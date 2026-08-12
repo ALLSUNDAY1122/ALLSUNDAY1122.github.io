@@ -28,14 +28,34 @@ def fail(errors: list[str], message: str) -> None:
     errors.append(message)
 
 
-def validate_file(path: Path) -> int:
+def check_similarity(rows: list[dict], errors: list[str], warnings: list[str], scope: str) -> None:
+    normalized = [(row.get("id"), normalize(row.get("question", ""))) for row in rows]
+    for i, (id_a, text_a) in enumerate(normalized):
+        if not text_a:
+            continue
+        for id_b, text_b in normalized[i + 1:]:
+            if not text_b:
+                continue
+            if text_a == text_b:
+                fail(errors, f"{scope} exact duplicate: {id_a} <-> {id_b}")
+                continue
+            ratio = SequenceMatcher(None, text_a, text_b).ratio()
+            if ratio >= 0.88:
+                fail(errors, f"{scope} high similarity {ratio:.2f}: {id_a} <-> {id_b}")
+            elif ratio >= 0.78:
+                warnings.append(f"{scope} similarity review {ratio:.2f}: {id_a} <-> {id_b}")
+
+
+def load_rows(path: Path) -> list[dict]:
     rows = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(rows, list) or not rows:
+        raise ValueError("non-empty JSON array required")
+    return rows
+
+
+def validate_file(path: Path, rows: list[dict]) -> int:
     errors: list[str] = []
     warnings: list[str] = []
-
-    if not isinstance(rows, list) or not rows:
-        print(f"FAIL {path}: non-empty JSON array required")
-        return 1
 
     ids = [row.get("id") for row in rows]
     duplicates = [value for value, count in Counter(ids).items() if value and count > 1]
@@ -81,6 +101,8 @@ def validate_file(path: Path) -> int:
         elif answer_type == "multiChoice":
             if not isinstance(indices, list) or len(indices) < 2 or len(set(indices)) != len(indices):
                 fail(errors, f"{label}: multiChoice indices invalid")
+            elif isinstance(choices, list) and not all(0 <= index < len(choices) for index in indices):
+                fail(errors, f"{label}: multiChoice index out of range")
         elif answer_type == "numeric":
             if not isinstance(row.get("correct_number"), (int, float)):
                 fail(errors, f"{label}: numeric answer missing")
@@ -96,17 +118,7 @@ def validate_file(path: Path) -> int:
         if len(str(row.get("memory_point", ""))) < 10:
             fail(errors, f"{label}: memory_point too short")
 
-    normalized = [(row.get("id"), normalize(row.get("question", ""))) for row in rows]
-    for i, (id_a, text_a) in enumerate(normalized):
-        for id_b, text_b in normalized[i + 1:]:
-            if text_a == text_b:
-                fail(errors, f"exact duplicate: {id_a} <-> {id_b}")
-                continue
-            ratio = SequenceMatcher(None, text_a, text_b).ratio()
-            if ratio >= 0.88:
-                fail(errors, f"high similarity {ratio:.2f}: {id_a} <-> {id_b}")
-            elif ratio >= 0.78:
-                warnings.append(f"similarity review {ratio:.2f}: {id_a} <-> {id_b}")
+    check_similarity(rows, errors, warnings, path.name)
 
     print(f"=== Authored Batch Audit: {path.name} ===")
     print(f"questions={len(rows)}")
@@ -119,7 +131,31 @@ def validate_file(path: Path) -> int:
         for error in errors:
             print(f"- {error}")
         return 1
-    print("PASS: schema / answer shape / evidence metadata / originality gate")
+    print("PASS: schema / answer shape / evidence metadata / in-file originality gate")
+    return 0
+
+
+def validate_global(all_rows: list[dict]) -> int:
+    errors: list[str] = []
+    warnings: list[str] = []
+    ids = [row.get("id") for row in all_rows]
+    duplicates = [value for value, count in Counter(ids).items() if value and count > 1]
+    if duplicates:
+        fail(errors, f"cross-file duplicate ids {duplicates}")
+    check_similarity(all_rows, errors, warnings, "global")
+
+    print("=== Authored Content Global Audit ===")
+    print(f"questions={len(all_rows)}")
+    if warnings:
+        print("WARNINGS")
+        for warning in warnings:
+            print(f"- {warning}")
+    if errors:
+        print("FAIL")
+        for error in errors:
+            print(f"- {error}")
+        return 1
+    print("PASS: cross-file ID / exact duplicate / high-similarity gate")
     print("NOTE: medical-policy correctness requires separate primary-source review before release_ready.")
     return 0
 
@@ -128,9 +164,20 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("paths", nargs="+", type=Path)
     args = parser.parse_args()
+
     status = 0
+    all_rows: list[dict] = []
     for path in args.paths:
-        status |= validate_file(path)
+        try:
+            rows = load_rows(path)
+        except Exception as exc:
+            print(f"FAIL {path}: {exc}")
+            status = 1
+            continue
+        all_rows.extend(rows)
+        status |= validate_file(path, rows)
+    if all_rows:
+        status |= validate_global(all_rows)
     return status
 
 
