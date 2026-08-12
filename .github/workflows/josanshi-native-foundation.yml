@@ -44,6 +44,9 @@ jobs:
       - name: Materialize authored question batches onto audited slots
         run: python3 josanshi-sprint/scripts/materialize_question_bank.py --output josanshi-sprint/data/questions.json
 
+      - name: Apply independent content audit approvals
+        run: python3 josanshi-sprint/scripts/apply_audit_approvals.py
+
       - name: Audit materialized production question-bank draft
         run: python3 josanshi-sprint/scripts/audit_question_bank.py
 
