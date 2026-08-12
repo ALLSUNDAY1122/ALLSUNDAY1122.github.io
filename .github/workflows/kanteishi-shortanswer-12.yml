@@ -29,6 +29,8 @@ jobs:
         run: jq '.questions' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Resources/questions.prototype.json > kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Resources/questions.audit.json
       - name: Shared question pipeline
         run: python3 automation/learning-sprint-question-pipeline/validate_questions.py kanteishi-shortanswer-sprint/learning-sprint-audit.prototype.json
+      - name: v2.1 native UI static audit
+        run: python3 kanteishi-shortanswer-sprint/scripts/audit_native_ui.py
       - name: Native implementation guard
         run: |
           if grep -R -nE 'WKWebView|UIWebView' kanteishi-shortanswer-sprint/ios; then

@@ -297,14 +297,26 @@ final class LearningStore: ObservableObject {
             self.startupError = error.localizedDescription
         }
 
-        self.persistenceURL = persistenceURL
-            ?? FileManager.default.temporaryDirectory.appendingPathComponent("kanteishi-learning-state.json")
+        if let persistenceURL {
+            self.persistenceURL = persistenceURL
+        } else {
+            let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+                ?? FileManager.default.temporaryDirectory
+            let directory = base.appendingPathComponent("KanteishiShortAnswerSprint", isDirectory: true)
+            try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            self.persistenceURL = directory.appendingPathComponent("learning-state.json")
+        }
 
         if let data = try? Data(contentsOf: self.persistenceURL),
            let loaded = try? decoder.decode(PersistedLearningState.self, from: data) {
-            self.state = loaded
+            self.state = Self.sanitize(loaded, repository: self.repository)
         } else {
             self.state = .fresh(contentVersion: self.repository.payload.contentVersion)
+        }
+        if self.repository.payload.contentVersion != "missing",
+           self.state.contentVersion != self.repository.payload.contentVersion {
+            self.state.contentVersion = self.repository.payload.contentVersion
+            self.state.inProgress = nil
         }
         self.session = self.state.inProgress
     }
@@ -320,8 +332,9 @@ final class LearningStore: ObservableObject {
     var weakQuestions: [AppQuestion] { repository.questions.filter { state.weak[$0.id] != nil } }
     var todayAnswered: Int { state.answerLog.filter { Calendar.current.isDateInToday($0.answeredAt) }.count }
     var todayCorrect: Int { state.answerLog.filter { Calendar.current.isDateInToday($0.answeredAt) && $0.correct }.count }
+    var todaySessionTarget: Int { min(settings.dailyGoal, repository.questions.count) }
     var todayGoalProgress: Double {
-        settings.dailyGoal == 0 ? 0 : min(1, Double(todayAnswered) / Double(settings.dailyGoal))
+        todaySessionTarget == 0 ? 0 : min(1, Double(todayAnswered) / Double(todaySessionTarget))
     }
     var examCountdown: (days: Int, pace: Int)? {
         guard let examDate = settings.examDate else { return nil }
@@ -338,7 +351,7 @@ final class LearningStore: ObservableObject {
     func startToday() {
         startSession(
             key: "today",
-            questions: Array(repository.questions.shuffled().prefix(settings.dailyGoal)),
+            questions: Array(repository.questions.shuffled().prefix(todaySessionTarget)),
             title: "今日のスプリント",
             mode: .practice
         )
@@ -419,12 +432,16 @@ final class LearningStore: ObservableObject {
             sessionKey: session.key,
             edition: question.edition
         ))
+        if state.answerLog.count > 4000 {
+            state.answerLog.removeFirst(state.answerLog.count - 4000)
+        }
         state.inProgress = session
         persist()
     }
 
     func advanceSession() {
         guard var session,
+              session.questionIDs.indices.contains(session.index),
               session.responses[session.questionIDs[session.index]] != nil else { return }
         if session.index + 1 < session.total {
             session.index += 1
@@ -489,8 +506,9 @@ final class LearningStore: ObservableObject {
     func importBackup(_ data: Data) throws {
         let envelope = try decoder.decode(BackupEnvelope.self, from: data)
         guard envelope.appNamespace == Self.backupNamespace else { throw BackupError.wrongApp }
-        state = envelope.state
-        session = state.inProgress
+        let restored = Self.sanitize(envelope.state, repository: repository)
+        state = restored
+        session = restored.inProgress
         result = nil
         persist()
         importMessage = "バックアップを読み込みました。"
@@ -548,6 +566,9 @@ final class LearningStore: ObservableObject {
             total: result.total,
             correct: result.correct
         ), at: 0)
+        if state.completionHistory.count > 100 {
+            state.completionHistory.removeLast(state.completionHistory.count - 100)
+        }
         state.inProgress = nil
         self.session = nil
         self.result = result
@@ -556,7 +577,28 @@ final class LearningStore: ObservableObject {
 
     private func persist() {
         guard let data = try? encoder.encode(state) else { return }
+        let directory = persistenceURL.deletingLastPathComponent()
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         try? data.write(to: persistenceURL, options: .atomic)
+    }
+
+    private static func sanitize(_ loaded: PersistedLearningState, repository: QuestionRepository) -> PersistedLearningState {
+        var state = loaded
+        let validIDs = Set(repository.questions.map(\.id))
+        state.weak = state.weak.filter { validIDs.contains($0.key) }
+        state.seenIDs = Set(state.seenIDs.filter { validIDs.contains($0) })
+        state.answerLog = state.answerLog.filter { validIDs.contains($0.questionID) }
+        if ![4, 8, 16].contains(state.settings.dailyGoal) {
+            state.settings.dailyGoal = 8
+        }
+        if let inProgress = state.inProgress,
+           inProgress.questionIDs.isEmpty || inProgress.questionIDs.contains(where: { !validIDs.contains($0) }) {
+            state.inProgress = nil
+        }
+        if repository.payload.contentVersion != "missing" {
+            state.contentVersion = repository.payload.contentVersion
+        }
+        return state
     }
 
     enum BackupError: LocalizedError {
