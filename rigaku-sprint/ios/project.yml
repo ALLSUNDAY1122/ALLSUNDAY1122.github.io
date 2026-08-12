@@ -1,0 +1,53 @@
+name: RigakuSprint
+options:
+  minimumXcodeGenVersion: 2.38.0
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    SWIFT_VERSION: 5.9
+    MARKETING_VERSION: 0.1.0
+    CURRENT_PROJECT_VERSION: 1
+    TARGETED_DEVICE_FAMILY: "1"
+    SUPPORTS_MACCATALYST: NO
+    CODE_SIGN_STYLE: Automatic
+packages:
+  LearningSprintCore:
+    path: ../../native-ios/LearningSprintCore
+targets:
+  RigakuSprint:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - Sources
+    dependencies:
+      - package: LearningSprintCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(RIGAKU_BUNDLE_ID)
+        PRODUCT_NAME: RigakuSprint
+        GENERATE_INFOPLIST_FILE: NO
+    info:
+      path: Generated/Info.plist
+      properties:
+        CFBundleDisplayName: 理学療法士 学びスプリント
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        ITSAppUsesNonExemptEncryption: false
+        LSRequiresIPhoneOS: true
+        UIApplicationSupportsIndirectInputEvents: true
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    scheme:
+      testTargets:
+        - RigakuSprintTests
+  RigakuSprintTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - Tests
+    dependencies:
+      - target: RigakuSprint
