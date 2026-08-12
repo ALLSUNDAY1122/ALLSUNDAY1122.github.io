@@ -107,6 +107,45 @@ final class YobiTantouSprintTests: XCTestCase {
         XCTAssertEqual(model.activeSession?.index, 1)
     }
 
+    func testPremiumOnlySessionCannotResumeAfterEntitlementLoss() {
+        let model = freshModel()
+        guard let question = model.questions.first else { return XCTFail("preview question missing") }
+        model.state.attempts[question.id] = AttemptState(answered: 1, correct: 0, consecutiveCorrect: 0, weak: true, unknown: false)
+        XCTAssertTrue(model.start(.weak, premium: true))
+        XCTAssertEqual(model.state.resume?.requiresPremium, true)
+        model.activeSession = nil
+
+        XCTAssertFalse(model.resume(premium: false))
+        XCTAssertNil(model.activeSession)
+    }
+
+    func testDailySessionStartedAsPremiumCanResumeAsFreeAndConsumesTrial() {
+        let model = freshModel()
+        XCTAssertTrue(model.start(.daily, premium: true))
+        XCTAssertEqual(model.state.resume?.requiresPremium, false)
+        model.activeSession = nil
+
+        XCTAssertTrue(model.resume(premium: false))
+        XCTAssertEqual(model.activeSession?.requiresPremium, false)
+        XCTAssertEqual(model.activeSession?.consumesFreeSprint, true)
+    }
+
+    func testConsumedFreeSprintBlocksDailyResumeWithoutPremium() {
+        let model = freshModel()
+        XCTAssertTrue(model.start(.daily, premium: true))
+        model.activeSession = nil
+        model.state.freeSprintConsumed = true
+
+        XCTAssertFalse(model.resume(premium: false))
+    }
+
+    func testLegacyResumeWithoutRequiresPremiumStillDecodesSafely() throws {
+        let json = #"{"questionIDs":["Q1","Q2"],"index":1,"correct":1,"title":"苦手をつぶす","consumesFreeSprint":false}"#.data(using: .utf8)!
+        let resume = try JSONDecoder().decode(ResumeState.self, from: json)
+        XCTAssertNil(resume.requiresPremium)
+        XCTAssertTrue(resume.resolvedRequiresPremium)
+    }
+
     func testBackupCannotRestoreConsumedFreeSprint() throws {
         let model = freshModel()
         model.state.freeSprintConsumed = false
@@ -131,6 +170,24 @@ final class YobiTantouSprintTests: XCTestCase {
         var invalid = PersistentState()
         invalid.totalAnswered = 1
         invalid.totalCorrect = 2
+        let payload = BackupPayload(schemaVersion: 1, exportedAt: Date(), state: invalid)
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        let data = try encoder.encode(payload)
+        XCTAssertThrowsError(try model.importBackup(data))
+    }
+
+    func testBackupRejectsInvalidResumeProgress() throws {
+        let model = freshModel()
+        var invalid = PersistentState()
+        invalid.resume = ResumeState(
+            questionIDs: ["Q1", "Q2"],
+            index: 1,
+            correct: 2,
+            title: "今日のスプリント",
+            consumesFreeSprint: true,
+            requiresPremium: false
+        )
         let payload = BackupPayload(schemaVersion: 1, exportedAt: Date(), state: invalid)
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
