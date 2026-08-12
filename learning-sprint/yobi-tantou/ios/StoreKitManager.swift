@@ -1,6 +1,17 @@
 import Foundation
 import StoreKit
 
+enum StoreProductIDPolicy {
+    static func normalized(_ raw: Any?) -> String? {
+        guard let value = raw as? String else { return nil }
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty,
+              !trimmed.contains("$("),
+              !trimmed.uppercased().contains("UNSET") else { return nil }
+        return trimmed
+    }
+}
+
 @MainActor
 final class StoreKitManager: ObservableObject {
     @Published private(set) var product: Product?
@@ -8,15 +19,13 @@ final class StoreKitManager: ObservableObject {
     @Published private(set) var statusMessage: String?
 
     var configuredProductID: String? {
-        guard let value = Bundle.main.object(forInfoDictionaryKey: "PremiumProductID") as? String,
-              !value.isEmpty,
-              !value.contains("$(") else { return nil }
-        return value
+        StoreProductIDPolicy.normalized(Bundle.main.object(forInfoDictionaryKey: "PremiumProductID"))
     }
 
     var isConfigured: Bool { configuredProductID != nil }
 
     func refresh() async {
+        statusMessage = nil
         await refreshEntitlements()
         guard let id = configuredProductID else {
             product = nil
@@ -25,17 +34,21 @@ final class StoreKitManager: ObservableObject {
         }
         do {
             product = try await Product.products(for: [id]).first
-            if product == nil { statusMessage = "StoreKit商品を取得できませんでした。" }
+            if product == nil {
+                statusMessage = "StoreKit商品を取得できませんでした。"
+            }
         } catch {
+            product = nil
             statusMessage = error.localizedDescription
         }
     }
 
     func purchase() async {
-        guard let product else {
+        guard isConfigured, let product else {
             statusMessage = "課金設定が未確定です。"
             return
         }
+        statusMessage = nil
         do {
             let result = try await product.purchase()
             switch result {
@@ -46,7 +59,7 @@ final class StoreKitManager: ObservableObject {
             case .pending:
                 statusMessage = "購入は保留中です。"
             case .userCancelled:
-                break
+                statusMessage = nil
             @unknown default:
                 statusMessage = "購入状態を確認できませんでした。"
             }
@@ -56,6 +69,11 @@ final class StoreKitManager: ObservableObject {
     }
 
     func restore() async {
+        guard isConfigured else {
+            statusMessage = "IAP Product ID が未設定のため復元できません。"
+            return
+        }
+        statusMessage = nil
         do {
             try await AppStore.sync()
             await refreshEntitlements()
@@ -71,7 +89,9 @@ final class StoreKitManager: ObservableObject {
         }
         var entitled = false
         for await result in Transaction.currentEntitlements {
-            if let transaction = try? verified(result), transaction.productID == id, transaction.revocationDate == nil {
+            if let transaction = try? verified(result),
+               transaction.productID == id,
+               transaction.revocationDate == nil {
                 entitled = true
             }
         }
