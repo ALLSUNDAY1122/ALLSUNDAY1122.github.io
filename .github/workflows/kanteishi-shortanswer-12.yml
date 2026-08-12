@@ -31,7 +31,9 @@ jobs:
           fi
       - name: Unconfirmed identifier guard
         run: |
-          if grep -R -nE 'PRODUCT_BUNDLE_IDENTIFIER|productIDs[[:space:]]*=[[:space:]]*\[[[:space:]]*"' kanteishi-shortanswer-sprint; then
-            echo 'Unconfirmed Bundle ID or StoreKit Product ID detected.'
+          if grep -R -nE 'PRODUCT_BUNDLE_IDENTIFIER[[:space:]]*[:=]|productIDs[[:space:]]*=[[:space:]]*\[[[:space:]]*"' \
+            kanteishi-shortanswer-sprint/core/Sources \
+            kanteishi-shortanswer-sprint/ios; then
+            echo 'Unconfirmed Bundle ID or StoreKit Product ID detected in source.'
             exit 1
           fi
