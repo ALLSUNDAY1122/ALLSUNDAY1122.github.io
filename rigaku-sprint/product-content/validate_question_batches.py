@@ -9,10 +9,11 @@ from validate_exam_structure import load_classification_records
 
 ROOT = Path(__file__).resolve().parent
 BATCH_DIR = ROOT / "question-batches"
+AUDIT_DIR = ROOT / "content-audit-batches"
 
 REQUIRED = {
     "id", "subject", "topic", "answerType", "prompt", "choices",
-    "correctIndices", "memoryPoint", "explanation", "sourceURL",
+    "correctIndices", "memoryPoint", "explanation", "sourceURL", "sourceRefs",
     "sourceCheckedAt", "lawBaselineDate", "contentVersion", "rightsBasis",
     "examRound", "questionNumber", "originType", "officialScoringStatus"
 }
@@ -30,11 +31,46 @@ def accepted_sets(question: dict) -> list[list[int]]:
     return [indices] if indices else []
 
 
+def load_content_audits(errors: list[str]) -> dict[str, dict]:
+    result: dict[str, dict] = {}
+    if not AUDIT_DIR.exists():
+        return result
+    for path in sorted(AUDIT_DIR.glob("audit-*.json")):
+        try:
+            doc = load_json(path)
+        except json.JSONDecodeError as exc:
+            errors.append(f"{path.name}: invalid audit JSON: {exc}")
+            continue
+        if doc.get("qualification") != "理学療法士国家試験":
+            errors.append(f"{path.name}: audit qualification mismatch")
+        for row in doc.get("records", []):
+            if not isinstance(row, list) or len(row) < 3:
+                errors.append(f"{path.name}: invalid audit row {row!r}")
+                continue
+            sid, status, note = row[0], row[1], row[2]
+            if sid in result:
+                errors.append(f"duplicate content audit: {sid}")
+                continue
+            result[sid] = {
+                "status": status,
+                "note": note,
+                "checkedAt": doc.get("checkedAt"),
+                "batch": doc.get("batch"),
+            }
+    return result
+
+
 def main() -> int:
     errors: list[str] = []
     classifications, classification_errors = load_classification_records()
     errors.extend(classification_errors)
     class_by_id = {item["id"]: item for item in classifications}
+    audits = load_content_audits(errors)
+
+    adjustments = load_json(ROOT / "scoring-adjustments.json")
+    official_treatment = {
+        item["id"]: item["treatment"] for item in adjustments.get("adjustments", [])
+    }
 
     questions: list[dict] = []
     main_path = ROOT / "questions.json"
@@ -69,6 +105,12 @@ def main() -> int:
             errors.append(f"{sid}: missing fields {sorted(missing)}")
             continue
 
+        audit = audits.get(sid)
+        if audit is None:
+            errors.append(f"{sid}: medical/content audit missing")
+        elif not str(audit["status"]).startswith("PASS"):
+            errors.append(f"{sid}: medical/content audit not PASS: {audit['status']}")
+
         classification = class_by_id.get(sid)
         if classification is None:
             errors.append(f"{sid}: no verified classification")
@@ -77,7 +119,10 @@ def main() -> int:
                 errors.append(
                     f"{sid}: subject mismatch question={question['subject']} classification={classification['subject']}"
                 )
-            if classification["mediaStatus"] == "excluded_unresolved_rights" and question["originType"] == "official_text_with_media":
+            if (
+                classification["mediaStatus"] == "excluded_unresolved_rights"
+                and question["originType"] == "official_text_with_media"
+            ):
                 errors.append(f"{sid}: unresolved official media cannot ship")
 
         if not str(question["prompt"]).strip():
@@ -88,10 +133,23 @@ def main() -> int:
             errors.append(f"{sid}: empty memoryPoint")
         if not str(question["sourceURL"]).startswith("https://"):
             errors.append(f"{sid}: sourceURL must be HTTPS")
+        if not isinstance(question.get("sourceRefs"), list) or not question["sourceRefs"]:
+            errors.append(f"{sid}: sourceRefs must contain evidence")
+        elif any(not str(url).startswith("https://") for url in question["sourceRefs"]):
+            errors.append(f"{sid}: sourceRefs must be HTTPS")
         if not str(question["rightsBasis"]).strip():
             errors.append(f"{sid}: rightsBasis missing")
         if question["officialScoringStatus"] not in {"scored", "excluded"}:
             errors.append(f"{sid}: invalid officialScoringStatus")
+
+        expected_treatment = official_treatment.get(sid)
+        if expected_treatment == "excluded":
+            if question["officialScoringStatus"] != "excluded":
+                errors.append(f"{sid}: official excluded slot must remain marked excluded")
+            if question["originType"] != "independent_replacement_for_excluded_official":
+                errors.append(f"{sid}: excluded official slot must use independent replacement")
+        elif question["officialScoringStatus"] == "excluded":
+            errors.append(f"{sid}: non-excluded official slot marked excluded")
 
         choices = question.get("choices", [])
         if len(choices) < 2:
@@ -124,6 +182,7 @@ def main() -> int:
 
     print("RIGAKU QUESTION BATCHES: PASS")
     print(f"audited release questions: {len(questions)} / 600")
+    print(f"medical/content audits: {len([sid for sid in ids if sid in audits])} / {len(questions)}")
     print(f"remaining: {600 - len(questions)}")
     return 0
 
