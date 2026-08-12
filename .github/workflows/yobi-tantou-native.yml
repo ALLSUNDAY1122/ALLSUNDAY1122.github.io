@@ -21,6 +21,8 @@ jobs:
           python-version: '3.12'
       - name: Native source contract
         run: python learning-sprint/yobi-tantou/audit_native.py
+      - name: Candidate question preflight self-test
+        run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py --self-test
 
   swift-tests:
     runs-on: macos-15
