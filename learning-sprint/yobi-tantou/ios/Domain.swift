@@ -41,6 +41,12 @@ struct ResumeState: Codable, Equatable {
     var correct: Int
     let title: String
     let consumesFreeSprint: Bool
+    let requiresPremium: Bool?
+
+    var resolvedRequiresPremium: Bool {
+        if let requiresPremium { return requiresPremium }
+        return title != "今日のスプリント" && title != "開発プレビュー"
+    }
 }
 
 struct PersistentState: Codable, Equatable {
