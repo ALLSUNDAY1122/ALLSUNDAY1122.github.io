@@ -34,7 +34,6 @@ public struct JosanshiQuestionSessionView: View {
                 completionBody
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
         .alert("処理できませんでした", isPresented: Binding(
             get: { errorMessage != nil },
             set: { if !$0 { errorMessage = nil } }
@@ -137,7 +136,7 @@ public struct JosanshiQuestionSessionView: View {
                 Text(choiceLabel(index))
                     .font(LearningSprintTheme.sans(14, weight: .bold))
                     .frame(width: 28, height: 28)
-                    .background(selectedIndices.contains(index) ? LearningSprintTheme.indigo : LearningSprintTheme.paper2)
+                    .background(selectedIndices.contains(index) ? LearningSprintTheme.indigo : LearningSprintTheme.indigoSoft)
                     .foregroundStyle(selectedIndices.contains(index) ? Color.white : LearningSprintTheme.ink2)
                     .clipShape(Circle())
 
@@ -153,7 +152,7 @@ public struct JosanshiQuestionSessionView: View {
             .overlay {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .stroke(
-                        selectedIndices.contains(index) ? LearningSprintTheme.indigo : LearningSprintTheme.rule,
+                        selectedIndices.contains(index) ? LearningSprintTheme.indigo : LearningSprintTheme.line,
                         lineWidth: selectedIndices.contains(index) ? 2 : 1
                     )
             }
@@ -206,7 +205,8 @@ public struct JosanshiQuestionSessionView: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("根拠確認日: \(question.sourceCheckedAt)")
-                    if let baseline = question.lawBaselineDate, !baseline.isEmpty {
+                    let baseline = question.lawBaselineDate
+                    if !baseline.isEmpty {
                         Text("法令・制度基準日: \(baseline)")
                     }
                 }
