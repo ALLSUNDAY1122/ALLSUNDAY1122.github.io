@@ -30,6 +30,9 @@ jobs:
       - name: Validate current-source and rights registry
         run: python3 josanshi-sprint/scripts/validate_sources.py
 
+      - name: Validate all 66 topics have current evidence anchors
+        run: python3 josanshi-sprint/scripts/validate_topic_sources.py
+
       - name: Assert no WebView primary implementation
         shell: bash
         run: |
