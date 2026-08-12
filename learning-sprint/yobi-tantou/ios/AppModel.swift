@@ -243,16 +243,10 @@ final class AppModel: ObservableObject {
     }
 
     private func loadQuestions(bundle: Bundle) {
-        guard let url = bundle.url(forResource: "questions.preview", withExtension: "json") else {
-            startupError = "questions.preview.json がありません。"
-            return
-        }
         do {
-            let data = try Data(contentsOf: url)
-            questions = try JSONDecoder().decode([StudyQuestion].self, from: data)
-            if questions.isEmpty { startupError = "教材データが空です。" }
+            questions = try QuestionRepository().load(bundle: bundle)
         } catch {
-            startupError = "教材データの形式が不正です: \(error.localizedDescription)"
+            startupError = error.localizedDescription
         }
     }
 
