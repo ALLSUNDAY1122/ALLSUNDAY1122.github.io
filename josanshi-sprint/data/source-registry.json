@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "1.0",
+  "qualification": "助産師国家試験",
+  "checkedAt": "2026-08-12",
+  "policy": {
+    "purpose": "Primary-source anchors for original question generation and currentness audits.",
+    "default": "Use facts to create original wording. Do not reproduce third-party CQ/Answer, figures, algorithms, tables or images unless an explicit reusable-rights basis is recorded.",
+    "medicalRule": "Clinical assertions require a current authoritative source and sourceCheckedAt. If a source is superseded, affected production questions lose PASS status until revalidated."
+  },
+  "sources": [
+    {
+      "id": "MHLW-EXAM-R5-STANDARD",
+      "title": "保健師助産師看護師国家試験出題基準 令和5年版",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/stf/shingi2/0000159020_00001.html",
+      "domains": ["all"],
+      "role": "canonical_exam_scope",
+      "currentness": "current baseline confirmed in 2026 national-exam review",
+      "reuse": "MHLW website content is generally under PDL1.0 unless separately noted; per-element third-party rights still require checking",
+      "directReproduction": "not needed for product; prefer original wording"
+    },
+    {
+      "id": "MHLW-EXAM-109",
+      "title": "第109回助産師国家試験 問題・正答",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp260424-03_04_05.html",
+      "domains": ["all"],
+      "role": "exam_structure_reference",
+      "currentness": "latest confirmed exam on 2026-08-12",
+      "reuse": "per-item audit required before any direct reuse; third-party figures/images are not assumed reusable",
+      "directReproduction": "prohibited by product policy unless separately rights-audited"
+    },
+    {
+      "id": "EGOV-MCH-ACT",
+      "title": "母子保健法",
+      "publisher": "e-Gov法令検索",
+      "url": "https://laws.e-gov.go.jp/law/340AC0000000141",
+      "domains": ["地域母子保健", "助産管理", "助産診断・技術学"],
+      "role": "current_law",
+      "currentness": "currently effective version must be resolved at generation/release audit; future-enacted amendments are present",
+      "reuse": "statutory source; cite law and effective-date baseline",
+      "directReproduction": "short statutory wording only when necessary; otherwise original explanatory wording"
+    },
+    {
+      "id": "EGOV-PHN-MIDWIFE-NURSE-ACT",
+      "title": "保健師助産師看護師法",
+      "publisher": "e-Gov法令検索",
+      "url": "https://laws.e-gov.go.jp/law/323AC0000000203",
+      "domains": ["助産管理", "基礎助産学"],
+      "role": "current_law",
+      "currentness": "current version includes amendment effective 2026-05-21",
+      "reuse": "statutory source; cite law and effective-date baseline",
+      "directReproduction": "short statutory wording only when necessary; otherwise original explanatory wording"
+    },
+    {
+      "id": "EGOV-MEDICAL-CARE-ACT",
+      "title": "医療法",
+      "publisher": "e-Gov法令検索",
+      "url": "https://laws.e-gov.go.jp/law/323AC0000000205",
+      "domains": ["助産管理"],
+      "role": "current_law",
+      "currentness": "current version must be resolved at question audit; includes rules defining and regulating助産所",
+      "reuse": "statutory source; cite law and effective-date baseline",
+      "directReproduction": "short statutory wording only when necessary; otherwise original explanatory wording"
+    },
+    {
+      "id": "EGOV-MATERNAL-PROTECTION-ACT",
+      "title": "母体保護法",
+      "publisher": "e-Gov法令検索",
+      "url": "https://laws.e-gov.go.jp/law/323AC0100000156",
+      "domains": ["基礎助産学", "助産管理"],
+      "role": "current_law",
+      "currentness": "current effective version must be checked at generation/release audit",
+      "reuse": "statutory source; cite law and effective-date baseline",
+      "directReproduction": "short statutory wording only when necessary; otherwise original explanatory wording"
+    },
+    {
+      "id": "JSOG-OB-GUIDELINE-2026",
+      "title": "産婦人科診療ガイドライン産科編2026",
+      "publisher": "日本産科婦人科学会・日本産婦人科医会",
+      "url": "https://www.jsog.or.jp/news_m/11722/",
+      "domains": ["基礎助産学", "助産診断・技術学"],
+      "role": "current_clinical_guideline",
+      "currentness": "published in 2026; use 2026 edition rather than assuming 2023 remains clinically current",
+      "reuse": "JSOG states that guideline figures and CQ/Answer reuse requires a reproduction application; treat as restricted third-party copyrighted material",
+      "directReproduction": "no; use for clinical verification and write original questions/explanations unless permission is separately obtained"
+    },
+    {
+      "id": "NCPR-GUIDELINE-2025",
+      "title": "新生児蘇生法ガイドライン2025 / NCPR 2025",
+      "publisher": "日本周産期・新生児医学会 新生児蘇生法普及事業",
+      "url": "https://www.ncpr.jp/guideline_update/",
+      "domains": ["助産診断・技術学"],
+      "role": "current_neonatal_resuscitation_guideline",
+      "currentness": "NCPR e-learning and materials were updated to the 2025 guideline in 2026",
+      "reuse": "NCPR states that permission is required to reproduce the 2025 algorithm figure",
+      "directReproduction": "no algorithm/figure reproduction without permission; use original text and independently designed non-derivative visuals only after rights review"
+    },
+    {
+      "id": "MHLW-BREASTFEEDING-WEANING-GUIDE",
+      "title": "授乳・離乳の支援ガイド",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb6885&dataType=1",
+      "domains": ["助産診断・技術学"],
+      "role": "supporting_guidance",
+      "currentness": "historical MHLW guidance; must be checked against later revisions/current guidance before a 2026 production question relies on it",
+      "reuse": "MHLW general terms apply unless separately noted; third-party embedded material still requires rights check",
+      "directReproduction": "not needed; original wording only"
+    }
+  ],
+  "openCoverage": {
+    "status": "in_progress",
+    "note": "This is the anchor registry, not yet a complete 66-topic source map. Each topic must be mapped to at least one current primary/authoritative source before production generation."
+  }
+}
