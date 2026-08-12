@@ -8,16 +8,19 @@
 - `WKWebView` / `UIWebView` / `WebKit`: 0件
 - Golden Master v2.1署名要素: PASS（8問、分野導線、苦手、模試、進捗リング、5週間ヒートマップ）
 - Bundle ID推測値: 0件。`$(RIGAKU_BUNDLE_ID)` 外部注入のみ
-- 第59・58回問題数: 未確認のため `nil` を維持
-- 第60回問題数: 厚労省公式PDFで午前100＋午後100を確認したため200のみ固定
+- 第60回: 厚労省公式PDFで午前100＋午後100＝200問を確認
+- 第59回: 厚労省公式PDFで午前100＋午後100＝200問を確認
+- 第58回: 厚労省公式PDFで午前100＋午後100＝200問を確認
+- 3回分総枠: 600問
+- 科目別600問分類: 未完了。推測配分を禁止し、`exam-config.json`確定ゲートとして保持
 
 ## 実行済み検査
 
-ChatGPT実行環境で、GitHub反映前の同一ソースに対して以下を実行。
+ChatGPT実行環境で、GitHub反映ソースと同内容に対して以下を再実行。
 
 ```bash
 python3 static_audit.py
-swiftc -frontend -parse Sources/AppConfiguration.swift Sources/RigakuSprintApp.swift Sources/RootTabView.swift
+swiftc -frontend -parse Sources/AppConfiguration.swift Sources/RigakuSprintApp.swift Sources/RootTabView.swift Tests/RigakuSprintConfigurationTests.swift
 ```
 
 結果:
@@ -28,7 +31,7 @@ Swift files: 3
 WebView ban: PASS
 Golden Master signature elements: PASS
 Identifier non-guess policy: PASS
-Unverified exam counts remain unset: PASS
+Official frame: R60/R59/R58 = 200 each, total 600: PASS
 SWIFT PARSE: PASS
 ```
 
@@ -38,8 +41,11 @@ SWIFT PARSE: PASS
 
 確認項目:
 - Golden Master v2.1 の4／8／16問・標準8問
-- 第59・58回問題数を未確認のまま固定しない
+- 第60・59・58回が公式PDF確認済み200問×3＝600問であること
+- 将来の未確認回を `officialQuestionCount=nil` で保持できるデータ型
 - 第61回公式施行情報に対応した一般8科目・実地5科目
+
+Xcode上でのXCTest実行は実Bundle IDを含むプロジェクト生成後に行う。
 
 ## 現在のビルドゲート
 
@@ -47,8 +53,9 @@ Xcode/iOS Simulatorの実ビルドは、正本Bundle IDが未確認であるた�
 
 ## 次の品質ループ
 
-1. 第59・58回PDFの構成・問題数監査
+1. 600問の科目分類監査
 2. `exam-config.json`確定
-3. LearningSprintCoreの学習状態・中断再開・苦手・バックアップ接続
-4. 問題生成・著作権監査
-5. Xcode build / XCTest / UI Test
+3. 問題単位の権利フラグ／一次根拠付与
+4. LearningSprintCoreの学習状態・中断再開・苦手・バックアップ接続
+5. 問題生成・著作権・正答監査
+6. Xcode build / XCTest / UI Test
