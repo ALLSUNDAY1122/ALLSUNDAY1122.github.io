@@ -23,7 +23,16 @@ targets:
       - path: Sources
       - path: ../product-content/questions.json
         buildPhase: resources
+      - path: ../product-content/question-batches
+        type: folder
+        buildPhase: resources
       - path: ../product-content/media-manifest.json
+        buildPhase: resources
+      - path: ../product-content/exam-config.json
+        buildPhase: resources
+      - path: ../product-content/official-answers.json
+        buildPhase: resources
+      - path: ../product-content/scoring-adjustments.json
         buildPhase: resources
     dependencies:
       - package: LearningSprintCore
