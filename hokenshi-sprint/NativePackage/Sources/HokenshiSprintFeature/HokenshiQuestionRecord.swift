@@ -189,9 +189,25 @@ public struct HokenshiQuestionRecord: Codable, Identifiable, Hashable, Sendable 
                   let scenarioIndex,
                   let scenarioTotal
             else { return false }
-            return scenarioTotal == 2 || scenarioTotal == 3
-                ? (1...scenarioTotal).contains(scenarioIndex)
-                : false
+            guard scenarioTotal == 2 || scenarioTotal == 3 else { return false }
+            return (1...scenarioTotal).contains(scenarioIndex)
+        }
+    }
+
+    public var hasValidAnswerShape: Bool {
+        switch answerType {
+        case .singleChoice:
+            guard choices.count >= 2, correctIndices.count == 1, correctNumber == nil else { return false }
+            return choices.indices.contains(correctIndices[0])
+        case .multiChoice:
+            guard choices.count >= 2, correctIndices.count >= 2, correctNumber == nil else { return false }
+            let unique = Set(correctIndices)
+            guard unique.count == correctIndices.count else { return false }
+            return correctIndices.allSatisfy { choices.indices.contains($0) }
+        case .numeric:
+            return correctNumber != nil && correctIndices.isEmpty
+        case .blankSelect, .declaration:
+            return false
         }
     }
 }
@@ -199,8 +215,13 @@ public struct HokenshiQuestionRecord: Codable, Identifiable, Hashable, Sendable 
 public enum HokenshiContentStoreError: Error, Equatable {
     case invalidTotal(Int)
     case invalidRound(Int, Int)
+    case invalidQuestionNumbers(Int)
+    case invalidSubjectCount(Int, String, Int)
+    case invalidQuestionTypeCount(Int, String, Int)
+    case invalidScenarioPlan(Int)
     case duplicateID(String)
     case invalidScenario(String)
+    case invalidAnswer(String)
     case unreleasedContent(String)
 }
 
@@ -220,15 +241,53 @@ public struct HokenshiContentStore: Sendable {
             if !record.hasValidScenarioMetadata {
                 throw HokenshiContentStoreError.invalidScenario(record.id)
             }
+            if !record.hasValidAnswerShape {
+                throw HokenshiContentStoreError.invalidAnswer(record.id)
+            }
             if requireReleaseReady && !record.auditStatus.isProductEligible {
                 throw HokenshiContentStoreError.unreleasedContent(record.id)
             }
         }
 
         for round in 1...HokenshiSprintConfiguration.plannedMockExamCount {
-            let count = records.filter { $0.round == round }.count
-            if count != HokenshiSprintConfiguration.questionsPerMockExam {
-                throw HokenshiContentStoreError.invalidRound(round, count)
+            let roundRecords = records.filter { $0.round == round }
+            if roundRecords.count != HokenshiSprintConfiguration.questionsPerMockExam {
+                throw HokenshiContentStoreError.invalidRound(round, roundRecords.count)
+            }
+
+            let questionNumbers = roundRecords.map(\.questionNumber).sorted()
+            if questionNumbers != Array(1...HokenshiSprintConfiguration.questionsPerMockExam) {
+                throw HokenshiContentStoreError.invalidQuestionNumbers(round)
+            }
+
+            for subject in HokenshiExamBlueprint.current.subjects {
+                let count = roundRecords.filter { $0.subject == subject }.count
+                if count != HokenshiSprintConfiguration.plannedQuestionsPerSubjectPerMock {
+                    throw HokenshiContentStoreError.invalidSubjectCount(round, subject, count)
+                }
+            }
+
+            let generalCount = roundRecords.filter { $0.questionType == .general }.count
+            if generalCount != HokenshiExamBlueprint.current.generalQuestions {
+                throw HokenshiContentStoreError.invalidQuestionTypeCount(round, "general", generalCount)
+            }
+            let situationalCount = roundRecords.filter { $0.questionType == .situational }.count
+            if situationalCount != HokenshiExamBlueprint.current.situationalQuestions {
+                throw HokenshiContentStoreError.invalidQuestionTypeCount(round, "situational", situationalCount)
+            }
+
+            let scenarioGroups = Dictionary(grouping: roundRecords.filter { $0.questionType == .situational }) { $0.scenarioID ?? "" }
+            let scenarioSizes = scenarioGroups.values.map(\.count).sorted()
+            if scenarioGroups.count != 12 || scenarioSizes != [2] + Array(repeating: 3, count: 11) {
+                throw HokenshiContentStoreError.invalidScenarioPlan(round)
+            }
+            for (_, group) in scenarioGroups {
+                let expectedTotal = group.count
+                let indexes = group.compactMap(\.scenarioIndex).sorted()
+                let totals = Set(group.compactMap(\.scenarioTotal))
+                if indexes != Array(1...expectedTotal) || totals != [expectedTotal] {
+                    throw HokenshiContentStoreError.invalidScenario(group.first?.id ?? "unknown")
+                }
             }
         }
 
