@@ -13,6 +13,32 @@ def load(name: str):
     return json.loads((ROOT / name).read_text(encoding="utf-8"))
 
 
+def load_classification_records() -> tuple[list[dict], list[str]]:
+    errors: list[str] = []
+    records: list[dict] = []
+
+    root_doc = load("classification.json")
+    records.extend(root_doc.get("records", []))
+
+    batch_dir = ROOT / "classification-batches"
+    if batch_dir.exists():
+        for path in sorted(batch_dir.glob("*.json")):
+            try:
+                doc = json.loads(path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as exc:
+                errors.append(f"classification batch JSON不正 {path.name}: {exc}")
+                continue
+            if doc.get("qualification") != "理学療法士国家試験":
+                errors.append(f"classification batch qualification不一致: {path.name}")
+            batch_records = doc.get("records")
+            if not isinstance(batch_records, list):
+                errors.append(f"classification batch records不正: {path.name}")
+                continue
+            records.extend(batch_records)
+
+    return records, errors
+
+
 def slot_id(round_no: int, session: str, number: int) -> str:
     return f"RIGAKU-R{round_no}-{session}-{number:03d}"
 
@@ -22,7 +48,8 @@ def main() -> int:
     frame = load("exam-frame.json")
     sources = load("official-sources.json")
     adjustments = load("scoring-adjustments.json")
-    classification = load("classification.json")
+    classification_records, classification_load_errors = load_classification_records()
+    errors.extend(classification_load_errors)
     questions = load("questions.json")
 
     frame_rounds = {int(item["round"]): item for item in frame["rounds"]}
@@ -89,9 +116,8 @@ def main() -> int:
     if len(adjustment_ids) != 20:
         errors.append(f"expected 20 official scoring adjustments, got {len(adjustment_ids)}")
 
-    # Position rule (1-20 practical, 21-100 general) is accepted only because
-    # its score totals reproduce MHLW's published maxima for all three rounds
-    # after the official excluded questions are removed.
+    # 1-20=実地3点、21-100=一般1点という位置ルールは、厚労省の
+    # 公表満点と採点除外を3回すべて再現できることを機械的に照合する。
     calculated = defaultdict(lambda: {"general": 0, "practical": 0})
     for slot in slots.values():
         if slot["treatment"] == "excluded":
@@ -114,7 +140,7 @@ def main() -> int:
         "解剖学", "生理学", "運動学", "病理学概論", "臨床心理学",
         "リハビリテーション医学", "臨床医学大要", "理学療法"
     }
-    for record in classification.get("records", []):
+    for record in classification_records:
         sid = record.get("id")
         if sid not in slots:
             errors.append(f"classification references missing slot: {sid}")
@@ -128,10 +154,23 @@ def main() -> int:
             errors.append(f"topic missing: {sid}")
         if record.get("classificationStatus") != "verified":
             errors.append(f"classification must be verified before ledger inclusion: {sid}")
-        if record.get("rightsStatus") not in {"pdl_mhlw_confirmed", "originalized_from_primary_sources", "excluded_third_party_rights"}:
+        if record.get("rightsStatus") not in {
+            "pdl_mhlw_confirmed",
+            "originalized_from_primary_sources",
+            "excluded_third_party_rights",
+        }:
             errors.append(f"invalid rightsStatus: {sid}")
-        if record.get("mediaStatus") not in {"none", "rights_cleared_local", "excluded_unresolved_rights"}:
+        if record.get("mediaStatus") not in {
+            "none",
+            "rights_cleared_local",
+            "excluded_unresolved_rights",
+        }:
             errors.append(f"invalid mediaStatus: {sid}")
+        disposition = record.get("productDisposition")
+        if not disposition:
+            errors.append(f"productDisposition missing: {sid}")
+        if record.get("mediaStatus") == "excluded_unresolved_rights" and disposition == "official_text_candidate":
+            errors.append(f"unresolved media cannot be direct official candidate: {sid}")
 
     question_ids: list[str] = []
     for question in questions:
