@@ -9,6 +9,7 @@ errors = []
 
 swift = "\n".join(p.read_text(encoding="utf-8") for p in IOS.glob("*.swift"))
 views = (IOS / "Views.swift").read_text(encoding="utf-8")
+storekit = (IOS / "StoreKitManager.swift").read_text(encoding="utf-8")
 project = (IOS / "project.yml").read_text(encoding="utf-8")
 questions = json.loads((IOS / "Resources" / "questions.preview.json").read_text(encoding="utf-8"))
 privacy = (IOS / "PrivacyInfo.xcprivacy").read_text(encoding="utf-8")
@@ -26,6 +27,15 @@ required_ui = [
 for text in required_ui:
     if text not in views:
         errors.append(f"missing Golden Master UI contract: {text}")
+
+required_storekit = [
+    "Product.products(for:", "product.purchase()", "AppStore.sync()",
+    "Transaction.currentEntitlements", "Transaction.updates",
+    "transaction.revocationDate == nil", "StoreProductIDPolicy.normalized",
+]
+for marker in required_storekit:
+    if marker not in storekit:
+        errors.append(f"missing StoreKit lifecycle contract: {marker}")
 
 if len(questions) != 8:
     errors.append(f"preview bank must contain exactly 8 questions, got {len(questions)}")
@@ -45,6 +55,10 @@ for production_value in ("jp.allsunday1122.yobi", "jp.allsunday1122.yobi.premium
 if "UNSET.YOBI.BUNDLE.ID" not in project or "YOBI_IAP_PRODUCT_ID" not in project:
     errors.append("identifier placeholders/injection contract missing")
 
+if "NSPrivacyTracking" not in privacy or "<false/>" not in privacy:
+    errors.append("Privacy Manifest tracking=false missing")
+if "NSPrivacyCollectedDataTypes" not in privacy:
+    errors.append("Privacy Manifest collected-data declaration missing")
 if "NSPrivacyAccessedAPICategoryUserDefaults" not in privacy or "CA92.1" not in privacy:
     errors.append("Privacy Manifest UserDefaults reason missing")
 
@@ -70,4 +84,4 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print("PASS: native source contract, v2.1 UI markers, preview/release gates, identifiers, privacy manifest and canonical AppIcon lock")
+print("PASS: native source contract, v2.1 UI, StoreKit lifecycle, preview/release gates, identifiers, privacy and canonical AppIcon lock")
