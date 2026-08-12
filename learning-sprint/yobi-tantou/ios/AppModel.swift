@@ -26,8 +26,7 @@ final class AppModel: ObservableObject {
     }
 
     var currentQuestion: StudyQuestion? {
-        guard let session = activeSession,
-              session.index < session.ids.count else { return nil }
+        guard let session = activeSession, session.index < session.ids.count else { return nil }
         return questions.first { $0.id == session.ids[session.index] }
     }
 
@@ -42,12 +41,10 @@ final class AppModel: ObservableObject {
     var todayAnswered: Int { dayStat(Date()).answered }
     var isPreviewBank: Bool { !questions.contains(where: \.releaseEligible) }
 
-    func subjects() -> [String] {
-        Self.officialSubjects
-    }
+    func subjects() -> [String] { Self.officialSubjects }
 
     func questionCount(subject: String) -> Int {
-        questions.filter { $0.subject == subject }.count
+        questions.filter { $0.subject == subject && $0.releaseEligible }.count
     }
 
     func subjectAccuracy(_ subject: String) -> Double {
@@ -109,7 +106,13 @@ final class AppModel: ObservableObject {
             saveState()
             return false
         }
-        activeSession = ActiveSession(ids: validIDs, index: resume.index, correct: 0, title: resume.title, consumesFreeSprint: !premium)
+        activeSession = ActiveSession(
+            ids: validIDs,
+            index: resume.index,
+            correct: resume.correct,
+            title: resume.title,
+            consumesFreeSprint: resume.consumesFreeSprint
+        )
         return true
     }
 
@@ -159,10 +162,7 @@ final class AppModel: ObservableObject {
         saveState()
     }
 
-    func isUnknown(_ id: String) -> Bool {
-        state.attempts[id]?.unknown == true
-    }
-
+    func isUnknown(_ id: String) -> Bool { state.attempts[id]?.unknown == true }
     func dismissResult() { lastResult = nil }
 
     func setDailyGoal(_ goal: Int) {
@@ -197,7 +197,9 @@ final class AppModel: ObservableObject {
         let payload = try decoder.decode(BackupPayload.self, from: data)
         guard payload.schemaVersion == 1,
               [4, 8, 16].contains(payload.state.dailyGoal),
-              ["small", "medium", "large"].contains(payload.state.selectedTextSize) else {
+              ["small", "medium", "large"].contains(payload.state.selectedTextSize),
+              payload.state.totalCorrect <= payload.state.totalAnswered,
+              payload.state.attempts.values.allSatisfy({ $0.correct <= $0.answered }) else {
             throw BackupError.invalid
         }
         let paidGateState = state.freeSprintConsumed
@@ -230,7 +232,13 @@ final class AppModel: ObservableObject {
 
     private func persistResume() {
         guard let session = activeSession else { return }
-        state.resume = ResumeState(questionIDs: session.ids, index: session.index, title: session.title)
+        state.resume = ResumeState(
+            questionIDs: session.ids,
+            index: session.index,
+            correct: session.correct,
+            title: session.title,
+            consumesFreeSprint: session.consumesFreeSprint
+        )
         saveState()
     }
 
@@ -262,15 +270,14 @@ final class AppModel: ObservableObject {
     private func saveState() {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
-        if let data = try? encoder.encode(state) {
-            UserDefaults.standard.set(data, forKey: defaultsKey)
-        }
+        if let data = try? encoder.encode(state) { UserDefaults.standard.set(data, forKey: defaultsKey) }
     }
 }
 
 enum BackupError: LocalizedError {
     case tooLarge
     case invalid
+
     var errorDescription: String? {
         switch self {
         case .tooLarge: return "バックアップは5MB以下にしてください。"
