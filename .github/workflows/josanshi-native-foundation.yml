@@ -24,6 +24,9 @@ jobs:
       - name: Validate official-structure question blueprint
         run: python3 josanshi-sprint/scripts/validate_blueprint.py
 
+      - name: Validate anti-padding generation slots
+        run: python3 josanshi-sprint/scripts/generate_slots.py --check
+
       - name: Assert no WebView primary implementation
         shell: bash
         run: |
