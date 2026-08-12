@@ -12,6 +12,7 @@ settings:
     TARGETED_DEVICE_FAMILY: "1"
     SUPPORTS_MACCATALYST: NO
     CODE_SIGN_STYLE: Automatic
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     YOBI_BUNDLE_ID: UNSET.YOBI.BUNDLE.ID
     YOBI_TEST_BUNDLE_ID: UNSET.YOBI.BUNDLE.ID.tests
     YOBI_UI_TEST_BUNDLE_ID: UNSET.YOBI.BUNDLE.ID.uitests
@@ -30,6 +31,8 @@ targets:
       - path: AppModel.swift
       - path: Theme.swift
       - path: Views.swift
+      - path: Assets.xcassets
+        buildPhase: resources
       - path: Resources
         buildPhase: resources
       - path: PrivacyInfo.xcprivacy
