@@ -105,6 +105,9 @@ final class AppModel: ObservableObject {
             consumesFreeSprint: consumesFreeSprint,
             requiresPremium: requiresPremium
         )
+        if consumesFreeSprint {
+            state.freeSprintConsumed = true
+        }
         persistResume()
         return true
     }
@@ -114,7 +117,11 @@ final class AppModel: ObservableObject {
         guard let resume = state.resume else { return false }
         let requiresPremium = resume.resolvedRequiresPremium
         if requiresPremium && !premium { return false }
-        if !requiresPremium && !premium && state.freeSprintConsumed { return false }
+
+        let usesFreeAccess = !premium && !requiresPremium
+        if usesFreeAccess && state.freeSprintConsumed && !resume.consumesFreeSprint {
+            return false
+        }
 
         let validIDs = resume.questionIDs.filter { id in questions.contains { $0.id == id } }
         guard validIDs.count == resume.questionIDs.count,
@@ -133,9 +140,13 @@ final class AppModel: ObservableObject {
             index: resume.index,
             correct: resume.correct,
             title: resume.title,
-            consumesFreeSprint: !premium && !requiresPremium,
+            consumesFreeSprint: usesFreeAccess,
             requiresPremium: requiresPremium
         )
+        if usesFreeAccess {
+            state.freeSprintConsumed = true
+        }
+        persistResume()
         return true
     }
 
@@ -166,7 +177,6 @@ final class AppModel: ObservableObject {
 
         session.index += 1
         if session.index >= session.ids.count {
-            if session.consumesFreeSprint { state.freeSprintConsumed = true }
             lastResult = SessionResult(title: session.title, answered: session.ids.count, correct: session.correct)
             activeSession = nil
             state.resume = nil
