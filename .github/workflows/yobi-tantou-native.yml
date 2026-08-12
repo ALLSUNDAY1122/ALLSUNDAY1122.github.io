@@ -1,0 +1,41 @@
+name: Yobi Tantou Native iOS
+
+on:
+  pull_request:
+    paths:
+      - 'learning-sprint/yobi-tantou/**'
+      - '.github/workflows/yobi-tantou-native.yml'
+  workflow_dispatch:
+
+jobs:
+  source-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Native source contract
+        run: python learning-sprint/yobi-tantou/audit_native.py
+
+  swift-tests:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        working-directory: learning-sprint/yobi-tantou/ios
+        run: xcodegen generate
+      - name: XCTest on iOS Simulator
+        working-directory: learning-sprint/yobi-tantou/ios
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project YobiTantouSprint.xcodeproj \
+            -scheme YobiTantouSprint \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+            CODE_SIGNING_ALLOWED=NO \
+            YOBI_BUNDLE_ID=jp.ci.yobi.preview \
+            YOBI_TEST_BUNDLE_ID=jp.ci.yobi.preview.tests \
+            | xcpretty
