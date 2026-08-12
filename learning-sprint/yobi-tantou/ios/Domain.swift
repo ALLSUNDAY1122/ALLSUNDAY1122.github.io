@@ -36,7 +36,9 @@ struct DayStat: Codable, Equatable {
 struct ResumeState: Codable, Equatable {
     let questionIDs: [String]
     var index: Int
+    var correct: Int
     let title: String
+    let consumesFreeSprint: Bool
 }
 
 struct PersistentState: Codable, Equatable {
