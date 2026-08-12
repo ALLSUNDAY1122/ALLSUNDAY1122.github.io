@@ -25,19 +25,23 @@
 - 苦手は3連続正解で解除。
 - 中断再開。再開前の正解数を保持。
 - 学習履歴、分野別正答率、5週間ヒートマップ。
-- JSON書出し・読込。5MiB上限と整合性検証。
+- JSON書出し・読込。5MiB上限と件数・再開進捗の整合性検証。
 - 無料スプリント消費状態はバックアップ／リセットで復活不可。
-- StoreKit 2の購入・復元・entitlement確認骨格。本番Product IDは未設定。
-- Privacy Manifest（UserDefaults CA92.1）。
+- Premium専用セッションは途中保存後も再開時に購入資格を再確認。権利失効時の再開バイパスを修正済み。
+- 旧バックアップに `requiresPremium` がない場合も安全側へ移行。
+- StoreKit 2はProduct ID未設定時fail-closed。購入・復元を開始しない。
+- verified transaction、current entitlements、revocation、Transaction.updatesを扱う。
+- Privacy Manifest: Tracking false / collected data none / UserDefaults CA92.1。
 - 8問の非教材UIプレビュー。全問 `releaseEligible=false`。
-- XCTest＋XCUITestとGitHub Actions。
+- XCTest＋XCUITest＋unsigned Release configuration buildをGitHub Actions対象化。
 
-## 教材品質基盤 2026-08-13
+## 教材品質基盤
 
 - `content-loop/source-audit-2026-08-13.md`: R6-R8一次資料の到達状況とReleaseゲート。
+- `content-loop/RIGHTS_AND_CONTENT_POLICY.md`: PDL1.0、第三者権利、CBT体験版二次利用禁止を分離。
 - `content-loop/topic-map.v1.json`: 8科目の独自作問論点マップ。公式出題比率・問題数を推測しない。
 - `content-loop/questions.candidates.v1.json`: 7法律科目×2問、計14問の一次法令ベース独自候補。正式教材ではない。
-- `content-loop/validate_candidates.py`: 件数確定前に候補の必須項目・正答index・一次資料URL・基準日・権利根拠・重複・高類似・Release禁止を検査。
+- `content-loop/validate_candidates.py`: 必須項目・正答index・一次資料URL・基準日・権利根拠・重複・高類似・Release禁止を検査。
 - `content-loop/build_native_release.py`: `audit_status=release_passed` かつ `release_eligible=true` の正式監査済みデータだけをNative形式へ変換。
 - `QuestionRepository.swift`: `questions.release.json` が存在する場合はfail-closed。監査条件を満たさない正式バンクは起動時エラーとし、プレビューへ黙ってフォールバックしない。
 - 法律科目は正式バンクで法令基準日必須。一般教養は法令基準日不要だが、正式変換前に一次資料・権利監査を要求する。
@@ -61,31 +65,73 @@
 - R7（2025）: 2025-01-01
 - R8（2026）: 2026-01-01
 
-## 受入条件
+## AppIcon
 
-1. `audit_native.py` PASS。
-2. candidate preflight実データ PASS。
-3. release builder self-test PASS。
-4. XCTest＋XCUITest PASS。
-5. WebKit/WKWebView 0。
-6. Golden Master v2.1主要UI契約欠損0。
-7. App ID / Bundle ID / IAP Product IDの推測値0。
-8. 正式教材は3回分の年度×科目構成、正答、重複、高類似、根拠、法令基準日、権利根拠が全PASSするまでRelease不可。
-9. R7訂正資料の対象・採点影響を反映済み。
-10. StoreKit購入・復元・無料利用ゲートがテストPASS。
-11. Internal TestFlight実機確認前にRelease監査PASS。
-12. 外部Beta App ReviewとApp Store本審査はユーザー承認前に実行しない。
+正本の確認・固定は完了。
 
-## 現在のリスク・ブロッカー
+- Drive個別PNG: `11_司法試験予備試験_短答式.png`
+- Drive file ID: `1EyeJxBN2WPEjEw9TUszhmyhuk3_3Lu6K`
+- 1024×1024 PNG / 721,851 bytes
+- SHA-256: `c56c3f0acf7e05ec6096fdee881081b7b7e8e863ae2933b496550e902b840bf9`
+- `app-icon-lock.json` で固定。
+- Canonical buildはDriveから正本を直接取得してSHA一致必須。
+- Simulator CIは専用placeholderを生成し、本番正本と分離。
 
-- R6-R8正式問題数・科目別内訳: 公式PDFのページ単位監査待ち。推測しない。
-- R6/R7正答・配点・特殊採点: PDF本文監査待ち。
-- R7誤記訂正: PDF本文監査待ち。
-- R8公式正答・配点: 一次資料取得待ち。
+## App Store準備
+
+作成済み:
+- `privacy/index.html`
+- `support/index.html`
+- `app-store/APP_STORE_METADATA_JA.md`
+- `app-store/APP_REVIEW_NOTES_JA.md`
+- `app-store/STOREKIT_TEST_PLAN.md`
+- `app-store/RELEASE_CHECKLIST.md`
+- `app-store/APPLE_CONNECT_PACKET.md`
+- `validate-app-store-draft.py`
+- `ios/release-preflight.py`
+
+申請原稿は、固定価格0、推測ID0、法務省公式と誤認させる表現0、正式問題数の断定0を条件とする。公開ページはmain統合後にHTTP 200を再検証する。
+
+## Production Releaseハードゲート
+
+次が揃うまで署名工程をBLOCKする。
+
+1. canonical `questions.release.json`
+2. Bundle IDの明示値
+3. App Store Connect App IDの明示値
+4. IAP Product IDの明示値
+5. canonical AppIcon SHA一致
+
+`UNSET`、ビルド変数文字列、`jp.ci.*`、preview識別子は本番preflightで拒否する。
+
+## 現在の受入条件
+
+- [ ] 最新 `audit_native.py` PASS
+- [ ] 最新 candidate preflight実データ PASS
+- [ ] 最新 release builder self-test PASS
+- [ ] 最新 production release preflight self-test PASS
+- [ ] 最新 App Store draft consistency PASS
+- [ ] 最新 XCTest PASS
+- [ ] 最新 XCUITest PASS
+- [ ] 最新 unsigned Release configuration build PASS
+- [x] WebKit/WKWebView 0
+- [x] Golden Master v2.1主要UI契約実装
+- [x] App ID / Bundle ID / IAP Product IDの推測値0
+- [x] 正本AppIconをDrive個別PNGから固定
+- [ ] R6-R8の年度×科目構成・正答・特殊採点を一次資料PDFで確定
+- [ ] R7訂正資料の対象・採点影響を反映
+- [ ] 正式3回分の重複・高類似・正答・根拠・法令基準日・権利根拠FAIL 0
+- [ ] StoreKit Sandbox実機確認
+- [ ] Internal TestFlight実機確認
+- [ ] 外部Beta App Review／App Store本審査はユーザー承認後のみ
+
+## 現在のブロッカー
+
+- 法務省PDF本体: 当開発環境では法務省HTMLが403となり、PDFビューアへ正答・配点・訂正PDFを渡せない。PDF本文を見ずに正式件数・正答を推測しない。
+- R8公式正答・配点: 一次資料本文未確定。
 - 一般教養の第三者文章・図表・写真: 権利処理なしで再利用しない。
-- Bundle ID / App Store Connect App ID / IAP Product ID: ユーザー確認が必要になる最終段階まで未設定を維持。
-- 学びスプリント正本AppIcon #11: 申請工程で個別PNGを取得・SHA固定する。
+- Bundle ID / App Store Connect App ID / IAP Product ID: 正式教材完成後の署名境界まで未設定を維持。
 
 ## 次の大ループ
 
-最新CIをPASSさせる → 法令ベース独自候補を拡張・内容監査 → 公式PDF取得可能になり次第R6-R8正式構成・正答・訂正を確定 → 共通 `validate_questions.py` 用の3回分設定を固定 → 正式バンクを構造・高類似・法令・権利・正答の各監査でFAIL 0にする → Native Release変換 → StoreKit設定直前まで進める。
+最新CIをPASSさせる → 独自候補の内容・法令時点監査を拡張 → 公式PDF本文を取得可能になり次第R6-R8正式構成・正答・訂正を確定 → 共通3回分validator設定固定 → canonical正式バンク監査FAIL 0 → Native Release変換 → 本番識別子確定 → Canonical AppIcon付きsigned IPA → Internal TestFlight実機確認。外部審査は明示承認まで実行しない。
