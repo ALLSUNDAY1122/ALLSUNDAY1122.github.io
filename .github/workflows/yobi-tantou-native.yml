@@ -29,11 +29,14 @@ jobs:
         run: python learning-sprint/yobi-tantou/content-loop/build_native_release.py --self-test
       - name: Production release preflight self-test
         run: python learning-sprint/yobi-tantou/ios/release-preflight.py --self-test
-      - name: AppIcon preparation scripts syntax
+      - name: App Store draft consistency
+        run: python learning-sprint/yobi-tantou/validate-app-store-draft.py
+      - name: AppIcon and release script syntax
         run: |
           bash -n learning-sprint/yobi-tantou/ios/prepare-ios.sh
           python -m py_compile learning-sprint/yobi-tantou/ios/verify_app_icon.py
           python -m py_compile learning-sprint/yobi-tantou/ios/release-preflight.py
+          python -m py_compile learning-sprint/yobi-tantou/validate-app-store-draft.py
 
   swift-tests:
     runs-on: macos-15
