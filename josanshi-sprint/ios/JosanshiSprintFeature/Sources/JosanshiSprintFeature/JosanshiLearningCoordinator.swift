@@ -203,7 +203,10 @@ public final class JosanshiLearningCoordinator: ObservableObject {
             activeSession = state.resumeSession
             return
         }
-        state = try store.importBackup(data, allowContentVersionMigration: true)
+        // Same-version restore preserves resume state. Future content-version
+        // migrations must be explicit because LearningStateStore intentionally
+        // clears resumeSession during migration.
+        state = try store.importBackup(data, allowContentVersionMigration: false)
         activeSession = state.resumeSession
         persistenceErrorDescription = nil
     }
