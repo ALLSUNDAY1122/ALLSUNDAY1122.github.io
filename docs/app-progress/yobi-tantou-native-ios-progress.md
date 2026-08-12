@@ -5,10 +5,12 @@
 ## 正本
 
 - Notion台帳: https://app.notion.com/p/3b609c10697d81ea8021da198988f436
+- 開発正本: https://app.notion.com/p/3ba09c10697d81888b47e05a81d863c1
 - Golden Master v2.1: https://app.notion.com/p/3b609c10697d81f0b3d0f78d160a819f
 - 標準手順 v2.2: https://app.notion.com/p/3a909c10697d81e0961bd0fd27a77d39
 - 問題生成・監査ループ: https://app.notion.com/p/3b609c10697d8148a0c2db3a8c8d5e63
 - GitHub branch: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/tree/feature/yobi-tantou-native-swiftui/learning-sprint/yobi-tantou
+- Draft PR: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/pull/4136
 
 ## v1.0指定との互換性
 
@@ -28,12 +30,21 @@
 - StoreKit 2の購入・復元・entitlement確認骨格。本番Product IDは未設定。
 - Privacy Manifest（UserDefaults CA92.1）。
 - 8問の非教材UIプレビュー。全問 `releaseEligible=false`。
-- XCTestとGitHub Actionsを追加。
+- XCTest＋XCUITestとGitHub Actionsを追加。
+- source-contract は最新CIでPASS確認済み。
+
+## 法令基準日
+
+法務省は令和6年予備試験から、原則として短答式・論文式が行われる年の1月1日現在施行法令を基準とすると公表している。このため対象3回は次で固定する。
+
+- R6（2024）: 2024-01-01
+- R7（2025）: 2025-01-01
+- R8（2026）: 2026-01-01
 
 ## 受入条件
 
 1. `audit_native.py` PASS。
-2. XCTest PASS。
+2. XCTest＋XCUITest PASS。
 3. WebKit/WKWebView 0。
 4. Golden Master v2.1主要UI契約欠損0。
 5. App ID / Bundle ID / IAP Product IDの推測値0。
@@ -44,8 +55,7 @@
 
 ## 現在のリスク・ブロッカー
 
-- 令和6・7・8年度の正式問題数・科目別内訳: 公式PDFのページ単位監査待ち。
-- 令和6・7年の法令基準日: 一次資料確認待ち。
+- 令和6・7・8年度の正式問題数・科目別内訳: 公式PDFのページ単位監査待ち。推測しない。
 - 公式正答・部分点: 一次資料監査待ち。
 - 一般教養等に含まれ得る第三者著作物: 問題単位の権利監査待ち。
 - Bundle ID / App Store Connect App ID / IAP Product ID: 要確認。
@@ -53,4 +63,4 @@
 
 ## 次の大ループ
 
-PRのCIをPASSさせた後、公式R6-R8資料の問題・正答・権利・法令基準日を監査し、`exam-config.pending.json` のnullを一次根拠で確定する。その後、独自短問の論点マップ→正式問題バンク→共通validator→内容/法令/著作権監査をPASSまで反復する。
+PRのCIをPASSさせた後、公式R6-R8資料の問題・正答・権利を監査し、`exam-config.pending.json` の公式問題数nullを一次根拠で確定する。その後、独自短問の論点マップ→正式問題バンク→共通validator→内容/法令/著作権監査をPASSまで反復する。
