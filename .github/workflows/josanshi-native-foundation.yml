@@ -39,7 +39,10 @@ jobs:
       - name: Validate 330-topic generation plan
         run: python3 josanshi-sprint/scripts/build_generation_plan.py --check
 
-      - name: Audit current production question-bank draft
+      - name: Materialize authored question batches onto audited slots
+        run: python3 josanshi-sprint/scripts/materialize_question_bank.py --output josanshi-sprint/data/questions.json
+
+      - name: Audit materialized production question-bank draft
         run: python3 josanshi-sprint/scripts/audit_question_bank.py
 
       - name: Assert no WebView primary implementation
