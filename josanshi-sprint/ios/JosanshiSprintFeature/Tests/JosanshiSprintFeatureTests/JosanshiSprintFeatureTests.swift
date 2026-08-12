@@ -144,6 +144,65 @@ final class JosanshiSprintFeatureTests: XCTestCase {
         XCTAssertEqual(mock.questionIDs, ["M1", "M2"])
     }
 
+    func testQuestionBankDecodeConvertsAuditedRecordToLearningQuestion() throws {
+        let question = makeProductionQuestion(id: "JOS-R1-AM-Q01")
+        let document = JosanshiQuestionBankDocument(
+            status: "draft",
+            questions: [question],
+            scenarios: []
+        )
+        let data = try JSONEncoder().encode(document)
+        let decoded = try JosanshiQuestionBankLoader.decode(data)
+        let learning = try decoded.learningQuestions()
+
+        XCTAssertEqual(decoded.questions.count, 1)
+        XCTAssertEqual(learning.count, 1)
+        XCTAssertEqual(learning[0].id, question.id)
+        XCTAssertEqual(learning[0].answerType, .singleChoice)
+        XCTAssertEqual(learning[0].sourceRefs, ["EGOV-PHN-MIDWIFE-NURSE-ACT"])
+        XCTAssertEqual(learning[0].examRound, "1")
+    }
+
+    func testQuestionBankRejectsSituationQuestionWithoutScenarioRecord() throws {
+        let question = JosanshiProductionQuestion(
+            id: "JOS-R1-AM-Q39",
+            mockRound: 1,
+            session: "AM",
+            slotNumber: 39,
+            questionType: "situation",
+            scenarioId: "JOS-R1-AM-SC01",
+            scenarioIndex: 1,
+            scenarioTotal: 3,
+            subject: "助産診断・技術学",
+            topicId: "DIAGNOSIS-05",
+            intentId: "DIAGNOSIS-05-I1",
+            intentFocus: "妊娠成立の徴候と検査",
+            answerType: "singleChoice",
+            prompt: "症例連結検証用のテスト問題本文です。",
+            choices: ["A", "B", "C", "D"],
+            correctIndices: [0],
+            explanation: "症例レコード欠損時にデコードを拒否するためのテスト用解説です。",
+            memoryPoint: "症例連結を必須化",
+            sourceIds: ["JSOG-OB-GUIDELINE-2026"],
+            sourceCheckedAt: "2026-08-13",
+            lawBaselineDate: "2026-08-13",
+            rightsBasis: "original test wording; no direct reproduction",
+            originType: "original_from_primary_source",
+            contentVersion: JosanshiLocalPersistenceConfiguration.contentVersion,
+            auditStatus: "draft"
+        )
+        let document = JosanshiQuestionBankDocument(
+            status: "draft",
+            questions: [question],
+            scenarios: []
+        )
+        let data = try JSONEncoder().encode(document)
+
+        XCTAssertThrowsError(try JosanshiQuestionBankLoader.decode(data)) { error in
+            XCTAssertEqual(error as? JosanshiQuestionBankError, .brokenScenarioReference(question.id))
+        }
+    }
+
     private func makeQuestions(count: Int) -> [LearningQuestion] {
         var result: [LearningQuestion] = []
         result.reserveCapacity(count)
@@ -183,6 +242,33 @@ final class JosanshiSprintFeatureTests: XCTestCase {
             examRound: examRound,
             questionNumber: id,
             rightsBasis: "test-only"
+        )
+    }
+
+    private func makeProductionQuestion(id: String) -> JosanshiProductionQuestion {
+        JosanshiProductionQuestion(
+            id: id,
+            mockRound: 1,
+            session: "AM",
+            slotNumber: 1,
+            questionType: "general",
+            subject: "基礎助産学",
+            topicId: "BASIC-01",
+            intentId: "BASIC-01-I1",
+            intentFocus: "助産・助産師の定義と法的位置付け",
+            answerType: "singleChoice",
+            prompt: "助産師の定義について確認するテスト問題本文です。",
+            choices: ["正解", "誤りA", "誤りB", "誤りC"],
+            correctIndices: [0],
+            explanation: "本番問題バンクからLearningQuestionへの変換を確認するテスト用の独自解説です。",
+            memoryPoint: "変換テスト",
+            sourceIds: ["EGOV-PHN-MIDWIFE-NURSE-ACT"],
+            sourceCheckedAt: "2026-08-13",
+            lawBaselineDate: "2026-08-13",
+            rightsBasis: "original test wording; no direct reproduction",
+            originType: "original_from_primary_source",
+            contentVersion: JosanshiLocalPersistenceConfiguration.contentVersion,
+            auditStatus: "draft"
         )
     }
 }
