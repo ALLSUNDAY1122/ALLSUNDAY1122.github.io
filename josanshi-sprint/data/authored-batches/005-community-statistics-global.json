@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.0",
+  "batchId": "005-community-statistics-global",
+  "checkedAt": "2026-08-13",
+  "questions": [
+    {
+      "intentId": "COMMUNITY-02-I1",
+      "answerType": "singleChoice",
+      "prompt": "厚生労働省の人口動態調査で継続的に把握される事象の組合せとして、正しいのはどれか。",
+      "choices": [
+        "出生・死亡・死産・婚姻・離婚",
+        "出生・学校健診・失業・転居・介護認定",
+        "死亡・交通事故・就職・退職・入院",
+        "妊娠届・予防接種・保育所入所・就学・転校"
+      ],
+      "correctIndices": [0],
+      "explanation": "人口動態調査は、出生、死亡、死産、婚姻、離婚という人口動態事象を把握する基幹統計である。母子保健では出生や死産、乳児・新生児死亡などの動向を理解する基礎資料として利用される。",
+      "memoryPoint": "人口動態調査の5事象＝出生・死亡・死産・婚姻・離婚。",
+      "sourceIds": ["CFA-MATERNAL-CHILD-HEALTH", "MHLW-VITAL-STATISTICS"],
+      "sourceCheckedAt": "2026-08-13",
+      "lawBaselineDate": "2026-08-13",
+      "rightsBasis": "original wording from verified official statistical definitions; no direct reproduction",
+      "originType": "original_from_primary_source",
+      "contentVersion": "josanshi-content-v1",
+      "auditStatus": "content-reviewed",
+      "evidenceNote": "厚生労働省人口動態調査の概要・調査対象事象を確認。"
+    },
+    {
+      "intentId": "COMMUNITY-02-I2",
+      "answerType": "singleChoice",
+      "prompt": "厚生労働統計で用いる母子保健関連の死亡指標について、正しい組合せはどれか。",
+      "choices": [
+        "乳児死亡＝生後4週未満、新生児死亡＝1歳未満",
+        "新生児死亡＝生後4週未満、早期新生児死亡＝生後1週未満",
+        "周産期死亡＝妊娠12週以後の死産だけを数える",
+        "妊産婦死亡率＝出生千対で算出する"
+      ],
+      "correctIndices": [1],
+      "explanation": "厚生労働統計では、新生児死亡は生後4週未満、早期新生児死亡は生後1週未満の死亡を指す。乳児死亡は1歳未満である。周産期死亡は妊娠満22週以後の死産と早期新生児死亡を用いて算出し、妊産婦死亡率は出生10万対で表す。",
+      "memoryPoint": "新生児＜4週、早期新生児＜1週、乳児＜1歳。",
+      "sourceIds": ["CFA-INFANT-GROWTH-2023", "MHLW-VITAL-RATES"],
+      "sourceCheckedAt": "2026-08-13",
+      "lawBaselineDate": "2026-08-13",
+      "rightsBasis": "original wording from verified official statistical definitions; no direct reproduction",
+      "originType": "original_from_primary_source",
+      "contentVersion": "josanshi-content-v1",
+      "auditStatus": "content-reviewed",
+      "evidenceNote": "厚生労働統計に用いる主な比率及び用語の解説で死亡指標を確認。"
+    },
+    {
+      "intentId": "COMMUNITY-02-I3",
+      "answerType": "singleChoice",
+      "prompt": "2024年の人口動態統計の確定数について、正しいのはどれか。",
+      "choices": [
+        "出生数は686,173人で、合計特殊出生率は1.15であった",
+        "出生数は1,000,000人を超え、合計特殊出生率は2.00を超えた",
+        "出生数は前年より増加し、合計特殊出生率も前年より上昇した",
+        "出生数は減少したが、合計特殊出生率は1.50を超えた"
+      ],
+      "correctIndices": [0],
+      "explanation": "厚生労働省の2024年人口動態統計確定数では、出生数は686,173人で前年より減少し、合計特殊出生率は1.15で前年の1.20から低下した。数値問題では『何年の確定値か』を明記し、後年の速報値や別年の数値と混同しないことが重要である。",
+      "memoryPoint": "2024年確定：出生686,173人、合計特殊出生率1.15。",
+      "sourceIds": ["CFA-MATERNAL-CHILD-HEALTH", "MHLW-VITAL-2024-FINAL"],
+      "sourceCheckedAt": "2026-08-13",
+      "lawBaselineDate": "2024-12-31",
+      "rightsBasis": "original wording from verified official final statistics; no direct reproduction",
+      "originType": "original_from_primary_source",
+      "contentVersion": "josanshi-content-v1",
+      "auditStatus": "content-reviewed",
+      "evidenceNote": "令和6年人口動態統計（確定数）の結果概要で出生数686,173人、TFR1.15を確認。"
+    },
+    {
+      "intentId": "COMMUNITY-02-I4",
+      "answerType": "singleChoice",
+      "prompt": "地域における不妊症・不育症への支援として、現在のこども家庭庁の取組に沿うのはどれか。",
+      "choices": [
+        "医学的相談だけに限定し、心理的な悩みやピアサポートは扱わない",
+        "性と健康の相談センターなどで、医学的・専門的な相談や心理社会的な支援を行う",
+        "不妊症・不育症は母子保健施策の対象外である",
+        "相談支援は妊娠成立後にのみ開始する"
+      ],
+      "correctIndices": [1],
+      "explanation": "こども家庭庁は、不妊症・不育症への相談支援を母子保健施策の一部として推進している。性と健康の相談センターでは、不妊症・不育症に関する医学的・専門的相談に加え、経験者によるピアサポート等も行われている。",
+      "memoryPoint": "不妊・不育支援は医学情報だけでなく、相談・心理社会的支援も含む。",
+      "sourceIds": ["CFA-MATERNAL-CHILD-HEALTH", "CFA-PRECON-5YEAR"],
+      "sourceCheckedAt": "2026-08-13",
+      "lawBaselineDate": "2026-08-13",
+      "rightsBasis": "original wording from verified current public-policy facts; no direct reproduction",
+      "originType": "original_from_primary_source",
+      "contentVersion": "josanshi-content-v1",
+      "auditStatus": "content-reviewed",
+      "evidenceNote": "こども家庭庁の母子保健・不育症・性と健康の相談センター現行ページを確認。"
+    },
+    {
+      "intentId": "COMMUNITY-02-I5",
+      "answerType": "singleChoice",
+      "prompt": "国連のSDG 3（すべての人に健康と福祉を）の母子・リプロダクティブヘルスに関する目標として、正しいのはどれか。",
+      "choices": [
+        "妊産婦死亡の削減や、性と生殖に関する保健サービスへのアクセス向上を含む",
+        "母子保健は対象外で、感染症だけを扱う",
+        "家族計画や性と生殖に関する情報・教育は対象外である",
+        "新生児・5歳未満児の予防可能な死亡を減らす目標は含まれない"
+      ],
+      "correctIndices": [0],
+      "explanation": "SDG 3には、世界の妊産婦死亡率の低下、予防可能な新生児・5歳未満児死亡の終結、家族計画を含む性と生殖に関する保健サービス・情報・教育への普遍的アクセスなどが含まれている。地域母子保健は国内施策だけでなく、国際的な健康目標とも関連する。",
+      "memoryPoint": "SDG3は妊産婦死亡、新生児・小児死亡、性と生殖の健康へのアクセスを含む。",
+      "sourceIds": ["CFA-MATERNAL-CHILD-HEALTH", "UN-SDG3"],
+      "sourceCheckedAt": "2026-08-13",
+      "lawBaselineDate": "2026-08-13",
+      "rightsBasis": "original Japanese wording from verified UN target concepts; no direct reproduction",
+      "originType": "original_from_primary_source",
+      "contentVersion": "josanshi-content-v1",
+      "auditStatus": "content-reviewed",
+      "evidenceNote": "国連SDG3のtargets 3.1, 3.2, 3.7を確認。"
+    }
+  ],
+  "scenarios": []
+}
