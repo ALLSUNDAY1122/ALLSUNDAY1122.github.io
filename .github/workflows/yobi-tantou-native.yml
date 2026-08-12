@@ -23,6 +23,8 @@ jobs:
         run: python learning-sprint/yobi-tantou/audit_native.py
       - name: Candidate question preflight self-test
         run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py --self-test
+      - name: Candidate question bank preflight
+        run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py learning-sprint/yobi-tantou/content-loop/questions.candidates.v1.json
 
   swift-tests:
     runs-on: macos-15
