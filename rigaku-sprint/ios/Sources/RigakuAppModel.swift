@@ -11,6 +11,7 @@ final class RigakuAppModel: ObservableObject {
     @Published var lastError: String?
 
     private let store: LearningStateStore?
+    private var examScoringRepository: RigakuExamScoringRepository?
 
     init(bundleIdentifier: String? = Bundle.main.bundleIdentifier) {
         self.state = LearningState(contentVersion: RigakuAppConfiguration.contentVersion)
@@ -39,6 +40,15 @@ final class RigakuAppModel: ObservableObject {
             self.mediaByQuestionID = [:]
             if self.lastError == nil {
                 self.lastError = "監査済み問題データを読み込めませんでした。"
+            }
+        }
+
+        do {
+            self.examScoringRepository = try RigakuExamScoringRepository.loadBundled()
+        } catch {
+            self.examScoringRepository = nil
+            if self.lastError == nil {
+                self.lastError = "模試採点正本を読み込めませんでした。"
             }
         }
     }
@@ -89,6 +99,22 @@ final class RigakuAppModel: ObservableObject {
         mediaByQuestionID[questionID]
     }
 
+    func officialPoints(for questionID: String) -> Int? {
+        examScoringRepository?.points(for: questionID)
+    }
+
+    func mockScore(
+        round: String,
+        questions: [LearningQuestion],
+        correctness: [String: Bool]
+    ) -> RigakuMockScore? {
+        examScoringRepository?.score(
+            round: round,
+            questions: questions,
+            correctness: correctness
+        )
+    }
+
     func questions(for kind: SessionKind) -> [LearningQuestion] {
         switch kind {
         case .sprint:
@@ -129,6 +155,18 @@ final class RigakuAppModel: ObservableObject {
         guard let snapshot = state.resumeSession else { return [] }
         let byID = Dictionary(uniqueKeysWithValues: questions.map { ($0.id, $0) })
         return snapshot.questionIDs.compactMap { byID[$0] }
+    }
+
+    func resumeCorrectness() -> [String: Bool] {
+        guard let snapshot = state.resumeSession else { return [:] }
+        let byID = Dictionary(uniqueKeysWithValues: questions.map { ($0.id, $0) })
+        var result: [String: Bool] = [:]
+        for (questionID, answer) in snapshot.answers {
+            guard let question = byID[questionID],
+                  let evaluation = try? LearningEngine.evaluate(question, answer: answer) else { continue }
+            result[questionID] = evaluation.isCorrect
+        }
+        return result
     }
 
     @discardableResult
