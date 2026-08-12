@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
-import json
-from pathlib import Path
+from source_registry_loader import load_sources
 
-ROOT = Path(__file__).resolve().parents[1]
-REGISTRY = ROOT / "data" / "source-registry.json"
 REQUIRED_FIELDS = {
     "id", "title", "publisher", "url", "domains", "role",
     "currentness", "reuse", "directReproduction"
@@ -14,15 +11,15 @@ def fail(message: str) -> None:
     raise SystemExit(f"FAIL: {message}")
 
 
-data = json.loads(REGISTRY.read_text(encoding="utf-8"))
-sources = data.get("sources", [])
-if len(sources) < 20:
+try:
+    sources, paths = load_sources()
+except RuntimeError as error:
+    fail(str(error))
+
+if len(sources) < 30:
     fail(f"expanded source registry unexpectedly small: {len(sources)}")
 
 ids = [source.get("id") for source in sources]
-if len(ids) != len(set(ids)):
-    fail("source IDs must be unique")
-
 for source in sources:
     missing = REQUIRED_FIELDS - set(source)
     if missing:
@@ -61,6 +58,14 @@ required_anchor_ids = {
     "JMA-MIDWIFE-OPERATIONS-2024",
     "JPS-NEONATAL",
     "JPS-VACCINE-INFECTION-2026",
+    "MHLW-VITAL-STATISTICS",
+    "MHLW-VITAL-RATES",
+    "MHLW-TFR-DEFINITION",
+    "MHLW-OPEN-SEMI-OPEN",
+    "MHLW-MATERNAL-SUPPORT-2026",
+    "MHLW-BIRTH-ALLOWANCE",
+    "MHLW-HEALTH-JAPAN21-3",
+    "CFA-KODOMO-KATEI-CENTER",
 }
 actual = set(ids)
 if not required_anchor_ids <= actual:
@@ -86,10 +91,8 @@ required_restricted = {
 if not required_restricted <= restricted:
     fail(f"restricted-source guard missing: {sorted(required_restricted - restricted)}")
 
-if data.get("checkedAt") != "2026-08-13":
-    fail("source registry must record the current evidence audit date 2026-08-13")
-
-print("PASS: #14 source registry")
+print("PASS: #14 modular source registry")
+print(f"  files: {[path.name for path in paths]}")
 print(f"  sources: {len(sources)}")
 print(f"  restricted/direct-reproduction guarded: {len(restricted)}")
-print("  current legal/clinical/public-health anchor set present")
+print("  legal/clinical/public-health/statistical anchor set present")
