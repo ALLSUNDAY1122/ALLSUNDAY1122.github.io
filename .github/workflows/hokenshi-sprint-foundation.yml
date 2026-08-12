@@ -1,0 +1,49 @@
+name: Hokenshi Sprint Native Foundation
+
+on:
+  pull_request:
+    paths:
+      - 'hokenshi-sprint/**'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/hokenshi-sprint-foundation.yml'
+  push:
+    branches:
+      - feat/hokenshi-sprint-native-foundation
+    paths:
+      - 'hokenshi-sprint/**'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/hokenshi-sprint-foundation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hokenshi-foundation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-foundation:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show Swift version
+        run: swift --version
+      - name: Shared LearningSprintCore tests
+        run: |
+          cd native-ios/LearningSprintCore
+          swift test
+      - name: Hokenshi native feature tests
+        run: |
+          cd hokenshi-sprint/NativePackage
+          swift test
+      - name: Block WebView based implementation
+        run: |
+          if grep -R --line-number -E 'WKWebView|import WebKit|UIViewRepresentable' hokenshi-sprint/NativePackage/Sources; then
+            echo 'WebView-based implementation is forbidden for this app.'
+            exit 1
+          fi
+      - name: Verify no guessed App Store identifiers
+        run: |
+          ! grep -R --line-number -E 'PRODUCT_BUNDLE_IDENTIFIER|App Store Connect App ID|jp\.allsunday1122\.[A-Za-z0-9_-]+\.premium' hokenshi-sprint/NativePackage/Sources
