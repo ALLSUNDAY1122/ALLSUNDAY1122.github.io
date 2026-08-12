@@ -7,6 +7,10 @@ on:
       - '.github/workflows/yobi-tantou-native.yml'
   workflow_dispatch:
 
+concurrency:
+  group: yobi-tantou-native-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   source-contract:
     runs-on: ubuntu-latest
