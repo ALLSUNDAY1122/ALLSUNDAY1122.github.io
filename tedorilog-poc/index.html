@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>手取りログ Phase A PoC｜給与明細 取込検証</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header class="head">
+  <h1>手取りログ Phase A PoC</h1>
+  <p class="sub">給与明細（PDF / 画像）の取込が商品価値として成立するかの検証用。使い捨てのPoCであり本番実装ではありません。</p>
+  <p class="privacy">解析はすべてこの端末内で完結します。明細の画像・PDF・認識結果を外部へ送信しません（AI API・OCR APIを含む）。</p>
+</header>
+
+<nav class="steps" aria-label="手順">
+  <span class="step" data-step="a">A 入力</span>
+  <span class="step" data-step="b">B 解析結果の確認</span>
+  <span class="step" data-step="c">C 結果</span>
+</nav>
+
+<!-- 画面A -->
+<section id="screen-a" class="screen">
+  <h2>画面A｜入力</h2>
+  <div class="pickers">
+    <label class="picker">
+      <span class="picker-title">PDFを選ぶ</span>
+      <span class="picker-note">テキスト埋込PDFはOCRを使わず直接解析します</span>
+      <input type="file" id="file-pdf" accept="application/pdf">
+    </label>
+    <label class="picker">
+      <span class="picker-title">写真を選ぶ</span>
+      <span class="picker-note">紙の明細をカメラで撮影したもの</span>
+      <input type="file" id="file-photo" accept="image/*">
+    </label>
+    <label class="picker">
+      <span class="picker-title">スクリーンショットを選ぶ</span>
+      <span class="picker-note">Web明細の画面キャプチャ</span>
+      <input type="file" id="file-shot" accept="image/*">
+    </label>
+  </div>
+
+  <div class="corpus">
+    <h3>固定コーパスから読み込む（10形式の評価用サンプル）</h3>
+    <p class="note">
+      画像の文字認識は本番では端末内のApple Visionで行います。ブラウザPoCではOCRエンジンを積まないため、
+      画像・スキャンPDFはローカルOCR済みのサンプル（合成データ）を再生して確認します。
+      テキスト埋込PDFはこの画面でも実際に解析します。
+    </p>
+    <div class="corpus-row">
+      <select id="corpus-select"></select>
+      <button id="btn-corpus" type="button">このサンプルを取り込む</button>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="btn-start" type="button" class="primary" disabled>取込開始</button>
+    <span id="selected-file" class="note"></span>
+  </div>
+  <p id="input-error" class="error" hidden></p>
+</section>
+
+<!-- 画面B -->
+<section id="screen-b" class="screen" hidden>
+  <h2>画面B｜解析結果の確認</h2>
+  <p class="banner" id="review-banner"></p>
+  <div class="review">
+    <div class="items" id="items"></div>
+    <aside class="preview">
+      <h3>原文の該当箇所</h3>
+      <p class="note" id="preview-note">項目名をタップすると、読み取り元の位置を表示します。</p>
+      <div class="preview-frame" id="preview-frame">
+        <canvas id="preview-canvas" hidden></canvas>
+        <img id="preview-image" alt="取り込んだ明細" hidden>
+        <div id="preview-overlay" class="overlay"></div>
+      </div>
+    </aside>
+  </div>
+  <div class="actions">
+    <button id="btn-confirm-all" type="button">表示どおりで全項目を確認済みにする</button>
+    <button id="btn-save" type="button" class="primary">確認した内容で保存する</button>
+    <button id="btn-back" type="button" class="ghost">入力へ戻る</button>
+  </div>
+  <p id="save-error" class="error" hidden></p>
+</section>
+
+<!-- 画面C -->
+<section id="screen-c" class="screen" hidden>
+  <h2>画面C｜結果</h2>
+  <dl class="result" id="result-summary"></dl>
+  <h3>保存された内容（明細の画像・原文は保存しません）</h3>
+  <pre id="result-json"></pre>
+  <div class="actions">
+    <button id="btn-restart" type="button" class="primary">別の明細を取り込む</button>
+  </div>
+</section>
+
+<footer class="foot">
+  <p>状態の意味：<b class="badge confident">確定候補</b> 検算で裏付けが取れた候補／<b class="badge review">要確認</b> 値の確認が必要／<b class="badge missing">未検出</b> 見つからなかった項目。
+  いずれの状態でも、ユーザーが確認するまで保存されません。</p>
+</footer>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>
