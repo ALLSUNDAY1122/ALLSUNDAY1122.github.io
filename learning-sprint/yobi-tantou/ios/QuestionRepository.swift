@@ -32,6 +32,7 @@ struct QuestionRepository {
     static let officialSubjects: Set<String> = [
         "憲法", "行政法", "民法", "商法", "民事訴訟法", "刑法", "刑事訴訟法", "一般教養"
     ]
+    static let legalSubjects = officialSubjects.subtracting(["一般教養"])
 
     private let decoder = JSONDecoder()
 
@@ -93,10 +94,15 @@ struct QuestionRepository {
         guard question.releaseEligible,
               question.originType != "original_preview",
               Self.officialSubjects.contains(question.subject),
-              question.examYear != nil,
-              let lawBasisDate = question.lawBasisDate,
-              isISODate(lawBasisDate) else {
+              question.examYear != nil else {
             throw QuestionBankError.invalidReleaseGate(question.id)
+        }
+
+        if Self.legalSubjects.contains(question.subject) {
+            guard let lawBasisDate = question.lawBasisDate,
+                  isISODate(lawBasisDate) else {
+                throw QuestionBankError.invalidReleaseGate(question.id)
+            }
         }
     }
 
