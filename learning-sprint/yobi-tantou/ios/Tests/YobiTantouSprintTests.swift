@@ -13,13 +13,14 @@ final class YobiTantouSprintTests: XCTestCase {
 
     private func releaseQuestion(
         id: String = "YOBI-RELEASE-001",
+        subject: String = "憲法",
         releaseEligible: Bool = true,
         lawBasisDate: String? = "2026-01-01"
     ) -> StudyQuestion {
         StudyQuestion(
             id: id,
             examYear: 2026,
-            subject: "憲法",
+            subject: subject,
             topic: "テスト用正式教材ゲート",
             stem: "正式教材バンクの構造テストです。",
             choices: ["正しい", "誤り"],
@@ -57,11 +58,18 @@ final class YobiTantouSprintTests: XCTestCase {
         }
     }
 
-    func testReleaseRepositoryRejectsMissingLawBasisDate() throws {
+    func testReleaseRepositoryRejectsMissingLawBasisDateForLegalSubject() throws {
         let data = try JSONEncoder().encode([releaseQuestion(lawBasisDate: nil)])
         XCTAssertThrowsError(try QuestionRepository().decode(data, kind: .release)) { error in
             XCTAssertEqual(error as? QuestionBankError, .invalidReleaseGate("YOBI-RELEASE-001"))
         }
+    }
+
+    func testReleaseRepositoryAllowsGeneralEducationWithoutLawBasisDate() throws {
+        let data = try JSONEncoder().encode([releaseQuestion(subject: "一般教養", lawBasisDate: nil)])
+        let decoded = try QuestionRepository().decode(data, kind: .release)
+        XCTAssertEqual(decoded.first?.subject, "一般教養")
+        XCTAssertNil(decoded.first?.lawBasisDate)
     }
 
     func testReleaseRepositoryRejectsDuplicateIDs() throws {
