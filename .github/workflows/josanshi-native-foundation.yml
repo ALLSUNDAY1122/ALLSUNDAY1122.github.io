@@ -21,6 +21,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Validate official-structure question blueprint
+        run: python3 josanshi-sprint/scripts/validate_blueprint.py
+
       - name: Assert no WebView primary implementation
         shell: bash
         run: |
