@@ -27,6 +27,9 @@ jobs:
       - name: Validate anti-padding generation slots
         run: python3 josanshi-sprint/scripts/generate_slots.py --check
 
+      - name: Validate current-source and rights registry
+        run: python3 josanshi-sprint/scripts/validate_sources.py
+
       - name: Assert no WebView primary implementation
         shell: bash
         run: |
