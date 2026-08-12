@@ -14,7 +14,7 @@ final class YobiTantouSprintUITests: XCTestCase {
         XCTAssertTrue(app.buttons["模試"].exists)
         XCTAssertTrue(app.buttons["記録"].exists)
         XCTAssertTrue(app.buttons["設定"].exists)
-        XCTAssertTrue(app.buttons["8問UIプレビュー"].exists)
+        XCTAssertTrue(app.staticTexts["8問UIプレビュー"].exists)
         XCTAssertTrue(app.staticTexts["分野から解く"].exists)
     }
 
