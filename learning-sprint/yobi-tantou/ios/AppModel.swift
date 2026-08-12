@@ -48,6 +48,11 @@ final class AppModel: ObservableObject {
         questions.filter { $0.subject == subject && $0.releaseEligible }.count
     }
 
+    func mockSelectionSummary(year: Int) -> MockSelectionSummary {
+        let yearQuestions = questions.filter { $0.releaseEligible && $0.examYear == year }
+        return MockSelectionPolicy.summary(for: yearQuestions)
+    }
+
     func subjectAccuracy(_ subject: String) -> Double {
         let ids = Set(questions.filter { $0.subject == subject }.map(\.id))
         let attempts = state.attempts.filter { ids.contains($0.key) }.map(\.value)
@@ -90,7 +95,8 @@ final class AppModel: ObservableObject {
             requiresPremium = true
         case .mock(let year):
             guard premium else { return false }
-            chosen = questions.filter { $0.releaseEligible && $0.examYear == year }
+            let yearQuestions = questions.filter { $0.releaseEligible && $0.examYear == year }
+            chosen = MockSelectionPolicy.select(from: yearQuestions)
             title = "令和\(year - 2018)年 模擬試験"
             consumesFreeSprint = false
             requiresPremium = true
