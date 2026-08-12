@@ -13,7 +13,7 @@ on:
       - '.github/workflows/kanteishi-shortanswer-12.yml'
 
 jobs:
-  core-tests:
+  core-and-content:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,6 +23,12 @@ jobs:
       - name: Swift core tests
         working-directory: kanteishi-shortanswer-sprint/core
         run: swift test
+      - name: Production 240-slot manifest
+        run: python3 kanteishi-shortanswer-sprint/scripts/validate_slot_manifest.py kanteishi-shortanswer-sprint/data/production-slot-manifest.json
+      - name: Prepare prototype audit array
+        run: jq '.questions' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Resources/questions.prototype.json > kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Resources/questions.audit.json
+      - name: Shared question pipeline
+        run: python3 automation/learning-sprint-question-pipeline/validate_questions.py kanteishi-shortanswer-sprint/learning-sprint-audit.prototype.json
       - name: Native implementation guard
         run: |
           if grep -R -nE 'WKWebView|UIWebView' kanteishi-shortanswer-sprint/ios; then
@@ -37,3 +43,25 @@ jobs:
             echo 'Unconfirmed Bundle ID or StoreKit Product ID detected in source.'
             exit 1
           fi
+      - name: Prototype must remain non-release
+        run: |
+          grep -q 'production_target_only' kanteishi-shortanswer-sprint/data/production-slot-manifest.json
+          grep -q '公開不可' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Resources/questions.prototype.json
+
+  native-typecheck:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: SwiftUI iOS Simulator typecheck
+        run: |
+          SDK="$(xcrun --sdk iphonesimulator --show-sdk-path)"
+          xcrun swiftc -typecheck -parse-as-library \
+            -target arm64-apple-ios17.0-simulator \
+            -sdk "$SDK" \
+            kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/AppTheme.swift \
+            kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/AppCore.swift \
+            kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/PremiumPurchaseStore.swift \
+            kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/ContentView.swift \
+            kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/QuizResultViews.swift \
+            kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/HistorySettingsViews.swift \
+            kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/KanteishiShortAnswerApp.swift
