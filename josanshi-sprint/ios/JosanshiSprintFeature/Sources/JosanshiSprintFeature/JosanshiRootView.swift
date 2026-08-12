@@ -1,10 +1,15 @@
 import SwiftUI
 import LearningSprintCore
 
+@MainActor
 public struct JosanshiRootView: View {
     @StateObject private var model: JosanshiDashboardModel
 
-    public init(model: JosanshiDashboardModel = JosanshiDashboardModel()) {
+    public init() {
+        _model = StateObject(wrappedValue: JosanshiDashboardModel())
+    }
+
+    public init(model: JosanshiDashboardModel) {
         _model = StateObject(wrappedValue: model)
     }
 
