@@ -1,0 +1,52 @@
+import Foundation
+
+enum RigakuAppConfiguration {
+    static let qualificationName = "理学療法士国家試験"
+    static let seriesName = "学びスプリント"
+    static let contentVersion = "0.1.0-dev"
+    static let defaultDailyTarget = 8
+    static let allowedDailyTargets = [4, 8, 16]
+
+    struct ExamRound: Identifiable, Equatable {
+        let round: Int
+        let officialQuestionCount: Int?
+        let publicationStatus: PublicationStatus
+
+        var id: Int { round }
+    }
+
+    enum PublicationStatus: String, Equatable {
+        case verifiedPublished
+        case pendingPdfAudit
+        case problemTextNotConfirmed
+    }
+
+    static let examRounds: [ExamRound] = [
+        .init(round: 60, officialQuestionCount: 200, publicationStatus: .verifiedPublished),
+        .init(round: 59, officialQuestionCount: nil, publicationStatus: .pendingPdfAudit),
+        .init(round: 58, officialQuestionCount: nil, publicationStatus: .pendingPdfAudit)
+    ]
+
+    static let generalSubjects = [
+        "解剖学",
+        "生理学",
+        "運動学",
+        "病理学概論",
+        "臨床心理学",
+        "リハビリテーション医学",
+        "臨床医学大要",
+        "理学療法"
+    ]
+
+    static let practicalSubjects = [
+        "運動学",
+        "臨床心理学",
+        "リハビリテーション医学",
+        "臨床医学大要",
+        "理学療法"
+    ]
+
+    static var runtimeBundleIdentifier: String? {
+        Bundle.main.bundleIdentifier
+    }
+}
