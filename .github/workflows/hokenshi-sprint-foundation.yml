@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Python syntax
-        run: python3 -m py_compile hokenshi-sprint/scripts/build_question_plan.py hokenshi-sprint/scripts/validate_question_plan.py hokenshi-sprint/scripts/validate_authored_batch.py hokenshi-sprint/scripts/validate_authored_coverage.py
+        run: python3 -m py_compile hokenshi-sprint/scripts/build_question_plan.py hokenshi-sprint/scripts/validate_question_plan.py hokenshi-sprint/scripts/validate_authored_batch.py hokenshi-sprint/scripts/validate_authored_coverage.py hokenshi-sprint/scripts/validate_current_guidance_recheck.py
       - name: Build 330-question structural inventory
         run: python3 hokenshi-sprint/scripts/build_question_plan.py
       - name: Validate exam/subject/scenario allocation
@@ -38,6 +38,8 @@ jobs:
         run: python3 hokenshi-sprint/scripts/validate_authored_batch.py hokenshi-sprint/content/authored/*.json
       - name: Verify authored records match canonical plan
         run: python3 hokenshi-sprint/scripts/validate_authored_coverage.py
+      - name: Recheck current PHN guidance
+        run: python3 hokenshi-sprint/scripts/validate_current_guidance_recheck.py
 
   native-foundation:
     needs: content-plan
