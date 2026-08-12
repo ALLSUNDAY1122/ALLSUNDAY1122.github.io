@@ -209,19 +209,55 @@ final class RigakuAppModel: ObservableObject {
     }
 
     private static func examQuestionOrder(_ lhs: LearningQuestion, _ rhs: LearningQuestion) -> Bool {
-        let lhsNumber = Int(lhs.questionNumber ?? "") ?? .max
-        let rhsNumber = Int(rhs.questionNumber ?? "") ?? .max
-        if lhsNumber != rhsNumber { return lhsNumber < rhsNumber }
+        let lhsKey = examOrderKey(lhs)
+        let rhsKey = examOrderKey(rhs)
+        if lhsKey != rhsKey { return lhsKey < rhsKey }
         return lhs.id < rhs.id
+    }
+
+    private static func examOrderKey(_ question: LearningQuestion) -> Int {
+        // RIGAKU-R60-AM-001 / RIGAKU-R60-PM-001 のIDを正本とし、
+        // 午前1...100の後に午後1...100が並ぶようにする。
+        let components = question.id.split(separator: "-")
+        if components.count >= 4 {
+            let sessionOffset = components[2] == "PM" ? 100 : 0
+            if let number = Int(components[3]) {
+                return sessionOffset + number
+            }
+        }
+        return Int(question.questionNumber ?? "") ?? .max
     }
 }
 
 enum RigakuQuestionRepository {
     static func loadBundled(bundle: Bundle = .main) throws -> [LearningQuestion] {
-        guard let url = bundle.url(forResource: "questions", withExtension: "json") else {
-            return []
+        let decoder = JSONDecoder()
+        var result: [LearningQuestion] = []
+        var loadedURLs = Set<URL>()
+
+        if let mainURL = bundle.url(forResource: "questions", withExtension: "json") {
+            let data = try Data(contentsOf: mainURL)
+            result.append(contentsOf: try decoder.decode([LearningQuestion].self, from: data))
+            loadedURLs.insert(mainURL)
         }
-        let data = try Data(contentsOf: url)
-        return try JSONDecoder().decode([LearningQuestion].self, from: data)
+
+        let candidateURLs = (bundle.urls(forResourcesWithExtension: "json", subdirectory: "question-batches") ?? [])
+            + (bundle.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? [])
+
+        for url in candidateURLs.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
+            guard url.lastPathComponent.hasPrefix("questions-") else { continue }
+            guard !loadedURLs.contains(url) else { continue }
+            let data = try Data(contentsOf: url)
+            result.append(contentsOf: try decoder.decode([LearningQuestion].self, from: data))
+            loadedURLs.insert(url)
+        }
+
+        let ids = result.map(\.id)
+        guard ids.count == Set(ids).count else {
+            throw CocoaError(.fileReadCorruptFile, userInfo: [
+                NSLocalizedDescriptionKey: "問題IDが重複しています。"
+            ])
+        }
+        return result
     }
 }
