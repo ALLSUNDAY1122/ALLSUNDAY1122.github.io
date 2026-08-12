@@ -39,6 +39,9 @@ jobs:
       - name: Validate 330-topic generation plan
         run: python3 josanshi-sprint/scripts/build_generation_plan.py --check
 
+      - name: Audit current production question-bank draft
+        run: python3 josanshi-sprint/scripts/audit_question_bank.py
+
       - name: Assert no WebView primary implementation
         shell: bash
         run: |
