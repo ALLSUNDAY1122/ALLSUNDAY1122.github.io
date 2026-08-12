@@ -22,7 +22,10 @@ let package = Package(
         ),
         .testTarget(
             name: "JosanshiSprintFeatureTests",
-            dependencies: ["JosanshiSprintFeature"]
+            dependencies: [
+                "JosanshiSprintFeature",
+                .product(name: "LearningSprintCore", package: "LearningSprintCore")
+            ]
         )
     ]
 )
