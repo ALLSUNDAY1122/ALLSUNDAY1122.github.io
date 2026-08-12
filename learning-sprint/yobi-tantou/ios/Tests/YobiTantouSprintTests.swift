@@ -4,7 +4,7 @@ import XCTest
 @MainActor
 final class YobiTantouSprintTests: XCTestCase {
     private func freshModel() -> AppModel {
-        let model = AppModel(bundle: .main)
+        let model = AppModel(bundle: Bundle(for: AppBundleToken.self))
         model.state = PersistentState()
         model.activeSession = nil
         model.lastResult = nil
