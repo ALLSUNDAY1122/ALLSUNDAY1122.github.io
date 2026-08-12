@@ -14,6 +14,7 @@ settings:
     CODE_SIGN_STYLE: Automatic
     YOBI_BUNDLE_ID: UNSET.YOBI.BUNDLE.ID
     YOBI_TEST_BUNDLE_ID: UNSET.YOBI.BUNDLE.ID.tests
+    YOBI_UI_TEST_BUNDLE_ID: UNSET.YOBI.BUNDLE.ID.uitests
     YOBI_IAP_PRODUCT_ID: ""
 
 targets:
@@ -54,6 +55,7 @@ targets:
     scheme:
       testTargets:
         - YobiTantouSprintTests
+        - YobiTantouSprintUITests
 
   YobiTantouSprintTests:
     type: bundle.unit-test
@@ -66,3 +68,16 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: $(YOBI_TEST_BUNDLE_ID)
+
+  YobiTantouSprintUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: UITests
+    dependencies:
+      - target: YobiTantouSprint
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(YOBI_UI_TEST_BUNDLE_ID)
+        TEST_TARGET_NAME: YobiTantouSprint
