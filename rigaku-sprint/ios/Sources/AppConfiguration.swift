@@ -9,7 +9,7 @@ enum RigakuAppConfiguration {
 
     struct ExamRound: Identifiable, Equatable {
         let round: Int
-        let officialQuestionCount: Int
+        let officialQuestionCount: Int?
         let publicationStatus: PublicationStatus
 
         var id: Int { round }
@@ -17,6 +17,7 @@ enum RigakuAppConfiguration {
 
     enum PublicationStatus: String, Equatable {
         case verifiedPublished
+        case pendingPdfAudit
         case problemTextNotConfirmed
     }
 
@@ -26,7 +27,7 @@ enum RigakuAppConfiguration {
         .init(round: 58, officialQuestionCount: 200, publicationStatus: .verifiedPublished)
     ]
 
-    static let totalOfficialQuestionSlots = examRounds.reduce(0) { $0 + $1.officialQuestionCount }
+    static let totalOfficialQuestionSlots = examRounds.compactMap(\.officialQuestionCount).reduce(0, +)
 
     static let generalSubjects = [
         "解剖学",
