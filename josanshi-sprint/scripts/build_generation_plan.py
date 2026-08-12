@@ -4,6 +4,8 @@ import json
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from build_intent_seeds import build_payload as build_intent_payload
+
 ROOT = Path(__file__).resolve().parents[1]
 BLUEPRINT = ROOT / "data" / "question-blueprint.json"
 TOPIC_MAP = ROOT / "data" / "topic-source-map.json"
@@ -72,8 +74,10 @@ def choose_topic(candidates: list[str], remaining: Counter, used_in_case: Counte
 def build_plan() -> dict:
     blueprint = json.loads(BLUEPRINT.read_text(encoding="utf-8"))
     topic_map = json.loads(TOPIC_MAP.read_text(encoding="utf-8"))
+    intent_payload = build_intent_payload()
     topics = {t["topicId"]: t for t in blueprint["topics"]}
     evidence = {t["topicId"]: t for t in topic_map["topics"]}
+    intents = {t["topicId"]: t["intents"] for t in intent_payload["topics"]}
 
     family_topics = defaultdict(list)
     situation_topics = []
@@ -92,6 +96,7 @@ def build_plan() -> dict:
 
     plan = []
     case_records = []
+    topic_occurrence = Counter()
     for mock_round in range(1, blueprint["productionBank"]["mockSetCount"] + 1):
         slots = make_slots(blueprint["latestConfirmedExam"], mock_round)
         remaining = Counter({
@@ -155,22 +160,39 @@ def build_plan() -> dict:
             tid = assignments[slot["id"]]
             topic = topics[tid]
             source_meta = evidence[tid]
+            occurrence = topic_occurrence[tid]
+            if occurrence >= len(intents[tid]):
+                fail(f"{tid}: more planned slots than semantic intents")
+            intent = intents[tid][occurrence]
+            topic_occurrence[tid] += 1
             plan.append({
                 **slot,
                 "subject": topic["subject"],
                 "topicId": tid,
                 "topicTitle": topic["title"],
+                "intentId": intent["intentId"],
+                "intentFocus": intent["focus"],
+                "cognitiveMode": intent["cognitiveMode"],
+                "officialKeywords": intent["officialKeywords"],
                 "risk": source_meta["risk"],
                 "caseCluster": source_meta["caseCluster"],
                 "sourceIds": source_meta["sourceIds"],
                 "contentStatus": "planned",
             })
 
+    for tid, seed_list in intents.items():
+        if topic_occurrence[tid] != len(seed_list):
+            fail(f"{tid}: semantic intents used {topic_occurrence[tid]} / {len(seed_list)}")
+
     return {
-        "schemaVersion": "1.0",
+        "schemaVersion": "1.1",
         "qualification": blueprint["qualification"],
-        "generatedFrom": ["question-blueprint.json", "topic-source-map.json"],
-        "policy": "Structural plan only. No question wording is approved until source-level content audit passes.",
+        "generatedFrom": [
+            "question-blueprint.json",
+            "topic-source-map.json",
+            "build_intent_seeds.py",
+        ],
+        "policy": "Structural and semantic plan only. No question wording is approved until source-level content audit passes.",
         "questions": plan,
         "scenarios": case_records,
     }
@@ -201,6 +223,12 @@ def validate(payload: dict) -> None:
         if actual != expected:
             fail(f"R{round_no}: topic distribution mismatch")
 
+    intent_ids = [q["intentId"] for q in questions]
+    if len(intent_ids) != len(set(intent_ids)) or len(intent_ids) != 330:
+        fail("each semantic intent must be assigned exactly once")
+    if any(not q["intentFocus"] or not q["officialKeywords"] for q in questions):
+        fail("semantic intent metadata missing")
+
     for scenario in scenarios:
         members = [q for q in questions if q["scenarioId"] == scenario["scenarioId"]]
         if len(members) != scenario["scenarioTotal"]:
@@ -214,6 +242,7 @@ def validate(payload: dict) -> None:
     print("  330 questions = 225 general + 105 situation")
     print("  36 linked scenarios")
     print("  66 topics x 5 questions")
+    print("  330 distinct semantic intents assigned exactly once")
     print("  per-mock topic distributions preserved")
 
 
