@@ -35,6 +35,31 @@ public struct HokenshiExamBlueprint: Equatable, Sendable {
     )
 }
 
+/// 2026-03-19に厚生労働省が公表した制度改善検討部会報告書を、
+/// 第113回以降も見据えた作問・UI設計の追加正本として保持する。
+/// 同報告書は令和5年版出題基準の見直しを行わず、現行出題数・試験時間を維持する方針を示している。
+public enum HokenshiExamPolicy2026 {
+    public static let evidenceDate = "2026-03-19"
+    public static let standardRevisionRequired = false
+    public static let keepCurrentQuestionCount = true
+    public static let keepCurrentExamTime = true
+    public static let latestLawAndStatisticsShouldBeTested = true
+    public static let visualMaterialShouldContinue = true
+    public static let communityDiagnosisShouldUseData = true
+
+    /// 状況設定問題は原則3連問。保健師は出題数の都合で2連問も許容される。
+    /// 35問を模試で再現する場合は11組×3問 + 1組×2問とする。
+    public static let situationalScenarioGroupSizes = Array(repeating: 3, count: 11) + [2]
+
+    /// 報告書に沿った中心Taxonomy。
+    public static let generalTaxonomies = ["I", "I-prime", "II"]
+    public static let situationalTaxonomies = ["II", "III"]
+
+    public static var plannedSituationalQuestionCount: Int {
+        situationalScenarioGroupSizes.reduce(0, +)
+    }
+}
+
 public enum HokenshiQuestionOrigin: String, Codable, Sendable {
     case originalFromPrimarySource
     case officialMHLWUnmodified
@@ -73,7 +98,11 @@ public enum HokenshiSprintConfiguration {
     public static let plannedMockExamCount = 3
     public static let questionsPerMockExam = HokenshiExamBlueprint.current.totalQuestions
     public static let plannedIndependentQuestionCount = plannedMockExamCount * questionsPerMockExam
-    public static let contentVersion = "hokenshi-foundation-2026-08-12"
+    public static let contentVersion = "hokenshi-content-plan-2026-08-13"
+
+    /// 初期独自模試は、出題基準10分類を欠落なく反復できるよう各分類11問ずつ配置する。
+    /// これは厚労省の科目別公式出題割合を主張する値ではなく、学習アプリ内の均等型設計である。
+    public static let plannedQuestionsPerSubjectPerMock = 11
 
     public static let supportedAnswerTypes: [LearningAnswerType] = [
         .singleChoice,
