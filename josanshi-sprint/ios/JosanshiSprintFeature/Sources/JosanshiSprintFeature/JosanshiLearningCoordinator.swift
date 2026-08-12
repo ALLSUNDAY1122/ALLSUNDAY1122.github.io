@@ -2,6 +2,13 @@ import Foundation
 import Combine
 import LearningSprintCore
 
+public enum JosanshiLocalPersistenceConfiguration {
+    /// Stable local namespace only. This is deliberately not the production Bundle ID.
+    /// It can remain unchanged after App Store identity is assigned.
+    public static let storageNamespace = "learning-sprint-14-josanshi-local"
+    public static let contentVersion = "josanshi-content-v1"
+}
+
 public enum JosanshiLearningError: Error, Equatable {
     case contentUnavailable
     case subjectUnavailable(String)
@@ -13,11 +20,6 @@ public enum JosanshiLearningError: Error, Equatable {
 
 @MainActor
 public final class JosanshiLearningCoordinator: ObservableObject {
-    /// Stable local namespace only. This is deliberately not the production Bundle ID.
-    /// It can remain unchanged after App Store identity is assigned.
-    public static let localStorageNamespace = "learning-sprint-14-josanshi-local"
-    public static let contentVersion = "josanshi-content-v1"
-
     @Published public private(set) var state: LearningState
     @Published public private(set) var activeSession: LearningSessionSnapshot?
     @Published public private(set) var latestEvaluation: AnswerEvaluation?
@@ -40,12 +42,12 @@ public final class JosanshiLearningCoordinator: ObservableObject {
                 self.activeSession = loaded.resumeSession
                 self.persistenceErrorDescription = nil
             } catch {
-                self.state = LearningState(contentVersion: Self.contentVersion)
+                self.state = LearningState(contentVersion: JosanshiLocalPersistenceConfiguration.contentVersion)
                 self.activeSession = nil
                 self.persistenceErrorDescription = String(describing: error)
             }
         } else {
-            self.state = LearningState(contentVersion: Self.contentVersion)
+            self.state = LearningState(contentVersion: JosanshiLocalPersistenceConfiguration.contentVersion)
             self.activeSession = nil
             self.persistenceErrorDescription = nil
         }
@@ -53,8 +55,8 @@ public final class JosanshiLearningCoordinator: ObservableObject {
 
     public static func defaultPersistentStore(directoryURL: URL? = nil) -> LearningStateStore {
         LearningStateStore(
-            bundleID: localStorageNamespace,
-            contentVersion: contentVersion,
+            bundleID: JosanshiLocalPersistenceConfiguration.storageNamespace,
+            contentVersion: JosanshiLocalPersistenceConfiguration.contentVersion,
             directoryURL: directoryURL
         )
     }
