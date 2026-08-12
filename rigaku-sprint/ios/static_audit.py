@@ -35,7 +35,6 @@ required_native = (
     "LearningEngine.selectWeak",
     "LearningEngine.record",
     "LearningSessionSnapshot",
-    "AnswerPayload.unknown",
     "fileExporter",
     "fileImporter",
     "LearningBackupDocument",
@@ -44,6 +43,16 @@ required_native = (
 for token in required_native:
     if token not in all_swift:
         errors.append(f"共通ネイティブ機能接続欠損: {token}")
+
+# 「わからない」は型名の直書きではなく、共通AnswerPayload.unknown相当が
+# 実際の回答送信経路で使われていることを確認する。
+unknown_patterns = (
+    "answer: .unknown",
+    "AnswerPayload.unknown",
+    "AnswerPayload(isUnknown: true)",
+)
+if not any(pattern in all_swift for pattern in unknown_patterns):
+    errors.append("共通ネイティブ機能接続欠損: わからない回答")
 
 if "$(RIGAKU_BUNDLE_ID)" not in project:
     errors.append("Bundle IDは正本値の外部注入にすること")
