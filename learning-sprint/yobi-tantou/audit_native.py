@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -11,6 +12,7 @@ views = (IOS / "Views.swift").read_text(encoding="utf-8")
 project = (IOS / "project.yml").read_text(encoding="utf-8")
 questions = json.loads((IOS / "Resources" / "questions.preview.json").read_text(encoding="utf-8"))
 privacy = (IOS / "PrivacyInfo.xcprivacy").read_text(encoding="utf-8")
+icon_lock = json.loads((IOS / "app-icon-lock.json").read_text(encoding="utf-8"))
 
 for forbidden in ("import WebKit", "WKWebView", "SFSafariViewController"):
     if forbidden in swift:
@@ -46,10 +48,26 @@ if "UNSET.YOBI.BUNDLE.ID" not in project or "YOBI_IAP_PRODUCT_ID" not in project
 if "NSPrivacyAccessedAPICategoryUserDefaults" not in privacy or "CA92.1" not in privacy:
     errors.append("Privacy Manifest UserDefaults reason missing")
 
+expected_icon = {
+    "developmentSequence": 11,
+    "canonicalFileName": "11_司法試験予備試験_短答式.png",
+    "canonicalDriveFileId": "1EyeJxBN2WPEjEw9TUszhmyhuk3_3Lu6K",
+    "width": 1024,
+    "height": 1024,
+    "mimeType": "image/png",
+    "sizeBytes": 721851,
+    "sha256": "c56c3f0acf7e05ec6096fdee881081b7b7e8e863ae2933b496550e902b840bf9",
+}
+for key, expected in expected_icon.items():
+    if icon_lock.get(key) != expected:
+        errors.append(f"canonical AppIcon lock mismatch {key}: {icon_lock.get(key)!r} != {expected!r}")
+if not re.fullmatch(r"[0-9a-f]{64}", str(icon_lock.get("sha256", ""))):
+    errors.append("canonical AppIcon SHA-256 format invalid")
+
 if errors:
     print("FAIL")
     for error in errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print("PASS: native source contract, v2.1 UI markers, preview release gate, identifiers and privacy manifest")
+print("PASS: native source contract, v2.1 UI markers, preview/release gates, identifiers, privacy manifest and canonical AppIcon lock")
