@@ -20,7 +20,9 @@ targets:
     platform: iOS
     deploymentTarget: "16.0"
     sources:
-      - Sources
+      - path: Sources
+      - path: ../product-content/questions.json
+        buildPhase: resources
     dependencies:
       - package: LearningSprintCore
     settings:
