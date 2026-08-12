@@ -29,7 +29,7 @@ jobs:
       - name: Validate anti-padding generation slots
         run: python3 josanshi-sprint/scripts/generate_slots.py --check
 
-      - name: Validate current-source and rights registry
+      - name: Validate modular current-source and rights registries
         run: python3 josanshi-sprint/scripts/validate_sources.py
 
       - name: Validate all 66 topics have current evidence anchors
@@ -40,6 +40,9 @@ jobs:
 
       - name: Validate 330-topic generation plan
         run: python3 josanshi-sprint/scripts/build_generation_plan.py --check
+
+      - name: Materialize modular source registry for bank audit
+        run: python3 josanshi-sprint/scripts/materialize_source_registry.py
 
       - name: Materialize authored question batches onto audited slots
         run: python3 josanshi-sprint/scripts/materialize_question_bank.py --output josanshi-sprint/data/questions.json
