@@ -6,6 +6,7 @@ import LearningSprintCore
 final class RigakuAppModel: ObservableObject {
     @Published private(set) var state: LearningState
     @Published private(set) var questions: [LearningQuestion] = []
+    @Published private(set) var premiumAccess = false
     @Published var lastError: String?
 
     private let store: LearningStateStore?
@@ -61,6 +62,10 @@ final class RigakuAppModel: ObservableObject {
         LearningEngine.heatmap35Days(state: state)
     }
 
+    var subjectAccuracy: [String: Double] {
+        LearningEngine.subjectAccuracy(state: state)
+    }
+
     var uniqueAnsweredCount: Int {
         Set(state.attempts.map(\.questionID)).count
     }
@@ -71,6 +76,80 @@ final class RigakuAppModel: ObservableObject {
             uniqueAnsweredCount: uniqueAnsweredCount,
             examDate: state.examDate
         )
+    }
+
+    var canStudy: Bool {
+        !questions.isEmpty
+    }
+
+    func questions(for kind: SessionKind) -> [LearningQuestion] {
+        switch kind {
+        case .sprint:
+            return LearningEngine.selectSprint(
+                from: questions,
+                target: state.dailyTarget,
+                isPremium: premiumAccess
+            )
+        case .weak:
+            return LearningEngine.selectWeak(
+                from: questions,
+                state: state,
+                target: state.dailyTarget,
+                isPremium: premiumAccess
+            )
+        case .subject(let subject):
+            return LearningEngine.selectSprint(
+                from: questions.filter { $0.subject == subject },
+                target: state.dailyTarget,
+                isPremium: premiumAccess
+            )
+        case .mock(let round):
+            return questions
+                .filter { ($0.examRound == round) && (premiumAccess || !$0.premium) }
+                .sorted(by: Self.examQuestionOrder)
+        }
+    }
+
+    func beginSession(kind: SessionKind, questions: [LearningQuestion]) {
+        state.resumeSession = LearningSessionSnapshot(
+            kind: kind,
+            questionIDs: questions.map(\.id)
+        )
+        persist()
+    }
+
+    func resumeQuestions() -> [LearningQuestion] {
+        guard let snapshot = state.resumeSession else { return [] }
+        let byID = Dictionary(uniqueKeysWithValues: questions.map { ($0.id, $0) })
+        return snapshot.questionIDs.compactMap { byID[$0] }
+    }
+
+    @discardableResult
+    func recordAnswer(
+        question: LearningQuestion,
+        answer: AnswerPayload,
+        advanceTo nextIndex: Int
+    ) throws -> AnswerEvaluation {
+        let evaluation = try LearningEngine.evaluate(question, answer: answer)
+        LearningEngine.record(question: question, evaluation: evaluation, state: &state)
+
+        if var snapshot = state.resumeSession {
+            snapshot.answers[question.id] = answer
+            snapshot.currentIndex = nextIndex
+            state.resumeSession = snapshot
+        }
+        persist()
+        return evaluation
+    }
+
+    func finishSession() {
+        state.resumeSession = nil
+        persist()
+    }
+
+    func discardResumeSession() {
+        state.resumeSession = nil
+        persist()
     }
 
     func setDailyTarget(_ value: Int) {
@@ -120,6 +199,13 @@ final class RigakuAppModel: ObservableObject {
         } catch {
             lastError = "学習データを保存できませんでした。"
         }
+    }
+
+    private static func examQuestionOrder(_ lhs: LearningQuestion, _ rhs: LearningQuestion) -> Bool {
+        let lhsNumber = Int(lhs.questionNumber ?? "") ?? .max
+        let rhsNumber = Int(rhs.questionNumber ?? "") ?? .max
+        if lhsNumber != rhsNumber { return lhsNumber < rhsNumber }
+        return lhs.id < rhs.id
     }
 }
 
