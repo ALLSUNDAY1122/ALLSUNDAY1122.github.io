@@ -18,6 +18,8 @@ jobs:
   native-foundation:
     runs-on: macos-15
     timeout-minutes: 20
+    env:
+      TZ: Asia/Tokyo
     steps:
       - uses: actions/checkout@v4
 
