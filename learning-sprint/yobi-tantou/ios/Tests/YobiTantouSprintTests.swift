@@ -11,12 +11,65 @@ final class YobiTantouSprintTests: XCTestCase {
         return model
     }
 
+    private func releaseQuestion(
+        id: String = "YOBI-RELEASE-001",
+        releaseEligible: Bool = true,
+        lawBasisDate: String? = "2026-01-01"
+    ) -> StudyQuestion {
+        StudyQuestion(
+            id: id,
+            examYear: 2026,
+            subject: "憲法",
+            topic: "テスト用正式教材ゲート",
+            stem: "正式教材バンクの構造テストです。",
+            choices: ["正しい", "誤り"],
+            correctIndices: [0],
+            explanation: "テスト用の説明です。",
+            memory: "テスト用の要点です。",
+            sourceTitle: "一次資料テスト",
+            sourceURL: "https://example.invalid/primary",
+            evidenceCheckedDate: "2026-08-13",
+            lawBasisDate: lawBasisDate,
+            originType: "original_from_primary_source",
+            releaseEligible: releaseEligible
+        )
+    }
+
     func testPreviewBankHasEightNonReleaseQuestions() {
         let model = freshModel()
         XCTAssertNil(model.startupError)
         XCTAssertEqual(model.questions.count, 8)
         XCTAssertTrue(model.questions.allSatisfy { !$0.releaseEligible && $0.originType == "original_preview" })
         XCTAssertTrue(model.isPreviewBank)
+    }
+
+    func testReleaseRepositoryAcceptsOnlyAuditedShape() throws {
+        let data = try JSONEncoder().encode([releaseQuestion()])
+        let decoded = try QuestionRepository().decode(data, kind: .release)
+        XCTAssertEqual(decoded.count, 1)
+        XCTAssertTrue(decoded[0].releaseEligible)
+    }
+
+    func testReleaseRepositoryRejectsNonReleaseQuestion() throws {
+        let data = try JSONEncoder().encode([releaseQuestion(releaseEligible: false)])
+        XCTAssertThrowsError(try QuestionRepository().decode(data, kind: .release)) { error in
+            XCTAssertEqual(error as? QuestionBankError, .invalidReleaseGate("YOBI-RELEASE-001"))
+        }
+    }
+
+    func testReleaseRepositoryRejectsMissingLawBasisDate() throws {
+        let data = try JSONEncoder().encode([releaseQuestion(lawBasisDate: nil)])
+        XCTAssertThrowsError(try QuestionRepository().decode(data, kind: .release)) { error in
+            XCTAssertEqual(error as? QuestionBankError, .invalidReleaseGate("YOBI-RELEASE-001"))
+        }
+    }
+
+    func testReleaseRepositoryRejectsDuplicateIDs() throws {
+        let question = releaseQuestion()
+        let data = try JSONEncoder().encode([question, question])
+        XCTAssertThrowsError(try QuestionRepository().decode(data, kind: .release)) { error in
+            XCTAssertEqual(error as? QuestionBankError, .duplicateID("YOBI-RELEASE-001"))
+        }
     }
 
     func testWeakQuestionClearsAfterThreeConsecutiveCorrectAnswers() {
