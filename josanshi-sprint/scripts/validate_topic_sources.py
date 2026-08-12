@@ -2,9 +2,10 @@
 import json
 from pathlib import Path
 
+from source_registry_loader import load_source_map
+
 ROOT = Path(__file__).resolve().parents[1]
 BLUEPRINT = ROOT / "data" / "question-blueprint.json"
-REGISTRY = ROOT / "data" / "source-registry.json"
 TOPIC_MAP = ROOT / "data" / "topic-source-map.json"
 
 
@@ -13,11 +14,13 @@ def fail(message: str) -> None:
 
 
 blueprint = json.loads(BLUEPRINT.read_text(encoding="utf-8"))
-registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
 topic_map = json.loads(TOPIC_MAP.read_text(encoding="utf-8"))
+try:
+    source_by_id = load_source_map()
+except RuntimeError as error:
+    fail(str(error))
 
 blueprint_topics = {t["topicId"]: t for t in blueprint["topics"]}
-source_by_id = {s["id"]: s for s in registry["sources"]}
 mapped = {t["topicId"]: t for t in topic_map["topics"]}
 
 if len(blueprint_topics) != 66:
@@ -44,20 +47,15 @@ for topic_id, item in mapped.items():
     if not isinstance(item.get("situationEligible"), bool):
         fail(f"{topic_id}: situationEligible must be boolean")
 
-    # At least one primary anchor must explicitly cover the blueprint subject.
-    # Additional supporting anchors may legitimately cross subject boundaries
-    # (e.g. NCPR supporting BASIC newborn physiology).
     expected_subject = blueprint_topics[topic_id]["subject"]
-    covered = False
-    for sid in source_ids:
-        domains = source_by_id[sid].get("domains", [])
-        if "all" in domains or expected_subject in domains:
-            covered = True
-            break
+    covered = any(
+        "all" in source_by_id[sid].get("domains", [])
+        or expected_subject in source_by_id[sid].get("domains", [])
+        for sid in source_ids
+    )
     if not covered:
         fail(f"{topic_id}: no mapped source explicitly covers subject {expected_subject}")
 
-# Safety-critical anchors that must not silently regress.
 required_specific = {
     "BASIC-09": {"JSSTI-GUIDELINE-2026"},
     "BASIC-11": {"CFA-PRENATAL-INFO"},
@@ -76,7 +74,6 @@ for topic_id, required in required_specific.items():
     if not required <= actual:
         fail(f"{topic_id}: missing safety-critical anchors {sorted(required - actual)}")
 
-# Situation-setting cases are reserved for clinical diagnosis/support topics.
 eligible = [tid for tid, item in mapped.items() if item["situationEligible"]]
 if any(not tid.startswith("DIAGNOSIS-") for tid in eligible):
     fail("situationEligible may only be set on DIAGNOSIS topics in v1 mapping")
@@ -102,6 +99,14 @@ acceptable_roles = {
     "current_pediatric_infection_vaccine_reference",
     "current_law",
     "supporting_guidance",
+    "official_vital_statistics_definition",
+    "official_health_statistics_formula",
+    "official_fertility_rate_definition",
+    "official_perinatal_collaboration_definition",
+    "current_maternal_support_policy_review",
+    "current_birth_allowance_policy",
+    "current_health_promotion_policy",
+    "current_integrated_family_support_policy",
 }
 for topic_id, item in mapped.items():
     if item["risk"] in {"high", "critical"}:
