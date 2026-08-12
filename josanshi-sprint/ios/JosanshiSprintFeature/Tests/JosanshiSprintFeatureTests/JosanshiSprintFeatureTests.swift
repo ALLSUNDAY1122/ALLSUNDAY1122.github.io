@@ -14,10 +14,18 @@ final class JosanshiSprintFeatureTests: XCTestCase {
         )
     }
 
-    func testLatestConfirmedQuestionCountAndThreeMockTarget() {
+    func testLatestConfirmedStructureAndThreeMockTarget() {
         XCTAssertEqual(JosanshiExamConfiguration.latestConfirmedExamRound, 109)
+        XCTAssertEqual(JosanshiExamConfiguration.morningQuestionCount, 55)
+        XCTAssertEqual(JosanshiExamConfiguration.afternoonQuestionCount, 55)
         XCTAssertEqual(JosanshiExamConfiguration.latestConfirmedQuestionCount, 110)
+        XCTAssertEqual(JosanshiExamConfiguration.generalQuestionCountPerMock, 75)
+        XCTAssertEqual(JosanshiExamConfiguration.situationQuestionCountPerMock, 35)
+        XCTAssertEqual(JosanshiExamConfiguration.scenarioCaseCountPerMock, 12)
         XCTAssertEqual(JosanshiExamConfiguration.originalProductionQuestionTarget, 330)
+        XCTAssertEqual(JosanshiExamConfiguration.originalGeneralQuestionTarget, 225)
+        XCTAssertEqual(JosanshiExamConfiguration.originalSituationQuestionTarget, 105)
+        XCTAssertEqual(JosanshiExamConfiguration.originalScenarioCaseTarget, 36)
     }
 
     func testProductionIdentifiersRemainUnsetUntilCanonicalValuesExist() {
