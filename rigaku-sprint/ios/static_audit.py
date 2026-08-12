@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import re
 import sys
 
 ROOT = Path(__file__).resolve().parent
@@ -35,10 +36,13 @@ for guessed in ("jp.allsunday1122.rigaku", "jp.allsunday1122.rigakusprint"):
         errors.append(f"Bundle ID推測値を検出: {guessed}")
 
 config = texts.get("AppConfiguration.swift", "")
-if ".init(round: 59, officialQuestionCount: nil" not in config:
-    errors.append("第59回問題数を未確認のまま固定している可能性")
-if ".init(round: 58, officialQuestionCount: nil" not in config:
-    errors.append("第58回問題数を未確認のまま固定している可能性")
+round_matches = re.findall(r"\.init\(round: (\d+), officialQuestionCount: (\d+), publicationStatus: \.verifiedPublished\)", config)
+verified = {int(round_no): int(count) for round_no, count in round_matches}
+expected = {60: 200, 59: 200, 58: 200}
+if verified != expected:
+    errors.append(f"公式PDF確認済み枠が不一致: actual={verified}, expected={expected}")
+if "static let totalOfficialQuestionSlots = examRounds.reduce" not in config:
+    errors.append("3回分総枠の導出が欠損")
 
 if errors:
     print("STATIC AUDIT: FAIL")
@@ -51,4 +55,4 @@ print(f"Swift files: {len(swift_files)}")
 print("WebView ban: PASS")
 print("Golden Master signature elements: PASS")
 print("Identifier non-guess policy: PASS")
-print("Unverified exam counts remain unset: PASS")
+print("Official frame: R60/R59/R58 = 200 each, total 600: PASS")
