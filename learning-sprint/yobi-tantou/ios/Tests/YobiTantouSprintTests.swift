@@ -119,18 +119,44 @@ final class YobiTantouSprintTests: XCTestCase {
         XCTAssertNil(model.activeSession)
     }
 
+    func testFreeSprintIsConsumedAtStartAndSameSessionCanResume() {
+        let model = freshModel()
+        XCTAssertFalse(model.state.freeSprintConsumed)
+        XCTAssertTrue(model.start(.daily, premium: false))
+        XCTAssertTrue(model.state.freeSprintConsumed)
+        XCTAssertEqual(model.state.resume?.consumesFreeSprint, true)
+        let originalIDs = model.activeSession?.ids
+        model.activeSession = nil
+
+        XCTAssertTrue(model.resume(premium: false))
+        XCTAssertEqual(model.activeSession?.ids, originalIDs)
+        XCTAssertEqual(model.activeSession?.consumesFreeSprint, true)
+    }
+
+    func testPartialFreeSprintCannotBeAbandonedForNewFreeSprint() {
+        let model = freshModel()
+        XCTAssertTrue(model.start(.daily, premium: false))
+        model.activeSession = nil
+        model.state.resume = nil
+
+        XCTAssertFalse(model.start(.daily, premium: false))
+    }
+
     func testDailySessionStartedAsPremiumCanResumeAsFreeAndConsumesTrial() {
         let model = freshModel()
         XCTAssertTrue(model.start(.daily, premium: true))
+        XCTAssertFalse(model.state.freeSprintConsumed)
         XCTAssertEqual(model.state.resume?.requiresPremium, false)
         model.activeSession = nil
 
         XCTAssertTrue(model.resume(premium: false))
+        XCTAssertTrue(model.state.freeSprintConsumed)
         XCTAssertEqual(model.activeSession?.requiresPremium, false)
         XCTAssertEqual(model.activeSession?.consumesFreeSprint, true)
+        XCTAssertEqual(model.state.resume?.consumesFreeSprint, true)
     }
 
-    func testConsumedFreeSprintBlocksDailyResumeWithoutPremium() {
+    func testConsumedFreeSprintBlocksPremiumStartedDailyResumeWithoutPremium() {
         let model = freshModel()
         XCTAssertTrue(model.start(.daily, premium: true))
         model.activeSession = nil
