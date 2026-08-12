@@ -302,7 +302,7 @@ private struct MockView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
                 Text("模擬試験").font(SprintTheme.serif(28, weight: .bold)).padding(.top, 18)
-                Text("正式な年度別問題数と配点は法務省一次資料の監査後にデータから自動生成します。")
+                Text("正式な年度別問題数と配点は法務省一次資料の監査後にデータから自動生成します。一般教養は本試験の選択ルールに合わせ、最大20題を採点対象として抽出します。")
                     .foregroundStyle(SprintTheme.ink2)
                 if years.isEmpty {
                     PaperCard {
@@ -311,13 +311,18 @@ private struct MockView: View {
                     }
                 } else {
                     ForEach(years, id: \.self) { year in
+                        let summary = model.mockSelectionSummary(year: year)
                         Button { onStart(.mock(year)) } label: {
                             PaperCard {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text("令和\(year - 2018)年").font(SprintTheme.serif(18, weight: .bold)).foregroundStyle(SprintTheme.ink)
-                                        Text("\(model.questions.filter { $0.releaseEligible && $0.examYear == year }.count)問")
+                                        Text("採点対象 \(summary.totalScoredQuestions)問")
                                             .font(.caption).foregroundStyle(SprintTheme.ink3)
+                                        if summary.generalEducationAvailable > summary.generalEducationSelected {
+                                            Text("一般教養 \(summary.generalEducationAvailable)題から\(summary.generalEducationSelected)題を抽出")
+                                                .font(.caption2).foregroundStyle(SprintTheme.ink3)
+                                        }
                                     }
                                     Spacer()
                                     if !store.isPremium { Image(systemName: "lock.fill").foregroundStyle(SprintTheme.gold) }
