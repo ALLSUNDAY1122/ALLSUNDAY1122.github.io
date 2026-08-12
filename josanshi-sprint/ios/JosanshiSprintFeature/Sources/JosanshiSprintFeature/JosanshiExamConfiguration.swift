@@ -36,11 +36,20 @@ public enum JosanshiExamConfiguration {
     public static let standardSprintCount = 8
     public static let selectableDailyTargets = [4, 8, 16]
 
-    /// Confirmed from the official 109th morning and afternoon booklets: 55 + 55.
+    /// Confirmed from the official 109th morning and afternoon booklets.
     public static let latestConfirmedExamRound = 109
-    public static let latestConfirmedQuestionCount = 110
+    public static let morningQuestionCount = 55
+    public static let afternoonQuestionCount = 55
+    public static let latestConfirmedQuestionCount = morningQuestionCount + afternoonQuestionCount
+    public static let generalQuestionCountPerMock = 75
+    public static let situationQuestionCountPerMock = 35
+    public static let scenarioCaseCountPerMock = 12
+
     public static let originalMockSetCount = 3
     public static let originalProductionQuestionTarget = latestConfirmedQuestionCount * originalMockSetCount
+    public static let originalGeneralQuestionTarget = generalQuestionCountPerMock * originalMockSetCount
+    public static let originalSituationQuestionTarget = situationQuestionCountPerMock * originalMockSetCount
+    public static let originalScenarioCaseTarget = scenarioCaseCountPerMock * originalMockSetCount
 
     /// Official examination subjects under the current rules.
     public static let subjects = [
@@ -57,6 +66,6 @@ public enum JosanshiExamConfiguration {
     /// Production identifiers are deliberately unset until a canonical value is provided.
     public static let productionIdentifiers = JosanshiProductionIdentifiers()
 
-    /// This is a content-design target, not a claim that MHLW publishes fixed subject quotas.
-    public static let subjectQuotaStatus = "要設計・公式固定配分とは扱わない"
+    /// Product-design allocation only. It is not represented as an official fixed MHLW subject quota.
+    public static let subjectQuotaStatus = "独自カバレッジ設計・公式固定配分とは扱わない"
 }
