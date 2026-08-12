@@ -36,7 +36,7 @@ final class JosanshiSprintFeatureTests: XCTestCase {
         XCTAssertNil(ids.productID)
         XCTAssertFalse(ids.isReleaseIdentityReady)
         XCTAssertFalse(ids.isStoreKitReady)
-        XCTAssertFalse(JosanshiLearningCoordinator.localStorageNamespace.contains("jp.allsunday1122"))
+        XCTAssertFalse(JosanshiLocalPersistenceConfiguration.storageNamespace.contains("jp.allsunday1122"))
     }
 
     @MainActor
@@ -93,7 +93,6 @@ final class JosanshiSprintFeatureTests: XCTestCase {
             }
         }
 
-        // The loop above establishes weak once and then records two correct answers.
         XCTAssertEqual(coordinator.state.weakQuestions[question.id]?.consecutiveCorrect, 2)
         _ = try coordinator.startWeakReview()
         _ = try coordinator.submit(AnswerPayload(selectedIndices: [0]))
@@ -146,13 +145,21 @@ final class JosanshiSprintFeatureTests: XCTestCase {
     }
 
     private func makeQuestions(count: Int) -> [LearningQuestion] {
-        (1...count).map { index in
-            makeQuestion(
-                id: "Q-\(index)",
-                subject: JosanshiExamConfiguration.subjects[(index - 1) % JosanshiExamConfiguration.subjects.count],
-                examRound: String(((index - 1) % 3) + 1)
+        var result: [LearningQuestion] = []
+        result.reserveCapacity(count)
+        for index in 1...count {
+            let subjectIndex = (index - 1) % JosanshiExamConfiguration.subjects.count
+            let subject = JosanshiExamConfiguration.subjects[subjectIndex]
+            let examRound = String(((index - 1) % 3) + 1)
+            result.append(
+                makeQuestion(
+                    id: "Q-\(index)",
+                    subject: subject,
+                    examRound: examRound
+                )
             )
         }
+        return result
     }
 
     private func makeQuestion(id: String, subject: String, examRound: String) -> LearningQuestion {
@@ -171,7 +178,7 @@ final class JosanshiSprintFeatureTests: XCTestCase {
             sourceRefs: ["TEST"],
             sourceCheckedAt: "2026-08-13",
             lawBaselineDate: "2026-08-13",
-            contentVersion: JosanshiLearningCoordinator.contentVersion,
+            contentVersion: JosanshiLocalPersistenceConfiguration.contentVersion,
             premium: false,
             examRound: examRound,
             questionNumber: id,
