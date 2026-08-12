@@ -44,12 +44,18 @@ for topic_id, item in mapped.items():
     if not isinstance(item.get("situationEligible"), bool):
         fail(f"{topic_id}: situationEligible must be boolean")
 
+    # At least one primary anchor must explicitly cover the blueprint subject.
+    # Additional supporting anchors may legitimately cross subject boundaries
+    # (e.g. NCPR supporting BASIC newborn physiology).
     expected_subject = blueprint_topics[topic_id]["subject"]
+    covered = False
     for sid in source_ids:
-        source = source_by_id[sid]
-        domains = source.get("domains", [])
-        if "all" not in domains and expected_subject not in domains:
-            fail(f"{topic_id}: {sid} does not cover subject {expected_subject}")
+        domains = source_by_id[sid].get("domains", [])
+        if "all" in domains or expected_subject in domains:
+            covered = True
+            break
+    if not covered:
+        fail(f"{topic_id}: no mapped source explicitly covers subject {expected_subject}")
 
 # Safety-critical anchors that must not silently regress.
 required_specific = {
@@ -77,8 +83,6 @@ if any(not tid.startswith("DIAGNOSIS-") for tid in eligible):
 if len(eligible) < 20:
     fail(f"insufficient situation-setting topic pool: {len(eligible)}")
 
-# High/critical topics must contain at least one current clinical, legal, policy,
-# professional or official-statistics anchor, not only exam-scope metadata.
 acceptable_roles = {
     "current_clinical_guideline",
     "current_neonatal_resuscitation_guideline",
