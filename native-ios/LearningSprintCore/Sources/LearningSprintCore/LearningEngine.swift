@@ -15,22 +15,24 @@ public enum LearningEngine {
         let correct: Bool
         switch question.answerType {
         case .singleChoice:
-            guard question.correctIndices.count == 1 else {
-                throw LearningEngineError.invalidQuestion(question.id)
-            }
             guard answer.selectedIndices.count == 1 else {
                 throw LearningEngineError.missingAnswer
             }
-            correct = answer.selectedIndices[0] == question.correctIndices[0]
-
-        case .multiChoice:
-            guard !question.correctIndices.isEmpty else {
+            let accepted = normalizedAcceptedIndexSets(for: question)
+            guard !accepted.isEmpty, accepted.allSatisfy({ $0.count == 1 }) else {
                 throw LearningEngineError.invalidQuestion(question.id)
             }
+            correct = accepted.contains(Set(answer.selectedIndices))
+
+        case .multiChoice:
             guard !answer.selectedIndices.isEmpty else {
                 throw LearningEngineError.missingAnswer
             }
-            correct = Set(answer.selectedIndices) == Set(question.correctIndices)
+            let accepted = normalizedAcceptedIndexSets(for: question)
+            guard !accepted.isEmpty else {
+                throw LearningEngineError.invalidQuestion(question.id)
+            }
+            correct = accepted.contains(Set(answer.selectedIndices))
 
         case .numeric:
             guard let expected = question.correctNumber else {
@@ -186,6 +188,16 @@ public enum LearningEngine {
         let days = max(1, calendar.dateComponents([.day], from: start, to: end).day ?? 1)
         let remaining = max(0, totalQuestionCount - uniqueAnsweredCount)
         return Int(ceil(Double(remaining) / Double(days)))
+    }
+
+    private static func normalizedAcceptedIndexSets(for question: LearningQuestion) -> [Set<Int>] {
+        if let alternatives = question.acceptedIndexSets, !alternatives.isEmpty {
+            return alternatives
+                .filter { !$0.isEmpty }
+                .map(Set.init)
+        }
+        guard !question.correctIndices.isEmpty else { return [] }
+        return [Set(question.correctIndices)]
     }
 
     private static func normalized(_ value: String?) -> String {
