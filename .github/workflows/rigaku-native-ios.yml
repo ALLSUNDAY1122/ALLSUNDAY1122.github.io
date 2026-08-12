@@ -1,18 +1,15 @@
 name: Rigaku Native iOS Quality Gate
 
 on:
-  push:
-    branches:
-      - feat/15-rigaku-sprint-native
-    paths:
-      - 'rigaku-sprint/**'
-      - 'native-ios/LearningSprintCore/**'
-      - '.github/workflows/rigaku-native-ios.yml'
   pull_request:
     paths:
       - 'rigaku-sprint/**'
       - 'native-ios/LearningSprintCore/**'
       - '.github/workflows/rigaku-native-ios.yml'
+
+concurrency:
+  group: rigaku-native-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   native-static-and-core-tests:
