@@ -35,7 +35,8 @@
 - [x] Candidateの `release_eligible=true` 禁止
 - [x] Release builderは `release_passed` のみ変換可能
 - [x] Native `QuestionRepository` fail-closed
-- [ ] 候補問題の内容監査・法令時点監査
+- [ ] 候補問題の2026-01-01時点e-Gov法令監査PASS
+- [ ] 候補問題の正答・解説内容監査PASS
 - [ ] 正式教材採用問題を `release_passed` に昇格
 
 ## C. Native iOS
@@ -50,6 +51,7 @@
 - [x] 無料利用状態のバックアップ／リセット復活防止
 - [x] Premium専用途中再開の権利再確認
 - [x] StoreKit 2 fail-closed
+- [x] StoreKit transaction updates監視
 - [x] Privacy Manifest
 - [x] iPhone縦向き固定
 - [ ] 最新XCTest全PASS
@@ -70,6 +72,7 @@
 - [x] 公開Privacy Policy原稿
 - [x] 公開Support原稿
 - [x] App Store metadata原稿
+- [x] Premium機能がアプリ内課金で解放されることをmetadataへ明記
 - [x] App Review Notes原稿
 - [x] StoreKit実機テスト計画
 - [ ] 正式教材Release後にmetadata収録内容を再照合
@@ -87,6 +90,7 @@
 - [ ] IAP Product ID: `要確認`
 - [ ] IAP商品種別Non-ConsumableをApp Store Connectで確認
 - [ ] IAP価格設定をApp Store Connectで確認
+- [ ] 初回Non-Consumable IAPをアプリversion 1.0.0と同時に審査対象へ紐付ける
 - [ ] Codemagic signing profile: `要確認`
 - [ ] root Codemagic workflow統合
 - [ ] Signed IPA生成
