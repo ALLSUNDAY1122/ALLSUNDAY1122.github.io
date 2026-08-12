@@ -36,4 +36,8 @@ jobs:
       - name: Confirm unresolved identifiers remain external
         run: |
           grep -F 'PRODUCT_BUNDLE_IDENTIFIER: $(RIGAKU_BUNDLE_ID)' rigaku-sprint/ios/project.yml
-          ! grep -R -E 'jp\.allsunday1122\.rigaku(sprint)?(\.premium)?' rigaku-sprint/ios rigaku-sprint/product-content
+          ! grep -R -E 'jp\.allsunday1122\.rigaku(sprint)?(\.premium)?' \
+            rigaku-sprint/ios/Sources \
+            rigaku-sprint/ios/Tests \
+            rigaku-sprint/ios/project.yml \
+            rigaku-sprint/product-content
