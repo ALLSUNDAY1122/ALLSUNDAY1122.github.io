@@ -21,6 +21,8 @@ Owner: ChatGPT project アプリ開発
 - [x] Latest 109th item count confirmed as 55 morning + 55 afternoon = 110.
 - [x] R5 question standard confirmed as current baseline in 2026 review.
 - [x] Production identifiers left unset rather than guessed.
+- [x] Canonical #14 AppIcon located: Drive file `14_助産師国家試験.png` / ID `134DG19Lknp2p1AFvDAkLPA2zocyj2nOP`.
+- [x] Native Foundation CI run #2 PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31565331187
 
 ### Native UI gate
 - [x] Native SwiftUI feature package created without Bundle ID dependency.
@@ -28,6 +30,9 @@ Owner: ChatGPT project アプリ開発
 - [x] 4-tab information architecture represented: Home / Mock / History / Settings.
 - [x] Standard sprint count = 8, selectable targets = 4 / 8 / 16.
 - [x] Official four subjects represented in configuration.
+- [x] Swift package compilation and unit tests PASS on macOS 15 CI.
+- [x] Static guard confirms no WKWebView/WebKit/SFSafariViewController in #14 feature sources.
+- [x] Static guard confirms no guessed production identifier is hard-coded in #14 feature sources.
 - [ ] Full question-session UI wired to audited production question JSON.
 - [ ] Weak-review flow integrated with persisted LearningStateStore.
 - [ ] JSON export/import wired to document picker/share sheet.
@@ -51,7 +56,8 @@ Owner: ChatGPT project アプリ開発
 - [ ] Bundle ID confirmed in canonical source.
 - [ ] App Store Connect App ID confirmed.
 - [ ] IAP Product ID confirmed if monetization is enabled.
-- [ ] Canonical #14 AppIcon PNG located and used; no lookalike regeneration.
+- [x] Canonical #14 AppIcon PNG located; no lookalike regeneration.
+- [ ] Canonical AppIcon copied into the final signed iOS app target after target creation.
 - [ ] Privacy manifest final audit PASS.
 - [ ] Signed archive / IPA PASS.
 - [ ] Internal TestFlight install PASS.
@@ -61,7 +67,6 @@ Owner: ChatGPT project アプリ開発
 
 1. Bundle ID — 要確認
 2. App Store Connect App ID — 要確認
-3. IAP Product ID — 要確認
-4. Canonical #14 AppIcon PNG exact asset — 要確認
+3. IAP Product ID — 要確認 if monetization is enabled
 
-These blockers do not stop question design, native feature development or source-level tests.
+The canonical AppIcon is no longer a discovery blocker. These remaining identifiers do not stop question design, native feature development or source-level tests; they block the final signed app target / StoreKit production wiring / TestFlight release work.
