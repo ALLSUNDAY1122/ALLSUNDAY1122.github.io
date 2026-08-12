@@ -33,6 +33,9 @@ jobs:
       - name: Validate all 66 topics have current evidence anchors
         run: python3 josanshi-sprint/scripts/validate_topic_sources.py
 
+      - name: Validate 330 distinct R5 semantic intents
+        run: python3 josanshi-sprint/scripts/build_intent_seeds.py --check
+
       - name: Validate 330-topic generation plan
         run: python3 josanshi-sprint/scripts/build_generation_plan.py --check
 
