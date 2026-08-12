@@ -58,7 +58,9 @@ for marker in ["Non-Consumable", "最初の1スプリント最大8問", "固定�
     if marker not in metadata + review + storekit + packet:
         errors.append(f"StoreKit disclosure missing: {marker}")
 
-for marker in ["トラッキングを行いません", "分析SDK", "端末内", "CA92.1"]:
+# Public privacy text should describe behavior in user-facing terms. The exact
+# required-reason code CA92.1 is validated separately in audit_native.py.
+for marker in ["トラッキングを行いません", "分析SDK", "端末内", "UserDefaults"]:
     if marker not in privacy:
         errors.append(f"privacy disclosure missing: {marker}")
 
@@ -69,9 +71,6 @@ for marker in ["GitHub Issues", "購入資格そのものはバックアップ�
 if "WebView" in privacy or "WebView" in metadata or "WebView" in review:
     errors.append("native app submission assets must not claim WebView storage/implementation")
 
-for unsafe_claim in ["3年分", "3回分", "210問", "180問", "正式問題数"]:
-    # '正式問題数' is allowed only with pending/unknown wording; detect certainty around numeric marketing claims separately.
-    pass
 if re.search(r"(?:収録|全)[^\n]{0,12}\d+問", metadata):
     errors.append("metadata contains fixed official question-count marketing claim before canonical release")
 
