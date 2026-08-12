@@ -2,6 +2,8 @@ import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
 
+final class AppBundleToken: NSObject {}
+
 struct StudyQuestion: Codable, Identifiable, Equatable {
     let id: String
     let examYear: Int?
