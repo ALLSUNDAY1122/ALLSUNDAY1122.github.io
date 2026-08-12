@@ -18,6 +18,8 @@ final class StoreKitManager: ObservableObject {
     @Published private(set) var isPremium = false
     @Published private(set) var statusMessage: String?
 
+    private var transactionUpdatesTask: Task<Void, Never>?
+
     var configuredProductID: String? {
         StoreProductIDPolicy.normalized(Bundle.main.object(forInfoDictionaryKey: "PremiumProductID"))
     }
@@ -25,6 +27,7 @@ final class StoreKitManager: ObservableObject {
     var isConfigured: Bool { configuredProductID != nil }
 
     func refresh() async {
+        startObservingTransactionUpdates()
         statusMessage = nil
         await refreshEntitlements()
         guard let id = configuredProductID else {
@@ -79,6 +82,22 @@ final class StoreKitManager: ObservableObject {
             await refreshEntitlements()
         } catch {
             statusMessage = error.localizedDescription
+        }
+    }
+
+    private func startObservingTransactionUpdates() {
+        guard transactionUpdatesTask == nil else { return }
+        transactionUpdatesTask = Task { [weak self] in
+            for await result in Transaction.updates {
+                guard let self else { return }
+                do {
+                    let transaction = try self.verified(result)
+                    await transaction.finish()
+                    await self.refreshEntitlements()
+                } catch {
+                    self.statusMessage = StoreError.failedVerification.localizedDescription
+                }
+            }
         }
     }
 
