@@ -58,6 +58,14 @@ for marker in ["Non-Consumable", "最初の1スプリント最大8問", "固定�
     if marker not in metadata + review + storekit + packet:
         errors.append(f"StoreKit disclosure missing: {marker}")
 
+for marker in [
+    "最初の1スプリントは最大8問まで無料",
+    "プレミアム機能は、アプリ内課金（買い切り）で解放",
+    "価格はApp Storeの購入画面で表示",
+]:
+    if marker not in metadata:
+        errors.append(f"metadata IAP disclosure missing: {marker}")
+
 # Public privacy text should describe behavior in user-facing terms. The exact
 # required-reason code CA92.1 is validated separately in audit_native.py.
 for marker in ["トラッキングを行いません", "分析SDK", "端末内", "UserDefaults"]:
@@ -83,4 +91,4 @@ if errors:
         print(f"- {error}")
     sys.exit(1)
 
-print("PASS: App Store draft assets are native/privacy/StoreKit consistent and production IDs/prices remain blocked")
+print("PASS: App Store draft assets are native/privacy/IAP consistent and production IDs/prices remain blocked")
