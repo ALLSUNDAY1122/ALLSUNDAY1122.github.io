@@ -6,6 +6,7 @@ import LearningSprintCore
 final class RigakuAppModel: ObservableObject {
     @Published private(set) var state: LearningState
     @Published private(set) var questions: [LearningQuestion] = []
+    @Published private(set) var mediaByQuestionID: [String: RigakuQuestionMedia] = [:]
     @Published private(set) var premiumAccess = false
     @Published var lastError: String?
 
@@ -32,8 +33,10 @@ final class RigakuAppModel: ObservableObject {
 
         do {
             self.questions = try RigakuQuestionRepository.loadBundled()
+            self.mediaByQuestionID = try RigakuQuestionMediaRepository.loadBundled()
         } catch {
             self.questions = []
+            self.mediaByQuestionID = [:]
             if self.lastError == nil {
                 self.lastError = "監査済み問題データを読み込めませんでした。"
             }
@@ -80,6 +83,10 @@ final class RigakuAppModel: ObservableObject {
 
     var canStudy: Bool {
         !questions.isEmpty
+    }
+
+    func media(for questionID: String) -> RigakuQuestionMedia? {
+        mediaByQuestionID[questionID]
     }
 
     func questions(for kind: SessionKind) -> [LearningQuestion] {
