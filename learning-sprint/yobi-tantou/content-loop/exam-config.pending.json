@@ -1,7 +1,7 @@
 {
   "qualification": "司法試験予備試験・短答式",
   "series": "学びスプリント",
-  "status": "pending_official_pdf_audit",
+  "status": "candidate_generation_in_progress_official_pdf_counts_pending",
   "targetYears": [2026, 2025, 2024],
   "subjects": [
     "憲法",
@@ -18,6 +18,16 @@
     "2025": null,
     "2024": null
   },
+  "officialAnswerStatus": {
+    "2026": "pending_primary_answer_source",
+    "2025": "answer_page_verified_pdf_body_pending",
+    "2024": "answer_page_verified_pdf_body_pending"
+  },
+  "yearSpecificGates": {
+    "2026": ["official_answer_source", "pdf_question_count", "scoring_status"],
+    "2025": ["pdf_question_count", "answer_and_points", "misprint_correction_effect", "scoring_status"],
+    "2024": ["pdf_question_count", "answer_and_points", "scoring_status"]
+  },
   "lawBasisDates": {
     "2026": "2026-01-01",
     "2025": "2025-01-01",
@@ -25,12 +35,25 @@
   },
   "lawBasisRule": "From the 2024 preliminary examination onward, questions are in principle based on laws in force on January 1 of the year in which the short-answer and essay examinations are held.",
   "officialRepeatPolicy": false,
-  "releaseRule": "Do not set official counts or release official/adapted questions until each official PDF, answer source, PDL1.0 applicability, third-party rights, and law-basis date are audited.",
+  "releaseRule": "Do not set official counts or release official/adapted questions until each official PDF, answer source, correction notice when applicable, PDL1.0 applicability, third-party rights, and law-basis date are audited.",
   "primarySources": {
     "2026Problems": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00317.html",
     "2026QA": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00210.html",
+    "2026CommitteeDecisions": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00296.html",
+    "2025Problems": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00287.html",
+    "2025ShortAnswerResultsAndAnswers": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00289.html",
+    "2025ResultsHubWithCorrectionNotice": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00285.html",
     "2025Implementation": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00244.html",
+    "2024Problems": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00228.html",
+    "2024ShortAnswerResultsAndAnswers": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00258.html",
     "2024ImplementationAndLawRule": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00162.html",
     "mojContentTerms": "https://www.moj.go.jp/hisho06_00280.html"
+  },
+  "contentFiles": {
+    "sourceAudit": "source-audit-2026-08-13.md",
+    "topicMap": "topic-map.v1.json",
+    "candidateBank": "questions.candidates.v1.json",
+    "candidateValidator": "validate_candidates.py",
+    "nativeReleaseBuilder": "build_native_release.py"
   }
 }
