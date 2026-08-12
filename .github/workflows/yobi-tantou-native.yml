@@ -27,10 +27,13 @@ jobs:
         run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py learning-sprint/yobi-tantou/content-loop/questions.candidates.v1.json
       - name: Audited release builder self-test
         run: python learning-sprint/yobi-tantou/content-loop/build_native_release.py --self-test
+      - name: Production release preflight self-test
+        run: python learning-sprint/yobi-tantou/ios/release-preflight.py --self-test
       - name: AppIcon preparation scripts syntax
         run: |
           bash -n learning-sprint/yobi-tantou/ios/prepare-ios.sh
           python -m py_compile learning-sprint/yobi-tantou/ios/verify_app_icon.py
+          python -m py_compile learning-sprint/yobi-tantou/ios/release-preflight.py
 
   swift-tests:
     runs-on: macos-15
