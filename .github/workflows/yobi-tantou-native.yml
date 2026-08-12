@@ -69,3 +69,27 @@ jobs:
             YOBI_TEST_BUNDLE_ID=jp.ci.yobi.preview.tests \
             YOBI_UI_TEST_BUNDLE_ID=jp.ci.yobi.preview.uitests \
             | xcpretty
+      - name: Unsigned Release configuration build and bundle inspection
+        working-directory: learning-sprint/yobi-tantou/ios
+        run: |
+          set -o pipefail
+          DEVICE_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/{print $2; exit}')"
+          DERIVED="$RUNNER_TEMP/yobi-release-derived"
+          xcodebuild build \
+            -project YobiTantouSprint.xcodeproj \
+            -scheme YobiTantouSprint \
+            -configuration Release \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -derivedDataPath "$DERIVED" \
+            CODE_SIGNING_ALLOWED=NO \
+            YOBI_BUNDLE_ID=jp.ci.yobi.preview \
+            YOBI_TEST_BUNDLE_ID=jp.ci.yobi.preview.tests \
+            YOBI_UI_TEST_BUNDLE_ID=jp.ci.yobi.preview.uitests \
+            | xcpretty
+          APP="$DERIVED/Build/Products/Release-iphonesimulator/YobiTantouSprint.app"
+          test -d "$APP"
+          test -f "$APP/questions.preview.json"
+          test -f "$APP/PrivacyInfo.xcprivacy"
+          test -f "$APP/Assets.car"
+          test -f "$APP/YobiTantouSprint"
+          echo "PASS: unsigned Release app bundle contains preview dataset, privacy manifest, compiled assets and native executable."
