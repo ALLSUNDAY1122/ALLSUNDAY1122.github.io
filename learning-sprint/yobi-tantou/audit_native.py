@@ -22,11 +22,21 @@ for forbidden in ("import WebKit", "WKWebView", "SFSafariViewController"):
 required_ui = [
     "ホーム", "模試", "記録", "設定", "今日の学習", "今日のスプリント",
     "苦手をつぶす", "分野から解く", "ここだけ覚える", "わからない記録",
-    "5週間", "学習データを書き出す", "学習データを読み込む"
+    "5週間", "学習データを書き出す", "学習データを読み込む",
+    "一般教養は本試験の選択ルールに合わせ、最大20題を採点対象として抽出します。"
 ]
 for text in required_ui:
     if text not in views:
-        errors.append(f"missing Golden Master UI contract: {text}")
+        errors.append(f"missing Golden Master/qualification UI contract: {text}")
+
+required_mock = [
+    "generalEducationSubject = \"一般教養\"",
+    "generalEducationAnswerLimit = 20",
+    "MockSelectionPolicy.select(from: yearQuestions)",
+]
+for marker in required_mock:
+    if marker not in swift:
+        errors.append(f"missing preliminary-exam mock contract: {marker}")
 
 required_storekit = [
     "Product.products(for:", "product.purchase()", "AppStore.sync()",
@@ -84,4 +94,4 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print("PASS: native source contract, v2.1 UI, StoreKit lifecycle, preview/release gates, identifiers, privacy and canonical AppIcon lock")
+print("PASS: native source contract, v2.1 UI, preliminary-exam mock rule, StoreKit lifecycle, preview/release gates, identifiers, privacy and canonical AppIcon lock")
