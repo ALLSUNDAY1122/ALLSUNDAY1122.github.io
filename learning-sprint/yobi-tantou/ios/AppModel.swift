@@ -8,6 +8,7 @@ final class AppModel: ObservableObject {
         var correct: Int
         let title: String
         let consumesFreeSprint: Bool
+        let requiresPremium: Bool
     }
 
     @Published private(set) var questions: [StudyQuestion] = []
@@ -66,6 +67,7 @@ final class AppModel: ObservableObject {
         let chosen: [StudyQuestion]
         let title: String
         let consumesFreeSprint: Bool
+        let requiresPremium: Bool
 
         switch descriptor {
         case .daily:
@@ -73,25 +75,36 @@ final class AppModel: ObservableObject {
             chosen = Array(eligible.shuffled().prefix(min(state.dailyGoal, eligible.count)))
             title = isPreviewBank ? "開発プレビュー" : "今日のスプリント"
             consumesFreeSprint = !premium
+            requiresPremium = false
         case .weak:
             guard premium else { return false }
             chosen = eligible.filter { state.attempts[$0.id]?.weak == true }
             title = "苦手をつぶす"
             consumesFreeSprint = false
+            requiresPremium = true
         case .subject(let subject):
             guard premium else { return false }
             chosen = eligible.filter { $0.subject == subject }
             title = subject
             consumesFreeSprint = false
+            requiresPremium = true
         case .mock(let year):
             guard premium else { return false }
             chosen = questions.filter { $0.releaseEligible && $0.examYear == year }
             title = "令和\(year - 2018)年 模擬試験"
             consumesFreeSprint = false
+            requiresPremium = true
         }
 
         guard !chosen.isEmpty else { return false }
-        activeSession = ActiveSession(ids: chosen.map(\.id), index: 0, correct: 0, title: title, consumesFreeSprint: consumesFreeSprint)
+        activeSession = ActiveSession(
+            ids: chosen.map(\.id),
+            index: 0,
+            correct: 0,
+            title: title,
+            consumesFreeSprint: consumesFreeSprint,
+            requiresPremium: requiresPremium
+        )
         persistResume()
         return true
     }
@@ -99,19 +112,29 @@ final class AppModel: ObservableObject {
     @discardableResult
     func resume(premium: Bool) -> Bool {
         guard let resume = state.resume else { return false }
-        guard premium || !state.freeSprintConsumed else { return false }
+        let requiresPremium = resume.resolvedRequiresPremium
+        if requiresPremium && !premium { return false }
+        if !requiresPremium && !premium && state.freeSprintConsumed { return false }
+
         let validIDs = resume.questionIDs.filter { id in questions.contains { $0.id == id } }
-        guard !validIDs.isEmpty, resume.index < validIDs.count else {
+        guard validIDs.count == resume.questionIDs.count,
+              !validIDs.isEmpty,
+              resume.index >= 0,
+              resume.index < validIDs.count,
+              resume.correct >= 0,
+              resume.correct <= resume.index else {
             state.resume = nil
             saveState()
             return false
         }
+
         activeSession = ActiveSession(
             ids: validIDs,
             index: resume.index,
             correct: resume.correct,
             title: resume.title,
-            consumesFreeSprint: resume.consumesFreeSprint
+            consumesFreeSprint: !premium && !requiresPremium,
+            requiresPremium: requiresPremium
         )
         return true
     }
@@ -199,7 +222,8 @@ final class AppModel: ObservableObject {
               [4, 8, 16].contains(payload.state.dailyGoal),
               ["small", "medium", "large"].contains(payload.state.selectedTextSize),
               payload.state.totalCorrect <= payload.state.totalAnswered,
-              payload.state.attempts.values.allSatisfy({ $0.correct <= $0.answered }) else {
+              payload.state.attempts.values.allSatisfy({ $0.correct <= $0.answered }),
+              Self.isValidResume(payload.state.resume) else {
             throw BackupError.invalid
         }
         let paidGateState = state.freeSprintConsumed
@@ -225,6 +249,17 @@ final class AppModel: ObservableObject {
         saveState()
     }
 
+    private static func isValidResume(_ resume: ResumeState?) -> Bool {
+        guard let resume else { return true }
+        return !resume.questionIDs.isEmpty
+            && Set(resume.questionIDs).count == resume.questionIDs.count
+            && resume.index >= 0
+            && resume.index < resume.questionIDs.count
+            && resume.correct >= 0
+            && resume.correct <= resume.index
+            && !resume.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
     private func learningEligibleQuestions() -> [StudyQuestion] {
         let released = questions.filter(\.releaseEligible)
         return released.isEmpty ? questions.filter { $0.originType == "original_preview" } : released
@@ -237,7 +272,8 @@ final class AppModel: ObservableObject {
             index: session.index,
             correct: session.correct,
             title: session.title,
-            consumesFreeSprint: session.consumesFreeSprint
+            consumesFreeSprint: session.consumesFreeSprint,
+            requiresPremium: session.requiresPremium
         )
         saveState()
     }
