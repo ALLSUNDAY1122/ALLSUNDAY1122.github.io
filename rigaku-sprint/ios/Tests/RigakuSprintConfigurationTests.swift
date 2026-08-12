@@ -7,11 +7,11 @@ final class RigakuSprintConfigurationTests: XCTestCase {
         XCTAssertEqual(RigakuAppConfiguration.allowedDailyTargets, [4, 8, 16])
     }
 
-    func testExamRoundsDoNotGuessUnverifiedQuestionCounts() {
+    func testThreeOfficialRoundsHaveVerifiedQuestionCounts() {
         XCTAssertEqual(RigakuAppConfiguration.examRounds.map(\.round), [60, 59, 58])
-        XCTAssertEqual(RigakuAppConfiguration.examRounds[0].officialQuestionCount, 200)
-        XCTAssertNil(RigakuAppConfiguration.examRounds[1].officialQuestionCount)
-        XCTAssertNil(RigakuAppConfiguration.examRounds[2].officialQuestionCount)
+        XCTAssertEqual(RigakuAppConfiguration.examRounds.map(\.officialQuestionCount), [200, 200, 200])
+        XCTAssertEqual(RigakuAppConfiguration.totalOfficialQuestionSlots, 600)
+        XCTAssertTrue(RigakuAppConfiguration.examRounds.allSatisfy { $0.publicationStatus == .verifiedPublished })
     }
 
     func testOfficialSubjectListsMatchCurrentExamNotice() {
