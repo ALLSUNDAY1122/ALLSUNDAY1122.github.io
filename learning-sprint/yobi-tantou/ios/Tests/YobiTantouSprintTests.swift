@@ -55,7 +55,10 @@ final class YobiTantouSprintTests: XCTestCase {
             $0.releaseEligible && $0.contentUse == .practice && $0.examYear == nil && !$0.isOfficialMockQuestion
         })
         XCTAssertFalse(model.isPreviewBank)
-        XCTAssertEqual(Set(model.questions.map(\.subject), intersection: Set(AppModel.officialSubjects)).count, 7)
+        XCTAssertEqual(
+            Set(model.questions.map(\.subject)).intersection(Set(AppModel.officialSubjects)).count,
+            7
+        )
     }
 
     func testReleaseRepositoryAcceptsOnlyAuditedShape() throws {
