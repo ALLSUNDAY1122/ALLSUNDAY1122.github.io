@@ -5,8 +5,9 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parent
+SOURCES = ROOT / "Sources"
 PRODUCT = ROOT.parent / "product-content"
-swift_files = list((ROOT / "Sources").glob("*.swift"))
+swift_files = list(SOURCES.glob("*.swift"))
 texts = {p.name: p.read_text(encoding="utf-8") for p in swift_files}
 all_swift = "\n".join(texts.values())
 project = (ROOT / "project.yml").read_text(encoding="utf-8")
@@ -53,8 +54,18 @@ for token in required_native:
 app_entry = texts.get("RigakuSprintApp.swift", "")
 if "RigakuRootViewV2()" not in app_entry:
     errors.append("実行入口が現行正本UI RigakuRootViewV2 ではありません")
-if "RootTabView" in all_swift or "StudyPlaceholderView" in all_swift:
-    errors.append("旧プレースホルダーUIが残っています")
+
+# 旧UIの検出は型名文字列検索ではなく、廃止済みソースファイルの実在で判定する。
+# 型名検索だと監査コードやコメント自身の説明文を誤検出するため。
+legacy_files = (
+    SOURCES / "RootTabView.swift",
+    SOURCES / "RigakuRootView.swift",
+)
+for legacy in legacy_files:
+    if legacy.exists():
+        errors.append(f"旧UIソースが残っています: {legacy.name}")
+if "struct StudyPlaceholderView" in all_swift:
+    errors.append("旧プレースホルダー画面 StudyPlaceholderView が残っています")
 
 unknown_patterns = (
     "answer: .unknown",
