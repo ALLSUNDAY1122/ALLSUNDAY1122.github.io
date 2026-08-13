@@ -35,6 +35,9 @@ jobs:
         run: python learning-sprint/yobi-tantou/ios/release-preflight.py --self-test
       - name: App Store draft consistency
         run: python learning-sprint/yobi-tantou/validate-app-store-draft.py
+      - name: Probe MOJ official PDF links from runner
+        continue-on-error: true
+        run: python learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
       - name: AppIcon and release script syntax
         run: |
           bash -n learning-sprint/yobi-tantou/ios/prepare-ios.sh
@@ -43,6 +46,7 @@ jobs:
           python -m py_compile learning-sprint/yobi-tantou/validate-app-store-draft.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
 
   swift-tests:
     runs-on: macos-15
