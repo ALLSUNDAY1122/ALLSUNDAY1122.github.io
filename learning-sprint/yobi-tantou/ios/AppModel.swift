@@ -12,6 +12,7 @@ final class AppModel: ObservableObject {
     }
 
     @Published private(set) var questions: [StudyQuestion] = []
+    @Published private(set) var officialScoringCanonical: OfficialScoringCanonical?
     @Published var state = PersistentState()
     @Published var activeSession: ActiveSession?
     @Published var lastResult: SessionResult?
@@ -24,6 +25,7 @@ final class AppModel: ObservableObject {
     init(bundle: Bundle = .main) {
         loadState()
         loadQuestions(bundle: bundle)
+        loadOfficialScoring(bundle: bundle)
     }
 
     var currentQuestion: StudyQuestion? {
@@ -41,6 +43,10 @@ final class AppModel: ObservableObject {
     }
     var todayAnswered: Int { dayStat(Date()).answered }
     var isPreviewBank: Bool { !questions.contains(where: \.releaseEligible) }
+    var officialScoringYears: [Int] {
+        guard let canonical = officialScoringCanonical else { return [] }
+        return canonical.years.keys.compactMap(Int.init).sorted(by: >)
+    }
 
     func subjects() -> [String] { Self.officialSubjects }
 
@@ -51,6 +57,11 @@ final class AppModel: ObservableObject {
     func mockSelectionSummary(year: Int) -> MockSelectionSummary {
         let yearQuestions = questions.filter { $0.releaseEligible && $0.examYear == year }
         return MockSelectionPolicy.summary(for: yearQuestions)
+    }
+
+    func officialScoring(year: Int) -> OfficialYearScoring? {
+        guard let canonical = officialScoringCanonical else { return nil }
+        return try? OfficialScoringRepository.scoring(for: year, canonical: canonical)
     }
 
     func subjectAccuracy(_ subject: String) -> Double {
@@ -299,6 +310,16 @@ final class AppModel: ObservableObject {
             questions = try QuestionRepository().load(bundle: bundle)
         } catch {
             startupError = error.localizedDescription
+        }
+    }
+
+    private func loadOfficialScoring(bundle: Bundle) {
+        do {
+            officialScoringCanonical = try OfficialScoringRepository.load(bundle: bundle)
+        } catch {
+            if startupError == nil {
+                startupError = error.localizedDescription
+            }
         }
     }
 
