@@ -40,6 +40,7 @@ jobs:
         run: |
           grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.kanteishishortanswer' kanteishi-shortanswer-sprint/ios/project.yml
           grep -q 'DEVELOPMENT_TEAM: "MN3D2ZM44N"' kanteishi-shortanswer-sprint/ios/project.yml
+          grep -q 'GENERATE_INFOPLIST_FILE: NO' kanteishi-shortanswer-sprint/ios/project.yml
           if grep -R -nE 'productIDs[[:space:]]*=[[:space:]]*\[[[:space:]]*"' kanteishi-shortanswer-sprint/core/Sources kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer; then
             echo 'StoreKit Product ID must remain unset until the product is created in App Store Connect.'
             exit 1
@@ -59,6 +60,12 @@ jobs:
       - name: Generate Xcode project
         working-directory: kanteishi-shortanswer-sprint/ios
         run: xcodegen generate
+      - name: Verify source Info.plist survived XcodeGen
+        run: |
+          PLIST='kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Info.plist'
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$PLIST" | grep -qx '鑑定士スプリント'
+          /usr/libexec/PlistBuddy -c 'Print :UILaunchScreen' "$PLIST" >/dev/null
+          /usr/libexec/PlistBuddy -c 'Print :UIRequiresFullScreen' "$PLIST" | grep -qx 'true'
       - name: SwiftUI iOS Simulator typecheck
         run: |
           SDK="$(xcrun --sdk iphonesimulator --show-sdk-path)"
@@ -96,6 +103,21 @@ jobs:
           test -d "$APP_PATH"
           find "$APP_PATH" -maxdepth 3 -type f -name 'questions.prototype.json' -print
           test -n "$(find "$APP_PATH" -maxdepth 3 -type f -name 'questions.prototype.json' -print -quit)"
+      - name: Verify final iPhone app metadata
+        run: |
+          APP_PATH="$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/DerivedData/Build/Products/Debug-iphonesimulator/KanteishiShortAnswer.app"
+          python3 - "$APP_PATH/Info.plist" <<'PY'
+          import plistlib, sys
+          with open(sys.argv[1], 'rb') as f:
+              p = plistlib.load(f)
+          assert p.get('CFBundleDisplayName') == '鑑定士スプリント', p
+          assert p.get('CFBundleShortVersionString') == '1.0.0', p.get('CFBundleShortVersionString')
+          assert p.get('UIDeviceFamily') == [1], p.get('UIDeviceFamily')
+          assert 'UILaunchScreen' in p, p
+          assert p.get('UIRequiresFullScreen') is True, p.get('UIRequiresFullScreen')
+          assert p.get('UISupportedInterfaceOrientations') == ['UIInterfaceOrientationPortrait'], p.get('UISupportedInterfaceOrientations')
+          print('Final app metadata PASS')
+          PY
       - name: Run native unit tests
         working-directory: kanteishi-shortanswer-sprint/ios
         run: |
@@ -121,18 +143,64 @@ jobs:
             -default-test-execution-time-allowance 60 \
             -maximum-test-execution-time-allowance 90 \
             test-without-building
-      - name: Install and launch built app
+      - name: Install clean app and capture home
         run: |
           DEVICE_ID='${{ steps.simulator.outputs.id }}'
           APP_PATH="$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/DerivedData/Build/Products/Debug-iphonesimulator/KanteishiShortAnswer.app"
+          EVIDENCE="$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/evidence"
           test -d "$APP_PATH"
-          xcrun simctl install "$DEVICE_ID" "$APP_PATH"
           xcrun simctl terminate "$DEVICE_ID" jp.allsunday1122.kanteishishortanswer 2>/dev/null || true
+          xcrun simctl uninstall "$DEVICE_ID" jp.allsunday1122.kanteishishortanswer 2>/dev/null || true
+          xcrun simctl install "$DEVICE_ID" "$APP_PATH"
           xcrun simctl launch "$DEVICE_ID" jp.allsunday1122.kanteishishortanswer
-          mkdir -p "$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/evidence"
+          mkdir -p "$EVIDENCE"
           sleep 2
-          xcrun simctl io "$DEVICE_ID" screenshot "$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/evidence/home.png"
-          test -s "$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/evidence/home.png"
+          xcrun simctl io "$DEVICE_ID" screenshot "$EVIDENCE/home.png"
+          test -s "$EVIDENCE/home.png"
+      - name: Full-screen visual gate
+        run: |
+          SCREENSHOT="$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/evidence/home.png"
+          SCREENSHOT="$SCREENSHOT" swift - <<'SWIFT'
+          import AppKit
+          import Foundation
+
+          guard let path = ProcessInfo.processInfo.environment["SCREENSHOT"],
+                let image = NSImage(contentsOfFile: path),
+                let tiff = image.tiffRepresentation,
+                let rep = NSBitmapImageRep(data: tiff) else {
+              fputs("Could not decode screenshot\n", stderr)
+              exit(2)
+          }
+
+          let width = rep.pixelsWide
+          let height = rep.pixelsHigh
+          guard width > 200, height > 400 else {
+              fputs("Unexpected screenshot size\n", stderr)
+              exit(2)
+          }
+
+          func averageLuminance(y: Int) -> Double {
+              var sum = 0.0
+              var count = 0
+              for x in stride(from: 20, to: width - 20, by: 40) {
+                  guard let raw = rep.colorAt(x: x, y: y),
+                        let color = raw.usingColorSpace(.deviceRGB) else { continue }
+                  sum += 0.2126 * Double(color.redComponent)
+                       + 0.7152 * Double(color.greenComponent)
+                       + 0.0722 * Double(color.blueComponent)
+                  count += 1
+              }
+              return count == 0 ? 0 : sum / Double(count)
+          }
+
+          let lower = averageLuminance(y: min(100, height - 1))
+          let upper = averageLuminance(y: max(0, height - 101))
+          print("Screenshot \(width)x\(height), edge luminance lower=\(lower), upper=\(upper)")
+          if lower < 0.25 || upper < 0.25 {
+              fputs("Black letterbox/full-screen regression detected\n", stderr)
+              exit(1)
+          }
+          SWIFT
       - name: Upload runnable app and launch evidence
         uses: actions/upload-artifact@v4
         with:
