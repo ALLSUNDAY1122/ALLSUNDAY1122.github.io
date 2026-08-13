@@ -11,6 +11,7 @@ struct RigakuStudyView: View {
     @State private var index = 0
     @State private var selectedIndices: Set<Int> = []
     @State private var evaluation: AnswerEvaluation?
+    @State private var correctness: [String: Bool] = [:]
     @State private var didLoad = false
     @State private var completed = false
     @State private var localError: String?
@@ -68,11 +69,13 @@ struct RigakuStudyView: View {
            let snapshot = appModel.state.resumeSession,
            snapshot.kind == kind {
             sessionQuestions = appModel.resumeQuestions()
+            correctness = appModel.resumeCorrectness()
             index = min(snapshot.currentIndex, max(0, sessionQuestions.count - 1))
             return
         }
 
         sessionQuestions = appModel.questions(for: kind)
+        correctness = [:]
         index = 0
         if !sessionQuestions.isEmpty {
             appModel.beginSession(kind: kind, questions: sessionQuestions)
@@ -211,11 +214,13 @@ struct RigakuStudyView: View {
 
     private func submit(question: LearningQuestion, answer: AnswerPayload) {
         do {
-            evaluation = try appModel.recordAnswer(
+            let result = try appModel.recordAnswer(
                 question: question,
                 answer: answer,
                 advanceTo: index + 1
             )
+            correctness[question.id] = result.isCorrect
+            evaluation = result
         } catch {
             localError = "回答を採点できませんでした。問題データの監査が必要です。"
         }
@@ -303,15 +308,66 @@ struct RigakuStudyView: View {
         .padding(24)
     }
 
+    @ViewBuilder
     private var completionView: some View {
-        VStack(spacing: 14) {
-            Text("完了")
-                .font(LearningSprintTheme.serif(30, weight: .bold))
-            Text("このセットの記録を保存しました。")
-                .font(LearningSprintTheme.sans(14, weight: .medium))
-                .foregroundStyle(LearningSprintTheme.ink2)
+        ScrollView {
+            VStack(spacing: 16) {
+                if case .mock(let round) = kind,
+                   let score = appModel.mockScore(
+                       round: round,
+                       questions: sessionQuestions,
+                       correctness: correctness
+                   ) {
+                    Text(score.passed ? "合格基準クリア" : "合格基準未到達")
+                        .font(LearningSprintTheme.serif(28, weight: .bold))
+                        .foregroundStyle(score.passed ? LearningSprintTheme.green : LearningSprintTheme.vermilion)
+                        .accessibilityIdentifier("mock.result.status")
+
+                    VStack(spacing: 10) {
+                        scoreRow("総得点", score.totalPoints, score.totalMax, threshold: score.passTotal)
+                        scoreRow("実地問題", score.practicalPoints, score.practicalMax, threshold: score.passPractical)
+                        scoreRow("一般問題", score.generalPoints, score.generalMax, threshold: nil)
+                    }
+                    .padding(16)
+                    .background(LearningSprintTheme.card)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(LearningSprintTheme.line))
+
+                    Text("第\(round)回の公式配点を再現：一般1点、実地3点。厚生労働省が採点対象外とした問題は0点として集計します。")
+                        .font(LearningSprintTheme.sans(12, weight: .medium))
+                        .foregroundStyle(LearningSprintTheme.ink2)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else {
+                    Text("完了")
+                        .font(LearningSprintTheme.serif(30, weight: .bold))
+                    Text("このセットの記録を保存しました。")
+                        .font(LearningSprintTheme.sans(14, weight: .medium))
+                        .foregroundStyle(LearningSprintTheme.ink2)
+                }
+            }
+            .padding(24)
+            .frame(maxWidth: 560)
+            .frame(maxWidth: .infinity)
         }
-        .padding(24)
+    }
+
+    private func scoreRow(_ label: String, _ points: Int, _ max: Int, threshold: Int?) -> some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(label)
+                    .font(LearningSprintTheme.sans(13, weight: .bold))
+                if let threshold {
+                    Text("基準 \(threshold)点以上")
+                        .font(LearningSprintTheme.sans(10, weight: .medium))
+                        .foregroundStyle(LearningSprintTheme.ink3)
+                }
+            }
+            Spacer()
+            Text("\(points) / \(max)")
+                .font(LearningSprintTheme.serif(20, weight: .bold))
+                .foregroundStyle(LearningSprintTheme.indigo)
+        }
     }
 
     private func choiceLabel(_ index: Int) -> String {
