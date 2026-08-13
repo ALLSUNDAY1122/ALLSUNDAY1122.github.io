@@ -294,23 +294,63 @@ private struct MockView: View {
     @EnvironmentObject private var store: StoreKitManager
     let onStart: (SessionDescriptor) -> Void
 
-    private var years: [Int] {
+    private var releasedYears: [Int] {
         Array(Set(model.questions.compactMap { $0.releaseEligible ? $0.examYear : nil })).sorted(by: >)
     }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
-                Text("模擬試験").font(SprintTheme.serif(28, weight: .bold)).padding(.top, 18)
-                Text("正式な年度別問題数と配点は法務省一次資料の監査後にデータから自動生成します。一般教養は本試験の選択ルールに合わせ、最大20題を採点対象として抽出します。")
+                Text("模擬試験")
+                    .font(SprintTheme.serif(28, weight: .bold))
+                    .padding(.top, 18)
+                Text("R6・R7は法務省一次資料から年度構成・正答・配点・順不同・部分点まで確認済みです。問題本文は権利・教材監査を通過したものだけを解放します。")
                     .foregroundStyle(SprintTheme.ink2)
-                if years.isEmpty {
+
+                if !model.officialScoringYears.isEmpty {
+                    Text("確認済みの公式採点構造")
+                        .font(SprintTheme.serif(19, weight: .bold))
+                        .padding(.top, 2)
+
+                    ForEach(model.officialScoringYears, id: \.self) { year in
+                        if let scoring = model.officialScoring(year: year) {
+                            PaperCard {
+                                VStack(alignment: .leading, spacing: 9) {
+                                    HStack {
+                                        Text("令和\(year - 2018)年")
+                                            .font(SprintTheme.serif(18, weight: .bold))
+                                        Spacer()
+                                        Label("採点確認済み", systemImage: "checkmark.seal.fill")
+                                            .font(.caption.bold())
+                                            .foregroundStyle(SprintTheme.green)
+                                    }
+                                    Text("法律基本科目 \(scoring.legal.questionCount)問・\(scoring.legal.maxPoints)点")
+                                        .font(.subheadline)
+                                    Text("一般教養 \(scoring.generalEducation.offered)題から\(scoring.generalEducation.select)題選択・\(scoring.generalEducation.maxPoints)点")
+                                        .font(.subheadline)
+                                    HStack {
+                                        Text("満点 \(scoring.totalMaxPoints)点")
+                                        Spacer()
+                                        Text("公式合格点 \(scoring.officialPassScore)点")
+                                    }
+                                    .font(.caption.bold())
+                                    .foregroundStyle(SprintTheme.indigo)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if releasedYears.isEmpty {
                     PaperCard {
-                        Label("R6〜R8の問題数・正答・権利監査が未完了のため、模試はまだ解放しません。", systemImage: "lock.doc")
+                        Label("採点構造は確認済みです。正式教材問題の権利・内容監査が完了するまで、年度模試の開始だけをロックしています。", systemImage: "lock.doc")
                             .foregroundStyle(SprintTheme.ink2)
                     }
                 } else {
-                    ForEach(years, id: \.self) { year in
+                    Text("受験できる年度")
+                        .font(SprintTheme.serif(19, weight: .bold))
+                        .padding(.top, 2)
+                    ForEach(releasedYears, id: \.self) { year in
                         let summary = model.mockSelectionSummary(year: year)
                         Button { onStart(.mock(year)) } label: {
                             PaperCard {
