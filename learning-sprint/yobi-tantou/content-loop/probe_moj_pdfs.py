@@ -8,8 +8,11 @@ import urllib.request
 PAGES = {
     "r6_questions": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00228.html",
     "r6_results": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00258.html",
-    "r7_results": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00285.html",
+    "r7_questions": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00287.html",
+    "r7_short_results": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00289.html",
+    "r7_results_parent": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00285.html",
     "r8_questions": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00317.html",
+    "r8_results_parent": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00315.html",
 }
 
 UA = "Mozilla/5.0 (compatible; LearningSprintOfficialSourceAudit/1.0)"
