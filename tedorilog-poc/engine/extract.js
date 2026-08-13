@@ -608,14 +608,6 @@ export function extractPayslip(rawTokens, options = {}) {
   const checks = reconcile(items, totals, otherDeductionSum);
   applyChecks(items, checks, totals, repairedBlocks);
 
-  const summary = { confident: 0, needsReview: 0, notFound: 0 };
-  for (const key of ITEM_KEYS) {
-    const st = items[key].status;
-    if (st === STATUS.CONFIRMED_CANDIDATE) summary.confident += 1;
-    else if (st === STATUS.NEEDS_REVIEW) summary.needsReview += 1;
-    else summary.notFound += 1;
-  }
-
   // 検算の裏付けが取れた項目だけを「確定候補」にする。
   // PDF直接抽出でも、フォント埋め込みの不備で文字が化けることがあるため経路を問わず適用する。
   const supported = new Set();
@@ -646,6 +638,15 @@ export function extractPayslip(rawTokens, options = {}) {
       item.status = STATUS.NEEDS_REVIEW;
       item.reasons.push('項目名が完全一致でない手当を含むため要確認（振替の可能性）');
     }
+  }
+
+  // 集計は状態の最終調整（裏付け・信頼度・振替の判定）が終わってから数える
+  const summary = { confident: 0, needsReview: 0, notFound: 0 };
+  for (const key of ITEM_KEYS) {
+    const st = items[key].status;
+    if (st === STATUS.CONFIRMED_CANDIDATE) summary.confident += 1;
+    else if (st === STATUS.NEEDS_REVIEW) summary.needsReview += 1;
+    else summary.notFound += 1;
   }
 
   return {

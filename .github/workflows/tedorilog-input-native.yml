@@ -35,10 +35,6 @@ jobs:
         working-directory: native-ios/TedoriLogInput
         run: swift test --filter TedoriLogCoreTests
 
-      - name: Vision holdout evaluation (実Apple Visionでの未知形式評価)
-        working-directory: native-ios/TedoriLogInput
-        run: swift test --filter TedoriLogVisionTests 2>&1 | tee vision-eval.log
-
       - name: Install XcodeGen
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
 
@@ -53,6 +49,10 @@ jobs:
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
             build 2>&1 | tail -60
+
+      - name: Vision holdout evaluation (実Apple Visionでの未知形式評価)
+        working-directory: native-ios/TedoriLogInput
+        run: swift test --filter TedoriLogVisionTests 2>&1 | tee vision-eval.log
 
       - name: Upload Vision evaluation log
         if: always()
