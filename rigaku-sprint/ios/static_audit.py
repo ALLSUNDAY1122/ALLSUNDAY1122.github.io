@@ -44,6 +44,7 @@ required_native = (
     "RigakuQuestionMediaRepository",
     "isMockReady",
     "auditedQuestionCount(forSubject:",
+    "RigakuExamScoringRepository",
 )
 for token in required_native:
     if token not in all_swift:
@@ -55,8 +56,6 @@ if "RigakuRootViewV2()" not in app_entry:
 if "RootTabView" in all_swift or "StudyPlaceholderView" in all_swift:
     errors.append("旧プレースホルダーUIが残っています")
 
-# 「わからない」は型名の直書きではなく、共通AnswerPayload.unknown相当が
-# 実際の回答送信経路で使われていることを確認する。
 unknown_patterns = (
     "answer: .unknown",
     "AnswerPayload.unknown",
@@ -71,7 +70,9 @@ for required_resource in (
     "questions.json",
     "question-batches",
     "media-manifest.json",
-    "exam-scoring.json",
+    "exam-config.json",
+    "official-answers.json",
+    "scoring-adjustments.json",
 ):
     if required_resource not in project:
         errors.append(f"ネイティブresource未登録: {required_resource}")
@@ -93,7 +94,14 @@ if verified != expected:
 if "static let totalOfficialQuestionSlots = examRounds.compactMap(\\.officialQuestionCount).reduce(0, +)" not in config:
     errors.append("3回分総枠の導出が欠損")
 
-for json_name in ("questions.json", "media-manifest.json", "exam-frame.json", "exam-scoring.json"):
+for json_name in (
+    "questions.json",
+    "media-manifest.json",
+    "exam-frame.json",
+    "exam-config.json",
+    "official-answers.json",
+    "scoring-adjustments.json",
+):
     path = PRODUCT / json_name
     if not path.exists():
         errors.append(f"product-content欠損: {json_name}")
