@@ -8,7 +8,9 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: yobi-tantou-native-${{ github.event.pull_request.number || github.ref }}
+  # v2 isolates new runs from a cancelled legacy run whose post-job cleanup
+  # remained stuck in_progress. Future PR commits still cancel superseded v2 runs.
+  group: yobi-tantou-native-v2-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -63,6 +65,7 @@ jobs:
           python -m py_compile learning-sprint/yobi-tantou/content-loop/summarize_official_answer_tables.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/summarize_official_question_shapes.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/build_official_scoring_canonical_fixed.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/triage_general_education_rights.py
 
   swift-tests:
     runs-on: macos-15
