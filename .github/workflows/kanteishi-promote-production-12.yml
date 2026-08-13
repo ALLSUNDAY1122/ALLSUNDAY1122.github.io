@@ -29,7 +29,8 @@ jobs:
           grep -q 'startEditionSubject' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/AppCore.swift
           grep -q 'official-240-' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswerTests/KanteishiShortAnswerTests.swift
           grep -q '年度別模試・80問' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/ContentView.swift
-          grep -q '40問・完答' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/ContentView.swift
+          grep -q 'questions.count' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/ContentView.swift
+          grep -q 'completionCount(for: key)' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/ContentView.swift
       - name: Commit promoted application sources
         if: github.event_name == 'pull_request'
         env:
