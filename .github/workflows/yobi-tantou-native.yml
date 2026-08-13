@@ -19,6 +19,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install PDF parser
+        run: python -m pip install --disable-pip-version-check pypdf==6.1.1
       - name: Native source contract
         run: python learning-sprint/yobi-tantou/audit_native.py
       - name: Candidate question preflight self-test
@@ -29,15 +31,16 @@ jobs:
         run: python learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
       - name: Candidate answer and explanation audit
         run: python learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
+      - name: Probe MOJ official PDF links from runner
+        run: python learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
+      - name: Official R6-R8 PDF structure audit
+        run: python learning-sprint/yobi-tantou/content-loop/audit_official_pdf_structure.py
       - name: Audited release builder self-test
         run: python learning-sprint/yobi-tantou/content-loop/build_native_release.py --self-test
       - name: Production release preflight self-test
         run: python learning-sprint/yobi-tantou/ios/release-preflight.py --self-test
       - name: App Store draft consistency
         run: python learning-sprint/yobi-tantou/validate-app-store-draft.py
-      - name: Probe MOJ official PDF links from runner
-        continue-on-error: true
-        run: python learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
       - name: AppIcon and release script syntax
         run: |
           bash -n learning-sprint/yobi-tantou/ios/prepare-ios.sh
@@ -47,6 +50,7 @@ jobs:
           python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_official_pdf_structure.py
 
   swift-tests:
     runs-on: macos-15
