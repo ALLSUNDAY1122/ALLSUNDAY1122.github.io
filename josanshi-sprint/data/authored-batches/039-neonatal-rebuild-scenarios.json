@@ -1,0 +1,71 @@
+{
+  "schemaVersion":"1.0",
+  "batchId":"039-neonatal-rebuild-scenarios",
+  "checkedAt":"2026-08-13",
+  "questions":[],
+  "scenarios":[
+    {
+      "scenarioId":"JOS-R1-AM-SC04",
+      "scenarioText":"28歳、初産婦。妊娠39週2日に経腟分娩し、3,160gの男児を出生した。児は出生直後から自発呼吸があり筋緊張も良好で、母児とも安定している。出生後の移行を観察しながら母児接触を行い、日齢2には授乳状況を確認している。",
+      "clinicalFrame":{"person":"在胎39週2日、正期産男児、出生直後から日齢2","timeline":"出生直後の全身評価→胎外環境への適応観察→出生24時間以降の授乳評価","coreTask":"Apgarを含む全身評価、移行期観察、授乳支援","safetyEscalation":"呼吸循環不安定・哺乳不良・活気低下があれば新生児医療へ連携"},
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JPS-NEONATAL","NCPR-GUIDELINE-2025"],
+      "sourceCheckedAt":"2026-08-13","rightsBasis":"original coherent neonatal timeline based on verified current evidence; no direct reproduction","auditStatus":"content-reviewed"
+    },
+    {
+      "scenarioId":"JOS-R1-PM-SC02",
+      "scenarioText":"30歳、初産婦。Basedow病で妊娠中も治療を継続し、妊娠38週6日に帝王切開で3,020gの女児を出生した。児は出生後に頻呼吸がみられ経過観察中で、日齢2に腹部膨満と緑色の嘔吐が出現した。",
+      "clinicalFrame":{"person":"母体Basedow病、正期産女児、帝王切開後の日齢0〜2","timeline":"出生後頻呼吸の評価→胆汁性嘔吐の緊急評価→母体甲状腺疾患の影響評価","coreTask":"新生児呼吸疾患、消化器異常、母体疾患の影響","safetyEscalation":"呼吸急変・胆汁性嘔吐・循環不良は即時新生児医療"},
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JPS-NEONATAL","MHLW-PERINATAL-SYSTEM","JSOG-OB-GUIDELINE-2026"],
+      "sourceCheckedAt":"2026-08-13","rightsBasis":"original coherent neonatal timeline based on verified current evidence; no direct reproduction","auditStatus":"content-reviewed"
+    },
+    {
+      "scenarioId":"JOS-R1-PM-SC06",
+      "scenarioText":"30歳、初産婦。胎児期から染色体異常の可能性を指摘されていた。妊娠35週5日に2,280gの女児を出生し、児は啼泣が弱く筋緊張も低下している。出生直後の呼吸・心拍を評価しながら保温を行い、家族は今後の発達や育児を心配している。",
+      "clinicalFrame":{"person":"在胎35週5日の早産・低出生体重児、発達上の問題が疑われる女児","timeline":"発達上の問題を踏まえた家族支援→早産児の呼吸循環・体温特性→出生直後の呼吸・心拍評価","coreTask":"発達リスク、早産児の生理、出生直後バイタル評価","safetyEscalation":"無呼吸・徐脈・低体温などは現行新生児蘇生・NICU管理へ連携"},
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JPS-NEONATAL","NCPR-GUIDELINE-2025","CFA-LOW-BIRTHWEIGHT-GUIDE","CFA-INFANT-CHECKUPS"],
+      "sourceCheckedAt":"2026-08-13","rightsBasis":"original coherent preterm neonatal timeline based on verified current evidence; no direct reproduction","auditStatus":"content-reviewed"
+    },
+    {
+      "scenarioId":"JOS-R2-AM-SC04",
+      "scenarioText":"27歳、初産婦。妊娠34週4日に2,080gの男児を出生した。出生直後の呼吸循環は安定している。身体計測と成熟度を確認し、低体温を防ぎながらケアを行っている。日齢数日で臍部を含む保清・感染予防について家族へ説明する。",
+      "clinicalFrame":{"person":"在胎34週4日、2,080gの早産・低出生体重児","timeline":"身体計測・成熟度評価→出生直後の保温・安全確保→保清・臍部感染予防","coreTask":"成熟度、保温、安全、感染予防","safetyEscalation":"呼吸循環不安定・体温異常・臍炎徴候は新生児医療へ連携"},
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JPS-NEONATAL","NCPR-GUIDELINE-2025","CFA-LOW-BIRTHWEIGHT-GUIDE"],
+      "sourceCheckedAt":"2026-08-13","rightsBasis":"original coherent preterm neonatal timeline based on verified current evidence; no direct reproduction","auditStatus":"content-reviewed"
+    },
+    {
+      "scenarioId":"JOS-R2-PM-SC02",
+      "scenarioText":"29歳、初産婦。妊娠35週0日に緊急分娩となり、2,210gの男児が出生した。出生直後に蘇生を要し、その後NICUへ入院した。経管栄養と静脈輸液を受けながら感染徴候にも注意して管理され、退院後は発育・発達を継続して確認する予定である。",
+      "clinicalFrame":{"person":"在胎35週、蘇生後NICU入院の早産児","timeline":"経管栄養・輸液管理→感染症/新生児仮死後の全身評価→退院後の生活・発達支援","coreTask":"栄養輸液、感染・低酸素評価、乳児期フォロー","safetyEscalation":"腹部異常、感染徴候、神経状態悪化は直ちに新生児医療チームへ共有"},
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JPS-NEONATAL","MHLW-PERINATAL-SYSTEM","CFA-INFANT-CHECKUPS"],
+      "sourceCheckedAt":"2026-08-13","rightsBasis":"original coherent NICU timeline based on verified current evidence; no direct reproduction","auditStatus":"content-reviewed"
+    },
+    {
+      "scenarioId":"JOS-R2-PM-SC06",
+      "scenarioText":"33歳、初産婦。妊娠33週6日に1,920gの女児を出生し、児はNICUへ入院した。呼吸状態は徐々に安定し経腸栄養を進めている。保育器からコットへ移行した際に体温低下と低血糖がみられた。退院に向け、授乳・感染予防と安全な睡眠環境を家族と確認している。",
+      "clinicalFrame":{"person":"在胎33週6日、1,920gの早産児、NICUから退院準備期","timeline":"SIDSリスク低減指導→早産児の栄養・授乳と感染予防→血糖・体温調節評価","coreTask":"安全睡眠、早産児栄養、感染予防、代謝・体温管理","safetyEscalation":"低体温・低血糖・哺乳不良・呼吸異常は新生児医療で再評価"},
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JPS-NEONATAL","CFA-LOW-BIRTHWEIGHT-GUIDE","CFA-SIDS-CURRENT","MHLW-PERINATAL-SYSTEM"],
+      "sourceCheckedAt":"2026-08-13","rightsBasis":"original coherent preterm discharge timeline based on verified current evidence; no direct reproduction","auditStatus":"content-reviewed"
+    },
+    {
+      "scenarioId":"JOS-R3-AM-SC04",
+      "scenarioText":"26歳、初産婦。妊娠39週5日に3,200gの女児を経腟分娩した。日齢3、出生後の体重減少を確認しながら授乳を続けている。臍部の清潔と感染予防について説明を受けているが、その後、黄疸の増強に加えて発熱と哺乳力低下がみられた。",
+      "clinicalFrame":{"person":"正期産女児、日齢3","timeline":"生理的体重減少の評価→臍部を含む感染予防ケア→黄疸・体温異常と全身状態評価","coreTask":"体重減少、感染予防、黄疸と感染の切り分け","safetyEscalation":"発熱・哺乳不良・活気低下を伴う黄疸は速やかに新生児医療へ連携"},
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JPS-NEONATAL","MHLW-PERINATAL-SYSTEM"],
+      "sourceCheckedAt":"2026-08-13","rightsBasis":"original coherent neonatal follow-up timeline based on verified current evidence; no direct reproduction","auditStatus":"content-reviewed"
+    },
+    {
+      "scenarioId":"JOS-R3-PM-SC02",
+      "scenarioText":"32歳、初産婦。妊娠中に喫煙と飲酒があり、妊娠39週で男児を出生した。児は出生時に低酸素性虚血性脳症が疑われ低体温療法を受けた。その後は全身状態が安定し、家族は退院後の予防接種や口腔ケアを含む育児について相談している。",
+      "clinicalFrame":{"person":"正期産男児、低酸素性虚血性脳症で低体温療法後","timeline":"低体温療法中の家族支援→母体喫煙・飲酒リスクの説明→退院後の予防接種・口腔衛生支援","coreTask":"集中治療中家族支援、非難しないリスク低減、疾病予防","safetyEscalation":"神経状態や哺乳・呼吸の悪化は新生児医療へ再評価"},
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JPS-NEONATAL","MHLW-PERINATAL-SYSTEM","JSOG-OB-GUIDELINE-2026","MHLW-VACCINATION-CURRENT-2026","CFA-INFANT-CHECKUPS"],
+      "sourceCheckedAt":"2026-08-13","rightsBasis":"original coherent neonatal recovery timeline based on verified current evidence; no direct reproduction","auditStatus":"content-reviewed"
+    },
+    {
+      "scenarioId":"JOS-R3-PM-SC06",
+      "scenarioText":"35歳、初産婦。胎児発育不全のため妊娠29週6日に980gの女児を出生した。児は長期NICU管理を受け、現在は退院準備中である。家族は今後の成長発達や後遺症、家庭でのケアに強い不安を抱いている。",
+      "clinicalFrame":{"person":"在胎29週6日、980gの超低出生体重児、長期NICU後の退院準備期","timeline":"長期予後・成長発達評価→早産児家族への退院支援→胎内環境・分娩歴を踏まえた継続評価","coreTask":"超早産児フォロー、ファミリーケア、周産期背景を踏まえた評価","safetyEscalation":"発達・視聴覚・呼吸栄養上の異常を専門外来と地域支援へ継続連携"},
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JPS-NEONATAL","CFA-LOW-BIRTHWEIGHT-GUIDE","CFA-INFANT-CHECKUPS","JSOG-OB-GUIDELINE-2026"],
+      "sourceCheckedAt":"2026-08-13","rightsBasis":"original coherent extremely-preterm follow-up timeline based on verified current evidence; no direct reproduction","auditStatus":"content-reviewed"
+    }
+  ]
+}
