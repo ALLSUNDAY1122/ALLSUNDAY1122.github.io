@@ -47,6 +47,9 @@ jobs:
           python3 josanshi-sprint/scripts/build_generation_plan.py --check
           python3 josanshi-sprint/scripts/build_scenario_authoring_plan.py --check
 
+      - name: Require independent review of same-topic similarity warnings
+        run: python3 josanshi-sprint/scripts/validate_similarity_reviews.py
+
       - name: Materialize modular source registry for bank audit
         run: python3 josanshi-sprint/scripts/materialize_source_registry.py
 
@@ -56,11 +59,17 @@ jobs:
       - name: Apply all independent content audit approvals
         run: python3 josanshi-sprint/scripts/apply_all_audit_approvals.py
 
-      - name: Audit materialized production question-bank draft
-        run: python3 josanshi-sprint/scripts/audit_question_bank.py
+      - name: Audit complete production question bank
+        run: python3 josanshi-sprint/scripts/audit_question_bank.py --require-complete
 
       - name: Validate current monotonic content stage
         run: python3 josanshi-sprint/scripts/validate_content_stage.py
+
+      - name: Assert bundled Swift bank matches audited source exactly
+        shell: bash
+        run: |
+          python3 josanshi-sprint/scripts/export_swift_question_bank.py --output /tmp/josanshi-questions.json
+          cmp /tmp/josanshi-questions.json josanshi-sprint/ios/JosanshiSprintFeature/Sources/JosanshiSprintFeature/Resources/questions.json
 
       - name: Assert no WebView primary implementation
         shell: bash
