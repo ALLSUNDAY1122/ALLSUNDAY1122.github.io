@@ -1,6 +1,6 @@
 # Release Status — #14 助産師国家試験｜学びスプリント
 
-Updated: 2026-08-12 JST
+Updated: 2026-08-13 JST
 Owner: ChatGPT project アプリ開発
 
 ## Canonical implementation rules
@@ -10,6 +10,7 @@ Owner: ChatGPT project アプリ開発
 - Shared core: `native-ios/LearningSprintCore`.
 - Internal TestFlight only until explicit user approval.
 - External TestFlight review and App Store review submission are prohibited before explicit approval.
+- Production Bundle ID / App Store Connect App ID / IAP Product ID must never be guessed.
 
 ## Acceptance gates
 
@@ -22,46 +23,75 @@ Owner: ChatGPT project アプリ開発
 - [x] R5 question standard confirmed as current baseline in 2026 review.
 - [x] Production identifiers left unset rather than guessed.
 - [x] Canonical #14 AppIcon located: Drive file `14_助産師国家試験.png` / ID `134DG19Lknp2p1AFvDAkLPA2zocyj2nOP`.
-- [x] Native Foundation CI run #2 PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31565331187
+- [x] Exact AppIcon source pinned in `ios/AppIconSource.json`: 1024×1024 PNG, SHA-256 `07668a08a0703b76ecbeca38bbc5b396a248f822de594947ddccd383f0898579`.
 
 ### Native UI gate
-- [x] Native SwiftUI feature package created without Bundle ID dependency.
+- [x] Native SwiftUI feature package created without production Bundle ID dependency.
 - [x] Golden Master colors/components supplied by `LearningSprintCore` are used.
-- [x] 4-tab information architecture represented: Home / Mock / History / Settings.
+- [x] 4-tab information architecture: Home / Mock / History / Settings.
 - [x] Standard sprint count = 8, selectable targets = 4 / 8 / 16.
-- [x] Official four subjects represented in configuration.
-- [x] Swift package compilation and unit tests PASS on macOS 15 CI.
+- [x] Official four subjects are data-driven.
+- [x] FULL-audited bundled question bank runtime validation: status audited / 330 questions / 36 scenarios / every auditStatus pass.
+- [x] Standard sprint wired to production bank.
+- [x] Subject practice wired to production bank.
+- [x] Three original 110-question mock exams wired.
+- [x] Weak-review flow wired with 3-consecutive-correct release rule.
+- [x] Unknown/unsure marking wired.
+- [x] Resume session wired to local persistent store.
+- [x] 35-day heatmap and subject accuracy wired.
+- [x] JSON backup export/import wired to system document UI.
+- [x] Swift resource is deterministically regenerated from the audited bank; Native CI requires byte-for-byte parity.
 - [x] Static guard confirms no WKWebView/WebKit/SFSafariViewController in #14 feature sources.
 - [x] Static guard confirms no guessed production identifier is hard-coded in #14 feature sources.
-- [ ] Full question-session UI wired to audited production question JSON.
-- [ ] Weak-review flow integrated with persisted LearningStateStore.
-- [ ] JSON export/import wired to document picker/share sheet.
-- [ ] StoreKit 2 UI wired after Product ID confirmation.
-- [ ] iPhone small/large UI tests PASS.
+- [x] Swift package compilation and unit tests PASS on macOS 15 CI with bundled production JSON.
+- [ ] StoreKit 2 production UI/product wiring after canonical Product ID confirmation.
+- [ ] Small/large iPhone UI test on a signed/simulator app target after canonical Bundle ID/app target creation.
 
-### Content gate
-- [ ] Blueprint coverage of R5 question standard finalized.
-- [ ] 330 original production questions generated (3 × 110).
-- [ ] Exact duplicate = 0.
-- [ ] High-similarity duplicate = 0.
-- [ ] Answer mismatch = 0.
-- [ ] Missing explanation = 0.
-- [ ] Missing primary source = 0.
-- [ ] Missing evidence check date = 0.
-- [ ] Missing law/system baseline = 0.
-- [ ] Missing rights basis = 0.
-- [ ] Medical-currentness audit PASS.
+### Content gate — FULL PASS
+- [x] R5 blueprint: 66 large topics × 5 distinct semantic intents = 330.
+- [x] 330 original production questions authored.
+- [x] 225 general + 105 situation-setting.
+- [x] 36 linked scenarios.
+- [x] Subject totals: Basic 100 / Diagnosis 185 / Community 20 / Management 25.
+- [x] Exact duplicate = 0.
+- [x] Same-topic similarity warnings reviewed = 9 / 9; each review bound to exact prompt SHA-256.
+- [x] Answer mismatch = 0.
+- [x] Missing explanation = 0.
+- [x] Missing primary/source anchor = 0.
+- [x] Missing evidence check date = 0.
+- [x] Missing law/system baseline = 0.
+- [x] Missing rights basis = 0.
+- [x] All 330 questions independently audited PASS.
+- [x] All 36 scenarios independently audited PASS.
+- [x] Post-audit Git blob drift invalidates previous approvals automatically.
+- [x] Neonatal semantic misassignment detected before release; superseded batches retired and DIAGNOSIS-26..37 rebuilt as 60 questions + 9 scenarios.
+- [x] Medical-currentness audit PASS for the current content baseline.
+
+### Privacy gate
+- [x] Current code path reviewed: local JSON persistence; no analytics, tracking, or off-device learning-data transmission.
+- [x] Current source contains no `UserDefaults` use or file-timestamp Required Reason API access.
+- [x] Canonical `ios/PrivacyInfo.xcprivacy` prepared with tracking=false, collected data=[], accessed APIs=[].
+- [x] Native CI lints the manifest and fails if selected Required Reason API candidates are introduced without re-audit.
+- [ ] Final privacy report / built-app manifest placement audit after signed iOS App target exists.
+- [ ] Re-audit if StoreKit, networking, analytics, crash SDK, or any new data flow is added.
 
 ### Release gate
 - [ ] Bundle ID confirmed in canonical source.
 - [ ] App Store Connect App ID confirmed.
 - [ ] IAP Product ID confirmed if monetization is enabled.
 - [x] Canonical #14 AppIcon PNG located; no lookalike regeneration.
-- [ ] Canonical AppIcon copied into the final signed iOS app target after target creation.
-- [ ] Privacy manifest final audit PASS.
+- [x] AppIcon filename / Drive ID / dimensions / SHA-256 pinned for exact-file verification.
+- [ ] Canonical AppIcon copied into the final iOS AppIcon asset catalog after target creation.
+- [ ] Privacy manifest installed in the final app target and built-app privacy report audited.
 - [ ] Signed archive / IPA PASS.
 - [ ] Internal TestFlight install PASS.
 - [ ] Purchase / restore real-device test PASS if monetization enabled.
+
+## Latest validation evidence
+
+- Content FULL CI PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31686547682
+- Native CI PASS after real 330-question integration: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31686547703
+- Draft PR: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/pull/4137
 
 ## Current blockers requiring human/canonical values
 
@@ -69,4 +99,4 @@ Owner: ChatGPT project アプリ開発
 2. App Store Connect App ID — 要確認
 3. IAP Product ID — 要確認 if monetization is enabled
 
-The canonical AppIcon is no longer a discovery blocker. These remaining identifiers do not stop question design, native feature development or source-level tests; they block the final signed app target / StoreKit production wiring / TestFlight release work.
+All non-signing content and source-level native work is now at FULL-audited state. The remaining identifiers are required to create/verify the final production app identity, place the exact canonical AppIcon and privacy manifest into the signed app target, connect StoreKit production products, create an archive, and proceed to Internal TestFlight.
