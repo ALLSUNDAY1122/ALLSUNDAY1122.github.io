@@ -1,6 +1,7 @@
 #if canImport(SwiftUI)
 import Foundation
 import SwiftUI
+import Combine
 import LearningSprintCore
 
 public struct HokenshiSessionPresentation: Identifiable {
@@ -37,6 +38,7 @@ public final class HokenshiProductModel: ObservableObject {
 
     public let purchaseController: PurchaseController
     private let stateStore: LearningStateStore
+    private var purchaseObserver: AnyCancellable?
 
     public init() {
         let persistence = LearningStateStore(
@@ -51,6 +53,9 @@ public final class HokenshiProductModel: ObservableObject {
         } catch {
             contentStore = nil
             loadError = "監査済み問題データを読み込めませんでした。"
+        }
+        purchaseObserver = purchaseController.objectWillChange.sink { [weak self] _ in
+            self?.objectWillChange.send()
         }
     }
 
