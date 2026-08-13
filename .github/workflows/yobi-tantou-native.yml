@@ -34,6 +34,12 @@ jobs:
         run: python learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
       - name: Candidate answer and explanation audit
         run: python learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
+      - name: Practice staging self-test
+        run: python learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py --self-test
+      - name: Practice promotion self-test
+        run: python learning-sprint/yobi-tantou/content-loop/promote_practice_release.py --self-test
+      - name: Practice quality release audit
+        run: python learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py --require-pass
       - name: Probe MOJ official PDF links from runner
         run: python learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
       - name: Official R6-R8 PDF structure audit
@@ -58,6 +64,10 @@ jobs:
           python -m py_compile learning-sprint/yobi-tantou/validate-app-store-draft.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/promote_practice_release.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/build_native_release.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_official_pdf_structure.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/inspect_official_scoring_layout.py
@@ -158,8 +168,9 @@ jobs:
           APP="$DERIVED/Build/Products/Release-iphonesimulator/YobiTantouSprint.app"
           test -d "$APP"
           test -f "$APP/questions.preview.json"
+          test -f "$APP/questions.release.json"
           test -f "$APP/official-scoring-canonical.v1.json"
           test -f "$APP/PrivacyInfo.xcprivacy"
           test -f "$APP/Assets.car"
           test -f "$APP/YobiTantouSprint"
-          echo "PASS: unsigned Release app bundle contains preview dataset, official scoring canonical, privacy manifest, compiled assets and native executable."
+          echo "PASS: unsigned Release app bundle contains preview fixture, formal practice bank, official scoring canonical, privacy manifest, compiled assets and native executable."
