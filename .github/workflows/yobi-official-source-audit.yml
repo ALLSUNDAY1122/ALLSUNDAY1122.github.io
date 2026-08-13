@@ -49,34 +49,38 @@ jobs:
         id: canonical
         continue-on-error: true
         run: python learning-sprint/yobi-tantou/content-loop/build_official_scoring_canonical_fixed.py
+      - name: Triage R6-R8 general-education item rights
+        id: rights
+        continue-on-error: true
+        run: python learning-sprint/yobi-tantou/content-loop/triage_general_education_rights.py
       - name: Copy verified canonical into iOS resources
         if: steps.canonical.outcome == 'success'
         run: |
           cp learning-sprint/yobi-tantou/content-loop/official-scoring-canonical.v1.json \
              learning-sprint/yobi-tantou/ios/Resources/official-scoring-canonical.v1.json
-      - name: Persist verified canonical on source branch
-        if: steps.canonical.outcome == 'success'
+      - name: Persist verified generated audit data on source branch
+        if: steps.canonical.outcome == 'success' && steps.rights.outcome == 'success'
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add learning-sprint/yobi-tantou/content-loop/official-scoring-canonical.v1.json
           git add learning-sprint/yobi-tantou/ios/Resources/official-scoring-canonical.v1.json
+          git add learning-sprint/yobi-tantou/content-loop/official-general-education-rights-triage.v1.json
           if git diff --cached --quiet; then
-            echo 'Canonical scoring is already current.'
+            echo 'Generated official audit data is already current.'
             exit 0
           fi
 
-          git commit -m 'data(yobi): sync verified R6-R7 official scoring canonical'
+          git commit -m 'data(yobi): sync verified official scoring and rights triage'
 
-          # This audit can overlap with a newer source commit. Never force-push an
-          # old checkout: replay only the generated canonical commit onto the
-          # latest remote branch, then fast-forward push. Any real conflict fails.
+          # Audits can overlap with newer source commits. Never force-push an old
+          # checkout: replay only generated audit data onto the latest remote.
           for attempt in 1 2 3; do
             git fetch origin "${GITHUB_REF_NAME}"
             if git rebase "origin/${GITHUB_REF_NAME}" && \
                git push origin "HEAD:${GITHUB_REF_NAME}"; then
-              echo 'Persisted canonical scoring on latest source branch.'
+              echo 'Persisted generated audit data on latest source branch.'
               exit 0
             fi
             git rebase --abort 2>/dev/null || true
@@ -85,9 +89,9 @@ jobs:
             fi
           done
 
-          echo 'FAIL: could not safely fast-forward canonical scoring onto latest source branch.' >&2
+          echo 'FAIL: could not safely fast-forward generated audit data onto latest source branch.' >&2
           exit 1
-      - name: Upload official-source summaries and canonical scoring
+      - name: Upload official-source summaries and generated audit data
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -96,10 +100,11 @@ jobs:
             learning-sprint/yobi-tantou/content-loop/official-scoring-table-summary.json
             learning-sprint/yobi-tantou/content-loop/official-question-shapes-summary.json
             learning-sprint/yobi-tantou/content-loop/official-scoring-canonical.v1.json
+            learning-sprint/yobi-tantou/content-loop/official-general-education-rights-triage.v1.json
           if-no-files-found: warn
           retention-days: 7
-      - name: Enforce canonical build success
-        if: steps.canonical.outcome != 'success'
+      - name: Enforce generated audit success
+        if: steps.canonical.outcome != 'success' || steps.rights.outcome != 'success'
         run: |
-          echo 'FAIL: canonical scoring build did not pass; summaries were preserved for diagnosis.' >&2
+          echo 'FAIL: one or more generated official audit datasets did not pass; artifacts were preserved for diagnosis.' >&2
           exit 1
