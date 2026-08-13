@@ -1,0 +1,37 @@
+name: Josanshi Labor Intent Map
+
+on:
+  push:
+    branches:
+      - agent/josanshi-sprint-14-native
+    paths:
+      - '.github/workflows/josanshi-labor-intent-map.yml'
+      - 'josanshi-sprint/scripts/build_generation_plan.py'
+      - 'josanshi-sprint/scripts/build_intent_seeds.py'
+
+jobs:
+  labor-map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print deterministic labor scenario intents with focus
+        run: |
+          python3 - <<'PY'
+          import sys
+          sys.path.insert(0, 'josanshi-sprint/scripts')
+          from build_generation_plan import build_plan
+          plan = build_plan()
+          by_scenario = {}
+          for q in plan['questions']:
+              sid = q.get('scenarioId')
+              if sid:
+                  by_scenario.setdefault(sid, []).append(q)
+          for scenario in plan['scenarios']:
+              if scenario['scenarioFamily'] != 'labor':
+                  continue
+              members = sorted(by_scenario[scenario['scenarioId']], key=lambda q: q['scenarioIndex'])
+              print(f"{scenario['scenarioId']} | R{scenario['mockRound']} | n={scenario['scenarioTotal']}")
+              for q in members:
+                  print(f"  {q['id']} | {q['intentId']} | {q['topicId']} | {q['intentFocus']}")
+          PY
