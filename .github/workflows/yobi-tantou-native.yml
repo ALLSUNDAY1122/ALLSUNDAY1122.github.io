@@ -79,7 +79,7 @@ jobs:
       - name: Generate Xcode project
         working-directory: learning-sprint/yobi-tantou/ios
         run: xcodegen generate
-      - name: XCTest and XCUITest on available iOS Simulator
+      - name: XCTest on available iOS Simulator
         working-directory: learning-sprint/yobi-tantou/ios
         run: |
           set -o pipefail
@@ -89,16 +89,55 @@ jobs:
             xcrun simctl list devices available
             exit 1
           fi
-          echo "Using iOS Simulator: $DEVICE_ID"
+          echo "Using iOS Simulator for XCTest: $DEVICE_ID"
           xcodebuild test \
             -project YobiTantouSprint.xcodeproj \
             -scheme YobiTantouSprint \
             -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -only-testing:YobiTantouSprintTests \
             CODE_SIGNING_ALLOWED=NO \
             YOBI_BUNDLE_ID=jp.ci.yobi.preview \
             YOBI_TEST_BUNDLE_ID=jp.ci.yobi.preview.tests \
             YOBI_UI_TEST_BUNDLE_ID=jp.ci.yobi.preview.uitests \
             | xcpretty
+      - name: XCUITest with one simulator-infrastructure retry
+        working-directory: learning-sprint/yobi-tantou/ios
+        run: |
+          set -o pipefail
+          DEVICE_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/{print $2; exit}')"
+          if [ -z "$DEVICE_ID" ]; then
+            echo 'No available iPhone Simulator found.' >&2
+            exit 1
+          fi
+
+          for attempt in 1 2; do
+            echo "XCUITest attempt ${attempt}/2"
+            xcrun simctl shutdown "$DEVICE_ID" 2>/dev/null || true
+            xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
+            xcrun simctl bootstatus "$DEVICE_ID" -b
+
+            if xcodebuild test \
+              -project YobiTantouSprint.xcodeproj \
+              -scheme YobiTantouSprint \
+              -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+              -only-testing:YobiTantouSprintUITests \
+              -parallel-testing-enabled NO \
+              CODE_SIGNING_ALLOWED=NO \
+              YOBI_BUNDLE_ID=jp.ci.yobi.preview \
+              YOBI_TEST_BUNDLE_ID=jp.ci.yobi.preview.tests \
+              YOBI_UI_TEST_BUNDLE_ID=jp.ci.yobi.preview.uitests \
+              | xcpretty; then
+              echo "PASS: XCUITest succeeded on attempt ${attempt}."
+              exit 0
+            fi
+
+            if [ "$attempt" -eq 1 ]; then
+              echo 'WARN: first XCUITest attempt failed; resetting Simulator once before final attempt.' >&2
+            fi
+          done
+
+          echo 'FAIL: XCUITest failed on both attempts.' >&2
+          exit 1
       - name: Unsigned Release configuration build and bundle inspection
         working-directory: learning-sprint/yobi-tantou/ios
         run: |
