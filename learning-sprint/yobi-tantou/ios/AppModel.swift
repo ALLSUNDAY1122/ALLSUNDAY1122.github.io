@@ -51,11 +51,13 @@ final class AppModel: ObservableObject {
     func subjects() -> [String] { Self.officialSubjects }
 
     func questionCount(subject: String) -> Int {
-        questions.filter { $0.subject == subject && $0.releaseEligible }.count
+        questions.filter { $0.subject == subject && $0.releaseEligible && $0.isPracticeQuestion }.count
     }
 
     func mockSelectionSummary(year: Int) -> MockSelectionSummary {
-        let yearQuestions = questions.filter { $0.releaseEligible && $0.examYear == year }
+        let yearQuestions = questions.filter {
+            $0.releaseEligible && $0.isOfficialMockQuestion && $0.examYear == year
+        }
         return MockSelectionPolicy.summary(for: yearQuestions)
     }
 
@@ -106,7 +108,9 @@ final class AppModel: ObservableObject {
             requiresPremium = true
         case .mock(let year):
             guard premium else { return false }
-            let yearQuestions = questions.filter { $0.releaseEligible && $0.examYear == year }
+            let yearQuestions = questions.filter {
+                $0.releaseEligible && $0.isOfficialMockQuestion && $0.examYear == year
+            }
             chosen = MockSelectionPolicy.select(from: yearQuestions)
             title = "令和\(year - 2018)年 模擬試験"
             consumesFreeSprint = false
@@ -288,8 +292,8 @@ final class AppModel: ObservableObject {
     }
 
     private func learningEligibleQuestions() -> [StudyQuestion] {
-        let released = questions.filter(\.releaseEligible)
-        return released.isEmpty ? questions.filter { $0.originType == "original_preview" } : released
+        let releasedPractice = questions.filter { $0.releaseEligible && $0.isPracticeQuestion }
+        return releasedPractice.isEmpty ? questions.filter { $0.originType == "original_preview" } : releasedPractice
     }
 
     private func persistResume() {
