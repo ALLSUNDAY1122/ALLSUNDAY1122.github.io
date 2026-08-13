@@ -40,7 +40,7 @@ public struct JosanshiRootView: View {
             }
             .tint(LearningSprintTheme.indigo)
         }
-        .fullScreenCover(isPresented: $model.isSessionPresented) {
+        .sheet(isPresented: $model.isSessionPresented) {
             NavigationStack {
                 JosanshiQuestionSessionView(
                     coordinator: model.coordinator,
