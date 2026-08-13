@@ -61,7 +61,9 @@ final class KanteishiShortAnswerUITests: XCTestCase {
         subject.tap()
 
         XCTAssertTrue(app.staticTexts["quiz.questionText"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.staticTexts["1 / 40"].waitForExistence(timeout: 5))
+        let progress = app.staticTexts["quiz.progress"]
+        XCTAssertTrue(progress.waitForExistence(timeout: 5))
+        XCTAssertEqual(progress.label, "1 / 40")
         XCTAssertTrue(app.buttons["quiz.unknown"].waitForExistence(timeout: 5))
     }
 
