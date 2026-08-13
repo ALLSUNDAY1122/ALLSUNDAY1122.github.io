@@ -8,6 +8,7 @@ on:
       - 'josanshi-sprint/data/authored-batches/**'
       - 'josanshi-sprint/data/audit-approvals*.json'
       - 'josanshi-sprint/data/source-registry*.json'
+      - 'josanshi-sprint/data/content-stage.json'
       - 'josanshi-sprint/docs/audits/**'
       - 'josanshi-sprint/scripts/**'
       - '.github/workflows/josanshi-content-checkpoint.yml'
@@ -16,12 +17,13 @@ on:
       - 'josanshi-sprint/data/authored-batches/**'
       - 'josanshi-sprint/data/audit-approvals*.json'
       - 'josanshi-sprint/data/source-registry*.json'
+      - 'josanshi-sprint/data/content-stage.json'
       - 'josanshi-sprint/docs/audits/**'
       - 'josanshi-sprint/scripts/**'
       - '.github/workflows/josanshi-content-checkpoint.yml'
 
 jobs:
-  community-management-checkpoint:
+  current-content-checkpoint:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -52,5 +54,5 @@ jobs:
       - name: Audit current question bank
         run: python3 josanshi-sprint/scripts/audit_question_bank.py
 
-      - name: Validate 47-question checkpoint
-        run: python3 josanshi-sprint/scripts/validate_47_checkpoint.py
+      - name: Validate current monotonic content stage
+        run: python3 josanshi-sprint/scripts/validate_content_stage.py
