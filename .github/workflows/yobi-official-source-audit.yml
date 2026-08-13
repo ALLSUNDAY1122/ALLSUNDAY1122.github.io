@@ -22,6 +22,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -55,16 +57,36 @@ jobs:
       - name: Persist verified canonical on source branch
         if: steps.canonical.outcome == 'success'
         run: |
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add learning-sprint/yobi-tantou/content-loop/official-scoring-canonical.v1.json
           git add learning-sprint/yobi-tantou/ios/Resources/official-scoring-canonical.v1.json
           if git diff --cached --quiet; then
             echo 'Canonical scoring is already current.'
-          else
-            git commit -m 'data(yobi): sync verified R6-R7 official scoring canonical'
-            git push
+            exit 0
           fi
+
+          git commit -m 'data(yobi): sync verified R6-R7 official scoring canonical'
+
+          # This audit can overlap with a newer source commit. Never force-push an
+          # old checkout: replay only the generated canonical commit onto the
+          # latest remote branch, then fast-forward push. Any real conflict fails.
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            if git rebase "origin/${GITHUB_REF_NAME}" && \
+               git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              echo 'Persisted canonical scoring on latest source branch.'
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            if [ "${attempt}" -lt 3 ]; then
+              sleep 2
+            fi
+          done
+
+          echo 'FAIL: could not safely fast-forward canonical scoring onto latest source branch.' >&2
+          exit 1
       - name: Upload official-source summaries and canonical scoring
         if: always()
         uses: actions/upload-artifact@v4
