@@ -13,6 +13,8 @@ on:
       - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py'
       - 'learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py'
       - 'learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py'
+      - 'learning-sprint/yobi-tantou/content-loop/promote_practice_release.py'
+      - 'learning-sprint/yobi-tantou/content-loop/build_native_release.py'
       - '.github/workflows/yobi-practice-candidate-pipeline.yml'
   workflow_dispatch:
 
@@ -47,38 +49,51 @@ jobs:
       - name: Build non-release practice staging bank
         run: python learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py
       - name: Audit practice release teaching quality
-        run: python learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py
-      - name: Persist generated staging and quality audit on latest source branch
+        run: python learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py --require-pass
+      - name: Practice release promotion self-test
+        run: python learning-sprint/yobi-tantou/content-loop/promote_practice_release.py --self-test
+      - name: Promote fully audited practice bank
+        run: python learning-sprint/yobi-tantou/content-loop/promote_practice_release.py
+      - name: Build native formal practice resource
+        run: |
+          python learning-sprint/yobi-tantou/content-loop/build_native_release.py \
+            learning-sprint/yobi-tantou/content-loop/questions.practice.release.v1.json \
+            learning-sprint/yobi-tantou/ios/Resources/questions.release.json
+      - name: Persist generated practice release data on latest source branch
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add learning-sprint/yobi-tantou/content-loop/practice-release-staging.v1.json
           git add learning-sprint/yobi-tantou/content-loop/practice-release-quality-audit.v1.json
+          git add learning-sprint/yobi-tantou/content-loop/questions.practice.release.v1.json
+          git add learning-sprint/yobi-tantou/ios/Resources/questions.release.json
           if git diff --cached --quiet; then
-            echo 'Practice staging and quality audit are already current.'
+            echo 'Practice staging, audit and release bank are already current.'
             exit 0
           fi
 
-          git commit -m 'data(yobi): sync practice staging and quality audit'
+          git commit -m 'data(yobi): sync audited practice release bank'
           for attempt in 1 2 3; do
             git fetch origin "${GITHUB_REF_NAME}"
             if git rebase "origin/${GITHUB_REF_NAME}" && \
                git push origin "HEAD:${GITHUB_REF_NAME}"; then
-              echo 'Persisted generated practice audit data on latest source branch.'
+              echo 'Persisted audited practice release bank on latest source branch.'
               exit 0
             fi
             git rebase --abort 2>/dev/null || true
             if [ "$attempt" -lt 3 ]; then sleep 2; fi
           done
-          echo 'FAIL: could not safely persist generated practice audit data.' >&2
+          echo 'FAIL: could not safely persist audited practice release bank.' >&2
           exit 1
-      - name: Upload practice staging evidence
+      - name: Upload practice release evidence
         uses: actions/upload-artifact@v4
         with:
-          name: yobi-practice-release-staging
+          name: yobi-practice-release-evidence
           path: |
             learning-sprint/yobi-tantou/content-loop/practice-release-staging.v1.json
             learning-sprint/yobi-tantou/content-loop/practice-release-quality-audit.v1.json
+            learning-sprint/yobi-tantou/content-loop/questions.practice.release.v1.json
+            learning-sprint/yobi-tantou/ios/Resources/questions.release.json
           if-no-files-found: error
           retention-days: 14
