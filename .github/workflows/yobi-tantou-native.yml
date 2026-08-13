@@ -37,6 +37,8 @@ jobs:
         run: python learning-sprint/yobi-tantou/content-loop/audit_official_pdf_structure.py
       - name: Inspect official R6-R7 scoring table layout
         run: python learning-sprint/yobi-tantou/content-loop/inspect_official_scoring_layout.py
+      - name: Inspect official question shapes and result scores
+        run: python learning-sprint/yobi-tantou/content-loop/inspect_official_exam_shapes.py
       - name: Audited release builder self-test
         run: python learning-sprint/yobi-tantou/content-loop/build_native_release.py --self-test
       - name: Production release preflight self-test
@@ -54,6 +56,7 @@ jobs:
           python -m py_compile learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_official_pdf_structure.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/inspect_official_scoring_layout.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/inspect_official_exam_shapes.py
 
   swift-tests:
     runs-on: macos-15
