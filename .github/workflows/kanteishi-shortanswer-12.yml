@@ -41,6 +41,8 @@ jobs:
           grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.kanteishishortanswer' kanteishi-shortanswer-sprint/ios/project.yml
           grep -q 'DEVELOPMENT_TEAM: "MN3D2ZM44N"' kanteishi-shortanswer-sprint/ios/project.yml
           grep -q 'GENERATE_INFOPLIST_FILE: NO' kanteishi-shortanswer-sprint/ios/project.yml
+          grep -q '<key>CFBundleIdentifier</key>' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Info.plist
+          grep -q '<key>CFBundleExecutable</key>' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Info.plist
           if grep -R -nE 'productIDs[[:space:]]*=[[:space:]]*\[[[:space:]]*"' kanteishi-shortanswer-sprint/core/Sources kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer; then
             echo 'StoreKit Product ID must remain unset until the product is created in App Store Connect.'
             exit 1
@@ -64,6 +66,8 @@ jobs:
         run: |
           PLIST='kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Info.plist'
           /usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$PLIST" | grep -qx '鑑定士スプリント'
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$PLIST" | grep -Fqx '$(PRODUCT_BUNDLE_IDENTIFIER)'
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$PLIST" | grep -Fqx '$(EXECUTABLE_NAME)'
           /usr/libexec/PlistBuddy -c 'Print :UILaunchScreen' "$PLIST" >/dev/null
           /usr/libexec/PlistBuddy -c 'Print :UIRequiresFullScreen' "$PLIST" | grep -qx 'true'
       - name: SwiftUI iOS Simulator typecheck
@@ -110,6 +114,9 @@ jobs:
           import plistlib, sys
           with open(sys.argv[1], 'rb') as f:
               p = plistlib.load(f)
+          assert p.get('CFBundleIdentifier') == 'jp.allsunday1122.kanteishishortanswer', p.get('CFBundleIdentifier')
+          assert p.get('CFBundleExecutable') == 'KanteishiShortAnswer', p.get('CFBundleExecutable')
+          assert p.get('CFBundlePackageType') == 'APPL', p.get('CFBundlePackageType')
           assert p.get('CFBundleDisplayName') == '鑑定士スプリント', p
           assert p.get('CFBundleShortVersionString') == '1.0.0', p.get('CFBundleShortVersionString')
           assert p.get('UIDeviceFamily') == [1], p.get('UIDeviceFamily')
