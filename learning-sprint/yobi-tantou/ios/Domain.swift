@@ -4,6 +4,11 @@ import UniformTypeIdentifiers
 
 final class AppBundleToken: NSObject {}
 
+enum QuestionContentUse: String, Codable, CaseIterable {
+    case practice
+    case officialMock = "official_mock"
+}
+
 struct StudyQuestion: Codable, Identifiable, Equatable {
     let id: String
     let examYear: Int?
@@ -20,6 +25,15 @@ struct StudyQuestion: Codable, Identifiable, Equatable {
     let lawBasisDate: String?
     let originType: String
     let releaseEligible: Bool
+    let contentUse: QuestionContentUse?
+
+    var isPracticeQuestion: Bool {
+        originType == "original_preview" || contentUse == .practice
+    }
+
+    var isOfficialMockQuestion: Bool {
+        contentUse == .officialMock
+    }
 }
 
 struct AttemptState: Codable, Equatable {
