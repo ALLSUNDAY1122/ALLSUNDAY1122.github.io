@@ -19,7 +19,7 @@ final class YobiTantouSprintTests: XCTestCase {
     ) -> StudyQuestion {
         StudyQuestion(
             id: id,
-            examYear: 2026,
+            examYear: nil,
             subject: subject,
             topic: "テスト用正式教材ゲート",
             stem: "正式教材バンクの構造テストです。",
@@ -32,7 +32,8 @@ final class YobiTantouSprintTests: XCTestCase {
             evidenceCheckedDate: "2026-08-13",
             lawBasisDate: lawBasisDate,
             originType: "original_from_primary_source",
-            releaseEligible: releaseEligible
+            releaseEligible: releaseEligible,
+            contentUse: .practice
         )
     }
 
@@ -49,6 +50,8 @@ final class YobiTantouSprintTests: XCTestCase {
         let decoded = try QuestionRepository().decode(data, kind: .release)
         XCTAssertEqual(decoded.count, 1)
         XCTAssertTrue(decoded[0].releaseEligible)
+        XCTAssertEqual(decoded[0].contentUse, .practice)
+        XCTAssertNil(decoded[0].examYear)
     }
 
     func testReleaseRepositoryRejectsNonReleaseQuestion() throws {
@@ -70,6 +73,7 @@ final class YobiTantouSprintTests: XCTestCase {
         let decoded = try QuestionRepository().decode(data, kind: .release)
         XCTAssertEqual(decoded.first?.subject, "一般教養")
         XCTAssertNil(decoded.first?.lawBasisDate)
+        XCTAssertEqual(decoded.first?.contentUse, .practice)
     }
 
     func testReleaseRepositoryRejectsDuplicateIDs() throws {
