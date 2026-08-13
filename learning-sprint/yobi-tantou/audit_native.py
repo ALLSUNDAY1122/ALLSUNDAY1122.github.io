@@ -5,13 +5,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 IOS = ROOT / "ios"
+CONTENT_LOOP = ROOT / "content-loop"
 errors = []
 
 swift = "\n".join(p.read_text(encoding="utf-8") for p in IOS.glob("*.swift"))
 views = (IOS / "Views.swift").read_text(encoding="utf-8")
 app_model = (IOS / "AppModel.swift").read_text(encoding="utf-8")
+question_repository = (IOS / "QuestionRepository.swift").read_text(encoding="utf-8")
 scoring_repository = (IOS / "OfficialScoringRepository.swift").read_text(encoding="utf-8")
 storekit = (IOS / "StoreKitManager.swift").read_text(encoding="utf-8")
+release_builder = (CONTENT_LOOP / "build_native_release.py").read_text(encoding="utf-8")
 project = (IOS / "project.yml").read_text(encoding="utf-8")
 questions = json.loads((IOS / "Resources" / "questions.preview.json").read_text(encoding="utf-8"))
 privacy = (IOS / "PrivacyInfo.xcprivacy").read_text(encoding="utf-8")
@@ -43,6 +46,34 @@ required_mock = [
 for marker in required_mock:
     if marker not in swift:
         errors.append(f"missing preliminary-exam mock contract: {marker}")
+
+required_use_separation = [
+    "enum QuestionContentUse",
+    "case officialMock = \"official_mock\"",
+    "$0.releaseEligible && $0.isOfficialMockQuestion && $0.examYear == year",
+    "releasedPractice = questions.filter { $0.releaseEligible && $0.isPracticeQuestion }",
+]
+for marker in required_use_separation:
+    if marker not in swift:
+        errors.append(f"missing practice/official-mock usage separation: {marker}")
+
+for marker in (
+    "officialMockRequiresDedicatedBank",
+    "question.examYear == nil",
+    "question.contentUse",
+):
+    if marker not in question_repository:
+        errors.append(f"missing repository official-mock isolation gate: {marker}")
+
+for marker in (
+    'PRACTICE_USE = "practice"',
+    'OFFICIAL_MOCK_USE = "official_mock"',
+    'practice問題にexam_yearを付与できない',
+    '公式年度模試は通常練習バンクへ変換できない',
+    '"contentUse": PRACTICE_USE',
+):
+    if marker not in release_builder:
+        errors.append(f"missing practice-only release builder gate: {marker}")
 
 required_scoring = [
     "static let supportedYears = [2024, 2025]",
@@ -76,6 +107,10 @@ if len(ids) != len(set(ids)):
 for q in questions:
     if q.get("originType") != "original_preview" or q.get("releaseEligible") is not False:
         errors.append(f"preview question must be non-release original_preview: {q.get('id')}")
+    # Preview data intentionally predates the production content-use field. It
+    # must remain non-release and cannot opt itself into practice/official mock.
+    if q.get("contentUse") is not None:
+        errors.append(f"preview question must not declare production contentUse: {q.get('id')}")
     for key in ("stem", "choices", "correctIndices", "explanation", "memory", "sourceURL", "evidenceCheckedDate"):
         if not q.get(key):
             errors.append(f"missing preview field {key}: {q.get('id')}")
@@ -115,4 +150,4 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print("PASS: native source contract, v2.1 UI, verified official scoring UI/repository, preview/release gates, StoreKit lifecycle, identifiers, privacy and canonical AppIcon lock")
+print("PASS: native source contract, v2.1 UI, practice/official-mock isolation, verified scoring, preview/release gates, StoreKit lifecycle, identifiers, privacy and canonical AppIcon lock")
