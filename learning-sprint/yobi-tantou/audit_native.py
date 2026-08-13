@@ -9,6 +9,8 @@ errors = []
 
 swift = "\n".join(p.read_text(encoding="utf-8") for p in IOS.glob("*.swift"))
 views = (IOS / "Views.swift").read_text(encoding="utf-8")
+app_model = (IOS / "AppModel.swift").read_text(encoding="utf-8")
+scoring_repository = (IOS / "OfficialScoringRepository.swift").read_text(encoding="utf-8")
 storekit = (IOS / "StoreKitManager.swift").read_text(encoding="utf-8")
 project = (IOS / "project.yml").read_text(encoding="utf-8")
 questions = json.loads((IOS / "Resources" / "questions.preview.json").read_text(encoding="utf-8"))
@@ -23,7 +25,8 @@ required_ui = [
     "ホーム", "模試", "記録", "設定", "今日の学習", "今日のスプリント",
     "苦手をつぶす", "分野から解く", "ここだけ覚える", "わからない記録",
     "5週間", "学習データを書き出す", "学習データを読み込む",
-    "一般教養は本試験の選択ルールに合わせ、最大20題を採点対象として抽出します。"
+    "確認済みの公式採点構造", "採点確認済み", "公式合格点",
+    "正式教材問題の権利・内容監査が完了するまで、年度模試の開始だけをロックしています。"
 ]
 for text in required_ui:
     if text not in views:
@@ -33,10 +36,28 @@ required_mock = [
     "generalEducationSubject = \"一般教養\"",
     "generalEducationAnswerLimit = 20",
     "MockSelectionPolicy.select(from: yearQuestions)",
+    "OfficialScoringRepository.load(bundle: bundle)",
+    "officialScoringYears",
+    "officialScoring(year:",
 ]
 for marker in required_mock:
     if marker not in swift:
         errors.append(f"missing preliminary-exam mock contract: {marker}")
+
+required_scoring = [
+    "static let supportedYears = [2024, 2025]",
+    "legal.questionCount == 95",
+    "legal.maxPoints == 210",
+    "general.select == 20",
+    "general.maxPoints == 60",
+    "yearData.totalMaxPoints == 270",
+]
+for marker in required_scoring:
+    if marker not in scoring_repository:
+        errors.append(f"missing verified official scoring contract: {marker}")
+
+if "officialScoringCanonical = try OfficialScoringRepository.load(bundle: bundle)" not in app_model:
+    errors.append("AppModel does not fail-closed load bundled official scoring canonical")
 
 required_storekit = [
     "Product.products(for:", "product.purchase()", "AppStore.sync()",
@@ -94,4 +115,4 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print("PASS: native source contract, v2.1 UI, preliminary-exam mock rule, StoreKit lifecycle, preview/release gates, identifiers, privacy and canonical AppIcon lock")
+print("PASS: native source contract, v2.1 UI, verified official scoring UI/repository, preview/release gates, StoreKit lifecycle, identifiers, privacy and canonical AppIcon lock")
