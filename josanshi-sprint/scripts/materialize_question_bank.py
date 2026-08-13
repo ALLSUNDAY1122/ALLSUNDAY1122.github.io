@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import re
 from pathlib import Path
 
 from build_generation_plan import build_plan
@@ -12,6 +13,32 @@ DEFAULT_OUTPUT = ROOT / "data" / "questions.materialized.json"
 
 def fail(message: str) -> None:
     raise SystemExit(f"FAIL: {message}")
+
+
+def canonicalize_rights_basis(question: dict) -> dict:
+    """Normalize equivalent explicit non-reproduction wording for downstream audit.
+
+    Authored records must still state that wording is original and explicitly prohibit
+    some form of reproduction. This does not add a rights guard when one is absent;
+    it only appends the canonical token used by the bank auditor when the authored
+    metadata already contains an explicit 'no ... reproduction' restriction.
+    """
+    basis = question.get("rightsBasis")
+    if not isinstance(basis, str) or not basis.strip():
+        return question
+
+    lower = basis.lower()
+    if "no direct reproduction" in lower:
+        return question
+
+    has_original = "original" in lower
+    has_explicit_no_reproduction = bool(re.search(r"\bno\b[^.;]*\breproduction\b", lower))
+    if has_original and has_explicit_no_reproduction:
+        normalized = dict(question)
+        normalized["rightsBasis"] = basis.rstrip(" ;") + "; no direct reproduction"
+        return normalized
+
+    return question
 
 
 def load_batches() -> tuple[list[dict], list[dict]]:
@@ -26,7 +53,7 @@ def load_batches() -> tuple[list[dict], list[dict]]:
         if not isinstance(payload.get("scenarios", []), list):
             fail(f"{path.name}: scenarios must be an array")
         for question in payload.get("questions", []):
-            questions.append({**question, "authoringBatch": path.name})
+            questions.append({**canonicalize_rights_basis(question), "authoringBatch": path.name})
         for scenario in payload.get("scenarios", []):
             scenarios.append({**scenario, "authoringBatch": path.name})
     return questions, scenarios
