@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import re
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -16,7 +17,8 @@ scoring_repository = (IOS / "OfficialScoringRepository.swift").read_text(encodin
 storekit = (IOS / "StoreKitManager.swift").read_text(encoding="utf-8")
 release_builder = (CONTENT_LOOP / "build_native_release.py").read_text(encoding="utf-8")
 project = (IOS / "project.yml").read_text(encoding="utf-8")
-questions = json.loads((IOS / "Resources" / "questions.preview.json").read_text(encoding="utf-8"))
+preview_questions = json.loads((IOS / "Resources" / "questions.preview.json").read_text(encoding="utf-8"))
+release_path = IOS / "Resources" / "questions.release.json"
 privacy = (IOS / "PrivacyInfo.xcprivacy").read_text(encoding="utf-8")
 icon_lock = json.loads((IOS / "app-icon-lock.json").read_text(encoding="utf-8"))
 
@@ -99,21 +101,49 @@ for marker in required_storekit:
     if marker not in storekit:
         errors.append(f"missing StoreKit lifecycle contract: {marker}")
 
-if len(questions) != 8:
-    errors.append(f"preview bank must contain exactly 8 questions, got {len(questions)}")
-ids = [q.get("id") for q in questions]
-if len(ids) != len(set(ids)):
+if len(preview_questions) != 8:
+    errors.append(f"preview bank must contain exactly 8 questions, got {len(preview_questions)}")
+preview_ids = [q.get("id") for q in preview_questions]
+if len(preview_ids) != len(set(preview_ids)):
     errors.append("duplicate preview question IDs")
-for q in questions:
+for q in preview_questions:
     if q.get("originType") != "original_preview" or q.get("releaseEligible") is not False:
         errors.append(f"preview question must be non-release original_preview: {q.get('id')}")
-    # Preview data intentionally predates the production content-use field. It
-    # must remain non-release and cannot opt itself into practice/official mock.
     if q.get("contentUse") is not None:
         errors.append(f"preview question must not declare production contentUse: {q.get('id')}")
     for key in ("stem", "choices", "correctIndices", "explanation", "memory", "sourceURL", "evidenceCheckedDate"):
         if not q.get(key):
             errors.append(f"missing preview field {key}: {q.get('id')}")
+
+# Formal practice bank is now a real source-of-truth resource. It must stay
+# isolated from official-year mock content and must not regress below the first
+# audited seed coverage (2 independently-authored items per legal subject).
+if not release_path.exists():
+    errors.append("formal practice questions.release.json missing")
+else:
+    release_questions = json.loads(release_path.read_text(encoding="utf-8"))
+    if not isinstance(release_questions, list) or len(release_questions) < 14:
+        errors.append(f"formal practice bank must contain at least 14 questions, got {len(release_questions) if isinstance(release_questions, list) else 'non-list'}")
+        release_questions = release_questions if isinstance(release_questions, list) else []
+    release_ids = [q.get("id") for q in release_questions]
+    if any(not qid for qid in release_ids) or len(release_ids) != len(set(release_ids)):
+        errors.append("formal practice bank has missing/duplicate IDs")
+    subject_counts = Counter(q.get("subject") for q in release_questions)
+    for subject in ("憲法", "行政法", "民法", "商法", "民事訴訟法", "刑法", "刑事訴訟法"):
+        if subject_counts.get(subject, 0) < 2:
+            errors.append(f"formal practice seed coverage below 2 questions: {subject}")
+    for q in release_questions:
+        qid = q.get("id", "<no-id>")
+        if q.get("releaseEligible") is not True:
+            errors.append(f"formal practice item is not releaseEligible: {qid}")
+        if q.get("contentUse") != "practice":
+            errors.append(f"ordinary release bank contains non-practice contentUse: {qid}")
+        if q.get("examYear") is not None:
+            errors.append(f"practice item falsely carries official exam year: {qid}")
+        if q.get("originType") in (None, "original_preview", "official_exam_reproduced"):
+            errors.append(f"formal practice originType invalid: {qid}")
+        if q.get("subject") not in QuestionSubjects if False else False:
+            pass
 
 for production_value in ("jp.allsunday1122.yobi", "jp.allsunday1122.yobi.premium"):
     if production_value in project or production_value in swift:
@@ -150,4 +180,4 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print("PASS: native source contract, v2.1 UI, practice/official-mock isolation, verified scoring, preview/release gates, StoreKit lifecycle, identifiers, privacy and canonical AppIcon lock")
+print("PASS: native source contract, v2.1 UI, formal practice bank, practice/official-mock isolation, verified scoring, preview/release gates, StoreKit lifecycle, identifiers, privacy and canonical AppIcon lock")
