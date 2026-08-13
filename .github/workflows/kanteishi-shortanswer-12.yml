@@ -52,6 +52,7 @@ jobs:
 
   native-app-tests:
     runs-on: macos-15
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
@@ -72,13 +73,15 @@ jobs:
             kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/QuizResultViews.swift \
             kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/HistorySettingsViews.swift \
             kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/KanteishiShortAnswerApp.swift
-      - name: Select available iPhone simulator
+      - name: Select and boot iPhone simulator
         id: simulator
         run: |
           DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; data=json.load(sys.stdin)["devices"]; devices=[d for runtime in data.values() for d in runtime if d.get("isAvailable") and d.get("name","").startswith("iPhone")]; print(devices[0]["udid"] if devices else "")')
           test -n "$DEVICE_ID"
           echo "id=$DEVICE_ID" >> "$GITHUB_OUTPUT"
-      - name: Build and run unit/UI tests
+          xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+      - name: Build app and tests
         working-directory: kanteishi-shortanswer-sprint/ios
         run: |
           xcodebuild \
@@ -87,22 +90,42 @@ jobs:
             -destination 'platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}' \
             -derivedDataPath build/DerivedData \
             CODE_SIGNING_ALLOWED=NO \
-            test
+            build-for-testing
+      - name: Run native unit tests
+        working-directory: kanteishi-shortanswer-sprint/ios
+        run: |
+          xcodebuild \
+            -project KanteishiShortAnswer.xcodeproj \
+            -scheme KanteishiShortAnswer \
+            -destination 'platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}' \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            -only-testing:KanteishiShortAnswerTests \
+            test-without-building
+      - name: Run UI smoke test
+        working-directory: kanteishi-shortanswer-sprint/ios
+        run: |
+          xcodebuild \
+            -project KanteishiShortAnswer.xcodeproj \
+            -scheme KanteishiShortAnswer \
+            -destination 'platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}' \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            -only-testing:KanteishiShortAnswerUITests \
+            -test-timeouts-enabled YES \
+            -default-test-execution-time-allowance 60 \
+            -maximum-test-execution-time-allowance 90 \
+            test-without-building
       - name: Install and launch built app
         run: |
           DEVICE_ID='${{ steps.simulator.outputs.id }}'
           APP_PATH="$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/DerivedData/Build/Products/Debug-iphonesimulator/KanteishiShortAnswer.app"
           test -d "$APP_PATH"
-          xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
-          xcrun simctl bootstatus "$DEVICE_ID" -b
           xcrun simctl install "$DEVICE_ID" "$APP_PATH"
           xcrun simctl terminate "$DEVICE_ID" jp.allsunday1122.kanteishishortanswer 2>/dev/null || true
           xcrun simctl launch "$DEVICE_ID" jp.allsunday1122.kanteishishortanswer
           mkdir -p "$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/evidence"
-          python3 - <<'PY'
-          import time
-          time.sleep(2)
-          PY
+          sleep 2
           xcrun simctl io "$DEVICE_ID" screenshot "$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/evidence/home.png"
           test -s "$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/evidence/home.png"
       - name: Upload runnable app and launch evidence
