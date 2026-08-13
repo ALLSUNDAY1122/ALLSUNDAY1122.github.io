@@ -71,6 +71,15 @@ jobs:
           python3 josanshi-sprint/scripts/export_swift_question_bank.py --output /tmp/josanshi-questions.json
           cmp /tmp/josanshi-questions.json josanshi-sprint/ios/JosanshiSprintFeature/Sources/JosanshiSprintFeature/Resources/questions.json
 
+      - name: Validate privacy manifest source
+        shell: bash
+        run: |
+          plutil -lint josanshi-sprint/ios/PrivacyInfo.xcprivacy
+          if grep -R -n -E 'UserDefaults|creationDateKey|contentModificationDateKey|fileModificationDate|attributesOfItem' josanshi-sprint/ios/JosanshiSprintFeature/Sources native-ios/LearningSprintCore/Sources; then
+            echo 'Required Reason API candidate detected; re-audit PrivacyInfo.xcprivacy before release.' >&2
+            exit 1
+          fi
+
       - name: Assert no WebView primary implementation
         shell: bash
         run: |
