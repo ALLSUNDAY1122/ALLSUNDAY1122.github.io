@@ -20,4 +20,12 @@ final class RigakuSprintConfigurationTests: XCTestCase {
         XCTAssertTrue(RigakuAppConfiguration.generalSubjects.contains("理学療法"))
         XCTAssertTrue(RigakuAppConfiguration.practicalSubjects.contains("運動学"))
     }
+
+    func testMockRouteRequiresCompleteAuditedRound() {
+        XCTAssertFalse(RigakuRouteGate.isComplete(audited: 0, expected: 200))
+        XCTAssertFalse(RigakuRouteGate.isComplete(audited: 199, expected: 200))
+        XCTAssertTrue(RigakuRouteGate.isComplete(audited: 200, expected: 200))
+        XCTAssertFalse(RigakuRouteGate.isComplete(audited: 201, expected: 200))
+        XCTAssertFalse(RigakuRouteGate.isComplete(audited: 200, expected: nil))
+    }
 }
