@@ -5,7 +5,7 @@ final class YobiTantouSprintUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    func testGoldenMasterHomeContract() throws {
+    func testGoldenMasterHomeContractWithFormalPracticeBank() throws {
         let app = XCUIApplication()
         app.launch()
 
@@ -14,8 +14,25 @@ final class YobiTantouSprintUITests: XCTestCase {
         XCTAssertTrue(app.buttons["模試"].exists)
         XCTAssertTrue(app.buttons["記録"].exists)
         XCTAssertTrue(app.buttons["設定"].exists)
-        XCTAssertTrue(app.staticTexts["8問UIプレビュー"].exists)
+        XCTAssertTrue(app.staticTexts["今日のスプリント"].exists)
+        XCTAssertFalse(app.staticTexts["8問UIプレビュー"].exists)
         XCTAssertTrue(app.staticTexts["分野から解く"].exists)
+        XCTAssertTrue(app.staticTexts["憲法"].exists)
+    }
+
+    func testVerifiedScoringIsVisibleWhileOfficialMockRemainsLocked() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        let mock = app.buttons["模試"]
+        XCTAssertTrue(mock.waitForExistence(timeout: 8))
+        mock.tap()
+
+        XCTAssertTrue(app.staticTexts["模擬試験"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["確認済みの公式採点構造"].exists)
+        XCTAssertTrue(app.staticTexts["令和7年"].exists)
+        XCTAssertTrue(app.staticTexts["令和6年"].exists)
+        XCTAssertTrue(app.staticTexts["正式教材問題の権利・内容監査が完了するまで、年度模試の開始だけをロックしています。"].exists)
     }
 
     func testTabsRemainNativeAndNavigable() throws {
