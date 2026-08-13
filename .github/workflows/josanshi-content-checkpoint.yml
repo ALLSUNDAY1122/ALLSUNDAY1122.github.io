@@ -37,10 +37,11 @@ jobs:
       - name: Validate 66-topic evidence coverage
         run: python3 josanshi-sprint/scripts/validate_topic_sources.py
 
-      - name: Validate 330 semantic intents and generation plan
+      - name: Validate 330 semantic intents, generation plan, and linked scenarios
         run: |
           python3 josanshi-sprint/scripts/build_intent_seeds.py --check
           python3 josanshi-sprint/scripts/build_generation_plan.py --check
+          python3 josanshi-sprint/scripts/build_scenario_authoring_plan.py --check
 
       - name: Materialize source registry
         run: python3 josanshi-sprint/scripts/materialize_source_registry.py
