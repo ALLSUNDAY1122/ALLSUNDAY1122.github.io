@@ -41,7 +41,7 @@ jobs:
         run: |
           python3 josanshi-sprint/scripts/build_intent_seeds.py --check
           python3 josanshi-sprint/scripts/build_generation_plan.py --check
-          python3 josanshi-sprint/scripts/build_scenario_authoring_plan.py --check
+          python3 josanshi-sprint/scripts/build_scenario_authoring_plan.py --check --print-cases
 
       - name: Materialize source registry
         run: python3 josanshi-sprint/scripts/materialize_source_registry.py
