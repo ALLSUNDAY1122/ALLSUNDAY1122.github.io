@@ -11,6 +11,7 @@ enum QuestionBankError: LocalizedError, Equatable {
     case duplicateID(String)
     case invalidQuestion(String)
     case invalidReleaseGate(String)
+    case officialMockRequiresDedicatedBank(String)
 
     var errorDescription: String? {
         switch self {
@@ -23,7 +24,9 @@ enum QuestionBankError: LocalizedError, Equatable {
         case .invalidQuestion(let id):
             return "問題データが不正です: \(id)"
         case .invalidReleaseGate(let id):
-            return "監査未完了の問題が正式教材へ混入しています: \(id)"
+            return "監査未完了または用途不明の問題が正式教材へ混入しています: \(id)"
+        case .officialMockRequiresDedicatedBank(let id):
+            return "公式年度模試問題を通常練習バンクへ混入できません: \(id)"
         }
     }
 }
@@ -63,7 +66,8 @@ struct QuestionRepository {
             switch kind {
             case .preview:
                 guard question.releaseEligible == false,
-                      question.originType == "original_preview" else {
+                      question.originType == "original_preview",
+                      question.contentUse == nil else {
                     throw QuestionBankError.invalidQuestion(question.id)
                 }
             case .release:
@@ -94,8 +98,22 @@ struct QuestionRepository {
         guard question.releaseEligible,
               question.originType != "original_preview",
               Self.officialSubjects.contains(question.subject),
-              question.examYear != nil else {
+              let contentUse = question.contentUse else {
             throw QuestionBankError.invalidReleaseGate(question.id)
+        }
+
+        switch contentUse {
+        case .practice:
+            // Original practice content is timeless learning material. Assigning an
+            // official exam year would make it look like a reproduced past question.
+            guard question.examYear == nil else {
+                throw QuestionBankError.invalidReleaseGate(question.id)
+            }
+        case .officialMock:
+            // Official-year questions require a separate bank that binds each item
+            // to official response slots/partial-credit scoring and rights clearance.
+            // The ordinary practice repository intentionally cannot load them.
+            throw QuestionBankError.officialMockRequiresDedicatedBank(question.id)
         }
 
         if Self.legalSubjects.contains(question.subject) {
