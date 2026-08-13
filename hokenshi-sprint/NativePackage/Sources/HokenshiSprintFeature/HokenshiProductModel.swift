@@ -29,11 +29,13 @@ public final class HokenshiProductModel: ObservableObject {
     @Published public private(set) var contentStore: HokenshiContentStore?
     @Published public var state: LearningState
     @Published public var activeSession: HokenshiSessionPresentation?
+    @Published public var showPaywall = false
     @Published public private(set) var loadError: String?
     @Published public private(set) var lastSessionCorrect = 0
     @Published public private(set) var lastSessionUnknown = 0
     @Published public private(set) var lastSessionTotal = 0
 
+    public let purchaseController: PurchaseController
     private let stateStore: LearningStateStore
 
     public init() {
@@ -42,6 +44,7 @@ public final class HokenshiProductModel: ObservableObject {
             contentVersion: HokenshiReleaseContentStore.contentVersion
         )
         stateStore = persistence
+        purchaseController = PurchaseController(productID: HokenshiMonetization.productID)
         state = (try? persistence.load()) ?? LearningState(contentVersion: HokenshiReleaseContentStore.contentVersion)
         do {
             contentStore = try HokenshiReleaseContentStore.load()
@@ -55,6 +58,9 @@ public final class HokenshiProductModel: ObservableObject {
         contentStore?.allRecords.map(\.displayQuestion) ?? []
     }
 
+    public var isPremium: Bool { purchaseController.isPremium }
+    public var freeQuestionCount: Int { allQuestions.filter { !$0.premium }.count }
+    public var premiumQuestionCount: Int { allQuestions.filter(\.premium).count }
     public var todayAnsweredCount: Int { LearningEngine.todayAnsweredCount(state: state) }
 
     public var accuracy: Double? {
@@ -84,7 +90,11 @@ public final class HokenshiProductModel: ObservableObject {
         begin(
             kind: .sprint,
             title: "今日のスプリント",
-            questions: LearningEngine.selectSprint(from: allQuestions, target: state.dailyTarget, isPremium: true)
+            questions: LearningEngine.selectSprint(
+                from: allQuestions,
+                target: state.dailyTarget,
+                isPremium: purchaseController.isPremium
+            )
         )
     }
 
@@ -92,7 +102,12 @@ public final class HokenshiProductModel: ObservableObject {
         begin(
             kind: .weak,
             title: "苦手復習",
-            questions: LearningEngine.selectWeak(from: allQuestions, state: state, target: state.dailyTarget, isPremium: true)
+            questions: LearningEngine.selectWeak(
+                from: allQuestions,
+                state: state,
+                target: state.dailyTarget,
+                isPremium: purchaseController.isPremium
+            )
         )
     }
 
@@ -101,11 +116,19 @@ public final class HokenshiProductModel: ObservableObject {
         begin(
             kind: .subject(subject),
             title: subject,
-            questions: LearningEngine.selectSprint(from: pool, target: state.dailyTarget, isPremium: true)
+            questions: LearningEngine.selectSprint(
+                from: pool,
+                target: state.dailyTarget,
+                isPremium: purchaseController.isPremium
+            )
         )
     }
 
     public func startMock(round: Int, segment: HokenshiMockSegment) {
+        guard purchaseController.isPremium else {
+            showPaywall = true
+            return
+        }
         guard let rows = contentStore?.questions(round: round), rows.count == 110 else { return }
         let selected: [HokenshiQuestionRecord]
         switch segment {
@@ -120,6 +143,10 @@ public final class HokenshiProductModel: ObservableObject {
         )
     }
 
+    public func requestPremium() {
+        showPaywall = true
+    }
+
     public func resume() {
         guard let snapshot = state.resumeSession else { return }
         let byID = Dictionary(uniqueKeysWithValues: allQuestions.map { ($0.id, $0) })
@@ -130,6 +157,10 @@ public final class HokenshiProductModel: ObservableObject {
         else {
             state.resumeSession = nil
             persist()
+            return
+        }
+        if !purchaseController.isPremium && questions.contains(where: \.premium) {
+            showPaywall = true
             return
         }
         activeSession = HokenshiSessionPresentation(
@@ -212,7 +243,10 @@ public final class HokenshiProductModel: ObservableObject {
     }
 
     private func begin(kind: SessionKind, title: String, questions: [LearningQuestion]) {
-        guard !questions.isEmpty else { return }
+        guard !questions.isEmpty else {
+            if !purchaseController.isPremium { showPaywall = true }
+            return
+        }
         state.resumeSession = LearningSessionSnapshot(kind: kind, questionIDs: questions.map(\.id))
         persist()
         activeSession = HokenshiSessionPresentation(kind: kind, title: title, questions: questions)
