@@ -43,7 +43,7 @@ jobs:
       - name: Build R6-R7 canonical scoring data
         id: canonical
         continue-on-error: true
-        run: python learning-sprint/yobi-tantou/content-loop/build_official_scoring_canonical.py
+        run: python learning-sprint/yobi-tantou/content-loop/build_official_scoring_canonical_fixed.py
       - name: Upload official-source summaries and canonical scoring
         if: always()
         uses: actions/upload-artifact@v4
