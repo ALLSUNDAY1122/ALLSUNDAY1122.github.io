@@ -84,7 +84,7 @@ def build_payload() -> dict:
     }
 
 
-def validate(payload: dict) -> None:
+def validate(payload: dict, *, print_cases: bool = False) -> None:
     cases = payload["cases"]
     if len(cases) != 36:
         fail(f"expected 36 cases, found {len(cases)}")
@@ -142,15 +142,25 @@ def validate(payload: dict) -> None:
     print("  12 cases per mock; 9 cases per clinical family")
     print("  case sizes: 33 x 3 questions + 3 x 2 questions")
     print("  clinical arc roles and anti-fragmentation rules: PASS")
+    if print_cases:
+        print("  deterministic case mapping:")
+        for case in cases:
+            intents = ",".join(case["intentIds"])
+            questions = ",".join(case["questionIds"])
+            print(
+                f"    {case['scenarioId']} | R{case['mockRound']} {case['session']} | "
+                f"{case['scenarioFamily']} | n={case['scenarioTotal']} | intents={intents} | questions={questions}"
+            )
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--print-cases", action="store_true")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
     payload = build_payload()
-    validate(payload)
+    validate(payload, print_cases=args.print_cases)
     if not args.check:
         args.output.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(f"WROTE: {args.output}")
