@@ -4,7 +4,7 @@ import SwiftUI
 struct RigakuSprintApp: App {
     var body: some Scene {
         WindowGroup {
-            RigakuRootView()
+            RigakuRootViewV2()
                 .preferredColorScheme(.light)
         }
     }
