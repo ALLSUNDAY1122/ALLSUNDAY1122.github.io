@@ -18,6 +18,9 @@ let package = Package(
             name: "JosanshiSprintFeature",
             dependencies: [
                 .product(name: "LearningSprintCore", package: "LearningSprintCore")
+            ],
+            resources: [
+                .process("Resources")
             ]
         ),
         .testTarget(
