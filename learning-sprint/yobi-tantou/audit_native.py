@@ -22,6 +22,9 @@ release_path = IOS / "Resources" / "questions.release.json"
 privacy = (IOS / "PrivacyInfo.xcprivacy").read_text(encoding="utf-8")
 icon_lock = json.loads((IOS / "app-icon-lock.json").read_text(encoding="utf-8"))
 
+legal_subjects = {"憲法", "行政法", "民法", "商法", "民事訴訟法", "刑法", "刑事訴訟法"}
+valid_release_subjects = legal_subjects | {"一般教養"}
+
 for forbidden in ("import WebKit", "WKWebView", "SFSafariViewController"):
     if forbidden in swift:
         errors.append(f"native-only violation: {forbidden}")
@@ -115,21 +118,22 @@ for q in preview_questions:
         if not q.get(key):
             errors.append(f"missing preview field {key}: {q.get('id')}")
 
-# Formal practice bank is now a real source-of-truth resource. It must stay
-# isolated from official-year mock content and must not regress below the first
-# audited seed coverage (2 independently-authored items per legal subject).
+# Formal practice bank must stay isolated from official-year mock content and
+# must not regress below the first audited seed coverage: two independent items
+# in each of the seven legal subjects.
 if not release_path.exists():
     errors.append("formal practice questions.release.json missing")
 else:
     release_questions = json.loads(release_path.read_text(encoding="utf-8"))
     if not isinstance(release_questions, list) or len(release_questions) < 14:
-        errors.append(f"formal practice bank must contain at least 14 questions, got {len(release_questions) if isinstance(release_questions, list) else 'non-list'}")
+        count = len(release_questions) if isinstance(release_questions, list) else "non-list"
+        errors.append(f"formal practice bank must contain at least 14 questions, got {count}")
         release_questions = release_questions if isinstance(release_questions, list) else []
     release_ids = [q.get("id") for q in release_questions]
     if any(not qid for qid in release_ids) or len(release_ids) != len(set(release_ids)):
         errors.append("formal practice bank has missing/duplicate IDs")
     subject_counts = Counter(q.get("subject") for q in release_questions)
-    for subject in ("憲法", "行政法", "民法", "商法", "民事訴訟法", "刑法", "刑事訴訟法"):
+    for subject in legal_subjects:
         if subject_counts.get(subject, 0) < 2:
             errors.append(f"formal practice seed coverage below 2 questions: {subject}")
     for q in release_questions:
@@ -142,8 +146,13 @@ else:
             errors.append(f"practice item falsely carries official exam year: {qid}")
         if q.get("originType") in (None, "original_preview", "official_exam_reproduced"):
             errors.append(f"formal practice originType invalid: {qid}")
-        if q.get("subject") not in QuestionSubjects if False else False:
-            pass
+        if q.get("subject") not in valid_release_subjects:
+            errors.append(f"formal practice subject invalid: {qid}")
+        if q.get("subject") in legal_subjects and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(q.get("lawBasisDate", ""))):
+            errors.append(f"formal legal practice lawBasisDate invalid: {qid}")
+        for key in ("stem", "choices", "correctIndices", "explanation", "memory", "sourceURL", "evidenceCheckedDate"):
+            if not q.get(key):
+                errors.append(f"formal practice field missing {key}: {qid}")
 
 for production_value in ("jp.allsunday1122.yobi", "jp.allsunday1122.yobi.premium"):
     if production_value in project or production_value in swift:
