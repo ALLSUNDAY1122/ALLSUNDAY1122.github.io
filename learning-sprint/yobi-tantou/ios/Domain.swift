@@ -27,6 +27,42 @@ struct StudyQuestion: Codable, Identifiable, Equatable {
     let releaseEligible: Bool
     let contentUse: QuestionContentUse?
 
+    init(
+        id: String,
+        examYear: Int?,
+        subject: String,
+        topic: String,
+        stem: String,
+        choices: [String],
+        correctIndices: [Int],
+        explanation: String,
+        memory: String,
+        sourceTitle: String,
+        sourceURL: String,
+        evidenceCheckedDate: String,
+        lawBasisDate: String?,
+        originType: String,
+        releaseEligible: Bool,
+        contentUse: QuestionContentUse? = nil
+    ) {
+        self.id = id
+        self.examYear = examYear
+        self.subject = subject
+        self.topic = topic
+        self.stem = stem
+        self.choices = choices
+        self.correctIndices = correctIndices
+        self.explanation = explanation
+        self.memory = memory
+        self.sourceTitle = sourceTitle
+        self.sourceURL = sourceURL
+        self.evidenceCheckedDate = evidenceCheckedDate
+        self.lawBasisDate = lawBasisDate
+        self.originType = originType
+        self.releaseEligible = releaseEligible
+        self.contentUse = contentUse
+    }
+
     var isPracticeQuestion: Bool {
         originType == "original_preview" || contentUse == .practice
     }
