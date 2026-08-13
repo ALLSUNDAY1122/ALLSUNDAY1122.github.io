@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-12T23:42:39.779Z",
+  "generatedAt": "2026-08-13T05:00:46.649Z",
   "summary": {
     "verdict": "PASS",
     "passConditions": {
@@ -77,8 +77,8 @@
       "reviewTaps": 0,
       "netPayCorrect": true,
       "itemPass": true,
-      "elapsedMs": 14,
-      "engineMs": 13,
+      "elapsedMs": 10,
+      "engineMs": 10,
       "crashed": null,
       "checks": [
         {
@@ -118,7 +118,7 @@
           "value": 47700,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 1.007,
           "reasons": [
             "支給合計と一致"
           ],
@@ -140,7 +140,7 @@
           "value": 17400,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 1.039,
           "reasons": [
             "控除合計と一致"
           ],
@@ -151,7 +151,7 @@
           "value": 32000,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 1.015,
           "reasons": [
             "控除合計と一致"
           ],
@@ -162,7 +162,7 @@
           "value": 2128,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 1.039,
           "reasons": [
             "控除合計と一致"
           ],
@@ -195,7 +195,7 @@
           "value": 277352,
           "status": "confident",
           "correct": true,
-          "confidence": 0.827,
+          "confidence": 0.744,
           "reasons": [
             "支給合計-控除合計と一致"
           ],
@@ -225,8 +225,8 @@
       "reviewTaps": 0,
       "netPayCorrect": true,
       "itemPass": true,
-      "elapsedMs": 5,
-      "engineMs": 5,
+      "elapsedMs": 4,
+      "engineMs": 4,
       "crashed": null,
       "checks": [
         {
@@ -255,7 +255,7 @@
           "value": 310000,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 1.034,
           "reasons": [
             "支給合計と一致"
           ],
@@ -266,7 +266,7 @@
           "value": 40400,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 0.989,
           "reasons": [
             "支給合計と一致"
           ],
@@ -343,7 +343,7 @@
           "value": 297576,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 1.039,
           "reasons": [
             "支給合計-控除合計と一致"
           ],
@@ -373,7 +373,7 @@
       "reviewTaps": 0,
       "netPayCorrect": true,
       "itemPass": true,
-      "elapsedMs": 3,
+      "elapsedMs": 2,
       "engineMs": 2,
       "crashed": null,
       "checks": [
@@ -414,7 +414,7 @@
           "value": 36750,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 1.007,
           "reasons": [
             "支給合計と一致"
           ],
@@ -436,7 +436,7 @@
           "value": 16900,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 1.025,
           "reasons": [
             "控除合計と一致"
           ],
@@ -447,7 +447,7 @@
           "value": 31110,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 0.996,
           "reasons": [
             "控除合計と一致"
           ],
@@ -458,7 +458,7 @@
           "value": 2080,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 1.039,
           "reasons": [
             "控除合計と一致"
           ],
@@ -469,7 +469,7 @@
           "value": 6930,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 1.018,
           "reasons": [
             "控除合計と一致"
           ],
@@ -491,7 +491,7 @@
           "value": 273930,
           "status": "confident",
           "correct": true,
-          "confidence": 1.06,
+          "confidence": 1.039,
           "reasons": [
             "支給合計-控除合計と一致"
           ],
@@ -521,8 +521,8 @@
       "reviewTaps": 0,
       "netPayCorrect": true,
       "itemPass": true,
-      "elapsedMs": 2,
-      "engineMs": 2,
+      "elapsedMs": 3,
+      "engineMs": 3,
       "crashed": null,
       "checks": [
         {
@@ -562,7 +562,7 @@
           "value": 59600,
           "status": "confident",
           "correct": true,
-          "confidence": 0.901,
+          "confidence": 0.856,
           "reasons": [
             "支給合計と一致"
           ],
@@ -681,8 +681,8 @@
       "reviewTaps": 5,
       "netPayCorrect": true,
       "itemPass": true,
-      "elapsedMs": 70,
-      "engineMs": 66,
+      "elapsedMs": 65,
+      "engineMs": 62,
       "crashed": null,
       "checks": [
         {
@@ -722,7 +722,7 @@
           "value": 38900,
           "status": "confident",
           "correct": true,
-          "confidence": 1.043,
+          "confidence": 0.991,
           "reasons": [
             "支給合計と一致"
           ],
@@ -780,7 +780,8 @@
           "confidence": 0.659,
           "reasons": [
             "合計との整合から桁誤りを補正（6549→6540）。要確認",
-            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+            "同ブロックで桁誤りの補正・判断保留があったため要確認",
+            "別条件の読み取りでは 6549 と読めたため要確認"
           ],
           "derived": false
         },
@@ -831,11 +832,11 @@
       "missing": 0,
       "silentWrong": 0,
       "fixOps": 0,
-      "reviewTaps": 1,
+      "reviewTaps": 2,
       "netPayCorrect": true,
       "itemPass": true,
-      "elapsedMs": 11,
-      "engineMs": 7,
+      "elapsedMs": 6,
+      "engineMs": 2,
       "crashed": null,
       "checks": [
         {
@@ -873,11 +874,12 @@
         "overtime": {
           "truth": 34400,
           "value": 34400,
-          "status": "confident",
+          "status": "needs_review",
           "correct": true,
-          "confidence": 0.951,
+          "confidence": 0.903,
           "reasons": [
-            "支給合計と一致"
+            "支給合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
           ],
           "derived": false
         },
@@ -897,7 +899,7 @@
           "value": 14800,
           "status": "confident",
           "correct": true,
-          "confidence": 1.033,
+          "confidence": 1.012,
           "reasons": [
             "控除合計と一致"
           ],
@@ -908,7 +910,7 @@
           "value": 27900,
           "status": "confident",
           "correct": true,
-          "confidence": 1.01,
+          "confidence": 0.967,
           "reasons": [
             "控除合計と一致"
           ],
@@ -919,7 +921,7 @@
           "value": 1702,
           "status": "needs_review",
           "correct": true,
-          "confidence": 0.864,
+          "confidence": 0.846,
           "reasons": [
             "控除合計と一致"
           ],
@@ -952,7 +954,7 @@
           "value": 221678,
           "status": "confident",
           "correct": true,
-          "confidence": 1.022,
+          "confidence": 0.988,
           "reasons": [
             "支給合計-控除合計と一致"
           ],
@@ -998,11 +1000,11 @@
       "missing": 0,
       "silentWrong": 0,
       "fixOps": 0,
-      "reviewTaps": 7,
+      "reviewTaps": 9,
       "netPayCorrect": true,
       "itemPass": true,
-      "elapsedMs": 58,
-      "engineMs": 29,
+      "elapsedMs": 55,
+      "engineMs": 23,
       "crashed": null,
       "checks": [
         {
@@ -1040,22 +1042,25 @@
         "overtime": {
           "truth": 35800,
           "value": 35800,
-          "status": "confident",
+          "status": "needs_review",
           "correct": true,
-          "confidence": 0.916,
+          "confidence": 0.886,
           "reasons": [
-            "支給合計と一致"
+            "支給合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）",
+            "別条件の読み取りでは 35890 と読めたため要確認"
           ],
           "derived": false
         },
         "other_allowance": {
           "truth": 11200,
           "value": 11200,
-          "status": "confident",
+          "status": "needs_review",
           "correct": true,
           "confidence": 1.017,
           "reasons": [
-            "支給合計と一致"
+            "支給合計と一致",
+            "別条件の読み取りでは 11260 と読めたため要確認"
           ],
           "derived": false
         },
@@ -1098,7 +1103,7 @@
           "value": 4880,
           "status": "needs_review",
           "correct": true,
-          "confidence": 0.992,
+          "confidence": 0.959,
           "reasons": [
             "同ブロックで桁誤りの補正・判断保留があったため要確認"
           ],
@@ -1111,7 +1116,8 @@
           "correct": true,
           "confidence": 0.807,
           "reasons": [
-            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+            "同ブロックで桁誤りの補正・判断保留があったため要確認",
+            "別条件の読み取りでは 1400 と読めたため要確認"
           ],
           "derived": false
         },
@@ -1159,11 +1165,11 @@
       "missing": 0,
       "silentWrong": 0,
       "fixOps": 0,
-      "reviewTaps": 5,
+      "reviewTaps": 6,
       "netPayCorrect": true,
       "itemPass": true,
-      "elapsedMs": 41,
-      "engineMs": 30,
+      "elapsedMs": 33,
+      "engineMs": 28,
       "crashed": null,
       "checks": [
         {
@@ -1203,7 +1209,7 @@
           "value": 45300,
           "status": "confident",
           "correct": true,
-          "confidence": 1.03,
+          "confidence": 0.996,
           "reasons": [
             "支給合計と一致"
           ],
@@ -1212,11 +1218,12 @@
         "other_allowance": {
           "truth": 28800,
           "value": 28800,
-          "status": "confident",
+          "status": "needs_review",
           "correct": true,
           "confidence": 1.014,
           "reasons": [
-            "支給合計と一致"
+            "支給合計と一致",
+            "別条件の読み取りでは 74100 と読めたため要確認"
           ],
           "derived": false
         },
@@ -1225,7 +1232,7 @@
           "value": 15900,
           "status": "needs_review",
           "correct": true,
-          "confidence": 1.03,
+          "confidence": 1.009,
           "reasons": [
             "同ブロックで桁誤りの補正・判断保留があったため要確認"
           ],
@@ -1236,7 +1243,7 @@
           "value": 30000,
           "status": "needs_review",
           "correct": true,
-          "confidence": 1.036,
+          "confidence": 0.992,
           "reasons": [
             "同ブロックで桁誤りの補正・判断保留があったため要確認"
           ],
@@ -1247,7 +1254,7 @@
           "value": 1956,
           "status": "needs_review",
           "correct": true,
-          "confidence": 0.955,
+          "confidence": 0.936,
           "reasons": [
             "同ブロックで桁誤りの補正・判断保留があったため要確認"
           ],
@@ -1260,7 +1267,8 @@
           "correct": true,
           "confidence": 1.004,
           "reasons": [
-            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+            "同ブロックで桁誤りの補正・判断保留があったため要確認",
+            "別条件の読み取りでは 0 と読めたため要確認"
           ],
           "derived": false
         },
@@ -1281,7 +1289,7 @@
           "value": 258364,
           "status": "confident",
           "correct": true,
-          "confidence": 1.046,
+          "confidence": 1.025,
           "reasons": [
             "支給合計-控除合計と一致"
           ],
@@ -1312,11 +1320,11 @@
       "missing": 0,
       "silentWrong": 0,
       "fixOps": 0,
-      "reviewTaps": 1,
+      "reviewTaps": 2,
       "netPayCorrect": true,
       "itemPass": true,
-      "elapsedMs": 40,
-      "engineMs": 2,
+      "elapsedMs": 35,
+      "engineMs": 1,
       "crashed": null,
       "checks": [
         {
@@ -1356,7 +1364,7 @@
           "value": 51000,
           "status": "confident",
           "correct": true,
-          "confidence": 0.986,
+          "confidence": 0.937,
           "reasons": [
             "支給合計と一致"
           ],
@@ -1380,7 +1388,8 @@
           "correct": true,
           "confidence": 0.664,
           "reasons": [
-            "控除合計と一致"
+            "控除合計と一致",
+            "別条件の読み取りでは 15169 と読めたため要確認"
           ],
           "derived": false
         },
@@ -1398,11 +1407,12 @@
         "employment_insurance": {
           "truth": 1850,
           "value": 1850,
-          "status": "confident",
+          "status": "needs_review",
           "correct": true,
           "confidence": 0.915,
           "reasons": [
-            "控除合計と一致"
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
           ],
           "derived": false
         },
@@ -1464,11 +1474,11 @@
       "missing": 0,
       "silentWrong": 0,
       "fixOps": 0,
-      "reviewTaps": 1,
+      "reviewTaps": 3,
       "netPayCorrect": true,
       "itemPass": true,
-      "elapsedMs": 6,
-      "engineMs": 3,
+      "elapsedMs": 4,
+      "engineMs": 2,
       "crashed": null,
       "checks": [
         {
@@ -1508,7 +1518,7 @@
           "value": 56800,
           "status": "confident",
           "correct": true,
-          "confidence": 1.008,
+          "confidence": 0.967,
           "reasons": [
             "支給合計と一致"
           ],
@@ -1530,7 +1540,7 @@
           "value": 18900,
           "status": "confident",
           "correct": true,
-          "confidence": 1.026,
+          "confidence": 1.005,
           "reasons": [
             "控除合計と一致"
           ],
@@ -1541,7 +1551,7 @@
           "value": 35200,
           "status": "needs_review",
           "correct": true,
-          "confidence": 0.636,
+          "confidence": 0.609,
           "reasons": [
             "控除合計と一致"
           ],
@@ -1550,11 +1560,12 @@
         "employment_insurance": {
           "truth": 2388,
           "value": 2388,
-          "status": "confident",
+          "status": "needs_review",
           "correct": true,
-          "confidence": 0.815,
+          "confidence": 0.799,
           "reasons": [
-            "控除合計と一致"
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
           ],
           "derived": false
         },
@@ -1572,11 +1583,12 @@
         "resident_tax": {
           "truth": 22800,
           "value": 22800,
-          "status": "confident",
+          "status": "needs_review",
           "correct": true,
           "confidence": 0.827,
           "reasons": [
-            "控除合計と一致"
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
           ],
           "derived": false
         },
@@ -1585,7 +1597,7 @@
           "value": 308472,
           "status": "confident",
           "correct": true,
-          "confidence": 1.044,
+          "confidence": 1.023,
           "reasons": [
             "支給合計-控除合計と一致"
           ],

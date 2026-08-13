@@ -15,6 +15,9 @@ export const STATUS = {
 const CONFIDENT_THRESHOLD = 0.6;
 const REVIEW_THRESHOLD = 0.28;
 const LOW_OCR_CONF = 0.55;
+// OCR経路で「確定候補」にする最低の読み取り信頼度。
+// 合計検算が偶然合ってしまう誤読を確定にしないため、PDF経路より厳しくする。
+const OCR_CONFIDENT_MIN = 0.8;
 
 function emptyItems() {
   const items = {};
@@ -103,32 +106,70 @@ function leftCandidates(hit, amountsInRow) {
 }
 
 /**
+ * ラベル列と金額列を、左から右の順序を保ったまま対応付ける。
+ * 表のセルは順番に並ぶので、単純な最近傍よりも順序を保つ方が崩れにくい
+ * （ラベルが長いと中心がずれ、隣のセルの金額に吸い寄せられるため）。
+ * @returns {Map<labelIndex, amountIndex>}
+ */
+function monotonicMatch(labelCenters, amountCenters) {
+  const n = labelCenters.length;
+  const m = amountCenters.length;
+  const INF = Infinity;
+  // dp[i][j] = ラベルi以降・金額j以降を対応付けたときの最小コスト
+  const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(INF));
+  const choice = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(null));
+  for (let j = 0; j <= m; j++) dp[n][j] = 0;
+  for (let i = n - 1; i >= 0; i--) {
+    for (let j = m - 1; j >= 0; j--) {
+      const pair = Math.abs(labelCenters[i] - amountCenters[j]) + dp[i + 1][j + 1];
+      const skipAmount = dp[i][j + 1] + 1; // 金額を飛ばす（余分な数値がある場合）
+      if (pair <= skipAmount) {
+        dp[i][j] = pair;
+        choice[i][j] = 'pair';
+      } else {
+        dp[i][j] = skipAmount;
+        choice[i][j] = 'skip';
+      }
+    }
+  }
+  const result = new Map();
+  let i = 0;
+  let j = 0;
+  while (i < n && j < m) {
+    if (choice[i][j] === 'pair') {
+      result.set(i, j);
+      i += 1;
+      j += 1;
+    } else {
+      j += 1;
+    }
+  }
+  return result;
+}
+
+/**
  * 列ヘッダ型（ラベルの真下に金額）の対応付け。
- * ラベル行と金額行の中心x座標が相互に最近傍のときだけ採用する。
  */
 function belowCandidate(hit, layout, profile, medianHeight) {
-  const labelsInRow = profile.labelsByRow.get(hit.row) || [];
+  const labelsInRow = (profile.labelsByRow.get(hit.row) || []).slice().sort((a, b) => a.token.x - b.token.x);
   const amountsInRow = profile.amountsByRow.get(hit.row) || [];
   if (labelsInRow.length < 2 || amountsInRow.length > 1) return null;
 
   for (let d = 1; d <= 2; d++) {
     const targetRow = hit.row + d;
-    const amounts = profile.amountsByRow.get(targetRow) || [];
+    const amounts = (profile.amountsByRow.get(targetRow) || []).slice().sort((a, b) => a.token.x - b.token.x);
     const labels = profile.labelsByRow.get(targetRow) || [];
     if (amounts.length < 2 || labels.length > amounts.length) continue;
-    const lx = tokenCenterX(hit.token);
-    const nearest = amounts
-      .map((a) => ({ a, dist: Math.abs(tokenCenterX(a.token) - lx) }))
-      .sort((p, q) => p.dist - q.dist)[0];
-    if (!nearest) continue;
-    // 相互最近傍か（その金額から見ても hit が最も近いラベルか）
-    const ax = tokenCenterX(nearest.a.token);
-    const closestLabel = labelsInRow
-      .map((l) => ({ l, dist: Math.abs(tokenCenterX(l.token) - ax) }))
-      .sort((p, q) => p.dist - q.dist)[0];
-    if (!closestLabel || closestLabel.l !== hit) continue;
-    if (nearest.dist > medianHeight * 12) continue;
-    return { amount: nearest.a, weight: d === 1 ? 0.85 : 0.6 };
+    const matching = monotonicMatch(
+      labelsInRow.map((l) => tokenCenterX(l.token)),
+      amounts.map((a) => tokenCenterX(a.token)),
+    );
+    const labelIndex = labelsInRow.indexOf(hit);
+    const amountIndex = matching.get(labelIndex);
+    if (amountIndex === undefined) continue;
+    const amount = amounts[amountIndex];
+    if (Math.abs(tokenCenterX(amount.token) - tokenCenterX(hit.token)) > medianHeight * 12) continue;
+    return { amount, weight: d === 1 ? 0.85 : 0.6 };
   }
   return null;
 }
@@ -591,6 +632,12 @@ export function extractPayslip(rawTokens, options = {}) {
       item.reasons.push('合計検算の裏付けが無いため要確認');
       continue;
     }
+    if (item.status === STATUS.CONFIRMED_CANDIDATE && route !== 'pdf_text' &&
+        (item.minOcrConf ?? 1) < OCR_CONFIDENT_MIN) {
+      item.status = STATUS.NEEDS_REVIEW;
+      item.reasons.push('読み取り信頼度が低いため要確認（合計が合っていても確定にしない）');
+      continue;
+    }
     // 残業関連とその他手当は「支給合計が合う」だけでは切り分けられない（互いに振り替えても合計は同じ）。
     // 項目名が完全一致していない構成要素がある場合は確定候補にしない。
     if (item.status === STATUS.CONFIRMED_CANDIDATE &&
@@ -645,11 +692,34 @@ export function extractPayslipBest(variants, options = {}) {
   if (!list.length) return extractPayslip([], options);
   let best = null;
   const attempts = [];
+  const results = [];
   for (const variant of list) {
     const result = extractPayslip(variant.tokens, options);
     const score = selfAssessment(result);
     attempts.push({ variant: variant.name, score: Number.isFinite(score) ? Number(score.toFixed(2)) : null });
+    results.push({ name: variant.name, result });
     if (!best || score > best.score) best = { score, result, variant: variant.name };
   }
-  return { ...best.result, variant: best.variant, variantScores: attempts };
+
+  // 別条件の読み取りと値が食い違う項目は確定候補にしない。
+  // 「合計は合うが実は誤読」を、独立した2回目の読み取りで落とすための安全弁。
+  const disagreements = [];
+  for (const key of ITEM_KEYS) {
+    const item = best.result.items[key];
+    if (!item || item.value === null) continue;
+    for (const other of results) {
+      if (other.name === best.variant) continue;
+      const otherValue = other.result.ok ? other.result.items[key].value : null;
+      if (otherValue === null || otherValue === item.value) continue;
+      disagreements.push({ key, chosen: item.value, other: otherValue, variant: other.name });
+      if (item.status === STATUS.CONFIRMED_CANDIDATE) item.status = STATUS.NEEDS_REVIEW;
+      item.reasons.push(`別条件の読み取りでは ${otherValue} と読めたため要確認`);
+      if (!item.alternatives.some((a) => a.value === otherValue)) {
+        item.alternatives.unshift({ value: otherValue, score: 0, label: `別の読み取り(${other.name})`, relation: 'variant' });
+      }
+      break;
+    }
+  }
+
+  return { ...best.result, variant: best.variant, variantScores: attempts, disagreements };
 }
