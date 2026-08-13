@@ -1,8 +1,10 @@
 #if canImport(SwiftUI)
 import SwiftUI
+import UniformTypeIdentifiers
 import LearningSprintCore
 
 public struct HokenshiRootView: View {
+    @StateObject private var model = HokenshiProductModel()
     @State private var selectedTab: Tab = .home
 
     public init() {}
@@ -11,30 +13,48 @@ public struct HokenshiRootView: View {
         ZStack {
             LearningSprintPaperBackground()
             TabView(selection: $selectedTab) {
-                HokenshiHomeView()
+                HokenshiHomeView(model: model, selectedTab: $selectedTab)
                     .tabItem { Label("ホーム", systemImage: "house.fill") }
                     .tag(Tab.home)
-                HokenshiMockListView()
+                HokenshiMockListView(model: model)
                     .tabItem { Label("模試", systemImage: "doc.text.fill") }
                     .tag(Tab.mock)
-                HokenshiHistoryView()
+                HokenshiHistoryView(model: model)
                     .tabItem { Label("記録", systemImage: "chart.bar.fill") }
                     .tag(Tab.history)
-                HokenshiSettingsView()
+                HokenshiSettingsView(model: model)
                     .tabItem { Label("設定", systemImage: "gearshape.fill") }
                     .tag(Tab.settings)
             }
             .tint(LearningSprintTheme.indigo)
         }
+        .fullScreenCover(item: $model.activeSession) { session in
+            HokenshiSessionContainer(
+                questions: session.questions,
+                title: session.title,
+                onComplete: { evaluations in
+                    model.finishActiveSession(evaluations)
+                },
+                onClose: {
+                    model.closeActiveSession(keepForResume: model.state.resumeSession != nil)
+                }
+            )
+        }
     }
 
-    private enum Tab: Hashable {
+    enum Tab: Hashable {
         case home, mock, history, settings
     }
 }
 
 public struct HokenshiHomeView: View {
-    public init() {}
+    @ObservedObject var model: HokenshiProductModel
+    @Binding var selectedTab: HokenshiRootView.Tab
+
+    var progress: Double {
+        guard model.state.dailyTarget > 0 else { return 0 }
+        return min(1, Double(model.todayAnsweredCount) / Double(model.state.dailyTarget))
+    }
 
     public var body: some View {
         ScrollView {
@@ -51,47 +71,91 @@ public struct HokenshiHomeView: View {
                         .foregroundStyle(LearningSprintTheme.ink2)
                 }
 
+                if let loadError = model.loadError {
+                    HokenshiCard {
+                        Label(loadError, systemImage: "exclamationmark.triangle.fill")
+                            .font(LearningSprintTheme.sans(13, weight: .bold))
+                            .foregroundStyle(LearningSprintTheme.vermilion)
+                    }
+                }
+
                 HokenshiCard {
                     HStack(spacing: 18) {
-                        LearningSprintProgressRing(progress: 0, label: "0 / 8")
+                        LearningSprintProgressRing(
+                            progress: progress,
+                            label: "\(model.todayAnsweredCount) / \(model.state.dailyTarget)"
+                        )
                         VStack(alignment: .leading, spacing: 6) {
                             Text("今日の学習")
                                 .font(LearningSprintTheme.sans(13, weight: .bold))
                                 .foregroundStyle(LearningSprintTheme.ink2)
-                            Text("8問で1スプリント")
+                            Text("\(model.state.dailyTarget)問で1スプリント")
                                 .font(LearningSprintTheme.serif(20, weight: .semibold))
                                 .foregroundStyle(LearningSprintTheme.ink)
-                            Text("短く区切って、毎日積み上げる")
-                                .font(LearningSprintTheme.sans(12))
-                                .foregroundStyle(LearningSprintTheme.ink3)
+                            if let pace = model.requiredDailyPace {
+                                Text("試験日までの必要ペース：1日\(pace)問")
+                                    .font(LearningSprintTheme.sans(12, weight: .bold))
+                                    .foregroundStyle(LearningSprintTheme.vermilion)
+                            } else {
+                                Text("短く区切って、毎日積み上げる")
+                                    .font(LearningSprintTheme.sans(12))
+                                    .foregroundStyle(LearningSprintTheme.ink3)
+                            }
                         }
                         Spacer(minLength: 0)
                     }
                 }
 
+                if model.canResume {
+                    Button(action: model.resume) {
+                        HokenshiActionCard(
+                            title: "途中から再開",
+                            subtitle: "前回の問題セット",
+                            systemImage: "arrow.clockwise.circle.fill",
+                            accent: LearningSprintTheme.green
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("hokenshi.resume")
+                }
+
                 Text("今日のスプリント")
                     .font(LearningSprintTheme.sans(13, weight: .bold))
                     .foregroundStyle(LearningSprintTheme.ink2)
-                HokenshiActionCard(
-                    title: "8問を解く",
-                    subtitle: "標準スプリント",
-                    systemImage: "figure.run",
-                    accent: LearningSprintTheme.indigo
-                )
+
+                Button(action: model.startSprint) {
+                    HokenshiActionCard(
+                        title: "\(model.state.dailyTarget)問を解く",
+                        subtitle: "標準スプリント",
+                        systemImage: "figure.run",
+                        accent: LearningSprintTheme.indigo
+                    )
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("hokenshi.start.sprint")
 
                 HStack(spacing: 12) {
-                    HokenshiActionCard(
-                        title: "苦手をつぶす",
-                        subtitle: "誤答・わからない",
-                        systemImage: "target",
-                        accent: LearningSprintTheme.vermilion
-                    )
-                    HokenshiActionCard(
-                        title: "模擬試験",
-                        subtitle: "110問 × 3回",
-                        systemImage: "doc.text",
-                        accent: LearningSprintTheme.gold
-                    )
+                    Button(action: model.startWeak) {
+                        HokenshiActionCard(
+                            title: "苦手をつぶす",
+                            subtitle: "\(model.state.weakQuestions.count)問・3連続で解除",
+                            systemImage: "target",
+                            accent: LearningSprintTheme.vermilion
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(model.state.weakQuestions.isEmpty)
+                    .opacity(model.state.weakQuestions.isEmpty ? 0.55 : 1)
+
+                    Button { selectedTab = .mock } label: {
+                        HokenshiActionCard(
+                            title: "模擬試験",
+                            subtitle: "110問 × 3回",
+                            systemImage: "doc.text",
+                            accent: LearningSprintTheme.gold
+                        )
+                    }
+                    .buttonStyle(.plain)
                 }
 
                 Text("分野から解く")
@@ -100,23 +164,31 @@ public struct HokenshiHomeView: View {
 
                 LazyVStack(spacing: 10) {
                     ForEach(Array(HokenshiExamBlueprint.current.subjects.enumerated()), id: \.offset) { index, subject in
-                        HokenshiCard {
-                            HStack(spacing: 12) {
-                                Text(String(format: "%02d", index + 1))
-                                    .font(LearningSprintTheme.sans(11, weight: .bold))
-                                    .foregroundStyle(LearningSprintTheme.indigo)
-                                    .frame(width: 30, height: 30)
-                                    .background(LearningSprintTheme.indigoSoft)
-                                    .clipShape(Circle())
-                                Text(subject)
-                                    .font(LearningSprintTheme.sans(14, weight: .semibold))
-                                    .foregroundStyle(LearningSprintTheme.ink)
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(.caption.bold())
-                                    .foregroundStyle(LearningSprintTheme.ink3)
+                        Button { model.startSubject(subject) } label: {
+                            HokenshiCard {
+                                HStack(spacing: 12) {
+                                    Text(String(format: "%02d", index + 1))
+                                        .font(LearningSprintTheme.sans(11, weight: .bold))
+                                        .foregroundStyle(LearningSprintTheme.indigo)
+                                        .frame(width: 30, height: 30)
+                                        .background(LearningSprintTheme.indigoSoft)
+                                        .clipShape(Circle())
+                                    VStack(alignment: .leading, spacing: 3) {
+                                        Text(subject)
+                                            .font(LearningSprintTheme.sans(14, weight: .semibold))
+                                            .foregroundStyle(LearningSprintTheme.ink)
+                                        Text("33問収録")
+                                            .font(LearningSprintTheme.sans(10, weight: .medium))
+                                            .foregroundStyle(LearningSprintTheme.ink3)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption.bold())
+                                        .foregroundStyle(LearningSprintTheme.ink3)
+                                }
                             }
                         }
+                        .buttonStyle(.plain)
                     }
                 }
 
@@ -124,9 +196,9 @@ public struct HokenshiHomeView: View {
                     .font(LearningSprintTheme.sans(13, weight: .bold))
                     .foregroundStyle(LearningSprintTheme.ink2)
                 HStack(spacing: 10) {
-                    HokenshiMetric(title: "解答", value: "0")
-                    HokenshiMetric(title: "正答率", value: "—")
-                    HokenshiMetric(title: "苦手", value: "0")
+                    HokenshiMetric(title: "解答", value: "\(model.state.attempts.count)")
+                    HokenshiMetric(title: "正答率", value: accuracyText(model.accuracy))
+                    HokenshiMetric(title: "苦手", value: "\(model.state.weakQuestions.count)")
                 }
             }
             .frame(maxWidth: 520, alignment: .leading)
@@ -137,10 +209,15 @@ public struct HokenshiHomeView: View {
         .background(Color.clear)
         .accessibilityIdentifier("hokenshi.home")
     }
+
+    private func accuracyText(_ value: Double?) -> String {
+        guard let value else { return "—" }
+        return "\(Int((value * 100).rounded()))%"
+    }
 }
 
 public struct HokenshiMockListView: View {
-    public init() {}
+    @ObservedObject var model: HokenshiProductModel
 
     public var body: some View {
         ScrollView {
@@ -148,25 +225,41 @@ public struct HokenshiMockListView: View {
                 Text("模擬試験")
                     .font(LearningSprintTheme.serif(28, weight: .bold))
                     .foregroundStyle(LearningSprintTheme.ink)
-                Text("本試験と同じ110問構成で、独自問題を3回分用意する設計です。問題監査PASS後に解放します。")
+                Text("独自問題3回分。各回110問を、午前55・午後55・通し110から選べます。")
                     .font(LearningSprintTheme.sans(14))
                     .foregroundStyle(LearningSprintTheme.ink2)
+                Text("一般75問・状況設定35問の構成を再現しています。10分野×11問は周回学習用に均等化した本アプリ独自設計で、実際の国家試験の科目別出題比率を示すものではありません。")
+                    .font(LearningSprintTheme.sans(11))
+                    .foregroundStyle(LearningSprintTheme.ink3)
+                    .lineSpacing(3)
 
                 ForEach(1...HokenshiSprintConfiguration.plannedMockExamCount, id: \.self) { number in
                     HokenshiCard {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text("独自模試 第\(number)回")
-                                    .font(LearningSprintTheme.serif(19, weight: .semibold))
-                                    .foregroundStyle(LearningSprintTheme.ink)
-                                Text("110問・コンテンツ監査待ち")
-                                    .font(LearningSprintTheme.sans(12, weight: .medium))
-                                    .foregroundStyle(LearningSprintTheme.ink3)
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("独自模試 第\(number)回")
+                                        .font(LearningSprintTheme.serif(19, weight: .semibold))
+                                    Text("110問・監査済み")
+                                        .font(LearningSprintTheme.sans(12, weight: .medium))
+                                        .foregroundStyle(LearningSprintTheme.green)
+                                }
+                                Spacer()
+                                Image(systemName: "checkmark.shield.fill")
+                                    .foregroundStyle(LearningSprintTheme.green)
                             }
-                            Spacer()
-                            Image(systemName: "lock.fill")
-                                .foregroundStyle(LearningSprintTheme.gold)
-                                .accessibilityLabel("監査完了まで利用不可")
+                            HStack(spacing: 8) {
+                                ForEach(HokenshiMockSegment.allCases, id: \.rawValue) { segment in
+                                    Button(segment.rawValue) {
+                                        model.startMock(round: number, segment: segment)
+                                    }
+                                    .font(LearningSprintTheme.sans(11, weight: .bold))
+                                    .foregroundStyle(segment == .full ? Color.white : LearningSprintTheme.indigo)
+                                    .frame(maxWidth: .infinity, minHeight: 44)
+                                    .background(segment == .full ? LearningSprintTheme.indigo : LearningSprintTheme.indigoSoft)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                }
+                            }
                         }
                     }
                 }
@@ -180,7 +273,7 @@ public struct HokenshiMockListView: View {
 }
 
 public struct HokenshiHistoryView: View {
-    public init() {}
+    @ObservedObject var model: HokenshiProductModel
 
     public var body: some View {
         ScrollView {
@@ -189,16 +282,34 @@ public struct HokenshiHistoryView: View {
                     .font(LearningSprintTheme.serif(28, weight: .bold))
                     .foregroundStyle(LearningSprintTheme.ink)
                 HStack(spacing: 10) {
-                    HokenshiMetric(title: "解答", value: "0")
-                    HokenshiMetric(title: "正答", value: "0")
-                    HokenshiMetric(title: "苦手", value: "0")
+                    HokenshiMetric(title: "解答", value: "\(model.state.attempts.count)")
+                    HokenshiMetric(title: "正答", value: "\(model.state.attempts.filter(\.isCorrect).count)")
+                    HokenshiMetric(title: "苦手", value: "\(model.state.weakQuestions.count)")
                 }
                 HokenshiCard {
                     VStack(alignment: .leading, spacing: 10) {
                         Text("直近5週間")
                             .font(LearningSprintTheme.sans(13, weight: .bold))
                             .foregroundStyle(LearningSprintTheme.ink2)
-                        LearningSprintHeatmap(values: [:])
+                        LearningSprintHeatmap(values: model.heatmap)
+                    }
+                }
+
+                Text("分野別")
+                    .font(LearningSprintTheme.sans(13, weight: .bold))
+                    .foregroundStyle(LearningSprintTheme.ink2)
+                VStack(spacing: 8) {
+                    ForEach(HokenshiExamBlueprint.current.subjects, id: \.self) { subject in
+                        HokenshiCard {
+                            HStack {
+                                Text(subject)
+                                    .font(LearningSprintTheme.sans(13, weight: .semibold))
+                                Spacer()
+                                Text(subjectAccuracyText(subject))
+                                    .font(LearningSprintTheme.serif(15, weight: .bold))
+                                    .foregroundStyle(LearningSprintTheme.indigo)
+                            }
+                        }
                     }
                 }
             }
@@ -208,12 +319,19 @@ public struct HokenshiHistoryView: View {
         }
         .accessibilityIdentifier("hokenshi.history")
     }
+
+    private func subjectAccuracyText(_ subject: String) -> String {
+        guard let value = model.subjectAccuracy[subject] else { return "—" }
+        return "\(Int((value * 100).rounded()))%"
+    }
 }
 
 public struct HokenshiSettingsView: View {
-    @State private var dailyTarget = HokenshiSprintConfiguration.standardSprintCount
-
-    public init() {}
+    @ObservedObject var model: HokenshiProductModel
+    @State private var exporting = false
+    @State private var importing = false
+    @State private var exportDocument = HokenshiJSONDocument(data: Data())
+    @State private var message: String?
 
     public var body: some View {
         ScrollView {
@@ -225,7 +343,10 @@ public struct HokenshiSettingsView: View {
                     VStack(alignment: .leading, spacing: 10) {
                         Text("1日の目標")
                             .font(LearningSprintTheme.sans(13, weight: .bold))
-                        Picker("1日の目標", selection: $dailyTarget) {
+                        Picker("1日の目標", selection: Binding(
+                            get: { model.state.dailyTarget },
+                            set: { model.setDailyTarget($0) }
+                        )) {
                             ForEach(HokenshiSprintConfiguration.selectableSprintCounts, id: \.self) { count in
                                 Text("\(count)問").tag(count)
                             }
@@ -233,21 +354,107 @@ public struct HokenshiSettingsView: View {
                         .pickerStyle(.segmented)
                     }
                 }
+
                 HokenshiCard {
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("文字サイズ")
+                            .font(LearningSprintTheme.sans(13, weight: .bold))
+                        Picker("文字サイズ", selection: Binding(
+                            get: { model.state.textSizeStep },
+                            set: { model.setTextSizeStep($0) }
+                        )) {
+                            Text("標準").tag(0)
+                            Text("大").tag(1)
+                            Text("特大").tag(2)
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                }
+
+                HokenshiCard {
+                    VStack(alignment: .leading, spacing: 10) {
                         Text("バックアップ")
                             .font(LearningSprintTheme.sans(13, weight: .bold))
-                        Text("JSON書き出し・読み込みはアプリターゲット統合時に LearningSprintCore の状態保存へ接続します。")
-                            .font(LearningSprintTheme.sans(13))
+                        Text("学習履歴・苦手・設定をJSONで書き出し、同じ保健師アプリへ戻せます。")
+                            .font(LearningSprintTheme.sans(12))
+                            .foregroundStyle(LearningSprintTheme.ink2)
+                        HStack(spacing: 10) {
+                            Button("書き出す") { prepareExport() }
+                            Button("読み込む") { importing = true }
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(LearningSprintTheme.indigo)
+                    }
+                }
+
+                HokenshiCard {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("データの扱い")
+                            .font(LearningSprintTheme.sans(13, weight: .bold))
+                        Text("問題と学習記録は端末内で利用する設計です。アカウント登録は不要です。")
+                            .font(LearningSprintTheme.sans(12))
                             .foregroundStyle(LearningSprintTheme.ink2)
                     }
+                }
+
+                if let message {
+                    Text(message)
+                        .font(LearningSprintTheme.sans(12, weight: .semibold))
+                        .foregroundStyle(LearningSprintTheme.ink2)
                 }
             }
             .frame(maxWidth: 520, alignment: .leading)
             .padding(18)
             .padding(.bottom, 90)
         }
+        .fileExporter(
+            isPresented: $exporting,
+            document: exportDocument,
+            contentType: .json,
+            defaultFilename: "hokenshi-learning-backup"
+        ) { result in
+            if case .failure = result { message = "バックアップを書き出せませんでした。" }
+        }
+        .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in
+            importFile(result)
+        }
         .accessibilityIdentifier("hokenshi.settings")
+    }
+
+    private func prepareExport() {
+        do {
+            exportDocument = HokenshiJSONDocument(data: try model.exportBackup())
+            exporting = true
+        } catch {
+            message = "バックアップを作成できませんでした。"
+        }
+    }
+
+    private func importFile(_ result: Result<URL, Error>) {
+        do {
+            let url = try result.get()
+            let scoped = url.startAccessingSecurityScopedResource()
+            defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+            try model.importBackup(Data(contentsOf: url))
+            message = "バックアップを読み込みました。"
+        } catch {
+            message = "このバックアップは読み込めません。"
+        }
+    }
+}
+
+public struct HokenshiJSONDocument: FileDocument {
+    public static var readableContentTypes: [UTType] { [.json] }
+    public var data: Data
+
+    public init(data: Data) { self.data = data }
+
+    public init(configuration: ReadConfiguration) throws {
+        self.data = configuration.file.regularFileContents ?? Data()
+    }
+
+    public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        FileWrapper(regularFileWithContents: data)
     }
 }
 
