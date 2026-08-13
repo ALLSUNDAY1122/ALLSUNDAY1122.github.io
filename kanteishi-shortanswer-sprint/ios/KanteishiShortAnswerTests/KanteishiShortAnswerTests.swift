@@ -2,14 +2,21 @@ import XCTest
 @testable import KanteishiShortAnswer
 
 final class KanteishiShortAnswerTests: XCTestCase {
-    func testPrototypePayloadAndProductionContract() throws {
+    func testProductionPayloadContract() throws {
         let repository = try QuestionRepository.load()
-        XCTAssertEqual(repository.questions.count, 12)
+        XCTAssertEqual(repository.questions.count, 240)
         XCTAssertEqual(repository.payload.productionTargetCount, 240)
+        XCTAssertTrue(repository.payload.contentVersion.hasPrefix("official-240-"))
         XCTAssertEqual(repository.editions, [2026, 2025, 2024])
-        XCTAssertEqual(repository.questions(edition: 2026).count, 4)
-        XCTAssertEqual(repository.questions(edition: 2025).count, 4)
-        XCTAssertEqual(repository.questions(edition: 2024).count, 4)
+        XCTAssertEqual(repository.questions(edition: 2026).count, 80)
+        XCTAssertEqual(repository.questions(edition: 2025).count, 80)
+        XCTAssertEqual(repository.questions(edition: 2024).count, 80)
+        XCTAssertEqual(Set(repository.questions.map(\.id)).count, 240)
+        XCTAssertTrue(repository.questions.allSatisfy { $0.choices.count == 5 })
+        for round in 1...3 {
+            XCTAssertEqual(repository.questions.filter { $0.round == round && $0.subject == "不動産に関する行政法規" }.count, 40)
+            XCTAssertEqual(repository.questions.filter { $0.round == round && $0.subject == "不動産の鑑定評価に関する理論" }.count, 40)
+        }
     }
 
     @MainActor
@@ -17,7 +24,7 @@ final class KanteishiShortAnswerTests: XCTestCase {
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".json")
         let store = LearningStore(persistenceURL: url)
         guard let question = store.repository.questions.first else {
-            XCTFail("No prototype question")
+            XCTFail("No production question")
             return
         }
 
@@ -55,11 +62,11 @@ final class KanteishiShortAnswerTests: XCTestCase {
     }
 
     @MainActor
-    func testPrototypeMockUsesFourQuestionsPerEdition() {
+    func testProductionMockUsesEightyQuestionsPerEdition() {
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".json")
         let store = LearningStore(persistenceURL: url)
         store.startMock(edition: 2026)
-        XCTAssertEqual(store.session?.total, 4)
+        XCTAssertEqual(store.session?.total, 80)
         XCTAssertEqual(store.session?.mode, .mock)
     }
 

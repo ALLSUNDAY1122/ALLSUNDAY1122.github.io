@@ -183,8 +183,11 @@ struct QuestionRepository {
     }
 
     static func load(bundle: Bundle = .main) throws -> QuestionRepository {
-        guard let url = bundle.url(forResource: "questions.prototype", withExtension: "json")
-                ?? bundle.url(forResource: "questions.prototype", withExtension: "json", subdirectory: "Resources") else {
+        let productionURL = bundle.url(forResource: "questions.production", withExtension: "json")
+            ?? bundle.url(forResource: "questions.production", withExtension: "json", subdirectory: "Resources")
+        let prototypeURL = bundle.url(forResource: "questions.prototype", withExtension: "json")
+            ?? bundle.url(forResource: "questions.prototype", withExtension: "json", subdirectory: "Resources")
+        guard let url = productionURL ?? prototypeURL else {
             throw RepositoryError.missingResource
         }
         let payload = try JSONDecoder().decode(QuestionPayload.self, from: Data(contentsOf: url))
@@ -220,22 +223,35 @@ struct QuestionRepository {
 
     private static func validate(_ payload: QuestionPayload) throws {
         guard payload.productionTargetCount == 240 else { throw RepositoryError.invalidProductionTarget }
-        guard payload.questions.count == 12 else { throw RepositoryError.invalidPrototypeCount(payload.questions.count) }
+        let isProduction = payload.contentVersion.hasPrefix("official-240-")
+        let expectedTotal = isProduction ? 240 : 12
+        let expectedPerSubjectRound = isProduction ? 40 : 2
+        let expectedChoiceCount = isProduction ? 5 : 4
+        guard payload.questions.count == expectedTotal else {
+            throw RepositoryError.invalidQuestionCount(expected: expectedTotal, actual: payload.questions.count)
+        }
         guard Set(payload.questions.map(\.id)).count == payload.questions.count else { throw RepositoryError.duplicateIDs }
+        guard Set(payload.questions.map(\.edition)) == Set([2026, 2025, 2024]) else {
+            throw RepositoryError.invalidEditions
+        }
         for round in 1...3 {
             for subject in ["不動産に関する行政法規", "不動産の鑑定評価に関する理論"] {
                 let count = payload.questions.filter { $0.round == round && $0.subject == subject }.count
-                guard count == 2 else { throw RepositoryError.invalidRoundSubject(round, subject, count) }
+                guard count == expectedPerSubjectRound else {
+                    throw RepositoryError.invalidRoundSubject(round, subject, expected: expectedPerSubjectRound, actual: count)
+                }
             }
         }
         for question in payload.questions {
-            guard question.choices.count == 4,
+            guard question.choices.count == expectedChoiceCount,
                   question.choices.indices.contains(question.correctIndex),
                   !question.question.isEmpty,
                   !question.memoryLine.isEmpty,
+                  !question.shortExplanation.isEmpty,
                   !question.detailExplanation.isEmpty,
                   URL(string: question.sourceURL) != nil,
                   !question.referenceDate.isEmpty,
+                  !question.originType.isEmpty,
                   !question.rightsBasis.isEmpty else {
                 throw RepositoryError.invalidQuestion(question.id)
             }
@@ -245,18 +261,21 @@ struct QuestionRepository {
     enum RepositoryError: LocalizedError {
         case missingResource
         case invalidProductionTarget
-        case invalidPrototypeCount(Int)
+        case invalidQuestionCount(expected: Int, actual: Int)
         case duplicateIDs
-        case invalidRoundSubject(Int, String, Int)
+        case invalidEditions
+        case invalidRoundSubject(Int, String, expected: Int, actual: Int)
         case invalidQuestion(String)
 
         var errorDescription: String? {
             switch self {
-            case .missingResource: return "試作問題データを読み込めません。"
+            case .missingResource: return "問題データを読み込めません。"
             case .invalidProductionTarget: return "製品版問題枠は240問でなければなりません。"
-            case .invalidPrototypeCount(let count): return "試作データが\(count)問です。正本は12問です。"
+            case .invalidQuestionCount(let expected, let actual): return "問題数が\(actual)問です。期待値は\(expected)問です。"
             case .duplicateIDs: return "問題IDが重複しています。"
-            case .invalidRoundSubject(let round, let subject, let count): return "R\(round)・\(subject)が\(count)問です。試作正本は2問です。"
+            case .invalidEditions: return "収録年度は令和8・7・6年の3年度でなければなりません。"
+            case .invalidRoundSubject(let round, let subject, let expected, let actual):
+                return "R\(round)・\(subject)が\(actual)問です。期待値は\(expected)問です。"
             case .invalidQuestion(let id): return "\(id)の必須データが不正です。"
             }
         }
@@ -374,7 +393,7 @@ final class LearningStore: ObservableObject {
         startSession(
             key: "exam:\(edition)",
             questions: repository.questions(edition: edition),
-            title: "令和\(edition - 2018)年 試作模試",
+            title: "令和\(edition - 2018)年 模擬試験",
             mode: .mock
         )
     }

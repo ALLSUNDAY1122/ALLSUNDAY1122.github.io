@@ -100,7 +100,7 @@ struct HomeView: View {
                             )
                             .appSerif(19, weight: .bold)
                             .foregroundStyle(AppTheme.ink)
-                            Text("正解 \(store.todayCorrect)問・試作データ \(store.repository.questions.count)問")
+                            Text("正解 \(store.todayCorrect)問・公式過去問 \(store.repository.questions.count)問")
                                 .appSans(11)
                                 .foregroundStyle(AppTheme.ink3)
                         }
@@ -228,7 +228,7 @@ struct HomeView: View {
                                     Text(domain)
                                         .appSans(15, weight: .bold)
                                         .foregroundStyle(AppTheme.ink)
-                                    Text("試作 \(store.repository.questions(domain: domain).count)問")
+                                    Text("\(store.repository.questions(domain: domain).count)問")
                                         .appSans(11)
                                         .foregroundStyle(AppTheme.ink3)
                                 }
@@ -325,8 +325,8 @@ struct MockView: View {
             PaperGridBackground()
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
-                    PageHeader(title: "模擬試験", subtitle: "製品版は各年度80問。現在は操作確認用に各4問です。")
-                    Text("行政法規40問＋鑑定理論40問×3年度＝240問を製品版固定枠としています。試作データを水増しして240問とは扱いません。")
+                    PageHeader(title: "模擬試験", subtitle: "令和8・7・6年の公式80問を年度別に再現します。")
+                    Text("各年度は行政法規40問＋鑑定理論40問＝80問。3年度合計240問を収録しています。")
                         .appSans(12)
                         .foregroundStyle(AppTheme.ink2)
                         .padding(14)
@@ -342,7 +342,7 @@ struct MockView: View {
                                     .appSerif(20, weight: .bold)
                                     .foregroundStyle(AppTheme.ink)
                                 Spacer()
-                                Text("試作4問／製品80問")
+                                Text("公式80問")
                                     .appSans(11, weight: .bold)
                                     .foregroundStyle(AppTheme.ink3)
                             }
@@ -351,7 +351,7 @@ struct MockView: View {
                             } label: {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("令和\(edition - 2018)年を試す")
+                                        Text("令和\(edition - 2018)年を解く")
                                             .appSans(16, weight: .bold)
                                             .foregroundStyle(AppTheme.ink)
                                         Text(
