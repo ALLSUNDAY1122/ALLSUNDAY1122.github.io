@@ -205,7 +205,7 @@ struct HomeView: View {
                                 Text("模擬試験")
                                     .appSans(11, weight: .bold)
                                     .foregroundStyle(AppTheme.ink3)
-                                Text("令和8・7・6年／製品版は各80問")
+                                Text("令和8・7・6年／公式過去問 各80問")
                                     .appSans(16, weight: .bold)
                                     .foregroundStyle(AppTheme.ink)
                             }
@@ -318,6 +318,7 @@ struct HomeView: View {
 
 struct MockView: View {
     @EnvironmentObject private var store: LearningStore
+    private let subjects = ["不動産に関する行政法規", "不動産の鑑定評価に関する理論"]
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -325,8 +326,8 @@ struct MockView: View {
             PaperGridBackground()
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
-                    PageHeader(title: "模擬試験", subtitle: "令和8・7・6年の公式80問を年度別に再現します。")
-                    Text("各年度は行政法規40問＋鑑定理論40問＝80問。3年度合計240問を収録しています。")
+                    PageHeader(title: "模擬試験", subtitle: "令和8・7・6年。年度別80問または科目別40問から選べます。")
+                    Text("各年度は行政法規40問＋鑑定理論40問＝80問。3年度合計240問の公式過去問を収録しています。")
                         .appSans(12)
                         .foregroundStyle(AppTheme.ink2)
                         .padding(14)
@@ -334,8 +335,8 @@ struct MockView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
                     ForEach(store.repository.editions, id: \.self) { edition in
-                        let key = "exam:\(edition)"
-                        let latest = store.latestCompletion(for: key)
+                        let examKey = "exam:\(edition)"
+                        let latest = store.latestCompletion(for: examKey)
                         VStack(alignment: .leading, spacing: 10) {
                             HStack {
                                 Text("令和\(edition - 2018)年")
@@ -346,18 +347,19 @@ struct MockView: View {
                                     .appSans(11, weight: .bold)
                                     .foregroundStyle(AppTheme.ink3)
                             }
+
                             Button {
                                 store.startMock(edition: edition)
                             } label: {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("令和\(edition - 2018)年を解く")
+                                        Text("年度別模試・80問")
                                             .appSans(16, weight: .bold)
                                             .foregroundStyle(AppTheme.ink)
                                         Text(
                                             latest.map {
-                                                "完答 \(store.completionCount(for: key))回・直近 \($0.correct)/\($0.total)"
-                                            } ?? "完答 \(store.completionCount(for: key))回"
+                                                "完答 \(store.completionCount(for: examKey))回・直近 \($0.correct)/\($0.total)"
+                                            } ?? "完答 \(store.completionCount(for: examKey))回"
                                         )
                                         .appSans(11)
                                         .foregroundStyle(AppTheme.ink3)
@@ -372,6 +374,38 @@ struct MockView: View {
                             .buttonStyle(.plain)
                             .appCard()
                             .accessibilityIdentifier("mock.edition.\(edition)")
+
+                            Text("科目別演習")
+                                .appSans(11, weight: .bold)
+                                .foregroundStyle(AppTheme.ink3)
+                                .padding(.top, 2)
+
+                            ForEach(subjects, id: \.self) { subject in
+                                let questions = store.repository.questions(edition: edition).filter { $0.subject == subject }
+                                let key = "exam:\(edition):subject:\(subject)"
+                                Button {
+                                    store.startEditionSubject(edition: edition, subject: subject)
+                                } label: {
+                                    HStack(spacing: 12) {
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(shortSubject(subject))
+                                                .appSans(14, weight: .bold)
+                                                .foregroundStyle(AppTheme.ink)
+                                            Text("\(questions.count)問・完答 \(store.completionCount(for: key))回")
+                                                .appSans(11)
+                                                .foregroundStyle(AppTheme.ink3)
+                                        }
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundStyle(AppTheme.ai)
+                                    }
+                                    .padding(14)
+                                    .frame(minHeight: 56)
+                                }
+                                .buttonStyle(.plain)
+                                .appCard()
+                                .accessibilityIdentifier("mock.subject.\(edition).\(subject)")
+                            }
                         }
                     }
                     Spacer(minLength: 20)
@@ -382,5 +416,9 @@ struct MockView: View {
             }
         }
         .accessibilityIdentifier("mock.screen")
+    }
+
+    private func shortSubject(_ subject: String) -> String {
+        subject == "不動産に関する行政法規" ? "行政法規" : "鑑定理論"
     }
 }

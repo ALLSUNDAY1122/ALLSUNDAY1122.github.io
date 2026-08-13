@@ -398,6 +398,16 @@ final class LearningStore: ObservableObject {
         )
     }
 
+    func startEditionSubject(edition: Int, subject: String) {
+        let questions = repository.questions(edition: edition).filter { $0.subject == subject }
+        startSession(
+            key: "exam:\(edition):subject:\(subject)",
+            questions: questions,
+            title: "令和\(edition - 2018)年・\(subject)",
+            mode: .practice
+        )
+    }
+
     func retryQuestions(_ ids: [String], title: String) {
         startSession(
             key: "retry",

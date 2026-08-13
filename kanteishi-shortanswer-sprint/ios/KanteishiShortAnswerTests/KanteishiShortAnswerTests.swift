@@ -70,6 +70,16 @@ final class KanteishiShortAnswerTests: XCTestCase {
         XCTAssertEqual(store.session?.mode, .mock)
     }
 
+    @MainActor
+    func testEditionSubjectPracticeUsesFortyQuestions() {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".json")
+        let store = LearningStore(persistenceURL: url)
+        store.startEditionSubject(edition: 2026, subject: "不動産に関する行政法規")
+        XCTAssertEqual(store.session?.total, 40)
+        XCTAssertEqual(store.session?.mode, .practice)
+        XCTAssertEqual(store.session?.key, "exam:2026:subject:不動産に関する行政法規")
+    }
+
     func testStoreKitAccessPolicyNeverUnlocksUnverifiedStates() {
         XCTAssertTrue(PremiumAccessPolicy.grantsAccess(for: .verifiedActive))
         XCTAssertFalse(PremiumAccessPolicy.grantsAccess(for: .verifiedRevoked))
