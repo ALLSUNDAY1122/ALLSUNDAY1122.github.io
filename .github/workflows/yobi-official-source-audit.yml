@@ -38,10 +38,14 @@ jobs:
         run: python learning-sprint/yobi-tantou/content-loop/extract_official_answer_tables.py
       - name: Build compact scoring-table summary
         run: python learning-sprint/yobi-tantou/content-loop/summarize_official_answer_tables.py
-      - name: Upload compact scoring-table summary
+      - name: Build compact question-shape summary
+        run: python learning-sprint/yobi-tantou/content-loop/summarize_official_question_shapes.py
+      - name: Upload compact official-source summaries
         uses: actions/upload-artifact@v4
         with:
-          name: yobi-official-scoring-table-summary
-          path: learning-sprint/yobi-tantou/content-loop/official-scoring-table-summary.json
+          name: yobi-official-source-summaries
+          path: |
+            learning-sprint/yobi-tantou/content-loop/official-scoring-table-summary.json
+            learning-sprint/yobi-tantou/content-loop/official-question-shapes-summary.json
           if-no-files-found: error
           retention-days: 7
