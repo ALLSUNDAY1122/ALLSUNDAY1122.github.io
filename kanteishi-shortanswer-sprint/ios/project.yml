@@ -1,5 +1,6 @@
 name: KanteishiShortAnswer
 options:
+  minimumXcodeGenVersion: 2.38.0
   bundleIdPrefix: jp.allsunday1122
   deploymentTarget:
     iOS: "17.0"
@@ -20,9 +21,10 @@ targets:
           - PrivacyInfo.xcprivacy
           - Info.plist
           - Resources
-    resources:
-      - path: KanteishiShortAnswer/Resources
+      - path: KanteishiShortAnswer/Resources/questions.prototype.json
+        buildPhase: resources
       - path: KanteishiShortAnswer/PrivacyInfo.xcprivacy
+        buildPhase: resources
     info:
       path: KanteishiShortAnswer/Info.plist
     settings:
