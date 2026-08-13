@@ -6,6 +6,8 @@ from pathlib import Path
 
 LEGAL_SUBJECTS = {"憲法", "行政法", "民法", "商法", "民事訴訟法", "刑法", "刑事訴訟法"}
 OFFICIAL_SUBJECTS = LEGAL_SUBJECTS | {"一般教養"}
+PRACTICE_USE = "practice"
+OFFICIAL_MOCK_USE = "official_mock"
 
 
 class ReleaseBuildError(ValueError):
@@ -18,12 +20,26 @@ def convert_question(q):
         raise ReleaseBuildError(f"{qid}: release監査PASS前はnative releaseへ変換できない")
     if q.get("subject") not in OFFICIAL_SUBJECTS:
         raise ReleaseBuildError(f"{qid}: subject不正")
-    if not isinstance(q.get("exam_year"), int):
-        raise ReleaseBuildError(f"{qid}: exam_year未確定")
+
+    content_use = q.get("content_use")
+    if content_use == OFFICIAL_MOCK_USE:
+        raise ReleaseBuildError(
+            f"{qid}: 公式年度模試は通常練習バンクへ変換できない。専用official mock builderが必要"
+        )
+    if content_use != PRACTICE_USE:
+        raise ReleaseBuildError(f"{qid}: content_useはpracticeを明示する必要がある")
+
+    # Original practice questions are not official past questions. A year label
+    # would falsely imply reproduction of that year's exam, so it is forbidden.
+    if q.get("exam_year") is not None:
+        raise ReleaseBuildError(f"{qid}: practice問題にexam_yearを付与できない")
+
     if q.get("subject") in LEGAL_SUBJECTS and not q.get("reference_date"):
         raise ReleaseBuildError(f"{qid}: 法律科目のreference_date未確定")
     if not q.get("rights_basis") or not q.get("source_url") or not q.get("evidence_checked_date"):
         raise ReleaseBuildError(f"{qid}: 根拠・権利監査情報不足")
+    if q.get("origin_type") == "official_exam_reproduced":
+        raise ReleaseBuildError(f"{qid}: 公式再録問題をpractice builderへ混入できない")
 
     answer_type = q.get("answer_type")
     answer = q.get("answer")
@@ -39,7 +55,7 @@ def convert_question(q):
 
     return {
         "id": qid,
-        "examYear": q["exam_year"],
+        "examYear": None,
         "subject": q["subject"],
         "topic": q["topic"],
         "stem": q["question"],
@@ -52,7 +68,8 @@ def convert_question(q):
         "evidenceCheckedDate": q["evidence_checked_date"],
         "lawBasisDate": q.get("reference_date") if q["subject"] in LEGAL_SUBJECTS else None,
         "originType": q["origin_type"],
-        "releaseEligible": True
+        "releaseEligible": True,
+        "contentUse": PRACTICE_USE,
     }
 
 
@@ -66,11 +83,20 @@ def build(bank):
     return native
 
 
-def fixture(status="release_passed", release=True, subject="憲法", reference_date="2026-01-01"):
+def fixture(
+    status="release_passed",
+    release=True,
+    subject="憲法",
+    reference_date="2026-01-01",
+    content_use=PRACTICE_USE,
+    exam_year=None,
+    origin_type="original_from_primary_source",
+):
     return {
         "id": "YOBI-SELFTEST-001",
         "round": 1,
-        "exam_year": 2026,
+        "exam_year": exam_year,
+        "content_use": content_use,
         "subject": subject,
         "topic": "release builder test",
         "question": "構造テスト問題",
@@ -83,29 +109,49 @@ def fixture(status="release_passed", release=True, subject="憲法", reference_d
         "source_url": "https://example.invalid/primary",
         "evidence_checked_date": "2026-08-13",
         "reference_date": reference_date,
-        "origin_type": "original_from_primary_source",
+        "origin_type": origin_type,
         "rights_basis": "自作fixture。第三者本文なし。",
         "audit_status": status,
-        "release_eligible": release
+        "release_eligible": release,
     }
+
+
+def expect_rejected(payload, message):
+    try:
+        build([payload])
+    except ReleaseBuildError:
+        return
+    raise AssertionError(message)
 
 
 def self_test():
     legal = build([fixture()])
     assert legal[0]["releaseEligible"] is True
     assert legal[0]["lawBasisDate"] == "2026-01-01"
+    assert legal[0]["examYear"] is None
+    assert legal[0]["contentUse"] == PRACTICE_USE
 
     general = build([fixture(subject="一般教養", reference_date=None)])
     assert general[0]["lawBasisDate"] is None
 
-    try:
-        build([fixture(status="candidate", release=False)])
-    except ReleaseBuildError:
-        pass
-    else:
-        raise AssertionError("candidateがreleaseへ変換された")
+    expect_rejected(
+        fixture(status="candidate", release=False),
+        "candidateがreleaseへ変換された",
+    )
+    expect_rejected(
+        fixture(content_use=OFFICIAL_MOCK_USE, exam_year=2024, origin_type="official_exam_reproduced"),
+        "official mockがpractice releaseへ変換された",
+    )
+    expect_rejected(
+        fixture(exam_year=2026),
+        "独自practiceにexam_yearが付いたまま変換された",
+    )
+    expect_rejected(
+        fixture(content_use=None),
+        "用途不明の問題がreleaseへ変換された",
+    )
 
-    print("SELFTEST PASS: release_passed only / legal date / general-ed policy")
+    print("SELFTEST PASS: practice-only release / no fake exam year / official mock isolation / legal date")
     return 0
 
 
@@ -124,7 +170,7 @@ def main():
     bank = json.loads(args.input.read_text(encoding="utf-8"))
     native = build(bank)
     args.output.write_text(json.dumps(native, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"PASS: native release bank {len(native)}問を生成")
+    print(f"PASS: native practice release bank {len(native)}問を生成")
     return 0
 
 
