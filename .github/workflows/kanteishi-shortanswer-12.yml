@@ -37,12 +37,12 @@ jobs:
             echo 'WebView-only/native-policy violation detected.'
             exit 1
           fi
-      - name: Unconfirmed identifier guard
+      - name: Apple identifier contract
         run: |
-          if grep -R -nE 'PRODUCT_BUNDLE_IDENTIFIER[[:space:]]*[:=]|productIDs[[:space:]]*=[[:space:]]*\[[[:space:]]*"' \
-            kanteishi-shortanswer-sprint/core/Sources \
-            kanteishi-shortanswer-sprint/ios; then
-            echo 'Unconfirmed Bundle ID or StoreKit Product ID detected in source.'
+          grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.kanteishishortanswer' kanteishi-shortanswer-sprint/ios/project.yml
+          grep -q 'DEVELOPMENT_TEAM: "MN3D2ZM44N"' kanteishi-shortanswer-sprint/ios/project.yml
+          if grep -R -nE 'productIDs[[:space:]]*=[[:space:]]*\[[[:space:]]*"' kanteishi-shortanswer-sprint/core/Sources kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer; then
+            echo 'StoreKit Product ID must remain unset until the product is created in App Store Connect.'
             exit 1
           fi
       - name: Prototype must remain non-release
@@ -50,10 +50,15 @@ jobs:
           grep -q 'production_target_only' kanteishi-shortanswer-sprint/data/production-slot-manifest.json
           grep -q '公開不可' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Resources/questions.prototype.json
 
-  native-typecheck:
+  native-app-tests:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        working-directory: kanteishi-shortanswer-sprint/ios
+        run: xcodegen generate
       - name: SwiftUI iOS Simulator typecheck
         run: |
           SDK="$(xcrun --sdk iphonesimulator --show-sdk-path)"
@@ -67,3 +72,18 @@ jobs:
             kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/QuizResultViews.swift \
             kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/HistorySettingsViews.swift \
             kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/KanteishiShortAnswerApp.swift
+      - name: Select available iPhone simulator
+        id: simulator
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; data=json.load(sys.stdin)["devices"]; devices=[d for runtime in data.values() for d in runtime if d.get("isAvailable") and d.get("name","").startswith("iPhone")]; print(devices[0]["udid"] if devices else "")')
+          test -n "$DEVICE_ID"
+          echo "id=$DEVICE_ID" >> "$GITHUB_OUTPUT"
+      - name: Build and run unit/UI tests
+        working-directory: kanteishi-shortanswer-sprint/ios
+        run: |
+          xcodebuild \
+            -project KanteishiShortAnswer.xcodeproj \
+            -scheme KanteishiShortAnswer \
+            -destination 'platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}' \
+            CODE_SIGNING_ALLOWED=NO \
+            test
