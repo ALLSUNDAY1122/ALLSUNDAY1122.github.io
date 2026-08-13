@@ -16,7 +16,10 @@ let package = Package(
     targets: [
         .target(
             name: "HokenshiSprintFeature",
-            dependencies: ["LearningSprintCore"]
+            dependencies: ["LearningSprintCore"],
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "HokenshiSprintFeatureTests",
