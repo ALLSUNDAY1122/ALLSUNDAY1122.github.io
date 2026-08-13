@@ -29,17 +29,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Python syntax
-        run: python3 -m py_compile hokenshi-sprint/scripts/build_question_plan.py hokenshi-sprint/scripts/validate_question_plan.py hokenshi-sprint/scripts/validate_authored_batch.py hokenshi-sprint/scripts/validate_authored_coverage.py hokenshi-sprint/scripts/validate_current_guidance_recheck.py
+        run: |
+          python3 -m py_compile \
+            hokenshi-sprint/scripts/build_question_plan.py \
+            hokenshi-sprint/scripts/validate_question_plan.py \
+            hokenshi-sprint/scripts/build_canonical_questions.py \
+            hokenshi-sprint/scripts/validate_canonical_questions.py \
+            hokenshi-sprint/scripts/validate_current_guidance_canonical.py
       - name: Build 330-question structural inventory
         run: python3 hokenshi-sprint/scripts/build_question_plan.py
       - name: Validate exam/subject/scenario allocation
         run: python3 hokenshi-sprint/scripts/validate_question_plan.py
-      - name: Audit authored batches
-        run: python3 hokenshi-sprint/scripts/validate_authored_batch.py hokenshi-sprint/content/authored/*.json
-      - name: Verify authored records match canonical plan
-        run: python3 hokenshi-sprint/scripts/validate_authored_coverage.py
-      - name: Recheck current PHN guidance
-        run: python3 hokenshi-sprint/scripts/validate_current_guidance_recheck.py
+      - name: Build canonical 330 questions
+        run: python3 hokenshi-sprint/scripts/build_canonical_questions.py
+      - name: Audit canonical 330 questions
+        run: python3 hokenshi-sprint/scripts/validate_canonical_questions.py
+      - name: Recheck current PHN guidance in canonical content
+        run: python3 hokenshi-sprint/scripts/validate_current_guidance_canonical.py
+      - name: Canonical content is not a raw authored batch
+        run: |
+          test -f hokenshi-sprint/content/questions.canonical.json
+          test "$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          rows=json.loads(Path('hokenshi-sprint/content/questions.canonical.json').read_text(encoding='utf-8'))
+          print(len(rows))
+          PY
+          )" = "330"
 
   native-foundation:
     needs: content-plan
