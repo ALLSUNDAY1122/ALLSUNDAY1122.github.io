@@ -72,9 +72,9 @@ struct SettingsView: View {
                     }
                     if purchases.isConfigured { settingsSection("プレミアム") { VStack(alignment:.leading,spacing:10){ if purchases.isPremium { Label("購入済み",systemImage:"checkmark.seal.fill").foregroundStyle(AppTheme.midori) } else if let price=purchases.displayPrice { HStack{Text("買い切り");Spacer();Text(price).foregroundStyle(AppTheme.ai)}.appSans(13,weight:.bold); Button{Task{await purchases.purchase()}}label:{settingsAction("cart","プレミアムを購入")}.buttonStyle(.plain) }; Button{Task{await purchases.restorePurchases()}}label:{settingsAction("arrow.clockwise","購入を復元")}.buttonStyle(.plain); if let message=purchases.message{Text(message).appSans(11).foregroundStyle(AppTheme.ink2)} } } }
                     settingsSection("このアプリ") {
-                        VStack(alignment:.leading,spacing:10){ infoRow("コンテンツ",store.repository.payload.contentVersion);infoRow("監査記録日時",store.repository.payload.sourceCheckedAt);infoRow("試作問題","12問（公開不可）");infoRow("製品版固定枠","240問");infoRow("課金",purchases.isConfigured ? "StoreKit 2" : "Product ID 未設定（Release Gate）");infoRow("Bundle ID","jp.allsunday1122.kanteishishortanswer") }
+                        VStack(alignment:.leading,spacing:10){ infoRow("コンテンツ",store.repository.payload.contentVersion);infoRow("監査基準日",store.repository.payload.sourceCheckedAt);infoRow("収録問題","240問（令和8・7・6年）");infoRow("構成","各年度 行政法規40＋鑑定理論40");infoRow("課金",purchases.isConfigured ? "StoreKit 2" : "Product ID 未設定（Release Gate）");infoRow("Bundle ID","jp.allsunday1122.kanteishishortanswer") }
                     }
-                    Text("本アプリは国土交通省・土地鑑定委員会の公式アプリではありません。現在の12問はUI・学習導線確認用の独自試作問題で、240問監査完了までは公開データとして扱いません。").appSans(11).foregroundStyle(AppTheme.ink3).padding(.bottom,18)
+                    Text("本アプリは国土交通省・土地鑑定委員会の公式アプリではありません。収録問題は国土交通省が公表した令和8・7・6年の不動産鑑定士試験短答式試験問題を、公共データ利用規約（PDL1.0）に基づきアプリ表示用に構造化して収録しています。").appSans(11).foregroundStyle(AppTheme.ink3).padding(.bottom,18)
                 }.padding(.horizontal,18).frame(maxWidth:520).frame(maxWidth:.infinity)
             }
         }
