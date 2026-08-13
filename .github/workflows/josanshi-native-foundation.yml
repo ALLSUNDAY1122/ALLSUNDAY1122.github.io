@@ -14,6 +14,10 @@ on:
       - 'native-ios/LearningSprintCore/**'
       - '.github/workflows/josanshi-native-foundation.yml'
 
+concurrency:
+  group: josanshi-native-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   native-foundation:
     runs-on: macos-15
@@ -38,8 +42,10 @@ jobs:
       - name: Validate 330 distinct R5 semantic intents
         run: python3 josanshi-sprint/scripts/build_intent_seeds.py --check
 
-      - name: Validate 330-topic generation plan
-        run: python3 josanshi-sprint/scripts/build_generation_plan.py --check
+      - name: Validate 330-topic generation plan and 36 linked scenarios
+        run: |
+          python3 josanshi-sprint/scripts/build_generation_plan.py --check
+          python3 josanshi-sprint/scripts/build_scenario_authoring_plan.py --check
 
       - name: Materialize modular source registry for bank audit
         run: python3 josanshi-sprint/scripts/materialize_source_registry.py
@@ -47,11 +53,14 @@ jobs:
       - name: Materialize authored question batches onto audited slots
         run: python3 josanshi-sprint/scripts/materialize_question_bank.py --output josanshi-sprint/data/questions.json
 
-      - name: Apply independent content audit approvals
-        run: python3 josanshi-sprint/scripts/apply_audit_approvals.py
+      - name: Apply all independent content audit approvals
+        run: python3 josanshi-sprint/scripts/apply_all_audit_approvals.py
 
       - name: Audit materialized production question-bank draft
         run: python3 josanshi-sprint/scripts/audit_question_bank.py
+
+      - name: Validate current monotonic content stage
+        run: python3 josanshi-sprint/scripts/validate_content_stage.py
 
       - name: Assert no WebView primary implementation
         shell: bash
