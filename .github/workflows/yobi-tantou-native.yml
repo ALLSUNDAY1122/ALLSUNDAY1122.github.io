@@ -8,10 +8,11 @@ on:
   workflow_dispatch:
 
 concurrency:
-  # v2 isolates new runs from a cancelled legacy run whose post-job cleanup
-  # remained stuck in_progress. Future PR commits still cancel superseded v2 runs.
-  group: yobi-tantou-native-v2-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  # A cancelled macOS job can remain stuck in post-job cleanup and keep a
+  # PR-wide concurrency slot occupied. Isolate each commit so a stale cleanup
+  # can never block validation of a newer source revision.
+  group: yobi-tantou-native-${{ github.sha }}
+  cancel-in-progress: false
 
 jobs:
   source-contract:
