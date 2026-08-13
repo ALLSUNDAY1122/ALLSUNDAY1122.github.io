@@ -7,6 +7,7 @@ on:
     paths:
       - 'josanshi-sprint/data/authored-batches/**'
       - 'josanshi-sprint/data/audit-approvals*.json'
+      - 'josanshi-sprint/data/similarity-review.json'
       - 'josanshi-sprint/data/source-registry*.json'
       - 'josanshi-sprint/data/content-stage.json'
       - 'josanshi-sprint/docs/audits/**'
@@ -16,6 +17,7 @@ on:
     paths:
       - 'josanshi-sprint/data/authored-batches/**'
       - 'josanshi-sprint/data/audit-approvals*.json'
+      - 'josanshi-sprint/data/similarity-review.json'
       - 'josanshi-sprint/data/source-registry*.json'
       - 'josanshi-sprint/data/content-stage.json'
       - 'josanshi-sprint/docs/audits/**'
@@ -56,6 +58,9 @@ jobs:
       - name: Report same-topic similarity review pairs
         run: python3 josanshi-sprint/scripts/report_similarity_warnings.py
 
+      - name: Enforce semantic review of similarity pairs
+        run: python3 josanshi-sprint/scripts/validate_similarity_reviews.py
+
       - name: Materialize source registry
         run: python3 josanshi-sprint/scripts/materialize_source_registry.py
 
@@ -65,8 +70,8 @@ jobs:
       - name: Apply all independent audit approvals
         run: python3 josanshi-sprint/scripts/apply_all_audit_approvals.py
 
-      - name: Audit current question bank
-        run: python3 josanshi-sprint/scripts/audit_question_bank.py
+      - name: Audit complete question bank
+        run: python3 josanshi-sprint/scripts/audit_question_bank.py --require-complete
 
       - name: Validate current monotonic content stage
         run: python3 josanshi-sprint/scripts/validate_content_stage.py
