@@ -39,9 +39,33 @@ final class JosanshiSprintFeatureTests: XCTestCase {
         XCTAssertFalse(JosanshiLocalPersistenceConfiguration.storageNamespace.contains("jp.allsunday1122"))
     }
 
+    func testBundledProductionBankIsExactlyFullAuditedContent() throws {
+        let bank = try JosanshiQuestionBankLoader.bundled()
+        XCTAssertEqual(bank.status, "audited")
+        XCTAssertEqual(bank.questions.count, 330)
+        XCTAssertEqual(bank.scenarios.count, 36)
+        XCTAssertTrue(bank.questions.allSatisfy { $0.auditStatus == "pass" })
+        XCTAssertTrue(bank.scenarios.allSatisfy { $0.auditStatus == "pass" })
+        XCTAssertEqual(bank.questions.filter { $0.questionType == "general" }.count, 225)
+        XCTAssertEqual(bank.questions.filter { $0.questionType == "situation" }.count, 105)
+        XCTAssertEqual(Set(bank.questions.map(\.id)).count, 330)
+        XCTAssertEqual(Set(bank.scenarios.map(\.scenarioId)).count, 36)
+
+        for round in 1...3 {
+            XCTAssertEqual(bank.questions.filter { $0.mockRound == round }.count, 110)
+            XCTAssertEqual(bank.scenarios.filter { $0.mockRound == round }.count, 12)
+        }
+
+        let subjectCounts = Dictionary(grouping: bank.questions, by: \.subject).mapValues(\.count)
+        XCTAssertEqual(subjectCounts["基礎助産学"], 100)
+        XCTAssertEqual(subjectCounts["助産診断・技術学"], 185)
+        XCTAssertEqual(subjectCounts["地域母子保健"], 20)
+        XCTAssertEqual(subjectCounts["助産管理"], 25)
+    }
+
     @MainActor
     func testInvalidDailyTargetIsRejected() {
-        let model = JosanshiDashboardModel()
+        let model = JosanshiDashboardModel(usePersistentStore: false)
         model.setDailyTarget(16)
         XCTAssertEqual(model.dailyTarget, 16)
 
@@ -50,16 +74,30 @@ final class JosanshiSprintFeatureTests: XCTestCase {
     }
 
     @MainActor
-    func testSubjectRequestOnlyAcceptsOfficialSubject() {
-        let model = JosanshiDashboardModel()
+    func testSubjectRequestStartsSessionOnlyForOfficialSubject() {
+        let model = JosanshiDashboardModel(usePersistentStore: false)
+        XCTAssertTrue(model.hasReadyContent)
+
         model.requestSubjectPractice("助産管理")
         XCTAssertEqual(model.selectedSubject, "助産管理")
-        XCTAssertTrue(model.isContentGatePresented)
+        XCTAssertTrue(model.isSessionPresented)
+        XCTAssertFalse(model.isContentGatePresented)
+        XCTAssertEqual(model.coordinator.activeSession?.questionIDs.count, model.dailyTarget)
 
-        model.isContentGatePresented = false
+        model.finishSession()
+        model.coordinator.clearSession()
         model.requestSubjectPractice("未定義科目")
         XCTAssertEqual(model.selectedSubject, "助産管理")
+        XCTAssertFalse(model.isSessionPresented)
         XCTAssertFalse(model.isContentGatePresented)
+    }
+
+    @MainActor
+    func testBundledMockStartsWithExactly110Questions() {
+        let model = JosanshiDashboardModel(usePersistentStore: false)
+        model.requestMock(2)
+        XCTAssertTrue(model.isSessionPresented)
+        XCTAssertEqual(model.coordinator.activeSession?.questionIDs.count, 110)
     }
 
     @MainActor
