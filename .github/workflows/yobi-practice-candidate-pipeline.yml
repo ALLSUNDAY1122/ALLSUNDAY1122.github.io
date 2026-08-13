@@ -1,0 +1,80 @@
+name: Yobi Practice Candidate Pipeline
+
+on:
+  push:
+    branches:
+      - feature/yobi-tantou-native-swiftui
+    paths:
+      - 'learning-sprint/yobi-tantou/content-loop/questions.candidates.v1.json'
+      - 'learning-sprint/yobi-tantou/content-loop/candidate-source-locks.v1.json'
+      - 'learning-sprint/yobi-tantou/content-loop/candidate-answer-audit.v1.json'
+      - 'learning-sprint/yobi-tantou/content-loop/validate_candidates.py'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py'
+      - 'learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py'
+      - '.github/workflows/yobi-practice-candidate-pipeline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  # Generated staging data may create one follow-up push. SHA isolation prevents
+  # that follow-up from cancelling the run that produced its evidence.
+  group: yobi-practice-candidate-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  candidate-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Candidate validator self-test
+        run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py --self-test
+      - name: Candidate schema and similarity audit
+        run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py learning-sprint/yobi-tantou/content-loop/questions.candidates.v1.json
+      - name: Exact-date e-Gov source audit
+        run: python learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
+      - name: Answer and explanation audit
+        run: python learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
+      - name: Practice staging builder self-test
+        run: python learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py --self-test
+      - name: Build non-release practice staging bank
+        run: python learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py
+      - name: Persist staging bank on latest source branch
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add learning-sprint/yobi-tantou/content-loop/practice-release-staging.v1.json
+          if git diff --cached --quiet; then
+            echo 'Practice release staging is already current.'
+            exit 0
+          fi
+
+          git commit -m 'data(yobi): sync non-release practice staging bank'
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            if git rebase "origin/${GITHUB_REF_NAME}" && \
+               git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              echo 'Persisted practice staging on latest source branch.'
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            if [ "$attempt" -lt 3 ]; then sleep 2; fi
+          done
+          echo 'FAIL: could not safely persist practice staging bank.' >&2
+          exit 1
+      - name: Upload practice staging evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: yobi-practice-release-staging
+          path: learning-sprint/yobi-tantou/content-loop/practice-release-staging.v1.json
+          if-no-files-found: error
+          retention-days: 14
