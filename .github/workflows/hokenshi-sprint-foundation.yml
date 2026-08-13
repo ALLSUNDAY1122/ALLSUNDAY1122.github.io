@@ -36,7 +36,8 @@ jobs:
             hokenshi-sprint/scripts/build_canonical_questions.py \
             hokenshi-sprint/scripts/validate_canonical_questions.py \
             hokenshi-sprint/scripts/validate_current_guidance_canonical.py \
-            hokenshi-sprint/scripts/promote_release_resource.py
+            hokenshi-sprint/scripts/promote_release_resource.py \
+            hokenshi-sprint/scripts/validate_native_product_shell.py
       - name: Build 330-question structural inventory
         run: python3 hokenshi-sprint/scripts/build_question_plan.py
       - name: Validate exam/subject/scenario allocation
@@ -63,6 +64,8 @@ jobs:
           assert all(r.get('origin_type') == 'original_from_primary_source' for r in rows)
           print('PASS: release resource is 330/330 release_ready original content')
           PY
+      - name: Native product shell audit
+        run: python3 hokenshi-sprint/scripts/validate_native_product_shell.py
       - name: Safari prototype static smoke
         run: |
           node --check hokenshi-sprint/prototype/app.js
