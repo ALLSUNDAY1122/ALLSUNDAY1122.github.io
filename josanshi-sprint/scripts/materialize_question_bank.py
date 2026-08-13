@@ -2,6 +2,7 @@
 import argparse
 import json
 import re
+from collections import defaultdict
 from pathlib import Path
 
 from build_generation_plan import build_plan
@@ -64,6 +65,10 @@ def materialize() -> dict:
     authored_questions, authored_scenarios = load_batches()
     plan_by_intent = {question["intentId"]: question for question in plan["questions"]}
     plan_by_scenario = {scenario["scenarioId"]: scenario for scenario in plan["scenarios"]}
+    questions_by_scenario: dict[str, list[dict]] = defaultdict(list)
+    for question in plan["questions"]:
+        if question.get("scenarioId"):
+            questions_by_scenario[question["scenarioId"]].append(question)
 
     if len(plan_by_intent) != 330:
         fail("generation plan must contain 330 unique intents")
@@ -119,11 +124,32 @@ def materialize() -> dict:
         planned = plan_by_scenario.get(scenario_id)
         if planned is None:
             fail(f"unknown scenarioId: {scenario_id}")
+
+        members = sorted(
+            questions_by_scenario.get(scenario_id, []),
+            key=lambda q: q["scenarioIndex"],
+        )
+        if len(members) != planned["scenarioTotal"]:
+            fail(
+                f"{scenario_id}: generation-plan membership mismatch "
+                f"{len(members)}/{planned['scenarioTotal']}"
+            )
+
+        # Scenario membership is structural data owned by the generation plan.
+        # Older authored batches may contain hand-copied questionIds/session values;
+        # never let those stale values override the canonical plan.
+        authored_payload = dict(authored)
+        for field in ("mockRound", "scenarioFamily", "scenarioTotal", "session", "questionIds"):
+            authored_payload.pop(field, None)
+
         record = {
+            **authored_payload,
             "scenarioId": scenario_id,
             "mockRound": planned["mockRound"],
             "scenarioFamily": planned["scenarioFamily"],
-            **authored,
+            "scenarioTotal": planned["scenarioTotal"],
+            "session": members[0]["session"],
+            "questionIds": [member["id"] for member in members],
         }
         scenarios.append(record)
 
