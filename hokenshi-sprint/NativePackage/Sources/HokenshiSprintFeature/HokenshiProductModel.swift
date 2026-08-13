@@ -8,11 +8,13 @@ public struct HokenshiSessionPresentation: Identifiable {
     public let kind: SessionKind
     public let title: String
     public let questions: [LearningQuestion]
+    public let startIndex: Int
 
-    public init(kind: SessionKind, title: String, questions: [LearningQuestion]) {
+    public init(kind: SessionKind, title: String, questions: [LearningQuestion], startIndex: Int = 0) {
         self.kind = kind
         self.title = title
         self.questions = questions
+        self.startIndex = startIndex
     }
 }
 
@@ -29,6 +31,7 @@ public final class HokenshiProductModel: ObservableObject {
     @Published public var activeSession: HokenshiSessionPresentation?
     @Published public private(set) var loadError: String?
     @Published public private(set) var lastSessionCorrect = 0
+    @Published public private(set) var lastSessionUnknown = 0
     @Published public private(set) var lastSessionTotal = 0
 
     private let stateStore: LearningStateStore
@@ -38,34 +41,28 @@ public final class HokenshiProductModel: ObservableObject {
             bundleID: HokenshiReleaseContentStore.stateNamespace,
             contentVersion: HokenshiReleaseContentStore.contentVersion
         )
-        self.stateStore = persistence
-        self.state = (try? persistence.load()) ?? LearningState(
-            contentVersion: HokenshiReleaseContentStore.contentVersion
-        )
+        stateStore = persistence
+        state = (try? persistence.load()) ?? LearningState(contentVersion: HokenshiReleaseContentStore.contentVersion)
         do {
-            self.contentStore = try HokenshiReleaseContentStore.load()
+            contentStore = try HokenshiReleaseContentStore.load()
         } catch {
-            self.contentStore = nil
-            self.loadError = "監査済み問題データを読み込めませんでした。"
+            contentStore = nil
+            loadError = "監査済み問題データを読み込めませんでした。"
         }
     }
 
     public var allQuestions: [LearningQuestion] {
-        contentStore?.productQuestions ?? []
+        contentStore?.allRecords.map(\.displayQuestion) ?? []
     }
 
-    public var todayAnsweredCount: Int {
-        LearningEngine.todayAnsweredCount(state: state)
-    }
+    public var todayAnsweredCount: Int { LearningEngine.todayAnsweredCount(state: state) }
 
     public var accuracy: Double? {
         guard !state.attempts.isEmpty else { return nil }
         return Double(state.attempts.filter(\.isCorrect).count) / Double(state.attempts.count)
     }
 
-    public var uniqueAnsweredCount: Int {
-        Set(state.attempts.map(\.questionID)).count
-    }
+    public var uniqueAnsweredCount: Int { Set(state.attempts.map(\.questionID)).count }
 
     public var requiredDailyPace: Int? {
         LearningEngine.requiredDailyPace(
@@ -77,61 +74,49 @@ public final class HokenshiProductModel: ObservableObject {
 
     public var canResume: Bool {
         guard let snapshot = state.resumeSession else { return false }
-        return !snapshot.questionIDs.isEmpty
+        return snapshot.currentIndex >= 0 && snapshot.currentIndex < snapshot.questionIDs.count
     }
 
-    public var heatmap: [Date: Int] {
-        LearningEngine.heatmap35Days(state: state)
-    }
-
-    public var subjectAccuracy: [String: Double] {
-        LearningEngine.subjectAccuracy(state: state)
-    }
+    public var heatmap: [Date: Int] { LearningEngine.heatmap35Days(state: state) }
+    public var subjectAccuracy: [String: Double] { LearningEngine.subjectAccuracy(state: state) }
 
     public func startSprint() {
-        let selected = LearningEngine.selectSprint(
-            from: allQuestions,
-            target: state.dailyTarget,
-            isPremium: true
+        begin(
+            kind: .sprint,
+            title: "今日のスプリント",
+            questions: LearningEngine.selectSprint(from: allQuestions, target: state.dailyTarget, isPremium: true)
         )
-        begin(kind: .sprint, title: "今日のスプリント", questions: selected)
     }
 
     public func startWeak() {
-        let selected = LearningEngine.selectWeak(
-            from: allQuestions,
-            state: state,
-            target: state.dailyTarget,
-            isPremium: true
+        begin(
+            kind: .weak,
+            title: "苦手復習",
+            questions: LearningEngine.selectWeak(from: allQuestions, state: state, target: state.dailyTarget, isPremium: true)
         )
-        begin(kind: .weak, title: "苦手復習", questions: selected)
     }
 
     public func startSubject(_ subject: String) {
-        let pool = contentStore?.questions(subject: subject).map(\.coreQuestion) ?? []
-        let selected = LearningEngine.selectSprint(
-            from: pool,
-            target: state.dailyTarget,
-            isPremium: true
+        let pool = contentStore?.questions(subject: subject).map(\.displayQuestion) ?? []
+        begin(
+            kind: .subject(subject),
+            title: subject,
+            questions: LearningEngine.selectSprint(from: pool, target: state.dailyTarget, isPremium: true)
         )
-        begin(kind: .subject(subject), title: subject, questions: selected)
     }
 
     public func startMock(round: Int, segment: HokenshiMockSegment) {
         guard let rows = contentStore?.questions(round: round), rows.count == 110 else { return }
         let selected: [HokenshiQuestionRecord]
         switch segment {
-        case .morning:
-            selected = Array(rows.prefix(55))
-        case .afternoon:
-            selected = Array(rows.suffix(55))
-        case .full:
-            selected = rows
+        case .morning: selected = Array(rows.prefix(55))
+        case .afternoon: selected = Array(rows.suffix(55))
+        case .full: selected = rows
         }
         begin(
             kind: .mock("R\(round)-\(segment.rawValue)"),
             title: "独自模試 第\(round)回・\(segment.rawValue)",
-            questions: selected.map(\.coreQuestion)
+            questions: selected.map(\.displayQuestion)
         )
     }
 
@@ -139,7 +124,10 @@ public final class HokenshiProductModel: ObservableObject {
         guard let snapshot = state.resumeSession else { return }
         let byID = Dictionary(uniqueKeysWithValues: allQuestions.map { ($0.id, $0) })
         let questions = snapshot.questionIDs.compactMap { byID[$0] }
-        guard questions.count == snapshot.questionIDs.count, !questions.isEmpty else {
+        guard questions.count == snapshot.questionIDs.count,
+              !questions.isEmpty,
+              snapshot.currentIndex < questions.count
+        else {
             state.resumeSession = nil
             persist()
             return
@@ -147,20 +135,50 @@ public final class HokenshiProductModel: ObservableObject {
         activeSession = HokenshiSessionPresentation(
             kind: snapshot.kind,
             title: title(for: snapshot.kind),
-            questions: questions
+            questions: questions,
+            startIndex: snapshot.currentIndex
         )
     }
 
-    public func finishActiveSession(_ evaluations: [AnswerEvaluation]) {
-        guard let session = activeSession else { return }
-        for (question, evaluation) in zip(session.questions, evaluations) {
-            LearningEngine.record(question: question, evaluation: evaluation, state: &state)
+    public func commitAdvance(
+        question: LearningQuestion,
+        answer: AnswerPayload,
+        evaluation: AnswerEvaluation,
+        nextIndex: Int,
+        total: Int
+    ) -> [AnswerEvaluation]? {
+        guard var snapshot = state.resumeSession,
+              snapshot.questionIDs.contains(question.id)
+        else { return nil }
+
+        LearningEngine.record(question: question, evaluation: evaluation, state: &state)
+        snapshot.answers[question.id] = answer
+        snapshot.currentIndex = min(nextIndex, total)
+
+        if nextIndex >= total {
+            let byID = Dictionary(uniqueKeysWithValues: allQuestions.map { ($0.id, $0) })
+            let results: [AnswerEvaluation] = snapshot.questionIDs.compactMap { id in
+                guard let q = byID[id], let saved = snapshot.answers[id] else { return nil }
+                return try? LearningEngine.evaluate(q, answer: saved)
+            }
+            guard results.count == snapshot.questionIDs.count else {
+                loadError = "学習結果の集計に失敗しました。"
+                state.resumeSession = snapshot
+                persist()
+                return nil
+            }
+            state.recordCompletion(for: snapshot.kind)
+            state.resumeSession = nil
+            lastSessionCorrect = results.filter(\.isCorrect).count
+            lastSessionUnknown = results.filter(\.isUnknown).count
+            lastSessionTotal = results.count
+            persist()
+            return results
         }
-        state.recordCompletion(for: session.kind)
-        state.resumeSession = nil
-        lastSessionCorrect = evaluations.filter(\.isCorrect).count
-        lastSessionTotal = evaluations.count
+
+        state.resumeSession = snapshot
         persist()
+        return nil
     }
 
     public func closeActiveSession(keepForResume: Bool) {
@@ -187,9 +205,7 @@ public final class HokenshiProductModel: ObservableObject {
         persist()
     }
 
-    public func exportBackup() throws -> Data {
-        try stateStore.exportBackup(state)
-    }
+    public func exportBackup() throws -> Data { try stateStore.exportBackup(state) }
 
     public func importBackup(_ data: Data) throws {
         state = try stateStore.importBackup(data, allowContentVersionMigration: true)
@@ -197,10 +213,7 @@ public final class HokenshiProductModel: ObservableObject {
 
     private func begin(kind: SessionKind, title: String, questions: [LearningQuestion]) {
         guard !questions.isEmpty else { return }
-        state.resumeSession = LearningSessionSnapshot(
-            kind: kind,
-            questionIDs: questions.map(\.id)
-        )
+        state.resumeSession = LearningSessionSnapshot(kind: kind, questionIDs: questions.map(\.id))
         persist()
         activeSession = HokenshiSessionPresentation(kind: kind, title: title, questions: questions)
     }
@@ -215,11 +228,8 @@ public final class HokenshiProductModel: ObservableObject {
     }
 
     private func persist() {
-        do {
-            try stateStore.save(state)
-        } catch {
-            loadError = "学習記録を保存できませんでした。"
-        }
+        do { try stateStore.save(state) }
+        catch { loadError = "学習記録を保存できませんでした。" }
     }
 }
 #endif
