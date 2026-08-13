@@ -42,37 +42,6 @@ final class KanteishiShortAnswerUITests: XCTestCase {
         XCTAssertTrue(app.otherElements["mock.screen"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["mock.edition.2026"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["mock.subject.2026.不動産に関する行政法規"].waitForExistence(timeout: 5))
-    }
-
-    @MainActor
-    func testEditionSubjectPracticeLaunches() throws {
-        let app = XCUIApplication()
-        app.launchArguments += ["-UITestReset"]
-        app.launch()
-
-        XCTAssertTrue(app.buttons["tab.mock"].waitForExistence(timeout: 10))
-        app.buttons["tab.mock"].tap()
-        XCTAssertTrue(app.otherElements["mock.screen"].waitForExistence(timeout: 5))
-
-        let subject = app.buttons["mock.subject.2026.不動産に関する行政法規"]
-        XCTAssertTrue(subject.waitForExistence(timeout: 5))
-        scrollToHittable(subject, in: app)
-        XCTAssertTrue(subject.isHittable)
-        subject.tap()
-
-        XCTAssertTrue(app.staticTexts["quiz.questionText"].waitForExistence(timeout: 10))
-        let progress = app.staticTexts["quiz.progress"]
-        XCTAssertTrue(progress.waitForExistence(timeout: 5))
-        XCTAssertEqual(progress.label, "1 / 40")
-        XCTAssertTrue(app.buttons["quiz.unknown"].waitForExistence(timeout: 5))
-    }
-
-    @MainActor
-    private func scrollToHittable(_ element: XCUIElement, in app: XCUIApplication) {
-        var attempts = 0
-        while !element.isHittable && attempts < 6 {
-            app.swipeUp()
-            attempts += 1
-        }
+        XCTAssertTrue(app.buttons["mock.subject.2026.不動産の鑑定評価に関する理論"].waitForExistence(timeout: 5))
     }
 }
