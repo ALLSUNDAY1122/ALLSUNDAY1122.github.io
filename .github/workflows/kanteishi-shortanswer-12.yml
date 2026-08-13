@@ -24,10 +24,38 @@ jobs:
         run: swift test
       - name: Production 240-slot manifest
         run: python3 kanteishi-shortanswer-sprint/scripts/validate_slot_manifest.py kanteishi-shortanswer-sprint/data/production-slot-manifest.json
-      - name: Prepare prototype audit array
+      - name: Prepare canonical production audit array
+        run: |
+          mkdir -p kanteishi-shortanswer-sprint/build/official
+          jq -s '[.[].questions[]]' \
+            kanteishi-shortanswer-sprint/questions/exam-2026.json \
+            kanteishi-shortanswer-sprint/questions/exam-2025.json \
+            kanteishi-shortanswer-sprint/questions/exam-2024.json \
+            > kanteishi-shortanswer-sprint/build/official/questions.audit.json
+      - name: Shared 240-question production audit
+        run: python3 automation/learning-sprint-question-pipeline/validate_questions.py kanteishi-shortanswer-sprint/learning-sprint-audit.production.json
+      - name: Prepare prototype fallback audit array
         run: jq '.questions' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Resources/questions.prototype.json > kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Resources/questions.audit.json
-      - name: Shared question pipeline
+      - name: Prototype fallback audit
         run: python3 automation/learning-sprint-question-pipeline/validate_questions.py kanteishi-shortanswer-sprint/learning-sprint-audit.prototype.json
+      - name: Production payload contract
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Resources/questions.production.json')
+          payload = json.loads(path.read_text(encoding='utf-8'))
+          assert payload['productionTargetCount'] == 240
+          assert payload['contentVersion'].startswith('official-240-')
+          assert len(payload['questions']) == 240
+          assert {q['edition'] for q in payload['questions']} == {2026, 2025, 2024}
+          assert all(len(q['choices']) == 5 for q in payload['questions'])
+          for round_no in (1, 2, 3):
+              for subject in ('不動産に関する行政法規', '不動産の鑑定評価に関する理論'):
+                  count = sum(q['round'] == round_no and q['subject'] == subject for q in payload['questions'])
+                  assert count == 40, (round_no, subject, count)
+          print('Production payload PASS: 240 questions / 3 editions / 5 choices')
+          PY
       - name: v2.1 native UI static audit
         run: python3 kanteishi-shortanswer-sprint/scripts/audit_native_ui.py
       - name: Native implementation guard
@@ -41,20 +69,21 @@ jobs:
           grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.kanteishishortanswer' kanteishi-shortanswer-sprint/ios/project.yml
           grep -q 'DEVELOPMENT_TEAM: "MN3D2ZM44N"' kanteishi-shortanswer-sprint/ios/project.yml
           grep -q 'GENERATE_INFOPLIST_FILE: NO' kanteishi-shortanswer-sprint/ios/project.yml
+          grep -q 'questions.production.json' kanteishi-shortanswer-sprint/ios/project.yml
           grep -q '<key>CFBundleIdentifier</key>' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Info.plist
           grep -q '<key>CFBundleExecutable</key>' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Info.plist
           if grep -R -nE 'productIDs[[:space:]]*=[[:space:]]*\[[[:space:]]*"' kanteishi-shortanswer-sprint/core/Sources kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer; then
             echo 'StoreKit Product ID must remain unset until the product is created in App Store Connect.'
             exit 1
           fi
-      - name: Prototype must remain non-release
+      - name: Prototype fallback must remain non-release
         run: |
-          grep -q 'production_target_only' kanteishi-shortanswer-sprint/data/production-slot-manifest.json
           grep -q '公開不可' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Resources/questions.prototype.json
+          grep -q 'questions.production' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/AppCore.swift
 
   native-app-tests:
     runs-on: macos-15
-    timeout-minutes: 15
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
@@ -101,11 +130,20 @@ jobs:
             -derivedDataPath build/DerivedData \
             CODE_SIGNING_ALLOWED=NO \
             build-for-testing
-      - name: Verify bundled question data
+      - name: Verify bundled production question data
         run: |
           APP_PATH="$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/DerivedData/Build/Products/Debug-iphonesimulator/KanteishiShortAnswer.app"
           test -d "$APP_PATH"
-          find "$APP_PATH" -maxdepth 3 -type f -name 'questions.prototype.json' -print
+          PROD=$(find "$APP_PATH" -maxdepth 3 -type f -name 'questions.production.json' -print -quit)
+          test -n "$PROD"
+          python3 - "$PROD" <<'PY'
+          import json, sys
+          payload = json.load(open(sys.argv[1], encoding='utf-8'))
+          assert payload['contentVersion'].startswith('official-240-')
+          assert len(payload['questions']) == 240
+          assert all(len(q['choices']) == 5 for q in payload['questions'])
+          print('Bundled production JSON PASS: 240')
+          PY
           test -n "$(find "$APP_PATH" -maxdepth 3 -type f -name 'questions.prototype.json' -print -quit)"
       - name: Verify final iPhone app metadata
         run: |
@@ -208,10 +246,10 @@ jobs:
               exit(1)
           }
           SWIFT
-      - name: Upload runnable app and launch evidence
+      - name: Upload runnable production app and launch evidence
         uses: actions/upload-artifact@v4
         with:
-          name: kanteishi-shortanswer-prototype
+          name: kanteishi-shortanswer-production
           path: |
             kanteishi-shortanswer-sprint/ios/build/DerivedData/Build/Products/Debug-iphonesimulator/KanteishiShortAnswer.app
             kanteishi-shortanswer-sprint/ios/build/evidence/home.png
