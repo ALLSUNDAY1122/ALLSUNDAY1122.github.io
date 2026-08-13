@@ -88,10 +88,29 @@ jobs:
             -derivedDataPath build/DerivedData \
             CODE_SIGNING_ALLOWED=NO \
             test
-      - name: Upload runnable Simulator app
+      - name: Install and launch built app
+        run: |
+          DEVICE_ID='${{ steps.simulator.outputs.id }}'
+          APP_PATH="$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/DerivedData/Build/Products/Debug-iphonesimulator/KanteishiShortAnswer.app"
+          test -d "$APP_PATH"
+          xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl install "$DEVICE_ID" "$APP_PATH"
+          xcrun simctl terminate "$DEVICE_ID" jp.allsunday1122.kanteishishortanswer 2>/dev/null || true
+          xcrun simctl launch "$DEVICE_ID" jp.allsunday1122.kanteishishortanswer
+          mkdir -p "$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/evidence"
+          python3 - <<'PY'
+          import time
+          time.sleep(2)
+          PY
+          xcrun simctl io "$DEVICE_ID" screenshot "$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/evidence/home.png"
+          test -s "$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/evidence/home.png"
+      - name: Upload runnable app and launch evidence
         uses: actions/upload-artifact@v4
         with:
-          name: kanteishi-shortanswer-simulator-app
-          path: kanteishi-shortanswer-sprint/ios/build/DerivedData/Build/Products/Debug-iphonesimulator/KanteishiShortAnswer.app
+          name: kanteishi-shortanswer-prototype
+          path: |
+            kanteishi-shortanswer-sprint/ios/build/DerivedData/Build/Products/Debug-iphonesimulator/KanteishiShortAnswer.app
+            kanteishi-shortanswer-sprint/ios/build/evidence/home.png
           if-no-files-found: error
           retention-days: 14
