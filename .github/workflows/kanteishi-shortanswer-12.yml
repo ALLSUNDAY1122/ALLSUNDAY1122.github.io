@@ -91,6 +91,12 @@ jobs:
             -derivedDataPath build/DerivedData \
             CODE_SIGNING_ALLOWED=NO \
             build-for-testing
+      - name: Verify bundled question data
+        run: |
+          APP_PATH="$GITHUB_WORKSPACE/kanteishi-shortanswer-sprint/ios/build/DerivedData/Build/Products/Debug-iphonesimulator/KanteishiShortAnswer.app"
+          test -d "$APP_PATH"
+          find "$APP_PATH" -maxdepth 3 -type f -name 'questions.prototype.json' -print
+          test -n "$(find "$APP_PATH" -maxdepth 3 -type f -name 'questions.prototype.json' -print -quit)"
       - name: Run native unit tests
         working-directory: kanteishi-shortanswer-sprint/ios
         run: |
