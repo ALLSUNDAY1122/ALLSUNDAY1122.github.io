@@ -5,22 +5,32 @@ final class KanteishiShortAnswerUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    @MainActor
     func testCoreLearningFlowAndTabs() throws {
         let app = XCUIApplication()
+        app.launchArguments += ["-UITestReset"]
         app.launch()
 
-        XCTAssertTrue(app.staticTexts["不動産鑑定士試験・短答式"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["home.startToday"].exists)
+        let title = app.staticTexts["不動産鑑定士試験・短答式"]
+        XCTAssertTrue(title.waitForExistence(timeout: 10))
 
-        app.buttons["home.startToday"].tap()
-        XCTAssertTrue(app.staticTexts["quiz.questionText"].waitForExistence(timeout: 10))
+        let start = app.buttons["home.startToday"]
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        start.tap()
 
-        app.buttons["quiz.unknown"].tap()
-        XCTAssertTrue(app.staticTexts["わからないとして記録"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["quiz.next"].exists)
+        let question = app.staticTexts["quiz.questionText"]
+        XCTAssertTrue(question.waitForExistence(timeout: 10))
+
+        let unknown = app.buttons["quiz.unknown"]
+        XCTAssertTrue(unknown.waitForExistence(timeout: 5))
+        unknown.tap()
+
+        let feedback = app.staticTexts["わからないとして記録"]
+        XCTAssertTrue(feedback.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["quiz.next"].waitForExistence(timeout: 5))
 
         app.buttons["quiz.home"].tap()
-        XCTAssertTrue(app.staticTexts["不動産鑑定士試験・短答式"].waitForExistence(timeout: 5))
+        XCTAssertTrue(title.waitForExistence(timeout: 5))
 
         app.buttons["tab.settings"].tap()
         XCTAssertTrue(app.otherElements["settings.screen"].waitForExistence(timeout: 5))
