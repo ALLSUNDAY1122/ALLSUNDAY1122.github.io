@@ -20,7 +20,7 @@ def main() -> int:
     required = {
         "4 tabs": ["ホーム", "模試", "記録", "設定"],
         "sprint counts": ["[4, 8, 16]", "dailyTarget"],
-        "unknown": ["わからない", "AnswerPayload.unknown"],
+        "unknown": ["わからない", "submit(.unknown)"],
         "weak review": ["startWeak", "3連続"],
         "resume": ["途中から再開", "currentIndex", "commitAdvance"],
         "mock segments": ["午前55", "午後55", "通し110"],
@@ -39,8 +39,7 @@ def main() -> int:
         if missing:
             errors.append(f"{label}: missing {missing}")
 
-    forbidden = ["WKWebView", "import WebKit", "UIViewRepresentable"]
-    for token in forbidden:
+    for token in ["WKWebView", "import WebKit", "UIViewRepresentable"]:
         if token in text:
             errors.append(f"forbidden WebView implementation: {token}")
 
