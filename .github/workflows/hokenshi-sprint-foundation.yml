@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: hokenshi-foundation-${{ github.event.pull_request.number || github.ref }}
@@ -35,7 +35,8 @@ jobs:
             hokenshi-sprint/scripts/validate_question_plan.py \
             hokenshi-sprint/scripts/build_canonical_questions.py \
             hokenshi-sprint/scripts/validate_canonical_questions.py \
-            hokenshi-sprint/scripts/validate_current_guidance_canonical.py
+            hokenshi-sprint/scripts/validate_current_guidance_canonical.py \
+            hokenshi-sprint/scripts/promote_release_resource.py
       - name: Build 330-question structural inventory
         run: python3 hokenshi-sprint/scripts/build_question_plan.py
       - name: Validate exam/subject/scenario allocation
@@ -46,16 +47,22 @@ jobs:
         run: python3 hokenshi-sprint/scripts/validate_canonical_questions.py
       - name: Recheck current PHN guidance in canonical content
         run: python3 hokenshi-sprint/scripts/validate_current_guidance_canonical.py
-      - name: Canonical content is not a raw authored batch
+      - name: Promote audited bank to release-ready resources
+        run: python3 hokenshi-sprint/scripts/promote_release_resource.py
+      - name: Verify release resource identity
         run: |
-          test -f hokenshi-sprint/content/questions.canonical.json
-          test "$(python3 - <<'PY'
+          cmp \
+            hokenshi-sprint/content/questions.release-ready.json \
+            hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/Resources/questions.json
+          python3 - <<'PY'
           import json
           from pathlib import Path
-          rows=json.loads(Path('hokenshi-sprint/content/questions.canonical.json').read_text(encoding='utf-8'))
-          print(len(rows))
+          rows=json.loads(Path('hokenshi-sprint/content/questions.release-ready.json').read_text(encoding='utf-8'))
+          assert len(rows) == 330
+          assert all(r.get('audit_status') == 'release_ready' for r in rows)
+          assert all(r.get('origin_type') == 'original_from_primary_source' for r in rows)
+          print('PASS: release resource is 330/330 release_ready original content')
           PY
-          )" = "330"
       - name: Safari prototype static smoke
         run: |
           node --check hokenshi-sprint/prototype/app.js
@@ -64,6 +71,16 @@ jobs:
           grep -q '8問をはじめる' hokenshi-sprint/prototype/index.html
           grep -q 'わからない' hokenshi-sprint/prototype/index.html
           grep -q 'ここだけ覚える' hokenshi-sprint/prototype/index.html
+      - name: Upload audited release resources
+        uses: actions/upload-artifact@v4
+        with:
+          name: hokenshi-release-resources
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            hokenshi-sprint/content/questions.release-ready.json
+            hokenshi-sprint/content/release-manifest.json
+            hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/Resources/questions.json
 
   native-foundation:
     needs: content-plan
@@ -71,6 +88,11 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - name: Restore audited release resources
+        uses: actions/download-artifact@v4
+        with:
+          name: hokenshi-release-resources
+          path: hokenshi-sprint
       - name: Show Swift version
         run: swift --version
       - name: Shared LearningSprintCore tests
@@ -90,3 +112,33 @@ jobs:
       - name: Verify no guessed App Store identifiers
         run: |
           ! grep -R --line-number -E 'PRODUCT_BUNDLE_IDENTIFIER|App Store Connect App ID|jp\.allsunday1122\.[A-Za-z0-9_-]+\.premium' hokenshi-sprint/NativePackage/Sources
+
+  persist-release-resources:
+    needs: [content-plan, native-foundation]
+    if: github.event_name == 'push' && github.ref_name == 'feat/hokenshi-sprint-native-foundation'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/hokenshi-sprint-native-foundation
+          fetch-depth: 0
+      - name: Restore audited release resources
+        uses: actions/download-artifact@v4
+        with:
+          name: hokenshi-release-resources
+          path: hokenshi-sprint
+      - name: Persist generated release bank
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            hokenshi-sprint/content/questions.release-ready.json \
+            hokenshi-sprint/content/release-manifest.json \
+            hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/Resources/questions.json
+          if git diff --cached --quiet; then
+            echo 'No generated release resource changes.'
+            exit 0
+          fi
+          git commit -m 'chore(hokenshi): persist audited release resources [skip ci]'
+          git push origin HEAD:feat/hokenshi-sprint-native-foundation
