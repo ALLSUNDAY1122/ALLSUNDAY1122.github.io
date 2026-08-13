@@ -115,13 +115,13 @@ jobs:
 
   persist-release-resources:
     needs: [content-plan, native-foundation]
-    if: github.event_name == 'push' && github.ref_name == 'feat/hokenshi-sprint-native-foundation'
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feat/hokenshi-sprint-native-foundation
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
       - name: Restore audited release resources
         uses: actions/download-artifact@v4
@@ -129,6 +129,8 @@ jobs:
           name: hokenshi-release-resources
           path: hokenshi-sprint
       - name: Persist generated release bank
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -141,4 +143,4 @@ jobs:
             exit 0
           fi
           git commit -m 'chore(hokenshi): persist audited release resources [skip ci]'
-          git push origin HEAD:feat/hokenshi-sprint-native-foundation
+          git push origin HEAD:"${HEAD_BRANCH}"
