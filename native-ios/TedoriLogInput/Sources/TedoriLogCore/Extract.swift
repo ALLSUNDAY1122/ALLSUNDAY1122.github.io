@@ -231,8 +231,14 @@ public enum PayslipExtractor {
                                   score: pairScore(hit, amounts[amountIndex], weights[i])))
             }
             if right.isEmpty {
-                if let leftIndex = rowAmounts.filter({ amounts[$0].token.right <= hit.token.x + 1 })
-                    .max(by: { amounts[$0].token.x < amounts[$1].token.x }) {
+                // ラベルの左側で最も近い（xが最大の）金額。同点なら先に現れた方
+                var leftIndex: Int?
+                for candidate in rowAmounts where amounts[candidate].token.right <= hit.token.x + 1 {
+                    if leftIndex == nil || amounts[candidate].token.x > amounts[leftIndex!].token.x {
+                        leftIndex = candidate
+                    }
+                }
+                if let leftIndex {
                     pairs.append(Pair(hitIndex: hitIndex, amountIndex: leftIndex, relation: "same_row_left",
                                       score: pairScore(hit, amounts[leftIndex], 0.45)))
                 }
@@ -613,9 +619,12 @@ public enum PayslipExtractor {
             let result = extract(tokens: variant.tokens, route: route)
             results.append((variant.name, result, selfAssessment(result)))
         }
-        guard var best = results.max(by: { $0.score < $1.score }).map({ $0 }) else {
-            return extract(tokens: [], route: route)
+        // 同点のときは先に評価した方を採る（JS版と同じ順序。max(by:)は最後の最大値を返すため使わない）
+        var best: (name: String, result: PayslipResult, score: Double)?
+        for candidate in results where best == nil || candidate.score > best!.score {
+            best = candidate
         }
+        guard let best else { return extract(tokens: [], route: route) }
         var result = best.result
         result.variant = best.name
 
@@ -636,7 +645,6 @@ public enum PayslipExtractor {
             }
             result.items[key] = item
         }
-        best.result = result
         return result
     }
 }
