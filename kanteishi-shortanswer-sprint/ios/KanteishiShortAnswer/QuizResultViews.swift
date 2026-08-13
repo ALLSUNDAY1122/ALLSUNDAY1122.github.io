@@ -47,7 +47,13 @@ struct QuizScreen: View {
     private func quizHeader(_ session: SessionState) -> some View {
         HStack(spacing: 12) {
             Button { store.exitSessionToHome() } label: { Image(systemName: "house").font(.system(size: 18, weight: .bold)).foregroundStyle(AppTheme.ai).frame(width: 44, height: 44).background(AppTheme.aiSoft).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous)) }.accessibilityIdentifier("quiz.home")
-            VStack(alignment: .leading, spacing: 3) { Text(session.title).appSans(13, weight: .bold).foregroundStyle(AppTheme.ink); Text("\(session.index + 1) / \(session.total)").appSans(11, weight: .bold).foregroundStyle(AppTheme.ink3) }
+            VStack(alignment: .leading, spacing: 3) {
+                Text(session.title).appSans(13, weight: .bold).foregroundStyle(AppTheme.ink)
+                Text("\(session.index + 1) / \(session.total)")
+                    .appSans(11, weight: .bold)
+                    .foregroundStyle(AppTheme.ink3)
+                    .accessibilityIdentifier("quiz.progress")
+            }
             Spacer(); Text(session.mode == .mock ? "模試" : "学習").appSans(10, weight: .bold).foregroundStyle(session.mode == .mock ? AppTheme.shu : AppTheme.midori).padding(.horizontal, 10).padding(.vertical, 6).background(session.mode == .mock ? AppTheme.shuSoft : AppTheme.midoriSoft).clipShape(Capsule())
         }
     }
