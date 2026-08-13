@@ -6,9 +6,36 @@
 
 **PRE-TESTFLIGHT / HUMAN IDENTIFIER GATE**
 
-初期試作品の人間確認は完了。製品240問・ネイティブアプリ統合・canonical監査・Simulator実行まで完了済み。
+初期試作品の人間確認は完了。製品240問・ネイティブアプリ統合・canonical監査・Simulator実行・申請資料整備まで完了済み。
 
 次の人間確認地点はTestFlight実機確認だが、その前にApple識別情報を最上位Notion正本へ確定する必要がある。
+
+## 最終機械ゲート
+
+### 製品アプリCI
+GitHub Actions run `31703594537`: **PASS**
+
+- canonical 240問 shared validator
+- production payload 240問 / 3年度 / 全5択
+- XcodeGen / SwiftUI typecheck
+- iPhone Simulator build
+- `.app`内 production JSON 240問
+- final Info.plist metadata
+- XCTest（年度別80問・年度×科目40問を含む）
+- XCUITest（通常学習・4タブ・年度/科目導線）
+- clean install / actual launch
+- full-screen / black letterbox gate
+- runnable production artifact
+
+### 公式問題再抽出・権利監査
+GitHub Actions run `31703594505`: **PASS**
+
+- 国土交通省公式PDF / 正解表から240問を再抽出
+- 80問×3年度
+- 行政法規120 / 鑑定理論120
+- 第三者権利要確認0
+- 表レイアウト監査PASS
+- canonical差分なし
 
 ## 完了
 - Phase 0 調査 / 権利 / 試験構成: PASS
@@ -22,10 +49,21 @@
 - 製品JSONアプリ同梱: PASS
 - 年度別80問模試: 実装済み
 - 年度×科目40問演習: 実装済み
-- XCTest / XCUITest / Simulator clean launch: PASS実績あり
+- XCTest / XCUITest / Simulator clean launch: PASS
 - Privacy Manifest: 作成済み
-- App Store原稿 / Support / Privacy: 作成済み
-- 学びスプリント#12正本App Icon: Google Driveで特定済み
+- App Store原稿 / TestFlight Notes / Support / Privacy: 作成済み
+- 学びスプリント#12正本App Icon: Google Driveで特定・1024×1024 RGB・SHA-256固定済み
+
+## App Icon残タスク
+
+Google Drive正本:
+- `12_不動産鑑定士試験_短答式.png`
+- Drive ID: `1wnnkFkere2-9OKXYSG3T_bS6NqS3xWMX`
+- SHA-256: `679f3493524dd2cf71126303c998b15395c70ff19f224d158a760ee3c2a395f1`
+
+GitHub ActionsからGoogle Driveへ匿名ダウンロードする自動配置を試したが、Drive側が取得を拒否した。共有設定を勝手に変更することはせず、一時ワークフローは削除済み。
+
+正本PNG自体は取得・検証済みなので、Apple識別情報確定後の署名前工程で原寸配置し、最終signed `.app`でアイコンを確認する。
 
 ## Apple識別情報の不整合
 
@@ -36,7 +74,7 @@
 
 ### 現行コード
 - Team ID: `MN3D2ZM44N`
-- Bundle ID: `jp.allsunday1122.kanteishishortanswer`
+- Bundle ID候補: `jp.allsunday1122.kanteishishortanswer`
 
 Team IDは共通正本に一致。Bundle IDは#12の最上位正本登録がないため、**Apple側登録にはまだ使用しない**。
 
