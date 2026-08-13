@@ -5,7 +5,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BANK = ROOT / "data" / "questions.json"
-SOURCES = ROOT / "data" / "source-registry.json"
 DEFAULT_OUTPUT = (
     ROOT
     / "ios"
@@ -21,15 +20,28 @@ def fail(message: str) -> None:
     raise SystemExit(f"FAIL: {message}")
 
 
+def clinical_frame(scenario: dict) -> dict:
+    raw = scenario.get("clinicalFrame") or {}
+    findings = raw.get("keyFindings")
+    if not isinstance(findings, list):
+        findings = [
+            str(raw[key]).strip()
+            for key in ("person", "coreTask", "safetyEscalation")
+            if raw.get(key) is not None and str(raw[key]).strip()
+        ]
+    return {
+        "phase": str(raw.get("phase") or scenario.get("scenarioFamily") or "clinical"),
+        "timeline": str(raw.get("timeline") or scenario.get("scenarioText") or ""),
+        "keyFindings": findings,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
 
     bank = json.loads(BANK.read_text(encoding="utf-8"))
-    source_doc = json.loads(SOURCES.read_text(encoding="utf-8"))
-    source_by_id = {source["id"]: source for source in source_doc.get("sources", [])}
-
     questions = bank.get("questions", [])
     scenarios = bank.get("scenarios", [])
     if len(questions) != 330:
@@ -43,8 +55,6 @@ def main() -> None:
 
     exported_questions = []
     for question in questions:
-        source_ids = question.get("sourceIds", [])
-        primary = source_by_id.get(source_ids[0]) if source_ids else None
         exported_questions.append(
             {
                 "id": question["id"],
@@ -63,16 +73,17 @@ def main() -> None:
                 "prompt": question["prompt"],
                 "choices": question.get("choices", []),
                 "correctIndices": question.get("correctIndices", []),
-                "memoryPoint": question["memoryPoint"],
                 "explanation": question["explanation"],
-                "sourceTitle": primary.get("title") if primary else None,
-                "sourceURL": primary.get("url") if primary else None,
-                "sourceRefs": source_ids,
+                "memoryPoint": question["memoryPoint"],
+                "sourceIds": question.get("sourceIds", []),
                 "sourceCheckedAt": question["sourceCheckedAt"],
                 "lawBaselineDate": question["lawBaselineDate"],
+                "rightsBasis": question.get("rightsBasis") or "original wording; no direct reproduction",
+                "originType": question.get("originType") or "original_from_primary_source",
                 "contentVersion": question["contentVersion"],
-                "rightsBasis": question.get("rightsBasis"),
-                "premium": bool(question.get("premium", False)),
+                "auditStatus": question["auditStatus"],
+                "evidenceNote": question.get("evidenceNote"),
+                "authoringBatch": question.get("authoringBatch"),
             }
         )
 
@@ -84,12 +95,14 @@ def main() -> None:
                 "mockRound": scenario["mockRound"],
                 "session": scenario["session"],
                 "scenarioFamily": scenario["scenarioFamily"],
-                "scenarioTotal": scenario["scenarioTotal"],
                 "scenarioText": scenario["scenarioText"],
+                "clinicalFrame": clinical_frame(scenario),
                 "questionIds": scenario["questionIds"],
                 "sourceIds": scenario.get("sourceIds", []),
                 "sourceCheckedAt": scenario["sourceCheckedAt"],
-                "rightsBasis": scenario.get("rightsBasis"),
+                "rightsBasis": scenario.get("rightsBasis") or "original scenario wording; no direct reproduction",
+                "auditStatus": scenario["auditStatus"],
+                "authoringBatch": scenario.get("authoringBatch"),
             }
         )
 
@@ -97,9 +110,7 @@ def main() -> None:
         "schemaVersion": "1.0",
         "qualification": "助産師国家試験",
         "contentVersion": bank.get("contentVersion", "josanshi-content-v1"),
-        "auditMode": "FULL",
-        "questionCount": 330,
-        "scenarioCount": 36,
+        "status": "audited",
         "questions": exported_questions,
         "scenarios": exported_scenarios,
     }
