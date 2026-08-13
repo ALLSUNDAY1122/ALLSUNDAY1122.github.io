@@ -36,6 +36,12 @@ public struct HokenshiRootView: View {
                 }
             )
         }
+        .sheet(isPresented: $model.showPaywall) {
+            HokenshiPaywallView(
+                purchase: model.purchaseController,
+                onClose: { model.showPaywall = false }
+            )
+        }
     }
 
     private var preferredDynamicTypeSize: DynamicTypeSize {
@@ -101,6 +107,29 @@ private struct HomeView: View {
                     }
                 }
 
+                Button(action: model.requestPremium) {
+                    Card {
+                        HStack(spacing: 12) {
+                            Image(systemName: model.isPremium ? "checkmark.seal.fill" : "lock.open.fill")
+                                .font(.title3)
+                                .foregroundStyle(model.isPremium ? LearningSprintTheme.green : LearningSprintTheme.gold)
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(model.isPremium ? "プレミアム解放済み" : "無料30問で試せます")
+                                    .font(LearningSprintTheme.sans(13, weight: .bold))
+                                    .foregroundStyle(LearningSprintTheme.ink)
+                                Text(model.isPremium ? "330問＋模試3回を利用可能" : "買い切りで残り300問＋模試3回を解放")
+                                    .font(LearningSprintTheme.sans(11))
+                                    .foregroundStyle(LearningSprintTheme.ink3)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(LearningSprintTheme.ink3)
+                        }
+                    }
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("hokenshi.premium.open")
+
                 if model.canResume {
                     actionButton(
                         "途中から再開",
@@ -115,7 +144,7 @@ private struct HomeView: View {
                 Text("今日のスプリント").sectionTitle()
                 actionButton(
                     "\(model.state.dailyTarget)問を解く",
-                    "標準スプリント",
+                    model.isPremium ? "330問から出題" : "無料30問から出題",
                     "figure.run",
                     LearningSprintTheme.indigo,
                     model.startSprint
@@ -152,7 +181,7 @@ private struct HomeView: View {
                                     Text(subject)
                                         .font(LearningSprintTheme.sans(14, weight: .semibold))
                                         .foregroundStyle(LearningSprintTheme.ink)
-                                    Text("33問収録")
+                                    Text(model.isPremium ? "33問収録" : "無料3問・全33問")
                                         .font(LearningSprintTheme.sans(10))
                                         .foregroundStyle(LearningSprintTheme.ink3)
                                 }
@@ -163,7 +192,7 @@ private struct HomeView: View {
                         }
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel("\(subject)、33問収録")
+                    .accessibilityLabel("\(subject)、\(model.isPremium ? "33問" : "無料3問")")
                 }
 
                 Text("これまで").sectionTitle()
@@ -215,6 +244,10 @@ private struct MockView: View {
                     .foregroundStyle(LearningSprintTheme.ink3)
                     .lineSpacing(3)
 
+                if !model.isPremium {
+                    HokenshiPremiumUnlockCard(purchase: model.purchaseController)
+                }
+
                 ForEach(1...3, id: \.self) { round in
                     Card {
                         VStack(alignment: .leading, spacing: 12) {
@@ -222,13 +255,13 @@ private struct MockView: View {
                                 VStack(alignment: .leading, spacing: 3) {
                                     Text("独自模試 第\(round)回")
                                         .font(LearningSprintTheme.serif(19, weight: .semibold))
-                                    Text("110問・監査済み")
+                                    Text(model.isPremium ? "110問・監査済み" : "プレミアムで解放")
                                         .font(LearningSprintTheme.sans(12, weight: .bold))
-                                        .foregroundStyle(LearningSprintTheme.green)
+                                        .foregroundStyle(model.isPremium ? LearningSprintTheme.green : LearningSprintTheme.gold)
                                 }
                                 Spacer()
-                                Image(systemName: "checkmark.shield.fill")
-                                    .foregroundStyle(LearningSprintTheme.green)
+                                Image(systemName: model.isPremium ? "checkmark.shield.fill" : "lock.fill")
+                                    .foregroundStyle(model.isPremium ? LearningSprintTheme.green : LearningSprintTheme.gold)
                             }
                             HStack(spacing: 8) {
                                 ForEach(HokenshiMockSegment.allCases, id: \.rawValue) { segment in
@@ -314,6 +347,8 @@ private struct SettingsView: View {
                 Text("設定")
                     .font(LearningSprintTheme.serif(28, weight: .bold))
 
+                HokenshiPremiumUnlockCard(purchase: model.purchaseController)
+
                 Card {
                     VStack(alignment: .leading, spacing: 10) {
                         Text("1日の目標")
@@ -392,7 +427,7 @@ private struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 5) {
                         Text("データの扱い")
                             .font(LearningSprintTheme.sans(13, weight: .bold))
-                        Text("問題と学習記録は端末内で利用する設計です。アカウント登録は不要です。")
+                        Text("問題と学習記録は端末内で利用する設計です。アカウント登録は不要です。購入処理はAppleのStoreKitを使用します。")
                             .font(LearningSprintTheme.sans(12))
                             .foregroundStyle(LearningSprintTheme.ink2)
                     }
