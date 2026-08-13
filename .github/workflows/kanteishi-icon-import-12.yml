@@ -1,0 +1,106 @@
+name: Kanteishi Canonical App Icon #12
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/kanteishi-icon-import-12.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kanteishi-icon-12-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  import-icon:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - name: Download exact Google Drive canonical icon
+        run: |
+          set -euo pipefail
+          EXPECTED='679f3493524dd2cf71126303c998b15395c70ff19f224d158a760ee3c2a395f1'
+          FILE_ID='1wnnkFkere2-9OKXYSG3T_bS6NqS3xWMX'
+          TMP="$RUNNER_TEMP/kanteishi-app-icon.png"
+          ok=0
+          for url in \
+            "https://drive.usercontent.google.com/download?id=${FILE_ID}&export=download&confirm=t" \
+            "https://drive.google.com/uc?export=download&id=${FILE_ID}"; do
+            rm -f "$TMP"
+            if curl -L --fail --silent --show-error "$url" -o "$TMP"; then
+              ACTUAL="$(sha256sum "$TMP" | awk '{print $1}')"
+              if [ "$ACTUAL" = "$EXPECTED" ]; then
+                ok=1
+                break
+              fi
+              echo "Downloaded content hash did not match canonical: $ACTUAL"
+            fi
+          done
+          test "$ok" -eq 1
+          python3 - "$TMP" <<'PY'
+          import struct, sys
+          p=sys.argv[1]
+          data=open(p,'rb').read(33)
+          assert data[:8] == b'\x89PNG\r\n\x1a\n'
+          assert data[12:16] == b'IHDR'
+          width,height=struct.unpack('>II',data[16:24])
+          color_type=data[25]
+          assert (width,height)==(1024,1024),(width,height)
+          assert color_type in (2,6), color_type
+          print('Canonical icon PASS:', width, height, 'PNG color type', color_type)
+          PY
+          mkdir -p kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Assets.xcassets/AppIcon.appiconset
+          cp "$TMP" kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Assets.xcassets/AppIcon.appiconset/AppIcon.png
+      - name: Create Xcode AppIcon catalog metadata
+        run: |
+          cat > kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Assets.xcassets/AppIcon.appiconset/Contents.json <<'JSON'
+          {
+            "images" : [
+              {
+                "filename" : "AppIcon.png",
+                "idiom" : "universal",
+                "platform" : "ios",
+                "size" : "1024x1024"
+              }
+            ],
+            "info" : {
+              "author" : "xcode",
+              "version" : 1
+            }
+          }
+          JSON
+      - name: Enable AppIcon in XcodeGen project
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('kanteishi-shortanswer-sprint/ios/project.yml')
+          s=p.read_text(encoding='utf-8')
+          needle='        PRODUCT_NAME: KanteishiShortAnswer\n'
+          addition='        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon\n'
+          if addition not in s:
+              assert needle in s
+              s=s.replace(needle, needle+addition, 1)
+              p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit exact canonical icon
+        if: github.event_name == 'pull_request'
+        env:
+          TARGET_BRANCH: ${{ github.head_ref }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Assets.xcassets/AppIcon.appiconset/AppIcon.png \
+            kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Assets.xcassets/AppIcon.appiconset/Contents.json \
+            kanteishi-shortanswer-sprint/ios/project.yml
+          if git diff --cached --quiet; then
+            echo 'Canonical AppIcon already up to date.'
+          else
+            git commit -m 'assets(kanteishi): add canonical #12 App Store icon'
+            git push origin "HEAD:${TARGET_BRANCH}"
+          fi
