@@ -28,6 +28,17 @@ final class OfficialScoringRepositoryTests: XCTestCase {
         XCTAssertEqual(r7.officialPassScore, 159)
     }
 
+    @MainActor
+    func testAppModelSurfacesVerifiedOfficialScoring() throws {
+        let model = AppModel(bundle: Bundle(for: AppBundleToken.self))
+
+        XCTAssertNil(model.startupError)
+        XCTAssertEqual(model.officialScoringYears, [2025, 2024])
+        XCTAssertEqual(model.officialScoring(year: 2024)?.officialPassScore, 165)
+        XCTAssertEqual(model.officialScoring(year: 2025)?.officialPassScore, 159)
+        XCTAssertNil(model.officialScoring(year: 2026))
+    }
+
     func testBundledCanonicalPreservesOfficialUnorderedPartialCreditRule() throws {
         let canonical = try loadCanonical()
         let r6 = try OfficialScoringRepository.scoring(for: 2024, canonical: canonical)
