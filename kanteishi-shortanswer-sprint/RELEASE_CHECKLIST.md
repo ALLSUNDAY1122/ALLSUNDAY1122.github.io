@@ -41,11 +41,12 @@
 - [x] iPhone Simulator build
 - [x] `.app`内production JSON 240問確認
 - [x] 最終Info.plist metadata監査
-- [x] XCTest
-- [x] XCUITest
+- [x] XCTest（年度×科目40問セッションを含む）
+- [x] XCUITest（主要4タブ・通常学習・年度/科目導線の存在）
 - [x] clean install / actual launch
 - [x] full-screen / black letterbox gate
-- [ ] **最終HEADで上記CIを再PASS**
+- [x] **production CI run 31703594537 全工程PASS**
+- [x] **official 240再抽出・権利監査 run 31703594505 PASS**
 
 ## D. Privacy / Store資料
 - [x] PrivacyInfo.xcprivacy
@@ -57,14 +58,18 @@
 - [x] `support.html` 作成
 - [x] `APP_STORE_METADATA_JA.md` 作成
 - [x] `APPLE_CONNECT_PACKET.md` 作成
+- [x] `TESTFLIGHT_NOTES_JA.md` 作成
 - [x] App Store本審査の自動提出禁止を明記
 - [ ] PR/main反映後、Support / Privacy URLを未ログインHTTP 200で確認
 
 ## E. アイコン / スクリーンショット
 - [x] Google Drive正本 `12_不動産鑑定士試験_短答式.png` を特定
 - [x] 1024×1024 / RGB確認
+- [x] 正本PNG SHA-256を固定：`679f3493524dd2cf71126303c998b15395c70ff19f224d158a760ee3c2a395f1`
 - [ ] 正本PNGをXcode Assetsへ原寸配置
-- [ ] App Iconを最終`.app`で確認
+  - GitHub ActionsからGoogle Driveへの匿名取得は拒否されたため、共有設定は勝手に変更せず停止
+  - Apple識別情報確定後の署名前工程で、取得済み正本PNGを原寸のまま組み込む
+- [ ] App Iconを最終signed `.app`で確認
 - [ ] App Store用スクリーンショット最終作成・選定
 
 ## F. Apple識別情報 — HUMAN GATE
