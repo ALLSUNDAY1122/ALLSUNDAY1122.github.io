@@ -29,18 +29,13 @@ final class RigakuSprintConfigurationTests: XCTestCase {
         XCTAssertFalse(RigakuRouteGate.isComplete(audited: 200, expected: nil))
     }
 
-    func testAppBundleLoadsAllAuditedRound60Questions() throws {
+    func testAppBundleLoadsCompleteAuditedRound60WithoutDuplicateIDs() throws {
         let questions = try RigakuQuestionRepository.loadBundled(bundle: Bundle.main)
         let ids = questions.map(\.id)
         let round60 = questions.filter { $0.examRound == "60" }
-        let round59 = questions.filter { $0.examRound == "59" }
-        let round58 = questions.filter { $0.examRound == "58" }
 
-        XCTAssertEqual(questions.count, 200)
-        XCTAssertEqual(Set(ids).count, 200)
+        XCTAssertEqual(Set(ids).count, ids.count)
         XCTAssertEqual(round60.count, 200)
-        XCTAssertEqual(round59.count, 0)
-        XCTAssertEqual(round58.count, 0)
         XCTAssertEqual(round60.filter { $0.id.contains("-AM-") }.count, 100)
         XCTAssertEqual(round60.filter { $0.id.contains("-PM-") }.count, 100)
     }
