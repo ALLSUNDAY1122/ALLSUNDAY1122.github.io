@@ -1,0 +1,79 @@
+name: Kanteishi Official 240 #12
+
+on:
+  pull_request:
+    paths:
+      - 'kanteishi-shortanswer-sprint/scripts/extract_official_questions.py'
+      - 'kanteishi-shortanswer-sprint/learning-sprint-audit.production.json'
+      - '.github/workflows/kanteishi-official-extraction-12.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: kanteishi-official-240-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  extract-and-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PDF text extractor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+      - name: Extract 240 official questions and answers
+        run: |
+          python3 kanteishi-shortanswer-sprint/scripts/extract_official_questions.py \
+            --out kanteishi-shortanswer-sprint/build/official
+      - name: Verify extraction totals
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('kanteishi-shortanswer-sprint/build/official')
+          report = json.loads((root / 'extraction-report.json').read_text(encoding='utf-8'))
+          assert report['total'] == 240, report
+          assert report['byEdition'] == {'2026': 80, '2025': 80, '2024': 80}, report['byEdition']
+          assert report['bySubject'] == {
+              '不動産に関する行政法規': 120,
+              '不動産の鑑定評価に関する理論': 120,
+          }, report['bySubject']
+          for year in (2026, 2025, 2024):
+              data = json.loads((root / f'exam-{year}.json').read_text(encoding='utf-8'))
+              assert len(data['questions']) == 80, (year, len(data['questions']))
+          print('Extraction totals PASS')
+          PY
+      - name: Prepare production audit array
+        run: |
+          jq '.questions' kanteishi-shortanswer-sprint/build/official/questions-240.json \
+            > kanteishi-shortanswer-sprint/build/official/questions.audit.json
+      - name: Shared 240-question machine audit
+        run: |
+          python3 automation/learning-sprint-question-pipeline/validate_questions.py \
+            kanteishi-shortanswer-sprint/learning-sprint-audit.production.json
+      - name: Release eligibility gate
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('kanteishi-shortanswer-sprint/build/official')
+          data = json.loads((root / 'questions-240.json').read_text(encoding='utf-8'))['questions']
+          bad = [q['id'] for q in data if q['rightsStatus'] not in {'text_only_pass', 'review_required'}]
+          assert not bad, bad
+          queue = json.loads((root / 'rights-review-queue.json').read_text(encoding='utf-8'))
+          print(f'Rights review queue: {len(queue)}')
+          PY
+      - name: Upload extraction corpus and audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: kanteishi-official-240-extract
+          path: |
+            kanteishi-shortanswer-sprint/build/official/exam-2026.json
+            kanteishi-shortanswer-sprint/build/official/exam-2025.json
+            kanteishi-shortanswer-sprint/build/official/exam-2024.json
+            kanteishi-shortanswer-sprint/build/official/questions-240.json
+            kanteishi-shortanswer-sprint/build/official/rights-review-queue.json
+            kanteishi-shortanswer-sprint/build/official/extraction-report.json
+          if-no-files-found: error
+          retention-days: 14
