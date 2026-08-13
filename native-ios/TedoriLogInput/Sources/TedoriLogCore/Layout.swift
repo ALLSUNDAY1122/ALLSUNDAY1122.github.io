@@ -65,7 +65,10 @@ enum LayoutBuilder {
     }
 
     private static func clusterRows(_ tokens: [TextToken], slope: Double, tolerance: Double) -> [[TextToken]] {
-        let sorted = tokens.sorted { rowKey($0, slope: slope) < rowKey($1, slope: slope) }
+        // Swiftのsortは不安定なので、同じ行キーのときは元の並び順を保つ（JS版と結果をそろえるため）
+        let sorted = tokens.enumerated()
+            .sorted { (rowKey($0.element, slope: slope), $0.offset) < (rowKey($1.element, slope: slope), $1.offset) }
+            .map(\.element)
         var rows: [[TextToken]] = []
         var current: [TextToken] = []
         var anchor: Double?
@@ -115,17 +118,17 @@ enum LayoutBuilder {
 
     private static func isNumericTail(_ text: String) -> Bool {
         guard let last = text.last else { return false }
-        return last.isNumber || last == "," || last == "."
+        return Normalize.isDigit(last) || last == "," || last == "."
     }
 
     private static func isNumericHead(_ text: String) -> Bool {
         guard let first = text.first else { return false }
-        return first.isNumber || first == "," || first == "."
+        return Normalize.isDigit(first) || first == "," || first == "."
     }
 
     /// 同一行内で近接するトークンを連結する（OCRの単語分割を戻す）。
     private static func mergeRowTokens(_ row: [TextToken], medianHeight: Double) -> [TextToken] {
-        let sorted = row.sorted { $0.x < $1.x }
+        let sorted = row.enumerated().sorted { ($0.element.x, $0.offset) < ($1.element.x, $1.offset) }.map(\.element)
         var out: [TextToken] = []
         for token in sorted {
             guard var prev = out.last else { out.append(token); continue }
@@ -191,11 +194,11 @@ enum LayoutBuilder {
         var rows: [LayoutRow] = []
         for group in clusterRows(tokens, slope: slope, tolerance: tolerance) {
             let merged = mergeRowTokens(group, medianHeight: medianHeight).flatMap(splitLabelAmount)
-            let sorted = merged.sorted { $0.x < $1.x }
+            let sorted = merged.enumerated().sorted { ($0.element.x, $0.offset) < ($1.element.x, $1.offset) }.map(\.element)
             let key = median(sorted.map { rowKey($0, slope: slope) })
             rows.append(LayoutRow(index: 0, tokens: sorted, key: key))
         }
-        rows.sort { $0.key < $1.key }
+        rows = rows.enumerated().sorted { ($0.element.key, $0.offset) < ($1.element.key, $1.offset) }.map(\.element)
         for i in rows.indices { rows[i].index = i }
 
         return Layout(rows: rows, tokens: rows.flatMap(\.tokens), slope: slope, medianHeight: medianHeight)

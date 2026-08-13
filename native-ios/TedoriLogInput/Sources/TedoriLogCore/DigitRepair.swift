@@ -69,7 +69,7 @@ public enum DigitRepair {
         let digits = Array(String(abs(value)))
         var out: [Int: Candidate] = [:]
         func add(_ text: String, _ cost: Double, _ kind: String) {
-            guard !text.isEmpty, text.allSatisfy(\.isNumber), let v = Int(text), v != abs(value) else { return }
+            guard !text.isEmpty, text.allSatisfy(Normalize.isDigit), let v = Int(text), v != abs(value) else { return }
             if let existing = out[v], existing.cost <= cost { return }
             out[v] = Candidate(value: v, cost: cost, kind: kind)
         }

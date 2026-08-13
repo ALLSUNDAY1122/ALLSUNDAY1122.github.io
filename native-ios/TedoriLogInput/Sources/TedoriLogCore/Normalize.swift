@@ -84,7 +84,8 @@ public enum Normalize {
             negative = true
             text = String(trimmed.dropFirst()).trimmingCharacters(in: .whitespaces)
         } else if let first = trimmed.first, first == "A" || first == "a",
-                  let second = trimmed.dropFirst().first, second.isNumber || second == "¥" || second == "￥" {
+                  let second = trimmed.dropFirst().first,
+                  isDigit(second) || second == "¥" || second == "￥" {
             // OCRが△をAと読むことがある
             negative = true
             confidence -= 0.1
@@ -109,7 +110,7 @@ public enum Normalize {
         }
         let separators = body.filter { $0 == "," || $0 == "." }.count
         body = body.replacingOccurrences(of: ",", with: "").replacingOccurrences(of: ".", with: "")
-        guard !body.isEmpty, body.allSatisfy({ $0.isNumber }) else { return nil }
+        guard !body.isEmpty, body.allSatisfy(isDigit) else { return nil }
 
         if separators > 0 {
             let groups = cleaned.replacingOccurrences(of: " ", with: "")
@@ -129,6 +130,11 @@ public enum Normalize {
     }
 
     /// 給与明細の金額としての妥当さ。
+    /// ASCIIの数字だけを数字とみなす（漢数字などを桁として数えないため）。
+    public static func isDigit(_ ch: Character) -> Bool {
+        ch.isASCII && ch.isNumber
+    }
+
     public static func amountPlausibility(_ value: Int) -> Double {
         let v = abs(value)
         if v == 0 { return 0.5 }

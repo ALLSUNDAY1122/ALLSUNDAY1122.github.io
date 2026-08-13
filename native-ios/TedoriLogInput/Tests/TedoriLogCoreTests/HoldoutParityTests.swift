@@ -63,12 +63,24 @@ final class HoldoutParityTests: XCTestCase {
             let result = PayslipExtractor.extractBest(variants: variants, route: tokenFile.route)
             guard let expected = golden[entry.id] else { continue }
 
+            var caseMismatched = false
             for key in ItemKey.allCases {
                 let got = result.items[key]?.value
                 let want = expected.items[key.rawValue]?.value
                 if got != want {
+                    caseMismatched = true
                     mismatches.append("\(entry.id) \(key.rawValue): swift=\(String(describing: got)) js=\(String(describing: want))")
                 }
+            }
+            if caseMismatched {
+                // どの読み取り条件を選んだかで差が出ることがあるため、選択の根拠も出す
+                let scores = variants.map { variant -> String in
+                    let single = PayslipExtractor.extract(tokens: variant.tokens, route: tokenFile.route)
+                    return String(format: "%@:%.2f(確定%d/要確認%d/未検出%d)", variant.name,
+                                  PayslipExtractor.selfAssessment(single), single.confidentCount,
+                                  single.needsReviewCount, single.notFoundCount)
+                }
+                mismatches.append("  \(entry.id) 採用=\(result.variant ?? "-") js採用=\(expected.variant) 自己評価 \(scores.joined(separator: " "))")
             }
         }
         XCTAssertTrue(mismatches.isEmpty,

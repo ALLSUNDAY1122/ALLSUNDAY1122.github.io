@@ -174,7 +174,7 @@ public enum PayslipExtractor {
         var amounts: [AmountRef] = []
         for row in layout.rows {
             for token in row.tokens {
-                let digits = token.text.filter(\.isNumber).count
+                let digits = token.text.filter(Normalize.isDigit).count
                 if let parsed = Normalize.parseAmount(token.text),
                    Double(digits) / Double(max(token.text.count, 1)) >= 0.5 {
                     amounts.append(AmountRef(token: token, parsed: parsed, row: row.index))
@@ -216,8 +216,9 @@ public enum PayslipExtractor {
 
         var pairs: [Pair] = []
         for (hitIndex, hit) in hits.enumerated() {
-            let rowAmounts = (amountsByRow[hit.row] ?? []).sorted { amounts[$0].token.x < amounts[$1].token.x }
-            let rowHits = (hitsByRow[hit.row] ?? []).sorted { hits[$0].token.x < hits[$1].token.x }
+            // 同じx座標のときは検出順を保つ（不安定ソートで結果が変わらないように）
+            let rowAmounts = (amountsByRow[hit.row] ?? []).sorted { (amounts[$0].token.x, $0) < (amounts[$1].token.x, $1) }
+            let rowHits = (hitsByRow[hit.row] ?? []).sorted { (hits[$0].token.x, $0) < (hits[$1].token.x, $1) }
 
             let nextLabelX = rowHits.compactMap { index -> Double? in
                 hits[index].token.x > hit.token.x + 1 ? hits[index].token.x : nil
@@ -248,7 +249,7 @@ public enum PayslipExtractor {
                 for distance in 1...2 {
                     let targetRow = hit.row + distance
                     let targetAmounts = (amountsByRow[targetRow] ?? [])
-                        .sorted { amounts[$0].token.x < amounts[$1].token.x }
+                        .sorted { (amounts[$0].token.x, $0) < (amounts[$1].token.x, $1) }
                     let targetHits = hitsByRow[targetRow] ?? []
                     guard targetAmounts.count >= 2, targetHits.count <= targetAmounts.count else { continue }
                     let matching = LayoutBuilder.monotonicMatch(
