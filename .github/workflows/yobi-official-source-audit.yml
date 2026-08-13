@@ -40,12 +40,15 @@ jobs:
         run: python learning-sprint/yobi-tantou/content-loop/summarize_official_answer_tables.py
       - name: Build compact question-shape summary
         run: python learning-sprint/yobi-tantou/content-loop/summarize_official_question_shapes.py
-      - name: Upload compact official-source summaries
+      - name: Build R6-R7 canonical scoring data
+        run: python learning-sprint/yobi-tantou/content-loop/build_official_scoring_canonical.py
+      - name: Upload official-source summaries and canonical scoring
         uses: actions/upload-artifact@v4
         with:
           name: yobi-official-source-summaries
           path: |
             learning-sprint/yobi-tantou/content-loop/official-scoring-table-summary.json
             learning-sprint/yobi-tantou/content-loop/official-question-shapes-summary.json
+            learning-sprint/yobi-tantou/content-loop/official-scoring-canonical.v1.json
           if-no-files-found: error
           retention-days: 7
