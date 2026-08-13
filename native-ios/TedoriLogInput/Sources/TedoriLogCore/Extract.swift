@@ -259,7 +259,12 @@ public enum PayslipExtractor {
                 }
             }
         }
-        pairs.sort { $0.score > $1.score }
+        // 同点のときの順序も決めておく（不安定ソートで結果が揺れないように）
+        pairs.sort {
+            if $0.score != $1.score { return $0.score > $1.score }
+            if $0.hitIndex != $1.hitIndex { return $0.hitIndex < $1.hitIndex }
+            return $0.amountIndex < $1.amountIndex
+        }
 
         var usedAmounts = Set<Int>()
         var usedHits = Set<Int>()

@@ -71,7 +71,8 @@ export function editCandidates(value) {
   for (let i = 0; i < digits.length; i++) {
     add(digits.slice(0, i) + digits[i] + digits.slice(i), INSERTION_COST, `dup:${digits[i]}@${i}`);
   }
-  return [...out.values()];
+  // 並び順で補正結果が変わらないよう、常に同じ順序にそろえる（Swift移植版と合わせる）
+  return [...out.values()].sort((a, b) => a.cost - b.cost || a.value - b.value);
 }
 
 /**
@@ -182,5 +183,5 @@ export function aggregateCandidates(parts) {
       if (!prev || prev.cost > cost) out.set(value, { value, cost, kind: `${cand.kind}#${index}` });
     }
   });
-  return [...out.values()];
+  return [...out.values()].sort((a, b) => a.cost - b.cost || a.value - b.value);
 }

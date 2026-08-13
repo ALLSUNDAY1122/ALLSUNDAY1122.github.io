@@ -33,6 +33,11 @@ final class HoldoutParityTests: XCTestCase {
         let cases: [ManifestCase]
     }
 
+    struct TruthFile: Decodable {
+        let id: String
+        let truth: [String: Int]
+    }
+
     static var fixturesURL: URL {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()   // TedoriLogCoreTests
@@ -83,9 +88,8 @@ final class HoldoutParityTests: XCTestCase {
             let tokenFile = try JSONDecoder().decode(
                 TokenFile.self, from: Data(contentsOf: dir.appendingPathComponent("\(entry.id).tokens.json")))
             let truth = try JSONDecoder().decode(
-                [String: [String: Int]].self,
-                from: Data(contentsOf: dir.appendingPathComponent("\(entry.id).truth.json"))
-            )["truth"] ?? [:]
+                TruthFile.self,
+                from: Data(contentsOf: dir.appendingPathComponent("\(entry.id).truth.json"))).truth
             let result = PayslipExtractor.extractBest(
                 variants: tokenFile.variants.map { .init(name: $0.name, tokens: $0.tokens) },
                 route: tokenFile.route)

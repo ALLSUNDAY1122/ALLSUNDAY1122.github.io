@@ -94,7 +94,8 @@ public enum DigitRepair {
             copy.insert(digits[i], at: i)
             add(String(copy), insertionCost, "dup:\(digits[i])@\(i)")
         }
-        return Array(out.values)
+        // 並びが実行ごとに変わると補正結果も変わるため、必ず同じ順序にそろえる
+        return out.values.sorted { ($0.cost, $0.value) < ($1.cost, $1.value) }
     }
 
     /// 集計項目（複数行の合算）の補正候補。構成要素のどれか1つを1桁直した合計を返す。
@@ -109,7 +110,7 @@ public enum DigitRepair {
                 out[value] = Candidate(value: value, cost: candidate.cost, kind: "\(candidate.kind)#\(index)")
             }
         }
-        return Array(out.values)
+        return out.values.sorted { ($0.cost, $0.value) < ($1.cost, $1.value) }
     }
 
     private struct State {
