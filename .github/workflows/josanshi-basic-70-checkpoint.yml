@@ -1,27 +1,10 @@
-name: Josanshi Basic 70 Checkpoint
+name: Josanshi Basic 70 Checkpoint (Historical)
 
 on:
-  push:
-    branches:
-      - agent/josanshi-sprint-14-native
-    paths:
-      - 'josanshi-sprint/data/authored-batches/**'
-      - 'josanshi-sprint/data/audit-approvals*.json'
-      - 'josanshi-sprint/data/source-registry*.json'
-      - 'josanshi-sprint/docs/audits/**'
-      - 'josanshi-sprint/scripts/**'
-      - '.github/workflows/josanshi-basic-70-checkpoint.yml'
-  pull_request:
-    paths:
-      - 'josanshi-sprint/data/authored-batches/**'
-      - 'josanshi-sprint/data/audit-approvals*.json'
-      - 'josanshi-sprint/data/source-registry*.json'
-      - 'josanshi-sprint/docs/audits/**'
-      - 'josanshi-sprint/scripts/**'
-      - '.github/workflows/josanshi-basic-70-checkpoint.yml'
+  workflow_dispatch:
 
 jobs:
-  audited-70-checkpoint:
+  historical-70-checkpoint:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -29,21 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate source and generation foundations
+      - name: Historical checkpoint note
         run: |
-          python3 josanshi-sprint/scripts/validate_sources.py
-          python3 josanshi-sprint/scripts/validate_topic_sources.py
-          python3 josanshi-sprint/scripts/build_intent_seeds.py --check
-          python3 josanshi-sprint/scripts/build_generation_plan.py --check
-
-      - name: Materialize current audited bank
-        run: |
-          python3 josanshi-sprint/scripts/materialize_source_registry.py
-          python3 josanshi-sprint/scripts/materialize_question_bank.py --output josanshi-sprint/data/questions.json
-          python3 josanshi-sprint/scripts/apply_all_audit_approvals.py
-
-      - name: Audit bank quality
-        run: python3 josanshi-sprint/scripts/audit_question_bank.py
-
-      - name: Validate 70-question checkpoint
-        run: python3 josanshi-sprint/scripts/validate_70_checkpoint.py
+          echo 'Historical 70-question checkpoint retained for manual audit only.'
+          echo 'Active development is validated by Josanshi Content Checkpoint using the monotonic content-stage gate.'
