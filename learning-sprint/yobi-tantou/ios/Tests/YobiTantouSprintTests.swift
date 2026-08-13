@@ -37,12 +37,25 @@ final class YobiTantouSprintTests: XCTestCase {
         )
     }
 
-    func testPreviewBankHasEightNonReleaseQuestions() {
+    func testPreviewFixtureStillHasEightNonReleaseQuestions() throws {
+        let bundle = Bundle(for: AppBundleToken.self)
+        guard let url = bundle.url(forResource: "questions.preview", withExtension: "json") else {
+            return XCTFail("preview resource missing")
+        }
+        let decoded = try QuestionRepository().decode(Data(contentsOf: url), kind: .preview)
+        XCTAssertEqual(decoded.count, 8)
+        XCTAssertTrue(decoded.allSatisfy { !$0.releaseEligible && $0.originType == "original_preview" && $0.contentUse == nil })
+    }
+
+    func testBundledFormalPracticeBankLoadsFourteenReleasedQuestions() {
         let model = freshModel()
         XCTAssertNil(model.startupError)
-        XCTAssertEqual(model.questions.count, 8)
-        XCTAssertTrue(model.questions.allSatisfy { !$0.releaseEligible && $0.originType == "original_preview" })
-        XCTAssertTrue(model.isPreviewBank)
+        XCTAssertEqual(model.questions.count, 14)
+        XCTAssertTrue(model.questions.allSatisfy {
+            $0.releaseEligible && $0.contentUse == .practice && $0.examYear == nil && !$0.isOfficialMockQuestion
+        })
+        XCTAssertFalse(model.isPreviewBank)
+        XCTAssertEqual(Set(model.questions.map(\.subject), intersection: Set(AppModel.officialSubjects)).count, 7)
     }
 
     func testReleaseRepositoryAcceptsOnlyAuditedShape() throws {
@@ -86,7 +99,7 @@ final class YobiTantouSprintTests: XCTestCase {
 
     func testWeakQuestionClearsAfterThreeConsecutiveCorrectAnswers() {
         let model = freshModel()
-        guard let question = model.questions.first else { return XCTFail("preview question missing") }
+        guard let question = model.questions.first else { return XCTFail("release question missing") }
         model.state.attempts[question.id] = AttemptState(answered: 1, correct: 0, consecutiveCorrect: 0, weak: true, unknown: false)
 
         for expected in 1...3 {
@@ -113,7 +126,7 @@ final class YobiTantouSprintTests: XCTestCase {
 
     func testPremiumOnlySessionCannotResumeAfterEntitlementLoss() {
         let model = freshModel()
-        guard let question = model.questions.first else { return XCTFail("preview question missing") }
+        guard let question = model.questions.first else { return XCTFail("release question missing") }
         model.state.attempts[question.id] = AttemptState(answered: 1, correct: 0, consecutiveCorrect: 0, weak: true, unknown: false)
         XCTAssertTrue(model.start(.weak, premium: true))
         XCTAssertEqual(model.state.resume?.requiresPremium, true)
