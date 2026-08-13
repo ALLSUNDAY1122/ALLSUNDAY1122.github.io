@@ -25,12 +25,15 @@ required_ui = (
     "これまで",
     "LearningSprintProgressRing",
     "LearningSprintHeatmap",
+    "監査済み問題",
+    "試験日を設定",
 )
 for token in required_ui:
     if token not in all_swift:
         errors.append(f"Golden Master要素欠損: {token}")
 
 required_native = (
+    "RigakuRootViewV2",
     "LearningEngine.selectSprint",
     "LearningEngine.selectWeak",
     "LearningEngine.record",
@@ -39,10 +42,18 @@ required_native = (
     "fileImporter",
     "LearningBackupDocument",
     "RigakuQuestionMediaRepository",
+    "isMockReady",
+    "auditedQuestionCount(forSubject:",
 )
 for token in required_native:
     if token not in all_swift:
         errors.append(f"共通ネイティブ機能接続欠損: {token}")
+
+app_entry = texts.get("RigakuSprintApp.swift", "")
+if "RigakuRootViewV2()" not in app_entry:
+    errors.append("実行入口が現行正本UI RigakuRootViewV2 ではありません")
+if "RootTabView" in all_swift or "StudyPlaceholderView" in all_swift:
+    errors.append("旧プレースホルダーUIが残っています")
 
 # 「わからない」は型名の直書きではなく、共通AnswerPayload.unknown相当が
 # 実際の回答送信経路で使われていることを確認する。
@@ -56,7 +67,12 @@ if not any(pattern in all_swift for pattern in unknown_patterns):
 
 if "$(RIGAKU_BUNDLE_ID)" not in project:
     errors.append("Bundle IDは正本値の外部注入にすること")
-for required_resource in ("questions.json", "media-manifest.json"):
+for required_resource in (
+    "questions.json",
+    "question-batches",
+    "media-manifest.json",
+    "exam-scoring.json",
+):
     if required_resource not in project:
         errors.append(f"ネイティブresource未登録: {required_resource}")
 
@@ -77,7 +93,7 @@ if verified != expected:
 if "static let totalOfficialQuestionSlots = examRounds.compactMap(\\.officialQuestionCount).reduce(0, +)" not in config:
     errors.append("3回分総枠の導出が欠損")
 
-for json_name in ("questions.json", "media-manifest.json", "exam-frame.json"):
+for json_name in ("questions.json", "media-manifest.json", "exam-frame.json", "exam-scoring.json"):
     path = PRODUCT / json_name
     if not path.exists():
         errors.append(f"product-content欠損: {json_name}")
@@ -112,6 +128,8 @@ print("STATIC AUDIT: PASS")
 print(f"Swift files: {len(swift_files)}")
 print("WebView ban: PASS")
 print("Golden Master signature elements: PASS")
+print("Active root route gate: PASS")
+print("Mock completeness gate: PASS")
 print("Shared native learning features: PASS")
 print("JSON backup/import: PASS")
 print("Rights-gated media manifest: PASS")
