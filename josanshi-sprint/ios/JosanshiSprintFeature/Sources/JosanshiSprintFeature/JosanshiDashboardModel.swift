@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import LearningSprintCore
 
 public enum JosanshiFeatureTab: Hashable, Sendable {
     case home
@@ -74,7 +75,7 @@ public final class JosanshiDashboardModel: ObservableObject {
     public func requestStandardSprint() {
         selectedSubject = nil
         startSession {
-            try coordinator.startStandardSprint()
+            _ = try coordinator.startStandardSprint()
         }
     }
 
@@ -82,20 +83,20 @@ public final class JosanshiDashboardModel: ObservableObject {
         guard JosanshiExamConfiguration.subjects.contains(subject) else { return }
         selectedSubject = subject
         startSession {
-            try coordinator.startSubject(subject)
+            _ = try coordinator.startSubject(subject)
         }
     }
 
     public func requestWeakReview() {
         startSession {
-            try coordinator.startWeakReview()
+            _ = try coordinator.startWeakReview()
         }
     }
 
     public func requestMock(_ round: Int) {
         guard (1...JosanshiExamConfiguration.originalMockSetCount).contains(round) else { return }
         startSession {
-            try coordinator.startMock(round)
+            _ = try coordinator.startMock(round)
         }
     }
 
