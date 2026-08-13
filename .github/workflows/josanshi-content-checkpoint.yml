@@ -50,6 +50,9 @@ jobs:
       - name: Report remaining semantic intents
         run: python3 josanshi-sprint/scripts/report_remaining_intents.py
 
+      - name: Report incomplete linked-case semantics
+        run: python3 josanshi-sprint/scripts/report_incomplete_scenarios.py
+
       - name: Materialize source registry
         run: python3 josanshi-sprint/scripts/materialize_source_registry.py
 
