@@ -1,16 +1,15 @@
 name: Kanteishi Short Answer #12
 
 on:
-  push:
-    branches:
-      - feat/kanteishi-shortanswer-sprint-12
-    paths:
-      - 'kanteishi-shortanswer-sprint/**'
-      - '.github/workflows/kanteishi-shortanswer-12.yml'
   pull_request:
     paths:
       - 'kanteishi-shortanswer-sprint/**'
       - '.github/workflows/kanteishi-shortanswer-12.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: kanteishi-12-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   core-and-content:
