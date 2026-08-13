@@ -56,6 +56,14 @@ jobs:
           print(len(rows))
           PY
           )" = "330"
+      - name: Safari prototype static smoke
+        run: |
+          node --check hokenshi-sprint/prototype/app.js
+          test -s hokenshi-sprint/prototype/index.html
+          test -s hokenshi-sprint/prototype/style.css
+          grep -q '8問をはじめる' hokenshi-sprint/prototype/index.html
+          grep -q 'わからない' hokenshi-sprint/prototype/index.html
+          grep -q 'ここだけ覚える' hokenshi-sprint/prototype/index.html
 
   native-foundation:
     needs: content-plan
