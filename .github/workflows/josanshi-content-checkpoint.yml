@@ -22,6 +22,10 @@ on:
       - 'josanshi-sprint/scripts/**'
       - '.github/workflows/josanshi-content-checkpoint.yml'
 
+concurrency:
+  group: josanshi-content-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   current-content-checkpoint:
     runs-on: ubuntu-latest
