@@ -60,6 +60,9 @@ jobs:
           python -m py_compile learning-sprint/yobi-tantou/content-loop/inspect_official_scoring_layout.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/inspect_official_exam_shapes.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/inspect_missing_r7_slots.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/summarize_official_answer_tables.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/summarize_official_question_shapes.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/build_official_scoring_canonical_fixed.py
 
   swift-tests:
     runs-on: macos-15
@@ -112,7 +115,8 @@ jobs:
           APP="$DERIVED/Build/Products/Release-iphonesimulator/YobiTantouSprint.app"
           test -d "$APP"
           test -f "$APP/questions.preview.json"
+          test -f "$APP/official-scoring-canonical.v1.json"
           test -f "$APP/PrivacyInfo.xcprivacy"
           test -f "$APP/Assets.car"
           test -f "$APP/YobiTantouSprint"
-          echo "PASS: unsigned Release app bundle contains preview dataset, privacy manifest, compiled assets and native executable."
+          echo "PASS: unsigned Release app bundle contains preview dataset, official scoring canonical, privacy manifest, compiled assets and native executable."
