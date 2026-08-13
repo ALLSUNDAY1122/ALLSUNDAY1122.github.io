@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'kanteishi-shortanswer-sprint/scripts/extract_official_questions.py'
+      - 'kanteishi-shortanswer-sprint/scripts/extract_official_questions_runner.py'
       - 'kanteishi-shortanswer-sprint/learning-sprint-audit.production.json'
       - '.github/workflows/kanteishi-official-extraction-12.yml'
   workflow_dispatch:
@@ -24,7 +25,7 @@ jobs:
           sudo apt-get install -y poppler-utils
       - name: Extract 240 official questions and answers
         run: |
-          python3 kanteishi-shortanswer-sprint/scripts/extract_official_questions.py \
+          python3 kanteishi-shortanswer-sprint/scripts/extract_official_questions_runner.py \
             --out kanteishi-shortanswer-sprint/build/official
       - name: Verify extraction totals
         run: |
