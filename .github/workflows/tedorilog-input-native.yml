@@ -52,7 +52,10 @@ jobs:
 
       - name: Vision holdout evaluation (実Apple Visionでの未知形式評価)
         working-directory: native-ios/TedoriLogInput
-        run: swift test --filter TedoriLogVisionTests 2>&1 | tee vision-eval.log
+        # pipefail が無いと tee の終了コードになり、テスト失敗を見逃す
+        run: |
+          set -o pipefail
+          swift test --filter TedoriLogVisionTests 2>&1 | tee vision-eval.log
 
       - name: Upload Vision evaluation log
         if: always()

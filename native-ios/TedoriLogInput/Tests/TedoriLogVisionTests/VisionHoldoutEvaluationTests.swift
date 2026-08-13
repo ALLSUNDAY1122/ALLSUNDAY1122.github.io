@@ -34,6 +34,11 @@ final class VisionHoldoutEvaluationTests: XCTestCase {
 
     struct Manifest: Decodable { let cases: [ManifestCase] }
 
+    struct TruthFile: Decodable {
+        let id: String
+        let truth: [String: Int]
+    }
+
     static var fixturesURL: URL {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
@@ -65,9 +70,8 @@ final class VisionHoldoutEvaluationTests: XCTestCase {
 
     private func evaluate(_ entry: ManifestCase, dir: URL) throws -> CaseOutcome {
         let truth = try JSONDecoder().decode(
-            [String: [String: Int]].self,
-            from: Data(contentsOf: dir.appendingPathComponent("\(entry.id).truth.json"))
-        )["truth"] ?? [:]
+            TruthFile.self,
+            from: Data(contentsOf: dir.appendingPathComponent("\(entry.id).truth.json"))).truth
 
         let fileURL = dir.appendingPathComponent(entry.file)
         let imported: PayslipImporter.ImportResult
