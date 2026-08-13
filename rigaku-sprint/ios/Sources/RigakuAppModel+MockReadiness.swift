@@ -1,6 +1,13 @@
 import Foundation
 import LearningSprintCore
 
+enum RigakuRouteGate {
+    static func isComplete(audited: Int, expected: Int?) -> Bool {
+        guard let expected, expected > 0 else { return false }
+        return audited == expected
+    }
+}
+
 extension RigakuAppModel {
     func auditedQuestionCount(forRound round: String) -> Int {
         questions.filter { $0.examRound == round }.count
@@ -11,8 +18,10 @@ extension RigakuAppModel {
     }
 
     func isMockReady(round: String, expectedQuestionCount: Int?) -> Bool {
-        guard let expectedQuestionCount else { return false }
-        return auditedQuestionCount(forRound: round) == expectedQuestionCount
+        RigakuRouteGate.isComplete(
+            audited: auditedQuestionCount(forRound: round),
+            expected: expectedQuestionCount
+        )
     }
 
     func isSessionAvailable(_ kind: SessionKind) -> Bool {
