@@ -5,19 +5,22 @@ import LearningSprintCore
 public struct HokenshiSessionContainer: View {
     private let questions: [LearningQuestion]
     private let title: String
-    private let onComplete: ([AnswerEvaluation]) -> Void
+    private let startIndex: Int
+    private let onAdvance: (LearningQuestion, AnswerPayload, AnswerEvaluation, Int, Int) -> [AnswerEvaluation]?
     private let onClose: () -> Void
     @State private var result: [AnswerEvaluation]?
 
     public init(
         questions: [LearningQuestion],
         title: String,
-        onComplete: @escaping ([AnswerEvaluation]) -> Void,
+        startIndex: Int = 0,
+        onAdvance: @escaping (LearningQuestion, AnswerPayload, AnswerEvaluation, Int, Int) -> [AnswerEvaluation]?,
         onClose: @escaping () -> Void
     ) {
         self.questions = questions
         self.title = title
-        self.onComplete = onComplete
+        self.startIndex = startIndex
+        self.onAdvance = onAdvance
         self.onClose = onClose
     }
 
@@ -25,13 +28,12 @@ public struct HokenshiSessionContainer: View {
         if let result {
             resultView(result)
         } else {
-            HokenshiQuizView(
+            HokenshiProductQuizView(
                 questions: questions,
                 title: title,
-                onFinish: { evaluations in
-                    self.result = evaluations
-                    onComplete(evaluations)
-                },
+                startIndex: startIndex,
+                onAdvance: onAdvance,
+                onFinish: { result = $0 },
                 onClose: onClose
             )
         }
@@ -66,25 +68,22 @@ public struct HokenshiSessionContainer: View {
                     .frame(maxWidth: .infinity)
                     .background(LearningSprintTheme.card)
                     .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-
                     HStack(spacing: 10) {
                         metric("わからない", value: unknown)
                         metric("復習へ", value: evaluations.count - correct)
                     }
-
                     Text("間違えた問題と「わからない」は苦手へ入り、3回連続正解すると解除されます。")
                         .font(LearningSprintTheme.sans(13))
                         .foregroundStyle(LearningSprintTheme.ink2)
                         .multilineTextAlignment(.center)
                         .lineSpacing(4)
-
                     Button(action: onClose) {
                         Text("ホームへ戻る")
                             .font(LearningSprintTheme.sans(15, weight: .bold))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity, minHeight: 50)
                             .background(LearningSprintTheme.indigo)
-                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
                     .buttonStyle(.plain)
                 }
@@ -97,16 +96,13 @@ public struct HokenshiSessionContainer: View {
 
     private func metric(_ title: String, value: Int) -> some View {
         VStack(spacing: 5) {
-            Text("\(value)")
-                .font(LearningSprintTheme.serif(23, weight: .bold))
-            Text(title)
-                .font(LearningSprintTheme.sans(11, weight: .bold))
-                .foregroundStyle(LearningSprintTheme.ink3)
+            Text("\(value)").font(LearningSprintTheme.serif(23, weight: .bold))
+            Text(title).font(LearningSprintTheme.sans(11, weight: .bold)).foregroundStyle(LearningSprintTheme.ink3)
         }
         .frame(maxWidth: .infinity)
         .padding(14)
         .background(LearningSprintTheme.card)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 #endif
