@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0",
+  "batchId": "020-scenario-r1-pregnancy-01",
+  "checkedAt": "2026-08-13",
+  "questions": [
+    {
+      "intentId": "DIAGNOSIS-05-I1",
+      "answerType": "singleChoice",
+      "prompt": "この時点で子宮内の妊娠成立を評価するため、最も有用な確認はどれか。",
+      "choices": [
+        "妊娠反応が陽性であることだけで子宮内妊娠と確定する",
+        "超音波検査で子宮内の胎嚢や胎芽・心拍などを妊娠週数に応じて確認する",
+        "基礎体温が高温であることだけで胎児の生存を確定する",
+        "悪心があることだけで異所性妊娠を否定する"
+      ],
+      "correctIndices": [1],
+      "explanation": "妊娠反応は妊娠を示唆するが、それだけでは妊娠部位や胎児の状態は判断できない。妊娠週数に応じて超音波で子宮内の胎嚢、胎芽、心拍などを確認し、症状や経過と合わせて評価する。腹痛や出血などがあれば異所性妊娠を含む異常妊娠の評価も必要になる。",
+      "memoryPoint": "妊娠反応陽性だけでは子宮内妊娠を確定しない。週数に応じた超音波所見で確認する。",
+      "sourceIds": ["MHLW-EXAM-R5-STANDARD", "JSOG-OB-GUIDELINE-2026", "JAM-MIDWIFERY-GUIDELINE-2024"],
+      "sourceCheckedAt": "2026-08-13",
+      "lawBaselineDate": "2026-08-13",
+      "rightsBasis": "original clinical scenario and wording from verified current obstetric assessment principles; no direct reproduction",
+      "originType": "original_from_primary_source",
+      "contentVersion": "josanshi-content-v1",
+      "auditStatus": "content-reviewed"
+    },
+    {
+      "intentId": "DIAGNOSIS-06-I1",
+      "answerType": "singleChoice",
+      "prompt": "妊娠11週になった。悪心は残るが嘔吐はなく、水分は摂取できている。デスクワークを続けており、妊娠経過に異常はない。生活指導として最も適切なのはどれか。",
+      "choices": [
+        "妊娠中は運動をすべて中止し、できるだけ終日臥床する",
+        "食べやすいものを少量ずつ摂り水分を確保し、体調に合わせた活動と休息のバランスをとる",
+        "悪心がある間は水分も控える",
+        "妊娠中はエネルギー不足を防ぐため毎食非妊娠時の2倍量を摂る"
+      ],
+      "correctIndices": [1],
+      "explanation": "軽度の悪心があり全身状態が安定している場合は、食べやすい食品を少量ずつ摂取し、水分を確保するなど症状に合わせて工夫する。正常経過の妊娠では一律に安静とするのではなく、体調と医療上の制限の有無を確認しながら適度な活動と休息を調整する。脱水や体重減少、反復する嘔吐などがあれば受診評価が必要である。",
+      "memoryPoint": "正常妊娠の生活支援は一律安静ではない。食事・水分・活動・休息を症状と経過に合わせる。",
+      "sourceIds": ["MHLW-EXAM-R5-STANDARD", "JSOG-OB-GUIDELINE-2026", "JAM-MIDWIFERY-GUIDELINE-2024"],
+      "sourceCheckedAt": "2026-08-13",
+      "lawBaselineDate": "2026-08-13",
+      "rightsBasis": "original clinical scenario and wording from verified current pregnancy lifestyle guidance; no direct reproduction",
+      "originType": "original_from_primary_source",
+      "contentVersion": "josanshi-content-v1",
+      "auditStatus": "content-reviewed"
+    },
+    {
+      "intentId": "DIAGNOSIS-08-I1",
+      "answerType": "singleChoice",
+      "prompt": "妊娠13週の健診で、初期血液検査のHBs抗原陽性が判明した。本人に自覚症状はない。助産師の対応として最も適切なのはどれか。",
+      "choices": [
+        "無症状なので結果の説明や追加評価は不要と伝える",
+        "B型肝炎ウイルス感染の評価と母子感染予防が必要であることを説明し、産科医・肝疾患の診療・出生後の児の予防対応へ切れ目なく連携する",
+        "HBs抗原陽性なら胎児感染がすでに確定していると説明する",
+        "母子感染を防ぐため妊娠中のワクチン接種だけで全対応が終了すると説明する"
+      ],
+      "correctIndices": [1],
+      "explanation": "妊婦健診ではHBs抗原検査が行われ、陽性の場合は医療機関での精密評価と継続管理が必要である。HBVは母子感染し得るため、母体の診療と出生後の児への適切な感染予防を周産期チームで確実につなぐ。HBs抗原陽性だけで胎児感染が確定するわけではなく、無症状でもフォローを省略しない。",
+      "memoryPoint": "妊婦HBs抗原陽性＝無症状でも精密評価＋母体管理＋出生後の児の母子感染予防へ連携。",
+      "sourceIds": ["MHLW-EXAM-R5-STANDARD", "JSOG-OB-GUIDELINE-2026", "CFA-MATERNAL-CHILD-HEALTH", "MHLW-HBV-PREGNANCY-2026"],
+      "sourceCheckedAt": "2026-08-13",
+      "lawBaselineDate": "2026-08-13",
+      "rightsBasis": "original clinical scenario and wording from verified current maternal HBV screening and infection-prevention policy; no direct reproduction",
+      "originType": "original_from_primary_source",
+      "contentVersion": "josanshi-content-v1",
+      "auditStatus": "content-reviewed"
+    }
+  ],
+  "scenarios": [
+    {
+      "scenarioId": "JOS-R1-AM-SC01",
+      "session": "AM",
+      "scenarioText": "28歳の初妊婦。月経周期はほぼ規則的で、最終月経から約7週と考えられる。月経が遅れたため市販の妊娠検査薬を使用し陽性であった。軽い悪心はあるが、下腹部痛と性器出血はない。妊娠・出産を希望しており、パートナーと同居している。これまで大きな既往歴はない。",
+      "clinicalFrame": {
+        "person": "28歳、初妊婦",
+        "timeline": "妊娠約7週の初診から妊娠13週の初期検査結果説明まで",
+        "coreTask": "妊娠成立確認、正常妊娠の生活支援、ウイルス性母子感染リスクへの連携",
+        "safetyEscalation": "腹痛・出血、重症悪阻、感染症スクリーニング陽性などは医師・周産期チームへ連携"
+      },
+      "questionIds": ["JOS-R1-AM-Q39", "JOS-R1-AM-Q40", "JOS-R1-AM-Q41"],
+      "sourceIds": ["JSOG-OB-GUIDELINE-2026", "JAM-MIDWIFERY-GUIDELINE-2024", "CFA-MATERNAL-CHILD-HEALTH", "MHLW-HBV-PREGNANCY-2026"],
+      "sourceCheckedAt": "2026-08-13",
+      "rightsBasis": "original patient timeline and original wording from verified current obstetric and maternal-infection sources; no direct reproduction",
+      "auditStatus": "content-reviewed"
+    }
+  ]
+}
