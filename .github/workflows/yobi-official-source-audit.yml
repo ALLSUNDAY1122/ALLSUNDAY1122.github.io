@@ -9,6 +9,9 @@ on:
       - '.github/workflows/yobi-official-source-audit.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 concurrency:
   group: yobi-official-source-${{ github.ref }}
   cancel-in-progress: true
@@ -44,6 +47,24 @@ jobs:
         id: canonical
         continue-on-error: true
         run: python learning-sprint/yobi-tantou/content-loop/build_official_scoring_canonical_fixed.py
+      - name: Copy verified canonical into iOS resources
+        if: steps.canonical.outcome == 'success'
+        run: |
+          cp learning-sprint/yobi-tantou/content-loop/official-scoring-canonical.v1.json \
+             learning-sprint/yobi-tantou/ios/Resources/official-scoring-canonical.v1.json
+      - name: Persist verified canonical on source branch
+        if: steps.canonical.outcome == 'success'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add learning-sprint/yobi-tantou/content-loop/official-scoring-canonical.v1.json
+          git add learning-sprint/yobi-tantou/ios/Resources/official-scoring-canonical.v1.json
+          if git diff --cached --quiet; then
+            echo 'Canonical scoring is already current.'
+          else
+            git commit -m 'data(yobi): sync verified R6-R7 official scoring canonical'
+            git push
+          fi
       - name: Upload official-source summaries and canonical scoring
         if: always()
         uses: actions/upload-artifact@v4
