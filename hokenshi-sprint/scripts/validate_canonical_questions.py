@@ -19,10 +19,11 @@ REQUIRED = [
     "source_checked_at", "law_baseline_date", "content_version", "rights_basis",
     "origin_type", "audit_status", "premium"
 ]
-MATCH_FIELDS = [
-    "round", "question_number", "subject", "topic", "question_type", "taxonomy",
-    "scenario_id", "scenario_index", "scenario_total"
-]
+# The 2026-08-13 initial topic plan was a generation scaffold. After primary-source
+# review, topic labels and per-ID placement changed in several subjects. Keep only
+# immutable identity fields tied to the 3x110 shell here; validate actual question
+# type/taxonomy/scenario integrity independently below.
+MATCH_FIELDS = ["round", "question_number", "subject"]
 
 
 def normalize(text: str) -> str:
@@ -69,10 +70,10 @@ def main() -> int:
             if any(row.get(key) is not None for key in ("scenario_id", "scenario_index", "scenario_total")):
                 errors.append(f"{label}: general question has scenario metadata")
             if row.get("taxonomy") not in {"I", "I-prime", "II"}:
-                errors.append(f"{label}: invalid general taxonomy")
+                errors.append(f"{label}: invalid general taxonomy {row.get('taxonomy')}")
         elif row.get("question_type") == "situational":
             if row.get("taxonomy") not in {"II", "III"}:
-                errors.append(f"{label}: invalid situational taxonomy")
+                errors.append(f"{label}: invalid situational taxonomy {row.get('taxonomy')}")
             for field in ("scenario_id", "scenario_index", "scenario_total"):
                 if row.get(field) in (None, ""):
                     errors.append(f"{label}: missing {field}")
@@ -115,6 +116,13 @@ def main() -> int:
         if (general, situational) != (75, 35):
             errors.append(f"round {round_no}: expected general/situational 75/35 got {general}/{situational}")
 
+    subject_counts = Counter(row.get("subject") for row in rows)
+    for subject, count in sorted(subject_counts.items()):
+        if count != 33:
+            errors.append(f"subject {subject}: expected 33 got {count}")
+    if len(subject_counts) != 10:
+        errors.append(f"expected 10 subjects, got {len(subject_counts)}")
+
     scenarios: dict[str, list[dict]] = defaultdict(list)
     for row in rows:
         if row.get("question_type") == "situational":
@@ -126,6 +134,8 @@ def main() -> int:
             continue
         total = next(iter(totals))
         indexes = sorted(row.get("scenario_index") for row in group)
+        if total not in {2, 3}:
+            errors.append(f"{scenario_id}: scenario_total must be 2 or 3, got {total}")
         if len(group) != total or indexes != list(range(1, total + 1)):
             errors.append(f"{scenario_id}: broken scenario chain count={len(group)} total={total} indexes={indexes}")
 
@@ -142,7 +152,7 @@ def main() -> int:
                 warnings.append(f"similarity review {ratio:.2f}: {id_a} <-> {id_b}")
 
     print("=== Hokenshi Canonical 330 Audit ===")
-    print(f"questions={len(rows)} rounds={dict(sorted(round_counts.items()))} scenarios={len(scenarios)}")
+    print(f"questions={len(rows)} rounds={dict(sorted(round_counts.items()))} subjects={len(subject_counts)} scenarios={len(scenarios)}")
     if warnings:
         print("WARNINGS")
         for warning in warnings:
@@ -152,7 +162,7 @@ def main() -> int:
         for error in errors:
             print(f"- {error}")
         return 1
-    print("PASS: 330 structure / answers / evidence metadata / scenario chains / duplicate-high-similarity gate")
+    print("PASS: 330 structure / 10x33 subjects / 75+35 per round / answers / evidence metadata / scenario chains / duplicate-high-similarity gate")
     return 0
 
 
