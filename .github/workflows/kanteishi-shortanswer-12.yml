@@ -3,7 +3,14 @@ name: Kanteishi Short Answer #12
 on:
   pull_request:
     paths:
-      - 'kanteishi-shortanswer-sprint/**'
+      - 'kanteishi-shortanswer-sprint/ios/**'
+      - 'kanteishi-shortanswer-sprint/core/**'
+      - 'kanteishi-shortanswer-sprint/data/**'
+      - 'kanteishi-shortanswer-sprint/questions/**'
+      - 'kanteishi-shortanswer-sprint/learning-sprint-audit.production.json'
+      - 'kanteishi-shortanswer-sprint/learning-sprint-audit.prototype.json'
+      - 'kanteishi-shortanswer-sprint/scripts/audit_native_ui.py'
+      - 'kanteishi-shortanswer-sprint/scripts/validate_slot_manifest.py'
       - '.github/workflows/kanteishi-shortanswer-12.yml'
   workflow_dispatch:
 
