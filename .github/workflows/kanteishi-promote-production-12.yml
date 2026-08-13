@@ -1,0 +1,44 @@
+name: Kanteishi Promote Production #12
+
+on:
+  pull_request:
+    paths:
+      - 'kanteishi-shortanswer-sprint/scripts/promote_production_app.py'
+      - '.github/workflows/kanteishi-promote-production-12.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - name: Apply production source patch
+        run: python3 kanteishi-shortanswer-sprint/scripts/promote_production_app.py
+      - name: Verify promoted source contract
+        run: |
+          grep -q 'questions.production' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/AppCore.swift
+          grep -q 'expectedTotal = isProduction ? 240 : 12' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/AppCore.swift
+          grep -q 'official-240-' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswerTests/KanteishiShortAnswerTests.swift
+          grep -q '公式80問' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/ContentView.swift
+      - name: Commit promoted application sources
+        if: github.event_name == 'pull_request'
+        env:
+          TARGET_BRANCH: ${{ github.head_ref }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/AppCore.swift \
+            kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/ContentView.swift \
+            kanteishi-shortanswer-sprint/ios/KanteishiShortAnswerTests/KanteishiShortAnswerTests.swift
+          if git diff --cached --quiet; then
+            echo 'Production source already up to date.'
+          else
+            git commit -m 'feat(kanteishi): promote native app to audited 240-question corpus'
+            git push origin "HEAD:${TARGET_BRANCH}"
+          fi
