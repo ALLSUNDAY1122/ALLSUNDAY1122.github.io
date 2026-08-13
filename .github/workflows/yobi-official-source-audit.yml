@@ -41,8 +41,11 @@ jobs:
       - name: Build compact question-shape summary
         run: python learning-sprint/yobi-tantou/content-loop/summarize_official_question_shapes.py
       - name: Build R6-R7 canonical scoring data
+        id: canonical
+        continue-on-error: true
         run: python learning-sprint/yobi-tantou/content-loop/build_official_scoring_canonical.py
       - name: Upload official-source summaries and canonical scoring
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: yobi-official-source-summaries
@@ -50,5 +53,10 @@ jobs:
             learning-sprint/yobi-tantou/content-loop/official-scoring-table-summary.json
             learning-sprint/yobi-tantou/content-loop/official-question-shapes-summary.json
             learning-sprint/yobi-tantou/content-loop/official-scoring-canonical.v1.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 7
+      - name: Enforce canonical build success
+        if: steps.canonical.outcome != 'success'
+        run: |
+          echo 'FAIL: canonical scoring build did not pass; summaries were preserved for diagnosis.' >&2
+          exit 1
