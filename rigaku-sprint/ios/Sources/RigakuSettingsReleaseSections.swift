@@ -1,3 +1,4 @@
+import LearningSprintCore
 import SwiftUI
 
 struct RigakuPurchaseSettingsSection: View {
