@@ -9,9 +9,15 @@ import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent
 LOCK = HERE / "app-icon-lock.json"
 RELEASE_BANK = HERE / "Resources" / "questions.release.json"
-MOCK_AUDIT = HERE.parent / "content-loop" / "audit_practice_mock_readiness.py"
+MOCK_AUDIT = ROOT / "content-loop" / "audit_practice_mock_readiness.py"
+MONETIZATION_CONFIG = ROOT / "app-store" / "monetization-config.v1.json"
+
+EXPECTED_BUNDLE_ID = "jp.allsunday1122.yobishikentantou"
+EXPECTED_IAP_PRODUCT_ID = "jp.allsunday1122.yobishikentantou.monthly"
+EXPECTED_RELEASE_QUESTION_COUNT = 417
 
 REQUIRED_ENV = (
     "YOBI_BUNDLE_ID",
@@ -39,7 +45,46 @@ def normalize_explicit(name: str, value: str | None) -> str:
 
 
 def validate_environment(env: dict[str, str]) -> dict[str, str]:
-    return {name: normalize_explicit(name, env.get(name)) for name in REQUIRED_ENV}
+    values = {name: normalize_explicit(name, env.get(name)) for name in REQUIRED_ENV}
+    if values["YOBI_BUNDLE_ID"] != EXPECTED_BUNDLE_ID:
+        raise PreflightError(
+            f"YOBI_BUNDLE_ID: canonical不一致 {values['YOBI_BUNDLE_ID']} != {EXPECTED_BUNDLE_ID}"
+        )
+    if values["YOBI_IAP_PRODUCT_ID"] != EXPECTED_IAP_PRODUCT_ID:
+        raise PreflightError(
+            f"YOBI_IAP_PRODUCT_ID: canonical不一致 {values['YOBI_IAP_PRODUCT_ID']} != {EXPECTED_IAP_PRODUCT_ID}"
+        )
+    if not re.fullmatch(r"\d{6,20}", values["YOBI_APP_STORE_CONNECT_APP_ID"]):
+        raise PreflightError("YOBI_APP_STORE_CONNECT_APP_ID: Apple実発行の数値IDが必要")
+    return values
+
+
+def validate_monetization_registration() -> dict:
+    if not MONETIZATION_CONFIG.exists():
+        raise PreflightError("monetization-config.v1.json がない")
+    config = json.loads(MONETIZATION_CONFIG.read_text(encoding="utf-8"))
+    if config.get("standardProcedureVersion") != "2.4":
+        raise PreflightError("課金正本が標準手順v2.4ではない")
+    if config.get("bundleID") != EXPECTED_BUNDLE_ID:
+        raise PreflightError("課金正本のBundle IDがcanonicalと不一致")
+    plan = config.get("monetization") or {}
+    if plan.get("model") != "auto_renewable_subscription" or plan.get("period") != "P1M":
+        raise PreflightError("課金モデルが月額Auto-Renewable Subscriptionではない")
+    if plan.get("japanReferencePriceJPY") != 200:
+        raise PreflightError("日本向け基準価格が200円/月ではない")
+    iap = config.get("iap") or {}
+    if iap.get("plannedProductID") != EXPECTED_IAP_PRODUCT_ID:
+        raise PreflightError("課金正本のProduct IDがcanonicalと不一致")
+    if iap.get("productType") != "autoRenewable":
+        raise PreflightError("課金正本の商品種別がautoRenewableではない")
+    if iap.get("appStoreConnectRegistrationStatus") != "registered":
+        raise PreflightError("IAP Product IDのApp Store Connect実登録確認が未完了")
+    if iap.get("runtimeConfigurationStatus") != "configured":
+        raise PreflightError("実登録済みIAP Product IDのruntime設定が未完了")
+    apple_id = config.get("appStoreConnectAppleID") or {}
+    if apple_id.get("status") != "issued" or not re.fullmatch(r"\d{6,20}", str(apple_id.get("value") or "")):
+        raise PreflightError("App Store Connect Apple IDの実発行値が正本化されていない")
+    return config
 
 
 def validate_icon_lock() -> dict:
@@ -58,8 +103,15 @@ def validate_release_bank(path: Path = RELEASE_BANK) -> int:
     if not path.exists():
         raise PreflightError("questions.release.json が未生成。教材Release監査PASS前は署名禁止")
     data = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(data, list) or not data:
-        raise PreflightError("questions.release.json が空")
+    if not isinstance(data, list):
+        raise PreflightError("questions.release.json が配列ではない")
+    if len(data) != EXPECTED_RELEASE_QUESTION_COUNT:
+        raise PreflightError(
+            f"questions.release.json が正式3回分ではない: {len(data)}/{EXPECTED_RELEASE_QUESTION_COUNT}"
+        )
+    ids = [question.get("id") for question in data]
+    if any(not value for value in ids) or len(ids) != len(set(ids)):
+        raise PreflightError("questions.release.json にID欠損または重複がある")
     for question in data:
         if question.get("releaseEligible") is not True:
             raise PreflightError(f"{question.get('id', '<no-id>')}: releaseEligible=trueではない")
@@ -81,7 +133,7 @@ def validate_three_mock_completion() -> None:
                 "--report",
                 str(report),
             ],
-            cwd=str(HERE.parent.parent.parent),
+            cwd=str(ROOT),
             text=True,
             capture_output=True,
             check=False,
@@ -93,17 +145,21 @@ def validate_three_mock_completion() -> None:
 
 def self_test() -> int:
     good = {
-        "YOBI_BUNDLE_ID": "jp.example.userchosen.yobi",
-        "YOBI_APP_STORE_CONNECT_APP_ID": "explicit-app-id",
-        "YOBI_IAP_PRODUCT_ID": "jp.example.userchosen.yobi.premium",
+        "YOBI_BUNDLE_ID": EXPECTED_BUNDLE_ID,
+        "YOBI_APP_STORE_CONNECT_APP_ID": "1234567890",
+        "YOBI_IAP_PRODUCT_ID": EXPECTED_IAP_PRODUCT_ID,
     }
     values = validate_environment(good)
-    assert values["YOBI_BUNDLE_ID"] == good["YOBI_BUNDLE_ID"]
+    assert values["YOBI_BUNDLE_ID"] == EXPECTED_BUNDLE_ID
+    assert values["YOBI_IAP_PRODUCT_ID"] == EXPECTED_IAP_PRODUCT_ID
 
     bad_cases = [
         {**good, "YOBI_BUNDLE_ID": "UNSET.YOBI.BUNDLE.ID"},
+        {**good, "YOBI_BUNDLE_ID": "jp.allsunday1122.other"},
         {**good, "YOBI_IAP_PRODUCT_ID": "$(YOBI_IAP_PRODUCT_ID)"},
+        {**good, "YOBI_IAP_PRODUCT_ID": "jp.allsunday1122.yobishikentantou.lifetime"},
         {**good, "YOBI_BUNDLE_ID": "jp.ci.yobi.preview"},
+        {**good, "YOBI_APP_STORE_CONNECT_APP_ID": "explicit-app-id"},
         {**good, "YOBI_APP_STORE_CONNECT_APP_ID": ""},
     ]
     for case in bad_cases:
@@ -115,7 +171,29 @@ def self_test() -> int:
             raise AssertionError(f"unsafe env accepted: {case}")
 
     validate_icon_lock()
-    print("SELFTEST PASS: production IDs must be explicit; CI/placeholder IDs rejected; AppIcon lock valid; normal preflight also requires three complete mocks")
+
+    pending = {
+        "standardProcedureVersion": "2.4",
+        "bundleID": EXPECTED_BUNDLE_ID,
+        "monetization": {
+            "model": "auto_renewable_subscription",
+            "period": "P1M",
+            "japanReferencePriceJPY": 200,
+        },
+        "iap": {
+            "plannedProductID": EXPECTED_IAP_PRODUCT_ID,
+            "productType": "autoRenewable",
+            "appStoreConnectRegistrationStatus": "pending",
+            "runtimeConfigurationStatus": "unset_until_registered",
+        },
+        "appStoreConnectAppleID": {"status": "pending_actual_issued_value", "value": None},
+    }
+    assert pending["iap"]["appStoreConnectRegistrationStatus"] == "pending"
+
+    print(
+        "SELFTEST PASS: v2.4 canonical Bundle/IAP IDs enforced; Apple ID must be issued numeric; "
+        "normal preflight also requires registered monthly IAP, 417-question Native bank and three complete mocks"
+    )
     return 0
 
 
@@ -130,6 +208,7 @@ def main() -> int:
 
     try:
         values = validate_environment(dict(os.environ))
+        config = validate_monetization_registration()
         lock = validate_icon_lock()
         count = validate_release_bank(args.release_bank)
         validate_three_mock_completion()
@@ -141,6 +220,7 @@ def main() -> int:
     print(f"- Bundle ID: {values['YOBI_BUNDLE_ID']}")
     print(f"- App Store Connect App ID: {values['YOBI_APP_STORE_CONNECT_APP_ID']}")
     print(f"- IAP Product ID: {values['YOBI_IAP_PRODUCT_ID']}")
+    print(f"- IAP registration: {config['iap']['appStoreConnectRegistrationStatus']}")
     print(f"- Release questions: {count}")
     print("- Three original practice mocks: complete")
     print(f"- Canonical AppIcon SHA-256: {lock['sha256']}")
