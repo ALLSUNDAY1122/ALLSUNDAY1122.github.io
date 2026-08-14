@@ -1,24 +1,54 @@
 import Foundation
 import LearningSprintCore
 
+public struct JosanshiSessionHistoryEntry: Codable, Equatable, Identifiable, Sendable {
+    public let id: UUID
+    public let finishedAt: Date
+    public let title: String
+    public let correctCount: Int
+    public let totalCount: Int
+
+    public init(
+        id: UUID = UUID(),
+        finishedAt: Date = Date(),
+        title: String,
+        correctCount: Int,
+        totalCount: Int
+    ) {
+        self.id = id
+        self.finishedAt = finishedAt
+        self.title = title
+        self.correctCount = correctCount
+        self.totalCount = totalCount
+    }
+}
+
 public struct JosanshiPreferences: Codable, Equatable, Sendable {
     public var shuffleQuestions: Bool
     public var shuffleChoices: Bool
     /// Optional so preferences written before the v2.1 text-size control still decode safely.
     public var textSizeStep: Int?
+    /// Optional so preferences written before session history was added still decode safely.
+    public var recentSessions: [JosanshiSessionHistoryEntry]?
 
     public init(
         shuffleQuestions: Bool = true,
         shuffleChoices: Bool = true,
-        textSizeStep: Int? = 0
+        textSizeStep: Int? = 0,
+        recentSessions: [JosanshiSessionHistoryEntry]? = []
     ) {
         self.shuffleQuestions = shuffleQuestions
         self.shuffleChoices = shuffleChoices
         self.textSizeStep = textSizeStep
+        self.recentSessions = recentSessions
     }
 
     public var resolvedTextSizeStep: Int {
         min(2, max(0, textSizeStep ?? 0))
+    }
+
+    public var resolvedRecentSessions: [JosanshiSessionHistoryEntry] {
+        recentSessions ?? []
     }
 }
 
