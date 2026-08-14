@@ -10,7 +10,11 @@ Owner: ChatGPT project アプリ開発
 - Shared core: `native-ios/LearningSprintCore`.
 - Internal TestFlight only until explicit user approval.
 - External TestFlight review and App Store review submission are prohibited before explicit approval.
-- Production Bundle ID / App Store Connect App ID / Codemagic profile / IAP Product ID are canonical values and must never be guessed.
+- Canonical production identity approved on 2026-08-14:
+  - Bundle ID: `jp.allsunday1122.josanshi`
+  - Codemagic profile: `josanshi_appstore`
+  - IAP: `jp.allsunday1122.josanshi.premium`
+  - App Store Connect numeric App ID: Apple-issued actual value only; currently unset.
 
 ## Content gate — FULL PASS
 
@@ -27,6 +31,23 @@ Owner: ChatGPT project アプリ開発
 - [x] 36 / 36 scenarios independently audited PASS.
 - [x] Neonatal semantic misassignment was detected before release; DIAGNOSIS-26..37 was rebuilt as 60 questions + 9 scenarios.
 - [x] Source registry: 66 evidence anchors / 57 restricted or direct-reproduction guards.
+
+## Monetization gate — PASS
+
+- [x] Purchase model: StoreKit 2 Non-Consumable / buy-once Premium.
+- [x] Free pool: 60 general questions = 15 per official subject, derived deterministically from the audited 330-question bank.
+- [x] Premium pool: 270 questions; all 105 situation-setting questions remain Premium so linked cases are never partially exposed.
+- [x] Free mode: `今日のスプリント`, daily target 4 / 8 / 16, basic progress, exam countdown.
+- [x] Premium: all 330, subject practice, weak review, 3 mocks, detailed history, JSON backup / restore.
+- [x] Free standard sprint filters Premium questions at the LearningEngine boundary.
+- [x] Subject / weak / mock / detailed-history / backup routes remain visible but open the Premium paywall when not entitled.
+- [x] Purchase and restore are wired through the shared StoreKit 2 `PurchaseController`.
+- [x] Verified current entitlement controls Premium unlock.
+- [x] Pending / user-cancelled / unavailable / failed states have explicit UI handling.
+- [x] Purchase price shown to the user is StoreKit `displayPrice`; no hard-coded display price.
+- [x] `validate_monetization.py` enforces exact identity, free60/Premium270, general-only free pool, no free scenario leakage, purchase/restore contract.
+- [ ] Japan base price: human decision pending.
+- [ ] App Store Connect IAP record creation: Apple-side task pending.
 
 ## Golden Master v2.1 native UI gate — PASS
 
@@ -51,23 +72,28 @@ Owner: ChatGPT project アプリ開発
 ## Native App gate — PASS at unsigned Simulator stage
 
 - [x] Actual `@main` SwiftUI application target exists: `JosanshiSprint`.
-- [x] XcodeGen produces local `LearningSprintCore → JosanshiSprintFeature → JosanshiSprint` targets without a production Bundle ID dependency.
+- [x] XcodeGen produces local `LearningSprintCore → JosanshiSprintFeature → JosanshiSprint` targets.
+- [x] Canonical Bundle ID and Team ID are present in generated release build settings.
+- [x] In-App Purchase capability is normalized and verified in the generated PBX project.
 - [x] FULL-audited 330-question / 36-scenario resource is bundled and runtime-gated.
 - [x] Audited source bank ↔ Swift resource byte-for-byte parity is enforced.
 - [x] `PrivacyInfo.xcprivacy` is included in the actual app target and linted from the built `.app`.
 - [x] No WebView primary implementation.
-- [x] Swift package tests: 21 / 21 PASS.
-- [x] Actual iOS Simulator application build: PASS.
-- [x] Production identifier hard-code guard: PASS.
+- [x] Swift package tests after monetization: **24 / 24 PASS**.
+- [x] Actual iOS Simulator application build after release/simulator split: PASS.
+- [x] Monetization + canonical-identity + release-configuration safety gates: PASS.
 - [ ] 30-state screenshot audit / small-large real-device visual audit: execute at Internal TestFlight checkpoint.
 
 ## AppIcon gate
 
 - [x] Canonical source located: Google Drive `14_助産師国家試験.png`, file ID `134DG19Lknp2p1AFvDAkLPA2zocyj2nOP`.
+- [x] Authenticated Google Drive raw fetch re-confirmed the canonical source bytes.
 - [x] Canonical metadata pinned: 1024×1024 RGB PNG, 590870 bytes, SHA-256 `07668a08a0703b76ecbeca38bbc5b396a248f822de594947ddccd383f0898579`.
-- [x] Release helper `ios/prepare-app-icon.sh` refuses any file whose byte size, SHA-256, or dimensions differ.
-- [x] Public Drive download routes were tested and correctly rejected because they returned HTML rather than the authenticated original PNG.
-- [ ] Exact authenticated canonical PNG must be staged into the release build environment before Archive; lookalike/regenerated icons are prohibited.
+- [x] Release helper `ios/prepare-app-icon.sh` accepts only an authenticated staged file or encrypted `JOSANSHI_APPICON_BASE64`, then refuses any file whose byte size, SHA-256, or dimensions differ.
+- [x] Debug/Simulator XcodeGen spec is AppIcon-independent.
+- [x] Release-only XcodeGen spec requires the exact generated `Assets.xcassets/AppIcon.appiconset`.
+- [x] Public Drive download routes are not used because they return HTML rather than the authenticated original PNG.
+- [ ] Codemagic secret `JOSANSHI_APPICON_BASE64` must be configured from the authenticated canonical PNG before signed Archive.
 
 ## Privacy gate
 
@@ -75,24 +101,49 @@ Owner: ChatGPT project アプリ開発
 - [x] Current source contains no selected Required Reason API candidates guarded by CI.
 - [x] `ios/PrivacyInfo.xcprivacy`: tracking=false / collected data=[] / accessed APIs=[] for the current code path.
 - [x] Built Simulator app contains and passes lint for the privacy manifest.
-- [ ] Re-audit after StoreKit production wiring or any new network / analytics / crash SDK.
+- [x] StoreKit wiring does not add a developer-operated payment server or collect card/payment credentials.
+- [ ] Re-audit the signed built app before Internal TestFlight.
+
+## Release / Codemagic gate — PREPARED, APPLE-SIDE INPUT PENDING
+
+- [x] `ios/codemagic-josanshi.yml` prepared for `josanshi_appstore`.
+- [x] Exact Bundle ID / Team ID / product ID / AppIcon SHA are fixed.
+- [x] Internal-only export option `testFlightInternalTestingOnly` is fixed.
+- [x] Automatic TestFlight upload is OFF.
+- [x] Automatic App Store submission is OFF.
+- [x] Signed build fails before Archive if canonical AppIcon secret is missing or mismatched.
+- [x] `validate_release_configuration.py` guards the release safety contract.
+- [ ] App Store Connect App record must exist and return the real numeric App ID.
+- [ ] Non-Consumable IAP record must exist with the approved product ID and a human-approved price.
+- [ ] Codemagic App Store Connect integration/profile and encrypted AppIcon secret must exist.
+- [ ] Signed Archive / IPA PASS.
+- [ ] Built-app privacy re-audit PASS.
+- [ ] Internal TestFlight install PASS.
+- [ ] Sandbox/TestFlight purchase + restore real-device PASS.
+
+## App Store metadata gate — PREPARED
+
+- [x] `APP_STORE_METADATA_JA.md` prepared: name, subtitle, promotional text, description, keywords, review notes, App Privacy draft, IAP registration draft.
+- [x] `support.html` prepared.
+- [x] `privacy.html` prepared.
+- [x] `terms.html` prepared.
+- [x] IAP price intentionally remains unresolved rather than guessed.
 
 ## Latest validation evidence
 
-- Content FULL PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31760418839
-- Native Foundation + Golden Master v2.1 + 21 XCTest PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31760418826
-- Actual iOS App Simulator build + built Privacy Manifest PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31760418821
-- Shared Learning Sprint Native Core PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31760418841
+- Native Foundation / full content / Golden Master / monetization / release safety / **24 XCTest PASS**: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31773707715
+- iOS App Simulator build after release/AppIcon split: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31773658496
 - Draft PR: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/pull/4137
 
-## Human / canonical decisions still required
+## Genuine human / Apple-side checkpoint
 
-Top-level Notion `【正本】対象アプリ識別情報｜App Store Connect / Codemagic` still marks #14 production values unresolved. Do not infer them from other apps.
+Technical work that does not need Apple-side records is complete at the current branch state. The next blockers are external/canonical rather than source implementation:
 
-1. Bundle ID — user value or explicit naming delegation required.
-2. Codemagic profile — user value or explicit naming delegation required.
-3. IAP Product ID — only after monetization is enabled; user value or explicit naming delegation required.
-4. Free / paid boundary and purchase model — qualification-specific monetization decision; not fixed by the common Golden Master.
-5. App Store Connect numeric App ID — Apple-issued actual value only; never guess.
+1. **Premium Japan base price** — human decision required.
+2. Create the App Store Connect app record for Bundle ID `jp.allsunday1122.josanshi`; write back the actual Apple-issued numeric App ID. Never guess it.
+3. Create Non-Consumable `jp.allsunday1122.josanshi.premium` and set the approved price.
+4. Confirm Paid Apps Agreement / tax / banking readiness for paid IAP.
+5. Configure Codemagic App Store Connect integration/profile `josanshi_appstore` and encrypted `JOSANSHI_APPICON_BASE64`.
+6. Run signed Archive / IPA → built-app privacy audit → Internal TestFlight → purchase/restore + 30-state small/large iPhone real-device audit.
 
-After those decisions: register canonical identifiers → stage exact AppIcon → connect StoreKit 2 if enabled → signed Archive / IPA → built-app privacy re-audit → Internal TestFlight → 30-state / small-large real-device audit → user TestFlight approval. External Beta Review / App Store review remain blocked until explicit approval.
+External Beta Review and App Store review submission remain blocked until explicit user approval.
