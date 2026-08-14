@@ -20,20 +20,21 @@
     "classificationUnclassified": 0,
     "classificationWarnings": 32,
     "classificationWarningsResolved": 32,
+    "situationSpecialistCorrectionsApplied": 4,
     "classificationPass": true,
-    "note": "第113回一般5問のPDF取込欠損を公式PDFで確認し、source-data-corrections.json→normalize_raw_import.pyで恒久修復。raw→L2を再発火してPASSを再取得。"
+    "note": "第113回一般5問のPDF取込欠損を恒久修復後にraw→L2を再発火。さらに状況設定症例監査で検出した4分類補正を適用し、意味監査・60症例監査・警告解決を含めて再PASS。"
   },
   "canonicalIntegratedL3": {
-    "explained": 547,
+    "explained": 583,
     "total": 720,
-    "pending": 173,
+    "pending": 137,
     "dynamicRequired": 85,
     "dynamicVerified": 66,
     "dynamicExpertReview": 0,
     "dynamicPending": 19,
     "pass": false,
     "releaseAllowed": false,
-    "auditBlobSha": "916a60d7ab4dd7c31c2e686d982c5be896df6e95"
+    "auditBlobSha": "3c94690136487d26d244acc42b94ee9ad6d39b55"
   },
   "workstreams": {
     "A_required": {
@@ -69,16 +70,18 @@
       "handoff": "kangoshi-sprint/workstreams/B-general/COORDINATOR-CANONICAL-AUDIT-20260814.json"
     },
     "C_situation": {
-      "status": "IN_PROGRESS_EXPERT_REVIEW_PARALLEL_CONTENT_RESUMED",
+      "status": "IN_PROGRESS_EXPERT_REVIEW_PARALLEL_CANONICAL_PREP",
       "targetQuestions": 180,
       "targetScenarios": 60,
-      "authoredL3Questions": 30,
-      "scenarioContentAuditPassScenarios": 10,
-      "contentPendingScenarios": 50,
+      "authoredL3QuestionFloor": 81,
+      "auditedQuestionFloor": 78,
+      "scenarioContentAuditPassFloor": 26,
+      "scenarioAuditRemainingCeiling": 34,
       "expertReviewQueueCount": 2,
       "expertReviewBlockingContentAuthoring": false,
-      "cursorScenario": "K115-PM-SC01",
-      "cursorQuestionIds": ["K115-PM091","K115-PM092","K115-PM093"],
+      "latestConfirmedAuthoredScenario": "K114-AM-SC07",
+      "latestConfirmedAuditedScenario": "K114-AM-SC06",
+      "canonicalIntegrationQueueCreated": true,
       "finalCanonicalPass": false
     }
   },
@@ -93,7 +96,7 @@
       "pass":false,
       "blockingItems":13
     },
-    "situation": {"canonicalJsonBuilt":false,"pass":false}
+    "situation": {"canonicalIntegrationQueueCreated":true,"canonicalJsonBuilt":false,"pass":false}
   },
   "v24ProductDecisions": {
     "previewRequired": true,
@@ -117,9 +120,10 @@
     "testFlightReady": false
   },
   "nextCoordinatorLoop": [
-    "Keep B canonical 13-gap handoff isolated and re-run canonical audit only after B fixes those items",
-    "Continue C from K115-PM-SC01 while expert queue remains quarantined in parallel",
-    "Re-run common L3 as new category batches arrive",
+    "Pause only for the v2.4 initial prototype human check while B and C worker work may continue independently on GitHub",
+    "After human prototype check, re-read GitHub main before any further coordinator action",
+    "Re-run B canonical audit only after the 13-gap worker handoff is fixed",
+    "Continue integrating C canonical patches/classification/text/media corrections as worker artifacts arrive",
     "Do not release mock/StoreKit/TestFlight gates until canonical 720, rights, and expert gates pass"
   ]
 }
