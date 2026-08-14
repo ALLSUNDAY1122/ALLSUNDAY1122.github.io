@@ -11,6 +11,8 @@ ROOT = Path(__file__).resolve().parent
 IOS = ROOT / "ios"
 CANON = ROOT / "release-canonical.json"
 EXPECTED_ICON_SHA256 = "5ffc2de874d6f22b0fd6ee121e7c691ae7a7caee30844fad059439846dfefca9"
+CANONICAL_BUNDLE_ID = "jp.allsunday1122.rigakuryouhoushi"
+CANONICAL_PRODUCT_ID = "jp.allsunday1122.rigakuryouhoushi.monthly"
 
 
 def load_canon() -> dict:
@@ -29,14 +31,40 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def monetization_checks(canon: dict) -> list[str]:
+    blockers: list[str] = []
+    monetization = canon.get("monetization", {})
+
+    if monetization.get("decision") != "subscription":
+        blockers.append("#15課金方式が月額サブスクリプション正本と不一致")
+    if monetization.get("productType") != "auto-renewable-subscription":
+        blockers.append("IAP商品種別が自動更新サブスクリプションではない")
+    if monetization.get("productId") != CANONICAL_PRODUCT_ID:
+        blockers.append("IAP Product IDが#15正本値と不一致")
+    if not concrete(monetization.get("pricePolicy")):
+        blockers.append("月額200円の価格方針が未記録")
+    if not concrete(monetization.get("premiumScope")):
+        blockers.append("無料60問 / 月額600問の利用範囲が未記録")
+    if monetization.get("registeredInAppStoreConnect") is not True:
+        blockers.append("月額商品がApp Store Connectへ未登録・未確認")
+
+    return blockers
+
+
 def common_checks(canon: dict) -> list[str]:
     blockers: list[str] = []
     project = (IOS / "project.yml").read_text(encoding="utf-8")
 
     if not concrete(canon.get("appStoreConnectAppleId")):
         blockers.append("App Store Connect Apple IDが未確定")
-    if not concrete(canon.get("bundleId")):
-        blockers.append("Bundle IDが未確定")
+    if canon.get("bundleId") != CANONICAL_BUNDLE_ID:
+        blockers.append("Bundle IDが#15正本値と不一致")
+    if f"PRODUCT_BUNDLE_IDENTIFIER: {CANONICAL_BUNDLE_ID}" not in project:
+        blockers.append("XcodeGenのBundle IDが#15正本値と不一致")
+    if f"RigakuPremiumProductID: {CANONICAL_PRODUCT_ID}" not in project:
+        blockers.append("XcodeGenの月額Product IDが#15正本値と不一致")
+
+    blockers.extend(monetization_checks(canon))
 
     icon_info = canon.get("appIcon", {})
     icon_path = ROOT.parent / str(icon_info.get("repositoryPath", ""))
@@ -71,20 +99,6 @@ def app_store_checks(canon: dict) -> list[str]:
     if pages.get("supportContactApproved") is not True:
         blockers.append("Support URLに公開してよい問い合わせ先が未承認")
 
-    monetization = canon.get("monetization", {})
-    decision = monetization.get("decision")
-    if decision not in {"none", "iap"}:
-        blockers.append("課金方針が未決定（none / iap）")
-    elif decision == "iap":
-        for key, label in (
-            ("productType", "IAP商品種別"),
-            ("productId", "IAP Product ID"),
-            ("pricePolicy", "IAP価格方針"),
-            ("premiumScope", "無料/有料範囲"),
-        ):
-            if not concrete(monetization.get(key)):
-                blockers.append(f"{label}が未確定")
-
     if canon.get("appStoreSubmission", {}).get("approvedByUser") is not True:
         blockers.append("App Store最終提出のユーザー承認が未取得")
 
@@ -92,9 +106,7 @@ def app_store_checks(canon: dict) -> list[str]:
 
 
 def internal_testflight_checks(canon: dict) -> list[str]:
-    blockers = common_checks(canon)
-    # 内部TestFlightは公開用メタデータや最終提出承認を要求しない。
-    return blockers
+    return common_checks(canon)
 
 
 def main() -> int:
