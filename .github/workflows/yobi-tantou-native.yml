@@ -73,6 +73,10 @@ jobs:
         run: python learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py --require-pass
       - name: Practice tier combiner self-test
         run: python learning-sprint/yobi-tantou/content-loop/combine_practice_release.py --self-test
+      - name: Three-mock readiness audit
+        run: |
+          python learning-sprint/yobi-tantou/content-loop/audit_practice_mock_readiness.py
+          cat learning-sprint/yobi-tantou/content-loop/practice-mock-readiness.v1.json
       - name: Probe MOJ official PDF links from runner
         run: python learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
       - name: Official R6-R8 PDF structure audit
@@ -102,6 +106,7 @@ jobs:
           python -m py_compile learning-sprint/yobi-tantou/content-loop/promote_practice_release.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/combine_practice_release.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/build_native_release.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_practice_mock_readiness.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_official_pdf_structure.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/inspect_official_scoring_layout.py
