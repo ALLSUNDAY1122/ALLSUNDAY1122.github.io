@@ -46,7 +46,7 @@ required_native = (
     "LearningBackupDocument",
     "RigakuQuestionMediaRepository",
     "isMockReady",
-    "auditedQuestionCount(forSubject:",
+    "availableQuestionCount(forSubject:",
     "RigakuExamScoringRepository",
     "runtimePremiumProductID",
     "PurchaseController(productID:",
