@@ -17,9 +17,10 @@ Apple側で新規Appレコードを作成するときの固定入力値。
 
 ## In-App Purchase
 - Type: Non-Consumable
-- Reference Name: `保健師国家試験 Premium`
+- Reference Name: `保健師国家試験 プレミアム解放`
 - Product ID: `jp.allsunday1122.hokenshi.premium`
-- Unlock: 第2・3回を追加し全330問を解放
+- Free: 30問（第1回の10分野から各3問）
+- Premium: 残り300問と模試機能を解放
 - Restore purchases: 必須
 - UI price source: StoreKit `Product.displayPrice`
 - Price: App Store本審査前の最終承認地点で確定
