@@ -9,6 +9,7 @@ CONFIG = ROOT / "practice-mock-config.v1.json"
 OFFICIAL = ROOT / "official-exam-structure.v1.json"
 RELEASE = ROOT.parent / "ios" / "Resources" / "questions.release.json"
 MOCK_BANK = ROOT / "mock-bank"
+GENERAL_BANK = ROOT / "general-bank"
 DEFAULT_REPORT = ROOT / "practice-mock-readiness.v1.json"
 
 DIFFICULTY_TO_MOCK = {
@@ -31,6 +32,14 @@ def add_count(per_mock, assigned_ids, qid, mock_id, subject, legal_subjects):
     assigned_ids[mock_id].append(qid)
 
 
+def promoted_release_files():
+    files = []
+    for bank_name, directory in (("legal_mock_bank", MOCK_BANK), ("general_bank", GENERAL_BANK)):
+        for path in sorted(directory.glob("*.release.json")):
+            files.append((bank_name, path))
+    return files
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--require-complete", action="store_true")
@@ -40,7 +49,7 @@ def main() -> int:
     config = load(CONFIG)
     official = load(OFFICIAL)
     native_questions = load(RELEASE)
-    expansion_files = sorted(MOCK_BANK.glob("*.release.json"))
+    expansion_files = promoted_release_files()
 
     structure_year = str(config["basis"]["structureYear"])
     official_year = official["years"][structure_year]
@@ -88,7 +97,7 @@ def main() -> int:
 
     expansion_count = 0
     expansion_file_summary = []
-    for path in expansion_files:
+    for bank_name, path in expansion_files:
         items = load(path)
         if not isinstance(items, list) or not items:
             structural_errors.append(f"{path.name}: promoted mock batch must be non-empty JSON array")
@@ -97,27 +106,36 @@ def main() -> int:
         for q in items:
             qid = q.get("id") or "<no-id>"
             if qid in all_ids:
-                structural_errors.append(f"{qid}: duplicate across native/mock release banks")
+                structural_errors.append(f"{qid}: duplicate across native/promoted release banks")
             all_ids.add(qid)
             mock_id = q.get("practice_mock_id")
             if mock_id not in valid_mock_ids:
                 structural_errors.append(f"{qid}: invalid practice_mock_id {mock_id!r}")
                 continue
             if q.get("audit_status") != "release_passed" or q.get("release_eligible") is not True:
-                structural_errors.append(f"{qid}: mock expansion is not release_passed/release_eligible")
+                structural_errors.append(f"{qid}: promoted expansion is not release_passed/release_eligible")
             if q.get("content_use") != "practice" or q.get("exam_year") is not None:
-                structural_errors.append(f"{qid}: mock expansion must be practice with no official exam year")
+                structural_errors.append(f"{qid}: promoted expansion must be practice with no official exam year")
             subject = q.get("subject")
             if subject in legal_subjects:
+                if bank_name != "legal_mock_bank":
+                    structural_errors.append(f"{qid}: legal subject stored outside legal mock bank")
                 if q.get("reference_date") != config["basis"]["lawBasisDate"]:
                     structural_errors.append(f"{qid}: legal reference_date mismatch")
-            elif subject != "一般教養":
+            elif subject == "一般教養":
+                if bank_name != "general_bank":
+                    structural_errors.append(f"{qid}: general-education item stored outside general bank")
+                if q.get("origin_type") != "self_authored_original":
+                    structural_errors.append(f"{qid}: general-education release must be self_authored_original")
+                if not str(q.get("source_url", "")).startswith("internal://"):
+                    structural_errors.append(f"{qid}: general-education source must remain internal self-authored fixture")
+            else:
                 structural_errors.append(f"{qid}: unknown subject {subject!r}")
                 continue
             add_count(per_mock, assigned_ids, qid, mock_id, subject, legal_subjects)
             expansion_count += 1
             file_count += 1
-        expansion_file_summary.append({"file": path.name, "count": file_count})
+        expansion_file_summary.append({"bank": bank_name, "file": path.name, "count": file_count})
 
     report_mocks = []
     total_filled = 0
@@ -181,7 +199,7 @@ def main() -> int:
         structural_errors.append(f"global offered total exceeds target {total_filled}>{target_total}")
 
     report = {
-        "schemaVersion": 2,
+        "schemaVersion": 3,
         "checkedAt": "2026-08-14",
         "status": "PASS" if all_complete and not structural_errors else ("FAIL" if structural_errors else "HOLD"),
         "basis": {
@@ -189,8 +207,8 @@ def main() -> int:
             "lawBasisDate": config["basis"]["lawBasisDate"],
         },
         "nativeSeedQuestionCount": len(native_questions),
-        "promotedMockExpansionQuestionCount": expansion_count,
-        "promotedMockExpansionFiles": expansion_file_summary,
+        "promotedExpansionQuestionCount": expansion_count,
+        "promotedExpansionFiles": expansion_file_summary,
         "currentFormalQuestionCount": len(native_questions) + expansion_count,
         "currentAssignedOfferedQuestionCount": total_filled,
         "targetOfferedQuestionCount": target_total,
@@ -214,6 +232,12 @@ def main() -> int:
         return 0
 
     print(f"HOLD: structure valid; formal={total_filled}/{target_total}; remaining={target_total - total_filled}")
+    for mock in report_mocks:
+        print(
+            f"- {mock['id']}: legal={mock['filled']['legalQuestionTotal']}/95 "
+            f"general={mock['filled']['generalEducationOffered']}/44 "
+            f"total={mock['filled']['totalOfferedQuestionCount']}/139 complete={mock['complete']}"
+        )
     if args.require_complete:
         return 2
     return 0
