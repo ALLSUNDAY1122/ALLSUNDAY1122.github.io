@@ -52,9 +52,9 @@ jobs:
 
   swift-tests:
     needs: native-contract
-    # XcodeGen 2.46 emits project format 77. Use macOS 15, which provides the
-    # Xcode generation/runtime stack already proven by this branch's prior CI.
-    runs-on: macos-15
+    # XcodeGen emits project format 77. Keep the Xcode-capable macOS 15 image,
+    # but use the separate Intel hosted pool to avoid the Apple Silicon queue.
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
       - name: Prepare simulator-only AppIcon
