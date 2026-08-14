@@ -17,18 +17,19 @@ final class LearningAccessPolicyTests: XCTestCase {
     }
 
     @MainActor
-    func testFreeTodayNeverLeavesCanonicalFreeSet() {
+    func testFreeTodayNeverLeavesCanonicalFreeSetAndKeepsTodayKey() {
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".json")
         let store = LearningStore(persistenceURL: url)
         store.setDailyGoal(16)
         XCTAssertTrue(store.startToday(isPremium: false))
         XCTAssertEqual(store.session?.total, 16)
+        XCTAssertEqual(store.session?.key, "today")
         let free = LearningAccessPolicy.freeQuestionIDs(in: store.repository.questions)
         XCTAssertTrue(store.session?.questionIDs.allSatisfy { free.contains($0) } ?? false)
     }
 
     @MainActor
-    func testFreeEditionSubjectHasFourQuestionsAndMockIsLocked() {
+    func testFreeEditionSubjectHasFourQuestionsAndCanonicalKeyWhileMockIsLocked() {
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".json")
         let store = LearningStore(persistenceURL: url)
         XCTAssertTrue(store.startEditionSubject(
@@ -37,13 +38,31 @@ final class LearningAccessPolicyTests: XCTestCase {
             isPremium: false
         ))
         XCTAssertEqual(store.session?.total, 4)
+        XCTAssertEqual(store.session?.key, "exam:2026:subject:不動産に関する行政法規")
         store.exitSessionToHome()
         XCTAssertFalse(store.startMock(edition: 2026, isPremium: false))
         XCTAssertNil(store.session)
         XCTAssertTrue(store.startMock(edition: 2026, isPremium: true))
         XCTAssertEqual(store.session?.total, 80)
+        XCTAssertEqual(store.session?.key, "exam:2026")
     }
 
+    @MainActor
+    func testFreeDomainKeepsDomainCompletionKey() {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".json")
+        let store = LearningStore(persistenceURL: url)
+        guard let domain = store.repository.domains.first else {
+            XCTFail("No production domain")
+            return
+        }
+        let freeCount = store.accessibleQuestionCount(store.repository.questions(domain: domain), isPremium: false)
+        if freeCount > 0 {
+            XCTAssertTrue(store.startDomain(domain, isPremium: false))
+            XCTAssertEqual(store.session?.key, "domain:\(domain)")
+        }
+    }
+
+    @MainActor
     func testPremiumAccessPolicyIsFailClosed() {
         XCTAssertTrue(PremiumAccessPolicy.grantsAccess(for: .verifiedActive))
         XCTAssertFalse(PremiumAccessPolicy.grantsAccess(for: .verifiedRevoked))
