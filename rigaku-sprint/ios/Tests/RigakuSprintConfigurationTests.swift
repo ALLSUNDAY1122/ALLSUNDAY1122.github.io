@@ -21,6 +21,12 @@ final class RigakuSprintConfigurationTests: XCTestCase {
         XCTAssertTrue(RigakuAppConfiguration.practicalSubjects.contains("運動学"))
     }
 
+    func testCanonicalReleaseIdentifiersAreLocked() {
+        XCTAssertEqual(RigakuAppConfiguration.canonicalBundleIdentifier, "jp.allsunday1122.rigakuryouhoushi")
+        XCTAssertEqual(RigakuAppConfiguration.canonicalMonthlyProductID, "jp.allsunday1122.rigakuryouhoushi.monthly")
+        XCTAssertEqual(RigakuAppConfiguration.contentVersion, "1.0.0")
+    }
+
     func testExternalIdentifiersRejectMissingOrUnexpandedValues() {
         XCTAssertNil(RigakuAppConfiguration.normalizedExternalIdentifier(nil))
         XCTAssertNil(RigakuAppConfiguration.normalizedExternalIdentifier(""))
@@ -65,6 +71,36 @@ final class RigakuSprintConfigurationTests: XCTestCase {
                 "R\(round) mock must unlock only when the full audited round is bundled"
             )
         }
+    }
+
+    func testFreePlanIsExactlySixtyQuestionsBalancedAcrossAllSubjectsAndRounds() throws {
+        let questions = try RigakuQuestionRepository.loadBundled(bundle: Bundle.main)
+        let freeIDs = RigakuAccessPolicy.freeQuestionIDs(from: questions)
+        let freeQuestions = questions.filter { freeIDs.contains($0.id) }
+
+        XCTAssertEqual(freeIDs.count, 60)
+        XCTAssertEqual(RigakuAccessPolicy.freeQuestionLimit, 60)
+        XCTAssertEqual(RigakuAccessPolicy.freeQuestionQuotas.values.reduce(0, +), 60)
+
+        for (subject, expectedCount) in RigakuAccessPolicy.freeQuestionQuotas {
+            XCTAssertEqual(
+                freeQuestions.filter { $0.subject == subject }.count,
+                expectedCount,
+                "free quota mismatch for \(subject)"
+            )
+        }
+
+        XCTAssertEqual(Set(freeQuestions.compactMap(\.examRound)), Set(["60", "59", "58"]))
+    }
+
+    func testPremiumAccessExpandsFromSixtyToAllSixHundred() throws {
+        let questions = try RigakuQuestionRepository.loadBundled(bundle: Bundle.main)
+        XCTAssertEqual(RigakuAccessPolicy.accessibleQuestions(from: questions, isPremium: false).count, 60)
+        XCTAssertEqual(RigakuAccessPolicy.accessibleQuestions(from: questions, isPremium: true).count, 600)
+        XCTAssertFalse(RigakuAccessPolicy.canAccessMock(isPremium: false))
+        XCTAssertTrue(RigakuAccessPolicy.canAccessMock(isPremium: true))
+        XCTAssertFalse(RigakuAccessPolicy.canAccessFullWeakReview(isPremium: false))
+        XCTAssertTrue(RigakuAccessPolicy.canAccessFullWeakReview(isPremium: true))
     }
 
     func testAllThreeMockScoringCanonsLoadFromAppBundle() throws {
