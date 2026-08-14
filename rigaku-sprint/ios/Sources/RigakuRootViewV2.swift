@@ -33,6 +33,7 @@ private struct RigakuHomeV2: View {
                         header
                         progressCard
                         contentProgress
+                        accessPlanCard
                         resumeCard
                         dailyCard
                         weakCard
@@ -119,6 +120,46 @@ private struct RigakuHomeV2: View {
     }
 
     @ViewBuilder
+    private var accessPlanCard: some View {
+        if appModel.purchaseConfigured {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Label(
+                        appModel.premiumAccess ? "月額プラン利用中" : "無料プラン",
+                        systemImage: appModel.premiumAccess ? "checkmark.seal.fill" : "sparkles"
+                    )
+                    .font(LearningSprintTheme.sans(13, weight: .bold))
+                    .foregroundStyle(appModel.premiumAccess ? LearningSprintTheme.green : LearningSprintTheme.indigo)
+                    Spacer()
+                    Text(appModel.premiumAccess ? "600問" : "60問")
+                        .font(LearningSprintTheme.sans(13, weight: .bold))
+                }
+
+                Text(appModel.premiumAccess
+                     ? "全600問・3回分ベース模試・全苦手復習を利用できます。"
+                     : "8分野の60問を無料で試せます。月額プランで全600問・ベース模試・全苦手復習を解放します。")
+                    .font(LearningSprintTheme.sans(12, weight: .medium))
+                    .foregroundStyle(LearningSprintTheme.ink2)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                if !appModel.premiumAccess, let price = appModel.purchaseDisplayPrice {
+                    Button("月額プランを開始（\(price)）") {
+                        Task { await appModel.purchasePremium() }
+                    }
+                    .font(LearningSprintTheme.sans(13, weight: .bold))
+                    .buttonStyle(.borderedProminent)
+                    .tint(LearningSprintTheme.indigo)
+                }
+            }
+            .padding(14)
+            .background(LearningSprintTheme.card)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(LearningSprintTheme.line))
+            .accessibilityIdentifier("home.accessPlan")
+        }
+    }
+
+    @ViewBuilder
     private var resumeCard: some View {
         if let snapshot = appModel.state.resumeSession {
             NavigationLink {
@@ -158,7 +199,7 @@ private struct RigakuHomeV2: View {
         } label: {
             actionCard(
                 title: "苦手をつぶす",
-                subtitle: "誤答・わからない \(appModel.weakCount)問",
+                subtitle: appModel.canAccessFullWeakReview ? "誤答・わからない \(appModel.weakCount)問" : "月額プランで全苦手復習を解放",
                 systemImage: "scope",
                 accent: LearningSprintTheme.green
             )
@@ -173,7 +214,7 @@ private struct RigakuHomeV2: View {
             Text("分野から解く")
                 .font(LearningSprintTheme.sans(16, weight: .bold))
             ForEach(RigakuAppConfiguration.generalSubjects, id: \.self) { subject in
-                let count = appModel.auditedQuestionCount(forSubject: subject)
+                let count = appModel.availableQuestionCount(forSubject: subject)
                 NavigationLink {
                     RigakuStudyView(kind: .subject(subject))
                 } label: {
@@ -182,7 +223,7 @@ private struct RigakuHomeV2: View {
                             Text(subject)
                                 .font(LearningSprintTheme.sans(14, weight: .semibold))
                             HStack(spacing: 8) {
-                                Text("監査済み \(count)問")
+                                Text("利用可能 \(count)問")
                                 if let accuracy = appModel.subjectAccuracy[subject] {
                                     Text("正答率 \(Int((accuracy * 100).rounded()))%")
                                 }
@@ -271,7 +312,8 @@ private struct RigakuMockListV2: View {
                             let round = String(exam.round)
                             let readyCount = appModel.auditedQuestionCount(forRound: round)
                             let expected = exam.officialQuestionCount ?? 0
-                            let ready = appModel.isMockReady(round: round, expectedQuestionCount: exam.officialQuestionCount)
+                            let contentReady = appModel.isMockReady(round: round, expectedQuestionCount: exam.officialQuestionCount)
+                            let accessReady = contentReady && appModel.canAccessBaseMocks
 
                             NavigationLink {
                                 RigakuStudyView(kind: .mock(round))
@@ -282,14 +324,14 @@ private struct RigakuMockListV2: View {
                                             .font(LearningSprintTheme.serif(20, weight: .bold))
                                         Text("監査済み \(readyCount) / \(expected)問")
                                             .font(LearningSprintTheme.sans(12, weight: .semibold))
-                                            .foregroundStyle(ready ? LearningSprintTheme.green : LearningSprintTheme.ink2)
-                                        Text(ready ? "200問のベース模試を開始" : "全問PASS後に解放")
+                                            .foregroundStyle(contentReady ? LearningSprintTheme.green : LearningSprintTheme.ink2)
+                                        Text(accessReady ? "200問のベース模試を開始" : (contentReady ? "月額プランで解放" : "全問PASS後に解放"))
                                             .font(LearningSprintTheme.sans(11, weight: .medium))
                                             .foregroundStyle(LearningSprintTheme.ink3)
                                     }
                                     Spacer()
-                                    Image(systemName: ready ? "checkmark.seal" : "lock")
-                                        .foregroundStyle(ready ? LearningSprintTheme.green : LearningSprintTheme.gold)
+                                    Image(systemName: accessReady ? "checkmark.seal" : "lock")
+                                        .foregroundStyle(accessReady ? LearningSprintTheme.green : LearningSprintTheme.gold)
                                 }
                                 .padding(16)
                                 .background(LearningSprintTheme.card)
@@ -297,7 +339,7 @@ private struct RigakuMockListV2: View {
                                 .overlay(RoundedRectangle(cornerRadius: 16).stroke(LearningSprintTheme.line))
                             }
                             .buttonStyle(.plain)
-                            .disabled(!ready)
+                            .disabled(!contentReady)
                             .accessibilityIdentifier("mock.round.\(exam.round)")
                         }
                     }
