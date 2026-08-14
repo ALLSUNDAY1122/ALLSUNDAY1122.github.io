@@ -1,0 +1,34 @@
+name: Rigaku Subscription Disclosure Migration
+
+on:
+  push:
+    branches:
+      - feat/15-rigaku-sprint-native
+    paths:
+      - rigaku-sprint/ios/patch_subscription_disclosure.py
+      - .github/workflows/rigaku-subscription-disclosure-migration.yml
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/15-rigaku-sprint-native
+          fetch-depth: 0
+      - name: Apply disclosure patch
+        run: python3 rigaku-sprint/ios/patch_subscription_disclosure.py
+      - name: Commit product UI changes
+        run: |
+          if git diff --quiet -- rigaku-sprint/ios/Sources/RigakuRootViewV2.swift rigaku-sprint/ios/Sources/RigakuStudyView.swift; then
+            echo "No disclosure migration needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add rigaku-sprint/ios/Sources/RigakuRootViewV2.swift rigaku-sprint/ios/Sources/RigakuStudyView.swift
+          git commit -m "fix(rigaku): complete subscription disclosures"
+          git push origin HEAD:feat/15-rigaku-sprint-native
