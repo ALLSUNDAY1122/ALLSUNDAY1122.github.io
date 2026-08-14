@@ -57,10 +57,13 @@ for token in required_native:
         errors.append(f"共通ネイティブ機能接続欠損: {token}")
 
 app_entry = texts.get("RigakuSprintApp.swift", "")
+root_v2 = texts.get("RigakuRootViewV2.swift", "")
 if "RigakuRootViewV2()" not in app_entry:
     errors.append("実行入口が現行正本UI RigakuRootViewV2 ではありません")
+for token in ("RigakuPurchaseSettingsSection()", "RigakuLegalSettingsSection()"):
+    if token not in root_v2:
+        errors.append(f"設定画面へのリリースSection接続欠損: {token}")
 
-# 旧UIは再混入させない。実行経路外の死んだ実装も将来の誤修正原因になる。
 legacy_files = (
     SOURCES / "RootTabView.swift",
     SOURCES / "RigakuRootView.swift",
@@ -134,6 +137,9 @@ if "static let totalOfficialQuestionSlots = examRounds.compactMap(\\.officialQue
     errors.append("3回分総枠の導出が欠損")
 if "normalizedExternalIdentifier" not in config:
     errors.append("外部識別子の未展開プレースホルダー拒否処理が欠損")
+for legal_url_token in ("supportURL", "privacyURL", "termsURL"):
+    if legal_url_token not in config:
+        errors.append(f"アプリ内法務URL欠損: {legal_url_token}")
 
 for json_name in (
     "questions.json",
@@ -182,6 +188,7 @@ print("Legacy root/source gate: PASS")
 print("Mock completeness gate: PASS")
 print("Shared native learning features: PASS")
 print("StoreKit2 external-ID bridge: PASS")
+print("In-app legal/support links: PASS")
 print("JSON backup/import: PASS")
 print("Rights-gated media manifest: PASS")
 print("Asset catalog metadata: PASS")
