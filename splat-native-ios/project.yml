@@ -1,0 +1,43 @@
+name: SplatNative
+options:
+  bundleIdPrefix: jp.allsunday1122
+  deploymentTarget:
+    iOS: '18.0'
+packages:
+  Msplat:
+    url: https://github.com/Voxelio-app/msplat.git
+    revision: d620d9c58d270e7de9e34a9d8a85dcf938a5070d
+  MetalSplatter:
+    url: https://github.com/scier/MetalSplatter.git
+    revision: 2b965de1934de38dda1c71cf90bf798aa948a14c
+targets:
+  SplatNative:
+    type: application
+    platform: iOS
+    deploymentTarget: '18.0'
+    sources:
+      - path: SplatNative
+    dependencies:
+      - package: Msplat
+        product: Msplat
+      - package: MetalSplatter
+        product: MetalSplatter
+      - package: MetalSplatter
+        product: SplatIO
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.splatlab
+        PRODUCT_NAME: Splat Lab Native
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: 1
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Splat Lab
+        INFOPLIST_KEY_NSCameraUsageDescription: 立体の思い出を端末内で3D生成するため、カメラを使用します。
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+        TARGETED_DEVICE_FAMILY: '1'
+        SWIFT_VERSION: '6.0'
+        SWIFT_STRICT_CONCURRENCY: minimal
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        CODE_SIGN_STYLE: Automatic
