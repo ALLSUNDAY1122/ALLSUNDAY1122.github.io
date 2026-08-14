@@ -114,9 +114,9 @@
       "scoringException": null,
       "point": "術後1日の39.1℃発熱では、手術侵襲に伴う吸収熱に加え、発赤・熱感のある末梢静脈カテーテル部位からの感染も原因候補となる。",
       "detail": "Aさんは術後1日に39.1℃、脈拍117/分、白血球11,900/μL、CRP11.4mg/dLである。胸部X線・呼吸音に異常がなく、尿沈渣に白血球を認めず、術創にも腫脹・発赤・熱感がないため肺炎・腎盂腎炎・術創部感染を示す局所所見は乏しい。一方、左手末梢血管内カテーテル刺入部に発赤・熱感があり、CDCは末梢静脈カテーテル部位の発赤・熱感を静脈炎・感染を疑う所見としている。したがって公式正答の『術後の吸収熱』『カテーテル関連血流感染症』を保持する。ただし実臨床で血流感染症を確定するには血液培養等が必要で、刺入部所見だけで確定診断はしない。",
-      "requiresMedia": true,
-      "mediaAuditStatus": "pending",
-      "rightsStatus": "mhlw-pdl1.0-text; media-pending",
+      "requiresMedia": false,
+      "mediaAuditStatus": "verified",
+      "rightsStatus": "mhlw-pdl1.0-text",
       "reviewStatus": "official_import_pending_explanation_and_classification",
       "sourceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp240424-03_04_05.html",
@@ -132,7 +132,7 @@
       "scenario": "A さん 49 歳、女性!は、これまで在宅勤務でほとんど外出することがなく、BMI 33 であった。A さんは久しぶりの出勤の際に転倒し、右大\u0013骨頸部骨折と診断され、 femoral neck fracture 右人工股関節置換術を受けることになった。",
       "scenarioIndex": 1,
       "scenarioTotal": 3,
-      "mediaDetectionReason": "media_reference_in_stem_conservative",
+      "mediaDetectionReason": "false_positive_verified_text_only",
       "classificationStatus": "high",
       "classificationScore": 20,
       "classificationSignals": [
@@ -159,13 +159,21 @@
       "contentConcernType": null,
       "contentConcernReason": null,
       "contentConcernEvidenceRefs": [],
+      "mediaAuditResult": "false_positive_textual_xray_finding",
+      "canonicalMediaAudit": {
+        "mediaAuditResult": "false_positive_textual_xray_finding",
+        "reason": "公式午前問題PDFの問題92は『胸部エックス線写真：異常所見なし』という文字情報のみで、解答に必要な図版・写真そのものは提示されていない。",
+        "officialSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+        "officialPdfPageIndex": 35,
+        "officialPrintedPage": 30,
+        "sourceAttributionRequired": true,
+        "checkedDate": "2026-08-14"
+      },
       "canonicalSchemaVersion": 1,
       "canonicalCategory": "状況設定",
       "canonicalSourceExam": 113,
-      "canonicalReleaseStatus": "quarantined",
-      "canonicalQuarantineTypes": [
-        "media"
-      ],
+      "canonicalReleaseStatus": "normal",
+      "canonicalQuarantineTypes": [],
       "canonicalScenarioAuditUnit": "3-question-scenario"
     },
     {
@@ -1475,8 +1483,8 @@
       "point": "産褥3日で乳房に熱感が出ているAさんには、現在の横抱きとは異なるフットボール抱き〈脇抱き〉を選択できる。公式図では③。",
       "detail": "Aさんは乳房Ⅲ型で乳房の熱感が出ており、現在は横抱きで授乳している。UNICEFはフットボール／ラグビー抱きを、乳房緊満や乳頭痛がある場合にも試せる授乳姿勢として示している。児を母体の脇に抱えるため、現在の横抱きとは異なる角度で吸着させやすい。厚生労働省の公式正答は図③で、複数の問題転載で図③がフットボール抱きであることを照合した。最終canonical PASS前には公式別冊図版を再度目視確認する。",
       "requiresMedia": true,
-      "mediaAuditStatus": "pending",
-      "rightsStatus": "mhlw-pdl1.0-text; media-pending",
+      "mediaAuditStatus": "verified",
+      "rightsStatus": "mhlw-pdl1.0-media-verified",
       "reviewStatus": "official_import_pending_explanation_and_classification",
       "sourceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp240424-03_04_05.html",
@@ -1492,7 +1500,7 @@
       "scenario": "A さん 32 歳、初産婦!は妊娠 39 週\u0006日で男児を正常分娩した。出生体重 3,000 g、 身長 48.0 cm。出生直後、児に付着していた羊水を拭き取り、インファントラジアン トウォーマーの下で観察を行った。その後、温めておいた衣服を着せてコットに寝か せ、コットを空調の風が当たらない場所に配置した。",
       "scenarioIndex": 1,
       "scenarioTotal": 3,
-      "mediaDetectionReason": "media_reference_in_stem_conservative",
+      "mediaDetectionReason": "official_media_verified",
       "classificationStatus": "high",
       "classificationScore": 20,
       "classificationSignals": [
@@ -1519,13 +1527,24 @@
       "contentConcernType": null,
       "contentConcernReason": null,
       "contentConcernEvidenceRefs": [],
+      "mediaAuditResult": "official_figure_verified",
+      "canonicalMediaAudit": {
+        "mediaAuditResult": "official_figure_verified",
+        "reason": "公式午前問題PDFで4つの授乳姿勢図を目視確認。選択肢3はフットボール抱きと明記され、公式正答3と一致。",
+        "officialSourceUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+        "officialPdfPageIndex": 48,
+        "officialPrintedPage": 43,
+        "figureLabel": "問題110 授乳の仕方 1〜4",
+        "verifiedVisualAnswer": "3. フットボール抱き",
+        "sourceAttributionRequired": true,
+        "processingAttribution": "厚生労働省『第113回看護師国家試験 午前問題』を学習用に必要範囲を加工して使用",
+        "checkedDate": "2026-08-14"
+      },
       "canonicalSchemaVersion": 1,
       "canonicalCategory": "状況設定",
       "canonicalSourceExam": 113,
-      "canonicalReleaseStatus": "quarantined",
-      "canonicalQuarantineTypes": [
-        "media"
-      ],
+      "canonicalReleaseStatus": "normal",
+      "canonicalQuarantineTypes": [],
       "canonicalScenarioAuditUnit": "3-question-scenario"
     },
     {
