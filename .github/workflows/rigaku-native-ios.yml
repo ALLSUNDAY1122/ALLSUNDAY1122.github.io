@@ -7,6 +7,9 @@ on:
       - 'native-ios/LearningSprintCore/**'
       - '.github/workflows/rigaku-native-ios.yml'
 
+permissions:
+  contents: write
+
 concurrency:
   group: rigaku-native-${{ github.ref }}
   cancel-in-progress: true
@@ -16,6 +19,19 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Apply duplicate-diversification migration
+        run: |
+          python3 rigaku-sprint/product-content/diversify_duplicate_prompts.py
+          if ! git diff --quiet -- rigaku-sprint/product-content/question-batches; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add rigaku-sprint/product-content/question-batches
+            git commit -m "fix(rigaku): diversify duplicate release questions"
+            git push origin HEAD:${GITHUB_HEAD_REF}
+          fi
 
       - name: Static native audit
         run: python3 rigaku-sprint/ios/static_audit.py
