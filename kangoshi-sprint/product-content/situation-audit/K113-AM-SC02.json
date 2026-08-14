@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K113-AM-SC02",
+  "sourceExam": 113,
+  "session": "AM",
+  "questionIds": ["K113-AM094", "K113-AM095", "K113-AM096"],
+  "scenarioIndexes": [0,1,2],
+  "scenarioTotal": 3,
+  "patientProfile": "57歳男性。50歳の妻と2人暮らし。21歳から喫煙し、5年前に肺気腫と診断。最近は坂道・階段で労作時息切れ。COPD増悪入院を経て、5年後には在宅酸素療法を導入。",
+  "mainCondition": "COPDの肺機能変化、呼吸負荷を減らす生活動作、在宅酸素療法の火気安全。",
+  "assessment": [
+    "AM094では気流閉塞とエアトラッピングから残気量増加を判断する。",
+    "AM095では退院後の家事の中で最も呼吸負荷が小さい動作として荷物をカートで運ぶ方法を選ぶ。",
+    "AM096ではHOT導入後の火災予防としてガス調理器を電磁調理器へ変更する。"
+  ],
+  "nursingJudgment": "3問は『安定期の病態理解→増悪後の省エネルギー生活→進行後のHOT安全管理』として5年以上のCOPD進行を追う。妻は同居家族で患者本人との取り違えはない。",
+  "nursingPractice": [
+    "呼吸機能・運動耐容能を評価し、肺過膨張と労作時呼吸困難を説明する。",
+    "家事では補助具や動作分割を使い、呼吸困難が強くならない方法を選ぶ。",
+    "HOTでは火気を2m以上離し、酸素流量は自己判断で変更しない。"
+  ],
+  "tripletConsistency": {"sameScenarioId":true,"sameScenarioText":true,"indexesComplete":true,"patientIdentityConsistent":true,"longitudinalProgression":"肺気腫診断→COPD増悪→5年後HOT","timelineConsistent":true,"clinicalConsistency":true,"nextScenarioLeakDetected":false},
+  "canonicalPatch": {"path":"situation-audit/canonical-patches/K113-AM-SC02.json","textCorrectionRequired":true,"classificationCorrectionRequired":false,"applyState":"pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent":true,"majorSubject":"成人看護学","subject":"呼吸器","status":"pass"},
+  "explanationAudit": {"batchId":"K113-AM094-AM096-situation-SC02","allThreeExplained":true,"allThreeEvidenceRefsPresent":true,"allThreeEvidenceCheckedDatePresent":true,"evidenceCheckedDate":"2026-08-14"},
+  "media":{"required":false,"status":"not_required"},
+  "scoring":{"exceptionPresent":false,"status":"normal"},
+  "contentConcern":{"status":"none","questionId":null,"reason":null,"evidenceRefs":[]},
+  "expertReviewStatus":"pending_global_expert_audit",
+  "scenarioAuditStatus":"content_pass_canonical_patch_pending",
+  "auditedAt":"2026-08-14T15:24:00+09:00"
+}
