@@ -1,7 +1,9 @@
 name: Hokenshi Sprint Native Foundation
 
 on:
-  pull_request:
+  push:
+    branches:
+      - feat/hokenshi-sprint-native-foundation
     paths:
       - 'hokenshi-sprint/NativePackage/**'
       - 'hokenshi-sprint/content/**'
@@ -17,7 +19,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: hokenshi-foundation-${{ github.event.pull_request.number || github.ref }}
+  group: hokenshi-foundation-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -77,13 +79,16 @@ jobs:
           grep -q 'jp.allsunday1122.hokenshi.premium' hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/HokenshiMonetization.swift
           grep -q 'public static let freeQuestionCount = 30' hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/HokenshiMonetization.swift
           grep -q 'public static let premiumQuestionCount = 300' hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/HokenshiMonetization.swift
+          grep -q 'hokenshi.paywall.retry' hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/HokenshiPaywallView.swift
+          grep -q 'purchase.product == nil' hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/HokenshiPaywallView.swift
+          grep -q 'testSubjectSprintNeverRepeatsQuestionsToFillTarget' hokenshi-sprint/NativePackage/Tests/HokenshiSprintFeatureTests/HokenshiMonetizationTests.swift
           grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.hokenshi' hokenshi-sprint/ios/project.yml
           grep -q 'DEVELOPMENT_TEAM: MN3D2ZM44N' hokenshi-sprint/ios/project.yml
           if grep -R --line-number -E 'App Store Connect App ID[^0-9]*[0-9]{6,}|APP_STORE_CONNECT_APP_ID[^0-9]*[0-9]{6,}' hokenshi-sprint; then
             echo 'A numeric App Store Connect App ID was added before an Apple-issued value was recorded.'
             exit 1
           fi
-          echo 'PASS: delegated Bundle/IAP identifiers are canonical; numeric ASC App ID remains unset until Apple issues it.'
+          echo 'PASS: delegated Bundle/IAP identifiers are canonical; StoreKit retry and no-repeat subject tests are present; numeric ASC App ID remains unset until Apple issues it.'
       - name: Safari prototype static smoke
         run: |
           node --check hokenshi-sprint/prototype/app.js
@@ -159,13 +164,13 @@ jobs:
 
   persist-release-resources:
     needs: [content-plan, native-foundation]
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    if: github.ref == 'refs/heads/feat/hokenshi-sprint-native-foundation'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: feat/hokenshi-sprint-native-foundation
           fetch-depth: 0
       - name: Restore audited release resources
         uses: actions/download-artifact@v4
@@ -173,8 +178,6 @@ jobs:
           name: hokenshi-release-resources
           path: hokenshi-sprint
       - name: Persist generated release bank
-        env:
-          HEAD_BRANCH: ${{ github.head_ref }}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -187,4 +190,4 @@ jobs:
             exit 0
           fi
           git commit -m 'chore(hokenshi): persist audited release resources [skip ci]'
-          git push origin HEAD:"${HEAD_BRANCH}"
+          git push origin HEAD:feat/hokenshi-sprint-native-foundation
