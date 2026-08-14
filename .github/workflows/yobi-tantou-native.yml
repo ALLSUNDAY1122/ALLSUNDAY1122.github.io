@@ -25,11 +25,11 @@ jobs:
         run: python learning-sprint/yobi-tantou/audit_native.py
       - name: Candidate question preflight self-test
         run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py --self-test
-      - name: Candidate question bank preflight
+      - name: Foundation candidate question bank preflight
         run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py learning-sprint/yobi-tantou/content-loop/questions.candidates.v1.json
-      - name: Candidate exact-date statutory source audit
+      - name: Foundation exact-date statutory source audit
         run: python learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
-      - name: Candidate answer and explanation audit
+      - name: Foundation answer and explanation audit
         run: python learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
       - name: Standard candidate bank preflight
         run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py learning-sprint/yobi-tantou/content-loop/questions.standard.candidates.v1.json
@@ -44,6 +44,19 @@ jobs:
           --bank learning-sprint/yobi-tantou/content-loop/questions.standard.candidates.v1.json
           --audit learning-sprint/yobi-tantou/content-loop/standard-answer-audit.v1.json
           --locks learning-sprint/yobi-tantou/content-loop/standard-source-locks.v1.json
+      - name: Applied candidate bank preflight
+        run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py learning-sprint/yobi-tantou/content-loop/questions.applied.candidates.v1.json
+      - name: Applied exact-date statutory source audit
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
+          --bank learning-sprint/yobi-tantou/content-loop/questions.applied.candidates.v1.json
+          --locks learning-sprint/yobi-tantou/content-loop/applied-source-locks.v1.json
+      - name: Applied answer and explanation audit
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
+          --bank learning-sprint/yobi-tantou/content-loop/questions.applied.candidates.v1.json
+          --audit learning-sprint/yobi-tantou/content-loop/applied-answer-audit.v1.json
+          --locks learning-sprint/yobi-tantou/content-loop/applied-source-locks.v1.json
       - name: Practice staging self-test
         run: python learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py --self-test
       - name: Practice promotion self-test
