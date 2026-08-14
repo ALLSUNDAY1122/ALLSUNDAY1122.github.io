@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K113-AM-SC09",
+  "questionIds": ["K113-AM115", "K113-AM116", "K113-AM117"],
+  "sourceEvidence": {
+    "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+    "officialPrintedPages": [48, 49],
+    "checkedAt": "2026-08-14T16:45:00+09:00"
+  },
+  "textCorrections": {
+    "scenario": [
+      {"from": "要介護\\u0004", "to": "要介護1"},
+      {"from": "\\u0004人暮らし", "to": "1人暮らし"},
+      {"from": "\\u0007年前に乳癌", "to": "5年前に乳癌"},
+      {"from": "\\u0004年前に肺への転移", "to": "1年前に肺への転移"},
+      {"from": "外来を月に\\u0002回", "to": "外来を月に2回"},
+      {"from": "訪問介護と訪問看護を週に\\u0004回ずつ", "to": "訪問介護と訪問看護を週に1回ずつ"},
+      {"from": "先月は\\u0004回しか受診", "to": "先月は1回しか受診"}
+    ],
+    "questions": [
+      {"id": "K113-AM115", "from": "医師の診察を月回に減らすこと", "to": "医師の診察を月1回に減らすこと"},
+      {"id": "K113-AM116", "from": "か月後", "to": "3か月後"},
+      {"id": "K113-AM116", "from": "HOTZ L/分、24時間", "to": "HOT〈3L/分、24時間〉"},
+      {"id": "K113-AM116", "from": "要介護に変更", "to": "要介護3に変更"},
+      {"id": "K113-AM116", "from": "訪問看護を週に回", "to": "訪問看護を週に3回"},
+      {"id": "K113-AM116", "from": "Aさんの回分の食事量", "to": "Aさんの1回分の食事量"},
+      {"id": "K113-AM117", "from": "か月後", "to": "6か月後"},
+      {"id": "K113-AM117", "from": "週後", "to": "2週後"}
+    ]
+  },
+  "classificationCorrections": [
+    {
+      "id": "K113-AM115",
+      "from": {"majorSubject": "成人看護学", "subject": "がん看護"},
+      "to": {"majorSubject": "地域・在宅看護論", "subject": "在宅療養・地域連携"},
+      "reason": "乳癌は背景疾患だが、設問の主眼は通院困難となった在宅終末期患者が自宅療養を続けるための訪問診療・地域連携である。症例本文と正答を主軸に分類する。"
+    }
+  ],
+  "applyState": "pending_canonical_integration"
+}
