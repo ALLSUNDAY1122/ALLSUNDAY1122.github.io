@@ -1,0 +1,43 @@
+name: Kangoshi Official Scoring Runtime
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/scoring-overrides.js'
+      - 'kangoshi-sprint/patch_scoring_runtime.py'
+      - 'kangoshi-sprint/validate_scoring_runtime.py'
+      - '.github/workflows/kangoshi-scoring-runtime.yml'
+
+concurrency:
+  group: kangoshi-official-scoring-runtime
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  scoring-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch scoring runtime
+        run: python3 kangoshi-sprint/patch_scoring_runtime.py
+      - name: Validate scoring runtime
+        run: python3 kangoshi-sprint/validate_scoring_runtime.py
+      - name: Commit patched runtime and audit
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/app-v03.js kangoshi-sprint/index.html kangoshi-sprint/product-content/scoring-runtime-audit.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'kangoshi: apply official scoring runtime [skip ci]'
+            pushed=0
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push; then pushed=1; break; fi
+              sleep 2
+            done
+            test "$pushed" = "1"
+          fi
