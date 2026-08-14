@@ -31,8 +31,18 @@ final class YobiTantouSprintUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["模擬試験"].waitForExistence(timeout: 3))
         XCTAssertTrue(app.staticTexts["確認済みの公式採点構造"].exists)
         XCTAssertTrue(app.staticTexts["令和7年"].exists)
-        XCTAssertTrue(app.staticTexts["令和6年"].exists)
-        XCTAssertTrue(app.staticTexts["正式教材問題の権利・内容監査が完了するまで、年度模試の開始だけをロックしています。"].exists)
+
+        let r6 = app.staticTexts["令和6年"]
+        if !r6.exists {
+            app.swipeUp()
+        }
+        XCTAssertTrue(r6.waitForExistence(timeout: 3))
+
+        let locked = app.staticTexts["採点構造は確認済みです。正式教材問題の権利・内容監査が完了するまで、年度模試の開始だけをロックしています。"]
+        if !locked.exists {
+            app.swipeUp()
+        }
+        XCTAssertTrue(locked.waitForExistence(timeout: 3))
     }
 
     func testTabsRemainNativeAndNavigable() throws {
