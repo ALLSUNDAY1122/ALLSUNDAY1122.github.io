@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-PM-SC10",
+  "sourceExam": 114,
+  "session": "PM",
+  "sourceEvidence": {
+    "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+    "officialPages": [48, 49],
+    "checkedAt": "2026-08-14T15:52:00+09:00"
+  },
+  "textCorrections": {
+    "scenarioTextCanonical": "午後1時に震度6強の地震が発生し、避難所が開設された。地震発生の2時間後、避難所に救護所が設置され、近隣の病院から医療救護班が派遣された。医療救護班が複数の被災者に対応するなか、Aさん（54歳、男性）が搬送されてきた。Aさんは右大腿部に4cmの切創があり、出血部位をタオルで押さえている。すぐに看護師が切創部の処置を介助することになった。",
+    "questionTextCorrections": [
+      {"id": "K114-PM119", "fromContains": "換気を日回", "toContains": "換気を1日1回"},
+      {"id": "K114-PM120", "fromContains": "発災日後", "toStartsWith": "発災3日後"},
+      {"id": "K114-PM120", "fromContains": "週間の睡眠状況", "toContains": "1週間の睡眠状況"}
+    ]
+  },
+  "scenarioType": "multi_patient_disaster_event",
+  "patientTargets": [
+    {"id": "K114-PM118", "target": "Aさん（54歳、男性、右大腿部4cm切創）"},
+    {"id": "K114-PM119", "target": "避難所登録者約150名の集団"},
+    {"id": "K114-PM120", "target": "Bさん（72歳、男性、帯状疱疹を疑う皮疹）"}
+  ],
+  "applyState": "pending_canonical_integration"
+}
