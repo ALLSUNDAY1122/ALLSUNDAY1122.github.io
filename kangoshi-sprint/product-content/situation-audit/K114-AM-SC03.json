@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC03",
+  "sourceExam": 114,
+  "session": "AM",
+  "questionIds": ["K114-AM097", "K114-AM098", "K114-AM099"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "50歳女性、会社員。職場で激しい頭痛と意識消失を来し救急搬送。大声で開眼するがすぐ眠る。脳動脈瘤破裂によるくも膜下出血と診断されクリッピング術を受け、その後いったん後遺症なく退院。",
+  "mainCondition": "くも膜下出血の急性期意識評価、クリッピング術後の頭痛・脳槽ドレーン管理、退院後の正常圧水頭症徴候の早期認識。",
+  "assessment": [
+    "AM097では大声で開眼し刺激中止で再び眠る状態をJCS II-20と評価する。",
+    "AM098ではクリッピング術後3時間、バイタル安定・脳槽ドレーン排液に急変がない中の頭痛を評価し、鎮痛薬の適応を判断する。",
+    "AM099では退院1か月後の反応鈍化・物忘れ、歩行遅延、尿失禁の組合せから正常圧水頭症を疑う。"
+  ],
+  "nursingJudgment": "3問は『発症時の意識障害→急性期手術後管理→退院後の遅発性合併症』として同一のくも膜下出血症例を追う。家族はAM099で情報提供者として登場するが患者本人との取り違えはない。",
+  "nursingPractice": [
+    "JCSを刺激への反応の強さと持続で評価する。",
+    "術後頭痛では神経所見・バイタル・ドレーン状態を確認し、指示に沿った鎮痛とドレーン管理を行う。",
+    "退院後も歩行、認知、排尿の変化を家族情報と合わせて評価し、水頭症など遅発性合併症へつなげる。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "textCorrectionAudit": {"required": true, "overlay": "situation-audit/text-corrections.json", "officialPdfVerified": true, "officialPages": [32, 33], "correctedFacts": ["AM098酸素投与=5L/分", "AM098=術後3時間後", "AM099=退院1か月後"], "applyState": "pending_canonical_integration"},
+  "classificationAudit": {
+    "scenarioContextConsistent": true,
+    "correctionRequiredIds": ["K114-AM098", "K114-AM099"],
+    "correctionOverlay": "situation-audit/classification-corrections.json",
+    "reason": "AM097は意識評価として基礎看護学でも妥当だが、AM098-099はくも膜下出血の周術期・遅発性神経合併症が主題で、成人看護学／脳神経へ修正する。",
+    "applyState": "pending_canonical_integration"
+  },
+  "explanationAudit": {"batchId": "K114-AM097-AM099-situation-SC03", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "none", "questionId": null, "reason": null, "evidenceRefs": []},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_corrections_pending_canonical",
+  "auditedAt": "2026-08-14T15:48:00+09:00"
+}
