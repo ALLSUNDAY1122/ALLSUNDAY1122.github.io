@@ -1,24 +1,15 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "workstream": "B-general",
   "scope": {"category":"一般","sourceExams":[115,114,113],"targetCount":390,"countPerExam":130},
   "sourceOfTruth": "GitHub main",
-  "checkedAt": "2026-08-10T14:35:00+09:00",
-  "status": "PASS_WITH_QUARANTINE_AND_COORDINATOR_HANDOFF",
-  "latestMainRecheck": {
-    "headSha": "a1d93468d2fce7b34ce707a51baa4a098090d990",
-    "baseBCompletionSha": "9d42f096f1a46e25b761434409d5415470d5dd8e",
-    "commitsSinceBCompletion": 4,
-    "kangoshiSprintFilesChanged": 0,
-    "affectedBGeneralDataChanged": 0,
-    "reAuditTriggered": false,
-    "reason": "No kangoshi-sprint changes were present between the B-general completion commit and the current main head; rerunning the 390-question audit would duplicate completed work."
-  },
-  "canonicalIntegrationSnapshot": {
-    "globalExplainedMaterialized": 102,
-    "globalTotal": 720,
-    "globalPass": false,
-    "note": "Common enriched-draft/manifest is coordinator-owned and stale relative to B-workstream batches. Do not report 390 as product-integrated until coordinator reruns apply/queue/validate."
+  "checkedAt": "2026-08-14T14:28:00+09:00",
+  "status": "BATCH_AUDIT_PASS_CANONICAL_AUDIT_PENDING",
+  "standardRecheck": {
+    "title": "AIアプリ開発・公開フロー v2.4",
+    "rechecked": true,
+    "materialChange": true,
+    "impact": "Workstream explanation batches are intermediate artifacts. Final PASS now requires consolidation into canonical JSON and a fresh audit against the consolidated canonical data. Repeated unchanged main checks are prohibited by the NO_PROGRESS recovery rule."
   },
   "workstreamCoverage": {
     "generalContentAndEvidenceCovered": 390,
@@ -26,13 +17,13 @@
     "normalExplanationEvidenceCovered": 352,
     "quarantinedWithAuditEvidence": 38,
     "completedExams": {
-      "115": {"status":"PASS_WITH_QUARANTINE","target":130,"normalText":122,"quarantined":8,"contentConcerns":2,"scoringExceptions":2,"mediaDependent":4,"sourceDataDefects":0,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K115-SPECIAL-AUDIT.json"},
-      "114": {"status":"PASS_WITH_QUARANTINE","target":130,"normalText":116,"quarantined":14,"contentConcerns":4,"scoringExceptions":0,"mediaDependent":10,"sourceDataDefects":0,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K114-SPECIAL-AUDIT.json"},
-      "113": {"status":"PASS_WITH_QUARANTINE","target":130,"normalText":114,"quarantined":16,"contentConcerns":3,"scoringExceptions":0,"mediaDependent":8,"sourceDataDefects":5,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K113-SPECIAL-AUDIT.json","specialAuditCommit":"8628f5709aa43c1f5e4f131cedb446f83ffe5f15"}
+      "115": {"batchAuditStatus":"PASS_WITH_QUARANTINE","target":130,"normalText":122,"quarantined":8,"contentConcerns":2,"scoringExceptions":2,"mediaDependent":4,"sourceDataDefects":0,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K115-SPECIAL-AUDIT.json"},
+      "114": {"batchAuditStatus":"PASS_WITH_QUARANTINE","target":130,"normalText":116,"quarantined":14,"contentConcerns":4,"scoringExceptions":0,"mediaDependent":10,"sourceDataDefects":0,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K114-SPECIAL-AUDIT.json"},
+      "113": {"batchAuditStatus":"PASS_WITH_QUARANTINE","target":130,"normalText":114,"quarantined":16,"contentConcerns":3,"scoringExceptions":0,"mediaDependent":8,"sourceDataDefects":5,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K113-SPECIAL-AUDIT.json"}
     }
   },
   "quarantineTotals": {"contentConcerns":9,"scoringExceptions":2,"mediaDependent":22,"sourceDataDefects":5},
-  "quality": {
+  "qualityAtBatchLayer": {
     "officialAnswerChanged":0,
     "unclassified":0,
     "queueOverlap":0,
@@ -40,18 +31,23 @@
     "normalMissingDetail":0,
     "normalMissingEvidenceRefs":0,
     "normalMissingEvidenceCheckedDate":0,
-    "highSimilarityWaterFillingDetected":0,
-    "finalAudit":"kangoshi-sprint/workstreams/B-general/FINAL-AUDIT.json",
-    "finalAuditCommit":"242662c58dce6d0af9538bc709b7e2785e7a8a1a"
+    "highSimilarityWaterFillingDetected":0
+  },
+  "canonicalization": {
+    "handoffFile":"kangoshi-sprint/workstreams/B-general/CANONICALIZATION-HANDOFF-v2.4.json",
+    "handoffCommit":"824dbb5f347e12dfdf5fec569fd4e87de391491d",
+    "canonicalAuditComplete":false,
+    "finalPassAllowed":false,
+    "reason":"The revised problem-generation/audit procedure requires final machine audit on consolidated canonical JSON rather than reusing small-batch PASS results."
   },
   "invalidatedCommonGate": {
-    "reason":"K113 raw numeric/text import defects newly discovered after the prior common raw audit PASS",
+    "reason":"K113 raw numeric/text import defects were discovered after the prior common raw audit PASS",
     "ids":["K113-AM061","K113-PM053","K113-PM057","K113-PM078","K113-PM090"],
-    "requiredAction":"Coordinator restores official text and reruns raw validation + duplicate/high-similarity + affected L2/L3 queues before product release."
+    "requiredAction":"Coordinator restores exact official text and reruns raw validation, duplicate/high-similarity audit, and affected L2/L3 queues before canonical PASS."
   },
   "editBoundary": {
     "allowed":["kangoshi-sprint/product-content/explanation-batches/B-general-*.json","kangoshi-sprint/workstreams/B-general/**"],
-    "forbidden":["kangoshi-sprint/product-content/enriched-draft/**","kangoshi-sprint/product-content/manifest.json","kangoshi-sprint/product-content/enrichment-trigger.json","kangoshi-sprint/product-content/content-concerns.json","common UI","mock exam engine","StoreKit"]
+    "forbidden":["kangoshi-sprint/product-content/enriched-draft/**","kangoshi-sprint/product-content/manifest.json","kangoshi-sprint/product-content/enrichment-trigger.json","kangoshi-sprint/product-content/content-concerns.json","common apply/build/validate scripts","common UI","mock exam engine","StoreKit"]
   },
-  "nextLoop":"B-general content loop complete. Await coordinator integration and specialist/media/raw-fix loops; if coordinator changes affected data, rerun only impacted B quality loop."
+  "nextLoop":"Do not repeat status-only checks. Wait only for actual coordinator/raw/media/expert changes. When canonical general JSON is created or affected source data changes, rerun the impacted B-general audit against canonical data."
 }
