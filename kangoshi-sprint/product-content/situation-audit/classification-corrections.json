@@ -19,6 +19,24 @@
       "reason": "同一症例3問はバセドウ病の診断前処置、抗甲状腺薬副作用、治療後の生活再開を扱う。PM099には将来の妊娠への不安も含まれるが、正答は『症状が落ちつけば運動できます』であり、主たる看護判断はバセドウ病の療養・活動支援。症例本文と正答を主軸に成人看護学・内分泌代謝へ修正する。",
       "detectedAt": "2026-08-14T14:46:00+09:00",
       "applyState": "pending_canonical_integration"
+    },
+    {
+      "id": "K115-PM118",
+      "scenarioId": "K115-PM-SC10",
+      "from": {
+        "majorSubject": "基礎看護学",
+        "subject": "与薬・輸液",
+        "classificationMethod": "semantic-refinement-v3-promoted",
+        "triggerConcern": "設問文の『輸液ポンプ』『輸液ライン』を局所キーワードとして拾い、災害時ICU対応という症例・正答文脈より優先した。"
+      },
+      "to": {
+        "majorSubject": "看護の統合と実践",
+        "subject": "災害・救急",
+        "classificationMethod": "situation-context-specialist-correction-v1"
+      },
+      "reason": "SC10は台風・停電・土砂災害・避難所対応を連続して扱う災害看護症例。PM118では自家発電切替後に医療機器は正常作動しており、正答は不安を示す意識清明患者への声かけである。輸液操作そのものを問う設問ではないため、症例本文・事象・正答を主軸に看護の統合と実践／災害・救急へ修正する。",
+      "detectedAt": "2026-08-14T15:22:00+09:00",
+      "applyState": "pending_canonical_integration"
     }
   ]
 }
