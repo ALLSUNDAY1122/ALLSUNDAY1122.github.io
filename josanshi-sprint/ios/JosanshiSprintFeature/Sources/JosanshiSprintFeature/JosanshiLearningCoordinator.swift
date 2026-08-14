@@ -24,6 +24,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
     @Published public private(set) var preferences: JosanshiPreferences
     @Published public private(set) var activeSession: LearningSessionSnapshot?
     @Published public private(set) var latestEvaluation: AnswerEvaluation?
+    @Published public private(set) var lastCompletedSession: JosanshiSessionHistoryEntry?
     @Published public private(set) var persistenceErrorDescription: String?
 
     public private(set) var questions: [LearningQuestion]
@@ -39,6 +40,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         self.questions = questions
         self.store = store
         self.preferencesStore = preferencesStore ?? (loadPersistedState ? JosanshiPreferencesStore() : nil)
+        self.lastCompletedSession = nil
 
         if loadPersistedState, let store {
             do {
@@ -119,12 +121,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         let eligible = questions.filter { isPremium || !$0.premium }
         let selected: [LearningQuestion]
         if preferences.shuffleQuestions {
-            selected = LearningEngine.selectSprint(
-                from: eligible,
-                target: state.dailyTarget,
-                isPremium: true,
-                seed: seed
-            )
+            selected = LearningEngine.selectSprint(from: eligible, target: state.dailyTarget, isPremium: true, seed: seed)
         } else {
             selected = Array(eligible.prefix(state.dailyTarget))
         }
@@ -145,12 +142,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         guard !candidates.isEmpty else { throw JosanshiLearningError.subjectUnavailable(subject) }
         let selected: [LearningQuestion]
         if preferences.shuffleQuestions {
-            selected = LearningEngine.selectSprint(
-                from: candidates,
-                target: state.dailyTarget,
-                isPremium: true,
-                seed: seed
-            )
+            selected = LearningEngine.selectSprint(from: candidates, target: state.dailyTarget, isPremium: true, seed: seed)
         } else {
             selected = Array(candidates.prefix(state.dailyTarget))
         }
@@ -172,9 +164,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
     @discardableResult
     public func startMock(_ mockRound: Int, isPremium: Bool = true) throws -> LearningSessionSnapshot {
         let roundValue = String(mockRound)
-        let candidates = questions.filter {
-            $0.examRound == roundValue && (isPremium || !$0.premium)
-        }
+        let candidates = questions.filter { $0.examRound == roundValue && (isPremium || !$0.premium) }
         guard !candidates.isEmpty else { throw JosanshiLearningError.mockUnavailable(roundValue) }
         return start(kind: .mock(roundValue), questions: candidates)
     }
@@ -207,6 +197,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
 
         if session.currentIndex + 1 >= session.questionIDs.count {
             state.recordCompletion(for: session.kind)
+            recordCompletedSession(session, finishedAt: date)
             state.resumeSession = nil
             activeSession = nil
         } else {
@@ -225,6 +216,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
     public func clearSession() {
         activeSession = nil
         latestEvaluation = nil
+        lastCompletedSession = nil
         state.resumeSession = nil
         persist()
     }
@@ -237,9 +229,12 @@ public final class JosanshiLearningCoordinator: ObservableObject {
             examDate: examDate,
             contentVersion: JosanshiLocalPersistenceConfiguration.contentVersion
         )
+        preferences.recentSessions = []
         activeSession = nil
         latestEvaluation = nil
+        lastCompletedSession = nil
         persist()
+        persistPreferences()
     }
 
     public func resumePersistedSession() -> Bool {
@@ -253,6 +248,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         }
         activeSession = snapshot
         latestEvaluation = nil
+        lastCompletedSession = nil
         return true
     }
 
@@ -280,6 +276,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
             state = envelope.state
             preferences = envelope.preferences
             activeSession = state.resumeSession
+            lastCompletedSession = nil
             persist()
             persistPreferences()
             return
@@ -288,32 +285,23 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         guard let store else {
             state = try decoder.decode(LearningState.self, from: data)
             activeSession = state.resumeSession
+            lastCompletedSession = nil
             return
         }
         state = try store.importBackup(data, allowContentVersionMigration: false)
         activeSession = state.resumeSession
+        lastCompletedSession = nil
         persistenceErrorDescription = nil
     }
 
-    public var todayAnsweredCount: Int {
-        LearningEngine.todayAnsweredCount(state: state)
-    }
-
-    public var heatmap35Days: [Date: Int] {
-        LearningEngine.heatmap35Days(state: state)
-    }
-
-    public var subjectAccuracy: [String: Double] {
-        LearningEngine.subjectAccuracy(state: state)
-    }
-
-    public var weakQuestionCount: Int {
-        state.weakQuestions.count
-    }
-
+    public var todayAnsweredCount: Int { LearningEngine.todayAnsweredCount(state: state) }
+    public var heatmap35Days: [Date: Int] { LearningEngine.heatmap35Days(state: state) }
+    public var subjectAccuracy: [String: Double] { LearningEngine.subjectAccuracy(state: state) }
+    public var weakQuestionCount: Int { state.weakQuestions.count }
     public var totalAnsweredCount: Int { state.attempts.count }
     public var totalCorrectCount: Int { state.attempts.filter(\.isCorrect).count }
     public var uniqueAnsweredCount: Int { Set(state.attempts.map(\.questionID)).count }
+    public var recentSessions: [JosanshiSessionHistoryEntry] { preferences.resolvedRecentSessions }
 
     public var requiredDailyPace: Int? {
         guard let examDate = state.examDate else { return nil }
@@ -325,15 +313,41 @@ public final class JosanshiLearningCoordinator: ObservableObject {
     }
 
     private func start(kind: SessionKind, questions selected: [LearningQuestion]) -> LearningSessionSnapshot {
-        if let activeSession {
-            return activeSession
-        }
+        if let activeSession { return activeSession }
         let snapshot = LearningSessionSnapshot(kind: kind, questionIDs: selected.map(\.id))
         activeSession = snapshot
         latestEvaluation = nil
+        lastCompletedSession = nil
         state.resumeSession = snapshot
         persist()
         return snapshot
+    }
+
+    private func recordCompletedSession(_ session: LearningSessionSnapshot, finishedAt: Date) {
+        let ids = Set(session.questionIDs)
+        let attempts = state.attempts.filter {
+            ids.contains($0.questionID) && $0.answeredAt >= session.startedAt && $0.answeredAt <= finishedAt
+        }
+        let entry = JosanshiSessionHistoryEntry(
+            finishedAt: finishedAt,
+            title: title(for: session.kind),
+            correctCount: attempts.filter(\.isCorrect).count,
+            totalCount: session.questionIDs.count
+        )
+        lastCompletedSession = entry
+        var history = preferences.resolvedRecentSessions
+        history.insert(entry, at: 0)
+        preferences.recentSessions = Array(history.prefix(20))
+        persistPreferences()
+    }
+
+    private func title(for kind: SessionKind) -> String {
+        switch kind {
+        case .sprint: return "今日のスプリント"
+        case .weak: return "苦手をつぶす"
+        case .subject(let subject): return subject
+        case .mock(let round): return "独自模試 \(round)"
+        }
     }
 
     private func persist() {
