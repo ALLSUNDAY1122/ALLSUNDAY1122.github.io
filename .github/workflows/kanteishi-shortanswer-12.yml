@@ -109,7 +109,7 @@ jobs:
       - name: SwiftUI iOS Simulator typecheck
         run: |
           SDK="$(xcrun --sdk iphonesimulator --show-sdk-path)"
-          mapfile -t SWIFT_SOURCES < <(find kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer -maxdepth 1 -type f -name '*.swift' -print | sort)
+          SWIFT_SOURCES=(kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/*.swift)
           test "${#SWIFT_SOURCES[@]}" -ge 8
           printf 'Typechecking %s Swift sources\n' "${#SWIFT_SOURCES[@]}"
           xcrun swiftc -typecheck -parse-as-library \
