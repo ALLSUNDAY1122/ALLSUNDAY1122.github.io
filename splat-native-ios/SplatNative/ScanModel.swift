@@ -65,6 +65,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     @Published var acceptedFrames = 0
     @Published var targetFrames = 48
     @Published var featurePointCount = 0
+    @Published var coverageSectorCount = 0
     @Published var trackingMessage = "対象を中央に置いて開始してください"
     @Published var trainingProgress: Double = 0
     @Published var trainingIteration = 0
@@ -72,24 +73,65 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     @Published var resultURL: URL?
     @Published var previewImage: UIImage?
 
+    let coverageSectorTotal = 12
+    let minimumCoverageSectors = 8
+    private let maxFrames = 72
+
     private(set) var session: ARSession?
     private var projectURL: URL?
     private var imagesURL: URL?
     private var captured: [CapturedView] = []
     private var featurePoints: [UInt64: SIMD3<Float>] = [:]
+    private var coverageSectors: Set<Int> = []
+    private var estimatedTargetCenter: SIMD3<Float>?
     private var lastAcceptedTransform: simd_float4x4?
     private var lastAcceptedTimestamp: TimeInterval = 0
+    private var datasetReady = false
     private let ciContext = CIContext(options: [.cacheIntermediates: false])
     private let captureQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.capture", qos: .userInitiated)
     private var isWritingFrame = false
 
-    var canFinishCapture: Bool { acceptedFrames >= 24 && !isWritingFrame }
-    var progressText: String { "\(acceptedFrames) / \(targetFrames)" }
+    var canFinishCapture: Bool {
+        acceptedFrames >= 24 &&
+        featurePointCount >= 64 &&
+        coverageSectorCount >= minimumCoverageSectors &&
+        !isWritingFrame
+    }
+
+    var canRetryGeneration: Bool { datasetReady && projectURL != nil }
+
+    var progressText: String { "撮影方向 \(coverageSectorCount) / \(coverageSectorTotal)" }
+
     var captureBand: String {
-        let n = acceptedFrames
-        if n < targetFrames / 3 { return "低い位置" }
-        if n < targetFrames * 2 / 3 { return "正面" }
-        return "高い位置"
+        if coverageSectorCount < 4 { return "対象の周囲を回る" }
+        if coverageSectorCount < minimumCoverageSectors { return "反対側まで回り込む" }
+        if acceptedFrames < targetFrames { return "高さを少し変えて仕上げる" }
+        return "撮影は十分です"
+    }
+
+    var captureQualityText: String {
+        if acceptedFrames < 24 {
+            return "対象を中央に保ったまま、止まらずゆっくり1周してください"
+        }
+        if coverageSectorCount < minimumCoverageSectors {
+            return "同じ側の写真に偏っています。対象の反対側まで回り込んでください"
+        }
+        if featurePointCount < 64 {
+            return "立体の手がかりが不足しています。明るさや背景を変えて少し撮り足してください"
+        }
+        if acceptedFrames < targetFrames {
+            return "生成できます。もう少し撮ると安定しやすくなります"
+        }
+        return "必要な方向がそろいました"
+    }
+
+    var trainingStageText: String {
+        switch trainingProgress {
+        case ..<0.18: return "写真の位置関係を確認しています"
+        case ..<0.58: return "立体の形を組み立てています"
+        case ..<0.88: return "色と細部を整えています"
+        default: return "見返せる形に仕上げています"
+        }
     }
 
     func attach(session: ARSession) {
@@ -116,8 +158,11 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
         captured.removeAll(keepingCapacity: true)
         featurePoints.removeAll(keepingCapacity: true)
+        coverageSectors.removeAll(keepingCapacity: true)
+        estimatedTargetCenter = nil
         acceptedFrames = 0
         featurePointCount = 0
+        coverageSectorCount = 0
         lastAcceptedTransform = nil
         lastAcceptedTimestamp = 0
         resultURL = nil
@@ -125,9 +170,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         trainingProgress = 0
         trainingIteration = 0
         splatCount = 0
+        datasetReady = false
         isWritingFrame = false
         phase = .capturing
-        trackingMessage = "対象の周囲をゆっくり移動してください"
+        trackingMessage = "対象を中央に保ち、周囲をゆっくり1周してください"
 
         let config = ARWorldTrackingConfiguration()
         config.worldAlignment = .gravity
@@ -143,10 +189,12 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         do {
             try writePointCloudPLY()
             try writeTransformsJSON()
+            datasetReady = true
             phase = .captured
-            trackingMessage = "撮影画像・カメラ姿勢・ARKit初期点群を保存しました。"
+            trackingMessage = "必要な撮影情報がそろいました"
         } catch {
-            phase = .failed("撮影データを書き出せませんでした: \(error.localizedDescription)")
+            datasetReady = false
+            phase = .failed("撮影データを準備できませんでした: \(error.localizedDescription)")
         }
     }
 
@@ -157,19 +205,29 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         imagesURL = nil
         captured.removeAll()
         featurePoints.removeAll()
+        coverageSectors.removeAll()
+        estimatedTargetCenter = nil
         acceptedFrames = 0
         featurePointCount = 0
+        coverageSectorCount = 0
         resultURL = nil
         previewImage = nil
         trainingProgress = 0
         trainingIteration = 0
         splatCount = 0
+        datasetReady = false
         phase = .ready
         UIApplication.shared.isIdleTimerDisabled = false
     }
 
+    func retryGeneration() {
+        guard canRetryGeneration else { return }
+        phase = .captured
+        train()
+    }
+
     func train(iterations: Int = 2_000) {
-        guard phase == .captured, let projectURL else { return }
+        guard phase == .captured, datasetReady, let projectURL else { return }
         phase = .training
         trainingProgress = 0
         trainingIteration = 0
@@ -182,7 +240,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 let dataset = GaussianDataset(path: path, downscaleFactor: 4.0, evalMode: false)
                 guard dataset.numTrain >= 3 else {
                     Task { @MainActor [weak self] in
-                        self?.failTraining("学習に必要な撮影画像を読み込めませんでした")
+                        self?.failTraining("撮影画像を読み込めませんでした。生成をもう一度試してください")
                     }
                     return
                 }
@@ -214,7 +272,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     }
                 }
 
-                // Make the final GPU writes visible before serializing the model.
                 msplatSync()
                 let output = projectURL.appendingPathComponent("result.splat")
                 trainer.exportSplat(to: output.path)
@@ -225,7 +282,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                       sizeNumber.intValue > 0,
                       sizeNumber.intValue % 32 == 0 else {
                     Task { @MainActor [weak self] in
-                        self?.failTraining("生成した3Dデータの書き出し検証に失敗しました")
+                        self?.failTraining("生成した3Dデータを保存できませんでした。生成をもう一度試してください")
                     }
                     return
                 }
@@ -257,7 +314,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     private func handleFrame(_ frame: ARFrame) {
-        guard phase == .capturing, !isWritingFrame, acceptedFrames < targetFrames else { return }
+        guard phase == .capturing, !isWritingFrame, acceptedFrames < maxFrames else { return }
 
         switch frame.camera.trackingState {
         case .normal:
@@ -277,7 +334,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             return
         }
 
-        absorbFeaturePoints(frame.rawFeaturePoints)
+        absorbFeaturePoints(frame.rawFeaturePoints, cameraTransform: frame.camera.transform)
 
         isWritingFrame = true
         let index = acceptedFrames
@@ -314,13 +371,19 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     w: Int(resolution.width),
                     h: Int(resolution.height)
                 ))
+                self.updateCoverage(using: transform)
                 self.acceptedFrames = self.captured.count
                 self.lastAcceptedTransform = transform
                 self.lastAcceptedTimestamp = timestamp
-                self.trackingMessage = self.acceptedFrames >= self.targetFrames
-                    ? "撮影完了。生成へ進めます。"
-                    : "\(self.captureBand)から、対象を中央に保ってゆっくり移動"
-                if self.acceptedFrames >= self.targetFrames { self.finishCapture() }
+                self.trackingMessage = self.captureQualityText
+
+                if self.acceptedFrames >= self.targetFrames && self.canFinishCapture {
+                    self.finishCapture()
+                } else if self.acceptedFrames >= self.maxFrames && !self.canFinishCapture {
+                    self.phase = .failed("十分な方向から撮影できませんでした。対象を中央に置き、反対側まで回り込んでもう一度撮影してください")
+                    self.session?.pause()
+                    UIApplication.shared.isIdleTimerDisabled = false
+                }
             }
         }
     }
@@ -331,8 +394,14 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         return UIImage(cgImage: cg).jpegData(compressionQuality: 0.86)
     }
 
-    private func absorbFeaturePoints(_ cloud: ARPointCloud?) {
+    private func absorbFeaturePoints(_ cloud: ARPointCloud?, cameraTransform: simd_float4x4) {
         guard let cloud, !cloud.points.isEmpty else { return }
+
+        if estimatedTargetCenter == nil {
+            estimatedTargetCenter = estimateTargetCenter(from: cloud, cameraTransform: cameraTransform)
+                ?? Self.fallbackTargetCenter(cameraTransform)
+        }
+
         let step = max(1, cloud.points.count / 350)
         for index in stride(from: 0, to: cloud.points.count, by: step) {
             if featurePoints.count >= 12_000 { break }
@@ -341,10 +410,54 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         featurePointCount = featurePoints.count
     }
 
+    private func estimateTargetCenter(from cloud: ARPointCloud, cameraTransform: simd_float4x4) -> SIMD3<Float>? {
+        let worldToCamera = simd_inverse(cameraTransform)
+        let step = max(1, cloud.points.count / 500)
+        var xs: [Float] = []
+        var ys: [Float] = []
+        var zs: [Float] = []
+        xs.reserveCapacity(128)
+        ys.reserveCapacity(128)
+        zs.reserveCapacity(128)
+
+        for index in stride(from: 0, to: cloud.points.count, by: step) {
+            let p = cloud.points[index]
+            let cameraPoint = worldToCamera * SIMD4<Float>(p.x, p.y, p.z, 1)
+            let depth = -cameraPoint.z
+            guard depth >= 0.20, depth <= 1.50 else { continue }
+            guard abs(cameraPoint.x) <= depth * 0.55,
+                  abs(cameraPoint.y) <= depth * 0.55 else { continue }
+            xs.append(p.x)
+            ys.append(p.y)
+            zs.append(p.z)
+        }
+
+        guard xs.count >= 8 else { return nil }
+        xs.sort(); ys.sort(); zs.sort()
+        let middle = xs.count / 2
+        return SIMD3<Float>(xs[middle], ys[middle], zs[middle])
+    }
+
+    private func updateCoverage(using transform: simd_float4x4) {
+        guard let center = estimatedTargetCenter else { return }
+        let position = Self.cameraPosition(transform)
+        let dx = position.x - center.x
+        let dz = position.z - center.z
+        let horizontalDistance = hypot(dx, dz)
+        guard horizontalDistance >= 0.08 else { return }
+
+        let angle = atan2(dx, dz)
+        let normalized = (angle + .pi) / (2 * .pi)
+        let rawSector = Int(floor(normalized * Float(coverageSectorTotal)))
+        let sector = min(coverageSectorTotal - 1, max(0, rawSector))
+        coverageSectors.insert(sector)
+        coverageSectorCount = coverageSectors.count
+    }
+
     private func writePointCloudPLY() throws {
         guard let projectURL else { throw dataError("保存先がありません") }
         guard featurePoints.count >= 64 else {
-            throw dataError("ARKitの初期3D点が不足しています（\(featurePoints.count)点）。模様のある背景で対象の周囲をもう一度撮影してください")
+            throw dataError("立体の手がかりが不足しています。模様のある背景で対象の周囲をもう一度撮影してください")
         }
         let points = featurePoints.values
         var ply = "ply\nformat ascii 1.0\nelement vertex \(points.count)\nproperty float x\nproperty float y\nproperty float z\nend_header\n"
@@ -381,14 +494,17 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     private func movedEnough(from a: simd_float4x4, to b: simd_float4x4) -> Bool {
-        let pa = SIMD3<Float>(a.columns.3.x, a.columns.3.y, a.columns.3.z)
-        let pb = SIMD3<Float>(b.columns.3.x, b.columns.3.y, b.columns.3.z)
+        let pa = Self.cameraPosition(a)
+        let pb = Self.cameraPosition(b)
         let translation = simd_distance(pa, pb)
         let qa = simd_quatf(a)
         let qb = simd_quatf(b)
         let dot = min(1, max(-1, abs(simd_dot(qa.vector, qb.vector))))
         let angle = 2 * acos(dot)
-        return translation >= 0.025 || angle >= 0.045
+
+        // Do not let a user collect an apparently complete scan by rotating in place.
+        // Rotation can supplement movement, but every accepted frame must include real translation.
+        return translation >= 0.030 || (translation >= 0.012 && angle >= 0.080)
     }
 
     private func limitedReason(_ reason: ARCamera.TrackingState.Reason) -> String {
@@ -403,6 +519,16 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
     private func dataError(_ message: String) -> NSError {
         NSError(domain: "SplatLab", code: 1, userInfo: [NSLocalizedDescriptionKey: message])
+    }
+
+    private static func cameraPosition(_ m: simd_float4x4) -> SIMD3<Float> {
+        SIMD3<Float>(m.columns.3.x, m.columns.3.y, m.columns.3.z)
+    }
+
+    private static func fallbackTargetCenter(_ transform: simd_float4x4) -> SIMD3<Float> {
+        let position = cameraPosition(transform)
+        let cameraBack = SIMD3<Float>(transform.columns.2.x, transform.columns.2.y, transform.columns.2.z)
+        return position - cameraBack * 0.60
     }
 
     private static func rows(_ m: simd_float4x4) -> [[Float]] {
