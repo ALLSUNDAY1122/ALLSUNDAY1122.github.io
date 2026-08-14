@@ -29,26 +29,43 @@ final class RigakuSprintConfigurationTests: XCTestCase {
         XCTAssertFalse(RigakuRouteGate.isComplete(audited: 200, expected: nil))
     }
 
-    func testAppBundleLoadsCompleteAuditedRound60WithoutDuplicateIDs() throws {
+    func testAppBundleLoadsAllThreeCompleteAuditedRoundsWithoutDuplicateIDs() throws {
         let questions = try RigakuQuestionRepository.loadBundled(bundle: Bundle.main)
         let ids = questions.map(\.id)
-        let round60 = questions.filter { $0.examRound == "60" }
 
+        XCTAssertEqual(questions.count, 600)
         XCTAssertEqual(Set(ids).count, ids.count)
-        XCTAssertEqual(round60.count, 200)
-        XCTAssertEqual(round60.filter { $0.id.contains("-AM-") }.count, 100)
-        XCTAssertEqual(round60.filter { $0.id.contains("-PM-") }.count, 100)
+
+        for round in ["60", "59", "58"] {
+            let roundQuestions = questions.filter { $0.examRound == round }
+            XCTAssertEqual(roundQuestions.count, 200, "R\(round) must contain exactly 200 bundled questions")
+            XCTAssertEqual(roundQuestions.filter { $0.id.contains("-AM-") }.count, 100, "R\(round) AM must contain exactly 100 questions")
+            XCTAssertEqual(roundQuestions.filter { $0.id.contains("-PM-") }.count, 100, "R\(round) PM must contain exactly 100 questions")
+            XCTAssertTrue(
+                RigakuRouteGate.isComplete(audited: roundQuestions.count, expected: 200),
+                "R\(round) mock must unlock only when the full audited round is bundled"
+            )
+        }
     }
 
-    func testRound60MockScoringCanonLoadsFromAppBundle() throws {
+    func testAllThreeMockScoringCanonsLoadFromAppBundle() throws {
         let repository = try RigakuExamScoringRepository.loadBundled(bundle: Bundle.main)
-        guard let config = repository.examConfig.roundConfig["60"] else {
-            return XCTFail("R60 scoring configuration missing")
+        let expected: [String: (general: Int, practical: Int, total: Int)] = [
+            "60": (159, 114, 273),
+            "59": (159, 120, 279),
+            "58": (158, 120, 278),
+        ]
+
+        for (round, maxima) in expected {
+            guard let config = repository.examConfig.roundConfig[round] else {
+                XCTFail("R\(round) scoring configuration missing")
+                continue
+            }
+            XCTAssertEqual(config.officialScoring.generalMax, maxima.general)
+            XCTAssertEqual(config.officialScoring.practicalMax, maxima.practical)
+            XCTAssertEqual(config.officialScoring.totalMax, maxima.total)
+            XCTAssertGreaterThan(config.officialScoring.passTotal, 0)
+            XCTAssertGreaterThan(config.officialScoring.passPractical, 0)
         }
-        XCTAssertEqual(config.officialScoring.generalMax, 159)
-        XCTAssertEqual(config.officialScoring.practicalMax, 114)
-        XCTAssertEqual(config.officialScoring.totalMax, 273)
-        XCTAssertEqual(config.officialScoring.passTotal, 164)
-        XCTAssertEqual(config.officialScoring.passPractical, 40)
     }
 }
