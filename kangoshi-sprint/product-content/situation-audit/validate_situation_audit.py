@@ -2,9 +2,8 @@
 """Artifact-driven audit for the nurse-exam situation-setting specialist lane.
 
 This validator deliberately derives progress from GitHub artifacts instead of a
-manually maintained chat cursor.  It treats the 60 scenarios as the unit of
-work and keeps release-only quarantines separate from content-authoring
-completion.
+manually maintained chat cursor. It treats the 60 scenarios as the unit of work
+and keeps release-only quarantines separate from content-authoring completion.
 
 Run from the repository root:
     python kangoshi-sprint/product-content/situation-audit/validate_situation_audit.py
@@ -15,11 +14,11 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from collections import defaultdict
 from pathlib import Path
 
+VALIDATOR_VERSION = 2
 ROOT = Path(__file__).resolve().parents[3]
 PRODUCT = ROOT / "kangoshi-sprint" / "product-content"
 SUMMARY = PRODUCT / "classified" / "situation-group-summary.json"
@@ -78,13 +77,13 @@ def main() -> int:
         if len(qids) != QUESTIONS_PER_SCENARIO or len(set(qids)) != QUESTIONS_PER_SCENARIO:
             structural_errors.append({"kind": "scenario_triplet", "scenarioId": sid, "questionIds": qids})
 
-    # Only batches that explicitly declare scenarioId participate.  Generic
+    # Only batches that explicitly declare scenarioId participate. Generic
     # required/general batches are ignored, preventing duplicate accounting.
     candidates: dict[str, list[tuple[str, dict]]] = defaultdict(list)
     for path in sorted(BATCH_DIR.glob("*.json")):
         try:
             batch = load_json(path)
-        except Exception as exc:  # keep one corrupt file from hiding all remaining work
+        except Exception as exc:
             structural_errors.append({"kind": "batch_parse", "file": path.name, "error": str(exc)})
             continue
         sid = batch.get("scenarioId")
@@ -119,8 +118,6 @@ def main() -> int:
                 missing_ids.append(qid)
                 continue
 
-            # Multiple files may represent the same question only if their
-            # content-bearing fields are identical. Otherwise it is a conflict.
             fingerprints: dict[str, list[str]] = defaultdict(list)
             for filename, item in versions:
                 fp_obj = {k: item.get(k) for k in REQUIRED_ITEM_FIELDS}
@@ -133,11 +130,9 @@ def main() -> int:
                     "files": sorted(filename for filename, _ in versions),
                 })
 
-            # At least one complete identical/current representation is enough
-            # for authoring coverage; conflicts are still a canonical blocker.
             complete = False
             all_missing: set[str] = set()
-            for filename, item in versions:
+            for _, item in versions:
                 ok, missing_fields = is_content_complete(item)
                 if ok:
                     complete = True
@@ -160,6 +155,7 @@ def main() -> int:
     completed_question_count = sum(len(expected[sid]) for sid in completed)
     report = {
         "schemaVersion": 2,
+        "validatorVersion": VALIDATOR_VERSION,
         "stateSource": "artifact-driven",
         "unit": "scenario",
         "expectedScenarioCount": EXPECTED_SCENARIOS,
@@ -175,10 +171,10 @@ def main() -> int:
         "structuralErrors": structural_errors,
         "contentAuthoringPass": len(completed) == EXPECTED_SCENARIOS and not structural_errors and not duplicate_conflicts,
         "releasePolicy": {
-            "expertMediaScoringConcernsBlockOnlyAffectedRelease": True,
-            "expertReviewIsNotAContentAuthoringPrerequisite": True,
-            "finalReleaseRequiresCanonicalIntegrationAndReleaseAudits": True,
-        },
+            "expertMediaScoringConcernsBlockOnlyAffectedRelease": true,
+            "expertReviewIsNotAContentAuthoringPrerequisite": true,
+            "finalReleaseRequiresCanonicalIntegrationAndReleaseAudits": true
+        }
     }
 
     text = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
