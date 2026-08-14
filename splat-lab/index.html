@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#07090d" />
+<title>Splat Lab｜3D Gaussian Splat 試作</title>
+<style>
+:root{color-scheme:dark;--bg:#07090d;--panel:#11151d;--panel2:#171d27;--line:#273041;--text:#f6f7fb;--muted:#9aa5b5;--accent:#6ee7c7;--danger:#ff8e8e;--safe:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans",sans-serif;height:100%;overflow:hidden}button,input{font:inherit}button{border:0}.app{height:100dvh;display:flex;flex-direction:column;max-width:760px;margin:auto;background:var(--bg);position:relative}.top{height:58px;display:flex;align-items:center;justify-content:space-between;padding:calc(8px + env(safe-area-inset-top)) 16px 8px;z-index:20}.brand{font-weight:750;letter-spacing:-.02em}.tag{font-size:11px;color:#07120f;background:var(--accent);padding:5px 9px;border-radius:999px;font-weight:800}.viewer{position:relative;flex:1;min-height:0;background:radial-gradient(circle at 50% 42%,#202a38,#080a0e 60%);overflow:hidden}.viewer canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}.hud{position:absolute;inset:0;pointer-events:none;padding:14px;display:flex;flex-direction:column;justify-content:space-between}.hudrow{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.pill{background:rgba(8,10,14,.66);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(14px);padding:7px 10px;border-radius:999px;font-size:12px;color:#dce3ed}.hint{align-self:center;background:rgba(8,10,14,.72);border:1px solid rgba(255,255,255,.10);padding:8px 12px;border-radius:999px;font-size:12px;color:#dce3ed}.bottom{padding:12px 14px calc(12px + var(--safe));background:linear-gradient(180deg,rgba(7,9,13,.86),#07090d 32%);z-index:25}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}.btn{min-height:48px;border-radius:16px;background:var(--panel2);color:var(--text);font-weight:700;padding:8px 10px}.btn.primary{background:var(--accent);color:#07120f}.btn:active{transform:scale(.98)}.status{font-size:12px;color:var(--muted);margin:10px 2px 0;min-height:18px;text-align:center}.sheet{position:absolute;inset:0;z-index:40;background:rgba(3,5,8,.66);backdrop-filter:blur(18px);display:none;align-items:flex-end}.sheet.on{display:flex}.card{width:100%;max-height:88dvh;overflow:auto;background:#0d1118;border-top:1px solid var(--line);border-radius:26px 26px 0 0;padding:18px 18px calc(18px + var(--safe))}.grab{width:44px;height:5px;background:#384254;border-radius:99px;margin:0 auto 16px}.card h2{font-size:22px;margin:0 0 8px}.card p{font-size:14px;line-height:1.65;color:var(--muted);margin:0 0 16px}.notice{padding:13px 14px;border-radius:16px;background:var(--panel);border:1px solid var(--line);font-size:13px;line-height:1.6;margin:12px 0}.notice strong{color:var(--accent)}.full{width:100%;min-height:50px;margin-top:10px}.file{display:none}.capture{position:absolute;inset:0;z-index:50;background:#000;display:none;flex-direction:column}.capture.on{display:flex}.camtop{position:absolute;top:0;left:0;right:0;z-index:4;padding:calc(12px + env(safe-area-inset-top)) 14px 10px;display:flex;justify-content:space-between;align-items:center}.round{width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.48);color:#fff;border:1px solid rgba(255,255,255,.18);font-size:21px}.capture video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.guide{position:absolute;inset:0;pointer-events:none;z-index:2;display:grid;place-items:center}.oval{width:min(72vw,420px);height:min(72vw,420px);border:2px dashed rgba(255,255,255,.75);border-radius:50%;box-shadow:0 0 0 999px rgba(0,0,0,.12)}.camfoot{position:absolute;left:0;right:0;bottom:0;z-index:5;padding:16px 16px calc(18px + var(--safe));background:linear-gradient(transparent,rgba(0,0,0,.82) 35%);text-align:center}.orbit{display:flex;justify-content:center;gap:7px;margin-bottom:11px}.orbit span{font-size:11px;padding:6px 9px;border-radius:999px;background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.15)}.orbit span.on{background:var(--accent);color:#07120f;border-color:transparent;font-weight:800}.capturemsg{font-size:13px;margin-bottom:12px;text-shadow:0 1px 8px #000}.shutter{width:74px;height:74px;border-radius:50%;background:#fff;border:6px solid rgba(255,255,255,.35);box-shadow:inset 0 0 0 3px #101010;margin:auto}.progress{height:5px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;margin:14px auto 0;max-width:310px}.progress i{display:block;height:100%;background:var(--accent);width:0}.reviewgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:12px 0}.reviewgrid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px}.tiny{font-size:11px;color:var(--muted)}.error{color:var(--danger)}
+</style>
+<script type="importmap">{"imports":{"playcanvas":"https://cdn.jsdelivr.net/npm/playcanvas@2.21.0/+esm"}}</script>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div class="brand">Splat Lab</div><div class="tag">TRUE 3DGS</div></div>
+  <main class="viewer" id="viewer"><canvas id="pc-canvas"></canvas><div class="hud"><div class="hudrow"><div class="pill" id="sceneName">Gaussian Splat サンプル</div><div class="pill" id="renderState">読込中</div></div><div class="hint">1本指：回転　2本指：移動　ピンチ：拡大</div></div></main>
+  <div class="bottom"><div class="actions"><button class="btn" id="sampleBtn">サンプル</button><button class="btn" id="fileBtn">Splatを開く</button><button class="btn primary" id="captureBtn">撮影を試す</button></div><div class="status" id="status">ポリゴンではなく、Gaussian Splatを直接描画します。</div></div>
+
+  <section class="sheet" id="infoSheet"><div class="card"><div class="grab"></div><h2>このPoCで確認すること</h2><p>前回のおもちゃばこと違い、写真をポリゴンへ貼る疑似3Dではありません。実際の3D Gaussian Splatデータを描画し、iPhoneで触ったときの質感を先に確認します。</p><div class="notice"><strong>実働：</strong>Gaussian Splat表示／PLY・SOG読込／iPhoneカメラ周回撮影。<br><strong>未接続：</strong>撮影写真からGaussian Splatを生成する再構築エンジン。ここは偽装せず、次の技術検証対象として残します。</div><button class="btn primary full" id="closeInfo">触って確認する</button></div></section>
+
+  <input class="file" id="fileInput" type="file" accept=".ply,.sog" />
+
+  <section class="capture" id="capture"><video id="video" autoplay playsinline muted></video><div class="camtop"><button class="round" id="closeCam">×</button><div class="pill" id="camCount">0 / 36</div><button class="round" id="camHelp">?</button></div><div class="guide"><div class="oval"></div></div><div class="camfoot"><div class="orbit"><span id="oLow" class="on">低い位置</span><span id="oMid">正面</span><span id="oHigh">高い位置</span></div><div class="capturemsg" id="captureMsg">対象を円の中に入れ、少しずつ横へ移動してください</div><button class="shutter" id="shutter" aria-label="撮影"></button><div class="progress"><i id="capProgress"></i></div></div></section>
+
+  <section class="sheet" id="reviewSheet"><div class="card"><div class="grab"></div><h2>撮影データ</h2><p id="reviewText"></p><div class="reviewgrid" id="reviewGrid"></div><div class="notice"><strong>重要：</strong>この写真を「生成済み3D」とは扱いません。現時点のGitHub PoCでは撮影ガイドまで。次にiPhone上で動く再構築エンジンを接続し、ここから実Splatへ変換できるかを判定します。</div><button class="btn primary full" id="backViewer">Gaussian表示へ戻る</button></div></section>
+</div>
+<script type="module">
+import { Application, Asset, AssetListLoader, Color, Entity, FILLMODE_FILL_WINDOW, RESOLUTION_AUTO } from 'playcanvas';
+
+const $=s=>document.querySelector(s); const status=$('#status');
+const canvas=$('#pc-canvas');
+const app=new Application(canvas,{graphicsDeviceOptions:{antialias:false,alpha:false}});
+app.setCanvasFillMode(FILLMODE_FILL_WINDOW); app.setCanvasResolution(RESOLUTION_AUTO); app.scene.ambientLight=new Color(.5,.5,.5); app.start();
+const camera=new Entity('Camera'); camera.setPosition(0,0,2.5); camera.addComponent('camera',{clearColor:new Color(.025,.03,.045)}); app.root.addChild(camera);
+let splat=null, currentAsset=null; let yaw=0,pitch=0.04,distance=2.5,targetY=-.15; let pointers=new Map(),lastPinch=0,lastCenter=null;
+function updateCamera(){const cp=Math.cos(pitch),sp=Math.sin(pitch),sy=Math.sin(yaw),cy=Math.cos(yaw);camera.setPosition(sy*cp*distance,targetY+sp*distance,cy*cp*distance);camera.lookAt(0,targetY,0)} updateCamera();
+canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture?.(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});});
+canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return; const old=pointers.get(e.pointerId); pointers.set(e.pointerId,{x:e.clientX,y:e.clientY}); const ps=[...pointers.values()]; if(ps.length===1){yaw-=(e.clientX-old.x)*.008; pitch=Math.max(-1.15,Math.min(1.15,pitch+(e.clientY-old.y)*.006)); updateCamera();}else if(ps.length>=2){const [a,b]=ps;const d=Math.hypot(a.x-b.x,a.y-b.y);const c={x:(a.x+b.x)/2,y:(a.y+b.y)/2};if(lastPinch){distance=Math.max(.35,Math.min(10,distance*(lastPinch/d)));}if(lastCenter){targetY+=(c.y-lastCenter.y)*.0025*distance;}lastPinch=d;lastCenter=c;updateCamera();}});
+function pointerEnd(e){pointers.delete(e.pointerId);if(pointers.size<2){lastPinch=0;lastCenter=null}} canvas.addEventListener('pointerup',pointerEnd);canvas.addEventListener('pointercancel',pointerEnd);
+canvas.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(.35,Math.min(10,distance*(1+Math.sign(e.deltaY)*.09)));updateCamera();},{passive:false});
+window.addEventListener('resize',()=>app.resizeCanvas());
+
+async function setSplat(url,name,rotationZ=180){
+  $('#renderState').textContent='読込中'; status.textContent='Gaussian Splatを読み込んでいます…';
+  try{
+    if(splat){splat.destroy();splat=null} if(currentAsset){app.assets.remove(currentAsset);currentAsset.unload?.();currentAsset=null}
+    const asset=new Asset(name,'gsplat',{url,filename:name}); currentAsset=asset; const loader=new AssetListLoader([asset],app.assets); await new Promise(resolve=>loader.load(resolve));
+    splat=new Entity(name); splat.setPosition(0,-.65,0); splat.setEulerAngles(0,0,rotationZ); splat.addComponent('gsplat',{asset}); app.root.addChild(splat);
+    yaw=0;pitch=.03;distance=2.5;targetY=-.15;updateCamera(); $('#sceneName').textContent=name;$('#renderState').textContent='実Splat'; status.textContent='実Gaussian Splatです。指で回して、ポリゴン表示との差を確認してください。';
+  }catch(err){console.error(err);$('#renderState').textContent='読込失敗';status.innerHTML='<span class="error">Splatの読み込みに失敗しました。</span>';}
+}
+async function loadSample(){await setSplat('https://developer.playcanvas.com/assets/toy-cat.sog','Gaussian Splat サンプル',180)}
+await loadSample();
+$('#sampleBtn').onclick=loadSample;
+$('#fileBtn').onclick=()=>$('#fileInput').click();
+$('#fileInput').onchange=async e=>{const f=e.target.files?.[0];if(!f)return; if(f.size>500*1024*1024){status.innerHTML='<span class="error">500MBを超えるファイルはこのPoCでは読み込めません。</span>';return;}const ext=f.name.split('.').pop().toLowerCase();if(!['ply','sog'].includes(ext)){status.innerHTML='<span class="error">現在はPLY / SOGに対応しています。</span>';return;}const u=URL.createObjectURL(f); $('#renderState').textContent='読込中'; status.textContent=f.name+' を読み込んでいます…'; try{ if(splat){splat.destroy();splat=null} if(currentAsset){app.assets.remove(currentAsset);currentAsset.unload?.();currentAsset=null} const asset=await new Promise((resolve,reject)=>app.assets.loadFromUrlAndFilename(u,f.name,'gsplat',(err,a)=>err?reject(err):resolve(a))); currentAsset=asset; splat=new Entity(f.name); splat.setPosition(0,-.65,0); splat.setEulerAngles(0,0,ext==='ply'?180:0); splat.addComponent('gsplat',{asset}); app.root.addChild(splat); yaw=0;pitch=.03;distance=2.5;targetY=-.15;updateCamera(); $('#sceneName').textContent=f.name;$('#renderState').textContent='実Splat';status.textContent='読み込んだ実Gaussian Splatです。'; }catch(err){console.error(err);$('#renderState').textContent='読込失敗';status.innerHTML='<span class="error">このSplatは読み込めませんでした。</span>';} finally{setTimeout(()=>URL.revokeObjectURL(u),120000)}};
+
+// Camera capture: local memory only. No upload endpoint exists.
+let stream=null,photos=[],orbit=0;const targetPerOrbit=12,total=36;
+function orbitUI(){['#oLow','#oMid','#oHigh'].forEach((s,i)=>$(s).classList.toggle('on',i===orbit));const msgs=['低い位置から一周します','正面の高さから一周します','少し上から一周します'];$('#captureMsg').textContent=msgs[orbit]+'。少しずつ横へ移動してください。'}
+async function openCamera(){photos=[];orbit=0;orbitUI();updateCount();$('#capture').classList.add('on');try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});$('#video').srcObject=stream;}catch(err){console.error(err);$('#captureMsg').textContent='カメラを開始できません。Safariのカメラ許可を確認してください。';}}
+function closeCamera(){stream?.getTracks().forEach(t=>t.stop());stream=null;$('#video').srcObject=null;$('#capture').classList.remove('on')}
+function updateCount(){const n=photos.length;$('#camCount').textContent=`${n} / ${total}`;$('#capProgress').style.width=`${Math.min(100,n/total*100)}%`}
+function snap(){const v=$('#video');if(!v.videoWidth)return;const c=document.createElement('canvas');const max=960;const scale=Math.min(1,max/v.videoWidth);c.width=Math.round(v.videoWidth*scale);c.height=Math.round(v.videoHeight*scale);const x=c.getContext('2d');x.drawImage(v,0,0,c.width,c.height);const url=c.toDataURL('image/jpeg',.76);photos.push({url,orbit,ts:Date.now()});updateCount();const inOrbit=photos.filter(p=>p.orbit===orbit).length;if(inOrbit>=targetPerOrbit){if(orbit<2){orbit++;navigator.vibrate?.(30);orbitUI();}else{finishCapture();}}}
+function finishCapture(){closeCamera();const grid=$('#reviewGrid');grid.innerHTML=photos.map(p=>`<img src="${p.url}" alt="撮影フレーム">`).join('');$('#reviewText').textContent=`${photos.length}枚を端末メモリ内に保持しています。サーバー送信はしていません。低・正面・高の3周をGaussian再構築へ渡す想定です。`;$('#reviewSheet').classList.add('on')}
+$('#captureBtn').onclick=openCamera;$('#closeCam').onclick=closeCamera;$('#shutter').onclick=snap;$('#camHelp').onclick=()=>alert('低い位置→正面→高い位置の順に12枚ずつ撮ります。隣の写真と景色が重なるよう、少しずつ移動してください。');$('#backViewer').onclick=()=>$('#reviewSheet').classList.remove('on');
+$('#infoSheet').classList.add('on');$('#closeInfo').onclick=()=>$('#infoSheet').classList.remove('on');
+</script>
+</body>
+</html>
