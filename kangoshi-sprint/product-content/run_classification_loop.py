@@ -13,6 +13,7 @@ STAGES=[
  ('refine-v8','refine_classification_v8.py'),
  ('refine-v9','refine_classification_v9.py'),
  ('refine-v10','refine_classification_v10.py'),
+ ('situation-specialist-corrections','apply_situation_classification_corrections.py'),
  ('validate','validate_classification.py'),
  ('semantic-audit','audit_classification_semantics.py'),
  ('situation-summary','summarize_situation_groups.py'),
