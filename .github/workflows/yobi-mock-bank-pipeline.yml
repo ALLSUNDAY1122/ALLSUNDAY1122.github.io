@@ -1,0 +1,46 @@
+name: Yobi Mock Bank Pipeline
+
+on:
+  push:
+    branches:
+      - feature/yobi-tantou-native-swiftui
+    paths:
+      - 'learning-sprint/yobi-tantou/content-loop/mock-bank/**'
+      - 'learning-sprint/yobi-tantou/content-loop/validate_candidates.py'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py'
+      - '.github/workflows/yobi-mock-bank-pipeline.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: yobi-mock-bank-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  mock-1-legal-batch-01:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Candidate preflight
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/validate_candidates.py
+          learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.candidates.json
+      - name: Exact-date statutory source audit
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
+          --bank learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.candidates.json
+          --locks learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-source-locks.json
+      - name: Answer and explanation audit
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
+          --bank learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.candidates.json
+          --audit learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-answer-audit.json
+          --locks learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-source-locks.json
+      - name: Syntax
+        run: |
+          python -m json.tool learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.candidates.json >/dev/null
+          python -m json.tool learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-source-locks.json >/dev/null
+          python -m json.tool learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-answer-audit.json >/dev/null
