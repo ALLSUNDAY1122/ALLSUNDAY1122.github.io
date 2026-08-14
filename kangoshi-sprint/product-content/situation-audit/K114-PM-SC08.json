@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-PM-SC08",
+  "sourceExam": 114,
+  "session": "PM",
+  "questionIds": ["K114-PM112", "K114-PM113", "K114-PM114"],
+  "scenarioIndexes": [0,1,2],
+  "scenarioTotal": 3,
+  "patientProfile": "21歳女性、大学生、独居。友人関係のトラブルを契機にうつ状態となり、処方された抗不安薬を酩酊・陶酔目的に反復大量使用。過量服用で意識を失い救急搬送され、その後物質使用障害と診断。",
+  "mainCondition": "処方抗不安薬の有害な使用、ベンゾジアゼピン系薬剤の離脱症状、依存症回復後の地域・当事者支援。",
+  "assessment": [
+    "PM112では治療目的を逸脱した反復大量使用と大学生活への支障から有害な使用〈乱用〉を判断する。",
+    "PM113では急激な中断後48～72時間に起こり得る離脱症状として幻覚を判断する。",
+    "PM114では1人暮らし・復学希望を維持しながら回復を続ける社会資源としてセルフヘルプグループを選ぶ。"
+  ],
+  "nursingJudgment": "3問は『使用パターンの問題認識→急性離脱の安全管理→退院後の再発予防・回復支援』として同一若年成人の経過を追う。母親は救急搬送の契機を作る支援者であり患者本人との取り違えはない。",
+  "nursingPractice": [
+    "処方薬であっても目的・量・頻度・生活障害を確認し、有害使用と依存リスクを評価する。",
+    "入院初期は痙攣・せん妄・幻覚等の離脱症状を観察する。",
+    "退院後は専門医療と自助グループ等をつなぎ、本人が学業・生活を続けながら回復を維持できるよう支援する。"
+  ],
+  "tripletConsistency": {"sameScenarioId":true,"sameScenarioText":true,"indexesComplete":true,"patientIdentityConsistent":true,"timelineConsistent":true,"clinicalConsistency":true,"nextScenarioLeakDetected":false},
+  "canonicalPatch": {"path":"situation-audit/canonical-patches/K114-PM-SC08.json","textCorrectionRequired":true,"classificationCorrectionRequired":false,"applyState":"pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent":true,"majorSubject":"精神看護学","status":"pass"},
+  "explanationAudit": {"batchId":"K114-PM112-PM114-situation-SC08","allThreeExplained":true,"allThreeEvidenceRefsPresent":true,"allThreeEvidenceCheckedDatePresent":true,"evidenceCheckedDate":"2026-08-14"},
+  "media":{"required":false,"status":"not_required"},
+  "scoring":{"exceptionPresent":false,"status":"normal"},
+  "contentConcern":{"status":"none","questionId":null,"reason":null,"evidenceRefs":[]},
+  "expertReviewStatus":"pending_global_expert_audit",
+  "scenarioAuditStatus":"content_pass_canonical_patch_pending",
+  "auditedAt":"2026-08-14T15:46:00+09:00"
+}
