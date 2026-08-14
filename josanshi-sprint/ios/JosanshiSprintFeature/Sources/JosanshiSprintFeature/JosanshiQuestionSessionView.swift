@@ -256,20 +256,46 @@ public struct JosanshiQuestionSessionView: View {
     }
 
     private var completionBody: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "checkmark.seal.fill")
-                .font(.system(size: 52))
-                .foregroundStyle(LearningSprintTheme.indigo)
-            Text("セッション完了")
-                .font(LearningSprintTheme.serif(26, weight: .bold))
-            Text("記録は端末内に保存されました。")
-                .font(LearningSprintTheme.sans(14))
-                .foregroundStyle(LearningSprintTheme.ink2)
-            Button("戻る", action: onFinish)
-                .buttonStyle(.borderedProminent)
-                .tint(LearningSprintTheme.indigo)
+        ScrollView {
+            VStack(spacing: 18) {
+                Image(systemName: "checkmark.seal.fill")
+                    .font(.system(size: 52))
+                    .foregroundStyle(LearningSprintTheme.indigo)
+                Text("結果")
+                    .font(LearningSprintTheme.serif(28, weight: .bold))
+
+                if let result = coordinator.lastCompletedSession {
+                    Text(result.title)
+                        .font(LearningSprintTheme.sans(14, weight: .bold))
+                        .foregroundStyle(LearningSprintTheme.ink2)
+                    Text("\(result.correctCount) / \(result.totalCount)")
+                        .font(LearningSprintTheme.serif(42, weight: .bold))
+                        .foregroundStyle(LearningSprintTheme.ink)
+                    let rate = result.totalCount > 0 ? Double(result.correctCount) / Double(result.totalCount) : 0
+                    ProgressView(value: rate)
+                        .tint(LearningSprintTheme.indigo)
+                        .frame(maxWidth: 280)
+                    Text("正答率 \(Int((rate * 100).rounded()))%")
+                        .font(LearningSprintTheme.sans(15, weight: .semibold))
+                        .foregroundStyle(LearningSprintTheme.ink2)
+                } else {
+                    Text("セッション完了")
+                        .font(LearningSprintTheme.serif(24, weight: .bold))
+                }
+
+                Text("記録は端末内に保存されました。")
+                    .font(LearningSprintTheme.sans(14))
+                    .foregroundStyle(LearningSprintTheme.ink2)
+
+                Button("ホームへ戻る", action: onFinish)
+                    .buttonStyle(.borderedProminent)
+                    .tint(LearningSprintTheme.indigo)
+                    .frame(minHeight: 50)
+            }
+            .padding(24)
+            .frame(maxWidth: 520)
+            .frame(maxWidth: .infinity)
         }
-        .padding(24)
     }
 
     private var sessionTitle: String {
@@ -350,9 +376,6 @@ public struct JosanshiQuestionSessionView: View {
         selectedIndices.removeAll()
         feedbackMarkScale = 0.55
         feedbackMarkOpacity = 0
-        if coordinator.activeSession == nil {
-            onFinish()
-        }
     }
 
     private func feedbackTitle(_ evaluation: AnswerEvaluation) -> String {
