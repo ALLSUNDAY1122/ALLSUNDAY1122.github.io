@@ -113,11 +113,13 @@ GitHub `main` を現在値の正本とし、過去チャットの数値は監査
 
 - 第113回一般5問の公式PDF取込欠損は一次資料確認済み補正として `source-data-corrections.json` → `normalize_raw_import.py` に恒久反映済み。
 - raw 720/720再監査: PASS。import/normalize/raw/media/common auditすべてexit 0。
-- L2分類: 720 high、unclassified 0、警告32/32解決、PASS。
-- 共通L3: 547/720説明済み、173 pending、動的根拠85中verified 66・pending 19。FAIL、releaseAllowed=false。
-- A必修: **150/150 final canonical PASS_WITH_QUARANTINE**。各回50、正答不整合0、解説・根拠・分類・基準日欠損0、dynamic pending 0、完全重複0、高類似0。通常解放候補136・隔離14（図版8・採点特例6・専門2、重複あり）を維持。
+- L2分類: 状況設定専門補正4件を反映後も720 high、unclassified 0、意味監査・60症例監査PASS、警告32/32解決、最終PASS。
+- 共通L3: **583/720説明済み、137 pending、動的根拠85中verified 66・pending 19。FAIL、releaseAllowed=false。**
+- A必修: **150/150 final canonical PASS_WITH_QUARANTINE**。各回50、正答不整合0、解説・根拠・分類・基準日欠損0、dynamic pending 0、完全重複0、高類似0。通常解放候補136・隔離14を維持。
 - B一般: 担当班では390/390作成済み。一般canonical 390問は生成済みだが、第113回13問でdetail/一次根拠不足を検出しcanonical gate FAIL。内訳は図版依存8問＋修復済みraw5問。統括からB班へ差分引継ぎ済み。
-- C状況設定: 30/180問、10/60症例まで内容監査済み。専門確認2問は隔離し、作成停止を解除。次カーソルはK115-PM-SC01（PM091〜093）。
+- C状況設定: **少なくとも81/180問・27/60症例を症例単位監査済み**。専門確認2問は並列隔離し、第114回午前の残症例へ継続中。canonical統合キューを作成済み。
+- 公開試用UI: 最後に成功したGitHub Pages build以降、UIファイル変更なし。v2.4の初期試作品確認を現在の人間ゲートとする。
+- 課金: 月額200円。Bundle ID: `jp.allsunday1122.kangoshi`。StoreKit 2実装・App Store Connect登録は後続ゲート。
 - メディア権利、専門監査、模試240問、StoreKit実装、TestFlightは未PASS。
 
 全3カテゴリの最終canonical PASS、720問L3、権利監査、専門監査がPASSするまで製品版全体を完成扱いしない。
