@@ -63,16 +63,28 @@ jobs:
           assert len(rows) == 330
           assert all(r.get('audit_status') == 'release_ready' for r in rows)
           assert all(r.get('origin_type') == 'original_from_primary_source' for r in rows)
-          print('PASS: release resource is 330/330 release_ready original content')
+          free=[r for r in rows if not r.get('premium')]
+          premium=[r for r in rows if r.get('premium')]
+          assert len(free) == 30 and len(premium) == 300
+          subjects={}
+          for row in free:
+              subjects[row['subject']]=subjects.get(row['subject'],0)+1
+          assert len(subjects) == 10 and set(subjects.values()) == {3}
+          print('PASS: release resource is 330/330 release_ready; free=30 balanced across 10 subjects; premium=300')
           PY
       - name: Native product shell audit
         run: python3 hokenshi-sprint/scripts/validate_native_product_shell.py
       - name: Verify delegated monetization and identifiers
         run: |
           grep -q 'jp.allsunday1122.hokenshi.premium' hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/HokenshiMonetization.swift
+          grep -q 'public static let freeQuestionCount = 30' hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/HokenshiMonetization.swift
+          grep -q 'public static let premiumQuestionCount = 300' hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/HokenshiMonetization.swift
           grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.hokenshi' hokenshi-sprint/ios/project.yml
           grep -q 'DEVELOPMENT_TEAM: MN3D2ZM44N' hokenshi-sprint/ios/project.yml
-          ! grep -R --line-number -E 'App Store Connect App ID: [0-9]{6,}|APP_STORE_CONNECT_APP_ID: ["'"']?[0-9]{6,}' hokenshi-sprint || false
+          if grep -R --line-number -E 'App Store Connect App ID[^0-9]*[0-9]{6,}|APP_STORE_CONNECT_APP_ID[^0-9]*[0-9]{6,}' hokenshi-sprint; then
+            echo 'A numeric App Store Connect App ID was added before an Apple-issued value was recorded.'
+            exit 1
+          fi
           echo 'PASS: delegated Bundle/IAP identifiers are canonical; numeric ASC App ID remains unset until Apple issues it.'
       - name: Safari prototype static smoke
         run: |
