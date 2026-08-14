@@ -9,12 +9,16 @@ on:
     paths:
       - 'splat-native-ios/**'
       - '.github/workflows/splat-native-ios.yml'
+env:
+  GIT_LFS_SKIP_SMUDGE: '1'
 jobs:
   build:
     runs-on: macos-15
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+      - name: Disable Git LFS smudge for SwiftPM source checkout
+        run: git lfs install --skip-smudge --global
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Static checks
