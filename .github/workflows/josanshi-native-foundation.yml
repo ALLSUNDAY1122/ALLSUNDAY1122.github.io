@@ -94,5 +94,8 @@ jobs:
       - name: Validate approved monetization and canonical identifiers
         run: python3 josanshi-sprint/scripts/validate_monetization.py
 
+      - name: Validate release configuration safety contract
+        run: python3 josanshi-sprint/scripts/validate_release_configuration.py
+
       - name: Run Swift package tests
         run: swift test --package-path josanshi-sprint/ios/JosanshiSprintFeature
