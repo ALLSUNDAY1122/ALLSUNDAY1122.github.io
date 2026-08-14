@@ -9,6 +9,7 @@ public struct JosanshiRootView: View {
     @State private var isExportingBackup = false
     @State private var isImportingBackup = false
     @State private var backupMessage: String?
+    @State private var isResetConfirmationPresented = false
 
     public init() {
         _model = StateObject(wrappedValue: JosanshiDashboardModel())
@@ -40,6 +41,7 @@ public struct JosanshiRootView: View {
             }
             .tint(LearningSprintTheme.indigo)
         }
+        .dynamicTypeSize(dynamicTypeRange)
         .sheet(isPresented: $model.isSessionPresented) {
             NavigationStack {
                 JosanshiQuestionSessionView(
@@ -86,21 +88,31 @@ public struct JosanshiRootView: View {
         } message: {
             Text(backupMessage ?? "")
         }
+        .alert("学習記録をリセットしますか？", isPresented: $isResetConfirmationPresented) {
+            Button("キャンセル", role: .cancel) {}
+            Button("リセット", role: .destructive) { model.resetLearningHistory() }
+        } message: {
+            Text("回答履歴・苦手・途中の演習・模試の完了記録を削除します。文字サイズ、1日の目標、試験日、シャッフル設定は残ります。")
+        }
     }
 
     private var home: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 18) {
-                VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 5) {
                     Text("学びスプリント")
                         .font(LearningSprintTheme.sans(12, weight: .bold))
                         .foregroundStyle(LearningSprintTheme.vermilion)
                     Text("助産師国家試験")
                         .font(LearningSprintTheme.serif(28, weight: .bold))
                         .foregroundStyle(LearningSprintTheme.ink)
-                    Text(model.contentStatusText)
-                        .font(LearningSprintTheme.sans(13))
-                        .foregroundStyle(model.hasReadyContent ? LearningSprintTheme.indigo : LearningSprintTheme.vermilion)
+                    Text("今日も1問、力に変える。")
+                        .font(LearningSprintTheme.sans(14))
+                        .foregroundStyle(LearningSprintTheme.ink2)
+                }
+
+                if let days = model.remainingDays {
+                    examCountdown(days: days)
                 }
 
                 HStack(spacing: 16) {
@@ -111,21 +123,21 @@ public struct JosanshiRootView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("今日の学習")
                             .font(LearningSprintTheme.serif(20, weight: .semibold))
-                        Text("標準8問。4 / 8 / 16問から1日の目標を選べます。")
+                        Text("\(model.dailyTarget)問を目標に、短い時間で積み上げます。")
                             .font(LearningSprintTheme.sans(14))
                             .foregroundStyle(LearningSprintTheme.ink2)
                     }
                     Spacer(minLength: 0)
                 }
-                .padding(16)
+                .padding(18)
                 .background(LearningSprintTheme.card)
-                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
 
                 if model.hasResumableSession {
                     Button(action: model.resumePreviousSession) {
                         HStack {
                             Image(systemName: "arrow.counterclockwise.circle.fill")
-                            Text("前回の続きから再開")
+                            Text("続きから再開")
                                 .font(LearningSprintTheme.sans(15, weight: .bold))
                             Spacer()
                             Text(model.coordinator.sessionProgressText)
@@ -144,47 +156,54 @@ public struct JosanshiRootView: View {
                 Button(action: model.requestStandardSprint) {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("標準スプリント")
+                            Text("今日のスプリント")
                                 .font(LearningSprintTheme.serif(20, weight: .bold))
-                            Text("\(model.dailyTarget)問を短時間で反復")
+                            Text("\(model.dailyTarget)問・3分ほど")
                                 .font(LearningSprintTheme.sans(13))
                                 .opacity(0.82)
                         }
                         Spacer()
-                        Image(systemName: "arrow.right.circle.fill")
-                            .font(.title2)
+                        Image(systemName: "arrow.right")
+                            .font(.title3.weight(.bold))
                     }
                     .frame(maxWidth: .infinity, minHeight: 56)
                     .padding(.horizontal, 16)
                     .foregroundStyle(.white)
-                    .background(LearningSprintTheme.indigo)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .background(
+                        LinearGradient(
+                            colors: [LearningSprintTheme.indigo, Color(hex: 0x1D2C42)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
                 .buttonStyle(.plain)
                 .disabled(!model.hasReadyContent)
                 .accessibilityIdentifier("start-standard-sprint")
 
-                if model.weakQuestionCount > 0 {
-                    Button(action: model.requestWeakReview) {
-                        HStack {
-                            Label("苦手復習", systemImage: "arrow.triangle.2.circlepath")
-                                .font(LearningSprintTheme.sans(15, weight: .bold))
-                            Spacer()
-                            Text("\(model.weakQuestionCount)問")
-                                .font(LearningSprintTheme.sans(13, weight: .semibold))
-                        }
-                        .padding(14)
-                        .frame(maxWidth: .infinity, minHeight: 48)
-                        .background(LearningSprintTheme.card)
-                        .foregroundStyle(LearningSprintTheme.vermilion)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("start-weak-review")
-                }
+                actionCard(
+                    title: "苦手をつぶす",
+                    subtitle: model.weakQuestionCount > 0 ? "\(model.weakQuestionCount)問を復習" : "苦手はまだありません",
+                    systemImage: "arrow.triangle.2.circlepath",
+                    accent: LearningSprintTheme.vermilion,
+                    enabled: model.weakQuestionCount > 0,
+                    accessibilityIdentifier: "start-weak-review",
+                    action: model.requestWeakReview
+                )
+
+                actionCard(
+                    title: "模擬試験",
+                    subtitle: "110問 × 3回・FULL監査済み",
+                    systemImage: "doc.text",
+                    accent: LearningSprintTheme.indigo,
+                    enabled: model.hasReadyContent,
+                    accessibilityIdentifier: "open-mock-tab",
+                    action: model.showMockTab
+                )
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("分野別演習")
+                    Text("分野から解く")
                         .font(LearningSprintTheme.serif(20, weight: .semibold))
                     ForEach(JosanshiExamConfiguration.subjects, id: \.self) { subject in
                         Button {
@@ -216,7 +235,15 @@ public struct JosanshiRootView: View {
                     }
                 }
 
-                LearningSprintMemoryBlock("根拠の確認日を問題単位で保持。制度・統計・医療情報の更新時は再監査で古い問題を止める。")
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("これまで")
+                        .font(LearningSprintTheme.serif(20, weight: .semibold))
+                    HStack(spacing: 10) {
+                        metricCard(title: "回答", value: "\(model.totalAnsweredCount)問")
+                        metricCard(title: "正答率", value: "\(Int((model.overallAccuracy * 100).rounded()))%")
+                        metricCard(title: "苦手", value: "\(model.weakQuestionCount)問")
+                    }
+                }
             }
             .padding(18)
             .frame(maxWidth: 520)
@@ -224,6 +251,80 @@ public struct JosanshiRootView: View {
         }
         .navigationTitle("")
         .background(Color.clear)
+    }
+
+    private func examCountdown(days: Int) -> some View {
+        let urgent = days <= 14
+        return VStack(alignment: .leading, spacing: 5) {
+            Text("試験日まで")
+                .font(LearningSprintTheme.sans(12, weight: .bold))
+                .opacity(0.85)
+            HStack(alignment: .firstTextBaseline) {
+                Text("あと\(days)日")
+                    .font(LearningSprintTheme.serif(28, weight: .bold))
+                Spacer()
+                if let pace = model.requiredDailyPace {
+                    Text("1日 \(pace)問")
+                        .font(LearningSprintTheme.sans(14, weight: .bold))
+                }
+            }
+            Text("未回答 \(model.remainingQuestionCount)問。現在の進み方から必要ペースを計算しています。")
+                .font(LearningSprintTheme.sans(12))
+                .opacity(0.85)
+        }
+        .padding(16)
+        .foregroundStyle(.white)
+        .background(
+            LinearGradient(
+                colors: urgent
+                    ? [Color(hex: 0xC14328), Color(hex: 0x96301C)]
+                    : [Color(hex: 0x2B3F5C), Color(hex: 0x1D2C42)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .accessibilityElement(children: .combine)
+    }
+
+    private func actionCard(
+        title: String,
+        subtitle: String,
+        systemImage: String,
+        accent: Color,
+        enabled: Bool,
+        accessibilityIdentifier: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                Image(systemName: systemImage)
+                    .font(.title3)
+                    .frame(width: 30)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(title)
+                        .font(LearningSprintTheme.sans(16, weight: .bold))
+                    Text(subtitle)
+                        .font(LearningSprintTheme.sans(12))
+                        .foregroundStyle(LearningSprintTheme.ink2)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(LearningSprintTheme.ink3)
+            }
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity, minHeight: 58, alignment: .leading)
+            .background(LearningSprintTheme.card)
+            .foregroundStyle(enabled ? accent : LearningSprintTheme.ink3)
+            .overlay {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(LearningSprintTheme.line, lineWidth: 1)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .disabled(!enabled)
+        .accessibilityIdentifier(accessibilityIdentifier)
     }
 
     private var mock: some View {
@@ -275,8 +376,9 @@ public struct JosanshiRootView: View {
                 Text("記録")
                     .font(LearningSprintTheme.serif(28, weight: .bold))
 
-                HStack(spacing: 12) {
-                    metricCard(title: "今日", value: "\(model.todayAnsweredCount)問")
+                HStack(spacing: 10) {
+                    metricCard(title: "回答", value: "\(model.totalAnsweredCount)問")
+                    metricCard(title: "正解", value: "\(model.totalCorrectCount)問")
                     metricCard(title: "苦手", value: "\(model.weakQuestionCount)問")
                 }
 
@@ -315,20 +417,33 @@ public struct JosanshiRootView: View {
     private func metricCard(title: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
-                .font(LearningSprintTheme.sans(12, weight: .semibold))
+                .font(LearningSprintTheme.sans(11, weight: .semibold))
                 .foregroundStyle(LearningSprintTheme.ink3)
             Text(value)
-                .font(LearningSprintTheme.serif(22, weight: .bold))
+                .font(LearningSprintTheme.serif(19, weight: .bold))
                 .foregroundStyle(LearningSprintTheme.ink)
+                .minimumScaleFactor(0.72)
         }
-        .padding(14)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .frame(maxWidth: .infinity, minHeight: 68, alignment: .leading)
         .background(LearningSprintTheme.card)
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
     private var settings: some View {
         Form {
+            Section("文字サイズ") {
+                Picker("文字サイズ", selection: Binding(
+                    get: { model.textSizeStep },
+                    set: { model.setTextSizeStep($0) }
+                )) {
+                    Text("標準").tag(0)
+                    Text("大").tag(1)
+                    Text("特大").tag(2)
+                }
+                .pickerStyle(.segmented)
+            }
+
             Section("1日の目標") {
                 Picker("問題数", selection: Binding(
                     get: { model.dailyTarget },
@@ -341,26 +456,48 @@ public struct JosanshiRootView: View {
                 .pickerStyle(.segmented)
             }
 
-            Section("コンテンツ") {
-                LabeledContent("状態", value: model.contentStatusText)
-                LabeledContent("最新確認試験", value: "第109回")
-                LabeledContent("本試験構造", value: "110問")
-                LabeledContent("独自問題", value: model.productionQuestionTargetText)
-                LabeledContent("出題基準", value: "令和5年版")
+            Section("出題順シャッフル") {
+                Toggle("演習の出題順をシャッフル", isOn: Binding(
+                    get: { model.shuffleQuestions },
+                    set: { model.setShuffleQuestions($0) }
+                ))
+                Text("模試は症例の順序を保つため、設定に関係なく固定順です。")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
-            Section("端末内データ") {
-                LabeledContent("保存", value: "自動")
-                LabeledContent("再開", value: model.hasResumableSession ? "あり" : "なし")
-                LabeledContent("回答履歴", value: "\(model.coordinator.state.attempts.count)件")
-                if let message = model.coordinator.persistenceErrorDescription {
-                    Text(message)
-                        .font(.caption)
-                        .foregroundStyle(.red)
+            Section("選択肢シャッフル") {
+                Toggle("選択肢の順番をシャッフル", isOn: Binding(
+                    get: { model.shuffleChoices },
+                    set: { model.setShuffleChoices($0) }
+                ))
+            }
+
+            Section("試験日") {
+                Toggle("試験日を設定", isOn: Binding(
+                    get: { model.examDate != nil },
+                    set: { enabled in
+                        if enabled {
+                            let initial = Calendar.current.date(byAdding: .month, value: 1, to: Date()) ?? Date()
+                            model.setExamDate(initial)
+                        } else {
+                            model.setExamDate(nil)
+                        }
+                    }
+                ))
+                if model.examDate != nil {
+                    DatePicker(
+                        "日付",
+                        selection: Binding(
+                            get: { model.examDate ?? Date() },
+                            set: { model.setExamDate($0) }
+                        ),
+                        displayedComponents: .date
+                    )
                 }
             }
 
-            Section("バックアップ") {
+            Section("学習データ") {
                 Button("JSONを書き出す") {
                     do {
                         backupDocument = JosanshiBackupDocument(data: try model.exportBackup())
@@ -372,21 +509,42 @@ public struct JosanshiRootView: View {
                 Button("JSONから復元") {
                     isImportingBackup = true
                 }
-                Text("学習履歴・苦手・1日の目標・途中セッションを端末外へ保存できます。")
+                if let message = model.coordinator.persistenceErrorDescription {
+                    Text(message)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+
+            Section("覚えかたのルール") {
+                Text("間違えた問題と「わからない」は苦手へ追加します。苦手は3回連続で正解すると復習対象から外れます。")
+            }
+
+            Section("この教材について") {
+                LabeledContent("状態", value: model.contentStatusText)
+                LabeledContent("最新確認試験", value: "第109回")
+                LabeledContent("独自問題", value: model.productionQuestionTargetText)
+                LabeledContent("出題基準", value: "令和5年版")
+                Text("問題・解説は一次・権威資料を確認した独自教材です。厚生労働省等の公式アプリではありません。")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
-            Section("本番識別子") {
-                LabeledContent("Bundle ID", value: "要確認")
-                LabeledContent("ASC App ID", value: "要確認")
-                LabeledContent("IAP Product ID", value: "要確認")
-                Text("ローカル学習データの保存には本番Bundle IDを流用せず、専用namespaceを使用しています。")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            Section("学習記録リセット") {
+                Button("回答履歴と苦手をリセット", role: .destructive) {
+                    isResetConfirmationPresented = true
+                }
             }
         }
         .navigationTitle("設定")
+    }
+
+    private var dynamicTypeRange: ClosedRange<DynamicTypeSize> {
+        switch model.textSizeStep {
+        case 1: return .xLarge ... .accessibility5
+        case 2: return .xxLarge ... .accessibility5
+        default: return .large ... .accessibility5
+        }
     }
 
     private func importBackup(_ result: Result<[URL], Error>) {
