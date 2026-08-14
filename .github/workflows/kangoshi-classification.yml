@@ -12,6 +12,8 @@ on:
       - 'kangoshi-sprint/product-content/raw/set3-raw.json'
       - 'kangoshi-sprint/product-content/classify_questions.py'
       - 'kangoshi-sprint/product-content/refine_classification*.py'
+      - 'kangoshi-sprint/product-content/apply_situation_classification_corrections.py'
+      - 'kangoshi-sprint/product-content/situation-audit/classification-corrections.json'
       - 'kangoshi-sprint/product-content/run_classification_loop.py'
       - 'kangoshi-sprint/product-content/validate_classification.py'
       - 'kangoshi-sprint/product-content/audit_classification_semantics.py'
@@ -56,6 +58,8 @@ jobs:
           loop_exit=int((root/'classified/loop.exit').read_text().strip())
           warn=root/'classified/warning-resolution-audit.json'
           wr=json.loads(warn.read_text(encoding='utf-8')) if warn.exists() else {}
+          corr=root/'classified/situation-classification-correction-report.json'
+          cr=json.loads(corr.read_text(encoding='utf-8')) if corr.exists() else {}
           d['classificationLoop']={
               'method':report.get('method','unknown'),
               'high':report.get('high',0),
@@ -65,6 +69,7 @@ jobs:
               'needsReview':len(report.get('needsReview',[])),
               'warningCount':wr.get('warningCount'),
               'resolvedWarnings':wr.get('resolvedCount'),
+              'situationSpecialistCorrectionsApplied':cr.get('appliedCount',0),
               'auditExit':loop_exit,
               'status':'pass' if loop_exit==0 else 'fail'
           }
@@ -76,7 +81,16 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add kangoshi-sprint/product-content/classified kangoshi-sprint/product-content/manifest.json
-          if ! git diff --cached --quiet; then git commit -m 'kangoshi: classification loop result [skip ci]' && git push; fi
+          if ! git diff --cached --quiet; then
+            git commit -m 'kangoshi: classification loop result [skip ci]'
+            pushed=0
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push; then pushed=1; break; fi
+              sleep 2
+            done
+            test "$pushed" = "1"
+          fi
       - name: Enforce classification gate
         shell: bash
         run: test "$(cat kangoshi-sprint/product-content/classified/loop.exit)" = "0"
