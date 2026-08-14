@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "updatedAt": "2026-08-14T18:53:00+09:00",
+  "updatedAt": "2026-08-14T18:55:00+09:00",
   "sourceOfTruth": "GitHub main",
   "standardProcedure": "v2.5",
   "noProgressManual": "NO_PROGRESS v2.0",
@@ -13,11 +13,11 @@
     "situationSpecialistCorrectionsApplied":4,"classificationPass":true
   },
   "canonicalIntegratedL3": {
-    "explainedLastMaterialized":583,"total":720,"pendingLastMaterialized":137,
+    "explainedLastMaterialized":674,"total":720,"pendingLastMaterialized":46,
     "dynamicRequired":85,"dynamicVerified":66,"dynamicExpertReview":0,"dynamicPending":19,
-    "pass":false,"releaseAllowed":false,"auditBlobSha":"3c94690136487d26d244acc42b94ee9ad6d39b55",
-    "refreshWorkflowRunId":31789928433,"refreshState":"WAIT_EXTERNAL",
-    "note":"C/B worker artifacts are newer than the last materialized L3 snapshot; adopt only the next enrichment audit result."
+    "pass":false,"releaseAllowed":false,"auditBlobSha":"da3ce1934bf0f99b73fe5ba7b6928841a4bfb974",
+    "refreshWorkflowRunId":31789928433,"refreshState":"COMPLETED_EXPECTED_GATE_FAIL",
+    "note":"Generation/application/audit/commit completed successfully; final L3 completion gate failed only because 46 explanations and 19 dynamic-evidence checks remain. Do not rerun until new inputs land."
   },
   "workstreams": {
     "A_required": {
@@ -57,10 +57,10 @@
     "initialPrototypeHumanCheckPass":true,"mock240PerExamReady":false,"storeKit2Ready":false,"releaseAuditPass":false,"testFlightReady":false
   },
   "nextCoordinatorLoop": [
-    "Keep enrichment run 31789928433 in WAIT_EXTERNAL while healthy and do not rerun it",
-    "C worker must finish the final 8 scenario units before situation canonical build",
-    "After C reaches 60/60, build and validate situation canonical JSON",
-    "Adopt the next materialized common L3 audit, then resolve remaining dynamic/media/content/scoring/expert queues",
+    "Wait for C worker-owned final 8 scenario units; this is an external dependency, not NO_PROGRESS",
+    "When C reaches 60/60, build and validate situation canonical JSON",
+    "Regenerate common L3 once new C artifacts settle and adopt only materialized audit values",
+    "Resolve remaining dynamic/media/content/scoring/expert queues after L3 content coverage converges",
     "Do not advance mock/StoreKit/TestFlight until all category canonical and common release gates pass"
   ]
 }
