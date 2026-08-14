@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC10",
+  "sourceExam": 114,
+  "session": "AM",
+  "sourceEvidence": {
+    "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+    "officialPages": [46, 47],
+    "supplementalTextVerification": [
+      "https://www.tokyo-ac.jp/nurse/exam-info/questions-114/",
+      "https://hws-kyokai.or.jp/publishing/eiesei-kangoshiken-main/eiesei-kangoshiken-114-am2.html"
+    ],
+    "checkedAt": "2026-08-14T15:04:00+09:00"
+  },
+  "textCorrections": {
+    "scenarioTextCanonical": "Aさん（64歳、男性、外国籍）は、1年前に日本に移住し、娘（36歳、会社員）と娘の夫（42歳、会社員、日本人）と3人家族である。娘の夫は海外に長期出張中で、娘は日本語での簡単な日常会話はできるが、Aさんはほとんど日本語が理解できない。Aさんは、2か月前から時々腰痛があり、市販薬で様子を見ていたが、徐々に腰痛が強くなり、娘に付き添われて受診した。検査の結果、肺癌と診断され、胸膜と腰椎への転移が見つかり、疼痛コントロールの目的で入院した。",
+    "questionTextCorrections": [
+      {"id": "K114-AM119", "fromContains": "痛に対して", "toContains": "疼痛に対して"},
+      {"id": "K114-AM119", "fromContains": "激しい腰痛が日に数回", "toContains": "激しい腰痛が1日に数回"},
+      {"id": "K114-AM119", "fromContains": "痛スケール", "toContains": "疼痛スケール"},
+      {"id": "K114-AM120", "fromContains": "入院 日、痛が", "toStartsWith": "入院8日、疼痛が"}
+    ]
+  },
+  "classificationCorrections": [
+    {
+      "id": "K114-AM118",
+      "from": {"majorSubject": "成人看護学", "subject": "呼吸器"},
+      "to": {"majorSubject": "看護の統合と実践", "subject": "国際看護・医療通訳"},
+      "reason": "肺癌は背景病態。設問の主題は日本語理解が困難な外国籍患者の説明・意思決定を支える専門的医療通訳の活用。"
+    },
+    {
+      "id": "K114-AM119",
+      "from": {"majorSubject": "成人看護学", "subject": "呼吸器"},
+      "to": {"majorSubject": "成人看護学", "subject": "緩和ケア・がん疼痛"},
+      "reason": "設問はモルヒネ徐放製剤とレスキュードーズを用いた転移性がん疼痛のアセスメント・患者教育を問う。"
+    },
+    {
+      "id": "K114-AM120",
+      "from": {"majorSubject": "成人看護学", "subject": "呼吸器"},
+      "to": {"majorSubject": "成人看護学", "subject": "緩和ケア・ACP"},
+      "reason": "設問の主題は退院希望と家族不安がある進行がん患者のアドバンス・ケア・プランニングで、呼吸器症状の評価ではない。"
+    }
+  ],
+  "patientIdentityAudit": {"patient": "Aさん（64歳、男性、外国籍）", "familyMembers": ["娘36歳", "娘の夫42歳"], "status": "pass"},
+  "applyState": "pending_canonical_integration"
+}
