@@ -67,7 +67,8 @@ struct QuestionRepository {
             case .preview:
                 guard question.releaseEligible == false,
                       question.originType == "original_preview",
-                      question.contentUse == nil else {
+                      question.contentUse == nil,
+                      question.difficulty == nil else {
                     throw QuestionBankError.invalidQuestion(question.id)
                 }
             case .release:
@@ -104,15 +105,11 @@ struct QuestionRepository {
 
         switch contentUse {
         case .practice:
-            // Original practice content is timeless learning material. Assigning an
-            // official exam year would make it look like a reproduced past question.
-            guard question.examYear == nil else {
+            guard question.examYear == nil,
+                  question.difficulty != nil else {
                 throw QuestionBankError.invalidReleaseGate(question.id)
             }
         case .officialMock:
-            // Official-year questions require a separate bank that binds each item
-            // to official response slots/partial-credit scoring and rights clearance.
-            // The ordinary practice repository intentionally cannot load them.
             throw QuestionBankError.officialMockRequiresDedicatedBank(question.id)
         }
 
