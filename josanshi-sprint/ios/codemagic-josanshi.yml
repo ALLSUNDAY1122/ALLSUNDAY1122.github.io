@@ -58,13 +58,15 @@ workflows:
           p.write_text(text, encoding='utf-8')
           PY
           xcodegen generate --spec xcodegen.yml
+          python3 apply-xcode-capabilities.py JosanshiSprint.xcodeproj/project.pbxproj
       - name: Verify release Xcode project
         script: |
           cd "$CM_BUILD_DIR"
-          grep -q 'PRODUCT_BUNDLE_IDENTIFIER = jp.allsunday1122.josanshi;' "$XCODE_PROJECT/project.pbxproj"
-          grep -q 'DEVELOPMENT_TEAM = MN3D2ZM44N;' "$XCODE_PROJECT/project.pbxproj"
-          grep -q 'com.apple.InAppPurchase' "$XCODE_PROJECT/project.pbxproj"
-          grep -q 'enabled = 1;' "$XCODE_PROJECT/project.pbxproj"
+          PBX="$XCODE_PROJECT/project.pbxproj"
+          grep -Eq 'PRODUCT_BUNDLE_IDENTIFIER = "?jp\.allsunday1122\.josanshi"?;' "$PBX"
+          grep -Eq 'DEVELOPMENT_TEAM = "?MN3D2ZM44N"?;' "$PBX"
+          grep -q 'com.apple.InAppPurchase' "$PBX"
+          grep -q 'enabled = 1;' "$PBX"
           test -f josanshi-sprint/ios/PrivacyInfo.xcprivacy
           test -f josanshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png
       - name: Apply App Store signing profiles for Internal TestFlight only
