@@ -2,6 +2,14 @@
 
 更新: 2026-08-14
 
+## Standard procedure v2.4
+- [x] 2026-08-14改訂の標準手順 v2.4を再確認
+- [x] Bundle ID恒久委任ルールを適用し `jp.allsunday1122.hokenshi` を維持
+- [x] 早期試用URLをGitHub Pagesへ公開・提示済み
+- [x] NO_PROGRESS自己復旧ルールを適用
+- [x] 学びスプリント課金標準から「非消耗型・買い切り800円」を採用
+- [x] アプリ内価格はStoreKit `Product.displayPrice`のみを使用し、価格文字列をコードへ固定しない
+
 ## Product / Content
 - [x] Golden Master v2.1を最上位UI正本として適用
 - [x] SwiftUI Native / WebView不使用
@@ -33,6 +41,7 @@
 
 ## Monetization
 - [x] 非消耗型・買い切りPremiumを採用
+- [x] 日本向け標準価格800円を正本化
 - [x] 無料30問（第1回の10分野から各3問）
 - [x] Premium残り300問＋模試
 - [x] 無料範囲の10分野均等性をCIで固定
@@ -44,6 +53,7 @@
 - [x] `Product.displayPrice`だけを価格表示へ使用
 - [x] 製品情報取得失敗時の再読み込み導線
 - [ ] App Store Connect上で非消耗型IAPを作成
+- [ ] 日本向け価格を800円で設定
 - [ ] Sandbox / TestFlightで購入・復元実機確認
 
 ## Quality
