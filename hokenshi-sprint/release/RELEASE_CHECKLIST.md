@@ -31,8 +31,9 @@
 
 ## Monetization
 - [x] 非消耗型・買い切りPremiumを採用
-- [x] 無料範囲: 第1回110問
-- [x] Premium: 第2・3回を追加し全330問
+- [x] 無料30問（第1回の10分野から各3問）
+- [x] Premium残り300問＋模試
+- [x] 無料範囲の10分野均等性をCIで固定
 - [x] StoreKit 2実装
 - [x] verified transactionのみ解放
 - [x] revocation確認
