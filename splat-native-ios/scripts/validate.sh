@@ -5,6 +5,7 @@ cd "$ROOT"
 
 test -f project.yml
 test -f SplatNative/ScanModel.swift
+test -f SplatNative/ScanModel+SessionLifecycle.swift
 test -f SplatNative/SplatViewer.swift
 test -f SplatNative/RootScanView.swift
 test -f SplatNative/SplatNativeApp.swift
@@ -33,6 +34,11 @@ grep -q 'RootScanView()' SplatNative/SplatNativeApp.swift
 grep -q 'PersistentScanCameraView()' SplatNative/RootScanView.swift
 grep -q 'model.attach(session: view.session)' SplatNative/RootScanView.swift
 grep -q 'session.run(config' SplatNative/ScanModel.swift
+
+# Permission/session failure must surface instead of leaving the user on a dead camera screen.
+grep -q 'didFailWithError' SplatNative/ScanModel+SessionLifecycle.swift
+grep -q 'sessionWasInterrupted' SplatNative/ScanModel+SessionLifecycle.swift
+grep -q 'sessionInterruptionEnded' SplatNative/ScanModel+SessionLifecycle.swift
 
 # Current PoC is intentionally local-only.
 ! grep -R -nE 'https?://.*(api|upload|analytics)|URLSession|Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
