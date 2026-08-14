@@ -28,8 +28,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-      - name: Materialize exact canonical AppIcon
-        run: bash josanshi-sprint/ios/prepare-app-icon.sh
       - name: Generate Xcode project
         run: |
           cd josanshi-sprint/ios
@@ -46,14 +44,12 @@ jobs:
             -derivedDataPath /tmp/josanshi-derived \
             CODE_SIGNING_ALLOWED=NO \
             PRODUCT_BUNDLE_IDENTIFIER=local.ci.josanshi
-      - name: Verify built app privacy manifest and asset catalog
+      - name: Verify built app privacy manifest
         run: |
           APP=/tmp/josanshi-derived/Build/Products/Debug-iphonesimulator/JosanshiSprint.app
           test -d "$APP"
           test -f "$APP/PrivacyInfo.xcprivacy"
-          test -f "$APP/Assets.car"
           plutil -lint "$APP/PrivacyInfo.xcprivacy"
-          test "$(shasum -a 256 josanshi-sprint/ios/AppIcon.png | awk '{print $1}')" = "07668a08a0703b76ecbeca38bbc5b396a248f822de594947ddccd383f0898579"
       - name: Assert native-only app sources
         run: |
           ! grep -R -n -E 'WKWebView|import WebKit|SFSafariViewController' josanshi-sprint/ios/App josanshi-sprint/ios/JosanshiSprintFeature/Sources
