@@ -1,53 +1,63 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "workstream": "B-general",
   "scope": {"category":"一般","sourceExams":[115,114,113],"targetCount":390,"countPerExam":130},
   "sourceOfTruth": "GitHub main",
-  "checkedAt": "2026-08-14T14:28:00+09:00",
-  "status": "BATCH_AUDIT_PASS_CANONICAL_AUDIT_PENDING",
+  "checkedAt": "2026-08-14T16:34:00+09:00",
+  "status": "WORKER_REMEDIATION_PASS_COORDINATOR_CANONICAL_REBUILD_PENDING",
   "standardRecheck": {
-    "title": "AIアプリ開発・公開フロー v2.4",
+    "title": "AIアプリ開発・公開フロー v2.5",
     "rechecked": true,
-    "materialChange": true,
-    "impact": "Workstream explanation batches are intermediate artifacts. Final PASS now requires consolidation into canonical JSON and a fresh audit against the consolidated canonical data. Repeated unchanged main checks are prohibited by the NO_PROGRESS recovery rule."
+    "noProgressManual": "NO_PROGRESS｜処理停滞・自己復旧ループ v2.0",
+    "impact": "進展は完了条件への接近で判定し、同じ状態確認や局所commitだけでは進展と数えない。canonical生成という実変更を検知したためB-general再監査を再発火した。"
   },
-  "workstreamCoverage": {
-    "generalContentAndEvidenceCovered": 390,
-    "generalRemaining": 0,
-    "normalExplanationEvidenceCovered": 352,
-    "quarantinedWithAuditEvidence": 38,
-    "completedExams": {
-      "115": {"batchAuditStatus":"PASS_WITH_QUARANTINE","target":130,"normalText":122,"quarantined":8,"contentConcerns":2,"scoringExceptions":2,"mediaDependent":4,"sourceDataDefects":0,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K115-SPECIAL-AUDIT.json"},
-      "114": {"batchAuditStatus":"PASS_WITH_QUARANTINE","target":130,"normalText":116,"quarantined":14,"contentConcerns":4,"scoringExceptions":0,"mediaDependent":10,"sourceDataDefects":0,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K114-SPECIAL-AUDIT.json"},
-      "113": {"batchAuditStatus":"PASS_WITH_QUARANTINE","target":130,"normalText":114,"quarantined":16,"contentConcerns":3,"scoringExceptions":0,"mediaDependent":8,"sourceDataDefects":5,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K113-SPECIAL-AUDIT.json"}
-    }
+  "canonicalSnapshotBeforeWorkerRemediation": {
+    "canonicalBuilt": true,
+    "total": 390,
+    "perExam": {"115":130,"114":130,"113":130},
+    "duplicateIds": 0,
+    "officialAnswerMismatch": 0,
+    "officialScoringMismatch": 0,
+    "gatePass": false,
+    "exam113MissingExplanation": 13,
+    "exam113MissingEvidence": 13,
+    "coordinatorAudit": "kangoshi-sprint/workstreams/B-general/COORDINATOR-CANONICAL-AUDIT-20260814.json"
   },
-  "quarantineTotals": {"contentConcerns":9,"scoringExceptions":2,"mediaDependent":22,"sourceDataDefects":5},
-  "qualityAtBatchLayer": {
-    "officialAnswerChanged":0,
-    "unclassified":0,
-    "queueOverlap":0,
-    "normalMissingPoint":0,
-    "normalMissingDetail":0,
-    "normalMissingEvidenceRefs":0,
-    "normalMissingEvidenceCheckedDate":0,
-    "highSimilarityWaterFillingDetected":0
+  "workerRemediation": {
+    "target": 13,
+    "completed": 13,
+    "batch": "kangoshi-sprint/product-content/explanation-batches/B-general-113-canonical-remediation-13.json",
+    "batchCommit": "19a153d34b195526a9de768e2557f5d4aef2e753",
+    "missingPoint": 0,
+    "missingDetail": 0,
+    "missingExplanationEvidenceRefs": 0,
+    "missingEvidenceCheckedDate": 0,
+    "officialAnswerChanged": 0,
+    "officialScoringChanged": 0,
+    "mediaDependentKeptQuarantined": 8,
+    "sourceDataDefectsResolvedNormal": 5,
+    "status": "PASS_FOR_COORDINATOR_REBUILD"
   },
-  "canonicalization": {
-    "handoffFile":"kangoshi-sprint/workstreams/B-general/CANONICALIZATION-HANDOFF-v2.4.json",
-    "handoffCommit":"824dbb5f347e12dfdf5fec569fd4e87de391491d",
-    "canonicalAuditComplete":false,
-    "finalPassAllowed":false,
-    "reason":"The revised problem-generation/audit procedure requires final machine audit on consolidated canonical JSON rather than reusing small-batch PASS results."
+  "remediatedIds": {
+    "mediaDependent": ["K113-AM027","K113-AM034","K113-AM035","K113-AM046","K113-PM037","K113-PM054","K113-PM066","K113-PM077"],
+    "sourceRepairResolved": ["K113-AM061","K113-PM053","K113-PM057","K113-PM078","K113-PM090"]
   },
-  "invalidatedCommonGate": {
-    "reason":"K113 raw numeric/text import defects were discovered after the prior common raw audit PASS",
-    "ids":["K113-AM061","K113-PM053","K113-PM057","K113-PM078","K113-PM090"],
-    "requiredAction":"Coordinator restores exact official text and reruns raw validation, duplicate/high-similarity audit, and affected L2/L3 queues before canonical PASS."
+  "evidenceRepair": {
+    "file": "kangoshi-sprint/workstreams/B-general/K113-SPECIAL-EVIDENCE.json",
+    "commit": "7a92715df2257246ed00f44babeee811d2713268",
+    "legacyMisMappedEvidenceRefsCorrected": 3,
+    "note": "味蕾・片麻痺移乗・歩行補助具に誤対応していた旧NCBI参照を実内容に一致する根拠へ差し替えた。"
+  },
+  "currentCoverage": {
+    "generalQuestions": 390,
+    "workerExplanationEvidenceComplete": 390,
+    "normalAfterSourceRepairs": 357,
+    "quarantined": 33,
+    "quarantineTotals": {"contentConcerns":9,"scoringExceptions":2,"mediaDependent":22,"unresolvedSourceDataDefects":0}
   },
   "editBoundary": {
     "allowed":["kangoshi-sprint/product-content/explanation-batches/B-general-*.json","kangoshi-sprint/workstreams/B-general/**"],
-    "forbidden":["kangoshi-sprint/product-content/enriched-draft/**","kangoshi-sprint/product-content/manifest.json","kangoshi-sprint/product-content/enrichment-trigger.json","kangoshi-sprint/product-content/content-concerns.json","common apply/build/validate scripts","common UI","mock exam engine","StoreKit"]
+    "forbidden":["kangoshi-sprint/product-content/enriched-draft/**","kangoshi-sprint/product-content/manifest.json","common canonical build/validate files","common UI","mock exam engine","StoreKit"]
   },
-  "nextLoop":"Do not repeat status-only checks. Wait only for actual coordinator/raw/media/expert changes. When canonical general JSON is created or affected source data changes, rerun the impacted B-general audit against canonical data."
+  "nextLoop": "Coordinator applies the 13-item remediation batch to consolidated canonical data, rebuilds exam-113/general.json and reruns the 390-question integrity/shared audits. B-general final canonical PASS may be declared only after those coordinator-owned audits return zero missing explanation/evidence."
 }
