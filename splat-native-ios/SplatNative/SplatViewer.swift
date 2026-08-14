@@ -109,7 +109,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
             cos(yaw) * cos(pitch) * distance
         )
         let viewMatrix = lookAt(eye: eye, center: .zero, up: SIMD3<Float>(0, 1, 0))
-        let viewport = ModelRendererViewportDescriptor(
+        let viewport = SplatRenderer.ViewportDescriptor(
             viewport: MTLViewport(originX: 0, originY: 0, width: drawableSize.width, height: drawableSize.height, znear: 0, zfar: 1),
             projectionMatrix: projection,
             viewMatrix: viewMatrix * rotationZ(.pi),
