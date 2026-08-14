@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K113-AM-SC10",
+  "questionIds": ["K113-AM118", "K113-AM119", "K113-AM120"],
+  "sourceEvidence": {
+    "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+    "officialPrintedPages": [50, 51],
+    "checkedAt": "2026-08-14T16:48:00+09:00"
+  },
+  "textCorrections": {
+    "scenario": [
+      {"from": "午前 時に発生した震度\\u0007強", "to": "午前9時に発生した震度5強"},
+      {"from": "自宅の\\u0002階", "to": "自宅の2階"},
+      {"from": "午前 時30分", "to": "午前9時30分"},
+      {"from": "尿潜血 袷!", "to": "尿潜血（＋）"}
+    ],
+    "questions": [
+      {"id": "K113-AM120", "from": "入院 日後", "to": "入院4日後"}
+    ]
+  },
+  "classificationCorrections": [
+    {
+      "id": "K113-AM118",
+      "from": {"majorSubject": "基礎看護学", "subject": "観察・フィジカルアセスメント"},
+      "to": {"majorSubject": "看護の統合と実践", "subject": "災害・救急"},
+      "reason": "地震時の高エネルギー外傷と循環不全から骨盤骨折を判断する災害・外傷初期対応が主題。バイタルサイン語だけで基礎看護へ寄せない。"
+    },
+    {
+      "id": "K113-AM119",
+      "from": {"majorSubject": "基礎看護学", "subject": "観察・フィジカルアセスメント"},
+      "to": {"majorSubject": "看護の統合と実践", "subject": "災害・救急"},
+      "reason": "余震下の複数被災者から急性変化を示すCさんを優先し初期評価する災害・救急判断が主題。SpO2やバイタル語だけを分類根拠にしない。"
+    }
+  ],
+  "scenarioStructure": {
+    "type": "multi-patient-disaster-event-linked",
+    "patientFlow": ["AM118:Aさん", "AM119:Bさん/Cさん", "AM120:Bさん"],
+    "patientSwitchIsValid": true
+  },
+  "applyState": "pending_canonical_integration"
+}
