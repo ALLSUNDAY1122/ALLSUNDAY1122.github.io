@@ -1,0 +1,69 @@
+name: Kangoshi Final Web Runtime Gate
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/product-content/validate_product_ui_runtime.py'
+      - 'kangoshi-sprint/product-content/product-runtime-audit.json'
+      - 'kangoshi-sprint/product-content/enriched-draft/release-queue-ids.json'
+      - 'kangoshi-sprint/product-content/manifest.json'
+      - 'kangoshi-sprint/questions-runtime.js'
+      - 'kangoshi-sprint/app-v03.js'
+      - 'kangoshi-sprint/media-runtime.js'
+      - 'kangoshi-sprint/scoring-overrides.js'
+      - 'kangoshi-sprint/product-availability.js'
+      - 'kangoshi-sprint/index.html'
+      - 'kangoshi-sprint/sw.js'
+      - '.github/workflows/kangoshi-product-ui-runtime.yml'
+
+concurrency:
+  group: kangoshi-final-web-runtime
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  web-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: JavaScript syntax checks
+        run: |
+          node --check kangoshi-sprint/questions-runtime.js
+          node --check kangoshi-sprint/scoring-overrides.js
+          node --check kangoshi-sprint/app-v03.js
+          node --check kangoshi-sprint/media-runtime.js
+          node --check kangoshi-sprint/product-availability.js
+      - name: Runtime data smoke check
+        run: |
+          node - <<'JS'
+          global.window={};
+          require('./kangoshi-sprint/questions-runtime.js');
+          const q=window.KANGOSHI_QUESTIONS||[];
+          if(q.length!==720) throw new Error(`runtime questions ${q.length}`);
+          const counts={}; for(const x of q){counts[x.sourceExam]=(counts[x.sourceExam]||0)+1}
+          for(const e of [115,114,113]) if(counts[e]!==240) throw new Error(`exam ${e}: ${counts[e]}`);
+          const media=q.filter(x=>x.mediaReleaseStatus==='resolved');
+          if(media.length!==38) throw new Error(`media resolved ${media.length}`);
+          console.log({questions:q.length,counts,media:media.length});
+          JS
+      - name: Final static/runtime audit
+        run: python3 kangoshi-sprint/product-content/validate_product_ui_runtime.py
+      - name: Commit audit result
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/product-content/product-ui-runtime-audit.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'kangoshi: record final web runtime audit [skip ci]'
+            pushed=0
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push; then pushed=1; break; fi
+              sleep 2
+            done
+            test "$pushed" = "1"
+          fi
