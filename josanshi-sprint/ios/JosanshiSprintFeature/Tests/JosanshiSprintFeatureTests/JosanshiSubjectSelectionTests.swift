@@ -19,6 +19,17 @@ final class JosanshiSubjectSelectionTests: XCTestCase {
         XCTAssertNotEqual(first.questionIDs, second.questionIDs)
     }
 
+    func testSubjectPracticeCanPreserveOrderWhenShuffleIsDisabled() throws {
+        let questions = makeQuestions()
+        let coordinator = JosanshiLearningCoordinator(questions: questions, loadPersistedState: false)
+        coordinator.setDailyTarget(8)
+        coordinator.setShuffleQuestions(false)
+
+        let session = try coordinator.startSubject(JosanshiExamConfiguration.subjects[0], seed: 99)
+
+        XCTAssertEqual(session.questionIDs, Array(questions.prefix(8).map(\.id)))
+    }
+
     func testNewRequestDoesNotOverwriteIncompleteSession() throws {
         let coordinator = JosanshiLearningCoordinator(questions: makeQuestions(), loadPersistedState: false)
         coordinator.setDailyTarget(8)
@@ -29,6 +40,23 @@ final class JosanshiSubjectSelectionTests: XCTestCase {
         XCTAssertEqual(attemptedReplacement, original)
         XCTAssertEqual(coordinator.activeSession, original)
         XCTAssertEqual(coordinator.state.resumeSession, original)
+    }
+
+    func testGoldenMasterPreferencesRoundTripInsideBackup() throws {
+        let source = JosanshiLearningCoordinator(questions: makeQuestions(), loadPersistedState: false)
+        source.setShuffleQuestions(false)
+        source.setShuffleChoices(false)
+        source.setTextSizeStep(2)
+        source.setExamDate(Date(timeIntervalSince1970: 1_800_000_000))
+
+        let data = try source.exportBackup()
+        let restored = JosanshiLearningCoordinator(questions: makeQuestions(), loadPersistedState: false)
+        try restored.importBackup(data)
+
+        XCTAssertFalse(restored.preferences.shuffleQuestions)
+        XCTAssertFalse(restored.preferences.shuffleChoices)
+        XCTAssertEqual(restored.preferences.resolvedTextSizeStep, 2)
+        XCTAssertNotNil(restored.state.examDate)
     }
 
     private func makeQuestions() -> [LearningQuestion] {
