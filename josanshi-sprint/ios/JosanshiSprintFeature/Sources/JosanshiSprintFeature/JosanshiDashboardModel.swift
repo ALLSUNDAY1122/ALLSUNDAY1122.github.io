@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Combine
 import LearningSprintCore
 
 public enum JosanshiFeatureTab: Hashable, Sendable {
@@ -16,15 +17,22 @@ public final class JosanshiDashboardModel: ObservableObject {
     @Published public var selectedSubject: String?
     @Published public var isContentGatePresented = false
     @Published public var isSessionPresented = false
+    @Published public var isPaywallPresented = false
+    @Published public private(set) var isPremium: Bool
     @Published public private(set) var contentErrorDescription: String?
 
     public let coordinator: JosanshiLearningCoordinator
     public private(set) var questionBank: JosanshiQuestionBankDocument?
+    public private(set) var purchaseController: PurchaseController?
+
+    private var purchaseCancellables = Set<AnyCancellable>()
 
     public init(
         questionBank: JosanshiQuestionBankDocument? = nil,
         coordinator injectedCoordinator: JosanshiLearningCoordinator? = nil,
-        usePersistentStore: Bool = true
+        usePersistentStore: Bool = true,
+        enableStoreKit: Bool = false,
+        premiumEntitlementOverride: Bool? = nil
     ) {
         var resolvedBank = questionBank
         var loadError: String?
@@ -63,6 +71,34 @@ public final class JosanshiDashboardModel: ObservableObject {
         self.dailyTarget = self.coordinator.state.dailyTarget
         self.contentErrorDescription = loadError
         self.isContentGatePresented = loadError != nil
+        self.isPremium = premiumEntitlementOverride ?? false
+        self.purchaseController = nil
+
+        if premiumEntitlementOverride == nil,
+           enableStoreKit,
+           let productID = JosanshiExamConfiguration.productionIdentifiers.productID,
+           !productID.isEmpty {
+            let controller = PurchaseController(productID: productID)
+            self.purchaseController = controller
+            self.isPremium = controller.isPremium
+
+            controller.$isPremium
+                .removeDuplicates()
+                .sink { [weak self] entitled in
+                    guard let self else { return }
+                    self.isPremium = entitled
+                    if entitled {
+                        self.isPaywallPresented = false
+                    }
+                }
+                .store(in: &purchaseCancellables)
+
+            controller.objectWillChange
+                .sink { [weak self] _ in
+                    self?.objectWillChange.send()
+                }
+                .store(in: &purchaseCancellables)
+        }
     }
 
     public func setDailyTarget(_ value: Int) {
@@ -95,28 +131,31 @@ public final class JosanshiDashboardModel: ObservableObject {
     public func requestStandardSprint() {
         selectedSubject = nil
         startSession {
-            _ = try coordinator.startStandardSprint()
+            _ = try coordinator.startStandardSprint(isPremium: isPremium)
         }
     }
 
     public func requestSubjectPractice(_ subject: String) {
         guard JosanshiExamConfiguration.subjects.contains(subject) else { return }
+        guard requirePremium() else { return }
         selectedSubject = subject
         startSession {
-            _ = try coordinator.startSubject(subject)
+            _ = try coordinator.startSubject(subject, isPremium: true)
         }
     }
 
     public func requestWeakReview() {
+        guard requirePremium() else { return }
         startSession {
-            _ = try coordinator.startWeakReview()
+            _ = try coordinator.startWeakReview(isPremium: true)
         }
     }
 
     public func requestMock(_ round: Int) {
         guard (1...JosanshiExamConfiguration.originalMockSetCount).contains(round) else { return }
+        guard requirePremium() else { return }
         startSession {
-            _ = try coordinator.startMock(round)
+            _ = try coordinator.startMock(round, isPremium: true)
         }
     }
 
@@ -124,7 +163,47 @@ public final class JosanshiDashboardModel: ObservableObject {
         selectedTab = .mock
     }
 
+    public func presentPaywall() {
+        isPaywallPresented = true
+    }
+
+    public func dismissPaywall() {
+        isPaywallPresented = false
+    }
+
+    public func purchasePremium() async {
+        guard let purchaseController else {
+            contentErrorDescription = "App Storeの商品情報を読み込めません。通信状態を確認してもう一度お試しください。"
+            isContentGatePresented = true
+            return
+        }
+        await purchaseController.purchase()
+        isPremium = purchaseController.isPremium
+        if isPremium { isPaywallPresented = false }
+        objectWillChange.send()
+    }
+
+    public func restorePremium() async {
+        guard let purchaseController else {
+            contentErrorDescription = "購入情報を復元できません。App Storeへ接続できる状態でお試しください。"
+            isContentGatePresented = true
+            return
+        }
+        await purchaseController.restore()
+        isPremium = purchaseController.isPremium
+        if isPremium { isPaywallPresented = false }
+        objectWillChange.send()
+    }
+
     public func resumePreviousSession() {
+        let persisted = coordinator.activeSession ?? coordinator.state.resumeSession
+        if !isPremium,
+           let persisted,
+           sessionContainsPremiumQuestion(persisted) {
+            isPaywallPresented = true
+            return
+        }
+
         if coordinator.activeSession != nil || coordinator.resumePersistedSession() {
             contentErrorDescription = nil
             isContentGatePresented = false
@@ -154,7 +233,23 @@ public final class JosanshiDashboardModel: ObservableObject {
     }
 
     public var hasResumableSession: Bool {
-        coordinator.activeSession != nil
+        coordinator.activeSession != nil || coordinator.state.resumeSession != nil
+    }
+
+    public var freeQuestionCount: Int {
+        coordinator.questions.filter { !$0.premium }.count
+    }
+
+    public var premiumQuestionCount: Int {
+        coordinator.questions.filter(\.premium).count
+    }
+
+    public var purchaseState: PurchaseController.PurchaseState? {
+        purchaseController?.state
+    }
+
+    public var purchasePriceText: String? {
+        purchaseController?.displayPrice
     }
 
     public var todayAnsweredCount: Int { coordinator.todayAnsweredCount }
@@ -206,6 +301,19 @@ public final class JosanshiDashboardModel: ObservableObject {
         try coordinator.importBackup(data)
         dailyTarget = coordinator.state.dailyTarget
         objectWillChange.send()
+    }
+
+    private func requirePremium() -> Bool {
+        guard isPremium else {
+            isPaywallPresented = true
+            return false
+        }
+        return true
+    }
+
+    private func sessionContainsPremiumQuestion(_ session: LearningSessionSnapshot) -> Bool {
+        let premiumIDs = Set(coordinator.questions.filter(\.premium).map(\.id))
+        return session.questionIDs.contains(where: premiumIDs.contains)
     }
 
     private func startSession(_ action: () throws -> Void) {
