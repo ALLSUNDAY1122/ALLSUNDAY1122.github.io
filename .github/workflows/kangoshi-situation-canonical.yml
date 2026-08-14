@@ -1,0 +1,101 @@
+name: Kangoshi Situation Canonical Audit
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/product-content/build_situation_canonical.py'
+      - 'kangoshi-sprint/product-content/validate_situation_canonical.py'
+      - 'kangoshi-sprint/product-content/situation-canonical-audit.json'
+      - 'kangoshi-sprint/product-content/situation-canonical-trigger.json'
+      - 'kangoshi-sprint/product-content/explanation-batches/*situation*.json'
+      - 'kangoshi-sprint/product-content/enriched-draft/set1-draft.json'
+      - 'kangoshi-sprint/product-content/enriched-draft/set2-draft.json'
+      - 'kangoshi-sprint/product-content/enriched-draft/set3-draft.json'
+      - 'kangoshi-sprint/product-content/classified/situation-group-summary.json'
+      - 'kangoshi-sprint/product-content/situation-audit/expert-review-queue.json'
+      - '.github/workflows/kangoshi-situation-canonical.yml'
+
+concurrency:
+  group: kangoshi-situation-canonical
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  canonicalize-situation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build consolidated situation canonical JSON
+        run: python3 kangoshi-sprint/product-content/build_situation_canonical.py
+
+      - name: Validate canonical integrity and 3-question scenario linkage
+        shell: bash
+        run: |
+          set +e
+          python3 kangoshi-sprint/product-content/validate_situation_canonical.py > kangoshi-sprint/product-content/questions/situation-canonical-integrity.log 2>&1
+          code=$?
+          set -e
+          cat kangoshi-sprint/product-content/questions/situation-canonical-integrity.log
+          echo "$code" > kangoshi-sprint/product-content/questions/situation-canonical-integrity.exit
+
+      - name: Run shared Learning Sprint audit on situation canonical JSON
+        shell: bash
+        run: |
+          set +e
+          python3 automation/learning-sprint-question-pipeline/validate_questions.py kangoshi-sprint/product-content/situation-canonical-audit.json > kangoshi-sprint/product-content/questions/situation-canonical-shared.log 2>&1
+          code=$?
+          set -e
+          cat kangoshi-sprint/product-content/questions/situation-canonical-shared.log
+          echo "$code" > kangoshi-sprint/product-content/questions/situation-canonical-shared.exit
+
+      - name: Write situation canonical gate report
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('kangoshi-sprint/product-content/questions')
+          integrity=int((root/'situation-canonical-integrity.exit').read_text().strip())
+          shared=int((root/'situation-canonical-shared.exit').read_text().strip())
+          build=json.loads((root/'situation-canonical-build-report.json').read_text(encoding='utf-8'))
+          report={
+            'schemaVersion':1,
+            'scope':'C-situation-180-60scenario-final-canonical',
+            'integrityExit':integrity,
+            'sharedAuditExit':shared,
+            'pass':integrity==0 and shared==0,
+            'releaseAllowed':False,
+            'build':build,
+            'note':'PASS is the situation canonical content gate only. Expert/media/scoring/content release quarantines remain separate.'
+          }
+          (root/'situation-canonical-gate.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit canonical outputs and diagnostics
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/product-content/questions
+          if git diff --cached --quiet; then
+            echo 'No situation canonical changes'
+          else
+            git commit -m 'kangoshi: situation canonical audit result [skip ci]'
+            pushed=0
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push; then pushed=1; break; fi
+              sleep 2
+            done
+            test "$pushed" = "1"
+          fi
+
+      - name: Enforce situation canonical gate
+        shell: bash
+        run: |
+          test "$(cat kangoshi-sprint/product-content/questions/situation-canonical-integrity.exit)" = "0"
+          test "$(cat kangoshi-sprint/product-content/questions/situation-canonical-shared.exit)" = "0"
