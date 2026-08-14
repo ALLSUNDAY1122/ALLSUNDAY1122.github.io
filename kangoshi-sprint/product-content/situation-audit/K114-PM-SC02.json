@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-PM-SC02",
+  "sourceExam": 114,
+  "session": "PM",
+  "questionIds": ["K114-PM094", "K114-PM095", "K114-PM096"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "55歳男性、会社員。心筋梗塞で救急搬送されCABG施行。術後6時間は人工呼吸器管理、心囊・胸腔ドレーン留置。湿性ラ音、漿液性気道分泌物、CVP12cmH2O、LVEF45％、両肺野広範な透過性低下を認める。",
+  "mainCondition": "CABG術後急性期の肺水腫評価、安全な離床判断、心臓リハビリテーション期の入浴指導。",
+  "assessment": [
+    "PM094では術後6時間の呼吸・循環・画像所見を統合して肺水腫を判断する。",
+    "PM095では術後2日、新規心房細動と乏尿傾向を離床中止の不安定所見として評価する。",
+    "PM096では術後3日の心臓リハビリ開始時に、入浴を一律禁止せず食後1時間以上空け、高温・深い湯を避ける生活指導を行う。"
+  ],
+  "nursingJudgment": "3問は『術後早期合併症→離床安全性→回復期生活指導』としてCABG後の時間経過を追う。患者は一貫してAさん本人である。",
+  "nursingPractice": [
+    "湿性ラ音、気道分泌物、X線、CVP、入出量から肺うっ血を評価する。",
+    "離床前に新規不整脈、血圧、症状、尿量など循環安定性を確認する。",
+    "心疾患患者の入浴では微温・浅め・短時間を基本とし、食直後を避ける。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "canonicalPatch": {"path": "situation-audit/canonical-patches/K114-PM-SC02.json", "textCorrectionRequired": true, "classificationCorrectionRequired": false, "applyState": "pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent": true, "majorSubject": "成人看護学", "subject": "循環器", "status": "pass"},
+  "explanationAudit": {"batchId": "K114-PM094-PM096-situation-SC02", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "none", "questionId": null, "reason": null, "evidenceRefs": []},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_canonical_patch_pending",
+  "auditedAt": "2026-08-14T15:19:00+09:00"
+}
