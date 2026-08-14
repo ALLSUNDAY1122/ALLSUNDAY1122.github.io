@@ -5,21 +5,18 @@ workflows:
     instance_type: mac_mini_m2
     integrations:
       app_store_connect: codemagic
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: 'testflight/splat-native-ios'
-          include: true
-          source: true
-      cancel_previous_builds: true
     environment:
       vars:
         BUNDLE_ID: jp.allsunday1122.splatlab
+        APP_STORE_CONNECT_APP_ID: PENDING_HUMAN_APP_RECORD
         XCODE_PROJECT: splat-native-ios/SplatNative.xcodeproj
         XCODE_SCHEME: SplatNative
       xcode: latest
     scripts:
+      - name: Stop if App Store Connect app record is not registered
+        script: |
+          set -euo pipefail
+          test "$APP_STORE_CONNECT_APP_ID" != "PENDING_HUMAN_APP_RECORD"
       - name: Disable unrelated msplat LFS datasets
         script: |
           set -euo pipefail
