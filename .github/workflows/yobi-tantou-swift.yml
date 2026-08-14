@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Native 28-question source contract
+      - name: Native 42-question source contract
         run: python learning-sprint/yobi-tantou/audit_native.py
       - name: Release pipeline self-tests
         run: |
@@ -39,7 +39,7 @@ jobs:
     needs: native-contract
     # iOS deployment target is 16.0 / Swift 5.0. macOS 14 provides a
     # compatible Xcode/iOS Simulator stack and uses a separate hosted pool from
-    # the currently congested macOS 15 queue.
+    # the congested macOS 15 queue.
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
@@ -105,7 +105,7 @@ jobs:
           done
           echo 'FAIL: XCUITest failed on both attempts.' >&2
           exit 1
-      - name: Unsigned Release build and 28-question bundle inspection
+      - name: Unsigned Release build and 42-question bundle inspection
         working-directory: learning-sprint/yobi-tantou/ios
         run: |
           set -o pipefail
@@ -134,11 +134,11 @@ jobs:
           import json, sys
           from collections import Counter
           data = json.load(open(sys.argv[1], encoding='utf-8'))
-          assert len(data) == 28
-          assert Counter(q.get('difficulty') for q in data) == Counter({'foundation': 14, 'standard': 14})
-          assert len({q['id'] for q in data}) == 28
+          assert len(data) == 42
+          assert Counter(q.get('difficulty') for q in data) == Counter({'foundation': 14, 'standard': 14, 'applied': 14})
+          assert len({q['id'] for q in data}) == 42
           assert len({q['subject'] for q in data}) == 7
           assert all(q.get('releaseEligible') is True and q.get('contentUse') == 'practice' for q in data)
           assert all(q.get('examYear') is None for q in data)
-          print('PASS: Release bundle contains audited foundation14 + standard14 practice bank.')
+          print('PASS: Release bundle contains audited foundation14 + standard14 + applied14 practice bank.')
           PY
