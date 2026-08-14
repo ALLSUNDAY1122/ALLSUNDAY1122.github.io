@@ -24,7 +24,9 @@ struct RigakuStudyView: View {
     var body: some View {
         ZStack {
             LearningSprintPaperBackground()
-            if completed {
+            if accessLocked {
+                premiumLockedView
+            } else if completed {
                 completionView
             } else if sessionQuestions.isEmpty && didLoad {
                 emptyView
@@ -47,6 +49,17 @@ struct RigakuStudyView: View {
         }
     }
 
+    private var accessLocked: Bool {
+        switch kind {
+        case .mock:
+            return !appModel.canAccessBaseMocks
+        case .weak:
+            return !appModel.canAccessFullWeakReview
+        case .sprint, .subject:
+            return false
+        }
+    }
+
     private var currentQuestion: LearningQuestion? {
         guard sessionQuestions.indices.contains(index) else { return nil }
         return sessionQuestions[index]
@@ -64,6 +77,7 @@ struct RigakuStudyView: View {
     private func loadSessionIfNeeded() {
         guard !didLoad else { return }
         didLoad = true
+        guard !accessLocked else { return }
 
         if resumeExisting,
            let snapshot = appModel.state.resumeSession,
@@ -293,14 +307,59 @@ struct RigakuStudyView: View {
         }
     }
 
+    private var premiumLockedView: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                Image(systemName: "lock.open.display")
+                    .font(.system(size: 38, weight: .semibold))
+                    .foregroundStyle(LearningSprintTheme.gold)
+                Text("月額プランで解放")
+                    .font(LearningSprintTheme.serif(24, weight: .bold))
+                Text("無料版では8分野から選んだ60問を利用できます。月額プランでは全600問・第58〜60回ベース模試・全苦手復習を利用できます。")
+                    .font(LearningSprintTheme.sans(14))
+                    .foregroundStyle(LearningSprintTheme.ink2)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                if let price = appModel.purchaseDisplayPrice {
+                    Button("月額プランを開始（\(price)）") {
+                        Task { await appModel.purchasePremium() }
+                    }
+                    .font(LearningSprintTheme.sans(15, weight: .bold))
+                    .buttonStyle(.borderedProminent)
+                    .tint(LearningSprintTheme.indigo)
+                    .frame(maxWidth: .infinity, minHeight: 50)
+                } else {
+                    Text("App Storeから価格を確認しています。")
+                        .font(LearningSprintTheme.sans(13))
+                        .foregroundStyle(LearningSprintTheme.ink2)
+                }
+
+                Button("購入を復元") {
+                    Task { await appModel.restorePurchases() }
+                }
+                .font(LearningSprintTheme.sans(14, weight: .semibold))
+
+                Text("表示価格はApp Storeから取得します。購読の管理・解約はApple Accountのサブスクリプション設定で行えます。")
+                    .font(LearningSprintTheme.sans(11))
+                    .foregroundStyle(LearningSprintTheme.ink3)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(24)
+            .frame(maxWidth: 480)
+            .frame(maxWidth: .infinity)
+        }
+        .accessibilityIdentifier("premium.locked")
+    }
+
     private var emptyView: some View {
         VStack(spacing: 14) {
             Image(systemName: "checkmark.shield")
                 .font(.system(size: 36, weight: .semibold))
                 .foregroundStyle(LearningSprintTheme.indigo)
-            Text("監査済み問題を準備中")
+            Text("利用できる問題がありません")
                 .font(LearningSprintTheme.serif(22, weight: .bold))
-            Text("600問の科目分類・権利・正答・解説監査を通過した問題だけ、ここに表示します。")
+            Text("監査済み問題データと利用範囲を確認してください。")
                 .font(LearningSprintTheme.sans(14))
                 .foregroundStyle(LearningSprintTheme.ink2)
                 .multilineTextAlignment(.center)
