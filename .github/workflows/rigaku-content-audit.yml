@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'rigaku-sprint/product-content/**'
+      - 'rigaku-sprint/ios/Sources/**'
+      - 'rigaku-sprint/ios/finalize_release_copy.py'
       - '.github/workflows/rigaku-content-audit.yml'
 
 permissions:
@@ -21,14 +23,15 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Apply specific-evidence migration
+      - name: Apply one-time release migrations
         run: |
           python3 rigaku-sprint/product-content/fix_specific_evidence_refs.py
-          if ! git diff --quiet -- rigaku-sprint/product-content/question-batches; then
+          python3 rigaku-sprint/ios/finalize_release_copy.py
+          if ! git diff --quiet -- rigaku-sprint/product-content/question-batches rigaku-sprint/ios/Sources; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add rigaku-sprint/product-content/question-batches
-            git commit -m "fix(rigaku): pin specific evidence for seven questions"
+            git add rigaku-sprint/product-content/question-batches rigaku-sprint/ios/Sources
+            git commit -m "fix(rigaku): finalize evidence and base-mock wording"
             git push origin HEAD:${GITHUB_HEAD_REF}
           fi
 
