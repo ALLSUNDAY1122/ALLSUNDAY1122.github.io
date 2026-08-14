@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import hashlib
 import html
 import json
@@ -11,8 +12,8 @@ import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-CONFIG = json.loads((HERE / "candidate-source-locks.v1.json").read_text(encoding="utf-8"))
-BANK = json.loads((HERE / "questions.candidates.v1.json").read_text(encoding="utf-8"))
+DEFAULT_LOCKS = HERE / "candidate-source-locks.v1.json"
+DEFAULT_BANK = HERE / "questions.candidates.v1.json"
 
 
 def normalize_markup(raw: str) -> str:
@@ -39,9 +40,9 @@ def fetch(url: str) -> bytes:
     raise RuntimeError(f"e-Gov fetch failed after retries: {url}: {last_error}")
 
 
-def main() -> int:
-    by_id = {q.get("id"): q for q in BANK}
-    configured_ids = [item["id"] for item in CONFIG["candidates"]]
+def audit(config: dict, bank: list[dict]) -> list[str]:
+    by_id = {q.get("id"): q for q in bank}
+    configured_ids = [item["id"] for item in config["candidates"]]
     bank_ids = list(by_id)
     errors = []
 
@@ -52,12 +53,12 @@ def main() -> int:
         extra = sorted(set(configured_ids) - set(bank_ids))
         errors.append(f"source lock coverage mismatch missing={missing} extra={extra}")
 
-    asof = CONFIG["asOf"]
-    law_ids = sorted({item["law_id"] for item in CONFIG["candidates"]})
+    asof = config["asOf"]
+    law_ids = sorted({item["law_id"] for item in config["candidates"]})
     normalized_by_law = {}
 
     for law_id in law_ids:
-        url = CONFIG["api"].format(law_id=urllib.parse.quote(law_id), asof=urllib.parse.quote(asof))
+        url = config["api"].format(law_id=urllib.parse.quote(law_id), asof=urllib.parse.quote(asof))
         try:
             raw = fetch(url)
         except Exception as error:
@@ -68,7 +69,7 @@ def main() -> int:
         normalized_by_law[law_id] = normalized
         print(f"SOURCE {law_id} asof={asof} bytes={len(raw)} sha256={digest}")
 
-    for item in CONFIG["candidates"]:
+    for item in config["candidates"]:
         qid = item["id"]
         q = by_id.get(qid)
         if not q:
@@ -87,13 +88,25 @@ def main() -> int:
         else:
             print(f"PASS {qid}: exact-date statutory basis marker found")
 
+    if not errors:
+        print(f"PASS: {len(configured_ids)} candidates matched e-Gov law text as of {asof}")
+    return errors
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--locks", type=Path, default=DEFAULT_LOCKS)
+    parser.add_argument("--bank", type=Path, default=DEFAULT_BANK)
+    args = parser.parse_args()
+
+    config = json.loads(args.locks.read_text(encoding="utf-8"))
+    bank = json.loads(args.bank.read_text(encoding="utf-8"))
+    errors = audit(config, bank)
     if errors:
         print("FAIL: candidate exact-date source audit")
         for error in errors:
             print(f"- {error}")
         return 1
-
-    print(f"PASS: {len(configured_ids)} candidates matched e-Gov law text as of {asof}")
     return 0
 
 
