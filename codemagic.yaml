@@ -1,4 +1,38 @@
 workflows:
+  splat-apple-bootstrap:
+    name: Splat Lab - Apple Bundle ID Bootstrap
+    max_build_duration: 20
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'testflight/splat-native-ios'
+          include: true
+          source: true
+      cancel_previous_builds: true
+    environment:
+      vars:
+        BUNDLE_ID: jp.allsunday1122.splatlab
+      xcode: latest
+    scripts:
+      - name: Ensure Explicit Apple Bundle ID exists
+        script: |
+          set -euo pipefail
+          if ! app-store-connect bundle-ids list \
+            --bundle-id-identifier "$BUNDLE_ID" \
+            --strict-match-identifier | grep -Fq "$BUNDLE_ID"; then
+            app-store-connect bundle-ids create \
+              --name "Splat Lab Native" \
+              --platform IOS \
+              "$BUNDLE_ID"
+          fi
+          app-store-connect bundle-ids list \
+            --bundle-id-identifier "$BUNDLE_ID" \
+            --strict-match-identifier | grep -F "$BUNDLE_ID"
+
   splat-native-ios:
     name: Splat Lab Native - Internal TestFlight
     max_build_duration: 120
@@ -52,17 +86,12 @@ workflows:
           ! grep -R -nE 'URLSession|Firebase|Amplitude|Mixpanel' "$CM_BUILD_DIR/splat-native-ios/SplatNative" --include='*.swift'
       - name: Initialize signing keychain
         script: keychain initialize
-      - name: Ensure Apple Developer Bundle ID exists
+      - name: Verify Apple Developer Bundle ID exists
         script: |
           set -euo pipefail
-          if ! app-store-connect bundle-ids list \
+          app-store-connect bundle-ids list \
             --bundle-id-identifier "$BUNDLE_ID" \
-            --strict-match-identifier | grep -Fq "$BUNDLE_ID"; then
-            app-store-connect bundle-ids create \
-              --name "Splat Lab Native" \
-              --platform IOS \
-              "$BUNDLE_ID"
-          fi
+            --strict-match-identifier | grep -Fq "$BUNDLE_ID"
       - name: Fetch or create App Store signing files
         script: |
           set -euo pipefail
