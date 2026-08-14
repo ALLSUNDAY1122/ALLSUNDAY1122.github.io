@@ -12,6 +12,14 @@ enum StoreProductIDPolicy {
     }
 }
 
+enum StoreProductTypePolicy {
+    static let requiredType: Product.ProductType = .autoRenewable
+
+    static func accepts(_ type: Product.ProductType) -> Bool {
+        type == requiredType
+    }
+}
+
 @MainActor
 final class StoreKitManager: ObservableObject {
     @Published private(set) var product: Product?
@@ -32,14 +40,21 @@ final class StoreKitManager: ObservableObject {
         await refreshEntitlements()
         guard let id = configuredProductID else {
             product = nil
-            statusMessage = "IAP Product ID は要確認です。"
+            statusMessage = "IAP Product ID はApp Store Connect登録待ちです。"
             return
         }
         do {
-            product = try await Product.products(for: [id]).first
-            if product == nil {
+            guard let candidate = try await Product.products(for: [id]).first else {
+                product = nil
                 statusMessage = "StoreKit商品を取得できませんでした。"
+                return
             }
+            guard StoreProductTypePolicy.accepts(candidate.type) else {
+                product = nil
+                statusMessage = "月額の自動更新サブスクリプション商品ではありません。"
+                return
+            }
+            product = candidate
         } catch {
             product = nil
             statusMessage = error.localizedDescription
@@ -51,12 +66,22 @@ final class StoreKitManager: ObservableObject {
             statusMessage = "課金設定が未確定です。"
             return
         }
+        guard StoreProductTypePolicy.accepts(product.type) else {
+            statusMessage = "月額の自動更新サブスクリプション商品ではありません。"
+            return
+        }
         statusMessage = nil
         do {
             let result = try await product.purchase()
             switch result {
             case .success(let verification):
                 let transaction = try verified(verification)
+                guard transaction.productID == configuredProductID else {
+                    statusMessage = "購入商品の識別子が一致しません。"
+                    await transaction.finish()
+                    await refreshEntitlements()
+                    return
+                }
                 await transaction.finish()
                 await refreshEntitlements()
             case .pending:
