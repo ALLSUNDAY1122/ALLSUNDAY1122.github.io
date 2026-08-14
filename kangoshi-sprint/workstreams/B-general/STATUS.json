@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "workstream": "B-general",
   "scope": {"category":"一般","sourceExams":[115,114,113],"targetCount":390,"countPerExam":130},
   "sourceOfTruth": "GitHub main",
@@ -9,7 +9,7 @@
     "title": "AIアプリ開発・公開フロー v2.5",
     "rechecked": true,
     "noProgressManual": "NO_PROGRESS｜処理停滞・自己復旧ループ v2.0",
-    "impact": "進展は完了条件への接近で判定し、同じ状態確認や局所commitだけでは進展と数えない。canonical生成という実変更を検知したためB-general再監査を再発火した。"
+    "impact": "進展は完了条件への接近で判定する。canonical生成という実変更を検知してB-general再監査を再発火し、同じ状態確認の反復は行わなかった。"
   },
   "canonicalSnapshotBeforeWorkerRemediation": {
     "canonicalBuilt": true,
@@ -28,6 +28,10 @@
     "completed": 13,
     "batch": "kangoshi-sprint/product-content/explanation-batches/B-general-113-canonical-remediation-13.json",
     "batchCommit": "19a153d34b195526a9de768e2557f5d4aef2e753",
+    "specialAudit": "kangoshi-sprint/workstreams/B-general/K113-SPECIAL-AUDIT.json",
+    "specialAuditCommit": "150addbb39d6b8cbb3c528d8bbf665b84c9eff96",
+    "evidenceMap": "kangoshi-sprint/workstreams/B-general/K113-SPECIAL-EVIDENCE.json",
+    "evidenceMapCommit": "7a92715df2257246ed00f44babeee811d2713268",
     "missingPoint": 0,
     "missingDetail": 0,
     "missingExplanationEvidenceRefs": 0,
@@ -38,15 +42,20 @@
     "sourceDataDefectsResolvedNormal": 5,
     "status": "PASS_FOR_COORDINATOR_REBUILD"
   },
+  "canonicalIngestion": {
+    "ready": true,
+    "mechanism": "build_general_canonical.py reads K113-SPECIAL-AUDIT.json and overlays missing point/detail/evidence onto the consolidated general records. The five repaired sourceDataDefects remain historical audit records but are automatically removed from active quarantine when sourceCorrectionStatus=official_pdf_verified.",
+    "workflow": ".github/workflows/kangoshi-general-canonical.yml",
+    "workflowAutoTriggerOnBWorkerFiles": false,
+    "coordinatorActionReducedTo": ["rerun canonical build", "rerun integrity audit", "rerun shared audit", "confirm exam113 missingExplanation=0 and missingEvidence=0"]
+  },
   "remediatedIds": {
     "mediaDependent": ["K113-AM027","K113-AM034","K113-AM035","K113-AM046","K113-PM037","K113-PM054","K113-PM066","K113-PM077"],
     "sourceRepairResolved": ["K113-AM061","K113-PM053","K113-PM057","K113-PM078","K113-PM090"]
   },
   "evidenceRepair": {
-    "file": "kangoshi-sprint/workstreams/B-general/K113-SPECIAL-EVIDENCE.json",
-    "commit": "7a92715df2257246ed00f44babeee811d2713268",
     "legacyMisMappedEvidenceRefsCorrected": 3,
-    "note": "味蕾・片麻痺移乗・歩行補助具に誤対応していた旧NCBI参照を実内容に一致する根拠へ差し替えた。"
+    "note": "味蕾・片麻痺移乗・歩行補助具へ誤対応していた旧参照を、各問題の実内容に一致する根拠へ差し替えた。"
   },
   "currentCoverage": {
     "generalQuestions": 390,
@@ -57,7 +66,7 @@
   },
   "editBoundary": {
     "allowed":["kangoshi-sprint/product-content/explanation-batches/B-general-*.json","kangoshi-sprint/workstreams/B-general/**"],
-    "forbidden":["kangoshi-sprint/product-content/enriched-draft/**","kangoshi-sprint/product-content/manifest.json","common canonical build/validate files","common UI","mock exam engine","StoreKit"]
+    "forbidden":["kangoshi-sprint/product-content/enriched-draft/**","kangoshi-sprint/product-content/manifest.json","common canonical build/validate/trigger files","common UI","mock exam engine","StoreKit"]
   },
-  "nextLoop": "Coordinator applies the 13-item remediation batch to consolidated canonical data, rebuilds exam-113/general.json and reruns the 390-question integrity/shared audits. B-general final canonical PASS may be declared only after those coordinator-owned audits return zero missing explanation/evidence."
+  "nextLoop": "Coordinator reruns the existing general canonical workflow. B-general final canonical PASS may be declared only after consolidated canonical audits return missingExplanation=0 and missingEvidence=0; media/content/scoring release gates remain separate."
 }
