@@ -27,8 +27,11 @@ struct SplatViewer: UIViewRepresentable {
 
         let pan = UIPanGestureRecognizer(target: renderer, action: #selector(SplatViewerRenderer.pan(_:)))
         let pinch = UIPinchGestureRecognizer(target: renderer, action: #selector(SplatViewerRenderer.pinch(_:)))
+        let doubleTap = UITapGestureRecognizer(target: renderer, action: #selector(SplatViewerRenderer.resetView(_:)))
+        doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(pan)
         view.addGestureRecognizer(pinch)
+        view.addGestureRecognizer(doubleTap)
         return view
     }
 
@@ -49,6 +52,8 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
     private var yaw: Float = 0
     private var pitch: Float = 0
     private var distance: Float = 2.5
+    private var baseDistance: Float = 2.5
+    private var sceneCenter = SIMD3<Float>.zero
     private let semaphore = DispatchSemaphore(value: 2)
 
     init?(view: MTKView) {
@@ -78,6 +83,14 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
                     loadingURL = nil
                     return
                 }
+
+                let framing = Self.robustFraming(for: points)
+                sceneCenter = framing.center
+                baseDistance = framing.distance
+                distance = framing.distance
+                yaw = 0
+                pitch = 0
+
                 let chunk = try SplatChunk(device: device, from: points)
                 await r.addChunk(chunk)
                 renderer = r
@@ -99,8 +112,14 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
     }
 
     @objc func pinch(_ g: UIPinchGestureRecognizer) {
-        distance = max(0.45, min(8, distance / Float(g.scale)))
+        distance = max(baseDistance * 0.18, min(baseDistance * 5.0, distance / Float(g.scale)))
         g.scale = 1
+    }
+
+    @objc func resetView(_ g: UITapGestureRecognizer) {
+        yaw = 0
+        pitch = 0
+        distance = baseDistance
     }
 
     func draw(in view: MTKView) {
@@ -112,13 +131,14 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
         commandBuffer.addCompletedHandler { [semaphore] _ in semaphore.signal() }
 
         let aspect = max(0.1, Float(drawableSize.width / max(1, drawableSize.height)))
-        let projection = perspective(fovY: 55 * .pi / 180, aspect: aspect, near: 0.05, far: 100)
-        let eye = SIMD3<Float>(
+        let projection = perspective(fovY: 55 * .pi / 180, aspect: aspect, near: 0.01, far: 100)
+        let orbit = SIMD3<Float>(
             sin(yaw) * cos(pitch) * distance,
             sin(pitch) * distance,
             cos(yaw) * cos(pitch) * distance
         )
-        let viewMatrix = lookAt(eye: eye, center: .zero, up: SIMD3<Float>(0, 1, 0))
+        let eye = sceneCenter + orbit
+        let viewMatrix = lookAt(eye: eye, center: sceneCenter, up: SIMD3<Float>(0, 1, 0))
         let viewport = SplatRenderer.ViewportDescriptor(
             viewport: MTLViewport(originX: 0, originY: 0, width: drawableSize.width, height: drawableSize.height, znear: 0, zfar: 1),
             projectionMatrix: projection,
@@ -143,6 +163,43 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         drawableSize = size
+    }
+
+    private static func robustFraming(for points: [SplatPoint]) -> (center: SIMD3<Float>, distance: Float) {
+        let strideSize = max(1, points.count / 6_000)
+        var xs: [Float] = []
+        var ys: [Float] = []
+        var zs: [Float] = []
+        xs.reserveCapacity(min(points.count, 6_000))
+        ys.reserveCapacity(min(points.count, 6_000))
+        zs.reserveCapacity(min(points.count, 6_000))
+
+        for index in stride(from: 0, to: points.count, by: strideSize) {
+            let p = points[index].position
+            guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
+            xs.append(p.x)
+            ys.append(p.y)
+            zs.append(p.z)
+        }
+
+        guard !xs.isEmpty else { return (.zero, 2.5) }
+        xs.sort(); ys.sort(); zs.sort()
+        let middle = xs.count / 2
+        let center = SIMD3<Float>(xs[middle], ys[middle], zs[middle])
+
+        var radii: [Float] = []
+        radii.reserveCapacity(xs.count)
+        for index in stride(from: 0, to: points.count, by: strideSize) {
+            let p = points[index].position
+            guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
+            radii.append(simd_distance(p, center))
+        }
+        radii.sort()
+        guard !radii.isEmpty else { return (center, 2.5) }
+        let percentileIndex = min(radii.count - 1, Int(Float(radii.count - 1) * 0.90))
+        let radius = max(0.10, radii[percentileIndex])
+        let framingDistance = max(0.35, min(12.0, radius * 2.8))
+        return (center, framingDistance)
     }
 
     private func perspective(fovY: Float, aspect: Float, near: Float, far: Float) -> simd_float4x4 {
