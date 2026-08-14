@@ -99,8 +99,8 @@ public final class JosanshiLearningCoordinator: ObservableObject {
 
     public func setTextSizeStep(_ value: Int) {
         guard (0...2).contains(value) else { return }
-        state.textSizeStep = value
-        persist()
+        preferences.textSizeStep = value
+        persistPreferences()
     }
 
     public func setShuffleQuestions(_ value: Bool) {
@@ -232,11 +232,9 @@ public final class JosanshiLearningCoordinator: ObservableObject {
     public func resetLearningHistory() {
         let dailyTarget = state.dailyTarget
         let examDate = state.examDate
-        let textSizeStep = state.textSizeStep
         state = LearningState(
             dailyTarget: dailyTarget,
             examDate: examDate,
-            textSizeStep: textSizeStep,
             contentVersion: JosanshiLocalPersistenceConfiguration.contentVersion
         )
         activeSession = nil
@@ -261,8 +259,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
     public func exportBackup() throws -> Data {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        let envelope = JosanshiBackupEnvelope(state: state, preferences: preferences)
-        return try encoder.encode(envelope)
+        return try encoder.encode(JosanshiBackupEnvelope(state: state, preferences: preferences))
     }
 
     public func importBackup(_ data: Data) throws {
@@ -331,10 +328,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         if let activeSession {
             return activeSession
         }
-        let snapshot = LearningSessionSnapshot(
-            kind: kind,
-            questionIDs: selected.map(\.id)
-        )
+        let snapshot = LearningSessionSnapshot(kind: kind, questionIDs: selected.map(\.id))
         activeSession = snapshot
         latestEvaluation = nil
         state.resumeSession = snapshot
