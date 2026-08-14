@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC10",
+  "sourceExam": 114,
+  "session": "AM",
+  "questionIds": ["K114-AM118", "K114-AM119", "K114-AM120"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "64歳男性、外国籍。1年前に日本へ移住。36歳の娘、42歳の娘婿と3人家族。日本語をほとんど理解できない。肺癌の胸膜・腰椎転移があり疼痛コントロール目的で入院。",
+  "mainCondition": "言語障壁のある外国人患者への意思決定支援、転移性がん疼痛のレスキュードーズ使用支援、本人中心のACP。",
+  "assessment": [
+    "AM118では専門的病状説明を患者本人が理解できるよう、家族・知人ではなく医療通訳を活用する。",
+    "AM119では激しい突出痛があるのにレスキュードーズを拒む理由・懸念を先に確認する。",
+    "AM120では入院8日、本人の自宅希望と娘の不安が異なる状況で、ACPとして本人が大切にしていること・生きがい・望む生き方を確認する。"
+  ],
+  "nursingJudgment": "3問は『情報理解と意思決定の言語支援→症状緩和に対する本人の選択支援→価値観に基づく今後の療養場所・ケアの話し合い』として一貫する。娘と娘婿は家族・支援者であり患者本人ではない。",
+  "nursingPractice": [
+    "重要説明では専門的医療通訳を用いて患者本人の理解を確認する。",
+    "鎮痛薬を拒む背景を探索し、患者の認識・文化・副作用懸念に合わせて説明する。",
+    "ACPでは本人の価値観と希望を起点に、家族・多職種と繰り返し話し合う。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "canonicalPatch": {"path": "situation-audit/canonical-patches/K114-AM-SC10.json", "textCorrectionRequired": true, "classificationCorrectionRequired": true, "applyState": "pending_canonical_integration"},
+  "classificationAudit": {"scenarioContextConsistentAfterPatch": true, "correctionRequiredIds": ["K114-AM118", "K114-AM119", "K114-AM120"], "reason": "raw分類は肺癌という背景病態に引かれ全問を呼吸器へ寄せている。実際の設問主題は国際看護、緩和ケア・がん疼痛、ACPであり症例本文・正答主軸で修正する。", "status": "content_pass_patch_pending"},
+  "explanationAudit": {"batchId": "K114-AM118-AM120-situation-SC10", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "none", "questionId": null, "reason": null, "evidenceRefs": []},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_canonical_patch_pending",
+  "auditedAt": "2026-08-14T15:06:00+09:00"
+}
