@@ -6503,8 +6503,8 @@
       "session": "AM",
       "questionNo": 98,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "観察・フィジカルアセスメント",
+      "majorSubject": "成人看護学",
+      "subject": "脳神経・周術期",
       "answerType": "singleChoice",
       "question": "A さんは、CT 検査の結果、脳動脈瘤の破裂によるくも膜下出血と診断され、ク cerebral aneurysm subarachnoid hemorrhage リッピング術を受けて ICU に入室した。入室時のバイタルサインは、体温 36.8 ℃、 呼吸数 22/分、脈拍 78/分、血圧 126/60 mmHg、フェイスマスクによる酸素投与 下 L/分!で経皮的動脈血酸素飽和度?SpO2C98 %であった。時間後、A さんは 開眼して｢頭が痛い｣と訴えた。バイタルサインに変化はなく、脳槽ドレーンからは 淡血性の排液がみられている。 このときの看護師の判断で正しいのはどれか。",
       "choices": [
@@ -6541,13 +6541,36 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 26,
+      "classificationScore": 180,
       "classificationSignals": [
         "SpO2",
         "バイタルサイン",
-        "呼吸数"
+        "呼吸数",
+        "situation-specialist:K114-AM-SC03:PMではなくAM098は脳動脈瘤破裂によるくも膜下出血のクリッピング術後3時間、脳槽ドレーン留置中の頭痛への看護判断を問う。単純な観察技術ではなく成人脳神経周術期看護が主題。"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario",
+      "classificationMethod": "situation-context-specialist-correction-v1",
+      "classificationSpecialistCorrection": {
+        "scenarioId": "K114-AM-SC03",
+        "observedBeforeApply": {
+          "majorSubject": "基礎看護学",
+          "subject": "観察・フィジカルアセスメント",
+          "classificationMethod": "semantic-keyword-v2-with-scenario"
+        },
+        "declaredFrom": {
+          "majorSubject": "基礎看護学",
+          "subject": "観察・フィジカルアセスメント",
+          "classificationMethod": "semantic-keyword-v2-with-scenario",
+          "triggerConcern": "バイタルサイン・SpO2等の観察語が、くも膜下出血クリッピング術後・脳槽ドレーン管理という症例主病態より優先された。"
+        },
+        "target": {
+          "majorSubject": "成人看護学",
+          "subject": "脳神経・周術期",
+          "classificationMethod": "situation-context-specialist-correction-v1"
+        },
+        "reason": "PMではなくAM098は脳動脈瘤破裂によるくも膜下出血のクリッピング術後3時間、脳槽ドレーン留置中の頭痛への看護判断を問う。単純な観察技術ではなく成人脳神経周術期看護が主題。",
+        "detectedAt": "2026-08-14T15:45:00+09:00",
+        "appliedBy": "apply_situation_classification_corrections.py"
+      },
       "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
@@ -6575,8 +6598,8 @@
       "session": "AM",
       "questionNo": 99,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "観察・フィジカルアセスメント",
+      "majorSubject": "成人看護学",
+      "subject": "脳神経",
       "answerType": "singleChoice",
       "question": "A さんの回復は順調で、後遺症なく退院した。退院か月後の外来で、A さん に生活状況を聞くと、会話に対する反応は鈍く｢この間、尿を漏らしてしまいまし た｣と話した。家族は｢最近物忘れが激しく、歩くのも遅くなりました｣と話した。 看護師が A さんに書類を渡すと、スムーズに受け取り、きれいな文字で名前を書 いた。家族は｢入院前と変わらない字で書けています｣と言った。 A さんに起こっている可能性が高いのはどれか。",
       "choices": [
@@ -6613,12 +6636,35 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 6,
+      "classificationScore": 180,
       "classificationSignals": [
         "SpO2",
-        "バイタルサイン"
+        "バイタルサイン",
+        "situation-specialist:K114-AM-SC03:AM099はくも膜下出血退院1か月後に、反応鈍化・物忘れ、歩行遅延、尿失禁が出現した患者の正常圧水頭症を判断する設問。症例主病態に基づき成人看護学／脳神経へ修正する。"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario",
+      "classificationMethod": "situation-context-specialist-correction-v1",
+      "classificationSpecialistCorrection": {
+        "scenarioId": "K114-AM-SC03",
+        "observedBeforeApply": {
+          "majorSubject": "基礎看護学",
+          "subject": "観察・フィジカルアセスメント",
+          "classificationMethod": "semantic-keyword-v2-with-scenario"
+        },
+        "declaredFrom": {
+          "majorSubject": "基礎看護学",
+          "subject": "観察・フィジカルアセスメント",
+          "classificationMethod": "semantic-keyword-v2-with-scenario",
+          "triggerConcern": "会話・歩行等の観察語が、くも膜下出血後の正常圧水頭症という病態判断より優先された。"
+        },
+        "target": {
+          "majorSubject": "成人看護学",
+          "subject": "脳神経",
+          "classificationMethod": "situation-context-specialist-correction-v1"
+        },
+        "reason": "AM099はくも膜下出血退院1か月後に、反応鈍化・物忘れ、歩行遅延、尿失禁が出現した患者の正常圧水頭症を判断する設問。症例主病態に基づき成人看護学／脳神経へ修正する。",
+        "detectedAt": "2026-08-14T15:45:00+09:00",
+        "appliedBy": "apply_situation_classification_corrections.py"
+      },
       "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
@@ -6663,8 +6709,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "術後1日、バイタルサインは安定していても食事時に顔をしかめており、本人が痛みを強くないと表現していても創部痛を優先して再評価する。",
+      "detail": "Aさんは87歳で右大腿骨頸部骨折に対する人工骨頭置換術後1日である。朝6時のバイタルサイン、尿流出、腸蠕動音は安定しており、点滴とドレーンも抜去された。一方、食事時に顔をしかめており、前回の鎮痛薬は手術当日21時である。高齢者は疼痛を過小表現する場合があり、股関節骨折術後では安静時・動作時の疼痛を定期的に評価し、リハビリや日常動作に支障しないよう鎮痛することが重要である。この時点で急変を示す情報がないため、午前9時に優先して確認するのは創部痛である。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -6690,15 +6736,18 @@
         "scenario-adult:骨折|人工関節|脊柱管狭窄|関節リウマチ"
       ],
       "classificationMethod": "semantic-refinement-v3",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.nice.org.uk/guidance/cg124/chapter/recommendations",
+        "https://www.nice.org.uk/guidance/cg124/evidence"
+      ],
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -6737,8 +6786,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "術後高齢者の昼夜で変動する多弁・落ち着かなさはせん妄を疑い、不要な膀胱留置カテーテルを外し、補聴器を使用できるようにして可逆的な誘因を減らす。",
+      "detail": "Aさんは87歳、股関節骨折術後で、午前中は眠っていたが昼食後に多弁・落ち着きのなさが出現しており、急性で変動するせん妄の経過に合う。NICEはせん妄予防で不要なカテーテル挿入を避け、感覚障害に対して補聴器・眼鏡が使用可能で適切に機能するようにすることを推奨している。したがって、医学的に不要となった膀胱留置カテーテルを抜去し、補聴器の装着を確認する2つが適切。抗不安薬を機械的に追加したり、カーテンで周囲を遮って見当識を悪化させたりしない。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -6764,15 +6813,18 @@
         "scenario-adult:骨折|人工関節|脊柱管狭窄|関節リウマチ"
       ],
       "classificationMethod": "semantic-refinement-v3",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.nice.org.uk/guidance/cg103/chapter/recommendations",
+        "https://www.nice.org.uk/guidance/cg103/evidence"
+      ],
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -6804,8 +6856,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "術後2週で杖歩行が進みながら転倒への恐怖と自信低下を訴えるAさんには、実際の回復を具体的に伝えて自己効力感を支える。",
+      "detail": "Aさんは早く自宅へ帰りたい一方、『また転びそうで怖い』『元のように歩ける自信がない』と話している。股関節骨折後は転倒恐怖や歩行への自信低下が退院後の活動を妨げ得る。リハビリテーションでは客観的な回復を本人へ返しながら段階的に活動を広げることが重要である。したがって『少しずつ歩けるようになってきていますよ』と現在の成果を具体的に肯定することが最も適切。訓練回数を一方的に増やしたり、本人の希望を無視して施設退院を決めたりしない。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -6831,15 +6883,18 @@
         "scenario-adult:骨折|人工関節|脊柱管狭窄|関節リウマチ"
       ],
       "classificationMethod": "semantic-refinement-v3",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.nice.org.uk/guidance/cg124/chapter/recommendations",
+        "https://pubmed.ncbi.nlm.nih.gov/28946138/"
+      ],
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -6871,8 +6926,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "血栓溶解療法後の脳梗塞患者が離床を開始するときは、脳灌流と出血性合併症に関係する血圧変動を優先して確認する。",
+      "detail": "Aさんは左中大脳動脈領域の脳梗塞で血栓溶解療法を受け、入院2日に全身状態が落ち着いて離床開始となった。急性虚血性脳卒中では血圧管理が重要で、血栓溶解療法後も過度の高血圧や急激な低下を避けながら管理する必要がある。2026年AHA/ASAガイドラインも、IV血栓溶解療法後の過度な血圧低下は利益がなく、患者ごとの適切な血圧管理を重視している。離床で循環動態が変化し得るため、選択肢では血圧の観察が最優先となる。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -6899,15 +6954,18 @@
         "unique-score>=4"
       ],
       "classificationMethod": "semantic-refinement-v3-promoted",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.ahajournals.org/guidelines/acute-ischemic-stroke",
+        "https://professional.heart.org/en/science-news/2026-guideline-for-the-early-management-of-patients-with-acute-ischemic-stroke/top-things-to-know"
+      ],
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -6939,8 +6997,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "右片麻痺で座位が右へ崩れるAさんには、体幹を軽く前傾させて骨盤・体幹を安定させ、食事動作を行いやすい姿勢をつくる。",
+      "detail": "入院5日、Aさんは自助具で少しずつ自分で食事できるが、時間経過とともに体幹が右へ傾く。脳卒中後の食事では適切な座位姿勢と安定した支持面が安全な摂食と自立に重要で、AHA/ASAの脳卒中リハビリテーションガイドラインも食事時のupright positioningなど環境・姿勢調整を行うことを支持している。本症例では背部にタオルを入れて軽く前傾姿勢にすることで体幹を安定させる援助が適切。テーブルを高くする、座位時間を短くする、本人だけに左への重心移動を求めるより、まず環境調整で安定した姿勢を作る。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -6967,15 +7025,18 @@
         "車椅子"
       ],
       "classificationMethod": "semantic-keyword-v2-with-scenario",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.ahajournals.org/doi/full/10.1161/STR.0000000000000098",
+        "https://www.strokebestpractices.ca/recommendations/stroke-rehabilitation-delivery/6-swallowing-nutrition-and-oral-care"
+      ],
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -7007,8 +7068,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "介助で車椅子へ移乗し、車椅子で食事・排泄をベッド外で行うAさんは、障害高齢者の日常生活自立度ではランクBに当たる。",
+      "detail": "入院2週、Aさんは車椅子で座位保持ができ、看護師の介助で車椅子へ移乗してトイレへ移動できる。厚生労働省の障害高齢者の日常生活自立度（寝たきり度）判定基準でランクBは、屋内生活に何らかの介助を要し、日中はベッド上生活が主体だが座位を保つ状態で、B1は車椅子へ移乗して食事・排泄をベッドから離れて行い、B2は介助で車椅子へ移乗する状態を含む。Aさんはこの範囲に合致するためランクBが適切。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -7036,15 +7097,18 @@
         "車椅子"
       ],
       "classificationMethod": "semantic-keyword-v2-with-scenario",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.mhlw.go.jp/web/t_doc?dataId=00tb6469&dataType=1&pageNo=1",
+        "https://www.mhlw.go.jp/topics/kaigo/kaigi/020904/2-3.html"
+      ],
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -7076,8 +7140,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "初回けいれん後に反復する嘔吐と傾眠がある9か月のD君は、意識障害や中枢神経疾患を除外する必要があり、待合室の4人で診察優先度が最も高い。",
+      "detail": "D君は自宅で初めて5分間けいれんし、受診時には止まっているが、待合室で3回嘔吐し、声かけで開眼してもすぐ傾眠する。日本小児科学会は、発熱児で意識がはっきりしない、けいれん、嘔吐を繰り返すなどがある場合は速やかな医療評価が必要としている。Aちゃんはボタン電池誤飲のため確実な評価・処置が必要だが現時点で機嫌・バイタルは安定、B君は軽微な転倒後で全身状態良好、Cちゃんは高熱でも機嫌・顔色が良い。したがって意識状態異常を伴うD君が最優先。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -7103,15 +7167,18 @@
         "v8-context:4歳6か月女児のボタン電池誤飲と待合室の患児優先度を扱うため"
       ],
       "classificationMethod": "contextual-semantic-v8",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.jpeds.or.jp/society-activities/pediatric-medical-care/vaccination/vaccinations-infectiousdiseases/20454.html",
+        "https://www.jpeds.or.jp/news/organizationnews/81072.html"
+      ],
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -7150,8 +7217,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "術後覚醒した1歳児がベッド内で立ち両親へ手を伸ばす状況では、足場になり得るぬいぐるみを除去し、点滴ルートに十分な余裕を持たせて転落・ルート牽引を防ぐ。",
+      "detail": "公式別冊No.3では、Aちゃんがベッド内で立って柵越しに手を伸ばし、ベッド内に大きなぬいぐるみがあり、点滴ポンプ・スタンドから患児へルートが通っている。小児入院中の転落予防では年齢に応じたベッド柵を安全に使用し、ベッド内の環境危険因子を減らす必要がある。ぬいぐるみは足場・障害物になり得るため取り除き、患児の動きでルートが牽引されない長さを確保する。毛布を柵にかけたり柵を下げたり、点滴スタンド自体を手の届く位置へ近づけるのは安全性を下げる。",
       "requiresMedia": true,
       "mediaAuditStatus": "pending",
       "rightsStatus": "mhlw-pdl1.0-text; media-pending",
@@ -7177,15 +7244,19 @@
         "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
       "classificationMethod": "semantic-refinement-v3",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.jointcommission.org/en/knowledge-library/support-center/standards-interpretation/standards-faqs/000001363",
+        "https://pubmed.ncbi.nlm.nih.gov/23448328/",
+        "https://pubmed.ncbi.nlm.nih.gov/27221207/"
+      ],
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -7217,8 +7288,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "乳幼児の誤飲予防では、口に入る大きさの小物を子どもの手が届かない場所へ置く環境整備が基本。直径約4cmより小さい物は特に注意する。",
+      "detail": "Aちゃんは1歳4か月で、10mmのボタン電池を誤飲した。消費者庁は3歳児の口の大きさを直径約4cmとし、それより小さい物は口に入り誤飲・窒息の危険があるため、子どもの手の届く範囲に置かないよう勧めている。ボタン電池についても、未使用・使用済みを含め子どもの手の届かない場所へ保管することが重要である。常に目を離さないことだけに依存する、1歳児へ禁止行為を言葉で教えるだけにする、生活範囲を柵だけで制限するより、危険物を環境から除く方法が最も適切。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -7244,15 +7315,18 @@
         "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
       "classificationMethod": "semantic-refinement-v3",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.caa.go.jp/policies/policy/consumer_safety/child/project_001/mail/20210225/",
+        "https://www.caa.go.jp/policies/policy/consumer_safety/child/project_001/mail/20210318/"
+      ],
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -7284,8 +7358,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "合併症のない妊娠では一律の安静は不要で、妊娠前から行っていた安全性の高い有酸素運動としてウォーキングを再開できる。",
+      "detail": "Aさんは41歳の初妊婦だが妊娠16週3日の健診で経過は順調で、安静を必要とする医学的・産科的合併症は示されていない。ACOGは合併症や禁忌がない妊婦では妊娠中の身体活動は安全で望ましく、ウォーキングは安全性の高い運動例としている。高齢妊娠だけを理由に仕事を辞める・安静にする必要はなく、接触や転倒リスクのあるバスケットボールより、妊娠前から習慣にしていたウォーキングの再開が適切。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -7311,15 +7385,18 @@
         "scenario-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児"
       ],
       "classificationMethod": "semantic-refinement-v3",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2020/04/physical-activity-and-exercise-during-pregnancy-and-the-postpartum-period",
+        "https://www.acog.org/womens-health/faqs/exercise-during-pregnancy"
+      ],
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -7351,8 +7428,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "妊娠24週でHb 10.1g/dL、Ht 31％は妊娠に伴う血液希釈を考慮しても貧血と評価する値であり、選択肢では妊娠性貧血が適切。",
+      "detail": "Aさんは妊娠24週0日、体重60kgで妊娠前55kgから5kg増、血圧138/88mmHg、尿蛋白陰性、脛骨上の圧痕なしである。体重増加が明らかに過剰、妊娠高血圧、浮腫と断定する所見ではない。一方Hb 10.1g/dL、Ht31％は妊娠中の貧血域にある。WHOの基準でも妊婦のHb 11g/dL未満を貧血とし、妊娠中期では生理的血液希釈も強くなるため、選択肢中では妊娠性貧血が最も適切である。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -7378,15 +7455,18 @@
         "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
       "classificationMethod": "semantic-refinement-v3",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.who.int/publications/i/item/9789240088542",
+        "https://www.who.int/data/nutrition/nlis/info/anaemia"
+      ],
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -7418,8 +7498,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "妊娠後期に下肢静脈が膨隆し夕方にだるさが出る場合、弾性ストッキングで静脈還流を助ける。",
+      "detail": "妊娠35週4日、Aさんの健診所見に大きな異常はなく、夕方に足がだるくなり膝裏の静脈が膨らみ青く見えるという訴えは妊娠に伴う下肢静脈瘤に合う。妊娠中の静脈瘤では長時間立位を避け、下肢挙上や運動、必要に応じ圧迫ストッキングを用いて症状軽減を図る。減量や強い腹帯、立ち続ける指導は静脈うっ滞を改善しないため、弾性ストッキングの着用が適切。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -7445,15 +7525,18 @@
         "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
       "classificationMethod": "semantic-refinement-v3",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.nhs.uk/pregnancy/common-symptoms/common-health-problems/",
+        "https://www.nhs.uk/conditions/varicose-veins/"
+      ],
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
