@@ -3,15 +3,18 @@ import Foundation
 public struct JosanshiProductionIdentifiers: Equatable, Sendable {
     public let bundleID: String?
     public let appStoreConnectAppID: String?
+    public let codemagicProfile: String?
     public let productID: String?
 
     public init(
         bundleID: String? = nil,
         appStoreConnectAppID: String? = nil,
+        codemagicProfile: String? = nil,
         productID: String? = nil
     ) {
         self.bundleID = bundleID
         self.appStoreConnectAppID = appStoreConnectAppID
+        self.codemagicProfile = codemagicProfile
         self.productID = productID
     }
 
@@ -20,11 +23,20 @@ public struct JosanshiProductionIdentifiers: Equatable, Sendable {
         return !productID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
-    public var isReleaseIdentityReady: Bool {
-        [bundleID, appStoreConnectAppID].allSatisfy {
+    public var isSignedBuildIdentityReady: Bool {
+        [bundleID, codemagicProfile].allSatisfy {
             guard let value = $0 else { return false }
             return !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         }
+    }
+
+    public var isAppStoreRecordReady: Bool {
+        guard let appStoreConnectAppID else { return false }
+        return !appStoreConnectAppID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    public var isReleaseIdentityReady: Bool {
+        isSignedBuildIdentityReady && isAppStoreRecordReady
     }
 }
 
@@ -63,8 +75,14 @@ public enum JosanshiExamConfiguration {
     public static let examScopeBaseline = "保健師助産師看護師国家試験出題基準 令和5年版"
     public static let sourceCheckedAt = "2026-08-12"
 
-    /// Production identifiers are deliberately unset until a canonical value is provided.
-    public static let productionIdentifiers = JosanshiProductionIdentifiers()
+    /// Canonical values approved by the user on 2026-08-14 and mirrored from Notion.
+    /// The numeric App Store Connect App ID remains nil until Apple actually issues it.
+    public static let productionIdentifiers = JosanshiProductionIdentifiers(
+        bundleID: "jp.allsunday1122.josanshi",
+        appStoreConnectAppID: nil,
+        codemagicProfile: "josanshi_appstore",
+        productID: "jp.allsunday1122.josanshi.premium"
+    )
 
     /// Product-design allocation only. It is not represented as an official fixed MHLW subject quota.
     public static let subjectQuotaStatus = "独自カバレッジ設計・公式固定配分とは扱わない"
