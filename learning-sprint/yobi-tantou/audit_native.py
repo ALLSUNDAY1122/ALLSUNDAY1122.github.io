@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 IOS = ROOT / "ios"
 CONTENT_LOOP = ROOT / "content-loop"
+APP_STORE = ROOT / "app-store"
 errors = []
 
 swift = "\n".join(p.read_text(encoding="utf-8") for p in IOS.glob("*.swift"))
@@ -18,6 +19,7 @@ storekit = (IOS / "StoreKitManager.swift").read_text(encoding="utf-8")
 release_builder = (CONTENT_LOOP / "build_native_release.py").read_text(encoding="utf-8")
 combiner = (CONTENT_LOOP / "combine_practice_release.py").read_text(encoding="utf-8")
 project = (IOS / "project.yml").read_text(encoding="utf-8")
+monetization = json.loads((APP_STORE / "monetization-config.v1.json").read_text(encoding="utf-8"))
 preview_questions = json.loads((IOS / "Resources" / "questions.preview.json").read_text(encoding="utf-8"))
 release_path = IOS / "Resources" / "questions.release.json"
 privacy = (IOS / "PrivacyInfo.xcprivacy").read_text(encoding="utf-8")
@@ -114,10 +116,11 @@ required_storekit = [
     "Product.products(for:", "product.purchase()", "AppStore.sync()",
     "Transaction.currentEntitlements", "Transaction.updates",
     "transaction.revocationDate == nil", "StoreProductIDPolicy.normalized",
+    "StoreProductTypePolicy", ".autoRenewable", "transaction.productID == configuredProductID",
 ]
 for marker in required_storekit:
     if marker not in storekit:
-        errors.append(f"missing StoreKit lifecycle contract: {marker}")
+        errors.append(f"missing StoreKit lifecycle/v2.4 subscription contract: {marker}")
 
 if len(preview_questions) != 8:
     errors.append(f"preview bank must contain exactly 8 questions, got {len(preview_questions)}")
@@ -133,17 +136,16 @@ for q in preview_questions:
         if not q.get(key):
             errors.append(f"missing preview field {key}: {q.get('id')}")
 
-# Formal practice bank has three independently audited tiers: 14 foundation,
-# 14 standard and 14 applied. Each tier contains exactly two items for each of
-# the seven legal subjects. Official exam reproductions remain in a separate,
-# still-locked official-mock pipeline.
+# Formal Native practice bank remains the first independently audited 42 items.
+# Additional three-mock content is audited in content-loop/mock-bank and is not
+# silently folded into the Native bundle until its dedicated integration gate.
 if not release_path.exists():
     errors.append("formal practice questions.release.json missing")
 else:
     release_questions = json.loads(release_path.read_text(encoding="utf-8"))
     if not isinstance(release_questions, list) or len(release_questions) != 42:
         count = len(release_questions) if isinstance(release_questions, list) else "non-list"
-        errors.append(f"formal practice bank must contain exactly 42 audited questions, got {count}")
+        errors.append(f"formal Native practice bank must contain exactly 42 audited questions, got {count}")
         release_questions = release_questions if isinstance(release_questions, list) else []
     release_ids = [q.get("id") for q in release_questions]
     if any(not qid for qid in release_ids) or len(release_ids) != len(set(release_ids)):
@@ -181,11 +183,37 @@ else:
             if not q.get(key):
                 errors.append(f"formal practice field missing {key}: {qid}")
 
-for production_value in ("jp.allsunday1122.yobi", "jp.allsunday1122.yobi.premium"):
-    if production_value in project or production_value in swift:
-        errors.append(f"guessed production identifier found: {production_value}")
-if "UNSET.YOBI.BUNDLE.ID" not in project or "YOBI_IAP_PRODUCT_ID" not in project:
-    errors.append("identifier placeholders/injection contract missing")
+# v2.4: Bundle ID naming is delegated to ChatGPT and is now canonical.
+expected_bundle_id = "jp.allsunday1122.yobishikentantou"
+expected_test_id = f"{expected_bundle_id}.tests"
+expected_ui_test_id = f"{expected_bundle_id}.uitests"
+expected_planned_iap = f"{expected_bundle_id}.monthly"
+identifier_markers = (
+    f"YOBI_BUNDLE_ID: {expected_bundle_id}",
+    f"YOBI_TEST_BUNDLE_ID: {expected_test_id}",
+    f"YOBI_UI_TEST_BUNDLE_ID: {expected_ui_test_id}",
+    'YOBI_IAP_PRODUCT_ID: ""',
+)
+for marker in identifier_markers:
+    if marker not in project:
+        errors.append(f"v2.4 identifier contract missing: {marker}")
+
+if monetization.get("standardProcedureVersion") != "2.4":
+    errors.append("monetization config must reference standard procedure v2.4")
+if monetization.get("bundleID") != expected_bundle_id or monetization.get("bundleIDStatus") != "canonical":
+    errors.append("canonical Bundle ID mismatch in monetization config")
+monetization_plan = monetization.get("monetization") or {}
+if monetization_plan.get("model") != "auto_renewable_subscription" or monetization_plan.get("period") != "P1M":
+    errors.append("v2.4 monthly auto-renewable monetization model missing")
+if monetization_plan.get("japanReferencePriceJPY") != 200:
+    errors.append("v2.4 Japan reference price must be 200 JPY/month")
+if monetization_plan.get("priceDisplayPolicy") != "StoreKit Product.displayPrice only":
+    errors.append("StoreKit displayPrice-only policy missing")
+iap = monetization.get("iap") or {}
+if iap.get("plannedProductID") != expected_planned_iap or iap.get("productType") != "autoRenewable":
+    errors.append("planned monthly IAP identifier/type mismatch")
+if iap.get("appStoreConnectRegistrationStatus") != "pending" or iap.get("runtimeConfigurationStatus") != "unset_until_registered":
+    errors.append("IAP must remain fail-closed until App Store Connect registration is confirmed")
 
 if "NSPrivacyTracking" not in privacy or "<false/>" not in privacy:
     errors.append("Privacy Manifest tracking=false missing")
@@ -216,4 +244,4 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print("PASS: native source contract, v2.1 UI, 42-question three-tier formal practice bank, practice/official-mock isolation, verified scoring, preview/release gates, StoreKit lifecycle, identifiers, privacy and canonical AppIcon lock")
+print("PASS: native source contract, v2.1 UI, 42-question Native formal bank, mock-bank isolation, verified scoring, v2.4 monthly StoreKit/Bundle ID contract, identifiers, privacy and canonical AppIcon lock")
