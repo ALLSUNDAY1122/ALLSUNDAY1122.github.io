@@ -21,6 +21,25 @@ final class RigakuSprintConfigurationTests: XCTestCase {
         XCTAssertTrue(RigakuAppConfiguration.practicalSubjects.contains("運動学"))
     }
 
+    func testExternalIdentifiersRejectMissingOrUnexpandedValues() {
+        XCTAssertNil(RigakuAppConfiguration.normalizedExternalIdentifier(nil))
+        XCTAssertNil(RigakuAppConfiguration.normalizedExternalIdentifier(""))
+        XCTAssertNil(RigakuAppConfiguration.normalizedExternalIdentifier("   "))
+        XCTAssertNil(RigakuAppConfiguration.normalizedExternalIdentifier("$(RIGAKU_IAP_PRODUCT_ID)"))
+        XCTAssertNil(RigakuAppConfiguration.normalizedExternalIdentifier("${RIGAKU_BUNDLE_ID}"))
+    }
+
+    func testExternalIdentifiersPreserveCanonicalInjectedValues() {
+        XCTAssertEqual(
+            RigakuAppConfiguration.normalizedExternalIdentifier("  jp.example.rigaku.premium  "),
+            "jp.example.rigaku.premium"
+        )
+        XCTAssertEqual(
+            RigakuAppConfiguration.normalizedExternalIdentifier("jp.example.rigaku"),
+            "jp.example.rigaku"
+        )
+    }
+
     func testMockRouteRequiresCompleteAuditedRound() {
         XCTAssertFalse(RigakuRouteGate.isComplete(audited: 0, expected: 200))
         XCTAssertFalse(RigakuRouteGate.isComplete(audited: 199, expected: 200))
