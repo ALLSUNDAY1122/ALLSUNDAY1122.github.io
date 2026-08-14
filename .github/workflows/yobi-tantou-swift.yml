@@ -37,7 +37,10 @@ jobs:
 
   swift-tests:
     needs: native-contract
-    runs-on: macos-15
+    # iOS deployment target is 16.0 / Swift 5.0. macOS 14 provides a
+    # compatible Xcode/iOS Simulator stack and uses a separate hosted pool from
+    # the currently congested macOS 15 queue.
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
       - name: Prepare simulator-only AppIcon
