@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K113-AM-SC07",
+  "sourceExam": 113,
+  "session": "AM",
+  "sourceEvidence": {
+    "officialQuestionPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+    "officialBookletPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_02.pdf",
+    "officialAnswerPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05seitou.pdf",
+    "secondaryFigureMapping": [
+      "https://www.hws-kyokai.or.jp/publishing/eiesei-kangoshiken-main/eiesei-kangoshiken-113-am2.html",
+      "https://www.kango-roo.com/kokushi/kako/detail/11438/1"
+    ],
+    "checkedAt": "2026-08-14T14:29:00+09:00"
+  },
+  "textCorrections": {
+    "scenarioTextCanonical": "Aさん（32歳、初産婦）は妊娠39週4日で男児を正常分娩した。出生体重3,000g、身長48.0cm。出生直後、児に付着していた羊水を拭き取り、インファントラジアントウォーマーの下で観察を行った。その後、温めておいた衣服を着せてコットに寝かせ、コットを空調の風が当たらない場所に配置した。",
+    "questionTextCorrections": [
+      {"id": "K113-AM110", "fromContains": "産褥日", "toStartsWith": "産褥3日"},
+      {"id": "K113-AM110", "fromContains": "乳管は左右とも 本", "toContains": "乳管は左右とも4本"},
+      {"id": "K113-AM111", "fromContains": "日齢。体重2760g", "toStartsWith": "日齢4。体重2,760g"},
+      {"id": "K113-AM111", "fromContains": "排尿は日 回、排便日 回", "toContains": "排尿は1日4回、排便1日1回"}
+    ]
+  },
+  "mediaCorrection": {
+    "id": "K113-AM110",
+    "requiresMedia": true,
+    "officialAnswerIndex": 3,
+    "figureOptionMapping": {
+      "1": "添え乳",
+      "2": "たて抱き",
+      "3": "フットボール抱き（脇抱き）",
+      "4": "交差横抱き"
+    },
+    "mediaAuditStatus": "mapping_verified_official_booklet_screenshot_pending",
+    "reason": "厚生労働省別冊PDFの取得は確認できたが該当ページのスクリーンショット取得がキャッシュエラーで失敗。厚労省公式正答③と複数の独立した問題転載で図③=フットボール抱きを一致確認した。最終canonical PASS前に公式別冊図版の目視再確認を行う。"
+  },
+  "applyState": "pending_canonical_integration"
+}
