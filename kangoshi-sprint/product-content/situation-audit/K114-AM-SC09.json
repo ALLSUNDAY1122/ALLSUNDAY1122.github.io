@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC09",
+  "sourceExam": 114,
+  "session": "AM",
+  "questionIds": ["K114-AM115", "K114-AM116", "K114-AM117"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "30歳男性。統合失調症で内服治療中だったが、引きこもり、昼夜逆転、被害・監視妄想が悪化し服薬を自己中断。母親と本人の希望で精神科入院し薬物療法を再開。",
+  "mainCondition": "統合失調症急性増悪時の活動・休息評価、妄想への非対立的コミュニケーション、回復過程でのレジリエンス理解。",
+  "assessment": [
+    "AM115では夜間覚醒・日中傾眠・活動回避から活動と休息のバランスを優先して評価する。",
+    "AM116では妄想内容の真偽を争わず、悪口を言われていると感じた際の本人の感情へ焦点を当てる。",
+    "AM117では服薬中断と再治療を振り返り、ストレスを乗り越えられそうだとする発言をレジリエンスとして捉える。"
+  ],
+  "nursingJudgment": "3問は『入院初期の生活リズム評価→症状軽減過程の妄想への対応→1か月後の回復・自己理解』として同一患者の経過を追う。母親は情報提供・支援者であり患者本人ではない。",
+  "nursingPractice": [
+    "睡眠覚醒リズム、活動性、セルフケア能力を具体的行動から評価する。",
+    "妄想を強化・正面否定せず、本人が感じる苦痛や感情を言語化できるよう支える。",
+    "再発要因と服薬継続の意味を本人と振り返り、ストレス対処と回復力を支援する。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "canonicalPatch": {"path": "situation-audit/canonical-patches/K114-AM-SC09.json", "textCorrectionRequired": true, "classificationCorrectionRequired": false, "applyState": "pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent": true, "majorSubject": "精神看護学", "status": "pass"},
+  "explanationAudit": {"batchId": "K114-AM115-AM117-situation-SC09", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "none", "questionId": null, "reason": null, "evidenceRefs": []},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_canonical_patch_pending",
+  "auditedAt": "2026-08-14T15:03:00+09:00"
+}
