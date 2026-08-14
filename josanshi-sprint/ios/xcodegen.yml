@@ -17,9 +17,21 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: ../../native-ios/LearningSprintCore/Sources/LearningSprintCore
+  JosanshiSprintFeature:
+    type: framework
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: JosanshiSprintFeature/Sources/JosanshiSprintFeature
+      - path: JosanshiSprintFeature/Sources/JosanshiSprintFeature/Resources
+        buildPhase: resources
+    dependencies:
+      - target: LearningSprintCore
   JosanshiSprint:
     type: application
     platform: iOS
     deploymentTarget: "17.0"
     sources:
       - path: App
+    dependencies:
+      - target: JosanshiSprintFeature
