@@ -1,0 +1,685 @@
+[
+  {
+    "id": "YOBI-M1GEN-LNG-001",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "language_reading",
+    "topic": "手順順序",
+    "question": "ある架空施設では、入館者は「受付で氏名を記入し、次に入館証を受け取り、最後に指定席へ移動する」と案内されている。案内どおりの順序はどれか。",
+    "choices": [
+      "入館証→氏名記入→指定席",
+      "氏名記入→指定席→入館証",
+      "氏名記入→入館証→指定席",
+      "指定席→入館証→氏名記入"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "文章は最初に氏名を記入し、『次に』入館証を受け取り、『最後に』指定席へ移動すると順序を明示している。したがって氏名記入→入館証→指定席が正しい。各行為の内容ではなく、接続表現が示す時系列をそのまま追う問題である。",
+    "memory": "「次に」「最後に」など順序語を追う。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "施設案内文・手順・選択肢を本アプリ用に独自執筆し、既存施設規約・作品・第三者文章を引用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "sequence",
+      "sequence": [
+        "氏名記入",
+        "入館証",
+        "指定席"
+      ]
+    },
+    "distractor_notes": [
+      "本文では氏名記入が入館証受取より先であり順序が逆である。",
+      "本文では入館証受取が指定席移動より先なので順序が違う。",
+      null,
+      "指定席への移動は最後であり最初ではない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "sequence"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-LNG-002",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "language_reading",
+    "topic": "条件分岐",
+    "question": "自作の案内文には「雨天の場合のみ屋内会場を使用し、晴天の場合は中庭を使用する」とある。当日が晴天なら使用する場所はどこか。",
+    "choices": [
+      "屋内会場",
+      "中庭",
+      "両方",
+      "どちらも使わない"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 1,
+    "explanation": "案内文は天候ごとに場所を分け、雨天なら屋内会場、晴天なら中庭と明示している。当日は晴天という条件なので対応する中庭を選ぶ。『雨天の場合のみ』という限定もあるため、晴天時に屋内会場を併用すると読む根拠はない。",
+    "memory": "条件文では該当する場合分けだけを選ぶ。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "天候と会場の条件文を独自に作成した読解fixtureで、実在施設案内や第三者著作物を利用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "conditional_lookup",
+      "condition": "晴天",
+      "mapping": {
+        "雨天": "屋内会場",
+        "晴天": "中庭"
+      }
+    },
+    "distractor_notes": [
+      "屋内会場は雨天の場合に限定されている。",
+      null,
+      "晴天時に両方を使用するとは本文に書かれていない。",
+      "晴天時は中庭を使用すると明示されているため不使用ではない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "conditional_lookup"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-LNG-003",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "language_reading",
+    "topic": "因果関係",
+    "question": "自作の報告文には「申込数が想定を上回ったため、締切日を2日早めた」とある。締切日を早めた直接の理由はどれか。",
+    "choices": [
+      "会場が変更されたため",
+      "申込数が想定を上回ったため",
+      "担当者が休暇を取るため",
+      "雨天が予想されたため"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 1,
+    "explanation": "『〜ため』は原因・理由を示す表現であり、本文では申込数が想定を上回ったことを理由として締切日を2日早めたと明示している。会場変更、担当者休暇、天候についての情報は本文にないため、推測で理由を追加してはいけない。",
+    "memory": "因果表現の直前に示された内容を理由として読む。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "報告文と因果関係を本アプリ用に独自執筆し、ニュース記事・業務文書・既存教材の文章を引用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "explicit_cause",
+      "correct_text": "申込数が想定を上回ったため"
+    },
+    "distractor_notes": [
+      "会場変更について本文は一切述べていない。",
+      null,
+      "担当者の休暇は理由として本文に書かれていない。",
+      "天候について本文は述べておらず推測にすぎない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "explicit_cause"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-LNG-004",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "language_reading",
+    "topic": "対比読解",
+    "question": "自作文には「A案は費用が低い一方で期間が長い。B案は費用が高いが期間は短い」とある。期間が短いのはどちらか。",
+    "choices": [
+      "A案",
+      "B案",
+      "同じ",
+      "文章から不明"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 1,
+    "explanation": "文章は二案を費用と期間の二軸で対比している。A案については期間が長い、B案については期間が短いと明示されているため、期間だけを比較すればB案が正しい。費用が低いというA案の別の利点と評価軸を混同しない。",
+    "memory": "対比文では問われた評価軸だけを追う。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "A案・B案の比較文を独自執筆した架空文章で、実在商品・政策・第三者比較記事を使用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "attribute_lookup",
+      "attributes": {
+        "A案": {
+          "期間": "長い",
+          "費用": "低い"
+        },
+        "B案": {
+          "期間": "短い",
+          "費用": "高い"
+        }
+      },
+      "query": [
+        "期間",
+        "短い"
+      ]
+    },
+    "distractor_notes": [
+      "A案は費用が低いが期間は長いと明示されている。",
+      null,
+      "期間はAが長くBが短いので同じではない。",
+      "B案の期間が短いと明示されているため不明ではない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "attribute_lookup"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-LNG-005",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "language_reading",
+    "topic": "例外規定",
+    "question": "自作規則には「原則として資料の持出しは禁止する。ただし、管理者の事前承認を受けた場合はこの限りでない」とある。持出しが許され得るのはどの場合か。",
+    "choices": [
+      "承認なしで自由に持ち出す場合",
+      "管理者の事前承認を受けた場合",
+      "誰にも知らせず持ち出す場合",
+      "事後に報告するだけの場合"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 1,
+    "explanation": "本文はまず資料持出しを原則禁止し、その直後の『ただし』で管理者の事前承認を受けた場合を例外としている。したがって事前承認がある場合に限り、規則上は持出しが許され得る。事後報告や無断持出しは例外条件に含まれない。",
+    "memory": "「ただし」は直前の原則に対する例外を示す。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "資料持出し規則を架空に独自執筆し、実在企業・図書館等の規程や第三者文章を引用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "exception",
+      "correct_text": "管理者の事前承認を受けた場合"
+    },
+    "distractor_notes": [
+      "原則として持出しは禁止されており承認なしは例外でない。",
+      null,
+      "無断持出しを許す記載は本文に存在しない。",
+      "例外は事後報告ではなく管理者の事前承認である。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "exception"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-LNG-006",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "language_reading",
+    "topic": "時系列",
+    "question": "自作の予定記録には「9時に受付開始、10時に説明会開始、11時30分に説明会終了、12時に個別相談開始」とある。説明会終了の直後に予定されているものはどれか。",
+    "choices": [
+      "受付開始",
+      "説明会開始",
+      "個別相談開始",
+      "説明会終了"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "時刻順に並べると受付開始→説明会開始→説明会終了→個別相談開始である。対象の説明会終了は11時30分で、その次に記載された予定は12時の個別相談開始となる。対象そのものやそれ以前の予定を『直後』として選ばない。",
+    "memory": "時系列は時刻順に並べて隣接関係を見る。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "予定時刻とイベント名を全て独自作成した架空スケジュールで、実在行事案内・第三者文章を利用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "timeline_next",
+      "events": [
+        [
+          "09:00",
+          "受付開始"
+        ],
+        [
+          "10:00",
+          "説明会開始"
+        ],
+        [
+          "11:30",
+          "説明会終了"
+        ],
+        [
+          "12:00",
+          "個別相談開始"
+        ]
+      ],
+      "target": "説明会終了"
+    },
+    "distractor_notes": [
+      "受付開始は説明会終了より2時間30分前の予定である。",
+      "説明会開始は説明会終了より前であり直後ではない。",
+      null,
+      "説明会終了は対象そのもので直後の予定ではない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "timeline_next"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-LNG-007",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "language_reading",
+    "topic": "残余人数",
+    "question": "自作文には「参加者は計24人で、そのうち午前のみが8人、午後のみが10人、残りは午前と午後の両方に参加した」とある。両方に参加したのは何人か。",
+    "choices": [
+      "4人",
+      "6人",
+      "8人",
+      "14人"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 1,
+    "explanation": "参加者総数24人から、午前のみ8人と午後のみ10人を差し引く。24－8－10＝6人なので、本文で『残り』とされた6人が午前・午後の両方に参加した。三分類が重ならない前提は『午前のみ』『午後のみ』『残り』という文から読み取れる。",
+    "memory": "「残り」＝総数－明示された部分。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "参加者数と分類文を独自作成した架空文章で、実在イベント・アンケート・第三者文章を使用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "remainder",
+      "total": 24,
+      "parts": [
+        8,
+        10
+      ],
+      "correct_value": 6
+    },
+    "distractor_notes": [
+      "4人では三分類の合計が22人となり総数24人に足りない。",
+      null,
+      "8人では三分類合計が26人となり総数を超える。",
+      "14人では三分類合計が32人となり総数を大きく超える。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "remainder"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-LNG-008",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "language_reading",
+    "topic": "必要条件",
+    "question": "自作案内には「研修修了証を受け取るには、全3回の講義に出席し、確認テストに合格する必要がある」とある。修了証の条件として文章が求めるものはどれか。",
+    "choices": [
+      "講義3回出席だけ",
+      "確認テスト合格だけ",
+      "講義3回出席と確認テスト合格の両方",
+      "どちらも不要"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "本文は『全3回の講義に出席し、確認テストに合格する必要がある』と二つの条件を並列で要求している。したがって一方だけを満たしても本文上の条件は完成せず、講義3回出席と確認テスト合格の両方が必要となる。",
+    "memory": "並列された必要条件は両方を満たす。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "研修制度と条件文を本アプリ用に独自設定した架空案内で、実在資格・研修規程・第三者文章を使用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "all_requirements",
+      "correct_text": "講義3回出席と確認テスト合格の両方"
+    },
+    "distractor_notes": [
+      "確認テスト合格というもう一つの必要条件が欠けている。",
+      "全3回の講義出席という必要条件が欠けている。",
+      null,
+      "本文は二つの条件を明示しておりどちらも不要ではない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "all_requirements"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-LNG-009",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "language_reading",
+    "topic": "否定範囲",
+    "question": "自作規則には「予約者以外は入室できない」とある。この文から直接いえることはどれか。",
+    "choices": [
+      "予約していない人は入室できない",
+      "予約者は必ず入室しなければならない",
+      "予約者は必ず座席を選べる",
+      "予約していない人も自由に入室できる"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 0,
+    "explanation": "『予約者以外は入室できない』は予約者でない人の入室を禁止する文である。一方、予約者が必ず入室する義務や座席を自由に選べる権利までは述べていない。禁止対象の範囲だけを読み取り、本文にない義務・権利を付け加えないことが重要である。",
+    "memory": "否定文が禁止している対象だけを正確に読む。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "入室規則を独自執筆した架空文章であり、実在施設の利用規約・法令・第三者著作物を引用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "explicit_prohibition",
+      "correct_text": "予約していない人は入室できない"
+    },
+    "distractor_notes": [
+      null,
+      "入室可能性と入室義務は別で、本文は義務を定めていない。",
+      "座席選択について本文は何も述べていない。",
+      "本文の禁止内容と正反対の記述である。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "explicit_prohibition"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-LNG-010",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "language_reading",
+    "topic": "優先順位",
+    "question": "自作手順書には「安全確認を最優先し、その後に機器の電源を入れ、最後に記録を開始する」とある。最優先するものはどれか。",
+    "choices": [
+      "記録開始",
+      "機器の電源投入",
+      "安全確認",
+      "全て同時"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "手順書は安全確認を『最優先』と明示し、その後に機器の電源投入、最後に記録開始と順序を指定している。したがって最優先は安全確認である。順序が明示されているため三作業を同時に行うという解釈もできない。",
+    "memory": "「最優先」と明示された項目を先に処理する。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "安全確認・電源投入・記録開始の手順を独自作成した架空手順書で、実在機器マニュアルを引用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "priority",
+      "labels": [
+        "記録開始",
+        "機器の電源投入",
+        "安全確認",
+        "全て同時"
+      ],
+      "priority": "安全確認",
+      "correct_index": 2
+    },
+    "distractor_notes": [
+      "記録開始は本文で最後に行うと指定されている。",
+      "電源投入は安全確認の後に行うと指定されている。",
+      null,
+      "本文は明確な順序を示しており同時実行ではない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "priority"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-LNG-011",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "language_reading",
+    "topic": "原則と例外の適用",
+    "question": "自作規定には「通常は本人確認書類と申請書の両方を提出する。ただし、更新手続で前回の本人確認から1年以内の場合は、本人確認書類を省略できる」とある。前回確認から6か月の更新手続で必要なのはどれか。",
+    "choices": [
+      "本人確認書類だけ",
+      "申請書だけ",
+      "両方必須",
+      "どちらも不要"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 1,
+    "explanation": "通常は本人確認書類と申請書の両方が必要だが、更新手続で前回確認から1年以内なら本人確認書類を省略できる。本問は6か月なので例外条件を満たし、本人確認書類は省略可能である。一方、申請書を省略できるとは書かれていないため申請書だけが必要となる。",
+    "memory": "原則を確認し、例外条件を事実へ当てはめる。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "更新手続と必要書類の規定を独自作成した架空ルールで、実在行政手続・企業規約・法令文を引用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "applied",
+    "verification": {
+      "kind": "exception_application",
+      "correct_text": "申請書だけ",
+      "months_since_check": 6,
+      "limit_months": 12,
+      "required_after_exception": [
+        "申請書"
+      ]
+    },
+    "distractor_notes": [
+      "本人確認書類は例外により省略でき、申請書はなお必要である。",
+      null,
+      "1年以内の更新なので本人確認書類まで必須ではない。",
+      "省略できるのは本人確認書類だけで申請書は必要である。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "exception_application"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 1,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  }
+]
