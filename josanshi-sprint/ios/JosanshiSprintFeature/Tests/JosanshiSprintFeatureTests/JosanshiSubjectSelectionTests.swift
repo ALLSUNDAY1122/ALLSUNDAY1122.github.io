@@ -59,6 +59,42 @@ final class JosanshiSubjectSelectionTests: XCTestCase {
         XCTAssertNotNil(restored.state.examDate)
     }
 
+    func testCompletedSessionCreatesResultAndRecentHistory() throws {
+        let coordinator = JosanshiLearningCoordinator(questions: makeQuestions(), loadPersistedState: false)
+        coordinator.setDailyTarget(4)
+        coordinator.setShuffleQuestions(false)
+        let session = try coordinator.startSubject(JosanshiExamConfiguration.subjects[0])
+
+        for _ in session.questionIDs {
+            _ = try coordinator.submit(AnswerPayload(selectedIndices: [0]))
+        }
+
+        XCTAssertNil(coordinator.activeSession)
+        XCTAssertEqual(coordinator.lastCompletedSession?.correctCount, 4)
+        XCTAssertEqual(coordinator.lastCompletedSession?.totalCount, 4)
+        XCTAssertEqual(coordinator.recentSessions.first?.title, JosanshiExamConfiguration.subjects[0])
+        XCTAssertEqual(coordinator.recentSessions.count, 1)
+    }
+
+    func testResetClearsHistoryButKeepsGoldenMasterPreferences() throws {
+        let coordinator = JosanshiLearningCoordinator(questions: makeQuestions(), loadPersistedState: false)
+        coordinator.setDailyTarget(4)
+        coordinator.setTextSizeStep(2)
+        coordinator.setShuffleChoices(false)
+        let session = try coordinator.startSubject(JosanshiExamConfiguration.subjects[0], seed: 1)
+        for _ in session.questionIDs {
+            _ = try coordinator.submit(AnswerPayload(selectedIndices: [0]))
+        }
+
+        coordinator.resetLearningHistory()
+
+        XCTAssertEqual(coordinator.totalAnsweredCount, 0)
+        XCTAssertTrue(coordinator.recentSessions.isEmpty)
+        XCTAssertEqual(coordinator.preferences.resolvedTextSizeStep, 2)
+        XCTAssertFalse(coordinator.preferences.shuffleChoices)
+        XCTAssertEqual(coordinator.state.dailyTarget, 4)
+    }
+
     private func makeQuestions() -> [LearningQuestion] {
         (0..<20).map { index in
             LearningQuestion(
