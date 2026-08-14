@@ -33,7 +33,7 @@ final class RigakuAppModel: ObservableObject {
             }
         } else {
             self.store = nil
-            self.lastError = "Bundle IDが未確定のため、学習データ保存は開発ゲート中です。"
+            self.lastError = "Bundle IDを確認できないため、学習データ保存を開始できません。"
         }
 
         do {
@@ -91,18 +91,38 @@ final class RigakuAppModel: ObservableObject {
 
     var requiredDailyPace: Int? {
         LearningEngine.requiredDailyPace(
-            totalQuestionCount: questions.count,
+            totalQuestionCount: availableQuestionCount,
             uniqueAnsweredCount: uniqueAnsweredCount,
             examDate: state.examDate
         )
     }
 
     var canStudy: Bool {
-        !questions.isEmpty
+        !accessibleQuestions.isEmpty
     }
 
     var purchaseConfigured: Bool {
         purchaseController != nil
+    }
+
+    var freeQuestionCount: Int {
+        RigakuAccessPolicy.freeQuestionIDs(from: questions).count
+    }
+
+    var availableQuestionCount: Int {
+        accessibleQuestions.count
+    }
+
+    var canAccessBaseMocks: Bool {
+        RigakuAccessPolicy.canAccessMock(isPremium: premiumAccess)
+    }
+
+    var canAccessFullWeakReview: Bool {
+        RigakuAccessPolicy.canAccessFullWeakReview(isPremium: premiumAccess)
+    }
+
+    var accessibleQuestions: [LearningQuestion] {
+        RigakuAccessPolicy.accessibleQuestions(from: questions, isPremium: premiumAccess)
     }
 
     func media(for questionID: String) -> RigakuQuestionMedia? {
@@ -129,26 +149,28 @@ final class RigakuAppModel: ObservableObject {
         switch kind {
         case .sprint:
             return LearningEngine.selectSprint(
-                from: questions,
+                from: accessibleQuestions,
                 target: state.dailyTarget,
                 isPremium: premiumAccess
             )
         case .weak:
+            guard canAccessFullWeakReview else { return [] }
             return LearningEngine.selectWeak(
                 from: questions,
                 state: state,
                 target: state.dailyTarget,
-                isPremium: premiumAccess
+                isPremium: true
             )
         case .subject(let subject):
             return LearningEngine.selectSprint(
-                from: questions.filter { $0.subject == subject },
+                from: accessibleQuestions.filter { $0.subject == subject },
                 target: state.dailyTarget,
                 isPremium: premiumAccess
             )
         case .mock(let round):
+            guard canAccessBaseMocks else { return [] }
             return questions
-                .filter { ($0.examRound == round) && (premiumAccess || !$0.premium) }
+                .filter { $0.examRound == round }
                 .sorted(by: Self.examQuestionOrder)
         }
     }
@@ -163,7 +185,11 @@ final class RigakuAppModel: ObservableObject {
 
     func resumeQuestions() -> [LearningQuestion] {
         guard let snapshot = state.resumeSession else { return [] }
-        let byID = Dictionary(uniqueKeysWithValues: questions.map { ($0.id, $0) })
+        let accessibleByID = Dictionary(uniqueKeysWithValues: accessibleQuestions.map { ($0.id, $0) })
+        if case .mock = snapshot.kind, !canAccessBaseMocks { return [] }
+        if case .weak = snapshot.kind, !canAccessFullWeakReview { return [] }
+        let allByID = Dictionary(uniqueKeysWithValues: questions.map { ($0.id, $0) })
+        let byID = premiumAccess ? allByID : accessibleByID
         return snapshot.questionIDs.compactMap { byID[$0] }
     }
 
@@ -226,7 +252,7 @@ final class RigakuAppModel: ObservableObject {
     func exportBackup() throws -> Data {
         guard let store else {
             throw CocoaError(.fileWriteUnknown, userInfo: [
-                NSLocalizedDescriptionKey: "Bundle ID確定後にバックアップを利用できます。"
+                NSLocalizedDescriptionKey: "Bundle ID確認後にバックアップを利用できます。"
             ])
         }
         return try store.exportBackup(state)
@@ -235,7 +261,7 @@ final class RigakuAppModel: ObservableObject {
     func importBackup(_ data: Data) throws {
         guard let store else {
             throw CocoaError(.fileReadUnknown, userInfo: [
-                NSLocalizedDescriptionKey: "Bundle ID確定後にバックアップを利用できます。"
+                NSLocalizedDescriptionKey: "Bundle ID確認後にバックアップを利用できます。"
             ])
         }
         state = try store.importBackup(data)
@@ -263,7 +289,7 @@ final class RigakuAppModel: ObservableObject {
 
     private func configurePurchaseIfAvailable() {
         guard let productID = RigakuAppConfiguration.runtimePremiumProductID else {
-            purchaseStateLabel = "IAP Product ID 未確定"
+            purchaseStateLabel = "月額商品を確認できません"
             return
         }
 
@@ -294,10 +320,10 @@ final class RigakuAppModel: ObservableObject {
     private static func purchaseStateLabel(for state: PurchaseController.PurchaseState) -> String {
         switch state {
         case .loading: return "StoreKit確認中"
-        case .ready: return "購入可能"
+        case .ready: return "月額プランを開始できます"
         case .purchasing: return "購入処理中"
         case .pending: return "承認待ち"
-        case .purchased: return "購入済み"
+        case .purchased: return "月額プラン利用中"
         case .cancelled: return "購入をキャンセルしました"
         case .unavailable(let message), .failed(let message): return message
         }
@@ -321,8 +347,6 @@ final class RigakuAppModel: ObservableObject {
     }
 
     private static func examOrderKey(_ question: LearningQuestion) -> Int {
-        // RIGAKU-R60-AM-001 / RIGAKU-R60-PM-001 のIDを正本とし、
-        // 午前1...100の後に午後1...100が並ぶようにする。
         let components = question.id.split(separator: "-")
         if components.count >= 4 {
             let sessionOffset = components[2] == "PM" ? 100 : 0
