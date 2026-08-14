@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC08",
+  "sourceExam": 114,
+  "session": "AM",
+  "questionIds": ["K114-AM112", "K114-AM113", "K114-AM114"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "36歳経産婦。35歳の夫、3歳男児と3人暮らし。妊娠39週5日に3,200gの女児を経腟分娩。Apgar 1分9点、5分10点。産褥1日から後陣痛、産褥3日に乳房緊満、日齢4に児の全身評価へ進む。",
+  "mainCondition": "経産婦の後陣痛、産褥早期の乳房緊満と授乳支援、正常新生児の日齢4評価。",
+  "assessment": [
+    "AM112では産褥1日の子宮復古に伴う後陣痛を評価し、経産婦で強く感じやすいことを説明する。",
+    "AM113では産褥3日の乳房緊満で児が吸着しにくい状況に対し、授乳前に乳輪部を軟化させる支援を行う。",
+    "AM114では日齢4女児の体重、体温、呼吸数、心拍数、経皮ビリルビン、排泄回数を統合して正常範囲を判断する。"
+  ],
+  "nursingJudgment": "3問は『母体の子宮復古→授乳成立支援→出生児の全身評価』として産褥早期の母児を連続して扱う。症例本文の男児（3歳）はAさんの第1子であり、患者本人ではない。AM112-113の対象はAさん、AM114では今回出生した女児へ評価対象が移る。過去の家族欄『男児』誤認型バグを明示的に再監査しPASS。",
+  "nursingPractice": [
+    "後陣痛の生理的意味を説明し、必要時は授乳中でも使用可能な鎮痛法を検討する。",
+    "乳房緊満時は乳輪部をやさしく軟化させ、児が深く吸着しやすい状態を作る。",
+    "新生児のバイタル、体重減少、黄疸、排泄を日齢と在胎週数に合わせて評価する。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "familyMemberMaleChildNotMisidentified": true, "maternalToNewbornTargetTransition": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "canonicalPatch": {"path": "situation-audit/canonical-patches/K114-AM-SC08.json", "textCorrectionRequired": true, "classificationCorrectionRequired": false, "applyState": "pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent": true, "majorSubject": "母性看護学", "status": "pass"},
+  "explanationAudit": {"batchId": "K114-AM112-AM114-situation-SC08", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "none", "questionId": null, "reason": null, "evidenceRefs": []},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_canonical_patch_pending",
+  "auditedAt": "2026-08-14T14:59:00+09:00"
+}
