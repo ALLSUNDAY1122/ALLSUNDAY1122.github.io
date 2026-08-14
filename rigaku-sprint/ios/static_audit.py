@@ -46,6 +46,11 @@ required_native = (
     "isMockReady",
     "auditedQuestionCount(forSubject:",
     "RigakuExamScoringRepository",
+    "runtimePremiumProductID",
+    "PurchaseController(productID:",
+    "purchasePremium()",
+    "restorePurchases()",
+    "purchaseDisplayPrice",
 )
 for token in required_native:
     if token not in all_swift:
@@ -77,6 +82,8 @@ if not any(pattern in all_swift for pattern in unknown_patterns):
 
 if "$(RIGAKU_BUNDLE_ID)" not in project:
     errors.append("Bundle IDは正本値の外部注入にすること")
+if "$(RIGAKU_IAP_PRODUCT_ID)" not in project:
+    errors.append("IAP Product IDは正本値の外部注入にすること")
 for required_resource in (
     "questions.json",
     "question-batches",
@@ -125,6 +132,8 @@ if verified != expected:
     errors.append(f"公式PDF確認済み枠が不一致: actual={verified}, expected={expected}")
 if "static let totalOfficialQuestionSlots = examRounds.compactMap(\\.officialQuestionCount).reduce(0, +)" not in config:
     errors.append("3回分総枠の導出が欠損")
+if "normalizedExternalIdentifier" not in config:
+    errors.append("外部識別子の未展開プレースホルダー拒否処理が欠損")
 
 for json_name in (
     "questions.json",
@@ -172,6 +181,7 @@ print("Active root route gate: PASS")
 print("Legacy root/source gate: PASS")
 print("Mock completeness gate: PASS")
 print("Shared native learning features: PASS")
+print("StoreKit2 external-ID bridge: PASS")
 print("JSON backup/import: PASS")
 print("Rights-gated media manifest: PASS")
 print("Asset catalog metadata: PASS")
