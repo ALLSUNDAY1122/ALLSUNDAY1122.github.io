@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-PM-SC07",
+  "sourceExam": 114,
+  "session": "PM",
+  "questionIds": ["K114-PM109", "K114-PM110", "K114-PM111"],
+  "scenarioIndexes": [0,1,2],
+  "scenarioTotal": 3,
+  "patientProfile": "30歳初産婦。妊娠39週3日に陣痛発来し、2時00分から分娩進行、16時20分に児娩出、16時30分に胎盤娩出。産後2時間までの母体評価と出生児の保温へ続く。",
+  "mainCondition": "分娩所要時間の算定、分娩直後の子宮復古評価、出生直後新生児の体温管理。",
+  "assessment": [
+    "PM109では分娩開始2時00分から胎盤娩出16時30分までを合計し14時間30分とする。",
+    "PM110では産後1～2時間の出血量、子宮底下降、硬度、循環動態、授乳後の後陣痛を統合し子宮復古良好と評価する。",
+    "PM111では出生2時間後の腋窩温36.4℃と末梢冷感から熱喪失予防を優先する。"
+  ],
+  "nursingJudgment": "3問は『分娩経過→母体の産褥早期評価→出生児の早期適応』として連続する。PM109-110の対象はAさん、PM111では出生児へ評価対象が移る正当な母児連結症例である。",
+  "nursingPractice": [
+    "分娩各期の時刻を正確に記録し、分娩所要時間を算定する。",
+    "分娩後は出血、子宮底・硬度、バイタル、排尿、疼痛を継続評価する。",
+    "新生児の体温と末梢循環を確認し、冷感がある場合は速やかに保温する。"
+  ],
+  "tripletConsistency": {"sameScenarioId":true,"sameScenarioText":true,"indexesComplete":true,"maternalToNewbornTargetTransition":true,"timelineConsistent":true,"clinicalConsistency":true,"nextScenarioLeakDetected":false},
+  "canonicalPatch": {"path":"situation-audit/canonical-patches/K114-PM-SC07.json","textCorrectionRequired":true,"classificationCorrectionRequired":false,"applyState":"pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent":true,"majorSubject":"母性看護学","status":"pass"},
+  "explanationAudit": {"batchId":"K114-PM109-PM111-situation-SC07","allThreeExplained":true,"allThreeEvidenceRefsPresent":true,"allThreeEvidenceCheckedDatePresent":true,"evidenceCheckedDate":"2026-08-14"},
+  "media":{"required":false,"status":"not_required"},
+  "scoring":{"exceptionPresent":false,"status":"normal"},
+  "contentConcern":{"status":"none","questionId":null,"reason":null,"evidenceRefs":[]},
+  "expertReviewStatus":"pending_global_expert_audit",
+  "scenarioAuditStatus":"content_pass_canonical_patch_pending",
+  "auditedAt":"2026-08-14T15:42:00+09:00"
+}
