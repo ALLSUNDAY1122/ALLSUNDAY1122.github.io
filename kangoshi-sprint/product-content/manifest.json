@@ -15,39 +15,48 @@
       "label": "第115回",
       "sourceExam": 115,
       "sourceYear": 2026,
-      "status": "raw_imported_pending_review",
+      "status": "pending_expert_review",
       "rawFile": "raw/set1-raw.json",
       "productFile": "set1.js",
       "sourceQuestionCount": 240,
       "importedCount": 240,
-      "questionCount": 0,
-      "expertReviewedCount": 0
+      "questionCount": 240,
+      "expertReviewedCount": 238,
+      "runtimeEligibleCount": 238,
+      "expertBlockedIds": [
+        "K115-AM103",
+        "K115-AM114"
+      ]
     },
     {
       "id": "set2",
       "label": "第114回",
       "sourceExam": 114,
       "sourceYear": 2025,
-      "status": "raw_imported_pending_review",
+      "status": "ready",
       "rawFile": "raw/set2-raw.json",
       "productFile": "set2.js",
       "sourceQuestionCount": 240,
       "importedCount": 240,
-      "questionCount": 0,
-      "expertReviewedCount": 0
+      "questionCount": 240,
+      "expertReviewedCount": 240,
+      "runtimeEligibleCount": 240,
+      "expertBlockedIds": []
     },
     {
       "id": "set3",
       "label": "第113回",
       "sourceExam": 113,
       "sourceYear": 2024,
-      "status": "raw_imported_pending_review",
+      "status": "ready",
       "rawFile": "raw/set3-raw.json",
       "productFile": "set3.js",
       "sourceQuestionCount": 240,
       "importedCount": 240,
-      "questionCount": 0,
-      "expertReviewedCount": 0
+      "questionCount": 240,
+      "expertReviewedCount": 240,
+      "runtimeEligibleCount": 240,
+      "expertBlockedIds": []
     }
   ],
   "releaseGate": {
@@ -114,5 +123,21 @@
     },
     "auditExit": 0,
     "status": "pass"
+  },
+  "runtime": {
+    "schemaVersion": 1,
+    "canonicalTotal": 720,
+    "runtimeEligible": 718,
+    "blocked": [
+      "K115-AM103",
+      "K115-AM114"
+    ],
+    "readyExamSets": [
+      114,
+      113
+    ],
+    "pendingExamSets": [
+      115
+    ]
   }
 }
