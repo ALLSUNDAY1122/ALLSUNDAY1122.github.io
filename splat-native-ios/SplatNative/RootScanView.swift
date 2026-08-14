@@ -9,7 +9,6 @@ struct PersistentScanCameraView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ARSCNView {
         let view = ARSCNView(frame: .zero)
-        view.automaticallyConfigureSession = false
         view.backgroundColor = .black
         view.preferredFramesPerSecond = 60
         view.automaticallyUpdatesLighting = false
