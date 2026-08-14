@@ -3,8 +3,6 @@ import Combine
 import LearningSprintCore
 
 public enum JosanshiLocalPersistenceConfiguration {
-    /// Stable local namespace only. This is deliberately not the production Bundle ID.
-    /// It can remain unchanged after App Store identity is assigned.
     public static let storageNamespace = "learning-sprint-14-josanshi-local"
     public static let contentVersion = "josanshi-content-v1"
 }
@@ -30,6 +28,8 @@ public final class JosanshiLearningCoordinator: ObservableObject {
     public private(set) var questions: [LearningQuestion]
     private let store: LearningStateStore?
     private let preferencesStore: JosanshiPreferencesStore?
+    private var lastCompletedKind: SessionKind?
+    private var lastCompletedQuestionIDs: [String] = []
 
     public init(
         questions: [LearningQuestion] = [],
@@ -41,6 +41,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         self.store = store
         self.preferencesStore = preferencesStore ?? (loadPersistedState ? JosanshiPreferencesStore() : nil)
         self.lastCompletedSession = nil
+        self.lastCompletedKind = nil
 
         if loadPersistedState, let store {
             do {
@@ -130,11 +131,7 @@ public final class JosanshiLearningCoordinator: ObservableObject {
     }
 
     @discardableResult
-    public func startSubject(
-        _ subject: String,
-        isPremium: Bool = true,
-        seed: UInt64? = nil
-    ) throws -> LearningSessionSnapshot {
+    public func startSubject(_ subject: String, isPremium: Bool = true, seed: UInt64? = nil) throws -> LearningSessionSnapshot {
         guard JosanshiExamConfiguration.subjects.contains(subject) else {
             throw JosanshiLearningError.subjectUnavailable(subject)
         }
@@ -167,6 +164,20 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         let candidates = questions.filter { $0.examRound == roundValue && (isPremium || !$0.premium) }
         guard !candidates.isEmpty else { throw JosanshiLearningError.mockUnavailable(roundValue) }
         return start(kind: .mock(roundValue), questions: candidates)
+    }
+
+    @discardableResult
+    public func restartLastCompletedSession() throws -> LearningSessionSnapshot {
+        guard let kind = lastCompletedKind, !lastCompletedQuestionIDs.isEmpty else {
+            throw JosanshiLearningError.noActiveSession
+        }
+        let ids = lastCompletedQuestionIDs
+        let selected = ids.compactMap { id in questions.first(where: { $0.id == id }) }
+        guard selected.count == ids.count else { throw JosanshiLearningError.contentUnavailable }
+        lastCompletedKind = nil
+        lastCompletedQuestionIDs = []
+        lastCompletedSession = nil
+        return start(kind: kind, questions: selected)
     }
 
     public var currentQuestion: LearningQuestion? {
@@ -217,6 +228,8 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         activeSession = nil
         latestEvaluation = nil
         lastCompletedSession = nil
+        lastCompletedKind = nil
+        lastCompletedQuestionIDs = []
         state.resumeSession = nil
         persist()
     }
@@ -233,6 +246,8 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         activeSession = nil
         latestEvaluation = nil
         lastCompletedSession = nil
+        lastCompletedKind = nil
+        lastCompletedQuestionIDs = []
         persist()
         persistPreferences()
     }
@@ -249,6 +264,8 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         activeSession = snapshot
         latestEvaluation = nil
         lastCompletedSession = nil
+        lastCompletedKind = nil
+        lastCompletedQuestionIDs = []
         return true
     }
 
@@ -277,6 +294,8 @@ public final class JosanshiLearningCoordinator: ObservableObject {
             preferences = envelope.preferences
             activeSession = state.resumeSession
             lastCompletedSession = nil
+            lastCompletedKind = nil
+            lastCompletedQuestionIDs = []
             persist()
             persistPreferences()
             return
@@ -286,11 +305,15 @@ public final class JosanshiLearningCoordinator: ObservableObject {
             state = try decoder.decode(LearningState.self, from: data)
             activeSession = state.resumeSession
             lastCompletedSession = nil
+            lastCompletedKind = nil
+            lastCompletedQuestionIDs = []
             return
         }
         state = try store.importBackup(data, allowContentVersionMigration: false)
         activeSession = state.resumeSession
         lastCompletedSession = nil
+        lastCompletedKind = nil
+        lastCompletedQuestionIDs = []
         persistenceErrorDescription = nil
     }
 
@@ -335,6 +358,8 @@ public final class JosanshiLearningCoordinator: ObservableObject {
             totalCount: session.questionIDs.count
         )
         lastCompletedSession = entry
+        lastCompletedKind = session.kind
+        lastCompletedQuestionIDs = session.questionIDs
         var history = preferences.resolvedRecentSessions
         history.insert(entry, at: 0)
         preferences.recentSessions = Array(history.prefix(20))
