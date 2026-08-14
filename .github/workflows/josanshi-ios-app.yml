@@ -28,10 +28,16 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-      - name: Generate Xcode project
+      - name: Generate Xcode project and apply IAP capability
         run: |
           cd josanshi-sprint/ios
           xcodegen generate --spec xcodegen.yml
+          python3 apply-xcode-capabilities.py JosanshiSprint.xcodeproj/project.pbxproj
+      - name: Verify canonical release identity in generated project
+        run: |
+          grep -q 'PRODUCT_BUNDLE_IDENTIFIER = jp.allsunday1122.josanshi;' josanshi-sprint/ios/JosanshiSprint.xcodeproj/project.pbxproj
+          grep -q 'DEVELOPMENT_TEAM = MN3D2ZM44N;' josanshi-sprint/ios/JosanshiSprint.xcodeproj/project.pbxproj
+          grep -q 'com.apple.InAppPurchase' josanshi-sprint/ios/JosanshiSprint.xcodeproj/project.pbxproj
       - name: Build native iOS app for Simulator
         run: |
           cd josanshi-sprint/ios
