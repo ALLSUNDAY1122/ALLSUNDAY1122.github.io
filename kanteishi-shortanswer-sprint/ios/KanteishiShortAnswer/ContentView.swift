@@ -2,15 +2,24 @@ import SwiftUI
 
 struct KanteishiShortAnswerRootView: View {
     @EnvironmentObject private var store: LearningStore
+    @EnvironmentObject private var purchases: PremiumPurchaseStore
 
     var body: some View {
         Group {
             if let error = store.startupError {
                 StartupErrorView(message: error)
             } else if let result = store.result {
-                ResultScreen(result: result)
-            } else if store.session != nil {
-                QuizScreen()
+                if purchases.isPremium || !store.requiresPremium(questionIDs: result.questionIDs) {
+                    ResultScreen(result: result)
+                } else {
+                    PremiumSessionLockedView(title: result.title)
+                }
+            } else if let session = store.session {
+                if purchases.isPremium || !store.requiresPremium(questionIDs: session.questionIDs) {
+                    QuizScreen()
+                } else {
+                    PremiumSessionLockedView(title: session.title)
+                }
             } else {
                 VStack(spacing: 0) {
                     Group {
@@ -56,8 +65,50 @@ private struct StartupErrorView: View {
     }
 }
 
+private struct PremiumSessionLockedView: View {
+    @EnvironmentObject private var store: LearningStore
+    let title: String
+
+    var body: some View {
+        ZStack {
+            AppTheme.paper.ignoresSafeArea()
+            VStack(spacing: 14) {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 30, weight: .bold))
+                    .foregroundStyle(AppTheme.ai)
+                Text("プレミアム学習を一時停止中")
+                    .appSerif(21, weight: .bold)
+                    .foregroundStyle(AppTheme.ink)
+                Text(title)
+                    .appSans(13, weight: .bold)
+                    .foregroundStyle(AppTheme.ink2)
+                Text("購入状態を確認すると、全240問と年度別80問模試を再開できます。")
+                    .appSans(12)
+                    .foregroundStyle(AppTheme.ink3)
+                    .multilineTextAlignment(.center)
+                Button {
+                    store.exitSessionToHome()
+                    store.currentTab = .settings
+                } label: {
+                    Text("プレミアムを確認")
+                        .appSans(15, weight: .bold)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .background(AppTheme.ai)
+                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(22)
+            .frame(maxWidth: 420)
+        }
+        .accessibilityIdentifier("premium.sessionLocked")
+    }
+}
+
 struct HomeView: View {
     @EnvironmentObject private var store: LearningStore
+    @EnvironmentObject private var purchases: PremiumPurchaseStore
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -111,7 +162,7 @@ struct HomeView: View {
 
                     if let inProgress = store.state.inProgress {
                         Button {
-                            store.resumeSession()
+                            if !store.resumeSession(isPremium: purchases.isPremium) { store.currentTab = .settings }
                         } label: {
                             HStack(spacing: 12) {
                                 Image(systemName: "arrow.clockwise")
@@ -140,7 +191,7 @@ struct HomeView: View {
                     }
 
                     Button {
-                        store.startToday()
+                        store.startToday(isPremium: purchases.isPremium)
                     } label: {
                         HStack(spacing: 14) {
                             Image(systemName: "bolt.fill")
@@ -165,7 +216,7 @@ struct HomeView: View {
                     .accessibilityIdentifier("home.startToday")
 
                     Button {
-                        store.startWeak()
+                        if !store.startWeak(isPremium: purchases.isPremium) { store.currentTab = .settings }
                     } label: {
                         HStack(spacing: 12) {
                             Image(systemName: "repeat")
@@ -175,12 +226,12 @@ struct HomeView: View {
                                 Text("苦手をつぶす")
                                     .appSans(11, weight: .bold)
                                     .foregroundStyle(AppTheme.ink3)
-                                Text(store.weakQuestions.isEmpty ? "現在の苦手はありません" : "\(store.weakQuestions.count)問あります")
+                                Text(store.accessibleWeakQuestions(isPremium: purchases.isPremium).isEmpty ? "現在の苦手はありません" : "\(store.accessibleWeakQuestions(isPremium: purchases.isPremium).count)問あります")
                                     .appSans(16, weight: .bold)
                                     .foregroundStyle(AppTheme.ink)
                             }
                             Spacer()
-                            Text("\(store.weakQuestions.count)")
+                            Text("\(store.accessibleWeakQuestions(isPremium: purchases.isPremium).count)")
                                 .appSerif(18, weight: .bold)
                                 .foregroundStyle(AppTheme.shu)
                                 .frame(minWidth: 34, minHeight: 34)
@@ -191,8 +242,8 @@ struct HomeView: View {
                     }
                     .buttonStyle(.plain)
                     .appCard()
-                    .disabled(store.weakQuestions.isEmpty)
-                    .opacity(store.weakQuestions.isEmpty ? 0.72 : 1)
+                    .disabled(store.accessibleWeakQuestions(isPremium: purchases.isPremium).isEmpty)
+                    .opacity(store.accessibleWeakQuestions(isPremium: purchases.isPremium).isEmpty ? 0.72 : 1)
 
                     Button {
                         store.currentTab = .mock
@@ -221,14 +272,14 @@ struct HomeView: View {
                     sectionHeader("分野から解く", trailing: "完答回数")
                     ForEach(store.repository.domains, id: \.self) { domain in
                         Button {
-                            store.startDomain(domain)
+                            if !store.startDomain(domain, isPremium: purchases.isPremium) { store.currentTab = .settings }
                         } label: {
                             HStack {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(domain)
                                         .appSans(15, weight: .bold)
                                         .foregroundStyle(AppTheme.ink)
-                                    Text("\(store.repository.questions(domain: domain).count)問")
+                                    Text("\(store.accessibleQuestionCount(store.repository.questions(domain: domain), isPremium: purchases.isPremium))問")
                                         .appSans(11)
                                         .foregroundStyle(AppTheme.ink3)
                                 }
@@ -250,7 +301,7 @@ struct HomeView: View {
                     HStack(spacing: 10) {
                         statCard("\(store.totalAnswered)", "回答")
                         statCard("\(store.overallAccuracy)%", "正答率")
-                        statCard("\(store.weakQuestions.count)", "苦手")
+                        statCard("\(store.accessibleWeakQuestions(isPremium: purchases.isPremium).count)", "苦手")
                     }
                     .padding(.bottom, 18)
                 }
@@ -318,6 +369,7 @@ struct HomeView: View {
 
 struct MockView: View {
     @EnvironmentObject private var store: LearningStore
+    @EnvironmentObject private var purchases: PremiumPurchaseStore
     private let subjects = ["不動産に関する行政法規", "不動産の鑑定評価に関する理論"]
 
     var body: some View {
@@ -333,6 +385,15 @@ struct MockView: View {
                         .padding(14)
                         .background(AppTheme.aiSoft)
                         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    if !purchases.isPremium {
+                        Label("無料版は24問。年度別80問模試と全240問はプレミアムで利用できます。", systemImage: "lock.fill")
+                            .appSans(11, weight: .bold)
+                            .foregroundStyle(AppTheme.ai)
+                            .padding(12)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(AppTheme.aiSoft)
+                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    }
 
                     ForEach(store.repository.editions, id: \.self) { edition in
                         let examKey = "exam:\(edition)"
@@ -349,7 +410,7 @@ struct MockView: View {
                             }
 
                             Button {
-                                store.startMock(edition: edition)
+                                if !store.startMock(edition: edition, isPremium: purchases.isPremium) { store.currentTab = .settings }
                             } label: {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {
@@ -384,14 +445,14 @@ struct MockView: View {
                                 let questions = store.repository.questions(edition: edition).filter { $0.subject == subject }
                                 let key = "exam:\(edition):subject:\(subject)"
                                 Button {
-                                    store.startEditionSubject(edition: edition, subject: subject)
+                                    if !store.startEditionSubject(edition: edition, subject: subject, isPremium: purchases.isPremium) { store.currentTab = .settings }
                                 } label: {
                                     HStack(spacing: 12) {
                                         VStack(alignment: .leading, spacing: 4) {
                                             Text(shortSubject(subject))
                                                 .appSans(14, weight: .bold)
                                                 .foregroundStyle(AppTheme.ink)
-                                            Text("\(questions.count)問・完答 \(store.completionCount(for: key))回")
+                                            Text("\(store.accessibleQuestionCount(questions, isPremium: purchases.isPremium))問・完答 \(store.completionCount(for: key))回")
                                                 .appSans(11)
                                                 .foregroundStyle(AppTheme.ink3)
                                         }
