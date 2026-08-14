@@ -1,0 +1,55 @@
+name: Josanshi iOS App Simulator
+
+on:
+  push:
+    branches:
+      - agent/josanshi-sprint-14-native
+    paths:
+      - 'josanshi-sprint/ios/**'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/josanshi-ios-app.yml'
+  pull_request:
+    paths:
+      - 'josanshi-sprint/ios/**'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/josanshi-ios-app.yml'
+
+concurrency:
+  group: josanshi-ios-app-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  simulator-build:
+    runs-on: macos-15
+    timeout-minutes: 25
+    env:
+      TZ: Asia/Tokyo
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Generate Xcode project
+        run: |
+          cd josanshi-sprint/ios
+          xcodegen generate --spec xcodegen.yml
+      - name: Build native iOS app for Simulator
+        run: |
+          cd josanshi-sprint/ios
+          xcodebuild build \
+            -project JosanshiSprint.xcodeproj \
+            -scheme JosanshiSprint \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath /tmp/josanshi-derived \
+            CODE_SIGNING_ALLOWED=NO \
+            PRODUCT_BUNDLE_IDENTIFIER=local.ci.josanshi
+      - name: Verify built app privacy manifest
+        run: |
+          APP=/tmp/josanshi-derived/Build/Products/Debug-iphonesimulator/JosanshiSprint.app
+          test -d "$APP"
+          test -f "$APP/PrivacyInfo.xcprivacy"
+          plutil -lint "$APP/PrivacyInfo.xcprivacy"
+      - name: Assert native-only app sources
+        run: |
+          ! grep -R -n -E 'WKWebView|import WebKit|SFSafariViewController' josanshi-sprint/ios/App josanshi-sprint/ios/JosanshiSprintFeature/Sources
