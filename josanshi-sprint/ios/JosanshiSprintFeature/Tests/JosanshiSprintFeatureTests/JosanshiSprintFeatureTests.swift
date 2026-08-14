@@ -29,13 +29,16 @@ final class JosanshiSprintFeatureTests: XCTestCase {
         XCTAssertEqual(JosanshiExamConfiguration.originalScenarioCaseTarget, 36)
     }
 
-    func testProductionIdentifiersRemainUnsetUntilCanonicalValuesExist() {
+    func testApprovedProductionIdentifiersAreCanonicalWhileAppleNumericIDRemainsUnset() {
         let ids = JosanshiExamConfiguration.productionIdentifiers
-        XCTAssertNil(ids.bundleID)
+        XCTAssertEqual(ids.bundleID, "jp.allsunday1122.josanshi")
         XCTAssertNil(ids.appStoreConnectAppID)
-        XCTAssertNil(ids.productID)
+        XCTAssertEqual(ids.codemagicProfile, "josanshi_appstore")
+        XCTAssertEqual(ids.productID, "jp.allsunday1122.josanshi.premium")
+        XCTAssertTrue(ids.isSignedBuildIdentityReady)
+        XCTAssertTrue(ids.isStoreKitReady)
+        XCTAssertFalse(ids.isAppStoreRecordReady)
         XCTAssertFalse(ids.isReleaseIdentityReady)
-        XCTAssertFalse(ids.isStoreKitReady)
         XCTAssertFalse(JosanshiLocalPersistenceConfiguration.storageNamespace.contains("jp.allsunday1122"))
     }
 
@@ -63,6 +66,26 @@ final class JosanshiSprintFeatureTests: XCTestCase {
         XCTAssertEqual(subjectCounts["助産管理"], 25)
     }
 
+    func testAuditedBankDerivesExactly60BalancedFreeGeneralQuestions() throws {
+        let bank = try JosanshiQuestionBankLoader.bundled()
+        let learning = try bank.learningQuestions()
+        let free = learning.filter { !$0.premium }
+        let premium = learning.filter(\.premium)
+
+        XCTAssertEqual(free.count, 60)
+        XCTAssertEqual(premium.count, 270)
+        XCTAssertEqual(free.count, JosanshiMonetizationConfiguration.freeQuestionTarget)
+
+        let freeIDs = Set(free.map(\.id))
+        XCTAssertEqual(freeIDs, JosanshiMonetizationConfiguration.freeQuestionIDs(in: bank.questions))
+        XCTAssertTrue(bank.questions.filter { freeIDs.contains($0.id) }.allSatisfy { $0.questionType == "general" })
+
+        let freeSubjectCounts = Dictionary(grouping: free, by: \.subject).mapValues(\.count)
+        for subject in JosanshiExamConfiguration.subjects {
+            XCTAssertEqual(freeSubjectCounts[subject], 15)
+        }
+    }
+
     @MainActor
     func testInvalidDailyTargetIsRejected() {
         let model = JosanshiDashboardModel(usePersistentStore: false)
@@ -74,14 +97,52 @@ final class JosanshiSprintFeatureTests: XCTestCase {
     }
 
     @MainActor
-    func testSubjectRequestStartsSessionOnlyForOfficialSubject() {
-        let model = JosanshiDashboardModel(usePersistentStore: false)
+    func testFreeStandardSprintUsesOnlyFreeQuestions() throws {
+        let model = JosanshiDashboardModel(
+            usePersistentStore: false,
+            premiumEntitlementOverride: false
+        )
+        XCTAssertEqual(model.freeQuestionCount, 60)
+        XCTAssertEqual(model.premiumQuestionCount, 270)
+
+        model.requestStandardSprint()
+        let session = try XCTUnwrap(model.coordinator.activeSession)
+        XCTAssertEqual(session.questionIDs.count, model.dailyTarget)
+        let freeIDs = Set(model.coordinator.questions.filter { !$0.premium }.map(\.id))
+        XCTAssertTrue(session.questionIDs.allSatisfy(freeIDs.contains))
+        XCTAssertFalse(model.isPaywallPresented)
+    }
+
+    @MainActor
+    func testFreePremiumRoutesOpenPaywallWithoutStartingSession() {
+        let model = JosanshiDashboardModel(
+            usePersistentStore: false,
+            premiumEntitlementOverride: false
+        )
+
+        model.requestSubjectPractice("助産管理")
+        XCTAssertTrue(model.isPaywallPresented)
+        XCTAssertNil(model.coordinator.activeSession)
+
+        model.dismissPaywall()
+        model.requestMock(1)
+        XCTAssertTrue(model.isPaywallPresented)
+        XCTAssertNil(model.coordinator.activeSession)
+    }
+
+    @MainActor
+    func testPremiumSubjectRequestStartsSessionOnlyForOfficialSubject() {
+        let model = JosanshiDashboardModel(
+            usePersistentStore: false,
+            premiumEntitlementOverride: true
+        )
         XCTAssertTrue(model.hasReadyContent)
 
         model.requestSubjectPractice("助産管理")
         XCTAssertEqual(model.selectedSubject, "助産管理")
         XCTAssertTrue(model.isSessionPresented)
         XCTAssertFalse(model.isContentGatePresented)
+        XCTAssertFalse(model.isPaywallPresented)
         XCTAssertEqual(model.coordinator.activeSession?.questionIDs.count, model.dailyTarget)
 
         model.finishSession()
@@ -93,10 +154,14 @@ final class JosanshiSprintFeatureTests: XCTestCase {
     }
 
     @MainActor
-    func testBundledMockStartsWithExactly110Questions() {
-        let model = JosanshiDashboardModel(usePersistentStore: false)
+    func testPremiumBundledMockStartsWithExactly110Questions() {
+        let model = JosanshiDashboardModel(
+            usePersistentStore: false,
+            premiumEntitlementOverride: true
+        )
         model.requestMock(2)
         XCTAssertTrue(model.isSessionPresented)
+        XCTAssertFalse(model.isPaywallPresented)
         XCTAssertEqual(model.coordinator.activeSession?.questionIDs.count, 110)
     }
 
@@ -199,6 +264,7 @@ final class JosanshiSprintFeatureTests: XCTestCase {
         XCTAssertEqual(learning[0].answerType, .singleChoice)
         XCTAssertEqual(learning[0].sourceRefs, ["EGOV-PHN-MIDWIFE-NURSE-ACT"])
         XCTAssertEqual(learning[0].examRound, "1")
+        XCTAssertFalse(learning[0].premium)
     }
 
     func testQuestionBankRejectsSituationQuestionWithoutScenarioRecord() throws {
