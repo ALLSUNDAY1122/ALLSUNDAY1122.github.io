@@ -17,6 +17,10 @@ extension RigakuAppModel {
         questions.filter { $0.subject == subject }.count
     }
 
+    func availableQuestionCount(forSubject subject: String) -> Int {
+        accessibleQuestions.filter { $0.subject == subject }.count
+    }
+
     func isMockReady(round: String, expectedQuestionCount: Int?) -> Bool {
         RigakuRouteGate.isComplete(
             audited: auditedQuestionCount(forRound: round),
@@ -27,14 +31,15 @@ extension RigakuAppModel {
     func isSessionAvailable(_ kind: SessionKind) -> Bool {
         switch kind {
         case .mock(let round):
+            guard canAccessBaseMocks else { return false }
             let expected = RigakuAppConfiguration.examRounds
                 .first { String($0.round) == round }?
                 .officialQuestionCount
             return isMockReady(round: round, expectedQuestionCount: expected)
         case .subject(let subject):
-            return auditedQuestionCount(forSubject: subject) > 0
+            return availableQuestionCount(forSubject: subject) > 0
         case .weak:
-            return canStudy && weakCount > 0
+            return canAccessFullWeakReview && canStudy && weakCount > 0
         case .sprint:
             return canStudy
         }
