@@ -21,7 +21,7 @@ final class PracticeTierContractTests: XCTestCase {
 
     func testEveryTierCoversAllSevenLegalSubjectsTwice() {
         let model = AppModel(bundle: Bundle(for: AppBundleToken.self))
-        let legalSubjects = Set(AppModel.officialSubjects).subtracting([AppModel.generalEducationSubject])
+        let legalSubjects = QuestionRepository.legalSubjects
 
         for difficulty in QuestionDifficulty.allCases {
             let tierQuestions = model.questions.filter { $0.difficulty == difficulty }
