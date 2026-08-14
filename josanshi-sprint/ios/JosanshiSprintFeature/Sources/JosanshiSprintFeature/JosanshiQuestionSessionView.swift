@@ -10,8 +10,11 @@ public struct JosanshiQuestionSessionView: View {
     @State private var selectedIndices: Set<Int> = []
     @State private var submittedQuestion: LearningQuestion?
     @State private var submittedEvaluation: AnswerEvaluation?
+    @State private var submittedChoiceOrder: [Int] = []
     @State private var isFeedbackPresented = false
     @State private var errorMessage: String?
+    @State private var feedbackMarkScale: CGFloat = 0.55
+    @State private var feedbackMarkOpacity = 0.0
 
     public init(
         coordinator: JosanshiLearningCoordinator,
@@ -45,7 +48,8 @@ public struct JosanshiQuestionSessionView: View {
     }
 
     private func questionBody(_ question: LearningQuestion) -> some View {
-        ScrollView {
+        let order = choiceOrder(for: question)
+        return ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     Text(sessionTitle)
@@ -88,14 +92,19 @@ public struct JosanshiQuestionSessionView: View {
                 }
 
                 VStack(spacing: 10) {
-                    ForEach(Array(question.choices.enumerated()), id: \.offset) { index, choice in
-                        choiceButton(index: index, choice: choice, question: question)
+                    ForEach(Array(order.enumerated()), id: \.element) { displayIndex, originalIndex in
+                        choiceButton(
+                            originalIndex: originalIndex,
+                            displayIndex: displayIndex,
+                            choice: question.choices[originalIndex],
+                            question: question
+                        )
                     }
                 }
 
                 HStack(spacing: 12) {
                     Button {
-                        submitUnknown(question)
+                        submitUnknown(question, order: order)
                     } label: {
                         Label("わからない", systemImage: "questionmark.circle")
                             .frame(maxWidth: .infinity, minHeight: 48)
@@ -105,7 +114,7 @@ public struct JosanshiQuestionSessionView: View {
                     .accessibilityIdentifier("answer-unknown")
 
                     Button {
-                        submitSelection(question)
+                        submitSelection(question, order: order)
                     } label: {
                         Text("回答する")
                             .frame(maxWidth: .infinity, minHeight: 48)
@@ -122,22 +131,27 @@ public struct JosanshiQuestionSessionView: View {
         }
     }
 
-    private func choiceButton(index: Int, choice: String, question: LearningQuestion) -> some View {
+    private func choiceButton(
+        originalIndex: Int,
+        displayIndex: Int,
+        choice: String,
+        question: LearningQuestion
+    ) -> some View {
         Button {
             if question.answerType == .singleChoice {
-                selectedIndices = [index]
-            } else if selectedIndices.contains(index) {
-                selectedIndices.remove(index)
+                selectedIndices = [originalIndex]
+            } else if selectedIndices.contains(originalIndex) {
+                selectedIndices.remove(originalIndex)
             } else {
-                selectedIndices.insert(index)
+                selectedIndices.insert(originalIndex)
             }
         } label: {
             HStack(alignment: .top, spacing: 12) {
-                Text(choiceLabel(index))
+                Text(choiceLabel(displayIndex))
                     .font(LearningSprintTheme.sans(14, weight: .bold))
                     .frame(width: 28, height: 28)
-                    .background(selectedIndices.contains(index) ? LearningSprintTheme.indigo : LearningSprintTheme.indigoSoft)
-                    .foregroundStyle(selectedIndices.contains(index) ? Color.white : LearningSprintTheme.ink2)
+                    .background(selectedIndices.contains(originalIndex) ? LearningSprintTheme.indigo : LearningSprintTheme.indigoSoft)
+                    .foregroundStyle(selectedIndices.contains(originalIndex) ? Color.white : LearningSprintTheme.ink2)
                     .clipShape(Circle())
 
                 Text(choice)
@@ -152,30 +166,34 @@ public struct JosanshiQuestionSessionView: View {
             .overlay {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .stroke(
-                        selectedIndices.contains(index) ? LearningSprintTheme.indigo : LearningSprintTheme.line,
-                        lineWidth: selectedIndices.contains(index) ? 2 : 1
+                        selectedIndices.contains(originalIndex) ? LearningSprintTheme.indigo : LearningSprintTheme.line,
+                        lineWidth: selectedIndices.contains(originalIndex) ? 2 : 1
                     )
             }
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(.plain)
-        .accessibilityIdentifier("choice-\(index)")
+        .accessibilityIdentifier("choice-\(displayIndex)")
     }
 
     private func feedback(question: LearningQuestion, evaluation: AnswerEvaluation) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                HStack(spacing: 12) {
-                    Image(systemName: feedbackIcon(evaluation))
-                        .font(.system(size: 34, weight: .semibold))
+                HStack(alignment: .center, spacing: 14) {
+                    Text(feedbackMark(evaluation))
+                        .font(.system(size: 62, weight: .bold, design: .rounded))
+                        .foregroundStyle(evaluation.isUnknown ? LearningSprintTheme.indigo : LearningSprintTheme.vermilion)
+                        .scaleEffect(feedbackMarkScale)
+                        .opacity(feedbackMarkOpacity)
+                        .accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 3) {
                         Text(feedbackTitle(evaluation))
                             .font(LearningSprintTheme.serif(25, weight: .bold))
-                        Text(evaluation.isUnknown ? "苦手復習へ登録しました" : "正答と根拠を確認してから次へ")
+                        Text(evaluation.isUnknown ? "苦手へ登録しました" : "正答と根拠を確認してから次へ")
                             .font(LearningSprintTheme.sans(13))
                     }
                 }
-                .foregroundStyle(evaluation.isCorrect ? LearningSprintTheme.indigo : LearningSprintTheme.vermilion)
+                .foregroundStyle(evaluation.isCorrect ? LearningSprintTheme.green : LearningSprintTheme.vermilion)
 
                 if !evaluation.isUnknown {
                     VStack(alignment: .leading, spacing: 6) {
@@ -227,6 +245,14 @@ public struct JosanshiQuestionSessionView: View {
             .frame(maxWidth: 560)
             .frame(maxWidth: .infinity)
         }
+        .onAppear {
+            feedbackMarkScale = 0.55
+            feedbackMarkOpacity = 0
+            withAnimation(.spring(response: 0.34, dampingFraction: 0.62)) {
+                feedbackMarkScale = 1
+                feedbackMarkOpacity = 1
+            }
+        }
     }
 
     private var completionBody: some View {
@@ -249,9 +275,9 @@ public struct JosanshiQuestionSessionView: View {
     private var sessionTitle: String {
         guard let kind = coordinator.activeSession?.kind else { return "演習" }
         switch kind {
-        case .sprint: return "標準スプリント"
+        case .sprint: return "今日のスプリント"
         case .subject(let subject): return subject
-        case .weak: return "苦手復習"
+        case .weak: return "苦手をつぶす"
         case .mock(let round): return "独自模試 \(round)"
         }
     }
@@ -267,13 +293,35 @@ public struct JosanshiQuestionSessionView: View {
         return bank.scenario(for: production)
     }
 
-    private func submitSelection(_ question: LearningQuestion) {
+    private func choiceOrder(for question: LearningQuestion) -> [Int] {
+        var order = Array(question.choices.indices)
+        guard coordinator.preferences.shuffleChoices, order.count > 1 else { return order }
+
+        var seed: UInt64 = 1_469_598_103_934_665_603
+        for byte in question.id.utf8 {
+            seed ^= UInt64(byte)
+            seed &*= 1_099_511_628_211
+        }
+        if let startedAt = coordinator.activeSession?.startedAt {
+            seed ^= startedAt.timeIntervalSinceReferenceDate.bitPattern
+        }
+        for index in stride(from: order.count - 1, through: 1, by: -1) {
+            seed = seed &* 6_364_136_223_846_793_005 &+ 1
+            let swapIndex = Int(seed % UInt64(index + 1))
+            if swapIndex != index { order.swapAt(index, swapIndex) }
+        }
+        return order
+    }
+
+    private func submitSelection(_ question: LearningQuestion, order: [Int]) {
+        submittedChoiceOrder = order
         let payload = AnswerPayload(selectedIndices: selectedIndices.sorted())
         submit(question: question, payload: payload)
     }
 
-    private func submitUnknown(_ question: LearningQuestion) {
+    private func submitUnknown(_ question: LearningQuestion, order: [Int]) {
         do {
+            submittedChoiceOrder = order
             submittedQuestion = question
             submittedEvaluation = try coordinator.markUnknown()
             selectedIndices.removeAll()
@@ -298,7 +346,10 @@ public struct JosanshiQuestionSessionView: View {
         isFeedbackPresented = false
         submittedQuestion = nil
         submittedEvaluation = nil
+        submittedChoiceOrder = []
         selectedIndices.removeAll()
+        feedbackMarkScale = 0.55
+        feedbackMarkOpacity = 0
         if coordinator.activeSession == nil {
             onFinish()
         }
@@ -309,15 +360,19 @@ public struct JosanshiQuestionSessionView: View {
         return evaluation.isCorrect ? "正解" : "不正解"
     }
 
-    private func feedbackIcon(_ evaluation: AnswerEvaluation) -> String {
-        if evaluation.isUnknown { return "questionmark.circle.fill" }
-        return evaluation.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill"
+    private func feedbackMark(_ evaluation: AnswerEvaluation) -> String {
+        if evaluation.isUnknown { return "?" }
+        return evaluation.isCorrect ? "○" : "×"
     }
 
     private func correctAnswerText(_ question: LearningQuestion) -> String {
-        question.correctIndices
+        let order = submittedChoiceOrder.isEmpty ? Array(question.choices.indices) : submittedChoiceOrder
+        return question.correctIndices
             .filter { question.choices.indices.contains($0) }
-            .map { "\(choiceLabel($0)) \(question.choices[$0])" }
+            .map { originalIndex in
+                let displayIndex = order.firstIndex(of: originalIndex) ?? originalIndex
+                return "\(choiceLabel(displayIndex)) \(question.choices[originalIndex])"
+            }
             .joined(separator: " / ")
     }
 
