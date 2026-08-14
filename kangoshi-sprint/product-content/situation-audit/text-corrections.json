@@ -42,6 +42,28 @@
         {"field": "K114-AM099.question", "from": "退院か月後", "to": "退院1か月後"}
       ],
       "applyState": "pending_canonical_integration"
+    },
+    {
+      "scenarioId": "K114-AM-SC04",
+      "questionIds": ["K114-AM100", "K114-AM101", "K114-AM102"],
+      "sourceEvidence": {"officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf", "officialPages": [34, 35], "checkedAt": "2026-08-14T14:49:00+09:00"},
+      "scenarioTextCanonical": "Aさん（87歳、女性）は1人で暮らしている。難聴のため補聴器を使用している。自宅で転倒して痛みで起き上がれなくなり、救急搬送され入院した。搬送先の病院で右大腿骨頸部骨折と診断され、全身麻酔下で人工骨頭置換術を受けた。術後は前腕部に点滴静脈内注射と右大腿の創部に吸引式ドレーンが1本挿入されている。手術直後の検査所見は赤血球410万/μL、白血球7,800/μL、Hb12.0g/dL、総蛋白6.5g/dL、アルブミン4.0g/dL、尿素窒素20mg/dL、Na145mEq/L、K3.8mEq/L。術後のドレーン出血量は少量である。創部痛に対して非ステロイド性抗炎症薬の坐薬と内服が処方され、手術当日の21時に坐薬を使用した。",
+      "questionTextCorrections": [
+        {"id": "K114-AM100", "fromContains": "術後日。朝 時", "toStartsWith": "術後1日。朝6時"},
+        {"id": "K114-AM100", "fromContains": "午前 時の看護師", "toContains": "午前9時の看護師"},
+        {"id": "K114-AM101", "fromContains": "術後日。午前中", "toStartsWith": "術後1日。午前中"},
+        {"id": "K114-AM101", "fromContains": "઄つ選べ", "toContains": "2つ選べ"},
+        {"id": "K114-AM102", "fromContains": "術後週。", "toStartsWith": "術後2週。"}
+      ],
+      "recoveredTokens": [
+        {"field": "scenario", "from": "\\u0004人", "to": "1人"},
+        {"field": "scenario", "from": "大ô骨", "to": "大腿骨"},
+        {"field": "K114-AM100.question", "from": "術後日。朝 時", "to": "術後1日。朝6時"},
+        {"field": "K114-AM100.question", "from": "午前 時", "to": "午前9時"},
+        {"field": "K114-AM101.question", "from": "術後日", "to": "術後1日"},
+        {"field": "K114-AM102.question", "from": "術後週", "to": "術後2週"}
+      ],
+      "applyState": "pending_canonical_integration"
     }
   ]
 }
