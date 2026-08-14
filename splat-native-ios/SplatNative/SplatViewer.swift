@@ -44,7 +44,8 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
     private weak var view: MTKView?
     private var renderer: SplatRenderer?
     private var loadedURL: URL?
-    private var drawableSize: CGSize = .zero
+    private var loadingURL: URL?
+    private var drawableSize: CGSize
     private var yaw: Float = 0
     private var pitch: Float = 0
     private var distance: Float = 2.5
@@ -55,12 +56,13 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
         self.device = device
         self.commandQueue = queue
         self.view = view
+        self.drawableSize = view.drawableSize
         super.init()
     }
 
     func load(url: URL) {
-        guard loadedURL != url else { return }
-        loadedURL = url
+        guard loadedURL != url, loadingURL != url else { return }
+        loadingURL = url
         renderer = nil
         Task {
             do {
@@ -72,10 +74,17 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
                                           maxSimultaneousRenders: 2)
                 let reader = try AutodetectSceneReader(url)
                 let points = try await reader.readAll()
+                guard !points.isEmpty else {
+                    loadingURL = nil
+                    return
+                }
                 let chunk = try SplatChunk(device: device, from: points)
                 await r.addChunk(chunk)
                 renderer = r
+                loadedURL = url
+                loadingURL = nil
             } catch {
+                loadingURL = nil
                 print("Splat load failed: \(error)")
             }
         }
@@ -96,6 +105,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
 
     func draw(in view: MTKView) {
         guard let renderer, renderer.isReadyToRender,
+              drawableSize.width > 0, drawableSize.height > 0,
               let drawable = view.currentDrawable,
               let commandBuffer = commandQueue.makeCommandBuffer() else { return }
         _ = semaphore.wait(timeout: .distantFuture)
