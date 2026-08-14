@@ -34,9 +34,14 @@ jobs:
           bash splat-native-ios/scripts/validate.sh
           test -f splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           sips -g pixelWidth -g pixelHeight splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | grep -q '1024'
-      - name: Generate project
+      - name: Generate project and verify bundled resources
         working-directory: splat-native-ios
-        run: xcodegen generate
+        run: |
+          xcodegen generate
+          grep -q 'msplat-APACHE-2.0.txt' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MetalSplatter-MIT.txt' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'nanoflann-BSD.txt' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'nlohmann-json-MIT.txt' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
