@@ -4,13 +4,13 @@
     "健康支援と社会保障制度": 82,
     "人体の構造と機能": 69,
     "疾病の成り立ちと回復の促進": 98,
-    "基礎看護学": 100,
+    "基礎看護学": 97,
     "小児看護学": 61,
     "地域・在宅看護論": 45,
-    "看護の統合と実践": 38,
-    "成人看護学": 76,
+    "看護の統合と実践": 39,
+    "成人看護学": 79,
     "老年看護学": 45,
-    "母性看護学": 60,
+    "母性看護学": 59,
     "精神看護学": 46
   },
   "perSetMajorCounts": {
@@ -18,24 +18,24 @@
       "健康支援と社会保障制度": 24,
       "人体の構造と機能": 27,
       "疾病の成り立ちと回復の促進": 34,
-      "基礎看護学": 32,
+      "基礎看護学": 31,
       "小児看護学": 19,
       "地域・在宅看護論": 16,
-      "看護の統合と実践": 18,
-      "成人看護学": 22,
+      "看護の統合と実践": 19,
+      "成人看護学": 23,
       "老年看護学": 13,
-      "母性看護学": 20,
+      "母性看護学": 19,
       "精神看護学": 15
     },
     "set2": {
       "健康支援と社会保障制度": 30,
       "老年看護学": 13,
-      "基礎看護学": 35,
+      "基礎看護学": 33,
       "母性看護学": 19,
       "小児看護学": 20,
       "人体の構造と機能": 19,
       "疾病の成り立ちと回復の促進": 34,
-      "成人看護学": 26,
+      "成人看護学": 28,
       "地域・在宅看護論": 16,
       "精神看護学": 19,
       "看護の統合と実践": 9
@@ -54,7 +54,9 @@
       "地域・在宅看護論": 13
     }
   },
-  "strongSemanticErrors": [],
+  "strongSemanticErrors": [
+    "K115-PM099: stem semantic domains ['maternal-explicit'] allow ['母性看護学'], got 成人看護学"
+  ],
   "splitScenarioGroups": [
     {
       "scenarioId": "K113-AM-SC02",
@@ -129,6 +131,30 @@
       ]
     },
     {
+      "scenarioId": "K114-AM-SC03",
+      "majors": {
+        "基礎看護学": 1,
+        "成人看護学": 2
+      },
+      "questions": [
+        [
+          "K114-AM097",
+          "基礎看護学",
+          "観察・フィジカルアセスメント"
+        ],
+        [
+          "K114-AM098",
+          "成人看護学",
+          "脳神経・周術期"
+        ],
+        [
+          "K114-AM099",
+          "成人看護学",
+          "脳神経"
+        ]
+      ]
+    },
+    {
       "scenarioId": "K114-AM-SC05",
       "majors": {
         "成人看護学": 1,
@@ -199,54 +225,6 @@
           "消化器・周術期"
         ]
       ]
-    },
-    {
-      "scenarioId": "K115-PM-SC03",
-      "majors": {
-        "成人看護学": 2,
-        "母性看護学": 1
-      },
-      "questions": [
-        [
-          "K115-PM097",
-          "成人看護学",
-          "内分泌・代謝"
-        ],
-        [
-          "K115-PM098",
-          "成人看護学",
-          "内分泌・代謝"
-        ],
-        [
-          "K115-PM099",
-          "母性看護学",
-          "母性看護"
-        ]
-      ]
-    },
-    {
-      "scenarioId": "K115-PM-SC10",
-      "majors": {
-        "基礎看護学": 1,
-        "看護の統合と実践": 2
-      },
-      "questions": [
-        [
-          "K115-PM118",
-          "基礎看護学",
-          "与薬・輸液"
-        ],
-        [
-          "K115-PM119",
-          "看護の統合と実践",
-          "災害・救急"
-        ],
-        [
-          "K115-PM120",
-          "看護の統合と実践",
-          "災害・救急"
-        ]
-      ]
     }
   ],
   "warnings": [
@@ -275,12 +253,11 @@
     "K113-AM-SC02: situation group split {'成人看護学': 2, '地域・在宅看護論': 1}; contextual review required",
     "K113-AM-SC09: situation group split {'成人看護学': 1, '地域・在宅看護論': 2}; contextual review required",
     "K113-AM-SC10: situation group split {'基礎看護学': 2, '看護の統合と実践': 1}; contextual review required",
+    "K114-AM-SC03: situation group split {'基礎看護学': 1, '成人看護学': 2}; contextual review required",
     "K114-AM-SC05: situation group split {'成人看護学': 1, '基礎看護学': 2}; contextual review required",
     "K114-PM-SC04: situation group split {'老年看護学': 2, '地域・在宅看護論': 1}; contextual review required",
-    "K115-PM-SC02: situation group split {'疾病の成り立ちと回復の促進': 1, '成人看護学': 2}; contextual review required",
-    "K115-PM-SC03: situation group split {'成人看護学': 2, '母性看護学': 1}; contextual review required",
-    "K115-PM-SC10: situation group split {'基礎看護学': 1, '看護の統合と実践': 2}; contextual review required"
+    "K115-PM-SC02: situation group split {'疾病の成り立ちと回復の促進': 1, '成人看護学': 2}; contextual review required"
   ],
-  "pass": true,
+  "pass": false,
   "note": "独立ルールによる分類整合監査。状況設定では在宅・一般技術語を主分類の強制根拠にせず、在宅利用者の災害準備は地域・在宅看護論または災害看護を許容する。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。"
 }

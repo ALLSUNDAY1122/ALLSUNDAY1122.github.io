@@ -10383,8 +10383,8 @@
       "session": "PM",
       "questionNo": 99,
       "category": "状況設定",
-      "majorSubject": "母性看護学",
-      "subject": "母性看護",
+      "majorSubject": "成人看護学",
+      "subject": "内分泌・代謝",
       "answerType": "singleChoice",
       "question": "2 週後の外来受診で A さんは「Basedow〈バセドウ〉病を知るほど怖くなってき Basedow disease た。眼が出ることもあるって。最近、足がつることが多くてテニスもできていな い。就職が決まったけど働くことができるのかしら。将来、結婚したり妊娠したり できるのかも心配」と思いを訴えた。 看護師の返答で適切なのはどれか。",
       "choices": [
@@ -10421,11 +10421,34 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 20,
+      "classificationScore": 180,
       "classificationSignals": [
-        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
+        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎",
+        "situation-specialist:K115-PM-SC03:同一症例3問はバセドウ病の診断前処置、抗甲状腺薬副作用、治療後の生活再開を扱う。PM099には将来の妊娠への不安も含まれるが、正答は『症状が落ちつけば運動できます』であり、主たる看護判断はバセドウ病の療養・活動支援。症例本文と正答を主軸に成人看護学・内分泌代謝へ修正する。"
       ],
-      "classificationMethod": "semantic-refinement-v3"
+      "classificationMethod": "situation-context-specialist-correction-v1",
+      "classificationSpecialistCorrection": {
+        "scenarioId": "K115-PM-SC03",
+        "observedBeforeApply": {
+          "majorSubject": "母性看護学",
+          "subject": "母性看護",
+          "classificationMethod": "semantic-refinement-v3"
+        },
+        "declaredFrom": {
+          "majorSubject": "母性看護学",
+          "subject": "母性看護",
+          "classificationMethod": "semantic-refinement-v3",
+          "triggerConcern": "設問文中の『妊娠』を局所キーワードとして拾い、症例主病態と正答が扱う療養支援より優先した。"
+        },
+        "target": {
+          "majorSubject": "成人看護学",
+          "subject": "内分泌・代謝",
+          "classificationMethod": "situation-context-specialist-correction-v1"
+        },
+        "reason": "同一症例3問はバセドウ病の診断前処置、抗甲状腺薬副作用、治療後の生活再開を扱う。PM099には将来の妊娠への不安も含まれるが、正答は『症状が落ちつけば運動できます』であり、主たる看護判断はバセドウ病の療養・活動支援。症例本文と正答を主軸に成人看護学・内分泌代謝へ修正する。",
+        "detectedAt": "2026-08-14T14:46:00+09:00",
+        "appliedBy": "apply_situation_classification_corrections.py"
+      }
     },
     {
       "id": "K115-PM100",
@@ -11347,8 +11370,8 @@
       "session": "PM",
       "questionNo": 118,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "与薬・輸液",
+      "majorSubject": "看護の統合と実践",
+      "subject": "災害・救急",
       "answerType": "singleChoice",
       "question": "午後 1 時、落雷によって病院の電源供給が一時停止したが、直後に自家発電に切 り替わり、医療機器は正常に作動している。ICU には患者 4 名が入院し、全員が 輸液ポンプを使用している。A さん（65 歳、女性）は鎮静薬が投与され、人工呼吸 器が装着されている。B さん（78 歳、男性）は大声で家族を呼び続けている。その 他の患者は心配そうな表情で ICU 内を見回している。 このときの ICU 看護師の対応で適切なのはどれか。",
       "choices": [
@@ -11385,12 +11408,35 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 7,
+      "classificationScore": 180,
       "classificationSignals": [
         "輸液",
-        "unique-score>=4"
+        "unique-score>=4",
+        "situation-specialist:K115-PM-SC10:SC10は台風・停電・土砂災害・避難所対応を連続して扱う災害看護症例。PM118では自家発電切替後に医療機器は正常作動しており、正答は不安を示す意識清明患者への声かけである。輸液操作そのものを問う設問ではないため、症例本文・事象・正答を主軸に看護の統合と実践／災害・救急へ修正する。"
       ],
-      "classificationMethod": "semantic-refinement-v3-promoted"
+      "classificationMethod": "situation-context-specialist-correction-v1",
+      "classificationSpecialistCorrection": {
+        "scenarioId": "K115-PM-SC10",
+        "observedBeforeApply": {
+          "majorSubject": "基礎看護学",
+          "subject": "与薬・輸液",
+          "classificationMethod": "semantic-refinement-v3-promoted"
+        },
+        "declaredFrom": {
+          "majorSubject": "基礎看護学",
+          "subject": "与薬・輸液",
+          "classificationMethod": "semantic-refinement-v3-promoted",
+          "triggerConcern": "設問文の『輸液ポンプ』『輸液ライン』を局所キーワードとして拾い、災害時ICU対応という症例・正答文脈より優先した。"
+        },
+        "target": {
+          "majorSubject": "看護の統合と実践",
+          "subject": "災害・救急",
+          "classificationMethod": "situation-context-specialist-correction-v1"
+        },
+        "reason": "SC10は台風・停電・土砂災害・避難所対応を連続して扱う災害看護症例。PM118では自家発電切替後に医療機器は正常作動しており、正答は不安を示す意識清明患者への声かけである。輸液操作そのものを問う設問ではないため、症例本文・事象・正答を主軸に看護の統合と実践／災害・救急へ修正する。",
+        "detectedAt": "2026-08-14T15:22:00+09:00",
+        "appliedBy": "apply_situation_classification_corrections.py"
+      }
     },
     {
       "id": "K115-PM119",

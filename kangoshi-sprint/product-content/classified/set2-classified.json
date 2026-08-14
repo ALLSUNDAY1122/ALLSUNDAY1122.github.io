@@ -4570,8 +4570,8 @@
       "session": "AM",
       "questionNo": 98,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "観察・フィジカルアセスメント",
+      "majorSubject": "成人看護学",
+      "subject": "脳神経・周術期",
       "answerType": "singleChoice",
       "question": "A さんは、CT 検査の結果、脳動脈瘤の破裂によるくも膜下出血と診断され、ク cerebral aneurysm subarachnoid hemorrhage リッピング術を受けて ICU に入室した。入室時のバイタルサインは、体温 36.8 ℃、 呼吸数 22/分、脈拍 78/分、血圧 126/60 mmHg、フェイスマスクによる酸素投与 下 L/分!で経皮的動脈血酸素飽和度?SpO2C98 %であった。時間後、A さんは 開眼して｢頭が痛い｣と訴えた。バイタルサインに変化はなく、脳槽ドレーンからは 淡血性の排液がみられている。 このときの看護師の判断で正しいのはどれか。",
       "choices": [
@@ -4608,13 +4608,36 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 26,
+      "classificationScore": 180,
       "classificationSignals": [
         "SpO2",
         "バイタルサイン",
-        "呼吸数"
+        "呼吸数",
+        "situation-specialist:K114-AM-SC03:PMではなくAM098は脳動脈瘤破裂によるくも膜下出血のクリッピング術後3時間、脳槽ドレーン留置中の頭痛への看護判断を問う。単純な観察技術ではなく成人脳神経周術期看護が主題。"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "situation-context-specialist-correction-v1",
+      "classificationSpecialistCorrection": {
+        "scenarioId": "K114-AM-SC03",
+        "observedBeforeApply": {
+          "majorSubject": "基礎看護学",
+          "subject": "観察・フィジカルアセスメント",
+          "classificationMethod": "semantic-keyword-v2-with-scenario"
+        },
+        "declaredFrom": {
+          "majorSubject": "基礎看護学",
+          "subject": "観察・フィジカルアセスメント",
+          "classificationMethod": "semantic-keyword-v2-with-scenario",
+          "triggerConcern": "バイタルサイン・SpO2等の観察語が、くも膜下出血クリッピング術後・脳槽ドレーン管理という症例主病態より優先された。"
+        },
+        "target": {
+          "majorSubject": "成人看護学",
+          "subject": "脳神経・周術期",
+          "classificationMethod": "situation-context-specialist-correction-v1"
+        },
+        "reason": "PMではなくAM098は脳動脈瘤破裂によるくも膜下出血のクリッピング術後3時間、脳槽ドレーン留置中の頭痛への看護判断を問う。単純な観察技術ではなく成人脳神経周術期看護が主題。",
+        "detectedAt": "2026-08-14T15:45:00+09:00",
+        "appliedBy": "apply_situation_classification_corrections.py"
+      }
     },
     {
       "id": "K114-AM099",
@@ -4622,8 +4645,8 @@
       "session": "AM",
       "questionNo": 99,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "観察・フィジカルアセスメント",
+      "majorSubject": "成人看護学",
+      "subject": "脳神経",
       "answerType": "singleChoice",
       "question": "A さんの回復は順調で、後遺症なく退院した。退院か月後の外来で、A さん に生活状況を聞くと、会話に対する反応は鈍く｢この間、尿を漏らしてしまいまし た｣と話した。家族は｢最近物忘れが激しく、歩くのも遅くなりました｣と話した。 看護師が A さんに書類を渡すと、スムーズに受け取り、きれいな文字で名前を書 いた。家族は｢入院前と変わらない字で書けています｣と言った。 A さんに起こっている可能性が高いのはどれか。",
       "choices": [
@@ -4660,12 +4683,35 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 6,
+      "classificationScore": 180,
       "classificationSignals": [
         "SpO2",
-        "バイタルサイン"
+        "バイタルサイン",
+        "situation-specialist:K114-AM-SC03:AM099はくも膜下出血退院1か月後に、反応鈍化・物忘れ、歩行遅延、尿失禁が出現した患者の正常圧水頭症を判断する設問。症例主病態に基づき成人看護学／脳神経へ修正する。"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "situation-context-specialist-correction-v1",
+      "classificationSpecialistCorrection": {
+        "scenarioId": "K114-AM-SC03",
+        "observedBeforeApply": {
+          "majorSubject": "基礎看護学",
+          "subject": "観察・フィジカルアセスメント",
+          "classificationMethod": "semantic-keyword-v2-with-scenario"
+        },
+        "declaredFrom": {
+          "majorSubject": "基礎看護学",
+          "subject": "観察・フィジカルアセスメント",
+          "classificationMethod": "semantic-keyword-v2-with-scenario",
+          "triggerConcern": "会話・歩行等の観察語が、くも膜下出血後の正常圧水頭症という病態判断より優先された。"
+        },
+        "target": {
+          "majorSubject": "成人看護学",
+          "subject": "脳神経",
+          "classificationMethod": "situation-context-specialist-correction-v1"
+        },
+        "reason": "AM099はくも膜下出血退院1か月後に、反応鈍化・物忘れ、歩行遅延、尿失禁が出現した患者の正常圧水頭症を判断する設問。症例主病態に基づき成人看護学／脳神経へ修正する。",
+        "detectedAt": "2026-08-14T15:45:00+09:00",
+        "appliedBy": "apply_situation_classification_corrections.py"
+      }
     },
     {
       "id": "K114-AM100",

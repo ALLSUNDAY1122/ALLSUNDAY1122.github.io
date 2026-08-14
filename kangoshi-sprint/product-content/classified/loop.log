@@ -25,13 +25,10 @@ needsReview=0
 === refine-v10 ===
 {"total": 720, "high": 720, "medium": 0, "low": 0, "unclassified": 0, "majorCounts": {"人体の構造と機能": 69, "健康支援と社会保障制度": 82, "地域・在宅看護論": 45, "基礎看護学": 100, "小児看護学": 61, "成人看護学": 76, "母性看護学": 60, "疾病の成り立ちと回復の促進": 98, "看護の統合と実践": 38, "精神看護学": 46, "老年看護学": 45}, "method": "geriatric-context-v10", "geriatricOverrideIds": ["K113-PM097", "K113-PM098", "K113-PM099"]}
 needsReview=0
+=== situation-specialist-corrections ===
+{"schemaVersion": 1, "correctionCount": 4, "appliedCount": 4, "appliedIds": ["K114-AM098", "K114-AM099", "K115-PM099", "K115-PM118"], "source": "situation-audit/classification-corrections.json"}
 === validate ===
 {"total": 720, "statusCounts": {"high": 720}, "errorCount": 0, "pass": true}
 === semantic-audit ===
-{"total": 720, "errorCount": 0, "splitScenarioGroups": 8, "warningCount": 30, "pass": true}
-=== situation-summary ===
-{"groupCount": 60, "questionCount": 180}
-=== situation-semantic-audit ===
-{"groups": 60, "questions": 180, "errors": 0, "warnings": 2, "pass": true}
-=== warning-resolution ===
-{"warningCount": 32, "resolvedCount": 32, "errorCount": 0, "pass": true}
+{"total": 720, "errorCount": 1, "splitScenarioGroups": 7, "warningCount": 29, "pass": false}
+K115-PM099: stem semantic domains ['maternal-explicit'] allow ['母性看護学'], got 成人看護学
