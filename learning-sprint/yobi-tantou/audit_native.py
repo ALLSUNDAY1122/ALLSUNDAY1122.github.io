@@ -133,25 +133,27 @@ for q in preview_questions:
         if not q.get(key):
             errors.append(f"missing preview field {key}: {q.get('id')}")
 
-# Formal practice bank currently has two fully audited tiers: 14 foundation +
-# 14 standard, exactly two items in each legal subject per tier. Applied is a
-# later loop and must not be fabricated merely to satisfy a count.
+# Formal practice bank has three independently audited tiers: 14 foundation,
+# 14 standard and 14 applied. Each tier contains exactly two items for each of
+# the seven legal subjects. Official exam reproductions remain in a separate,
+# still-locked official-mock pipeline.
 if not release_path.exists():
     errors.append("formal practice questions.release.json missing")
 else:
     release_questions = json.loads(release_path.read_text(encoding="utf-8"))
-    if not isinstance(release_questions, list) or len(release_questions) != 28:
+    if not isinstance(release_questions, list) or len(release_questions) != 42:
         count = len(release_questions) if isinstance(release_questions, list) else "non-list"
-        errors.append(f"formal practice bank must contain exactly 28 audited questions, got {count}")
+        errors.append(f"formal practice bank must contain exactly 42 audited questions, got {count}")
         release_questions = release_questions if isinstance(release_questions, list) else []
     release_ids = [q.get("id") for q in release_questions]
     if any(not qid for qid in release_ids) or len(release_ids) != len(set(release_ids)):
         errors.append("formal practice bank has missing/duplicate IDs")
 
+    expected_difficulties = Counter({"foundation": 14, "standard": 14, "applied": 14})
     difficulty_counts = Counter(q.get("difficulty") for q in release_questions)
-    if difficulty_counts != Counter({"foundation": 14, "standard": 14}):
+    if difficulty_counts != expected_difficulties:
         errors.append(f"formal practice difficulty coverage mismatch: {dict(difficulty_counts)}")
-    for difficulty in ("foundation", "standard"):
+    for difficulty in ("foundation", "standard", "applied"):
         tier_subject_counts = Counter(
             q.get("subject") for q in release_questions if q.get("difficulty") == difficulty
         )
@@ -214,4 +216,4 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print("PASS: native source contract, v2.1 UI, 28-question tiered formal practice bank, practice/official-mock isolation, verified scoring, preview/release gates, StoreKit lifecycle, identifiers, privacy and canonical AppIcon lock")
+print("PASS: native source contract, v2.1 UI, 42-question three-tier formal practice bank, practice/official-mock isolation, verified scoring, preview/release gates, StoreKit lifecycle, identifiers, privacy and canonical AppIcon lock")
