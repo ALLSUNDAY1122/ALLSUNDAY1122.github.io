@@ -11,8 +11,9 @@ if proper.search(text):
     print("PASS: #14 In-App Purchase capability present")
     raise SystemExit(0)
 
+# If a generator serialized SystemCapabilities as a quoted object, replace the entire line.
 malformed = re.compile(
-    r'(?m)^(?P<i>[ \t]*)SystemCapabilities\s*=\s*"[^"\n]*com\.apple\.InAppPurchase[^"\n]*";\s*$'
+    r'(?m)^(?P<i>[ \t]*)SystemCapabilities\s*=\s*.*com\.apple\.InAppPurchase.*;\s*$'
 )
 match = malformed.search(text)
 if match:
@@ -26,8 +27,8 @@ if match:
     )
     text = text[:match.start()] + replacement + text[match.end():]
 else:
-    # XcodeGen emits one ProvisioningStyle per native target. Insert into the application target's
-    # TargetAttributes block by choosing the last Automatic entry, which corresponds to JosanshiSprint.
+    # XcodeGen is required to emit ProvisioningStyle on the application target.
+    # The final Automatic entry belongs to JosanshiSprint in this deterministic 3-target project.
     matches = list(re.finditer(r"(?m)^(?P<i>[ \t]*)ProvisioningStyle\s*=\s*Automatic;\s*$", text))
     if not matches:
         raise SystemExit("ERROR: target ProvisioningStyle not found")
