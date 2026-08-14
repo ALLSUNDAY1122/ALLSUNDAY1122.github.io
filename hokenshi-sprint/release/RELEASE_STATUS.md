@@ -1,9 +1,9 @@
 # Release Status｜保健師国家試験｜学びスプリント
 
-更新: 2026-08-13
+更新: 2026-08-14
 
 ## 到達状態
-**署名前Native Release Gate到達 / Apple識別情報の正本登録待ち**
+**Native製品ターゲット実装済み / 変更後CI再検証中 / Apple新規Appレコード作成待ち**
 
 ## 完了
 - Notion正本照合
@@ -22,11 +22,32 @@
 - オフライン学習
 - 4/8/16、苦手、わからない、3連続解除、途中再開、履歴、35日ヒートマップ、目標試験日、文字サイズ、JSON backup
 - 午前55／午後55／通し110模試
-- Native product shell audit
-- Privacy Manifest原稿
+- Privacy Manifest
 - Support / Privacy公開ページ原稿
 - App Store日本語原稿
-- GitHub Actionsによる構造・証拠・権利・Nativeテスト
+- iPhone向けXcodeGen App target
+- StoreKit 2買い切りPremium実装
+- verified transaction / revocation確認 / transaction updates
+- 購入復元常設
+- StoreKit `Product.displayPrice` だけを価格表示に使用
+
+## 決定済み識別情報
+ユーザーが2026-08-13に「課金あり、3項目はあなたが決めて」と明示し、命名判断をAIへ委任したため以下を正本へ登録済み。
+- Bundle ID: `jp.allsunday1122.hokenshi`
+- Codemagic profile/workflow: `hokenshi_appstore`
+- IAP Product ID: `jp.allsunday1122.hokenshi.premium`
+- Apple Team ID: `MN3D2ZM44N`
+- Version: `1.0.0`
+- SKU: `hokenshi-sprint-13-ios`
+
+App Store Connectの数値App IDはApple自動発行値のため仮値を作らない。
+
+## 課金方式
+- 非消耗型・買い切りPremium
+- 無料: 第1回110問
+- Premium: 第2・3回を追加し全330問
+- 模試のPremium範囲も同じentitlementで解放
+- App Store上の価格は本審査前の最終承認地点で確定
 
 ## AppIcon正本
 Google Drive個別PNG `13_保健師国家試験.png` を正本として特定・取得済み。
@@ -36,27 +57,25 @@ Google Drive個別PNG `13_保健師国家試験.png` を正本として特定・
 - bytes: 609,807
 - SHA-256: `34c1ec303ef5420947bf13ab4b05d2045a70b79417ac40ebd667e05c8f2f2c64`
 
-署名対象App target作成時はこの正本バイトを配置する。一覧画像からの切り出し・再生成は禁止。
+GitHubのAsset Catalogには正本ファイル名を登録済み。署名ビルド前に正本バイト自体の配置とSHA照合を必須とする。
 
-## Release blocker
-最上位識別情報正本に開発連番#13が未登録で、さらに現在利用可能な連携にもApp Store Connect書込手段がない。正本ルールにより次の値は推測・命名規則生成を行わない。
-- Bundle ID
-- App Store Connect App ID
-- Codemagic profile
-- IAP Product ID（課金採用時のみ）
+## CI
+2026-08-14に、正式決定前の旧「IAP ID禁止」ガードが正式Product IDまで弾いていたことを特定。ガードを正本一致検証へ変更し、以下を再実行する。
+- canonical/content/current-guidance/release-resource gate
+- Native product shell audit
+- LearningSprintCore tests
+- Hokenshi Native tests
+- Bundle ID / Team ID / IAP Product ID正本一致
+- IAP capability生成
+- iOS App target Simulator Release build
+- WebView禁止
+- audited resource persist
 
-このため現時点では、署名対象Xcode app target、Apple署名、signed IPA、Internal TestFlight uploadを実行できない。
+## 現在の外部ブロッカー
+App Store Connectの新規Appレコードがまだ確認できないため、数値App IDだけ未取得。
+固定入力値は `release/APP_STORE_RECORD_VALUES.md` に記録済み。
 
-## 次の工程
-上記の識別情報が正本へ登録されたら、同じPRから以下を再開する。
-1. iOS App target / signing config作成
-2. AppIcon正本配置・SHA照合
-3. PrivacyInfo.xcprivacyをtargetへ追加
-4. Codemagic App Store署名build
-5. signed IPA検証
-6. Internal TestFlight upload
-7. 人間確認地点 #3「TestFlight実機確認」
-8. Golden Master 30状態スクリーンショット比較・修正
+Appレコード作成後は、実App IDを正本へ記録→非消耗型IAP作成→Codemagic署名→signed IPA→Internal TestFlightへ進む。
 
-## 本審査
-Internal TestFlight確認後も、ユーザー明示承認までApp Store本審査提出を実行しない。
+## 人間確認地点
+次の人間確認地点は #3「Internal TestFlight実機確認」。App Store本審査はその後もユーザー最終承認まで実行しない。
