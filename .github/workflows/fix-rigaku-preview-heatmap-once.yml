@@ -1,0 +1,49 @@
+name: Fix Rigaku Preview Heatmap Once
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-rigaku-preview-heatmap-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch heatmap to one cell per calendar day
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('previews/rigaku-sprint/index.html')
+          text = p.read_text(encoding='utf-8')
+          replacement = r'''function localDayKey(value){const d=new Date(value);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+          function renderRecord(){const n=state.history.length,c=state.history.filter(x=>x.correct).length,w=Object.values(state.weak);$('#total').textContent=`${n}問`;$('#accuracy').textContent=n?`${Math.round(c/n*100)}%`:'—';$('#weakCount').textContent=`${w.length}問`;$('#weakSummary').textContent=w.length?`${[...new Set(w.map(x=>x.subject))].join('・')}に復習対象があります。`:'まだ苦手問題はありません。';const learnedDays=new Set(state.history.map(x=>localDayKey(x.at)));const today=new Date(),start=new Date(today.getFullYear(),today.getMonth(),today.getDate()-34);$('#heat').innerHTML='';for(let i=0;i<35;i++){const day=new Date(start.getFullYear(),start.getMonth(),start.getDate()+i),el=document.createElement('i');if(learnedDays.has(localDayKey(day)))el.className='on';$('#heat').appendChild(el)}}
+          SUBJECTS.forEach'''
+          pattern = r"function renderRecord\(\)\{.*?\}\nSUBJECTS\.forEach"
+          updated, count = re.subn(pattern, replacement, text, count=1, flags=re.S)
+          if count != 1:
+              raise SystemExit(f'expected one renderRecord replacement, got {count}')
+          if "if(n&&i>=30)" in updated:
+              raise SystemExit('old five-cell placeholder logic remains')
+          p.write_text(updated, encoding='utf-8')
+          PY
+      - name: Static checks
+        run: |
+          grep -q "const learnedDays=new Set" previews/rigaku-sprint/index.html
+          grep -q "for(let i=0;i<35;i++)" previews/rigaku-sprint/index.html
+          ! grep -q "if(n&&i>=30)" previews/rigaku-sprint/index.html
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add previews/rigaku-sprint/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "fix: count rigaku heatmap by calendar day"
+          git push
