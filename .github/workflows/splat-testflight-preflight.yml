@@ -36,12 +36,14 @@ jobs:
           grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO' splat-native-ios/project.yml
           grep -q 'App Store Connect Apple ID: 未発行' splat-native-ios/RELEASE_STATUS.md
 
-      - name: Validate Splat-only Codemagic safety contract
+      - name: Validate armed Codemagic safety contract
         run: |
           set -euo pipefail
           grep -q '^  splat-native-ios:' codemagic.yaml
           grep -q 'BUNDLE_ID: jp.allsunday1122.splatlab' codemagic.yaml
-          grep -q "pattern: 'testflight/splat-native-ios'" codemagic.yaml
+          grep -q 'APP_STORE_CONNECT_APP_ID: PENDING_HUMAN_APP_RECORD' codemagic.yaml
+          grep -q 'test.*APP_STORE_CONNECT_APP_ID.*PENDING_HUMAN_APP_RECORD' codemagic.yaml
+          ! grep -q '^    triggering:' codemagic.yaml
           grep -q 'app-store-connect bundle-ids create' codemagic.yaml
           grep -q 'fetch-signing-files.*IOS_APP_STORE.*--create' codemagic.yaml
           grep -q 'testFlightInternalTestingOnly' codemagic.yaml
@@ -57,8 +59,10 @@ jobs:
             w = data.fetch("workflows").fetch("splat-native-ios")
             raise "wrong workflow name" unless w["name"] == "Splat Lab Native - Internal TestFlight"
             raise "wrong bundle" unless w.dig("environment", "vars", "BUNDLE_ID") == "jp.allsunday1122.splatlab"
+            raise "workflow must stay armed until App Store Connect record exists" unless w.dig("environment", "vars", "APP_STORE_CONNECT_APP_ID") == "PENDING_HUMAN_APP_RECORD"
+            raise "automatic trigger must stay disabled before human app-record gate" if w.key?("triggering")
             p = w.dig("publishing", "app_store_connect")
             raise "TestFlight upload disabled" unless p["submit_to_testflight"] == true
             raise "App Store submission must stay disabled" unless p["submit_to_app_store"] == false
-            puts "PASS: Codemagic YAML and release safety contract"
+            puts "PASS: Codemagic YAML armed safely before App Store Connect record creation"
           '
