@@ -545,7 +545,7 @@ final class LearningStore: ObservableObject {
 
     func clearImportMessage() { importMessage = nil }
 
-    private func startSession(key: String, questions: [AppQuestion], title: String, mode: SessionMode) {
+    func startSession(key: String, questions: [AppQuestion], title: String, mode: SessionMode) {
         guard !questions.isEmpty else { return }
         let session = SessionState(
             key: key,
