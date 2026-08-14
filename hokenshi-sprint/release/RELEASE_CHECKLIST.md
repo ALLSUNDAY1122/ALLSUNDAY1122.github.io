@@ -28,6 +28,8 @@
 - [x] 3段階文字サイズ
 - [x] JSONバックアップ / 読込
 - [x] 選択状態VoiceOver表現
+- [x] 科目別学習で同一問題をtarget数まで反復補充しない
+- [x] 無料科目別3問は3 ID一意 / Premium科目別8問は8 ID一意を10科目で自動テスト
 
 ## Monetization
 - [x] 非消耗型・買い切りPremiumを採用
@@ -40,6 +42,7 @@
 - [x] transaction updates監視
 - [x] 購入復元常設
 - [x] `Product.displayPrice`だけを価格表示へ使用
+- [x] 製品情報取得失敗時の再読み込み導線
 - [ ] App Store Connect上で非消耗型IAPを作成
 - [ ] Sandbox / TestFlightで購入・復元実機確認
 
@@ -50,24 +53,33 @@
 - [x] WebView禁止CI
 - [x] 正本識別情報一致CIへ更新
 - [x] 辛口レビュー3周をリポジトリへ記録
-- [ ] 最新変更後CI PASS
+- [x] 課金導入後の辛口レビュー3周を再実施
+- [x] 最新機能変更後CI PASS（run #249 / `31772797429`）
+- [x] iOS Simulator Release build PASS
 - [ ] 30状態スクリーンショット比較（TestFlight build後）
 - [ ] Internal TestFlight実機確認（人間確認地点 #3）
 
 ## Privacy / Store
 - [x] PrivacyInfo.xcprivacy
 - [x] UserDefaults required-reason `CA92.1` 記載
-- [x] Privacy Policy原稿
-- [x] Support原稿
+- [x] Privacy Policyを現行Premium実装へ同期
+- [x] Supportに購入復元FAQ / 問い合わせ導線を追加
 - [x] App Store日本語メタデータ原稿
+- [x] 「過去問」誤認キーワードを削除し、独自問題であることを明示
+- [x] App Store Connect入力回答正本を作成
 - [x] トラッキングなし / 第三者広告SDKなし / 第三者解析SDKなしの現在実装と原稿を一致
-- [ ] Privacy / Support URLをmainへ公開（本体統合後）
+- [x] Privacy URLをGitHub Pages mainへ公開
+- [x] Support URLをGitHub Pages mainへ公開
+- [x] `ITSAppUsesNonExemptEncryption=false`
+- [x] Age Rating回答方針: Medical or Treatment Information = Infrequent
 
 ## AppIcon
 - [x] 正本ファイル特定: Google Drive `13_保健師国家試験.png`
 - [x] 1024×1024 / RGB / 609,807 bytesを確認
 - [x] 正本SHA-256記録: `34c1ec303ef5420947bf13ab4b05d2045a70b79417ac40ebd667e05c8f2f2c64`
+- [x] 2026-08-14にDriveから再取得しローカルSHA完全一致
 - [x] Asset Catalogに正本ファイル名 `AppIcon-1024.png` を登録
+- [x] Driveはowner-onlyを維持し、代替画像生成・公開権限変更をしない
 - [ ] 署名ビルド前に正本PNGバイトをAsset Catalogへ配置
 - [ ] 配置後SHA-256再照合
 
@@ -82,7 +94,8 @@
 - [x] SKU: `hokenshi-sprint-13-ios`
 - [x] iPhone向けXcodeGen App target
 - [x] IAP capability生成スクリプト
-- [ ] iOS Simulator Release build PASS
+- [x] iOS Simulator Release build PASS
+- [ ] Apple DeveloperでExplicit App IDを登録（未登録時）
 - [ ] App Store Connect新規Appレコード作成
 - [ ] App Store Connect App ID（Apple実発行値）
 - [ ] Signed IPA
