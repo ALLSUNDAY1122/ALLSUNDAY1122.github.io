@@ -1,5 +1,10 @@
-const CACHE='kangoshi-sprint-v21-20260809-audit5';
-const ASSETS=['./','./index.html','./style.css','./questions.js','./questions-numeric.js','./questions-audit-v1.js','./question-taxonomy-v1.js','./exam-config.js','./app-v03.js','./product-availability.js','./product-content/manifest.json','./manifest.json'];
+const CACHE='kangoshi-sprint-v25-20260814-canonical-runtime1';
+const ASSETS=[
+ './','./index.html','./style.css',
+ './questions.js','./questions-numeric.js','./questions-audit-v1.js','./question-taxonomy-v1.js',
+ './exam-config.js','./scoring-overrides.js','./questions-runtime.js','./app-v03.js','./media-runtime.js','./product-availability.js',
+ './product-content/manifest.json','./manifest.json'
+];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{
