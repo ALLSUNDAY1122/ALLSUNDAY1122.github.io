@@ -24,7 +24,8 @@ enum KSTheme {
 }
 
 struct KSCard<Content: View>: View {
-    @ViewBuilder let content: Content
+    let content: Content
+    init(content: Content) { self.content = content }
     var body: some View {
         content.padding(16).frame(maxWidth: .infinity, alignment: .leading)
             .background(KSTheme.card).overlay(RoundedRectangle(cornerRadius: 16).stroke(KSTheme.line))
