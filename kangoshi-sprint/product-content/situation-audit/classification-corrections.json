@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "purpose": "状況設定問題の症例本文主軸監査で検出した分類修正をcanonical統合時に適用するための作業用オーバーレイ。最終正本ではなく、統合後に再監査する。",
+  "corrections": [
+    {
+      "id": "K115-PM099",
+      "scenarioId": "K115-PM-SC03",
+      "from": {
+        "majorSubject": "母性看護学",
+        "subject": "母性看護",
+        "classificationMethod": "semantic-refinement-v3",
+        "triggerConcern": "設問文中の『妊娠』を局所キーワードとして拾い、症例主病態と正答が扱う療養支援より優先した。"
+      },
+      "to": {
+        "majorSubject": "成人看護学",
+        "subject": "内分泌・代謝",
+        "classificationMethod": "situation-context-specialist-correction-v1"
+      },
+      "reason": "同一症例3問はバセドウ病の診断前処置、抗甲状腺薬副作用、治療後の生活再開を扱う。PM099には将来の妊娠への不安も含まれるが、正答は『症状が落ちつけば運動できます』であり、主たる看護判断はバセドウ病の療養・活動支援。症例本文と正答を主軸に成人看護学・内分泌代謝へ修正する。",
+      "detectedAt": "2026-08-14T14:46:00+09:00",
+      "applyState": "pending_canonical_integration"
+    }
+  ]
+}
