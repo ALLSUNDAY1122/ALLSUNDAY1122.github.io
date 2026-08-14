@@ -47,14 +47,19 @@ jobs:
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
       - name: Run msplat runtime smoke test on iOS Simulator
+        timeout-minutes: 8
         working-directory: splat-native-ios
         shell: bash
         run: |
           set -euo pipefail
           DEVICE_ID="$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); xs=[x["udid"] for devices in d["devices"].values() for x in devices if x.get("isAvailable") and x.get("name","").startswith("iPhone")]; print(xs[0] if xs else "")')"
           test -n "$DEVICE_ID"
+          xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
           xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
             -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -parallel-testing-enabled NO \
+            -only-testing:SplatNativeTests/MsplatRuntimeSmokeTests/testTinyNerfstudioDatasetTrainsAndExportsSplat \
             CODE_SIGNING_ALLOWED=NO test
       - name: Compile for iPhone without signing
         id: compile
