@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC08",
+  "sourceExam": 114,
+  "session": "AM",
+  "sourceEvidence": {"officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf", "officialPages": [42, 43], "checkedAt": "2026-08-14T14:58:00+09:00"},
+  "textCorrections": {
+    "scenarioTextCanonical": "Aさん（36歳、経産婦）は、夫（35歳）、男児（3歳）と3人で暮らしている。妊娠、分娩経過は順調で、妊娠39週5日で3,200gの女児を経腟分娩で出産した。1分後のApgar〈アプガー〉スコア9点、5分後のApgar〈アプガー〉スコア10点であった。産褥1日、Aさんの子宮底は臍下2横指、硬度良好、悪露は赤色であった。『1人目の出産後よりもお腹が痛くて眠れませんでした』と看護師に話す。",
+    "questionTextCorrections": [
+      {"id": "K114-AM112", "fromContains": "つ選べ", "toContains": "2つ選べ"},
+      {"id": "K114-AM112", "fromContains": "産後日くらいまで", "toContains": "産後5日くらいまで"},
+      {"id": "K114-AM113", "fromContains": "産褥日、乳房は緊満", "toStartsWith": "産褥3日、乳房は緊満"},
+      {"id": "K114-AM113", "fromContains": "乳管開通は左右とも、 本", "toContains": "乳管開通は左右とも5、6本"},
+      {"id": "K114-AM113", "fromContains": "日 回授乳", "toContains": "1日8回授乳"},
+      {"id": "K114-AM113", "fromContains": "乳房の張りは週間程度続きます", "toContains": "乳房の張りは2週間程度続きます"},
+      {"id": "K114-AM114", "fromContains": "日 齢 、", "toStartsWith": "日齢4、"},
+      {"id": "K114-AM114", "fromContains": "排尿 回/日、排便 回/日", "toContains": "排尿9回/日、排便8回/日"}
+    ]
+  },
+  "patientIdentityAudit": {
+    "patient": "Aさん（36歳、経産婦）",
+    "familyMemberNotPatient": "男児（3歳）はAさんの第1子。AM112-113の患者本人ではない。AM114は今回出生した女児が評価対象へ移る。",
+    "historicalFailureModeChecked": "family member wording such as 男児 being misread as the patient identity",
+    "status": "pass"
+  },
+  "applyState": "pending_canonical_integration"
+}
