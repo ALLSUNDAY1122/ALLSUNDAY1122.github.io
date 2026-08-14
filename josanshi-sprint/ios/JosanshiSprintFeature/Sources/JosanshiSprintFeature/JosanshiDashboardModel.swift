@@ -72,6 +72,26 @@ public final class JosanshiDashboardModel: ObservableObject {
         objectWillChange.send()
     }
 
+    public func setExamDate(_ value: Date?) {
+        coordinator.setExamDate(value)
+        objectWillChange.send()
+    }
+
+    public func setTextSizeStep(_ value: Int) {
+        coordinator.setTextSizeStep(value)
+        objectWillChange.send()
+    }
+
+    public func setShuffleQuestions(_ value: Bool) {
+        coordinator.setShuffleQuestions(value)
+        objectWillChange.send()
+    }
+
+    public func setShuffleChoices(_ value: Bool) {
+        coordinator.setShuffleChoices(value)
+        objectWillChange.send()
+    }
+
     public func requestStandardSprint() {
         selectedSubject = nil
         startSession {
@@ -100,6 +120,10 @@ public final class JosanshiDashboardModel: ObservableObject {
         }
     }
 
+    public func showMockTab() {
+        selectedTab = .mock
+    }
+
     public func resumePreviousSession() {
         if coordinator.activeSession != nil || coordinator.resumePersistedSession() {
             contentErrorDescription = nil
@@ -110,6 +134,12 @@ public final class JosanshiDashboardModel: ObservableObject {
 
     public func finishSession() {
         isSessionPresented = false
+        dailyTarget = coordinator.state.dailyTarget
+        objectWillChange.send()
+    }
+
+    public func resetLearningHistory() {
+        coordinator.resetLearningHistory()
         dailyTarget = coordinator.state.dailyTarget
         objectWillChange.send()
     }
@@ -127,17 +157,37 @@ public final class JosanshiDashboardModel: ObservableObject {
         coordinator.activeSession != nil
     }
 
-    public var todayAnsweredCount: Int {
-        coordinator.todayAnsweredCount
-    }
-
-    public var weakQuestionCount: Int {
-        coordinator.weakQuestionCount
-    }
+    public var todayAnsweredCount: Int { coordinator.todayAnsweredCount }
+    public var weakQuestionCount: Int { coordinator.weakQuestionCount }
+    public var totalAnsweredCount: Int { coordinator.totalAnsweredCount }
+    public var totalCorrectCount: Int { coordinator.totalCorrectCount }
+    public var uniqueAnsweredCount: Int { coordinator.uniqueAnsweredCount }
+    public var examDate: Date? { coordinator.state.examDate }
+    public var textSizeStep: Int { coordinator.preferences.resolvedTextSizeStep }
+    public var shuffleQuestions: Bool { coordinator.preferences.shuffleQuestions }
+    public var shuffleChoices: Bool { coordinator.preferences.shuffleChoices }
+    public var requiredDailyPace: Int? { coordinator.requiredDailyPace }
 
     public var todayProgress: Double {
         guard dailyTarget > 0 else { return 0 }
         return min(1, Double(todayAnsweredCount) / Double(dailyTarget))
+    }
+
+    public var overallAccuracy: Double {
+        guard totalAnsweredCount > 0 else { return 0 }
+        return Double(totalCorrectCount) / Double(totalAnsweredCount)
+    }
+
+    public var remainingQuestionCount: Int {
+        max(0, JosanshiExamConfiguration.originalProductionQuestionTarget - uniqueAnsweredCount)
+    }
+
+    public var remainingDays: Int? {
+        guard let examDate else { return nil }
+        let calendar = Calendar.current
+        let start = calendar.startOfDay(for: Date())
+        let end = calendar.startOfDay(for: examDate)
+        return max(0, calendar.dateComponents([.day], from: start, to: end).day ?? 0)
     }
 
     public var productionQuestionTargetText: String {
