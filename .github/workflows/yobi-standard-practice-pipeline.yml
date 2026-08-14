@@ -6,6 +6,9 @@ on:
       - 'learning-sprint/yobi-tantou/content-loop/questions.standard.candidates.v1.json'
       - 'learning-sprint/yobi-tantou/content-loop/standard-source-locks.v1.json'
       - 'learning-sprint/yobi-tantou/content-loop/standard-answer-audit.v1.json'
+      - 'learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json'
+      - 'learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json'
+      - 'learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json'
       - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py'
       - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py'
       - 'learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py'
@@ -13,6 +16,9 @@ on:
       - 'learning-sprint/yobi-tantou/content-loop/promote_practice_release.py'
       - '.github/workflows/yobi-standard-practice-pipeline.yml'
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 concurrency:
   group: yobi-standard-practice-${{ github.sha }}
@@ -70,6 +76,7 @@ jobs:
           quality = json.loads((root / 'practice-standard-quality-audit.v1.json').read_text())
           release = json.loads((root / 'questions.standard.release.v1.json').read_text())
           assert len(staging) == len(release) == 14
+          assert quality['checkedAt'] == '2026-08-14'
           assert quality['overallVerdict'] == 'PASS'
           assert quality['summary'] == {'total': 14, 'pass': 14, 'hold': 0, 'nearDuplicatePairs': 0}
           assert all(q['difficulty'] == 'standard' for q in release)
@@ -87,3 +94,35 @@ jobs:
             learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json
             learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json
           if-no-files-found: error
+      - name: Persist audited standard canonical files to PR branch
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          set -euo pipefail
+          GENERATED="$RUNNER_TEMP/yobi-standard-generated"
+          mkdir -p "$GENERATED"
+          cp learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json "$GENERATED/"
+          cp learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json "$GENERATED/"
+          cp learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json "$GENERATED/"
+
+          git fetch origin "$BRANCH"
+          git checkout -B "$BRANCH" "origin/$BRANCH"
+          cp "$GENERATED/practice-standard-staging.v1.json" learning-sprint/yobi-tantou/content-loop/
+          cp "$GENERATED/practice-standard-quality-audit.v1.json" learning-sprint/yobi-tantou/content-loop/
+          cp "$GENERATED/questions.standard.release.v1.json" learning-sprint/yobi-tantou/content-loop/
+          git add \
+            learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json \
+            learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json \
+            learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json
+
+          if git diff --cached --quiet; then
+            echo 'PASS: committed standard canonical files already match regenerated output.'
+            exit 0
+          fi
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore(yobi): persist audited standard practice release'
+          git pull --rebase origin "$BRANCH"
+          git push origin HEAD:"$BRANCH"
