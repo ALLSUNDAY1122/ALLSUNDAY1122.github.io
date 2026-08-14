@@ -1,58 +1,71 @@
-# Splat Lab Native｜Release Status
+# Scan Lab｜Parity Program Status
 
 更新日: 2026-08-15
 
 ## 現在地
 
-`MACHINE GREEN → APP STORE CONNECT RECORD WAITING`
+`SCANIVERSE_PARITY_PROGRAM_ACTIVE`
 
-機械側で実行できる開発・監査はInternal TestFlight直前まで完了しています。
+Splat中心PoCを「完成」とみなす方針を廃止し、現行Scaniverse個人向けiOS機能との機能・実用品質同等化を先に完了する。
 
-## PASS済み
+## 統括正本
 
-- ARKit撮影・camera-to-world pose取得
-- rawFeaturePoints収集・初期PLY生成
-- Nerfstudio transforms.json生成
+- Notion: `Scaniverse同等化｜9セッション分割・統括正本 v1.0`
+- GitHub: `splat-native-ios/SCANIVERSE_PARITY_PLAN.md`
+- Session prompts: `splat-native-ios/SESSION_PROMPTS.md`
+- Integration branch: `feature/splat-native-ios-poc`
+
+## Specialist branches
+
+- S1 `scaniverse/s1-capture`
+- S2 `scaniverse/s2-splat-reconstruction`
+- S3 `scaniverse/s3-splat-viewer-edit`
+- S4 `scaniverse/s4-mesh-photogrammetry`
+- S5 `scaniverse/s5-library-lifecycle`
+- S6 `scaniverse/s6-export-video-share`
+- S7 `scaniverse/s7-map-discover-backend`
+- S8 `scaniverse/s8-adversarial-qa`
+
+各専門sessionは開始時にintegration最新HEADとの差分を確認し、必要なら取り込んでから担当branch上でループエンジニアリングを継続する。
+
+## 現在できている基盤
+
+- ARKit撮影
+- camera-to-world pose取得
+- rawFeaturePoints初期点群
+- Nerfstudio dataset
 - msplat Metal学習経路
-- result.splat書出し
+- `.splat` 書出し
 - MetalSplatter表示
-- .splat 32-byte layout / quaternion互換監査
-- 初回撮影開始ライフサイクル修正
-- ARSession失敗・中断復旧
-- Swift 6 / iPhone Release compile
-- Privacy Manifest
-- 外部送信・解析SDKなし監査
-- 1024px AppIcon生成経路
-- 第三者ライセンス同梱
-- App Store metadata draft
-- Review notes
-- Privacy page / Support page
-- Internal TestFlight実機テスト手順
-- TestFlight専用Codemagic workflow
-- App Store本審査自動提出禁止
+- 撮影方向coverage gate
+- 実移動gate
+- 自動framing
+- 回転 / zoom / reset
+- 再生成
+- 破棄確認
+- Privacy / license / CI基盤
 
-## GitHub
+これらは同等化programの出発点であり、Scaniverse parity完了を意味しない。
 
-- Repository: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
-- Source branch: `feature/splat-native-ios-poc`
-- TestFlight branch: `testflight/splat-native-ios`
-- Main draft PR: #4145
-- TestFlight sync PR: #4147（手動2-parent mergeで内容同期済み。整理対象）
+## 主な未同等項目
 
-## Apple識別子
+- Resume scan / process laterの製品導線
+- 3DGS品質最適化・sky segmentation・enhance
+- pan / crop / exposure / contrast / measurement
+- Mesh / LiDAR / photogrammetry / texture
+- persistent scan library / reprocess
+- PLY / SPZ / mesh各種export
+- video export
+- browser share URL
+- account / public-unlisted share
+- Map / Discover
+- representative-object side-by-side quality evidence
+- device performance / thermal matrix
 
-- Bundle ID: `jp.allsunday1122.splatlab`
-- Version: `1.0.0`
-- App Store Connect Apple ID: 未発行。推測禁止。
+## おもちゃばこ
 
-## 次の不可避な人間操作
+Scan Labのconsumer parityが完了するまで、おもちゃばこ固有UI・思い出メタデータ・対象物特化機能は本rootへ混ぜない。同等化完了後に3D基盤を移植する。
 
-App Store Connect Web UIで新規Appレコードを作成する。
+## 人間ゲート
 
-入力値は `APPLE_CONNECT_PACKET.md` を正本とする。
-
-Apple IDが発行されたら、機械側で正本反映→Codemagic signed IPA→Internal TestFlight uploadの監査へ戻る。
-
-## その次の人間判断
-
-Internal TestFlight実機で3D品質・生成時間・熱・メモリを確認し、PASS / CONDITIONAL / FAILを判断する。
+各sessionは自動で進める。途中で止めてよいのは、実機比較、Apple認証済み外部UI、法的/商標判断、公開最終承認など真正な人間判断・操作が不可避な地点のみ。
