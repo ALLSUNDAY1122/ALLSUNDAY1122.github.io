@@ -15,19 +15,13 @@
     "k113VerifiedSourceCorrections": 5,
     "rawTotal": 720,
     "rawAuditPass": true,
-    "rawLoop": {
-      "importExit": 0,
-      "normalizeExit": 0,
-      "rawValidationExit": 0,
-      "mediaDetectionExit": 0,
-      "commonAuditExit": 0
-    },
+    "rawLoop": {"importExit":0,"normalizeExit":0,"rawValidationExit":0,"mediaDetectionExit":0,"commonAuditExit":0},
     "classificationHigh": 720,
     "classificationUnclassified": 0,
     "classificationWarnings": 32,
     "classificationWarningsResolved": 32,
     "classificationPass": true,
-    "note": "B監査で発見した第113回一般5問のPDF取込欠損を公式PDFで確認し、source-data-corrections.json→normalize_raw_import.pyで再現可能に修復。raw→L2を再発火してPASSを再取得。"
+    "note": "第113回一般5問のPDF取込欠損を公式PDFで確認し、source-data-corrections.json→normalize_raw_import.pyで恒久修復。raw→L2を再発火してPASSを再取得。"
   },
   "canonicalIntegratedL3": {
     "explained": 547,
@@ -43,24 +37,28 @@
   },
   "workstreams": {
     "A_required": {
-      "status": "CONTENT_AUDIT_PASS_WITH_QUARANTINE_CANONICAL_JSON_PENDING",
+      "status": "FINAL_CANONICAL_PASS_WITH_QUARANTINE",
       "target": 150,
+      "canonicalBuilt": 150,
+      "canonicalPerExam": {"115":50,"114":50,"113":50},
       "contentAndEvidenceCovered": 150,
       "releaseEligibleBeforeGlobalGates": 136,
       "quarantinedUnique": 14,
       "mediaDependent": 8,
       "scoringSpecial": 6,
       "expertReview": 2,
-      "dedicatedAuditPass": true,
-      "finalCanonicalPass": false,
-      "reasonFinalCanonicalPending": "2026-08-12改訂の問題生成・監査ループにより、最終PASSには試験回/大分類canonical JSON生成後の再監査が必要。"
+      "dynamicEvidencePending": 0,
+      "exactDuplicateContent": 0,
+      "highSimilarityPairs": 0,
+      "finalCanonicalPass": true,
+      "canonicalAuditCommit": "cd901b5763cfa3c7645cfdbe07af5c44b3e34695"
     },
     "B_general": {
       "status": "WORKER_390_COMPLETE_CANONICAL_FAIL_13_GAPS",
       "target": 390,
       "workerCoverage": 390,
       "canonicalBuilt": 390,
-      "canonicalPerExam": {"115": 130, "114": 130, "113": 130},
+      "canonicalPerExam": {"115":130,"114":130,"113":130},
       "canonicalDuplicateIds": 0,
       "officialAnswerMismatch": 0,
       "officialScoringMismatch": 0,
@@ -80,22 +78,22 @@
       "expertReviewQueueCount": 2,
       "expertReviewBlockingContentAuthoring": false,
       "cursorScenario": "K115-PM-SC01",
-      "cursorQuestionIds": ["K115-PM091", "K115-PM092", "K115-PM093"],
+      "cursorQuestionIds": ["K115-PM091","K115-PM092","K115-PM093"],
       "finalCanonicalPass": false
     }
   },
   "canonicalization": {
     "policy": "小分けバッチPASSは最終PASSへ流用しない。試験回または試験回×大分類のcanonical JSONへ統合後、共通validatorとカテゴリ固有validatorを再実行する。",
+    "required": {"canonicalJsonBuilt":true,"pass":true,"questions":150},
     "general": {
-      "builder": "kangoshi-sprint/product-content/build_general_canonical.py",
-      "integrityValidator": "kangoshi-sprint/product-content/validate_general_canonical.py",
-      "workflow": ".github/workflows/kangoshi-general-canonical.yml",
-      "gate": "kangoshi-sprint/product-content/questions/general-canonical-gate.json",
-      "pass": false,
-      "blockingItems": 13
+      "builder":"kangoshi-sprint/product-content/build_general_canonical.py",
+      "integrityValidator":"kangoshi-sprint/product-content/validate_general_canonical.py",
+      "workflow":".github/workflows/kangoshi-general-canonical.yml",
+      "gate":"kangoshi-sprint/product-content/questions/general-canonical-gate.json",
+      "pass":false,
+      "blockingItems":13
     },
-    "required": {"canonicalJsonBuilt": false, "pass": false},
-    "situation": {"canonicalJsonBuilt": false, "pass": false}
+    "situation": {"canonicalJsonBuilt":false,"pass":false}
   },
   "v24ProductDecisions": {
     "previewRequired": true,
@@ -121,7 +119,6 @@
   "nextCoordinatorLoop": [
     "Keep B canonical 13-gap handoff isolated and re-run canonical audit only after B fixes those items",
     "Continue C from K115-PM-SC01 while expert queue remains quarantined in parallel",
-    "Build A required canonical JSON before granting final A canonical PASS",
     "Re-run common L3 as new category batches arrive",
     "Do not release mock/StoreKit/TestFlight gates until canonical 720, rights, and expert gates pass"
   ]
