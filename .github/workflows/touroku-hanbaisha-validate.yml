@@ -21,6 +21,7 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check touroku-hanbaisha-sprint/app-v05.js
+          node --check touroku-hanbaisha-sprint/app-v06.js
           node --check touroku-hanbaisha-sprint/question-order-v05.js
           node --check touroku-hanbaisha-sprint/mock-mode-v05.js
           node --check touroku-hanbaisha-sprint/questions.js
@@ -31,7 +32,7 @@ jobs:
           node --check touroku-hanbaisha-sprint/questions-v05-ch3b.js
           node --check touroku-hanbaisha-sprint/questions-v05-ch4.js
           node --check touroku-hanbaisha-sprint/questions-v05-ch5.js
-      - name: Validate 120-question structure
+      - name: Validate base 120-question structure
         run: |
           cat touroku-hanbaisha-sprint/questions.js \
               touroku-hanbaisha-sprint/questions-extra.js \
@@ -54,6 +55,30 @@ jobs:
             for(const key of ['question','point','detail','topic','chapter']) if(typeof q[key]!=='string'||!q[key].trim()) throw new Error(`${q.id}: missing ${key}`);
           }
           for(const [chapter,n] of Object.entries(expected)) if(counts[chapter]!==n) throw new Error(`${chapter}: expected ${n}, got ${counts[chapter]||0}`);
-          console.log('PASS', {total:QUESTIONS.length,counts});
+          console.log('PASS base', {total:QUESTIONS.length,counts});
           NODE
           node /tmp/questions-bundle.js
+      - name: Validate independent exam 2 canonical JSON
+        run: |
+          node <<'NODE'
+          const fs=require('fs');
+          const files=[1,2,3,4,5].map(n=>`touroku-hanbaisha-sprint/questions/exam-2/chapter-${n}.json`);
+          const expected={'第1章':20,'第2章':20,'第3章':40,'第4章':20,'第5章':20};
+          const all=files.flatMap(f=>JSON.parse(fs.readFileSync(f,'utf8')));
+          if(all.length!==120) throw new Error(`Exam2 expected 120, got ${all.length}`);
+          const ids=new Set(), counts={};
+          for(const q of all){
+            if(q.round!==2) throw new Error(`${q.id}: round must be 2`);
+            if(!q.id||ids.has(q.id)) throw new Error(`Duplicate/missing ID: ${q.id}`);
+            ids.add(q.id); counts[q.chapter]=(counts[q.chapter]||0)+1;
+            if(!Array.isArray(q.choices)||q.choices.length!==5) throw new Error(`${q.id}: choices must be 5`);
+            if(new Set(q.choices).size!==5) throw new Error(`${q.id}: duplicate choice`);
+            if(!Number.isInteger(q.correct_index)||q.correct_index<0||q.correct_index>4) throw new Error(`${q.id}: invalid correct_index`);
+            for(const key of ['subject','topic','question','explanation','source_url','reference_date','origin_type','rights_basis']) if(typeof q[key]!=='string'||!q[key].trim()) throw new Error(`${q.id}: missing ${key}`);
+          }
+          for(const [chapter,n] of Object.entries(expected)) if(counts[chapter]!==n) throw new Error(`Exam2 ${chapter}: expected ${n}, got ${counts[chapter]||0}`);
+          const normalized=s=>s.toLowerCase().replace(/[\s、。,.!?！？・:：;；（）()「」『』\-ー〜~]/g,'');
+          const seen=new Map();
+          for(const q of all){const k=normalized(q.question); if(seen.has(k)) throw new Error(`Exact duplicate question: ${seen.get(k)} / ${q.id}`); seen.set(k,q.id);}
+          console.log('PASS exam2 canonical', {total:all.length,counts});
+          NODE
