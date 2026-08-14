@@ -1,0 +1,49 @@
+name: Fetch Hokenshi canonical AppIcon
+
+on:
+  push:
+    branches:
+      - feat/hokenshi-sprint-native-foundation
+    paths:
+      - '.github/workflows/hokenshi-fetch-icon.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-icon:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/hokenshi-sprint-native-foundation
+          fetch-depth: 0
+      - name: Fetch and verify canonical Drive AppIcon
+        run: |
+          set -euo pipefail
+          TARGET='hokenshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+          EXPECTED='34c1ec303ef5420947bf13ab4b05d2045a70b79417ac40ebd667e05c8f2f2c64'
+          if [ -f "$TARGET" ] && [ "$(sha256sum "$TARGET" | awk '{print $1}')" = "$EXPECTED" ]; then
+            echo 'Canonical AppIcon already present.'
+            exit 0
+          fi
+          mkdir -p "$(dirname "$TARGET")"
+          curl -L --fail --retry 2 \
+            'https://drive.usercontent.google.com/download?id=13fX8V5AuEiOHu2vhhnzHo4NosZ6pwTBt&export=download&confirm=t' \
+            -o "$TARGET"
+          ACTUAL="$(sha256sum "$TARGET" | awk '{print $1}')"
+          echo "AppIcon SHA-256: $ACTUAL"
+          test "$ACTUAL" = "$EXPECTED"
+      - name: Commit canonical AppIcon
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add hokenshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          if git diff --cached --quiet; then
+            echo 'No AppIcon changes.'
+            exit 0
+          fi
+          git commit -m 'assets(hokenshi): add canonical AppIcon [skip ci]'
+          git push origin HEAD:feat/hokenshi-sprint-native-foundation
