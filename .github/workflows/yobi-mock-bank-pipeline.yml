@@ -23,86 +23,55 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  mock-1-legal-batch-01:
+  audit-selected-batches:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: feature/yobi-tantou-native-swiftui
+          fetch-depth: 2
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Candidate preflight
-        run: >-
-          python learning-sprint/yobi-tantou/content-loop/validate_candidates.py
-          learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.candidates.json
-      - name: Exact-date statutory source audit
-        run: >-
-          python learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
-          --bank learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.candidates.json
-          --locks learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-source-locks.json
-      - name: Answer and explanation audit
-        run: >-
-          python learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
-          --bank learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.candidates.json
-          --audit learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-answer-audit.json
-          --locks learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-source-locks.json
-      - name: Stage audited candidates
+      - name: Run only affected mock-bank batches
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
         run: |
-          mkdir -p learning-sprint/yobi-tantou/content-loop/mock-bank/generated
-          python learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py \
-            --candidates learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.candidates.json \
-            --locks learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-source-locks.json \
-            --answers learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-answer-audit.json \
-            --output learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.staging.json
-      - name: Merge distractor rationales
-        run: >-
-          python learning-sprint/yobi-tantou/content-loop/mock-bank/merge_distractor_notes.py
-          --input learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.staging.json
-          --notes learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-distractors.json
-          --output learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.enriched-staging.json
-      - name: Global uniqueness against released 42
-        run: >-
-          python learning-sprint/yobi-tantou/content-loop/mock-bank/audit_global_uniqueness.py
-          --base learning-sprint/yobi-tantou/ios/Resources/questions.release.json
-          --expansion learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.enriched-staging.json
-      - name: Editorial quality audit
-        run: >-
-          python learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py
-          --input learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.enriched-staging.json
-          --report learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.quality.json
-          --require-pass
-      - name: Promote to mock-bank release_passed
-        run: >-
-          python learning-sprint/yobi-tantou/content-loop/promote_practice_release.py
-          --staging learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.enriched-staging.json
-          --quality learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.quality.json
-          --output learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.release.json
-      - name: Syntax
+          ARGS=(--persist)
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            ARGS+=(--all)
+          else
+            ARGS+=(--git-base "$BEFORE_SHA" --git-head "$HEAD_SHA")
+          fi
+          python learning-sprint/yobi-tantou/content-loop/mock-bank/run_mock_bank_pipeline.py "${ARGS[@]}"
+      - name: Persist changed promoted canonicals
         run: |
-          python -m json.tool learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.candidates.json >/dev/null
-          python -m json.tool learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-source-locks.json >/dev/null
-          python -m json.tool learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-answer-audit.json >/dev/null
-          python -m json.tool learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-distractors.json >/dev/null
-          python -m py_compile learning-sprint/yobi-tantou/content-loop/mock-bank/merge_distractor_notes.py
-          python -m py_compile learning-sprint/yobi-tantou/content-loop/mock-bank/audit_global_uniqueness.py
-      - name: Persist promoted release canonical
-        run: |
-          DEST=learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.release.json
-          cp learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.release.json "$DEST"
-          if git diff --quiet -- "$DEST" && git ls-files --error-unmatch "$DEST" >/dev/null 2>&1; then
+          ROOT=learning-sprint/yobi-tantou/content-loop/mock-bank
+          mapfile -t FILES < <(find "$ROOT" -maxdepth 1 -type f -name '*.release.json' -print | sort)
+          if [ "${#FILES[@]}" -eq 0 ]; then
+            echo 'No promoted canonical files exist yet.'
+            exit 0
+          fi
+          git add "${FILES[@]}"
+          if git diff --cached --quiet; then
             echo 'No canonical change.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "$DEST"
-          git commit -m 'chore(yobi): persist audited mock 1 legal batch 01'
+          git commit -m 'chore(yobi): persist audited mock-bank batches'
           git push origin HEAD:feature/yobi-tantou-native-swiftui
+      - name: Syntax
+        run: |
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/mock-bank/run_mock_bank_pipeline.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/mock-bank/merge_distractor_notes.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/mock-bank/audit_global_uniqueness.py
       - name: Upload generated audit bundle
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: yobi-mock-1-legal-batch-01-audit
+          name: yobi-mock-bank-audit-${{ github.run_id }}
           path: learning-sprint/yobi-tantou/content-loop/mock-bank/generated/
           if-no-files-found: ignore
