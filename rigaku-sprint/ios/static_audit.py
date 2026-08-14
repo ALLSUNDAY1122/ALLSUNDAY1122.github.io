@@ -21,7 +21,7 @@ for banned in ("WKWebView", "UIWebView", "import WebKit"):
 required_ui = (
     "今日のスプリント",
     "苦手をつぶす",
-    "模擬試験",
+    "第58〜60回ベース模試",
     "分野から解く",
     "これまで",
     "LearningSprintProgressRing",
@@ -55,11 +55,11 @@ app_entry = texts.get("RigakuSprintApp.swift", "")
 if "RigakuRootViewV2()" not in app_entry:
     errors.append("実行入口が現行正本UI RigakuRootViewV2 ではありません")
 
-# 旧UIの検出は型名文字列検索ではなく、廃止済みソースファイルの実在で判定する。
-# 型名検索だと監査コードやコメント自身の説明文を誤検出するため。
+# 旧UIは再混入させない。実行経路外の死んだ実装も将来の誤修正原因になる。
 legacy_files = (
     SOURCES / "RootTabView.swift",
     SOURCES / "RigakuRootView.swift",
+    SOURCES / "RigakuRootTabView.swift",
 )
 for legacy in legacy_files:
     if legacy.exists():
@@ -84,9 +84,30 @@ for required_resource in (
     "exam-config.json",
     "official-answers.json",
     "scoring-adjustments.json",
+    "Assets.xcassets",
+    "PrivacyInfo.xcprivacy",
 ):
     if required_resource not in project:
         errors.append(f"ネイティブresource未登録: {required_resource}")
+
+asset_contents = ROOT / "Assets.xcassets" / "Contents.json"
+app_icon_contents = ROOT / "Assets.xcassets" / "AppIcon.appiconset" / "Contents.json"
+if not asset_contents.exists():
+    errors.append("Asset Catalog欠損: Assets.xcassets/Contents.json")
+if not app_icon_contents.exists():
+    errors.append("AppIcon asset metadata欠損: AppIcon.appiconset/Contents.json")
+else:
+    try:
+        icon_doc = json.loads(app_icon_contents.read_text(encoding="utf-8"))
+        images = icon_doc.get("images", [])
+        if not any(item.get("size") == "1024x1024" and item.get("platform") == "ios" for item in images):
+            errors.append("AppIcon 1024x1024 iOS slot欠損")
+    except json.JSONDecodeError as exc:
+        errors.append(f"AppIcon Contents.json不正: {exc}")
+
+privacy_manifest = ROOT / "PrivacyInfo.xcprivacy"
+if not privacy_manifest.exists():
+    errors.append("PrivacyInfo.xcprivacy欠損")
 
 for guessed in (
     "jp.allsunday1122.rigaku",
@@ -148,10 +169,13 @@ print(f"Swift files: {len(swift_files)}")
 print("WebView ban: PASS")
 print("Golden Master signature elements: PASS")
 print("Active root route gate: PASS")
+print("Legacy root/source gate: PASS")
 print("Mock completeness gate: PASS")
 print("Shared native learning features: PASS")
 print("JSON backup/import: PASS")
 print("Rights-gated media manifest: PASS")
+print("Asset catalog metadata: PASS")
+print("Privacy manifest presence: PASS")
 print("Identifier non-guess policy: PASS")
 print("Official frame: R60/R59/R58 = 200 each, total 600: PASS")
 print("Product JSON syntax/schema gate: PASS")
