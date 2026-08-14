@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC06",
+  "sourceExam": 114,
+  "session": "AM",
+  "questionIds": ["K114-AM106", "K114-AM107", "K114-AM108"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "1歳4か月女児。10mmボタン型電池を誤飲し、両親と外来受診。全身状態は安定。内視鏡的摘出後に小児病棟へ1泊入院。",
+  "mainCondition": "小児外来トリアージ、ボタン電池摘出後の病棟安全環境、乳幼児の家庭内誤飲予防。",
+  "assessment": [
+    "AM106では待合室の4患児を全身状態で比較し、初回けいれん後の反復嘔吐と傾眠があるD君を最優先と判断する。",
+    "AM107では公式別冊No.3を目視し、ベッド内で立つ1歳児、ぬいぐるみ、点滴ルート配置から転落・牽引リスクを評価する。",
+    "AM108では1歳児の発達特性を踏まえ、直径約4cm未満の小物を手の届かない場所へ置く環境整備を保護者教育の中心とする。"
+  ],
+  "nursingJudgment": "3問は『受診時トリアージ→摘出後入院中の安全→退院時の再発予防』としてAちゃんの誤飲事故を軸に連結する。AM106のみ比較対象としてB君・Cちゃん・D君が登場するが、症例患者Aちゃんとの取り違えではない。",
+  "nursingPractice": [
+    "けいれん後の意識、反復嘔吐、全身状態を重視して診療優先度を判断する。",
+    "小児ベッド内の足場・障害物を除き、点滴ルートが患児の動きで引かれないよう環境を整える。",
+    "危険物を監視だけに頼らず子どもの手と口から物理的に遠ざけ、ボタン電池を含む小物の保管を家族へ指導する。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "comparisonPatientsPresentInQ106": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "canonicalPatch": {"path": "situation-audit/canonical-patches/K114-AM-SC06.json", "textCorrectionRequired": true, "classificationCorrectionRequired": false, "mediaCorrectionRequired": true, "applyState": "pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent": true, "majorSubject": "小児看護学", "status": "pass"},
+  "explanationAudit": {"batchId": "K114-AM106-AM108-situation-SC06", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"requiredQuestionIds": ["K114-AM107"], "status": "official_booklet_verified", "source": "第114回看護師国家試験午前別冊No.3", "answerVisualConsistency": true},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "none", "questionId": null, "reason": null, "evidenceRefs": []},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_canonical_patch_pending",
+  "auditedAt": "2026-08-14T15:01:00+09:00"
+}
