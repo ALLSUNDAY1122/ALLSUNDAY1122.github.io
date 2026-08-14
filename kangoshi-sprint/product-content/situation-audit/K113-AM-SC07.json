@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K113-AM-SC07",
+  "sourceExam": 113,
+  "session": "AM",
+  "questionIds": ["K113-AM109", "K113-AM110", "K113-AM111"],
+  "scenarioIndexes": [0,1,2],
+  "scenarioTotal": 3,
+  "patientProfile": "32歳初産婦。妊娠39週4日に3,000gの男児を正常分娩。出生直後の保温、産褥3日の授乳姿勢、日齢4の児の哺乳・体重・排泄評価へ続く。",
+  "mainCondition": "新生児の熱喪失予防、乳房状態に応じた授乳姿勢、母乳摂取不足の早期評価。",
+  "assessment": [
+    "AM109では空調の風を避けることで対流性熱喪失を防ぐ。",
+    "AM110では産褥3日の乳房Ⅲ型・熱感に対し、現在の横抱き以外として公式図③のフットボール抱きを選ぶ。",
+    "AM111では日齢4、体重減少8％、排尿4回/日、授乳30分超、授乳後啼泣を統合し母乳不足を疑う。"
+  ],
+  "nursingJudgment": "3問は『出生直後の体温管理→母体の授乳支援→日齢4児の哺乳評価』として母児の時間経過で連結する。AM109-110の母児双方の情報とAM111の児評価への移行を患者取り違えとはしない。",
+  "nursingPractice": [
+    "出生直後は乾燥・保温・気流回避など熱喪失経路ごとに環境を整える。",
+    "乳房・乳頭・児の吸着状態に応じて複数の授乳姿勢を使い分ける。",
+    "体重減少、排尿・排便、授乳時間、授乳後の児の様子から母乳摂取量を評価する。"
+  ],
+  "tripletConsistency": {"sameScenarioId":true,"sameScenarioText":true,"indexesComplete":true,"maternalToNewbornTargetTransition":true,"timelineConsistent":true,"clinicalConsistency":true,"nextScenarioLeakDetected":false},
+  "canonicalPatch": {"path":"situation-audit/canonical-patches/K113-AM-SC07.json","textCorrectionRequired":true,"classificationCorrectionRequired":false,"mediaVerificationRequired":true,"applyState":"pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent":true,"majorSubject":"母性看護学","status":"pass"},
+  "explanationAudit": {"batchId":"K113-AM109-AM111-situation-SC07","allThreeExplained":true,"allThreeEvidenceRefsPresent":true,"allThreeEvidenceCheckedDatePresent":true,"evidenceCheckedDate":"2026-08-14"},
+  "media": {"requiredQuestionIds":["K113-AM110"],"status":"official_answer_and_option_mapping_verified_official_booklet_screenshot_pending","officialAnswerIndex":3,"mappedAnswer":"フットボール抱き（脇抱き）","blockingFinalPass":true},
+  "scoring":{"exceptionPresent":false,"status":"normal"},
+  "contentConcern":{"status":"none","questionId":null,"reason":null,"evidenceRefs":[]},
+  "expertReviewStatus":"pending_global_expert_audit",
+  "scenarioAuditStatus":"content_pass_media_final_verification_pending",
+  "auditedAt":"2026-08-14T14:31:00+09:00"
+}
