@@ -35,7 +35,9 @@ for sid in ('set1','set2','set3'):
         q['evidenceCheckedDate']=None
         q['dynamicEvidenceRequired']=dynamic
         q['dynamicEvidenceStatus']='pending' if dynamic else 'not_required'
-        q['expertReviewStatus']='pending'
+        # Expert review is opt-in, not the default state. Specialist/source
+        # metadata later in the pipeline explicitly escalates only affected IDs.
+        q['expertReviewStatus']='not_required'
         q['releaseEligible']=False
         concern=concerns.get(q['id'])
         if concern:
@@ -50,7 +52,7 @@ for sid in ('set1','set2','set3'):
             q['contentConcernReason']=None
             q['contentConcernEvidenceRefs']=[]
     out={
-        'schemaVersion':1,'setId':sid,'sourceExam':data.get('sourceExam'),
+        'schemaVersion':2,'setId':sid,'sourceExam':data.get('sourceExam'),
         'questionCount':len(data.get('questions',[])),'releaseStatus':'draft_enrichment_only',
         'questions':data.get('questions',[])
     }
