@@ -1,0 +1,141 @@
+name: Yobi Tantou Swift Validation
+
+on:
+  pull_request:
+    paths:
+      - 'learning-sprint/yobi-tantou/ios/**/*.swift'
+      - 'learning-sprint/yobi-tantou/ios/Resources/**'
+      - 'learning-sprint/yobi-tantou/ios/project.yml'
+      - 'learning-sprint/yobi-tantou/ios/prepare-ios.sh'
+      - 'learning-sprint/yobi-tantou/ios/PrivacyInfo.xcprivacy'
+      - 'learning-sprint/yobi-tantou/ios/app-icon-lock.json'
+      - 'learning-sprint/yobi-tantou/ios/verify_app_icon.py'
+      - 'learning-sprint/yobi-tantou/audit_native.py'
+      - 'learning-sprint/yobi-tantou/content-loop/build_native_release.py'
+      - 'learning-sprint/yobi-tantou/content-loop/combine_practice_release.py'
+      - '.github/workflows/yobi-tantou-swift.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: yobi-tantou-swift-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  native-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Native 28-question source contract
+        run: python learning-sprint/yobi-tantou/audit_native.py
+      - name: Release pipeline self-tests
+        run: |
+          python learning-sprint/yobi-tantou/content-loop/combine_practice_release.py --self-test
+          python learning-sprint/yobi-tantou/content-loop/build_native_release.py --self-test
+
+  swift-tests:
+    needs: native-contract
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare simulator-only AppIcon
+        run: YOBI_ICON_MODE=simulator-placeholder bash learning-sprint/yobi-tantou/ios/prepare-ios.sh
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        working-directory: learning-sprint/yobi-tantou/ios
+        run: xcodegen generate
+      - name: XCTest on available iOS Simulator
+        working-directory: learning-sprint/yobi-tantou/ios
+        run: |
+          set -o pipefail
+          DEVICE_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/{print $2; exit}')"
+          if [ -z "$DEVICE_ID" ]; then
+            echo 'No available iPhone Simulator found.' >&2
+            xcrun simctl list devices available
+            exit 1
+          fi
+          echo "Using iOS Simulator for XCTest: $DEVICE_ID"
+          xcodebuild test \
+            -project YobiTantouSprint.xcodeproj \
+            -scheme YobiTantouSprint \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -only-testing:YobiTantouSprintTests \
+            CODE_SIGNING_ALLOWED=NO \
+            YOBI_BUNDLE_ID=jp.ci.yobi.preview \
+            YOBI_TEST_BUNDLE_ID=jp.ci.yobi.preview.tests \
+            YOBI_UI_TEST_BUNDLE_ID=jp.ci.yobi.preview.uitests \
+            | xcpretty
+      - name: XCUITest with one simulator-infrastructure retry
+        working-directory: learning-sprint/yobi-tantou/ios
+        run: |
+          set -o pipefail
+          DEVICE_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/{print $2; exit}')"
+          if [ -z "$DEVICE_ID" ]; then
+            echo 'No available iPhone Simulator found.' >&2
+            exit 1
+          fi
+          for attempt in 1 2; do
+            echo "XCUITest attempt ${attempt}/2"
+            xcrun simctl shutdown "$DEVICE_ID" 2>/dev/null || true
+            xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
+            xcrun simctl bootstatus "$DEVICE_ID" -b
+            if xcodebuild test \
+              -project YobiTantouSprint.xcodeproj \
+              -scheme YobiTantouSprint \
+              -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+              -only-testing:YobiTantouSprintUITests \
+              -parallel-testing-enabled NO \
+              CODE_SIGNING_ALLOWED=NO \
+              YOBI_BUNDLE_ID=jp.ci.yobi.preview \
+              YOBI_TEST_BUNDLE_ID=jp.ci.yobi.preview.tests \
+              YOBI_UI_TEST_BUNDLE_ID=jp.ci.yobi.preview.uitests \
+              | xcpretty; then
+              echo "PASS: XCUITest succeeded on attempt ${attempt}."
+              exit 0
+            fi
+            if [ "$attempt" -eq 1 ]; then
+              echo 'WARN: first XCUITest attempt failed; resetting Simulator once before final attempt.' >&2
+            fi
+          done
+          echo 'FAIL: XCUITest failed on both attempts.' >&2
+          exit 1
+      - name: Unsigned Release build and 28-question bundle inspection
+        working-directory: learning-sprint/yobi-tantou/ios
+        run: |
+          set -o pipefail
+          DEVICE_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/{print $2; exit}')"
+          DERIVED="$RUNNER_TEMP/yobi-release-derived"
+          xcodebuild build \
+            -project YobiTantouSprint.xcodeproj \
+            -scheme YobiTantouSprint \
+            -configuration Release \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -derivedDataPath "$DERIVED" \
+            CODE_SIGNING_ALLOWED=NO \
+            YOBI_BUNDLE_ID=jp.ci.yobi.preview \
+            YOBI_TEST_BUNDLE_ID=jp.ci.yobi.preview.tests \
+            YOBI_UI_TEST_BUNDLE_ID=jp.ci.yobi.preview.uitests \
+            | xcpretty
+          APP="$DERIVED/Build/Products/Release-iphonesimulator/YobiTantouSprint.app"
+          test -d "$APP"
+          test -f "$APP/questions.preview.json"
+          test -f "$APP/questions.release.json"
+          test -f "$APP/official-scoring-canonical.v1.json"
+          test -f "$APP/PrivacyInfo.xcprivacy"
+          test -f "$APP/Assets.car"
+          test -f "$APP/YobiTantouSprint"
+          python - "$APP/questions.release.json" <<'PY'
+          import json, sys
+          from collections import Counter
+          data = json.load(open(sys.argv[1], encoding='utf-8'))
+          assert len(data) == 28
+          assert Counter(q.get('difficulty') for q in data) == Counter({'foundation': 14, 'standard': 14})
+          assert len({q['id'] for q in data}) == 28
+          assert len({q['subject'] for q in data}) == 7
+          assert all(q.get('releaseEligible') is True and q.get('contentUse') == 'practice' for q in data)
+          assert all(q.get('examYear') is None for q in data)
+          print('PASS: Release bundle contains audited foundation14 + standard14 practice bank.')
+          PY
