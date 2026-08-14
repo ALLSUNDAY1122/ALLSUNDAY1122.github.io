@@ -4,12 +4,19 @@ from pathlib import Path
 
 root=Path(__file__).resolve().parents[1]/'Sources'
 changed=[]
-pattern=re.compile(r'(?<![A-Za-z0-9_])\.(\d+)')
+numeric_pattern=re.compile(r'(?<![A-Za-z0-9_])\.(\d+)')
+legacy_mock_pattern=re.compile(
+    r'\nstruct MockView: View \{.*?\n\}\n\nstruct HistoryView: View \{',
+    re.S,
+)
 for p in root.glob('*.swift'):
     s=p.read_text(encoding='utf-8')
-    fixed=pattern.sub(r'0.\1',s)
+    fixed=numeric_pattern.sub(r'0.\1',s)
     if p.name=='MainViews.swift' and (root/'MockViews.swift').exists():
-        fixed=fixed.replace('struct MockView: View {','struct LegacyMockView: View {',1)
+        replacement='\nstruct LegacyMockView: View { var body: some View { EmptyView() } }\n\nstruct HistoryView: View {'
+        fixed,n=legacy_mock_pattern.subn(replacement,fixed,count=1)
+        if n!=1 and 'struct LegacyMockView: View' not in fixed:
+            raise SystemExit('failed to replace legacy MockView')
     if fixed!=s:
         p.write_text(fixed,encoding='utf-8')
         changed.append(p.name)
