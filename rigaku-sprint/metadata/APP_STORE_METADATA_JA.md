@@ -7,6 +7,7 @@
 - Primary category候補：Education
 - Version：1.0.0
 - Bundle ID：`jp.allsunday1122.rigakuryouhoushi`
+- SKU：`rigakuryouhoushi-ios-001`
 - サインイン：不要
 - アカウント登録：なし
 - 広告：なし
@@ -27,16 +28,16 @@
 
 ## 外部正本待ち（推測禁止）
 - App Store Connect Apple ID：Apple実発行待ち
-- SKU：未確定
 - Copyright owner：未確定
 - AppIcon：Drive正本 `15_理学療法士国家試験.png` を採用。GitHubへの正本PNG本体投入は未完。
 - 公開してよいサポート問い合わせ先：未承認
 
-## URL（main統合後に公開確認）
+## 公開URL
 - Support：https://allsunday1122.github.io/rigaku-sprint/support.html
 - Privacy：https://allsunday1122.github.io/rigaku-sprint/privacy.html
 - Terms：https://allsunday1122.github.io/rigaku-sprint/terms.html
 - Settingsから上記3ページへの導線：実装済み
+- 3ページはmainへ独立公開済み。GitHub Pagesのデプロイ完了後にHTTP表示を最終確認する。
 
 ## App Store説明文案
 理学療法士国家試験の学習を、毎日4・8・16問の短い反復へ分けて進める試験対策アプリです。
