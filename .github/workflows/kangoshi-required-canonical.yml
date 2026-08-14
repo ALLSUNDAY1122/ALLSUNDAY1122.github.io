@@ -5,7 +5,8 @@ on:
   push:
     paths:
       - 'kangoshi-sprint/product-content/build_required_canonical.py'
-      - 'kangoshi-sprint/product-content/validate_required_canonical.py'
+      - 'kangoshi-sprint/product-content/apply_required_canonical_overrides.py'
+      - 'kangoshi-sprint/product-content/validate_required_canonical_v2.py'
       - 'kangoshi-sprint/product-content/classified/set1-classified.json'
       - 'kangoshi-sprint/product-content/classified/set2-classified.json'
       - 'kangoshi-sprint/product-content/classified/set3-classified.json'
@@ -37,6 +38,13 @@ jobs:
           cat kangoshi-sprint/product-content/required-150/canonical-build.log
           echo "$code" > kangoshi-sprint/product-content/required-150/canonical-build.exit
 
+      - name: Apply verified dynamic evidence to canonical JSON
+        shell: bash
+        run: |
+          if [ "$(cat kangoshi-sprint/product-content/required-150/canonical-build.exit)" = "0" ]; then
+            python3 kangoshi-sprint/product-content/apply_required_canonical_overrides.py
+          fi
+
       - name: Validate canonical JSON
         shell: bash
         run: |
@@ -46,7 +54,7 @@ jobs:
               > kangoshi-sprint/product-content/required-150/canonical-audit.log
           else
             set +e
-            python3 kangoshi-sprint/product-content/validate_required_canonical.py \
+            python3 kangoshi-sprint/product-content/validate_required_canonical_v2.py \
               > kangoshi-sprint/product-content/required-150/canonical-audit.log 2>&1
             code=$?
             set -e
@@ -59,14 +67,10 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add \
-            kangoshi-sprint/product-content/questions \
-            kangoshi-sprint/product-content/required-150/canonical-build-report.json \
-            kangoshi-sprint/product-content/required-150/canonical-build.log \
-            kangoshi-sprint/product-content/required-150/canonical-build.exit \
-            kangoshi-sprint/product-content/required-150/canonical-audit.json \
-            kangoshi-sprint/product-content/required-150/canonical-audit.log \
-            kangoshi-sprint/product-content/required-150/canonical-audit.exit
+          if [ -d kangoshi-sprint/product-content/questions ]; then
+            git add kangoshi-sprint/product-content/questions
+          fi
+          git add -A kangoshi-sprint/product-content/required-150
           if ! git diff --cached --quiet; then
             git commit -m 'kangoshi: required canonical audit result [skip ci]'
             git pull --rebase origin main
