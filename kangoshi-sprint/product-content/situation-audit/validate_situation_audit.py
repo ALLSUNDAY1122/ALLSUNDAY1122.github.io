@@ -77,8 +77,6 @@ def main() -> int:
         if len(qids) != QUESTIONS_PER_SCENARIO or len(set(qids)) != QUESTIONS_PER_SCENARIO:
             structural_errors.append({"kind": "scenario_triplet", "scenarioId": sid, "questionIds": qids})
 
-    # Only batches that explicitly declare scenarioId participate. Generic
-    # required/general batches are ignored, preventing duplicate accounting.
     candidates: dict[str, list[tuple[str, dict]]] = defaultdict(list)
     for path in sorted(BATCH_DIR.glob("*.json")):
         try:
@@ -171,9 +169,9 @@ def main() -> int:
         "structuralErrors": structural_errors,
         "contentAuthoringPass": len(completed) == EXPECTED_SCENARIOS and not structural_errors and not duplicate_conflicts,
         "releasePolicy": {
-            "expertMediaScoringConcernsBlockOnlyAffectedRelease": true,
-            "expertReviewIsNotAContentAuthoringPrerequisite": true,
-            "finalReleaseRequiresCanonicalIntegrationAndReleaseAudits": true
+            "expertMediaScoringConcernsBlockOnlyAffectedRelease": True,
+            "expertReviewIsNotAContentAuthoringPrerequisite": True,
+            "finalReleaseRequiresCanonicalIntegrationAndReleaseAudits": True
         }
     }
 
