@@ -94,13 +94,22 @@ public final class JosanshiLearningCoordinator: ObservableObject {
     }
 
     @discardableResult
-    public func startSubject(_ subject: String, isPremium: Bool = true) throws -> LearningSessionSnapshot {
+    public func startSubject(
+        _ subject: String,
+        isPremium: Bool = true,
+        seed: UInt64? = nil
+    ) throws -> LearningSessionSnapshot {
         guard JosanshiExamConfiguration.subjects.contains(subject) else {
             throw JosanshiLearningError.subjectUnavailable(subject)
         }
         let candidates = questions.filter { $0.subject == subject && (isPremium || !$0.premium) }
         guard !candidates.isEmpty else { throw JosanshiLearningError.subjectUnavailable(subject) }
-        let selected = Array(candidates.prefix(state.dailyTarget))
+        let selected = LearningEngine.selectSprint(
+            from: candidates,
+            target: state.dailyTarget,
+            isPremium: true,
+            seed: seed
+        )
         return start(kind: .subject(subject), questions: selected)
     }
 
