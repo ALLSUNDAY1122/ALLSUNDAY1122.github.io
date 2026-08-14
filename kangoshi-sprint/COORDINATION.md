@@ -115,7 +115,7 @@ GitHub `main` を現在値の正本とし、過去チャットの数値は監査
 - raw 720/720再監査: PASS。import/normalize/raw/media/common auditすべてexit 0。
 - L2分類: 720 high、unclassified 0、警告32/32解決、PASS。
 - 共通L3: 547/720説明済み、173 pending、動的根拠85中verified 66・pending 19。FAIL、releaseAllowed=false。
-- A必修: 150/150の専用内容監査PASS_WITH_QUARANTINE。ただし2026-08-12 canonical化改訂により、最終canonical JSON生成・再監査前なので最終canonical PASSではない。
+- A必修: **150/150 final canonical PASS_WITH_QUARANTINE**。各回50、正答不整合0、解説・根拠・分類・基準日欠損0、dynamic pending 0、完全重複0、高類似0。通常解放候補136・隔離14（図版8・採点特例6・専門2、重複あり）を維持。
 - B一般: 担当班では390/390作成済み。一般canonical 390問は生成済みだが、第113回13問でdetail/一次根拠不足を検出しcanonical gate FAIL。内訳は図版依存8問＋修復済みraw5問。統括からB班へ差分引継ぎ済み。
 - C状況設定: 30/180問、10/60症例まで内容監査済み。専門確認2問は隔離し、作成停止を解除。次カーソルはK115-PM-SC01（PM091〜093）。
 - メディア権利、専門監査、模試240問、StoreKit実装、TestFlightは未PASS。
