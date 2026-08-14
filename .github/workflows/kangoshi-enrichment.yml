@@ -12,6 +12,8 @@ on:
       - 'kangoshi-sprint/product-content/apply_canonical_l3_fallback.py'
       - 'kangoshi-sprint/product-content/dynamic-evidence-overrides.json'
       - 'kangoshi-sprint/product-content/apply_dynamic_evidence_overrides.py'
+      - 'kangoshi-sprint/product-content/release-review-resolutions.json'
+      - 'kangoshi-sprint/product-content/apply_release_review_resolutions.py'
       - 'kangoshi-sprint/product-content/build_enrichment_queues.py'
       - 'kangoshi-sprint/product-content/write_dynamic_pending_report.py'
       - 'kangoshi-sprint/product-content/write_release_queue_ids.py'
@@ -29,7 +31,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  PIPELINE_SCHEMA: '9'
+  PIPELINE_SCHEMA: '10'
 
 permissions:
   contents: write
@@ -48,6 +50,8 @@ jobs:
         run: python3 kangoshi-sprint/product-content/apply_canonical_l3_fallback.py
       - name: Apply audited dynamic-evidence overrides
         run: python3 kangoshi-sprint/product-content/apply_dynamic_evidence_overrides.py
+      - name: Apply audited release-review resolutions
+        run: python3 kangoshi-sprint/product-content/apply_release_review_resolutions.py
       - name: Build compact pending queues
         run: python3 kangoshi-sprint/product-content/build_enrichment_queues.py
       - name: Write compact dynamic-evidence report
