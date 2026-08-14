@@ -6,7 +6,7 @@ struct SplatNativeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootScanView()
                 .environmentObject(model)
         }
     }
