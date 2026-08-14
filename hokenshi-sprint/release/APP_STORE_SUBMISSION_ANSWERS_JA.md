@@ -65,14 +65,15 @@
 - Product ID: `jp.allsunday1122.hokenshi.premium`
 - Display Name (Japanese): `プレミアム問題・模試解放`
 - Description (Japanese): `残り300問と独自模試3回分を買い切りで解放します。`
-- Price: App Store本審査前の人間確認地点 #4 で最終決定
-- App内価格表示: StoreKit `Product.displayPrice` のみ
+- Pricing standard: 標準手順 v2.4「買い切り800円」
+- Japan price: `800円`
+- App内価格表示: StoreKit `Product.displayPrice` のみ。`800円`をコードへ固定しない。
 - Restore: 常設
 - Family Sharing: 初回提出時はオフを既定とし、必要性を別途判断する
-- Review Screenshot: Internal TestFlight前後に実AppのPaywall画面から作成。ダミー価格の画像を提出しない。
+- Review Screenshot: Internal TestFlight前後に実AppのPaywall画面から作成。StoreKit実価格が取得できた画面を提出する。
 
 ## 7. IAP Review Notes
-`ホーム、模試、設定からプレミアム画面を開けます。無料版では10分野から各3問、合計30問を利用できます。非消耗型の買い切りPremium購入後は残り300問と独自模試3回分が解放されます。設定およびプレミアム画面に「購入を復元」があります。価格はStoreKitから取得したApp Store表示価格のみを表示します。`
+`ホーム、模試、設定からプレミアム画面を開けます。無料版では10分野から各3問、合計30問を利用できます。非消耗型の買い切りPremium購入後は残り300問と独自模試3回分が解放されます。日本向け価格は標準手順に基づき800円で設定し、設定およびプレミアム画面に「購入を復元」があります。アプリ内価格はStoreKitから取得したApp Store表示価格のみを表示します。`
 
 ## 8. App Review Notes
 `保健師国家試験の学習用アプリです。診断・治療・個別の医療判断を提供する医療機器アプリではありません。問題と解説は独自作成で、公的な一次根拠への外部リンクを問題単位で確認できます。アカウント登録、広告、第三者分析SDK、トラッキングはありません。回答履歴等は端末内に保存します。無料30問を利用でき、非消耗型Premiumで残り300問と模試を解放します。`
@@ -87,4 +88,5 @@
 - Internal TestFlightまでは自動化対象。
 - TestFlight実機確認 = 人間確認地点 #3。
 - App Store本審査提出 = 人間確認地点 #4の明示承認後のみ。
+- 人間確認地点 #4では800円という既決定価格を再判断せず、App Store Connectの商品価格とStoreKit表示の一致だけを確認する。
 - 数値App Store Connect App IDはApple実発行値のみを正本へ登録し、仮値は禁止。
