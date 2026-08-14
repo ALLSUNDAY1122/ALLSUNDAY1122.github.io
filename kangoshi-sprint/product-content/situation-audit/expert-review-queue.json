@@ -1,8 +1,9 @@
 {
-  "schemaVersion": 3,
-  "updatedAt": "2026-08-14",
+  "schemaVersion": 4,
+  "updatedAt": "2026-08-14T20:50:00+09:00",
   "reviewPacket": "kangoshi-sprint/product-content/situation-audit/expert-review-packet.json",
-  "policy": "Learning Sprint問題監査§10に従いAI・CIで可能な限り完結。一次資料監査で解消できないもののみ外部専門家へ残す。該当問題だけrelease quarantineし、他問題を停止しない。",
+  "appExclusion": "kangoshi-sprint/product-content/situation-audit/app-exclusion.json",
+  "policy": "AI primary-source audit may refine wording but does not substitute for unavailable domain-expert confirmation. Per user decision, unresolved specialist items are retained for audit and excluded from app eligibility rather than treated as resolved.",
   "items": [
     {
       "scenarioId": "K115-AM-SC05",
@@ -17,10 +18,11 @@
         "https://www.jspaci.jp/journal/asthma2023/"
       ],
       "reviewPacketItem": "K115-AM103",
-      "reviewMethod": "AI primary-source audit per Learning Sprint §10",
-      "reviewedAt": "2026-08-14",
-      "resolution": "JPGLの年齢別SpO2分布と修正pulmonary indexを再確認。公式正答は保持し、SpO2単独ではなく呼吸数・心拍数・喘鳴・呼吸仕事量等を総合評価する説明へ修正した。",
-      "status": "resolved"
+      "aiPrimarySourceAuditAt": "2026-08-14",
+      "aiAuditSummary": "JPGLの年齢別SpO2分布と修正pulmonary indexを再確認し、SpO2単独ではなく呼吸数・心拍数・喘鳴・呼吸仕事量等を総合評価する説明へ修正済み。ただし専門家確認とは扱わない。",
+      "status": "hold_user_review_excluded_from_app",
+      "appEligible": false,
+      "retainedForAudit": true
     },
     {
       "scenarioId": "K115-AM-SC08",
@@ -37,10 +39,11 @@
         "https://www.acog.org/womens-health/faqs/postpartum-birth-control"
       ],
       "reviewPacketItem": "K115-AM114",
-      "reviewMethod": "AI primary-source audit per Learning Sprint §10",
-      "reviewedAt": "2026-08-14",
-      "resolution": "厚労省の産婦健診時期とACOG/NHSの産後性生活・避妊情報を再確認。国家試験の公式正答と、固定日ではなく回復・疼痛・本人の準備・避妊を個別評価する現行指導を明確に分離した。",
-      "status": "resolved"
+      "aiPrimarySourceAuditAt": "2026-08-14",
+      "aiAuditSummary": "厚労省の産婦健診時期とACOG/NHSの産後性生活・避妊情報を再確認し、国家試験の公式正答と現行の個別評価を分離した。ただし専門家確認とは扱わない。",
+      "status": "hold_user_review_excluded_from_app",
+      "appEligible": false,
+      "retainedForAudit": true
     }
   ]
 }
