@@ -23,13 +23,12 @@ struct PersistentScanCameraView: UIViewRepresentable {
 struct RootScanView: View {
     @EnvironmentObject var model: ScanModel
     @State private var showingShare = false
+    @State private var showingDiscardConfirmation = false
 
     private var isCapturing: Bool { model.phase == .capturing }
 
     var body: some View {
         ZStack {
-            // This view must stay mounted even before capture starts. ScanModel.startCapture()
-            // requires an attached ARSession and then explicitly starts world tracking.
             PersistentScanCameraView()
                 .environmentObject(model)
                 .ignoresSafeArea()
@@ -61,6 +60,14 @@ struct RootScanView: View {
                 ShareSheet(items: [url])
             }
         }
+        .alert("現在の3Dを破棄しますか？", isPresented: $showingDiscardConfirmation) {
+            Button("キャンセル", role: .cancel) {}
+            Button("破棄して新しく撮る", role: .destructive) {
+                model.discardAndReset()
+            }
+        } message: {
+            Text("この試作版にはまだアルバム保存がありません。書き出していない3Dは、破棄すると元に戻せません。")
+        }
     }
 
     private var ready: some View {
@@ -69,19 +76,19 @@ struct RootScanView: View {
             Image(systemName: "cube.transparent")
                 .font(.system(size: 68, weight: .thin))
                 .foregroundStyle(.mint)
-            Text("Splat Lab")
+            Text("おもちゃばこ")
                 .font(.largeTitle.bold())
-            Text("残したい物の周囲をゆっくり撮影すると、\niPhoneの中だけで立体の思い出を生成します。")
+            Text("残しておきたい作品や記念品を、\n写真より立体的な思い出として残します。")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
             VStack(alignment: .leading, spacing: 8) {
-                Label("写真・3Dデータを開発者サーバーへ自動送信しません", systemImage: "lock.iphone")
-                Label("LiDARなしでも撮影できます", systemImage: "viewfinder")
-                Label("生成後は指で回して見返せます", systemImage: "rotate.3d")
+                Label("写真や3Dを開発者サーバーへ自動送信しません", systemImage: "lock.iphone")
+                Label("特別な機材は必要ありません", systemImage: "iphone")
+                Label("完成後は指で回して見返せます", systemImage: "rotate.3d")
             }
             .font(.subheadline)
             Spacer()
-            Button("新しく3Dで残す") {
+            Button("新しく立体で残す") {
                 model.startCapture()
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -102,16 +109,11 @@ struct RootScanView: View {
                             .background(.black.opacity(0.55), in: Circle())
                     }
                     Spacer()
-                    VStack(alignment: .trailing, spacing: 3) {
-                        Text(model.progressText)
-                            .font(.headline.monospacedDigit())
-                        Text("特徴点 \(model.featurePointCount.formatted())")
-                            .font(.caption2.monospacedDigit())
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 9)
-                    .background(.black.opacity(0.62), in: Capsule())
+                    Text(model.progressText)
+                        .font(.subheadline.bold().monospacedDigit())
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 9)
+                        .background(.black.opacity(0.62), in: Capsule())
                 }
 
                 Spacer()
@@ -135,22 +137,22 @@ struct RootScanView: View {
                     Text(model.trackingMessage)
                         .font(.subheadline.weight(.semibold))
                         .multilineTextAlignment(.center)
-                    ProgressView(value: Double(model.acceptedFrames), total: Double(model.targetFrames))
-                        .tint(.mint)
 
-                    if model.canFinishCapture && model.featurePointCount >= 64 {
+                    ProgressView(
+                        value: Double(model.coverageSectorCount),
+                        total: Double(model.coverageSectorTotal)
+                    )
+                    .tint(.mint)
+
+                    if model.canFinishCapture {
                         Button("この撮影で生成へ") {
                             model.finishCapture()
                         }
                         .buttonStyle(PrimaryButtonStyle())
-                    } else if model.acceptedFrames >= 24 {
-                        Text("立体の手がかりを集めています。対象の周囲をもう少し移動してください")
+                    } else {
+                        Text(model.captureQualityText)
                             .font(.caption)
                             .multilineTextAlignment(.center)
-                            .foregroundStyle(.secondary)
-                    } else {
-                        Text("最低24枚、推奨48枚")
-                            .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -169,10 +171,10 @@ struct RootScanView: View {
                 .foregroundStyle(.mint)
             Text("撮影できました")
                 .font(.title2.bold())
-            Text("\(model.acceptedFrames)枚の画像と \(model.featurePointCount.formatted()) 個の立体特徴点を使い、端末内で3Dを生成します。")
+            Text("対象の周囲から必要な写真がそろいました。\niPhoneの中で立体の思い出を組み立てます。")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
-            Button("端末内で3Dを生成") {
+            Button("立体の思い出を生成") {
                 model.train()
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -194,11 +196,10 @@ struct RootScanView: View {
                 .tint(.mint)
             Text("立体の思い出を生成中")
                 .font(.title2.bold())
-            Text("iteration \(model.trainingIteration) / 2000")
-                .font(.body.monospacedDigit())
-                .foregroundStyle(.secondary)
-            Text("splats \(model.splatCount.formatted())")
-                .font(.caption.monospacedDigit())
+            Text(model.trainingStageText)
+                .font(.body.weight(.medium))
+            Text("\(Int(model.trainingProgress * 100))%")
+                .font(.title3.monospacedDigit())
                 .foregroundStyle(.secondary)
             ProgressView(value: model.trainingProgress)
                 .tint(.mint)
@@ -221,14 +222,14 @@ struct RootScanView: View {
                         .ignoresSafeArea(edges: .top)
                     HStack {
                         Button {
-                            model.discardAndReset()
+                            showingDiscardConfirmation = true
                         } label: {
-                            Image(systemName: "chevron.left")
+                            Image(systemName: "xmark")
                                 .frame(width: 44, height: 44)
                                 .background(.black.opacity(0.55), in: Circle())
                         }
                         Spacer()
-                        Text("3D生成完了")
+                        Text("立体の思い出ができました")
                             .font(.caption.bold())
                             .padding(.horizontal, 12)
                             .padding(.vertical, 8)
@@ -239,16 +240,17 @@ struct RootScanView: View {
                 }
 
                 VStack(spacing: 10) {
-                    Text("1本指で回転・ピンチで拡大縮小")
+                    Text("1本指で回転・ピンチで拡大縮小・ダブルタップで表示を戻す")
                         .font(.caption)
+                        .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)
                     HStack {
                         Button("3Dを書き出す") {
                             showingShare = true
                         }
                         .buttonStyle(SecondaryButtonStyle())
-                        Button("もう一度撮る") {
-                            model.discardAndReset()
+                        Button("新しく撮る") {
+                            showingDiscardConfirmation = true
                         }
                         .buttonStyle(PrimaryButtonStyle())
                     }
@@ -270,10 +272,22 @@ struct RootScanView: View {
             Text(message)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
-            Button("最初からやり直す") {
-                model.discardAndReset()
+
+            if model.canRetryGeneration {
+                Button("生成だけもう一度試す") {
+                    model.retryGeneration()
+                }
+                .buttonStyle(PrimaryButtonStyle())
+                Button("撮影からやり直す") {
+                    model.discardAndReset()
+                }
+                .foregroundStyle(.secondary)
+            } else {
+                Button("撮影からやり直す") {
+                    model.discardAndReset()
+                }
+                .buttonStyle(PrimaryButtonStyle())
             }
-            .buttonStyle(PrimaryButtonStyle())
             Spacer()
         }
         .padding(24)
