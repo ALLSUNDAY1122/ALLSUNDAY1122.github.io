@@ -9,6 +9,9 @@ on:
     paths:
       - 'splat-native-ios/**'
       - '.github/workflows/splat-native-ios.yml'
+concurrency:
+  group: splat-native-ios-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
   pull-requests: write
