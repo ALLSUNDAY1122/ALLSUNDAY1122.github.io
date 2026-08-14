@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K113-AM-SC01",
+  "sourceExam": 113,
+  "session": "AM",
+  "questionIds": ["K113-AM091", "K113-AM092", "K113-AM093"],
+  "scenarioIndexes": [0,1,2],
+  "scenarioTotal": 3,
+  "patientProfile": "49歳女性。ほぼ在宅勤務で活動量が少なくBMI33。久しぶりの出勤時に転倒し、右大腿骨頸部骨折で右人工股関節置換術を受ける。",
+  "mainCondition": "人工股関節置換術後のVTE監視、術後発熱の原因評価、脱臼予防肢位。",
+  "assessment": [
+    "AM091では肥満・活動量低下・人工股関節手術からDVTリスクを捉え、国家試験上はHomans徴候を選ぶ。",
+    "AM092では術後1日の発熱を、肺・尿路・術創の陰性所見と末梢カテーテル刺入部の発赤・熱感を統合して評価する。",
+    "AM093では術後3日の脱臼予防として患肢外転位を保つ。"
+  ],
+  "nursingJudgment": "3問は『術後血栓症リスク→術後早期の発熱鑑別→回復期の脱臼予防』として同一THA患者の経過を追う。",
+  "nursingPractice": [
+    "DVTは下肢腫脹・疼痛などを観察し、疑う場合は現行診断アルゴリズムへつなげる。",
+    "術後発熱では全身所見と感染源候補を系統的に確認し、末梢カテーテル部位の炎症所見も見逃さない。",
+    "手術アプローチに応じた脱臼予防肢位を守り、脚の交差・過度な内転を避ける。"
+  ],
+  "tripletConsistency": {"sameScenarioId":true,"sameScenarioText":true,"indexesComplete":true,"patientIdentityConsistent":true,"timelineConsistent":true,"clinicalConsistency":true,"nextScenarioLeakDetected":false},
+  "canonicalPatch": {"path":"situation-audit/canonical-patches/K113-AM-SC01.json","textCorrectionRequired":true,"classificationCorrectionRequired":false,"mediaCorrectionRequired":true,"applyState":"pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent":true,"majorSubject":"成人看護学","subject":"運動器","status":"pass"},
+  "explanationAudit": {"batchId":"K113-AM091-AM093-situation-SC01","allThreeExplained":true,"allThreeEvidenceRefsPresent":true,"allThreeEvidenceCheckedDatePresent":true,"evidenceCheckedDate":"2026-08-14"},
+  "media": {"requiredQuestionIds":[],"falsePositiveMediaFlagQuestionIds":["K113-AM092"],"status":"official_paper_verified_no_external_media"},
+  "scoring": {"exceptionPresent":false,"status":"normal"},
+  "contentConcern": {"status":"expert_note","questionId":"K113-AM091","reason":"公式正答Homans徴候は維持するが、現行DVT診断ではHomans徴候単独を用いずWells/D-dimer/超音波で評価する。","evidenceRefs":["https://www.nice.org.uk/guidance/ng158/chapter/Recommendations","https://ashpublications.org/bloodadvances/article/2/22/3226/16134/American-Society-of-Hematology-2018-guidelines-for"]},
+  "expertReviewStatus":"pending_global_expert_audit",
+  "scenarioAuditStatus":"content_pass_canonical_patch_pending",
+  "auditedAt":"2026-08-14T15:19:00+09:00"
+}
