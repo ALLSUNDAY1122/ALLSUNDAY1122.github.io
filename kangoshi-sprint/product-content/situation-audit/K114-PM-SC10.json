@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-PM-SC10",
+  "sourceExam": 114,
+  "session": "PM",
+  "questionIds": ["K114-PM118", "K114-PM119", "K114-PM120"],
+  "scenarioIndexes": [0,1,2],
+  "scenarioTotal": 3,
+  "patientProfile": "震度6強の地震後に開設された避難所・救護所を舞台にする災害事象連結型症例。PM118は右大腿部切創のAさん54歳、PM119は避難者約150名の集団感染予防、PM120は発災3日後に帯状疱疹を疑うBさん72歳を扱う。",
+  "mainCondition": "災害救護所での標準予防策、避難所のインフルエンザ集団感染サーベイランス、帯状疱疹の播種性評価と感染対策。",
+  "assessment": [
+    "PM118では出血創処置の血液飛散リスクからゴーグルを含む標準予防策を選ぶ。",
+    "PM119では流行情報がある避難所で、入所時からの健康記録により症状の発生を早期把握する。",
+    "PM120では皮節性水疱を認めるBさんについて、播種性帯状疱疹を除外するため全身の皮疹分布を優先して観察する。"
+  ],
+  "nursingJudgment": "この症例は単一患者を3問追う形式ではなく、同一地震・避難所という災害事象を軸に、創傷患者Aさん→避難者集団→帯状疱疹疑いBさんへ対象が変わる。対象変化を患者取り違えや次症例混入と誤判定せず、災害事象連結型としてPASSする。",
+  "nursingPractice": [
+    "血液・体液飛散が予測される処置では眼・粘膜をPPEで保護する。",
+    "避難所では健康状態を継続記録し、呼吸器症状などの発生を早期把握して隔離・受診へつなげる。",
+    "水疱性皮疹では分布と免疫状態を確認し、播種性が疑われる場合は感染経路別予防策を強化する。"
+  ],
+  "tripletConsistency": {"sameScenarioId":true,"sameScenarioText":true,"indexesComplete":true,"multiPatientDisasterScenario":true,"patientIdentityConsistent":true,"timelineConsistent":true,"clinicalConsistency":true,"nextScenarioLeakDetected":false},
+  "canonicalPatch": {"path":"situation-audit/canonical-patches/K114-PM-SC10.json","textCorrectionRequired":true,"classificationCorrectionRequired":false,"applyState":"pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent":true,"majorSubject":"看護の統合と実践","subject":"災害・救急","status":"pass"},
+  "explanationAudit": {"batchId":"K114-PM118-PM120-situation-SC10","allThreeExplained":true,"allThreeEvidenceRefsPresent":true,"allThreeEvidenceCheckedDatePresent":true,"evidenceCheckedDate":"2026-08-14"},
+  "media":{"required":false,"status":"not_required"},
+  "scoring":{"exceptionPresent":false,"status":"normal"},
+  "contentConcern":{"status":"none","questionId":null,"reason":null,"evidenceRefs":[]},
+  "expertReviewStatus":"pending_global_expert_audit",
+  "scenarioAuditStatus":"content_pass_canonical_patch_pending",
+  "auditedAt":"2026-08-14T15:54:00+09:00"
+}
