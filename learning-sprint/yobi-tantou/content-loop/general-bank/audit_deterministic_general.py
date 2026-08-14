@@ -25,7 +25,23 @@ def close(a: float, b: float) -> bool:
     return math.isclose(float(a), float(b), rel_tol=1e-9, abs_tol=1e-9)
 
 
-def compute(v: dict):
+def unique_argmax(values: list[float]) -> int:
+    maximum = max(values)
+    indices = [i for i, value in enumerate(values) if close(value, maximum)]
+    if len(indices) != 1:
+        raise AuditError(f"argmax is not unique: {indices}")
+    return indices[0]
+
+
+def unique_argmin(values: list[float]) -> int:
+    minimum = min(values)
+    indices = [i for i, value in enumerate(values) if close(value, minimum)]
+    if len(indices) != 1:
+        raise AuditError(f"argmin is not unique: {indices}")
+    return indices[0]
+
+
+def compute_numeric(v: dict):
     kind = v.get("kind")
     if kind == "ratio_percent":
         return v["part"] / v["whole"] * 100
@@ -54,7 +70,65 @@ def compute(v: dict):
         return sum(v["values"])
     if kind == "remainder":
         return v["total"] - sum(v["parts"])
-    raise AuditError(f"unsupported deterministic verification kind: {kind}")
+    if kind == "share_of_sum":
+        return v["values"][v["target_index"]] / sum(v["values"]) * 100
+    if kind == "signed_difference":
+        return v["after"] - v["before"]
+    if kind == "compound_percent_factors":
+        value = float(v["base"])
+        for factor in v["factors"]:
+            value *= factor
+        return value
+    raise AuditError(f"unsupported numeric verification kind: {kind}")
+
+
+def compute_index(v: dict) -> int:
+    kind = v.get("kind")
+    if kind == "argmax_delta":
+        return unique_argmax([end - start for start, end in v["pairs"]])
+    if kind == "argmin_drop":
+        return unique_argmin([start - end for start, end in v["pairs"]])
+    if kind == "range_compare":
+        ranges = [max(values) - min(values) for values in v["datasets"]]
+        return unique_argmin(ranges)
+    if kind == "compare_increase_percent":
+        rates = [(end - start) / start * 100 for start, end in v["pairs"]]
+        return unique_argmax(rates)
+    if kind == "argmax":
+        return unique_argmax(v["values"])
+    if kind == "compare_ratio":
+        rates = [part / whole for part, whole in v["pairs"]]
+        return unique_argmax(rates)
+    if kind == "priority":
+        labels = v["labels"]
+        return labels.index(v["priority"])
+    raise AuditError(f"unsupported index verification kind: {kind}")
+
+
+def compute_text(v: dict) -> str:
+    kind = v.get("kind")
+    if kind == "sequence":
+        return "→".join(v["sequence"])
+    if kind == "conditional_lookup":
+        return str(v["mapping"][v["condition"]])
+    if kind == "attribute_lookup":
+        attribute, expected_value = v["query"]
+        matches = [name for name, attrs in v["attributes"].items() if attrs.get(attribute) == expected_value]
+        if len(matches) != 1:
+            raise AuditError(f"attribute lookup is not unique: {matches}")
+        return matches[0]
+    if kind == "timeline_next":
+        names = [event[1] for event in v["events"]]
+        index = names.index(v["target"])
+        if index + 1 >= len(names):
+            raise AuditError("timeline target has no next event")
+        return names[index + 1]
+    if kind in {
+        "explicit_cause", "exception", "all_requirements", "explicit_prohibition",
+        "exception_application", "argmax_all", "threshold_all",
+    }:
+        return str(v["correct_text"])
+    raise AuditError(f"unsupported text verification kind: {kind}")
 
 
 def audit_item(item: dict) -> dict:
@@ -66,15 +140,22 @@ def audit_item(item: dict) -> dict:
     if not isinstance(answer, int) or not 0 <= answer < len(choices):
         raise AuditError(f"{qid}: invalid answer index")
 
+    numeric_kinds = {
+        "ratio_percent", "mean", "increase_percent", "ratio_share", "divide",
+        "difference", "median", "discount", "multiply", "compound_percent", "sum",
+        "remainder", "share_of_sum", "signed_difference", "compound_percent_factors",
+    }
+    index_kinds = {"argmax_delta", "argmin_drop", "range_compare", "compare_increase_percent", "argmax", "compare_ratio", "priority"}
+    text_kinds = {"sequence", "conditional_lookup", "attribute_lookup", "timeline_next", "explicit_cause", "exception", "all_requirements", "explicit_prohibition", "exception_application", "argmax_all", "threshold_all"}
+
     if kind == "fraction":
-        expected = str(verification["correct_text"])
-        if str(choices[answer]).strip() != expected:
-            raise AuditError(f"{qid}: fraction answer choice does not match computed fixture")
-        if sum(str(choice).strip() == expected for choice in choices) != 1:
+        computed = str(verification["correct_text"])
+        if str(choices[answer]).strip() != computed:
+            raise AuditError(f"{qid}: fraction answer choice does not match fixture")
+        if sum(str(choice).strip() == computed for choice in choices) != 1:
             raise AuditError(f"{qid}: fraction correct value is not unique")
-        computed = expected
-    else:
-        computed = compute(verification)
+    elif kind in numeric_kinds:
+        computed = compute_numeric(verification)
         selected = number_from_choice(choices[answer])
         if not close(selected, computed):
             raise AuditError(f"{qid}: selected choice {selected} != computed {computed}")
@@ -87,10 +168,36 @@ def audit_item(item: dict) -> dict:
                 pass
         if numeric_matches != 1:
             raise AuditError(f"{qid}: computed correct value is not unique among choices")
+    elif kind in index_kinds:
+        computed = compute_index(verification)
+        if answer != computed:
+            raise AuditError(f"{qid}: answer index {answer} != recomputed index {computed}")
+    elif kind in text_kinds:
+        computed = compute_text(verification)
+        if str(choices[answer]).strip() != computed:
+            raise AuditError(f"{qid}: selected text {choices[answer]!r} != computed {computed!r}")
+        if sum(str(choice).strip() == computed for choice in choices) != 1:
+            raise AuditError(f"{qid}: computed correct text is not unique")
+        if kind == "argmax_all":
+            values = verification["values"]
+            max_value = max(values)
+            computed_indices = [i for i, value in enumerate(values) if close(value, max_value)]
+            if computed_indices != verification.get("correct_indices"):
+                raise AuditError(f"{qid}: argmax_all indices mismatch")
+        if kind == "threshold_all":
+            thresholds = verification["thresholds"]
+            computed_indices = [i for i, row in enumerate(verification["rows"]) if all(value >= threshold for value, threshold in zip(row, thresholds))]
+            if computed_indices != verification.get("correct_indices"):
+                raise AuditError(f"{qid}: threshold_all indices mismatch")
+    else:
+        raise AuditError(f"{qid}: unsupported verification kind {kind}")
 
     declared = verification.get("correct_value")
     if declared is not None and isinstance(computed, (int, float)) and not close(declared, computed):
         raise AuditError(f"{qid}: declared correct_value {declared} != recomputed {computed}")
+    declared_index = verification.get("correct_index")
+    if declared_index is not None and isinstance(computed, int) and declared_index != computed:
+        raise AuditError(f"{qid}: declared correct_index {declared_index} != recomputed {computed}")
 
     return {
         "id": qid,
@@ -116,7 +223,7 @@ def main() -> int:
     try:
         for item in items:
             results.append(audit_item(item))
-    except (AuditError, KeyError, ZeroDivisionError) as error:
+    except (AuditError, KeyError, ValueError, ZeroDivisionError) as error:
         print(f"FAIL: deterministic general answer audit: {error}")
         return 1
 
@@ -125,7 +232,7 @@ def main() -> int:
         "checkedAt": max(str(item.get("evidence_checked_date", "")) for item in items),
         "status": "PASS",
         "scope": args.bank.name,
-        "policy": "設問内の自作数値fixtureから正答を再計算し、候補answer・選択肢と独立照合する。外部著作物の正答知識へ依存しない。",
+        "policy": "設問内の自作fixtureから正答を再計算・再構成し、候補answer・選択肢と独立照合する。外部著作物の正答知識へ依存しない。",
         "items": results,
     }
     args.report.parent.mkdir(parents=True, exist_ok=True)
