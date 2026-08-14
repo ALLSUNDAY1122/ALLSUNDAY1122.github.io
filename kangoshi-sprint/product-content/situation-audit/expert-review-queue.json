@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "updatedAt": "2026-08-14",
   "reviewPacket": "kangoshi-sprint/product-content/situation-audit/expert-review-packet.json",
-  "policy": "専門監査が完了するまで該当問題のみrelease quarantine。他178問およびcanonical content PASSを停止しない。ready_for_domain_expertは承認済みを意味しない。",
+  "policy": "Learning Sprint問題監査§10に従いAI・CIで可能な限り完結。一次資料監査で解消できないもののみ外部専門家へ残す。該当問題だけrelease quarantineし、他問題を停止しない。",
   "items": [
     {
       "scenarioId": "K115-AM-SC05",
@@ -11,14 +11,16 @@
       "type": "clinical_severity_wording",
       "officialAnswerAction": "keep",
       "officialAnswer": 1,
-      "issue": "公式正答は中発作。SpO2 93％はJPGLの8歳以上中発作の分布と整合する一方、『途切れ途切れに話す』は強い呼吸困難を示す表現でもある。解説で中発作と断定する際の表現を小児喘息専門家が確認する。",
+      "issue": "公式正答は中発作。SpO2 93％はJPGLの8歳以上中発作群の分布と整合するが、単一指標だけで重症度を断定しない表現が必要。",
       "evidenceRefs": [
         "https://www.jspaci.jp/assets/documents/jpgl2023_web.pdf",
         "https://www.jspaci.jp/journal/asthma2023/"
       ],
       "reviewPacketItem": "K115-AM103",
-      "requestedDecision": "提案文が、公式正答を維持しつつ会話途切れを軽視しない臨床的に妥当な説明かを確認する。",
-      "status": "ready_for_domain_expert"
+      "reviewMethod": "AI primary-source audit per Learning Sprint §10",
+      "reviewedAt": "2026-08-14",
+      "resolution": "JPGLの年齢別SpO2分布と修正pulmonary indexを再確認。公式正答は保持し、SpO2単独ではなく呼吸数・心拍数・喘鳴・呼吸仕事量等を総合評価する説明へ修正した。",
+      "status": "resolved"
     },
     {
       "scenarioId": "K115-AM-SC08",
@@ -27,16 +29,18 @@
       "type": "current_guidance_nuance",
       "officialAnswerAction": "keep",
       "officialAnswer": 3,
-      "issue": "公式正答は『産後1か月健診までは性交渉を避ける』で維持。現行の産後ケアは回復・疼痛・避妊等を個別評価する考え方が強いため、国家試験向け解説と現行臨床指導の境界表現を母性看護専門家が確認する。",
+      "issue": "公式正答は『産後1か月健診までは性交渉を避ける』で維持する一方、現行臨床を一律の固定日ルールとして教えない表現が必要。",
       "evidenceRefs": [
-        "https://prenatal.cfa.go.jp/pregnancy-and-childbirth/medical-checkup.html",
-        "https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2018/05/optimizing-postpartum-care",
+        "https://birth-navi.mhlw.go.jp/support/postnatal",
         "https://www.acog.org/womens-health/faqs/a-partners-guide-to-pregnancy",
-        "https://www.nhs.uk/baby/support-and-services/sex-and-contraception-after-birth/"
+        "https://www.nhs.uk/baby/support-and-services/sex-and-contraception-after-birth/",
+        "https://www.acog.org/womens-health/faqs/postpartum-birth-control"
       ],
       "reviewPacketItem": "K115-AM114",
-      "requestedDecision": "提案文が、国家試験正答と現行の個別的産褥指導を明確かつ安全に区別しているかを確認する。",
-      "status": "ready_for_domain_expert"
+      "reviewMethod": "AI primary-source audit per Learning Sprint §10",
+      "reviewedAt": "2026-08-14",
+      "resolution": "厚労省の産婦健診時期とACOG/NHSの産後性生活・避妊情報を再確認。国家試験の公式正答と、固定日ではなく回復・疼痛・本人の準備・避妊を個別評価する現行指導を明確に分離した。",
+      "status": "resolved"
     }
   ]
 }

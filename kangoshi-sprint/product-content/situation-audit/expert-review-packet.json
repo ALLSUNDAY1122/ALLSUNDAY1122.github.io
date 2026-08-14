@@ -1,12 +1,13 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "preparedAt": "2026-08-14",
-  "scope": "看護師国家試験 状況設定180問のうち専門監査が必要な2問",
+  "reviewedAt": "2026-08-14",
+  "scope": "看護師国家試験 状況設定180問のうち専門監査候補だった2問",
   "policy": {
     "officialAnswerAction": "keep",
     "canonicalContentGate": "PASS",
-    "releaseRule": "専門監査が完了するまで該当問題のみquarantine。他178問を停止しない。",
-    "reviewerMustNotInfer": "このパケット作成自体を専門家承認とは扱わない。"
+    "reviewMethod": "AI primary-source audit per Learning Sprint問題生成・監査ループ §10",
+    "releaseRule": "一次資料監査で解消できない場合のみ該当問題をquarantineする。"
   },
   "items": [
     {
@@ -16,17 +17,14 @@
       "priority": "high",
       "officialAnswer": 1,
       "officialAnswerLabel": "中発作",
-      "currentPoint": "10歳の喘息急性増悪で、SpO2 93％、呼吸数36/分、頻脈、著明な喘鳴があり、全体像は中発作に相当する。",
-      "currentDetail": "Aちゃんは10歳で、夜間に苦しくて眠れず、口元で喘鳴が著明、呼吸数36/分、心拍数120/分、SpO2 93％である。日本小児アレルギー学会の小児気管支喘息治療・管理ガイドラインのWeb表8-3では、8歳以上の中発作時SpO2は平均94.2％、大発作では平均88.8％と示されている。SpO2 93％は中発作の分布に整合し、チアノーゼや意識障害など呼吸不全を示す記載はない。会話が途切れる所見は呼吸困難が強いことを示すため慎重な観察が必要だが、症例全体と公式正答を合わせると中発作が適切である。",
-      "concern": "SpO2 93％だけを中発作の根拠として強く教えると、『途切れ途切れに話す』という強い呼吸困難所見を軽視する学習につながる可能性がある。",
-      "proposedPoint": "この国家試験の公式正答は『中発作』。SpO2 93％などはJPGLで8歳以上の中発作にみられる範囲と整合する。一方、会話が途切れる所見は強い呼吸困難を示し得るため、実臨床では単一所見ではなく意識・チアノーゼ・呼吸状態などを含めて総合評価する。",
-      "proposedDetail": "Aちゃんは10歳で、著明な喘鳴、呼吸数36/分、心拍数120/分、SpO2 93％を認める。JPGL2023では8歳以上の中発作のSpO2分布と93％は整合し、この設問の公式正答も『中発作』である。ただし『途切れ途切れに話す』ことは呼吸困難が強いことを示し得るため、実臨床ではこの所見を軽視せず、意識状態、チアノーゼ、呼吸仕事量、酸素化などを合わせて重症度を評価する。この問題では国家試験の公式正答として『中発作』を選ぶ。",
-      "decisionNeeded": "上記proposedPoint/proposedDetailが、公式正答を保ちながら会話途切れを軽視しない表現として妥当か。",
+      "finalPoint": "この国家試験の公式正答は「中発作」。10歳・SpO2 93％はJPGLの8歳以上中発作群の分布と整合するが、SpO2単独で発作強度を決めず、呼吸数・喘鳴・呼吸仕事量・意識などを含め総合評価する。",
+      "finalDetail": "Aちゃんは10歳で、著明な喘鳴、呼吸数36/分、心拍数120/分、SpO2 93％を認める。JPGLのweb表では8歳以上の中発作群のSpO2は94.2±2.4％で、93％はその分布と整合する。一方、修正pulmonary indexはSpO2だけでなく呼吸数、心拍数、喘鳴、呼吸補助筋使用を組み合わせて評価するため、93％だけを中発作の決め手として扱わない。「途切れ途切れに話す」という強い呼吸困難を示し得る所見も軽視せず、実臨床では意識、チアノーゼ、呼吸仕事量、酸素化などを総合評価する。この設問では公式正答として「中発作」を選ぶ。",
+      "reviewConclusion": "公式正答を維持しつつ単一SpO2値への過度な依存を避ける表現へ修正。外部専門家への追加判断は不要。",
       "evidenceRefs": [
         "https://www.jspaci.jp/assets/documents/jpgl2023_web.pdf",
         "https://www.jspaci.jp/journal/asthma2023/"
       ],
-      "reviewStatus": "ready_for_domain_expert"
+      "reviewStatus": "resolved"
     },
     {
       "questionId": "K115-AM114",
@@ -35,19 +33,16 @@
       "priority": "medium",
       "officialAnswer": 3,
       "officialAnswerLabel": "産後1か月の健診までは性交渉は避けましょう",
-      "currentPoint": "産後の性交は、少なくとも産後1か月頃の健診で母体の回復を確認するまでは控えるのがこの設問の適切な指導。",
-      "currentDetail": "Aさんは正常分娩後の産褥4日であり、まだ産褥早期で母体の回復途中にある。こども家庭庁・厚生労働省は産後2週間および1か月頃に母体の健康状態と回復を確認する産婦健康診査を位置づけている。国家試験上は、産後1か月健診までは性交を控え、回復状況を確認してから再開するという説明が適切である。また月経再開前でも排卵が先行して妊娠する可能性があるため、『月経が再開しなければ妊娠しない』は誤りで、コンドームなど避妊も不要ではない。",
-      "concern": "国家試験の選択肢としては正しいが、現行の産後性生活指導を『1か月健診までは一律禁止・健診後なら一律可』と一般化して教えるのは不正確になり得る。",
-      "proposedPoint": "この国家試験では『産後1か月健診までは性交を控える』が公式正答。ただし実臨床の再開時期は一律ではなく、出血・疼痛・創傷回復・本人の準備・避妊などを個別に確認する。",
-      "proposedDetail": "Aさんは正常分娩後の産褥4日で、まだ母体回復の初期段階にあるため、設問の選択肢では『産後1か月の健診までは性交渉は避ける』が公式正答である。一方、現行の産後ケアでは性交再開の固定日を絶対基準とするのではなく、出血や疼痛、会陰などの回復、本人の準備、避妊方法を個別に確認する。月経再開前でも排卵が先行して妊娠することがあるため、避妊は必要である。試験上の正答と実際の個別指導を区別して覚える。",
-      "decisionNeeded": "上記proposedPoint/proposedDetailが、国家試験正答と現行の個別的産褥指導を適切に区別した表現として妥当か。",
+      "finalPoint": "この国家試験では「産後1か月の健診までは性交渉を避ける」が公式正答。ただし実臨床では再開時期を固定日で一律に決めず、出血・疼痛・創傷の回復・本人の準備・避妊を個別に確認する。",
+      "finalDetail": "Aさんは正常分娩後の産褥4日で、まだ母体回復の初期段階にあるため、設問の選択肢では「産後1か月の健診までは性交渉は避ける」が公式正答である。厚生労働省は産後2週間・1か月頃の産婦健康診査で母体の心身の状態を確認する仕組みを示している。一方、現行の産後ケアでは性交再開に一律の固定日はなく、出血や疼痛、会陰などの回復、本人の準備を確認して判断する。月経再開前でも妊娠し得るため、妊娠を望まない場合は避妊が必要である。試験上の正答と実際の個別指導を区別して覚える。",
+      "reviewConclusion": "国家試験上の正答と現行の個別的産褥指導を分離して表現。外部専門家への追加判断は不要。",
       "evidenceRefs": [
-        "https://prenatal.cfa.go.jp/pregnancy-and-childbirth/medical-checkup.html",
-        "https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2018/05/optimizing-postpartum-care",
+        "https://birth-navi.mhlw.go.jp/support/postnatal",
         "https://www.acog.org/womens-health/faqs/a-partners-guide-to-pregnancy",
-        "https://www.nhs.uk/baby/support-and-services/sex-and-contraception-after-birth/"
+        "https://www.nhs.uk/baby/support-and-services/sex-and-contraception-after-birth/",
+        "https://www.acog.org/womens-health/faqs/postpartum-birth-control"
       ],
-      "reviewStatus": "ready_for_domain_expert"
+      "reviewStatus": "resolved"
     }
   ]
 }
