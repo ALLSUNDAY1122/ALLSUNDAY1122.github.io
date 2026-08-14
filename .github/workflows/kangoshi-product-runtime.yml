@@ -1,0 +1,65 @@
+name: Kangoshi Canonical Product Runtime
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/product-content/build_product_runtime.py'
+      - 'kangoshi-sprint/product-content/enriched-draft/set1-draft.json'
+      - 'kangoshi-sprint/product-content/enriched-draft/set2-draft.json'
+      - 'kangoshi-sprint/product-content/enriched-draft/set3-draft.json'
+      - 'kangoshi-sprint/product-content/situation-audit/expert-review-queue.json'
+      - 'kangoshi-sprint/media/**'
+      - '.github/workflows/kangoshi-product-runtime.yml'
+
+concurrency:
+  group: kangoshi-product-runtime
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build canonical runtime
+        run: python3 kangoshi-sprint/product-content/build_product_runtime.py
+      - name: Validate runtime artifact
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          root=Path('kangoshi-sprint/product-content')
+          audit=json.loads((root/'product-runtime-audit.json').read_text(encoding='utf-8'))
+          js=Path('kangoshi-sprint/questions-runtime.js').read_text(encoding='utf-8')
+          manifest=json.loads((root/'manifest.json').read_text(encoding='utf-8'))
+          assert audit.get('pass') is True
+          assert audit['canonicalTotal']==720 and audit['runtimeEligible']==718
+          assert audit['mediaResolved']==38 and not audit['mediaMissingAssets']
+          assert 'window.KANGOSHI_QUESTIONS=ALL.filter' in js
+          sets={int(s['sourceExam']):s for s in manifest['sets']}
+          assert sets[114]['status']=='ready' and sets[114]['runtimeEligibleCount']==240
+          assert sets[113]['status']=='ready' and sets[113]['runtimeEligibleCount']==240
+          assert sets[115]['status']=='pending_expert_review' and sets[115]['runtimeEligibleCount']==238
+          print({'runtime':718,'media':38,'readyExams':[114,113],'pass':True})
+          PY
+      - name: Commit runtime and manifest
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/questions-runtime.js \
+                  kangoshi-sprint/product-content/product-runtime-audit.json \
+                  kangoshi-sprint/product-content/manifest.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'kangoshi: materialize canonical 720-question runtime'
+            pushed=0
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push; then pushed=1; break; fi
+              sleep 2
+            done
+            test "$pushed" = "1"
+          fi
