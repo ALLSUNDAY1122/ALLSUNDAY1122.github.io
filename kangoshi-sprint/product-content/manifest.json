@@ -76,6 +76,7 @@
     "importExit": 0,
     "normalizeExit": 0,
     "rawValidationExit": 0,
+    "mediaDetectionExit": 0,
     "commonAuditExit": 0,
     "releaseAllowed": false
   },
@@ -93,19 +94,22 @@
   },
   "explanationEvidenceLoop": {
     "total": 720,
-    "explained": 102,
-    "pending": 618,
+    "explained": 547,
+    "pending": 173,
     "dynamicRequired": 85,
-    "dynamicVerified": 9,
-    "dynamicPending": 76,
+    "dynamicVerified": 66,
+    "dynamicExpertReview": 0,
+    "dynamicPending": 19,
     "queues": {
-      "textPending": 572,
-      "mediaPending": 36,
-      "dynamicPending": 76,
-      "contentConcerns": 2,
+      "textPending": 0,
+      "mediaPending": 38,
+      "dynamicPending": 19,
+      "contentConcerns": 3,
       "scoringExceptionPending": 8,
-      "explained": 102,
-      "queueDetectedMediaOverrides": 9
+      "expertReviewPending": 720,
+      "releaseQuarantined": 720,
+      "explained": 547,
+      "queueDetectedMediaOverrides": 0
     },
     "auditExit": 1,
     "status": "fail"

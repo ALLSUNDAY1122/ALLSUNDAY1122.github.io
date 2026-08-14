@@ -3,7 +3,7 @@
 更新: 2026-08-14
 
 このファイルは、Notion正本「【正本】対象アプリ識別情報｜App Store Connect / Codemagic」のGitHubミラーです。
-識別情報はユーザー指定値または明示的に委任された命名判断を最上位正本として扱い、外部検索、過去チャット、既存コード、命名規則、推測で変更・補完しません。Appleが自動発行する数値App Store Connect App IDは実発行値だけを記録します。
+識別情報はユーザー指定値を最上位正本として扱い、外部検索、過去チャット、既存コード、命名規則、推測で変更・補完しません。ユーザーが命名判断を明示的にAIへ委任した場合は、その委任範囲に限りAIが値を決定して正本へ記録できます。Appleが自動発行する数値IDは実発行値だけを記録します。
 
 Notion正本:
 https://app.notion.com/p/3b709c10697d8138a352c422d4dd5c47
@@ -38,8 +38,8 @@ https://app.notion.com/p/3b709c10697d8138a352c422d4dd5c47
 
 ## 運用ルール
 
-1. 実装・署名・Codemagic・App Store Connect入力前にNotion正本を確認する。
-2. 他資料と不一致なら、Notion正本を優先して他資料を修正する。
+1. 実装・署名・Codemagic・App Store Connect入力前にこの正本を確認する。
+2. 他資料と不一致なら、Notion正本を優先してこのミラーを修正する。
 3. 未記載値を外部検索や命名規則から作らない。
 4. Bundle ID / Codemagic profile / IAPは、ユーザーが値を明示するか命名判断を明示的にAIへ委任した場合のみ追記する。
 5. Appleが自動発行する数値App Store Connect App IDは実発行値だけを記録する。

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K115-PM-SC10",
+  "sourceExam": 115,
+  "session": "PM",
+  "questionIds": ["K115-PM118", "K115-PM119", "K115-PM120"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "大型台風接近を受け災害対策本部を設置した病院と避難所を舞台にする災害看護症例。PM118はICU患者、PM119は娘が行方不明の66歳Cさん、PM120は避難生活で興奮する72歳Dさんを扱う。",
+  "mainCondition": "災害発生時の病院内安全・心理支援、避難所での急性ストレス・悲嘆評価、避難生活中の興奮への安全な対応。",
+  "assessment": [
+    "PM118では停電直後でも自家発電で機器が正常作動している事実を優先し、機器を不必要に変更せず不安を示す意識清明患者へ声をかける。",
+    "PM119では発災3日目に娘の安否不明と自責・涙を抱えるCさんについて、睡眠・食事など基本的生活機能を確認する。",
+    "PM120では避難所生活5日目のストレス下で興奮するDさんを、安全確保しながら刺激の少ない場所へ誘導する。"
+  ],
+  "nursingJudgment": "この症例は単一患者を3問追跡する形式ではなく、同一の台風・土砂災害という災害事象の時間経過の中で複数患者を扱うタイプである。scenarioIdと症例本文は共通し、PM118の病院内対応→PM119-120の避難所支援へ災害対応の場が移る。患者名の変化を抽出誤りとせず、災害事象連結型症例として監査する。",
+  "nursingPractice": [
+    "設備の実作動状態を確認し、不要な機器変更を避けながら患者へ状況説明と安心支援を行う。",
+    "被災者の悲嘆を否定せず、睡眠・食事・安全など基本的ニーズを確認する。",
+    "興奮時は刺激と対立を減らし、スタッフの安全も確保して静かな場所へ案内する。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "multiPatientDisasterScenario": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "classificationAudit": {
+    "currentDraftPass": false,
+    "correctionRequired": true,
+    "questionId": "K115-PM118",
+    "current": {"majorSubject": "基礎看護学", "subject": "与薬・輸液"},
+    "corrected": {"majorSubject": "看護の統合と実践", "subject": "災害・救急"},
+    "reason": "輸液ポンプは場面内機器の一つにすぎず、設問の主題・正答は災害時ICUでの安全確認と患者支援。SC10全体も災害看護で連結する。",
+    "correctionOverlay": "situation-audit/classification-corrections.json",
+    "applyState": "pending_canonical_integration"
+  },
+  "explanationAudit": {"batchId": "K115-PM118-PM120-situation-SC10", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "none", "questionId": null, "reason": null, "evidenceRefs": []},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_classification_correction_pending_canonical",
+  "auditedAt": "2026-08-14T15:25:00+09:00"
+}

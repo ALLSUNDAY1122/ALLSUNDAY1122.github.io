@@ -1,10 +1,12 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "workstream": "B-general",
   "scope": "第115・114・113回 一般問題",
   "targetCount": 390,
-  "checkedAt": "2026-08-10",
-  "status": "PASS_WITH_QUARANTINE_AND_COORDINATOR_HANDOFF",
+  "recheckedAt": "2026-08-14T14:28:00+09:00",
+  "status": "BATCH_AUDIT_PASS_CANONICAL_AUDIT_PENDING",
+  "supersedesPreviousStatus": "PASS_WITH_QUARANTINE_AND_COORDINATOR_HANDOFF",
+  "reasonForStatusChange": "The revised standard/procedure states that explanation-batches and temporary audit JSON are intermediate artifacts; final PASS requires consolidation to canonical JSON and a fresh audit on that consolidated canonical data.",
   "counts": {
     "total": 390,
     "normalExplanationEvidenceCovered": 352,
@@ -15,12 +17,7 @@
       "114": {"total":130,"normal":116,"quarantined":14},
       "113": {"total":130,"normal":114,"quarantined":16}
     },
-    "quarantineByType": {
-      "contentConcern": 9,
-      "scoringException": 2,
-      "mediaDependent": 22,
-      "sourceDataDefect": 5
-    }
+    "quarantineByType": {"contentConcern":9,"scoringException":2,"mediaDependent":22,"sourceDataDefect":5}
   },
   "quarantineIds": {
     "contentConcern": ["K115-AM029","K115-AM066","K114-AM042","K114-AM043","K114-AM056","K114-PM089","K113-AM084","K113-AM085","K113-AM087"],
@@ -28,7 +25,7 @@
     "mediaDependent": ["K115-AM034","K115-AM063","K115-PM058","K115-PM077","K114-AM030","K114-AM039","K114-AM041","K114-AM051","K114-AM054","K114-PM027","K114-PM045","K114-PM055","K114-PM071","K114-PM080","K113-AM027","K113-AM034","K113-AM035","K113-AM046","K113-PM037","K113-PM054","K113-PM066","K113-PM077"],
     "sourceDataDefect": ["K113-AM061","K113-PM053","K113-PM057","K113-PM078","K113-PM090"]
   },
-  "qualityGates": {
+  "batchLayerQualityGates": {
     "count390": "pass",
     "eachExam130": "pass",
     "questionQueueOverlap": 0,
@@ -42,26 +39,27 @@
     "quarantineMissingEvidenceOrOfficialSource": 0,
     "batchIdDuplicatesDetectedInBWorkstream": 0,
     "questionIdDuplicatesDetectedInBWorkstream": 0,
-    "rawExactDuplicateStemGate": "pass_inherited_from_common_raw_audit_before_new_semantic-defect_discovery",
-    "rawNearDuplicateStemGate": "pass_inherited_at_threshold_0.90_before_new_semantic-defect_discovery",
-    "highSimilarityWaterFillingDetected": 0,
-    "note": "The 390 questions are official questions from three distinct exam rounds, not AI-generated paraphrase filler. Existing common raw audit had similarity_threshold 0.90 and commonAuditExit=0. Newly found numeric import defects invalidate semantic-completeness confidence for affected raw records, so coordinator must repair and rerun common raw audit before release."
+    "highSimilarityWaterFillingDetected": 0
   },
-  "examAuditFiles": {
-    "115": "kangoshi-sprint/workstreams/B-general/K115-SPECIAL-AUDIT.json",
-    "114": "kangoshi-sprint/workstreams/B-general/K114-SPECIAL-AUDIT.json",
-    "113": "kangoshi-sprint/workstreams/B-general/K113-SPECIAL-AUDIT.json"
+  "canonicalLayerQualityGates": {
+    "canonicalGeneralFilesCreated": false,
+    "canonicalCountAudit": "pending",
+    "canonicalDuplicateIdAudit": "pending",
+    "canonicalExactStemAudit": "pending",
+    "canonicalNearDuplicateAudit": "pending",
+    "canonicalAnswerConsistencyAudit": "pending",
+    "canonicalExplanationEvidenceAudit": "pending",
+    "canonicalRightsAndBaseDateAudit": "pending",
+    "finalPass": false
   },
-  "newSourceDefectsThatInvalidateAffectedRawPass": {
-    "count": 5,
-    "ids": ["K113-AM061","K113-PM053","K113-PM057","K113-PM078","K113-PM090"],
-    "requiredCoordinatorLoop": [
-      "restore exact official text/numerals from MHLW PDFs",
-      "rerun raw structural validation",
-      "rerun common duplicate/high-similarity audit",
-      "rerun L2/L3 queues for affected questions",
-      "do not release affected questions before all reruns pass"
-    ]
+  "canonicalizationHandoff": {
+    "file":"kangoshi-sprint/workstreams/B-general/CANONICALIZATION-HANDOFF-v2.4.json",
+    "commit":"824dbb5f347e12dfdf5fec569fd4e87de391491d"
+  },
+  "sourceDefectsBlockingCanonicalPass": {
+    "count":5,
+    "ids":["K113-AM061","K113-PM053","K113-PM057","K113-PM078","K113-PM090"],
+    "requiredAction":"restore exact MHLW source text/numerals before generating and auditing canonical general JSON"
   },
   "releaseBlockingHandoff": {
     "coordinatorOwned": true,
@@ -70,7 +68,8 @@
     "mediaRightsAndVisualAuditNeeded": 22,
     "scoringOverlayNeeded": 2,
     "rawFixNeeded": 5,
+    "canonicalAuditNeeded": true,
     "productReleaseAllowedByBWorkstream": false
   },
-  "conclusion": "B-general workstream has classified and evidence-audited all 390 general questions with no silent answer changes and no filler. Workstream PASS is conditional on quarantine. Product integration/release remains blocked until coordinator resolves quarantine and reruns invalidated common audits."
+  "conclusion": "All 390 general questions have completed B-workstream batch-layer content/evidence classification without silent answer changes or filler. Under standard v2.4 this is not a final PASS. Final PASS remains blocked until coordinator fixes affected raw data, consolidates exam-level canonical JSON, and reruns the prescribed audits on canonical data."
 }

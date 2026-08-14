@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K115-PM-SC03",
+  "sourceExam": 115,
+  "session": "PM",
+  "questionIds": ["K115-PM097", "K115-PM098", "K115-PM099"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "21歳女性、大学生。半年ほど前から疲れやすく、安静時の息切れ・動悸、手指振戦、発汗、甲状腺腫大、6kgの体重減少があり、受診時脈拍132/分。",
+  "mainCondition": "バセドウ病の診断、抗甲状腺薬治療と重大副作用、症状改善後の活動・将来設計を含む療養支援。",
+  "assessment": [
+    "PM097ではバセドウ病鑑別の123I甲状腺摂取率検査に必要なヨウ素制限を判断する。",
+    "PM098では抗甲状腺薬開始後に注意すべき無顆粒球症の初期徴候として発熱を判断する。",
+    "PM099では眼症・運動・就職・妊娠への不安を表明する若年成人に対し、病勢コントロール後の生活再開について現実的に説明する。"
+  ],
+  "nursingJudgment": "3問は『診断前処置→薬物治療の安全管理→治療と生活の両立支援』として一貫する。患者は全問Aさん本人で、母親は受診契機に関与する家族にすぎない。PM099の『妊娠』は本人の将来不安の一要素であり、症例主病態と正答はバセドウ病の療養・活動支援にある。",
+  "nursingPractice": [
+    "123I摂取率検査前はヨウ素摂取制限の必要性と対象食品を説明する。",
+    "抗甲状腺薬開始時に発熱・咽頭痛など無顆粒球症を疑う徴候と受診行動を説明する。",
+    "病勢・甲状腺機能の改善を確認しながら活動を段階的に戻し、妊娠希望など将来設計は治療内容を踏まえて個別相談につなげる。"
+  ],
+  "tripletConsistency": {
+    "sameScenarioId": true,
+    "sameScenarioText": true,
+    "indexesComplete": true,
+    "patientIdentityConsistent": true,
+    "timelineConsistent": true,
+    "clinicalConsistency": true,
+    "nextScenarioLeakDetected": false
+  },
+  "classificationAudit": {
+    "currentDraftPass": false,
+    "correctionRequired": true,
+    "questionId": "K115-PM099",
+    "current": {"majorSubject": "母性看護学", "subject": "母性看護"},
+    "corrected": {"majorSubject": "成人看護学", "subject": "内分泌・代謝"},
+    "reason": "局所語『妊娠』より症例本文・主病態・正答内容を優先。PM099の正答は症状改善後の運動再開であり、同一バセドウ病症例の成人・内分泌看護として扱う。",
+    "correctionOverlay": "situation-audit/classification-corrections.json",
+    "applyState": "pending_canonical_integration"
+  },
+  "explanationAudit": {
+    "batchId": "K115-PM097-PM099-situation-SC03",
+    "allThreeExplained": true,
+    "allThreeEvidenceRefsPresent": true,
+    "allThreeEvidenceCheckedDatePresent": true,
+    "evidenceCheckedDate": "2026-08-14"
+  },
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {
+    "status": "none",
+    "questionId": null,
+    "reason": null,
+    "evidenceRefs": []
+  },
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_classification_correction_pending_canonical",
+  "auditedAt": "2026-08-14T14:48:00+09:00"
+}

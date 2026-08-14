@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "purpose": "状況設定問題の症例単位監査で公式PDFとの照合により確定した文字抽出破損をcanonical統合時に適用するための作業用オーバーレイ。最終正本ではなく、統合後に再監査する。",
+  "corrections": [
+    {
+      "scenarioId": "K114-AM-SC01",
+      "questionIds": ["K114-AM091", "K114-AM092", "K114-AM093"],
+      "sourceEvidence": {"officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf", "officialPages": [28, 29], "checkedAt": "2026-08-14T15:34:00+09:00"},
+      "scenarioTextCanonical": "Aさん（73歳、女性）は1人で暮らしており、脳梗塞で入院した。Aさんは左半身に麻痺があり、認知機能障害はない。4点杖を使用して歩行が可能となり、住宅改修をして自宅に退院した。退院後は、降圧薬と抗血栓薬が処方され、服薬管理と健康管理の目的で訪問看護を週1回、調理と買い物代行の目的で訪問介護を週1回利用している。Aさんは『昨日、退院して初めて1人で買い物に行ったら転びそうになって、横にいた人に支えてもらったんです』と訪問看護師に話した。",
+      "questionTextCorrections": [
+        {"id": "K114-AM092", "fromContains": "退院からか月後", "toStartsWith": "退院から2か月後"},
+        {"id": "K114-AM093", "fromContains": "退院からか月後", "toStartsWith": "退院から3か月後"}
+      ],
+      "recoveredTokens": [
+        {"field": "scenario", "from": "\\u0004人", "to": "1人"}, {"field": "scenario", "from": "\\u0006点杖", "to": "4点杖"}, {"field": "scenario", "from": "週\\u0004回", "to": "週1回"}, {"field": "scenario", "from": "初めて\\u0004人で", "to": "初めて1人で"}, {"field": "K114-AM092.question", "from": "退院からか月後", "to": "退院から2か月後"}, {"field": "K114-AM093.question", "from": "退院からか月後", "to": "退院から3か月後"}
+      ],
+      "applyState": "pending_canonical_integration"
+    },
+    {
+      "scenarioId": "K114-AM-SC02",
+      "questionIds": ["K114-AM094", "K114-AM095", "K114-AM096"],
+      "sourceEvidence": {"officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf", "officialPages": [30, 31], "checkedAt": "2026-08-14T15:38:00+09:00"},
+      "scenarioTextCanonical": "Aさん（56歳、女性、主婦）は、食後に冷汗を伴う腹痛があり外来を受診した。腹部超音波検査の結果、胆石症と診断され、腹腔鏡下胆嚢摘出術の目的で入院した。看護師は手術オリエンテーションで、術後の入院期間は2日と説明した。Aさんは、同じ手術を受けた妹が合併症で3週間以上食事もできなかったので、自分も同じ合併症を発症するかもしれないと心配そうに話した。",
+      "questionTextCorrections": [],
+      "recoveredTokens": [{"field": "scenario", "from": "術後の入院期間は\\u0002日", "to": "術後の入院期間は2日"}, {"field": "scenario", "from": "合併症で\\u0005週間以上", "to": "合併症で3週間以上"}],
+      "applyState": "pending_canonical_integration"
+    },
+    {
+      "scenarioId": "K114-AM-SC03",
+      "questionIds": ["K114-AM097", "K114-AM098", "K114-AM099"],
+      "sourceEvidence": {"officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf", "officialPages": [32, 33], "checkedAt": "2026-08-14T15:44:00+09:00"},
+      "scenarioTextCanonical": "Aさん（50歳、女性、会社員）は、職場で激しい頭痛を訴えて倒れ、意識を失って、救急搬送された。救命救急センター到着時のバイタルサインは、体温36.7℃、呼吸数20/分、脈拍88/分、血圧168/88mmHg、経皮的動脈血酸素飽和度〈SpO2〉98％（room air）であった。閉眼していたので、大声で話しかけると開眼したが、すぐに閉眼して眠り込んでしまう。",
+      "questionTextCorrections": [
+        {"id": "K114-AM097", "fromContains": "ジャパン・コーマ・スケール?JCSC", "toContains": "ジャパン・コーマ・スケール〈JCS〉"},
+        {"id": "K114-AM098", "fromContains": "酸素投与 下 L/分", "toContains": "酸素投与下（5L/分）"},
+        {"id": "K114-AM098", "fromContains": "時間後、A さんは", "toContains": "3時間後、Aさんは"},
+        {"id": "K114-AM099", "fromContains": "退院か月後", "toStartsWith": "退院1か月後"}
+      ],
+      "recoveredTokens": [
+        {"field": "K114-AM098.question", "from": "酸素投与 下 L/分", "to": "酸素投与下（5L/分）"},
+        {"field": "K114-AM098.question", "from": "時間後", "to": "3時間後"},
+        {"field": "K114-AM099.question", "from": "退院か月後", "to": "退院1か月後"}
+      ],
+      "applyState": "pending_canonical_integration"
+    }
+  ]
+}

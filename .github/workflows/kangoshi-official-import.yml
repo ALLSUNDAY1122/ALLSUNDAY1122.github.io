@@ -6,6 +6,7 @@ on:
     paths:
       - 'kangoshi-sprint/product-content/import_official_exams.py'
       - 'kangoshi-sprint/product-content/normalize_raw_import.py'
+      - 'kangoshi-sprint/product-content/source-data-corrections.json'
       - 'kangoshi-sprint/product-content/validate_raw_import.py'
       - 'kangoshi-sprint/product-content/audit_media_detection.py'
       - 'kangoshi-sprint/product-content/build_common_audit_input.py'
@@ -180,7 +181,17 @@ jobs:
             echo 'No generated changes'
           else
             git commit -m 'kangoshi: official exam raw loop result [skip ci]'
-            git push
+            pushed=0
+            for attempt in 1 2 3 4 5; do
+              echo "push attempt $attempt"
+              git pull --rebase origin main
+              if git push; then
+                pushed=1
+                break
+              fi
+              sleep 2
+            done
+            test "$pushed" = "1"
           fi
 
       - name: Enforce loop gate

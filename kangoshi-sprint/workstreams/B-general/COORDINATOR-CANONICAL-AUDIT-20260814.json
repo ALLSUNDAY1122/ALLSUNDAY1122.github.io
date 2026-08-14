@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-08-14T14:26:00+09:00",
+  "workstream": "B-general",
+  "standardProcedure": "v2.4",
+  "problemAuditProcedure": "学びスプリント｜問題生成・監査ループ v1.0 (2026-08-12 canonicalization rule)",
+  "coordinatorActionsCompleted": {
+    "k113SourceRepairsApplied": 5,
+    "raw720AuditPass": true,
+    "l2ReauditPass": true,
+    "commonL3Materialized": {"explained":547,"total":720,"pending":173,"dynamicPending":13,"pass":false},
+    "generalCanonicalBuilt": 390,
+    "generalPerExam": {"115":130,"114":130,"113":130},
+    "canonicalDuplicateIds": 0,
+    "officialAnswerMismatch": 0,
+    "officialScoringMismatch": 0
+  },
+  "canonicalGate": {
+    "pass": false,
+    "reason": "第113回一般13問でcanonical正本に解説詳細または一次根拠URLが不足。小分けバッチPASSは最終PASSへ流用しない。",
+    "integrityAudit": "kangoshi-sprint/product-content/questions/general-canonical-integrity-audit.json",
+    "sharedAuditLog": "kangoshi-sprint/product-content/questions/general-canonical-shared.log",
+    "gateFile": "kangoshi-sprint/product-content/questions/general-canonical-gate.json"
+  },
+  "missingCanonicalContent": {
+    "mediaDependent": [
+      "K113-AM027",
+      "K113-AM034",
+      "K113-AM035",
+      "K113-AM046",
+      "K113-PM037",
+      "K113-PM054",
+      "K113-PM066",
+      "K113-PM077"
+    ],
+    "sourceRepairResolvedNowNeedsExplanation": [
+      "K113-AM061",
+      "K113-PM053",
+      "K113-PM057",
+      "K113-PM078",
+      "K113-PM090"
+    ],
+    "total": 13
+  },
+  "requiredWorkerAction": [
+    "13問だけを対象に独自解説detail・一次根拠URL・evidenceCheckedDateを監査可能な形で補完する。",
+    "media8問は図版の権利・視覚依存を解除せずquarantinedのまま解説と根拠だけを完成させる。",
+    "raw修復5問は修復済み公式本文を前提に解説・根拠を追加し、source_data_defect隔離理由は再付与しない。",
+    "公式正答・officialAcceptedAnswers・officialScoringStatusは変更しない。",
+    "完了後はB-generalバッチ/固有報告だけを変更し、共通canonical生成・監査は統括へ戻す。"
+  ],
+  "finalPassAllowed": false,
+  "releaseAllowed": false
+}

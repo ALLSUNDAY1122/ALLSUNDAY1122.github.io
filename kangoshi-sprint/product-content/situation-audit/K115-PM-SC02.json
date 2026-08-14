@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K115-PM-SC02",
+  "sourceExam": 115,
+  "session": "PM",
+  "questionIds": ["K115-PM094", "K115-PM095", "K115-PM096"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "55歳男性。会社健診で便潜血陽性を指摘されたが、無症状で仕事を優先し精密検査を受けず、6か月後に妻の勧めで受診。特記すべき既往歴なし。",
+  "mainCondition": "便潜血陽性からの大腸病変診断、腹腔鏡下左半結腸切除術、術後の排便変化と生活指導。",
+  "assessment": [
+    "PM094では便潜血陽性後の診断に最も有用な検査を判断し、大腸内視鏡による直接観察・必要時生検を選ぶ。",
+    "PM095では腹腔鏡下左半結腸切除術の気腹法を理解し、二酸化炭素による気腹を判断する。",
+    "PM096では術後4日、食事再開・検査値が概ね保たれた状況から、結腸切除後に起こり得る排便変化として下痢を判断する。"
+  ],
+  "nursingJudgment": "3問は『便潜血陽性後の診断→手術理解→術後生活指導』という診療経過で連結する。同一のAさんを扱い、妻は受診・入院を支える家族であり患者本人との取り違えはない。PM094のみ診断・検査領域としてmajorSubjectが異なるが、症例全体の文脈とは整合し、単純な科目名不一致をhard errorとはしない。",
+  "nursingPractice": [
+    "便潜血陽性を無症状で放置せず、精密検査の必要性を説明する。",
+    "腹腔鏡手術の方法を、開腹手術との違いを含め患者・家族が理解できるよう説明する。",
+    "結腸切除後の排便変化を予測し、下痢・便秘・脱水等の観察とセルフケアにつなげる。"
+  ],
+  "tripletConsistency": {
+    "sameScenarioId": true,
+    "sameScenarioText": true,
+    "indexesComplete": true,
+    "patientIdentityConsistent": true,
+    "timelineConsistent": true,
+    "clinicalConsistency": true,
+    "nextScenarioLeakDetected": false
+  },
+  "classificationAudit": {
+    "majorSubjectConsistent": false,
+    "scenarioContextConsistent": true,
+    "subjects": ["検査・診断", "消化器・周術期", "消化器・周術期"],
+    "reason": "PM094は診断検査、PM095-096は周術期・生活指導を問うため設問単位のmajorSubject差は妥当。同一症例としての連結性を優先してPASS。",
+    "status": "pass"
+  },
+  "explanationAudit": {
+    "batchId": "K115-PM094-PM096-situation-SC02",
+    "allThreeExplained": true,
+    "allThreeEvidenceRefsPresent": true,
+    "allThreeEvidenceCheckedDatePresent": true,
+    "evidenceCheckedDate": "2026-08-14"
+  },
+  "media": {
+    "required": false,
+    "status": "not_required"
+  },
+  "scoring": {
+    "exceptionPresent": false,
+    "status": "normal"
+  },
+  "contentConcern": {
+    "status": "none",
+    "questionId": null,
+    "reason": null,
+    "evidenceRefs": []
+  },
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass",
+  "auditedAt": "2026-08-14T14:40:00+09:00"
+}

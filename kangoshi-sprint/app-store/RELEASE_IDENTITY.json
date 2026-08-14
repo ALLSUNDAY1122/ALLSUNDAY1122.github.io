@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-14T14:26:00+09:00",
+  "standardProcedure": "v2.4",
+  "app": "看護師国家試験｜学びスプリント",
+  "bundleId": {
+    "value": "jp.allsunday1122.kangoshi",
+    "status": "coordinator_assigned_not_yet_verified_in_app_store_connect",
+    "reason": "既存Bundle IDをGitHub内で確認できなかったため、v2.4の恒久委任ルールに従い資格名から一意なstable slugを採用。",
+    "mustNotChangeAfterRegistration": true
+  },
+  "appleId": {
+    "value": null,
+    "status": "not_issued_or_not_verified",
+    "policy": "App Store Connectの実発行値のみ記録し、推測しない。"
+  },
+  "billing": {
+    "model": "auto_renewable_subscription",
+    "jpyReferencePrice": 200,
+    "decision": "monthly_200",
+    "reason": "問題追加、統計、制度、ガイドライン等の継続更新価値が主要価値のため標準手順v2.4の月額200円を採用。",
+    "storeKit": 2,
+    "displayPricePolicy": "Product.displayPrice",
+    "hardCodedPriceStringAllowed": false,
+    "restorePurchasesRequired": true,
+    "entitlementRule": "verified transaction AND matching product ID AND not revoked"
+  },
+  "productId": {
+    "plannedValue": "jp.allsunday1122.kangoshi.monthly",
+    "appStoreConnectRegistered": false,
+    "canonicalStatus": "planned_until_actual_app_store_connect_registration_is_verified"
+  },
+  "releaseGate": {
+    "storeKitImplementationReady": false,
+    "appStoreConnectProductVerified": false,
+    "paidAppsAgreementVerified": false,
+    "releaseAllowed": false
+  }
+}

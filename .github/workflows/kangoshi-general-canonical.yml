@@ -1,0 +1,95 @@
+name: Kangoshi General Canonical Audit
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/product-content/build_general_canonical.py'
+      - 'kangoshi-sprint/product-content/validate_general_canonical.py'
+      - 'kangoshi-sprint/product-content/general-canonical-audit.json'
+      - 'kangoshi-sprint/product-content/general-canonical-trigger.json'
+      - '.github/workflows/kangoshi-general-canonical.yml'
+
+concurrency:
+  group: kangoshi-general-canonical
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  canonicalize-general:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build consolidated general canonical JSON
+        run: python3 kangoshi-sprint/product-content/build_general_canonical.py
+
+      - name: Validate canonical integrity against normalized raw
+        shell: bash
+        run: |
+          set +e
+          python3 kangoshi-sprint/product-content/validate_general_canonical.py > kangoshi-sprint/product-content/questions/general-canonical-integrity.log 2>&1
+          code=$?
+          set -e
+          cat kangoshi-sprint/product-content/questions/general-canonical-integrity.log
+          echo "$code" > kangoshi-sprint/product-content/questions/general-canonical-integrity.exit
+
+      - name: Run shared Learning Sprint audit on canonical JSON
+        shell: bash
+        run: |
+          set +e
+          python3 automation/learning-sprint-question-pipeline/validate_questions.py kangoshi-sprint/product-content/general-canonical-audit.json > kangoshi-sprint/product-content/questions/general-canonical-shared.log 2>&1
+          code=$?
+          set -e
+          cat kangoshi-sprint/product-content/questions/general-canonical-shared.log
+          echo "$code" > kangoshi-sprint/product-content/questions/general-canonical-shared.exit
+
+      - name: Write canonical gate report
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('kangoshi-sprint/product-content/questions')
+          integrity=int((root/'general-canonical-integrity.exit').read_text().strip())
+          shared=int((root/'general-canonical-shared.exit').read_text().strip())
+          build=json.loads((root/'general-canonical-build-report.json').read_text(encoding='utf-8'))
+          report={
+            'schemaVersion':1,
+            'scope':'B-general-390-final-canonical',
+            'integrityExit':integrity,
+            'sharedAuditExit':shared,
+            'pass':integrity==0 and shared==0,
+            'releaseAllowed':False,
+            'build':build,
+            'note':'PASS is the B-general canonical content gate only. Media rights/content expert/scoring release gates remain separate.'
+          }
+          (root/'general-canonical-gate.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit canonical outputs and diagnostics
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/product-content/questions
+          if git diff --cached --quiet; then
+            echo 'No canonical changes'
+          else
+            git commit -m 'kangoshi: general canonical audit result [skip ci]'
+            pushed=0
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push; then pushed=1; break; fi
+              sleep 2
+            done
+            test "$pushed" = "1"
+          fi
+
+      - name: Enforce canonical gate
+        shell: bash
+        run: |
+          test "$(cat kangoshi-sprint/product-content/questions/general-canonical-integrity.exit)" = "0"
+          test "$(cat kangoshi-sprint/product-content/questions/general-canonical-shared.exit)" = "0"
