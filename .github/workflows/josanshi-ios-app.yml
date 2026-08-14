@@ -34,10 +34,16 @@ jobs:
           xcodegen generate --spec xcodegen.yml
       - name: Verify canonical release identity and IAP capability
         run: |
-          grep -q 'PRODUCT_BUNDLE_IDENTIFIER = jp.allsunday1122.josanshi;' josanshi-sprint/ios/JosanshiSprint.xcodeproj/project.pbxproj
-          grep -q 'DEVELOPMENT_TEAM = MN3D2ZM44N;' josanshi-sprint/ios/JosanshiSprint.xcodeproj/project.pbxproj
-          grep -q 'com.apple.InAppPurchase' josanshi-sprint/ios/JosanshiSprint.xcodeproj/project.pbxproj
-          grep -q 'enabled = 1;' josanshi-sprint/ios/JosanshiSprint.xcodeproj/project.pbxproj
+          PBX=josanshi-sprint/ios/JosanshiSprint.xcodeproj/project.pbxproj
+          grep -E 'PRODUCT_BUNDLE_IDENTIFIER|DEVELOPMENT_TEAM|com\.apple\.InAppPurchase|enabled = 1' "$PBX" || true
+          grep -Eq 'PRODUCT_BUNDLE_IDENTIFIER = "?jp\.allsunday1122\.josanshi"?;' "$PBX"
+          grep -Eq 'DEVELOPMENT_TEAM = "?MN3D2ZM44N"?;' "$PBX"
+          grep -q 'com.apple.InAppPurchase' "$PBX"
+          grep -q 'enabled = 1;' "$PBX"
+          cd josanshi-sprint/ios
+          xcodebuild -project JosanshiSprint.xcodeproj -scheme JosanshiSprint -configuration Release -showBuildSettings > /tmp/josanshi-release-settings.txt
+          grep -Eq '^ *PRODUCT_BUNDLE_IDENTIFIER = jp\.allsunday1122\.josanshi$' /tmp/josanshi-release-settings.txt
+          grep -Eq '^ *DEVELOPMENT_TEAM = MN3D2ZM44N$' /tmp/josanshi-release-settings.txt
       - name: Build native iOS app for Simulator
         run: |
           cd josanshi-sprint/ios
