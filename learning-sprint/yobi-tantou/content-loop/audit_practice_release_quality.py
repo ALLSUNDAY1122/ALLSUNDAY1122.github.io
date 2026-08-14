@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parent
 DEFAULT_INPUT = ROOT / "practice-release-staging.v1.json"
 DEFAULT_REPORT = ROOT / "practice-release-quality-audit.v1.json"
 DIFFICULTIES = {"foundation", "standard", "applied"}
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
 class QualityError(ValueError):
@@ -31,7 +32,6 @@ def normalized(text: str) -> str:
 
 
 def inspect_item(item: dict) -> list[str]:
-    qid = item.get("id", "<no-id>")
     failures: list[str] = []
 
     if item.get("content_use") != "practice":
@@ -87,6 +87,9 @@ def inspect_item(item: dict) -> list[str]:
         if not item.get(key):
             failures.append(f"missing_evidence:{key}")
 
+    if item.get("evidence_checked_date") and not DATE_RE.match(str(item.get("evidence_checked_date"))):
+        failures.append("invalid_evidence_checked_date")
+
     staging = item.get("staging_evidence") or {}
     if staging.get("answer_audit_verdict") != "PASS" or staging.get("answer_audit_risk") != "low":
         failures.append("upstream_answer_audit_not_low_risk_pass")
@@ -100,6 +103,11 @@ def build_report(items: list[dict]) -> dict:
     ids = [item.get("id") for item in items]
     if any(not qid for qid in ids) or len(ids) != len(set(ids)):
         raise QualityError("missing or duplicate item IDs")
+
+    evidence_dates = [str(item.get("evidence_checked_date", "")) for item in items]
+    if any(not DATE_RE.match(value) for value in evidence_dates):
+        raise QualityError("all staging items require YYYY-MM-DD evidence_checked_date")
+    checked_at = max(evidence_dates)
 
     results = []
     for item in items:
@@ -129,7 +137,7 @@ def build_report(items: list[dict]) -> dict:
     passed = sum(result["verdict"] == "PASS" for result in results)
     return {
         "schemaVersion": 1,
-        "checkedAt": "2026-08-13",
+        "checkedAt": checked_at,
         "scope": "independently-authored practice staging",
         "policy": {
             "legalCorrectnessGate": "separate upstream e-Gov exact-date + answer audit",
