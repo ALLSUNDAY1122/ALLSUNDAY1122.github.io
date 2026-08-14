@@ -5596,8 +5596,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "公式正答は保持するが、敗血症性ショックの原因を『エンドトキシン』へ一律に限定することは現在の敗血症定義へ一般化できない。",
+      "detail": "Sepsis-3は敗血症を感染に対する調節不全の宿主反応による生命を脅かす臓器障害と定義し、敗血症性ショックを循環・細胞・代謝異常が著しいサブセットとする。グラム陰性菌のLPS〈エンドトキシン〉は重要な病原体関連分子だが、敗血症性ショックはグラム陽性菌、真菌など多様な感染で起こる。公式正答は試験史実として変えず、現行実践では『エンドトキシンが普遍的原因』と教えないよう専門監査する。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -5619,15 +5619,17 @@
         "ショック"
       ],
       "classificationMethod": "semantic-keyword-v2-with-scenario",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp240424-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2024/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://pubmed.ncbi.nlm.nih.gov/26903338/"
+      ],
+      "evidenceCheckedDate": "2026-08-10",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -5635,7 +5637,8 @@
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
-      "contentConcernEvidenceRefs": []
+      "contentConcernEvidenceRefs": [],
+      "canonicalL3FallbackSource": "final-category-canonical"
     },
     {
       "id": "K113-AM085",
@@ -5666,8 +5669,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "公式正答の医学的核は保持できるが、『症候性てんかん』『単純部分発作』は現在のILAE分類では旧用語。",
+      "detail": "旧分類の『症候性』は現在の原因分類では構造的、感染性、代謝性、免疫性などへ再編され、『単純部分発作』は現在の焦点起始発作の意識保持〈focal aware〉等へ置き換えられている。発作が神経細胞ネットワークの異常過剰・同期性活動で生じるという核心は維持する。公式正答を変更せず、学習解説に旧用語であることを明示する専門監査が必要。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -5689,15 +5692,18 @@
         "てんかん"
       ],
       "classificationMethod": "semantic-keyword-v2-with-scenario",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp240424-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2024/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://pubmed.ncbi.nlm.nih.gov/28276062/",
+        "https://pubmed.ncbi.nlm.nih.gov/40159961/"
+      ],
+      "evidenceCheckedDate": "2026-08-10",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -5705,7 +5711,8 @@
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
-      "contentConcernEvidenceRefs": []
+      "contentConcernEvidenceRefs": [],
+      "canonicalL3FallbackSource": "final-category-canonical"
     },
     {
       "id": "K113-AM086",
@@ -5809,8 +5816,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "ハフィングを含む呼吸理学療法は合理的だが、インセンティブ・スパイロメトリー単独を術後無気肺予防の確立した有効策として一般化する根拠は弱い。",
+      "detail": "上腹部手術後の系統的レビューでは、インセンティブ・スパイロメトリーが無治療や他の呼吸理学療法より肺合併症を減らす明確な利益は示されておらず、エビデンスの質も低い。現在の周術期呼吸管理では早期離床、深呼吸、疼痛管理、咳嗽・排痰等を組み合わせる。公式正答は変更せず、単独介入の有効性を過大表現しない専門監査が必要。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -5833,15 +5840,18 @@
         "無気肺"
       ],
       "classificationMethod": "semantic-keyword-v2-with-scenario",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp240424-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2024/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://pubmed.ncbi.nlm.nih.gov/25522640/",
+        "https://pubmed.ncbi.nlm.nih.gov/33065215/"
+      ],
+      "evidenceCheckedDate": "2026-08-10",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -5849,7 +5859,8 @@
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
-      "contentConcernEvidenceRefs": []
+      "contentConcernEvidenceRefs": [],
+      "canonicalL3FallbackSource": "final-category-canonical"
     },
     {
       "id": "K113-AM088",

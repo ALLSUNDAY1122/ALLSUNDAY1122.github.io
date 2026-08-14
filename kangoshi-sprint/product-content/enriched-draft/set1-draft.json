@@ -1885,8 +1885,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "公式正答はDダイマーだが、現行の肺血栓塞栓症診断ではDダイマー単独を確定診断検査とは扱わない。",
+      "detail": "第115回の公式正答はDダイマーであり、試験史実としてそのまま保持する。一方、JCS/JPCPHS 2025ガイドラインが現行版として公開されており、急性肺血栓塞栓症は事前確率とDダイマーを用いて画像検査の必要性を判断し、確定・除外にはCT肺動脈造影などの画像診断を用いる。2026 AHA/ACC等ガイドラインも、Dダイマー高値時には画像検査を行い、陽性CTPA等を診断に用いるとする。したがって『確定診断にDダイマー』という設問表現を現在の診療へ一般化しない。専門監査で、学習画面に公式正答と現行診療上の注記を併記するか判断する。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -1908,15 +1908,19 @@
         "direct:肺血栓塞栓症.*確定診断|診断に用いる.*肺血栓"
       ],
       "classificationMethod": "semantic-keyword-v2-with-scenario",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp260424-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.j-circ.or.jp/guideline/guideline-series/",
+        "https://doi.org/10.1253/circj.CJ-25-1144",
+        "https://www.jacc.org/doi/10.1016/j.jacc.2025.11.005"
+      ],
+      "evidenceCheckedDate": "2026-08-10",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -1927,7 +1931,8 @@
       "contentConcernEvidenceRefs": [
         "https://pmc.ncbi.nlm.nih.gov/articles/PMC6258916/",
         "https://pmc.ncbi.nlm.nih.gov/articles/PMC13376148/"
-      ]
+      ],
+      "canonicalL3FallbackSource": "final-category-canonical"
     },
     {
       "id": "K115-AM030",
@@ -2090,8 +2095,8 @@
         "reason": "設問文が不明瞭であるため採点対象から除外",
         "noticeUrl": "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/dl/kangoshi_am32.pdf"
       },
-      "point": null,
-      "detail": null,
+      "point": "厚生労働省が設問文不明瞭を理由に採点対象から除外した問題。正答を新たに付与しない。",
+      "detail": "公式通知に従い、模試・通常学習の採点では正誤判定対象から除外する。学習用に廃棄物処理制度を解説する場合でも、その解説を新たな『公式正答』として扱わない。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -2112,7 +2117,7 @@
         "direct:廃棄物とその処理|医療廃棄物|産業廃棄物"
       ],
       "classificationMethod": "semantic-keyword-v2-with-scenario",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp260424-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05a_01.pdf",
@@ -2120,8 +2125,10 @@
         "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/about.html",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/dl/kangoshi_am32.pdf"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/dl/kangoshi_am32.pdf"
+      ],
+      "evidenceCheckedDate": "2026-08-10",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -2129,7 +2136,8 @@
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
-      "contentConcernEvidenceRefs": []
+      "contentConcernEvidenceRefs": [],
+      "canonicalL3FallbackSource": "final-category-canonical"
     },
     {
       "id": "K115-AM033",
@@ -2219,8 +2227,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "股関節90度屈曲位では内旋・外旋を評価できるが、設問の矢印方向を確認するには図A/Bが不可欠。",
+      "detail": "股関節を90度屈曲した姿勢で内旋・外旋の可動域を評価すること自体は標準的だが、この設問は図AからBへの下腿の移動方向によって運動名を判断する。rawではrequiresMedia=falseとなっているが本文が明示的に図を参照するため、B班では図版依存として上書き検出し、図の権利・表示・矢印方向を確認するまで製品解放しない。公式正答『内旋』は保持する。",
       "requiresMedia": true,
       "mediaAuditStatus": "pending",
       "rightsStatus": "mhlw-pdl1.0-text; media-pending",
@@ -2242,15 +2250,18 @@
         "direct:股関節の運動|関節の運動|関節可動域|筋収縮"
       ],
       "classificationMethod": "semantic-keyword-v2-with-scenario",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp260424-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://pubmed.ncbi.nlm.nih.gov/9742472/",
+        "https://pubmed.ncbi.nlm.nih.gov/36368014/"
+      ],
+      "evidenceCheckedDate": "2026-08-10",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -2258,7 +2269,8 @@
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
-      "contentConcernEvidenceRefs": []
+      "contentConcernEvidenceRefs": [],
+      "canonicalL3FallbackSource": "final-category-canonical"
     },
     {
       "id": "K115-AM035",
@@ -4122,8 +4134,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "6か月児の採尿用具を画像から選ぶ問題であり、番号④と用具の対応確認には別冊図版が不可欠。",
+      "detail": "乳幼児の尿採取では目的に応じて非侵襲的採尿、カテーテル、膀胱穿刺等を使い分ける。NICEは可能ならclean catchを優先し、困難時には他の非侵襲的方法を用いるとしている。尿バッグはスクリーニング等に使われることがある一方、培養では汚染に注意が必要である。本問は別冊No.1の画像④を特定する形式なので、画像そのものを確認せずに用具名を断定して製品化しない。",
       "requiresMedia": true,
       "mediaAuditStatus": "pending",
       "rightsStatus": "mhlw-pdl1.0-text; media-pending",
@@ -4145,15 +4157,18 @@
         "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
       "classificationMethod": "semantic-refinement-v3",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp260424-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.nice.org.uk/guidance/ng224/chapter/Recommendations",
+        "https://publications.aap.org/pediatrics/article-abstract/128/3/595/30724"
+      ],
+      "evidenceCheckedDate": "2026-08-10",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -4161,7 +4176,8 @@
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
-      "contentConcernEvidenceRefs": []
+      "contentConcernEvidenceRefs": [],
+      "canonicalL3FallbackSource": "final-category-canonical"
     },
     {
       "id": "K115-AM064",
@@ -4319,8 +4335,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "公式正答は保持するが、授乳婦へ納豆を特別に『多く』摂るよう求める現行栄養基準は確認できない。",
+      "detail": "厚生労働省『日本人の食事摂取基準（2025年版）』では、ビタミンKの目安量は成人女性150µg/日で、授乳婦も150µg/日である。授乳婦だから追加量が設定されているわけではない。このため、他の選択肢が明確に不適切である設問上の公式正答と、現在の一般的な授乳期栄養指導を区別する必要がある。公式正答は変更せず、専門監査で『納豆を多量摂取すべき』との誤学習を防ぐ注記を確定する。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -4342,15 +4358,18 @@
         "母乳"
       ],
       "classificationMethod": "semantic-keyword-v2-with-scenario",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp260424-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05a_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/eiyou/syokuji_kijyun.html",
+        "https://www.mhlw.go.jp/web/t_doc?dataId=78ab4652&dataType=0"
+      ],
+      "evidenceCheckedDate": "2026-08-10",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -4361,7 +4380,8 @@
       "contentConcernEvidenceRefs": [
         "https://www.mhlw.go.jp/web/t_doc?dataId=78ab4652&dataType=0&pageNo=3",
         "https://www.mhlw.go.jp/web/t_doc?dataId=00tb6885&dataType=1"
-      ]
+      ],
+      "canonicalL3FallbackSource": "final-category-canonical"
     },
     {
       "id": "K115-AM067",
@@ -5254,8 +5274,8 @@
         "reason": "複数の正解があるため複数の選択肢を正解として採点",
         "noticeUrl": "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/dl/kangoshi_am80.pdf"
       },
-      "point": null,
-      "detail": null,
+      "point": "厚生労働省が『テレビを観て過ごす』『ADLは自立』の双方を正解として採点した問題。",
+      "detail": "ICFの活動は課題または行為の遂行を指し、テレビ視聴もADLの遂行も活動として捉え得る。公式採点では選択肢4・5の双方が正解とされたため、アプリでも一方だけへ正規化せず、公式の複数正答を保持する。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -5279,7 +5299,7 @@
         "高血圧"
       ],
       "classificationMethod": "semantic-keyword-v2-with-scenario",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp260424-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05a_01.pdf",
@@ -5287,8 +5307,12 @@
         "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/about.html",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/dl/kangoshi_am80.pdf"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/dl/kangoshi_am80.pdf",
+        "https://www.who.int/standards/classifications/international-classification-of-functioning-disability-and-health",
+        "https://apps.who.int/classifications/icfbrowser/Browse.aspx?code=d"
+      ],
+      "evidenceCheckedDate": "2026-08-10",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -5296,7 +5320,8 @@
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
-      "contentConcernEvidenceRefs": []
+      "contentConcernEvidenceRefs": [],
+      "canonicalL3FallbackSource": "final-category-canonical"
     },
     {
       "id": "K115-AM081",
@@ -6876,8 +6901,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": "10歳の喘息急性増悪で、SpO2 93％、呼吸数36/分、頻脈、著明な喘鳴があり、全体像は中発作に相当する。",
-      "detail": "Aちゃんは10歳で、夜間に苦しくて眠れず、口元で喘鳴が著明、呼吸数36/分、心拍数120/分、SpO2 93％である。日本小児アレルギー学会の小児気管支喘息治療・管理ガイドラインのWeb表8-3では、8歳以上の中発作時SpO2は平均94.2％、大発作では平均88.8％と示されている。SpO2 93％は中発作の分布に整合し、チアノーゼや意識障害など呼吸不全を示す記載はない。会話が途切れる所見は呼吸困難が強いことを示すため慎重な観察が必要だが、症例全体と公式正答を合わせると中発作が適切である。",
+      "point": "この国家試験の公式正答は「中発作」。10歳・SpO2 93％はJPGLの8歳以上中発作群の分布と整合するが、SpO2単独で発作強度を決めず、呼吸数・喘鳴・呼吸仕事量・意識などを含め総合評価する。",
+      "detail": "Aちゃんは10歳で、著明な喘鳴、呼吸数36/分、心拍数120/分、SpO2 93％を認める。JPGLのweb表では8歳以上の中発作群のSpO2は94.2±2.4％で、93％はその分布と整合する。一方、修正pulmonary indexはSpO2だけでなく呼吸数、心拍数、喘鳴、呼吸補助筋使用を組み合わせて評価するため、93％だけを中発作の決め手として扱わない。「途切れ途切れに話す」という強い呼吸困難を示し得る所見も軽視せず、実臨床では意識、チアノーゼ、呼吸仕事量、酸素化などを総合評価する。この設問では公式正答として「中発作」を選ぶ。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -6914,25 +6939,17 @@
         "https://www.jspaci.jp/assets/documents/jpgl2023_web.pdf",
         "https://www.jspaci.jp/journal/asthma2023/"
       ],
-      "evidenceCheckedDate": "2026-08-10",
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
-      "expertReviewStatus": "required",
+      "expertReviewStatus": "resolved",
       "releaseEligible": false,
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
       "contentConcernEvidenceRefs": [],
-      "specialistQuarantineStatus": "quarantined",
-      "specialistQuarantineReasons": [
-        {
-          "kind": "situationExpertReview",
-          "status": "ready_for_domain_expert",
-          "reason": "公式正答は中発作。SpO2 93％はJPGLの8歳以上中発作の分布と整合する一方、『途切れ途切れに話す』は強い呼吸困難を示す表現でもある。解説で中発作と断定する際の表現を小児喘息専門家が確認する。",
-          "scenarioId": "K115-AM-SC05",
-          "priority": "high"
-        }
-      ]
+      "specialistQuarantineStatus": "clear",
+      "specialistQuarantineReasons": []
     },
     {
       "id": "K115-AM104",
@@ -7658,8 +7675,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": "産後の性交は、少なくとも産後1か月頃の健診で母体の回復を確認するまでは控えるのがこの設問の適切な指導。",
-      "detail": "Aさんは正常分娩後の産褥4日であり、まだ産褥早期で母体の回復途中にある。こども家庭庁・厚生労働省は産後2週間および1か月頃に母体の健康状態と回復を確認する産婦健康診査を位置づけている。国家試験上は、産後1か月健診までは性交を控え、回復状況を確認してから再開するという説明が適切である。また月経再開前でも排卵が先行して妊娠する可能性があるため、『月経が再開しなければ妊娠しない』は誤りで、コンドームなど避妊も不要ではない。",
+      "point": "この国家試験では「産後1か月の健診までは性交渉を避ける」が公式正答。ただし実臨床では再開時期を固定日で一律に決めず、出血・疼痛・創傷の回復・本人の準備・避妊を個別に確認する。",
+      "detail": "Aさんは正常分娩後の産褥4日で、まだ母体回復の初期段階にあるため、設問の選択肢では「産後1か月の健診までは性交渉は避ける」が公式正答である。厚生労働省は産後2週間・1か月頃の産婦健康診査で母体の心身の状態を確認する仕組みを示している。一方、現行の産後ケアでは性交再開に一律の固定日はなく、出血や疼痛、会陰などの回復、本人の準備を確認して判断する。月経再開前でも妊娠し得るため、妊娠を望まない場合は避妊が必要である。試験上の正答と実際の個別指導を区別して覚える。",
       "requiresMedia": false,
       "mediaAuditStatus": "not_required",
       "rightsStatus": "mhlw-pdl1.0-text",
@@ -7693,29 +7710,22 @@
         "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/about.html"
       ],
       "explanationEvidenceRefs": [
-        "https://prenatal.cfa.go.jp/pregnancy-and-childbirth/medical-checkup.html",
-        "https://birth-navi.mhlw.go.jp/support/delivery",
+        "https://birth-navi.mhlw.go.jp/support/postnatal",
+        "https://www.acog.org/womens-health/faqs/a-partners-guide-to-pregnancy",
+        "https://www.nhs.uk/baby/support-and-services/sex-and-contraception-after-birth/",
         "https://www.acog.org/womens-health/faqs/postpartum-birth-control"
       ],
-      "evidenceCheckedDate": "2026-08-09",
+      "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
-      "expertReviewStatus": "required",
+      "expertReviewStatus": "resolved",
       "releaseEligible": false,
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
       "contentConcernEvidenceRefs": [],
-      "specialistQuarantineStatus": "quarantined",
-      "specialistQuarantineReasons": [
-        {
-          "kind": "situationExpertReview",
-          "status": "ready_for_domain_expert",
-          "reason": "公式正答は『産後1か月健診までは性交渉を避ける』で維持。現行の産後ケアは回復・疼痛・避妊等を個別評価する考え方が強いため、国家試験向け解説と現行臨床指導の境界表現を母性看護専門家が確認する。",
-          "scenarioId": "K115-AM-SC08",
-          "priority": "medium"
-        }
-      ]
+      "specialistQuarantineStatus": "clear",
+      "specialistQuarantineReasons": []
     },
     {
       "id": "K115-AM115",
@@ -11958,8 +11968,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "睡眠・覚醒の1日図を読み取る問題であり、生活時間帯を評価するには図が必要。",
+      "detail": "高齢者では過度な床上時間や長い昼寝を避け、日中の身体活動を確保することが睡眠改善に重要である。厚生労働省の睡眠ガイド2023と身体活動・運動ガイド2023は、適切な睡眠習慣と日中の身体活動を推奨している。ただし本問は『1日の過ごし方を図に示す』ことが判断条件なので、図を表示できない状態では通常問題として解放しない。公式正答は保持する。",
       "requiresMedia": true,
       "mediaAuditStatus": "pending",
       "rightsStatus": "mhlw-pdl1.0-text; media-pending",
@@ -11982,15 +11992,18 @@
         "unique-score>=4"
       ],
       "classificationMethod": "semantic-refinement-v3-promoted",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp260424-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05c_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/suimin/index.html",
+        "https://kennet.mhlw.go.jp/information/information/exercise/s-00-004.html"
+      ],
+      "evidenceCheckedDate": "2026-08-10",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -11998,7 +12011,8 @@
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
-      "contentConcernEvidenceRefs": []
+      "contentConcernEvidenceRefs": [],
+      "canonicalL3FallbackSource": "final-category-canonical"
     },
     {
       "id": "K115-PM059",
@@ -13211,8 +13225,8 @@
       ],
       "officialScoringStatus": "normal",
       "scoringException": null,
-      "point": null,
-      "detail": null,
+      "point": "精子形成では減数分裂によって染色体セットが2nからnになるが、設問の④がどの段階を示すかは図の確認が必要。",
+      "detail": "精子形成では精祖細胞から一次精母細胞を経て減数分裂が起こり、最終的に半数体の精子細胞が生じる。したがって2nからnへの還元は減数分裂過程で生じる。しかし本問は図中の①〜⑤のどこが該当するかを問うため、図版を確認せず番号だけで製品化しない。公式正答④は保持する。",
       "requiresMedia": true,
       "mediaAuditStatus": "pending",
       "rightsStatus": "mhlw-pdl1.0-text; media-pending",
@@ -13234,15 +13248,18 @@
         "染色体"
       ],
       "classificationMethod": "semantic-keyword-v2-with-scenario",
-      "explanationStatus": "pending",
+      "explanationStatus": "ai_explained",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp260424-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05c_01.pdf",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05seitou.pdf",
         "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/about.html"
       ],
-      "explanationEvidenceRefs": [],
-      "evidenceCheckedDate": null,
+      "explanationEvidenceRefs": [
+        "https://pubmed.ncbi.nlm.nih.gov/28950090/",
+        "https://pubmed.ncbi.nlm.nih.gov/31566717/"
+      ],
+      "evidenceCheckedDate": "2026-08-10",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "pending",
@@ -13250,7 +13267,8 @@
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
-      "contentConcernEvidenceRefs": []
+      "contentConcernEvidenceRefs": [],
+      "canonicalL3FallbackSource": "final-category-canonical"
     },
     {
       "id": "K115-PM078",
