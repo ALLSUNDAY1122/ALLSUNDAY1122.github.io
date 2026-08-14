@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K113-AM-SC01",
+  "sourceExam": 113,
+  "session": "AM",
+  "sourceEvidence": {
+    "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+    "officialPages": [36, 37],
+    "checkedAt": "2026-08-14T15:18:00+09:00"
+  },
+  "textCorrections": {
+    "scenarioTextCanonical": "Aさん（49歳、女性）は、これまで在宅勤務でほとんど外出することがなく、BMI33であった。Aさんは久しぶりの出勤の際に転倒し、右大腿骨頸部骨折と診断され、右人工股関節置換術を受けることになった。",
+    "questionTextCorrections": [
+      {"id": "K113-AM092", "fromContains": "術後日", "toStartsWith": "術後1日"},
+      {"id": "K113-AM093", "fromContains": "術後日", "toStartsWith": "術後3日"}
+    ]
+  },
+  "mediaCorrection": {
+    "id": "K113-AM092",
+    "from": {"requiresMedia": true, "mediaAuditStatus": "pending"},
+    "to": {"requiresMedia": false, "mediaAuditStatus": "not_required"},
+    "reason": "設問本文に『胸部エックス線写真：異常所見なし』という文字情報があるだけで、別冊図版を参照する設問ではない。公式問題紙面を目視確認済み。"
+  },
+  "contentConcern": {
+    "id": "K113-AM091",
+    "officialAnswer": "Homans〈ホーマンズ〉徴候",
+    "status": "retain_official_answer_with_modern_clinical_note",
+    "reason": "国家試験上は人工股関節置換術後のDVTを想定したHomans徴候が正答。しかし現行DVT診断はWellsスコア、D-dimer、下肢静脈超音波等を用い、Homans徴候単独を信頼できる診断所見として扱わない。"
+  },
+  "applyState": "pending_canonical_integration"
+}
