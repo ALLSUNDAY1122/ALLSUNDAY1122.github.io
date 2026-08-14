@@ -1,10 +1,18 @@
 name: Yobi Tantou Source Contract
 
 on:
+  push:
+    branches:
+      - feature/yobi-tantou-native-swiftui
+    paths:
+      - 'learning-sprint/yobi-tantou/**'
+      - '.github/workflows/yobi-tantou-native.yml'
+      - '.github/workflows/yobi-tantou-swift.yml'
   pull_request:
     paths:
       - 'learning-sprint/yobi-tantou/**'
       - '.github/workflows/yobi-tantou-native.yml'
+      - '.github/workflows/yobi-tantou-swift.yml'
   workflow_dispatch:
 
 concurrency:
