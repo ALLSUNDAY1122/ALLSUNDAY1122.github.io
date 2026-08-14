@@ -3,11 +3,11 @@
 更新: 2026-08-14
 
 ## 到達状態
-**Native Release Gate PASS / Apple新規Appレコード作成待ち**
+**Apple操作直前までのNative Release Gate PASS / Apple新規Appレコード作成待ち**
 
 ## 完了
 - Notion正本照合
-- 初期Safari試作品のユーザー採用
+- 初期Safari試作品のユーザー動作確認・採用
 - Golden Master v2.1適用
 - SwiftUI Native製品シェル
 - WebKit/WKWebView不使用
@@ -18,19 +18,27 @@
 - 一次根拠を解説画面から開く導線
 - Evidence / Content / Rights / current-guidance gate
 - 現行保健師活動指針（2026-05-15）再照合
-- 3回辛口レビュー記録
 - オフライン学習
 - 4/8/16、苦手、わからない、3連続解除、途中再開、履歴、35日ヒートマップ、目標試験日、文字サイズ、JSON backup
 - 午前55／午後55／通し110模試
 - Privacy Manifest
-- Support / Privacy公開ページ原稿
-- App Store日本語原稿
 - iPhone向けXcodeGen App target
 - StoreKit 2買い切りPremium実装
 - verified transaction / revocation確認 / transaction updates
 - 購入復元常設
 - StoreKit `Product.displayPrice` だけを価格表示に使用
+- StoreKit製品情報取得失敗時の「製品情報を再読み込み」回復導線
+- 無料科目別3問を8問へ同一問題で水増ししないことを10科目すべてテストで固定
 - `codemagic.yaml` にInternal TestFlight専用 `hokenshi_appstore` workflow追加
+- 課金導入後の辛口レビュー3周を再実施してPASS
+- App Store日本語原稿を課金・独自問題の実態へ同期。「過去問」キーワードを削除
+- App Store Connect入力回答正本 `APP_STORE_SUBMISSION_ANSWERS_JA.md` 作成
+
+## 公開済みURL
+GitHub Pages mainで公開・build成功。
+- Demo: `https://allsunday1122.github.io/hokenshi-sprint/demo/`
+- Support: `https://allsunday1122.github.io/hokenshi-sprint/support.html`
+- Privacy: `https://allsunday1122.github.io/hokenshi-sprint/privacy.html`
 
 ## 決定済み識別情報
 ユーザーが2026-08-13に「課金あり、3項目はあなたが決めて」と明示し、命名判断をAIへ委任したため以下を正本へ登録済み。
@@ -47,8 +55,9 @@ App Store Connectの数値App IDはApple自動発行値のため仮値を作ら�
 - 非消耗型・買い切りPremium
 - 無料: 30問。第1回の10分野から各3問ずつを均等に公開
 - Premium: 残り300問＋模試機能
-- 無料版でも8問スプリント・分野別学習・苦手復習の中心体験を確認できる
-- App Store上の価格は本審査前の最終承認地点で確定
+- 無料版でも通常スプリント・分野別学習・苦手復習の中心体験を確認できる
+- 無料科目別学習は利用可能3問で終了し、目標8問へ同一問題を反復補充しない
+- App Store上の価格は本審査前の人間確認地点 #4 で確定
 
 ## AppIcon正本
 Google Drive個別PNG `13_保健師国家試験.png` を正本として特定・取得済み。
@@ -58,31 +67,45 @@ Google Drive個別PNG `13_保健師国家試験.png` を正本として特定・
 - bytes: 609,807
 - SHA-256: `34c1ec303ef5420947bf13ab4b05d2045a70b79417ac40ebd667e05c8f2f2c64`
 
-Asset Catalogは `AppIcon-1024.png` を参照済み。GitHub ActionsからDrive匿名直取得はHTTP 403だったため、署名ビルド前に正本バイトの搬送とSHA完全一致を必須ゲートとして残す。ユーザーへ画像再提出は求めない。
+2026-08-14にDriveから実バイトを再取得し、ローカルSHA-256も上記正本値と完全一致。Driveファイルはowner-onlyの非公開状態を維持する。Asset Catalogは `AppIcon-1024.png` を参照済み。GitHub/Codemagicへ実バイトを搬送する際はSHA完全一致を必須ゲートとし、別画像生成・代替画像・公開権限変更は行わない。
 
 ## CI
-2026-08-14に旧IAP禁止ガードとshell quoting不備を修正し、正本一致検証へ移行。
+最新の機能コードを含む Hokenshi Sprint Native Foundation run #249（ID `31772797429`）:
+- content-plan: PASS
+- native-foundation: PASS
+- persist-release-resources: PASS
 
-フルNative検証PASS実績:
-- Hokenshi Sprint Native Foundation run #232: content-plan / native-foundation / persist-release-resources 全PASS
-- その後のrunでもcontent-planは連続PASSし、free=30 / premium=300 / 無料10分野×3問を固定
-- Swift Package / LearningSprintCore tests PASS
+検証内容:
+- canonical/content/current-guidance/release-resource gate PASS
+- free=30 / premium=300 / 無料10分野×3問 PASS
+- Native product shell audit PASS
+- LearningSprintCore tests PASS
+- Hokenshi Native tests PASS
+- 科目別同一問題反復禁止テスト PASS
+- StoreKit製品情報再読込導線の静的監査 PASS
 - Bundle ID / Team ID / IAP Product ID正本一致 PASS
 - WebView禁止 PASS
 - XcodeGen + IAP capability PASS
 - iOS Simulator Release build PASS
+- audited resource persist PASS
 
-運用改善:
-- release文書だけの更新でmacOS buildを再実行しないようpath filterを限定
-- `push` と `pull_request` の二重実行を廃止し、PR同期＋手動実行へ一本化
+CI運用はfeature branch `push`＋`workflow_dispatch`へ一本化し、同一commitのpush/PR二重実行を廃止。
+
+## App Store申請準備
+- Privacy Policyは現行の買い切りPremium実装へ更新済み
+- Supportに購入復元FAQ・問い合わせ導線を追加済み
+- App Privacy: 現実装ではData Collectionなしとして申告する正本を準備済み
+- Export Compliance: `ITSAppUsesNonExemptEncryption=false` をiOS targetへ設定済み
+- Age Rating: 国家試験教材で疾患等を扱うため、Medical or Treatment InformationをNoneとせずInfrequentで回答する正本を準備済み
+- IAPローカライズ名・説明・Review Notesを正本化済み
 
 ## 現在の外部ブロッカー
-Apple Developer / App Store Connectへのログイン操作が必要。
+Apple Developer / App Store Connectへのユーザー認証を伴う操作が必要。
 1. Explicit App ID `jp.allsunday1122.hokenshi` が未登録なら登録
 2. App Store Connectで新規Appレコードを作成
 3. Appleが発行した実App IDを取得
 
-固定入力値は `release/APP_STORE_RECORD_VALUES.md` に記録済み。
+固定入力値は `release/APP_STORE_RECORD_VALUES.md` と `release/APP_STORE_SUBMISSION_ANSWERS_JA.md` に記録済み。
 
 Appレコード作成後は、実App IDを正本へ記録→非消耗型IAP作成→正本AppIcon搬送→Codemagic署名→signed IPA→Internal TestFlightへ進む。
 
