@@ -31,15 +31,18 @@ extension RigakuAppModel {
     func isSessionAvailable(_ kind: SessionKind) -> Bool {
         switch kind {
         case .mock(let round):
-            guard canAccessBaseMocks else { return false }
             let expected = RigakuAppConfiguration.examRounds
                 .first { String($0.round) == round }?
                 .officialQuestionCount
+            // The route remains open when the audited round is complete so a
+            // free user can reach the StoreKit paywall in RigakuStudyView.
             return isMockReady(round: round, expectedQuestionCount: expected)
         case .subject(let subject):
             return availableQuestionCount(forSubject: subject) > 0
         case .weak:
-            return canAccessFullWeakReview && canStudy && weakCount > 0
+            // Free users may open this route to see the monthly-plan paywall.
+            // Premium users need at least one recorded weak question.
+            return premiumAccess ? (canStudy && weakCount > 0) : true
         case .sprint:
             return canStudy
         }
