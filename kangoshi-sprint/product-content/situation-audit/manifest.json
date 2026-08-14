@@ -22,7 +22,9 @@
     "requireEvidenceCheckedDateForAllThree": true,
     "separateMediaScoringConcernExpertQueues": true,
     "rawDataIsNotTrustedWithoutScenarioAudit": true,
-    "scenarioAuditMayRecombineSplitBatchStorage": true
+    "scenarioAuditMayRecombineSplitBatchStorage": true,
+    "expertQueueDoesNotBlockIndependentScenarioAuthoring": true,
+    "noProgressPolicy": "standard-procedure-v2.4"
   },
   "protectedAreas": [
     "必修問題",
@@ -77,20 +79,23 @@
       "reason": "保存バッチは2+1だが、現行draftの同一scenarioId 3問を同時に再統合監査し、症例本文・患者・時間経過・正答・解説・根拠の整合を確認済み。"
     }
   ],
+  "parallelExpertQueue": {
+    "blockingContentAuthoring": false,
+    "questionIds": ["K115-AM103", "K115-AM114"],
+    "policy": "公式正答を保持して製品解放から隔離し、専門監査は並列で継続する。専門監査待ちを理由に別症例のL3作成を止めない。"
+  },
   "cursor": {
-    "scenarioId": "K115-AM-SC05",
-    "questionIds": ["K115-AM103", "K115-AM104", "K115-AM105"],
-    "state": "expert_review_required",
-    "blockingQuestionId": "K115-AM103",
-    "blockingReason": "公式正答は中発作で維持するが、SpO2 93%と『途切れ途切れに話す』所見を併記した解説表現について小児喘息専門監査を要する。",
-    "nextContentScenarioAfterClearance": {
-      "scenarioId": "K115-PM-SC01",
-      "questionIds": ["K115-PM091", "K115-PM092", "K115-PM093"]
-    }
+    "scenarioId": "K115-PM-SC01",
+    "questionIds": ["K115-PM091", "K115-PM092", "K115-PM093"],
+    "state": "l3_content_pending_resume_after_no_progress_recovery",
+    "previousBlockedScenario": "K115-AM-SC05",
+    "previousBlockingQuestionId": "K115-AM103",
+    "recoveryReason": "標準手順v2.4のNO_PROGRESSルールにより、専門監査待ちを並列隔離し、独立して進められる次症例へカーソルを移動。"
   },
   "knownHistoricalFailureModes": [
     "next scenario stem leaking into previous question choices during PDF extraction",
     "family member wording such as 男児 being misread as the patient identity during classification"
   ],
-  "status": "current_scenario_content_pass_waiting_expert_review"
+  "status": "in_progress_expert_review_parallel_content_resumed",
+  "updatedAt": "2026-08-14T14:26:00+09:00"
 }
