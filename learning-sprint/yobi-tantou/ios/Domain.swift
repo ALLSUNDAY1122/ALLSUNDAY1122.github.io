@@ -9,6 +9,12 @@ enum QuestionContentUse: String, Codable, CaseIterable {
     case officialMock = "official_mock"
 }
 
+enum QuestionDifficulty: String, Codable, CaseIterable {
+    case foundation
+    case standard
+    case applied
+}
+
 struct StudyQuestion: Codable, Identifiable, Equatable {
     let id: String
     let examYear: Int?
@@ -26,6 +32,7 @@ struct StudyQuestion: Codable, Identifiable, Equatable {
     let originType: String
     let releaseEligible: Bool
     let contentUse: QuestionContentUse?
+    let difficulty: QuestionDifficulty?
 
     init(
         id: String,
@@ -43,7 +50,8 @@ struct StudyQuestion: Codable, Identifiable, Equatable {
         lawBasisDate: String?,
         originType: String,
         releaseEligible: Bool,
-        contentUse: QuestionContentUse? = nil
+        contentUse: QuestionContentUse? = nil,
+        difficulty: QuestionDifficulty? = nil
     ) {
         self.id = id
         self.examYear = examYear
@@ -61,6 +69,7 @@ struct StudyQuestion: Codable, Identifiable, Equatable {
         self.originType = originType
         self.releaseEligible = releaseEligible
         self.contentUse = contentUse
+        self.difficulty = difficulty
     }
 
     var isPracticeQuestion: Bool {
