@@ -1,0 +1,61 @@
+name: Kangoshi Original Redraw Assets
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/product-content/build_original_redraw_assets.py'
+      - 'kangoshi-sprint/product-content/media-redraw-packet.json'
+      - '.github/workflows/kangoshi-original-redraw.yml'
+
+concurrency:
+  group: kangoshi-original-redraw
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  redraw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate original vector redraws
+        run: python3 kangoshi-sprint/product-content/build_original_redraw_assets.py
+      - name: Validate redraw set
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('kangoshi-sprint/product-content')
+          audit=json.loads((root/'media-redraw-audit.json').read_text(encoding='utf-8'))
+          res=json.loads((root/'media-redraw-resolutions.json').read_text(encoding='utf-8'))
+          assets=list(Path('kangoshi-sprint/media/redraw').glob('*.svg'))
+          assert audit.get('pass') is True
+          assert audit.get('generated') == 23
+          assert len(res.get('items') or []) == 23
+          assert len(assets) == 23
+          for p in assets:
+              text=p.read_text(encoding='utf-8').lower()
+              assert '<image' not in text and 'data:image' not in text
+              assert 'data-original-redraw=' in text
+          print({'redraws':len(assets),'pass':True})
+          PY
+      - name: Commit redraw assets and resolutions
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/media/redraw \
+                  kangoshi-sprint/product-content/media-redraw-resolutions.json \
+                  kangoshi-sprint/product-content/media-redraw-audit.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'kangoshi: generate 23 original media redraws'
+            pushed=0
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push; then pushed=1; break; fi
+              sleep 2
+            done
+            test "$pushed" = "1"
+          fi
