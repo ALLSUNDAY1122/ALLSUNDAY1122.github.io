@@ -7,6 +7,10 @@ enum RigakuAppConfiguration {
     static let defaultDailyTarget = 8
     static let allowedDailyTargets = [4, 8, 16]
 
+    static let supportURL = URL(string: "https://allsunday1122.github.io/rigaku-sprint/support.html")!
+    static let privacyURL = URL(string: "https://allsunday1122.github.io/rigaku-sprint/privacy.html")!
+    static let termsURL = URL(string: "https://allsunday1122.github.io/rigaku-sprint/terms.html")!
+
     struct ExamRound: Identifiable, Equatable {
         let round: Int
         let officialQuestionCount: Int?
