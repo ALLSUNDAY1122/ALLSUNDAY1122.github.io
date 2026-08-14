@@ -8,6 +8,7 @@ LEGAL_SUBJECTS = {"憲法", "行政法", "民法", "商法", "民事訴訟法", 
 OFFICIAL_SUBJECTS = LEGAL_SUBJECTS | {"一般教養"}
 PRACTICE_USE = "practice"
 OFFICIAL_MOCK_USE = "official_mock"
+DIFFICULTIES = {"foundation", "standard", "applied"}
 
 
 class ReleaseBuildError(ValueError):
@@ -29,10 +30,12 @@ def convert_question(q):
     if content_use != PRACTICE_USE:
         raise ReleaseBuildError(f"{qid}: content_useはpracticeを明示する必要がある")
 
-    # Original practice questions are not official past questions. A year label
-    # would falsely imply reproduction of that year's exam, so it is forbidden.
     if q.get("exam_year") is not None:
         raise ReleaseBuildError(f"{qid}: practice問題にexam_yearを付与できない")
+
+    difficulty = q.get("difficulty")
+    if difficulty not in DIFFICULTIES:
+        raise ReleaseBuildError(f"{qid}: 監査済みdifficultyが必要")
 
     if q.get("subject") in LEGAL_SUBJECTS and not q.get("reference_date"):
         raise ReleaseBuildError(f"{qid}: 法律科目のreference_date未確定")
@@ -70,6 +73,7 @@ def convert_question(q):
         "originType": q["origin_type"],
         "releaseEligible": True,
         "contentUse": PRACTICE_USE,
+        "difficulty": difficulty,
     }
 
 
@@ -91,12 +95,14 @@ def fixture(
     content_use=PRACTICE_USE,
     exam_year=None,
     origin_type="original_from_primary_source",
+    difficulty="foundation",
 ):
     return {
         "id": "YOBI-SELFTEST-001",
         "round": 1,
         "exam_year": exam_year,
         "content_use": content_use,
+        "difficulty": difficulty,
         "subject": subject,
         "topic": "release builder test",
         "question": "構造テスト問題",
@@ -130,6 +136,10 @@ def self_test():
     assert legal[0]["lawBasisDate"] == "2026-01-01"
     assert legal[0]["examYear"] is None
     assert legal[0]["contentUse"] == PRACTICE_USE
+    assert legal[0]["difficulty"] == "foundation"
+
+    standard = build([fixture(difficulty="standard")])
+    assert standard[0]["difficulty"] == "standard"
 
     general = build([fixture(subject="一般教養", reference_date=None)])
     assert general[0]["lawBasisDate"] is None
@@ -150,8 +160,12 @@ def self_test():
         fixture(content_use=None),
         "用途不明の問題がreleaseへ変換された",
     )
+    expect_rejected(
+        fixture(difficulty=None),
+        "難易度不明の問題がreleaseへ変換された",
+    )
 
-    print("SELFTEST PASS: practice-only release / no fake exam year / official mock isolation / legal date")
+    print("SELFTEST PASS: practice-only release / no fake exam year / official mock isolation / difficulty / legal date")
     return 0
 
 
