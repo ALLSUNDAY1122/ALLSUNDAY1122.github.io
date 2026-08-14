@@ -8,6 +8,8 @@ pattern=re.compile(r'(?<![A-Za-z0-9_])\.(\d+)')
 for p in root.glob('*.swift'):
     s=p.read_text(encoding='utf-8')
     fixed=pattern.sub(r'0.\1',s)
+    if p.name=='MainViews.swift' and (root/'MockViews.swift').exists():
+        fixed=fixed.replace('struct MockView: View {','struct LegacyMockView: View {',1)
     if fixed!=s:
         p.write_text(fixed,encoding='utf-8')
         changed.append(p.name)
