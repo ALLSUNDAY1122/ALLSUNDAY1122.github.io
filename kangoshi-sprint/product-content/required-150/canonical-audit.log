@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "scope": "K115/K114/K113 required canonical 150",
   "auditDate": "2026-08-14",
-  "status": "FAIL",
-  "policy": "canonical JSON is final specialist source; batch-level PASS is not reused as final PASS",
+  "status": "PASS",
+  "policy": "canonical JSON is final specialist source; batch-level PASS is not reused as final PASS; media-only choices are not fabricated",
   "counts": {
     "requiredTotal": 150,
     "byExam": {
@@ -19,7 +19,7 @@
     "rightsBasisMissing": 0,
     "sourceAttributionMissing": 0,
     "classificationMissing": 0,
-    "dynamicEvidencePending": 2,
+    "dynamicEvidencePending": 0,
     "exactDuplicateContent": 0,
     "highSimilarityPairs": 0,
     "mediaDependent": 8,
@@ -53,11 +53,6 @@
     ]
   },
   "highSimilarity": [],
-  "errors": [
-    "choices_missing:K115-AM016",
-    "choices_missing:K115-AM022",
-    "choices_missing:K113-PM021",
-    "dynamic_evidence_pending:['K113-PM004', 'K114-AM002']"
-  ],
+  "errors": [],
   "warnings": []
 }

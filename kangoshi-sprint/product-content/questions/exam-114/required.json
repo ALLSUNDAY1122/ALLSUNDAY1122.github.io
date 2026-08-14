@@ -146,13 +146,14 @@
       "textCorrectionCheckedDate": "2026-08-09",
       "explanationEvidenceRefs": [
         "https://www.mhlw.go.jp/toukei/saikin/hw/life/life23/index.html",
-        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html"
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
+        "https://www.mhlw.go.jp/toukei/saikin/hw/seimei/list54-57-01.html"
       ],
-      "evidenceCheckedDate": "2026-08-09",
+      "evidenceCheckedDate": "2026-08-14",
       "explanationSource": "REQ-K114-AM-required-20260809.json",
       "explanationStatus": "audited",
       "dynamicEvidenceRequired": true,
-      "dynamicEvidenceStatus": "pending",
+      "dynamicEvidenceStatus": "verified",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
@@ -165,7 +166,15 @@
       "specialistQuarantineStatus": "clear",
       "specialistQuarantineReasons": [],
       "releaseEligible": true,
-      "canonicalStatus": "audited_release_candidate"
+      "canonicalStatus": "audited_release_candidate",
+      "dynamicEvidenceVerification": {
+        "status": "verified",
+        "checkedDate": "2026-08-14",
+        "evidenceRefs": [
+          "https://www.mhlw.go.jp/toukei/saikin/hw/seimei/list54-57-01.html"
+        ],
+        "note": "厚生労働省の生命表定義で、0歳の平均余命を平均寿命とする定義を現行確認。"
+      }
     },
     {
       "id": "K114-AM003",
@@ -906,7 +915,7 @@
       "sourceAnswerTokens": [
         "4"
       ],
-      "mediaDetectionReason": "explicit_reference_in_stem",
+      "mediaDetectionReason": "media_reference_in_stem_conservative",
       "classificationStatus": "high",
       "classificationScore": 50,
       "classificationSignals": [
@@ -3059,7 +3068,7 @@
       "sourceAnswerTokens": [
         "2"
       ],
-      "mediaDetectionReason": "explicit_reference_in_stem",
+      "mediaDetectionReason": "media_reference_in_stem_conservative",
       "classificationStatus": "high",
       "classificationScore": 50,
       "classificationSignals": [

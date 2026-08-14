@@ -1607,7 +1607,7 @@
       "sourceAnswerTokens": [
         "3"
       ],
-      "mediaDetectionReason": "explicit_reference_in_stem",
+      "mediaDetectionReason": "media_reference_in_stem_conservative",
       "classificationStatus": "high",
       "classificationScore": 10,
       "classificationSignals": [
@@ -2075,13 +2075,15 @@
       "classificationMethod": "semantic-keyword-v2-with-scenario",
       "explanationEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp240424-03_04_05.html",
-        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05seitou.pdf"
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05seitou.pdf",
+        "https://www.mhlw.go.jp/topics/kaigo/kentou/tp0814-1.html",
+        "https://www.mhlw.go.jp/web/t_doc?dataId=00ta4435&dataType=1&pageNo=1"
       ],
-      "evidenceCheckedDate": "2026-08-09",
+      "evidenceCheckedDate": "2026-08-14",
       "explanationSource": "REQ-K113-PM-required-20260809.json",
       "explanationStatus": "audited",
       "dynamicEvidenceRequired": true,
-      "dynamicEvidenceStatus": "pending",
+      "dynamicEvidenceStatus": "verified",
       "answerEvidenceRefs": [
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp240424-03_04_05.html",
         "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
@@ -2094,7 +2096,16 @@
       "specialistQuarantineStatus": "clear",
       "specialistQuarantineReasons": [],
       "releaseEligible": true,
-      "canonicalStatus": "audited_release_candidate"
+      "canonicalStatus": "audited_release_candidate",
+      "dynamicEvidenceVerification": {
+        "status": "verified",
+        "checkedDate": "2026-08-14",
+        "evidenceRefs": [
+          "https://www.mhlw.go.jp/topics/kaigo/kentou/tp0814-1.html",
+          "https://www.mhlw.go.jp/web/t_doc?dataId=00ta4435&dataType=1&pageNo=1"
+        ],
+        "note": "厚生労働省の身体拘束ゼロ関連資料で、自分で降りられないようベッドを柵で囲む行為を身体拘束の具体例として確認。"
+      }
     },
     {
       "id": "K113-PM005",
@@ -3269,7 +3280,7 @@
       ],
       "sourceAttribution": "出典：厚生労働省『第113回看護師国家試験』を学習用データとして加工",
       "sourceAnswerTokens": [],
-      "mediaDetectionReason": "explicit_reference_in_stem",
+      "mediaDetectionReason": "media_reference_in_stem_conservative",
       "classificationStatus": "high",
       "classificationScore": 40,
       "classificationSignals": [
