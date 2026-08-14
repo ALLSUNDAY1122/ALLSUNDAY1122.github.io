@@ -29,9 +29,13 @@ for sid in ('set1','set2','set3'):
     for q in rows:
         at=q.get('answerType') or 'singleChoice'
         answer=q.get('answer')
+        mode=scoring_modes.get(q['id'],'normal')
         accepted=[]
         numeric=None
-        if at=='numeric':
+        if mode=='excluded':
+            # Officially excluded items intentionally have no app-created answer.
+            accepted=[]
+        elif at=='numeric':
             try: numeric=float(answer)
             except Exception: raise SystemExit(f"{q['id']}: invalid numeric answer {answer!r}")
         elif at=='multiChoice':
@@ -39,7 +43,7 @@ for sid in ('set1','set2','set3'):
             accepted=[sorted(int(v) for v in vals)]
         else:
             accepted=[[int(answer)]]
-        if scoring_modes.get(q['id'])=='multiple_accepted':
+        if mode=='multiple_accepted':
             vals=q.get('officialAcceptedAnswers') or []
             if len(vals)<2: raise SystemExit(f"{q['id']}: multiple accepted choices missing")
             accepted=[[int(v)] for v in vals]
@@ -63,18 +67,23 @@ for sid in ('set1','set2','set3'):
                 shutil.copy2(src,dest)
             native_assets.append(f'Media/{dest.name}')
         if q.get('mediaReleaseStatus')=='resolved': media_count+=1
+        choices=q.get('choices') or []
+        if not choices and at!='numeric':
+            # Official image-only choice rows are represented by numbered panels
+            # in the audited redraw; expose the corresponding 1–4 tap targets.
+            choices=['①','②','③','④']
         questions.append({
             'id':q['id'],'sourceExam':int(q['sourceExam']),'session':q.get('session') or '',
             'questionNo':int(q.get('questionNo') or 0),'category':q.get('category') or '',
             'majorSubject':q.get('majorSubject') or 'その他・横断','subject':q.get('subject') or '',
             'answerType':at,'selectCount':q.get('selectCount'),
-            'question':q.get('question') or '','choices':q.get('choices') or [],
+            'question':q.get('question') or '','choices':choices,
             'acceptedChoiceSets':accepted,'numericAnswer':numeric,
             'tolerance':float(q.get('tolerance') or 0),'unit':q.get('unit') or '',
             'point':q.get('point') or '','detail':q.get('detail') or '',
             'scenario':q.get('scenario') or '', 'scenarioId':q.get('scenarioId') or '',
             'scenarioIndex':int(q.get('scenarioIndex') or 0),'scenarioTotal':int(q.get('scenarioTotal') or 0),
-            'scoringMode':scoring_modes.get(q['id'],'normal'),
+            'scoringMode':mode,
             'mediaAssets':native_assets,'mediaAttribution':q.get('mediaAttribution') or ''
         })
 
@@ -89,11 +98,11 @@ if media_count!=38:
     raise SystemExit(f'expected 38 media questions, got {media_count}')
 if converted_svg!=23:
     raise SystemExit(f'expected 23 SVG redraw conversions, got {converted_svg}')
+if sum(1 for q in questions if q['scoringMode']=='excluded' and not q['acceptedChoiceSets'])!=2:
+    raise SystemExit('expected exactly 2 officially excluded questions with no accepted answer')
 
 free_ids=[]
 for category in ('必修','一般','状況設定'):
-    # Golden Master keeps the default sprint at 8; the free tier uses a fixed,
-    # deterministic 8-question sample per category from the newest exam.
     free_ids += [q['id'] for q in questions if q['sourceExam']==115 and q['category']==category][:8]
 
 payload={
@@ -103,10 +112,11 @@ payload={
 }
 (OUT/'questions.generated.json').write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
 audit={
-    'schemaVersion':2,'questions':len(questions),'uniqueIds':len({q['id'] for q in questions}),
+    'schemaVersion':3,'questions':len(questions),'uniqueIds':len({q['id'] for q in questions}),
     'byExam':{str(e):len(rows) for e,rows in by_exam.items()},'mediaQuestions':media_count,
     'copiedMediaAssets':len(list(MEDIA_OUT.iterdir())),'svgRedrawsRasterized':converted_svg,
-    'freeSampleQuestions':len(free_ids),'scoringExceptions':len(scoring_modes),'pass':True
+    'freeSampleQuestions':len(free_ids),'scoringExceptions':len(scoring_modes),
+    'officialExcludedWithoutAcceptedAnswer':2,'pass':True
 }
 (OUT/'native-content-audit.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(audit,ensure_ascii=False))
