@@ -6,6 +6,7 @@ on:
     paths:
       - 'kangoshi-sprint/product-content/media-official-sources.json'
       - 'kangoshi-sprint/product-content/build_official_media_assets.py'
+      - 'kangoshi-sprint/product-content/write_media_redraw_packet.py'
       - 'kangoshi-sprint/product-content/enriched-draft/media-audit-packet.json'
       - '.github/workflows/kangoshi-media-rights.yml'
 
@@ -32,13 +33,16 @@ jobs:
           set -e
           echo "$code" > /tmp/media-rights.exit
           if [ "$code" -ne 0 ] && [ "$code" -ne 2 ]; then exit "$code"; fi
-      - name: Commit audit, safe assets and resolutions
+      - name: Build redraw packet
+        run: python3 kangoshi-sprint/product-content/write_media_redraw_packet.py
+      - name: Commit audit, safe assets and redraw packet
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add kangoshi-sprint/product-content/media-rights-audit.json \
                   kangoshi-sprint/product-content/media-release-resolutions.generated.json \
+                  kangoshi-sprint/product-content/media-redraw-packet.json \
                   kangoshi-sprint/media/official
           if ! git diff --cached --quiet; then
             git commit -m 'kangoshi: media rights audit and safe official assets'
