@@ -37,7 +37,8 @@ jobs:
             hokenshi-sprint/scripts/validate_canonical_questions.py \
             hokenshi-sprint/scripts/validate_current_guidance_canonical.py \
             hokenshi-sprint/scripts/promote_release_resource.py \
-            hokenshi-sprint/scripts/validate_native_product_shell.py
+            hokenshi-sprint/scripts/validate_native_product_shell.py \
+            hokenshi-sprint/ios/apply-xcode-capabilities.py
       - name: Build 330-question structural inventory
         run: python3 hokenshi-sprint/scripts/build_question_plan.py
       - name: Validate exam/subject/scenario allocation
@@ -66,6 +67,13 @@ jobs:
           PY
       - name: Native product shell audit
         run: python3 hokenshi-sprint/scripts/validate_native_product_shell.py
+      - name: Verify delegated monetization and identifiers
+        run: |
+          grep -q 'jp.allsunday1122.hokenshi.premium' hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/HokenshiMonetization.swift
+          grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.hokenshi' hokenshi-sprint/ios/project.yml
+          grep -q 'DEVELOPMENT_TEAM: MN3D2ZM44N' hokenshi-sprint/ios/project.yml
+          ! grep -R --line-number -E 'App Store Connect App ID: [0-9]{6,}|APP_STORE_CONNECT_APP_ID: ["'"']?[0-9]{6,}' hokenshi-sprint || false
+          echo 'PASS: delegated Bundle/IAP identifiers are canonical; numeric ASC App ID remains unset until Apple issues it.'
       - name: Safari prototype static smoke
         run: |
           node --check hokenshi-sprint/prototype/app.js
@@ -88,7 +96,7 @@ jobs:
   native-foundation:
     needs: content-plan
     runs-on: macos-15
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - name: Restore audited release resources
@@ -108,13 +116,36 @@ jobs:
           swift test
       - name: Block WebView based implementation
         run: |
-          if grep -R --line-number -E 'WKWebView|import WebKit|UIViewRepresentable' hokenshi-sprint/NativePackage/Sources; then
+          if grep -R --line-number -E 'WKWebView|import WebKit|UIViewRepresentable' hokenshi-sprint/NativePackage/Sources hokenshi-sprint/ios; then
             echo 'WebView-based implementation is forbidden for this app.'
             exit 1
           fi
-      - name: Verify no guessed App Store identifiers
+      - name: Verify canonical App Store identifiers
         run: |
-          ! grep -R --line-number -E 'PRODUCT_BUNDLE_IDENTIFIER|App Store Connect App ID|jp\.allsunday1122\.[A-Za-z0-9_-]+\.premium' hokenshi-sprint/NativePackage/Sources
+          grep -q 'public static let productID = "jp.allsunday1122.hokenshi.premium"' hokenshi-sprint/NativePackage/Sources/HokenshiSprintFeature/HokenshiMonetization.swift
+          grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.hokenshi' hokenshi-sprint/ios/project.yml
+          grep -q 'DEVELOPMENT_TEAM: MN3D2ZM44N' hokenshi-sprint/ios/project.yml
+          echo 'PASS: Bundle ID, Team ID and IAP Product ID match the delegated canonical values.'
+      - name: Install XcodeGen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Generate iOS project and normalize IAP capability
+        run: |
+          cd hokenshi-sprint/ios
+          xcodegen generate
+          python3 apply-xcode-capabilities.py HokenshiSprint.xcodeproj/project.pbxproj
+          grep -q 'com.apple.InAppPurchase' HokenshiSprint.xcodeproj/project.pbxproj
+          ! grep -q 'SystemCapabilities = "' HokenshiSprint.xcodeproj/project.pbxproj
+      - name: Build iOS app target for Simulator
+        run: |
+          cd hokenshi-sprint/ios
+          xcodebuild build \
+            -project HokenshiSprint.xcodeproj \
+            -scheme HokenshiSprint \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            ASSETCATALOG_COMPILER_APPICON_NAME=
 
   persist-release-resources:
     needs: [content-plan, native-foundation]
