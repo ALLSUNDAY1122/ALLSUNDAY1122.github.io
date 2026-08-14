@@ -28,10 +28,12 @@ required_ui = (
     "LearningSprintHeatmap",
     "監査済み問題",
     "試験日を設定",
+    "月額プラン",
+    "無料版では8分野から選んだ60問",
 )
 for token in required_ui:
     if token not in all_swift:
-        errors.append(f"Golden Master要素欠損: {token}")
+        errors.append(f"Golden Master/課金UI要素欠損: {token}")
 
 required_native = (
     "RigakuRootViewV2",
@@ -51,6 +53,10 @@ required_native = (
     "purchasePremium()",
     "restorePurchases()",
     "purchaseDisplayPrice",
+    "RigakuAccessPolicy.freeQuestionIDs",
+    "canAccessBaseMocks",
+    "canAccessFullWeakReview",
+    "premiumLockedView",
 )
 for token in required_native:
     if token not in all_swift:
@@ -83,10 +89,15 @@ unknown_patterns = (
 if not any(pattern in all_swift for pattern in unknown_patterns):
     errors.append("共通ネイティブ機能接続欠損: わからない回答")
 
-if "$(RIGAKU_BUNDLE_ID)" not in project:
-    errors.append("Bundle IDは正本値の外部注入にすること")
-if "$(RIGAKU_IAP_PRODUCT_ID)" not in project:
-    errors.append("IAP Product IDは正本値の外部注入にすること")
+canonical_bundle = "jp.allsunday1122.rigakuryouhoushi"
+canonical_product = "jp.allsunday1122.rigakuryouhoushi.monthly"
+if f"PRODUCT_BUNDLE_IDENTIFIER: {canonical_bundle}" not in project:
+    errors.append("Bundle IDが#15正本値と不一致")
+if f"RigakuPremiumProductID: {canonical_product}" not in project:
+    errors.append("月額Product IDが#15正本値と不一致")
+if "MARKETING_VERSION: 1.0.0" not in project:
+    errors.append("初回公開Versionが1.0.0ではありません")
+
 for required_resource in (
     "questions.json",
     "question-batches",
@@ -119,15 +130,30 @@ privacy_manifest = ROOT / "PrivacyInfo.xcprivacy"
 if not privacy_manifest.exists():
     errors.append("PrivacyInfo.xcprivacy欠損")
 
-for guessed in (
-    "jp.allsunday1122.rigaku",
-    "jp.allsunday1122.rigakusprint",
-    "jp.allsunday1122.rigaku.premium",
-):
-    if guessed in project or guessed in all_swift:
-        errors.append(f"識別子推測値を検出: {guessed}")
-
 config = texts.get("AppConfiguration.swift", "")
+if f'static let canonicalBundleIdentifier = "{canonical_bundle}"' not in config:
+    errors.append("AppConfigurationのBundle ID正本値欠損")
+if f'static let canonicalMonthlyProductID = "{canonical_product}"' not in config:
+    errors.append("AppConfigurationの月額Product ID正本値欠損")
+if 'static let contentVersion = "1.0.0"' not in config:
+    errors.append("contentVersionが1.0.0ではありません")
+
+access = texts.get("RigakuAccessPolicy.swift", "")
+if "static let freeQuestionLimit = 60" not in access:
+    errors.append("無料60問上限が固定されていません")
+for subject, quota in {
+    "理学療法": 16,
+    "臨床医学大要": 14,
+    "生理学": 7,
+    "解剖学": 6,
+    "リハビリテーション医学": 5,
+    "臨床心理学": 5,
+    "運動学": 5,
+    "病理学概論": 2,
+}.items():
+    if f'"{subject}": {quota}' not in access:
+        errors.append(f"無料問題配分欠損: {subject}={quota}")
+
 round_matches = re.findall(r"\.init\(round: (\d+), officialQuestionCount: (\d+), publicationStatus: \.verifiedPublished\)", config)
 verified = {int(round_no): int(count) for round_no, count in round_matches}
 expected = {60: 200, 59: 200, 58: 200}
@@ -187,12 +213,13 @@ print("Active root route gate: PASS")
 print("Legacy root/source gate: PASS")
 print("Mock completeness gate: PASS")
 print("Shared native learning features: PASS")
-print("StoreKit2 external-ID bridge: PASS")
+print("Monthly StoreKit2 access gate: PASS")
+print("Free 60 balanced-sample policy: PASS")
+print("Canonical Bundle/Product IDs: PASS")
 print("In-app legal/support links: PASS")
 print("JSON backup/import: PASS")
 print("Rights-gated media manifest: PASS")
 print("Asset catalog metadata: PASS")
 print("Privacy manifest presence: PASS")
-print("Identifier non-guess policy: PASS")
 print("Official frame: R60/R59/R58 = 200 each, total 600: PASS")
 print("Product JSON syntax/schema gate: PASS")
