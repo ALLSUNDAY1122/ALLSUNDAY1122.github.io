@@ -23,7 +23,7 @@ grep -q 'Copyright (c) 2013-2022 Niels Lohmann' SplatNative/Resources/Licenses/n
 grep -q 'jp.allsunday1122.splatlab' project.yml
 grep -q 'MARKETING_VERSION: 1.0.0' project.yml
 grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO' project.yml
-grep -q 'INFOPLIST_KEY_CFBundleDisplayName: おもちゃばこ' project.yml
+grep -q 'INFOPLIST_KEY_CFBundleDisplayName: Scan Lab' project.yml
 grep -q 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' project.yml
 grep -q 'd620d9c58d270e7de9e34a9d8a85dcf938a5070d' project.yml
 grep -q '2b965de1934de38dda1c71cf90bf798aa948a14c' project.yml
@@ -58,12 +58,15 @@ grep -q 'resetView' SplatNative/SplatViewer.swift
 
 # Harsh-review gate: consumer UI must not expose internal training/debug jargon,
 # and destructive loss of a finished scan needs an explicit confirmation.
-grep -q 'Text("おもちゃばこ")' SplatNative/RootScanView.swift
+grep -q 'Text("Scan Lab")' SplatNative/RootScanView.swift
 grep -q 'showingDiscardConfirmation' SplatNative/RootScanView.swift
 grep -q '生成だけもう一度試す' SplatNative/RootScanView.swift
 ! grep -q '特徴点 ' SplatNative/RootScanView.swift
 ! grep -q 'iteration ' SplatNative/RootScanView.swift
 ! grep -q 'splats ' SplatNative/RootScanView.swift
+
+# Parity work must remain product-neutral until Scaniverse functional parity is achieved.
+! grep -R -n 'おもちゃばこ' SplatNative project.yml
 
 # Current PoC is intentionally local-only.
 ! grep -R -nE 'https?://.*(api|upload|analytics)|URLSession|Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
