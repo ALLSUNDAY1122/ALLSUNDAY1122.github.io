@@ -64,7 +64,20 @@ if len(canonical) != 720 or set(canonical) != set(index):
     raise SystemExit(f'canonical coverage mismatch total={len(canonical)} missing={missing[:20]} extra={extra[:20]}')
 
 filled = []
+historical_normalized = []
 for qid, q in index.items():
+    # Historical-statistic rows were previously recorded as verified_historical.
+    # The validator's canonical terminal state is simply "verified"; preserve the
+    # audit trail while normalizing only this explicit legacy status.
+    if q.get('dynamicEvidenceRequired') and str(q.get('dynamicEvidenceStatus') or '').lower() == 'verified_historical':
+        refs = q.get('explanationEvidenceRefs') or []
+        checked = str(q.get('evidenceCheckedDate') or '').strip()
+        if not refs or not all(str(x).startswith('https://') for x in refs) or not checked:
+            raise SystemExit(f'{qid}: verified_historical lacks evidence/date')
+        q['dynamicEvidenceLegacyStatus'] = 'verified_historical'
+        q['dynamicEvidenceStatus'] = 'verified'
+        historical_normalized.append(qid)
+
     if q.get('explanationStatus') == 'ai_explained' and complete(q):
         continue
     source = canonical[qid]
@@ -103,13 +116,15 @@ for path, doc in sets.values():
     path.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
 report = {
-    'schemaVersion': 1,
+    'schemaVersion': 2,
     'canonicalCoverage': len(canonical),
     'filledFromCanonicalCount': len(filled),
     'filledFromCanonicalIds': sorted(filled),
+    'historicalDynamicStatusNormalizedCount': len(historical_normalized),
+    'historicalDynamicStatusNormalizedIds': sorted(historical_normalized),
     'resolvedSituationExpertCount': len(resolved_expert),
     'resolvedSituationExpertIds': sorted(resolved_expert),
     'allCategoryCanonicalGatesPass': True
 }
 (DRAFT / 'canonical-l3-fallback-report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-print(json.dumps({'canonicalCoverage': 720, 'filledFromCanonicalCount': len(filled), 'resolvedSituationExpertCount': len(resolved_expert)}, ensure_ascii=False))
+print(json.dumps({'canonicalCoverage': 720, 'filledFromCanonicalCount': len(filled), 'historicalDynamicStatusNormalizedCount': len(historical_normalized), 'resolvedSituationExpertCount': len(resolved_expert)}, ensure_ascii=False))
