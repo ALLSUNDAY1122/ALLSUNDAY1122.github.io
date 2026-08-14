@@ -3,9 +3,12 @@ import Foundation
 enum RigakuAppConfiguration {
     static let qualificationName = "理学療法士国家試験"
     static let seriesName = "学びスプリント"
-    static let contentVersion = "0.1.0-dev"
+    static let contentVersion = "1.0.0"
     static let defaultDailyTarget = 8
     static let allowedDailyTargets = [4, 8, 16]
+
+    static let canonicalBundleIdentifier = "jp.allsunday1122.rigakuryouhoushi"
+    static let canonicalMonthlyProductID = "jp.allsunday1122.rigakuryouhoushi.monthly"
 
     static let supportURL = URL(string: "https://allsunday1122.github.io/rigaku-sprint/support.html")!
     static let privacyURL = URL(string: "https://allsunday1122.github.io/rigaku-sprint/privacy.html")!
