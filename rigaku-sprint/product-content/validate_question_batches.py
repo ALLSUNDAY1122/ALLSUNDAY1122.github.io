@@ -2,7 +2,10 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
+from collections import Counter
+from difflib import SequenceMatcher
 from pathlib import Path
 
 from validate_exam_structure import load_classification_records
@@ -10,6 +13,11 @@ from validate_exam_structure import load_classification_records
 ROOT = Path(__file__).resolve().parent
 BATCH_DIR = ROOT / "question-batches"
 AUDIT_DIR = ROOT / "content-audit-batches"
+EXPECTED_TOTAL = 600
+EXPECTED_ROUNDS = {"60": 200, "59": 200, "58": 200}
+HIGH_SIMILARITY_THRESHOLD = 0.96
+SAME_TOPIC_SIMILARITY_THRESHOLD = 0.94
+MIN_SIMILARITY_LENGTH = 24
 
 REQUIRED = {
     "id", "subject", "topic", "answerType", "prompt", "choices",
@@ -36,9 +44,18 @@ TOPIC_ALIASES = {
     ("関節運動と運動軸", "関節の運動軸"),
 }
 
+ID_PATTERN = re.compile(r"^RIGAKU-R(58|59|60)-(AM|PM)-(\d{3})$")
+
 
 def load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def normalize_text(value: str) -> str:
+    text = str(value).lower()
+    text = re.sub(r"\s+", "", text)
+    text = re.sub(r"[、。,.!?！？・:：;；（）()\[\]{}『』「」\-ー〜~]", "", text)
+    return text
 
 
 def accepted_sets(question: dict) -> list[list[int]]:
@@ -110,6 +127,41 @@ def embedded_content_audit(question: dict, errors: list[str]) -> dict | None:
     }
 
 
+def validate_similarity(questions: list[dict], errors: list[str]) -> None:
+    normalized_prompts: list[tuple[str, str, str]] = []
+    exact_map: dict[str, list[str]] = {}
+
+    for question in questions:
+        sid = str(question.get("id", "?"))
+        topic = str(question.get("topic", "")).strip()
+        normalized = normalize_text(question.get("prompt", ""))
+        if not normalized:
+            continue
+        normalized_prompts.append((sid, topic, normalized))
+        exact_map.setdefault(normalized, []).append(sid)
+
+    for labels in exact_map.values():
+        if len(labels) > 1:
+            errors.append(f"exact duplicate prompt: {labels}")
+
+    for index, (id_a, topic_a, text_a) in enumerate(normalized_prompts):
+        if len(text_a) < MIN_SIMILARITY_LENGTH:
+            continue
+        for id_b, topic_b, text_b in normalized_prompts[index + 1:]:
+            if len(text_b) < MIN_SIMILARITY_LENGTH:
+                continue
+            ratio = SequenceMatcher(None, text_a, text_b).ratio()
+            threshold = (
+                SAME_TOPIC_SIMILARITY_THRESHOLD
+                if topic_a and topic_a == topic_b
+                else HIGH_SIMILARITY_THRESHOLD
+            )
+            if ratio >= threshold:
+                errors.append(
+                    f"high-similarity prompt {ratio:.3f}: {id_a} <-> {id_b}"
+                )
+
+
 def main() -> int:
     errors: list[str] = []
     classifications, classification_errors = load_classification_records()
@@ -143,8 +195,14 @@ def main() -> int:
                 continue
             questions.extend(batch)
 
+    if len(questions) != EXPECTED_TOTAL:
+        errors.append(f"release count must be {EXPECTED_TOTAL}, got {len(questions)}")
+
     ids: set[str] = set()
     audited_count = 0
+    round_counts: Counter[str] = Counter()
+    session_counts: Counter[tuple[str, str]] = Counter()
+
     for index, question in enumerate(questions):
         sid = question.get("id", f"index:{index}")
         if sid in ids:
@@ -155,6 +213,27 @@ def main() -> int:
         if missing:
             errors.append(f"{sid}: missing fields {sorted(missing)}")
             continue
+
+        id_match = ID_PATTERN.match(str(sid))
+        if id_match is None:
+            errors.append(f"{sid}: invalid question id format")
+        else:
+            id_round, id_session, id_number = id_match.groups()
+            declared_round = str(question["examRound"])
+            declared_number = str(question["questionNumber"])
+            if declared_round != id_round:
+                errors.append(
+                    f"{sid}: examRound mismatch declared={declared_round} id={id_round}"
+                )
+            if declared_number != str(int(id_number)):
+                errors.append(
+                    f"{sid}: questionNumber mismatch declared={declared_number} id={int(id_number)}"
+                )
+            number = int(id_number)
+            if not 1 <= number <= 100:
+                errors.append(f"{sid}: question number out of range")
+            round_counts[id_round] += 1
+            session_counts[(id_round, id_session)] += 1
 
         external_audit = audits.get(sid)
         embedded_audit = embedded_content_audit(question, errors)
@@ -225,6 +304,10 @@ def main() -> int:
         if len(choices) < 2:
             errors.append(f"{sid}: choice question needs at least 2 choices")
             continue
+        normalized_choices = [normalize_text(choice) for choice in choices]
+        if len(normalized_choices) != len(set(normalized_choices)):
+            errors.append(f"{sid}: duplicate choices after normalization")
+
         alternatives = accepted_sets(question)
         if not alternatives:
             errors.append(f"{sid}: no correct answer pattern")
@@ -244,6 +327,20 @@ def main() -> int:
         if question["answerType"] not in {"singleChoice", "multiChoice"}:
             errors.append(f"{sid}: PT first release supports singleChoice/multiChoice only")
 
+    for round_no, expected in EXPECTED_ROUNDS.items():
+        if round_counts[round_no] != expected:
+            errors.append(f"R{round_no}: release count {round_counts[round_no]}/{expected}")
+        for session in ("AM", "PM"):
+            if session_counts[(round_no, session)] != 100:
+                errors.append(
+                    f"R{round_no}-{session}: release count {session_counts[(round_no, session)]}/100"
+                )
+
+    if audited_count != len(questions):
+        errors.append(f"medical/content audit coverage {audited_count}/{len(questions)}")
+
+    validate_similarity(questions, errors)
+
     if errors:
         print("RIGAKU QUESTION BATCHES: FAIL")
         for error in errors:
@@ -251,9 +348,12 @@ def main() -> int:
         return 1
 
     print("RIGAKU QUESTION BATCHES: PASS")
-    print(f"audited release questions: {len(questions)} / 600")
+    print(f"audited release questions: {len(questions)} / {EXPECTED_TOTAL}")
     print(f"medical/content audits: {audited_count} / {len(questions)}")
-    print(f"remaining: {600 - len(questions)}")
+    print("round completeness: R60=200 / R59=200 / R58=200")
+    print("session completeness: all AM/PM sessions = 100")
+    print("duplicate/high-similarity gate: PASS")
+    print("remaining: 0")
     return 0
 
 
