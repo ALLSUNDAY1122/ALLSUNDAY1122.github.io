@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 BATCH_DIR = ROOT / "question-batches"
+AUDIT_SUFFIX = "重複監査後、同一知識を別角度から問う独立設問へ再構成済み。"
 
 UPDATES = {
     "RIGAKU-R58-PM-041": {
@@ -51,8 +52,8 @@ def main() -> int:
     changed_files: list[str] = []
 
     for path in sorted(BATCH_DIR.glob("questions-*.json")):
-        data = json.loads(path.read_text(encoding="utf-8"))
-        changed = False
+        original = path.read_text(encoding="utf-8")
+        data = json.loads(original)
         for question in data:
             sid = question.get("id")
             update = UPDATES.get(sid)
@@ -61,24 +62,21 @@ def main() -> int:
             found.add(sid)
             question.update(update)
             if isinstance(question.get("contentAudit"), dict):
-                question["contentAudit"]["note"] = (
-                    question["contentAudit"].get("note", "")
-                    + " 重複監査後、同一知識を別角度から問う独立設問へ再構成済み。"
-                ).strip()
-            changed = True
-        if changed:
-            path.write_text(
-                json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n",
-                encoding="utf-8",
-            )
+                note = str(question["contentAudit"].get("note", "")).strip()
+                if AUDIT_SUFFIX not in note:
+                    question["contentAudit"]["note"] = (note + " " + AUDIT_SUFFIX).strip()
+
+        rendered = json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n"
+        if rendered != original:
+            path.write_text(rendered, encoding="utf-8")
             changed_files.append(path.name)
 
     missing = sorted(set(UPDATES) - found)
     if missing:
         raise SystemExit(f"missing question ids: {missing}")
 
-    print(f"updated questions: {len(found)}")
-    print("changed files:")
+    print(f"target questions found: {len(found)}")
+    print(f"changed files: {len(changed_files)}")
     for name in changed_files:
         print(f"- {name}")
     return 0
