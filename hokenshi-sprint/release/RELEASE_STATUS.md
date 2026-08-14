@@ -3,7 +3,7 @@
 更新: 2026-08-14
 
 ## 到達状態
-**Native製品ターゲット実装済み / 変更後CI再検証中 / Apple新規Appレコード作成待ち**
+**Native Release Gate PASS / Apple新規Appレコード作成待ち**
 
 ## 完了
 - Notion正本照合
@@ -30,6 +30,7 @@
 - verified transaction / revocation確認 / transaction updates
 - 購入復元常設
 - StoreKit `Product.displayPrice` だけを価格表示に使用
+- `codemagic.yaml` にInternal TestFlight専用 `hokenshi_appstore` workflow追加
 
 ## 決定済み識別情報
 ユーザーが2026-08-13に「課金あり、3項目はあなたが決めて」と明示し、命名判断をAIへ委任したため以下を正本へ登録済み。
@@ -57,26 +58,34 @@ Google Drive個別PNG `13_保健師国家試験.png` を正本として特定・
 - bytes: 609,807
 - SHA-256: `34c1ec303ef5420947bf13ab4b05d2045a70b79417ac40ebd667e05c8f2f2c64`
 
-GitHubのAsset Catalogには正本ファイル名を登録済み。署名ビルド前に正本バイト自体の配置とSHA照合を必須とする。
+Asset Catalogは `AppIcon-1024.png` を参照済み。GitHub ActionsからDrive匿名直取得はHTTP 403だったため、署名ビルド前に正本バイトの搬送とSHA完全一致を必須ゲートとして残す。ユーザーへ画像再提出は求めない。
 
 ## CI
-2026-08-14に、正式決定前の旧「IAP ID禁止」ガードが正式Product IDまで弾いていたことを特定。ガードを正本一致検証へ変更。さらに生成データのfree=30 / premium=300をCIで固定する。
-- canonical/content/current-guidance/release-resource gate
-- Native product shell audit
-- LearningSprintCore tests
-- Hokenshi Native tests
-- Bundle ID / Team ID / IAP Product ID正本一致
-- free=30 / premium=300 / 無料10分野×3問
-- IAP capability生成
-- iOS App target Simulator Release build
-- WebView禁止
-- audited resource persist
+2026-08-14に旧IAP禁止ガードとshell quoting不備を修正し、正本一致検証へ移行。
+
+フルNative検証PASS実績:
+- Hokenshi Sprint Native Foundation run #232: content-plan / native-foundation / persist-release-resources 全PASS
+- その後のrunでもcontent-planは連続PASSし、free=30 / premium=300 / 無料10分野×3問を固定
+- Swift Package / LearningSprintCore tests PASS
+- Bundle ID / Team ID / IAP Product ID正本一致 PASS
+- WebView禁止 PASS
+- XcodeGen + IAP capability PASS
+- iOS Simulator Release build PASS
+
+運用改善:
+- release文書だけの更新でmacOS buildを再実行しないようpath filterを限定
+- `push` と `pull_request` の二重実行を廃止し、PR同期＋手動実行へ一本化
 
 ## 現在の外部ブロッカー
-App Store Connectの新規Appレコードがまだ確認できないため、数値App IDだけ未取得。
+Apple Developer / App Store Connectへのログイン操作が必要。
+1. Explicit App ID `jp.allsunday1122.hokenshi` が未登録なら登録
+2. App Store Connectで新規Appレコードを作成
+3. Appleが発行した実App IDを取得
+
 固定入力値は `release/APP_STORE_RECORD_VALUES.md` に記録済み。
 
-Appレコード作成後は、実App IDを正本へ記録→非消耗型IAP作成→Codemagic署名→signed IPA→Internal TestFlightへ進む。
+Appレコード作成後は、実App IDを正本へ記録→非消耗型IAP作成→正本AppIcon搬送→Codemagic署名→signed IPA→Internal TestFlightへ進む。
 
 ## 人間確認地点
-次の人間確認地点は #3「Internal TestFlight実機確認」。App Store本審査はその後もユーザー最終承認まで実行しない。
+次の製品判断の人間確認地点は #3「Internal TestFlight実機確認」。ただしその前段として、Appleログイン/MFAを伴う新規Appレコード作成はユーザー操作が必要。
+App Store本審査は #4 の明示承認まで実行しない。
