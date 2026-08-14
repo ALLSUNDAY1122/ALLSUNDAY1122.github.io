@@ -1,117 +1,98 @@
 # Release Status — #14 助産師国家試験｜学びスプリント
 
-Updated: 2026-08-13 JST
+Updated: 2026-08-14 JST
 Owner: ChatGPT project アプリ開発
 
 ## Canonical implementation rules
 
 - UI master: Notion Golden Master v2.1; v1.0 compatibility is documentary only.
-- Native implementation: SwiftUI; no WKWebView/WebKit as primary UI.
+- Native implementation: genuine SwiftUI; no WKWebView/WebKit primary UI.
 - Shared core: `native-ios/LearningSprintCore`.
 - Internal TestFlight only until explicit user approval.
 - External TestFlight review and App Store review submission are prohibited before explicit approval.
-- Production Bundle ID / App Store Connect App ID / IAP Product ID must never be guessed.
+- Production Bundle ID / App Store Connect App ID / Codemagic profile / IAP Product ID are canonical values and must never be guessed.
 
-## Acceptance gates
+## Content gate — FULL PASS
 
-### Foundation gate
-- [x] Market size checked from MHLW primary sources.
-- [x] Current competitors checked on the Japanese App Store.
-- [x] MHLW/PDL1.0 copyright terms checked.
-- [x] Current official subjects confirmed.
-- [x] Latest 109th item count confirmed as 55 morning + 55 afternoon = 110.
-- [x] R5 question standard confirmed as current baseline in 2026 review.
-- [x] Production identifiers left unset rather than guessed.
-- [x] Canonical #14 AppIcon located: Drive file `14_助産師国家試験.png` / ID `134DG19Lknp2p1AFvDAkLPA2zocyj2nOP`.
-- [x] Exact AppIcon source pinned in `ios/AppIconSource.json`: 1024×1024 PNG, SHA-256 `07668a08a0703b76ecbeca38bbc5b396a248f822de594947ddccd383f0898579`.
-
-### Native UI gate
-- [x] Native SwiftUI feature package created without production Bundle ID dependency.
-- [x] Golden Master colors/components supplied by `LearningSprintCore` are used.
-- [x] 4-tab information architecture: Home / Mock / History / Settings.
-- [x] Standard sprint count = 8, selectable targets = 4 / 8 / 16.
-- [x] Official four subjects are data-driven.
-- [x] FULL-audited bundled question bank runtime validation: status audited / 330 questions / 36 scenarios / every auditStatus pass.
-- [x] Standard sprint wired to production bank.
-- [x] Subject practice wired to production bank.
-- [x] Three original 110-question mock exams wired.
-- [x] Weak-review flow wired with 3-consecutive-correct release rule.
-- [x] Unknown/unsure marking wired.
-- [x] Resume session wired to local persistent store.
-- [x] 35-day heatmap and subject accuracy wired.
-- [x] JSON backup export/import wired to system document UI.
-- [x] Swift resource is deterministically regenerated from the audited bank; Native CI requires byte-for-byte parity.
-- [x] Static guard confirms no WKWebView/WebKit/SFSafariViewController in #14 feature sources.
-- [x] Static guard confirms no guessed production identifier is hard-coded in #14 feature sources.
-- [x] Swift package compilation and unit tests PASS on macOS 15 CI with bundled production JSON.
-- [x] XCTest 14 / 14 PASS, including full bundled bank, 110-question mock, weak-release rule, unknown/resume, local persistence and backup round-trip.
-- [ ] StoreKit 2 production UI/product wiring after canonical Product ID confirmation.
-- [ ] Small/large iPhone UI test on a signed/simulator app target after canonical Bundle ID/app target creation.
-
-### Content gate — FULL PASS
+- [x] Latest confirmed exam structure: 55 morning + 55 afternoon = 110.
+- [x] 3 original exam-equivalent mocks = 330 questions.
 - [x] R5 blueprint: 66 large topics × 5 distinct semantic intents = 330.
-- [x] 330 original production questions authored.
 - [x] 225 general + 105 situation-setting.
 - [x] 36 linked scenarios.
-- [x] Subject totals: Basic 100 / Diagnosis 185 / Community 20 / Management 25. These are internal coverage-design totals, not official MHLW subject quotas.
+- [x] Subject design totals: 基礎助産学100 / 助産診断・技術学185 / 地域母子保健20 / 助産管理25. These are internal coverage-design totals, not official subject quotas.
 - [x] Exact duplicate = 0.
-- [x] Same-topic similarity warnings reviewed = 9 / 9; each review bound to exact prompt SHA-256.
-- [x] Answer mismatch = 0.
-- [x] Missing explanation = 0.
-- [x] Missing primary/source anchor = 0.
-- [x] Missing evidence check date = 0.
-- [x] Missing law/system baseline = 0.
-- [x] Missing rights basis = 0.
-- [x] All 330 questions independently audited PASS.
-- [x] All 36 scenarios independently audited PASS.
-- [x] Post-audit Git blob drift invalidates previous approvals automatically.
-- [x] Neonatal semantic misassignment detected before release; superseded batches retired and DIAGNOSIS-26..37 rebuilt as 60 questions + 9 scenarios.
-- [x] Medical-currentness audit PASS for the current content baseline.
-- [x] Current source registry: 66 anchors / 57 direct-reproduction or restricted-use guards.
+- [x] Same-topic similarity warnings = 9; independently reviewed as distinct intents.
+- [x] Missing answer / explanation / source / checked date / baseline / rights basis = 0.
+- [x] 330 / 330 questions independently audited PASS.
+- [x] 36 / 36 scenarios independently audited PASS.
+- [x] Neonatal semantic misassignment was detected before release; DIAGNOSIS-26..37 was rebuilt as 60 questions + 9 scenarios.
+- [x] Source registry: 66 evidence anchors / 57 restricted or direct-reproduction guards.
 
-### Privacy gate
-- [x] Current code path reviewed: local JSON persistence; no analytics, tracking, or off-device learning-data transmission.
-- [x] Current source contains no `UserDefaults` use or file-timestamp Required Reason API access.
-- [x] Canonical `ios/PrivacyInfo.xcprivacy` prepared with tracking=false, collected data=[], accessed APIs=[].
-- [x] Native CI lints the manifest and fails if selected Required Reason API candidates are introduced without re-audit.
-- [ ] Final privacy report / built-app manifest placement audit after signed iOS App target exists.
-- [ ] Re-audit if StoreKit, networking, analytics, crash SDK, or any new data flow is added.
+## Golden Master v2.1 native UI gate — PASS
 
-### Release gate
-- [ ] Bundle ID confirmed in canonical source.
-- [ ] App Store Connect App ID confirmed.
-- [ ] Codemagic profile confirmed.
-- [ ] IAP Product ID confirmed if monetization is enabled.
-- [x] Canonical identifier registry contains a #14 row explicitly marked `未記載・推測禁止` for unresolved values.
-- [x] Canonical #14 AppIcon PNG located; no lookalike regeneration.
-- [x] AppIcon filename / Drive ID / dimensions / SHA-256 pinned for exact-file verification.
-- [ ] Canonical AppIcon copied into the final iOS AppIcon asset catalog after target creation.
-- [ ] Privacy manifest installed in the final app target and built-app privacy report audited.
-- [ ] Signed archive / IPA PASS.
-- [ ] Internal TestFlight install PASS.
-- [ ] Purchase / restore real-device test PASS if monetization enabled.
+- [x] Home fixed order: brand → qualification → `今日も1問、力に変える。` → countdown → today ring → resume → sprint → weak → mock → subjects → 3 statistics.
+- [x] Standard sprint default 8; selectable daily targets 4 / 8 / 16.
+- [x] Subject practice supports randomized selection and deterministic non-shuffle mode.
+- [x] Incomplete session is protected from silent overwrite.
+- [x] Single-choice options grade immediately on tap.
+- [x] Choice shuffle preserves original answer indices and displayed A/B/C/D mapping.
+- [x] Feedback uses animated `○ / ×`, with `ここだけ覚える` before collapsible `詳しい解説`.
+- [x] Weak review uses 3-consecutive-correct release rule; `わからない` joins weak review.
+- [x] Result CTA order: weak review if present → replay exact completed N questions → home.
+- [x] History fixed blocks: achievement ring → subject accuracy → 5-week heatmap → weak list → recent sessions.
+- [x] Recent session summaries are retained up to 20 entries.
+- [x] Exam date countdown and calculated required daily pace are wired; <=14 days uses the urgent accent.
+- [x] Settings fixed order: text size → daily target → question shuffle → choice shuffle → exam date → learning data → memory rule → material info → reset.
+- [x] Text size has standard / large / extra-large controls while preserving higher OS accessibility sizes.
+- [x] JSON backup envelope includes learning state plus #14 UI preferences and recent session history; legacy core backup remains importable.
+- [x] Learning reset clears answers / weak / resume / session history while preserving learning preferences.
+- [x] `validate_native_golden_master.py` enforces the critical Golden Master structure in CI.
+
+## Native App gate — PASS at unsigned Simulator stage
+
+- [x] Actual `@main` SwiftUI application target exists: `JosanshiSprint`.
+- [x] XcodeGen produces local `LearningSprintCore → JosanshiSprintFeature → JosanshiSprint` targets without a production Bundle ID dependency.
+- [x] FULL-audited 330-question / 36-scenario resource is bundled and runtime-gated.
+- [x] Audited source bank ↔ Swift resource byte-for-byte parity is enforced.
+- [x] `PrivacyInfo.xcprivacy` is included in the actual app target and linted from the built `.app`.
+- [x] No WebView primary implementation.
+- [x] Swift package tests: 21 / 21 PASS.
+- [x] Actual iOS Simulator application build: PASS.
+- [x] Production identifier hard-code guard: PASS.
+- [ ] 30-state screenshot audit / small-large real-device visual audit: execute at Internal TestFlight checkpoint.
+
+## AppIcon gate
+
+- [x] Canonical source located: Google Drive `14_助産師国家試験.png`, file ID `134DG19Lknp2p1AFvDAkLPA2zocyj2nOP`.
+- [x] Canonical metadata pinned: 1024×1024 RGB PNG, 590870 bytes, SHA-256 `07668a08a0703b76ecbeca38bbc5b396a248f822de594947ddccd383f0898579`.
+- [x] Release helper `ios/prepare-app-icon.sh` refuses any file whose byte size, SHA-256, or dimensions differ.
+- [x] Public Drive download routes were tested and correctly rejected because they returned HTML rather than the authenticated original PNG.
+- [ ] Exact authenticated canonical PNG must be staged into the release build environment before Archive; lookalike/regenerated icons are prohibited.
+
+## Privacy gate
+
+- [x] Current learning data remains local JSON; no analytics, tracking, or off-device learning-data transmission.
+- [x] Current source contains no selected Required Reason API candidates guarded by CI.
+- [x] `ios/PrivacyInfo.xcprivacy`: tracking=false / collected data=[] / accessed APIs=[] for the current code path.
+- [x] Built Simulator app contains and passes lint for the privacy manifest.
+- [ ] Re-audit after StoreKit production wiring or any new network / analytics / crash SDK.
 
 ## Latest validation evidence
 
-- Content FULL CI PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31698323947
-  - 330 / 330 authored; remaining 0; 225 general + 105 situation; 36 / 36 scenarios; unique intents 330 / 330.
-  - 9 same-topic similarity warnings independently reviewed as distinct semantic intents.
-  - Full structural / source / rights / duplication gate PASS.
-- Native Foundation PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31698323951
-  - Audited bank ↔ bundled Swift resource byte-for-byte parity PASS.
-  - `PrivacyInfo.xcprivacy` lint PASS and Required Reason API candidate scan PASS.
-  - No WebView primary implementation.
-  - XCTest 14 tests / 0 failures.
-  - Production-identifier hard-code guard PASS.
+- Content FULL PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31760418839
+- Native Foundation + Golden Master v2.1 + 21 XCTest PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31760418826
+- Actual iOS App Simulator build + built Privacy Manifest PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31760418821
+- Shared Learning Sprint Native Core PASS: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/31760418841
 - Draft PR: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/pull/4137
 
-## Current blockers requiring human/canonical values
+## Human / canonical decisions still required
 
-1. Bundle ID — 要確認
-2. App Store Connect App ID — 要確認
-3. Codemagic profile — 要確認
-4. IAP Product ID — 要確認 if monetization is enabled
+Top-level Notion `【正本】対象アプリ識別情報｜App Store Connect / Codemagic` still marks #14 production values unresolved. Do not infer them from other apps.
 
-The highest-priority identifier source is Notion `【正本】対象アプリ識別情報｜App Store Connect / Codemagic`. As of 2026-08-13, #14 is explicitly present there with unresolved values marked `未記載・推測禁止`.
+1. Bundle ID — user value or explicit naming delegation required.
+2. Codemagic profile — user value or explicit naming delegation required.
+3. IAP Product ID — only after monetization is enabled; user value or explicit naming delegation required.
+4. Free / paid boundary and purchase model — qualification-specific monetization decision; not fixed by the common Golden Master.
+5. App Store Connect numeric App ID — Apple-issued actual value only; never guess.
 
-All non-signing content and source-level native work is now at FULL-audited state. The remaining identifiers are required to create/verify the final production app identity, place the exact canonical AppIcon and privacy manifest into the signed app target, connect StoreKit production products, create an archive, and proceed to Internal TestFlight.
+After those decisions: register canonical identifiers → stage exact AppIcon → connect StoreKit 2 if enabled → signed Archive / IPA → built-app privacy re-audit → Internal TestFlight → 30-state / small-large real-device audit → user TestFlight approval. External Beta Review / App Store review remain blocked until explicit approval.
