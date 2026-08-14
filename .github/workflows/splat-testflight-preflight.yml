@@ -1,0 +1,64 @@
+name: Splat TestFlight Preflight
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: splat-testflight-preflight
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate source and release packet
+        run: |
+          set -euo pipefail
+          test -f splat-native-ios/project.yml
+          test -f splat-native-ios/PrivacyInfo.xcprivacy || test -f splat-native-ios/SplatNative/PrivacyInfo.xcprivacy
+          test -f splat-native-ios/APP_STORE_METADATA_JA.md
+          test -f splat-native-ios/APP_REVIEW_NOTES_JA.md
+          test -f splat-native-ios/APPLE_CONNECT_PACKET.md
+          test -f splat-native-ios/RELEASE_CHECKLIST.md
+          test -f splat-native-ios/RELEASE_STATUS.md
+          test -f splat-native-ios/privacy.html
+          test -f splat-native-ios/support.html
+          grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.splatlab' splat-native-ios/project.yml
+          grep -q 'MARKETING_VERSION: 1.0.0' splat-native-ios/project.yml
+          grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO' splat-native-ios/project.yml
+          grep -q 'App Store Connect Apple ID: 未発行' splat-native-ios/RELEASE_STATUS.md
+
+      - name: Validate Splat-only Codemagic safety contract
+        run: |
+          set -euo pipefail
+          grep -q '^  splat-native-ios:' codemagic.yaml
+          grep -q 'BUNDLE_ID: jp.allsunday1122.splatlab' codemagic.yaml
+          grep -q "pattern: 'testflight/splat-native-ios'" codemagic.yaml
+          grep -q 'app-store-connect bundle-ids create' codemagic.yaml
+          grep -q 'fetch-signing-files.*IOS_APP_STORE.*--create' codemagic.yaml
+          grep -q 'testFlightInternalTestingOnly' codemagic.yaml
+          grep -q 'submit_to_testflight: true' codemagic.yaml
+          grep -q 'submit_to_app_store: false' codemagic.yaml
+          ! grep -q 'submit_to_app_store: true' codemagic.yaml
+
+      - name: Validate Codemagic YAML syntax and workflow values
+        run: |
+          ruby -e '
+            require "yaml"
+            data = YAML.safe_load(File.read("codemagic.yaml"), aliases: true)
+            w = data.fetch("workflows").fetch("splat-native-ios")
+            raise "wrong workflow name" unless w["name"] == "Splat Lab Native - Internal TestFlight"
+            raise "wrong bundle" unless w.dig("environment", "vars", "BUNDLE_ID") == "jp.allsunday1122.splatlab"
+            p = w.dig("publishing", "app_store_connect")
+            raise "TestFlight upload disabled" unless p["submit_to_testflight"] == true
+            raise "App Store submission must stay disabled" unless p["submit_to_app_store"] == false
+            puts "PASS: Codemagic YAML and release safety contract"
+          '
