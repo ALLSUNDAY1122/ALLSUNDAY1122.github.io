@@ -6,6 +6,7 @@ on:
       - 'kangoshi-sprint/product-content/explanation-batches/**'
       - 'kangoshi-sprint/product-content/classified/situation-group-summary.json'
       - 'kangoshi-sprint/product-content/situation-audit/validate_situation_audit.py'
+      - '.github/workflows/kangoshi-situation-audit.yml'
   workflow_dispatch:
 
 permissions:
@@ -30,12 +31,13 @@ jobs:
       - name: Persist report when changed
         shell: bash
         run: |
-          if git diff --quiet -- kangoshi-sprint/product-content/situation-audit/report.json; then
+          REPORT='kangoshi-sprint/product-content/situation-audit/report.json'
+          if [ -z "$(git status --porcelain -- "$REPORT")" ]; then
             echo 'Situation audit report already current.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add kangoshi-sprint/product-content/situation-audit/report.json
+          git add "$REPORT"
           git commit -m 'kangoshi: refresh situation audit report'
           git push
