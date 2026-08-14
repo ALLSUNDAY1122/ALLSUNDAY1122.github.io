@@ -1,0 +1,65 @@
+name: Yobi General Education Bank Pipeline
+
+on:
+  push:
+    branches:
+      - feature/yobi-tantou-native-swiftui
+    paths:
+      - 'learning-sprint/yobi-tantou/content-loop/general-bank/**'
+      - 'learning-sprint/yobi-tantou/content-loop/mock-bank/validate_general_candidates.py'
+      - 'learning-sprint/yobi-tantou/content-loop/mock-bank/audit_global_uniqueness.py'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py'
+      - 'learning-sprint/yobi-tantou/content-loop/promote_practice_release.py'
+      - '.github/workflows/yobi-general-bank-pipeline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: yobi-general-bank-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  audit-general-banks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/yobi-tantou-native-swiftui
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit and promote all present general banks
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/general-bank/run_general_bank_pipeline.py
+          --all --persist
+      - name: Persist promoted general canonicals
+        run: |
+          ROOT=learning-sprint/yobi-tantou/content-loop/general-bank
+          mapfile -t FILES < <(find "$ROOT" -maxdepth 1 -type f -name '*.release.json' -print | sort)
+          if [ "${#FILES[@]}" -eq 0 ]; then
+            echo 'No promoted general canonical files exist yet.'
+            exit 0
+          fi
+          git add "${FILES[@]}"
+          if git diff --cached --quiet; then
+            echo 'No canonical change.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore(yobi): persist audited general-education banks'
+          git push origin HEAD:feature/yobi-tantou-native-swiftui
+      - name: Syntax
+        run: |
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/general-bank/audit_deterministic_general.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/general-bank/stage_general_candidates.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/general-bank/run_general_bank_pipeline.py
+      - name: Upload generated audit bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yobi-general-bank-audit-${{ github.run_id }}
+          path: learning-sprint/yobi-tantou/content-loop/general-bank/generated/
+          if-no-files-found: ignore
