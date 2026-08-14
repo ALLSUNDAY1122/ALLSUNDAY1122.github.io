@@ -1,8 +1,9 @@
 {
-  "schemaVersion": 2,
-  "updatedAt": "2026-08-14T14:26:00+09:00",
+  "schemaVersion": 3,
+  "updatedAt": "2026-08-14T18:50:00+09:00",
   "sourceOfTruth": "GitHub main",
-  "standardProcedure": "v2.4",
+  "standardProcedure": "v2.5",
+  "noProgressManual": "NO_PROGRESS v2.0",
   "questionAuditCanonicalizationRule": "2026-08-12",
   "target": {"totalQuestions":720,"required":150,"general":390,"situation":180,"scenarioCount":60},
   "rawAndClassification": {
@@ -15,57 +16,63 @@
     "classificationWarnings":32,
     "classificationWarningsResolved":32,
     "situationSpecialistCorrectionsApplied":4,
-    "classificationPass":true,
-    "note":"第113回一般5問のPDF取込欠損を恒久修復後にraw→L2を再発火。さらに状況設定症例監査で検出した4分類補正を適用し、意味監査・60症例監査・警告解決を含めて再PASS。"
+    "classificationPass":true
   },
   "canonicalIntegratedL3": {
-    "explained":583,"total":720,"pending":137,
+    "explainedLastMaterialized":583,"total":720,"pendingLastMaterialized":137,
     "dynamicRequired":85,"dynamicVerified":66,"dynamicExpertReview":0,"dynamicPending":19,
     "pass":false,"releaseAllowed":false,
-    "auditBlobSha":"3c94690136487d26d244acc42b94ee9ad6d39b55"
+    "auditBlobSha":"3c94690136487d26d244acc42b94ee9ad6d39b55",
+    "note":"C worker has advanced beyond this materialized L3 snapshot; do not infer a larger common count until enrichment audit is regenerated."
   },
   "workstreams": {
     "A_required": {
       "status":"FINAL_CANONICAL_PASS_WITH_QUARANTINE","target":150,"canonicalBuilt":150,
-      "canonicalPerExam":{"115":50,"114":50,"113":50},"contentAndEvidenceCovered":150,
+      "canonicalPerExam":{"115":50,"114":50,"113":50},"finalCanonicalPass":true,
       "releaseEligibleBeforeGlobalGates":136,"quarantinedUnique":14,"mediaDependent":8,"scoringSpecial":6,"expertReview":2,
-      "dynamicEvidencePending":0,"exactDuplicateContent":0,"highSimilarityPairs":0,"finalCanonicalPass":true,
       "canonicalAuditCommit":"cd901b5763cfa3c7645cfdbe07af5c44b3e34695"
     },
     "B_general": {
-      "status":"WORKER_390_COMPLETE_CANONICAL_FAIL_13_GAPS","target":390,"workerCoverage":390,"canonicalBuilt":390,
-      "canonicalPerExam":{"115":130,"114":130,"113":130},"canonicalDuplicateIds":0,"officialAnswerMismatch":0,"officialScoringMismatch":0,
-      "canonicalMissingExplanationOrEvidence":13,"missingMediaItems":8,"missingRepairedSourceItems":5,"finalCanonicalPass":false,
-      "handoff":"kangoshi-sprint/workstreams/B-general/COORDINATOR-CANONICAL-AUDIT-20260814.json"
+      "status":"WORKER_REMEDIATION_PASS_COORDINATOR_CANONICAL_RUN_QUEUED","target":390,"workerCoverage":390,
+      "workerRemediationCompleted":13,"workerExplanationEvidenceComplete":390,
+      "remediationBatch":"kangoshi-sprint/product-content/explanation-batches/B-general-113-canonical-remediation-13.json",
+      "coordinatorWorkflowRunId":31789808169,"finalCanonicalPass":false,
+      "expected":{"integrityExit":0,"sharedAuditExit":0,"exam113MissingExplanation":0,"exam113MissingEvidence":0}
     },
     "C_situation": {
-      "status":"IN_PROGRESS_EXPERT_REVIEW_PARALLEL_CANONICAL_PREP","targetQuestions":180,"targetScenarios":60,
-      "authoredL3QuestionFloor":81,"auditedQuestionFloor":81,"scenarioContentAuditPassFloor":27,"scenarioAuditRemainingCeiling":33,
+      "status":"IN_PROGRESS_ARTIFACT_DRIVEN","targetQuestions":180,"targetScenarios":60,
+      "authoredQuestionCoverage":156,"scenarioBatchCoverage":52,
+      "pendingQuestions":24,"pendingScenarios":8,
+      "nextScenario":"K113-PM-SC03",
       "expertReviewQueueCount":2,"expertReviewBlockingContentAuthoring":false,
-      "latestConfirmedAuthoredScenario":"K114-AM-SC07","latestConfirmedAuditedScenario":"K114-AM-SC07",
-      "canonicalIntegrationQueueCreated":true,"finalCanonicalPass":false
+      "canonicalAuditRequiredAfterAll60ContentComplete":true,"finalCanonicalPass":false
     }
   },
   "canonicalization": {
-    "policy":"小分けバッチPASSは最終PASSへ流用しない。試験回または試験回×大分類のcanonical JSONへ統合後、共通validatorとカテゴリ固有validatorを再実行する。",
     "required":{"canonicalJsonBuilt":true,"pass":true,"questions":150},
-    "general":{"builder":"kangoshi-sprint/product-content/build_general_canonical.py","integrityValidator":"kangoshi-sprint/product-content/validate_general_canonical.py","workflow":".github/workflows/kangoshi-general-canonical.yml","gate":"kangoshi-sprint/product-content/questions/general-canonical-gate.json","pass":false,"blockingItems":13},
-    "situation":{"canonicalIntegrationQueueCreated":true,"canonicalJsonBuilt":false,"pass":false}
+    "general":{"workflow":".github/workflows/kangoshi-general-canonical.yml","runId":31789808169,"pass":false,"state":"WAIT_EXTERNAL"},
+    "situation":{"contentComplete":false,"scenarioCoverage":52,"canonicalJsonBuilt":false,"pass":false}
   },
-  "v24ProductDecisions": {
-    "previewRequired":true,"previewUrl":"https://allsunday1122.github.io/kangoshi-sprint/",
-    "humanInitialPrototypeCheckRequired":true,"humanInitialPrototypeCheckPassed":false,
-    "billing":"monthly_200_auto_renewable","bundleId":"jp.allsunday1122.kangoshi","plannedProductId":"jp.allsunday1122.kangoshi.monthly","numericAppleId":null
+  "v25ProductDecisions": {
+    "previewUrl":"https://allsunday1122.github.io/kangoshi-sprint/",
+    "humanInitialPrototypeCheckRequired":true,
+    "humanInitialPrototypeCheckPassed":true,
+    "humanInitialPrototypeCheckPassedAt":"2026-08-14T18:50:00+09:00",
+    "billing":"monthly_200_auto_renewable",
+    "bundleId":"jp.allsunday1122.kangoshi",
+    "plannedProductId":"jp.allsunday1122.kangoshi.monthly",
+    "numericAppleId":null
   },
   "releaseGates": {
     "allThreeWorkstreamsFinalCanonicalPass":false,"l3All720Pass":false,"mediaRightsPass":false,"expertReviewPass":false,
-    "initialPrototypeHumanCheckPass":false,"mock240PerExamReady":false,"storeKit2Ready":false,"releaseAuditPass":false,"testFlightReady":false
+    "initialPrototypeHumanCheckPass":true,"mock240PerExamReady":false,"storeKit2Ready":false,"releaseAuditPass":false,"testFlightReady":false
   },
   "nextCoordinatorLoop": [
-    "Pause only for the v2.4 initial prototype human check while B and C worker work may continue independently on GitHub",
-    "After human prototype check, re-read GitHub main before any further coordinator action",
-    "Re-run B canonical audit only after the 13-gap worker handoff is fixed",
-    "Continue integrating C canonical patches/classification/text/media corrections as worker artifacts arrive",
-    "Do not release mock/StoreKit/TestFlight gates until canonical 720, rights, and expert gates pass"
+    "Treat B run 31789808169 as WAIT_EXTERNAL while healthy; do not rerun it",
+    "Continue independent integration work while C finishes the final 8 scenarios",
+    "When B workflow completes, adopt its actual canonical gate result",
+    "When C reaches 60/60, generate and audit situation canonical JSON",
+    "Regenerate common L3 after new category artifacts settle",
+    "Do not advance release gates until all category canonical, L3 720, rights and specialist gates pass"
   ]
 }
