@@ -11,7 +11,7 @@ struct RigakuPurchaseSettingsSection: View {
                     Label("全600問・ベース模試・全苦手復習を利用可能", systemImage: "checkmark.seal.fill")
                         .foregroundStyle(LearningSprintTheme.green)
                 } else if let price = appModel.purchaseDisplayPrice {
-                    Button("月額プランを開始（\(price)）") {
+                    Button("月額プランを開始（\(price) / 1か月）") {
                         Task { await appModel.purchasePremium() }
                     }
                 } else {
@@ -24,9 +24,19 @@ struct RigakuPurchaseSettingsSection: View {
                     .font(.caption)
                     .foregroundStyle(LearningSprintTheme.ink2)
 
+                Text("1か月ごとに自動更新され、解約するまで継続します。請求額は購入時にApp Storeへ表示される価格です。")
+                    .font(.caption)
+                    .foregroundStyle(LearningSprintTheme.ink2)
+
                 Button("購入を復元") {
                     Task { await appModel.restorePurchases() }
                 }
+
+                HStack(spacing: 16) {
+                    Link("プライバシー", destination: RigakuAppConfiguration.privacyURL)
+                    Link("利用条件", destination: RigakuAppConfiguration.termsURL)
+                }
+                .font(.caption)
 
                 if let state = appModel.purchaseStateLabel {
                     Text(state)
@@ -34,7 +44,7 @@ struct RigakuPurchaseSettingsSection: View {
                         .foregroundStyle(LearningSprintTheme.ink2)
                 }
 
-                Text("価格はApp Storeの表示価格のみを使用します。購読の管理・解約はApple Accountのサブスクリプション設定から行えます。")
+                Text("購読の管理・解約はApple Accountのサブスクリプション設定から行えます。")
                     .font(.caption)
                     .foregroundStyle(LearningSprintTheme.ink3)
             }
