@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC05",
+  "sourceExam": 114,
+  "session": "AM",
+  "sourceEvidence": {
+    "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+    "officialPages": [36, 37],
+    "checkedAt": "2026-08-14T14:52:00+09:00"
+  },
+  "textCorrections": {
+    "scenarioTextCanonical": "Aさん（76歳、男性）は妻（72歳）と2人で暮らしている。ベッドからトイレに起きようとしたところ右上下肢にしびれと脱力感があり、動けなくなったため救急車で来院した。頭部CTで左中大脳動脈領域のラクナ梗塞と診断され、緊急入院し血栓溶解療法が施行された。既往歴は53歳で高血圧症と診断され内服治療を継続。60歳まで食品会社に勤務。入院時は身長168cm、体重65kg、体温37.2℃、呼吸数20/分、脈拍78/分・整、血圧210/88mmHg、SpO2 97％（room air）、右上下肢麻痺を認めた。検査所見は白血球3,600/μL、赤血球420万/μL、Hb11.2g/dL、総蛋白6.2g/dL、アルブミン3.6g/dL、空腹時血糖108mg/dL、CRP0.1mg/dL。",
+    "questionTextCorrections": [
+      {"id": "K114-AM103", "fromContains": "入院日、A さんは", "toStartsWith": "入院2日、Aさんは"},
+      {"id": "K114-AM104", "fromContains": "入院日。A さんは", "toStartsWith": "入院5日。Aさんは"},
+      {"id": "K114-AM105", "fromContains": "入院週、A さんは", "toStartsWith": "入院2週、Aさんは"}
+    ]
+  },
+  "classificationCorrections": [
+    {
+      "id": "K114-AM103",
+      "from": {"majorSubject": "成人看護学", "subject": "循環器"},
+      "to": {"majorSubject": "成人看護学", "subject": "脳神経・急性期"},
+      "reason": "高血圧は既往・観察項目の一部。設問は血栓溶解療法後の脳梗塞患者の離床開始時安全管理を問う。"
+    },
+    {
+      "id": "K114-AM104",
+      "from": {"majorSubject": "基礎看護学", "subject": "日常生活援助"},
+      "to": {"majorSubject": "成人看護学", "subject": "脳神経・リハビリテーション看護"},
+      "reason": "食事一般援助ではなく、右片麻痺・体幹右傾斜をもつ脳梗塞患者の座位姿勢と食事自立支援を問う。"
+    },
+    {
+      "id": "K114-AM105",
+      "from": {"majorSubject": "基礎看護学", "subject": "日常生活援助"},
+      "to": {"majorSubject": "老年看護学", "subject": "高齢者のADL・自立支援"},
+      "reason": "76歳の脳梗塞患者について、障害高齢者の日常生活自立度（寝たきり度）判定基準を用いて回復期ADLを評価する設問。"
+    }
+  ],
+  "applyState": "pending_canonical_integration"
+}
