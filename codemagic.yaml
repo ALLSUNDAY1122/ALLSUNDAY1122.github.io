@@ -47,6 +47,17 @@ workflows:
           ! grep -R -nE 'URLSession|Firebase|Amplitude|Mixpanel' "$CM_BUILD_DIR/splat-native-ios/SplatNative" --include='*.swift'
       - name: Initialize signing keychain
         script: keychain initialize
+      - name: Ensure Apple Developer Bundle ID exists
+        script: |
+          set -euo pipefail
+          if ! app-store-connect bundle-ids list \
+            --bundle-id-identifier "$BUNDLE_ID" \
+            --strict-match-identifier | grep -Fq "$BUNDLE_ID"; then
+            app-store-connect bundle-ids create \
+              --name "Splat Lab Native" \
+              --platform IOS \
+              "$BUNDLE_ID"
+          fi
       - name: Fetch or create App Store signing files
         script: |
           set -euo pipefail
