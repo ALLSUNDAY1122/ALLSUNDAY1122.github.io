@@ -1,0 +1,25 @@
+name: Splat Native iOS Build
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'splat-native-ios/**'
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Static checks
+        run: bash splat-native-ios/scripts/validate.sh
+      - name: Generate project
+        working-directory: splat-native-ios
+        run: xcodegen generate
+      - name: Resolve packages
+        working-directory: splat-native-ios
+        run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
+      - name: Compile for iPhone without signing
+        working-directory: splat-native-ios
+        run: xcodebuild -project SplatNative.xcodeproj -scheme SplatNative -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
