@@ -51,10 +51,10 @@ final class YobiTantouSprintTests: XCTestCase {
         })
     }
 
-    func testBundledFormalPracticeBankLoadsTwentyEightReleasedQuestionsAcrossTwoTiers() {
+    func testBundledFormalPracticeBankLoadsFortyTwoReleasedQuestionsAcrossThreeTiers() {
         let model = freshModel()
         XCTAssertNil(model.startupError)
-        XCTAssertEqual(model.questions.count, 28)
+        XCTAssertEqual(model.questions.count, 42)
         XCTAssertTrue(model.questions.allSatisfy {
             $0.releaseEligible && $0.contentUse == .practice && $0.examYear == nil && !$0.isOfficialMockQuestion
         })
@@ -65,17 +65,19 @@ final class YobiTantouSprintTests: XCTestCase {
         )
         XCTAssertEqual(model.questions.filter { $0.difficulty == .foundation }.count, 14)
         XCTAssertEqual(model.questions.filter { $0.difficulty == .standard }.count, 14)
-        XCTAssertEqual(model.questions.filter { $0.difficulty == .applied }.count, 0)
+        XCTAssertEqual(model.questions.filter { $0.difficulty == .applied }.count, 14)
     }
 
     func testReleaseRepositoryAcceptsAuditedDifficulty() throws {
-        let data = try JSONEncoder().encode([releaseQuestion(difficulty: .standard)])
-        let decoded = try QuestionRepository().decode(data, kind: .release)
-        XCTAssertEqual(decoded.count, 1)
-        XCTAssertTrue(decoded[0].releaseEligible)
-        XCTAssertEqual(decoded[0].contentUse, .practice)
-        XCTAssertEqual(decoded[0].difficulty, .standard)
-        XCTAssertNil(decoded[0].examYear)
+        for difficulty in QuestionDifficulty.allCases {
+            let data = try JSONEncoder().encode([releaseQuestion(id: "YOBI-RELEASE-\(difficulty.rawValue)", difficulty: difficulty)])
+            let decoded = try QuestionRepository().decode(data, kind: .release)
+            XCTAssertEqual(decoded.count, 1)
+            XCTAssertTrue(decoded[0].releaseEligible)
+            XCTAssertEqual(decoded[0].contentUse, .practice)
+            XCTAssertEqual(decoded[0].difficulty, difficulty)
+            XCTAssertNil(decoded[0].examYear)
+        }
     }
 
     func testReleaseRepositoryRejectsMissingDifficulty() throws {
