@@ -13,6 +13,35 @@ def load(name: str):
     return json.loads((ROOT / name).read_text(encoding="utf-8"))
 
 
+def load_release_questions(errors: list[str]) -> list[dict]:
+    questions: list[dict] = []
+    main_path = ROOT / "questions.json"
+    if main_path.exists():
+        try:
+            main_questions = json.loads(main_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            errors.append(f"questions.json invalid JSON: {exc}")
+            main_questions = []
+        if not isinstance(main_questions, list):
+            errors.append("questions.json must be an array")
+        else:
+            questions.extend(main_questions)
+
+    batch_dir = ROOT / "question-batches"
+    if batch_dir.exists():
+        for path in sorted(batch_dir.glob("questions-*.json")):
+            try:
+                batch = json.loads(path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as exc:
+                errors.append(f"question batch JSON invalid {path.name}: {exc}")
+                continue
+            if not isinstance(batch, list):
+                errors.append(f"question batch root must be array: {path.name}")
+                continue
+            questions.extend(batch)
+    return questions
+
+
 def slot_id(round_no: int, session: str, number: int) -> str:
     return f"RIGAKU-R{round_no}-{session}-{number:03d}"
 
@@ -114,7 +143,7 @@ def main() -> int:
     adjustments = load("scoring-adjustments.json")
     classification_records, classification_load_errors = load_classification_records()
     errors.extend(classification_load_errors)
-    questions = load("questions.json")
+    questions = load_release_questions(errors)
 
     frame_rounds = {int(item["round"]): item for item in frame["rounds"]}
     source_rounds = {int(item["round"]): item for item in sources["rounds"]}
@@ -235,6 +264,7 @@ def main() -> int:
             errors.append(f"unresolved media cannot be direct official candidate: {sid}")
 
     question_ids: list[str] = []
+    release_by_round: Counter[int] = Counter()
     for question in questions:
         sid = question.get("id")
         question_ids.append(sid)
@@ -248,10 +278,19 @@ def main() -> int:
             errors.append(f"product question sourceURL missing: {sid}")
         if not question.get("explanation") or not question.get("memoryPoint"):
             errors.append(f"product question L3 explanation/memory missing: {sid}")
+        try:
+            release_by_round[int(question.get("examRound"))] += 1
+        except (TypeError, ValueError):
+            errors.append(f"product question examRound invalid: {sid}")
 
     duplicates = [key for key, count in Counter(question_ids).items() if count > 1]
     if duplicates:
         errors.append(f"duplicate product question ids: {duplicates[:10]}")
+    if len(questions) != 600:
+        errors.append(f"release question count must be 600, got {len(questions)}")
+    for round_no in expected_rounds:
+        if release_by_round[round_no] != 200:
+            errors.append(f"R{round_no} release question count must be 200, got {release_by_round[round_no]}")
 
     if errors:
         print("RIGAKU EXAM STRUCTURE: FAIL")
@@ -270,7 +309,8 @@ def main() -> int:
         )
     print(f"verified classified slots: {len(class_ids)} / 600")
     print(f"release question records: {len(questions)} / 600")
-    print("release gate remains closed until audited product questions are populated")
+    print("release round completeness: R60=200 / R59=200 / R58=200")
+    print("release gate: OPEN (structure/count/rights ledger complete; content audit is validated separately)")
     return 0
 
 
