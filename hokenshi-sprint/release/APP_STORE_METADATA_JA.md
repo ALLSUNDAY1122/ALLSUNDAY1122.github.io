@@ -1,13 +1,13 @@
 # App Store Metadata JA｜保健師国家試験｜学びスプリント
 
-更新: 2026-08-13
+更新: 2026-08-14
 
 ## 基本情報
 - アプリ名候補: `保健師国家試験｜学びスプリント`
 - サブタイトル候補: `8問ずつ、地域看護を積み上げる`
 - 主カテゴリ候補: 教育
 - 年齢レーティング方針: 学習教材として申告。医療助言・診療機能なし。
-- バージョン: `1.0.0`（識別情報正本の共通設定）
+- バージョン: `1.0.0`
 
 ## キーワード候補
 `保健師,国家試験,国試,公衆衛生,地域看護,疫学,保健統計,過去問,模試,資格`
@@ -36,6 +36,9 @@
 ### 学習記録は端末内
 履歴、苦手、35日ヒートマップ、途中再開に対応。JSONバックアップを書き出して保管できます。アカウント登録は不要です。
 
+### 無料で中心体験を確認
+第1回の10分野から各3問、合計30問を無料で利用できます。買い切りPremiumでは残り300問と模試機能を解放します。購入済みPremiumは「購入を復元」から再取得できます。
+
 ## 明示事項
 - 本アプリの問題は、法令・厚生労働省資料・公的統計等を参照して作成した独自問題です。
 - 10分野×11問/回の均等配分は周回学習用の独自設計で、実際の国家試験の科目別出題比率を示すものではありません。
@@ -46,9 +49,12 @@
 - Support URL: `https://allsunday1122.github.io/hokenshi-sprint/support.html`
 - Privacy Policy URL: `https://allsunday1122.github.io/hokenshi-sprint/privacy.html`
 
-## 未確定
-- Bundle ID: 正本未登録
-- App Store Connect App ID: 正本未登録
-- SKU: App Store Connect作成工程で確定
-- IAP Product ID / 価格: 課金採用時のみ確定
-- Codemagic profile: 正本未登録
+## App Store / Signing正本
+- Bundle ID: `jp.allsunday1122.hokenshi`
+- SKU: `hokenshi-sprint-13-ios`
+- IAP: 非消耗型・買い切りPremium
+- IAP Product ID: `jp.allsunday1122.hokenshi.premium`
+- Codemagic workflow/profile: `hokenshi_appstore`
+- Apple Team ID: `MN3D2ZM44N`
+- App Store Connect App ID: Apple新規Appレコード作成後の実発行値を記録する。仮値禁止。
+- IAP価格: App Store本審査前の最終承認地点で確定し、アプリ内ではStoreKit `Product.displayPrice`を表示する。
