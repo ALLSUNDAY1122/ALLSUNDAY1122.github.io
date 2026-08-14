@@ -21,6 +21,18 @@ def number_from_choice(text: str) -> float:
     return float(match.group(0))
 
 
+def signed_number_from_choice(text: str) -> float:
+    value = abs(number_from_choice(text))
+    raw = str(text)
+    negative_markers = ("低下", "減少", "減", "マイナス", "-")
+    positive_markers = ("上昇", "増加", "増", "プラス", "+")
+    if any(marker in raw for marker in negative_markers):
+        return -value
+    if any(marker in raw for marker in positive_markers):
+        return value
+    return number_from_choice(text)
+
+
 def close(a: float, b: float) -> bool:
     return math.isclose(float(a), float(b), rel_tol=1e-9, abs_tol=1e-9)
 
@@ -156,13 +168,14 @@ def audit_item(item: dict) -> dict:
             raise AuditError(f"{qid}: fraction correct value is not unique")
     elif kind in numeric_kinds:
         computed = compute_numeric(verification)
-        selected = number_from_choice(choices[answer])
+        parser = signed_number_from_choice if kind == "signed_difference" else number_from_choice
+        selected = parser(choices[answer])
         if not close(selected, computed):
             raise AuditError(f"{qid}: selected choice {selected} != computed {computed}")
         numeric_matches = 0
         for choice in choices:
             try:
-                if close(number_from_choice(choice), computed):
+                if close(parser(choice), computed):
                     numeric_matches += 1
             except AuditError:
                 pass
@@ -232,7 +245,7 @@ def main() -> int:
         "checkedAt": max(str(item.get("evidence_checked_date", "")) for item in items),
         "status": "PASS",
         "scope": args.bank.name,
-        "policy": "設問内の自作fixtureから正答を再計算・再構成し、候補answer・選択肢と独立照合する。外部著作物の正答知識へ依存しない。",
+        "policy": "設問内の自作fixtureから正答を再計算・再構成し、候補answer・選択肢と独立照合する。増減方向を含む選択肢は語義も符号として検証し、外部著作物の正答知識へ依存しない。",
         "items": results,
     }
     args.report.parent.mkdir(parents=True, exist_ok=True)
