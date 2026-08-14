@@ -45,6 +45,9 @@ jobs:
       - name: Audited question batches
         run: python3 rigaku-sprint/product-content/validate_question_batches.py
 
+      - name: Evidence specificity audit
+        run: python3 rigaku-sprint/product-content/validate_evidence_quality.py
+
       - name: Classification summary
         run: python3 rigaku-sprint/product-content/summarize_classification.py
 
