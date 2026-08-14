@@ -18,109 +18,25 @@ jobs:
         with:
           ref: feat/kanteishi-shortanswer-sprint-12
           fetch-depth: 0
-      - name: Append #12 Codemagic workflow
+      - name: Append staged Codemagic workflow
         run: |
           set -euo pipefail
-          if grep -q '^  kanteishi-shortanswer-ios:' codemagic.yaml; then
-            echo '#12 Codemagic workflow already exists.'
-          else
-            cat >> codemagic.yaml <<'YAML'
-
-          kanteishi-shortanswer-ios:
-            name: 不動産鑑定士短答式 - Internal TestFlight
-            max_build_duration: 60
-            instance_type: mac_mini_m2
-            integrations:
-              app_store_connect: codemagic
-            environment:
-              ios_signing:
-                distribution_type: app_store
-                bundle_identifier: jp.allsunday1122.kanteishishortanswer
-              vars:
-                BUNDLE_ID: jp.allsunday1122.kanteishishortanswer
-                XCODE_PROJECT: kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer.xcodeproj
-                XCODE_SCHEME: KanteishiShortAnswer
-                EXPECTED_APPICON_SHA256: 679f3493524dd2cf71126303c998b15395c70ff19f224d158a760ee3c2a395f1
-              xcode: latest
-            scripts:
-              - name: Require registered App Store subscription Product ID
-                script: |
-                  set -euo pipefail
-                  test -n "${PREMIUM_PRODUCT_ID:-}" || { echo 'PREMIUM_PRODUCT_ID is not registered/configured yet.'; exit 2; }
-                  case "$PREMIUM_PRODUCT_ID" in
-                    *'$('*|*')'*) echo 'Unresolved Product ID placeholder.'; exit 2 ;;
-                  esac
-              - name: Install XcodeGen
-                script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-              - name: Prepare audited release project
-                script: |
-                  set -euo pipefail
-                  cd "$CM_BUILD_DIR/kanteishi-shortanswer-sprint/ios"
-                  python3 - <<'PY'
-                  from pathlib import Path
-                  import os
-                  p = Path('project.yml')
-                  text = p.read_text(encoding='utf-8')
-                  build = os.environ.get('CM_BUILD_NUMBER')
-                  product = os.environ.get('PREMIUM_PRODUCT_ID', '').strip()
-                  if not build or not product:
-                      raise SystemExit('Missing CM_BUILD_NUMBER or PREMIUM_PRODUCT_ID')
-                  text = text.replace('CURRENT_PROJECT_VERSION: "1"', f'CURRENT_PROJECT_VERSION: "{build}"', 1)
-                  text = text.replace('PREMIUM_PRODUCT_ID: ""', 'PREMIUM_PRODUCT_ID: "' + product + '"', 1)
-                  p.write_text(text, encoding='utf-8')
-                  PY
-                  xcodegen generate
-              - name: Verify canonical release inputs
-                script: |
-                  set -euo pipefail
-                  APPICON="$CM_BUILD_DIR/kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
-                  PROD="$CM_BUILD_DIR/kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Resources/questions.production.json"
-                  PLIST="$CM_BUILD_DIR/kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Info.plist"
-                  test -f "$APPICON"
-                  test "$(shasum -a 256 "$APPICON" | awk '{print $1}')" = "$EXPECTED_APPICON_SHA256"
-                  python3 - "$PROD" <<'PY'
-                  import json,sys
-                  p=json.load(open(sys.argv[1],encoding='utf-8'))
-                  assert len(p['questions']) == 240
-                  assert p['productionTargetCount'] == 240
-                  assert {q['edition'] for q in p['questions']} == {2024,2025,2026}
-                  assert all(len(q['choices']) == 5 for q in p['questions'])
-                  print('PASS: canonical 240-question release payload')
-                  PY
-                  grep -q '<key>PremiumProductID</key>' "$PLIST"
-                  grep -q 'PREMIUM_PRODUCT_ID: "' "$CM_BUILD_DIR/kanteishi-shortanswer-sprint/ios/project.yml"
-              - name: Apply App Store signing profiles for Internal TestFlight only
-                script: |
-                  set -euo pipefail
-                  cd "$CM_BUILD_DIR/kanteishi-shortanswer-sprint/ios"
-                  xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
-              - name: Build signed IPA
-                script: |
-                  set -euo pipefail
-                  xcode-project build-ipa \
-                    --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
-                    --scheme "$XCODE_SCHEME"
-            artifacts:
-              - build/ios/ipa/*.ipa
-              - /tmp/xcodebuild_logs/*.log
-              - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
-              - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
-            publishing:
-              app_store_connect:
-                auth: integration
-                submit_to_testflight: true
-                submit_to_app_store: false
-          YAML
+          test -f kanteishi-shortanswer-sprint/codemagic-workflow-fragment.yml
+          if ! grep -q '^  kanteishi-shortanswer-ios:' codemagic.yaml; then
+            printf '\n' >> codemagic.yaml
+            cat kanteishi-shortanswer-sprint/codemagic-workflow-fragment.yml >> codemagic.yaml
           fi
-      - name: Commit root workflow and remove bootstrap
-        run: |
-          set -euo pipefail
           grep -q '^  kanteishi-shortanswer-ios:' codemagic.yaml
           grep -q 'submit_to_testflight: true' codemagic.yaml
           grep -q 'submit_to_app_store: false' codemagic.yaml
+          ruby -e "require 'yaml'; YAML.load_file('codemagic.yaml'); puts 'codemagic.yaml YAML PASS'"
+      - name: Commit root workflow and remove bootstrap files
+        run: |
+          set -euo pipefail
           rm .github/workflows/kanteishi-codemagic-root-12.yml
+          rm kanteishi-shortanswer-sprint/codemagic-workflow-fragment.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add codemagic.yaml .github/workflows/kanteishi-codemagic-root-12.yml
+          git add -A
           git commit -m 'ci(#12): prepare Codemagic Internal TestFlight workflow'
           git push origin HEAD:feat/kanteishi-shortanswer-sprint-12
