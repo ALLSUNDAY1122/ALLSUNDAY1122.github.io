@@ -23,6 +23,7 @@ grep -q 'Copyright (c) 2013-2022 Niels Lohmann' SplatNative/Resources/Licenses/n
 grep -q 'jp.allsunday1122.splatlab' project.yml
 grep -q 'MARKETING_VERSION: 1.0.0' project.yml
 grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO' project.yml
+grep -q 'INFOPLIST_KEY_CFBundleDisplayName: おもちゃばこ' project.yml
 grep -q 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' project.yml
 grep -q 'd620d9c58d270e7de9e34a9d8a85dcf938a5070d' project.yml
 grep -q '2b965de1934de38dda1c71cf90bf798aa948a14c' project.yml
@@ -39,6 +40,30 @@ grep -q 'session.run(config' SplatNative/ScanModel.swift
 grep -q 'didFailWithError' SplatNative/ScanModel+SessionLifecycle.swift
 grep -q 'sessionWasInterrupted' SplatNative/ScanModel+SessionLifecycle.swift
 grep -q 'sessionInterruptionEnded' SplatNative/ScanModel+SessionLifecycle.swift
+
+# Harsh-review gate: photo count alone is not enough. The capture must require
+# spatial coverage and real translation so spinning in place cannot complete a scan.
+grep -q 'minimumCoverageSectors = 8' SplatNative/ScanModel.swift
+grep -q 'coverageSectorCount >= minimumCoverageSectors' SplatNative/ScanModel.swift
+grep -q 'translation >= 0.030 || (translation >= 0.012 && angle >= 0.080)' SplatNative/ScanModel.swift
+grep -q 'acceptedFrames < maxFrames' SplatNative/ScanModel.swift
+grep -q '同じ側の写真に偏っています' SplatNative/ScanModel.swift
+
+# Harsh-review gate: a successful splat must open centered on its actual data,
+# and the user must be able to restore that framing.
+grep -q 'robustFraming(for: points)' SplatNative/SplatViewer.swift
+grep -q 'sceneCenter = framing.center' SplatNative/SplatViewer.swift
+grep -q 'center: sceneCenter' SplatNative/SplatViewer.swift
+grep -q 'resetView' SplatNative/SplatViewer.swift
+
+# Harsh-review gate: consumer UI must not expose internal training/debug jargon,
+# and destructive loss of a finished scan needs an explicit confirmation.
+grep -q 'Text("おもちゃばこ")' SplatNative/RootScanView.swift
+grep -q 'showingDiscardConfirmation' SplatNative/RootScanView.swift
+grep -q '生成だけもう一度試す' SplatNative/RootScanView.swift
+! grep -q '特徴点 ' SplatNative/RootScanView.swift
+! grep -q 'iteration ' SplatNative/RootScanView.swift
+! grep -q 'splats ' SplatNative/RootScanView.swift
 
 # Current PoC is intentionally local-only.
 ! grep -R -nE 'https?://.*(api|upload|analytics)|URLSession|Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
