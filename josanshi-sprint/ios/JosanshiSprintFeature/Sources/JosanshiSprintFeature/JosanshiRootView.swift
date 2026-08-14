@@ -376,15 +376,26 @@ public struct JosanshiRootView: View {
                 Text("記録")
                     .font(LearningSprintTheme.serif(28, weight: .bold))
 
-                HStack(spacing: 10) {
-                    metricCard(title: "回答", value: "\(model.totalAnsweredCount)問")
-                    metricCard(title: "正解", value: "\(model.totalCorrectCount)問")
-                    metricCard(title: "苦手", value: "\(model.weakQuestionCount)問")
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("達成度")
+                        .font(LearningSprintTheme.serif(20, weight: .semibold))
+                    HStack(spacing: 18) {
+                        LearningSprintProgressRing(
+                            progress: Double(model.uniqueAnsweredCount) / Double(JosanshiExamConfiguration.originalProductionQuestionTarget),
+                            label: "\(model.uniqueAnsweredCount) / \(JosanshiExamConfiguration.originalProductionQuestionTarget)"
+                        )
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text("全330問のうち\(model.uniqueAnsweredCount)問に触れました")
+                                .font(LearningSprintTheme.sans(14, weight: .semibold))
+                            Text("総回答 \(model.totalAnsweredCount)回・正解 \(model.totalCorrectCount)回")
+                                .font(LearningSprintTheme.sans(12))
+                                .foregroundStyle(LearningSprintTheme.ink2)
+                        }
+                    }
+                    .padding(16)
+                    .background(LearningSprintTheme.card)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
-
-                Text("直近5週間")
-                    .font(LearningSprintTheme.sans(15, weight: .semibold))
-                LearningSprintHeatmap(values: model.coordinator.heatmap35Days)
 
                 VStack(alignment: .leading, spacing: 12) {
                     Text("分野別正答率")
@@ -407,10 +418,103 @@ public struct JosanshiRootView: View {
                 .padding(16)
                 .background(LearningSprintTheme.card)
                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("直近5週間")
+                        .font(LearningSprintTheme.serif(20, weight: .semibold))
+                    LearningSprintHeatmap(values: model.coordinator.heatmap35Days)
+                }
+
+                weakList
+                recentSessions
             }
             .padding(18)
             .frame(maxWidth: 520)
             .frame(maxWidth: .infinity)
+        }
+    }
+
+    private var weakList: some View {
+        let weak = model.coordinator.state.weakQuestions
+            .sorted { $0.value.lastAnsweredAt > $1.value.lastAnsweredAt }
+        return VStack(alignment: .leading, spacing: 10) {
+            Text("苦手一覧")
+                .font(LearningSprintTheme.serif(20, weight: .semibold))
+
+            if weak.isEmpty {
+                Text("苦手はまだありません。間違えた問題や「わからない」がここに集まります。")
+                    .font(LearningSprintTheme.sans(13))
+                    .foregroundStyle(LearningSprintTheme.ink2)
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(LearningSprintTheme.card)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            } else {
+                ForEach(Array(weak.prefix(10)), id: \.key) { id, status in
+                    let prompt = model.coordinator.questions.first(where: { $0.id == id })?.prompt ?? id
+                    HStack(alignment: .top, spacing: 10) {
+                        Text(prompt)
+                            .font(LearningSprintTheme.sans(13))
+                            .lineLimit(2)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        HStack(spacing: 4) {
+                            ForEach(0..<3, id: \.self) { index in
+                                Circle()
+                                    .fill(index < status.consecutiveCorrect ? LearningSprintTheme.green : LearningSprintTheme.line)
+                                    .frame(width: 8, height: 8)
+                            }
+                        }
+                        .padding(.top, 5)
+                        .accessibilityLabel("連続正解 \(status.consecutiveCorrect) / 3")
+                    }
+                    .padding(14)
+                    .background(LearningSprintTheme.card)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                }
+
+                Button(action: model.requestWeakReview) {
+                    Text("苦手だけ解く（\(model.weakQuestionCount)問）")
+                        .frame(maxWidth: .infinity, minHeight: 48)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(LearningSprintTheme.vermilion)
+            }
+        }
+    }
+
+    private var recentSessions: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("直近のスプリント")
+                .font(LearningSprintTheme.serif(20, weight: .semibold))
+
+            if model.coordinator.recentSessions.isEmpty {
+                Text("完了した演習はまだありません。")
+                    .font(LearningSprintTheme.sans(13))
+                    .foregroundStyle(LearningSprintTheme.ink2)
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(LearningSprintTheme.card)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            } else {
+                ForEach(Array(model.coordinator.recentSessions.prefix(20))) { entry in
+                    HStack(spacing: 12) {
+                        Text(entry.finishedAt, format: .dateTime.month().day())
+                            .font(LearningSprintTheme.sans(12, weight: .semibold))
+                            .foregroundStyle(LearningSprintTheme.ink3)
+                            .frame(width: 54, alignment: .leading)
+                        Text(entry.title)
+                            .font(LearningSprintTheme.sans(13, weight: .semibold))
+                            .lineLimit(1)
+                        Spacer()
+                        Text("\(entry.correctCount) / \(entry.totalCount)")
+                            .font(LearningSprintTheme.sans(13, weight: .bold))
+                            .foregroundStyle(LearningSprintTheme.indigo)
+                    }
+                    .padding(13)
+                    .background(LearningSprintTheme.card)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                }
+            }
         }
     }
 
