@@ -1,4 +1,5 @@
 import Foundation
+import LearningSprintCore
 
 public struct JosanshiPreferences: Codable, Equatable, Sendable {
     public var shuffleQuestions: Bool
