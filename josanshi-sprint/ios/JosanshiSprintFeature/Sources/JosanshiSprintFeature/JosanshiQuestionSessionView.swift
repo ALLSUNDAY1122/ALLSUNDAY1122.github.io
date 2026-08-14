@@ -272,7 +272,7 @@ public struct JosanshiQuestionSessionView: View {
 
     private var completionBody: some View {
         ScrollView {
-            VStack(spacing: 18) {
+            VStack(spacing: 16) {
                 Image(systemName: "checkmark.seal.fill")
                     .font(.system(size: 52))
                     .foregroundStyle(LearningSprintTheme.indigo)
@@ -293,19 +293,39 @@ public struct JosanshiQuestionSessionView: View {
                     Text("正答率 \(Int((rate * 100).rounded()))%")
                         .font(LearningSprintTheme.sans(15, weight: .semibold))
                         .foregroundStyle(LearningSprintTheme.ink2)
+                    Text(resultComment(rate))
+                        .font(LearningSprintTheme.sans(13))
+                        .foregroundStyle(LearningSprintTheme.ink2)
+                        .multilineTextAlignment(.center)
+
+                    if coordinator.weakQuestionCount > 0 {
+                        Button {
+                            startWeakFromResult()
+                        } label: {
+                            Text("間違えた問題をすぐ復習")
+                                .frame(maxWidth: .infinity, minHeight: 48)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(LearningSprintTheme.vermilion)
+                    }
+
+                    Button {
+                        restartLastCompleted()
+                    } label: {
+                        Text("もう一度\(result.totalCount)問")
+                            .frame(maxWidth: .infinity, minHeight: 48)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(LearningSprintTheme.indigo)
                 } else {
                     Text("セッション完了")
                         .font(LearningSprintTheme.serif(24, weight: .bold))
                 }
 
-                Text("記録は端末内に保存されました。")
-                    .font(LearningSprintTheme.sans(14))
-                    .foregroundStyle(LearningSprintTheme.ink2)
-
                 Button("ホームへ戻る", action: onFinish)
-                    .buttonStyle(.borderedProminent)
-                    .tint(LearningSprintTheme.indigo)
-                    .frame(minHeight: 50)
+                    .buttonStyle(.plain)
+                    .foregroundStyle(LearningSprintTheme.ink2)
+                    .frame(maxWidth: .infinity, minHeight: 48)
             }
             .padding(24)
             .frame(maxWidth: 520)
@@ -356,8 +376,7 @@ public struct JosanshiQuestionSessionView: View {
 
     private func submitSelection(_ question: LearningQuestion, order: [Int]) {
         submittedChoiceOrder = order
-        let payload = AnswerPayload(selectedIndices: selectedIndices.sorted())
-        submit(question: question, payload: payload)
+        submit(question: question, payload: AnswerPayload(selectedIndices: selectedIndices.sorted()))
     }
 
     private func submitUnknown(_ question: LearningQuestion, order: [Int]) {
@@ -386,6 +405,41 @@ public struct JosanshiQuestionSessionView: View {
         isDetailExpanded = false
         feedbackMarkScale = 0.55
         feedbackMarkOpacity = 0
+    }
+
+    private func startWeakFromResult() {
+        do {
+            _ = try coordinator.startWeakReview()
+            resetTransientViewState()
+        } catch {
+            errorMessage = String(describing: error)
+        }
+    }
+
+    private func restartLastCompleted() {
+        do {
+            _ = try coordinator.restartLastCompletedSession()
+            resetTransientViewState()
+        } catch {
+            errorMessage = String(describing: error)
+        }
+    }
+
+    private func resetTransientViewState() {
+        isFeedbackPresented = false
+        submittedQuestion = nil
+        submittedEvaluation = nil
+        submittedChoiceOrder = []
+        selectedIndices.removeAll()
+        isDetailExpanded = false
+    }
+
+    private func resultComment(_ rate: Double) -> String {
+        switch rate {
+        case 0.8...: return "よく定着しています。次は苦手だけを短く確認すると効率的です。"
+        case 0.6..<0.8: return "基礎は積み上がっています。迷った問題の根拠を見直しましょう。"
+        default: return "今回の結果を起点に、苦手を少しずつ減らしていきましょう。"
+        }
     }
 
     private func feedbackTitle(_ evaluation: AnswerEvaluation) -> String {
