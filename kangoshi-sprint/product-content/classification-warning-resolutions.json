@@ -26,6 +26,18 @@
       "reason": "統合失調症当事者のセルフヘルプグループの機能を問う設問で、地域活動という側面はあるが主題は精神障害者の回復・ピア支援であるため精神看護学を主分類とする。"
     },
     {
+      "id": "specialist-K115-PM099-graves-context",
+      "matchRegex": "^K115-PM099: specialist situation correction overrides local stem domains \\['maternal-explicit'\\]; assigned 成人看護学$",
+      "decision": "accepted",
+      "reason": "K115-PM-SC03の症例単位監査で、PM099の『妊娠』は将来への不安という局所語であり、設問の主題・正答はバセドウ病治療後の活動・療養支援と確認済み。成人看護学／内分泌・代謝への専門補正を優先する。"
+    },
+    {
+      "id": "split-K114-AM-SC03",
+      "matchRegex": "^K114-AM-SC03: situation group split .*contextual review required$",
+      "decision": "accepted",
+      "reason": "同一くも膜下出血症例だが、AM097はJCSによる意識レベル評価そのものを問うため基礎看護学が妥当。AM098はクリッピング術後管理、AM099は正常圧水頭症の遅発性神経合併症を問うため成人看護学／脳神経へ専門補正する。症例単位監査でこの2領域分割を明示確認済み。"
+    },
+    {
       "id": "split-K113-AM-SC02",
       "matchRegex": "^K113-AM-SC02: situation group split .*contextual review required$",
       "decision": "accepted",
@@ -65,7 +77,7 @@
       "id": "split-K115-PM-SC03",
       "matchRegex": "^K115-PM-SC03: situation group split .*contextual review required$",
       "decision": "accepted",
-      "reason": "成人疾患の症例内に妊娠・生殖に直接関係する設問が含まれるため、その設問のみ母性看護へ分ける。"
+      "reason": "バセドウ病症例内でも設問ごとの主題を優先して分類する。症例単位専門監査で確認した分類補正を含め、3問を患者属性や局所キーワードだけで単一領域へ強制しない。"
     },
     {
       "id": "split-K115-PM-SC10",
