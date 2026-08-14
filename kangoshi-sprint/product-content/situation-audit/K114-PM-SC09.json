@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-PM-SC09",
+  "sourceExam": 114,
+  "session": "PM",
+  "questionIds": ["K114-PM115", "K114-PM116", "K114-PM117"],
+  "scenarioIndexes": [0,1,2],
+  "scenarioTotal": 3,
+  "patientProfile": "65歳女性、夫と2人暮らし。友人死去後にうつ病を発症しSSRI・睡眠薬で改善。精神科終診1年後に多発性脳梗塞による血管性認知症と診断され、その後要介護2となる。",
+  "mainCondition": "うつ病治療開始時のSSRI副作用説明、血管性認知症の認知・情動症状、本人希望に沿った地域密着型介護サービス選択。",
+  "assessment": [
+    "PM115ではSSRI導入初期の消化器症状に注意するよう夫へ説明する。",
+    "PM116では多発性脳梗塞後の料理手順困難・怒り・急な泣き出しから実行機能障害と感情失禁を評価する。",
+    "PM117では自宅を基盤に通い・訪問・宿泊を柔軟に使いたい希望から小規模多機能型居宅介護を選ぶ。"
+  ],
+  "nursingJudgment": "3問は『うつ病治療→1年後の血管性認知症診断→介護サービス導入』という長期経過で連結する。PM116の症状をうつ病再燃だけで説明せずMRI所見と認知機能変化を統合する。夫は支援者で患者本人との取り違えはない。",
+  "nursingPractice": [
+    "抗うつ薬開始時は副作用と受診目安を本人・家族へ説明する。",
+    "気分症状の既往があっても新たな認知・行動変化は神経学的病態を含め再評価する。",
+    "本人の生活場所・人混みへの苦手さ・家族介護力を踏まえ、通い・訪問・宿泊を組み合わせる。"
+  ],
+  "tripletConsistency": {"sameScenarioId":true,"sameScenarioText":true,"indexesComplete":true,"patientIdentityConsistent":true,"longitudinalDiagnosisTransition":"うつ病→血管性認知症","timelineConsistent":true,"clinicalConsistency":true,"nextScenarioLeakDetected":false},
+  "canonicalPatch": {"path":"situation-audit/canonical-patches/K114-PM-SC09.json","textCorrectionRequired":true,"classificationCorrectionRequired":false,"applyState":"pending_canonical_integration"},
+  "classificationAudit": {"scenarioContextConsistent":true,"majorSubject":"精神看護学／老年看護学の縦断症例","status":"pass"},
+  "explanationAudit": {"batchId":"K114-PM115-PM117-situation-SC09","allThreeExplained":true,"allThreeEvidenceRefsPresent":true,"allThreeEvidenceCheckedDatePresent":true,"evidenceCheckedDate":"2026-08-14"},
+  "media":{"required":false,"status":"not_required"},
+  "scoring":{"exceptionPresent":false,"status":"normal"},
+  "contentConcern":{"status":"none","questionId":null,"reason":null,"evidenceRefs":[]},
+  "expertReviewStatus":"pending_global_expert_audit",
+  "scenarioAuditStatus":"content_pass_canonical_patch_pending",
+  "auditedAt":"2026-08-14T15:50:00+09:00"
+}
