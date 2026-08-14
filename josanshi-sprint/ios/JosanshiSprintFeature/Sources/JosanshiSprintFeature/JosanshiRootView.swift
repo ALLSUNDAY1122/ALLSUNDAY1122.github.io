@@ -12,7 +12,7 @@ public struct JosanshiRootView: View {
     @State private var isResetConfirmationPresented = false
 
     public init() {
-        _model = StateObject(wrappedValue: JosanshiDashboardModel())
+        _model = StateObject(wrappedValue: JosanshiDashboardModel(enableStoreKit: true))
     }
 
     public init(model: JosanshiDashboardModel) {
@@ -57,6 +57,9 @@ public struct JosanshiRootView: View {
                     }
                 }
             }
+        }
+        .sheet(isPresented: $model.isPaywallPresented) {
+            JosanshiPremiumPaywallView(model: model)
         }
         .alert("問題データを読み込めません", isPresented: $model.isContentGatePresented) {
             Button("OK", role: .cancel) { model.dismissContentError() }
@@ -158,7 +161,7 @@ public struct JosanshiRootView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("今日のスプリント")
                                 .font(LearningSprintTheme.serif(20, weight: .bold))
-                            Text("\(model.dailyTarget)問・3分ほど")
+                            Text(model.isPremium ? "\(model.dailyTarget)問・全330問から出題" : "\(model.dailyTarget)問・無料\(model.freeQuestionCount)問から出題")
                                 .font(LearningSprintTheme.sans(13))
                                 .opacity(0.82)
                         }
@@ -184,18 +187,20 @@ public struct JosanshiRootView: View {
 
                 actionCard(
                     title: "苦手をつぶす",
-                    subtitle: model.weakQuestionCount > 0 ? "\(model.weakQuestionCount)問を復習" : "苦手はまだありません",
-                    systemImage: "arrow.triangle.2.circlepath",
+                    subtitle: model.isPremium
+                        ? (model.weakQuestionCount > 0 ? "\(model.weakQuestionCount)問を復習" : "苦手はまだありません")
+                        : "Premiumで苦手だけを復習",
+                    systemImage: model.isPremium ? "arrow.triangle.2.circlepath" : "lock.fill",
                     accent: LearningSprintTheme.vermilion,
-                    enabled: model.weakQuestionCount > 0,
+                    enabled: model.isPremium ? model.weakQuestionCount > 0 : true,
                     accessibilityIdentifier: "start-weak-review",
                     action: model.requestWeakReview
                 )
 
                 actionCard(
                     title: "模擬試験",
-                    subtitle: "110問 × 3回・FULL監査済み",
-                    systemImage: "doc.text",
+                    subtitle: model.isPremium ? "110問 × 3回・FULL監査済み" : "Premium・110問 × 3回",
+                    systemImage: model.isPremium ? "doc.text" : "lock.fill",
                     accent: LearningSprintTheme.indigo,
                     enabled: model.hasReadyContent,
                     accessibilityIdentifier: "open-mock-tab",
@@ -214,15 +219,19 @@ public struct JosanshiRootView: View {
                                     Text(subject)
                                         .font(LearningSprintTheme.sans(16, weight: .semibold))
                                         .foregroundStyle(LearningSprintTheme.ink)
-                                    if let accuracy = model.coordinator.subjectAccuracy[subject] {
+                                    if model.isPremium, let accuracy = model.coordinator.subjectAccuracy[subject] {
                                         Text("正答率 \(Int((accuracy * 100).rounded()))%")
                                             .font(LearningSprintTheme.sans(11))
                                             .foregroundStyle(LearningSprintTheme.ink3)
+                                    } else if !model.isPremium {
+                                        Text("Premium")
+                                            .font(LearningSprintTheme.sans(11, weight: .bold))
+                                            .foregroundStyle(LearningSprintTheme.vermilion)
                                     }
                                 }
                                 Spacer()
-                                Image(systemName: "chevron.right")
-                                    .foregroundStyle(LearningSprintTheme.ink3)
+                                Image(systemName: model.isPremium ? "chevron.right" : "lock.fill")
+                                    .foregroundStyle(model.isPremium ? LearningSprintTheme.ink3 : LearningSprintTheme.vermilion)
                             }
                             .frame(minHeight: 44)
                             .padding(.horizontal, 14)
@@ -336,6 +345,13 @@ public struct JosanshiRootView: View {
                     .font(LearningSprintTheme.sans(15))
                     .foregroundStyle(LearningSprintTheme.ink2)
 
+                if !model.isPremium {
+                    premiumLockCard(
+                        title: "模試はPremiumで開放",
+                        detail: "3回分・合計330問の本番形式に取り組めます。"
+                    )
+                }
+
                 ForEach(1...JosanshiExamConfiguration.originalMockSetCount, id: \.self) { index in
                     Button {
                         model.requestMock(index)
@@ -345,12 +361,12 @@ public struct JosanshiRootView: View {
                                 Text("独自模試 \(index)")
                                     .font(LearningSprintTheme.serif(20, weight: .semibold))
                                     .foregroundStyle(LearningSprintTheme.ink)
-                                Text("110問・FULL監査済み")
-                                    .font(LearningSprintTheme.sans(14))
-                                    .foregroundStyle(LearningSprintTheme.ink2)
+                                Text(model.isPremium ? "110問・FULL監査済み" : "Premium")
+                                    .font(LearningSprintTheme.sans(14, weight: model.isPremium ? .regular : .bold))
+                                    .foregroundStyle(model.isPremium ? LearningSprintTheme.ink2 : LearningSprintTheme.vermilion)
                             }
                             Spacer()
-                            Image(systemName: "play.circle.fill")
+                            Image(systemName: model.isPremium ? "play.circle.fill" : "lock.fill")
                                 .font(.title2)
                                 .foregroundStyle(LearningSprintTheme.indigo)
                         }
@@ -397,36 +413,43 @@ public struct JosanshiRootView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
 
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("分野別正答率")
-                        .font(LearningSprintTheme.serif(20, weight: .semibold))
-                    ForEach(JosanshiExamConfiguration.subjects, id: \.self) { subject in
-                        let accuracy = model.coordinator.subjectAccuracy[subject] ?? 0
-                        VStack(alignment: .leading, spacing: 5) {
-                            HStack {
-                                Text(subject)
-                                    .font(LearningSprintTheme.sans(13, weight: .semibold))
-                                Spacer()
-                                Text("\(Int((accuracy * 100).rounded()))%")
-                                    .font(LearningSprintTheme.sans(12, weight: .bold))
+                if model.isPremium {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("分野別正答率")
+                            .font(LearningSprintTheme.serif(20, weight: .semibold))
+                        ForEach(JosanshiExamConfiguration.subjects, id: \.self) { subject in
+                            let accuracy = model.coordinator.subjectAccuracy[subject] ?? 0
+                            VStack(alignment: .leading, spacing: 5) {
+                                HStack {
+                                    Text(subject)
+                                        .font(LearningSprintTheme.sans(13, weight: .semibold))
+                                    Spacer()
+                                    Text("\(Int((accuracy * 100).rounded()))%")
+                                        .font(LearningSprintTheme.sans(12, weight: .bold))
+                                }
+                                ProgressView(value: accuracy)
+                                    .tint(LearningSprintTheme.indigo)
                             }
-                            ProgressView(value: accuracy)
-                                .tint(LearningSprintTheme.indigo)
                         }
                     }
-                }
-                .padding(16)
-                .background(LearningSprintTheme.card)
-                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .padding(16)
+                    .background(LearningSprintTheme.card)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("直近5週間")
-                        .font(LearningSprintTheme.serif(20, weight: .semibold))
-                    LearningSprintHeatmap(values: model.coordinator.heatmap35Days)
-                }
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("直近5週間")
+                            .font(LearningSprintTheme.serif(20, weight: .semibold))
+                        LearningSprintHeatmap(values: model.coordinator.heatmap35Days)
+                    }
 
-                weakList
-                recentSessions
+                    weakList
+                    recentSessions
+                } else {
+                    premiumLockCard(
+                        title: "詳細な記録はPremium",
+                        detail: "分野別正答率・5週間ヒートマップ・苦手一覧・直近20セッションを確認できます。"
+                    )
+                }
             }
             .padding(18)
             .frame(maxWidth: 520)
@@ -518,6 +541,37 @@ public struct JosanshiRootView: View {
         }
     }
 
+    private func premiumLockCard(title: String, detail: String) -> some View {
+        Button(action: model.presentPaywall) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "lock.fill")
+                    .font(.title3)
+                    .foregroundStyle(LearningSprintTheme.vermilion)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(LearningSprintTheme.sans(15, weight: .bold))
+                        .foregroundStyle(LearningSprintTheme.ink)
+                    Text(detail)
+                        .font(LearningSprintTheme.sans(12))
+                        .foregroundStyle(LearningSprintTheme.ink2)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(LearningSprintTheme.ink3)
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(LearningSprintTheme.card)
+            .overlay {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(LearningSprintTheme.vermilion.opacity(0.25), lineWidth: 1)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("open-premium-paywall")
+    }
+
     private func metricCard(title: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
@@ -603,6 +657,10 @@ public struct JosanshiRootView: View {
 
             Section("学習データ") {
                 Button("JSONを書き出す") {
+                    guard model.isPremium else {
+                        model.presentPaywall()
+                        return
+                    }
                     do {
                         backupDocument = JosanshiBackupDocument(data: try model.exportBackup())
                         isExportingBackup = true
@@ -611,7 +669,16 @@ public struct JosanshiRootView: View {
                     }
                 }
                 Button("JSONから復元") {
-                    isImportingBackup = true
+                    if model.isPremium {
+                        isImportingBackup = true
+                    } else {
+                        model.presentPaywall()
+                    }
+                }
+                if !model.isPremium {
+                    Text("バックアップ・復元はPremium機能です。")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
                 if let message = model.coordinator.persistenceErrorDescription {
                     Text(message)
@@ -629,6 +696,10 @@ public struct JosanshiRootView: View {
                 LabeledContent("最新確認試験", value: "第109回")
                 LabeledContent("独自問題", value: model.productionQuestionTargetText)
                 LabeledContent("出題基準", value: "令和5年版")
+                LabeledContent("利用状態", value: model.isPremium ? "Premium" : "無料版・\(model.freeQuestionCount)問")
+                if !model.isPremium {
+                    Button("Premiumを見る") { model.presentPaywall() }
+                }
                 Text("問題・解説は一次・権威資料を確認した独自教材です。厚生労働省等の公式アプリではありません。")
                     .font(.caption)
                     .foregroundStyle(.secondary)
