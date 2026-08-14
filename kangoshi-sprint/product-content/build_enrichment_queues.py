@@ -23,6 +23,7 @@ for sid in ('set1','set2','set3'):
         media_cue=bool(MEDIA_RE.search(stem))
         no_text_choices=q.get('answerType') in {'singleChoice','multiChoice'} and len(q.get('choices') or [])==0
         effective_media=bool(q.get('requiresMedia')) or media_cue or no_text_choices
+        media_pending=effective_media and q.get('mediaReleaseStatus')!='resolved'
         concern=q.get('contentConcernStatus') not in {None,'none','resolved'}
         scoring_special=q.get('officialScoringStatus') not in {None,'normal'}
         scoring_exception=scoring_special and q.get('scoringExceptionStatus')!='resolved'
@@ -35,45 +36,26 @@ for sid in ('set1','set2','set3'):
             'subject':q.get('subject'),'question':q.get('question'),'answerType':q.get('answerType'),
             'answer':q.get('answer'),'choices':q.get('choices') or [],'requiresMedia':effective_media,
             'sourceRequiresMedia':bool(q.get('requiresMedia')),'mediaCueDetectedInQueue':media_cue or no_text_choices,
-            'officialScoringStatus':q.get('officialScoringStatus'),
-            'scoringException':q.get('scoringException'),
-            'scoringExceptionStatus':q.get('scoringExceptionStatus'),
-            'scoringRuntimeMode':q.get('scoringRuntimeMode'),
-            'contentConcernStatus':q.get('contentConcernStatus','none'),
-            'contentConcernReason':q.get('contentConcernReason'),
-            'expertReviewStatus':q.get('expertReviewStatus'),
-            'specialistQuarantineStatus':q.get('specialistQuarantineStatus'),
+            'mediaReleaseStatus':q.get('mediaReleaseStatus'),'mediaRightsStatus':q.get('mediaRightsStatus'),
+            'mediaAssets':q.get('mediaAssets') or [],
+            'officialScoringStatus':q.get('officialScoringStatus'),'scoringException':q.get('scoringException'),
+            'scoringExceptionStatus':q.get('scoringExceptionStatus'),'scoringRuntimeMode':q.get('scoringRuntimeMode'),
+            'contentConcernStatus':q.get('contentConcernStatus','none'),'contentConcernReason':q.get('contentConcernReason'),
+            'expertReviewStatus':q.get('expertReviewStatus'),'specialistQuarantineStatus':q.get('specialistQuarantineStatus'),
             'specialistQuarantineReasons':q.get('specialistQuarantineReasons') or [],
-            'explanationStatus':q.get('explanationStatus'),
-            'dynamicEvidenceStatus':q.get('dynamicEvidenceStatus')
+            'explanationStatus':q.get('explanationStatus'),'dynamicEvidenceStatus':q.get('dynamicEvidenceStatus')
         }
 
-        if explained:
-            queues['explained'].append(q['id'])
-        elif not (concern or scoring_exception or effective_media or expert_required):
-            queues['textPending'].append(row)
-
-        if effective_media:
-            queues['mediaPending'].append(row)
-        if scoring_exception:
-            queues['scoringExceptionPending'].append(row)
-        if concern:
-            queues['contentConcerns'].append(row)
-        if expert_required:
-            queues['expertReviewPending'].append(row)
-        if specialist_quarantine or concern or scoring_exception or effective_media or expert_required:
-            queues['releaseQuarantined'].append(row)
-
-        if q.get('dynamicEvidenceRequired') and q.get('dynamicEvidenceStatus') not in {'verified','expert_review_required'}:
-            queues['dynamicPending'].append(row)
+        if explained: queues['explained'].append(q['id'])
+        elif not (concern or scoring_exception or media_pending or expert_required): queues['textPending'].append(row)
+        if media_pending: queues['mediaPending'].append(row)
+        if scoring_exception: queues['scoringExceptionPending'].append(row)
+        if concern: queues['contentConcerns'].append(row)
+        if expert_required: queues['expertReviewPending'].append(row)
+        if specialist_quarantine or concern or scoring_exception or media_pending or expert_required: queues['releaseQuarantined'].append(row)
+        if q.get('dynamicEvidenceRequired') and q.get('dynamicEvidenceStatus') not in {'verified','expert_review_required'}: queues['dynamicPending'].append(row)
 
 summary={k:len(v) for k,v in queues.items()}
-summary['queueDetectedMediaOverrides']=sum(
-    1 for row in queues['mediaPending']
-    if row['mediaCueDetectedInQueue'] and not row['sourceRequiresMedia']
-)
-(DRAFT/'pending-queues.json').write_text(
-    json.dumps({'summary':summary,**queues},ensure_ascii=False,indent=2)+'\n',
-    encoding='utf-8'
-)
+summary['queueDetectedMediaOverrides']=sum(1 for row in queues['mediaPending'] if row['mediaCueDetectedInQueue'] and not row['sourceRequiresMedia'])
+(DRAFT/'pending-queues.json').write_text(json.dumps({'summary':summary,**queues},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(summary,ensure_ascii=False))
