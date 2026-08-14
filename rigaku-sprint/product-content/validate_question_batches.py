@@ -18,8 +18,6 @@ REQUIRED = {
     "examRound", "questionNumber", "originType", "officialScoringStatus"
 }
 
-# 表記だけが異なり、教材論点として同義であることを人手確認した組だけを許可する。
-# 未知の表記差・別論点は自動許可せずFAILさせる。
 TOPIC_ALIASES = {
     ("認知症の行動・心理症状", "認知症の周辺症状"),
     ("C6B1頸髄損傷の到達可能動作", "C6頸髄損傷の到達可能動作"),
@@ -76,8 +74,40 @@ def load_content_audits(errors: list[str]) -> dict[str, dict]:
                 "note": note,
                 "checkedAt": doc.get("checkedAt"),
                 "batch": doc.get("batch"),
+                "evidenceRefs": [],
+                "source": "external",
             }
     return result
+
+
+def embedded_content_audit(question: dict, errors: list[str]) -> dict | None:
+    audit = question.get("contentAudit")
+    if audit is None:
+        return None
+    if not isinstance(audit, dict):
+        errors.append(f"{question.get('id')}: contentAudit must be an object")
+        return None
+    status = str(audit.get("status", ""))
+    checked_at = str(audit.get("checkedAt", ""))
+    evidence = audit.get("evidenceRefs")
+    note = str(audit.get("note", "")).strip()
+    if not status.startswith("PASS"):
+        errors.append(f"{question.get('id')}: embedded contentAudit not PASS: {status!r}")
+    if not checked_at:
+        errors.append(f"{question.get('id')}: embedded contentAudit checkedAt missing")
+    if not isinstance(evidence, list) or not evidence:
+        errors.append(f"{question.get('id')}: embedded contentAudit evidenceRefs missing")
+    elif any(not str(url).startswith("https://") for url in evidence):
+        errors.append(f"{question.get('id')}: embedded contentAudit evidenceRefs must be HTTPS")
+    if not note:
+        errors.append(f"{question.get('id')}: embedded contentAudit note missing")
+    return {
+        "status": status,
+        "checkedAt": checked_at,
+        "evidenceRefs": evidence if isinstance(evidence, list) else [],
+        "note": note,
+        "source": "embedded",
+    }
 
 
 def main() -> int:
@@ -114,6 +144,7 @@ def main() -> int:
             questions.extend(batch)
 
     ids: set[str] = set()
+    audited_count = 0
     for index, question in enumerate(questions):
         sid = question.get("id", f"index:{index}")
         if sid in ids:
@@ -125,11 +156,16 @@ def main() -> int:
             errors.append(f"{sid}: missing fields {sorted(missing)}")
             continue
 
-        audit = audits.get(sid)
-        if audit is None:
+        external_audit = audits.get(sid)
+        embedded_audit = embedded_content_audit(question, errors)
+        if external_audit is None and embedded_audit is None:
             errors.append(f"{sid}: medical/content audit missing")
-        elif not str(audit["status"]).startswith("PASS"):
-            errors.append(f"{sid}: medical/content audit not PASS: {audit['status']}")
+        else:
+            audit = external_audit or embedded_audit
+            if not str(audit["status"]).startswith("PASS"):
+                errors.append(f"{sid}: medical/content audit not PASS: {audit['status']}")
+            else:
+                audited_count += 1
 
         classification = class_by_id.get(sid)
         if classification is None:
@@ -216,7 +252,7 @@ def main() -> int:
 
     print("RIGAKU QUESTION BATCHES: PASS")
     print(f"audited release questions: {len(questions)} / 600")
-    print(f"medical/content audits: {len([sid for sid in ids if sid in audits])} / {len(questions)}")
+    print(f"medical/content audits: {audited_count} / {len(questions)}")
     print(f"remaining: {600 - len(questions)}")
     return 0
 
