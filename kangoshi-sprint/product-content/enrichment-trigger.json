@@ -1,13 +1,15 @@
 {
   "schemaVersion": 1,
-  "checkpoint": "2026-08-14-v2.5-all-category-canonical-pass-C180",
-  "reason": "Rebuild common L3 after all three category canonical gates reached PASS and C-situation content reached 180/180 across 60/60 scenarios.",
+  "checkpoint": "2026-08-14-v2.5-media-redraw-23-complete",
+  "reason": "Apply the audited 23 original-authored SVG redraw resolutions after the redraw generator and CI both passed, then rematerialize release queues.",
   "expected": {
     "requiredCanonical": 150,
     "generalCanonical": 390,
-    "generalCanonicalPass": true,
     "situationCanonical": 180,
-    "situationScenarioCount": 60,
-    "situationCanonicalPass": true
+    "l3Explained": 720,
+    "dynamicVerified": 85,
+    "officialMediaResolved": 15,
+    "originalRedrawResolved": 23,
+    "mediaPendingAfterApply": 0
   }
 }
