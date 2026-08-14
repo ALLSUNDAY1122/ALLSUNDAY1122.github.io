@@ -36,6 +36,7 @@ for sid in ('set1','set2','set3'):
     for q in qs:
         total+=1; qid=q.get('id','?'); major=q.get('majorSubject'); stem=str(q.get('question') or ''); scen=str(q.get('scenario') or '')
         category=q.get('category')
+        specialist=q.get('classificationSpecialistCorrection') if category=='状況設定' else None
         majors[major]+=1; set_counts[major]+=1
 
         stem_matches=[]
@@ -55,7 +56,10 @@ for sid in ('set1','set2','set3'):
             union=set().union(*(x[0] for x in stem_matches))
             labels=[x[1] for x in stem_matches]
             if major not in union:
-                errors.append(f'{qid}: stem semantic domains {labels} allow {sorted(union)}, got {major}')
+                if specialist:
+                    warnings.append(f'{qid}: specialist situation correction overrides local stem domains {labels}; assigned {major}')
+                else:
+                    errors.append(f'{qid}: stem semantic domains {labels} allow {sorted(union)}, got {major}')
             if len(union)>1:
                 warnings.append(f'{qid}: multi-domain stem {labels}; assigned {major} requires contextual review')
 
@@ -64,7 +68,10 @@ for sid in ('set1','set2','set3'):
                 if re.search(pattern,scen,re.I) and major not in allowed:
                     stem_union=set().union(*(x[0] for x in stem_matches)) if stem_matches else set()
                     if major not in stem_union:
-                        errors.append(f'{qid}: {label} expects {sorted(allowed)}, got {major}')
+                        if specialist:
+                            warnings.append(f'{qid}: specialist situation correction overrides scenario keyword domain {label}; assigned {major}')
+                        else:
+                            errors.append(f'{qid}: {label} expects {sorted(allowed)}, got {major}')
             if q.get('scenarioId'):
                 scenario_groups[q['scenarioId']].append((qid,major,q.get('subject')))
 
@@ -86,7 +93,7 @@ report={
  'total':total,'majorCounts':dict(majors),'perSetMajorCounts':per_set,
  'strongSemanticErrors':errors,'splitScenarioGroups':split_groups,'warnings':warnings,
  'pass':not errors,
- 'note':'独立ルールによる分類整合監査。状況設定では在宅・一般技術語を主分類の強制根拠にせず、在宅利用者の災害準備は地域・在宅看護論または災害看護を許容する。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。'
+ 'note':'独立ルールによる分類整合監査。状況設定では在宅・一般技術語を主分類の強制根拠にせず、在宅利用者の災害準備は地域・在宅看護論または災害看護を許容する。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。ただし症例単位専門監査で理由・変更前後・scenarioIdを明示したclassificationSpecialistCorrectionは局所キーワードより優先し、矛盾を警告として残す。専門家監査の代替ではない。'
 }
 (OUT/'semantic-consistency-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps({'total':total,'errorCount':len(errors),'splitScenarioGroups':len(split_groups),'warningCount':len(warnings),'pass':not errors},ensure_ascii=False))
