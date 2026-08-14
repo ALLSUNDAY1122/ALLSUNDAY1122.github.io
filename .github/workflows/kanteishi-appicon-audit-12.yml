@@ -1,0 +1,60 @@
+name: Kanteishi AppIcon Contract #12
+
+on:
+  push:
+    branches:
+      - feat/kanteishi-shortanswer-sprint-12
+    paths:
+      - 'kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Assets.xcassets/**'
+      - 'kanteishi-shortanswer-sprint/ios/project.yml'
+      - '.github/workflows/kanteishi-appicon-audit-12.yml'
+  pull_request:
+    paths:
+      - 'kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/Assets.xcassets/**'
+      - 'kanteishi-shortanswer-sprint/ios/project.yml'
+      - '.github/workflows/kanteishi-appicon-audit-12.yml'
+  workflow_dispatch:
+
+jobs:
+  canonical-appicon:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify exact canonical AppIcon contract
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, struct
+          from pathlib import Path
+
+          root = Path('kanteishi-shortanswer-sprint/ios')
+          icon = root / 'KanteishiShortAnswer/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+          contents = root / 'KanteishiShortAnswer/Assets.xcassets/AppIcon.appiconset/Contents.json'
+          catalog = root / 'KanteishiShortAnswer/Assets.xcassets/Contents.json'
+          project = root / 'project.yml'
+          legacy = root / 'icon-source'
+
+          assert icon.is_file(), icon
+          data = icon.read_bytes()
+          expected = '679f3493524dd2cf71126303c998b15395c70ff19f224d158a760ee3c2a395f1'
+          actual = hashlib.sha256(data).hexdigest()
+          assert len(data) == 668457, len(data)
+          assert actual == expected, (actual, expected)
+          assert data[:8] == b'\x89PNG\r\n\x1a\n'
+          assert data[12:16] == b'IHDR'
+          width, height, bit_depth, color_type, compression, filter_method, interlace = struct.unpack('>IIBBBBB', data[16:29])
+          assert (width, height, bit_depth, color_type, compression, filter_method, interlace) == (1024, 1024, 8, 2, 0, 0, 0)
+
+          spec = json.loads(contents.read_text())
+          images = spec.get('images', [])
+          assert images == [{
+              'filename': 'AppIcon-1024.png',
+              'idiom': 'universal',
+              'platform': 'ios',
+              'size': '1024x1024',
+          }], images
+          assert json.loads(catalog.read_text()).get('info', {}).get('version') == 1
+          text = project.read_text()
+          assert 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' in text
+          assert not legacy.exists(), 'obsolete Base64 chunk transport must stay removed'
+          print('Canonical AppIcon PASS:', actual)
+          PY
