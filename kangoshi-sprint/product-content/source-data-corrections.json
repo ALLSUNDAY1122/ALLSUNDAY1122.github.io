@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "scope": "第113回看護師国家試験の公式PDF取込で欠落した一般問題5問の補正",
+  "checkedDate": "2026-08-14",
+  "policy": "公式PDFで視認・照合した欠損だけを補正する。公式正答・採点取扱いは変更しない。import後・raw監査前のnormalize工程で毎回適用する。",
+  "corrections": [
+    {
+      "id": "K113-AM061",
+      "setId": "set3",
+      "category": "一般",
+      "question": "自然流産を連続（　）回以上繰り返した状態を習慣流産という。（　）に当てはまるのはどれか。",
+      "choices": ["2", "3", "4", "5"],
+      "expectedOfficialAcceptedAnswers": [1],
+      "sourceRef": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+      "reason": "回数と4つの数値選択肢がPDF抽出時に欠落"
+    },
+    {
+      "id": "K113-PM053",
+      "setId": "set3",
+      "category": "一般",
+      "choicePatches": {"0": "対象疾患数は5である。"},
+      "expectedOfficialAcceptedAnswers": [2],
+      "sourceRef": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+      "reason": "選択肢1の対象疾患数5がPDF抽出時に欠落"
+    },
+    {
+      "id": "K113-PM057",
+      "setId": "set3",
+      "category": "一般",
+      "choices": ["4週後", "3週後", "2週後", "1週後"],
+      "expectedOfficialAcceptedAnswers": [2],
+      "sourceRef": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+      "reason": "フォローアップ間隔の4つの週数がPDF抽出時に欠落"
+    },
+    {
+      "id": "K113-PM078",
+      "setId": "set3",
+      "category": "一般",
+      "question": "胃癌の胃切除術後5年ほどで欠乏し貧血を起こさせるのはどれか。",
+      "expectedOfficialAcceptedAnswers": [2],
+      "sourceRef": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+      "reason": "術後年数5がPDF抽出時に欠落"
+    },
+    {
+      "id": "K113-PM090",
+      "setId": "set3",
+      "category": "一般",
+      "question": "20滴で1mLの輸液セットを用いて500mLの輸液を3時間30分かけて実施する場合の1分間の滴下数を求めよ。",
+      "expectedOfficialAcceptedAnswers": [48],
+      "sourceRef": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+      "reason": "輸液時間3時間30分の3がPDF抽出時に欠落"
+    }
+  ]
+}
