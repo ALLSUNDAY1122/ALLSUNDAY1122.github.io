@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "auditedAt": "2026-08-14",
+  "policy": "Dynamic-evidence terminal-state overrides after primary-source re-audit. These overrides resolve evidence freshness/status only; media, scoring, content-concern and other release quarantines remain independent.",
+  "items": [
+    {
+      "id": "K114-AM002",
+      "status": "verified",
+      "evidenceRefs": ["https://kennet.mhlw.go.jp/information/information/hale/h-01-002.html"],
+      "checkedDate": "2026-08-14",
+      "note": "厚生労働省e-ヘルスネットで平均寿命=0歳における平均余命を再確認。定義問題として現行根拠PASS。"
+    },
+    {
+      "id": "K114-AM043",
+      "status": "verified",
+      "evidenceRefs": [
+        "https://www.mhlw.go.jp/bunya/shougaihoken/chiiki/taisho.html",
+        "https://guardianship.mhlw.go.jp/personal/type/",
+        "https://guardianship.mhlw.go.jp/personal/type/legal_guardianship/"
+      ],
+      "checkedDate": "2026-08-14",
+      "note": "地域生活支援事業に位置付くのは厳密には成年後見制度利用支援事業。成年後見制度本体との区別を一次資料で確認。公式正答は保持し、既存content-concern quarantineは別ゲートとして維持。"
+    },
+    {
+      "id": "K114-PM055",
+      "status": "verified",
+      "evidenceRefs": ["https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/kakutei21/index.html"],
+      "checkedDate": "2026-08-14",
+      "note": "令和3年人口動態統計という歴史統計の一次根拠を確認。A-D系列の対応は別途media gateで扱うためdynamic evidenceからは分離。"
+    },
+    {
+      "id": "K114-PM080",
+      "status": "verified",
+      "evidenceRefs": [
+        "https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/kakutei24/index.html",
+        "https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/suii07/deth7.html"
+      ],
+      "checkedDate": "2026-08-14",
+      "note": "厚生労働省人口動態統計の死因別年次推移を再確認。図中Cの視覚対応は独立media gateを維持。"
+    },
+    {
+      "id": "K114-PM104",
+      "status": "verified",
+      "evidenceRefs": [
+        "https://www.mhlw.go.jp/web/t_doc?dataId=78ab4652&dataType=0&pageNo=10",
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/eiyou/syokuji_kijyun.html"
+      ],
+      "checkedDate": "2026-08-14",
+      "note": "日本人の食事摂取基準2025年版（令和7-11年度）で12-14歳の脂質エネルギー比率目標量20-30%を再確認。"
+    },
+    {
+      "id": "K113-AM098",
+      "status": "verified",
+      "evidenceRefs": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/seikatsuhogo/chiiki-fukusi-yougo/index.html",
+        "https://www.mhlw.go.jp/web/t_doc?dataId=00tb4085&dataType=1&pageNo=1"
+      ],
+      "checkedDate": "2026-08-14",
+      "note": "日常生活自立支援事業の対象要件・契約判断能力・日常的金銭管理支援を厚生労働省一次資料で再確認。"
+    },
+    {
+      "id": "K113-AM106",
+      "status": "verified",
+      "evidenceRefs": [
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05seitou.pdf"
+      ],
+      "checkedDate": "2026-08-14",
+      "note": "2023年の日付を含むため機械検出されたが、Naegele概算法と公式正答を問う歴史的設問。公式問題・正答で確認済み。"
+    },
+    {
+      "id": "K113-AM107",
+      "status": "verified",
+      "evidenceRefs": [
+        "https://precon.cfa.go.jp/dictionary/pregnancy-alcohol/",
+        "https://prenatal.cfa.go.jp/pregnancy-and-childbirth/body-changes.html",
+        "https://kennet.mhlw.go.jp/information/information/food/e-05-002"
+      ],
+      "checkedDate": "2026-08-14",
+      "note": "こども家庭庁の2026年情報で妊娠中に安全と確立した飲酒量はなく禁酒、厚生労働省2026年更新情報で妊娠可能性・妊娠初期の葉酸400µg/日を再確認。"
+    },
+    {
+      "id": "K113-AM108",
+      "status": "verified",
+      "evidenceRefs": ["https://www.acog.org/womens-health/faqs/back-pain-during-pregnancy"],
+      "checkedDate": "2026-08-14",
+      "note": "ACOG現行案内で妊娠後期の腰痛に側臥位、膝屈曲、枕による支持を確認。シナリオ内年表現によるdynamic検出を解消。"
+    },
+    {
+      "id": "K113-AM116",
+      "status": "verified",
+      "evidenceRefs": [
+        "https://ganjoho.jp/public/support/condition/dyspnea/index.html",
+        "https://ganjoho.jp/public/support/condition/anorexia/index.html",
+        "https://ganjoho.jp/public/support/dietarylife/index.html"
+      ],
+      "checkedDate": "2026-08-14",
+      "note": "国立がん研究センター現行情報で呼吸が楽な時間の摂食と、少量ずつ複数回に分ける食事調整を確認。"
+    },
+    {
+      "id": "K113-PM004",
+      "status": "verified",
+      "evidenceRefs": [
+        "https://www.kaigokensaku.mhlw.go.jp/commentary/term.html",
+        "https://www.mhlw.go.jp/topics/kaigo/kentou/tp0814-1.html"
+      ],
+      "checkedDate": "2026-08-14",
+      "note": "厚生労働省系の現行介護サービス情報で、自分で降りられないようベッドをサイドレールで囲む行為が身体的拘束の具体例であることを再確認。"
+    },
+    {
+      "id": "K113-PM109",
+      "status": "verified",
+      "evidenceRefs": ["https://www.nice.org.uk/guidance/ng222/chapter/Recommendations"],
+      "checkedDate": "2026-08-14",
+      "note": "NICE NG222現行推奨で非判断的・compassionateな関わりと、自殺念慮・意図を直接評価することを再確認。"
+    }
+  ]
+}
