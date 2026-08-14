@@ -15,7 +15,8 @@ final class YobiTantouSprintTests: XCTestCase {
         id: String = "YOBI-RELEASE-001",
         subject: String = "憲法",
         releaseEligible: Bool = true,
-        lawBasisDate: String? = "2026-01-01"
+        lawBasisDate: String? = "2026-01-01",
+        difficulty: QuestionDifficulty? = .foundation
     ) -> StudyQuestion {
         StudyQuestion(
             id: id,
@@ -29,11 +30,12 @@ final class YobiTantouSprintTests: XCTestCase {
             memory: "テスト用の要点です。",
             sourceTitle: "一次資料テスト",
             sourceURL: "https://example.invalid/primary",
-            evidenceCheckedDate: "2026-08-13",
+            evidenceCheckedDate: "2026-08-14",
             lawBasisDate: lawBasisDate,
             originType: "original_from_primary_source",
             releaseEligible: releaseEligible,
-            contentUse: .practice
+            contentUse: .practice,
+            difficulty: difficulty
         )
     }
 
@@ -44,13 +46,15 @@ final class YobiTantouSprintTests: XCTestCase {
         }
         let decoded = try QuestionRepository().decode(Data(contentsOf: url), kind: .preview)
         XCTAssertEqual(decoded.count, 8)
-        XCTAssertTrue(decoded.allSatisfy { !$0.releaseEligible && $0.originType == "original_preview" && $0.contentUse == nil })
+        XCTAssertTrue(decoded.allSatisfy {
+            !$0.releaseEligible && $0.originType == "original_preview" && $0.contentUse == nil && $0.difficulty == nil
+        })
     }
 
-    func testBundledFormalPracticeBankLoadsFourteenReleasedQuestions() {
+    func testBundledFormalPracticeBankLoadsTwentyEightReleasedQuestionsAcrossTwoTiers() {
         let model = freshModel()
         XCTAssertNil(model.startupError)
-        XCTAssertEqual(model.questions.count, 14)
+        XCTAssertEqual(model.questions.count, 28)
         XCTAssertTrue(model.questions.allSatisfy {
             $0.releaseEligible && $0.contentUse == .practice && $0.examYear == nil && !$0.isOfficialMockQuestion
         })
@@ -59,15 +63,26 @@ final class YobiTantouSprintTests: XCTestCase {
             Set(model.questions.map(\.subject)).intersection(Set(AppModel.officialSubjects)).count,
             7
         )
+        XCTAssertEqual(model.questions.filter { $0.difficulty == .foundation }.count, 14)
+        XCTAssertEqual(model.questions.filter { $0.difficulty == .standard }.count, 14)
+        XCTAssertEqual(model.questions.filter { $0.difficulty == .applied }.count, 0)
     }
 
-    func testReleaseRepositoryAcceptsOnlyAuditedShape() throws {
-        let data = try JSONEncoder().encode([releaseQuestion()])
+    func testReleaseRepositoryAcceptsAuditedDifficulty() throws {
+        let data = try JSONEncoder().encode([releaseQuestion(difficulty: .standard)])
         let decoded = try QuestionRepository().decode(data, kind: .release)
         XCTAssertEqual(decoded.count, 1)
         XCTAssertTrue(decoded[0].releaseEligible)
         XCTAssertEqual(decoded[0].contentUse, .practice)
+        XCTAssertEqual(decoded[0].difficulty, .standard)
         XCTAssertNil(decoded[0].examYear)
+    }
+
+    func testReleaseRepositoryRejectsMissingDifficulty() throws {
+        let data = try JSONEncoder().encode([releaseQuestion(difficulty: nil)])
+        XCTAssertThrowsError(try QuestionRepository().decode(data, kind: .release)) { error in
+            XCTAssertEqual(error as? QuestionBankError, .invalidReleaseGate("YOBI-RELEASE-001"))
+        }
     }
 
     func testReleaseRepositoryRejectsNonReleaseQuestion() throws {
@@ -90,6 +105,7 @@ final class YobiTantouSprintTests: XCTestCase {
         XCTAssertEqual(decoded.first?.subject, "一般教養")
         XCTAssertNil(decoded.first?.lawBasisDate)
         XCTAssertEqual(decoded.first?.contentUse, .practice)
+        XCTAssertEqual(decoded.first?.difficulty, .foundation)
     }
 
     func testReleaseRepositoryRejectsDuplicateIDs() throws {
