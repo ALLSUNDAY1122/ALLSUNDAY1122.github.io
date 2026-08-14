@@ -1,25 +1,69 @@
 # 看護師国家試験｜必修150問 専門チャット → 統括 引継ぎ
 
-更新日: 2026-08-09
+更新日: 2026-08-14
 
-## 専門チャットで完了した範囲
+## 最終状態
 
-- 第115・114・113回の必修50問×3回＝150問を対象に監査。
-- 公式本文・公式正答・公式採点取扱いを照合。
-- 通常140問に独自解説、ここだけ覚える、一次根拠、evidenceCheckedDateを整備。
-- 隔離10問にも解説ドラフト・一次根拠・evidenceCheckedDateを整備。ただし解放不可状態を維持。
-- PDF取込時の数字・語句欠損18件を `text-corrections.json` に必修専用オーバーレイとして記録。raw原本は変更していない。
-- 図版依存8問、公式採点特例6問、現行知識との齟齬疑い2問を `special-cases.json` に分離。
-- 必修150問専用ゲート `validate_required_150.py` を追加。共通validatorは未変更。
+**標準手順 v2.4 のcanonical正本ルール適用済み。必修150問の統合後canonical監査はPASS。**
 
-## 統括で必要な共通領域反映
+作業用バッチ・`required-150`内の補正ファイル・旧監査結果は生成元／監査証跡であり、最終問題データの正本ではない。必修問題の最終正本は次の3ファイルとする。
 
-1. 製品データ組立時、必修問題に限り `required-150/text-corrections.json` をraw本文より後、解説統合より前に適用する。
-2. `required-150/special-cases.json` の隔離対象を、共通出題・模試・復習導線から無条件に解放しない。
-3. 第113回の公式採点特例6問は、通常の1問1点ロジックで上書きしない。特にPM21は公式採点除外であり、独自正答を設定しない。
-4. 図版依存8問は、図版の権利・表示・対応肢の監査完了後にのみ解放する。
-5. 専門監査キュー2問（K115-PM025、K113-PM025）は公式正答を維持したまま、現在の臨床・薬剤情報と区別する注記を確定してから解放する。
-6. 統合後に `python3 kangoshi-sprint/product-content/required-150/validate_required_150.py` を再実行し、PASSを確認する。
+- `kangoshi-sprint/product-content/questions/exam-115/required.json`
+- `kangoshi-sprint/product-content/questions/exam-114/required.json`
+- `kangoshi-sprint/product-content/questions/exam-113/required.json`
+
+最終監査結果:
+
+- `kangoshi-sprint/product-content/required-150/canonical-audit.json`
+- PASS結果コミット: `cd901b5763cfa3c7645cfdbe07af5c44b3e34695`
+- GitHub Actions: `Kangoshi Required Canonical Audit`
+
+## canonical監査結果
+
+- 必修: 50問×3回＝150問
+- 公式正答不整合: 0
+- source answer token不整合: 0
+- 解説欠損: 0
+- 根拠URL欠損: 0
+- evidenceCheckedDate欠損: 0
+- 権利根拠欠損: 0
+- 出典欠損: 0
+- 大分類／小分類欠損: 0
+- dynamic evidence pending: 0
+- 本文完全重複: 0
+- 高類似候補: 0
+- 通常解放候補: 136
+- 隔離ユニーク: 14
+
+隔離内訳は図版依存8問、公式採点特例6問、専門確認2問。重複があるため合計ユニーク14問。
+
+## canonical化で修正した事項
+
+1. 公式PDF照合済み本文補正18件をcanonicalへ適用。
+2. 解説・一次根拠を150/150へ統合。
+3. `K115-PM001` / `K115-PM002` が2つの作業バッチへ重複登録されていることをcanonical初回監査で検出。冗長な `022-K115-PM001-PM005-verified.json` を削除し、一意化後に再監査PASS。
+4. `K114-AM002` は厚生労働省の生命表定義を2026-08-14に再確認し、dynamic evidenceをverifiedへ更新。
+5. `K113-PM004` は厚生労働省の身体拘束ゼロ関連一次資料を2026-08-14に再確認し、dynamic evidenceをverifiedへ更新。
+6. 図版だけで構成される選択肢について、文字選択肢を新規作成しない。media依存として隔離し、validatorでも文字選択肢欠損を誤FAILにしない。
+
+## 統括が守るrelease gate
+
+1. `releaseEligible=false` の14問を通常出題・模試・復習へ解放しない。
+2. 第113回の公式採点特例6問を通常の1問1点ロジックで上書きしない。特に `K113-PM021` は公式採点除外であり、独自正答を設定しない。
+3. 図版依存8問は、図版の権利・表示・対応肢監査が完了してから解除可否を判断する。
+4. 専門確認2問 `K115-PM025` / `K113-PM025` は公式正答を保持し、現行知識との区別を確定してから解除する。
+5. canonicalまたはその生成元を変更した場合は、旧バッチPASSを流用せず `Kangoshi Required Canonical Audit` を再発火し、`canonical-audit.json` のPASSを確認する。
+
+## final gate
+
+最終ゲートは以下のworkflow／validatorを使用する。
+
+- `.github/workflows/kangoshi-required-canonical.yml`
+- `kangoshi-sprint/product-content/build_required_canonical.py`
+- `kangoshi-sprint/product-content/apply_required_canonical_overrides.py`
+- `kangoshi-sprint/product-content/validate_required_canonical_v2.py`
+
+`validate_required_150.py` や旧バッチ単位のPASSは、過去の診断・監査証跡としてのみ扱い、v2.4の最終PASS判定には使用しない。
 
 ## 編集禁止を維持した領域
 
