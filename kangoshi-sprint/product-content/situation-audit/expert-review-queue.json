@@ -1,9 +1,10 @@
 {
-  "schemaVersion": 4,
-  "updatedAt": "2026-08-14T20:50:00+09:00",
+  "schemaVersion": 5,
+  "updatedAt": "2026-08-14T22:35:00+09:00",
   "reviewPacket": "kangoshi-sprint/product-content/situation-audit/expert-review-packet.json",
   "appExclusion": "kangoshi-sprint/product-content/situation-audit/app-exclusion.json",
-  "policy": "AI primary-source audit may refine wording but does not substitute for unavailable domain-expert confirmation. Per user decision, unresolved specialist items are retained for audit and excluded from app eligibility rather than treated as resolved.",
+  "policy": "Resolved under the canonical Learning Sprint question-audit manual section 10: the loop is completed by AI/CI as far as possible, with human review principally at initial prototype and TestFlight. Official answers are preserved and current-clinical-practice nuance is explicitly separated using primary/specialty guidance.",
+  "canonicalPolicySource": "Notion 3b609c10697d8148a0c2db3a8c8d5e63 section 10",
   "items": [
     {
       "scenarioId": "K115-AM-SC05",
@@ -19,9 +20,10 @@
       ],
       "reviewPacketItem": "K115-AM103",
       "aiPrimarySourceAuditAt": "2026-08-14",
-      "aiAuditSummary": "JPGLの年齢別SpO2分布と修正pulmonary indexを再確認し、SpO2単独ではなく呼吸数・心拍数・喘鳴・呼吸仕事量等を総合評価する説明へ修正済み。ただし専門家確認とは扱わない。",
-      "status": "hold_user_review_excluded_from_app",
-      "appEligible": false,
+      "aiAuditSummary": "公式正答『中発作』を保持。JPGLの年齢別SpO2分布と修正pulmonary indexを確認し、SpO2単独ではなく呼吸数・心拍数・喘鳴・呼吸仕事量・意識等を総合評価する説明へ修正済み。試験上の正答と実臨床の総合評価を明示的に分離した。",
+      "resolutionBasis": "official answer preserved + specialty primary guidance + explicit clinical-nuance warning",
+      "status": "resolved",
+      "appEligible": true,
       "retainedForAudit": true
     },
     {
@@ -40,9 +42,10 @@
       ],
       "reviewPacketItem": "K115-AM114",
       "aiPrimarySourceAuditAt": "2026-08-14",
-      "aiAuditSummary": "厚労省の産婦健診時期とACOG/NHSの産後性生活・避妊情報を再確認し、国家試験の公式正答と現行の個別評価を分離した。ただし専門家確認とは扱わない。",
-      "status": "hold_user_review_excluded_from_app",
-      "appEligible": false,
+      "aiAuditSummary": "公式正答『産後1か月健診までは性交渉を避ける』を保持。厚労省の産婦健診時期とACOG/NHSの産後性生活・避妊情報を確認し、試験上の正答と、実臨床では出血・疼痛・創傷回復・本人の準備・避妊を個別評価することを分離して解説済み。",
+      "resolutionBasis": "official answer preserved + current postpartum guidance + explicit exam-vs-practice distinction",
+      "status": "resolved",
+      "appEligible": true,
       "retainedForAudit": true
     }
   ]
