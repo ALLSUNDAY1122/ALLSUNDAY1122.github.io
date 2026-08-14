@@ -19,6 +19,7 @@ if scoring.get('pass') is not True:
 scoring_modes=scoring.get('expected') or {}
 questions=[]
 media_count=0
+converted_svg=0
 
 for sid in ('set1','set2','set3'):
     doc=json.loads((DRAFT/f'{sid}-draft.json').read_text(encoding='utf-8'))
@@ -47,11 +48,20 @@ for sid in ('set1','set2','set3'):
         for rel in assets:
             src=APP/rel
             if not src.exists(): raise SystemExit(f"{q['id']}: missing media {rel}")
-            dest=MEDIA_OUT/src.name
-            if dest.exists() and dest.read_bytes()!=src.read_bytes():
-                raise SystemExit(f'media filename collision: {src.name}')
-            shutil.copy2(src,dest)
-            native_assets.append(f'Media/{src.name}')
+            if src.suffix.lower()=='.svg':
+                try:
+                    import cairosvg
+                except ImportError as exc:
+                    raise SystemExit('CairoSVG is required to rasterize original redraw SVGs') from exc
+                dest=MEDIA_OUT/f'{src.stem}.png'
+                cairosvg.svg2png(url=str(src),write_to=str(dest),output_width=1200)
+                converted_svg+=1
+            else:
+                dest=MEDIA_OUT/src.name
+                if dest.exists() and dest.read_bytes()!=src.read_bytes():
+                    raise SystemExit(f'media filename collision: {src.name}')
+                shutil.copy2(src,dest)
+            native_assets.append(f'Media/{dest.name}')
         if q.get('mediaReleaseStatus')=='resolved': media_count+=1
         questions.append({
             'id':q['id'],'sourceExam':int(q['sourceExam']),'session':q.get('session') or '',
@@ -77,10 +87,13 @@ for exam,rows in by_exam.items():
         raise SystemExit(f'exam {exam}: composition mismatch {len(rows)} {comp}')
 if media_count!=38:
     raise SystemExit(f'expected 38 media questions, got {media_count}')
+if converted_svg!=23:
+    raise SystemExit(f'expected 23 SVG redraw conversions, got {converted_svg}')
 
 free_ids=[]
 for category in ('必修','一般','状況設定'):
-    # Canonical deterministic sample: earliest 8 questions across the newest exam.
+    # Golden Master keeps the default sprint at 8; the free tier uses a fixed,
+    # deterministic 8-question sample per category from the newest exam.
     free_ids += [q['id'] for q in questions if q['sourceExam']==115 and q['category']==category][:8]
 
 payload={
@@ -90,10 +103,10 @@ payload={
 }
 (OUT/'questions.generated.json').write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
 audit={
-    'schemaVersion':1,'questions':len(questions),'uniqueIds':len({q['id'] for q in questions}),
+    'schemaVersion':2,'questions':len(questions),'uniqueIds':len({q['id'] for q in questions}),
     'byExam':{str(e):len(rows) for e,rows in by_exam.items()},'mediaQuestions':media_count,
-    'copiedMediaAssets':len(list(MEDIA_OUT.iterdir())),'freeSampleQuestions':len(free_ids),
-    'scoringExceptions':len(scoring_modes),'pass':True
+    'copiedMediaAssets':len(list(MEDIA_OUT.iterdir())),'svgRedrawsRasterized':converted_svg,
+    'freeSampleQuestions':len(free_ids),'scoringExceptions':len(scoring_modes),'pass':True
 }
 (OUT/'native-content-audit.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(audit,ensure_ascii=False))
