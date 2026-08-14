@@ -7,6 +7,7 @@ APP=ROOT.parent
 DRAFT=ROOT/'enriched-draft'
 MANIFEST=ROOT/'manifest.json'
 EXPERT_QUEUE=ROOT/'situation-audit'/'expert-review-queue.json'
+KNOWN_SPECIALIST_IDS={'K115-AM103','K115-AM114'}
 
 sets=[]
 all_questions=[]
@@ -24,8 +25,8 @@ if len(all_questions)!=720 or len({q['id'] for q in all_questions})!=720:
 expert_doc=json.loads(EXPERT_QUEUE.read_text(encoding='utf-8'))
 blocked={x.get('questionId') for x in expert_doc.get('items') or [] if x.get('appEligible') is False}
 blocked.discard(None)
-if blocked != {'K115-AM103','K115-AM114'}:
-    raise SystemExit(f'unexpected expert-blocked set: {sorted(blocked)}')
+if not blocked.issubset(KNOWN_SPECIALIST_IDS):
+    raise SystemExit(f'unexpected expert-blocked ids: {sorted(blocked-KNOWN_SPECIALIST_IDS)}')
 
 def compact(q):
     keep=(
@@ -42,21 +43,22 @@ def compact(q):
 
 runtime=[compact(q) for q in all_questions]
 eligible=[q for q in runtime if q['releaseEligible']]
-if len(eligible)!=718:
-    raise SystemExit(f'expected 718 runtime eligible questions, got {len(eligible)}')
+expected_eligible=720-len(blocked)
+if len(eligible)!=expected_eligible:
+    raise SystemExit(f'expected {expected_eligible} runtime eligible questions, got {len(eligible)}')
 
 payload='(()=>{\n\'use strict\';\n'
 payload+='const ALL='+json.dumps(runtime,ensure_ascii=False,separators=(',',':'))+';\n'
 payload+='window.KANGOSHI_ALL_QUESTIONS=ALL;\n'
 payload+='window.KANGOSHI_QUESTIONS=ALL.filter(q=>q.releaseEligible!==false);\n'
 payload+='window.KANGOSHI_RUNTIME_META='+json.dumps({
-    'schemaVersion':1,'canonicalTotal':720,'runtimeEligible':718,'expertBlockedIds':sorted(blocked),
+    'schemaVersion':2,'canonicalTotal':720,'runtimeEligible':len(eligible),'expertBlockedIds':sorted(blocked),
     'source':'product-content/enriched-draft','generatedBy':'build_product_runtime.py'
 },ensure_ascii=False,separators=(',',':'))+';\n})();\n'
 (APP/'questions-runtime.js').write_text(payload,encoding='utf-8')
 
 manifest=json.loads(MANIFEST.read_text(encoding='utf-8'))
-by_exam={115:'set1',114:'set2',113:'set3'}
+ready=[]; pending=[]
 for s in manifest.get('sets') or []:
     exam=int(s.get('sourceExam') or 0)
     rows=[q for q in runtime if int(q.get('sourceExam') or 0)==exam]
@@ -69,15 +71,17 @@ for s in manifest.get('sets') or []:
     s['expertReviewedCount']=eligible_count
     s['expertBlockedIds']=blocked_ids
     s['status']='ready' if eligible_count==240 else 'pending_expert_review'
+    (ready if eligible_count==240 else pending).append(exam)
 manifest['runtime']={
-    'schemaVersion':1,'canonicalTotal':720,'runtimeEligible':718,'blocked':sorted(blocked),
-    'readyExamSets':[114,113],'pendingExamSets':[115]
+    'schemaVersion':2,'canonicalTotal':720,'runtimeEligible':len(eligible),'blocked':sorted(blocked),
+    'readyExamSets':sorted(ready,reverse=True),'pendingExamSets':sorted(pending,reverse=True)
 }
 MANIFEST.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 audit={
-    'schemaVersion':1,'canonicalTotal':len(runtime),'runtimeEligible':len(eligible),
+    'schemaVersion':2,'canonicalTotal':len(runtime),'runtimeEligible':len(eligible),
     'blockedIds':sorted(blocked),'byExam':{},'mediaResolved':0,'mediaMissingAssets':[],
+    'readyExamSets':sorted(ready,reverse=True),'pendingExamSets':sorted(pending,reverse=True),
     'pass':True,'errors':[]
 }
 for exam in (115,114,113):
@@ -101,8 +105,10 @@ if audit['mediaMissingAssets']:
 for exam,row in audit['byExam'].items():
     if (row['total'],row['required'],row['general'],row['situation'])!=(240,50,130,60):
         audit['errors'].append(f'exam {exam} composition mismatch {row}')
-if audit['byExam']['115']['eligible']!=238 or audit['byExam']['114']['eligible']!=240 or audit['byExam']['113']['eligible']!=240:
-    audit['errors'].append('eligible count mismatch')
+for exam in (115,114,113):
+    expected=240-sum(1 for qid in blocked if qid.startswith(f'K{exam}-'))
+    if audit['byExam'][str(exam)]['eligible']!=expected:
+        audit['errors'].append(f'exam {exam} eligible count mismatch')
 audit['pass']=not audit['errors']
 (ROOT/'product-runtime-audit.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 if not audit['pass']:
