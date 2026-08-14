@@ -66,7 +66,7 @@ struct RootScanView: View {
                 model.discardAndReset()
             }
         } message: {
-            Text("この試作版にはまだアルバム保存がありません。書き出していない3Dは、破棄すると元に戻せません。")
+            Text("この検証版にはまだスキャンライブラリがありません。書き出していない3Dは、破棄すると元に戻せません。")
         }
     }
 
@@ -76,19 +76,19 @@ struct RootScanView: View {
             Image(systemName: "cube.transparent")
                 .font(.system(size: 68, weight: .thin))
                 .foregroundStyle(.mint)
-            Text("おもちゃばこ")
+            Text("Scan Lab")
                 .font(.largeTitle.bold())
-            Text("残しておきたい作品や記念品を、\n写真より立体的な思い出として残します。")
+            Text("スマホを向けて周囲を撮影し、\niPhone内で高品質な3Dを生成します。")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
             VStack(alignment: .leading, spacing: 8) {
-                Label("写真や3Dを開発者サーバーへ自動送信しません", systemImage: "lock.iphone")
-                Label("特別な機材は必要ありません", systemImage: "iphone")
-                Label("完成後は指で回して見返せます", systemImage: "rotate.3d")
+                Label("撮影データを開発者サーバーへ自動送信しません", systemImage: "lock.iphone")
+                Label("LiDARなしでもSplat撮影を検証できます", systemImage: "iphone")
+                Label("完成後は回転・拡大して確認できます", systemImage: "rotate.3d")
             }
             .font(.subheadline)
             Spacer()
-            Button("新しく立体で残す") {
+            Button("新しくスキャン") {
                 model.startCapture()
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -171,10 +171,10 @@ struct RootScanView: View {
                 .foregroundStyle(.mint)
             Text("撮影できました")
                 .font(.title2.bold())
-            Text("対象の周囲から必要な写真がそろいました。\niPhoneの中で立体の思い出を組み立てます。")
+            Text("対象の周囲から必要な写真がそろいました。\niPhoneの中でGaussian Splatを生成します。")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
-            Button("立体の思い出を生成") {
+            Button("3Dを生成") {
                 model.train()
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -194,7 +194,7 @@ struct RootScanView: View {
                 .progressViewStyle(.circular)
                 .scaleEffect(1.7)
                 .tint(.mint)
-            Text("立体の思い出を生成中")
+            Text("3Dを生成中")
                 .font(.title2.bold())
             Text(model.trainingStageText)
                 .font(.body.weight(.medium))
@@ -229,7 +229,7 @@ struct RootScanView: View {
                                 .background(.black.opacity(0.55), in: Circle())
                         }
                         Spacer()
-                        Text("立体の思い出ができました")
+                        Text("3D生成完了")
                             .font(.caption.bold())
                             .padding(.horizontal, 12)
                             .padding(.vertical, 8)
