@@ -59,18 +59,42 @@ def compute_numeric(v: dict):
         return v["part"] / v["whole"] * 100
     if kind == "mean":
         return statistics.mean(v["values"])
+    if kind == "weighted_mean":
+        values, weights = v["values"], v["weights"]
+        return sum(value * weight for value, weight in zip(values, weights)) / sum(weights)
     if kind == "increase_percent":
         return (v["after"] - v["before"]) / v["before"] * 100
     if kind == "ratio_share":
         return v["total"] * v["parts"][v["target_index"]] / sum(v["parts"])
     if kind == "divide":
         return v["numerator"] / v["denominator"]
+    if kind == "unit_cost":
+        return v["total_cost"] / v["count"]
     if kind == "difference":
         return v["a"] - v["b"]
     if kind == "median":
         return statistics.median(v["values"])
     if kind == "discount":
         return v["price"] * (100 - v["discount_percent"]) / 100
+    if kind == "reverse_percent":
+        return v["after"] / (v["percent"] / 100)
+    if kind == "simple_interest":
+        return v["principal"] * v["annual_rate_percent"] / 100 * v["years"]
+    if kind == "solve_linear":
+        return (v["c"] - v["b"]) / v["a"]
+    if kind == "arithmetic_sequence":
+        return v["first"] + (v["n"] - 1) * v["difference"]
+    if kind == "percent_point_diff":
+        return v["after_percent"] - v["before_percent"]
+    if kind == "probability_complement_percent":
+        return (1 - v["event_count"] / v["total_count"]) * 100
+    if kind == "average_speed":
+        return sum(v["distances"]) / sum(v["times"])
+    if kind == "combination_count_2":
+        n = v["n"]
+        return n * (n - 1) / 2
+    if kind == "rectangle_area":
+        return v["width"] * v["height"]
     if kind == "multiply":
         return v["a"] * v["b"]
     if kind == "compound_percent":
@@ -153,8 +177,10 @@ def audit_item(item: dict) -> dict:
         raise AuditError(f"{qid}: invalid answer index")
 
     numeric_kinds = {
-        "ratio_percent", "mean", "increase_percent", "ratio_share", "divide",
-        "difference", "median", "discount", "multiply", "compound_percent", "sum",
+        "ratio_percent", "mean", "weighted_mean", "increase_percent", "ratio_share", "divide",
+        "unit_cost", "difference", "median", "discount", "reverse_percent", "simple_interest",
+        "solve_linear", "arithmetic_sequence", "percent_point_diff", "probability_complement_percent",
+        "average_speed", "combination_count_2", "rectangle_area", "multiply", "compound_percent", "sum",
         "remainder", "share_of_sum", "signed_difference", "compound_percent_factors",
     }
     index_kinds = {"argmax_delta", "argmin_drop", "range_compare", "compare_increase_percent", "argmax", "compare_ratio", "priority"}
@@ -168,7 +194,7 @@ def audit_item(item: dict) -> dict:
             raise AuditError(f"{qid}: fraction correct value is not unique")
     elif kind in numeric_kinds:
         computed = compute_numeric(verification)
-        parser = signed_number_from_choice if kind == "signed_difference" else number_from_choice
+        parser = signed_number_from_choice if kind in {"signed_difference", "percent_point_diff"} else number_from_choice
         selected = parser(choices[answer])
         if not close(selected, computed):
             raise AuditError(f"{qid}: selected choice {selected} != computed {computed}")
@@ -241,7 +267,7 @@ def main() -> int:
         return 1
 
     report = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "checkedAt": max(str(item.get("evidence_checked_date", "")) for item in items),
         "status": "PASS",
         "scope": args.bank.name,
