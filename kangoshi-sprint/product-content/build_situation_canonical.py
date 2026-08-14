@@ -9,6 +9,7 @@ OUT = ROOT / 'questions'
 SUMMARY = ROOT / 'classified' / 'situation-group-summary.json'
 BATCH_DIR = ROOT / 'explanation-batches'
 EXPERT_QUEUE = ROOT / 'situation-audit' / 'expert-review-queue.json'
+MEDIA_AUDIT = ROOT / 'situation-audit' / 'media-audit.json'
 
 EXAMS = {115: 'set1', 114: 'set2', 113: 'set3'}
 REQUIRED_L3 = ('point', 'detail', 'explanationEvidenceRefs', 'evidenceCheckedDate')
@@ -40,6 +41,25 @@ def pending_expert_ids():
             qid = row.get('questionId') or row.get('question_id')
             if qid:
                 result.add(qid)
+    return result
+
+
+def verified_media_overrides():
+    if not MEDIA_AUDIT.exists():
+        return {}
+    doc = load(MEDIA_AUDIT)
+    items = doc.get('items') if isinstance(doc, dict) else None
+    if not isinstance(items, dict):
+        raise SystemExit('situation media-audit.json must contain an items object')
+    result = {}
+    for qid, row in items.items():
+        if str(row.get('mediaAuditStatus') or '').lower() != 'verified':
+            continue
+        if not str(row.get('rightsStatus') or '').strip():
+            raise SystemExit(f'{qid}: verified media audit missing rightsStatus')
+        if not str(row.get('checkedDate') or '').strip():
+            raise SystemExit(f'{qid}: verified media audit missing checkedDate')
+        result[qid] = row
     return result
 
 
@@ -95,6 +115,11 @@ for qid, sid in sorted(qid_to_sid.items()):
     canonical_l3[qid] = complete[-1][1]
 
 expert_pending = pending_expert_ids()
+media_overrides = verified_media_overrides()
+unknown_media_ids = sorted(set(media_overrides) - set(qid_to_sid))
+if unknown_media_ids:
+    raise SystemExit(f'media audit contains non-situation ids: {unknown_media_ids}')
+
 all_questions = []
 by_exam = {}
 for exam, set_id in EXAMS.items():
@@ -117,6 +142,24 @@ for exam, set_id in EXAMS.items():
         l3 = canonical_l3[qid]
         for field in REQUIRED_L3:
             q[field] = l3.get(field)
+
+        # Media audit is situation-lane canonical state. It may clear a conservative
+        # text-only false positive or validate the exact official figure/page used.
+        media = media_overrides.get(qid)
+        if media:
+            q['requiresMedia'] = bool(media.get('requiresMedia'))
+            q['mediaAuditStatus'] = 'verified'
+            q['mediaAuditResult'] = media.get('mediaAuditResult')
+            q['rightsStatus'] = media.get('rightsStatus')
+            q['mediaDetectionReason'] = (
+                'false_positive_verified_text_only'
+                if not q['requiresMedia']
+                else 'official_media_verified'
+            )
+            q['canonicalMediaAudit'] = {
+                k: v for k, v in media.items()
+                if k not in {'requiresMedia', 'mediaAuditStatus', 'rightsStatus'}
+            }
 
         quarantine = []
         if qid in expert_pending:
@@ -166,6 +209,8 @@ for exam, set_id in EXAMS.items():
         'explained': sum(1 for q in canonical if complete_item(q)),
         'normal': sum(1 for q in canonical if q['canonicalReleaseStatus'] == 'normal'),
         'quarantined': sum(1 for q in canonical if q['canonicalReleaseStatus'] == 'quarantined'),
+        'mediaRequired': sum(1 for q in canonical if q.get('requiresMedia')),
+        'mediaVerified': sum(1 for q in canonical if q.get('requiresMedia') and str(q.get('mediaAuditStatus') or '').lower() == 'verified'),
     }
     all_questions.extend(canonical)
 
@@ -206,6 +251,7 @@ for q in all_questions:
     'totalQuestions': len(all_questions),
     'totalScenarios': len(expected_by_sid),
     'expertPendingQuestionIds': sorted(expert_pending),
+    'verifiedMediaQuestionIds': sorted(media_overrides),
     'byExam': by_exam,
     'outputFiles': [f'questions/exam-{exam}/situation.json' for exam in EXAMS],
 }, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
