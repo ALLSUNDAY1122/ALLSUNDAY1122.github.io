@@ -1,0 +1,86 @@
+workflows:
+  josanshi_appstore:
+    name: 助産師国家試験 - iOS Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.josanshi
+      vars:
+        BUNDLE_ID: jp.allsunday1122.josanshi
+        APPLE_TEAM_ID: MN3D2ZM44N
+        CODEMAGIC_PROFILE_REF: josanshi_appstore
+        IAP_PRODUCT_ID: jp.allsunday1122.josanshi.premium
+        XCODE_PROJECT: josanshi-sprint/ios/JosanshiSprint.xcodeproj
+        XCODE_SCHEME: JosanshiSprint
+        APPICON_SHA256: 07668a08a0703b76ecbeca38bbc5b396a248f822de594947ddccd383f0898579
+      xcode: latest
+    scripts:
+      - name: Audit canonical content, UI and monetization
+        script: |
+          cd "$CM_BUILD_DIR"
+          python3 josanshi-sprint/scripts/validate_blueprint.py
+          python3 josanshi-sprint/scripts/generate_slots.py --check
+          python3 josanshi-sprint/scripts/validate_sources.py
+          python3 josanshi-sprint/scripts/validate_topic_sources.py
+          python3 josanshi-sprint/scripts/build_intent_seeds.py --check
+          python3 josanshi-sprint/scripts/build_generation_plan.py --check
+          python3 josanshi-sprint/scripts/build_scenario_authoring_plan.py --check
+          python3 josanshi-sprint/scripts/validate_similarity_reviews.py
+          python3 josanshi-sprint/scripts/materialize_source_registry.py
+          python3 josanshi-sprint/scripts/materialize_question_bank.py --output josanshi-sprint/data/questions.json
+          python3 josanshi-sprint/scripts/apply_all_audit_approvals.py
+          python3 josanshi-sprint/scripts/audit_question_bank.py --require-complete
+          python3 josanshi-sprint/scripts/validate_content_stage.py
+          python3 josanshi-sprint/scripts/validate_native_golden_master.py
+          python3 josanshi-sprint/scripts/validate_monetization.py
+          swift test --package-path josanshi-sprint/ios/JosanshiSprintFeature
+      - name: Install XcodeGen
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Materialize exact canonical AppIcon
+        script: |
+          cd "$CM_BUILD_DIR"
+          test -n "${JOSANSHI_APPICON_BASE64:-}" || { echo 'ERROR: JOSANSHI_APPICON_BASE64 is not configured in Codemagic.' >&2; exit 1; }
+          bash josanshi-sprint/ios/prepare-app-icon.sh
+          test "$(shasum -a 256 josanshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png | awk '{print $1}')" = "$APPICON_SHA256"
+      - name: Set CI build number and generate Xcode project
+        script: |
+          cd "$CM_BUILD_DIR/josanshi-sprint/ios"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          p = Path('xcodegen.yml')
+          text = p.read_text(encoding='utf-8')
+          text = text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: ' + os.environ['CM_BUILD_NUMBER'], 1)
+          p.write_text(text, encoding='utf-8')
+          PY
+          xcodegen generate --spec xcodegen.yml
+      - name: Verify release Xcode project
+        script: |
+          cd "$CM_BUILD_DIR"
+          grep -q 'PRODUCT_BUNDLE_IDENTIFIER = jp.allsunday1122.josanshi;' "$XCODE_PROJECT/project.pbxproj"
+          grep -q 'DEVELOPMENT_TEAM = MN3D2ZM44N;' "$XCODE_PROJECT/project.pbxproj"
+          grep -q 'com.apple.InAppPurchase' "$XCODE_PROJECT/project.pbxproj"
+          grep -q 'enabled = 1;' "$XCODE_PROJECT/project.pbxproj"
+          test -f josanshi-sprint/ios/PrivacyInfo.xcprivacy
+          test -f josanshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png
+      - name: Apply App Store signing profiles for Internal TestFlight only
+        script: |
+          cd "$CM_BUILD_DIR/josanshi-sprint/ios"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
