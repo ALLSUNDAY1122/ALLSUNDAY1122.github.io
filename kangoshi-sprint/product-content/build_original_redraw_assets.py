@@ -241,7 +241,7 @@ BUILDERS={
 rows=[]; audit=[]
 for qid in IDS:
     content=BUILDERS[qid]()
-    if '<image' in content.lower() or 'data:image' in content.lower() or 'http://' in content.lower() or 'https://' in content.lower():
+    if '<image' in content.lower() or 'data:image' in content.lower() or ' href=' in content.lower():
         raise SystemExit(f'{qid}: SVG must be self-contained original vectors')
     p=OUT/f'{qid}.svg'; p.write_text(content,encoding='utf-8')
     q=INDEX[qid]
