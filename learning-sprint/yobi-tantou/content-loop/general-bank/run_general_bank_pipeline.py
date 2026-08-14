@@ -53,17 +53,33 @@ def process(base: str, persist: bool) -> None:
     GENERATED.mkdir(parents=True, exist_ok=True)
     answer_audit = GENERATED / f"{base}.answer-audit.json"
     staging = GENERATED / f"{base}.staging.json"
+    enriched_staging = GENERATED / f"{base}.enriched-staging.json"
     quality = GENERATED / f"{base}.quality.json"
     release = GENERATED / f"{base}.release.json"
     canonical = HERE / f"{base}.release.json"
+    distractor_overrides = HERE / f"{base}-distractor-overrides.json"
 
     run(py, CONTENT / "mock-bank" / "validate_general_candidates.py", candidate)
     run(py, HERE / "audit_deterministic_general.py", "--bank", candidate, "--report", answer_audit)
     run(py, HERE / "stage_general_candidates.py", "--bank", candidate, "--answer-audit", answer_audit, "--output", staging)
 
+    quality_input = staging
+    if distractor_overrides.exists():
+        run(
+            py,
+            HERE / "apply_distractor_overrides.py",
+            "--input",
+            staging,
+            "--overrides",
+            distractor_overrides,
+            "--output",
+            enriched_staging,
+        )
+        quality_input = enriched_staging
+
     uniqueness = build_uniqueness_base(base)
     try:
-        run(py, CONTENT / "mock-bank" / "audit_global_uniqueness.py", "--base", uniqueness, "--expansion", staging)
+        run(py, CONTENT / "mock-bank" / "audit_global_uniqueness.py", "--base", uniqueness, "--expansion", quality_input)
     finally:
         uniqueness.unlink(missing_ok=True)
 
@@ -71,7 +87,7 @@ def process(base: str, persist: bool) -> None:
         py,
         CONTENT / "audit_practice_release_quality.py",
         "--input",
-        staging,
+        quality_input,
         "--report",
         quality,
         "--require-pass",
@@ -80,7 +96,7 @@ def process(base: str, persist: bool) -> None:
         py,
         CONTENT / "promote_practice_release.py",
         "--staging",
-        staging,
+        quality_input,
         "--quality",
         quality,
         "--output",
