@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-PM-SC01",
+  "sourceExam": 114,
+  "session": "PM",
+  "questionIds": ["K114-PM091", "K114-PM092", "K114-PM093"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "88歳男性、82歳の妻と2人暮らし。息子2人は独立。要介護5でエアマットレス使用。経口摂取は妻介助で1日1回のペースト食だが、むせや摂取不能日があり、訪問介護毎日・訪問看護週3回を利用。",
+  "mainCondition": "重度要介護高齢者の口腔・誤嚥予防、在宅看取りの支援体制、死期が近い患者と家族の関わり支援。",
+  "assessment": [
+    "PM091では食事摂取不能日がある嚥下機能低下患者でも口腔衛生管理を継続する必要性を判断する。",
+    "PM092では2か月後に経口摂取不能となり、家族が自宅看取りを望みつつ高齢妻の介護負担を懸念しているため、看取りまでの支援体制を具体化する。",
+    "PM093では反応が乏しい終末期患者を前に関わり方が分からない妻へ、触れることを含むつながりの維持を支援する。"
+  ],
+  "nursingJudgment": "3問は『日常ケアの質保持→看取り場所の意思決定支援→死期接近期の家族ケア』として同一在宅療養者の終末期進行を追う。妻・息子は支援者であり患者本人との取り違えはない。",
+  "nursingPractice": [
+    "経口摂取の有無にかかわらず口腔衛生を保ち、誤嚥・感染リスクを評価する。",
+    "本人・家族の希望を確認し、訪問診療・訪問看護・介護・緊急時連絡など在宅看取り体制を説明する。",
+    "反応がなくても家族が触れる・話しかける等の関わりを選べるよう支え、負担や不安を軽減する。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "canonicalPatch": {"path": "situation-audit/canonical-patches/K114-PM-SC01.json", "textCorrectionRequired": true, "classificationCorrectionRequired": false, "applyState": "pending_canonical_integration"},
+  "classificationAudit": {"scenarioContextConsistent": true, "majorSubject": "地域・在宅看護論", "status": "pass"},
+  "explanationAudit": {"batchId": "K114-PM091-PM093-situation-SC01", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "none", "questionId": null, "reason": null, "evidenceRefs": []},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_canonical_patch_pending",
+  "auditedAt": "2026-08-14T15:13:00+09:00"
+}
