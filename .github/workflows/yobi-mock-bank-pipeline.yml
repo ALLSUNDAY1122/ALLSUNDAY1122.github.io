@@ -9,6 +9,9 @@ on:
       - 'learning-sprint/yobi-tantou/content-loop/validate_candidates.py'
       - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py'
       - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py'
+      - 'learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py'
+      - 'learning-sprint/yobi-tantou/content-loop/promote_practice_release.py'
       - '.github/workflows/yobi-mock-bank-pipeline.yml'
   workflow_dispatch:
 
@@ -39,8 +42,49 @@ jobs:
           --bank learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.candidates.json
           --audit learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-answer-audit.json
           --locks learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-source-locks.json
+      - name: Stage audited candidates
+        run: |
+          mkdir -p learning-sprint/yobi-tantou/content-loop/mock-bank/generated
+          python learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py \
+            --candidates learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.candidates.json \
+            --locks learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-source-locks.json \
+            --answers learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-answer-audit.json \
+            --output learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.staging.json
+      - name: Merge distractor rationales
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/mock-bank/merge_distractor_notes.py
+          --input learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.staging.json
+          --notes learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-distractors.json
+          --output learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.enriched-staging.json
+      - name: Global uniqueness against released 42
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/mock-bank/audit_global_uniqueness.py
+          --base learning-sprint/yobi-tantou/ios/Resources/questions.release.json
+          --expansion learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.enriched-staging.json
+      - name: Editorial quality audit
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py
+          --input learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.enriched-staging.json
+          --report learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.quality.json
+          --require-pass
+      - name: Promote to mock-bank release_passed
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/promote_practice_release.py
+          --staging learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.enriched-staging.json
+          --quality learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.quality.json
+          --output learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.release.json
       - name: Syntax
         run: |
           python -m json.tool learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.candidates.json >/dev/null
           python -m json.tool learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-source-locks.json >/dev/null
           python -m json.tool learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-answer-audit.json >/dev/null
+          python -m json.tool learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-distractors.json >/dev/null
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/mock-bank/merge_distractor_notes.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/mock-bank/audit_global_uniqueness.py
+      - name: Upload generated audit bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yobi-mock-1-legal-batch-01-audit
+          path: learning-sprint/yobi-tantou/content-loop/mock-bank/generated/
+          if-no-files-found: ignore
