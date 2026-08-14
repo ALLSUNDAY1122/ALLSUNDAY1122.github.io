@@ -8,15 +8,19 @@ final class RigakuAppModel: ObservableObject {
     @Published private(set) var questions: [LearningQuestion] = []
     @Published private(set) var mediaByQuestionID: [String: RigakuQuestionMedia] = [:]
     @Published private(set) var premiumAccess = false
+    @Published private(set) var purchaseDisplayPrice: String?
+    @Published private(set) var purchaseStateLabel: String?
     @Published var lastError: String?
 
     private let store: LearningStateStore?
     private var examScoringRepository: RigakuExamScoringRepository?
+    private var purchaseController: PurchaseController?
+    private var purchaseCancellables: Set<AnyCancellable> = []
 
     init(bundleIdentifier: String? = Bundle.main.bundleIdentifier) {
         self.state = LearningState(contentVersion: RigakuAppConfiguration.contentVersion)
 
-        if let bundleIdentifier, !bundleIdentifier.isEmpty {
+        if let bundleIdentifier = RigakuAppConfiguration.normalizedExternalIdentifier(bundleIdentifier) {
             let store = LearningStateStore(
                 bundleID: bundleIdentifier,
                 contentVersion: RigakuAppConfiguration.contentVersion
@@ -51,6 +55,8 @@ final class RigakuAppModel: ObservableObject {
                 self.lastError = "模試採点正本を読み込めませんでした。"
             }
         }
+
+        configurePurchaseIfAvailable()
     }
 
     var todayAnsweredCount: Int {
@@ -93,6 +99,10 @@ final class RigakuAppModel: ObservableObject {
 
     var canStudy: Bool {
         !questions.isEmpty
+    }
+
+    var purchaseConfigured: Bool {
+        purchaseController != nil
     }
 
     func media(for questionID: String) -> RigakuQuestionMedia? {
@@ -232,8 +242,65 @@ final class RigakuAppModel: ObservableObject {
         lastError = nil
     }
 
+    func purchasePremium() async {
+        guard let purchaseController else { return }
+        await purchaseController.purchase()
+    }
+
+    func restorePurchases() async {
+        guard let purchaseController else { return }
+        await purchaseController.restore()
+    }
+
+    func refreshPurchase() async {
+        guard let purchaseController else { return }
+        await purchaseController.refresh()
+    }
+
     func clearError() {
         lastError = nil
+    }
+
+    private func configurePurchaseIfAvailable() {
+        guard let productID = RigakuAppConfiguration.runtimePremiumProductID else {
+            purchaseStateLabel = "IAP Product ID 未確定"
+            return
+        }
+
+        let controller = PurchaseController(productID: productID)
+        purchaseController = controller
+        purchaseStateLabel = "StoreKit確認中"
+
+        controller.$isPremium
+            .removeDuplicates()
+            .sink { [weak self] value in
+                self?.premiumAccess = value
+            }
+            .store(in: &purchaseCancellables)
+
+        controller.$product
+            .sink { [weak self] product in
+                self?.purchaseDisplayPrice = product?.displayPrice
+            }
+            .store(in: &purchaseCancellables)
+
+        controller.$state
+            .sink { [weak self] state in
+                self?.purchaseStateLabel = Self.purchaseStateLabel(for: state)
+            }
+            .store(in: &purchaseCancellables)
+    }
+
+    private static func purchaseStateLabel(for state: PurchaseController.PurchaseState) -> String {
+        switch state {
+        case .loading: return "StoreKit確認中"
+        case .ready: return "購入可能"
+        case .purchasing: return "購入処理中"
+        case .pending: return "承認待ち"
+        case .purchased: return "購入済み"
+        case .cancelled: return "購入をキャンセルしました"
+        case .unavailable(let message), .failed(let message): return message
+        }
     }
 
     private func persist() {
