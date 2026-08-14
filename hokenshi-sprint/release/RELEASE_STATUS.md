@@ -3,7 +3,15 @@
 更新: 2026-08-14
 
 ## 到達状態
-**Apple操作直前までのNative Release Gate PASS / Apple新規Appレコード作成待ち**
+**標準手順 v2.4再適用済み / Apple操作直前までのNative Release Gate PASS / Apple新規Appレコード作成待ち**
+
+## v2.4再確認・差分適用
+2026-08-14改訂の標準手順 v2.4を再確認し、本アプリへ次を適用済み。
+- 学びスプリント課金標準: 本アプリは完成教材として長期利用できるため、既採用の非消耗型・買い切りPremiumを維持し、日本向け価格を`800円`へ確定
+- Bundle ID恒久委任: `jp.allsunday1122.hokenshi`を維持。ユーザー確認ゲートに戻さない
+- 早期試用URL必須: GitHub Pagesデモを公開・提示済みで条件達成
+- NO_PROGRESS自己復旧: 同一操作の空回りを継続せず、CIトリガー変更・main同期等の方法変更で復旧済み
+- アプリ内価格は引き続きStoreKit `Product.displayPrice`のみを表示し、`800円`文字列をコードへ固定しない
 
 ## 完了
 - Notion正本照合
@@ -41,7 +49,6 @@ GitHub Pages mainで公開・build成功。
 - Privacy: `https://allsunday1122.github.io/hokenshi-sprint/privacy.html`
 
 ## 決定済み識別情報
-ユーザーが2026-08-13に「課金あり、3項目はあなたが決めて」と明示し、命名判断をAIへ委任したため以下を正本へ登録済み。
 - Bundle ID: `jp.allsunday1122.hokenshi`
 - Codemagic profile/workflow: `hokenshi_appstore`
 - IAP Product ID: `jp.allsunday1122.hokenshi.premium`
@@ -53,11 +60,12 @@ App Store Connectの数値App IDはApple自動発行値のため仮値を作ら�
 
 ## 課金方式
 - 非消耗型・買い切りPremium
+- 日本向け価格: `800円`（標準手順 v2.4）
 - 無料: 30問。第1回の10分野から各3問ずつを均等に公開
 - Premium: 残り300問＋模試機能
 - 無料版でも通常スプリント・分野別学習・苦手復習の中心体験を確認できる
 - 無料科目別学習は利用可能3問で終了し、目標8問へ同一問題を反復補充しない
-- App Store上の価格は本審査前の人間確認地点 #4 で確定
+- App Store Connectの商品価格とStoreKit `Product.displayPrice`の一致をTestFlightで確認する
 
 ## AppIcon正本
 Google Drive個別PNG `13_保健師国家試験.png` を正本として特定・取得済み。
@@ -98,6 +106,7 @@ CI運用はfeature branch `push`＋`workflow_dispatch`へ一本化し、同一co
 - Export Compliance: `ITSAppUsesNonExemptEncryption=false` をiOS targetへ設定済み
 - Age Rating: 国家試験教材で疾患等を扱うため、Medical or Treatment InformationをNoneとせずInfrequentで回答する正本を準備済み
 - IAPローカライズ名・説明・Review Notesを正本化済み
+- IAP日本向け価格800円を正本化済み
 
 ## 現在の外部ブロッカー
 Apple Developer / App Store Connectへのユーザー認証を伴う操作が必要。
@@ -107,7 +116,7 @@ Apple Developer / App Store Connectへのユーザー認証を伴う操作が必
 
 固定入力値は `release/APP_STORE_RECORD_VALUES.md` と `release/APP_STORE_SUBMISSION_ANSWERS_JA.md` に記録済み。
 
-Appレコード作成後は、実App IDを正本へ記録→非消耗型IAP作成→正本AppIcon搬送→Codemagic署名→signed IPA→Internal TestFlightへ進む。
+Appレコード作成後は、実App IDを正本へ記録→800円の非消耗型IAP作成→正本AppIcon搬送→Codemagic署名→signed IPA→Internal TestFlightへ進む。
 
 ## 人間確認地点
 次の製品判断の人間確認地点は #3「Internal TestFlight実機確認」。ただしその前段として、Appleログイン/MFAを伴う新規Appレコード作成はユーザー操作が必要。
