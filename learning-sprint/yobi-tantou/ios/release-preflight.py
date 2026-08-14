@@ -3,12 +3,15 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 LOCK = HERE / "app-icon-lock.json"
 RELEASE_BANK = HERE / "Resources" / "questions.release.json"
+MOCK_AUDIT = HERE.parent / "content-loop" / "audit_practice_mock_readiness.py"
 
 REQUIRED_ENV = (
     "YOBI_BUNDLE_ID",
@@ -65,6 +68,29 @@ def validate_release_bank(path: Path = RELEASE_BANK) -> int:
     return len(data)
 
 
+def validate_three_mock_completion() -> None:
+    if not MOCK_AUDIT.exists():
+        raise PreflightError("3回分完成監査スクリプトがない")
+    with tempfile.TemporaryDirectory() as tmp:
+        report = Path(tmp) / "practice-mock-readiness.json"
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(MOCK_AUDIT),
+                "--require-complete",
+                "--report",
+                str(report),
+            ],
+            cwd=str(HERE.parent.parent.parent),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            detail = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else "completion gate failed"
+            raise PreflightError(f"独自模試3回分が未完成: {detail}")
+
+
 def self_test() -> int:
     good = {
         "YOBI_BUNDLE_ID": "jp.example.userchosen.yobi",
@@ -89,7 +115,7 @@ def self_test() -> int:
             raise AssertionError(f"unsafe env accepted: {case}")
 
     validate_icon_lock()
-    print("SELFTEST PASS: production IDs must be explicit; CI/placeholder IDs rejected; AppIcon lock valid")
+    print("SELFTEST PASS: production IDs must be explicit; CI/placeholder IDs rejected; AppIcon lock valid; normal preflight also requires three complete mocks")
     return 0
 
 
@@ -106,6 +132,7 @@ def main() -> int:
         values = validate_environment(dict(os.environ))
         lock = validate_icon_lock()
         count = validate_release_bank(args.release_bank)
+        validate_three_mock_completion()
     except PreflightError as error:
         print(f"BLOCKED: {error}")
         return 2
@@ -115,6 +142,7 @@ def main() -> int:
     print(f"- App Store Connect App ID: {values['YOBI_APP_STORE_CONNECT_APP_ID']}")
     print(f"- IAP Product ID: {values['YOBI_IAP_PRODUCT_ID']}")
     print(f"- Release questions: {count}")
+    print("- Three original practice mocks: complete")
     print(f"- Canonical AppIcon SHA-256: {lock['sha256']}")
     return 0
 
