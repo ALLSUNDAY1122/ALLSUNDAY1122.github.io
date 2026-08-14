@@ -11,35 +11,42 @@ struct CapturedView: Codable, Identifiable {
     let id: Int
     let filePath: String
     let transformMatrix: [[Float]]
-}
-
-struct NerfstudioDataset: Codable {
-    let cameraModel: String
     let flX: Float
     let flY: Float
     let cx: Float
     let cy: Float
     let w: Int
     let h: Int
+}
+
+struct NerfstudioDataset: Codable {
+    let cameraModel: String
     let plyFilePath: String
     let frames: [NerfstudioFrame]
 
     enum CodingKeys: String, CodingKey {
         case cameraModel = "camera_model"
-        case flX = "fl_x"
-        case flY = "fl_y"
-        case cx, cy, w, h, frames
         case plyFilePath = "ply_file_path"
+        case frames
     }
 }
 
 struct NerfstudioFrame: Codable {
     let filePath: String
     let transformMatrix: [[Float]]
+    let flX: Float
+    let flY: Float
+    let cx: Float
+    let cy: Float
+    let w: Int
+    let h: Int
 
     enum CodingKeys: String, CodingKey {
         case filePath = "file_path"
         case transformMatrix = "transform_matrix"
+        case flX = "fl_x"
+        case flY = "fl_y"
+        case cx, cy, w, h
     }
 }
 
@@ -70,8 +77,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private var imagesURL: URL?
     private var captured: [CapturedView] = []
     private var featurePoints: [UInt64: SIMD3<Float>] = [:]
-    private var firstIntrinsics: simd_float3x3?
-    private var firstResolution: CGSize?
     private var lastAcceptedTransform: simd_float4x4?
     private var lastAcceptedTimestamp: TimeInterval = 0
     private let ciContext = CIContext(options: [.cacheIntermediates: false])
@@ -113,8 +118,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         featurePoints.removeAll(keepingCapacity: true)
         acceptedFrames = 0
         featurePointCount = 0
-        firstIntrinsics = nil
-        firstResolution = nil
         lastAcceptedTransform = nil
         lastAcceptedTimestamp = 0
         resultURL = nil
@@ -177,6 +180,13 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         Task.detached(priority: .userInitiated) { [weak self] in
             autoreleasepool {
                 let dataset = GaussianDataset(path: path, downscaleFactor: 4.0, evalMode: false)
+                guard dataset.numTrain >= 3 else {
+                    Task { @MainActor [weak self] in
+                        self?.failTraining("学習に必要な撮影画像を読み込めませんでした")
+                    }
+                    return
+                }
+
                 var config = TrainingConfig()
                 config.iterations = Int32(iterations)
                 config.shDegree = 2
@@ -204,8 +214,22 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     }
                 }
 
+                // Make the final GPU writes visible before serializing the model.
+                msplatSync()
                 let output = projectURL.appendingPathComponent("result.splat")
                 trainer.exportSplat(to: output.path)
+                msplatSync()
+
+                guard let attributes = try? FileManager.default.attributesOfItem(atPath: output.path),
+                      let sizeNumber = attributes[.size] as? NSNumber,
+                      sizeNumber.intValue > 0,
+                      sizeNumber.intValue % 32 == 0 else {
+                    Task { @MainActor [weak self] in
+                        self?.failTraining("生成した3Dデータの書き出し検証に失敗しました")
+                    }
+                    return
+                }
+
                 let rendered = trainer.render(cameraIndex: 0)
                 let preview = Self.makeImage(from: rendered)
                 Task { @MainActor [weak self] in
@@ -218,6 +242,12 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 }
             }
         }
+    }
+
+    private func failTraining(_ message: String) {
+        phase = .failed(message)
+        trackingMessage = message
+        UIApplication.shared.isIdleTimerDisabled = false
     }
 
     nonisolated func session(_ session: ARSession, didUpdate frame: ARFrame) {
@@ -247,14 +277,14 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             return
         }
 
-        firstIntrinsics = firstIntrinsics ?? frame.camera.intrinsics
-        firstResolution = firstResolution ?? frame.camera.imageResolution
         absorbFeaturePoints(frame.rawFeaturePoints)
 
         isWritingFrame = true
         let index = acceptedFrames
         let matrixRows = Self.rows(frame.camera.transform)
         let transform = frame.camera.transform
+        let intrinsics = frame.camera.intrinsics
+        let resolution = frame.camera.imageResolution
         let timestamp = frame.timestamp
         let imagesURL = imagesURL
 
@@ -273,7 +303,17 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 guard let self else { return }
                 self.isWritingFrame = false
                 guard success, self.phase == .capturing else { return }
-                self.captured.append(CapturedView(id: index, filePath: "images/\(fileName)", transformMatrix: matrixRows))
+                self.captured.append(CapturedView(
+                    id: index,
+                    filePath: "images/\(fileName)",
+                    transformMatrix: matrixRows,
+                    flX: intrinsics[0, 0],
+                    flY: intrinsics[1, 1],
+                    cx: intrinsics[2, 0],
+                    cy: intrinsics[2, 1],
+                    w: Int(resolution.width),
+                    h: Int(resolution.height)
+                ))
                 self.acceptedFrames = self.captured.count
                 self.lastAcceptedTransform = transform
                 self.lastAcceptedTimestamp = timestamp
@@ -316,15 +356,22 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     private func writeTransformsJSON() throws {
-        guard let projectURL, let intrinsics = firstIntrinsics, let resolution = firstResolution else {
-            throw dataError("カメラ情報が不足しています")
+        guard let projectURL else { throw dataError("保存先がありません") }
+        guard !captured.isEmpty else { throw dataError("撮影画像がありません") }
+        let frames = captured.map {
+            NerfstudioFrame(
+                filePath: $0.filePath,
+                transformMatrix: $0.transformMatrix,
+                flX: $0.flX,
+                flY: $0.flY,
+                cx: $0.cx,
+                cy: $0.cy,
+                w: $0.w,
+                h: $0.h
+            )
         }
-        let frames = captured.map { NerfstudioFrame(filePath: $0.filePath, transformMatrix: $0.transformMatrix) }
         let dataset = NerfstudioDataset(
             cameraModel: "OPENCV",
-            flX: intrinsics[0,0], flY: intrinsics[1,1],
-            cx: intrinsics[2,0], cy: intrinsics[2,1],
-            w: Int(resolution.width), h: Int(resolution.height),
             plyFilePath: "points3D.ply",
             frames: frames
         )

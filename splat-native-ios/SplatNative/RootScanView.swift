@@ -75,7 +75,7 @@ struct RootScanView: View {
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
             VStack(alignment: .leading, spacing: 8) {
-                Label("写真・3Dデータは端末外へ送信しません", systemImage: "lock.iphone")
+                Label("写真・3Dデータを開発者サーバーへ自動送信しません", systemImage: "lock.iphone")
                 Label("LiDARなしでも撮影できます", systemImage: "viewfinder")
                 Label("生成後は指で回して見返せます", systemImage: "rotate.3d")
             }

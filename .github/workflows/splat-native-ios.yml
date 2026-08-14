@@ -42,9 +42,19 @@ jobs:
           grep -q 'MetalSplatter-MIT.txt' SplatNative.xcodeproj/project.pbxproj
           grep -q 'nanoflann-BSD.txt' SplatNative.xcodeproj/project.pbxproj
           grep -q 'nlohmann-json-MIT.txt' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MsplatRuntimeSmokeTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
+      - name: Build msplat smoke-test bundle for iOS Simulator
+        timeout-minutes: 8
+        working-directory: splat-native-ios
+        run: |
+          set -euo pipefail
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -parallel-testing-enabled NO \
+            CODE_SIGNING_ALLOWED=NO build-for-testing
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true
