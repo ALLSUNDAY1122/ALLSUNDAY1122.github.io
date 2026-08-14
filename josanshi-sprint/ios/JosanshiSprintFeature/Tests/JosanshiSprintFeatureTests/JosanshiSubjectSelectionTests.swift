@@ -76,6 +76,21 @@ final class JosanshiSubjectSelectionTests: XCTestCase {
         XCTAssertEqual(coordinator.recentSessions.count, 1)
     }
 
+    func testResultRestartUsesExactlyTheCompletedQuestionSet() throws {
+        let coordinator = JosanshiLearningCoordinator(questions: makeQuestions(), loadPersistedState: false)
+        coordinator.setDailyTarget(4)
+        coordinator.setShuffleQuestions(false)
+        let completed = try coordinator.startSubject(JosanshiExamConfiguration.subjects[0])
+        for _ in completed.questionIDs {
+            _ = try coordinator.submit(AnswerPayload(selectedIndices: [0]))
+        }
+
+        let restarted = try coordinator.restartLastCompletedSession()
+
+        XCTAssertEqual(restarted.questionIDs, completed.questionIDs)
+        XCTAssertEqual(restarted.kind, completed.kind)
+    }
+
     func testResetClearsHistoryButKeepsGoldenMasterPreferences() throws {
         let coordinator = JosanshiLearningCoordinator(questions: makeQuestions(), loadPersistedState: false)
         coordinator.setDailyTarget(4)
