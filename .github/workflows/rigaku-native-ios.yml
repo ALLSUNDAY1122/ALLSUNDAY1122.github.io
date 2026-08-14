@@ -23,6 +23,9 @@ jobs:
       - name: Static native audit
         run: python3 rigaku-sprint/ios/static_audit.py
 
+      - name: Privacy manifest and Required Reason API audit
+        run: python3 rigaku-sprint/ios/privacy_audit.py
+
       - name: Official 600-slot and scoring audit
         run: python3 rigaku-sprint/product-content/validate_exam_structure.py
 
