@@ -1,0 +1,89 @@
+name: Yobi Standard Practice Pipeline
+
+on:
+  pull_request:
+    paths:
+      - 'learning-sprint/yobi-tantou/content-loop/questions.standard.candidates.v1.json'
+      - 'learning-sprint/yobi-tantou/content-loop/standard-source-locks.v1.json'
+      - 'learning-sprint/yobi-tantou/content-loop/standard-answer-audit.v1.json'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py'
+      - 'learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py'
+      - 'learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py'
+      - 'learning-sprint/yobi-tantou/content-loop/promote_practice_release.py'
+      - '.github/workflows/yobi-standard-practice-pipeline.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: yobi-standard-practice-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  build-standard-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Standard candidate preflight
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/validate_candidates.py
+          learning-sprint/yobi-tantou/content-loop/questions.standard.candidates.v1.json
+      - name: Standard exact-date statutory source audit
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
+          --bank learning-sprint/yobi-tantou/content-loop/questions.standard.candidates.v1.json
+          --locks learning-sprint/yobi-tantou/content-loop/standard-source-locks.v1.json
+      - name: Standard answer and explanation audit
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
+          --bank learning-sprint/yobi-tantou/content-loop/questions.standard.candidates.v1.json
+          --audit learning-sprint/yobi-tantou/content-loop/standard-answer-audit.v1.json
+          --locks learning-sprint/yobi-tantou/content-loop/standard-source-locks.v1.json
+      - name: Build non-release standard staging
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py
+          --candidates learning-sprint/yobi-tantou/content-loop/questions.standard.candidates.v1.json
+          --locks learning-sprint/yobi-tantou/content-loop/standard-source-locks.v1.json
+          --answers learning-sprint/yobi-tantou/content-loop/standard-answer-audit.v1.json
+          --output learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json
+      - name: Standard editorial quality release audit
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py
+          --input learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json
+          --report learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json
+          --require-pass
+      - name: Promote standard practice only after clean PASS
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/promote_practice_release.py
+          --staging learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json
+          --quality learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json
+          --output learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json
+      - name: Verify standard release invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('learning-sprint/yobi-tantou/content-loop')
+          staging = json.loads((root / 'practice-standard-staging.v1.json').read_text())
+          quality = json.loads((root / 'practice-standard-quality-audit.v1.json').read_text())
+          release = json.loads((root / 'questions.standard.release.v1.json').read_text())
+          assert len(staging) == len(release) == 14
+          assert quality['overallVerdict'] == 'PASS'
+          assert quality['summary'] == {'total': 14, 'pass': 14, 'hold': 0, 'nearDuplicatePairs': 0}
+          assert all(q['difficulty'] == 'standard' for q in release)
+          assert all(q['content_use'] == 'practice' and q['release_eligible'] is True for q in release)
+          assert all(q.get('exam_year') is None for q in release)
+          assert len({q['id'] for q in release}) == 14
+          assert len({q['subject'] for q in release}) == 7
+          print('PASS: 14 standard practice items promoted; 7 subjects; no official exam year')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: yobi-standard-practice-release
+          path: |
+            learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json
+            learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json
+            learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json
+          if-no-files-found: error
