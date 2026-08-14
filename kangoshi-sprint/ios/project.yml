@@ -43,4 +43,18 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
     scheme:
-      testTargets: []
+      testTargets:
+        - KangoshiSprintUITests
+
+  KangoshiSprintUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: UITests
+    dependencies:
+      - target: KangoshiSprint
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.kangoshi.uitests
+        TEST_TARGET_NAME: KangoshiSprint
