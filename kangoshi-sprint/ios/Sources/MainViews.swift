@@ -35,7 +35,7 @@ struct HomeView: View {
                     PageHeader(eyebrow:"学びスプリント",title:"看護師国家試験",tagline:"今日も1問、力に変える。")
                     todayCard
                     Button { model.startDaily(isPremium:purchase.isPremium) } label: {
-                        HStack { VStack(alignment:.leading,spacing:3) { Text("今日のスプリント").font(.headline); Text("\(model.learning.goal)問・短く集中").font(.caption).opacity(.85) }; Spacer(); Image(systemName:"arrow.right") }
+                        HStack { VStack(alignment:.leading,spacing:3) { Text("今日のスプリント").font(.headline); Text("\(model.learning.goal)問・短く集中").font(.caption).opacity(0.85) }; Spacer(); Image(systemName:"arrow.right") }
                             .foregroundStyle(.white).padding(17).background(KSTheme.ai).clipShape(RoundedRectangle(cornerRadius:16))
                     }.padding(.horizontal,18)
 
@@ -99,27 +99,7 @@ struct HomeView: View {
     private func stat(_ value:String,_ label:String)->some View { VStack(spacing:3){Text(value).font(.title3.bold()).foregroundStyle(KSTheme.ai);Text(label).font(.caption2).foregroundStyle(KSTheme.tertiary)}.frame(maxWidth:.infinity).padding(.vertical,13).background(KSTheme.card).overlay(RoundedRectangle(cornerRadius:12).stroke(KSTheme.line)).clipShape(RoundedRectangle(cornerRadius:12)) }
 }
 
-struct MockView: View {
-    @EnvironmentObject var model: KangoshiAppModel
-    @EnvironmentObject var purchase: PurchaseController
-    @Binding var showPaywall: Bool
-    var body: some View {
-        NavigationStack { ScrollView { VStack(spacing:16) {
-            PageHeader(eyebrow:"模擬試験",title:"本番形式",tagline:"第115・114・113回を、必修・一般・状況設定ごとに解けます。")
-            if !purchase.isPremium { KSCard(content:VStack(alignment:.leading,spacing:9){HStack{PremiumBadge();Text("本番形式はプレミアム").font(.headline)};Text("3試験回×240問の公式構成と特殊採点ルールを反映します。").font(.caption).foregroundStyle(KSTheme.secondary);Button("プレミアムを見る"){showPaywall=true}.buttonStyle(.borderedProminent).tint(KSTheme.ai)}).padding(.horizontal,18) }
-            ForEach([115,114,113],id:\.self) { exam in
-                VStack(alignment:.leading,spacing:9) { HStack { Text("第\(exam)回").font(.headline); Spacer(); Text("240問").font(.caption).foregroundStyle(KSTheme.tertiary) }
-                    ForEach([("必修",50),("一般",130),("状況設定",60)],id:\.0) { c,n in
-                        Button { if purchase.isPremium { model.startMock(exam:exam,category:c) } else { showPaywall=true } } label: {
-                            HStack { Text(c).font(.subheadline.bold()); Spacer(); Text("\(n)問").font(.caption).foregroundStyle(KSTheme.tertiary); Image(systemName:purchase.isPremium ? "chevron.right" : "lock.fill").foregroundStyle(KSTheme.ai) }
-                                .padding(14).background(KSTheme.card).overlay(RoundedRectangle(cornerRadius:12).stroke(KSTheme.line)).clipShape(RoundedRectangle(cornerRadius:12))
-                        }.buttonStyle(.plain)
-                    }
-                }.padding(.horizontal,18)
-            }
-        }.padding(.bottom,24) }.background(KSTheme.paper.ignoresSafeArea()).toolbar(.hidden,for:.navigationBar) }
-    }
-}
+struct LegacyMockView: View { var body: some View { EmptyView() } }
 
 struct HistoryView: View {
     @EnvironmentObject var model: KangoshiAppModel

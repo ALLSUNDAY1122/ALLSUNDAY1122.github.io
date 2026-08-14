@@ -45,5 +45,5 @@ struct PageHeader: View {
 }
 
 struct PremiumBadge: View {
-    var body: some View { Text("PREMIUM").font(.system(size:9,weight:.heavy)).tracking(1).padding(.horizontal,7).padding(.vertical,4).background(KSTheme.gold.opacity(.14)).foregroundStyle(KSTheme.gold).clipShape(Capsule()) }
+    var body: some View { Text("PREMIUM").font(.system(size:9,weight:.heavy)).tracking(1).padding(.horizontal,7).padding(.vertical,4).background(KSTheme.gold.opacity(0.14)).foregroundStyle(KSTheme.gold).clipShape(Capsule()) }
 }
