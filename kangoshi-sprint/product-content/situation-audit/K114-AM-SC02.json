@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC02",
+  "sourceExam": 114,
+  "session": "AM",
+  "questionIds": ["K114-AM094", "K114-AM095", "K114-AM096"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "56歳女性、主婦。食後の冷汗を伴う腹痛で受診し胆石症と診断、腹腔鏡下胆嚢摘出術目的で入院。同手術を受けた妹が胆汁瘻を想定させる合併症で3週間以上食事できなかった経験から不安を抱く。",
+  "mainCondition": "腹腔鏡下胆嚢摘出術の術後合併症理解、CO2気腹中の生理変化、胆嚢摘出後下痢への食事支援。",
+  "assessment": [
+    "AM094では腹腔鏡下胆嚢摘出術に特有性が高く治療長期化につながる胆汁漏・胆汁瘻を判断する。",
+    "AM095ではCO2気腹に伴う腹膜からの二酸化炭素吸収とPaCO2上昇を判断する。",
+    "AM096では術後下痢を訴える患者に対し、一律の恒久的脂質制限ではなく症状に応じて高脂肪食を控える支援として解釈する。"
+  ],
+  "nursingJudgment": "3問は『術前の合併症不安→術中の気腹管理→退院後の消化器症状』として周術期から生活回復まで連結する。妹はAさんの不安形成に関わる家族歴であり、患者本人との取り違えはない。",
+  "nursingPractice": [
+    "胆汁漏など術式特有の合併症を観察し、不安へ具体的な情報を提供する。",
+    "気腹中は換気・EtCO2・必要時血液ガスなどを通じ高二酸化炭素血症に注意する。",
+    "術後下痢では食事と症状の関係を確認し、脂質量を含め個別に調整する。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "textCorrectionAudit": {"required": true, "overlay": "situation-audit/text-corrections.json", "officialPdfVerified": true, "officialPages": [30, 31], "correctedFacts": ["術後入院期間=2日", "妹の食事不能期間=3週間以上"], "applyState": "pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent": true, "majorSubject": "成人看護学", "status": "pass"},
+  "explanationAudit": {"batchId": "K114-AM094-AM096-situation-SC02", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "note", "questionId": "K114-AM096", "reason": "脂質制限は胆嚢摘出後の全患者へ恒久的に推奨するものではない。公式正答は維持し、術後下痢を訴える本症例で高脂肪食を控えるという限定で解説する。", "evidenceRefs": ["https://pubmed.ncbi.nlm.nih.gov/24647139/", "https://pubmed.ncbi.nlm.nih.gov/31623819/"]},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_text_correction_pending_canonical",
+  "auditedAt": "2026-08-14T15:40:00+09:00"
+}
