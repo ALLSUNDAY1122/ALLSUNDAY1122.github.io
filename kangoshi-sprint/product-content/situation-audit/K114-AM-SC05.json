@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC05",
+  "sourceExam": 114,
+  "session": "AM",
+  "questionIds": ["K114-AM103", "K114-AM104", "K114-AM105"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "76歳男性、72歳の妻と2人暮らし。右上下肢のしびれ・脱力で救急搬送され、左中大脳動脈領域の脳梗塞と診断、血栓溶解療法を受けた。既往に高血圧症。右上下肢麻痺が残る。",
+  "mainCondition": "脳梗塞急性期の安全な離床、片麻痺患者の食事時座位・自立支援、回復期ADLの障害高齢者自立度評価。",
+  "assessment": [
+    "AM103では血栓溶解療法後の入院2日に離床開始となるため、循環動態と脳血管安全性に直結する血圧を優先して観察する。",
+    "AM104では入院5日、右片麻痺に伴う体幹右傾斜を環境調整で補い、軽い前傾姿勢を作って食事自立を支える。",
+    "AM105では入院2週、介助で車椅子へ移乗しベッド外で食事・排泄できる状態を障害高齢者の日常生活自立度ランクBと評価する。"
+  ],
+  "nursingJudgment": "3問は『急性期離床の安全管理→食事時の姿勢・自立支援→回復期ADL評価』として同一脳梗塞患者の回復過程を追う。妻は同居家族で患者ではなく、家族欄誤認はない。",
+  "nursingPractice": [
+    "離床前後の血圧・神経所見を確認し、急激な循環変動や症状悪化を避ける。",
+    "麻痺と体幹機能に合わせて支持物・座位姿勢を調整し、可能な食事動作は本人が行えるようにする。",
+    "実際の移乗・座位・食事・排泄状態からADLを評価し、看護計画と回復期リハビリへ反映する。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "canonicalPatch": {"path": "situation-audit/canonical-patches/K114-AM-SC05.json", "textCorrectionRequired": true, "classificationCorrectionRequired": true, "applyState": "pending_canonical_integration"},
+  "classificationAudit": {
+    "scenarioContextConsistentAfterPatch": true,
+    "correctionRequiredIds": ["K114-AM103", "K114-AM104", "K114-AM105"],
+    "reason": "raw分類は高血圧・車椅子等の局所語を優先。症例本文と各設問の臨床判断から、脳神経急性期、脳神経リハビリ、高齢者ADL評価へ修正する。",
+    "status": "content_pass_patch_pending"
+  },
+  "explanationAudit": {"batchId": "K114-AM103-AM105-situation-SC05", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "none", "questionId": null, "reason": null, "evidenceRefs": []},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_canonical_patch_pending",
+  "auditedAt": "2026-08-14T14:55:00+09:00"
+}
