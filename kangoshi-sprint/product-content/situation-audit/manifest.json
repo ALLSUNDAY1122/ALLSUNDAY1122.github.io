@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "scope": {
     "qualification": "看護師国家試験",
     "sourceExams": [115, 114, 113],
@@ -9,14 +9,16 @@
     "questionsPerScenario": 3
   },
   "stateModel": {
-    "sourceOfTruth": "classified/situation-group-summary.json + explanation-batches/*.json with scenarioId",
+    "progressSourceOfTruth": "kangoshi-sprint/product-content/situation-audit/report.json",
+    "canonicalGateSourceOfTruth": "kangoshi-sprint/product-content/questions/situation-canonical-gate.json",
+    "canonicalIntegritySourceOfTruth": "kangoshi-sprint/product-content/questions/situation-canonical-integrity-audit.json",
+    "expertQueueSourceOfTruth": "kangoshi-sprint/product-content/situation-audit/expert-review-queue.json",
+    "mediaAuditSourceOfTruth": "kangoshi-sprint/product-content/situation-audit/media-audit.json",
     "progressDerivation": "artifact-driven",
-    "validator": "kangoshi-sprint/product-content/situation-audit/validate_situation_audit.py",
+    "manualCountersAuthoritative": false,
     "manualCursorAuthoritative": false,
     "expertReviewIsContentAuthoringBlocker": false,
-    "expertReviewIsGlobalReleaseBlocker": false,
     "affectedQuestionQuarantineOnly": true,
-    "canonicalAuditRequiredAfterAll60ContentComplete": true,
     "noProgressPolicy": "standard-procedure-v2.5 / NO_PROGRESS-v2.0"
   },
   "auditPolicy": {
@@ -31,9 +33,9 @@
     "requireClinicalConsistencyAcrossTriplet": true,
     "requireExplanationEvidenceForAllThree": true,
     "requireEvidenceCheckedDateForAllThree": true,
-    "separateMediaScoringConcernExpertQueues": true,
     "rawDataIsNotTrustedWithoutScenarioAudit": true,
-    "scenarioAuditMayRecombineSplitBatchStorage": true
+    "scenarioAuditMayRecombineSplitBatchStorage": true,
+    "canonicalRebuildAndReauditRequired": true
   },
   "protectedAreas": [
     "必修問題",
@@ -42,53 +44,34 @@
     "模試エンジン",
     "StoreKit"
   ],
-  "artifactSnapshot": {
-    "checkedAt": "2026-08-14T18:37:00+09:00",
-    "scenarioBatchCoverage": 52,
-    "questionBatchCoverage": 156,
-    "pendingScenarioCount": 8,
-    "pendingQuestionCount": 24,
-    "pendingScenarioIds": [
-      "K113-PM-SC03",
-      "K113-PM-SC04",
-      "K113-PM-SC05",
-      "K113-PM-SC06",
-      "K113-PM-SC07",
-      "K113-PM-SC08",
-      "K113-PM-SC09",
-      "K113-PM-SC10"
-    ],
-    "nextScenarioId": "K113-PM-SC03",
-    "nextQuestionIds": ["K113-PM097", "K113-PM098", "K113-PM099"],
-    "note": "This snapshot is a recovery checkpoint from directory inventory. Future progress must be recomputed by validate_situation_audit.py rather than incrementing this block manually."
-  },
-  "parallelReleaseQuarantine": {
-    "blockingContentAuthoring": false,
-    "questionIds": ["K115-AM103", "K115-AM114"],
-    "policy": "Keep the official answer and authored content, but do not release the affected question until its specialist concern is resolved. Do not stop unrelated scenario authoring or canonicalization."
-  },
   "completionModel": {
-    "contentAuthoringPass": "all 60 scenarios have exactly the expected 3 question IDs and all 3 have point/detail/explanationEvidenceRefs/evidenceCheckedDate with no conflicting duplicate content",
-    "canonicalPass": "contentAuthoringPass + integrated canonical JSON regenerated + final canonical validator PASS",
-    "releasePass": "canonicalPass + affected media/scoring/content/expert quarantines resolved or explicitly excluded from release",
+    "contentAuthoringPass": "derive only from situation-audit/report.json",
+    "canonicalPass": "derive only from questions/situation-canonical-gate.json and situation-canonical-integrity-audit.json",
+    "releasePass": "canonicalPass plus no unresolved affected-question quarantine",
     "deprecatedHardGates": [
       "expertReviewedScenarios == 60",
       "finalPassScenarios manually incremented in chat",
-      "manual cursor completion"
+      "manual cursor completion",
+      "artifactSnapshot counters in this manifest"
     ]
+  },
+  "automation": {
+    "authoringAuditValidator": "kangoshi-sprint/product-content/situation-audit/validate_situation_audit.py",
+    "authoringAuditWorkflow": ".github/workflows/kangoshi-situation-audit.yml",
+    "canonicalBuilder": "kangoshi-sprint/product-content/build_situation_canonical.py",
+    "canonicalValidator": "kangoshi-sprint/product-content/validate_situation_canonical.py",
+    "canonicalWorkflow": ".github/workflows/kangoshi-situation-canonical.yml"
   },
   "knownHistoricalFailureModes": [
     "next scenario stem leaking into previous question choices during PDF extraction",
     "family member wording such as 男児 being misread as the patient identity during classification"
   ],
   "recoveryRecord": {
-    "objective": "Complete 180 situation-setting questions as 60 three-question scenario units without requiring repeated user prompts.",
     "oldMethodFamily": "manual chat cursor + manually maintained progress counters",
-    "failureEvidence": "manifest remained at 10/60 and K115-PM-SC01 while GitHub artifacts had already reached 52/60 and K113-PM-SC02; expertReviewedScenarios/finalPassScenarios were fixed at zero and could never converge through authoring alone.",
-    "preservedValidWork": "all existing scenario explanation batches and existing per-question release quarantines",
-    "newMethodFamily": "artifact-driven scenario inventory + deterministic validator + quarantine-only release blockers",
-    "resumeFrom": "K113-PM-SC03"
+    "failureEvidence": "manual snapshot became stale and blocked forward progress despite completed GitHub artifacts",
+    "newMethodFamily": "artifact-driven inventory + deterministic canonical rebuild + affected-question quarantine",
+    "manualProgressSnapshotRemoved": true
   },
-  "status": "in_progress_artifact_driven_deadlock_removed",
-  "updatedAt": "2026-08-14T18:37:00+09:00"
+  "status": "derive_runtime_status_from_authoritative_reports",
+  "updatedAt": "2026-08-14"
 }
