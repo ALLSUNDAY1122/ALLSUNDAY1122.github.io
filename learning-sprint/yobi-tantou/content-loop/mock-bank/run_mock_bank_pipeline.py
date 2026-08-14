@@ -90,9 +90,9 @@ def paths_for(base: str) -> dict[str, Path]:
         "distractors": HERE / f"{base}-distractors.json",
         "editorial": HERE / f"{base}-editorial-overrides.json",
         "canonical": HERE / f"{base}.release.json",
+        "effective": GENERATED / f"{base}.effective-candidates.json",
         "staging": GENERATED / f"{base}.staging.json",
         "enriched": GENERATED / f"{base}.enriched-staging.json",
-        "edited": GENERATED / f"{base}.edited-staging.json",
         "quality": GENERATED / f"{base}.quality.json",
         "release": GENERATED / f"{base}.release.json",
     }
@@ -141,20 +141,34 @@ def process_batch(base: str, persist: bool) -> bool:
     if not ensure_complete_source_set(base, p):
         return False
 
-    candidates = load(p["candidate"])
+    GENERATED.mkdir(parents=True, exist_ok=True)
+    py = sys.executable
+    candidate_input = p["candidate"]
+    if p["editorial"].exists():
+        run(
+            py,
+            HERE / "apply_editorial_overrides.py",
+            "--input",
+            p["candidate"],
+            "--overrides",
+            p["editorial"],
+            "--output",
+            p["effective"],
+        )
+        candidate_input = p["effective"]
+
+    candidates = load(candidate_input)
     if not isinstance(candidates, list) or not candidates:
         raise ValueError(f"{base}: candidates must be a non-empty JSON array")
     validate_mock_assignment(base, candidates)
-    GENERATED.mkdir(parents=True, exist_ok=True)
 
-    py = sys.executable
-    run(py, CONTENT / "validate_candidates.py", p["candidate"])
-    run(py, CONTENT / "audit_candidate_sources.py", "--bank", p["candidate"], "--locks", p["locks"])
+    run(py, CONTENT / "validate_candidates.py", candidate_input)
+    run(py, CONTENT / "audit_candidate_sources.py", "--bank", candidate_input, "--locks", p["locks"])
     run(
         py,
         CONTENT / "audit_candidate_answers.py",
         "--bank",
-        p["candidate"],
+        candidate_input,
         "--audit",
         p["answers"],
         "--locks",
@@ -164,7 +178,7 @@ def process_batch(base: str, persist: bool) -> bool:
         py,
         CONTENT / "stage_practice_release_candidates.py",
         "--candidates",
-        p["candidate"],
+        candidate_input,
         "--locks",
         p["locks"],
         "--answers",
@@ -183,20 +197,6 @@ def process_batch(base: str, persist: bool) -> bool:
         p["enriched"],
     )
 
-    final_staging = p["enriched"]
-    if p["editorial"].exists():
-        run(
-            py,
-            HERE / "apply_editorial_overrides.py",
-            "--input",
-            p["enriched"],
-            "--overrides",
-            p["editorial"],
-            "--output",
-            p["edited"],
-        )
-        final_staging = p["edited"]
-
     uniqueness_base = build_uniqueness_base(base)
     try:
         run(
@@ -205,7 +205,7 @@ def process_batch(base: str, persist: bool) -> bool:
             "--base",
             uniqueness_base,
             "--expansion",
-            final_staging,
+            p["enriched"],
         )
     finally:
         uniqueness_base.unlink(missing_ok=True)
@@ -214,7 +214,7 @@ def process_batch(base: str, persist: bool) -> bool:
         py,
         CONTENT / "audit_practice_release_quality.py",
         "--input",
-        final_staging,
+        p["enriched"],
         "--report",
         p["quality"],
         "--require-pass",
@@ -223,7 +223,7 @@ def process_batch(base: str, persist: bool) -> bool:
         py,
         CONTENT / "promote_practice_release.py",
         "--staging",
-        final_staging,
+        p["enriched"],
         "--quality",
         p["quality"],
         "--output",
