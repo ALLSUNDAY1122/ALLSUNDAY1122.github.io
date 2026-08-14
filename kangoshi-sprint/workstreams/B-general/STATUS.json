@@ -1,15 +1,15 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "workstream": "B-general",
   "scope": {"category":"一般","sourceExams":[115,114,113],"targetCount":390,"countPerExam":130},
   "sourceOfTruth": "GitHub main",
-  "checkedAt": "2026-08-14T16:34:00+09:00",
-  "status": "WORKER_REMEDIATION_PASS_COORDINATOR_CANONICAL_REBUILD_PENDING",
+  "checkedAt": "2026-08-14T18:31:00+09:00",
+  "status": "WORKER_REMEDIATION_PASS_STATIC_CANONICAL_PROOF_PASS_COORDINATOR_RUN_PENDING",
   "standardRecheck": {
     "title": "AIアプリ開発・公開フロー v2.5",
     "rechecked": true,
     "noProgressManual": "NO_PROGRESS｜処理停滞・自己復旧ループ v2.0",
-    "impact": "進展は完了条件への接近で判定する。canonical生成という実変更を検知してB-general再監査を再発火し、同じ状態確認の反復は行わなかった。"
+    "impact": "進展は完了条件への接近で判定する。B worker remediation後に同じ状態確認を繰り返さず、canonical builderの実装とSPECIAL監査を静的照合して再生成時の取込可否を検証した。"
   },
   "canonicalSnapshotBeforeWorkerRemediation": {
     "canonicalBuilt": true,
@@ -42,12 +42,29 @@
     "sourceDataDefectsResolvedNormal": 5,
     "status": "PASS_FOR_COORDINATOR_REBUILD"
   },
+  "staticCanonicalIngestionProof": {
+    "status": "PASS",
+    "builder": "kangoshi-sprint/product-content/build_general_canonical.py",
+    "builderBehaviorVerified": [
+      "K113-SPECIAL-AUDIT.json is loaded for exam 113 and matched strictly by question ID",
+      "when canonical draft point/detail/explanationEvidenceRefs are empty, overlay_special fills them from SPECIAL audit point/detail/evidenceRefs",
+      "sourceDataDefects are removed from active quarantine when sourceCorrectionStatus=official_pdf_verified while historical audit records remain",
+      "mediaDependent records remain quarantined while their explanation and evidence fields are still overlaid"
+    ],
+    "specialAuditCurrentState": {"activeNormal":119,"activeQuarantined":11,"contentConcerns":3,"mediaDependent":8,"sourceDataDefectHistorical":5,"sourceDataDefectResolved":5,"officialAnswerChanged":0},
+    "priorCanonicalOnlyBlockingCause": "第113回13問のpoint/detailまたはexplanationEvidenceRefs欠損。duplicateIds=0、officialAnswerMismatch=0、officialScoringMismatch=0で、それ以外のcanonical integrity errorは記録されていない。",
+    "expectedAfterCoordinatorRebuild": {"exam113MissingExplanation":0,"exam113MissingEvidence":0,"generalTotal":390,"perExam":{"115":130,"114":130,"113":130}},
+    "finalCanonicalPassDeclarationStillRequiresActualCoordinatorRun": true,
+    "localExecutionAttempt": "latest main cloneによる独立実行も試みたが、実行環境のDNSでgithub.comを解決できなかったため同手法を反復せず静的照合へ変更した。"
+  },
   "canonicalIngestion": {
     "ready": true,
     "mechanism": "build_general_canonical.py reads K113-SPECIAL-AUDIT.json and overlays missing point/detail/evidence onto the consolidated general records. The five repaired sourceDataDefects remain historical audit records but are automatically removed from active quarantine when sourceCorrectionStatus=official_pdf_verified.",
     "workflow": ".github/workflows/kangoshi-general-canonical.yml",
     "workflowAutoTriggerOnBWorkerFiles": false,
-    "coordinatorActionReducedTo": ["rerun canonical build", "rerun integrity audit", "rerun shared audit", "confirm exam113 missingExplanation=0 and missingEvidence=0"]
+    "connectorWorkflowDispatchAvailable": false,
+    "existingFailedRunsUsePreRemediationCommits": true,
+    "coordinatorActionReducedTo": ["run existing workflow on current main", "confirm integrity exit 0", "confirm shared audit exit 0", "confirm exam113 missingExplanation=0 and missingEvidence=0"]
   },
   "remediatedIds": {
     "mediaDependent": ["K113-AM027","K113-AM034","K113-AM035","K113-AM046","K113-PM037","K113-PM054","K113-PM066","K113-PM077"],
@@ -66,7 +83,7 @@
   },
   "editBoundary": {
     "allowed":["kangoshi-sprint/product-content/explanation-batches/B-general-*.json","kangoshi-sprint/workstreams/B-general/**"],
-    "forbidden":["kangoshi-sprint/product-content/enriched-draft/**","kangoshi-sprint/product-content/manifest.json","common canonical build/validate/trigger files","common UI","mock exam engine","StoreKit"]
+    "forbidden":["kangoshi-sprint/product-content/enriched-draft/**","kangoshi-sprint/product-content/manifest.json","kangoshi-sprint/product-content/questions/**","common canonical build/validate/trigger files",".github/workflows/kangoshi-*.yml","common UI","mock exam engine","StoreKit"]
   },
-  "nextLoop": "Coordinator reruns the existing general canonical workflow. B-general final canonical PASS may be declared only after consolidated canonical audits return missingExplanation=0 and missingEvidence=0; media/content/scoring release gates remain separate."
+  "nextLoop": "Coordinator runs the existing general canonical workflow against current main. B-general final canonical PASS may be declared only after actual consolidated canonical audits return integrityExit=0, sharedAuditExit=0, exam113 missingExplanation=0 and missingEvidence=0; media/content/scoring release gates remain separate."
 }
