@@ -10,7 +10,7 @@ on:
       - 'splat-native-ios/**'
       - '.github/workflows/splat-native-ios.yml'
 concurrency:
-  group: splat-native-ios-${{ github.ref }}
+  group: splat-native-ios-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 permissions:
   contents: read
