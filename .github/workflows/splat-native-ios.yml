@@ -9,6 +9,9 @@ on:
     paths:
       - 'splat-native-ios/**'
       - '.github/workflows/splat-native-ios.yml'
+permissions:
+  contents: read
+  pull-requests: write
 env:
   GIT_LFS_SKIP_SMUDGE: '1'
 jobs:
@@ -30,6 +33,8 @@ jobs:
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
       - name: Compile for iPhone without signing
+        id: compile
+        continue-on-error: true
         working-directory: splat-native-ios
         shell: bash
         run: |
@@ -39,12 +44,28 @@ jobs:
             -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
             CODE_SIGNING_ALLOWED=NO build 2>&1 | tee /tmp/splat-build.log
           status=${PIPESTATUS[0]}
-          echo '===== SPLAT BUILD DIAGNOSTICS ====='
-          grep -E '(^|:) error:|(^|:) warning:' /tmp/splat-build.log | tail -200 || true
-          {
-            echo '## Splat Native build diagnostics'
-            echo '```text'
-            grep -E '(^|:) error:|(^|:) warning:' /tmp/splat-build.log | tail -200 || true
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+          grep -E '(^|:) error:|(^|:) warning:' /tmp/splat-build.log | tail -200 > /tmp/splat-diagnostics.txt || true
+          echo "status=$status" >> "$GITHUB_OUTPUT"
           exit "$status"
+      - name: Publish compile diagnostics to PR
+        if: always() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          {
+            echo '<!-- splat-native-build-diagnostics -->'
+            echo '### Splat Native build diagnostics'
+            echo '```text'
+            if [ -s /tmp/splat-diagnostics.txt ]; then
+              cat /tmp/splat-diagnostics.txt
+            else
+              echo 'No compiler error/warning lines captured.'
+            fi
+            echo '```'
+          } > /tmp/pr-comment.md
+          gh pr comment "$PR_NUMBER" --body-file /tmp/pr-comment.md
+      - name: Fail if compile failed
+        if: steps.compile.outcome == 'failure'
+        run: exit 1
