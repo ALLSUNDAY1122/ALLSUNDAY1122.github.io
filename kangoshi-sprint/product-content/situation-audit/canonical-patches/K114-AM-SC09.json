@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC09",
+  "sourceExam": 114,
+  "session": "AM",
+  "sourceEvidence": {"officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf", "officialPages": [44, 45], "checkedAt": "2026-08-14T15:01:00+09:00"},
+  "textCorrections": {
+    "scenarioTextCanonical": "Aさん（30歳、男性）は統合失調症で内服治療をしていた。最近、部屋にこもり、精神科受診以外は外出しなくなった。ある日、母親がAさんの部屋で大量の薬を見つけ、確認すると『薬は飲みたくない』と話した。受診に付き添った母親は『Aは昼間に寝ていて、夜に窓を開けて、隣の家に向かって「悪口を言うな」「監視するな」と大声で怒鳴る』と主治医に話した。Aさんと母親の強い希望があり、精神科病棟に入院し薬物療法が開始された。入院3日、夜間の巡視のたびにAさんは起きていて『隣の人が自分を監視している』『皆が悪口を言っている』と小さな声で看護師に話した。日中はホールで眠そうにしていることもあり、レクリエーションには『疲れた』と言って参加しない。他の患者と話すことはあるがトラブルはない。歯磨きや身だしなみは、声をかけると行う。",
+    "questionTextCorrections": [
+      {"id": "K114-AM116", "fromContains": "入院 14 日", "toStartsWith": "入院14日"},
+      {"id": "K114-AM117", "fromContains": "入院か月", "toStartsWith": "入院1か月"}
+    ]
+  },
+  "patientIdentityAudit": {"patient": "Aさん（30歳、男性）", "familyMemberNotPatient": "母親は受診・情報提供・入院希望に関与する家族。患者本人ではない。", "status": "pass"},
+  "applyState": "pending_canonical_integration"
+}
