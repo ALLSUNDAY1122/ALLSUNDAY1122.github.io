@@ -18,6 +18,8 @@ enum PremiumAccessPolicy {
 
 @MainActor
 final class PremiumPurchaseStore: ObservableObject {
+    static let plannedProductID = "jp.allsunday1122.kanteishishortanswer.monthly200"
+
     enum Status: Equatable { case unconfigured, loading, ready, purchasing, restoring, unavailable, failed }
 
     @Published private(set) var product: Product?
@@ -63,9 +65,9 @@ final class PremiumPurchaseStore: ObservableObject {
         do {
             let products = try await Product.products(for: [productID])
             guard let item = products.first(where: { $0.id == productID }),
-                  item.type == .nonConsumable else {
+                  item.type == .autoRenewable else {
                 status = .unavailable
-                message = "App Store Connectの非消耗型商品を確認できません。"
+                message = "App Store Connectの自動更新サブスクリプションを確認できません。"
                 return
             }
             product = item
