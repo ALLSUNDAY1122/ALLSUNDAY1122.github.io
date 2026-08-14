@@ -57,7 +57,7 @@ struct RigakuStudyView: View {
         case .sprint: return "今日のスプリント"
         case .weak: return "苦手をつぶす"
         case .subject(let name): return name
-        case .mock(let round): return "第\(round)回 模試"
+        case .mock(let round): return "第\(round)回ベース模試"
         }
     }
 
@@ -333,7 +333,7 @@ struct RigakuStudyView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                     .overlay(RoundedRectangle(cornerRadius: 16).stroke(LearningSprintTheme.line))
 
-                    Text("第\(round)回の公式配点を再現：一般1点、実地3点。厚生労働省が採点対象外とした問題は0点として集計します。")
+                    Text("第\(round)回の公式配点を再現して集計します。問題文・図版は権利と内容を監査した独自問題で再構成し、厚生労働省が採点対象外とした問題は0点として扱います。")
                         .font(LearningSprintTheme.sans(12, weight: .medium))
                         .foregroundStyle(LearningSprintTheme.ink2)
                         .multilineTextAlignment(.center)

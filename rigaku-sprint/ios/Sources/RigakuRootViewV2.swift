@@ -260,9 +260,9 @@ private struct RigakuMockListV2: View {
                 LearningSprintPaperBackground()
                 ScrollView {
                     VStack(alignment: .leading, spacing: 14) {
-                        Text("模擬試験")
+                        Text("第58〜60回ベース模試")
                             .font(LearningSprintTheme.serif(26, weight: .bold))
-                        Text("各回200問がすべて内容・正答・権利監査を通過した時点で、その回の模試を解放します。")
+                        Text("各回200枠の公式出題範囲・配点をもとに、問題文と図版を権利・内容監査した独自問題で再構成しています。")
                             .font(LearningSprintTheme.sans(13))
                             .foregroundStyle(LearningSprintTheme.ink2)
                             .fixedSize(horizontal: false, vertical: true)
@@ -278,12 +278,12 @@ private struct RigakuMockListV2: View {
                             } label: {
                                 HStack(spacing: 12) {
                                     VStack(alignment: .leading, spacing: 5) {
-                                        Text("第\(exam.round)回")
+                                        Text("第\(exam.round)回ベース模試")
                                             .font(LearningSprintTheme.serif(20, weight: .bold))
                                         Text("監査済み \(readyCount) / \(expected)問")
                                             .font(LearningSprintTheme.sans(12, weight: .semibold))
                                             .foregroundStyle(ready ? LearningSprintTheme.green : LearningSprintTheme.ink2)
-                                        Text(ready ? "本番形式を開始できます" : "全問PASS後に解放")
+                                        Text(ready ? "200問のベース模試を開始" : "全問PASS後に解放")
                                             .font(LearningSprintTheme.sans(11, weight: .medium))
                                             .foregroundStyle(LearningSprintTheme.ink3)
                                     }
