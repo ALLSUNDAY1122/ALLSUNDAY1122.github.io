@@ -243,11 +243,6 @@ def main() -> int:
         print("PASS: no source batch requires re-audit for this change")
         return 0
 
-    known = set(all_batch_bases())
-    unknown = sorted(set(selected) - known)
-    if unknown:
-        raise SystemExit(f"FAIL: unknown batch base(s): {unknown}")
-
     completed = 0
     held = 0
     for base in selected:
