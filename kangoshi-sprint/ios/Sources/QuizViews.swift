@@ -65,6 +65,7 @@ struct QuizQuestionView: View {
                         .overlay(RoundedRectangle(cornerRadius: 12).stroke(KSTheme.line))
                 }
                 .foregroundStyle(KSTheme.ink)
+                .accessibilityLabel("閉じる")
                 VStack(alignment: .leading, spacing: 2) {
                     Text(session.title).font(.subheadline.bold())
                     Text(question.majorSubject).font(.caption2).foregroundStyle(KSTheme.tertiary)
