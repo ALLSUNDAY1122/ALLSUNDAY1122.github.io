@@ -20,11 +20,13 @@
 - IAP Product ID：未確定（ビルド時 `RIGAKU_IAP_PRODUCT_ID` 外部注入）
 - 課金方式・価格・無料/有料範囲：人間判断待ち
 - AppIcon：Drive正本 `15_理学療法士国家試験.png` を採用。GitHubへの正本PNG本体投入は未完。
+- 公開してよいサポート問い合わせ先：未承認
 
 ## URL（main統合後に公開確認）
 - Support：https://allsunday1122.github.io/rigaku-sprint/support.html
 - Privacy：https://allsunday1122.github.io/rigaku-sprint/privacy.html
 - Terms：https://allsunday1122.github.io/rigaku-sprint/terms.html
+- Settingsから上記3ページへの導線：実装済み
 
 ## App Store説明文案
 理学療法士国家試験の学習を、毎日4・8・16問の短い反復へ分けて進める試験対策アプリです。
@@ -48,7 +50,7 @@
 
 本アプリは厚生労働省の公式アプリではありません。また、国家試験の学習補助を目的とし、診断、治療、リハビリテーション実施その他の医療上の判断を提供するものではありません。
 
-## キーワード候補
+## キーワード候補（95 bytes）
 理学療法士,国家試験,国試,理学療法,PT,解剖学,生理学,運動学,資格,学習
 
 ## App Reviewメモ案
@@ -59,7 +61,8 @@
 - 権利未解決の第三者図版66枠は原図を収録せず、独自の文章問題へ再構成。
 - ベース模試は公式配点を再現するが、問題文・図版は独自再構成であり、公式問題の完全複製ではない。
 - PrivacyInfo.xcprivacyを同梱。現行実装は追跡・広告・解析なし、開発者によるデータ収集なし。
-- StoreKit 2の権利検証基盤は実装済み。実際のIAP提供範囲・価格・Product IDは正本確定後にのみ有効化する。
+- SettingsからSupport / Privacy Policy / Termsへ直接到達できる。
+- StoreKit 2のverified entitlement接続と購入・復元UIは実装済み。実際のIAP提供範囲・価格・Product IDは正本確定後にのみ有効化する。
 
 ## 提出前確認
 - 表示名・サブタイトルはApp Store Connectの現行文字数制限内で再検証する。
