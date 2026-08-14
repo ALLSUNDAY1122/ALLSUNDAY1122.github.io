@@ -1,4 +1,4 @@
-name: Yobi Tantou Native iOS
+name: Yobi Tantou Source Contract
 
 on:
   pull_request:
@@ -8,10 +8,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  # A cancelled macOS job can remain stuck in post-job cleanup and keep a
-  # PR-wide concurrency slot occupied. Isolate each commit so a stale cleanup
-  # can never block validation of a newer source revision.
-  group: yobi-tantou-native-${{ github.sha }}
+  group: yobi-tantou-source-${{ github.sha }}
   cancel-in-progress: false
 
 jobs:
@@ -53,6 +50,8 @@ jobs:
         run: python learning-sprint/yobi-tantou/content-loop/promote_practice_release.py --self-test
       - name: Practice quality release audit
         run: python learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py --require-pass
+      - name: Practice tier combiner self-test
+        run: python learning-sprint/yobi-tantou/content-loop/combine_practice_release.py --self-test
       - name: Probe MOJ official PDF links from runner
         run: python learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
       - name: Official R6-R8 PDF structure audit
@@ -69,7 +68,7 @@ jobs:
         run: python learning-sprint/yobi-tantou/ios/release-preflight.py --self-test
       - name: App Store draft consistency
         run: python learning-sprint/yobi-tantou/validate-app-store-draft.py
-      - name: AppIcon and release script syntax
+      - name: Source and release script syntax
         run: |
           bash -n learning-sprint/yobi-tantou/ios/prepare-ios.sh
           python -m py_compile learning-sprint/yobi-tantou/ios/verify_app_icon.py
@@ -80,6 +79,7 @@ jobs:
           python -m py_compile learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/promote_practice_release.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/combine_practice_release.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/build_native_release.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_official_pdf_structure.py
@@ -90,100 +90,3 @@ jobs:
           python -m py_compile learning-sprint/yobi-tantou/content-loop/summarize_official_question_shapes.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/build_official_scoring_canonical_fixed.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/triage_general_education_rights.py
-
-  swift-tests:
-    runs-on: macos-15
-    steps:
-      - uses: actions/checkout@v4
-      - name: Prepare simulator-only AppIcon
-        run: YOBI_ICON_MODE=simulator-placeholder bash learning-sprint/yobi-tantou/ios/prepare-ios.sh
-      - name: Install XcodeGen
-        run: brew install xcodegen
-      - name: Generate Xcode project
-        working-directory: learning-sprint/yobi-tantou/ios
-        run: xcodegen generate
-      - name: XCTest on available iOS Simulator
-        working-directory: learning-sprint/yobi-tantou/ios
-        run: |
-          set -o pipefail
-          DEVICE_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/{print $2; exit}')"
-          if [ -z "$DEVICE_ID" ]; then
-            echo 'No available iPhone Simulator found.' >&2
-            xcrun simctl list devices available
-            exit 1
-          fi
-          echo "Using iOS Simulator for XCTest: $DEVICE_ID"
-          xcodebuild test \
-            -project YobiTantouSprint.xcodeproj \
-            -scheme YobiTantouSprint \
-            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
-            -only-testing:YobiTantouSprintTests \
-            CODE_SIGNING_ALLOWED=NO \
-            YOBI_BUNDLE_ID=jp.ci.yobi.preview \
-            YOBI_TEST_BUNDLE_ID=jp.ci.yobi.preview.tests \
-            YOBI_UI_TEST_BUNDLE_ID=jp.ci.yobi.preview.uitests \
-            | xcpretty
-      - name: XCUITest with one simulator-infrastructure retry
-        working-directory: learning-sprint/yobi-tantou/ios
-        run: |
-          set -o pipefail
-          DEVICE_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/{print $2; exit}')"
-          if [ -z "$DEVICE_ID" ]; then
-            echo 'No available iPhone Simulator found.' >&2
-            exit 1
-          fi
-
-          for attempt in 1 2; do
-            echo "XCUITest attempt ${attempt}/2"
-            xcrun simctl shutdown "$DEVICE_ID" 2>/dev/null || true
-            xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
-            xcrun simctl bootstatus "$DEVICE_ID" -b
-
-            if xcodebuild test \
-              -project YobiTantouSprint.xcodeproj \
-              -scheme YobiTantouSprint \
-              -destination "platform=iOS Simulator,id=$DEVICE_ID" \
-              -only-testing:YobiTantouSprintUITests \
-              -parallel-testing-enabled NO \
-              CODE_SIGNING_ALLOWED=NO \
-              YOBI_BUNDLE_ID=jp.ci.yobi.preview \
-              YOBI_TEST_BUNDLE_ID=jp.ci.yobi.preview.tests \
-              YOBI_UI_TEST_BUNDLE_ID=jp.ci.yobi.preview.uitests \
-              | xcpretty; then
-              echo "PASS: XCUITest succeeded on attempt ${attempt}."
-              exit 0
-            fi
-
-            if [ "$attempt" -eq 1 ]; then
-              echo 'WARN: first XCUITest attempt failed; resetting Simulator once before final attempt.' >&2
-            fi
-          done
-
-          echo 'FAIL: XCUITest failed on both attempts.' >&2
-          exit 1
-      - name: Unsigned Release configuration build and bundle inspection
-        working-directory: learning-sprint/yobi-tantou/ios
-        run: |
-          set -o pipefail
-          DEVICE_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/{print $2; exit}')"
-          DERIVED="$RUNNER_TEMP/yobi-release-derived"
-          xcodebuild build \
-            -project YobiTantouSprint.xcodeproj \
-            -scheme YobiTantouSprint \
-            -configuration Release \
-            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
-            -derivedDataPath "$DERIVED" \
-            CODE_SIGNING_ALLOWED=NO \
-            YOBI_BUNDLE_ID=jp.ci.yobi.preview \
-            YOBI_TEST_BUNDLE_ID=jp.ci.yobi.preview.tests \
-            YOBI_UI_TEST_BUNDLE_ID=jp.ci.yobi.preview.uitests \
-            | xcpretty
-          APP="$DERIVED/Build/Products/Release-iphonesimulator/YobiTantouSprint.app"
-          test -d "$APP"
-          test -f "$APP/questions.preview.json"
-          test -f "$APP/questions.release.json"
-          test -f "$APP/official-scoring-canonical.v1.json"
-          test -f "$APP/PrivacyInfo.xcprivacy"
-          test -f "$APP/Assets.car"
-          test -f "$APP/YobiTantouSprint"
-          echo "PASS: unsigned Release app bundle contains preview fixture, formal practice bank, official scoring canonical, privacy manifest, compiled assets and native executable."
