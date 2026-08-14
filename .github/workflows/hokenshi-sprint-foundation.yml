@@ -3,15 +3,25 @@ name: Hokenshi Sprint Native Foundation
 on:
   pull_request:
     paths:
-      - 'hokenshi-sprint/**'
+      - 'hokenshi-sprint/NativePackage/**'
+      - 'hokenshi-sprint/content/**'
+      - 'hokenshi-sprint/scripts/**'
+      - 'hokenshi-sprint/ios/**'
+      - 'hokenshi-sprint/prototype/**'
       - 'native-ios/LearningSprintCore/**'
+      - 'codemagic.yaml'
       - '.github/workflows/hokenshi-sprint-foundation.yml'
   push:
     branches:
       - feat/hokenshi-sprint-native-foundation
     paths:
-      - 'hokenshi-sprint/**'
+      - 'hokenshi-sprint/NativePackage/**'
+      - 'hokenshi-sprint/content/**'
+      - 'hokenshi-sprint/scripts/**'
+      - 'hokenshi-sprint/ios/**'
+      - 'hokenshi-sprint/prototype/**'
       - 'native-ios/LearningSprintCore/**'
+      - 'codemagic.yaml'
       - '.github/workflows/hokenshi-sprint-foundation.yml'
   workflow_dispatch:
 
