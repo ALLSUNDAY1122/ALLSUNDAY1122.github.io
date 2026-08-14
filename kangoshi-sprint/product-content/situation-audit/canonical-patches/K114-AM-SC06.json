@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC06",
+  "sourceExam": 114,
+  "session": "AM",
+  "sourceEvidence": {
+    "officialQuestionPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
+    "officialQuestionPages": [38, 39],
+    "officialBookletPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_02.pdf",
+    "officialBookletNo": 3,
+    "checkedAt": "2026-08-14T14:58:00+09:00"
+  },
+  "textCorrections": {
+    "scenarioTextCanonical": "Aちゃん（1歳4か月、女児）は午前9時ころ、ポータブル型ゲーム機用の直径10mmのボタン型電池を誤飲し、午前10時に両親に付き添われ外来を受診した。看護師が観察すると機嫌は良くバイタルサインも安定し、成長や発達の遅れはない。待合室にはAちゃんのほかに3人の患児が診察を待っている。B君（1歳3か月）は今朝フロアで歩行中に転倒、バイタル正常・顔色良好で母親に抱かれ遊んでいる。Cちゃん（3歳）は体温39.5℃、呼吸数23/分、脈拍100/分、鼻汁多量、機嫌・顔色良好。D君（9か月）は自宅で初めてのけいれんが5分間続き、受診時には止まっているが待合室で3回嘔吐、体温38.7℃、声かけで開眼するがすぐうとうとする。",
+    "questionTextCorrections": [
+      {"id": "K114-AM107", "fromContains": "摘出後、小児病棟に泊入院した", "toContains": "摘出後、小児病棟に1泊入院した"},
+      {"id": "K114-AM107", "fromContains": "入院時間後", "toContains": "入院1時間後"},
+      {"id": "K114-AM107", "fromContains": "つ選べ", "toContains": "2つ選べ"},
+      {"id": "K114-AM108", "fromContains": "大きさがcmよりも小さいもの", "toContains": "大きさが4cmよりも小さいもの"}
+    ]
+  },
+  "mediaCorrection": {
+    "id": "K114-AM107",
+    "requiresMedia": true,
+    "mediaAuditStatus": "official_booklet_verified",
+    "observed": "1歳児がベッド内で立ち、両親へ手を伸ばしている。大きなぬいぐるみがベッド内にあり、点滴ポンプ・スタンドから患児までのルートが張る配置になっている。",
+    "answerContext": "転落・牽引リスクを減らすため、ぬいぐるみを除去し、点滴ルートに必要な余裕を確保する。"
+  },
+  "applyState": "pending_canonical_integration"
+}
