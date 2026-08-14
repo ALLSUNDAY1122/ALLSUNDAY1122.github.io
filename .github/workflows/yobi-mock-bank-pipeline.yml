@@ -15,6 +15,9 @@ on:
       - '.github/workflows/yobi-mock-bank-pipeline.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 concurrency:
   group: yobi-mock-bank-${{ github.sha }}
   cancel-in-progress: false
@@ -24,6 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: feature/yobi-tantou-native-swiftui
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -81,6 +86,19 @@ jobs:
           python -m json.tool learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01-distractors.json >/dev/null
           python -m py_compile learning-sprint/yobi-tantou/content-loop/mock-bank/merge_distractor_notes.py
           python -m py_compile learning-sprint/yobi-tantou/content-loop/mock-bank/audit_global_uniqueness.py
+      - name: Persist promoted release canonical
+        run: |
+          DEST=learning-sprint/yobi-tantou/content-loop/mock-bank/practice-mock-1-legal-batch-01.release.json
+          cp learning-sprint/yobi-tantou/content-loop/mock-bank/generated/practice-mock-1-legal-batch-01.release.json "$DEST"
+          if git diff --quiet -- "$DEST" && git ls-files --error-unmatch "$DEST" >/dev/null 2>&1; then
+            echo 'No canonical change.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$DEST"
+          git commit -m 'chore(yobi): persist audited mock 1 legal batch 01'
+          git push origin HEAD:feature/yobi-tantou-native-swiftui
       - name: Upload generated audit bundle
         if: always()
         uses: actions/upload-artifact@v4
