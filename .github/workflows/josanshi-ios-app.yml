@@ -28,10 +28,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-      - name: Generate Xcode project
+      - name: Generate Xcode project and normalize IAP capability
         run: |
           cd josanshi-sprint/ios
           xcodegen generate --spec xcodegen.yml
+          python3 apply-xcode-capabilities.py JosanshiSprint.xcodeproj/project.pbxproj
       - name: Verify canonical release identity and IAP capability
         run: |
           PBX=josanshi-sprint/ios/JosanshiSprint.xcodeproj/project.pbxproj
