@@ -1,6 +1,8 @@
 {
-  "schemaVersion": 1,
-  "updatedAt": "2026-08-10T04:42:00+09:00",
+  "schemaVersion": 2,
+  "updatedAt": "2026-08-14",
+  "reviewPacket": "kangoshi-sprint/product-content/situation-audit/expert-review-packet.json",
+  "policy": "専門監査が完了するまで該当問題のみrelease quarantine。他178問およびcanonical content PASSを停止しない。ready_for_domain_expertは承認済みを意味しない。",
   "items": [
     {
       "scenarioId": "K115-AM-SC05",
@@ -14,7 +16,9 @@
         "https://www.jspaci.jp/assets/documents/jpgl2023_web.pdf",
         "https://www.jspaci.jp/journal/asthma2023/"
       ],
-      "status": "expert_review_required"
+      "reviewPacketItem": "K115-AM103",
+      "requestedDecision": "提案文が、公式正答を維持しつつ会話途切れを軽視しない臨床的に妥当な説明かを確認する。",
+      "status": "ready_for_domain_expert"
     },
     {
       "scenarioId": "K115-AM-SC08",
@@ -27,9 +31,12 @@
       "evidenceRefs": [
         "https://prenatal.cfa.go.jp/pregnancy-and-childbirth/medical-checkup.html",
         "https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2018/05/optimizing-postpartum-care",
-        "https://www.acog.org/womens-health/faqs/a-partners-guide-to-pregnancy"
+        "https://www.acog.org/womens-health/faqs/a-partners-guide-to-pregnancy",
+        "https://www.nhs.uk/baby/support-and-services/sex-and-contraception-after-birth/"
       ],
-      "status": "expert_review_required"
+      "reviewPacketItem": "K115-AM114",
+      "requestedDecision": "提案文が、国家試験正答と現行の個別的産褥指導を明確かつ安全に区別しているかを確認する。",
+      "status": "ready_for_domain_expert"
     }
   ]
 }
