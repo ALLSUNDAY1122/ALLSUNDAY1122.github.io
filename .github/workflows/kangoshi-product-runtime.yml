@@ -30,20 +30,23 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import json,re
+          import json
           root=Path('kangoshi-sprint/product-content')
           audit=json.loads((root/'product-runtime-audit.json').read_text(encoding='utf-8'))
           js=Path('kangoshi-sprint/questions-runtime.js').read_text(encoding='utf-8')
           manifest=json.loads((root/'manifest.json').read_text(encoding='utf-8'))
           assert audit.get('pass') is True
-          assert audit['canonicalTotal']==720 and audit['runtimeEligible']==718
+          assert audit['canonicalTotal']==720
+          assert audit['runtimeEligible']==720-len(audit['blockedIds'])
+          assert set(audit['blockedIds']).issubset({'K115-AM103','K115-AM114'})
           assert audit['mediaResolved']==38 and not audit['mediaMissingAssets']
           assert 'window.KANGOSHI_QUESTIONS=ALL.filter' in js
           sets={int(s['sourceExam']):s for s in manifest['sets']}
-          assert sets[114]['status']=='ready' and sets[114]['runtimeEligibleCount']==240
-          assert sets[113]['status']=='ready' and sets[113]['runtimeEligibleCount']==240
-          assert sets[115]['status']=='pending_expert_review' and sets[115]['runtimeEligibleCount']==238
-          print({'runtime':718,'media':38,'readyExams':[114,113],'pass':True})
+          for exam in (115,114,113):
+            expected=240-sum(1 for qid in audit['blockedIds'] if qid.startswith(f'K{exam}-'))
+            assert sets[exam]['runtimeEligibleCount']==expected
+            assert sets[exam]['status']==('ready' if expected==240 else 'pending_expert_review')
+          print({'runtime':audit['runtimeEligible'],'blocked':audit['blockedIds'],'media':38,'pass':True})
           PY
       - name: Commit runtime and manifest
         shell: bash
