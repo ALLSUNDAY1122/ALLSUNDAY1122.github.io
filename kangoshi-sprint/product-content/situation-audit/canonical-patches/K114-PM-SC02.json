@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-PM-SC02",
+  "sourceExam": 114,
+  "session": "PM",
+  "sourceEvidence": {
+    "officialPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
+    "officialPages": [37, 38],
+    "supplementalTextVerification": [
+      "https://www.tokyo-ac.jp/nurse/exam-info/questions-114/",
+      "https://hws-kyokai.or.jp/publishing/eiesei-kangoshiken-main/eiesei-kangoshiken-114-pm2.html"
+    ],
+    "checkedAt": "2026-08-14T15:16:00+09:00"
+  },
+  "textCorrections": {
+    "scenarioTextCanonical": "Aさん（55歳、男性、会社員）は激しい胸痛で救急搬送され、心筋梗塞と診断された。冠動脈バイパス術〈CABG〉を受けICUに入室。手術中の輸液量2,700mL、輸血量400mL、出血量280mL、尿量200mL。手術から6時間が経過し、人工呼吸器が装着され、心囊ドレーンと胸腔ドレーンが留置中。体温37.1℃、脈拍63/分、血圧126/62mmHg、末梢冷感なし。肺野全体に湿性ラ音、漿液性気道分泌物。FiO2 40％、PaO2 95Torr、PaCO2 36Torr、CVP12cmH2O、LVEF45％、心囊液なし。胸部X線で両肺野広範に透過性低下。",
+    "questionTextCorrections": [
+      {"id": "K114-PM095", "fromContains": "術後日", "toStartsWith": "術後2日"},
+      {"id": "K114-PM095", "fromContains": "時間尿量 0.5 mL/kg/時が時間持続", "toContains": "時間尿量0.5mL/kg/時が3時間持続"},
+      {"id": "K114-PM096", "fromContains": "術後日", "toStartsWith": "術後3日"},
+      {"id": "K114-PM096", "fromContains": "食後時間以上", "toContains": "食後1時間以上"}
+    ]
+  },
+  "applyState": "pending_canonical_integration"
+}
