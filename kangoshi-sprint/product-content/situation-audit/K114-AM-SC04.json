@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC04",
+  "sourceExam": 114,
+  "session": "AM",
+  "questionIds": ["K114-AM100", "K114-AM101", "K114-AM102"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "87歳女性、独居。難聴があり補聴器を使用。自宅転倒で右大腿骨頸部骨折を受傷し、全身麻酔下で人工骨頭置換術を受けた。",
+  "mainCondition": "大腿骨頸部骨折術後の疼痛評価、術後せん妄の予防・対応、転倒恐怖を伴うリハビリテーション支援。",
+  "assessment": [
+    "AM100では術後1日、全身状態が安定している一方で食事時の苦痛表情を捉え、創部痛を優先して再評価する。",
+    "AM101では同日、午前中の傾眠から昼食後の多弁・落ち着かなさという急性変動をせん妄として捉え、尿道カテーテルと聴覚障害など可逆的誘因へ介入する。",
+    "AM102では術後2週、杖歩行練習が進んでも転倒恐怖と自己効力感低下が残るため、実際の回復を具体的に肯定する。"
+  ],
+  "nursingJudgment": "3問は『術後早期の疼痛→同日のせん妄リスク→2週後の歩行回復と心理支援』として同一高齢患者の回復過程を追う。患者は一貫してAさん本人である。",
+  "nursingPractice": [
+    "高齢者の自己申告だけに依存せず表情・動作時疼痛を含めて疼痛を評価する。",
+    "せん妄では不要な侵襲的デバイスを減らし、補聴器など感覚補助具を使用可能にする。",
+    "回復した能力を具体的にフィードバックし、転倒恐怖を抱える患者の自信回復を支える。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "textCorrectionAudit": {"required": true, "overlay": "situation-audit/text-corrections.json", "officialPdfVerified": true, "officialPages": [34, 35], "correctedFacts": ["独居=1人", "右大腿骨頸部骨折", "AM100=術後1日・朝6時・午前9時", "AM101=術後1日・2つ選べ", "AM102=術後2週"], "applyState": "pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent": true, "majorSubject": "成人看護学", "scenarioContextRequired": true, "status": "pass"},
+  "explanationAudit": {"batchId": "K114-AM100-AM102-situation-SC04", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "none", "questionId": null, "reason": null, "evidenceRefs": []},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_text_correction_pending_canonical",
+  "auditedAt": "2026-08-14T14:50:00+09:00"
+}
