@@ -54,7 +54,8 @@
 - SKU: `hokenshi-sprint-13-ios`
 - IAP: 非消耗型・買い切りPremium
 - IAP Product ID: `jp.allsunday1122.hokenshi.premium`
+- IAP日本価格: `800円`（標準手順 v2.4）
 - Codemagic workflow/profile: `hokenshi_appstore`
 - Apple Team ID: `MN3D2ZM44N`
 - App Store Connect App ID: Apple新規Appレコード作成後の実発行値を記録する。仮値禁止。
-- IAP価格: App Store本審査前の最終承認地点で確定し、アプリ内ではStoreKit `Product.displayPrice`を表示する。
+- アプリ内価格: StoreKit `Product.displayPrice`のみを表示し、800円の文字列をコードへ固定しない。
