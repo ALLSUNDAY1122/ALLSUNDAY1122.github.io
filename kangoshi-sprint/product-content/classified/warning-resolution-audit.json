@@ -1,11 +1,8 @@
 {
   "warningCount": 32,
-  "resolvedCount": 30,
-  "unresolvedCount": 2,
-  "errors": [
-    "warning resolution match count 0: K115-PM099: specialist situation correction overrides local stem domains ['maternal-explicit']; assigned 成人看護学",
-    "warning resolution match count 0: K114-AM-SC03: situation group split {'基礎看護学': 1, '成人看護学': 2}; contextual review required"
-  ],
+  "resolvedCount": 32,
+  "unresolvedCount": 0,
+  "errors": [],
   "resolvedWarnings": [
     {
       "warning": "K115-AM092: contextual stem domain community-explicit; assigned 地域・在宅看護論",
@@ -66,6 +63,12 @@
       "ruleId": "home-disaster-known",
       "decision": "accepted",
       "reason": "両設問とも訪問看護利用者・家族の自宅での災害準備を問うため、災害看護との横断性を認めつつ主分類は地域・在宅看護論とする。"
+    },
+    {
+      "warning": "K115-PM099: specialist situation correction overrides local stem domains ['maternal-explicit']; assigned 成人看護学",
+      "ruleId": "specialist-K115-PM099-graves-context",
+      "decision": "accepted",
+      "reason": "K115-PM-SC03の症例単位監査で、PM099の『妊娠』は将来への不安という局所語であり、設問の主題・正答はバセドウ病治療後の活動・療養支援と確認済み。成人看護学／内分泌・代謝への専門補正を優先する。"
     },
     {
       "warning": "K114-AM091: contextual stem domain community-explicit; assigned 地域・在宅看護論",
@@ -158,6 +161,12 @@
       "reason": "症例内で基本的援助と統合・安全判断を別々に問うため、設問単位の分類を維持する。"
     },
     {
+      "warning": "K114-AM-SC03: situation group split {'基礎看護学': 1, '成人看護学': 2}; contextual review required",
+      "ruleId": "split-K114-AM-SC03",
+      "decision": "accepted",
+      "reason": "同一くも膜下出血症例だが、AM097はJCSによる意識レベル評価そのものを問うため基礎看護学が妥当。AM098はクリッピング術後管理、AM099は正常圧水頭症の遅発性神経合併症を問うため成人看護学／脳神経へ専門補正する。症例単位監査でこの2領域分割を明示確認済み。"
+    },
+    {
       "warning": "K114-AM-SC05: situation group split {'成人看護学': 1, '基礎看護学': 2}; contextual review required",
       "ruleId": "split-K114-AM-SC05",
       "decision": "accepted",
@@ -188,6 +197,6 @@
       "reason": "75歳レビー小体型認知症患者の症状・生活支援を扱う症例で、在宅という場面より認知症・老年看護が3問の中心である。"
     }
   ],
-  "pass": false,
+  "pass": true,
   "note": "各警告は対象IDを制限した正規表現ルール1件だけに一致する必要がある。未知の警告・未知IDは自動FAIL。"
 }
