@@ -33,5 +33,15 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: App
+      - path: PrivacyInfo.xcprivacy
+        buildPhase: resources
     dependencies:
       - target: JosanshiSprintFeature
+    settings:
+      base:
+        PRODUCT_NAME: JosanshiSprint
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: 助産師 学びスプリント
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
