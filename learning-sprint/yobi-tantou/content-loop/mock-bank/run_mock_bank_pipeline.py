@@ -23,6 +23,7 @@ SHARED_DEPENDENCIES = {
     "learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py",
     "learning-sprint/yobi-tantou/content-loop/promote_practice_release.py",
     "learning-sprint/yobi-tantou/content-loop/mock-bank/merge_distractor_notes.py",
+    "learning-sprint/yobi-tantou/content-loop/mock-bank/apply_editorial_overrides.py",
     "learning-sprint/yobi-tantou/content-loop/mock-bank/audit_global_uniqueness.py",
     "learning-sprint/yobi-tantou/content-loop/mock-bank/run_mock_bank_pipeline.py",
     ".github/workflows/yobi-mock-bank-pipeline.yml",
@@ -33,6 +34,7 @@ COMPANION_SUFFIXES = (
     "-source-locks.json",
     "-answer-audit.json",
     "-distractors.json",
+    "-editorial-overrides.json",
 )
 
 
@@ -86,9 +88,11 @@ def paths_for(base: str) -> dict[str, Path]:
         "locks": HERE / f"{base}-source-locks.json",
         "answers": HERE / f"{base}-answer-audit.json",
         "distractors": HERE / f"{base}-distractors.json",
+        "editorial": HERE / f"{base}-editorial-overrides.json",
         "canonical": HERE / f"{base}.release.json",
         "staging": GENERATED / f"{base}.staging.json",
         "enriched": GENERATED / f"{base}.enriched-staging.json",
+        "edited": GENERATED / f"{base}.edited-staging.json",
         "quality": GENERATED / f"{base}.quality.json",
         "release": GENERATED / f"{base}.release.json",
     }
@@ -179,6 +183,20 @@ def process_batch(base: str, persist: bool) -> bool:
         p["enriched"],
     )
 
+    final_staging = p["enriched"]
+    if p["editorial"].exists():
+        run(
+            py,
+            HERE / "apply_editorial_overrides.py",
+            "--input",
+            p["enriched"],
+            "--overrides",
+            p["editorial"],
+            "--output",
+            p["edited"],
+        )
+        final_staging = p["edited"]
+
     uniqueness_base = build_uniqueness_base(base)
     try:
         run(
@@ -187,7 +205,7 @@ def process_batch(base: str, persist: bool) -> bool:
             "--base",
             uniqueness_base,
             "--expansion",
-            p["enriched"],
+            final_staging,
         )
     finally:
         uniqueness_base.unlink(missing_ok=True)
@@ -196,7 +214,7 @@ def process_batch(base: str, persist: bool) -> bool:
         py,
         CONTENT / "audit_practice_release_quality.py",
         "--input",
-        p["enriched"],
+        final_staging,
         "--report",
         p["quality"],
         "--require-pass",
@@ -205,7 +223,7 @@ def process_batch(base: str, persist: bool) -> bool:
         py,
         CONTENT / "promote_practice_release.py",
         "--staging",
-        p["enriched"],
+        final_staging,
         "--quality",
         p["quality"],
         "--output",
