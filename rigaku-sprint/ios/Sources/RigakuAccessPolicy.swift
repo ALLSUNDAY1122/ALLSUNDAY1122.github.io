@@ -16,28 +16,29 @@ struct RigakuAccessPolicy {
 
     static func freeQuestionIDs(from questions: [LearningQuestion]) -> Set<String> {
         var result = Set<String>()
+        let roundOrder = RigakuAppConfiguration.examRounds.map { String($0.round) }
 
         for subject in RigakuAppConfiguration.generalSubjects {
             guard let quota = freeQuestionQuotas[subject], quota > 0 else { continue }
 
-            let subjectQuestions = questions.filter { $0.subject == subject }
             var byRound: [String: [LearningQuestion]] = [:]
-            for round in RigakuAppConfiguration.examRounds.map({ String($0.round) }) {
-                byRound[round] = subjectQuestions
-                    .filter { $0.examRound == round }
+            for round in roundOrder {
+                byRound[round] = questions
+                    .filter { $0.subject == subject && $0.examRound == round }
                     .sorted { $0.id < $1.id }
             }
 
-            let roundOrder = RigakuAppConfiguration.examRounds.map { String($0.round) }
             var offsets = Dictionary(uniqueKeysWithValues: roundOrder.map { ($0, 0) })
+            var selectedForSubject = 0
 
-            while result.filter({ id in subjectQuestions.contains(where: { $0.id == id }) }).count < quota {
+            while selectedForSubject < quota {
                 var addedInCycle = false
-                for round in roundOrder {
-                    guard result.filter({ id in subjectQuestions.contains(where: { $0.id == id }) }).count < quota else { break }
+                for round in roundOrder where selectedForSubject < quota {
                     let offset = offsets[round, default: 0]
                     guard let candidates = byRound[round], offset < candidates.count else { continue }
-                    result.insert(candidates[offset].id)
+                    if result.insert(candidates[offset].id).inserted {
+                        selectedForSubject += 1
+                    }
                     offsets[round] = offset + 1
                     addedInCycle = true
                 }
