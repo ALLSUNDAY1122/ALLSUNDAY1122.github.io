@@ -1,6 +1,11 @@
 {
   "schemaVersion": 1,
-  "checkpoint": "2026-08-10-L3-coordinator-Apass-B116-C30-5",
-  "reason": "Coordinator checkpoint after B-general advanced to 116 authored questions, required-150 PASS integration, and C-situation 30 authored questions with expert quarantine; rebuild common L3 from latest main",
-  "expectedBatchFloor": 37
+  "checkpoint": "2026-08-14-v2.5-prototype-pass-B390-C156",
+  "reason": "Human prototype gate passed. Rebuild common L3 after B-general 13-item remediation/final canonical PASS and C-situation artifact coverage reached 156/180.",
+  "expected": {
+    "requiredCanonical": 150,
+    "generalWorkerComplete": 390,
+    "generalCanonicalPass": true,
+    "situationBatchCoverageFloor": 156
+  }
 }
