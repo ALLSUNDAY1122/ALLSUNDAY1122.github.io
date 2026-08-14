@@ -24,7 +24,8 @@ for sid in ('set1','set2','set3'):
         no_text_choices=q.get('answerType') in {'singleChoice','multiChoice'} and len(q.get('choices') or [])==0
         effective_media=bool(q.get('requiresMedia')) or media_cue or no_text_choices
         concern=q.get('contentConcernStatus') not in {None,'none','resolved'}
-        scoring_exception=q.get('officialScoringStatus') not in {None,'normal'}
+        scoring_special=q.get('officialScoringStatus') not in {None,'normal'}
+        scoring_exception=scoring_special and q.get('scoringExceptionStatus')!='resolved'
         expert_required=q.get('expertReviewStatus') in {'required','pending','expert_review_required'}
         specialist_quarantine=q.get('specialistQuarantineStatus')=='quarantined'
         explained=q.get('explanationStatus')=='ai_explained'
@@ -36,6 +37,8 @@ for sid in ('set1','set2','set3'):
             'sourceRequiresMedia':bool(q.get('requiresMedia')),'mediaCueDetectedInQueue':media_cue or no_text_choices,
             'officialScoringStatus':q.get('officialScoringStatus'),
             'scoringException':q.get('scoringException'),
+            'scoringExceptionStatus':q.get('scoringExceptionStatus'),
+            'scoringRuntimeMode':q.get('scoringRuntimeMode'),
             'contentConcernStatus':q.get('contentConcernStatus','none'),
             'contentConcernReason':q.get('contentConcernReason'),
             'expertReviewStatus':q.get('expertReviewStatus'),
@@ -50,7 +53,6 @@ for sid in ('set1','set2','set3'):
         elif not (concern or scoring_exception or effective_media or expert_required):
             queues['textPending'].append(row)
 
-        # Special queues are orthogonal to explanation completion.
         if effective_media:
             queues['mediaPending'].append(row)
         if scoring_exception:
@@ -62,8 +64,6 @@ for sid in ('set1','set2','set3'):
         if specialist_quarantine or concern or scoring_exception or effective_media or expert_required:
             queues['releaseQuarantined'].append(row)
 
-        # Dynamic evidence escalated to explicit expert review is handled by the
-        # expert queue and is not treated as untriaged L3 dynamic work.
         if q.get('dynamicEvidenceRequired') and q.get('dynamicEvidenceStatus') not in {'verified','expert_review_required'}:
             queues['dynamicPending'].append(row)
 
