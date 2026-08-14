@@ -91,6 +91,7 @@ struct StudySession: Identifiable {
     var index = 0
     var results: [AnswerResult] = []
     var answered = false
+    var finished = false
 
     var attempted: Int { results.count }
     var correct: Int { results.filter { $0.correct && $0.scored }.count }
