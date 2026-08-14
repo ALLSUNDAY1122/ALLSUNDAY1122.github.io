@@ -142,13 +142,10 @@ private struct RigakuHomeV2: View {
                     .foregroundStyle(LearningSprintTheme.ink2)
                     .fixedSize(horizontal: false, vertical: true)
 
-                if !appModel.premiumAccess, let price = appModel.purchaseDisplayPrice {
-                    Button("月額プランを開始（\(price)）") {
-                        Task { await appModel.purchasePremium() }
-                    }
-                    .font(LearningSprintTheme.sans(13, weight: .bold))
-                    .buttonStyle(.borderedProminent)
-                    .tint(LearningSprintTheme.indigo)
+                if !appModel.premiumAccess {
+                    Text("ベース模試・苦手復習、または設定画面から月額プランの詳細を確認できます。")
+                        .font(LearningSprintTheme.sans(11, weight: .medium))
+                        .foregroundStyle(LearningSprintTheme.ink3)
                 }
             }
             .padding(14)
