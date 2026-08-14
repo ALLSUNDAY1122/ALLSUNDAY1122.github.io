@@ -23,7 +23,7 @@ Apple側で新規Appレコードを作成するときの固定入力値。
 - Premium: 残り300問と模試機能を解放
 - Restore purchases: 必須
 - UI price source: StoreKit `Product.displayPrice`
-- Price model: 標準手順 v2.4 の買い切りモデル
+- Price model: 現行標準手順 v2.5 の買い切りモデル（価格標準はv2.4で導入）
 - Japan price: `800円`
 - 価格文字列をアプリコードへ固定しない。App Store Connectの商品価格を800円基準で設定し、アプリ内はStoreKit取得値だけを表示する。
 
