@@ -31,4 +31,20 @@ jobs:
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
       - name: Compile for iPhone without signing
         working-directory: splat-native-ios
-        run: xcodebuild -project SplatNative.xcodeproj -scheme SplatNative -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+        shell: bash
+        run: |
+          set +e
+          set -o pipefail
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNative \
+            -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO build 2>&1 | tee /tmp/splat-build.log
+          status=${PIPESTATUS[0]}
+          echo '===== SPLAT BUILD DIAGNOSTICS ====='
+          grep -E '(^|:) error:|(^|:) warning:' /tmp/splat-build.log | tail -200 || true
+          {
+            echo '## Splat Native build diagnostics'
+            echo '```text'
+            grep -E '(^|:) error:|(^|:) warning:' /tmp/splat-build.log | tail -200 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
