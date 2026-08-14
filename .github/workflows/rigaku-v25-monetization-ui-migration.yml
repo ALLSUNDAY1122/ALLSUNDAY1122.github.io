@@ -1,0 +1,34 @@
+name: Rigaku v2.5 Monetization UI Migration
+
+on:
+  push:
+    branches:
+      - feat/15-rigaku-sprint-native
+    paths:
+      - rigaku-sprint/ios/patch_v25_monetization_ui.py
+      - .github/workflows/rigaku-v25-monetization-ui-migration.yml
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/15-rigaku-sprint-native
+          fetch-depth: 0
+      - name: Apply one-shot UI migration
+        run: python3 rigaku-sprint/ios/patch_v25_monetization_ui.py
+      - name: Commit migrated UI
+        run: |
+          if git diff --quiet -- rigaku-sprint/ios/Sources/RigakuRootViewV2.swift; then
+            echo "No UI migration needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add rigaku-sprint/ios/Sources/RigakuRootViewV2.swift
+          git commit -m "feat(rigaku): align premium UI with v2.5"
+          git push origin HEAD:feat/15-rigaku-sprint-native
