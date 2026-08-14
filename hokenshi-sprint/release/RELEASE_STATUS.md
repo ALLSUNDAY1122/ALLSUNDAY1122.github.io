@@ -44,9 +44,9 @@ App Store Connectの数値App IDはApple自動発行値のため仮値を作ら�
 
 ## 課金方式
 - 非消耗型・買い切りPremium
-- 無料: 第1回110問
-- Premium: 第2・3回を追加し全330問
-- 模試のPremium範囲も同じentitlementで解放
+- 無料: 30問。第1回の10分野から各3問ずつを均等に公開
+- Premium: 残り300問＋模試機能
+- 無料版でも8問スプリント・分野別学習・苦手復習の中心体験を確認できる
 - App Store上の価格は本審査前の最終承認地点で確定
 
 ## AppIcon正本
@@ -60,12 +60,13 @@ Google Drive個別PNG `13_保健師国家試験.png` を正本として特定・
 GitHubのAsset Catalogには正本ファイル名を登録済み。署名ビルド前に正本バイト自体の配置とSHA照合を必須とする。
 
 ## CI
-2026-08-14に、正式決定前の旧「IAP ID禁止」ガードが正式Product IDまで弾いていたことを特定。ガードを正本一致検証へ変更し、以下を再実行する。
+2026-08-14に、正式決定前の旧「IAP ID禁止」ガードが正式Product IDまで弾いていたことを特定。ガードを正本一致検証へ変更。さらに生成データのfree=30 / premium=300をCIで固定する。
 - canonical/content/current-guidance/release-resource gate
 - Native product shell audit
 - LearningSprintCore tests
 - Hokenshi Native tests
 - Bundle ID / Team ID / IAP Product ID正本一致
+- free=30 / premium=300 / 無料10分野×3問
 - IAP capability生成
 - iOS App target Simulator Release build
 - WebView禁止
