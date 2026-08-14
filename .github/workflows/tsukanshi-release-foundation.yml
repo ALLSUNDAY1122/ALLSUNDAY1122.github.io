@@ -2,12 +2,16 @@ name: Tsukanshi release foundation
 
 on:
   push:
+    branches-ignore:
+      - 'testflight/splat-native-ios'
     paths:
       - 'tsukanshi-sprint/**'
       - 'codemagic.yaml'
       - '.github/workflows/tsukanshi-release-foundation.yml'
       - '.github/workflows/tsukanshi-xcode-build.yml'
   pull_request:
+    branches-ignore:
+      - 'testflight/splat-native-ios'
     paths:
       - 'tsukanshi-sprint/**'
       - 'codemagic.yaml'
