@@ -92,7 +92,6 @@ public struct JosanshiPremiumPaywallView: View {
             }
             .background(LearningSprintPaperBackground())
             .navigationTitle("Premium")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("閉じる") { model.dismissPaywall() }
