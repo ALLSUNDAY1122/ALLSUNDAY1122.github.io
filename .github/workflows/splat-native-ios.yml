@@ -4,6 +4,11 @@ on:
   push:
     paths:
       - 'splat-native-ios/**'
+      - '.github/workflows/splat-native-ios.yml'
+  pull_request:
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-native-ios.yml'
 jobs:
   build:
     runs-on: macos-15
