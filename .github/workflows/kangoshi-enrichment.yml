@@ -14,6 +14,8 @@ on:
       - 'kangoshi-sprint/product-content/apply_dynamic_evidence_overrides.py'
       - 'kangoshi-sprint/product-content/release-review-resolutions.json'
       - 'kangoshi-sprint/product-content/apply_release_review_resolutions.py'
+      - 'kangoshi-sprint/product-content/scoring-runtime-audit.json'
+      - 'kangoshi-sprint/product-content/apply_scoring_exception_resolutions.py'
       - 'kangoshi-sprint/product-content/build_enrichment_queues.py'
       - 'kangoshi-sprint/product-content/write_dynamic_pending_report.py'
       - 'kangoshi-sprint/product-content/write_release_queue_ids.py'
@@ -21,17 +23,12 @@ on:
       - 'kangoshi-sprint/product-content/enrichment-trigger.json'
       - '.github/workflows/kangoshi-enrichment.yml'
 
-# Explanation batch files are intentionally NOT direct triggers.
-# During large content work, dozens of small batch commits would otherwise
-# continuously cancel one another. Batches accumulate on main and one
-# checkpoint trigger runs the deterministic apply/validate loop against the
-# latest repository state.
 concurrency:
   group: kangoshi-explanation-evidence
   cancel-in-progress: false
 
 env:
-  PIPELINE_SCHEMA: '10'
+  PIPELINE_SCHEMA: '11'
 
 permissions:
   contents: write
@@ -52,6 +49,8 @@ jobs:
         run: python3 kangoshi-sprint/product-content/apply_dynamic_evidence_overrides.py
       - name: Apply audited release-review resolutions
         run: python3 kangoshi-sprint/product-content/apply_release_review_resolutions.py
+      - name: Apply official scoring-exception resolutions
+        run: python3 kangoshi-sprint/product-content/apply_scoring_exception_resolutions.py
       - name: Build compact pending queues
         run: python3 kangoshi-sprint/product-content/build_enrichment_queues.py
       - name: Write compact dynamic-evidence report
@@ -75,10 +74,8 @@ jobs:
           from pathlib import Path
           root=Path('kangoshi-sprint/product-content'); manifest=root/'manifest.json'
           d=json.loads(manifest.read_text(encoding='utf-8'))
-          ap=root/'enriched-draft/enrichment-audit.json'
-          audit=json.loads(ap.read_text(encoding='utf-8')) if ap.exists() else {'counts':{}}
-          qp=root/'enriched-draft/pending-queues.json'
-          queues=json.loads(qp.read_text(encoding='utf-8')).get('summary',{}) if qp.exists() else {}
+          audit=json.loads((root/'enriched-draft/enrichment-audit.json').read_text(encoding='utf-8'))
+          queues=json.loads((root/'enriched-draft/pending-queues.json').read_text(encoding='utf-8')).get('summary',{})
           code=int((root/'enriched-draft/enrichment.exit').read_text().strip())
           d['explanationEvidenceLoop']={**audit.get('counts',{}),'queues':queues,'auditExit':code,'status':'pass' if code==0 else 'fail'}
           manifest.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
@@ -100,5 +97,4 @@ jobs:
             test "$pushed" = "1"
           fi
       - name: Enforce L3 gate
-        shell: bash
         run: test "$(cat kangoshi-sprint/product-content/enriched-draft/enrichment.exit)" = "0"
