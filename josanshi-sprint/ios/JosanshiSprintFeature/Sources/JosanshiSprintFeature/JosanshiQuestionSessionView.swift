@@ -12,6 +12,7 @@ public struct JosanshiQuestionSessionView: View {
     @State private var submittedEvaluation: AnswerEvaluation?
     @State private var submittedChoiceOrder: [Int] = []
     @State private var isFeedbackPresented = false
+    @State private var isDetailExpanded = false
     @State private var errorMessage: String?
     @State private var feedbackMarkScale: CGFloat = 0.55
     @State private var feedbackMarkOpacity = 0.0
@@ -97,12 +98,13 @@ public struct JosanshiQuestionSessionView: View {
                             originalIndex: originalIndex,
                             displayIndex: displayIndex,
                             choice: question.choices[originalIndex],
-                            question: question
+                            question: question,
+                            order: order
                         )
                     }
                 }
 
-                HStack(spacing: 12) {
+                if question.answerType == .singleChoice {
                     Button {
                         submitUnknown(question, order: order)
                     } label: {
@@ -112,17 +114,29 @@ public struct JosanshiQuestionSessionView: View {
                     .buttonStyle(.bordered)
                     .tint(LearningSprintTheme.ink2)
                     .accessibilityIdentifier("answer-unknown")
+                } else {
+                    HStack(spacing: 12) {
+                        Button {
+                            submitUnknown(question, order: order)
+                        } label: {
+                            Label("わからない", systemImage: "questionmark.circle")
+                                .frame(maxWidth: .infinity, minHeight: 48)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(LearningSprintTheme.ink2)
+                        .accessibilityIdentifier("answer-unknown")
 
-                    Button {
-                        submitSelection(question, order: order)
-                    } label: {
-                        Text("回答する")
-                            .frame(maxWidth: .infinity, minHeight: 48)
+                        Button {
+                            submitSelection(question, order: order)
+                        } label: {
+                            Text("回答する")
+                                .frame(maxWidth: .infinity, minHeight: 48)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(LearningSprintTheme.indigo)
+                        .disabled(selectedIndices.isEmpty)
+                        .accessibilityIdentifier("submit-answer")
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(LearningSprintTheme.indigo)
-                    .disabled(selectedIndices.isEmpty)
-                    .accessibilityIdentifier("submit-answer")
                 }
             }
             .padding(18)
@@ -135,11 +149,13 @@ public struct JosanshiQuestionSessionView: View {
         originalIndex: Int,
         displayIndex: Int,
         choice: String,
-        question: LearningQuestion
+        question: LearningQuestion,
+        order: [Int]
     ) -> some View {
         Button {
             if question.answerType == .singleChoice {
-                selectedIndices = [originalIndex]
+                submittedChoiceOrder = order
+                submit(question: question, payload: AnswerPayload(selectedIndices: [originalIndex]))
             } else if selectedIndices.contains(originalIndex) {
                 selectedIndices.remove(originalIndex)
             } else {
@@ -206,20 +222,19 @@ public struct JosanshiQuestionSessionView: View {
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("解説")
-                        .font(LearningSprintTheme.serif(20, weight: .bold))
+                LearningSprintMemoryBlock(question.memoryPoint)
+
+                DisclosureGroup("詳しい解説", isExpanded: $isDetailExpanded) {
                     Text(question.explanation)
                         .font(LearningSprintTheme.sans(15))
-                        .foregroundStyle(LearningSprintTheme.ink)
+                        .foregroundStyle(LearningSprintTheme.ink2)
                         .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 8)
                 }
+                .font(LearningSprintTheme.sans(14, weight: .bold))
                 .padding(16)
-                .frame(maxWidth: .infinity, alignment: .leading)
                 .background(LearningSprintTheme.card)
                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-
-                LearningSprintMemoryBlock(question.memoryPoint)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("根拠確認日: \(question.sourceCheckedAt)")
@@ -346,15 +361,8 @@ public struct JosanshiQuestionSessionView: View {
     }
 
     private func submitUnknown(_ question: LearningQuestion, order: [Int]) {
-        do {
-            submittedChoiceOrder = order
-            submittedQuestion = question
-            submittedEvaluation = try coordinator.markUnknown()
-            selectedIndices.removeAll()
-            isFeedbackPresented = true
-        } catch {
-            errorMessage = String(describing: error)
-        }
+        submittedChoiceOrder = order
+        submit(question: question, payload: .unknown)
     }
 
     private func submit(question: LearningQuestion, payload: AnswerPayload) {
@@ -362,6 +370,7 @@ public struct JosanshiQuestionSessionView: View {
             submittedQuestion = question
             submittedEvaluation = try coordinator.submit(payload)
             selectedIndices.removeAll()
+            isDetailExpanded = false
             isFeedbackPresented = true
         } catch {
             errorMessage = String(describing: error)
@@ -374,6 +383,7 @@ public struct JosanshiQuestionSessionView: View {
         submittedEvaluation = nil
         submittedChoiceOrder = []
         selectedIndices.removeAll()
+        isDetailExpanded = false
         feedbackMarkScale = 0.55
         feedbackMarkOpacity = 0
     }
