@@ -88,6 +88,9 @@ jobs:
             exit 1
           fi
 
+      - name: Validate Golden Master v2.1 native structure
+        run: python3 josanshi-sprint/scripts/validate_native_golden_master.py
+
       - name: Run Swift package tests
         run: swift test --package-path josanshi-sprint/ios/JosanshiSprintFeature
 
