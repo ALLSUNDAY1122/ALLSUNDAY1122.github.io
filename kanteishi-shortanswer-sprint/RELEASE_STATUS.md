@@ -1,14 +1,22 @@
 # #12 不動産鑑定士｜学びスプリント Release Status
 
-更新日: 2026-08-13
+更新日: 2026-08-14
 
 ## 現在地
 
-**PRE-TESTFLIGHT / HUMAN IDENTIFIER GATE**
+**PRE-TESTFLIGHT / APP STORE CONNECT REGISTRATION**
 
-初期試作品の人間確認は完了。製品240問・ネイティブアプリ統合・canonical監査・Simulator実行・申請資料整備まで完了済み。
+初期試作品確認、製品240問、SwiftUIネイティブ統合、canonical監査、Simulator実行、申請資料整備まで完了済み。
 
-次の人間確認地点はTestFlight実機確認だが、その前にApple識別情報を最上位Notion正本へ確定する必要がある。
+2026-08-14の標準手順 v2.4 により、Bundle ID命名はChatGPTへ恒久委任され、ユーザー確認ゲートではなくなった。最上位Notion正本にも#12が登録済みのため、旧 `HUMAN IDENTIFIER GATE` は解除する。
+
+## 確定識別情報
+
+- Team ID: `MN3D2ZM44N`
+- Bundle ID: `jp.allsunday1122.kanteishishortanswer`
+- Codemagic profile: `kanteishishortanswer_appstore`
+- App Store Connect App ID: Apple発行待ち・推測禁止
+- App Store本審査自動提出: 禁止
 
 ## 最終機械ゲート
 
@@ -38,6 +46,7 @@ GitHub Actions run `31703594505`: **PASS**
 - canonical差分なし
 
 ## 完了
+
 - Phase 0 調査 / 権利 / 試験構成: PASS
 - Phase 1 SwiftUI Golden Master系UI: PASS
 - 初期試作品確認: PASS
@@ -53,46 +62,28 @@ GitHub Actions run `31703594505`: **PASS**
 - Privacy Manifest: 作成済み
 - App Store原稿 / TestFlight Notes / Support / Privacy: 作成済み
 - 学びスプリント#12正本App Icon: Google Driveで特定・1024×1024 RGB・SHA-256固定済み
+- Bundle ID / Codemagic profile: 最上位Notion正本へ登録済み
 
-## App Icon残タスク
+## App Icon
 
 Google Drive正本:
 - `12_不動産鑑定士試験_短答式.png`
 - Drive ID: `1wnnkFkere2-9OKXYSG3T_bS6NqS3xWMX`
 - SHA-256: `679f3493524dd2cf71126303c998b15395c70ff19f224d158a760ee3c2a395f1`
 
-GitHub ActionsからGoogle Driveへ匿名ダウンロードする自動配置を試したが、Drive側が取得を拒否した。共有設定を勝手に変更することはせず、一時ワークフローは削除済み。
+正本PNGは取得・検証済み。署名前工程でApp Icon Assetsへ統合し、signed `.app`で最終確認する。
 
-正本PNG自体は取得・検証済みなので、Apple識別情報確定後の署名前工程で原寸配置し、最終signed `.app`でアイコンを確認する。
+## 次工程
 
-## Apple識別情報の不整合
+1. App Store Connectで#12の新規アプリを作成し、Apple発行の数値App IDを取得する。
+2. 実発行値を最上位Notion正本へ記録する。
+3. App Icon Assets統合。
+4. release preflight再監査。
+5. Codemagic署名設定、Archive / IPA。
+6. App Store Connect build upload。
+7. Internal TestFlightへ配布。
+8. TestFlight実機確認でユーザーへ戻す。
 
-### 最上位Notion正本
-`【正本】対象アプリ識別情報｜App Store Connect / Codemagic`
+ユーザー操作が必要なのは、Apple/App Store Connect/Codemagicのログイン・2FA等の本人認証と、TestFlight実機確認、最終Submit直前の承認のみとする。
 
-2026-08-13現在、#12の行が存在しない。この正本は「未記載値を他アプリ・GitHub・過去チャット・命名規則から推測しない」と定めている。
-
-### 現行コード
-- Team ID: `MN3D2ZM44N`
-- Bundle ID候補: `jp.allsunday1122.kanteishishortanswer`
-
-Team IDは共通正本に一致。Bundle IDは#12の最上位正本登録がないため、**Apple側登録にはまだ使用しない**。
-
-## 次の停止条件
-ユーザーが次を明示した時点で再開する。
-
-1. 現行Bundle ID `jp.allsunday1122.kanteishishortanswer` を#12の確定値として採用する、または別のBundle IDを明示する。
-2. 採用値を最上位Notion正本へ登録する。
-3. App Store Connect App IDはApple発行実値だけを追記する。
-
-## その後の自動進行
-識別情報確定後は、可能な限り次を連続実行する。
-- App Icon Assets統合
-- release preflight再監査
-- Codemagic / 署名設定
-- Archive / IPA
-- App Store Connect build upload
-- Internal TestFlight
-- TestFlight実機確認でユーザーへ戻す
-
-App Store本審査提出は、TestFlight確認後もユーザーの明示承認まで実行しない。
+App Store本審査の `Add for Review` / `Submit for Review` は、TestFlight確認後もユーザーの明示承認まで実行しない。
