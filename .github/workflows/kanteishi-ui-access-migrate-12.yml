@@ -1,0 +1,121 @@
+name: Kanteishi UI Access Migration
+
+on:
+  push:
+    branches:
+      - feat/kanteishi-shortanswer-sprint-12
+    paths:
+      - .github/workflows/kanteishi-ui-access-migrate-12.yml
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/kanteishi-shortanswer-sprint-12
+          fetch-depth: 0
+      - name: Patch access-aware UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/ContentView.swift')
+          s = p.read_text()
+
+          def r(old, new):
+              global s
+              if old not in s:
+                  raise SystemExit('missing: ' + old[:80])
+              s = s.replace(old, new, 1)
+
+          r('struct KanteishiShortAnswerRootView: View {\n    @EnvironmentObject private var store: LearningStore',
+            'struct KanteishiShortAnswerRootView: View {\n    @EnvironmentObject private var store: LearningStore\n    @EnvironmentObject private var purchases: PremiumPurchaseStore')
+
+          r('            } else if let result = store.result {\n                ResultScreen(result: result)\n            } else if store.session != nil {\n                QuizScreen()\n            } else {',
+            '            } else if let result = store.result {\n                if purchases.isPremium || !store.requiresPremium(questionIDs: result.questionIDs) {\n                    ResultScreen(result: result)\n                } else {\n                    PremiumSessionLockedView(title: result.title)\n                }\n            } else if let session = store.session {\n                if purchases.isPremium || !store.requiresPremium(questionIDs: session.questionIDs) {\n                    QuizScreen()\n                } else {\n                    PremiumSessionLockedView(title: session.title)\n                }\n            } else {')
+
+          lock_view = '''private struct PremiumSessionLockedView: View {
+              @EnvironmentObject private var store: LearningStore
+              let title: String
+
+              var body: some View {
+                  ZStack {
+                      AppTheme.paper.ignoresSafeArea()
+                      VStack(spacing: 14) {
+                          Image(systemName: "lock.fill")
+                              .font(.system(size: 30, weight: .bold))
+                              .foregroundStyle(AppTheme.ai)
+                          Text("プレミアム学習を一時停止中")
+                              .appSerif(21, weight: .bold)
+                              .foregroundStyle(AppTheme.ink)
+                          Text(title)
+                              .appSans(13, weight: .bold)
+                              .foregroundStyle(AppTheme.ink2)
+                          Text("購入状態を確認すると、全240問と年度別80問模試を再開できます。")
+                              .appSans(12)
+                              .foregroundStyle(AppTheme.ink3)
+                              .multilineTextAlignment(.center)
+                          Button {
+                              store.exitSessionToHome()
+                              store.currentTab = .settings
+                          } label: {
+                              Text("プレミアムを確認")
+                                  .appSans(15, weight: .bold)
+                                  .foregroundStyle(.white)
+                                  .frame(maxWidth: .infinity, minHeight: 50)
+                                  .background(AppTheme.ai)
+                                  .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                          }
+                          .buttonStyle(.plain)
+                      }
+                      .padding(22)
+                      .frame(maxWidth: 420)
+                  }
+                  .accessibilityIdentifier("premium.sessionLocked")
+              }
+          }
+
+          '''
+          r('struct HomeView: View {\n    @EnvironmentObject private var store: LearningStore',
+            lock_view + 'struct HomeView: View {\n    @EnvironmentObject private var store: LearningStore\n    @EnvironmentObject private var purchases: PremiumPurchaseStore')
+
+          r('store.resumeSession()', 'if !store.resumeSession(isPremium: purchases.isPremium) { store.currentTab = .settings }')
+          r('store.startToday()', 'store.startToday(isPremium: purchases.isPremium)')
+          r('store.startWeak()', 'if !store.startWeak(isPremium: purchases.isPremium) { store.currentTab = .settings }')
+          s = s.replace('store.weakQuestions', 'store.accessibleWeakQuestions(isPremium: purchases.isPremium)')
+          r('store.startDomain(domain)', 'if !store.startDomain(domain, isPremium: purchases.isPremium) { store.currentTab = .settings }')
+          r('Text("\\(store.repository.questions(domain: domain).count)問")',
+            'Text("\\(store.accessibleQuestionCount(store.repository.questions(domain: domain), isPremium: purchases.isPremium))問")')
+
+          r('struct MockView: View {\n    @EnvironmentObject private var store: LearningStore',
+            'struct MockView: View {\n    @EnvironmentObject private var store: LearningStore\n    @EnvironmentObject private var purchases: PremiumPurchaseStore')
+
+          intro = '                    Text("各年度は行政法規40問＋鑑定理論40問＝80問。3年度合計240問の公式過去問を収録しています。")\n                        .appSans(12)\n                        .foregroundStyle(AppTheme.ink2)\n                        .padding(14)\n                        .background(AppTheme.aiSoft)\n                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))'
+          intro_new = intro + '\n                    if !purchases.isPremium {\n                        Label("無料版は24問。年度別80問模試と全240問はプレミアムで利用できます。", systemImage: "lock.fill")\n                            .appSans(11, weight: .bold)\n                            .foregroundStyle(AppTheme.ai)\n                            .padding(12)\n                            .frame(maxWidth: .infinity, alignment: .leading)\n                            .background(AppTheme.aiSoft)\n                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))\n                    }'
+          r(intro, intro_new)
+          r('store.startMock(edition: edition)', 'if !store.startMock(edition: edition, isPremium: purchases.isPremium) { store.currentTab = .settings }')
+          r('store.startEditionSubject(edition: edition, subject: subject)', 'if !store.startEditionSubject(edition: edition, subject: subject, isPremium: purchases.isPremium) { store.currentTab = .settings }')
+          r('Text("\\(questions.count)問・完答 \\(store.completionCount(for: key))回")',
+            'Text("\\(store.accessibleQuestionCount(questions, isPremium: purchases.isPremium))問・完答 \\(store.completionCount(for: key))回")')
+
+          p.write_text(s)
+          Path('.github/workflows/kanteishi-ui-access-migrate-12.yml').unlink()
+          PY
+      - name: Commit UI patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq 'premium.sessionLocked' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/ContentView.swift
+          grep -Fq 'startMock(edition: edition, isPremium: purchases.isPremium)' kanteishi-shortanswer-sprint/ios/KanteishiShortAnswer/ContentView.swift
+          ! test -f .github/workflows/kanteishi-ui-access-migrate-12.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat(#12): gate UI to free 24 and premium 240'
+          git push origin HEAD:feat/kanteishi-shortanswer-sprint-12
