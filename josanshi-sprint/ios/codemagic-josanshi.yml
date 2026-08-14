@@ -46,18 +46,18 @@ workflows:
           test -n "${JOSANSHI_APPICON_BASE64:-}" || { echo 'ERROR: JOSANSHI_APPICON_BASE64 is not configured in Codemagic.' >&2; exit 1; }
           bash josanshi-sprint/ios/prepare-app-icon.sh
           test "$(shasum -a 256 josanshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png | awk '{print $1}')" = "$APPICON_SHA256"
-      - name: Set CI build number and generate Xcode project
+      - name: Set CI build number and generate Release Xcode project
         script: |
           cd "$CM_BUILD_DIR/josanshi-sprint/ios"
           python3 - <<'PY'
           from pathlib import Path
           import os
-          p = Path('xcodegen.yml')
+          p = Path('xcodegen-release.yml')
           text = p.read_text(encoding='utf-8')
           text = text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: ' + os.environ['CM_BUILD_NUMBER'], 1)
           p.write_text(text, encoding='utf-8')
           PY
-          xcodegen generate --spec xcodegen.yml
+          xcodegen generate --spec xcodegen-release.yml
           python3 apply-xcode-capabilities.py JosanshiSprint.xcodeproj/project.pbxproj
       - name: Verify release Xcode project
         script: |
@@ -67,6 +67,7 @@ workflows:
           grep -Eq 'DEVELOPMENT_TEAM = "?MN3D2ZM44N"?;' "$PBX"
           grep -q 'com.apple.InAppPurchase' "$PBX"
           grep -q 'enabled = 1;' "$PBX"
+          grep -q 'ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;' "$PBX"
           test -f josanshi-sprint/ios/PrivacyInfo.xcprivacy
           test -f josanshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png
       - name: Apply App Store signing profiles for Internal TestFlight only
