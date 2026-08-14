@@ -4,10 +4,21 @@ import LearningSprintCore
 public struct JosanshiPreferences: Codable, Equatable, Sendable {
     public var shuffleQuestions: Bool
     public var shuffleChoices: Bool
+    /// Optional so preferences written before the v2.1 text-size control still decode safely.
+    public var textSizeStep: Int?
 
-    public init(shuffleQuestions: Bool = true, shuffleChoices: Bool = true) {
+    public init(
+        shuffleQuestions: Bool = true,
+        shuffleChoices: Bool = true,
+        textSizeStep: Int? = 0
+    ) {
         self.shuffleQuestions = shuffleQuestions
         self.shuffleChoices = shuffleChoices
+        self.textSizeStep = textSizeStep
+    }
+
+    public var resolvedTextSizeStep: Int {
+        min(2, max(0, textSizeStep ?? 0))
     }
 }
 
