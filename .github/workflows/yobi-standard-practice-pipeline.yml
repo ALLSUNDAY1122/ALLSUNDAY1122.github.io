@@ -3,17 +3,22 @@ name: Yobi Standard Practice Pipeline
 on:
   pull_request:
     paths:
+      - 'learning-sprint/yobi-tantou/content-loop/questions.practice.release.v1.json'
       - 'learning-sprint/yobi-tantou/content-loop/questions.standard.candidates.v1.json'
       - 'learning-sprint/yobi-tantou/content-loop/standard-source-locks.v1.json'
       - 'learning-sprint/yobi-tantou/content-loop/standard-answer-audit.v1.json'
       - 'learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json'
       - 'learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json'
       - 'learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json'
+      - 'learning-sprint/yobi-tantou/content-loop/questions.practice.combined.v1.json'
       - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py'
       - 'learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py'
       - 'learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py'
       - 'learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py'
       - 'learning-sprint/yobi-tantou/content-loop/promote_practice_release.py'
+      - 'learning-sprint/yobi-tantou/content-loop/combine_practice_release.py'
+      - 'learning-sprint/yobi-tantou/content-loop/build_native_release.py'
+      - 'learning-sprint/yobi-tantou/ios/Resources/questions.release.json'
       - '.github/workflows/yobi-standard-practice-pipeline.yml'
   workflow_dispatch:
 
@@ -66,26 +71,49 @@ jobs:
           --staging learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json
           --quality learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json
           --output learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json
-      - name: Verify standard release invariants
+      - name: Combine audited foundation and standard tiers
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/combine_practice_release.py
+          --tier foundation=learning-sprint/yobi-tantou/content-loop/questions.practice.release.v1.json
+          --tier standard=learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json
+          --output learning-sprint/yobi-tantou/content-loop/questions.practice.combined.v1.json
+      - name: Build native 28-question formal practice bank
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/build_native_release.py
+          learning-sprint/yobi-tantou/content-loop/questions.practice.combined.v1.json
+          learning-sprint/yobi-tantou/ios/Resources/questions.release.json
+      - name: Verify combined release invariants
         run: |
           python - <<'PY'
           import json
+          from collections import Counter
           from pathlib import Path
           root = Path('learning-sprint/yobi-tantou/content-loop')
           staging = json.loads((root / 'practice-standard-staging.v1.json').read_text())
           quality = json.loads((root / 'practice-standard-quality-audit.v1.json').read_text())
-          release = json.loads((root / 'questions.standard.release.v1.json').read_text())
-          assert len(staging) == len(release) == 14
+          standard = json.loads((root / 'questions.standard.release.v1.json').read_text())
+          combined = json.loads((root / 'questions.practice.combined.v1.json').read_text())
+          native = json.loads(Path('learning-sprint/yobi-tantou/ios/Resources/questions.release.json').read_text())
+          assert len(staging) == len(standard) == 14
           assert quality['checkedAt'] == '2026-08-14'
           assert quality['overallVerdict'] == 'PASS'
           assert quality['summary'] == {'total': 14, 'pass': 14, 'hold': 0, 'nearDuplicatePairs': 0}
-          assert all(q['difficulty'] == 'standard' for q in release)
-          assert all(q['content_use'] == 'practice' and q['release_eligible'] is True for q in release)
-          assert all(q.get('exam_year') is None for q in release)
-          assert len({q['id'] for q in release}) == 14
-          assert len({q['subject'] for q in release}) == 7
-          print('PASS: 14 standard practice items promoted; 7 subjects; no official exam year')
+          assert len(combined) == len(native) == 28
+          assert Counter(q['difficulty'] for q in combined) == Counter({'foundation': 14, 'standard': 14})
+          assert Counter(q['difficulty'] for q in native) == Counter({'foundation': 14, 'standard': 14})
+          assert all(q['content_use'] == 'practice' and q['release_eligible'] is True for q in combined)
+          assert all(q.get('exam_year') is None for q in combined)
+          assert all(q['contentUse'] == 'practice' and q['releaseEligible'] is True for q in native)
+          assert all(q.get('examYear') is None for q in native)
+          assert len({q['id'] for q in combined}) == 28
+          assert len({q['id'] for q in native}) == 28
+          assert len({q['subject'] for q in combined}) == 7
+          print('PASS: 28 formal practice items = foundation14 + standard14; 7 subjects; official mock isolation intact')
           PY
+      - name: Release pipeline script self-tests
+        run: |
+          python learning-sprint/yobi-tantou/content-loop/combine_practice_release.py --self-test
+          python learning-sprint/yobi-tantou/content-loop/build_native_release.py --self-test
       - uses: actions/upload-artifact@v4
         with:
           name: yobi-standard-practice-release
@@ -93,36 +121,44 @@ jobs:
             learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json
             learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json
             learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json
+            learning-sprint/yobi-tantou/content-loop/questions.practice.combined.v1.json
+            learning-sprint/yobi-tantou/ios/Resources/questions.release.json
           if-no-files-found: error
-      - name: Persist audited standard canonical files to PR branch
+      - name: Persist audited practice canonical files to PR branch
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         env:
           BRANCH: ${{ github.head_ref }}
         run: |
           set -euo pipefail
           GENERATED="$RUNNER_TEMP/yobi-standard-generated"
-          mkdir -p "$GENERATED"
-          cp learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json "$GENERATED/"
-          cp learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json "$GENERATED/"
-          cp learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json "$GENERATED/"
+          mkdir -p "$GENERATED/content-loop" "$GENERATED/Resources"
+          cp learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json "$GENERATED/content-loop/"
+          cp learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json "$GENERATED/content-loop/"
+          cp learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json "$GENERATED/content-loop/"
+          cp learning-sprint/yobi-tantou/content-loop/questions.practice.combined.v1.json "$GENERATED/content-loop/"
+          cp learning-sprint/yobi-tantou/ios/Resources/questions.release.json "$GENERATED/Resources/"
 
           git fetch origin "$BRANCH"
           git checkout -B "$BRANCH" "origin/$BRANCH"
-          cp "$GENERATED/practice-standard-staging.v1.json" learning-sprint/yobi-tantou/content-loop/
-          cp "$GENERATED/practice-standard-quality-audit.v1.json" learning-sprint/yobi-tantou/content-loop/
-          cp "$GENERATED/questions.standard.release.v1.json" learning-sprint/yobi-tantou/content-loop/
+          cp "$GENERATED/content-loop/practice-standard-staging.v1.json" learning-sprint/yobi-tantou/content-loop/
+          cp "$GENERATED/content-loop/practice-standard-quality-audit.v1.json" learning-sprint/yobi-tantou/content-loop/
+          cp "$GENERATED/content-loop/questions.standard.release.v1.json" learning-sprint/yobi-tantou/content-loop/
+          cp "$GENERATED/content-loop/questions.practice.combined.v1.json" learning-sprint/yobi-tantou/content-loop/
+          cp "$GENERATED/Resources/questions.release.json" learning-sprint/yobi-tantou/ios/Resources/
           git add \
             learning-sprint/yobi-tantou/content-loop/practice-standard-staging.v1.json \
             learning-sprint/yobi-tantou/content-loop/practice-standard-quality-audit.v1.json \
-            learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json
+            learning-sprint/yobi-tantou/content-loop/questions.standard.release.v1.json \
+            learning-sprint/yobi-tantou/content-loop/questions.practice.combined.v1.json \
+            learning-sprint/yobi-tantou/ios/Resources/questions.release.json
 
           if git diff --cached --quiet; then
-            echo 'PASS: committed standard canonical files already match regenerated output.'
+            echo 'PASS: committed 28-question practice canonical already matches regenerated output.'
             exit 0
           fi
 
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'chore(yobi): persist audited standard practice release'
+          git commit -m 'chore(yobi): persist 28-question audited practice bank'
           git pull --rebase origin "$BRANCH"
           git push origin HEAD:"$BRANCH"
