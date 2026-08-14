@@ -240,6 +240,9 @@ public final class JosanshiLearningCoordinator: ObservableObject {
     }
 
     private func start(kind: SessionKind, questions selected: [LearningQuestion]) -> LearningSessionSnapshot {
+        if let activeSession {
+            return activeSession
+        }
         let snapshot = LearningSessionSnapshot(
             kind: kind,
             questionIDs: selected.map(\.id)
