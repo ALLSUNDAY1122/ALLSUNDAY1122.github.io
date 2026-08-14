@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC07",
+  "sourceExam": 114,
+  "session": "AM",
+  "questionIds": ["K114-AM109", "K114-AM110", "K114-AM111"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "41歳初妊婦、会社員。42歳の夫と2人暮らし。妊娠16週3日時点で経過順調。妊娠前はバスケットボール週3回、夫とのウォーキングを毎日行っていたが、高齢妊娠を理由に自主的に活動を大きく制限していた。",
+  "mainCondition": "高年初妊婦の妊娠中運動支援、妊娠中期の貧血評価、妊娠後期の下肢静脈瘤へのセルフケア支援。",
+  "assessment": [
+    "AM109では医学的禁忌のない順調な妊娠であり、一律安静ではなく妊娠前からのウォーキング再開を支援する。",
+    "AM110では妊娠24週0日のHb10.1g/dL、Ht31％を妊娠性貧血として評価する。",
+    "AM111では妊娠35週4日の夕方の下肢だるさと膝窩部の静脈膨隆を妊娠に伴う下肢静脈瘤として捉え、弾性ストッキングを勧める。"
+  ],
+  "nursingJudgment": "3問は『妊娠中期の活動支援→妊娠中期の身体変化評価→妊娠後期の静脈うっ滞対策』として同一妊婦の経過を追う。夫は生活支援者であり患者本人との取り違えはない。",
+  "nursingPractice": [
+    "高齢妊娠のみを理由に過度な安静を勧めず、禁忌の有無を確認し安全な運動を継続できるよう支援する。",
+    "妊娠週数と血算を合わせて貧血を評価し、必要な食事・治療相談につなげる。",
+    "下肢静脈瘤では長時間立位を避け、下肢挙上や弾性ストッキングなど静脈還流を助ける方法を説明する。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "canonicalPatch": {"path": "situation-audit/canonical-patches/K114-AM-SC07.json", "textCorrectionRequired": true, "classificationCorrectionRequired": false, "applyState": "pending_canonical_integration"},
+  "classificationAudit": {"majorSubjectConsistent": true, "majorSubject": "母性看護学", "status": "pass"},
+  "explanationAudit": {"batchId": "K114-AM109-AM111-situation-SC07", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "none", "questionId": null, "reason": null, "evidenceRefs": []},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_canonical_patch_pending",
+  "auditedAt": "2026-08-14T14:56:00+09:00"
+}
