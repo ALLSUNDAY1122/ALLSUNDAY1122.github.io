@@ -6,7 +6,8 @@ final class QuestionContentUseGateTests: XCTestCase {
         id: String = "RELEASE-001",
         examYear: Int? = nil,
         contentUse: QuestionContentUse? = .practice,
-        originType: String = "original_from_primary_source"
+        originType: String = "original_from_primary_source",
+        difficulty: QuestionDifficulty? = .foundation
     ) -> StudyQuestion {
         StudyQuestion(
             id: id,
@@ -20,11 +21,12 @@ final class QuestionContentUseGateTests: XCTestCase {
             memory: "用途を分離する。",
             sourceTitle: "一次資料",
             sourceURL: "https://example.invalid/primary",
-            evidenceCheckedDate: "2026-08-13",
+            evidenceCheckedDate: "2026-08-14",
             lawBasisDate: "2026-01-01",
             originType: originType,
             releaseEligible: true,
-            contentUse: contentUse
+            contentUse: contentUse,
+            difficulty: difficulty
         )
     }
 
@@ -40,6 +42,7 @@ final class QuestionContentUseGateTests: XCTestCase {
 
         XCTAssertEqual(decoded.count, 1)
         XCTAssertEqual(decoded[0].contentUse, .practice)
+        XCTAssertEqual(decoded[0].difficulty, .foundation)
         XCTAssertNil(decoded[0].examYear)
         XCTAssertTrue(decoded[0].isPracticeQuestion)
         XCTAssertFalse(decoded[0].isOfficialMockQuestion)
@@ -80,6 +83,17 @@ final class QuestionContentUseGateTests: XCTestCase {
         XCTAssertThrowsError(
             try QuestionRepository().decode(
                 try data([releaseQuestion(contentUse: nil)]),
+                kind: .release
+            )
+        ) { error in
+            XCTAssertEqual(error as? QuestionBankError, .invalidReleaseGate("RELEASE-001"))
+        }
+    }
+
+    func testReleaseRejectsMissingDifficulty() throws {
+        XCTAssertThrowsError(
+            try QuestionRepository().decode(
+                try data([releaseQuestion(difficulty: nil)]),
                 kind: .release
             )
         ) { error in
