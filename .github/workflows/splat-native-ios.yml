@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Disable Git LFS smudge for SwiftPM source checkout
-        run: git lfs install --skip-smudge --global
+        run: git lfs install --skip-smudge --skip-repo
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Static checks
