@@ -119,6 +119,10 @@ def main() -> int:
                 errors.append(
                     f"{sid}: subject mismatch question={question['subject']} classification={classification['subject']}"
                 )
+            if str(question["topic"]).strip() != str(classification["topic"]).strip():
+                errors.append(
+                    f"{sid}: topic mismatch question={question['topic']} classification={classification['topic']}"
+                )
             if (
                 classification["mediaStatus"] == "excluded_unresolved_rights"
                 and question["originType"] == "official_text_with_media"
