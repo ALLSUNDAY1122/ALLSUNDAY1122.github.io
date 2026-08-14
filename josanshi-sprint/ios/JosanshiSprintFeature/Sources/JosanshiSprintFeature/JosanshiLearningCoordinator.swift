@@ -21,20 +21,25 @@ public enum JosanshiLearningError: Error, Equatable {
 @MainActor
 public final class JosanshiLearningCoordinator: ObservableObject {
     @Published public private(set) var state: LearningState
+    @Published public private(set) var preferences: JosanshiPreferences
     @Published public private(set) var activeSession: LearningSessionSnapshot?
     @Published public private(set) var latestEvaluation: AnswerEvaluation?
     @Published public private(set) var persistenceErrorDescription: String?
 
     public private(set) var questions: [LearningQuestion]
     private let store: LearningStateStore?
+    private let preferencesStore: JosanshiPreferencesStore?
 
     public init(
         questions: [LearningQuestion] = [],
         store: LearningStateStore? = nil,
+        preferencesStore: JosanshiPreferencesStore? = nil,
         loadPersistedState: Bool = true
     ) {
         self.questions = questions
         self.store = store
+        self.preferencesStore = preferencesStore ?? (loadPersistedState ? JosanshiPreferencesStore() : nil)
+
         if loadPersistedState, let store {
             do {
                 let loaded = try store.load()
@@ -50,6 +55,13 @@ public final class JosanshiLearningCoordinator: ObservableObject {
             self.state = LearningState(contentVersion: JosanshiLocalPersistenceConfiguration.contentVersion)
             self.activeSession = nil
             self.persistenceErrorDescription = nil
+        }
+
+        do {
+            self.preferences = try self.preferencesStore?.load() ?? JosanshiPreferences()
+        } catch {
+            self.preferences = JosanshiPreferences()
+            self.persistenceErrorDescription = self.persistenceErrorDescription ?? String(describing: error)
         }
     }
 
@@ -80,15 +92,42 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         persist()
     }
 
+    public func setExamDate(_ value: Date?) {
+        state.examDate = value.map { Calendar.current.startOfDay(for: $0) }
+        persist()
+    }
+
+    public func setTextSizeStep(_ value: Int) {
+        guard (0...2).contains(value) else { return }
+        state.textSizeStep = value
+        persist()
+    }
+
+    public func setShuffleQuestions(_ value: Bool) {
+        preferences.shuffleQuestions = value
+        persistPreferences()
+    }
+
+    public func setShuffleChoices(_ value: Bool) {
+        preferences.shuffleChoices = value
+        persistPreferences()
+    }
+
     @discardableResult
     public func startStandardSprint(isPremium: Bool = true, seed: UInt64? = nil) throws -> LearningSessionSnapshot {
         guard !questions.isEmpty else { throw JosanshiLearningError.contentUnavailable }
-        let selected = LearningEngine.selectSprint(
-            from: questions,
-            target: state.dailyTarget,
-            isPremium: isPremium,
-            seed: seed
-        )
+        let eligible = questions.filter { isPremium || !$0.premium }
+        let selected: [LearningQuestion]
+        if preferences.shuffleQuestions {
+            selected = LearningEngine.selectSprint(
+                from: eligible,
+                target: state.dailyTarget,
+                isPremium: true,
+                seed: seed
+            )
+        } else {
+            selected = Array(eligible.prefix(state.dailyTarget))
+        }
         guard !selected.isEmpty else { throw JosanshiLearningError.contentUnavailable }
         return start(kind: .sprint, questions: selected)
     }
@@ -104,12 +143,17 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         }
         let candidates = questions.filter { $0.subject == subject && (isPremium || !$0.premium) }
         guard !candidates.isEmpty else { throw JosanshiLearningError.subjectUnavailable(subject) }
-        let selected = LearningEngine.selectSprint(
-            from: candidates,
-            target: state.dailyTarget,
-            isPremium: true,
-            seed: seed
-        )
+        let selected: [LearningQuestion]
+        if preferences.shuffleQuestions {
+            selected = LearningEngine.selectSprint(
+                from: candidates,
+                target: state.dailyTarget,
+                isPremium: true,
+                seed: seed
+            )
+        } else {
+            selected = Array(candidates.prefix(state.dailyTarget))
+        }
         return start(kind: .subject(subject), questions: selected)
     }
 
@@ -185,6 +229,21 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         persist()
     }
 
+    public func resetLearningHistory() {
+        let dailyTarget = state.dailyTarget
+        let examDate = state.examDate
+        let textSizeStep = state.textSizeStep
+        state = LearningState(
+            dailyTarget: dailyTarget,
+            examDate: examDate,
+            textSizeStep: textSizeStep,
+            contentVersion: JosanshiLocalPersistenceConfiguration.contentVersion
+        )
+        activeSession = nil
+        latestEvaluation = nil
+        persist()
+    }
+
     public func resumePersistedSession() -> Bool {
         guard let snapshot = state.resumeSession else { return false }
         let known = Set(questions.map(\.id))
@@ -200,24 +259,40 @@ public final class JosanshiLearningCoordinator: ObservableObject {
     }
 
     public func exportBackup() throws -> Data {
-        guard let store else {
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-            return try encoder.encode(state)
-        }
-        return try store.exportBackup(state)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let envelope = JosanshiBackupEnvelope(state: state, preferences: preferences)
+        return try encoder.encode(envelope)
     }
 
     public func importBackup(_ data: Data) throws {
+        let decoder = JSONDecoder()
+        if let envelope = try? decoder.decode(JosanshiBackupEnvelope.self, from: data) {
+            guard envelope.namespace == JosanshiLocalPersistenceConfiguration.storageNamespace else {
+                throw CocoaError(.fileReadCorruptFile, userInfo: [NSLocalizedDescriptionKey: "別の資格アプリのバックアップです。"])
+            }
+            guard envelope.state.contentVersion == JosanshiLocalPersistenceConfiguration.contentVersion else {
+                throw LearningStateStoreError.invalidContentVersion(
+                    expected: JosanshiLocalPersistenceConfiguration.contentVersion,
+                    actual: envelope.state.contentVersion
+                )
+            }
+            guard LearningState.validTarget(envelope.state.dailyTarget) else {
+                throw LearningStateStoreError.invalidTarget(envelope.state.dailyTarget)
+            }
+            state = envelope.state
+            preferences = envelope.preferences
+            activeSession = state.resumeSession
+            persist()
+            persistPreferences()
+            return
+        }
+
         guard let store else {
-            let decoder = JSONDecoder()
             state = try decoder.decode(LearningState.self, from: data)
             activeSession = state.resumeSession
             return
         }
-        // Same-version restore preserves resume state. Future content-version
-        // migrations must be explicit because LearningStateStore intentionally
-        // clears resumeSession during migration.
         state = try store.importBackup(data, allowContentVersionMigration: false)
         activeSession = state.resumeSession
         persistenceErrorDescription = nil
@@ -239,6 +314,19 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         state.weakQuestions.count
     }
 
+    public var totalAnsweredCount: Int { state.attempts.count }
+    public var totalCorrectCount: Int { state.attempts.filter(\.isCorrect).count }
+    public var uniqueAnsweredCount: Int { Set(state.attempts.map(\.questionID)).count }
+
+    public var requiredDailyPace: Int? {
+        guard let examDate = state.examDate else { return nil }
+        return LearningEngine.requiredDailyPace(
+            totalQuestionCount: questions.count,
+            uniqueAnsweredCount: uniqueAnsweredCount,
+            examDate: examDate
+        )
+    }
+
     private func start(kind: SessionKind, questions selected: [LearningQuestion]) -> LearningSessionSnapshot {
         if let activeSession {
             return activeSession
@@ -258,6 +346,16 @@ public final class JosanshiLearningCoordinator: ObservableObject {
         guard let store else { return }
         do {
             try store.save(state)
+            persistenceErrorDescription = nil
+        } catch {
+            persistenceErrorDescription = String(describing: error)
+        }
+    }
+
+    private func persistPreferences() {
+        guard let preferencesStore else { return }
+        do {
+            try preferencesStore.save(preferences)
             persistenceErrorDescription = nil
         } catch {
             persistenceErrorDescription = String(describing: error)
