@@ -14,6 +14,7 @@ on:
       - 'kangoshi-sprint/product-content/apply_dynamic_evidence_overrides.py'
       - 'kangoshi-sprint/product-content/build_enrichment_queues.py'
       - 'kangoshi-sprint/product-content/write_dynamic_pending_report.py'
+      - 'kangoshi-sprint/product-content/write_release_queue_ids.py'
       - 'kangoshi-sprint/product-content/validate_enrichment.py'
       - 'kangoshi-sprint/product-content/enrichment-trigger.json'
       - '.github/workflows/kangoshi-enrichment.yml'
@@ -28,7 +29,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  PIPELINE_SCHEMA: '8'
+  PIPELINE_SCHEMA: '9'
 
 permissions:
   contents: write
@@ -51,6 +52,8 @@ jobs:
         run: python3 kangoshi-sprint/product-content/build_enrichment_queues.py
       - name: Write compact dynamic-evidence report
         run: python3 kangoshi-sprint/product-content/write_dynamic_pending_report.py
+      - name: Write compact release-queue ID report
+        run: python3 kangoshi-sprint/product-content/write_release_queue_ids.py
       - name: Validate enrichment
         shell: bash
         run: |
