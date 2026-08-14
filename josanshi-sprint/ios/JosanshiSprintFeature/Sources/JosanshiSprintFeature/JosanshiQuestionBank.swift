@@ -154,7 +154,7 @@ public struct JosanshiProductionQuestion: Codable, Identifiable, Hashable, Senda
         self.authoringBatch = authoringBatch
     }
 
-    public func asLearningQuestion() throws -> LearningQuestion {
+    public func asLearningQuestion(premium: Bool = false) throws -> LearningQuestion {
         guard let learningAnswerType = LearningAnswerType(rawValue: answerType) else {
             throw JosanshiQuestionBankError.invalidAnswerType(answerType)
         }
@@ -174,7 +174,7 @@ public struct JosanshiProductionQuestion: Codable, Identifiable, Hashable, Senda
             sourceCheckedAt: sourceCheckedAt,
             lawBaselineDate: lawBaselineDate,
             contentVersion: contentVersion,
-            premium: false,
+            premium: premium,
             examRound: String(mockRound),
             questionNumber: "\(session)-\(slotNumber)",
             rightsBasis: rightsBasis
@@ -212,7 +212,10 @@ public struct JosanshiQuestionBankDocument: Codable, Sendable {
     }
 
     public func learningQuestions() throws -> [LearningQuestion] {
-        try questions.map { try $0.asLearningQuestion() }
+        let freeIDs = JosanshiMonetizationConfiguration.freeQuestionIDs(in: questions)
+        return try questions.map { question in
+            try question.asLearningQuestion(premium: !freeIDs.contains(question.id))
+        }
     }
 }
 
