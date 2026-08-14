@@ -20,6 +20,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Repair SVG namespace guard
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('kangoshi-sprint/product-content/build_original_redraw_assets.py')
+          s=p.read_text(encoding='utf-8')
+          old=" or 'http://' in content.lower() or 'https://' in content.lower()"
+          new=" or ' href=' in content.lower()"
+          if old in s:
+              s=s.replace(old,new)
+              p.write_text(s,encoding='utf-8')
+          assert old not in p.read_text(encoding='utf-8')
+          PY
       - name: Generate original vector redraws
         run: python3 kangoshi-sprint/product-content/build_original_redraw_assets.py
       - name: Validate redraw set
@@ -37,7 +50,7 @@ jobs:
           assert len(assets) == 23
           for p in assets:
               text=p.read_text(encoding='utf-8').lower()
-              assert '<image' not in text and 'data:image' not in text
+              assert '<image' not in text and 'data:image' not in text and ' href=' not in text
               assert 'data-original-redraw=' in text
           print({'redraws':len(assets),'pass':True})
           PY
@@ -46,7 +59,8 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add kangoshi-sprint/media/redraw \
+          git add kangoshi-sprint/product-content/build_original_redraw_assets.py \
+                  kangoshi-sprint/media/redraw \
                   kangoshi-sprint/product-content/media-redraw-resolutions.json \
                   kangoshi-sprint/product-content/media-redraw-audit.json
           if ! git diff --cached --quiet; then
