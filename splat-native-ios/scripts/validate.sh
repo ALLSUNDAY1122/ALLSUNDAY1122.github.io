@@ -27,11 +27,12 @@ grep -q 'd620d9c58d270e7de9e34a9d8a85dcf938a5070d' project.yml
 grep -q '2b965de1934de38dda1c71cf90bf798aa948a14c' project.yml
 
 # Regression gate: the root view must mount the AR session before the first
-# capture button can call ScanModel.startCapture().
+# capture button can call ScanModel.startCapture(). ARSCNView itself does not
+# auto-run world tracking; ScanModel explicitly starts it with session.run().
 grep -q 'RootScanView()' SplatNative/SplatNativeApp.swift
 grep -q 'PersistentScanCameraView()' SplatNative/RootScanView.swift
-grep -q 'automaticallyConfigureSession = false' SplatNative/RootScanView.swift
 grep -q 'model.attach(session: view.session)' SplatNative/RootScanView.swift
+grep -q 'session.run(config' SplatNative/ScanModel.swift
 
 # Current PoC is intentionally local-only.
 ! grep -R -nE 'https?://.*(api|upload|analytics)|URLSession|Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
