@@ -21,6 +21,7 @@ struct NerfstudioDataset: Codable {
     let cy: Float
     let w: Int
     let h: Int
+    let plyFilePath: String
     let frames: [NerfstudioFrame]
 
     enum CodingKeys: String, CodingKey {
@@ -28,6 +29,7 @@ struct NerfstudioDataset: Codable {
         case flX = "fl_x"
         case flY = "fl_y"
         case cx, cy, w, h, frames
+        case plyFilePath = "ply_file_path"
     }
 }
 
@@ -42,7 +44,7 @@ struct NerfstudioFrame: Codable {
 }
 
 @MainActor
-final class ScanModel: NSObject, ObservableObject {
+final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     enum Phase: Equatable {
         case ready
         case capturing
@@ -55,6 +57,7 @@ final class ScanModel: NSObject, ObservableObject {
     @Published var phase: Phase = .ready
     @Published var acceptedFrames = 0
     @Published var targetFrames = 48
+    @Published var featurePointCount = 0
     @Published var trackingMessage = "対象を中央に置いて開始してください"
     @Published var trainingProgress: Double = 0
     @Published var trainingIteration = 0
@@ -66,6 +69,7 @@ final class ScanModel: NSObject, ObservableObject {
     private var projectURL: URL?
     private var imagesURL: URL?
     private var captured: [CapturedView] = []
+    private var featurePoints: [UInt64: SIMD3<Float>] = [:]
     private var firstIntrinsics: simd_float3x3?
     private var firstResolution: CGSize?
     private var lastAcceptedTransform: simd_float4x4?
@@ -74,7 +78,7 @@ final class ScanModel: NSObject, ObservableObject {
     private let captureQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.capture", qos: .userInitiated)
     private var isWritingFrame = false
 
-    var canFinishCapture: Bool { acceptedFrames >= 24 }
+    var canFinishCapture: Bool { acceptedFrames >= 24 && !isWritingFrame }
     var progressText: String { "\(acceptedFrames) / \(targetFrames)" }
     var captureBand: String {
         let n = acceptedFrames
@@ -106,7 +110,9 @@ final class ScanModel: NSObject, ObservableObject {
         }
 
         captured.removeAll(keepingCapacity: true)
+        featurePoints.removeAll(keepingCapacity: true)
         acceptedFrames = 0
+        featurePointCount = 0
         firstIntrinsics = nil
         firstResolution = nil
         lastAcceptedTransform = nil
@@ -132,9 +138,10 @@ final class ScanModel: NSObject, ObservableObject {
         guard phase == .capturing, canFinishCapture else { return }
         session?.pause()
         do {
+            try writePointCloudPLY()
             try writeTransformsJSON()
             phase = .captured
-            trackingMessage = "撮影データを保存しました。端末内生成へ進めます。"
+            trackingMessage = "撮影画像・カメラ姿勢・ARKit初期点群を保存しました。"
         } catch {
             phase = .failed("撮影データを書き出せませんでした: \(error.localizedDescription)")
         }
@@ -146,7 +153,9 @@ final class ScanModel: NSObject, ObservableObject {
         projectURL = nil
         imagesURL = nil
         captured.removeAll()
+        featurePoints.removeAll()
         acceptedFrames = 0
+        featurePointCount = 0
         resultURL = nil
         previewImage = nil
         trainingProgress = 0
@@ -184,8 +193,8 @@ final class ScanModel: NSObject, ObservableObject {
                     if Task.isCancelled { return }
                     let stats = trainer.step()
                     if step % 20 == 0 || step == iterations - 1 {
-                        let iteration = Int(stats.iteration)
-                        let count = Int(stats.splatCount)
+                        let iteration = stats.iteration
+                        let count = stats.splatCount
                         Task { @MainActor [weak self] in
                             guard let self else { return }
                             self.trainingIteration = iteration
@@ -233,34 +242,41 @@ final class ScanModel: NSObject, ObservableObject {
 
         if frame.timestamp - lastAcceptedTimestamp < 0.18 { return }
         if let previous = lastAcceptedTransform, !movedEnough(from: previous, to: frame.camera.transform) { return }
+        guard let jpegData = makeJPEGData(pixelBuffer: frame.capturedImage) else {
+            trackingMessage = "画像を保存できません。もう一度ゆっくり動かしてください"
+            return
+        }
 
         firstIntrinsics = firstIntrinsics ?? frame.camera.intrinsics
         firstResolution = firstResolution ?? frame.camera.imageResolution
+        absorbFeaturePoints(frame.rawFeaturePoints)
+
         isWritingFrame = true
         let index = acceptedFrames
+        let matrixRows = Self.rows(frame.camera.transform)
         let transform = frame.camera.transform
-        let pixelBuffer = frame.capturedImage
-        CVPixelBufferRetain(pixelBuffer)
+        let timestamp = frame.timestamp
         let imagesURL = imagesURL
 
         captureQueue.async { [weak self] in
-            defer { CVPixelBufferRelease(pixelBuffer) }
-            guard let self, let imagesURL else { return }
+            guard let imagesURL else { return }
             let fileName = String(format: "frame_%05d.jpg", index)
             let fileURL = imagesURL.appendingPathComponent(fileName)
-            let success = self.writeJPEG(pixelBuffer: pixelBuffer, to: fileURL)
+            let success: Bool
+            do {
+                try jpegData.write(to: fileURL, options: .atomic)
+                success = true
+            } catch {
+                success = false
+            }
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.isWritingFrame = false
                 guard success, self.phase == .capturing else { return }
-                self.captured.append(CapturedView(
-                    id: index,
-                    filePath: "images/\(fileName)",
-                    transformMatrix: Self.rows(transform)
-                ))
+                self.captured.append(CapturedView(id: index, filePath: "images/\(fileName)", transformMatrix: matrixRows))
                 self.acceptedFrames = self.captured.count
                 self.lastAcceptedTransform = transform
-                self.lastAcceptedTimestamp = frame.timestamp
+                self.lastAcceptedTimestamp = timestamp
                 self.trackingMessage = self.acceptedFrames >= self.targetFrames
                     ? "撮影完了。生成へ進めます。"
                     : "\(self.captureBand)から、対象を中央に保ってゆっくり移動"
@@ -269,21 +285,39 @@ final class ScanModel: NSObject, ObservableObject {
         }
     }
 
-    private func writeJPEG(pixelBuffer: CVPixelBuffer, to url: URL) -> Bool {
+    private func makeJPEGData(pixelBuffer: CVPixelBuffer) -> Data? {
         let image = CIImage(cvPixelBuffer: pixelBuffer)
-        guard let cg = ciContext.createCGImage(image, from: image.extent) else { return false }
-        guard let data = UIImage(cgImage: cg).jpegData(compressionQuality: 0.86) else { return false }
-        do {
-            try data.write(to: url, options: .atomic)
-            return true
-        } catch {
-            return false
+        guard let cg = ciContext.createCGImage(image, from: image.extent) else { return nil }
+        return UIImage(cgImage: cg).jpegData(compressionQuality: 0.86)
+    }
+
+    private func absorbFeaturePoints(_ cloud: ARPointCloud?) {
+        guard let cloud, !cloud.points.isEmpty else { return }
+        let step = max(1, cloud.points.count / 350)
+        for index in stride(from: 0, to: cloud.points.count, by: step) {
+            if featurePoints.count >= 12_000 { break }
+            featurePoints[cloud.identifiers[index]] = cloud.points[index]
         }
+        featurePointCount = featurePoints.count
+    }
+
+    private func writePointCloudPLY() throws {
+        guard let projectURL else { throw dataError("保存先がありません") }
+        guard featurePoints.count >= 64 else {
+            throw dataError("ARKitの初期3D点が不足しています（\(featurePoints.count)点）。模様のある背景で対象の周囲をもう一度撮影してください")
+        }
+        let points = featurePoints.values
+        var ply = "ply\nformat ascii 1.0\nelement vertex \(points.count)\nproperty float x\nproperty float y\nproperty float z\nend_header\n"
+        ply.reserveCapacity(points.count * 40)
+        for p in points {
+            ply += "\(p.x) \(p.y) \(p.z)\n"
+        }
+        try ply.write(to: projectURL.appendingPathComponent("points3D.ply"), atomically: true, encoding: .utf8)
     }
 
     private func writeTransformsJSON() throws {
         guard let projectURL, let intrinsics = firstIntrinsics, let resolution = firstResolution else {
-            throw NSError(domain: "SplatLab", code: 1, userInfo: [NSLocalizedDescriptionKey: "カメラ情報が不足しています"])
+            throw dataError("カメラ情報が不足しています")
         }
         let frames = captured.map { NerfstudioFrame(filePath: $0.filePath, transformMatrix: $0.transformMatrix) }
         let dataset = NerfstudioDataset(
@@ -291,6 +325,7 @@ final class ScanModel: NSObject, ObservableObject {
             flX: intrinsics[0,0], flY: intrinsics[1,1],
             cx: intrinsics[2,0], cy: intrinsics[2,1],
             w: Int(resolution.width), h: Int(resolution.height),
+            plyFilePath: "points3D.ply",
             frames: frames
         )
         let encoder = JSONEncoder()
@@ -319,6 +354,10 @@ final class ScanModel: NSObject, ObservableObject {
         }
     }
 
+    private func dataError(_ message: String) -> NSError {
+        NSError(domain: "SplatLab", code: 1, userInfo: [NSLocalizedDescriptionKey: message])
+    }
+
     private static func rows(_ m: simd_float4x4) -> [[Float]] {
         (0..<4).map { row in (0..<4).map { col in m[col][row] } }
     }
@@ -333,12 +372,12 @@ final class ScanModel: NSObject, ObservableObject {
             bytes[i * 4 + 1] = UInt8(clamping: Int(max(0, min(1, pixels.pixels[i * 3 + 1])) * 255))
             bytes[i * 4 + 2] = UInt8(clamping: Int(max(0, min(1, pixels.pixels[i * 3 + 2])) * 255))
         }
-        let provider = CGDataProvider(data: Data(bytes) as CFData)
+        guard let provider = CGDataProvider(data: Data(bytes) as CFData) else { return nil }
         let space = CGColorSpaceCreateDeviceRGB()
         guard let cg = CGImage(width: width, height: height, bitsPerComponent: 8, bitsPerPixel: 32,
                                bytesPerRow: width * 4, space: space,
                                bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue),
-                               provider: provider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent) else { return nil }
+                               provider: provider, decode: nil, shouldInterpolate: true, intent: .defaultIntent) else { return nil }
         return UIImage(cgImage: cg)
     }
 }
@@ -351,7 +390,6 @@ struct ScanCameraView: UIViewRepresentable {
         view.backgroundColor = .black
         view.preferredFramesPerSecond = 60
         view.automaticallyUpdatesLighting = false
-        view.rendersCameraGrain = false
         model.attach(session: view.session)
         return view
     }
