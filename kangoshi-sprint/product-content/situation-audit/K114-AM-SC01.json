@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K114-AM-SC01",
+  "sourceExam": 114,
+  "session": "AM",
+  "questionIds": ["K114-AM091", "K114-AM092", "K114-AM093"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "73歳女性、独居。脳梗塞後の左半身麻痺があり認知機能障害なし。4点杖で歩行可能となり住宅改修後に退院。訪問看護週1回、訪問介護週1回を利用。",
+  "mainCondition": "脳梗塞後の在宅生活における転倒予防、排泄自立支援、活動・食生活変化に伴う便秘への生活支援。",
+  "assessment": [
+    "AM091では独居・左片麻痺・4点杖歩行で買い物中に転びそうになった状況から、歩行支持に関わる右上下肢筋力を評価する。",
+    "AM092では退院2か月後、歩行と家事の自立が進む一方で生じた切迫性の尿漏れに対し、本人の排尿間隔を活用して排泄自立を支える。",
+    "AM093では退院3か月後、活動量低下と単調な食生活に伴って新たに便秘が生じたため、食事内容を優先して見直す。"
+  ],
+  "nursingJudgment": "3問は『退院直後の転倒リスク→2か月後の排泄自立→3か月後の活動・食事と便秘』として、独居の脳梗塞後患者が在宅生活へ適応していく時間経過で連結する。患者は全問Aさん本人で、他者との取り違えはない。",
+  "nursingPractice": [
+    "麻痺側だけでなく健側の筋力・バランス・杖操作を含め歩行安全性を評価する。",
+    "本人の排尿パターンを把握し、尿意切迫前の計画的排尿を支援する。",
+    "便秘出現前後の食事・水分・活動量の変化を確認し、まず生活要因を調整する。"
+  ],
+  "tripletConsistency": {"sameScenarioId": true, "sameScenarioText": true, "indexesComplete": true, "patientIdentityConsistent": true, "timelineConsistent": true, "clinicalConsistency": true, "nextScenarioLeakDetected": false},
+  "textCorrectionAudit": {
+    "required": true,
+    "overlay": "situation-audit/text-corrections.json",
+    "officialPdfVerified": true,
+    "officialPages": [28, 29],
+    "correctedFacts": ["独居=1人", "4点杖", "訪問看護週1回", "訪問介護週1回", "AM092=退院2か月後", "AM093=退院3か月後"],
+    "applyState": "pending_canonical_integration"
+  },
+  "classificationAudit": {"majorSubjectConsistent": true, "majorSubject": "地域・在宅看護論", "status": "pass"},
+  "explanationAudit": {"batchId": "K114-AM091-AM093-situation-SC01", "allThreeExplained": true, "allThreeEvidenceRefsPresent": true, "allThreeEvidenceCheckedDatePresent": true, "evidenceCheckedDate": "2026-08-14"},
+  "media": {"required": false, "status": "not_required"},
+  "scoring": {"exceptionPresent": false, "status": "normal"},
+  "contentConcern": {"status": "none", "questionId": null, "reason": null, "evidenceRefs": []},
+  "expertReviewStatus": "pending_global_expert_audit",
+  "scenarioAuditStatus": "content_pass_text_correction_pending_canonical",
+  "auditedAt": "2026-08-14T15:36:00+09:00"
+}
