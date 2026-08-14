@@ -3,14 +3,23 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ASSET_DIR="$SCRIPT_DIR/Assets.xcassets/AppIcon.appiconset"
-ICON_SRC="${JOSANSHI_APPICON_PATH:-$SCRIPT_DIR/AppIcon.png}"
+DEFAULT_ICON_SRC="$SCRIPT_DIR/AppIcon.png"
 ICON_DRIVE_ID="134DG19Lknp2p1AFvDAkLPA2zocyj2nOP"
 ICON_EXPECTED_SIZE="590870"
 ICON_SHA256="07668a08a0703b76ecbeca38bbc5b396a248f822de594947ddccd383f0898579"
 
+ICON_SRC="${JOSANSHI_APPICON_PATH:-$DEFAULT_ICON_SRC}"
+
+# Codemagic supports binary files stored as encrypted base64 environment variables.
+# Decode only to the build workspace, then verify byte identity before use.
+if [ -n "${JOSANSHI_APPICON_BASE64:-}" ]; then
+  ICON_SRC="$DEFAULT_ICON_SRC"
+  printf '%s' "$JOSANSHI_APPICON_BASE64" | base64 --decode > "$ICON_SRC"
+fi
+
 if [ ! -f "$ICON_SRC" ]; then
   echo "ERROR: exact canonical #14 AppIcon is not staged. Source Drive ID=${ICON_DRIVE_ID}" >&2
-  echo "Set JOSANSHI_APPICON_PATH to the authenticated canonical PNG before release preparation." >&2
+  echo "Set JOSANSHI_APPICON_PATH or encrypted JOSANSHI_APPICON_BASE64 before release preparation." >&2
   exit 1
 fi
 
