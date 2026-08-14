@@ -63,7 +63,7 @@ public struct HokenshiPaywallView: View {
                             VStack(spacing: 3) {
                                 Text("プレミアムを解放")
                                     .font(LearningSprintTheme.sans(16, weight: .bold))
-                                Text(purchase.displayPrice ?? "App Storeで価格を確認")
+                                Text(purchase.displayPrice ?? "価格を取得中")
                                     .font(LearningSprintTheme.sans(12, weight: .semibold))
                             }
                             .foregroundStyle(.white)
@@ -72,8 +72,21 @@ public struct HokenshiPaywallView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                         }
                         .buttonStyle(.plain)
-                        .disabled(isBusy)
+                        .disabled(isBusy || purchase.product == nil)
+                        .opacity(purchase.product == nil ? 0.55 : 1)
                         .accessibilityIdentifier("hokenshi.paywall.purchase")
+
+                        if purchase.product == nil && !isBusy {
+                            Button {
+                                Task { await purchase.refresh() }
+                            } label: {
+                                Text("製品情報を再読み込み")
+                                    .font(LearningSprintTheme.sans(13, weight: .bold))
+                                    .frame(maxWidth: .infinity, minHeight: 44)
+                            }
+                            .buttonStyle(.bordered)
+                            .accessibilityIdentifier("hokenshi.paywall.retry")
+                        }
                     }
 
                     Button {
