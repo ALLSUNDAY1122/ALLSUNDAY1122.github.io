@@ -1,8 +1,11 @@
 {
   "warningCount": 32,
-  "resolvedCount": 32,
-  "unresolvedCount": 0,
-  "errors": [],
+  "resolvedCount": 30,
+  "unresolvedCount": 2,
+  "errors": [
+    "warning resolution match count 0: K115-PM099: specialist situation correction overrides local stem domains ['maternal-explicit']; assigned 成人看護学",
+    "warning resolution match count 0: K114-AM-SC03: situation group split {'基礎看護学': 1, '成人看護学': 2}; contextual review required"
+  ],
   "resolvedWarnings": [
     {
       "warning": "K115-AM092: contextual stem domain community-explicit; assigned 地域・在宅看護論",
@@ -173,18 +176,6 @@
       "reason": "症例の一部は病態・診断理解、他は成人看護上の援助を問うため、疾病領域と成人看護領域の分割を許容する。"
     },
     {
-      "warning": "K115-PM-SC03: situation group split {'成人看護学': 2, '母性看護学': 1}; contextual review required",
-      "ruleId": "split-K115-PM-SC03",
-      "decision": "accepted",
-      "reason": "成人疾患の症例内に妊娠・生殖に直接関係する設問が含まれるため、その設問のみ母性看護へ分ける。"
-    },
-    {
-      "warning": "K115-PM-SC10: situation group split {'基礎看護学': 1, '看護の統合と実践': 2}; contextual review required",
-      "ruleId": "split-K115-PM-SC10",
-      "decision": "accepted",
-      "reason": "災害・統合判断と個別の基本看護技術を別設問で問う症例であり、設問内容に沿った2領域分類を維持する。"
-    },
-    {
       "warning": "K113-PM-SC03: home-care case has no 地域・在宅看護論 question: {'老年看護学': 3}",
       "ruleId": "geriatric-facility-not-regional",
       "decision": "accepted",
@@ -197,6 +188,6 @@
       "reason": "75歳レビー小体型認知症患者の症状・生活支援を扱う症例で、在宅という場面より認知症・老年看護が3問の中心である。"
     }
   ],
-  "pass": true,
+  "pass": false,
   "note": "各警告は対象IDを制限した正規表現ルール1件だけに一致する必要がある。未知の警告・未知IDは自動FAIL。"
 }

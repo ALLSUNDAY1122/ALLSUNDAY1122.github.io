@@ -54,9 +54,7 @@
       "地域・在宅看護論": 13
     }
   },
-  "strongSemanticErrors": [
-    "K115-PM099: stem semantic domains ['maternal-explicit'] allow ['母性看護学'], got 成人看護学"
-  ],
+  "strongSemanticErrors": [],
   "splitScenarioGroups": [
     {
       "scenarioId": "K113-AM-SC02",
@@ -238,6 +236,7 @@
     "K115-PM092: contextual stem domain community-explicit; assigned 地域・在宅看護論",
     "K115-PM093: contextual stem domain community-explicit; assigned 地域・在宅看護論",
     "K115-PM093: home-care disaster preparedness; assigned 地域・在宅看護論 allowed as 地域・在宅看護論 or 看護の統合と実践",
+    "K115-PM099: specialist situation correction overrides local stem domains ['maternal-explicit']; assigned 成人看護学",
     "K114-AM091: contextual stem domain community-explicit; assigned 地域・在宅看護論",
     "K114-AM092: contextual stem domain community-explicit; assigned 地域・在宅看護論",
     "K114-AM093: contextual stem domain community-explicit; assigned 地域・在宅看護論",
@@ -258,6 +257,6 @@
     "K114-PM-SC04: situation group split {'老年看護学': 2, '地域・在宅看護論': 1}; contextual review required",
     "K115-PM-SC02: situation group split {'疾病の成り立ちと回復の促進': 1, '成人看護学': 2}; contextual review required"
   ],
-  "pass": false,
-  "note": "独立ルールによる分類整合監査。状況設定では在宅・一般技術語を主分類の強制根拠にせず、在宅利用者の災害準備は地域・在宅看護論または災害看護を許容する。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。"
+  "pass": true,
+  "note": "独立ルールによる分類整合監査。状況設定では在宅・一般技術語を主分類の強制根拠にせず、在宅利用者の災害準備は地域・在宅看護論または災害看護を許容する。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。ただし症例単位専門監査で理由・変更前後・scenarioIdを明示したclassificationSpecialistCorrectionは局所キーワードより優先し、矛盾を警告として残す。専門家監査の代替ではない。"
 }
