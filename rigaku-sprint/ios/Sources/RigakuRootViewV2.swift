@@ -452,6 +452,9 @@ private struct RigakuSettingsV2: View {
                             .font(.caption)
                     }
 
+                    RigakuPurchaseSettingsSection()
+                    RigakuLegalSettingsSection()
+
                     Section("この教材について") {
                         LabeledContent("コンテンツ版", value: RigakuAppConfiguration.contentVersion)
                         LabeledContent("監査済み", value: "\(appModel.questions.count) / 600問")
