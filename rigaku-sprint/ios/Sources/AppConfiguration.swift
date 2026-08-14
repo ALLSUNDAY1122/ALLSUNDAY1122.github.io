@@ -49,6 +49,20 @@ enum RigakuAppConfiguration {
     ]
 
     static var runtimeBundleIdentifier: String? {
-        Bundle.main.bundleIdentifier
+        normalizedExternalIdentifier(Bundle.main.bundleIdentifier)
+    }
+
+    static var runtimePremiumProductID: String? {
+        normalizedExternalIdentifier(
+            Bundle.main.object(forInfoDictionaryKey: "RigakuPremiumProductID") as? String
+        )
+    }
+
+    static func normalizedExternalIdentifier(_ raw: String?) -> String? {
+        guard let raw else { return nil }
+        let value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !value.isEmpty else { return nil }
+        guard !value.contains("$("), !value.contains("${") else { return nil }
+        return value
     }
 }
