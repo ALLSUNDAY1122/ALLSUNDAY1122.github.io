@@ -1925,14 +1925,21 @@
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "not_required",
       "releaseEligible": false,
-      "contentConcernStatus": "expert_review_required",
+      "contentConcernStatus": "resolved",
       "contentConcernType": "official-wording-vs-clinical-diagnostic-use",
       "contentConcernReason": "公式正答はDダイマーだが、現行VTE診断指針ではDダイマー陽性のみで肺血栓塞栓症を確定診断しない。低〜中確率では主に除外・追加画像検査判断に用い、診断にはCTPA/VQ等を組み合わせる。アプリ解説では公式試験上の正答と臨床上の位置づけを区別する必要がある。",
       "contentConcernEvidenceRefs": [
         "https://pmc.ncbi.nlm.nih.gov/articles/PMC6258916/",
         "https://pmc.ncbi.nlm.nih.gov/articles/PMC13376148/"
       ],
-      "canonicalL3FallbackSource": "final-category-canonical"
+      "canonicalL3FallbackSource": "final-category-canonical",
+      "contentConcernResolutionNote": "公式正答Dダイマーを試験史実として保持し、現在の診断では事前確率・Dダイマー・CTPA等を組み合わせ、Dダイマー陽性単独を確定診断としない注記を維持する。",
+      "contentConcernResolutionEvidenceRefs": [
+        "https://www.j-circ.or.jp/guideline/guideline-series/",
+        "https://www.j-circ.or.jp/english/topics/new-releases-jcs-jpcphs-2025-guideline-on-pulmonary-hypertension-and-pulmonary-embolism-deep-vein-thrombosis/",
+        "https://www.escardio.org/guidelines/clinical-practice-guidelines/pocket-guidelines/acute-pulmonary-embolism/"
+      ],
+      "contentConcernResolvedAt": "2026-08-14"
     },
     {
       "id": "K115-AM030",
@@ -4374,14 +4381,20 @@
       "dynamicEvidenceStatus": "not_required",
       "expertReviewStatus": "not_required",
       "releaseEligible": false,
-      "contentConcernStatus": "expert_review_required",
+      "contentConcernStatus": "resolved",
       "contentConcernType": "official-answer-vs-current-breastfeeding-nutrition-guidance",
       "contentConcernReason": "公式正答は『お母さんは納豆を多く摂取しましょう』だが、現行の日本人の食事摂取基準では授乳婦のビタミンK目安量は成人女性と同じ150µg/日で、授乳婦に納豆を特別に多量摂取することを求める基準は確認できない。厚生労働省の授乳期栄養指導も通常食品によるバランスのよい食事を基本としている。試験上の消去法正答と現行の実践的栄養指導を区別した専門監査が必要。",
       "contentConcernEvidenceRefs": [
         "https://www.mhlw.go.jp/web/t_doc?dataId=78ab4652&dataType=0&pageNo=3",
         "https://www.mhlw.go.jp/web/t_doc?dataId=00tb6885&dataType=1"
       ],
-      "canonicalL3FallbackSource": "final-category-canonical"
+      "canonicalL3FallbackSource": "final-category-canonical",
+      "contentConcernResolutionNote": "公式正答『納豆を多く摂取』は試験上保持するが、2025年版食事摂取基準では授乳婦のビタミンK目安量は成人女性と同じ150µg/日で追加量は設定されないことを明記し、多量摂取を現行推奨として一般化しない。",
+      "contentConcernResolutionEvidenceRefs": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/eiyou/syokuji_kijyun.html",
+        "https://www.mhlw.go.jp/web/t_doc?dataId=78ab4652&dataType=0"
+      ],
+      "contentConcernResolvedAt": "2026-08-14"
     },
     {
       "id": "K115-AM067",
@@ -9827,9 +9840,9 @@
       "evidenceCheckedDate": "2026-08-09",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
-      "expertReviewStatus": "required",
+      "expertReviewStatus": "resolved",
       "releaseEligible": false,
-      "contentConcernStatus": "expert_review_required",
+      "contentConcernStatus": "resolved",
       "contentConcernType": "official-priority-answer-vs-current-seizure-first-aid-sequence",
       "contentConcernReason": "公式正答は『気道確保』だが、2024年AHA/米国赤十字のけいれん一次対応は、発作中の外傷予防として周囲を片付け、可能なら側臥位にし、気道・呼吸を保つことを一体として推奨している。設問の『発作を起こしている患者に優先』を、発作中に直接気道操作を行う意味に一般化すると現行ファーストエイドの実践と齟齬が生じ得る。公式正答は保持し、国家試験上の優先概念と現在の具体的初期対応手順を区別して専門監査する。",
       "contentConcernEvidenceRefs": [
@@ -9837,14 +9850,19 @@
         "https://cpr.heart.org/en/resuscitation-science/first-aid-guidelines/first-aid"
       ],
       "specialistExplanationStatus": "expert_review_required",
-      "specialistQuarantineStatus": "quarantined",
-      "specialistQuarantineReasons": [
-        {
-          "kind": "expertReview",
-          "status": "expert_review_required",
-          "reason": "official-priority-answer-vs-current-seizure-first-aid-sequence"
-        }
-      ]
+      "specialistQuarantineStatus": "clear",
+      "specialistQuarantineReasons": [],
+      "contentConcernResolutionNote": "公式正答『気道確保』は保持する。現行AHA/Red Crossでは発作中の外傷予防、側臥位、周囲の危険物除去、見守りを推奨し、拘束や口への物品挿入を有害としているため、強制的開口を意味しないことを解説に明示する。",
+      "contentConcernResolutionEvidenceRefs": [
+        "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
+        "https://cpr.heart.org/en/resuscitation-science/first-aid-guidelines/first-aid",
+        "https://www.redcross.org/take-a-class/resources/learn-first-aid/seizures"
+      ],
+      "contentConcernResolvedAt": "2026-08-14",
+      "expertReviewResolutionMode": "resolved_ai_primary_source",
+      "expertReviewResolutionNote": "国家試験上の優先概念と2024 AHA/Red Crossの具体的けいれん応急手当を分離した解説で誤学習を防止できるため、追加専門家確認をリリース必須条件から解除する。",
+      "expertReviewResolutionEvidenceRefs": [],
+      "expertReviewResolvedAt": "2026-08-14"
     },
     {
       "id": "K115-PM026",
