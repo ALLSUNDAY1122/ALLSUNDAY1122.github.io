@@ -3,7 +3,7 @@ import argparse
 import json
 from pathlib import Path
 
-ALLOWED_FIELDS = {"explanation", "memory"}
+ALLOWED_FIELDS = {"question", "explanation", "memory"}
 
 
 def load(path: Path):
@@ -49,7 +49,7 @@ def main() -> int:
         }
 
     args.output.write_text(json.dumps(items, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"PASS: applied editorial overrides to {len(overrides)} items")
+    print(f"PASS: applied audited editorial overrides to {len(overrides)} items")
     return 0
 
 
