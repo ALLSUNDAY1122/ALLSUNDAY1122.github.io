@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "workstream": "B-general",
+  "standardRecheck": {
+    "checkedAt": "2026-08-14T14:28:00+09:00",
+    "standardTitle": "AIアプリ開発・公開フロー v2.4",
+    "problemLoopTitle": "学びスプリント｜問題生成・監査ループ v1.0",
+    "impact": [
+      "explanation-batches and temporary audit JSON are intermediate work products, not final canonical problem data",
+      "after batch-level PASS, canonical JSON should be consolidated by exam or exam x major category",
+      "machine audit must be rerun against the consolidated canonical JSON; batch PASS must not be reused as final PASS",
+      "NO_PROGRESS requires method change and automatic recovery rather than repeated unchanged status checks"
+    ]
+  },
+  "scope": {
+    "category": "一般",
+    "sourceExams": [115, 114, 113],
+    "targetCount": 390,
+    "countPerExam": 130
+  },
+  "priorWorkstreamResult": {
+    "batchAuditCoverage": 390,
+    "normalExplanationEvidenceCovered": 352,
+    "quarantinedWithAuditEvidence": 38,
+    "unclassified": 0,
+    "officialAnswerChanged": 0,
+    "interpretationUnderV2_4": "BATCH_AUDIT_PASS_CANONICAL_AUDIT_PENDING"
+  },
+  "quarantineTotals": {
+    "contentConcern": 9,
+    "scoringException": 2,
+    "mediaDependent": 22,
+    "sourceDataDefect": 5
+  },
+  "sourceDataDefects": [
+    "K113-AM061",
+    "K113-PM053",
+    "K113-PM057",
+    "K113-PM078",
+    "K113-PM090"
+  ],
+  "canonicalTargetsRecommended": [
+    "kangoshi-sprint/product-content/questions/exam-115/general.json",
+    "kangoshi-sprint/product-content/questions/exam-114/general.json",
+    "kangoshi-sprint/product-content/questions/exam-113/general.json"
+  ],
+  "canonicalizationContract": {
+    "baseQuestions": [
+      "kangoshi-sprint/product-content/raw/set1-raw.json",
+      "kangoshi-sprint/product-content/raw/set2-raw.json",
+      "kangoshi-sprint/product-content/raw/set3-raw.json"
+    ],
+    "overlayRule": "Join explanation/evidence records strictly by question ID. Do not duplicate one question across canonical files. Preserve officialAcceptedAnswers and officialScoringStatus exactly. Quarantined questions stay explicitly gated rather than silently converted to normal records.",
+    "legacyAndBGeneralSources": {
+      "115": [
+        "kangoshi-sprint/product-content/explanation-batches/026-K115-PM026-PM033-verified.json",
+        "kangoshi-sprint/product-content/explanation-batches/027-K115-PM034-PM040-verified.json",
+        "kangoshi-sprint/product-content/explanation-batches/028-K115-PM041-PM046-verified.json",
+        "kangoshi-sprint/product-content/explanation-batches/029-K115-PM047-PM055-verified.json",
+        "kangoshi-sprint/product-content/explanation-batches/030-K115-PM056-PM066-verified.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-115-AM-gaps-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-115-PM067-PM078-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-115-PM079-PM090-text.json",
+        "plus existing already-materialized K115-AM general explanation records currently represented by the coordinator-owned apply report"
+      ],
+      "114": [
+        "kangoshi-sprint/product-content/explanation-batches/B-general-114-AM026-AM038-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-114-AM040-AM060-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-114-AM061-AM075-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-114-AM076-AM090-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-114-PM026-PM040-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-114-PM041-PM055-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-114-PM056-PM070-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-114-PM072-PM090-text.json"
+      ],
+      "113": [
+        "kangoshi-sprint/product-content/explanation-batches/B-general-113-AM026-AM045-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-113-AM047-AM060-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-113-AM062-AM075-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-113-AM076-AM090-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-113-PM026-PM045-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-113-PM046-PM061-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-113-PM062-PM076-text.json",
+        "kangoshi-sprint/product-content/explanation-batches/B-general-113-PM079-PM089-text.json"
+      ]
+    },
+    "specialAuditSources": [
+      "kangoshi-sprint/workstreams/B-general/K115-SPECIAL-AUDIT.json",
+      "kangoshi-sprint/workstreams/B-general/K114-SPECIAL-AUDIT.json",
+      "kangoshi-sprint/workstreams/B-general/K113-SPECIAL-AUDIT.json",
+      "kangoshi-sprint/workstreams/B-general/K113-SPECIAL-EVIDENCE.json"
+    ]
+  },
+  "requiredCoordinatorOrder": [
+    "restore the five K113 raw import defects from official MHLW source before canonical generation",
+    "generate one general canonical JSON per exam from raw + explanation/evidence overlays",
+    "preserve quarantine gates for content concern, scoring exception and media dependent questions",
+    "rerun count audit: 130 general questions per exam and 390 total",
+    "rerun duplicate ID, exact stem and high-similarity audit against consolidated canonical JSON",
+    "rerun answer consistency, explanation, evidence URL, evidenceCheckedDate, legal/system base date and rights basis audits against canonical JSON",
+    "only after canonical audit PASS may the coordinator update common manifest/enriched product state"
+  ],
+  "workstreamBoundary": {
+    "BGeneralMayEdit": [
+      "kangoshi-sprint/product-content/explanation-batches/B-general-*.json",
+      "kangoshi-sprint/workstreams/B-general/**"
+    ],
+    "BGeneralMustNotEdit": [
+      "kangoshi-sprint/product-content/enriched-draft/**",
+      "kangoshi-sprint/product-content/manifest.json",
+      "kangoshi-sprint/product-content/enrichment-trigger.json",
+      "kangoshi-sprint/product-content/content-concerns.json",
+      "common apply/build/validate scripts",
+      "common UI",
+      "mock exam engine",
+      "StoreKit"
+    ],
+    "reason": "existing coordination contract assigns common materialization and final canonical integration to coordinator"
+  },
+  "currentDecision": "B-general batch content work is complete, but final PASS is withheld under v2.4 until coordinator creates consolidated canonical JSON and reruns the prescribed audits."
+}
