@@ -1,0 +1,41 @@
+name: Kangoshi situation audit state
+
+on:
+  push:
+    paths:
+      - 'kangoshi-sprint/product-content/explanation-batches/**'
+      - 'kangoshi-sprint/product-content/classified/situation-group-summary.json'
+      - 'kangoshi-sprint/product-content/situation-audit/validate_situation_audit.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kangoshi-situation-audit-state
+  cancel-in-progress: true
+
+jobs:
+  derive-state:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Derive situation state from artifacts
+        run: python kangoshi-sprint/product-content/situation-audit/validate_situation_audit.py --write
+
+      - name: Persist report when changed
+        shell: bash
+        run: |
+          if git diff --quiet -- kangoshi-sprint/product-content/situation-audit/report.json; then
+            echo 'Situation audit report already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/product-content/situation-audit/report.json
+          git commit -m 'kangoshi: refresh situation audit report'
+          git push
