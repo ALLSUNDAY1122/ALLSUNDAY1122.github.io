@@ -91,13 +91,8 @@ jobs:
       - name: Validate Golden Master v2.1 native structure
         run: python3 josanshi-sprint/scripts/validate_native_golden_master.py
 
+      - name: Validate approved monetization and canonical identifiers
+        run: python3 josanshi-sprint/scripts/validate_monetization.py
+
       - name: Run Swift package tests
         run: swift test --package-path josanshi-sprint/ios/JosanshiSprintFeature
-
-      - name: Assert production identifiers are not guessed
-        shell: bash
-        run: |
-          if grep -R -n -E 'jp\.allsunday1122\.[A-Za-z0-9._-]+|productID: "[^" ]+"|appStoreConnectAppID: "[0-9]+"' josanshi-sprint/ios/JosanshiSprintFeature/Sources; then
-            echo 'A production identifier appears to have been hard-coded before canonical confirmation.' >&2
-            exit 1
-          fi
