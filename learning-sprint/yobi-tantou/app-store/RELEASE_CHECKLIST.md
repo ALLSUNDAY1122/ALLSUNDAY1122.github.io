@@ -19,26 +19,30 @@
 - [ ] R8正答・配点・短答合格点の一次資料公開／確認
 - [x] 公式一般教養R6-R8計130題をfail-closed権利トリアージ
 - [ ] 公式問題本文を再録する場合の設問単位権利クリアランス
-- [ ] 独自模試3回分417題の完成（現在84/417）
-- [ ] 3回分の規定数一致
-- [ ] 全417題で誤答・重複・高類似・根拠不明・水増し0
-- [ ] mock-bankからNative正式バンクへの専用統合監査PASS
+- [x] 独自模試1を139/139完成（法律95＋一般教養44）
+- [ ] 独自模試2を139/139完成（現在14/139）
+- [ ] 独自模試3を139/139完成（現在14/139）
+- [ ] 独自模試3回分417題の完成（現在167/417）
+- [ ] 3回分全417題で誤答・重複・高類似・根拠不明・水増し0
+- [ ] mock-bank/general-bankからNative正式バンクへの専用統合監査PASS
 
 ## B. 独自問題・品質基盤
 
 - [x] 8科目論点マップv1
-- [x] Native正式練習問題42問をrelease_passedへ昇格
-- [x] 独自模試1の追加42問（legal batch-01／02／03）をrelease_passedへ昇格
+- [x] Native seed正式練習問題42問をrelease_passedへ昇格
+- [x] 独自模試1の法律追加81問をrelease_passedへ昇格
+- [x] 独自模試1一般教養44題をself-authored deterministic方式でrelease_passedへ昇格
 - [x] 候補preflight
 - [x] 2026-01-01 e-Gov exact-date source audit
 - [x] 正答・解説監査
 - [x] 誤答理由監査
 - [x] 既存問題との横断近似重複監査
+- [x] 一般教養の設問内fixture正答再計算監査
 - [x] 品質HOLD時に閾値を下げず設問修正→上流監査から再実行
 - [x] 候補の `release_eligible=true` 禁止
 - [x] Release builderは `release_passed` のみ変換可能
 - [x] Native `QuestionRepository` fail-closed
-- [ ] 残り333題を同一品質ゲートで作成・監査
+- [ ] 模試2・3の残り250題を同一品質ゲートで作成・監査
 
 ## C. Native iOS
 
@@ -56,9 +60,9 @@
 - [x] Product ID未登録時fail-closed
 - [x] Privacy Manifest
 - [x] iPhone縦向き固定
-- [ ] v2.4変更後の最新XCTest全PASS
-- [ ] v2.4変更後の最新XCUITest全PASS
-- [ ] v2.4変更後のRelease configuration unsigned build PASS
+- [x] v2.4変更後のXCTest PASS（Swift Validation #32）
+- [x] v2.4変更後のXCUITest PASS（Swift Validation #32）
+- [x] v2.4変更後のRelease configuration unsigned build PASS（Swift Validation #32）
 
 ## D. AppIcon
 
@@ -78,6 +82,7 @@
 - [x] StoreKit実機テスト計画
 - [x] v2.4月額サブスクリプションへ原稿同期
 - [x] アプリ内価格はStoreKit `displayPrice` のみを使用する契約
+- [x] v2.4 App Store draft consistency PASS（Source Contract #361）
 - [ ] 正式417題完成後にmetadata収録内容を再照合
 - [ ] iPhoneスクリーンショット作成
 - [ ] 公開Privacy URL HTTP 200確認
