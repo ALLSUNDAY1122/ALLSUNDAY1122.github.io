@@ -6942,14 +6942,22 @@
       "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
-      "expertReviewStatus": "resolved",
+      "expertReviewStatus": "required",
       "releaseEligible": false,
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
       "contentConcernEvidenceRefs": [],
-      "specialistQuarantineStatus": "clear",
-      "specialistQuarantineReasons": []
+      "specialistQuarantineStatus": "quarantined",
+      "specialistQuarantineReasons": [
+        {
+          "kind": "situationExpertReview",
+          "status": "hold_user_review_excluded_from_app",
+          "reason": "公式正答は中発作。SpO2 93％はJPGLの8歳以上中発作群の分布と整合するが、単一指標だけで重症度を断定しない表現が必要。",
+          "scenarioId": "K115-AM-SC05",
+          "priority": "high"
+        }
+      ]
     },
     {
       "id": "K115-AM104",
@@ -7718,14 +7726,22 @@
       "evidenceCheckedDate": "2026-08-14",
       "dynamicEvidenceRequired": false,
       "dynamicEvidenceStatus": "not_required",
-      "expertReviewStatus": "resolved",
+      "expertReviewStatus": "required",
       "releaseEligible": false,
       "contentConcernStatus": "none",
       "contentConcernType": null,
       "contentConcernReason": null,
       "contentConcernEvidenceRefs": [],
-      "specialistQuarantineStatus": "clear",
-      "specialistQuarantineReasons": []
+      "specialistQuarantineStatus": "quarantined",
+      "specialistQuarantineReasons": [
+        {
+          "kind": "situationExpertReview",
+          "status": "hold_user_review_excluded_from_app",
+          "reason": "公式正答は『産後1か月健診までは性交渉を避ける』で維持する一方、現行臨床を一律の固定日ルールとして教えない表現が必要。",
+          "scenarioId": "K115-AM-SC08",
+          "priority": "medium"
+        }
+      ]
     },
     {
       "id": "K115-AM115",
