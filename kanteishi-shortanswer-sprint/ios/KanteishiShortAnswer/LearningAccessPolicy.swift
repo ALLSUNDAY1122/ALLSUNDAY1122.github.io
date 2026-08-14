@@ -97,15 +97,29 @@ extension LearningStore {
         let free = accessibleQuestions(repository.questions, isPremium: false).shuffled()
         let selected = Array(free.prefix(min(todaySessionTarget, free.count)))
         guard !selected.isEmpty else { return false }
-        retryQuestions(selected.map(\.id), title: "今日のスプリント")
+        startSession(
+            key: "today",
+            questions: selected,
+            title: "今日のスプリント",
+            mode: .practice
+        )
         return true
     }
 
     @discardableResult
     func startWeak(isPremium: Bool) -> Bool {
-        let questions = accessibleWeakQuestions(isPremium: isPremium).shuffled()
+        guard !isPremium else {
+            startWeak()
+            return true
+        }
+        let questions = accessibleWeakQuestions(isPremium: false).shuffled()
         guard !questions.isEmpty else { return false }
-        retryQuestions(questions.map(\.id), title: "苦手をつぶす")
+        startSession(
+            key: "weak",
+            questions: questions,
+            title: "苦手をつぶす",
+            mode: .practice
+        )
         return true
     }
 
@@ -116,10 +130,13 @@ extension LearningStore {
             return true
         }
         let questions = accessibleQuestions(repository.questions(domain: domain), isPremium: false)
-        guard !questions.isEmpty else { return false }
-        retryQuestions(
-            Array(questions.shuffled().prefix(settings.dailyGoal)).map(\.id),
-            title: domain
+        let selected = Array(questions.shuffled().prefix(settings.dailyGoal))
+        guard !selected.isEmpty else { return false }
+        startSession(
+            key: "domain:\(domain)",
+            questions: selected,
+            title: domain,
+            mode: .practice
         )
         return true
     }
@@ -133,7 +150,12 @@ extension LearningStore {
         let questions = repository.questions(edition: edition).filter { $0.subject == subject }
         let allowed = accessibleQuestions(questions, isPremium: false)
         guard !allowed.isEmpty else { return false }
-        retryQuestions(allowed.map(\.id), title: "令和\(edition - 2018)年・\(subject)")
+        startSession(
+            key: "exam:\(edition):subject:\(subject)",
+            questions: allowed,
+            title: "令和\(edition - 2018)年・\(subject)",
+            mode: .practice
+        )
         return true
     }
 
