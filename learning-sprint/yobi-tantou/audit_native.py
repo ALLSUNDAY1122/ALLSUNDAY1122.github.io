@@ -16,6 +16,7 @@ question_repository = (IOS / "QuestionRepository.swift").read_text(encoding="utf
 scoring_repository = (IOS / "OfficialScoringRepository.swift").read_text(encoding="utf-8")
 storekit = (IOS / "StoreKitManager.swift").read_text(encoding="utf-8")
 release_builder = (CONTENT_LOOP / "build_native_release.py").read_text(encoding="utf-8")
+combiner = (CONTENT_LOOP / "combine_practice_release.py").read_text(encoding="utf-8")
 project = (IOS / "project.yml").read_text(encoding="utf-8")
 preview_questions = json.loads((IOS / "Resources" / "questions.preview.json").read_text(encoding="utf-8"))
 release_path = IOS / "Resources" / "questions.release.json"
@@ -24,6 +25,7 @@ icon_lock = json.loads((IOS / "app-icon-lock.json").read_text(encoding="utf-8"))
 
 legal_subjects = {"憲法", "行政法", "民法", "商法", "民事訴訟法", "刑法", "刑事訴訟法"}
 valid_release_subjects = legal_subjects | {"一般教養"}
+valid_difficulties = {"foundation", "standard", "applied"}
 
 for forbidden in ("import WebKit", "WKWebView", "SFSafariViewController"):
     if forbidden in swift:
@@ -55,30 +57,43 @@ for marker in required_mock:
 required_use_separation = [
     "enum QuestionContentUse",
     "case officialMock = \"official_mock\"",
+    "enum QuestionDifficulty",
     "$0.releaseEligible && $0.isOfficialMockQuestion && $0.examYear == year",
     "releasedPractice = questions.filter { $0.releaseEligible && $0.isPracticeQuestion }",
 ]
 for marker in required_use_separation:
     if marker not in swift:
-        errors.append(f"missing practice/official-mock usage separation: {marker}")
+        errors.append(f"missing practice/official-mock/tier separation: {marker}")
 
 for marker in (
     "officialMockRequiresDedicatedBank",
     "question.examYear == nil",
     "question.contentUse",
+    "question.difficulty != nil",
 ):
     if marker not in question_repository:
-        errors.append(f"missing repository official-mock isolation gate: {marker}")
+        errors.append(f"missing repository formal release gate: {marker}")
 
 for marker in (
     'PRACTICE_USE = "practice"',
     'OFFICIAL_MOCK_USE = "official_mock"',
+    'DIFFICULTIES = {"foundation", "standard", "applied"}',
     'practice問題にexam_yearを付与できない',
     '公式年度模試は通常練習バンクへ変換できない',
     '"contentUse": PRACTICE_USE',
+    '"difficulty": difficulty',
 ):
     if marker not in release_builder:
-        errors.append(f"missing practice-only release builder gate: {marker}")
+        errors.append(f"missing tiered practice-only release builder gate: {marker}")
+
+for marker in (
+    "duplicate question id across tiers",
+    "only practice content may enter combined bank",
+    "practice item cannot carry official exam year",
+    "difficulty does not match declared tier",
+):
+    if marker not in combiner:
+        errors.append(f"missing fail-closed practice tier combiner gate: {marker}")
 
 required_scoring = [
     "static let supportedYears = [2024, 2025]",
@@ -112,30 +127,38 @@ if len(preview_ids) != len(set(preview_ids)):
 for q in preview_questions:
     if q.get("originType") != "original_preview" or q.get("releaseEligible") is not False:
         errors.append(f"preview question must be non-release original_preview: {q.get('id')}")
-    if q.get("contentUse") is not None:
-        errors.append(f"preview question must not declare production contentUse: {q.get('id')}")
+    if q.get("contentUse") is not None or q.get("difficulty") is not None:
+        errors.append(f"preview question must not declare production contentUse/difficulty: {q.get('id')}")
     for key in ("stem", "choices", "correctIndices", "explanation", "memory", "sourceURL", "evidenceCheckedDate"):
         if not q.get(key):
             errors.append(f"missing preview field {key}: {q.get('id')}")
 
-# Formal practice bank must stay isolated from official-year mock content and
-# must not regress below the first audited seed coverage: two independent items
-# in each of the seven legal subjects.
+# Formal practice bank currently has two fully audited tiers: 14 foundation +
+# 14 standard, exactly two items in each legal subject per tier. Applied is a
+# later loop and must not be fabricated merely to satisfy a count.
 if not release_path.exists():
     errors.append("formal practice questions.release.json missing")
 else:
     release_questions = json.loads(release_path.read_text(encoding="utf-8"))
-    if not isinstance(release_questions, list) or len(release_questions) < 14:
+    if not isinstance(release_questions, list) or len(release_questions) != 28:
         count = len(release_questions) if isinstance(release_questions, list) else "non-list"
-        errors.append(f"formal practice bank must contain at least 14 questions, got {count}")
+        errors.append(f"formal practice bank must contain exactly 28 audited questions, got {count}")
         release_questions = release_questions if isinstance(release_questions, list) else []
     release_ids = [q.get("id") for q in release_questions]
     if any(not qid for qid in release_ids) or len(release_ids) != len(set(release_ids)):
         errors.append("formal practice bank has missing/duplicate IDs")
-    subject_counts = Counter(q.get("subject") for q in release_questions)
-    for subject in legal_subjects:
-        if subject_counts.get(subject, 0) < 2:
-            errors.append(f"formal practice seed coverage below 2 questions: {subject}")
+
+    difficulty_counts = Counter(q.get("difficulty") for q in release_questions)
+    if difficulty_counts != Counter({"foundation": 14, "standard": 14}):
+        errors.append(f"formal practice difficulty coverage mismatch: {dict(difficulty_counts)}")
+    for difficulty in ("foundation", "standard"):
+        tier_subject_counts = Counter(
+            q.get("subject") for q in release_questions if q.get("difficulty") == difficulty
+        )
+        for subject in legal_subjects:
+            if tier_subject_counts.get(subject, 0) != 2:
+                errors.append(f"{difficulty} practice coverage must be exactly 2 questions: {subject}")
+
     for q in release_questions:
         qid = q.get("id", "<no-id>")
         if q.get("releaseEligible") is not True:
@@ -144,6 +167,8 @@ else:
             errors.append(f"ordinary release bank contains non-practice contentUse: {qid}")
         if q.get("examYear") is not None:
             errors.append(f"practice item falsely carries official exam year: {qid}")
+        if q.get("difficulty") not in valid_difficulties:
+            errors.append(f"formal practice difficulty invalid: {qid}")
         if q.get("originType") in (None, "original_preview", "official_exam_reproduced"):
             errors.append(f"formal practice originType invalid: {qid}")
         if q.get("subject") not in valid_release_subjects:
@@ -189,4 +214,4 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print("PASS: native source contract, v2.1 UI, formal practice bank, practice/official-mock isolation, verified scoring, preview/release gates, StoreKit lifecycle, identifiers, privacy and canonical AppIcon lock")
+print("PASS: native source contract, v2.1 UI, 28-question tiered formal practice bank, practice/official-mock isolation, verified scoring, preview/release gates, StoreKit lifecycle, identifiers, privacy and canonical AppIcon lock")
