@@ -208,4 +208,17 @@ let migrated = ScanProjectStore(rootURL: root).listProjects().first(where: { $0.
 expect(migrated?.manifest.stage == .captured, "legacy project was not migrated")
 expect(FileManager.default.fileExists(atPath: legacy.appendingPathComponent(ScanProjectStore.manifestFileName).path), "legacy manifest not written")
 
-print("PASS: ScanProjectStore lifecycle regression gate — partial outputs rejected, committed output recovered")
+// MIGRATION + S8 #4151: a legacy folder without a manifest must not trust an aligned `.splat`
+// merely because its byte count looks structurally valid. Keep the file, but publish only raw retry.
+let legacyPartialID = "legacy-aligned-partial"
+let legacyPartial = root.appendingPathComponent(legacyPartialID).appendingPathExtension(ScanProjectStore.projectExtension)
+try rawFiles(in: legacyPartial)
+let legacyPartialResult = legacyPartial.appendingPathComponent(ScanProjectStore.splatResultFileName)
+try splatData(0x77).write(to: legacyPartialResult)
+let migratedPartial = ScanProjectStore(rootURL: root).listProjects().first(where: { $0.id == legacyPartialID })
+expect(migratedPartial?.manifest.stage == .captured, "legacy aligned partial was trusted as finished without completion evidence")
+expect(migratedPartial?.manifest.splatFileName == nil, "legacy aligned partial was published without completion evidence")
+expect(FileManager.default.fileExists(atPath: legacyPartialResult.path), "legacy migration destroyed the unverified result file")
+expect(migratedPartial?.manifest.lastError?.contains("完了確認情報がない") == true, "legacy migration did not explain why the old result is untrusted")
+
+print("PASS: ScanProjectStore lifecycle regression gate — partial outputs and legacy aligned results require durable completion evidence")
