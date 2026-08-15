@@ -18,6 +18,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Refuse stale TestFlight source
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin feature/splat-native-ios-poc
+          S0_HEAD="$(git rev-parse FETCH_HEAD)"
+          TESTFLIGHT_HEAD="$(git rev-parse HEAD)"
+          echo "Current S0 integration HEAD: $S0_HEAD"
+          echo "Current TestFlight HEAD: $TESTFLIGHT_HEAD"
+          if ! git merge-base --is-ancestor "$S0_HEAD" "$TESTFLIGHT_HEAD"; then
+            echo "::error::TestFlight source is stale. Synchronize testflight/splat-native-ios with the latest feature/splat-native-ios-poc before building or uploading an IPA."
+            exit 1
+          fi
+          echo "PASS: TestFlight source contains current S0 integration HEAD"
 
       - name: Validate source and release packet
         run: |
