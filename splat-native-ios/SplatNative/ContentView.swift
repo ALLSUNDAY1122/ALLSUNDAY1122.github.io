@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var model: ScanModel
+    @StateObject private var viewerState = SplatViewerState()
     @State private var showingShare = false
 
     var body: some View {
@@ -115,7 +116,7 @@ struct ContentView: View {
         if let url = model.resultURL {
             VStack(spacing: 0) {
                 ZStack(alignment: .top) {
-                    SplatViewer(url: url).ignoresSafeArea(edges: .top)
+                    SplatViewer(url: url, state: viewerState).ignoresSafeArea(edges: .top)
                     HStack {
                         Button { model.discardAndReset() } label: {
                             Image(systemName: "chevron.left").frame(width: 44, height: 44).background(.black.opacity(0.55), in: Circle())
