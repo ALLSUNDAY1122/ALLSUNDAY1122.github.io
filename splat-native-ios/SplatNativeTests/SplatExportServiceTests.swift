@@ -22,8 +22,6 @@ final class SplatExportServiceTests: XCTestCase {
             XCTAssertTrue(FileManager.default.fileExists(atPath: output.path))
             XCTAssertGreaterThan(try byteCount(output), 0)
 
-            // AutodetectSceneReader is the same public interoperability surface a separate
-            // consumer of SplatIO can use; the output must decode without Scan Lab state.
             let reader = try AutodetectSceneReader(output)
             let decoded = try await reader.readAll()
             XCTAssertEqual(decoded.count, sourcePoints.count)
@@ -46,8 +44,6 @@ final class SplatExportServiceTests: XCTestCase {
                 XCTAssertEqual(actualScale.y, expectedScale.y, accuracy: 0.01)
                 XCTAssertEqual(actualScale.z, expectedScale.z, accuracy: 0.01)
 
-                // q and -q represent the same 3D orientation. Compare the absolute quaternion
-                // dot product instead of raw components so interoperability is representation-safe.
                 let expectedRotation = expected.rotation.normalized.vector
                 let actualRotation = actual.rotation.normalized.vector
                 let orientationAgreement = abs(simd_dot(expectedRotation, actualRotation))
@@ -95,6 +91,7 @@ final class SplatExportServiceTests: XCTestCase {
         XCTAssertEqual(manifest.primaryAsset.fileName, "scene.spz")
         XCTAssertEqual(manifest.primaryAsset.byteLength, assetData.count)
         XCTAssertEqual(manifest.primaryAsset.sha256, SplatExportService.sha256Hex(assetData))
+        XCTAssertEqual(manifest.primaryAsset.sha256, try SplatExportService.sha256Hex(fileURL: package.assetURL))
         XCTAssertFalse(manifest.containsLocation)
     }
 
@@ -126,6 +123,25 @@ final class SplatExportServiceTests: XCTestCase {
                 return XCTFail("Expected untrustedSource, got \(error)")
             }
         }
+    }
+
+    func testStreamingSHA256MatchesWholeDataAcrossMultipleChunks() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("s6-streaming-hash-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        var data = Data(count: 2_500_123)
+        for index in data.indices {
+            data[index] = UInt8(truncatingIfNeeded: index &* 31 &+ 7)
+        }
+        let url = root.appendingPathComponent("large.spz")
+        try data.write(to: url, options: .atomic)
+
+        XCTAssertEqual(
+            try SplatExportService.sha256Hex(fileURL: url),
+            SplatExportService.sha256Hex(data)
+        )
     }
 
     func testRejectsPartialDotSplatRecord() throws {
