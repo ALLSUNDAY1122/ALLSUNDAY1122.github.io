@@ -33,7 +33,11 @@ enum SplatExportAdmission {
     /// Export is admitted only when the source matches the project store's atomic completion
     /// evidence. Record alignment or a `.finished` manifest by itself is not enough because an
     /// interrupted writer can still leave a whole number of 32-byte records behind.
-    static func preflight(sourceURL: URL, kind: Kind) throws -> URL {
+    static func preflight(
+        sourceURL: URL,
+        kind: Kind,
+        availableCapacityOverride: Int64? = nil
+    ) throws -> URL {
         let trustedURL: URL
         do {
             trustedURL = try SplatCompletionVerifier.verify(sourceURL: sourceURL)
@@ -44,7 +48,9 @@ enum SplatExportAdmission {
         let projectURL = trustedURL.deletingLastPathComponent()
         let sourceBytes = try fileSize(at: trustedURL)
         let required = estimatedRequiredFreeBytes(sourceBytes: sourceBytes, kind: kind)
-        if let available = availableCapacity(at: projectURL), available < required {
+        let available = availableCapacityOverride.map { max(0, $0) }
+            ?? availableCapacity(at: projectURL)
+        if let available, available < required {
             throw AdmissionError.insufficientStorage(required: required, available: available)
         }
         return trustedURL
