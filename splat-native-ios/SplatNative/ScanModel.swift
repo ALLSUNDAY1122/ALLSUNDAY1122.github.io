@@ -72,6 +72,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     @Published var splatCount = 0
     @Published var resultURL: URL?
     @Published var previewImage: UIImage?
+    @Published private(set) var libraryProjects: [ScanProjectSummary] = []
+    @Published private(set) var trashProjects: [ScanProjectSummary] = []
+    @Published private(set) var libraryStorageBytes: Int64 = 0
+    @Published private(set) var activeManifest: ScanProjectManifest?
 
     let coverageSectorTotal = 12
     let minimumCoverageSectors = 8
@@ -90,6 +94,13 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private let ciContext = CIContext(options: [.cacheIntermediates: false])
     private let captureQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.capture", qos: .userInitiated)
     private var isWritingFrame = false
+    private let projectStore = ScanProjectStore()
+    private var loadedFromDisk = false
+
+    override init() {
+        super.init()
+        refreshLibrary()
+    }
 
     var canFinishCapture: Bool {
         acceptedFrames >= 24 &&
@@ -99,6 +110,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     var canRetryGeneration: Bool { datasetReady && projectURL != nil }
+    var activeProjectCanProcess: Bool { datasetReady && projectURL != nil }
+    var activeProjectHasRaw: Bool { activeManifest?.rawDataRetained == true }
+    var activeProjectIsDraft: Bool { activeManifest?.stage == .capturing }
+
+    var activeProjectCanResume: Bool {
+        guard activeProjectIsDraft, let projectURL,
+              (try? projectStore.loadCheckpoint(projectURL: projectURL)) != nil else { return false }
+        return !loadedFromDisk || projectStore.hasWorldMap(projectURL: projectURL)
+    }
 
     var progressText: String { "撮影方向 \(coverageSectorCount) / \(coverageSectorTotal)" }
 
@@ -140,90 +160,246 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         session.delegate = self
     }
 
+    func refreshLibrary() {
+        libraryProjects = projectStore.listProjects()
+        trashProjects = projectStore.listTrash()
+        libraryStorageBytes = projectStore.storageBytes(includeTrash: true)
+    }
+
     func startCapture() {
         guard let session else { return }
+        if projectURL != nil {
+            returnToLibrary()
+        }
         do {
-            let root = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                .appendingPathComponent("SplatLab", isDirectory: true)
-            try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
-            let project = root.appendingPathComponent(UUID().uuidString + ".splatproject", isDirectory: true)
-            let images = project.appendingPathComponent("images", isDirectory: true)
-            try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
-            projectURL = project
-            imagesURL = images
+            let created = try projectStore.createProject(title: "スキャン", targetFrames: targetFrames)
+            projectURL = created.0
+            imagesURL = created.0.appendingPathComponent("images", isDirectory: true)
+            activeManifest = created.1
         } catch {
             phase = .failed("保存領域を準備できませんでした: \(error.localizedDescription)")
             return
         }
 
-        captured.removeAll(keepingCapacity: true)
-        featurePoints.removeAll(keepingCapacity: true)
-        coverageSectors.removeAll(keepingCapacity: true)
-        estimatedTargetCenter = nil
-        acceptedFrames = 0
-        featurePointCount = 0
-        coverageSectorCount = 0
-        lastAcceptedTransform = nil
-        lastAcceptedTimestamp = 0
-        resultURL = nil
-        previewImage = nil
-        trainingProgress = 0
-        trainingIteration = 0
-        splatCount = 0
-        datasetReady = false
-        isWritingFrame = false
+        resetCaptureMemory()
+        loadedFromDisk = false
         phase = .capturing
         trackingMessage = "対象を中央に保ち、周囲をゆっくり1周してください"
 
-        let config = ARWorldTrackingConfiguration()
-        config.worldAlignment = .gravity
-        config.isLightEstimationEnabled = true
-        config.environmentTexturing = .none
+        let config = makeWorldTrackingConfiguration()
         session.run(config, options: [.resetTracking, .removeExistingAnchors])
         UIApplication.shared.isIdleTimerDisabled = true
+        refreshLibrary()
     }
 
     func finishCapture() {
         guard phase == .capturing, canFinishCapture else { return }
-        session?.pause()
+        persistWorldMapIfPossible()
         do {
             try writePointCloudPLY()
             try writeTransformsJSON()
+            persistCaptureCheckpoint(force: true, stage: .captured)
+            if let projectURL {
+                activeManifest = try projectStore.updateManifest(projectURL: projectURL) { manifest in
+                    manifest.stage = .captured
+                    manifest.acceptedFrames = self.acceptedFrames
+                    manifest.targetFrames = self.targetFrames
+                    manifest.featurePointCount = self.featurePointCount
+                    manifest.coverageSectorCount = self.coverageSectorCount
+                    manifest.rawDataRetained = true
+                    manifest.lastError = nil
+                }
+            }
             datasetReady = true
             phase = .captured
             trackingMessage = "必要な撮影情報がそろいました"
+            session?.pause()
+            UIApplication.shared.isIdleTimerDisabled = false
+            refreshLibrary()
         } catch {
             datasetReady = false
-            phase = .failed("撮影データを準備できませんでした: \(error.localizedDescription)")
+            markActiveProjectFailed("撮影データを準備できませんでした: \(error.localizedDescription)")
         }
     }
 
+    /// Saves an in-progress scan without destroying raw data. A later cold resume requires an ARWorldMap.
+    func saveDraftAndReturnToLibrary() {
+        guard phase == .capturing else {
+            returnToLibrary()
+            return
+        }
+        persistWorldMapIfPossible()
+        persistCaptureCheckpoint(force: true, stage: .capturing)
+        session?.pause()
+        UIApplication.shared.isIdleTimerDisabled = false
+        clearActiveRuntimeState()
+        refreshLibrary()
+    }
+
+    /// Leaves a completed/captured project in the local library.
+    func returnToLibrary() {
+        if phase == .capturing {
+            persistWorldMapIfPossible()
+            persistCaptureCheckpoint(force: true, stage: .capturing)
+        }
+        session?.pause()
+        UIApplication.shared.isIdleTimerDisabled = false
+        clearActiveRuntimeState()
+        refreshLibrary()
+    }
+
+    /// Backward-compatible destructive action. S5 makes it recoverable by moving the project to Recently Deleted.
     func discardAndReset() {
         session?.pause()
-        if let projectURL { try? FileManager.default.removeItem(at: projectURL) }
-        projectURL = nil
-        imagesURL = nil
-        captured.removeAll()
-        featurePoints.removeAll()
-        coverageSectors.removeAll()
-        estimatedTargetCenter = nil
-        acceptedFrames = 0
-        featurePointCount = 0
-        coverageSectorCount = 0
-        resultURL = nil
-        previewImage = nil
-        trainingProgress = 0
-        trainingIteration = 0
-        splatCount = 0
-        datasetReady = false
-        phase = .ready
+        if let projectURL {
+            do {
+                try projectStore.moveToTrash(projectURL: projectURL)
+            } catch {
+                phase = .failed("スキャンを最近削除した項目へ移動できませんでした: \(error.localizedDescription)")
+                return
+            }
+        }
         UIApplication.shared.isIdleTimerDisabled = false
+        clearActiveRuntimeState()
+        refreshLibrary()
+    }
+
+    func openProject(id: String) {
+        do {
+            let summary = try projectStore.loadProject(id: id)
+            session?.pause()
+            projectURL = summary.projectURL
+            imagesURL = summary.projectURL.appendingPathComponent("images", isDirectory: true)
+            activeManifest = summary.manifest
+            loadedFromDisk = true
+            restoreRuntimeState(from: summary)
+            if let result = summary.resultURL {
+                resultURL = result
+                phase = .finished
+            } else {
+                phase = .captured
+            }
+        } catch {
+            clearActiveRuntimeState()
+            phase = .failed("保存済みスキャンを開けませんでした: \(error.localizedDescription)")
+        }
+    }
+
+    func resumeActiveCapture() {
+        guard let session, let projectURL, activeProjectIsDraft else { return }
+        do {
+            let checkpoint = try projectStore.loadCheckpoint(projectURL: projectURL)
+            restoreCheckpoint(checkpoint)
+            let config = makeWorldTrackingConfiguration()
+            if loadedFromDisk {
+                let worldMapURL = projectStore.worldMapURL(projectURL: projectURL)
+                guard let data = try? Data(contentsOf: worldMapURL),
+                      let worldMap = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) else {
+                    phase = .failed("撮影途中のrawデータは保存されていますが、カメラ位置を復元する情報がありません。既存データは削除されていません。")
+                    return
+                }
+                config.initialWorldMap = worldMap
+                session.run(config, options: [.resetTracking, .removeExistingAnchors])
+                trackingMessage = "保存位置を再確認しています。対象を映しながらゆっくり動かしてください"
+            } else {
+                session.run(config)
+                trackingMessage = "撮影を再開しました。続きから対象の周囲を回ってください"
+            }
+            loadedFromDisk = false
+            phase = .capturing
+            UIApplication.shared.isIdleTimerDisabled = true
+        } catch {
+            phase = .failed("撮影途中の状態を復元できませんでした: \(error.localizedDescription)")
+        }
     }
 
     func retryGeneration() {
         guard canRetryGeneration else { return }
         phase = .captured
         train()
+    }
+
+    func reprocessCurrentSplat() {
+        guard let projectURL else { return }
+        do {
+            _ = try projectStore.reprocessRequest(projectURL: projectURL, representation: .splat)
+            datasetReady = true
+            phase = .captured
+            train()
+        } catch {
+            phase = .failed(error.localizedDescription)
+        }
+    }
+
+    /// Stable S5 handoff for S4: S4 can request the same retained raw package for Mesh reconstruction.
+    func reprocessRequest(for representation: ScanRepresentationKind) throws -> ScanReprocessRequest {
+        guard let projectURL else { throw ScanProjectStoreError.projectNotFound }
+        return try projectStore.reprocessRequest(projectURL: projectURL, representation: representation)
+    }
+
+    func clearRawDataForActiveProject() {
+        guard let projectURL, resultURL != nil else { return }
+        do {
+            try projectStore.clearRawData(projectURL: projectURL)
+            datasetReady = false
+            captured.removeAll()
+            featurePoints.removeAll()
+            coverageSectors.removeAll()
+            acceptedFrames = activeManifest?.acceptedFrames ?? acceptedFrames
+            activeManifest = try projectStore.loadManifest(projectURL: projectURL)
+            refreshLibrary()
+        } catch {
+            phase = .failed("rawデータを整理できませんでした: \(error.localizedDescription)")
+        }
+    }
+
+    func renameActiveProject(_ value: String) {
+        guard let projectURL else { return }
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        do {
+            activeManifest = try projectStore.updateManifest(projectURL: projectURL) { manifest in
+                manifest.title = String(trimmed.prefix(80))
+            }
+            refreshLibrary()
+        } catch {
+            trackingMessage = "名前を保存できませんでした"
+        }
+    }
+
+    func deleteProject(id: String) {
+        do {
+            let summary = try projectStore.loadProject(id: id)
+            try projectStore.moveToTrash(projectURL: summary.projectURL)
+            if activeManifest?.id == id { clearActiveRuntimeState() }
+            refreshLibrary()
+        } catch {
+            phase = .failed("スキャンを削除できませんでした: \(error.localizedDescription)")
+        }
+    }
+
+    func restoreProject(id: String) {
+        do {
+            try projectStore.restoreFromTrash(id: id)
+            refreshLibrary()
+        } catch {
+            phase = .failed("スキャンを復元できませんでした: \(error.localizedDescription)")
+        }
+    }
+
+    func permanentlyDeleteProject(id: String) {
+        do {
+            try projectStore.permanentlyDeleteFromTrash(id: id)
+            refreshLibrary()
+        } catch {
+            phase = .failed("スキャンを完全に削除できませんでした: \(error.localizedDescription)")
+        }
+    }
+
+    func handleScenePhase(_ scenePhase: ScenePhase) {
+        guard scenePhase != .active, phase == .capturing else { return }
+        persistCaptureCheckpoint(force: true, stage: .capturing)
+        persistWorldMapIfPossible()
     }
 
     func train(iterations: Int = 2_000) {
@@ -233,6 +409,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         trainingIteration = 0
         splatCount = 0
         UIApplication.shared.isIdleTimerDisabled = true
+        do {
+            activeManifest = try projectStore.updateManifest(projectURL: projectURL) { manifest in
+                manifest.stage = .processing
+                manifest.lastError = nil
+            }
+        } catch {
+            failTraining("生成状態を保存できませんでした: \(error.localizedDescription)")
+            return
+        }
 
         let path = projectURL.path
         Task.detached(priority: .userInitiated) { [weak self] in
@@ -291,20 +476,63 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 let preview = Self.makeImage(from: rendered)
                 Task { @MainActor [weak self] in
                     guard let self else { return }
+                    do {
+                        if let jpeg = preview?.jpegData(compressionQuality: 0.82) {
+                            try self.projectStore.setThumbnail(data: jpeg, projectURL: projectURL)
+                        }
+                        self.activeManifest = try self.projectStore.updateManifest(projectURL: projectURL) { manifest in
+                            manifest.stage = .finished
+                            manifest.outputs[ScanRepresentationKind.splat.rawValue] = output.lastPathComponent
+                            manifest.lastError = nil
+                        }
+                    } catch {
+                        self.failTraining("3Dは生成できましたが、ライブラリ情報を保存できませんでした: \(error.localizedDescription)")
+                        return
+                    }
                     self.resultURL = output
                     self.previewImage = preview
                     self.trainingProgress = 1
                     self.phase = .finished
                     UIApplication.shared.isIdleTimerDisabled = false
+                    self.refreshLibrary()
                 }
             }
         }
+    }
+
+    func restartAfterSessionInterruption() {
+        guard phase == .capturing, let activeSession = session else { return }
+        // Do not reset tracking here: the stored camera transforms and feature points share this world coordinate system.
+        let config = makeWorldTrackingConfiguration()
+        activeSession.run(config)
+        trackingMessage = "位置を再確認しています。対象を中央にしてゆっくり動かしてください"
     }
 
     private func failTraining(_ message: String) {
         phase = .failed(message)
         trackingMessage = message
         UIApplication.shared.isIdleTimerDisabled = false
+        markManifest(stage: .failed, error: message)
+        refreshLibrary()
+    }
+
+    private func markActiveProjectFailed(_ message: String) {
+        phase = .failed(message)
+        trackingMessage = message
+        UIApplication.shared.isIdleTimerDisabled = false
+        markManifest(stage: .failed, error: message)
+        refreshLibrary()
+    }
+
+    private func markManifest(stage: ScanProjectStage, error: String?) {
+        guard let projectURL else { return }
+        activeManifest = try? projectStore.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = stage
+            manifest.lastError = error
+            manifest.acceptedFrames = self.acceptedFrames
+            manifest.featurePointCount = self.featurePointCount
+            manifest.coverageSectorCount = self.coverageSectorCount
+        }
     }
 
     nonisolated func session(_ session: ARSession, didUpdate frame: ARFrame) {
@@ -376,16 +604,182 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 self.lastAcceptedTransform = transform
                 self.lastAcceptedTimestamp = timestamp
                 self.trackingMessage = self.captureQualityText
+                self.persistCaptureCheckpoint(force: self.acceptedFrames <= 3 || self.acceptedFrames % 3 == 0, stage: .capturing)
+                if self.acceptedFrames == 1, let projectURL = self.projectURL {
+                    try? self.projectStore.setThumbnail(from: fileURL, projectURL: projectURL)
+                    self.activeManifest = try? self.projectStore.loadManifest(projectURL: projectURL)
+                }
+                if self.acceptedFrames % 12 == 0 {
+                    self.persistWorldMapIfPossible()
+                }
 
                 if self.acceptedFrames >= self.targetFrames && self.canFinishCapture {
                     self.finishCapture()
                 } else if self.acceptedFrames >= self.maxFrames && !self.canFinishCapture {
-                    self.phase = .failed("十分な方向から撮影できませんでした。対象を中央に置き、反対側まで回り込んでもう一度撮影してください")
+                    let message = "十分な方向から撮影できませんでした。対象を中央に置き、反対側まで回り込んでもう一度撮影してください"
+                    self.persistCaptureCheckpoint(force: true, stage: .capturing)
+                    self.persistWorldMapIfPossible()
+                    self.phase = .failed(message)
+                    self.trackingMessage = message
+                    self.markManifest(stage: .failed, error: message)
                     self.session?.pause()
                     UIApplication.shared.isIdleTimerDisabled = false
                 }
             }
         }
+    }
+
+    private func persistCaptureCheckpoint(force: Bool, stage: ScanProjectStage) {
+        guard let projectURL else { return }
+        if !force {
+            // Keep manifest current even when the heavier binary point-cloud checkpoint is throttled.
+            activeManifest = try? projectStore.updateManifest(projectURL: projectURL) { manifest in
+                manifest.stage = stage
+                manifest.acceptedFrames = self.acceptedFrames
+                manifest.targetFrames = self.targetFrames
+                manifest.featurePointCount = self.featurePointCount
+                manifest.coverageSectorCount = self.coverageSectorCount
+                manifest.rawDataRetained = true
+            }
+            return
+        }
+        let storedFrames = captured.map {
+            StoredCapturedFrame(
+                id: $0.id,
+                filePath: $0.filePath,
+                transformMatrix: $0.transformMatrix,
+                flX: $0.flX,
+                flY: $0.flY,
+                cx: $0.cx,
+                cy: $0.cy,
+                w: $0.w,
+                h: $0.h
+            )
+        }
+        let storedPoints = featurePoints.map { key, value in
+            StoredFeaturePoint(id: key, x: value.x, y: value.y, z: value.z)
+        }
+        let center = estimatedTargetCenter.map { StoredVector3(x: $0.x, y: $0.y, z: $0.z) }
+        let checkpoint = ScanCaptureCheckpoint(
+            frames: storedFrames,
+            featurePoints: storedPoints,
+            coverageSectors: Array(coverageSectors),
+            estimatedTargetCenter: center,
+            lastAcceptedTransform: lastAcceptedTransform.map(Self.rows),
+            lastAcceptedTimestamp: lastAcceptedTimestamp
+        )
+        do {
+            try projectStore.saveCheckpoint(checkpoint, projectURL: projectURL)
+            activeManifest = try projectStore.updateManifest(projectURL: projectURL) { manifest in
+                manifest.stage = stage
+                manifest.acceptedFrames = self.acceptedFrames
+                manifest.targetFrames = self.targetFrames
+                manifest.featurePointCount = self.featurePointCount
+                manifest.coverageSectorCount = self.coverageSectorCount
+                manifest.rawDataRetained = true
+                manifest.lastError = nil
+            }
+        } catch {
+            trackingMessage = "撮影は続けられますが、途中状態の保存に失敗しました"
+        }
+    }
+
+    private func persistWorldMapIfPossible() {
+        guard let session, let projectURL else { return }
+        let targetURL = projectStore.worldMapURL(projectURL: projectURL)
+        session.getCurrentWorldMap { worldMap, _ in
+            guard let worldMap,
+                  let data = try? NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true) else { return }
+            try? data.write(to: targetURL, options: .atomic)
+        }
+    }
+
+    private func restoreRuntimeState(from summary: ScanProjectSummary) {
+        resetCaptureMemory()
+        acceptedFrames = summary.manifest.acceptedFrames
+        targetFrames = summary.manifest.targetFrames
+        featurePointCount = summary.manifest.featurePointCount
+        coverageSectorCount = summary.manifest.coverageSectorCount
+        datasetReady = (try? projectStore.reprocessRequest(projectURL: summary.projectURL, representation: .splat)) != nil
+        resultURL = summary.resultURL
+        if let thumbnail = summary.thumbnailURL {
+            previewImage = UIImage(contentsOfFile: thumbnail.path)
+        }
+        if let checkpoint = try? projectStore.loadCheckpoint(projectURL: summary.projectURL) {
+            restoreCheckpoint(checkpoint)
+        }
+        if let error = summary.manifest.lastError {
+            trackingMessage = error
+        } else if summary.manifest.stage == .capturing {
+            trackingMessage = activeProjectCanResume
+                ? "撮影途中のデータを復元しました"
+                : "撮影途中のrawデータを保存しています"
+        } else {
+            trackingMessage = "保存済みスキャンを開きました"
+        }
+    }
+
+    private func restoreCheckpoint(_ checkpoint: ScanCaptureCheckpoint) {
+        captured = checkpoint.frames.map {
+            CapturedView(
+                id: $0.id,
+                filePath: $0.filePath,
+                transformMatrix: $0.transformMatrix,
+                flX: $0.flX,
+                flY: $0.flY,
+                cx: $0.cx,
+                cy: $0.cy,
+                w: $0.w,
+                h: $0.h
+            )
+        }
+        featurePoints = Dictionary(uniqueKeysWithValues: checkpoint.featurePoints.map {
+            ($0.id, SIMD3<Float>($0.x, $0.y, $0.z))
+        })
+        coverageSectors = Set(checkpoint.coverageSectors)
+        estimatedTargetCenter = checkpoint.estimatedTargetCenter.map { SIMD3<Float>($0.x, $0.y, $0.z) }
+        lastAcceptedTransform = checkpoint.lastAcceptedTransform.flatMap(Self.matrix(from:))
+        lastAcceptedTimestamp = checkpoint.lastAcceptedTimestamp
+        acceptedFrames = captured.count
+        featurePointCount = featurePoints.count
+        coverageSectorCount = coverageSectors.count
+    }
+
+    private func resetCaptureMemory() {
+        captured.removeAll(keepingCapacity: true)
+        featurePoints.removeAll(keepingCapacity: true)
+        coverageSectors.removeAll(keepingCapacity: true)
+        estimatedTargetCenter = nil
+        acceptedFrames = 0
+        featurePointCount = 0
+        coverageSectorCount = 0
+        lastAcceptedTransform = nil
+        lastAcceptedTimestamp = 0
+        resultURL = nil
+        previewImage = nil
+        trainingProgress = 0
+        trainingIteration = 0
+        splatCount = 0
+        datasetReady = false
+        isWritingFrame = false
+    }
+
+    private func clearActiveRuntimeState() {
+        projectURL = nil
+        imagesURL = nil
+        activeManifest = nil
+        loadedFromDisk = false
+        resetCaptureMemory()
+        phase = .ready
+        trackingMessage = "対象を中央に置いて開始してください"
+    }
+
+    private func makeWorldTrackingConfiguration() -> ARWorldTrackingConfiguration {
+        let config = ARWorldTrackingConfiguration()
+        config.worldAlignment = .gravity
+        config.isLightEstimationEnabled = true
+        config.environmentTexturing = .none
+        return config
     }
 
     private func makeJPEGData(pixelBuffer: CVPixelBuffer) -> Data? {
@@ -512,7 +906,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         case .initializing: return "位置を合わせています。ゆっくり動かしてください"
         case .excessiveMotion: return "動きが速すぎます。もっとゆっくり"
         case .insufficientFeatures: return "模様が少ないため追跡困難です。背景や明るさを変えてください"
-        case .relocalizing: return "位置を再確認しています"
+        case .relocalizing: return "保存位置を再確認しています。対象を映しながらゆっくり動かしてください"
         @unknown default: return "追跡が安定するまで少し動かしてください"
         }
     }
@@ -533,6 +927,17 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
     private static func rows(_ m: simd_float4x4) -> [[Float]] {
         (0..<4).map { row in (0..<4).map { col in m[col][row] } }
+    }
+
+    private static func matrix(from rows: [[Float]]) -> simd_float4x4? {
+        guard rows.count == 4, rows.allSatisfy({ $0.count == 4 }) else { return nil }
+        var matrix = matrix_identity_float4x4
+        for row in 0..<4 {
+            for column in 0..<4 {
+                matrix[column][row] = rows[row][column]
+            }
+        }
+        return matrix
     }
 
     nonisolated private static func makeImage(from pixels: PixelData) -> UIImage? {
