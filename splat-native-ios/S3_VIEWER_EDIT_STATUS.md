@@ -10,7 +10,7 @@ S3 owns initial useful view, orbit/pan/zoom/reset, crop, exposure/contrast, on-d
 
 ## Wave 1 implementation
 
-- Initial framing uses robust median / 90th-percentile distance.
+- Initial framing uses robust median / 90th-percentile distance. Capture-pose initial orbit is converted through the same camera-center/scale normalization used by the pinned msplat trainer before it is compared with the exported Splat scene.
 - The 180-degree renderer correction is applied in camera space instead of rotating translated scene data around the world origin.
 - One-finger drag: orbit.
 - Two-finger drag: real camera/target translation pan.
@@ -46,7 +46,7 @@ Run 1 reached XcodeGen generation, then SwiftPM checkout failed before app compi
 
 | S3 row | State | Evidence / blocker |
 |---|---|---|
-| Initial useful view | PARTIAL | robust framing + camera-space roll fix exist, but capture-pose initial-orbit conversion still needs to account for msplat scene normalization before this can return to NEAR_PARITY |
+| Initial useful view | NEAR_PARITY | robust framing + normalized capture-pose initial orbit + camera-space roll fix; representative real-device validation still required |
 | Orbit / zoom / reset | NEAR_PARITY | implemented; real-device gesture/quality validation required |
 | Pan | NEAR_PARITY | true two-finger target translation implemented; real-device direction/sensitivity validation required |
 | Crop Splat | NEAR_PARITY | real point filtering + persisted non-destructive state implemented; crop UX and representative scans require device validation |

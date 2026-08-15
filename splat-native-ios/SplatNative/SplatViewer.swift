@@ -181,9 +181,9 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
                 self.sourcePoints = points
                 self.targetOffset = .zero
 
-                let initial = Self.initialOrbit(for: url, center: framing.center)
-                self.initialYaw = initial?.yaw ?? 0
-                self.initialPitch = initial?.pitch ?? 0
+                let initial = Self.initialViewGeometry(for: url, center: framing.center)
+                self.initialYaw = initial.yaw
+                self.initialPitch = initial.pitch
                 self.yaw = self.initialYaw
                 self.pitch = self.initialPitch
                 self.loadedURL = url
@@ -277,6 +277,8 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         if measurementPoints.count == 1 {
             state?.rendererSelectedMeasurementPoint(count: 1)
         } else if measurementPoints.count == 2 {
+            // SplatViewerState converts exported scene units back into meters using
+            // the exact camera normalization applied by the pinned msplat trainer.
             state?.rendererMeasured(meters: simd_distance(measurementPoints[0], measurementPoints[1]))
         }
     }
@@ -450,28 +452,37 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         return best
     }
 
-    private static func initialOrbit(for url: URL, center: SIMD3<Float>) -> (yaw: Float, pitch: Float)? {
+    /// Reproduces the pinned msplat camera center/scale normalization before
+    /// comparing the capture camera positions with the exported Splat scene.
+    private static func initialViewGeometry(for url: URL, center: SIMD3<Float>) -> (yaw: Float, pitch: Float) {
         let transformsURL = url.deletingLastPathComponent().appendingPathComponent("transforms.json")
         guard let data = try? Data(contentsOf: transformsURL),
               let dataset = try? JSONDecoder().decode(ViewerCameraDataset.self, from: data),
-              !dataset.frames.isEmpty else { return nil }
+              !dataset.frames.isEmpty else { return (0, 0) }
 
-        var cameraSum = SIMD3<Float>.zero
-        var count: Float = 0
-        for frame in dataset.frames.prefix(6) {
+        let positions = dataset.frames.compactMap { frame -> SIMD3<Float>? in
             let matrix = frame.transformMatrix
             guard matrix.count >= 3,
                   matrix[0].count >= 4,
                   matrix[1].count >= 4,
-                  matrix[2].count >= 4 else { continue }
-            cameraSum += SIMD3<Float>(matrix[0][3], matrix[1][3], matrix[2][3])
+                  matrix[2].count >= 4 else { return nil }
+            return SIMD3<Float>(matrix[0][3], matrix[1][3], matrix[2][3])
+        }
+        guard !positions.isEmpty else { return (0, 0) }
+
+        let normalization = SplatSceneNormalization(cameraPositions: positions)
+        var cameraSum = SIMD3<Float>.zero
+        var count: Float = 0
+        for position in positions.prefix(6) {
+            cameraSum += position
             count += 1
         }
-        guard count > 0 else { return nil }
-        let camera = cameraSum / count
+        guard count > 0 else { return (0, 0) }
+
+        let camera = normalization.normalized(cameraSum / count)
         let vector = camera - center
         let length = simd_length(vector)
-        guard length > 0.05 else { return nil }
+        guard length > 0.05 else { return (0, 0) }
         let yaw = atan2(vector.x, vector.z)
         let pitch = asin(max(-0.9, min(0.9, vector.y / length)))
         return (yaw, pitch)
