@@ -1,8 +1,10 @@
+import CoreGraphics
+import ImageIO
 import ModelIO
 import XCTest
 
 final class MeshExportServiceTests: XCTestCase {
-    func testPinnedAssimpBuildContainsRequiredRealExporters() {
+    func testPinnedAssimpBuildContainsRequiredRealMeshExporters() {
         let exporterIDs = MeshExportService.assimpExporterIDs()
         XCTAssertTrue(exporterIDs.contains("obj"))
         XCTAssertTrue(exporterIDs.contains("stlb"))
@@ -25,7 +27,7 @@ final class MeshExportServiceTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: output), try Data(contentsOf: source))
     }
 
-    func testOBJExportsAllSevenRealScaniverseMeshFormats() async throws {
+    func testOBJExportsFiveMeshesAndTwoPointCloudFormats() async throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let source = try writeTriangleOBJ(in: root)
@@ -70,7 +72,8 @@ final class MeshExportServiceTests: XCTestCase {
         XCTAssertTrue(plyPrefix.hasPrefix("ply\n"))
         XCTAssertTrue(plyPrefix.contains("format binary_little_endian 1.0"))
         XCTAssertTrue(plyPrefix.contains("element vertex 3"))
-        XCTAssertTrue(plyPrefix.contains("element face 1"))
+        XCTAssertFalse(plyPrefix.contains("element face"))
+        XCTAssertFalse(plyPrefix.contains("property uchar red"))
 
         let lasData = try Data(contentsOf: las)
         XCTAssertEqual(Array(lasData.prefix(4)), [0x4c, 0x41, 0x53, 0x46])
@@ -81,7 +84,7 @@ final class MeshExportServiceTests: XCTestCase {
         XCTAssertEqual(readUInt32LE(lasData, 107), 3)
     }
 
-    func testVertexColorsArePreservedInPLYAndLASInsteadOfInvented() async throws {
+    func testInlineVertexColorsArePreservedInPLYAndLASInsteadOfInvented() async throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let source = root.appendingPathComponent("colored.obj")
@@ -101,12 +104,66 @@ final class MeshExportServiceTests: XCTestCase {
         XCTAssertTrue(plyPrefix.contains("property uchar red"))
         XCTAssertTrue(plyPrefix.contains("property uchar green"))
         XCTAssertTrue(plyPrefix.contains("property uchar blue"))
+        let plyPayload = try payloadOffset(in: plyData)
+        XCTAssertEqual(Array(plyData[(plyPayload + 12)..<(plyPayload + 15)]), [255, 0, 0])
 
         let lasData = try Data(contentsOf: las)
         XCTAssertEqual(lasData[104], 2)
         XCTAssertEqual(readUInt16LE(lasData, 105), 26)
         XCTAssertEqual(readUInt32LE(lasData, 107), 3)
 
+        let firstPoint = 227
+        XCTAssertEqual(readUInt16LE(lasData, firstPoint + 20), UInt16.max)
+        XCTAssertEqual(readUInt16LE(lasData, firstPoint + 22), 0)
+        XCTAssertEqual(readUInt16LE(lasData, firstPoint + 24), 0)
+    }
+
+    func testS4StyleMTLAndAtlasProduceRealColorPointClouds() async throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("mesh-textured.obj")
+        let mtl = root.appendingPathComponent("mesh-textured.mtl")
+        let atlas = root.appendingPathComponent("mesh-textured-atlas.png")
+        try writeSolidRedPNG(at: atlas)
+        try """
+        newmtl scanlab_texture
+        Kd 1 1 1
+        map_Kd mesh-textured-atlas.png
+        """.write(to: mtl, atomically: true, encoding: .utf8)
+        try """
+        mtllib mesh-textured.mtl
+        o TexturedQuad
+        v 0 0 0
+        v 1 0 0
+        v 1 1 0
+        v 0 1 0
+        vt 0 0
+        vt 1 0
+        vt 1 1
+        vt 0 0
+        vt 1 1
+        vt 0 1
+        usemtl scanlab_texture
+        f 1/1 2/2 3/3
+        f 1/4 3/5 4/6
+        """.write(to: source, atomically: true, encoding: .utf8)
+
+        let ply = try await MeshExportService.export(sourceURL: source, format: .ply, destinationDirectory: root)
+        let las = try await MeshExportService.export(sourceURL: source, format: .las, destinationDirectory: root)
+
+        let plyData = try Data(contentsOf: ply)
+        let plyPrefix = String(decoding: plyData.prefix(min(512, plyData.count)), as: UTF8.self)
+        XCTAssertTrue(plyPrefix.contains("element vertex 6")) // one captured RGB point per face corner
+        XCTAssertTrue(plyPrefix.contains("property uchar red"))
+        XCTAssertFalse(plyPrefix.contains("element face"))
+        let plyPayload = try payloadOffset(in: plyData)
+        XCTAssertEqual(Array(plyData[(plyPayload + 12)..<(plyPayload + 15)]), [255, 0, 0])
+
+        let lasData = try Data(contentsOf: las)
+        XCTAssertEqual(lasData[104], 2)
+        XCTAssertEqual(readUInt16LE(lasData, 105), 26)
+        XCTAssertEqual(readUInt32LE(lasData, 107), 6)
         let firstPoint = 227
         XCTAssertEqual(readUInt16LE(lasData, firstPoint + 20), UInt16.max)
         XCTAssertEqual(readUInt16LE(lasData, firstPoint + 22), 0)
@@ -163,6 +220,36 @@ final class MeshExportServiceTests: XCTestCase {
         """
         try obj.write(to: source, atomically: true, encoding: .utf8)
         return source
+    }
+
+    private func writeSolidRedPNG(at url: URL) throws {
+        let pixel = Data([255, 0, 0, 255])
+        guard let provider = CGDataProvider(data: pixel as CFData),
+              let image = CGImage(
+                width: 1,
+                height: 1,
+                bitsPerComponent: 8,
+                bitsPerPixel: 32,
+                bytesPerRow: 4,
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGBitmapInfo(
+                    rawValue: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue
+                ),
+                provider: provider,
+                decode: nil,
+                shouldInterpolate: false,
+                intent: .defaultIntent
+              ),
+              let destination = CGImageDestinationCreateWithURL(url as CFURL, "public.png" as CFString, 1, nil) else {
+            return XCTFail("Could not create PNG fixture")
+        }
+        CGImageDestinationAddImage(destination, image, nil)
+        XCTAssertTrue(CGImageDestinationFinalize(destination))
+    }
+
+    private func payloadOffset(in data: Data) throws -> Int {
+        let marker = Data("end_header\n".utf8)
+        return try XCTUnwrap(data.range(of: marker)).upperBound
     }
 
     private func makeRoot() throws -> URL {
