@@ -51,10 +51,14 @@ targets:
       - path: SplatNativeTests
       - path: SplatNative/SplatExportService.swift
       - path: SplatNative/SplatVideoConfiguration.swift
+      - path: SplatNative/SplatCameraGeometry.swift
+      - path: SplatNative/SplatVideoExporter.swift
       - path: SplatNative/MeshExportService.swift
     dependencies:
       - package: Msplat
         product: Msplat
+      - package: MetalSplatter
+        product: MetalSplatter
       - package: MetalSplatter
         product: SplatIO
     settings:
