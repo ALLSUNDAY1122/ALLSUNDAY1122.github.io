@@ -25,7 +25,6 @@ struct RootScanView: View {
     @EnvironmentObject var meshModel: MeshScanModel
     @Environment(\.scenePhase) private var scenePhase
     @State private var showingShare = false
-    @State private var showingDiscardConfirmation = false
     @State private var showingMesh = false
 
     private var isCapturing: Bool { model.phase == .capturing }
@@ -66,14 +65,6 @@ struct RootScanView: View {
             if let url = model.resultURL {
                 ShareSheet(items: [url])
             }
-        }
-        .alert("現在の3Dを破棄しますか？", isPresented: $showingDiscardConfirmation) {
-            Button("キャンセル", role: .cancel) {}
-            Button("破棄して新しく撮る", role: .destructive) {
-                model.discardAndReset()
-            }
-        } message: {
-            Text("この検証版にはまだスキャンライブラリがありません。書き出していない3Dは、破棄すると元に戻せません。")
         }
         .onChange(of: scenePhase) { _, newPhase in
             switch newPhase {
@@ -295,52 +286,8 @@ struct RootScanView: View {
     @ViewBuilder
     private var finished: some View {
         if let url = model.resultURL {
-            VStack(spacing: 0) {
-                ZStack(alignment: .top) {
-                    SplatViewer(url: url)
-                        .ignoresSafeArea(edges: .top)
-                    HStack {
-                        Button {
-                            showingDiscardConfirmation = true
-                        } label: {
-                            Image(systemName: "xmark")
-                                .frame(width: 44, height: 44)
-                                .background(.black.opacity(0.55), in: Circle())
-                        }
-                        Spacer()
-                        Text("3D生成完了")
-                            .font(.caption.bold())
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(.mint, in: Capsule())
-                            .foregroundStyle(.black)
-                    }
-                    .padding()
-                }
-
-                VStack(spacing: 10) {
-                    Text("1本指で回転・ピンチで拡大縮小・ダブルタップで表示を戻す")
-                        .font(.caption)
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.secondary)
-                    Button("品質をさらに上げる") {
-                        model.enhanceResult()
-                    }
-                    .buttonStyle(SecondaryButtonStyle())
-                    HStack {
-                        Button("3Dを書き出す") {
-                            showingShare = true
-                        }
-                        .buttonStyle(SecondaryButtonStyle())
-                        Button("新しく撮る") {
-                            showingDiscardConfirmation = true
-                        }
-                        .buttonStyle(PrimaryButtonStyle())
-                    }
-                }
-                .padding(16)
-                .background(.black)
-            }
+            SplatResultView(url: url, showingShare: $showingShare)
+                .environmentObject(model)
         }
     }
 
