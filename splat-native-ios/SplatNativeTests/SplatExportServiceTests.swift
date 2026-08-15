@@ -39,6 +39,19 @@ final class SplatExportServiceTests: XCTestCase {
                 XCTAssertEqual(actualColor.x, expectedColor.x, accuracy: 0.03)
                 XCTAssertEqual(actualColor.y, expectedColor.y, accuracy: 0.03)
                 XCTAssertEqual(actualColor.z, expectedColor.z, accuracy: 0.03)
+
+                let expectedScale = expected.scale.asLinearFloat
+                let actualScale = actual.scale.asLinearFloat
+                XCTAssertEqual(actualScale.x, expectedScale.x, accuracy: 0.01)
+                XCTAssertEqual(actualScale.y, expectedScale.y, accuracy: 0.01)
+                XCTAssertEqual(actualScale.z, expectedScale.z, accuracy: 0.01)
+
+                // q and -q represent the same 3D orientation. Compare the absolute quaternion
+                // dot product instead of raw components so interoperability is representation-safe.
+                let expectedRotation = expected.rotation.normalized.vector
+                let actualRotation = actual.rotation.normalized.vector
+                let orientationAgreement = abs(simd_dot(expectedRotation, actualRotation))
+                XCTAssertEqual(orientationAgreement, 1, accuracy: 0.03)
             }
         }
     }
