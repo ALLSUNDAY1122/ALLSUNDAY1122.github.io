@@ -48,18 +48,39 @@ jobs:
           grep -q 'SplatVideoConfigurationTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatVideoExporterTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
+        id: resolve
+        continue-on-error: true
         working-directory: splat-native-ios
-        run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
+        shell: bash
+        run: |
+          set +e
+          set -o pipefail
+          xcodebuild -resolvePackageDependencies \
+            -project SplatNative.xcodeproj -scheme SplatNative \
+            2>&1 | tee /tmp/s6-resolve.log
+          status=${PIPESTATUS[0]}
+          exit "$status"
       - name: Build test bundle for iOS Simulator
+        id: testbundle
+        if: steps.resolve.outcome == 'success'
+        continue-on-error: true
         timeout-minutes: 8
         working-directory: splat-native-ios
+        shell: bash
         run: |
-          set -euo pipefail
+          set +e
+          set -o pipefail
           xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -parallel-testing-enabled NO \
-            CODE_SIGNING_ALLOWED=NO build-for-testing
+            CODE_SIGNING_ALLOWED=NO build-for-testing \
+            2>&1 | tee /tmp/s6-testbundle.log
+          status=${PIPESTATUS[0]}
+          exit "$status"
       - name: Run S6 export regression tests on iOS Simulator
+        id: runtime
+        if: steps.resolve.outcome == 'success' && steps.testbundle.outcome == 'success'
+        continue-on-error: true
         timeout-minutes: 10
         working-directory: splat-native-ios
         shell: bash
@@ -83,6 +104,7 @@ jobs:
           PY
           )
           echo "Using simulator: $SIMULATOR_ID"
+          set +e
           xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
             -sdk iphonesimulator -destination "platform=iOS Simulator,id=$SIMULATOR_ID" \
             -parallel-testing-enabled NO \
@@ -90,9 +112,13 @@ jobs:
             -only-testing:SplatNativeTests/SplatExportServiceTests \
             -only-testing:SplatNativeTests/MeshExportServiceTests \
             -only-testing:SplatNativeTests/SplatVideoConfigurationTests \
-            -only-testing:SplatNativeTests/SplatVideoExporterTests
+            -only-testing:SplatNativeTests/SplatVideoExporterTests \
+            2>&1 | tee /tmp/s6-runtime.log
+          status=${PIPESTATUS[0]}
+          exit "$status"
       - name: Compile for iPhone without signing
         id: compile
+        if: steps.resolve.outcome == 'success'
         continue-on-error: true
         working-directory: splat-native-ios
         shell: bash
@@ -101,12 +127,34 @@ jobs:
           set -o pipefail
           xcodebuild -project SplatNative.xcodeproj -scheme SplatNative \
             -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
-            CODE_SIGNING_ALLOWED=NO build 2>&1 | tee /tmp/splat-build.log
+            CODE_SIGNING_ALLOWED=NO build 2>&1 | tee /tmp/s6-build.log
           status=${PIPESTATUS[0]}
-          grep -E '(^|:) error:|(^|:) warning:' /tmp/splat-build.log | tail -200 > /tmp/splat-diagnostics.txt || true
-          echo "status=$status" >> "$GITHUB_OUTPUT"
           exit "$status"
-      - name: Publish compile diagnostics to PR
+      - name: Collect S6 xcodebuild diagnostics
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          : > /tmp/s6-diagnostics.txt
+          for spec in \
+            'Package resolve:/tmp/s6-resolve.log' \
+            'Simulator test bundle:/tmp/s6-testbundle.log' \
+            'S6 runtime tests:/tmp/s6-runtime.log' \
+            'iPhone Release compile:/tmp/s6-build.log'; do
+            label="${spec%%:*}"
+            file="${spec#*:}"
+            if [ ! -s "$file" ]; then
+              continue
+            fi
+            {
+              echo "===== $label ====="
+              grep -E '(^|:) error:|fatal error:|Undefined symbols|ld: |No such module|module map|Command .* failed|BUILD FAILED|TEST FAILED' "$file" | tail -200
+            } >> /tmp/s6-diagnostics.txt
+          done
+          if [ ! -s /tmp/s6-diagnostics.txt ]; then
+            echo 'No xcodebuild error lines captured; all executed xcodebuild gates may have succeeded.' > /tmp/s6-diagnostics.txt
+          fi
+      - name: Publish S6 diagnostics to PR
         if: always() && github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -115,16 +163,19 @@ jobs:
         run: |
           {
             echo '<!-- splat-native-build-diagnostics -->'
-            echo '### Splat Native build diagnostics'
+            echo '### Splat Native S6 xcodebuild diagnostics'
             echo '```text'
-            if [ -s /tmp/splat-diagnostics.txt ]; then
-              cat /tmp/splat-diagnostics.txt
-            else
-              echo 'No compiler error/warning lines captured.'
-            fi
+            cat /tmp/s6-diagnostics.txt
             echo '```'
+            echo "resolve=${{ steps.resolve.outcome }} testbundle=${{ steps.testbundle.outcome }} runtime=${{ steps.runtime.outcome }} compile=${{ steps.compile.outcome }}"
           } > /tmp/pr-comment.md
           gh pr comment "$PR_NUMBER" --body-file /tmp/pr-comment.md
-      - name: Fail if compile failed
-        if: steps.compile.outcome == 'failure'
-        run: exit 1
+      - name: Fail if any S6 xcodebuild gate failed
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${{ steps.resolve.outcome }}" = "success"
+          test "${{ steps.testbundle.outcome }}" = "success"
+          test "${{ steps.runtime.outcome }}" = "success"
+          test "${{ steps.compile.outcome }}" = "success"
