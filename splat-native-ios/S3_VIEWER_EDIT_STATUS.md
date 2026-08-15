@@ -10,7 +10,7 @@ S3 owns initial useful view, orbit/pan/zoom/reset, crop, exposure/contrast, on-d
 
 ## Wave 1 implementation
 
-- Initial framing keeps robust median / 90th-percentile distance and now also derives initial orbit direction from the first capture poses in `transforms.json` when available.
+- Initial framing uses robust median / 90th-percentile distance.
 - The 180-degree renderer correction is applied in camera space instead of rotating translated scene data around the world origin.
 - One-finger drag: orbit.
 - Two-finger drag: real camera/target translation pan.
@@ -18,9 +18,10 @@ S3 owns initial useful view, orbit/pan/zoom/reset, crop, exposure/contrast, on-d
 - Two-finger double tap and UI action: reset view.
 - Crop is applied to real Splat points, not a visual mask. Source points remain retained in memory, so edits are non-destructive.
 - Crop uses robust per-axis 1st/99th percentile ranges when an axis is actively trimmed; untouched axes do not silently drop outliers.
-- Exposure and contrast rebuild the displayed Splat point colors. SH inputs keep their higher-order coefficients and modify only SH0/DC color; sRGB inputs stay sRGB.
+- Exposure and contrast rebuild the displayed Splat point colors. SH inputs keep higher-order coefficients and modify only SH0/DC color; sRGB inputs stay sRGB.
 - Edit settings are persisted next to the Splat as `result.viewer.json`.
-- Two-point measurement picks visible Splat positions projected through the active camera and reports distance in mm/cm/m using the original ARKit/world scale.
+- Two-point measurement picks visible Splat positions projected through the active camera.
+- Measurement scale reproduces the pinned msplat `autoScaleAndCenter` camera normalization and multiplies exported-scene distances by `1 / scale` before formatting them in mm/cm/m. This restores the original ARKit/world meter scale instead of treating normalized Splat units as meters.
 - Loading/render/edit failures have user-visible recovery/warning states instead of console-only errors.
 - Edit rebuilds are debounced and performed from retained source points; point transformation runs off the main actor before a new Metal chunk is swapped in.
 - A dedicated viewer UI exposes View / Crop / Adjust / Measure tools plus Reprocess, export, and guarded new-scan actions.
@@ -33,30 +34,37 @@ S3 owns initial useful view, orbit/pan/zoom/reset, crop, exposure/contrast, on-d
 - invalid edit ranges are normalized and bounded
 - edit settings JSON round-trip
 - measurement unit formatting
+- msplat-compatible camera center/scale normalization and meter recovery
+
+## CI
+
+S3 has a dedicated GitHub Actions gate: `.github/workflows/splat-native-s3.yml`.
+
+Run 1 reached XcodeGen generation, then SwiftPM checkout failed before app compilation because the pinned msplat revision references an LFS-backed benchmark image whose remote object is unavailable. Those benchmark datasets are not part of the Swift package build. The S3 gate now sets `GIT_LFS_SKIP_SMUDGE=1` so package source can be checked out without downloading unused benchmark assets. This dependency failure is not recorded as an S3 code PASS or FAIL; the next run must reach compilation.
 
 ## Current parity ledger after code implementation, before device validation
 
 | S3 row | State | Evidence / blocker |
 |---|---|---|
-| Initial useful view | NEAR_PARITY | robust framing + capture-pose initial orbit + camera-space roll fix; real-device representative-set validation still required |
+| Initial useful view | PARTIAL | robust framing + camera-space roll fix exist, but capture-pose initial-orbit conversion still needs to account for msplat scene normalization before this can return to NEAR_PARITY |
 | Orbit / zoom / reset | NEAR_PARITY | implemented; real-device gesture/quality validation required |
 | Pan | NEAR_PARITY | true two-finger target translation implemented; real-device direction/sensitivity validation required |
 | Crop Splat | NEAR_PARITY | real point filtering + persisted non-destructive state implemented; crop UX and representative scans require device validation |
 | Exposure / contrast | NEAR_PARITY | real SH0/sRGB adjustment with higher-order SH retained; visual parity requires device comparison |
-| Measurement | NEAR_PARITY | projected two-point selection + AR-scale Euclidean distance implemented; tap accuracy / scale requires real-device validation |
+| Measurement | NEAR_PARITY | projected two-point selection + inverse-msplat-scale meter recovery implemented; tap accuracy / physical scale require real-device validation |
 | Edit persistence | PARTIAL | sidecar persistence exists; reopening after full app relaunch depends on S5 library/lifecycle |
 | Reprocess entry point | PARTIAL | existing raw reprocess is exposed in viewer; lifecycle robustness belongs to S5 |
-| Enhance entry point | MISSING / S2 dependency | do not fake Enhance by restarting training. S2 must expose a genuine continuation/checkpoint or additional-training API before S3 can wire the entry point |
+| Enhance entry point | MISSING / S2 dependency | pinned `GaussianTrainer` already exposes `saveCheckpoint(to:)` and `loadCheckpoint(from:)`; S2 must persist/resume a genuine training checkpoint so S3 can expose additional-training Enhance instead of relabeling a fresh rerun |
 | Edited export contract | S6 dependency | current export shares the base Splat file; S6 must decide/apply persisted viewer edits for edited-file export parity |
 | Loading failure UX | NEAR_PARITY | visible retry/error path implemented; corrupt/huge-file validation remains |
 | Render performance | PARTIAL | 60 fps target + edit debounce + off-main point transform; real-device frame time, memory and thermal evidence required |
 
 ## Explicit cross-session requirements for S0
 
-1. **S2 → S3 Enhance API**: provide a genuine additional-training continuation/checkpoint operation over an already processed raw scan. A fresh 2,000-iteration rerun must not be labeled Enhance.
+1. **S2 → S3 Enhance API**: save the initial trainer checkpoint and expose resume/additional-training semantics. A fresh 2,000-iteration rerun must not be labeled Enhance.
 2. **S5 → S3 reopen contract**: when a saved Splat project is reopened, restore `result.splat` together with `result.viewer.json` and preserve raw data needed for reprocess.
 3. **S6 → S3 export contract**: base export versus edited export must be explicit. If exporting edited output, crop and color settings must be applied deterministically rather than merely changing the viewer.
-4. **S8 device gate**: verify all gestures, crop sensitivity, measurement tap accuracy, scale, 60-fps behavior, memory, and error recovery on representative scans.
+4. **S8 device gate**: verify all gestures, crop sensitivity, measurement tap accuracy, physical scale, 60-fps behavior, memory, and error recovery on representative scans.
 
 ## Human-only gate
 

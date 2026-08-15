@@ -1,4 +1,5 @@
 import XCTest
+import simd
 
 final class SplatViewerStateTests: XCTestCase {
     func testDefaultEditSettingsAreNonDestructive() {
@@ -50,5 +51,27 @@ final class SplatViewerStateTests: XCTestCase {
         XCTAssertEqual(SplatMeasurementFormatter.string(meters: 0.004), "4.0 mm")
         XCTAssertEqual(SplatMeasurementFormatter.string(meters: 0.245), "24.5 cm")
         XCTAssertEqual(SplatMeasurementFormatter.string(meters: 1.25), "1.25 m")
+    }
+
+    func testSceneNormalizationMatchesMsplatScaleAndCenter() {
+        let positions: [SIMD3<Float>] = [
+            SIMD3<Float>(-0.20, 0.00, 1.50),
+            SIMD3<Float>( 0.00, 0.10, 1.45),
+            SIMD3<Float>( 0.20, 0.00, 1.50),
+        ]
+        let normalization = SplatSceneNormalization(cameraPositions: positions)
+
+        // Mean camera position is removed, then the largest absolute centered
+        // camera component (0.20 m here) is scaled to 1.0 by msplat.
+        XCTAssertEqual(normalization.scale, 5.0, accuracy: 0.0001)
+        XCTAssertEqual(normalization.metersPerSceneUnit, 0.20, accuracy: 0.0001)
+        XCTAssertEqual(normalization.normalized(positions[0]).x, -1.0, accuracy: 0.0001)
+        XCTAssertEqual(normalization.normalized(positions[2]).x, 1.0, accuracy: 0.0001)
+
+        let normalizedDistance = simd_distance(
+            normalization.normalized(positions[0]),
+            normalization.normalized(positions[2])
+        )
+        XCTAssertEqual(normalizedDistance * normalization.metersPerSceneUnit, 0.40, accuracy: 0.0001)
     }
 }

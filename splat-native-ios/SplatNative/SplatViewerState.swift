@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import simd
 
 struct SplatEditSettings: Codable, Equatable, Sendable {
     var exposureEV: Double = 0
@@ -57,6 +58,52 @@ enum SplatMeasurementFormatter {
     }
 }
 
+/// Mirrors msplat's `autoScaleAndCenter` transform for Nerfstudio input.
+/// The trainer exports gaussians in this normalized coordinate system, so
+/// distances in the exported Splat must be multiplied by `1 / scale` to recover meters.
+struct SplatSceneNormalization: Equatable, Sendable {
+    let translation: SIMD3<Float>
+    let scale: Float
+
+    init(cameraPositions: [SIMD3<Float>]) {
+        guard !cameraPositions.isEmpty else {
+            translation = .zero
+            scale = 1
+            return
+        }
+
+        let total = cameraPositions.reduce(SIMD3<Float>.zero, +)
+        let mean = total / Float(cameraPositions.count)
+        var maxAbs: Float = 0
+        for position in cameraPositions {
+            let centered = position - mean
+            maxAbs = max(maxAbs, abs(centered.x), abs(centered.y), abs(centered.z))
+        }
+        translation = mean
+        scale = maxAbs > 0 ? 1 / maxAbs : 1
+    }
+
+    var metersPerSceneUnit: Float {
+        scale > 0.000001 ? 1 / scale : 1
+    }
+
+    func normalized(_ worldPosition: SIMD3<Float>) -> SIMD3<Float> {
+        (worldPosition - translation) * scale
+    }
+}
+
+private struct MeasurementTransforms: Decodable {
+    let frames: [MeasurementFrame]
+}
+
+private struct MeasurementFrame: Decodable {
+    let transformMatrix: [[Float]]
+
+    enum CodingKeys: String, CodingKey {
+        case transformMatrix = "transform_matrix"
+    }
+}
+
 @MainActor
 final class SplatViewerState: ObservableObject {
     @Published var exposureEV: Double = 0
@@ -82,6 +129,7 @@ final class SplatViewerState: ObservableObject {
 
     private var sourceURL: URL?
     private var persistenceTask: Task<Void, Never>?
+    private var metersPerSceneUnit: Float = 1
 
     var editSettings: SplatEditSettings {
         SplatEditSettings(
@@ -99,6 +147,7 @@ final class SplatViewerState: ObservableObject {
     func attach(url: URL) {
         guard sourceURL != url else { return }
         sourceURL = url
+        metersPerSceneUnit = Self.measurementScale(for: url)
         measurementEnabled = false
         measurementText = "画面上の2点を順番にタップしてください"
         errorMessage = nil
@@ -194,8 +243,12 @@ final class SplatViewerState: ObservableObject {
         }
     }
 
-    func rendererMeasured(meters: Float) {
-        measurementText = SplatMeasurementFormatter.string(meters: meters)
+    /// The renderer reports distance in exported Splat scene units. The parameter
+    /// label is retained for the renderer-facing API, then converted back to meters here.
+    func rendererMeasured(meters sceneUnits: Float) {
+        measurementText = SplatMeasurementFormatter.string(
+            meters: sceneUnits * metersPerSceneUnit
+        )
     }
 
     private var sidecarURL: URL? {
@@ -222,5 +275,23 @@ final class SplatViewerState: ObservableObject {
         cropYMax = value.cropYMax
         cropZMin = value.cropZMin
         cropZMax = value.cropZMax
+    }
+
+    private static func measurementScale(for splatURL: URL) -> Float {
+        let transformsURL = splatURL.deletingLastPathComponent().appendingPathComponent("transforms.json")
+        guard let data = try? Data(contentsOf: transformsURL),
+              let dataset = try? JSONDecoder().decode(MeasurementTransforms.self, from: data) else {
+            return 1
+        }
+
+        let positions = dataset.frames.compactMap { frame -> SIMD3<Float>? in
+            let matrix = frame.transformMatrix
+            guard matrix.count >= 3,
+                  matrix[0].count >= 4,
+                  matrix[1].count >= 4,
+                  matrix[2].count >= 4 else { return nil }
+            return SIMD3<Float>(matrix[0][3], matrix[1][3], matrix[2][3])
+        }
+        return SplatSceneNormalization(cameraPositions: positions).metersPerSceneUnit
     }
 }

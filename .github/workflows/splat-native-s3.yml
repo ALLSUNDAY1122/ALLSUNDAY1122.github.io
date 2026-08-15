@@ -16,6 +16,11 @@ jobs:
   build-and-test:
     runs-on: macos-15
     timeout-minutes: 30
+    env:
+      # The pinned msplat revision contains LFS-backed benchmark images that are
+      # not required by the Swift package build. Its remote LFS test object is
+      # currently unavailable, so skip smudging those dataset assets.
+      GIT_LFS_SKIP_SMUDGE: '1'
     steps:
       - uses: actions/checkout@v4
 
