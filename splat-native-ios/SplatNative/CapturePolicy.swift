@@ -6,6 +6,11 @@ struct CaptureGridCell: Hashable {
     let z: Int
 }
 
+enum CaptureCoverageMode: Equatable {
+    case object
+    case scene
+}
+
 enum CapturePolicy {
     struct Movement: Equatable {
         let translation: Float
@@ -47,6 +52,15 @@ enum CapturePolicy {
 
         if delta.translation >= minimum { return true }
         return delta.translation >= minimum * 0.45 && delta.rotation >= 0.09
+    }
+
+    static func coverageMode(subjectDistance: Float?) -> CaptureCoverageMode {
+        // A reliably detected nearby center is treated as an object capture. In that mode,
+        // walking/turning around on one side must never satisfy the scene coverage fallback.
+        guard let subjectDistance, subjectDistance.isFinite, subjectDistance > 0 else {
+            return .scene
+        }
+        return subjectDistance <= 1.50 ? .object : .scene
     }
 
     static func orbitSector(
@@ -101,7 +115,31 @@ enum CapturePolicy {
         viewDirectionSectors >= 5 && spatialCells >= 5 && pathLength >= 0.80
     }
 
+    static func coverageSatisfied(
+        subjectDistance: Float?,
+        orbitSectors: Int,
+        elevationBands: Int,
+        viewDirectionSectors: Int,
+        spatialCells: Int,
+        pathLength: Float
+    ) -> Bool {
+        switch coverageMode(subjectDistance: subjectDistance) {
+        case .object:
+            return objectCoverageSatisfied(
+                orbitSectors: orbitSectors,
+                elevationBands: elevationBands
+            )
+        case .scene:
+            return sceneCoverageSatisfied(
+                viewDirectionSectors: viewDirectionSectors,
+                spatialCells: spatialCells,
+                pathLength: pathLength
+            )
+        }
+    }
+
     static func coverageScore(
+        subjectDistance: Float?,
         orbitSectors: Int,
         elevationBands: Int,
         viewDirectionSectors: Int,
@@ -113,7 +151,13 @@ enum CapturePolicy {
         let sceneScore = min(1, Float(viewDirectionSectors) / 5) * 0.35
             + min(1, Float(spatialCells) / 5) * 0.30
             + min(1, pathLength / 0.80) * 0.35
-        return min(1, max(objectScore, sceneScore))
+
+        switch coverageMode(subjectDistance: subjectDistance) {
+        case .object:
+            return min(1, objectScore)
+        case .scene:
+            return min(1, sceneScore)
+        }
     }
 
     static func cameraPosition(_ transform: simd_float4x4) -> SIMD3<Float> {
