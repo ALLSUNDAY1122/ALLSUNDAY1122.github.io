@@ -1,16 +1,20 @@
 {
   "schemaVersion": 3,
-  "updatedAt": "2026-08-15T14:22:00+09:00",
+  "updatedAt": "2026-08-15T17:37:00+09:00",
   "standardProcedure": "v2.5",
   "app": "看護師国家試験｜学びスプリント",
   "bundleId": {
     "value": "jp.allsunday1122.kangoshi",
-    "status": "canonical_implementation_value_app_store_connect_record_pending",
+    "status": "canonical_implementation_value_app_store_connect_record_created",
     "mustNotChangeAfterRegistration": true
   },
+  "sku": {
+    "value": "kangoshi-sprint-ios-001",
+    "status": "app_store_connect_registered"
+  },
   "appleId": {
-    "value": null,
-    "status": "apple_issuance_pending_do_not_guess",
+    "value": 6801792293,
+    "status": "app_store_connect_issued_verified_from_user_screenshot",
     "policy": "App Store Connectの実発行値のみ記録し、推測しない。"
   },
   "codemagic": {
@@ -78,11 +82,11 @@
     "codemagicConfigurationReady": true,
     "canonicalAppIconReady": false,
     "codeSideReadyExceptAppIcon": true,
-    "appStoreConnectAppRecordVerified": false,
+    "appStoreConnectAppRecordVerified": true,
     "appStoreConnectProductVerified": false,
     "paidAppsAgreementVerified": false,
     "signedInternalTestFlightBuildReady": false,
     "releaseAllowed": false
   },
-  "nextExternalGate": "正本AppIconバイナリ1ファイルをGitHub所定パスへ無加工アップロードし、App Store Connect Appレコード・IAP実登録・契約状態の実値を確認後、Internal TestFlight署名ビルドへ進む。App Store本審査への自動提出は禁止。"
+  "nextExternalGate": "App Store Connect AppレコードはApple ID 6801792293 / SKU kangoshi-sprint-ios-001で作成済み。次はBundle ID表示を確認し、jp.allsunday1122.kangoshi.monthly のIAP実登録・契約状態確認・正本AppIcon投入後、Internal TestFlight署名ビルドへ進む。App Store本審査への自動提出は禁止。"
 }
