@@ -3,10 +3,13 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var model: ScanModel
     @State private var showingExportOptions = false
+    @State private var showingVideoOptions = false
+    @State private var videoConfiguration = SplatVideoConfiguration()
     @State private var sharePayload: SharePayload?
     @State private var exportError: String?
     @State private var exportTask: Task<Void, Never>?
     @State private var isExporting = false
+    @State private var exportStatusText = "3Dデータを書き出しています"
 
     var body: some View {
         ZStack {
@@ -32,11 +35,17 @@ struct ContentView: View {
         }
         .preferredColorScheme(.dark)
         .confirmationDialog("書き出し形式", isPresented: $showingExportOptions, titleVisibility: .visible) {
-            Button("PLYで書き出す") { beginExport(.ply) }
-            Button("SPZで書き出す") { beginExport(.spz) }
+            Button("PLYで書き出す") { beginSplatExport(.ply) }
+            Button("SPZで書き出す") { beginSplatExport(.spz) }
+            Button("動画を作る") { showingVideoOptions = true }
             Button("キャンセル", role: .cancel) {}
         } message: {
-            Text("PLYは一般的なGaussian Splat編集向け、SPZは共有しやすい圧縮形式です。")
+            Text("Gaussian SplatのPLY/SPZ、またはカメラが動くMP4動画を作成できます。")
+        }
+        .sheet(isPresented: $showingVideoOptions) {
+            SplatVideoOptionsView(configuration: $videoConfiguration) { selected in
+                beginVideoExport(selected)
+            }
         }
         .sheet(item: $sharePayload) { payload in
             ShareSheet(items: [payload.url])
@@ -163,7 +172,7 @@ struct ContentView: View {
             Color.black.opacity(0.72).ignoresSafeArea()
             VStack(spacing: 16) {
                 ProgressView().scaleEffect(1.35).tint(.mint)
-                Text("3Dデータを書き出しています").font(.headline)
+                Text(exportStatusText).font(.headline)
                 Text("完了後にiOSの共有画面を開きます。")
                     .font(.caption).foregroundStyle(.secondary)
                 Button("中止", role: .cancel) {
@@ -177,9 +186,10 @@ struct ContentView: View {
         }
     }
 
-    private func beginExport(_ format: SplatExportService.Format) {
+    private func beginSplatExport(_ format: SplatExportService.Format) {
         guard let sourceURL = model.resultURL, !isExporting else { return }
         exportError = nil
+        exportStatusText = "\(format.displayName)を書き出しています"
         isExporting = true
 
         exportTask = Task {
@@ -194,6 +204,33 @@ struct ContentView: View {
                 sharePayload = SharePayload(url: outputURL)
             } catch is CancellationError {
                 // User cancellation is an expected recovery path; do not show an error alert.
+            } catch {
+                exportError = error.localizedDescription
+            }
+        }
+    }
+
+    private func beginVideoExport(_ configuration: SplatVideoConfiguration) {
+        guard let sourceURL = model.resultURL, !isExporting else { return }
+        exportError = nil
+        exportStatusText = "動画を書き出しています"
+        isExporting = true
+
+        exportTask = Task {
+            defer {
+                isExporting = false
+                exportTask = nil
+            }
+
+            do {
+                let outputURL = try await SplatVideoExporter.export(
+                    sourceURL: sourceURL,
+                    configuration: configuration
+                )
+                try Task.checkCancellation()
+                sharePayload = SharePayload(url: outputURL)
+            } catch is CancellationError {
+                // User cancellation is an expected recovery path; partial MP4 is removed by exporter.
             } catch {
                 exportError = error.localizedDescription
             }
