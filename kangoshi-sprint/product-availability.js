@@ -6,12 +6,12 @@ let manifest=null,scheduled=false;
 const targets={必修:50,一般:130,状況設定:60};
 function schedule(){if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;apply()})}
 function setText(el,text){if(el&&el.textContent!==text)el.textContent=text}
-function readySet(s){return s?.status==='ready'&&s?.questionCount===240&&s?.expertReviewedCount===240}
+function readySet(s){return s?.status==='ready'&&s?.questionCount===240&&s?.releaseEligibleCount===240}
 function progressText(s){
  if(!s)return'準備中 0/240問';
- if(readySet(s))return'専門監査 240/240問';
- const imported=Number(s.importedCount||0),reviewed=Number(s.expertReviewedCount||0);
- if(imported>0)return`取込 ${imported}/240 ・ 専門監査 ${reviewed}/240`;
+ if(readySet(s))return'監査済み 240/240問';
+ const imported=Number(s.importedCount||0),eligible=Number(s.releaseEligibleCount||0);
+ if(imported>0)return`取込 ${imported}/240 ・ リリース可能 ${eligible}/240`;
  return'取込準備中 0/240問';
 }
 function applyHome(){
