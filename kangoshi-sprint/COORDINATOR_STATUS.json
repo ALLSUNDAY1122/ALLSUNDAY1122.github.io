@@ -1,6 +1,6 @@
 {
   "schemaVersion": 5,
-  "updatedAt": "2026-08-15T14:22:00+09:00",
+  "updatedAt": "2026-08-15T17:37:00+09:00",
   "sourceOfTruth": "GitHub main",
   "standardProcedure": "v2.5",
   "noProgressManual": "NO_PROGRESS v2.0",
@@ -81,8 +81,9 @@
     "codemagicProfile": "kangoshi_appstore"
   },
   "humanAndAppleGates": {
-    "numericAppStoreConnectAppleId": null,
-    "appStoreConnectAppRecordVerified": false,
+    "numericAppStoreConnectAppleId": 6801792293,
+    "sku": "kangoshi-sprint-ios-001",
+    "appStoreConnectAppRecordVerified": true,
     "explicitBundleIdVerified": false,
     "iapRegistered": false,
     "paidAppsAgreementVerified": false,
@@ -106,8 +107,9 @@
     "testFlightReady": false
   },
   "nextCoordinatorLoop": [
+    "Confirm the App Store Connect Bundle ID field resolves to jp.allsunday1122.kangoshi and set primary language/category/content-rights fields.",
+    "Register jp.allsunday1122.kangoshi.monthly as a 1-month auto-renewable subscription and verify Paid Apps Agreement/tax/bank state. Record only Apple-issued real values.",
     "Human mechanical gate: upload the exact canonical Drive PNG unchanged to kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png; the AppIcon gate will verify SHA-256 and bind it automatically.",
-    "Apple account gate: create/verify the App Store Connect app record for jp.allsunday1122.kangoshi, register jp.allsunday1122.kangoshi.monthly, and verify Paid Apps Agreement/tax/bank state. Record only Apple-issued real values.",
     "Then run the prepared Codemagic kangoshi-ios signed App Store build and proceed only to Internal TestFlight.",
     "After user TestFlight device verification, repair any findings; never submit to App Store review without explicit user approval."
   ]
