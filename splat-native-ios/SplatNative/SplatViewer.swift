@@ -439,8 +439,10 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
             guard clip.w > 0.0001 else { continue }
             let ndc = SIMD3<Float>(clip.x, clip.y, clip.z) / clip.w
             guard ndc.x >= -1.1, ndc.x <= 1.1, ndc.y >= -1.1, ndc.y <= 1.1 else { continue }
-            let x = CGFloat((ndc.x * 0.5 + 0.5) * Float(size.width))
-            let y = CGFloat((1 - (ndc.y * 0.5 + 0.5)) * Float(size.height))
+            let normalizedX = CGFloat(ndc.x) * 0.5 + 0.5
+            let normalizedY = CGFloat(ndc.y) * 0.5 + 0.5
+            let x = normalizedX * size.width
+            let y = (1.0 - normalizedY) * size.height
             let dx = x - location.x
             let dy = y - location.y
             let d2 = dx * dx + dy * dy
