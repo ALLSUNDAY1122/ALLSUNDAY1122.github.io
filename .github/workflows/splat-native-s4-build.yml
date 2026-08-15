@@ -52,12 +52,19 @@ jobs:
           test -f splat-native-ios/SplatNative/MeshSimplifier.swift
           test -f splat-native-ios/SplatNative/MeshVisualFallback.swift
           test -f splat-native-ios/SplatNative/MeshAssetContract.swift
+          test -f splat-native-ios/SplatNative/MeshRGBTextureBaker.swift
+          test -f splat-native-ios/SplatNative/MeshARViewer.swift
           grep -q 'ARMeshAnchor' splat-native-ios/SplatNative/MeshScanModel.swift
           grep -q 'PhotogrammetrySession' splat-native-ios/SplatNative/MeshScanModel.swift
           grep -q 'smoothedSceneDepth' splat-native-ios/SplatNative/MeshDepthRecorder.swift
           grep -q 'rawFeaturePoints' splat-native-ios/SplatNative/MeshVisualFallback.swift
           grep -q 'vertex-cluster simplified mesh' splat-native-ios/SplatNative/MeshSimplifier.swift
           grep -q 'ARKit world space; Y-up; right-handed' splat-native-ios/SplatNative/MeshAssetContract.swift
+          grep -q 'mesh-textured-atlas.jpg' splat-native-ios/SplatNative/MeshRGBTextureBaker.swift
+          grep -q 'mesh-texture-bake.json' splat-native-ios/SplatNative/MeshRGBTextureBaker.swift
+          grep -q '8192' splat-native-ios/SplatNative/MeshRGBTextureBaker.swift
+          grep -q 'ARSCNView' splat-native-ios/SplatNative/MeshARViewer.swift
+          grep -q 'currentMeshHasMetricScale' splat-native-ios/SplatNative/MeshAdvancedSupervisor.swift
           ! grep -R -nE 'TODO.*Mesh|placeholder.*Mesh|fake.*mesh|mock.*mesh' splat-native-ios/SplatNative/Mesh*.swift
           ! grep -R -n 'URLSession' splat-native-ios/SplatNative/Mesh*.swift
 
