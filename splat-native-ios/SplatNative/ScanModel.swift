@@ -88,6 +88,8 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private var lastAcceptedTimestamp: TimeInterval = 0
     private var datasetReady = false
     private var pendingTrainingTarget = SplatReconstructionPolicy.standardIterations
+    private let resourceGuard = SplatResourceGuard()
+    private var memoryWarningObserver: NSObjectProtocol?
     private let ciContext = CIContext(options: [.cacheIntermediates: false])
     private let captureQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.capture", qos: .userInitiated)
     private var isWritingFrame = false
@@ -136,6 +138,16 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     func attach(session: ARSession) {
+        if memoryWarningObserver == nil {
+            let passResourceGuard = resourceGuard
+            memoryWarningObserver = NotificationCenter.default.addObserver(
+                forName: UIApplication.didReceiveMemoryWarningNotification,
+                object: nil,
+                queue: .main
+            ) { _ in
+                passResourceGuard.noteMemoryWarning()
+            }
+        }
         guard self.session !== session else { return }
         self.session = session
         session.delegate = self
@@ -257,6 +269,11 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let checkpoint = projectURL.appendingPathComponent("training.msplat-checkpoint")
         let geometryPoints = Array(featurePoints.values)
         let seedFrames = captured.map(Self.seedFrame(from:))
+        let passResourceGuard = resourceGuard
+        passResourceGuard.resetForPass()
+        let runStartedAt = Date()
+        let runStartUptime = ProcessInfo.processInfo.systemUptime
+        let initialThermalState = splatThermalStateName(ProcessInfo.processInfo.thermalState)
 
         Task.detached(priority: .userInitiated) { [weak self] in
             autoreleasepool {
@@ -302,6 +319,32 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 )
                 let passStart = resumedIteration
                 let passSpan = max(1, effectiveTarget - passStart)
+                let writeRunReport: (String, Int, Int) -> Void = { outcome, finalIteration, finalSplatCount in
+                    let report = passResourceGuard.makeReport(
+                        startedAt: runStartedAt,
+                        startUptime: runStartUptime,
+                        passStartIteration: passStart,
+                        targetIteration: effectiveTarget,
+                        finalIteration: finalIteration,
+                        finalSplatCount: finalSplatCount,
+                        initialThermalState: initialThermalState,
+                        finalThermalState: splatThermalStateName(ProcessInfo.processInfo.thermalState),
+                        outcome: outcome
+                    )
+                    SplatReconstructionRunReport.write(report, projectURL: projectURL)
+                }
+
+                let initialResourceEvaluation = passResourceGuard.evaluate(splatCount: trainer.splatCount)
+                if let reason = initialResourceEvaluation.reason {
+                    msplatSync()
+                    _ = trainer.saveCheckpoint(to: checkpoint.path)
+                    writeRunReport("paused-\(reason.rawValue)", resumedIteration, trainer.splatCount)
+                    Task { @MainActor [weak self] in
+                        self?.failTraining(reason.userMessage)
+                    }
+                    return
+                }
+
                 if resumedIteration > 0 {
                     let resumedCount = trainer.splatCount
                     Task { @MainActor [weak self] in
@@ -323,8 +366,14 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                             ProcessInfo.processInfo.thermalState
                         )
                         let checkpointDue = iteration % SplatReconstructionPolicy.checkpointInterval == 0
+                        let shouldCheckResources = iteration % 20 == 0 || checkpointDue ||
+                            stats.splatCount >= passResourceGuard.limits.maxSplatCount
+                        let resourceEvaluation = shouldCheckResources
+                            ? passResourceGuard.evaluate(splatCount: stats.splatCount)
+                            : nil
+                        let resourcePauseReason = resourceEvaluation?.reason
 
-                        if checkpointDue || thermalPause {
+                        if checkpointDue || thermalPause || resourcePauseReason != nil {
                             msplatSync()
                             _ = trainer.saveCheckpoint(to: checkpoint.path)
                         }
@@ -340,7 +389,16 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                             }
                         }
 
+                        if let reason = resourcePauseReason {
+                            writeRunReport("paused-\(reason.rawValue)", iteration, stats.splatCount)
+                            Task { @MainActor [weak self] in
+                                self?.failTraining(reason.userMessage)
+                            }
+                            return
+                        }
+
                         if thermalPause {
+                            writeRunReport("paused-thermal", iteration, stats.splatCount)
                             Task { @MainActor [weak self] in
                                 self?.failTraining("端末温度が高くなったため生成を安全に一時停止しました。端末が冷えてから「生成だけもう一度試す」で続きから再開できます")
                             }
@@ -368,6 +426,8 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 let rendered = trainer.render(cameraIndex: 0)
                 let preview = Self.makeImage(from: rendered)
                 let finalCount = trainer.splatCount
+                _ = passResourceGuard.evaluate(splatCount: finalCount)
+                writeRunReport("completed", effectiveTarget, finalCount)
                 Task { @MainActor [weak self] in
                     guard let self else { return }
                     self.resultURL = output
