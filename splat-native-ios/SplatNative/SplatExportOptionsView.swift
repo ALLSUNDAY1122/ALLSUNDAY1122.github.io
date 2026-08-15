@@ -43,7 +43,7 @@ struct SplatExportOptionsView: View {
                     }
                     .disabled(isExporting)
                 } footer: {
-                    Text("動画は端末内で再描画します。大きすぎるシーンは開始前にメモリ見積もりで停止します。")
+                    Text("動画は端末内で再描画します。大きすぎるシーンや空き容量不足は開始前に停止します。")
                 }
 
                 if isExporting || statusText != nil {
@@ -132,7 +132,10 @@ struct SplatExportOptionsView: View {
 
         exportTask = Task {
             do {
-                let url = try await SplatExportService.export(sourceURL: sourceURL, format: format)
+                let kind: SplatExportAdmission.Kind = format == .ply ? .ply : .spz
+                let trustedURL = try SplatExportAdmission.preflight(sourceURL: sourceURL, kind: kind)
+                try Task.checkCancellation()
+                let url = try await SplatExportService.export(sourceURL: trustedURL, format: format)
                 try Task.checkCancellation()
                 finishExport(url: url, message: "\(format.displayName)を書き出しました")
             } catch is CancellationError {
@@ -151,8 +154,19 @@ struct SplatExportOptionsView: View {
 
         exportTask = Task {
             do {
-                let url = try await SplatVideoExporter.export(
+                let dimensions = configuration.dimensions
+                let trustedURL = try SplatExportAdmission.preflight(
                     sourceURL: sourceURL,
+                    kind: .video(
+                        width: dimensions.width,
+                        height: dimensions.height,
+                        framesPerSecond: configuration.framesPerSecond,
+                        duration: configuration.duration
+                    )
+                )
+                try Task.checkCancellation()
+                let url = try await SplatVideoExporter.export(
+                    sourceURL: trustedURL,
                     configuration: configuration
                 )
                 try Task.checkCancellation()
