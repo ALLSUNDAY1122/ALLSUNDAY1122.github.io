@@ -1,0 +1,92 @@
+name: Kangoshi Materialize Canonical AppIcon
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/ios/icon-source/**'
+      - '.github/workflows/kangoshi-materialize-appicon.yml'
+
+concurrency:
+  group: kangoshi-materialize-appicon
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct exact Drive canonical PNG
+        shell: bash
+        run: |
+          set -euo pipefail
+          count=$(find kangoshi-sprint/ios/icon-source -maxdepth 1 -name 'appicon.b64.part*' -type f | wc -l | tr -d ' ')
+          test "$count" = '57'
+          cat kangoshi-sprint/ios/icon-source/appicon.b64.part* | base64 --decode > /tmp/AppIcon-1024.png
+          echo '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80  /tmp/AppIcon-1024.png' | sha256sum -c -
+          file /tmp/AppIcon-1024.png | grep -q 'PNG image data, 1024 x 1024'
+          test "$(stat -c '%s' /tmp/AppIcon-1024.png)" = '683924'
+      - name: Install canonical AppIcon asset catalog
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset
+          cp /tmp/AppIcon-1024.png kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          cat > kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/Contents.json <<'JSON'
+          {
+            "images" : [
+              {
+                "filename" : "AppIcon-1024.png",
+                "idiom" : "universal",
+                "platform" : "ios",
+                "size" : "1024x1024"
+              }
+            ],
+            "info" : { "author" : "xcode", "version" : 1 }
+          }
+          JSON
+          cat > kangoshi-sprint/ios/Assets.xcassets/Contents.json <<'JSON'
+          { "info" : { "author" : "xcode", "version" : 1 } }
+          JSON
+      - name: Bind AppIcon in XcodeGen
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('kangoshi-sprint/ios/project.yml')
+          s=p.read_text(encoding='utf-8')
+          source='      - path: Sources\n'
+          if '      - path: Assets.xcassets\n' not in s:
+              if source not in s: raise SystemExit('Sources marker missing')
+              s=s.replace(source,source+'      - path: Assets.xcassets\n',1)
+          bundle='        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.kangoshi\n'
+          if 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' not in s:
+              if bundle not in s: raise SystemExit('Bundle marker missing')
+              s=s.replace(bundle,bundle+'        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon\n',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Reverify installed binary and clean transport shards
+        shell: bash
+        run: |
+          echo '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80  kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png' | sha256sum -c -
+          grep -q 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' kangoshi-sprint/ios/project.yml
+          grep -q 'Assets.xcassets' kangoshi-sprint/ios/project.yml
+          rm -rf kangoshi-sprint/ios/icon-source
+      - name: Commit exact canonical AppIcon
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A kangoshi-sprint/ios
+          if ! git diff --cached --quiet; then
+            git commit -m 'kangoshi: materialize exact approved canonical AppIcon [skip ci]'
+            pushed=0
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push; then pushed=1; break; fi
+              sleep 2
+            done
+            test "$pushed" = '1'
+          fi
