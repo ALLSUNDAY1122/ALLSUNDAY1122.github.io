@@ -116,7 +116,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
     var activeProjectCanResume: Bool {
         guard let stage = activeManifest?.stage,
-              stage == .capturing || stage == .captured,
+              stage == .capturing || stage == .captured || stage == .failed,
               let projectURL,
               (try? projectStore.loadCheckpoint(projectURL: projectURL)) != nil else { return false }
         return !loadedFromDisk || projectStore.hasWorldMap(projectURL: projectURL)
