@@ -1,0 +1,72 @@
+name: Splat Native S4 Mesh Build
+
+on:
+  push:
+    branches: [scaniverse/s4-mesh-photogrammetry]
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-native-s4-build.yml'
+  pull_request:
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-native-s4-build.yml'
+
+concurrency:
+  group: splat-native-s4-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GIT_LFS_SKIP_SMUDGE: '1'
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Disable LFS smudge for SwiftPM dependency checkout
+        run: git lfs install --skip-smudge --skip-repo
+      - name: Toolchain
+        run: |
+          set -euxo pipefail
+          xcodebuild -version
+          swift --version
+          brew install xcodegen
+      - name: Generate Xcode project
+        run: |
+          set -euxo pipefail
+          cd splat-native-ios
+          xcodegen generate
+      - name: S4 real-mesh anti-placeholder and parity-engine audit
+        run: |
+          set -euxo pipefail
+          for f in MeshScanModel.swift MeshScanView.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshRawReprocess.swift MeshAdvancedSupervisor.swift MeshVisualFallback.swift MeshAssetContract.swift MeshRGBTextureBaker.swift MeshARViewer.swift MeshCaptureQualityAdvisor.swift MeshGeometryRefiner.swift MeshDenseTextureBaker.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshDenseMVS.swift MeshParityAuditor.swift; do
+            test -f "splat-native-ios/SplatNative/$f"
+          done
+          grep -q 'ARMeshAnchor' splat-native-ios/SplatNative/MeshScanModel.swift
+          grep -q 'PhotogrammetrySession' splat-native-ios/SplatNative/MeshScanModel.swift
+          grep -q 'cameraWidth' splat-native-ios/SplatNative/MeshDepthRecorder.swift
+          grep -q 'multi-view LiDAR depth fused metric mesh' splat-native-ios/SplatNative/MeshLiDARDenseFusion.swift
+          grep -q 'azimuthCoverage' splat-native-ios/SplatNative/MeshCaptureQualityAdvisor.swift
+          grep -q 'conservative weld' splat-native-ios/SplatNative/MeshGeometryRefiner.swift
+          grep -q 'visibility-aware textured metric mesh' splat-native-ios/SplatNative/MeshDenseTextureBaker.swift
+          grep -q 'seamSmoothingSwitches' splat-native-ios/SplatNative/MeshDenseTextureBaker.swift
+          grep -q 'exposureAdjust' splat-native-ios/SplatNative/MeshAppearanceEditor.swift
+          grep -q '6方向' splat-native-ios/SplatNative/MeshTrimEditor.swift
+          grep -q 'protected_components' splat-native-ios/SplatNative/MeshDetailSimplifier.swift
+          grep -q 'plane-sweep dense MVS' splat-native-ios/SplatNative/MeshDenseMVS.swift
+          grep -q '275481' splat-native-ios/SplatNative/MeshParityAuditor.swift
+          grep -q 'MeshDenseVisualFallbackOverlay' splat-native-ios/SplatNative/MeshAdvancedSupervisor.swift
+          ! grep -R -nE 'TODO.*Mesh|placeholder.*Mesh|fake.*mesh|mock.*mesh' splat-native-ios/SplatNative/Mesh*.swift
+          ! grep -R -n 'URLSession' splat-native-ios/SplatNative/Mesh*.swift
+      - name: Build iOS device target without signing
+        shell: bash
+        run: |
+          set +e
+          xcodebuild -quiet -project splat-native-ios/SplatNative.xcodeproj -scheme SplatNative -configuration Debug -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build 2>&1 | tee /tmp/s4-build.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            echo '--- S4 compiler diagnostics ---'
+            grep -E ':[0-9]+:[0-9]+: error:|(^|[[:space:]])error:' /tmp/s4-build.log | tail -n 120 || true
+            exit "$status"
+          fi

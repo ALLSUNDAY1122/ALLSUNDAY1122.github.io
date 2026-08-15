@@ -2,7 +2,7 @@
 import SceneKit
 import SwiftUI
 
-/// Keeps one ARSession alive for the whole app lifecycle.
+/// Keeps one ARSession alive for the whole Splat lifecycle.
 /// The camera is not started until ScanModel.startCapture() explicitly runs the session.
 struct PersistentScanCameraView: UIViewRepresentable {
     @EnvironmentObject var model: ScanModel
@@ -22,8 +22,10 @@ struct PersistentScanCameraView: UIViewRepresentable {
 
 struct RootScanView: View {
     @EnvironmentObject var model: ScanModel
+    @EnvironmentObject var meshModel: MeshScanModel
     @State private var showingShare = false
     @State private var showingDiscardConfirmation = false
+    @State private var showingMesh = false
 
     private var isCapturing: Bool { model.phase == .capturing }
 
@@ -55,6 +57,10 @@ struct RootScanView: View {
             }
         }
         .preferredColorScheme(.dark)
+        .fullScreenCover(isPresented: $showingMesh) {
+            MeshScanContainerView()
+                .environmentObject(meshModel)
+        }
         .sheet(isPresented: $showingShare) {
             if let url = model.resultURL {
                 ShareSheet(items: [url])
@@ -78,20 +84,34 @@ struct RootScanView: View {
                 .foregroundStyle(.mint)
             Text("Scan Lab")
                 .font(.largeTitle.bold())
-            Text("スマホを向けて周囲を撮影し、\niPhone内で高品質な3Dを生成します。")
+            Text("SplatとMeshを用途で選び、\niPhone内で実3Dデータを生成します。")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
             VStack(alignment: .leading, spacing: 8) {
                 Label("撮影データを開発者サーバーへ自動送信しません", systemImage: "lock.iphone")
-                Label("LiDARなしでもSplat撮影を検証できます", systemImage: "iphone")
-                Label("完成後は回転・拡大して確認できます", systemImage: "rotate.3d")
+                Label("Splat: 写実的な見た目を優先", systemImage: "sparkles")
+                Label("Mesh: 計測・編集・3Dツール利用を優先", systemImage: "square.3.layers.3d")
             }
             .font(.subheadline)
             Spacer()
-            Button("新しくスキャン") {
-                model.startCapture()
+
+            VStack(spacing: 10) {
+                Button("Splatをスキャン") {
+                    model.startCapture()
+                }
+                .buttonStyle(PrimaryButtonStyle())
+
+                Button {
+                    meshModel.reset()
+                    showingMesh = true
+                } label: {
+                    HStack {
+                        Image(systemName: "square.3.layers.3d")
+                        Text("Meshをスキャン")
+                    }
+                }
+                .buttonStyle(SecondaryButtonStyle())
             }
-            .buttonStyle(PrimaryButtonStyle())
         }
         .padding(24)
     }
