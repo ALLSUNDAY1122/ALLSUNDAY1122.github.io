@@ -70,7 +70,13 @@ jobs:
             -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
             CODE_SIGNING_ALLOWED=NO build 2>&1 | tee /tmp/splat-build.log
           status=${PIPESTATUS[0]}
-          grep -E '(^|:) error:|(^|:) warning:' /tmp/splat-build.log | tail -200 > /tmp/splat-diagnostics.txt || true
+          grep -E '(^|:) error:|(^|:) warning:|fatal error:|BUILD FAILED|The following build commands failed:|Command .* failed|linker command failed|Undefined symbols|duplicate symbol|Could not|unable to' /tmp/splat-build.log | tail -240 > /tmp/splat-diagnostics.txt || true
+          if [ "$status" -ne 0 ] && [ ! -s /tmp/splat-diagnostics.txt ]; then
+            {
+              echo 'xcodebuild exited non-zero without a matched compiler diagnostic. Last 240 build-log lines:'
+              tail -240 /tmp/splat-build.log
+            } > /tmp/splat-diagnostics.txt
+          fi
           echo "status=$status" >> "$GITHUB_OUTPUT"
           exit "$status"
       - name: Publish compile diagnostics to PR
