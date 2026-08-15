@@ -174,7 +174,9 @@ struct ScanLabRemoteScanView: View {
         do {
             let (downloaded, response) = try await URLSession.shared.download(from: modelURL)
             guard let http = response as? HTTPURLResponse, 200..<300 ~= http.statusCode else { throw ScanLabBackendError.invalidServerResponse }
-            let target = FileManager.default.temporaryDirectory.appendingPathComponent("scanlab-\(scan.id.uuidString).splat")
+            let remoteExtension = modelURL.pathExtension.lowercased()
+            let supportedExtension = ["spz", "splat", "ply"].contains(remoteExtension) ? remoteExtension : "spz"
+            let target = FileManager.default.temporaryDirectory.appendingPathComponent("scanlab-\(scan.id.uuidString).\(supportedExtension)")
             try? FileManager.default.removeItem(at: target); try FileManager.default.moveItem(at: downloaded, to: target); localURL = target
         } catch { errorMessage = error.localizedDescription }
         loading = false
