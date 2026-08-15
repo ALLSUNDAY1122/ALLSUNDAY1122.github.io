@@ -1,6 +1,6 @@
 import Combine
 import Foundation
-import Supabase
+@preconcurrency import Supabase
 import UIKit
 
 struct ScanLabLocation: Codable, Hashable {
