@@ -1,7 +1,6 @@
 import XCTest
 import SplatIO
 import simd
-@testable import SplatNative
 
 final class SplatExportServiceTests: XCTestCase {
     func testPLYAndSPZRoundTripThroughIndependentReaders() async throws {
