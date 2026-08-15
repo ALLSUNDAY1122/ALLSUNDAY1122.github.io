@@ -49,11 +49,7 @@ final class SplatExportServiceTests: XCTestCase {
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: root) }
 
-        let source = root.appendingPathComponent("result.splat")
-        let writer = try DotSplatSceneWriter(toFileAtPath: source.path)
-        try await writer.write(makePoints())
-        try await writer.close()
-
+        let source = try await makeCommittedProjectResult(in: root)
         let preview = Data([0xff, 0xd8, 0xff, 0xd9])
         let package = try await SplatExportService.makeBrowserSharePackage(
             sourceURL: source,
@@ -81,6 +77,36 @@ final class SplatExportServiceTests: XCTestCase {
         XCTAssertFalse(manifest.containsLocation)
     }
 
+    func testBrowserSharePackageRejectsAlignedButUncommittedResult() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("s6-untrusted-package-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Uncommitted")
+        let source = projectURL.appendingPathComponent(ScanProjectStore.splatResultFileName)
+        let writer = try DotSplatSceneWriter(toFileAtPath: source.path)
+        try await writer.write(makePoints())
+        try await writer.close()
+        _ = try store.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = .finished
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+
+        do {
+            _ = try await SplatExportService.makeBrowserSharePackage(
+                sourceURL: source,
+                rootDirectory: root
+            )
+            XCTFail("Expected untrusted completed-result gate to reject package creation")
+        } catch {
+            guard case SplatExportAdmission.AdmissionError.untrustedSource = error else {
+                return XCTFail("Expected untrustedSource, got \(error)")
+            }
+        }
+    }
+
     func testRejectsPartialDotSplatRecord() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("s6-corrupt-\(UUID().uuidString)", isDirectory: true)
@@ -95,6 +121,21 @@ final class SplatExportServiceTests: XCTestCase {
                 return XCTFail("Expected corruptSource, got \(error)")
             }
         }
+    }
+
+    private func makeCommittedProjectResult(in root: URL) async throws -> URL {
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Committed share")
+        let pending = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        let writer = try DotSplatSceneWriter(toFileAtPath: pending.path)
+        try await writer.write(makePoints())
+        try await writer.close()
+        let result = try store.commitPendingSplat(projectURL: projectURL)
+        _ = try store.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = .finished
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+        return result
     }
 
     private func makePoints() -> [SplatPoint] {
