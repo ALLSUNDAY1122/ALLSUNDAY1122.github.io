@@ -42,6 +42,85 @@ final class CapturePolicyTests: XCTestCase {
         ))
     }
 
+    func testLongScanStagesAreIndependentOfCoverage() {
+        XCTAssertEqual(CapturePolicy.longScanStage(seconds: 89.9), .normal)
+        XCTAssertEqual(CapturePolicy.longScanStage(seconds: 90.0), .caution)
+        XCTAssertEqual(CapturePolicy.longScanStage(seconds: 179.9), .caution)
+        XCTAssertEqual(CapturePolicy.longScanStage(seconds: 180.0), .stopRecommended)
+    }
+
+    func testSoftFrameLimitAllowsOnlyMissingObjectCoverage() {
+        XCTAssertTrue(CapturePolicy.softLimitAllowsFrame(
+            mode: .object,
+            coverageSatisfied: false,
+            orbitSectorIsNew: true,
+            elevationBandIsNew: false,
+            viewDirectionIsNew: false,
+            spatialCellIsNew: false,
+            spatialCellCount: 8,
+            pathLength: 2.0,
+            translationSinceLast: 0.2
+        ))
+        XCTAssertFalse(CapturePolicy.softLimitAllowsFrame(
+            mode: .object,
+            coverageSatisfied: false,
+            orbitSectorIsNew: false,
+            elevationBandIsNew: false,
+            viewDirectionIsNew: true,
+            spatialCellIsNew: true,
+            spatialCellCount: 8,
+            pathLength: 2.0,
+            translationSinceLast: 0.2
+        ))
+        XCTAssertFalse(CapturePolicy.softLimitAllowsFrame(
+            mode: .object,
+            coverageSatisfied: true,
+            orbitSectorIsNew: true,
+            elevationBandIsNew: true,
+            viewDirectionIsNew: true,
+            spatialCellIsNew: true,
+            spatialCellCount: 8,
+            pathLength: 2.0,
+            translationSinceLast: 0.2
+        ))
+    }
+
+    func testSoftFrameLimitLetsSceneRecoverButRejectsRedundantFrames() {
+        XCTAssertTrue(CapturePolicy.softLimitAllowsFrame(
+            mode: .scene,
+            coverageSatisfied: false,
+            orbitSectorIsNew: false,
+            elevationBandIsNew: false,
+            viewDirectionIsNew: true,
+            spatialCellIsNew: false,
+            spatialCellCount: 5,
+            pathLength: 0.9,
+            translationSinceLast: 0.05
+        ))
+        XCTAssertTrue(CapturePolicy.softLimitAllowsFrame(
+            mode: .scene,
+            coverageSatisfied: false,
+            orbitSectorIsNew: false,
+            elevationBandIsNew: false,
+            viewDirectionIsNew: false,
+            spatialCellIsNew: false,
+            spatialCellCount: 5,
+            pathLength: 0.45,
+            translationSinceLast: 0.15
+        ))
+        XCTAssertFalse(CapturePolicy.softLimitAllowsFrame(
+            mode: .scene,
+            coverageSatisfied: false,
+            orbitSectorIsNew: false,
+            elevationBandIsNew: false,
+            viewDirectionIsNew: false,
+            spatialCellIsNew: false,
+            spatialCellCount: 5,
+            pathLength: 0.9,
+            translationSinceLast: 0.15
+        ))
+    }
+
     func testObjectCoverageRequiresHeightDiversity() {
         XCTAssertFalse(CapturePolicy.objectCoverageSatisfied(orbitSectors: 8, elevationBands: 1))
         XCTAssertTrue(CapturePolicy.objectCoverageSatisfied(orbitSectors: 8, elevationBands: 2))
