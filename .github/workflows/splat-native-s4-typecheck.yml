@@ -7,11 +7,19 @@ on:
     paths:
       - 'splat-native-ios/SplatNative/MeshScanModel.swift'
       - 'splat-native-ios/SplatNative/MeshScanView.swift'
+      - 'splat-native-ios/SplatNative/MeshDepthRecorder.swift'
+      - 'splat-native-ios/SplatNative/MeshRawReprocess.swift'
+      - 'splat-native-ios/SplatNative/MeshSimplifier.swift'
+      - 'splat-native-ios/SplatNative/MeshAdvancedSupervisor.swift'
       - '.github/workflows/splat-native-s4-typecheck.yml'
   pull_request:
     paths:
       - 'splat-native-ios/SplatNative/MeshScanModel.swift'
       - 'splat-native-ios/SplatNative/MeshScanView.swift'
+      - 'splat-native-ios/SplatNative/MeshDepthRecorder.swift'
+      - 'splat-native-ios/SplatNative/MeshRawReprocess.swift'
+      - 'splat-native-ios/SplatNative/MeshSimplifier.swift'
+      - 'splat-native-ios/SplatNative/MeshAdvancedSupervisor.swift'
       - '.github/workflows/splat-native-s4-typecheck.yml'
 
 jobs:
@@ -37,7 +45,7 @@ jobs:
             splat-native-ios/SplatNative/MeshScanModel.swift \
             2>&1 | tee /tmp/s4-model-typecheck.log
 
-      - name: Typecheck Mesh UI with minimal app stubs
+      - name: Typecheck Mesh runtime with minimal app stubs
         shell: bash
         run: |
           set -o pipefail
@@ -67,8 +75,12 @@ jobs:
             -strict-concurrency=minimal \
             -target arm64-apple-ios18.0 \
             -sdk "$SDK" \
-            -module-name S4MeshUIProbe \
+            -module-name S4MeshRuntimeProbe \
             splat-native-ios/SplatNative/MeshScanModel.swift \
             splat-native-ios/SplatNative/MeshScanView.swift \
+            splat-native-ios/SplatNative/MeshDepthRecorder.swift \
+            splat-native-ios/SplatNative/MeshRawReprocess.swift \
+            splat-native-ios/SplatNative/MeshSimplifier.swift \
+            splat-native-ios/SplatNative/MeshAdvancedSupervisor.swift \
             /tmp/S4UIStubs.swift \
-            2>&1 | tee /tmp/s4-ui-typecheck.log
+            2>&1 | tee /tmp/s4-runtime-typecheck.log
