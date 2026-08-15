@@ -224,10 +224,24 @@ final class ScanProjectStoreTests: XCTestCase {
         let legacy = rootURL.appendingPathComponent(legacyID).appendingPathExtension(ScanProjectStore.projectExtension)
         try makeProcessableRaw(in: legacy)
         let projects = ScanProjectStore(rootURL: rootURL).listProjects()
-        XCTAssertEqual(projects.count, 1)
-        XCTAssertEqual(projects[0].manifest.id, legacyID)
-        XCTAssertEqual(projects[0].manifest.stage, .captured)
-        XCTAssertTrue(projects[0].manifest.rawDataRetained)
+        let migrated = try XCTUnwrap(projects.first(where: { $0.id == legacyID }))
+        XCTAssertEqual(migrated.manifest.stage, .captured)
+        XCTAssertTrue(migrated.manifest.rawDataRetained)
+    }
+
+    func testLegacyAlignedSplatWithoutEvidenceIsNotPromoted() throws {
+        let legacyID = "legacy-aligned-partial"
+        let legacy = rootURL.appendingPathComponent(legacyID).appendingPathExtension(ScanProjectStore.projectExtension)
+        try makeProcessableRaw(in: legacy)
+        let result = legacy.appendingPathComponent(ScanProjectStore.splatResultFileName)
+        try splatData(0x77).write(to: result)
+
+        let projects = ScanProjectStore(rootURL: rootURL).listProjects()
+        let migrated = try XCTUnwrap(projects.first(where: { $0.id == legacyID }))
+        XCTAssertEqual(migrated.manifest.stage, .captured)
+        XCTAssertNil(migrated.manifest.splatFileName)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: result.path))
+        XCTAssertTrue(migrated.manifest.lastError?.contains("完了確認情報がない") == true)
     }
 
     private func makeProcessableRaw(in projectURL: URL) throws {
