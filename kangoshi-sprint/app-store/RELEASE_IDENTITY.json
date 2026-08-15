@@ -1,28 +1,34 @@
 {
-  "schemaVersion": 1,
-  "updatedAt": "2026-08-14T14:26:00+09:00",
-  "standardProcedure": "v2.4",
+  "schemaVersion": 2,
+  "updatedAt": "2026-08-15T10:40:00+09:00",
+  "standardProcedure": "v2.5",
   "app": "看護師国家試験｜学びスプリント",
   "bundleId": {
     "value": "jp.allsunday1122.kangoshi",
-    "status": "coordinator_assigned_not_yet_verified_in_app_store_connect",
-    "reason": "既存Bundle IDをGitHub内で確認できなかったため、v2.4の恒久委任ルールに従い資格名から一意なstable slugを採用。",
+    "status": "canonical_implementation_value_app_store_connect_record_pending",
     "mustNotChangeAfterRegistration": true
   },
   "appleId": {
     "value": null,
-    "status": "not_issued_or_not_verified",
+    "status": "apple_issuance_pending_do_not_guess",
     "policy": "App Store Connectの実発行値のみ記録し、推測しない。"
+  },
+  "codemagic": {
+    "profile": "kangoshi_appstore",
+    "rootWorkflow": "kangoshi-ios",
+    "internalTestFlightOnly": true,
+    "configurationReady": true,
+    "signedBuildExecuted": false
   },
   "billing": {
     "model": "auto_renewable_subscription",
     "jpyReferencePrice": 200,
     "decision": "monthly_200",
-    "reason": "問題追加、統計、制度、ガイドライン等の継続更新価値が主要価値のため標準手順v2.4の月額200円を採用。",
     "storeKit": 2,
     "displayPricePolicy": "Product.displayPrice",
     "hardCodedPriceStringAllowed": false,
     "restorePurchasesRequired": true,
+    "storeKitImplementationReady": true,
     "entitlementRule": "verified transaction AND matching product ID AND not revoked"
   },
   "productId": {
@@ -30,10 +36,38 @@
     "appStoreConnectRegistered": false,
     "canonicalStatus": "planned_until_actual_app_store_connect_registration_is_verified"
   },
+  "native": {
+    "canonicalQuestions": 720,
+    "examSets": 3,
+    "mediaAssets": 38,
+    "debugSimulatorBuild": true,
+    "releaseSimulatorBuild": true,
+    "privacyManifest": true,
+    "nativeBuildAuditPass": true,
+    "uiTwoSizeAuditPass": false,
+    "uiTwoSizeAuditStatus": "running_after_deterministic_dismissal_assertion_fix",
+    "canonicalAppIconDriveId": "1VDnbT0s9gEPde4baCfw9kXYfnEHLQrp3",
+    "canonicalAppIconSha256": "6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80",
+    "canonicalAppIconIntegrated": false
+  },
+  "publicPages": {
+    "support": "https://allsunday1122.github.io/kangoshi-sprint/support.html",
+    "privacy": "https://allsunday1122.github.io/kangoshi-sprint/privacy.html",
+    "marketing": "https://allsunday1122.github.io/kangoshi-sprint/",
+    "sourceFilesReady": true
+  },
   "releaseGate": {
-    "storeKitImplementationReady": false,
+    "contentAndMediaReady": true,
+    "storeKitImplementationReady": true,
+    "nativeBuildReady": true,
+    "codemagicConfigurationReady": true,
+    "canonicalAppIconReady": false,
+    "uiAutomationReady": false,
+    "appStoreConnectAppRecordVerified": false,
     "appStoreConnectProductVerified": false,
     "paidAppsAgreementVerified": false,
+    "signedInternalTestFlightBuildReady": false,
     "releaseAllowed": false
-  }
+  },
+  "nextExternalGate": "App Store Connect Appレコード・IAP実登録・契約状態の実値確認後、Internal TestFlight署名ビルドへ進む。App Store本審査への自動提出は禁止。"
 }
