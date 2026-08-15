@@ -46,15 +46,33 @@ jobs:
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
-      - name: Build msplat smoke-test bundle for iOS Simulator
-        timeout-minutes: 8
+      - name: Run msplat runtime smoke test on iOS Simulator
+        timeout-minutes: 12
         working-directory: splat-native-ios
+        shell: bash
         run: |
           set -euo pipefail
+          SIMULATOR_UDID="$(
+            xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin).get("devices", {})
+          for runtime, candidates in devices.items():
+              if "iOS" not in runtime:
+                  continue
+              for device in candidates:
+                  if device.get("isAvailable") and device.get("name", "").startswith("iPhone"):
+                      print(device["udid"])
+                      raise SystemExit(0)
+          raise SystemExit("No available iPhone simulator found")
+          '
+          )"
+          test -n "$SIMULATOR_UDID"
+          xcrun simctl boot "$SIMULATOR_UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$SIMULATOR_UDID" -b
           xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
-            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -sdk iphonesimulator -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
             -parallel-testing-enabled NO \
-            CODE_SIGNING_ALLOWED=NO build-for-testing
+            CODE_SIGNING_ALLOWED=NO test
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true
