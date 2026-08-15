@@ -53,6 +53,8 @@ jobs:
           grep -q 'ScanPersistenceIntegrationTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatVideoConfigurationTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatVideoExporterTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatTransientExportWorkspaceTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MeshExportServiceTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
@@ -65,8 +67,8 @@ jobs:
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -parallel-testing-enabled NO \
             CODE_SIGNING_ALLOWED=NO build-for-testing
-      - name: Run C2 persistence export and video regressions
-        timeout-minutes: 10
+      - name: Run C2 persistence export video and mesh regressions
+        timeout-minutes: 12
         working-directory: splat-native-ios
         shell: bash
         run: |
@@ -83,9 +85,11 @@ jobs:
             -only-testing:SplatNativeTests/SplatProjectTrustRecoveryTests \
             -only-testing:SplatNativeTests/SplatExportAdmissionTests \
             -only-testing:SplatNativeTests/SplatExportServiceTests \
+            -only-testing:SplatNativeTests/SplatTransientExportWorkspaceTests \
             -only-testing:SplatNativeTests/ScanTrashLifecycleTests \
             -only-testing:SplatNativeTests/SplatVideoConfigurationTests \
-            -only-testing:SplatNativeTests/SplatVideoExporterTests
+            -only-testing:SplatNativeTests/SplatVideoExporterTests \
+            -only-testing:SplatNativeTests/MeshExportServiceTests
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true
