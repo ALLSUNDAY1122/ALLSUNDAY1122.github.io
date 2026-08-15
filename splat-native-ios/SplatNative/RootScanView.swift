@@ -63,7 +63,7 @@ struct RootScanView: View {
         }
         .sheet(isPresented: $showingShare) {
             if let url = model.resultURL {
-                ShareSheet(items: [url])
+                SplatExportOptionsView(sourceURL: url)
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
