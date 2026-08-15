@@ -529,7 +529,12 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 self.isWritingFrame = false
                 guard self.phase == .capturing, !self.isCapturePaused else { return }
                 guard writeError == nil else {
-                    self.trackingMessage = "撮影データを保存できませんでした。空き容量を確認してください"
+                    let message = "撮影データを保存できませんでした。iPhoneの空き容量を確認してください。"
+                    self.closeActiveCaptureTiming()
+                    self.phase = .failed(message)
+                    self.trackingMessage = message
+                    self.session?.pause()
+                    UIApplication.shared.isIdleTimerDisabled = false
                     return
                 }
 

@@ -63,6 +63,28 @@ grep -q '撮影が90秒を超えています' SplatNative/ScanModel.swift
 grep -q '撮影が3分を超えています' SplatNative/ScanModel.swift
 grep -q '未撮影の方向・高さだけを追加してください' SplatNative/ScanModel.swift
 
+# Sev-2 #4149 storage gate: a frame/depth write failure must not leave capture running.
+# Keep the hard-stop actions in the write-error branch so low storage cannot produce silent non-progress.
+python3 - <<'PY'
+from pathlib import Path
+text = Path('SplatNative/ScanModel.swift').read_text(encoding='utf-8')
+needle = 'guard writeError == nil else {'
+start = text.find(needle)
+assert start >= 0, 'frame write-error branch missing'
+block = text[start:start + 900]
+required = [
+    '撮影データを保存できませんでした',
+    'self.closeActiveCaptureTiming()',
+    'self.phase = .failed(message)',
+    'self.trackingMessage = message',
+    'self.session?.pause()',
+    'UIApplication.shared.isIdleTimerDisabled = false',
+]
+for token in required:
+    assert token in block, f'storage hard-stop regression: missing {token}'
+print('PASS: S1 frame storage failure is explicit and terminal')
+PY
+
 # Resume gate: manual pause, post-stop resume and app interruption must preserve the existing
 # world coordinate system. A reset is allowed only when creating a brand-new scan.
 grep -q 'func pauseCapture()' SplatNative/ScanModel.swift
