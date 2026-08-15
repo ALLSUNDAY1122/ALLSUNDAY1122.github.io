@@ -142,7 +142,7 @@ struct PublishScanView: View {
     private func submit() async {
         busy = true; errorMessage = nil; defer { busy = false }
         let location: ScanLabLocation? = visibility == .public && locationPicker.location != nil ? ScanLabLocation(latitude: locationPicker.location!.coordinate.latitude, longitude: locationPicker.location!.coordinate.longitude, label: locationLabel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : locationLabel.trimmingCharacters(in: .whitespacesAndNewlines)) : nil
-        do { published = try await backend.publish(resultURL: resultURL, previewImage: previewImage, title: title, caption: caption, visibility: visibility, location: location, publicPlaceConfirmed: publicPlaceConfirmed, privacyConfirmed: privacyConfirmed, rightsConfirmed: rightsConfirmed, contentConfirmed: contentConfirmed) }
+        do { published = try await backend.publishTrustedPackage(resultURL: resultURL, previewImage: previewImage, title: title, caption: caption, visibility: visibility, location: location, publicPlaceConfirmed: publicPlaceConfirmed, privacyConfirmed: privacyConfirmed, rightsConfirmed: rightsConfirmed, contentConfirmed: contentConfirmed) }
         catch { errorMessage = error.localizedDescription }
     }
 }
