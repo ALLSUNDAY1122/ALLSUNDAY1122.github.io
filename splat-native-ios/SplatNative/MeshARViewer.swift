@@ -75,6 +75,7 @@ struct MeshARViewerSheet: View {
     }
 }
 
+@MainActor
 struct MeshARPlacementView: UIViewRepresentable {
     let modelURL: URL
 
@@ -103,6 +104,7 @@ struct MeshARPlacementView: UIViewRepresentable {
         uiView.session.pause()
     }
 
+    @MainActor
     final class Coordinator: NSObject {
         private let modelURL: URL
         private weak var view: ARSCNView?
