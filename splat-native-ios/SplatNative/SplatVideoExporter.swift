@@ -52,6 +52,14 @@ enum SplatVideoExporter {
     ) async throws -> URL {
         try Task.checkCancellation()
 
+        // Reject scenes that cannot fit inside the bounded video working set before
+        // readAll(), Metal buffers, pixel buffers, or VideoToolbox state are allocated.
+        try SplatVideoMemoryPolicy.preflight(
+            sourceURL: sourceURL,
+            configuration: configuration
+        )
+        try Task.checkCancellation()
+
         guard let device = MTLCreateSystemDefaultDevice() else {
             throw ExportError.metalUnavailable
         }
