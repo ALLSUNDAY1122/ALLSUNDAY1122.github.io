@@ -2,13 +2,18 @@ name: Scan Lab Assimp iOS XCFramework
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - scaniverse/s6-export-video-share
+    paths:
+      - '.github/workflows/scanlab-assimp-ios.yml'
 
 permissions:
   contents: write
 
 env:
   ASSIMP_TAG: v6.0.5
-  RELEASE_TAG: scanlab-assimp-v6.0.5-1
+  RELEASE_TAG: scanlab-assimp-v6.0.5-2
   ASSET_NAME: Assimp-6.0.5-iOS.xcframework.zip
 
 jobs:
@@ -39,7 +44,12 @@ jobs:
           p = Path('/tmp/assimp/port/iOS/build.sh')
           s = p.read_text()
           s = s.replace('BUILD_ARCHS_DEVICE="arm64e arm64"', 'BUILD_ARCHS_DEVICE="arm64"')
-          s = s.replace('BUILD_ARCHS_SIMULATOR="arm64-simulator x86_64-simulator"', 'BUILD_ARCHS_SIMULATOR="arm64-simulator"')
+          # Keep both simulator architectures. GitHub macOS runners may link x86_64
+          # Simulator tests even when real iPhone builds only need arm64.
+          s = s.replace(
+              'BUILD_ARCHS_SIMULATOR="arm64-simulator x86_64-simulator"',
+              'BUILD_ARCHS_SIMULATOR="arm64-simulator x86_64-simulator"'
+          )
           needle = '-DASSIMP_BUILD_ZLIB=ON"'
           replacement = '''-DASSIMP_BUILD_ZLIB=OFF \\
             -DZLIB_LIBRARY=$SDKROOT/usr/lib/libz.tbd \\
@@ -77,16 +87,22 @@ jobs:
           EOF
           chmod +x /tmp/assimp/port/iOS/build.sh
 
-      - name: Build device and simulator XCFramework
+      - name: Build device and universal simulator XCFramework
         working-directory: /tmp/assimp/port/iOS
         run: |
           set -euo pipefail
           brew install cmake pkg-config
           ./build.sh --stdlib=libc++ --no-fat --min-version="18.0"
-          test -d /tmp/assimp/lib/iOS/libassimp.xcframework
+          XCFRAMEWORK=/tmp/assimp/lib/iOS/libassimp.xcframework
+          test -d "$XCFRAMEWORK"
           test -f /tmp/assimp/include/assimp/cimport.h
           test -f /tmp/assimp/include/assimp/cexport.h
-          find /tmp/assimp/lib/iOS/libassimp.xcframework -name module.modulemap -print | grep -q module.modulemap
+          find "$XCFRAMEWORK" -name module.modulemap -print | grep -q module.modulemap
+          SIM_LIB="$(find "$XCFRAMEWORK" -path '*ios*simulator*/libassimp.a' -print -quit)"
+          test -n "$SIM_LIB"
+          lipo -info "$SIM_LIB" | tee /tmp/assimp-simulator-architectures.txt
+          grep -q 'arm64' /tmp/assimp-simulator-architectures.txt
+          grep -q 'x86_64' /tmp/assimp-simulator-architectures.txt
 
       - name: Package and checksum
         run: |
@@ -105,8 +121,8 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --prerelease \
-            --title "Scan Lab Assimp iOS 6.0.5" \
-            --notes "Pinned Assimp 6.0.5 XCFramework for Scaniverse parity S6 on-device OBJ/FBX/GLB/STL export." \
+            --title "Scan Lab Assimp iOS 6.0.5 universal simulator" \
+            --notes "Pinned Assimp 6.0.5 XCFramework for Scaniverse parity S6. Device arm64 plus Simulator arm64/x86_64; OBJ/FBX/GLB/STL export surface only." \
             "/tmp/$ASSET_NAME#Assimp iOS XCFramework" \
             "/tmp/assimp-checksum.txt#SwiftPM checksum"
 
@@ -116,5 +132,6 @@ jobs:
             echo '### Scan Lab Assimp binary'
             echo "- Tag: $RELEASE_TAG"
             echo "- Asset: $ASSET_NAME"
+            echo "- Simulator architectures: $(cat /tmp/assimp-simulator-architectures.txt)"
             echo "- SwiftPM checksum: $(cat /tmp/assimp-checksum.txt)"
           } >> "$GITHUB_STEP_SUMMARY"
