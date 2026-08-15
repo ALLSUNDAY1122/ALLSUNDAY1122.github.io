@@ -121,6 +121,8 @@ struct MeshExportOptionsView: View {
                 exportTask = nil
             }
             do {
+                try MeshExportAdmission.preflight(sourceURL: sourceURL, format: format)
+                try Task.checkCancellation()
                 let createdWorkspace = try SplatTransientExportWorkspace.create()
                 workspace = createdWorkspace
                 let output = try await MeshExportService.export(
