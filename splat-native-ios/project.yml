@@ -60,3 +60,5 @@ targets:
         SWIFT_VERSION: '6.0'
         SWIFT_STRICT_CONCURRENCY: minimal
         CODE_SIGNING_ALLOWED: NO
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Splat Lab Native.app/Splat Lab Native
+        BUNDLE_LOADER: $(TEST_HOST)
