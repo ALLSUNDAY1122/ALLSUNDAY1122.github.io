@@ -164,6 +164,8 @@ struct MeshScanContainerView: View {
                 .environmentObject(model)
             MeshAdvancedSupervisor()
                 .environmentObject(model)
+            MeshVisualFallbackOverlay()
+                .environmentObject(model)
         }
     }
 }
