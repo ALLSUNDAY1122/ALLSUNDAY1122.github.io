@@ -2,8 +2,8 @@ import AssimpBinary
 import Foundation
 import ModelIO
 
-/// Export adapter intentionally decoupled from `MeshScanModel` so S0 can merge S4 and S6
-/// in either order. S4 supplies its real `resultURL`; S6 owns the format conversion/share step.
+/// Export adapter intentionally decoupled from `MeshScanModel` so B can supply its real result
+/// while C owns actual interchange conversion and delivery semantics.
 enum MeshExportService {
     enum Format: String, CaseIterable, Identifiable, Sendable {
         case fbx
@@ -260,46 +260,58 @@ enum MeshExportService {
     }
 
     private static func validateOutput(_ url: URL) throws {
-        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        guard let size = attributes[.size] as? NSNumber, size.intValue > 0 else {
+        guard try fileByteCount(url) > 0 else {
             throw ExportError.outputMissing
         }
     }
 
-    /// Prevents extension-only success. Every finalized file must carry a recognizable
-    /// signature/structure for the requested interchange format.
+    /// Prevents extension-only success without loading a potentially huge export into memory.
+    /// Container recognition needs only bounded header/prefix bytes plus the on-disk byte count.
     private static func validateContainer(_ url: URL, as format: Format) throws {
-        let data = try Data(contentsOf: url, options: [.mappedIfSafe])
-        guard !data.isEmpty else { throw ExportError.outputMissing }
+        let totalBytes = try fileByteCount(url)
+        guard totalBytes > 0 else { throw ExportError.outputMissing }
 
         let valid: Bool
         switch format {
         case .fbx:
-            let prefix = String(decoding: data.prefix(32), as: UTF8.self)
+            let data = try readPrefix(url, maxBytes: 32)
+            let prefix = String(decoding: data, as: UTF8.self)
             valid = prefix.contains("Kaydara FBX Binary") || prefix.contains("; FBX")
+
         case .glb:
+            let data = try readPrefix(url, maxBytes: 12)
             valid = data.count >= 12 && Array(data.prefix(4)) == [0x67, 0x6c, 0x54, 0x46]
+
         case .usdz:
+            let data = try readPrefix(url, maxBytes: 4)
             valid = data.count >= 4 && data[0] == 0x50 && data[1] == 0x4b
+
         case .stl:
+            let data = try readPrefix(url, maxBytes: 84)
             let asciiPrefix = String(decoding: data.prefix(80), as: UTF8.self)
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .lowercased()
-            valid = data.count >= 84 || asciiPrefix.hasPrefix("solid")
+            valid = totalBytes >= 84 || asciiPrefix.hasPrefix("solid")
+
         case .obj:
-            guard let text = String(data: data.prefix(min(data.count, 1_000_000)), encoding: .utf8) else {
+            let data = try readPrefix(url, maxBytes: 1_000_000)
+            guard let text = String(data: data, encoding: .utf8) else {
                 valid = false
                 break
             }
             valid = text.hasPrefix("v ") || text.contains("\nv ")
+
         case .ply:
-            let prefix = String(decoding: data.prefix(min(data.count, 2_048)), as: UTF8.self)
+            let data = try readPrefix(url, maxBytes: 2_048)
+            let prefix = String(decoding: data, as: UTF8.self)
             valid = prefix.hasPrefix("ply\n") &&
                 prefix.contains("format binary_little_endian 1.0") &&
                 prefix.contains("element vertex ") &&
                 !prefix.contains("element face ") &&
                 prefix.contains("end_header\n")
+
         case .las:
+            let data = try readPrefix(url, maxBytes: las12HeaderSize)
             guard data.count >= las12HeaderSize,
                   Array(data.prefix(4)) == [0x4c, 0x41, 0x53, 0x46] else {
                 valid = false
@@ -313,13 +325,27 @@ enum MeshExportService {
             let requiredBytes = UInt64(pointOffset) + legacyPointCount * UInt64(recordLength)
             valid = headerSize >= las12HeaderSize &&
                 pointOffset >= headerSize &&
-                pointOffset <= data.count &&
+                UInt64(pointOffset) <= totalBytes &&
                 pointFormat <= 10 &&
                 recordLength > 0 &&
-                requiredBytes <= UInt64(data.count)
+                requiredBytes <= totalBytes
         }
 
         guard valid else { throw ExportError.invalidContainer(format.rawValue) }
+    }
+
+    private static func fileByteCount(_ url: URL) throws -> UInt64 {
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        guard let size = attributes[.size] as? NSNumber else {
+            throw ExportError.outputMissing
+        }
+        return size.uint64Value
+    }
+
+    private static func readPrefix(_ url: URL, maxBytes: Int) throws -> Data {
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        return try handle.read(upToCount: max(1, maxBytes)) ?? Data()
     }
 
     private static func readUInt16LE(_ data: Data, offset: Int) -> UInt16 {
