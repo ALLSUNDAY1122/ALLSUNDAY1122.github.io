@@ -104,13 +104,16 @@ struct ScanLabMapView: View {
 
 struct ScanLabRemoteScanView: View {
     @EnvironmentObject var backend: ScanLabBackend
+    @Environment(\.dismiss) private var dismiss
     let scan: ScanLabPublicScan
     @State private var localURL: URL?
     @State private var loading = true
     @State private var errorMessage: String?
     @State private var likeBusy = false
     @State private var reportBusy = false
+    @State private var blockBusy = false
     @State private var showingReport = false
+    @State private var showingBlock = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -126,7 +129,12 @@ struct ScanLabRemoteScanView: View {
                     Button { Task { likeBusy = true; defer { likeBusy = false }; do { try await backend.like(scan) } catch { backend.notice = error.localizedDescription } } } label: { Label("\(scan.likeCount)", systemImage: "heart") }.disabled(likeBusy)
                     Spacer()
                     if let shareURL = publicShareURL { ShareLink(item: shareURL) { Label("共有", systemImage: "square.and.arrow.up") } }
-                    Menu { Button("この3Dを報告", role: .destructive) { showingReport = true } } label: { Image(systemName: "ellipsis") }.disabled(reportBusy)
+                    Menu {
+                        Button("この3Dを報告", role: .destructive) { showingReport = true }
+                        if backend.isAuthenticated, scan.author != nil {
+                            Button("このユーザーをブロック", role: .destructive) { showingBlock = true }
+                        }
+                    } label: { Image(systemName: "ellipsis") }.disabled(reportBusy || blockBusy)
                 }.buttonStyle(.bordered)
             }.padding(16).background(.black)
         }
@@ -139,7 +147,11 @@ struct ScanLabRemoteScanView: View {
             Button("スパム", role: .destructive) { Task { await report("spam") } }
             Button("その他", role: .destructive) { Task { await report("other") } }
             Button("キャンセル", role: .cancel) {}
-        } message: { Text("3件以上の独立した報告を受けた公開3Dは自動的に非表示となり、再確認待ちになります。") }
+        } message: { Text("報告を受けた公開3Dは確認のため非表示になり、再公開はモデレーション保留になります。") }
+        .alert("このユーザーをブロックしますか？", isPresented: $showingBlock) {
+            Button("キャンセル", role: .cancel) {}
+            Button("ブロック", role: .destructive) { Task { await blockAuthor() } }
+        } message: { Text("このユーザーの公開3DをMapとDiscoverから除外します。") }
         .onDisappear { if let localURL { try? FileManager.default.removeItem(at: localURL) } }
     }
 
@@ -148,7 +160,14 @@ struct ScanLabRemoteScanView: View {
         components.queryItems = [URLQueryItem(name: "id", value: scan.id.uuidString.lowercased())]
         return components.url
     }
-    private func report(_ reason: String) async { reportBusy = true; defer { reportBusy = false }; do { try await backend.report(scan, reason: reason) } catch { backend.notice = error.localizedDescription } }
+    private func report(_ reason: String) async {
+        reportBusy = true; defer { reportBusy = false }
+        do { try await backend.report(scan, reason: reason); dismiss() } catch { backend.notice = error.localizedDescription }
+    }
+    private func blockAuthor() async {
+        blockBusy = true; defer { blockBusy = false }
+        do { try await backend.block(scan); dismiss() } catch { backend.notice = error.localizedDescription }
+    }
     private func loadModel() async {
         guard localURL == nil, let modelURL = scan.modelUrl else { loading = false; if scan.modelUrl == nil { errorMessage = "3Dデータの署名URLがありません。" }; return }
         do {
