@@ -16,6 +16,8 @@ POLICY = (ROOT / "SplatNative" / "SplatReconstructionPolicy.swift").read_text()
 MODEL = (ROOT / "SplatNative" / "ScanModel.swift").read_text()
 COLORIZER = (ROOT / "SplatNative" / "SplatSeedColorizer.swift").read_text()
 SKY = (ROOT / "SplatNative" / "SplatSkySeeder.swift").read_text()
+RESOURCE = (ROOT / "SplatNative" / "SplatResourceGuard.swift").read_text()
+TESTS = (ROOT / "SplatNativeTests" / "SplatReconstructionPolicyTests.swift").read_text()
 
 
 def require(pattern: str, text: str, message: str) -> re.Match[str]:
@@ -83,6 +85,39 @@ assert "borderCandidates.count >= 5" in SKY
 assert "hasGeometryNear" in SKY
 assert "brightOvercast" in SKY and "blueSky" in SKY
 assert "prepareProjectImages" not in COLORIZER
+
+# S8 Sev-2 #4157: training cannot densify without a bounded resource strategy. The process must
+# observe iOS memory warnings and phys_footprint, maintain a device-scaled splat ceiling, checkpoint
+# before pausing, and persist evidence for the eventual real-device parity run.
+for token in (
+    "residentMemoryBudgetBytes",
+    "maxSplatCount",
+    "TASK_VM_INFO",
+    "phys_footprint",
+    "didReceiveMemoryWarningNotification",
+    "passResourceGuard.evaluate",
+    "resourcePauseReason",
+    "SplatReconstructionRunReport.write",
+):
+    assert token in (RESOURCE + MODEL), f"resource guard contract missing: {token}"
+
+resource_pause = MODEL.index("if let reason = resourcePauseReason")
+checkpoint_before_pause = MODEL.rfind("trainer.saveCheckpoint", 0, resource_pause)
+assert checkpoint_before_pause >= 0, "resource pause must be preceded by a recoverable checkpoint"
+assert "paused-\\(reason.rawValue)" in MODEL
+assert 'writeRunReport("completed"' in MODEL
+assert "peakResidentMemoryBytes" in RESOURCE
+assert "peakSplatCount" in RESOURCE
+assert "reconstruction-run-%05d.json" in RESOURCE
+
+for test_name in (
+    "testResourceLimitsScaleWithDeviceMemoryAndRemainBounded",
+    "testSyntheticHighDensityTriggersCheckpointPauseBeforeUnboundedGrowth",
+    "testSyntheticMemoryPressureRecordsPeakAndPauses",
+    "testMemoryWarningOverridesOtherwiseSafeResourceSnapshot",
+    "testRunReportCapturesSyntheticPeakMemory",
+):
+    assert test_name in TESTS, f"synthetic stress regression missing: {test_name}"
 
 # Coordinate-contract mirror: ARKit camera looks down -Z, image y grows downward.
 def project(point, fx=10.0, fy=10.0, cx=10.0, cy=10.0):
