@@ -95,9 +95,23 @@ require_text SplatNative/ScanProjectStore.swift 'recoverInterruptedProcessing'
 require_text SplatNative/ScanProjectStore.swift 'worldMapURL'
 require_text SplatNative/ScanLibraryView.swift 'restoreSavedProject'
 
-# Product-neutral and local-only by default.
+# Product-neutral until Scaniverse functional parity is achieved.
 ! grep -R -n 'おもちゃばこ' SplatNative project.yml
-! grep -R -nE 'https?://.*(api|upload|analytics)|URLSession|Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
+
+# D authenticated cloud sharing is explicit and isolated from the capture/reconstruction core.
+for f in ScanLabBackend.swift ScanLabShellView.swift PublishScanView.swift ScanLabAccountView.swift; do require_file "SplatNative/$f"; done
+require_text SplatNative/SplatNativeApp.swift 'ScanLabShellView()'
+require_text SplatNative/ScanLabShellView.swift 'RootScanView()'
+require_text SplatNative/ScanLabBackend.swift 'import Supabase'
+require_text SplatNative/ScanLabBackend.swift 'ScanLabVisibility'
+require_text SplatNative/PublishScanView.swift 'contentConfirmed'
+require_text SplatNative/PublishScanView.swift 'publicPlaceConfirmed'
+require_text project.yml 'package: Supabase'
+require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
+# Network access must not leak into offline capture/reconstruction/storage core.
+! grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
+# D parity work must not add advertising/analytics SDKs.
+! grep -R -nE 'Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
 
 plutil -lint SplatNative/PrivacyInfo.xcprivacy >/dev/null
 python3 - <<'PY'
@@ -105,9 +119,23 @@ import plistlib
 with open('SplatNative/PrivacyInfo.xcprivacy','rb') as f:
     data=plistlib.load(f)
 assert data.get('NSPrivacyTracking') is False
-assert data.get('NSPrivacyCollectedDataTypes') == []
 assert data.get('NSPrivacyTrackingDomains') == []
-print('PASS: Privacy Manifest matches local-only app')
+collected = data.get('NSPrivacyCollectedDataTypes', [])
+by_type = {item.get('NSPrivacyCollectedDataType'): item for item in collected}
+expected = {
+    'NSPrivacyCollectedDataTypeName',
+    'NSPrivacyCollectedDataTypeEmailAddress',
+    'NSPrivacyCollectedDataTypeUserID',
+    'NSPrivacyCollectedDataTypePreciseLocation',
+    'NSPrivacyCollectedDataTypeOtherUserContent',
+}
+assert expected.issubset(by_type), (expected - set(by_type))
+for kind in expected:
+    item = by_type[kind]
+    assert item.get('NSPrivacyCollectedDataTypeLinked') is True
+    assert item.get('NSPrivacyCollectedDataTypeTracking') is False
+    assert 'NSPrivacyCollectedDataTypePurposeAppFunctionality' in item.get('NSPrivacyCollectedDataTypePurposes', [])
+print('PASS: Privacy Manifest matches explicit D2 authenticated sharing')
 PY
 
 echo 'PASS: integrated Scan Lab static contracts'
