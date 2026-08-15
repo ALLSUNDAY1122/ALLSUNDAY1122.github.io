@@ -238,10 +238,17 @@ final class ScanProjectStore {
 
     func updateManifest(projectURL: URL, _ mutate: (inout ScanProjectManifest) -> Void) throws -> ScanProjectManifest {
         var manifest = try loadOrMigrateManifest(projectURL: projectURL)
+        let previousStage = manifest.stage
         mutate(&manifest)
         manifest.schemaVersion = ScanProjectManifest.currentSchemaVersion
         manifest.updatedAt = Date()
         try writeManifest(manifest, to: projectURL)
+
+        if manifest.stage == .processing, previousStage != .processing {
+            preparePriorSplatForProcessing(projectURL: projectURL)
+        } else if manifest.stage == .finished {
+            cleanupSplatSwapArtifacts(projectURL: projectURL)
+        }
         return manifest
     }
 
@@ -315,8 +322,7 @@ final class ScanProjectStore {
         )
     }
 
-    /// Commits a newly exported `result.pending.splat` without risking the prior completed result.
-    /// The explicit previous-result fallback lets relaunch repair every crash point in the swap.
+    /// Optional two-phase writer for reconstruction engines that can export to a temporary path.
     func commitPendingSplat(projectURL: URL) throws -> URL {
         let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
@@ -327,7 +333,6 @@ final class ScanProjectStore {
             if fileManager.fileExists(atPath: previous.path) { try fileManager.removeItem(at: previous) }
             try fileManager.moveItem(at: output, to: previous)
         }
-
         do {
             if fileManager.fileExists(atPath: output.path) { try fileManager.removeItem(at: output) }
             try fileManager.moveItem(at: pending, to: output)
@@ -338,7 +343,6 @@ final class ScanProjectStore {
             }
             throw error
         }
-
         if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
         return output
     }
@@ -430,7 +434,6 @@ final class ScanProjectStore {
         let primary = projectURL.appendingPathComponent(Self.manifestFileName)
         let backup = projectURL.appendingPathComponent(Self.manifestBackupFileName)
         let decoder = JSONDecoder()
-
         if let data = try? Data(contentsOf: primary),
            let manifest = try? decoder.decode(ScanProjectManifest.self, from: data) {
             return manifest
@@ -481,6 +484,7 @@ final class ScanProjectStore {
         var manifest = input
         var changed = false
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
 
         if manifest.stage == .processing {
             let hadPriorResult = manifest.splatFileName != nil
@@ -500,9 +504,24 @@ final class ScanProjectStore {
                     : "前回の3D生成は途中で終了し、再処理に必要なrawデータも見つかりません。"
                 changed = true
             }
-        } else if validSplat(at: output), manifest.splatFileName == nil {
+        } else if validSplat(at: output) {
+            if manifest.splatFileName == nil {
+                manifest.outputs[ScanRepresentationKind.splat.rawValue] = output.lastPathComponent
+                changed = true
+            }
+            if manifest.stage == .captured || manifest.stage == .failed {
+                manifest.stage = .finished
+                changed = true
+            }
+        } else if validSplat(at: previous) {
+            if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
+            try fileManager.moveItem(at: previous, to: output)
             manifest.outputs[ScanRepresentationKind.splat.rawValue] = output.lastPathComponent
-            if manifest.stage == .captured || manifest.stage == .failed { manifest.stage = .finished }
+            manifest.stage = .finished
+            manifest.recoveredAfterInterruption = true
+            if manifest.lastError == nil {
+                manifest.lastError = "再生成中断後、以前の完成済み3Dを復元しました。"
+            }
             changed = true
         }
 
@@ -526,32 +545,43 @@ final class ScanProjectStore {
         return manifest
     }
 
+    private func preparePriorSplatForProcessing(projectURL: URL) {
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
+        let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
+        if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+        guard validSplat(at: output) else { return }
+        if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
+        try? fileManager.moveItem(at: output, to: previous)
+    }
+
+    private func cleanupSplatSwapArtifacts(projectURL: URL) {
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        guard validSplat(at: output) else { return }
+        let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
+        let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
+        if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
+        if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+    }
+
     private func recoverProcessingResult(projectURL: URL) throws -> (url: URL?, message: String?) {
         let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
         let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
-
         if validSplat(at: pending) {
-            do {
-                return (try commitPendingSplat(projectURL: projectURL), nil)
-            } catch {
-                // Fall through to the previous completed result if the pending swap itself was interrupted.
-            }
+            do { return (try commitPendingSplat(projectURL: projectURL), nil) } catch { }
         }
-
         if validSplat(at: output) {
             if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
             if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
             return (output, nil)
         }
-
         if validSplat(at: previous) {
             if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
             try fileManager.moveItem(at: previous, to: output)
             if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
             return (output, "再生成は中断しましたが、以前の完成済み3Dを復元しました。")
         }
-
         return (nil, nil)
     }
 
