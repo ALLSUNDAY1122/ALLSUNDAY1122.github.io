@@ -1,17 +1,19 @@
 import CryptoKit
 import Foundation
 
-/// Durable sidecar used only while a trusted completed Splat is being reprocessed.
+/// Durable protection for the last trusted completed Splat while a new reconstruction is running.
 ///
-/// `ScanProjectStore` already preserves the previous `result.splat` bytes, but its legacy swap
-/// path removes the current completion evidence before moving those bytes to `result.previous.splat`.
-/// This sidecar binds the old completion evidence to the exact old bytes with SHA-256 so a crash
-/// can restore trust only for that exact previous result, never for a same-size partial write.
+/// The legacy Store swap keeps one `result.previous.splat`, but a second retry from `.failed`
+/// can delete that file before the old result has been restored. C2 therefore keeps a separate
+/// trusted backup. APFS hard-linking is attempted first so the backup normally costs no duplicate
+/// data blocks; a verified copy is used only when linking is unavailable. SHA-256 binds the backup
+/// to its original completion evidence and prevents same-size partial data from regaining trust.
 enum SplatPreviousResultEvidence {
     static let fileName = "result.previous.splat.complete.json"
+    static let assetFileName = "result.previous.trusted.splat"
 
     struct Snapshot: Codable, Equatable, Sendable {
-        static let currentSchemaVersion = 1
+        static let currentSchemaVersion = 2
 
         let schemaVersion: Int
         let originalEvidence: SplatCommitEvidence
@@ -30,6 +32,7 @@ enum SplatPreviousResultEvidence {
         case currentResultNotTrusted
         case completionEvidenceMissing
         case resultChangedDuringPreservation
+        case previousResultBackupFailed
 
         var errorDescription: String? {
             switch self {
@@ -39,6 +42,8 @@ enum SplatPreviousResultEvidence {
                 return "現在の3Dの完了記録を退避できないため、再処理を開始できません。"
             case .resultChangedDuringPreservation:
                 return "再処理準備中に3Dデータが変化したため、安全のため処理を中止しました。"
+            case .previousResultBackupFailed:
+                return "以前の完成3Dを保護できないため、再処理を開始できません。iPhoneの空き容量を確認してください。"
             }
         }
     }
@@ -72,52 +77,101 @@ enum SplatPreviousResultEvidence {
             throw PreservationError.resultChangedDuringPreservation
         }
 
-        let snapshot = Snapshot(originalEvidence: evidence, sha256: hash)
-        let backupURL = projectURL.appendingPathComponent(fileName)
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        try encoder.encode(snapshot).write(to: backupURL, options: .atomic)
-    }
-
-    /// If Store recovery has restored the exact old bytes but the legacy evidence was lost,
-    /// recreate the current evidence atomically. A SHA-256 mismatch always fails closed.
-    static func restoreCurrentEvidenceIfExactPreviousResult(
-        projectURL: URL,
-        outputURL: URL,
-        fileManager: FileManager = .default
-    ) {
-        let currentEvidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
-        let backupURL = projectURL.appendingPathComponent(fileName)
-
-        // A new successful reconstruction already has its own completion evidence. The old
-        // preservation sidecar is no longer needed and must not survive into a later lifecycle.
-        if fileManager.fileExists(atPath: currentEvidenceURL.path) {
-            try? fileManager.removeItem(at: backupURL)
-            return
+        discardBackup(projectURL: projectURL, fileManager: fileManager)
+        let backupAssetURL = projectURL.appendingPathComponent(assetFileName)
+        do {
+            try materializeExactFile(
+                sourceURL: trustedURL,
+                destinationURL: backupAssetURL,
+                expectedByteCount: evidence.byteCount,
+                expectedSHA256: hash,
+                fileManager: fileManager
+            )
+        } catch {
+            discardBackup(projectURL: projectURL, fileManager: fileManager)
+            throw PreservationError.previousResultBackupFailed
         }
 
-        guard let data = try? Data(contentsOf: backupURL),
+        let snapshot = Snapshot(originalEvidence: evidence, sha256: hash)
+        let backupEvidenceURL = projectURL.appendingPathComponent(fileName)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        do {
+            try encoder.encode(snapshot).write(to: backupEvidenceURL, options: .atomic)
+        } catch {
+            discardBackup(projectURL: projectURL, fileManager: fileManager)
+            throw error
+        }
+    }
+
+    /// Restores the separately protected previous result after Store recovery has exhausted its
+    /// legacy swap files. This is intentionally callable for `.failed`/`.captured` repaired state:
+    /// the exact SHA-256-bound backup is stronger evidence than structural 32-byte alignment.
+    @discardableResult
+    static func recoverTrustedPreviousIfNeeded(
+        projectURL: URL,
+        manifest: ScanProjectManifest,
+        fileManager: FileManager = .default
+    ) -> ScanProjectManifest {
+        let outputURL = projectURL.appendingPathComponent(ScanProjectStore.splatResultFileName)
+        let currentEvidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
+
+        if currentResultMatchesEvidence(
+            outputURL: outputURL,
+            evidenceURL: currentEvidenceURL,
+            fileManager: fileManager
+        ) {
+            return manifest
+        }
+
+        let backupEvidenceURL = projectURL.appendingPathComponent(fileName)
+        let backupAssetURL = projectURL.appendingPathComponent(assetFileName)
+        guard let data = try? Data(contentsOf: backupEvidenceURL),
               let snapshot = try? JSONDecoder().decode(Snapshot.self, from: data),
               snapshot.schemaVersion == Snapshot.currentSchemaVersion,
               snapshot.originalEvidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
               snapshot.originalEvidence.fileName == ScanProjectStore.splatResultFileName,
               snapshot.originalEvidence.byteCount > 0,
               snapshot.originalEvidence.byteCount % 32 == 0,
-              fileManager.fileExists(atPath: outputURL.path),
-              (try? fileByteCount(outputURL, fileManager: fileManager)) == snapshot.originalEvidence.byteCount,
-              (try? sha256Hex(fileURL: outputURL)) == snapshot.sha256 else {
-            return
+              fileManager.fileExists(atPath: backupAssetURL.path),
+              (try? fileByteCount(backupAssetURL, fileManager: fileManager)) == snapshot.originalEvidence.byteCount,
+              (try? sha256Hex(fileURL: backupAssetURL)) == snapshot.sha256 else {
+            return manifest
         }
 
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        if let evidenceData = try? encoder.encode(snapshot.originalEvidence) {
-            do {
-                try evidenceData.write(to: currentEvidenceURL, options: .atomic)
-                try? fileManager.removeItem(at: backupURL)
-            } catch {
-                try? fileManager.removeItem(at: currentEvidenceURL)
+        do {
+            if fileManager.fileExists(atPath: outputURL.path) {
+                try fileManager.removeItem(at: outputURL)
             }
+            if fileManager.fileExists(atPath: currentEvidenceURL.path) {
+                try fileManager.removeItem(at: currentEvidenceURL)
+            }
+
+            try materializeExactFile(
+                sourceURL: backupAssetURL,
+                destinationURL: outputURL,
+                expectedByteCount: snapshot.originalEvidence.byteCount,
+                expectedSHA256: snapshot.sha256,
+                fileManager: fileManager
+            )
+
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+            try encoder.encode(snapshot.originalEvidence).write(to: currentEvidenceURL, options: .atomic)
+
+            let store = ScanProjectStore(
+                rootURL: projectURL.deletingLastPathComponent(),
+                fileManager: fileManager
+            )
+            return try store.updateManifest(projectURL: projectURL) { value in
+                value.stage = .finished
+                value.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+                value.recoveredAfterInterruption = true
+                value.lastError = "再処理が中断したため、直前の完成確認済み3Dを復元しました。"
+            }
+        } catch {
+            try? fileManager.removeItem(at: currentEvidenceURL)
+            return manifest
         }
     }
 
@@ -126,6 +180,58 @@ enum SplatPreviousResultEvidence {
         fileManager: FileManager = .default
     ) {
         try? fileManager.removeItem(at: projectURL.appendingPathComponent(fileName))
+        try? fileManager.removeItem(at: projectURL.appendingPathComponent(assetFileName))
+        try? fileManager.removeItem(at: projectURL.appendingPathComponent(".\(assetFileName).partial"))
+    }
+
+    private static func currentResultMatchesEvidence(
+        outputURL: URL,
+        evidenceURL: URL,
+        fileManager: FileManager
+    ) -> Bool {
+        guard let data = try? Data(contentsOf: evidenceURL),
+              let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: data),
+              evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
+              evidence.fileName == ScanProjectStore.splatResultFileName,
+              evidence.byteCount > 0,
+              evidence.byteCount % 32 == 0,
+              let actual = try? fileByteCount(outputURL, fileManager: fileManager),
+              actual == evidence.byteCount else {
+            return false
+        }
+        return true
+    }
+
+    private static func materializeExactFile(
+        sourceURL: URL,
+        destinationURL: URL,
+        expectedByteCount: Int64,
+        expectedSHA256: String,
+        fileManager: FileManager
+    ) throws {
+        let partialURL = destinationURL
+            .deletingLastPathComponent()
+            .appendingPathComponent(".\(destinationURL.lastPathComponent).partial")
+        try? fileManager.removeItem(at: partialURL)
+        try? fileManager.removeItem(at: destinationURL)
+
+        do {
+            do {
+                try fileManager.linkItem(at: sourceURL, to: partialURL)
+            } catch {
+                try fileManager.copyItem(at: sourceURL, to: partialURL)
+            }
+
+            guard try fileByteCount(partialURL, fileManager: fileManager) == expectedByteCount,
+                  try sha256Hex(fileURL: partialURL) == expectedSHA256 else {
+                throw PreservationError.resultChangedDuringPreservation
+            }
+            try fileManager.moveItem(at: partialURL, to: destinationURL)
+        } catch {
+            try? fileManager.removeItem(at: partialURL)
+            try? fileManager.removeItem(at: destinationURL)
+            throw error
+        }
     }
 
     private static func fileByteCount(_ url: URL, fileManager: FileManager) throws -> Int64 {
