@@ -1,0 +1,68 @@
+name: S2 one-shot resource budget wiring v2
+
+on:
+  push:
+    branches:
+      - scaniverse/s2-splat-reconstruction
+    paths:
+      - '.github/workflows/s2-resource-budget-hotfix-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-test-commit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: scaniverse/s2-splat-reconstruction
+          fetch-depth: 0
+      - name: Apply resource guard to latest S2 head
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('splat-native-ios/SplatNative/ScanModel.swift')
+          s = p.read_text()
+          replacements = [
+          ('''    private var datasetReady = false\n    private var pendingTrainingTarget = SplatReconstructionPolicy.standardIterations\n    private let ciContext = CIContext(options: [.cacheIntermediates: false])\n''', '''    private var datasetReady = false\n    private var pendingTrainingTarget = SplatReconstructionPolicy.standardIterations\n    private let resourceGuard = SplatResourceGuard()\n    private var memoryWarningObserver: NSObjectProtocol?\n    private let ciContext = CIContext(options: [.cacheIntermediates: false])\n'''),
+          ('''    func attach(session: ARSession) {\n        guard self.session !== session else { return }\n        self.session = session\n        session.delegate = self\n    }\n''', '''    func attach(session: ARSession) {\n        if memoryWarningObserver == nil {\n            let passResourceGuard = resourceGuard\n            memoryWarningObserver = NotificationCenter.default.addObserver(\n                forName: UIApplication.didReceiveMemoryWarningNotification,\n                object: nil,\n                queue: .main\n            ) { _ in\n                passResourceGuard.noteMemoryWarning()\n            }\n        }\n        guard self.session !== session else { return }\n        self.session = session\n        session.delegate = self\n    }\n'''),
+          ('''        let path = projectURL.path\n        let checkpoint = projectURL.appendingPathComponent("training.msplat-checkpoint")\n        let geometryPoints = Array(featurePoints.values)\n        let seedFrames = captured.map(Self.seedFrame(from:))\n\n        Task.detached(priority: .userInitiated) { [weak self] in\n''', '''        let path = projectURL.path\n        let checkpoint = projectURL.appendingPathComponent("training.msplat-checkpoint")\n        let geometryPoints = Array(featurePoints.values)\n        let seedFrames = captured.map(Self.seedFrame(from:))\n        let passResourceGuard = resourceGuard\n        passResourceGuard.resetForPass()\n        let runStartedAt = Date()\n        let runStartUptime = ProcessInfo.processInfo.systemUptime\n        let initialThermalState = splatThermalStateName(ProcessInfo.processInfo.thermalState)\n\n        Task.detached(priority: .userInitiated) { [weak self] in\n'''),
+          ('''                let passStart = resumedIteration\n                let passSpan = max(1, effectiveTarget - passStart)\n                if resumedIteration > 0 {\n''', '''                let passStart = resumedIteration\n                let passSpan = max(1, effectiveTarget - passStart)\n                let writeRunReport: (String, Int, Int) -> Void = { outcome, finalIteration, finalSplatCount in\n                    let report = passResourceGuard.makeReport(\n                        startedAt: runStartedAt,\n                        startUptime: runStartUptime,\n                        passStartIteration: passStart,\n                        targetIteration: effectiveTarget,\n                        finalIteration: finalIteration,\n                        finalSplatCount: finalSplatCount,\n                        initialThermalState: initialThermalState,\n                        finalThermalState: splatThermalStateName(ProcessInfo.processInfo.thermalState),\n                        outcome: outcome\n                    )\n                    SplatReconstructionRunReport.write(report, projectURL: projectURL)\n                }\n\n                let initialResourceEvaluation = passResourceGuard.evaluate(splatCount: trainer.splatCount)\n                if let reason = initialResourceEvaluation.reason {\n                    msplatSync()\n                    _ = trainer.saveCheckpoint(to: checkpoint.path)\n                    writeRunReport("paused-\\(reason.rawValue)", resumedIteration, trainer.splatCount)\n                    Task { @MainActor [weak self] in\n                        self?.failTraining(reason.userMessage)\n                    }\n                    return\n                }\n\n                if resumedIteration > 0 {\n'''),
+          ('''                        let checkpointDue = iteration % SplatReconstructionPolicy.checkpointInterval == 0\n\n                        if checkpointDue || thermalPause {\n                            msplatSync()\n                            _ = trainer.saveCheckpoint(to: checkpoint.path)\n                        }\n''', '''                        let checkpointDue = iteration % SplatReconstructionPolicy.checkpointInterval == 0\n                        let shouldCheckResources = iteration % 20 == 0 || checkpointDue ||\n                            stats.splatCount >= passResourceGuard.limits.maxSplatCount\n                        let resourceEvaluation = shouldCheckResources\n                            ? passResourceGuard.evaluate(splatCount: stats.splatCount)\n                            : nil\n                        let resourcePauseReason = resourceEvaluation?.reason\n\n                        if checkpointDue || thermalPause || resourcePauseReason != nil {\n                            msplatSync()\n                            _ = trainer.saveCheckpoint(to: checkpoint.path)\n                        }\n'''),
+          ('''                        if thermalPause {\n                            Task { @MainActor [weak self] in\n                                self?.failTraining("端末温度が高くなったため生成を安全に一時停止しました。端末が冷えてから「生成だけもう一度試す」で続きから再開できます")\n                            }\n                            return\n                        }\n''', '''                        if let reason = resourcePauseReason {\n                            writeRunReport("paused-\\(reason.rawValue)", iteration, stats.splatCount)\n                            Task { @MainActor [weak self] in\n                                self?.failTraining(reason.userMessage)\n                            }\n                            return\n                        }\n\n                        if thermalPause {\n                            writeRunReport("paused-thermal", iteration, stats.splatCount)\n                            Task { @MainActor [weak self] in\n                                self?.failTraining("端末温度が高くなったため生成を安全に一時停止しました。端末が冷えてから「生成だけもう一度試す」で続きから再開できます")\n                            }\n                            return\n                        }\n'''),
+          ('''                let rendered = trainer.render(cameraIndex: 0)\n                let preview = Self.makeImage(from: rendered)\n                let finalCount = trainer.splatCount\n                Task { @MainActor [weak self] in\n''', '''                let rendered = trainer.render(cameraIndex: 0)\n                let preview = Self.makeImage(from: rendered)\n                let finalCount = trainer.splatCount\n                _ = passResourceGuard.evaluate(splatCount: finalCount)\n                writeRunReport("completed", effectiveTarget, finalCount)\n                Task { @MainActor [weak self] in\n''')]
+          for old, new in replacements:
+              count = s.count(old)
+              if count != 1:
+                  raise SystemExit(f'patch anchor count={count}: {old[:100]!r}')
+              s = s.replace(old, new, 1)
+          p.write_text(s)
+          PY
+          grep -q 'private let resourceGuard = SplatResourceGuard()' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'UIApplication.didReceiveMemoryWarningNotification' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'resourcePauseReason' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'SplatReconstructionRunReport.write' splat-native-ios/SplatNative/ScanModel.swift
+      - name: Compile current resource-bounded S2 head
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          xcodegen generate
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO build-for-testing
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNative \
+            -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO build
+      - name: Commit only verified ScanModel wiring
+        run: |
+          set -euo pipefail
+          git config user.name 'S2 Reconstruction'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/ScanModel.swift
+          git commit -m 'fix(s2): checkpoint before reconstruction resource exhaustion'
+          git push origin HEAD:scaniverse/s2-splat-reconstruction
