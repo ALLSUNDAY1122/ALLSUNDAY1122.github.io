@@ -37,7 +37,7 @@ struct HomeView: View {
                     Button { model.startDaily(isPremium:purchase.isPremium) } label: {
                         HStack { VStack(alignment:.leading,spacing:3) { Text("今日のスプリント").font(.headline); Text("\(model.learning.goal)問・短く集中").font(.caption).opacity(0.85) }; Spacer(); Image(systemName:"arrow.right") }
                             .foregroundStyle(.white).padding(17).background(KSTheme.ai).clipShape(RoundedRectangle(cornerRadius:16))
-                    }.padding(.horizontal,18)
+                    }.padding(.horizontal,18).accessibilityLabel("今日のスプリント")
 
                     actionButton(title:"苦手をつぶす",subtitle:"3回連続正解で卒業",icon:"repeat",count:"\(model.weakQuestions.count)問",premium:true) {
                         if purchase.isPremium { model.startWeak() } else { showPaywall=true }
