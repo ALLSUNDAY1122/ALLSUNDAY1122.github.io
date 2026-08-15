@@ -22,28 +22,16 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Check v0.7 JavaScript and public entry
+      - name: Check canonical runtime entry
         run: |
           node --check touroku-hanbaisha-sprint/app-v07.js
           node --check touroku-hanbaisha-sprint/choice-balance-v07.js
+          node --check touroku-hanbaisha-sprint/r1-canonical-loader-v08.js
           grep -q 'choice-balance-v07.js' touroku-hanbaisha-sprint/index.html
-          grep -q 'app-v07.js' touroku-hanbaisha-sprint/index.html
-          if grep -q 'app-v06.js' touroku-hanbaisha-sprint/index.html; then exit 1; fi
+          grep -q 'r1-canonical-loader-v08.js' touroku-hanbaisha-sprint/index.html
+          if grep -Eq 'questions\.js|questions-extra\.js|questions-v05-|app-v06\.js' touroku-hanbaisha-sprint/index.html; then exit 1; fi
 
-      - name: Build round 1 audit JSON
-        run: |
-          cat touroku-hanbaisha-sprint/questions.js \
-              touroku-hanbaisha-sprint/questions-extra.js \
-              touroku-hanbaisha-sprint/questions-v05-ch1.js \
-              touroku-hanbaisha-sprint/questions-v05-ch2.js \
-              touroku-hanbaisha-sprint/questions-v05-ch3a.js \
-              touroku-hanbaisha-sprint/questions-v05-ch3b.js \
-              touroku-hanbaisha-sprint/questions-v05-ch4.js \
-              touroku-hanbaisha-sprint/questions-v05-ch5.js > /tmp/r1-bundle.js
-          printf '\nconsole.log(JSON.stringify(QUESTIONS));\n' >> /tmp/r1-bundle.js
-          node /tmp/r1-bundle.js > /tmp/r1.json
-
-      - name: Validate all 360 questions
+      - name: Validate canonical 360 questions
         run: |
           python - <<'PY'
           import json,re
@@ -53,83 +41,58 @@ jobs:
 
           root=Path('touroku-hanbaisha-sprint')
           expected={'第1章':20,'第2章':20,'第3章':40,'第4章':20,'第5章':20}
-          r1=json.load(open('/tmp/r1.json',encoding='utf-8'))
           def load_round(n):
               out=[]
               for ch in range(1,6):
                   out += json.load(open(root/f'questions/exam-{n}/chapter-{ch}.json',encoding='utf-8'))
               return out
-          r2,r3=load_round(2),load_round(3)
-          rounds=[r1,r2,r3]
-          errors=[]
-          allq=[]
+          rounds=[load_round(1),load_round(2),load_round(3)]
+          errors=[]; allq=[]
           for rn,qs in enumerate(rounds,1):
               if len(qs)!=120: errors.append(f'R{rn}: {len(qs)}/120')
               counts=Counter(q.get('chapter') for q in qs)
               for ch,n in expected.items():
                   if counts[ch]!=n: errors.append(f'R{rn}/{ch}: {counts[ch]}/{n}')
-              ids=[]
-              target_counts=Counter()
+              ids=[]; target_counts=Counter()
               for i,q in enumerate(qs):
-                  qid=q.get('id') or f'R{rn}-{i+1}'
-                  ids.append(qid)
-                  choices=q.get('choices')
-                  ans=q.get('answer') if rn==1 else q.get('correct_index')
+                  qid=q.get('id') or f'R{rn}-{i+1}'; ids.append(qid)
+                  if q.get('round')!=rn: errors.append(f'{qid}: round {q.get("round")}/{rn}')
+                  choices=q.get('choices'); ans=q.get('correct_index')
                   if not isinstance(choices,list) or len(choices)!=5 or len(set(choices))!=5: errors.append(f'{qid}: choices')
                   if not isinstance(ans,int) or not 0<=ans<5: errors.append(f'{qid}: answer')
-                  for key in ('question','topic','chapter'):
+                  for key in ('subject','topic','question','explanation','source_url','reference_date','origin_type','rights_basis','chapter'):
                       if not str(q.get(key,'')).strip(): errors.append(f'{qid}: missing {key}')
-                  if rn==1:
-                      for key in ('point','detail'):
-                          if not str(q.get(key,'')).strip(): errors.append(f'{qid}: missing {key}')
-                      evidence=f"{q.get('point','')} {q.get('detail','')}"
-                  else:
-                      for key in ('subject','explanation','source_url','reference_date','origin_type','rights_basis'):
-                          if not str(q.get(key,'')).strip(): errors.append(f'{qid}: missing {key}')
-                      evidence=str(q.get('explanation',''))
-                  m=re.search(r'(\d+)$',qid)
-                  target=(int(m.group(1))-1)%5 if m else i%5
+                  m=re.search(r'(\d+)$',qid); target=(int(m.group(1))-1)%5 if m else i%5
                   target_counts[target]+=1
+                  evidence=f"{q.get('point','')} {q.get('detail','')}" if rn==1 else str(q.get('explanation',''))
                   allq.append((f'R{rn}:{qid}',str(q.get('topic','')),str(q.get('question','')),evidence))
               dups=[x for x,c in Counter(ids).items() if c>1]
               if dups: errors.append(f'R{rn}: duplicate ids {dups[:5]}')
               if [target_counts[i] for i in range(5)] != [24]*5: errors.append(f'R{rn}: runtime answer balance {dict(target_counts)}')
 
-          def norm(s):
-              s=str(s).lower()
-              return re.sub(r'[\s、。,.!?！？・:：;；（）()\[\]{}『』「」\-ー〜~]','',s)
-
-          seen={}
-          normalized=[]
+          def norm(s): return re.sub(r'[\s、。,.!?！？・:：;；（）()\[\]{}『』「」\-ー〜~]','',str(s).lower())
+          seen={}; normalized=[]
           for qid,topic,text,evidence in allq:
-              n=norm(text)
-              if n in seen: errors.append(f'exact duplicate: {seen[n]} <-> {qid}')
-              else: seen[n]=qid
-              normalized.append((qid,norm(topic),n,norm(evidence)))
-
-          template_warnings=[]
+              q=norm(text)
+              if q in seen: errors.append(f'exact duplicate: {seen[q]} <-> {qid}')
+              else: seen[q]=qid
+              normalized.append((qid,norm(topic),q,norm(evidence)))
+          warnings=[]
           for i in range(len(normalized)):
               ida,ta,qa,ea=normalized[i]
               for j in range(i+1,len(normalized)):
                   idb,tb,qb,eb=normalized[j]
-                  if not qa or not qb: continue
-                  qratio=SequenceMatcher(None,qa,qb).ratio()
-                  if qratio < 0.90: continue
-                  eratio=SequenceMatcher(None,ea,eb).ratio() if ea and eb else 0.0
-                  same_topic=bool(ta and tb and ta==tb)
-                  # 問題文の定型句だけが似ている別論点を水増しと誤判定しない。
-                  # 問い方に加えて、正答根拠も近い、または同一論点である場合のみFAIL。
-                  if eratio >= 0.72 or same_topic:
-                      errors.append(f'semantic high similarity q={qratio:.2f} evidence={eratio:.2f}: {ida} <-> {idb}')
-                  else:
-                      template_warnings.append(f'template-only q={qratio:.2f} evidence={eratio:.2f}: {ida} <-> {idb}')
-
-          if template_warnings:
+                  qratio=SequenceMatcher(None,qa,qb).ratio() if qa and qb else 0
+                  if qratio<0.90: continue
+                  eratio=SequenceMatcher(None,ea,eb).ratio() if ea and eb else 0
+                  if eratio>=0.72 or (ta and ta==tb): errors.append(f'semantic high similarity q={qratio:.2f} evidence={eratio:.2f}: {ida} <-> {idb}')
+                  else: warnings.append(f'template-only q={qratio:.2f} evidence={eratio:.2f}: {ida} <-> {idb}')
+          if warnings:
               print('TEMPLATE-SIMILARITY WARNINGS (not water-padding)')
-              for w in template_warnings[:100]: print('-',w)
+              for w in warnings[:100]: print('-',w)
           if errors:
               print('FAIL')
               for e in errors[:200]: print('-',e)
               raise SystemExit(1)
-          print('PASS: 360 questions, 3x120, 20/20/40/20/20, exact duplicates 0, semantic high-similarity/water-padding 0, runtime answer positions 24 each')
+          print('PASS: canonical 360, 3x120, 20/20/40/20/20, exact duplicate 0, semantic high-similarity/water-padding 0, runtime answer positions 24 each')
           PY
