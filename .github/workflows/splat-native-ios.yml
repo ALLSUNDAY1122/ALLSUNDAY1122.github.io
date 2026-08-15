@@ -57,6 +57,10 @@ jobs:
           grep -q 'SplatTransientExportWorkspaceTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportServiceTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportAdmissionTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'CaptureMotionQualityTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatResourceGuardAdaptiveTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatSeedColorizerMultiViewTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatSkySeederDedupTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
@@ -69,7 +73,7 @@ jobs:
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -parallel-testing-enabled NO \
             CODE_SIGNING_ALLOWED=NO build-for-testing
-      - name: Run C2 persistence export video and mesh regressions
+      - name: Run integrated A2 and C2 regressions
         timeout-minutes: 12
         working-directory: splat-native-ios
         shell: bash
@@ -80,6 +84,10 @@ jobs:
           xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
             -sdk iphonesimulator -destination "platform=iOS Simulator,id=$SIMULATOR_ID" \
             -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO test-without-building \
+            -only-testing:SplatNativeTests/CaptureMotionQualityTests \
+            -only-testing:SplatNativeTests/SplatResourceGuardAdaptiveTests \
+            -only-testing:SplatNativeTests/SplatSeedColorizerMultiViewTests \
+            -only-testing:SplatNativeTests/SplatSkySeederDedupTests \
             -only-testing:SplatNativeTests/ScanProjectStoreTests \
             -only-testing:SplatNativeTests/ScanColdResumePersistenceTests \
             -only-testing:SplatNativeTests/ScanPersistenceIntegrationTests \
