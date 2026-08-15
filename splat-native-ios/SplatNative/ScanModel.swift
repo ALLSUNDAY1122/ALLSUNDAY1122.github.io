@@ -333,6 +333,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             trackingMessage = "画像を保存できません。もう一度ゆっくり動かしてください"
             return
         }
+        guard let imagesURL else {
+            failCaptureStorage()
+            return
+        }
 
         absorbFeaturePoints(frame.rawFeaturePoints, cameraTransform: frame.camera.transform)
 
@@ -343,23 +347,19 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let intrinsics = frame.camera.intrinsics
         let resolution = frame.camera.imageResolution
         let timestamp = frame.timestamp
-        let imagesURL = imagesURL
 
         captureQueue.async { [weak self] in
-            guard let imagesURL else { return }
             let fileName = String(format: "frame_%05d.jpg", index)
             let fileURL = imagesURL.appendingPathComponent(fileName)
-            let success: Bool
-            do {
-                try jpegData.write(to: fileURL, options: .atomic)
-                success = true
-            } catch {
-                success = false
-            }
+            let success = (try? jpegData.write(to: fileURL, options: .atomic)) != nil
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.isWritingFrame = false
-                guard success, self.phase == .capturing else { return }
+                guard self.phase == .capturing else { return }
+                guard success else {
+                    self.failCaptureStorage()
+                    return
+                }
                 self.captured.append(CapturedView(
                     id: index,
                     filePath: "images/\(fileName)",
@@ -386,6 +386,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 }
             }
         }
+    }
+
+    private func failCaptureStorage() {
+        let message = "撮影データを保存できませんでした。iPhoneの空き容量を確認して、もう一度撮影してください"
+        datasetReady = false
+        trackingMessage = message
+        phase = .failed(message)
+        session?.pause()
+        UIApplication.shared.isIdleTimerDisabled = false
     }
 
     private func makeJPEGData(pixelBuffer: CVPixelBuffer) -> Data? {
