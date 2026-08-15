@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "qualification": "看護師国家試験",
   "targetQuestions": 720,
   "setCount": 3,
@@ -21,9 +21,10 @@
       "sourceQuestionCount": 240,
       "importedCount": 240,
       "questionCount": 240,
-      "expertReviewedCount": 240,
       "runtimeEligibleCount": 240,
-      "expertBlockedIds": []
+      "releaseEligibleCount": 240,
+      "releaseBlockedIds": [],
+      "reviewBasis": "ai_ci_primary_source_audit"
     },
     {
       "id": "set2",
@@ -36,9 +37,10 @@
       "sourceQuestionCount": 240,
       "importedCount": 240,
       "questionCount": 240,
-      "expertReviewedCount": 240,
       "runtimeEligibleCount": 240,
-      "expertBlockedIds": []
+      "releaseEligibleCount": 240,
+      "releaseBlockedIds": [],
+      "reviewBasis": "ai_ci_primary_source_audit"
     },
     {
       "id": "set3",
@@ -51,9 +53,10 @@
       "sourceQuestionCount": 240,
       "importedCount": 240,
       "questionCount": 240,
-      "expertReviewedCount": 240,
       "runtimeEligibleCount": 240,
-      "expertBlockedIds": []
+      "releaseEligibleCount": 240,
+      "releaseBlockedIds": [],
+      "reviewBasis": "ai_ci_primary_source_audit"
     }
   ],
   "releaseGate": {
@@ -65,7 +68,9 @@
     "explanationRequired": true,
     "rightsStatusRequired": true,
     "sourceRefsRequired": true,
-    "expertReviewRequired": true,
+    "primarySourceAuditRequired": true,
+    "specialistConcernResolutionRequired": true,
+    "humanReviewAtPrototypeAndTestFlight": true,
     "scenarioGroupingRequired": true,
     "noPlaceholderDistractors": true,
     "mediaRightsAuditRequired": true,
@@ -73,9 +78,11 @@
   },
   "reviewStatusOrder": [
     "official_import_pending_explanation_and_classification",
-    "ai_audited",
-    "expert_reviewed"
+    "ai_ci_primary_source_audited",
+    "release_eligible"
   ],
+  "reviewPolicySource": "Notion 3b609c10697d8148a0c2db3a8c8d5e63 section 10",
+  "reviewPolicyNote": "AI・CIで可能な限り完結し、人間確認は原則として初期試作品とTestFlight実機確認で行う。releaseEligibleCountは専門家レビュー済み件数を意味しない。",
   "sourcePolicy": "直近3回（第115・114・113回）の厚生労働省公開問題を基礎データとし、出典・加工表示を付す。図・写真・別冊は項目単位で権利監査する。",
   "note": "720問は実在する3試験回×240問を基礎にする。同一論点の言い換えで水増ししない。raw取込だけでは模試を解放しない。",
   "lastRawLoop": {
