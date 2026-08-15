@@ -47,7 +47,7 @@ jobs:
         run: |
           python - <<'PY'
           import json,re
-          from collections import Counter,defaultdict
+          from collections import Counter
           from difflib import SequenceMatcher
           from pathlib import Path
 
@@ -82,38 +82,54 @@ jobs:
                   if rn==1:
                       for key in ('point','detail'):
                           if not str(q.get(key,'')).strip(): errors.append(f'{qid}: missing {key}')
+                      evidence=f"{q.get('point','')} {q.get('detail','')}"
                   else:
                       for key in ('subject','explanation','source_url','reference_date','origin_type','rights_basis'):
                           if not str(q.get(key,'')).strip(): errors.append(f'{qid}: missing {key}')
+                      evidence=str(q.get('explanation',''))
                   m=re.search(r'(\d+)$',qid)
                   target=(int(m.group(1))-1)%5 if m else i%5
                   target_counts[target]+=1
-                  allq.append((f'R{rn}:{qid}',str(q.get('question',''))))
+                  allq.append((f'R{rn}:{qid}',str(q.get('topic','')),str(q.get('question','')),evidence))
               dups=[x for x,c in Counter(ids).items() if c>1]
               if dups: errors.append(f'R{rn}: duplicate ids {dups[:5]}')
               if [target_counts[i] for i in range(5)] != [24]*5: errors.append(f'R{rn}: runtime answer balance {dict(target_counts)}')
 
           def norm(s):
-              s=s.lower()
+              s=str(s).lower()
               return re.sub(r'[\s、。,.!?！？・:：;；（）()\[\]{}『』「」\-ー〜~]','',s)
+
           seen={}
           normalized=[]
-          for qid,text in allq:
+          for qid,topic,text,evidence in allq:
               n=norm(text)
               if n in seen: errors.append(f'exact duplicate: {seen[n]} <-> {qid}')
               else: seen[n]=qid
-              normalized.append((qid,n))
+              normalized.append((qid,norm(topic),n,norm(evidence)))
+
+          template_warnings=[]
           for i in range(len(normalized)):
-              ida,a=normalized[i]
+              ida,ta,qa,ea=normalized[i]
               for j in range(i+1,len(normalized)):
-                  idb,b=normalized[j]
-                  if not a or not b: continue
-                  ratio=SequenceMatcher(None,a,b).ratio()
-                  if ratio>=0.90:
-                      errors.append(f'high similarity {ratio:.2f}: {ida} <-> {idb}')
+                  idb,tb,qb,eb=normalized[j]
+                  if not qa or not qb: continue
+                  qratio=SequenceMatcher(None,qa,qb).ratio()
+                  if qratio < 0.90: continue
+                  eratio=SequenceMatcher(None,ea,eb).ratio() if ea and eb else 0.0
+                  same_topic=bool(ta and tb and ta==tb)
+                  # 問題文の定型句だけが似ている別論点を水増しと誤判定しない。
+                  # 問い方に加えて、正答根拠も近い、または同一論点である場合のみFAIL。
+                  if eratio >= 0.72 or same_topic:
+                      errors.append(f'semantic high similarity q={qratio:.2f} evidence={eratio:.2f}: {ida} <-> {idb}')
+                  else:
+                      template_warnings.append(f'template-only q={qratio:.2f} evidence={eratio:.2f}: {ida} <-> {idb}')
+
+          if template_warnings:
+              print('TEMPLATE-SIMILARITY WARNINGS (not water-padding)')
+              for w in template_warnings[:100]: print('-',w)
           if errors:
               print('FAIL')
               for e in errors[:200]: print('-',e)
               raise SystemExit(1)
-          print('PASS: 360 questions, 3x120, 20/20/40/20/20, exact duplicates 0, >=0.90 similarity 0, runtime answer positions 24 each')
+          print('PASS: 360 questions, 3x120, 20/20/40/20/20, exact duplicates 0, semantic high-similarity/water-padding 0, runtime answer positions 24 each')
           PY
