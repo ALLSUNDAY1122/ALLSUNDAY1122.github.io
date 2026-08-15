@@ -32,10 +32,10 @@ grep -q 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' project.yml
 grep -q 'd620d9c58d270e7de9e34a9d8a85dcf938a5070d' project.yml
 grep -q '2b965de1934de38dda1c71cf90bf798aa948a14c' project.yml
 
-# Regression gate: the root view must mount the AR session before the first
-# capture button can call ScanModel.startCapture(). ARSCNView itself does not
-# auto-run world tracking; ScanModel explicitly starts it with session.run().
-grep -q 'RootScanView()' SplatNative/SplatNativeApp.swift
+# Regression gate: S7 mounts the capture flow through ScanLabShellView's Scan tab.
+# The AR view must still be mounted before ScanModel.startCapture() can run.
+grep -q 'ScanLabShellView()' SplatNative/SplatNativeApp.swift
+grep -q 'RootScanView()' SplatNative/ScanLabShellView.swift
 grep -q 'PersistentScanCameraView()' SplatNative/RootScanView.swift
 grep -q 'model.attach(session: view.session)' SplatNative/RootScanView.swift
 grep -q 'session.run(config' SplatNative/ScanModel.swift
