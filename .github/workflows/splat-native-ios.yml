@@ -46,6 +46,17 @@ jobs:
           grep -q 'nlohmann-json-MIT.txt' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MsplatRuntimeSmokeTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatReconstructionPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatCompletionVerifierTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatPreviousResultEvidenceTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatProjectTrustRecoveryTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'ScanTrashLifecycleTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'ScanColdResumePersistenceTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'ScanPersistenceIntegrationTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatVideoConfigurationTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatVideoExporterTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatTransientExportWorkspaceTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MeshExportServiceTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MeshExportAdmissionTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
@@ -58,6 +69,31 @@ jobs:
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -parallel-testing-enabled NO \
             CODE_SIGNING_ALLOWED=NO build-for-testing
+      - name: Run C2 persistence export video and mesh regressions
+        timeout-minutes: 12
+        working-directory: splat-native-ios
+        shell: bash
+        run: |
+          set -euo pipefail
+          SIMULATOR_ID="$(xcrun simctl list devices available -j | python3 -c 'import json,sys; data=json.load(sys.stdin); ids=[d["udid"] for runtime,devices in data.get("devices",{}).items() if "iOS" in runtime for d in devices if d.get("isAvailable") and d.get("name","").startswith("iPhone")]; print(ids[0] if ids else "")')"
+          test -n "$SIMULATOR_ID"
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
+            -sdk iphonesimulator -destination "platform=iOS Simulator,id=$SIMULATOR_ID" \
+            -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO test-without-building \
+            -only-testing:SplatNativeTests/ScanProjectStoreTests \
+            -only-testing:SplatNativeTests/ScanColdResumePersistenceTests \
+            -only-testing:SplatNativeTests/ScanPersistenceIntegrationTests \
+            -only-testing:SplatNativeTests/SplatCompletionVerifierTests \
+            -only-testing:SplatNativeTests/SplatPreviousResultEvidenceTests \
+            -only-testing:SplatNativeTests/SplatProjectTrustRecoveryTests \
+            -only-testing:SplatNativeTests/SplatExportAdmissionTests \
+            -only-testing:SplatNativeTests/SplatExportServiceTests \
+            -only-testing:SplatNativeTests/SplatTransientExportWorkspaceTests \
+            -only-testing:SplatNativeTests/ScanTrashLifecycleTests \
+            -only-testing:SplatNativeTests/SplatVideoConfigurationTests \
+            -only-testing:SplatNativeTests/SplatVideoExporterTests \
+            -only-testing:SplatNativeTests/MeshExportServiceTests \
+            -only-testing:SplatNativeTests/MeshExportAdmissionTests
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true

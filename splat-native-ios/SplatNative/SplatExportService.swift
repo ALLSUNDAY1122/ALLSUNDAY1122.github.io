@@ -2,7 +2,7 @@ import CryptoKit
 import Foundation
 import SplatIO
 
-/// S6 export pipeline for Gaussian Splat assets.
+/// C2 export pipeline for Gaussian Splat assets.
 ///
 /// The reconstruction output is the 32-byte-per-point `.splat` format emitted by Msplat.
 /// We intentionally decode it through SplatIO and re-encode through SplatIO's PLY/SPZ writers
@@ -71,7 +71,7 @@ enum SplatExportService {
             self.primaryAsset = primaryAsset
             self.previewFileName = previewFileName
             self.createdAt = createdAt
-            // S7 may add an explicitly approved geotag later. S6 never infers or embeds location.
+            // D may add an explicitly approved geotag later. C never infers or embeds location.
             self.containsLocation = false
         }
     }
@@ -84,15 +84,27 @@ enum SplatExportService {
     }
 
     private static let dotSplatRecordByteWidth = 32
+    private static let hashChunkBytes = 1_024 * 1_024
 
     /// Convert Msplat's `.splat` result into a standards-oriented export file.
     /// The destination is written through a temporary file and only replaces the final output
     /// after the writer has closed and the output has been validated.
-    static func export(sourceURL: URL, format: Format) async throws -> URL {
+    static func export(
+        sourceURL: URL,
+        format: Format,
+        destinationDirectory: URL? = nil,
+        outputBaseName: String? = nil
+    ) async throws -> URL {
         let pointCount = try sourcePointCount(sourceURL)
-        let outputURL = sourceURL.deletingPathExtension().appendingPathExtension(format.rawValue)
-        let temporaryURL = outputURL
-            .deletingLastPathComponent()
+        let directory = destinationDirectory ?? sourceURL.deletingLastPathComponent()
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+
+        let defaultBaseName = sourceURL.deletingPathExtension().lastPathComponent
+        let baseName = outputBaseName ?? defaultBaseName
+        let outputURL = directory
+            .appendingPathComponent(baseName)
+            .appendingPathExtension(format.rawValue)
+        let temporaryURL = directory
             .appendingPathComponent(".\(outputURL.lastPathComponent).\(UUID().uuidString).partial")
 
         try? FileManager.default.removeItem(at: temporaryURL)
@@ -141,14 +153,16 @@ enum SplatExportService {
         }
     }
 
-    /// Creates the local asset contract consumed by S7's explicit upload flow.
-    /// This does not perform networking and does not create a public URL.
+    /// Creates the local asset contract D should consume for explicit browser/cloud sharing.
+    /// It accepts only an atomically committed completed Splat, applies the same low-storage gate as
+    /// local SPZ export, writes exactly one SPZ directly inside the temporary package, and never
+    /// performs networking or embeds location on C's behalf.
     static func makeBrowserSharePackage(
         sourceURL: URL,
         previewJPEG: Data? = nil,
         rootDirectory: URL = FileManager.default.temporaryDirectory
     ) async throws -> BrowserSharePackage {
-        let exportedSPZ = try await export(sourceURL: sourceURL, format: .spz)
+        let trustedURL = try SplatExportAdmission.preflight(sourceURL: sourceURL, kind: .spz)
         try Task.checkCancellation()
 
         let packageURL = rootDirectory
@@ -156,10 +170,18 @@ enum SplatExportService {
         try FileManager.default.createDirectory(at: packageURL, withIntermediateDirectories: true)
 
         do {
-            let assetURL = packageURL.appendingPathComponent("scene.spz")
-            try FileManager.default.copyItem(at: exportedSPZ, to: assetURL)
-            let assetData = try Data(contentsOf: assetURL, options: [.mappedIfSafe])
-            guard !assetData.isEmpty else { throw ExportError.outputMissing }
+            let assetURL = try await export(
+                sourceURL: trustedURL,
+                format: .spz,
+                destinationDirectory: packageURL,
+                outputBaseName: "scene"
+            )
+            try Task.checkCancellation()
+
+            let assetByteLength = try fileByteLength(assetURL)
+            guard assetByteLength > 0 else { throw ExportError.outputMissing }
+            let assetHash = try sha256Hex(fileURL: assetURL)
+            try Task.checkCancellation()
 
             var previewURL: URL?
             if let previewJPEG, !previewJPEG.isEmpty {
@@ -171,8 +193,8 @@ enum SplatExportService {
             let asset = BrowserShareManifest.Asset(
                 fileName: assetURL.lastPathComponent,
                 mediaType: "application/octet-stream",
-                byteLength: assetData.count,
-                sha256: sha256Hex(assetData)
+                byteLength: assetByteLength,
+                sha256: assetHash
             )
             let manifest = BrowserShareManifest(
                 primaryAsset: asset,
@@ -219,10 +241,28 @@ enum SplatExportService {
         SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
     }
 
-    private static func validateNonEmptyFile(_ url: URL) throws {
-        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        guard let size = attributes[.size] as? NSNumber, size.intValue > 0 else {
-            throw ExportError.outputMissing
+    /// Hashes large export assets with a bounded working set instead of materializing the entire
+    /// file as `Data`. This matters for browser-share packages near the upload-size ceiling.
+    static func sha256Hex(fileURL: URL) throws -> String {
+        let handle = try FileHandle(forReadingFrom: fileURL)
+        defer { try? handle.close() }
+
+        var hasher = SHA256()
+        while true {
+            try Task.checkCancellation()
+            guard let chunk = try handle.read(upToCount: hashChunkBytes), !chunk.isEmpty else { break }
+            hasher.update(data: chunk)
         }
+        return hasher.finalize().map { String(format: "%02x", $0) }.joined()
+    }
+
+    private static func fileByteLength(_ url: URL) throws -> Int {
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        guard let size = attributes[.size] as? NSNumber else { throw ExportError.outputMissing }
+        return size.intValue
+    }
+
+    private static func validateNonEmptyFile(_ url: URL) throws {
+        guard try fileByteLength(url) > 0 else { throw ExportError.outputMissing }
     }
 }

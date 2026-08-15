@@ -9,6 +9,7 @@ struct SplatResultView: View {
     @StateObject private var viewerState = SplatViewerState()
     @State private var selectedTool: ViewerTool = .view
     @State private var confirmNewScan = false
+    @State private var reprocessError: String?
 
     private enum ViewerTool: String, CaseIterable, Hashable {
         case view = "見る"
@@ -45,12 +46,21 @@ struct SplatResultView: View {
             viewerState.schedulePersistence()
         }
         .confirmationDialog("新しい撮影を開始しますか？", isPresented: $confirmNewScan, titleVisibility: .visible) {
-            Button("現在の撮影データを削除して開始", role: .destructive) {
-                model.discardAndReset()
+            Button("保存したまま新しい撮影へ") {
+                viewerState.persistNow()
+                model.returnHomePreservingProject()
             }
             Button("キャンセル", role: .cancel) {}
         } message: {
-            Text("現在のプロジェクトは削除されます。")
+            Text("現在の完成済みスキャンは「保存済み」に残ります。")
+        }
+        .alert("再処理を開始できません", isPresented: Binding(
+            get: { reprocessError != nil },
+            set: { if !$0 { reprocessError = nil } }
+        )) {
+            Button("OK", role: .cancel) { reprocessError = nil }
+        } message: {
+            Text(reprocessError ?? "")
         }
     }
 
@@ -107,8 +117,9 @@ struct SplatResultView: View {
 
             HStack(spacing: 9) {
                 Button {
-                    viewerState.persistNow()
-                    model.enhanceResult()
+                    beginProtectedReprocess {
+                        model.enhanceResult()
+                    }
                 } label: {
                     Label("品質向上", systemImage: "sparkles")
                 }
@@ -125,8 +136,9 @@ struct SplatResultView: View {
 
             HStack(spacing: 9) {
                 Button {
-                    viewerState.persistNow()
-                    model.retryGeneration()
+                    beginProtectedReprocess {
+                        model.retryGeneration()
+                    }
                 } label: {
                     Label("再処理", systemImage: "arrow.clockwise")
                 }
@@ -220,6 +232,16 @@ struct SplatResultView: View {
                     .buttonStyle(.bordered)
                 }
             }
+        }
+    }
+
+    private func beginProtectedReprocess(_ action: () -> Void) {
+        viewerState.persistNow()
+        do {
+            try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: url)
+            action()
+        } catch {
+            reprocessError = error.localizedDescription
         }
     }
 

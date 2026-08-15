@@ -5,13 +5,16 @@ private struct MeshSharePayload: Identifiable {
     let url: URL
 }
 
-/// Drop-in S6 export surface for S4's `MeshScanModel.resultURL`.
-/// S0 only needs to present this view with the real S4 result URL after sibling-branch integration.
+/// Export surface for B's real Mesh result. Share outputs are transient user-delivery artifacts:
+/// the durable project keeps its source Mesh, while converted FBX/OBJ/GLB/USDZ/STL/PLY/LAS files
+/// are removed after the iOS share activity ends so repeated exports do not inflate library storage.
+@MainActor
 struct MeshExportOptionsView: View {
     let sourceURL: URL
 
     @Environment(\.dismiss) private var dismiss
     @State private var sharePayload: MeshSharePayload?
+    @State private var exportWorkspaceURL: URL?
     @State private var exportError: String?
     @State private var exportingFormat: MeshExportService.Format?
     @State private var exportTask: Task<Void, Never>?
@@ -74,12 +77,20 @@ struct MeshExportOptionsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("閉じる") { dismiss() }
-                        .disabled(exportingFormat != nil)
+                    Button("閉じる") {
+                        exportTask?.cancel()
+                        if sharePayload == nil {
+                            cleanupTransientExport()
+                        }
+                        dismiss()
+                    }
+                    .disabled(exportingFormat != nil)
                 }
             }
         }
-        .sheet(item: $sharePayload) { payload in
+        .sheet(item: $sharePayload, onDismiss: {
+            cleanupTransientExport()
+        }) { payload in
             ShareSheet(items: [payload.url])
         }
         .alert("3Dデータを書き出せませんでした", isPresented: Binding(
@@ -90,6 +101,12 @@ struct MeshExportOptionsView: View {
         } message: {
             Text(exportError ?? "不明なエラーです")
         }
+        .onDisappear {
+            if sharePayload == nil {
+                exportTask?.cancel()
+                cleanupTransientExport()
+            }
+        }
     }
 
     private func beginExport(_ format: MeshExportService.Format) {
@@ -98,23 +115,39 @@ struct MeshExportOptionsView: View {
         exportError = nil
 
         exportTask = Task {
+            var workspace: URL?
             defer {
                 exportingFormat = nil
                 exportTask = nil
             }
             do {
+                try MeshExportAdmission.preflight(sourceURL: sourceURL, format: format)
+                try Task.checkCancellation()
+                let createdWorkspace = try SplatTransientExportWorkspace.create()
+                workspace = createdWorkspace
                 let output = try await MeshExportService.export(
                     sourceURL: sourceURL,
-                    format: format
+                    format: format,
+                    destinationDirectory: createdWorkspace
                 )
                 try Task.checkCancellation()
+                cleanupTransientExport()
+                exportWorkspaceURL = createdWorkspace
                 sharePayload = MeshSharePayload(url: output)
+                workspace = nil
             } catch is CancellationError {
-                // Expected recovery path. MeshExportService removes partial outputs.
+                SplatTransientExportWorkspace.remove(workspace)
             } catch {
+                SplatTransientExportWorkspace.remove(workspace)
                 exportError = error.localizedDescription
             }
         }
+    }
+
+    private func cleanupTransientExport() {
+        SplatTransientExportWorkspace.remove(exportWorkspaceURL)
+        exportWorkspaceURL = nil
+        sharePayload = nil
     }
 
     private func description(for format: MeshExportService.Format) -> String {

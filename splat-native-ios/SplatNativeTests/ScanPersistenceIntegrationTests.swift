@@ -2,7 +2,7 @@ import Foundation
 import XCTest
 
 final class ScanPersistenceIntegrationTests: XCTestCase {
-    func testPendingSplatCommitBecomesTrustedFinishedResult() throws {
+    func testPendingSplatCommitBecomesVerifiedFinishedResult() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
         defer { try? FileManager.default.removeItem(at: root) }
@@ -24,7 +24,7 @@ final class ScanPersistenceIntegrationTests: XCTestCase {
         }
 
         XCTAssertEqual(committedURL.lastPathComponent, ScanProjectStore.splatResultFileName)
-        XCTAssertEqual(store.trustedSplatURL(projectURL: projectURL), committedURL)
+        XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: committedURL), committedURL)
         XCTAssertFalse(FileManager.default.fileExists(atPath: pendingURL.path))
     }
 }

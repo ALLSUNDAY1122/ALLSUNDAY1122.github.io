@@ -22,8 +22,6 @@ final class SplatExportServiceTests: XCTestCase {
             XCTAssertTrue(FileManager.default.fileExists(atPath: output.path))
             XCTAssertGreaterThan(try byteCount(output), 0)
 
-            // AutodetectSceneReader is the same public interoperability surface a separate
-            // consumer of SplatIO can use; the output must decode without Scan Lab state.
             let reader = try AutodetectSceneReader(output)
             let decoded = try await reader.readAll()
             XCTAssertEqual(decoded.count, sourcePoints.count)
@@ -39,6 +37,17 @@ final class SplatExportServiceTests: XCTestCase {
                 XCTAssertEqual(actualColor.x, expectedColor.x, accuracy: 0.03)
                 XCTAssertEqual(actualColor.y, expectedColor.y, accuracy: 0.03)
                 XCTAssertEqual(actualColor.z, expectedColor.z, accuracy: 0.03)
+
+                let expectedScale = expected.scale.asLinearFloat
+                let actualScale = actual.scale.asLinearFloat
+                XCTAssertEqual(actualScale.x, expectedScale.x, accuracy: 0.01)
+                XCTAssertEqual(actualScale.y, expectedScale.y, accuracy: 0.01)
+                XCTAssertEqual(actualScale.z, expectedScale.z, accuracy: 0.01)
+
+                let expectedRotation = expected.rotation.normalized.vector
+                let actualRotation = actual.rotation.normalized.vector
+                let orientationAgreement = abs(simd_dot(expectedRotation, actualRotation))
+                XCTAssertEqual(orientationAgreement, 1, accuracy: 0.03)
             }
         }
     }
@@ -49,10 +58,9 @@ final class SplatExportServiceTests: XCTestCase {
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: root) }
 
-        let source = root.appendingPathComponent("result.splat")
-        let writer = try DotSplatSceneWriter(toFileAtPath: source.path)
-        try await writer.write(makePoints())
-        try await writer.close()
+        let source = try await makeCommittedProjectResult(in: root)
+        let projectSideSPZ = source.deletingPathExtension().appendingPathExtension("spz")
+        XCTAssertFalse(FileManager.default.fileExists(atPath: projectSideSPZ.path))
 
         let preview = Data([0xff, 0xd8, 0xff, 0xd9])
         let package = try await SplatExportService.makeBrowserSharePackage(
@@ -61,9 +69,14 @@ final class SplatExportServiceTests: XCTestCase {
             rootDirectory: root
         )
 
+        XCTAssertEqual(package.assetURL.lastPathComponent, "scene.spz")
         XCTAssertTrue(FileManager.default.fileExists(atPath: package.assetURL.path))
         XCTAssertTrue(FileManager.default.fileExists(atPath: package.manifestURL.path))
         XCTAssertTrue(FileManager.default.fileExists(atPath: try XCTUnwrap(package.previewURL).path))
+        XCTAssertFalse(
+            FileManager.default.fileExists(atPath: projectSideSPZ.path),
+            "Browser packaging must not create a second persistent SPZ beside the project result"
+        )
 
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
@@ -78,7 +91,57 @@ final class SplatExportServiceTests: XCTestCase {
         XCTAssertEqual(manifest.primaryAsset.fileName, "scene.spz")
         XCTAssertEqual(manifest.primaryAsset.byteLength, assetData.count)
         XCTAssertEqual(manifest.primaryAsset.sha256, SplatExportService.sha256Hex(assetData))
+        XCTAssertEqual(manifest.primaryAsset.sha256, try SplatExportService.sha256Hex(fileURL: package.assetURL))
         XCTAssertFalse(manifest.containsLocation)
+    }
+
+    func testBrowserSharePackageRejectsAlignedButUncommittedResult() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("s6-untrusted-package-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Uncommitted")
+        let source = projectURL.appendingPathComponent(ScanProjectStore.splatResultFileName)
+        let writer = try DotSplatSceneWriter(toFileAtPath: source.path)
+        try await writer.write(makePoints())
+        try await writer.close()
+        _ = try store.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = .finished
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+
+        do {
+            _ = try await SplatExportService.makeBrowserSharePackage(
+                sourceURL: source,
+                rootDirectory: root
+            )
+            XCTFail("Expected untrusted completed-result gate to reject package creation")
+        } catch {
+            guard case SplatExportAdmission.AdmissionError.untrustedSource = error else {
+                return XCTFail("Expected untrustedSource, got \(error)")
+            }
+        }
+    }
+
+    func testStreamingSHA256MatchesWholeDataAcrossMultipleChunks() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("s6-streaming-hash-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        var data = Data(count: 2_500_123)
+        for index in data.indices {
+            data[index] = UInt8(truncatingIfNeeded: index &* 31 &+ 7)
+        }
+        let url = root.appendingPathComponent("large.spz")
+        try data.write(to: url, options: .atomic)
+
+        XCTAssertEqual(
+            try SplatExportService.sha256Hex(fileURL: url),
+            SplatExportService.sha256Hex(data)
+        )
     }
 
     func testRejectsPartialDotSplatRecord() throws {
@@ -95,6 +158,21 @@ final class SplatExportServiceTests: XCTestCase {
                 return XCTFail("Expected corruptSource, got \(error)")
             }
         }
+    }
+
+    private func makeCommittedProjectResult(in root: URL) async throws -> URL {
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Committed share")
+        let pending = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        let writer = try DotSplatSceneWriter(toFileAtPath: pending.path)
+        try await writer.write(makePoints())
+        try await writer.close()
+        let result = try store.commitPendingSplat(projectURL: projectURL)
+        _ = try store.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = .finished
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+        return result
     }
 
     private func makePoints() -> [SplatPoint] {

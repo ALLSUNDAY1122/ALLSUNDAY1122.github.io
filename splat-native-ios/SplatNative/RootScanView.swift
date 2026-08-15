@@ -63,7 +63,7 @@ struct RootScanView: View {
         }
         .sheet(isPresented: $showingShare) {
             if let url = model.resultURL {
-                ShareSheet(items: [url])
+                SplatExportOptionsView(sourceURL: url)
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
@@ -244,6 +244,11 @@ struct RootScanView: View {
                 model.train()
             }
             .buttonStyle(PrimaryButtonStyle())
+            Button("あとで生成") {
+                model.returnHomePreservingProject()
+            }
+            .buttonStyle(SecondaryButtonStyle())
+            .accessibilityHint("撮影データを保存したままホームへ戻ります")
             Button("撮影を再開して追加") {
                 model.resumeCapture()
             }
@@ -252,6 +257,10 @@ struct RootScanView: View {
                 model.discardAndReset()
             }
             .foregroundStyle(.secondary)
+            Text("「あとで生成」を選ぶと、保存済み一覧の「生成待ち」から再開できます。")
+                .font(.caption)
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.secondary)
             Spacer()
         }
         .padding(24)
