@@ -52,6 +52,14 @@ grep -q 'translation >= 0.030 || (translation >= 0.012 && angle >= 0.080)' Splat
 grep -q 'acceptedFrames < maxFrames' SplatNative/ScanModel.swift
 grep -q '同じ側の写真に偏っています' SplatNative/ScanModel.swift
 
+# S8 #4149: a frame storage write failure is terminal for the active capture.
+# It must never fall through to another write attempt while the UI remains `.capturing`.
+grep -q 'private func failCaptureStorage()' SplatNative/ScanModel.swift
+grep -q 'guard success else {' SplatNative/ScanModel.swift
+grep -q 'self.failCaptureStorage()' SplatNative/ScanModel.swift
+grep -q 'session?.pause()' SplatNative/ScanModel.swift
+grep -q 'iPhoneの空き容量を確認して' SplatNative/ScanModel.swift
+
 # Harsh-review gate: a successful splat must open centered on its actual data,
 # and the user must be able to restore that framing.
 grep -q 'robustFraming(for: points)' SplatNative/SplatViewer.swift
@@ -69,6 +77,15 @@ grep -q 'moveToTrash' SplatNative/ScanProjectStore.swift
 grep -q 'restoreFromTrash' SplatNative/ScanProjectStore.swift
 grep -q 'clearRawData' SplatNative/ScanProjectStore.swift
 grep -q 'reprocessRequest' SplatNative/ScanProjectStore.swift
+
+# S8 #4151: active reconstruction must use a two-phase write plus durable completion evidence.
+grep -q 'result.pending.splat' SplatNative/ScanProjectStore.swift
+grep -q 'result.splat.complete.json' SplatNative/ScanProjectStore.swift
+grep -q 'commitPendingSplat' SplatNative/ScanProjectStore.swift
+grep -q 'committedSplatURL' SplatNative/ScanProjectStore.swift
+grep -q 'ScanProjectStore.pendingSplatFileName' SplatNative/ScanModel.swift
+grep -q 'detachedStore.commitPendingSplat' SplatNative/ScanModel.swift
+! grep -q 'trainer.exportSplat(to: output.path)' SplatNative/ScanModel.swift
 
 # S5 product wiring: raw data can be saved before processing, reopened, resumed when
 # relocalization data exists, and a finished scan is not destroyed by leaving the viewer.
