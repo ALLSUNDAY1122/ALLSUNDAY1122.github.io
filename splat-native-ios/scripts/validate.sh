@@ -6,6 +6,7 @@ cd "$ROOT"
 test -f project.yml
 test -f SplatNative/ScanModel.swift
 test -f SplatNative/ScanModel+SessionLifecycle.swift
+test -f SplatNative/CapturePolicy.swift
 test -f SplatNative/SplatViewer.swift
 test -f SplatNative/RootScanView.swift
 test -f SplatNative/SplatNativeApp.swift
@@ -13,6 +14,7 @@ test -f SplatNative/SplatReconstructionPolicy.swift
 test -f SplatNative/SplatSeedColorizer.swift
 test -f SplatNative/SplatSkySeeder.swift
 test -f SplatNative/SplatResourceGuard.swift
+test -f SplatNativeTests/CapturePolicyTests.swift
 test -f SplatNativeTests/SplatReconstructionPolicyTests.swift
 test -f SplatNative/PrivacyInfo.xcprivacy
 
@@ -32,30 +34,57 @@ grep -q 'INFOPLIST_KEY_CFBundleDisplayName: Scan Lab' project.yml
 grep -q 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' project.yml
 grep -q 'd620d9c58d270e7de9e34a9d8a85dcf938a5070d' project.yml
 grep -q '2b965de1934de38dda1c71cf90bf798aa948a14c' project.yml
+grep -q 'SplatNative/CapturePolicy.swift' project.yml
 
-# Regression gate: the root view must mount the AR session before the first
-# capture button can call ScanModel.startCapture(). ARSCNView itself does not
-# auto-run world tracking; ScanModel explicitly starts it with session.run().
+# Root camera/session gate.
 grep -q 'RootScanView()' SplatNative/SplatNativeApp.swift
 grep -q 'PersistentScanCameraView()' SplatNative/RootScanView.swift
 grep -q 'model.attach(session: view.session)' SplatNative/RootScanView.swift
-grep -q 'session.run(config' SplatNative/ScanModel.swift
+grep -q 'session.run(makeWorldTrackingConfiguration()' SplatNative/ScanModel.swift
 
-# Permission/session failure must surface instead of leaving the user on a dead camera screen.
+# Permission and interruption failures must surface and relocalization must preserve one coordinate system.
 grep -q 'didFailWithError' SplatNative/ScanModel+SessionLifecycle.swift
 grep -q 'sessionWasInterrupted' SplatNative/ScanModel+SessionLifecycle.swift
 grep -q 'sessionInterruptionEnded' SplatNative/ScanModel+SessionLifecycle.swift
+grep -q 'sessionShouldAttemptRelocalization' SplatNative/ScanModel+SessionLifecycle.swift
+grep -q 'handleSessionInterrupted' SplatNative/ScanModel.swift
+grep -q 'handleSessionInterruptionEnded' SplatNative/ScanModel.swift
+grep -q 'session.run(makeWorldTrackingConfiguration(), options: \[\])' SplatNative/ScanModel.swift
 
-# Harsh-review gate: photo count alone is not enough. The capture must require
-# spatial coverage and real translation so spinning in place cannot complete a scan.
-grep -q 'minimumCoverageSectors = 8' SplatNative/ScanModel.swift
-grep -q 'coverageSectorCount >= minimumCoverageSectors' SplatNative/ScanModel.swift
-grep -q 'translation >= 0.030 || (translation >= 0.012 && angle >= 0.080)' SplatNative/ScanModel.swift
-grep -q 'acceptedFrames < maxFrames' SplatNative/ScanModel.swift
-grep -q '同じ側の写真に偏っています' SplatNative/ScanModel.swift
+# S1 capture parity gate: count alone is not enough; object and scene coverage use different evidence,
+# spinning in place cannot satisfy movement, long scans are bounded, and pause/resume + optional depth survive.
+grep -q 'CapturePolicy.coverageSatisfied' SplatNative/ScanModel.swift
+grep -q 'CapturePolicy.shouldAcceptFrame' SplatNative/ScanModel.swift
+grep -q 'CapturePolicy.softLimitAllowsFrame' SplatNative/ScanModel.swift
+grep -q 'acceptedFrames >= maxFrames' SplatNative/ScanModel.swift
+grep -q 'elevationBands' SplatNative/ScanModel.swift
+grep -q 'viewDirectionSectors' SplatNative/ScanModel.swift
+grep -q 'spatialCells' SplatNative/ScanModel.swift
+grep -q 'pathLengthMeters' SplatNative/ScanModel.swift
+grep -q 'activeCaptureSeconds' SplatNative/ScanModel.swift
+grep -q 'sceneDepth' SplatNative/ScanModel.swift
+grep -q 'depthFilePath' SplatNative/ScanModel.swift
+grep -q 'func pauseCapture' SplatNative/ScanModel.swift
+grep -q 'func resumeCapture' SplatNative/ScanModel.swift
+grep -q 'testRotationInPlaceNeverCountsAsUsefulCaptureMotion' SplatNativeTests/CapturePolicyTests.swift
+grep -q 'testNearbyObjectCannotPassUsingSceneCoverageFromOneSide' SplatNativeTests/CapturePolicyTests.swift
+grep -q 'testSceneModeDoesNotRequireObjectOrbit' SplatNativeTests/CapturePolicyTests.swift
 
-# S2 reconstruction gate: seed points must carry observed RGB into msplat, use full SH/densification,
-# preserve background, seed high-confidence sky at far distance, and support repeatable Enhance passes.
+# A storage failure is a hard stop, never a silently skipped frame.
+grep -q '撮影データを保存できませんでした。iPhoneの空き容量を確認してください。' SplatNative/ScanModel.swift
+python3 - <<'PY'
+from pathlib import Path
+s=Path('SplatNative/ScanModel.swift').read_text()
+resume=s.index('func resumeCapture()')
+finish=s.index('func finishCapture()')
+block=s[resume:finish]
+assert 'options: []' in block
+assert '.resetTracking' not in block
+print('PASS: resumed capture preserves AR world coordinates')
+PY
+
+# S2 reconstruction gate: seed points carry observed RGB, preserve sky/background, use full SH/densification,
+# checkpoint safely, and support repeatable Enhance passes.
 grep -q 'property uchar red' SplatNative/ScanModel.swift
 grep -q 'property uchar green' SplatNative/ScanModel.swift
 grep -q 'property uchar blue' SplatNative/ScanModel.swift
@@ -73,8 +102,7 @@ grep -q 'SplatSkySeeder.makeSeeds' SplatNative/ScanModel.swift
 grep -q 'farDistance: Float = 20' SplatNative/SplatSkySeeder.swift
 ! grep -q 'SplatForegroundIsolator' SplatNative/ScanModel.swift
 
-# S8 #4157 regression gate: densification must have a bounded device-aware resource path,
-# checkpoint before a resource pause, and leave automatic peak-memory/splat evidence behind.
+# S8 resource guard regression gate.
 grep -q 'residentMemoryBudgetBytes' SplatNative/SplatResourceGuard.swift
 grep -q 'maxSplatCount' SplatNative/SplatResourceGuard.swift
 grep -q 'TASK_VM_INFO' SplatNative/SplatResourceGuard.swift
@@ -108,26 +136,27 @@ assert 'preparePointCloudPLY' not in s[finish:train]
 print('PASS: S2 preprocessing runs off capture MainActor path')
 PY
 
-# Harsh-review gate: a successful splat must open centered on its actual data,
-# and the user must be able to restore that framing.
+# A successful splat must open centered and support reset framing.
 grep -q 'robustFraming(for: points)' SplatNative/SplatViewer.swift
 grep -q 'sceneCenter = framing.center' SplatNative/SplatViewer.swift
 grep -q 'center: sceneCenter' SplatNative/SplatViewer.swift
 grep -q 'resetView' SplatNative/SplatViewer.swift
 
-# Harsh-review gate: consumer UI must not expose internal training/debug jargon,
-# and destructive loss of a finished scan needs an explicit confirmation.
+# Consumer UI gate: no training/debug jargon; destructive loss is confirmed; capture recovery and Enhance are visible.
 grep -q 'Text("Scan Lab")' SplatNative/RootScanView.swift
 grep -q 'showingDiscardConfirmation' SplatNative/RootScanView.swift
 grep -q '生成だけもう一度試す' SplatNative/RootScanView.swift
+grep -q '撮影を再開' SplatNative/RootScanView.swift
+grep -q 'LiDAR深度を撮影に使う' SplatNative/RootScanView.swift
+grep -q '品質をさらに上げる' SplatNative/RootScanView.swift
 ! grep -q '特徴点 ' SplatNative/RootScanView.swift
 ! grep -q 'iteration ' SplatNative/RootScanView.swift
 ! grep -q 'splats ' SplatNative/RootScanView.swift
 
-# Parity work must remain product-neutral until Scaniverse functional parity is achieved.
+# Product-neutral until Scaniverse functional parity is achieved.
 ! grep -R -n 'おもちゃばこ' SplatNative project.yml
 
-# Current PoC is intentionally local-only.
+# Current PoC remains local-only.
 ! grep -R -nE 'https?://.*(api|upload|analytics)|URLSession|Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
 
 plutil -lint SplatNative/PrivacyInfo.xcprivacy >/dev/null
