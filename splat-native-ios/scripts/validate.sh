@@ -64,6 +64,10 @@ grep -q 'iPhoneの空き容量を確認して' SplatNative/ScanModel.swift
 grep -q 'stage == .capturing || stage == .captured || stage == .failed' SplatNative/ScanModel.swift
 test "$(grep -c 'if model.activeProjectCanResume' SplatNative/RootScanView.swift)" -ge 2
 
+# Explicit save-and-exit must verify that the current frame set is actually durable before leaving capture.
+grep -q 'checkpoint.frames.count == captured.count' SplatNative/ScanModel.swift
+grep -q '途中状態を保存できませんでした。空き容量を確認してから' SplatNative/ScanModel.swift
+
 # Harsh-review gate: a successful splat must open centered on its actual data,
 # and the user must be able to restore that framing.
 grep -q 'robustFraming(for: points)' SplatNative/SplatViewer.swift
