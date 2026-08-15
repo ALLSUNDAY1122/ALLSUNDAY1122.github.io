@@ -12,6 +12,7 @@ struct MeshAdvancedSupervisor: View {
     @State private var showingRawReprocess = false
     @State private var showingSimplifier = false
     @State private var showingUncalibratedShare = false
+    @State private var showingARViewer = false
     @State private var attemptedAutomaticTextureBake = false
 
     var body: some View {
@@ -59,6 +60,18 @@ struct MeshAdvancedSupervisor: View {
                     Spacer()
                     HStack(spacing: 8) {
                         Spacer()
+                        if model.currentMeshHasMetricScale {
+                            Button {
+                                showingARViewer = true
+                            } label: {
+                                Label("ARビュー", systemImage: "arkit")
+                                    .font(.caption.bold())
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 9)
+                                    .background(.white.opacity(0.16), in: Capsule())
+                                    .foregroundStyle(.white)
+                            }
+                        }
                         if model.mode == .lidar,
                            model.frameCount >= 8,
                            !(model.resultURL?.lastPathComponent.lowercased().contains("textured") ?? false) {
@@ -130,6 +143,10 @@ struct MeshAdvancedSupervisor: View {
                 MeshSimplifySheet(sourceURL: url)
                     .environmentObject(model)
             }
+        }
+        .sheet(isPresented: $showingARViewer) {
+            MeshARViewerSheet()
+                .environmentObject(model)
         }
         .sheet(isPresented: $showingUncalibratedShare) {
             if let url = model.resultURL {
