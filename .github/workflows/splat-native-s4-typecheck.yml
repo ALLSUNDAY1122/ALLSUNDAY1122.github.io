@@ -12,6 +12,7 @@ on:
       - 'splat-native-ios/SplatNative/MeshSimplifier.swift'
       - 'splat-native-ios/SplatNative/MeshAdvancedSupervisor.swift'
       - 'splat-native-ios/SplatNative/MeshVisualFallback.swift'
+      - 'splat-native-ios/SplatNative/MeshAssetContract.swift'
       - '.github/workflows/splat-native-s4-typecheck.yml'
   pull_request:
     paths:
@@ -22,6 +23,7 @@ on:
       - 'splat-native-ios/SplatNative/MeshSimplifier.swift'
       - 'splat-native-ios/SplatNative/MeshAdvancedSupervisor.swift'
       - 'splat-native-ios/SplatNative/MeshVisualFallback.swift'
+      - 'splat-native-ios/SplatNative/MeshAssetContract.swift'
       - '.github/workflows/splat-native-s4-typecheck.yml'
 
 jobs:
@@ -79,6 +81,7 @@ jobs:
             -sdk "$SDK" \
             -module-name S4MeshRuntimeProbe \
             splat-native-ios/SplatNative/MeshScanModel.swift \
+            splat-native-ios/SplatNative/MeshAssetContract.swift \
             splat-native-ios/SplatNative/MeshScanView.swift \
             splat-native-ios/SplatNative/MeshDepthRecorder.swift \
             splat-native-ios/SplatNative/MeshRawReprocess.swift \
