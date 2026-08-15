@@ -366,7 +366,7 @@ final class ScanProjectStore {
                 try fileManager.moveItem(at: output, to: previous)
             }
             try fileManager.moveItem(at: pending, to: output)
-            guard committedSplatURL(projectURL: projectURL) != nil else {
+            guard try committedSplatURL(projectURL: projectURL) != nil else {
                 throw ScanProjectStoreError.invalidPendingResult
             }
             if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
