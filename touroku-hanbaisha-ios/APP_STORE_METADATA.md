@@ -15,14 +15,14 @@
 ## 説明
 登録販売者試験の5分野を、短時間で繰り返し学べる試験対策アプリです。
 
-・全120問の独自問題
-・本試験の分野配分20・20・40・20・20問に対応
+・独立模擬試験3回分、全360問の独自問題
+・各回120問、本試験の分野配分20・20・40・20・20問に対応
 ・毎回12問のクイック学習
-・章別学習
+・試験回・章別の15分類学習
 ・誤答と「わからない」を自動で苦手登録
 ・3回連続正解で苦手から解除
-・120問の総合模試
-・学習履歴と途中再開
+・第1回〜第3回を各120問通しで解ける総合模試
+・学習履歴カレンダーと途中再開
 ・文字サイズ変更
 
 問題は厚生労働省「登録販売者試験問題の作成に関する手引き（令和8年4月）」を基準にした独自問題です。実際の試験問題の転載を中心とした構成ではありません。
@@ -40,7 +40,7 @@
 ## App Review Notes
 This app is an educational quiz app for Japan's registered seller examination. It does not diagnose symptoms, recommend treatment, or provide individualized medication-use decisions. Learning progress is stored locally in the WebView storage. No login, advertising SDK, analytics SDK, location access, contacts, camera, microphone, or health data integration is used.
 
-The 120 questions are original educational questions based on the Japanese Ministry of Health, Labour and Welfare's April 2026 examination handbook. The app shows a clear educational-use disclaimer.
+The app contains 360 original educational questions across three independent 120-question mock examinations based on the Japanese Ministry of Health, Labour and Welfare's April 2026 examination handbook. The app shows a clear educational-use disclaimer.
 
 ## 提出前にApp Store Connectで最終確認する項目
 - Seller Name / Copyright はApple Developer登録名に合わせる
