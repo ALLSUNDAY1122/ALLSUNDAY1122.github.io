@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
 
   const { data: scan, error: scanError } = await admin
     .from("scanlab_scans")
-    .select("id,owner_id,visibility,status,asset_path,preview_path,latitude,longitude,public_place_confirmed,privacy_confirmed,rights_confirmed,share_token")
+    .select("id,owner_id,visibility,status,moderation_status,asset_path,preview_path,latitude,longitude,public_place_confirmed,privacy_confirmed,rights_confirmed,content_confirmed,share_token")
     .eq("id", body.scanId)
     .maybeSingle();
 
@@ -39,11 +39,21 @@ Deno.serve(async (req) => {
   if (scan.owner_id !== user.id) return json({ error: "forbidden" }, 403);
   if (!scan.asset_path.startsWith(`${user.id}/`)) return json({ error: "invalid_asset_path" }, 400);
 
+  if (["public", "unlisted"].includes(scan.visibility) && !scan.content_confirmed) {
+    return json({ error: "content_confirmation_required" }, 400);
+  }
   if (scan.visibility === "public") {
     if (scan.latitude == null || scan.longitude == null || !scan.public_place_confirmed || !scan.privacy_confirmed || !scan.rights_confirmed) {
       return json({ error: "public_safety_confirmation_required" }, 400);
     }
   }
+
+  const { count: reportCount, error: reportError } = await admin
+    .from("scanlab_reports")
+    .select("id", { count: "exact", head: true })
+    .eq("scan_id", scan.id);
+  if (reportError) return json({ error: "moderation_check_failed" }, 503);
+  if ((reportCount ?? 0) > 0) return json({ error: "moderation_hold" }, 409);
 
   const slash = scan.asset_path.lastIndexOf("/");
   const folder = slash > 0 ? scan.asset_path.slice(0, slash) : "";
@@ -61,7 +71,8 @@ Deno.serve(async (req) => {
 
   if (updateError) {
     const rateLimited = updateError.message?.includes("rate limit") ?? false;
-    return json({ error: rateLimited ? "publish_rate_limited" : "publish_failed" }, rateLimited ? 429 : 400);
+    const objectionable = updateError.message?.includes("objectionable") ?? false;
+    return json({ error: rateLimited ? "publish_rate_limited" : objectionable ? "content_rejected" : "publish_failed" }, rateLimited ? 429 : 400);
   }
 
   const base = "https://allsunday1122.github.io/splat-native-ios/viewer/";
