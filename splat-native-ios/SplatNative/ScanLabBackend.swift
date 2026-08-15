@@ -9,6 +9,7 @@ struct ScanLabLocation: Codable, Hashable {
 }
 
 struct ScanLabAuthor: Codable, Hashable {
+    let id: UUID
     let handle: String
     let displayName: String
 }
@@ -113,6 +114,7 @@ private struct ScanLabDraftInsert: Encodable {
     let publicPlaceConfirmed: Bool
     let privacyConfirmed: Bool
     let rightsConfirmed: Bool
+    let contentConfirmed: Bool
     enum CodingKeys: String, CodingKey {
         case ownerId = "owner_id"
         case title, caption, visibility, status
@@ -123,6 +125,7 @@ private struct ScanLabDraftInsert: Encodable {
         case publicPlaceConfirmed = "public_place_confirmed"
         case privacyConfirmed = "privacy_confirmed"
         case rightsConfirmed = "rights_confirmed"
+        case contentConfirmed = "content_confirmed"
     }
 }
 
@@ -151,17 +154,27 @@ private struct ScanLabReportInsert: Encodable {
         case reason, details
     }
 }
+private struct ScanLabBlockInsert: Encodable {
+    let blockerId: UUID
+    let blockedId: UUID
+    enum CodingKeys: String, CodingKey {
+        case blockerId = "blocker_id"
+        case blockedId = "blocked_id"
+    }
+}
 
 enum ScanLabBackendError: LocalizedError {
-    case signInRequired, invalidTitle, invalidPublicLocation, safetyConfirmationRequired, invalidAsset, invalidProfile, assetTooLarge, invalidServerResponse
+    case signInRequired, invalidTitle, invalidPublicLocation, safetyConfirmationRequired, contentConfirmationRequired, invalidAsset, invalidProfile, invalidBlockTarget, assetTooLarge, invalidServerResponse
     var errorDescription: String? {
         switch self {
         case .signInRequired: "公開・クラウド保存にはログインが必要です。"
         case .invalidTitle: "タイトルを1〜80文字で入力してください。"
         case .invalidPublicLocation: "マップ公開には位置情報が必要です。"
         case .safetyConfirmationRequired: "公開場所・プライバシー・権利の3項目を確認してください。"
+        case .contentConfirmationRequired: "共有前にコンテンツ安全性の確認が必要です。"
         case .invalidAsset: "3Dデータを読み込めませんでした。"
         case .invalidProfile: "表示名は1〜40文字、ユーザーIDは英小文字・数字・_ の3〜24文字で入力してください。"
+        case .invalidBlockTarget: "このユーザーはブロックできません。"
         case .assetTooLarge: "3Dデータが128MBを超えています。"
         case .invalidServerResponse: "サーバーから正しい応答を受け取れませんでした。"
         }
@@ -174,6 +187,7 @@ enum ScanLabConfig {
     static let publishableKey = "sb_publishable_jYM9b6kivVT80sbAQ2syFw_zSUANBHV"
     static let publicFunctionURL = URL(string: "https://gybchnyqlqwmajwkhsly.supabase.co/functions/v1/scanlab-public")!
     static let viewerBaseURL = URL(string: "https://allsunday1122.github.io/splat-native-ios/viewer/")!
+    static let supportURL = URL(string: "https://allsunday1122.github.io/splat-native-ios/support.html")!
     static let maximumAssetBytes = 128 * 1024 * 1024
 }
 
@@ -205,6 +219,7 @@ final class ScanLabBackend: ObservableObject {
                 async let scans: Void = loadOwnerScans()
                 async let loadedProfile: Void = loadProfile()
                 _ = await (scans, loadedProfile)
+                await loadPublicScans()
             }
         }
     }
@@ -216,7 +231,7 @@ final class ScanLabBackend: ObservableObject {
     func signIn(email: String, password: String) async throws {
         try await client.auth.signIn(email: email.trimmingCharacters(in: .whitespacesAndNewlines), password: password); notice = nil
     }
-    func signOut() async { do { try await client.auth.signOut() } catch { notice = error.localizedDescription } }
+    func signOut() async { do { try await client.auth.signOut(); await loadPublicScans() } catch { notice = error.localizedDescription } }
 
     func loadPublicScans(boundingBox: (minLat: Double, maxLat: Double, minLon: Double, maxLon: Double)? = nil) async {
         guard !isLoadingPublic else { return }; isLoadingPublic = true; defer { isLoadingPublic = false }
@@ -226,7 +241,12 @@ final class ScanLabBackend: ObservableObject {
             if let boundingBox { items += [URLQueryItem(name: "minLat", value: String(boundingBox.minLat)), URLQueryItem(name: "maxLat", value: String(boundingBox.maxLat)), URLQueryItem(name: "minLon", value: String(boundingBox.minLon)), URLQueryItem(name: "maxLon", value: String(boundingBox.maxLon))] }
             components.queryItems = items
             guard let url = components.url else { throw ScanLabBackendError.invalidServerResponse }
-            let (data, response) = try await URLSession.shared.data(from: url)
+            var request = URLRequest(url: url)
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+            if let session = try? await client.auth.session {
+                request.setValue("Bearer \(session.accessToken)", forHTTPHeaderField: "Authorization")
+            }
+            let (data, response) = try await URLSession.shared.data(for: request)
             guard let http = response as? HTTPURLResponse, 200..<300 ~= http.statusCode else { throw ScanLabBackendError.invalidServerResponse }
             publicScans = try JSONDecoder().decode(ScanLabPublicEnvelope.self, from: data).items
         } catch { notice = "公開スキャンを取得できませんでした: \(error.localizedDescription)" }
@@ -254,11 +274,12 @@ final class ScanLabBackend: ObservableObject {
         } catch { notice = "自分のスキャンを取得できませんでした: \(error.localizedDescription)" }
     }
 
-    func publish(resultURL: URL, previewImage: UIImage?, title: String, caption: String, visibility: ScanLabVisibility, location: ScanLabLocation?, publicPlaceConfirmed: Bool, privacyConfirmed: Bool, rightsConfirmed: Bool) async throws -> ScanLabPublishResponse {
+    func publish(resultURL: URL, previewImage: UIImage?, title: String, caption: String, visibility: ScanLabVisibility, location: ScanLabLocation?, publicPlaceConfirmed: Bool, privacyConfirmed: Bool, rightsConfirmed: Bool, contentConfirmed: Bool) async throws -> ScanLabPublishResponse {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard (1...80).contains(trimmedTitle.count) else { throw ScanLabBackendError.invalidTitle }
         guard let session = try? await client.auth.session else { throw ScanLabBackendError.signInRequired }
         let user = session.user
+        if visibility != .private && !contentConfirmed { throw ScanLabBackendError.contentConfirmationRequired }
         if visibility == .public {
             guard location != nil else { throw ScanLabBackendError.invalidPublicLocation }
             guard publicPlaceConfirmed, privacyConfirmed, rightsConfirmed else { throw ScanLabBackendError.safetyConfirmationRequired }
@@ -274,7 +295,7 @@ final class ScanLabBackend: ObservableObject {
             if let previewPath, let previewData = previewImage?.jpegData(compressionQuality: 0.82) {
                 try await client.storage.from("scanlab-assets").upload(path: previewPath, file: previewData, options: FileOptions(contentType: "image/jpeg")); uploadedPaths.append(previewPath)
             }
-            let draft = ScanLabDraftInsert(ownerId: user.id, title: trimmedTitle, caption: String(caption.prefix(500)), visibility: visibility.rawValue, status: "draft", assetPath: assetPath, previewPath: previewPath, latitude: location?.latitude, longitude: location?.longitude, locationLabel: location?.label, publicPlaceConfirmed: publicPlaceConfirmed, privacyConfirmed: privacyConfirmed, rightsConfirmed: rightsConfirmed)
+            let draft = ScanLabDraftInsert(ownerId: user.id, title: trimmedTitle, caption: String(caption.prefix(500)), visibility: visibility.rawValue, status: "draft", assetPath: assetPath, previewPath: previewPath, latitude: location?.latitude, longitude: location?.longitude, locationLabel: location?.label, publicPlaceConfirmed: publicPlaceConfirmed, privacyConfirmed: privacyConfirmed, rightsConfirmed: rightsConfirmed, contentConfirmed: contentConfirmed)
             let created: ScanLabCreatedScan = try await client.from("scanlab_scans").insert(draft).select("id").single().execute().value
             let published: ScanLabPublishResponse = try await client.functions.invoke("scanlab-publish", options: FunctionInvokeOptions(region: .apSoutheast1, body: ScanLabPublishRequest(scanId: created.id.uuidString.lowercased()), timeoutInterval: 30))
             await loadOwnerScans(); if visibility == .public { await loadPublicScans() }; return published
@@ -296,7 +317,19 @@ final class ScanLabBackend: ObservableObject {
     }
     func report(_ scan: ScanLabPublicScan, reason: String) async throws {
         guard let session = try? await client.auth.session else { throw ScanLabBackendError.signInRequired }
-        try await client.from("scanlab_reports").insert(ScanLabReportInsert(scanId: scan.id, reporterId: session.user.id, reason: reason, details: "")).execute(); notice = "報告を受け付けました。"; await loadPublicScans()
+        try await client.from("scanlab_reports").insert(ScanLabReportInsert(scanId: scan.id, reporterId: session.user.id, reason: reason, details: "")).execute(); notice = "報告を受け付け、公開3Dを確認のため非表示にしました。"; await loadPublicScans()
+    }
+    func block(_ scan: ScanLabPublicScan) async throws {
+        guard let session = try? await client.auth.session else { throw ScanLabBackendError.signInRequired }
+        guard let author = scan.author, author.id != session.user.id else { throw ScanLabBackendError.invalidBlockTarget }
+        do {
+            try await client.from("scanlab_blocks").insert(ScanLabBlockInsert(blockerId: session.user.id, blockedId: author.id)).execute()
+        } catch {
+            let message = error.localizedDescription.lowercased()
+            if !message.contains("duplicate") && !message.contains("unique") { throw error }
+        }
+        notice = "このユーザーをブロックしました。MapとDiscoverから投稿を除外します。"
+        await loadPublicScans()
     }
     func deleteAccount() async throws {
         let response: ScanLabDeleteAccountResponse = try await client.functions.invoke("scanlab-delete-account", options: FunctionInvokeOptions(region: .apSoutheast1, body: ["confirm": true], timeoutInterval: 30))
