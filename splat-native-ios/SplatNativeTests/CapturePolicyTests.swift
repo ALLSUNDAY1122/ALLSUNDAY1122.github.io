@@ -61,8 +61,47 @@ final class CapturePolicyTests: XCTestCase {
         ))
     }
 
+    func testNearbyObjectCannotPassUsingSceneCoverageFromOneSide() {
+        XCTAssertFalse(CapturePolicy.coverageSatisfied(
+            subjectDistance: 0.65,
+            orbitSectors: 3,
+            elevationBands: 2,
+            viewDirectionSectors: 8,
+            spatialCells: 12,
+            pathLength: 3.0
+        ))
+        XCTAssertTrue(CapturePolicy.coverageSatisfied(
+            subjectDistance: 0.65,
+            orbitSectors: 8,
+            elevationBands: 2,
+            viewDirectionSectors: 2,
+            spatialCells: 2,
+            pathLength: 0.4
+        ))
+    }
+
+    func testSceneModeDoesNotRequireObjectOrbit() {
+        XCTAssertTrue(CapturePolicy.coverageSatisfied(
+            subjectDistance: nil,
+            orbitSectors: 0,
+            elevationBands: 0,
+            viewDirectionSectors: 5,
+            spatialCells: 5,
+            pathLength: 0.80
+        ))
+        XCTAssertTrue(CapturePolicy.coverageSatisfied(
+            subjectDistance: 2.2,
+            orbitSectors: 1,
+            elevationBands: 1,
+            viewDirectionSectors: 5,
+            spatialCells: 5,
+            pathLength: 0.80
+        ))
+    }
+
     func testCoverageScoreSupportsObjectAndSceneStrategies() {
         let objectScore = CapturePolicy.coverageScore(
+            subjectDistance: 0.60,
             orbitSectors: 8,
             elevationBands: 2,
             viewDirectionSectors: 1,
@@ -70,6 +109,7 @@ final class CapturePolicyTests: XCTestCase {
             pathLength: 0.1
         )
         let sceneScore = CapturePolicy.coverageScore(
+            subjectDistance: nil,
             orbitSectors: 1,
             elevationBands: 1,
             viewDirectionSectors: 5,
