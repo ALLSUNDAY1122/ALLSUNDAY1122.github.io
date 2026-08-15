@@ -38,6 +38,9 @@ final class SplatCompletionVerifierTests: XCTestCase {
 
         let verified = try SplatCompletionVerifier.verify(sourceURL: resultURL)
         XCTAssertEqual(verified.standardizedFileURL, resultURL.standardizedFileURL)
+        XCTAssertTrue(FileManager.default.fileExists(
+            atPath: projectURL.appendingPathComponent(SplatStrongCompletionEvidence.fileName).path
+        ))
     }
 
     func testRejectsResultWhoseByteCountNoLongerMatchesCommitEvidence() throws {
@@ -58,6 +61,59 @@ final class SplatCompletionVerifierTests: XCTestCase {
         try handle.seekToEnd()
         try handle.write(contentsOf: Data(repeating: 0, count: 32))
         try handle.close()
+
+        XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: resultURL))
+    }
+
+    func testRejectsSameSizeReplacementBeforeFirstStrongSeal() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Same-size pre-seal tamper")
+        let pendingURL = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        try Data(repeating: 0x11, count: 64).write(to: pendingURL, options: .atomic)
+        let resultURL = try store.commitPendingSplat(projectURL: projectURL)
+        _ = try store.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = .finished
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+
+        try Data(repeating: 0x22, count: 64).write(to: resultURL, options: .atomic)
+        try FileManager.default.setAttributes(
+            [.modificationDate: Date().addingTimeInterval(10)],
+            ofItemAtPath: resultURL.path
+        )
+
+        XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: resultURL))
+        XCTAssertFalse(FileManager.default.fileExists(
+            atPath: projectURL.appendingPathComponent(SplatStrongCompletionEvidence.fileName).path
+        ))
+    }
+
+    func testRejectsSameSizeReplacementAfterStrongSealEvenWhenMtimeIsRestored() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, _) = try store.createProject(title: "Same-size post-seal tamper")
+        let pendingURL = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        try Data(repeating: 0x33, count: 64).write(to: pendingURL, options: .atomic)
+        let resultURL = try store.commitPendingSplat(projectURL: projectURL)
+        _ = try store.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = .finished
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+        }
+
+        XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: resultURL), resultURL)
+        let originalAttributes = try FileManager.default.attributesOfItem(atPath: resultURL.path)
+        let originalModificationDate = try XCTUnwrap(originalAttributes[.modificationDate] as? Date)
+
+        try Data(repeating: 0x44, count: 64).write(to: resultURL, options: .atomic)
+        try FileManager.default.setAttributes(
+            [.modificationDate: originalModificationDate],
+            ofItemAtPath: resultURL.path
+        )
 
         XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: resultURL))
     }
