@@ -44,20 +44,22 @@ enum SplatCompletionVerifier {
             rootURL: projectURL.deletingLastPathComponent(),
             fileManager: fileManager
         )
-        guard let manifest = try? store.loadManifest(projectURL: projectURL),
-              manifest.stage == .finished,
-              manifest.splatFileName == ScanProjectStore.splatResultFileName else {
+        guard let loadedManifest = try? store.loadManifest(projectURL: projectURL) else {
             throw VerificationError.projectNotFinished
         }
 
-        // Legacy Store recovery restores `result.previous.splat` bytes but historically discarded
-        // their evidence. C2 preserves a SHA-256-bound sidecar before reprocess and may restore the
-        // evidence here only when the recovered bytes are exactly the previous trusted result.
-        SplatPreviousResultEvidence.restoreCurrentEvidenceIfExactPreviousResult(
+        // A failed/repeated reprocess may have exhausted Store's legacy `result.previous.splat`.
+        // C2 can restore only the separately protected exact previous bytes whose SHA-256 matches
+        // the snapshot captured while that result was still strictly trusted.
+        let manifest = SplatPreviousResultEvidence.recoverTrustedPreviousIfNeeded(
             projectURL: projectURL,
-            outputURL: expectedURL,
+            manifest: loadedManifest,
             fileManager: fileManager
         )
+        guard manifest.stage == .finished,
+              manifest.splatFileName == ScanProjectStore.splatResultFileName else {
+            throw VerificationError.projectNotFinished
+        }
 
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
         guard let evidenceData = try? Data(contentsOf: evidenceURL),
@@ -76,6 +78,7 @@ enum SplatCompletionVerifier {
             throw VerificationError.completionEvidenceMismatch
         }
 
+        SplatPreviousResultEvidence.discardBackup(projectURL: projectURL, fileManager: fileManager)
         return expectedURL
     }
 
