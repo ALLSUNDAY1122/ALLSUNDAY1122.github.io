@@ -44,9 +44,23 @@ jobs:
           grep -q 'nlohmann-json-MIT.txt' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MsplatRuntimeSmokeTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
+        id: resolve
+        continue-on-error: true
         working-directory: splat-native-ios
-        run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
+        shell: bash
+        run: |
+          set +e
+          set -o pipefail
+          xcodebuild -resolvePackageDependencies \
+            -project SplatNative.xcodeproj -scheme SplatNative \
+            2>&1 | tee /tmp/splat-resolve.log
+          status=${PIPESTATUS[0]}
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
       - name: Run msplat runtime smoke test on iOS Simulator
+        id: runtime
+        if: steps.resolve.outcome == 'success'
+        continue-on-error: true
         timeout-minutes: 12
         working-directory: splat-native-ios
         shell: bash
@@ -69,12 +83,17 @@ jobs:
           test -n "$SIMULATOR_UDID"
           xcrun simctl boot "$SIMULATOR_UDID" 2>/dev/null || true
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
+          set +e
           xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
             -sdk iphonesimulator -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
             -parallel-testing-enabled NO \
-            CODE_SIGNING_ALLOWED=NO test
+            CODE_SIGNING_ALLOWED=NO test \
+            2>&1 | tee /tmp/splat-runtime.log
+          status=${PIPESTATUS[0]}
+          exit "$status"
       - name: Compile for iPhone without signing
         id: compile
+        if: steps.resolve.outcome == 'success'
         continue-on-error: true
         working-directory: splat-native-ios
         shell: bash
@@ -85,10 +104,32 @@ jobs:
             -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
             CODE_SIGNING_ALLOWED=NO build 2>&1 | tee /tmp/splat-build.log
           status=${PIPESTATUS[0]}
-          grep -E '(^|:) error:|(^|:) warning:' /tmp/splat-build.log | tail -200 > /tmp/splat-diagnostics.txt || true
           echo "status=$status" >> "$GITHUB_OUTPUT"
           exit "$status"
-      - name: Publish compile diagnostics to PR
+      - name: Collect xcodebuild diagnostics
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          : > /tmp/splat-diagnostics.txt
+          for spec in \
+            'Package resolve:/tmp/splat-resolve.log' \
+            'Runtime XCTest:/tmp/splat-runtime.log' \
+            'iPhone Release compile:/tmp/splat-build.log'; do
+            label="${spec%%:*}"
+            file="${spec#*:}"
+            if [ ! -s "$file" ]; then
+              continue
+            fi
+            {
+              echo "===== $label ====="
+              grep -E '(^|:) error:|fatal error:|Undefined symbols|ld: |No such module|module map|Command .* failed|BUILD FAILED|TEST FAILED' "$file" | tail -200
+            } >> /tmp/splat-diagnostics.txt
+          done
+          if [ ! -s /tmp/splat-diagnostics.txt ]; then
+            echo 'No xcodebuild error lines captured; all executed xcodebuild gates may have succeeded.' > /tmp/splat-diagnostics.txt
+          fi
+      - name: Publish xcodebuild diagnostics to PR
         if: always() && github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -97,16 +138,18 @@ jobs:
         run: |
           {
             echo '<!-- splat-native-build-diagnostics -->'
-            echo '### Splat Native build diagnostics'
+            echo '### Splat Native xcodebuild diagnostics'
             echo '```text'
-            if [ -s /tmp/splat-diagnostics.txt ]; then
-              cat /tmp/splat-diagnostics.txt
-            else
-              echo 'No compiler error/warning lines captured.'
-            fi
+            cat /tmp/splat-diagnostics.txt
             echo '```'
+            echo "resolve=${{ steps.resolve.outcome }} runtime=${{ steps.runtime.outcome }} compile=${{ steps.compile.outcome }}"
           } > /tmp/pr-comment.md
           gh pr comment "$PR_NUMBER" --body-file /tmp/pr-comment.md
-      - name: Fail if compile failed
-        if: steps.compile.outcome == 'failure'
-        run: exit 1
+      - name: Fail if any xcodebuild gate failed
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${{ steps.resolve.outcome }}" = "success"
+          test "${{ steps.runtime.outcome }}" = "success"
+          test "${{ steps.compile.outcome }}" = "success"
