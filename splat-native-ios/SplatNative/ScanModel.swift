@@ -59,6 +59,7 @@ struct CaptureManifest: Codable {
     let frameCount: Int
     let depthFrameCount: Int
     let lidarIgnored: Bool
+    let captureMode: String
     let orbitSectorCount: Int
     let elevationBandCount: Int
     let viewDirectionSectorCount: Int
@@ -170,12 +171,21 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         if featurePointCount < 64 {
             return "立体の手がかりが不足しています。明るさや背景を変えて少し撮り足してください"
         }
-        if coverageSectors.count >= 6 && elevationBands.count < 2 {
-            return "同じ高さに偏っています。少し高い位置か低い位置から撮り足してください"
+
+        switch coverageMode {
+        case .object:
+            if coverageSectors.count >= 6 && elevationBands.count < 2 {
+                return "反対側まで回れています。少し高い位置か低い位置からも撮り足してください"
+            }
+            if !coverageSatisfied {
+                return "対象物の片側だけでは完了しません。対象を中央に保ち、反対側まで回って撮ってください"
+            }
+        case .scene:
+            if !coverageSatisfied {
+                return "部屋や屋外では位置を移しながら、別の方向も重ねて撮ってください"
+            }
         }
-        if !coverageSatisfied {
-            return "対象物なら反対側へ回り、部屋や屋外なら位置を移しながら別方向も撮ってください"
-        }
+
         if activeCaptureSeconds >= 180 {
             return "長い撮影です。現在の範囲で一度停止して保存・生成することを推奨します"
         }
@@ -197,11 +207,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         }
     }
 
+    private var coverageMode: CaptureCoverageMode {
+        CapturePolicy.coverageMode(subjectDistance: estimatedSubjectDistance)
+    }
+
     private var coverageSatisfied: Bool {
-        CapturePolicy.objectCoverageSatisfied(
+        CapturePolicy.coverageSatisfied(
+            subjectDistance: estimatedSubjectDistance,
             orbitSectors: coverageSectors.count,
-            elevationBands: elevationBands.count
-        ) || CapturePolicy.sceneCoverageSatisfied(
+            elevationBands: elevationBands.count,
             viewDirectionSectors: viewDirectionSectors.count,
             spatialCells: spatialCells.count,
             pathLength: pathLengthMeters
@@ -479,7 +493,13 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let depthURL = depthURL
 
         captureQueue.async { [weak self] in
-            guard let imagesURL else { return }
+            guard let imagesURL else {
+                Task { @MainActor [weak self] in
+                    self?.isWritingFrame = false
+                    self?.trackingMessage = "撮影データの保存先を確認できませんでした"
+                }
+                return
+            }
             let fileName = String(format: "frame_%05d.jpg", index)
             let fileURL = imagesURL.appendingPathComponent(fileName)
             var depthRelativePath: String?
@@ -539,12 +559,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private func absorbFeaturePoints(_ cloud: ARPointCloud?, cameraTransform: simd_float4x4) {
         guard let cloud, !cloud.points.isEmpty else { return }
 
-        if estimatedTargetCenter == nil {
-            estimatedTargetCenter = estimateTargetCenter(from: cloud, cameraTransform: cameraTransform)
-                ?? Self.fallbackTargetCenter(cameraTransform)
-            if let center = estimatedTargetCenter {
-                estimatedSubjectDistance = simd_distance(Self.cameraPosition(cameraTransform), center)
-            }
+        if estimatedTargetCenter == nil,
+           let center = estimateTargetCenter(from: cloud, cameraTransform: cameraTransform) {
+            estimatedTargetCenter = center
+            estimatedSubjectDistance = simd_distance(Self.cameraPosition(cameraTransform), center)
         }
 
         let step = max(1, cloud.points.count / 350)
@@ -613,6 +631,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         }
 
         let score = CapturePolicy.coverageScore(
+            subjectDistance: estimatedSubjectDistance,
             orbitSectors: coverageSectors.count,
             elevationBands: elevationBands.count,
             viewDirectionSectors: viewDirectionSectors.count,
@@ -668,6 +687,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             frameCount: captured.count,
             depthFrameCount: captured.filter { $0.depthFilePath != nil }.count,
             lidarIgnored: ignoreLiDAR,
+            captureMode: coverageMode == .object ? "object" : "scene",
             orbitSectorCount: coverageSectors.count,
             elevationBandCount: elevationBands.count,
             viewDirectionSectorCount: viewDirectionSectors.count,
@@ -800,12 +820,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
     private static func cameraPosition(_ m: simd_float4x4) -> SIMD3<Float> {
         CapturePolicy.cameraPosition(m)
-    }
-
-    private static func fallbackTargetCenter(_ transform: simd_float4x4) -> SIMD3<Float> {
-        let position = cameraPosition(transform)
-        let cameraBack = SIMD3<Float>(transform.columns.2.x, transform.columns.2.y, transform.columns.2.z)
-        return position - cameraBack * 0.60
     }
 
     private static func rows(_ m: simd_float4x4) -> [[Float]] {
