@@ -76,6 +76,8 @@ struct SplatReconstructionRunReport: Codable, Sendable {
     let peakSplatCount: Int
     let peakResidentMemoryBytes: UInt64
     let residentMemoryBudgetBytes: UInt64
+    let minimumAvailableMemoryBytes: UInt64
+    let minimumAvailableMemoryReserveBytes: UInt64
     let maxSplatCount: Int
     let physicalMemoryBytes: UInt64
     let initialThermalState: String
@@ -184,7 +186,7 @@ final class SplatResourceGuard: @unchecked Sendable {
     ) -> SplatReconstructionRunReport {
         let peaks = snapshotPeaks(finalSplatCount: finalSplatCount)
         return SplatReconstructionRunReport(
-            schemaVersion: 1,
+            schemaVersion: 2,
             startedAt: startedAt,
             finishedAt: Date(),
             elapsedSeconds: max(0, ProcessInfo.processInfo.systemUptime - startUptime),
@@ -195,6 +197,8 @@ final class SplatResourceGuard: @unchecked Sendable {
             peakSplatCount: peaks.splats,
             peakResidentMemoryBytes: peaks.memory,
             residentMemoryBudgetBytes: limits.residentMemoryBudgetBytes,
+            minimumAvailableMemoryBytes: peaks.minimumAvailable,
+            minimumAvailableMemoryReserveBytes: limits.minimumAvailableMemoryReserveBytes,
             maxSplatCount: limits.maxSplatCount,
             physicalMemoryBytes: physicalMemoryBytes,
             initialThermalState: initialThermalState,
@@ -203,10 +207,11 @@ final class SplatResourceGuard: @unchecked Sendable {
         )
     }
 
-    private func snapshotPeaks(finalSplatCount: Int) -> (memory: UInt64, splats: Int) {
+    private func snapshotPeaks(finalSplatCount: Int) -> (memory: UInt64, minimumAvailable: UInt64, splats: Int) {
         lock.lock()
         peakSplatCount = max(peakSplatCount, finalSplatCount)
-        let snapshot = (peakResidentMemoryBytes, peakSplatCount)
+        let minimumAvailable = minimumAvailableMemoryBytes == .max ? 0 : minimumAvailableMemoryBytes
+        let snapshot = (peakResidentMemoryBytes, minimumAvailable, peakSplatCount)
         lock.unlock()
         return snapshot
     }
