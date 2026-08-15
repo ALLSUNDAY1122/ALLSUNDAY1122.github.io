@@ -84,7 +84,7 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
                     return
                 }
 
-                let framing = Self.robustFraming(for: points)
+                let framing = SplatCameraGeometry.robustFraming(for: points)
                 sceneCenter = framing.center
                 baseDistance = framing.distance
                 distance = framing.distance
@@ -131,18 +131,13 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
         commandBuffer.addCompletedHandler { [semaphore] _ in semaphore.signal() }
 
         let aspect = max(0.1, Float(drawableSize.width / max(1, drawableSize.height)))
-        let projection = perspective(fovY: 55 * .pi / 180, aspect: aspect, near: 0.01, far: 100)
-        let orbit = SIMD3<Float>(
-            sin(yaw) * cos(pitch) * distance,
-            sin(pitch) * distance,
-            cos(yaw) * cos(pitch) * distance
-        )
-        let eye = sceneCenter + orbit
-        let viewMatrix = lookAt(eye: eye, center: sceneCenter, up: SIMD3<Float>(0, 1, 0))
+        let projection = SplatCameraGeometry.perspective(fovY: 55 * .pi / 180, aspect: aspect, near: 0.01, far: 100)
+        let eye = SplatCameraGeometry.eye(center: sceneCenter, distance: distance, yaw: yaw, pitch: pitch)
+        let viewMatrix = SplatCameraGeometry.lookAt(eye: eye, center: sceneCenter, up: SIMD3<Float>(0, 1, 0))
         let viewport = SplatRenderer.ViewportDescriptor(
             viewport: MTLViewport(originX: 0, originY: 0, width: drawableSize.width, height: drawableSize.height, znear: 0, zfar: 1),
             projectionMatrix: projection,
-            viewMatrix: viewMatrix * rotationZ(.pi),
+            viewMatrix: viewMatrix * SplatCameraGeometry.rotationZ(.pi),
             screenSize: SIMD2(Int(drawableSize.width), Int(drawableSize.height))
         )
 
@@ -163,76 +158,5 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate {
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         drawableSize = size
-    }
-
-    private static func robustFraming(for points: [SplatPoint]) -> (center: SIMD3<Float>, distance: Float) {
-        let strideSize = max(1, points.count / 6_000)
-        var xs: [Float] = []
-        var ys: [Float] = []
-        var zs: [Float] = []
-        xs.reserveCapacity(min(points.count, 6_000))
-        ys.reserveCapacity(min(points.count, 6_000))
-        zs.reserveCapacity(min(points.count, 6_000))
-
-        for index in stride(from: 0, to: points.count, by: strideSize) {
-            let p = points[index].position
-            guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
-            xs.append(p.x)
-            ys.append(p.y)
-            zs.append(p.z)
-        }
-
-        guard !xs.isEmpty else { return (.zero, 2.5) }
-        xs.sort(); ys.sort(); zs.sort()
-        let middle = xs.count / 2
-        let center = SIMD3<Float>(xs[middle], ys[middle], zs[middle])
-
-        var radii: [Float] = []
-        radii.reserveCapacity(xs.count)
-        for index in stride(from: 0, to: points.count, by: strideSize) {
-            let p = points[index].position
-            guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
-            radii.append(simd_distance(p, center))
-        }
-        radii.sort()
-        guard !radii.isEmpty else { return (center, 2.5) }
-        let percentileIndex = min(radii.count - 1, Int(Float(radii.count - 1) * 0.90))
-        let radius = max(0.10, radii[percentileIndex])
-        let framingDistance = max(0.35, min(12.0, radius * 2.8))
-        return (center, framingDistance)
-    }
-
-    private func perspective(fovY: Float, aspect: Float, near: Float, far: Float) -> simd_float4x4 {
-        let y = 1 / tan(fovY * 0.5)
-        let x = y / aspect
-        let z = far / (near - far)
-        return simd_float4x4(columns: (
-            SIMD4<Float>(x, 0, 0, 0),
-            SIMD4<Float>(0, y, 0, 0),
-            SIMD4<Float>(0, 0, z, -1),
-            SIMD4<Float>(0, 0, z * near, 0)
-        ))
-    }
-
-    private func lookAt(eye: SIMD3<Float>, center: SIMD3<Float>, up: SIMD3<Float>) -> simd_float4x4 {
-        let z = simd_normalize(eye - center)
-        let x = simd_normalize(simd_cross(up, z))
-        let y = simd_cross(z, x)
-        return simd_float4x4(columns: (
-            SIMD4<Float>(x.x, y.x, z.x, 0),
-            SIMD4<Float>(x.y, y.y, z.y, 0),
-            SIMD4<Float>(x.z, y.z, z.z, 0),
-            SIMD4<Float>(-simd_dot(x, eye), -simd_dot(y, eye), -simd_dot(z, eye), 1)
-        ))
-    }
-
-    private func rotationZ(_ a: Float) -> simd_float4x4 {
-        let c = cos(a), s = sin(a)
-        return simd_float4x4(columns: (
-            SIMD4<Float>(c, s, 0, 0),
-            SIMD4<Float>(-s, c, 0, 0),
-            SIMD4<Float>(0, 0, 1, 0),
-            SIMD4<Float>(0, 0, 0, 1)
-        ))
     }
 }

@@ -15,10 +15,12 @@ test -f SplatNative/Resources/Licenses/msplat-APACHE-2.0.txt
 test -f SplatNative/Resources/Licenses/MetalSplatter-MIT.txt
 test -f SplatNative/Resources/Licenses/nanoflann-BSD.txt
 test -f SplatNative/Resources/Licenses/nlohmann-json-MIT.txt
+test -f SplatNative/Resources/Licenses/assimp-BSD-3-Clause.txt
 grep -q 'Apache License' SplatNative/Resources/Licenses/msplat-APACHE-2.0.txt
 grep -q 'Copyright (c) 2026 Sean Cier' SplatNative/Resources/Licenses/MetalSplatter-MIT.txt
 grep -q 'Jose L. Blanco' SplatNative/Resources/Licenses/nanoflann-BSD.txt
 grep -q 'Copyright (c) 2013-2022 Niels Lohmann' SplatNative/Resources/Licenses/nlohmann-json-MIT.txt
+grep -q 'Copyright (c) 2006-2026, assimp team' SplatNative/Resources/Licenses/assimp-BSD-3-Clause.txt
 
 grep -q 'jp.allsunday1122.splatlab' project.yml
 grep -q 'MARKETING_VERSION: 1.0.0' project.yml
@@ -64,6 +66,23 @@ grep -q '生成だけもう一度試す' SplatNative/RootScanView.swift
 ! grep -q '特徴点 ' SplatNative/RootScanView.swift
 ! grep -q 'iteration ' SplatNative/RootScanView.swift
 ! grep -q 'splats ' SplatNative/RootScanView.swift
+
+# S6 parity gate: five Mesh containers plus two point-cloud containers.
+# PLY/LAS must remain point clouds and must consume captured texture data when available.
+for format in fbx obj glb usdz stl ply las; do
+  grep -q "case $format" SplatNative/MeshExportService.swift
+  grep -q "case .$format" SplatNative/MeshExportOptionsView.swift
+done
+grep -q 'testOBJExportsFiveMeshesAndTwoPointCloudFormats' SplatNativeTests/MeshExportServiceTests.swift
+grep -q 'testS4StyleMTLAndAtlasProduceRealColorPointClouds' SplatNativeTests/MeshExportServiceTests.swift
+grep -q 'MeshPointCloudExportService.exportPLY' SplatNative/MeshExportService.swift
+grep -q 'MeshPointCloudExportService.exportLAS12' SplatNative/MeshExportService.swift
+grep -q 'format binary_little_endian 1.0' SplatNative/MeshPointCloudExportService.swift
+grep -q 'LASF' SplatNative/MeshPointCloudExportService.swift
+grep -q 'map_Kd' SplatNative/MeshPointCloudExportService.swift
+grep -q 'property uchar red' SplatNative/MeshPointCloudExportService.swift
+grep -q 'SplatVideoMemoryPolicy.preflight' SplatNative/SplatVideoExporter.swift
+grep -q 'testExporterRejectsOversizedSceneBeforeDecode' SplatNativeTests/SplatVideoExporterTests.swift
 
 # Parity work must remain product-neutral until Scaniverse functional parity is achieved.
 ! grep -R -n 'おもちゃばこ' SplatNative project.yml

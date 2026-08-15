@@ -2,7 +2,14 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var model: ScanModel
-    @State private var showingShare = false
+    @State private var showingExportOptions = false
+    @State private var showingVideoOptions = false
+    @State private var videoConfiguration = SplatVideoConfiguration()
+    @State private var sharePayload: SharePayload?
+    @State private var exportError: String?
+    @State private var exportTask: Task<Void, Never>?
+    @State private var isExporting = false
+    @State private var exportStatusText = "3Dデータを書き出しています"
 
     var body: some View {
         ZStack {
@@ -21,10 +28,35 @@ struct ContentView: View {
             case .failed(let message):
                 failed(message)
             }
+
+            if isExporting {
+                exportOverlay
+            }
         }
         .preferredColorScheme(.dark)
-        .sheet(isPresented: $showingShare) {
-            if let url = model.resultURL { ShareSheet(items: [url]) }
+        .confirmationDialog("書き出し形式", isPresented: $showingExportOptions, titleVisibility: .visible) {
+            Button("PLYで書き出す") { beginSplatExport(.ply) }
+            Button("SPZで書き出す") { beginSplatExport(.spz) }
+            Button("動画を作る") { showingVideoOptions = true }
+            Button("キャンセル", role: .cancel) {}
+        } message: {
+            Text("Gaussian SplatのPLY/SPZ、またはカメラが動くMP4動画を作成できます。")
+        }
+        .sheet(isPresented: $showingVideoOptions) {
+            SplatVideoOptionsView(configuration: $videoConfiguration) { selected in
+                beginVideoExport(selected)
+            }
+        }
+        .sheet(item: $sharePayload) { payload in
+            ShareSheet(items: [payload.url])
+        }
+        .alert("書き出しできませんでした", isPresented: Binding(
+            get: { exportError != nil },
+            set: { if !$0 { exportError = nil } }
+        )) {
+            Button("閉じる", role: .cancel) { exportError = nil }
+        } message: {
+            Text(exportError ?? "不明なエラーです")
         }
     }
 
@@ -127,10 +159,80 @@ struct ContentView: View {
                 VStack(spacing: 10) {
                     Text("1本指で回転・ピンチで拡大縮小").font(.caption).foregroundStyle(.secondary)
                     HStack {
-                        Button("Splatを書き出す") { showingShare = true }.buttonStyle(SecondaryButtonStyle())
+                        Button("書き出す") { showingExportOptions = true }.buttonStyle(SecondaryButtonStyle())
                         Button("もう一度撮る") { model.discardAndReset() }.buttonStyle(PrimaryButtonStyle())
                     }
                 }.padding(16).background(.black)
+            }
+        }
+    }
+
+    private var exportOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.72).ignoresSafeArea()
+            VStack(spacing: 16) {
+                ProgressView().scaleEffect(1.35).tint(.mint)
+                Text(exportStatusText).font(.headline)
+                Text("完了後にiOSの共有画面を開きます。")
+                    .font(.caption).foregroundStyle(.secondary)
+                Button("中止", role: .cancel) {
+                    exportTask?.cancel()
+                }
+                .buttonStyle(SecondaryButtonStyle())
+            }
+            .padding(24)
+            .background(.black.opacity(0.92), in: RoundedRectangle(cornerRadius: 20))
+            .padding(30)
+        }
+    }
+
+    private func beginSplatExport(_ format: SplatExportService.Format) {
+        guard let sourceURL = model.resultURL, !isExporting else { return }
+        exportError = nil
+        exportStatusText = "\(format.displayName)を書き出しています"
+        isExporting = true
+
+        exportTask = Task {
+            defer {
+                isExporting = false
+                exportTask = nil
+            }
+
+            do {
+                let outputURL = try await SplatExportService.export(sourceURL: sourceURL, format: format)
+                try Task.checkCancellation()
+                sharePayload = SharePayload(url: outputURL)
+            } catch is CancellationError {
+                // User cancellation is an expected recovery path; do not show an error alert.
+            } catch {
+                exportError = error.localizedDescription
+            }
+        }
+    }
+
+    private func beginVideoExport(_ configuration: SplatVideoConfiguration) {
+        guard let sourceURL = model.resultURL, !isExporting else { return }
+        exportError = nil
+        exportStatusText = "動画を書き出しています"
+        isExporting = true
+
+        exportTask = Task {
+            defer {
+                isExporting = false
+                exportTask = nil
+            }
+
+            do {
+                let outputURL = try await SplatVideoExporter.export(
+                    sourceURL: sourceURL,
+                    configuration: configuration
+                )
+                try Task.checkCancellation()
+                sharePayload = SharePayload(url: outputURL)
+            } catch is CancellationError {
+                // User cancellation is an expected recovery path; partial MP4 is removed by exporter.
+            } catch {
+                exportError = error.localizedDescription
             }
         }
     }
@@ -145,6 +247,11 @@ struct ContentView: View {
             Spacer()
         }.padding(24)
     }
+}
+
+struct SharePayload: Identifiable {
+    let id = UUID()
+    let url: URL
 }
 
 struct PrimaryButtonStyle: ButtonStyle {
