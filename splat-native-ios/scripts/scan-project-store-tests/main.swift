@@ -81,8 +81,18 @@ let recoveredProcessing = try ScanProjectStore(rootURL: root).loadProject(id: in
 expect(recoveredProcessing.manifest.stage == .captured, "processing interruption did not recover to captured")
 expect(recoveredProcessing.manifest.recoveredAfterInterruption, "processing recovery flag missing")
 
-// PROCESSING after a first result: direct reprocessing may overwrite result.splat, but the old completed
-// result must remain recoverable even if termination happens during that write.
+// A file with a superficially valid Splat byte length is still uncommitted while manifest says processing.
+// On first processing there is no prior result to preserve, so discard it and retry from retained raw.
+let firstProcessWrite = try relaunched.createProject(title: "first-process-write")
+try rawFiles(in: firstProcessWrite.0)
+_ = try relaunched.updateManifest(projectURL: firstProcessWrite.0) { $0.stage = .processing }
+try Data(repeating: 0xAA, count: 32).write(to: firstProcessWrite.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
+let recoveredFirstWrite = try ScanProjectStore(rootURL: root).loadProject(id: firstProcessWrite.1.id)
+expect(recoveredFirstWrite.manifest.stage == .captured, "uncommitted first-process output was trusted after relaunch")
+expect(!FileManager.default.fileExists(atPath: firstProcessWrite.0.appendingPathComponent(ScanProjectStore.splatResultFileName).path), "uncommitted first-process output was not discarded")
+
+// PROCESSING after a completed result: the old completion must win even when the interrupted new file
+// has a byte length that would otherwise pass the lightweight Splat structural check.
 let reprocessCrash = try relaunched.createProject(title: "reprocess-crash")
 try rawFiles(in: reprocessCrash.0)
 try splatData(0x2A).write(to: reprocessCrash.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
@@ -93,7 +103,7 @@ _ = try relaunched.updateManifest(projectURL: reprocessCrash.0) { manifest in
 _ = try relaunched.updateManifest(projectURL: reprocessCrash.0) { $0.stage = .processing }
 expect(!FileManager.default.fileExists(atPath: reprocessCrash.0.appendingPathComponent(ScanProjectStore.splatResultFileName).path), "old result was not isolated before reprocessing")
 expect(FileManager.default.fileExists(atPath: reprocessCrash.0.appendingPathComponent(ScanProjectStore.previousSplatFileName).path), "previous completed result was not preserved")
-try Data(repeating: 0xEE, count: 13).write(to: reprocessCrash.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
+try Data(repeating: 0xEE, count: 32).write(to: reprocessCrash.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
 let recoveredOld = try ScanProjectStore(rootURL: root).loadProject(id: reprocessCrash.1.id)
 expect(recoveredOld.manifest.stage == .finished, "reprocess crash did not recover previous finished state")
 let recoveredOldData = try Data(contentsOf: reprocessCrash.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
@@ -117,12 +127,12 @@ let successfulData = try Data(contentsOf: reprocessSuccess.0.appendingPathCompon
 expect(successfulData == splatData(0x20), "successful reprocess did not retain the new result")
 expect(!FileManager.default.fileExists(atPath: reprocessSuccess.0.appendingPathComponent(ScanProjectStore.previousSplatFileName).path), "previous result was not cleaned after successful finish")
 
-// FINISHED written immediately before termination: relaunch promotes the valid file to finished.
+// FINISHED: a completed result that existed before a processing transition is recoverable on relaunch.
 let completedWrite = try relaunched.createProject(title: "completed-write")
 try splatData(0x04).write(to: completedWrite.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
 _ = try relaunched.updateManifest(projectURL: completedWrite.0) { $0.stage = .processing }
 let recoveredFinished = try ScanProjectStore(rootURL: root).loadProject(id: completedWrite.1.id)
-expect(recoveredFinished.manifest.stage == .finished, "valid splat was not promoted to finished")
+expect(recoveredFinished.manifest.stage == .finished, "previous completed splat was not recovered")
 expect(recoveredFinished.manifest.splatFileName == ScanProjectStore.splatResultFileName, "recovered splat output missing")
 
 // FAILED: failure state survives relaunch rather than silently disappearing from the library.
