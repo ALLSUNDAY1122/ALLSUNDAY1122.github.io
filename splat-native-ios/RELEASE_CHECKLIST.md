@@ -53,10 +53,14 @@ TestFlightはScaniverse同等化途中の実機比較手段として使う。Spl
 - [ ] S8 no unresolved Sev-1 / Sev-2
 - [ ] S0 ledger has no MISSING / PARTIAL / NEAR_PARITY
 
-## Gate D｜Apple / Codemagic
+## Gate D｜Apple / Codemagic / Internal TestFlight
 
 Apple外部UI操作が必要な時点でのみ人間ゲートとする。
 
+- [x] TestFlight preflightは最新S0を含まないrelease branchを強制FAILする（#4161）
+- [x] Codemagic signed-IPA経路にXcode 26以上 / iOS 26 SDK以上のruntime guardを追加
+- [x] Internal TestFlight用workflowは `submit_to_app_store: false`
+- [ ] 最新S0統合候補を `testflight/splat-native-ios` へ同期し、stale-source preflight PASS
 - [ ] Explicit App ID
 - [ ] App Store Connect App record
 - [ ] 実Apple ID記録
@@ -64,9 +68,20 @@ Apple外部UI操作が必要な時点でのみ人間ゲートとする。
 - [ ] signed IPA
 - [ ] Internal TestFlight upload
 
-このGateは開発終了条件ではなく、必要な実機比較を配布するために適宜通過する。
+このGateは開発終了条件ではなく、必要な実機比較を配布するために適宜通過する。S0統合候補ができる前に古いTestFlight枝を同期・配布しない。
 
-## Gate E｜おもちゃばこ移植判断
+## Gate E｜App Store本審査前の必須人間確認
+
+Internal TestFlight比較とは別の最終ゲート。自動提出しない。
+
+- [ ] Privacy Policy URLをApp Store Connectへ登録し、公開URLが表示可能
+- [ ] 現行のAge Rating質問へApp Store Connectで回答し、Unratedでないことを確認
+- [ ] App Store ConnectのApp Privacy回答を最終統合実装と再照合
+- [ ] S7導入後のアカウント・公開共有・Map/Discoverに合わせPrivacy Manifest / privacy policy / Review Notesを再監査
+- [ ] 最終スクリーンショット・説明・カテゴリ等のストア情報を完成版UIと照合
+- [ ] ユーザーがApp Store本審査提出を明示承認
+
+## Gate F｜おもちゃばこ移植判断
 
 Scaniverse consumer parityが完了するまでは到達不可。
 
@@ -74,4 +89,4 @@ Scaniverse consumer parityが完了するまでは到達不可。
 - [ ] ユーザーが代表scanの品質を実機比較
 - [ ] 3D基盤をおもちゃばこへ移植する判断
 
-App Store本審査提出は別の最終人間承認ゲートとする。
+App Store本審査提出はGate Eの最終人間承認後にのみ行う。
