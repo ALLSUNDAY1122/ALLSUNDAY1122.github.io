@@ -316,7 +316,8 @@ final class ScanProjectStore {
     }
 
     func clearRawData(projectURL: URL) throws {
-        let resultNames = Set((try? loadOrMigrateManifest(projectURL: projectURL).outputs.values) ?? [])
+        let manifest = try loadOrMigrateManifest(projectURL: projectURL)
+        let resultNames = Set(manifest.outputs.values)
         let keep = resultNames.union([
             Self.manifestFileName,
             Self.manifestBackupFileName,
@@ -344,13 +345,18 @@ final class ScanProjectStore {
         try ensureDirectories()
         let source = trashURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
         guard fileManager.fileExists(atPath: source.path) else { throw ScanProjectStoreError.projectNotFound }
-        var destination = rootURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+        var restoredID = id
+        var destination = rootURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
         if fileManager.fileExists(atPath: destination.path) {
-            destination = rootURL
-                .appendingPathComponent(UUID().uuidString)
-                .appendingPathExtension(Self.projectExtension)
+            restoredID = UUID().uuidString
+            destination = rootURL.appendingPathComponent(restoredID).appendingPathExtension(Self.projectExtension)
         }
         try fileManager.moveItem(at: source, to: destination)
+        if restoredID != id {
+            _ = try updateManifest(projectURL: destination) { manifest in
+                manifest.id = restoredID
+            }
+        }
     }
 
     func permanentlyDeleteFromTrash(id: String) throws {
@@ -517,7 +523,7 @@ final class ScanProjectStore {
         guard let enumerator = fileManager.enumerator(
             at: url,
             includingPropertiesForKeys: [.isRegularFileKey, .fileAllocatedSizeKey, .totalFileAllocatedSizeKey],
-            options: [.skipsHiddenFiles]
+            options: []
         ) else { return 0 }
         var total: Int64 = 0
         for case let fileURL as URL in enumerator {
