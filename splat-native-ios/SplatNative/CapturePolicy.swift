@@ -11,6 +11,12 @@ enum CaptureCoverageMode: Equatable {
     case scene
 }
 
+enum LongScanStage: Equatable {
+    case normal
+    case caution
+    case stopRecommended
+}
+
 enum CapturePolicy {
     struct Movement: Equatable {
         let translation: Float
@@ -52,6 +58,38 @@ enum CapturePolicy {
 
         if delta.translation >= minimum { return true }
         return delta.translation >= minimum * 0.45 && delta.rotation >= 0.09
+    }
+
+    static func longScanStage(seconds: Double) -> LongScanStage {
+        if seconds >= 180 { return .stopRecommended }
+        if seconds >= 90 { return .caution }
+        return .normal
+    }
+
+    static func softLimitAllowsFrame(
+        mode: CaptureCoverageMode,
+        coverageSatisfied: Bool,
+        orbitSectorIsNew: Bool,
+        elevationBandIsNew: Bool,
+        viewDirectionIsNew: Bool,
+        spatialCellIsNew: Bool,
+        spatialCellCount: Int,
+        pathLength: Float,
+        translationSinceLast: Float
+    ) -> Bool {
+        guard !coverageSatisfied else { return false }
+
+        switch mode {
+        case .object:
+            return orbitSectorIsNew || elevationBandIsNew
+        case .scene:
+            let extendsPath = pathLength < 0.80
+                && translationSinceLast >= 0.10
+                && translationSinceLast <= 1.25
+            return viewDirectionIsNew
+                || (spatialCellCount < 5 && spatialCellIsNew)
+                || extendsPath
+        }
     }
 
     static func coverageMode(subjectDistance: Float?) -> CaptureCoverageMode {
