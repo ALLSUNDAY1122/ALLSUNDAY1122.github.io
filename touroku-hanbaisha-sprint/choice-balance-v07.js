@@ -27,7 +27,7 @@ const nativeFetch=window.fetch.bind(window);
 window.fetch=async function(input,init){
   const response=await nativeFetch(input,init);
   const url=typeof input==='string'?input:(input&&input.url)||'';
-  if(!/questions\/exam-[23]\/chapter-[1-5]\.json(?:\?|$)/.test(url))return response;
+  if(!/questions\/exam-[123]\/chapter-[1-5]\.json(?:\?|$)/.test(url))return response;
   const originalJson=response.json.bind(response);
   response.json=async function(){
     const data=await originalJson();
