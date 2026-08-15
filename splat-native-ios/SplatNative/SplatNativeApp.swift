@@ -7,7 +7,7 @@ struct SplatNativeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootScanView()
+            ScanHomeView()
                 .environmentObject(model)
                 .environmentObject(meshModel)
         }
