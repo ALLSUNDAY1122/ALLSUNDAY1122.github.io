@@ -2,7 +2,7 @@ import CryptoKit
 import Foundation
 import SplatIO
 
-/// S6 export pipeline for Gaussian Splat assets.
+/// C2 export pipeline for Gaussian Splat assets.
 ///
 /// The reconstruction output is the 32-byte-per-point `.splat` format emitted by Msplat.
 /// We intentionally decode it through SplatIO and re-encode through SplatIO's PLY/SPZ writers
@@ -88,11 +88,22 @@ enum SplatExportService {
     /// Convert Msplat's `.splat` result into a standards-oriented export file.
     /// The destination is written through a temporary file and only replaces the final output
     /// after the writer has closed and the output has been validated.
-    static func export(sourceURL: URL, format: Format) async throws -> URL {
+    static func export(
+        sourceURL: URL,
+        format: Format,
+        destinationDirectory: URL? = nil,
+        outputBaseName: String? = nil
+    ) async throws -> URL {
         let pointCount = try sourcePointCount(sourceURL)
-        let outputURL = sourceURL.deletingPathExtension().appendingPathExtension(format.rawValue)
-        let temporaryURL = outputURL
-            .deletingLastPathComponent()
+        let directory = destinationDirectory ?? sourceURL.deletingLastPathComponent()
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+
+        let defaultBaseName = sourceURL.deletingPathExtension().lastPathComponent
+        let baseName = outputBaseName ?? defaultBaseName
+        let outputURL = directory
+            .appendingPathComponent(baseName)
+            .appendingPathExtension(format.rawValue)
+        let temporaryURL = directory
             .appendingPathComponent(".\(outputURL.lastPathComponent).\(UUID().uuidString).partial")
 
         try? FileManager.default.removeItem(at: temporaryURL)
@@ -141,16 +152,16 @@ enum SplatExportService {
         }
     }
 
-    /// Creates the only local asset contract D should consume for explicit browser/cloud sharing.
+    /// Creates the local asset contract D should consume for explicit browser/cloud sharing.
     /// It accepts only an atomically committed completed Splat, applies the same low-storage gate as
-    /// local SPZ export, and never performs networking or embeds location on C's behalf.
+    /// local SPZ export, writes exactly one SPZ directly inside the temporary package, and never
+    /// performs networking or embeds location on C's behalf.
     static func makeBrowserSharePackage(
         sourceURL: URL,
         previewJPEG: Data? = nil,
         rootDirectory: URL = FileManager.default.temporaryDirectory
     ) async throws -> BrowserSharePackage {
         let trustedURL = try SplatExportAdmission.preflight(sourceURL: sourceURL, kind: .spz)
-        let exportedSPZ = try await export(sourceURL: trustedURL, format: .spz)
         try Task.checkCancellation()
 
         let packageURL = rootDirectory
@@ -158,8 +169,14 @@ enum SplatExportService {
         try FileManager.default.createDirectory(at: packageURL, withIntermediateDirectories: true)
 
         do {
-            let assetURL = packageURL.appendingPathComponent("scene.spz")
-            try FileManager.default.copyItem(at: exportedSPZ, to: assetURL)
+            let assetURL = try await export(
+                sourceURL: trustedURL,
+                format: .spz,
+                destinationDirectory: packageURL,
+                outputBaseName: "scene"
+            )
+            try Task.checkCancellation()
+
             let assetData = try Data(contentsOf: assetURL, options: [.mappedIfSafe])
             guard !assetData.isEmpty else { throw ExportError.outputMissing }
 
