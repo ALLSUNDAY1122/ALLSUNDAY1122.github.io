@@ -50,11 +50,19 @@ grep -q 'acceptedFrames < maxFrames' SplatNative/ScanModel.swift
 grep -q '同じ側の写真に偏っています' SplatNative/ScanModel.swift
 
 # Harsh-review gate: a successful splat must open centered on its actual data,
-# and the user must be able to restore that framing.
+# preserve that center while panning via an offset, and let the user restore framing.
 grep -q 'robustFraming(for: points)' SplatNative/SplatViewer.swift
 grep -q 'sceneCenter = framing.center' SplatNative/SplatViewer.swift
-grep -q 'center: sceneCenter' SplatNative/SplatViewer.swift
+grep -q 'let target = sceneCenter + targetOffset' SplatNative/SplatViewer.swift
 grep -q 'resetView' SplatNative/SplatViewer.swift
+
+# S3 parity gate: 1-finger orbit, 2-finger pan, pinch zoom, crop/edit rebuild,
+# and two-point measurement must remain implemented in the native viewer.
+grep -q 'orbit.minimumNumberOfTouches = 1' SplatNative/SplatViewer.swift
+grep -q 'scenePan.minimumNumberOfTouches = 2' SplatNative/SplatViewer.swift
+grep -q 'UIPinchGestureRecognizer' SplatNative/SplatViewer.swift
+grep -q 'editedPoints(points, settings: settings, bounds: bounds)' SplatNative/SplatViewer.swift
+grep -q 'rendererMeasured(meters:' SplatNative/SplatViewer.swift
 
 # Harsh-review gate: consumer UI must not expose internal training/debug jargon,
 # and destructive loss of a finished scan needs an explicit confirmation.
