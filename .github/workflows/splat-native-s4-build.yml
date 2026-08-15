@@ -50,13 +50,20 @@ jobs:
           ! grep -R -nE 'TODO.*Mesh|placeholder.*Mesh|fake.*mesh' splat-native-ios/SplatNative/MeshScan*.swift
 
       - name: Build iOS device target without signing
+        shell: bash
         run: |
-          set -euxo pipefail
-          xcodebuild \
+          set +e
+          xcodebuild -quiet \
             -project splat-native-ios/SplatNative.xcodeproj \
             -scheme SplatNative \
             -configuration Debug \
             -destination 'generic/platform=iOS' \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
-            build
+            build 2>&1 | tee /tmp/s4-build.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            echo '--- S4 compiler diagnostics ---'
+            grep -E '(^|[[:space:]])(error|warning):|:[0-9]+:[0-9]+: (error|warning):' /tmp/s4-build.log | tail -n 160 || true
+            exit "$status"
+          fi
