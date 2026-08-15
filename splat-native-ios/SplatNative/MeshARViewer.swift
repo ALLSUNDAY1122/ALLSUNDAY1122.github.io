@@ -143,14 +143,18 @@ struct MeshARPlacementView: UIViewRepresentable {
             placedNode?.removeFromParentNode()
             guard let source = try? SCNScene(url: modelURL, options: nil) else { return }
 
-            let container = SCNNode()
+            let anchor = SCNNode()
+            anchor.simdTransform = transform
+
+            let modelRoot = SCNNode()
             for child in source.rootNode.childNodes {
-                container.addChildNode(child.clone())
+                modelRoot.addChildNode(child.clone())
             }
-            recenterForPlacement(container)
-            container.simdTransform = transform
-            view.scene.rootNode.addChildNode(container)
-            placedNode = container
+            recenterForPlacement(modelRoot)
+            anchor.addChildNode(modelRoot)
+
+            view.scene.rootNode.addChildNode(anchor)
+            placedNode = anchor
         }
 
         private func recenterForPlacement(_ root: SCNNode) {
@@ -163,8 +167,8 @@ struct MeshARPlacementView: UIViewRepresentable {
                 let bounds = geometry.boundingBox
                 let corners = Self.corners(minimum: bounds.min, maximum: bounds.max)
                 for corner in corners {
-                    let world = node.convertPosition(corner, to: root)
-                    let p = SIMD3<Float>(world.x, world.y, world.z)
+                    let local = node.convertPosition(corner, to: root)
+                    let p = SIMD3<Float>(local.x, local.y, local.z)
                     minimum = simd_min(minimum, p)
                     maximum = simd_max(maximum, p)
                     found = true
