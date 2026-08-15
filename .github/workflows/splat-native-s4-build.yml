@@ -16,12 +16,18 @@ concurrency:
   group: splat-native-s4-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  GIT_LFS_SKIP_SMUDGE: '1'
+
 jobs:
   build:
     runs-on: macos-15
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
+
+      - name: Disable LFS smudge for SwiftPM dependency checkout
+        run: git lfs install --skip-smudge --skip-repo
 
       - name: Toolchain
         run: |
