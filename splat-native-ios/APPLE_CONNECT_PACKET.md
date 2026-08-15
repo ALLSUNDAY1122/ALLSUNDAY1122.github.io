@@ -15,15 +15,22 @@
 - TestFlight: Internal Testing only
 - App Store review auto-submit: disabled
 
+## 今回のS1実機候補
+
+- Development branch: `scaniverse/s1-capture`
+- TestFlight candidate branch: `testflight/s1-capture`
+- Device acceptance: `splat-native-ios/S1_DEVICE_ACCEPTANCE.md`
+- Integration branchへのmerge: 実機gate PASSまで禁止
+
 ## Apple Developer側
 
-CodemagicのTestFlight workflowは、Bundle IDが存在しない場合に `jp.allsunday1122.splatlab` のExplicit App IDを作成し、App Store配布用の署名ファイルを取得・生成する構成です。
+Codemagicの`Splat Lab - Apple Bundle ID Bootstrap` workflowは、Bundle IDが存在しない場合に `jp.allsunday1122.splatlab` のExplicit App IDを作成する構成です。
 
 したがって、手作業で先にBundle IDを作る必要はありません。Codemagicが権限不足等で失敗した場合のみ、その失敗内容に応じて人間操作へ切り替えます。
 
 ## App Store Connect側で人間が行う登録
 
-App Store Connect APIでは新規Appレコードを作成できないため、新規AppレコードだけはWeb UIで作成します。
+新規AppレコードだけはApple側の認証済みUIで作成し、発行された実値を使用します。
 
 入力値:
 
@@ -34,26 +41,37 @@ App Store Connect APIでは新規Appレコードを作成できないため、�
 - SKU: `splatlab-ios-2026`
 - User Access: Full Access（特別に制限する必要がない場合）
 
-作成後に発行されるApple ID（数値）は推測せず、実値をNotion正本とこのパケットへ記録します。
+作成後に表示されるApple ID（数値）は推測せず、実値をNotion正本とこのパケットへ記録します。
 
 ## Appレコード作成後の自動経路
 
-`testflight/splat-native-ios` ブランチのCodemagic workflow:
+`testflight/s1-capture` ブランチのCodemagic `Splat Lab S1 - Internal TestFlight` workflow:
 
-1. Release入力監査
-2. Explicit Bundle ID確認/必要時作成
-3. App Store signing files取得/必要時作成
-4. signed IPA生成
-5. App Store Connectへupload
-6. Internal TestFlightへ送信
-7. App Store本審査には送信しない
+1. App Store Connect App IDが実値へ更新済みか確認
+2. Release入力監査
+3. Explicit Bundle ID確認
+4. App Store signing files取得/必要時作成
+5. signed IPA生成
+6. App Store Connectへupload
+7. Internal TestFlightへ送信
+8. App Store本審査には送信しない
 
-## Internal TestFlight後に必要な人間判断
+`APP_STORE_CONNECT_APP_ID=PENDING_HUMAN_APP_RECORD` の間はworkflow冒頭で停止し、誤って署名・uploadへ進まない。
 
-実機で中心経路を確認し、次のどれかを判断します。
+## Internal TestFlight後のS1 human-only gate
 
-- PASS: 立体の思い出として十分識別できる → おもちゃばこMVPへ進む
-- CONDITIONAL: 生成可能だが品質・速度・熱に課題 → パラメータ/撮影方法を改善し再試験
-- FAIL: オンデバイス方式が実用品質に届かない → 方式再設計
+`splat-native-ios/S1_DEVICE_ACCEPTANCE.md` に沿い、原則1本の画面録画で次を確認する。
 
-この判断以前にApp Store本審査へ提出しません。
+- small object全周は完了できる
+- 同じobjectを片側だけ撮っても誤合格しない
+- room / outdoor sceneが完了できる
+- near / farでcaptureが破綻しない
+- pause→resume
+- stop→resume/add
+- background→return
+- tracking loss→relocalization
+- 90秒/180秒のlong-scan警告
+- soft frame limit後も未撮影coverageだけ救済できる
+- LiDAR対応端末がある場合はLiDAR ON/OFF
+
+この判断以前にDraft PR #4158をintegration branchへmergeせず、App Store本審査にも提出しない。
