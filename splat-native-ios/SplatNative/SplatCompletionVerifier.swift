@@ -3,8 +3,8 @@ import Foundation
 /// Verifies that a `.splat` is the atomically committed result of a finished local project.
 ///
 /// Structural record alignment alone is not completion evidence: a process can be interrupted
-/// after writing any whole number of 32-byte records. Export/share entry points must pass through
-/// this verifier before treating a local result as user-owned completed data.
+/// after writing any whole number of 32-byte records. Export/share/view entry points must pass
+/// through this verifier before treating a local result as user-owned completed data.
 enum SplatCompletionVerifier {
     enum VerificationError: LocalizedError {
         case unexpectedSource
@@ -49,6 +49,15 @@ enum SplatCompletionVerifier {
               manifest.splatFileName == ScanProjectStore.splatResultFileName else {
             throw VerificationError.projectNotFinished
         }
+
+        // Legacy Store recovery restores `result.previous.splat` bytes but historically discarded
+        // their evidence. C2 preserves a SHA-256-bound sidecar before reprocess and may restore the
+        // evidence here only when the recovered bytes are exactly the previous trusted result.
+        SplatPreviousResultEvidence.restoreCurrentEvidenceIfExactPreviousResult(
+            projectURL: projectURL,
+            outputURL: expectedURL,
+            fileManager: fileManager
+        )
 
         let evidenceURL = projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName)
         guard let evidenceData = try? Data(contentsOf: evidenceURL),
