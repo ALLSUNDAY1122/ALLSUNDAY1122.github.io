@@ -33,6 +33,13 @@ jobs:
         run: |
           python3 kangoshi-sprint/ios/tools/normalize_swift_numeric_literals.py
           git diff --check
+      - name: Session dismissal safety gate
+        run: |
+          if grep -R -n -E 'model\.session!' kangoshi-sprint/ios/Sources --include='*.swift'; then
+            echo 'Unsafe model.session force unwrap detected'; exit 1
+          fi
+          grep -q 'if let s = model.session' kangoshi-sprint/ios/Sources/QuizViews.swift
+          grep -q 'let session: StudySession' kangoshi-sprint/ios/Sources/QuizViews.swift
       - name: Validate privacy manifest
         run: plutil -lint kangoshi-sprint/ios/PrivacyInfo.xcprivacy
       - name: Prepare canonical 720-question resources
@@ -95,10 +102,11 @@ jobs:
           from pathlib import Path
           out=Path('kangoshi-sprint/ios/native-build-audit.json')
           out.write_text(json.dumps({
-            'schemaVersion':2,'bundleId':'jp.allsunday1122.kangoshi',
+            'schemaVersion':3,'bundleId':'jp.allsunday1122.kangoshi',
             'productId':'jp.allsunday1122.kangoshi.monthly','questions':720,'examSets':3,
             'mediaAssets':38,'storeKit2CodeReady':True,'displayPriceFromStoreKit':True,
-            'privacyManifest':True,'debugSimulatorBuild':True,'releaseSimulatorBuild':True,'pass':True
+            'privacyManifest':True,'sessionDismissalSafetyGate':True,
+            'debugSimulatorBuild':True,'releaseSimulatorBuild':True,'pass':True
           },ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
       - name: Commit normalized sources and native audit
