@@ -73,7 +73,7 @@ try Data("broken".utf8).write(
 let recoveredBackup = try ScanProjectStore(rootURL: root).loadProject(id: persistent.1.id)
 expect(recoveredBackup.manifest.title == "backup-ok", "backup manifest recovery failed")
 
-// PROCESSING without a previous result: relaunch returns to captured when raw is intact.
+// PROCESSING without an output: relaunch returns to captured when raw is intact.
 let interrupted = try relaunched.createProject(title: "interrupted")
 try rawFiles(in: interrupted.0)
 _ = try relaunched.updateManifest(projectURL: interrupted.0) { $0.stage = .processing }
@@ -81,18 +81,46 @@ let recoveredProcessing = try ScanProjectStore(rootURL: root).loadProject(id: in
 expect(recoveredProcessing.manifest.stage == .captured, "processing interruption did not recover to captured")
 expect(recoveredProcessing.manifest.recoveredAfterInterruption, "processing recovery flag missing")
 
-// A file with a superficially valid Splat byte length is still uncommitted while manifest says processing.
-// On first processing there is no prior result to preserve, so discard it and retry from retained raw.
-let firstProcessWrite = try relaunched.createProject(title: "first-process-write")
-try rawFiles(in: firstProcessWrite.0)
-_ = try relaunched.updateManifest(projectURL: firstProcessWrite.0) { $0.stage = .processing }
-try Data(repeating: 0xAA, count: 32).write(to: firstProcessWrite.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
-let recoveredFirstWrite = try ScanProjectStore(rootURL: root).loadProject(id: firstProcessWrite.1.id)
-expect(recoveredFirstWrite.manifest.stage == .captured, "uncommitted first-process output was trusted after relaunch")
-expect(!FileManager.default.fileExists(atPath: firstProcessWrite.0.appendingPathComponent(ScanProjectStore.splatResultFileName).path), "uncommitted first-process output was not discarded")
+// S8 #4151 acceptance: an aligned partial/direct output is never completion evidence.
+let alignedPartial = try relaunched.createProject(title: "aligned-partial")
+try rawFiles(in: alignedPartial.0)
+_ = try relaunched.updateManifest(projectURL: alignedPartial.0) { $0.stage = .processing }
+try Data(repeating: 0xAA, count: 64).write(
+    to: alignedPartial.0.appendingPathComponent(ScanProjectStore.splatResultFileName)
+)
+let recoveredAligned = try ScanProjectStore(rootURL: root).loadProject(id: alignedPartial.1.id)
+expect(recoveredAligned.manifest.stage == .captured, "aligned partial output was promoted to finished")
+expect(recoveredAligned.manifest.splatFileName == nil, "aligned partial output remained published")
+expect(!FileManager.default.fileExists(atPath: alignedPartial.0.appendingPathComponent(ScanProjectStore.splatResultFileName).path), "aligned partial output was not discarded")
 
-// PROCESSING after a completed result: the old completion must win even when the interrupted new file
-// has a byte length that would otherwise pass the lightweight Splat structural check.
+// S8 #4151 acceptance: an unaligned partial output is also discarded and raw remains retryable.
+let unalignedPartial = try relaunched.createProject(title: "unaligned-partial")
+try rawFiles(in: unalignedPartial.0)
+_ = try relaunched.updateManifest(projectURL: unalignedPartial.0) { $0.stage = .processing }
+try Data(repeating: 0xBB, count: 47).write(
+    to: unalignedPartial.0.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+)
+let recoveredUnaligned = try ScanProjectStore(rootURL: root).loadProject(id: unalignedPartial.1.id)
+expect(recoveredUnaligned.manifest.stage == .captured, "unaligned partial output was promoted to finished")
+expect(!FileManager.default.fileExists(atPath: unalignedPartial.0.appendingPathComponent(ScanProjectStore.pendingSplatFileName).path), "unaligned partial pending output was not discarded")
+
+// S8 #4151 acceptance: a fully exported pending file gets durable evidence before manifest completion.
+// Simulate termination after commitPendingSplat returned but before ScanModel writes `.finished`.
+let committedBeforeManifest = try relaunched.createProject(title: "committed-before-manifest")
+try rawFiles(in: committedBeforeManifest.0)
+_ = try relaunched.updateManifest(projectURL: committedBeforeManifest.0) { $0.stage = .processing }
+try splatData(0xCC).write(
+    to: committedBeforeManifest.0.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+)
+let committedURL = try relaunched.commitPendingSplat(projectURL: committedBeforeManifest.0)
+expect(FileManager.default.fileExists(atPath: committedURL.path), "committed output missing before simulated termination")
+expect(FileManager.default.fileExists(atPath: committedBeforeManifest.0.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName).path), "durable completion evidence missing")
+let recoveredCommitted = try ScanProjectStore(rootURL: root).loadProject(id: committedBeforeManifest.1.id)
+expect(recoveredCommitted.manifest.stage == .finished, "durably committed output was not recovered after manifest interruption")
+expect(recoveredCommitted.manifest.splatFileName == ScanProjectStore.splatResultFileName, "committed output was not published during recovery")
+expect(try Data(contentsOf: recoveredCommitted.resultURL!) == splatData(0xCC), "committed output changed during recovery")
+
+// REPROCESS interruption: a prior finished result is preserved before `.processing` is made durable.
 let reprocessCrash = try relaunched.createProject(title: "reprocess-crash")
 try rawFiles(in: reprocessCrash.0)
 try splatData(0x2A).write(to: reprocessCrash.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
@@ -103,13 +131,13 @@ _ = try relaunched.updateManifest(projectURL: reprocessCrash.0) { manifest in
 _ = try relaunched.updateManifest(projectURL: reprocessCrash.0) { $0.stage = .processing }
 expect(!FileManager.default.fileExists(atPath: reprocessCrash.0.appendingPathComponent(ScanProjectStore.splatResultFileName).path), "old result was not isolated before reprocessing")
 expect(FileManager.default.fileExists(atPath: reprocessCrash.0.appendingPathComponent(ScanProjectStore.previousSplatFileName).path), "previous completed result was not preserved")
-try Data(repeating: 0xEE, count: 32).write(to: reprocessCrash.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
+try Data(repeating: 0xEE, count: 64).write(to: reprocessCrash.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
 let recoveredOld = try ScanProjectStore(rootURL: root).loadProject(id: reprocessCrash.1.id)
 expect(recoveredOld.manifest.stage == .finished, "reprocess crash did not recover previous finished state")
 let recoveredOldData = try Data(contentsOf: reprocessCrash.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
 expect(recoveredOldData == splatData(0x2A), "reprocess crash damaged the previous completed splat")
 
-// PROCESSING success: a valid new result replaces the previous one and cleanup happens only after finish.
+// REPROCESS success: the new result is exported to pending and committed before the finished manifest.
 let reprocessSuccess = try relaunched.createProject(title: "reprocess-success")
 try rawFiles(in: reprocessSuccess.0)
 try splatData(0x10).write(to: reprocessSuccess.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
@@ -118,22 +146,16 @@ _ = try relaunched.updateManifest(projectURL: reprocessSuccess.0) { manifest in
     manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
 }
 _ = try relaunched.updateManifest(projectURL: reprocessSuccess.0) { $0.stage = .processing }
-try splatData(0x20).write(to: reprocessSuccess.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
+try splatData(0x20).write(to: reprocessSuccess.0.appendingPathComponent(ScanProjectStore.pendingSplatFileName))
+let newResult = try relaunched.commitPendingSplat(projectURL: reprocessSuccess.0)
 _ = try relaunched.updateManifest(projectURL: reprocessSuccess.0) { manifest in
     manifest.stage = .finished
-    manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+    manifest.outputs[ScanRepresentationKind.splat.rawValue] = newResult.lastPathComponent
 }
 let successfulData = try Data(contentsOf: reprocessSuccess.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
 expect(successfulData == splatData(0x20), "successful reprocess did not retain the new result")
 expect(!FileManager.default.fileExists(atPath: reprocessSuccess.0.appendingPathComponent(ScanProjectStore.previousSplatFileName).path), "previous result was not cleaned after successful finish")
-
-// FINISHED: a completed result that existed before a processing transition is recoverable on relaunch.
-let completedWrite = try relaunched.createProject(title: "completed-write")
-try splatData(0x04).write(to: completedWrite.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
-_ = try relaunched.updateManifest(projectURL: completedWrite.0) { $0.stage = .processing }
-let recoveredFinished = try ScanProjectStore(rootURL: root).loadProject(id: completedWrite.1.id)
-expect(recoveredFinished.manifest.stage == .finished, "previous completed splat was not recovered")
-expect(recoveredFinished.manifest.splatFileName == ScanProjectStore.splatResultFileName, "recovered splat output missing")
+expect(relaunched.trustedSplatURL(projectURL: reprocessSuccess.0) != nil, "finished result was not exposed through trusted completion contract")
 
 // FAILED: failure state survives relaunch rather than silently disappearing from the library.
 let failed = try relaunched.createProject(title: "failed")
@@ -150,20 +172,23 @@ let meshRequest = try relaunched.reprocessRequest(projectURL: persistent.0, repr
 expect(meshRequest.representation == .mesh, "mesh reprocess contract lost representation")
 expect(meshRequest.imagesURL.lastPathComponent == "images", "mesh reprocess contract did not expose retained images")
 
-// Clearing raw must never remove the completed result or thumbnail.
+// Clearing raw must never remove the completed result, thumbnail, or durable completion evidence.
 let clearable = try relaunched.createProject(title: "clearable")
 try rawFiles(in: clearable.0)
-try splatData(0x05).write(to: clearable.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
+_ = try relaunched.updateManifest(projectURL: clearable.0) { $0.stage = .processing }
+try splatData(0x05).write(to: clearable.0.appendingPathComponent(ScanProjectStore.pendingSplatFileName))
+let clearableOutput = try relaunched.commitPendingSplat(projectURL: clearable.0)
 try relaunched.setThumbnail(data: Data(repeating: 6, count: 12), projectURL: clearable.0)
 _ = try relaunched.updateManifest(projectURL: clearable.0) { manifest in
     manifest.stage = .finished
-    manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+    manifest.outputs[ScanRepresentationKind.splat.rawValue] = clearableOutput.lastPathComponent
 }
 try relaunched.clearRawData(projectURL: clearable.0)
 let cleared = try relaunched.loadProject(id: clearable.1.id)
 expect(!cleared.manifest.rawDataRetained, "raw flag remained true after clear")
 expect(FileManager.default.fileExists(atPath: clearable.0.appendingPathComponent(ScanProjectStore.splatResultFileName).path), "clear raw deleted result")
 expect(FileManager.default.fileExists(atPath: clearable.0.appendingPathComponent(ScanProjectStore.thumbnailFileName).path), "clear raw deleted thumbnail")
+expect(FileManager.default.fileExists(atPath: clearable.0.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName).path), "clear raw deleted completion evidence")
 expect(!FileManager.default.fileExists(atPath: clearable.0.appendingPathComponent("images").path), "clear raw retained images")
 
 // TRASH: delete is reversible until explicitly purged.
@@ -174,7 +199,7 @@ expect(afterDelete.listTrash().contains(where: { $0.id == recoverableDelete.1.id
 try afterDelete.restoreFromTrash(id: recoverableDelete.1.id)
 expect(ScanProjectStore(rootURL: root).listProjects().contains(where: { $0.id == recoverableDelete.1.id }), "project did not restore across relaunch")
 
-// MIGRATION: pre-S5 PoC folders migrate in place without requiring a central index.
+// MIGRATION: pre-S5 PoC raw folders migrate in place without requiring a central index.
 let legacyID = "legacy-gate"
 let legacy = root.appendingPathComponent(legacyID).appendingPathExtension(ScanProjectStore.projectExtension)
 try rawFiles(in: legacy)
@@ -182,4 +207,4 @@ let migrated = ScanProjectStore(rootURL: root).listProjects().first(where: { $0.
 expect(migrated?.manifest.stage == .captured, "legacy project was not migrated")
 expect(FileManager.default.fileExists(atPath: legacy.appendingPathComponent(ScanProjectStore.manifestFileName).path), "legacy manifest not written")
 
-print("PASS: ScanProjectStore lifecycle regression gate — capturing/captured/processing/finished/failed/trash/migration")
+print("PASS: ScanProjectStore lifecycle regression gate — partial outputs rejected, committed output recovered")
