@@ -59,8 +59,10 @@ grep -q 'guard success else {' SplatNative/ScanModel.swift
 grep -q 'self.failCaptureStorage()' SplatNative/ScanModel.swift
 grep -q 'session?.pause()' SplatNative/ScanModel.swift
 grep -q 'iPhoneの空き容量を確認して' SplatNative/ScanModel.swift
-# A recoverable capture failure with a persisted checkpoint must be resumable after reopening.
+# A recoverable capture failure with a persisted checkpoint must be resumable after reopening
+# and directly from the failure screen while the in-memory AR coordinate frame still exists.
 grep -q 'stage == .capturing || stage == .captured || stage == .failed' SplatNative/ScanModel.swift
+test "$(grep -c 'if model.activeProjectCanResume' SplatNative/RootScanView.swift)" -ge 2
 
 # Harsh-review gate: a successful splat must open centered on its actual data,
 # and the user must be able to restore that framing.
