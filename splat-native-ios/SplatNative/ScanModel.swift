@@ -440,7 +440,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.isWritingFrame = false
-                guard success, self.phase == .capturing else { return }
+                guard self.phase == .capturing else { return }
+                guard success else {
+                    let message = "撮影データを保存できませんでした。iPhoneの空き容量を確認してください。"
+                    self.phase = .failed(message)
+                    self.trackingMessage = message
+                    self.session?.pause()
+                    UIApplication.shared.isIdleTimerDisabled = false
+                    return
+                }
                 self.captured.append(CapturedView(
                     id: index,
                     filePath: "images/\(fileName)",
