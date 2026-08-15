@@ -487,20 +487,19 @@ final class ScanProjectStore {
         let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
 
         if manifest.stage == .processing {
-            let hadPriorResult = manifest.splatFileName != nil
-            let recovery = try recoverProcessingResult(projectURL: projectURL)
+            let recovery = try recoverInterruptedProcessing(projectURL: projectURL)
             if let recoveredURL = recovery.url {
                 manifest.outputs[ScanRepresentationKind.splat.rawValue] = recoveredURL.lastPathComponent
                 manifest.stage = .finished
                 manifest.recoveredAfterInterruption = true
-                manifest.lastError = recovery.message ?? (hadPriorResult ? "再生成は中断しましたが、完成済み3Dは保持されています。" : nil)
+                manifest.lastError = recovery.message
                 changed = true
             } else {
                 let canRetry = (try? reprocessRequest(projectURL: projectURL, representation: .splat)) != nil
                 manifest.stage = canRetry ? .captured : .failed
                 manifest.recoveredAfterInterruption = true
                 manifest.lastError = canRetry
-                    ? "前回の3D生成は途中で終了しました。rawデータから生成を再開できます。"
+                    ? "前回の3D生成は完了確認前に終了しました。rawデータから安全に生成をやり直せます。"
                     : "前回の3D生成は途中で終了し、再処理に必要なrawデータも見つかりません。"
                 changed = true
             }
@@ -513,6 +512,7 @@ final class ScanProjectStore {
                 manifest.stage = .finished
                 changed = true
             }
+            cleanupSplatSwapArtifacts(projectURL: projectURL)
         } else if validSplat(at: previous) {
             if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
             try fileManager.moveItem(at: previous, to: output)
@@ -564,24 +564,25 @@ final class ScanProjectStore {
         if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
     }
 
-    private func recoverProcessingResult(projectURL: URL) throws -> (url: URL?, message: String?) {
+    /// A `.processing` manifest means the reconstruction engine never reached the explicit finished commit.
+    /// Therefore `result.splat` is never trusted after relaunch, even if its byte count happens to look valid.
+    /// If this was a reprocess, the prior completed result wins; otherwise the uncommitted output is discarded
+    /// and retained raw data remains available for a deterministic retry.
+    private func recoverInterruptedProcessing(projectURL: URL) throws -> (url: URL?, message: String?) {
         let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
         let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
-        if validSplat(at: pending) {
-            do { return (try commitPendingSplat(projectURL: projectURL), nil) } catch { }
-        }
-        if validSplat(at: output) {
-            if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
-            if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
-            return (output, nil)
-        }
+
         if validSplat(at: previous) {
             if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
-            try fileManager.moveItem(at: previous, to: output)
             if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
-            return (output, "再生成は中断しましたが、以前の完成済み3Dを復元しました。")
+            try fileManager.moveItem(at: previous, to: output)
+            return (output, "再生成は完了確認前に中断しました。以前の完成済み3Dを復元しました。")
         }
+
+        if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
+        if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+        if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
         return (nil, nil)
     }
 
