@@ -1,13 +1,15 @@
+import CoreGraphics
 import Foundation
+import ImageIO
 import SceneKit
-import UIKit
+import UniformTypeIdentifiers
 import simd
 
-private struct MeshTextureManifest: Decodable, Sendable {
+private struct MeshTextureManifest: Decodable {
     let frames: [MeshTextureFrame]
 }
 
-private struct MeshTextureFrame: Decodable, Sendable {
+private struct MeshTextureFrame: Decodable {
     let filePath: String
     let timestamp: TimeInterval
     let transform: [[Float]]
@@ -16,12 +18,12 @@ private struct MeshTextureFrame: Decodable, Sendable {
     let height: Int
 }
 
-private struct MeshTextureOBJ: Sendable {
+private struct MeshTextureOBJ {
     let vertices: [SIMD3<Float>]
     let triangles: [SIMD3<Int>]
 }
 
-private struct MeshTexturePreparedFrame: Sendable {
+private struct MeshTexturePreparedFrame {
     let fileURL: URL
     let worldToCamera: simd_float4x4
     let cameraPosition: SIMD3<Float>
@@ -50,7 +52,7 @@ struct MeshTextureBakeResult: Sendable {
     }
 }
 
-private struct MeshTextureBakeMetadata: Codable, Sendable {
+private struct MeshTextureBakeMetadata: Codable {
     let schemaVersion: Int
     let sourceOBJ: String
     let outputOBJ: String
@@ -85,8 +87,11 @@ enum MeshRGBTextureBaker {
         }
 
         let selected = selectFrames(manifest.frames, maximumCount: 63)
-        guard !selected.isEmpty else {
-            throw bakeError("利用できるRGBフレームがありません")
+        let prepared = selected.enumerated().compactMap { index, frame in
+            prepareFrame(frame, projectURL: projectURL, tileIndex: index)
+        }
+        guard !prepared.isEmpty else {
+            throw bakeError("RGBフレームの姿勢情報を復元できません")
         }
 
         let atlasSize: Int
@@ -98,15 +103,9 @@ enum MeshRGBTextureBaker {
             atlasSize = 2048
         }
 
-        let grid = min(8, max(2, Int(ceil(sqrt(Double(selected.count + 1))))))
+        let grid = min(8, max(2, Int(ceil(sqrt(Double(prepared.count + 1))))))
         let tileSize = atlasSize / grid
         let padding = max(2, tileSize / 256)
-        let prepared = selected.enumerated().compactMap { index, frame in
-            prepareFrame(frame, projectURL: projectURL, tileIndex: index)
-        }
-        guard !prepared.isEmpty else {
-            throw bakeError("RGBフレームの姿勢情報を復元できません")
-        }
 
         let textureURL = projectURL.appendingPathComponent("mesh-textured-atlas.jpg")
         try renderAtlas(
@@ -190,19 +189,17 @@ enum MeshRGBTextureBaker {
               frame.height > 0 else { return nil }
 
         let cameraToWorld = matrix4(fromRows: frame.transform)
-        let worldToCamera = simd_inverse(cameraToWorld)
-        let cameraPosition = SIMD3<Float>(
-            cameraToWorld.columns.3.x,
-            cameraToWorld.columns.3.y,
-            cameraToWorld.columns.3.z
-        )
         let fileURL = projectURL.appendingPathComponent(frame.filePath)
         guard FileManager.default.fileExists(atPath: fileURL.path) else { return nil }
 
         return MeshTexturePreparedFrame(
             fileURL: fileURL,
-            worldToCamera: worldToCamera,
-            cameraPosition: cameraPosition,
+            worldToCamera: simd_inverse(cameraToWorld),
+            cameraPosition: SIMD3<Float>(
+                cameraToWorld.columns.3.x,
+                cameraToWorld.columns.3.y,
+                cameraToWorld.columns.3.z
+            ),
             fx: frame.intrinsics[0][0],
             fy: frame.intrinsics[1][1],
             cx: frame.intrinsics[0][2],
@@ -229,7 +226,7 @@ enum MeshRGBTextureBaker {
         vertices.reserveCapacity(100_000)
         triangles.reserveCapacity(150_000)
 
-        for lineSlice in text.split(whereSeparator: \ .isNewline) {
+        for lineSlice in text.split(whereSeparator: \.isNewline) {
             if lineSlice.hasPrefix("v ") {
                 let values = lineSlice.split(separator: " ", omittingEmptySubsequences: true)
                 guard values.count >= 4,
@@ -267,34 +264,66 @@ enum MeshRGBTextureBaker {
         padding: Int,
         outputURL: URL
     ) throws {
-        let format = UIGraphicsImageRendererFormat()
-        format.scale = 1
-        format.opaque = true
-        let renderer = UIGraphicsImageRenderer(
-            size: CGSize(width: atlasSize, height: atlasSize),
-            format: format
-        )
-        let inner = CGFloat(tileSize - 2 * padding)
-        let jpeg = renderer.jpegData(withCompressionQuality: 0.9) { context in
-            context.cgContext.setFillColor(UIColor(white: 0.42, alpha: 1).cgColor)
-            context.cgContext.fill(CGRect(x: 0, y: 0, width: atlasSize, height: atlasSize))
+        guard let colorSpace = CGColorSpace(name: CGColorSpace.sRGB),
+              let context = CGContext(
+                data: nil,
+                width: atlasSize,
+                height: atlasSize,
+                bitsPerComponent: 8,
+                bytesPerRow: atlasSize * 4,
+                space: colorSpace,
+                bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue
+              ) else {
+            throw bakeError("テクスチャatlas用メモリを確保できませんでした")
+        }
 
-            for frame in frames {
-                autoreleasepool {
-                    guard let image = UIImage(contentsOfFile: frame.fileURL.path) else { return }
-                    let column = frame.tileIndex % grid
-                    let row = frame.tileIndex / grid
-                    let rect = CGRect(
-                        x: CGFloat(column * tileSize + padding),
-                        y: CGFloat(row * tileSize + padding),
-                        width: inner,
-                        height: inner
-                    )
-                    image.draw(in: rect)
-                }
+        context.translateBy(x: 0, y: CGFloat(atlasSize))
+        context.scaleBy(x: 1, y: -1)
+        context.setFillColor(red: 0.42, green: 0.42, blue: 0.42, alpha: 1)
+        context.fill(CGRect(x: 0, y: 0, width: atlasSize, height: atlasSize))
+
+        let inner = CGFloat(tileSize - 2 * padding)
+        for frame in frames {
+            autoreleasepool {
+                guard let source = CGImageSourceCreateWithURL(frame.fileURL as CFURL, nil),
+                      let image = CGImageSourceCreateThumbnailAtIndex(
+                        source,
+                        0,
+                        [
+                            kCGImageSourceCreateThumbnailFromImageAlways: true,
+                            kCGImageSourceThumbnailMaxPixelSize: max(256, tileSize),
+                            kCGImageSourceCreateThumbnailWithTransform: false
+                        ] as CFDictionary
+                      ) else { return }
+                let column = frame.tileIndex % grid
+                let row = frame.tileIndex / grid
+                let rect = CGRect(
+                    x: CGFloat(column * tileSize + padding),
+                    y: CGFloat(row * tileSize + padding),
+                    width: inner,
+                    height: inner
+                )
+                context.draw(image, in: rect)
             }
         }
-        try jpeg.write(to: outputURL, options: .atomic)
+
+        guard let atlas = context.makeImage(),
+              let destination = CGImageDestinationCreateWithURL(
+                outputURL as CFURL,
+                UTType.jpeg.identifier as CFString,
+                1,
+                nil
+              ) else {
+            throw bakeError("テクスチャatlasをJPEGへ変換できませんでした")
+        }
+        CGImageDestinationAddImage(
+            destination,
+            atlas,
+            [kCGImageDestinationLossyCompressionQuality: 0.9] as CFDictionary
+        )
+        guard CGImageDestinationFinalize(destination) else {
+            throw bakeError("テクスチャatlasを書き出せませんでした")
+        }
     }
 
     private static func writeTexturedOBJ(
@@ -320,7 +349,7 @@ enum MeshRGBTextureBaker {
         """
         try mtl.write(to: mtlURL, atomically: true, encoding: .utf8)
 
-        FileManager.default.createFile(atPath: objURL.path, contents: nil)
+        _ = FileManager.default.createFile(atPath: objURL.path, contents: nil)
         let handle = try FileHandle(forWritingTo: objURL)
         defer { try? handle.close() }
 
