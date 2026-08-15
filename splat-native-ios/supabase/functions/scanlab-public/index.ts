@@ -43,11 +43,22 @@ async function decorate(scan: Record<string, any>) {
       longitude: scan.longitude,
       label: scan.location_label,
     },
-    author: profile ? { handle: profile.handle, displayName: profile.display_name } : null,
+    author: profile ? { id: scan.owner_id, handle: profile.handle, displayName: profile.display_name } : null,
     likeCount: likeCount ?? 0,
     modelUrl,
     previewUrl,
   };
+}
+
+async function blockedUserIds(req: Request) {
+  const header = req.headers.get("authorization") ?? "";
+  if (!header.toLowerCase().startsWith("bearer ")) return new Set<string>();
+  const token = header.slice(7);
+  const { data: userData } = await supabase.auth.getUser(token);
+  const user = userData.user;
+  if (!user) return new Set<string>();
+  const { data } = await supabase.from("scanlab_blocks").select("blocked_id").eq("blocker_id", user.id);
+  return new Set((data ?? []).map((row) => row.blocked_id as string));
 }
 
 Deno.serve(async (req) => {
@@ -66,7 +77,7 @@ Deno.serve(async (req) => {
       .eq("status", "published")
       .eq("moderation_status", "approved")
       .order("published_at", { ascending: false })
-      .limit(limit);
+      .limit(Math.min(limit * 2, 80));
 
     const minLat = Number(url.searchParams.get("minLat"));
     const maxLat = Number(url.searchParams.get("maxLat"));
@@ -80,9 +91,10 @@ Deno.serve(async (req) => {
       query = query.gte("latitude", minLat).lte("latitude", maxLat).gte("longitude", minLon).lte("longitude", maxLon);
     }
 
-    const { data, error } = await query;
+    const [{ data, error }, blocked] = await Promise.all([query, blockedUserIds(req)]);
     if (error) return json({ error: "feed_unavailable" }, 503);
-    return json({ items: await Promise.all((data ?? []).map(decorate)) });
+    const visible = (data ?? []).filter((scan) => !blocked.has(scan.owner_id)).slice(0, limit);
+    return json({ items: await Promise.all(visible.map(decorate)) });
   }
 
   if (mode === "share") {
