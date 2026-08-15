@@ -39,6 +39,7 @@ struct ScanLibraryView: View {
     @State private var projects: [ScanProjectSummary] = []
     @State private var trash: [ScanProjectSummary] = []
     @State private var showingTrash = false
+    @State private var pendingPermanentDelete: ScanProjectSummary?
     @State private var errorMessage: String?
 
     private let store = ScanProjectStore()
@@ -100,7 +101,7 @@ struct ScanLibraryView: View {
 
     @ViewBuilder
     private func projectRow(_ project: ScanProjectSummary) -> some View {
-        if let trustedURL = store.trustedSplatURL(projectURL: project.projectURL) {
+        if let trustedURL = SplatProjectTrustRecovery.trustedResultURL(for: project) {
             NavigationLink {
                 SavedSplatView(
                     url: trustedURL,
@@ -113,8 +114,7 @@ struct ScanLibraryView: View {
             VStack(alignment: .leading, spacing: 8) {
                 rowLabel(project, canOpen: false)
                 Button {
-                    model.restoreSavedProject(id: project.id)
-                    dismiss()
+                    continueProject(project)
                 } label: {
                     Label(continueLabel(project), systemImage: "arrow.clockwise")
                         .frame(maxWidth: .infinity)
@@ -127,6 +127,9 @@ struct ScanLibraryView: View {
     }
 
     private func canContinue(_ project: ScanProjectSummary) -> Bool {
+        if SplatProjectTrustRecovery.canRecoverForReprocess(project, store: store) {
+            return true
+        }
         guard (try? store.loadCheckpoint(projectURL: project.projectURL)) != nil else { return false }
         let transforms = project.projectURL.appendingPathComponent("transforms.json")
         switch project.manifest.stage {
@@ -147,7 +150,8 @@ struct ScanLibraryView: View {
         case .capturing: return "撮影を再開"
         case .captured: return "生成へ戻る"
         case .failed: return "保存状態から復旧"
-        case .processing, .finished: return "開く"
+        case .finished: return "安全に再生成"
+        case .processing: return "開く"
         }
     }
 
@@ -161,7 +165,7 @@ struct ScanLibraryView: View {
                     .lineLimit(1)
 
                 HStack(spacing: 7) {
-                    Text(stageText(project.manifest.stage))
+                    Text(stageText(project))
                         .font(.caption.bold())
                         .foregroundStyle(canOpen ? .mint : .secondary)
                     Text(project.manifest.updatedAt.formatted(date: .abbreviated, time: .shortened))
@@ -224,12 +228,15 @@ struct ScanLibraryView: View {
                 } else {
                     List {
                         ForEach(trash) { project in
-                            HStack {
+                            HStack(spacing: 12) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(project.manifest.title)
                                         .font(.headline)
                                     Text(project.manifest.updatedAt.formatted(date: .abbreviated, time: .shortened))
                                         .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Text(ByteCountFormatter.string(fromByteCount: project.storageBytes, countStyle: .file))
+                                        .font(.caption2.monospacedDigit())
                                         .foregroundStyle(.secondary)
                                 }
                                 Spacer()
@@ -237,6 +244,13 @@ struct ScanLibraryView: View {
                                     restore(project)
                                 }
                                 .buttonStyle(.bordered)
+                                Button(role: .destructive) {
+                                    pendingPermanentDelete = project
+                                } label: {
+                                    Image(systemName: "trash.slash")
+                                }
+                                .buttonStyle(.bordered)
+                                .accessibilityLabel("完全に削除")
                             }
                             .padding(.vertical, 4)
                         }
@@ -249,6 +263,26 @@ struct ScanLibraryView: View {
                     Button("閉じる") { showingTrash = false }
                 }
             }
+            .confirmationDialog(
+                "このスキャンを完全に削除しますか？",
+                isPresented: Binding(
+                    get: { pendingPermanentDelete != nil },
+                    set: { if !$0 { pendingPermanentDelete = nil } }
+                ),
+                titleVisibility: .visible
+            ) {
+                Button("完全に削除", role: .destructive) {
+                    if let project = pendingPermanentDelete {
+                        permanentlyDelete(project)
+                    }
+                    pendingPermanentDelete = nil
+                }
+                Button("キャンセル", role: .cancel) {
+                    pendingPermanentDelete = nil
+                }
+            } message: {
+                Text("この操作は取り消せません。3D・rawデータ・サムネイルを端末から削除し、使用容量を解放します。")
+            }
         }
         .preferredColorScheme(.dark)
     }
@@ -256,6 +290,19 @@ struct ScanLibraryView: View {
     private func refresh() {
         projects = store.listProjects()
         trash = store.listTrash()
+    }
+
+    private func continueProject(_ project: ScanProjectSummary) {
+        do {
+            if project.manifest.stage == .finished,
+               SplatProjectTrustRecovery.trustedResultURL(for: project) == nil {
+                try SplatProjectTrustRecovery.prepareForReprocess(project, store: store)
+            }
+            model.restoreSavedProject(id: project.id)
+            dismiss()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     private func moveToTrash(_ project: ScanProjectSummary) {
@@ -277,8 +324,25 @@ struct ScanLibraryView: View {
         }
     }
 
-    private func stageText(_ stage: ScanProjectStage) -> String {
-        switch stage {
+    private func permanentlyDelete(_ project: ScanProjectSummary) {
+        do {
+            try store.permanentlyDeleteFromTrash(id: project.id)
+            refresh()
+            if trash.isEmpty { showingTrash = false }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func stageText(_ project: ScanProjectSummary) -> String {
+        if project.manifest.stage == .finished,
+           SplatProjectTrustRecovery.trustedResultURL(for: project) == nil {
+            return SplatProjectTrustRecovery.canRecoverForReprocess(project, store: store)
+                ? "要再生成"
+                : "完成未確認"
+        }
+
+        switch project.manifest.stage {
         case .capturing: return "撮影途中"
         case .captured: return "生成待ち"
         case .processing: return "生成中断"
