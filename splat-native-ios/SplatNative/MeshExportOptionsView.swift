@@ -1,12 +1,17 @@
 import SwiftUI
 
+private struct MeshSharePayload: Identifiable {
+    let id = UUID()
+    let url: URL
+}
+
 /// Drop-in S6 export surface for S4's `MeshScanModel.resultURL`.
 /// S0 only needs to present this view with the real S4 result URL after sibling-branch integration.
 struct MeshExportOptionsView: View {
     let sourceURL: URL
 
     @Environment(\.dismiss) private var dismiss
-    @State private var sharePayload: SharePayload?
+    @State private var sharePayload: MeshSharePayload?
     @State private var exportError: String?
     @State private var exportingFormat: MeshExportService.Format?
     @State private var exportTask: Task<Void, Never>?
@@ -103,7 +108,7 @@ struct MeshExportOptionsView: View {
                     format: format
                 )
                 try Task.checkCancellation()
-                sharePayload = SharePayload(url: output)
+                sharePayload = MeshSharePayload(url: output)
             } catch is CancellationError {
                 // Expected recovery path. MeshExportService removes partial outputs.
             } catch {
