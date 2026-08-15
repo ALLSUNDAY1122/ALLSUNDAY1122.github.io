@@ -49,8 +49,8 @@ targets:
     deploymentTarget: '18.0'
     sources:
       - path: SplatNativeTests
+      - path: SplatNative/SplatExportService.swift
     dependencies:
-      - target: SplatNative
       - package: Msplat
         product: Msplat
       - package: MetalSplatter
