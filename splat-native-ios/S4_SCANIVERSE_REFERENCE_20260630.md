@@ -20,7 +20,7 @@ The recording shows a real saved bouquet scan opened in Scaniverse, then:
 5. share surface with link sharing, message, Sketchfab, video creation and model export;
 6. model export choices shown in the UI: **FBX, OBJ, GLB, USDZ, STL, PLY, LAS**.
 
-Cross-session ownership remains unchanged: S4 owns Mesh generation/edit/measurement and the exporter-facing asset contract; S6 owns final multi-format writers/share/video; S7 owns public link/discovery/backend; AR presentation should be coordinated with S3/S4/S0.
+Cross-session ownership remains unchanged: S4 owns Mesh generation/edit/measurement and the exporter-facing asset contract; S6 owns final multi-format writers/share/video; S7 owns public link/discovery/backend. S4 now supplies metric Mesh AR/object presentation because it depends directly on the metric Mesh contract.
 
 ## GLB structure
 
@@ -66,19 +66,31 @@ Interpretation: Scaniverse accepts many disconnected thin/occluded pieces where 
 
 ## Texture quality characteristics
 
-The GLB uses a single large UV atlas. The atlas is heavily packed with many disconnected texture islands rather than a simple camera projection. That implies a real texture-unwrapping / view-selection / blending stage.
+The GLB uses a single large UV atlas. The atlas is heavily packed with many disconnected texture islands rather than a simple single-camera projection. That implies a real texture-unwrapping / view-selection / blending stage.
 
 The 8K atlas is a decisive parity signal: an untextured LiDAR OBJ or a coarse vertex-color preview is not practically comparable for this object class.
 
 ## Consequences for S4
 
-1. **Textured Mesh must become the normal final result**, not an optional afterthought on supported hardware.
+1. **Textured Mesh must become the normal final LiDAR result**, not an optional afterthought.
 2. LiDAR geometry should keep ARKit meter scale while RGB frames are used for texture projection/baking.
 3. Thin disconnected components must survive cleanup unless they are demonstrably noise.
 4. Geometry simplification must be texture-aware and must not erase petals/leaves/wrapping merely to reduce component count.
 5. Current non-LiDAR feature-point voxel Mesh remains far below this reference in geometry density.
 6. Apple iOS Object Capture alone cannot be treated as the parity engine; S4 needs an independent dense/textured path where the system API cannot reproduce this output class.
 7. S4 device comparison should record at minimum: vertex count, triangle count, bounding-box scale, texture dimensions/file size, visible holes, thin-structure retention, measurement error and processing time.
+
+## Reference-driven implementation wave
+
+This reference exposed software gaps that were invisible in compile-only review, so S4 was reopened instead of waiting for device testing.
+
+- `MeshRGBTextureBaker.swift` projects the saved RGB capture frames back onto the original ARKit meter-scale LiDAR Mesh, chooses a source view per face, writes textured OBJ/MTL plus a 2K/4K/8K JPEG atlas, and records `projectionCoverage` in `mesh-texture-bake.json`.
+- LiDAR result flow automatically attempts RGB texture baking when enough frames are available. Texture failure does not discard the underlying metric geometry.
+- `MeshARViewer.swift` adds `AR / オブジェクト` switching for metric assets. ARSCNView raycasting places the Mesh without applying an arbitrary scale transform.
+- Scale-uncalibrated photogrammetry output remains excluded from metric measurement and metric AR placement.
+- `S4_DEVICE_ACCEPTANCE.md` now checks atlas resolution, projection orientation/seams/ghosting, projection coverage, known-length measurement, 1:1 AR placement, and direct comparison with this reference.
+
+These additions close structural workflow gaps but do **not** prove practical-quality parity. First-generation RGB projection still needs device validation for coordinate convention, occlusion, seam/blend quality, color consistency and 8K memory/thermal behavior. Non-LiDAR dense reconstruction is still a separate major gap.
 
 ## Reference-only target band
 
