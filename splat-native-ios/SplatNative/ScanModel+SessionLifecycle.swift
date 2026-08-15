@@ -14,25 +14,17 @@ extension ScanModel {
 
     nonisolated func sessionWasInterrupted(_ session: ARSession) {
         Task { @MainActor [weak self] in
-            guard let self, self.phase == .capturing else { return }
-            self.trackingMessage = "カメラが一時中断されました。アプリへ戻ると追跡を再開します"
+            self?.handleSessionInterrupted()
         }
     }
 
     nonisolated func sessionInterruptionEnded(_ session: ARSession) {
         Task { @MainActor [weak self] in
-            guard let self, self.phase == .capturing else { return }
-            self.trackingMessage = "位置を再確認しています。対象を中央にしてゆっくり動かしてください"
-            guard let activeSession = self.session else {
-                self.phase = .failed("ARセッションを再開できませんでした")
-                UIApplication.shared.isIdleTimerDisabled = false
-                return
-            }
-            let config = ARWorldTrackingConfiguration()
-            config.worldAlignment = .gravity
-            config.isLightEstimationEnabled = true
-            config.environmentTexturing = .none
-            activeSession.run(config, options: [.resetTracking, .removeExistingAnchors])
+            self?.handleSessionInterruptionEnded()
         }
+    }
+
+    nonisolated func sessionShouldAttemptRelocalization(_ session: ARSession) -> Bool {
+        true
     }
 }
