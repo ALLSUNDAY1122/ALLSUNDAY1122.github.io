@@ -291,10 +291,9 @@ final class ScanLabBackend: ObservableObject {
         let uploadID = UUID().uuidString.lowercased(), prefix = "\(user.id.uuidString.lowercased())/\(uploadID)", assetPath = "\(prefix)/result.splat", previewPath = previewImage == nil ? nil : "\(prefix)/preview.jpg"
         var uploadedPaths: [String] = []
         do {
-            let modelData = try Data(contentsOf: resultURL, options: [.mappedIfSafe])
-            try await client.storage.from("scanlab-assets").upload(path: assetPath, file: modelData, options: FileOptions(contentType: "application/octet-stream")); uploadedPaths.append(assetPath)
+            try await client.storage.from("scanlab-assets").upload(assetPath, fileURL: resultURL, options: FileOptions(contentType: "application/octet-stream")); uploadedPaths.append(assetPath)
             if let previewPath, let previewData = previewImage?.jpegData(compressionQuality: 0.82) {
-                try await client.storage.from("scanlab-assets").upload(path: previewPath, file: previewData, options: FileOptions(contentType: "image/jpeg")); uploadedPaths.append(previewPath)
+                try await client.storage.from("scanlab-assets").upload(previewPath, data: previewData, options: FileOptions(contentType: "image/jpeg")); uploadedPaths.append(previewPath)
             }
             let draft = ScanLabDraftInsert(ownerId: user.id, title: trimmedTitle, caption: String(caption.prefix(500)), visibility: visibility.rawValue, status: "draft", assetPath: assetPath, previewPath: previewPath, latitude: location?.latitude, longitude: location?.longitude, locationLabel: location?.label, publicPlaceConfirmed: publicPlaceConfirmed, privacyConfirmed: privacyConfirmed, rightsConfirmed: rightsConfirmed, contentConfirmed: contentConfirmed)
             let created: ScanLabCreatedScan = try await client.from("scanlab_scans").insert(draft).select("id").single().execute().value
