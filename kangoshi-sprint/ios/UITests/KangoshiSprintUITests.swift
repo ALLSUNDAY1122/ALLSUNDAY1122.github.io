@@ -5,6 +5,7 @@ final class KangoshiSprintUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    // Regression: quiz dismissal must restore the home content, not a fragile tab-bar query.
     func testHomeFreeSprintAndClose() throws {
         let app = XCUIApplication()
         app.launchArguments += ["-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
