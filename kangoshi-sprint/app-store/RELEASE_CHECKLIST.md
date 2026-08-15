@@ -24,7 +24,8 @@
 - [x] Privacy Manifest
 - [x] Debug Simulator build
 - [x] Release Simulator build
-- [ ] 2サイズUI automation PASS（最終run進行中）
+- [x] 2サイズUI automation PASS（iPhone SE 第3世代 / iPhone 16 Pro）
+- [x] 問題画面終了時のsession強制アンラップを除去し、閉じる→アプリ生存→ホーム復帰を自動確認
 - [ ] Google Drive正本 `03_看護師国家試験.png` の完全一致AppIconをXcode assetへ格納
 
 ## C. App Store提出物
@@ -32,8 +33,9 @@
 - [x] App Review notes
 - [x] Support page source
 - [x] Privacy policy source
+- [x] Support / Privacy 公開HTTPS・未ログインHTTP 200監査
 - [x] Codemagic `kangoshi-ios` Internal TestFlight workflow
-- [ ] App Store用スクリーンショット最終生成・確認
+- [ ] App Store用スクリーンショット最終4枚（ホーム・問題・模試・設定）生成・目視確認
 
 ## D. Apple側実値・契約 — 人間/Apple gate
 - [ ] App Store Connect Appレコード作成
