@@ -106,6 +106,7 @@ struct ScanLabRemoteScanView: View {
     @EnvironmentObject var backend: ScanLabBackend
     @Environment(\.dismiss) private var dismiss
     let scan: ScanLabPublicScan
+    @StateObject private var viewerState = SplatViewerState()
     @State private var localURL: URL?
     @State private var loading = true
     @State private var errorMessage: String?
@@ -118,7 +119,7 @@ struct ScanLabRemoteScanView: View {
     var body: some View {
         VStack(spacing: 0) {
             Group {
-                if let localURL { SplatViewer(url: localURL) }
+                if let localURL { SplatViewer(url: localURL, state: viewerState) }
                 else if loading { ProgressView("3Dを読み込み中").frame(maxWidth: .infinity, maxHeight: .infinity) }
                 else { ContentUnavailableView("3Dを開けませんでした", systemImage: "exclamationmark.triangle", description: Text(errorMessage ?? "公開データの取得に失敗しました。")) }
             }
