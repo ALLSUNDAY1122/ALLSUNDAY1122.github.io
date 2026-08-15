@@ -50,8 +50,11 @@ targets:
     sources:
       - path: SplatNativeTests
     dependencies:
+      - target: SplatNative
       - package: Msplat
         product: Msplat
+      - package: MetalSplatter
+        product: SplatIO
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.splatlab.tests
