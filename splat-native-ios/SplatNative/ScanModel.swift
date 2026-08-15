@@ -232,6 +232,12 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         }
         persistWorldMapIfPossible()
         persistCaptureCheckpoint(force: true, stage: .capturing)
+        guard let projectURL,
+              let checkpoint = try? projectStore.loadCheckpoint(projectURL: projectURL),
+              checkpoint.frames.count == captured.count else {
+            trackingMessage = "途中状態を保存できませんでした。空き容量を確認してから、もう一度「保存してあとで続ける」を押してください"
+            return
+        }
         session?.pause()
         UIApplication.shared.isIdleTimerDisabled = false
         clearActiveRuntimeState()
