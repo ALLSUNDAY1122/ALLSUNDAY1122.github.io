@@ -46,6 +46,7 @@ jobs:
           grep -q 'SplatExportServiceTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportServiceTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatVideoConfigurationTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatVideoExporterTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
@@ -88,7 +89,8 @@ jobs:
             CODE_SIGNING_ALLOWED=NO test \
             -only-testing:SplatNativeTests/SplatExportServiceTests \
             -only-testing:SplatNativeTests/MeshExportServiceTests \
-            -only-testing:SplatNativeTests/SplatVideoConfigurationTests
+            -only-testing:SplatNativeTests/SplatVideoConfigurationTests \
+            -only-testing:SplatNativeTests/SplatVideoExporterTests
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true
