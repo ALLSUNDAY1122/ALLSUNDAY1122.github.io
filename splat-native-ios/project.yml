@@ -49,8 +49,8 @@ targets:
     deploymentTarget: '18.0'
     sources:
       - path: SplatNativeTests
+      - path: SplatNative/CapturePolicy.swift
     dependencies:
-      - target: SplatNative
       - package: Msplat
         product: Msplat
     settings:
@@ -60,5 +60,3 @@ targets:
         SWIFT_VERSION: '6.0'
         SWIFT_STRICT_CONCURRENCY: minimal
         CODE_SIGNING_ALLOWED: NO
-        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Splat Lab Native.app/Splat Lab Native
-        BUNDLE_LOADER: $(TEST_HOST)
