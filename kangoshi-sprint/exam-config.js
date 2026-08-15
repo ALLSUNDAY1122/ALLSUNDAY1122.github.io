@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 window.KANGOSHI_EXAM_CONFIG={
-  schemaVersion:1,
+  schemaVersion:2,
   qualification:'看護師国家試験',
   currentReference:{
     examNo:115,
@@ -34,7 +34,9 @@ window.KANGOSHI_EXAM_CONFIG={
     questionsPerSet:240,
     totalQuestions:720,
     setComposition:{required:50,general:130,scenario:60},
-    rightsPolicy:'原則独自問題。公式資料を利用する場合は問題単位で権利・出典を監査し、第三者画像・図表は別途確認する。',
+    rightsPolicy:'厚生労働省公開問題を利用条件に従って収録し、図・写真・別冊は項目単位で権利監査する。第三者権利を含む素材は独自図版へ置換する。',
+    reviewPolicy:'AI・CIで一次資料監査を可能な限り完結し、人間確認は原則として初期試作品とTestFlight実機確認で行う。',
+    reviewPolicySource:'Notion 3b609c10697d8148a0c2db3a8c8d5e63 section 10',
     releaseGate:{
       uniqueQuestionIds:720,
       noDuplicateStems:true,
@@ -42,7 +44,9 @@ window.KANGOSHI_EXAM_CONFIG={
       explanationRequired:true,
       rightsStatusRequired:true,
       sourceRefsRequired:true,
-      expertReviewRequired:true
+      primarySourceAuditRequired:true,
+      specialistConcernResolutionRequired:true,
+      humanReviewAtPrototypeAndTestFlight:true
     }
   }
 };
