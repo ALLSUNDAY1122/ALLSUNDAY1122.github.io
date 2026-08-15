@@ -34,6 +34,8 @@ jobs:
           bash splat-native-ios/scripts/validate.sh
           test -f splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           sips -g pixelWidth -g pixelHeight splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | grep -q '1024'
+      - name: S2 reconstruction contracts
+        run: python3 splat-native-ios/scripts/test_reconstruction_contracts.py
       - name: Generate project and verify bundled resources
         working-directory: splat-native-ios
         run: |
@@ -43,6 +45,7 @@ jobs:
           grep -q 'nanoflann-BSD.txt' SplatNative.xcodeproj/project.pbxproj
           grep -q 'nlohmann-json-MIT.txt' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MsplatRuntimeSmokeTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatReconstructionPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative

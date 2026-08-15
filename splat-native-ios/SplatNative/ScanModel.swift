@@ -87,6 +87,9 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private var lastAcceptedTransform: simd_float4x4?
     private var lastAcceptedTimestamp: TimeInterval = 0
     private var datasetReady = false
+    private var pendingTrainingTarget = SplatReconstructionPolicy.standardIterations
+    private let resourceGuard = SplatResourceGuard()
+    private var memoryWarningObserver: NSObjectProtocol?
     private let ciContext = CIContext(options: [.cacheIntermediates: false])
     private let captureQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.capture", qos: .userInitiated)
     private var isWritingFrame = false
@@ -135,6 +138,16 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     func attach(session: ARSession) {
+        if memoryWarningObserver == nil {
+            let passResourceGuard = resourceGuard
+            memoryWarningObserver = NotificationCenter.default.addObserver(
+                forName: UIApplication.didReceiveMemoryWarningNotification,
+                object: nil,
+                queue: .main
+            ) { _ in
+                passResourceGuard.noteMemoryWarning()
+            }
+        }
         guard self.session !== session else { return }
         self.session = session
         session.delegate = self
@@ -171,6 +184,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         trainingIteration = 0
         splatCount = 0
         datasetReady = false
+        pendingTrainingTarget = SplatReconstructionPolicy.standardIterations
         isWritingFrame = false
         phase = .capturing
         trackingMessage = "対象を中央に保ち、周囲をゆっくり1周してください"
@@ -187,7 +201,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         guard phase == .capturing, canFinishCapture else { return }
         session?.pause()
         do {
-            try writePointCloudPLY()
             try writeTransformsJSON()
             datasetReady = true
             phase = .captured
@@ -216,28 +229,75 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         trainingIteration = 0
         splatCount = 0
         datasetReady = false
+        pendingTrainingTarget = SplatReconstructionPolicy.standardIterations
         phase = .ready
         UIApplication.shared.isIdleTimerDisabled = false
+    }
+
+    func train() {
+        pendingTrainingTarget = SplatReconstructionPolicy.standardIterations
+        startTraining(targetIterations: pendingTrainingTarget)
     }
 
     func retryGeneration() {
         guard canRetryGeneration else { return }
         phase = .captured
-        train()
+        startTraining(targetIterations: pendingTrainingTarget)
     }
 
-    func train(iterations: Int = 2_000) {
+    /// Each Enhance pass extends the existing checkpoint instead of starting over. Repeated calls
+    /// keep adding work until the common 30k optimizer horizon is reached.
+    func enhanceResult() {
+        guard datasetReady, projectURL != nil, phase == .finished else { return }
+        let target = SplatReconstructionPolicy.enhancementTarget(from: trainingIteration)
+        guard target > trainingIteration else { return }
+        pendingTrainingTarget = target
+        phase = .captured
+        startTraining(targetIterations: target)
+    }
+
+    private func startTraining(targetIterations: Int) {
         guard phase == .captured, datasetReady, let projectURL else { return }
+        let requestedTarget = min(SplatReconstructionPolicy.trainingHorizon, max(1, targetIterations))
+        pendingTrainingTarget = requestedTarget
         phase = .training
         trainingProgress = 0
-        trainingIteration = 0
         splatCount = 0
         UIApplication.shared.isIdleTimerDisabled = true
 
         let path = projectURL.path
+        let checkpoint = projectURL.appendingPathComponent("training.msplat-checkpoint")
+        let geometryPoints = Array(featurePoints.values)
+        let seedFrames = captured.map(Self.seedFrame(from:))
+        let passResourceGuard = resourceGuard
+        passResourceGuard.resetForPass()
+        let runStartedAt = Date()
+        let runStartUptime = ProcessInfo.processInfo.systemUptime
+        let initialThermalState = splatThermalStateName(ProcessInfo.processInfo.thermalState)
+
         Task.detached(priority: .userInitiated) { [weak self] in
             autoreleasepool {
-                let dataset = GaussianDataset(path: path, downscaleFactor: 4.0, evalMode: false)
+                do {
+                    let plyURL = projectURL.appendingPathComponent("points3D.ply")
+                    if !FileManager.default.fileExists(atPath: plyURL.path) {
+                        try Self.preparePointCloudPLY(
+                            projectURL: projectURL,
+                            points: geometryPoints,
+                            frames: seedFrames
+                        )
+                    }
+                } catch {
+                    Task { @MainActor [weak self] in
+                        self?.failTraining("初期3Dデータを準備できませんでした: \(error.localizedDescription)")
+                    }
+                    return
+                }
+
+                let dataset = GaussianDataset(
+                    path: path,
+                    downscaleFactor: SplatReconstructionPolicy.datasetDownscale,
+                    evalMode: false
+                )
                 guard dataset.numTrain >= 3 else {
                     Task { @MainActor [weak self] in
                         self?.failTraining("撮影画像を読み込めませんでした。生成をもう一度試してください")
@@ -245,34 +305,110 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     return
                 }
 
-                var config = TrainingConfig()
-                config.iterations = Int32(iterations)
-                config.shDegree = 2
-                config.shDegreeInterval = 500
-                config.numDownscales = 0
-                config.refineEvery = 100
-                config.warmupLength = 250
-                config.resetAlphaEvery = 20
-                config.stopScreenSizeAt = Int32(iterations)
-                config.bgColor = (0.02, 0.02, 0.025)
+                let config = SplatReconstructionPolicy.makeConfig()
                 let trainer = GaussianTrainer(dataset: dataset, config: config)
 
-                for step in 0..<iterations {
-                    if Task.isCancelled { return }
-                    let stats = trainer.step()
-                    if step % 20 == 0 || step == iterations - 1 {
+                if FileManager.default.fileExists(atPath: checkpoint.path) {
+                    _ = trainer.loadCheckpoint(from: checkpoint.path)
+                }
+
+                let resumedIteration = trainer.iteration
+                let effectiveTarget = SplatReconstructionPolicy.boundedTarget(
+                    requestedTarget,
+                    resumedIteration: resumedIteration
+                )
+                let passStart = resumedIteration
+                let passSpan = max(1, effectiveTarget - passStart)
+                let writeRunReport: (String, Int, Int) -> Void = { outcome, finalIteration, finalSplatCount in
+                    let report = passResourceGuard.makeReport(
+                        startedAt: runStartedAt,
+                        startUptime: runStartUptime,
+                        passStartIteration: passStart,
+                        targetIteration: effectiveTarget,
+                        finalIteration: finalIteration,
+                        finalSplatCount: finalSplatCount,
+                        initialThermalState: initialThermalState,
+                        finalThermalState: splatThermalStateName(ProcessInfo.processInfo.thermalState),
+                        outcome: outcome
+                    )
+                    SplatReconstructionRunReport.write(report, projectURL: projectURL)
+                }
+
+                let initialResourceEvaluation = passResourceGuard.evaluate(splatCount: trainer.splatCount)
+                if let reason = initialResourceEvaluation.reason {
+                    msplatSync()
+                    _ = trainer.saveCheckpoint(to: checkpoint.path)
+                    writeRunReport("paused-\(reason.rawValue)", resumedIteration, trainer.splatCount)
+                    Task { @MainActor [weak self] in
+                        self?.failTraining(reason.userMessage)
+                    }
+                    return
+                }
+
+                if resumedIteration > 0 {
+                    let resumedCount = trainer.splatCount
+                    Task { @MainActor [weak self] in
+                        guard let self else { return }
+                        self.trainingIteration = resumedIteration
+                        self.splatCount = resumedCount
+                        self.trainingProgress = resumedIteration >= effectiveTarget ? 1 : 0
+                    }
+                }
+
+                if resumedIteration < effectiveTarget {
+                    for _ in resumedIteration..<effectiveTarget {
+                        if Task.isCancelled { return }
+                        let stats = trainer.step()
                         let iteration = stats.iteration
-                        let count = stats.splatCount
-                        Task { @MainActor [weak self] in
-                            guard let self else { return }
-                            self.trainingIteration = iteration
-                            self.splatCount = count
-                            self.trainingProgress = min(1, Double(iteration) / Double(iterations))
+                        let shouldReport = iteration % 20 == 0 || iteration >= effectiveTarget
+                        let thermalCheck = iteration % SplatReconstructionPolicy.thermalCheckInterval == 0
+                        let thermalPause = thermalCheck && SplatReconstructionPolicy.requiresThermalPause(
+                            ProcessInfo.processInfo.thermalState
+                        )
+                        let checkpointDue = iteration % SplatReconstructionPolicy.checkpointInterval == 0
+                        let shouldCheckResources = iteration % 20 == 0 || checkpointDue ||
+                            stats.splatCount >= passResourceGuard.limits.maxSplatCount
+                        let resourceEvaluation = shouldCheckResources
+                            ? passResourceGuard.evaluate(splatCount: stats.splatCount)
+                            : nil
+                        let resourcePauseReason = resourceEvaluation?.reason
+
+                        if checkpointDue || thermalPause || resourcePauseReason != nil {
+                            msplatSync()
+                            _ = trainer.saveCheckpoint(to: checkpoint.path)
+                        }
+
+                        if shouldReport {
+                            let count = stats.splatCount
+                            let progress = min(1, Double(iteration - passStart) / Double(passSpan))
+                            Task { @MainActor [weak self] in
+                                guard let self else { return }
+                                self.trainingIteration = iteration
+                                self.splatCount = count
+                                self.trainingProgress = progress
+                            }
+                        }
+
+                        if let reason = resourcePauseReason {
+                            writeRunReport("paused-\(reason.rawValue)", iteration, stats.splatCount)
+                            Task { @MainActor [weak self] in
+                                self?.failTraining(reason.userMessage)
+                            }
+                            return
+                        }
+
+                        if thermalPause {
+                            writeRunReport("paused-thermal", iteration, stats.splatCount)
+                            Task { @MainActor [weak self] in
+                                self?.failTraining("端末温度が高くなったため生成を安全に一時停止しました。端末が冷えてから「生成だけもう一度試す」で続きから再開できます")
+                            }
+                            return
                         }
                     }
                 }
 
                 msplatSync()
+                _ = trainer.saveCheckpoint(to: checkpoint.path)
                 let output = projectURL.appendingPathComponent("result.splat")
                 trainer.exportSplat(to: output.path)
                 msplatSync()
@@ -289,10 +425,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
                 let rendered = trainer.render(cameraIndex: 0)
                 let preview = Self.makeImage(from: rendered)
+                let finalCount = trainer.splatCount
+                _ = passResourceGuard.evaluate(splatCount: finalCount)
+                writeRunReport("completed", effectiveTarget, finalCount)
                 Task { @MainActor [weak self] in
                     guard let self else { return }
                     self.resultURL = output
                     self.previewImage = preview
+                    self.trainingIteration = effectiveTarget
+                    self.splatCount = finalCount
                     self.trainingProgress = 1
                     self.phase = .finished
                     UIApplication.shared.isIdleTimerDisabled = false
@@ -359,7 +500,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.isWritingFrame = false
-                guard success, self.phase == .capturing else { return }
+                guard self.phase == .capturing else { return }
+                guard success else {
+                    let message = "撮影データを保存できませんでした。iPhoneの空き容量を確認してください。"
+                    self.phase = .failed(message)
+                    self.trackingMessage = message
+                    self.session?.pause()
+                    UIApplication.shared.isIdleTimerDisabled = false
+                    return
+                }
                 self.captured.append(CapturedView(
                     id: index,
                     filePath: "images/\(fileName)",
@@ -454,18 +603,42 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         coverageSectorCount = coverageSectors.count
     }
 
-    private func writePointCloudPLY() throws {
-        guard let projectURL else { throw dataError("保存先がありません") }
-        guard featurePoints.count >= 64 else {
-            throw dataError("立体の手がかりが不足しています。模様のある背景で対象の周囲をもう一度撮影してください")
+    nonisolated private static func preparePointCloudPLY(
+        projectURL: URL,
+        points: [SIMD3<Float>],
+        frames: [SplatSeedFrame]
+    ) throws {
+        guard points.count >= 64 else {
+            throw NSError(
+                domain: "SplatLab",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "立体の手がかりが不足しています"]
+            )
         }
-        let points = featurePoints.values
-        var ply = "ply\nformat ascii 1.0\nelement vertex \(points.count)\nproperty float x\nproperty float y\nproperty float z\nend_header\n"
-        ply.reserveCapacity(points.count * 40)
-        for p in points {
-            ply += "\(p.x) \(p.y) \(p.z)\n"
+
+        let colors = SplatSeedColorizer.colorize(points: points, frames: frames, projectURL: projectURL)
+        let skySeeds = SplatSkySeeder.makeSeeds(
+            frames: frames,
+            geometryPoints: points,
+            projectURL: projectURL
+        )
+        let totalCount = points.count + skySeeds.count
+        var ply = "ply\nformat ascii 1.0\nelement vertex \(totalCount)\nproperty float x\nproperty float y\nproperty float z\nproperty uchar red\nproperty uchar green\nproperty uchar blue\nend_header\n"
+        ply.reserveCapacity(totalCount * 56)
+        for (index, point) in points.enumerated() {
+            let color = colors.indices.contains(index) ? colors[index] : SplatSeedColorizer.fallback
+            ply += "\(point.x) \(point.y) \(point.z) \(color.red) \(color.green) \(color.blue)\n"
         }
-        try ply.write(to: projectURL.appendingPathComponent("points3D.ply"), atomically: true, encoding: .utf8)
+        for seed in skySeeds {
+            let p = seed.position
+            let c = seed.color
+            ply += "\(p.x) \(p.y) \(p.z) \(c.red) \(c.green) \(c.blue)\n"
+        }
+        try ply.write(
+            to: projectURL.appendingPathComponent("points3D.ply"),
+            atomically: true,
+            encoding: .utf8
+        )
     }
 
     private func writeTransformsJSON() throws {
@@ -502,8 +675,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let dot = min(1, max(-1, abs(simd_dot(qa.vector, qb.vector))))
         let angle = 2 * acos(dot)
 
-        // Do not let a user collect an apparently complete scan by rotating in place.
-        // Rotation can supplement movement, but every accepted frame must include real translation.
         return translation >= 0.030 || (translation >= 0.012 && angle >= 0.080)
     }
 
@@ -519,6 +690,19 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
     private func dataError(_ message: String) -> NSError {
         NSError(domain: "SplatLab", code: 1, userInfo: [NSLocalizedDescriptionKey: message])
+    }
+
+    private static func seedFrame(from frame: CapturedView) -> SplatSeedFrame {
+        SplatSeedFrame(
+            filePath: frame.filePath,
+            transformMatrix: frame.transformMatrix,
+            flX: frame.flX,
+            flY: frame.flY,
+            cx: frame.cx,
+            cy: frame.cy,
+            w: frame.w,
+            h: frame.h
+        )
     }
 
     private static func cameraPosition(_ m: simd_float4x4) -> SIMD3<Float> {

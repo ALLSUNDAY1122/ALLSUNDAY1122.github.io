@@ -9,6 +9,11 @@ test -f SplatNative/ScanModel+SessionLifecycle.swift
 test -f SplatNative/SplatViewer.swift
 test -f SplatNative/RootScanView.swift
 test -f SplatNative/SplatNativeApp.swift
+test -f SplatNative/SplatReconstructionPolicy.swift
+test -f SplatNative/SplatSeedColorizer.swift
+test -f SplatNative/SplatSkySeeder.swift
+test -f SplatNative/SplatResourceGuard.swift
+test -f SplatNativeTests/SplatReconstructionPolicyTests.swift
 test -f SplatNative/PrivacyInfo.xcprivacy
 
 test -f SplatNative/Resources/Licenses/msplat-APACHE-2.0.txt
@@ -48,6 +53,60 @@ grep -q 'coverageSectorCount >= minimumCoverageSectors' SplatNative/ScanModel.sw
 grep -q 'translation >= 0.030 || (translation >= 0.012 && angle >= 0.080)' SplatNative/ScanModel.swift
 grep -q 'acceptedFrames < maxFrames' SplatNative/ScanModel.swift
 grep -q '同じ側の写真に偏っています' SplatNative/ScanModel.swift
+
+# S2 reconstruction gate: seed points must carry observed RGB into msplat, use full SH/densification,
+# preserve background, seed high-confidence sky at far distance, and support repeatable Enhance passes.
+grep -q 'property uchar red' SplatNative/ScanModel.swift
+grep -q 'property uchar green' SplatNative/ScanModel.swift
+grep -q 'property uchar blue' SplatNative/ScanModel.swift
+grep -q 'trainingHorizon = 30_000' SplatNative/SplatReconstructionPolicy.swift
+grep -q 'standardIterations = 7_000' SplatNative/SplatReconstructionPolicy.swift
+grep -q 'enhancementIncrement = 5_000' SplatNative/SplatReconstructionPolicy.swift
+grep -q 'config.shDegree = 3' SplatNative/SplatReconstructionPolicy.swift
+grep -q 'config.numDownscales = 1' SplatNative/SplatReconstructionPolicy.swift
+grep -q 'config.warmupLength = 500' SplatNative/SplatReconstructionPolicy.swift
+grep -q 'trainer.saveCheckpoint' SplatNative/ScanModel.swift
+grep -q 'trainer.loadCheckpoint' SplatNative/ScanModel.swift
+grep -q 'requiresThermalPause' SplatNative/ScanModel.swift
+grep -q 'enhancementTarget(from: trainingIteration)' SplatNative/ScanModel.swift
+grep -q 'SplatSkySeeder.makeSeeds' SplatNative/ScanModel.swift
+grep -q 'farDistance: Float = 20' SplatNative/SplatSkySeeder.swift
+! grep -q 'SplatForegroundIsolator' SplatNative/ScanModel.swift
+
+# S8 #4157 regression gate: densification must have a bounded device-aware resource path,
+# checkpoint before a resource pause, and leave automatic peak-memory/splat evidence behind.
+grep -q 'residentMemoryBudgetBytes' SplatNative/SplatResourceGuard.swift
+grep -q 'maxSplatCount' SplatNative/SplatResourceGuard.swift
+grep -q 'TASK_VM_INFO' SplatNative/SplatResourceGuard.swift
+grep -q 'phys_footprint' SplatNative/SplatResourceGuard.swift
+grep -q 'UIApplication.didReceiveMemoryWarningNotification' SplatNative/ScanModel.swift
+grep -q 'passResourceGuard.evaluate' SplatNative/ScanModel.swift
+grep -q 'resourcePauseReason' SplatNative/ScanModel.swift
+grep -q 'SplatReconstructionRunReport.write' SplatNative/ScanModel.swift
+grep -q 'reconstruction-run-%05d.json' SplatNative/SplatResourceGuard.swift
+grep -q 'testSyntheticHighDensityTriggersCheckpointPauseBeforeUnboundedGrowth' SplatNativeTests/SplatReconstructionPolicyTests.swift
+grep -q 'testSyntheticMemoryPressureRecordsPeakAndPauses' SplatNativeTests/SplatReconstructionPolicyTests.swift
+python3 - <<'PY'
+from pathlib import Path
+s=Path('SplatNative/ScanModel.swift').read_text()
+pause=s.index('if let reason = resourcePauseReason')
+checkpoint=s.rfind('trainer.saveCheckpoint', 0, pause)
+assert checkpoint >= 0
+print('PASS: S2 resource pause is checkpoint-recoverable')
+PY
+
+# CPU-heavy RGB projection/sky seeding belongs to the detached generation path, not finishCapture.
+python3 - <<'PY'
+from pathlib import Path
+s=Path('SplatNative/ScanModel.swift').read_text()
+finish=s.index('func finishCapture()')
+train=s.index('private func startTraining(')
+detached=s.index('Task.detached', train)
+prepare=s.index('Self.preparePointCloudPLY', detached)
+assert finish < train < detached < prepare
+assert 'preparePointCloudPLY' not in s[finish:train]
+print('PASS: S2 preprocessing runs off capture MainActor path')
+PY
 
 # Harsh-review gate: a successful splat must open centered on its actual data,
 # and the user must be able to restore that framing.
