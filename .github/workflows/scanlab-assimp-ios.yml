@@ -1,11 +1,6 @@
 name: Scan Lab Assimp iOS XCFramework
 
 on:
-  push:
-    branches:
-      - scaniverse/s6-export-video-share
-    paths:
-      - '.github/workflows/scanlab-assimp-ios.yml'
   workflow_dispatch:
 
 permissions:
@@ -21,6 +16,16 @@ jobs:
     runs-on: macos-15
     timeout-minutes: 50
     steps:
+      - name: Refuse overwrite of pinned binary release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $RELEASE_TAG already exists. Bump RELEASE_TAG and checksum instead of overwriting it."
+            exit 1
+          fi
+
       - name: Checkout Assimp at pinned release
         run: |
           set -euo pipefail
@@ -91,12 +96,11 @@ jobs:
           swift package compute-checksum "/tmp/$ASSET_NAME" | tee /tmp/assimp-checksum.txt
           test -s /tmp/assimp-checksum.txt
 
-      - name: Publish immutable prerelease asset
+      - name: Publish pinned prerelease asset
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh release delete "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag || true
           gh release create "$RELEASE_TAG" \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
