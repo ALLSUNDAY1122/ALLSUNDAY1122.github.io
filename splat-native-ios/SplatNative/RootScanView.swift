@@ -58,7 +58,7 @@ struct RootScanView: View {
         }
         .preferredColorScheme(.dark)
         .fullScreenCover(isPresented: $showingMesh) {
-            MeshScanView()
+            MeshScanContainerView()
                 .environmentObject(meshModel)
         }
         .sheet(isPresented: $showingShare) {
