@@ -1,0 +1,74 @@
+name: Splat Native S4 Mesh Typecheck
+
+on:
+  push:
+    branches:
+      - scaniverse/s4-mesh-photogrammetry
+    paths:
+      - 'splat-native-ios/SplatNative/MeshScanModel.swift'
+      - 'splat-native-ios/SplatNative/MeshScanView.swift'
+      - '.github/workflows/splat-native-s4-typecheck.yml'
+  pull_request:
+    paths:
+      - 'splat-native-ios/SplatNative/MeshScanModel.swift'
+      - 'splat-native-ios/SplatNative/MeshScanView.swift'
+      - '.github/workflows/splat-native-s4-typecheck.yml'
+
+jobs:
+  typecheck:
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Typecheck Mesh model against iPhoneOS SDK
+        shell: bash
+        run: |
+          set -o pipefail
+          SDK=$(xcrun --sdk iphoneos --show-sdk-path)
+          xcrun --sdk iphoneos swiftc \
+            -typecheck \
+            -parse-as-library \
+            -swift-version 6 \
+            -strict-concurrency=minimal \
+            -target arm64-apple-ios18.0 \
+            -sdk "$SDK" \
+            -module-name S4MeshModelProbe \
+            splat-native-ios/SplatNative/MeshScanModel.swift \
+            2>&1 | tee /tmp/s4-model-typecheck.log
+
+      - name: Typecheck Mesh UI with minimal app stubs
+        shell: bash
+        run: |
+          set -o pipefail
+          SDK=$(xcrun --sdk iphoneos --show-sdk-path)
+          cat > /tmp/S4UIStubs.swift <<'SWIFT'
+          import SwiftUI
+          import UIKit
+
+          struct PrimaryButtonStyle: ButtonStyle {
+              func makeBody(configuration: Configuration) -> some View { configuration.label }
+          }
+          struct SecondaryButtonStyle: ButtonStyle {
+              func makeBody(configuration: Configuration) -> some View { configuration.label }
+          }
+          struct ShareSheet: UIViewControllerRepresentable {
+              let items: [Any]
+              func makeUIViewController(context: Context) -> UIActivityViewController {
+                  UIActivityViewController(activityItems: items, applicationActivities: nil)
+              }
+              func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+          }
+          SWIFT
+          xcrun --sdk iphoneos swiftc \
+            -typecheck \
+            -parse-as-library \
+            -swift-version 6 \
+            -strict-concurrency=minimal \
+            -target arm64-apple-ios18.0 \
+            -sdk "$SDK" \
+            -module-name S4MeshUIProbe \
+            splat-native-ios/SplatNative/MeshScanModel.swift \
+            splat-native-ios/SplatNative/MeshScanView.swift \
+            /tmp/S4UIStubs.swift \
+            2>&1 | tee /tmp/s4-ui-typecheck.log
