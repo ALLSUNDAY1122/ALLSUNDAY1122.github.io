@@ -19,7 +19,8 @@ final class KangoshiSprintUITests: XCTestCase {
         close.tap()
         XCTAssertTrue(close.waitForNonExistence(timeout: 10))
         XCTAssertEqual(app.state, .runningForeground)
-        XCTAssertTrue(app.tabBars.buttons["ホーム"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["今日の学習"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["今日のスプリント"].waitForExistence(timeout: 10))
     }
 
     func testFreeMockGateAndRestoreEntry() throws {
