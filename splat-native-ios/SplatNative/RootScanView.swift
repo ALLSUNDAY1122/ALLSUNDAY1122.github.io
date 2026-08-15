@@ -216,48 +216,7 @@ struct RootScanView: View {
     @ViewBuilder
     private var finished: some View {
         if let url = model.resultURL {
-            VStack(spacing: 0) {
-                ZStack(alignment: .top) {
-                    SplatViewer(url: url)
-                        .ignoresSafeArea(edges: .top)
-                    HStack {
-                        Button {
-                            showingDiscardConfirmation = true
-                        } label: {
-                            Image(systemName: "xmark")
-                                .frame(width: 44, height: 44)
-                                .background(.black.opacity(0.55), in: Circle())
-                        }
-                        Spacer()
-                        Text("3D生成完了")
-                            .font(.caption.bold())
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(.mint, in: Capsule())
-                            .foregroundStyle(.black)
-                    }
-                    .padding()
-                }
-
-                VStack(spacing: 10) {
-                    Text("1本指で回転・ピンチで拡大縮小・ダブルタップで表示を戻す")
-                        .font(.caption)
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.secondary)
-                    HStack {
-                        Button("3Dを書き出す") {
-                            showingShare = true
-                        }
-                        .buttonStyle(SecondaryButtonStyle())
-                        Button("新しく撮る") {
-                            showingDiscardConfirmation = true
-                        }
-                        .buttonStyle(PrimaryButtonStyle())
-                    }
-                }
-                .padding(16)
-                .background(.black)
-            }
+            SplatResultView(url: url, showingShare: $showingShare)
         }
     }
 
