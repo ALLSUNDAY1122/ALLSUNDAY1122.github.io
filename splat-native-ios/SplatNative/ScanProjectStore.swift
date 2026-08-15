@@ -158,19 +158,20 @@ enum ScanProjectStoreError: LocalizedError {
     case projectNotFound
     case rawDataUnavailable
     case invalidManifest
+    case invalidPendingResult
 
     var errorDescription: String? {
         switch self {
         case .projectNotFound: return "保存済みスキャンが見つかりません"
         case .rawDataUnavailable: return "再処理に必要なrawデータがありません"
         case .invalidManifest: return "スキャン情報を読み込めません"
+        case .invalidPendingResult: return "生成結果の安全な保存を完了できません"
         }
     }
 }
 
 /// File-system source of truth for local scans.
-/// Every project is a self-contained `.splatproject` directory so a library index can be rebuilt
-/// after app termination or an interrupted metadata write.
+/// Every project is self-contained so the library can be rebuilt after termination without an in-memory index.
 final class ScanProjectStore {
     static let projectExtension = "splatproject"
     static let manifestFileName = "manifest.json"
@@ -179,6 +180,9 @@ final class ScanProjectStore {
     static let checkpointBackupFileName = "capture-checkpoint.plist.bak"
     static let worldMapFileName = "worldmap.arexperience"
     static let thumbnailFileName = "thumbnail.jpg"
+    static let splatResultFileName = "result.splat"
+    static let pendingSplatFileName = "result.pending.splat"
+    static let previousSplatFileName = "result.previous.splat"
     static let trashDirectoryName = ".Trash"
 
     let rootURL: URL
@@ -201,11 +205,11 @@ final class ScanProjectStore {
     func createProject(title: String = "スキャン", targetFrames: Int = 48) throws -> (URL, ScanProjectManifest) {
         try ensureDirectories()
         let id = UUID().uuidString
-        let projectURL = rootURL
-            .appendingPathComponent(id)
-            .appendingPathExtension(Self.projectExtension)
-        let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
-        try fileManager.createDirectory(at: imagesURL, withIntermediateDirectories: true)
+        let projectURL = rootURL.appendingPathComponent(id).appendingPathExtension(Self.projectExtension)
+        try fileManager.createDirectory(
+            at: projectURL.appendingPathComponent("images", isDirectory: true),
+            withIntermediateDirectories: true
+        )
         var manifest = ScanProjectManifest(id: id, title: title, targetFrames: targetFrames)
         manifest.updatedAt = Date()
         try writeManifest(manifest, to: projectURL)
@@ -265,10 +269,12 @@ final class ScanProjectStore {
         let primary = projectURL.appendingPathComponent(Self.checkpointFileName)
         let backup = projectURL.appendingPathComponent(Self.checkpointBackupFileName)
         let decoder = PropertyListDecoder()
-        if let data = try? Data(contentsOf: primary), let value = try? decoder.decode(ScanCaptureCheckpoint.self, from: data) {
+        if let data = try? Data(contentsOf: primary),
+           let value = try? decoder.decode(ScanCaptureCheckpoint.self, from: data) {
             return value
         }
-        if let data = try? Data(contentsOf: backup), let value = try? decoder.decode(ScanCaptureCheckpoint.self, from: data) {
+        if let data = try? Data(contentsOf: backup),
+           let value = try? decoder.decode(ScanCaptureCheckpoint.self, from: data) {
             try? data.write(to: primary, options: .atomic)
             return value
         }
@@ -279,20 +285,15 @@ final class ScanProjectStore {
         guard fileManager.fileExists(atPath: sourceURL.path) else { return }
         let target = projectURL.appendingPathComponent(Self.thumbnailFileName)
         if sourceURL.standardizedFileURL != target.standardizedFileURL {
-            let data = try Data(contentsOf: sourceURL)
-            try data.write(to: target, options: .atomic)
+            try Data(contentsOf: sourceURL).write(to: target, options: .atomic)
         }
-        _ = try updateManifest(projectURL: projectURL) { manifest in
-            manifest.thumbnailFileName = Self.thumbnailFileName
-        }
+        _ = try updateManifest(projectURL: projectURL) { $0.thumbnailFileName = Self.thumbnailFileName }
     }
 
     func setThumbnail(data: Data, projectURL: URL) throws {
         let target = projectURL.appendingPathComponent(Self.thumbnailFileName)
         try data.write(to: target, options: .atomic)
-        _ = try updateManifest(projectURL: projectURL) { manifest in
-            manifest.thumbnailFileName = Self.thumbnailFileName
-        }
+        _ = try updateManifest(projectURL: projectURL) { $0.thumbnailFileName = Self.thumbnailFileName }
     }
 
     func reprocessRequest(projectURL: URL, representation: ScanRepresentationKind) throws -> ScanReprocessRequest {
@@ -304,15 +305,42 @@ final class ScanProjectStore {
               fileManager.fileExists(atPath: points.path) else {
             throw ScanProjectStoreError.rawDataUnavailable
         }
-        let id = projectURL.deletingPathExtension().lastPathComponent
         return ScanReprocessRequest(
-            projectID: id,
+            projectID: projectURL.deletingPathExtension().lastPathComponent,
             projectURL: projectURL,
             representation: representation,
             transformsURL: transforms,
             pointCloudURL: points,
             imagesURL: images
         )
+    }
+
+    /// Commits a newly exported `result.pending.splat` without risking the prior completed result.
+    /// The explicit previous-result fallback lets relaunch repair every crash point in the swap.
+    func commitPendingSplat(projectURL: URL) throws -> URL {
+        let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
+        guard validSplat(at: pending) else { throw ScanProjectStoreError.invalidPendingResult }
+
+        if fileManager.fileExists(atPath: output.path) {
+            if fileManager.fileExists(atPath: previous.path) { try fileManager.removeItem(at: previous) }
+            try fileManager.moveItem(at: output, to: previous)
+        }
+
+        do {
+            if fileManager.fileExists(atPath: output.path) { try fileManager.removeItem(at: output) }
+            try fileManager.moveItem(at: pending, to: output)
+            guard validSplat(at: output) else { throw ScanProjectStoreError.invalidPendingResult }
+        } catch {
+            if !fileManager.fileExists(atPath: output.path), fileManager.fileExists(atPath: previous.path) {
+                try? fileManager.moveItem(at: previous, to: output)
+            }
+            throw error
+        }
+
+        if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
+        return output
     }
 
     func clearRawData(projectURL: URL) throws {
@@ -327,17 +355,13 @@ final class ScanProjectStore {
         for child in children where !keep.contains(child.lastPathComponent) {
             try? fileManager.removeItem(at: child)
         }
-        _ = try updateManifest(projectURL: projectURL) { manifest in
-            manifest.rawDataRetained = false
-        }
+        _ = try updateManifest(projectURL: projectURL) { $0.rawDataRetained = false }
     }
 
     func moveToTrash(projectURL: URL) throws {
         try ensureDirectories()
         let destination = trashURL.appendingPathComponent(projectURL.lastPathComponent)
-        if fileManager.fileExists(atPath: destination.path) {
-            try fileManager.removeItem(at: destination)
-        }
+        if fileManager.fileExists(atPath: destination.path) { try fileManager.removeItem(at: destination) }
         try fileManager.moveItem(at: projectURL, to: destination)
     }
 
@@ -353,9 +377,7 @@ final class ScanProjectStore {
         }
         try fileManager.moveItem(at: source, to: destination)
         if restoredID != id {
-            _ = try updateManifest(projectURL: destination) { manifest in
-                manifest.id = restoredID
-            }
+            _ = try updateManifest(projectURL: destination) { $0.id = restoredID }
         }
     }
 
@@ -367,9 +389,7 @@ final class ScanProjectStore {
 
     func storageBytes(includeTrash: Bool = true) -> Int64 {
         var total = directorySize(rootURL)
-        if !includeTrash {
-            total -= directorySize(trashURL)
-        }
+        if !includeTrash { total -= directorySize(trashURL) }
         return max(0, total)
     }
 
@@ -411,25 +431,27 @@ final class ScanProjectStore {
         let backup = projectURL.appendingPathComponent(Self.manifestBackupFileName)
         let decoder = JSONDecoder()
 
-        if let data = try? Data(contentsOf: primary), let manifest = try? decoder.decode(ScanProjectManifest.self, from: data) {
+        if let data = try? Data(contentsOf: primary),
+           let manifest = try? decoder.decode(ScanProjectManifest.self, from: data) {
             return manifest
         }
-        if let data = try? Data(contentsOf: backup), let manifest = try? decoder.decode(ScanProjectManifest.self, from: data) {
+        if let data = try? Data(contentsOf: backup),
+           let manifest = try? decoder.decode(ScanProjectManifest.self, from: data) {
             try? data.write(to: primary, options: .atomic)
             return manifest
         }
 
-        // Migration path for pre-library PoC folders that already contain real raw/result files.
         guard fileManager.fileExists(atPath: projectURL.path) else { throw ScanProjectStoreError.projectNotFound }
         let id = projectURL.deletingPathExtension().lastPathComponent
         let attrs = try? fileManager.attributesOfItem(atPath: projectURL.path)
         let createdAt = (attrs?[.creationDate] as? Date) ?? (attrs?[.modificationDate] as? Date) ?? Date()
-        let imageCount = ((try? fileManager.contentsOfDirectory(at: projectURL.appendingPathComponent("images"), includingPropertiesForKeys: nil)) ?? []).filter {
-            ["jpg", "jpeg", "png", "heic"].contains($0.pathExtension.lowercased())
-        }.count
+        let imagesDirectory = projectURL.appendingPathComponent("images", isDirectory: true)
+        let imageURLs = ((try? fileManager.contentsOfDirectory(at: imagesDirectory, includingPropertiesForKeys: nil)) ?? [])
+            .filter { ["jpg", "jpeg", "png", "heic"].contains($0.pathExtension.lowercased()) }
+            .sorted { $0.lastPathComponent < $1.lastPathComponent }
         let hasTransforms = fileManager.fileExists(atPath: projectURL.appendingPathComponent("transforms.json").path)
         let hasPoints = fileManager.fileExists(atPath: projectURL.appendingPathComponent("points3D.ply").path)
-        let resultURL = projectURL.appendingPathComponent("result.splat")
+        let resultURL = projectURL.appendingPathComponent(Self.splatResultFileName)
         let hasResult = validSplat(at: resultURL)
         let stage: ScanProjectStage = hasResult ? .finished : ((hasTransforms && hasPoints) ? .captured : .capturing)
         var outputs: [String: String] = [:]
@@ -440,15 +462,11 @@ final class ScanProjectStore {
             createdAt: createdAt,
             updatedAt: (attrs?[.modificationDate] as? Date) ?? createdAt,
             stage: stage,
-            acceptedFrames: imageCount,
-            rawDataRetained: imageCount > 0,
+            acceptedFrames: imageURLs.count,
+            rawDataRetained: !imageURLs.isEmpty,
             outputs: outputs
         )
-        let firstImage = ((try? fileManager.contentsOfDirectory(at: projectURL.appendingPathComponent("images"), includingPropertiesForKeys: nil)) ?? [])
-            .filter { ["jpg", "jpeg", "png", "heic"].contains($0.pathExtension.lowercased()) }
-            .sorted { $0.lastPathComponent < $1.lastPathComponent }
-            .first
-        if let firstImage {
+        if let firstImage = imageURLs.first {
             let thumbnail = projectURL.appendingPathComponent(Self.thumbnailFileName)
             if !fileManager.fileExists(atPath: thumbnail.path), let data = try? Data(contentsOf: firstImage) {
                 try? data.write(to: thumbnail, options: .atomic)
@@ -462,30 +480,37 @@ final class ScanProjectStore {
     private func repairIfNeeded(manifest input: ScanProjectManifest, projectURL: URL) throws -> ScanProjectManifest {
         var manifest = input
         var changed = false
-        let resultURL = projectURL.appendingPathComponent(manifest.splatFileName ?? "result.splat")
-        if validSplat(at: resultURL) {
-            if manifest.outputs[ScanRepresentationKind.splat.rawValue] == nil {
-                manifest.outputs[ScanRepresentationKind.splat.rawValue] = resultURL.lastPathComponent
-                changed = true
-            }
-            if manifest.stage == .processing {
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+
+        if manifest.stage == .processing {
+            let hadPriorResult = manifest.splatFileName != nil
+            let recovery = try recoverProcessingResult(projectURL: projectURL)
+            if let recoveredURL = recovery.url {
+                manifest.outputs[ScanRepresentationKind.splat.rawValue] = recoveredURL.lastPathComponent
                 manifest.stage = .finished
                 manifest.recoveredAfterInterruption = true
-                manifest.lastError = nil
+                manifest.lastError = recovery.message ?? (hadPriorResult ? "再生成は中断しましたが、完成済み3Dは保持されています。" : nil)
+                changed = true
+            } else {
+                let canRetry = (try? reprocessRequest(projectURL: projectURL, representation: .splat)) != nil
+                manifest.stage = canRetry ? .captured : .failed
+                manifest.recoveredAfterInterruption = true
+                manifest.lastError = canRetry
+                    ? "前回の3D生成は途中で終了しました。rawデータから生成を再開できます。"
+                    : "前回の3D生成は途中で終了し、再処理に必要なrawデータも見つかりません。"
                 changed = true
             }
-        } else if manifest.stage == .processing {
-            let canRetry = (try? reprocessRequest(projectURL: projectURL, representation: .splat)) != nil
-            manifest.stage = canRetry ? .captured : .failed
-            manifest.recoveredAfterInterruption = true
-            manifest.lastError = canRetry
-                ? "前回の3D生成は途中で終了しました。rawデータから生成を再開できます。"
-                : "前回の3D生成は途中で終了し、再処理に必要なrawデータも見つかりません。"
+        } else if validSplat(at: output), manifest.splatFileName == nil {
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = output.lastPathComponent
+            if manifest.stage == .captured || manifest.stage == .failed { manifest.stage = .finished }
             changed = true
         }
 
+        let checkpointPrimary = projectURL.appendingPathComponent(Self.checkpointFileName)
+        let checkpointBackup = projectURL.appendingPathComponent(Self.checkpointBackupFileName)
         let rawExists = (try? reprocessRequest(projectURL: projectURL, representation: .splat)) != nil
-            || fileManager.fileExists(atPath: projectURL.appendingPathComponent(Self.checkpointFileName).path)
+            || fileManager.fileExists(atPath: checkpointPrimary.path)
+            || fileManager.fileExists(atPath: checkpointBackup.path)
         if manifest.rawDataRetained != rawExists {
             manifest.rawDataRetained = rawExists
             changed = true
@@ -499,6 +524,35 @@ final class ScanProjectStore {
             try writeManifest(manifest, to: projectURL)
         }
         return manifest
+    }
+
+    private func recoverProcessingResult(projectURL: URL) throws -> (url: URL?, message: String?) {
+        let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
+
+        if validSplat(at: pending) {
+            do {
+                return (try commitPendingSplat(projectURL: projectURL), nil)
+            } catch {
+                // Fall through to the previous completed result if the pending swap itself was interrupted.
+            }
+        }
+
+        if validSplat(at: output) {
+            if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+            if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
+            return (output, nil)
+        }
+
+        if validSplat(at: previous) {
+            if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
+            try fileManager.moveItem(at: previous, to: output)
+            if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+            return (output, "再生成は中断しましたが、以前の完成済み3Dを復元しました。")
+        }
+
+        return (nil, nil)
     }
 
     private func rotateBackup(primary: URL, backup: URL) throws {
