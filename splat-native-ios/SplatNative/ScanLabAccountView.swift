@@ -35,6 +35,8 @@ struct ScanLabAuthView: View {
             }
             Section("プライバシー") {
                 Text("スキャン作成と端末内3D生成はログイン不要です。クラウドへ送信するのは、公開・限定リンク・非公開クラウド保存を明示的に実行した場合だけです。").font(.footnote).foregroundStyle(.secondary)
+                Link("サポート・お問い合わせ", destination: ScanLabConfig.supportURL)
+                Link("プライバシーポリシー", destination: URL(string: "https://allsunday1122.github.io/splat-native-ios/privacy.html")!)
             }
         }
     }
@@ -67,6 +69,10 @@ private struct ScanLabSignedInAccountView: View {
             Section("自分のクラウドスキャン") {
                 if backend.ownerScans.isEmpty { Text(backend.isLoadingOwner ? "取得中…" : "まだクラウドへ保存していません。").foregroundStyle(.secondary) }
                 else { ForEach(backend.ownerScans) { scan in ScanLabOwnerScanRow(scan: scan) } }
+            }
+            Section("サポート") {
+                Link("サポート・お問い合わせ", destination: ScanLabConfig.supportURL)
+                Link("プライバシーポリシー", destination: URL(string: "https://allsunday1122.github.io/splat-native-ios/privacy.html")!)
             }
             Section {
                 Button("ログアウト") { Task { await backend.signOut() } }
