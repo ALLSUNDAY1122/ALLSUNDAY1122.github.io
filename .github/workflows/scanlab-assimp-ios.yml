@@ -34,9 +34,11 @@ jobs:
           p = Path('/tmp/assimp/port/iOS/build.sh')
           s = p.read_text()
           s = s.replace('BUILD_ARCHS_DEVICE="arm64e arm64"', 'BUILD_ARCHS_DEVICE="arm64"')
-          s = s.replace('BUILD_ARCHS_SIMULATOR="arm64 x86_64"', 'BUILD_ARCHS_SIMULATOR="arm64"')
+          s = s.replace('BUILD_ARCHS_SIMULATOR="arm64-simulator x86_64-simulator"', 'BUILD_ARCHS_SIMULATOR="arm64-simulator"')
           needle = '-DASSIMP_BUILD_ZLIB=ON"'
           replacement = '''-DASSIMP_BUILD_ZLIB=OFF \\
+            -DZLIB_LIBRARY=$SDKROOT/usr/lib/libz.tbd \\
+            -DZLIB_INCLUDE_DIR=$SDKROOT/usr/include \\
             -DASSIMP_BUILD_MINIZIP=ON \\
             -DASSIMP_BUILD_TESTS=OFF \\
             -DASSIMP_BUILD_ASSIMP_TOOLS=OFF \\
