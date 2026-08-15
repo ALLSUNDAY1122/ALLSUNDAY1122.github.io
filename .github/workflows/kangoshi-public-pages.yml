@@ -1,0 +1,43 @@
+name: Kangoshi Public App Store Pages
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/support.html'
+      - 'kangoshi-sprint/privacy.html'
+      - '.github/workflows/kangoshi-public-pages.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  public-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate source files
+        run: |
+          grep -q '看護師国試 学びスプリント' kangoshi-sprint/support.html
+          grep -q '購入を復元' kangoshi-sprint/support.html
+          grep -q 'プライバシーポリシー' kangoshi-sprint/privacy.html
+          grep -q '開発者のサーバーへ収集・送信しません' kangoshi-sprint/privacy.html
+      - name: Verify public HTTPS pages without authentication
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://allsunday1122.github.io/kangoshi-sprint'
+          for page in support.html privacy.html; do
+            ok=0
+            for attempt in $(seq 1 15); do
+              code=$(curl -L -sS -o "/tmp/$page" -w '%{http_code}' "$base/$page" || true)
+              if [ "$code" = '200' ]; then ok=1; break; fi
+              sleep 10
+            done
+            test "$ok" = '1'
+          done
+          grep -q '看護師国試 学びスプリント' /tmp/support.html
+          grep -q '購入を復元' /tmp/support.html
+          grep -q 'プライバシーポリシー' /tmp/privacy.html
+          grep -q 'トラッキングを行いません' /tmp/privacy.html
+          echo 'PASS: public support/privacy pages return HTTP 200 without authentication'
