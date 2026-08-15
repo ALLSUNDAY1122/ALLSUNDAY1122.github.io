@@ -115,7 +115,9 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     var activeProjectIsDraft: Bool { activeManifest?.stage == .capturing }
 
     var activeProjectCanResume: Bool {
-        guard activeProjectIsDraft, let projectURL,
+        guard let stage = activeManifest?.stage,
+              stage == .capturing || stage == .captured,
+              let projectURL,
               (try? projectStore.loadCheckpoint(projectURL: projectURL)) != nil else { return false }
         return !loadedFromDisk || projectStore.hasWorldMap(projectURL: projectURL)
     }
@@ -286,30 +288,39 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     func resumeActiveCapture() {
-        guard let session, let projectURL, activeProjectIsDraft else { return }
+        guard let session, let projectURL, activeProjectCanResume else { return }
         do {
             let checkpoint = try projectStore.loadCheckpoint(projectURL: projectURL)
             restoreCheckpoint(checkpoint)
             let config = makeWorldTrackingConfiguration()
+            var runOptions: ARSession.RunOptions = []
+            var resumeMessage = "撮影を再開しました。続きから対象の周囲を回ってください"
+
             if loadedFromDisk {
                 let worldMapURL = projectStore.worldMapURL(projectURL: projectURL)
                 guard let data = try? Data(contentsOf: worldMapURL),
                       let worldMap = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) else {
-                    phase = .failed("撮影途中のrawデータは保存されていますが、カメラ位置を復元する情報がありません。既存データは削除されていません。")
+                    phase = .failed("撮影済みrawデータは保存されていますが、カメラ位置を復元する情報がありません。既存データは削除されていません。")
                     return
                 }
                 config.initialWorldMap = worldMap
-                session.run(config, options: [.resetTracking, .removeExistingAnchors])
-                trackingMessage = "保存位置を再確認しています。対象を映しながらゆっくり動かしてください"
-            } else {
-                session.run(config)
-                trackingMessage = "撮影を再開しました。続きから対象の周囲を回ってください"
+                runOptions = [.resetTracking, .removeExistingAnchors]
+                resumeMessage = "保存位置を再確認しています。対象を映しながらゆっくり動かしてください"
             }
+
+            activeManifest = try projectStore.updateManifest(projectURL: projectURL) { manifest in
+                manifest.stage = .capturing
+                manifest.lastError = nil
+                manifest.rawDataRetained = true
+            }
+            session.run(config, options: runOptions)
+            trackingMessage = resumeMessage
             loadedFromDisk = false
             phase = .capturing
             UIApplication.shared.isIdleTimerDisabled = true
+            refreshLibrary()
         } catch {
-            phase = .failed("撮影途中の状態を復元できませんでした: \(error.localizedDescription)")
+            phase = .failed("保存した撮影状態を復元できませんでした: \(error.localizedDescription)")
         }
     }
 
@@ -710,10 +721,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         }
         if let error = summary.manifest.lastError {
             trackingMessage = error
-        } else if summary.manifest.stage == .capturing {
+        } else if summary.manifest.stage == .capturing || summary.manifest.stage == .captured {
             trackingMessage = activeProjectCanResume
-                ? "撮影途中のデータを復元しました"
-                : "撮影途中のrawデータを保存しています"
+                ? "保存した撮影状態を復元しました"
+                : "撮影rawデータを保存しています"
         } else {
             trackingMessage = "保存済みスキャンを開きました"
         }
