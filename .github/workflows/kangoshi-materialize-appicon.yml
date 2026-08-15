@@ -4,8 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'kangoshi-sprint/ios/icon-source/**'
-      - '.github/workflows/kangoshi-materialize-appicon.yml'
+      - 'kangoshi-sprint/ios/icon-source/READY'
 
 concurrency:
   group: kangoshi-materialize-appicon
@@ -23,6 +22,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          test -f kangoshi-sprint/ios/icon-source/READY
           count=$(find kangoshi-sprint/ios/icon-source -maxdepth 1 -name 'appicon.b64.part*' -type f | wc -l | tr -d ' ')
           test "$count" = '57'
           cat kangoshi-sprint/ios/icon-source/appicon.b64.part* | base64 --decode > /tmp/AppIcon-1024.png
