@@ -18,6 +18,8 @@ final class KangoshiSprintUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS '1/'")).firstMatch.exists)
         close.tap()
         XCTAssertTrue(close.waitForNonExistence(timeout: 10))
+        XCTAssertEqual(app.state, .runningForeground)
+        XCTAssertTrue(app.tabBars.buttons["ホーム"].waitForExistence(timeout: 10))
     }
 
     func testFreeMockGateAndRestoreEntry() throws {
