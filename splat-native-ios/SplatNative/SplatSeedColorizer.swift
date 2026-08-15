@@ -24,6 +24,7 @@ private struct SplatSeedAssignment {
     let frameIndex: Int
     let x: Float
     let y: Float
+    let score: Float
 }
 
 private struct SplatSeedRaster {
@@ -45,23 +46,31 @@ private struct SplatSeedRaster {
 
 enum SplatSeedColorizer {
     static let fallback = SplatSeedSample(red: 128, green: 128, blue: 128)
+    static let maxColorViewsPerPoint = 3
 
     static func colorize(points: [SIMD3<Float>], frames: [SplatSeedFrame], projectURL: URL) -> [SplatSeedSample] {
         guard !points.isEmpty, !frames.isEmpty else {
             return Array(repeating: fallback, count: points.count)
         }
 
-        let assignments = points.map { bestAssignment(for: $0, frames: frames) }
-        var result = Array(repeating: fallback, count: points.count)
+        // Use several nearby, low-off-axis views instead of trusting one frame. A single projection
+        // can land on a temporary occluder, highlight or exposure outlier; a small robust consensus
+        // gives the 3DGS initializer a more stable color while keeping raster memory bounded because
+        // only one source image is decoded at a time below.
+        let assignments = points.map {
+            bestAssignments(for: $0, frames: frames, maxCount: maxColorViewsPerPoint)
+        }
         var grouped: [Int: [(pointIndex: Int, assignment: SplatSeedAssignment)]] = [:]
+        var samples = Array(repeating: [SplatSeedSample](), count: points.count)
 
-        for (pointIndex, assignment) in assignments.enumerated() {
-            guard let assignment else { continue }
-            grouped[assignment.frameIndex, default: []].append((pointIndex, assignment))
+        for (pointIndex, pointAssignments) in assignments.enumerated() {
+            for assignment in pointAssignments {
+                grouped[assignment.frameIndex, default: []].append((pointIndex, assignment))
+            }
         }
 
-        // Seed colors always come from untouched captures. Background suppression is a separate
-        // training-stage preprocessing pass so capture finalization never blocks on Vision work.
+        // Seed colors always come from untouched captures. Decode one raster at a time so adding
+        // multi-view consensus does not multiply peak memory by the number of captured frames.
         for (frameIndex, items) in grouped {
             guard frames.indices.contains(frameIndex) else { continue }
             let frame = frames[frameIndex]
@@ -74,12 +83,12 @@ enum SplatSeedColorizer {
                     sourceWidth: frame.w,
                     sourceHeight: frame.h
                 ) {
-                    result[item.pointIndex] = color
+                    samples[item.pointIndex].append(color)
                 }
             }
         }
 
-        return result
+        return samples.map(robustColor)
     }
 
     static func project(point: SIMD3<Float>, frame: SplatSeedFrame) -> SIMD3<Float>? {
@@ -105,9 +114,14 @@ enum SplatSeedColorizer {
         return SIMD3<Float>(x, y, depth)
     }
 
-    private static func bestAssignment(for point: SIMD3<Float>, frames: [SplatSeedFrame]) -> SplatSeedAssignment? {
-        var best: SplatSeedAssignment?
-        var bestScore = Float.greatestFiniteMagnitude
+    private static func bestAssignments(
+        for point: SIMD3<Float>,
+        frames: [SplatSeedFrame],
+        maxCount: Int
+    ) -> [SplatSeedAssignment] {
+        guard maxCount > 0 else { return [] }
+        var candidates: [SplatSeedAssignment] = []
+        candidates.reserveCapacity(frames.count)
 
         for (frameIndex, frame) in frames.enumerated() {
             guard let projected = project(point: point, frame: frame) else { continue }
@@ -115,13 +129,44 @@ enum SplatSeedColorizer {
             let ny = (projected.y - frame.cy) / max(frame.flY, 1)
             let offAxis = sqrt(nx * nx + ny * ny)
             let score = projected.z * (1 + 0.35 * offAxis)
-            if score < bestScore {
-                bestScore = score
-                best = SplatSeedAssignment(frameIndex: frameIndex, x: projected.x, y: projected.y)
-            }
+            candidates.append(SplatSeedAssignment(
+                frameIndex: frameIndex,
+                x: projected.x,
+                y: projected.y,
+                score: score
+            ))
         }
 
-        return best
+        candidates.sort {
+            if abs($0.score - $1.score) < 0.000_001 {
+                return $0.frameIndex < $1.frameIndex
+            }
+            return $0.score < $1.score
+        }
+        guard let bestScore = candidates.first?.score else { return [] }
+
+        // Avoid blending a very distant/grazing observation merely to reach three samples.
+        let scoreCeiling = max(bestScore * 1.8, bestScore + 0.05)
+        return Array(candidates.lazy.filter { $0.score <= scoreCeiling }.prefix(maxCount))
+    }
+
+    private static func robustColor(_ samples: [SplatSeedSample]) -> SplatSeedSample {
+        guard !samples.isEmpty else { return fallback }
+        return SplatSeedSample(
+            red: robustChannel(samples.map(\.red)),
+            green: robustChannel(samples.map(\.green)),
+            blue: robustChannel(samples.map(\.blue))
+        )
+    }
+
+    private static func robustChannel(_ values: [UInt8]) -> UInt8 {
+        guard !values.isEmpty else { return 128 }
+        let sorted = values.sorted()
+        let middle = sorted.count / 2
+        if sorted.count.isMultiple(of: 2) {
+            return UInt8((Int(sorted[middle - 1]) + Int(sorted[middle])) / 2)
+        }
+        return sorted[middle]
     }
 
     private static func matrix(fromRows rows: [[Float]]) -> simd_float4x4 {
