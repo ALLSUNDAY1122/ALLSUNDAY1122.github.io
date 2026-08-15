@@ -1,0 +1,40 @@
+name: Kangoshi Canonical AppIcon Gate
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+      - '.github/workflows/kangoshi-appicon-gate.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  bind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify exact Drive canonical PNG and bind Xcode asset
+        run: |
+          python3 kangoshi-sprint/ios/tools/bind_canonical_appicon.py
+          test "$(stat -c '%s' kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png)" = '683924'
+          file kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | grep -q 'PNG image data, 1024 x 1024'
+          grep -q 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' kangoshi-sprint/ios/project.yml
+          grep -q 'Assets.xcassets' kangoshi-sprint/ios/project.yml
+      - name: Commit deterministic binding
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/ios/project.yml
+          if ! git diff --cached --quiet; then
+            git commit -m 'kangoshi: bind verified canonical AppIcon [skip ci]'
+            pushed=0
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push; then pushed=1; break; fi
+              sleep 2
+            done
+            test "$pushed" = '1'
+          fi
