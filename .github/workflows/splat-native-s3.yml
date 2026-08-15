@@ -1,0 +1,60 @@
+name: Splat Native S3 Viewer Gate
+
+on:
+  push:
+    branches:
+      - scaniverse/s3-splat-viewer-edit
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-native-s3.yml'
+  pull_request:
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-native-s3.yml'
+
+jobs:
+  build-and-test:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+
+      - name: Generate project
+        working-directory: splat-native-ios
+        run: xcodegen generate
+
+      - name: Build app for iOS Simulator
+        working-directory: splat-native-ios
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project SplatNative.xcodeproj \
+            -scheme SplatNative \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath .derived \
+            CODE_SIGNING_ALLOWED=NO \
+            build | tee /tmp/s3-build.log
+
+      - name: Select available iPhone simulator
+        id: simulator
+        run: |
+          UDID=$(xcrun simctl list devices available --json | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; ids=[x["udid"] for runtime in d.values() for x in runtime if x.get("isAvailable") and "iPhone" in x.get("name","")]; print(ids[0] if ids else "")')
+          test -n "$UDID"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+
+      - name: Run S3 viewer state regression tests
+        working-directory: splat-native-ios
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project SplatNative.xcodeproj \
+            -scheme SplatNative \
+            -destination 'platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}' \
+            -derivedDataPath .derived \
+            CODE_SIGNING_ALLOWED=NO \
+            -only-testing:SplatNativeTests/SplatViewerStateTests \
+            test | tee /tmp/s3-test.log
