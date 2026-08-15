@@ -6,9 +6,13 @@ struct QuizFlowView: View {
     @EnvironmentObject var model: KangoshiAppModel
     var body: some View {
         Group {
-            if let s = model.session, s.finished { ResultView(session: s) }
-            else if let q = model.currentQuestion { QuizQuestionView(question: q) }
-            else { ProgressView().tint(KSTheme.ai) }
+            if let s = model.session {
+                if s.finished { ResultView(session: s) }
+                else if let q = model.currentQuestion { QuizQuestionView(question: q, session: s) }
+                else { ProgressView().tint(KSTheme.ai) }
+            } else {
+                EmptyView()
+            }
         }
         .background(KSTheme.paper.ignoresSafeArea())
     }
@@ -17,11 +21,11 @@ struct QuizFlowView: View {
 struct QuizQuestionView: View {
     @EnvironmentObject var model: KangoshiAppModel
     let question: NativeQuestion
+    let session: StudySession
     @State private var selected: Set<Int> = []
     @State private var numericText = ""
     @State private var showDetail = false
 
-    private var session: StudySession { model.session! }
     private var result: AnswerResult? { session.answered ? session.results.last : nil }
     private var choices: [String] { question.choices.isEmpty && !question.isNumeric ? ["①","②","③","④"] : question.choices }
     private var questionFont: Font {
