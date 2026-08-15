@@ -78,6 +78,16 @@ enum SplatCompletionVerifier {
             throw VerificationError.completionEvidenceMismatch
         }
 
+        do {
+            try SplatStrongCompletionEvidence.verifyOrSeal(
+                sourceURL: expectedURL,
+                evidence: evidence,
+                fileManager: fileManager
+            )
+        } catch {
+            throw VerificationError.completionEvidenceMismatch
+        }
+
         SplatPreviousResultEvidence.discardBackup(projectURL: projectURL, fileManager: fileManager)
         return expectedURL
     }
