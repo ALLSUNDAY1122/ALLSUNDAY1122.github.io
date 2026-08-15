@@ -129,12 +129,17 @@ No session may mark itself complete while a row in its ownership remains below `
 | SPZ export | MISSING | none | S6 |
 | Model export formats | MISSING | none | S4/S6 |
 | Video export | MISSING | none | S6 |
-| Shareable browser URL | MISSING | none | S6/S7 |
-| Public/unlisted publish | MISSING | none | S7 |
-| Map/Discover | MISSING | none | S7 |
-| Account/auth | MISSING | none | S7 |
+| Shareable browser URL | PARTIAL | signed private Storage URL + interactive browser viewer implemented; merged-site E2E pending | S6/S7 |
+| Public/unlisted publish | PARTIAL | explicit private/unlisted/public publish path, owner unpublish/delete, server guards implemented; real-account E2E pending | S7 |
+| Map/Discover | PARTIAL | real public feed + geotagged Map + remote Splat viewer implemented with no dummy content; device E2E pending | S7 |
+| Account/auth | PARTIAL | Supabase email auth, profile, account/cloud deletion, support/privacy links implemented; real-account E2E pending | S7 |
+| UGC moderation/blocking | PARTIAL | content confirmation, server text guard, report auto-hide, moderation hold, user blocking implemented; adversarial E2E pending | S7/S8 |
 | Device performance matrix | MISSING | build-only evidence | S8 |
 | Release/adversarial regression | PARTIAL | CI exists; parity-specific gates incomplete | S8 |
+
+## S7 explicit human-only gate
+
+S7 must remain below `PARITY` until a real iPhone/TestFlight run demonstrates: login, private save, unlisted browser link, public Map/Discover visibility, other-account like/report/block, report auto-hide, owner unpublish/delete, and account/cloud deletion. The exact sequence and backend evidence are recorded in `S7_HANDOFF.md`.
 
 ## Hard anti-cheating rules
 
