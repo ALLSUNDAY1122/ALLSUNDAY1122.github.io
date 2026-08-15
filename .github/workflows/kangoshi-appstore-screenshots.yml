@@ -1,0 +1,82 @@
+name: Kangoshi App Store Screenshots
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/ios/UITests/KangoshiScreenshotUITests.swift'
+      - '.github/workflows/kangoshi-appstore-screenshots.yml'
+
+concurrency:
+  group: kangoshi-appstore-screenshots
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools and prepare canonical native payload
+        run: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen cairo pango
+          python3 -m pip install --break-system-packages 'CairoSVG>=2.7,<3'
+          python3 kangoshi-sprint/ios/tools/normalize_swift_numeric_literals.py
+          python3 kangoshi-sprint/ios/tools/prepare_native_content.py
+      - name: Generate Xcode project
+        working-directory: kangoshi-sprint/ios
+        run: xcodegen generate
+      - name: Pick current large iPhone simulator
+        run: |
+          python3 - <<'PY'
+          import json,subprocess
+          d=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          rows=[]
+          for runtime,items in d.get('devices',{}).items():
+              if 'iOS' not in runtime: continue
+              rows += [x for x in items if x.get('isAvailable') and str(x.get('name','')).startswith('iPhone')]
+          for preferred in ['iPhone 16 Pro Max','iPhone 16 Pro','iPhone 16 Plus','iPhone 16']:
+              hit=next((x for x in rows if x['name']==preferred),None)
+              if hit: break
+          else: hit=rows[0] if rows else None
+          if not hit: raise SystemExit('No available iPhone simulator')
+          open('/tmp/kangoshi-shot-udid','w').write(hit['udid'])
+          open('/tmp/kangoshi-shot-device','w').write(hit['name'])
+          print(hit['name'],hit['udid'])
+          PY
+      - name: Capture four product screens
+        shell: bash
+        run: |
+          set -euo pipefail
+          udid=$(cat /tmp/kangoshi-shot-udid)
+          xcrun simctl boot "$udid" 2>/dev/null || true
+          xcrun simctl bootstatus "$udid" -b
+          rm -rf /tmp/KangoshiScreens.xcresult /tmp/kangoshi-screens
+          set -o pipefail
+          xcodebuild test \
+            -project kangoshi-sprint/ios/KangoshiSprint.xcodeproj \
+            -scheme KangoshiSprint \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$udid" \
+            -only-testing:KangoshiSprintUITests/KangoshiScreenshotUITests/testCaptureAppStoreScreens \
+            -resultBundlePath /tmp/KangoshiScreens.xcresult \
+            CODE_SIGNING_ALLOWED=NO | xcpretty
+          mkdir -p /tmp/kangoshi-screens
+          xcrun xcresulttool export attachments \
+            --path /tmp/KangoshiScreens.xcresult \
+            --output-path /tmp/kangoshi-screens
+          find /tmp/kangoshi-screens -type f -maxdepth 2 -print
+          count=$(find /tmp/kangoshi-screens -type f \( -name '*.png' -o -name '*.jpeg' \) | wc -l | tr -d ' ')
+          test "$count" -ge 4
+      - name: Write screenshot manifest
+        run: |
+          device=$(cat /tmp/kangoshi-shot-device)
+          printf 'device=%s\ncreated=2026-08-15\nflow=home,question,mock,premium\n' "$device" > /tmp/kangoshi-screens/manifest.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kangoshi-appstore-screenshots
+          path: /tmp/kangoshi-screens
+          if-no-files-found: error
