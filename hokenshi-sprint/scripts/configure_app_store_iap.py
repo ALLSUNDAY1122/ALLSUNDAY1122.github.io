@@ -4,6 +4,9 @@
 Requires Codemagic App Store Connect integration credentials in:
 APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER,
 APP_STORE_CONNECT_PRIVATE_KEY.
+
+This script deliberately stops on unexpected existing values rather than
+silently overwriting store metadata or pricing.
 """
 
 from __future__ import annotations
@@ -14,7 +17,6 @@ import sys
 import time
 import uuid
 from decimal import Decimal
-from urllib.parse import quote
 
 import jwt
 import requests
@@ -27,6 +29,7 @@ DISPLAY_NAME = "プレミアム解放"
 DESCRIPTION = "残り300問と模試機能を買い切りで解放します。購入済みの場合は購入を復元できます。"
 REVIEW_NOTE = "無料30問から、残り300問と模試機能を非消耗型の買い切りで解放します。StoreKit 2の購入復元に対応しています。"
 TARGET_JPY = Decimal("800")
+BASE_TERRITORY = "JPN"
 
 
 def require(name: str) -> str:
@@ -52,11 +55,10 @@ def make_token() -> str:
 
 
 def request(method: str, path: str, *, params=None, payload=None, expected=(200,)):
-    token = make_token()
     response = requests.request(
         method,
         BASE + path,
-        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+        headers={"Authorization": f"Bearer {make_token()}", "Content-Type": "application/json"},
         params=params,
         data=json.dumps(payload, ensure_ascii=False) if payload is not None else None,
         timeout=60,
@@ -77,9 +79,14 @@ def get_or_create_iap() -> str:
     )
     matches = [x for x in existing.get("data", []) if x.get("attributes", {}).get("productId") == PRODUCT_ID]
     if matches:
-        iap_id = matches[0]["id"]
-        print(f"PASS: IAP already exists: {PRODUCT_ID} / {iap_id}")
-        return iap_id
+        if len(matches) != 1:
+            raise RuntimeError(f"Expected one IAP for {PRODUCT_ID}, found {len(matches)}")
+        row = matches[0]
+        attrs = row.get("attributes", {})
+        if attrs.get("inAppPurchaseType") != "NON_CONSUMABLE":
+            raise RuntimeError(f"Existing IAP has unexpected type: {attrs.get('inAppPurchaseType')}")
+        print(f"PASS: IAP already exists: {PRODUCT_ID} / {row['id']}")
+        return row["id"]
 
     payload = {
         "data": {
@@ -101,11 +108,42 @@ def get_or_create_iap() -> str:
     return iap_id
 
 
-def ensure_japanese_localization(iap_id: str) -> None:
-    current = request("GET", f"/v2/inAppPurchases/{iap_id}/inAppPurchaseLocalizations", params={"limit": 200})
-    locales = {x.get("attributes", {}).get("locale") for x in current.get("data", [])}
-    if "ja" in locales or "ja-JP" in locales:
-        print("PASS: Japanese IAP localization already exists")
+def get_or_create_draft_version(iap_id: str) -> str:
+    versions = request("GET", f"/v2/inAppPurchases/{iap_id}/versions", params={"limit": 50})
+    rows = versions.get("data", [])
+    drafts = [x for x in rows if x.get("attributes", {}).get("state") == "PREPARE_FOR_SUBMISSION"]
+    if drafts:
+        drafts.sort(key=lambda x: int(x.get("attributes", {}).get("version") or 0), reverse=True)
+        version_id = drafts[0]["id"]
+        print(f"PASS: draft IAP version already exists: {version_id}")
+        return version_id
+
+    payload = {
+        "data": {
+            "type": "inAppPurchaseVersions",
+            "relationships": {
+                "inAppPurchase": {"data": {"type": "inAppPurchases", "id": iap_id}}
+            },
+        }
+    }
+    created = request("POST", "/v1/inAppPurchaseVersions", payload=payload, expected=(201,))
+    version_id = created["data"]["id"]
+    print(f"PASS: created draft IAP version: {version_id}")
+    return version_id
+
+
+def ensure_japanese_localization(version_id: str) -> None:
+    current = request("GET", f"/v1/inAppPurchaseVersions/{version_id}/localizations", params={"limit": 200})
+    japanese = [
+        x
+        for x in current.get("data", [])
+        if x.get("attributes", {}).get("locale") in {"ja", "ja-JP"}
+    ]
+    if japanese:
+        attrs = japanese[0].get("attributes", {})
+        if attrs.get("name") != DISPLAY_NAME or attrs.get("description") != DESCRIPTION:
+            raise RuntimeError("Existing Japanese IAP localization differs from canonical metadata")
+        print("PASS: Japanese IAP localization already matches canonical metadata")
         return
 
     payload = {
@@ -113,40 +151,33 @@ def ensure_japanese_localization(iap_id: str) -> None:
             "type": "inAppPurchaseLocalizations",
             "attributes": {"locale": "ja", "name": DISPLAY_NAME, "description": DESCRIPTION},
             "relationships": {
-                "inAppPurchaseV2": {"data": {"type": "inAppPurchases", "id": iap_id}}
+                "version": {"data": {"type": "inAppPurchaseVersions", "id": version_id}}
             },
         }
     }
-    request("POST", "/v1/inAppPurchaseLocalizations", payload=payload, expected=(201,))
-    print("PASS: created Japanese IAP localization")
+    request("POST", "/v2/inAppPurchaseLocalizations", payload=payload, expected=(201,))
+    print("PASS: created Japanese IAP localization on draft version")
 
 
 def current_japan_price(iap_id: str) -> Decimal | None:
-    schedule = request(
-        "GET",
-        f"/v2/inAppPurchases/{iap_id}/iapPriceSchedule",
-        params={"include": "manualPrices", "limit[manualPrices]": 50},
-        expected=(200, 404),
-    )
-    if not schedule or not schedule.get("data"):
-        return None
-    manual_ids = {
-        x.get("id")
-        for x in schedule.get("included", [])
-        if x.get("type") == "inAppPurchasePrices" and x.get("attributes", {}).get("startDate") is None
-    }
-    if not manual_ids:
-        return None
-    # Confirm the effective JPN price by reading manual prices with price points included.
     manual = request(
         "GET",
         f"/v1/inAppPurchasePriceSchedules/{iap_id}/manualPrices",
-        params={"filter[territory]": "JPN", "include": "inAppPurchasePricePoint", "limit": 50},
+        params={
+            "filter[territory]": BASE_TERRITORY,
+            "fields[inAppPurchasePricePoints]": "customerPrice",
+            "include": "inAppPurchasePricePoint",
+            "limit": 50,
+        },
         expected=(200, 404),
     )
     if not manual:
         return None
-    points = {x["id"]: x.get("attributes", {}) for x in manual.get("included", []) if x.get("type") == "inAppPurchasePricePoints"}
+    points = {
+        x["id"]: x.get("attributes", {})
+        for x in manual.get("included", [])
+        if x.get("type") == "inAppPurchasePricePoints"
+    }
     for row in manual.get("data", []):
         if row.get("attributes", {}).get("startDate") is not None:
             continue
@@ -163,34 +194,37 @@ def ensure_japan_price(iap_id: str) -> None:
         print("PASS: Japan IAP price already equals 800 JPY")
         return
     if current is not None:
-        raise RuntimeError(f"Existing JPN price is {current} JPY; refusing to overwrite an existing price automatically")
+        raise RuntimeError(f"Existing JPN price is {current} JPY; refusing to overwrite it automatically")
 
     points = request(
         "GET",
         f"/v2/inAppPurchases/{iap_id}/pricePoints",
         params={
-            "filter[territory]": "JPN",
+            "filter[territory]": BASE_TERRITORY,
             "fields[inAppPurchasePricePoints]": "customerPrice,territory",
             "include": "territory",
             "limit": 8000,
         },
     )
-    candidates = []
-    for point in points.get("data", []):
-        value = point.get("attributes", {}).get("customerPrice")
-        if value is not None and Decimal(str(value)) == TARGET_JPY:
-            candidates.append(point["id"])
+    candidates = [
+        point["id"]
+        for point in points.get("data", [])
+        if point.get("attributes", {}).get("customerPrice") is not None
+        and Decimal(str(point["attributes"]["customerPrice"])) == TARGET_JPY
+    ]
     if len(candidates) != 1:
         raise RuntimeError(f"Expected one 800 JPY price point, found {len(candidates)}")
     price_point_id = candidates[0]
     local_price_id = str(uuid.uuid4())
     payload = {
         "data": {
-            "type": "inAppPurchases",
-            "id": iap_id,
-            "attributes": {},
+            "type": "inAppPurchasePriceSchedules",
             "relationships": {
-                "prices": {"data": [{"type": "inAppPurchasePrices", "id": local_price_id}]}
+                "inAppPurchase": {"data": {"type": "inAppPurchases", "id": iap_id}},
+                "baseTerritory": {"data": {"type": "territories", "id": BASE_TERRITORY}},
+                "manualPrices": {
+                    "data": [{"type": "inAppPurchasePrices", "id": local_price_id}]
+                },
             },
         },
         "included": [
@@ -199,27 +233,32 @@ def ensure_japan_price(iap_id: str) -> None:
                 "id": local_price_id,
                 "attributes": {"startDate": None},
                 "relationships": {
-                    "inAppPurchaseV2": {"data": {"type": "inAppPurchasesV2", "id": iap_id}},
+                    "inAppPurchaseV2": {"data": {"type": "inAppPurchases", "id": iap_id}},
                     "inAppPurchasePricePoint": {
                         "data": {"type": "inAppPurchasePricePoints", "id": price_point_id}
                     },
                 },
-            }
+            },
+            {"type": "territories", "id": BASE_TERRITORY},
         ],
     }
     request("POST", "/v1/inAppPurchasePriceSchedules", payload=payload, expected=(201,))
-    print(f"PASS: configured Japan IAP price at {TARGET_JPY} JPY")
+    print(f"PASS: configured base territory {BASE_TERRITORY} at {TARGET_JPY} JPY")
 
 
 def main() -> int:
     iap_id = get_or_create_iap()
-    ensure_japanese_localization(iap_id)
+    version_id = get_or_create_draft_version(iap_id)
+    ensure_japanese_localization(version_id)
     ensure_japan_price(iap_id)
     final = request("GET", f"/v2/inAppPurchases/{iap_id}")
     attrs = final.get("data", {}).get("attributes", {})
     if attrs.get("productId") != PRODUCT_ID or attrs.get("inAppPurchaseType") != "NON_CONSUMABLE":
         raise RuntimeError("Final IAP verification failed")
-    print(f"PASS: final IAP state={attrs.get('state')} id={iap_id}")
+    final_price = current_japan_price(iap_id)
+    if final_price != TARGET_JPY:
+        raise RuntimeError(f"Final Japan price verification failed: {final_price}")
+    print(f"PASS: final IAP state={attrs.get('state')} id={iap_id} JPN={final_price}")
     return 0
 
 
