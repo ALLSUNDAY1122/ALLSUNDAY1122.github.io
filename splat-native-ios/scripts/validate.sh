@@ -10,6 +10,10 @@ test -f SplatNative/SplatViewer.swift
 test -f SplatNative/RootScanView.swift
 test -f SplatNative/SplatNativeApp.swift
 test -f SplatNative/PrivacyInfo.xcprivacy
+test -f SplatNative/ScanLabBackend.swift
+test -f SplatNative/ScanLabShellView.swift
+test -f SplatNative/PublishScanView.swift
+test -f SplatNative/ScanLabAccountView.swift
 
 test -f SplatNative/Resources/Licenses/msplat-APACHE-2.0.txt
 test -f SplatNative/Resources/Licenses/MetalSplatter-MIT.txt
@@ -68,8 +72,14 @@ grep -q '生成だけもう一度試す' SplatNative/RootScanView.swift
 # Parity work must remain product-neutral until Scaniverse functional parity is achieved.
 ! grep -R -n 'おもちゃばこ' SplatNative project.yml
 
-# Current PoC is intentionally local-only.
-! grep -R -nE 'https?://.*(api|upload|analytics)|URLSession|Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
+# S7 intentionally adds authenticated cloud sharing. Network access is therefore
+# expected, but it must use the declared Supabase client and must not introduce
+# advertising/analytics SDKs as a side effect of the parity work.
+grep -q 'import Supabase' SplatNative/ScanLabBackend.swift
+grep -q 'ScanLabVisibility' SplatNative/ScanLabBackend.swift
+grep -q 'contentConfirmed' SplatNative/PublishScanView.swift
+grep -q 'publicPlaceConfirmed' SplatNative/PublishScanView.swift
+! grep -R -nE 'Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
 
 plutil -lint SplatNative/PrivacyInfo.xcprivacy >/dev/null
 python3 - <<'PY'
@@ -77,9 +87,23 @@ import plistlib
 with open('SplatNative/PrivacyInfo.xcprivacy','rb') as f:
     data=plistlib.load(f)
 assert data.get('NSPrivacyTracking') is False
-assert data.get('NSPrivacyCollectedDataTypes') == []
 assert data.get('NSPrivacyTrackingDomains') == []
-print('PASS: Privacy Manifest matches local-only PoC')
+collected = data.get('NSPrivacyCollectedDataTypes', [])
+by_type = {item.get('NSPrivacyCollectedDataType'): item for item in collected}
+expected = {
+    'NSPrivacyCollectedDataTypeName',
+    'NSPrivacyCollectedDataTypeEmailAddress',
+    'NSPrivacyCollectedDataTypeUserID',
+    'NSPrivacyCollectedDataTypePreciseLocation',
+    'NSPrivacyCollectedDataTypeOtherUserContent',
+}
+assert expected.issubset(by_type), (expected - set(by_type))
+for kind in expected:
+    item = by_type[kind]
+    assert item.get('NSPrivacyCollectedDataTypeLinked') is True
+    assert item.get('NSPrivacyCollectedDataTypeTracking') is False
+    assert 'NSPrivacyCollectedDataTypePurposeAppFunctionality' in item.get('NSPrivacyCollectedDataTypePurposes', [])
+print('PASS: Privacy Manifest matches S7 authenticated sharing')
 PY
 
 echo 'PASS: static Splat Lab Native checks'
