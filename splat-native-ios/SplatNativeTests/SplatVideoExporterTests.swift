@@ -1,4 +1,5 @@
 import AVFoundation
+import Metal
 import SplatIO
 import simd
 import XCTest
