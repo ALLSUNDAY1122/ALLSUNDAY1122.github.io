@@ -1,6 +1,6 @@
 # App Store Connect record values｜保健師国家試験｜学びスプリント
 
-更新: 2026-08-14
+更新: 2026-08-15
 
 Apple側で新規Appレコードを作成するときの固定入力値。
 
@@ -9,6 +9,7 @@ Apple側で新規Appレコードを作成するときの固定入力値。
 - Primary Language: Japanese
 - Bundle ID: `jp.allsunday1122.hokenshi`
 - SKU: `hokenshi-sprint-13-ios`
+- App Store Connect App ID: `6801783499`
 - User Access: Full Access
 - Version: `1.0.0`
 - Distribution: App Store
@@ -27,7 +28,4 @@ Apple側で新規Appレコードを作成するときの固定入力値。
 - Japan price: `800円`
 - 価格文字列をアプリコードへ固定しない。App Store Connectの商品価格を800円基準で設定し、アプリ内はStoreKit取得値だけを表示する。
 
-## 未取得
-- App Store Connect App ID: 新規Appレコード作成後にAppleが発行した実値だけを記録する。
-
-数値App IDの仮値は置かない。Apple ID／パスワード／MFAコード／秘密鍵はこのファイルへ保存しない。
+数値App IDはApple実発行値 `6801783499` を記録済み。Apple ID／パスワード／MFAコード／秘密鍵はこのファイルへ保存しない。
