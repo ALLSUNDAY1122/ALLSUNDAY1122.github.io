@@ -118,7 +118,8 @@ expect(FileManager.default.fileExists(atPath: committedBeforeManifest.0.appendin
 let recoveredCommitted = try ScanProjectStore(rootURL: root).loadProject(id: committedBeforeManifest.1.id)
 expect(recoveredCommitted.manifest.stage == .finished, "durably committed output was not recovered after manifest interruption")
 expect(recoveredCommitted.manifest.splatFileName == ScanProjectStore.splatResultFileName, "committed output was not published during recovery")
-expect(try Data(contentsOf: recoveredCommitted.resultURL!) == splatData(0xCC), "committed output changed during recovery")
+let recoveredCommittedData = try Data(contentsOf: recoveredCommitted.resultURL!)
+expect(recoveredCommittedData == splatData(0xCC), "committed output changed during recovery")
 
 // REPROCESS interruption: a prior finished result is preserved before `.processing` is made durable.
 let reprocessCrash = try relaunched.createProject(title: "reprocess-crash")
