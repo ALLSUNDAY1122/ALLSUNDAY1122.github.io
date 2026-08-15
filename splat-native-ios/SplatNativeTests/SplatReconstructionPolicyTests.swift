@@ -24,6 +24,80 @@ final class SplatReconstructionPolicyTests: XCTestCase {
         XCTAssertEqual(SplatReconstructionPolicy.enhancementTarget(from: 30_000), 30_000)
     }
 
+    func testResourceLimitsScaleWithDeviceMemoryAndRemainBounded() {
+        let gib: UInt64 = 1_073_741_824
+        let low = SplatResourceLimits.conservative(physicalMemoryBytes: 3 * gib)
+        let high = SplatResourceLimits.conservative(physicalMemoryBytes: 8 * gib)
+
+        XCTAssertGreaterThanOrEqual(low.residentMemoryBudgetBytes, 700 * 1_048_576)
+        XCTAssertLessThanOrEqual(high.residentMemoryBudgetBytes, 1_536 * 1_048_576)
+        XCTAssertGreaterThan(high.maxSplatCount, low.maxSplatCount)
+        XCTAssertGreaterThanOrEqual(low.maxSplatCount, 300_000)
+        XCTAssertLessThanOrEqual(high.maxSplatCount, 900_000)
+    }
+
+    func testSyntheticHighDensityTriggersCheckpointPauseBeforeUnboundedGrowth() {
+        let guardrail = SplatResourceGuard(physicalMemoryBytes: 4 * 1_073_741_824)
+        guardrail.resetForPass()
+        let safe = guardrail.evaluate(
+            splatCount: guardrail.limits.maxSplatCount - 1,
+            residentMemoryBytes: guardrail.limits.residentMemoryBudgetBytes - 1
+        )
+        XCTAssertNil(safe.reason)
+
+        let saturated = guardrail.evaluate(
+            splatCount: guardrail.limits.maxSplatCount,
+            residentMemoryBytes: guardrail.limits.residentMemoryBudgetBytes - 1
+        )
+        XCTAssertEqual(saturated.reason, .splatBudget)
+        XCTAssertEqual(saturated.peakSplatCount, guardrail.limits.maxSplatCount)
+    }
+
+    func testSyntheticMemoryPressureRecordsPeakAndPauses() {
+        let guardrail = SplatResourceGuard(physicalMemoryBytes: 4 * 1_073_741_824)
+        guardrail.resetForPass()
+        let first = guardrail.evaluate(splatCount: 250_000, residentMemoryBytes: 500_000_000)
+        XCTAssertNil(first.reason)
+
+        let pressure = guardrail.evaluate(
+            splatCount: 300_000,
+            residentMemoryBytes: guardrail.limits.residentMemoryBudgetBytes
+        )
+        XCTAssertEqual(pressure.reason, .residentMemoryBudget)
+        XCTAssertEqual(pressure.peakResidentMemoryBytes, guardrail.limits.residentMemoryBudgetBytes)
+        XCTAssertEqual(pressure.peakSplatCount, 300_000)
+    }
+
+    func testMemoryWarningOverridesOtherwiseSafeResourceSnapshot() {
+        let guardrail = SplatResourceGuard(physicalMemoryBytes: 8 * 1_073_741_824)
+        guardrail.resetForPass()
+        guardrail.noteMemoryWarning()
+        let evaluation = guardrail.evaluate(splatCount: 10_000, residentMemoryBytes: 100_000_000)
+        XCTAssertEqual(evaluation.reason, .memoryWarning)
+    }
+
+    func testRunReportCapturesSyntheticPeakMemory() throws {
+        let guardrail = SplatResourceGuard(physicalMemoryBytes: 8 * 1_073_741_824)
+        guardrail.resetForPass()
+        _ = guardrail.evaluate(splatCount: 120_000, residentMemoryBytes: 640_000_000)
+        _ = guardrail.evaluate(splatCount: 180_000, residentMemoryBytes: 720_000_000)
+        let report = guardrail.makeReport(
+            startedAt: Date(timeIntervalSince1970: 1),
+            startUptime: ProcessInfo.processInfo.systemUptime,
+            passStartIteration: 0,
+            targetIteration: 7_000,
+            finalIteration: 4_200,
+            finalSplatCount: 180_000,
+            initialThermalState: "nominal",
+            finalThermalState: "fair",
+            outcome: "synthetic-stress"
+        )
+        XCTAssertEqual(report.peakResidentMemoryBytes, 720_000_000)
+        XCTAssertEqual(report.peakSplatCount, 180_000)
+        XCTAssertEqual(report.outcome, "synthetic-stress")
+        XCTAssertEqual(report.schemaVersion, 1)
+    }
+
     func testSeedProjectionUsesARKitMinusZForwardAndImageTopLeftCoordinates() {
         let frame = SplatSeedFrame(
             filePath: "unused.png",
