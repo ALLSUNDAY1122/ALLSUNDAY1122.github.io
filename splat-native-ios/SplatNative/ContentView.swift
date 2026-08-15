@@ -163,8 +163,36 @@ struct SecondaryButtonStyle: ButtonStyle {
     }
 }
 
-struct ShareSheet: UIViewControllerRepresentable {
+/// Central share router. A completed Mesh project first opens C's real format-conversion surface;
+/// converted/transient files and every non-Mesh item continue to the standard iOS activity sheet.
+struct ShareSheet: View {
     let items: [Any]
-    func makeUIViewController(context: Context) -> UIActivityViewController { UIActivityViewController(activityItems: items, applicationActivities: nil) }
+
+    var body: some View {
+        if let meshURL = meshProjectSourceURL {
+            MeshExportOptionsView(sourceURL: meshURL)
+        } else {
+            ActivityShareController(items: items)
+        }
+    }
+
+    private var meshProjectSourceURL: URL? {
+        guard items.count == 1,
+              let url = items.first as? URL,
+              url.isFileURL,
+              url.deletingLastPathComponent().pathExtension.lowercased() == "meshproject" else {
+            return nil
+        }
+        return url
+    }
+}
+
+private struct ActivityShareController: UIViewControllerRepresentable {
+    let items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
