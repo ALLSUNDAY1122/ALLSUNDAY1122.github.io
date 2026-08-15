@@ -1,0 +1,56 @@
+name: Splat Native S4 Mesh Build
+
+on:
+  push:
+    branches:
+      - scaniverse/s4-mesh-photogrammetry
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-native-s4-build.yml'
+  pull_request:
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-native-s4-build.yml'
+
+concurrency:
+  group: splat-native-s4-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: |
+          set -euxo pipefail
+          xcodebuild -version
+          swift --version
+          brew install xcodegen
+
+      - name: Generate Xcode project
+        run: |
+          set -euxo pipefail
+          cd splat-native-ios
+          xcodegen generate
+
+      - name: S4 anti-placeholder audit
+        run: |
+          set -euxo pipefail
+          test -f splat-native-ios/SplatNative/MeshScanModel.swift
+          test -f splat-native-ios/SplatNative/MeshScanView.swift
+          ! grep -R -nE 'TODO.*Mesh|placeholder.*Mesh|fake.*mesh' splat-native-ios/SplatNative/MeshScan*.swift
+
+      - name: Build iOS device target without signing
+        run: |
+          set -euxo pipefail
+          xcodebuild \
+            -project splat-native-ios/SplatNative.xcodeproj \
+            -scheme SplatNative \
+            -configuration Debug \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
