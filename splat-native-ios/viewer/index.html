@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#050607">
+  <title>Scan Lab 3D Viewer</title>
+  <link rel="stylesheet" href="./viewer.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "@mkkellogg/gaussian-splats-3d": "https://cdn.jsdelivr.net/npm/@mkkellogg/gaussian-splats-3d@0.4.7/build/gaussian-splats-3d.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <main id="app">
+    <section id="viewer" aria-label="3D viewer"></section>
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Scan Lab">Scan Lab</a>
+      <button id="share" class="icon-button" type="button" aria-label="この3Dを共有">共有</button>
+    </header>
+    <section id="card" class="card" hidden>
+      <p id="author" class="eyebrow"></p>
+      <h1 id="title"></h1>
+      <p id="caption" class="caption"></p>
+      <p id="location" class="meta"></p>
+      <p id="likes" class="meta"></p>
+    </section>
+    <section id="status" class="status" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <p id="status-text">3Dを読み込んでいます</p>
+    </section>
+  </main>
+  <script type="module" src="./viewer.js"></script>
+</body>
+</html>
