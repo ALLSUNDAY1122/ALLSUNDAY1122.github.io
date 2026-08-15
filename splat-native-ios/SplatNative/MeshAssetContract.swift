@@ -10,7 +10,12 @@ enum MeshAssetSource: String, Codable, Sendable {
     case lidarRGBTextureBake
     case photogrammetry
     case visualFeatureFallback
+    case visualDenseMVS
     case rawReprocess
+    case refined
+    case trimmed
+    case appearanceEdited
+    case detailSimplified
     case simplified
     case unknown
 }
@@ -34,7 +39,7 @@ struct MeshAssetDescriptor: Codable, Sendable, Equatable {
         isTextured: Bool,
         rawProjectURL: URL?
     ) {
-        self.schemaVersion = 1
+        self.schemaVersion = 2
         self.fileURL = fileURL
         self.format = format
         self.source = source
@@ -56,12 +61,9 @@ enum MeshAssetContract {
         let ext = url.pathExtension.lowercased()
         let format: MeshAssetFormat
         switch ext {
-        case "obj":
-            format = .obj
-        case "usdz":
-            format = .usdz
-        default:
-            return nil
+        case "obj": format = .obj
+        case "usdz": format = .usdz
+        default: return nil
         }
 
         let source = requestedSource == .unknown ? inferSource(url: url) : requestedSource
@@ -90,14 +92,23 @@ enum MeshAssetContract {
 
     private static func isTextured(url: URL, format: MeshAssetFormat, source: MeshAssetSource) -> Bool {
         if format == .usdz { return true }
-        if source == .lidarRGBTextureBake { return true }
-        return url.lastPathComponent.lowercased().contains("textured")
+        if source == .lidarRGBTextureBake || source == .appearanceEdited { return true }
+        let name = url.lastPathComponent.lowercased()
+        return name.contains("textured") || name.contains("edited")
     }
 
     private static func hasMetricScale(format: MeshAssetFormat, source: MeshAssetSource) -> Bool {
         guard format == .obj else { return false }
         switch source {
-        case .lidarSceneReconstruction, .lidarRGBTextureBake, .visualFeatureFallback, .simplified:
+        case .lidarSceneReconstruction,
+             .lidarRGBTextureBake,
+             .visualFeatureFallback,
+             .visualDenseMVS,
+             .refined,
+             .trimmed,
+             .appearanceEdited,
+             .detailSimplified,
+             .simplified:
             return true
         case .photogrammetry, .rawReprocess, .unknown:
             return false
@@ -106,12 +117,22 @@ enum MeshAssetContract {
 
     private static func inferSource(url: URL) -> MeshAssetSource {
         let name = url.lastPathComponent.lowercased()
-        if name == "mesh-textured.obj" || name.contains("rgb-textured") { return .lidarRGBTextureBake }
-        if name.contains("visual-mesh") { return .visualFeatureFallback }
-        if name.contains("reprocessed") { return .rawReprocess }
+        if url.pathExtension.lowercased() == "usdz" {
+            return name.contains("reprocessed") ? .rawReprocess : .photogrammetry
+        }
+        if name.contains("visual-dense-mvs") || name.contains("visual-mesh") || name.hasPrefix("visual-") {
+            if name.contains("edited") { return .appearanceEdited }
+            if name.contains("trimmed") { return .trimmed }
+            if name.contains("textured") { return .lidarRGBTextureBake }
+            return name.contains("dense") ? .visualDenseMVS : .visualFeatureFallback
+        }
+        if name.contains("edited") { return .appearanceEdited }
+        if name.contains("textured") || name.contains("rgb-textured") { return .lidarRGBTextureBake }
+        if name.contains("detail-simplified") { return .detailSimplified }
         if name.contains("simplified") { return .simplified }
-        if url.pathExtension.lowercased() == "usdz" { return .photogrammetry }
-        if name == "mesh.obj" || name.contains("cropped") { return .lidarSceneReconstruction }
+        if name.contains("refined") { return .refined }
+        if name.contains("trimmed") || name.contains("cropped") { return .trimmed }
+        if name == "mesh.obj" { return .lidarSceneReconstruction }
         return .unknown
     }
 }
