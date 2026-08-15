@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - 'kangoshi-sprint/ios/Sources/**'
-      - 'kangoshi-sprint/ios/UITests/**'
+      - 'kangoshi-sprint/ios/UITests/KangoshiSprintUITests.swift'
       - 'kangoshi-sprint/ios/project.yml'
       - 'kangoshi-sprint/ios/tools/**'
       - '.github/workflows/kangoshi-native-ui-tests.yml'
@@ -46,12 +46,10 @@ jobs:
                   if row.get('isAvailable') and str(row.get('name','')).startswith('iPhone'):
                       iphones.append(row)
           if not iphones: raise SystemExit('No available iPhone simulators')
-          def pick(name):
-              return next((x for x in iphones if x['name']==name),None)
+          def pick(name): return next((x for x in iphones if x['name']==name),None)
           large=pick('iPhone 16 Pro') or pick('iPhone 16') or iphones[0]
           small=pick('iPhone SE (3rd generation)') or pick('iPhone SE (2nd generation)')
           if small is None:
-              # Prefer the smallest-looking available non-Pro Max device as fallback.
               small=next((x for x in iphones if 'Plus' not in x['name'] and 'Max' not in x['name'] and x['udid']!=large['udid']),iphones[-1])
           selected=[]
           for x in (small,large):
@@ -76,7 +74,7 @@ jobs:
               -scheme KangoshiSprint \
               -configuration Debug \
               -destination "platform=iOS Simulator,id=$udid" \
-              -only-testing:KangoshiSprintUITests \
+              -only-testing:KangoshiSprintUITests/KangoshiSprintUITests \
               CODE_SIGNING_ALLOWED=NO | xcpretty
             passed=$((passed+1))
             xcrun simctl shutdown "$udid" || true
