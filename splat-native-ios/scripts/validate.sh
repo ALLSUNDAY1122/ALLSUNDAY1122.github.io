@@ -67,6 +67,18 @@ grep -q '生成だけもう一度試す' SplatNative/RootScanView.swift
 ! grep -q 'iteration ' SplatNative/RootScanView.swift
 ! grep -q 'splats ' SplatNative/RootScanView.swift
 
+# S6 parity gate: the Scaniverse Mesh reference exposes seven real interchange formats.
+# Keep both the format surface and real-container regressions from silently shrinking.
+for format in fbx obj glb usdz stl ply las; do
+  grep -q "case $format" SplatNative/MeshExportService.swift
+  grep -q "case .$format" SplatNative/MeshExportOptionsView.swift
+done
+grep -q 'testOBJExportsAllSevenRealScaniverseMeshFormats' SplatNativeTests/MeshExportServiceTests.swift
+grep -q 'format binary_little_endian 1.0' SplatNative/MeshExportService.swift
+grep -q 'LASF' SplatNative/MeshExportService.swift
+grep -q 'SplatVideoMemoryPolicy.preflight' SplatNative/SplatVideoExporter.swift
+grep -q 'testExporterRejectsOversizedSceneBeforeDecode' SplatNativeTests/SplatVideoExporterTests.swift
+
 # Parity work must remain product-neutral until Scaniverse functional parity is achieved.
 ! grep -R -n 'おもちゃばこ' SplatNative project.yml
 
