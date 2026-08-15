@@ -58,6 +58,7 @@ jobs:
           grep -q 'MeshExportServiceTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportAdmissionTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportMemoryPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MeshProjectStoreTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'CaptureMotionQualityTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatResourceGuardAdaptiveTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatSeedColorizerMultiViewTests.swift' SplatNative.xcodeproj/project.pbxproj
@@ -103,7 +104,8 @@ jobs:
             -only-testing:SplatNativeTests/SplatVideoExporterTests \
             -only-testing:SplatNativeTests/MeshExportServiceTests \
             -only-testing:SplatNativeTests/MeshExportAdmissionTests \
-            -only-testing:SplatNativeTests/MeshExportMemoryPolicyTests
+            -only-testing:SplatNativeTests/MeshExportMemoryPolicyTests \
+            -only-testing:SplatNativeTests/MeshProjectStoreTests
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true
