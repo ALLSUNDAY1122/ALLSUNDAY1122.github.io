@@ -85,4 +85,43 @@ final class SplatResourceGuardAdaptiveTests: XCTestCase {
         )
         XCTAssertEqual(evaluation.reason, .memoryWarning)
     }
+
+    func testRunReportPreservesMinimumAvailableMemoryEvidence() {
+        let guardrail = SplatResourceGuard(physicalMemoryBytes: 8 * 1_073_741_824)
+        guardrail.resetForPass()
+        let firstAvailable: UInt64 = 900_000_000
+        let minimumAvailable: UInt64 = 620_000_000
+
+        _ = guardrail.evaluate(
+            splatCount: 80_000,
+            residentMemoryBytes: 420_000_000,
+            availableMemoryBytes: firstAvailable,
+            thermalState: .nominal
+        )
+        _ = guardrail.evaluate(
+            splatCount: 90_000,
+            residentMemoryBytes: 460_000_000,
+            availableMemoryBytes: minimumAvailable,
+            thermalState: .nominal
+        )
+
+        let report = guardrail.makeReport(
+            startedAt: Date(),
+            startUptime: ProcessInfo.processInfo.systemUptime,
+            passStartIteration: 0,
+            targetIteration: 7_000,
+            finalIteration: 7_000,
+            finalSplatCount: 90_000,
+            initialThermalState: "nominal",
+            finalThermalState: "nominal",
+            outcome: "completed"
+        )
+
+        XCTAssertEqual(report.schemaVersion, 2)
+        XCTAssertEqual(report.minimumAvailableMemoryBytes, minimumAvailable)
+        XCTAssertEqual(
+            report.minimumAvailableMemoryReserveBytes,
+            guardrail.limits.minimumAvailableMemoryReserveBytes
+        )
+    }
 }
