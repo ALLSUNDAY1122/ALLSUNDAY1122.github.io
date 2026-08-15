@@ -23,8 +23,10 @@ jobs:
         run: |
           set -euo pipefail
           test -f kangoshi-sprint/ios/icon-source/READY
+          expected=$(tr -d '[:space:]' < kangoshi-sprint/ios/icon-source/READY)
+          test "$expected" -gt 0
           count=$(find kangoshi-sprint/ios/icon-source -maxdepth 1 -name 'appicon.b64.part*' -type f | wc -l | tr -d ' ')
-          test "$count" = '57'
+          test "$count" = "$expected"
           cat kangoshi-sprint/ios/icon-source/appicon.b64.part* | base64 --decode > /tmp/AppIcon-1024.png
           echo '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80  /tmp/AppIcon-1024.png' | sha256sum -c -
           file /tmp/AppIcon-1024.png | grep -q 'PNG image data, 1024 x 1024'
@@ -38,12 +40,7 @@ jobs:
           cat > kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/Contents.json <<'JSON'
           {
             "images" : [
-              {
-                "filename" : "AppIcon-1024.png",
-                "idiom" : "universal",
-                "platform" : "ios",
-                "size" : "1024x1024"
-              }
+              { "filename" : "AppIcon-1024.png", "idiom" : "universal", "platform" : "ios", "size" : "1024x1024" }
             ],
             "info" : { "author" : "xcode", "version" : 1 }
           }
