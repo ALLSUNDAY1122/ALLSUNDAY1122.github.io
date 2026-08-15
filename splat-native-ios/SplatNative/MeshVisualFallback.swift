@@ -58,7 +58,7 @@ final class MeshVisualFallbackRecorder: ObservableObject {
 
     var isRecording: Bool { projectURL != nil }
     var frameCount: Int { frames.count }
-    var stableVoxelCount: Int { observations.values.reduce(0) { $0 + ($1 >= 2 ? 1 : 0) } }
+    var stableVoxelCount: Int { observations.values.reduce(0) { $0 + ($1 >= 3 ? 1 : 0) } }
     var canFinish: Bool { frameCount >= 16 && stableVoxelCount >= 48 }
 
     func start(size: MeshScanSize) throws {
@@ -100,13 +100,17 @@ final class MeshVisualFallbackRecorder: ObservableObject {
         if frame.timestamp - lastFeatureTimestamp >= 0.20,
            let origin = scanOrigin,
            let cloud = frame.rawFeaturePoints {
+            var frameKeys = Set<VisualVoxelKey>()
+            frameKeys.reserveCapacity(cloud.points.count)
             for point in cloud.points {
                 guard simd_distance(point, origin) <= maximumRange else { continue }
-                let key = VisualVoxelKey(
+                frameKeys.insert(VisualVoxelKey(
                     x: Int(floor(point.x / voxelSize)),
                     y: Int(floor(point.y / voxelSize)),
                     z: Int(floor(point.z / voxelSize))
-                )
+                ))
+            }
+            for key in frameKeys {
                 observations[key, default: 0] = min(255, observations[key, default: 0] + 1)
             }
             lastFeatureTimestamp = frame.timestamp
@@ -143,15 +147,15 @@ final class MeshVisualFallbackRecorder: ObservableObject {
             return
         }
 
-        let stable = observations.filter { $0.value >= 2 }.map(\.key)
+        let stable = observations.filter { $0.value >= 3 }.map(\.key)
         guard stable.count >= 48 else {
-            model.phase = .failed("追跡できた3D特徴点が不足しています。模様や角のある対象を複数方向から撮影してください。")
+            model.phase = .failed("複数フレームで追跡できた3D特徴点が不足しています。模様や角のある対象を複数方向から撮影してください。")
             return
         }
 
         let manifest = VisualMeshManifest(
             schemaVersion: 1,
-            source: "ARKit rawFeaturePoints voxel surface",
+            source: "ARKit rawFeaturePoints cross-frame voxel surface",
             createdAt: Date(),
             voxelSizeMeters: voxelSize,
             maximumRangeMeters: maximumRange,
@@ -174,7 +178,7 @@ final class MeshVisualFallbackRecorder: ObservableObject {
         let size = voxelSize
         model.phase = .reconstructing
         model.reconstructionProgress = 0.25
-        model.statusMessage = "非LiDARの安定特徴点から実寸ボクセル表面を生成しています"
+        model.statusMessage = "複数フレームで安定した3D特徴点から実寸ボクセル表面を生成しています"
 
         do {
             let result = try await Task.detached(priority: .userInitiated) {
@@ -188,6 +192,7 @@ final class MeshVisualFallbackRecorder: ObservableObject {
             model.reconstructionProgress = 1
             model.phase = .finished
             model.statusMessage = "非LiDAR Visual Meshを生成しました。高密度MVSではないため品質監査対象です"
+            releaseCompletedProject()
         } catch {
             model.phase = .failed("非LiDAR Visual Meshを生成できませんでした: \(error.localizedDescription)")
         }
@@ -197,6 +202,14 @@ final class MeshVisualFallbackRecorder: ObservableObject {
         if let projectURL {
             try? FileManager.default.removeItem(at: projectURL)
         }
+        clearInMemoryState()
+    }
+
+    private func releaseCompletedProject() {
+        clearInMemoryState()
+    }
+
+    private func clearInMemoryState() {
         projectURL = nil
         imagesURL = nil
         observations.removeAll()
