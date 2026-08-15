@@ -112,7 +112,8 @@ final class ScanProjectStoreTests: XCTestCase {
         let recovered = try ScanProjectStore(rootURL: rootURL).loadProject(id: created.1.id)
         XCTAssertEqual(recovered.manifest.stage, .finished)
         XCTAssertEqual(recovered.manifest.splatFileName, ScanProjectStore.splatResultFileName)
-        XCTAssertEqual(try Data(contentsOf: recovered.resultURL!), splatData(0xCC))
+        let recoveredData = try Data(contentsOf: recovered.resultURL!)
+        XCTAssertEqual(recoveredData, splatData(0xCC))
     }
 
     func testReprocessCrashRestoresPreviousCompletedSplat() throws {
@@ -133,7 +134,8 @@ final class ScanProjectStoreTests: XCTestCase {
 
         let recovered = try ScanProjectStore(rootURL: rootURL).loadProject(id: created.1.id)
         XCTAssertEqual(recovered.manifest.stage, .finished)
-        XCTAssertEqual(try Data(contentsOf: result), splatData(0x2A))
+        let restoredData = try Data(contentsOf: result)
+        XCTAssertEqual(restoredData, splatData(0x2A))
     }
 
     func testSuccessfulReprocessUsesPendingCommitContract() throws {
@@ -154,7 +156,8 @@ final class ScanProjectStoreTests: XCTestCase {
             manifest.outputs[ScanRepresentationKind.splat.rawValue] = committed.lastPathComponent
         }
 
-        XCTAssertEqual(try Data(contentsOf: result), splatData(0x20))
+        let successfulData = try Data(contentsOf: result)
+        XCTAssertEqual(successfulData, splatData(0x20))
         XCTAssertNotNil(store.trustedSplatURL(projectURL: created.0))
         XCTAssertFalse(FileManager.default.fileExists(
             atPath: created.0.appendingPathComponent(ScanProjectStore.previousSplatFileName).path
