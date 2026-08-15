@@ -1,0 +1,36 @@
+name: Scan WorldMap resume one-shot
+
+on:
+  push:
+    branches:
+      - feature/splat-native-ios-poc
+    paths:
+      - '.github/workflows/scan-worldmap-resume-wire.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-native-ios-poc
+          fetch-depth: 0
+      - name: Patch WorldMap resume
+        run: python3 .github/scripts/scan_worldmap_resume_patch.py
+      - name: Verify and commit
+        run: |
+          set -euo pipefail
+          grep -q 'pendingResumeWorldMap' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'restoreSavedProject' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'persistWorldMapIfPossible' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q '撮影を再開' splat-native-ios/SplatNative/ScanLibraryView.swift
+          git config user.name 'Scan Integration HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/ScanModel.swift splat-native-ios/SplatNative/ScanLibraryView.swift
+          git diff --cached --check
+          git commit -m 'Integrate ARWorldMap cold resume for saved scans'
+          git push origin HEAD:feature/splat-native-ios-poc
