@@ -35,7 +35,7 @@
 - [x] Privacy policy source
 - [x] Support / Privacy 公開HTTPS・未ログインHTTP 200監査
 - [x] Codemagic `kangoshi-ios` Internal TestFlight workflow
-- [ ] App Store用スクリーンショット最終4枚（ホーム・問題・模試・設定）生成・目視確認
+- [x] App Store用スクリーンショット最終4枚（ホーム・問題・模試・設定）生成・目視確認
 
 ## D. Apple側実値・契約 — 人間/Apple gate
 - [ ] App Store Connect Appレコード作成
