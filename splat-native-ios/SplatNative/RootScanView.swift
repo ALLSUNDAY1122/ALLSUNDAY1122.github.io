@@ -435,7 +435,9 @@ struct RootScanView: View {
                     model.resumeActiveCapture()
                 }
                 .buttonStyle(PrimaryButtonStyle())
-            } else if model.canRetryGeneration {
+            }
+
+            if model.canRetryGeneration {
                 Button("生成だけもう一度試す") {
                     model.retryGeneration()
                 }
