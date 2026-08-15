@@ -126,6 +126,22 @@ struct ScanCaptureCheckpoint: Codable, Equatable {
     }
 }
 
+struct SplatCommitEvidence: Codable, Equatable {
+    static let currentSchemaVersion = 1
+
+    var schemaVersion: Int
+    var fileName: String
+    var byteCount: Int64
+    var completedAt: Date
+
+    init(fileName: String, byteCount: Int64, completedAt: Date = Date()) {
+        self.schemaVersion = Self.currentSchemaVersion
+        self.fileName = fileName
+        self.byteCount = byteCount
+        self.completedAt = completedAt
+    }
+}
+
 struct ScanProjectSummary: Identifiable, Equatable {
     var id: String { manifest.id }
     var manifest: ScanProjectManifest
@@ -183,6 +199,7 @@ final class ScanProjectStore {
     static let splatResultFileName = "result.splat"
     static let pendingSplatFileName = "result.pending.splat"
     static let previousSplatFileName = "result.previous.splat"
+    static let splatCommitEvidenceFileName = "result.splat.complete.json"
     static let trashDirectoryName = ".Trash"
 
     let rootURL: URL
@@ -238,15 +255,21 @@ final class ScanProjectStore {
 
     func updateManifest(projectURL: URL, _ mutate: (inout ScanProjectManifest) -> Void) throws -> ScanProjectManifest {
         var manifest = try loadOrMigrateManifest(projectURL: projectURL)
-        let previousStage = manifest.stage
+        let previousManifest = manifest
         mutate(&manifest)
         manifest.schemaVersion = ScanProjectManifest.currentSchemaVersion
         manifest.updatedAt = Date()
+
+        if manifest.stage == .processing, previousManifest.stage != .processing {
+            try preparePriorSplatForProcessing(
+                projectURL: projectURL,
+                preserveCurrentResult: previousManifest.stage == .finished && previousManifest.splatFileName == Self.splatResultFileName
+            )
+        }
+
         try writeManifest(manifest, to: projectURL)
 
-        if manifest.stage == .processing, previousStage != .processing {
-            preparePriorSplatForProcessing(projectURL: projectURL)
-        } else if manifest.stage == .finished {
+        if manifest.stage == .finished {
             cleanupSplatSwapArtifacts(projectURL: projectURL)
         }
         return manifest
@@ -322,29 +345,51 @@ final class ScanProjectStore {
         )
     }
 
-    /// Optional two-phase writer for reconstruction engines that can export to a temporary path.
+    /// Commits a reconstruction only after the pending file has been completely exported.
+    /// The evidence file is written atomically before the rename so relaunch can distinguish a completed export
+    /// from an aligned partial write even if termination happens before the manifest reaches `.finished`.
     func commitPendingSplat(projectURL: URL) throws -> URL {
         let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
         let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
-        guard validSplat(at: pending) else { throw ScanProjectStoreError.invalidPendingResult }
-
-        if fileManager.fileExists(atPath: output.path) {
-            if fileManager.fileExists(atPath: previous.path) { try fileManager.removeItem(at: previous) }
-            try fileManager.moveItem(at: output, to: previous)
+        let evidenceURL = projectURL.appendingPathComponent(Self.splatCommitEvidenceFileName)
+        guard let byteCount = validSplatByteCount(at: pending) else {
+            throw ScanProjectStoreError.invalidPendingResult
         }
+
+        let evidence = SplatCommitEvidence(fileName: Self.splatResultFileName, byteCount: byteCount)
+        try writeCommitEvidence(evidence, projectURL: projectURL)
+
         do {
-            if fileManager.fileExists(atPath: output.path) { try fileManager.removeItem(at: output) }
+            if fileManager.fileExists(atPath: output.path) {
+                if fileManager.fileExists(atPath: previous.path) { try fileManager.removeItem(at: previous) }
+                try fileManager.moveItem(at: output, to: previous)
+            }
             try fileManager.moveItem(at: pending, to: output)
-            guard validSplat(at: output) else { throw ScanProjectStoreError.invalidPendingResult }
+            guard committedSplatURL(projectURL: projectURL) != nil else {
+                throw ScanProjectStoreError.invalidPendingResult
+            }
+            if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
+            return output
         } catch {
-            if !fileManager.fileExists(atPath: output.path), fileManager.fileExists(atPath: previous.path) {
+            try? fileManager.removeItem(at: evidenceURL)
+            if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
+            if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+            if fileManager.fileExists(atPath: previous.path) {
                 try? fileManager.moveItem(at: previous, to: output)
             }
             throw error
         }
-        if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
-        return output
+    }
+
+    /// Returns only a Splat whose project state carries durable completion evidence.
+    /// Consumers such as export/share should use a repaired project summary instead of byte alignment alone.
+    func trustedSplatURL(projectURL: URL) -> URL? {
+        guard let manifest = try? loadManifest(projectURL: projectURL),
+              manifest.stage == .finished,
+              manifest.splatFileName == Self.splatResultFileName else { return nil }
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        return validSplat(at: output) ? output : nil
     }
 
     func clearRawData(projectURL: URL) throws {
@@ -353,7 +398,8 @@ final class ScanProjectStore {
         let keep = resultNames.union([
             Self.manifestFileName,
             Self.manifestBackupFileName,
-            Self.thumbnailFileName
+            Self.thumbnailFileName,
+            Self.splatCommitEvidenceFileName
         ])
         let children = try fileManager.contentsOfDirectory(at: projectURL, includingPropertiesForKeys: nil)
         for child in children where !keep.contains(child.lastPathComponent) {
@@ -497,21 +543,30 @@ final class ScanProjectStore {
             } else {
                 let canRetry = (try? reprocessRequest(projectURL: projectURL, representation: .splat)) != nil
                 manifest.stage = canRetry ? .captured : .failed
+                manifest.outputs.removeValue(forKey: ScanRepresentationKind.splat.rawValue)
                 manifest.recoveredAfterInterruption = true
                 manifest.lastError = canRetry
                     ? "前回の3D生成は完了確認前に終了しました。rawデータから安全に生成をやり直せます。"
                     : "前回の3D生成は途中で終了し、再処理に必要なrawデータも見つかりません。"
                 changed = true
             }
-        } else if validSplat(at: output) {
-            if manifest.splatFileName == nil {
-                manifest.outputs[ScanRepresentationKind.splat.rawValue] = output.lastPathComponent
+        } else if let committed = try committedSplatURL(projectURL: projectURL) {
+            if manifest.splatFileName != committed.lastPathComponent {
+                manifest.outputs[ScanRepresentationKind.splat.rawValue] = committed.lastPathComponent
                 changed = true
             }
-            if manifest.stage == .captured || manifest.stage == .failed {
+            if manifest.stage != .finished {
                 manifest.stage = .finished
+                manifest.recoveredAfterInterruption = true
+                if manifest.lastError == nil {
+                    manifest.lastError = "完成済み3Dの保存記録から状態を復元しました。"
+                }
                 changed = true
             }
+            cleanupSplatSwapArtifacts(projectURL: projectURL)
+        } else if manifest.stage == .finished,
+                  manifest.splatFileName == Self.splatResultFileName,
+                  validSplat(at: output) {
             cleanupSplatSwapArtifacts(projectURL: projectURL)
         } else if validSplat(at: previous) {
             if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
@@ -545,14 +600,22 @@ final class ScanProjectStore {
         return manifest
     }
 
-    private func preparePriorSplatForProcessing(projectURL: URL) {
+    private func preparePriorSplatForProcessing(projectURL: URL, preserveCurrentResult: Bool) throws {
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
         let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
         let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
+        let evidence = projectURL.appendingPathComponent(Self.splatCommitEvidenceFileName)
+
         if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
-        guard validSplat(at: output) else { return }
+        if fileManager.fileExists(atPath: evidence.path) { try? fileManager.removeItem(at: evidence) }
         if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
-        try? fileManager.moveItem(at: output, to: previous)
+
+        guard fileManager.fileExists(atPath: output.path) else { return }
+        if preserveCurrentResult, validSplat(at: output) {
+            try fileManager.moveItem(at: output, to: previous)
+        } else {
+            try fileManager.removeItem(at: output)
+        }
     }
 
     private func cleanupSplatSwapArtifacts(projectURL: URL) {
@@ -564,15 +627,21 @@ final class ScanProjectStore {
         if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
     }
 
-    /// A `.processing` manifest means the reconstruction engine never reached the explicit finished commit.
-    /// Therefore `result.splat` is never trusted after relaunch, even if its byte count happens to look valid.
-    /// If this was a reprocess, the prior completed result wins; otherwise the uncommitted output is discarded
-    /// and retained raw data remains available for a deterministic retry.
+    /// A `.processing` manifest is repaired only from durable completion evidence.
+    /// Record alignment by itself is structural validation, never proof that export reached completion.
     private func recoverInterruptedProcessing(projectURL: URL) throws -> (url: URL?, message: String?) {
         let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
         let output = projectURL.appendingPathComponent(Self.splatResultFileName)
         let previous = projectURL.appendingPathComponent(Self.previousSplatFileName)
+        let evidence = projectURL.appendingPathComponent(Self.splatCommitEvidenceFileName)
 
+        if let committed = try committedSplatURL(projectURL: projectURL) {
+            if fileManager.fileExists(atPath: previous.path) { try? fileManager.removeItem(at: previous) }
+            if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
+            return (committed, "前回の3D生成は完了していました。完成記録から安全に復元しました。")
+        }
+
+        if fileManager.fileExists(atPath: evidence.path) { try? fileManager.removeItem(at: evidence) }
         if validSplat(at: previous) {
             if fileManager.fileExists(atPath: output.path) { try? fileManager.removeItem(at: output) }
             if fileManager.fileExists(atPath: pending.path) { try? fileManager.removeItem(at: pending) }
@@ -586,16 +655,58 @@ final class ScanProjectStore {
         return (nil, nil)
     }
 
+    private func committedSplatURL(projectURL: URL) throws -> URL? {
+        let evidenceURL = projectURL.appendingPathComponent(Self.splatCommitEvidenceFileName)
+        guard let data = try? Data(contentsOf: evidenceURL),
+              let evidence = try? JSONDecoder().decode(SplatCommitEvidence.self, from: data),
+              evidence.schemaVersion == SplatCommitEvidence.currentSchemaVersion,
+              evidence.fileName == Self.splatResultFileName,
+              evidence.byteCount > 0,
+              evidence.byteCount % 32 == 0 else { return nil }
+
+        let output = projectURL.appendingPathComponent(Self.splatResultFileName)
+        if fileMatchesCommitEvidence(output, evidence: evidence) {
+            return output
+        }
+
+        let pending = projectURL.appendingPathComponent(Self.pendingSplatFileName)
+        if fileMatchesCommitEvidence(pending, evidence: evidence) {
+            if fileManager.fileExists(atPath: output.path) { try fileManager.removeItem(at: output) }
+            try fileManager.moveItem(at: pending, to: output)
+            return fileMatchesCommitEvidence(output, evidence: evidence) ? output : nil
+        }
+        return nil
+    }
+
+    private func writeCommitEvidence(_ evidence: SplatCommitEvidence, projectURL: URL) throws {
+        let url = projectURL.appendingPathComponent(Self.splatCommitEvidenceFileName)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        try encoder.encode(evidence).write(to: url, options: .atomic)
+    }
+
+    private func fileMatchesCommitEvidence(_ url: URL, evidence: SplatCommitEvidence) -> Bool {
+        guard let attrs = try? fileManager.attributesOfItem(atPath: url.path),
+              let size = attrs[.size] as? NSNumber else { return false }
+        return size.int64Value == evidence.byteCount
+    }
+
     private func rotateBackup(primary: URL, backup: URL) throws {
         guard fileManager.fileExists(atPath: primary.path) else { return }
         if fileManager.fileExists(atPath: backup.path) { try? fileManager.removeItem(at: backup) }
         try fileManager.copyItem(at: primary, to: backup)
     }
 
-    private func validSplat(at url: URL) -> Bool {
+    private func validSplatByteCount(at url: URL) -> Int64? {
         guard let attrs = try? fileManager.attributesOfItem(atPath: url.path),
-              let size = attrs[.size] as? NSNumber else { return false }
-        return size.int64Value > 0 && size.int64Value % 32 == 0
+              let size = attrs[.size] as? NSNumber,
+              size.int64Value > 0,
+              size.int64Value % 32 == 0 else { return nil }
+        return size.int64Value
+    }
+
+    private func validSplat(at url: URL) -> Bool {
+        validSplatByteCount(at: url) != nil
     }
 
     private func directorySize(_ url: URL) -> Int64 {
