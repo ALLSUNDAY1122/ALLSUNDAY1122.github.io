@@ -27,10 +27,11 @@ final class ScanLabLocationPicker: NSObject, ObservableObject, CLLocationManager
     func clear() { location = nil; isRequesting = false; statusMessage = "位置情報はまだ付与していません" }
 
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let authorizationStatus = manager.authorizationStatus
         Task { @MainActor [weak self] in
             guard let self else { return }
-            switch manager.authorizationStatus {
-            case .authorizedAlways, .authorizedWhenInUse: self.statusMessage = "現在地を取得しています"; manager.requestLocation()
+            switch authorizationStatus {
+            case .authorizedAlways, .authorizedWhenInUse: self.statusMessage = "現在地を取得しています"; self.manager.requestLocation()
             case .denied, .restricted: self.isRequesting = false; self.statusMessage = "位置情報が許可されていません。設定から許可してください。"
             case .notDetermined: break
             @unknown default: self.isRequesting = false; self.statusMessage = "位置情報を利用できません"
