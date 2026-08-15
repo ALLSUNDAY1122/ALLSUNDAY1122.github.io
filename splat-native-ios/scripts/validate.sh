@@ -67,15 +67,20 @@ grep -q '生成だけもう一度試す' SplatNative/RootScanView.swift
 ! grep -q 'iteration ' SplatNative/RootScanView.swift
 ! grep -q 'splats ' SplatNative/RootScanView.swift
 
-# S6 parity gate: the Scaniverse Mesh reference exposes seven real interchange formats.
-# Keep both the format surface and real-container regressions from silently shrinking.
+# S6 parity gate: five Mesh containers plus two point-cloud containers.
+# PLY/LAS must remain point clouds and must consume captured texture data when available.
 for format in fbx obj glb usdz stl ply las; do
   grep -q "case $format" SplatNative/MeshExportService.swift
   grep -q "case .$format" SplatNative/MeshExportOptionsView.swift
 done
-grep -q 'testOBJExportsAllSevenRealScaniverseMeshFormats' SplatNativeTests/MeshExportServiceTests.swift
-grep -q 'format binary_little_endian 1.0' SplatNative/MeshExportService.swift
-grep -q 'LASF' SplatNative/MeshExportService.swift
+grep -q 'testOBJExportsFiveMeshesAndTwoPointCloudFormats' SplatNativeTests/MeshExportServiceTests.swift
+grep -q 'testS4StyleMTLAndAtlasProduceRealColorPointClouds' SplatNativeTests/MeshExportServiceTests.swift
+grep -q 'MeshPointCloudExportService.exportPLY' SplatNative/MeshExportService.swift
+grep -q 'MeshPointCloudExportService.exportLAS12' SplatNative/MeshExportService.swift
+grep -q 'format binary_little_endian 1.0' SplatNative/MeshPointCloudExportService.swift
+grep -q 'LASF' SplatNative/MeshPointCloudExportService.swift
+grep -q 'map_Kd' SplatNative/MeshPointCloudExportService.swift
+grep -q 'property uchar red' SplatNative/MeshPointCloudExportService.swift
 grep -q 'SplatVideoMemoryPolicy.preflight' SplatNative/SplatVideoExporter.swift
 grep -q 'testExporterRejectsOversizedSceneBeforeDecode' SplatNativeTests/SplatVideoExporterTests.swift
 
