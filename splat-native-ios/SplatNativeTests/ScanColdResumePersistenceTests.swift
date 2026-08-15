@@ -56,6 +56,24 @@ final class ScanColdResumePersistenceTests: XCTestCase {
         XCTAssertEqual(decoded.ignoreLiDAR, false)
     }
 
+    func testCheckpointV2DefaultsRemainBackwardFriendly() {
+        let checkpoint = ScanCaptureCheckpoint(
+            frames: [],
+            featurePoints: [],
+            coverageSectors: [],
+            estimatedTargetCenter: nil,
+            lastAcceptedTransform: nil,
+            lastAcceptedTimestamp: 0
+        )
+
+        XCTAssertEqual(checkpoint.schemaVersion, 2)
+        XCTAssertNil(checkpoint.elevationBands)
+        XCTAssertNil(checkpoint.viewDirectionSectors)
+        XCTAssertNil(checkpoint.spatialCells)
+        XCTAssertNil(checkpoint.accumulatedCaptureSeconds)
+        XCTAssertNil(checkpoint.ignoreLiDAR)
+    }
+
     func testLegacyCheckpointWithoutV2FieldsStillDecodes() throws {
         let legacy: [String: Any] = [
             "schemaVersion": 1,
