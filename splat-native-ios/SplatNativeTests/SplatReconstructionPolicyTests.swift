@@ -79,6 +79,13 @@ final class SplatReconstructionPolicyTests: XCTestCase {
         XCTAssertLessThan(colors[1].red, 40)
     }
 
+    func testForegroundMaskGuardRejectsNearEmptyAndNearFullMasks() {
+        XCTAssertFalse(SplatForegroundIsolator.shouldApplyMask(globalOccupancy: 0.01, centerOccupancy: 0.8))
+        XCTAssertFalse(SplatForegroundIsolator.shouldApplyMask(globalOccupancy: 0.98, centerOccupancy: 0.8))
+        XCTAssertFalse(SplatForegroundIsolator.shouldApplyMask(globalOccupancy: 0.40, centerOccupancy: 0.05))
+        XCTAssertTrue(SplatForegroundIsolator.shouldApplyMask(globalOccupancy: 0.40, centerOccupancy: 0.45))
+    }
+
     private var identityRows: [[Float]] {
         [
             [1, 0, 0, 0],

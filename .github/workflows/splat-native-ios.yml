@@ -43,6 +43,7 @@ jobs:
           grep -q 'nanoflann-BSD.txt' SplatNative.xcodeproj/project.pbxproj
           grep -q 'nlohmann-json-MIT.txt' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MsplatRuntimeSmokeTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatReconstructionPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
@@ -55,6 +56,18 @@ jobs:
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -parallel-testing-enabled NO \
             CODE_SIGNING_ALLOWED=NO build-for-testing
+      - name: Run S2 reconstruction unit tests
+        timeout-minutes: 8
+        working-directory: splat-native-ios
+        run: |
+          set -euo pipefail
+          UDID=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; xs=[v["udid"] for vs in d.values() for v in vs if v.get("isAvailable") and v.get("name","").startswith("iPhone")]; print(xs[0] if xs else "")')
+          test -n "$UDID"
+          xcodebuild test -project SplatNative.xcodeproj -scheme SplatNativeTests \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -parallel-testing-enabled NO \
+            -only-testing:SplatNativeTests/SplatReconstructionPolicyTests \
+            CODE_SIGNING_ALLOWED=NO
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true
