@@ -54,6 +54,15 @@ grep -q 'pathLengthMeters' SplatNative/ScanModel.swift
 grep -q 'trackingNeedsRecovery' SplatNative/ScanModel.swift
 grep -q 'recoveryFramesRequired = 6' SplatNative/ScanModel.swift
 
+# Long scans must warn even when coverage is still incomplete, and the frame cap must be a
+# soft rescue limit rather than a dead-end that prevents missing coverage from being added.
+grep -q 'longScanStage(seconds:' SplatNative/CapturePolicy.swift
+grep -q 'softLimitAllowsFrame' SplatNative/CapturePolicy.swift
+grep -q 'frameAddsMissingCoverage' SplatNative/ScanModel.swift
+grep -q '撮影が90秒を超えています' SplatNative/ScanModel.swift
+grep -q '撮影が3分を超えています' SplatNative/ScanModel.swift
+grep -q '未撮影の方向・高さだけを追加してください' SplatNative/ScanModel.swift
+
 # Resume gate: manual pause, post-stop resume and app interruption must preserve the existing
 # world coordinate system. A reset is allowed only when creating a brand-new scan.
 grep -q 'func pauseCapture()' SplatNative/ScanModel.swift
@@ -75,6 +84,9 @@ grep -q 'LiDAR深度を撮影に使う' SplatNative/RootScanView.swift
 grep -q 'testRotationInPlaceNeverCountsAsUsefulCaptureMotion' SplatNativeTests/CapturePolicyTests.swift
 grep -q 'testRelocalizationSizedPoseJumpIsRejected' SplatNativeTests/CapturePolicyTests.swift
 grep -q 'testSceneCoverageCanPassWithoutObjectCenteredOrbit' SplatNativeTests/CapturePolicyTests.swift
+grep -q 'testLongScanStagesAreIndependentOfCoverage' SplatNativeTests/CapturePolicyTests.swift
+grep -q 'testSoftFrameLimitAllowsOnlyMissingObjectCoverage' SplatNativeTests/CapturePolicyTests.swift
+grep -q 'testSoftFrameLimitLetsSceneRecoverButRejectsRedundantFrames' SplatNativeTests/CapturePolicyTests.swift
 
 # Viewer framing and reset remain protected from the S0 baseline.
 grep -q 'robustFraming(for: points)' SplatNative/SplatViewer.swift
