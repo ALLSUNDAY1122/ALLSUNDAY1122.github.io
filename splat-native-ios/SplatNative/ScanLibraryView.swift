@@ -35,6 +35,7 @@ struct ScanHomeView: View {
 @MainActor
 struct ScanLibraryView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var model: ScanModel
     @State private var projects: [ScanProjectSummary] = []
     @State private var trash: [ScanProjectSummary] = []
     @State private var showingTrash = false
@@ -108,8 +109,45 @@ struct ScanLibraryView: View {
             } label: {
                 rowLabel(project, canOpen: true)
             }
+        } else if canContinue(project) {
+            VStack(alignment: .leading, spacing: 8) {
+                rowLabel(project, canOpen: false)
+                Button {
+                    model.restoreSavedProject(id: project.id)
+                    dismiss()
+                } label: {
+                    Label(continueLabel(project), systemImage: "arrow.clockwise")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+            }
         } else {
             rowLabel(project, canOpen: false)
+        }
+    }
+
+    private func canContinue(_ project: ScanProjectSummary) -> Bool {
+        guard (try? store.loadCheckpoint(projectURL: project.projectURL)) != nil else { return false }
+        let transforms = project.projectURL.appendingPathComponent("transforms.json")
+        switch project.manifest.stage {
+        case .capturing:
+            return store.hasWorldMap(projectURL: project.projectURL)
+        case .captured:
+            return true
+        case .failed:
+            return FileManager.default.fileExists(atPath: transforms.path)
+                || store.hasWorldMap(projectURL: project.projectURL)
+        case .processing, .finished:
+            return false
+        }
+    }
+
+    private func continueLabel(_ project: ScanProjectSummary) -> String {
+        switch project.manifest.stage {
+        case .capturing: return "撮影を再開"
+        case .captured: return "生成へ戻る"
+        case .failed: return "保存状態から復旧"
+        case .processing, .finished: return "開く"
         }
     }
 
