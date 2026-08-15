@@ -45,12 +45,13 @@ struct SplatResultView: View {
             viewerState.schedulePersistence()
         }
         .confirmationDialog("新しい撮影を開始しますか？", isPresented: $confirmNewScan, titleVisibility: .visible) {
-            Button("現在の撮影データを削除して開始", role: .destructive) {
-                model.discardAndReset()
+            Button("保存したまま新しい撮影へ") {
+                viewerState.persistNow()
+                model.returnHomePreservingProject()
             }
             Button("キャンセル", role: .cancel) {}
         } message: {
-            Text("現在のプロジェクトは削除されます。")
+            Text("現在の完成済みスキャンは「保存済み」に残ります。")
         }
     }
 
