@@ -52,6 +52,7 @@ struct MeshPreviewView: UIViewRepresentable {
         }
     }
 
+    @MainActor
     final class Coordinator: NSObject {
         weak var view: SCNView?
         var measurementEnabled = false
