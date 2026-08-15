@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
+      - 'kangoshi-sprint/ios/Sources/**'
       - 'kangoshi-sprint/ios/UITests/KangoshiScreenshotUITests.swift'
       - '.github/workflows/kangoshi-appstore-screenshots.yml'
 
