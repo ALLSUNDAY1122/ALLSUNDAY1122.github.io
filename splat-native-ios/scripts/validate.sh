@@ -6,10 +6,13 @@ cd "$ROOT"
 test -f project.yml
 test -f SplatNative/ScanModel.swift
 test -f SplatNative/ScanModel+SessionLifecycle.swift
+test -f SplatNative/ScanProjectStore.swift
 test -f SplatNative/SplatViewer.swift
 test -f SplatNative/RootScanView.swift
 test -f SplatNative/SplatNativeApp.swift
 test -f SplatNative/PrivacyInfo.xcprivacy
+test -f SplatNativeTests/ScanProjectStoreTests.swift
+test -f scripts/scan-project-store-tests/main.swift
 
 test -f SplatNative/Resources/Licenses/msplat-APACHE-2.0.txt
 test -f SplatNative/Resources/Licenses/MetalSplatter-MIT.txt
@@ -55,6 +58,29 @@ grep -q 'robustFraming(for: points)' SplatNative/SplatViewer.swift
 grep -q 'sceneCenter = framing.center' SplatNative/SplatViewer.swift
 grep -q 'center: sceneCenter' SplatNative/SplatViewer.swift
 grep -q 'resetView' SplatNative/SplatViewer.swift
+
+# S5 lifecycle gate: projects must be self-describing and reconstructible without an in-memory index.
+grep -q 'manifest.json' SplatNative/ScanProjectStore.swift
+grep -q 'capture-checkpoint.plist' SplatNative/ScanProjectStore.swift
+grep -q 'worldmap.arexperience' SplatNative/ScanProjectStore.swift
+grep -q 'loadOrMigrateManifest' SplatNative/ScanProjectStore.swift
+grep -q 'recoveredAfterInterruption' SplatNative/ScanProjectStore.swift
+grep -q 'moveToTrash' SplatNative/ScanProjectStore.swift
+grep -q 'restoreFromTrash' SplatNative/ScanProjectStore.swift
+grep -q 'clearRawData' SplatNative/ScanProjectStore.swift
+grep -q 'reprocessRequest' SplatNative/ScanProjectStore.swift
+
+# S5 product wiring: raw data can be saved before processing, reopened, resumed when
+# relocalization data exists, and a finished scan is not destroyed by leaving the viewer.
+grep -q 'saveDraftAndReturnToLibrary' SplatNative/RootScanView.swift
+grep -q 'model.openProject' SplatNative/RootScanView.swift
+grep -q 'model.resumeActiveCapture' SplatNative/RootScanView.swift
+grep -q 'model.reprocessCurrentSplat' SplatNative/RootScanView.swift
+grep -q 'model.clearRawDataForActiveProject' SplatNative/RootScanView.swift
+grep -q 'model.returnToLibrary' SplatNative/RootScanView.swift
+grep -q 'persistCaptureCheckpoint' SplatNative/ScanModel.swift
+grep -q 'persistWorldMapIfPossible' SplatNative/ScanModel.swift
+grep -q 'ScanProjectStore' project.yml
 
 # Harsh-review gate: consumer UI must not expose internal training/debug jargon,
 # and destructive loss of a finished scan needs an explicit confirmation.
