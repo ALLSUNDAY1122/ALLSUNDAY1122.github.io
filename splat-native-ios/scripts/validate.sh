@@ -12,6 +12,7 @@ test -f SplatNative/SplatNativeApp.swift
 test -f SplatNative/SplatReconstructionPolicy.swift
 test -f SplatNative/SplatSeedColorizer.swift
 test -f SplatNative/SplatSkySeeder.swift
+test -f SplatNative/SplatResourceGuard.swift
 test -f SplatNativeTests/SplatReconstructionPolicyTests.swift
 test -f SplatNative/PrivacyInfo.xcprivacy
 
@@ -71,6 +72,28 @@ grep -q 'enhancementTarget(from: trainingIteration)' SplatNative/ScanModel.swift
 grep -q 'SplatSkySeeder.makeSeeds' SplatNative/ScanModel.swift
 grep -q 'farDistance: Float = 20' SplatNative/SplatSkySeeder.swift
 ! grep -q 'SplatForegroundIsolator' SplatNative/ScanModel.swift
+
+# S8 #4157 regression gate: densification must have a bounded device-aware resource path,
+# checkpoint before a resource pause, and leave automatic peak-memory/splat evidence behind.
+grep -q 'residentMemoryBudgetBytes' SplatNative/SplatResourceGuard.swift
+grep -q 'maxSplatCount' SplatNative/SplatResourceGuard.swift
+grep -q 'TASK_VM_INFO' SplatNative/SplatResourceGuard.swift
+grep -q 'phys_footprint' SplatNative/SplatResourceGuard.swift
+grep -q 'UIApplication.didReceiveMemoryWarningNotification' SplatNative/ScanModel.swift
+grep -q 'passResourceGuard.evaluate' SplatNative/ScanModel.swift
+grep -q 'resourcePauseReason' SplatNative/ScanModel.swift
+grep -q 'SplatReconstructionRunReport.write' SplatNative/ScanModel.swift
+grep -q 'reconstruction-run-%05d.json' SplatNative/SplatResourceGuard.swift
+grep -q 'testSyntheticHighDensityTriggersCheckpointPauseBeforeUnboundedGrowth' SplatNativeTests/SplatReconstructionPolicyTests.swift
+grep -q 'testSyntheticMemoryPressureRecordsPeakAndPauses' SplatNativeTests/SplatReconstructionPolicyTests.swift
+python3 - <<'PY'
+from pathlib import Path
+s=Path('SplatNative/ScanModel.swift').read_text()
+pause=s.index('if let reason = resourcePauseReason')
+checkpoint=s.rfind('trainer.saveCheckpoint', 0, pause)
+assert checkpoint >= 0
+print('PASS: S2 resource pause is checkpoint-recoverable')
+PY
 
 # CPU-heavy RGB projection/sky seeding belongs to the detached generation path, not finishCapture.
 python3 - <<'PY'
