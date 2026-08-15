@@ -1,0 +1,128 @@
+name: Kangoshi Prepare Codemagic
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/kangoshi-prepare-codemagic.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Append Kangoshi internal TestFlight workflow once
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml')
+          s=p.read_text(encoding='utf-8')
+          if '\n  kangoshi-ios:\n' in s:
+              print('PASS: kangoshi-ios already present')
+              raise SystemExit(0)
+          block=r'''
+
+  kangoshi-ios:
+    name: 看護師国家試験 - iOS Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.kangoshi
+      vars:
+        BUNDLE_ID: jp.allsunday1122.kangoshi
+        CODEMAGIC_PROFILE_REF: kangoshi_appstore
+        IAP_PRODUCT_ID: jp.allsunday1122.kangoshi.monthly
+        XCODE_PROJECT: kangoshi-sprint/ios/KangoshiSprint.xcodeproj
+        XCODE_SCHEME: KangoshiSprint
+      xcode: latest
+    scripts:
+      - name: Audit canonical nursing release inputs
+        script: |
+          cd "$CM_BUILD_DIR"
+          python3 kangoshi-sprint/ios/tools/normalize_swift_numeric_literals.py
+          python3 kangoshi-sprint/ios/tools/prepare_native_content.py
+          python3 -m py_compile kangoshi-sprint/ios/apply-xcode-capabilities.py
+          test "$BUNDLE_ID" = "jp.allsunday1122.kangoshi"
+          test "$CODEMAGIC_PROFILE_REF" = "kangoshi_appstore"
+          test "$IAP_PRODUCT_ID" = "jp.allsunday1122.kangoshi.monthly"
+          test -f kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          echo '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80  kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png' | shasum -a 256 -c -
+          python3 - <<'PY2'
+          import json
+          d=json.load(open('kangoshi-sprint/ios/GeneratedResources/native-content-audit.json',encoding='utf-8'))
+          assert d['pass'] and d['questions']==720 and d['byExam']=={'115':240,'114':240,'113':240}
+          assert d['mediaQuestions']==38 and d['copiedMediaAssets']==38
+          print('PASS: canonical 720-question native payload')
+          PY2
+      - name: Install native build tools
+        script: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen cairo pango
+          python3 -m pip install 'CairoSVG>=2.7,<3'
+      - name: Prepare resources after tool install
+        script: |
+          cd "$CM_BUILD_DIR"
+          python3 kangoshi-sprint/ios/tools/prepare_native_content.py
+      - name: Set CI build number and generate project
+        script: |
+          cd "$CM_BUILD_DIR/kangoshi-sprint/ios"
+          python3 - <<'PY2'
+          from pathlib import Path
+          import os
+          p=Path('project.yml')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('CURRENT_PROJECT_VERSION: 1','CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'],1)
+          p.write_text(s,encoding='utf-8')
+          PY2
+          xcodegen generate
+          python3 apply-xcode-capabilities.py KangoshiSprint.xcodeproj/project.pbxproj
+          grep -q 'com.apple.InAppPurchase' KangoshiSprint.xcodeproj/project.pbxproj
+      - name: Apply App Store signing profiles for internal TestFlight only
+        script: |
+          cd "$CM_BUILD_DIR/kangoshi-sprint/ios"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
+'''
+          p.write_text(s.rstrip()+block+'\n',encoding='utf-8')
+          print('PASS: appended kangoshi-ios')
+          PY
+          grep -q '^  kangoshi-ios:' codemagic.yaml
+          grep -q 'bundle_identifier: jp.allsunday1122.kangoshi' codemagic.yaml
+          grep -q 'CODEMAGIC_PROFILE_REF: kangoshi_appstore' codemagic.yaml
+          grep -q 'submit_to_app_store: false' codemagic.yaml
+      - name: Commit Codemagic preparation
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          if ! git diff --cached --quiet; then
+            git commit -m 'kangoshi: add Internal TestFlight Codemagic workflow [skip ci]'
+            pushed=0
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push; then pushed=1; break; fi
+              sleep 2
+            done
+            test "$pushed" = '1'
+          fi
