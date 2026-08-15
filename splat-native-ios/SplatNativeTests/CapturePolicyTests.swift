@@ -1,6 +1,5 @@
 import XCTest
 import simd
-@testable import SplatNative
 
 final class CapturePolicyTests: XCTestCase {
     func testRotationInPlaceNeverCountsAsUsefulCaptureMotion() {
