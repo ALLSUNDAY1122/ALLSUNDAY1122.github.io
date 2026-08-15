@@ -16,13 +16,16 @@ final class KangoshiScreenshotUITests: XCTestCase {
         capture("02-question")
         app.buttons["閉じる"].tap()
         XCTAssertTrue(app.buttons["閉じる"].waitForNonExistence(timeout: 10))
+        XCTAssertEqual(app.state, .runningForeground)
 
         app.tabBars.buttons["模試"].tap()
         XCTAssertTrue(app.staticTexts["本番形式"].waitForExistence(timeout: 8))
         capture("03-mock")
-        app.buttons["プレミアムを見る"].tap()
-        XCTAssertTrue(app.staticTexts["学びスプリント プレミアム"].waitForExistence(timeout: 8))
-        capture("04-premium")
+
+        app.tabBars.buttons["設定"].tap()
+        XCTAssertTrue(app.staticTexts["学びかた"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.buttons["購入を復元"].exists)
+        capture("04-settings")
     }
 
     private func capture(_ name: String) {
