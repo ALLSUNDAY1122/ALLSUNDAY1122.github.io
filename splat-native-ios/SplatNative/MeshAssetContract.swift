@@ -7,6 +7,7 @@ enum MeshAssetFormat: String, Codable, Sendable {
 
 enum MeshAssetSource: String, Codable, Sendable {
     case lidarSceneReconstruction
+    case lidarDepthFusion
     case lidarRGBTextureBake
     case photogrammetry
     case visualFeatureFallback
@@ -31,14 +32,7 @@ struct MeshAssetDescriptor: Codable, Sendable, Equatable {
     let isTextured: Bool
     let rawProjectURL: URL?
 
-    init(
-        fileURL: URL,
-        format: MeshAssetFormat,
-        source: MeshAssetSource,
-        hasMetricScale: Bool,
-        isTextured: Bool,
-        rawProjectURL: URL?
-    ) {
+    init(fileURL: URL, format: MeshAssetFormat, source: MeshAssetSource, hasMetricScale: Bool, isTextured: Bool, rawProjectURL: URL?) {
         self.schemaVersion = 2
         self.fileURL = fileURL
         self.format = format
@@ -54,10 +48,7 @@ struct MeshAssetDescriptor: Codable, Sendable, Equatable {
 }
 
 enum MeshAssetContract {
-    static func descriptor(
-        for url: URL,
-        source requestedSource: MeshAssetSource = .unknown
-    ) -> MeshAssetDescriptor? {
+    static func descriptor(for url: URL, source requestedSource: MeshAssetSource = .unknown) -> MeshAssetDescriptor? {
         let ext = url.pathExtension.lowercased()
         let format: MeshAssetFormat
         switch ext {
@@ -65,25 +56,21 @@ enum MeshAssetContract {
         case "usdz": format = .usdz
         default: return nil
         }
-
         let source = requestedSource == .unknown ? inferSource(url: url) : requestedSource
         let metric = hasMetricScale(format: format, source: source)
         let parent = url.deletingLastPathComponent()
-        let rawProjectURL = parent.pathExtension == "meshproject" ? parent : nil
         return MeshAssetDescriptor(
             fileURL: url,
             format: format,
             source: source,
             hasMetricScale: metric,
             isTextured: isTextured(url: url, format: format, source: source),
-            rawProjectURL: rawProjectURL
+            rawProjectURL: parent.pathExtension == "meshproject" ? parent : nil
         )
     }
 
     static func writeSidecar(for descriptor: MeshAssetDescriptor) throws -> URL {
-        let sidecarURL = descriptor.fileURL
-            .deletingPathExtension()
-            .appendingPathExtension("mesh-asset.json")
+        let sidecarURL = descriptor.fileURL.deletingPathExtension().appendingPathExtension("mesh-asset.json")
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         try encoder.encode(descriptor).write(to: sidecarURL, options: .atomic)
@@ -100,15 +87,9 @@ enum MeshAssetContract {
     private static func hasMetricScale(format: MeshAssetFormat, source: MeshAssetSource) -> Bool {
         guard format == .obj else { return false }
         switch source {
-        case .lidarSceneReconstruction,
-             .lidarRGBTextureBake,
-             .visualFeatureFallback,
-             .visualDenseMVS,
-             .refined,
-             .trimmed,
-             .appearanceEdited,
-             .detailSimplified,
-             .simplified:
+        case .lidarSceneReconstruction, .lidarDepthFusion, .lidarRGBTextureBake,
+             .visualFeatureFallback, .visualDenseMVS, .refined, .trimmed,
+             .appearanceEdited, .detailSimplified, .simplified:
             return true
         case .photogrammetry, .rawReprocess, .unknown:
             return false
@@ -120,6 +101,7 @@ enum MeshAssetContract {
         if url.pathExtension.lowercased() == "usdz" {
             return name.contains("reprocessed") ? .rawReprocess : .photogrammetry
         }
+        if name.contains("depth-fused") { return .lidarDepthFusion }
         if name.contains("visual-dense-mvs") || name.contains("visual-mesh") || name.hasPrefix("visual-") {
             if name.contains("edited") { return .appearanceEdited }
             if name.contains("trimmed") { return .trimmed }

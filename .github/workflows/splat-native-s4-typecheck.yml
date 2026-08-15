@@ -2,8 +2,7 @@ name: Splat Native S4 Mesh Typecheck
 
 on:
   push:
-    branches:
-      - scaniverse/s4-mesh-photogrammetry
+    branches: [scaniverse/s4-mesh-photogrammetry]
     paths:
       - 'splat-native-ios/SplatNative/Mesh*.swift'
       - '.github/workflows/splat-native-s4-typecheck.yml'
@@ -18,23 +17,12 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-
       - name: Typecheck Mesh model against iPhoneOS SDK
         shell: bash
         run: |
           set -o pipefail
           SDK=$(xcrun --sdk iphoneos --show-sdk-path)
-          xcrun --sdk iphoneos swiftc \
-            -typecheck \
-            -parse-as-library \
-            -swift-version 6 \
-            -strict-concurrency=minimal \
-            -target arm64-apple-ios18.0 \
-            -sdk "$SDK" \
-            -module-name S4MeshModelProbe \
-            splat-native-ios/SplatNative/MeshScanModel.swift \
-            2>&1 | tee /tmp/s4-model-typecheck.log
-
+          xcrun --sdk iphoneos swiftc -typecheck -parse-as-library -swift-version 6 -strict-concurrency=minimal -target arm64-apple-ios18.0 -sdk "$SDK" -module-name S4MeshModelProbe splat-native-ios/SplatNative/MeshScanModel.swift 2>&1 | tee /tmp/s4-model-typecheck.log
       - name: Typecheck full Mesh runtime with quality pipeline
         shell: bash
         run: |
@@ -43,32 +31,22 @@ jobs:
           cat > /tmp/S4UIStubs.swift <<'SWIFT'
           import SwiftUI
           import UIKit
-
-          struct PrimaryButtonStyle: ButtonStyle {
-              func makeBody(configuration: Configuration) -> some View { configuration.label }
-          }
-          struct SecondaryButtonStyle: ButtonStyle {
-              func makeBody(configuration: Configuration) -> some View { configuration.label }
-          }
+          struct PrimaryButtonStyle: ButtonStyle { func makeBody(configuration: Configuration) -> some View { configuration.label } }
+          struct SecondaryButtonStyle: ButtonStyle { func makeBody(configuration: Configuration) -> some View { configuration.label } }
           struct ShareSheet: UIViewControllerRepresentable {
               let items: [Any]
-              func makeUIViewController(context: Context) -> UIActivityViewController {
-                  UIActivityViewController(activityItems: items, applicationActivities: nil)
-              }
+              func makeUIViewController(context: Context) -> UIActivityViewController { UIActivityViewController(activityItems: items, applicationActivities: nil) }
               func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
           }
           SWIFT
           xcrun --sdk iphoneos swiftc \
-            -typecheck \
-            -parse-as-library \
-            -swift-version 6 \
-            -strict-concurrency=minimal \
-            -target arm64-apple-ios18.0 \
-            -sdk "$SDK" \
-            -module-name S4MeshRuntimeProbe \
+            -typecheck -parse-as-library -swift-version 6 -strict-concurrency=minimal \
+            -target arm64-apple-ios18.0 -sdk "$SDK" -module-name S4MeshRuntimeProbe \
             splat-native-ios/SplatNative/MeshScanModel.swift \
             splat-native-ios/SplatNative/MeshAssetContract.swift \
             splat-native-ios/SplatNative/MeshCaptureQualityAdvisor.swift \
+            splat-native-ios/SplatNative/MeshDepthRecorder.swift \
+            splat-native-ios/SplatNative/MeshLiDARDenseFusion.swift \
             splat-native-ios/SplatNative/MeshGeometryRefiner.swift \
             splat-native-ios/SplatNative/MeshDenseTextureBaker.swift \
             splat-native-ios/SplatNative/MeshAppearanceEditor.swift \
@@ -78,11 +56,9 @@ jobs:
             splat-native-ios/SplatNative/MeshParityAuditor.swift \
             splat-native-ios/SplatNative/MeshRGBTextureBaker.swift \
             splat-native-ios/SplatNative/MeshScanView.swift \
-            splat-native-ios/SplatNative/MeshDepthRecorder.swift \
             splat-native-ios/SplatNative/MeshRawReprocess.swift \
             splat-native-ios/SplatNative/MeshSimplifier.swift \
             splat-native-ios/SplatNative/MeshVisualFallback.swift \
             splat-native-ios/SplatNative/MeshAdvancedSupervisor.swift \
             splat-native-ios/SplatNative/MeshARViewer.swift \
-            /tmp/S4UIStubs.swift \
-            2>&1 | tee /tmp/s4-runtime-typecheck.log
+            /tmp/S4UIStubs.swift 2>&1 | tee /tmp/s4-runtime-typecheck.log

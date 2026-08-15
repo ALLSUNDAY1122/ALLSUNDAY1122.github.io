@@ -8,6 +8,8 @@ private struct MeshDepthSampleRecord: Codable {
     let timestamp: TimeInterval
     let width: Int
     let height: Int
+    let cameraWidth: Int
+    let cameraHeight: Int
     let transform: [[Float]]
     let intrinsics: [[Float]]
 }
@@ -45,7 +47,7 @@ final class MeshDepthRecorder: ObservableObject {
 
     func record(frame: ARFrame) {
         guard let directoryURL,
-              frame.timestamp - lastTimestamp >= 1.0,
+              frame.timestamp - lastTimestamp >= 0.75,
               let sceneDepth = frame.smoothedSceneDepth ?? frame.sceneDepth else { return }
 
         let depthMap = sceneDepth.depthMap
@@ -70,11 +72,14 @@ final class MeshDepthRecorder: ObservableObject {
         let fileURL = directoryURL.appendingPathComponent(fileName)
         do {
             try data.write(to: fileURL, options: .atomic)
+            let cameraResolution = frame.camera.imageResolution
             samples.append(MeshDepthSampleRecord(
                 file: fileName,
                 timestamp: frame.timestamp,
                 width: width,
                 height: height,
+                cameraWidth: Int(cameraResolution.width),
+                cameraHeight: Int(cameraResolution.height),
                 transform: Self.rows(frame.camera.transform),
                 intrinsics: Self.rows3(frame.camera.intrinsics)
             ))
@@ -91,8 +96,8 @@ final class MeshDepthRecorder: ObservableObject {
         }
         do {
             let index = MeshDepthIndex(
-                schemaVersion: 1,
-                format: "Float32 meters, little-endian, tightly packed row-major",
+                schemaVersion: 2,
+                format: "Float32 meters, little-endian, tightly packed row-major; ARCamera intrinsics include source camera resolution",
                 createdAt: Date(),
                 samples: samples
             )
