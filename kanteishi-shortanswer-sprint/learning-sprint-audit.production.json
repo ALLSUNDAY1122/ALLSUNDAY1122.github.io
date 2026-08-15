@@ -1,0 +1,35 @@
+{
+  "qualification": "不動産鑑定士試験・短答式｜製品240問",
+  "questions_file": "build/official/questions.audit.json",
+  "rounds": 3,
+  "subjects": {
+    "不動産に関する行政法規": 40,
+    "不動産の鑑定評価に関する理論": 40
+  },
+  "similarity_threshold": 0.90,
+  "required_fields": [
+    "id",
+    "round",
+    "edition",
+    "officialQuestionNo",
+    "subject",
+    "topic",
+    "question",
+    "choices",
+    "correct_index",
+    "detailExplanation",
+    "source_url",
+    "answerSourceURL",
+    "reference_date",
+    "evidenceCheckedDate",
+    "origin_type",
+    "rights_basis",
+    "rightsStatus",
+    "attribution"
+  ],
+  "official_repeat_policy": {
+    "allow_exact_official_repeats": true,
+    "allow_high_similarity_official": true,
+    "normal_learning_canonicalize_exact": true
+  }
+}
