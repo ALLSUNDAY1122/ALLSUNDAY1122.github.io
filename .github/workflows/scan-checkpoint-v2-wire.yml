@@ -1,0 +1,33 @@
+name: Scan checkpoint v2 one-shot
+
+on:
+  push:
+    branches:
+      - feature/splat-native-ios-poc
+    paths:
+      - '.github/workflows/scan-checkpoint-v2-wire.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-native-ios-poc
+          fetch-depth: 0
+      - name: Patch checkpoint schema
+        run: python3 .github/scripts/scan_checkpoint_v2_patch.py
+      - name: Verify and commit
+        run: |
+          set -euo pipefail
+          grep -q 'currentSchemaVersion = 2' splat-native-ios/SplatNative/ScanProjectStore.swift
+          git config user.name 'Scan Integration HQ'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/ScanProjectStore.swift
+          git diff --cached --check
+          git commit -m 'Extend scan checkpoint for cold resume continuity'
+          git push origin HEAD:feature/splat-native-ios-poc
