@@ -1,6 +1,6 @@
 # 看護師国家試験｜学びスプリント CODEX HANDOFF 正本
 
-更新日: 2026-08-15 14:48 JST
+更新日: 2026-08-15 17:43 JST
 
 このファイルはCodexが「看護師国家試験｜学びスプリント」を引き継ぐ際に最初に読む現在地の正本です。過去工程を最初からやり直さず、未完了ゲートから継続してください。
 
@@ -19,13 +19,15 @@ https://app.notion.com/p/3b609c10697d8157887bcf481e1acb38?pvs=204
 
 共通のアプリ開発標準手順は v2.5、停滞時ルールは `NO_PROGRESS v2.0`。GitHub側の実値とApple実発行値を、過去チャットの推測値より優先する。
 
-## 1. リポジトリ
+## 1. リポジトリ・固定識別子
 
 - Repository: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
 - App folder: `kangoshi-sprint/`
 - Branch: `main`
-- Bundle ID: `jp.allsunday1122.kangoshi`
 - App name: `看護師国家試験｜学びスプリント`
+- Bundle ID: `jp.allsunday1122.kangoshi`
+- SKU: `kangoshi-sprint-ios-001`
+- App Store Connect Apple ID: `6801792293`
 - Native: SwiftUI-native
 - WebView: 不使用
 - Planned Product ID: `jp.allsunday1122.kangoshi.monthly`
@@ -34,7 +36,7 @@ https://app.notion.com/p/3b609c10697d8157887bcf481e1acb38?pvs=204
 - Codemagic workflow: `kangoshi-ios`
 - Codemagic profile: `kangoshi_appstore`
 
-Bundle ID / Product IDを独断で変更しない。Apple側の数値App IDは推測しない。
+Bundle ID / SKU / Apple IDを独断で変更しない。Product IDはApp Store Connect実登録値で最終確定する。Apple側の数値App IDは推測しない。
 
 ## 2. 完了済み工程
 
@@ -93,18 +95,43 @@ Bundle ID / Product IDを独断で変更しない。Apple側の数値App IDは�
 - artifact: `9239701132`
 - screens: home / question / mock / settings
 
-## 3. 現在地
+## 3. 2026-08-15 17:43 引継ぎ時点のApple側現在地
 
-**コード側はAppIconを除きPre-TestFlight準備完了。現在はHuman / Apple gate。**
+**App Store ConnectのAppレコード作成まで完了。ここをやり直さない。**
 
-現在のrelease blockerは主に次の2系統。
+ユーザーのApp Store Connect画面で次を実確認済み:
 
-1. 正本AppIconバイナリのGitHub投入
-2. App Store Connect / Apple契約側の実登録
+- App Store Connect App record: 作成済み
+- Apple ID: `6801792293`
+- SKU: `kangoshi-sprint-ios-001`
+
+この実値は `COORDINATOR_STATUS.json` と `app-store/RELEASE_IDENTITY.json` に反映済み。
+
+ただし、ユーザーが最後に共有した画面ではBundle ID欄がまだ `ロード中…` 表示だったため、`jp.allsunday1122.kangoshi` が画面上で解決したこと自体は未確認。したがって `explicitBundleIdVerified` は false のまま維持する。
+
+同画面で未確定 / 未確認の項目:
+
+- Bundle ID表示が `jp.allsunday1122.kangoshi` に解決すること
+- プライマリ言語 = 日本語
+- プライマリカテゴリ = 教育
+- セカンダリカテゴリ = メディカル
+- コンテンツ配信権の回答
+- 自動更新サブスクリプション実登録
+- Paid Apps Agreement / Tax / Banking状態
+
+CodexはAppレコードを再作成せず、この未完了点から続行する。
+
+## 4. 現在のrelease blocker
+
+現在のrelease blockerは主に次の3系統。
+
+1. App Store Connectの残設定とIAP実登録
+2. 正本AppIconバイナリのGitHub投入
+3. Apple契約 / 署名 / Internal TestFlight
 
 ここを越えたら、Prepared Codemagic `kangoshi-ios` でsigned App Store build → Internal TestFlightへ進む。
 
-## 4. AppIcon — 絶対に再生成・加工しない
+## 5. AppIcon — 絶対に再生成・加工しない
 
 正本:
 - Google Drive file: `03_看護師国家試験.png`
@@ -129,30 +156,33 @@ GitHub配置先:
 
 Codex環境に正本バイナリが見えない場合は、この1ファイルだけを人間ゲートとしてユーザーに渡してもらう。ファイルが入ったら機械検証から自動再開する。
 
-## 5. Apple / App Store Connect gate
+## 6. Apple / App Store Connect gate — 次に行う順番
 
 CodexはApple実値だけを記録すること。未確認値を埋めない。
 
-確認・実施順:
-
-1. Apple Developer側で `jp.allsunday1122.kangoshi` のExplicit App IDが存在するか確認
-2. App Store Connectに `看護師国家試験｜学びスプリント` のAppレコードを作成/確認
-3. Apple発行の数値App IDを取得
-4. 数値App IDを `app-store/RELEASE_IDENTITY.json` と `COORDINATOR_STATUS.json` に記録
+1. 最新 `main` を取得し、このHandoff・`COORDINATOR_STATUS.json`・`app-store/RELEASE_IDENTITY.json` を確認
+2. App Store Connect Appレコードは作成済みとして扱う
+3. ユーザー画面でBundle IDが `jp.allsunday1122.kangoshi` に解決していることを確認
+4. App情報の残項目を設定/確認
+   - Primary Language: Japanese
+   - Primary Category: Education
+   - Secondary Category: Medical
+   - Content Rights: 実際の収録内容・利用権監査に一致する回答をする。第三者由来の公的資料等を含む場合、権利保有を前提に適切に回答する
 5. 自動更新サブスクリプションを作成
    - planned Product ID: `jp.allsunday1122.kangoshi.monthly`
-   - 期間: 1 month
-   - 日本向け価格: 月額200円方針
+   - duration: 1 month
+   - Japan price policy: 月額200円
 6. 実登録Product IDを確認し、planned valueと一致することを確認
 7. Paid Apps Agreement / Tax / Banking stateを確認
-8. Codemagic App Store Connect integration / signing profile `kangoshi_appstore` を確認
-9. signed IPA生成
-10. Internal TestFlightまでアップロード
-11. iPhone実機で起動・無料導線・購入・復元・再起動後entitlementを確認
+8. 正本AppIconを所定パスへ投入しSHA検証
+9. Codemagic App Store Connect integration / signing profile `kangoshi_appstore` を確認
+10. signed IPA生成
+11. Internal TestFlightまでアップロード
+12. iPhone実機で起動・無料導線・購入・復元・再起動後entitlementを確認
 
-Appleログイン・2FA・契約/税務/銀行情報・App Store Connectでの最終登録操作など、人間しかできない箇所だけユーザーへ依頼する。
+Appleログイン・2FA・契約/税務/銀行情報・App Store Connectでの最終登録操作など、人間しかできない箇所だけユーザーへ依頼する。それ以外は止まらず進める。
 
-## 6. 課金ルール
+## 7. 課金ルール
 
 - StoreKit 2
 - entitlementは verified transaction + Product ID一致 + revokedでないこと
@@ -161,7 +191,7 @@ Appleログイン・2FA・契約/税務/銀行情報・App Store Connectでの�
 - 復元導線を残す
 - IAP登録前の仮値で成功扱いしない
 
-## 7. Codemagic / TestFlight安全ルール
+## 8. Codemagic / TestFlight安全ルール
 
 workflow: `kangoshi-ios`
 
@@ -176,7 +206,22 @@ workflow: `kangoshi-ios`
 
 Apple password / 2FA / `.p8` / API secret / certificate private key等をGitHub・Notion・ログへ保存しない。
 
-## 8. Codex再開時の最初の行動
+## 9. 再実行禁止・停滞時処理
+
+以下を変更なしで最初からやり直さない:
+- 720問コンテンツ監査
+- 38図版監査
+- Debug / Release simulator build
+- UI 2サイズ監査 run `31858624555`
+- App Store screenshot生成 / 視覚監査
+- support/privacyページ作成
+- App Store Connect Appレコード作成
+- Apple ID / SKUの再決定
+- 公開Drive URLからのAppIcon取得
+
+同一手法で進展がない場合は `NO_PROGRESS v2.0` に従い、その処理のみ中止して別の未完了工程へ切り替える。
+
+## 10. Codex再開時の最初の行動
 
 1. `git pull` して最新 `main` を取得
 2. `kangoshi-sprint/CODEX_HANDOFF.md`
@@ -187,22 +232,20 @@ Apple password / 2FA / `.p8` / API secret / certificate private key等をGitHub�
 
 を読み、記録と実装が一致するか確認する。
 
-その後:
-- AppIcon正本が所定パスにある → SHA検証 → AppIcon gate → release auditへ進む
-- AppIconがない → その一点のみ人間ゲートとして扱い、他の進められるApple preflightを先に処理
-- Apple側実登録値が取れる → 正本JSONを更新
-- Apple側で人間操作が必要 → 最短手順だけユーザーへ提示
+最初のApple側確認点は **App Store ConnectのBundle ID欄が `jp.allsunday1122.kangoshi` に解決しているか**。Appレコード作成は完了済みなので再作成しない。
 
-同一の失敗取得や完了済みCIをループしない。`NO_PROGRESS v2.0` に従い、進展がない処理は別の未完了工程へ切り替える。
+その後はIAP実登録・契約状態確認・AppIcon投入・signed Internal TestFlightへ進む。人間しか操作できない画面だけ最短指示を出す。
 
-## 9. 完了条件
+## 11. 完了条件
 
 この引継ぎの次の到達点は **Internal TestFlight**。
 
 完了扱いには最低限以下が必要:
 - exact canonical AppIcon integrated + SHA PASS
-- App Store Connect App record verified
-- numeric Apple App ID recorded
+- App Store Connect App record verified — 完了済み
+- numeric Apple App ID recorded — `6801792293` 完了済み
+- SKU recorded — `kangoshi-sprint-ios-001` 完了済み
+- Bundle ID UI verification
 - monthly subscription registered
 - Paid Apps Agreement / Tax / Banking ready
 - signed App Store IPA build PASS
