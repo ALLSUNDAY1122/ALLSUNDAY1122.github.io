@@ -56,6 +56,7 @@ jobs:
           grep -q 'SplatVideoExporterTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatTransientExportWorkspaceTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportServiceTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MeshExportAdmissionTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
@@ -91,7 +92,8 @@ jobs:
             -only-testing:SplatNativeTests/ScanTrashLifecycleTests \
             -only-testing:SplatNativeTests/SplatVideoConfigurationTests \
             -only-testing:SplatNativeTests/SplatVideoExporterTests \
-            -only-testing:SplatNativeTests/MeshExportServiceTests
+            -only-testing:SplatNativeTests/MeshExportServiceTests \
+            -only-testing:SplatNativeTests/MeshExportAdmissionTests
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true
