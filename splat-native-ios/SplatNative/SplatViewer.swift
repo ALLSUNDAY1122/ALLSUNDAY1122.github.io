@@ -435,7 +435,9 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         var bestDistanceSquared = CGFloat(42 * 42)
 
         for point in pickPositions {
-            let clip = matrices.projection * matrices.view * SIMD4<Float>(point.x, point.y, point.z, 1)
+            let worldPoint = SIMD4<Float>(point.x, point.y, point.z, 1)
+            let viewPoint = simd_mul(matrices.view, worldPoint)
+            let clip = simd_mul(matrices.projection, viewPoint)
             guard clip.w > 0.0001 else { continue }
             let ndc = SIMD3<Float>(clip.x, clip.y, clip.z) / clip.w
             guard ndc.x >= -1.1, ndc.x <= 1.1, ndc.y >= -1.1, ndc.y <= 1.1 else { continue }
