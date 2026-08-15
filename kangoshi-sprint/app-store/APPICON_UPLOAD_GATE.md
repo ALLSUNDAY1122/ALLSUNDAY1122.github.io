@@ -10,11 +10,11 @@ This is the only remaining binary-transfer step that cannot be completed through
 - Expected SHA-256: `6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80`
 
 ## Destination
-Upload the source PNG **unchanged** as:
+Upload the exact source PNG bytes as:
 
 `kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png`
 
-Do not crop, resize, recompress, rename the source before upload, or generate a replacement.
+Changing only the filename from `03_看護師国家試験.png` to `AppIcon-1024.png` is allowed. Do not open-and-resave, crop, resize, recompress, recolor, or generate a replacement image.
 
 ## Automatic processing after upload
 `.github/workflows/kangoshi-appicon-gate.yml` will:
