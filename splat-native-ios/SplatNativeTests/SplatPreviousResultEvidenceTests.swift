@@ -16,9 +16,7 @@ final class SplatPreviousResultEvidenceTests: XCTestCase {
         XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: result), result)
 
         try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: result)
-        XCTAssertTrue(FileManager.default.fileExists(
-            atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName).path
-        ))
+        assertBackupExists(projectURL)
 
         _ = try store.updateManifest(projectURL: projectURL) { value in
             value.stage = .processing
@@ -40,16 +38,58 @@ final class SplatPreviousResultEvidenceTests: XCTestCase {
         XCTAssertTrue(FileManager.default.fileExists(
             atPath: projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName).path
         ))
-        XCTAssertFalse(FileManager.default.fileExists(
-            atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName).path
-        ))
+        assertBackupMissing(projectURL)
     }
 
-    func testSameSizeTamperedPreviousResultNeverRegainsTrust() throws {
+    func testRepeatedRetryCannotDeleteLastTrustedCompletedResult() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let store = ScanProjectStore(rootURL: root)
-        let (projectURL, manifest) = try store.createProject(title: "Tampered previous")
+        let (projectURL, manifest) = try store.createProject(title: "Repeated retry")
+        try makeProcessableRaw(in: projectURL, store: store)
+
+        let result = try commitResult(
+            bytes: Data(repeating: 0x51, count: 64),
+            projectURL: projectURL,
+            store: store
+        )
+        try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: result)
+
+        // First reprocess starts and fails before a new result is committed.
+        _ = try store.updateManifest(projectURL: projectURL) { value in value.stage = .processing }
+        _ = try store.updateManifest(projectURL: projectURL) { value in
+            value.stage = .failed
+            value.lastError = "simulated first failure"
+        }
+
+        // Immediate retry from `.failed` is the legacy edge case: Store removes its own
+        // `result.previous.splat` because the previous manifest is no longer `.finished`.
+        _ = try store.updateManifest(projectURL: projectURL) { value in value.stage = .processing }
+        XCTAssertFalse(FileManager.default.fileExists(
+            atPath: projectURL.appendingPathComponent(ScanProjectStore.previousSplatFileName).path
+        ))
+        assertBackupExists(projectURL)
+
+        // Simulate another interruption. Store can no longer recover from its swap file, but C2's
+        // exact protected backup remains available.
+        let repaired = try store.loadProject(id: manifest.id)
+        XCTAssertNotEqual(repaired.manifest.stage, .finished)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: result.path))
+
+        let verified = try SplatCompletionVerifier.verify(sourceURL: result)
+        XCTAssertEqual(verified.standardizedFileURL, result.standardizedFileURL)
+        let restored = try store.loadProject(id: manifest.id)
+        XCTAssertEqual(restored.manifest.stage, .finished)
+        XCTAssertTrue(restored.manifest.recoveredAfterInterruption)
+        XCTAssertEqual(try Data(contentsOf: result), Data(repeating: 0x51, count: 64))
+        assertBackupMissing(projectURL)
+    }
+
+    func testSameSizeTamperedProtectedBackupNeverRegainsTrust() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = ScanProjectStore(rootURL: root)
+        let (projectURL, manifest) = try store.createProject(title: "Tampered protected backup")
         try makeProcessableRaw(in: projectURL, store: store)
 
         let result = try commitResult(
@@ -58,21 +98,21 @@ final class SplatPreviousResultEvidenceTests: XCTestCase {
             store: store
         )
         try SplatPreviousResultEvidence.preserveBeforeReprocess(sourceURL: result)
-        _ = try store.updateManifest(projectURL: projectURL) { value in
-            value.stage = .processing
-        }
+        _ = try store.updateManifest(projectURL: projectURL) { value in value.stage = .processing }
 
-        let previous = projectURL.appendingPathComponent(ScanProjectStore.previousSplatFileName)
-        try Data(repeating: 0x22, count: 64).write(to: previous, options: .atomic)
+        let protectedAsset = projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName)
+        try Data(repeating: 0x22, count: 64).write(to: protectedAsset, options: .atomic)
+
+        // Exhaust Store's ordinary previous swap so only the tampered protected copy remains.
+        _ = try store.updateManifest(projectURL: projectURL) { value in value.stage = .failed }
+        _ = try store.updateManifest(projectURL: projectURL) { value in value.stage = .processing }
         _ = try store.loadProject(id: manifest.id)
 
         XCTAssertThrowsError(try SplatCompletionVerifier.verify(sourceURL: result))
         XCTAssertFalse(FileManager.default.fileExists(
             atPath: projectURL.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName).path
         ))
-        XCTAssertTrue(FileManager.default.fileExists(
-            atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName).path
-        ))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: protectedAsset.path))
     }
 
     func testSuccessfulReprocessUsesNewEvidenceAndDiscardsOldBackupOnVerification() throws {
@@ -100,13 +140,36 @@ final class SplatPreviousResultEvidenceTests: XCTestCase {
             value.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
         }
 
-        XCTAssertTrue(FileManager.default.fileExists(
-            atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName).path
-        ))
+        assertBackupExists(projectURL)
         XCTAssertEqual(try SplatCompletionVerifier.verify(sourceURL: newResult), newResult)
-        XCTAssertFalse(FileManager.default.fileExists(
-            atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName).path
-        ))
+        XCTAssertEqual(try Data(contentsOf: newResult), Data(repeating: 0x44, count: 96))
+        assertBackupMissing(projectURL)
+    }
+
+    private func assertBackupExists(_ projectURL: URL, file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName).path),
+            file: file,
+            line: line
+        )
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName).path),
+            file: file,
+            line: line
+        )
+    }
+
+    private func assertBackupMissing(_ projectURL: URL, file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertFalse(
+            FileManager.default.fileExists(atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.fileName).path),
+            file: file,
+            line: line
+        )
+        XCTAssertFalse(
+            FileManager.default.fileExists(atPath: projectURL.appendingPathComponent(SplatPreviousResultEvidence.assetFileName).path),
+            file: file,
+            line: line
+        )
     }
 
     private func commitResult(
