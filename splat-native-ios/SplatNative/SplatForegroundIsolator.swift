@@ -15,7 +15,6 @@ struct SplatBackgroundIsolationStats: Codable, Sendable {
 enum SplatForegroundIsolator {
     private static let markerName = "background-isolation.json"
     private static let rawDirectoryName = "raw-images"
-    private static let context = CIContext(options: [.cacheIntermediates: false])
 
     static func prepareProjectImages(projectURL: URL, frames: [SplatSeedFrame]) -> SplatBackgroundIsolationStats {
         let markerURL = projectURL.appendingPathComponent(markerName)
@@ -76,6 +75,7 @@ enum SplatForegroundIsolator {
         guard let cgImage = UIImage(contentsOfFile: url.path)?.cgImage else { return nil }
         let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .up)
         let request = VNGenerateForegroundInstanceMaskRequest()
+        let context = CIContext(options: [.cacheIntermediates: false])
         do {
             try handler.perform([request])
             guard let observation = request.results?.first,
@@ -86,12 +86,12 @@ enum SplatForegroundIsolator {
             )
             let source = CIImage(cgImage: cgImage)
             let mask = normalizedMask(CIImage(cvPixelBuffer: maskBuffer), targetExtent: source.extent)
-            let global = averageMaskValue(mask, rect: source.extent)
+            let global = averageMaskValue(mask, rect: source.extent, context: context)
             let centerRect = source.extent.insetBy(
                 dx: source.extent.width * 0.30,
                 dy: source.extent.height * 0.30
             )
-            let center = averageMaskValue(mask, rect: centerRect)
+            let center = averageMaskValue(mask, rect: centerRect, context: context)
             guard shouldApplyMask(globalOccupancy: global, centerOccupancy: center) else { return nil }
 
             let background = CIImage(color: CIColor(red: 0.02, green: 0.02, blue: 0.025, alpha: 1))
@@ -119,7 +119,7 @@ enum SplatForegroundIsolator {
             .cropped(to: targetExtent)
     }
 
-    private static func averageMaskValue(_ mask: CIImage, rect: CGRect) -> Double {
+    private static func averageMaskValue(_ mask: CIImage, rect: CGRect, context: CIContext) -> Double {
         guard rect.width > 0, rect.height > 0 else { return 0 }
         let average = mask
             .cropped(to: rect)
