@@ -1,10 +1,9 @@
 {
-  "schemaVersion": 4,
-  "updatedAt": "2026-08-14T22:39:00+09:00",
+  "schemaVersion": 5,
+  "updatedAt": "2026-08-15T11:21:00+09:00",
   "sourceOfTruth": "GitHub main",
   "standardProcedure": "v2.5",
   "noProgressManual": "NO_PROGRESS v2.0",
-  "questionAuditCanonicalizationRule": "2026-08-12",
   "target": {
     "totalQuestions": 720,
     "required": 150,
@@ -12,126 +11,104 @@
     "situation": 180,
     "scenarioCount": 60
   },
-  "rawAndClassification": {
-    "k113VerifiedSourceCorrections": 5,
+  "content": {
     "rawTotal": 720,
-    "rawAuditPass": true,
-    "rawLoop": {
-      "importExit": 0,
-      "normalizeExit": 0,
-      "rawValidationExit": 0,
-      "mediaDetectionExit": 0,
-      "commonAuditExit": 0
-    },
     "classificationHigh": 720,
     "classificationUnclassified": 0,
-    "classificationWarnings": 32,
-    "classificationWarningsResolved": 32,
-    "situationSpecialistCorrectionsApplied": 4,
-    "classificationPass": true
-  },
-  "workstreams": {
-    "A_required": {
-      "status": "FINAL_CANONICAL_PASS",
-      "target": 150,
-      "canonicalBuilt": 150,
-      "canonicalPerExam": {"115": 50, "114": 50, "113": 50},
-      "finalCanonicalPass": true
-    },
-    "B_general": {
-      "status": "FINAL_CANONICAL_PASS",
-      "target": 390,
-      "canonicalBuilt": 390,
-      "canonicalPerExam": {"115": 130, "114": 130, "113": 130},
-      "integrityExit": 0,
-      "sharedAuditExit": 0,
-      "sourceRepairsResolvedExam113": 5,
-      "finalCanonicalPass": true
-    },
-    "C_situation": {
-      "status": "FINAL_CANONICAL_PASS",
-      "targetQuestions": 180,
-      "targetScenarios": 60,
-      "authoredQuestionCoverage": 180,
-      "scenarioBatchCoverage": 60,
-      "pendingQuestions": 0,
-      "pendingScenarios": 0,
-      "finalCanonicalPass": true
-    }
-  },
-  "canonicalization": {
-    "required": {"canonicalJsonBuilt": true, "pass": true, "questions": 150},
-    "general": {"canonicalJsonBuilt": true, "pass": true, "questions": 390},
-    "situation": {"contentComplete": true, "scenarioCoverage": 60, "canonicalJsonBuilt": true, "pass": true, "questions": 180}
-  },
-  "canonicalIntegratedL3": {
-    "total": 720,
+    "requiredCanonical": 150,
+    "generalCanonical": 390,
+    "situationCanonical": 180,
+    "scenarioCanonical": 60,
     "explained": 720,
-    "pending": 0,
     "dynamicRequired": 85,
     "dynamicVerified": 85,
-    "dynamicPending": 0,
     "contentConcerns": 0,
     "scoringExceptionPending": 0,
     "expertReviewPending": 0,
     "releaseQuarantined": 0,
-    "pass": true,
-    "workflowRunId": 31805466152
+    "pass": true
   },
   "media": {
-    "mediaQuestions": 38,
+    "questions": 38,
     "officialPdl1Resolved": 15,
     "originalVectorRedrawResolved": 23,
     "pending": 0,
-    "rightsPass": true,
-    "missingRuntimeAssets": 0
+    "runtimeMissing": 0,
+    "pass": true
   },
-  "officialScoring": {
-    "exceptionCount": 8,
-    "runtimePass": true,
-    "pending": 0
-  },
-  "productRuntime": {
-    "canonicalTotal": 720,
-    "runtimeEligible": 720,
-    "blockedIds": [],
+  "runtime": {
+    "eligible": 720,
     "examSets": {
-      "115": {"questions": 240, "required": 50, "general": 130, "situation": 60, "ready": true},
-      "114": {"questions": 240, "required": 50, "general": 130, "situation": 60, "ready": true},
-      "113": {"questions": 240, "required": 50, "general": 130, "situation": 60, "ready": true}
+      "115": {"questions": 240, "required": 50, "general": 130, "situation": 60},
+      "114": {"questions": 240, "required": 50, "general": 130, "situation": 60},
+      "113": {"questions": 240, "required": 50, "general": 130, "situation": 60}
     },
-    "mediaResolved": 38,
-    "mediaMissingAssets": 0,
-    "webRuntimeAuditPass": true,
-    "webRuntimeAuditWorkflowRunId": 31805574037
+    "webRuntimePass": true,
+    "nativePayloadPass": true
   },
-  "v25ProductDecisions": {
-    "previewUrl": "https://allsunday1122.github.io/kangoshi-sprint/",
-    "humanInitialPrototypeCheckPassed": true,
-    "humanInitialPrototypeCheckPassedAt": "2026-08-14T18:50:00+09:00",
-    "billing": "monthly_200_auto_renewable",
+  "nativeIos": {
+    "implementation": "SwiftUI-native",
+    "webViewUsed": false,
     "bundleId": "jp.allsunday1122.kangoshi",
     "plannedProductId": "jp.allsunday1122.kangoshi.monthly",
-    "numericAppleId": null
+    "storeKit2Ready": true,
+    "displayPriceFromStoreKit": true,
+    "restorePurchasesReady": true,
+    "privacyManifestReady": true,
+    "debugBuildPass": true,
+    "releaseBuildPass": true,
+    "sessionDismissalCrashResolved": true,
+    "uiTwoSizeAuditPass": true,
+    "uiAuditRunId": 31857874950,
+    "uiDevices": ["iPhone SE (3rd generation)", "iPhone 16 Pro"],
+    "appIconCanonicalDriveFile": "03_看護師国家試験.png",
+    "appIconCanonicalSha256": "6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80",
+    "appIconIntegrated": false
+  },
+  "appStorePreparation": {
+    "metadataReady": true,
+    "reviewNotesReady": true,
+    "supportPageReady": true,
+    "privacyPageReady": true,
+    "publicPagesHttp200Pass": true,
+    "screenshotsReady": true,
+    "screenshotsRunId": 31858045423,
+    "screenshotsArtifactId": 9239701132,
+    "screenshots": ["home", "question", "mock", "settings"],
+    "screenshotsVisualReviewPass": true,
+    "codemagicWorkflowReady": true,
+    "codemagicWorkflow": "kangoshi-ios",
+    "codemagicProfile": "kangoshi_appstore"
+  },
+  "humanAndAppleGates": {
+    "numericAppStoreConnectAppleId": null,
+    "appStoreConnectAppRecordVerified": false,
+    "explicitBundleIdVerified": false,
+    "iapRegistered": false,
+    "paidAppsAgreementVerified": false,
+    "canonicalAppIconBinaryTransferRequired": true,
+    "testFlightDeviceVerificationRequired": true,
+    "appStoreFinalSubmissionApprovalRequired": true
   },
   "releaseGates": {
-    "allThreeWorkstreamsFinalCanonicalPass": true,
-    "l3All720Pass": true,
-    "mediaRightsPass": true,
-    "expertReviewPass": true,
-    "officialScoringRuntimePass": true,
-    "initialPrototypeHumanCheckPass": true,
-    "mock240PerExamReady": true,
+    "allContentPass": true,
     "webRuntimePass": true,
-    "storeKit2Ready": false,
-    "nativeIosReady": false,
+    "storeKit2Ready": true,
+    "nativeIosReady": true,
+    "uiAutomationReady": true,
+    "publicPagesReady": true,
+    "screenshotsReady": true,
+    "codemagicConfigurationReady": true,
+    "codeSideReadyExceptAppIcon": true,
+    "canonicalAppIconReady": false,
+    "appleAccountSideReady": false,
     "releaseAuditPass": false,
     "testFlightReady": false
   },
   "nextCoordinatorLoop": [
-    "Reuse the standard Learning Sprint native iOS shell and connect the canonical 720-question runtime/data assets.",
-    "Implement StoreKit 2 monthly subscription with planned product id jp.allsunday1122.kangoshi.monthly and Product.displayPrice; never invent App Store Connect registration state.",
-    "Run native build/type/content/resource/release audits and repair until PASS.",
-    "Advance to TestFlight when code-side gates pass; TestFlight device verification is the next principal human gate."
+    "Human mechanical gate: upload the exact canonical Drive PNG unchanged to kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png; the AppIcon gate will verify SHA-256 and bind it automatically.",
+    "Apple account gate: create/verify the App Store Connect app record for jp.allsunday1122.kangoshi, register jp.allsunday1122.kangoshi.monthly, and verify Paid Apps Agreement/tax/bank state. Record only Apple-issued real values.",
+    "Then run the prepared Codemagic kangoshi-ios signed App Store build and proceed only to Internal TestFlight.",
+    "After user TestFlight device verification, repair any findings; never submit to App Store review without explicit user approval."
   ]
 }
