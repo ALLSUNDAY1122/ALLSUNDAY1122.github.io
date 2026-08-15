@@ -17,6 +17,14 @@ enum LongScanStage: Equatable {
     case stopRecommended
 }
 
+enum CaptureFrameDecision: Equatable {
+    case accept
+    case tooSoon
+    case relocalizationJump
+    case tooFast
+    case insufficientParallax
+}
+
 enum CapturePolicy {
     struct Movement: Equatable {
         let translation: Float
@@ -40,6 +48,46 @@ enum CapturePolicy {
         return min(0.12, max(0.018, subjectDistance * 0.045))
     }
 
+    static func maximumTranslationSpeed(subjectDistance: Float?) -> Float {
+        guard let subjectDistance, subjectDistance.isFinite, subjectDistance > 0 else {
+            return 1.20
+        }
+        // Close-object scans need slower motion to retain overlap; rooms can tolerate a faster walk.
+        return min(1.60, max(0.55, subjectDistance * 0.80))
+    }
+
+    static let maximumRotationSpeed: Float = 1.80
+
+    static func frameDecision(
+        previous: simd_float4x4?,
+        current: simd_float4x4,
+        subjectDistance: Float?,
+        previousTimestamp: TimeInterval,
+        currentTimestamp: TimeInterval
+    ) -> CaptureFrameDecision {
+        let elapsed = currentTimestamp - previousTimestamp
+        guard elapsed >= 0.16 else { return .tooSoon }
+        guard let previous else { return .accept }
+
+        let delta = movement(from: previous, to: current)
+        let minimum = minimumTranslation(subjectDistance: subjectDistance)
+
+        // Large discontinuities are more likely to be relocalization jumps than useful overlap.
+        guard delta.translation <= 1.25 else { return .relocalizationJump }
+
+        let dt = Float(max(0.001, elapsed))
+        let translationSpeed = delta.translation / dt
+        let rotationSpeed = delta.rotation / dt
+        guard translationSpeed <= maximumTranslationSpeed(subjectDistance: subjectDistance),
+              rotationSpeed <= maximumRotationSpeed else {
+            return .tooFast
+        }
+
+        if delta.translation >= minimum { return .accept }
+        if delta.translation >= minimum * 0.45 && delta.rotation >= 0.09 { return .accept }
+        return .insufficientParallax
+    }
+
     static func shouldAcceptFrame(
         previous: simd_float4x4?,
         current: simd_float4x4,
@@ -47,17 +95,13 @@ enum CapturePolicy {
         previousTimestamp: TimeInterval,
         currentTimestamp: TimeInterval
     ) -> Bool {
-        guard currentTimestamp - previousTimestamp >= 0.16 else { return false }
-        guard let previous else { return true }
-
-        let delta = movement(from: previous, to: current)
-        let minimum = minimumTranslation(subjectDistance: subjectDistance)
-
-        // Large discontinuities are more likely to be relocalization jumps than useful overlap.
-        guard delta.translation <= 1.25 else { return false }
-
-        if delta.translation >= minimum { return true }
-        return delta.translation >= minimum * 0.45 && delta.rotation >= 0.09
+        frameDecision(
+            previous: previous,
+            current: current,
+            subjectDistance: subjectDistance,
+            previousTimestamp: previousTimestamp,
+            currentTimestamp: currentTimestamp
+        ) == .accept
     }
 
     static func longScanStage(seconds: Double) -> LongScanStage {

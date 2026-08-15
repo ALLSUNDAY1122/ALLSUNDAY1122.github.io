@@ -16,8 +16,22 @@ struct SplatSkySeed: Sendable {
 /// placed far from the capture so training can represent sky/background appearance without forcing
 /// near-object geometry to explain an effectively infinite surface.
 enum SplatSkySeeder {
+    struct DirectionKey: Hashable, Sendable {
+        let azimuth: Int
+        let elevation: Int
+    }
+
+    private struct SkyAccumulator {
+        let position: SIMD3<Float>
+        var samples: [SplatSeedSample]
+    }
+
     static let farDistance: Float = 20
     static let maxSeedsPerFrame = 24
+    static let maxTotalSeeds = 512
+    static let azimuthBinCount = 48
+    static let elevationBinCount = 12
+    static let maxColorSamplesPerDirection = 5
 
     static func makeSeeds(
         frames: [SplatSeedFrame],
@@ -25,8 +39,16 @@ enum SplatSkySeeder {
         projectURL: URL
     ) -> [SplatSkySeed] {
         guard !frames.isEmpty else { return [] }
-        var seeds: [SplatSkySeed] = []
-        seeds.reserveCapacity(frames.count * maxSeedsPerFrame)
+
+        // The same far-field direction is visible in many overlapping capture frames. Emitting a
+        // fresh Gaussian seed every time can create thousands of nearly duplicate sky points and
+        // waste the splat/memory budget before training has learned useful foreground geometry.
+        // Keep a bounded world-direction grid instead and use repeated observations to stabilize
+        // the seed color rather than increasing seed count.
+        var order: [DirectionKey] = []
+        order.reserveCapacity(min(maxTotalSeeds, frames.count * maxSeedsPerFrame))
+        var accumulators: [DirectionKey: SkyAccumulator] = [:]
+        accumulators.reserveCapacity(min(maxTotalSeeds, frames.count * maxSeedsPerFrame))
 
         for frame in frames {
             autoreleasepool {
@@ -43,10 +65,10 @@ enum SplatSkySeeder {
                 guard borderCandidates.count >= 5 else { return }
 
                 let ys: [Float] = [0.04, 0.11, 0.18]
-                var frameSeeds = 0
+                var frameContributions = 0
                 for y in ys {
                     for x in xs {
-                        guard frameSeeds < maxSeedsPerFrame else { break }
+                        guard frameContributions < maxSeedsPerFrame else { break }
                         let pixel = raster.sample(normalizedX: x, normalizedY: y)
                         guard isHighConfidenceSky(pixel, sceneLuma: baseline),
                               !hasGeometryNear(normalizedX: x, normalizedY: y, frame: frame, points: geometryPoints),
@@ -55,14 +77,34 @@ enum SplatSkySeeder {
                                 normalizedY: y,
                                 frame: frame,
                                 distance: farDistance
-                              ) else { continue }
-                        seeds.append(SplatSkySeed(position: position, color: pixel))
-                        frameSeeds += 1
+                              ),
+                              let key = directionKey(position: position, frame: frame) else { continue }
+
+                        if var existing = accumulators[key] {
+                            if existing.samples.count < maxColorSamplesPerDirection {
+                                existing.samples.append(pixel)
+                                accumulators[key] = existing
+                            }
+                            frameContributions += 1
+                            continue
+                        }
+
+                        guard order.count < maxTotalSeeds else { continue }
+                        accumulators[key] = SkyAccumulator(position: position, samples: [pixel])
+                        order.append(key)
+                        frameContributions += 1
                     }
                 }
             }
         }
-        return seeds
+
+        return order.compactMap { key in
+            guard let accumulator = accumulators[key] else { return nil }
+            return SplatSkySeed(
+                position: accumulator.position,
+                color: robustColor(accumulator.samples)
+            )
+        }
     }
 
     static func isHighConfidenceSky(_ pixel: SplatSeedSample, sceneLuma: Float) -> Bool {
@@ -103,6 +145,62 @@ enum SplatSkySeeder {
         let worldDirection = simd_normalize(SIMD3<Float>(worldDirection4.x, worldDirection4.y, worldDirection4.z))
         let origin = SIMD3<Float>(m.columns.3.x, m.columns.3.y, m.columns.3.z)
         return origin + worldDirection * distance
+    }
+
+    static func directionKey(position: SIMD3<Float>, frame: SplatSeedFrame) -> DirectionKey? {
+        guard let origin = cameraOrigin(frame: frame) else { return nil }
+        let delta = position - origin
+        let length = simd_length(delta)
+        guard length.isFinite, length > 0.001 else { return nil }
+        return directionKey(worldDirection: delta / length)
+    }
+
+    static func directionKey(worldDirection: SIMD3<Float>) -> DirectionKey? {
+        let length = simd_length(worldDirection)
+        guard length.isFinite, length > 0.001 else { return nil }
+        let direction = worldDirection / length
+        guard direction.x.isFinite, direction.y.isFinite, direction.z.isFinite else { return nil }
+
+        let azimuth = atan2(direction.x, direction.z)
+        let azimuthNormalized = (azimuth + .pi) / (2 * .pi)
+        let azimuthBin = min(
+            azimuthBinCount - 1,
+            max(0, Int(floor(azimuthNormalized * Float(azimuthBinCount))))
+        )
+
+        let elevation = asin(min(1, max(-1, direction.y)))
+        let elevationNormalized = (elevation + .pi / 2) / .pi
+        let elevationBin = min(
+            elevationBinCount - 1,
+            max(0, Int(floor(elevationNormalized * Float(elevationBinCount))))
+        )
+        return DirectionKey(azimuth: azimuthBin, elevation: elevationBin)
+    }
+
+    static func robustColor(_ samples: [SplatSeedSample]) -> SplatSeedSample {
+        guard !samples.isEmpty else { return SplatSeedColorizer.fallback }
+        return SplatSeedSample(
+            red: median(samples.map(\.red)),
+            green: median(samples.map(\.green)),
+            blue: median(samples.map(\.blue))
+        )
+    }
+
+    private static func median(_ values: [UInt8]) -> UInt8 {
+        guard !values.isEmpty else { return 128 }
+        let sorted = values.sorted()
+        let middle = sorted.count / 2
+        if sorted.count.isMultiple(of: 2) {
+            return UInt8((Int(sorted[middle - 1]) + Int(sorted[middle])) / 2)
+        }
+        return sorted[middle]
+    }
+
+    private static func cameraOrigin(frame: SplatSeedFrame) -> SIMD3<Float>? {
+        guard frame.transformMatrix.count == 4,
+              frame.transformMatrix.allSatisfy({ $0.count == 4 }) else { return nil }
+        let m = matrix(fromRows: frame.transformMatrix)
+        return SIMD3<Float>(m.columns.3.x, m.columns.3.y, m.columns.3.z)
     }
 
     private static func lowerSceneLuma(raster: SkyRaster) -> Float {
