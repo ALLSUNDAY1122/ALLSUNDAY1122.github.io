@@ -1,0 +1,71 @@
+name: S8 one-shot S4 storage lifecycle hotfix
+
+on:
+  push:
+    branches:
+      - scaniverse/s4-mesh-photogrammetry
+    paths:
+      - '.github/workflows/s8-hotfix-s4-storage-lifecycle.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-test-commit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: scaniverse/s4-mesh-photogrammetry
+          fetch-depth: 0
+      - name: Apply exact S8 fixes
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('splat-native-ios/SplatNative/MeshScanModel.swift')
+          s = p.read_text()
+
+          old_reset = '''        session?.pause()\n        phase = .ready\n'''
+          new_reset = '''        session?.pause()\n        if let projectURL { try? FileManager.default.removeItem(at: projectURL) }\n        projectURL = nil\n        imagesURL = nil\n        phase = .ready\n'''
+          if s.count(old_reset) != 1:
+              raise SystemExit(f'reset patch anchor count={s.count(old_reset)}')
+          s = s.replace(old_reset, new_reset, 1)
+
+          old_write = '''                self.isWritingFrame = false\n                guard success, self.phase == .scanning else { return }\n                self.frames.append(MeshCapturedFrame(\n'''
+          new_write = '''                self.isWritingFrame = false\n                guard self.phase == .scanning else { return }\n                guard success else {\n                    let message = "撮影データを保存できませんでした。iPhoneの空き容量を確認してください。"\n                    self.phase = .failed(message)\n                    self.statusMessage = message\n                    self.session?.pause()\n                    UIApplication.shared.isIdleTimerDisabled = false\n                    return\n                }\n                self.frames.append(MeshCapturedFrame(\n'''
+          if s.count(old_write) != 1:
+              raise SystemExit(f'write patch anchor count={s.count(old_write)}')
+          s = s.replace(old_write, new_write, 1)
+          p.write_text(s)
+          PY
+          grep -q 'if let projectURL { try? FileManager.default.removeItem(at: projectURL) }' splat-native-ios/SplatNative/MeshScanModel.swift
+          grep -q 'iPhoneの空き容量を確認してください' splat-native-ios/SplatNative/MeshScanModel.swift
+      - name: Build patched S4 app
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          xcodegen generate
+          xcodebuild \
+            -project SplatNative.xcodeproj \
+            -scheme SplatNative \
+            -configuration Debug \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+      - name: Commit verified patch
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'No patch diff produced' >&2
+            exit 1
+          fi
+          git config user.name 'S8 Adversarial QA'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/MeshScanModel.swift
+          git commit -m 'fix(s4): fail closed on storage and clean discarded mesh'
+          git push origin HEAD:scaniverse/s4-mesh-photogrammetry
