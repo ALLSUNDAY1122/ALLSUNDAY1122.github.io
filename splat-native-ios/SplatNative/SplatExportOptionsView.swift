@@ -35,13 +35,15 @@ struct SplatExportOptionsView: View {
                     }
                 }
 
-                Section("動画") {
+                Section {
                     Button {
                         showingVideoOptions = true
                     } label: {
                         Label("MP4動画を作る", systemImage: "video")
                     }
                     .disabled(isExporting)
+                } header: {
+                    Text("動画")
                 } footer: {
                     Text("動画は端末内で再描画します。大きすぎるシーンや空き容量不足は開始前に停止します。")
                 }
