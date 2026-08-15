@@ -52,9 +52,9 @@ struct MeshExportOptionsView: View {
                         }
                     }
                 } header: {
-                    Text("Mesh形式")
+                    Text("書き出し形式")
                 } footer: {
-                    Text("実際に変換可能な形式だけを選べます。拡張子だけを変更する書き出しは行いません。")
+                    Text("FBX・OBJ・GLB・USDZ・STLはMesh、PLY・LASは点群として書き出します。実際に変換可能な形式だけを選べます。")
                 }
 
                 if exportingFormat != nil {
@@ -65,7 +65,7 @@ struct MeshExportOptionsView: View {
                     }
                 }
             }
-            .navigationTitle("Meshを書き出す")
+            .navigationTitle("3Dデータを書き出す")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -77,7 +77,7 @@ struct MeshExportOptionsView: View {
         .sheet(item: $sharePayload) { payload in
             ShareSheet(items: [payload.url])
         }
-        .alert("Meshを書き出せませんでした", isPresented: Binding(
+        .alert("3Dデータを書き出せませんでした", isPresented: Binding(
             get: { exportError != nil },
             set: { if !$0 { exportError = nil } }
         )) {
@@ -114,13 +114,13 @@ struct MeshExportOptionsView: View {
 
     private func description(for format: MeshExportService.Format) -> String {
         switch format {
-        case .fbx: return "DCC・3Dツール向け"
+        case .fbx: return "DCC・3Dツール向けMesh"
         case .obj: return "広く対応する汎用Mesh"
-        case .glb: return "Web・共有向け単一バイナリ"
-        case .usdz: return "Apple AR・Quick Look向け"
-        case .stl: return "形状中心の3Dプリント向け"
-        case .ply: return "Mesh・点群ツール向け"
-        case .las: return "計測・点群ツール向け"
+        case .glb: return "Web・共有向け単一バイナリMesh"
+        case .usdz: return "Apple AR・Quick Look向けMesh"
+        case .stl: return "形状中心の3Dプリント向けMesh"
+        case .ply: return "実テクスチャ色を保持するカラー点群"
+        case .las: return "計測・点群ツール向け点群"
         }
     }
 }
