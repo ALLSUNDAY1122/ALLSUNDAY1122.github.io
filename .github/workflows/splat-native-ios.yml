@@ -49,6 +49,10 @@ jobs:
           grep -q 'SplatCompletionVerifierTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatProjectTrustRecoveryTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'ScanTrashLifecycleTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'ScanColdResumePersistenceTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'ScanPersistenceIntegrationTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatVideoConfigurationTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatVideoExporterTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
@@ -61,8 +65,8 @@ jobs:
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -parallel-testing-enabled NO \
             CODE_SIGNING_ALLOWED=NO build-for-testing
-      - name: Run C2 persistence and export regressions
-        timeout-minutes: 8
+      - name: Run C2 persistence export and video regressions
+        timeout-minutes: 10
         working-directory: splat-native-ios
         shell: bash
         run: |
@@ -73,11 +77,15 @@ jobs:
             -sdk iphonesimulator -destination "platform=iOS Simulator,id=$SIMULATOR_ID" \
             -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO test-without-building \
             -only-testing:SplatNativeTests/ScanProjectStoreTests \
+            -only-testing:SplatNativeTests/ScanColdResumePersistenceTests \
+            -only-testing:SplatNativeTests/ScanPersistenceIntegrationTests \
             -only-testing:SplatNativeTests/SplatCompletionVerifierTests \
             -only-testing:SplatNativeTests/SplatProjectTrustRecoveryTests \
             -only-testing:SplatNativeTests/SplatExportAdmissionTests \
             -only-testing:SplatNativeTests/SplatExportServiceTests \
-            -only-testing:SplatNativeTests/ScanTrashLifecycleTests
+            -only-testing:SplatNativeTests/ScanTrashLifecycleTests \
+            -only-testing:SplatNativeTests/SplatVideoConfigurationTests \
+            -only-testing:SplatNativeTests/SplatVideoExporterTests
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true
