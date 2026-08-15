@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "canonicalQuestions": 720,
   "runtimeEligible": 720,
   "examSetsReady": [
@@ -7,6 +7,11 @@
     114,
     113
   ],
+  "releaseEligibleByExam": {
+    "115": 240,
+    "114": 240,
+    "113": 240
+  },
   "mediaResolved": 38,
   "pendingQueues": {
     "textPending": 0,
@@ -17,6 +22,7 @@
     "expertReviewPending": 0,
     "releaseQuarantined": 0
   },
+  "reviewPolicy": "ai_ci_primary_source_audit_plus_human_prototype_testflight",
   "scriptOrder": [
     "questions-runtime.js",
     "app-v03.js",
