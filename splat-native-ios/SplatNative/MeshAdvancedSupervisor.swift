@@ -109,8 +109,11 @@ struct MeshAdvancedSupervisor: View {
             }
         }
         .onChange(of: model.resultURL) { _, newURL in
-            guard let newURL, depthRecorder.isRecording else { return }
-            depthRecorder.finalize(into: newURL.deletingLastPathComponent())
+            guard let newURL else { return }
+            if depthRecorder.isRecording {
+                depthRecorder.finalize(into: newURL.deletingLastPathComponent())
+            }
+            try? model.persistExporterMeshAssetContract()
         }
         .task(id: model.phase) {
             guard model.phase == .scanning, model.mode == .lidar else { return }
