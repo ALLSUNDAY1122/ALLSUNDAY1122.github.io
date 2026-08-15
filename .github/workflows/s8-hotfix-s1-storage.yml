@@ -1,0 +1,54 @@
+name: S8 one-shot S1 storage failure hotfix
+
+on:
+  push:
+    branches:
+      - scaniverse/s1-capture
+    paths:
+      - '.github/workflows/s8-hotfix-s1-storage.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-test-commit:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: scaniverse/s1-capture
+          fetch-depth: 0
+      - name: Apply exact S8 storage fix
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('splat-native-ios/SplatNative/ScanModel.swift')
+          s = p.read_text()
+          old = '''                guard writeError == nil else {\n                    self.trackingMessage = "撮影データを保存できませんでした。空き容量を確認してください"\n                    return\n                }\n'''
+          new = '''                guard writeError == nil else {\n                    let message = "撮影データを保存できませんでした。iPhoneの空き容量を確認してください。"\n                    self.closeActiveCaptureTiming()\n                    self.phase = .failed(message)\n                    self.trackingMessage = message\n                    self.session?.pause()\n                    UIApplication.shared.isIdleTimerDisabled = false\n                    return\n                }\n'''
+          if s.count(old) != 1:
+              raise SystemExit(f'patch anchor count={s.count(old)}')
+          p.write_text(s.replace(old, new, 1))
+          PY
+          grep -q 'self.phase = .failed(message)' splat-native-ios/SplatNative/ScanModel.swift
+          grep -q 'iPhoneの空き容量を確認してください' splat-native-ios/SplatNative/ScanModel.swift
+      - name: Build patched S1 app
+        run: |
+          set -euo pipefail
+          git lfs install --skip-smudge --skip-repo
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd splat-native-ios
+          xcodegen generate
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNative \
+            -configuration Debug -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+      - name: Commit verified patch
+        run: |
+          set -euo pipefail
+          git config user.name 'S8 Adversarial QA'
+          git config user.email 'actions@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/ScanModel.swift
+          git commit -m 'fix(s1): fail capture when frame storage fails'
+          git push origin HEAD:scaniverse/s1-capture
