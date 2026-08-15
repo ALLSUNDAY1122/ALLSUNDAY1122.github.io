@@ -23,6 +23,10 @@ jobs:
   build-and-audit:
     runs-on: macos-latest
     timeout-minutes: 45
+    env:
+      # msplat tracks large research datasets through Git LFS. One upstream fixture is
+      # currently missing from LFS, but those datasets are not part of the Swift package build.
+      GIT_LFS_SKIP_SMUDGE: '1'
     steps:
       - uses: actions/checkout@v4
 
@@ -46,7 +50,11 @@ jobs:
 
       - name: Resolve Swift packages
         working-directory: splat-native-ios
-        run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
+        run: |
+          set -o pipefail
+          xcodebuild -resolvePackageDependencies \
+            -project SplatNative.xcodeproj \
+            -scheme SplatNative | tee /tmp/scanlab-s7-package-resolve.log
 
       - name: Build iOS Simulator app
         working-directory: splat-native-ios
@@ -60,10 +68,12 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build | tee /tmp/scanlab-s7-xcodebuild.log
 
-      - name: Upload build log on failure
+      - name: Upload logs on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: scanlab-s7-xcodebuild-log
-          path: /tmp/scanlab-s7-xcodebuild.log
+          name: scanlab-s7-ci-logs
+          path: |
+            /tmp/scanlab-s7-package-resolve.log
+            /tmp/scanlab-s7-xcodebuild.log
           if-no-files-found: ignore
