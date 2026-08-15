@@ -43,6 +43,20 @@ workflows:
         script: |
           set -euo pipefail
           test "$APP_STORE_CONNECT_APP_ID" != "PENDING_HUMAN_APP_RECORD"
+      - name: Verify Apple upload toolchain
+        script: |
+          set -euo pipefail
+          xcodebuild -version
+          XCODE_MAJOR="$(xcodebuild -version | awk '/^Xcode / {split($2, v, "."); print v[1]}')"
+          IOS_SDK_VERSION="$(xcrun --sdk iphoneos --show-sdk-version)"
+          IOS_SDK_MAJOR="${IOS_SDK_VERSION%%.*}"
+          test -n "$XCODE_MAJOR"
+          test -n "$IOS_SDK_MAJOR"
+          if [ "$XCODE_MAJOR" -lt 26 ] || [ "$IOS_SDK_MAJOR" -lt 26 ]; then
+            echo "App Store Connect upload requires Xcode 26+ and iOS 26 SDK+; found Xcode major $XCODE_MAJOR / iOS SDK $IOS_SDK_VERSION" >&2
+            exit 1
+          fi
+          echo "PASS: Xcode major $XCODE_MAJOR / iOS SDK $IOS_SDK_VERSION"
       - name: Disable unrelated msplat LFS datasets
         script: |
           set -euo pipefail
