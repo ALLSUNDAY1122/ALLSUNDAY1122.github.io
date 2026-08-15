@@ -17,6 +17,12 @@ for p in root.glob('*.swift'):
         fixed,n=legacy_mock_pattern.subn(replacement,fixed,count=1)
         if n!=1 and 'struct LegacyMockView: View' not in fixed:
             raise SystemExit('failed to replace legacy MockView')
+        if '.accessibilityLabel("今日のスプリント")' not in fixed:
+            old='                    }.padding(.horizontal,18)\n\n                    actionButton(title:"苦手をつぶす"'
+            new='                    }.padding(.horizontal,18).accessibilityLabel("今日のスプリント")\n\n                    actionButton(title:"苦手をつぶす"'
+            if old not in fixed:
+                raise SystemExit('daily sprint accessibility marker missing')
+            fixed=fixed.replace(old,new,1)
     if p.name=='QuizViews.swift' and '.accessibilityLabel("閉じる")' not in fixed:
         old='                .foregroundStyle(KSTheme.ink)\n                VStack(alignment: .leading, spacing: 2) {'
         new='                .foregroundStyle(KSTheme.ink)\n                .accessibilityLabel("閉じる")\n                VStack(alignment: .leading, spacing: 2) {'
