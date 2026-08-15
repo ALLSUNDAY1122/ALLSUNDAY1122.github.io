@@ -15,10 +15,12 @@ test -f SplatNative/Resources/Licenses/msplat-APACHE-2.0.txt
 test -f SplatNative/Resources/Licenses/MetalSplatter-MIT.txt
 test -f SplatNative/Resources/Licenses/nanoflann-BSD.txt
 test -f SplatNative/Resources/Licenses/nlohmann-json-MIT.txt
+test -f SplatNative/Resources/Licenses/assimp-BSD-3-Clause.txt
 grep -q 'Apache License' SplatNative/Resources/Licenses/msplat-APACHE-2.0.txt
 grep -q 'Copyright (c) 2026 Sean Cier' SplatNative/Resources/Licenses/MetalSplatter-MIT.txt
 grep -q 'Jose L. Blanco' SplatNative/Resources/Licenses/nanoflann-BSD.txt
 grep -q 'Copyright (c) 2013-2022 Niels Lohmann' SplatNative/Resources/Licenses/nlohmann-json-MIT.txt
+grep -q 'Copyright (c) 2006-2026, assimp team' SplatNative/Resources/Licenses/assimp-BSD-3-Clause.txt
 
 grep -q 'jp.allsunday1122.splatlab' project.yml
 grep -q 'MARKETING_VERSION: 1.0.0' project.yml
