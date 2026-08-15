@@ -76,6 +76,7 @@ struct RootScanView: View {
             Image(systemName: "cube.transparent")
                 .font(.system(size: 68, weight: .thin))
                 .foregroundStyle(.mint)
+                .accessibilityHidden(true)
             Text("Scan Lab")
                 .font(.largeTitle.bold())
             Text("スマホを向けて周囲を撮影し、\niPhone内で高品質な3Dを生成します。")
@@ -108,6 +109,8 @@ struct RootScanView: View {
                             .frame(width: 44, height: 44)
                             .background(.black.opacity(0.55), in: Circle())
                     }
+                    .accessibilityLabel("撮影を終了")
+                    .accessibilityHint("現在の撮影内容を破棄して開始画面に戻ります")
                     Spacer()
                     Text(model.progressText)
                         .font(.subheadline.bold().monospacedDigit())
@@ -130,6 +133,7 @@ struct RootScanView: View {
                             .foregroundStyle(.black)
                             .offset(y: -20)
                     }
+                    .accessibilityHidden(true)
 
                 Spacer()
 
@@ -143,6 +147,8 @@ struct RootScanView: View {
                         total: Double(model.coverageSectorTotal)
                     )
                     .tint(.mint)
+                    .accessibilityLabel("撮影方向の進捗")
+                    .accessibilityValue("\(model.coverageSectorCount) / \(model.coverageSectorTotal)")
 
                     if model.canFinishCapture {
                         Button("この撮影で生成へ") {
@@ -169,6 +175,7 @@ struct RootScanView: View {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 64))
                 .foregroundStyle(.mint)
+                .accessibilityHidden(true)
             Text("撮影できました")
                 .font(.title2.bold())
             Text("対象の周囲から必要な写真がそろいました。\niPhoneの中でGaussian Splatを生成します。")
@@ -194,6 +201,7 @@ struct RootScanView: View {
                 .progressViewStyle(.circular)
                 .scaleEffect(1.7)
                 .tint(.mint)
+                .accessibilityHidden(true)
             Text("3Dを生成中")
                 .font(.title2.bold())
             Text(model.trainingStageText)
@@ -204,6 +212,8 @@ struct RootScanView: View {
             ProgressView(value: model.trainingProgress)
                 .tint(.mint)
                 .padding(.horizontal, 24)
+                .accessibilityLabel("3D生成の進捗")
+                .accessibilityValue("\(Int(model.trainingProgress * 100))パーセント")
             Text("処理はiPhone内だけで行っています。生成中はアプリを閉じないでください。")
                 .font(.caption)
                 .multilineTextAlignment(.center)
@@ -228,6 +238,8 @@ struct RootScanView: View {
                                 .frame(width: 44, height: 44)
                                 .background(.black.opacity(0.55), in: Circle())
                         }
+                        .accessibilityLabel("現在の3Dを閉じる")
+                        .accessibilityHint("破棄する前に確認画面を表示します")
                         Spacer()
                         Text("3D生成完了")
                             .font(.caption.bold())
@@ -267,6 +279,7 @@ struct RootScanView: View {
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.system(size: 54))
                 .foregroundStyle(.orange)
+                .accessibilityHidden(true)
             Text("処理を完了できませんでした")
                 .font(.title2.bold())
             Text(message)
