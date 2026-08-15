@@ -48,6 +48,7 @@ jobs:
           grep -q 'SplatReconstructionPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatCompletionVerifierTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatProjectTrustRecoveryTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'ScanTrashLifecycleTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
@@ -75,7 +76,8 @@ jobs:
             -only-testing:SplatNativeTests/SplatCompletionVerifierTests \
             -only-testing:SplatNativeTests/SplatProjectTrustRecoveryTests \
             -only-testing:SplatNativeTests/SplatExportAdmissionTests \
-            -only-testing:SplatNativeTests/SplatExportServiceTests
+            -only-testing:SplatNativeTests/SplatExportServiceTests \
+            -only-testing:SplatNativeTests/ScanTrashLifecycleTests
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true
