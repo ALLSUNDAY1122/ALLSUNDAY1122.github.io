@@ -9,6 +9,9 @@ test -f SplatNative/ScanModel+SessionLifecycle.swift
 test -f SplatNative/SplatViewer.swift
 test -f SplatNative/RootScanView.swift
 test -f SplatNative/SplatNativeApp.swift
+test -f SplatNative/SplatReconstructionPolicy.swift
+test -f SplatNative/SplatSeedColorizer.swift
+test -f SplatNativeTests/SplatReconstructionPolicyTests.swift
 test -f SplatNative/PrivacyInfo.xcprivacy
 
 test -f SplatNative/Resources/Licenses/msplat-APACHE-2.0.txt
@@ -48,6 +51,19 @@ grep -q 'coverageSectorCount >= minimumCoverageSectors' SplatNative/ScanModel.sw
 grep -q 'translation >= 0.030 || (translation >= 0.012 && angle >= 0.080)' SplatNative/ScanModel.swift
 grep -q 'acceptedFrames < maxFrames' SplatNative/ScanModel.swift
 grep -q '同じ側の写真に偏っています' SplatNative/ScanModel.swift
+
+# S2 reconstruction gate: seed points must carry observed RGB into msplat, and
+# production reconstruction must not regress to the former 2k/SH2/no-pyramid profile.
+grep -q 'property uchar red' SplatNative/ScanModel.swift
+grep -q 'property uchar green' SplatNative/ScanModel.swift
+grep -q 'property uchar blue' SplatNative/ScanModel.swift
+grep -q 'standardIterations = 7_000' SplatNative/SplatReconstructionPolicy.swift
+grep -q 'config.shDegree = 3' SplatNative/SplatReconstructionPolicy.swift
+grep -q 'config.numDownscales = 1' SplatNative/SplatReconstructionPolicy.swift
+grep -q 'config.warmupLength = 500' SplatNative/SplatReconstructionPolicy.swift
+grep -q 'trainer.saveCheckpoint' SplatNative/ScanModel.swift
+grep -q 'trainer.loadCheckpoint' SplatNative/ScanModel.swift
+grep -q 'requiresThermalPause' SplatNative/ScanModel.swift
 
 # Harsh-review gate: a successful splat must open centered on its actual data,
 # and the user must be able to restore that framing.
