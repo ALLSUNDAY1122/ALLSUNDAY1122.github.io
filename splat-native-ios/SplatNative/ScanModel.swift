@@ -156,6 +156,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private var datasetReady = false
     private var pendingTrainingTarget = SplatReconstructionPolicy.standardIterations
     private let resourceGuard = SplatResourceGuard()
+    private let projectStore = ScanProjectStore()
     private var memoryWarningObserver: NSObjectProtocol?
     private let ciContext = CIContext(options: [.cacheIntermediates: false])
     private let captureQueue = DispatchQueue(label: "jp.allsunday1122.splatlab.capture", qos: .userInitiated)
@@ -278,13 +279,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     func startCapture() {
         guard let session else { return }
         do {
-            let root = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                .appendingPathComponent("SplatLab", isDirectory: true)
-            try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
-            let project = root.appendingPathComponent(UUID().uuidString + ".splatproject", isDirectory: true)
+            let created = try projectStore.createProject(title: "スキャン", targetFrames: targetFrames)
+            let project = created.0
             let images = project.appendingPathComponent("images", isDirectory: true)
             let depth = project.appendingPathComponent("depth", isDirectory: true)
-            try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
             try FileManager.default.createDirectory(at: depth, withIntermediateDirectories: true)
             projectURL = project
             imagesURL = images
@@ -311,6 +309,8 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         closeActiveCaptureTiming()
         isCapturePaused = true
         systemPausedCapture = false
+        persistCaptureStateOrFail(stage: .capturing)
+        guard phase == .capturing else { return }
         session?.pause()
         trackingMessage = "撮影を一時停止しました"
         UIApplication.shared.isIdleTimerDisabled = false
@@ -330,6 +330,8 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         stableTrackingFrames = 0
         beginActiveCaptureTiming()
         trackingMessage = "前に撮った場所を映して位置を合わせています"
+        persistCaptureStateOrFail(stage: .capturing)
+        guard phase == .capturing else { return }
 
         // Do not reset tracking here. Old and resumed poses must remain in one coordinate system.
         session.run(makeWorldTrackingConfiguration(), options: [])
@@ -346,6 +348,13 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             // Writing the old XYZ-only PLY here would suppress that higher-quality initializer.
             try writeTransformsJSON()
             try writeCaptureManifest()
+            try persistProjectSnapshot(stage: .captured)
+            if let projectURL, let first = captured.first {
+                try? projectStore.setThumbnail(
+                    from: projectURL.appendingPathComponent(first.filePath),
+                    projectURL: projectURL
+                )
+            }
             datasetReady = true
             phase = .captured
             trackingMessage = "必要な撮影情報がそろいました"
@@ -360,7 +369,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     func discardAndReset() {
         closeActiveCaptureTiming()
         session?.pause()
-        if let projectURL { try? FileManager.default.removeItem(at: projectURL) }
+        if let projectURL { try? projectStore.moveToTrash(projectURL: projectURL) }
         projectURL = nil
         imagesURL = nil
         depthURL = nil
@@ -419,6 +428,12 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         guard phase == .captured, datasetReady, let projectURL else { return }
         let requestedTarget = min(SplatReconstructionPolicy.trainingHorizon, max(1, targetIterations))
         pendingTrainingTarget = requestedTarget
+        do {
+            try persistProjectSnapshot(stage: .processing)
+        } catch {
+            failTraining("生成状態を保存できませんでした: \(error.localizedDescription)")
+            return
+        }
         phase = .training
         trainingProgress = 0
         splatCount = 0
@@ -568,16 +583,32 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
                 msplatSync()
                 _ = trainer.saveCheckpoint(to: checkpoint.path)
-                let output = projectURL.appendingPathComponent("result.splat")
-                trainer.exportSplat(to: output.path)
+                let pendingOutput = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+                trainer.exportSplat(to: pendingOutput.path)
                 msplatSync()
 
-                guard let attributes = try? FileManager.default.attributesOfItem(atPath: output.path),
+                guard let attributes = try? FileManager.default.attributesOfItem(atPath: pendingOutput.path),
                       let sizeNumber = attributes[.size] as? NSNumber,
                       sizeNumber.intValue > 0,
                       sizeNumber.intValue % 32 == 0 else {
                     Task { @MainActor [weak self] in
                         self?.failTraining("生成した3Dデータを保存できませんでした。生成をもう一度試してください")
+                    }
+                    return
+                }
+
+                let output: URL
+                do {
+                    let store = ScanProjectStore()
+                    output = try store.commitPendingSplat(projectURL: projectURL)
+                    _ = try store.updateManifest(projectURL: projectURL) { manifest in
+                        manifest.stage = .finished
+                        manifest.outputs[ScanRepresentationKind.splat.rawValue] = output.lastPathComponent
+                        manifest.lastError = nil
+                    }
+                } catch {
+                    Task { @MainActor [weak self] in
+                        self?.failTraining("生成した3Dデータの安全な保存を完了できませんでした: \(error.localizedDescription)")
                     }
                     return
                 }
@@ -591,6 +622,9 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     guard let self else { return }
                     self.resultURL = output
                     self.previewImage = preview
+                    if let preview, let thumbnail = preview.jpegData(compressionQuality: 0.82) {
+                        try? self.projectStore.setThumbnail(data: thumbnail, projectURL: projectURL)
+                    }
                     self.trainingIteration = effectiveTarget
                     self.splatCount = finalCount
                     self.trainingProgress = 1
@@ -602,6 +636,12 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     private func failTraining(_ message: String) {
+        if let projectURL {
+            try? projectStore.updateManifest(projectURL: projectURL) { manifest in
+                manifest.stage = .failed
+                manifest.lastError = message
+            }
+        }
         phase = .failed(message)
         trackingMessage = message
         UIApplication.shared.isIdleTimerDisabled = false
@@ -729,6 +769,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 self.acceptedFrames = self.captured.count
                 self.lastAcceptedTransform = transform
                 self.lastAcceptedTimestamp = timestamp
+                if self.acceptedFrames % 4 == 0 {
+                    self.persistCaptureStateOrFail(stage: .capturing)
+                    guard self.phase == .capturing else { return }
+                }
                 self.trackingMessage = self.captureQualityText
             }
         }
@@ -942,6 +986,61 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         try encoder.encode(manifest).write(to: projectURL.appendingPathComponent("capture_manifest.json"), options: .atomic)
     }
 
+    private func makeCaptureCheckpoint() -> ScanCaptureCheckpoint {
+        let frames = captured.map { frame in
+            StoredCapturedFrame(
+                id: frame.id,
+                filePath: frame.filePath,
+                transformMatrix: frame.transformMatrix,
+                flX: frame.flX,
+                flY: frame.flY,
+                cx: frame.cx,
+                cy: frame.cy,
+                w: frame.w,
+                h: frame.h
+            )
+        }
+        let storedFeatures = featurePoints.map { id, point in
+            StoredFeaturePoint(id: id, x: point.x, y: point.y, z: point.z)
+        }.sorted { $0.id < $1.id }
+        let center = estimatedTargetCenter.map { StoredVector3(x: $0.x, y: $0.y, z: $0.z) }
+        return ScanCaptureCheckpoint(
+            frames: frames,
+            featurePoints: storedFeatures,
+            coverageSectors: coverageSectors.sorted(),
+            estimatedTargetCenter: center,
+            lastAcceptedTransform: lastAcceptedTransform.map { Self.rows($0) },
+            lastAcceptedTimestamp: lastAcceptedTimestamp
+        )
+    }
+
+    private func persistProjectSnapshot(stage: ScanProjectStage, lastError: String? = nil) throws {
+        guard let projectURL else { throw dataError("保存先がありません") }
+        try projectStore.saveCheckpoint(makeCaptureCheckpoint(), projectURL: projectURL)
+        _ = try projectStore.updateManifest(projectURL: projectURL) { manifest in
+            manifest.stage = stage
+            manifest.acceptedFrames = acceptedFrames
+            manifest.targetFrames = targetFrames
+            manifest.featurePointCount = featurePointCount
+            manifest.coverageSectorCount = coverageSectorCount
+            manifest.rawDataRetained = true
+            manifest.lastError = lastError
+        }
+    }
+
+    private func persistCaptureStateOrFail(stage: ScanProjectStage) {
+        do {
+            try persistProjectSnapshot(stage: stage)
+        } catch {
+            let message = "撮影状態を保存できませんでした。iPhoneの空き容量を確認してください: \(error.localizedDescription)"
+            closeActiveCaptureTiming()
+            phase = .failed(message)
+            trackingMessage = message
+            session?.pause()
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
+    }
+
     private func makeWorldTrackingConfiguration() -> ARWorldTrackingConfiguration {
         let config = ARWorldTrackingConfiguration()
         config.worldAlignment = .gravity
@@ -967,6 +1066,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         trackingNeedsRecovery = true
         stableTrackingFrames = 0
         trackingMessage = "カメラが中断されました。戻ると同じスキャンを復旧します"
+        persistCaptureStateOrFail(stage: .capturing)
         UIApplication.shared.isIdleTimerDisabled = false
     }
 
