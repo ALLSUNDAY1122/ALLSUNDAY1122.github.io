@@ -119,6 +119,8 @@ struct MeshExportOptionsView: View {
         case .glb: return "Web・共有向け単一バイナリ"
         case .usdz: return "Apple AR・Quick Look向け"
         case .stl: return "形状中心の3Dプリント向け"
+        case .ply: return "Mesh・点群ツール向け"
+        case .las: return "計測・点群ツール向け"
         }
     }
 }
