@@ -165,6 +165,16 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         if trackingNeedsRecovery {
             return "前に撮った場所を映しながら、ゆっくり動かして位置を合わせてください"
         }
+
+        switch CapturePolicy.longScanStage(seconds: activeCaptureSeconds) {
+        case .stopRecommended:
+            return "撮影が3分を超えています。発熱と保存容量を抑えるため、必要な範囲を優先し、十分なら停止して生成してください"
+        case .caution:
+            return "撮影が90秒を超えています。必要な範囲を優先し、十分なら停止して生成してください"
+        case .normal:
+            break
+        }
+
         if acceptedFrames < 24 {
             return "同じ場所に留まらず、ゆっくり連続して位置を変えてください"
         }
@@ -186,12 +196,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             }
         }
 
-        if activeCaptureSeconds >= 180 {
-            return "長い撮影です。現在の範囲で一度停止して保存・生成することを推奨します"
-        }
-        if activeCaptureSeconds >= 90 {
-            return "撮影が長くなっています。十分なら一度停止して生成できます"
-        }
         if acceptedFrames < targetFrames {
             return "生成できます。もう少し撮ると安定しやすくなります"
         }
@@ -442,11 +446,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         guard phase == .capturing, !isCapturePaused, !isWritingFrame else { return }
         updateCaptureDuration()
 
-        if acceptedFrames >= maxFrames {
-            trackingMessage = "保存容量を守るため撮影枚数の上限です。現在の撮影で生成してください"
-            return
-        }
-
         switch frame.camera.trackingState {
         case .normal:
             if trackingNeedsRecovery {
@@ -473,6 +472,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             previousTimestamp: lastAcceptedTimestamp,
             currentTimestamp: frame.timestamp
         ) else { return }
+
+        if acceptedFrames >= maxFrames {
+            guard frameAddsMissingCoverage(using: frame.camera.transform) else {
+                trackingMessage = coverageSatisfied
+                    ? "保存容量を守るため追加撮影を停止しました。現在の撮影で生成できます"
+                    : "保存容量を守るため、未撮影の方向・高さだけを追加してください"
+                return
+            }
+        }
 
         guard let jpegData = makeJPEGData(pixelBuffer: frame.capturedImage) else {
             trackingMessage = "画像を保存できません。もう一度ゆっくり動かしてください"
@@ -599,6 +607,40 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         xs.sort(); ys.sort(); zs.sort()
         let middle = xs.count / 2
         return SIMD3<Float>(xs[middle], ys[middle], zs[middle])
+    }
+
+    private func frameAddsMissingCoverage(using transform: simd_float4x4) -> Bool {
+        let position = Self.cameraPosition(transform)
+        let viewSector = CapturePolicy.viewDirectionSector(transform: transform, count: coverageSectorTotal)
+        let cell = CapturePolicy.spatialCell(cameraPosition: position)
+        let translation = previousCoveragePosition.map { simd_distance($0, position) } ?? 0
+
+        var orbitSectorIsNew = false
+        var elevationBandIsNew = false
+        if let center = estimatedTargetCenter {
+            if let sector = CapturePolicy.orbitSector(
+                cameraPosition: position,
+                center: center,
+                count: coverageSectorTotal
+            ) {
+                orbitSectorIsNew = !coverageSectors.contains(sector)
+            }
+            if let band = CapturePolicy.elevationBand(cameraPosition: position, center: center) {
+                elevationBandIsNew = !elevationBands.contains(band)
+            }
+        }
+
+        return CapturePolicy.softLimitAllowsFrame(
+            mode: coverageMode,
+            coverageSatisfied: coverageSatisfied,
+            orbitSectorIsNew: orbitSectorIsNew,
+            elevationBandIsNew: elevationBandIsNew,
+            viewDirectionIsNew: !viewDirectionSectors.contains(viewSector),
+            spatialCellIsNew: !spatialCells.contains(cell),
+            spatialCellCount: spatialCells.count,
+            pathLength: pathLengthMeters,
+            translationSinceLast: translation
+        )
     }
 
     private func updateCoverage(using transform: simd_float4x4) {
