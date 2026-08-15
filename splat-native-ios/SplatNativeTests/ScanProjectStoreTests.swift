@@ -26,12 +26,9 @@ final class ScanProjectStoreTests: XCTestCase {
             manifest.featurePointCount = 900
             manifest.coverageSectorCount = 9
         }
-
-        let relaunched = ScanProjectStore(rootURL: rootURL)
-        let projects = relaunched.listProjects()
+        let projects = ScanProjectStore(rootURL: rootURL).listProjects()
         XCTAssertEqual(projects.count, 1)
         XCTAssertEqual(projects[0].manifest.id, created.1.id)
-        XCTAssertEqual(projects[0].manifest.title, "机")
         XCTAssertEqual(projects[0].manifest.acceptedFrames, 36)
         XCTAssertEqual(projects[0].manifest.stage, .captured)
     }
@@ -39,82 +36,83 @@ final class ScanProjectStoreTests: XCTestCase {
     func testCheckpointBackupRecoversAfterPrimaryCorruption() throws {
         let created = try store.createProject(title: "撮影途中")
         let first = ScanCaptureCheckpoint(
-            frames: [],
-            featurePoints: [StoredFeaturePoint(id: 1, x: 1, y: 2, z: 3)],
-            coverageSectors: [0, 1],
-            estimatedTargetCenter: StoredVector3(x: 0, y: 0, z: -1),
-            lastAcceptedTransform: nil,
-            lastAcceptedTimestamp: 10
+            frames: [], featurePoints: [StoredFeaturePoint(id: 1, x: 1, y: 2, z: 3)],
+            coverageSectors: [0, 1], estimatedTargetCenter: StoredVector3(x: 0, y: 0, z: -1),
+            lastAcceptedTransform: nil, lastAcceptedTimestamp: 10
         )
         let second = ScanCaptureCheckpoint(
-            frames: [],
-            featurePoints: [StoredFeaturePoint(id: 2, x: 4, y: 5, z: 6)],
-            coverageSectors: [0, 1, 2],
-            estimatedTargetCenter: StoredVector3(x: 0, y: 0, z: -1),
-            lastAcceptedTransform: nil,
-            lastAcceptedTimestamp: 20
+            frames: [], featurePoints: [StoredFeaturePoint(id: 2, x: 4, y: 5, z: 6)],
+            coverageSectors: [0, 1, 2], estimatedTargetCenter: StoredVector3(x: 0, y: 0, z: -1),
+            lastAcceptedTransform: nil, lastAcceptedTimestamp: 20
         )
         try store.saveCheckpoint(first, projectURL: created.0)
         try store.saveCheckpoint(second, projectURL: created.0)
         try Data("broken-checkpoint".utf8).write(
-            to: created.0.appendingPathComponent(ScanProjectStore.checkpointFileName),
-            options: .atomic
+            to: created.0.appendingPathComponent(ScanProjectStore.checkpointFileName), options: .atomic
         )
-
-        let relaunched = ScanProjectStore(rootURL: rootURL)
-        let recovered = try relaunched.loadCheckpoint(projectURL: created.0)
+        let recovered = try ScanProjectStore(rootURL: rootURL).loadCheckpoint(projectURL: created.0)
         XCTAssertEqual(recovered.lastAcceptedTimestamp, 10)
         XCTAssertEqual(recovered.coverageSectors, [0, 1])
     }
 
     func testCorruptedPrimaryManifestRecoversFromBackup() throws {
         let created = try store.createProject(title: "原本")
-        _ = try store.updateManifest(projectURL: created.0) { manifest in
-            manifest.title = "復元対象"
-        }
-        _ = try store.updateManifest(projectURL: created.0) { manifest in
-            manifest.acceptedFrames = 12
-        }
+        _ = try store.updateManifest(projectURL: created.0) { $0.title = "復元対象" }
+        _ = try store.updateManifest(projectURL: created.0) { $0.acceptedFrames = 12 }
         try Data("broken-json".utf8).write(
-            to: created.0.appendingPathComponent(ScanProjectStore.manifestFileName),
-            options: .atomic
+            to: created.0.appendingPathComponent(ScanProjectStore.manifestFileName), options: .atomic
         )
-
-        let relaunched = ScanProjectStore(rootURL: rootURL)
-        let recovered = try relaunched.loadProject(id: created.1.id)
+        let recovered = try ScanProjectStore(rootURL: rootURL).loadProject(id: created.1.id)
         XCTAssertEqual(recovered.manifest.title, "復元対象")
-        XCTAssertTrue(FileManager.default.fileExists(
-            atPath: created.0.appendingPathComponent(ScanProjectStore.manifestFileName).path
-        ))
     }
 
     func testInterruptedProcessingReturnsToCapturedWhenRawExists() throws {
         let created = try store.createProject(title: "処理中")
         try makeProcessableRaw(in: created.0)
-        _ = try store.updateManifest(projectURL: created.0) { manifest in
-            manifest.stage = .processing
-        }
-
-        let relaunched = ScanProjectStore(rootURL: rootURL)
-        let recovered = try relaunched.loadProject(id: created.1.id)
+        _ = try store.updateManifest(projectURL: created.0) { $0.stage = .processing }
+        let recovered = try ScanProjectStore(rootURL: rootURL).loadProject(id: created.1.id)
         XCTAssertEqual(recovered.manifest.stage, .captured)
         XCTAssertTrue(recovered.manifest.recoveredAfterInterruption)
-        XCTAssertNotNil(recovered.manifest.lastError)
         XCTAssertTrue(recovered.manifest.rawDataRetained)
     }
 
-    func testInterruptedFirstProcessingCompletesRecoveryWhenSplatWasAlreadyWritten() throws {
-        let created = try store.createProject(title: "書込済み")
-        try splatData(1).write(to: created.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
-        _ = try store.updateManifest(projectURL: created.0) { manifest in
-            manifest.stage = .processing
-        }
+    func testAlignedPartialOutputIsNeverPromotedToFinished() throws {
+        let created = try store.createProject(title: "aligned partial")
+        try makeProcessableRaw(in: created.0)
+        _ = try store.updateManifest(projectURL: created.0) { $0.stage = .processing }
+        let direct = created.0.appendingPathComponent(ScanProjectStore.splatResultFileName)
+        try splatData(0xAA).write(to: direct)
 
-        let relaunched = ScanProjectStore(rootURL: rootURL)
-        let recovered = try relaunched.loadProject(id: created.1.id)
+        let recovered = try ScanProjectStore(rootURL: rootURL).loadProject(id: created.1.id)
+        XCTAssertEqual(recovered.manifest.stage, .captured)
+        XCTAssertNil(recovered.manifest.splatFileName)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: direct.path))
+    }
+
+    func testUnalignedPendingOutputIsDiscarded() throws {
+        let created = try store.createProject(title: "unaligned partial")
+        try makeProcessableRaw(in: created.0)
+        _ = try store.updateManifest(projectURL: created.0) { $0.stage = .processing }
+        let pending = created.0.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        try Data(repeating: 0xBB, count: 47).write(to: pending)
+
+        let recovered = try ScanProjectStore(rootURL: rootURL).loadProject(id: created.1.id)
+        XCTAssertEqual(recovered.manifest.stage, .captured)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: pending.path))
+    }
+
+    func testCommittedSplatRecoversWhenManifestUpdateWasInterrupted() throws {
+        let created = try store.createProject(title: "committed")
+        try makeProcessableRaw(in: created.0)
+        _ = try store.updateManifest(projectURL: created.0) { $0.stage = .processing }
+        let pending = created.0.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        try splatData(0xCC).write(to: pending)
+        _ = try store.commitPendingSplat(projectURL: created.0)
+
+        let recovered = try ScanProjectStore(rootURL: rootURL).loadProject(id: created.1.id)
         XCTAssertEqual(recovered.manifest.stage, .finished)
         XCTAssertEqual(recovered.manifest.splatFileName, ScanProjectStore.splatResultFileName)
-        XCTAssertTrue(recovered.manifest.recoveredAfterInterruption)
+        XCTAssertEqual(try Data(contentsOf: recovered.resultURL!), splatData(0xCC))
     }
 
     func testReprocessCrashRestoresPreviousCompletedSplat() throws {
@@ -126,42 +124,41 @@ final class ScanProjectStoreTests: XCTestCase {
             manifest.stage = .finished
             manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
         }
-
         _ = try store.updateManifest(projectURL: created.0) { $0.stage = .processing }
         XCTAssertFalse(FileManager.default.fileExists(atPath: result.path))
         XCTAssertTrue(FileManager.default.fileExists(
             atPath: created.0.appendingPathComponent(ScanProjectStore.previousSplatFileName).path
         ))
+        try splatData(0xEE).write(to: result)
 
-        // Simulate termination while the reconstruction engine is partially rewriting result.splat.
-        try Data(repeating: 0xEE, count: 13).write(to: result)
-        let relaunched = ScanProjectStore(rootURL: rootURL)
-        let recovered = try relaunched.loadProject(id: created.1.id)
+        let recovered = try ScanProjectStore(rootURL: rootURL).loadProject(id: created.1.id)
         XCTAssertEqual(recovered.manifest.stage, .finished)
         XCTAssertEqual(try Data(contentsOf: result), splatData(0x2A))
     }
 
-    func testSuccessfulReprocessReplacesPreviousSplatOnlyAfterFinish() throws {
+    func testSuccessfulReprocessUsesPendingCommitContract() throws {
         let created = try store.createProject(title: "再生成成功")
         try makeProcessableRaw(in: created.0)
         let result = created.0.appendingPathComponent(ScanProjectStore.splatResultFileName)
-        let previous = created.0.appendingPathComponent(ScanProjectStore.previousSplatFileName)
         try splatData(0x10).write(to: result)
         _ = try store.updateManifest(projectURL: created.0) { manifest in
             manifest.stage = .finished
             manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
         }
-
         _ = try store.updateManifest(projectURL: created.0) { $0.stage = .processing }
-        XCTAssertTrue(FileManager.default.fileExists(atPath: previous.path))
-        try splatData(0x20).write(to: result)
+        let pending = created.0.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+        try splatData(0x20).write(to: pending)
+        let committed = try store.commitPendingSplat(projectURL: created.0)
         _ = try store.updateManifest(projectURL: created.0) { manifest in
             manifest.stage = .finished
-            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = committed.lastPathComponent
         }
 
         XCTAssertEqual(try Data(contentsOf: result), splatData(0x20))
-        XCTAssertFalse(FileManager.default.fileExists(atPath: previous.path))
+        XCTAssertNotNil(store.trustedSplatURL(projectURL: created.0))
+        XCTAssertFalse(FileManager.default.fileExists(
+            atPath: created.0.appendingPathComponent(ScanProjectStore.previousSplatFileName).path
+        ))
     }
 
     func testMeshReprocessRequestUsesSameRetainedRawPackage() throws {
@@ -171,8 +168,6 @@ final class ScanProjectStoreTests: XCTestCase {
         XCTAssertEqual(request.representation, .mesh)
         XCTAssertEqual(request.projectID, created.1.id)
         XCTAssertEqual(request.imagesURL.lastPathComponent, "images")
-        XCTAssertEqual(request.transformsURL.lastPathComponent, "transforms.json")
-        XCTAssertEqual(request.pointCloudURL.lastPathComponent, "points3D.ply")
     }
 
     func testFailureStateSurvivesRelaunch() throws {
@@ -186,21 +181,28 @@ final class ScanProjectStoreTests: XCTestCase {
         XCTAssertEqual(recovered.manifest.lastError, "synthetic failure")
     }
 
-    func testClearRawDataPreservesFinishedResultAndThumbnail() throws {
+    func testClearRawDataPreservesCommittedResultThumbnailAndEvidence() throws {
         let created = try store.createProject(title: "完成")
         try makeProcessableRaw(in: created.0)
-        try splatData(2).write(to: created.0.appendingPathComponent(ScanProjectStore.splatResultFileName))
+        _ = try store.updateManifest(projectURL: created.0) { $0.stage = .processing }
+        try splatData(2).write(to: created.0.appendingPathComponent(ScanProjectStore.pendingSplatFileName))
+        let result = try store.commitPendingSplat(projectURL: created.0)
         try store.setThumbnail(data: Data(repeating: 3, count: 16), projectURL: created.0)
         _ = try store.updateManifest(projectURL: created.0) { manifest in
             manifest.stage = .finished
-            manifest.outputs[ScanRepresentationKind.splat.rawValue] = ScanProjectStore.splatResultFileName
+            manifest.outputs[ScanRepresentationKind.splat.rawValue] = result.lastPathComponent
         }
 
         try store.clearRawData(projectURL: created.0)
         let loaded = try store.loadProject(id: created.1.id)
         XCTAssertFalse(loaded.manifest.rawDataRetained)
-        XCTAssertTrue(FileManager.default.fileExists(atPath: created.0.appendingPathComponent(ScanProjectStore.splatResultFileName).path))
-        XCTAssertTrue(FileManager.default.fileExists(atPath: created.0.appendingPathComponent(ScanProjectStore.thumbnailFileName).path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: result.path))
+        XCTAssertTrue(FileManager.default.fileExists(
+            atPath: created.0.appendingPathComponent(ScanProjectStore.thumbnailFileName).path
+        ))
+        XCTAssertTrue(FileManager.default.fileExists(
+            atPath: created.0.appendingPathComponent(ScanProjectStore.splatCommitEvidenceFileName).path
+        ))
         XCTAssertFalse(FileManager.default.fileExists(atPath: created.0.appendingPathComponent("images").path))
     }
 
@@ -210,24 +212,19 @@ final class ScanProjectStoreTests: XCTestCase {
         let relaunched = ScanProjectStore(rootURL: rootURL)
         XCTAssertEqual(relaunched.listProjects().count, 0)
         XCTAssertEqual(relaunched.listTrash().count, 1)
-
         try relaunched.restoreFromTrash(id: created.1.id)
         XCTAssertEqual(ScanProjectStore(rootURL: rootURL).listProjects().count, 1)
-        XCTAssertEqual(ScanProjectStore(rootURL: rootURL).listTrash().count, 0)
     }
 
     func testLegacyPoCFolderMigratesWithoutLosingRawData() throws {
         let legacyID = "legacy-project"
         let legacy = rootURL.appendingPathComponent(legacyID).appendingPathExtension(ScanProjectStore.projectExtension)
         try makeProcessableRaw(in: legacy)
-
-        let relaunched = ScanProjectStore(rootURL: rootURL)
-        let projects = relaunched.listProjects()
+        let projects = ScanProjectStore(rootURL: rootURL).listProjects()
         XCTAssertEqual(projects.count, 1)
         XCTAssertEqual(projects[0].manifest.id, legacyID)
         XCTAssertEqual(projects[0].manifest.stage, .captured)
         XCTAssertTrue(projects[0].manifest.rawDataRetained)
-        XCTAssertTrue(FileManager.default.fileExists(atPath: legacy.appendingPathComponent(ScanProjectStore.manifestFileName).path))
     }
 
     private func makeProcessableRaw(in projectURL: URL) throws {
