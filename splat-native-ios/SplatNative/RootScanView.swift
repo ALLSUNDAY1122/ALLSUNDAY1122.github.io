@@ -22,6 +22,7 @@ struct PersistentScanCameraView: UIViewRepresentable {
 
 struct RootScanView: View {
     @EnvironmentObject var model: ScanModel
+    @Environment(\.scenePhase) private var scenePhase
     @State private var showingShare = false
     @State private var showingDiscardConfirmation = false
 
@@ -68,6 +69,16 @@ struct RootScanView: View {
         } message: {
             Text("この検証版にはまだスキャンライブラリがありません。書き出していない3Dは、破棄すると元に戻せません。")
         }
+        .onChange(of: scenePhase) { _, newPhase in
+            switch newPhase {
+            case .active:
+                model.handleApplicationBecameActive()
+            case .inactive, .background:
+                model.handleApplicationBecameInactive()
+            @unknown default:
+                break
+            }
+        }
     }
 
     private var ready: some View {
@@ -87,6 +98,23 @@ struct RootScanView: View {
                 Label("完成後は回転・拡大して確認できます", systemImage: "rotate.3d")
             }
             .font(.subheadline)
+
+            if model.lidarControlAvailable {
+                Toggle(isOn: Binding(
+                    get: { !model.ignoreLiDAR },
+                    set: { model.ignoreLiDAR = !$0 }
+                )) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("LiDAR深度を撮影に使う")
+                        Text("OFFでもRGB＋ARKit姿勢で撮影できます")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(14)
+                .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 16))
+            }
+
             Spacer()
             Button("新しくスキャン") {
                 model.startCapture()
@@ -98,7 +126,7 @@ struct RootScanView: View {
 
     private var captureOverlay: some View {
         ZStack {
-            Color.black.opacity(0.08).ignoresSafeArea()
+            Color.black.opacity(model.isCapturePaused ? 0.28 : 0.08).ignoresSafeArea()
             VStack {
                 HStack {
                     Button {
@@ -108,12 +136,24 @@ struct RootScanView: View {
                             .frame(width: 44, height: 44)
                             .background(.black.opacity(0.55), in: Circle())
                     }
+
                     Spacer()
-                    Text(model.progressText)
-                        .font(.subheadline.bold().monospacedDigit())
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 9)
-                        .background(.black.opacity(0.62), in: Capsule())
+
+                    VStack(alignment: .trailing, spacing: 5) {
+                        Text(model.progressText)
+                            .font(.subheadline.bold().monospacedDigit())
+                        HStack(spacing: 7) {
+                            Text(formatDuration(model.activeCaptureSeconds))
+                            if model.depthCaptureActive {
+                                Label("Depth", systemImage: "viewfinder.circle")
+                            }
+                        }
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 9)
+                    .background(.black.opacity(0.62), in: Capsule())
                 }
 
                 Spacer()
@@ -126,7 +166,7 @@ struct RootScanView: View {
                             .font(.caption.bold())
                             .padding(.horizontal, 10)
                             .padding(.vertical, 7)
-                            .background(.mint, in: Capsule())
+                            .background(model.isCapturePaused ? .orange : .mint, in: Capsule())
                             .foregroundStyle(.black)
                             .offset(y: -20)
                     }
@@ -144,20 +184,36 @@ struct RootScanView: View {
                     )
                     .tint(.mint)
 
-                    if model.canFinishCapture {
-                        Button("この撮影で生成へ") {
-                            model.finishCapture()
+                    if model.isCapturePaused {
+                        Button("撮影を再開") {
+                            model.resumeCapture()
                         }
                         .buttonStyle(PrimaryButtonStyle())
                     } else {
-                        Text(model.captureQualityText)
-                            .font(.caption)
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(.secondary)
+                        HStack(spacing: 10) {
+                            Button {
+                                model.pauseCapture()
+                            } label: {
+                                Label("一時停止", systemImage: "pause.fill")
+                            }
+                            .buttonStyle(SecondaryButtonStyle())
+
+                            if model.canFinishCapture {
+                                Button("停止して生成へ") {
+                                    model.finishCapture()
+                                }
+                                .buttonStyle(PrimaryButtonStyle())
+                            }
+                        }
                     }
+
+                    Text(model.captureQualityText)
+                        .font(.caption)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.secondary)
                 }
                 .padding(16)
-                .background(.black.opacity(0.74), in: RoundedRectangle(cornerRadius: 20))
+                .background(.black.opacity(0.78), in: RoundedRectangle(cornerRadius: 20))
             }
             .padding()
         }
@@ -171,13 +227,17 @@ struct RootScanView: View {
                 .foregroundStyle(.mint)
             Text("撮影できました")
                 .font(.title2.bold())
-            Text("対象の周囲から必要な写真がそろいました。\niPhoneの中でGaussian Splatを生成します。")
+            Text("対象の周囲から必要な写真がそろいました。\nこのまま生成するか、同じスキャンへ撮影を追加できます。")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
             Button("3Dを生成") {
                 model.train()
             }
             .buttonStyle(PrimaryButtonStyle())
+            Button("撮影を再開して追加") {
+                model.resumeCapture()
+            }
+            .buttonStyle(SecondaryButtonStyle())
             Button("撮り直す") {
                 model.discardAndReset()
             }
@@ -244,6 +304,10 @@ struct RootScanView: View {
                         .font(.caption)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)
+                    Button("品質をさらに上げる") {
+                        model.enhanceResult()
+                    }
+                    .buttonStyle(SecondaryButtonStyle())
                     HStack {
                         Button("3Dを書き出す") {
                             showingShare = true
@@ -291,5 +355,10 @@ struct RootScanView: View {
             Spacer()
         }
         .padding(24)
+    }
+
+    private func formatDuration(_ seconds: Double) -> String {
+        let whole = max(0, Int(seconds.rounded(.down)))
+        return String(format: "%d:%02d", whole / 60, whole % 60)
     }
 }
