@@ -23,7 +23,7 @@ final class MeshExportMemoryPolicyTests: XCTestCase {
             physicalMemoryBytes: 4 * 1_024 * mib
         )
         let large = MeshExportMemoryPolicy.estimate(
-            sourceBytes: 72 * mib,
+            sourceBytes: 80 * mib,
             sourceExtension: "obj",
             format: .ply,
             physicalMemoryBytes: 4 * 1_024 * mib
@@ -58,8 +58,8 @@ final class MeshExportMemoryPolicyTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
 
         let source = root.appendingPathComponent("large.obj")
-        let handle = FileManager.default.createFile(atPath: source.path, contents: Data("v 0 0 0\n".utf8))
-        XCTAssertTrue(handle)
+        let created = FileManager.default.createFile(atPath: source.path, contents: Data("v 0 0 0\n".utf8))
+        XCTAssertTrue(created)
         let fileHandle = try FileHandle(forWritingTo: source)
         try fileHandle.truncate(atOffset: 80 * mib)
         try fileHandle.close()
