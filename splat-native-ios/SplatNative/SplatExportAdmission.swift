@@ -30,16 +30,18 @@ enum SplatExportAdmission {
 
     private static let safetyReserveBytes: Int64 = 128 * 1_024 * 1_024
 
-    /// Export is admitted only from the project store's durable completed-result contract.
-    /// This prevents an aligned but partial `.splat` from bypassing the atomic commit evidence.
+    /// Export is admitted only when the source matches the project store's atomic completion
+    /// evidence. Record alignment or a `.finished` manifest by itself is not enough because an
+    /// interrupted writer can still leave a whole number of 32-byte records behind.
     static func preflight(sourceURL: URL, kind: Kind) throws -> URL {
-        let projectURL = sourceURL.deletingLastPathComponent()
-        let store = ScanProjectStore()
-        guard let trustedURL = store.trustedSplatURL(projectURL: projectURL),
-              trustedURL.standardizedFileURL == sourceURL.standardizedFileURL else {
+        let trustedURL: URL
+        do {
+            trustedURL = try SplatCompletionVerifier.verify(sourceURL: sourceURL)
+        } catch {
             throw AdmissionError.untrustedSource
         }
 
+        let projectURL = trustedURL.deletingLastPathComponent()
         let sourceBytes = try fileSize(at: trustedURL)
         let required = estimatedRequiredFreeBytes(sourceBytes: sourceBytes, kind: kind)
         if let available = availableCapacity(at: projectURL), available < required {
