@@ -469,16 +469,28 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 }
 
                 msplatSync()
-                let output = projectURL.appendingPathComponent("result.splat")
-                trainer.exportSplat(to: output.path)
+                let pending = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+                try? FileManager.default.removeItem(at: pending)
+                trainer.exportSplat(to: pending.path)
                 msplatSync()
 
-                guard let attributes = try? FileManager.default.attributesOfItem(atPath: output.path),
+                guard let attributes = try? FileManager.default.attributesOfItem(atPath: pending.path),
                       let sizeNumber = attributes[.size] as? NSNumber,
                       sizeNumber.intValue > 0,
                       sizeNumber.intValue % 32 == 0 else {
                     Task { @MainActor [weak self] in
                         self?.failTraining("生成した3Dデータを保存できませんでした。生成をもう一度試してください")
+                    }
+                    return
+                }
+
+                let detachedStore = ScanProjectStore(rootURL: projectURL.deletingLastPathComponent())
+                let output: URL
+                do {
+                    output = try detachedStore.commitPendingSplat(projectURL: projectURL)
+                } catch {
+                    Task { @MainActor [weak self] in
+                        self?.failTraining("生成した3Dデータの安全な保存を完了できませんでした。生成をもう一度試してください")
                     }
                     return
                 }
@@ -489,7 +501,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     guard let self else { return }
                     do {
                         if let jpeg = preview?.jpegData(compressionQuality: 0.82) {
-                            try self.projectStore.setThumbnail(data: jpeg, projectURL: projectURL)
+                            try? self.projectStore.setThumbnail(data: jpeg, projectURL: projectURL)
                         }
                         self.activeManifest = try self.projectStore.updateManifest(projectURL: projectURL) { manifest in
                             manifest.stage = .finished
@@ -535,6 +547,17 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         refreshLibrary()
     }
 
+    private func failCaptureStorage() {
+        let message = "撮影データを保存できませんでした。iPhoneの空き容量を確認して、このスキャンを開き直してから撮影を再開してください"
+        datasetReady = false
+        trackingMessage = message
+        phase = .failed(message)
+        session?.pause()
+        UIApplication.shared.isIdleTimerDisabled = false
+        markManifest(stage: .failed, error: message)
+        refreshLibrary()
+    }
+
     private func markManifest(stage: ScanProjectStage, error: String?) {
         guard let projectURL else { return }
         activeManifest = try? projectStore.updateManifest(projectURL: projectURL) { manifest in
@@ -572,6 +595,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             trackingMessage = "画像を保存できません。もう一度ゆっくり動かしてください"
             return
         }
+        guard let imagesURL else {
+            failCaptureStorage()
+            return
+        }
 
         absorbFeaturePoints(frame.rawFeaturePoints, cameraTransform: frame.camera.transform)
 
@@ -582,23 +609,19 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let intrinsics = frame.camera.intrinsics
         let resolution = frame.camera.imageResolution
         let timestamp = frame.timestamp
-        let imagesURL = imagesURL
 
         captureQueue.async { [weak self] in
-            guard let imagesURL else { return }
             let fileName = String(format: "frame_%05d.jpg", index)
             let fileURL = imagesURL.appendingPathComponent(fileName)
-            let success: Bool
-            do {
-                try jpegData.write(to: fileURL, options: .atomic)
-                success = true
-            } catch {
-                success = false
-            }
+            let success = (try? jpegData.write(to: fileURL, options: .atomic)) != nil
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.isWritingFrame = false
-                guard success, self.phase == .capturing else { return }
+                guard self.phase == .capturing else { return }
+                guard success else {
+                    self.failCaptureStorage()
+                    return
+                }
                 self.captured.append(CapturedView(
                     id: index,
                     filePath: "images/\(fileName)",
