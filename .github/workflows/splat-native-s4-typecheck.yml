@@ -11,6 +11,7 @@ on:
       - 'splat-native-ios/SplatNative/MeshRawReprocess.swift'
       - 'splat-native-ios/SplatNative/MeshSimplifier.swift'
       - 'splat-native-ios/SplatNative/MeshAdvancedSupervisor.swift'
+      - 'splat-native-ios/SplatNative/MeshVisualFallback.swift'
       - '.github/workflows/splat-native-s4-typecheck.yml'
   pull_request:
     paths:
@@ -20,6 +21,7 @@ on:
       - 'splat-native-ios/SplatNative/MeshRawReprocess.swift'
       - 'splat-native-ios/SplatNative/MeshSimplifier.swift'
       - 'splat-native-ios/SplatNative/MeshAdvancedSupervisor.swift'
+      - 'splat-native-ios/SplatNative/MeshVisualFallback.swift'
       - '.github/workflows/splat-native-s4-typecheck.yml'
 
 jobs:
@@ -81,6 +83,7 @@ jobs:
             splat-native-ios/SplatNative/MeshDepthRecorder.swift \
             splat-native-ios/SplatNative/MeshRawReprocess.swift \
             splat-native-ios/SplatNative/MeshSimplifier.swift \
+            splat-native-ios/SplatNative/MeshVisualFallback.swift \
             splat-native-ios/SplatNative/MeshAdvancedSupervisor.swift \
             /tmp/S4UIStubs.swift \
             2>&1 | tee /tmp/s4-runtime-typecheck.log
