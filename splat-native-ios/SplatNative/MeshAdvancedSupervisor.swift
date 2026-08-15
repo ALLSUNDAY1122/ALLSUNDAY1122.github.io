@@ -12,6 +12,7 @@ struct MeshAdvancedSupervisor: View {
     @State private var showingRawReprocess = false
     @State private var showingSimplifier = false
     @State private var showingUncalibratedShare = false
+    @State private var attemptedAutomaticTextureBake = false
 
     var body: some View {
         ZStack {
@@ -56,8 +57,22 @@ struct MeshAdvancedSupervisor: View {
                       model.rawOBJURL != nil {
                 VStack {
                     Spacer()
-                    HStack {
+                    HStack(spacing: 8) {
                         Spacer()
+                        if model.mode == .lidar,
+                           model.frameCount >= 8,
+                           !(model.resultURL?.lastPathComponent.lowercased().contains("textured") ?? false) {
+                            Button {
+                                model.bakeRGBTextureAtlas()
+                            } label: {
+                                Label("RGBテクスチャ", systemImage: "photo.on.rectangle.angled")
+                                    .font(.caption.bold())
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 9)
+                                    .background(.blue, in: Capsule())
+                                    .foregroundStyle(.white)
+                            }
+                        }
                         Button {
                             showingSimplifier = true
                         } label: {
@@ -139,11 +154,25 @@ struct MeshAdvancedSupervisor: View {
             if newPhase == .ready {
                 isPaused = false
                 autoPaused = false
+                attemptedAutomaticTextureBake = false
                 if depthRecorder.isRecording { depthRecorder.discard() }
+            }
+            if newPhase == .scanning {
+                attemptedAutomaticTextureBake = false
             }
             if newPhase != .scanning {
                 isPaused = false
                 autoPaused = false
+            }
+            if newPhase == .finished,
+               !attemptedAutomaticTextureBake,
+               model.mode == .lidar,
+               model.frameCount >= 8,
+               let url = model.resultURL,
+               url.pathExtension.lowercased() == "obj",
+               !url.lastPathComponent.lowercased().contains("textured") {
+                attemptedAutomaticTextureBake = true
+                model.bakeRGBTextureAtlas()
             }
         }
         .onChange(of: model.resultURL) { _, newURL in
