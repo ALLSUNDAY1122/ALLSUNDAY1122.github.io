@@ -264,6 +264,9 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
         photogrammetrySession?.cancel()
         photogrammetrySession = nil
         session?.pause()
+        if let projectURL { try? FileManager.default.removeItem(at: projectURL) }
+        projectURL = nil
+        imagesURL = nil
         phase = .ready
         statusMessage = "Meshモードを選んでください"
         frameCount = 0
@@ -393,7 +396,15 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.isWritingFrame = false
-                guard success, self.phase == .scanning else { return }
+                guard self.phase == .scanning else { return }
+                guard success else {
+                    let message = "撮影データを保存できませんでした。iPhoneの空き容量を確認してください。"
+                    self.phase = .failed(message)
+                    self.statusMessage = message
+                    self.session?.pause()
+                    UIApplication.shared.isIdleTimerDisabled = false
+                    return
+                }
                 self.frames.append(MeshCapturedFrame(
                     filePath: "images/\(fileName)",
                     timestamp: timestamp,
