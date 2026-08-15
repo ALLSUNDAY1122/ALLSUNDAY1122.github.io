@@ -1,18 +1,19 @@
 # #12 不動産鑑定士｜学びスプリント Release Status
 
-更新日: 2026-08-14
+更新日: 2026-08-15
 
 ## 現在地
 
-**PRE-TESTFLIGHT / APP STORE CONNECT HUMAN GATE**
+**PRE-TESTFLIGHT / SUBSCRIPTION REGISTRATION HUMAN GATE**
 
-製品240問、SwiftUIネイティブ統合、canonical監査、正本App Icon、無料24問／プレミアム240問、月額StoreKit 2、release時Product ID注入、ネイティブCIまで機械工程はPASS済み。
+製品240問、SwiftUIネイティブ統合、canonical監査、正本App Icon、無料24問／プレミアム240問、月額StoreKit 2、release時Product ID注入、ネイティブCIまで機械工程はPASS済み。App Store ConnectのAppレコード作成も完了し、Apple発行の数値App IDを実取得済み。
 
 ## 確定識別情報
 - Team ID: `MN3D2ZM44N`
 - Bundle ID: `jp.allsunday1122.kanteishishortanswer`
 - Codemagic profile: `kanteishishortanswer_appstore`
-- App Store Connect App ID: Apple発行待ち・推測禁止
+- App Store Connect App ID: `6801787074`
+- SKU: `kanteishi-shortanswer-sprint-ios`
 - App Store本審査自動提出: 禁止
 
 ## 課金・アクセス
@@ -64,6 +65,8 @@ GitHub Actions run `31788327068`: **PASS**
 - 苦手復習 / 中断復帰 / 履歴 / バックアップ
 - Privacy Manifest / Support / Privacy / Store原稿 / TestFlight Notes
 - Bundle ID / Codemagic profile正本化
+- App Store Connect Appレコード作成
+- Apple発行数値App ID `6801787074` 正本化
 - 正本App Iconバイナリ統合・永久SHA監査
 - 無料24問アクセス制御
 - StoreKit 2月額自動更新サブスクリプション
@@ -72,12 +75,11 @@ GitHub Actions run `31788327068`: **PASS**
 - 課金アクセス変更後ネイティブCI PASS
 
 ## 次工程
-1. App Store Connectで新規Appレコードを作成。
-2. Apple発行の数値App IDを実取得し正本化。
-3. 月額自動更新サブスクリプションを実登録し、Product ID実値を正本化。
-4. Codemagicへ実登録Product IDとApple署名接続を設定。
-5. signed IPAを作成しInternal TestFlightへアップロード。
-6. iPhone実機で無料24問、購入、復元、再起動、失効を含む確認。
+1. App Store Connectの収益化 → サブスクリプションでサブスクリプショングループを作成。
+2. 月額自動更新サブスクリプション `jp.allsunday1122.kanteishishortanswer.monthly200` を実登録し、actual Product IDを正本化。
+3. Codemagicへ実登録Product IDとApple署名接続を設定。
+4. signed IPAを作成しInternal TestFlightへアップロード。
+5. iPhone実機で無料24問、購入、復元、再起動、失効を含む確認。
 
 Apple/App Store Connect/Codemagicのログイン・2FA・契約同意など本人操作が必要な箇所だけユーザーが担当する。
 
