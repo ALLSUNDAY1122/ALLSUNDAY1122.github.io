@@ -41,6 +41,15 @@ grep -q 'didFailWithError' SplatNative/ScanModel+SessionLifecycle.swift
 grep -q 'sessionWasInterrupted' SplatNative/ScanModel+SessionLifecycle.swift
 grep -q 'sessionInterruptionEnded' SplatNative/ScanModel+SessionLifecycle.swift
 
+# S8 resilience gate: filesystem failures during capture must not silently stall progress.
+grep -q 'failCaptureStorage' SplatNative/ScanModel.swift
+grep -q 'iPhoneの空き容量を確認して' SplatNative/ScanModel.swift
+
+# S8 CI gate: the msplat XCTest must be executed, not merely compiled.
+grep -q 'Run msplat runtime smoke test on iOS Simulator' ../.github/workflows/splat-native-ios.yml
+grep -q 'CODE_SIGNING_ALLOWED=NO test' ../.github/workflows/splat-native-ios.yml
+! grep -q 'build-for-testing' ../.github/workflows/splat-native-ios.yml
+
 # Harsh-review gate: photo count alone is not enough. The capture must require
 # spatial coverage and real translation so spinning in place cannot complete a scan.
 grep -q 'minimumCoverageSectors = 8' SplatNative/ScanModel.swift
