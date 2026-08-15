@@ -11,6 +11,7 @@ struct MeshAdvancedSupervisor: View {
     @State private var autoPaused = false
     @State private var showingRawReprocess = false
     @State private var showingSimplifier = false
+    @State private var showingUncalibratedShare = false
 
     var body: some View {
         ZStack {
@@ -72,6 +73,38 @@ struct MeshAdvancedSupervisor: View {
                     .padding(.bottom, 320)
                 }
             }
+
+            if model.phase == .finished,
+               let descriptor = model.exporterMeshAsset,
+               !descriptor.hasMetricScale {
+                VStack(spacing: 0) {
+                    Spacer()
+                    VStack(spacing: 14) {
+                        Label("尺度未校正のMesh", systemImage: "ruler.fill")
+                            .font(.headline)
+                            .foregroundStyle(.orange)
+                        Text("写真だけから再構築したUSDZはARKit実寸座標へ校正していません。誤ったcm/m値を出さないため、この結果では計測を無効にしています。")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                        HStack {
+                            Button("Meshを書き出す") {
+                                showingUncalibratedShare = true
+                            }
+                            .buttonStyle(SecondaryButtonStyle())
+                            Button("新しく撮る") {
+                                model.reset()
+                            }
+                            .buttonStyle(PrimaryButtonStyle())
+                        }
+                    }
+                    .padding(18)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 310)
+                    .background(.black)
+                }
+                .ignoresSafeArea(edges: .bottom)
+            }
         }
         .sheet(isPresented: $showingRawReprocess) {
             MeshRawReprocessSheet()
@@ -81,6 +114,11 @@ struct MeshAdvancedSupervisor: View {
             if let url = model.rawOBJURL {
                 MeshSimplifySheet(sourceURL: url)
                     .environmentObject(model)
+            }
+        }
+        .sheet(isPresented: $showingUncalibratedShare) {
+            if let url = model.resultURL {
+                ShareSheet(items: [url])
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
