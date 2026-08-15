@@ -60,8 +60,8 @@ enum SplatSeedColorizer {
             grouped[assignment.frameIndex, default: []].append((pointIndex, assignment))
         }
 
-        // Seed colors must come from the untouched captures. Background isolation runs only after
-        // all point colors have been sampled and first preserves originals under raw-images/.
+        // Seed colors always come from untouched captures. Background suppression is a separate
+        // training-stage preprocessing pass so capture finalization never blocks on Vision work.
         for (frameIndex, items) in grouped {
             guard frames.indices.contains(frameIndex) else { continue }
             let frame = frames[frameIndex]
@@ -79,7 +79,6 @@ enum SplatSeedColorizer {
             }
         }
 
-        _ = SplatForegroundIsolator.prepareProjectImages(projectURL: projectURL, frames: frames)
         return result
     }
 

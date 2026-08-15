@@ -245,8 +245,24 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
         let path = projectURL.path
         let checkpoint = projectURL.appendingPathComponent("training.msplat-checkpoint")
+        let preprocessingFrames = captured.map { frame in
+            SplatSeedFrame(
+                filePath: frame.filePath,
+                transformMatrix: frame.transformMatrix,
+                flX: frame.flX,
+                flY: frame.flY,
+                cx: frame.cx,
+                cy: frame.cy,
+                w: frame.w,
+                h: frame.h
+            )
+        }
         Task.detached(priority: .userInitiated) { [weak self] in
             autoreleasepool {
+                _ = SplatForegroundIsolator.prepareProjectImages(
+                    projectURL: projectURL,
+                    frames: preprocessingFrames
+                )
                 let dataset = GaussianDataset(
                     path: path,
                     downscaleFactor: SplatReconstructionPolicy.datasetDownscale,
