@@ -10,6 +10,8 @@ packages:
   MetalSplatter:
     url: https://github.com/scier/MetalSplatter.git
     revision: 2b965de1934de38dda1c71cf90bf798aa948a14c
+  AssimpBinary:
+    path: Packages/AssimpBinary
 targets:
   SplatNative:
     type: application
@@ -24,6 +26,10 @@ targets:
         product: MetalSplatter
       - package: MetalSplatter
         product: SplatIO
+      - package: AssimpBinary
+        product: AssimpBinary
+      - sdk: libc++.tbd
+      - sdk: libz.tbd
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.splatlab
@@ -56,9 +62,24 @@ targets:
       - path: SplatNative/SplatResourceGuard.swift
       - path: SplatNative/SplatViewerState.swift
       - path: SplatNative/ScanProjectStore.swift
+      - path: SplatNative/SplatExportService.swift
+      - path: SplatNative/SplatVideoConfiguration.swift
+      - path: SplatNative/SplatCameraGeometry.swift
+      - path: SplatNative/SplatVideoMemoryPolicy.swift
+      - path: SplatNative/SplatVideoExporter.swift
+      - path: SplatNative/MeshExportService.swift
+      - path: SplatNative/MeshPointCloudExportService.swift
     dependencies:
       - package: Msplat
         product: Msplat
+      - package: MetalSplatter
+        product: MetalSplatter
+      - package: MetalSplatter
+        product: SplatIO
+      - package: AssimpBinary
+        product: AssimpBinary
+      - sdk: libc++.tbd
+      - sdk: libz.tbd
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.splatlab.tests
