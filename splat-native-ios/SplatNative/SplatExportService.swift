@@ -84,6 +84,7 @@ enum SplatExportService {
     }
 
     private static let dotSplatRecordByteWidth = 32
+    private static let hashChunkBytes = 1_024 * 1_024
 
     /// Convert Msplat's `.splat` result into a standards-oriented export file.
     /// The destination is written through a temporary file and only replaces the final output
@@ -177,8 +178,10 @@ enum SplatExportService {
             )
             try Task.checkCancellation()
 
-            let assetData = try Data(contentsOf: assetURL, options: [.mappedIfSafe])
-            guard !assetData.isEmpty else { throw ExportError.outputMissing }
+            let assetByteLength = try fileByteLength(assetURL)
+            guard assetByteLength > 0 else { throw ExportError.outputMissing }
+            let assetHash = try sha256Hex(fileURL: assetURL)
+            try Task.checkCancellation()
 
             var previewURL: URL?
             if let previewJPEG, !previewJPEG.isEmpty {
@@ -190,8 +193,8 @@ enum SplatExportService {
             let asset = BrowserShareManifest.Asset(
                 fileName: assetURL.lastPathComponent,
                 mediaType: "application/octet-stream",
-                byteLength: assetData.count,
-                sha256: sha256Hex(assetData)
+                byteLength: assetByteLength,
+                sha256: assetHash
             )
             let manifest = BrowserShareManifest(
                 primaryAsset: asset,
@@ -238,10 +241,28 @@ enum SplatExportService {
         SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
     }
 
-    private static func validateNonEmptyFile(_ url: URL) throws {
-        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
-        guard let size = attributes[.size] as? NSNumber, size.intValue > 0 else {
-            throw ExportError.outputMissing
+    /// Hashes large export assets with a bounded working set instead of materializing the entire
+    /// file as `Data`. This matters for browser-share packages near the upload-size ceiling.
+    static func sha256Hex(fileURL: URL) throws -> String {
+        let handle = try FileHandle(forReadingFrom: fileURL)
+        defer { try? handle.close() }
+
+        var hasher = SHA256()
+        while true {
+            try Task.checkCancellation()
+            guard let chunk = try handle.read(upToCount: hashChunkBytes), !chunk.isEmpty else { break }
+            hasher.update(data: chunk)
         }
+        return hasher.finalize().map { String(format: "%02x", $0) }.joined()
+    }
+
+    private static func fileByteLength(_ url: URL) throws -> Int {
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        guard let size = attributes[.size] as? NSNumber else { throw ExportError.outputMissing }
+        return size.intValue
+    }
+
+    private static func validateNonEmptyFile(_ url: URL) throws {
+        guard try fileByteLength(url) > 0 else { throw ExportError.outputMissing }
     }
 }
