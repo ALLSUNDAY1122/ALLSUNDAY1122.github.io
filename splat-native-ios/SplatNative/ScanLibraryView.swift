@@ -354,7 +354,7 @@ private struct SavedSplatView: View {
             viewerState.schedulePersistence()
         }
         .sheet(isPresented: $showingShare) {
-            ShareSheet(items: [url])
+            SplatExportOptionsView(sourceURL: url)
         }
     }
 
@@ -388,7 +388,7 @@ private struct SavedSplatView: View {
                     viewerState.persistNow()
                     showingShare = true
                 } label: {
-                    Label("共有", systemImage: "square.and.arrow.up")
+                    Label("書き出す", systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.mint)
