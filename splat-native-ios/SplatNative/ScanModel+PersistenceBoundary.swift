@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 /// Stable owner-facing contract for persistence, resume and reprocess flows.
 ///
@@ -13,6 +14,23 @@ protocol ScanPersistenceBoundary: AnyObject {
     func restoreSavedProject(id: String)
     func discardAndReset()
     func retryGeneration()
+    func returnHomePreservingProject()
 }
 
-extension ScanModel: ScanPersistenceBoundary {}
+extension ScanModel: ScanPersistenceBoundary {
+    /// Leave the currently selected project without deleting its durable on-disk project.
+    ///
+    /// This deliberately does not call `discardAndReset()`: that method is reserved for
+    /// explicit destructive discard flows because it moves the current project to Trash.
+    /// Starting or restoring another project will replace the in-memory project binding,
+    /// while the current project remains available from the local library.
+    func returnHomePreservingProject() {
+        session?.pause()
+        resultURL = nil
+        previewImage = nil
+        isCapturePaused = false
+        trackingMessage = "保存済みスキャンから再開できます"
+        phase = .ready
+        UIApplication.shared.isIdleTimerDisabled = false
+    }
+}
