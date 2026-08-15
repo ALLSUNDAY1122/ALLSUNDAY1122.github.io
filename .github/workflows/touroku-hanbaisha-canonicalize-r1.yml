@@ -1,0 +1,88 @@
+name: Canonicalize Touhan R1
+
+on:
+  push:
+    paths:
+      - '.github/workflows/touroku-hanbaisha-canonicalize-r1.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  canonicalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build canonical R1 JSON
+        run: |
+          cat touroku-hanbaisha-sprint/questions.js \
+              touroku-hanbaisha-sprint/questions-extra.js \
+              touroku-hanbaisha-sprint/questions-v05-ch1.js \
+              touroku-hanbaisha-sprint/questions-v05-ch2.js \
+              touroku-hanbaisha-sprint/questions-v05-ch3a.js \
+              touroku-hanbaisha-sprint/questions-v05-ch3b.js \
+              touroku-hanbaisha-sprint/questions-v05-ch4.js \
+              touroku-hanbaisha-sprint/questions-v05-ch5.js > /tmp/r1-source.js
+          cat >> /tmp/r1-source.js <<'NODE'
+          const fs=require('fs');
+          const outDir='touroku-hanbaisha-sprint/questions/exam-1';
+          fs.mkdirSync(outDir,{recursive:true});
+          const subjects={
+            '第1章':'医薬品に共通する特性と基本的な知識',
+            '第2章':'人体の働きと医薬品',
+            '第3章':'主な医薬品とその作用',
+            '第4章':'薬事関係法規・制度',
+            '第5章':'医薬品の適正使用・安全対策'
+          };
+          const legalSales='https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000082514.html';
+          const handbook='https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000082537.html';
+          const abuse='https://www.mhlw.go.jp/web/t_doc?dataId=00tc9728&dataType=1&pageNo=1';
+          const quantity='https://www.mhlw.go.jp/web/t_doc?dataId=00tc9723&dataType=1&pageNo=1';
+          function sourceFor(q){
+            const n=parseInt(String(q.id).split('-').pop(),10)||0;
+            if(n===111) return quantity;
+            if(n===109||n===110) return abuse;
+            if(q.chapter==='第4章') return legalSales;
+            return handbook;
+          }
+          const canonical=QUESTIONS.map(q=>({
+            id:q.id,
+            round:1,
+            chapter:q.chapter,
+            subject:subjects[q.chapter],
+            topic:q.topic,
+            question:q.question,
+            choices:q.choices,
+            correct_index:q.answer,
+            answer:q.answer,
+            point:q.point,
+            detail:q.detail,
+            explanation:q.detail,
+            source_url:sourceFor(q),
+            reference_date:'2026-08-15',
+            origin_type:'original_from_primary_source',
+            rights_basis:'厚生労働省の一次資料に基づく独自作問。公式問題本文の転載ではない。'
+          }));
+          const expected={'第1章':20,'第2章':20,'第3章':40,'第4章':20,'第5章':20};
+          if(canonical.length!==120) throw new Error(`R1 total ${canonical.length}/120`);
+          for(let ch=1;ch<=5;ch++){
+            const key=`第${ch}章`, rows=canonical.filter(q=>q.chapter===key);
+            if(rows.length!==expected[key]) throw new Error(`${key}: ${rows.length}/${expected[key]}`);
+            fs.writeFileSync(`${outDir}/chapter-${ch}.json`,JSON.stringify(rows,null,2)+'\n');
+          }
+          NODE
+          node /tmp/r1-source.js
+      - name: Commit canonical R1 JSON
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-sprint/questions/exam-1
+          if git diff --cached --quiet; then
+            echo 'No canonical changes to commit.'
+          else
+            git commit -m 'Canonicalize Touhan exam 1 questions'
+            git push origin HEAD:main
+          fi
