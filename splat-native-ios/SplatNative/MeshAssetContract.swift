@@ -7,6 +7,7 @@ enum MeshAssetFormat: String, Codable, Sendable {
 
 enum MeshAssetSource: String, Codable, Sendable {
     case lidarSceneReconstruction
+    case lidarRGBTextureBake
     case photogrammetry
     case visualFeatureFallback
     case rawReprocess
@@ -54,14 +55,11 @@ enum MeshAssetContract {
     ) -> MeshAssetDescriptor? {
         let ext = url.pathExtension.lowercased()
         let format: MeshAssetFormat
-        let textured: Bool
         switch ext {
         case "obj":
             format = .obj
-            textured = false
         case "usdz":
             format = .usdz
-            textured = true
         default:
             return nil
         }
@@ -75,7 +73,7 @@ enum MeshAssetContract {
             format: format,
             source: source,
             hasMetricScale: metric,
-            isTextured: textured,
+            isTextured: isTextured(url: url, format: format, source: source),
             rawProjectURL: rawProjectURL
         )
     }
@@ -90,10 +88,16 @@ enum MeshAssetContract {
         return sidecarURL
     }
 
+    private static func isTextured(url: URL, format: MeshAssetFormat, source: MeshAssetSource) -> Bool {
+        if format == .usdz { return true }
+        if source == .lidarRGBTextureBake { return true }
+        return url.lastPathComponent.lowercased().contains("textured")
+    }
+
     private static func hasMetricScale(format: MeshAssetFormat, source: MeshAssetSource) -> Bool {
         guard format == .obj else { return false }
         switch source {
-        case .lidarSceneReconstruction, .visualFeatureFallback, .simplified:
+        case .lidarSceneReconstruction, .lidarRGBTextureBake, .visualFeatureFallback, .simplified:
             return true
         case .photogrammetry, .rawReprocess, .unknown:
             return false
@@ -102,10 +106,11 @@ enum MeshAssetContract {
 
     private static func inferSource(url: URL) -> MeshAssetSource {
         let name = url.lastPathComponent.lowercased()
+        if name == "mesh-textured.obj" || name.contains("rgb-textured") { return .lidarRGBTextureBake }
         if name.contains("visual-mesh") { return .visualFeatureFallback }
         if name.contains("reprocessed") { return .rawReprocess }
         if name.contains("simplified") { return .simplified }
-        if name.contains("textured") || url.pathExtension.lowercased() == "usdz" { return .photogrammetry }
+        if url.pathExtension.lowercased() == "usdz" { return .photogrammetry }
         if name == "mesh.obj" || name.contains("cropped") { return .lidarSceneReconstruction }
         return .unknown
     }
