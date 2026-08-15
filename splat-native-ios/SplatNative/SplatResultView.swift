@@ -108,12 +108,11 @@ struct SplatResultView: View {
             HStack(spacing: 9) {
                 Button {
                     viewerState.persistNow()
-                    model.retryGeneration()
+                    model.enhanceResult()
                 } label: {
-                    Label("再処理", systemImage: "arrow.clockwise")
+                    Label("品質向上", systemImage: "sparkles")
                 }
                 .buttonStyle(ViewerActionButtonStyle())
-                .disabled(!model.canRetryGeneration)
 
                 Button {
                     viewerState.persistNow()
@@ -122,6 +121,17 @@ struct SplatResultView: View {
                     Label("書き出す", systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(ViewerActionButtonStyle())
+            }
+
+            HStack(spacing: 9) {
+                Button {
+                    viewerState.persistNow()
+                    model.retryGeneration()
+                } label: {
+                    Label("再処理", systemImage: "arrow.clockwise")
+                }
+                .buttonStyle(ViewerActionButtonStyle())
+                .disabled(!model.canRetryGeneration)
 
                 Button {
                     confirmNewScan = true
