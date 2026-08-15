@@ -51,11 +51,13 @@ jobs:
           test -f splat-native-ios/SplatNative/MeshRawReprocess.swift
           test -f splat-native-ios/SplatNative/MeshSimplifier.swift
           test -f splat-native-ios/SplatNative/MeshVisualFallback.swift
+          test -f splat-native-ios/SplatNative/MeshAssetContract.swift
           grep -q 'ARMeshAnchor' splat-native-ios/SplatNative/MeshScanModel.swift
           grep -q 'PhotogrammetrySession' splat-native-ios/SplatNative/MeshScanModel.swift
           grep -q 'smoothedSceneDepth' splat-native-ios/SplatNative/MeshDepthRecorder.swift
           grep -q 'rawFeaturePoints' splat-native-ios/SplatNative/MeshVisualFallback.swift
           grep -q 'vertex-cluster simplified mesh' splat-native-ios/SplatNative/MeshSimplifier.swift
+          grep -q 'ARKit world space; Y-up; right-handed' splat-native-ios/SplatNative/MeshAssetContract.swift
           ! grep -R -nE 'TODO.*Mesh|placeholder.*Mesh|fake.*mesh|mock.*mesh' splat-native-ios/SplatNative/Mesh*.swift
           ! grep -R -n 'URLSession' splat-native-ios/SplatNative/Mesh*.swift
 
