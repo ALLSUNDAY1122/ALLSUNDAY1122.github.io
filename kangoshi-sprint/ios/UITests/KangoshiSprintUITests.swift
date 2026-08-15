@@ -13,10 +13,11 @@ final class KangoshiSprintUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["看護師国家試験"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.buttons["今日のスプリント"].exists)
         app.buttons["今日のスプリント"].tap()
-        XCTAssertTrue(app.buttons["閉じる"].waitForExistence(timeout: 5))
+        let close = app.buttons["閉じる"]
+        XCTAssertTrue(close.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS '1/'")).firstMatch.exists)
-        app.buttons["閉じる"].tap()
-        XCTAssertTrue(app.tabBars.buttons["ホーム"].waitForExistence(timeout: 10))
+        close.tap()
+        XCTAssertTrue(close.waitForNonExistence(timeout: 10))
     }
 
     func testFreeMockGateAndRestoreEntry() throws {
