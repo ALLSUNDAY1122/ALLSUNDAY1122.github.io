@@ -1,147 +1,257 @@
-# Scaniverse Parity — Session Prompts
+# Scaniverse Parity — 4 Build Lanes
 
-Use one new ChatGPT project session per section. Every session works in `ALLSUNDAY1122/ALLSUNDAY1122.github.io`, reads `splat-native-ios/SCANIVERSE_PARITY_PLAN.md` and Notion `Scaniverse同等化｜9セッション分割・統括正本 v1.0`, then works only on its assigned branch unless S0 is integrating.
+Updated: 2026-08-15
 
-## Branch assignment
+## Structure
 
-| Session | Branch |
-|---|---|
-| S0 Integration / Parity Gate | `feature/splat-native-ios-poc` |
-| S1 Capture / Tracking | `scaniverse/s1-capture` |
-| S2 Splat Reconstruction | `scaniverse/s2-splat-reconstruction` |
-| S3 Splat Viewer / Edit | `scaniverse/s3-splat-viewer-edit` |
-| S4 Mesh / Photogrammetry | `scaniverse/s4-mesh-photogrammetry` |
-| S5 Library / Lifecycle | `scaniverse/s5-library-lifecycle` |
-| S6 Export / Video / Share | `scaniverse/s6-export-video-share` |
-| S7 Map / Discover / Backend | `scaniverse/s7-map-discover-backend` |
-| S8 Adversarial QA | `scaniverse/s8-adversarial-qa` |
+There is one integration headquarters and four implementation-heavy build lanes.
 
-## COMMON RULES
+| Role | Branch | User-visible responsibility |
+|---|---|---|
+| Integration HQ | `feature/splat-native-ios-poc` | integrate A-D, shared app shell, cross-lane fixes, integrated CI/runtime flows, final harsh-review fixes |
+| A — Capture → Splat | `scaniverse/a-capture-reconstruction` | press Scan → capture/track → on-device Gaussian Splat is actually generated |
+| B — View/Edit + Mesh | `scaniverse/b-view-edit-mesh` | view/edit/measure Splat + capture/reconstruct/edit/measure Mesh |
+| C — Library + Export | `scaniverse/c-library-export` | keep scans safely → resume/reprocess → export/video/share correctly |
+| D — Share/Discover | `scaniverse/d-share-discover` | account → explicit publish → browser URL → Map/Discover → unpublish/delete |
 
-You are one specialist session in the Scaniverse functional-parity program. The goal is not “a useful toy scanner” and not “good enough for omochabako.” The goal is independently implemented functional and practical-quality parity with the current consumer Scaniverse iOS experience. Do not copy Scaniverse proprietary code, trademark, logo, artwork, or copyrighted assets.
+The previous S0-S8 structure is retired. Old S1-S8 branches are frozen migration sources only; do not start new development on them.
 
-Treat current GitHub as implementation truth. Work by loop engineering:
+## Common operating rule
 
-`inspect actual state → compare with current Scaniverse → identify largest gap → implement → test/build/runtime-check where possible → harsh review → fix → repeat`.
+The target is independently implemented functional and practical-quality parity with the current consumer Scaniverse iOS experience. Do not copy Scaniverse proprietary source, trademark, logo, artwork, or copyrighted assets.
 
-Do not stop because a PoC works. Do not stop because compilation passes. Do not ask the user to say “next.” Continue until every parity row you own is `PARITY`, or the immediate next step truly requires human-only real-device/Apple/external judgment. If the same approach produces no new progress three times, invoke NO_PROGRESS and change method.
+Every lane works by loop engineering:
 
-After every meaningful fix, add a regression check. Never fake 3D, export, progress, map content, or network behavior. Never substitute a textured polygon for a Gaussian Splat. Do not mix `omochabako` branding or memory-specific UX into Scan Lab before the global parity gate is complete.
+`inspect actual state → compare with Scaniverse → identify the largest real gap → implement → build/test/runtime-check → harsh review → improve → repeat`
 
-When a gap is outside your scope, record a precise requirement for S0 instead of silently ignoring it or taking over unrelated architecture.
+Rules:
+
+- QA is part of every build lane; there is no separate QA-only lane.
+- A green compile is not completion.
+- “PoCとして十分” and “後で改善” are not parity arguments.
+- Never fake reconstruction, exports, network behavior, processing progress, Map/Discover content, or replace Gaussian Splat with textured polygons.
+- Add a regression gate after every meaningful defect fix.
+- Continue without asking the user for “next” until the immediate next action truly requires a physical-device, Apple-authenticated, legal, or final-product human judgment.
+- When a change crosses lane boundaries, record the dependency and let Integration HQ resolve the shared contract rather than creating two competing implementations.
+- Integration HQ is not passive management: it implements shared shell/contracts, resolves semantic conflicts, fixes cross-lane bugs, and runs integrated harsh-review loops.
+
+## Migration rule
+
+The new branches intentionally preserve the strongest existing implementation as their starting point. Their first task is to absorb the paired legacy source semantically. Do not choose one whole shared file and discard the other implementation.
+
+- A starts from old S2 and must absorb `scaniverse/s1-capture`.
+- B starts from old S4 and must absorb `scaniverse/s3-splat-viewer-edit`.
+- C starts from old S6 and must absorb `scaniverse/s5-library-lifecycle`.
+- D starts from old S7 and continues that implementation directly.
+- Old S8 findings are acceptance requirements distributed across A-D and Integration HQ; S8 is not an active lane.
 
 ---
 
-# S0 — Integration / Parity Gate
+# A — Capture → On-device Gaussian Splat
+
+**Branch:** `scaniverse/a-capture-reconstruction`
+
+## User story
+
+A first-time user points the iPhone at a subject, follows lightweight guidance, completes capture, and receives a real usable Gaussian Splat on-device without needing to understand ARKit or 3DGS.
+
+## Own all of this
+
+### Capture
+- ARKit lifecycle and permissions
+- camera poses/intrinsics
+- RGB frame selection
+- feature points and LiDAR/depth ingestion where available
+- object / room / outdoor capture policy
+- overlap and spatial coverage
+- near/far movement guidance
+- too-fast / insufficient-feature guidance
+- pause/resume and interruption recovery
+- relocalization continuity
+- long-scan warnings and frame limits
+- Ignore LiDAR option architecture
+- storage-write failures while capturing
+- pre-reconstruction quality gate
+
+### Reconstruction
+- coordinate/camera-model correctness
+- point/Gaussian initialization and seed colors
+- optimizer/loss policy
+- densification/pruning/opacity reset
+- SH scheduling
+- sky/background behavior
+- failed-frame rejection
+- standard process and Enhance/retrain
+- checkpoint/resume during processing
+- output validation
+- memory budgets / splat ceilings
+- thermal pause/recovery
+- processing-time instrumentation
+
+## Legacy inputs to preserve
+
+- old S1 PR/source: adaptive coverage, translation-only rejection, tracking recovery, pause/resume, LiDAR toggle, 90s/180s guidance, storage hard-stop
+- old S2 PR/source: colorized initialization, SH3/progressive training, resource guard, checkpoint/thermal handling, sky seeding, Enhance horizon
+
+## Acceptance endpoint
+
+A is not complete merely when `.splat` exists. Representative object/scene captures must repeatedly reach a visually useful Splat without obviously worse holes, doubling, initialization, or failure behavior than Scaniverse, subject to explicit real-device comparison gates.
+
+---
+
+# B — Splat View/Edit/Measure + Mesh
+
+**Branch:** `scaniverse/b-view-edit-mesh`
+
+## User story
+
+Once a 3D asset exists, the user can inspect, correct, measure and use it. The same app also offers a real Mesh path instead of only Splat.
+
+## Own all of this
+
+### Splat interaction
+- useful initial view / auto-framing
+- orbit
+- true pan
+- zoom
+- reset
+- crop
+- exposure
+- contrast
+- measurement
+- non-destructive edit state where practical
+- loading/error states
+- Enhance/Reprocess entry points
+- large-scene render/memory safety
+
+### Mesh
+- Mesh capture mode
+- LiDAR geometry path where supported
+- non-LiDAR photogrammetry/MVS path
+- geometry fusion/refinement
+- texture generation and visibility handling
+- crop/trim
+- appearance editing
+- metric scale contract
+- measurement
+- AR/object viewing where useful
+- raw reprocess to Mesh
+- export-facing Mesh asset contract
+
+## Legacy inputs to preserve
+
+- old S3 PR/source: viewer state, editing/measurement UI and renderer work
+- old S4 PR/source: LiDAR dense fusion, non-LiDAR MVS, geometry refinement, texture baking, trim, appearance, metric audit
+
+## Acceptance endpoint
+
+A user can open a new real scan and use Splat and Mesh workflows without obvious missing consumer controls or placeholder geometry. Viewer and Mesh quality must survive large/off-center/hard scenes and real-device comparison gates.
+
+---
+
+# C — Library / Resume / Reprocess / Export / Video
+
+**Branch:** `scaniverse/c-library-export`
+
+## User story
+
+A scan is a durable user asset, not an ephemeral demo. It survives relaunch/crash, can be resumed or reprocessed, and can be exported in real interoperable formats.
+
+## Own all of this
+
+### Durable lifecycle
+- persistent local scan library
+- project IDs / metadata / thumbnails
+- raw capture retention
+- save before processing
+- process later
+- capture resume
+- crash/interrupted-write recovery
+- safe result commit
+- keep previous good result during reprocess
+- Splat ↔ Mesh reprocess contract
+- safe delete / Recently Deleted where appropriate
+- storage usage and low-storage behavior
+- migration/versioning
+
+### Output
+- standards-correct Splat PLY
+- SPZ
+- Mesh/model exports supported by parity scope: OBJ / FBX / GLB / USDZ / STL and point-cloud outputs such as PLY/LAS where source data supports them
+- independent-reader interoperability tests
+- orientation/scale/color/metadata correctness
+- video render
+- camera paths / speed / aspect ratio
+- cancellation and partial-file cleanup
+- large-scene export memory preflight
+- iOS share sheet
+- trusted browser-share asset package consumed by D
+
+## Legacy inputs to preserve
+
+- old S5 PR/source: `.splatproject` store, checkpoints, process-later/resume, atomic completion, migration/recovery, trash/raw lifecycle
+- old S6 PR/source: real PLY/SPZ, Assimp-based model export, RGB point cloud, H.264 video, memory preflight, browser-share integrity contract
+
+## Acceptance endpoint
+
+A completed or resumable scan cannot disappear during normal lifecycle events, and every advertised export is a real file that an independent consumer can open correctly. Export must accept only trusted completed assets from the lifecycle store.
+
+---
+
+# D — Account / Publish / Browser / Map / Discover
+
+**Branch:** `scaniverse/d-share-discover`
+
+## User story
+
+Local scanning continues to work offline. Only after an explicit user action can a finished scan be uploaded and shared; published scans can be discovered and opened, and the owner can remove them.
+
+## Own all of this
+
+- authentication/account lifecycle
+- minimal profile
+- public / unlisted / private semantics
+- explicit upload only
+- durable asset storage and URLs
+- interactive browser viewer
+- publish metadata
+- opt-in geotagging
+- Map index
+- Discover/feed
+- opening another user’s scan
+- owner unpublish/delete
+- account deletion
+- rate limits
+- moderation/reporting architecture
+- abuse/privacy safeguards
+- backend storage lifecycle
+- privacy/app-review declarations caused by networking
+
+## Legacy input to preserve
+
+- old S7 source: iOS account/publish shell, Supabase backend/migrations/functions, browser viewer, privacy changes
+
+## Acceptance endpoint
+
+No hardcoded demo content counts. Explicit publish must create a durable real share target backed by the real service, discovery must return real published assets, and privacy/ownership controls must work end-to-end.
+
+---
+
+# Integration HQ — this project chat
 
 **Branch:** `feature/splat-native-ios-poc`
 
-Role: program integrator and uncompromising parity auditor.
-
 Own:
-- maintain the parity ledger
-- inspect specialist branch diffs and CI before integration
-- merge compatible specialist changes
-- detect stale claims by reading current source
-- run cross-feature capture→process→edit→save→export→share scenarios
-- maintain known differences vs Scaniverse
-- return regressions to the responsible branch
-- repeatedly review as reconstruction engineer, iOS performance engineer, 3D artist, UX reviewer, privacy/security reviewer, App Store reviewer, and first-time user
 
-Do not declare completion while any consumer parity row is below `PARITY`.
+- the integrated app shell and navigation
+- common contracts among A/B/C/D
+- semantic integration of completed lane waves
+- cross-lane compilation/runtime fixes
+- removal of duplicate/conflicting implementations
+- integrated capture → process → view/edit → save/reprocess → export → publish → discover flows
+- integrated privacy/security/accessibility/performance review
+- regression CI and TestFlight candidate construction
+- final multi-perspective harsh-review loop
+- parity ledger truthfulness
 
----
-
-# S1 — Capture / Tracking / Guidance
-
-**Branch:** `scaniverse/s1-capture`
-
-Make capture as forgiving and simple as Scaniverse.
-
-Own ARKit lifecycle, camera poses, frame policy, raw feature/depth ingestion, overlap, spatial coverage, motion guidance, tracking recovery, resume scan, long-scan warning, LiDAR-use/ignore architecture, and pre-reconstruction quality gates.
-
-Repeated harsh-review questions:
-- Can a novice succeed by pointing and walking?
-- Can near-duplicate frames falsely complete a scan?
-- Can tracking loss recover without throwing away a good scan?
-- Does the policy work for small objects, rooms, and outdoor scenes rather than one hardcoded circle?
-
-Continue until capture is no longer an obvious source of quality disadvantage versus Scaniverse.
-
----
-
-# S2 — Gaussian Splat Reconstruction / Quality / Performance
-
-**Branch:** `scaniverse/s2-splat-reconstruction`
-
-Own the actual on-device 3DGS quality: coordinate correctness, intrinsics, point/Gaussian initialization, optimizer, densification/pruning, opacity resets, SH schedule, loss behavior, failed-frame robustness, sky segmentation, background handling, enhancement passes, output validation, processing time, memory, GPU synchronization, and thermal behavior.
-
-Do not assume msplat defaults are sufficient. Build repeatable configuration benchmarks using representative captures. The recurring question is: “Would a user who just used Scaniverse call this visibly worse?” If yes, keep improving.
-
-No mesh/photo-projection fallback may be counted as Splat parity.
-
----
-
-# S3 — Splat Viewer / Editing / Measurement
-
-**Branch:** `scaniverse/s3-splat-viewer-edit`
-
-Own initial camera selection, framing, orbit, pan, zoom, reset, crop, exposure, contrast, measurement, edit persistence, non-destructive state where practical, Enhance/Reprocess entry points, loading failures, and render performance.
-
-Test off-center scans, outliers, sky, glossy objects, very small objects, and huge scenes. A viewer that can only rotate a `.splat` is not parity.
-
----
-
-# S4 — Mesh / Photogrammetry / LiDAR
-
-**Branch:** `scaniverse/s4-mesh-photogrammetry`
-
-Implement the entire non-Splat path: Mesh mode, LiDAR reconstruction on supported devices, non-LiDAR photogrammetry, scale/range choices where appropriate, geometry cleanup, texture generation, crop/edit, measurement, raw reprocess, and exporter-facing model interfaces.
-
-A button leading to a placeholder is `MISSING`, not `PARTIAL`.
-
----
-
-# S5 — Scan Library / Raw Lifecycle / Reprocess
-
-**Branch:** `scaniverse/s5-library-lifecycle`
-
-Own persistent scan library, IDs, thumbnails, dates/metadata, raw capture retention, save-before-processing, process later, resume, reprocess Splat/Mesh, safe delete, storage usage, interrupted-write recovery, migration/versioning, relaunch persistence, and crash-safe project state.
-
-Simulate app termination at every lifecycle stage. Losing a completed or resumable scan on relaunch is Sev-1.
-
----
-
-# S6 — Export / SPZ / Video / Browser Sharing
-
-**Branch:** `scaniverse/s6-export-video-share`
-
-Own standards-correct Splat PLY, SPZ using the open specification/license-compatible implementation, mesh/model exports, independent-reader interoperability tests, export cancellation/errors, video rendering, camera-path controls, speed, aspect ratio, iOS share sheet, and the browser-sharing asset contract used by S7.
-
-An export passes only when an independent consumer opens it with correct orientation, scale, geometry/color behavior, and expected metadata.
-
----
-
-# S7 — Account / Public Share / Map / Discover / Browser Viewer Backend
-
-**Branch:** `scaniverse/s7-map-discover-backend`
-
-Own auth, minimal profile, public/unlisted/private semantics, upload, durable asset URLs, interactive browser viewer, map index, explicit geotagging, Discover/feed, opening other users’ scans, owner delete/unpublish, rate limits, moderation architecture, abuse/privacy controls, and server storage lifecycle.
-
-This is the only session that should introduce intentional network upload into the consumer app. Local capture and personal processing must continue to work offline; upload happens only after explicit user action.
-
-A hardcoded map or sample feed is not parity.
-
----
-
-# S8 — Performance / UX / Adversarial QA / TestFlight
-
-**Branch:** `scaniverse/s8-adversarial-qa`
-
-Assume every other specialist is overconfident and prove them wrong.
-
-Own full-flow adversarial testing, compatibility, low storage, battery/thermal stress, memory pressure, long scans, background/foreground transitions, interruptions, permissions, offline behavior, corrupt projects, huge outputs, rendering performance, basic accessibility, UI consistency, privacy verification, licenses, TestFlight, and App Store gates.
-
-After each integration wave, classify Sev-1/2/3 findings. Fix small cross-cutting defects on your branch; route subsystem defects back to their owner. A green build is only the start of review.
-
-Final stop gate: no unresolved Sev-1/Sev-2 and S0 can defensibly mark all consumer rows `PARITY`.
+A-D should build product code. HQ should continuously turn those outputs into one working app rather than allowing branch inventory to grow indefinitely.
