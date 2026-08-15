@@ -43,10 +43,13 @@ jobs:
           grep -q 'nanoflann-BSD.txt' SplatNative.xcodeproj/project.pbxproj
           grep -q 'nlohmann-json-MIT.txt' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MsplatRuntimeSmokeTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatExportServiceTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MeshExportServiceTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'SplatVideoConfigurationTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
-      - name: Build msplat smoke-test bundle for iOS Simulator
+      - name: Build test bundle for iOS Simulator
         timeout-minutes: 8
         working-directory: splat-native-ios
         run: |
@@ -55,6 +58,37 @@ jobs:
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -parallel-testing-enabled NO \
             CODE_SIGNING_ALLOWED=NO build-for-testing
+      - name: Run S6 export regression tests on iOS Simulator
+        timeout-minutes: 10
+        working-directory: splat-native-ios
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcrun simctl list devices available -j > /tmp/simulators.json
+          SIMULATOR_ID=$(python3 - <<'PY'
+          import json
+          data = json.load(open('/tmp/simulators.json'))
+          candidates = []
+          for runtime, devices in data.get('devices', {}).items():
+              if '.iOS-' not in runtime:
+                  continue
+              for device in devices:
+                  if device.get('isAvailable') and device.get('name', '').startswith('iPhone'):
+                      candidates.append((runtime, device['name'], device['udid']))
+          if not candidates:
+              raise SystemExit('No available iPhone simulator found')
+          candidates.sort(reverse=True)
+          print(candidates[0][2])
+          PY
+          )
+          echo "Using simulator: $SIMULATOR_ID"
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
+            -sdk iphonesimulator -destination "platform=iOS Simulator,id=$SIMULATOR_ID" \
+            -parallel-testing-enabled NO \
+            CODE_SIGNING_ALLOWED=NO test \
+            -only-testing:SplatNativeTests/SplatExportServiceTests \
+            -only-testing:SplatNativeTests/MeshExportServiceTests \
+            -only-testing:SplatNativeTests/SplatVideoConfigurationTests
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true
