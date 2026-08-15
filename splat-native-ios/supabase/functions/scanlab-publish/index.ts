@@ -58,8 +58,16 @@ Deno.serve(async (req) => {
   const slash = scan.asset_path.lastIndexOf("/");
   const folder = slash > 0 ? scan.asset_path.slice(0, slash) : "";
   const fileName = slash > 0 ? scan.asset_path.slice(slash + 1) : scan.asset_path;
-  const { data: files, error: listError } = await admin.storage.from("scanlab-assets").list(folder, { search: fileName, limit: 10 });
-  if (listError || !(files ?? []).some((f) => f.name === fileName)) return json({ error: "asset_missing" }, 409);
+
+  // Network publication accepts C2's explicit browser-share contract only. Requiring both
+  // `scene.spz` and its integrity manifest makes the legacy raw result.splat upload path
+  // impossible to publish even if an older client attempts to call this function directly.
+  if (fileName !== "scene.spz") return json({ error: "trusted_package_required" }, 409);
+  const { data: files, error: listError } = await admin.storage.from("scanlab-assets").list(folder, { limit: 20 });
+  if (listError) return json({ error: "asset_check_failed" }, 503);
+  const names = new Set((files ?? []).map((f) => f.name));
+  if (!names.has("scene.spz")) return json({ error: "asset_missing" }, 409);
+  if (!names.has("manifest.json")) return json({ error: "manifest_missing" }, 409);
 
   const { data: updated, error: updateError } = await admin
     .from("scanlab_scans")
