@@ -501,10 +501,32 @@ final class ScanProjectStore {
         let hasTransforms = fileManager.fileExists(atPath: projectURL.appendingPathComponent("transforms.json").path)
         let hasPoints = fileManager.fileExists(atPath: projectURL.appendingPathComponent("points3D.ply").path)
         let resultURL = projectURL.appendingPathComponent(Self.splatResultFileName)
-        let hasResult = validSplat(at: resultURL)
-        let stage: ScanProjectStage = hasResult ? .finished : ((hasTransforms && hasPoints) ? .captured : .capturing)
+        let structurallyValidLegacyResult = validSplat(at: resultURL)
+        let committedResult: URL? = try? committedSplatURL(projectURL: projectURL)
+        let hasProcessableRaw = hasTransforms && hasPoints && !imageURLs.isEmpty
+
+        let stage: ScanProjectStage
+        let migrationError: String?
+        if committedResult != nil {
+            stage = .finished
+            migrationError = nil
+        } else if hasProcessableRaw {
+            stage = .captured
+            migrationError = structurallyValidLegacyResult
+                ? "旧バージョンの3D結果は完了確認情報がないため、rawデータから安全に再生成できます。"
+                : nil
+        } else if structurallyValidLegacyResult {
+            stage = .failed
+            migrationError = "旧バージョンの3D結果は完了確認情報がなく、完成データとして安全に確認できません。ファイル自体は削除していません。"
+        } else {
+            stage = .capturing
+            migrationError = nil
+        }
+
         var outputs: [String: String] = [:]
-        if hasResult { outputs[ScanRepresentationKind.splat.rawValue] = resultURL.lastPathComponent }
+        if let committedResult {
+            outputs[ScanRepresentationKind.splat.rawValue] = committedResult.lastPathComponent
+        }
         var manifest = ScanProjectManifest(
             id: id,
             title: "保存済みスキャン",
@@ -513,7 +535,8 @@ final class ScanProjectStore {
             stage: stage,
             acceptedFrames: imageURLs.count,
             rawDataRetained: !imageURLs.isEmpty,
-            outputs: outputs
+            outputs: outputs,
+            lastError: migrationError
         )
         if let firstImage = imageURLs.first {
             let thumbnail = projectURL.appendingPathComponent(Self.thumbnailFileName)
