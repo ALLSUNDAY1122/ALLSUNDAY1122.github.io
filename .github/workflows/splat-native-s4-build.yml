@@ -42,12 +42,22 @@ jobs:
           cd splat-native-ios
           xcodegen generate
 
-      - name: S4 anti-placeholder audit
+      - name: S4 real-mesh anti-placeholder audit
         run: |
           set -euxo pipefail
           test -f splat-native-ios/SplatNative/MeshScanModel.swift
           test -f splat-native-ios/SplatNative/MeshScanView.swift
-          ! grep -R -nE 'TODO.*Mesh|placeholder.*Mesh|fake.*mesh' splat-native-ios/SplatNative/MeshScan*.swift
+          test -f splat-native-ios/SplatNative/MeshDepthRecorder.swift
+          test -f splat-native-ios/SplatNative/MeshRawReprocess.swift
+          test -f splat-native-ios/SplatNative/MeshSimplifier.swift
+          test -f splat-native-ios/SplatNative/MeshVisualFallback.swift
+          grep -q 'ARMeshAnchor' splat-native-ios/SplatNative/MeshScanModel.swift
+          grep -q 'PhotogrammetrySession' splat-native-ios/SplatNative/MeshScanModel.swift
+          grep -q 'smoothedSceneDepth' splat-native-ios/SplatNative/MeshDepthRecorder.swift
+          grep -q 'rawFeaturePoints' splat-native-ios/SplatNative/MeshVisualFallback.swift
+          grep -q 'vertex-cluster simplified mesh' splat-native-ios/SplatNative/MeshSimplifier.swift
+          ! grep -R -nE 'TODO.*Mesh|placeholder.*Mesh|fake.*mesh|mock.*mesh' splat-native-ios/SplatNative/Mesh*.swift
+          ! grep -R -n 'URLSession' splat-native-ios/SplatNative/Mesh*.swift
 
       - name: Build iOS device target without signing
         shell: bash
