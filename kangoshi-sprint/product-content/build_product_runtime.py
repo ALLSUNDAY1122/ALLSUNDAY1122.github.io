@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parent
 APP=ROOT.parent
 DRAFT=ROOT/'enriched-draft'
 MANIFEST=ROOT/'manifest.json'
-EXPERT_QUEUE=ROOT/'situation-audit'/'expert-review-queue.json'
+REVIEW_QUEUE=ROOT/'situation-audit'/'expert-review-queue.json'
 KNOWN_SPECIALIST_IDS={'K115-AM103','K115-AM114'}
 
 sets=[]
@@ -22,11 +22,11 @@ for sid in ('set1','set2','set3'):
 if len(all_questions)!=720 or len({q['id'] for q in all_questions})!=720:
     raise SystemExit('runtime requires 720 unique canonical questions')
 
-expert_doc=json.loads(EXPERT_QUEUE.read_text(encoding='utf-8'))
-blocked={x.get('questionId') for x in expert_doc.get('items') or [] if x.get('appEligible') is False}
+review_doc=json.loads(REVIEW_QUEUE.read_text(encoding='utf-8'))
+blocked={x.get('questionId') for x in review_doc.get('items') or [] if x.get('appEligible') is False}
 blocked.discard(None)
 if not blocked.issubset(KNOWN_SPECIALIST_IDS):
-    raise SystemExit(f'unexpected expert-blocked ids: {sorted(blocked-KNOWN_SPECIALIST_IDS)}')
+    raise SystemExit(f'unexpected review-blocked ids: {sorted(blocked-KNOWN_SPECIALIST_IDS)}')
 
 def compact(q):
     keep=(
@@ -52,8 +52,8 @@ payload+='const ALL='+json.dumps(runtime,ensure_ascii=False,separators=(',',':')
 payload+='window.KANGOSHI_ALL_QUESTIONS=ALL;\n'
 payload+='window.KANGOSHI_QUESTIONS=ALL.filter(q=>q.releaseEligible!==false);\n'
 payload+='window.KANGOSHI_RUNTIME_META='+json.dumps({
-    'schemaVersion':2,'canonicalTotal':720,'runtimeEligible':len(eligible),'expertBlockedIds':sorted(blocked),
-    'source':'product-content/enriched-draft','generatedBy':'build_product_runtime.py'
+    'schemaVersion':3,'canonicalTotal':720,'runtimeEligible':len(eligible),'releaseBlockedIds':sorted(blocked),
+    'reviewBasis':'ai_ci_primary_source_audit','source':'product-content/enriched-draft','generatedBy':'build_product_runtime.py'
 },ensure_ascii=False,separators=(',',':'))+';\n})();\n'
 (APP/'questions-runtime.js').write_text(payload,encoding='utf-8')
 
@@ -68,19 +68,24 @@ for s in manifest.get('sets') or []:
     eligible_count=240-len(blocked_ids)
     s['questionCount']=240
     s['runtimeEligibleCount']=eligible_count
-    s['expertReviewedCount']=eligible_count
-    s['expertBlockedIds']=blocked_ids
-    s['status']='ready' if eligible_count==240 else 'pending_expert_review'
+    s['releaseEligibleCount']=eligible_count
+    s['releaseBlockedIds']=blocked_ids
+    s['reviewBasis']='ai_ci_primary_source_audit'
+    s.pop('expertReviewedCount',None)
+    s.pop('expertBlockedIds',None)
+    s['status']='ready' if eligible_count==240 else 'pending_release_review'
     (ready if eligible_count==240 else pending).append(exam)
 manifest['runtime']={
-    'schemaVersion':2,'canonicalTotal':720,'runtimeEligible':len(eligible),'blocked':sorted(blocked),
+    'schemaVersion':3,'canonicalTotal':720,'runtimeEligible':len(eligible),'releaseBlocked':sorted(blocked),
+    'reviewBasis':'ai_ci_primary_source_audit',
     'readyExamSets':sorted(ready,reverse=True),'pendingExamSets':sorted(pending,reverse=True)
 }
 MANIFEST.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 audit={
-    'schemaVersion':2,'canonicalTotal':len(runtime),'runtimeEligible':len(eligible),
-    'blockedIds':sorted(blocked),'byExam':{},'mediaResolved':0,'mediaMissingAssets':[],
+    'schemaVersion':3,'canonicalTotal':len(runtime),'runtimeEligible':len(eligible),
+    'blockedIds':sorted(blocked),'reviewBasis':'ai_ci_primary_source_audit',
+    'byExam':{},'mediaResolved':0,'mediaMissingAssets':[],
     'readyExamSets':sorted(ready,reverse=True),'pendingExamSets':sorted(pending,reverse=True),
     'pass':True,'errors':[]
 }
