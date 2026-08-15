@@ -71,7 +71,7 @@ enum SplatExportService {
             self.primaryAsset = primaryAsset
             self.previewFileName = previewFileName
             self.createdAt = createdAt
-            // S7 may add an explicitly approved geotag later. S6 never infers or embeds location.
+            // D may add an explicitly approved geotag later. C never infers or embeds location.
             self.containsLocation = false
         }
     }
@@ -141,14 +141,16 @@ enum SplatExportService {
         }
     }
 
-    /// Creates the local asset contract consumed by S7's explicit upload flow.
-    /// This does not perform networking and does not create a public URL.
+    /// Creates the only local asset contract D should consume for explicit browser/cloud sharing.
+    /// It accepts only an atomically committed completed Splat, applies the same low-storage gate as
+    /// local SPZ export, and never performs networking or embeds location on C's behalf.
     static func makeBrowserSharePackage(
         sourceURL: URL,
         previewJPEG: Data? = nil,
         rootDirectory: URL = FileManager.default.temporaryDirectory
     ) async throws -> BrowserSharePackage {
-        let exportedSPZ = try await export(sourceURL: sourceURL, format: .spz)
+        let trustedURL = try SplatExportAdmission.preflight(sourceURL: sourceURL, kind: .spz)
+        let exportedSPZ = try await export(sourceURL: trustedURL, format: .spz)
         try Task.checkCancellation()
 
         let packageURL = rootDirectory
