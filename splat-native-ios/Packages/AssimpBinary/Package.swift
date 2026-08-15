@@ -12,8 +12,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "AssimpBinary",
-            url: "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/releases/download/scanlab-assimp-v6.0.5-1/Assimp-6.0.5-iOS.xcframework.zip",
-            checksum: "4ba91ff505d8703f24542a89de5ca9a5031ff70cb38fc87558bee8a3d4f1f1f0"
+            url: "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/releases/download/scanlab-assimp-v6.0.5-2/Assimp-6.0.5-iOS.xcframework.zip",
+            checksum: "323f517dd4200fc04886d1e979577abcadb3852a7de78028d0e54288e2671417"
         ),
     ]
 )
