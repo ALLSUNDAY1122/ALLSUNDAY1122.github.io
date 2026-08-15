@@ -48,6 +48,72 @@ final class SplatVideoExporterTests: XCTestCase {
         XCTAssertEqual(Int(abs(naturalSize.height)), 720)
     }
 
+    func testMemoryPreflightProducesBoundedEstimateForNormalScene() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("s6-video-memory-normal-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        try makeSparseDotSplat(source, pointCount: 500_000)
+
+        var configuration = SplatVideoConfiguration()
+        configuration.aspectRatio = .landscape16x9
+
+        let estimate = try SplatVideoMemoryPolicy.preflight(
+            sourceURL: source,
+            configuration: configuration,
+            physicalMemoryBytes: 4 * 1024 * 1024 * 1024
+        )
+
+        XCTAssertEqual(estimate.pointCount, 500_000)
+        XCTAssertLessThan(estimate.estimatedPeakBytes, estimate.budgetBytes)
+        print(
+            "S6_MEMORY_PREFLIGHT normal pointCount=\(estimate.pointCount) "
+            + "estimatedPeakMB=\(estimate.estimatedPeakMegabytes) budgetMB=\(estimate.budgetMegabytes)"
+        )
+    }
+
+    func testExporterRejectsOversizedSceneBeforeDecode() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("s6-video-memory-large-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        // 3,000,000 * 32 bytes is a valid fixed-width .splat length but exceeds the
+        // exporter's capped working-set budget. A sparse file keeps this regression cheap.
+        try makeSparseDotSplat(source, pointCount: 3_000_000)
+
+        var configuration = SplatVideoConfiguration()
+        configuration.aspectRatio = .square1x1
+        configuration.cameraMotion = .fixed
+        configuration.speed = .fast
+        configuration.framesPerSecond = 1
+
+        do {
+            _ = try await SplatVideoExporter.export(
+                sourceURL: source,
+                configuration: configuration,
+                destinationDirectory: root
+            )
+            XCTFail("Expected memory preflight to reject the oversized scene")
+        } catch let error as SplatVideoMemoryPolicy.PolicyError {
+            guard case let .sceneTooLarge(pointCount, estimatedPeakMegabytes, budgetMegabytes) = error else {
+                return XCTFail("Unexpected policy error: \(error)")
+            }
+            XCTAssertEqual(pointCount, 3_000_000)
+            XCTAssertGreaterThan(estimatedPeakMegabytes, budgetMegabytes)
+            XCTAssertTrue(error.localizedDescription.contains("安全に動画化できません"))
+            print(
+                "S6_MEMORY_PREFLIGHT rejected pointCount=\(pointCount) "
+                + "estimatedPeakMB=\(estimatedPeakMegabytes) budgetMB=\(budgetMegabytes)"
+            )
+        } catch {
+            XCTFail("Oversized source reached a later decode/render failure instead of preflight: \(error)")
+        }
+    }
+
     private func makePoints() -> [SplatPoint] {
         [
             SplatPoint(
@@ -72,6 +138,13 @@ final class SplatVideoExporterTests: XCTestCase {
                 rotation: simd_quatf(angle: 0, axis: SIMD3<Float>(0, 1, 0))
             ),
         ]
+    }
+
+    private func makeSparseDotSplat(_ url: URL, pointCount: Int) throws {
+        XCTAssertTrue(FileManager.default.createFile(atPath: url.path, contents: nil))
+        let handle = try FileHandle(forWritingTo: url)
+        try handle.truncate(atOffset: UInt64(pointCount * 32))
+        try handle.close()
     }
 
     private func byteCount(_ url: URL) throws -> Int {
