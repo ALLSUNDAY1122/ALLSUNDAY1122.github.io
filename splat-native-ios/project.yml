@@ -10,6 +10,9 @@ packages:
   MetalSplatter:
     url: https://github.com/scier/MetalSplatter.git
     revision: 2b965de1934de38dda1c71cf90bf798aa948a14c
+  Supabase:
+    url: https://github.com/supabase/supabase-swift.git
+    revision: 21d3aaf21ee98f41611f9f75070489fc8b23d882
   AssimpBinary:
     path: Packages/AssimpBinary
 targets:
@@ -26,6 +29,8 @@ targets:
         product: MetalSplatter
       - package: MetalSplatter
         product: SplatIO
+      - package: Supabase
+        product: Supabase
       - package: AssimpBinary
         product: AssimpBinary
       - sdk: libc++.tbd
@@ -39,6 +44,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: Scan Lab
         INFOPLIST_KEY_NSCameraUsageDescription: 周囲を撮影して端末内で3Dスキャンを生成するため、カメラを使用します。
+        INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: Mapへ公開する地点をユーザーが明示的に設定した場合だけ、現在地を取得します。位置情報は自動送信しません。
         INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
