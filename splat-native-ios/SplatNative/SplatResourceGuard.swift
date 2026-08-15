@@ -29,6 +29,15 @@ enum SplatResourcePauseReason: String, Codable, Sendable {
     case memoryWarning
     case residentMemoryBudget
     case splatBudget
+
+    var userMessage: String {
+        switch self {
+        case .memoryWarning, .residentMemoryBudget:
+            return "端末のメモリ使用量が高くなったため生成を安全に一時停止しました。ほかのアプリを閉じてから「生成だけもう一度試す」で続きから再開できます"
+        case .splatBudget:
+            return "3Dデータが端末の安全上限まで細かくなったため生成を一時停止しました。現在の結果を利用するか、より新しい端末で追加生成してください"
+        }
+    }
 }
 
 struct SplatResourceEvaluation: Equatable, Sendable {
@@ -122,6 +131,38 @@ final class SplatResourceGuard: @unchecked Sendable {
             residentMemoryBytes: resident,
             peakResidentMemoryBytes: peakMemory,
             peakSplatCount: peakSplats
+        )
+    }
+
+    func makeReport(
+        startedAt: Date,
+        startUptime: TimeInterval,
+        passStartIteration: Int,
+        targetIteration: Int,
+        finalIteration: Int,
+        finalSplatCount: Int,
+        initialThermalState: String,
+        finalThermalState: String,
+        outcome: String
+    ) -> SplatReconstructionRunReport {
+        let evaluation = evaluate(splatCount: finalSplatCount)
+        return SplatReconstructionRunReport(
+            schemaVersion: 1,
+            startedAt: startedAt,
+            finishedAt: Date(),
+            elapsedSeconds: max(0, ProcessInfo.processInfo.systemUptime - startUptime),
+            passStartIteration: passStartIteration,
+            targetIteration: targetIteration,
+            finalIteration: finalIteration,
+            finalSplatCount: finalSplatCount,
+            peakSplatCount: evaluation.peakSplatCount,
+            peakResidentMemoryBytes: evaluation.peakResidentMemoryBytes,
+            residentMemoryBudgetBytes: limits.residentMemoryBudgetBytes,
+            maxSplatCount: limits.maxSplatCount,
+            physicalMemoryBytes: physicalMemoryBytes,
+            initialThermalState: initialThermalState,
+            finalThermalState: finalThermalState,
+            outcome: outcome
         )
     }
 
