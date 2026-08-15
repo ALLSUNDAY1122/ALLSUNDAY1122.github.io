@@ -25,7 +25,7 @@ final class MeshExportServiceTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: output), try Data(contentsOf: source))
     }
 
-    func testOBJExportsRealFBXGLBAndSTLContainers() async throws {
+    func testOBJExportsAllSevenRealScaniverseMeshFormats() async throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let source = try writeTriangleOBJ(in: root)
@@ -33,17 +33,21 @@ final class MeshExportServiceTests: XCTestCase {
         let capabilities = Dictionary(
             uniqueKeysWithValues: MeshExportService.capabilities(for: source).map { ($0.format, $0) }
         )
-        XCTAssertEqual(capabilities[.fbx]?.isAvailable, true)
-        XCTAssertEqual(capabilities[.glb]?.isAvailable, true)
-        XCTAssertEqual(capabilities[.stl]?.isAvailable, true)
+        for format in MeshExportService.Format.allCases where format != .usdz {
+            XCTAssertEqual(capabilities[format]?.isAvailable, true, "Expected \(format.rawValue) to be available")
+        }
 
         let fbx = try await MeshExportService.export(sourceURL: source, format: .fbx, destinationDirectory: root)
         let glb = try await MeshExportService.export(sourceURL: source, format: .glb, destinationDirectory: root)
         let stl = try await MeshExportService.export(sourceURL: source, format: .stl, destinationDirectory: root)
+        let ply = try await MeshExportService.export(sourceURL: source, format: .ply, destinationDirectory: root)
+        let las = try await MeshExportService.export(sourceURL: source, format: .las, destinationDirectory: root)
 
         XCTAssertGreaterThan(try byteCount(fbx), 100)
         XCTAssertGreaterThan(try byteCount(glb), 100)
         XCTAssertGreaterThan(try byteCount(stl), 84)
+        XCTAssertGreaterThan(try byteCount(ply), 100)
+        XCTAssertEqual(try byteCount(las), 227 + 3 * 20)
 
         let fbxPrefix = String(decoding: try Data(contentsOf: fbx).prefix(32), as: UTF8.self)
         XCTAssertTrue(fbxPrefix.contains("Kaydara FBX Binary"))
@@ -60,6 +64,53 @@ final class MeshExportServiceTests: XCTestCase {
             let decodedSTL = MDLAsset(url: stl)
             XCTAssertGreaterThan(decodedSTL.count, 0)
         }
+
+        let plyData = try Data(contentsOf: ply)
+        let plyPrefix = String(decoding: plyData.prefix(min(512, plyData.count)), as: UTF8.self)
+        XCTAssertTrue(plyPrefix.hasPrefix("ply\n"))
+        XCTAssertTrue(plyPrefix.contains("format binary_little_endian 1.0"))
+        XCTAssertTrue(plyPrefix.contains("element vertex 3"))
+        XCTAssertTrue(plyPrefix.contains("element face 1"))
+
+        let lasData = try Data(contentsOf: las)
+        XCTAssertEqual(Array(lasData.prefix(4)), [0x4c, 0x41, 0x53, 0x46])
+        XCTAssertEqual(lasData[24], 1)
+        XCTAssertEqual(lasData[25], 2)
+        XCTAssertEqual(lasData[104], 0) // no fabricated RGB when the OBJ has none
+        XCTAssertEqual(readUInt16LE(lasData, 105), 20)
+        XCTAssertEqual(readUInt32LE(lasData, 107), 3)
+    }
+
+    func testVertexColorsArePreservedInPLYAndLASInsteadOfInvented() async throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("colored.obj")
+        let obj = """
+        v 0 0 0 1 0 0
+        v 1 0 0 0 1 0
+        v 0 1 0 0 0 1
+        f 1 2 3
+        """
+        try obj.write(to: source, atomically: true, encoding: .utf8)
+
+        let ply = try await MeshExportService.export(sourceURL: source, format: .ply, destinationDirectory: root)
+        let las = try await MeshExportService.export(sourceURL: source, format: .las, destinationDirectory: root)
+
+        let plyData = try Data(contentsOf: ply)
+        let plyPrefix = String(decoding: plyData.prefix(min(512, plyData.count)), as: UTF8.self)
+        XCTAssertTrue(plyPrefix.contains("property uchar red"))
+        XCTAssertTrue(plyPrefix.contains("property uchar green"))
+        XCTAssertTrue(plyPrefix.contains("property uchar blue"))
+
+        let lasData = try Data(contentsOf: las)
+        XCTAssertEqual(lasData[104], 2)
+        XCTAssertEqual(readUInt16LE(lasData, 105), 26)
+        XCTAssertEqual(readUInt32LE(lasData, 107), 3)
+
+        let firstPoint = 227
+        XCTAssertEqual(readUInt16LE(lasData, firstPoint + 20), UInt16.max)
+        XCTAssertEqual(readUInt16LE(lasData, firstPoint + 22), 0)
+        XCTAssertEqual(readUInt16LE(lasData, firstPoint + 24), 0)
     }
 
     func testUSDZExportIsOnlyAdvertisedWhenModelIOCanActuallyProduceIt() async throws {
@@ -124,5 +175,16 @@ final class MeshExportServiceTests: XCTestCase {
     private func byteCount(_ url: URL) throws -> Int {
         let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
         return try XCTUnwrap(attributes[.size] as? NSNumber).intValue
+    }
+
+    private func readUInt16LE(_ data: Data, _ offset: Int) -> UInt16 {
+        UInt16(data[offset]) | (UInt16(data[offset + 1]) << 8)
+    }
+
+    private func readUInt32LE(_ data: Data, _ offset: Int) -> UInt32 {
+        UInt32(data[offset]) |
+            (UInt32(data[offset + 1]) << 8) |
+            (UInt32(data[offset + 2]) << 16) |
+            (UInt32(data[offset + 3]) << 24)
     }
 }
