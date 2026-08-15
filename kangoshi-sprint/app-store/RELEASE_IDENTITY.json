@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 2,
-  "updatedAt": "2026-08-15T10:40:00+09:00",
+  "schemaVersion": 3,
+  "updatedAt": "2026-08-15T11:20:00+09:00",
   "standardProcedure": "v2.5",
   "app": "看護師国家試験｜学びスプリント",
   "bundleId": {
@@ -44,8 +44,10 @@
     "releaseSimulatorBuild": true,
     "privacyManifest": true,
     "nativeBuildAuditPass": true,
-    "uiTwoSizeAuditPass": false,
-    "uiTwoSizeAuditStatus": "running_after_deterministic_dismissal_assertion_fix",
+    "sessionDismissalCrashResolved": true,
+    "uiTwoSizeAuditPass": true,
+    "uiTwoSizeAuditWorkflowRunId": 31857874950,
+    "uiDevices": ["iPhone SE (3rd generation)", "iPhone 16 Pro"],
     "canonicalAppIconDriveId": "1VDnbT0s9gEPde4baCfw9kXYfnEHLQrp3",
     "canonicalAppIconSha256": "6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80",
     "canonicalAppIconIntegrated": false
@@ -54,20 +56,33 @@
     "support": "https://allsunday1122.github.io/kangoshi-sprint/support.html",
     "privacy": "https://allsunday1122.github.io/kangoshi-sprint/privacy.html",
     "marketing": "https://allsunday1122.github.io/kangoshi-sprint/",
-    "sourceFilesReady": true
+    "sourceFilesReady": true,
+    "publicHttp200AuditPass": true
+  },
+  "screenshots": {
+    "ready": true,
+    "workflowRunId": 31858045423,
+    "artifactId": 9239701132,
+    "artifactDigest": "sha256:e09f796e67fc238f8d6d156e4a2441cac2ca277fe7a3b2dedc36b2adea1e01e5",
+    "device": "iPhone 16 Pro Max",
+    "screens": ["home", "question", "mock", "settings"],
+    "visualReviewPass": true
   },
   "releaseGate": {
     "contentAndMediaReady": true,
     "storeKitImplementationReady": true,
     "nativeBuildReady": true,
+    "uiAutomationReady": true,
+    "publicPagesReady": true,
+    "appStoreScreenshotsReady": true,
     "codemagicConfigurationReady": true,
     "canonicalAppIconReady": false,
-    "uiAutomationReady": false,
+    "codeSideReadyExceptAppIcon": true,
     "appStoreConnectAppRecordVerified": false,
     "appStoreConnectProductVerified": false,
     "paidAppsAgreementVerified": false,
     "signedInternalTestFlightBuildReady": false,
     "releaseAllowed": false
   },
-  "nextExternalGate": "App Store Connect Appレコード・IAP実登録・契約状態の実値確認後、Internal TestFlight署名ビルドへ進む。App Store本審査への自動提出は禁止。"
+  "nextExternalGate": "正本AppIconバイナリ1ファイルをGitHub所定パスへ無加工アップロードし、App Store Connect Appレコード・IAP実登録・契約状態の実値を確認後、Internal TestFlight署名ビルドへ進む。App Store本審査への自動提出は禁止。"
 }
