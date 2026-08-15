@@ -430,7 +430,12 @@ struct RootScanView: View {
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
 
-            if model.canRetryGeneration {
+            if model.activeProjectCanResume {
+                Button("撮影を再開") {
+                    model.resumeActiveCapture()
+                }
+                .buttonStyle(PrimaryButtonStyle())
+            } else if model.canRetryGeneration {
                 Button("生成だけもう一度試す") {
                     model.retryGeneration()
                 }
