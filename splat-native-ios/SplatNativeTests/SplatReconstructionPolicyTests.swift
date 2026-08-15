@@ -5,10 +5,8 @@ import simd
 
 final class SplatReconstructionPolicyTests: XCTestCase {
     func testStandardProfileKeepsFullSHAndProgressiveRefinement() {
-        let config = SplatReconstructionPolicy.makeConfig(
-            iterations: SplatReconstructionPolicy.standardIterations
-        )
-        XCTAssertEqual(config.iterations, 7_000)
+        let config = SplatReconstructionPolicy.makeConfig()
+        XCTAssertEqual(config.iterations, 30_000)
         XCTAssertEqual(config.shDegree, 3)
         XCTAssertEqual(config.shDegreeInterval, 1_000)
         XCTAssertEqual(config.numDownscales, 1)
@@ -17,6 +15,13 @@ final class SplatReconstructionPolicyTests: XCTestCase {
         XCTAssertEqual(config.resetAlphaEvery, 30)
         XCTAssertEqual(config.stopScreenSizeAt, 4_000)
         XCTAssertEqual(config.ssimWeight, 0.2, accuracy: 0.0001)
+    }
+
+    func testEnhancementAddsRepeatedWorkUntilTrainingHorizon() {
+        XCTAssertEqual(SplatReconstructionPolicy.enhancementTarget(from: 7_000), 12_000)
+        XCTAssertEqual(SplatReconstructionPolicy.enhancementTarget(from: 12_000), 17_000)
+        XCTAssertEqual(SplatReconstructionPolicy.enhancementTarget(from: 29_000), 30_000)
+        XCTAssertEqual(SplatReconstructionPolicy.enhancementTarget(from: 30_000), 30_000)
     }
 
     func testSeedProjectionUsesARKitMinusZForwardAndImageTopLeftCoordinates() {
@@ -79,11 +84,45 @@ final class SplatReconstructionPolicyTests: XCTestCase {
         XCTAssertLessThan(colors[1].red, 40)
     }
 
-    func testForegroundMaskGuardRejectsNearEmptyAndNearFullMasks() {
-        XCTAssertFalse(SplatForegroundIsolator.shouldApplyMask(globalOccupancy: 0.01, centerOccupancy: 0.8))
-        XCTAssertFalse(SplatForegroundIsolator.shouldApplyMask(globalOccupancy: 0.98, centerOccupancy: 0.8))
-        XCTAssertFalse(SplatForegroundIsolator.shouldApplyMask(globalOccupancy: 0.40, centerOccupancy: 0.05))
-        XCTAssertTrue(SplatForegroundIsolator.shouldApplyMask(globalOccupancy: 0.40, centerOccupancy: 0.45))
+    func testSkyClassifierIsConservative() {
+        XCTAssertTrue(SplatSkySeeder.isHighConfidenceSky(
+            SplatSeedSample(red: 70, green: 145, blue: 220),
+            sceneLuma: 0.40
+        ))
+        XCTAssertTrue(SplatSkySeeder.isHighConfidenceSky(
+            SplatSeedSample(red: 225, green: 228, blue: 232),
+            sceneLuma: 0.55
+        ))
+        XCTAssertFalse(SplatSkySeeder.isHighConfidenceSky(
+            SplatSeedSample(red: 210, green: 210, blue: 210),
+            sceneLuma: 0.78
+        ))
+        XCTAssertFalse(SplatSkySeeder.isHighConfidenceSky(
+            SplatSeedSample(red: 40, green: 60, blue: 90),
+            sceneLuma: 0.35
+        ))
+    }
+
+    func testSkySeedRayIsPlacedAtFarFieldDistance() throws {
+        let frame = SplatSeedFrame(
+            filePath: "unused.png",
+            transformMatrix: identityRows,
+            flX: 10,
+            flY: 10,
+            cx: 10,
+            cy: 10,
+            w: 20,
+            h: 20
+        )
+        let point = try XCTUnwrap(SplatSkySeeder.worldPoint(
+            normalizedX: 0.5,
+            normalizedY: 0.5,
+            frame: frame,
+            distance: 20
+        ))
+        XCTAssertEqual(point.x, 0, accuracy: 0.001)
+        XCTAssertEqual(point.y, 0, accuracy: 0.001)
+        XCTAssertEqual(point.z, -20, accuracy: 0.001)
     }
 
     private var identityRows: [[Float]] {

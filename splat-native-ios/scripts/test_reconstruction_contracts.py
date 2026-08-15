@@ -2,8 +2,8 @@
 """Deterministic S2 reconstruction contracts that do not require booting iOS Simulator.
 
 The iOS test bundle is still compiled by xcodebuild build-for-testing, which catches Swift/API/link
-regressions. These contracts cover the reconstruction invariants that previously tempted CI to boot
-an msplat-linked Simulator test process; that runtime path is intentionally reserved for a real device.
+regressions. These contracts cover reconstruction invariants while msplat runtime execution remains a
+real-device gate because the Simulator path has previously stalled in CI.
 """
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 POLICY = (ROOT / "SplatNative" / "SplatReconstructionPolicy.swift").read_text()
 MODEL = (ROOT / "SplatNative" / "ScanModel.swift").read_text()
 COLORIZER = (ROOT / "SplatNative" / "SplatSeedColorizer.swift").read_text()
-ISOLATOR = (ROOT / "SplatNative" / "SplatForegroundIsolator.swift").read_text()
+SKY = (ROOT / "SplatNative" / "SplatSkySeeder.swift").read_text()
 
 
 def require(pattern: str, text: str, message: str) -> re.Match[str]:
@@ -29,16 +29,19 @@ def int_constant(name: str) -> int:
     return int(raw.replace("_", ""))
 
 
+horizon = int_constant("trainingHorizon")
 standard = int_constant("standardIterations")
-enhancement = int_constant("enhancementIterations")
+enhancement = int_constant("enhancementIncrement")
 checkpoint = int_constant("checkpointInterval")
 thermal = int_constant("thermalCheckInterval")
-assert standard >= 7_000, "standard reconstruction regressed below S2 quality floor"
-assert enhancement > standard, "enhancement pass must extend the standard pass"
-assert 1 <= checkpoint <= 2_000, "checkpoint interval is too sparse for recoverable on-device training"
-assert 1 <= thermal <= 250, "thermal state must be sampled frequently enough during training"
+assert horizon >= 30_000
+assert 7_000 <= standard < horizon
+assert enhancement > 0 and standard + enhancement <= horizon
+assert 1 <= checkpoint <= 2_000
+assert 1 <= thermal <= 250
 
 for contract in (
+    r"config\.iterations\s*=\s*Int32\(trainingHorizon\)",
     r"config\.shDegree\s*=\s*3",
     r"config\.shDegreeInterval\s*=\s*1_000",
     r"config\.numDownscales\s*=\s*1",
@@ -50,6 +53,8 @@ for contract in (
 ):
     require(contract, POLICY, f"reconstruction policy contract missing: {contract}")
 
+assert "base + enhancementIncrement" in POLICY
+assert "min(trainingHorizon" in POLICY
 for ply_field in ("property uchar red", "property uchar green", "property uchar blue"):
     assert ply_field in MODEL, f"colored seed PLY contract missing: {ply_field}"
 
@@ -57,25 +62,27 @@ assert "trainer.loadCheckpoint" in MODEL
 assert "trainer.saveCheckpoint" in MODEL
 assert "requiresThermalPause" in MODEL
 assert "func enhanceResult()" in MODEL
+assert "enhancementTarget(from: trainingIteration)" in MODEL
 
-# Background suppression must happen after capture finalization, inside the detached training task,
-# and before GaussianDataset reads training images. This prevents Vision preprocessing from freezing
-# the capture-completion UI and guarantees the dataset observes the derived images.
-train_start = MODEL.index("func train(")
-detached = MODEL.index("Task.detached", train_start)
-preprocess = MODEL.index("SplatForegroundIsolator.prepareProjectImages", detached)
-dataset = MODEL.index("let dataset = GaussianDataset", detached)
+# Expensive point-color projection and sky seeding must run after Task.detached begins, not while
+# finishCapture is transitioning the UI from capture to the processing screen.
 finish = MODEL.index("func finishCapture()")
-assert finish < train_start < detached < preprocess < dataset
-finish_body = MODEL[finish:train_start]
-assert "prepareProjectImages" not in finish_body
-assert "prepareProjectImages" not in COLORIZER
+train = MODEL.index("private func startTraining(")
+detached = MODEL.index("Task.detached", train)
+prepare = MODEL.index("Self.preparePointCloudPLY", detached)
+dataset = MODEL.index("let dataset = GaussianDataset", prepare)
+assert finish < train < detached < prepare < dataset
+assert "preparePointCloudPLY" not in MODEL[finish:train]
 
-# Preserve original captures and reject implausible masks. These source-level bounds mirror the
-# Swift unit tests but remain runnable on CI without an iOS runtime.
-assert 'rawDirectoryName = "raw-images"' in ISOLATOR
-assert "0.04...0.92" in ISOLATOR
-assert "centerOccupancy >= 0.10" in ISOLATOR
+# Scaniverse-style splats retain background and sky. S2 therefore must not universally replace the
+# background with a foreground mask; only conservative far-field sky seeds are added.
+assert "SplatForegroundIsolator" not in MODEL
+assert "SplatSkySeeder.makeSeeds" in MODEL
+assert "farDistance: Float = 20" in SKY
+assert "borderCandidates.count >= 5" in SKY
+assert "hasGeometryNear" in SKY
+assert "brightOvercast" in SKY and "blueSky" in SKY
+assert "prepareProjectImages" not in COLORIZER
 
 # Coordinate-contract mirror: ARKit camera looks down -Z, image y grows downward.
 def project(point, fx=10.0, fy=10.0, cx=10.0, cy=10.0):
@@ -87,6 +94,6 @@ def project(point, fx=10.0, fy=10.0, cx=10.0, cy=10.0):
 u, v, d = project((0.0, 0.0, -1.0))
 assert math.isclose(u, 10.0) and math.isclose(v, 10.0) and math.isclose(d, 1.0)
 _, upper_v, _ = project((0.0, 0.5, -1.0))
-assert math.isclose(upper_v, 5.0), "positive camera Y must project upward in top-left image coordinates"
+assert math.isclose(upper_v, 5.0)
 
 print("PASS: deterministic S2 reconstruction contracts")
