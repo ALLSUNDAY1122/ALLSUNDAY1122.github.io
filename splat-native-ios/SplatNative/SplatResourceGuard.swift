@@ -145,7 +145,7 @@ final class SplatResourceGuard: @unchecked Sendable {
         finalThermalState: String,
         outcome: String
     ) -> SplatReconstructionRunReport {
-        let evaluation = evaluate(splatCount: finalSplatCount)
+        let peaks = snapshotPeaks(finalSplatCount: finalSplatCount)
         return SplatReconstructionRunReport(
             schemaVersion: 1,
             startedAt: startedAt,
@@ -155,8 +155,8 @@ final class SplatResourceGuard: @unchecked Sendable {
             targetIteration: targetIteration,
             finalIteration: finalIteration,
             finalSplatCount: finalSplatCount,
-            peakSplatCount: evaluation.peakSplatCount,
-            peakResidentMemoryBytes: evaluation.peakResidentMemoryBytes,
+            peakSplatCount: peaks.splats,
+            peakResidentMemoryBytes: peaks.memory,
             residentMemoryBudgetBytes: limits.residentMemoryBudgetBytes,
             maxSplatCount: limits.maxSplatCount,
             physicalMemoryBytes: physicalMemoryBytes,
@@ -164,6 +164,14 @@ final class SplatResourceGuard: @unchecked Sendable {
             finalThermalState: finalThermalState,
             outcome: outcome
         )
+    }
+
+    private func snapshotPeaks(finalSplatCount: Int) -> (memory: UInt64, splats: Int) {
+        lock.lock()
+        peakSplatCount = max(peakSplatCount, finalSplatCount)
+        let snapshot = (peakResidentMemoryBytes, peakSplatCount)
+        lock.unlock()
+        return snapshot
     }
 
     static func currentResidentMemoryBytes() -> UInt64 {
