@@ -34,8 +34,13 @@ need(set(sets)=={115,114,113},'manifest exam set mismatch')
 for exam in (115,114,113):
     s=sets.get(exam,{})
     need(s.get('status')=='ready',f'exam {exam} not ready')
-    need(s.get('questionCount')==240 and s.get('runtimeEligibleCount')==240,f'exam {exam} not 240/240')
-    need(s.get('expertBlockedIds')==[],f'exam {exam} still blocked')
+    need(s.get('questionCount')==240 and s.get('runtimeEligibleCount')==240,f'exam {exam} runtime not 240/240')
+    need(s.get('releaseEligibleCount')==240,f'exam {exam} release eligibility not 240/240')
+    need(s.get('releaseBlockedIds')==[],f'exam {exam} still release-blocked')
+    need('expertReviewedCount' not in s,f'exam {exam} contains misleading expertReviewedCount')
+need((manifest.get('releaseGate') or {}).get('primarySourceAuditRequired') is True,'primary source audit gate missing')
+need((manifest.get('releaseGate') or {}).get('humanReviewAtPrototypeAndTestFlight') is True,'human review gate does not match canonical procedure')
+need((manifest.get('releaseGate') or {}).get('expertReviewRequired') is not True,'legacy expertReviewRequired gate remains')
 
 scripts=['questions-runtime.js','app-v03.js','media-runtime.js','product-availability.js']
 pos=[]
@@ -56,16 +61,19 @@ need("q.mediaReleaseStatus!=='resolved'" in media,'media renderer does not enfor
 need("const examNo=[115,114,113][round]" in app,'mock pool is not keyed by source exam')
 need("Number(q.sourceExam)===examNo" in app,'mock pool sourceExam filter missing')
 need('const SCORING=window.KANGOSHI_SCORING||{}' in app,'scoring runtime not connected to app')
-need("s?.status==='ready'&&s?.questionCount===240&&s?.expertReviewedCount===240" in avail,'availability ready gate mismatch')
+need("s?.status==='ready'&&s?.questionCount===240&&s?.releaseEligibleCount===240" in avail,'availability ready gate mismatch')
+need('専門監査' not in avail,'availability UI still claims specialist review')
 need('K113-AM005' in scoring and 'K115-AM080' in scoring,'official scoring exception map incomplete marker')
 
 report={
-    'schemaVersion':1,
+    'schemaVersion':2,
     'canonicalQuestions':runtime.get('canonicalTotal'),
     'runtimeEligible':runtime.get('runtimeEligible'),
     'examSetsReady':sorted([e for e,s in sets.items() if s.get('status')=='ready'],reverse=True),
+    'releaseEligibleByExam':{str(e):sets[e].get('releaseEligibleCount') for e in sorted(sets,reverse=True)},
     'mediaResolved':runtime.get('mediaResolved'),
     'pendingQueues':{k:summary.get(k) for k in ('textPending','mediaPending','dynamicPending','contentConcerns','scoringExceptionPending','expertReviewPending','releaseQuarantined')},
+    'reviewPolicy':'ai_ci_primary_source_audit_plus_human_prototype_testflight',
     'scriptOrder':scripts,
     'cacheVersion':'kangoshi-sprint-v25-20260814-canonical-runtime1',
     'pass':not errors,
