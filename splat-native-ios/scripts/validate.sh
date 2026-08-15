@@ -26,6 +26,8 @@ require_text SplatNative/ScanModel.swift 'CapturePolicy.coverageSatisfied'
 require_text SplatNative/ScanModel.swift 'sceneDepth'
 require_text SplatNative/ScanModel.swift 'func pauseCapture'
 require_text SplatNative/ScanModel.swift 'func resumeCapture'
+require_text SplatNative/ScanModel.swift 'persistWorldMapIfPossible'
+require_text SplatNative/ScanModel.swift 'restoreSavedProject'
 require_text SplatNative/ScanModel+SessionLifecycle.swift 'sessionShouldAttemptRelocalization'
 python3 - <<'PY'
 from pathlib import Path
@@ -33,9 +35,12 @@ s=Path('SplatNative/ScanModel.swift').read_text()
 resume=s.index('func resumeCapture()')
 finish=s.index('func finishCapture()')
 block=s[resume:finish]
-assert 'options: []' in block
-assert '.resetTracking' not in block
-print('PASS: capture resume preserves AR world coordinates')
+assert 'var options: ARSession.RunOptions = []' in block
+assert 'if let worldMap = pendingResumeWorldMap' in block
+assert 'config.initialWorldMap = worldMap' in block
+assert 'options = [.resetTracking, .removeExistingAnchors]' in block
+assert 'session.run(config, options: options)' in block
+print('PASS: in-memory resume preserves coordinates; cold resume restores ARWorldMap')
 PY
 
 # S2 reconstruction / resource safety
@@ -78,13 +83,17 @@ require_text SplatNative/MeshAdvancedSupervisor.swift 'bakeDenseRGBTextureAtlas'
 require_text SplatNative/MeshAdvancedSupervisor.swift 'runMeshParityAudit'
 require_text SplatNative/RootScanView.swift 'Meshをスキャン'
 
-# C local library foundation is present before lifecycle hooks are wired.
+# C local library / durable resume foundation.
 require_file SplatNative/ScanProjectStore.swift
+require_file SplatNative/ScanLibraryView.swift
 require_file SplatNativeTests/ScanProjectStoreTests.swift
+require_file SplatNativeTests/ScanColdResumePersistenceTests.swift
 require_text SplatNative/ScanProjectStore.swift 'commitPendingSplat'
 require_text SplatNative/ScanProjectStore.swift 'reprocessRequest'
 require_text SplatNative/ScanProjectStore.swift 'moveToTrash'
 require_text SplatNative/ScanProjectStore.swift 'recoverInterruptedProcessing'
+require_text SplatNative/ScanProjectStore.swift 'worldMapURL'
+require_text SplatNative/ScanLibraryView.swift 'restoreSavedProject'
 
 # Product-neutral and local-only by default.
 ! grep -R -n 'おもちゃばこ' SplatNative project.yml
