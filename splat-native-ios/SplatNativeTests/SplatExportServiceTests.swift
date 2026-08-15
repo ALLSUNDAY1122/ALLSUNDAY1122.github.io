@@ -63,6 +63,9 @@ final class SplatExportServiceTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
 
         let source = try await makeCommittedProjectResult(in: root)
+        let projectSideSPZ = source.deletingPathExtension().appendingPathExtension("spz")
+        XCTAssertFalse(FileManager.default.fileExists(atPath: projectSideSPZ.path))
+
         let preview = Data([0xff, 0xd8, 0xff, 0xd9])
         let package = try await SplatExportService.makeBrowserSharePackage(
             sourceURL: source,
@@ -70,9 +73,14 @@ final class SplatExportServiceTests: XCTestCase {
             rootDirectory: root
         )
 
+        XCTAssertEqual(package.assetURL.lastPathComponent, "scene.spz")
         XCTAssertTrue(FileManager.default.fileExists(atPath: package.assetURL.path))
         XCTAssertTrue(FileManager.default.fileExists(atPath: package.manifestURL.path))
         XCTAssertTrue(FileManager.default.fileExists(atPath: try XCTUnwrap(package.previewURL).path))
+        XCTAssertFalse(
+            FileManager.default.fileExists(atPath: projectSideSPZ.path),
+            "Browser packaging must not create a second persistent SPZ beside the project result"
+        )
 
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
