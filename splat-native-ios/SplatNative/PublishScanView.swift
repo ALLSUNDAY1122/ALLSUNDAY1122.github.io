@@ -59,6 +59,7 @@ struct PublishScanView: View {
     @State private var publicPlaceConfirmed = false
     @State private var privacyConfirmed = false
     @State private var rightsConfirmed = false
+    @State private var contentConfirmed = false
     @State private var busy = false
     @State private var errorMessage: String?
     @State private var published: ScanLabPublishResponse?
@@ -85,6 +86,12 @@ struct PublishScanView: View {
                 Picker("公開範囲", selection: $visibility) { ForEach(ScanLabVisibility.allCases) { Text($0.title).tag($0) } }
                 Text(visibility.explanation).font(.footnote).foregroundStyle(.secondary)
             }
+            if visibility != .private {
+                Section("コミュニティ安全確認") {
+                    Toggle("性的・暴力的・嫌がらせ等の不適切な内容ではなく、共有に適した3Dです", isOn: $contentConfirmed)
+                    Text("不適切な投稿はサーバー側の確認で拒否される場合があり、報告を受けた投稿は確認のため非表示になります。").font(.footnote).foregroundStyle(.secondary)
+                }
+            }
             if visibility == .public {
                 Section("マップ位置") {
                     Text("位置情報は自動取得・自動送信しません。公開地点として使う場合だけ、下のボタンを押してください。").font(.footnote).foregroundStyle(.secondary)
@@ -105,10 +112,18 @@ struct PublishScanView: View {
                 if let errorMessage { Text(errorMessage).foregroundStyle(.red).font(.footnote) }
             } footer: { Text("このボタンを押すまで3Dファイル・位置情報はサーバーへ送信されません。") }
         }
-        .onChange(of: visibility) { _, newValue in if newValue != .public { locationPicker.clear(); publicPlaceConfirmed = false; privacyConfirmed = false; rightsConfirmed = false } }
+        .onChange(of: visibility) { _, newValue in
+            if newValue != .public { locationPicker.clear(); publicPlaceConfirmed = false; privacyConfirmed = false; rightsConfirmed = false }
+            if newValue == .private { contentConfirmed = false }
+        }
     }
 
-    private var canSubmit: Bool { visibility != .public || (locationPicker.location != nil && publicPlaceConfirmed && privacyConfirmed && rightsConfirmed) }
+    private var canSubmit: Bool {
+        if visibility == .private { return true }
+        guard contentConfirmed else { return false }
+        if visibility == .public { return locationPicker.location != nil && publicPlaceConfirmed && privacyConfirmed && rightsConfirmed }
+        return true
+    }
     private var actionTitle: String { switch visibility { case .private: "非公開でクラウド保存"; case .unlisted: "限定リンクを作成"; case .public: "Map・Discoverへ公開" } }
 
     @ViewBuilder private func successView(_ response: ScanLabPublishResponse) -> some View {
@@ -126,7 +141,7 @@ struct PublishScanView: View {
     private func submit() async {
         busy = true; errorMessage = nil; defer { busy = false }
         let location: ScanLabLocation? = visibility == .public && locationPicker.location != nil ? ScanLabLocation(latitude: locationPicker.location!.coordinate.latitude, longitude: locationPicker.location!.coordinate.longitude, label: locationLabel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : locationLabel.trimmingCharacters(in: .whitespacesAndNewlines)) : nil
-        do { published = try await backend.publish(resultURL: resultURL, previewImage: previewImage, title: title, caption: caption, visibility: visibility, location: location, publicPlaceConfirmed: publicPlaceConfirmed, privacyConfirmed: privacyConfirmed, rightsConfirmed: rightsConfirmed) }
+        do { published = try await backend.publish(resultURL: resultURL, previewImage: previewImage, title: title, caption: caption, visibility: visibility, location: location, publicPlaceConfirmed: publicPlaceConfirmed, privacyConfirmed: privacyConfirmed, rightsConfirmed: rightsConfirmed, contentConfirmed: contentConfirmed) }
         catch { errorMessage = error.localizedDescription }
     }
 }
