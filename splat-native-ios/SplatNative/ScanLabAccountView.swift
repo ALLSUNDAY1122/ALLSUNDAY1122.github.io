@@ -105,7 +105,7 @@ private struct ScanLabOwnerScanRow: View {
             }
             HStack {
                 if let shareURL = backend.shareURL(for: scan) { ShareLink(item: shareURL) { Label("リンク共有", systemImage: "link") } }
-                if scan.status == "published" { Button("非公開化") { Task { await unpublish() } } }
+                if let unpublishActionTitle { Button(unpublishActionTitle) { Task { await unpublish() } } }
                 Spacer()
                 Button("削除", role: .destructive) { deleteConfirmation = true }
             }.buttonStyle(.borderless).font(.caption).disabled(busy)
@@ -114,10 +114,44 @@ private struct ScanLabOwnerScanRow: View {
         .alert("このクラウドスキャンを削除しますか？", isPresented: $deleteConfirmation) {
             Button("キャンセル", role: .cancel) {}
             Button("削除", role: .destructive) { Task { await deleteScan() } }
-        } message: { Text("公開リンクも使えなくなり、クラウド上の3Dファイルも削除されます。") }
+        } message: { Text(deleteMessage) }
     }
-    private var visibilityText: String { switch scan.visibility { case "public": "公開"; case "unlisted": "限定リンク"; default: "非公開" } }
-    private var statusText: String { if scan.status == "hidden" { return "非公開化済み" }; if scan.moderationStatus == "pending" { return "公開確認中" }; return scan.status == "published" ? "公開中" : "下書き" }
+    private var visibilityText: String {
+        switch scan.visibility {
+        case "public": "公開"
+        case "unlisted": "限定リンク"
+        default: "非公開"
+        }
+    }
+    private var statusText: String {
+        if scan.status == "hidden" {
+            return scan.visibility == "private" ? "クラウド保存停止済み" : "共有停止済み"
+        }
+        if scan.status != "published" {
+            return scan.visibility == "private" ? "クラウド保存処理中" : "公開準備中"
+        }
+        if scan.visibility != "private" && scan.moderationStatus == "pending" { return "公開確認中" }
+        if scan.visibility != "private" && scan.moderationStatus == "rejected" { return "公開停止（確認結果）" }
+        switch scan.visibility {
+        case "public": return "Map・Discoverで公開中"
+        case "unlisted": return "限定リンク有効"
+        default: return "非公開クラウド保存済み"
+        }
+    }
+    private var unpublishActionTitle: String? {
+        guard scan.status == "published" else { return nil }
+        switch scan.visibility {
+        case "public": return "公開を停止"
+        case "unlisted": return "限定リンクを無効化"
+        default: return nil
+        }
+    }
+    private var deleteMessage: String {
+        switch scan.visibility {
+        case "public", "unlisted": return "共有リンクも使えなくなり、クラウド上の3Dファイルも削除されます。"
+        default: return "非公開で保存しているクラウド上の3Dファイルを削除します。この操作は元に戻せません。"
+        }
+    }
     private func unpublish() async { busy = true; defer { busy = false }; do { try await backend.unpublish(scan) } catch { backend.notice = error.localizedDescription } }
     private func deleteScan() async { busy = true; defer { busy = false }; do { try await backend.delete(scan) } catch { backend.notice = error.localizedDescription } }
 }
