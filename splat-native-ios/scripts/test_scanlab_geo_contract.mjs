@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { parseScanLabBoundingBox } from "../supabase/functions/scanlab-public/bbox.mjs";
+import { makeScanLabFeedCursor, parseScanLabFeedCursor } from "../supabase/functions/scanlab-public/feed_cursor.mjs";
 import { locationForPublicResponse } from "../supabase/functions/scanlab-public/geo_contract.mjs";
 
 assert.deepEqual(
@@ -72,12 +73,27 @@ assert.equal(
   "invalid coordinates must not be emitted",
 );
 
+const cursor = makeScanLabFeedCursor({
+  published_at: "2026-08-16T13:56:04.000Z",
+  id: "11111111-1111-4111-8111-111111111111",
+});
+assert.equal(cursor, "2026-08-16T13:56:04.000Z~11111111-1111-4111-8111-111111111111");
+assert.deepEqual(parseScanLabFeedCursor(cursor), {
+  value: {
+    publishedAt: "2026-08-16T13:56:04.000Z",
+    id: "11111111-1111-4111-8111-111111111111",
+  },
+});
+assert.equal(parseScanLabFeedCursor("broken").error, "invalid_cursor", "pagination cursor validation must be preserved");
+
 const functionSource = readFileSync(
   fileURLToPath(new URL("../supabase/functions/scanlab-public/index.ts", import.meta.url)),
   "utf8",
 );
 assert.match(functionSource, /parseScanLabBoundingBox\(url\.searchParams\)/, "feed must use the deployed bbox parser contract");
 assert.match(functionSource, /location:\s*locationForPublicResponse\(scan\)/, "public API must filter location by visibility");
+assert.match(functionSource, /parseScanLabFeedCursor\(url\.searchParams\.get\("cursor"\)\)/, "W06 cursor pagination must not be rolled back by the geotag privacy fix");
+assert.match(functionSource, /nextCursor/, "paged Discover response contract must be preserved");
 assert.match(functionSource, /"Vary": "Authorization"/, "authenticated blocked-user feed must keep auth-aware cache variance");
 assert.match(functionSource, /"Cache-Control": "private, no-store"/, "personalized public feed must not regress to shared caching");
 assert.doesNotMatch(
