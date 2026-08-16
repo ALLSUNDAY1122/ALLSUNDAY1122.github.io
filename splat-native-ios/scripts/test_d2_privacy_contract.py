@@ -143,6 +143,20 @@ require(
     f'mailto:{SUPPORT_EMAIL}',
 )
 
+# Apple Guideline 5.1.1(i): policy must cover third-party protection, retention/deletion, and consent withdrawal.
+require(
+    "privacy.html",
+    "第三者サービスとデータ保護",
+    "同等以上の保護",
+    "広告目的で販売せず",
+    "保存期間と削除",
+    "機能提供・安全運用に必要な間保持",
+    "同意の撤回と設定変更",
+    "iOSの設定",
+    "すでにクラウドへ送信した位置情報を削除する場合",
+    "法令または正当なセキュリティ上の義務",
+)
+
 # UGC apps need a reachable published support/contact path in addition to in-app report/block controls.
 require(
     "support.html",
@@ -171,6 +185,10 @@ require(
     PRIVACY_URL,
     SUPPORT_EMAIL,
     "UGC安全機能",
+    "保存期間・削除・同意撤回",
+    "同等以上の保護",
+    "iOS設定で位置情報権限を取り消し",
+    "Supabase Auth URL Configuration",
 )
 require(
     "APP_STORE_METADATA_JA.md",
@@ -182,6 +200,9 @@ require(
     f"Privacy Policy URL: `{PRIVACY_URL}`",
     SUPPORT_EMAIL,
     "本審査前に",
+    "第三者サービス / 保存 / 同意撤回",
+    "同等以上の保護",
+    "Supabase Auth URL Configuration",
 )
 
 forbid(
@@ -204,4 +225,4 @@ forbid(
     "現段階の開発者によるデータ収集: なし",
 )
 
-print("PASS: D2 privacy manifest / permissions / review text / UGC support contact / publish boundary are aligned")
+print("PASS: D2 privacy manifest / permissions / retention / consent / third-party / review / UGC support / publish boundary are aligned")

@@ -57,6 +57,16 @@ Required Reason API:
 
 通常の撮影・生成では、撮影画像、ARKitの姿勢・特徴点・深度等をScan Labのクラウドへ送りません。利用者が共有フォームを明示的に送信した場合だけ、`scene.spz`、`manifest.json`、任意のpreview画像、投稿メタデータを送信します。`public` の場合のみ、明示取得した位置情報も送信します。公開UIからraw再構成 `.splat` は送信しません。
 
+## 第三者サービス / 保存 / 同意撤回
+
+- SupabaseをAuth / Database / Storage / Edge Functionsの基盤として利用し、オンライン機能に必要なデータを機能提供の範囲で送信・保存する。
+- ユーザーデータへアクセスする第三者サービスは、公開Privacy Policyおよび適用されるApple要件と同等以上の保護を行うものに限定する。
+- ユーザーデータを広告目的で販売せず、広告トラッキング目的で第三者へ提供しない。
+- アカウント情報、プロフィール、クラウドスキャン、投稿メタデータ、位置情報、コミュニティ操作情報は、アカウントまたは対象データが存在し、機能提供・安全運用に必要な間保持する。
+- 位置情報同意はiOS設定から撤回可能。送信済み位置情報は対象クラウドスキャン削除で削除対象とする。
+- 公開停止は非公開化、個別クラウドデータ削除はスキャン削除、オンライン機能全体の終了はアカウント削除で行う。
+- 法令または正当なセキュリティ上の義務により保持が必要な場合は必要な範囲と期間に限定する。
+
 ## 公開範囲
 
 - `private`: 所有者のみ。
@@ -75,3 +85,5 @@ Required Reason API:
 ## App Review Information
 
 本審査時はApp Store ConnectのApp Review Informationに審査用アカウントを設定し、具体的な審査手順とprivacy説明は `APP_REVIEW_NOTES_JA.md` を正本とする。
+
+D2-W01のメール確認callbackが統合された場合は、Supabase Auth URL Configurationのallow-listと確認メールredirectを実環境で検証し、signupを審査可能な導線として完成扱いにする。
