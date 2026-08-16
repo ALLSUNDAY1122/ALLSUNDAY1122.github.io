@@ -96,6 +96,7 @@ private struct ScanLabOwnerScanRow: View {
     let scan: ScanLabOwnerScan
     @State private var busy = false
     @State private var deleteConfirmation = false
+    @State private var visibilityEditor = false
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -105,12 +106,16 @@ private struct ScanLabOwnerScanRow: View {
             }
             HStack {
                 if let shareURL = backend.shareURL(for: scan) { ShareLink(item: shareURL) { Label("リンク共有", systemImage: "link") } }
+                if canChangeVisibility { Button("公開範囲を変更") { visibilityEditor = true } }
                 if let unpublishActionTitle { Button(unpublishActionTitle) { Task { await unpublish() } } }
                 Spacer()
                 Button("削除", role: .destructive) { deleteConfirmation = true }
             }.buttonStyle(.borderless).font(.caption).disabled(busy)
         }
         .padding(.vertical, 4)
+        .sheet(isPresented: $visibilityEditor) {
+            ScanLabVisibilityChangeView(scan: scan).environmentObject(backend)
+        }
         .alert("このクラウドスキャンを削除しますか？", isPresented: $deleteConfirmation) {
             Button("キャンセル", role: .cancel) {}
             Button("削除", role: .destructive) { Task { await deleteScan() } }
@@ -120,6 +125,12 @@ private struct ScanLabOwnerScanRow: View {
     private var statusText: String {
         ScanLabOwnerVisibilityPresentation.statusText(
             visibility: scan.visibility,
+            status: scan.status,
+            moderationStatus: scan.moderationStatus
+        )
+    }
+    private var canChangeVisibility: Bool {
+        ScanLabOwnerVisibilityPresentation.canChangeVisibility(
             status: scan.status,
             moderationStatus: scan.moderationStatus
         )

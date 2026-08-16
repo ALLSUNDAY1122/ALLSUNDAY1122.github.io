@@ -16,6 +16,21 @@ final class ScanLabVisibilityPresentationTests: XCTestCase {
         )
     }
 
+    func testVisibilityChangeOnlyForPublishedApprovedRows() {
+        XCTAssertTrue(
+            ScanLabOwnerVisibilityPresentation.canChangeVisibility(status: "published", moderationStatus: "approved")
+        )
+        XCTAssertFalse(
+            ScanLabOwnerVisibilityPresentation.canChangeVisibility(status: "published", moderationStatus: "pending")
+        )
+        XCTAssertFalse(
+            ScanLabOwnerVisibilityPresentation.canChangeVisibility(status: "published", moderationStatus: "rejected")
+        )
+        XCTAssertFalse(
+            ScanLabOwnerVisibilityPresentation.canChangeVisibility(status: "hidden", moderationStatus: "approved")
+        )
+    }
+
     func testOnlySharedVisibilityOffersStopAction() {
         XCTAssertEqual(
             ScanLabOwnerVisibilityPresentation.unpublishActionTitle(visibility: "public", status: "published"),

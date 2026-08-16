@@ -37,6 +37,10 @@ enum ScanLabOwnerVisibilityPresentation {
         }
     }
 
+    static func canChangeVisibility(status: String, moderationStatus: String) -> Bool {
+        status == "published" && moderationStatus == "approved"
+    }
+
     static func unpublishActionTitle(visibility: String, status: String) -> String? {
         guard status == "published" else { return nil }
         switch visibility {
