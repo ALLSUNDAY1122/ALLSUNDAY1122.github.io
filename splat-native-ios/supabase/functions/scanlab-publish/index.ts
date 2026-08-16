@@ -37,11 +37,15 @@ Deno.serve(async (req) => {
 
   if (scanError || !scan) return json({ error: "not_found" }, 404);
   if (scan.owner_id !== user.id) return json({ error: "forbidden" }, 403);
+
+  // Private means owner-only storage/library state. It is not a third kind of public
+  // publication and must never mint a durable browser URL or enter published status.
+  if (scan.visibility === "private") return json({ error: "private_scan_not_publishable" }, 409);
+  if (!["public", "unlisted"].includes(scan.visibility)) return json({ error: "invalid_visibility" }, 400);
+
   if (!scan.asset_path.startsWith(`${user.id}/`)) return json({ error: "invalid_asset_path" }, 400);
 
-  if (["public", "unlisted"].includes(scan.visibility) && !scan.content_confirmed) {
-    return json({ error: "content_confirmation_required" }, 400);
-  }
+  if (!scan.content_confirmed) return json({ error: "content_confirmation_required" }, 400);
   if (scan.visibility === "public") {
     if (scan.latitude == null || scan.longitude == null || !scan.public_place_confirmed || !scan.privacy_confirmed || !scan.rights_confirmed) {
       return json({ error: "public_safety_confirmation_required" }, 400);
@@ -59,9 +63,6 @@ Deno.serve(async (req) => {
   const folder = slash > 0 ? scan.asset_path.slice(0, slash) : "";
   const fileName = slash > 0 ? scan.asset_path.slice(slash + 1) : scan.asset_path;
 
-  // Network publication accepts C2's explicit browser-share contract only. Requiring both
-  // `scene.spz` and its integrity manifest makes the legacy raw result.splat upload path
-  // impossible to publish even if an older client attempts to call this function directly.
   if (fileName !== "scene.spz") return json({ error: "trusted_package_required" }, 409);
   const { data: files, error: listError } = await admin.storage.from("scanlab-assets").list(folder, { limit: 20 });
   if (listError) return json({ error: "asset_check_failed" }, 503);
@@ -86,9 +87,7 @@ Deno.serve(async (req) => {
   const base = "https://allsunday1122.github.io/splat-native-ios/viewer/";
   const shareUrl = updated.visibility === "public"
     ? `${base}?id=${encodeURIComponent(updated.id)}`
-    : updated.visibility === "unlisted"
-      ? `${base}?token=${encodeURIComponent(updated.share_token)}`
-      : null;
+    : `${base}?token=${encodeURIComponent(updated.share_token)}`;
 
   return json({ id: updated.id, visibility: updated.visibility, publishedAt: updated.published_at, shareUrl });
 });
