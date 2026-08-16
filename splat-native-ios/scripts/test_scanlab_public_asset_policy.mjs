@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { parseScanLabFeedAssetPolicy } from "./feed_asset_policy.mjs";
+import { parseScanLabFeedAssetPolicy } from "../supabase/functions/scanlab-public/feed_asset_policy.mjs";
 
 const parse = (query = "") => parseScanLabFeedAssetPolicy(new URLSearchParams(query));
 
