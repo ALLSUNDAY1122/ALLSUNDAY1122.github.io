@@ -116,54 +116,18 @@ private struct ScanLabOwnerScanRow: View {
             Button("削除", role: .destructive) { Task { await deleteScan() } }
         } message: { Text(deleteMessage) }
     }
-    private var visibilityText: String {
-        switch scan.visibility {
-        case "public": "公開"
-        case "unlisted": "限定リンク"
-        default: "非公開"
-        }
-    }
+    private var visibilityText: String { ScanLabOwnerVisibilityPresentation.visibilityText(scan.visibility) }
     private var statusText: String {
-        if scan.status == "hidden" {
-            switch scan.visibility {
-            case "public": return "公開停止済み"
-            case "unlisted": return "限定リンク無効化済み"
-            default: return "クラウド保存停止済み"
-            }
-        }
-        if scan.status != "published" {
-            switch scan.visibility {
-            case "public": return "公開準備中"
-            case "unlisted": return "限定リンク準備中"
-            default: return "クラウド保存処理中"
-            }
-        }
-        if scan.visibility != "private" && scan.moderationStatus == "pending" {
-            return scan.visibility == "public" ? "公開確認中" : "共有確認中"
-        }
-        if scan.visibility != "private" && scan.moderationStatus == "rejected" {
-            return scan.visibility == "public" ? "公開停止（確認結果）" : "共有停止（確認結果）"
-        }
-        switch scan.visibility {
-        case "public": return "Map・Discoverで公開中"
-        case "unlisted": return "限定リンク有効"
-        default: return "非公開クラウド保存済み"
-        }
+        ScanLabOwnerVisibilityPresentation.statusText(
+            visibility: scan.visibility,
+            status: scan.status,
+            moderationStatus: scan.moderationStatus
+        )
     }
     private var unpublishActionTitle: String? {
-        guard scan.status == "published" else { return nil }
-        switch scan.visibility {
-        case "public": return "公開を停止"
-        case "unlisted": return "限定リンクを無効化"
-        default: return nil
-        }
+        ScanLabOwnerVisibilityPresentation.unpublishActionTitle(visibility: scan.visibility, status: scan.status)
     }
-    private var deleteMessage: String {
-        switch scan.visibility {
-        case "public", "unlisted": return "共有リンクも使えなくなり、クラウド上の3Dファイルも削除されます。"
-        default: return "非公開で保存しているクラウド上の3Dファイルを削除します。この操作は元に戻せません。"
-        }
-    }
+    private var deleteMessage: String { ScanLabOwnerVisibilityPresentation.deleteMessage(scan.visibility) }
     private func unpublish() async { busy = true; defer { busy = false }; do { try await backend.unpublish(scan) } catch { backend.notice = error.localizedDescription } }
     private func deleteScan() async { busy = true; defer { busy = false }; do { try await backend.delete(scan) } catch { backend.notice = error.localizedDescription } }
 }
