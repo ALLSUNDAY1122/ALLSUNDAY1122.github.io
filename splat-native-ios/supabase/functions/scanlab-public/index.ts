@@ -1,10 +1,12 @@
 import { createClient } from "npm:@supabase/supabase-js@2.112.3";
+import { parseScanLabBoundingBox } from "./bbox.mjs";
 
 const cors = {
   "Access-Control-Allow-Origin": "https://allsunday1122.github.io",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Cache-Control": "public, max-age=30, s-maxage=60",
+  "Vary": "Authorization",
+  "Cache-Control": "private, no-store",
 };
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
@@ -79,16 +81,14 @@ Deno.serve(async (req) => {
       .order("published_at", { ascending: false })
       .limit(Math.min(limit * 2, 80));
 
-    const minLat = Number(url.searchParams.get("minLat"));
-    const maxLat = Number(url.searchParams.get("maxLat"));
-    const minLon = Number(url.searchParams.get("minLon"));
-    const maxLon = Number(url.searchParams.get("maxLon"));
-    const hasBox = [minLat, maxLat, minLon, maxLon].every(Number.isFinite);
-    if (hasBox) {
-      if (minLat < -90 || maxLat > 90 || minLon < -180 || maxLon > 180 || minLat > maxLat || minLon > maxLon || (maxLat - minLat) > 90 || (maxLon - minLon) > 180) {
-        return json({ error: "invalid_bbox" }, 400);
-      }
-      query = query.gte("latitude", minLat).lte("latitude", maxLat).gte("longitude", minLon).lte("longitude", maxLon);
+    const bbox = parseScanLabBoundingBox(url.searchParams);
+    if (bbox.error) return json({ error: bbox.error }, 400);
+    if (bbox.value) {
+      query = query
+        .gte("latitude", bbox.value.minLat)
+        .lte("latitude", bbox.value.maxLat)
+        .gte("longitude", bbox.value.minLon)
+        .lte("longitude", bbox.value.maxLon);
     }
 
     const [{ data, error }, blocked] = await Promise.all([query, blockedUserIds(req)]);
