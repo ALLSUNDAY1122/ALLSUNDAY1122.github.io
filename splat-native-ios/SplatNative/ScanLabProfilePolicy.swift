@@ -33,7 +33,7 @@ enum ScanLabProfilePolicy {
         let b = normalizedBio(bio)
         guard handleRange.contains(h.count), (1...displayNameLimit).contains(n.count), (b?.count ?? 0) <= bioLimit else { return false }
         guard h.unicodeScalars.allSatisfy({ scalar in
-            ("a"..."z").contains(Character(String(scalar))) || ("0"..."9").contains(Character(String(scalar))) || scalar == "_"
+            (97...122).contains(Int(scalar.value)) || (48...57).contains(Int(scalar.value)) || scalar.value == 95
         }) else { return false }
         if !avatarURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, normalizedAvatarURL(avatarURL) == nil { return false }
         return true
