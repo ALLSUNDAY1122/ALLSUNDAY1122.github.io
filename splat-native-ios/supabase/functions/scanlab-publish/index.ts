@@ -1,4 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2.112.3";
+import { validateScanLabPublicGeoSafety } from "./geo_publish_contract.mjs";
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
   status,
@@ -42,11 +43,8 @@ Deno.serve(async (req) => {
   if (["public", "unlisted"].includes(scan.visibility) && !scan.content_confirmed) {
     return json({ error: "content_confirmation_required" }, 400);
   }
-  if (scan.visibility === "public") {
-    if (scan.latitude == null || scan.longitude == null || !scan.public_place_confirmed || !scan.privacy_confirmed || !scan.rights_confirmed) {
-      return json({ error: "public_safety_confirmation_required" }, 400);
-    }
-  }
+  const geoSafety = validateScanLabPublicGeoSafety(scan);
+  if (!geoSafety.ok) return json({ error: geoSafety.error }, 400);
 
   const { count: reportCount, error: reportError } = await admin
     .from("scanlab_reports")

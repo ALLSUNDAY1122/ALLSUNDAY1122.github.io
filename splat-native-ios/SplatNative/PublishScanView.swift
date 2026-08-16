@@ -84,8 +84,18 @@ struct PublishScanView: View {
         Form {
             Section("投稿内容") { TextField("タイトル", text: $title); TextField("説明（任意）", text: $caption, axis: .vertical).lineLimit(2...5) }
             Section("公開範囲") {
-                Picker("公開範囲", selection: $visibility) { ForEach(ScanLabVisibility.allCases) { Text($0.title).tag($0) } }
-                Text(visibility.explanation).font(.footnote).foregroundStyle(.secondary)
+                Picker("公開範囲", selection: $visibility) {
+                    ForEach(ScanLabVisibility.allCases) { option in
+                        Text(option == .public ? "公開（Discover）" : option.title).tag(option)
+                    }
+                }
+                Text(
+                    visibility == .public
+                        ? "Discoverに公開します。Mapへ載せる場合だけ、位置情報を任意で追加できます。"
+                        : visibility.explanation
+                )
+                .font(.footnote)
+                .foregroundStyle(.secondary)
             }
             if visibility != .private {
                 Section("コミュニティ安全確認") {
@@ -94,15 +104,28 @@ struct PublishScanView: View {
                 }
             }
             if visibility == .public {
-                Section("マップ位置") {
-                    Text("位置情報は自動取得・自動送信しません。公開地点として使う場合だけ、下のボタンを押してください。").font(.footnote).foregroundStyle(.secondary)
-                    Button { locationPicker.requestCurrentLocation() } label: { Label("現在地を公開地点に設定", systemImage: "location") }.disabled(locationPicker.isRequesting)
+                Section("マップ位置（任意）") {
+                    Text("位置情報は自動取得・自動送信しません。位置情報を付けなくてもDiscoverへ公開できます。Mapへ載せる場合だけ、下のボタンを押してください。").font(.footnote).foregroundStyle(.secondary)
+                    Button {
+                        publicPlaceConfirmed = false
+                        locationPicker.requestCurrentLocation()
+                    } label: {
+                        Label("現在地を公開地点に設定", systemImage: "location")
+                    }
+                    .disabled(locationPicker.isRequesting)
                     if locationPicker.isRequesting { ProgressView() }
                     Text(locationPicker.statusMessage).font(.caption).foregroundStyle(.secondary)
-                    if locationPicker.location != nil { TextField("場所名（任意）", text: $locationLabel); Button("位置情報を外す", role: .destructive) { locationPicker.clear() } }
+                    if locationPicker.location != nil {
+                        TextField("場所名（任意）", text: $locationLabel)
+                        Toggle("この地点は私有住宅や立入禁止区域ではなく、公開可能な場所です", isOn: $publicPlaceConfirmed)
+                        Button("位置情報を外す", role: .destructive) {
+                            locationPicker.clear()
+                            locationLabel = ""
+                            publicPlaceConfirmed = false
+                        }
+                    }
                 }
                 Section("公開前の確認") {
-                    Toggle("私有住宅や立入禁止区域ではなく、公開可能な場所です", isOn: $publicPlaceConfirmed)
                     Toggle("識別できる人物・住所・車両番号などの私的情報を含まない、または必要な許可があります", isOn: $privacyConfirmed)
                     Toggle("公開する3Dに必要な権利があります", isOn: $rightsConfirmed)
                 }
@@ -114,7 +137,7 @@ struct PublishScanView: View {
             } footer: { Text("このボタンを押すまで3Dファイル・位置情報はサーバーへ送信されません。") }
         }
         .onChange(of: visibility) { _, newValue in
-            if newValue != .public { locationPicker.clear(); publicPlaceConfirmed = false; privacyConfirmed = false; rightsConfirmed = false }
+            if newValue != .public { locationPicker.clear(); locationLabel = ""; publicPlaceConfirmed = false; privacyConfirmed = false; rightsConfirmed = false }
             if newValue == .private { contentConfirmed = false }
         }
     }
@@ -122,10 +145,19 @@ struct PublishScanView: View {
     private var canSubmit: Bool {
         if visibility == .private { return true }
         guard contentConfirmed else { return false }
-        if visibility == .public { return locationPicker.location != nil && publicPlaceConfirmed && privacyConfirmed && rightsConfirmed }
+        if visibility == .public {
+            guard privacyConfirmed, rightsConfirmed else { return false }
+            if locationPicker.location != nil { return publicPlaceConfirmed }
+        }
         return true
     }
-    private var actionTitle: String { switch visibility { case .private: "非公開でクラウド保存"; case .unlisted: "限定リンクを作成"; case .public: "Map・Discoverへ公開" } }
+    private var actionTitle: String {
+        switch visibility {
+        case .private: "非公開でクラウド保存"
+        case .unlisted: "限定リンクを作成"
+        case .public: locationPicker.location == nil ? "Discoverへ公開" : "Map・Discoverへ公開"
+        }
+    }
 
     @ViewBuilder private func successView(_ response: ScanLabPublishResponse) -> some View {
         VStack(spacing: 18) {
@@ -137,7 +169,16 @@ struct PublishScanView: View {
         }.padding(24)
     }
     private func successTitle(_ r: ScanLabPublishResponse) -> String { switch r.visibility { case "public": "公開しました"; case "unlisted": "限定リンクを作成しました"; default: "クラウドへ保存しました" } }
-    private func successExplanation(_ r: ScanLabPublishResponse) -> String { switch r.visibility { case "public": "MapとDiscoverから開けます。ブラウザ共有URLでも3Dを操作できます。"; case "unlisted": "MapやDiscoverには表示されません。専用URLを知る人だけが開けます。"; default: "自分のアカウントからだけ確認できます。共有URLは発行しません。" } }
+    private func successExplanation(_ r: ScanLabPublishResponse) -> String {
+        switch r.visibility {
+        case "public":
+            locationPicker.location == nil
+                ? "Discoverから開けます。Mapには掲載していません。ブラウザ共有URLでも3Dを操作できます。"
+                : "MapとDiscoverから開けます。ブラウザ共有URLでも3Dを操作できます。"
+        case "unlisted": "MapやDiscoverには表示されません。専用URLを知る人だけが開けます。"
+        default: "自分のアカウントからだけ確認できます。共有URLは発行しません。"
+        }
+    }
 
     private func submit() async {
         busy = true; errorMessage = nil; defer { busy = false }

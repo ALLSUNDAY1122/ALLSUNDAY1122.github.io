@@ -65,8 +65,10 @@ extension ScanLabBackend {
             throw ScanLabBackendError.contentConfirmationRequired
         }
         if visibility == .public {
-            guard location != nil else { throw ScanLabBackendError.invalidPublicLocation }
-            guard publicPlaceConfirmed, privacyConfirmed, rightsConfirmed else {
+            guard privacyConfirmed, rightsConfirmed else {
+                throw ScanLabBackendError.safetyConfirmationRequired
+            }
+            if location != nil && !publicPlaceConfirmed {
                 throw ScanLabBackendError.safetyConfirmationRequired
             }
         }
@@ -131,7 +133,7 @@ extension ScanLabBackend {
                 latitude: location?.latitude,
                 longitude: location?.longitude,
                 locationLabel: location?.label,
-                publicPlaceConfirmed: publicPlaceConfirmed,
+                publicPlaceConfirmed: location == nil ? false : publicPlaceConfirmed,
                 privacyConfirmed: privacyConfirmed,
                 rightsConfirmed: rightsConfirmed,
                 contentConfirmed: contentConfirmed
