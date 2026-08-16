@@ -1,4 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2.112.3";
+import { locationForPublicResponse, parseBoundingBox } from "./geo_contract.mjs";
 
 const cors = {
   "Access-Control-Allow-Origin": "https://allsunday1122.github.io",
@@ -38,11 +39,7 @@ async function decorate(scan: Record<string, any>) {
     caption: scan.caption,
     visibility: scan.visibility,
     publishedAt: scan.published_at,
-    location: scan.latitude == null || scan.longitude == null ? null : {
-      latitude: scan.latitude,
-      longitude: scan.longitude,
-      label: scan.location_label,
-    },
+    location: locationForPublicResponse(scan),
     author: profile ? { id: scan.owner_id, handle: profile.handle, displayName: profile.display_name } : null,
     likeCount: likeCount ?? 0,
     modelUrl,
@@ -79,15 +76,10 @@ Deno.serve(async (req) => {
       .order("published_at", { ascending: false })
       .limit(Math.min(limit * 2, 80));
 
-    const minLat = Number(url.searchParams.get("minLat"));
-    const maxLat = Number(url.searchParams.get("maxLat"));
-    const minLon = Number(url.searchParams.get("minLon"));
-    const maxLon = Number(url.searchParams.get("maxLon"));
-    const hasBox = [minLat, maxLat, minLon, maxLon].every(Number.isFinite);
-    if (hasBox) {
-      if (minLat < -90 || maxLat > 90 || minLon < -180 || maxLon > 180 || minLat > maxLat || minLon > maxLon || (maxLat - minLat) > 90 || (maxLon - minLon) > 180) {
-        return json({ error: "invalid_bbox" }, 400);
-      }
+    const boundingBox = parseBoundingBox(url.searchParams);
+    if (boundingBox.kind === "invalid") return json({ error: "invalid_bbox" }, 400);
+    if (boundingBox.kind === "valid") {
+      const { minLat, maxLat, minLon, maxLon } = boundingBox.value;
       query = query.gte("latitude", minLat).lte("latitude", maxLat).gte("longitude", minLon).lte("longitude", maxLon);
     }
 
