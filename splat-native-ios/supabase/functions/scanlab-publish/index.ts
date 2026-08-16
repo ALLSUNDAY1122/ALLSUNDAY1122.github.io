@@ -16,6 +16,11 @@ function bearer(req: Request) {
   return header.toLowerCase().startsWith("bearer ") ? header.slice(7) : null;
 }
 
+function cleanText(value: unknown, maxLength: number) {
+  if (typeof value !== "string") return null;
+  return value.replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim().slice(0, maxLength);
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
   const token = bearer(req);
@@ -25,13 +30,17 @@ Deno.serve(async (req) => {
   const user = userData.user;
   if (userError || !user) return json({ error: "unauthorized" }, 401);
 
-  let body: { scanId?: string };
+  let body: { scanId?: string; title?: string; description?: string };
   try { body = await req.json(); } catch { return json({ error: "invalid_json" }, 400); }
   if (!body.scanId || !/^[0-9a-f-]{36}$/i.test(body.scanId)) return json({ error: "invalid_scan_id" }, 400);
 
+  const title = body.title === undefined ? null : cleanText(body.title, 80);
+  const description = body.description === undefined ? null : cleanText(body.description, 500);
+  if (body.title !== undefined && !title) return json({ error: "invalid_title" }, 400);
+
   const { data: scan, error: scanError } = await admin
     .from("scanlab_scans")
-    .select("id,owner_id,visibility,status,moderation_status,asset_path,preview_path,latitude,longitude,public_place_confirmed,privacy_confirmed,rights_confirmed,content_confirmed,share_token")
+    .select("id,owner_id,title,caption,visibility,status,moderation_status,asset_path,preview_path,latitude,longitude,public_place_confirmed,privacy_confirmed,rights_confirmed,content_confirmed,share_token")
     .eq("id", body.scanId)
     .maybeSingle();
 
@@ -69,12 +78,16 @@ Deno.serve(async (req) => {
   if (!names.has("scene.spz")) return json({ error: "asset_missing" }, 409);
   if (!names.has("manifest.json")) return json({ error: "manifest_missing" }, 409);
 
+  const metadata: Record<string, string> = {};
+  if (title !== null) metadata.title = title;
+  if (description !== null) metadata.caption = description;
+
   const { data: updated, error: updateError } = await admin
     .from("scanlab_scans")
-    .update({ status: "published", moderation_status: "approved" })
+    .update({ ...metadata, status: "published", moderation_status: "approved" })
     .eq("id", scan.id)
     .eq("owner_id", user.id)
-    .select("id,visibility,share_token,published_at")
+    .select("id,title,caption,visibility,share_token,preview_path,published_at")
     .single();
 
   if (updateError) {
@@ -90,5 +103,13 @@ Deno.serve(async (req) => {
       ? `${base}?token=${encodeURIComponent(updated.share_token)}`
       : null;
 
-  return json({ id: updated.id, visibility: updated.visibility, publishedAt: updated.published_at, shareUrl });
+  return json({
+    id: updated.id,
+    title: updated.title,
+    description: updated.caption,
+    visibility: updated.visibility,
+    publishedAt: updated.published_at,
+    shareUrl,
+    hasPreview: Boolean(updated.preview_path),
+  });
 });
