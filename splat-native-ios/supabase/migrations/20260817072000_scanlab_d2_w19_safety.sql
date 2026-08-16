@@ -1,0 +1,152 @@
+-- D2-019: moderation / rate-limit / abuse resistance / failure handling
+-- Server-side controls; clients must treat raised exceptions as retryable or terminal as appropriate.
+
+create table if not exists public.scanlab_moderation_actions (
+  id bigint generated always as identity primary key,
+  scan_id uuid not null references public.scanlab_scans(id) on delete cascade,
+  actor_id uuid references auth.users(id) on delete set null,
+  action text not null check (action in ('hide','restore','reject')),
+  reason text not null check (char_length(btrim(reason)) between 3 and 500),
+  created_at timestamptz not null default now()
+);
+create index if not exists scanlab_moderation_actions_scan_idx
+  on public.scanlab_moderation_actions (scan_id, created_at desc);
+alter table public.scanlab_moderation_actions enable row level security;
+revoke all on public.scanlab_moderation_actions from anon, authenticated;
+
+create table if not exists public.scanlab_abuse_events (
+  id bigint generated always as identity primary key,
+  actor_id uuid not null references auth.users(id) on delete cascade,
+  action text not null check (action in ('publish','report')),
+  target_id uuid,
+  created_at timestamptz not null default now()
+);
+create index if not exists scanlab_abuse_events_actor_action_idx
+  on public.scanlab_abuse_events (actor_id, action, created_at desc);
+alter table public.scanlab_abuse_events enable row level security;
+revoke all on public.scanlab_abuse_events from anon, authenticated;
+
+create or replace function scanlab_private.enforce_abuse_limit(
+  p_actor uuid,
+  p_action text,
+  p_target uuid default null
+) returns void
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  recent_count integer;
+  max_count integer;
+  window_size interval;
+begin
+  if p_actor is null or p_actor <> (select auth.uid()) then
+    raise exception using errcode='42501', message='abuse guard actor mismatch';
+  end if;
+  if p_action = 'publish' then
+    max_count := 10;
+    window_size := interval '1 hour';
+  elsif p_action = 'report' then
+    max_count := 20;
+    window_size := interval '1 hour';
+  else
+    raise exception using errcode='22023', message='unsupported abuse guard action';
+  end if;
+
+  perform pg_advisory_xact_lock(hashtextextended(p_actor::text || ':' || p_action, 0));
+  select count(*) into recent_count
+    from public.scanlab_abuse_events
+   where actor_id=p_actor and action=p_action and created_at > now() - window_size;
+  if recent_count >= max_count then
+    raise exception using errcode='P0001', message='rate limit exceeded', hint='retry later';
+  end if;
+
+  insert into public.scanlab_abuse_events(actor_id, action, target_id)
+  values (p_actor, p_action, p_target);
+end;
+$$;
+revoke all on function scanlab_private.enforce_abuse_limit(uuid,text,uuid) from public, anon, authenticated;
+
+create or replace function scanlab_private.publish_guard()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if new.status='published' and (tg_op='INSERT' or old.status is distinct from 'published') then
+    if new.visibility in ('public','unlisted') and not new.content_confirmed then
+      raise exception using errcode='23514', message='shared scan requires content confirmation';
+    end if;
+    if new.visibility='public' and (new.latitude is null or new.longitude is null or not new.public_place_confirmed or not new.privacy_confirmed or not new.rights_confirmed) then
+      raise exception using errcode='23514', message='public scan requires location and safety attestations';
+    end if;
+    if new.visibility in ('public','unlisted') then
+      perform scanlab_private.enforce_abuse_limit(new.owner_id, 'publish', new.id);
+    end if;
+    new.published_at := coalesce(new.published_at, now());
+  end if;
+  if new.status <> 'published' then new.published_at := null; end if;
+  return new;
+end;
+$$;
+
+create or replace function scanlab_private.report_abuse_guard()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  if new.reporter_id is null or new.reporter_id <> (select auth.uid()) then
+    raise exception using errcode='42501', message='reporter mismatch';
+  end if;
+  perform scanlab_private.enforce_abuse_limit(new.reporter_id, 'report', new.scan_id);
+  return new;
+end;
+$$;
+
+-- Install the report guard only when the reports table exists; deployments remain forward-compatible.
+do $$
+begin
+  if to_regclass('public.scanlab_reports') is not null then
+    execute 'drop trigger if exists scanlab_report_abuse_guard on public.scanlab_reports';
+    execute 'create trigger scanlab_report_abuse_guard before insert on public.scanlab_reports for each row execute function scanlab_private.report_abuse_guard()';
+  end if;
+end $$;
+
+create or replace function scanlab_private.auto_hide_reported_scan()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  affected integer;
+begin
+  update public.scanlab_scans
+     set status='hidden', moderation_status='pending', updated_at=now()
+   where id=new.scan_id and status='published';
+  get diagnostics affected = row_count;
+  if affected > 0 then
+    insert into public.scanlab_moderation_actions(scan_id, actor_id, action, reason)
+    values (new.scan_id, new.reporter_id, 'hide', 'user report');
+  end if;
+  return new;
+end;
+$$;
+
+-- Keep abuse-event storage bounded without weakening the active one-hour window.
+create or replace function scanlab_private.prune_abuse_events()
+returns integer
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare deleted_count integer;
+begin
+  delete from public.scanlab_abuse_events where created_at < now() - interval '7 days';
+  get diagnostics deleted_count = row_count;
+  return deleted_count;
+end;
+$$;
+revoke all on function scanlab_private.prune_abuse_events() from public, anon, authenticated;
