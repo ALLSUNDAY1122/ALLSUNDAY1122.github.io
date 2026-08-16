@@ -39,22 +39,57 @@ struct ScanLabAuthView: View {
     @State private var password = ""
     @State private var busy = false
     @State private var errorMessage: String?
+    @State private var awaitingEmailConfirmation = false
+    @State private var lastConfirmationSentAt: Date? = ScanLabEmailConfirmationStore.load()
     enum Mode: String, CaseIterable, Identifiable { case signIn = "ログイン"; case signUp = "新規登録"; var id: String { rawValue } }
 
     var body: some View {
         Form {
             Section { Picker("認証", selection: $mode) { ForEach(Mode.allCases) { Text($0.rawValue).tag($0) } }.pickerStyle(.segmented) }
             Section("メールアドレス") {
-                TextField("you@example.com", text: $email).textContentType(.emailAddress).textInputAutocapitalization(.never).keyboardType(.emailAddress).autocorrectionDisabled()
+                TextField("you@example.com", text: $email)
+                    .textContentType(.emailAddress)
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(.emailAddress)
+                    .autocorrectionDisabled()
+                    .disabled(mode == .signUp && awaitingEmailConfirmation)
                 SecureField("パスワード", text: $password).textContentType(mode == .signUp ? .newPassword : .password)
             }
             Section {
-                Button(mode == .signIn ? "ログイン" : "アカウントを作成") { Task { await submit() } }
-                    .disabled(busy || email.isEmpty || password.count < 6)
+                Button(primaryActionTitle) { Task { await submit() } }
+                    .disabled(primaryActionDisabled)
+
                 if mode == .signIn {
                     Button("パスワードを忘れた場合") { Task { await requestPasswordReset() } }
-                        .disabled(busy || email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        .disabled(busy || normalizedEmail.isEmpty)
+                } else {
+                    TimelineView(.periodic(from: .now, by: 1)) { context in
+                        let remaining = ScanLabEmailConfirmationPolicy.remainingSeconds(
+                            lastSentAt: lastConfirmationSentAt,
+                            now: context.date
+                        )
+                        VStack(alignment: .leading, spacing: 10) {
+                            Button(resendButtonTitle(remainingSeconds: remaining)) {
+                                Task { await resendConfirmation() }
+                            }
+                            .disabled(busy || normalizedEmail.isEmpty || remaining > 0)
+
+                            if awaitingEmailConfirmation {
+                                Text("確認メールを送信済みです。再送した場合は古いメールではなく、最新メールのリンクを開いてください。")
+                                    .font(.footnote)
+                                    .foregroundStyle(.secondary)
+                                Button("別のメールアドレスで登録し直す") {
+                                    awaitingEmailConfirmation = false
+                                    errorMessage = nil
+                                    backend.notice = nil
+                                    password = ""
+                                }
+                                .disabled(busy || remaining > 0)
+                            }
+                        }
+                    }
                 }
+
                 if busy { ProgressView() }
                 if let errorMessage { Text(errorMessage).foregroundStyle(.red).font(.footnote) }
                 else if let notice = backend.notice { Text(notice).foregroundStyle(.secondary).font(.footnote) }
@@ -65,6 +100,31 @@ struct ScanLabAuthView: View {
                 Link("プライバシーポリシー", destination: URL(string: "https://allsunday1122.github.io/splat-native-ios/privacy.html")!)
             }
         }
+        .onChange(of: mode) { _, _ in errorMessage = nil }
+    }
+
+    private var normalizedEmail: String {
+        email.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var primaryActionTitle: String {
+        if mode == .signIn { return "ログイン" }
+        return awaitingEmailConfirmation ? "確認メールを送信済み" : "アカウントを作成"
+    }
+
+    private var primaryActionDisabled: Bool {
+        busy || normalizedEmail.isEmpty || password.count < 6 || (mode == .signUp && awaitingEmailConfirmation)
+    }
+
+    private func resendButtonTitle(remainingSeconds: Int) -> String {
+        remainingSeconds > 0 ? "確認メールを再送（\(remainingSeconds)秒後）" : "確認メールを再送"
+    }
+
+    private func markConfirmationEmailSent() {
+        let now = Date()
+        lastConfirmationSentAt = now
+        ScanLabEmailConfirmationStore.save(now)
+        awaitingEmailConfirmation = true
     }
 
     private func submit() async {
@@ -75,11 +135,34 @@ struct ScanLabAuthView: View {
             passwordRecovery.prepareForStandardAuth()
             if mode == .signIn {
                 try await backend.signIn(email: email, password: password)
+                ScanLabEmailConfirmationStore.clear()
+                lastConfirmationSentAt = nil
+                awaitingEmailConfirmation = false
             } else {
-                try await backend.signUpWithAuthCallback(email: email, password: password)
+                let confirmationPending = try await backend.signUpWithAuthCallback(email: email, password: password)
+                if confirmationPending {
+                    markConfirmationEmailSent()
+                } else {
+                    lastConfirmationSentAt = nil
+                    awaitingEmailConfirmation = false
+                }
             }
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+
+    private func resendConfirmation() async {
+        guard ScanLabEmailConfirmationPolicy.canResend(lastSentAt: lastConfirmationSentAt) else { return }
+        busy = true
+        errorMessage = nil
+        defer { busy = false }
+        do {
+            passwordRecovery.prepareForStandardAuth()
+            try await backend.resendSignUpConfirmation(email: email)
+            markConfirmationEmailSent()
+        } catch {
+            errorMessage = "確認メールを再送できませんでした。少し待ってから、もう一度お試しください。"
         }
     }
 
@@ -88,6 +171,9 @@ struct ScanLabAuthView: View {
         errorMessage = nil
         defer { busy = false }
         do {
+            awaitingEmailConfirmation = false
+            lastConfirmationSentAt = nil
+            ScanLabEmailConfirmationStore.clear()
             try await passwordRecovery.requestReset(email: email, backend: backend)
         } catch {
             errorMessage = "パスワード再設定メールを送信できませんでした。通信状態を確認して、もう一度お試しください。"
