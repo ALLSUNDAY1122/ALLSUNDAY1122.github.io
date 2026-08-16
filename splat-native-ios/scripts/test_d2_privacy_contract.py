@@ -27,6 +27,10 @@ def forbid(rel: str, *tokens: str) -> None:
             raise AssertionError(f"stale privacy claim {token!r} in {rel}")
 
 
+SUPPORT_URL = "https://allsunday1122.github.io/splat-native-ios/support.html"
+PRIVACY_URL = "https://allsunday1122.github.io/splat-native-ios/privacy.html"
+SUPPORT_EMAIL = "kohei3615@gmail.com"
+
 # Permission prompts must describe the actual opt-in behavior.
 require(
     "project.yml",
@@ -56,7 +60,7 @@ require(
     "attributesOfItem(atPath: package.assetURL.path)",
 )
 
-# Account, UGC interaction, moderation, and deletion are network-backed D2 features.
+# Account, UGC interaction, moderation, deletion and published contact paths are network-backed D2 contracts.
 require(
     "SplatNative/ScanLabBackend.swift",
     "func signUp(email:",
@@ -65,6 +69,13 @@ require(
     "func report(_ scan:",
     "func block(_ scan:",
     "func deleteAccount()",
+    f'static let supportURL = URL(string: "{SUPPORT_URL}")!',
+)
+require(
+    "SplatNative/ScanLabAccountView.swift",
+    'Link("サポート・お問い合わせ", destination: ScanLabConfig.supportURL)',
+    f'URL(string: "{PRIVACY_URL}")!',
+    "アカウントとクラウドデータを削除",
 )
 require(
     "supabase/functions/scanlab-delete-account/index.ts",
@@ -117,7 +128,6 @@ assert "C617.1" in file_timestamp.get("NSPrivacyAccessedAPITypeReasons", []), "m
 for rel in ("privacy.html", "APP_REVIEW_NOTES_JA.md", "APP_STORE_METADATA_JA.md"):
     require(rel, "Supabase", "scene.spz", "manifest.json")
 
-# Public policy is user-facing Japanese, so test the visible semantics rather than internal enum spellings.
 require(
     "privacy.html",
     "非公開",
@@ -128,7 +138,24 @@ require(
     "報告",
     "ブロック",
     "アカウントとクラウドデータを削除",
+    "お問い合わせ",
+    "./support.html",
+    f'mailto:{SUPPORT_EMAIL}',
 )
+
+# UGC apps need a reachable published support/contact path in addition to in-app report/block controls.
+require(
+    "support.html",
+    "Scan Lab サポート",
+    "お問い合わせ",
+    "不適切なコンテンツ・ユーザー",
+    "アプリ内の「報告」",
+    "「ブロック」",
+    "アカウントとクラウドデータの削除",
+    f'mailto:{SUPPORT_EMAIL}',
+    "./privacy.html",
+)
+forbid("support.html", "Splat Lab サポート")
 
 # Review/metadata files are implementation-facing and intentionally name the internal visibility enums.
 for rel in ("APP_REVIEW_NOTES_JA.md", "APP_STORE_METADATA_JA.md"):
@@ -140,6 +167,10 @@ require(
     "Product Interaction",
     "C617.1",
     "位置情報が自動取得されない",
+    SUPPORT_URL,
+    PRIVACY_URL,
+    SUPPORT_EMAIL,
+    "UGC安全機能",
 )
 require(
     "APP_STORE_METADATA_JA.md",
@@ -147,6 +178,10 @@ require(
     "Product Interaction",
     "C617.1",
     "App Review Information",
+    f"Support URL: `{SUPPORT_URL}`",
+    f"Privacy Policy URL: `{PRIVACY_URL}`",
+    SUPPORT_EMAIL,
+    "本審査前に",
 )
 
 forbid(
@@ -169,4 +204,4 @@ forbid(
     "現段階の開発者によるデータ収集: なし",
 )
 
-print("PASS: D2 privacy manifest / permissions / review text / publish boundary are aligned")
+print("PASS: D2 privacy manifest / permissions / review text / UGC support contact / publish boundary are aligned")
