@@ -282,7 +282,7 @@ private struct ScanLabSignedInAccountView: View {
         profileError = nil
         defer { profileBusy = false }
         do {
-            try await backend.updateProfile(handle: handle, displayName: displayName)
+            try await backend.updateProfileWithConflictMapping(handle: handle, displayName: displayName)
         } catch {
             profileError = error.localizedDescription
         }
