@@ -1,11 +1,13 @@
 import { createClient } from "npm:@supabase/supabase-js@2.112.3";
-import { locationForPublicResponse, parseBoundingBox } from "./geo_contract.mjs";
+import { parseScanLabBoundingBox } from "./bbox.mjs";
+import { locationForPublicResponse } from "./geo_contract.mjs";
 
 const cors = {
   "Access-Control-Allow-Origin": "https://allsunday1122.github.io",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Cache-Control": "public, max-age=30, s-maxage=60",
+  "Vary": "Authorization",
+  "Cache-Control": "private, no-store",
 };
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
@@ -76,11 +78,14 @@ Deno.serve(async (req) => {
       .order("published_at", { ascending: false })
       .limit(Math.min(limit * 2, 80));
 
-    const boundingBox = parseBoundingBox(url.searchParams);
-    if (boundingBox.kind === "invalid") return json({ error: "invalid_bbox" }, 400);
-    if (boundingBox.kind === "valid") {
-      const { minLat, maxLat, minLon, maxLon } = boundingBox.value;
-      query = query.gte("latitude", minLat).lte("latitude", maxLat).gte("longitude", minLon).lte("longitude", maxLon);
+    const bbox = parseScanLabBoundingBox(url.searchParams);
+    if (bbox.error) return json({ error: bbox.error }, 400);
+    if (bbox.value) {
+      query = query
+        .gte("latitude", bbox.value.minLat)
+        .lte("latitude", bbox.value.maxLat)
+        .gte("longitude", bbox.value.minLon)
+        .lte("longitude", bbox.value.maxLon);
     }
 
     const [{ data, error }, blocked] = await Promise.all([query, blockedUserIds(req)]);

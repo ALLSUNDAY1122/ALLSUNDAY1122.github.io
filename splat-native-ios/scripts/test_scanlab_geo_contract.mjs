@@ -1,44 +1,42 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import {
-  locationForPublicResponse,
-  parseBoundingBox,
-} from "../supabase/functions/scanlab-public/geo_contract.mjs";
+import { parseScanLabBoundingBox } from "../supabase/functions/scanlab-public/bbox.mjs";
+import { locationForPublicResponse } from "../supabase/functions/scanlab-public/geo_contract.mjs";
 
 assert.deepEqual(
-  parseBoundingBox(new URLSearchParams("mode=feed&limit=40")),
-  { kind: "none" },
+  parseScanLabBoundingBox(new URLSearchParams("mode=feed&limit=40")),
+  { value: null },
   "omitting bbox must not become a zero-degree bbox",
 );
-assert.equal(parseBoundingBox(new URLSearchParams("minLat=35")).kind, "invalid", "partial bbox must be rejected");
+assert.equal(parseScanLabBoundingBox(new URLSearchParams("minLat=35")).error, "invalid_bbox", "partial bbox must be rejected");
 assert.equal(
-  parseBoundingBox(new URLSearchParams("minLat=&maxLat=&minLon=&maxLon=")).kind,
-  "invalid",
+  parseScanLabBoundingBox(new URLSearchParams("minLat=&maxLat=&minLon=&maxLon=")).error,
+  "invalid_bbox",
   "explicitly empty bbox must not be treated as omitted",
 );
 assert.equal(
-  parseBoundingBox(new URLSearchParams("minLat=&maxLat=36&minLon=139&maxLon=140")).kind,
-  "invalid",
+  parseScanLabBoundingBox(new URLSearchParams("minLat=&maxLat=36&minLon=139&maxLon=140")).error,
+  "invalid_bbox",
   "empty bbox values must not coerce to zero",
 );
 assert.equal(
-  parseBoundingBox(new URLSearchParams("minLat=x&maxLat=36&minLon=139&maxLon=140")).kind,
-  "invalid",
+  parseScanLabBoundingBox(new URLSearchParams("minLat=x&maxLat=36&minLon=139&maxLon=140")).error,
+  "invalid_bbox",
   "non-numeric bbox must be rejected",
 );
 assert.deepEqual(
-  parseBoundingBox(new URLSearchParams("minLat=35&maxLat=36&minLon=139&maxLon=140")),
-  { kind: "valid", value: { minLat: 35, maxLat: 36, minLon: 139, maxLon: 140 } },
+  parseScanLabBoundingBox(new URLSearchParams("minLat=35&maxLat=36&minLon=139&maxLon=140")),
+  { value: { minLat: 35, maxLat: 36, minLon: 139, maxLon: 140 } },
 );
 assert.equal(
-  parseBoundingBox(new URLSearchParams("minLat=-91&maxLat=36&minLon=139&maxLon=140")).kind,
-  "invalid",
+  parseScanLabBoundingBox(new URLSearchParams("minLat=-91&maxLat=36&minLon=139&maxLon=140")).error,
+  "invalid_bbox",
   "out-of-range bbox must be rejected",
 );
 assert.equal(
-  parseBoundingBox(new URLSearchParams("minLat=0&maxLat=91&minLon=139&maxLon=140")).kind,
-  "invalid",
+  parseScanLabBoundingBox(new URLSearchParams("minLat=0&maxLat=91&minLon=139&maxLon=140")).error,
+  "invalid_bbox",
   "overly broad bbox must be rejected",
 );
 
@@ -78,8 +76,10 @@ const functionSource = readFileSync(
   fileURLToPath(new URL("../supabase/functions/scanlab-public/index.ts", import.meta.url)),
   "utf8",
 );
-assert.match(functionSource, /parseBoundingBox\(url\.searchParams\)/, "feed must use the bbox parser");
+assert.match(functionSource, /parseScanLabBoundingBox\(url\.searchParams\)/, "feed must use the deployed bbox parser contract");
 assert.match(functionSource, /location:\s*locationForPublicResponse\(scan\)/, "public API must filter location by visibility");
+assert.match(functionSource, /"Vary": "Authorization"/, "authenticated blocked-user feed must keep auth-aware cache variance");
+assert.match(functionSource, /"Cache-Control": "private, no-store"/, "personalized public feed must not regress to shared caching");
 assert.doesNotMatch(
   functionSource,
   /Number\(url\.searchParams\.get\("minLat"\)\)/,
@@ -104,6 +104,6 @@ const shellSource = readFileSync(
   "utf8",
 );
 assert.match(shellSource, /struct ScanLabMapView: View/, "Map UI must remain wired");
-assert.match(shellSource, /backend\.publicScans\.filter \{ \$0\.location != nil \}/, "Map must show only located public items");
+assert.match(shellSource, /backend\.mapScans\.filter \{ \$0\.location != nil \}/, "Map must show only located public items from the map feed");
 
 console.log("PASS: ScanLab Map/geotag contract");

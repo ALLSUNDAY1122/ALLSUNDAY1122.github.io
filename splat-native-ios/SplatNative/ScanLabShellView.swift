@@ -79,7 +79,8 @@ private struct ScanLabDiscoverRow: View {
 struct ScanLabMapView: View {
     @EnvironmentObject var backend: ScanLabBackend
     @State private var selected: ScanLabPublicScan?
-    private var mappedScans: [ScanLabPublicScan] { backend.publicScans.filter { $0.location != nil } }
+    private var mappedScans: [ScanLabPublicScan] { backend.mapScans.filter { $0.location != nil } }
+
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
@@ -91,12 +92,28 @@ struct ScanLabMapView: View {
                             }
                         }
                     }
-                }.mapStyle(.standard(pointsOfInterest: .excludingAll))
-                if mappedScans.isEmpty {
-                    Text(backend.isLoadingPublic ? "公開地点を取得中" : "公開地点はまだありません").font(.footnote.weight(.semibold)).padding(.horizontal, 14).padding(.vertical, 9).background(.ultraThinMaterial, in: Capsule()).padding(.bottom, 14)
+                }
+                .mapStyle(.standard(pointsOfInterest: .excludingAll))
+                .onMapCameraChange(frequency: .onEnd) { context in
+                    let bounds = ScanLabMapQueryPolicy.boundingBox(
+                        centerLatitude: context.region.center.latitude,
+                        centerLongitude: context.region.center.longitude,
+                        latitudeDelta: context.region.span.latitudeDelta,
+                        longitudeDelta: context.region.span.longitudeDelta
+                    )
+                    // A viewport that exceeds the backend's single-box contract falls back
+                    // to the global latest feed instead of leaving stale local pins on screen.
+                    Task { await backend.loadMapScans(boundingBox: bounds) }
+                }
+
+                if backend.isLoadingMap {
+                    Text("この範囲を検索中").font(.footnote.weight(.semibold)).padding(.horizontal, 14).padding(.vertical, 9).background(.ultraThinMaterial, in: Capsule()).padding(.bottom, 14)
+                } else if mappedScans.isEmpty {
+                    Text("この範囲に公開地点はありません").font(.footnote.weight(.semibold)).padding(.horizontal, 14).padding(.vertical, 9).background(.ultraThinMaterial, in: Capsule()).padding(.bottom, 14)
                 }
             }
-            .navigationTitle("Map").task { await backend.loadPublicScans() }
+            .navigationTitle("Map")
+            .task { await backend.loadMapScans() }
             .sheet(item: $selected) { scan in NavigationStack { ScanLabRemoteScanView(scan: scan) } }
         }
     }

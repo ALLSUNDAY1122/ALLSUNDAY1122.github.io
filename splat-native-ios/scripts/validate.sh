@@ -99,11 +99,17 @@ require_text SplatNative/ScanLibraryView.swift 'restoreSavedProject'
 ! grep -R -n 'おもちゃばこ' SplatNative project.yml
 
 # D authenticated cloud sharing is explicit and isolated from the capture/reconstruction core.
-for f in ScanLabBackend.swift ScanLabShellView.swift PublishScanView.swift ScanLabAccountView.swift; do require_file "SplatNative/$f"; done
+for f in ScanLabBackend.swift ScanLabShellView.swift ScanLabMapQuery.swift PublishScanView.swift ScanLabAccountView.swift; do require_file "SplatNative/$f"; done
+require_file scripts/test_scanlab_map_query.swift
+require_file scripts/test_scanlab_geo_contract.mjs
 require_text SplatNative/SplatNativeApp.swift 'ScanLabShellView()'
 require_text SplatNative/ScanLabShellView.swift 'RootScanView()'
 require_text SplatNative/ScanLabBackend.swift 'import Supabase'
 require_text SplatNative/ScanLabBackend.swift 'ScanLabVisibility'
+require_text SplatNative/ScanLabBackend.swift 'mapScans'
+require_text SplatNative/ScanLabBackend.swift 'func loadMapScans'
+require_text SplatNative/ScanLabShellView.swift 'backend.mapScans'
+require_text SplatNative/ScanLabShellView.swift 'onMapCameraChange(frequency: .onEnd)'
 require_text SplatNative/PublishScanView.swift 'contentConfirmed'
 require_text SplatNative/PublishScanView.swift 'publicPlaceConfirmed'
 require_text project.yml 'package: Supabase'
@@ -112,6 +118,33 @@ require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
 ! grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
 # D parity work must not add advertising/analytics SDKs.
 ! grep -R -nE 'Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
+
+node scripts/test_scanlab_geo_contract.mjs
+
+MAP_QUERY_TEST_BIN="${TMPDIR:-/tmp}/scanlab-map-query-contract"
+swiftc SplatNative/ScanLabMapQuery.swift scripts/test_scanlab_map_query.swift -o "$MAP_QUERY_TEST_BIN"
+"$MAP_QUERY_TEST_BIN"
+rm -f "$MAP_QUERY_TEST_BIN"
+
+python3 - <<'PY'
+from pathlib import Path
+shell=Path('SplatNative/ScanLabShellView.swift').read_text()
+backend=Path('SplatNative/ScanLabBackend.swift').read_text()
+start=shell.index('struct ScanLabMapView: View')
+end=shell.index('struct ScanLabRemoteScanView: View')
+map_block=shell[start:end]
+assert 'backend.mapScans' in map_block
+assert 'backend.publicScans' not in map_block
+assert 'onMapCameraChange(frequency: .onEnd)' in map_block
+assert 'ScanLabMapQueryPolicy.boundingBox' in map_block
+assert 'loadMapScans(boundingBox: bounds)' in map_block
+assert '@Published private(set) var mapScans' in backend
+assert 'private var mapRequestGeneration = 0' in backend
+assert 'generation == mapRequestGeneration' in backend
+assert 'func loadPublicScans() async' in backend
+assert 'func loadPublicScans(boundingBox:' not in backend
+print('PASS: Map viewport feed is isolated from Discover and stale map responses are rejected')
+PY
 
 plutil -lint SplatNative/PrivacyInfo.xcprivacy >/dev/null
 python3 - <<'PY'

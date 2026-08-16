@@ -198,11 +198,15 @@ final class ScanLabBackend: ObservableObject {
     @Published private(set) var isAuthenticated = false
     @Published private(set) var currentUserEmail: String?
     @Published private(set) var publicScans: [ScanLabPublicScan] = []
+    @Published private(set) var mapScans: [ScanLabPublicScan] = []
     @Published private(set) var ownerScans: [ScanLabOwnerScan] = []
     @Published private(set) var profile: ScanLabProfile?
     @Published private(set) var isLoadingPublic = false
+    @Published private(set) var isLoadingMap = false
     @Published private(set) var isLoadingOwner = false
     @Published var notice: String?
+
+    private var mapRequestGeneration = 0
 
     init() {
         client = SupabaseClient(supabaseURL: ScanLabConfig.supabaseURL, supabaseKey: ScanLabConfig.publishableKey)
@@ -234,23 +238,55 @@ final class ScanLabBackend: ObservableObject {
     }
     func signOut() async { do { try await client.auth.signOut(); await loadPublicScans() } catch { notice = error.localizedDescription } }
 
-    func loadPublicScans(boundingBox: (minLat: Double, maxLat: Double, minLon: Double, maxLon: Double)? = nil) async {
-        guard !isLoadingPublic else { return }; isLoadingPublic = true; defer { isLoadingPublic = false }
+    private func fetchPublicScans(boundingBox: ScanLabMapBounds?) async throws -> [ScanLabPublicScan] {
+        var components = URLComponents(url: ScanLabConfig.publicFunctionURL, resolvingAgainstBaseURL: false)!
+        var items = [URLQueryItem(name: "mode", value: "feed"), URLQueryItem(name: "limit", value: "40")]
+        if let boundingBox {
+            items += [
+                URLQueryItem(name: "minLat", value: String(boundingBox.minLat)),
+                URLQueryItem(name: "maxLat", value: String(boundingBox.maxLat)),
+                URLQueryItem(name: "minLon", value: String(boundingBox.minLon)),
+                URLQueryItem(name: "maxLon", value: String(boundingBox.maxLon)),
+            ]
+        }
+        components.queryItems = items
+        guard let url = components.url else { throw ScanLabBackendError.invalidServerResponse }
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let session = try? await client.auth.session {
+            request.setValue("Bearer \(session.accessToken)", forHTTPHeaderField: "Authorization")
+        }
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let http = response as? HTTPURLResponse, 200..<300 ~= http.statusCode else { throw ScanLabBackendError.invalidServerResponse }
+        return try JSONDecoder().decode(ScanLabPublicEnvelope.self, from: data).items
+    }
+
+    func loadPublicScans() async {
+        guard !isLoadingPublic else { return }
+        isLoadingPublic = true
+        defer { isLoadingPublic = false }
         do {
-            var components = URLComponents(url: ScanLabConfig.publicFunctionURL, resolvingAgainstBaseURL: false)!
-            var items = [URLQueryItem(name: "mode", value: "feed"), URLQueryItem(name: "limit", value: "40")]
-            if let boundingBox { items += [URLQueryItem(name: "minLat", value: String(boundingBox.minLat)), URLQueryItem(name: "maxLat", value: String(boundingBox.maxLat)), URLQueryItem(name: "minLon", value: String(boundingBox.minLon)), URLQueryItem(name: "maxLon", value: String(boundingBox.maxLon))] }
-            components.queryItems = items
-            guard let url = components.url else { throw ScanLabBackendError.invalidServerResponse }
-            var request = URLRequest(url: url)
-            request.setValue("application/json", forHTTPHeaderField: "Accept")
-            if let session = try? await client.auth.session {
-                request.setValue("Bearer \(session.accessToken)", forHTTPHeaderField: "Authorization")
-            }
-            let (data, response) = try await URLSession.shared.data(for: request)
-            guard let http = response as? HTTPURLResponse, 200..<300 ~= http.statusCode else { throw ScanLabBackendError.invalidServerResponse }
-            publicScans = try JSONDecoder().decode(ScanLabPublicEnvelope.self, from: data).items
-        } catch { notice = "公開スキャンを取得できませんでした: \(error.localizedDescription)" }
+            publicScans = try await fetchPublicScans(boundingBox: nil)
+        } catch {
+            notice = "公開スキャンを取得できませんでした: \(error.localizedDescription)"
+        }
+    }
+
+    func loadMapScans(boundingBox: ScanLabMapBounds? = nil) async {
+        mapRequestGeneration += 1
+        let generation = mapRequestGeneration
+        isLoadingMap = true
+        do {
+            let scans = try await fetchPublicScans(boundingBox: boundingBox)
+            guard generation == mapRequestGeneration else { return }
+            mapScans = scans
+        } catch {
+            guard generation == mapRequestGeneration else { return }
+            notice = "Mapの公開地点を取得できませんでした: \(error.localizedDescription)"
+        }
+        if generation == mapRequestGeneration {
+            isLoadingMap = false
+        }
     }
 
     func loadProfile() async {
