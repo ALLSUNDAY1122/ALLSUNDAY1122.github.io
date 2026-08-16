@@ -43,6 +43,14 @@ targets:
         CURRENT_PROJECT_VERSION: 1
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: Scan Lab
+        INFOPLIST_KEY_CFBundleURLTypes: |
+          {
+              CFBundleTypeRole = Editor;
+              CFBundleURLName = "jp.allsunday1122.splatlab.auth";
+              CFBundleURLSchemes = (
+                  "jp.allsunday1122.splatlab"
+              );
+          }
         INFOPLIST_KEY_NSCameraUsageDescription: 周囲を撮影して端末内で3Dスキャンを生成するため、カメラを使用します。
         INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: Mapへ公開する地点をユーザーが明示的に設定した場合だけ、現在地を取得します。位置情報は自動送信しません。
         INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
@@ -63,6 +71,7 @@ targets:
       - path: SplatNativeTests
       - path: SplatNative/CapturePolicy.swift
       - path: SplatNative/ScanLabAuthStatePolicy.swift
+      - path: SplatNative/ScanLabAuthCallbackPolicy.swift
       - path: SplatNative/SplatReconstructionPolicy.swift
       - path: SplatNative/SplatSeedColorizer.swift
       - path: SplatNative/SplatSkySeeder.swift

@@ -12,6 +12,9 @@ struct SplatNativeApp: App {
                 .environmentObject(model)
                 .environmentObject(meshModel)
                 .environmentObject(backend)
+                .onOpenURL { url in
+                    Task { await backend.handleAuthCallback(url) }
+                }
         }
     }
 }

@@ -65,7 +65,7 @@ struct ScanLabAuthView: View {
             if mode == .signIn {
                 try await backend.signIn(email: email, password: password)
             } else {
-                try await backend.signUp(email: email, password: password)
+                try await backend.signUpWithAuthCallback(email: email, password: password)
             }
         } catch {
             errorMessage = error.localizedDescription
