@@ -78,6 +78,10 @@ A separate suspected visibility-transition safety bypass was checked against pro
 and rejected as a duplicate fix: the existing CHECK constraints already fail closed for published
 public/shared safety requirements.
 
+Post-write trigger review found `OLD`/`NEW` references placed in unused boolean/CASE branches.
+Those references were rewritten as explicit `TG_OP` branches so INSERT and DELETE paths never depend
+on expression evaluation order for the unavailable trigger record.
+
 ## Regression model
 
 Read-only SQL models were executed without inserting production data:

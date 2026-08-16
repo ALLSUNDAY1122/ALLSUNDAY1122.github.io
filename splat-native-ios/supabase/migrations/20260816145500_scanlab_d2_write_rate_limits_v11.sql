@@ -137,7 +137,11 @@ as $$
 declare
   actor uuid;
 begin
-  actor := case when tg_op = 'DELETE' then old.blocker_id else new.blocker_id end;
+  if tg_op = 'DELETE' then
+    actor := old.blocker_id;
+  else
+    actor := new.blocker_id;
+  end if;
 
   perform scanlab_private.consume_rate_limit(
     actor,
@@ -203,9 +207,12 @@ begin
       interval '1 hour'
     );
     new.published_at := pg_catalog.now();
-  elsif new.status = 'published'
-        and (tg_op = 'INSERT' or old.status is distinct from 'published') then
-    new.published_at := coalesce(new.published_at, pg_catalog.now());
+  elsif new.status = 'published' then
+    if tg_op = 'INSERT' then
+      new.published_at := coalesce(new.published_at, pg_catalog.now());
+    elsif old.status is distinct from 'published' then
+      new.published_at := coalesce(new.published_at, pg_catalog.now());
+    end if;
   end if;
 
   if new.status <> 'published' then
