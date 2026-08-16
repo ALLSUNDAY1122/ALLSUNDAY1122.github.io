@@ -1,0 +1,171 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import plistlib
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def read(rel: str) -> str:
+    path = ROOT / rel
+    if not path.is_file():
+        raise AssertionError(f"missing: {rel}")
+    return path.read_text(encoding="utf-8")
+
+
+def require(rel: str, *tokens: str) -> str:
+    text = read(rel)
+    for token in tokens:
+        if token not in text:
+            raise AssertionError(f"missing contract {token!r} in {rel}")
+    return text
+
+
+def forbid(rel: str, *tokens: str) -> None:
+    text = read(rel)
+    for token in tokens:
+        if token in text:
+            raise AssertionError(f"stale privacy claim {token!r} in {rel}")
+
+
+# Permission prompts must describe the actual opt-in behavior.
+require(
+    "project.yml",
+    "INFOPLIST_KEY_NSCameraUsageDescription",
+    "INFOPLIST_KEY_NSLocationWhenInUseUsageDescription",
+    "Mapへ公開する地点をユーザーが明示的に設定した場合だけ、現在地を取得します。位置情報は自動送信しません。",
+)
+
+# Current UI boundary: location is requested only by explicit user action and publish is trusted-package only.
+publish = require(
+    "SplatNative/PublishScanView.swift",
+    "requestCurrentLocation()",
+    "manager.requestWhenInUseAuthorization()",
+    "現在地を公開地点に設定",
+    "投稿するまで送信されません",
+    "publishTrustedPackage",
+    "このボタンを押すまで3Dファイル・位置情報はサーバーへ送信されません。",
+)
+if "backend.publish(resultURL:" in publish:
+    raise AssertionError("PublishScanView must not call the legacy raw .splat publish path")
+
+require(
+    "SplatNative/ScanLabBackend+TrustedPublish.swift",
+    "scene.spz",
+    "manifest.json",
+    "The raw reconstruction `.splat` never leaves the device.",
+    "attributesOfItem(atPath: package.assetURL.path)",
+)
+
+# Account, UGC interaction, moderation, and deletion are network-backed D2 features.
+require(
+    "SplatNative/ScanLabBackend.swift",
+    "func signUp(email:",
+    "func updateProfile(handle:",
+    "func like(_ scan:",
+    "func report(_ scan:",
+    "func block(_ scan:",
+    "func deleteAccount()",
+)
+require(
+    "supabase/functions/scanlab-delete-account/index.ts",
+    'storage.from("scanlab-assets").remove',
+    "admin.auth.admin.deleteUser(user.id)",
+)
+require(
+    "supabase/migrations/20260815015516_scanlab_s7_social_backend_v1.sql",
+    "references auth.users(id) on delete cascade",
+    "scanlab_likes",
+    "scanlab_reports",
+)
+
+# Privacy manifest must cover all server-retained D2 data categories and the required-reason API.
+manifest_path = ROOT / "SplatNative/PrivacyInfo.xcprivacy"
+with manifest_path.open("rb") as fh:
+    manifest = plistlib.load(fh)
+
+assert manifest.get("NSPrivacyTracking") is False
+assert manifest.get("NSPrivacyTrackingDomains") == []
+
+collected = manifest.get("NSPrivacyCollectedDataTypes", [])
+by_type = {item.get("NSPrivacyCollectedDataType"): item for item in collected}
+expected = {
+    "NSPrivacyCollectedDataTypeName",
+    "NSPrivacyCollectedDataTypeEmailAddress",
+    "NSPrivacyCollectedDataTypeUserID",
+    "NSPrivacyCollectedDataTypePreciseLocation",
+    "NSPrivacyCollectedDataTypeOtherUserContent",
+    "NSPrivacyCollectedDataTypeEnvironmentScanning",
+    "NSPrivacyCollectedDataTypeProductInteraction",
+}
+missing = expected - set(by_type)
+assert not missing, f"missing privacy data types: {sorted(missing)}"
+for kind in expected:
+    item = by_type[kind]
+    assert item.get("NSPrivacyCollectedDataTypeLinked") is True, kind
+    assert item.get("NSPrivacyCollectedDataTypeTracking") is False, kind
+    assert "NSPrivacyCollectedDataTypePurposeAppFunctionality" in item.get("NSPrivacyCollectedDataTypePurposes", []), kind
+
+accessed = manifest.get("NSPrivacyAccessedAPITypes", [])
+file_timestamp = next(
+    (item for item in accessed if item.get("NSPrivacyAccessedAPIType") == "NSPrivacyAccessedAPICategoryFileTimestamp"),
+    None,
+)
+assert file_timestamp is not None, "missing FileTimestamp required-reason declaration"
+assert "C617.1" in file_timestamp.get("NSPrivacyAccessedAPITypeReasons", []), "missing FileTimestamp C617.1"
+
+# Public policy and review material must describe the current D2 behavior, not the pre-network build.
+for rel in ("privacy.html", "APP_REVIEW_NOTES_JA.md", "APP_STORE_METADATA_JA.md"):
+    require(
+        rel,
+        "Supabase",
+        "scene.spz",
+        "manifest.json",
+        "public",
+        "unlisted",
+        "private",
+    )
+
+require(
+    "privacy.html",
+    "現在地を公開地点に設定",
+    "いいね",
+    "報告",
+    "ブロック",
+    "アカウントとクラウドデータを削除",
+)
+require(
+    "APP_REVIEW_NOTES_JA.md",
+    "Environment Scanning",
+    "Product Interaction",
+    "C617.1",
+    "位置情報が自動取得されない",
+)
+require(
+    "APP_STORE_METADATA_JA.md",
+    "Environment Scanning",
+    "Product Interaction",
+    "C617.1",
+    "App Review Information",
+)
+
+forbid(
+    "privacy.html",
+    "現在の版では、撮影画像や生成した3Dデータを開発者のサーバーへ送信しません。",
+    "現在の版には、開発者がこれらを受信するための外部API、アカウント機能、解析SDK、広告SDKはありません。",
+    "マイク・位置情報・通知・トラッキング: 現在の版では要求しません。",
+)
+forbid(
+    "APP_REVIEW_NOTES_JA.md",
+    "現段階ではログインはありません。",
+    "Location: 現段階では要求しません。",
+    "将来のS7公開共有機能",
+)
+forbid(
+    "APP_STORE_METADATA_JA.md",
+    "ログイン: 現段階なし",
+    "現段階の外部API: なし",
+    "位置情報: 現段階では使用しない",
+    "現段階の開発者によるデータ収集: なし",
+)
+
+print("PASS: D2 privacy manifest / permissions / review text / publish boundary are aligned")
