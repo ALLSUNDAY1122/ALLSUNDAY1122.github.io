@@ -51,7 +51,7 @@ Deno.serve(async (req) => {
 
   const { data: scan, error: scanError } = await admin
     .from("scanlab_scans")
-    .select("id,owner_id,visibility,status,moderation_status,share_token")
+    .select("id,owner_id,visibility,status,moderation_status,share_token,published_at")
     .eq("id", body.scanId)
     .maybeSingle();
 
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
     return json({
       id: scan.id,
       visibility: scan.visibility,
-      publishedAt: null,
+      publishedAt: scan.published_at,
       shareUrl: shareUrl(scan.id, scan.visibility, scan.share_token),
     });
   }
@@ -91,10 +91,13 @@ Deno.serve(async (req) => {
     .eq("owner_id", user.id)
     .eq("status", "published")
     .eq("moderation_status", "approved")
+    .eq("visibility", scan.visibility)
+    .eq("share_token", scan.share_token)
     .select("id,visibility,share_token,published_at")
-    .single();
+    .maybeSingle();
 
   if (updateError) return json({ error: "visibility_change_failed" }, 400);
+  if (!updated) return json({ error: "visibility_change_conflict" }, 409);
 
   return json({
     id: updated.id,
