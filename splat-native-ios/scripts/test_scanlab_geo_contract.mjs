@@ -158,7 +158,7 @@ assert.doesNotMatch(
 );
 
 const migrationSource = readFileSync(
-  fileURLToPath(new URL("../supabase/migrations/20260816160000_scanlab_d2_optional_public_geotag_v12.sql", import.meta.url)),
+  fileURLToPath(new URL("../supabase/migrations/20260816160353_scanlab_d2_optional_public_geotag_v12.sql", import.meta.url)),
   "utf8",
 );
 assert.match(
