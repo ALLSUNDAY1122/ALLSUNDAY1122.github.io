@@ -1,10 +1,15 @@
 import { createClient } from "npm:@supabase/supabase-js@2.112.3";
+import { parseScanLabBoundingBox } from "./bbox.mjs";
+import { makeScanLabFeedCursor, parseScanLabFeedCursor } from "./feed_cursor.mjs";
+import { parseScanLabFeedAssetPolicy } from "./feed_asset_policy.mjs";
+import { locationForPublicResponse } from "./geo_contract.mjs";
 
 const cors = {
   "Access-Control-Allow-Origin": "https://allsunday1122.github.io",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Cache-Control": "public, max-age=30, s-maxage=60",
+  "Vary": "Authorization",
+  "Cache-Control": "private, no-store",
 };
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
@@ -25,10 +30,11 @@ async function signed(path: string | null, expiresIn = 600) {
   return data.signedUrl;
 }
 
-async function decorate(scan: Record<string, any>) {
+async function decorate(scan: Record<string, any>, includeModel = true) {
+  const modelUrlPromise = includeModel ? signed(scan.asset_path) : Promise.resolve(null);
   const [{ data: profile }, modelUrl, previewUrl, { count: likeCount }] = await Promise.all([
     supabase.from("scanlab_profiles").select("handle,display_name,avatar_path").eq("id", scan.owner_id).maybeSingle(),
-    signed(scan.asset_path),
+    modelUrlPromise,
     signed(scan.preview_path),
     supabase.from("scanlab_likes").select("scan_id", { count: "exact", head: true }).eq("scan_id", scan.id),
   ]);
@@ -38,11 +44,7 @@ async function decorate(scan: Record<string, any>) {
     caption: scan.caption,
     visibility: scan.visibility,
     publishedAt: scan.published_at,
-    location: scan.latitude == null || scan.longitude == null ? null : {
-      latitude: scan.latitude,
-      longitude: scan.longitude,
-      label: scan.location_label,
-    },
+    location: locationForPublicResponse(scan),
     author: profile ? { id: scan.owner_id, handle: profile.handle, displayName: profile.display_name } : null,
     likeCount: likeCount ?? 0,
     modelUrl,
@@ -70,6 +72,12 @@ Deno.serve(async (req) => {
 
   if (mode === "feed") {
     const limit = Math.min(Math.max(Number(url.searchParams.get("limit") ?? 24) || 24, 1), 40);
+    const fetchLimit = Math.min(limit * 3 + 1, 121);
+    const cursor = parseScanLabFeedCursor(url.searchParams.get("cursor"));
+    if (cursor.error) return json({ error: cursor.error }, 400);
+    const assetPolicy = parseScanLabFeedAssetPolicy(url.searchParams);
+    if (assetPolicy.error) return json({ error: assetPolicy.error }, 400);
+
     let query = supabase
       .from("scanlab_scans")
       .select("id,owner_id,title,caption,visibility,published_at,latitude,longitude,location_label,asset_path,preview_path")
@@ -77,24 +85,44 @@ Deno.serve(async (req) => {
       .eq("status", "published")
       .eq("moderation_status", "approved")
       .order("published_at", { ascending: false })
-      .limit(Math.min(limit * 2, 80));
+      .order("id", { ascending: false })
+      .limit(fetchLimit);
 
-    const minLat = Number(url.searchParams.get("minLat"));
-    const maxLat = Number(url.searchParams.get("maxLat"));
-    const minLon = Number(url.searchParams.get("minLon"));
-    const maxLon = Number(url.searchParams.get("maxLon"));
-    const hasBox = [minLat, maxLat, minLon, maxLon].every(Number.isFinite);
-    if (hasBox) {
-      if (minLat < -90 || maxLat > 90 || minLon < -180 || maxLon > 180 || minLat > maxLat || minLon > maxLon || (maxLat - minLat) > 90 || (maxLon - minLon) > 180) {
-        return json({ error: "invalid_bbox" }, 400);
-      }
-      query = query.gte("latitude", minLat).lte("latitude", maxLat).gte("longitude", minLon).lte("longitude", maxLon);
+    if (cursor.value) {
+      const { publishedAt, id } = cursor.value;
+      query = query.or(`published_at.lt.${publishedAt},and(published_at.eq.${publishedAt},id.lt.${id})`);
+    }
+
+    const bbox = parseScanLabBoundingBox(url.searchParams);
+    if (bbox.error) return json({ error: bbox.error }, 400);
+    if (bbox.value) {
+      query = query
+        .gte("latitude", bbox.value.minLat)
+        .lte("latitude", bbox.value.maxLat)
+        .gte("longitude", bbox.value.minLon)
+        .lte("longitude", bbox.value.maxLon);
     }
 
     const [{ data, error }, blocked] = await Promise.all([query, blockedUserIds(req)]);
     if (error) return json({ error: "feed_unavailable" }, 503);
-    const visible = (data ?? []).filter((scan) => !blocked.has(scan.owner_id)).slice(0, limit);
-    return json({ items: await Promise.all(visible.map(decorate)) });
+
+    const rows = data ?? [];
+    const visibleRows = rows.filter((scan) => !blocked.has(scan.owner_id));
+    const pageRows = visibleRows.slice(0, limit);
+    let nextCursor: string | null = null;
+
+    if (pageRows.length === limit && (visibleRows.length > limit || rows.length === fetchLimit)) {
+      nextCursor = makeScanLabFeedCursor(pageRows[pageRows.length - 1]);
+    } else if (pageRows.length < limit && rows.length === fetchLimit) {
+      // A block-heavy batch may contain fewer than `limit` visible rows. Advance past every
+      // row already inspected so the next request cannot loop forever on blocked content.
+      nextCursor = makeScanLabFeedCursor(rows[rows.length - 1]);
+    }
+
+    return json({
+      items: await Promise.all(pageRows.map((scan) => decorate(scan, assetPolicy.includeModel))),
+      nextCursor,
+    });
   }
 
   if (mode === "share") {

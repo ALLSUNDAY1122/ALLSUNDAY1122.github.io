@@ -99,8 +99,9 @@ require_text SplatNative/ScanLibraryView.swift 'restoreSavedProject'
 ! grep -R -n 'おもちゃばこ' SplatNative project.yml
 
 # D authenticated cloud sharing is explicit and isolated from the capture/reconstruction core.
-for f in ScanLabBackend.swift ScanLabShellView.swift PublishScanView.swift ScanLabAccountView.swift; do require_file "SplatNative/$f"; done
-require_text SplatNative/SplatNativeApp.swift 'ScanLabShellView()'
+for f in ScanLabBackend.swift ScanLabShellView.swift ScanLabDiscoverShellView.swift ScanLabDiscoverStore.swift ScanLabPagedDiscoverView.swift PublishScanView.swift ScanLabAccountView.swift; do require_file "SplatNative/$f"; done
+require_text SplatNative/SplatNativeApp.swift 'ScanLabDiscoverShellView()'
+require_text SplatNative/ScanLabDiscoverShellView.swift 'ScanLabPagedDiscoverView()'
 require_text SplatNative/ScanLabShellView.swift 'RootScanView()'
 require_text SplatNative/ScanLabBackend.swift 'import Supabase'
 require_text SplatNative/ScanLabBackend.swift 'ScanLabVisibility'
@@ -108,6 +109,7 @@ require_text SplatNative/PublishScanView.swift 'contentConfirmed'
 require_text SplatNative/PublishScanView.swift 'publicPlaceConfirmed'
 require_text project.yml 'package: Supabase'
 require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
+bash scripts/validate_d2_discover.sh
 # Network access must not leak into offline capture/reconstruction/storage core.
 ! grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
 # D parity work must not add advertising/analytics SDKs.
