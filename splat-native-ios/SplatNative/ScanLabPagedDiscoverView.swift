@@ -17,7 +17,7 @@ struct ScanLabPagedDiscoverView: View {
                                 systemImage: "wifi.exclamationmark",
                                 description: Text(errorMessage)
                             )
-                            Button("再試行") { Task { await store.reload(backend: backend) } }
+                            Button("再試行") { Task { await store.reload() } }
                                 .buttonStyle(.borderedProminent)
                         } else {
                             ContentUnavailableView(
@@ -26,7 +26,7 @@ struct ScanLabPagedDiscoverView: View {
                                 description: Text("公開された3Dはここに表示されます。ダミー投稿は表示しません。")
                             )
                             if store.nextCursor != nil {
-                                Button("さらに探す") { Task { await store.loadMore(backend: backend) } }
+                                Button("さらに探す") { Task { await store.loadMore() } }
                                     .buttonStyle(.bordered)
                             }
                         }
@@ -36,7 +36,7 @@ struct ScanLabPagedDiscoverView: View {
                         ForEach(store.scans) { scan in
                             NavigationLink {
                                 ScanLabPagedRemoteContainer(scan: scan) {
-                                    Task { await store.reload(backend: backend) }
+                                    Task { await store.reload() }
                                 }
                             } label: {
                                 ScanLabPagedDiscoverRow(scan: scan)
@@ -46,7 +46,7 @@ struct ScanLabPagedDiscoverView: View {
                         if store.nextCursor != nil {
                             Section {
                                 Button {
-                                    Task { await store.loadMore(backend: backend) }
+                                    Task { await store.loadMore() }
                                 } label: {
                                     HStack {
                                         Spacer()
@@ -68,11 +68,11 @@ struct ScanLabPagedDiscoverView: View {
                         }
                     }
                     .listStyle(.plain)
-                    .refreshable { await store.reload(backend: backend) }
+                    .refreshable { await store.reload() }
                 }
             }
             .navigationTitle("Discover")
-            .task { await store.loadInitialIfNeeded(backend: backend) }
+            .task { await store.observeAuthAndLoad(backend: backend) }
         }
     }
 }

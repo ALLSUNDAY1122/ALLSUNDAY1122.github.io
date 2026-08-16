@@ -41,8 +41,20 @@ grep -q 'includeModel ? signed(scan.asset_path) : Promise.resolve(null)' supabas
 grep -q 'URLQueryItem(name: "includeModel", value: "0")' SplatNative/ScanLabDiscoverStore.swift
 grep -q 'envelope.items.allSatisfy({ \$0.modelUrl == nil })' SplatNative/ScanLabDiscoverStore.swift
 
+# Discover feed is personalized by block state. Account switches must clear the old snapshot and
+# stale in-flight requests must never repopulate data from the previous auth scope.
+grep -q 'for await state in backend.client.auth.authStateChanges' SplatNative/ScanLabDiscoverStore.swift
+grep -q 'ScanLabDiscoverAuthScope.user(\$0.user.id)' SplatNative/ScanLabDiscoverStore.swift
+grep -q 'self.bearerToken = bearerToken' SplatNative/ScanLabDiscoverStore.swift
+grep -q 'requestGeneration += 1' SplatNative/ScanLabDiscoverStore.swift
+grep -q 'scans = \[\]' SplatNative/ScanLabDiscoverStore.swift
+grep -q 'generation == requestGeneration && scope == authScope' SplatNative/ScanLabDiscoverStore.swift
+! grep -q 'backend.client.auth.session' SplatNative/ScanLabDiscoverStore.swift
+grep -q 'request.setValue("Bearer \\(bearerToken)", forHTTPHeaderField: "Authorization")' SplatNative/ScanLabDiscoverStore.swift
+grep -q 'observeAuthAndLoad(backend: backend)' SplatNative/ScanLabPagedDiscoverView.swift
+
 # Preserve the production v5 geolocation privacy contract while extending the shared function.
 grep -q 'locationForPublicResponse(scan)' supabase/functions/scanlab-public/index.ts
 grep -q 'scan.visibility !== "public"' supabase/functions/scanlab-public/geo_contract.mjs
 
-echo 'PASS: D2 Discover/feed bbox + cache + cursor + fresh-open + no-feed-model-signature regression gate'
+echo 'PASS: D2 Discover/feed bbox + cache + cursor + fresh-open + no-feed-model-signature + auth-scope regression gate'
