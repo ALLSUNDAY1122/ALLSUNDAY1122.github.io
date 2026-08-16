@@ -1,6 +1,6 @@
 # Scan Lab｜App Review / TestFlight Notes
 
-更新日: 2026-08-16
+更新日: 2026-08-17
 
 ## このビルドの目的
 
@@ -16,6 +16,7 @@
 
 - Support URL: `https://allsunday1122.github.io/splat-native-ios/support.html`
 - Privacy Policy URL: `https://allsunday1122.github.io/splat-native-ios/privacy.html`
+- User Privacy Choices URL: `https://allsunday1122.github.io/splat-native-ios/privacy-choices.html`
 - 公開問い合わせ先: `kohei3615@gmail.com`
 - Account画面ではログイン前・ログイン後の双方に「サポート・お問い合わせ」「プライバシーポリシー」を表示します。
 - 公開投稿に問題がある場合はアプリ内の報告・ブロックを利用でき、追加情報やアカウント・削除・privacyの問い合わせは公開サポート窓口から連絡できます。
@@ -24,10 +25,12 @@
 
 - Camera: 必須。3D生成用の撮影に使用します。
 - Location When In Use: 任意。`public` を選び、利用者が「現在地を公開地点に設定」を押した場合だけ許可を確認して現在地を取得します。取得後も公開操作を実行するまでは送信しません。
-- Photos: 要求しません。
+- Photos: 権限は要求しません。
 - Microphone: 要求しません。
 - Notifications: 要求しません。
 - Tracking: 要求しません。
+
+App Privacy上の `Photos or Videos` はPhotosライブラリ権限を意味しません。3D生成完了時にtrainerがユーザーの3Dをレンダリングしたpreview画像を作成し、明示クラウド共有時に存在する場合だけ `preview.jpg` として保存するため申告します。
 
 ## データ取扱い
 
@@ -38,9 +41,10 @@
 - アカウント: メールアドレス、アカウントID
 - プロフィール: 表示名、ユーザーID（ハンドル）
 - 投稿メタデータ: タイトル、説明、公開範囲
-- 3D共有パッケージ: `scene.spz`、`manifest.json`、生成できた場合はpreview画像
+- 3D共有パッケージ: `scene.spz`、`manifest.json`
+- 生成できた場合のpreview画像: `preview.jpg`（ユーザー3Dからアプリ内生成）
 - `public` の場合のみ: 利用者が明示的に取得した緯度・経度、任意の場所名
-- コミュニティ操作: いいね、報告理由、ブロック対象など、機能提供に必要な操作情報
+- コミュニティ操作: いいね、報告理由、ブロック対象など、機能提供・安全運用に必要な操作情報
 
 公開UIから撮影元画像やraw再構成 `.splat` をアップロードする設計ではありません。広告SDK、行動解析SDK、ユーザートラッキングはありません。
 
@@ -48,11 +52,12 @@ SupabaseはAuth / Database / Storage / Edge Functionsの基盤として利用し
 
 ## 保存期間・削除・同意撤回
 
-- アカウント情報、プロフィール、クラウドスキャン、投稿メタデータ、位置情報、コミュニティ操作情報は、アカウントまたは対象データが存在し、機能提供・安全運用に必要な間保持します。
-- クラウドスキャン削除では、対象3Dファイル、投稿レコード、対象スキャンに紐づく関連レコードを削除対象とします。
-- 「アカウントとクラウドデータを削除」では、所有3Dを削除した後に認証ユーザーを削除し、プロフィール、投稿、アカウントに紐づく関連DBレコードを削除対象とします。
+- アカウント情報、プロフィール、クラウドスキャン、preview画像、投稿メタデータ、位置情報、コミュニティ操作情報は、アカウントまたは対象データが存在し、機能提供・安全運用に必要な間保持します。
+- クラウドスキャン削除では、対象3Dファイル、preview画像、投稿レコード、対象スキャンに紐づく関連レコードを削除対象とします。
+- 「アカウントとクラウドデータを削除」では、所有3Dとpreview画像を削除した後に認証ユーザーを削除し、プロフィール、投稿、アカウントに紐づく関連DBレコードを削除対象とします。
 - 位置情報の同意はiOS設定から撤回できます。撤回後は新たな現在地取得を行いません。既に送信済みの位置情報を削除するには対象クラウドスキャンを削除します。
 - 公開のみ停止したい場合は非公開化、クラウド上の投稿自体を消したい場合はスキャン削除、オンライン機能全体を終了したい場合はアカウント削除を利用します。
+- 具体的な選択肢はUser Privacy Choices URLにまとめています。
 - 法令または正当なセキュリティ上の義務により保持が必要な場合は、必要な範囲と期間に限定します。
 
 ## 公開範囲
@@ -73,15 +78,24 @@ SupabaseはAuth / Database / Storage / Edge Functionsの基盤として利用し
 
 ## 削除・非公開化
 
-所有者は公開中のクラウドスキャンを非公開化できます。スキャン削除ではクラウド上の3Dファイルと投稿レコードを削除します。アカウント画面には「アカウントとクラウドデータを削除」があり、サーバー上の当該ユーザー所有3Dと共有投稿を削除したうえで認証ユーザーを削除します。関連DBレコードは外部キーのcascadeで削除されます。端末内に保存・書き出したファイルは対象外です。
+所有者は公開中のクラウドスキャンを非公開化できます。スキャン削除ではクラウド上の3Dファイル、preview画像と投稿レコードを削除します。アカウント画面には「アカウントとクラウドデータを削除」があり、サーバー上の当該ユーザー所有3Dとpreview画像・共有投稿を削除したうえで認証ユーザーを削除します。関連DBレコードは外部キーのcascadeで削除されます。端末内に保存・書き出したファイルは対象外です。
 
 ## Privacy Manifest / App Store Connect申告
 
-現在のPrivacy ManifestはTracking=falseとし、App Functionality目的で、Name / Email Address / User ID / Precise Location / Other User Content / Environment Scanning / Product Interactionを申告します。
+現在のPrivacy ManifestはTracking=falseとし、App Functionality目的で次の8項目を申告します。
+
+- Name
+- Email Address
+- User ID
+- Precise Location
+- Photos or Videos
+- Other User Content
+- Environment Scanning
+- Product Interaction
+
+全項目 `Linked to User = YES`、`Used for Tracking = NO`。App Store Connectへの転記正本は `APP_STORE_PRIVACY_RESPONSES.json` とし、Manifestとのdata type完全一致をCIで検査します。
 
 共有パッケージのファイルmetadata確認に対し、Required Reason APIのFile Timestamp categoryに `C617.1` を申告します。
-
-App Store ConnectのApp Privacy回答は、このManifestと `privacy.html` の内容に合わせます。
 
 ## Internal TestFlight確認手順
 
@@ -89,20 +103,21 @@ App Store ConnectのApp Privacy回答は、このManifestと `privacy.html` の�
 2. Account画面を開き、未ログインでも「サポート・お問い合わせ」「プライバシーポリシー」を開けることを確認する。
 3. 検証用アカウントで登録またはログインする。
 4. `private` を選び、位置情報権限なしで非公開クラウド保存できることを確認する。
-5. `unlisted` を選び、安全確認後に限定リンクを作成し、Map / Discoverには表示されずブラウザURLで閲覧できることを確認する。
-6. `public` を選ぶ。位置情報が自動取得されないことを確認してから「現在地を公開地点に設定」を押し、位置情報権限を許可する。
-7. 場所・プライバシー・権利・コンテンツ安全確認を完了し、Map・Discoverへ公開する。
-8. Map / Discoverとブラウザ共有URLから対象3Dを開けることを確認する。
-9. 別アカウントから、いいね・報告・ブロックを確認する。
-10. 所有者アカウントで非公開化し、公開面から消えることを確認する。
-11. クラウドスキャン削除後、共有URLが利用できず、所有者一覧からも消えることを確認する。
-12. iOS設定で位置情報権限を取り消し、その後の現在地取得が行われないことを確認する。
-13. 検証用アカウントでアカウント削除を実行し、共有したクラウド3D・投稿・プロフィールが削除対象になることを確認する。
+5. 生成済みpreviewがある場合、明示共有後にpreviewがクラウド共有パッケージの一部として扱われることを確認する。撮影元画像は送信されないことを維持する。
+6. `unlisted` を選び、安全確認後に限定リンクを作成し、Map / Discoverには表示されずブラウザURLで閲覧できることを確認する。
+7. `public` を選ぶ。位置情報が自動取得されないことを確認してから「現在地を公開地点に設定」を押し、位置情報権限を許可する。
+8. 場所・プライバシー・権利・コンテンツ安全確認を完了し、Map・Discoverへ公開する。
+9. Map / Discoverとブラウザ共有URLから対象3Dを開けることを確認する。
+10. 別アカウントから、いいね・報告・ブロックを確認する。
+11. 所有者アカウントで非公開化し、公開面から消えることを確認する。
+12. クラウドスキャン削除後、共有URLが利用できず、所有者一覧からも消えることを確認する。
+13. iOS設定で位置情報権限を取り消し、その後の現在地取得が行われないことを確認する。
+14. 検証用アカウントでアカウント削除を実行し、共有したクラウド3D・preview画像・投稿・プロフィールが削除対象になることを確認する。
 
 ## 既知の審査前確認事項
 
 - Internal TestFlight用の開発版であり、App Store本審査への自動提出は禁止しています。
-- 本審査時はPrivacy Nutrition Label、審査用アカウント、公開Support URL、公開Privacy Policy URLを最終buildと突合します。
+- 本審査時は `APP_STORE_PRIVACY_RESPONSES.json`、Privacy Nutrition Label、審査用アカウント、公開Support URL、Privacy Policy URL、User Privacy Choices URLを最終buildと突合します。
 - 公開URLは統合・GitHub Pages反映後にHTTPSで到達できることを実確認します。
 - 実auth、公開URL、Map / Discover、削除系は実バックエンドを使うため、審査時にSupabase環境が到達可能である必要があります。
-- D2-W01のメール確認callbackが統合された後は、Supabase Auth URL Configurationのallow-listと確認メールのredirect設定を実環境で確認し、実メール確認→アプリ復帰→session成立までPASSしてから審査用signup導線を完成扱いにします。
+- D2-W01のAuth callback / password recoveryが統合された後は、Supabase Auth URL Configurationで `jp.allsunday1122.splatlab://auth-callback` と `jp.allsunday1122.splatlab://password-recovery` の両方を許可し、確認・復旧メールのredirect/PKCE、実メール→アプリ復帰→session/パスワード更新までPASSしてから審査用導線を完成扱いにします。

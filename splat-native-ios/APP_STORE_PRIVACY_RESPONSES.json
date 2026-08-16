@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "updated": "2026-08-17",
+  "privacy_policy_url": "https://allsunday1122.github.io/splat-native-ios/privacy.html",
+  "user_privacy_choices_url": "https://allsunday1122.github.io/splat-native-ios/privacy-choices.html",
+  "tracking": false,
+  "tracking_domains": [],
+  "data_types": [
+    {
+      "manifest_type": "NSPrivacyCollectedDataTypeName",
+      "app_store_name": "Name",
+      "collected": true,
+      "purposes": ["App Functionality"],
+      "linked_to_user": true,
+      "used_for_tracking": false,
+      "condition": "Online account profile is used.",
+      "evidence": ["SplatNative/ScanLabBackend.swift: profile display_name"]
+    },
+    {
+      "manifest_type": "NSPrivacyCollectedDataTypeEmailAddress",
+      "app_store_name": "Email Address",
+      "collected": true,
+      "purposes": ["App Functionality"],
+      "linked_to_user": true,
+      "used_for_tracking": false,
+      "condition": "Email authentication or account recovery is used.",
+      "evidence": ["SplatNative/ScanLabBackend.swift: Supabase email auth"]
+    },
+    {
+      "manifest_type": "NSPrivacyCollectedDataTypeUserID",
+      "app_store_name": "User ID",
+      "collected": true,
+      "purposes": ["App Functionality"],
+      "linked_to_user": true,
+      "used_for_tracking": false,
+      "condition": "Online account, ownership, likes, reports, blocks, or rate-limit state is used.",
+      "evidence": ["SplatNative/ScanLabBackend.swift", "supabase/migrations/20260815015516_scanlab_s7_social_backend_v1.sql"]
+    },
+    {
+      "manifest_type": "NSPrivacyCollectedDataTypePreciseLocation",
+      "app_store_name": "Precise Location",
+      "collected": true,
+      "purposes": ["App Functionality"],
+      "linked_to_user": true,
+      "used_for_tracking": false,
+      "condition": "Only when public visibility is selected and the user explicitly taps the current-location button, then submits the publish form.",
+      "evidence": ["SplatNative/PublishScanView.swift"]
+    },
+    {
+      "manifest_type": "NSPrivacyCollectedDataTypePhotosorVideos",
+      "app_store_name": "Photos or Videos",
+      "collected": true,
+      "purposes": ["App Functionality"],
+      "linked_to_user": true,
+      "used_for_tracking": false,
+      "condition": "When a generated scan preview is available and the user explicitly performs cloud sharing, the rendered preview is uploaded as preview.jpg. This does not require Photos library permission.",
+      "evidence": ["SplatNative/ScanModel.swift: rendered previewImage", "SplatNative/ScanLabShellView.swift: model.previewImage", "SplatNative/ScanLabBackend+TrustedPublish.swift: preview.jpg image/jpeg"]
+    },
+    {
+      "manifest_type": "NSPrivacyCollectedDataTypeOtherUserContent",
+      "app_store_name": "Other User Content",
+      "collected": true,
+      "purposes": ["App Functionality"],
+      "linked_to_user": true,
+      "used_for_tracking": false,
+      "condition": "When the user explicitly stores or shares a scan, title/caption and user-created shared content are retained.",
+      "evidence": ["SplatNative/ScanLabBackend+TrustedPublish.swift"]
+    },
+    {
+      "manifest_type": "NSPrivacyCollectedDataTypeEnvironmentScanning",
+      "app_store_name": "Environment Scanning",
+      "collected": true,
+      "purposes": ["App Functionality"],
+      "linked_to_user": true,
+      "used_for_tracking": false,
+      "condition": "When the user explicitly stores or shares the generated 3D representation, scene.spz is uploaded. Raw captured images and raw reconstruction .splat are not uploaded by the publish UI.",
+      "evidence": ["SplatNative/ScanLabBackend+TrustedPublish.swift: scene.spz"]
+    },
+    {
+      "manifest_type": "NSPrivacyCollectedDataTypeProductInteraction",
+      "app_store_name": "Product Interaction",
+      "collected": true,
+      "purposes": ["App Functionality"],
+      "linked_to_user": true,
+      "used_for_tracking": false,
+      "condition": "Online community and safety operations such as likes, reports, blocks and abuse/rate-limit enforcement are used.",
+      "evidence": ["SplatNative/ScanLabBackend.swift", "supabase/migrations/20260815015516_scanlab_s7_social_backend_v1.sql"]
+    }
+  ],
+  "required_reason_apis": [
+    {
+      "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+      "reasons": ["C617.1"],
+      "evidence": ["SplatNative/ScanLabBackend+TrustedPublish.swift: attributesOfItem"]
+    }
+  ]
+}
