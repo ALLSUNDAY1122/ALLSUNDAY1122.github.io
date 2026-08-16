@@ -49,22 +49,25 @@ struct ScanLabAuthView: View {
 
 private struct ScanLabSignedInAccountView: View {
     @EnvironmentObject var backend: ScanLabBackend
-    @State private var displayName = ""
-    @State private var handle = ""
-    @State private var profileBusy = false
-    @State private var profileError: String?
     @State private var deleteAccountConfirmation = false
     @State private var accountBusy = false
 
     var body: some View {
         List {
             Section("プロフィール") {
+                NavigationLink {
+                    ScanLabProfileView()
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "person.crop.circle").font(.title2)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(backend.profile?.displayName ?? "プロフィールを編集")
+                            if let handle = backend.profile?.handle { Text("@\(handle)").font(.caption).foregroundStyle(.secondary) }
+                        }
+                    }
+                }
                 Text(backend.currentUserEmail ?? "").font(.footnote).foregroundStyle(.secondary)
-                TextField("表示名", text: $displayName).textContentType(.name)
-                TextField("ユーザーID", text: $handle).textInputAutocapitalization(.never).autocorrectionDisabled()
-                Button("プロフィールを保存") { Task { await saveProfile() } }.disabled(profileBusy || displayName.isEmpty || handle.isEmpty)
-                if profileBusy { ProgressView() }
-                if let profileError { Text(profileError).foregroundStyle(.red).font(.footnote) }
+                Text("メールアドレスは公開プロフィールには表示されません。").font(.caption).foregroundStyle(.secondary)
             }
             Section("自分のクラウドスキャン") {
                 if backend.ownerScans.isEmpty { Text(backend.isLoadingOwner ? "取得中…" : "まだクラウドへ保存していません。").foregroundStyle(.secondary) }
@@ -79,15 +82,12 @@ private struct ScanLabSignedInAccountView: View {
                 Button("アカウントとクラウドデータを削除", role: .destructive) { deleteAccountConfirmation = true }.disabled(accountBusy)
             } footer: { Text("アカウント削除では、このアカウントに紐づく3Dファイルと公開情報を削除します。端末内に書き出したファイルは削除されません。") }
         }
-        .task { await backend.loadProfile(); await backend.loadOwnerScans(); syncProfileFields() }
-        .onChange(of: backend.profile) { _, _ in syncProfileFields() }
+        .task { await backend.loadProfile(); await backend.loadOwnerScans() }
         .alert("アカウントを削除しますか？", isPresented: $deleteAccountConfirmation) {
             Button("キャンセル", role: .cancel) {}
             Button("完全に削除", role: .destructive) { Task { await deleteAccount() } }
         } message: { Text("クラウド上の3D・プロフィール・公開状態を削除します。この操作は元に戻せません。") }
     }
-    private func syncProfileFields() { guard let p = backend.profile else { return }; displayName = p.displayName; handle = p.handle }
-    private func saveProfile() async { profileBusy = true; profileError = nil; defer { profileBusy = false }; do { try await backend.updateProfile(handle: handle, displayName: displayName) } catch { profileError = error.localizedDescription } }
     private func deleteAccount() async { accountBusy = true; defer { accountBusy = false }; do { try await backend.deleteAccount() } catch { backend.notice = "アカウントを削除できませんでした: \(error.localizedDescription)" } }
 }
 
