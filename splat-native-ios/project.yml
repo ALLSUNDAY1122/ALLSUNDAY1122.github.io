@@ -75,6 +75,8 @@ targets:
       - path: SplatNative/SplatVideoExporter.swift
       - path: SplatNative/MeshExportService.swift
       - path: SplatNative/MeshPointCloudExportService.swift
+      - path: SplatNative/ScanLabBackend.swift
+      - path: SplatNative/ScanLabGeotagPolicy.swift
     dependencies:
       - package: Msplat
         product: Msplat
@@ -82,6 +84,8 @@ targets:
         product: MetalSplatter
       - package: MetalSplatter
         product: SplatIO
+      - package: Supabase
+        product: Supabase
       - package: AssimpBinary
         product: AssimpBinary
       - sdk: libc++.tbd
