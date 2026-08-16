@@ -140,5 +140,5 @@ private struct ScanLabOwnerScanRow: View {
     }
     private var deleteMessage: String { ScanLabOwnerVisibilityPresentation.deleteMessage(scan.visibility) }
     private func unpublish() async { busy = true; defer { busy = false }; do { try await backend.unpublish(scan) } catch { backend.notice = error.localizedDescription } }
-    private func deleteScan() async { busy = true; defer { busy = false }; do { try await backend.delete(scan) } catch { backend.notice = error.localizedDescription } }
+    private func deleteScan() async { busy = true; defer { busy = false }; do { try await backend.deleteVisibilityLocked(scan) } catch { backend.notice = error.localizedDescription } }
 }
