@@ -125,13 +125,25 @@ private struct ScanLabOwnerScanRow: View {
     }
     private var statusText: String {
         if scan.status == "hidden" {
-            return scan.visibility == "private" ? "クラウド保存停止済み" : "共有停止済み"
+            switch scan.visibility {
+            case "public": return "公開停止済み"
+            case "unlisted": return "限定リンク無効化済み"
+            default: return "クラウド保存停止済み"
+            }
         }
         if scan.status != "published" {
-            return scan.visibility == "private" ? "クラウド保存処理中" : "公開準備中"
+            switch scan.visibility {
+            case "public": return "公開準備中"
+            case "unlisted": return "限定リンク準備中"
+            default: return "クラウド保存処理中"
+            }
         }
-        if scan.visibility != "private" && scan.moderationStatus == "pending" { return "公開確認中" }
-        if scan.visibility != "private" && scan.moderationStatus == "rejected" { return "公開停止（確認結果）" }
+        if scan.visibility != "private" && scan.moderationStatus == "pending" {
+            return scan.visibility == "public" ? "公開確認中" : "共有確認中"
+        }
+        if scan.visibility != "private" && scan.moderationStatus == "rejected" {
+            return scan.visibility == "public" ? "公開停止（確認結果）" : "共有停止（確認結果）"
+        }
         switch scan.visibility {
         case "public": return "Map・Discoverで公開中"
         case "unlisted": return "限定リンク有効"
