@@ -39,6 +39,16 @@ Deno.serve(async (req) => {
   if (scan.owner_id !== user.id) return json({ error: "forbidden" }, 403);
   if (!scan.asset_path.startsWith(`${user.id}/`)) return json({ error: "invalid_asset_path" }, 400);
 
+  if (scan.status === "published") {
+    const base = "https://allsunday1122.github.io/splat-native-ios/viewer/";
+    const shareUrl = scan.visibility === "public"
+      ? `${base}?id=${encodeURIComponent(scan.id)}`
+      : scan.visibility === "unlisted"
+        ? `${base}?token=${encodeURIComponent(scan.share_token)}`
+        : null;
+    return json({ id: scan.id, visibility: scan.visibility, shareUrl, alreadyPublished: true });
+  }
+
   if (["public", "unlisted"].includes(scan.visibility) && !scan.content_confirmed) {
     return json({ error: "content_confirmation_required" }, 400);
   }
@@ -58,10 +68,6 @@ Deno.serve(async (req) => {
   const slash = scan.asset_path.lastIndexOf("/");
   const folder = slash > 0 ? scan.asset_path.slice(0, slash) : "";
   const fileName = slash > 0 ? scan.asset_path.slice(slash + 1) : scan.asset_path;
-
-  // Network publication accepts C2's explicit browser-share contract only. Requiring both
-  // `scene.spz` and its integrity manifest makes the legacy raw result.splat upload path
-  // impossible to publish even if an older client attempts to call this function directly.
   if (fileName !== "scene.spz") return json({ error: "trusted_package_required" }, 409);
   const { data: files, error: listError } = await admin.storage.from("scanlab-assets").list(folder, { limit: 20 });
   if (listError) return json({ error: "asset_check_failed" }, 503);
@@ -74,14 +80,16 @@ Deno.serve(async (req) => {
     .update({ status: "published", moderation_status: "approved" })
     .eq("id", scan.id)
     .eq("owner_id", user.id)
+    .neq("status", "published")
     .select("id,visibility,share_token,published_at")
-    .single();
+    .maybeSingle();
 
   if (updateError) {
     const rateLimited = updateError.message?.includes("rate limit") ?? false;
     const objectionable = updateError.message?.includes("objectionable") ?? false;
     return json({ error: rateLimited ? "publish_rate_limited" : objectionable ? "content_rejected" : "publish_failed" }, rateLimited ? 429 : 400);
   }
+  if (!updated) return json({ error: "lifecycle_conflict" }, 409);
 
   const base = "https://allsunday1122.github.io/splat-native-ios/viewer/";
   const shareUrl = updated.visibility === "public"
@@ -90,5 +98,5 @@ Deno.serve(async (req) => {
       ? `${base}?token=${encodeURIComponent(updated.share_token)}`
       : null;
 
-  return json({ id: updated.id, visibility: updated.visibility, publishedAt: updated.published_at, shareUrl });
+  return json({ id: updated.id, visibility: updated.visibility, publishedAt: updated.published_at, shareUrl, alreadyPublished: false });
 });
