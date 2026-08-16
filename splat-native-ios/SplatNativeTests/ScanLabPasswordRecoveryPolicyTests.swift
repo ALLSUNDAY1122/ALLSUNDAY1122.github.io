@@ -8,14 +8,14 @@ final class ScanLabPasswordRecoveryPolicyTests: XCTestCase {
         )
     }
 
-    func testCallbackOnlyRequiresPasswordAfterResetRequest() {
+    func testRecoveryCallbackRequiresPasswordEvenWhenLocalIntentWasLost() {
         XCTAssertEqual(
             ScanLabPasswordRecoveryPolicy.reduce(current: .linkRequested, signal: .callbackSucceeded),
             .passwordUpdateRequired
         )
         XCTAssertEqual(
             ScanLabPasswordRecoveryPolicy.reduce(current: .idle, signal: .callbackSucceeded),
-            .idle
+            .passwordUpdateRequired
         )
     }
 

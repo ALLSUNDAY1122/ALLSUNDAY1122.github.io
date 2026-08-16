@@ -60,7 +60,7 @@ The pinned Supabase Swift revision `21d3aaf21ee98f41611f9f75070489fc8b23d882` su
 
 The first draft classified a recovery callback only by a locally persisted `linkRequested` flag. That is insufficient: after app reinstall, UserDefaults loss, or device migration, a valid recovery link could arrive without that flag and be misclassified as ordinary email confirmation.
 
-The design was corrected before commit:
+The design was corrected before the Wave was finalized:
 
 - signup callback remains on host `auth-callback`;
 - recovery callback uses host `password-recovery` under the already-registered app scheme;
@@ -69,7 +69,11 @@ The design was corrected before commit:
 
 This avoids relying on ephemeral local state for security-sensitive callback routing.
 
-## Regression gates executed before commit
+### Post-write audit correction
+
+The first Wave 3 tree still retained one stale reducer condition: `.callbackSucceeded` advanced to `passwordUpdateRequired` only when the local phase was `linkRequested`. The dedicated recovery host made that condition obsolete and it would have broken recovery after local state loss. The post-write diff audit caught this before the Wave was finalized. The reducer was corrected so a callback that has already passed the dedicated `password-recovery` route always enters `passwordUpdateRequired`, and the regression test/smoke gate were updated accordingly.
+
+## Regression gates executed before finalizing the Wave
 
 - Swift parser: PASS for all Wave 3 Swift files.
 - Existing callback policy + existing callback XCTest typecheck: PASS.
@@ -77,8 +81,7 @@ This avoids relying on ephemeral local state for security-sensitive callback rou
 - Combined callback/recovery policy typecheck: PASS.
 - Executable recovery smoke: PASS.
   - reset request → `linkRequested`
-  - recovery callback → `passwordUpdateRequired`
-  - unexpected callback does not enter recovery
+  - valid dedicated recovery callback → `passwordUpdateRequired` even if local intent was lost
   - signup and recovery hosts remain separated
   - recovery phase persists through `UserDefaults`
 - YAML parse: PASS.

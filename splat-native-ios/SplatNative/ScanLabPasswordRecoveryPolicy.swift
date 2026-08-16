@@ -24,7 +24,7 @@ enum ScanLabPasswordRecoveryPolicy {
         case .resetRequested:
             return .linkRequested
         case .callbackSucceeded:
-            return current == .linkRequested ? .passwordUpdateRequired : current
+            return .passwordUpdateRequired
         case .callbackFailed, .standardAuthStarted, .passwordUpdated, .cancelled:
             return .idle
         }
