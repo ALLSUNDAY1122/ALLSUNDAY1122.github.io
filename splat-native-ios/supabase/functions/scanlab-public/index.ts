@@ -4,7 +4,8 @@ const cors = {
   "Access-Control-Allow-Origin": "https://allsunday1122.github.io",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Cache-Control": "public, max-age=30, s-maxage=60",
+  "Cache-Control": "no-store",
+  "Vary": "Authorization",
 };
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
@@ -50,15 +51,45 @@ async function decorate(scan: Record<string, any>) {
   };
 }
 
-async function blockedUserIds(req: Request) {
+type ViewerContext = {
+  userId: string | null;
+  blockedPeers: Set<string>;
+  error: "invalid_auth" | "block_lookup_failed" | null;
+};
+
+async function viewerContext(req: Request): Promise<ViewerContext> {
   const header = req.headers.get("authorization") ?? "";
-  if (!header.toLowerCase().startsWith("bearer ")) return new Set<string>();
-  const token = header.slice(7);
-  const { data: userData } = await supabase.auth.getUser(token);
+  if (!header.toLowerCase().startsWith("bearer ")) {
+    return { userId: null, blockedPeers: new Set<string>(), error: null };
+  }
+
+  const token = header.slice(7).trim();
+  if (!token) return { userId: null, blockedPeers: new Set<string>(), error: "invalid_auth" };
+
+  const { data: userData, error: userError } = await supabase.auth.getUser(token);
   const user = userData.user;
-  if (!user) return new Set<string>();
-  const { data } = await supabase.from("scanlab_blocks").select("blocked_id").eq("blocker_id", user.id);
-  return new Set((data ?? []).map((row) => row.blocked_id as string));
+  if (userError || !user) {
+    return { userId: null, blockedPeers: new Set<string>(), error: "invalid_auth" };
+  }
+
+  const { data, error } = await supabase
+    .from("scanlab_blocks")
+    .select("blocker_id,blocked_id")
+    .or(`blocker_id.eq.${user.id},blocked_id.eq.${user.id}`);
+  if (error) return { userId: user.id, blockedPeers: new Set<string>(), error: "block_lookup_failed" };
+
+  const blockedPeers = new Set<string>();
+  for (const row of data ?? []) {
+    if (row.blocker_id === user.id && typeof row.blocked_id === "string") blockedPeers.add(row.blocked_id);
+    if (row.blocked_id === user.id && typeof row.blocker_id === "string") blockedPeers.add(row.blocker_id);
+  }
+  return { userId: user.id, blockedPeers, error: null };
+}
+
+function viewerError(context: ViewerContext) {
+  if (context.error === "invalid_auth") return json({ error: "invalid_auth" }, 401);
+  if (context.error === "block_lookup_failed") return json({ error: "viewer_context_unavailable" }, 503);
+  return null;
 }
 
 Deno.serve(async (req) => {
@@ -91,9 +122,11 @@ Deno.serve(async (req) => {
       query = query.gte("latitude", minLat).lte("latitude", maxLat).gte("longitude", minLon).lte("longitude", maxLon);
     }
 
-    const [{ data, error }, blocked] = await Promise.all([query, blockedUserIds(req)]);
+    const [{ data, error }, context] = await Promise.all([query, viewerContext(req)]);
+    const contextError = viewerError(context);
+    if (contextError) return contextError;
     if (error) return json({ error: "feed_unavailable" }, 503);
-    const visible = (data ?? []).filter((scan) => !blocked.has(scan.owner_id)).slice(0, limit);
+    const visible = (data ?? []).filter((scan) => !context.blockedPeers.has(scan.owner_id)).slice(0, limit);
     return json({ items: await Promise.all(visible.map(decorate)) });
   }
 
@@ -113,8 +146,10 @@ Deno.serve(async (req) => {
     if (token) query = query.eq("share_token", token).eq("visibility", "unlisted");
     else query = query.eq("id", id!).eq("visibility", "public");
 
-    const { data, error } = await query.maybeSingle();
-    if (error || !data) return json({ error: "not_found" }, 404);
+    const [{ data, error }, context] = await Promise.all([query.maybeSingle(), viewerContext(req)]);
+    const contextError = viewerError(context);
+    if (contextError) return contextError;
+    if (error || !data || context.blockedPeers.has(data.owner_id)) return json({ error: "not_found" }, 404);
     return json({ item: await decorate(data) });
   }
 
