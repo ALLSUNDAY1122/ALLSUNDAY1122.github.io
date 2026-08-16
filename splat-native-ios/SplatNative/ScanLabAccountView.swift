@@ -2,10 +2,26 @@ import SwiftUI
 
 struct ScanLabAccountView: View {
     @EnvironmentObject var backend: ScanLabBackend
+
     var body: some View {
         NavigationStack {
-            Group { if backend.isAuthenticated { ScanLabSignedInAccountView() } else { ScanLabAuthView() } }
-                .navigationTitle("Account")
+            Group {
+                switch backend.authPhase {
+                case .resolving:
+                    VStack(spacing: 12) {
+                        ProgressView()
+                        Text("セッションを確認中…")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                case .signedIn:
+                    ScanLabSignedInAccountView()
+                case .signedOut:
+                    ScanLabAuthView()
+                }
+            }
+            .navigationTitle("Account")
         }
     }
 }
@@ -40,10 +56,20 @@ struct ScanLabAuthView: View {
             }
         }
     }
+
     private func submit() async {
-        busy = true; errorMessage = nil; defer { busy = false }
-        do { if mode == .signIn { try await backend.signIn(email: email, password: password) } else { try await backend.signUp(email: email, password: password) } }
-        catch { errorMessage = error.localizedDescription }
+        busy = true
+        errorMessage = nil
+        defer { busy = false }
+        do {
+            if mode == .signIn {
+                try await backend.signIn(email: email, password: password)
+            } else {
+                try await backend.signUp(email: email, password: password)
+            }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 
@@ -79,16 +105,40 @@ private struct ScanLabSignedInAccountView: View {
                 Button("アカウントとクラウドデータを削除", role: .destructive) { deleteAccountConfirmation = true }.disabled(accountBusy)
             } footer: { Text("アカウント削除では、このアカウントに紐づく3Dファイルと公開情報を削除します。端末内に書き出したファイルは削除されません。") }
         }
-        .task { await backend.loadProfile(); await backend.loadOwnerScans(); syncProfileFields() }
+        .task { syncProfileFields() }
         .onChange(of: backend.profile) { _, _ in syncProfileFields() }
         .alert("アカウントを削除しますか？", isPresented: $deleteAccountConfirmation) {
             Button("キャンセル", role: .cancel) {}
             Button("完全に削除", role: .destructive) { Task { await deleteAccount() } }
         } message: { Text("クラウド上の3D・プロフィール・公開状態を削除します。この操作は元に戻せません。") }
     }
-    private func syncProfileFields() { guard let p = backend.profile else { return }; displayName = p.displayName; handle = p.handle }
-    private func saveProfile() async { profileBusy = true; profileError = nil; defer { profileBusy = false }; do { try await backend.updateProfile(handle: handle, displayName: displayName) } catch { profileError = error.localizedDescription } }
-    private func deleteAccount() async { accountBusy = true; defer { accountBusy = false }; do { try await backend.deleteAccount() } catch { backend.notice = "アカウントを削除できませんでした: \(error.localizedDescription)" } }
+
+    private func syncProfileFields() {
+        guard let p = backend.profile else { return }
+        displayName = p.displayName
+        handle = p.handle
+    }
+
+    private func saveProfile() async {
+        profileBusy = true
+        profileError = nil
+        defer { profileBusy = false }
+        do {
+            try await backend.updateProfile(handle: handle, displayName: displayName)
+        } catch {
+            profileError = error.localizedDescription
+        }
+    }
+
+    private func deleteAccount() async {
+        accountBusy = true
+        defer { accountBusy = false }
+        do {
+            try await backend.deleteAccount()
+        } catch {
+            backend.notice = "アカウントを削除できませんでした: \(error.localizedDescription)"
+        }
+    }
 }
 
 private struct ScanLabOwnerScanRow: View {
@@ -96,6 +146,7 @@ private struct ScanLabOwnerScanRow: View {
     let scan: ScanLabOwnerScan
     @State private var busy = false
     @State private var deleteConfirmation = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -116,6 +167,7 @@ private struct ScanLabOwnerScanRow: View {
             Button("削除", role: .destructive) { Task { await deleteScan() } }
         } message: { Text("公開リンクも使えなくなり、クラウド上の3Dファイルも削除されます。") }
     }
+
     private var visibilityText: String { switch scan.visibility { case "public": "公開"; case "unlisted": "限定リンク"; default: "非公開" } }
     private var statusText: String { if scan.status == "hidden" { return "非公開化済み" }; if scan.moderationStatus == "pending" { return "公開確認中" }; return scan.status == "published" ? "公開中" : "下書き" }
     private func unpublish() async { busy = true; defer { busy = false }; do { try await backend.unpublish(scan) } catch { backend.notice = error.localizedDescription } }

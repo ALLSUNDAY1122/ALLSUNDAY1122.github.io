@@ -195,6 +195,7 @@ enum ScanLabConfig {
 @MainActor
 final class ScanLabBackend: ObservableObject {
     let client: SupabaseClient
+    @Published private(set) var authPhase: ScanLabAuthPhase = .resolving
     @Published private(set) var isAuthenticated = false
     @Published private(set) var currentUserEmail: String?
     @Published private(set) var publicScans: [ScanLabPublicScan] = []
@@ -211,17 +212,34 @@ final class ScanLabBackend: ObservableObject {
 
     private func observeAuth() async {
         for await state in client.auth.authStateChanges {
-            guard [.initialSession, .signedIn, .signedOut, .userUpdated].contains(state.event) else { continue }
-            isAuthenticated = state.session != nil
-            currentUserEmail = state.session?.user.email
-            if state.session == nil {
-                ownerScans = []; profile = nil
-            } else {
-                async let scans: Void = loadOwnerScans()
-                async let loadedProfile: Void = loadProfile()
-                _ = await (scans, loadedProfile)
-                await loadPublicScans()
+            let signal: ScanLabAuthSignal
+            switch state.event {
+            case .initialSession, .signedIn, .tokenRefreshed, .userUpdated, .passwordRecovery, .mfaChallengeVerified:
+                signal = .sessionResolved(hasSession: state.session != nil)
+            case .signedOut, .userDeleted:
+                signal = .signedOut
             }
+
+            let previousPhase = authPhase
+            let nextPhase = ScanLabAuthStatePolicy.reduce(current: previousPhase, signal: signal)
+            authPhase = nextPhase
+            isAuthenticated = nextPhase == .signedIn
+            currentUserEmail = nextPhase == .signedIn ? state.session?.user.email : nil
+
+            if nextPhase == .signedOut {
+                ownerScans = []
+                profile = nil
+                await loadPublicScans()
+                continue
+            }
+
+            let shouldHydrateAccount = previousPhase != .signedIn || state.event == .userUpdated
+            guard shouldHydrateAccount else { continue }
+
+            async let scans: Void = loadOwnerScans()
+            async let loadedProfile: Void = loadProfile()
+            _ = await (scans, loadedProfile)
+            await loadPublicScans()
         }
     }
 
@@ -232,7 +250,7 @@ final class ScanLabBackend: ObservableObject {
     func signIn(email: String, password: String) async throws {
         try await client.auth.signIn(email: email.trimmingCharacters(in: .whitespacesAndNewlines), password: password); notice = nil
     }
-    func signOut() async { do { try await client.auth.signOut(); await loadPublicScans() } catch { notice = error.localizedDescription } }
+    func signOut() async { do { try await client.auth.signOut() } catch { notice = error.localizedDescription } }
 
     func loadPublicScans(boundingBox: (minLat: Double, maxLat: Double, minLon: Double, maxLon: Double)? = nil) async {
         guard !isLoadingPublic else { return }; isLoadingPublic = true; defer { isLoadingPublic = false }
