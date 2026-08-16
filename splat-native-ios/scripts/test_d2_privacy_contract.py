@@ -115,24 +115,25 @@ assert "C617.1" in file_timestamp.get("NSPrivacyAccessedAPITypeReasons", []), "m
 
 # Public policy and review material must describe the current D2 behavior, not the pre-network build.
 for rel in ("privacy.html", "APP_REVIEW_NOTES_JA.md", "APP_STORE_METADATA_JA.md"):
-    require(
-        rel,
-        "Supabase",
-        "scene.spz",
-        "manifest.json",
-        "public",
-        "unlisted",
-        "private",
-    )
+    require(rel, "Supabase", "scene.spz", "manifest.json")
 
+# Public policy is user-facing Japanese, so test the visible semantics rather than internal enum spellings.
 require(
     "privacy.html",
+    "非公開",
+    "限定リンク",
+    "公開",
     "現在地を公開地点に設定",
     "いいね",
     "報告",
     "ブロック",
     "アカウントとクラウドデータを削除",
 )
+
+# Review/metadata files are implementation-facing and intentionally name the internal visibility enums.
+for rel in ("APP_REVIEW_NOTES_JA.md", "APP_STORE_METADATA_JA.md"):
+    require(rel, "public", "unlisted", "private")
+
 require(
     "APP_REVIEW_NOTES_JA.md",
     "Environment Scanning",
