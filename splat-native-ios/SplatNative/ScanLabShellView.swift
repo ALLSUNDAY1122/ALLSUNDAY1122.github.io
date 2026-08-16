@@ -79,26 +79,83 @@ private struct ScanLabDiscoverRow: View {
 struct ScanLabMapView: View {
     @EnvironmentObject var backend: ScanLabBackend
     @State private var selected: ScanLabPublicScan?
-    private var mappedScans: [ScanLabPublicScan] { backend.publicScans.filter { $0.location != nil } }
+    @State private var cameraPosition: MapCameraPosition = .automatic
+    @State private var visibleRegion: MKCoordinateRegion?
+    @State private var queryTask: Task<Void, Never>?
+    @State private var hasLoadedInitialRegion = false
+
+    private var mappedScans: [ScanLabPublicScan] {
+        backend.publicScans.filter { scan in
+            guard let location = scan.location else { return false }
+            return (-90...90).contains(location.latitude) && (-180...180).contains(location.longitude)
+        }
+    }
+
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
-                Map {
+                Map(position: $cameraPosition) {
                     ForEach(mappedScans) { scan in
                         if let location = scan.location {
                             Annotation(scan.title, coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)) {
-                                Button { selected = scan } label: { Image(systemName: "cube.fill").font(.headline).foregroundStyle(.black).frame(width: 38, height: 38).background(.mint, in: Circle()).shadow(radius: 3) }.buttonStyle(.plain)
+                                Button { selected = scan } label: {
+                                    Image(systemName: "cube.fill").font(.headline).foregroundStyle(.black).frame(width: 38, height: 38).background(.mint, in: Circle()).shadow(radius: 3)
+                                }.buttonStyle(.plain)
                             }
                         }
                     }
-                }.mapStyle(.standard(pointsOfInterest: .excludingAll))
+                }
+                .mapStyle(.standard(pointsOfInterest: .excludingAll))
+                .onMapCameraChange(frequency: .onEnd) { context in
+                    visibleRegion = context.region
+                    scheduleVisibleRegionQuery(context.region)
+                }
                 if mappedScans.isEmpty {
-                    Text(backend.isLoadingPublic ? "公開地点を取得中" : "公開地点はまだありません").font(.footnote.weight(.semibold)).padding(.horizontal, 14).padding(.vertical, 9).background(.ultraThinMaterial, in: Capsule()).padding(.bottom, 14)
+                    Text(backend.isLoadingPublic ? "この範囲の公開地点を取得中" : "この範囲に公開地点はありません")
+                        .font(.footnote.weight(.semibold)).padding(.horizontal, 14).padding(.vertical, 9)
+                        .background(.ultraThinMaterial, in: Capsule()).padding(.bottom, 14)
                 }
             }
-            .navigationTitle("Map").task { await backend.loadPublicScans() }
+            .navigationTitle("Map")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { Task { await reloadVisibleRegion() } } label: { Image(systemName: "arrow.clockwise") }
+                        .disabled(backend.isLoadingPublic)
+                        .accessibilityLabel("表示範囲を再読み込み")
+                }
+            }
+            .task {
+                guard !hasLoadedInitialRegion else { return }
+                hasLoadedInitialRegion = true
+                await backend.loadPublicScans()
+            }
+            .onDisappear { queryTask?.cancel() }
             .sheet(item: $selected) { scan in NavigationStack { ScanLabRemoteScanView(scan: scan) } }
         }
+    }
+
+    private func scheduleVisibleRegionQuery(_ region: MKCoordinateRegion) {
+        queryTask?.cancel()
+        queryTask = Task {
+            try? await Task.sleep(for: .milliseconds(350))
+            guard !Task.isCancelled else { return }
+            await backend.loadPublicScans(boundingBox: boundingBox(for: region))
+        }
+    }
+
+    private func reloadVisibleRegion() async {
+        if let visibleRegion { await backend.loadPublicScans(boundingBox: boundingBox(for: visibleRegion)) }
+        else { await backend.loadPublicScans() }
+    }
+
+    private func boundingBox(for region: MKCoordinateRegion) -> (minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) {
+        let halfLat = min(abs(region.span.latitudeDelta) / 2, 90)
+        let halfLon = min(abs(region.span.longitudeDelta) / 2, 180)
+        let minLat = max(-90, region.center.latitude - halfLat)
+        let maxLat = min(90, region.center.latitude + halfLat)
+        let minLon = max(-180, region.center.longitude - halfLon)
+        let maxLon = min(180, region.center.longitude + halfLon)
+        return (minLat, maxLat, minLon, maxLon)
     }
 }
 
@@ -132,9 +189,7 @@ struct ScanLabRemoteScanView: View {
                     if let shareURL = publicShareURL { ShareLink(item: shareURL) { Label("共有", systemImage: "square.and.arrow.up") } }
                     Menu {
                         Button("この3Dを報告", role: .destructive) { showingReport = true }
-                        if backend.isAuthenticated, scan.author != nil {
-                            Button("このユーザーをブロック", role: .destructive) { showingBlock = true }
-                        }
+                        if backend.isAuthenticated, scan.author != nil { Button("このユーザーをブロック", role: .destructive) { showingBlock = true } }
                     } label: { Image(systemName: "ellipsis") }.disabled(reportBusy || blockBusy)
                 }.buttonStyle(.bordered)
             }.padding(16).background(.black)
@@ -161,14 +216,8 @@ struct ScanLabRemoteScanView: View {
         components.queryItems = [URLQueryItem(name: "id", value: scan.id.uuidString.lowercased())]
         return components.url
     }
-    private func report(_ reason: String) async {
-        reportBusy = true; defer { reportBusy = false }
-        do { try await backend.report(scan, reason: reason); dismiss() } catch { backend.notice = error.localizedDescription }
-    }
-    private func blockAuthor() async {
-        blockBusy = true; defer { blockBusy = false }
-        do { try await backend.block(scan); dismiss() } catch { backend.notice = error.localizedDescription }
-    }
+    private func report(_ reason: String) async { reportBusy = true; defer { reportBusy = false }; do { try await backend.report(scan, reason: reason); dismiss() } catch { backend.notice = error.localizedDescription } }
+    private func blockAuthor() async { blockBusy = true; defer { blockBusy = false }; do { try await backend.block(scan); dismiss() } catch { backend.notice = error.localizedDescription } }
     private func loadModel() async {
         guard localURL == nil, let modelURL = scan.modelUrl else { loading = false; if scan.modelUrl == nil { errorMessage = "3Dデータの署名URLがありません。" }; return }
         do {
