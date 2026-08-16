@@ -1,6 +1,8 @@
 import { createClient } from "npm:@supabase/supabase-js@2.112.3";
 import { parseScanLabBoundingBox } from "./bbox.mjs";
 import { makeScanLabFeedCursor, parseScanLabFeedCursor } from "./feed_cursor.mjs";
+import { parseScanLabFeedAssetPolicy } from "./feed_asset_policy.mjs";
+import { locationForPublicResponse } from "./geo_contract.mjs";
 
 const cors = {
   "Access-Control-Allow-Origin": "https://allsunday1122.github.io",
@@ -28,10 +30,11 @@ async function signed(path: string | null, expiresIn = 600) {
   return data.signedUrl;
 }
 
-async function decorate(scan: Record<string, any>) {
+async function decorate(scan: Record<string, any>, includeModel = true) {
+  const modelUrlPromise = includeModel ? signed(scan.asset_path) : Promise.resolve(null);
   const [{ data: profile }, modelUrl, previewUrl, { count: likeCount }] = await Promise.all([
     supabase.from("scanlab_profiles").select("handle,display_name,avatar_path").eq("id", scan.owner_id).maybeSingle(),
-    signed(scan.asset_path),
+    modelUrlPromise,
     signed(scan.preview_path),
     supabase.from("scanlab_likes").select("scan_id", { count: "exact", head: true }).eq("scan_id", scan.id),
   ]);
@@ -41,11 +44,7 @@ async function decorate(scan: Record<string, any>) {
     caption: scan.caption,
     visibility: scan.visibility,
     publishedAt: scan.published_at,
-    location: scan.latitude == null || scan.longitude == null ? null : {
-      latitude: scan.latitude,
-      longitude: scan.longitude,
-      label: scan.location_label,
-    },
+    location: locationForPublicResponse(scan),
     author: profile ? { id: scan.owner_id, handle: profile.handle, displayName: profile.display_name } : null,
     likeCount: likeCount ?? 0,
     modelUrl,
@@ -76,6 +75,8 @@ Deno.serve(async (req) => {
     const fetchLimit = Math.min(limit * 3 + 1, 121);
     const cursor = parseScanLabFeedCursor(url.searchParams.get("cursor"));
     if (cursor.error) return json({ error: cursor.error }, 400);
+    const assetPolicy = parseScanLabFeedAssetPolicy(url.searchParams);
+    if (assetPolicy.error) return json({ error: assetPolicy.error }, 400);
 
     let query = supabase
       .from("scanlab_scans")
@@ -118,7 +119,10 @@ Deno.serve(async (req) => {
       nextCursor = makeScanLabFeedCursor(rows[rows.length - 1]);
     }
 
-    return json({ items: await Promise.all(pageRows.map(decorate)), nextCursor });
+    return json({
+      items: await Promise.all(pageRows.map((scan) => decorate(scan, assetPolicy.includeModel))),
+      nextCursor,
+    });
   }
 
   if (mode === "share") {

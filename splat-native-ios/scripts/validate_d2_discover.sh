@@ -5,6 +5,7 @@ cd "$ROOT"
 
 node scripts/test_scanlab_public_bbox.mjs
 node scripts/test_scanlab_public_cursor.mjs
+node scripts/test_scanlab_public_asset_policy.mjs
 
 grep -q 'parseScanLabBoundingBox(url.searchParams)' supabase/functions/scanlab-public/index.ts
 ! grep -q 'Number(url.searchParams.get("minLat"))' supabase/functions/scanlab-public/index.ts
@@ -32,4 +33,16 @@ grep -q '.eq("status", "published")' supabase/functions/scanlab-public/index.ts
 grep -q '.eq("moderation_status", "approved")' supabase/functions/scanlab-public/index.ts
 grep -q 'else query = query.eq("id", id!).eq("visibility", "public")' supabase/functions/scanlab-public/index.ts
 
-echo 'PASS: D2 Discover/feed bbox + cache isolation + cursor browse + fresh-open regression gate'
+# Discover feed must not mint model download signatures. It only needs preview/metadata; the model
+# URL is minted by fresh-open after the current public state has been revalidated.
+grep -q 'parseScanLabFeedAssetPolicy(url.searchParams)' supabase/functions/scanlab-public/index.ts
+grep -q 'decorate(scan, assetPolicy.includeModel)' supabase/functions/scanlab-public/index.ts
+grep -q 'includeModel ? signed(scan.asset_path) : Promise.resolve(null)' supabase/functions/scanlab-public/index.ts
+grep -q 'URLQueryItem(name: "includeModel", value: "0")' SplatNative/ScanLabDiscoverStore.swift
+grep -q 'envelope.items.allSatisfy({ \$0.modelUrl == nil })' SplatNative/ScanLabDiscoverStore.swift
+
+# Preserve the production v5 geolocation privacy contract while extending the shared function.
+grep -q 'locationForPublicResponse(scan)' supabase/functions/scanlab-public/index.ts
+grep -q 'scan.visibility !== "public"' supabase/functions/scanlab-public/geo_contract.mjs
+
+echo 'PASS: D2 Discover/feed bbox + cache + cursor + fresh-open + no-feed-model-signature regression gate'

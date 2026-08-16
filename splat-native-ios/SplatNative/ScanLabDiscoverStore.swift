@@ -63,6 +63,7 @@ final class ScanLabDiscoverStore: ObservableObject {
         var items = [
             URLQueryItem(name: "mode", value: "feed"),
             URLQueryItem(name: "limit", value: "24"),
+            URLQueryItem(name: "includeModel", value: "0"),
         ]
         if let cursor { items.append(URLQueryItem(name: "cursor", value: cursor)) }
         components.queryItems = items
@@ -79,6 +80,10 @@ final class ScanLabDiscoverStore: ObservableObject {
         guard let http = response as? HTTPURLResponse, 200..<300 ~= http.statusCode else {
             throw ScanLabBackendError.invalidServerResponse
         }
-        return try JSONDecoder().decode(ScanLabDiscoverEnvelope.self, from: data)
+        let envelope = try JSONDecoder().decode(ScanLabDiscoverEnvelope.self, from: data)
+        guard envelope.items.allSatisfy({ $0.modelUrl == nil }) else {
+            throw ScanLabBackendError.invalidServerResponse
+        }
+        return envelope
     }
 }
