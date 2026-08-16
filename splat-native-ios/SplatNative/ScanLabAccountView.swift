@@ -2,23 +2,28 @@ import SwiftUI
 
 struct ScanLabAccountView: View {
     @EnvironmentObject var backend: ScanLabBackend
+    @EnvironmentObject var passwordRecovery: ScanLabPasswordRecoveryCoordinator
 
     var body: some View {
         NavigationStack {
             Group {
-                switch backend.authPhase {
-                case .resolving:
-                    VStack(spacing: 12) {
-                        ProgressView()
-                        Text("セッションを確認中…")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
+                if backend.authPhase == .signedIn && passwordRecovery.requiresPasswordUpdate {
+                    ScanLabPasswordRecoveryView()
+                } else {
+                    switch backend.authPhase {
+                    case .resolving:
+                        VStack(spacing: 12) {
+                            ProgressView()
+                            Text("セッションを確認中…")
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    case .signedIn:
+                        ScanLabSignedInAccountView()
+                    case .signedOut:
+                        ScanLabAuthView()
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                case .signedIn:
-                    ScanLabSignedInAccountView()
-                case .signedOut:
-                    ScanLabAuthView()
                 }
             }
             .navigationTitle("Account")
@@ -28,6 +33,7 @@ struct ScanLabAccountView: View {
 
 struct ScanLabAuthView: View {
     @EnvironmentObject var backend: ScanLabBackend
+    @EnvironmentObject var passwordRecovery: ScanLabPasswordRecoveryCoordinator
     @State private var mode: Mode = .signIn
     @State private var email = ""
     @State private var password = ""
@@ -45,6 +51,10 @@ struct ScanLabAuthView: View {
             Section {
                 Button(mode == .signIn ? "ログイン" : "アカウントを作成") { Task { await submit() } }
                     .disabled(busy || email.isEmpty || password.count < 6)
+                if mode == .signIn {
+                    Button("パスワードを忘れた場合") { Task { await requestPasswordReset() } }
+                        .disabled(busy || email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
                 if busy { ProgressView() }
                 if let errorMessage { Text(errorMessage).foregroundStyle(.red).font(.footnote) }
                 else if let notice = backend.notice { Text(notice).foregroundStyle(.secondary).font(.footnote) }
@@ -62,6 +72,7 @@ struct ScanLabAuthView: View {
         errorMessage = nil
         defer { busy = false }
         do {
+            passwordRecovery.prepareForStandardAuth()
             if mode == .signIn {
                 try await backend.signIn(email: email, password: password)
             } else {
@@ -71,10 +82,71 @@ struct ScanLabAuthView: View {
             errorMessage = error.localizedDescription
         }
     }
+
+    private func requestPasswordReset() async {
+        busy = true
+        errorMessage = nil
+        defer { busy = false }
+        do {
+            try await passwordRecovery.requestReset(email: email, backend: backend)
+        } catch {
+            errorMessage = "パスワード再設定メールを送信できませんでした。通信状態を確認して、もう一度お試しください。"
+        }
+    }
+}
+
+private struct ScanLabPasswordRecoveryView: View {
+    @EnvironmentObject var backend: ScanLabBackend
+    @EnvironmentObject var passwordRecovery: ScanLabPasswordRecoveryCoordinator
+    @State private var newPassword = ""
+    @State private var confirmation = ""
+    @State private var busy = false
+    @State private var errorMessage: String?
+
+    var body: some View {
+        Form {
+            Section("新しいパスワード") {
+                SecureField("6文字以上", text: $newPassword).textContentType(.newPassword)
+                SecureField("もう一度入力", text: $confirmation).textContentType(.newPassword)
+            }
+            Section {
+                Button("パスワードを変更") { Task { await complete() } }
+                    .disabled(busy || !ScanLabPasswordRecoveryPolicy.isValidNewPassword(newPassword) || newPassword != confirmation)
+                Button("キャンセルしてログアウト", role: .cancel) { Task { await cancel() } }
+                    .disabled(busy)
+                if busy { ProgressView() }
+                if let errorMessage { Text(errorMessage).foregroundStyle(.red).font(.footnote) }
+                else { Text("再設定リンクで認証したセッションでは、先に新しいパスワードを確定してください。").font(.footnote).foregroundStyle(.secondary) }
+            }
+        }
+    }
+
+    private func complete() async {
+        busy = true
+        errorMessage = nil
+        defer { busy = false }
+        guard newPassword == confirmation else {
+            errorMessage = "確認用パスワードが一致しません。"
+            return
+        }
+        do {
+            try await passwordRecovery.complete(newPassword: newPassword, backend: backend)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func cancel() async {
+        busy = true
+        errorMessage = nil
+        await passwordRecovery.cancel(backend: backend)
+        busy = false
+    }
 }
 
 private struct ScanLabSignedInAccountView: View {
     @EnvironmentObject var backend: ScanLabBackend
+    @EnvironmentObject var passwordRecovery: ScanLabPasswordRecoveryCoordinator
     @State private var displayName = ""
     @State private var handle = ""
     @State private var profileBusy = false
@@ -101,7 +173,7 @@ private struct ScanLabSignedInAccountView: View {
                 Link("プライバシーポリシー", destination: URL(string: "https://allsunday1122.github.io/splat-native-ios/privacy.html")!)
             }
             Section {
-                Button("ログアウト") { Task { await backend.signOut() } }
+                Button("ログアウト") { Task { passwordRecovery.prepareForStandardAuth(); await backend.signOut() } }
                 Button("アカウントとクラウドデータを削除", role: .destructive) { deleteAccountConfirmation = true }.disabled(accountBusy)
             } footer: { Text("アカウント削除では、このアカウントに紐づく3Dファイルと公開情報を削除します。端末内に書き出したファイルは削除されません。") }
         }
@@ -135,6 +207,7 @@ private struct ScanLabSignedInAccountView: View {
         defer { accountBusy = false }
         do {
             try await backend.deleteAccount()
+            passwordRecovery.prepareForStandardAuth()
         } catch {
             backend.notice = "アカウントを削除できませんでした: \(error.localizedDescription)"
         }
