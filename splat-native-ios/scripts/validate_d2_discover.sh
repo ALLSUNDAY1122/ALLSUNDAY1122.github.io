@@ -20,4 +20,16 @@ grep -q 'さらに読み込む' SplatNative/ScanLabPagedDiscoverView.swift
 grep -q 'ScanLabPagedDiscoverView()' SplatNative/ScanLabDiscoverShellView.swift
 grep -q 'ScanLabDiscoverShellView()' SplatNative/SplatNativeApp.swift
 
-echo 'PASS: D2 Discover/feed bbox + cache isolation + cursor browse regression gate'
+# Discover must revalidate a public scan immediately before opening it. Feed-signed model URLs
+# are short-lived and must not bypass later unpublish/moderation state changes.
+grep -q 'ScanLabDiscoverFreshOpenView(scanID: scan.id)' SplatNative/ScanLabPagedDiscoverView.swift
+grep -q 'URLQueryItem(name: "mode", value: "share")' SplatNative/ScanLabDiscoverFreshOpenView.swift
+grep -q 'request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData' SplatNative/ScanLabDiscoverFreshOpenView.swift
+grep -q 'http.statusCode == 404' SplatNative/ScanLabDiscoverFreshOpenView.swift
+grep -q 'fresh.visibility == ScanLabVisibility.public.rawValue' SplatNative/ScanLabDiscoverFreshOpenView.swift
+grep -q 'fresh.modelUrl != nil' SplatNative/ScanLabDiscoverFreshOpenView.swift
+grep -q '.eq("status", "published")' supabase/functions/scanlab-public/index.ts
+grep -q '.eq("moderation_status", "approved")' supabase/functions/scanlab-public/index.ts
+grep -q 'else query = query.eq("id", id!).eq("visibility", "public")' supabase/functions/scanlab-public/index.ts
+
+echo 'PASS: D2 Discover/feed bbox + cache isolation + cursor browse + fresh-open regression gate'

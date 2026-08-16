@@ -82,7 +82,7 @@ private struct ScanLabPagedRemoteContainer: View {
     let onReturn: () -> Void
 
     var body: some View {
-        ScanLabRemoteScanView(scan: scan)
+        ScanLabDiscoverFreshOpenView(scanID: scan.id)
             .onDisappear(perform: onReturn)
     }
 }
