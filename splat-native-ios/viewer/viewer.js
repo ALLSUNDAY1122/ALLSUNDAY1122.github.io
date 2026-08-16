@@ -19,6 +19,27 @@ function fail(message) {
   statusText.textContent = message;
 }
 
+function setMeta(selector, value, attribute = 'content') {
+  const element = document.querySelector(selector);
+  if (element && value) element.setAttribute(attribute, value);
+}
+
+function applyShareMetadata(item) {
+  const pageTitle = item.title ? `${item.title} | Scan Lab` : 'Scan Lab 3D Viewer';
+  const description = item.caption || 'Scan Labで公開された3D Gaussian Splatをブラウザで閲覧します。';
+  document.title = pageTitle;
+  setMeta('meta[name="description"]', description);
+  setMeta('meta[property="og:title"]', pageTitle);
+  setMeta('meta[property="og:description"]', description);
+  setMeta('meta[property="og:url"]', location.href);
+  setMeta('meta[name="twitter:title"]', pageTitle);
+  setMeta('meta[name="twitter:description"]', description);
+  if (item.previewUrl) {
+    setMeta('meta[property="og:image"]', item.previewUrl);
+    setMeta('meta[name="twitter:image"]', item.previewUrl);
+  }
+}
+
 async function loadMetadata() {
   if (!id && !token) throw new Error('共有URLが正しくありません。');
   const query = new URLSearchParams({ mode: 'share' });
@@ -34,7 +55,7 @@ async function loadMetadata() {
 async function main() {
   try {
     const item = await loadMetadata();
-    document.title = `${item.title} | Scan Lab`;
+    applyShareMetadata(item);
     title.textContent = item.title;
     author.textContent = item.author?.displayName ? `@${item.author.handle} · ${item.author.displayName}` : 'Scan Lab';
     caption.textContent = item.caption || '';
@@ -73,8 +94,9 @@ async function main() {
 
 share.addEventListener('click', async () => {
   try {
+    const shareData = { title: document.title, text: caption.textContent || undefined, url: location.href };
     if (navigator.share) {
-      await navigator.share({ title: document.title, url: location.href });
+      await navigator.share(shareData);
     } else if (navigator.clipboard) {
       await navigator.clipboard.writeText(location.href);
       share.textContent = 'URLをコピーしました';
