@@ -10,8 +10,8 @@ final class ScanLabProfilePolicyTests: XCTestCase {
 
     func testRejectsInvalidHandle() {
         XCTAssertFalse(ScanLabProfilePolicy.validate(handle: "ab", displayName: "Name", bio: "", avatarURL: ""))
-        XCTAssertFalse(ScanLabProfilePolicy.validate(handle: "UPPER", displayName: "Name", bio: "", avatarURL: ""))
         XCTAssertFalse(ScanLabProfilePolicy.validate(handle: "bad-handle", displayName: "Name", bio: "", avatarURL: ""))
+        XCTAssertFalse(ScanLabProfilePolicy.validate(handle: "bad space", displayName: "Name", bio: "", avatarURL: ""))
     }
 
     func testAcceptsNormalizedUppercaseInput() {
