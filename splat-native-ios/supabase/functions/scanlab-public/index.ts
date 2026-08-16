@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2.112.3";
 import { parseScanLabBoundingBox } from "./bbox.mjs";
+import { makeScanLabFeedCursor, parseScanLabFeedCursor } from "./feed_cursor.mjs";
 
 const cors = {
   "Access-Control-Allow-Origin": "https://allsunday1122.github.io",
@@ -72,6 +73,10 @@ Deno.serve(async (req) => {
 
   if (mode === "feed") {
     const limit = Math.min(Math.max(Number(url.searchParams.get("limit") ?? 24) || 24, 1), 40);
+    const fetchLimit = Math.min(limit * 3 + 1, 121);
+    const cursor = parseScanLabFeedCursor(url.searchParams.get("cursor"));
+    if (cursor.error) return json({ error: cursor.error }, 400);
+
     let query = supabase
       .from("scanlab_scans")
       .select("id,owner_id,title,caption,visibility,published_at,latitude,longitude,location_label,asset_path,preview_path")
@@ -79,7 +84,13 @@ Deno.serve(async (req) => {
       .eq("status", "published")
       .eq("moderation_status", "approved")
       .order("published_at", { ascending: false })
-      .limit(Math.min(limit * 2, 80));
+      .order("id", { ascending: false })
+      .limit(fetchLimit);
+
+    if (cursor.value) {
+      const { publishedAt, id } = cursor.value;
+      query = query.or(`published_at.lt.${publishedAt},and(published_at.eq.${publishedAt},id.lt.${id})`);
+    }
 
     const bbox = parseScanLabBoundingBox(url.searchParams);
     if (bbox.error) return json({ error: bbox.error }, 400);
@@ -93,8 +104,21 @@ Deno.serve(async (req) => {
 
     const [{ data, error }, blocked] = await Promise.all([query, blockedUserIds(req)]);
     if (error) return json({ error: "feed_unavailable" }, 503);
-    const visible = (data ?? []).filter((scan) => !blocked.has(scan.owner_id)).slice(0, limit);
-    return json({ items: await Promise.all(visible.map(decorate)) });
+
+    const rows = data ?? [];
+    const visibleRows = rows.filter((scan) => !blocked.has(scan.owner_id));
+    const pageRows = visibleRows.slice(0, limit);
+    let nextCursor: string | null = null;
+
+    if (pageRows.length === limit && (visibleRows.length > limit || rows.length === fetchLimit)) {
+      nextCursor = makeScanLabFeedCursor(pageRows[pageRows.length - 1]);
+    } else if (pageRows.length < limit && rows.length === fetchLimit) {
+      // A block-heavy batch may contain fewer than `limit` visible rows. Advance past every
+      // row already inspected so the next request cannot loop forever on blocked content.
+      nextCursor = makeScanLabFeedCursor(rows[rows.length - 1]);
+    }
+
+    return json({ items: await Promise.all(pageRows.map(decorate)), nextCursor });
   }
 
   if (mode === "share") {

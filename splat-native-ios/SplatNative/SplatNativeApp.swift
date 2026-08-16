@@ -8,7 +8,7 @@ struct SplatNativeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ScanLabShellView()
+            ScanLabDiscoverShellView()
                 .environmentObject(model)
                 .environmentObject(meshModel)
                 .environmentObject(backend)
