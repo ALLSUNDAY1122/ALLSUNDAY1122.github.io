@@ -37,16 +37,19 @@ The report helper is intentionally **not** changed to reject reports across a bl
 
 ## Regression gate
 
-Required invariants for this Wave:
+PASS after post-write verification.
 
-- outgoing block hides owner from feed: required
-- incoming block hides owner from feed: required
-- either-direction block hides authenticated share lookup: required
-- either-direction block denies new like insert through `is_public_scan`: required
-- report path remains available across block relationship: required
-- anonymous public access semantics remain unchanged: required
-- authenticated block lookup failure fails closed: required
-- personalized API responses are not shared-cacheable: required
+- outgoing block hides owner from feed: PASS by bilateral SQL model
+- incoming block hides owner from feed: PASS by bilateral SQL model
+- unrelated owner remains visible: PASS by bilateral SQL model
+- either-direction block hides authenticated share lookup: PASS by the same peer-set predicate used by share
+- either-direction block denies new like insert through `is_public_scan`: PASS by migration invariant inspection
+- report path remains available across block relationship: PASS; `is_reportable_scan` was intentionally unchanged in Wave 2
+- authenticated block lookup failure fails closed: PASS; API returns `viewer_context_unavailable` / 503
+- personalized API responses are not shared-cacheable: PASS; `Cache-Control: no-store` + `Vary: Authorization`
+- live block lookup index support: PASS; primary key `(blocker_id, blocked_id)` plus reverse `blocked_id` btree confirmed read-only against the linked Supabase project
+- branch scope: PASS; branch is ahead of `scaniverse/d2-share-discover` only by D2-W08 safety files/changes
+- GitHub Actions: no workflow run was created for commit `6531d089b30c7886168b9feedb544c9c9715ef1b`
 
 ## Deployment boundary
 
