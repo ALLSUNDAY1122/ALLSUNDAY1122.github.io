@@ -55,15 +55,8 @@ if "backend.publish(resultURL:" in publish:
     raise AssertionError("PublishScanView must not call the legacy raw .splat publish path")
 
 # The optional cloud preview is a user-associated rendered image and must stay declared as Photos or Videos.
-require(
-    "SplatNative/ScanModel.swift",
-    "let rendered = trainer.render(cameraIndex: 0)",
-    "self.previewImage = preview",
-)
-require(
-    "SplatNative/ScanLabShellView.swift",
-    "PublishScanView(resultURL: resultURL, previewImage: model.previewImage)",
-)
+require("SplatNative/ScanModel.swift", "let rendered = trainer.render(cameraIndex: 0)", "self.previewImage = preview")
+require("SplatNative/ScanLabShellView.swift", "PublishScanView(resultURL: resultURL, previewImage: model.previewImage)")
 require(
     "SplatNative/ScanLabBackend+TrustedPublish.swift",
     "scene.spz",
@@ -103,17 +96,16 @@ require(
     "scanlab_reports",
 )
 
-# Privacy manifest must cover all server-retained D2 data categories and the required-reason API.
+# Privacy Manifest describes Scan Lab/app-side collected-data declarations.
 manifest_path = ROOT / "SplatNative/PrivacyInfo.xcprivacy"
 with manifest_path.open("rb") as fh:
     manifest = plistlib.load(fh)
 
 assert manifest.get("NSPrivacyTracking") is False
 assert manifest.get("NSPrivacyTrackingDomains") == []
-
 collected = manifest.get("NSPrivacyCollectedDataTypes", [])
-by_type = {item.get("NSPrivacyCollectedDataType"): item for item in collected}
-expected = {
+manifest_by_type = {item.get("NSPrivacyCollectedDataType"): item for item in collected}
+manifest_expected = {
     "NSPrivacyCollectedDataTypeName",
     "NSPrivacyCollectedDataTypeEmailAddress",
     "NSPrivacyCollectedDataTypeUserID",
@@ -123,32 +115,35 @@ expected = {
     "NSPrivacyCollectedDataTypeEnvironmentScanning",
     "NSPrivacyCollectedDataTypeProductInteraction",
 }
-assert set(by_type) == expected, f"privacy manifest data types drifted: {sorted(set(by_type) ^ expected)}"
-for kind in expected:
-    item = by_type[kind]
+assert set(manifest_by_type) == manifest_expected, f"privacy manifest data types drifted: {sorted(set(manifest_by_type) ^ manifest_expected)}"
+for kind in manifest_expected:
+    item = manifest_by_type[kind]
     assert item.get("NSPrivacyCollectedDataTypeLinked") is True, kind
     assert item.get("NSPrivacyCollectedDataTypeTracking") is False, kind
     assert "NSPrivacyCollectedDataTypePurposeAppFunctionality" in item.get("NSPrivacyCollectedDataTypePurposes", []), kind
 
 accessed = manifest.get("NSPrivacyAccessedAPITypes", [])
-file_timestamp = next(
-    (item for item in accessed if item.get("NSPrivacyAccessedAPIType") == "NSPrivacyAccessedAPICategoryFileTimestamp"),
-    None,
-)
+file_timestamp = next((item for item in accessed if item.get("NSPrivacyAccessedAPIType") == "NSPrivacyAccessedAPICategoryFileTimestamp"), None)
 assert file_timestamp is not None, "missing FileTimestamp required-reason declaration"
 assert "C617.1" in file_timestamp.get("NSPrivacyAccessedAPITypeReasons", []), "missing FileTimestamp C617.1"
 
-# App Store Connect transfer source must exactly reproduce the manifest's collected-data contract.
+# App Store Connect must include app declarations AND third-party-partner collection.
 answers = json.loads(read("APP_STORE_PRIVACY_RESPONSES.json"))
+assert answers.get("schema_version") == 2
 assert answers.get("tracking") is False
 assert answers.get("tracking_domains") == []
 assert answers.get("privacy_policy_url") == PRIVACY_URL
 assert answers.get("user_privacy_choices_url") == PRIVACY_CHOICES_URL
 answer_rows = answers.get("data_types", [])
 answer_by_type = {row.get("manifest_type"): row for row in answer_rows}
-assert set(answer_by_type) == expected, f"App Store privacy answer types drifted: {sorted(set(answer_by_type) ^ expected)}"
-assert len(answer_rows) == len(expected), "duplicate App Store privacy answer type"
-for kind in expected:
+partner_diagnostic = "NSPrivacyCollectedDataTypeOtherDiagnosticData"
+app_store_expected = manifest_expected | {partner_diagnostic}
+assert set(answer_by_type) == app_store_expected, f"App Store privacy answer types drifted: {sorted(set(answer_by_type) ^ app_store_expected)}"
+assert len(answer_rows) == len(app_store_expected), "duplicate App Store privacy answer type"
+assert manifest_expected < app_store_expected
+assert set(manifest_by_type).issubset(set(answer_by_type)), "App Store answers must cover every Manifest data type"
+
+for kind in app_store_expected:
     row = answer_by_type[kind]
     assert row.get("collected") is True, kind
     assert row.get("purposes") == ["App Functionality"], kind
@@ -157,14 +152,21 @@ for kind in expected:
     assert row.get("app_store_name"), kind
     assert row.get("evidence"), kind
 
+diagnostic = answer_by_type[partner_diagnostic]
+assert diagnostic.get("app_store_name") == "Other Diagnostic Data"
+assert diagnostic.get("source_scope") == "third_party_partner"
+assert diagnostic.get("manifest_declared") is False
+for token in ("Supabase Auth", "IP address", "user agent", "security"):
+    assert token.lower() in diagnostic.get("condition", "").lower(), token
+
 reason_rows = answers.get("required_reason_apis", [])
 reason = next((row for row in reason_rows if row.get("category") == "NSPrivacyAccessedAPICategoryFileTimestamp"), None)
 assert reason is not None
 assert "C617.1" in reason.get("reasons", [])
 
-# Public policy and review material must describe the current D2 behavior, not the pre-network build.
+# Public policy and review material must describe current D2 behavior and third-party auth audit collection.
 for rel in ("privacy.html", "APP_REVIEW_NOTES_JA.md", "APP_STORE_METADATA_JA.md"):
-    require(rel, "Supabase", "scene.spz", "manifest.json")
+    require(rel, "Supabase", "scene.spz", "manifest.json", "IPアドレス", "User-Agent", "監査ログ")
 
 require(
     "privacy.html",
@@ -178,8 +180,11 @@ require(
     "アカウントとクラウドデータを削除",
     "preview.jpg",
     "写真ライブラリから選択した画像ではなく",
+    "アカウントと認証ログ",
+    "不正利用・不正アクセス",
+    "アカウント削除と同時に必ず消去されるとは限りません",
+    "広告、マーケティング、ユーザートラッキングには利用しません",
     "./privacy-choices.html",
-    "お問い合わせ",
     "./support.html",
     f'mailto:{SUPPORT_EMAIL}',
 )
@@ -194,11 +199,9 @@ require(
     "機能提供・安全運用に必要な間保持",
     "同意の撤回と設定変更",
     "iOSの設定",
-    "すでにクラウドへ送信した位置情報を削除する場合",
     "法令または正当なセキュリティ上の義務",
 )
 
-# User Privacy Choices URL must be a concrete self-service map, not a generic policy landing page.
 require(
     "privacy-choices.html",
     "Scan Lab プライバシー設定・削除",
@@ -207,6 +210,10 @@ require(
     "クラウドスキャンを削除する",
     "アカウントとクラウドデータを削除する",
     "preview画像",
+    "Supabase Auth",
+    "監査ログ",
+    "アカウント削除と同時に必ず消去されるとは限りません",
+    "広告・トラッキングには利用しません",
     "./support.html",
     "./privacy.html",
     f'mailto:{SUPPORT_EMAIL}',
@@ -226,47 +233,56 @@ require(
 )
 forbid("support.html", "Splat Lab サポート")
 
-# Review/metadata files are implementation-facing and intentionally name the internal visibility enums.
 for rel in ("APP_REVIEW_NOTES_JA.md", "APP_STORE_METADATA_JA.md"):
-    require(rel, "public", "unlisted", "private")
+    require(
+        rel,
+        "public",
+        "unlisted",
+        "private",
+        "Other Diagnostic Data",
+        "APP_STORE_PRIVACY_RESPONSES.json",
+        "9項目",
+        "第三者パートナー",
+        "Privacy Manifest",
+        "包含",
+        "C617.1",
+        SUPPORT_URL,
+        PRIVACY_URL,
+        PRIVACY_CHOICES_URL,
+        SUPPORT_EMAIL,
+        "Supabase Auth URL Configuration",
+        "jp.allsunday1122.splatlab://password-recovery",
+    )
 
 require(
     "APP_REVIEW_NOTES_JA.md",
     "Photos or Videos",
     "Environment Scanning",
     "Product Interaction",
-    "APP_STORE_PRIVACY_RESPONSES.json",
-    "C617.1",
     "位置情報が自動取得されない",
-    SUPPORT_URL,
-    PRIVACY_URL,
-    PRIVACY_CHOICES_URL,
-    SUPPORT_EMAIL,
     "UGC安全機能",
     "保存期間・削除・同意撤回",
     "同等以上の保護",
-    "iOS設定で位置情報権限を取り消し",
-    "Supabase Auth URL Configuration",
-    "jp.allsunday1122.splatlab://password-recovery",
+    "Supabase Authの監査ログはこのcascade対象ではありません",
 )
 require(
     "APP_STORE_METADATA_JA.md",
     "Photos or Videos",
     "Environment Scanning",
     "Product Interaction",
-    "APP_STORE_PRIVACY_RESPONSES.json",
-    "C617.1",
     "App Review Information",
     f"Support URL: `{SUPPORT_URL}`",
     f"Privacy Policy URL: `{PRIVACY_URL}`",
     f"User Privacy Choices URL: `{PRIVACY_CHOICES_URL}`",
-    SUPPORT_EMAIL,
     "本審査前に",
     "第三者サービス / 保存 / 同意撤回",
     "同等以上の保護",
-    "Supabase Auth URL Configuration",
-    "jp.allsunday1122.splatlab://password-recovery",
+    "partner-only",
 )
+
+# Never regress to the false assumption that third-party-partner App Store answers must exactly equal app-manifest rows.
+forbid("APP_REVIEW_NOTES_JA.md", "Manifestとのdata type完全一致")
+forbid("APP_STORE_METADATA_JA.md", "Privacy ManifestとこのJSONのdata type集合はCIで完全一致")
 
 forbid(
     "privacy.html",
@@ -288,4 +304,4 @@ forbid(
     "現段階の開発者によるデータ収集: なし",
 )
 
-print("PASS: D2 privacy manifest / App Store answers / preview media / permissions / retention / consent / third-party / review / UGC support / publish boundary are aligned")
+print("PASS: D2 privacy manifest is covered by App Store answers; Supabase Auth partner diagnostics, deletion retention, permissions, review and UGC contracts are aligned")

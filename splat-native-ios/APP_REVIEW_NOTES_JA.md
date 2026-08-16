@@ -6,7 +6,7 @@
 
 本ビルドはScaniverse個人向けiOS体験との機能・実用品質同等化を検証する開発版です。撮影と端末内3D生成に加え、D2のアカウント、クラウド保存、public / unlisted / private、ブラウザ共有、Map、Discover、報告・ブロック・削除を含みます。iPhoneホーム画面上の表示名は `Scan Lab` です。
 
-ローカル撮影・生成はログイン不要で利用できます。ネットワーク送信は共有画面から利用者が明示的に実行した場合だけ開始します。
+ローカル撮影・生成はログイン不要で利用できます。ネットワーク送信は共有画面から利用者が明示的に実行した場合だけ開始します。ただしオンライン認証を利用した場合、Supabase Authは認証・セキュリティ監査ログを自動記録します。
 
 ## ログイン情報
 
@@ -48,13 +48,16 @@ App Privacy上の `Photos or Videos` はPhotosライブラリ権限を意味し�
 
 公開UIから撮影元画像やraw再構成 `.splat` をアップロードする設計ではありません。広告SDK、行動解析SDK、ユーザートラッキングはありません。
 
-SupabaseはAuth / Database / Storage / Edge Functionsの基盤として利用します。ユーザーデータへアクセスする第三者サービスは、本ポリシーおよび適用されるApple要件と同等以上の保護を行うものに限定し、広告トラッキング目的では共有しません。
+SupabaseはAuth / Database / Storage / Edge Functionsの基盤として利用します。Supabase Authはsignup、login、password reset、email verification、token refresh、logout等の認証イベントを監査ログとして自動記録し、ユーザーID、認証操作、日時、IPアドレス、User-Agent、provider metadata等を保持する場合があります。用途は認証、セキュリティ、不正利用・不正アクセス防止、コンプライアンス、運用診断であり、広告・マーケティング・トラッキングには使用しません。
+
+ユーザーデータへアクセスする第三者サービスは、本ポリシーおよび適用されるApple要件と同等以上の保護を行うものに限定し、広告トラッキング目的では共有しません。
 
 ## 保存期間・削除・同意撤回
 
 - アカウント情報、プロフィール、クラウドスキャン、preview画像、投稿メタデータ、位置情報、コミュニティ操作情報は、アカウントまたは対象データが存在し、機能提供・安全運用に必要な間保持します。
 - クラウドスキャン削除では、対象3Dファイル、preview画像、投稿レコード、対象スキャンに紐づく関連レコードを削除対象とします。
-- 「アカウントとクラウドデータを削除」では、所有3Dとpreview画像を削除した後に認証ユーザーを削除し、プロフィール、投稿、アカウントに紐づく関連DBレコードを削除対象とします。
+- 「アカウントとクラウドデータを削除」では、所有3Dとpreview画像を削除した後に認証ユーザーを削除し、プロフィール、投稿、アカウントに紐づくアプリDBレコードを削除対象とします。
+- Supabase Authの監査ログは認証ユーザー・投稿とは別管理で、アカウント削除と同時に必ず消去されるとは限りません。Supabase側のログ保持設定・契約上の保持期間と、セキュリティ・不正利用防止・障害調査・法令対応に必要な範囲で保持します。
 - 位置情報の同意はiOS設定から撤回できます。撤回後は新たな現在地取得を行いません。既に送信済みの位置情報を削除するには対象クラウドスキャンを削除します。
 - 公開のみ停止したい場合は非公開化、クラウド上の投稿自体を消したい場合はスキャン削除、オンライン機能全体を終了したい場合はアカウント削除を利用します。
 - 具体的な選択肢はUser Privacy Choices URLにまとめています。
@@ -78,11 +81,11 @@ SupabaseはAuth / Database / Storage / Edge Functionsの基盤として利用し
 
 ## 削除・非公開化
 
-所有者は公開中のクラウドスキャンを非公開化できます。スキャン削除ではクラウド上の3Dファイル、preview画像と投稿レコードを削除します。アカウント画面には「アカウントとクラウドデータを削除」があり、サーバー上の当該ユーザー所有3Dとpreview画像・共有投稿を削除したうえで認証ユーザーを削除します。関連DBレコードは外部キーのcascadeで削除されます。端末内に保存・書き出したファイルは対象外です。
+所有者は公開中のクラウドスキャンを非公開化できます。スキャン削除ではクラウド上の3Dファイル、preview画像と投稿レコードを削除します。アカウント画面には「アカウントとクラウドデータを削除」があり、サーバー上の当該ユーザー所有3Dとpreview画像・共有投稿を削除したうえで認証ユーザーを削除します。アプリDBの関連レコードは外部キーのcascadeで削除されます。Supabase Authの監査ログはこのcascade対象ではありません。端末内に保存・書き出したファイルは対象外です。
 
 ## Privacy Manifest / App Store Connect申告
 
-現在のPrivacy ManifestはTracking=falseとし、App Functionality目的で次の8項目を申告します。
+現在のアプリPrivacy ManifestはTracking=falseとし、Scan Labのアプリ実装が収集する次の8項目をApp Functionality目的で申告します。
 
 - Name
 - Email Address
@@ -93,7 +96,11 @@ SupabaseはAuth / Database / Storage / Edge Functionsの基盤として利用し
 - Environment Scanning
 - Product Interaction
 
-全項目 `Linked to User = YES`、`Used for Tracking = NO`。App Store Connectへの転記正本は `APP_STORE_PRIVACY_RESPONSES.json` とし、Manifestとのdata type完全一致をCIで検査します。
+App Store Connectへの転記正本 `APP_STORE_PRIVACY_RESPONSES.json` は、上記8項目に第三者パートナーSupabase Authの認証監査ログ由来 `Other Diagnostic Data` を加えた9項目です。9項目すべて `Linked to User = YES`、`Used for Tracking = NO`、目的は `App Functionality` です。
+
+`Other Diagnostic Data` はSupabase Authが認証・セキュリティ監査のため保持し得るIPアドレス、User-Agent、認証イベント等をAppleのIPアドレス追加ガイダンスに基づき診断情報として保守的に申告するものです。これはCrash SDKや行動解析SDKを導入したという意味ではありません。
+
+CIではPrivacy ManifestとApp Store Connect回答の完全一致を要求せず、Manifestの8項目がApp Store Connect正本にすべて包含され、第三者パートナー由来の追加申告が明示されていることを検査します。
 
 共有パッケージのファイルmetadata確認に対し、Required Reason APIのFile Timestamp categoryに `C617.1` を申告します。
 
@@ -112,7 +119,7 @@ SupabaseはAuth / Database / Storage / Edge Functionsの基盤として利用し
 11. 所有者アカウントで非公開化し、公開面から消えることを確認する。
 12. クラウドスキャン削除後、共有URLが利用できず、所有者一覧からも消えることを確認する。
 13. iOS設定で位置情報権限を取り消し、その後の現在地取得が行われないことを確認する。
-14. 検証用アカウントでアカウント削除を実行し、共有したクラウド3D・preview画像・投稿・プロフィールが削除対象になることを確認する。
+14. 検証用アカウントでアカウント削除を実行し、共有したクラウド3D・preview画像・投稿・プロフィールが削除対象になることを確認する。監査ログは別保持であることをPrivacy Policyと一致させる。
 
 ## 既知の審査前確認事項
 

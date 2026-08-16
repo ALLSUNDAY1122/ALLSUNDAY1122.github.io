@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "updated": "2026-08-17",
   "privacy_policy_url": "https://allsunday1122.github.io/splat-native-ios/privacy.html",
   "user_privacy_choices_url": "https://allsunday1122.github.io/splat-native-ios/privacy-choices.html",
@@ -33,8 +33,8 @@
       "purposes": ["App Functionality"],
       "linked_to_user": true,
       "used_for_tracking": false,
-      "condition": "Online account, ownership, likes, reports, blocks, or rate-limit state is used.",
-      "evidence": ["SplatNative/ScanLabBackend.swift", "supabase/migrations/20260815015516_scanlab_s7_social_backend_v1.sql"]
+      "condition": "Online account, ownership, likes, reports, blocks, rate-limit state, or authentication audit state is used.",
+      "evidence": ["SplatNative/ScanLabBackend.swift", "supabase/migrations/20260815015516_scanlab_s7_social_backend_v1.sql", "Supabase Auth Audit Logs"]
     },
     {
       "manifest_type": "NSPrivacyCollectedDataTypePreciseLocation",
@@ -85,6 +85,18 @@
       "used_for_tracking": false,
       "condition": "Online community and safety operations such as likes, reports, blocks and abuse/rate-limit enforcement are used.",
       "evidence": ["SplatNative/ScanLabBackend.swift", "supabase/migrations/20260815015516_scanlab_s7_social_backend_v1.sql"]
+    },
+    {
+      "manifest_type": "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+      "app_store_name": "Other Diagnostic Data",
+      "collected": true,
+      "purposes": ["App Functionality"],
+      "linked_to_user": true,
+      "used_for_tracking": false,
+      "source_scope": "third_party_partner",
+      "manifest_declared": false,
+      "condition": "Supabase Auth automatically retains authentication audit/security events. These can include an account-linked user ID, event/action, timestamp, IP address, user agent and provider metadata and are used for authentication security, abuse/fraud prevention, compliance and operational diagnosis rather than advertising or tracking.",
+      "evidence": ["Supabase Auth Audit Logs documentation", "Production auth.audit_log_entries schema: payload, created_at, ip_address"]
     }
   ],
   "required_reason_apis": [
