@@ -1,0 +1,38 @@
+name: Expo Robot Token Check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/expo-token-check.yml
+
+permissions:
+  contents: read
+
+jobs:
+  expo-auth:
+    name: Verify Expo authentication
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify EXPO_TOKEN is configured
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [ -z "$EXPO_TOKEN" ]; then
+            echo "::error::EXPO_TOKEN repository secret is not configured"
+            exit 1
+          fi
+
+      - name: Set up Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Verify Expo robot authentication
+        run: |
+          echo "Authenticated Expo account:"
+          eas whoami
