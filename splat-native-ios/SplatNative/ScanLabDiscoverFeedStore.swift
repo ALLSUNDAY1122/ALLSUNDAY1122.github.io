@@ -3,8 +3,7 @@ import Foundation
 
 private struct ScanLabDiscoverEnvelope: Decodable {
     let items: [ScanLabPublicScan]
-    let nextOffset: Int?
-    let hasMore: Bool
+    let nextCursor: String?
 }
 
 @MainActor
@@ -17,13 +16,13 @@ final class ScanLabDiscoverFeedStore: ObservableObject {
     @Published private(set) var errorMessage: String?
 
     private let pageSize = 20
-    private var nextOffset = 0
+    private var nextCursor: String?
     private var generation = UUID()
 
     func reload(using backend: ScanLabBackend) async {
         generation = UUID()
         let requestGeneration = generation
-        nextOffset = 0
+        nextCursor = nil
         hasMore = true
         errorMessage = nil
         isLoadingInitial = true
@@ -32,21 +31,22 @@ final class ScanLabDiscoverFeedStore: ObservableObject {
         }
 
         do {
-            let page = try await fetchVisiblePage(startingAt: 0, using: backend)
+            let page = try await fetchVisiblePage(startingAt: nil, using: backend)
             guard generation == requestGeneration else { return }
             items = unique(page.items)
-            nextOffset = page.nextOffset ?? items.count
-            hasMore = page.hasMore
+            nextCursor = page.nextCursor
+            hasMore = page.nextCursor != nil
         } catch {
             guard generation == requestGeneration else { return }
             items = []
+            nextCursor = nil
             hasMore = false
             errorMessage = error.localizedDescription
         }
     }
 
     func loadNextPage(using backend: ScanLabBackend) async {
-        guard hasMore, errorMessage == nil, !isLoadingInitial, !isLoadingMore else { return }
+        guard hasMore, errorMessage == nil, !isLoadingInitial, !isLoadingMore, let cursor = nextCursor else { return }
         let requestGeneration = generation
         isLoadingMore = true
         defer {
@@ -54,12 +54,12 @@ final class ScanLabDiscoverFeedStore: ObservableObject {
         }
 
         do {
-            let page = try await fetchVisiblePage(startingAt: nextOffset, using: backend)
+            let page = try await fetchVisiblePage(startingAt: cursor, using: backend)
             guard generation == requestGeneration else { return }
             let existing = Set(items.map(\.id))
             items.append(contentsOf: page.items.filter { !existing.contains($0.id) })
-            nextOffset = page.nextOffset ?? nextOffset + page.items.count
-            hasMore = page.hasMore
+            nextCursor = page.nextCursor
+            hasMore = page.nextCursor != nil
             errorMessage = nil
         } catch {
             guard generation == requestGeneration else { return }
@@ -71,24 +71,27 @@ final class ScanLabDiscoverFeedStore: ObservableObject {
         errorMessage = nil
     }
 
-    private func fetchVisiblePage(startingAt offset: Int, using backend: ScanLabBackend) async throws -> ScanLabDiscoverEnvelope {
-        var currentOffset = offset
-        for _ in 0..<5 {
-            let page = try await fetchPage(offset: currentOffset, using: backend)
-            if !page.items.isEmpty || !page.hasMore { return page }
-            guard let next = page.nextOffset, next > currentOffset else { return page }
-            currentOffset = next
+    private func fetchVisiblePage(startingAt cursor: String?, using backend: ScanLabBackend) async throws -> ScanLabDiscoverEnvelope {
+        var currentCursor = cursor
+        var seenCursors = Set<String>()
+        for _ in 0..<6 {
+            let page = try await fetchPage(cursor: currentCursor, using: backend)
+            if !page.items.isEmpty || page.nextCursor == nil { return page }
+            guard let next = page.nextCursor, next != currentCursor, seenCursors.insert(next).inserted else { return page }
+            currentCursor = next
         }
-        return try await fetchPage(offset: currentOffset, using: backend)
+        return try await fetchPage(cursor: currentCursor, using: backend)
     }
 
-    private func fetchPage(offset: Int, using backend: ScanLabBackend) async throws -> ScanLabDiscoverEnvelope {
+    private func fetchPage(cursor: String?, using backend: ScanLabBackend) async throws -> ScanLabDiscoverEnvelope {
         var components = URLComponents(url: ScanLabConfig.publicFunctionURL, resolvingAgainstBaseURL: false)!
         var queryItems = [
             URLQueryItem(name: "mode", value: "feed"),
-            URLQueryItem(name: "limit", value: String(pageSize)),
-            URLQueryItem(name: "offset", value: String(max(offset, 0)))
+            URLQueryItem(name: "limit", value: String(pageSize))
         ]
+        if let cursor, !cursor.isEmpty {
+            queryItems.append(URLQueryItem(name: "cursor", value: cursor))
+        }
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         if !trimmed.isEmpty {
             queryItems.append(URLQueryItem(name: "q", value: String(trimmed.prefix(80))))
