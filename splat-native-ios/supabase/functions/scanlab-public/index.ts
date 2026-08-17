@@ -101,9 +101,15 @@ Deno.serve(async (req) => {
     const [{ data, error }, blocked] = await Promise.all([query, blockedUserIds(req)]);
     if (error) return json({ error: "feed_unavailable" }, 503);
     const rows = data ?? [];
-    const visible = rows.filter((scan) => !blocked.has(scan.owner_id)).slice(0, limit);
-    const nextOffset = offset + rows.length;
-    const hasMore = rows.length === fetchCount;
+    const visible: Record<string, any>[] = [];
+    let consumedRows = 0;
+    for (const scan of rows) {
+      consumedRows += 1;
+      if (!blocked.has(scan.owner_id)) visible.push(scan);
+      if (visible.length === limit) break;
+    }
+    const nextOffset = offset + consumedRows;
+    const hasMore = consumedRows < rows.length || rows.length === fetchCount;
     return json({
       items: await Promise.all(visible.map(decorate)),
       nextOffset: hasMore ? nextOffset : null,
