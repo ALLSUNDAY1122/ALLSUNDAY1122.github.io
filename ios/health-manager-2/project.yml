@@ -10,6 +10,8 @@ settings:
     CURRENT_PROJECT_VERSION: 1
     GENERATE_INFOPLIST_FILE: NO
     ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    INFOPLIST_KEY_CFBundleIconName: AppIcon
+    INFOPLIST_KEY_CFBundleIconFiles: "AppIcon-120 AppIcon-152 AppIcon-167 AppIcon-180"
     TARGETED_DEVICE_FAMILY: "1,2"
     SUPPORTS_MACCATALYST: NO
     CODE_SIGN_STYLE: Automatic
@@ -26,6 +28,10 @@ targets:
       - path: HealthManager2/Web
       - path: HealthManager2/Assets.xcassets
       - path: HealthManager2/PrivacyInfo.xcprivacy
+      - path: HealthManager2/AppIcon-120.png
+      - path: HealthManager2/AppIcon-152.png
+      - path: HealthManager2/AppIcon-167.png
+      - path: HealthManager2/AppIcon-180.png
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.healthmanager2
@@ -36,6 +42,11 @@ targets:
       properties:
         CFBundleDisplayName: 第二種衛生管理者
         CFBundleIconName: AppIcon
+        CFBundleIconFiles:
+          - AppIcon-120
+          - AppIcon-152
+          - AppIcon-167
+          - AppIcon-180
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         ITSAppUsesNonExemptEncryption: false

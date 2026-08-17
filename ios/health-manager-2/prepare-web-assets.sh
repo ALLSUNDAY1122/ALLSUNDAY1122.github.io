@@ -33,6 +33,10 @@ if command -v magick >/dev/null 2>&1; then
   magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 180x180 "$ASSET_DIR/AppIcon-180.png"
   magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 152x152 "$ASSET_DIR/AppIcon-152.png"
   magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 167x167 "$ASSET_DIR/AppIcon-167.png"
+  cp "$ASSET_DIR/AppIcon-120.png" "$SCRIPT_DIR/HealthManager2/AppIcon-120.png"
+  cp "$ASSET_DIR/AppIcon-152.png" "$SCRIPT_DIR/HealthManager2/AppIcon-152.png"
+  cp "$ASSET_DIR/AppIcon-167.png" "$SCRIPT_DIR/HealthManager2/AppIcon-167.png"
+  cp "$ASSET_DIR/AppIcon-180.png" "$SCRIPT_DIR/HealthManager2/AppIcon-180.png"
 else
   echo "ImageMagick is required to generate AppIcon.png" >&2
   exit 1
