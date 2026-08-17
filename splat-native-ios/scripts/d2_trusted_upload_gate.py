@@ -2,7 +2,7 @@
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
-migration = (root / "supabase/migrations/20260817072000_scanlab_d2_trusted_upload_v9.sql").read_text()
+migration = (root / "supabase/migrations/20260817214149_scanlab_d2_trusted_upload_v17.sql").read_text()
 publish = (root / "supabase/functions/scanlab-publish/index.ts").read_text()
 
 required_migration = [
