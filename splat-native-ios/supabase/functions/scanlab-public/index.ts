@@ -11,6 +11,7 @@ const cors = {
 };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" } });
 const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false, autoRefreshToken: false } });
+const shareUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 async function signed(path: string | null, expiresIn = 120) {
   if (!path) return null;
@@ -47,7 +48,9 @@ async function sharedScan(url: URL) {
   const id = url.searchParams.get("id");
   const token = url.searchParams.get("token");
   if (!id && !token) return { error: "missing_share_key", status: 400 };
-  if (token && !/^[0-9a-f-]{36}$/i.test(token)) return { error: "invalid_token", status: 400 };
+  if (id && token) return { error: "ambiguous_share_key", status: 400 };
+  if (id && !shareUUID.test(id)) return { error: "invalid_id", status: 400 };
+  if (token && !shareUUID.test(token)) return { error: "invalid_token", status: 400 };
   let query = supabase.from("scanlab_scans")
     .select("id,owner_id,title,caption,visibility,published_at,latitude,longitude,location_label,asset_path,preview_path,status,moderation_status,share_token")
     .eq("status", "published").eq("moderation_status", "approved").limit(1);
@@ -69,7 +72,9 @@ async function serveAsset(req: Request, url: URL) {
   if (!upstream.ok && upstream.status !== 206) return json({ error: upstream.status === 404 ? "asset_not_found" : "asset_unavailable" }, upstream.status === 404 ? 404 : 503);
   const responseHeaders = new Headers(cors);
   responseHeaders.set("Content-Type", upstream.headers.get("content-type") || assetContentType(scan.asset_path));
-  responseHeaders.set("Cache-Control", "private, max-age=60");
+  // Durable URL must still honor unpublish/delete immediately on the next request.
+  // Do not let browser/CDN caches preserve scene bytes after server-side visibility changes.
+  responseHeaders.set("Cache-Control", "private, no-store");
   for (const name of ["accept-ranges", "content-length", "content-range", "etag"]) {
     const value = upstream.headers.get(name); if (value) responseHeaders.set(name, value);
   }
