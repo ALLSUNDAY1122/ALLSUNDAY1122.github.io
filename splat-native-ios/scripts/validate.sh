@@ -108,6 +108,9 @@ require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
 ! grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
 ! grep -R -nE 'Firebase|Amplitude|Mixpanel|AppsFlyer|Adjust' SplatNative --include='*.swift'
 
+# D2-019: server-side moderation/rate-limit abuse contract must remain enforced.
+python3 scripts/verify_d2_w19_safety.py
+
 # D2-020: privacy manifest, permission strings and review explanation must move together.
 plutil -lint SplatNative/PrivacyInfo.xcprivacy >/dev/null
 python3 - <<'PY'
