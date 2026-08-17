@@ -43,20 +43,50 @@ begin
 end; $$;
 revoke all on function scanlab_private.enforce_abuse_limit(uuid,text,uuid) from public, anon, authenticated;
 
-create or replace function scanlab_private.publish_guard()
+-- Owners must not be able to self-approve or otherwise rewrite moderation state.
+-- pg_trigger_depth() permits nested server-side moderation updates such as auto-hide.
+create or replace function scanlab_private.owner_moderation_state_guard()
 returns trigger language plpgsql set search_path = '' as $$
 begin
-  if new.status='published' and (tg_op='INSERT' or old.status is distinct from 'published') then
+  if pg_trigger_depth() = 1 and (select auth.uid()) = new.owner_id then
+    if tg_op='INSERT' then
+      if new.moderation_status <> 'pending' then
+        raise exception using errcode='42501', message='owner cannot set moderation state';
+      end if;
+    elsif new.moderation_status is distinct from old.moderation_status then
+      raise exception using errcode='42501', message='owner cannot change moderation state';
+    end if;
+  end if;
+  return new;
+end; $$;
+
+drop trigger if exists scanlab_owner_moderation_state_guard on public.scanlab_scans;
+create trigger scanlab_owner_moderation_state_guard
+before insert or update of moderation_status on public.scanlab_scans
+for each row execute function scanlab_private.owner_moderation_state_guard();
+
+create or replace function scanlab_private.publish_guard()
+returns trigger language plpgsql set search_path = '' as $$
+declare entering_shared boolean;
+begin
+  entering_shared := new.status='published' and new.visibility in ('public','unlisted') and (
+    tg_op='INSERT' or old.status is distinct from 'published' or old.visibility not in ('public','unlisted')
+  );
+
+  if new.status='published' then
     if new.visibility in ('public','unlisted') and not new.content_confirmed then
       raise exception using errcode='23514', message='shared scan requires content confirmation';
     end if;
     if new.visibility='public' and (new.latitude is null or new.longitude is null or not new.public_place_confirmed or not new.privacy_confirmed or not new.rights_confirmed) then
       raise exception using errcode='23514', message='public scan requires location and safety attestations';
     end if;
-    if new.visibility in ('public','unlisted') then perform scanlab_private.enforce_abuse_limit(new.owner_id,'publish',new.id); end if;
+    if entering_shared then
+      perform scanlab_private.enforce_abuse_limit(new.owner_id,'publish',new.id);
+    end if;
     new.published_at:=coalesce(new.published_at,now());
+  else
+    new.published_at:=null;
   end if;
-  if new.status<>'published' then new.published_at:=null; end if;
   return new;
 end; $$;
 
