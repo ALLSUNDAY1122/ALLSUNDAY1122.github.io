@@ -6,6 +6,7 @@ const publish = fs.readFileSync(new URL('../supabase/functions/scanlab-publish/i
 const viewer = fs.readFileSync(new URL('../viewer/viewer.js', import.meta.url), 'utf8');
 const html = fs.readFileSync(new URL('../viewer/index.html', import.meta.url), 'utf8');
 const backend = fs.readFileSync(new URL('../SplatNative/ScanLabBackend.swift', import.meta.url), 'utf8');
+const account = fs.readFileSync(new URL('../SplatNative/ScanLabAccountView.swift', import.meta.url), 'utf8');
 
 assert.match(publish, /title\?: string; description\?: string/);
 assert.match(publish, /metadata\.title = title/);
@@ -30,17 +31,21 @@ assert.match(publish, /alreadyPublished: false/);
 
 // Already-published shares must accept owner metadata refresh without republishing assets.
 assert.match(publish, /if \(scan\.status === "published"\)/);
-assert.match(publish, /Object\.keys\(metadata\)\.length > 0/);
+assert.match(publish, /const metadataRequested = Object\.keys\(metadata\)\.length > 0/);
 assert.match(publish, /\.update\(metadata\)/);
 assert.match(publish, /\.eq\("status", "published"\)/);
 assert.match(publish, /current = \{ \.\.\.scan, \.\.\.refreshed \}/);
-assert.match(publish, /metadataUpdated: Object\.keys\(metadata\)\.length > 0/);
+assert.match(publish, /metadataUpdated: metadataRequested/);
+assert.match(publish, /shareUrl: viewerAvailable \? shareUrlFor\(current\) : null/);
+assert.match(publish, /viewerAvailable,/);
 const publishedBranch = publish.indexOf('if (scan.status === "published")');
 const metadataRefresh = publish.indexOf('.update(metadata)', publishedBranch);
+const publishedViewerCheck = publish.indexOf('const viewerAvailable = !needsViewer || await viewerIsReady()', publishedBranch);
 const freshPublishMutation = publish.indexOf('.update({ ...metadata, status: "published", moderation_status: "approved" })');
-assert.ok(publishedBranch >= 0 && metadataRefresh > publishedBranch && metadataRefresh < freshPublishMutation, 'published metadata refresh must not reuse fresh publish mutation');
+assert.ok(publishedBranch >= 0 && metadataRefresh > publishedBranch && metadataRefresh < publishedViewerCheck, 'published metadata must save independently before viewer availability is resolved');
+assert.ok(publishedViewerCheck < freshPublishMutation, 'published metadata path must remain separate from fresh publish mutation');
 
-// A share URL is only valid when the browser viewer is actually deployed.
+// A new share URL is only valid when the browser viewer is actually deployed.
 assert.match(publish, /async function viewerIsReady\(\)/);
 assert.match(publish, /method: "HEAD"/);
 assert.match(publish, /Accept: "text\/html"/);
@@ -48,13 +53,22 @@ assert.match(publish, /controller\.abort\(\), 2500/);
 assert.match(publish, /contentType\.toLowerCase\(\)\.includes\("text\/html"\)/);
 assert.match(publish, /viewerReadyUntil = Date\.now\(\) \+ 60_000/);
 assert.match(publish, /error: "viewer_unavailable"/);
-const readinessGate = publish.indexOf('if (["public", "unlisted"].includes(scan.visibility) && !(await viewerIsReady()))');
+const freshReadinessGate = publish.lastIndexOf('if (["public", "unlisted"].includes(scan.visibility) && !(await viewerIsReady()))');
 const publishMutation = publish.indexOf('.update({ ...metadata, status: "published", moderation_status: "approved" })');
-assert.ok(readinessGate >= 0 && readinessGate < publishMutation, 'viewer readiness must fail closed before publish mutation');
+assert.ok(freshReadinessGate >= 0 && freshReadinessGate < publishMutation, 'viewer readiness must fail closed before fresh publish mutation');
 
 // Native owner re-share must preserve the same capability-token privacy contract.
 assert.match(backend, /case ScanLabVisibility\.unlisted\.rawValue:[\s\S]*components\.queryItems = nil[\s\S]*components\.fragment = "token=\\\(scan\.shareToken\.uuidString\.lowercased\(\)\)"/);
 assert.doesNotMatch(backend, /case ScanLabVisibility\.unlisted\.rawValue:[^\n]*queryItems = \[URLQueryItem\(name: "token"/);
+
+// Owner UI must expose title/description editing and call the authenticated metadata endpoint.
+assert.match(backend, /private struct ScanLabPublishRequest:[\s\S]*let title: String\?[\s\S]*let description: String\?/);
+assert.match(backend, /func updatePublishedMetadata\(_ scan: ScanLabOwnerScan, title: String, caption: String\) async throws/);
+assert.match(backend, /ScanLabPublishRequest\([\s\S]*title: trimmedTitle,[\s\S]*description: String\(caption\.prefix\(500\)\)/);
+assert.match(account, /Button\("編集"\) \{ beginEditing\(\) \}/);
+assert.match(account, /TextField\("タイトル", text: \$editTitle\)/);
+assert.match(account, /TextField\("説明（任意）", text: \$editCaption/);
+assert.match(account, /backend\.updatePublishedMetadata\(scan, title: editTitle, caption: editCaption\)/);
 
 assert.match(html, /property="og:title"/);
 assert.match(html, /property="og:description"/);
