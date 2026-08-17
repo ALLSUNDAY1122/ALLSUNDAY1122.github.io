@@ -1,7 +1,10 @@
 const API = 'https://gybchnyqlqwmajwkhsly.supabase.co/functions/v1/scanlab-public';
-const params = new URLSearchParams(location.search);
-const id = params.get('id');
-const token = params.get('token');
+const queryParams = new URLSearchParams(location.search);
+const hashParams = new URLSearchParams(location.hash.startsWith('#') ? location.hash.slice(1) : location.hash);
+const id = queryParams.get('id');
+const legacyToken = queryParams.get('token');
+const fragmentToken = hashParams.get('token');
+const token = fragmentToken || legacyToken;
 const status = document.querySelector('#status');
 const statusText = document.querySelector('#status-text');
 const statusPreview = document.querySelector('#status-preview');
@@ -12,6 +15,25 @@ const caption = document.querySelector('#caption');
 const locationText = document.querySelector('#location');
 const likes = document.querySelector('#likes');
 const share = document.querySelector('#share');
+
+function normalizedShareURL() {
+  const url = new URL(location.href);
+  if (token) {
+    url.searchParams.delete('token');
+    url.hash = new URLSearchParams({ token }).toString();
+  } else if (id) {
+    url.searchParams.set('id', id);
+    url.hash = '';
+  }
+  return url.toString();
+}
+
+const shareURL = normalizedShareURL();
+if (legacyToken && !fragmentToken) {
+  // Backward compatibility for previously issued ?token= links while removing the
+  // capability token from the HTTP-visible query string as soon as the page executes.
+  history.replaceState(null, '', shareURL);
+}
 
 function fail(message) {
   status.classList.add('error');
@@ -26,13 +48,15 @@ function setMeta(selector, value, attribute = 'content') {
 function applyShareMetadata(item) {
   const pageTitle = item.title ? `${item.title} | Scan Lab` : 'Scan Lab 3D Viewer';
   const description = item.caption || 'Scan Labで公開された3D Gaussian Splatをブラウザで閲覧します。';
+  const canonicalURL = id ? shareURL : `${location.origin}${location.pathname}`;
   document.title = pageTitle;
   setMeta('meta[name="description"]', description);
   setMeta('meta[property="og:title"]', pageTitle);
   setMeta('meta[property="og:description"]', description);
-  setMeta('meta[property="og:url"]', location.href);
+  setMeta('meta[property="og:url"]', canonicalURL);
   setMeta('meta[name="twitter:title"]', pageTitle);
   setMeta('meta[name="twitter:description"]', description);
+  setMeta('link[rel="canonical"]', canonicalURL, 'href');
   if (item.previewUrl) {
     setMeta('meta[property="og:image"]', item.previewUrl);
     setMeta('meta[name="twitter:image"]', item.previewUrl);
@@ -113,11 +137,11 @@ async function main() {
 
 share.addEventListener('click', async () => {
   try {
-    const shareData = { title: document.title, text: caption.textContent || undefined, url: location.href };
+    const shareData = { title: document.title, text: caption.textContent || undefined, url: shareURL };
     if (navigator.share) {
       await navigator.share(shareData);
     } else if (navigator.clipboard) {
-      await navigator.clipboard.writeText(location.href);
+      await navigator.clipboard.writeText(shareURL);
       share.textContent = 'URLをコピーしました';
       setTimeout(() => { share.textContent = '共有'; }, 1600);
     }
