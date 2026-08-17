@@ -1,5 +1,29 @@
 {
-  "request_id": "testflight-inventory-20260817-1810",
-  "method": "GET",
-  "path": "/v1/apps?limit=200"
+  "request_id": "testflight-status-batch-20260817-1812",
+  "requests": [
+    {"label":"yakuzaishi-build","path":"/v1/builds?filter%5Bapp%5D=6799753724&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"},
+    {"label":"yakuzaishi-store","path":"/v1/apps/6799753724/appStoreVersions?limit=5&include=build"},
+    {"label":"eisei1-build","path":"/v1/builds?filter%5Bapp%5D=6799581662&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"},
+    {"label":"eisei1-store","path":"/v1/apps/6799581662/appStoreVersions?limit=5&include=build"},
+    {"label":"otsu4-build","path":"/v1/builds?filter%5Bapp%5D=6799755566&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"},
+    {"label":"otsu4-store","path":"/v1/apps/6799755566/appStoreVersions?limit=5&include=build"},
+    {"label":"torutango-build","path":"/v1/builds?filter%5Bapp%5D=6795968222&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"},
+    {"label":"torutango-store","path":"/v1/apps/6795968222/appStoreVersions?limit=5&include=build"},
+    {"label":"pitari-build","path":"/v1/builds?filter%5Bapp%5D=6795941132&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"},
+    {"label":"pitari-store","path":"/v1/apps/6795941132/appStoreVersions?limit=5&include=build"},
+    {"label":"fp2-build","path":"/v1/builds?filter%5Bapp%5D=6797228406&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"},
+    {"label":"fp2-store","path":"/v1/apps/6797228406/appStoreVersions?limit=5&include=build"},
+    {"label":"fp3-build","path":"/v1/builds?filter%5Bapp%5D=6796733578&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"},
+    {"label":"fp3-store","path":"/v1/apps/6796733578/appStoreVersions?limit=5&include=build"},
+    {"label":"shiwake-build","path":"/v1/builds?filter%5Bapp%5D=6794796078&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"},
+    {"label":"shiwake-store","path":"/v1/apps/6794796078/appStoreVersions?limit=5&include=build"},
+    {"label":"relay-build","path":"/v1/builds?filter%5Bapp%5D=6794847479&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"},
+    {"label":"relay-store","path":"/v1/apps/6794847479/appStoreVersions?limit=5&include=build"},
+    {"label":"itpassport-build","path":"/v1/builds?filter%5Bapp%5D=6796310458&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"},
+    {"label":"itpassport-store","path":"/v1/apps/6796310458/appStoreVersions?limit=5&include=build"},
+    {"label":"yorunoshoka-build","path":"/v1/builds?filter%5Bapp%5D=6794137637&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"},
+    {"label":"yorunoshoka-store","path":"/v1/apps/6794137637/appStoreVersions?limit=5&include=build"},
+    {"label":"takucalc-build","path":"/v1/builds?filter%5Bapp%5D=6794350490&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"},
+    {"label":"takucalc-store","path":"/v1/apps/6794350490/appStoreVersions?limit=5&include=build"}
+  ]
 }
