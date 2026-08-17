@@ -98,7 +98,7 @@ require_text SplatNative/SplatNativeApp.swift 'ScanLabShellView()'
 require_text SplatNative/ScanLabShellView.swift 'RootScanView()'
 require_text SplatNative/ScanLabBackend.swift 'import Supabase'
 require_text SplatNative/ScanLabBackend.swift 'ScanLabVisibility'
-require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "offset"'
+require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "cursor"'
 require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "q"'
 require_text SplatNative/ScanLabDiscoverFeedStore.swift 'guard hasMore, errorMessage == nil'
 require_text SplatNative/ScanLabShellView.swift '.searchable(text: $feed.query'
@@ -110,23 +110,25 @@ require_text project.yml 'INFOPLIST_KEY_NSCameraUsageDescription'
 require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
 ! grep -qE 'INFOPLIST_KEY_NSLocationAlways|INFOPLIST_KEY_NSLocationAlwaysAndWhenInUse' project.yml
 ! grep -qE 'INFOPLIST_KEY_NSPhotoLibrary|INFOPLIST_KEY_NSMicrophoneUsageDescription|INFOPLIST_KEY_NSUserTrackingUsageDescription' project.yml
-# D2-012: prefetch pagination must not skip rows that were fetched but not yet emitted,
-# must terminate before replaying a capped page, and failed next-page loads require explicit retry.
+
+# D2-012: app and live-compatible Edge Function must share cursor/query contract.
 python3 - <<'PY'
 from pathlib import Path
 edge=Path('supabase/functions/scanlab-public/index.ts').read_text()
 store=Path('SplatNative/ScanLabDiscoverFeedStore.swift').read_text()
-assert 'let consumedRows = 0' in edge
-assert 'consumedRows += 1' in edge
-assert 'if (visible.length === limit) break' in edge
-assert 'const nextOffset = offset + consumedRows' in edge
-assert 'const maxOffset = 10000' in edge
-assert 'nextOffset <= maxOffset && (consumedRows < rows.length || rows.length === fetchCount)' in edge
-assert 'nextOffset: hasMore ? nextOffset : null' in edge
-assert 'offset + rows.length' not in edge
-assert 'guard hasMore, errorMessage == nil, !isLoadingInitial, !isLoadingMore else { return }' in store
-assert 'func clearError()' in store
-print('PASS: Discover pagination preserves rows, terminates at cap, and requires explicit retry after errors')
+assert 'const cursor = parseCursor(url.searchParams.get("cursor"))' in edge
+assert 'const q = (url.searchParams.get("q") ?? "").trim().slice(0, 80)' in edge
+assert 'if (q) query = query.ilike("title"' in edge
+assert 'nextCursor = makeCursor' in edge
+assert 'return json({ items: await Promise.all(pageRows.map((scan) => decorate(scan, assetPolicy.includeModel))), nextCursor })' in edge
+assert 'let nextCursor: String?' in store
+assert 'URLQueryItem(name: "cursor", value: cursor)' in store
+assert 'URLQueryItem(name: "q", value: String(trimmed.prefix(80)))' in store
+assert 'seenCursors.insert(next).inserted' in store
+assert 'guard hasMore, errorMessage == nil, !isLoadingInitial, !isLoadingMore, let cursor = nextCursor else { return }' in store
+assert 'nextOffset' not in store
+assert 'URLQueryItem(name: "offset"' not in store
+print('PASS: Discover client/backend share cursor pagination + query contract and stop cursor replay')
 PY
 ! grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
 ! grep -R -nE 'Firebase|Amplitude|Mixpanel|AppsFlyer|Adjust' SplatNative --include='*.swift'
