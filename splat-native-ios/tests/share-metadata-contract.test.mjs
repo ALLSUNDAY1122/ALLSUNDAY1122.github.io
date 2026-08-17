@@ -5,6 +5,7 @@ import { normalizeShareURL, parseShareKey } from '../viewer/share-url.js';
 const publish = fs.readFileSync(new URL('../supabase/functions/scanlab-publish/index.ts', import.meta.url), 'utf8');
 const viewer = fs.readFileSync(new URL('../viewer/viewer.js', import.meta.url), 'utf8');
 const html = fs.readFileSync(new URL('../viewer/index.html', import.meta.url), 'utf8');
+const backend = fs.readFileSync(new URL('../SplatNative/ScanLabBackend.swift', import.meta.url), 'utf8');
 
 assert.match(publish, /title\?: string; description\?: string/);
 assert.match(publish, /metadata\.title = title/);
@@ -50,6 +51,10 @@ assert.match(publish, /error: "viewer_unavailable"/);
 const readinessGate = publish.indexOf('if (["public", "unlisted"].includes(scan.visibility) && !(await viewerIsReady()))');
 const publishMutation = publish.indexOf('.update({ ...metadata, status: "published", moderation_status: "approved" })');
 assert.ok(readinessGate >= 0 && readinessGate < publishMutation, 'viewer readiness must fail closed before publish mutation');
+
+// Native owner re-share must preserve the same capability-token privacy contract.
+assert.match(backend, /case ScanLabVisibility\.unlisted\.rawValue:[\s\S]*components\.queryItems = nil[\s\S]*components\.fragment = "token=\\\(scan\.shareToken\.uuidString\.lowercased\(\)\)"/);
+assert.doesNotMatch(backend, /case ScanLabVisibility\.unlisted\.rawValue:[^\n]*queryItems = \[URLQueryItem\(name: "token"/);
 
 assert.match(html, /property="og:title"/);
 assert.match(html, /property="og:description"/);
