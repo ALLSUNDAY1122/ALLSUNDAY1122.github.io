@@ -130,6 +130,14 @@ workflows:
         script: |
           cd "$CM_BUILD_DIR/ios/health-manager-2"
           xcodegen generate
+          PLIST="$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleIconName AppIcon" "$PLIST" 2>/dev/null || /usr/libexec/PlistBuddy -c "Add :CFBundleIconName string AppIcon" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Delete :CFBundleIconFiles" "$PLIST" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconFiles array" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconFiles:0 string AppIcon-120" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconFiles:1 string AppIcon-152" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconFiles:2 string AppIcon-167" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconFiles:3 string AppIcon-180" "$PLIST"
       - name: Verify bundled release inputs
         script: |
           test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/index.html"
@@ -137,6 +145,9 @@ workflows:
           test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/question-order-v1.js"
           test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/PrivacyInfo.xcprivacy"
           test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Assets.xcassets/AppIcon.appiconset/AppIcon.png"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleIconName" "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Info.plist"
+          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/AppIcon-120.png"
+          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/AppIcon-152.png"
       - name: Apply App Store signing profiles
         script: |
           cd "$CM_BUILD_DIR/ios/health-manager-2"
