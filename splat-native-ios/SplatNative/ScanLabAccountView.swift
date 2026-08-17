@@ -136,7 +136,7 @@ private struct ScanLabBlockedUsersSection: View {
     let onUnblock: (ScanLabBlockedUser) -> Void
 
     var body: some View {
-        Section("ブロック中") {
+        Section {
             if blockedUsers.isEmpty {
                 Text("ブロック中のユーザーはいません。").foregroundStyle(.secondary)
             } else {
@@ -151,6 +151,8 @@ private struct ScanLabBlockedUsersSection: View {
                     }
                 }
             }
+        } header: {
+            Text("ブロック中")
         } footer: {
             Text("解除すると、そのユーザーの公開投稿が再び表示される場合があります。")
         }
