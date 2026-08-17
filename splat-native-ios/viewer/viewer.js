@@ -1,11 +1,10 @@
-import * as GaussianSplats3D from '@mkkellogg/gaussian-splats-3d';
-
 const API = 'https://gybchnyqlqwmajwkhsly.supabase.co/functions/v1/scanlab-public';
 const params = new URLSearchParams(location.search);
 const id = params.get('id');
 const token = params.get('token');
 const status = document.querySelector('#status');
 const statusText = document.querySelector('#status-text');
+const statusPreview = document.querySelector('#status-preview');
 const card = document.querySelector('#card');
 const title = document.querySelector('#title');
 const author = document.querySelector('#author');
@@ -40,6 +39,27 @@ function applyShareMetadata(item) {
   }
 }
 
+function revealPreview(item) {
+  if (!item.previewUrl) return;
+  statusPreview.src = item.previewUrl;
+  statusPreview.alt = item.title ? `${item.title} のプレビュー` : '3Dプレビュー';
+  statusPreview.hidden = false;
+  status.classList.add('has-preview');
+}
+
+function renderMetadataCard(item) {
+  title.textContent = item.title || '名称未設定';
+  const handle = item.author?.handle ? `@${item.author.handle}` : '';
+  const displayName = item.author?.displayName || '';
+  author.textContent = [handle, displayName].filter(Boolean).join(' · ') || 'Scan Lab';
+  caption.textContent = item.caption || '';
+  caption.hidden = !item.caption;
+  locationText.textContent = item.location?.label ? `場所: ${item.location.label}` : '';
+  locationText.hidden = !item.location?.label;
+  likes.textContent = `♡ ${Number(item.likeCount || 0).toLocaleString('ja-JP')}`;
+  card.hidden = false;
+}
+
 async function loadMetadata() {
   if (!id && !token) throw new Error('共有URLが正しくありません。');
   const query = new URLSearchParams({ mode: 'share' });
@@ -55,16 +75,15 @@ async function loadMetadata() {
 async function main() {
   try {
     const item = await loadMetadata();
-    applyShareMetadata(item);
-    title.textContent = item.title;
-    author.textContent = item.author?.displayName ? `@${item.author.handle} · ${item.author.displayName}` : 'Scan Lab';
-    caption.textContent = item.caption || '';
-    caption.hidden = !item.caption;
-    locationText.textContent = item.location?.label ? `場所: ${item.location.label}` : '';
-    locationText.hidden = !item.location?.label;
-    likes.textContent = `♡ ${Number(item.likeCount || 0).toLocaleString('ja-JP')}`;
-    card.hidden = false;
 
+    // Metadata and preview are intentionally rendered before loading the heavy 3D runtime.
+    // A CDN/GPU/runtime failure must not erase the recipient's title/description/preview context.
+    applyShareMetadata(item);
+    renderMetadataCard(item);
+    revealPreview(item);
+    statusText.textContent = '3Dを読み込んでいます';
+
+    const GaussianSplats3D = await import('@mkkellogg/gaussian-splats-3d');
     const rootElement = document.querySelector('#viewer');
     const viewer = new GaussianSplats3D.Viewer({
       rootElement,
