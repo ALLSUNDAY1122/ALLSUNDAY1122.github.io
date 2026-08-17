@@ -71,23 +71,8 @@ private struct ScanLabSignedInAccountView: View {
                 if backend.ownerScans.isEmpty { Text(backend.isLoadingOwner ? "取得中…" : "まだクラウドへ保存していません。").foregroundStyle(.secondary) }
                 else { ForEach(backend.ownerScans) { scan in ScanLabOwnerScanRow(scan: scan) } }
             }
-            Section("ブロック中") {
-                if backend.blockedUsers.isEmpty {
-                    Text("ブロック中のユーザーはいません。").foregroundStyle(.secondary)
-                } else {
-                    ForEach(backend.blockedUsers) { blocked in
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("ユーザー \(blocked.blockedId.uuidString.lowercased().prefix(8))…").font(.subheadline)
-                                Text("公開投稿・共有・新しい操作を相互に抑止中").font(.caption).foregroundStyle(.secondary)
-                            }
-                            Spacer()
-                            Button("解除") { unblockTarget = blocked }.buttonStyle(.borderless)
-                        }
-                    }
-                }
-            } footer: {
-                Text("解除すると、そのユーザーの公開投稿が再び表示される場合があります。")
+            ScanLabBlockedUsersSection(blockedUsers: backend.blockedUsers) { blocked in
+                unblockTarget = blocked
             }
             Section("サポート") {
                 Link("サポート・お問い合わせ", destination: ScanLabConfig.supportURL)
@@ -126,6 +111,37 @@ private struct ScanLabSignedInAccountView: View {
         defer { unblockTarget = nil }
         do { try await backend.unblock(target) }
         catch { backend.notice = "ブロックを解除できませんでした: \(error.localizedDescription)" }
+    }
+}
+
+private struct ScanLabBlockedUsersSection: View {
+    let blockedUsers: [ScanLabBlockedUser]
+    let onUnblock: (ScanLabBlockedUser) -> Void
+
+    var body: some View {
+        Section("ブロック中") {
+            if blockedUsers.isEmpty {
+                Text("ブロック中のユーザーはいません。").foregroundStyle(.secondary)
+            } else {
+                ForEach(blockedUsers) { blocked in
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(blockedUserLabel(blocked)).font(.subheadline)
+                            Text("公開投稿・共有・新しい操作を相互に抑止中").font(.caption).foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Button("解除") { onUnblock(blocked) }.buttonStyle(.borderless)
+                    }
+                }
+            }
+        } footer: {
+            Text("解除すると、そのユーザーの公開投稿が再び表示される場合があります。")
+        }
+    }
+
+    private func blockedUserLabel(_ blocked: ScanLabBlockedUser) -> String {
+        let prefix = blocked.blockedId.uuidString.lowercased().prefix(8)
+        return "ユーザー \(prefix)…"
     }
 }
 
