@@ -108,9 +108,15 @@ require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
 ! grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
 ! grep -R -nE 'Firebase|Amplitude|Mixpanel|AppsFlyer|Adjust' SplatNative --include='*.swift'
 
-# D2-001: live Auth E2E is wired to GitHub Secrets only; source never carries a fixture credential.
+# D2-001: hosted Auth readiness is probed without creating a user; live E2E uses GitHub Secrets only.
+require_file scripts/scanlab_auth_readiness.mjs
 require_file scripts/scanlab_auth_e2e.mjs
 require_file ../.github/workflows/splat-native-ios.yml
+require_text scripts/scanlab_auth_readiness.mjs '/auth/v1/settings'
+require_text scripts/scanlab_auth_readiness.mjs 'external?.email'
+require_text scripts/scanlab_auth_readiness.mjs 'disable_signup'
+require_text ../.github/workflows/splat-native-ios.yml 'Hosted ScanLab auth readiness gate'
+require_text ../.github/workflows/splat-native-ios.yml 'node splat-native-ios/scripts/scanlab_auth_readiness.mjs'
 require_text ../.github/workflows/splat-native-ios.yml 'Live ScanLab auth/session/profile E2E gate'
 require_text ../.github/workflows/splat-native-ios.yml 'secrets.SCANLAB_E2E_EMAIL'
 require_text ../.github/workflows/splat-native-ios.yml 'secrets.SCANLAB_E2E_PASSWORD'
