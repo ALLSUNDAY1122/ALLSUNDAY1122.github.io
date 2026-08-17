@@ -55,8 +55,29 @@ private struct ScanLabSignedInAccountView: View {
     @State private var profileError: String?
     @State private var deleteAccountConfirmation = false
     @State private var accountBusy = false
+    @State private var unblockTarget: ScanLabBlockedUser?
 
     var body: some View {
+        accountList
+            .task { await loadAccountData() }
+            .onChange(of: backend.profile) { _, _ in syncProfileFields() }
+            .alert("アカウントを削除しますか？", isPresented: $deleteAccountConfirmation) {
+                Button("キャンセル", role: .cancel) {}
+                Button("完全に削除", role: .destructive) { Task { await deleteAccount() } }
+            } message: {
+                Text("クラウド上の3D・プロフィール・公開状態を削除します。この操作は元に戻せません。")
+            }
+            .alert("ブロックを解除しますか？", isPresented: unblockAlertPresented) {
+                Button("キャンセル", role: .cancel) { unblockTarget = nil }
+                Button("解除") {
+                    if let target = unblockTarget { Task { await unblock(target) } }
+                }
+            } message: {
+                Text("このユーザーとの相互非表示を解除します。")
+            }
+    }
+
+    private var accountList: some View {
         List {
             Section("プロフィール") {
                 Text(backend.currentUserEmail ?? "").font(.footnote).foregroundStyle(.secondary)
@@ -70,6 +91,9 @@ private struct ScanLabSignedInAccountView: View {
                 if backend.ownerScans.isEmpty { Text(backend.isLoadingOwner ? "取得中…" : "まだクラウドへ保存していません。").foregroundStyle(.secondary) }
                 else { ForEach(backend.ownerScans) { scan in ScanLabOwnerScanRow(scan: scan) } }
             }
+            ScanLabBlockedUsersSection(blockedUsers: backend.blockedUsers) { blocked in
+                unblockTarget = blocked
+            }
             Section("サポート") {
                 Link("サポート・お問い合わせ", destination: ScanLabConfig.supportURL)
                 Link("プライバシーポリシー", destination: URL(string: "https://allsunday1122.github.io/splat-native-ios/privacy.html")!)
@@ -77,18 +101,67 @@ private struct ScanLabSignedInAccountView: View {
             Section {
                 Button("ログアウト") { Task { await backend.signOut() } }
                 Button("アカウントとクラウドデータを削除", role: .destructive) { deleteAccountConfirmation = true }.disabled(accountBusy)
-            } footer: { Text("アカウント削除では、このアカウントに紐づく3Dファイルと公開情報を削除します。端末内に書き出したファイルは削除されません。") }
+            } footer: {
+                Text("アカウント削除では、このアカウントに紐づく3Dファイルと公開情報を削除します。端末内に書き出したファイルは削除されません。")
+            }
         }
-        .task { await backend.loadProfile(); await backend.loadOwnerScans(); syncProfileFields() }
-        .onChange(of: backend.profile) { _, _ in syncProfileFields() }
-        .alert("アカウントを削除しますか？", isPresented: $deleteAccountConfirmation) {
-            Button("キャンセル", role: .cancel) {}
-            Button("完全に削除", role: .destructive) { Task { await deleteAccount() } }
-        } message: { Text("クラウド上の3D・プロフィール・公開状態を削除します。この操作は元に戻せません。") }
     }
+
+    private var unblockAlertPresented: Binding<Bool> {
+        Binding(
+            get: { unblockTarget != nil },
+            set: { if !$0 { unblockTarget = nil } }
+        )
+    }
+
+    private func loadAccountData() async {
+        await backend.loadProfile()
+        await backend.loadOwnerScans()
+        await backend.loadBlockedUsers()
+        syncProfileFields()
+    }
+
     private func syncProfileFields() { guard let p = backend.profile else { return }; displayName = p.displayName; handle = p.handle }
     private func saveProfile() async { profileBusy = true; profileError = nil; defer { profileBusy = false }; do { try await backend.updateProfile(handle: handle, displayName: displayName) } catch { profileError = error.localizedDescription } }
     private func deleteAccount() async { accountBusy = true; defer { accountBusy = false }; do { try await backend.deleteAccount() } catch { backend.notice = "アカウントを削除できませんでした: \(error.localizedDescription)" } }
+    private func unblock(_ target: ScanLabBlockedUser) async {
+        defer { unblockTarget = nil }
+        do { try await backend.unblock(target) }
+        catch { backend.notice = "ブロックを解除できませんでした: \(error.localizedDescription)" }
+    }
+}
+
+private struct ScanLabBlockedUsersSection: View {
+    let blockedUsers: [ScanLabBlockedUser]
+    let onUnblock: (ScanLabBlockedUser) -> Void
+
+    var body: some View {
+        Section {
+            if blockedUsers.isEmpty {
+                Text("ブロック中のユーザーはいません。").foregroundStyle(.secondary)
+            } else {
+                ForEach(blockedUsers) { blocked in
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(blockedUserLabel(blocked)).font(.subheadline)
+                            Text("公開投稿・共有・新しい操作を相互に抑止中").font(.caption).foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Button("解除") { onUnblock(blocked) }.buttonStyle(.borderless)
+                    }
+                }
+            }
+        } header: {
+            Text("ブロック中")
+        } footer: {
+            Text("解除すると、そのユーザーの公開投稿が再び表示される場合があります。")
+        }
+    }
+
+    private func blockedUserLabel(_ blocked: ScanLabBlockedUser) -> String {
+        let prefix = blocked.blockedId.uuidString.lowercased().prefix(8)
+        return "ユーザー \(prefix)…"
+    }
 }
 
 private struct ScanLabOwnerScanRow: View {

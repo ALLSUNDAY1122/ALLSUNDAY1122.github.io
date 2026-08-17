@@ -72,6 +72,16 @@ private struct ScanLabProfileUpdate: Encodable {
     }
 }
 
+struct ScanLabBlockedUser: Decodable, Identifiable, Hashable {
+    let blockedId: UUID
+    let createdAt: String
+    var id: UUID { blockedId }
+    enum CodingKeys: String, CodingKey {
+        case blockedId = "blocked_id"
+        case createdAt = "created_at"
+    }
+}
+
 struct ScanLabOwnerScan: Decodable, Identifiable, Hashable {
     let id: UUID
     let title: String
@@ -199,6 +209,7 @@ final class ScanLabBackend: ObservableObject {
     @Published private(set) var currentUserEmail: String?
     @Published private(set) var publicScans: [ScanLabPublicScan] = []
     @Published private(set) var ownerScans: [ScanLabOwnerScan] = []
+    @Published private(set) var blockedUsers: [ScanLabBlockedUser] = []
     @Published private(set) var profile: ScanLabProfile?
     @Published private(set) var isLoadingPublic = false
     @Published private(set) var isLoadingOwner = false
@@ -215,11 +226,12 @@ final class ScanLabBackend: ObservableObject {
             isAuthenticated = state.session != nil
             currentUserEmail = state.session?.user.email
             if state.session == nil {
-                ownerScans = []; profile = nil
+                ownerScans = []; blockedUsers = []; profile = nil
             } else {
                 async let scans: Void = loadOwnerScans()
                 async let loadedProfile: Void = loadProfile()
-                _ = await (scans, loadedProfile)
+                async let blocks: Void = loadBlockedUsers()
+                _ = await (scans, loadedProfile, blocks)
                 await loadPublicScans()
             }
         }
@@ -273,6 +285,13 @@ final class ScanLabBackend: ObservableObject {
             let rows: [ScanLabOwnerScan] = try await client.from("scanlab_scans").select("id,title,caption,visibility,status,moderation_status,share_token,asset_path,preview_path,latitude,longitude,location_label,published_at,created_at").order("created_at", ascending: false).execute().value
             ownerScans = rows
         } catch { notice = "自分のスキャンを取得できませんでした: \(error.localizedDescription)" }
+    }
+    func loadBlockedUsers() async {
+        guard isAuthenticated else { blockedUsers = []; return }
+        do {
+            let rows: [ScanLabBlockedUser] = try await client.from("scanlab_blocks").select("blocked_id,created_at").order("created_at", ascending: false).execute().value
+            blockedUsers = rows
+        } catch { notice = "ブロック一覧を取得できませんでした: \(error.localizedDescription)" }
     }
 
     func publish(resultURL: URL, previewImage: UIImage?, title: String, caption: String, visibility: ScanLabVisibility, location: ScanLabLocation?, publicPlaceConfirmed: Bool, privacyConfirmed: Bool, rightsConfirmed: Bool, contentConfirmed: Bool) async throws -> ScanLabPublishResponse {
@@ -328,7 +347,15 @@ final class ScanLabBackend: ObservableObject {
             let message = error.localizedDescription.lowercased()
             if !message.contains("duplicate") && !message.contains("unique") { throw error }
         }
-        notice = "このユーザーをブロックしました。MapとDiscoverから投稿を除外します。"
+        notice = "このユーザーをブロックしました。お互いの公開投稿と新しい操作を非表示にします。"
+        await loadBlockedUsers()
+        await loadPublicScans()
+    }
+    func unblock(_ blockedUser: ScanLabBlockedUser) async throws {
+        guard let session = try? await client.auth.session else { throw ScanLabBackendError.signInRequired }
+        try await client.from("scanlab_blocks").delete().eq("blocker_id", value: session.user.id).eq("blocked_id", value: blockedUser.blockedId).execute()
+        notice = "ブロックを解除しました。"
+        await loadBlockedUsers()
         await loadPublicScans()
     }
     func deleteAccount() async throws {
