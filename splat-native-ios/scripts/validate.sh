@@ -9,6 +9,7 @@ require_text() { grep -q "$2" "$1" || { echo "missing contract '$2' in $1"; exit
 # Project / legal / privacy
 require_file project.yml
 require_file SplatNative/PrivacyInfo.xcprivacy
+require_file APP_REVIEW_NOTES_JA.md
 require_file SplatNative/Resources/Licenses/msplat-APACHE-2.0.txt
 require_file SplatNative/Resources/Licenses/MetalSplatter-MIT.txt
 require_text project.yml 'jp.allsunday1122.splatlab'
@@ -65,14 +66,8 @@ require_text SplatNative/SplatResultView.swift '調整'
 require_text SplatNative/SplatResultView.swift '計測'
 require_text SplatNative/SplatResultView.swift '品質向上'
 
-# B Mesh: base ARKit/Photogrammetry path plus advanced supervisor pipeline.
-for f in \
-  MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift \
-  MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift \
-  MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift \
-  MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift; do
-  require_file "SplatNative/$f"
-done
+# B Mesh
+for f in MeshScanModel.swift MeshScanView.swift MeshAdvancedSupervisor.swift MeshDepthRecorder.swift MeshLiDARDenseFusion.swift MeshDenseMVS.swift MeshDenseTextureBaker.swift MeshGeometryRefiner.swift MeshAppearanceEditor.swift MeshTrimEditor.swift MeshDetailSimplifier.swift MeshRawReprocess.swift MeshARViewer.swift MeshParityAuditor.swift MeshAssetContract.swift; do require_file "SplatNative/$f"; done
 require_text SplatNative/MeshScanModel.swift 'sceneReconstruction'
 require_text SplatNative/MeshScanModel.swift 'PhotogrammetrySession'
 require_text SplatNative/MeshScanView.swift '2点タップで計測'
@@ -95,10 +90,9 @@ require_text SplatNative/ScanProjectStore.swift 'recoverInterruptedProcessing'
 require_text SplatNative/ScanProjectStore.swift 'worldMapURL'
 require_text SplatNative/ScanLibraryView.swift 'restoreSavedProject'
 
-# Product-neutral until Scaniverse functional parity is achieved.
 ! grep -R -n 'おもちゃばこ' SplatNative project.yml
 
-# D authenticated cloud sharing is explicit and isolated from the capture/reconstruction core.
+# D authenticated cloud sharing is explicit and isolated from capture/reconstruction core.
 for f in ScanLabBackend.swift ScanLabShellView.swift PublishScanView.swift ScanLabAccountView.swift; do require_file "SplatNative/$f"; done
 require_text SplatNative/SplatNativeApp.swift 'ScanLabShellView()'
 require_text SplatNative/ScanLabShellView.swift 'RootScanView()'
@@ -107,13 +101,14 @@ require_text SplatNative/ScanLabBackend.swift 'ScanLabVisibility'
 require_text SplatNative/PublishScanView.swift 'contentConfirmed'
 require_text SplatNative/PublishScanView.swift 'publicPlaceConfirmed'
 require_text project.yml 'package: Supabase'
+require_text project.yml 'INFOPLIST_KEY_NSCameraUsageDescription'
 require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
-# Network access must not leak into offline capture/reconstruction/storage core.
+! grep -qE 'INFOPLIST_KEY_NSLocationAlways|INFOPLIST_KEY_NSLocationAlwaysAndWhenInUse' project.yml
+! grep -qE 'INFOPLIST_KEY_NSPhotoLibrary|INFOPLIST_KEY_NSMicrophoneUsageDescription|INFOPLIST_KEY_NSUserTrackingUsageDescription' project.yml
 ! grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
-# D parity work must not add advertising/analytics SDKs.
-! grep -R -nE 'Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
+! grep -R -nE 'Firebase|Amplitude|Mixpanel|AppsFlyer|Adjust' SplatNative --include='*.swift'
 
-# D2-001 live Auth E2E remains explicit: credentials are GitHub Secrets only, never fixtures in source.
+# D2-001: live Auth E2E is wired to GitHub Secrets only; source never carries a fixture credential.
 require_file scripts/scanlab_auth_e2e.mjs
 require_file ../.github/workflows/splat-native-ios.yml
 require_text ../.github/workflows/splat-native-ios.yml 'Live ScanLab auth/session/profile E2E gate'
@@ -121,11 +116,13 @@ require_text ../.github/workflows/splat-native-ios.yml 'secrets.SCANLAB_E2E_EMAI
 require_text ../.github/workflows/splat-native-ios.yml 'secrets.SCANLAB_E2E_PASSWORD'
 require_text ../.github/workflows/splat-native-ios.yml 'LIVE_E2E_BLOCKED_BY_TEST_IDENTITY'
 require_text ../.github/workflows/splat-native-ios.yml 'node splat-native-ios/scripts/scanlab_auth_e2e.mjs'
-! grep -R -nE 'SCANLAB_E2E_(EMAIL|PASSWORD)=' scripts . --exclude='validate.sh' --exclude='splat-native-ios.yml' --exclude-dir='.git'
+! grep -R -nE 'SCANLAB_E2E_(EMAIL|PASSWORD)=' scripts . --exclude='validate.sh' --exclude-dir='.git'
 
+# D2-020: privacy manifest, permission strings and review explanation must move together.
 plutil -lint SplatNative/PrivacyInfo.xcprivacy >/dev/null
 python3 - <<'PY'
 import plistlib
+from pathlib import Path
 with open('SplatNative/PrivacyInfo.xcprivacy','rb') as f:
     data=plistlib.load(f)
 assert data.get('NSPrivacyTracking') is False
@@ -139,13 +136,23 @@ expected = {
     'NSPrivacyCollectedDataTypePreciseLocation',
     'NSPrivacyCollectedDataTypeOtherUserContent',
 }
-assert expected.issubset(by_type), (expected - set(by_type))
+assert set(by_type) == expected, (set(by_type), expected)
 for kind in expected:
     item = by_type[kind]
     assert item.get('NSPrivacyCollectedDataTypeLinked') is True
     assert item.get('NSPrivacyCollectedDataTypeTracking') is False
-    assert 'NSPrivacyCollectedDataTypePurposeAppFunctionality' in item.get('NSPrivacyCollectedDataTypePurposes', [])
-print('PASS: Privacy Manifest matches explicit D2 authenticated sharing')
+    assert item.get('NSPrivacyCollectedDataTypePurposes') == ['NSPrivacyCollectedDataTypePurposeAppFunctionality']
+assert data.get('NSPrivacyAccessedAPITypes') == []
+
+project=Path('project.yml').read_text()
+review=Path('APP_REVIEW_NOTES_JA.md').read_text()
+assert '周囲を撮影して端末内で3Dスキャンを生成するため、カメラを使用します。' in project
+assert 'Mapへ公開する地点をユーザーが明示的に設定した場合だけ、現在地を取得します。位置情報は自動送信しません。' in project
+for phrase in ['Camera:', 'Location When In Use:', 'Tracking:', 'Name:', 'Email Address:', 'User ID:', 'Precise Location:', 'Other User Content:', 'NSPrivacyTracking = false']:
+    assert phrase in review, phrase
+assert '現段階ではログインはありません' not in review
+assert 'Location: 現段階では要求しません' not in review
+print('PASS: D2 privacy manifest / permissions / App Review explanation are aligned')
 PY
 
 echo 'PASS: integrated Scan Lab static contracts'
