@@ -75,6 +75,14 @@ assert.match(account, /TextField\("タイトル", text: \$editTitle\)/);
 assert.match(account, /TextField\("説明（任意）", text: \$editCaption/);
 assert.match(account, /backend\.updatePublishedMetadata\(scan, title: editTitle, caption: editCaption\)/);
 
+// The editor must expose and enforce the same 80/500 metadata contract instead of silently truncating on save.
+assert.match(account, /if value\.count > 80 \{ editTitle = String\(value\.prefix\(80\)\) \}/);
+assert.match(account, /Text\("\\\(editTitle\.count\)\/80"\)/);
+assert.match(account, /if value\.count > 500 \{ editCaption = String\(value\.prefix\(500\)\) \}/);
+assert.match(account, /Text\("\\\(editCaption\.count\)\/500"\)/);
+assert.match(account, /editTitle = String\(scan\.title\.prefix\(80\)\)/);
+assert.match(account, /editCaption = String\(scan\.caption\.prefix\(500\)\)/);
+
 assert.match(html, /property="og:title"/);
 assert.match(html, /property="og:description"/);
 assert.match(html, /property="og:image" content=""/);
