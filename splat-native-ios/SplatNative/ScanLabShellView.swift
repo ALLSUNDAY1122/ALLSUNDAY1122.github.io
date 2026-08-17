@@ -36,19 +36,67 @@ struct ScanLabScanTab: View {
 
 struct ScanLabDiscoverView: View {
     @EnvironmentObject var backend: ScanLabBackend
+    @StateObject private var feed = ScanLabDiscoverFeedStore()
+
     var body: some View {
         NavigationStack {
             Group {
-                if backend.publicScans.isEmpty && backend.isLoadingPublic { ProgressView("公開スキャンを取得中") }
-                else if backend.publicScans.isEmpty {
-                    ContentUnavailableView("まだ公開スキャンがありません", systemImage: "sparkles.rectangle.stack", description: Text("公開された3Dはここに表示されます。ダミー投稿は表示しません。"))
+                if feed.isLoadingInitial && feed.items.isEmpty {
+                    ProgressView("公開スキャンを取得中")
+                } else if let error = feed.errorMessage, feed.items.isEmpty {
+                    ContentUnavailableView {
+                        Label("Discoverを読み込めません", systemImage: "wifi.exclamationmark")
+                    } description: {
+                        Text(error)
+                    } actions: {
+                        Button("再試行") { Task { await feed.reload(using: backend) } }
+                            .buttonStyle(.borderedProminent)
+                    }
+                } else if feed.items.isEmpty {
+                    ContentUnavailableView(
+                        feed.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "まだ公開スキャンがありません" : "一致する公開スキャンがありません",
+                        systemImage: "sparkles.rectangle.stack",
+                        description: Text(feed.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "公開された3Dはここに表示されます。ダミー投稿は表示しません。" : "別のキーワードで検索してください。")
+                    )
                 } else {
-                    List(backend.publicScans) { scan in NavigationLink { ScanLabRemoteScanView(scan: scan) } label: { ScanLabDiscoverRow(scan: scan) } }
-                        .listStyle(.plain).refreshable { await backend.loadPublicScans() }
+                    List {
+                        ForEach(feed.items) { scan in
+                            NavigationLink { ScanLabRemoteScanView(scan: scan) } label: { ScanLabDiscoverRow(scan: scan) }
+                                .onAppear {
+                                    if scan.id == feed.items.last?.id, feed.hasMore {
+                                        Task { await feed.loadNextPage(using: backend) }
+                                    }
+                                }
+                        }
+                        if feed.isLoadingMore {
+                            HStack { Spacer(); ProgressView("さらに読み込み中"); Spacer() }
+                                .listRowSeparator(.hidden)
+                        } else if let error = feed.errorMessage {
+                            VStack(spacing: 8) {
+                                Text(error).font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                                Button("続きを再試行") {
+                                    feed.clearError()
+                                    Task { await feed.loadNextPage(using: backend) }
+                                }
+                                .buttonStyle(.bordered)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .listRowSeparator(.hidden)
+                        }
+                    }
+                    .listStyle(.plain)
+                    .refreshable { await feed.reload(using: backend) }
                 }
             }
             .navigationTitle("Discover")
-            .task { await backend.loadPublicScans() }
+            .searchable(text: $feed.query, prompt: "タイトルを検索")
+            .onSubmit(of: .search) { Task { await feed.reload(using: backend) } }
+            .task(id: feed.query) {
+                try? await Task.sleep(for: .milliseconds(350))
+                guard !Task.isCancelled else { return }
+                await feed.reload(using: backend)
+            }
         }
     }
 }
