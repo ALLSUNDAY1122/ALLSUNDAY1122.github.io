@@ -7,6 +7,23 @@ WEB_SRC="$REPO_ROOT/apps/sanitary-manager-2"
 WEB_DST="$SCRIPT_DIR/HealthManager2/Web"
 ASSET_DIR="$SCRIPT_DIR/HealthManager2/Assets.xcassets/AppIcon.appiconset"
 
+# Every Apple upload needs a unique CFBundleVersion. Codemagic supplies a
+# monotonically increasing build number; apply it before XcodeGen runs.
+if [ -n "${CM_BUILD_NUMBER:-}" ]; then
+  python3 - "$SCRIPT_DIR/project.yml" "$CM_BUILD_NUMBER" <<'PY'
+from pathlib import Path
+import re, sys
+p = Path(sys.argv[1])
+build_number = sys.argv[2]
+text = p.read_text(encoding='utf-8')
+updated, count = re.subn(r'(?m)^(\s*CURRENT_PROJECT_VERSION:\s*)\d+\s*$', rf'\g<1>{build_number}', text, count=1)
+if count != 1:
+    raise SystemExit('CURRENT_PROJECT_VERSION was not updated exactly once')
+p.write_text(updated, encoding='utf-8')
+print(f'PASS: HealthManager2 CURRENT_PROJECT_VERSION={build_number}')
+PY
+fi
+
 rm -rf "$WEB_DST"
 rm -rf "$SCRIPT_DIR/HealthManager2/Assets.xcassets"
 mkdir -p "$WEB_DST" "$ASSET_DIR"
