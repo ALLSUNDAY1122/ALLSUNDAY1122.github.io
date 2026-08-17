@@ -136,7 +136,16 @@ struct ScanLabPublishResponse: Decodable, Hashable {
     let publishedAt: String?
     let shareUrl: URL?
 }
-private struct ScanLabPublishRequest: Encodable { let scanId: String }
+private struct ScanLabPublishRequest: Encodable {
+    let scanId: String
+    let title: String?
+    let description: String?
+    init(scanId: String, title: String? = nil, description: String? = nil) {
+        self.scanId = scanId
+        self.title = title
+        self.description = description
+    }
+}
 private struct ScanLabDeleteAccountResponse: Decodable { let deleted: Bool }
 private struct ScanLabScanStatusUpdate: Encodable { let status: String }
 private struct ScanLabLikeInsert: Encodable {
@@ -302,6 +311,24 @@ final class ScanLabBackend: ObservableObject {
         } catch {
             if !uploadedPaths.isEmpty { try? await client.storage.from("scanlab-assets").remove(paths: uploadedPaths) }; throw error
         }
+    }
+
+    func updatePublishedMetadata(_ scan: ScanLabOwnerScan, title: String, caption: String) async throws {
+        guard scan.status == "published" else { throw ScanLabBackendError.invalidServerResponse }
+        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard (1...80).contains(trimmedTitle.count) else { throw ScanLabBackendError.invalidTitle }
+        guard isAuthenticated else { throw ScanLabBackendError.signInRequired }
+        let request = ScanLabPublishRequest(
+            scanId: scan.id.uuidString.lowercased(),
+            title: trimmedTitle,
+            description: String(caption.prefix(500))
+        )
+        let _: ScanLabPublishResponse = try await client.functions.invoke(
+            "scanlab-publish",
+            options: FunctionInvokeOptions(region: .apSoutheast1, body: request, timeoutInterval: 30)
+        )
+        await loadOwnerScans()
+        if scan.visibility == ScanLabVisibility.public.rawValue { await loadPublicScans() }
     }
 
     func unpublish(_ scan: ScanLabOwnerScan) async throws {
