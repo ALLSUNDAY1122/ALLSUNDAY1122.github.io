@@ -31,3 +31,62 @@ with open(sys.argv[1], encoding='utf-8') as f:
 assert payload == {'error': 'invalid_cursor'}, payload
 print('PASS: live Discover cursor validation is active')
 PY
+
+# Real-data parity gate. This never creates fixtures: it only becomes strict once
+# production contains enough genuine public scans to exercise a second page.
+python3 - "$BASE_URL" <<'PY'
+import json
+import sys
+import urllib.parse
+import urllib.request
+
+base = sys.argv[1]
+
+def get(params):
+    url = base + '?' + urllib.parse.urlencode(params)
+    req = urllib.request.Request(url, headers={'Accept': 'application/json'})
+    with urllib.request.urlopen(req, timeout=25) as response:
+        assert response.status == 200, (response.status, url)
+        payload = json.load(response)
+    assert isinstance(payload.get('items'), list), payload
+    cursor = payload.get('nextCursor')
+    assert cursor is None or isinstance(cursor, str), payload
+    return payload
+
+first = get({'mode': 'feed', 'limit': 20, 'includeModel': 0})
+if first.get('nextCursor') is None:
+    print(f"PENDING: real-data Discover parity gate needs >20 public scans; first page currently has {len(first['items'])}")
+    raise SystemExit(0)
+
+all_items = []
+seen_ids = set()
+seen_cursors = set()
+payload = first
+pages = 0
+while True:
+    pages += 1
+    assert pages <= 100, 'Discover pagination did not terminate within 100 pages'
+    for item in payload['items']:
+        scan_id = item.get('id')
+        assert isinstance(scan_id, str) and scan_id, item
+        assert scan_id not in seen_ids, f'duplicate Discover scan across pages: {scan_id}'
+        seen_ids.add(scan_id)
+        all_items.append(item)
+    cursor = payload.get('nextCursor')
+    if cursor is None:
+        break
+    assert cursor not in seen_cursors, f'cursor replay detected: {cursor}'
+    seen_cursors.add(cursor)
+    payload = get({'mode': 'feed', 'limit': 20, 'includeModel': 0, 'cursor': cursor})
+
+assert len(all_items) > 20, len(all_items)
+assert pages >= 2, pages
+sample = next((item for item in all_items if isinstance(item.get('title'), str) and item['title'].strip()), None)
+assert sample is not None, 'no searchable title found in real Discover data'
+query = sample['title'].strip()[:80]
+searched = get({'mode': 'feed', 'limit': 20, 'includeModel': 0, 'q': query})
+assert any(item.get('id') == sample.get('id') for item in searched['items']), (
+    'real title search did not return sampled scan', sample.get('id'), query
+)
+print(f"PASS: real-data Discover parity traversed {pages} pages / {len(all_items)} unique scans, reached terminal cursor, and title search hit {sample.get('id')}")
+PY
