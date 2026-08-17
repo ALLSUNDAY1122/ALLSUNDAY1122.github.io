@@ -1,11 +1,13 @@
 # RELEASE_STATUS｜第二種衛生管理者｜学びスプリント
 
-更新: 2026-08-09
+更新: 2026-08-18
 
 ## 現在地
-**TestFlightクラウドビルド開始直前。** Safari価値検証、Golden Master v2.1 UI確認、90問監査、法令/権利監査、最終辛口レビュー3周、iOSラッパー、Privacy/Support、App Store原稿、Codemagic workflowまで完了。
+**Internal TestFlight到達済み。Build 1はApp Store Connect APIで VALID / INTERNAL_ONLY を確認。** Safari価値検証、Golden Master v2.1 UI確認、90問監査、法令/権利監査、最終辛口レビュー3周、iOSラッパー、Privacy/Support、App Store原稿、Codemagic workflow、署名Build、Apple uploadまで完了。
 
-次に必要なのはApple/Codemagic側の本人認証を伴う登録・署名準備と、Codemagic `health-manager-2-ios` workflowの実行。Build 1がTestFlightへ到達した時点で次の人間品質ゲート（iPhone実機確認）へ移る。
+2026-08-18、Codemagic APIから `health-manager-2-ios` を実行。初回はIPA生成後のApple validationでAppIcon 120/152/1024のbundle不足を検出した。App Store Connect Build Upload APIからエラーを直接取得し、XcodeGenのresource build phaseとAppIcon packagingを修正して再Build。修正後はCodemagic Build/PublishingがSUCCESS、Apple Build Uploadは `COMPLETE`、Build 1は `processingState=VALID`、`buildAudienceType=INTERNAL_ONLY`、validation errors=0となった。
+
+次の人間品質ゲートはiPhone実機確認。実機確認を待つ間も、App Store metadata / Review Detail / Build紐付け等のAPI対応工程は並行して進める。本審査Submitは人間の最終承認まで実行しない。
 
 ## 固定値
 - Version: `1.0.0`
@@ -47,38 +49,35 @@
 - [x] App Store本審査自動提出OFF
 - [x] 最終辛口レビュー3周完了、修正可能な重大指摘0
 
-## Codemagic最初のビルドで機械確認する項目
-現在のChatGPT実行環境にはXcode/macOS署名環境がないため、以下はCodemagicを次の機械ゲートとする。
-- [ ] 共通90問監査スクリプトPASS
-- [ ] XcodeGenによる `.xcodeproj` 生成
-- [ ] Swift compile
-- [ ] Asset Catalog / 1024px AppIcon生成
-- [ ] PrivacyInfo.xcprivacy同梱
-- [ ] WKWebViewのローカルWeb資産読込
-- [ ] Distribution signing
-- [ ] IPA archive/export
-- [ ] App Store ConnectへのBuild 1アップロード
-- [ ] TestFlight処理完了
+## Codemagic / Apple 機械ゲート
+- [x] 共通90問監査スクリプトPASS
+- [x] XcodeGenによる `.xcodeproj` 生成
+- [x] Swift compile
+- [x] Asset Catalog / 1024px AppIcon生成
+- [x] PrivacyInfo.xcprivacy同梱
+- [x] WKWebViewのローカルWeb資産読込
+- [x] Distribution signing
+- [x] IPA archive/export
+- [x] App Store ConnectへのBuild 1アップロード
+- [x] Apple Build Upload COMPLETE / validation error 0
+- [x] TestFlight Build 1 VALID / INTERNAL_ONLY
 
-FAIL時は標準手順v2.2に従い、該当箇所を修正して同じループを再実行する。
-
-## Apple/Codemagic側でのみ必要な本人操作
-- [ ] Apple DeveloperでExplicit App ID `jp.allsunday1122.healthmanager2` を登録
-- [ ] App Store Connectで新規アプリを作成しBundle IDを紐付け
-- [ ] Codemagic integration `codemagic` にApp Store Connect API Keyを接続/確認
-- [ ] Apple Distribution証明書とApp Store provisioning profileをCodemagicで利用可能にする
-- [ ] Codemagicで `health-manager-2-ios` workflowを開始
+## Apple/Codemagic本人操作
+- [x] Apple Developer / App Store Connect識別子準備
+- [x] Codemagicから利用可能なApp Store Connect integration確認
+- [x] Distribution signing / App Store provisioningを利用可能な状態へ設定
+- [x] Codemagic API Build Gateway接続
+- [x] `health-manager-2-ios` workflowをAPI起動
 
 パスワード、2FAコード、API秘密鍵はGitHub/Notion/チャットへ保存しない。
 
 ## App Reviewでの残存リスク
 - Guideline 4.2: WKWebView主体だが、90問を完全同梱し、8問スプリント、9セット、履歴、苦手卒業、中断再開、JSON共有、ネイティブ触覚を備えることで単純なWeb再包装との差を明確化した。
 - Guideline 4.3: 第一種など同シリーズとのUI基盤共有により、App Store本審査では類似アプリ判定の可能性が残る。第二種固有の試験範囲・独立90問バンク・Review Notesで差異を説明し、本審査提出時の人間最終承認で再評価する。
-
-このリスクはInternal TestFlightビルドを止める技術的FAILではない。
+- AppIcon: Internal TestFlight用の技術的packagingはPASS。本申請前に学びスプリント正本AppIconとの一致を確定し、差分があれば正本PNGへ置換して再Buildする。
 
 ## 次の人間品質ゲート
-Build 1がTestFlightへ到達したらiPhone実機で確認する。
+Build 1をiPhone実機で確認する。
 
 ### 実機合格条件
 - [ ] 起動クラッシュなし
