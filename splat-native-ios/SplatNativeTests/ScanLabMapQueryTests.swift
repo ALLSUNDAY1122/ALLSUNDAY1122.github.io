@@ -1,6 +1,5 @@
 import MapKit
 import Testing
-@testable import SplatNative
 
 struct ScanLabMapQueryTests {
     @Test func boundsClampToWorldLimits() {
