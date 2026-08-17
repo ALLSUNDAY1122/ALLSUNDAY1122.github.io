@@ -100,6 +100,7 @@ require_text SplatNative/ScanLabBackend.swift 'import Supabase'
 require_text SplatNative/ScanLabBackend.swift 'ScanLabVisibility'
 require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "offset"'
 require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "q"'
+require_text SplatNative/ScanLabDiscoverFeedStore.swift 'guard hasMore, errorMessage == nil'
 require_text SplatNative/ScanLabShellView.swift '.searchable(text: $feed.query'
 require_text SplatNative/ScanLabShellView.swift '続きを再試行'
 require_text SplatNative/PublishScanView.swift 'contentConfirmed'
@@ -110,19 +111,22 @@ require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
 ! grep -qE 'INFOPLIST_KEY_NSLocationAlways|INFOPLIST_KEY_NSLocationAlwaysAndWhenInUse' project.yml
 ! grep -qE 'INFOPLIST_KEY_NSPhotoLibrary|INFOPLIST_KEY_NSMicrophoneUsageDescription|INFOPLIST_KEY_NSUserTrackingUsageDescription' project.yml
 # D2-012: prefetch pagination must not skip rows that were fetched but not yet emitted,
-# and the abuse-control offset cap must terminate instead of replaying the same page forever.
+# must terminate before replaying a capped page, and failed next-page loads require explicit retry.
 python3 - <<'PY'
 from pathlib import Path
-s=Path('supabase/functions/scanlab-public/index.ts').read_text()
-assert 'let consumedRows = 0' in s
-assert 'consumedRows += 1' in s
-assert 'if (visible.length === limit) break' in s
-assert 'const nextOffset = offset + consumedRows' in s
-assert 'const maxOffset = 10000' in s
-assert 'offset < maxOffset && (consumedRows < rows.length || rows.length === fetchCount)' in s
-assert 'nextOffset: hasMore ? nextOffset : null' in s
-assert 'offset + rows.length' not in s
-print('PASS: Discover pagination preserves prefetched rows and terminates at offset cap')
+edge=Path('supabase/functions/scanlab-public/index.ts').read_text()
+store=Path('SplatNative/ScanLabDiscoverFeedStore.swift').read_text()
+assert 'let consumedRows = 0' in edge
+assert 'consumedRows += 1' in edge
+assert 'if (visible.length === limit) break' in edge
+assert 'const nextOffset = offset + consumedRows' in edge
+assert 'const maxOffset = 10000' in edge
+assert 'nextOffset <= maxOffset && (consumedRows < rows.length || rows.length === fetchCount)' in edge
+assert 'nextOffset: hasMore ? nextOffset : null' in edge
+assert 'offset + rows.length' not in edge
+assert 'guard hasMore, errorMessage == nil, !isLoadingInitial, !isLoadingMore else { return }' in store
+assert 'func clearError()' in store
+print('PASS: Discover pagination preserves rows, terminates at cap, and requires explicit retry after errors')
 PY
 ! grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
 ! grep -R -nE 'Firebase|Amplitude|Mixpanel|AppsFlyer|Adjust' SplatNative --include='*.swift'
