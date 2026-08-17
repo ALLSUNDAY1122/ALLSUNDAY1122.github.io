@@ -70,6 +70,10 @@ Deno.serve(async (req) => {
 
   if (mode === "feed") {
     const limit = Math.min(Math.max(Number(url.searchParams.get("limit") ?? 24) || 24, 1), 40);
+    const offset = Math.min(Math.max(Number(url.searchParams.get("offset") ?? 0) || 0, 0), 10000);
+    const q = (url.searchParams.get("q") ?? "").trim().slice(0, 80);
+    const fetchCount = Math.min(limit * 2, 80);
+
     let query = supabase
       .from("scanlab_scans")
       .select("id,owner_id,title,caption,visibility,published_at,latitude,longitude,location_label,asset_path,preview_path")
@@ -77,7 +81,10 @@ Deno.serve(async (req) => {
       .eq("status", "published")
       .eq("moderation_status", "approved")
       .order("published_at", { ascending: false })
-      .limit(Math.min(limit * 2, 80));
+      .order("id", { ascending: false })
+      .range(offset, offset + fetchCount - 1);
+
+    if (q) query = query.ilike("title", `%${q.replaceAll("%", "\\%").replaceAll("_", "\\_")}%`);
 
     const minLat = Number(url.searchParams.get("minLat"));
     const maxLat = Number(url.searchParams.get("maxLat"));
@@ -93,8 +100,15 @@ Deno.serve(async (req) => {
 
     const [{ data, error }, blocked] = await Promise.all([query, blockedUserIds(req)]);
     if (error) return json({ error: "feed_unavailable" }, 503);
-    const visible = (data ?? []).filter((scan) => !blocked.has(scan.owner_id)).slice(0, limit);
-    return json({ items: await Promise.all(visible.map(decorate)) });
+    const rows = data ?? [];
+    const visible = rows.filter((scan) => !blocked.has(scan.owner_id)).slice(0, limit);
+    const nextOffset = offset + rows.length;
+    const hasMore = rows.length === fetchCount;
+    return json({
+      items: await Promise.all(visible.map(decorate)),
+      nextOffset: hasMore ? nextOffset : null,
+      hasMore,
+    });
   }
 
   if (mode === "share") {
