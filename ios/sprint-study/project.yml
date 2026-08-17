@@ -34,6 +34,7 @@ targets:
       path: SprintStudy/Info.plist
       properties:
         CFBundleDisplayName: 学びスプリント
+        CFBundleIconName: AppIcon
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         ITSAppUsesNonExemptEncryption: false
@@ -42,6 +43,9 @@ targets:
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
         UIViewControllerBasedStatusBarAppearance: true
     scheme:
       testTargets: []
