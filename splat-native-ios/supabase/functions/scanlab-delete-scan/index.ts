@@ -20,10 +20,11 @@ function validUUID(value: unknown): value is string {
   return typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
 
-function safeOwnedPath(path: unknown, ownerId: string) {
-  if (typeof path !== "string" || !path.startsWith(`${ownerId}/`)) return null;
-  if (path.includes("..") || path.includes("//")) return null;
-  return path;
+function canonicalPackage(ownerId: string, scanId: string, assetPath: unknown, previewPath: unknown) {
+  const folder = `${ownerId}/${scanId}`;
+  if (assetPath !== `${folder}/scene.spz`) return null;
+  if (previewPath != null && previewPath !== `${folder}/preview.jpg` && previewPath !== `${folder}/preview.png`) return null;
+  return { folder, assetPath: `${folder}/scene.spz`, previewPath: previewPath as string | null };
 }
 
 async function listFolderPaths(folder: string) {
@@ -36,16 +37,20 @@ async function listFolderPaths(folder: string) {
       sortBy: { column: "name", order: "asc" },
     });
     if (error) return { paths: null, error: "asset_cleanup_pending" as const };
-    for (const file of data ?? []) paths.push(folder ? `${folder}/${file.name}` : file.name);
+    for (const file of data ?? []) paths.push(`${folder}/${file.name}`);
     if ((data ?? []).length < pageSize) return { paths, error: null };
   }
   return { paths: null, error: "asset_cleanup_limit_exceeded" as const };
 }
 
 async function removePaths(paths: string[]) {
-  if (paths.length === 0) return null;
-  const { error } = await admin.storage.from("scanlab-assets").remove(paths);
-  return error;
+  for (let i = 0; i < paths.length; i += 100) {
+    const batch = paths.slice(i, i + 100);
+    if (batch.length === 0) continue;
+    const { error } = await admin.storage.from("scanlab-assets").remove(batch);
+    if (error) return error;
+  }
+  return null;
 }
 
 Deno.serve(async (req) => {
@@ -70,9 +75,8 @@ Deno.serve(async (req) => {
   if (!scan) return json({ deleted: true, scanId: body.scanId, recovered: true });
   if (scan.owner_id !== user.id) return json({ error: "forbidden" }, 403);
 
-  const assetPath = safeOwnedPath(scan.asset_path, user.id);
-  const previewPath = scan.preview_path == null ? null : safeOwnedPath(scan.preview_path, user.id);
-  if (!assetPath || (scan.preview_path != null && !previewPath)) return json({ error: "invalid_asset_path" }, 409);
+  const packagePaths = canonicalPackage(user.id, scan.id, scan.asset_path, scan.preview_path);
+  if (!packagePaths) return json({ error: "invalid_asset_path" }, 409);
 
   // Revoke publication first. If cleanup fails, share/feed reads stop immediately while the
   // hidden metadata row remains as a durable retry cursor for the owner.
@@ -83,14 +87,12 @@ Deno.serve(async (req) => {
     .eq("owner_id", user.id);
   if (hideError) return json({ error: "delete_prepare_failed" }, 503);
 
-  const slash = assetPath.lastIndexOf("/");
-  const folder = slash > 0 ? assetPath.slice(0, slash) : "";
-  const listed = await listFolderPaths(folder);
+  const listed = await listFolderPaths(packagePaths.folder);
   if (listed.error) return json({ error: listed.error, retryable: true }, 503);
 
   const paths = new Set(listed.paths ?? []);
-  paths.add(assetPath);
-  if (previewPath) paths.add(previewPath);
+  paths.add(packagePaths.assetPath);
+  if (packagePaths.previewPath) paths.add(packagePaths.previewPath);
 
   const cleanupError = await removePaths([...paths]);
   if (cleanupError) return json({ error: "asset_cleanup_pending", retryable: true }, 503);
