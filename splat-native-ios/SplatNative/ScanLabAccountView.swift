@@ -58,6 +58,26 @@ private struct ScanLabSignedInAccountView: View {
     @State private var unblockTarget: ScanLabBlockedUser?
 
     var body: some View {
+        accountList
+            .task { await loadAccountData() }
+            .onChange(of: backend.profile) { _, _ in syncProfileFields() }
+            .alert("アカウントを削除しますか？", isPresented: $deleteAccountConfirmation) {
+                Button("キャンセル", role: .cancel) {}
+                Button("完全に削除", role: .destructive) { Task { await deleteAccount() } }
+            } message: {
+                Text("クラウド上の3D・プロフィール・公開状態を削除します。この操作は元に戻せません。")
+            }
+            .alert("ブロックを解除しますか？", isPresented: unblockAlertPresented) {
+                Button("キャンセル", role: .cancel) { unblockTarget = nil }
+                Button("解除") {
+                    if let target = unblockTarget { Task { await unblock(target) } }
+                }
+            } message: {
+                Text("このユーザーとの相互非表示を解除します。")
+            }
+    }
+
+    private var accountList: some View {
         List {
             Section("プロフィール") {
                 Text(backend.currentUserEmail ?? "").font(.footnote).foregroundStyle(.secondary)
@@ -81,29 +101,26 @@ private struct ScanLabSignedInAccountView: View {
             Section {
                 Button("ログアウト") { Task { await backend.signOut() } }
                 Button("アカウントとクラウドデータを削除", role: .destructive) { deleteAccountConfirmation = true }.disabled(accountBusy)
-            } footer: { Text("アカウント削除では、このアカウントに紐づく3Dファイルと公開情報を削除します。端末内に書き出したファイルは削除されません。") }
-        }
-        .task { await backend.loadProfile(); await backend.loadOwnerScans(); await backend.loadBlockedUsers(); syncProfileFields() }
-        .onChange(of: backend.profile) { _, _ in syncProfileFields() }
-        .alert("アカウントを削除しますか？", isPresented: $deleteAccountConfirmation) {
-            Button("キャンセル", role: .cancel) {}
-            Button("完全に削除", role: .destructive) { Task { await deleteAccount() } }
-        } message: { Text("クラウド上の3D・プロフィール・公開状態を削除します。この操作は元に戻せません。") }
-        .alert(
-            "ブロックを解除しますか？",
-            isPresented: Binding(
-                get: { unblockTarget != nil },
-                set: { if !$0 { unblockTarget = nil } }
-            )
-        ) {
-            Button("キャンセル", role: .cancel) { unblockTarget = nil }
-            Button("解除") {
-                if let target = unblockTarget { Task { await unblock(target) } }
+            } footer: {
+                Text("アカウント削除では、このアカウントに紐づく3Dファイルと公開情報を削除します。端末内に書き出したファイルは削除されません。")
             }
-        } message: {
-            Text("このユーザーとの相互非表示を解除します。")
         }
     }
+
+    private var unblockAlertPresented: Binding<Bool> {
+        Binding(
+            get: { unblockTarget != nil },
+            set: { if !$0 { unblockTarget = nil } }
+        )
+    }
+
+    private func loadAccountData() async {
+        await backend.loadProfile()
+        await backend.loadOwnerScans()
+        await backend.loadBlockedUsers()
+        syncProfileFields()
+    }
+
     private func syncProfileFields() { guard let p = backend.profile else { return }; displayName = p.displayName; handle = p.handle }
     private func saveProfile() async { profileBusy = true; profileError = nil; defer { profileBusy = false }; do { try await backend.updateProfile(handle: handle, displayName: displayName) } catch { profileError = error.localizedDescription } }
     private func deleteAccount() async { accountBusy = true; defer { accountBusy = false }; do { try await backend.deleteAccount() } catch { backend.notice = "アカウントを削除できませんでした: \(error.localizedDescription)" } }
