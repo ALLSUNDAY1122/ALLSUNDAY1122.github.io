@@ -1,18 +1,19 @@
 # D2-011 Map query / Map表示 / publish asset位置表示 — Evidence
 
-Date: 2026-08-17
+Date: 2026-08-18
 Branch: `scaniverse/d2-w11-map`
-Base at branch creation: `scaniverse/d2-share-discover` (`c47329211f5ec9495f29d0c171dbfe95323f5bd9`)
+Base: `scaniverse/d2-share-discover`
+Synchronized base before final review: `74c357ed60c97e0a02d9988776d81bcfea9e4fab`
 
 ## Implemented
 
-- Map camera end events now query the public endpoint using the visible map bounding box.
-- Camera queries are debounced (350 ms) and superseded queries are cancelled before dispatch.
-- Manual visible-region refresh is available from the Map toolbar.
-- Only published records with finite, world-valid coordinates are rendered as map annotations.
+- Map camera end events query the public scan endpoint with the visible MapKit bounding box.
+- Camera queries are debounced for 350 ms and superseded tasks are cancelled before dispatch.
+- The Map toolbar can manually reload the current visible region.
+- Only published records with finite, world-valid coordinates are rendered as annotations.
 - Annotation selection opens the existing remote published-asset viewer.
-- Empty/loading copy now describes the visible region rather than the global feed.
-- Bounds construction and coordinate validity were extracted to `ScanLabMapQuery.swift`.
+- Empty/loading copy describes the visible region rather than the global feed.
+- Bounds construction and coordinate validity are isolated in `ScanLabMapQuery.swift`.
 
 ## Regression gates
 
@@ -23,12 +24,19 @@ Base at branch creation: `scaniverse/d2-share-discover` (`c47329211f5ec9495f29d0
 3. rejection of NaN/infinite coordinates;
 4. acceptance of a normal published location.
 
-`project.yml` uses directory source inclusion for `SplatNative` and `SplatNativeTests`, so the new source/test files are picked up by project generation without hand-editing an Xcode project.
+The direct-source `SplatNativeTests` target includes `SplatNative/ScanLabMapQuery.swift` in `project.yml`. The test intentionally does not use `@testable import SplatNative`, matching the existing direct-source test-target architecture.
 
-## Review / fixes
+## CI evidence
 
-Initial implementation duplicated bounds math in the SwiftUI view and accepted NaN because closed-range containment alone is insufficient. Review extracted a single policy and added explicit `isFinite` validation plus regression tests.
+Synchronized worker commit `b96059c09da426ec45ef24a483cdc6f73060f160` passed `Splat Native iOS Build` run #1143. Successful steps included static checks, project generation/resource verification, SwiftPM resolution, the msplat smoke-test bundle for iOS Simulator, and unsigned iPhone compilation.
 
-## Remaining environment gate
+Earlier CI failures exposed two regression-gate wiring defects and were fixed rather than ignored:
 
-This connector session cannot execute Xcode/xcodebuild, so compile/runtime execution is not claimed here. The branch contains deterministic unit regression coverage intended for the existing macOS/iOS CI/build lane. No duplicate CI was manually triggered.
+- the new map policy source was initially absent from the direct-source test target;
+- the new test initially used `@testable import SplatNative`, which is incompatible with that target layout.
+
+## Adversarial review / cleanup
+
+The first implementation also reformatted unrelated Discover, publish entry, and remote-viewer code in `ScanLabShellView.swift`. Although behavior was unchanged, this enlarged the PR and increased merge-conflict risk. Final review restores all non-Map sections from the latest base and retains only the D2-011 Map-specific changes.
+
+The cleanup commit that contains this evidence must pass the same existing CI lane before D2-011 is considered complete. No duplicate workflow run is manually triggered.
