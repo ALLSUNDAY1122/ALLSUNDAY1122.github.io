@@ -97,12 +97,9 @@ Deno.serve(async (req) => {
   }
 
   if (scan.status === "published") {
-    if (["public", "unlisted"].includes(scan.visibility) && !(await viewerIsReady())) {
-      return json({ error: "viewer_unavailable" }, 503);
-    }
-
     let current = scan;
-    if (Object.keys(metadata).length > 0) {
+    const metadataRequested = Object.keys(metadata).length > 0;
+    if (metadataRequested) {
       const { data: refreshed, error: refreshError } = await admin
         .from("scanlab_scans")
         .update(metadata)
@@ -116,16 +113,23 @@ Deno.serve(async (req) => {
       current = { ...scan, ...refreshed };
     }
 
+    const needsViewer = ["public", "unlisted"].includes(current.visibility);
+    const viewerAvailable = !needsViewer || await viewerIsReady();
+    if (!viewerAvailable && !metadataRequested) {
+      return json({ error: "viewer_unavailable" }, 503);
+    }
+
     return json({
       id: current.id,
       title: current.title,
       description: current.caption,
       visibility: current.visibility,
       publishedAt: current.published_at,
-      shareUrl: shareUrlFor(current),
+      shareUrl: viewerAvailable ? shareUrlFor(current) : null,
       hasPreview: Boolean(current.preview_path),
       alreadyPublished: true,
-      metadataUpdated: Object.keys(metadata).length > 0,
+      metadataUpdated: metadataRequested,
+      viewerAvailable,
     });
   }
 
@@ -185,5 +189,6 @@ Deno.serve(async (req) => {
     hasPreview: Boolean(updated.preview_path),
     alreadyPublished: false,
     metadataUpdated: Object.keys(metadata).length > 0,
+    viewerAvailable: true,
   });
 });
