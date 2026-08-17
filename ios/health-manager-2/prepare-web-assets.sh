@@ -29,6 +29,8 @@ done
 
 if command -v magick >/dev/null 2>&1; then
   magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 1024x1024 "$ASSET_DIR/AppIcon.png"
+  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 120x120 "$ASSET_DIR/AppIcon-120.png"
+  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 180x180 "$ASSET_DIR/AppIcon-180.png"
   magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 152x152 "$ASSET_DIR/AppIcon-152.png"
   magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 167x167 "$ASSET_DIR/AppIcon-167.png"
 else
@@ -44,6 +46,18 @@ cat > "$ASSET_DIR/Contents.json" <<'JSON'
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
+    },
+    {
+      "filename" : "AppIcon-120.png",
+      "idiom" : "iphone",
+      "scale" : "2x",
+      "size" : "60x60"
+    },
+    {
+      "filename" : "AppIcon-180.png",
+      "idiom" : "iphone",
+      "scale" : "3x",
+      "size" : "60x60"
     },
     {
       "filename" : "AppIcon-152.png",
