@@ -12,7 +12,7 @@ final class ScanLabGeotagPolicyTests: XCTestCase {
         XCTAssertNil(ScanLabGeotagPolicy.normalized(visibility: .unlisted, location: tokyo, label: "Tokyo"))
     }
 
-    func testPublicRequiresExplicitLocation() {
+    func testPublicWithoutGeotagKeepsLocationNil() {
         XCTAssertNil(ScanLabGeotagPolicy.normalized(visibility: .public, location: nil, label: nil))
     }
 
@@ -29,9 +29,14 @@ final class ScanLabGeotagPolicyTests: XCTestCase {
         XCTAssertEqual(normalized?.label?.count, 80)
     }
 
-    func testPublicGateRequiresLocationAndAllPrivacyConfirmations() {
+    func testPublicWithoutGeotagNeedsPrivacyAndRightsButNotPlaceConfirmation() {
+        XCTAssertTrue(ScanLabGeotagPolicy.canPublishPublic(location: nil, publicPlaceConfirmed: false, privacyConfirmed: true, rightsConfirmed: true))
+        XCTAssertFalse(ScanLabGeotagPolicy.canPublishPublic(location: nil, publicPlaceConfirmed: false, privacyConfirmed: false, rightsConfirmed: true))
+        XCTAssertFalse(ScanLabGeotagPolicy.canPublishPublic(location: nil, publicPlaceConfirmed: false, privacyConfirmed: true, rightsConfirmed: false))
+    }
+
+    func testPublicWithGeotagAlsoNeedsPlaceConfirmation() {
         XCTAssertTrue(ScanLabGeotagPolicy.canPublishPublic(location: tokyo, publicPlaceConfirmed: true, privacyConfirmed: true, rightsConfirmed: true))
-        XCTAssertFalse(ScanLabGeotagPolicy.canPublishPublic(location: nil, publicPlaceConfirmed: true, privacyConfirmed: true, rightsConfirmed: true))
         XCTAssertFalse(ScanLabGeotagPolicy.canPublishPublic(location: tokyo, publicPlaceConfirmed: false, privacyConfirmed: true, rightsConfirmed: true))
         XCTAssertFalse(ScanLabGeotagPolicy.canPublishPublic(location: tokyo, publicPlaceConfirmed: true, privacyConfirmed: false, rightsConfirmed: true))
         XCTAssertFalse(ScanLabGeotagPolicy.canPublishPublic(location: tokyo, publicPlaceConfirmed: true, privacyConfirmed: true, rightsConfirmed: false))
