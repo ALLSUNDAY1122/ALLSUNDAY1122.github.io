@@ -12,11 +12,28 @@ let userId = null;
 let scanId = null;
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 
+async function createFixtureSession() {
+  const anonymous = await supabase.auth.signInAnonymously();
+  if (!anonymous.error && anonymous.data.session?.access_token) return anonymous.data;
+  if (!anonymous.error?.message?.includes('Anonymous sign-ins are disabled')) {
+    throw new Error(`anonymous_auth_failed:${anonymous.error?.message ?? 'missing_session'}`);
+  }
+
+  const email = `d2-015-${Date.now()}@example.invalid`;
+  const password = `D2-015-${crypto.randomUUID()}-Aa1!`;
+  const emailSignup = await supabase.auth.signUp({ email, password });
+  if (emailSignup.error) throw new Error(`fixture_signup_failed:${emailSignup.error.message}`);
+  userId = emailSignup.data.user?.id ?? null;
+  if (!emailSignup.data.session?.access_token) {
+    throw new Error(`fixture_signup_requires_confirmation:user=${userId ?? 'unknown'}`);
+  }
+  return emailSignup.data;
+}
+
 try {
-  const { data: authData, error: authError } = await supabase.auth.signInAnonymously();
-  if (authError) throw new Error(`anonymous_auth_failed:${authError.message}`);
-  userId = authData.user?.id ?? null;
-  assert(userId, 'anonymous user missing');
+  const authData = await createFixtureSession();
+  userId = authData.user?.id ?? userId;
+  assert(userId, 'fixture user missing');
 
   const { data: initData, error: initError } = await supabase.functions.invoke('scanlab-upload', {
     body: { action: 'init', title: 'D2-015 runtime fixture', caption: 'ephemeral integration fixture' },
