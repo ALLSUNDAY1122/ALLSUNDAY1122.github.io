@@ -83,8 +83,14 @@ Deno.serve(async (req) => {
   const assetError = await removePaths(paths);
   if (assetError) return json({ error: "asset_delete_failed", retryable: true }, 503);
 
+  // Revoke every refresh token/session before removing the auth principal.
+  // Existing access JWTs can remain cryptographically valid until exp, so all
+  // sensitive endpoints must still resolve the token through Auth/getUser.
+  const { error: signOutError } = await admin.auth.admin.signOut(token, "global");
+  if (signOutError) return json({ error: "session_revoke_failed", retryable: true }, 503);
+
   const { error: deleteError } = await admin.auth.admin.deleteUser(user.id);
   if (deleteError) return json({ error: "account_delete_failed", retryable: true }, 503);
 
-  return json({ deleted: true, deleted_assets: paths.length });
+  return json({ deleted: true, deleted_assets: paths.length, sessions_revoked: true });
 });
