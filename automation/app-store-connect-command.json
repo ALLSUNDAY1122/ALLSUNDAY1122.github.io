@@ -1,13 +1,13 @@
 {
-  "request_id": "eisei2-build-upload-diagnostics-20260818-0630",
+  "request_id": "eisei2-stale-build-upload-files-20260818-0632",
   "requests": [
     {
-      "label": "eisei2-build-uploads",
-      "path": "/v1/apps/6799751657/buildUploads?limit=10&fields%5BbuildUploads%5D=cfBundleShortVersionString,cfBundleVersion,createdDate,state,platform,uploadedDate,build,assetFile,assetDescriptionFile,assetSpiFile,buildUploadFiles"
+      "label": "eisei2-upload-files",
+      "path": "/v1/buildUploads/0a191f57-c193-44e3-8ed2-ed3a89e9ce0f/buildUploadFiles?limit=20&fields%5BbuildUploadFiles%5D=assetDeliveryState,assetToken,assetType,fileName,fileSize,sourceFileChecksums,uploadOperations,uti"
     },
     {
-      "label": "eisei2-builds",
-      "path": "/v1/builds?filter%5Bapp%5D=6799751657&sort=-uploadedDate&limit=3&fields%5Bbuilds%5D=version,uploadedDate,processingState,buildAudienceType,usesNonExemptEncryption"
+      "label": "eisei2-upload-state",
+      "path": "/v1/buildUploads/0a191f57-c193-44e3-8ed2-ed3a89e9ce0f"
     }
   ]
 }
