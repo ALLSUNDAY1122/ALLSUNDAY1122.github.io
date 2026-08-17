@@ -30,6 +30,33 @@ async function removePaths(paths: string[]) {
   return null;
 }
 
+async function discoverOwnedObjects(userID: string) {
+  const files: string[] = [];
+  const pending = [userID];
+  while (pending.length) {
+    const prefix = pending.pop()!;
+    let offset = 0;
+    while (true) {
+      const { data, error } = await admin.storage.from("scanlab-assets").list(prefix, {
+        limit: 100,
+        offset,
+        sortBy: { column: "name", order: "asc" },
+      });
+      if (error) return { files: [], error };
+      const entries = data ?? [];
+      for (const entry of entries) {
+        const path = `${prefix}/${entry.name}`;
+        if (!ownedPath(userID, path)) continue;
+        if (entry.id) files.push(path);
+        else pending.push(path);
+      }
+      if (entries.length < 100) break;
+      offset += entries.length;
+    }
+  }
+  return { files, error: null };
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
   const token = bearer(req);
@@ -39,8 +66,6 @@ Deno.serve(async (req) => {
   const user = userData.user;
   if (userError || !user) return json({ error: "unauthorized" }, 401);
 
-  // DB rows are deleted by auth.users ON DELETE CASCADE. Storage is not, so all
-  // owned object paths must be collected before deleting the auth principal.
   const { data: scans, error: scansError } = await admin
     .from("scanlab_scans")
     .select("asset_path,preview_path")
@@ -51,27 +76,10 @@ Deno.serve(async (req) => {
     .flatMap((scan) => [scan.asset_path, scan.preview_path])
     .filter((path): path is string => ownedPath(user.id, path));
 
-  // Also enumerate the user's storage prefix. This removes orphaned/partial
-  // uploads that have no scan row and therefore would survive a cascade.
-  const discovered: string[] = [];
-  let offset = 0;
-  while (true) {
-    const { data, error } = await admin.storage.from("scanlab-assets").list(user.id, {
-      limit: 100,
-      offset,
-      sortBy: { column: "name", order: "asc" },
-    });
-    if (error) return json({ error: "asset_list_failed", retryable: true }, 503);
-    const objects = data ?? [];
-    for (const object of objects) {
-      const path = `${user.id}/${object.name}`;
-      if (ownedPath(user.id, path)) discovered.push(path);
-    }
-    if (objects.length < 100) break;
-    offset += objects.length;
-  }
+  const discovered = await discoverOwnedObjects(user.id);
+  if (discovered.error) return json({ error: "asset_list_failed", retryable: true }, 503);
 
-  const paths = Array.from(new Set([...referenced, ...discovered]));
+  const paths = Array.from(new Set([...referenced, ...discovered.files]));
   const assetError = await removePaths(paths);
   if (assetError) return json({ error: "asset_delete_failed", retryable: true }, 503);
 
