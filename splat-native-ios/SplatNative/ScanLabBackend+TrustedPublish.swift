@@ -23,11 +23,10 @@ extension ScanLabBackend {
         let user = session.user
         if visibility != .private && !contentConfirmed { throw ScanLabBackendError.contentConfirmationRequired }
 
-        // Privacy invariant: only an explicitly public scan may carry coordinates. This is
-        // enforced again here even if a future UI accidentally passes stale location state.
+        // Privacy invariant: only an explicitly public scan may carry coordinates. Public scans
+        // remain valid without a geotag; attaching a geotag adds the public-place attestation gate.
         let publishLocation = ScanLabGeotagPolicy.normalized(visibility: visibility, location: location, label: location?.label)
         if visibility == .public {
-            guard publishLocation != nil else { throw ScanLabBackendError.invalidPublicLocation }
             guard ScanLabGeotagPolicy.canPublishPublic(location: publishLocation, publicPlaceConfirmed: publicPlaceConfirmed, privacyConfirmed: privacyConfirmed, rightsConfirmed: rightsConfirmed) else { throw ScanLabBackendError.safetyConfirmationRequired }
         }
 
@@ -45,7 +44,7 @@ extension ScanLabBackend {
             try await client.storage.from("scanlab-assets").upload(assetPath, fileURL: package.assetURL, options: FileOptions(contentType: "application/octet-stream")); uploadedPaths.append(assetPath)
             try await client.storage.from("scanlab-assets").upload(manifestPath, fileURL: package.manifestURL, options: FileOptions(contentType: "application/octet-stream")); uploadedPaths.append(manifestPath)
             if let previewPath, let previewURL = package.previewURL { try await client.storage.from("scanlab-assets").upload(previewPath, fileURL: previewURL, options: FileOptions(contentType: "image/jpeg")); uploadedPaths.append(previewPath) }
-            let draft = ScanLabTrustedDraftInsert(ownerId: user.id, title: trimmedTitle, caption: String(caption.prefix(500)), visibility: visibility.rawValue, status: "draft", assetPath: assetPath, previewPath: previewPath, latitude: publishLocation?.latitude, longitude: publishLocation?.longitude, locationLabel: publishLocation?.label, publicPlaceConfirmed: visibility == .public && publicPlaceConfirmed, privacyConfirmed: visibility == .public && privacyConfirmed, rightsConfirmed: visibility == .public && rightsConfirmed, contentConfirmed: contentConfirmed)
+            let draft = ScanLabTrustedDraftInsert(ownerId: user.id, title: trimmedTitle, caption: String(caption.prefix(500)), visibility: visibility.rawValue, status: "draft", assetPath: assetPath, previewPath: previewPath, latitude: publishLocation?.latitude, longitude: publishLocation?.longitude, locationLabel: publishLocation?.label, publicPlaceConfirmed: visibility == .public && publishLocation != nil && publicPlaceConfirmed, privacyConfirmed: visibility == .public && privacyConfirmed, rightsConfirmed: visibility == .public && rightsConfirmed, contentConfirmed: contentConfirmed)
             let created: ScanLabTrustedCreatedScan = try await client.from("scanlab_scans").insert(draft).select("id").single().execute().value
             let published: ScanLabPublishResponse = try await client.functions.invoke("scanlab-publish", options: FunctionInvokeOptions(region: .apSoutheast1, body: ScanLabTrustedPublishRequest(scanId: created.id.uuidString.lowercased()), timeoutInterval: 30))
             await loadOwnerScans(); if visibility == .public { await loadPublicScans() }; return published
