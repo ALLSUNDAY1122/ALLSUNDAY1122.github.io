@@ -2,7 +2,7 @@ import Foundation
 
 enum PublicBrowsePolicy {
     static func isBrowsable(_ scan: ScanLabPublicScan) -> Bool {
-        scan.visibility == "public" && scan.author != nil && scan.modelUrl != nil
+        scan.visibility == "public" && scan.author != nil
     }
 
     static func scans(for authorID: UUID, in scans: [ScanLabPublicScan]) -> [ScanLabPublicScan] {
