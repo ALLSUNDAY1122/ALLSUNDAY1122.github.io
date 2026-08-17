@@ -34,6 +34,7 @@ function applyShareMetadata(item) {
   const pageTitle = item.title ? `${item.title} | Scan Lab` : 'Scan Lab 3D Viewer';
   const description = item.caption || 'Scan Labで公開された3D Gaussian Splatをブラウザで閲覧します。';
   const canonicalURL = id ? shareURL : `${location.origin}${location.pathname}`;
+  const previewAlt = item.title ? `${item.title} の3Dプレビュー` : 'Scan Lab 3Dプレビュー';
   document.title = pageTitle;
   setMeta('meta[name="description"]', description);
   setMeta('meta[property="og:title"]', pageTitle);
@@ -44,7 +45,9 @@ function applyShareMetadata(item) {
   setMeta('link[rel="canonical"]', canonicalURL, 'href');
   if (item.previewUrl) {
     setMeta('meta[property="og:image"]', item.previewUrl);
+    setMeta('meta[property="og:image:alt"]', previewAlt);
     setMeta('meta[name="twitter:image"]', item.previewUrl);
+    setMeta('meta[name="twitter:image:alt"]', previewAlt);
   }
 }
 
