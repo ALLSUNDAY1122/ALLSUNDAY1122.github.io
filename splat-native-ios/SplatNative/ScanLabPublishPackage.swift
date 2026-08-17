@@ -32,7 +32,7 @@ struct ScanLabPublishPackage {
     let manifest: ScanLabPublishManifest
 }
 
-enum ScanLabPublishPackageError: LocalizedError {
+enum ScanLabPublishPackageError: LocalizedError, Equatable {
     case invalidSource, sourceTooLarge, invalidSPZ, packageWriteFailed, packageVerificationFailed
 
     var errorDescription: String? {
