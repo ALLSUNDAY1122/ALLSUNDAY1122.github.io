@@ -99,15 +99,31 @@ require_text SplatNative/ScanLibraryView.swift 'restoreSavedProject'
 ! grep -R -n 'おもちゃばこ' SplatNative project.yml
 
 # D authenticated cloud sharing is explicit and isolated from the capture/reconstruction core.
-for f in ScanLabBackend.swift ScanLabShellView.swift PublishScanView.swift ScanLabAccountView.swift; do require_file "SplatNative/$f"; done
+for f in ScanLabBackend.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift PublishScanView.swift ScanLabAccountView.swift; do require_file "SplatNative/$f"; done
 require_text SplatNative/SplatNativeApp.swift 'ScanLabShellView()'
 require_text SplatNative/ScanLabShellView.swift 'RootScanView()'
 require_text SplatNative/ScanLabBackend.swift 'import Supabase'
 require_text SplatNative/ScanLabBackend.swift 'ScanLabVisibility'
+require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "offset"'
+require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "q"'
+require_text SplatNative/ScanLabShellView.swift '.searchable(text: $feed.query'
+require_text SplatNative/ScanLabShellView.swift '続きを再試行'
 require_text SplatNative/PublishScanView.swift 'contentConfirmed'
 require_text SplatNative/PublishScanView.swift 'publicPlaceConfirmed'
 require_text project.yml 'package: Supabase'
 require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
+# Discover pagination must advance only through rows actually consumed; otherwise prefetching can skip visible scans.
+python3 - <<'PY'
+from pathlib import Path
+s=Path('supabase/functions/scanlab-public/index.ts').read_text()
+assert 'let consumedRows = 0' in s
+assert 'consumedRows += 1' in s
+assert 'if (visible.length === limit) break' in s
+assert 'const nextOffset = offset + consumedRows' in s
+assert 'consumedRows < rows.length || rows.length === fetchCount' in s
+assert 'offset + rows.length' not in s
+print('PASS: Discover pagination cannot skip prefetched visible rows')
+PY
 # Network access must not leak into offline capture/reconstruction/storage core.
 ! grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
 # D parity work must not add advertising/analytics SDKs.
