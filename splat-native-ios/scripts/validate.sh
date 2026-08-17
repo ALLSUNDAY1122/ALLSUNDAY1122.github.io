@@ -109,7 +109,8 @@ require_text project.yml 'INFOPLIST_KEY_NSCameraUsageDescription'
 require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
 ! grep -qE 'INFOPLIST_KEY_NSLocationAlways|INFOPLIST_KEY_NSLocationAlwaysAndWhenInUse' project.yml
 ! grep -qE 'INFOPLIST_KEY_NSPhotoLibrary|INFOPLIST_KEY_NSMicrophoneUsageDescription|INFOPLIST_KEY_NSUserTrackingUsageDescription' project.yml
-# D2-012: prefetch pagination must not skip rows that were fetched but not yet emitted.
+# D2-012: prefetch pagination must not skip rows that were fetched but not yet emitted,
+# and the abuse-control offset cap must terminate instead of replaying the same page forever.
 python3 - <<'PY'
 from pathlib import Path
 s=Path('supabase/functions/scanlab-public/index.ts').read_text()
@@ -117,9 +118,11 @@ assert 'let consumedRows = 0' in s
 assert 'consumedRows += 1' in s
 assert 'if (visible.length === limit) break' in s
 assert 'const nextOffset = offset + consumedRows' in s
-assert 'consumedRows < rows.length || rows.length === fetchCount' in s
+assert 'const maxOffset = 10000' in s
+assert 'offset < maxOffset && (consumedRows < rows.length || rows.length === fetchCount)' in s
+assert 'nextOffset: hasMore ? nextOffset : null' in s
 assert 'offset + rows.length' not in s
-print('PASS: Discover pagination cannot skip prefetched visible rows')
+print('PASS: Discover pagination preserves prefetched rows and terminates at offset cap')
 PY
 ! grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
 ! grep -R -nE 'Firebase|Amplitude|Mixpanel|AppsFlyer|Adjust' SplatNative --include='*.swift'
