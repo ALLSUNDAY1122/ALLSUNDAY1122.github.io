@@ -46,10 +46,11 @@ jobs:
           grep -q 'nlohmann-json-MIT.txt' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MsplatRuntimeSmokeTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatReconstructionPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'ScanLabPublishPackageTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
-      - name: Build msplat smoke-test bundle for iOS Simulator
+      - name: Build simulator test bundle
         timeout-minutes: 8
         working-directory: splat-native-ios
         shell: bash
@@ -69,6 +70,34 @@ jobs:
             while IFS= read -r line; do
               printf '::error title=Simulator test build::%s\n' "${line//$'\r'/}"
             done < /tmp/splat-test-diagnostics.txt
+          fi
+          exit "$status"
+      - name: Run publish package regression tests
+        timeout-minutes: 8
+        working-directory: splat-native-ios
+        shell: bash
+        run: |
+          set -euo pipefail
+          SIM_UDID=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; print(next(device["udid"] for devices in d.values() for device in devices if "iPhone" in device["name"]))')
+          test -n "$SIM_UDID"
+          xcrun simctl boot "$SIM_UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$SIM_UDID" -b
+          set +e
+          set -o pipefail
+          xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
+            -sdk iphonesimulator -destination "platform=iOS Simulator,id=$SIM_UDID" \
+            -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO \
+            -only-testing:SplatNativeTests/ScanLabPublishPackageTests \
+            test-without-building 2>&1 | tee /tmp/scanlab-publish-tests.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            grep -E '(^|:) error:|failed|Failure|TEST FAILED|XCTAssert|threw error|Test Case' /tmp/scanlab-publish-tests.log | tail -100 > /tmp/scanlab-publish-test-diagnostics.txt || true
+            if [ ! -s /tmp/scanlab-publish-test-diagnostics.txt ]; then
+              tail -100 /tmp/scanlab-publish-tests.log > /tmp/scanlab-publish-test-diagnostics.txt
+            fi
+            while IFS= read -r line; do
+              printf '::error title=D2-005 publish package regression::%s\n' "${line//$'\r'/}"
+            done < /tmp/scanlab-publish-test-diagnostics.txt
           fi
           exit "$status"
       - name: Compile for iPhone without signing
