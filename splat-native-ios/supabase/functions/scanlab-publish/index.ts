@@ -23,6 +23,7 @@ function cleanText(value: unknown, maxLength: number) {
 
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const shareBase = "https://allsunday1122.github.io/splat-native-ios/viewer/";
+let viewerReadyUntil = 0;
 
 function shareUrlFor(scan: { id: string; visibility: string; share_token: string }) {
   return scan.visibility === "public"
@@ -30,6 +31,28 @@ function shareUrlFor(scan: { id: string; visibility: string; share_token: string
     : scan.visibility === "unlisted"
       ? `${shareBase}#token=${encodeURIComponent(scan.share_token)}`
       : null;
+}
+
+async function viewerIsReady() {
+  if (Date.now() < viewerReadyUntil) return true;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 2500);
+  try {
+    const response = await fetch(shareBase, {
+      method: "HEAD",
+      redirect: "follow",
+      signal: controller.signal,
+      headers: { Accept: "text/html" },
+    });
+    const contentType = response.headers.get("content-type") ?? "";
+    const ready = response.ok && contentType.toLowerCase().includes("text/html");
+    if (ready) viewerReadyUntil = Date.now() + 60_000;
+    return ready;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 Deno.serve(async (req) => {
@@ -64,6 +87,9 @@ Deno.serve(async (req) => {
   }
 
   if (scan.status === "published") {
+    if (["public", "unlisted"].includes(scan.visibility) && !(await viewerIsReady())) {
+      return json({ error: "viewer_unavailable" }, 503);
+    }
     return json({
       id: scan.id,
       title: scan.title,
@@ -105,6 +131,10 @@ Deno.serve(async (req) => {
   if (!manifest.metadata?.size || manifest.metadata.size < 2 || manifest.metadata.size > 65536) return json({ error: "manifest_invalid" }, 409);
   if (scene.metadata?.mimetype && scene.metadata.mimetype !== "application/octet-stream") return json({ error: "asset_mime_invalid" }, 409);
   if (manifest.metadata?.mimetype && !["application/json", "application/octet-stream"].includes(manifest.metadata.mimetype)) return json({ error: "manifest_mime_invalid" }, 409);
+
+  if (["public", "unlisted"].includes(scan.visibility) && !(await viewerIsReady())) {
+    return json({ error: "viewer_unavailable" }, 503);
+  }
 
   const metadata: Record<string, string> = {};
   if (title !== null) metadata.title = title;
