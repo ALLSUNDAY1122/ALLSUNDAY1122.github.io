@@ -1,7 +1,7 @@
 import Foundation
 
 /// Privacy boundary for Scan Lab geotags.
-/// Location is opt-in, valid only for public scans, and is stripped from every
+/// Location is explicit opt-in, valid only for public scans, and is stripped from every
 /// private/unlisted publish request before it reaches the backend.
 enum ScanLabGeotagPolicy {
     static func normalized(
@@ -23,13 +23,17 @@ enum ScanLabGeotagPolicy {
         )
     }
 
+    /// Public visibility does not imply a geotag. Privacy/rights attestations remain required
+    /// for public UGC; the public-place attestation is required only when location is attached.
     static func canPublishPublic(
         location: ScanLabLocation?,
         publicPlaceConfirmed: Bool,
         privacyConfirmed: Bool,
         rightsConfirmed: Bool
     ) -> Bool {
-        normalized(visibility: .public, location: location, label: location?.label) != nil &&
-        publicPlaceConfirmed && privacyConfirmed && rightsConfirmed
+        guard privacyConfirmed, rightsConfirmed else { return false }
+        guard let location else { return true }
+        return normalized(visibility: .public, location: location, label: location.label) != nil &&
+            publicPlaceConfirmed
     }
 }
