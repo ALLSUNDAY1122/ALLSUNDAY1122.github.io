@@ -1,13 +1,25 @@
 {
-  "request_id": "eisei2-processing-poll-20260818-0644",
+  "request_id": "eisei2-submission-audit-20260818-0650",
   "requests": [
     {
-      "label": "eisei2-build",
-      "path": "/v1/builds?filter%5Bapp%5D=6799751657&sort=-uploadedDate&limit=3&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+      "label": "eisei2-version-localizations",
+      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/appStoreVersionLocalizations?limit=20"
     },
     {
-      "label": "eisei2-build-uploads",
-      "path": "/v1/apps/6799751657/buildUploads?limit=5&fields%5BbuildUploads%5D=cfBundleShortVersionString,cfBundleVersion,createdDate,state,platform,uploadedDate,build"
+      "label": "eisei2-review-detail",
+      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/appStoreReviewDetail"
+    },
+    {
+      "label": "eisei2-app-infos",
+      "path": "/v1/apps/6799751657/appInfos?limit=5&include=appInfoLocalizations,ageRatingDeclaration,primaryCategory,secondaryCategory"
+    },
+    {
+      "label": "eisei2-build",
+      "path": "/v1/builds/0a191f57-c193-44e3-8ed2-ed3a89e9ce0f"
+    },
+    {
+      "label": "eisei2-version-build",
+      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/build"
     }
   ]
 }
