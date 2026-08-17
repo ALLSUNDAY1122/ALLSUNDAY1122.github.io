@@ -8,6 +8,7 @@ WEB_DST="$SCRIPT_DIR/HealthManager2/Web"
 ASSET_DIR="$SCRIPT_DIR/HealthManager2/Assets.xcassets/AppIcon.appiconset"
 
 rm -rf "$WEB_DST"
+rm -rf "$SCRIPT_DIR/HealthManager2/Assets.xcassets"
 mkdir -p "$WEB_DST" "$ASSET_DIR"
 
 files=(
@@ -28,52 +29,33 @@ done
 # intentionally omitted. All required learning assets are already inside the app.
 
 if command -v magick >/dev/null 2>&1; then
-  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 1024x1024 "$ASSET_DIR/AppIcon.png"
-  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 120x120 "$ASSET_DIR/AppIcon-120.png"
-  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 180x180 "$ASSET_DIR/AppIcon-180.png"
-  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 152x152 "$ASSET_DIR/AppIcon-152.png"
-  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 167x167 "$ASSET_DIR/AppIcon-167.png"
-  cp "$ASSET_DIR/AppIcon-120.png" "$SCRIPT_DIR/HealthManager2/AppIcon-120.png"
-  cp "$ASSET_DIR/AppIcon-152.png" "$SCRIPT_DIR/HealthManager2/AppIcon-152.png"
-  cp "$ASSET_DIR/AppIcon-167.png" "$SCRIPT_DIR/HealthManager2/AppIcon-167.png"
-  cp "$ASSET_DIR/AppIcon-180.png" "$SCRIPT_DIR/HealthManager2/AppIcon-180.png"
+  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 1024x1024 "$ASSET_DIR/AppIcon-1024.png"
 else
-  echo "ImageMagick is required to generate AppIcon.png" >&2
+  echo "ImageMagick is required to generate AppIcon-1024.png" >&2
   exit 1
 fi
 
+python3 - "$ASSET_DIR/AppIcon-1024.png" <<'PY'
+from pathlib import Path
+import struct, sys
+p = Path(sys.argv[1])
+b = p.read_bytes()
+assert b[:8] == b'\x89PNG\r\n\x1a\n', 'AppIcon must be PNG'
+assert b[12:16] == b'IHDR', 'invalid PNG header'
+w, h = struct.unpack('>II', b[16:24])
+assert (w, h) == (1024, 1024), (w, h)
+print('PASS: AppIcon source is 1024x1024 PNG')
+PY
+
+# Match the known-good learning-sprint Xcode 15/16 single-size AppIcon catalog.
 cat > "$ASSET_DIR/Contents.json" <<'JSON'
 {
   "images" : [
     {
-      "filename" : "AppIcon.png",
+      "filename" : "AppIcon-1024.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
-    },
-    {
-      "filename" : "AppIcon-120.png",
-      "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "60x60"
-    },
-    {
-      "filename" : "AppIcon-180.png",
-      "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "60x60"
-    },
-    {
-      "filename" : "AppIcon-152.png",
-      "idiom" : "ipad",
-      "scale" : "2x",
-      "size" : "76x76"
-    },
-    {
-      "filename" : "AppIcon-167.png",
-      "idiom" : "ipad",
-      "scale" : "2x",
-      "size" : "83.5x83.5"
     }
   ],
   "info" : {
@@ -83,4 +65,4 @@ cat > "$ASSET_DIR/Contents.json" <<'JSON'
 }
 JSON
 
-echo "Prepared HealthManager2 bundled web assets (audited content set)."
+echo "Prepared HealthManager2 bundled web assets and compiled AppIcon catalog inputs."
