@@ -1,0 +1,81 @@
+name: Release API Command Bus
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: read
+
+concurrency:
+  group: release-command-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  route:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      (startsWith(github.event.issue.title, '[ASC-CMD]') || startsWith(github.event.issue.title, '[CM-CMD]'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check PyYAML
+
+      - name: Materialize non-secret command
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          raw = os.environ.get('ISSUE_BODY', '').strip()
+          data = json.loads(raw)
+          if not isinstance(data, dict):
+              raise SystemExit('Issue body must be one JSON object')
+          forbidden = ('secret','token','password','private_key','issuer_id','key_id','jwt','credential')
+          lowered = json.dumps(data, ensure_ascii=False).lower()
+          if any(term in lowered for term in forbidden):
+              raise SystemExit('Command issue must never contain credential fields or values')
+          Path('/tmp/release-command.json').write_text(
+              json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8'
+          )
+          PY
+
+      - name: Execute App Store Connect command
+        if: startsWith(github.event.issue.title, '[ASC-CMD]')
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python scripts/app_store_connect_gateway.py \
+            --command /tmp/release-command.json \
+            --output release-result.json
+
+      - name: Execute Codemagic command
+        if: startsWith(github.event.issue.title, '[CM-CMD]')
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          CM_APP_ID: ${{ vars.CM_APP_ID }}
+        run: |
+          python scripts/codemagic_build_gateway.py \
+            --command /tmp/release-command.json \
+            --output release-result.json
+
+      - name: Upload sanitized command result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-command-result-${{ github.event.issue.number }}-${{ github.run_id }}
+          path: release-result.json
+          if-no-files-found: error
+          retention-days: 7
