@@ -1,5 +1,4 @@
 import XCTest
-@testable import SplatNative
 
 final class ScanLabGeotagPolicyTests: XCTestCase {
     private let tokyo = ScanLabLocation(latitude: 35.681236, longitude: 139.767125, label: "Tokyo")
