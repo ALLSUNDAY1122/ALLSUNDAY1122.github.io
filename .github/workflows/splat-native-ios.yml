@@ -32,6 +32,7 @@ jobs:
       - name: Static checks
         run: |
           bash splat-native-ios/scripts/validate.sh
+          node splat-native-ios/scripts/test-unpublish-lifecycle.mjs
           test -f splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           sips -g pixelWidth -g pixelHeight splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | grep -q '1024'
       - name: S2 reconstruction contracts
