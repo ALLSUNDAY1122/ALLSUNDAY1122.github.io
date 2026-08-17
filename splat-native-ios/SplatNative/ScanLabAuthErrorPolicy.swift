@@ -1,5 +1,5 @@
 import Foundation
-import Supabase
+@preconcurrency import Supabase
 
 enum ScanLabAuthOperation {
     case signIn
