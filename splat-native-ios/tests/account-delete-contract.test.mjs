@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const source = readFileSync(new URL('../supabase/functions/scanlab-delete-account/index.ts', import.meta.url), 'utf8');
+const live = readFileSync(new URL('./account-delete-live-e2e.ts', import.meta.url), 'utf8');
 
 assert.match(source, /admin\.auth\.getUser\(token\)/, 'deletion must authenticate the bearer token');
 assert.match(source, /\.eq\("owner_id", user\.id\)/, 'scan lookup must be scoped to the authenticated owner');
@@ -20,5 +21,17 @@ assert.ok(revokeIndex < deleteIndex, 'session revocation must precede auth-princ
 assert.match(source, /session_revoke_failed/, 'session revocation failure must stop destructive completion');
 assert.match(source, /retryable: true/, 'pre-auth deletion failures must be explicitly retryable');
 assert.match(source, /"Cache-Control": "no-store"/, 'account deletion responses must not be cached');
+
+assert.match(live, /D2_ACCOUNT_DELETE_E2E.*!== "1"/, 'live destructive gate must require explicit opt-in');
+assert.match(live, /SUPABASE_SERVICE_ROLE_KEY/, 'live E2E must use server-only admin credentials');
+assert.match(live, /admin\.auth\.admin\.createUser/, 'live E2E must provision an isolated disposable account');
+assert.match(live, /@example\.com/, 'live E2E must use a non-delivery reserved email domain');
+assert.match(live, /nested\/orphan\.bin/, 'live E2E must exercise a nested orphan storage object');
+assert.match(live, /functions\.invoke\("scanlab-delete-account"/, 'live E2E must invoke the deployed deletion function');
+assert.match(live, /admin\.auth\.admin\.getUserById/, 'live E2E must verify auth-principal absence');
+assert.match(live, /assertNoStoragePrefix/, 'live E2E must verify storage-prefix absence');
+assert.match(live, /refreshSession\(\)/, 'live E2E must verify refresh-token invalidation');
+assert.match(live, /signInWithPassword/, 'live E2E must verify deleted credentials cannot reauthenticate');
+assert.match(live, /finally/, 'live E2E must contain emergency cleanup');
 
 console.log('account-delete-contract: PASS');
