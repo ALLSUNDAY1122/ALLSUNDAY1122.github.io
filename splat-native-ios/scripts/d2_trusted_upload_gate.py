@@ -3,6 +3,7 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
 migration = (root / "supabase/migrations/20260817214149_scanlab_d2_trusted_upload_v17.sql").read_text()
+exec_fix = (root / "supabase/migrations/20260817220410_scanlab_d2_trusted_upload_policy_exec_v18.sql").read_text()
 publish = (root / "supabase/functions/scanlab-publish/index.ts").read_text()
 
 required_migration = [
@@ -28,6 +29,9 @@ for needle in required_migration:
     assert needle in migration, f"missing migration guard: {needle}"
 for needle in required_publish:
     assert needle in publish, f"missing publish validation: {needle}"
+
+assert "grant execute on function scanlab_private.is_trusted_upload_path(text) to authenticated;" in exec_fix, \
+    "RLS policy helper must remain executable by authenticated"
 
 for forbidden in ["result.splat", "startsWith(`${user.id}/`)"]:
     assert forbidden not in publish, f"legacy permissive path remains: {forbidden}"
