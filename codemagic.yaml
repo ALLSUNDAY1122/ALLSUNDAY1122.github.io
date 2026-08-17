@@ -152,6 +152,11 @@ workflows:
         script: |
           cd "$CM_BUILD_DIR/ios/health-manager-2"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          PLIST="$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleIconName AppIcon" "$PLIST" 2>/dev/null || /usr/libexec/PlistBuddy -c "Add :CFBundleIconName string AppIcon" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Delete :CFBundleIconFiles" "$PLIST" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconFiles array" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconFiles:0 string AppIcon-120" "$PLIST"
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \
