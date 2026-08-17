@@ -1,12 +1,7 @@
 name: D2-015 owner delete runtime
 
 on:
-  push:
-    branches:
-      - scaniverse/d2-w15-scan-delete
-    paths:
-      - splat-native-ios/scripts/d2_owner_delete_runtime.mjs
-      - .github/workflows/scaniverse-d2-owner-delete-runtime.yml
+  workflow_dispatch:
 
 jobs:
   runtime:
@@ -23,4 +18,6 @@ jobs:
         env:
           SUPABASE_URL: https://gybchnyqlqwmajwkhsly.supabase.co
           SUPABASE_PUBLISHABLE_KEY: sb_publishable_jYM9b6kivVT80sbAQ2syFw_zSUANBHV
+          SUPABASE_TEST_EMAIL: ${{ secrets.SCANLAB_RUNTIME_TEST_EMAIL }}
+          SUPABASE_TEST_PASSWORD: ${{ secrets.SCANLAB_RUNTIME_TEST_PASSWORD }}
         run: node splat-native-ios/scripts/d2_owner_delete_runtime.mjs
