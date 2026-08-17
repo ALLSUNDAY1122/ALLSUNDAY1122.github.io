@@ -113,6 +113,9 @@ require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
 # D parity work must not add advertising/analytics SDKs.
 ! grep -R -nE 'Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
 
+# D2-015 owner delete / asset cleanup / recovery regression gate.
+python3 scripts/test_d2_owner_delete.py
+
 plutil -lint SplatNative/PrivacyInfo.xcprivacy >/dev/null
 python3 - <<'PY'
 import plistlib
