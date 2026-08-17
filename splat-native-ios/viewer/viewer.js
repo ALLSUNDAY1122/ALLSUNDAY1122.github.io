@@ -123,19 +123,61 @@ async function main() {
   }
 }
 
-share.addEventListener('click', async () => {
-  try {
-    const shareData = { title: document.title, text: caption.textContent || undefined, url: shareURL };
-    if (navigator.share) {
-      await navigator.share(shareData);
-    } else if (navigator.clipboard) {
+async function copyShareURL() {
+  if (navigator.clipboard?.writeText) {
+    try {
       await navigator.clipboard.writeText(shareURL);
-      share.textContent = 'URLをコピーしました';
-      setTimeout(() => { share.textContent = '共有'; }, 1600);
+      return true;
+    } catch {
+      // Fall through to the legacy DOM copy path for restricted clipboard contexts.
     }
-  } catch (error) {
-    if (error?.name !== 'AbortError') console.error(error);
   }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = shareURL;
+  textarea.setAttribute('readonly', '');
+  textarea.setAttribute('aria-hidden', 'true');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  textarea.style.pointerEvents = 'none';
+  document.body.appendChild(textarea);
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+  let copied = false;
+  try {
+    copied = document.execCommand('copy');
+  } catch {
+    copied = false;
+  } finally {
+    textarea.remove();
+  }
+  return copied;
+}
+
+function showCopiedFeedback() {
+  share.textContent = 'URLをコピーしました';
+  setTimeout(() => { share.textContent = '共有'; }, 1600);
+}
+
+share.addEventListener('click', async () => {
+  const shareData = { title: document.title, text: caption.textContent || undefined, url: shareURL };
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      return;
+    } catch (error) {
+      if (error?.name === 'AbortError') return;
+      console.error(error);
+    }
+  }
+
+  if (await copyShareURL()) {
+    showCopiedFeedback();
+    return;
+  }
+
+  // Last-resort manual path: only invoked after a user gesture and when browser copy APIs fail.
+  window.prompt('共有URLをコピーしてください', shareURL);
 });
 
 main();
