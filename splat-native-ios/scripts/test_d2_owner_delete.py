@@ -8,7 +8,7 @@ public = (root / "supabase/functions/scanlab-public/index.ts").read_text()
 
 required = [
     'update({ status: "hidden", moderation_status: "pending" })',
-    'error: "asset_cleanup_pending", retryable: true',
+    'asset_cleanup_pending',
     'asset_cleanup_limit_exceeded',
     'for (let offset = 0; offset < 1000; offset += pageSize)',
     'offset,',
@@ -18,8 +18,12 @@ required = [
     'previewPath !== `${folder}/preview.png`',
     'for (let i = 0; i < paths.length; i += 100)',
     '.from("scanlab-assets").remove(batch)',
+    'async function cleanupCanonicalFolder(ownerId: string, scanId: string',
+    'paths.add(`${folder}/scene.spz`)',
+    'paths.add(`${folder}/manifest.json`)',
+    'if (!scan) {',
+    'cleanupCanonicalFolder(user.id, body.scanId)',
     '.from("scanlab_scans")\n    .delete()',
-    'if (!scan) return json({ deleted: true',
 ]
 for needle in required:
     assert needle in fn, f"missing delete recovery invariant: {needle}"
@@ -27,6 +31,7 @@ for needle in required:
 for forbidden in [
     'safeOwnedPath(scan.asset_path, user.id)',
     '.remove(paths)',
+    'if (!scan) return json({ deleted: true',
 ]:
     assert forbidden not in fn, f"unsafe delete behavior remains: {forbidden}"
 
