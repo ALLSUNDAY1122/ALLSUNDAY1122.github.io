@@ -98,9 +98,25 @@ struct ScanLabOwnerScan: Decodable, Identifiable, Hashable {
         case publishedAt = "published_at"
         case createdAt = "created_at"
     }
+    var location: ScanLabLocation? { guard let latitude, let longitude else { return nil }; return ScanLabLocation(latitude: latitude, longitude: longitude, label: locationLabel) }
 }
 
-private struct ScanLabCreatedScan: Decodable { let id: UUID }
+struct ScanLabPublishResponse: Decodable {
+    let id: UUID
+    let status: String
+    let visibility: String
+    let shareToken: UUID
+    enum CodingKeys: String, CodingKey { case id, status, visibility; case shareToken = "share_token" }
+}
+private struct ScanLabPublishRequest: Encodable { let scanId: String; enum CodingKeys: String, CodingKey { case scanId = "scan_id" } }
+private struct ScanLabDeleteAccountResponse: Decodable { let deleted: Bool }
+private struct ScanLabScanStatusUpdate: Encodable { let status: String }
+private struct ScanLabProfileInsert: Encodable {
+    let id: UUID
+    let handle: String
+    let displayName: String
+    enum CodingKeys: String, CodingKey { case id, handle; case displayName = "display_name" }
+}
 private struct ScanLabDraftInsert: Encodable {
     let ownerId: UUID
     let title: String
@@ -129,16 +145,7 @@ private struct ScanLabDraftInsert: Encodable {
         case contentConfirmed = "content_confirmed"
     }
 }
-
-struct ScanLabPublishResponse: Decodable, Hashable {
-    let id: UUID
-    let visibility: String
-    let publishedAt: String?
-    let shareUrl: URL?
-}
-private struct ScanLabPublishRequest: Encodable { let scanId: String }
-private struct ScanLabDeleteAccountResponse: Decodable { let deleted: Bool }
-private struct ScanLabScanStatusUpdate: Encodable { let status: String }
+private struct ScanLabCreatedScan: Decodable { let id: UUID }
 private struct ScanLabLikeInsert: Encodable {
     let scanId: UUID
     let userId: UUID
@@ -333,7 +340,17 @@ final class ScanLabBackend: ObservableObject {
     }
     func deleteAccount() async throws {
         let response: ScanLabDeleteAccountResponse = try await client.functions.invoke("scanlab-delete-account", options: FunctionInvokeOptions(region: .apSoutheast1, body: ["confirm": true], timeoutInterval: 30))
-        guard response.deleted else { throw ScanLabBackendError.invalidServerResponse }; try? await client.auth.signOut()
+        guard response.deleted else { throw ScanLabBackendError.invalidServerResponse }
+        do { try await client.auth.signOut() } catch {
+            // The server already revoked all refresh tokens and deleted the Auth principal.
+            // Keep the app state consistent even if the post-delete sign-out request observes that deletion first.
+        }
+        isAuthenticated = false
+        currentUserEmail = nil
+        ownerScans = []
+        profile = nil
+        notice = "アカウントとクラウドデータを削除しました。"
+        await loadPublicScans()
     }
     func shareURL(for scan: ScanLabOwnerScan) -> URL? {
         guard scan.status == "published", scan.moderationStatus == "approved" else { return nil }
