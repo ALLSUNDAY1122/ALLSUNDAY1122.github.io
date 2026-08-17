@@ -43,10 +43,18 @@ targets:
         CFBundleDisplayName: 第二種衛生管理者
         CFBundleIconName: AppIcon
         CFBundleIconFiles:
-          - AppIcon-120
-          - AppIcon-152
-          - AppIcon-167
-          - AppIcon-180
+          - AppIcon-120.png
+          - AppIcon-152.png
+          - AppIcon-167.png
+          - AppIcon-180.png
+        CFBundleIcons:
+          CFBundlePrimaryIcon:
+            CFBundleIconFiles:
+              - AppIcon-120.png
+              - AppIcon-180.png
+            CFBundleIconName: AppIcon
+        UIDeviceFamily:
+          - 1
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         ITSAppUsesNonExemptEncryption: false
