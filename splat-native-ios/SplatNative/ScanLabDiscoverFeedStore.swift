@@ -101,8 +101,9 @@ final class ScanLabDiscoverFeedStore: ObservableObject {
         if let cursor, !cursor.isEmpty {
             queryItems.append(URLQueryItem(name: "cursor", value: cursor))
         }
-        if !query.isEmpty {
-            queryItems.append(URLQueryItem(name: "q", value: query))
+        let trimmed = query
+        if !trimmed.isEmpty {
+            queryItems.append(URLQueryItem(name: "q", value: String(trimmed.prefix(80))))
         }
         components.queryItems = queryItems
         guard let url = components.url else { throw ScanLabBackendError.invalidServerResponse }
