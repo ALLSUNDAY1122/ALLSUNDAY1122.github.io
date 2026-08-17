@@ -210,15 +210,22 @@ final class ScanLabBackend: ObservableObject {
     }
 
     private func observeAuth() async {
+        var waitingForInitialRefresh = false
+
         for await state in client.auth.authStateChanges {
             let event: ScanLabSessionEvent
             switch state.event {
             case .initialSession:
-                event = .initialSession(hasSession: state.session != nil)
+                event = .initialSession(
+                    hasSession: state.session != nil,
+                    isExpired: state.session?.isExpired ?? false
+                )
+                waitingForInitialRefresh = ScanLabSessionPolicy.needsRefreshBeforePrivateData(after: event)
             case .signedIn:
                 event = .signedIn
             case .signedOut:
                 event = .signedOut
+                waitingForInitialRefresh = false
             case .tokenRefreshed:
                 event = .tokenRefreshed
             case .userUpdated:
@@ -231,13 +238,17 @@ final class ScanLabBackend: ObservableObject {
 
             if let session = state.session, ScanLabSessionPolicy.isAuthenticated(after: event) {
                 applyAuthenticatedSession(session)
-                if ScanLabSessionPolicy.shouldReloadPrivateData(after: event) {
+                let shouldReloadPrivateData = ScanLabSessionPolicy.shouldReloadPrivateData(after: event)
+                    || (event == .tokenRefreshed && waitingForInitialRefresh)
+                if shouldReloadPrivateData {
+                    waitingForInitialRefresh = false
                     async let scans: Void = loadOwnerScans()
                     async let loadedProfile: Void = loadProfile()
                     _ = await (scans, loadedProfile)
                     await loadPublicScans()
                 }
             } else {
+                waitingForInitialRefresh = false
                 clearAuthenticatedState(requireSignInNotice: false)
                 if event == .signedOut {
                     await loadPublicScans()
@@ -289,7 +300,6 @@ final class ScanLabBackend: ObservableObject {
     func signOut() async {
         do {
             try await client.auth.signOut()
-            await loadPublicScans()
         } catch {
             notice = error.localizedDescription
         }
