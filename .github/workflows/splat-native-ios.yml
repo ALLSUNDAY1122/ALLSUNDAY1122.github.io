@@ -36,6 +36,8 @@ jobs:
           sips -g pixelWidth -g pixelHeight splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | grep -q '1024'
       - name: S2 reconstruction contracts
         run: python3 splat-native-ios/scripts/test_reconstruction_contracts.py
+      - name: D2 browser viewer contracts
+        run: python3 splat-native-ios/scripts/test_browser_viewer_contracts.py
       - name: Generate project and verify bundled resources
         working-directory: splat-native-ios
         run: |
