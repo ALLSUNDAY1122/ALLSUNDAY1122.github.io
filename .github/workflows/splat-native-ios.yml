@@ -52,12 +52,25 @@ jobs:
       - name: Build msplat smoke-test bundle for iOS Simulator
         timeout-minutes: 8
         working-directory: splat-native-ios
+        shell: bash
         run: |
-          set -euo pipefail
+          set +e
+          set -o pipefail
           xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -parallel-testing-enabled NO \
-            CODE_SIGNING_ALLOWED=NO build-for-testing
+            CODE_SIGNING_ALLOWED=NO build-for-testing 2>&1 | tee /tmp/splat-test-build.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            grep -E '(^|:) error:|fatal error:|BUILD FAILED|The following build commands failed:|Command .* failed|linker command failed|Undefined symbols|duplicate symbol|Could not|unable to' /tmp/splat-test-build.log | tail -80 > /tmp/splat-test-diagnostics.txt || true
+            if [ ! -s /tmp/splat-test-diagnostics.txt ]; then
+              tail -80 /tmp/splat-test-build.log > /tmp/splat-test-diagnostics.txt
+            fi
+            while IFS= read -r line; do
+              printf '::error title=Simulator test build::%s\n' "${line//$'\r'/}"
+            done < /tmp/splat-test-diagnostics.txt
+          fi
+          exit "$status"
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true
