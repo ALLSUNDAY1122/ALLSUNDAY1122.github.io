@@ -38,6 +38,8 @@ jobs:
         run: python3 splat-native-ios/scripts/test_reconstruction_contracts.py
       - name: D2 browser viewer contracts
         run: python3 splat-native-ios/scripts/test_browser_viewer_contracts.py
+      - name: D2 live viewer readiness
+        run: python3 splat-native-ios/scripts/test_browser_viewer_live_readiness.py
       - name: Generate project and verify bundled resources
         working-directory: splat-native-ios
         run: |
