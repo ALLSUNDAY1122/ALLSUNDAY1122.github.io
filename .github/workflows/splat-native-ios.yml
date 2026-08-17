@@ -34,6 +34,12 @@ jobs:
           bash splat-native-ios/scripts/validate.sh
           test -f splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           sips -g pixelWidth -g pixelHeight splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | grep -q '1024'
+      - name: Hosted ScanLab auth readiness gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node splat-native-ios/scripts/scanlab_auth_readiness.mjs | tee /tmp/scanlab-auth-readiness.json
+          grep -q '"status":"PASS"' /tmp/scanlab-auth-readiness.json
       - name: Live ScanLab auth/session/profile E2E gate
         env:
           SCANLAB_E2E_EMAIL: ${{ secrets.SCANLAB_E2E_EMAIL }}
