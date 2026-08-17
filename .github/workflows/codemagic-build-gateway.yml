@@ -35,11 +35,64 @@ jobs:
             --command automation/codemagic-build-command.json \
             --output codemagic-result.json
 
+      - name: Inspect Codemagic build actions
+        if: always()
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+
+          result_path = Path('codemagic-result.json')
+          if not result_path.exists():
+              raise SystemExit(0)
+          result = json.loads(result_path.read_text(encoding='utf-8'))
+          build_id = result.get('build_id')
+          token = os.environ.get('CM_API_TOKEN', '').strip()
+          if not build_id or not token:
+              raise SystemExit(0)
+
+          req = urllib.request.Request(
+              f'https://codemagic.io/api/v3/builds/{build_id}/actions',
+              headers={'x-auth-token': token, 'Accept': 'application/json'},
+              method='GET',
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  payload = json.loads(response.read().decode('utf-8'))
+          except urllib.error.HTTPError as exc:
+              raw = exc.read().decode('utf-8', errors='replace')
+              payload = {'http_status': exc.code, 'error': raw[:2000]}
+
+          sensitive = ('secret', 'token', 'password', 'credential', 'private', 'apikey', 'api_key', 'environment', 'variable')
+          def clean(value):
+              if isinstance(value, dict):
+                  out = {}
+                  for key, child in value.items():
+                      if any(part in str(key).lower() for part in sensitive):
+                          out[key] = '[REDACTED]'
+                      else:
+                          out[key] = clean(child)
+                  return out
+              if isinstance(value, list):
+                  return [clean(item) for item in value]
+              return value
+
+          Path('codemagic-actions.json').write_text(
+              json.dumps(clean(payload), ensure_ascii=False, indent=2),
+              encoding='utf-8',
+          )
+          print(f'PASS: collected action diagnostics for Codemagic build {build_id}')
+          PY
+
       - name: Upload Codemagic result
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: codemagic-result-${{ github.run_id }}
-          path: codemagic-result.json
+          path: |
+            codemagic-result.json
+            codemagic-actions.json
           if-no-files-found: error
           retention-days: 7
