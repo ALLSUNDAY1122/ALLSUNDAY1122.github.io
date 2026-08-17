@@ -77,10 +77,18 @@ assert.match(account, /backend\.updatePublishedMetadata\(scan, title: editTitle,
 
 assert.match(html, /property="og:title"/);
 assert.match(html, /property="og:description"/);
+assert.match(html, /property="og:image" content=""/);
+assert.match(html, /property="og:image:alt" content=""/);
 assert.match(html, /name="twitter:card" content="summary_large_image"/);
+assert.match(html, /name="twitter:image" content=""/);
+assert.match(html, /name="twitter:image:alt" content=""/);
 assert.match(html, /name="referrer" content="no-referrer"/);
 assert.match(html, /rel="canonical"/);
 assert.match(html, /id="status-preview"/);
+assert.match(viewer, /meta\[property="og:image"\]/);
+assert.match(viewer, /meta\[property="og:image:alt"\]/);
+assert.match(viewer, /meta\[name="twitter:image"\]/);
+assert.match(viewer, /meta\[name="twitter:image:alt"\]/);
 
 const legacy = parseShareKey('https://example.test/viewer/?token=11111111-1111-1111-1111-111111111111');
 assert.equal(legacy.token, '11111111-1111-1111-1111-111111111111');
