@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Static regression gates for the public browser viewer loading lifecycle."""
+"""Static + real-browser regression gates for the public browser viewer lifecycle."""
 from pathlib import Path
-import re
+import contextlib, http.server, re, shutil, socketserver, subprocess, threading, time
 
 ROOT = Path(__file__).resolve().parents[1]
 VIEWER = ROOT / "viewer"
+HARNESS = ROOT / "scripts" / "browser_viewer_runtime_harness"
 js = (VIEWER / "viewer.js").read_text(encoding="utf-8")
 html = (VIEWER / "index.html").read_text(encoding="utf-8")
 css = (VIEWER / "viewer.css").read_text(encoding="utf-8")
@@ -28,28 +29,41 @@ required_js = {
 }
 for label, needle in required_js.items():
     assert needle in js, f"missing browser viewer contract: {label}"
-
-required_html = [
-    'id="retry"',
-    'id="status-detail"',
-    'aria-live="polite"',
-    'aria-busy="true"',
-]
-for needle in required_html:
+for needle in ['id="retry"','id="status-detail"','aria-live="polite"','aria-busy="true"']:
     assert needle in html, f"missing browser viewer UI contract: {needle}"
-
-assert ".status.error" in css, "missing error visual state"
-assert ".status.offline" in css, "missing offline visual state"
-assert ".retry-button" in css, "missing retry button styling"
-assert "prefers-reduced-motion" in css, "missing reduced-motion accommodation"
-
-# Prevent regression to the original one-shot loader that hid all failures behind one message.
-assert "async function main()" not in js, "legacy one-shot main loader returned"
-assert "showLoadingUI: true" not in js, "library loading UI must not conflict with app lifecycle UI"
-
-# Keep retry policy intentionally bounded: at most one automatic retry before user action.
+assert ".status.error" in css and ".status.offline" in css and ".retry-button" in css
+assert "prefers-reduced-motion" in css
+assert "async function main()" not in js
+assert "showLoadingUI: true" not in js
 match = re.search(r"AUTO_RETRY_DELAYS_MS\s*=\s*\[([^\]]+)\]", js)
-assert match, "automatic retry policy missing"
-assert len([p for p in match.group(1).split(',') if p.strip()]) <= 2, "automatic retry loop is unbounded/aggressive"
+assert match and len([p for p in match.group(1).split(',') if p.strip()]) <= 2
 
-print("browser viewer contracts: PASS")
+chrome = shutil.which("chromium") or shutil.which("google-chrome") or "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+assert Path(chrome).exists() or shutil.which(chrome), "Chrome/Chromium required for D2 runtime viewer gate"
+
+class Quiet(http.server.SimpleHTTPRequestHandler):
+    def log_message(self, *args): pass
+
+with contextlib.ExitStack() as stack:
+    server = socketserver.TCPServer(("127.0.0.1", 8765), Quiet)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    old = Path.cwd()
+    import os
+    os.chdir(ROOT)
+    thread.start()
+    stack.callback(server.shutdown)
+    stack.callback(os.chdir, old)
+    time.sleep(.2)
+    def dom(scenario):
+        url=f"http://127.0.0.1:8765/scripts/browser_viewer_runtime_harness/index.html?id=fixture&scenario={scenario}"
+        return subprocess.check_output([chrome,"--headless","--disable-gpu","--no-sandbox","--virtual-time-budget=2500","--dump-dom",url],text=True,stderr=subprocess.STDOUT,timeout=20)
+    success=dom("success")
+    assert 'data-status="success"' in success and 'data-scene-started="true"' in success
+    metadata_retry=dom("metadataRetry")
+    assert 'data-status="success"' in metadata_retry and 'data-scene-started="true"' in metadata_retry
+    scene_retry=dom("sceneRetry")
+    assert 'data-status="success"' in scene_retry and 'data-viewer-disposed="true"' in scene_retry
+    terminal=dom("terminal404")
+    assert 'data-status="error"' in terminal and '非公開化または削除' in terminal
+
+print("browser viewer static + Chromium runtime contracts: PASS")
