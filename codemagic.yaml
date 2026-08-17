@@ -24,10 +24,6 @@ workflows:
         script: |
           cd "$CM_BUILD_DIR/ios/sprint-study"
           xcodegen generate
-      - name: Set build number
-        script: |
-          cd "$CM_BUILD_DIR/ios/sprint-study"
-          agvtool new-version -all "$CM_BUILD_NUMBER"
       - name: Verify release inputs
         script: |
           test -f "$CM_BUILD_DIR/ios/sprint-study/SprintStudy/Web/index.html"
