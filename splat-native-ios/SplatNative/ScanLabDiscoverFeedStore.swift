@@ -32,7 +32,7 @@ final class ScanLabDiscoverFeedStore: ObservableObject {
         }
 
         do {
-            let page = try await fetchPage(offset: 0, using: backend)
+            let page = try await fetchVisiblePage(startingAt: 0, using: backend)
             guard generation == requestGeneration else { return }
             items = unique(page.items)
             nextOffset = page.nextOffset ?? items.count
@@ -54,7 +54,7 @@ final class ScanLabDiscoverFeedStore: ObservableObject {
         }
 
         do {
-            let page = try await fetchPage(offset: nextOffset, using: backend)
+            let page = try await fetchVisiblePage(startingAt: nextOffset, using: backend)
             guard generation == requestGeneration else { return }
             let existing = Set(items.map(\.id))
             items.append(contentsOf: page.items.filter { !existing.contains($0.id) })
@@ -69,6 +69,17 @@ final class ScanLabDiscoverFeedStore: ObservableObject {
 
     func clearError() {
         errorMessage = nil
+    }
+
+    private func fetchVisiblePage(startingAt offset: Int, using backend: ScanLabBackend) async throws -> ScanLabDiscoverEnvelope {
+        var currentOffset = offset
+        for _ in 0..<5 {
+            let page = try await fetchPage(offset: currentOffset, using: backend)
+            if !page.items.isEmpty || !page.hasMore { return page }
+            guard let next = page.nextOffset, next > currentOffset else { return page }
+            currentOffset = next
+        }
+        return try await fetchPage(offset: currentOffset, using: backend)
     }
 
     private func fetchPage(offset: Int, using backend: ScanLabBackend) async throws -> ScanLabDiscoverEnvelope {
