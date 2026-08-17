@@ -137,7 +137,14 @@ struct ScanLabMapView: View {
     private func scheduleVisibleRegionQuery(_ region: MKCoordinateRegion) {
         queryTask?.cancel()
         queryTask = Task {
-            try? await Task.sleep(for: .milliseconds(350))
+            do {
+                try await Task.sleep(for: .milliseconds(350))
+                while backend.isLoadingPublic {
+                    try await Task.sleep(for: .milliseconds(50))
+                }
+            } catch {
+                return
+            }
             guard !Task.isCancelled else { return }
             await backend.loadPublicScans(boundingBox: ScanLabMapBounds.make(from: region).backendTuple)
         }
