@@ -27,6 +27,18 @@ assert.match(publish, /\.neq\("status", "published"\)/);
 assert.match(publish, /alreadyPublished: true/);
 assert.match(publish, /alreadyPublished: false/);
 
+// A share URL is only valid when the browser viewer is actually deployed.
+assert.match(publish, /async function viewerIsReady\(\)/);
+assert.match(publish, /method: "HEAD"/);
+assert.match(publish, /Accept: "text\/html"/);
+assert.match(publish, /controller\.abort\(\), 2500/);
+assert.match(publish, /contentType\.toLowerCase\(\)\.includes\("text\/html"\)/);
+assert.match(publish, /viewerReadyUntil = Date\.now\(\) \+ 60_000/);
+assert.match(publish, /error: "viewer_unavailable"/);
+const readinessGate = publish.indexOf('if (["public", "unlisted"].includes(scan.visibility) && !(await viewerIsReady()))');
+const publishMutation = publish.indexOf('.update({ ...metadata, status: "published", moderation_status: "approved" })');
+assert.ok(readinessGate >= 0 && readinessGate < publishMutation, 'viewer readiness must fail closed before publish mutation');
+
 assert.match(html, /property="og:title"/);
 assert.match(html, /property="og:description"/);
 assert.match(html, /name="twitter:card" content="summary_large_image"/);
