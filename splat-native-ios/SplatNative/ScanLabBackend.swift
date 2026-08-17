@@ -210,17 +210,81 @@ final class ScanLabBackend: ObservableObject {
     }
 
     private func observeAuth() async {
+        var waitingForInitialRefresh = false
+
         for await state in client.auth.authStateChanges {
-            guard [.initialSession, .signedIn, .signedOut, .userUpdated].contains(state.event) else { continue }
-            isAuthenticated = state.session != nil
-            currentUserEmail = state.session?.user.email
-            if state.session == nil {
-                ownerScans = []; profile = nil
+            let event: ScanLabSessionEvent
+            switch state.event {
+            case .initialSession:
+                event = .initialSession(
+                    hasSession: state.session != nil,
+                    isExpired: state.session?.isExpired ?? false
+                )
+                waitingForInitialRefresh = ScanLabSessionPolicy.needsRefreshBeforePrivateData(after: event)
+            case .signedIn:
+                event = .signedIn
+            case .signedOut:
+                event = .signedOut
+                waitingForInitialRefresh = false
+            case .tokenRefreshed:
+                event = .tokenRefreshed
+            case .userUpdated:
+                event = .userUpdated
+            case .passwordRecovery:
+                event = .passwordRecovery
+            default:
+                continue
+            }
+
+            if let session = state.session, ScanLabSessionPolicy.isAuthenticated(after: event) {
+                applyAuthenticatedSession(session)
+                let shouldReloadPrivateData = ScanLabSessionPolicy.shouldReloadPrivateData(after: event)
+                    || (event == .tokenRefreshed && waitingForInitialRefresh)
+                if shouldReloadPrivateData {
+                    waitingForInitialRefresh = false
+                    async let scans: Void = loadOwnerScans()
+                    async let loadedProfile: Void = loadProfile()
+                    _ = await (scans, loadedProfile)
+                    await loadPublicScans()
+                }
             } else {
-                async let scans: Void = loadOwnerScans()
-                async let loadedProfile: Void = loadProfile()
-                _ = await (scans, loadedProfile)
-                await loadPublicScans()
+                waitingForInitialRefresh = false
+                clearAuthenticatedState(requireSignInNotice: false)
+                if event == .signedOut {
+                    await loadPublicScans()
+                }
+            }
+        }
+    }
+
+    private func applyAuthenticatedSession(_ session: Session) {
+        isAuthenticated = true
+        currentUserEmail = session.user.email
+    }
+
+    private func clearAuthenticatedState(requireSignInNotice: Bool) {
+        isAuthenticated = false
+        currentUserEmail = nil
+        ownerScans = []
+        profile = nil
+        if requireSignInNotice {
+            notice = "ログインの有効期限が切れました。もう一度ログインしてください。"
+        }
+    }
+
+    private func authenticatedSession() async throws -> Session {
+        do {
+            let session = try await client.auth.session
+            applyAuthenticatedSession(session)
+            return session
+        } catch {
+            switch ScanLabSessionPolicy.recoveryDecision(hasCachedSessionAfterFailure: client.auth.currentSession != nil) {
+            case .keepAuthenticatedAndRetry:
+                notice = "ログイン状態を更新できませんでした。通信状態を確認して再試行してください。"
+                throw error
+            case .requireSignIn:
+                clearAuthenticatedState(requireSignInNotice: true)
+                throw ScanLabBackendError.signInRequired
             }
         }
     }
@@ -230,16 +294,32 @@ final class ScanLabBackend: ObservableObject {
         notice = response.session == nil ? "確認メールを送信しました。メール内のリンクで登録を完了してください。" : "アカウントを作成しました。"
     }
     func signIn(email: String, password: String) async throws {
-        try await client.auth.signIn(email: email.trimmingCharacters(in: .whitespacesAndNewlines), password: password); notice = nil
+        try await client.auth.signIn(email: email.trimmingCharacters(in: .whitespacesAndNewlines), password: password)
+        notice = nil
     }
-    func signOut() async { do { try await client.auth.signOut(); await loadPublicScans() } catch { notice = error.localizedDescription } }
+    func signOut() async {
+        do {
+            try await client.auth.signOut()
+        } catch {
+            notice = error.localizedDescription
+        }
+    }
 
     func loadPublicScans(boundingBox: (minLat: Double, maxLat: Double, minLon: Double, maxLon: Double)? = nil) async {
-        guard !isLoadingPublic else { return }; isLoadingPublic = true; defer { isLoadingPublic = false }
+        guard !isLoadingPublic else { return }
+        isLoadingPublic = true
+        defer { isLoadingPublic = false }
         do {
             var components = URLComponents(url: ScanLabConfig.publicFunctionURL, resolvingAgainstBaseURL: false)!
             var items = [URLQueryItem(name: "mode", value: "feed"), URLQueryItem(name: "limit", value: "40")]
-            if let boundingBox { items += [URLQueryItem(name: "minLat", value: String(boundingBox.minLat)), URLQueryItem(name: "maxLat", value: String(boundingBox.maxLat)), URLQueryItem(name: "minLon", value: String(boundingBox.minLon)), URLQueryItem(name: "maxLon", value: String(boundingBox.maxLon))] }
+            if let boundingBox {
+                items += [
+                    URLQueryItem(name: "minLat", value: String(boundingBox.minLat)),
+                    URLQueryItem(name: "maxLat", value: String(boundingBox.maxLat)),
+                    URLQueryItem(name: "minLon", value: String(boundingBox.minLon)),
+                    URLQueryItem(name: "maxLon", value: String(boundingBox.maxLon))
+                ]
+            }
             components.queryItems = items
             guard let url = components.url else { throw ScanLabBackendError.invalidServerResponse }
             var request = URLRequest(url: url)
@@ -250,35 +330,52 @@ final class ScanLabBackend: ObservableObject {
             let (data, response) = try await URLSession.shared.data(for: request)
             guard let http = response as? HTTPURLResponse, 200..<300 ~= http.statusCode else { throw ScanLabBackendError.invalidServerResponse }
             publicScans = try JSONDecoder().decode(ScanLabPublicEnvelope.self, from: data).items
-        } catch { notice = "公開スキャンを取得できませんでした: \(error.localizedDescription)" }
+        } catch {
+            notice = "公開スキャンを取得できませんでした: \(error.localizedDescription)"
+        }
     }
 
     func loadProfile() async {
-        guard isAuthenticated, let session = try? await client.auth.session else { return }
+        guard isAuthenticated else { return }
         do {
+            let session = try await authenticatedSession()
             let row: ScanLabProfile = try await client.from("scanlab_profiles").select("id,handle,display_name,avatar_path").eq("id", value: session.user.id).single().execute().value
             profile = row
-        } catch { notice = "プロフィールを取得できませんでした: \(error.localizedDescription)" }
+        } catch {
+            if !isAuthenticated { return }
+            notice = "プロフィールを取得できませんでした: \(error.localizedDescription)"
+        }
     }
+
     func updateProfile(handle: String, displayName: String) async throws {
-        let h = handle.trimmingCharacters(in: .whitespacesAndNewlines).lowercased(), n = displayName.trimmingCharacters(in: .whitespacesAndNewlines)
-        let re = try NSRegularExpression(pattern: "^[a-z0-9_]{3,24}$"), range = NSRange(h.startIndex..., in: h)
+        let h = handle.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let n = displayName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let re = try NSRegularExpression(pattern: "^[a-z0-9_]{3,24}$")
+        let range = NSRange(h.startIndex..., in: h)
         guard re.firstMatch(in: h, range: range) != nil, (1...40).contains(n.count) else { throw ScanLabBackendError.invalidProfile }
-        guard let session = try? await client.auth.session else { throw ScanLabBackendError.signInRequired }
-        try await client.from("scanlab_profiles").update(ScanLabProfileUpdate(handle: h, displayName: n)).eq("id", value: session.user.id).execute(); await loadProfile()
+        let session = try await authenticatedSession()
+        try await client.from("scanlab_profiles").update(ScanLabProfileUpdate(handle: h, displayName: n)).eq("id", value: session.user.id).execute()
+        await loadProfile()
     }
+
     func loadOwnerScans() async {
-        guard isAuthenticated, !isLoadingOwner else { return }; isLoadingOwner = true; defer { isLoadingOwner = false }
+        guard isAuthenticated, !isLoadingOwner else { return }
+        isLoadingOwner = true
+        defer { isLoadingOwner = false }
         do {
+            _ = try await authenticatedSession()
             let rows: [ScanLabOwnerScan] = try await client.from("scanlab_scans").select("id,title,caption,visibility,status,moderation_status,share_token,asset_path,preview_path,latitude,longitude,location_label,published_at,created_at").order("created_at", ascending: false).execute().value
             ownerScans = rows
-        } catch { notice = "自分のスキャンを取得できませんでした: \(error.localizedDescription)" }
+        } catch {
+            if !isAuthenticated { return }
+            notice = "自分のスキャンを取得できませんでした: \(error.localizedDescription)"
+        }
     }
 
     func publish(resultURL: URL, previewImage: UIImage?, title: String, caption: String, visibility: ScanLabVisibility, location: ScanLabLocation?, publicPlaceConfirmed: Bool, privacyConfirmed: Bool, rightsConfirmed: Bool, contentConfirmed: Bool) async throws -> ScanLabPublishResponse {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard (1...80).contains(trimmedTitle.count) else { throw ScanLabBackendError.invalidTitle }
-        guard let session = try? await client.auth.session else { throw ScanLabBackendError.signInRequired }
+        let session = try await authenticatedSession()
         let user = session.user
         if visibility != .private && !contentConfirmed { throw ScanLabBackendError.contentConfirmationRequired }
         if visibility == .public {
@@ -288,39 +385,63 @@ final class ScanLabBackend: ObservableObject {
         let attributes = try FileManager.default.attributesOfItem(atPath: resultURL.path)
         guard let size = attributes[.size] as? NSNumber, size.intValue > 0 else { throw ScanLabBackendError.invalidAsset }
         guard size.intValue <= ScanLabConfig.maximumAssetBytes else { throw ScanLabBackendError.assetTooLarge }
-        let uploadID = UUID().uuidString.lowercased(), prefix = "\(user.id.uuidString.lowercased())/\(uploadID)", assetPath = "\(prefix)/result.splat", previewPath = previewImage == nil ? nil : "\(prefix)/preview.jpg"
+        let uploadID = UUID().uuidString.lowercased()
+        let prefix = "\(user.id.uuidString.lowercased())/\(uploadID)"
+        let assetPath = "\(prefix)/result.splat"
+        let previewPath = previewImage == nil ? nil : "\(prefix)/preview.jpg"
         var uploadedPaths: [String] = []
         do {
-            try await client.storage.from("scanlab-assets").upload(assetPath, fileURL: resultURL, options: FileOptions(contentType: "application/octet-stream")); uploadedPaths.append(assetPath)
+            try await client.storage.from("scanlab-assets").upload(assetPath, fileURL: resultURL, options: FileOptions(contentType: "application/octet-stream"))
+            uploadedPaths.append(assetPath)
             if let previewPath, let previewData = previewImage?.jpegData(compressionQuality: 0.82) {
-                try await client.storage.from("scanlab-assets").upload(previewPath, data: previewData, options: FileOptions(contentType: "image/jpeg")); uploadedPaths.append(previewPath)
+                try await client.storage.from("scanlab-assets").upload(previewPath, data: previewData, options: FileOptions(contentType: "image/jpeg"))
+                uploadedPaths.append(previewPath)
             }
             let draft = ScanLabDraftInsert(ownerId: user.id, title: trimmedTitle, caption: String(caption.prefix(500)), visibility: visibility.rawValue, status: "draft", assetPath: assetPath, previewPath: previewPath, latitude: location?.latitude, longitude: location?.longitude, locationLabel: location?.label, publicPlaceConfirmed: publicPlaceConfirmed, privacyConfirmed: privacyConfirmed, rightsConfirmed: rightsConfirmed, contentConfirmed: contentConfirmed)
             let created: ScanLabCreatedScan = try await client.from("scanlab_scans").insert(draft).select("id").single().execute().value
             let published: ScanLabPublishResponse = try await client.functions.invoke("scanlab-publish", options: FunctionInvokeOptions(region: .apSoutheast1, body: ScanLabPublishRequest(scanId: created.id.uuidString.lowercased()), timeoutInterval: 30))
-            await loadOwnerScans(); if visibility == .public { await loadPublicScans() }; return published
+            await loadOwnerScans()
+            if visibility == .public { await loadPublicScans() }
+            return published
         } catch {
-            if !uploadedPaths.isEmpty { try? await client.storage.from("scanlab-assets").remove(paths: uploadedPaths) }; throw error
+            if !uploadedPaths.isEmpty {
+                try? await client.storage.from("scanlab-assets").remove(paths: uploadedPaths)
+            }
+            throw error
         }
     }
 
     func unpublish(_ scan: ScanLabOwnerScan) async throws {
-        try await client.from("scanlab_scans").update(ScanLabScanStatusUpdate(status: "hidden")).eq("id", value: scan.id).execute(); await loadOwnerScans(); await loadPublicScans()
+        _ = try await authenticatedSession()
+        try await client.from("scanlab_scans").update(ScanLabScanStatusUpdate(status: "hidden")).eq("id", value: scan.id).execute()
+        await loadOwnerScans()
+        await loadPublicScans()
     }
+
     func delete(_ scan: ScanLabOwnerScan) async throws {
-        let paths = [scan.assetPath, scan.previewPath].compactMap { $0 }; if !paths.isEmpty { try await client.storage.from("scanlab-assets").remove(paths: paths) }
-        try await client.from("scanlab_scans").delete().eq("id", value: scan.id).execute(); await loadOwnerScans(); await loadPublicScans()
+        _ = try await authenticatedSession()
+        let paths = [scan.assetPath, scan.previewPath].compactMap { $0 }
+        if !paths.isEmpty { try await client.storage.from("scanlab-assets").remove(paths: paths) }
+        try await client.from("scanlab_scans").delete().eq("id", value: scan.id).execute()
+        await loadOwnerScans()
+        await loadPublicScans()
     }
+
     func like(_ scan: ScanLabPublicScan) async throws {
-        guard let session = try? await client.auth.session else { throw ScanLabBackendError.signInRequired }
-        try await client.from("scanlab_likes").insert(ScanLabLikeInsert(scanId: scan.id, userId: session.user.id)).execute(); await loadPublicScans()
+        let session = try await authenticatedSession()
+        try await client.from("scanlab_likes").insert(ScanLabLikeInsert(scanId: scan.id, userId: session.user.id)).execute()
+        await loadPublicScans()
     }
+
     func report(_ scan: ScanLabPublicScan, reason: String) async throws {
-        guard let session = try? await client.auth.session else { throw ScanLabBackendError.signInRequired }
-        try await client.from("scanlab_reports").insert(ScanLabReportInsert(scanId: scan.id, reporterId: session.user.id, reason: reason, details: "")).execute(); notice = "報告を受け付け、公開3Dを確認のため非表示にしました。"; await loadPublicScans()
+        let session = try await authenticatedSession()
+        try await client.from("scanlab_reports").insert(ScanLabReportInsert(scanId: scan.id, reporterId: session.user.id, reason: reason, details: "")).execute()
+        notice = "報告を受け付け、公開3Dを確認のため非表示にしました。"
+        await loadPublicScans()
     }
+
     func block(_ scan: ScanLabPublicScan) async throws {
-        guard let session = try? await client.auth.session else { throw ScanLabBackendError.signInRequired }
+        let session = try await authenticatedSession()
         guard let author = scan.author, author.id != session.user.id else { throw ScanLabBackendError.invalidBlockTarget }
         do {
             try await client.from("scanlab_blocks").insert(ScanLabBlockInsert(blockerId: session.user.id, blockedId: author.id)).execute()
@@ -331,17 +452,24 @@ final class ScanLabBackend: ObservableObject {
         notice = "このユーザーをブロックしました。MapとDiscoverから投稿を除外します。"
         await loadPublicScans()
     }
+
     func deleteAccount() async throws {
+        _ = try await authenticatedSession()
         let response: ScanLabDeleteAccountResponse = try await client.functions.invoke("scanlab-delete-account", options: FunctionInvokeOptions(region: .apSoutheast1, body: ["confirm": true], timeoutInterval: 30))
-        guard response.deleted else { throw ScanLabBackendError.invalidServerResponse }; try? await client.auth.signOut()
+        guard response.deleted else { throw ScanLabBackendError.invalidServerResponse }
+        try? await client.auth.signOut()
     }
+
     func shareURL(for scan: ScanLabOwnerScan) -> URL? {
         guard scan.status == "published", scan.moderationStatus == "approved" else { return nil }
         var components = URLComponents(url: ScanLabConfig.viewerBaseURL, resolvingAgainstBaseURL: false)!
         switch scan.visibility {
-        case ScanLabVisibility.public.rawValue: components.queryItems = [URLQueryItem(name: "id", value: scan.id.uuidString.lowercased())]
-        case ScanLabVisibility.unlisted.rawValue: components.queryItems = [URLQueryItem(name: "token", value: scan.shareToken.uuidString.lowercased())]
-        default: return nil
+        case ScanLabVisibility.public.rawValue:
+            components.queryItems = [URLQueryItem(name: "id", value: scan.id.uuidString.lowercased())]
+        case ScanLabVisibility.unlisted.rawValue:
+            components.queryItems = [URLQueryItem(name: "token", value: scan.shareToken.uuidString.lowercased())]
+        default:
+            return nil
         }
         return components.url
     }
