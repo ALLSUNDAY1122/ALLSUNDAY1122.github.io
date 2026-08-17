@@ -151,7 +151,7 @@ workflows:
       - name: Apply App Store signing profiles
         script: |
           cd "$CM_BUILD_DIR/ios/health-manager-2"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          xcode-project use-profiles
           PLIST="$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Info.plist"
           /usr/libexec/PlistBuddy -c "Set :CFBundleIconName AppIcon" "$PLIST" 2>/dev/null || /usr/libexec/PlistBuddy -c "Add :CFBundleIconName string AppIcon" "$PLIST"
           /usr/libexec/PlistBuddy -c "Delete :CFBundleIconFiles" "$PLIST" 2>/dev/null || true
@@ -170,7 +170,7 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: true
+        submit_to_testflight: false
         submit_to_app_store: false
 
   otsu4-ios:
