@@ -122,7 +122,7 @@ struct PublishScanView: View {
             Section("投稿内容") { TextField("タイトル", text: $title); TextField("説明（任意）", text: $caption, axis: .vertical).lineLimit(2...5) }
             Section("公開範囲") {
                 Picker("公開範囲", selection: $visibility) { ForEach(ScanLabVisibility.allCases) { Text($0.title).tag($0) } }
-                Text(visibility.explanation).font(.footnote).foregroundStyle(.secondary)
+                Text(visibilityExplanation).font(.footnote).foregroundStyle(.secondary)
             }
             if visibility != .private {
                 Section("コミュニティ安全確認") {
@@ -160,6 +160,13 @@ struct PublishScanView: View {
             }
             if newValue == .private { contentConfirmed = false }
         }
+    }
+
+    private var visibilityExplanation: String {
+        if visibility == .public {
+            return "Discoverへ公開します。位置情報を明示的に付与した場合だけMapにも表示されます。"
+        }
+        return visibility.explanation
     }
 
     private var selectedLocation: ScanLabLocation? {
