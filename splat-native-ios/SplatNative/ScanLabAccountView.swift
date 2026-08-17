@@ -124,7 +124,22 @@ private struct ScanLabOwnerScanRow: View {
                 Form {
                     Section("共有情報") {
                         TextField("タイトル", text: $editTitle)
-                        TextField("説明（任意）", text: $editCaption, axis: .vertical).lineLimit(2...5)
+                            .onChange(of: editTitle) { _, value in
+                                if value.count > 80 { editTitle = String(value.prefix(80)) }
+                            }
+                        HStack {
+                            Spacer()
+                            Text("\(editTitle.count)/80").font(.caption).foregroundStyle(.secondary)
+                        }
+                        TextField("説明（任意）", text: $editCaption, axis: .vertical)
+                            .lineLimit(2...5)
+                            .onChange(of: editCaption) { _, value in
+                                if value.count > 500 { editCaption = String(value.prefix(500)) }
+                            }
+                        HStack {
+                            Spacer()
+                            Text("\(editCaption.count)/500").font(.caption).foregroundStyle(.secondary)
+                        }
                     }
                     if let editError { Text(editError).foregroundStyle(.red).font(.footnote) }
                 }
@@ -146,8 +161,8 @@ private struct ScanLabOwnerScanRow: View {
     }
 
     private func beginEditing() {
-        editTitle = scan.title
-        editCaption = scan.caption
+        editTitle = String(scan.title.prefix(80))
+        editCaption = String(scan.caption.prefix(500))
         editError = nil
         editPresented = true
     }
