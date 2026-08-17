@@ -110,7 +110,7 @@ Deno.serve(async (req) => {
       if (visible.length === limit) break;
     }
     const nextOffset = offset + consumedRows;
-    const hasMore = offset < maxOffset && (consumedRows < rows.length || rows.length === fetchCount);
+    const hasMore = nextOffset <= maxOffset && (consumedRows < rows.length || rows.length === fetchCount);
     return json({
       items: await Promise.all(visible.map(decorate)),
       nextOffset: hasMore ? nextOffset : null,
