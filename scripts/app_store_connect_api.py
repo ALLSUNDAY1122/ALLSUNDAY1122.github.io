@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Minimal read-only App Store Connect API client.
+"""Minimal App Store Connect API transport.
 
 Credentials are supplied only through environment variables or a local key path.
-The script never prints the issuer ID, key ID, private key, or JWT.
+The module never prints the issuer ID, key ID, private key, or JWT. Write methods
+are exposed to the semantic allow-list gateway, not as a free-form user surface.
 """
 
 import argparse
@@ -17,6 +18,7 @@ import urllib.request
 from pathlib import Path
 
 BASE_URL = "https://api.appstoreconnect.apple.com"
+ALLOWED_METHODS = {"GET", "POST", "PATCH"}
 
 
 def b64url(data: bytes) -> str:
@@ -111,26 +113,49 @@ def make_token(issuer_id: str, key_id: str, key_path: Path, lifetime: int = 600)
     return f"{encoded_header}.{encoded_payload}.{signature}"
 
 
-def api_get(token: str, path: str):
+def api_request(token: str, path: str, method: str = "GET", payload=None):
+    method = method.upper()
+    if method not in ALLOWED_METHODS:
+        raise ValueError(f"Unsupported App Store Connect method: {method}")
     if not path.startswith("/v1/"):
         raise ValueError("Only /v1/ App Store Connect API paths are allowed.")
+    if len(path) > 2000 or "\n" in path or "\r" in path:
+        raise ValueError("Invalid App Store Connect API path.")
+
+    body = None
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/json",
+    }
+    if payload is not None:
+        body = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+        headers["Content-Type"] = "application/json"
+
     request = urllib.request.Request(
         BASE_URL + path,
-        headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
-        method="GET",
+        data=body,
+        headers=headers,
+        method=method,
     )
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
-            return response.status, json.load(response)
+            raw = response.read()
+            if not raw:
+                return response.status, None
+            return response.status, json.loads(raw.decode("utf-8"))
     except urllib.error.HTTPError as exc:
-        body = exc.read().decode("utf-8", "replace")
+        body_text = exc.read().decode("utf-8", "replace")
         try:
-            payload = json.loads(body)
+            error_payload = json.loads(body_text)
         except json.JSONDecodeError:
-            payload = {"raw": body[:1000]}
+            error_payload = {"raw": body_text[:2000]}
         raise RuntimeError(
-            f"App Store Connect API returned HTTP {exc.code}: {payload}"
+            f"App Store Connect API {method} {path} returned HTTP {exc.code}: {error_payload}"
         ) from None
+
+
+def api_get(token: str, path: str):
+    return api_request(token, path, method="GET")
 
 
 def main():
@@ -152,12 +177,12 @@ def main():
     key_path, cleanup = load_private_key()
     try:
         token = make_token(issuer_id, key_id, key_path)
-        status, payload = api_get(token, args.path)
+        status, response_payload = api_get(token, args.path)
     finally:
         if cleanup:
             cleanup.unlink(missing_ok=True)
 
-    count = len(payload.get("data", [])) if isinstance(payload, dict) else 0
+    count = len(response_payload.get("data", [])) if isinstance(response_payload, dict) else 0
     print(
         f"PASS: App Store Connect API reachable "
         f"(HTTP {status}, returned_items={count})."
