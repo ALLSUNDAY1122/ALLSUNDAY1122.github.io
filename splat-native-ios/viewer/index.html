@@ -11,9 +11,11 @@
   <meta property="og:title" content="Scan Lab 3D Viewer">
   <meta property="og:description" content="Scan Labで公開された3D Gaussian Splatをブラウザで閲覧します。">
   <meta property="og:url" content="https://allsunday1122.github.io/splat-native-ios/viewer/">
+  <meta property="og:image" content="https://allsunday1122.github.io/splat-native-ios/viewer/share-preview-fallback.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Scan Lab 3D Viewer">
   <meta name="twitter:description" content="Scan Labで公開された3D Gaussian Splatをブラウザで閲覧します。">
+  <meta name="twitter:image" content="https://allsunday1122.github.io/splat-native-ios/viewer/share-preview-fallback.svg">
   <title>Scan Lab 3D Viewer</title>
   <link rel="stylesheet" href="./viewer.css">
   <script type="importmap">
@@ -40,8 +42,12 @@
       <p id="likes" class="meta"></p>
     </section>
     <section id="status" class="status" role="status" aria-live="polite">
-      <div class="spinner" aria-hidden="true"></div>
-      <p id="status-text">3Dを読み込んでいます</p>
+      <img id="status-preview" class="status-preview" alt="" hidden>
+      <div class="status-overlay" aria-hidden="true"></div>
+      <div class="status-content">
+        <div class="spinner" aria-hidden="true"></div>
+        <p id="status-text">共有情報を読み込んでいます</p>
+      </div>
     </section>
   </main>
   <script type="module" src="./viewer.js"></script>
