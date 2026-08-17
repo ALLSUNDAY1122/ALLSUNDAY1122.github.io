@@ -16,6 +16,8 @@ function bearer(req: Request) {
   return header.toLowerCase().startsWith("bearer ") ? header.slice(7) : null;
 }
 
+const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
   const token = bearer(req);
@@ -27,7 +29,7 @@ Deno.serve(async (req) => {
 
   let body: { scanId?: string };
   try { body = await req.json(); } catch { return json({ error: "invalid_json" }, 400); }
-  if (!body.scanId || !/^[0-9a-f-]{36}$/i.test(body.scanId)) return json({ error: "invalid_scan_id" }, 400);
+  if (!body.scanId || !uuid.test(body.scanId)) return json({ error: "invalid_scan_id" }, 400);
 
   const { data: scan, error: scanError } = await admin
     .from("scanlab_scans")
@@ -43,7 +45,7 @@ Deno.serve(async (req) => {
 
   const { data: updated, error: updateError } = await admin
     .from("scanlab_scans")
-    .update({ status: "draft" })
+    .update({ status: "hidden" })
     .eq("id", scan.id)
     .eq("owner_id", user.id)
     .eq("status", "published")
@@ -53,8 +55,8 @@ Deno.serve(async (req) => {
   if (updateError) return json({ error: "unpublish_failed" }, 400);
   if (!updated) return json({ error: "lifecycle_conflict" }, 409);
 
-  // Keep visibility and share_token stable. Republish restores the same public/unlisted
-  // addressing contract after all current publish safety/moderation checks run again.
+  // Preserve visibility, share_token and all storage assets. A later publish call can move
+  // hidden -> published only after the current safety, moderation and package checks pass again.
   return json({
     id: updated.id,
     status: updated.status,
