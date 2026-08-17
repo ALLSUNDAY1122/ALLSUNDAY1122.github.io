@@ -148,7 +148,10 @@ struct ScanLabAuthView: View {
                 }
             }
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = ScanLabAuthErrorPolicy.userMessage(
+                for: error,
+                operation: mode == .signIn ? .signIn : .signUp
+            )
         }
     }
 
@@ -218,7 +221,7 @@ private struct ScanLabPasswordRecoveryView: View {
         do {
             try await passwordRecovery.complete(newPassword: newPassword, backend: backend)
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = ScanLabAuthErrorPolicy.userMessage(for: error, operation: .passwordUpdate)
         }
     }
 
@@ -259,7 +262,7 @@ private struct ScanLabSignedInAccountView: View {
                 Link("プライバシーポリシー", destination: URL(string: "https://allsunday1122.github.io/splat-native-ios/privacy.html")!)
             }
             Section {
-                Button("ログアウト") { Task { passwordRecovery.prepareForStandardAuth(); await backend.signOut() } }
+                Button("ログアウト") { Task { passwordRecovery.prepareForStandardAuth(); await backend.signOutWithUserSafeError() } }
                 Button("アカウントとクラウドデータを削除", role: .destructive) { deleteAccountConfirmation = true }.disabled(accountBusy)
             } footer: { Text("アカウント削除では、このアカウントに紐づく3Dファイルと公開情報を削除します。端末内に書き出したファイルは削除されません。") }
         }
