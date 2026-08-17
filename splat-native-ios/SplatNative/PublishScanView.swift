@@ -16,34 +16,73 @@ final class ScanLabLocationPicker: NSObject, ObservableObject, CLLocationManager
     }
 
     func requestCurrentLocation() {
-        location = nil; isRequesting = true
+        location = nil
+        isRequesting = true
         switch manager.authorizationStatus {
-        case .notDetermined: statusMessage = "位置情報の許可を確認しています"; manager.requestWhenInUseAuthorization()
-        case .authorizedAlways, .authorizedWhenInUse: statusMessage = "現在地を取得しています"; manager.requestLocation()
-        case .denied, .restricted: isRequesting = false; statusMessage = "位置情報が許可されていません。設定から許可してください。"
-        @unknown default: isRequesting = false; statusMessage = "位置情報を利用できません"
+        case .notDetermined:
+            statusMessage = "位置情報の許可を確認しています"
+            manager.requestWhenInUseAuthorization()
+        case .authorizedAlways, .authorizedWhenInUse:
+            statusMessage = "現在地を取得しています"
+            manager.requestLocation()
+        case .denied, .restricted:
+            invalidateLocation(message: "位置情報が許可されていません。設定から許可してください。")
+        @unknown default:
+            invalidateLocation(message: "位置情報を利用できません")
         }
     }
-    func clear() { location = nil; isRequesting = false; statusMessage = "位置情報はまだ付与していません" }
+
+    func clear() {
+        invalidateLocation(message: "位置情報はまだ付与していません")
+    }
+
+    private func invalidateLocation(message: String) {
+        location = nil
+        isRequesting = false
+        statusMessage = message
+    }
 
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         let authorizationStatus = manager.authorizationStatus
         Task { @MainActor [weak self] in
             guard let self else { return }
             switch authorizationStatus {
-            case .authorizedAlways, .authorizedWhenInUse: self.statusMessage = "現在地を取得しています"; self.manager.requestLocation()
-            case .denied, .restricted: self.isRequesting = false; self.statusMessage = "位置情報が許可されていません。設定から許可してください。"
-            case .notDetermined: break
-            @unknown default: self.isRequesting = false; self.statusMessage = "位置情報を利用できません"
+            case .authorizedAlways, .authorizedWhenInUse:
+                // Never reacquire merely because this view appeared with a previously granted
+                // permission. A location request must originate from the explicit user button.
+                guard self.isRequesting else { return }
+                self.statusMessage = "現在地を取得しています"
+                self.manager.requestLocation()
+            case .denied, .restricted:
+                self.invalidateLocation(message: "位置情報が許可されていません。設定から許可してください。")
+            case .notDetermined:
+                break
+            @unknown default:
+                self.invalidateLocation(message: "位置情報を利用できません")
             }
         }
     }
+
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let latest = locations.last else { return }
-        Task { @MainActor [weak self] in self?.location = latest; self?.isRequesting = false; self?.statusMessage = "公開地点を取得しました（投稿するまで送信されません）" }
+        Task { @MainActor [weak self] in
+            guard let self, self.isRequesting else { return }
+            guard latest.horizontalAccuracy >= 0,
+                  latest.horizontalAccuracy <= 1_000,
+                  abs(latest.timestamp.timeIntervalSinceNow) <= 60 else {
+                self.invalidateLocation(message: "現在地の精度を確認できませんでした。もう一度取得してください。")
+                return
+            }
+            self.location = latest
+            self.isRequesting = false
+            self.statusMessage = "公開地点を取得しました（投稿するまで送信されません）"
+        }
     }
+
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        Task { @MainActor [weak self] in self?.isRequesting = false; self?.statusMessage = "現在地を取得できませんでした: \(error.localizedDescription)" }
+        Task { @MainActor [weak self] in
+            self?.invalidateLocation(message: "現在地を取得できませんでした: \(error.localizedDescription)")
+        }
     }
 }
 
