@@ -1,5 +1,4 @@
 import Foundation
-@preconcurrency import Supabase
 
 enum ScanLabAuthOperation {
     case signIn
@@ -54,16 +53,5 @@ enum ScanLabAuthErrorPolicy {
 
     private static func containsAny(_ text: String, _ candidates: [String]) -> Bool {
         candidates.contains { text.contains($0) }
-    }
-}
-
-extension ScanLabBackend {
-    func signOutWithUserSafeError() async {
-        do {
-            try await client.auth.signOut()
-            notice = nil
-        } catch {
-            notice = ScanLabAuthErrorPolicy.userMessage(for: error, operation: .signOut)
-        }
     }
 }
