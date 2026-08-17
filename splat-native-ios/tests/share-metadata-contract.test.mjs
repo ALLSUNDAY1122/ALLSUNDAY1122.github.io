@@ -29,8 +29,14 @@ assert.match(publish, /\.neq\("status", "published"\)/);
 assert.match(publish, /alreadyPublished: true/);
 assert.match(publish, /alreadyPublished: false/);
 
+// Moderation must run before both an idempotent published response and metadata mutation.
+assert.match(publish, /from\("scanlab_reports"\)/);
+assert.match(publish, /error: "moderation_hold"/);
+const moderationCheck = publish.indexOf('.from("scanlab_reports")');
+const publishedBranch = publish.indexOf('if (scan.status === "published")');
+assert.ok(moderationCheck >= 0 && moderationCheck < publishedBranch, 'reported content must be held before published metadata/read path');
+
 // Already-published shares must accept owner metadata refresh without republishing assets.
-assert.match(publish, /if \(scan\.status === "published"\)/);
 assert.match(publish, /const metadataRequested = Object\.keys\(metadata\)\.length > 0/);
 assert.match(publish, /\.update\(metadata\)/);
 assert.match(publish, /\.eq\("status", "published"\)/);
@@ -38,11 +44,10 @@ assert.match(publish, /current = \{ \.\.\.scan, \.\.\.refreshed \}/);
 assert.match(publish, /metadataUpdated: metadataRequested/);
 assert.match(publish, /shareUrl: viewerAvailable \? shareUrlFor\(current\) : null/);
 assert.match(publish, /viewerAvailable,/);
-const publishedBranch = publish.indexOf('if (scan.status === "published")');
 const metadataRefresh = publish.indexOf('.update(metadata)', publishedBranch);
 const publishedViewerCheck = publish.indexOf('const viewerAvailable = !needsViewer || await viewerIsReady()', publishedBranch);
 const freshPublishMutation = publish.indexOf('.update({ ...metadata, status: "published", moderation_status: "approved" })');
-assert.ok(publishedBranch >= 0 && metadataRefresh > publishedBranch && metadataRefresh < publishedViewerCheck, 'published metadata must save independently before viewer availability is resolved');
+assert.ok(metadataRefresh > publishedBranch && metadataRefresh < publishedViewerCheck, 'published metadata must save independently before viewer availability is resolved');
 assert.ok(publishedViewerCheck < freshPublishMutation, 'published metadata path must remain separate from fresh publish mutation');
 
 // A new share URL is only valid when the browser viewer is actually deployed.
