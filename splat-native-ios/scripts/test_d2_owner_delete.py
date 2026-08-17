@@ -9,6 +9,9 @@ public = (root / "supabase/functions/scanlab-public/index.ts").read_text()
 required = [
     'update({ status: "hidden", moderation_status: "pending" })',
     'error: "asset_cleanup_pending", retryable: true',
+    'asset_cleanup_limit_exceeded',
+    'for (let offset = 0; offset < 1000; offset += pageSize)',
+    'offset,',
     '.from("scanlab-assets").remove(paths)',
     '.from("scanlab_scans")\n    .delete()',
     'if (!scan) return json({ deleted: true',

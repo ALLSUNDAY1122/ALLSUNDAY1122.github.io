@@ -26,6 +26,22 @@ function safeOwnedPath(path: unknown, ownerId: string) {
   return path;
 }
 
+async function listFolderPaths(folder: string) {
+  const paths: string[] = [];
+  const pageSize = 100;
+  for (let offset = 0; offset < 1000; offset += pageSize) {
+    const { data, error } = await admin.storage.from("scanlab-assets").list(folder, {
+      limit: pageSize,
+      offset,
+      sortBy: { column: "name", order: "asc" },
+    });
+    if (error) return { paths: null, error: "asset_cleanup_pending" as const };
+    for (const file of data ?? []) paths.push(folder ? `${folder}/${file.name}` : file.name);
+    if ((data ?? []).length < pageSize) return { paths, error: null };
+  }
+  return { paths: null, error: "asset_cleanup_limit_exceeded" as const };
+}
+
 async function removePaths(paths: string[]) {
   if (paths.length === 0) return null;
   const { error } = await admin.storage.from("scanlab-assets").remove(paths);
@@ -58,8 +74,8 @@ Deno.serve(async (req) => {
   const previewPath = scan.preview_path == null ? null : safeOwnedPath(scan.preview_path, user.id);
   if (!assetPath || (scan.preview_path != null && !previewPath)) return json({ error: "invalid_asset_path" }, 409);
 
-  // Hide first. If storage cleanup fails, public/feed/share reads stop immediately and a retry
-  // can safely resume cleanup without exposing a half-deleted scan.
+  // Revoke publication first. If cleanup fails, share/feed reads stop immediately while the
+  // hidden metadata row remains as a durable retry cursor for the owner.
   const { error: hideError } = await admin
     .from("scanlab_scans")
     .update({ status: "hidden", moderation_status: "pending" })
@@ -69,11 +85,10 @@ Deno.serve(async (req) => {
 
   const slash = assetPath.lastIndexOf("/");
   const folder = slash > 0 ? assetPath.slice(0, slash) : "";
-  const { data: files, error: listError } = await admin.storage.from("scanlab-assets").list(folder, { limit: 100 });
-  if (listError) return json({ error: "asset_cleanup_pending", retryable: true }, 503);
+  const listed = await listFolderPaths(folder);
+  if (listed.error) return json({ error: listed.error, retryable: true }, 503);
 
-  const paths = new Set<string>();
-  for (const file of files ?? []) paths.add(folder ? `${folder}/${file.name}` : file.name);
+  const paths = new Set(listed.paths ?? []);
   paths.add(assetPath);
   if (previewPath) paths.add(previewPath);
 
