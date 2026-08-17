@@ -51,12 +51,8 @@ final class ScanLabDiscoverFeedStore: ObservableObject {
 
     func loadNextPage(using backend: ScanLabBackend) async {
         let currentQuery = normalizedQuery(query)
-        guard currentQuery == loadedQuery,
-              hasMore,
-              errorMessage == nil,
-              !isLoadingInitial,
-              !isLoadingMore,
-              let cursor = nextCursor else { return }
+        guard hasMore, errorMessage == nil, !isLoadingInitial, !isLoadingMore, let cursor = nextCursor else { return }
+        guard currentQuery == loadedQuery else { return }
         let requestGeneration = generation
         isLoadingMore = true
         defer {
