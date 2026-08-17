@@ -15,6 +15,18 @@ assert.match(publish, /visibility === "public"[\s\S]*\?id=/);
 assert.match(publish, /visibility === "unlisted"[\s\S]*#token=/);
 assert.doesNotMatch(publish, /visibility === "unlisted"[\s\S]*\?token=/);
 
+// Preserve production publish safety/lifecycle gates while adding D2-009 metadata behavior.
+assert.match(publish, /const expectedFolder = `\$\{user\.id\}\/\$\{scan\.id\}`/);
+assert.match(publish, /scan\.asset_path !== `\$\{expectedFolder\}\/scene\.spz`/);
+assert.match(publish, /invalid_preview_path/);
+assert.match(publish, /scene\.metadata\?\.size < 64/);
+assert.match(publish, /manifest\.metadata\.size > 65536/);
+assert.match(publish, /asset_mime_invalid/);
+assert.match(publish, /manifest_mime_invalid/);
+assert.match(publish, /\.neq\("status", "published"\)/);
+assert.match(publish, /alreadyPublished: true/);
+assert.match(publish, /alreadyPublished: false/);
+
 assert.match(html, /property="og:title"/);
 assert.match(html, /property="og:description"/);
 assert.match(html, /name="twitter:card" content="summary_large_image"/);
