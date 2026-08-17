@@ -1,4 +1,5 @@
 import Foundation
+import Supabase
 
 enum ScanLabAuthOperation {
     case signIn
