@@ -96,6 +96,15 @@ Deno.serve(async (req) => {
     return json({ error: "invalid_preview_path" }, 409);
   }
 
+  // Reported content is held before either an idempotent share response or an owner metadata edit.
+  // This prevents title/description changes from bypassing the same moderation boundary as fresh publish.
+  const { count: reportCount, error: reportError } = await admin
+    .from("scanlab_reports")
+    .select("id", { count: "exact", head: true })
+    .eq("scan_id", scan.id);
+  if (reportError) return json({ error: "moderation_check_failed" }, 503);
+  if ((reportCount ?? 0) > 0) return json({ error: "moderation_hold" }, 409);
+
   if (scan.status === "published") {
     let current = scan;
     const metadataRequested = Object.keys(metadata).length > 0;
@@ -143,13 +152,6 @@ Deno.serve(async (req) => {
       return json({ error: "public_safety_confirmation_required" }, 400);
     }
   }
-
-  const { count: reportCount, error: reportError } = await admin
-    .from("scanlab_reports")
-    .select("id", { count: "exact", head: true })
-    .eq("scan_id", scan.id);
-  if (reportError) return json({ error: "moderation_check_failed" }, 503);
-  if ((reportCount ?? 0) > 0) return json({ error: "moderation_hold" }, 409);
 
   const { data: files, error: listError } = await admin.storage.from("scanlab-assets").list(expectedFolder, { limit: 8 });
   if (listError) return json({ error: "asset_check_failed" }, 503);
