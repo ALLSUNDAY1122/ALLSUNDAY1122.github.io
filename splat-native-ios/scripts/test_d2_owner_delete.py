@@ -21,6 +21,7 @@ required = [
     'async function cleanupCanonicalFolder(ownerId: string, scanId: string',
     'paths.add(`${folder}/scene.spz`)',
     'paths.add(`${folder}/manifest.json`)',
+    '.eq("id", body.scanId)\n    .eq("owner_id", user.id)',
     'if (!scan) {',
     'cleanupCanonicalFolder(user.id, body.scanId)',
     '.from("scanlab_scans")\n    .delete()',
@@ -32,6 +33,8 @@ for forbidden in [
     'safeOwnedPath(scan.asset_path, user.id)',
     '.remove(paths)',
     'if (!scan) return json({ deleted: true',
+    'if (scan.owner_id !== user.id)',
+    'return json({ error: "forbidden" }, 403)',
 ]:
     assert forbidden not in fn, f"unsafe delete behavior remains: {forbidden}"
 
