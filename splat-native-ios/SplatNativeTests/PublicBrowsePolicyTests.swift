@@ -1,5 +1,4 @@
 import XCTest
-@testable import SplatNative
 
 final class PublicBrowsePolicyTests: XCTestCase {
     private let authorA = ScanLabAuthor(id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!, handle: "alice", displayName: "Alice")
