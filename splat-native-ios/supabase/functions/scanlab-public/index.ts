@@ -70,7 +70,8 @@ Deno.serve(async (req) => {
 
   if (mode === "feed") {
     const limit = Math.min(Math.max(Number(url.searchParams.get("limit") ?? 24) || 24, 1), 40);
-    const offset = Math.min(Math.max(Number(url.searchParams.get("offset") ?? 0) || 0, 0), 10000);
+    const maxOffset = 10000;
+    const offset = Math.min(Math.max(Number(url.searchParams.get("offset") ?? 0) || 0, 0), maxOffset);
     const q = (url.searchParams.get("q") ?? "").trim().slice(0, 80);
     const fetchCount = Math.min(limit * 2, 80);
 
@@ -109,7 +110,7 @@ Deno.serve(async (req) => {
       if (visible.length === limit) break;
     }
     const nextOffset = offset + consumedRows;
-    const hasMore = consumedRows < rows.length || rows.length === fetchCount;
+    const hasMore = offset < maxOffset && (consumedRows < rows.length || rows.length === fetchCount);
     return json({
       items: await Promise.all(visible.map(decorate)),
       nextOffset: hasMore ? nextOffset : null,
