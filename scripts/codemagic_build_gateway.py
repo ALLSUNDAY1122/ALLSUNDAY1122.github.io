@@ -21,7 +21,19 @@ import yaml
 
 REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,100}$")
 WORKFLOW_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,120}$")
+BUILD_ID_RE = re.compile(r"^[A-Za-z0-9_-]{8,120}$")
 TERMINAL = {"finished", "failed", "canceled", "timeout", "skipped"}
+SENSITIVE_KEY_PARTS = (
+    "secret",
+    "token",
+    "password",
+    "credential",
+    "private",
+    "apikey",
+    "api_key",
+    "environment",
+    "variable",
+)
 
 
 def api_json(url: str, token: str, method: str = "GET", payload: dict | None = None) -> tuple[int, dict]:
@@ -42,6 +54,22 @@ def api_json(url: str, token: str, method: str = "GET", payload: dict | None = N
         return exc.code, parsed
 
 
+def sanitize(value):
+    """Remove fields that may contain credentials before writing API data to artifacts."""
+    if isinstance(value, dict):
+        clean = {}
+        for key, child in value.items():
+            lowered = str(key).lower()
+            if any(part in lowered for part in SENSITIVE_KEY_PARTS):
+                clean[key] = "[REDACTED]"
+            else:
+                clean[key] = sanitize(child)
+        return clean
+    if isinstance(value, list):
+        return [sanitize(item) for item in value]
+    return value
+
+
 def load_command(path: Path) -> dict:
     data = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
@@ -50,8 +78,12 @@ def load_command(path: Path) -> dict:
     if not isinstance(request_id, str) or not REQUEST_ID_RE.fullmatch(request_id):
         raise ValueError("Invalid request_id.")
     action = data.get("action")
-    if action not in {"inspect", "build"}:
-        raise ValueError("action must be inspect or build.")
+    if action not in {"inspect", "inspect_build", "build"}:
+        raise ValueError("action must be inspect, inspect_build, or build.")
+    if action == "inspect_build":
+        build_id = data.get("build_id")
+        if not isinstance(build_id, str) or not BUILD_ID_RE.fullmatch(build_id):
+            raise ValueError("Invalid build_id.")
     return data
 
 
@@ -88,6 +120,13 @@ def validate_workflow(workflow_id: str, yaml_path: Path) -> None:
         raise ValueError("Blocked: workflow is configured to submit to the App Store review/release path.")
 
 
+def get_build(token: str, build_id: str) -> dict:
+    status, response = api_json(f"https://codemagic.io/api/v3/builds/{build_id}", token)
+    if status < 200 or status >= 300:
+        raise RuntimeError(f"Codemagic build status failed with HTTP {status}: {sanitize(response)}")
+    return response.get("data") or response
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--command", default="automation/codemagic-build-command.json")
@@ -105,10 +144,23 @@ def main() -> int:
         if not token:
             raise RuntimeError("Missing GitHub Actions secret CM_API_TOKEN.")
 
+        if command["action"] == "inspect_build":
+            build_id = command["build_id"]
+            details = get_build(token, build_id)
+            result.update({
+                "ok": True,
+                "build_id": build_id,
+                "status": details.get("status"),
+                "build_details": sanitize(details),
+            })
+            output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+            print(f"PASS: inspected Codemagic build {build_id}; status={details.get('status')}")
+            return 0
+
         repository = command.get("repository") or os.environ.get("GITHUB_REPOSITORY") or "ALLSUNDAY1122/ALLSUNDAY1122.github.io"
         status, apps_response = api_json("https://api.codemagic.io/apps", token)
         if status < 200 or status >= 300:
-            raise RuntimeError(f"Codemagic GET /apps failed with HTTP {status}: {apps_response}")
+            raise RuntimeError(f"Codemagic GET /apps failed with HTTP {status}: {sanitize(apps_response)}")
         apps = apps_response.get("applications") or apps_response.get("data") or []
         if isinstance(apps, dict):
             apps = apps.get("applications") or []
@@ -139,10 +191,10 @@ def main() -> int:
         payload = {"appId": requested_app_id, "workflowId": workflow_id, "branch": branch}
         start_status, start_response = api_json("https://api.codemagic.io/builds", token, method="POST", payload=payload)
         if start_status < 200 or start_status >= 300:
-            raise RuntimeError(f"Codemagic POST /builds failed with HTTP {start_status}: {start_response}")
+            raise RuntimeError(f"Codemagic POST /builds failed with HTTP {start_status}: {sanitize(start_response)}")
         build_id = start_response.get("buildId") or start_response.get("id")
         if not build_id:
-            raise RuntimeError(f"Codemagic did not return a buildId: {start_response}")
+            raise RuntimeError(f"Codemagic did not return a buildId: {sanitize(start_response)}")
 
         result.update({
             "app_id": requested_app_id,
@@ -162,15 +214,14 @@ def main() -> int:
             deadline = time.time() + timeout_seconds
             last_status = ""
             while time.time() < deadline:
-                poll_status, poll_response = api_json(f"https://codemagic.io/api/v3/builds/{build_id}", token)
-                if poll_status < 200 or poll_status >= 300:
-                    raise RuntimeError(f"Codemagic build status failed with HTTP {poll_status}: {poll_response}")
-                data = poll_response.get("data") or poll_response
-                current = data.get("status")
+                details = get_build(token, build_id)
+                current = details.get("status")
                 if current != last_status:
                     print(f"Codemagic status: {current}")
                     last_status = current
                 result["status"] = current
+                if current in TERMINAL:
+                    result["build_details"] = sanitize(details)
                 output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
                 if current in TERMINAL:
                     result["ok"] = current == "finished"
