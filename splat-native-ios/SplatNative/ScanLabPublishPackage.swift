@@ -25,7 +25,10 @@ struct ScanLabPublishManifest: Codable, Equatable {
 struct ScanLabPublishPackage {
     static let sceneFilename = "scene.spz"
     static let manifestFilename = "manifest.json"
-    static let sceneMediaType = "application/vnd.scanlab.spz"
+    // Storage transport MIME follows the trusted-upload policy; the manifest keeps the
+    // semantic SPZ media type independently so browser/package consumers do not lose type information.
+    static let sceneMediaType = "application/octet-stream"
+    static let manifestSceneMediaType = "application/vnd.scanlab.spz"
 
     let directoryURL: URL
     let sceneURL: URL
@@ -91,7 +94,7 @@ enum ScanLabPublishPackageBuilder {
                 sceneFile: ScanLabPublishPackage.sceneFilename,
                 sceneByteCount: Int64(source.count),
                 sceneSHA256: sha256(source),
-                mediaType: ScanLabPublishPackage.sceneMediaType,
+                mediaType: ScanLabPublishPackage.manifestSceneMediaType,
                 createdAt: ISO8601DateFormatter().string(from: Date())
             )
             let encoder = JSONEncoder()
@@ -121,7 +124,7 @@ enum ScanLabPublishPackageBuilder {
     ) throws -> Bool {
         guard package.manifest.schemaVersion == ScanLabPublishManifest.currentSchemaVersion,
               package.manifest.sceneFile == ScanLabPublishPackage.sceneFilename,
-              package.manifest.mediaType == ScanLabPublishPackage.sceneMediaType,
+              package.manifest.mediaType == ScanLabPublishPackage.manifestSceneMediaType,
               fileManager.fileExists(atPath: package.sceneURL.path),
               fileManager.fileExists(atPath: package.manifestURL.path) else {
             return false
