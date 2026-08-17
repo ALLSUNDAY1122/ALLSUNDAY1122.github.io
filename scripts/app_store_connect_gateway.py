@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Safe App Store Connect API gateway runner.
+"""Safe semantic App Store Connect API gateway.
 
-The command file is committed without credentials. Apple credentials are supplied
-only by the GitHub Actions secret store. The gateway is intentionally read-only:
-GET requests only. A command may contain either one request or a bounded batch.
+Credentials are supplied only by the GitHub Actions secret store. Arbitrary write
+paths are forbidden. Read requests remain available, while writes are limited to
+reviewable semantic operations with app/bundle preflight and read-back checks.
 """
 
 import argparse
@@ -13,10 +13,26 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
-from app_store_connect_api import api_get, load_private_key, make_token
+from app_store_connect_api import api_get, api_request, load_private_key, make_token
 
 REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,100}$")
+RESOURCE_ID_RE = re.compile(r"^[A-Za-z0-9-]{8,100}$")
+BUNDLE_ID_RE = re.compile(r"^[A-Za-z0-9.-]{3,200}$")
 MAX_BATCH = 50
+MAX_WRITE_OPS = 10
+VERSION_LOCALIZATION_ATTRS = {
+    "description",
+    "keywords",
+    "marketingUrl",
+    "promotionalText",
+    "supportUrl",
+    "whatsNew",
+}
+APP_INFO_LOCALIZATION_ATTRS = {
+    "subtitle",
+    "privacyPolicyUrl",
+    "privacyChoicesUrl",
+}
 
 
 def validate_path(api_path: object) -> str:
@@ -27,16 +43,65 @@ def validate_path(api_path: object) -> str:
     return api_path
 
 
+def validate_resource_id(value: object, label: str) -> str:
+    if not isinstance(value, str) or not RESOURCE_ID_RE.fullmatch(value):
+        raise ValueError(f"Invalid {label}.")
+    return value
+
+
 def validate_request(item: object, index: int) -> dict:
     if not isinstance(item, dict):
         raise ValueError(f"requests[{index}] must be an object.")
     method = item.get("method", "GET")
     if method != "GET":
-        raise ValueError("Gateway is read-only: only GET is allowed.")
+        raise ValueError("Read request batches allow only GET.")
     label = item.get("label", f"request-{index + 1}")
     if not isinstance(label, str) or not REQUEST_ID_RE.fullmatch(label):
         raise ValueError(f"requests[{index}].label is invalid.")
     return {"label": label, "method": "GET", "path": validate_path(item.get("path"))}
+
+
+def validate_attributes(value: object, allowed: set[str], label: str) -> dict:
+    if not isinstance(value, dict) or not value:
+        raise ValueError(f"{label}.attributes must be a non-empty object.")
+    unknown = set(value) - allowed
+    if unknown:
+        raise ValueError(f"Unsupported {label} attributes: {sorted(unknown)}")
+    clean = {}
+    for key, item in value.items():
+        if item is not None and not isinstance(item, str):
+            raise ValueError(f"{label}.{key} must be a string or null.")
+        if isinstance(item, str) and len(item) > 10000:
+            raise ValueError(f"{label}.{key} is too long.")
+        clean[key] = item
+    return clean
+
+
+def validate_write_operation(item: object, index: int) -> dict:
+    if not isinstance(item, dict):
+        raise ValueError(f"operations[{index}] must be an object.")
+    op_type = item.get("type")
+    if op_type == "update_version_localization":
+        return {
+            "type": op_type,
+            "id": validate_resource_id(item.get("id"), "version localization id"),
+            "app_store_version_id": validate_resource_id(item.get("app_store_version_id"), "app store version id"),
+            "attributes": validate_attributes(item.get("attributes"), VERSION_LOCALIZATION_ATTRS, op_type),
+        }
+    if op_type == "update_app_info_localization":
+        return {
+            "type": op_type,
+            "id": validate_resource_id(item.get("id"), "app info localization id"),
+            "app_info_id": validate_resource_id(item.get("app_info_id"), "app info id"),
+            "attributes": validate_attributes(item.get("attributes"), APP_INFO_LOCALIZATION_ATTRS, op_type),
+        }
+    if op_type == "attach_build":
+        return {
+            "type": op_type,
+            "app_store_version_id": validate_resource_id(item.get("app_store_version_id"), "app store version id"),
+            "build_id": validate_resource_id(item.get("build_id"), "build id"),
+        }
+    raise ValueError(f"Unsupported semantic write operation: {op_type}")
 
 
 def load_command(path: Path) -> dict:
@@ -48,6 +113,24 @@ def load_command(path: Path) -> dict:
     if not isinstance(request_id, str) or not REQUEST_ID_RE.fullmatch(request_id):
         raise ValueError("request_id must match [A-Za-z0-9._-]{1,100}.")
 
+    if payload.get("action") == "write":
+        app_id = validate_resource_id(payload.get("expected_app_id"), "expected app id")
+        bundle_id = payload.get("expected_bundle_id")
+        if not isinstance(bundle_id, str) or not BUNDLE_ID_RE.fullmatch(bundle_id):
+            raise ValueError("Invalid expected_bundle_id.")
+        operations = payload.get("operations")
+        if not isinstance(operations, list) or not operations:
+            raise ValueError("operations must be a non-empty array.")
+        if len(operations) > MAX_WRITE_OPS:
+            raise ValueError(f"Write batch exceeds maximum of {MAX_WRITE_OPS} operations.")
+        return {
+            "request_id": request_id,
+            "action": "write",
+            "expected_app_id": app_id,
+            "expected_bundle_id": bundle_id,
+            "operations": [validate_write_operation(item, i) for i, item in enumerate(operations)],
+        }
+
     if "requests" in payload:
         requests = payload.get("requests")
         if not isinstance(requests, list) or not requests:
@@ -56,30 +139,152 @@ def load_command(path: Path) -> dict:
             raise ValueError(f"Batch exceeds maximum of {MAX_BATCH} requests.")
         return {
             "request_id": request_id,
+            "action": "read",
             "requests": [validate_request(item, i) for i, item in enumerate(requests)],
         }
 
     method = payload.get("method")
     if method != "GET":
-        raise ValueError("Gateway is read-only: only GET is allowed.")
+        raise ValueError("Single free-form requests are read-only: method must be GET.")
     return {
         "request_id": request_id,
+        "action": "read",
         "requests": [{"label": "single", "method": "GET", "path": validate_path(payload.get("path"))}],
     }
 
 
+def get_data_ids(response: object) -> set[str]:
+    if not isinstance(response, dict):
+        return set()
+    data = response.get("data")
+    if isinstance(data, list):
+        return {str(x.get("id")) for x in data if isinstance(x, dict) and x.get("id")}
+    if isinstance(data, dict) and data.get("id"):
+        return {str(data["id"])}
+    return set()
+
+
+def get_included_ids(response: object, resource_type: str) -> set[str]:
+    if not isinstance(response, dict):
+        return set()
+    included = response.get("included") or []
+    return {
+        str(x.get("id"))
+        for x in included
+        if isinstance(x, dict) and x.get("type") == resource_type and x.get("id")
+    }
+
+
+def preflight_target(token: str, app_id: str, bundle_id: str) -> None:
+    _, app = api_get(token, f"/v1/apps/{app_id}")
+    data = app.get("data") if isinstance(app, dict) else None
+    actual = (data or {}).get("attributes", {}).get("bundleId") if isinstance(data, dict) else None
+    if actual != bundle_id:
+        raise RuntimeError(f"Target preflight failed: expected bundle {bundle_id}, got {actual!r}")
+
+
+def ensure_version_belongs_to_app(token: str, app_id: str, version_id: str) -> None:
+    _, response = api_get(token, f"/v1/apps/{app_id}/appStoreVersions?limit=200")
+    if version_id not in get_data_ids(response):
+        raise RuntimeError("App Store version does not belong to expected app.")
+
+
+def ensure_build_belongs_to_app(token: str, app_id: str, build_id: str) -> None:
+    _, response = api_get(token, f"/v1/apps/{app_id}/builds?limit=200")
+    if build_id not in get_data_ids(response):
+        raise RuntimeError("Build does not belong to expected app.")
+
+
+def ensure_version_localization(token: str, version_id: str, localization_id: str) -> None:
+    _, response = api_get(token, f"/v1/appStoreVersions/{version_id}/appStoreVersionLocalizations?limit=200")
+    if localization_id not in get_data_ids(response):
+        raise RuntimeError("Version localization does not belong to expected version.")
+
+
+def ensure_app_info_localization(token: str, app_id: str, app_info_id: str, localization_id: str) -> None:
+    _, infos = api_get(token, f"/v1/apps/{app_id}/appInfos?limit=20&include=appInfoLocalizations")
+    if app_info_id not in get_data_ids(infos):
+        raise RuntimeError("App info does not belong to expected app.")
+    if localization_id not in get_included_ids(infos, "appInfoLocalizations"):
+        raise RuntimeError("App info localization does not belong to expected app info.")
+
+
+def update_resource_attributes(token: str, resource_type: str, resource_id: str, path: str, attributes: dict) -> dict:
+    _, before = api_get(token, path)
+    before_data = before.get("data") if isinstance(before, dict) else None
+    current = (before_data or {}).get("attributes", {}) if isinstance(before_data, dict) else {}
+    changes = {key: value for key, value in attributes.items() if current.get(key) != value}
+    if not changes:
+        return {"changed": False, "before": before, "after": before}
+
+    payload = {
+        "data": {
+            "type": resource_type,
+            "id": resource_id,
+            "attributes": changes,
+        }
+    }
+    status, _ = api_request(token, path, method="PATCH", payload=payload)
+    _, after = api_get(token, path)
+    after_data = after.get("data") if isinstance(after, dict) else None
+    after_attrs = (after_data or {}).get("attributes", {}) if isinstance(after_data, dict) else {}
+    for key, value in changes.items():
+        if after_attrs.get(key) != value:
+            raise RuntimeError(f"Read-back mismatch after updating {resource_type}.{key}")
+    return {"changed": True, "http_status": status, "changed_attributes": sorted(changes), "after": after}
+
+
+def execute_write(token: str, command: dict) -> list[dict]:
+    app_id = command["expected_app_id"]
+    preflight_target(token, app_id, command["expected_bundle_id"])
+    results = []
+
+    for op in command["operations"]:
+        op_type = op["type"]
+        if op_type == "update_version_localization":
+            ensure_version_belongs_to_app(token, app_id, op["app_store_version_id"])
+            ensure_version_localization(token, op["app_store_version_id"], op["id"])
+            outcome = update_resource_attributes(
+                token,
+                "appStoreVersionLocalizations",
+                op["id"],
+                f"/v1/appStoreVersionLocalizations/{op['id']}",
+                op["attributes"],
+            )
+        elif op_type == "update_app_info_localization":
+            ensure_app_info_localization(token, app_id, op["app_info_id"], op["id"])
+            outcome = update_resource_attributes(
+                token,
+                "appInfoLocalizations",
+                op["id"],
+                f"/v1/appInfoLocalizations/{op['id']}",
+                op["attributes"],
+            )
+        elif op_type == "attach_build":
+            ensure_version_belongs_to_app(token, app_id, op["app_store_version_id"])
+            ensure_build_belongs_to_app(token, app_id, op["build_id"])
+            relationship_path = f"/v1/appStoreVersions/{op['app_store_version_id']}/relationships/build"
+            _, before = api_get(token, relationship_path)
+            current_ids = get_data_ids(before)
+            if op["build_id"] in current_ids:
+                outcome = {"changed": False, "before": before, "after": before}
+            else:
+                payload = {"data": {"type": "builds", "id": op["build_id"]}}
+                status, _ = api_request(token, relationship_path, method="PATCH", payload=payload)
+                _, after = api_get(token, relationship_path)
+                if op["build_id"] not in get_data_ids(after):
+                    raise RuntimeError("Build relationship read-back mismatch.")
+                outcome = {"changed": True, "http_status": status, "after": after}
+        else:
+            raise AssertionError(op_type)
+        results.append({"operation": op_type, "outcome": outcome})
+    return results
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Execute safe read-only App Store Connect commands.")
-    parser.add_argument(
-        "--command",
-        default="automation/app-store-connect-command.json",
-        help="Path to the command JSON file.",
-    )
-    parser.add_argument(
-        "--output",
-        default="asc-result.json",
-        help="Path for the API result artifact.",
-    )
+    parser = argparse.ArgumentParser(description="Execute safe App Store Connect commands.")
+    parser.add_argument("--command", default="automation/app-store-connect-command.json")
+    parser.add_argument("--output", default="asc-result.json")
     args = parser.parse_args()
 
     command = load_command(Path(args.command))
@@ -92,37 +297,32 @@ def main() -> None:
     results = []
     try:
         token = make_token(issuer_id, key_id, key_path)
-        for req in command["requests"]:
-            status, response = api_get(token, req["path"])
-            results.append({
-                "label": req["label"],
-                "method": "GET",
-                "path": req["path"],
-                "http_status": status,
-                "response": response,
-            })
+        if command["action"] == "write":
+            results = execute_write(token, command)
+        else:
+            for req in command["requests"]:
+                status, response = api_get(token, req["path"])
+                results.append({
+                    "label": req["label"],
+                    "method": "GET",
+                    "path": req["path"],
+                    "http_status": status,
+                    "response": response,
+                })
     finally:
         if cleanup:
             cleanup.unlink(missing_ok=True)
 
     result = {
         "request_id": command["request_id"],
+        "action": command["action"],
         "completed_at": datetime.now(timezone.utc).isoformat(),
-        "request_count": len(results),
+        "result_count": len(results),
         "results": results,
     }
-    Path(args.output).write_text(
-        json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    Path(args.output).write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    total_items = 0
-    for entry in results:
-        response = entry["response"]
-        total_items += len(response.get("data", [])) if isinstance(response, dict) else 0
-    print(
-        f"PASS: request_id={command['request_id']} requests={len(results)} "
-        f"returned_items={total_items}"
-    )
+    print(f"PASS: request_id={command['request_id']} action={command['action']} results={len(results)}")
 
 
 if __name__ == "__main__":
