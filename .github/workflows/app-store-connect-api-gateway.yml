@@ -1,0 +1,32 @@
+name: App Store Connect API Gateway
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'automation/app-store-connect-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gateway:
+    runs-on: macos-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Execute App Store Connect command
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/app_store_connect_gateway.py
+      - name: Upload API result
+        if: always() && hashFiles('asc-result.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-store-connect-result-${{ github.run_id }}
+          path: asc-result.json
+          retention-days: 7
