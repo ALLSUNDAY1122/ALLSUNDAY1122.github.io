@@ -339,9 +339,13 @@ final class ScanLabBackend: ObservableObject {
         guard scan.status == "published", scan.moderationStatus == "approved" else { return nil }
         var components = URLComponents(url: ScanLabConfig.viewerBaseURL, resolvingAgainstBaseURL: false)!
         switch scan.visibility {
-        case ScanLabVisibility.public.rawValue: components.queryItems = [URLQueryItem(name: "id", value: scan.id.uuidString.lowercased())]
-        case ScanLabVisibility.unlisted.rawValue: components.queryItems = [URLQueryItem(name: "token", value: scan.shareToken.uuidString.lowercased())]
-        default: return nil
+        case ScanLabVisibility.public.rawValue:
+            components.queryItems = [URLQueryItem(name: "id", value: scan.id.uuidString.lowercased())]
+        case ScanLabVisibility.unlisted.rawValue:
+            components.queryItems = nil
+            components.fragment = "token=\(scan.shareToken.uuidString.lowercased())"
+        default:
+            return nil
         }
         return components.url
     }
