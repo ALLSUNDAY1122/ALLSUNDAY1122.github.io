@@ -100,7 +100,9 @@ Deno.serve(async (req) => {
   const shareUrl = updated.visibility === "public"
     ? `${base}?id=${encodeURIComponent(updated.id)}`
     : updated.visibility === "unlisted"
-      ? `${base}?token=${encodeURIComponent(updated.share_token)}`
+      // Keep the unlisted capability token out of the HTTP request target and referrer surface.
+      // The browser viewer reads it from the fragment and sends it only to scanlab-public.
+      ? `${base}#token=${encodeURIComponent(updated.share_token)}`
       : null;
 
   return json({
