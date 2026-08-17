@@ -113,6 +113,16 @@ require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
 # D parity work must not add advertising/analytics SDKs.
 ! grep -R -nE 'Firebase|Amplitude|Mixpanel' SplatNative --include='*.swift'
 
+# D2-001 live Auth E2E remains explicit: credentials are GitHub Secrets only, never fixtures in source.
+require_file scripts/scanlab_auth_e2e.mjs
+require_file ../.github/workflows/splat-native-ios.yml
+require_text ../.github/workflows/splat-native-ios.yml 'Live ScanLab auth/session/profile E2E gate'
+require_text ../.github/workflows/splat-native-ios.yml 'secrets.SCANLAB_E2E_EMAIL'
+require_text ../.github/workflows/splat-native-ios.yml 'secrets.SCANLAB_E2E_PASSWORD'
+require_text ../.github/workflows/splat-native-ios.yml 'LIVE_E2E_BLOCKED_BY_TEST_IDENTITY'
+require_text ../.github/workflows/splat-native-ios.yml 'node splat-native-ios/scripts/scanlab_auth_e2e.mjs'
+! grep -R -nE 'SCANLAB_E2E_(EMAIL|PASSWORD)=' scripts . --exclude='validate.sh' --exclude='splat-native-ios.yml' --exclude-dir='.git'
+
 plutil -lint SplatNative/PrivacyInfo.xcprivacy >/dev/null
 python3 - <<'PY'
 import plistlib
