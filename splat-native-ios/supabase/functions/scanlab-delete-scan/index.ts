@@ -80,14 +80,17 @@ Deno.serve(async (req) => {
   try { body = await req.json(); } catch { return json({ error: "invalid_json" }, 400); }
   if (!validUUID(body.scanId)) return json({ error: "invalid_scan_id" }, 400);
 
+  // Scope the service-role lookup by owner at the database boundary. A caller must not be able
+  // to distinguish another user's scan UUID from an absent scan via 403 vs success behavior.
   const { data: scan, error: scanError } = await admin
     .from("scanlab_scans")
     .select("id,owner_id,asset_path,preview_path,status")
     .eq("id", body.scanId)
+    .eq("owner_id", user.id)
     .maybeSingle();
   if (scanError) return json({ error: "scan_lookup_failed" }, 503);
 
-  // A missing row can still have durable package remnants after a historical metadata-only
+  // A missing owner row can still have durable package remnants after a historical metadata-only
   // delete or interrupted legacy flow. The authenticated owner's canonical folder can be
   // derived safely from user.id + scanId, so recover those orphaned objects before success.
   if (!scan) {
@@ -95,7 +98,6 @@ Deno.serve(async (req) => {
     if (recoveryError) return json({ error: recoveryError, retryable: true }, 503);
     return json({ deleted: true, scanId: body.scanId, recovered: true });
   }
-  if (scan.owner_id !== user.id) return json({ error: "forbidden" }, 403);
 
   const packagePaths = canonicalPackage(user.id, scan.id, scan.asset_path, scan.preview_path);
   if (!packagePaths) return json({ error: "invalid_asset_path" }, 409);
