@@ -29,25 +29,47 @@ done
 # intentionally omitted. All required learning assets are already inside the app.
 
 if command -v magick >/dev/null 2>&1; then
+  # Modern Xcode single-size AppIcon catalog input.
   magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 1024x1024 "$ASSET_DIR/AppIcon-1024.png"
+  # Compatibility filename retained for the existing Codemagic release-input check.
+  cp "$ASSET_DIR/AppIcon-1024.png" "$ASSET_DIR/AppIcon.png"
+
+  # Explicit legacy icon files. Apple upload validation still checks these when
+  # CFBundleIconFiles is present, so they must be copied into the final .app bundle.
+  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 120x120 "$SCRIPT_DIR/HealthManager2/AppIcon-120.png"
+  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 152x152 "$SCRIPT_DIR/HealthManager2/AppIcon-152.png"
+  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 167x167 "$SCRIPT_DIR/HealthManager2/AppIcon-167.png"
+  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 180x180 "$SCRIPT_DIR/HealthManager2/AppIcon-180.png"
 else
-  echo "ImageMagick is required to generate AppIcon-1024.png" >&2
+  echo "ImageMagick is required to generate AppIcon assets" >&2
   exit 1
 fi
 
-python3 - "$ASSET_DIR/AppIcon-1024.png" <<'PY'
+python3 - "$ASSET_DIR/AppIcon-1024.png" "$SCRIPT_DIR/HealthManager2" <<'PY'
 from pathlib import Path
 import struct, sys
-p = Path(sys.argv[1])
-b = p.read_bytes()
-assert b[:8] == b'\x89PNG\r\n\x1a\n', 'AppIcon must be PNG'
-assert b[12:16] == b'IHDR', 'invalid PNG header'
-w, h = struct.unpack('>II', b[16:24])
-assert (w, h) == (1024, 1024), (w, h)
-print('PASS: AppIcon source is 1024x1024 PNG')
+expected = {
+    'AppIcon-1024.png': (1024, 1024),
+    'AppIcon-120.png': (120, 120),
+    'AppIcon-152.png': (152, 152),
+    'AppIcon-167.png': (167, 167),
+    'AppIcon-180.png': (180, 180),
+}
+paths = {'AppIcon-1024.png': Path(sys.argv[1])}
+root = Path(sys.argv[2])
+for name in expected:
+    if name != 'AppIcon-1024.png':
+        paths[name] = root / name
+for name, p in paths.items():
+    b = p.read_bytes()
+    assert b[:8] == b'\x89PNG\r\n\x1a\n', f'{name}: must be PNG'
+    assert b[12:16] == b'IHDR', f'{name}: invalid PNG header'
+    w, h = struct.unpack('>II', b[16:24])
+    assert (w, h) == expected[name], (name, w, h)
+print('PASS: AppIcon source and legacy icon dimensions verified')
 PY
 
-# Match the known-good learning-sprint Xcode 15/16 single-size AppIcon catalog.
+# Match the known-good learning-sprint Xcode single-size AppIcon catalog.
 cat > "$ASSET_DIR/Contents.json" <<'JSON'
 {
   "images" : [
@@ -65,4 +87,4 @@ cat > "$ASSET_DIR/Contents.json" <<'JSON'
 }
 JSON
 
-echo "Prepared HealthManager2 bundled web assets and compiled AppIcon catalog inputs."
+echo "Prepared HealthManager2 web assets, compiled AppIcon catalog, and legacy icon resources."
