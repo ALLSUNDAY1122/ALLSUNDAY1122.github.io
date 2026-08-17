@@ -5,11 +5,11 @@ import UIKit
 private struct ScanLabTrustedCreatedScan: Decodable { let id: UUID }
 private struct ScanLabTrustedPublishRequest: Encodable { let scanId: String }
 private struct ScanLabTrustedDraftInsert: Encodable {
-    let ownerId: UUID; let title: String; let caption: String; let visibility: String; let status: String
+    let id: UUID; let ownerId: UUID; let title: String; let caption: String; let visibility: String; let status: String
     let assetPath: String; let previewPath: String?; let latitude: Double?; let longitude: Double?; let locationLabel: String?
     let publicPlaceConfirmed: Bool; let privacyConfirmed: Bool; let rightsConfirmed: Bool; let contentConfirmed: Bool
     enum CodingKeys: String, CodingKey {
-        case ownerId = "owner_id"; case title, caption, visibility, status; case assetPath = "asset_path"; case previewPath = "preview_path"
+        case id; case ownerId = "owner_id"; case title, caption, visibility, status; case assetPath = "asset_path"; case previewPath = "preview_path"
         case latitude, longitude; case locationLabel = "location_label"; case publicPlaceConfirmed = "public_place_confirmed"
         case privacyConfirmed = "privacy_confirmed"; case rightsConfirmed = "rights_confirmed"; case contentConfirmed = "content_confirmed"
     }
@@ -37,14 +37,17 @@ extension ScanLabBackend {
         guard let size = attributes[.size] as? NSNumber, size.intValue > 0 else { throw ScanLabBackendError.invalidAsset }
         guard size.intValue <= ScanLabConfig.maximumAssetBytes else { throw ScanLabBackendError.assetTooLarge }
 
-        let uploadID = UUID().uuidString.lowercased(), prefix = "\(user.id.uuidString.lowercased())/\(uploadID)"
+        // Use one client-generated scan UUID for both the durable storage folder and the database row.
+        // scanlab-publish intentionally requires owner_id/scan.id/{scene,manifest,preview} so it can
+        // reject arbitrary objects even when an authenticated user can upload into their own prefix.
+        let scanID = UUID(), prefix = "\(user.id.uuidString.lowercased())/\(scanID.uuidString.lowercased())"
         let assetPath = "\(prefix)/scene.spz", manifestPath = "\(prefix)/manifest.json", previewPath = package.previewURL == nil ? nil : "\(prefix)/preview.jpg"
         var uploadedPaths: [String] = []
         do {
             try await client.storage.from("scanlab-assets").upload(assetPath, fileURL: package.assetURL, options: FileOptions(contentType: "application/octet-stream")); uploadedPaths.append(assetPath)
             try await client.storage.from("scanlab-assets").upload(manifestPath, fileURL: package.manifestURL, options: FileOptions(contentType: "application/octet-stream")); uploadedPaths.append(manifestPath)
             if let previewPath, let previewURL = package.previewURL { try await client.storage.from("scanlab-assets").upload(previewPath, fileURL: previewURL, options: FileOptions(contentType: "image/jpeg")); uploadedPaths.append(previewPath) }
-            let draft = ScanLabTrustedDraftInsert(ownerId: user.id, title: trimmedTitle, caption: String(caption.prefix(500)), visibility: visibility.rawValue, status: "draft", assetPath: assetPath, previewPath: previewPath, latitude: publishLocation?.latitude, longitude: publishLocation?.longitude, locationLabel: publishLocation?.label, publicPlaceConfirmed: visibility == .public && publishLocation != nil && publicPlaceConfirmed, privacyConfirmed: visibility == .public && privacyConfirmed, rightsConfirmed: visibility == .public && rightsConfirmed, contentConfirmed: contentConfirmed)
+            let draft = ScanLabTrustedDraftInsert(id: scanID, ownerId: user.id, title: trimmedTitle, caption: String(caption.prefix(500)), visibility: visibility.rawValue, status: "draft", assetPath: assetPath, previewPath: previewPath, latitude: publishLocation?.latitude, longitude: publishLocation?.longitude, locationLabel: publishLocation?.label, publicPlaceConfirmed: visibility == .public && publishLocation != nil && publicPlaceConfirmed, privacyConfirmed: visibility == .public && privacyConfirmed, rightsConfirmed: visibility == .public && rightsConfirmed, contentConfirmed: contentConfirmed)
             let created: ScanLabTrustedCreatedScan = try await client.from("scanlab_scans").insert(draft).select("id").single().execute().value
             let published: ScanLabPublishResponse = try await client.functions.invoke("scanlab-publish", options: FunctionInvokeOptions(region: .apSoutheast1, body: ScanLabTrustedPublishRequest(scanId: created.id.uuidString.lowercased()), timeoutInterval: 30))
             await loadOwnerScans(); if visibility == .public { await loadPublicScans() }; return published
