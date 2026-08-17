@@ -24,6 +24,17 @@ assert.match(publish, /manifest_invalid/);
 assert.match(publish, /content_confirmation_required/);
 assert.match(publish, /public_safety_confirmation_required/);
 
+const moderationIndex = publish.indexOf('const { count: reportCount');
+const publishedBranchIndex = publish.indexOf('if (scan.status === "published")');
+const republishUpdateIndex = publish.indexOf('.neq("status", "published")');
+assert.ok(moderationIndex >= 0, 'moderation check must exist');
+assert.ok(publishedBranchIndex >= 0, 'published lifecycle branch must exist');
+assert.ok(republishUpdateIndex >= 0, 'republish conditional update must exist');
+assert.ok(
+  moderationIndex < publishedBranchIndex && moderationIndex < republishUpdateIndex,
+  'reported scans must hit moderation hold before idempotent publish or republish lifecycle paths',
+);
+
 assert.match(lifecycle, /functions\.invoke\(\s*"scanlab-unpublish"/s);
 assert.match(lifecycle, /functions\.invoke\(\s*"scanlab-publish"/s);
 assert.match(lifecycle, /response\.status != "published"/);
