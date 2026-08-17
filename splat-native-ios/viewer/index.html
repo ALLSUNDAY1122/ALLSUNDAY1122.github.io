@@ -30,9 +30,11 @@
       <p id="location" class="meta"></p>
       <p id="likes" class="meta"></p>
     </section>
-    <section id="status" class="status" role="status" aria-live="polite">
+    <section id="status" class="status" role="status" aria-live="polite" aria-busy="true">
       <div class="spinner" aria-hidden="true"></div>
       <p id="status-text">3Dを読み込んでいます</p>
+      <p id="status-detail" class="status-detail" hidden></p>
+      <button id="retry" class="retry-button" type="button" hidden>もう一度試す</button>
     </section>
   </main>
   <script type="module" src="./viewer.js"></script>
