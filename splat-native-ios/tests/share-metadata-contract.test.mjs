@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { normalizeShareURL, parseShareKey } from '../viewer/share-url.js';
 
 const publish = fs.readFileSync(new URL('../supabase/functions/scanlab-publish/index.ts', import.meta.url), 'utf8');
 const viewer = fs.readFileSync(new URL('../viewer/viewer.js', import.meta.url), 'utf8');
@@ -21,9 +22,34 @@ assert.match(html, /name="referrer" content="no-referrer"/);
 assert.match(html, /rel="canonical"/);
 assert.match(html, /id="status-preview"/);
 
-assert.match(viewer, /hashParams\.get\('token'\)/);
-assert.match(viewer, /queryParams\.get\('token'\)/);
-assert.match(viewer, /url\.searchParams\.delete\('token'\)/);
+const legacy = parseShareKey('https://example.test/viewer/?token=11111111-1111-1111-1111-111111111111');
+assert.equal(legacy.token, '11111111-1111-1111-1111-111111111111');
+assert.equal(legacy.legacyToken, legacy.token);
+assert.equal(legacy.fragmentToken, null);
+assert.equal(
+  normalizeShareURL('https://example.test/viewer/?token=11111111-1111-1111-1111-111111111111', legacy),
+  'https://example.test/viewer/#token=11111111-1111-1111-1111-111111111111',
+);
+
+const fragment = parseShareKey('https://example.test/viewer/#token=22222222-2222-2222-2222-222222222222');
+assert.equal(fragment.token, '22222222-2222-2222-2222-222222222222');
+assert.equal(fragment.legacyToken, null);
+assert.equal(fragment.fragmentToken, fragment.token);
+assert.equal(
+  normalizeShareURL('https://example.test/viewer/#token=22222222-2222-2222-2222-222222222222', fragment),
+  'https://example.test/viewer/#token=22222222-2222-2222-2222-222222222222',
+);
+
+const publicShare = parseShareKey('https://example.test/viewer/?id=33333333-3333-3333-3333-333333333333');
+assert.equal(publicShare.id, '33333333-3333-3333-3333-333333333333');
+assert.equal(publicShare.token, null);
+assert.equal(
+  normalizeShareURL('https://example.test/viewer/?id=33333333-3333-3333-3333-333333333333', publicShare),
+  'https://example.test/viewer/?id=33333333-3333-3333-3333-333333333333',
+);
+
+assert.match(viewer, /parseShareKey\(location\.href\)/);
+assert.match(viewer, /normalizeShareURL\(location\.href, \{ id, token \}\)/);
 assert.match(viewer, /history\.replaceState\(null, '', shareURL\)/);
 assert.match(viewer, /applyShareMetadata\(item\)/);
 assert.match(viewer, /revealPreview\(item\)/);
