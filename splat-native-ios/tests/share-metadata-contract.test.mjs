@@ -11,18 +11,27 @@ assert.match(publish, /metadata\.caption = description/);
 assert.match(publish, /description: updated\.caption/);
 assert.match(publish, /hasPreview: Boolean\(updated\.preview_path\)/);
 assert.match(publish, /visibility === "public"[\s\S]*\?id=/);
-assert.match(publish, /visibility === "unlisted"[\s\S]*\?token=/);
+assert.match(publish, /visibility === "unlisted"[\s\S]*#token=/);
+assert.doesNotMatch(publish, /visibility === "unlisted"[\s\S]*\?token=/);
 
 assert.match(html, /property="og:title"/);
 assert.match(html, /property="og:description"/);
 assert.match(html, /name="twitter:card" content="summary_large_image"/);
+assert.match(html, /name="referrer" content="no-referrer"/);
+assert.match(html, /rel="canonical"/);
 assert.match(html, /id="status-preview"/);
+
+assert.match(viewer, /hashParams\.get\('token'\)/);
+assert.match(viewer, /queryParams\.get\('token'\)/);
+assert.match(viewer, /url\.searchParams\.delete\('token'\)/);
+assert.match(viewer, /history\.replaceState\(null, '', shareURL\)/);
 assert.match(viewer, /applyShareMetadata\(item\)/);
 assert.match(viewer, /revealPreview\(item\)/);
 assert.match(viewer, /await import\('@mkkellogg\/gaussian-splats-3d'\)/);
 assert.ok(viewer.indexOf('applyShareMetadata(item)') < viewer.indexOf("await import('@mkkellogg/gaussian-splats-3d')"), 'metadata must render before 3D runtime import');
 assert.ok(viewer.indexOf('revealPreview(item)') < viewer.indexOf("await import('@mkkellogg/gaussian-splats-3d')"), 'preview must render before 3D runtime import');
 assert.match(viewer, /navigator\.share\(shareData\)/);
-assert.match(viewer, /text: caption\.textContent \|\| undefined/);
+assert.match(viewer, /url: shareURL/);
+assert.match(viewer, /navigator\.clipboard\.writeText\(shareURL\)/);
 
 console.log('share metadata contract: PASS');
