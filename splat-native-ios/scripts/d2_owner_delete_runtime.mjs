@@ -2,6 +2,8 @@ import { createClient } from '@supabase/supabase-js';
 
 const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_PUBLISHABLE_KEY;
+const testEmail = process.env.SUPABASE_TEST_EMAIL;
+const testPassword = process.env.SUPABASE_TEST_PASSWORD;
 if (!url || !key) throw new Error('missing supabase runtime env');
 
 const supabase = createClient(url, key, {
@@ -13,26 +15,24 @@ let scanId = null;
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 
 async function createFixtureSession() {
-  const anonymous = await supabase.auth.signInAnonymously();
-  if (!anonymous.error && anonymous.data.session?.access_token) return anonymous.data;
-  if (!anonymous.error?.message?.includes('Anonymous sign-ins are disabled')) {
-    throw new Error(`anonymous_auth_failed:${anonymous.error?.message ?? 'missing_session'}`);
+  if (testEmail && testPassword) {
+    const password = await supabase.auth.signInWithPassword({ email: testEmail, password: testPassword });
+    if (password.error) throw new Error(`fixture_password_auth_failed:${password.error.message}`);
+    if (!password.data.session?.access_token) throw new Error('fixture_password_auth_missing_session');
+    return password.data;
   }
 
-  const email = `d2-015-${Date.now()}@example.invalid`;
-  const password = `D2-015-${crypto.randomUUID()}-Aa1!`;
-  const emailSignup = await supabase.auth.signUp({ email, password });
-  if (emailSignup.error) throw new Error(`fixture_signup_failed:${emailSignup.error.message}`);
-  userId = emailSignup.data.user?.id ?? null;
-  if (!emailSignup.data.session?.access_token) {
-    throw new Error(`fixture_signup_requires_confirmation:user=${userId ?? 'unknown'}`);
+  const anonymous = await supabase.auth.signInAnonymously();
+  if (anonymous.error) {
+    throw new Error(`fixture_auth_unavailable:${anonymous.error.message}; configure SCANLAB_RUNTIME_TEST_EMAIL/PASSWORD for explicit production runtime verification`);
   }
-  return emailSignup.data;
+  if (!anonymous.data.session?.access_token) throw new Error('fixture_anonymous_auth_missing_session');
+  return anonymous.data;
 }
 
 try {
   const authData = await createFixtureSession();
-  userId = authData.user?.id ?? userId;
+  userId = authData.user?.id ?? null;
   assert(userId, 'fixture user missing');
 
   const { data: initData, error: initError } = await supabase.functions.invoke('scanlab-upload', {
@@ -82,7 +82,9 @@ try {
 
   console.log(JSON.stringify({ ok: true, userId, scanId, first: first.data, retry: retry.data }));
 } finally {
-  if (userId) {
+  // The runtime account is intentionally retained when password credentials are supplied.
+  // Only scan/package fixtures are ephemeral; account lifecycle is owned by D2-016.
+  if (userId && !testEmail && !testPassword) {
     const cleanup = await supabase.functions.invoke('scanlab-delete-account', { body: {} });
     if (cleanup.error) console.error(`fixture_account_cleanup_failed:${cleanup.error.message}`);
     else console.log(JSON.stringify({ cleanup: cleanup.data }));
