@@ -11,17 +11,10 @@ assert.ok(Number.isFinite(waitSeconds) && waitSeconds >= 0 && waitSeconds <= 900
 
 const key = id ? `id=${encodeURIComponent(id)}` : `token=${encodeURIComponent(token)}`;
 const shareUrl = `${api}?mode=share&${key}`;
+const durableUrl = `${api}?mode=asset&${key}`;
 
 async function metadata() {
-  const response = await fetch(shareUrl, { headers: { Accept: 'application/json' }, cache: 'no-store' });
-  if (expectGone) {
-    assert.equal(response.status, 404, `expected 404 after unpublish/delete, got ${response.status}`);
-    return null;
-  }
-  assert.equal(response.status, 200, `share metadata failed: ${response.status}`);
-  const body = await response.json();
-  assert.ok(body?.item?.modelUrl, 'metadata did not return modelUrl');
-  return body.item;
+  return fetch(shareUrl, { headers: { Accept: 'application/json' }, cache: 'no-store' });
 }
 
 async function probeAsset(modelUrl) {
@@ -37,21 +30,30 @@ async function probeAsset(modelUrl) {
   assert.equal(bytes.byteLength, 16, `expected 16 range bytes, got ${bytes.byteLength}`);
 }
 
-const first = await metadata();
-if (!first) {
+if (expectGone) {
+  const [shareResponse, assetResponse] = await Promise.all([
+    metadata(),
+    fetch(durableUrl, { headers: { Range: 'bytes=0-15' }, cache: 'no-store' }),
+  ]);
+  assert.equal(shareResponse.status, 404, `share endpoint must return 404 after unpublish/delete, got ${shareResponse.status}`);
+  assert.equal(assetResponse.status, 404, `same durable asset URL must return 404 after unpublish/delete, got ${assetResponse.status}`);
   console.log('scanlab durable asset live probe: GONE PASS');
   process.exit(0);
 }
 
-const durableUrl = first.modelUrl;
-assert.match(durableUrl, /\/functions\/v1\/scanlab-public\?mode=asset&(?:id|token)=/);
-assert.ok(!/[?&]token=[^&]+.*[?&]token=/.test(durableUrl), 'duplicate token parameter');
+const firstResponse = await metadata();
+assert.equal(firstResponse.status, 200, `share metadata failed: ${firstResponse.status}`);
+const firstBody = await firstResponse.json();
+assert.ok(firstBody?.item?.modelUrl, 'metadata did not return modelUrl');
+assert.equal(firstBody.item.modelUrl, durableUrl, 'metadata modelUrl is not the deterministic durable asset URL');
 await probeAsset(durableUrl);
 
 if (waitSeconds > 0) {
   await new Promise((resolve) => setTimeout(resolve, waitSeconds * 1000));
-  const second = await metadata();
-  assert.equal(second.modelUrl, durableUrl, 'durable modelUrl changed after wait');
+  const secondResponse = await metadata();
+  assert.equal(secondResponse.status, 200, `share metadata failed after wait: ${secondResponse.status}`);
+  const secondBody = await secondResponse.json();
+  assert.equal(secondBody?.item?.modelUrl, durableUrl, 'durable modelUrl changed after wait');
   await probeAsset(durableUrl);
 }
 
