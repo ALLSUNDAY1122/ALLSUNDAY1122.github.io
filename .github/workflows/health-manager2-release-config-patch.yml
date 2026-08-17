@@ -1,0 +1,61 @@
+name: Patch HealthManager2 Release Build Config
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/health-manager2-release-config-patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor == 'ALLSUNDAY1122'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Convert HealthManager2 to App Store eligible release candidate build
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('codemagic.yaml')
+          text = path.read_text(encoding='utf-8')
+          start_marker = '  health-manager-2-ios:\n'
+          end_marker = '\n  otsu4-ios:\n'
+          start = text.index(start_marker)
+          end = text.index(end_marker, start)
+          block = text[start:end]
+
+          internal = "xcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'"
+          if block.count(internal) != 1:
+              raise SystemExit(f'Expected exactly one HealthManager2 internal-only signing command, found {block.count(internal)}')
+          block = block.replace(internal, 'xcode-project use-profiles', 1)
+
+          if block.count('submit_to_testflight: true') != 1:
+              raise SystemExit('Expected exactly one HealthManager2 submit_to_testflight: true')
+          block = block.replace('submit_to_testflight: true', 'submit_to_testflight: false', 1)
+
+          if 'submit_to_app_store: false' not in block:
+              raise SystemExit('Refusing patch: App Store auto-submit guard missing')
+
+          updated = text[:start] + block + text[end:]
+          path.write_text(updated, encoding='utf-8')
+          print('PASS: HealthManager2 now produces App Store eligible builds without automatic Beta/App Store review submission')
+          PY
+
+          # One-shot self cleanup: this workflow should not remain as a latent writer.
+          rm .github/workflows/health-manager2-release-config-patch.yml
+
+      - name: Commit exact release configuration change
+        run: |
+          git config user.name "release-automation"
+          git config user.email "release-automation@users.noreply.github.com"
+          git add codemagic.yaml .github/workflows/health-manager2-release-config-patch.yml
+          git diff --cached --check
+          git commit -m "Make HealthManager2 build App Store eligible"
+          git push origin HEAD:main
