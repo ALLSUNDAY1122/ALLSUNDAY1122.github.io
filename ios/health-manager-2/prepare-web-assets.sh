@@ -29,6 +29,8 @@ done
 
 if command -v magick >/dev/null 2>&1; then
   magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 1024x1024 "$ASSET_DIR/AppIcon.png"
+  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 152x152 "$ASSET_DIR/AppIcon-152.png"
+  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 167x167 "$ASSET_DIR/AppIcon-167.png"
 else
   echo "ImageMagick is required to generate AppIcon.png" >&2
   exit 1
@@ -42,6 +44,18 @@ cat > "$ASSET_DIR/Contents.json" <<'JSON'
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
+    },
+    {
+      "filename" : "AppIcon-152.png",
+      "idiom" : "ipad",
+      "scale" : "2x",
+      "size" : "76x76"
+    },
+    {
+      "filename" : "AppIcon-167.png",
+      "idiom" : "ipad",
+      "scale" : "2x",
+      "size" : "83.5x83.5"
     }
   ],
   "info" : {
