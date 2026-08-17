@@ -1,10 +1,7 @@
+import { normalizeShareURL, parseShareKey } from './share-url.js';
+
 const API = 'https://gybchnyqlqwmajwkhsly.supabase.co/functions/v1/scanlab-public';
-const queryParams = new URLSearchParams(location.search);
-const hashParams = new URLSearchParams(location.hash.startsWith('#') ? location.hash.slice(1) : location.hash);
-const id = queryParams.get('id');
-const legacyToken = queryParams.get('token');
-const fragmentToken = hashParams.get('token');
-const token = fragmentToken || legacyToken;
+const { id, token, legacyToken, fragmentToken } = parseShareKey(location.href);
 const status = document.querySelector('#status');
 const statusText = document.querySelector('#status-text');
 const statusPreview = document.querySelector('#status-preview');
@@ -16,19 +13,7 @@ const locationText = document.querySelector('#location');
 const likes = document.querySelector('#likes');
 const share = document.querySelector('#share');
 
-function normalizedShareURL() {
-  const url = new URL(location.href);
-  if (token) {
-    url.searchParams.delete('token');
-    url.hash = new URLSearchParams({ token }).toString();
-  } else if (id) {
-    url.searchParams.set('id', id);
-    url.hash = '';
-  }
-  return url.toString();
-}
-
-const shareURL = normalizedShareURL();
+const shareURL = normalizeShareURL(location.href, { id, token });
 if (legacyToken && !fragmentToken) {
   // Backward compatibility for previously issued ?token= links while removing the
   // capability token from the HTTP-visible query string as soon as the page executes.
