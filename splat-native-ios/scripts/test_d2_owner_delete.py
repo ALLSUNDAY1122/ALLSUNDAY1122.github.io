@@ -12,13 +12,23 @@ required = [
     'asset_cleanup_limit_exceeded',
     'for (let offset = 0; offset < 1000; offset += pageSize)',
     'offset,',
-    '.from("scanlab-assets").remove(paths)',
+    'const folder = `${ownerId}/${scanId}`',
+    'assetPath !== `${folder}/scene.spz`',
+    'previewPath !== `${folder}/preview.jpg`',
+    'previewPath !== `${folder}/preview.png`',
+    'for (let i = 0; i < paths.length; i += 100)',
+    '.from("scanlab-assets").remove(batch)',
     '.from("scanlab_scans")\n    .delete()',
     'if (!scan) return json({ deleted: true',
-    'safeOwnedPath(scan.asset_path, user.id)',
 ]
 for needle in required:
     assert needle in fn, f"missing delete recovery invariant: {needle}"
+
+for forbidden in [
+    'safeOwnedPath(scan.asset_path, user.id)',
+    '.remove(paths)',
+]:
+    assert forbidden not in fn, f"unsafe delete behavior remains: {forbidden}"
 
 assert 'drop policy if exists "scanlab owner scan delete"' in migration
 assert 'revoke delete on public.scanlab_scans from authenticated' in migration
