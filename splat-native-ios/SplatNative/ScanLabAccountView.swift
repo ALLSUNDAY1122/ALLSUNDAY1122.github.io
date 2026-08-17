@@ -105,7 +105,11 @@ private struct ScanLabOwnerScanRow: View {
             }
             HStack {
                 if let shareURL = backend.shareURL(for: scan) { ShareLink(item: shareURL) { Label("リンク共有", systemImage: "link") } }
-                if scan.status == "published" { Button("非公開化") { Task { await unpublish() } } }
+                if scan.status == "published" {
+                    Button("非公開化") { Task { await unpublish() } }
+                } else if scan.status == "hidden", scan.visibility != ScanLabVisibility.private.rawValue {
+                    Button("再公開") { Task { await republish() } }
+                }
                 Spacer()
                 Button("削除", role: .destructive) { deleteConfirmation = true }
             }.buttonStyle(.borderless).font(.caption).disabled(busy)
@@ -118,6 +122,7 @@ private struct ScanLabOwnerScanRow: View {
     }
     private var visibilityText: String { switch scan.visibility { case "public": "公開"; case "unlisted": "限定リンク"; default: "非公開" } }
     private var statusText: String { if scan.status == "hidden" { return "非公開化済み" }; if scan.moderationStatus == "pending" { return "公開確認中" }; return scan.status == "published" ? "公開中" : "下書き" }
-    private func unpublish() async { busy = true; defer { busy = false }; do { try await backend.unpublish(scan) } catch { backend.notice = error.localizedDescription } }
+    private func unpublish() async { busy = true; defer { busy = false }; do { try await backend.unpublishPublishedScan(scan) } catch { backend.notice = error.localizedDescription } }
+    private func republish() async { busy = true; defer { busy = false }; do { _ = try await backend.republish(scan) } catch { backend.notice = error.localizedDescription } }
     private func deleteScan() async { busy = true; defer { busy = false }; do { try await backend.delete(scan) } catch { backend.notice = error.localizedDescription } }
 }
