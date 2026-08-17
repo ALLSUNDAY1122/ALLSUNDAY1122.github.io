@@ -66,7 +66,7 @@ final class ScanLabPasswordRecoveryCoordinator: ObservableObject {
 
     func cancel(backend: ScanLabBackend) async {
         transition(.cancelled)
-        await backend.signOut()
+        await backend.signOutWithUserSafeError()
     }
 
     private func transition(_ signal: ScanLabPasswordRecoverySignal) {
