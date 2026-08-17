@@ -2,6 +2,12 @@ name: App Store Connect API Check
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/asc-check-trigger'
+      - '.github/workflows/app-store-connect-api-check.yml'
 
 permissions:
   contents: read
