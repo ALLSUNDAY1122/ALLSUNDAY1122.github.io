@@ -96,6 +96,11 @@ private struct ScanLabOwnerScanRow: View {
     let scan: ScanLabOwnerScan
     @State private var busy = false
     @State private var deleteConfirmation = false
+    @State private var editPresented = false
+    @State private var editTitle = ""
+    @State private var editCaption = ""
+    @State private var editError: String?
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -105,19 +110,58 @@ private struct ScanLabOwnerScanRow: View {
             }
             HStack {
                 if let shareURL = backend.shareURL(for: scan) { ShareLink(item: shareURL) { Label("リンク共有", systemImage: "link") } }
-                if scan.status == "published" { Button("非公開化") { Task { await unpublish() } } }
+                if scan.status == "published" {
+                    Button("編集") { beginEditing() }
+                    Button("非公開化") { Task { await unpublish() } }
+                }
                 Spacer()
                 Button("削除", role: .destructive) { deleteConfirmation = true }
             }.buttonStyle(.borderless).font(.caption).disabled(busy)
         }
         .padding(.vertical, 4)
+        .sheet(isPresented: $editPresented) {
+            NavigationStack {
+                Form {
+                    Section("共有情報") {
+                        TextField("タイトル", text: $editTitle)
+                        TextField("説明（任意）", text: $editCaption, axis: .vertical).lineLimit(2...5)
+                    }
+                    if let editError { Text(editError).foregroundStyle(.red).font(.footnote) }
+                }
+                .navigationTitle("共有情報を編集")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) { Button("キャンセル") { editPresented = false } }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(busy ? "保存中…" : "保存") { Task { await saveMetadata() } }
+                            .disabled(busy || editTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    }
+                }
+            }
+        }
         .alert("このクラウドスキャンを削除しますか？", isPresented: $deleteConfirmation) {
             Button("キャンセル", role: .cancel) {}
             Button("削除", role: .destructive) { Task { await deleteScan() } }
         } message: { Text("公開リンクも使えなくなり、クラウド上の3Dファイルも削除されます。") }
     }
+
+    private func beginEditing() {
+        editTitle = scan.title
+        editCaption = scan.caption
+        editError = nil
+        editPresented = true
+    }
     private var visibilityText: String { switch scan.visibility { case "public": "公開"; case "unlisted": "限定リンク"; default: "非公開" } }
     private var statusText: String { if scan.status == "hidden" { return "非公開化済み" }; if scan.moderationStatus == "pending" { return "公開確認中" }; return scan.status == "published" ? "公開中" : "下書き" }
+    private func saveMetadata() async {
+        busy = true; editError = nil; defer { busy = false }
+        do {
+            try await backend.updatePublishedMetadata(scan, title: editTitle, caption: editCaption)
+            editPresented = false
+        } catch {
+            editError = error.localizedDescription
+        }
+    }
     private func unpublish() async { busy = true; defer { busy = false }; do { try await backend.unpublish(scan) } catch { backend.notice = error.localizedDescription } }
     private func deleteScan() async { busy = true; defer { busy = false }; do { try await backend.delete(scan) } catch { backend.notice = error.localizedDescription } }
 }
