@@ -55,6 +55,12 @@ async function viewerIsReady() {
   }
 }
 
+function publishError(error: { message?: string } | null | undefined) {
+  const rateLimited = error?.message?.includes("rate limit") ?? false;
+  const objectionable = error?.message?.includes("objectionable") ?? false;
+  return json({ error: rateLimited ? "publish_rate_limited" : objectionable ? "content_rejected" : "publish_failed" }, rateLimited ? 429 : 400);
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
   const token = bearer(req);
@@ -72,6 +78,10 @@ Deno.serve(async (req) => {
   const description = body.description === undefined ? null : cleanText(body.description, 500);
   if (body.title !== undefined && !title) return json({ error: "invalid_title" }, 400);
 
+  const metadata: Record<string, string> = {};
+  if (title !== null) metadata.title = title;
+  if (description !== null) metadata.caption = description;
+
   const { data: scan, error: scanError } = await admin
     .from("scanlab_scans")
     .select("id,owner_id,title,caption,visibility,status,moderation_status,asset_path,preview_path,latitude,longitude,public_place_confirmed,privacy_confirmed,rights_confirmed,content_confirmed,share_token,published_at")
@@ -86,19 +96,47 @@ Deno.serve(async (req) => {
     return json({ error: "invalid_preview_path" }, 409);
   }
 
+  const { count: reportCount, error: reportError } = await admin
+    .from("scanlab_reports")
+    .select("id", { count: "exact", head: true })
+    .eq("scan_id", scan.id);
+  if (reportError) return json({ error: "moderation_check_failed" }, 503);
+  if ((reportCount ?? 0) > 0) return json({ error: "moderation_hold" }, 409);
+
   if (scan.status === "published") {
-    if (["public", "unlisted"].includes(scan.visibility) && !(await viewerIsReady())) {
+    let current = scan;
+    const metadataRequested = Object.keys(metadata).length > 0;
+    if (metadataRequested) {
+      const { data: refreshed, error: refreshError } = await admin
+        .from("scanlab_scans")
+        .update(metadata)
+        .eq("id", scan.id)
+        .eq("owner_id", user.id)
+        .eq("status", "published")
+        .select("id,title,caption,visibility,share_token,preview_path,published_at")
+        .maybeSingle();
+      if (refreshError) return publishError(refreshError);
+      if (!refreshed) return json({ error: "lifecycle_conflict" }, 409);
+      current = { ...scan, ...refreshed };
+    }
+
+    const needsViewer = ["public", "unlisted"].includes(current.visibility);
+    const viewerAvailable = !needsViewer || await viewerIsReady();
+    if (!viewerAvailable && !metadataRequested) {
       return json({ error: "viewer_unavailable" }, 503);
     }
+
     return json({
-      id: scan.id,
-      title: scan.title,
-      description: scan.caption,
-      visibility: scan.visibility,
-      publishedAt: scan.published_at,
-      shareUrl: shareUrlFor(scan),
-      hasPreview: Boolean(scan.preview_path),
+      id: current.id,
+      title: current.title,
+      description: current.caption,
+      visibility: current.visibility,
+      publishedAt: current.published_at,
+      shareUrl: viewerAvailable ? shareUrlFor(current) : null,
+      hasPreview: Boolean(current.preview_path),
       alreadyPublished: true,
+      metadataUpdated: metadataRequested,
+      viewerAvailable,
     });
   }
 
@@ -112,13 +150,6 @@ Deno.serve(async (req) => {
       return json({ error: "public_safety_confirmation_required" }, 400);
     }
   }
-
-  const { count: reportCount, error: reportError } = await admin
-    .from("scanlab_reports")
-    .select("id", { count: "exact", head: true })
-    .eq("scan_id", scan.id);
-  if (reportError) return json({ error: "moderation_check_failed" }, 503);
-  if ((reportCount ?? 0) > 0) return json({ error: "moderation_hold" }, 409);
 
   const { data: files, error: listError } = await admin.storage.from("scanlab-assets").list(expectedFolder, { limit: 8 });
   if (listError) return json({ error: "asset_check_failed" }, 503);
@@ -136,10 +167,6 @@ Deno.serve(async (req) => {
     return json({ error: "viewer_unavailable" }, 503);
   }
 
-  const metadata: Record<string, string> = {};
-  if (title !== null) metadata.title = title;
-  if (description !== null) metadata.caption = description;
-
   const { data: updated, error: updateError } = await admin
     .from("scanlab_scans")
     .update({ ...metadata, status: "published", moderation_status: "approved" })
@@ -149,11 +176,7 @@ Deno.serve(async (req) => {
     .select("id,title,caption,visibility,share_token,preview_path,published_at")
     .maybeSingle();
 
-  if (updateError) {
-    const rateLimited = updateError.message?.includes("rate limit") ?? false;
-    const objectionable = updateError.message?.includes("objectionable") ?? false;
-    return json({ error: rateLimited ? "publish_rate_limited" : objectionable ? "content_rejected" : "publish_failed" }, rateLimited ? 429 : 400);
-  }
+  if (updateError) return publishError(updateError);
   if (!updated) return json({ error: "lifecycle_conflict" }, 409);
 
   return json({
@@ -165,5 +188,7 @@ Deno.serve(async (req) => {
     shareUrl: shareUrlFor(updated),
     hasPreview: Boolean(updated.preview_path),
     alreadyPublished: false,
+    metadataUpdated: Object.keys(metadata).length > 0,
+    viewerAvailable: true,
   });
 });
