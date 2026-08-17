@@ -16,8 +16,12 @@ assert.match(publish, /visibility === "unlisted"[\s\S]*\?token=/);
 assert.match(html, /property="og:title"/);
 assert.match(html, /property="og:description"/);
 assert.match(html, /name="twitter:card" content="summary_large_image"/);
+assert.match(html, /id="status-preview"/);
 assert.match(viewer, /applyShareMetadata\(item\)/);
-assert.match(viewer, /item\.previewUrl/);
+assert.match(viewer, /revealPreview\(item\)/);
+assert.match(viewer, /await import\('@mkkellogg\/gaussian-splats-3d'\)/);
+assert.ok(viewer.indexOf('applyShareMetadata(item)') < viewer.indexOf("await import('@mkkellogg/gaussian-splats-3d')"), 'metadata must render before 3D runtime import');
+assert.ok(viewer.indexOf('revealPreview(item)') < viewer.indexOf("await import('@mkkellogg/gaussian-splats-3d')"), 'preview must render before 3D runtime import');
 assert.match(viewer, /navigator\.share\(shareData\)/);
 assert.match(viewer, /text: caption\.textContent \|\| undefined/);
 
