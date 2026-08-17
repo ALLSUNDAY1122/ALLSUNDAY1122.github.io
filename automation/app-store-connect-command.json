@@ -1,17 +1,125 @@
 {
-  "request_id": "testflight-beta-review-batch-20260817-1814",
+  "request_id": "remaining-app-status-20260817-1825",
   "requests": [
-    {"label":"yakuzaishi-beta","path":"/v1/betaAppReviewSubmissions?filter%5Bbuild%5D=262a8aaa-3e7b-4c2f-81fd-9d41a4f38f80&limit=10"},
-    {"label":"eisei1-beta","path":"/v1/betaAppReviewSubmissions?filter%5Bbuild%5D=1642cafd-1aa9-4038-b7d1-946e60155cf5&limit=10"},
-    {"label":"otsu4-beta","path":"/v1/betaAppReviewSubmissions?filter%5Bbuild%5D=150dbe94-988b-47fc-a477-bf5cf02c1318&limit=10"},
-    {"label":"torutango-beta","path":"/v1/betaAppReviewSubmissions?filter%5Bbuild%5D=7b8f2866-8b2d-4ec9-9bcf-a42d146b799a&limit=10"},
-    {"label":"pitari-beta","path":"/v1/betaAppReviewSubmissions?filter%5Bbuild%5D=d0ac3685-4e7b-49d9-a86f-0736e8088e76&limit=10"},
-    {"label":"fp2-beta","path":"/v1/betaAppReviewSubmissions?filter%5Bbuild%5D=8b9b7b39-68bf-4c3f-9fd8-005a0a9d53a7&limit=10"},
-    {"label":"fp3-beta","path":"/v1/betaAppReviewSubmissions?filter%5Bbuild%5D=389c1299-3ba1-4f08-85ee-ef9435dcecc1&limit=10"},
-    {"label":"shiwake-beta","path":"/v1/betaAppReviewSubmissions?filter%5Bbuild%5D=081d48f2-b864-4513-9b88-747657c1ec2a&limit=10"},
-    {"label":"relay-beta","path":"/v1/betaAppReviewSubmissions?filter%5Bbuild%5D=8fa8cf8d-0a5f-48ac-b30f-f56e5f7c492e&limit=10"},
-    {"label":"itpassport-beta","path":"/v1/betaAppReviewSubmissions?filter%5Bbuild%5D=31fe1dbe-ab33-4e2c-a917-9de8980d8336&limit=10"},
-    {"label":"yorunoshoka-beta","path":"/v1/betaAppReviewSubmissions?filter%5Bbuild%5D=23521541-e269-4baf-800d-7830b94c36a1&limit=10"},
-    {"label":"takucalc-beta","path":"/v1/betaAppReviewSubmissions?filter%5Bbuild%5D=e88d3687-830a-476c-8c5a-7d7b04a5027d&limit=10"}
+    {
+      "label": "sprintstudy-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6802207686&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "sprintstudy-store",
+      "path": "/v1/apps/6802207686/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "touroku-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6802119268&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "touroku-store",
+      "path": "/v1/apps/6802119268/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "kangoshi-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6801792293&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "kangoshi-store",
+      "path": "/v1/apps/6801792293/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "kanteishi-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6801787074&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "kanteishi-store",
+      "path": "/v1/apps/6801787074/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "hokenshi-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6801783499&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "hokenshi-store",
+      "path": "/v1/apps/6801783499/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "shoshi-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6799755748&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "shoshi-store",
+      "path": "/v1/apps/6799755748/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "cpa-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6799754783&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "cpa-store",
+      "path": "/v1/apps/6799754783/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "network-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6799754573&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "network-store",
+      "path": "/v1/apps/6799754573/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "ap-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6799754343&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "ap-store",
+      "path": "/v1/apps/6799754343/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "kanrieiyo-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6799753841&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "kanrieiyo-store",
+      "path": "/v1/apps/6799753841/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "tsukanshi-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6799753744&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "tsukanshi-store",
+      "path": "/v1/apps/6799753744/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "eisei2-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6799751657&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "eisei2-store",
+      "path": "/v1/apps/6799751657/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "seihoippan-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6798736588&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "seihoippan-store",
+      "path": "/v1/apps/6798736588/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "seihosenmon-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6798736255&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "seihosenmon-store",
+      "path": "/v1/apps/6798736255/appStoreVersions?limit=5&include=build"
+    },
+    {
+      "label": "aihandover-build",
+      "path": "/v1/builds?filter%5Bapp%5D=6794561178&sort=-uploadedDate&limit=1&fields%5Bbuilds%5D=version,uploadedDate,expirationDate,expired,processingState,buildAudienceType,usesNonExemptEncryption"
+    },
+    {
+      "label": "aihandover-store",
+      "path": "/v1/apps/6794561178/appStoreVersions?limit=5&include=build"
+    }
   ]
 }
