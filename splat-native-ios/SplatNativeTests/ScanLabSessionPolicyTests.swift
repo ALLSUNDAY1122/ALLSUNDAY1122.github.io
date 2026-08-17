@@ -2,17 +2,28 @@ import XCTest
 @testable import SplatNative
 
 final class ScanLabSessionPolicyTests: XCTestCase {
-    func testInitialPersistedSessionRestoresAuthenticatedState() {
-        XCTAssertTrue(ScanLabSessionPolicy.isAuthenticated(after: .initialSession(hasSession: true)))
-        XCTAssertTrue(ScanLabSessionPolicy.shouldReloadPrivateData(after: .initialSession(hasSession: true)))
+    func testInitialPersistedValidSessionRestoresAndReloadsPrivateData() {
+        let event = ScanLabSessionEvent.initialSession(hasSession: true, isExpired: false)
+        XCTAssertTrue(ScanLabSessionPolicy.isAuthenticated(after: event))
+        XCTAssertTrue(ScanLabSessionPolicy.shouldReloadPrivateData(after: event))
+        XCTAssertFalse(ScanLabSessionPolicy.needsRefreshBeforePrivateData(after: event))
+    }
+
+    func testInitialPersistedExpiredSessionWaitsForRefreshBeforePrivateData() {
+        let event = ScanLabSessionEvent.initialSession(hasSession: true, isExpired: true)
+        XCTAssertTrue(ScanLabSessionPolicy.isAuthenticated(after: event))
+        XCTAssertFalse(ScanLabSessionPolicy.shouldReloadPrivateData(after: event))
+        XCTAssertTrue(ScanLabSessionPolicy.needsRefreshBeforePrivateData(after: event))
     }
 
     func testInitialMissingSessionIsSignedOut() {
-        XCTAssertFalse(ScanLabSessionPolicy.isAuthenticated(after: .initialSession(hasSession: false)))
-        XCTAssertFalse(ScanLabSessionPolicy.shouldReloadPrivateData(after: .initialSession(hasSession: false)))
+        let event = ScanLabSessionEvent.initialSession(hasSession: false, isExpired: false)
+        XCTAssertFalse(ScanLabSessionPolicy.isAuthenticated(after: event))
+        XCTAssertFalse(ScanLabSessionPolicy.shouldReloadPrivateData(after: event))
+        XCTAssertFalse(ScanLabSessionPolicy.needsRefreshBeforePrivateData(after: event))
     }
 
-    func testTokenRefreshKeepsAuthenticatedStateWithoutReloadStorm() {
+    func testTokenRefreshKeepsAuthenticatedStateWithoutPeriodicReloadStorm() {
         XCTAssertTrue(ScanLabSessionPolicy.isAuthenticated(after: .tokenRefreshed))
         XCTAssertFalse(ScanLabSessionPolicy.shouldReloadPrivateData(after: .tokenRefreshed))
     }
