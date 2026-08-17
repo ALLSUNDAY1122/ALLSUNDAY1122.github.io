@@ -53,6 +53,20 @@ async function removePaths(paths: string[]) {
   return null;
 }
 
+async function cleanupCanonicalFolder(ownerId: string, scanId: string, previewPath: string | null = null) {
+  const folder = `${ownerId}/${scanId}`;
+  const listed = await listFolderPaths(folder);
+  if (listed.error) return listed.error;
+
+  const paths = new Set(listed.paths ?? []);
+  paths.add(`${folder}/scene.spz`);
+  paths.add(`${folder}/manifest.json`);
+  if (previewPath) paths.add(previewPath);
+
+  const cleanupError = await removePaths([...paths]);
+  return cleanupError ? "asset_cleanup_pending" as const : null;
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
   const token = bearer(req);
@@ -72,7 +86,15 @@ Deno.serve(async (req) => {
     .eq("id", body.scanId)
     .maybeSingle();
   if (scanError) return json({ error: "scan_lookup_failed" }, 503);
-  if (!scan) return json({ deleted: true, scanId: body.scanId, recovered: true });
+
+  // A missing row can still have durable package remnants after a historical metadata-only
+  // delete or interrupted legacy flow. The authenticated owner's canonical folder can be
+  // derived safely from user.id + scanId, so recover those orphaned objects before success.
+  if (!scan) {
+    const recoveryError = await cleanupCanonicalFolder(user.id, body.scanId);
+    if (recoveryError) return json({ error: recoveryError, retryable: true }, 503);
+    return json({ deleted: true, scanId: body.scanId, recovered: true });
+  }
   if (scan.owner_id !== user.id) return json({ error: "forbidden" }, 403);
 
   const packagePaths = canonicalPackage(user.id, scan.id, scan.asset_path, scan.preview_path);
@@ -87,15 +109,8 @@ Deno.serve(async (req) => {
     .eq("owner_id", user.id);
   if (hideError) return json({ error: "delete_prepare_failed" }, 503);
 
-  const listed = await listFolderPaths(packagePaths.folder);
-  if (listed.error) return json({ error: listed.error, retryable: true }, 503);
-
-  const paths = new Set(listed.paths ?? []);
-  paths.add(packagePaths.assetPath);
-  if (packagePaths.previewPath) paths.add(packagePaths.previewPath);
-
-  const cleanupError = await removePaths([...paths]);
-  if (cleanupError) return json({ error: "asset_cleanup_pending", retryable: true }, 503);
+  const cleanupError = await cleanupCanonicalFolder(user.id, scan.id, packagePaths.previewPath);
+  if (cleanupError) return json({ error: cleanupError, retryable: true }, 503);
 
   const { error: deleteError } = await admin
     .from("scanlab_scans")
