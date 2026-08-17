@@ -28,11 +28,14 @@ jobs:
       - name: Build native question payload
         run: python3 network-specialist-sprint/scripts/build_native_questions.py
 
+      - name: Materialize exact canonical AppIcon
+        run: python3 network-specialist-sprint/scripts/materialize_appicon.py
+
       - name: Legacy content and rights validation
         run: python3 network-specialist-sprint/scripts/validate_release.py
 
-      - name: Native static validation
-        run: python3 network-specialist-sprint/scripts/validate_native_release.py
+      - name: Native static validation with canonical icon
+        run: python3 network-specialist-sprint/scripts/validate_native_release.py --require-icon
 
       - name: JavaScript syntax validation
         run: |
@@ -77,6 +80,7 @@ jobs:
           grep -R --line-number 'JSONバックアップ' network-specialist-sprint/ios/NetworkSpecialist/*.swift
           python3 -m py_compile \
             network-specialist-sprint/scripts/build_native_questions.py \
+            network-specialist-sprint/scripts/materialize_appicon.py \
             network-specialist-sprint/scripts/validate_native_release.py
           bash -n network-specialist-sprint/scripts/run_native_ui_tests.sh
 
@@ -88,6 +92,9 @@ jobs:
       - name: Build native question payload
         run: python3 network-specialist-sprint/scripts/build_native_questions.py
 
+      - name: Materialize exact canonical AppIcon
+        run: python3 network-specialist-sprint/scripts/materialize_appicon.py
+
       - name: Install XcodeGen
         run: brew install xcodegen
 
@@ -97,7 +104,19 @@ jobs:
           xcodegen generate
 
       - name: SwiftUI unit and UI tests on two iPhone sizes
-        timeout-minutes: 15
+        timeout-minutes: 30
         run: |
           cd network-specialist-sprint
           bash scripts/run_native_ui_tests.sh
+
+      - name: Unsigned device Release build
+        timeout-minutes: 10
+        run: |
+          cd network-specialist-sprint
+          xcodebuild build \
+            -project ios/NetworkSpecialist.xcodeproj \
+            -scheme NetworkSpecialist \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
