@@ -40,6 +40,16 @@ async function listFolderPaths(folder: string) {
     for (const file of data ?? []) paths.push(`${folder}/${file.name}`);
     if ((data ?? []).length < pageSize) return { paths, error: null };
   }
+
+  // Exactly 1000 objects is still within the recovery budget. Probe only the 1001st object
+  // so the limit error means "more than 1000", not "1000 or more".
+  const { data: overflow, error: overflowError } = await admin.storage.from("scanlab-assets").list(folder, {
+    limit: 1,
+    offset: 1000,
+    sortBy: { column: "name", order: "asc" },
+  });
+  if (overflowError) return { paths: null, error: "asset_cleanup_pending" as const };
+  if ((overflow ?? []).length === 0) return { paths, error: null };
   return { paths: null, error: "asset_cleanup_limit_exceeded" as const };
 }
 
@@ -80,8 +90,6 @@ Deno.serve(async (req) => {
   try { body = await req.json(); } catch { return json({ error: "invalid_json" }, 400); }
   if (!validUUID(body.scanId)) return json({ error: "invalid_scan_id" }, 400);
 
-  // Scope the service-role lookup by owner at the database boundary. A caller must not be able
-  // to distinguish another user's scan UUID from an absent scan via 403 vs success behavior.
   const { data: scan, error: scanError } = await admin
     .from("scanlab_scans")
     .select("id,owner_id,asset_path,preview_path,status")
@@ -90,9 +98,6 @@ Deno.serve(async (req) => {
     .maybeSingle();
   if (scanError) return json({ error: "scan_lookup_failed" }, 503);
 
-  // A missing owner row can still have durable package remnants after a historical metadata-only
-  // delete or interrupted legacy flow. The authenticated owner's canonical folder can be
-  // derived safely from user.id + scanId, so recover those orphaned objects before success.
   if (!scan) {
     const recoveryError = await cleanupCanonicalFolder(user.id, body.scanId);
     if (recoveryError) return json({ error: recoveryError, retryable: true }, 503);
@@ -102,8 +107,6 @@ Deno.serve(async (req) => {
   const packagePaths = canonicalPackage(user.id, scan.id, scan.asset_path, scan.preview_path);
   if (!packagePaths) return json({ error: "invalid_asset_path" }, 409);
 
-  // Revoke publication first. If cleanup fails, share/feed reads stop immediately while the
-  // hidden metadata row remains as a durable retry cursor for the owner.
   const { error: hideError } = await admin
     .from("scanlab_scans")
     .update({ status: "hidden", moderation_status: "pending" })
