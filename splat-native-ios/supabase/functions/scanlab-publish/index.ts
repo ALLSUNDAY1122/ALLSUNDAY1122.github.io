@@ -37,9 +37,14 @@ Deno.serve(async (req) => {
 
   if (scanError || !scan) return json({ error: "not_found" }, 404);
   if (scan.owner_id !== user.id) return json({ error: "forbidden" }, 403);
+
+  // Private is owner-only storage/library state and is never a public publication.
+  if (scan.visibility === "private") return json({ error: "private_scan_not_publishable" }, 409);
+  if (!["public", "unlisted"].includes(scan.visibility)) return json({ error: "invalid_visibility" }, 400);
+
   if (!scan.asset_path.startsWith(`${user.id}/`)) return json({ error: "invalid_asset_path" }, 400);
 
-  if (["public", "unlisted"].includes(scan.visibility) && !scan.content_confirmed) {
+  if (!scan.content_confirmed) {
     return json({ error: "content_confirmation_required" }, 400);
   }
   if (scan.visibility === "public") {
@@ -86,9 +91,7 @@ Deno.serve(async (req) => {
   const base = "https://allsunday1122.github.io/splat-native-ios/viewer/";
   const shareUrl = updated.visibility === "public"
     ? `${base}?id=${encodeURIComponent(updated.id)}`
-    : updated.visibility === "unlisted"
-      ? `${base}?token=${encodeURIComponent(updated.share_token)}`
-      : null;
+    : `${base}?token=${encodeURIComponent(updated.share_token)}`;
 
   return json({ id: updated.id, visibility: updated.visibility, publishedAt: updated.published_at, shareUrl });
 });
