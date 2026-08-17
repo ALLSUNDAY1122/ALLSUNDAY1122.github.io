@@ -27,6 +27,18 @@ assert.match(publish, /\.neq\("status", "published"\)/);
 assert.match(publish, /alreadyPublished: true/);
 assert.match(publish, /alreadyPublished: false/);
 
+// Already-published shares must accept owner metadata refresh without republishing assets.
+assert.match(publish, /if \(scan\.status === "published"\)/);
+assert.match(publish, /Object\.keys\(metadata\)\.length > 0/);
+assert.match(publish, /\.update\(metadata\)/);
+assert.match(publish, /\.eq\("status", "published"\)/);
+assert.match(publish, /current = \{ \.\.\.scan, \.\.\.refreshed \}/);
+assert.match(publish, /metadataUpdated: Object\.keys\(metadata\)\.length > 0/);
+const publishedBranch = publish.indexOf('if (scan.status === "published")');
+const metadataRefresh = publish.indexOf('.update(metadata)', publishedBranch);
+const freshPublishMutation = publish.indexOf('.update({ ...metadata, status: "published", moderation_status: "approved" })');
+assert.ok(publishedBranch >= 0 && metadataRefresh > publishedBranch && metadataRefresh < freshPublishMutation, 'published metadata refresh must not reuse fresh publish mutation');
+
 // A share URL is only valid when the browser viewer is actually deployed.
 assert.match(publish, /async function viewerIsReady\(\)/);
 assert.match(publish, /method: "HEAD"/);
