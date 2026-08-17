@@ -16,7 +16,44 @@ function bearer(req: Request) {
   return header.toLowerCase().startsWith("bearer ") ? header.slice(7) : null;
 }
 
+function cleanText(value: unknown, maxLength: number) {
+  if (typeof value !== "string") return null;
+  return value.replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim().slice(0, maxLength);
+}
+
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const shareBase = "https://allsunday1122.github.io/splat-native-ios/viewer/";
+let viewerReadyUntil = 0;
+
+function shareUrlFor(scan: { id: string; visibility: string; share_token: string }) {
+  return scan.visibility === "public"
+    ? `${shareBase}?id=${encodeURIComponent(scan.id)}`
+    : scan.visibility === "unlisted"
+      ? `${shareBase}#token=${encodeURIComponent(scan.share_token)}`
+      : null;
+}
+
+async function viewerIsReady() {
+  if (Date.now() < viewerReadyUntil) return true;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 2500);
+  try {
+    const response = await fetch(shareBase, {
+      method: "HEAD",
+      redirect: "follow",
+      signal: controller.signal,
+      headers: { Accept: "text/html" },
+    });
+    const contentType = response.headers.get("content-type") ?? "";
+    const ready = response.ok && contentType.toLowerCase().includes("text/html");
+    if (ready) viewerReadyUntil = Date.now() + 60_000;
+    return ready;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
@@ -27,13 +64,17 @@ Deno.serve(async (req) => {
   const user = userData.user;
   if (userError || !user) return json({ error: "unauthorized" }, 401);
 
-  let body: { scanId?: string };
+  let body: { scanId?: string; title?: string; description?: string };
   try { body = await req.json(); } catch { return json({ error: "invalid_json" }, 400); }
   if (!body.scanId || !uuid.test(body.scanId)) return json({ error: "invalid_scan_id" }, 400);
 
+  const title = body.title === undefined ? null : cleanText(body.title, 80);
+  const description = body.description === undefined ? null : cleanText(body.description, 500);
+  if (body.title !== undefined && !title) return json({ error: "invalid_title" }, 400);
+
   const { data: scan, error: scanError } = await admin
     .from("scanlab_scans")
-    .select("id,owner_id,visibility,status,moderation_status,asset_path,preview_path,latitude,longitude,public_place_confirmed,privacy_confirmed,rights_confirmed,content_confirmed,share_token")
+    .select("id,owner_id,title,caption,visibility,status,moderation_status,asset_path,preview_path,latitude,longitude,public_place_confirmed,privacy_confirmed,rights_confirmed,content_confirmed,share_token,published_at")
     .eq("id", body.scanId)
     .maybeSingle();
 
@@ -46,20 +87,28 @@ Deno.serve(async (req) => {
   }
 
   if (scan.status === "published") {
-    const base = "https://allsunday1122.github.io/splat-native-ios/viewer/";
-    const shareUrl = scan.visibility === "public"
-      ? `${base}?id=${encodeURIComponent(scan.id)}`
-      : scan.visibility === "unlisted"
-        ? `${base}?token=${encodeURIComponent(scan.share_token)}`
-        : null;
-    return json({ id: scan.id, visibility: scan.visibility, shareUrl, alreadyPublished: true });
+    if (["public", "unlisted"].includes(scan.visibility) && !(await viewerIsReady())) {
+      return json({ error: "viewer_unavailable" }, 503);
+    }
+    return json({
+      id: scan.id,
+      title: scan.title,
+      description: scan.caption,
+      visibility: scan.visibility,
+      publishedAt: scan.published_at,
+      shareUrl: shareUrlFor(scan),
+      hasPreview: Boolean(scan.preview_path),
+      alreadyPublished: true,
+    });
   }
 
   if (["public", "unlisted"].includes(scan.visibility) && !scan.content_confirmed) {
     return json({ error: "content_confirmation_required" }, 400);
   }
   if (scan.visibility === "public") {
-    if (scan.latitude == null || scan.longitude == null || !scan.public_place_confirmed || !scan.privacy_confirmed || !scan.rights_confirmed) {
+    const hasLat = scan.latitude != null;
+    const hasLon = scan.longitude != null;
+    if (!scan.privacy_confirmed || !scan.rights_confirmed || hasLat !== hasLon || (hasLat && !scan.public_place_confirmed)) {
       return json({ error: "public_safety_confirmation_required" }, 400);
     }
   }
@@ -83,13 +132,21 @@ Deno.serve(async (req) => {
   if (scene.metadata?.mimetype && scene.metadata.mimetype !== "application/octet-stream") return json({ error: "asset_mime_invalid" }, 409);
   if (manifest.metadata?.mimetype && !["application/json", "application/octet-stream"].includes(manifest.metadata.mimetype)) return json({ error: "manifest_mime_invalid" }, 409);
 
+  if (["public", "unlisted"].includes(scan.visibility) && !(await viewerIsReady())) {
+    return json({ error: "viewer_unavailable" }, 503);
+  }
+
+  const metadata: Record<string, string> = {};
+  if (title !== null) metadata.title = title;
+  if (description !== null) metadata.caption = description;
+
   const { data: updated, error: updateError } = await admin
     .from("scanlab_scans")
-    .update({ status: "published", moderation_status: "approved" })
+    .update({ ...metadata, status: "published", moderation_status: "approved" })
     .eq("id", scan.id)
     .eq("owner_id", user.id)
     .neq("status", "published")
-    .select("id,visibility,share_token,published_at")
+    .select("id,title,caption,visibility,share_token,preview_path,published_at")
     .maybeSingle();
 
   if (updateError) {
@@ -99,12 +156,14 @@ Deno.serve(async (req) => {
   }
   if (!updated) return json({ error: "lifecycle_conflict" }, 409);
 
-  const base = "https://allsunday1122.github.io/splat-native-ios/viewer/";
-  const shareUrl = updated.visibility === "public"
-    ? `${base}?id=${encodeURIComponent(updated.id)}`
-    : updated.visibility === "unlisted"
-      ? `${base}?token=${encodeURIComponent(updated.share_token)}`
-      : null;
-
-  return json({ id: updated.id, visibility: updated.visibility, publishedAt: updated.published_at, shareUrl, alreadyPublished: false });
+  return json({
+    id: updated.id,
+    title: updated.title,
+    description: updated.caption,
+    visibility: updated.visibility,
+    publishedAt: updated.published_at,
+    shareUrl: shareUrlFor(updated),
+    hasPreview: Boolean(updated.preview_path),
+    alreadyPublished: false,
+  });
 });
