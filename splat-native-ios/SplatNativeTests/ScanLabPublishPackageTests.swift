@@ -14,6 +14,8 @@ final class ScanLabPublishPackageTests: XCTestCase {
 
         XCTAssertEqual(package.sceneURL.lastPathComponent, "scene.spz")
         XCTAssertEqual(package.manifestURL.lastPathComponent, "manifest.json")
+        XCTAssertEqual(ScanLabPublishPackage.sceneMediaType, "application/octet-stream")
+        XCTAssertEqual(package.manifest.mediaType, "application/vnd.scanlab.spz")
         XCTAssertEqual(package.manifest.sceneByteCount, Int64(sourceData.count))
         XCTAssertEqual(package.manifest.sceneSHA256.count, 64)
         XCTAssertTrue(try ScanLabPublishPackageBuilder.verify(package))
