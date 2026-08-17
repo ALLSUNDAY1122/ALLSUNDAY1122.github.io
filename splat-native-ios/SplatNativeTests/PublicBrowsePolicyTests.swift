@@ -15,16 +15,33 @@ final class PublicBrowsePolicyTests: XCTestCase {
         XCTAssertEqual(result.map(\.id), [UUID(uuidString: "dddddddd-dddd-dddd-dddd-dddddddddddd")!, UUID(uuidString: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")!])
     }
 
-    func testBrowseRejectsMissingAuthorOrModelURL() {
+    func testBrowseRejectsMissingAuthorOrNonPublicVisibility() {
         XCTAssertFalse(PublicBrowsePolicy.isBrowsable(makeScan(id: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", visibility: "public", author: nil)))
         XCTAssertFalse(PublicBrowsePolicy.isBrowsable(makeScan(id: "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", visibility: "private", author: authorA)))
     }
 
-    private func makeScan(id: String, visibility: String, author: ScanLabAuthor?, publishedAt: String? = nil) -> ScanLabPublicScan {
+    func testMetadataOnlyPublicScanRemainsBrowsableUntilFreshOpenResolvesModel() {
+        let scan = makeScan(
+            id: "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+            visibility: "public",
+            author: authorA,
+            modelURL: nil
+        )
+        XCTAssertTrue(PublicBrowsePolicy.isBrowsable(scan))
+        XCTAssertEqual(PublicBrowsePolicy.author(for: scan)?.id, authorA.id)
+    }
+
+    private func makeScan(
+        id: String,
+        visibility: String,
+        author: ScanLabAuthor?,
+        publishedAt: String? = nil,
+        modelURL: URL? = URL(string: "https://example.com/model.spz")
+    ) -> ScanLabPublicScan {
         ScanLabPublicScan(
             id: UUID(uuidString: id)!, title: "Scan", caption: "", visibility: visibility,
             publishedAt: publishedAt, location: nil, author: author, likeCount: 0,
-            modelUrl: author == nil ? nil : URL(string: "https://example.com/model.spz"), previewUrl: nil
+            modelUrl: modelURL, previewUrl: nil
         )
     }
 }
