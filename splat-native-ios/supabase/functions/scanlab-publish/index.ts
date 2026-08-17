@@ -16,6 +16,8 @@ function bearer(req: Request) {
   return header.toLowerCase().startsWith("bearer ") ? header.slice(7) : null;
 }
 
+const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
   const token = bearer(req);
@@ -27,7 +29,7 @@ Deno.serve(async (req) => {
 
   let body: { scanId?: string };
   try { body = await req.json(); } catch { return json({ error: "invalid_json" }, 400); }
-  if (!body.scanId || !/^[0-9a-f-]{36}$/i.test(body.scanId)) return json({ error: "invalid_scan_id" }, 400);
+  if (!body.scanId || !uuid.test(body.scanId)) return json({ error: "invalid_scan_id" }, 400);
 
   const { data: scan, error: scanError } = await admin
     .from("scanlab_scans")
@@ -37,7 +39,11 @@ Deno.serve(async (req) => {
 
   if (scanError || !scan) return json({ error: "not_found" }, 404);
   if (scan.owner_id !== user.id) return json({ error: "forbidden" }, 403);
-  if (!scan.asset_path.startsWith(`${user.id}/`)) return json({ error: "invalid_asset_path" }, 400);
+  const expectedFolder = `${user.id}/${scan.id}`;
+  if (scan.asset_path !== `${expectedFolder}/scene.spz`) return json({ error: "trusted_package_required" }, 409);
+  if (scan.preview_path && ![`${expectedFolder}/preview.jpg`, `${expectedFolder}/preview.png`].includes(scan.preview_path)) {
+    return json({ error: "invalid_preview_path" }, 409);
+  }
 
   if (scan.status === "published") {
     const base = "https://allsunday1122.github.io/splat-native-ios/viewer/";
@@ -65,15 +71,17 @@ Deno.serve(async (req) => {
   if (reportError) return json({ error: "moderation_check_failed" }, 503);
   if ((reportCount ?? 0) > 0) return json({ error: "moderation_hold" }, 409);
 
-  const slash = scan.asset_path.lastIndexOf("/");
-  const folder = slash > 0 ? scan.asset_path.slice(0, slash) : "";
-  const fileName = slash > 0 ? scan.asset_path.slice(slash + 1) : scan.asset_path;
-  if (fileName !== "scene.spz") return json({ error: "trusted_package_required" }, 409);
-  const { data: files, error: listError } = await admin.storage.from("scanlab-assets").list(folder, { limit: 20 });
+  const { data: files, error: listError } = await admin.storage.from("scanlab-assets").list(expectedFolder, { limit: 8 });
   if (listError) return json({ error: "asset_check_failed" }, 503);
-  const names = new Set((files ?? []).map((f) => f.name));
-  if (!names.has("scene.spz")) return json({ error: "asset_missing" }, 409);
-  if (!names.has("manifest.json")) return json({ error: "manifest_missing" }, 409);
+  const byName = new Map((files ?? []).map((f) => [f.name, f]));
+  const scene = byName.get("scene.spz");
+  const manifest = byName.get("manifest.json");
+  if (!scene) return json({ error: "asset_missing" }, 409);
+  if (!manifest) return json({ error: "manifest_missing" }, 409);
+  if (!scene.metadata?.size || scene.metadata.size < 64) return json({ error: "asset_invalid" }, 409);
+  if (!manifest.metadata?.size || manifest.metadata.size < 2 || manifest.metadata.size > 65536) return json({ error: "manifest_invalid" }, 409);
+  if (scene.metadata?.mimetype && scene.metadata.mimetype !== "application/octet-stream") return json({ error: "asset_mime_invalid" }, 409);
+  if (manifest.metadata?.mimetype && !["application/json", "application/octet-stream"].includes(manifest.metadata.mimetype)) return json({ error: "manifest_mime_invalid" }, 409);
 
   const { data: updated, error: updateError } = await admin
     .from("scanlab_scans")
