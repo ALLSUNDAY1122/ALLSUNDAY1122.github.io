@@ -1,5 +1,4 @@
 import XCTest
-@testable import SplatNative
 
 final class ScanLabSessionPolicyTests: XCTestCase {
     func testInitialPersistedValidSessionRestoresAndReloadsPrivateData() {

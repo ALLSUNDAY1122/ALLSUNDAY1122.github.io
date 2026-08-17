@@ -5,6 +5,11 @@ root="$(cd "$(dirname "$0")/.." && pwd)"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 
+if grep -q '@testable import SplatNative' "$root/SplatNativeTests/ScanLabSessionPolicyTests.swift"; then
+    echo 'session-policy regression failed: tests compile policy source directly and must not import SplatNative' >&2
+    exit 1
+fi
+
 cp "$root/SplatNative/ScanLabSessionPolicy.swift" "$tmp/ScanLabSessionPolicy.swift"
 cat > "$tmp/main.swift" <<'SWIFT'
 import Foundation
