@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   gateway:
@@ -23,6 +23,61 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: python3 scripts/app_store_connect_gateway.py
+      - name: Persist sanitized API summary
+        if: success() && hashFiles('asc-result.json') != ''
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          source = json.loads(Path('asc-result.json').read_text(encoding='utf-8'))
+          summary = {
+              'request_id': source.get('request_id'),
+              'completed_at': source.get('completed_at'),
+              'results': [],
+          }
+
+          for result in source.get('results', []):
+              item = {
+                  'label': result.get('label'),
+                  'http_status': result.get('http_status'),
+                  'data': [],
+              }
+              response = result.get('response') or {}
+              data = response.get('data') or []
+              if isinstance(data, dict):
+                  data = [data]
+              for resource in data:
+                  if not isinstance(resource, dict):
+                      continue
+                  attrs = resource.get('attributes') or {}
+                  item['data'].append({
+                      'id': resource.get('id'),
+                      'type': resource.get('type'),
+                      'attributes': {
+                          key: attrs.get(key)
+                          for key in (
+                              'name', 'bundleId', 'sku', 'primaryLocale',
+                              'version', 'uploadedDate', 'processingState',
+                              'expired', 'expirationDate', 'minOsVersion'
+                          )
+                          if key in attrs
+                      },
+                  })
+              summary['results'].append(item)
+
+          out = Path('automation/asc-last-result-summary.json')
+          out.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/asc-last-result-summary.json
+          if git diff --cached --quiet; then
+            echo "No sanitized status changes to persist"
+          else
+            git commit -m "Persist sanitized App Store Connect status"
+            git push
+          fi
       - name: Upload API result
         if: always() && hashFiles('asc-result.json') != ''
         uses: actions/upload-artifact@v4
