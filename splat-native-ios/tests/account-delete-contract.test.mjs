@@ -25,11 +25,14 @@ assert.match(source, /"Cache-Control": "no-store"/, 'account deletion responses 
 
 assert.match(client, /func deleteAccount\(\) async throws/, 'native client must expose account deletion');
 assert.match(client, /guard response\.deleted/, 'client must verify server deletion success before local cleanup');
-assert.match(client, /try await client\.auth\.signOut\(\)/, 'client must attempt to clear persisted auth session after deletion');
+assert.match(client, /try\? await client\.auth\.signOut\(\)/, 'client must attempt to clear persisted auth session after deletion');
 assert.match(client, /isAuthenticated = false/, 'client UI auth state must be cleared even if post-delete sign-out observes the deleted principal');
 assert.match(client, /currentUserEmail = nil/, 'deleted account email must be cleared from memory');
 assert.match(client, /ownerScans = \[\]/, 'deleted account scan cache must be cleared');
 assert.match(client, /profile = nil/, 'deleted account profile cache must be cleared');
+// The account-delete patch must not replace the integrated backend with an older snapshot.
+assert.match(client, /let shareUrl: URL\?/, 'integrated publish response contract must survive account-delete edits');
+assert.match(client, /let avatarPath: String\?/, 'integrated profile contract must survive account-delete edits');
 
 assert.match(live, /D2_ACCOUNT_DELETE_E2E.*!== "1"/, 'live destructive gate must require explicit opt-in');
 assert.match(live, /SUPABASE_SERVICE_ROLE_KEY/, 'live E2E must use server-only admin credentials');
