@@ -32,9 +32,8 @@ mkdir -p "$WEB_DST" "$ASSET_DIR"
 files=(
   index.html
   gm-style.css
-  q1.js q2.js q3.js q4.js q5.js q6.js q7.js q8.js q9.js
-  q10.js q11.js q12.js q13.js q14.js q15.js q16.js
-  audit-patch-v2.js audit-fixes.js question-order-v1.js
+  q1.js q2.js q3.js q4.js q5.js q6.js q7.js q8.js q9.js q10.js q11.js q12.js
+  audit-patch-v2.js audit-patch-v3.js audit-fixes.js question-order-v1.js
   gm1.js gm2.js gm3.js gm4.js
   manifest.json icon.svg
 )
