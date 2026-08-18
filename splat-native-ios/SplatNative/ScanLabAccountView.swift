@@ -109,7 +109,11 @@ private struct ScanLabOwnerScanRow: View {
                 Text(visibilityText).font(.caption.bold()).padding(.horizontal, 8).padding(.vertical, 5).background(.white.opacity(0.08), in: Capsule())
             }
             HStack {
-                if let shareURL = backend.shareURL(for: scan) { ShareLink(item: shareURL) { Label("リンク共有", systemImage: "link") } }
+                if let shareURL = backend.shareURL(for: scan) {
+                    ShareLink(item: shareURL, subject: Text(scan.title), message: Text(scan.caption)) {
+                        Label("リンク共有", systemImage: "link")
+                    }
+                }
                 if scan.status == "published" {
                     Button("編集") { beginEditing() }
                     Button("非公開化") { Task { await unpublish() } }
