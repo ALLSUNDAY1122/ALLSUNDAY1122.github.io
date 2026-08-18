@@ -1,7 +1,6 @@
 import SplatIO
 import XCTest
 import simd
-@testable import SplatNative
 
 final class ScanLabPublishPackageTests: XCTestCase {
     func testBuildCreatesSceneAndConsistentManifestFromRealSPZ() async throws {
