@@ -1,21 +1,9 @@
 {
-  "request_id": "eisei2-submission-audit-20260818-0650",
+  "request_id": "eisei2-prebuild-check-20260818-1846",
   "requests": [
     {
-      "label": "eisei2-version-localizations",
-      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/appStoreVersionLocalizations?limit=20"
-    },
-    {
-      "label": "eisei2-review-detail",
-      "path": "/v1/appStoreVersions/c0372f0c-c99a-4e4f-a8a3-28d13969091a/appStoreReviewDetail"
-    },
-    {
-      "label": "eisei2-app-infos",
-      "path": "/v1/apps/6799751657/appInfos?limit=5&include=appInfoLocalizations,ageRatingDeclaration,primaryCategory,secondaryCategory"
-    },
-    {
-      "label": "eisei2-build",
-      "path": "/v1/builds/0a191f57-c193-44e3-8ed2-ed3a89e9ce0f"
+      "label": "eisei2-builds",
+      "path": "/v1/builds?filter[app]=6799751657&sort=-uploadedDate&limit=5"
     },
     {
       "label": "eisei2-version-build",
