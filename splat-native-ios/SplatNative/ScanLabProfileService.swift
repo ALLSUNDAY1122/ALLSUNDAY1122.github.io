@@ -1,4 +1,5 @@
 import Foundation
+@preconcurrency import PostgREST
 @preconcurrency import Supabase
 
 struct ScanLabEditableProfile: Decodable, Hashable {
