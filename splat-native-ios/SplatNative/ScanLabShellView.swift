@@ -77,7 +77,10 @@ private struct ScanLabDiscoverRow: View {
     }
 }
 
-struct ScanLabPublicProfileView: View {
+/// D2-013 owns the author -> public scan browse list only.
+/// The canonical public profile screen is owned by D2-003 (`ScanLabPublicProfileView`).
+/// Keeping a distinct type avoids a duplicate-type compile failure when both worker PRs are integrated.
+struct ScanLabAuthorScanBrowserView: View {
     @EnvironmentObject var backend: ScanLabBackend
     let author: ScanLabAuthor
     private var scans: [ScanLabPublicScan] { PublicBrowsePolicy.scans(for: author.id, in: backend.publicScans) }
@@ -101,7 +104,7 @@ struct ScanLabPublicProfileView: View {
             }
         }
         .listStyle(.plain)
-        .navigationTitle("プロフィール")
+        .navigationTitle("公開3D")
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await backend.loadPublicScans() }
     }
@@ -158,7 +161,7 @@ struct ScanLabRemoteScanView: View {
                 Text(scan.title).font(.title3.bold())
                 if !scan.caption.isEmpty { Text(scan.caption).font(.subheadline).foregroundStyle(.secondary) }
                 if let author = PublicBrowsePolicy.author(for: scan) {
-                    NavigationLink { ScanLabPublicProfileView(author: author) } label: {
+                    NavigationLink { ScanLabAuthorScanBrowserView(author: author) } label: {
                         HStack(spacing: 8) {
                             Image(systemName: "person.crop.circle")
                             VStack(alignment: .leading, spacing: 1) {
