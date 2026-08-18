@@ -39,13 +39,13 @@ jobs:
         env:
           SUPABASE_URL: https://gybchnyqlqwmajwkhsly.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_jYM9b6kivVT80sbAQ2syFw_zSUANBHV
         shell: bash
         run: |
           set -euo pipefail
           node --check splat-native-ios/scripts/live_scanlab_durable_asset_selftest.mjs
-          if [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ] || [ -z "${SUPABASE_PUBLISHABLE_KEY:-}" ]; then
-            echo 'D2_DURABLE_ASSET_LIVE_E2E=BLOCKED_BY_SERVER_CREDENTIALS' | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            echo 'D2_DURABLE_ASSET_LIVE_E2E=BLOCKED_BY_SERVICE_ROLE_SECRET' | tee -a "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           D2_DURABLE_ASSET_E2E=1 SCANLAB_DURABLE_WAIT_SECONDS=125 \
