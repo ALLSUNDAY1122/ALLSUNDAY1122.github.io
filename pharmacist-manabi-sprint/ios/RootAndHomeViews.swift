@@ -239,16 +239,18 @@ struct HomeView: View {
                 let seen = all.filter { learning.state.seen.contains($0.id) }.count
                 let weak = all.filter { learning.state.weak[$0.id] != nil }.count
                 Button {
-                    let pool = learning.fieldQuestions(field, premium: storeKit.isPremium)
-                    if pool.isEmpty { learning.paywallPresented = true }
-                    else { learning.startField(field, premium: storeKit.isPremium) }
+                    if storeKit.isPremium {
+                        learning.startField(field, premium: true)
+                    } else {
+                        learning.paywallPresented = true
+                    }
                 } label: {
                     VStack(spacing: 9) {
                         HStack {
                             Text(field).font(.system(size: 15, weight: .bold)).foregroundStyle(Color.sprintInk)
                             Spacer()
                             Text("\(all.count)問").font(.system(size: 12, weight: .semibold)).foregroundStyle(Color.sprintInk3)
-                            if !storeKit.isPremium && !all.contains(where: \.isFree) {
+                            if !storeKit.isPremium {
                                 Image(systemName: "lock.fill").font(.system(size: 11)).foregroundStyle(Color.sprintKin)
                             }
                         }
