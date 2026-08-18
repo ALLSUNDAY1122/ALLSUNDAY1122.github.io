@@ -108,6 +108,16 @@ require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
 ! grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
 ! grep -R -nE 'Firebase|Amplitude|Mixpanel|AppsFlyer|Adjust' SplatNative --include='*.swift'
 
+# D2-006 durable browser asset URL contract.
+require_file supabase/functions/scanlab-public/asset_delivery.mjs
+require_file scripts/test_scanlab_public_asset_delivery.mjs
+require_file scripts/live_scanlab_durable_asset_probe.mjs
+require_text supabase/functions/scanlab-public/index.ts 'mode === "asset"'
+require_text supabase/functions/scanlab-public/index.ts 'req.headers.get("range")'
+require_text supabase/functions/scanlab-public/index.ts 'parseScanLabAssetPath'
+node scripts/test_scanlab_public_asset_delivery.mjs
+node --check scripts/live_scanlab_durable_asset_probe.mjs
+
 # D2-020: privacy manifest, permission strings and review explanation must move together.
 plutil -lint SplatNative/PrivacyInfo.xcprivacy >/dev/null
 python3 - <<'PY'
