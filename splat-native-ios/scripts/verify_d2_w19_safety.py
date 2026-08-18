@@ -4,7 +4,7 @@ import sys
 
 root = Path(__file__).resolve().parents[1]
 base = root / 'supabase/migrations/20260815021337_scanlab_s7_ugc_safety_v7.sql'
-hardening = root / 'supabase/migrations/20260818084300_scanlab_d2_w19_safety.sql'
+hardening = root / 'supabase/migrations/20260818115839_scanlab_d2_w19_safety.sql'
 errors=[]
 for p in (base, hardening):
     if not p.exists(): errors.append(f'missing {p.relative_to(root)}')
