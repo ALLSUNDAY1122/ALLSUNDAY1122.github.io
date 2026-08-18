@@ -43,10 +43,13 @@ function applyShareMetadata(item) {
   setMeta('meta[name="twitter:title"]', pageTitle);
   setMeta('meta[name="twitter:description"]', description);
   setMeta('link[rel="canonical"]', canonicalURL, 'href');
-  if (item.previewUrl) {
-    setMeta('meta[property="og:image"]', item.previewUrl);
+  // Public shares use a deterministic image endpoint instead of a 10-minute signed URL.
+  // Unlisted shares intentionally omit og:image to avoid exposing the capability token.
+  const metadataPreview = item.previewImageUrl || (id ? item.previewUrl : null);
+  if (metadataPreview) {
+    setMeta('meta[property="og:image"]', metadataPreview);
     setMeta('meta[property="og:image:alt"]', previewAlt);
-    setMeta('meta[name="twitter:image"]', item.previewUrl);
+    setMeta('meta[name="twitter:image"]', metadataPreview);
     setMeta('meta[name="twitter:image:alt"]', previewAlt);
   }
 }
