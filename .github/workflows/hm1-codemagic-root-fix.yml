@@ -1,0 +1,65 @@
+name: Fix HealthManager1 Codemagic root workflow
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - automation/hm1-codemagic-root-fix-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Patch HealthManager1 root Codemagic workflow
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('codemagic.yaml')
+          text = path.read_text(encoding='utf-8')
+          start = text.index('  health-manager-1-testflight:')
+          end = text.index('\n  health-manager-2-ios:', start)
+          block = text[start:end]
+
+          old = '      app_store_connect: codemagic'
+          new = '      app_store_connect: Codemagic Shiwake Swipe'
+          if old not in block:
+              if new in block:
+                  print('PASS: root HealthManager1 integration already corrected')
+                  raise SystemExit(0)
+              raise SystemExit('HealthManager1 App Store integration line not found in expected block')
+
+          block = block.replace(old, new, 1)
+          text = text[:start] + block + text[end:]
+          path.write_text(text, encoding='utf-8')
+          print('PASS: patched HealthManager1 root App Store Connect integration')
+          PY
+
+      - name: Commit root workflow correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add codemagic.yaml
+          if git diff --cached --quiet; then
+            echo "No root Codemagic change"
+            exit 0
+          fi
+          git commit -m "Fix HealthManager1 Codemagic App Store integration"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep 2
+          done
+          exit 1
