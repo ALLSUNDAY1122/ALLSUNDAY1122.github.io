@@ -1,0 +1,23 @@
+name: D2-015 owner delete runtime
+
+on:
+  workflow_dispatch:
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned Supabase client
+        run: npm install --no-save @supabase/supabase-js@2.112.3
+      - name: Run production owner-delete runtime gate
+        env:
+          SUPABASE_URL: https://gybchnyqlqwmajwkhsly.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_jYM9b6kivVT80sbAQ2syFw_zSUANBHV
+          SUPABASE_TEST_EMAIL: ${{ secrets.SCANLAB_RUNTIME_TEST_EMAIL }}
+          SUPABASE_TEST_PASSWORD: ${{ secrets.SCANLAB_RUNTIME_TEST_PASSWORD }}
+        run: node splat-native-ios/scripts/d2_owner_delete_runtime.mjs
