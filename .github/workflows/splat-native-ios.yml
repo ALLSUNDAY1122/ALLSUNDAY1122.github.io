@@ -21,6 +21,9 @@ jobs:
   build:
     runs-on: macos-15
     timeout-minutes: 45
+    env:
+      SCANLAB_E2E_EMAIL: ${{ secrets.SCANLAB_E2E_EMAIL }}
+      SCANLAB_E2E_PASSWORD: ${{ secrets.SCANLAB_E2E_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
       - name: Disable Git LFS smudge for SwiftPM source checkout
@@ -41,20 +44,20 @@ jobs:
           node splat-native-ios/scripts/scanlab_auth_readiness.mjs | tee /tmp/scanlab-auth-readiness.json
           grep -q '"status":"PASS"' /tmp/scanlab-auth-readiness.json
       - name: Live ScanLab auth/session/profile E2E gate
-        env:
-          SCANLAB_E2E_EMAIL: ${{ secrets.SCANLAB_E2E_EMAIL }}
-          SCANLAB_E2E_PASSWORD: ${{ secrets.SCANLAB_E2E_PASSWORD }}
+        if: ${{ env.SCANLAB_E2E_EMAIL != '' && env.SCANLAB_E2E_PASSWORD != '' }}
         shell: bash
         run: |
           set -euo pipefail
-          if [[ -z "${SCANLAB_E2E_EMAIL:-}" || -z "${SCANLAB_E2E_PASSWORD:-}" ]]; then
-            echo 'LIVE_E2E_BLOCKED_BY_TEST_IDENTITY' | tee -a "$GITHUB_STEP_SUMMARY"
-            echo 'SCANLAB_E2E_EMAIL / SCANLAB_E2E_PASSWORD are not configured; no fake production identity will be created.' | tee -a "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
           node splat-native-ios/scripts/scanlab_auth_e2e.mjs | tee /tmp/scanlab-auth-e2e.json
           grep -q '"status":"PASS"' /tmp/scanlab-auth-e2e.json
           echo 'LIVE_E2E_PASS' >> "$GITHUB_STEP_SUMMARY"
+      - name: Live ScanLab auth E2E blocked by missing test identity
+        if: ${{ env.SCANLAB_E2E_EMAIL == '' || env.SCANLAB_E2E_PASSWORD == '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'LIVE_E2E_BLOCKED_BY_TEST_IDENTITY' | tee -a "$GITHUB_STEP_SUMMARY"
+          echo 'SCANLAB_E2E_EMAIL / SCANLAB_E2E_PASSWORD are not configured; no fake production identity will be created.' | tee -a "$GITHUB_STEP_SUMMARY"
       - name: S2 reconstruction contracts
         run: python3 splat-native-ios/scripts/test_reconstruction_contracts.py
       - name: Generate project and verify bundled resources
