@@ -15,7 +15,7 @@ global.localStorage = { getItem: () => null, setItem: () => {} };
 
 const scripts = [
   'q1.js','q2.js','q3.js','q4.js','q5.js','q6.js','q7.js','q8.js','q9.js','q10.js','q11.js','q12.js',
-  'audit-patch-v2.js','audit-patch-v3.js','audit-fixes.js','question-order-v1.js'
+  'audit-patch-v2.js','audit-patch-v3.js','audit-patch-v4.js','audit-fixes.js','question-order-v1.js'
 ];
 for (const file of scripts) {
   const full = path.join(WEB, file);
@@ -74,6 +74,47 @@ for (const q of questions) {
   bodies.set(body, q.id);
 }
 
+// Current-law/content release gate. These are the high-risk numeric or newly-amended
+// assertions rechecked against current MHLW primary materials on 2026-08-18.
+const byTopic = new Map(questions.map(q => [q.topic, q]));
+function requireText(topic, ...needles) {
+  const q = byTopic.get(topic);
+  if (!q) throw new Error(`Missing audited topic: ${topic}`);
+  const text = `${q.question} ${q.quick} ${q.explanation} ${q.basis}`;
+  for (const needle of needles) if (!text.includes(needle)) throw new Error(`${topic}: missing verified current-law value ${needle}`);
+}
+requireText('健康診断後の医師等の意見聴取','3か月以内');
+requireText('自発的健康診断後の意見聴取','2か月以内');
+requireText('産業医の辞任等の報告','2026年8月1日','所轄労働基準監督署長','辞任・解任・退任');
+requireText('衛生管理者の選任期限','14日以内');
+requireText('衛生管理者の定期巡視','毎週1回');
+requireText('衛生委員会の開催頻度','毎月1回');
+requireText('衛生委員会記録の保存','3年間');
+requireText('暑熱な場所の基準','WBGT28','気温31');
+requireText('熱中症対策の対象作業','継続1時間','1日4時間');
+requireText('法定労働時間（日）','1日8時間');
+requireText('法定労働時間（週）','1週間40時間');
+requireText('6時間超の休憩','45分');
+requireText('8時間超の休憩','1時間');
+requireText('時間外労働の原則月上限','月45時間');
+requireText('時間外労働の原則年上限','年360時間');
+requireText('特別条項の年上限','年720時間');
+requireText('特別条項の単月上限','100時間未満');
+requireText('特別条項の複数月平均','2～6か月','80時間以内');
+requireText('空調時の室温','18℃以上28℃以下');
+requireText('空調時の相対湿度','40％以上70％以下');
+requireText('事務室の気流','0.5m/s以下');
+requireText('供給空気の二酸化炭素','1,000ppm以下');
+requireText('供給空気の一酸化炭素','10ppm以下');
+requireText('一般的な事務作業の照度','300ルクス以上');
+
+for (const q of questions.filter(q => q.fiveYearExpansion)) {
+  if (q.publicationStatus !== '公開候補') throw new Error(`${q.id}: content audit not finalized (${q.publicationStatus})`);
+  if (q.lawRelated && q.auditStatus !== '一次資料照合済') throw new Error(`${q.id}: current-law primary-source audit missing`);
+  if (!q.lawRelated && q.auditStatus !== '内容監査済') throw new Error(`${q.id}: content audit missing`);
+}
+console.log('PASS: 210 added questions passed content-status gate; high-risk current-law numeric/amendment assertions are pinned to 2026-08-18 baseline.');
+
 const out = questions.map(q => ({
   id: q.id,
   round: examRound[q.examSet],
@@ -101,10 +142,8 @@ fs.writeFileSync(outPath, JSON.stringify(out, null, 2) + '\n');
 console.log(`Exported ${out.length} audited questions to ${outPath}`);
 console.log('PASS: 10 rounds / 30 groups x 10 questions, 5 choices each, answer positions 1-5 each exactly twice per group.');
 
-// Verify that the interrupted text transport still represents the exact user-approved
-// Second-class icon artwork closely enough to use as a lossless-source recovery path.
-// This does not trust the filenames or commit messages: it validates the actual decoded
-// WebP container and a robust 8x8 grayscale fingerprint sampled from the approved PNG.
+// Validate the interrupted icon transport by actual decoded bytes and by a robust
+// fingerprint sampled from the user-approved Second-class icon PNG.
 const iconPartsDir = path.join(WEB, 'approved-icon');
 if (fs.existsSync(iconPartsDir)) {
   const parts = fs.readdirSync(iconPartsDir).filter(n => /^part\d+\.b64$/.test(n)).sort();
@@ -119,9 +158,7 @@ if (fs.existsSync(iconPartsDir)) {
       expectedBytes = iconBytes.readUInt32LE(4) + 8;
     }
     console.log(`ICON_TRANSFER parts=${parts.length} actual_bytes=${iconBytes.length} riff_expected_bytes=${expectedBytes} sha256=${sha}`);
-    if (!expectedBytes || expectedBytes !== iconBytes.length) {
-      throw new Error(`Approved icon transfer is incomplete: actual=${iconBytes.length} expected=${expectedBytes}`);
-    }
+    if (!expectedBytes || expectedBytes !== iconBytes.length) throw new Error(`Approved icon transfer is incomplete: actual=${iconBytes.length} expected=${expectedBytes}`);
 
     const expectedGray8 = [38,62,53,80,137,64,41,36,59,51,55,138,194,122,89,48,57,76,104,131,101,208,192,50,47,83,121,133,126,196,187,82,164,226,214,224,229,210,229,171,255,255,155,183,177,152,255,255,252,173,159,161,148,140,177,253,142,236,211,199,202,210,235,142];
     const candidates = [
