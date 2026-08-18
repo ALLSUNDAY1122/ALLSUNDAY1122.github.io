@@ -1,7 +1,7 @@
 -- D2-019: moderation / rate-limit / abuse resistance / failure handling
--- HQ convergence note: preserve the already-accepted D2 safety semantics while adding
--- serialized publish quota protection. Public geotag remains optional and report auto-hide
--- remains 3 distinct reporters / 30 days; a single report only enters moderation review.
+-- HQ convergence note: preserve already-accepted D2 safety semantics while adding serialized
+-- publish quota protection. Public geotag remains optional and report auto-hide remains
+-- 3 distinct reporters / 30 days; a single report only enters moderation review.
 
 create table if not exists public.scanlab_moderation_actions (
   id bigint generated always as identity primary key,
@@ -15,6 +15,7 @@ create index if not exists scanlab_moderation_actions_scan_idx on public.scanlab
 alter table public.scanlab_moderation_actions enable row level security;
 revoke all on public.scanlab_moderation_actions from anon, authenticated;
 
+-- Fallback ledger for histories that do not yet contain the earlier atomic token bucket.
 create table if not exists public.scanlab_abuse_events (
   id bigint generated always as identity primary key,
   actor_id uuid not null references auth.users(id) on delete cascade,
@@ -34,9 +35,6 @@ begin
   if p_actor is null or (caller_uid is not null and p_actor <> caller_uid) then
     raise exception using errcode='42501', message='abuse guard actor mismatch';
   end if;
-  -- Authenticated writes must bind p_actor to auth.uid(). A null auth.uid() is reserved
-  -- for the service-role Edge Function path, which already possesses bypass-RLS authority;
-  -- this helper is not directly executable by public/anon/authenticated roles.
   if p_action='publish' then max_count:=10; window_size:=interval '1 hour';
   elsif p_action='report' then max_count:=20; window_size:=interval '1 hour';
   else raise exception using errcode='22023', message='unsupported abuse guard action'; end if;
@@ -74,8 +72,6 @@ create or replace function scanlab_private.publish_guard()
 returns trigger language plpgsql set search_path = '' as $$
 declare entering_shared boolean;
 begin
-  -- D2-010: location is explicit opt-in and public-only. Never retain stale coordinates
-  -- when moving to unlisted/private, and never accept a partial coordinate pair.
   if new.visibility <> 'public' then
     new.latitude := null;
     new.longitude := null;
@@ -91,7 +87,6 @@ begin
     end if;
   end if;
 
-  -- D2-007: private is owner-only; a published row transitioning private is atomically hidden.
   if new.visibility='private' then
     new.status := case when tg_op='UPDATE' and old.status='published' then 'hidden' else new.status end;
     if new.status='published' then
@@ -116,7 +111,15 @@ begin
       end if;
     end if;
     if entering_shared then
-      perform scanlab_private.enforce_abuse_limit(new.owner_id,'publish',new.id);
+      -- Reuse the previously deployed advisory-lock token bucket where present. This avoids
+      -- creating a second quota source of truth in production. Fresh histories fall back to
+      -- the D2-019 abuse-event ledger.
+      if to_regprocedure('scanlab_private.consume_rate_limit(uuid,text,integer,interval)') is not null then
+        execute 'select scanlab_private.consume_rate_limit($1,$2,$3,$4)'
+          using new.owner_id,'publish_shared',10,interval '1 hour';
+      else
+        perform scanlab_private.enforce_abuse_limit(new.owner_id,'publish',new.id);
+      end if;
     end if;
     new.published_at:=coalesce(new.published_at,now());
   else
@@ -142,8 +145,7 @@ begin
   return new;
 end; $$;
 
--- Some production histories already contain the earlier atomic token-bucket report trigger
--- (`scanlab_reports_rate_limit`). Do not stack a second 20/hour limiter on top of it.
+-- Preserve an existing atomic token-bucket report limiter instead of stacking another one.
 drop trigger if exists scanlab_report_abuse_guard on public.scanlab_reports;
 do $$
 begin
@@ -162,8 +164,6 @@ create or replace function scanlab_private.auto_hide_reported_scan()
 returns trigger language plpgsql security definer set search_path = '' as $$
 declare report_count integer; affected integer;
 begin
-  -- Serialize moderation threshold evaluation for this scan. One report enters the queue;
-  -- only 3 distinct reporters in 30 days move an approved published scan to hidden/pending.
   perform 1 from public.scanlab_scans where id=new.scan_id for update;
   if not found then return new; end if;
 
