@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-import contextlib
 import http.server
 import json
 import socket
 import socketserver
-import subprocess
 import threading
-import time
 import unittest
 from collections import Counter
 from pathlib import Path
@@ -80,7 +77,7 @@ class MvpContractTests(unittest.TestCase):
             "ホーム", "模試", "記録", "設定", "--paper:#f7f3ea", "max-width:520px",
         ]:
             self.assertIn(token, html)
-        self.assertIn("OT60-A053", html)
+        self.assertIn("sagyo-ryohoshi-sprint/mvp/questions.json", html)
         self.assertIn("data-testid=\"feedback\"", html)
 
 
@@ -108,7 +105,10 @@ class BrowserSmokeTests(unittest.TestCase):
 
     def test_home_subject_quiz_feedback_result_history_flow(self):
         page = self.browser.new_page(viewport={"width": 390, "height": 844})
-        page.set_content(PREVIEW.read_text(encoding="utf-8"), wait_until="load")
+        html = PREVIEW.read_text(encoding="utf-8")
+        payload = QUESTIONS.read_text(encoding="utf-8")
+        html = html.replace("<head>", f"<head><script>window.__MVP_QUESTIONS__={payload};</script>", 1)
+        page.set_content(html, wait_until="load")
 
         self.assertTrue(page.get_by_test_id("screen-home").is_visible())
         page.locator('[data-subject="解剖学"]').click()
@@ -136,7 +136,10 @@ class BrowserSmokeTests(unittest.TestCase):
 
     def test_today_sprint_has_eight_subjects(self):
         page = self.browser.new_page(viewport={"width": 390, "height": 844})
-        page.set_content(PREVIEW.read_text(encoding="utf-8"), wait_until="load")
+        html = PREVIEW.read_text(encoding="utf-8")
+        payload = QUESTIONS.read_text(encoding="utf-8")
+        html = html.replace("<head>", f"<head><script>window.__MVP_QUESTIONS__={payload};</script>", 1)
+        page.set_content(html, wait_until="load")
         page.get_by_test_id("start-sprint").click()
         self.assertTrue(page.get_by_test_id("screen-quiz").is_visible())
         self.assertIn("1 / 8", page.locator("#position").inner_text())
