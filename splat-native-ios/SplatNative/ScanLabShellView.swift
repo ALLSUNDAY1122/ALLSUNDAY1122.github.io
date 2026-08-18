@@ -36,14 +36,15 @@ struct ScanLabScanTab: View {
 
 struct ScanLabDiscoverView: View {
     @EnvironmentObject var backend: ScanLabBackend
+    private var browsableScans: [ScanLabPublicScan] { backend.publicScans.filter(PublicBrowsePolicy.isBrowsable) }
     var body: some View {
         NavigationStack {
             Group {
-                if backend.publicScans.isEmpty && backend.isLoadingPublic { ProgressView("公開スキャンを取得中") }
-                else if backend.publicScans.isEmpty {
+                if browsableScans.isEmpty && backend.isLoadingPublic { ProgressView("公開スキャンを取得中") }
+                else if browsableScans.isEmpty {
                     ContentUnavailableView("まだ公開スキャンがありません", systemImage: "sparkles.rectangle.stack", description: Text("公開された3Dはここに表示されます。ダミー投稿は表示しません。"))
                 } else {
-                    List(backend.publicScans) { scan in NavigationLink { ScanLabRemoteScanView(scan: scan) } label: { ScanLabDiscoverRow(scan: scan) } }
+                    List(browsableScans) { scan in NavigationLink { ScanLabRemoteScanView(scan: scan) } label: { ScanLabDiscoverRow(scan: scan) } }
                         .listStyle(.plain).refreshable { await backend.loadPublicScans() }
                 }
             }
@@ -76,10 +77,43 @@ private struct ScanLabDiscoverRow: View {
     }
 }
 
+/// D2-013 owns the author -> public scan browse list only.
+/// The canonical public profile screen is owned by D2-003 (`ScanLabPublicProfileView`).
+/// Keeping a distinct type avoids a duplicate-type compile failure when both worker PRs are integrated.
+struct ScanLabAuthorScanBrowserView: View {
+    @EnvironmentObject var backend: ScanLabBackend
+    let author: ScanLabAuthor
+    private var scans: [ScanLabPublicScan] { PublicBrowsePolicy.scans(for: author.id, in: backend.publicScans) }
+
+    var body: some View {
+        List {
+            Section {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(author.displayName).font(.title2.bold())
+                    Text("@\(author.handle)").font(.subheadline).foregroundStyle(.secondary)
+                }.padding(.vertical, 6)
+            }
+            Section("公開3D") {
+                if scans.isEmpty {
+                    ContentUnavailableView("公開3Dはありません", systemImage: "cube.transparent")
+                } else {
+                    ForEach(scans) { scan in
+                        NavigationLink { ScanLabRemoteScanView(scan: scan) } label: { ScanLabDiscoverRow(scan: scan) }
+                    }
+                }
+            }
+        }
+        .listStyle(.plain)
+        .navigationTitle("公開3D")
+        .navigationBarTitleDisplayMode(.inline)
+        .refreshable { await backend.loadPublicScans() }
+    }
+}
+
 struct ScanLabMapView: View {
     @EnvironmentObject var backend: ScanLabBackend
     @State private var selected: ScanLabPublicScan?
-    private var mappedScans: [ScanLabPublicScan] { backend.publicScans.filter { $0.location != nil } }
+    private var mappedScans: [ScanLabPublicScan] { backend.publicScans.filter { PublicBrowsePolicy.isBrowsable($0) && $0.location != nil } }
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
@@ -126,15 +160,26 @@ struct ScanLabRemoteScanView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text(scan.title).font(.title3.bold())
                 if !scan.caption.isEmpty { Text(scan.caption).font(.subheadline).foregroundStyle(.secondary) }
+                if let author = PublicBrowsePolicy.author(for: scan) {
+                    NavigationLink { ScanLabAuthorScanBrowserView(author: author) } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "person.crop.circle")
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(author.displayName).font(.subheadline.weight(.semibold))
+                                Text("@\(author.handle) · 公開3Dを見る").font(.caption).foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right").font(.caption).foregroundStyle(.secondary)
+                        }
+                    }.buttonStyle(.plain)
+                }
                 HStack {
                     Button { Task { likeBusy = true; defer { likeBusy = false }; do { try await backend.like(scan) } catch { backend.notice = error.localizedDescription } } } label: { Label("\(scan.likeCount)", systemImage: "heart") }.disabled(likeBusy)
                     Spacer()
                     if let shareURL = publicShareURL { ShareLink(item: shareURL) { Label("共有", systemImage: "square.and.arrow.up") } }
                     Menu {
                         Button("この3Dを報告", role: .destructive) { showingReport = true }
-                        if backend.isAuthenticated, scan.author != nil {
-                            Button("このユーザーをブロック", role: .destructive) { showingBlock = true }
-                        }
+                        if backend.isAuthenticated, scan.author != nil { Button("このユーザーをブロック", role: .destructive) { showingBlock = true } }
                     } label: { Image(systemName: "ellipsis") }.disabled(reportBusy || blockBusy)
                 }.buttonStyle(.bordered)
             }.padding(16).background(.black)
