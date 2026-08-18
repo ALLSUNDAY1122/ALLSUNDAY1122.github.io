@@ -1,14 +1,6 @@
 name: Health Manager 2 - 300Q Check
 
 on:
-  push:
-    branches:
-      - agent/health-manager-2-300q-icon
-    paths:
-      - 'apps/sanitary-manager-2/**'
-      - 'ios/health-manager-2/**'
-      - 'automation/learning-sprint-question-pipeline/**'
-      - '.github/workflows/health-manager-2-300q-check.yml'
   pull_request:
     branches:
       - main
@@ -17,6 +9,7 @@ on:
       - 'ios/health-manager-2/**'
       - 'automation/learning-sprint-question-pipeline/**'
       - '.github/workflows/health-manager-2-300q-check.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
