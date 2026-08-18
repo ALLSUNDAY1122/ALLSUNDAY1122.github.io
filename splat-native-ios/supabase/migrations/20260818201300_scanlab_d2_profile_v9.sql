@@ -9,7 +9,7 @@ alter table public.scanlab_profiles
 alter table public.scanlab_profiles drop constraint if exists scanlab_profiles_bio_length;
 alter table public.scanlab_profiles add constraint scanlab_profiles_bio_length check (bio is null or char_length(bio) <= 160);
 alter table public.scanlab_profiles drop constraint if exists scanlab_profiles_avatar_url_https;
-alter table public.scanlab_profiles add constraint scanlab_profiles_avatar_url_https check (avatar_url is null or (char_length(avatar_url) <= 2048 and avatar_url ~ '^https://'));
+alter table public.scanlab_profiles add constraint scanlab_profiles_avatar_url_https check (avatar_url is null or (char_length(avatar_url) <= 2048 and avatar_url ~* '^https://'));
 
 create or replace function public.scanlab_public_profile(p_handle text)
 returns table (id uuid, handle text, display_name text, bio text, avatar_url text, public_scan_count bigint)
