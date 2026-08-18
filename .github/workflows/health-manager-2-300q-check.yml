@@ -36,3 +36,35 @@ jobs:
           grep -q 'QUESTIONS.length' apps/sanitary-manager-2/gm2.js
           ! grep -q '3回分を科目ごとに' apps/sanitary-manager-2/gm2.js
           ! grep -q '全9セット' apps/sanitary-manager-2/gm2.js
+      - name: Reconstruct current approved-icon payload for comparison
+        shell: bash
+        run: |
+          set -u
+          mkdir -p icon-diagnostic
+          cat apps/sanitary-manager-2/approved-icon/part*.b64 | tr -d '\r\n' | base64 --decode > icon-diagnostic/current.webp || true
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, struct
+          p=Path('icon-diagnostic/current.webp')
+          b=p.read_bytes() if p.exists() else b''
+          info={'actual_bytes':len(b),'sha256':hashlib.sha256(b).hexdigest() if b else None,'riff_expected_bytes':None,'riff_header_ok':False}
+          if len(b)>=12 and b[:4]==b'RIFF' and b[8:12]==b'WEBP':
+              info['riff_header_ok']=True
+              info['riff_expected_bytes']=struct.unpack('<I',b[4:8])[0]+8
+          Path('icon-diagnostic/status.txt').write_text('\n'.join(f'{k}={v}' for k,v in info.items())+'\n')
+          print(info)
+          PY
+          if command -v magick >/dev/null 2>&1 && magick identify icon-diagnostic/current.webp; then
+            magick icon-diagnostic/current.webp -alpha off icon-diagnostic/current.png
+            echo 'decode_status=valid' >> icon-diagnostic/status.txt
+          else
+            echo 'decode_status=incomplete_or_invalid' >> icon-diagnostic/status.txt
+          fi
+      - name: Upload icon diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-manager-2-icon-diagnostic
+          path: icon-diagnostic/
+          if-no-files-found: error
+          retention-days: 2
