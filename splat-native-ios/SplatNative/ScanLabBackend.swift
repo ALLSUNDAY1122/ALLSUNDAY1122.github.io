@@ -136,7 +136,16 @@ struct ScanLabPublishResponse: Decodable, Hashable {
     let publishedAt: String?
     let shareUrl: URL?
 }
-private struct ScanLabPublishRequest: Encodable { let scanId: String }
+private struct ScanLabPublishRequest: Encodable {
+    let scanId: String
+    let title: String?
+    let description: String?
+    init(scanId: String, title: String? = nil, description: String? = nil) {
+        self.scanId = scanId
+        self.title = title
+        self.description = description
+    }
+}
 private struct ScanLabDeleteAccountResponse: Decodable { let deleted: Bool }
 private struct ScanLabScanStatusUpdate: Encodable { let status: String }
 private struct ScanLabLikeInsert: Encodable {
@@ -304,6 +313,24 @@ final class ScanLabBackend: ObservableObject {
         }
     }
 
+    func updatePublishedMetadata(_ scan: ScanLabOwnerScan, title: String, caption: String) async throws {
+        guard scan.status == "published" else { throw ScanLabBackendError.invalidServerResponse }
+        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard (1...80).contains(trimmedTitle.count) else { throw ScanLabBackendError.invalidTitle }
+        guard isAuthenticated else { throw ScanLabBackendError.signInRequired }
+        let request = ScanLabPublishRequest(
+            scanId: scan.id.uuidString.lowercased(),
+            title: trimmedTitle,
+            description: String(caption.prefix(500))
+        )
+        let _: ScanLabPublishResponse = try await client.functions.invoke(
+            "scanlab-publish",
+            options: FunctionInvokeOptions(region: .apSoutheast1, body: request, timeoutInterval: 30)
+        )
+        await loadOwnerScans()
+        if scan.visibility == ScanLabVisibility.public.rawValue { await loadPublicScans() }
+    }
+
     func unpublish(_ scan: ScanLabOwnerScan) async throws {
         try await client.from("scanlab_scans").update(ScanLabScanStatusUpdate(status: "hidden")).eq("id", value: scan.id).execute(); await loadOwnerScans(); await loadPublicScans()
     }
@@ -339,9 +366,13 @@ final class ScanLabBackend: ObservableObject {
         guard scan.status == "published", scan.moderationStatus == "approved" else { return nil }
         var components = URLComponents(url: ScanLabConfig.viewerBaseURL, resolvingAgainstBaseURL: false)!
         switch scan.visibility {
-        case ScanLabVisibility.public.rawValue: components.queryItems = [URLQueryItem(name: "id", value: scan.id.uuidString.lowercased())]
-        case ScanLabVisibility.unlisted.rawValue: components.queryItems = [URLQueryItem(name: "token", value: scan.shareToken.uuidString.lowercased())]
-        default: return nil
+        case ScanLabVisibility.public.rawValue:
+            components.queryItems = [URLQueryItem(name: "id", value: scan.id.uuidString.lowercased())]
+        case ScanLabVisibility.unlisted.rawValue:
+            components.queryItems = nil
+            components.fragment = "token=\(scan.shareToken.uuidString.lowercased())"
+        default:
+            return nil
         }
         return components.url
     }

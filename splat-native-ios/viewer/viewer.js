@@ -1,11 +1,10 @@
-import * as GaussianSplats3D from '@mkkellogg/gaussian-splats-3d';
+import { normalizeShareURL, parseShareKey } from './share-url.js';
 
 const API = 'https://gybchnyqlqwmajwkhsly.supabase.co/functions/v1/scanlab-public';
-const params = new URLSearchParams(location.search);
-const id = params.get('id');
-const token = params.get('token');
+const { id, token, legacyToken, fragmentToken } = parseShareKey(location.href);
 const status = document.querySelector('#status');
 const statusText = document.querySelector('#status-text');
+const statusPreview = document.querySelector('#status-preview');
 const card = document.querySelector('#card');
 const title = document.querySelector('#title');
 const author = document.querySelector('#author');
@@ -14,9 +13,66 @@ const locationText = document.querySelector('#location');
 const likes = document.querySelector('#likes');
 const share = document.querySelector('#share');
 
+const shareURL = normalizeShareURL(location.href, { id, token });
+if (legacyToken && !fragmentToken) {
+  // Backward compatibility for previously issued ?token= links while removing the
+  // capability token from the HTTP-visible query string as soon as the page executes.
+  history.replaceState(null, '', shareURL);
+}
+
 function fail(message) {
   status.classList.add('error');
   statusText.textContent = message;
+}
+
+function setMeta(selector, value, attribute = 'content') {
+  const element = document.querySelector(selector);
+  if (element && value) element.setAttribute(attribute, value);
+}
+
+function applyShareMetadata(item) {
+  const pageTitle = item.title ? `${item.title} | Scan Lab` : 'Scan Lab 3D Viewer';
+  const description = item.caption || 'Scan Labで公開された3D Gaussian Splatをブラウザで閲覧します。';
+  const canonicalURL = id ? shareURL : `${location.origin}${location.pathname}`;
+  const previewAlt = item.title ? `${item.title} の3Dプレビュー` : 'Scan Lab 3Dプレビュー';
+  document.title = pageTitle;
+  setMeta('meta[name="description"]', description);
+  setMeta('meta[property="og:title"]', pageTitle);
+  setMeta('meta[property="og:description"]', description);
+  setMeta('meta[property="og:url"]', canonicalURL);
+  setMeta('meta[name="twitter:title"]', pageTitle);
+  setMeta('meta[name="twitter:description"]', description);
+  setMeta('link[rel="canonical"]', canonicalURL, 'href');
+  // Public shares use a deterministic image endpoint instead of a 10-minute signed URL.
+  // Unlisted shares intentionally omit og:image to avoid exposing the capability token.
+  const metadataPreview = item.previewImageUrl || (id ? item.previewUrl : null);
+  if (metadataPreview) {
+    setMeta('meta[property="og:image"]', metadataPreview);
+    setMeta('meta[property="og:image:alt"]', previewAlt);
+    setMeta('meta[name="twitter:image"]', metadataPreview);
+    setMeta('meta[name="twitter:image:alt"]', previewAlt);
+  }
+}
+
+function revealPreview(item) {
+  if (!item.previewUrl) return;
+  statusPreview.src = item.previewUrl;
+  statusPreview.alt = item.title ? `${item.title} のプレビュー` : '3Dプレビュー';
+  statusPreview.hidden = false;
+  status.classList.add('has-preview');
+}
+
+function renderMetadataCard(item) {
+  title.textContent = item.title || '名称未設定';
+  const handle = item.author?.handle ? `@${item.author.handle}` : '';
+  const displayName = item.author?.displayName || '';
+  author.textContent = [handle, displayName].filter(Boolean).join(' · ') || 'Scan Lab';
+  caption.textContent = item.caption || '';
+  caption.hidden = !item.caption;
+  locationText.textContent = item.location?.label ? `場所: ${item.location.label}` : '';
+  locationText.hidden = !item.location?.label;
+  likes.textContent = `♡ ${Number(item.likeCount || 0).toLocaleString('ja-JP')}`;
+  card.hidden = false;
 }
 
 async function loadMetadata() {
@@ -34,16 +90,15 @@ async function loadMetadata() {
 async function main() {
   try {
     const item = await loadMetadata();
-    document.title = `${item.title} | Scan Lab`;
-    title.textContent = item.title;
-    author.textContent = item.author?.displayName ? `@${item.author.handle} · ${item.author.displayName}` : 'Scan Lab';
-    caption.textContent = item.caption || '';
-    caption.hidden = !item.caption;
-    locationText.textContent = item.location?.label ? `場所: ${item.location.label}` : '';
-    locationText.hidden = !item.location?.label;
-    likes.textContent = `♡ ${Number(item.likeCount || 0).toLocaleString('ja-JP')}`;
-    card.hidden = false;
 
+    // Metadata and preview are intentionally rendered before loading the heavy 3D runtime.
+    // A CDN/GPU/runtime failure must not erase the recipient's title/description/preview context.
+    applyShareMetadata(item);
+    renderMetadataCard(item);
+    revealPreview(item);
+    statusText.textContent = '3Dを読み込んでいます';
+
+    const GaussianSplats3D = await import('@mkkellogg/gaussian-splats-3d');
     const rootElement = document.querySelector('#viewer');
     const viewer = new GaussianSplats3D.Viewer({
       rootElement,
@@ -71,18 +126,61 @@ async function main() {
   }
 }
 
-share.addEventListener('click', async () => {
-  try {
-    if (navigator.share) {
-      await navigator.share({ title: document.title, url: location.href });
-    } else if (navigator.clipboard) {
-      await navigator.clipboard.writeText(location.href);
-      share.textContent = 'URLをコピーしました';
-      setTimeout(() => { share.textContent = '共有'; }, 1600);
+async function copyShareURL() {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(shareURL);
+      return true;
+    } catch {
+      // Fall through to the legacy DOM copy path for restricted clipboard contexts.
     }
-  } catch (error) {
-    if (error?.name !== 'AbortError') console.error(error);
   }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = shareURL;
+  textarea.setAttribute('readonly', '');
+  textarea.setAttribute('aria-hidden', 'true');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  textarea.style.pointerEvents = 'none';
+  document.body.appendChild(textarea);
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+  let copied = false;
+  try {
+    copied = document.execCommand('copy');
+  } catch {
+    copied = false;
+  } finally {
+    textarea.remove();
+  }
+  return copied;
+}
+
+function showCopiedFeedback() {
+  share.textContent = 'URLをコピーしました';
+  setTimeout(() => { share.textContent = '共有'; }, 1600);
+}
+
+share.addEventListener('click', async () => {
+  const shareData = { title: document.title, text: caption.textContent || undefined, url: shareURL };
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      return;
+    } catch (error) {
+      if (error?.name === 'AbortError') return;
+      console.error(error);
+    }
+  }
+
+  if (await copyShareURL()) {
+    showCopiedFeedback();
+    return;
+  }
+
+  // Last-resort manual path: only invoked after a user gesture and when browser copy APIs fail.
+  window.prompt('共有URLをコピーしてください', shareURL);
 });
 
 main();
