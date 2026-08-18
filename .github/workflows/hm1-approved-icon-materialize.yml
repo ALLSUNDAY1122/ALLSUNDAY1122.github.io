@@ -31,6 +31,33 @@ jobs:
           fetch-depth: 0
       - name: Install image tooling
         run: sudo apt-get update -qq && sudo apt-get install -y webp python3-pil
+      - name: Verify approved icon transport
+        run: |
+          cat ios/health-manager-1/approved-icon-v1/part01.b64 \
+              ios/health-manager-1/approved-icon-v1/part02.b64 \
+              ios/health-manager-1/approved-icon-v1/part03.b64 \
+              ios/health-manager-1/approved-icon-v1/part04.b64 \
+            | tr -d '\r\n' | base64 --decode > /tmp/hm1-approved.webp
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          p=Path('/tmp/hm1-approved.webp')
+          b=p.read_bytes()
+          assert len(b)==43200, f'bytes={len(b)}'
+          assert hashlib.sha256(b).hexdigest()=='ac8f0c2c050801ed2121bdd50494fdcafcec8af89a1d7811cd044b8977dd2d59'
+          print('PASS: transport')
+          PY
+      - name: Decode approved WebP
+        run: dwebp /tmp/hm1-approved.webp -o /tmp/hm1-approved.png
+      - name: Verify Pillow can read approved artwork
+        run: |
+          python3 - <<'PY'
+          from PIL import Image
+          p='/tmp/hm1-approved.png'
+          with Image.open(p) as im:
+              im.load()
+              print(f'PASS: Pillow image size={im.size} mode={im.mode}')
+          PY
       - name: Materialize exact approved artwork into AppIcon sizes
         run: bash ios/health-manager-1/prepare-approved-icon.sh
       - name: Commit generated AppIcon assets
