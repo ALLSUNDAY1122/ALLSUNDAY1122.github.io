@@ -1,6 +1,6 @@
 import Foundation
 
-enum ScanReportReason: String, CaseIterable, Codable, Sendable {
+enum ScanReportReason: String, CaseIterable, Codable, Hashable, Sendable {
     case privacy
     case unsafeLocation = "unsafe_location"
     case copyright
@@ -12,14 +12,14 @@ enum ScanReportReason: String, CaseIterable, Codable, Sendable {
 
     var title: String {
         switch self {
-        case .privacy: return "Privacy"
-        case .unsafeLocation: return "Unsafe location"
-        case .copyright: return "Copyright"
-        case .harassment: return "Harassment"
-        case .sexual: return "Sexual content"
-        case .violence: return "Violence"
-        case .spam: return "Spam"
-        case .other: return "Other"
+        case .privacy: return "プライバシー上の問題"
+        case .unsafeLocation: return "危険・不適切な場所"
+        case .copyright: return "著作権・権利の問題"
+        case .harassment: return "嫌がらせ・攻撃的な内容"
+        case .sexual: return "性的な内容"
+        case .violence: return "暴力的な内容"
+        case .spam: return "スパム"
+        case .other: return "その他"
         }
     }
 }
