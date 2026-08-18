@@ -44,7 +44,6 @@ private struct ScanLabEditableProfileUpdate: Encodable {
     }
 }
 
-@MainActor
 struct ScanLabProfileService {
     let client: SupabaseClient
 
