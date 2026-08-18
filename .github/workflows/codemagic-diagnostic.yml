@@ -1,0 +1,127 @@
+name: Codemagic Gateway Diagnostic
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - automation/codemagic-diagnostic-command.json
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Diagnose target Codemagic gateway run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import io, json, os, urllib.parse, urllib.request, zipfile
+          from pathlib import Path
+
+          cmd = json.loads(Path('automation/codemagic-diagnostic-command.json').read_text(encoding='utf-8'))
+          target_sha = cmd['target_head_sha']
+          workflow = cmd.get('workflow', 'codemagic-build-gateway.yml')
+          repo = os.environ['GH_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+
+          def api(path, accept='application/vnd.github+json'):
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/{path}',
+                  headers={
+                      'Authorization': f'Bearer {token}',
+                      'Accept': accept,
+                      'X-GitHub-Api-Version': '2022-11-28',
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  return r.read()
+
+          q = urllib.parse.urlencode({'head_sha': target_sha, 'per_page': 10})
+          runs = json.loads(api(f'actions/workflows/{workflow}/runs?{q}').decode('utf-8')).get('workflow_runs', [])
+          summary = {
+              'request_id': cmd.get('request_id'),
+              'target_head_sha': target_sha,
+              'workflow': workflow,
+              'run_found': bool(runs),
+          }
+          if not runs:
+              Path('automation/codemagic-diagnostic-summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding='utf-8')
+              raise SystemExit(0)
+
+          run = runs[0]
+          run_id = run['id']
+          summary['run'] = {
+              'id': run_id,
+              'name': run.get('name'),
+              'status': run.get('status'),
+              'conclusion': run.get('conclusion'),
+              'created_at': run.get('created_at'),
+              'updated_at': run.get('updated_at'),
+              'html_url': run.get('html_url'),
+              'head_sha': run.get('head_sha'),
+          }
+
+          jobs = json.loads(api(f'actions/runs/{run_id}/jobs?per_page=100').decode('utf-8')).get('jobs', [])
+          summary['jobs'] = [
+              {
+                  'name': j.get('name'),
+                  'status': j.get('status'),
+                  'conclusion': j.get('conclusion'),
+                  'steps': [
+                      {'name': s.get('name'), 'status': s.get('status'), 'conclusion': s.get('conclusion')}
+                      for s in (j.get('steps') or [])
+                  ],
+              }
+              for j in jobs
+          ]
+
+          artifacts = json.loads(api(f'actions/runs/{run_id}/artifacts?per_page=100').decode('utf-8')).get('artifacts', [])
+          summary['artifacts'] = [{'id': a.get('id'), 'name': a.get('name'), 'expired': a.get('expired')} for a in artifacts]
+
+          sensitive = ('secret', 'token', 'password', 'credential', 'private', 'apikey', 'api_key', 'environment', 'variable')
+          def clean(v):
+              if isinstance(v, dict):
+                  return {k: ('[REDACTED]' if any(p in str(k).lower() for p in sensitive) else clean(x)) for k, x in v.items()}
+              if isinstance(v, list):
+                  return [clean(x) for x in v]
+              return v
+
+          target_artifact = next((a for a in artifacts if str(a.get('name', '')).startswith('codemagic-result-') and not a.get('expired')), None)
+          if target_artifact:
+              raw_zip = api(f"actions/artifacts/{target_artifact['id']}/zip", accept='application/octet-stream')
+              with zipfile.ZipFile(io.BytesIO(raw_zip)) as z:
+                  names = set(z.namelist())
+                  if 'codemagic-result.json' in names:
+                      result = json.loads(z.read('codemagic-result.json').decode('utf-8'))
+                      summary['codemagic_result'] = clean(result)
+                  if 'codemagic-actions.json' in names:
+                      actions = json.loads(z.read('codemagic-actions.json').decode('utf-8'))
+                      summary['codemagic_actions'] = clean(actions)
+
+          Path('automation/codemagic-diagnostic-summary.json').write_text(
+              json.dumps(summary, ensure_ascii=False, indent=2),
+              encoding='utf-8',
+          )
+          PY
+
+      - name: Persist sanitized diagnostic summary
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/codemagic-diagnostic-summary.json
+          if git diff --cached --quiet; then
+            echo "No diagnostic changes"
+            exit 0
+          fi
+          git commit -m "Record Codemagic gateway diagnostic"
+          git push
