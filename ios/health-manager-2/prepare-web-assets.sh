@@ -10,10 +10,13 @@ APP_ICON_SOURCE="$WEB_SRC/approved-app-icon.png"
 ICON_PARTS_DIR="$WEB_SRC/approved-icon-v4"
 ICON_TRANSPORT_SHA256="4cefe840198dde91fddb6c5fe0fdece7d41a8bebfed415eb034752491cd7977c"
 
-# Every Apple upload needs a unique CFBundleVersion. Codemagic supplies a
-# monotonically increasing build number; apply it before XcodeGen runs.
-if [ -n "${CM_BUILD_NUMBER:-}" ]; then
-  python3 - "$SCRIPT_DIR/project.yml" "$CM_BUILD_NUMBER" <<'PY'
+# Every Apple upload needs a unique CFBundleVersion. Codemagic officially
+# exports BUILD_NUMBER per workflow; apply it before XcodeGen runs.
+if [ -z "${BUILD_NUMBER:-}" ]; then
+  echo "BUILD_NUMBER is required for release builds" >&2
+  exit 1
+fi
+python3 - "$SCRIPT_DIR/project.yml" "$BUILD_NUMBER" <<'PY'
 from pathlib import Path
 import re, sys
 p = Path(sys.argv[1])
@@ -25,7 +28,6 @@ if count != 1:
 p.write_text(updated, encoding='utf-8')
 print(f'PASS: HealthManager2 CURRENT_PROJECT_VERSION={build_number}')
 PY
-fi
 
 rm -rf "$WEB_DST"
 rm -rf "$SCRIPT_DIR/HealthManager2/Assets.xcassets"
