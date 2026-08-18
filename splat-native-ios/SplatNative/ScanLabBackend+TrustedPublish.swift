@@ -2,21 +2,40 @@ import Foundation
 @preconcurrency import Supabase
 import UIKit
 
-private struct ScanLabTrustedCreatedScan: Decodable {
-    let id: UUID
+private struct ScanLabUploadInitRequest: Encodable {
+    let action = "init"
+    let title: String
+    let caption: String
 }
 
-private struct ScanLabTrustedPublishRequest: Encodable {
+private struct ScanLabUploadValidateRequest: Encodable {
+    let action = "validate"
     let scanId: String
 }
 
-private struct ScanLabTrustedDraftInsert: Encodable {
-    let ownerId: UUID
-    let title: String
-    let caption: String
+private struct ScanLabUploadPaths: Decodable {
+    let scene: String
+    let manifest: String
+    let previewJpeg: String
+    let previewPng: String
+}
+
+private struct ScanLabUploadInitResponse: Decodable {
+    let scanId: UUID
+    let paths: ScanLabUploadPaths
+    let required: [String]
+}
+
+private struct ScanLabUploadValidateResponse: Decodable {
+    let scanId: UUID
+    let ready: Bool
+}
+
+private struct ScanLabTrustedPublishRequest: Encodable { let scanId: String }
+private struct ScanLabDeleteDraftRequest: Encodable { let scanId: String }
+
+private struct ScanLabTrustedDraftSettings: Encodable {
     let visibility: String
-    let status: String
-    let assetPath: String
     let previewPath: String?
     let latitude: Double?
     let longitude: Double?
@@ -27,9 +46,7 @@ private struct ScanLabTrustedDraftInsert: Encodable {
     let contentConfirmed: Bool
 
     enum CodingKeys: String, CodingKey {
-        case ownerId = "owner_id"
-        case title, caption, visibility, status
-        case assetPath = "asset_path"
+        case visibility
         case previewPath = "preview_path"
         case latitude, longitude
         case locationLabel = "location_label"
@@ -41,9 +58,6 @@ private struct ScanLabTrustedDraftInsert: Encodable {
 }
 
 extension ScanLabBackend {
-    /// Explicit network-publish path. The local completed result is first converted into C2's
-    /// browser-share contract (`scene.spz` + `manifest.json` + optional preview) and only those
-    /// package artifacts are uploaded. The raw reconstruction `.splat` never leaves the device.
     func publishTrustedPackage(
         resultURL: URL,
         previewImage: UIImage?,
@@ -59,107 +73,167 @@ extension ScanLabBackend {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard (1...80).contains(trimmedTitle.count) else { throw ScanLabBackendError.invalidTitle }
         guard let session = try? await client.auth.session else { throw ScanLabBackendError.signInRequired }
-        let user = session.user
 
         if visibility != .private && !contentConfirmed {
             throw ScanLabBackendError.contentConfirmationRequired
         }
+
+        let publishLocation = ScanLabGeotagPolicy.normalized(
+            visibility: visibility,
+            location: location,
+            label: location?.label
+        )
         if visibility == .public {
-            guard location != nil else { throw ScanLabBackendError.invalidPublicLocation }
-            guard publicPlaceConfirmed, privacyConfirmed, rightsConfirmed else {
+            guard ScanLabGeotagPolicy.canPublishPublic(
+                location: publishLocation,
+                publicPlaceConfirmed: publicPlaceConfirmed,
+                privacyConfirmed: privacyConfirmed,
+                rightsConfirmed: rightsConfirmed
+            ) else {
                 throw ScanLabBackendError.safetyConfirmationRequired
             }
         }
 
-        let previewJPEG = previewImage?.jpegData(compressionQuality: 0.82)
-        let package = try await SplatExportService.makeBrowserSharePackage(
-            sourceURL: resultURL,
-            previewJPEG: previewJPEG
-        )
-        defer { try? FileManager.default.removeItem(at: package.directoryURL) }
-
-        let assetAttributes = try FileManager.default.attributesOfItem(atPath: package.assetURL.path)
-        guard let assetSize = assetAttributes[.size] as? NSNumber, assetSize.intValue > 0 else {
+        let package: ScanLabPublishPackage
+        do {
+            package = try ScanLabPublishPackageBuilder.build(
+                from: resultURL,
+                maximumBytes: ScanLabConfig.maximumAssetBytes
+            )
+        } catch ScanLabPublishPackageError.sourceTooLarge {
+            throw ScanLabBackendError.assetTooLarge
+        } catch {
             throw ScanLabBackendError.invalidAsset
         }
-        guard assetSize.intValue <= ScanLabConfig.maximumAssetBytes else {
-            throw ScanLabBackendError.assetTooLarge
+        defer { ScanLabPublishPackageBuilder.cleanup(package) }
+
+        // D2-004 + D2-015 convergence: create the owner-bound draft first.
+        // The final Storage policy intentionally rejects uploads that are not attached
+        // to a live draft, which also prevents assets from being resurrected while a
+        // deletion is in progress.
+        let initialized: ScanLabUploadInitResponse = try await client.functions.invoke(
+            "scanlab-upload",
+            options: FunctionInvokeOptions(
+                region: .apSoutheast1,
+                body: ScanLabUploadInitRequest(
+                    title: trimmedTitle,
+                    caption: String(caption.prefix(500))
+                ),
+                timeoutInterval: 30
+            )
+        )
+
+        let scanID = initialized.scanId
+        let expectedPrefix = "\(session.user.id.uuidString.lowercased())/\(scanID.uuidString.lowercased())"
+        guard initialized.paths.scene == "\(expectedPrefix)/scene.spz",
+              initialized.paths.manifest == "\(expectedPrefix)/manifest.json",
+              initialized.paths.previewJpeg == "\(expectedPrefix)/preview.jpg",
+              initialized.paths.previewPng == "\(expectedPrefix)/preview.png",
+              Set(initialized.required) == Set(["scene.spz", "manifest.json"]) else {
+            await cleanupFailedDraft(scanID)
+            throw ScanLabBackendError.invalidServerResponse
         }
 
-        let uploadID = UUID().uuidString.lowercased()
-        let prefix = "\(user.id.uuidString.lowercased())/\(uploadID)"
-        let assetPath = "\(prefix)/scene.spz"
-        let manifestPath = "\(prefix)/manifest.json"
-        let previewPath = package.previewURL == nil ? nil : "\(prefix)/preview.jpg"
-        var uploadedPaths: [String] = []
+        let previewPath = previewImage == nil ? nil : initialized.paths.previewJpeg
 
         do {
             try await client.storage.from("scanlab-assets").upload(
-                assetPath,
-                fileURL: package.assetURL,
-                options: FileOptions(contentType: "application/octet-stream")
+                initialized.paths.scene,
+                fileURL: package.sceneURL,
+                options: FileOptions(contentType: ScanLabPublishPackage.sceneMediaType)
             )
-            uploadedPaths.append(assetPath)
-
-            // The existing private bucket only permits binary/image MIME types. Keep the JSON
-            // filename and bytes intact while using octet-stream so deployed bucket policy does
-            // not need to widen merely to transport the integrity sidecar.
             try await client.storage.from("scanlab-assets").upload(
-                manifestPath,
+                initialized.paths.manifest,
                 fileURL: package.manifestURL,
-                options: FileOptions(contentType: "application/octet-stream")
+                options: FileOptions(contentType: "application/json")
             )
-            uploadedPaths.append(manifestPath)
-
-            if let previewPath, let previewURL = package.previewURL {
+            if let previewPath, let previewData = previewImage?.jpegData(compressionQuality: 0.82) {
                 try await client.storage.from("scanlab-assets").upload(
                     previewPath,
-                    fileURL: previewURL,
+                    data: previewData,
                     options: FileOptions(contentType: "image/jpeg")
                 )
-                uploadedPaths.append(previewPath)
             }
 
-            let draft = ScanLabTrustedDraftInsert(
-                ownerId: user.id,
-                title: trimmedTitle,
-                caption: String(caption.prefix(500)),
+            let settings = ScanLabTrustedDraftSettings(
                 visibility: visibility.rawValue,
-                status: "draft",
-                assetPath: assetPath,
                 previewPath: previewPath,
-                latitude: location?.latitude,
-                longitude: location?.longitude,
-                locationLabel: location?.label,
-                publicPlaceConfirmed: publicPlaceConfirmed,
-                privacyConfirmed: privacyConfirmed,
-                rightsConfirmed: rightsConfirmed,
-                contentConfirmed: contentConfirmed
+                latitude: publishLocation?.latitude,
+                longitude: publishLocation?.longitude,
+                locationLabel: publishLocation?.label,
+                publicPlaceConfirmed: visibility == .public && publishLocation != nil && publicPlaceConfirmed,
+                privacyConfirmed: visibility == .public && privacyConfirmed,
+                rightsConfirmed: visibility == .public && rightsConfirmed,
+                contentConfirmed: visibility != .private && contentConfirmed
             )
-            let created: ScanLabTrustedCreatedScan = try await client
-                .from("scanlab_scans")
-                .insert(draft)
-                .select("id")
-                .single()
+            try await client.from("scanlab_scans")
+                .update(settings)
+                .eq("id", value: scanID)
+                .eq("owner_id", value: session.user.id)
+                .eq("status", value: "draft")
                 .execute()
-                .value
+
+            let validation: ScanLabUploadValidateResponse = try await client.functions.invoke(
+                "scanlab-upload",
+                options: FunctionInvokeOptions(
+                    region: .apSoutheast1,
+                    body: ScanLabUploadValidateRequest(
+                        scanId: scanID.uuidString.lowercased()
+                    ),
+                    timeoutInterval: 30
+                )
+            )
+            guard validation.scanId == scanID, validation.ready else {
+                throw ScanLabBackendError.invalidServerResponse
+            }
+
+            // Private cloud storage intentionally remains an owner-only draft. A private
+            // row must never enter the published lifecycle or receive a share URL.
+            if visibility == .private {
+                await loadOwnerScans()
+                return ScanLabPublishResponse(
+                    id: scanID,
+                    visibility: ScanLabVisibility.private.rawValue,
+                    publishedAt: nil,
+                    shareUrl: nil
+                )
+            }
 
             let published: ScanLabPublishResponse = try await client.functions.invoke(
                 "scanlab-publish",
                 options: FunctionInvokeOptions(
                     region: .apSoutheast1,
-                    body: ScanLabTrustedPublishRequest(scanId: created.id.uuidString.lowercased()),
+                    body: ScanLabTrustedPublishRequest(
+                        scanId: scanID.uuidString.lowercased()
+                    ),
                     timeoutInterval: 30
                 )
             )
+            guard published.id == scanID else { throw ScanLabBackendError.invalidServerResponse }
+
             await loadOwnerScans()
             if visibility == .public { await loadPublicScans() }
             return published
         } catch {
-            if !uploadedPaths.isEmpty {
-                try? await client.storage.from("scanlab-assets").remove(paths: uploadedPaths)
-            }
+            await cleanupFailedDraft(scanID)
             throw error
         }
     }
+
+    private func cleanupFailedDraft(_ scanID: UUID) async {
+        // D2-015 is idempotent and also cleans an orphaned canonical folder when the
+        // metadata row has already disappeared, so it is the only rollback path used.
+        let _: ScanLabDeleteDraftResponse? = try? await client.functions.invoke(
+            "scanlab-delete-scan",
+            options: FunctionInvokeOptions(
+                region: .apSoutheast1,
+                body: ScanLabDeleteDraftRequest(scanId: scanID.uuidString.lowercased()),
+                timeoutInterval: 30
+            )
+        )
+    }
+}
+
+private struct ScanLabDeleteDraftResponse: Decodable {
+    let deleted: Bool
 }

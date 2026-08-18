@@ -36,19 +36,59 @@ struct ScanLabScanTab: View {
 
 struct ScanLabDiscoverView: View {
     @EnvironmentObject var backend: ScanLabBackend
+    @StateObject private var feed = ScanLabDiscoverFeedStore()
+    private var browsableItems: [ScanLabPublicScan] { feed.items.filter(PublicBrowsePolicy.isBrowsable) }
+
     var body: some View {
         NavigationStack {
             Group {
-                if backend.publicScans.isEmpty && backend.isLoadingPublic { ProgressView("公開スキャンを取得中") }
-                else if backend.publicScans.isEmpty {
-                    ContentUnavailableView("まだ公開スキャンがありません", systemImage: "sparkles.rectangle.stack", description: Text("公開された3Dはここに表示されます。ダミー投稿は表示しません。"))
+                if feed.isLoadingInitial && feed.items.isEmpty {
+                    ProgressView("公開スキャンを取得中")
+                } else if let error = feed.errorMessage, feed.items.isEmpty {
+                    ContentUnavailableView {
+                        Label("Discoverを読み込めません", systemImage: "wifi.exclamationmark")
+                    } description: { Text(error) }
+                    actions: {
+                        Button("再試行") { Task { await feed.reload(using: backend) } }.buttonStyle(.borderedProminent)
+                    }
+                } else if browsableItems.isEmpty {
+                    ContentUnavailableView(
+                        feed.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "まだ公開スキャンがありません" : "一致する公開スキャンがありません",
+                        systemImage: "sparkles.rectangle.stack",
+                        description: Text(feed.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "公開された3Dはここに表示されます。ダミー投稿は表示しません。" : "別のキーワードで検索してください。")
+                    )
                 } else {
-                    List(backend.publicScans) { scan in NavigationLink { ScanLabRemoteScanView(scan: scan) } label: { ScanLabDiscoverRow(scan: scan) } }
-                        .listStyle(.plain).refreshable { await backend.loadPublicScans() }
+                    List {
+                        ForEach(browsableItems) { scan in
+                            NavigationLink { ScanLabRemoteScanView(scan: scan) } label: { ScanLabDiscoverRow(scan: scan) }
+                                .onAppear {
+                                    if scan.id == browsableItems.last?.id, feed.hasMore {
+                                        Task { await feed.loadNextPage(using: backend) }
+                                    }
+                                }
+                        }
+                        if feed.isLoadingMore {
+                            HStack { Spacer(); ProgressView("さらに読み込み中"); Spacer() }.listRowSeparator(.hidden)
+                        } else if let error = feed.errorMessage {
+                            VStack(spacing: 8) {
+                                Text(error).font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                                Button("続きを再試行") { feed.clearError(); Task { await feed.loadNextPage(using: backend) } }.buttonStyle(.bordered)
+                            }
+                            .frame(maxWidth: .infinity).padding(.vertical, 12).listRowSeparator(.hidden)
+                        }
+                    }
+                    .listStyle(.plain)
+                    .refreshable { await feed.reload(using: backend) }
                 }
             }
             .navigationTitle("Discover")
-            .task { await backend.loadPublicScans() }
+            .searchable(text: $feed.query, prompt: "タイトルを検索")
+            .onSubmit(of: .search) { Task { await feed.reload(using: backend) } }
+            .task(id: feed.query) {
+                try? await Task.sleep(for: .milliseconds(350))
+                guard !Task.isCancelled else { return }
+                await feed.reload(using: backend)
+            }
         }
     }
 }
@@ -57,7 +97,7 @@ private struct ScanLabDiscoverRow: View {
     let scan: ScanLabPublicScan
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: scan.previewUrl) { phase in
+            AsyncImage(url: scan.previewImageUrl ?? scan.previewUrl) { phase in
                 switch phase {
                 case .success(let image): image.resizable().scaledToFill()
                 default: ZStack { RoundedRectangle(cornerRadius: 12).fill(.white.opacity(0.08)); Image(systemName: "cube.transparent").foregroundStyle(.secondary) }
@@ -70,41 +110,123 @@ private struct ScanLabDiscoverRow: View {
                 HStack(spacing: 12) {
                     Label("\(scan.likeCount)", systemImage: "heart")
                     if let label = scan.location?.label, !label.isEmpty { Label(label, systemImage: "mappin.and.ellipse").lineLimit(1) }
-                }.font(.caption).foregroundStyle(.secondary)
+                }
+                .font(.caption).foregroundStyle(.secondary)
             }
-        }.padding(.vertical, 4)
+        }
+        .padding(.vertical, 4)
+    }
+}
+
+struct ScanLabAuthorScanBrowserView: View {
+    @EnvironmentObject var backend: ScanLabBackend
+    let author: ScanLabAuthor
+    private var scans: [ScanLabPublicScan] { PublicBrowsePolicy.scans(for: author.id, in: backend.publicScans) }
+    var body: some View {
+        List {
+            Section {
+                NavigationLink { ScanLabPublicProfileView(handle: author.handle) } label: {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(author.displayName).font(.title2.bold())
+                        Text("@\(author.handle) · 公開プロフィール").font(.subheadline).foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 6)
+                }
+            }
+            Section("公開3D") {
+                if scans.isEmpty { ContentUnavailableView("公開3Dはありません", systemImage: "cube.transparent") }
+                else {
+                    ForEach(scans) { scan in
+                        NavigationLink { ScanLabRemoteScanView(scan: scan) } label: { ScanLabDiscoverRow(scan: scan) }
+                    }
+                }
+            }
+        }
+        .listStyle(.plain)
+        .navigationTitle("公開3D").navigationBarTitleDisplayMode(.inline)
+        .task { if scans.isEmpty { await backend.loadPublicScans() } }
+        .refreshable { await backend.loadPublicScans() }
     }
 }
 
 struct ScanLabMapView: View {
     @EnvironmentObject var backend: ScanLabBackend
     @State private var selected: ScanLabPublicScan?
-    private var mappedScans: [ScanLabPublicScan] { backend.publicScans.filter { $0.location != nil } }
+    @State private var cameraPosition: MapCameraPosition = .automatic
+    @State private var visibleRegion: MKCoordinateRegion?
+    @State private var queryTask: Task<Void, Never>?
+    @State private var hasLoadedInitialRegion = false
+
+    private var mappedScans: [ScanLabPublicScan] {
+        backend.publicScans.filter { scan in
+            guard PublicBrowsePolicy.isBrowsable(scan), let location = scan.location else { return false }
+            return ScanLabMapQueryPolicy.isValid(latitude: location.latitude, longitude: location.longitude)
+        }
+    }
+
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
-                Map {
+                Map(position: $cameraPosition) {
                     ForEach(mappedScans) { scan in
                         if let location = scan.location {
                             Annotation(scan.title, coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)) {
-                                Button { selected = scan } label: { Image(systemName: "cube.fill").font(.headline).foregroundStyle(.black).frame(width: 38, height: 38).background(.mint, in: Circle()).shadow(radius: 3) }.buttonStyle(.plain)
+                                Button { selected = scan } label: {
+                                    Image(systemName: "cube.fill").font(.headline).foregroundStyle(.black).frame(width: 38, height: 38).background(.mint, in: Circle()).shadow(radius: 3)
+                                }
+                                .buttonStyle(.plain)
                             }
                         }
                     }
-                }.mapStyle(.standard(pointsOfInterest: .excludingAll))
+                }
+                .mapStyle(.standard(pointsOfInterest: .excludingAll))
+                .onMapCameraChange(frequency: .onEnd) { context in
+                    visibleRegion = context.region
+                    scheduleVisibleRegionQuery(context.region)
+                }
                 if mappedScans.isEmpty {
-                    Text(backend.isLoadingPublic ? "公開地点を取得中" : "公開地点はまだありません").font(.footnote.weight(.semibold)).padding(.horizontal, 14).padding(.vertical, 9).background(.ultraThinMaterial, in: Capsule()).padding(.bottom, 14)
+                    Text(backend.isLoadingPublic ? "この範囲の公開地点を取得中" : "この範囲に公開地点はありません")
+                        .font(.footnote.weight(.semibold)).padding(.horizontal, 14).padding(.vertical, 9)
+                        .background(.ultraThinMaterial, in: Capsule()).padding(.bottom, 14)
                 }
             }
-            .navigationTitle("Map").task { await backend.loadPublicScans() }
+            .navigationTitle("Map")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { Task { await reloadVisibleRegion() } } label: { Image(systemName: "arrow.clockwise") }
+                        .disabled(backend.isLoadingPublic).accessibilityLabel("表示範囲を再読み込み")
+                }
+            }
+            .task {
+                guard !hasLoadedInitialRegion else { return }
+                hasLoadedInitialRegion = true
+                await backend.loadPublicScans()
+            }
+            .onDisappear { queryTask?.cancel() }
             .sheet(item: $selected) { scan in NavigationStack { ScanLabRemoteScanView(scan: scan) } }
         }
+    }
+
+    private func scheduleVisibleRegionQuery(_ region: MKCoordinateRegion) {
+        queryTask?.cancel()
+        queryTask = Task {
+            do {
+                try await Task.sleep(for: .milliseconds(350))
+                while backend.isLoadingPublic { try await Task.sleep(for: .milliseconds(50)) }
+            } catch { return }
+            guard !Task.isCancelled else { return }
+            await backend.loadPublicScans(boundingBox: ScanLabMapBounds.make(from: region).backendTuple)
+        }
+    }
+
+    private func reloadVisibleRegion() async {
+        if let visibleRegion { await backend.loadPublicScans(boundingBox: ScanLabMapBounds.make(from: visibleRegion).backendTuple) }
+        else { await backend.loadPublicScans() }
     }
 }
 
 struct ScanLabRemoteScanView: View {
     @EnvironmentObject var backend: ScanLabBackend
-    @Environment(\.dismiss) private var dismiss
     let scan: ScanLabPublicScan
     @StateObject private var viewerState = SplatViewerState()
     @State private var localURL: URL?
@@ -115,6 +237,7 @@ struct ScanLabRemoteScanView: View {
     @State private var blockBusy = false
     @State private var showingReport = false
     @State private var showingBlock = false
+    @State private var hasAlreadyReported = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -126,33 +249,51 @@ struct ScanLabRemoteScanView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text(scan.title).font(.title3.bold())
                 if !scan.caption.isEmpty { Text(scan.caption).font(.subheadline).foregroundStyle(.secondary) }
+                if let author = PublicBrowsePolicy.author(for: scan) {
+                    NavigationLink { ScanLabAuthorScanBrowserView(author: author) } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "person.crop.circle")
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(author.displayName).font(.subheadline.weight(.semibold))
+                                Text("@\(author.handle) · 公開3Dを見る").font(.caption).foregroundStyle(.secondary)
+                            }
+                            Spacer(); Image(systemName: "chevron.right").font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
                 HStack {
-                    Button { Task { likeBusy = true; defer { likeBusy = false }; do { try await backend.like(scan) } catch { backend.notice = error.localizedDescription } } } label: { Label("\(scan.likeCount)", systemImage: "heart") }.disabled(likeBusy)
+                    Button {
+                        Task { likeBusy = true; defer { likeBusy = false }; do { try await backend.like(scan) } catch { backend.notice = error.localizedDescription } }
+                    } label: { Label("\(scan.likeCount)", systemImage: "heart") }
+                    .disabled(likeBusy)
                     Spacer()
                     if let shareURL = publicShareURL { ShareLink(item: shareURL) { Label("共有", systemImage: "square.and.arrow.up") } }
                     Menu {
-                        Button("この3Dを報告", role: .destructive) { showingReport = true }
-                        if backend.isAuthenticated, scan.author != nil {
-                            Button("このユーザーをブロック", role: .destructive) { showingBlock = true }
-                        }
-                    } label: { Image(systemName: "ellipsis") }.disabled(reportBusy || blockBusy)
-                }.buttonStyle(.bordered)
-            }.padding(16).background(.black)
+                        if hasAlreadyReported { Button("この3Dは報告済み") {}.disabled(true) }
+                        else { Button("この3Dを報告", role: .destructive) { showingReport = true } }
+                        if backend.isAuthenticated, scan.author != nil { Button("このユーザーをブロック", role: .destructive) { showingBlock = true } }
+                    } label: { Image(systemName: "ellipsis") }
+                    .disabled(reportBusy || blockBusy)
+                }
+                .buttonStyle(.bordered)
+            }
+            .padding(16).background(.black)
         }
         .navigationTitle(scan.author?.displayName ?? "Scan").navigationBarTitleDisplayMode(.inline)
-        .task { await loadModel() }
+        .task { await loadModel(); await loadReportStatus() }
         .confirmationDialog("報告理由", isPresented: $showingReport, titleVisibility: .visible) {
-            Button("プライバシー上の問題", role: .destructive) { Task { await report("privacy") } }
-            Button("危険・不適切な場所", role: .destructive) { Task { await report("unsafe_location") } }
-            Button("著作権・権利の問題", role: .destructive) { Task { await report("copyright") } }
-            Button("スパム", role: .destructive) { Task { await report("spam") } }
-            Button("その他", role: .destructive) { Task { await report("other") } }
+            ForEach(ScanReportReason.allCases, id: \.self) { reason in
+                Button(reason.title, role: .destructive) { Task { await report(reason) } }
+            }
             Button("キャンセル", role: .cancel) {}
-        } message: { Text("報告を受けた公開3Dは確認のため非表示になり、再公開はモデレーション保留になります。") }
+        } message: {
+            Text("報告は運営確認用に保存されます。同じ3Dへの再報告は重複として扱われ、最初の報告内容が保持されます。")
+        }
         .alert("このユーザーをブロックしますか？", isPresented: $showingBlock) {
             Button("キャンセル", role: .cancel) {}
             Button("ブロック", role: .destructive) { Task { await blockAuthor() } }
-        } message: { Text("このユーザーの公開3DをMapとDiscoverから除外します。") }
+        } message: { Text("ブロックすると、お互いの公開投稿と新しい操作を非表示にします。") }
         .onDisappear { if let localURL { try? FileManager.default.removeItem(at: localURL) } }
     }
 
@@ -161,23 +302,39 @@ struct ScanLabRemoteScanView: View {
         components.queryItems = [URLQueryItem(name: "id", value: scan.id.uuidString.lowercased())]
         return components.url
     }
-    private func report(_ reason: String) async {
+
+    private func report(_ reason: ScanReportReason) async {
         reportBusy = true; defer { reportBusy = false }
-        do { try await backend.report(scan, reason: reason); dismiss() } catch { backend.notice = error.localizedDescription }
+        do { _ = try await backend.submitReport(scan, reason: reason); hasAlreadyReported = true }
+        catch { backend.notice = error.localizedDescription }
     }
+
+    private func loadReportStatus() async {
+        guard backend.isAuthenticated else { hasAlreadyReported = false; return }
+        do { hasAlreadyReported = try await backend.hasReported(scan) }
+        catch { backend.notice = "報告状態を確認できませんでした: \(error.localizedDescription)" }
+    }
+
     private func blockAuthor() async {
         blockBusy = true; defer { blockBusy = false }
-        do { try await backend.block(scan); dismiss() } catch { backend.notice = error.localizedDescription }
+        do { try await backend.block(scan) } catch { backend.notice = error.localizedDescription }
     }
+
     private func loadModel() async {
-        guard localURL == nil, let modelURL = scan.modelUrl else { loading = false; if scan.modelUrl == nil { errorMessage = "3Dデータの署名URLがありません。" }; return }
+        guard localURL == nil, let modelURL = scan.modelUrl else {
+            loading = false
+            if scan.modelUrl == nil { errorMessage = "3DデータURLがありません。" }
+            return
+        }
         do {
             let (downloaded, response) = try await URLSession.shared.download(from: modelURL)
             guard let http = response as? HTTPURLResponse, 200..<300 ~= http.statusCode else { throw ScanLabBackendError.invalidServerResponse }
             let remoteExtension = modelURL.pathExtension.lowercased()
             let supportedExtension = ["spz", "splat", "ply"].contains(remoteExtension) ? remoteExtension : "spz"
             let target = FileManager.default.temporaryDirectory.appendingPathComponent("scanlab-\(scan.id.uuidString).\(supportedExtension)")
-            try? FileManager.default.removeItem(at: target); try FileManager.default.moveItem(at: downloaded, to: target); localURL = target
+            try? FileManager.default.removeItem(at: target)
+            try FileManager.default.moveItem(at: downloaded, to: target)
+            localURL = target
         } catch { errorMessage = error.localizedDescription }
         loading = false
     }

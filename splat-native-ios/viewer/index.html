@@ -4,14 +4,30 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#050607">
+  <meta name="description" content="Scan Labで公開された3D Gaussian Splatをブラウザで閲覧します。">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Scan Lab">
+  <meta property="og:title" content="Scan Lab 3D Viewer">
+  <meta property="og:description" content="Scan Labで公開された3D Gaussian Splatをブラウザで閲覧します。">
+  <meta property="og:url" content="https://allsunday1122.github.io/splat-native-ios/viewer/">
+  <meta property="og:image" content="">
+  <meta property="og:image:alt" content="">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Scan Lab 3D Viewer">
+  <meta name="twitter:description" content="Scan Labで公開された3D Gaussian Splatをブラウザで閲覧します。">
+  <meta name="twitter:image" content="">
+  <meta name="twitter:image:alt" content="">
+  <link rel="canonical" href="https://allsunday1122.github.io/splat-native-ios/viewer/">
   <title>Scan Lab 3D Viewer</title>
   <link rel="stylesheet" href="./viewer.css">
   <script type="importmap">
   {
     "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-      "@mkkellogg/gaussian-splats-3d": "https://cdn.jsdelivr.net/npm/@mkkellogg/gaussian-splats-3d@0.4.7/build/gaussian-splats-3d.module.js"
+      "gaussian-splats-upstream": "https://cdn.jsdelivr.net/npm/@mkkellogg/gaussian-splats-3d@0.4.7/build/gaussian-splats-3d.module.js",
+      "@mkkellogg/gaussian-splats-3d": "./gaussian-spz-wrapper.js"
     }
   }
   </script>
@@ -30,9 +46,15 @@
       <p id="location" class="meta"></p>
       <p id="likes" class="meta"></p>
     </section>
-    <section id="status" class="status" role="status" aria-live="polite">
-      <div class="spinner" aria-hidden="true"></div>
-      <p id="status-text">3Dを読み込んでいます</p>
+    <section id="status" class="status" role="status" aria-live="polite" aria-busy="true">
+      <img id="status-preview" class="status-preview" alt="" hidden>
+      <div class="status-overlay" aria-hidden="true"></div>
+      <div class="status-content">
+        <div class="spinner" aria-hidden="true"></div>
+        <p id="status-text">共有情報を読み込んでいます</p>
+        <p id="status-detail" class="status-detail" hidden></p>
+        <button id="retry" class="retry-button" type="button" hidden>もう一度試す</button>
+      </div>
     </section>
   </main>
   <script type="module" src="./viewer.js"></script>
