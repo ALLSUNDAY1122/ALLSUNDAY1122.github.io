@@ -6,6 +6,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 WEB_SRC="$REPO_ROOT/apps/sanitary-manager-2"
 WEB_DST="$SCRIPT_DIR/HealthManager2/Web"
 ASSET_DIR="$SCRIPT_DIR/HealthManager2/Assets.xcassets/AppIcon.appiconset"
+APP_ICON_SOURCE="$WEB_SRC/approved-app-icon.png"
 
 # Every Apple upload needs a unique CFBundleVersion. Codemagic supplies a
 # monotonically increasing build number; apply it before XcodeGen runs.
@@ -32,6 +33,7 @@ files=(
   index.html
   gm-style.css
   q1.js q2.js q3.js q4.js q5.js q6.js q7.js q8.js q9.js
+  q10.js q11.js q12.js q13.js q14.js q15.js q16.js
   audit-patch-v2.js audit-fixes.js question-order-v1.js
   gm1.js gm2.js gm3.js gm4.js
   manifest.json icon.svg
@@ -42,21 +44,21 @@ for file in "${files[@]}"; do
   cp "$WEB_SRC/$file" "$WEB_DST/$file"
 done
 
+test -f "$APP_ICON_SOURCE" || { echo "Missing approved AppIcon: $APP_ICON_SOURCE" >&2; exit 1; }
+
 # WKWebView loads bundled assets from file://, so the website service worker is
 # intentionally omitted. All required learning assets are already inside the app.
 
 if command -v magick >/dev/null 2>&1; then
-  # Modern Xcode single-size AppIcon catalog input.
-  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 1024x1024 "$ASSET_DIR/AppIcon-1024.png"
-  # Compatibility filename retained for the existing Codemagic release-input check.
+  # Always derive release icons from the user-approved canonical PNG. Never
+  # regenerate the artwork from the old placeholder icon.svg.
+  magick "$APP_ICON_SOURCE" -background '#f7f3ea' -alpha remove -alpha off -resize 1024x1024 "$ASSET_DIR/AppIcon-1024.png"
   cp "$ASSET_DIR/AppIcon-1024.png" "$ASSET_DIR/AppIcon.png"
 
-  # Explicit legacy icon files. Apple upload validation still checks these when
-  # CFBundleIconFiles is present, so they must be copied into the final .app bundle.
-  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 120x120 "$SCRIPT_DIR/HealthManager2/AppIcon-120.png"
-  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 152x152 "$SCRIPT_DIR/HealthManager2/AppIcon-152.png"
-  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 167x167 "$SCRIPT_DIR/HealthManager2/AppIcon-167.png"
-  magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 180x180 "$SCRIPT_DIR/HealthManager2/AppIcon-180.png"
+  magick "$APP_ICON_SOURCE" -background '#f7f3ea' -alpha remove -alpha off -resize 120x120 "$SCRIPT_DIR/HealthManager2/AppIcon-120.png"
+  magick "$APP_ICON_SOURCE" -background '#f7f3ea' -alpha remove -alpha off -resize 152x152 "$SCRIPT_DIR/HealthManager2/AppIcon-152.png"
+  magick "$APP_ICON_SOURCE" -background '#f7f3ea' -alpha remove -alpha off -resize 167x167 "$SCRIPT_DIR/HealthManager2/AppIcon-167.png"
+  magick "$APP_ICON_SOURCE" -background '#f7f3ea' -alpha remove -alpha off -resize 180x180 "$SCRIPT_DIR/HealthManager2/AppIcon-180.png"
 else
   echo "ImageMagick is required to generate AppIcon assets" >&2
   exit 1
@@ -83,10 +85,9 @@ for name, p in paths.items():
     assert b[12:16] == b'IHDR', f'{name}: invalid PNG header'
     w, h = struct.unpack('>II', b[16:24])
     assert (w, h) == expected[name], (name, w, h)
-print('PASS: AppIcon source and legacy icon dimensions verified')
+print('PASS: approved AppIcon source and legacy icon dimensions verified')
 PY
 
-# Match the known-good learning-sprint Xcode single-size AppIcon catalog.
 cat > "$ASSET_DIR/Contents.json" <<'JSON'
 {
   "images" : [
@@ -104,4 +105,4 @@ cat > "$ASSET_DIR/Contents.json" <<'JSON'
 }
 JSON
 
-echo "Prepared HealthManager2 web assets, compiled AppIcon catalog, and legacy icon resources."
+echo "Prepared HealthManager2 300-question web assets and approved AppIcon resources."
