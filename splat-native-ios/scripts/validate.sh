@@ -108,6 +108,20 @@ require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
 ! grep -nE 'URLSession|Supabase' SplatNative/ScanModel.swift SplatNative/ScanModel+SessionLifecycle.swift SplatNative/SplatReconstructionPolicy.swift SplatNative/ScanProjectStore.swift
 ! grep -R -nE 'Firebase|Amplitude|Mixpanel|AppsFlyer|Adjust' SplatNative --include='*.swift'
 
+# D2-017 report wiring: UI must use the validated RPC contract, expose all reasons,
+# and must never fall back to the legacy direct-insert UI path.
+for f in ScanReportPolicy.swift ScanReportBackend.swift; do require_file "SplatNative/$f"; done
+require_file SplatNativeTests/ScanReportPolicyTests.swift
+require_text SplatNative/ScanReportBackend.swift 'scanlab_submit_report'
+require_text SplatNative/ScanReportBackend.swift 'scanlab_has_reported'
+require_text SplatNative/ScanLabShellView.swift 'ScanReportReason.allCases'
+require_text SplatNative/ScanLabShellView.swift 'backend.submitReport(scan'
+require_text SplatNative/ScanLabShellView.swift 'backend.hasReported(scan)'
+if grep -q 'backend.report(scan' SplatNative/ScanLabShellView.swift; then
+  echo 'legacy direct report UI path detected'
+  exit 1
+fi
+
 # D2-020: privacy manifest, permission strings and review explanation must move together.
 plutil -lint SplatNative/PrivacyInfo.xcprivacy >/dev/null
 python3 - <<'PY'

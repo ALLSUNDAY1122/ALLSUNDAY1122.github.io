@@ -104,7 +104,6 @@ struct ScanLabMapView: View {
 
 struct ScanLabRemoteScanView: View {
     @EnvironmentObject var backend: ScanLabBackend
-    @Environment(\.dismiss) private var dismiss
     let scan: ScanLabPublicScan
     @StateObject private var viewerState = SplatViewerState()
     @State private var localURL: URL?
@@ -115,6 +114,7 @@ struct ScanLabRemoteScanView: View {
     @State private var blockBusy = false
     @State private var showingReport = false
     @State private var showingBlock = false
+    @State private var hasAlreadyReported = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -131,7 +131,11 @@ struct ScanLabRemoteScanView: View {
                     Spacer()
                     if let shareURL = publicShareURL { ShareLink(item: shareURL) { Label("共有", systemImage: "square.and.arrow.up") } }
                     Menu {
-                        Button("この3Dを報告", role: .destructive) { showingReport = true }
+                        if hasAlreadyReported {
+                            Button("この3Dは報告済み") {}.disabled(true)
+                        } else {
+                            Button("この3Dを報告", role: .destructive) { showingReport = true }
+                        }
                         if backend.isAuthenticated, scan.author != nil {
                             Button("このユーザーをブロック", role: .destructive) { showingBlock = true }
                         }
@@ -140,15 +144,16 @@ struct ScanLabRemoteScanView: View {
             }.padding(16).background(.black)
         }
         .navigationTitle(scan.author?.displayName ?? "Scan").navigationBarTitleDisplayMode(.inline)
-        .task { await loadModel() }
+        .task {
+            await loadModel()
+            await loadReportStatus()
+        }
         .confirmationDialog("報告理由", isPresented: $showingReport, titleVisibility: .visible) {
-            Button("プライバシー上の問題", role: .destructive) { Task { await report("privacy") } }
-            Button("危険・不適切な場所", role: .destructive) { Task { await report("unsafe_location") } }
-            Button("著作権・権利の問題", role: .destructive) { Task { await report("copyright") } }
-            Button("スパム", role: .destructive) { Task { await report("spam") } }
-            Button("その他", role: .destructive) { Task { await report("other") } }
+            ForEach(ScanReportReason.allCases, id: \.self) { reason in
+                Button(reason.title, role: .destructive) { Task { await report(reason) } }
+            }
             Button("キャンセル", role: .cancel) {}
-        } message: { Text("報告を受けた公開3Dは確認のため非表示になり、再公開はモデレーション保留になります。") }
+        } message: { Text("報告は運営確認用に保存されます。同じ3Dへの再報告は重複として扱われ、最初の報告内容が保持されます。") }
         .alert("このユーザーをブロックしますか？", isPresented: $showingBlock) {
             Button("キャンセル", role: .cancel) {}
             Button("ブロック", role: .destructive) { Task { await blockAuthor() } }
@@ -161,13 +166,26 @@ struct ScanLabRemoteScanView: View {
         components.queryItems = [URLQueryItem(name: "id", value: scan.id.uuidString.lowercased())]
         return components.url
     }
-    private func report(_ reason: String) async {
+    private func report(_ reason: ScanReportReason) async {
         reportBusy = true; defer { reportBusy = false }
-        do { try await backend.report(scan, reason: reason); dismiss() } catch { backend.notice = error.localizedDescription }
+        do {
+            _ = try await backend.submitReport(scan, reason: reason)
+            hasAlreadyReported = true
+        } catch {
+            backend.notice = error.localizedDescription
+        }
+    }
+    private func loadReportStatus() async {
+        guard backend.isAuthenticated else { hasAlreadyReported = false; return }
+        do {
+            hasAlreadyReported = try await backend.hasReported(scan)
+        } catch {
+            backend.notice = "報告状態を確認できませんでした: \(error.localizedDescription)"
+        }
     }
     private func blockAuthor() async {
         blockBusy = true; defer { blockBusy = false }
-        do { try await backend.block(scan); dismiss() } catch { backend.notice = error.localizedDescription }
+        do { try await backend.block(scan) } catch { backend.notice = error.localizedDescription }
     }
     private func loadModel() async {
         guard localURL == nil, let modelURL = scan.modelUrl else { loading = false; if scan.modelUrl == nil { errorMessage = "3Dデータの署名URLがありません。" }; return }
