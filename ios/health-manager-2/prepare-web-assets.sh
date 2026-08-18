@@ -7,6 +7,7 @@ WEB_SRC="$REPO_ROOT/apps/sanitary-manager-2"
 WEB_DST="$SCRIPT_DIR/HealthManager2/Web"
 ASSET_DIR="$SCRIPT_DIR/HealthManager2/Assets.xcassets/AppIcon.appiconset"
 APP_ICON_SOURCE="$WEB_SRC/approved-app-icon.png"
+ICON_PARTS_DIR="$WEB_SRC/approved-icon"
 
 # Every Apple upload needs a unique CFBundleVersion. Codemagic supplies a
 # monotonically increasing build number; apply it before XcodeGen runs.
@@ -33,7 +34,7 @@ files=(
   index.html
   gm-style.css
   q1.js q2.js q3.js q4.js q5.js q6.js q7.js q8.js q9.js q10.js q11.js q12.js
-  audit-patch-v2.js audit-patch-v3.js audit-fixes.js question-order-v1.js
+  audit-patch-v2.js audit-patch-v3.js audit-patch-v4.js audit-fixes.js question-order-v1.js
   gm1.js gm2.js gm3.js gm4.js
   manifest.json icon.svg
 )
@@ -43,13 +44,28 @@ for file in "${files[@]}"; do
   cp "$WEB_SRC/$file" "$WEB_DST/$file"
 done
 
+# The approved artwork was user-approved as a 1024px PNG. During connector-only
+# transport it may be stored as ordered base64 WebP chunks. Reconstruct only from
+# those validated chunks; never fall back to icon.svg or regenerate artwork.
+if [ ! -f "$APP_ICON_SOURCE" ] && compgen -G "$ICON_PARTS_DIR/part*.b64" >/dev/null; then
+  TMP_WEBP="$(mktemp -t sm2-approved-icon.XXXXXX.webp)"
+  cat "$ICON_PARTS_DIR"/part*.b64 | tr -d '\r\n' | base64 --decode > "$TMP_WEBP"
+  if command -v magick >/dev/null 2>&1; then
+    magick "$TMP_WEBP" -alpha off "$APP_ICON_SOURCE"
+  else
+    echo "ImageMagick is required to reconstruct approved AppIcon transport" >&2
+    exit 1
+  fi
+  rm -f "$TMP_WEBP"
+fi
+
 test -f "$APP_ICON_SOURCE" || { echo "Missing approved AppIcon: $APP_ICON_SOURCE" >&2; exit 1; }
 
 # WKWebView loads bundled assets from file://, so the website service worker is
 # intentionally omitted. All required learning assets are already inside the app.
 
 if command -v magick >/dev/null 2>&1; then
-  # Always derive release icons from the user-approved canonical PNG. Never
+  # Always derive release icons from the user-approved canonical artwork. Never
   # regenerate the artwork from the old placeholder icon.svg.
   magick "$APP_ICON_SOURCE" -background '#f7f3ea' -alpha remove -alpha off -resize 1024x1024 "$ASSET_DIR/AppIcon-1024.png"
   cp "$ASSET_DIR/AppIcon-1024.png" "$ASSET_DIR/AppIcon.png"
