@@ -25,5 +25,6 @@ final class ScanLabProfilePolicyTests: XCTestCase {
     func testAvatarRequiresHTTPS() {
         XCTAssertFalse(ScanLabProfilePolicy.validate(handle: "user_123", displayName: "Name", bio: "", avatarURL: "http://example.com/a.jpg"))
         XCTAssertTrue(ScanLabProfilePolicy.validate(handle: "user_123", displayName: "Name", bio: "", avatarURL: "https://example.com/a.jpg"))
+        XCTAssertTrue(ScanLabProfilePolicy.validate(handle: "user_123", displayName: "Name", bio: "", avatarURL: "HTTPS://example.com/a.jpg"))
     }
 }
