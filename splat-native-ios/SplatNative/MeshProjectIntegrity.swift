@@ -10,6 +10,11 @@ import Foundation
 enum MeshProjectIntegrity {
     static let evidenceFileName = "mesh-result.sha256.json"
 
+    // `JSONEncoder.DateEncodingStrategy.iso8601` stores whole seconds. The archived file's
+    // filesystem mtime can retain sub-second precision, so first-seal comparisons must use the
+    // precision the manifest actually preserves. Hash verification remains exact after sealing.
+    private static let manifestTimestampTolerance: TimeInterval = 1.0
+
     struct Evidence: Codable, Equatable, Sendable {
         static let currentSchemaVersion = 1
 
@@ -110,11 +115,11 @@ enum MeshProjectIntegrity {
             return resultURL
         }
 
-        // The store writes archivedAt after snapshotting the result and also records the exact
-        // source result mtime. Refuse to create a first trust seal if those bytes were replaced
-        // after archival, even if a replacement happens to have the same byte count.
-        guard abs(before.modificationDate.timeIntervalSince(manifest.sourceResultModificationDate)) < 0.001,
-              before.modificationDate <= manifest.archivedAt.addingTimeInterval(0.001) else {
+        // The manifest is encoded with ISO8601 whole-second precision while the filesystem mtime
+        // can retain fractional seconds. Compare at manifest precision before creating the first
+        // trust seal; subsequent verification still requires an exact SHA-256 match.
+        guard abs(before.modificationDate.timeIntervalSince(manifest.sourceResultModificationDate)) < manifestTimestampTolerance,
+              before.modificationDate < manifest.archivedAt.addingTimeInterval(manifestTimestampTolerance) else {
             throw IntegrityError.resultChangedAfterArchive
         }
 
