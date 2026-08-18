@@ -6,7 +6,7 @@ on:
 
 permissions:
   contents: read
-  issues: read
+  issues: write
 
 concurrency:
   group: release-command-${{ github.event.issue.number }}
@@ -79,3 +79,17 @@ jobs:
           path: release-result.json
           if-no-files-found: error
           retention-days: 7
+
+      - name: Report run locator to command issue
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const artifact = `release-command-result-${context.issue.number}-${context.runId}`;
+            const conclusion = '${{ job.status }}';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Release API command finished. status=${conclusion}; run_id=${context.runId}; artifact=${artifact}`
+            });
