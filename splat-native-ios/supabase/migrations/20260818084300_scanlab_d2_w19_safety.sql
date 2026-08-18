@@ -1,6 +1,7 @@
 -- D2-019: moderation / rate-limit / abuse resistance / failure handling
--- HQ convergence note: the final publish_guard intentionally preserves D2-007 private lifecycle
--- and D2-010 explicit/optional geotag privacy semantics while adding D2-019 serialized rate limits.
+-- HQ convergence note: preserve the already-accepted D2 safety semantics while adding
+-- serialized publish quota protection. Public geotag remains optional and report auto-hide
+-- remains 3 distinct reporters / 30 days; a single report only enters moderation review.
 
 create table if not exists public.scanlab_moderation_actions (
   id bigint generated always as identity primary key,
@@ -141,20 +142,43 @@ begin
   return new;
 end; $$;
 
+-- Some production histories already contain the earlier atomic token-bucket report trigger
+-- (`scanlab_reports_rate_limit`). Do not stack a second 20/hour limiter on top of it.
 drop trigger if exists scanlab_report_abuse_guard on public.scanlab_reports;
-create trigger scanlab_report_abuse_guard before insert on public.scanlab_reports
-for each row execute function scanlab_private.report_abuse_guard();
+do $$
+begin
+  if not exists (
+    select 1 from pg_trigger
+    where tgrelid='public.scanlab_reports'::regclass
+      and tgname='scanlab_reports_rate_limit'
+      and not tgisinternal
+  ) then
+    create trigger scanlab_report_abuse_guard before insert on public.scanlab_reports
+    for each row execute function scanlab_private.report_abuse_guard();
+  end if;
+end $$;
 
 create or replace function scanlab_private.auto_hide_reported_scan()
 returns trigger language plpgsql security definer set search_path = '' as $$
-declare affected integer;
+declare report_count integer; affected integer;
 begin
-  update public.scanlab_scans set status='hidden',moderation_status='pending',updated_at=now()
-   where id=new.scan_id and status='published';
-  get diagnostics affected=row_count;
-  if affected>0 then
-    insert into public.scanlab_moderation_actions(scan_id,actor_id,action,reason)
-    values(new.scan_id,new.reporter_id,'hide','user report');
+  -- Serialize moderation threshold evaluation for this scan. One report enters the queue;
+  -- only 3 distinct reporters in 30 days move an approved published scan to hidden/pending.
+  perform 1 from public.scanlab_scans where id=new.scan_id for update;
+  if not found then return new; end if;
+
+  select count(distinct reporter_id) into report_count
+  from public.scanlab_reports
+  where scan_id=new.scan_id and created_at > now()-interval '30 days';
+
+  if report_count >= 3 then
+    update public.scanlab_scans set status='hidden',moderation_status='pending',updated_at=now()
+     where id=new.scan_id and status='published' and moderation_status='approved';
+    get diagnostics affected=row_count;
+    if affected>0 then
+      insert into public.scanlab_moderation_actions(scan_id,actor_id,action,reason)
+      values(new.scan_id,new.reporter_id,'hide','3 distinct user reports');
+    end if;
   end if;
   return new;
 end; $$;
