@@ -1,0 +1,38 @@
+name: Materialize approved Health Manager 1 icon
+
+on:
+  push:
+    branches:
+      - agent/approved-icons-it-hm1
+    paths:
+      - 'ios/health-manager-1/approved-icon-v1/**'
+      - 'ios/health-manager-1/prepare-approved-icon.sh'
+      - '.github/workflows/hm1-approved-icon-materialize.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/approved-icons-it-hm1
+          fetch-depth: 0
+      - name: Install ImageMagick
+        run: sudo apt-get update -qq && sudo apt-get install -y imagemagick
+      - name: Materialize exact approved artwork into AppIcon sizes
+        run: bash ios/health-manager-1/prepare-approved-icon.sh
+      - name: Commit generated AppIcon assets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset/*.png
+          if git diff --cached --quiet; then
+            echo 'PASS: approved AppIcon assets already current'
+          else
+            git commit -m 'Materialize approved First-class Health Manager AppIcon'
+            git push origin HEAD:agent/approved-icons-it-hm1
+          fi
