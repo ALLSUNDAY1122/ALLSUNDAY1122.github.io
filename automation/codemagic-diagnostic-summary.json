@@ -1,23 +1,23 @@
 {
-  "request_id": "eisei1-codemagic-diagnose-20260818-2120",
-  "target_head_sha": "6331f9354138c03b40766d72d4f6e3d4f29615f6",
+  "request_id": "eisei1-codemagic-diagnose-retry-20260818-2125",
+  "target_head_sha": "0d078137ce88d72e6f3a680d7edd131b9171626d",
   "workflow": "codemagic-build-gateway.yml",
   "run_found": true,
   "run": {
-    "id": 32108133596,
+    "id": 32136616915,
     "name": "Codemagic Build Gateway",
-    "status": "completed",
-    "conclusion": "failure",
-    "created_at": "2026-08-18T06:43:17Z",
-    "updated_at": "2026-08-18T06:44:03Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32108133596",
-    "head_sha": "6331f9354138c03b40766d72d4f6e3d4f29615f6"
+    "status": "in_progress",
+    "conclusion": null,
+    "created_at": "2026-08-18T12:23:57Z",
+    "updated_at": "2026-08-18T12:24:01Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32136616915",
+    "head_sha": "0d078137ce88d72e6f3a680d7edd131b9171626d"
   },
   "jobs": [
     {
       "name": "gateway",
-      "status": "completed",
-      "conclusion": "failure",
+      "status": "in_progress",
+      "conclusion": null,
       "steps": [
         {
           "name": "Set up job",
@@ -41,43 +41,31 @@
         },
         {
           "name": "Execute Codemagic command",
-          "status": "completed",
-          "conclusion": "failure"
+          "status": "in_progress",
+          "conclusion": null
         },
         {
           "name": "Inspect Codemagic build actions",
-          "status": "completed",
-          "conclusion": "success"
+          "status": "pending",
+          "conclusion": null
         },
         {
           "name": "Upload Codemagic result",
-          "status": "completed",
-          "conclusion": "success"
+          "status": "pending",
+          "conclusion": null
         },
         {
           "name": "Post Set up Python",
-          "status": "completed",
-          "conclusion": "skipped"
+          "status": "pending",
+          "conclusion": null
         },
         {
           "name": "Post Run actions/checkout@v6",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "status": "completed",
-          "conclusion": "success"
+          "status": "pending",
+          "conclusion": null
         }
       ]
     }
   ],
-  "artifacts": [
-    {
-      "id": 9313891841,
-      "name": "codemagic-result-32108133596",
-      "expired": false
-    }
-  ],
-  "artifact_download_error": "HTTPError: HTTP Error 415: Unsupported Media Type"
+  "artifacts": []
 }
