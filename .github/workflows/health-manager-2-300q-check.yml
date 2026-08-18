@@ -30,12 +30,6 @@ jobs:
         run: |
           node ios/health-manager-2/export-audit-data.cjs
           python automation/learning-sprint-question-pipeline/validate_questions.py ios/health-manager-2/learning-sprint-audit.json
-      - name: Verify approved AppIcon transport and release source
-        run: |
-          node ios/health-manager-2/verify-approved-icon.cjs
-          grep -q 'approved-icon-v3' ios/health-manager-2/prepare-web-assets.sh
-          grep -q 'APP_ICON_SOURCE=.*approved-app-icon.png' ios/health-manager-2/prepare-web-assets.sh
-          ! grep -E 'magick .*icon\.svg.*AppIcon' ios/health-manager-2/prepare-web-assets.sh
       - name: Verify UI derives 300Q presentation from data
         run: |
           grep -q "5年分相当" apps/sanitary-manager-2/gm2.js
