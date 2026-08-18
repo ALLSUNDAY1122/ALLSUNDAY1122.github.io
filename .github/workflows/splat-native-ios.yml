@@ -36,6 +36,7 @@ jobs:
         run: |
           bash splat-native-ios/scripts/validate.sh
           python3 splat-native-ios/scripts/test_auth_workflow_contract.py
+          python3 splat-native-ios/scripts/d2_trusted_upload_gate.py
           test -f splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           sips -g pixelWidth -g pixelHeight splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | grep -q '1024'
       - name: Hosted ScanLab auth readiness gate
@@ -75,6 +76,10 @@ jobs:
           grep -q 'nlohmann-json-MIT.txt' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MsplatRuntimeSmokeTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatReconstructionPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'ScanLabSessionPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'ScanLabPublishPackageTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'ScanLabGeotagPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'ScanReportPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
       - name: Resolve packages
         working-directory: splat-native-ios
         run: xcodebuild -resolvePackageDependencies -project SplatNative.xcodeproj -scheme SplatNative
