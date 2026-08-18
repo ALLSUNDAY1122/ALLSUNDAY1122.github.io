@@ -1,4 +1,6 @@
 -- D2-019: moderation / rate-limit / abuse resistance / failure handling
+-- HQ convergence note: the final publish_guard intentionally preserves D2-007 private lifecycle
+-- and D2-010 explicit/optional geotag privacy semantics while adding D2-019 serialized rate limits.
 
 create table if not exists public.scanlab_moderation_actions (
   id bigint generated always as identity primary key,
@@ -43,8 +45,6 @@ begin
 end; $$;
 revoke all on function scanlab_private.enforce_abuse_limit(uuid,text,uuid) from public, anon, authenticated;
 
--- Owners must not be able to self-approve or otherwise rewrite moderation state.
--- pg_trigger_depth() permits nested server-side moderation updates such as auto-hide.
 create or replace function scanlab_private.owner_moderation_state_guard()
 returns trigger language plpgsql set search_path = '' as $$
 begin
@@ -69,6 +69,31 @@ create or replace function scanlab_private.publish_guard()
 returns trigger language plpgsql set search_path = '' as $$
 declare entering_shared boolean;
 begin
+  -- D2-010: location is explicit opt-in and public-only. Never retain stale coordinates
+  -- when moving to unlisted/private, and never accept a partial coordinate pair.
+  if new.visibility <> 'public' then
+    new.latitude := null;
+    new.longitude := null;
+    new.location_label := null;
+    new.public_place_confirmed := false;
+  else
+    if (new.latitude is null) <> (new.longitude is null) then
+      raise exception using errcode='23514', message='public geotag requires both latitude and longitude';
+    end if;
+    if new.latitude is null then
+      new.location_label := null;
+      new.public_place_confirmed := false;
+    end if;
+  end if;
+
+  -- D2-007: private is owner-only; a published row transitioning private is atomically hidden.
+  if new.visibility='private' then
+    new.status := case when tg_op='UPDATE' and old.status='published' then 'hidden' else new.status end;
+    if new.status='published' then
+      raise exception using errcode='23514', message='private scan cannot be published';
+    end if;
+  end if;
+
   entering_shared := new.status='published' and new.visibility in ('public','unlisted') and (
     tg_op='INSERT' or old.status is distinct from 'published' or old.visibility not in ('public','unlisted')
   );
@@ -77,8 +102,13 @@ begin
     if new.visibility in ('public','unlisted') and not new.content_confirmed then
       raise exception using errcode='23514', message='shared scan requires content confirmation';
     end if;
-    if new.visibility='public' and (new.latitude is null or new.longitude is null or not new.public_place_confirmed or not new.privacy_confirmed or not new.rights_confirmed) then
-      raise exception using errcode='23514', message='public scan requires location and safety attestations';
+    if new.visibility='public' then
+      if not new.privacy_confirmed or not new.rights_confirmed then
+        raise exception using errcode='23514', message='public scan requires privacy and rights attestations';
+      end if;
+      if new.latitude is not null and not new.public_place_confirmed then
+        raise exception using errcode='23514', message='public geotag requires public-place attestation';
+      end if;
     end if;
     if entering_shared then
       perform scanlab_private.enforce_abuse_limit(new.owner_id,'publish',new.id);
@@ -90,6 +120,13 @@ begin
   return new;
 end; $$;
 
+drop trigger if exists scanlab_scan_publish_guard on public.scanlab_scans;
+create trigger scanlab_scan_publish_guard
+before insert or update of status, visibility, latitude, longitude, location_label,
+  public_place_confirmed, privacy_confirmed, rights_confirmed, content_confirmed
+on public.scanlab_scans
+for each row execute function scanlab_private.publish_guard();
+
 create or replace function scanlab_private.report_abuse_guard()
 returns trigger language plpgsql security definer set search_path = '' as $$
 begin
@@ -100,7 +137,6 @@ begin
   return new;
 end; $$;
 
--- The reports table is already part of the D2 base contract. Fail migration loudly if that contract regresses.
 drop trigger if exists scanlab_report_abuse_guard on public.scanlab_reports;
 create trigger scanlab_report_abuse_guard before insert on public.scanlab_reports
 for each row execute function scanlab_private.report_abuse_guard();
