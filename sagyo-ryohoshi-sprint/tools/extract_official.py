@@ -23,17 +23,13 @@ def text(pdf):
 
 def parse_answers(t):
     ans={}
-    for m in re.finditer(r'\b(AM|PM)\s*0*(\d{1,3})\s+((?:[1-5](?:\s+[1-5]){0,2})?)(?=\s+(?:AM|PM)\s*\d|\s*$)',t,re.M):
-        sess='am' if m.group(1)=='AM' else 'pm'; n=int(m.group(2)); ans[(sess,n)]=m.group(3).strip()
-    for m in re.finditer(r'\b([AB])\s*0*(\d{1,3})\s+([1-5]{1,2}|)(?=\s+[AB]\s*\d|\s*$)',t,re.M):
-        sess='am' if m.group(1)=='A' else 'pm'; n=int(m.group(2)); ans.setdefault((sess,n),m.group(3).strip())
     toks=t.replace('\u3000',' ').split()
     for i,x in enumerate(toks):
         m=re.fullmatch(r'(AM|PM)(\d{1,3})',x,re.I) or re.fullmatch(r'([AB])(\d{3})',x,re.I)
         if not m: continue
         tag=m.group(1).upper(); sess='am' if tag in ('AM','A') else 'pm'; n=int(m.group(2)); vals=[]; j=i+1
         while j<len(toks) and len(vals)<3 and re.fullmatch(r'[1-5]{1,2}',toks[j]): vals.append(toks[j]); j+=1
-        if (sess,n) not in ans: ans[(sess,n)]=' '.join(vals)
+        ans[(sess,n)]=' '.join(vals)
     return ans
 
 def parse_questions(t):
@@ -86,9 +82,7 @@ def decode(raw):
     if not raw: return {'scoring_status':'excluded','answer_type':'singleChoice','answer':None,'accepted_answers':None}
     groups=raw.split()
     if len(groups)>1:
-        sets=[]
-        for g in groups: sets.append([int(c)-1 for c in g])
-        primary=sets[0]
+        sets=[[int(c)-1 for c in g] for g in groups]; primary=sets[0]
         return {'scoring_status':'multiple_accepted','answer_type':'multiChoice' if len(primary)>1 else 'singleChoice','answer':primary if len(primary)>1 else primary[0],'accepted_answers':sets}
     arr=[int(c)-1 for c in groups[0]]
     return {'scoring_status':'normal','answer_type':'multiChoice' if len(arr)>1 else 'singleChoice','answer':arr if len(arr)>1 else arr[0],'accepted_answers':None}
@@ -101,8 +95,8 @@ def main():
             qp=download(cfg[sess],f'r{r}-{sess}.pdf'); qs=parse_questions(text(qp))
             report[-1][sess+'_questions']=len(qs); report[-1][sess+'_media']=sum(x['requires_media'] for x in qs)
             for q in qs:
-                d=decode(amap.get((sess,q['number'])))
-                rows.append({'id':f"OT-R{r}-{sess.upper()}-{q['number']:03d}",'round':r,'reference_exam_round':cfg['exam_round'],'session':sess,'slot':q['number'],'question':q['question'],'choices':q['choices'],'requires_media':q['requires_media'],'official_answer_raw':amap.get((sess,q['number'],''),),**d,'question_source_url':cfg[sess],'answer_source_url':cfg['answer'],'raw_block':q['raw_block']})
+                raw=amap.get((sess,q['number']),''); d=decode(raw)
+                rows.append({'id':f"OT-R{r}-{sess.upper()}-{q['number']:03d}",'round':r,'reference_exam_round':cfg['exam_round'],'session':sess,'slot':q['number'],'question':q['question'],'choices':q['choices'],'requires_media':q['requires_media'],'official_answer_raw':raw,**d,'question_source_url':cfg[sess],'answer_source_url':cfg['answer'],'raw_block':q['raw_block']})
     OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps(report,ensure_ascii=False,indent=2)); print('TOTAL',len(rows),'MEDIA',sum(x['requires_media'] for x in rows)); print('EMPTY_CHOICES',sum(len(x['choices'])!=5 for x in rows),'EXCLUDED',sum(x['scoring_status']=='excluded' for x in rows))
     for x in rows[:3]+rows[97:100]: print(x['id'],x['question'][:80],x['choices'][:2],x['official_answer_raw'])
