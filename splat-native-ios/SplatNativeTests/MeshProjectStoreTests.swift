@@ -115,6 +115,55 @@ final class MeshProjectStoreTests: XCTestCase {
         }
     }
 
+    func testCrossRepresentationBridgeDiscoversSplatRawThroughStoreContract() throws {
+        let splatStore = ScanProjectStore(rootURL: rootURL)
+        let (projectURL, _) = try splatStore.createProject(title: "Splat source")
+        let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
+        try Data(repeating: 0xAB, count: 32).write(to: imagesURL.appendingPathComponent("frame-0001.jpg"))
+        try Data("{}".utf8).write(to: projectURL.appendingPathComponent("transforms.json"))
+        try Data("ply\n".utf8).write(to: projectURL.appendingPathComponent("points3D.ply"))
+
+        let discovered = MeshRawProjectBridge.discover(appRootURL: rootURL)
+        let source = try XCTUnwrap(discovered.first { $0.sourceKind == .splatProject })
+
+        XCTAssertEqual(source.sourceProjectURL.standardizedFileURL, projectURL.standardizedFileURL)
+        XCTAssertEqual(source.imagesURL.standardizedFileURL, imagesURL.standardizedFileURL)
+        XCTAssertEqual(source.imageCount, 1)
+        XCTAssertEqual(source.title, "Splat source")
+    }
+
+    func testCrossRepresentationBridgeUsesTransientMeshProjectWithoutCopyingSplatRaw() throws {
+        let splatStore = ScanProjectStore(rootURL: rootURL)
+        let (projectURL, _) = try splatStore.createProject(title: "Splat source")
+        let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
+        try Data(repeating: 0xCD, count: 32).write(to: imagesURL.appendingPathComponent("frame-0001.jpg"))
+        try Data("{}".utf8).write(to: projectURL.appendingPathComponent("transforms.json"))
+        try Data("ply\n".utf8).write(to: projectURL.appendingPathComponent("points3D.ply"))
+
+        let source = try XCTUnwrap(
+            MeshRawProjectBridge.discover(appRootURL: rootURL).first { $0.sourceKind == .splatProject }
+        )
+        let prepared = try MeshRawProjectBridge.prepareWorkingProject(for: source)
+
+        XCTAssertEqual(prepared.projectURL.pathExtension, MeshProjectStore.projectExtension)
+        XCTAssertEqual(prepared.imagesURL.standardizedFileURL, imagesURL.standardizedFileURL)
+        XCTAssertFalse(FileManager.default.fileExists(
+            atPath: prepared.projectURL.appendingPathComponent("images", isDirectory: true).path
+        ))
+        XCTAssertTrue(FileManager.default.fileExists(
+            atPath: prepared.projectURL.appendingPathComponent(MeshProjectStore.sourceManifestFileName).path
+        ))
+        XCTAssertTrue(MeshRawProjectBridge.isDerivedWorkingProject(prepared.projectURL))
+
+        let result = prepared.projectURL.appendingPathComponent("mesh-reprocessed.usdz")
+        try Data(repeating: 0xEF, count: 128).write(to: result)
+        MeshRawProjectBridge.cleanupDerivedWorkingProject(containing: result)
+
+        XCTAssertFalse(FileManager.default.fileExists(atPath: prepared.projectURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: projectURL.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: imagesURL.appendingPathComponent("frame-0001.jpg").path))
+    }
+
     private func makeLiveProject(
         mode: String,
         resultName: String,

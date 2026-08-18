@@ -3,41 +3,9 @@ import RealityKit
 import SceneKit
 import SwiftUI
 
-struct MeshRawProject: Identifiable, Sendable {
-    let id: String
-    let url: URL
-    let imagesURL: URL
-    let imageCount: Int
-    let modifiedAt: Date
-}
-
 enum MeshRawProjectStore {
     static func discover() -> [MeshRawProject] {
-        let fileManager = FileManager.default
-        guard let documents = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return [] }
-        let root = documents.appendingPathComponent("SplatLab", isDirectory: true)
-        guard let urls = try? fileManager.contentsOfDirectory(
-            at: root,
-            includingPropertiesForKeys: [.contentModificationDateKey, .isDirectoryKey],
-            options: [.skipsHiddenFiles]
-        ) else { return [] }
-
-        return urls.compactMap { projectURL in
-            guard projectURL.pathExtension == "meshproject" else { return nil }
-            let imagesURL = projectURL.appendingPathComponent("images", isDirectory: true)
-            guard let imageFiles = try? fileManager.contentsOfDirectory(at: imagesURL, includingPropertiesForKeys: nil) else { return nil }
-            let imageCount = imageFiles.filter { ["jpg", "jpeg", "heic", "png"].contains($0.pathExtension.lowercased()) }.count
-            guard imageCount > 0 else { return nil }
-            let values = try? projectURL.resourceValues(forKeys: [.contentModificationDateKey])
-            return MeshRawProject(
-                id: projectURL.lastPathComponent,
-                url: projectURL,
-                imagesURL: imagesURL,
-                imageCount: imageCount,
-                modifiedAt: values?.contentModificationDate ?? .distantPast
-            )
-        }
-        .sorted { $0.modifiedAt > $1.modifiedAt }
+        MeshRawProjectBridge.discover()
     }
 }
 
@@ -49,24 +17,40 @@ enum MeshRawReprocessor {
             return
         }
 
+        let prepared: PreparedMeshRawProject
+        do {
+            prepared = try MeshRawProjectBridge.prepareWorkingProject(for: project)
+        } catch {
+            model.phase = .failed(error.localizedDescription)
+            return
+        }
+
         let formatter = ISO8601DateFormatter()
         let safeStamp = formatter.string(from: Date()).replacingOccurrences(of: ":", with: "-")
-        let outputURL = project.url.appendingPathComponent("mesh-reprocessed-\(safeStamp).usdz")
+        let outputURL = prepared.projectURL.appendingPathComponent("mesh-reprocessed-\(safeStamp).usdz")
         try? FileManager.default.removeItem(at: outputURL)
 
+        model.mode = .photogrammetry
+        model.resultURL = nil
+        model.rawOBJURL = nil
+        model.previewScene = nil
         model.phase = .reconstructing
         model.reconstructionProgress = 0
         model.invalidPhotogrammetrySamples = 0
-        model.statusMessage = "保存済みraw画像からMeshを再処理しています"
+        model.statusMessage = project.sourceKind == .splatProject
+            ? "保存済みSplat rawからMeshを再処理しています"
+            : "保存済みMesh rawからMeshを再処理しています"
 
         do {
             var configuration = PhotogrammetrySession.Configuration()
             configuration.isObjectMaskingEnabled = true
-            let session = try PhotogrammetrySession(input: project.imagesURL, configuration: configuration)
+            let session = try PhotogrammetrySession(input: prepared.imagesURL, configuration: configuration)
             let request = PhotogrammetrySession.Request.modelFile(url: outputURL, detail: .reduced, geometry: nil)
             try session.process(requests: [request])
 
+            var completed = false
             for try await output in session.outputs {
+                try Task.checkCancellation()
                 switch output {
                 case .requestProgress(_, let fractionComplete):
                     model.reconstructionProgress = fractionComplete
@@ -74,14 +58,11 @@ enum MeshRawReprocessor {
                     model.statusMessage = "raw画像の取り込み完了。Meshを再構築しています"
                 case .requestComplete(_, _):
                     if FileManager.default.fileExists(atPath: outputURL.path) {
-                        model.resultURL = outputURL
-                        model.previewScene = try? SCNScene(url: outputURL, options: nil)
-                        model.reconstructionProgress = 1
-                        model.phase = .finished
-                        model.statusMessage = "保存済みrawから再処理したMeshを生成しました"
+                        finish(outputURL: outputURL, sourceKind: project.sourceKind, model: model)
+                        completed = true
                     }
                 case .requestError(_, let error):
-                    model.phase = .failed("raw再処理に失敗しました: \(error.localizedDescription)")
+                    throw error
                 case .invalidSample(_, _), .skippedSample(_):
                     model.invalidPhotogrammetrySamples += 1
                 case .automaticDownsampling:
@@ -89,15 +70,14 @@ enum MeshRawReprocessor {
                 case .stitchingIncomplete:
                     model.statusMessage = "raw再処理中: 一部画像を接続できませんでした"
                 case .processingCancelled:
+                    MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
                     model.phase = .captured
-                    model.statusMessage = "raw再処理を中断しました"
+                    model.statusMessage = "raw再処理を中断しました。保存rawは保持されています"
+                    return
                 case .processingComplete:
-                    if model.resultURL == nil && FileManager.default.fileExists(atPath: outputURL.path) {
-                        model.resultURL = outputURL
-                        model.previewScene = try? SCNScene(url: outputURL, options: nil)
-                        model.reconstructionProgress = 1
-                        model.phase = .finished
-                        model.statusMessage = "保存済みrawから再処理したMeshを生成しました"
+                    if !completed, FileManager.default.fileExists(atPath: outputURL.path) {
+                        finish(outputURL: outputURL, sourceKind: project.sourceKind, model: model)
+                        completed = true
                     }
                 case .requestProgressInfo(_, _):
                     break
@@ -105,9 +85,33 @@ enum MeshRawReprocessor {
                     break
                 }
             }
+
+            if !completed {
+                MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
+                model.phase = .failed("raw再処理は完了しましたが、完成Meshを確認できませんでした。保存rawは保持されています。")
+            }
+        } catch is CancellationError {
+            MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
+            model.phase = .captured
+            model.statusMessage = "raw再処理を中断しました。保存rawは保持されています"
         } catch {
-            model.phase = .failed("raw再処理を開始できませんでした: \(error.localizedDescription)")
+            MeshRawProjectBridge.cleanupDerivedWorkingProject(projectURL: prepared.projectURL)
+            model.phase = .failed("raw再処理に失敗しました: \(error.localizedDescription)。保存rawは保持されています。")
         }
+    }
+
+    private static func finish(
+        outputURL: URL,
+        sourceKind: MeshRawSourceKind,
+        model: MeshScanModel
+    ) {
+        model.resultURL = outputURL
+        model.previewScene = try? SCNScene(url: outputURL, options: nil)
+        model.reconstructionProgress = 1
+        model.phase = .finished
+        model.statusMessage = sourceKind == .splatProject
+            ? "保存済みSplat rawからMeshを生成しました。ライブラリへ安全に保存しています"
+            : "保存済みMesh rawから再処理したMeshを生成しました"
     }
 }
 
@@ -124,7 +128,7 @@ struct MeshRawReprocessSheet: View {
                     ContentUnavailableView(
                         "再処理できるrawがありません",
                         systemImage: "externaldrive.badge.xmark",
-                        description: Text("Mesh撮影を完了するとRGB rawが.meshproject内に保持されます。")
+                        description: Text("保存済みMesh rawとSplat rawのうち、再処理に必要な画像・pose・point cloudが残っているものを表示します。")
                     )
                 } else {
                     List(projects) { project in
@@ -132,11 +136,24 @@ struct MeshRawReprocessSheet: View {
                             dismiss()
                             Task { await MeshRawReprocessor.run(project: project, model: model) }
                         } label: {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(project.id)
-                                    .font(.subheadline.monospaced())
-                                Text("画像 \(project.imageCount)枚")
-                                    .font(.caption)
+                            HStack(spacing: 12) {
+                                Image(systemName: project.sourceKind == .splatProject ? "sparkles" : "cube")
+                                    .foregroundStyle(.mint)
+                                    .frame(width: 28)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(project.title)
+                                        .font(.subheadline.weight(.semibold))
+                                        .lineLimit(1)
+                                    Text("\(project.sourceKind.displayName) ・ 画像 \(project.imageCount)枚")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Text(project.modifiedAt.formatted(date: .abbreviated, time: .shortened))
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption.bold())
                                     .foregroundStyle(.secondary)
                             }
                         }
@@ -144,11 +161,14 @@ struct MeshRawReprocessSheet: View {
                     }
                 }
             }
-            .navigationTitle("rawから再処理")
+            .navigationTitle("rawからMesh再処理")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("閉じる") { dismiss() }
                 }
+            }
+            .refreshable {
+                projects = MeshRawProjectStore.discover()
             }
         }
     }

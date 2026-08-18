@@ -54,10 +54,14 @@ final class MeshDurabilityCoordinator: ObservableObject {
                 self.archiveTask = nil
                 self.warningMessage = nil
 
-                // Do not overwrite a newer edit/crop result that arrived while this snapshot ran.
-                if model.resultURL == sourceURL {
+                // Do not overwrite or remove a newer edit/crop result that arrived while this snapshot ran.
+                let currentResult = model.resultURL
+                if currentResult == sourceURL {
                     model.resultURL = durableURL
                     model.statusMessage = "Meshをライブラリへ安全に保存しました"
+                    MeshRawProjectBridge.cleanupDerivedWorkingProject(containing: sourceURL)
+                } else if currentResult == nil {
+                    MeshRawProjectBridge.cleanupDerivedWorkingProject(containing: sourceURL)
                 }
 
                 self.reconcile(model: model)
