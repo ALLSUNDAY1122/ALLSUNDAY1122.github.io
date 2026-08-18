@@ -1,10 +1,10 @@
 const QUESTIONS=window.Q_PARTS||[];
 const SUBJECTS=['関係法令','労働衛生','労働生理'];
-const EXAMSETS=['令和8年4月','令和7年10月','令和7年4月'];
+const EXAMSETS=['令和8年4月','令和7年10月','令和7年4月','5年分相当｜第4回','5年分相当｜第5回','5年分相当｜第6回','5年分相当｜第7回','5年分相当｜第8回','5年分相当｜第9回','5年分相当｜第10回'];
 const KEY='sm2_manabi_sprint_v110';
 const OLDKEY='sm2-proto-v01';
-const VERSION=1;
-const LEGAL_DATE='2026-08-08';
+const VERSION=2;
+const LEGAL_DATE='2026-08-18';
 
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
