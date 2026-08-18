@@ -7,7 +7,7 @@ window.Q_PARTS=(window.Q_PARTS||[]).map(q=>{
   if(q.primarySourceUrl) q.sourceUrl=q.primarySourceUrl;
   if(q.fiveYearExpansion){
     q.baselineDate=BASELINE;
-    q.originType='official-topic-original-question';
+    q.originType='original_from_primary_source';
     q.rightsBasis=RIGHTS;
     q.contentChecked=BASELINE;
     q.auditStatus=q.auditStatus||'監査済';
