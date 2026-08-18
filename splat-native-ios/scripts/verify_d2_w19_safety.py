@@ -13,7 +13,8 @@ if errors:
 b=base.read_text(); h=hardening.read_text()
 checks={
  'objectionable text guard remains': 'reject_objectionable_text' in b,
- 'report abuse trigger': 'create trigger scanlab_report_abuse_guard before insert on public.scanlab_reports' in h,
+ 'report abuse guard available for histories without atomic quota': 'create trigger scanlab_report_abuse_guard before insert on public.scanlab_reports' in h,
+ 'existing report quota is not stacked': "tgname='scanlab_reports_rate_limit'" in h and 'if not exists' in h,
  'report identity binding': "new.reporter_id <> (select auth.uid())" in h,
  'publish rate limit': "p_action='publish'" in h and 'max_count:=10' in h,
  'report rate limit': "p_action='report'" in h and 'max_count:=20' in h,
@@ -22,7 +23,9 @@ checks={
  'owner moderation state protected': 'owner_moderation_state_guard' in h and 'owner cannot change moderation state' in h,
  'nested server moderation remains possible': 'pg_trigger_depth() = 1' in h,
  'abuse tables closed to clients': h.count('revoke all on public.scanlab_') >= 2,
- 'moderation audit': 'scanlab_moderation_actions' in h and "'user report'" in h,
+ 'three-distinct-report moderation threshold preserved': 'count(distinct reporter_id)' in h and 'report_count >= 3' in h and "interval '30 days'" in h,
+ 'single report does not directly hide': "'3 distinct user reports'" in h,
+ 'moderation audit': 'scanlab_moderation_actions' in h and "'3 distinct user reports'" in h,
  'failure hint': "hint='retry later'" in h,
  'bounded retention': "interval '7 days'" in h,
 }
