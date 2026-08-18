@@ -4,6 +4,7 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 fn = (root / "supabase/functions/scanlab-delete-scan/index.ts").read_text()
 migrations = "\n".join(p.read_text() for p in sorted((root / "supabase/migrations").glob("*.sql")))
+upload_guard = (root / "supabase/migrations/20260818092500_scanlab_d2_delete_upload_guard.sql").read_text()
 public = (root / "supabase/functions/scanlab-public/index.ts").read_text()
 
 required = [
@@ -51,6 +52,20 @@ for migration_contract in [
     "check (deletion_requested_at is null or status <> 'published')",
 ]:
     assert migration_contract in migrations, f"missing migration contract: {migration_contract}"
+
+for upload_contract in [
+    'create or replace function scanlab_private.is_trusted_upload_path(object_name text)',
+    'stable',
+    'security definer',
+    's.owner_id = (select auth.uid())',
+    "s.status = 'draft'",
+    's.deletion_requested_at is null',
+    'storage.foldername(s.asset_path) = storage.foldername(object_name)',
+    'revoke all on function scanlab_private.is_trusted_upload_path(text) from public, anon',
+    'grant execute on function scanlab_private.is_trusted_upload_path(text) to authenticated, service_role',
+]:
+    assert upload_contract in upload_guard, f"missing upload/delete race guard: {upload_contract}"
+assert 'immutable' not in upload_guard.lower(), "trusted upload lifecycle guard must not be IMMUTABLE"
 
 assert '.eq("status", "published")' in public
 assert '.eq("moderation_status", "approved")' in public
