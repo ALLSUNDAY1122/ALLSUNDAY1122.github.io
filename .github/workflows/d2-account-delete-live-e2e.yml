@@ -30,13 +30,21 @@ jobs:
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
-      - name: Verify destructive-test secret is configured
+      - name: Detect destructive-test secret
+        id: secret
         shell: bash
         run: |
-          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
-            echo 'SUPABASE_SERVICE_ROLE_KEY repository secret is not configured.' >&2
-            exit 2
+          if [ -n "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo 'available=true' >> "$GITHUB_OUTPUT"
+            echo 'SUPABASE_SERVICE_ROLE_KEY is configured; live E2E will run.'
+          else
+            echo 'available=false' >> "$GITHUB_OUTPUT"
+            echo 'SUPABASE_SERVICE_ROLE_KEY is not configured; live E2E is intentionally skipped.'
           fi
       - name: Run isolated disposable-account deletion E2E
+        if: steps.secret.outputs.available == 'true'
         working-directory: splat-native-ios
         run: deno run --allow-env --allow-net tests/account-delete-live-e2e.ts
+      - name: Record skipped runtime gate
+        if: steps.secret.outputs.available != 'true'
+        run: echo 'D2-016 remains NEAR_PARITY until SUPABASE_SERVICE_ROLE_KEY is configured and this workflow completes the live E2E.'
