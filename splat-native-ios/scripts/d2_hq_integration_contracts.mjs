@@ -40,6 +40,8 @@ assert.doesNotMatch(normalized, /[?&]token=/);
 assert.match(visibility, /#token=\$\{encodeURIComponent\(shareToken\)\}/);
 assert.match(viewer, /history\.replaceState\(null, '', shareURL\)/);
 assert.match(viewer, /item\.previewImageUrl \|\| \(id \? item\.previewUrl : null\)/);
+assert.match(publicApi, /mode=preview&id=\$\{encodeURIComponent\(scanId\)\}/);
+assert.match(publicApi, /previewImageUrl: scan\.visibility === "public"/);
 
 // D2-012: deterministic cursor contract.
 const cursor = makeScanLabFeedCursor({ id: '22222222-2222-4222-8222-222222222222', published_at: '2026-08-18T10:00:00Z' });
@@ -76,5 +78,8 @@ assert.match(safety, /pg_advisory_xact_lock/);
 assert.match(safety, /new\.visibility <> 'public'/);
 assert.match(safety, /new\.latitude := null/);
 assert.match(safety, /new\.visibility='private'/);
+assert.match(safety, /count\(distinct reporter_id\)/);
+assert.match(safety, /report_count >= 3/);
+assert.match(safety, /tgname='scanlab_reports_rate_limit'/);
 
 console.log('D2 HQ cross-worker integration contracts: PASS');
