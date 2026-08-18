@@ -93,13 +93,25 @@ require_text SplatNative/ScanLibraryView.swift 'restoreSavedProject'
 ! grep -R -n 'おもちゃばこ' SplatNative project.yml
 
 # D authenticated cloud sharing is explicit and isolated from capture/reconstruction core.
-for f in ScanLabBackend.swift ScanLabShellView.swift PublishScanView.swift ScanLabAccountView.swift; do require_file "SplatNative/$f"; done
+for f in ScanLabBackend.swift ScanLabBackend+TrustedPublish.swift ScanLabBackend+PublishLifecycle.swift ScanLabShellView.swift ScanLabDiscoverFeedStore.swift ScanLabProfilePolicy.swift ScanLabProfileService.swift ScanLabProfileView.swift ScanLabSessionPolicy.swift ScanLabPublishPackage.swift ScanLabGeotagPolicy.swift ScanReportPolicy.swift ScanReportBackend.swift PublicBrowsePolicy.swift PublishScanView.swift ScanLabAccountView.swift; do require_file "SplatNative/$f"; done
 require_text SplatNative/SplatNativeApp.swift 'ScanLabShellView()'
 require_text SplatNative/ScanLabShellView.swift 'RootScanView()'
 require_text SplatNative/ScanLabBackend.swift 'import Supabase'
 require_text SplatNative/ScanLabBackend.swift 'ScanLabVisibility'
+require_text SplatNative/ScanLabBackend.swift 'func deleteAccount() async throws'
+require_text SplatNative/ScanLabBackend+TrustedPublish.swift 'ScanLabUploadInitRequest'
+require_text SplatNative/ScanLabBackend+TrustedPublish.swift 'ScanLabUploadValidateRequest'
+require_text SplatNative/ScanLabBackend+TrustedPublish.swift 'cleanupFailedDraft'
 require_text SplatNative/PublishScanView.swift 'contentConfirmed'
 require_text SplatNative/PublishScanView.swift 'publicPlaceConfirmed'
+require_text SplatNative/PublishScanView.swift '位置情報を付けなくてもDiscoverへ公開できます'
+require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "cursor"'
+require_text SplatNative/ScanLabDiscoverFeedStore.swift 'URLQueryItem(name: "q"'
+require_text SplatNative/ScanLabShellView.swift 'searchable'
+require_text SplatNative/ScanLabShellView.swift '続きを再試行'
+require_text SplatNative/ScanLabShellView.swift 'ScanReportReason.allCases'
+require_text SplatNative/ScanLabShellView.swift 'backend.submitReport(scan'
+require_text SplatNative/ScanLabShellView.swift 'backend.hasReported(scan)'
 require_text project.yml 'package: Supabase'
 require_text project.yml 'INFOPLIST_KEY_NSCameraUsageDescription'
 require_text project.yml 'INFOPLIST_KEY_NSLocationWhenInUseUsageDescription'
@@ -123,6 +135,108 @@ require_text ../.github/workflows/splat-native-ios.yml 'secrets.SCANLAB_E2E_PASS
 require_text ../.github/workflows/splat-native-ios.yml 'LIVE_E2E_BLOCKED_BY_TEST_IDENTITY'
 require_text ../.github/workflows/splat-native-ios.yml 'node splat-native-ios/scripts/scanlab_auth_e2e.mjs'
 ! grep -R -nE 'SCANLAB_E2E_(EMAIL|PASSWORD)=' scripts . --exclude='validate.sh' --exclude-dir='.git'
+
+# D2-002 session persistence / refresh / expired-session recovery.
+require_file SplatNativeTests/ScanLabSessionPolicyTests.swift
+bash scripts/test_session_policy.sh
+
+# D2-003 profile / public profile / avatar policy.
+require_file SplatNativeTests/ScanLabProfilePolicyTests.swift
+require_text SplatNative/ScanLabProfileService.swift 'scanlab_public_profile'
+require_text SplatNative/ScanLabProfilePolicy.swift 'normalizedAvatarURL'
+
+# D2-004 trusted upload entry / authorization / validation.
+require_file supabase/functions/scanlab-upload/index.ts
+python3 scripts/d2_trusted_upload_gate.py
+
+# D2-005 publish package / scene.spz / manifest integrity.
+require_file SplatNativeTests/ScanLabPublishPackageTests.swift
+require_text SplatNative/ScanLabPublishPackage.swift 'scene.spz'
+require_text SplatNative/ScanLabPublishPackage.swift 'manifest.json'
+require_text SplatNative/ScanLabPublishPackage.swift 'SHA256.hash'
+
+# D2-006 durable asset URL / browser Range retrieval.
+require_file supabase/functions/scanlab-public/asset_delivery.mjs
+node scripts/test_scanlab_public_asset_delivery.mjs
+
+# D2-007 public / unlisted / private visibility lifecycle.
+node supabase/functions/scanlab-visibility/visibility_contract.test.mjs
+require_text supabase/functions/scanlab-visibility/index.ts '#token='
+
+# D2-008 + D2-009 browser viewer loading/error/retry + share metadata.
+for f in viewer/index.html viewer/viewer.js viewer/viewer.css viewer/share-url.js; do require_file "$f"; done
+require_text viewer/viewer.js 'history.replaceState'
+require_text viewer/viewer.js 'previewImageUrl'
+require_text viewer/viewer.js 'runtime_load_failed'
+require_text viewer/index.html 'no-referrer'
+
+# D2-010 explicit optional geotag privacy boundary.
+require_file SplatNativeTests/ScanLabGeotagPolicyTests.swift
+python3 scripts/test_geotag_publish_contracts.py
+
+# D2-011 Map query / published geotag display.
+require_file SplatNative/ScanLabMapQuery.swift
+require_file SplatNativeTests/ScanLabMapQueryTests.swift
+require_text SplatNative/ScanLabShellView.swift 'ScanLabMapBounds.make'
+
+# D2-012 Discover cursor / search / pagination / empty / error / retry.
+python3 - <<'PY'
+from pathlib import Path
+edge=Path('supabase/functions/scanlab-public/index.ts').read_text()
+store=Path('SplatNative/ScanLabDiscoverFeedStore.swift').read_text()
+for needle in [
+    'const cursor = parseCursor(url.searchParams.get("cursor"))',
+    'const q = (url.searchParams.get("q") ?? "").trim().slice(0, 80)',
+    'if (q) query = query.ilike("title"',
+    '.order("published_at", { ascending: false })',
+    '.order("id", { ascending: false })',
+    'nextCursor',
+]: assert needle in edge, needle
+for needle in [
+    'let nextCursor: String?',
+    'URLQueryItem(name: "cursor", value: cursor)',
+    'URLQueryItem(name: "q", value: String(query.prefix(80)))',
+    'seenCursors.insert(next).inserted',
+    'guard hasMore, errorMessage == nil, !isLoadingInitial, !isLoadingMore, let cursor = nextCursor else { return }',
+]: assert needle in store, needle
+assert 'URLQueryItem(name: "offset"' not in store
+print('D2-012 Discover cursor/search regression gate PASS')
+PY
+
+# D2-013 public profile -> other-user public scan browse.
+require_text SplatNative/ScanLabShellView.swift 'ScanLabAuthorScanBrowserView'
+require_text SplatNative/ScanLabShellView.swift 'ScanLabPublicProfileView(handle: author.handle)'
+
+# D2-014 owner unpublish / republish lifecycle.
+require_file supabase/functions/scanlab-unpublish/index.ts
+require_text SplatNative/ScanLabBackend+PublishLifecycle.swift 'unpublishPublishedScan'
+require_text SplatNative/ScanLabBackend+PublishLifecycle.swift 'func republish'
+
+# D2-015 owner scan delete / asset cleanup / delete recovery.
+python3 scripts/test_d2_owner_delete.py
+
+# D2-016 account delete / owned data cleanup / auth cleanup.
+require_file tests/account-delete-contract.test.mjs
+require_file tests/account-delete-live-e2e.ts
+node tests/account-delete-contract.test.mjs
+
+# D2-017 report reason / persistence / duplicate prevention.
+require_file SplatNativeTests/ScanReportPolicyTests.swift
+require_text SplatNative/ScanReportBackend.swift 'scanlab_submit_report'
+require_text SplatNative/ScanReportBackend.swift 'scanlab_has_reported'
+if grep -q 'backend.report(scan' SplatNative/ScanLabShellView.swift; then echo 'legacy report UI path detected'; exit 1; fi
+
+# D2-018 block / unblock / visibility and interaction suppression.
+require_text supabase/functions/scanlab-public/index.ts 'blockedUserIds'
+require_text supabase/functions/scanlab-public/index.ts 'blocked.has(data.owner_id)'
+require_text SplatNative/ScanLabBackend.swift 'func unblock('
+require_text SplatNative/ScanLabAccountView.swift 'ScanLabBlockedUsersSection'
+
+# D2-019 moderation / rate-limit / abuse failure handling.
+python3 scripts/verify_d2_w19_safety.py
+
+# HQ-only cross-worker conflict checks: catches contracts no single worker can see.
+node scripts/d2_hq_integration_contracts.mjs
 
 # D2-020: privacy manifest, permission strings and review explanation must move together.
 plutil -lint SplatNative/PrivacyInfo.xcprivacy >/dev/null
