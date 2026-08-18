@@ -287,7 +287,7 @@ struct Otsu4GoldenHomeView: View {
     }
 
     private var subjectSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("分野から解く")
                 .font(Otsu4Theme.serif(20, weight: .bold))
                 .foregroundStyle(Otsu4Theme.ink)
@@ -295,19 +295,24 @@ struct Otsu4GoldenHomeView: View {
                 Button {
                     startSubject(subject)
                 } label: {
-                    HStack {
+                    HStack(spacing: 12) {
                         Text(subject)
                             .font(Otsu4Theme.sans(15, weight: .bold))
-                        Spacer()
+                        Spacer(minLength: 12)
                         Image(systemName: "chevron.right")
                     }
-                    .padding(.vertical, 5)
+                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
                 .foregroundStyle(Otsu4Theme.ai)
                 .accessibilityLabel("\(subject)を学習")
+                .accessibilityIdentifier("subject-\(subject)")
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var summarySection: some View {
