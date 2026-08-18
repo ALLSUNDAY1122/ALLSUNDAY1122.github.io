@@ -9,6 +9,14 @@ on:
       - 'ios/health-manager-2/**'
       - 'automation/learning-sprint-question-pipeline/**'
       - '.github/workflows/health-manager-2-300q-check.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'apps/sanitary-manager-2/**'
+      - 'ios/health-manager-2/**'
+      - 'automation/learning-sprint-question-pipeline/**'
+      - '.github/workflows/health-manager-2-300q-check.yml'
 
 permissions:
   contents: read
