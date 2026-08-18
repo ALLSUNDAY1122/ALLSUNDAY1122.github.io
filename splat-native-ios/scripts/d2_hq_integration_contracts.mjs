@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { normalizeShareURL, parseShareKey } from '../viewer/share-url.js';
 import { parseScanLabFeedCursor, makeScanLabFeedCursor } from '../supabase/functions/scanlab-public/feed_cursor.mjs';
 import { parseScanLabBoundingBox } from '../supabase/functions/scanlab-public/bbox.mjs';
@@ -9,6 +9,26 @@ const trustedPublish = readFileSync(new URL('../SplatNative/ScanLabBackend+Trust
 const safety = readFileSync(new URL('../supabase/migrations/20260818084300_scanlab_d2_w19_safety.sql', import.meta.url), 'utf8');
 const visibility = readFileSync(new URL('../supabase/functions/scanlab-visibility/index.ts', import.meta.url), 'utf8');
 const viewer = readFileSync(new URL('../viewer/viewer.js', import.meta.url), 'utf8');
+
+// Supabase migration versions are primary keys in production history. Reject the
+// duplicate timestamp problem produced by independent workers before any deploy.
+const migrationsDirectory = new URL('../supabase/migrations/', import.meta.url);
+const migrationFiles = readdirSync(migrationsDirectory).filter((name) => name.endsWith('.sql'));
+const versions = new Map();
+for (const name of migrationFiles) {
+  const match = name.match(/^(\d{14})_/);
+  assert.ok(match, `migration filename must start with a 14-digit version: ${name}`);
+  const version = match[1];
+  assert.ok(!versions.has(version), `duplicate migration version ${version}: ${versions.get(version)} and ${name}`);
+  versions.set(version, name);
+}
+assert.equal(versions.get('20260817230440'), '20260817230440_scanlab_d2_w17_report_contract.sql');
+assert.equal(versions.get('20260817214236'), '20260817214236_scanlab_d2_owner_delete_v18.sql');
+assert.equal(versions.get('20260817214331'), '20260817214331_scanlab_d2_block_interaction_suppression_v18.sql');
+assert.equal(versions.get('20260818000539'), '20260818000539_scanlab_d2_delete_lifecycle_marker_v1.sql');
+assert.equal(versions.get('20260818000622'), '20260818000622_scanlab_d2_delete_publish_guard_v1.sql');
+assert.equal(versions.get('20260818002528'), '20260818002528_scanlab_d2_delete_upload_guard.sql');
+assert.equal(versions.get('20260818201300'), '20260818201300_scanlab_d2_profile_v9.sql');
 
 // D2-009: capability token must end up in the fragment, never a normalized query string.
 const legacy = 'https://allsunday1122.github.io/splat-native-ios/viewer/?token=22222222-2222-4222-8222-222222222222';
