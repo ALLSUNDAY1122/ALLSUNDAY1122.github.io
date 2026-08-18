@@ -11,7 +11,8 @@
   {
     "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-      "@mkkellogg/gaussian-splats-3d": "https://cdn.jsdelivr.net/npm/@mkkellogg/gaussian-splats-3d@0.4.7/build/gaussian-splats-3d.module.js"
+      "gaussian-splats-upstream": "https://cdn.jsdelivr.net/npm/@mkkellogg/gaussian-splats-3d@0.4.7/build/gaussian-splats-3d.module.js",
+      "@mkkellogg/gaussian-splats-3d": "./gaussian-spz-wrapper.js"
     }
   }
   </script>
@@ -30,9 +31,11 @@
       <p id="location" class="meta"></p>
       <p id="likes" class="meta"></p>
     </section>
-    <section id="status" class="status" role="status" aria-live="polite">
+    <section id="status" class="status" role="status" aria-live="polite" aria-busy="true">
       <div class="spinner" aria-hidden="true"></div>
       <p id="status-text">3Dを読み込んでいます</p>
+      <p id="status-detail" class="status-detail" hidden></p>
+      <button id="retry" class="retry-button" type="button" hidden>もう一度試す</button>
     </section>
   </main>
   <script type="module" src="./viewer.js"></script>

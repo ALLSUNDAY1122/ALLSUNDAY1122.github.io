@@ -61,6 +61,10 @@ jobs:
           echo 'SCANLAB_E2E_EMAIL / SCANLAB_E2E_PASSWORD are not configured; no fake production identity will be created.' | tee -a "$GITHUB_STEP_SUMMARY"
       - name: S2 reconstruction contracts
         run: python3 splat-native-ios/scripts/test_reconstruction_contracts.py
+      - name: D2 browser viewer contracts
+        run: python3 splat-native-ios/scripts/test_browser_viewer_contracts.py
+      - name: D2 live viewer readiness
+        run: python3 splat-native-ios/scripts/test_browser_viewer_live_readiness.py
       - name: Generate project and verify bundled resources
         working-directory: splat-native-ios
         run: |
