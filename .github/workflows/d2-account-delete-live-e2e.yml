@@ -2,21 +2,22 @@ name: D2 Account Delete Live E2E
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - scaniverse/d2-w16-account-delete
+  pull_request:
     paths:
       - '.github/workflows/d2-account-delete-live-e2e.yml'
+      - 'splat-native-ios/tests/account-delete-live-e2e.ts'
+      - 'splat-native-ios/supabase/functions/scanlab-delete-account/**'
 
 permissions:
   contents: read
 
 concurrency:
-  group: d2-account-delete-live-e2e
-  cancel-in-progress: false
+  group: d2-account-delete-live-e2e-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   live-e2e:
+    if: github.head_ref == 'scaniverse/d2-w16-account-delete' || github.ref_name == 'scaniverse/d2-w16-account-delete'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
