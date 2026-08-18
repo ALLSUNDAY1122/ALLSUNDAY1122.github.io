@@ -35,7 +35,7 @@ jobs:
           test -f splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           sips -g pixelWidth -g pixelHeight splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | grep -q '1024'
       - name: D2 durable asset self-contained live E2E
-        if: github.ref_name == 'scaniverse/d2-w06-durable-url'
+        if: github.head_ref == 'scaniverse/d2-w06-durable-url' || github.ref_name == 'scaniverse/d2-w06-durable-url'
         env:
           SUPABASE_URL: https://gybchnyqlqwmajwkhsly.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
