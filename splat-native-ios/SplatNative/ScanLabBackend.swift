@@ -285,13 +285,25 @@ final class ScanLabBackend: ObservableObject {
             guard location != nil else { throw ScanLabBackendError.invalidPublicLocation }
             guard publicPlaceConfirmed, privacyConfirmed, rightsConfirmed else { throw ScanLabBackendError.safetyConfirmationRequired }
         }
-        let attributes = try FileManager.default.attributesOfItem(atPath: resultURL.path)
-        guard let size = attributes[.size] as? NSNumber, size.intValue > 0 else { throw ScanLabBackendError.invalidAsset }
-        guard size.intValue <= ScanLabConfig.maximumAssetBytes else { throw ScanLabBackendError.assetTooLarge }
-        let uploadID = UUID().uuidString.lowercased(), prefix = "\(user.id.uuidString.lowercased())/\(uploadID)", assetPath = "\(prefix)/result.splat", previewPath = previewImage == nil ? nil : "\(prefix)/preview.jpg"
+        let package: ScanLabPublishPackage
+        do {
+            package = try ScanLabPublishPackageBuilder.build(from: resultURL, maximumBytes: ScanLabConfig.maximumAssetBytes)
+        } catch ScanLabPublishPackageError.sourceTooLarge {
+            throw ScanLabBackendError.assetTooLarge
+        } catch {
+            throw ScanLabBackendError.invalidAsset
+        }
+        defer { ScanLabPublishPackageBuilder.cleanup(package) }
+
+        let uploadID = UUID().uuidString.lowercased()
+        let prefix = "\(user.id.uuidString.lowercased())/\(uploadID)"
+        let assetPath = "\(prefix)/scene.spz"
+        let manifestPath = "\(prefix)/manifest.json"
+        let previewPath = previewImage == nil ? nil : "\(prefix)/preview.jpg"
         var uploadedPaths: [String] = []
         do {
-            try await client.storage.from("scanlab-assets").upload(assetPath, fileURL: resultURL, options: FileOptions(contentType: "application/octet-stream")); uploadedPaths.append(assetPath)
+            try await client.storage.from("scanlab-assets").upload(assetPath, fileURL: package.sceneURL, options: FileOptions(contentType: ScanLabPublishPackage.sceneMediaType)); uploadedPaths.append(assetPath)
+            try await client.storage.from("scanlab-assets").upload(manifestPath, fileURL: package.manifestURL, options: FileOptions(contentType: "application/json")); uploadedPaths.append(manifestPath)
             if let previewPath, let previewData = previewImage?.jpegData(compressionQuality: 0.82) {
                 try await client.storage.from("scanlab-assets").upload(previewPath, data: previewData, options: FileOptions(contentType: "image/jpeg")); uploadedPaths.append(previewPath)
             }
@@ -308,7 +320,9 @@ final class ScanLabBackend: ObservableObject {
         try await client.from("scanlab_scans").update(ScanLabScanStatusUpdate(status: "hidden")).eq("id", value: scan.id).execute(); await loadOwnerScans(); await loadPublicScans()
     }
     func delete(_ scan: ScanLabOwnerScan) async throws {
-        let paths = [scan.assetPath, scan.previewPath].compactMap { $0 }; if !paths.isEmpty { try await client.storage.from("scanlab-assets").remove(paths: paths) }
+        let prefix = (scan.assetPath as NSString).deletingLastPathComponent
+        let paths = [scan.assetPath, "\(prefix)/manifest.json", scan.previewPath].compactMap { $0 }
+        if !paths.isEmpty { try await client.storage.from("scanlab-assets").remove(paths: paths) }
         try await client.from("scanlab_scans").delete().eq("id", value: scan.id).execute(); await loadOwnerScans(); await loadPublicScans()
     }
     func like(_ scan: ScanLabPublicScan) async throws {

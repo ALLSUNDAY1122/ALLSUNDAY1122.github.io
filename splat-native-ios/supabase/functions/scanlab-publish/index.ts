@@ -1,5 +1,11 @@
 import { createClient } from "npm:@supabase/supabase-js@2.112.3";
 
+const STORAGE_BUCKET = "scanlab-assets";
+const SCENE_FILE = "scene.spz";
+const MANIFEST_FILE = "manifest.json";
+const SCENE_MEDIA_TYPE = "application/vnd.scanlab.spz";
+const SHA256_RE = /^[0-9a-f]{64}$/;
+
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
   status,
   headers: { "Content-Type": "application/json; charset=utf-8" },
@@ -14,6 +20,25 @@ const admin = createClient(
 function bearer(req: Request) {
   const header = req.headers.get("authorization") ?? "";
   return header.toLowerCase().startsWith("bearer ") ? header.slice(7) : null;
+}
+
+function validateManifest(value: unknown, sceneBytes: number): string | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return "manifest_invalid";
+  const manifest = value as Record<string, unknown>;
+  if (manifest.schema_version !== 1) return "manifest_schema_unsupported";
+  if (manifest.scene_file !== SCENE_FILE) return "manifest_scene_mismatch";
+  if (!Number.isSafeInteger(manifest.scene_byte_count) || (manifest.scene_byte_count as number) <= 0) {
+    return "manifest_byte_count_invalid";
+  }
+  if (manifest.scene_byte_count !== sceneBytes) return "manifest_byte_count_mismatch";
+  if (typeof manifest.scene_sha256 !== "string" || !SHA256_RE.test(manifest.scene_sha256)) {
+    return "manifest_sha256_invalid";
+  }
+  if (manifest.media_type !== SCENE_MEDIA_TYPE) return "manifest_media_type_invalid";
+  if (typeof manifest.created_at !== "string" || !Number.isFinite(Date.parse(manifest.created_at))) {
+    return "manifest_created_at_invalid";
+  }
+  return null;
 }
 
 Deno.serve(async (req) => {
@@ -62,12 +87,28 @@ Deno.serve(async (req) => {
   // Network publication accepts C2's explicit browser-share contract only. Requiring both
   // `scene.spz` and its integrity manifest makes the legacy raw result.splat upload path
   // impossible to publish even if an older client attempts to call this function directly.
-  if (fileName !== "scene.spz") return json({ error: "trusted_package_required" }, 409);
-  const { data: files, error: listError } = await admin.storage.from("scanlab-assets").list(folder, { limit: 20 });
+  if (fileName !== SCENE_FILE) return json({ error: "trusted_package_required" }, 409);
+  const { data: files, error: listError } = await admin.storage.from(STORAGE_BUCKET).list(folder, { limit: 20 });
   if (listError) return json({ error: "asset_check_failed" }, 503);
-  const names = new Set((files ?? []).map((f) => f.name));
-  if (!names.has("scene.spz")) return json({ error: "asset_missing" }, 409);
-  if (!names.has("manifest.json")) return json({ error: "manifest_missing" }, 409);
+  const scene = (files ?? []).find((f) => f.name === SCENE_FILE);
+  if (!scene) return json({ error: "asset_missing" }, 409);
+  if (!(files ?? []).some((f) => f.name === MANIFEST_FILE)) return json({ error: "manifest_missing" }, 409);
+
+  const sceneBytes = Number(scene.metadata?.size);
+  if (!Number.isSafeInteger(sceneBytes) || sceneBytes <= 0) return json({ error: "asset_metadata_invalid" }, 409);
+
+  const manifestPath = `${folder}/${MANIFEST_FILE}`;
+  const { data: manifestBlob, error: manifestDownloadError } = await admin.storage.from(STORAGE_BUCKET).download(manifestPath);
+  if (manifestDownloadError || !manifestBlob) return json({ error: "manifest_read_failed" }, 503);
+
+  let manifest: unknown;
+  try {
+    manifest = JSON.parse(await manifestBlob.text());
+  } catch {
+    return json({ error: "manifest_invalid_json" }, 409);
+  }
+  const manifestError = validateManifest(manifest, sceneBytes);
+  if (manifestError) return json({ error: manifestError }, 409);
 
   const { data: updated, error: updateError } = await admin
     .from("scanlab_scans")
