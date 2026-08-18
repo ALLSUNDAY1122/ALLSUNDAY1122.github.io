@@ -35,6 +35,7 @@ jobs:
       - name: Static checks
         run: |
           bash splat-native-ios/scripts/validate.sh
+          python3 splat-native-ios/scripts/test_auth_workflow_contract.py
           test -f splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           sips -g pixelWidth -g pixelHeight splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | grep -q '1024'
       - name: Hosted ScanLab auth readiness gate
