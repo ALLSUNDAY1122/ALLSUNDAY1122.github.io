@@ -19,9 +19,24 @@ workflows:
           brew install xcodegen
       - name: Generate Xcode project
         script: |
-          BUILD_NUM="${BUILD_NUMBER:-1}"
-          sed -i.bak "s/CURRENT_PROJECT_VERSION: 1/CURRENT_PROJECT_VERSION: ${BUILD_NUM}/" project.yml
-          rm -f project.yml.bak
+          BUILD_NUM="${CM_BUILD_NUMBER:-2026081801}"
+          python3 - "$BUILD_NUM" <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          path = Path('project.yml')
+          text = path.read_text(encoding='utf-8')
+          updated, count = re.subn(
+              r'CURRENT_PROJECT_VERSION:\s*\d+',
+              f'CURRENT_PROJECT_VERSION: {sys.argv[1]}',
+              text,
+              count=1,
+          )
+          if count != 1:
+              raise SystemExit('CURRENT_PROJECT_VERSION replacement failed')
+          path.write_text(updated, encoding='utf-8')
+          PY
           xcodegen generate
       - name: Apply signing profiles
         script: |
