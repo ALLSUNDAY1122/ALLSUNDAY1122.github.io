@@ -1,0 +1,38 @@
+name: Health Manager 2 - 300Q Check
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'apps/sanitary-manager-2/**'
+      - 'ios/health-manager-2/**'
+      - 'automation/learning-sprint-question-pipeline/**'
+      - '.github/workflows/health-manager-2-300q-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  question-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Export and validate 300 questions
+        run: |
+          node ios/health-manager-2/export-audit-data.cjs
+          python automation/learning-sprint-question-pipeline/validate_questions.py ios/health-manager-2/learning-sprint-audit.json
+      - name: Verify UI derives 300Q presentation from data
+        run: |
+          grep -q "5年分相当" apps/sanitary-manager-2/gm2.js
+          grep -q 'QUESTIONS.length' apps/sanitary-manager-2/gm2.js
+          ! grep -q '3回分を科目ごとに' apps/sanitary-manager-2/gm2.js
+          ! grep -q '全9セット' apps/sanitary-manager-2/gm2.js
