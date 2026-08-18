@@ -8,6 +8,14 @@ on:
       - 'ios/health-manager-1/approved-icon-v1/**'
       - 'ios/health-manager-1/prepare-approved-icon.sh'
       - '.github/workflows/hm1-approved-icon-materialize.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'ios/health-manager-1/approved-icon-v1/**'
+      - 'ios/health-manager-1/prepare-approved-icon.sh'
+      - 'ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset/**'
+      - '.github/workflows/hm1-approved-icon-materialize.yml'
 
 permissions:
   contents: write
