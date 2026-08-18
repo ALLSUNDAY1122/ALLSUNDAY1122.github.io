@@ -11,8 +11,8 @@ global.window = { Q_PARTS: [] };
 global.localStorage = { getItem: () => null, setItem: () => {} };
 
 const scripts = [
-  'q1.js','q2.js','q3.js','q4.js','q5.js','q6.js','q7.js','q8.js','q9.js',
-  'audit-patch-v2.js','audit-fixes.js','question-order-v1.js'
+  'q1.js','q2.js','q3.js','q4.js','q5.js','q6.js','q7.js','q8.js','q9.js','q10.js',
+  'audit-patch-v2.js','audit-patch-v3.js','audit-fixes.js','question-order-v1.js'
 ];
 for (const file of scripts) {
   const full = path.join(WEB, file);
@@ -21,9 +21,14 @@ for (const file of scripts) {
 }
 
 const questions = window.Q_PARTS;
-if (questions.length !== 90) throw new Error(`Expected 90 questions, got ${questions.length}`);
+if (questions.length !== 300) throw new Error(`Expected 300 questions, got ${questions.length}`);
 
-const examRound = {'令和8年4月':1,'令和7年10月':2,'令和7年4月':3};
+const sets = [
+  '令和8年4月','令和7年10月','令和7年4月',
+  '5年分相当｜第4回','5年分相当｜第5回','5年分相当｜第6回','5年分相当｜第7回',
+  '5年分相当｜第8回','5年分相当｜第9回','5年分相当｜第10回'
+];
+const examRound = Object.fromEntries(sets.map((name, i) => [name, i + 1]));
 const subjects = ['関係法令','労働衛生','労働生理'];
 const groups = new Map();
 for (const q of questions) {
@@ -31,20 +36,26 @@ for (const q of questions) {
   if (!groups.has(key)) groups.set(key, []);
   groups.get(key).push(q);
 }
-if (groups.size !== 9) throw new Error(`Expected 9 exam/subject groups, got ${groups.size}`);
+if (groups.size !== 30) throw new Error(`Expected 30 exam/subject groups, got ${groups.size}`);
 
-for (const [key, qs] of groups) {
-  if (qs.length !== 10) throw new Error(`${key}: expected 10 questions, got ${qs.length}`);
-  const positions = [0,0,0,0,0];
-  for (const q of qs) {
-    if (!Array.isArray(q.choices) || q.choices.length !== 5) throw new Error(`${q.id}: choices must be 5`);
-    if (!Number.isInteger(q.answer) || q.answer < 1 || q.answer > 5) throw new Error(`${q.id}: invalid answer ${q.answer}`);
-    positions[q.answer - 1]++;
+for (const set of sets) {
+  for (const subject of subjects) {
+    const key = `${set}|${subject}`;
+    const qs = groups.get(key) || [];
+    if (qs.length !== 10) throw new Error(`${key}: expected 10 questions, got ${qs.length}`);
+    const positions = [0,0,0,0,0];
+    for (const q of qs) {
+      if (!Array.isArray(q.choices) || q.choices.length !== 5) throw new Error(`${q.id}: choices must be 5`);
+      if (!Number.isInteger(q.answer) || q.answer < 1 || q.answer > 5) throw new Error(`${q.id}: invalid answer ${q.answer}`);
+      positions[q.answer - 1]++;
+    }
+    if (!positions.every(n => n === 2)) throw new Error(`${key}: answer positions are biased: ${positions.join(',')}`);
   }
-  if (!positions.every(n => n === 2)) throw new Error(`${key}: answer positions are biased: ${positions.join(',')}`);
 }
 
 const required = ['id','examSet','subject','topic','question','choices','answer','quick','explanation','basis','sourceUrl','baselineDate','originType','rightsBasis'];
+const normalized = s => String(s).replace(/[\s\p{P}\p{S}]/gu, '').toLowerCase();
+const bodies = new Map();
 for (const q of questions) {
   for (const field of required) {
     const value = q[field];
@@ -54,6 +65,10 @@ for (const q of questions) {
   }
   if (!examRound[q.examSet]) throw new Error(`${q.id}: unknown examSet ${q.examSet}`);
   if (!subjects.includes(q.subject)) throw new Error(`${q.id}: unknown subject ${q.subject}`);
+  if (q.lawRelated && !q.legalChecked) throw new Error(`${q.id}: law-related question missing legalChecked`);
+  const body = normalized(q.question);
+  if (bodies.has(body)) throw new Error(`${q.id}: exact normalized duplicate of ${bodies.get(body)}`);
+  bodies.set(body, q.id);
 }
 
 const out = questions.map(q => ({
@@ -71,10 +86,14 @@ const out = questions.map(q => ({
   source_url: q.sourceUrl,
   baseline_date: q.baselineDate,
   origin_type: q.originType,
-  rights_basis: q.rightsBasis
+  rights_basis: q.rightsBasis,
+  law_related: Boolean(q.lawRelated),
+  legal_checked: q.legalChecked || null,
+  audit_status: q.auditStatus,
+  publication_status: q.publicationStatus
 }));
 
 const outPath = path.join(IOS_DIR, 'release-questions.json');
 fs.writeFileSync(outPath, JSON.stringify(out, null, 2) + '\n');
 console.log(`Exported ${out.length} audited questions to ${outPath}`);
-console.log('PASS: 9 groups x 10 questions, 5 choices each, answer positions 1-5 each exactly twice per group.');
+console.log('PASS: 10 rounds / 30 groups x 10 questions, 5 choices each, answer positions 1-5 each exactly twice per group.');
