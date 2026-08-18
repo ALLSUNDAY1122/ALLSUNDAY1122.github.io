@@ -41,8 +41,6 @@ async function listFolderPaths(folder: string) {
     if ((data ?? []).length < pageSize) return { paths, error: null };
   }
 
-  // Exactly 1000 objects is still within the recovery budget. Probe only the 1001st object
-  // so the limit error means "more than 1000", not "1000 or more".
   const { data: overflow, error: overflowError } = await admin.storage.from("scanlab-assets").list(folder, {
     limit: 1,
     offset: 1000,
@@ -92,7 +90,7 @@ Deno.serve(async (req) => {
 
   const { data: scan, error: scanError } = await admin
     .from("scanlab_scans")
-    .select("id,owner_id,asset_path,preview_path,status")
+    .select("id,owner_id,asset_path,preview_path,status,deletion_requested_at")
     .eq("id", body.scanId)
     .eq("owner_id", user.id)
     .maybeSingle();
@@ -107,12 +105,17 @@ Deno.serve(async (req) => {
   const packagePaths = canonicalPackage(user.id, scan.id, scan.asset_path, scan.preview_path);
   if (!packagePaths) return json({ error: "invalid_asset_path" }, 409);
 
-  const { error: hideError } = await admin
+  // Persist a non-client-writable delete marker before touching Storage. Publish/republish
+  // rejects marked rows, closing the race where a hidden scan could be republished mid-cleanup.
+  const deletionRequestedAt = scan.deletion_requested_at ?? new Date().toISOString();
+  const { data: prepared, error: hideError } = await admin
     .from("scanlab_scans")
-    .update({ status: "hidden", moderation_status: "pending" })
+    .update({ status: "hidden", moderation_status: "pending", deletion_requested_at: deletionRequestedAt })
     .eq("id", scan.id)
-    .eq("owner_id", user.id);
-  if (hideError) return json({ error: "delete_prepare_failed" }, 503);
+    .eq("owner_id", user.id)
+    .select("id")
+    .maybeSingle();
+  if (hideError || !prepared) return json({ error: "delete_prepare_failed" }, 503);
 
   const cleanupError = await cleanupCanonicalFolder(user.id, scan.id, packagePaths.previewPath);
   if (cleanupError) return json({ error: cleanupError, retryable: true }, 503);
@@ -121,8 +124,9 @@ Deno.serve(async (req) => {
     .from("scanlab_scans")
     .delete()
     .eq("id", scan.id)
-    .eq("owner_id", user.id);
+    .eq("owner_id", user.id)
+    .not("deletion_requested_at", "is", null);
   if (deleteError) return json({ error: "metadata_cleanup_pending", retryable: true }, 503);
 
-  return json({ deleted: true, scanId: scan.id, recovered: scan.status === "hidden" });
+  return json({ deleted: true, scanId: scan.id, recovered: scan.status === "hidden" || Boolean(scan.deletion_requested_at) });
 });
