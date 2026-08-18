@@ -105,8 +105,8 @@ def main():
             qp=download(cfg[sess],f'r{r}-{sess}.pdf'); qs=parse_questions(text(qp))
             report[-1][sess+'_questions']=len(qs); report[-1][sess+'_media']=sum(x['requires_media'] for x in qs)
             for q in qs:
-                d=decode(amap.get((sess,q['number'])))
-                rows.append({'id':f"OT-R{r}-{sess.upper()}-{q['number']:03d}",'round':r,'reference_exam_round':cfg['exam_round'],'session':sess,'slot':q['number'],'question':q['question'],'choices':q['choices'],'requires_media':q['requires_media'],'official_answer_raw':amap.get((sess,q['number'],''),),**d,'question_source_url':cfg[sess],'answer_source_url':cfg['answer'],'raw_block':q['raw_block']})
+                raw=amap.get((sess,q['number']),''); d=decode(raw)
+                rows.append({'id':f"OT-R{r}-{sess.upper()}-{q['number']:03d}",'round':r,'reference_exam_round':cfg['exam_round'],'session':sess,'slot':q['number'],'question':q['question'],'choices':q['choices'],'requires_media':q['requires_media'],'official_answer_raw':raw,**d,'question_source_url':cfg[sess],'answer_source_url':cfg['answer'],'raw_block':q['raw_block']})
     OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps(report,ensure_ascii=False,indent=2)); print('TOTAL',len(rows),'MEDIA',sum(x['requires_media'] for x in rows))
     print('EMPTY_CHOICES',sum(len(x['choices'])!=5 for x in rows),'EMPTY_ANS',sum(x['scoring_status']=='excluded' for x in rows))
