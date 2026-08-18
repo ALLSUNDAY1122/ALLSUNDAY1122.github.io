@@ -1,0 +1,96 @@
+{
+  "version": "0.1",
+  "project": "学びスプリント #16｜作業療法士国家試験",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "learning-sprint-16-sagyo-dispatcher",
+  "app_path": "sagyo-ryohoshi-sprint",
+  "queue_path": "automation/chatgpt-dispatcher/learning-sprint-16/queue.json",
+  "worker_bootstrap": "automation/chatgpt-dispatcher/learning-sprint-16/WORKER_BOOTSTRAP.md",
+  "notion_ledger_url": "https://app.notion.com/p/3b609c10697d81049dafec035e69f8c5",
+  "notion_standard_url": "https://app.notion.com/p/3a909c10697d81e0961bd0fd27a77d39",
+  "max_active": 1,
+  "paused": false,
+  "pause_reason": "",
+  "tasks": [
+    {
+      "id": "LS16-001",
+      "title": "市場・競合・権利・試験構成 Gate",
+      "status": "READY",
+      "worker_role": "RESEARCH",
+      "depends_on": [],
+      "evidence_path": "automation/chatgpt-dispatcher/learning-sprint-16/evidence/LS16-001-market-rights.md",
+      "completed_at": null,
+      "prompt": "Notion台帳の次の作業「市場規模・競合・医療系問題の権利条件を確認」を完了する。現行Web一次資料を使い、受験者規模、試験方式・科目・問題数、公式過去問/出題基準の利用条件、主要iOS競合、課金余地、開発KILL条件を確認する。ADVANCE/HOLD/KILLを根拠付きで決定し、ADVANCEなら次Taskへ進める証拠を保存する。"
+    },
+    {
+      "id": "LS16-002",
+      "title": "REUSE_SCAN・要件・データ契約確定",
+      "status": "READY",
+      "worker_role": "RESEARCH",
+      "depends_on": ["LS16-001"],
+      "evidence_path": "automation/chatgpt-dispatcher/learning-sprint-16/evidence/LS16-002-reuse-spec.md",
+      "completed_at": null,
+      "prompt": "学びスプリント共通資産、#15理学療法士、問題生成・監査パイプラインをREUSE_SCANし、REUSE/ADAPT/REFERENCE/REJECT/NEW_BUILDへ分類する。作業療法士固有の試験構成・分野・必要問題数・roundsを一次資料で確定し、MVP要件、UI正本、データ契約、Bundle ID案、app_pathを確定する。"
+    },
+    {
+      "id": "LS16-003",
+      "title": "MVP scaffold・試用URL",
+      "status": "READY",
+      "worker_role": "BUILD",
+      "depends_on": ["LS16-002"],
+      "evidence_path": "automation/chatgpt-dispatcher/learning-sprint-16/evidence/LS16-003-mvp.md",
+      "completed_at": null,
+      "prompt": "確定したREUSE_SCANと要件に従い、作業療法士学びスプリントのMVPを担当branchへ実装する。共通UIを再利用し、ホーム→分野/問題→即時採点→解説→履歴の中心導線を実データで成立させる。ブラウザ試用URLを公開・HTTP確認し、中心導線の自動テストを追加する。"
+    },
+    {
+      "id": "LS16-004",
+      "title": "問題バンク生成・品質監査",
+      "status": "READY",
+      "worker_role": "BUILD",
+      "depends_on": ["LS16-003"],
+      "evidence_path": "automation/chatgpt-dispatcher/learning-sprint-16/evidence/LS16-004-question-bank.md",
+      "completed_at": null,
+      "prompt": "確定した試験構成とrights basisに従い、必要rounds×本試験1回分の問題バンクを作成する。automation/learning-sprint-question-pipelineを使い、問題数一致、科目配分、重複、高類似、根拠URL、基準日、権利根拠、正答・解説の一次資料監査をPASSまで反復する。水増し問題は禁止。"
+    },
+    {
+      "id": "LS16-005",
+      "title": "製品UI・学習状態・課金境界実装",
+      "status": "READY",
+      "worker_role": "BUILD",
+      "depends_on": ["LS16-004"],
+      "evidence_path": "automation/chatgpt-dispatcher/learning-sprint-16/evidence/LS16-005-product.md",
+      "completed_at": null,
+      "prompt": "現行学びスプリントUI正本へ揃え、4/8/16問設定、分野演習、履歴、苦手、途中再開、無料/購入版の正しいロック境界、購入復元、オフライン挙動を実装する。旧UIの残存やボタン不能を重大バグとして除去し、UI品質ループをPASSまで回す。"
+    },
+    {
+      "id": "LS16-006",
+      "title": "独立QA・回帰Gate",
+      "status": "READY",
+      "worker_role": "QA",
+      "depends_on": ["LS16-005"],
+      "evidence_path": "automation/chatgpt-dispatcher/learning-sprint-16/evidence/LS16-006-qa.md",
+      "completed_at": null,
+      "prompt": "実装者の自己評価を信用せず、機能・UI・アクセシビリティ・データ保持・戻る/再起動・無料/購入境界・問題品質・Privacyを独立監査する。Sev-1/2を0にし、発見した欠陥はTask内で修正→再検証し、再発防止test/gateを追加する。"
+    },
+    {
+      "id": "LS16-007",
+      "title": "iOS build・Codemagic・TestFlight準備",
+      "status": "READY",
+      "worker_role": "BUILD",
+      "depends_on": ["LS16-006"],
+      "evidence_path": "automation/chatgpt-dispatcher/learning-sprint-16/evidence/LS16-007-build.md",
+      "completed_at": null,
+      "prompt": "申請手順を再取得し、Bundle ID/Version/Build/Privacy Manifest/署名設定/Codemagicを準備する。公式API/CI経路を優先し、可能な範囲でbuildを起動・監視してInternal TestFlight直前まで進める。課金や不可逆提出は行わない。"
+    },
+    {
+      "id": "LS16-008",
+      "title": "Store準備・HUMAN_GATE",
+      "status": "READY",
+      "worker_role": "QA",
+      "depends_on": ["LS16-007"],
+      "evidence_path": "automation/chatgpt-dispatcher/learning-sprint-16/evidence/LS16-008-store-prep.md",
+      "completed_at": null,
+      "prompt": "App Storeメタデータ、説明、サブタイトル、キーワード、Privacy、審査メモ、スクリーンショット構成、価格判断、TestFlight確認項目を完成させる。App Store本提出・購入契約など不可逆操作の直前だけHUMAN_REQUIREDにする。"
+    }
+  ]
+}
