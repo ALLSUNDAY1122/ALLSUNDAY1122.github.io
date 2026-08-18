@@ -4,10 +4,10 @@ const path = require('path');
 const crypto = require('crypto');
 
 const repoRoot = path.resolve(__dirname, '..', '..');
-const partsDir = path.join(repoRoot, 'apps', 'sanitary-manager-2', 'approved-icon-v3');
-const expectedParts = ['part01.b64','part02.b64','part03.b64','part04.b64','part05.b64'];
-const expectedBytes = 49326;
-const expectedSha256 = 'b07c6c54e4f7c690a3a1454f586972f3a28298f284a916f93ecda2976e8ac7e3';
+const partsDir = path.join(repoRoot, 'apps', 'sanitary-manager-2', 'approved-icon-v4');
+const expectedParts = ['part01.b64','part02.b64','part03.b64','part04.b64'];
+const expectedBytes = 28904;
+const expectedSha256 = '4cefe840198dde91fddb6c5fe0fdece7d41a8bebfed415eb034752491cd7977c';
 
 for (const name of expectedParts) {
   const p = path.join(partsDir, name);
@@ -27,5 +27,5 @@ if (riffBytes !== expectedBytes) throw new Error(`WebP RIFF length mismatch: ${r
 const sha = crypto.createHash('sha256').update(bytes).digest('hex');
 if (sha !== expectedSha256) throw new Error(`Approved icon SHA-256 mismatch: ${sha}`);
 
-console.log(`PASS: approved Health Manager 2 icon transport is complete (${expectedParts.length} parts, ${expectedBytes} bytes, SHA-256 ${expectedSha256}).`);
-console.log('NOTE: this transport is a compression-only derivative of the user-approved 1024px artwork; release preparation must not regenerate or substitute artwork.');
+console.log(`PASS: approved Health Manager 2 icon transport v4 is complete (${expectedParts.length} parts, ${expectedBytes} bytes, SHA-256 ${expectedSha256}).`);
+console.log('NOTE: v4 is a compression-only derivative of the exact user-approved Drive PNG; release preparation must never redraw, relabel, or substitute the artwork.');
