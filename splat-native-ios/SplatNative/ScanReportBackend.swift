@@ -1,4 +1,5 @@
 import Foundation
+@preconcurrency import Supabase
 
 private struct ScanReportSubmitRPCParams: Encodable {
     let targetScanID: UUID
