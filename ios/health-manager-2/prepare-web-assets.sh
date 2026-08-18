@@ -7,8 +7,8 @@ WEB_SRC="$REPO_ROOT/apps/sanitary-manager-2"
 WEB_DST="$SCRIPT_DIR/HealthManager2/Web"
 ASSET_DIR="$SCRIPT_DIR/HealthManager2/Assets.xcassets/AppIcon.appiconset"
 APP_ICON_SOURCE="$WEB_SRC/approved-app-icon.png"
-ICON_PARTS_DIR="$WEB_SRC/approved-icon-v3"
-ICON_TRANSPORT_SHA256="b07c6c54e4f7c690a3a1454f586972f3a28298f284a916f93ecda2976e8ac7e3"
+ICON_PARTS_DIR="$WEB_SRC/approved-icon-v4"
+ICON_TRANSPORT_SHA256="4cefe840198dde91fddb6c5fe0fdece7d41a8bebfed415eb034752491cd7977c"
 
 # Every Apple upload needs a unique CFBundleVersion. Codemagic supplies a
 # monotonically increasing build number; apply it before XcodeGen runs.
@@ -45,27 +45,27 @@ for file in "${files[@]}"; do
   cp "$WEB_SRC/$file" "$WEB_DST/$file"
 done
 
-# The artwork was explicitly user-approved. Connector transport stores a
-# compression-only WebP derivative in five deterministic chunks. Reconstruct
-# only that verified payload; never use the old placeholder icon.svg or any
-# incomplete/abandoned transport.
+# The artwork was explicitly user-approved. v4 stores a compression-only WebP
+# derivative of the exact approved Drive PNG in four deterministic chunks.
+# Reconstruct only that verified payload; never redraw/relabel the icon and never
+# fall back to the historical placeholder icon.svg.
 if [ ! -f "$APP_ICON_SOURCE" ]; then
   test -d "$ICON_PARTS_DIR" || { echo "Missing approved AppIcon transport: $ICON_PARTS_DIR" >&2; exit 1; }
   PART_COUNT=$(find "$ICON_PARTS_DIR" -maxdepth 1 -type f -name 'part*.b64' | wc -l | tr -d ' ')
-  test "$PART_COUNT" = "5" || { echo "Approved AppIcon transport must contain exactly 5 parts, got $PART_COUNT" >&2; exit 1; }
+  test "$PART_COUNT" = "4" || { echo "Approved AppIcon transport must contain exactly 4 parts, got $PART_COUNT" >&2; exit 1; }
   TMP_WEBP="$(mktemp -t sm2-approved-icon.XXXXXX.webp)"
-  cat "$ICON_PARTS_DIR"/part01.b64 "$ICON_PARTS_DIR"/part02.b64 "$ICON_PARTS_DIR"/part03.b64 "$ICON_PARTS_DIR"/part04.b64 "$ICON_PARTS_DIR"/part05.b64 | tr -d '\r\n' | base64 --decode > "$TMP_WEBP"
+  cat "$ICON_PARTS_DIR"/part01.b64 "$ICON_PARTS_DIR"/part02.b64 "$ICON_PARTS_DIR"/part03.b64 "$ICON_PARTS_DIR"/part04.b64 | tr -d '\r\n' | base64 --decode > "$TMP_WEBP"
   python3 - "$TMP_WEBP" "$ICON_TRANSPORT_SHA256" <<'PY'
 from pathlib import Path
 import hashlib, struct, sys
 p=Path(sys.argv[1]); expected_sha=sys.argv[2]
 b=p.read_bytes()
-assert len(b)==49326, f'approved icon bytes {len(b)}/49326'
+assert len(b)==28904, f'approved icon bytes {len(b)}/28904'
 assert b[:4]==b'RIFF' and b[8:12]==b'WEBP', 'approved icon transport is not WebP RIFF'
 assert struct.unpack('<I', b[4:8])[0]+8 == len(b), 'approved icon RIFF length mismatch'
 sha=hashlib.sha256(b).hexdigest()
 assert sha==expected_sha, f'approved icon SHA mismatch: {sha}'
-print(f'PASS: approved icon transport verified ({len(b)} bytes, {sha})')
+print(f'PASS: approved icon transport v4 verified ({len(b)} bytes, {sha})')
 PY
   if command -v magick >/dev/null 2>&1; then
     magick "$TMP_WEBP" -alpha off "$APP_ICON_SOURCE"
@@ -82,8 +82,8 @@ test -f "$APP_ICON_SOURCE" || { echo "Missing approved AppIcon: $APP_ICON_SOURCE
 # intentionally omitted. All required learning assets are already inside the app.
 
 if command -v magick >/dev/null 2>&1; then
-  # Always derive release icons from the user-approved canonical artwork. Never
-  # regenerate the artwork from the old placeholder icon.svg.
+  # Always derive release icon sizes from the approved canonical artwork. Never
+  # regenerate the artwork itself from icon.svg.
   magick "$APP_ICON_SOURCE" -background '#f7f3ea' -alpha remove -alpha off -resize 1024x1024 "$ASSET_DIR/AppIcon-1024.png"
   cp "$ASSET_DIR/AppIcon-1024.png" "$ASSET_DIR/AppIcon.png"
 
