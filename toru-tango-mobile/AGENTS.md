@@ -13,7 +13,7 @@
 
 - Expo SDK 57 / React Native / TypeScript / Expo Routerを維持する。
 - Web版を正本に戻さず、iOS版はこのディレクトリで継続する。
-- OpenAI APIキーをアプリ、GitHub、`.env.example`へ書かない。
+- Gemini APIキーをアプリ、GitHub、`.env.example`へ書かない。
 - AI作問は `EXPO_PUBLIC_AI_API_URL` からCloudflare Workerへ接続する。
 - AI API失敗時の端末内簡易作問を削除しない。
 - 既存カードと履歴を破壊するデータ移行を行わない。

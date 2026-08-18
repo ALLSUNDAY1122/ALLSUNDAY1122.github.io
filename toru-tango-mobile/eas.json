@@ -6,21 +6,31 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "credentialsSource": "remote"
+      "credentialsSource": "remote",
+      "env": {
+        "EXPO_PUBLIC_AI_API_URL": "https://toru-tango-ai.kohei3615.workers.dev/generate"
+      }
     },
     "preview": {
       "distribution": "internal",
-      "credentialsSource": "remote"
+      "credentialsSource": "remote",
+      "env": {
+        "EXPO_PUBLIC_AI_API_URL": "https://toru-tango-ai.kohei3615.workers.dev/generate"
+      }
     },
     "production": {
       "distribution": "store",
       "credentialsSource": "remote",
-      "autoIncrement": true
+      "env": {
+        "EXPO_PUBLIC_AI_API_URL": "https://toru-tango-ai.kohei3615.workers.dev/generate"
+      }
     }
   },
   "submit": {
     "production": {
-      "ios": {}
+      "ios": {
+        "ascAppId": "6795968222"
+      }
     }
   }
 }

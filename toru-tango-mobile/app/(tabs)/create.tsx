@@ -2,6 +2,10 @@ import { useMemo, useState } from 'react';
 import { Alert, Image, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {
+  isNativeOcrAvailable,
+  recognizeText
+} from '@/modules/toru-tango-ocr';
+import {
   AppButton,
   ChoiceRow,
   commonStyles,
@@ -13,13 +17,18 @@ import {
 } from '@/src/components/ui';
 import { useAppStore } from '@/src/context/AppStore';
 import { generateAiQuestions } from '@/src/services/ai';
-import { generateLocalQuestions } from '@/src/services/localQuestionGenerator';
+import {
+  generateOcrAwareQuestions,
+  repairOcrText
+} from '@/src/services/ocrAwareQuestionGenerator';
 import type {
   Difficulty,
   QuestionCandidate,
   QuestionType
 } from '@/src/types';
 import { isSameCard } from '@/src/utils/data';
+
+type OcrRotation = 'auto' | 'left' | 'right';
 
 function parseLines(text: string): QuestionCandidate[] {
   return text
@@ -40,6 +49,17 @@ function formatLines(candidates: QuestionCandidate[]): string {
     .join('\n');
 }
 
+function formatSeconds(milliseconds: number): string {
+  if (!milliseconds) return '';
+  return `${(milliseconds / 1000).toFixed(1)}秒`;
+}
+
+function rotationValue(rotation: OcrRotation): number {
+  if (rotation === 'left') return 270;
+  if (rotation === 'right') return 90;
+  return -1;
+}
+
 export default function CreateScreen() {
   const { cards, addCard, addCards } = useAppStore();
   const [sourceText, setSourceText] = useState('');
@@ -53,47 +73,82 @@ export default function CreateScreen() {
   const [answer, setAnswer] = useState('');
   const [bulkText, setBulkText] = useState('');
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const [ocrText, setOcrText] = useState('');
+  const [ocrStatus, setOcrStatus] = useState('');
+  const [ocrRunning, setOcrRunning] = useState(false);
+  const [ocrRotation, setOcrRotation] = useState<OcrRotation>('auto');
 
   const candidateCount = useMemo(
     () => parseLines(generatedText).length,
     [generatedText]
   );
+  const nativeOcrAvailable = isNativeOcrAvailable();
 
-  const generate = async () => {
+  const validateSource = (): string | null => {
     const text = sourceText.trim();
     if (text.length < 20) {
       Alert.alert('教材本文が短すぎます', '20文字以上入力してください。');
-      return;
+      return null;
     }
+    const repaired = repairOcrText(text);
+    setSourceText(repaired);
+    return repaired;
+  };
+
+  const generateWithAi = async () => {
+    const text = validateSource();
+    if (!text) return;
 
     setGenerating(true);
-    setGenerateStatus('作問中…');
+    setGenerateStatus('OCR空白と罫線ノイズを整形し、Geminiで作問中…');
     try {
-      const candidates = await generateAiQuestions({
+      const result = await generateAiQuestions({
         text,
         count: Number(count),
         type,
         difficulty
       });
-      if (!candidates.length) throw new Error('AI_EMPTY');
-      setGeneratedText(formatLines(candidates));
-      setGenerateStatus(`AIで${candidates.length}問を作成しました。追加前に確認してください。`);
-    } catch {
-      const fallback = generateLocalQuestions(
-        text,
-        Number(count),
-        type,
-        difficulty
-      );
-      setGeneratedText(formatLines(fallback));
+      setGeneratedText(formatLines(result.questions));
+
+      const usage = result.usage.totalTokens
+        ? `入力${result.usage.inputTokens}・出力${result.usage.outputTokens}トークン`
+        : 'トークン数未取得';
+      const cleanup =
+        result.quality.duplicateCount || result.quality.rejectedCount
+          ? `重複${result.quality.duplicateCount}件・不適切${result.quality.rejectedCount}件を除外`
+          : 'サーバー除外0件';
+      const elapsed = formatSeconds(result.elapsedMs);
+
       setGenerateStatus(
-        fallback.length
-          ? `AIへ接続できなかったため、端末内で${fallback.length}問を作成しました。`
-          : '問題を作成できませんでした。文章を増やし、句点を入れてください。'
+        `OCR文字を整形後、${result.provider}（${result.model}）で${result.questions.length}枚作成。${cleanup}。${usage}${elapsed ? `・${elapsed}` : ''}。保存前に内容を確認してください。`
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '原因不明のエラー';
+      setGeneratedText('');
+      setGenerateStatus(
+        `AI作問に失敗しました：${message}。端末内簡易作問へは自動切替していません。`
       );
     } finally {
       setGenerating(false);
     }
+  };
+
+  const generateLocally = () => {
+    const text = validateSource();
+    if (!text) return;
+
+    const candidates = generateOcrAwareQuestions(
+      text,
+      Number(count),
+      type,
+      difficulty
+    );
+    setGeneratedText(formatLines(candidates));
+    setGenerateStatus(
+      candidates.length
+        ? `OCR空白と罫線ノイズを整形し、端末内で${candidates.length}枚作成しました。AIは使用していません。`
+        : 'OCR文字を整形しましたが、確認できる事実を抽出できませんでした。AI作問を使うか、認識結果を修正してください。'
+    );
   };
 
   const removeDuplicates = () => {
@@ -104,7 +159,7 @@ export default function CreateScreen() {
       accepted.push(candidate);
     }
     setGeneratedText(formatLines(accepted));
-    setGenerateStatus(`${accepted.length}問に整理しました。`);
+    setGenerateStatus(`${accepted.length}枚に整理しました。`);
   };
 
   const saveGenerated = () => {
@@ -143,26 +198,116 @@ export default function CreateScreen() {
     const result = camera
       ? await ImagePicker.launchCameraAsync({
           mediaTypes: ['images'],
-          quality: 0.8
+          quality: 1
         })
       : await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ['images'],
-          quality: 0.8
+          quality: 1
         });
 
-    if (!result.canceled) setImageUri(result.assets[0].uri);
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+      setOcrText('');
+      setOcrStatus('写真を選択しました。向きを確認して文字認識を実行してください。');
+    }
+  };
+
+  const runOcr = async () => {
+    if (!imageUri) {
+      Alert.alert('写真がありません', '先に教材を撮影するか写真を選んでください。');
+      return;
+    }
+    if (!nativeOcrAvailable) {
+      Alert.alert(
+        '開発ビルドが必要です',
+        'Apple Vision OCRはExpo Goでは動作しません。EAS開発ビルドまたは本番ビルドで確認してください。'
+      );
+      return;
+    }
+
+    setOcrRunning(true);
+    setOcrStatus('Apple Visionで日本語を認識しています…');
+    try {
+      const result = await recognizeText(imageUri, rotationValue(ocrRotation));
+      const repaired = repairOcrText(result.text);
+      if (repaired.length < 5) throw new Error('有効な文字を認識できませんでした。');
+      setOcrText(repaired);
+      setOcrStatus(
+        `認識完了。採用した向きは${result.rotation}度です。結果を修正して教材本文へ送ってください。`
+      );
+    } catch (error) {
+      setOcrText('');
+      setOcrStatus(
+        `文字認識に失敗しました：${error instanceof Error ? error.message : '原因不明のエラー'}`
+      );
+    } finally {
+      setOcrRunning(false);
+    }
+  };
+
+  const useOcrResult = () => {
+    const repaired = repairOcrText(ocrText);
+    if (repaired.length < 5) {
+      Alert.alert('認識結果がありません', '文字認識を実行するか、認識結果を修正してください。');
+      return;
+    }
+    setOcrText(repaired);
+    setSourceText(repaired);
+    setGenerateStatus('OCR結果を教材本文へ入れました。作問方法を選んでください。');
   };
 
   return (
     <Page>
       <Text style={commonStyles.title}>撮る単語帳</Text>
       <Text style={commonStyles.subtitle}>
-        教材から、15秒で答えられる一問一答を作ります。
+        教材から表裏の単語カードを作り、両面を読み上げて学習します。
       </Text>
+
+      <Section title="教材を撮る・文字を読む">
+        <View style={commonStyles.row}>
+          <AppButton label="撮影する" onPress={() => void selectPhoto(true)} />
+          <AppButton
+            label="写真を選ぶ"
+            variant="secondary"
+            onPress={() => void selectPhoto(false)}
+          />
+        </View>
+        {imageUri ? <Image source={{ uri: imageUri }} style={styles.preview} /> : null}
+        <Text style={styles.optionLabel}>文字の向き</Text>
+        <ChoiceRow
+          value={ocrRotation}
+          onChange={setOcrRotation}
+          options={[
+            { value: 'auto', label: '自動' },
+            { value: 'left', label: '左へ90°' },
+            { value: 'right', label: '右へ90°' }
+          ]}
+        />
+        <AppButton
+          label={ocrRunning ? '文字認識中…' : '写真から文字を読む'}
+          onPress={() => void runOcr()}
+          disabled={ocrRunning || !imageUri}
+        />
+        <MutedText>
+          正式iOS版はApple Visionを使用します。Expo Goではなく、EAS開発ビルドまたは本番ビルドで動作します。
+        </MutedText>
+        {ocrStatus ? <Text style={styles.status}>{ocrStatus}</Text> : null}
+        {ocrText ? (
+          <>
+            <Field
+              label="認識結果（編集可能）"
+              multiline
+              value={ocrText}
+              onChangeText={setOcrText}
+            />
+            <AppButton label="認識結果を教材本文へ" onPress={useOcrResult} />
+          </>
+        ) : null}
+      </Section>
 
       <Section title="教材から自動作問">
         <MutedText>
-          AI APIが未設定・通信失敗の場合は、端末内の簡易作問へ自動で切り替わります。
+          当面はGemini 3.5 Flash-Liteを使用します。無料枠には利用上限があり、教材本文は作問のためGoogleのAPIへ送信されます。OCR由来の文字間空白と罫線ノイズは作問前に自動整形します。
         </MutedText>
         <Field
           label="教材本文"
@@ -191,45 +336,53 @@ export default function CreateScreen() {
             { value: 'hard', label: '難しい' }
           ]}
         />
-        <Text style={styles.optionLabel}>作問数</Text>
+        <Text style={styles.optionLabel}>最大作成枚数</Text>
         <ChoiceRow
           value={count}
           onChange={setCount}
           options={['5', '10', '15', '20'].map((value) => ({
             value: value as '5' | '10' | '15' | '20',
-            label: `${value}問`
+            label: `${value}枚`
           }))}
         />
-        <AppButton
-          label={generating ? '作問中…' : '問題を作る'}
-          onPress={() => void generate()}
-          disabled={generating}
-        />
+        <View style={commonStyles.row}>
+          <AppButton
+            label={generating ? 'Geminiで作問中…' : 'AIで作問（Gemini）'}
+            onPress={() => void generateWithAi()}
+            disabled={generating}
+          />
+          <AppButton
+            label="端末内で簡易作問"
+            variant="secondary"
+            onPress={generateLocally}
+            disabled={generating}
+          />
+        </View>
         {generateStatus ? <Text style={styles.status}>{generateStatus}</Text> : null}
         {generatedText ? (
           <>
             <Field
-              label={`生成結果（${candidateCount}問・編集可能）`}
+              label={`生成結果（${candidateCount}枚・表｜裏・編集可能）`}
               multiline
               value={generatedText}
               onChangeText={setGeneratedText}
             />
             <View style={commonStyles.row}>
               <AppButton label="重複を除く" variant="secondary" onPress={removeDuplicates} />
-              <AppButton label="カードへ追加" onPress={saveGenerated} />
+              <AppButton label="単語帳へ追加" onPress={saveGenerated} />
             </View>
           </>
         ) : null}
       </Section>
 
-      <Section title="直接入力">
-        <Field label="問題" value={question} onChangeText={setQuestion} />
-        <Field label="答え" value={answer} onChangeText={setAnswer} />
-        <AppButton label="カードを追加" onPress={saveDirect} />
+      <Section title="1枚ずつ作る">
+        <Field label="表" value={question} onChangeText={setQuestion} />
+        <Field label="裏" value={answer} onChangeText={setAnswer} />
+        <AppButton label="単語帳へ追加" onPress={saveDirect} />
       </Section>
 
       <Section title="まとめて作成">
-        <MutedText>1行に「問題｜答え」の形式で入力してください。</MutedText>
+        <MutedText>1行に「表｜裏」の形式で入力してください。</MutedText>
         <Field
           label="カードデータ"
           multiline
@@ -238,21 +391,6 @@ export default function CreateScreen() {
           placeholder={'日本の首都は？｜東京\n日本で最も高い山は？｜富士山'}
         />
         <AppButton label="まとめて追加" onPress={saveBulk} />
-      </Section>
-
-      <Section title="教材写真">
-        <View style={commonStyles.row}>
-          <AppButton label="撮影する" onPress={() => void selectPhoto(true)} />
-          <AppButton
-            label="写真を選ぶ"
-            variant="secondary"
-            onPress={() => void selectPhoto(false)}
-          />
-        </View>
-        {imageUri ? <Image source={{ uri: imageUri }} style={styles.preview} /> : null}
-        <MutedText>
-          写真の撮影・選択まで実装済みです。OCR接続は次の工程で追加します。
-        </MutedText>
       </Section>
     </Page>
   );
@@ -267,5 +405,5 @@ const styles = StyleSheet.create({
     padding: 10,
     lineHeight: 20
   },
-  preview: { width: '100%', height: 240, borderRadius: 12, resizeMode: 'contain' }
+  preview: { width: '100%', height: 260, borderRadius: 12, resizeMode: 'contain' }
 });

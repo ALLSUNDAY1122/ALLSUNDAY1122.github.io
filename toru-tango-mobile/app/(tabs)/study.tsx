@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Speech from 'expo-speech';
 import {
   AppButton,
@@ -59,10 +59,10 @@ export default function StudyScreen() {
     setRevealed(false);
   };
 
-  const speak = () => {
+  const speakSide = (side: 'front' | 'back') => {
     if (!currentCard) return;
     Speech.stop();
-    Speech.speak(revealed ? currentCard.answer : currentCard.question, {
+    Speech.speak(side === 'front' ? currentCard.question : currentCard.answer, {
       language: 'ja-JP',
       rate: 0.95
     });
@@ -72,7 +72,7 @@ export default function StudyScreen() {
     <Page>
       <Text style={commonStyles.title}>学習</Text>
       <Text style={commonStyles.subtitle}>
-        「もう一度」のカードは同じセッションの末尾へ戻ります。
+        カードをタップして表と裏を切り替えます。「もう一度」は末尾へ戻ります。
       </Text>
 
       <Section title="学習条件">
@@ -88,7 +88,7 @@ export default function StudyScreen() {
         <AppButton label="この条件で開始" onPress={start} disabled={!cards.length} />
       </Section>
 
-      <Section title="問題">
+      <Section title="単語カード">
         <View style={styles.progressTrack}>
           <View style={[styles.progressBar, { width: `${progress * 100}%` }]} />
         </View>
@@ -105,32 +105,53 @@ export default function StudyScreen() {
           </View>
         ) : currentCard ? (
           <View style={styles.studyBox}>
-            <Text style={styles.side}>{revealed ? 'ANSWER' : 'QUESTION'}</Text>
-            <Text style={styles.studyText}>
-              {revealed ? currentCard.answer : currentCard.question}
-            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={revealed ? 'カードの裏面' : 'カードの表面'}
+              accessibilityHint="タップすると反対側を表示します"
+              onPress={() => setRevealed((current) => !current)}
+              style={({ pressed }) => [styles.flashCard, pressed && styles.cardPressed]}
+            >
+              <Text style={styles.side}>{revealed ? '裏' : '表'}</Text>
+              <Text style={styles.studyText}>
+                {revealed ? currentCard.answer : currentCard.question}
+              </Text>
+              <Text style={styles.flipHint}>タップして{revealed ? '表' : '裏'}へ</Text>
+            </Pressable>
+
             <Text style={styles.counter}>
               {position + 1} / {queue.length}
             </Text>
+
             <View style={commonStyles.row}>
-              <AppButton label="読み上げ" variant="secondary" onPress={speak} />
-              {!revealed ? (
-                <AppButton label="答えを見る" onPress={() => setRevealed(true)} />
-              ) : (
-                <>
-                  <AppButton
-                    label="もう一度"
-                    variant="danger"
-                    onPress={() => grade(false)}
-                  />
-                  <AppButton
-                    label="覚えた"
-                    variant="success"
-                    onPress={() => grade(true)}
-                  />
-                </>
-              )}
+              <AppButton
+                label="表を読む"
+                variant="secondary"
+                onPress={() => speakSide('front')}
+              />
+              <AppButton
+                label="裏を読む"
+                variant="secondary"
+                onPress={() => speakSide('back')}
+              />
             </View>
+
+            {!revealed ? (
+              <AppButton label="裏を見る" onPress={() => setRevealed(true)} />
+            ) : (
+              <View style={commonStyles.row}>
+                <AppButton
+                  label="もう一度"
+                  variant="danger"
+                  onPress={() => grade(false)}
+                />
+                <AppButton
+                  label="覚えた"
+                  variant="success"
+                  onPress={() => grade(true)}
+                />
+              </View>
+            )}
           </View>
         ) : (
           <EmptyState>対象カードがありません。</EmptyState>
@@ -148,15 +169,35 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   progressBar: { height: '100%', backgroundColor: colors.primary },
-  studyBox: { alignItems: 'center', gap: 16, paddingVertical: 28 },
-  side: { color: colors.muted, fontSize: 12, fontWeight: '800' },
+  studyBox: { alignItems: 'center', gap: 16, paddingVertical: 18 },
+  flashCard: {
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderColor: colors.primary,
+    borderRadius: 22,
+    borderWidth: 2,
+    justifyContent: 'center',
+    minHeight: 300,
+    paddingHorizontal: 22,
+    paddingVertical: 30,
+    width: '100%'
+  },
+  cardPressed: { opacity: 0.78 },
+  side: {
+    color: colors.primary,
+    fontSize: 13,
+    fontWeight: '900',
+    letterSpacing: 2
+  },
   studyText: {
     color: colors.text,
     fontSize: 24,
     fontWeight: '800',
     lineHeight: 36,
+    marginVertical: 24,
     textAlign: 'center'
   },
+  flipHint: { color: colors.muted, fontSize: 12 },
   counter: { color: colors.muted },
   completed: { color: colors.text, fontSize: 26, fontWeight: '800' }
 });

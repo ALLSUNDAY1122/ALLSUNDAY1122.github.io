@@ -18,7 +18,7 @@ Expo / React Native / TypeScriptで作成したiPhoneアプリ版です。
 - JSONバックアップと復元
 - カメラ撮影・写真選択と権限拒否処理
 
-写真OCRは未接続です。初回TestFlightの必須範囲から除外する場合は、Claude QAとユーザー承認で確定します。
+写真OCRはApple VisionのローカルExpo Moduleで実装済みです。Expo Goでは動作しないため、EAS development buildまたは本番ビルドで確認します。
 
 ## 必要環境
 
@@ -49,7 +49,7 @@ EXPO_PUBLIC_AI_API_URL=https://YOUR-WORKER.workers.dev
 
 `/generate` まで含めたURLも利用できます。
 
-OpenAI APIキーをアプリ、GitHub、`.env`へ保存してはいけません。APIキーはCloudflare WorkerのSecretだけに登録します。
+Gemini APIキーをアプリ、GitHub、`.env`へ保存してはいけません。APIキーはCloudflare Workerの`GEMINI_API_KEY` Secretだけに登録します。既定モデルは無料枠対象の`gemini-3.5-flash-lite`です。無料枠には利用上限があり、無料枠のデータ取扱いを公開前に再確認します。
 
 ## iPhoneでの確認
 
@@ -62,10 +62,11 @@ npx eas-cli@latest build --platform ios --profile preview
 
 ## 標準の担当順
 
-1. ChatGPT: 仕様、実装、検査、開発文書
-2. Claude: 動作確認、UI/UX改善、P0・P1解消
-3. ユーザー: リリース候補承認
-4. Codex: EAS Build、EAS Submit、TestFlight、申請
+1. ChatGPT: 仕様、Safari価値検証、既存実装監査
+2. Codex: Gemini API、Worker公開、実通信、EAS development build
+3. Claude: 動作確認、UI/UX改善、P0・P1解消
+4. ユーザー: リリース候補承認
+5. Codex: EAS production build、EAS Submit、TestFlight、申請
 
 Codexへ渡した後は、原則として機能追加や大幅なUI変更を行いません。
 

@@ -4,11 +4,15 @@ on:
   push:
     paths:
       - 'toru-tango-mobile/**'
+      - 'toru-tango/generator-v2.js'
+      - 'toru-tango/tests/**'
       - 'toru-tango/backend/**'
       - '.github/workflows/toru-tango-mobile-ci.yml'
   pull_request:
     paths:
       - 'toru-tango-mobile/**'
+      - 'toru-tango/generator-v2.js'
+      - 'toru-tango/tests/**'
       - 'toru-tango/backend/**'
       - '.github/workflows/toru-tango-mobile-ci.yml'
 
@@ -33,8 +37,81 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Mobile checks
-        run: npm run check
+      - name: TypeScript
+        run: |
+          mkdir -p ci-logs
+          set -o pipefail
+          npm run typecheck 2>&1 | tee ci-logs/typecheck.log
 
-      - name: Worker syntax
-        run: node --check ../toru-tango/backend/src/index.js
+      - name: ESLint
+        run: |
+          mkdir -p ci-logs
+          set -o pipefail
+          npm run lint 2>&1 | tee ci-logs/lint.log
+
+      - name: Expo Doctor
+        run: |
+          mkdir -p ci-logs
+          set -o pipefail
+          npm run doctor 2>&1 | tee ci-logs/doctor.log
+
+      - name: Expo config
+        run: |
+          mkdir -p ci-logs
+          set -o pipefail
+          npx expo config --type public 2>&1 | tee ci-logs/expo-config.log
+
+      - name: Web semantic generator regressions
+        run: |
+          mkdir -p ci-logs
+          set -o pipefail
+          node --test ../toru-tango/tests/generator-v2.test.cjs 2>&1 | tee ci-logs/generator-tests.log
+
+      - name: Mobile OCR-aware generator regressions
+        run: |
+          mkdir -p ci-logs
+          set -o pipefail
+          rm -rf .tmp-regression
+          npx tsc -p tsconfig.regression.json 2>&1 | tee ci-logs/mobile-generator-compile.log
+          node --test tests/mobile-generator.test.cjs 2>&1 | tee ci-logs/mobile-generator-tests.log
+          rm -rf .tmp-regression
+
+      - name: Native OCR module and Expo autolinking
+        run: |
+          mkdir -p ci-logs
+          set -o pipefail
+          test -f modules/toru-tango-ocr/expo-module.config.json
+          test -f modules/toru-tango-ocr/index.ts
+          test -f modules/toru-tango-ocr/ios/ToruTangoOcrModule.swift
+          grep -q 'ToruTangoOcrModule' modules/toru-tango-ocr/expo-module.config.json
+          grep -q 'Name("ToruTangoOcr")' modules/toru-tango-ocr/ios/ToruTangoOcrModule.swift
+          grep -q 'VNRecognizeTextRequest' modules/toru-tango-ocr/ios/ToruTangoOcrModule.swift
+          npx expo-modules-autolinking resolve --platform apple 2>&1 | tee ci-logs/autolinking-apple.log
+          grep -q 'ToruTangoOcrModule' ci-logs/autolinking-apple.log
+          echo 'Apple Vision OCR module structure and autolinking: OK' | tee ci-logs/native-ocr.log
+
+      - name: Expo iOS prebuild
+        run: |
+          mkdir -p ci-logs
+          set -o pipefail
+          rm -rf ios
+          CI=1 npx expo prebuild --platform ios --no-install --clean 2>&1 | tee ci-logs/ios-prebuild.log
+          test -f ios/Podfile
+          find ios -name '*.xcodeproj' -print -quit | grep -q .
+          rm -rf ios
+
+      - name: Worker syntax and API tests
+        run: |
+          mkdir -p ci-logs
+          set -o pipefail
+          node --check ../toru-tango/backend/src/index.js 2>&1 | tee ci-logs/worker.log
+          node --test ../toru-tango/backend/tests/worker.test.js 2>&1 | tee ci-logs/worker-tests.log
+
+      - name: Upload validation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-validation-logs
+          path: toru-tango-mobile/ci-logs
+          if-no-files-found: error
+          retention-days: 7

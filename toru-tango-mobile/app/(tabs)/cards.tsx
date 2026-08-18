@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
+import * as Speech from 'expo-speech';
 import {
   AppButton,
   ChoiceRow,
@@ -48,6 +49,11 @@ export default function CardsScreen() {
     setEditingId(null);
   };
 
+  const speak = (text: string) => {
+    Speech.stop();
+    Speech.speak(text, { language: 'ja-JP', rate: 0.95 });
+  };
+
   const confirmDelete = (id: string) => {
     Alert.alert('カードを削除', 'このカードと関連する学習履歴を削除します。', [
       { text: 'キャンセル', style: 'cancel' },
@@ -73,7 +79,9 @@ export default function CardsScreen() {
   return (
     <Page>
       <Text style={commonStyles.title}>単語帳</Text>
-      <Text style={commonStyles.subtitle}>{cards.length}枚保存されています。</Text>
+      <Text style={commonStyles.subtitle}>
+        {cards.length}枚保存されています。各カードは表と裏の組み合わせです。
+      </Text>
 
       <Section
         title="カード一覧"
@@ -100,8 +108,8 @@ export default function CardsScreen() {
             <View key={card.id} style={styles.cardRow}>
               {editingId === card.id ? (
                 <>
-                  <Field label="問題" value={question} onChangeText={setQuestion} />
-                  <Field label="答え" value={answer} onChangeText={setAnswer} />
+                  <Field label="表" value={question} onChangeText={setQuestion} />
+                  <Field label="裏" value={answer} onChangeText={setAnswer} />
                   <View style={commonStyles.row}>
                     <AppButton label="保存" variant="success" onPress={saveEdit} />
                     <AppButton
@@ -113,12 +121,28 @@ export default function CardsScreen() {
                 </>
               ) : (
                 <>
-                  <Text style={styles.question}>{card.question}</Text>
-                  <Text style={styles.answer}>{card.answer}</Text>
+                  <View style={styles.face}>
+                    <Text style={styles.faceLabel}>表</Text>
+                    <Text style={styles.question}>{card.question}</Text>
+                  </View>
+                  <View style={styles.face}>
+                    <Text style={styles.faceLabel}>裏</Text>
+                    <Text style={styles.answer}>{card.answer}</Text>
+                  </View>
                   <Text style={styles.stats}>
                     正解 {card.correct}回・もう一度 {card.wrong}回
                   </Text>
                   <View style={commonStyles.row}>
+                    <AppButton
+                      label="表を読む"
+                      variant="secondary"
+                      onPress={() => speak(card.question)}
+                    />
+                    <AppButton
+                      label="裏を読む"
+                      variant="secondary"
+                      onPress={() => speak(card.answer)}
+                    />
                     <AppButton
                       label="編集"
                       variant="secondary"
@@ -144,10 +168,24 @@ const styles = StyleSheet.create({
   cardRow: {
     borderTopColor: colors.border,
     borderTopWidth: 1,
-    gap: 8,
+    gap: 10,
     paddingVertical: 14
   },
+  face: {
+    backgroundColor: colors.background,
+    borderColor: colors.border,
+    borderRadius: 14,
+    borderWidth: 1,
+    gap: 6,
+    padding: 13
+  },
+  faceLabel: {
+    color: colors.primary,
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 1.5
+  },
   question: { color: colors.text, fontSize: 16, fontWeight: '800', lineHeight: 23 },
-  answer: { color: colors.muted, fontSize: 15, lineHeight: 22 },
+  answer: { color: colors.text, fontSize: 15, lineHeight: 22 },
   stats: { color: colors.muted, fontSize: 12 }
 });

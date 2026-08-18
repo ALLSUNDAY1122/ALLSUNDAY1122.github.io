@@ -1,7 +1,9 @@
 import { Tabs } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '@/src/components/ui';
 
 export default function TabLayout() {
+  const insets = useSafeAreaInsets();
   return (
     <Tabs
       screenOptions={{
@@ -9,7 +11,11 @@ export default function TabLayout() {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.muted,
         tabBarLabelStyle: { fontSize: 12, fontWeight: '700' },
-        tabBarStyle: { height: 62, paddingBottom: 8, paddingTop: 6 }
+        tabBarStyle: {
+          height: 54 + insets.bottom,
+          paddingBottom: Math.max(insets.bottom, 8),
+          paddingTop: 6
+        }
       }}
     >
       <Tabs.Screen name="create" options={{ title: '作る' }} />

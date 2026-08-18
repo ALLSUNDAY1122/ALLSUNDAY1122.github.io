@@ -1,0 +1,51 @@
+name: Deploy Toru Tango AI Worker
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: toru-tango/backend
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      GEMINI_API_KEY: ${{ secrets.TORU_TANGO_GEMINI_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+
+      - name: Validate required secrets
+        shell: bash
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || (echo 'CLOUDFLARE_API_TOKEN is missing' && exit 1)
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || (echo 'CLOUDFLARE_ACCOUNT_ID is missing' && exit 1)
+          test -n "$GEMINI_API_KEY" || (echo 'TORU_TANGO_GEMINI_API_KEY is missing' && exit 1)
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Register Gemini secret
+        shell: bash
+        run: printf '%s' "$GEMINI_API_KEY" | npx wrangler secret put GEMINI_API_KEY
+
+      - name: Deploy Worker
+        shell: bash
+        run: npx wrangler deploy | tee deploy.log
+
+      - name: Upload deployment log
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-ai-deploy-log
+          path: toru-tango/backend/deploy.log
+          if-no-files-found: error

@@ -1,8 +1,8 @@
 # 撮る単語帳 App Storeプライバシー回答案
 
-更新日: 2026-07-26
+更新日: 2026-07-29
 
-この文書はApp Store Connectの「Appのプライバシー」回答案である。最終回答は、公開時のアプリ、Cloudflare Worker、OpenAI契約・設定と一致することをCodexとユーザーが確認する。
+この文書はApp Store Connectの「Appのプライバシー」回答案である。最終回答は、公開時のアプリ、Cloudflare Worker、Google Gemini APIの契約・設定と一致することをCodexとユーザーが確認する。
 
 ## 基本方針
 
@@ -28,12 +28,13 @@
 取扱い:
 
 - 利用者がAI作問を実行した場合のみ送信
-- Cloudflare Workerを経由してOpenAI APIで処理
+- Cloudflare Workerを経由してGoogle Gemini Developer APIで処理
 - 利用目的は「Appの機能」
 - ユーザーの氏名やアカウントとはリンクしない設計
 - トラッキングには使用しない
 - 広告やマーケティングには使用しない
-- OpenAIリクエストは `store: false` を指定
+- Gemini API無料枠では、Googleの料金表上、入力・出力が製品改善に使われる
+- 無料枠のデータ取扱いと利用規約を公開直前に再確認する
 
 App Store Connect回答案:
 
@@ -77,13 +78,14 @@ App Store Connect回答案:
 ## 外部事業者
 
 - Cloudflare: API中継
-- OpenAI: 教材本文からの問題生成
+- Google: Gemini APIによる教材本文からの問題生成
 - Apple: App Store、TestFlight、iOSの標準機能
 
 ## 提出前確認
 
 - [ ] 本番Workerでログへ教材本文を出力していない
-- [ ] `store: false` が本番コードにある
+- [ ] Gemini API無料枠の最新データ取扱いを確認した
+- [ ] プライバシーポリシーにGoogle Geminiへの教材本文送信を明記した
 - [ ] アクセス解析SDKを追加していない
 - [ ] 写真OCRを追加した場合、写真送信の有無を反映した
 - [ ] クラッシュ解析を追加した場合、診断データ回答を更新した

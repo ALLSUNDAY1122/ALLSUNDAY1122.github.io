@@ -30,4 +30,15 @@ jobs:
       - name: JavaScript syntax
         run: node --check toru-tango/generator-v2.js && node --check toru-tango/sw.js
       - name: Regression test
-        run: node toru-tango/generator-v2.test.cjs
+        run: |
+          mkdir -p toru-tango/ci-logs
+          set -o pipefail
+          node toru-tango/generator-v2.test.cjs 2>&1 | tee toru-tango/ci-logs/generator-regression.log
+      - name: Upload generator diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-generator-diagnostics
+          path: toru-tango/ci-logs
+          if-no-files-found: error
+          retention-days: 7
