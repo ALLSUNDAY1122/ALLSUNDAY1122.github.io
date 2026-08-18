@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json,re,subprocess
 from pathlib import Path
+from pypdf import PdfReader
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'audit'/'raw-official.json'
 TMP=Path('/tmp/ls16-official'); TMP.mkdir(exist_ok=True)
@@ -17,9 +18,12 @@ def download(url,name):
     return p
 
 def text(pdf):
-    out=pdf.with_suffix('.txt')
-    subprocess.run(['pdftotext','-layout','-nopgbrk',str(pdf),str(out)],check=True)
-    return out.read_text(encoding='utf-8',errors='replace')
+    reader=PdfReader(str(pdf))
+    parts=[]
+    for page in reader.pages:
+        try: parts.append(page.extract_text(extraction_mode='layout') or '')
+        except TypeError: parts.append(page.extract_text() or '')
+    return '\n'.join(parts)
 
 def parse_answers(t):
     ans={}
