@@ -6,7 +6,7 @@ import { parseScanLabBoundingBox } from '../supabase/functions/scanlab-public/bb
 
 const publicApi = readFileSync(new URL('../supabase/functions/scanlab-public/index.ts', import.meta.url), 'utf8');
 const trustedPublish = readFileSync(new URL('../SplatNative/ScanLabBackend+TrustedPublish.swift', import.meta.url), 'utf8');
-const safety = readFileSync(new URL('../supabase/migrations/20260818084300_scanlab_d2_w19_safety.sql', import.meta.url), 'utf8');
+const safety = readFileSync(new URL('../supabase/migrations/20260818115839_scanlab_d2_w19_safety.sql', import.meta.url), 'utf8');
 const visibility = readFileSync(new URL('../supabase/functions/scanlab-visibility/index.ts', import.meta.url), 'utf8');
 const viewer = readFileSync(new URL('../viewer/viewer.js', import.meta.url), 'utf8');
 
@@ -26,7 +26,8 @@ assert.equal(versions.get('20260817214331'), '20260817214331_scanlab_d2_block_in
 assert.equal(versions.get('20260818000539'), '20260818000539_scanlab_d2_delete_lifecycle_marker_v1.sql');
 assert.equal(versions.get('20260818000622'), '20260818000622_scanlab_d2_delete_publish_guard_v1.sql');
 assert.equal(versions.get('20260818002528'), '20260818002528_scanlab_d2_delete_upload_guard.sql');
-assert.equal(versions.get('20260818201300'), '20260818201300_scanlab_d2_profile_v9.sql');
+assert.equal(versions.get('20260818115839'), '20260818115839_scanlab_d2_w19_safety.sql');
+assert.equal(versions.get('20260818115853'), '20260818115853_scanlab_d2_profile_v9.sql');
 
 const legacy = 'https://allsunday1122.github.io/splat-native-ios/viewer/?token=22222222-2222-4222-8222-222222222222';
 const parsedLegacy = parseShareKey(legacy);
