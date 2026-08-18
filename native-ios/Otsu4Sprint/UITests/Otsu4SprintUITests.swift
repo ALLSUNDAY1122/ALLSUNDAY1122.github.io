@@ -36,6 +36,30 @@ final class Otsu4SprintUITests: XCTestCase {
         assertVisibleContentFitsHorizontally(in: app)
     }
 
+    func testEachSubjectRowIsFullyTappableAndStartsFreeStudyFlow() throws {
+        let app = makeApp()
+
+        for subject in ["法令", "物理・化学", "性質・消火"] {
+            app.launch()
+            XCTAssertTrue(app.staticTexts["危険物 乙4"].waitForExistence(timeout: 20))
+
+            let button = app.buttons["subject-\(subject)"]
+            XCTAssertTrue(button.waitForExistence(timeout: 5), "\(subject)の分野別ボタンが存在する")
+            if !button.isHittable {
+                app.scrollViews.firstMatch.swipeUp()
+            }
+            XCTAssertTrue(button.isHittable, "\(subject)の分野別ボタンがタップ可能")
+            XCTAssertGreaterThanOrEqual(button.frame.height, 44, "\(subject)のタップ領域は44pt以上")
+
+            button.coordinate(withNormalizedOffset: CGVector(dx: 0.08, dy: 0.5)).tap()
+            XCTAssertTrue(
+                app.buttons["わからない"].waitForExistence(timeout: 10),
+                "\(subject)をタップすると無料版でも学習画面へ遷移する"
+            )
+            app.terminate()
+        }
+    }
+
     func testHistoryMatchesGoldenMasterStructure() throws {
         let app = makeApp()
         app.launch()
