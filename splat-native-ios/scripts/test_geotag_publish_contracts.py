@@ -18,9 +18,10 @@ checks = {
     "public action supports Discover without location": 'selectedLocation == nil ? "Discoverへ公開" : "Map・Discoverへ公開"' in view,
     "policy strips non-public location": "guard visibility == .public, let location else { return nil }" in policy,
     "policy allows public without geotag": "guard let location else { return true }" in policy,
-    "edge allows public without geotag": "const hasLat = scan.latitude != null;" in publish_function and "const hasLon = scan.longitude != null;" in publish_function,
+    "edge derives independent latitude/longitude presence": "const hasLat = scan.latitude != null;" in publish_function and "const hasLon = scan.longitude != null;" in publish_function,
     "edge rejects partial public geotag": "hasLat !== hasLon" in publish_function,
     "edge requires place attestation only when geotagged": "(hasLat && !scan.public_place_confirmed)" in publish_function,
+    "edge requires privacy and rights for public": "!scan.privacy_confirmed || !scan.rights_confirmed" in publish_function,
     "DB enforces public-only location": "scanlab_location_public_only" in migration,
     "DB enforces coordinate pair integrity": "scanlab_geotag_pair_integrity" in migration,
 }
