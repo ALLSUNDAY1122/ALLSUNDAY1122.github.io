@@ -29,8 +29,8 @@ jobs:
         with:
           ref: agent/approved-icons-it-hm1
           fetch-depth: 0
-      - name: Install ImageMagick
-        run: sudo apt-get update -qq && sudo apt-get install -y imagemagick
+      - name: Install image tooling
+        run: sudo apt-get update -qq && sudo apt-get install -y imagemagick webp
       - name: Materialize exact approved artwork into AppIcon sizes
         run: bash ios/health-manager-1/prepare-approved-icon.sh
       - name: Commit generated AppIcon assets
