@@ -2,6 +2,9 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const os = require('os');
+const crypto = require('crypto');
+const { spawnSync } = require('child_process');
 
 const IOS_DIR = __dirname;
 const REPO_ROOT = path.resolve(IOS_DIR, '..', '..');
@@ -97,3 +100,43 @@ const outPath = path.join(IOS_DIR, 'release-questions.json');
 fs.writeFileSync(outPath, JSON.stringify(out, null, 2) + '\n');
 console.log(`Exported ${out.length} audited questions to ${outPath}`);
 console.log('PASS: 10 rounds / 30 groups x 10 questions, 5 choices each, answer positions 1-5 each exactly twice per group.');
+
+// Verify that the interrupted text transport still represents the exact user-approved
+// Second-class icon artwork closely enough to use as a lossless-source recovery path.
+// This does not trust the filenames or commit messages: it validates the actual decoded
+// WebP container and a robust 8x8 grayscale fingerprint sampled from the approved PNG.
+const iconPartsDir = path.join(WEB, 'approved-icon');
+if (fs.existsSync(iconPartsDir)) {
+  const parts = fs.readdirSync(iconPartsDir).filter(n => /^part\d+\.b64$/.test(n)).sort();
+  if (parts.length) {
+    const encoded = parts.map(n => fs.readFileSync(path.join(iconPartsDir, n), 'utf8').trim()).join('');
+    const iconBytes = Buffer.from(encoded, 'base64');
+    const tmp = path.join(os.tmpdir(), 'sm2-approved-transfer.webp');
+    fs.writeFileSync(tmp, iconBytes);
+    const sha = crypto.createHash('sha256').update(iconBytes).digest('hex');
+    let expectedBytes = null;
+    if (iconBytes.length >= 12 && iconBytes.subarray(0,4).toString() === 'RIFF' && iconBytes.subarray(8,12).toString() === 'WEBP') {
+      expectedBytes = iconBytes.readUInt32LE(4) + 8;
+    }
+    console.log(`ICON_TRANSFER parts=${parts.length} actual_bytes=${iconBytes.length} riff_expected_bytes=${expectedBytes} sha256=${sha}`);
+    if (!expectedBytes || expectedBytes !== iconBytes.length) {
+      throw new Error(`Approved icon transfer is incomplete: actual=${iconBytes.length} expected=${expectedBytes}`);
+    }
+
+    const expectedGray8 = [38,62,53,80,137,64,41,36,59,51,55,138,194,122,89,48,57,76,104,131,101,208,192,50,47,83,121,133,126,196,187,82,164,226,214,224,229,210,229,171,255,255,155,183,177,152,255,255,252,173,159,161,148,140,177,253,142,236,211,199,202,210,235,142];
+    const candidates = [
+      ['magick', [tmp, '-resize', '8x8!', '-colorspace', 'Gray', '-depth', '8', 'gray:-']],
+      ['convert', [tmp, '-resize', '8x8!', '-colorspace', 'Gray', '-depth', '8', 'gray:-']]
+    ];
+    let gray = null;
+    for (const [cmd,args] of candidates) {
+      const r = spawnSync(cmd, args, { encoding: null, maxBuffer: 1024 * 1024 });
+      if (r.status === 0 && r.stdout && r.stdout.length === 64) { gray = r.stdout; break; }
+    }
+    if (!gray) throw new Error('Could not decode approved icon transfer with ImageMagick');
+    const mae = expectedGray8.reduce((sum,v,i) => sum + Math.abs(v - gray[i]), 0) / 64;
+    console.log(`ICON_TRANSFER perceptual_mae=${mae.toFixed(3)} expected_max=4.000`);
+    if (mae > 4) throw new Error(`Approved icon transfer does not match approved artwork (MAE ${mae.toFixed(3)})`);
+    console.log('PASS: approved Health Manager 2 icon artwork fingerprint matches the user-approved icon.');
+  }
+}
