@@ -30,7 +30,7 @@ jobs:
           ref: agent/approved-icons-it-hm1
           fetch-depth: 0
       - name: Install image tooling
-        run: sudo apt-get update -qq && sudo apt-get install -y imagemagick webp
+        run: sudo apt-get update -qq && sudo apt-get install -y webp python3-pil
       - name: Materialize exact approved artwork into AppIcon sizes
         run: bash ios/health-manager-1/prepare-approved-icon.sh
       - name: Commit generated AppIcon assets
