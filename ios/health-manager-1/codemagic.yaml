@@ -19,6 +19,24 @@ workflows:
           brew install xcodegen
       - name: Generate Xcode project
         script: |
+          BUILD_NUM="${CM_BUILD_NUMBER:-2026081801}"
+          python3 - "$BUILD_NUM" <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          path = Path('project.yml')
+          text = path.read_text(encoding='utf-8')
+          updated, count = re.subn(
+              r'CURRENT_PROJECT_VERSION:\s*\d+',
+              f'CURRENT_PROJECT_VERSION: {sys.argv[1]}',
+              text,
+              count=1,
+          )
+          if count != 1:
+              raise SystemExit('CURRENT_PROJECT_VERSION replacement failed')
+          path.write_text(updated, encoding='utf-8')
+          PY
           xcodegen generate
       - name: Apply signing profiles
         script: |
@@ -26,6 +44,37 @@ workflows:
       - name: Build IPA
         script: |
           xcode-project build-ipa --project "$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+      - name: Verify packaged learning content
+        script: |
+          IPA_PATH="$(find build/ios/ipa -type f -name '*.ipa' -print -quit)"
+          if [ -z "$IPA_PATH" ]; then
+            echo "HealthManager1 IPA not found"
+            exit 1
+          fi
+
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          INDEX_PATH="$APP_DIR/index.html"
+
+          if [ ! -f "$INDEX_PATH" ]; then
+            echo "index.html is missing from the packaged app"
+            find "$APP_DIR" -maxdepth 2 -type f -print | sort
+            exit 1
+          fi
+
+          INDEX_BYTES="$(wc -c < "$INDEX_PATH" | tr -d ' ')"
+          if [ "$INDEX_BYTES" -lt 100000 ]; then
+            echo "index.html is unexpectedly small: ${INDEX_BYTES} bytes"
+            exit 1
+          fi
+
+          if ! grep -q "第一種衛生管理者" "$INDEX_PATH"; then
+            echo "index.html does not contain the expected app marker"
+            exit 1
+          fi
+
+          echo "Packaged learning content verified: ${INDEX_BYTES} bytes"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
