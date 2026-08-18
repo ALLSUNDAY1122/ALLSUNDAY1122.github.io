@@ -1,5 +1,12 @@
 name: LS16 OT question bank build and audit
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'sagyo-ryohoshi-sprint/tools/build_question_bank.py'
+      - 'sagyo-ryohoshi-sprint/audit/exam-config.json'
+      - 'automation/learning-sprint-question-pipeline/validate_questions_v2.py'
+      - '.github/workflows/ls16-question-bank-audit.yml'
   push:
     branches: [learning-sprint-16-sagyo-dispatcher]
     paths:
@@ -15,7 +22,9 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
       - run: python -m pip install --disable-pip-version-check requests beautifulsoup4 pypdf
