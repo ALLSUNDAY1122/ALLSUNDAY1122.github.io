@@ -333,7 +333,12 @@ final class ScanLabBackend: ObservableObject {
     }
     func deleteAccount() async throws {
         let response: ScanLabDeleteAccountResponse = try await client.functions.invoke("scanlab-delete-account", options: FunctionInvokeOptions(region: .apSoutheast1, body: ["confirm": true], timeoutInterval: 30))
-        guard response.deleted else { throw ScanLabBackendError.invalidServerResponse }; try? await client.auth.signOut()
+        guard response.deleted else { throw ScanLabBackendError.invalidServerResponse }
+        isAuthenticated = false
+        currentUserEmail = nil
+        profile = nil
+        ownerScans = []
+        try? await client.auth.signOut()
     }
     func shareURL(for scan: ScanLabOwnerScan) -> URL? {
         guard scan.status == "published", scan.moderationStatus == "approved" else { return nil }
