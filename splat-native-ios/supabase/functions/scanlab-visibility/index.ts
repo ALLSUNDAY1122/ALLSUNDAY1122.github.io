@@ -3,7 +3,12 @@ import { buildScanLabVisibilityChange } from "./visibility_contract.mjs";
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json; charset=utf-8" } });
 const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false, autoRefreshToken: false } });
 function bearer(req: Request) { const header = req.headers.get("authorization") ?? ""; return header.toLowerCase().startsWith("bearer ") ? header.slice(7) : null; }
-function shareUrl(id: string, visibility: string, shareToken: string) { const base = "https://allsunday1122.github.io/splat-native-ios/viewer/"; if (visibility === "public") return `${base}?id=${encodeURIComponent(id)}`; if (visibility === "unlisted") return `${base}?token=${encodeURIComponent(shareToken)}`; return null; }
+function shareUrl(id: string, visibility: string, shareToken: string) {
+  const base = "https://allsunday1122.github.io/splat-native-ios/viewer/";
+  if (visibility === "public") return `${base}?id=${encodeURIComponent(id)}`;
+  if (visibility === "unlisted") return `${base}#token=${encodeURIComponent(shareToken)}`;
+  return null;
+}
 type VisibilityBody = { scanId?: string; visibility?: string; latitude?: number | null; longitude?: number | null; locationLabel?: string | null; contentConfirmed?: boolean; publicPlaceConfirmed?: boolean; privacyConfirmed?: boolean; rightsConfirmed?: boolean; };
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
