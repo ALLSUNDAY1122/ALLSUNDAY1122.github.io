@@ -4,7 +4,7 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 fn = (root / "supabase/functions/scanlab-delete-scan/index.ts").read_text()
 migrations = "\n".join(p.read_text() for p in sorted((root / "supabase/migrations").glob("*.sql")))
-upload_guard = (root / "supabase/migrations/20260818092500_scanlab_d2_delete_upload_guard.sql").read_text()
+upload_guard = (root / "supabase/migrations/20260818002528_scanlab_d2_delete_upload_guard.sql").read_text()
 public = (root / "supabase/functions/scanlab-public/index.ts").read_text()
 
 required = [
