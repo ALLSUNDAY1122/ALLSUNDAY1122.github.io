@@ -1,0 +1,60 @@
+name: LS16 MVP HTTP Check
+
+on:
+  push:
+    branches:
+      - learning-sprint-16-sagyo-dispatcher
+    paths:
+      - '.github/workflows/ls16-mvp-http-check.yml'
+      - 'previews/sagyo-ryohoshi-sprint/**'
+      - 'sagyo-ryohoshi-sprint/mvp/**'
+      - 'sagyo-ryohoshi-sprint/tests/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-http:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate source contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          q=json.loads(Path('sagyo-ryohoshi-sprint/mvp/questions.json').read_text())
+          assert len(q)==16
+          assert len({x['subject'] for x in q})==8
+          html=Path('previews/sagyo-ryohoshi-sprint/index.html').read_text()
+          assert '作業療法士国家試験' in html
+          assert 'ここだけ覚える' in html
+          print('SOURCE_CONTRACT_OK')
+          PY
+      - name: Verify public preview HTTP
+        run: |
+          set -euo pipefail
+          PREVIEW='https://allsunday1122.github.io/previews/sagyo-ryohoshi-sprint/'
+          DATA='https://allsunday1122.github.io/sagyo-ryohoshi-sprint/mvp/questions.json'
+          for i in $(seq 1 18); do
+            code=$(curl -L -sS -o /tmp/preview.html -w '%{http_code}' "$PREVIEW" || true)
+            if [ "$code" = '200' ] && grep -q '作業療法士国家試験' /tmp/preview.html; then
+              echo "PREVIEW_HTTP_200 attempt=$i"
+              break
+            fi
+            if [ "$i" = '18' ]; then
+              echo "preview unavailable: HTTP $code" >&2
+              exit 1
+            fi
+            sleep 5
+          done
+          code=$(curl -L -sS -o /tmp/questions.json -w '%{http_code}' "$DATA")
+          test "$code" = '200'
+          python - <<'PY'
+          import json
+          q=json.load(open('/tmp/questions.json'))
+          assert len(q)==16
+          assert any(x['id']=='OT60-A053' for x in q)
+          print('DATA_HTTP_200_16Q')
+          PY
