@@ -25,6 +25,10 @@ async function signed(path: string | null, expiresIn = 600) {
   return data.signedUrl;
 }
 
+function publicPreviewEndpoint(scanId: string) {
+  return `https://gybchnyqlqwmajwkhsly.supabase.co/functions/v1/scanlab-public?mode=preview&id=${encodeURIComponent(scanId)}`;
+}
+
 async function decorate(scan: Record<string, any>) {
   const [{ data: profile }, modelUrl, previewUrl, { count: likeCount }] = await Promise.all([
     supabase.from("scanlab_profiles").select("handle,display_name,avatar_path").eq("id", scan.owner_id).maybeSingle(),
@@ -47,6 +51,7 @@ async function decorate(scan: Record<string, any>) {
     likeCount: likeCount ?? 0,
     modelUrl,
     previewUrl,
+    previewImageUrl: scan.visibility === "public" && scan.preview_path ? publicPreviewEndpoint(scan.id) : null,
   };
 }
 
@@ -67,6 +72,32 @@ Deno.serve(async (req) => {
 
   const url = new URL(req.url);
   const mode = url.searchParams.get("mode") ?? "feed";
+
+  if (mode === "preview") {
+    const id = url.searchParams.get("id");
+    if (!id || !/^[0-9a-f-]{36}$/i.test(id)) return json({ error: "invalid_id" }, 400);
+    const { data: scan, error } = await supabase
+      .from("scanlab_scans")
+      .select("id,visibility,status,moderation_status,preview_path")
+      .eq("id", id)
+      .eq("visibility", "public")
+      .eq("status", "published")
+      .eq("moderation_status", "approved")
+      .maybeSingle();
+    if (error || !scan?.preview_path) return new Response("Not Found", { status: 404, headers: cors });
+    const { data: file, error: downloadError } = await supabase.storage.from("scanlab-assets").download(scan.preview_path);
+    if (downloadError || !file) return new Response("Not Found", { status: 404, headers: cors });
+    const contentType = file.type === "image/png" ? "image/png" : file.type === "image/jpeg" ? "image/jpeg" : null;
+    if (!contentType) return new Response("Unsupported preview", { status: 415, headers: cors });
+    return new Response(file, {
+      status: 200,
+      headers: {
+        ...cors,
+        "Cache-Control": "public, max-age=300, s-maxage=600",
+        "Content-Type": contentType,
+      },
+    });
+  }
 
   if (mode === "feed") {
     const limit = Math.min(Math.max(Number(url.searchParams.get("limit") ?? 24) || 24, 1), 40);
