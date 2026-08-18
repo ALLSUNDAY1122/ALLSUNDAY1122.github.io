@@ -27,11 +27,15 @@ revoke all on public.scanlab_abuse_events from anon, authenticated;
 
 create or replace function scanlab_private.enforce_abuse_limit(p_actor uuid, p_action text, p_target uuid default null)
 returns void language plpgsql security definer set search_path = '' as $$
-declare recent_count integer; max_count integer; window_size interval;
+declare recent_count integer; max_count integer; window_size interval; caller_uid uuid;
 begin
-  if p_actor is null or p_actor <> (select auth.uid()) then
+  caller_uid := (select auth.uid());
+  if p_actor is null or (caller_uid is not null and p_actor <> caller_uid) then
     raise exception using errcode='42501', message='abuse guard actor mismatch';
   end if;
+  -- Authenticated writes must bind p_actor to auth.uid(). A null auth.uid() is reserved
+  -- for the service-role Edge Function path, which already possesses bypass-RLS authority;
+  -- this helper is not directly executable by public/anon/authenticated roles.
   if p_action='publish' then max_count:=10; window_size:=interval '1 hour';
   elsif p_action='report' then max_count:=20; window_size:=interval '1 hour';
   else raise exception using errcode='22023', message='unsupported abuse guard action'; end if;
