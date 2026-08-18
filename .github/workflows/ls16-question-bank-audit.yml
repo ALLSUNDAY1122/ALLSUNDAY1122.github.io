@@ -1,0 +1,41 @@
+name: LS16 OT question bank build and audit
+on:
+  push:
+    branches: [learning-sprint-16-sagyo-dispatcher]
+    paths:
+      - 'sagyo-ryohoshi-sprint/tools/build_question_bank.py'
+      - 'sagyo-ryohoshi-sprint/audit/exam-config.json'
+      - 'automation/learning-sprint-question-pipeline/validate_questions_v2.py'
+      - '.github/workflows/ls16-question-bank-audit.yml'
+permissions:
+  contents: write
+jobs:
+  build-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install --disable-pip-version-check requests beautifulsoup4 pypdf
+      - name: Build canonical 600-question bank from MHLW official text-only pool
+        run: python sagyo-ryohoshi-sprint/tools/build_question_bank.py
+      - name: Validate v2 contract
+        run: >-
+          python automation/learning-sprint-question-pipeline/validate_questions_v2.py
+          --config sagyo-ryohoshi-sprint/audit/exam-config.json
+          sagyo-ryohoshi-sprint/data/questions-r1.json
+          sagyo-ryohoshi-sprint/data/questions-r2.json
+          sagyo-ryohoshi-sprint/data/questions-r3.json
+      - name: Commit canonical output and audit evidence
+        run: |
+          git config user.name 'LS16 Question Bank Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add sagyo-ryohoshi-sprint/data/questions-r1.json sagyo-ryohoshi-sprint/data/questions-r2.json sagyo-ryohoshi-sprint/data/questions-r3.json sagyo-ryohoshi-sprint/audit/bank-audit.json
+          if git diff --cached --quiet; then
+            echo 'CANONICAL_NO_CHANGE'
+          else
+            git commit -m 'Build audited LS16 OT 600-question bank [skip ci]'
+            git push origin HEAD:learning-sprint-16-sagyo-dispatcher
+          fi
