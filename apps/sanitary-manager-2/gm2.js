@@ -1,13 +1,14 @@
 function home(){
   const d=dailyNow(),goal=S.dailyGoal,w=Object.keys(S.weak).length,rate=S.total?Math.round(S.correct/S.total*100):0,days=Object.values(S.daily).filter(x=>x.a>0).length;
+  const mockSetCount=EXAMSETS.length*SUBJECTS.length;
   let resume='';
   if(S.resume&&S.resume.ids?.length&&S.resume.idx<S.resume.ids.length) resume=`<button class="resume" onclick="resumeSession()"><strong>続きから再開</strong><small>${esc(S.resume.title)}　${S.resume.idx+1}問目から</small></button>`;
   const html=topBlock('学びスプリント','第二種衛生管理者','今日も1問、力に変える。')+countdownHTML()+
   `<div class="today">${ringHTML(d.a,goal)}<div class="todaycopy"><b>今日の学習</b><p>${todayMessage(d.a,d.c,goal)}</p><span class="streakchip">連続 ${streakDays()}日</span></div></div>${resume}
   <div class="sec"><button class="primarycta" onclick="startDaily()"><span><strong>今日のスプリント</strong><small>${goal}問・${minutes(goal)}分ほど</small></span><span class="arr">→</span></button></div>
   <div class="sec"><button class="action" onclick="startWeak()"><span class="aicon weak">${ICON.weak}</span><span><strong>苦手をつぶす</strong><small>間違えた問題を3連続正解で卒業</small></span><span class="pill ${w?'hot':''}">${w}</span></button></div>
-  <div class="sec"><button class="action" onclick="mockScreen()"><span class="aicon mock">${ICON.mock}</span><span><strong>模擬試験</strong><small>3回分・科目別に9セット</small></span><span class="pill">9</span></button></div>
-  <div class="sec"><div class="sectitle"><h2>分野から解く</h2><span>全90問</span></div><div class="subjectlist">${SUBJECTS.map(subjectCard).join('')}</div></div>
+  <div class="sec"><button class="action" onclick="mockScreen()"><span class="aicon mock">${ICON.mock}</span><span><strong>模擬試験</strong><small>5年分相当・${mockSetCount}セット</small></span><span class="pill">${mockSetCount}</span></button></div>
+  <div class="sec"><div class="sectitle"><h2>分野から解く</h2><span>全${QUESTIONS.length}問</span></div><div class="subjectlist">${SUBJECTS.map(subjectCard).join('')}</div></div>
   <div class="sec"><div class="sectitle"><h2>これまで</h2></div><div class="homestats"><div class="hstat"><b>${S.total}</b><small>のべ回答</small></div><div class="hstat"><b>${rate}%</b><small>正答率</small></div><div class="hstat"><b>${days}</b><small>学習日数</small></div></div></div>`+nav('home');
   setApp(html,true);
 }
@@ -30,11 +31,12 @@ function mockCard(set,sub){
   return `<button class="mockcard" onclick="startMock('${set}','${sub}')"><span class="pill ${score===null?'':score>=6?'good':'bad'}">${score===null?'未受験':`前回 ${score}/10`}</span><div class="mockring" style="--pct:${pct}%"></div><b>${sub}</b><small>10問・解答${pairAnswers(set,sub)}回</small></button>`;
 }
 function mockScreen(){
+  const mockSetCount=EXAMSETS.length*SUBJECTS.length;
   let groups=EXAMSETS.map(set=>{
     const done=SUBJECTS.filter(s=>S.mockResults[pairKey(set,s)]).length;
-    return `<div class="mockgroup"><div class="mocktitle"><b>${set}</b><span>完答 ${done}/3 科目</span></div><div class="mockgrid">${SUBJECTS.map(s=>mockCard(set,s)).join('')}</div></div>`;
+    return `<div class="mockgroup"><div class="mocktitle"><b>${set}</b><span>完答 ${done}/${SUBJECTS.length} 科目</span></div><div class="mockgrid">${SUBJECTS.map(s=>mockCard(set,s)).join('')}</div></div>`;
   }).join('');
-  setApp(topBlock('模擬試験','本番形式','3回分を科目ごとに。全9セットを10問ずつ解けます。')+`<div class="sec">${groups}</div>`+nav('mock'));
+  setApp(topBlock('模擬試験','本番形式',`5年分相当。全${mockSetCount}セットを10問ずつ解けます。`)+`<div class="sec">${groups}</div>`+nav('mock'));
 }
 function startMock(set,sub){begin(pairKey(set,sub),QUESTIONS.filter(q=>q.examSet===set&&q.subject===sub),{mode:'mock',examSet:set,subject:sub})}
 
