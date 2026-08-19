@@ -183,7 +183,7 @@ export default function CardsScreen() {
         { text: 'キャンセル', style: 'cancel' },
         {
           text: '追加',
-          onPress: (value) => {
+          onPress: (value?: string) => {
             const name = value?.trim() ?? '';
             if (!addDeck(name)) {
               Alert.alert('追加できません', 'フォルダ名の未入力または同名フォルダを確認してください。');
