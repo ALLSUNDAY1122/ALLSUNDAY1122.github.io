@@ -1,4 +1,25 @@
 {
-  "request_id": "app2-003-yoru-version-build-fix-retry-20260819-1232",
-  "mode": "version_build_fix"
+  "request_id": "app2-003-yoru-final-readback-20260819-1234",
+  "requests": [
+    {
+      "label": "appstore-version",
+      "path": "/v1/appStoreVersions/812cd84c-3efb-407b-a04c-f9fb1b5554e6"
+    },
+    {
+      "label": "appstore-version-build",
+      "path": "/v1/appStoreVersions/812cd84c-3efb-407b-a04c-f9fb1b5554e6/relationships/build"
+    },
+    {
+      "label": "appstore-review-detail",
+      "path": "/v1/appStoreReviewDetails/630be79a-3c94-4c4b-8882-6644d165152e"
+    },
+    {
+      "label": "beta-review-build3",
+      "path": "/v1/betaAppReviewSubmissions?filter[build]=23521541-e269-4baf-800d-7830b94c36a1&limit=20"
+    },
+    {
+      "label": "review-submissions",
+      "path": "/v1/apps/6794137637/reviewSubmissions?limit=20"
+    }
+  ]
 }
