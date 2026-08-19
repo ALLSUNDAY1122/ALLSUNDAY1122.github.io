@@ -1,0 +1,67 @@
+name: Network Specialist Canonical AppIcon Bootstrap
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/network-specialist-icon-bootstrap.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize-canonical-icon:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Download exact canonical Drive source
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEST='network-specialist-sprint/ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+          mkdir -p "$(dirname "$DEST")"
+          URL='https://drive.google.com/uc?export=download&id=1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8'
+          curl --fail --location --retry 2 --connect-timeout 20 --max-time 120 "$URL" -o /tmp/network-specialist-appicon.png
+          test "$(stat -c%s /tmp/network-specialist-appicon.png)" = '678310'
+          echo '5b53032021cea4a3e71e737c1a48e1aa8d6495b3647cb770b0e5d917bb0d8729  /tmp/network-specialist-appicon.png' | sha256sum --check --strict
+          python - <<'PY'
+          import struct
+          from pathlib import Path
+          p=Path('/tmp/network-specialist-appicon.png')
+          d=p.read_bytes()
+          assert d[:8] == b'\x89PNG\r\n\x1a\n' and d[12:16] == b'IHDR'
+          w,h=struct.unpack('>II',d[16:24])
+          assert (w,h)==(1024,1024)
+          assert d[24]==8 and d[25]==2
+          print('PASS canonical PNG metadata')
+          PY
+          cp /tmp/network-specialist-appicon.png "$DEST"
+
+      - name: Validate release gates
+        run: |
+          cd network-specialist-sprint
+          python3 scripts/build_native_questions.py
+          python3 scripts/materialize_appicon.py
+          python3 scripts/validate_release.py
+          python3 scripts/validate_native_release.py --require-icon --require-iap
+
+      - name: Commit canonical AppIcon
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEST='network-specialist-sprint/ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$DEST"
+          if git diff --cached --quiet; then
+            echo 'Canonical AppIcon already present; nothing to commit.'
+            exit 0
+          fi
+          git commit -m 'Materialize network specialist canonical AppIcon'
+          git push origin HEAD:main
