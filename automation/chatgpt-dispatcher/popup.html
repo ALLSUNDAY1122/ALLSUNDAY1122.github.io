@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Queue Dispatcher</title>
 <style>
-body{font-family:system-ui,sans-serif;width:360px;margin:0;padding:14px;color:#111}h1{font-size:16px;margin:0 0 12px}#version{font-size:11px;font-weight:400;color:#666}label{display:block;font-size:12px;margin:10px 0 4px}input,select,button{box-sizing:border-box;width:100%;font:inherit}input,select{padding:7px}button{margin-top:8px;padding:8px;cursor:pointer}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.inline{display:flex;gap:8px;align-items:center}.inline input[type=checkbox]{width:auto}#status{margin:10px 0;padding:8px;background:#f3f3f3;font-size:12px;white-space:pre-wrap;max-height:160px;overflow:auto}#workers{font-size:12px;margin-top:8px}.worker{display:flex;justify-content:space-between;gap:8px;margin:5px 0}.worker button{width:auto;margin:0;padding:3px 7px}.note{font-size:11px;color:#555;margin-top:10px;line-height:1.45}
+body{font-family:system-ui,sans-serif;width:380px;margin:0;padding:14px;color:#111}h1{font-size:16px;margin:0 0 12px}#version{font-size:11px;font-weight:400;color:#666}label{display:block;font-size:12px;margin:10px 0 4px}input,select,button{box-sizing:border-box;width:100%;font:inherit}input,select{padding:7px}button{margin-top:8px;padding:8px;cursor:pointer}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.inline{display:flex;gap:8px;align-items:center}.inline input[type=checkbox]{width:auto}#status{margin:10px 0;padding:8px;background:#f3f3f3;font-size:12px;white-space:pre-wrap;max-height:160px;overflow:auto}#workers{font-size:12px;margin-top:8px}.worker{display:flex;justify-content:space-between;gap:8px;margin:5px 0}.worker button{width:auto;margin:0;padding:3px 7px}.note{font-size:11px;color:#555;margin-top:10px;line-height:1.45}
 </style></head><body>
 <h1>ChatGPT Queue Dispatcher <span id="version"></span></h1>
 <div class="inline"><input id="enabled" type="checkbox"><label for="enabled" style="margin:0">自動配車を有効化</label></div>
 <label for="queueUrl">GitHub Queue URL</label><input id="queueUrl" type="url">
-<div class="row"><div><label for="pollMinutes">確認間隔（分）</label><select id="pollMinutes"><option value="1">1</option><option value="2">2</option><option value="5">5</option></select></div><div><label for="maxActive">同時Task数</label><select id="maxActive"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div></div>
-<label for="workerLabel">現在のChatGPTタブをWorker登録</label><div class="row"><input id="workerLabel" value="Worker-1"><select id="workerRole"><option value="ANY">ANY</option><option value="RESEARCH">RESEARCH</option><option value="BUILD">BUILD</option><option value="QA">QA</option></select></div>
+<div class="row"><div><label for="pollMinutes">確認間隔（分）</label><select id="pollMinutes"><option value="1">1</option><option value="2">2</option><option value="5">5</option></select></div><div><label for="maxActive">同時Task数</label><select id="maxActive"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="5">5</option><option value="8">8</option><option value="13">13</option></select></div></div>
+<label for="workerLabel">現在のChatGPTタブをWorker登録</label><div class="row"><input id="workerLabel" value="Worker-1"><input id="workerRole" value="ANY" placeholder="例: ITPASS"></div>
 <button id="registerWorker">現在のタブを登録</button><div id="workers"></div><div id="status"></div>
 <div class="row"><button id="save">保存</button><button id="dispatchNow">今すぐ確認</button></div>
 <button id="diagnose">Worker診断（送信しない）</button><button id="clearLeases">詰まり解除（leaseのみ）</button>
-<div class="note">v0.1.2では送信失敗時にcomposer/busy/send状態を表示します。診断ボタンはChatGPTへ文字を送りません。</div>
+<div class="note">アプリ開発②では各タブをQueueのworker_roleと同じRoleで登録します。13セッション同時起動も選択できますが、最初は3〜5並列を推奨します。ChatGPTの回答本文は収集しません。</div>
 <script src="popup.js"></script></body></html>
