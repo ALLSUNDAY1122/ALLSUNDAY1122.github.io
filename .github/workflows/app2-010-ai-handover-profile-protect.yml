@@ -1,0 +1,52 @@
+name: APP2-010 Protect AI Handover Signing Profile
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'automation/app2-010-ai-handover-protect-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  protect:
+    runs-on: macos-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Create or verify replacement AI Handover App Store profile
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/app2_010_protect_ai_handover_profile.py
+      - name: Persist sanitized protection result
+        run: |
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          data=json.loads(Path('asc-ai-handover-protect-result.json').read_text(encoding='utf-8'))
+          rid=data['request_id']
+          if not re.fullmatch(r'app2-010-ai-handover-protect-[A-Za-z0-9._-]{1,60}',rid): raise SystemExit('bad request id')
+          out=Path('automation/asc-results')/f'{rid}.json'; out.parent.mkdir(parents=True,exist_ok=True)
+          payload=json.dumps(data,ensure_ascii=False,indent=2)+'\n'; out.write_text(payload,encoding='utf-8')
+          Path('/tmp/protect-result.json').write_text(payload,encoding='utf-8'); Path('/tmp/protect-path.txt').write_text(str(out),encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          P="$(cat /tmp/protect-path.txt)"
+          git add "$P"
+          git commit -m "Persist APP2-010 AI Handover protection" || exit 0
+          if git push; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p "$(dirname "$P")"
+          cp /tmp/protect-result.json "$P"
+          git add "$P"
+          git commit -m "Persist APP2-010 AI Handover protection" || exit 0
+          git push origin HEAD:main
