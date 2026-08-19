@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """APP2-009 compatibility runner for App Store Connect versioned IAP metadata APIs."""
 import copy
-from datetime import date
+from datetime import date, timedelta
 import app2_009_kangoshi_iap_bootstrap as bootstrap
 
 _original_req = bootstrap.req
@@ -62,7 +62,7 @@ def req(token,path,method="GET",payload=None):
         elif path=="/v1/inAppPurchasePriceSchedules":
             payload=_normalize_inline_price_payload(payload)
         elif path=="/v1/subscriptionPrices":
-            payload=copy.deepcopy(payload); payload.setdefault("data",{}).setdefault("attributes",{}).setdefault("startDate",date.today().isoformat())
+            payload=copy.deepcopy(payload); payload.setdefault("data",{}).setdefault("attributes",{}).setdefault("startDate",(date.today()+timedelta(days=1)).isoformat())
     return _original_req(token,path,method,payload)
 
 bootstrap.req=req
