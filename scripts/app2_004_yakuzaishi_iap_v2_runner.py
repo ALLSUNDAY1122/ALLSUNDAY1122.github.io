@@ -3,7 +3,6 @@
 
 import copy
 import json
-from datetime import date, timedelta
 
 import app2_004_yakuzaishi_iap_bootstrap as bootstrap
 
@@ -116,9 +115,7 @@ def request(token, path, method="GET", payload=None):
 
         elif path == "/v1/subscriptionPrices":
             payload = copy.deepcopy(payload)
-            payload.setdefault("data", {}).setdefault("attributes", {}).setdefault(
-                "startDate", (date.today() + timedelta(days=1)).isoformat()
-            )
+            payload.setdefault("data", {}).setdefault("attributes", {})["startDate"] = None
             point = (
                 payload.get("data", {})
                 .get("relationships", {})
