@@ -17,7 +17,7 @@ on:
       - '.github/workflows/toru-tango-mobile-ci.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate:
@@ -36,6 +36,19 @@ jobs:
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+
+      - name: Sync generated lockfile on Toru Tango feature branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feature/on-device-ai-card-generation'
+        run: |
+          if git diff --quiet -- package-lock.json; then
+            echo 'package-lock.json is already synchronized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package-lock.json
+          git commit -m 'build(toru-tango): sync Expo SDK lockfile'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: TypeScript
         run: |
