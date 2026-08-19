@@ -1,12 +1,7 @@
 {
-  "request_id": "hm2-create-subscription-group-20260819-1704",
-  "action": "write",
-  "expected_app_id": "6799751657",
-  "expected_bundle_id": "jp.allsunday1122.healthmanager2",
-  "operations": [
-    {
-      "type": "create_subscription_group",
-      "reference_name": "第二種衛生管理者 プレミアム"
-    }
+  "request_id": "hm2-iap-readback-20260819-1705",
+  "requests": [
+    {"label":"subscription-groups","path":"/v1/apps/6799751657/subscriptionGroups?limit=50"},
+    {"label":"in-app-purchases","path":"/v1/apps/6799751657/inAppPurchasesV2?limit=50"}
   ]
 }
