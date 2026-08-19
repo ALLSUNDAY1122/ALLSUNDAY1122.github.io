@@ -2,6 +2,7 @@
 """APP2-004 compatibility runner for App Store Connect API 4.4.1+ metadata versions."""
 
 import copy
+from datetime import date
 
 import app2_004_yakuzaishi_iap_bootstrap as bootstrap
 
@@ -111,6 +112,12 @@ def request(token, path, method="GET", payload=None):
 
         elif path == "/v1/inAppPurchasePriceSchedules":
             payload = _normalize_inline_price_payload(payload)
+
+        elif path == "/v1/subscriptionPrices":
+            payload = copy.deepcopy(payload)
+            payload.setdefault("data", {}).setdefault("attributes", {}).setdefault(
+                "startDate", date.today().isoformat()
+            )
 
     return _original_request(token, path, method, payload)
 
