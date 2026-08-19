@@ -112,4 +112,32 @@ final class ScanColdResumePersistenceTests: XCTestCase {
         )
         XCTAssertTrue(store.hasWorldMap(projectURL: projectURL))
     }
+
+    func testWorldMapArchiveStoreAtomicallyReplacesExistingArchive() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let target = root.appendingPathComponent("worldmap.arexperience")
+        try Data([0x01]).write(to: target, options: .atomic)
+
+        let replacement = Data([0x10, 0x20, 0x30, 0x40])
+        try ScanWorldMapArchiveStore.write(replacement, to: target)
+
+        XCTAssertEqual(try Data(contentsOf: target), replacement)
+    }
+
+    func testWorldMapArchiveStoreRejectsEmptyArchiveWithoutReplacingExistingData() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let target = root.appendingPathComponent("worldmap.arexperience")
+        let existing = Data([0xAA, 0xBB])
+        try existing.write(to: target, options: .atomic)
+
+        XCTAssertThrowsError(try ScanWorldMapArchiveStore.write(Data(), to: target))
+        XCTAssertEqual(try Data(contentsOf: target), existing)
+    }
+
 }

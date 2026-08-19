@@ -116,6 +116,17 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let bytesPerRow: Int
     }
 
+    private enum WorldMapArchiveResult: Sendable {
+        case data(Data)
+        case failed(String)
+    }
+
+    private enum WorldMapPersistenceOutcome: Sendable {
+        case saved
+        case reusedExisting(String)
+        case failed(String)
+    }
+
     @Published var phase: Phase = .ready
     @Published var acceptedFrames = 0
     @Published var targetFrames = 72
@@ -131,6 +142,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     @Published var activeCaptureSeconds: Double = 0
     @Published var ignoreLiDAR = false
     @Published var depthCaptureActive = false
+    @Published private(set) var isWorldMapPersistencePending = false
 
     let coverageSectorTotal = 12
     let minimumCoverageSectors = 8
@@ -168,6 +180,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private var systemPausedCapture = false
     private var pendingResumeWorldMap: ARWorldMap?
     private var requiresWorldMapForResume = false
+    private var periodicWorldMapPersistenceTask: Task<Void, Never>?
+    private var worldMapPersistenceGeneration = 0
+    private var worldMapPersistenceWarning: String?
+    private var userPauseRequested = false
 
     var lidarControlAvailable: Bool {
         ARWorldTrackingConfiguration.supportsFrameSemantics(.sceneDepth)
@@ -178,7 +194,8 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         featurePointCount >= 64 &&
         coverageSatisfied &&
         !isWritingFrame &&
-        !trackingNeedsRecovery
+        !trackingNeedsRecovery &&
+        !isWorldMapPersistencePending
     }
 
     var canRetryGeneration: Bool { datasetReady && projectURL != nil }
@@ -186,6 +203,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     var progressText: String { "撮影カバー \(coverageSectorCount) / \(coverageSectorTotal)" }
 
     var captureBand: String {
+        if isWorldMapPersistencePending { return "位置を保存中" }
         if isCapturePaused { return "一時停止中" }
         if trackingNeedsRecovery { return "位置を復旧中" }
         if coverageSectorCount < 4 { return "ゆっくり位置を変える" }
@@ -195,6 +213,9 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     var captureQualityText: String {
+        if isWorldMapPersistencePending {
+            return "撮影位置を安全に保存しています。完了するまでこの画面を維持します"
+        }
         if isCapturePaused {
             return "撮影を一時停止しています。再開すると同じスキャンへ続けて追加できます"
         }
@@ -307,20 +328,58 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     func pauseCapture() {
-        guard phase == .capturing, !isCapturePaused else { return }
+        guard phase == .capturing,
+              !isCapturePaused,
+              !isWorldMapPersistencePending,
+              let projectURL else { return }
+
         closeActiveCaptureTiming()
         isCapturePaused = true
+        userPauseRequested = true
         systemPausedCapture = false
-        persistWorldMapIfPossible()
         persistCaptureStateOrFail(stage: .capturing)
         guard phase == .capturing else { return }
-        session?.pause()
-        trackingMessage = "撮影を一時停止しました"
-        UIApplication.shared.isIdleTimerDisabled = false
-    }
 
+        isWorldMapPersistencePending = true
+        trackingMessage = "一時停止位置を安全に保存しています"
+        let generation = worldMapPersistenceGeneration
+
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            let outcome = await self.persistWorldMapForTransition(
+                projectURL: projectURL,
+                generation: generation
+            )
+            guard self.worldMapPersistenceGeneration == generation,
+                  self.projectURL?.standardizedFileURL == projectURL.standardizedFileURL else { return }
+
+            self.isWorldMapPersistencePending = false
+            guard self.phase == .capturing else { return }
+
+            switch outcome {
+            case .saved:
+                self.worldMapPersistenceWarning = nil
+                self.session?.pause()
+                self.trackingMessage = "撮影位置を保存して一時停止しました"
+                UIApplication.shared.isIdleTimerDisabled = false
+            case .reusedExisting(let warning):
+                self.worldMapPersistenceWarning = warning
+                self.session?.pause()
+                self.trackingMessage = "最新位置の保存には失敗しましたが、直前の位置復元データを保持して一時停止しました"
+                UIApplication.shared.isIdleTimerDisabled = false
+            case .failed(let message):
+                self.worldMapPersistenceWarning = message
+                self.userPauseRequested = false
+                self.systemPausedCapture = false
+                self.isCapturePaused = false
+                self.beginActiveCaptureTiming()
+                self.trackingMessage = "位置復元情報を保存できないため一時停止を完了できませんでした。空き容量を確認し、アプリを閉じずに撮影を続けてください: \(message)"
+                UIApplication.shared.isIdleTimerDisabled = true
+            }
+        }
+    }
     func resumeCapture() {
-        guard let session else { return }
+        guard let session, !isWorldMapPersistencePending else { return }
         guard phase == .captured || (phase == .capturing && isCapturePaused) else { return }
 
         if requiresWorldMapForResume && pendingResumeWorldMap == nil {
@@ -336,6 +395,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             phase = .capturing
         }
         isCapturePaused = false
+        userPauseRequested = false
         systemPausedCapture = false
         trackingNeedsRecovery = true
         stableTrackingFrames = 0
@@ -355,39 +415,75 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         session.run(config, options: options)
         pendingResumeWorldMap = nil
         requiresWorldMapForResume = false
+        worldMapPersistenceWarning = nil
         UIApplication.shared.isIdleTimerDisabled = true
     }
-
     func finishCapture() {
-        guard phase == .capturing, canFinishCapture else { return }
+        guard phase == .capturing,
+              canFinishCapture,
+              !isWorldMapPersistencePending,
+              let projectURL else { return }
+
         closeActiveCaptureTiming()
-        persistWorldMapIfPossible()
-        session?.pause()
-        isCapturePaused = false
+        isCapturePaused = true
+        userPauseRequested = true
         do {
-            // S2 prepares a colored/sky-aware points3D.ply immediately before training.
-            // Writing the old XYZ-only PLY here would suppress that higher-quality initializer.
+            // A captured project must be independently processable before the UI can leave capture.
             try writeTransformsJSON()
             try writeCaptureManifest()
             try persistProjectSnapshot(stage: .captured)
-            if let projectURL, let first = captured.first {
+            if let first = captured.first {
                 try? projectStore.setThumbnail(
                     from: projectURL.appendingPathComponent(first.filePath),
                     projectURL: projectURL
                 )
             }
             datasetReady = true
-            phase = .captured
-            trackingMessage = "必要な撮影情報がそろいました"
-            UIApplication.shared.isIdleTimerDisabled = false
         } catch {
+            isCapturePaused = false
+            userPauseRequested = false
             datasetReady = false
             phase = .failed("撮影データを準備できませんでした: \(error.localizedDescription)")
             UIApplication.shared.isIdleTimerDisabled = false
+            return
+        }
+
+        isWorldMapPersistencePending = true
+        trackingMessage = "撮影位置を保存して生成準備を確定しています"
+        let generation = worldMapPersistenceGeneration
+
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            let outcome = await self.persistWorldMapForTransition(
+                projectURL: projectURL,
+                generation: generation
+            )
+            guard self.worldMapPersistenceGeneration == generation,
+                  self.projectURL?.standardizedFileURL == projectURL.standardizedFileURL else { return }
+
+            self.isWorldMapPersistencePending = false
+            guard self.phase == .capturing else { return }
+            self.session?.pause()
+            self.isCapturePaused = false
+            self.userPauseRequested = false
+            self.phase = .captured
+            UIApplication.shared.isIdleTimerDisabled = false
+
+            switch outcome {
+            case .saved:
+                self.worldMapPersistenceWarning = nil
+                self.trackingMessage = "必要な撮影情報と位置復元データを安全に保存しました"
+            case .reusedExisting(let warning):
+                self.worldMapPersistenceWarning = warning
+                self.trackingMessage = "撮影データは保存済みです。位置復元には直前の保存データを使用します"
+            case .failed(let message):
+                self.worldMapPersistenceWarning = message
+                self.trackingMessage = "撮影データは保存済みで3D生成できます。位置復元情報だけ保存できなかったため、再起動後は撮影を追加できません"
+            }
         }
     }
-
     func discardAndReset() {
+        invalidateWorldMapPersistence()
         closeActiveCaptureTiming()
         session?.pause()
         if let projectURL { try? projectStore.moveToTrash(projectURL: projectURL) }
@@ -422,6 +518,8 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         stableTrackingFrames = 0
         pendingResumeWorldMap = nil
         requiresWorldMapForResume = false
+        userPauseRequested = false
+        worldMapPersistenceWarning = nil
         phase = .ready
         UIApplication.shared.isIdleTimerDisabled = false
     }
@@ -799,8 +897,8 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 if self.acceptedFrames == 1, let projectURL = self.projectURL {
                     try? self.projectStore.setThumbnail(from: fileURL, projectURL: projectURL)
                 }
-                if self.acceptedFrames % 12 == 0 {
-                    self.persistWorldMapIfPossible()
+                if self.acceptedFrames == 1 || self.acceptedFrames % 12 == 0 {
+                    self.schedulePeriodicWorldMapPersistence()
                 }
                 self.trackingMessage = self.captureQualityText
             }
@@ -1123,6 +1221,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             }
             let checkpoint = try projectStore.loadCheckpoint(projectURL: summary.projectURL)
 
+            invalidateWorldMapPersistence()
             session?.pause()
             closeActiveCaptureTiming()
             projectURL = summary.projectURL
@@ -1133,6 +1232,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             pendingTrainingTarget = SplatReconstructionPolicy.standardIterations
             pendingResumeWorldMap = loadPersistedWorldMap(projectURL: summary.projectURL)
             requiresWorldMapForResume = true
+            userPauseRequested = false
             systemPausedCapture = false
             activeCaptureStartedAt = nil
             resultURL = projectStore.trustedSplatURL(projectURL: summary.projectURL)
@@ -1219,19 +1319,107 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         isWritingFrame = false
     }
 
-    private func persistWorldMapIfPossible() {
-        guard let session, let projectURL else { return }
-        let targetURL = projectStore.worldMapURL(projectURL: projectURL)
-        session.getCurrentWorldMap { worldMap, _ in
-            guard let worldMap,
-                  let data = try? NSKeyedArchiver.archivedData(
-                    withRootObject: worldMap,
-                    requiringSecureCoding: true
-                  ) else { return }
-            try? data.write(to: targetURL, options: .atomic)
+    private func schedulePeriodicWorldMapPersistence() {
+        guard periodicWorldMapPersistenceTask == nil,
+              !isWorldMapPersistencePending,
+              let projectURL else { return }
+        let generation = worldMapPersistenceGeneration
+        periodicWorldMapPersistenceTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            let outcome = await self.persistWorldMapSnapshot(
+                projectURL: projectURL,
+                generation: generation
+            )
+            guard self.worldMapPersistenceGeneration == generation else { return }
+            self.periodicWorldMapPersistenceTask = nil
+            switch outcome {
+            case .saved:
+                self.worldMapPersistenceWarning = nil
+            case .reusedExisting(let warning), .failed(let warning):
+                self.worldMapPersistenceWarning = warning
+            }
         }
     }
 
+    private func persistWorldMapForTransition(
+        projectURL: URL,
+        generation: Int
+    ) async -> WorldMapPersistenceOutcome {
+        if let existingTask = periodicWorldMapPersistenceTask {
+            await existingTask.value
+        }
+        guard worldMapPersistenceGeneration == generation,
+              self.projectURL?.standardizedFileURL == projectURL.standardizedFileURL else {
+            return .failed("保存対象のスキャンが切り替わりました")
+        }
+        return await persistWorldMapSnapshot(projectURL: projectURL, generation: generation)
+    }
+
+    private func persistWorldMapSnapshot(
+        projectURL: URL,
+        generation: Int
+    ) async -> WorldMapPersistenceOutcome {
+        let hadExistingMap = projectStore.hasWorldMap(projectURL: projectURL)
+        let archiveResult = await requestCurrentWorldMapArchive()
+
+        guard worldMapPersistenceGeneration == generation,
+              self.projectURL?.standardizedFileURL == projectURL.standardizedFileURL,
+              FileManager.default.fileExists(atPath: projectURL.path) else {
+            return .failed("保存対象のスキャンが切り替わりました")
+        }
+
+        switch archiveResult {
+        case .failed(let message):
+            return hadExistingMap ? .reusedExisting(message) : .failed(message)
+        case .data(let data):
+            let targetURL = projectStore.worldMapURL(projectURL: projectURL)
+            do {
+                try await Task.detached(priority: .utility) {
+                    try ScanWorldMapArchiveStore.write(data, to: targetURL)
+                }.value
+                return .saved
+            } catch {
+                let message = "WorldMapを書き込めませんでした: \(error.localizedDescription)"
+                return hadExistingMap ? .reusedExisting(message) : .failed(message)
+            }
+        }
+    }
+
+    private func requestCurrentWorldMapArchive() async -> WorldMapArchiveResult {
+        guard let session else { return .failed("ARSessionを確認できません") }
+        return await withCheckedContinuation { continuation in
+            session.getCurrentWorldMap { worldMap, error in
+                if let error {
+                    continuation.resume(returning: .failed(error.localizedDescription))
+                    return
+                }
+                guard let worldMap else {
+                    continuation.resume(returning: .failed("現在の撮影位置を取得できません"))
+                    return
+                }
+                do {
+                    let data = try NSKeyedArchiver.archivedData(
+                        withRootObject: worldMap,
+                        requiringSecureCoding: true
+                    )
+                    guard !data.isEmpty else {
+                        continuation.resume(returning: .failed("WorldMap archiveが空です"))
+                        return
+                    }
+                    continuation.resume(returning: .data(data))
+                } catch {
+                    continuation.resume(returning: .failed(error.localizedDescription))
+                }
+            }
+        }
+    }
+
+    private func invalidateWorldMapPersistence() {
+        worldMapPersistenceGeneration &+= 1
+        periodicWorldMapPersistenceTask?.cancel()
+        periodicWorldMapPersistenceTask = nil
+        isWorldMapPersistencePending = false
+    }
     private func loadPersistedWorldMap(projectURL: URL) -> ARWorldMap? {
         let url = projectStore.worldMapURL(projectURL: projectURL)
         guard let data = try? Data(contentsOf: url) else { return nil }
@@ -1262,20 +1450,31 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         isCapturePaused = true
         trackingNeedsRecovery = true
         stableTrackingFrames = 0
-        trackingMessage = "カメラが中断されました。戻ると同じスキャンを復旧します"
-        persistWorldMapIfPossible()
+        trackingMessage = "カメラが中断されました。raw状態を保存し、位置復元データも更新します"
         persistCaptureStateOrFail(stage: .capturing)
+        guard phase == .capturing else { return }
+        schedulePeriodicWorldMapPersistence()
         UIApplication.shared.isIdleTimerDisabled = false
     }
 
     func handleSessionInterruptionEnded() {
         guard phase == .capturing, systemPausedCapture, let session else { return }
         systemPausedCapture = false
+        if userPauseRequested {
+            trackingMessage = worldMapPersistenceWarning == nil
+                ? "撮影は一時停止中です"
+                : "撮影は一時停止中です。位置復元データの保存状態を確認してください"
+            UIApplication.shared.isIdleTimerDisabled = false
+            return
+        }
+
         isCapturePaused = false
         trackingNeedsRecovery = true
         stableTrackingFrames = 0
         beginActiveCaptureTiming()
-        trackingMessage = "前に撮った場所を映して位置を再確認してください"
+        trackingMessage = worldMapPersistenceWarning.map {
+            "位置復元データの保存に注意が必要です。アプリを閉じず、前に撮った場所を映して続けてください: \($0)"
+        } ?? "前に撮った場所を映して位置を再確認してください"
         session.run(makeWorldTrackingConfiguration(), options: [])
         UIApplication.shared.isIdleTimerDisabled = true
     }
@@ -1313,6 +1512,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     private func resetCaptureStateForNewProject() {
+        invalidateWorldMapPersistence()
         captured.removeAll(keepingCapacity: true)
         featurePoints.removeAll(keepingCapacity: true)
         coverageSectors.removeAll(keepingCapacity: true)
@@ -1344,8 +1544,9 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         systemPausedCapture = false
         pendingResumeWorldMap = nil
         requiresWorldMapForResume = false
+        userPauseRequested = false
+        worldMapPersistenceWarning = nil
     }
-
     private func limitedReason(_ reason: ARCamera.TrackingState.Reason) -> String {
         switch reason {
         case .initializing: return "位置を合わせています。ゆっくり動かしてください"

@@ -610,11 +610,15 @@ for needle in (
     if needle not in model:
         raise SystemExit(f"missing WorldMap durability contract: {needle}")
 
-pause = re.search(r"func pauseCapture\\(\\) \\{(.*?)\\n    \\}\\n\\n    func resumeCapture", model, re.S)
-finish = re.search(r"func finishCapture\\(\\) \\{(.*?)\\n    \\}\\n\\n    func discardAndReset", model, re.S)
-if not pause or pause.group(1).find("persistWorldMapForTransition") > pause.group(1).find("session?.pause()"):
+pause_start = model.index("func pauseCapture()")
+pause_end = model.index("func resumeCapture()", pause_start)
+pause = model[pause_start:pause_end]
+finish_start = model.index("func finishCapture()")
+finish_end = model.index("func discardAndReset()", finish_start)
+finish = model[finish_start:finish_end]
+if pause.index("persistWorldMapForTransition") > pause.index("session?.pause()"):
     raise SystemExit("pauseCapture must settle WorldMap before pausing ARSession")
-if not finish or finish.group(1).find("persistWorldMapForTransition") > finish.group(1).find("self.phase = .captured"):
+if finish.index("persistWorldMapForTransition") > finish.index("self.phase = .captured"):
     raise SystemExit("finishCapture must settle WorldMap before exposing captured UI")
 if "try data.write(to: targetURL, options: .atomic)" not in helper or "values.fileSize == data.count" not in helper:
     raise SystemExit("WorldMap archive store must atomically write and verify byte count")
