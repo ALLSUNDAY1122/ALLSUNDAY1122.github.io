@@ -95,6 +95,27 @@ jobs:
             git commit -m "Persist APP2-004 pharmacist IAP diagnostic"
             git push origin HEAD:main
           fi
+      - name: Audit Build 2 and Internal TestFlight
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/app2_004_yakuzaishi_asc_audit.py
+      - name: Persist APP2-004 ASC final audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp automation/app2-004-yakuzaishi-asc-final.json /tmp/app2-004-yakuzaishi-asc-final.json
+          git restore automation/app2-004-yakuzaishi-asc-final.json 2>/dev/null || true
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          cp /tmp/app2-004-yakuzaishi-asc-final.json automation/app2-004-yakuzaishi-asc-final.json
+          git add automation/app2-004-yakuzaishi-asc-final.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Persist APP2-004 App Store Connect final audit"
+            git push origin HEAD:main
+          fi
       - name: Assert bootstrap success
         if: always()
         shell: bash
