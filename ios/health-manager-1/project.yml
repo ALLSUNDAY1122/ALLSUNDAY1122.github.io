@@ -7,7 +7,7 @@ settings:
   base:
     SWIFT_VERSION: 5.10
     MARKETING_VERSION: 1.0.0
-    CURRENT_PROJECT_VERSION: 2026081901
+    CURRENT_PROJECT_VERSION: 2026081902
 targets:
   HealthManager1:
     type: application
@@ -16,6 +16,10 @@ targets:
       - path: HealthManager1
       - path: Resources
         buildPhase: resources
+    preBuildScripts:
+      - name: Prepare audited 132 questions and unified AppIcon
+        script: |
+          bash "$SRCROOT/prepare-ios.sh"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.healthmanager1
