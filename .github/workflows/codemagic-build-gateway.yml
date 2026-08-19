@@ -34,6 +34,8 @@ jobs:
           command=json.loads(Path('automation/codemagic-build-command.json').read_text(encoding='utf-8'))
           if command.get('prepare_network_specialist'):
               subprocess.run(['python','scripts/prepare_network_specialist_codemagic.py'],check=True)
+          if command.get('prepare_network_specialist_signing_preflight'):
+              subprocess.run(['python','scripts/prepare_network_specialist_signing_preflight.py'],check=True)
           PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
