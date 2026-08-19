@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,9 +20,6 @@ BLOCK = r'''
     integrations:
       app_store_connect: "Codemagic Shiwake Swipe"
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.allsunday1122.tourokuhanbaisha
       vars:
         BUNDLE_ID: com.allsunday1122.tourokuhanbaisha
         APP_STORE_CONNECT_APP_ID: "6802119268"
@@ -59,7 +57,7 @@ BLOCK = r'''
           p.write_text(text, encoding='utf-8')
           PYBUILD
           xcodegen generate
-      - name: Verify signed native inputs
+      - name: Verify native inputs before signing
         script: |
           set -euo pipefail
           test -f "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/PrivacyInfo.xcprivacy"
@@ -67,6 +65,20 @@ BLOCK = r'''
           echo "$APPICON_SHA256  $CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" | shasum -a 256 -c -
           grep -q 'com.allsunday1122.tourokuhanbaisha' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
           grep -q 'MN3D2ZM44N' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
+      - name: Initialize signing keychain
+        script: |
+          set -euo pipefail
+          keychain initialize
+      - name: Fetch or create App Store signing files
+        script: |
+          set -euo pipefail
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+      - name: Add signing certificate to keychain
+        script: |
+          set -euo pipefail
+          keychain add-certificates
       - name: Apply App Store signing profiles for internal TestFlight only
         script: |
           set -euo pipefail
@@ -91,6 +103,26 @@ BLOCK = r'''
 '''
 
 
+def replace_workflow(text: str) -> tuple[str, bool]:
+    marker = f"\n  {WORKFLOW_ID}:\n"
+    start = text.find(marker)
+    if start < 0:
+        return text.rstrip() + BLOCK + "\n", True
+
+    tail_start = start + 1
+    match = re.search(r"(?m)^  [A-Za-z0-9_-]+:\s*$", text[tail_start + len(f'  {WORKFLOW_ID}:\n'):])
+    if match:
+        end = tail_start + len(f"  {WORKFLOW_ID}:\n") + match.start()
+        suffix = text[end:]
+    else:
+        suffix = ""
+    replacement = BLOCK.lstrip("\n").rstrip() + "\n"
+    current = text[tail_start:end] if match else text[tail_start:]
+    if current == replacement:
+        return text, False
+    return text[:tail_start] + replacement + suffix, True
+
+
 def main() -> int:
     trigger = json.loads(TRIGGER.read_text(encoding="utf-8"))
     request_id = str(trigger["request_id"])
@@ -101,19 +133,21 @@ def main() -> int:
     if not text.startswith("workflows:\n") and "\nworkflows:\n" not in text:
         raise SystemExit("codemagic.yaml has no workflows root")
 
-    changed = False
-    if f"\n  {WORKFLOW_ID}:\n" not in text:
-        text = text.rstrip() + BLOCK + "\n"
-        CODEMAGIC.write_text(text, encoding="utf-8")
-        changed = True
+    updated, changed = replace_workflow(text)
+    if changed:
+        CODEMAGIC.write_text(updated, encoding="utf-8")
 
     final = CODEMAGIC.read_text(encoding="utf-8")
     required = [
         "  touhan-ios:\n",
-        "bundle_identifier: com.allsunday1122.tourokuhanbaisha",
+        "BUNDLE_ID: com.allsunday1122.tourokuhanbaisha",
         'APP_STORE_CONNECT_APP_ID: "6802119268"',
         "CODEMAGIC_PROFILE_REF: tourokuhanbaisha_appstore",
         "APPICON_SHA256: c0cefbae22cdcd7b614d213ddca7942c7d693f02ead758b11b66d447a66bff03",
+        'app-store-connect fetch-signing-files "$BUNDLE_ID"',
+        "--type IOS_APP_STORE",
+        "--create",
+        "keychain add-certificates",
         "submit_to_testflight: true",
         "submit_to_app_store: false",
     ]
@@ -128,6 +162,7 @@ def main() -> int:
         "action": "install_touhan_workflow",
         "workflow_id": WORKFLOW_ID,
         "changed": changed,
+        "signing_mode": "runtime_fetch_or_create",
         "bundle_id": "com.allsunday1122.tourokuhanbaisha",
         "app_store_connect_app_id": "6802119268",
         "codemagic_profile_ref": "tourokuhanbaisha_appstore",
