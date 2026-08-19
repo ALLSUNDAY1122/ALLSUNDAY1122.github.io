@@ -141,11 +141,34 @@ jobs:
             -only-testing:SplatNativeTests/SplatVideoConfigurationTests \
             -only-testing:SplatNativeTests/SplatVideoExporterTests \
             -only-testing:SplatNativeTests/MeshExportServiceTests \
-            -only-testing:SplatNativeTests/MeshThirdPartyReaderCompatibilityTests \
             -only-testing:SplatNativeTests/MeshExportAdmissionTests \
             -only-testing:SplatNativeTests/MeshExportMemoryPolicyTests \
             -only-testing:SplatNativeTests/MeshProjectStoreTests \
             -only-testing:SplatNativeTests/MeshProjectIntegrityTests
+      - name: Reader compatibility OBJ
+        timeout-minutes: 4
+        working-directory: splat-native-ios
+        run: bash scripts/run_mesh_reader_compat_test.sh testOBJReopensThroughAssimp
+      - name: Reader compatibility FBX
+        timeout-minutes: 4
+        working-directory: splat-native-ios
+        run: bash scripts/run_mesh_reader_compat_test.sh testFBXReopensThroughAssimp
+      - name: Reader compatibility GLB
+        timeout-minutes: 4
+        working-directory: splat-native-ios
+        run: bash scripts/run_mesh_reader_compat_test.sh testGLBReopensThroughAssimp
+      - name: Reader compatibility STL
+        timeout-minutes: 4
+        working-directory: splat-native-ios
+        run: bash scripts/run_mesh_reader_compat_test.sh testSTLReopensThroughAssimp
+      - name: Reader compatibility PLY
+        timeout-minutes: 4
+        working-directory: splat-native-ios
+        run: bash scripts/run_mesh_reader_compat_test.sh testPLYReopensThroughAssimp
+      - name: Reader compatibility USDZ
+        timeout-minutes: 4
+        working-directory: splat-native-ios
+        run: bash scripts/run_mesh_reader_compat_test.sh testUSDZReopensThroughModelIOWhenAdvertised
       - name: Compile for iPhone without signing
         id: compile
         continue-on-error: true
