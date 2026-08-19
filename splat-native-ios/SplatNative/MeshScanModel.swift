@@ -104,6 +104,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
     @Published var cropInset: Double = 0
     @Published var measuredDistanceMeters: Float?
     @Published var invalidPhotogrammetrySamples = 0
+    @Published private(set) var destructiveResetBlockedReason: String?
 
     let supportsLiDARMesh = ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh)
     let supportsPhotogrammetry = PhotogrammetrySession.isSupported
@@ -258,7 +259,22 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
         measuredDistanceMeters = meters
     }
 
-    func reset() {
+    func blockDestructiveReset(_ reason: String) {
+        destructiveResetBlockedReason = reason
+        statusMessage = reason
+    }
+
+    func allowDestructiveReset() {
+        destructiveResetBlockedReason = nil
+    }
+
+    @discardableResult
+    func reset() -> Bool {
+        if let reason = destructiveResetBlockedReason {
+            statusMessage = reason
+            return false
+        }
+
         reconstructionTask?.cancel()
         reconstructionTask = nil
         photogrammetrySession?.cancel()
@@ -286,6 +302,7 @@ final class MeshScanModel: NSObject, ObservableObject, ARSessionDelegate {
         lastSavedFrameTimestamp = 0
         isWritingFrame = false
         UIApplication.shared.isIdleTimerDisabled = false
+        return true
     }
 
     nonisolated func session(_ session: ARSession, didUpdate frame: ARFrame) {

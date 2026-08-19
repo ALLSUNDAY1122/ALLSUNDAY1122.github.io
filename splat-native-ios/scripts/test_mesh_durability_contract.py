@@ -3,6 +3,7 @@ from pathlib import Path
 
 coordinator = Path("splat-native-ios/SplatNative/MeshDurabilityCoordinator.swift").read_text()
 recovery = Path("splat-native-ios/SplatNative/MeshDurabilityRecoveryStore.swift").read_text()
+model = Path("splat-native-ios/SplatNative/MeshScanModel.swift").read_text()
 shell = Path("splat-native-ios/SplatNative/IntegratedScanLabShellView.swift").read_text()
 
 snapshot = "summary = try archiveFinishedProject(sourceURL)"
@@ -28,10 +29,30 @@ for needle in (
     "func retry(model: MeshScanModel)",
     "func recoverPendingProjects()",
     "preserveAfterFailure(sourceURL:",
-    "self.cleanupProtectedResult(sourceURL)",
+    "model.blockDestructiveReset(failClosedReason)",
+    "model.allowDestructiveReset()",
 ):
     if needle not in coordinator:
         raise SystemExit(f"missing fail-closed Mesh lifecycle contract: {needle}")
+
+for needle in (
+    "@Published private(set) var destructiveResetBlockedReason: String?",
+    "func blockDestructiveReset(_ reason: String)",
+    "func allowDestructiveReset()",
+    "@discardableResult\n    func reset() -> Bool",
+    "if let reason = destructiveResetBlockedReason",
+    "return false",
+):
+    if needle not in model:
+        raise SystemExit(f"MeshScanModel reset is not fail-closed: {needle}")
+
+reset_start = model.index("@discardableResult\n    func reset() -> Bool")
+reset_end = model.index("nonisolated func session", reset_start)
+reset_block = model[reset_start:reset_end]
+guard_pos = reset_block.index("if let reason = destructiveResetBlockedReason")
+delete_pos = reset_block.index("FileManager.default.removeItem")
+if not guard_pos < delete_pos:
+    raise SystemExit("Mesh reset guard must execute before deleting the working .meshproject")
 
 protect_start = recovery.index("func protect(resultURL: URL)")
 protect_end = recovery.index("func cleanupProtectedResult", protect_start)
@@ -65,4 +86,4 @@ for needle in (
     if needle not in shell:
         raise SystemExit(f"production shell is missing fail-closed Mesh recovery UI: {needle}")
 
-print("PASS: Mesh archive/verification failure preserves working data and exposes retry/relaunch recovery")
+print("PASS: Mesh durability is fail-closed at the model reset boundary with retry/relaunch recovery")

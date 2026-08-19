@@ -4,7 +4,7 @@ import SwiftUI
 /// Serializes finished Mesh snapshots into C's durable library and shelters working projects until
 /// the durable copy is trusted. Low-storage/archive failures move the whole `.meshproject` into a
 /// same-volume Recovery directory before destructive UI can return. If even that rename fails, the
-/// production shell enters a fail-closed blocking state until retry succeeds.
+/// model-level reset contract remains blocked until retry or protection succeeds.
 @MainActor
 final class MeshDurabilityCoordinator: ObservableObject {
     typealias ArchiveFinishedProject = (URL) throws -> MeshProjectSummary
@@ -57,6 +57,7 @@ final class MeshDurabilityCoordinator: ObservableObject {
             blockingMessage = nil
             pendingSourceURL = nil
             failedSourceURL = nil
+            model.allowDestructiveReset()
             return
         }
 
@@ -114,10 +115,12 @@ final class MeshDurabilityCoordinator: ObservableObject {
         let summary: MeshProjectSummary
         do {
             // Critical durability boundary: finish the hard-link/capacity-checked snapshot before
-            // returning control to SwiftUI. A reset immediately after this point cannot race the
-            // initial library snapshot.
+            // returning control to SwiftUI. Once this succeeds, reset may safely remove B's working
+            // name because C's library holds its own hard links/copy.
             summary = try archiveFinishedProject(sourceURL)
             warningMessage = nil
+            blockingMessage = nil
+            model.allowDestructiveReset()
             model.statusMessage = "Meshを安全に保存しました。整合性を確認しています…"
         } catch {
             archivingSourceURL = nil
@@ -141,6 +144,7 @@ final class MeshDurabilityCoordinator: ObservableObject {
                 self.verificationTask = nil
                 self.warningMessage = nil
                 self.blockingMessage = nil
+                model.allowDestructiveReset()
 
                 let currentResult = model.resultURL
                 self.cleanupProtectedResult(sourceURL)
@@ -170,11 +174,14 @@ final class MeshDurabilityCoordinator: ObservableObject {
 
     private func preserveAfterFailure(sourceURL: URL, error: Error, model: MeshScanModel) {
         let baseMessage = "Meshを安全に保存できませんでした: \(error.localizedDescription)"
+        let failClosedReason = baseMessage + "。working projectを保護するまで破棄・新規撮影を停止しています。"
+        model.blockDestructiveReset(failClosedReason)
 
         guard FileManager.default.fileExists(atPath: sourceURL.path) else {
             failedSourceURL = nil
             blockingMessage = nil
             warningMessage = baseMessage + "。working projectは既に閉じられています。保存済みライブラリコピーは保持し、次回ライブラリ確認時に再検証します。"
+            model.allowDestructiveReset()
             model.statusMessage = warningMessage ?? baseMessage
             return
         }
@@ -183,6 +190,7 @@ final class MeshDurabilityCoordinator: ObservableObject {
             failedSourceURL = sourceURL
             warningMessage = baseMessage + "。working projectはRecoveryに保持されています。空き容量を確保して保存を再試行してください。"
             blockingMessage = nil
+            model.allowDestructiveReset()
             model.statusMessage = warningMessage ?? baseMessage
             return
         }
@@ -195,12 +203,13 @@ final class MeshDurabilityCoordinator: ObservableObject {
             if model.resultURL == sourceURL {
                 model.resultURL = protected.resultURL
             }
+            model.allowDestructiveReset()
             model.statusMessage = warningMessage ?? baseMessage
         } catch {
             failedSourceURL = sourceURL
             warningMessage = baseMessage
             blockingMessage = baseMessage + "。さらにRecoveryへの退避にも失敗したため、データ消失を防ぐため操作を停止しています。空き容量・ファイル状態を確認して保存を再試行してください。"
-            model.statusMessage = blockingMessage ?? baseMessage
+            model.blockDestructiveReset(blockingMessage ?? failClosedReason)
         }
     }
 
