@@ -42,6 +42,9 @@ jobs:
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
           set +e
+          # ASC live schema rejects availableInAllTerritories in create payloads even though
+          # older guide examples show it. Availability is configured separately when needed.
+          sed -i '/"availableInAllTerritories": True,/d' scripts/app2_004_yakuzaishi_iap_bootstrap.py
           python scripts/app2_004_yakuzaishi_iap_bootstrap.py > /tmp/app2-004-iap.log 2>&1
           code=$?
           python - "$code" <<'PY'
