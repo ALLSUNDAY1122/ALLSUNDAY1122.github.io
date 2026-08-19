@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "ChatGPT App Development 2 Dispatcher",
+  "version": "0.2.0",
+  "description": "アプリ開発②の13 Workerへ、Role固定で40分間隔・最大5回の安全な配車を行います。",
+  "permissions": ["alarms", "storage", "tabs"],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://raw.githubusercontent.com/*"
+  ],
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chatgpt.com/*"],
+      "js": ["content-script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>アプリ開発② Dispatcher</title>
+  <style>
+    body{font-family:system-ui,sans-serif;width:430px;margin:0;padding:14px;color:#111}
+    h1{font-size:16px;margin:0 0 8px}
+    p{font-size:12px;line-height:1.45}
+    button{box-sizing:border-box;width:100%;font:inherit;margin-top:8px;padding:9px;cursor:pointer}
+    #status{white-space:pre-wrap;background:#f3f3f3;border-radius:6px;padding:9px;font-size:12px;max-height:250px;overflow:auto}
+    .note{font-size:11px;color:#555}
+  </style>
+</head>
+<body>
+  <h1>アプリ開発② Dispatcher <span id="version"></span></h1>
+  <p>13 Role固定 / Round 1即時 / 以後40分ごと / 最大5回。回答本文は保存しません。</p>
+  <button id="diagnose">起動前診断（送信しない）</button>
+  <button id="start">5 Round Dispatcherを開始</button>
+  <button id="stop">停止</button>
+  <div id="status">読み込み中...</div>
+  <p class="note">開始後はWorkerごとにbusy・composer・stop表示を判定し、busyならそのWorkerだけskipします。run_count=5で自動停止します。</p>
+  <script src="popup.js"></script>
+</body>
+</html>
