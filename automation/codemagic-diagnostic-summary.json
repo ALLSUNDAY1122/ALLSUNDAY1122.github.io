@@ -1,23 +1,23 @@
 {
-  "request_id": "app2-004-yakuzaishi-iap-repaired-diagnostic-20260819-1255",
-  "target_head_sha": "0c252672c082d1af4ec27d0bd03a7e744473368d",
-  "workflow": "app2-004-yakuzaishi-iap-bootstrap.yml",
+  "request_id": "app2-005-hm1-icon132-build-diagnostic-20260819-1538",
+  "target_head_sha": "c9748bcbc6c5c974a87d7ec1f871f95a0e425ff3",
+  "workflow": "codemagic-build-gateway.yml",
   "run_found": true,
   "run": {
-    "id": 32213744269,
-    "name": "APP2-004 Pharmacist IAP Bootstrap",
-    "status": "completed",
-    "conclusion": "failure",
-    "created_at": "2026-08-19T03:53:24Z",
-    "updated_at": "2026-08-19T03:53:49Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32213744269",
-    "head_sha": "0c252672c082d1af4ec27d0bd03a7e744473368d"
+    "id": 32224153986,
+    "name": "Codemagic Build Gateway",
+    "status": "in_progress",
+    "conclusion": null,
+    "created_at": "2026-08-19T06:36:49Z",
+    "updated_at": "2026-08-19T06:36:53Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32224153986",
+    "head_sha": "c9748bcbc6c5c974a87d7ec1f871f95a0e425ff3"
   },
   "jobs": [
     {
-      "name": "bootstrap",
-      "status": "completed",
-      "conclusion": "failure",
+      "name": "gateway",
+      "status": "in_progress",
+      "conclusion": null,
       "steps": [
         {
           "name": "Set up job",
@@ -25,39 +25,54 @@
           "conclusion": "success"
         },
         {
-          "name": "Run actions/checkout@v4",
+          "name": "Run actions/checkout@v6",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Validate command",
+          "name": "Set up Python",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Ensure pharmacist App Store Connect products",
+          "name": "Install gateway dependency",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Persist sanitized IAP result or diagnostic",
-          "status": "completed",
-          "conclusion": "failure"
-        },
-        {
-          "name": "Assert bootstrap success",
-          "status": "completed",
-          "conclusion": "failure"
-        },
-        {
-          "name": "Post Run actions/checkout@v4",
+          "name": "Prepare requested Codemagic workflow",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Complete job",
-          "status": "completed",
-          "conclusion": "success"
+          "name": "Execute Codemagic command",
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "name": "Inspect Codemagic build actions",
+          "status": "pending",
+          "conclusion": null
+        },
+        {
+          "name": "Persist request-scoped sanitized result",
+          "status": "pending",
+          "conclusion": null
+        },
+        {
+          "name": "Upload Codemagic result",
+          "status": "pending",
+          "conclusion": null
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "pending",
+          "conclusion": null
+        },
+        {
+          "name": "Post Run actions/checkout@v6",
+          "status": "pending",
+          "conclusion": null
         }
       ]
     }
