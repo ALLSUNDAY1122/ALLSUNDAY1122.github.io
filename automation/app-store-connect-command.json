@@ -1,20 +1,20 @@
 {
-  "request_id": "hm2-create-products-20260819-1707",
-  "action": "write",
-  "expected_app_id": "6799751657",
-  "expected_bundle_id": "jp.allsunday1122.healthmanager2",
-  "operations": [
+  "request_id": "app2-010-touhan-signing-audit-20260819-1932",
+  "requests": [
     {
-      "type": "create_subscription",
-      "subscription_group_id": "22319275",
-      "name": "第二種衛生管理者 月額プレミアム",
-      "product_id": "jp.allsunday1122.healthmanager2.monthly",
-      "subscription_period": "ONE_MONTH"
+      "label": "bundle-id",
+      "method": "GET",
+      "path": "/v1/bundleIds?filter[identifier]=com.allsunday1122.tourokuhanbaisha&include=profiles&limit=10"
     },
     {
-      "type": "create_non_consumable",
-      "name": "第二種衛生管理者 買い切りプレミアム",
-      "product_id": "jp.allsunday1122.healthmanager2.lifetime"
+      "label": "distribution-certificates",
+      "method": "GET",
+      "path": "/v1/certificates?limit=200"
+    },
+    {
+      "label": "app-store-profiles",
+      "method": "GET",
+      "path": "/v1/profiles?filter[profileType]=IOS_APP_STORE&limit=200"
     }
   ]
 }
