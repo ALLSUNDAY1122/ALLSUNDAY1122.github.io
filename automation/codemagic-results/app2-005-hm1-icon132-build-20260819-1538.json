@@ -1,0 +1,165 @@
+{
+  "request_id": "app2-005-hm1-icon132-build-20260819-1538",
+  "ok": false,
+  "action": "build",
+  "workflow_id": "health-manager-1-testflight",
+  "branch": "main",
+  "resolved_app_id": null,
+  "application_candidates": [
+    {
+      "id": "6a769d81a1add9d06020b524",
+      "name": "ALLSUNDAY1122.github.io",
+      "repositoryUrl": null
+    }
+  ],
+  "note": null,
+  "build_id": "6a854f102904f8c2b298b85f",
+  "status": "failed",
+  "app_id": "6a769d81a1add9d06020b524",
+  "error": "Codemagic build ended with status: failed",
+  "build_details": {
+    "id": "6a854f102904f8c2b298b85f",
+    "app_id": "6a769d81a1add9d06020b524",
+    "workflow": {
+      "id": "health-manager-1-testflight",
+      "source": "file",
+      "name": "Health Manager 1 - iOS TestFlight"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "failed",
+    "index": 4,
+    "artifacts": [
+      {
+        "name": "ALLSUNDAY1122.github.io_4_artifacts.zip",
+        "size_in_bytes": 19243,
+        "type": "bundle",
+        "short_lived_download_url": "https://api.codemagic.io//artifacts/.eJwVwduSQzAAANB_6bsZRZHHKErFta596bCuadEi6crX7-w5hw7-0z59wtnZCERl_lwnDNebdrJklakkAbotbcgbSkasvS2jLUxQ0M5fcGap8MVHsJdKdZJkOZIM-MCeqcSpmnZxES7crPuzxt13Ia7Zbg2vZ3OzIfZKwHKNAOEU8cJP0YfluhHI9VH2UgPxkXDuJAYBCml1q2g-_ga8uC_53mf32OFNsK7s0S4YvxNG82lYvGbdzuPq1_JRke2uR08PXl3D0fSJpNCKJSshvN1THUV0u7vF2eU1UNOWkgtCqBMQznvRoQ2fMcXpC79OdFLFped-NZmaFzigJgdyazx_YWlfuxtrRuwbpqCzwsMKl7xzGTR6FcHDHzhubuw.ubeVpEoyKiYevatJSLJ8TFLRpH8",
+        "version_code": null,
+        "version_name": null
+      }
+    ],
+    "labels": [],
+    "release_notes": [],
+    "created_at": "2026-08-19T06:37:04.189000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "56099ea5fed64b4c9030c39c30c7b077487dcc7d",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "Track APP2-005 HM1 icon and 132-question build",
+      "url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/56099ea5fed64b4c9030c39c30c7b077487dcc7d"
+    },
+    "branch": "main",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-08-19T06:37:11.227000Z",
+    "finished_at": "2026-08-19T06:38:36.512000Z"
+  },
+  "actions": {
+    "data": [
+      {
+        "id": "6a854f110c1588b0c3bafc08",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:37:11.542000Z",
+        "finished_at": "2026-08-19T06:37:34.518000Z"
+      },
+      {
+        "id": "6a854f110c1588b0c3bafc09",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:37:34.518000Z",
+        "finished_at": "2026-08-19T06:37:42.743000Z"
+      },
+      {
+        "id": "6a854f110c1588b0c3bafc07",
+        "name": "Set up code signing identities",
+        "type": "setup_code_signing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:37:42.743000Z",
+        "finished_at": "2026-08-19T06:37:45.175000Z"
+      },
+      {
+        "id": "6a854f110c1588b0c3bafc0a",
+        "name": "Install XcodeGen",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nHOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen",
+        "status": "success",
+        "started_at": "2026-08-19T06:37:45.175000Z",
+        "finished_at": "2026-08-19T06:37:53.849000Z"
+      },
+      {
+        "id": "6a854f110c1588b0c3bafc0b",
+        "name": "Generate Xcode project",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/ios/health-manager-1\"\nxcodegen generate",
+        "status": "success",
+        "started_at": "2026-08-19T06:37:53.849000Z",
+        "finished_at": "2026-08-19T06:37:54.294000Z"
+      },
+      {
+        "id": "6a854f110c1588b0c3bafc0c",
+        "name": "Apply App Store signing profiles",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/ios/health-manager-1\"\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
+        "status": "success",
+        "started_at": "2026-08-19T06:37:54.294000Z",
+        "finished_at": "2026-08-19T06:37:55.373000Z"
+      },
+      {
+        "id": "6a854f110c1588b0c3bafc0d",
+        "name": "Build signed IPA",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nxcode-project build-ipa \\\n  --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  --scheme \"$XCODE_SCHEME\"",
+        "status": "failed",
+        "started_at": "2026-08-19T06:37:55.373000Z",
+        "finished_at": "2026-08-19T06:38:35.051000Z"
+      },
+      {
+        "id": "6a854f110c1588b0c3bafc0e",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:38:35.051000Z",
+        "finished_at": "2026-08-19T06:38:36.408000Z"
+      },
+      {
+        "id": "6a854f110c1588b0c3bafc0f",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:38:36.408000Z",
+        "finished_at": "2026-08-19T06:38:36.512000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
