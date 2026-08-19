@@ -12,7 +12,7 @@ jobs:
   inspect:
     if: >-
       github.actor == 'ALLSUNDAY1122' &&
-      github.event.issue.title == '[OTSU4-CM-APP2-007] Inspect build 6a852415 actions'
+      github.event.issue.title == '[OTSU4-CM-APP2-007] Inspect build 6a852567 actions'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -21,12 +21,12 @@ jobs:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           python3 - <<'PY'
-          import json, os, urllib.request, urllib.error
+          import json, os, urllib.request
           from pathlib import Path
           token=os.environ.get('CM_API_TOKEN','').strip()
           if not token:
               raise SystemExit('Missing CM_API_TOKEN')
-          build_id='6a85241530da502731cde4fd'
+          build_id='6a852567d1bed0becef29461'
           req=urllib.request.Request(
               f'https://codemagic.io/api/v3/builds/{build_id}/actions',
               headers={'x-auth-token':token,'Accept':'application/json'},
