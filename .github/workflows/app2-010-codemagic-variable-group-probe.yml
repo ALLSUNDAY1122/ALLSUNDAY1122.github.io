@@ -82,7 +82,6 @@ jobs:
               existing=next((g for g in groups(after) if gname(g)==group_name),None)
               group_id=gid(existing) if existing else None
               if not group_id:
-                  # Fallback to creation response shapes.
                   candidates=[]
                   if isinstance(created_body,dict):
                       candidates=[created_body,created_body.get('data'),created_body.get('variable_group')]
@@ -112,8 +111,9 @@ jobs:
           out=Path('automation/codemagic-results')/f'{request_id}.json'; out.parent.mkdir(parents=True,exist_ok=True); out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8'); Path('/tmp/result-path.txt').write_text(str(out))
           PY
       - name: Persist sanitized probe result
-        if: always() && hashFiles('/tmp/result-path.txt') != ''
+        if: always()
         run: |
+          test -f /tmp/result-path.txt || exit 0
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           P="$(cat /tmp/result-path.txt)"
