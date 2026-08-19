@@ -26,6 +26,7 @@ struct IntegratedScanLabShellView: View {
         .tint(.mint)
         .preferredColorScheme(.dark)
         .task {
+            meshDurability.recoverPendingProjects()
             meshDurability.reconcile(model: meshModel)
         }
         .onChange(of: meshModel.phase) { _, _ in
@@ -35,16 +36,59 @@ struct IntegratedScanLabShellView: View {
             meshDurability.reconcile(model: meshModel)
         }
         .overlay(alignment: .top) {
-            if let warning = meshDurability.warningMessage {
-                Label(warning, systemImage: "exclamationmark.triangle.fill")
-                    .font(.footnote.weight(.semibold))
-                    .multilineTextAlignment(.leading)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 9)
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-                    .padding(.horizontal, 12)
-                    .padding(.top, 8)
-                    .accessibilityLabel("Mesh保存エラー: \(warning)")
+            if let blocking = meshDurability.blockingMessage {
+                ZStack {
+                    Color.black.opacity(0.82)
+                        .ignoresSafeArea()
+
+                    VStack(spacing: 14) {
+                        Image(systemName: "externaldrive.badge.exclamationmark")
+                            .font(.system(size: 42))
+                            .foregroundStyle(.orange)
+                        Text("Meshを保護できません")
+                            .font(.title3.bold())
+                        Text(blocking)
+                            .font(.footnote)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.secondary)
+                        Button {
+                            meshDurability.retry(model: meshModel)
+                        } label: {
+                            Label("保存を再試行", systemImage: "arrow.clockwise")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 11)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.mint)
+                    }
+                    .padding(22)
+                    .frame(maxWidth: 360)
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
+                    .padding(20)
+                }
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Mesh保存保護エラー。保存を再試行してください。")
+            } else if let warning = meshDurability.warningMessage {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(warning, systemImage: "exclamationmark.triangle.fill")
+                        .font(.footnote.weight(.semibold))
+                        .multilineTextAlignment(.leading)
+                    Button {
+                        meshDurability.retry(model: meshModel)
+                    } label: {
+                        Label("保存を再試行", systemImage: "arrow.clockwise")
+                            .font(.footnote.bold())
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.mint)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 9)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .padding(.horizontal, 12)
+                .padding(.top, 8)
+                .accessibilityLabel("Mesh保存エラー: \(warning)。保存を再試行できます。")
             }
         }
     }
