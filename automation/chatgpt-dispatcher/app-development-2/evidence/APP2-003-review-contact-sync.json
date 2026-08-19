@@ -1,0 +1,36 @@
+{
+  "app_id": "6794137637",
+  "version_id": "812cd84c-3efb-407b-a04c-f9fb1b5554e6",
+  "review_detail_id": "630be79a-3c94-4c4b-8882-6644d165152e",
+  "steps": [
+    {
+      "step": "beta_contact_preflight",
+      "ok": true,
+      "has_contactFirstName": true,
+      "has_contactLastName": true,
+      "has_contactPhone": true,
+      "has_contactEmail": true
+    },
+    {
+      "step": "app_store_contact_before",
+      "has_contactFirstName": false,
+      "has_contactLastName": false,
+      "has_contactPhone": false,
+      "has_contactEmail": false
+    },
+    {
+      "step": "sync_contact",
+      "changed": true,
+      "http_status": 200
+    },
+    {
+      "step": "app_store_contact_readback",
+      "ok": true,
+      "has_contactFirstName": true,
+      "has_contactLastName": true,
+      "has_contactPhone": true,
+      "has_contactEmail": true
+    }
+  ],
+  "ok": true
+}
