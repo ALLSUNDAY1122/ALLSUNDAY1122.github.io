@@ -1,0 +1,204 @@
+name: APP2-003 夜の書架 ASC Full Audit
+
+on:
+  push:
+    branches:
+      - automation/app-development-2-session-dispatcher
+    paths:
+      - automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-asc-full-trigger.json
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: macos-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Audit App Store Connect without persisting personal values
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          sys.path.insert(0, 'scripts')
+          from app_store_connect_api import api_get, load_private_key, make_token
+
+          APP_ID = '6794137637'
+          out = {'app_id': APP_ID, 'ok': True, 'errors': [], 'api': {}}
+          issuer = os.environ.get('ASC_ISSUER_ID')
+          key_id = os.environ.get('ASC_KEY_ID')
+          key_path, cleanup = load_private_key()
+          token = make_token(issuer, key_id, key_path)
+
+          def safe(label, path):
+              try:
+                  status, payload = api_get(token, path)
+                  out['api'][label] = {'http_status': status}
+                  return payload or {}
+              except Exception as exc:
+                  out['ok'] = False
+                  msg = str(exc)
+                  if len(msg) > 1200: msg = msg[-1200:]
+                  out['errors'].append({'label': label, 'error': msg})
+                  return {}
+
+          def data_list(payload):
+              data = payload.get('data') if isinstance(payload, dict) else None
+              if isinstance(data, list): return data
+              if isinstance(data, dict): return [data]
+              return []
+
+          def present(attrs, key):
+              value = attrs.get(key)
+              return value is not None and str(value).strip() != ''
+
+          try:
+              app_p = safe('app', f'/v1/apps/{APP_ID}')
+              apps = data_list(app_p)
+              if apps:
+                  a = apps[0].get('attributes') or {}
+                  out['app'] = {k: a.get(k) for k in ('name','bundleId','sku','primaryLocale')}
+
+              builds_p = safe('builds', f'/v1/apps/{APP_ID}/builds?limit=20')
+              builds = data_list(builds_p)
+              out['builds'] = []
+              for b in builds:
+                  a = b.get('attributes') or {}
+                  item = {'id': b.get('id')}
+                  item.update({k: a.get(k) for k in ('version','uploadedDate','processingState','expired','expirationDate','minOsVersion')})
+                  out['builds'].append(item)
+
+              versions_p = safe('app_store_versions', f'/v1/apps/{APP_ID}/appStoreVersions?limit=20')
+              versions = data_list(versions_p)
+              out['app_store_versions'] = []
+              for v in versions:
+                  a = v.get('attributes') or {}
+                  vid = v.get('id')
+                  vi = {'id': vid, **{k: a.get(k) for k in ('versionString','platform','appStoreState','releaseType','copyright')}}
+                  link_p = safe(f'version_build_{vid}', f'/v1/appStoreVersions/{vid}/relationships/build')
+                  link_data = link_p.get('data') if isinstance(link_p, dict) else None
+                  vi['attached_build_id'] = link_data.get('id') if isinstance(link_data, dict) else None
+
+                  loc_p = safe(f'version_localizations_{vid}', f'/v1/appStoreVersions/{vid}/appStoreVersionLocalizations?limit=20')
+                  vi['localizations'] = []
+                  for loc in data_list(loc_p):
+                      la = loc.get('attributes') or {}
+                      lid = loc.get('id')
+                      li = {
+                          'id': lid,
+                          'locale': la.get('locale'),
+                          'description_length': len(la.get('description') or ''),
+                          'keywords_length': len(la.get('keywords') or ''),
+                          'supportUrl': la.get('supportUrl'),
+                          'marketingUrl': la.get('marketingUrl'),
+                          'promotionalText_length': len(la.get('promotionalText') or ''),
+                          'whatsNew_length': len(la.get('whatsNew') or ''),
+                          'screenshot_sets': []
+                      }
+                      sets_p = safe(f'screenshot_sets_{lid}', f'/v1/appStoreVersionLocalizations/{lid}/appScreenshotSets?limit=20')
+                      for ss in data_list(sets_p):
+                          sid = ss.get('id')
+                          sa = ss.get('attributes') or {}
+                          shots_p = safe(f'screenshots_{sid}', f'/v1/appScreenshotSets/{sid}/appScreenshots?limit=50')
+                          li['screenshot_sets'].append({'id': sid, 'screenshotDisplayType': sa.get('screenshotDisplayType'), 'count': len(data_list(shots_p))})
+                      vi['localizations'].append(li)
+
+                  review_p = safe(f'app_store_review_detail_{vid}', f'/v1/appStoreVersions/{vid}/appStoreReviewDetail')
+                  rds = data_list(review_p)
+                  if rds:
+                      ra = rds[0].get('attributes') or {}
+                      vi['review_detail'] = {
+                          'hasContactFirstName': present(ra, 'contactFirstName'),
+                          'hasContactLastName': present(ra, 'contactLastName'),
+                          'hasContactPhone': present(ra, 'contactPhone'),
+                          'hasContactEmail': present(ra, 'contactEmail'),
+                          'demoAccountRequired': ra.get('demoAccountRequired'),
+                          'hasDemoAccountName': present(ra, 'demoAccountName'),
+                          'hasDemoAccountPassword': present(ra, 'demoAccountPassword'),
+                          'notes_length': len(ra.get('notes') or '')
+                      }
+                  else:
+                      vi['review_detail'] = None
+                  out['app_store_versions'].append(vi)
+
+              groups_p = safe('beta_groups', f'/v1/apps/{APP_ID}/betaGroups?limit=20')
+              out['beta_groups'] = [{'id': g.get('id'), 'name': (g.get('attributes') or {}).get('name')} for g in data_list(groups_p)]
+
+              beta_locs_p = safe('beta_app_localizations', f'/v1/apps/{APP_ID}/betaAppLocalizations?limit=20')
+              out['beta_app_localizations'] = []
+              for loc in data_list(beta_locs_p):
+                  a = loc.get('attributes') or {}
+                  out['beta_app_localizations'].append({
+                      'id': loc.get('id'), 'locale': a.get('locale'),
+                      'description_length': len(a.get('description') or ''),
+                      'hasFeedbackEmail': present(a, 'feedbackEmail'),
+                      'marketingUrl': a.get('marketingUrl'),
+                      'privacyPolicyUrl': a.get('privacyPolicyUrl')
+                  })
+
+              beta_detail_p = safe('beta_review_detail', f'/v1/betaAppReviewDetails?filter[app]={APP_ID}&limit=20')
+              out['beta_review_detail'] = None
+              bd = data_list(beta_detail_p)
+              if bd:
+                  a = bd[0].get('attributes') or {}
+                  out['beta_review_detail'] = {
+                      'id': bd[0].get('id'),
+                      'hasContactFirstName': present(a, 'contactFirstName'),
+                      'hasContactLastName': present(a, 'contactLastName'),
+                      'hasContactPhone': present(a, 'contactPhone'),
+                      'hasContactEmail': present(a, 'contactEmail'),
+                      'demoAccountRequired': a.get('demoAccountRequired'),
+                      'hasDemoAccountName': present(a, 'demoAccountName'),
+                      'hasDemoAccountPassword': present(a, 'demoAccountPassword'),
+                      'notes_length': len(a.get('notes') or '')
+                  }
+
+              out['beta_review_submissions'] = []
+              for b in builds:
+                  bid = b.get('id')
+                  p = safe(f'beta_submission_{bid}', f'/v1/betaAppReviewSubmissions?filter[build]={bid}&limit=20')
+                  for s in data_list(p):
+                      a = s.get('attributes') or {}
+                      out['beta_review_submissions'].append({'id': s.get('id'), 'build_id': bid, 'betaReviewState': a.get('betaReviewState'), 'submittedDate': a.get('submittedDate')})
+
+              review_sub_p = safe('review_submissions', f'/v1/apps/{APP_ID}/reviewSubmissions?limit=20')
+              out['review_submissions'] = []
+              for rs in data_list(review_sub_p):
+                  a = rs.get('attributes') or {}
+                  rid = rs.get('id')
+                  ri = {'id': rid, **{k: a.get(k) for k in ('platform','state','submittedDate')}}
+                  items_p = safe(f'review_submission_items_{rid}', f'/v1/reviewSubmissions/{rid}/items?limit=50')
+                  ri['items'] = [{'id': i.get('id'), 'state': (i.get('attributes') or {}).get('state')} for i in data_list(items_p)]
+                  out['review_submissions'].append(ri)
+
+              infos_p = safe('app_infos', f'/v1/apps/{APP_ID}/appInfos?limit=20')
+              out['app_info_localizations'] = []
+              for info in data_list(infos_p):
+                  iid = info.get('id')
+                  il_p = safe(f'app_info_localizations_{iid}', f'/v1/appInfos/{iid}/appInfoLocalizations?limit=20')
+                  for il in data_list(il_p):
+                      a = il.get('attributes') or {}
+                      out['app_info_localizations'].append({
+                          'id': il.get('id'), 'app_info_id': iid, 'locale': a.get('locale'),
+                          'subtitle': a.get('subtitle'), 'privacyPolicyUrl': a.get('privacyPolicyUrl'),
+                          'privacyChoicesUrl': a.get('privacyChoicesUrl')
+                      })
+          finally:
+              if cleanup: cleanup.unlink(missing_ok=True)
+
+          p = Path('automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-asc-full.json')
+          p.parent.mkdir(parents=True, exist_ok=True)
+          p.write_text(json.dumps(out, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+      - name: Persist audit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-asc-full.json
+          git commit -m "Persist APP2-003 full ASC audit" || exit 0
+          git push
