@@ -1,0 +1,115 @@
+name: Otsu4 APP2-007 Internal TestFlight
+
+on:
+  push:
+    branches:
+      - release/app2-007-otsu4-testflight
+    paths:
+      - automation/otsu4-app2-007-testflight-trigger.txt
+
+permissions:
+  contents: read
+
+concurrency:
+  group: otsu4-app2-007-testflight
+  cancel-in-progress: false
+
+jobs:
+  codemagic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Verify isolated Internal TestFlight contract
+        run: |
+          set -euo pipefail
+          test "${GITHUB_REF_NAME}" = "release/app2-007-otsu4-testflight"
+          grep -q '^  otsu4-ios:' codemagic.yaml
+          grep -q 'bundle_identifier: jp.allsunday1122.otsu4' codemagic.yaml
+          grep -q 'submit_to_testflight: true' codemagic.yaml
+          grep -q 'submit_to_app_store: false' codemagic.yaml
+          grep -q 'testFlightInternalTestingOnly' codemagic.yaml
+          test -f native-ios/Otsu4Sprint/Otsu4GoldenRootView.swift
+          test -f native-ios/Otsu4Sprint/UITests/Otsu4SprintUITests.swift
+
+      - name: Start and monitor Codemagic Otsu4 build
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, time, urllib.request, urllib.error
+          from pathlib import Path
+
+          token = os.environ.get('CM_API_TOKEN', '').strip()
+          if not token:
+              raise SystemExit('Missing CM_API_TOKEN')
+
+          app_id = '6a769d81a1add9d06020b524'
+          workflow_id = 'otsu4-ios'
+          branch = 'release/app2-007-otsu4-testflight'
+
+          def request(url, method='GET', payload=None):
+              body = None if payload is None else json.dumps(payload).encode('utf-8')
+              req = urllib.request.Request(url, data=body, method=method)
+              req.add_header('Content-Type', 'application/json')
+              req.add_header('x-auth-token', token)
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      raw = response.read().decode('utf-8')
+                      return response.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as exc:
+                  raw = exc.read().decode('utf-8', errors='replace')
+                  raise RuntimeError(f'HTTP {exc.code}: {raw[:2000]}')
+
+          status, started = request(
+              'https://api.codemagic.io/builds',
+              method='POST',
+              payload={'appId': app_id, 'workflowId': workflow_id, 'branch': branch},
+          )
+          build_id = started.get('buildId') or started.get('id')
+          if not build_id:
+              raise RuntimeError(f'Codemagic did not return buildId: {started}')
+          print(f'CODEMAGIC_BUILD_ID={build_id}')
+          print(f'CODEMAGIC_BUILD_URL=https://codemagic.io/app/{app_id}/build/{build_id}')
+
+          result = {
+              'app_id': app_id,
+              'workflow_id': workflow_id,
+              'branch': branch,
+              'build_id': build_id,
+              'status': 'started',
+          }
+          out = Path('automation/otsu4-app2-007-codemagic-result.json')
+          out.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
+
+          terminal = {'finished', 'failed', 'canceled', 'timeout', 'skipped'}
+          deadline = time.time() + 4200
+          last = None
+          while time.time() < deadline:
+              _, response = request(f'https://codemagic.io/api/v3/builds/{build_id}')
+              details = response.get('data') or response
+              current = details.get('status')
+              if current != last:
+                  print(f'CODEMAGIC_STATUS={current}')
+                  last = current
+              result['status'] = current
+              out.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
+              if current in terminal:
+                  if current != 'finished':
+                      raise RuntimeError(f'Codemagic build ended with status {current}')
+                  print('CODEMAGIC_BUILD_FINISHED')
+                  break
+              time.sleep(30)
+          else:
+              raise RuntimeError('Timed out waiting for Codemagic build')
+          PY
+
+      - name: Upload sanitized build locator
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: otsu4-app2-007-codemagic-result-${{ github.run_id }}
+          path: automation/otsu4-app2-007-codemagic-result.json
+          if-no-files-found: warn
+          retention-days: 7
