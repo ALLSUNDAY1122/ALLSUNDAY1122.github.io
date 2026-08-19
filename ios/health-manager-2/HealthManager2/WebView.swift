@@ -3,12 +3,15 @@ import WebKit
 import UIKit
 
 struct LocalWebView: UIViewRepresentable {
-    func makeCoordinator() -> Coordinator { Coordinator() }
+    let store: StoreKitManager
+
+    func makeCoordinator() -> Coordinator { Coordinator(store: store) }
 
     func makeUIView(context: Context) -> WKWebView {
         let controller = WKUserContentController()
         controller.add(context.coordinator, name: "exportJSON")
         controller.add(context.coordinator, name: "nativeHaptic")
+        controller.add(context.coordinator, name: "storekit")
         controller.addUserScript(WKUserScript(
             source: Self.hapticBridge,
             injectionTime: .atDocumentEnd,
@@ -47,10 +50,14 @@ struct LocalWebView: UIViewRepresentable {
         let controller = webView.configuration.userContentController
         controller.removeScriptMessageHandler(forName: "exportJSON")
         controller.removeScriptMessageHandler(forName: "nativeHaptic")
+        controller.removeScriptMessageHandler(forName: "storekit")
     }
 
     final class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
+        let store: StoreKitManager
         weak var webView: WKWebView?
+
+        init(store: StoreKitManager) { self.store = store }
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             let bridge = #"""
@@ -73,6 +80,11 @@ struct LocalWebView: UIViewRepresentable {
             })();
             """#
             webView.evaluateJavaScript(bridge)
+            Task { @MainActor in
+                await store.loadProducts()
+                await store.refreshEntitlement()
+                sendStoreStatus()
+            }
         }
 
         func webView(_ webView: WKWebView,
@@ -106,9 +118,60 @@ struct LocalWebView: UIViewRepresentable {
             case "nativeHaptic":
                 guard let kind = message.body as? String else { return }
                 haptic(kind)
+            case "storekit":
+                guard let body = message.body as? [String: Any],
+                      let action = body["action"] as? String else { return }
+                handleStoreKit(action: action, body: body)
             default:
                 return
             }
+        }
+
+        private func handleStoreKit(action: String, body: [String: Any]) {
+            switch action {
+            case "status":
+                Task { @MainActor in
+                    await store.loadProducts()
+                    await store.refreshEntitlement()
+                    sendStoreStatus()
+                }
+            case "purchase":
+                let tier = body["tier"] as? String
+                let productID = tier == "monthly" ? StoreKitManager.monthlyProductID :
+                    (tier == "lifetime" ? StoreKitManager.lifetimeProductID : "")
+                guard !productID.isEmpty else { return }
+                Task { @MainActor in
+                    await store.purchase(productID: productID)
+                    sendStoreStatus()
+                }
+            case "restore":
+                Task { @MainActor in
+                    await store.restore()
+                    sendStoreStatus()
+                }
+            case "manageSubscriptions":
+                guard let url = URL(string: "https://apps.apple.com/account/subscriptions") else { return }
+                Task { @MainActor in UIApplication.shared.open(url) }
+            default:
+                return
+            }
+        }
+
+        @MainActor
+        private func sendStoreStatus() {
+            guard let webView else { return }
+            let payload: [String: Any] = [
+                "isPremium": store.isPremium,
+                "entitlementSource": store.entitlementSource,
+                "monthlyPrice": store.monthlyDisplayPrice,
+                "lifetimePrice": store.lifetimeDisplayPrice,
+                "monthlyAvailable": store.monthlyAvailable,
+                "lifetimeAvailable": store.lifetimeAvailable,
+                "message": store.statusMessage
+            ]
+            guard let data = try? JSONSerialization.data(withJSONObject: payload),
+                  let json = String(data: data, encoding: .utf8) else { return }
+            webView.evaluateJavaScript("window.__storekitUpdate && window.__storekitUpdate(\(json));")
         }
 
         private func haptic(_ kind: String) {
@@ -141,11 +204,7 @@ struct LocalWebView: UIViewRepresentable {
             let url = FileManager.default.temporaryDirectory.appendingPathComponent(name)
 
             guard let data = text.data(using: .utf8) else { return }
-            do {
-                try data.write(to: url, options: .atomic)
-            } catch {
-                return
-            }
+            do { try data.write(to: url, options: .atomic) } catch { return }
 
             DispatchQueue.main.async { [weak self] in
                 guard let self, let webView = self.webView else { return }
