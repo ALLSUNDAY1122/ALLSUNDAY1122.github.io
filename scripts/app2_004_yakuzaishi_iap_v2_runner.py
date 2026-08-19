@@ -52,6 +52,28 @@ def _ensure_draft_version(token, kind, parent_id):
     return created["data"]["id"], version_type
 
 
+def _normalize_inline_price_ids(payload):
+    payload = copy.deepcopy(payload)
+    included = payload.get("included") or []
+    replacements = {}
+    for item in included:
+        local_id = item.get("id")
+        if isinstance(local_id, str) and not (local_id.startswith("${") and local_id.endswith("}")):
+            normalized = "${" + local_id + "}"
+            replacements[local_id] = normalized
+            item["id"] = normalized
+    manual = (
+        payload.get("data", {})
+        .get("relationships", {})
+        .get("manualPrices", {})
+        .get("data", [])
+    )
+    for item in manual:
+        if item.get("id") in replacements:
+            item["id"] = replacements[item["id"]]
+    return payload
+
+
 def request(token, path, method="GET", payload=None):
     if method == "POST" and payload and isinstance(payload, dict):
         data = payload.get("data") or {}
@@ -82,6 +104,9 @@ def request(token, path, method="GET", payload=None):
                 "version": {"data": {"type": version_type, "id": version_id}}
             }
             path = "/v2/subscriptionGroupLocalizations"
+
+        elif path == "/v1/inAppPurchasePriceSchedules":
+            payload = _normalize_inline_price_ids(payload)
 
     return _original_request(token, path, method, payload)
 
