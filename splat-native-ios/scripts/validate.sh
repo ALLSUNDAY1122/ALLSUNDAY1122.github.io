@@ -243,6 +243,7 @@ node scripts/d2_hq_integration_contracts.mjs
 
 # D2-020: privacy manifest, permission strings and review explanation must move together.
 plutil -lint SplatNative/PrivacyInfo.xcprivacy >/dev/null
+python3 scripts/privacy_manifest_preflight.py
 python3 - <<'PY'
 import plistlib
 from pathlib import Path
@@ -265,7 +266,16 @@ for kind in expected:
     assert item.get('NSPrivacyCollectedDataTypeLinked') is True
     assert item.get('NSPrivacyCollectedDataTypeTracking') is False
     assert item.get('NSPrivacyCollectedDataTypePurposes') == ['NSPrivacyCollectedDataTypePurposeAppFunctionality']
-assert data.get('NSPrivacyAccessedAPITypes') == []
+accessed = {
+    item.get('NSPrivacyAccessedAPIType'): set(item.get('NSPrivacyAccessedAPITypeReasons', []))
+    for item in data.get('NSPrivacyAccessedAPITypes', [])
+}
+expected_accessed = {
+    'NSPrivacyAccessedAPICategoryFileTimestamp': {'C617.1'},
+    'NSPrivacyAccessedAPICategorySystemBootTime': {'35F9.1'},
+    'NSPrivacyAccessedAPICategoryDiskSpace': {'E174.1'},
+}
+assert accessed == expected_accessed, (accessed, expected_accessed)
 
 project=Path('project.yml').read_text()
 review=Path('APP_REVIEW_NOTES_JA.md').read_text()
