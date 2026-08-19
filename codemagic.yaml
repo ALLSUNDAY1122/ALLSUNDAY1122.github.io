@@ -748,9 +748,6 @@ workflows:
     integrations:
       app_store_connect: "Codemagic Shiwake Swipe"
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.allsunday1122.tourokuhanbaisha
       vars:
         BUNDLE_ID: com.allsunday1122.tourokuhanbaisha
         APP_STORE_CONNECT_APP_ID: "6802119268"
@@ -799,6 +796,19 @@ workflows:
           echo "$APPICON_SHA256  $CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" | shasum -a 256 -c -
           grep -q 'com.allsunday1122.tourokuhanbaisha' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
           grep -q 'MN3D2ZM44N' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
+      - name: Initialize signing keychain
+        script: |
+          set -euo pipefail
+          keychain initialize
+      - name: Fetch existing App Store signing files
+        script: |
+          set -euo pipefail
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE
+      - name: Add signing certificate to keychain
+        script: |
+          set -euo pipefail
+          keychain add-certificates
       - name: Apply App Store signing profiles for internal TestFlight only
         script: |
           set -euo pipefail
