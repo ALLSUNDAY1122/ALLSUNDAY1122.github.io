@@ -16,6 +16,11 @@ EXPECTED_APP_ID = "6802119268"
 EXPECTED_TEAM = "MN3D2ZM44N"
 EXPECTED_ICON_SHA = "c0cefbae22cdcd7b614d213ddca7942c7d693f02ead758b11b66d447a66bff03"
 EXPECTED_WEB_URL = "https://allsunday1122.github.io/touroku-hanbaisha-sprint/"
+EXPECTED_ORIENTATIONS = (
+    "INFOPLIST_KEY_UISupportedInterfaceOrientations: \"UIInterfaceOrientationPortrait "
+    "UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft "
+    "UIInterfaceOrientationLandscapeRight\""
+)
 
 app = json.loads((IOS / "app.json").read_text(encoding="utf-8"))['expo']
 assert app['version'] == '1.0.0'
@@ -24,7 +29,13 @@ assert app['extra']['webAppUrl'] == EXPECTED_WEB_URL
 assert app['ios']['icon'].endswith('AppIcon-1024.png')
 
 project = (NATIVE / "project.yml").read_text(encoding="utf-8")
-for token in (EXPECTED_BUNDLE, EXPECTED_TEAM, 'MARKETING_VERSION: 1.0.0', 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon'):
+for token in (
+    EXPECTED_BUNDLE,
+    EXPECTED_TEAM,
+    'MARKETING_VERSION: 1.0.0',
+    'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon',
+    EXPECTED_ORIENTATIONS,
+):
     assert token in project, f'missing project setting: {token}'
 assert '\n    resources:\n' not in project, 'XcodeGen target resources must be declared under sources'
 for token in (
@@ -58,4 +69,4 @@ assert f'Bundle ID: {EXPECTED_BUNDLE}' in metadata
 assert f'- サポート: {EXPECTED_WEB_URL}support.html' in metadata
 assert f'- プライバシーポリシー: {EXPECTED_WEB_URL}privacy.html' in metadata
 
-print(f'PASS: Touhan release inputs; bundle={EXPECTED_BUNDLE}; app_id={EXPECTED_APP_ID}; icon_sha256={EXPECTED_ICON_SHA}')
+print(f'PASS: Touhan release inputs; bundle={EXPECTED_BUNDLE}; app_id={EXPECTED_APP_ID}; icon_sha256={EXPECTED_ICON_SHA}; orientations=all-four')
