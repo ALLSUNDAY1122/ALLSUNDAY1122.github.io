@@ -31,8 +31,24 @@ jobs:
         with: {python-version: '3.12'}
       - run: python -m pip install --disable-pip-version-check requests beautifulsoup4 pypdf
       - name: Build canonical 600-question bank from MHLW official text-only pool
-        run: python sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py
+        id: build
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py 2>&1 | tee sagyo-ryohoshi-sprint/audit/question-bank-ci.log
+      - name: Commit build diagnostic
+        if: steps.build.outcome != 'success'
+        run: |
+          git config user.name 'LS16 Question Bank Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add sagyo-ryohoshi-sprint/audit/question-bank-ci.log
+          git commit -m 'diagnose LS16 question bank build [skip ci]'
+          git push origin HEAD:learning-sprint-16-sagyo-dispatcher
+      - name: Stop on build failure
+        if: steps.build.outcome != 'success'
+        run: exit 1
       - name: Validate v2 contract
+        if: steps.build.outcome == 'success'
         run: >-
           python automation/learning-sprint-question-pipeline/validate_questions_v2.py
           --config sagyo-ryohoshi-sprint/audit/exam-config.json
@@ -40,6 +56,7 @@ jobs:
           sagyo-ryohoshi-sprint/data/questions-r2.json
           sagyo-ryohoshi-sprint/data/questions-r3.json
       - name: Commit canonical output and audit evidence
+        if: steps.build.outcome == 'success'
         run: |
           git config user.name 'LS16 Question Bank Bot'
           git config user.email 'actions@users.noreply.github.com'
