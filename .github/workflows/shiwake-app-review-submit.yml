@@ -1,0 +1,175 @@
+name: Shiwake Swipe App Review Submit
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - automation/shiwake-app-review-submit-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  submit:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Submit Shiwake Swipe 1.0.1 Build 5 to App Review
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          import sys
+
+          sys.path.insert(0, str(Path('scripts').resolve()))
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          APP_ID = '6794796078'
+          BUNDLE_ID = 'jp.allsunday1122.shiwakeswipe'
+          TARGET_VERSION = '1.0.1'
+          TARGET_BUILD = '5'
+
+          command_path = Path('automation/shiwake-app-review-submit-command.json')
+          command = json.loads(command_path.read_text(encoding='utf-8'))
+          if command.get('approved') is not True:
+              raise RuntimeError('Submission approval flag is not true.')
+          if command.get('app_id') != APP_ID or command.get('bundle_id') != BUNDLE_ID:
+              raise RuntimeError('Command target does not match hard-coded Shiwake Swipe target.')
+          if command.get('version') != TARGET_VERSION or str(command.get('build')) != TARGET_BUILD:
+              raise RuntimeError('Command version/build does not match 1.0.1 Build 5.')
+
+          key_path, cleanup = load_private_key()
+          try:
+              token = make_token(__import__('os').environ['ASC_ISSUER_ID'], __import__('os').environ['ASC_KEY_ID'], key_path)
+
+              _, app = api_get(token, f'/v1/apps/{APP_ID}')
+              attrs = app['data']['attributes']
+              if attrs.get('bundleId') != BUNDLE_ID:
+                  raise RuntimeError(f"Bundle preflight mismatch: {attrs.get('bundleId')}")
+
+              _, versions = api_get(token, f'/v1/apps/{APP_ID}/appStoreVersions?limit=50')
+              matches = [v for v in versions.get('data', []) if v.get('attributes', {}).get('versionString') == TARGET_VERSION]
+              if len(matches) != 1:
+                  raise RuntimeError(f'Expected exactly one App Store version {TARGET_VERSION}; found {len(matches)}')
+              version = matches[0]
+              version_id = version['id']
+              before_state = version.get('attributes', {}).get('appStoreState')
+
+              _, build_rel = api_get(token, f'/v1/appStoreVersions/{version_id}/build')
+              build_data = build_rel.get('data')
+              if not isinstance(build_data, dict) or not build_data.get('id'):
+                  raise RuntimeError('No build is attached to App Store version 1.0.1.')
+              build_id = build_data['id']
+              _, build = api_get(token, f'/v1/builds/{build_id}')
+              actual_build = str(build.get('data', {}).get('attributes', {}).get('version'))
+              if actual_build != TARGET_BUILD:
+                  raise RuntimeError(f'Attached build mismatch: expected {TARGET_BUILD}, got {actual_build}')
+              if build.get('data', {}).get('attributes', {}).get('processingState') != 'VALID':
+                  raise RuntimeError('Attached Build 5 is not VALID.')
+
+              _, existing = api_get(token, f'/v1/apps/{APP_ID}/reviewSubmissions?limit=50')
+              review_submission_id = None
+              already_submitted = False
+              for sub in existing.get('data', []):
+                  sid = sub['id']
+                  _, items = api_get(token, f'/v1/reviewSubmissions/{sid}/items?limit=100&include=appStoreVersion')
+                  included = items.get('included') or []
+                  if any(x.get('type') == 'appStoreVersions' and x.get('id') == version_id for x in included):
+                      review_submission_id = sid
+                      submitted = sub.get('attributes', {}).get('submitted')
+                      already_submitted = submitted is True
+                      break
+
+              created_submission = False
+              created_item = False
+              if review_submission_id is None:
+                  payload = {
+                      'data': {
+                          'type': 'reviewSubmissions',
+                          'relationships': {
+                              'app': {'data': {'type': 'apps', 'id': APP_ID}}
+                          }
+                      }
+                  }
+                  status, response = api_request(token, '/v1/reviewSubmissions', method='POST', payload=payload)
+                  if status != 201:
+                      raise RuntimeError(f'Create review submission failed: HTTP {status}')
+                  review_submission_id = response['data']['id']
+                  created_submission = True
+
+                  item_payload = {
+                      'data': {
+                          'type': 'reviewSubmissionItems',
+                          'relationships': {
+                              'reviewSubmission': {'data': {'type': 'reviewSubmissions', 'id': review_submission_id}},
+                              'appStoreVersion': {'data': {'type': 'appStoreVersions', 'id': version_id}}
+                          }
+                      }
+                  }
+                  status, _ = api_request(token, '/v1/reviewSubmissionItems', method='POST', payload=item_payload)
+                  if status != 201:
+                      raise RuntimeError(f'Add App Store version to review submission failed: HTTP {status}')
+                  created_item = True
+
+              if not already_submitted:
+                  submit_payload = {
+                      'data': {
+                          'type': 'reviewSubmissions',
+                          'id': review_submission_id,
+                          'attributes': {'submitted': True}
+                      }
+                  }
+                  status, _ = api_request(token, f'/v1/reviewSubmissions/{review_submission_id}', method='PATCH', payload=submit_payload)
+                  if status != 200:
+                      raise RuntimeError(f'Submit for review failed: HTTP {status}')
+
+              _, after_submission = api_get(token, f'/v1/reviewSubmissions/{review_submission_id}')
+              _, after_version = api_get(token, f'/v1/appStoreVersions/{version_id}')
+              submitted_after = after_submission.get('data', {}).get('attributes', {}).get('submitted')
+              after_state = after_version.get('data', {}).get('attributes', {}).get('appStoreState')
+              if submitted_after is not True:
+                  raise RuntimeError('Read-back failed: review submission is not marked submitted.')
+
+              result = {
+                  'request_id': command.get('request_id'),
+                  'completed_at': datetime.now(timezone.utc).isoformat(),
+                  'app_id': APP_ID,
+                  'bundle_id': BUNDLE_ID,
+                  'version': TARGET_VERSION,
+                  'build': TARGET_BUILD,
+                  'version_id': version_id,
+                  'build_id': build_id,
+                  'review_submission_id': review_submission_id,
+                  'created_submission': created_submission,
+                  'created_item': created_item,
+                  'already_submitted_before': already_submitted,
+                  'submitted_after': submitted_after,
+                  'app_store_state_before': before_state,
+                  'app_store_state_after': after_state,
+                  'status': 'SUBMITTED_FOR_REVIEW'
+              }
+              Path('automation/shiwake-app-review-submit-result.json').write_text(
+                  json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8'
+              )
+              print(json.dumps(result, ensure_ascii=False, indent=2))
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+          PY
+
+      - name: Persist submission read-back
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/shiwake-app-review-submit-result.json
+          git commit -m "Record Shiwake Swipe App Review submission" || exit 0
+          git pull --rebase origin main
+          git push origin main
