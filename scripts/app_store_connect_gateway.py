@@ -18,6 +18,7 @@ from app_store_connect_api import api_get, api_request, load_private_key, make_t
 REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,100}$")
 RESOURCE_ID_RE = re.compile(r"^[A-Za-z0-9-]{8,100}$")
 BUNDLE_ID_RE = re.compile(r"^[A-Za-z0-9.-]{3,200}$")
+PRODUCT_ID_RE = re.compile(r"^[A-Za-z0-9._-]{3,200}$")
 MAX_BATCH = 50
 MAX_WRITE_OPS = 10
 VERSION_LOCALIZATION_ATTRS = {
@@ -46,6 +47,21 @@ def validate_path(api_path: object) -> str:
 def validate_resource_id(value: object, label: str) -> str:
     if not isinstance(value, str) or not RESOURCE_ID_RE.fullmatch(value):
         raise ValueError(f"Invalid {label}.")
+    return value
+
+
+def validate_short_text(value: object, label: str, max_len: int = 255) -> str:
+    if not isinstance(value, str):
+        raise ValueError(f"{label} must be a string.")
+    value = value.strip()
+    if not value or len(value) > max_len or "\n" in value or "\r" in value:
+        raise ValueError(f"Invalid {label}.")
+    return value
+
+
+def validate_product_id(value: object) -> str:
+    if not isinstance(value, str) or not PRODUCT_ID_RE.fullmatch(value):
+        raise ValueError("Invalid product id.")
     return value
 
 
@@ -100,6 +116,28 @@ def validate_write_operation(item: object, index: int) -> dict:
             "type": op_type,
             "app_store_version_id": validate_resource_id(item.get("app_store_version_id"), "app store version id"),
             "build_id": validate_resource_id(item.get("build_id"), "build id"),
+        }
+    if op_type == "create_subscription_group":
+        return {
+            "type": op_type,
+            "reference_name": validate_short_text(item.get("reference_name"), "subscription group reference name"),
+        }
+    if op_type == "create_subscription":
+        period = item.get("subscription_period")
+        if period != "ONE_MONTH":
+            raise ValueError("Only ONE_MONTH subscriptions are allowed by this semantic operation.")
+        return {
+            "type": op_type,
+            "subscription_group_id": validate_resource_id(item.get("subscription_group_id"), "subscription group id"),
+            "name": validate_short_text(item.get("name"), "subscription name"),
+            "product_id": validate_product_id(item.get("product_id")),
+            "subscription_period": period,
+        }
+    if op_type == "create_non_consumable":
+        return {
+            "type": op_type,
+            "name": validate_short_text(item.get("name"), "in-app purchase name"),
+            "product_id": validate_product_id(item.get("product_id")),
         }
     raise ValueError(f"Unsupported semantic write operation: {op_type}")
 
@@ -164,6 +202,24 @@ def get_data_ids(response: object) -> set[str]:
     return set()
 
 
+def get_data_list(response: object) -> list[dict]:
+    if not isinstance(response, dict):
+        return []
+    data = response.get("data")
+    if isinstance(data, list):
+        return [x for x in data if isinstance(x, dict)]
+    if isinstance(data, dict):
+        return [data]
+    return []
+
+
+def find_by_attribute(response: object, key: str, value: str) -> dict | None:
+    for resource in get_data_list(response):
+        if (resource.get("attributes") or {}).get(key) == value:
+            return resource
+    return None
+
+
 def get_included_ids(response: object, resource_type: str) -> set[str]:
     if not isinstance(response, dict):
         return set()
@@ -193,6 +249,12 @@ def ensure_build_belongs_to_app(token: str, app_id: str, build_id: str) -> None:
     _, response = api_get(token, f"/v1/apps/{app_id}/builds?limit=200")
     if build_id not in get_data_ids(response):
         raise RuntimeError("Build does not belong to expected app.")
+
+
+def ensure_subscription_group_belongs_to_app(token: str, app_id: str, group_id: str) -> None:
+    _, response = api_get(token, f"/v1/apps/{app_id}/subscriptionGroups?limit=200")
+    if group_id not in get_data_ids(response):
+        raise RuntimeError("Subscription group does not belong to expected app.")
 
 
 def ensure_version_localization(token: str, version_id: str, localization_id: str) -> None:
@@ -232,6 +294,84 @@ def update_resource_attributes(token: str, resource_type: str, resource_id: str,
         if after_attrs.get(key) != value:
             raise RuntimeError(f"Read-back mismatch after updating {resource_type}.{key}")
     return {"changed": True, "http_status": status, "changed_attributes": sorted(changes), "after": after}
+
+
+def create_subscription_group(token: str, app_id: str, reference_name: str) -> dict:
+    list_path = f"/v1/apps/{app_id}/subscriptionGroups?limit=200"
+    _, before = api_get(token, list_path)
+    existing = find_by_attribute(before, "referenceName", reference_name)
+    if existing:
+        return {"changed": False, "resource": existing}
+    payload = {
+        "data": {
+            "type": "subscriptionGroups",
+            "attributes": {"referenceName": reference_name},
+            "relationships": {"app": {"data": {"type": "apps", "id": app_id}}},
+        }
+    }
+    status, response = api_request(token, "/v1/subscriptionGroups", method="POST", payload=payload)
+    created = response.get("data") if isinstance(response, dict) else None
+    if not isinstance(created, dict) or not created.get("id"):
+        raise RuntimeError("Subscription group creation returned no resource id.")
+    _, after = api_get(token, list_path)
+    if created["id"] not in get_data_ids(after):
+        raise RuntimeError("Subscription group read-back mismatch.")
+    return {"changed": True, "http_status": status, "resource": created}
+
+
+def create_subscription(token: str, app_id: str, group_id: str, name: str, product_id: str, period: str) -> dict:
+    ensure_subscription_group_belongs_to_app(token, app_id, group_id)
+    list_path = f"/v1/subscriptionGroups/{group_id}/subscriptions?limit=200"
+    _, before = api_get(token, list_path)
+    existing = find_by_attribute(before, "productId", product_id)
+    if existing:
+        return {"changed": False, "resource": existing}
+    payload = {
+        "data": {
+            "type": "subscriptions",
+            "attributes": {
+                "name": name,
+                "productId": product_id,
+                "subscriptionPeriod": period,
+            },
+            "relationships": {"group": {"data": {"type": "subscriptionGroups", "id": group_id}}},
+        }
+    }
+    status, response = api_request(token, "/v1/subscriptions", method="POST", payload=payload)
+    created = response.get("data") if isinstance(response, dict) else None
+    if not isinstance(created, dict) or not created.get("id"):
+        raise RuntimeError("Subscription creation returned no resource id.")
+    _, after = api_get(token, list_path)
+    if created["id"] not in get_data_ids(after):
+        raise RuntimeError("Subscription read-back mismatch.")
+    return {"changed": True, "http_status": status, "resource": created}
+
+
+def create_non_consumable(token: str, app_id: str, name: str, product_id: str) -> dict:
+    list_path = f"/v1/apps/{app_id}/inAppPurchasesV2?limit=200"
+    _, before = api_get(token, list_path)
+    existing = find_by_attribute(before, "productId", product_id)
+    if existing:
+        return {"changed": False, "resource": existing}
+    payload = {
+        "data": {
+            "type": "inAppPurchases",
+            "attributes": {
+                "name": name,
+                "productId": product_id,
+                "inAppPurchaseType": "NON_CONSUMABLE",
+            },
+            "relationships": {"app": {"data": {"type": "apps", "id": app_id}}},
+        }
+    }
+    status, response = api_request(token, "/v2/inAppPurchases", method="POST", payload=payload)
+    created = response.get("data") if isinstance(response, dict) else None
+    if not isinstance(created, dict) or not created.get("id"):
+        raise RuntimeError("In-app purchase creation returned no resource id.")
+    _, after = api_get(token, list_path)
+    if created["id"] not in get_data_ids(after):
+        raise RuntimeError("In-app purchase read-back mismatch.")
+    return {"changed": True, "http_status": status, "resource": created}
 
 
 def execute_write(token: str, command: dict) -> list[dict]:
@@ -275,6 +415,19 @@ def execute_write(token: str, command: dict) -> list[dict]:
                 if op["build_id"] not in get_data_ids(after):
                     raise RuntimeError("Build relationship read-back mismatch.")
                 outcome = {"changed": True, "http_status": status, "after": after}
+        elif op_type == "create_subscription_group":
+            outcome = create_subscription_group(token, app_id, op["reference_name"])
+        elif op_type == "create_subscription":
+            outcome = create_subscription(
+                token,
+                app_id,
+                op["subscription_group_id"],
+                op["name"],
+                op["product_id"],
+                op["subscription_period"],
+            )
+        elif op_type == "create_non_consumable":
+            outcome = create_non_consumable(token, app_id, op["name"], op["product_id"])
         else:
             raise AssertionError(op_type)
         results.append({"operation": op_type, "outcome": outcome})
