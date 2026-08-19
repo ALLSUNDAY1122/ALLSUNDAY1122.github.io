@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - 'touroku-hanbaisha-sprint/**'
+      - 'touroku-hanbaisha-ios/**'
       - '.github/workflows/touroku-hanbaisha-validate.yml'
   pull_request:
     paths:
       - 'touroku-hanbaisha-sprint/**'
+      - 'touroku-hanbaisha-ios/**'
   workflow_dispatch:
 
 jobs:
@@ -27,9 +29,22 @@ jobs:
           node --check touroku-hanbaisha-sprint/app-v07.js
           node --check touroku-hanbaisha-sprint/choice-balance-v07.js
           node --check touroku-hanbaisha-sprint/r1-canonical-loader-v08.js
+          node touroku-hanbaisha-sprint/validate-history-calendar.mjs
           grep -q 'choice-balance-v07.js' touroku-hanbaisha-sprint/index.html
           grep -q 'r1-canonical-loader-v08.js' touroku-hanbaisha-sprint/index.html
+          grep -q 'history-calendar-v02.js' touroku-hanbaisha-sprint/index.html
           if grep -Eq 'questions\.js|questions-extra\.js|questions-v05-|app-v06\.js' touroku-hanbaisha-sprint/index.html; then exit 1; fi
+
+      - name: Check iOS release inputs
+        run: |
+          python -m pip install --disable-pip-version-check 'cairosvg==2.8.2'
+          bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
+          python touroku-hanbaisha-ios/scripts/validate_release.py
+          python - <<'PY'
+          import plistlib
+          plistlib.load(open('touroku-hanbaisha-ios/native-ios/PrivacyInfo.xcprivacy','rb'))
+          print('PASS: PrivacyInfo.xcprivacy parses')
+          PY
 
       - name: Validate canonical 360 questions
         run: |
