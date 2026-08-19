@@ -1,183 +1,134 @@
 # 撮る単語帳 リリース状況
 
-更新日: 2026-07-29
+更新日: 2026-08-19
 
 ## 現在の段階
 
-ユーザー判断により、Safari価値検証後の次担当をClaudeからCodexへ変更した。
+2026-08-19承認済みのUX再設計を実装し、Internal TestFlight用ビルドを再送中。
+App Review本審査にはまだ提出しない。
 
-現在は**Gemini API実装・Worker公開・モバイル接続・EAS／Apple登録を完了し、TestFlight用production buildのApple認証待ち**である。ユーザー指示によりTestFlight準備を先行しているが、EAS上のiOSビルドはまだ0件であり、TestFlight完了とは扱わない。PR `#3959`はDraftを維持する。
+## 正本
 
-開発順:
-
-1. ChatGPT: Safari価値検証、仕様整理、既存実装監査
-2. Codex: API実装、Worker公開、アプリ接続、実通信、開発ビルド
-3. Claude: API実装後のQAとUI改善
-4. Codex: ClaudeのP0・P1解消後、TestFlight・App Store申請
-
-## 作業対象
-
-- リポジトリ: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
-- ブランチ: `qa/toru-tango-mobile-20260726`
-- Pull Request: `#3959`
-- iOSアプリ: `toru-tango-mobile/`
-- API Worker: `toru-tango/backend/`
-- Safari価値検証参照: PR `#4059`
-- Codex指示: `toru-tango-mobile/CODEX_API_HANDOFF.md`
-- Codex開始文: `toru-tango-mobile/CODEX_START_PROMPT.md`
-- Codex成果物: `toru-tango-mobile/CODEX_API_REPORT.md`
-
-PR `#4059`はSafari OCR比較の参照資産として残す。API実装先、EAS実装先、Claude QA対象はPR `#3959`である。
+- Repository: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
+- 実装branch: `feature/on-device-ai-card-generation`
+- PR: `#4064`
+- iOS app: `toru-tango-mobile/`
+- UX仕様書: `toru-tango-mobile/UX_REDESIGN_SPEC_20260819.md`
 
 ## リリース識別情報
 
-- アプリ名: 撮る単語帳
+- App: 撮る単語帳
 - Bundle ID: `com.allsunday1122.torutango`
 - Version: `1.0.0`
-- Build: `1`
+- 現在のbuildNumber: `8`
 - EAS project: `@allsunday1122/toru-tango`
 - EAS project ID: `96443b56-fef4-4a25-b5e9-831eaa4ec854`
 - App Store Connect App ID: `6795968222`
-- 対応: iPhone
-- 初期版の外観: ライトモード固定
-- プライバシーポリシー: `https://allsunday1122.github.io/toru-tango/privacy-policy.html`
-- サポートURL: `https://allsunday1122.github.io/toru-tango/`
+- App Store version: `1.0`
+- App Store state: `PREPARE_FOR_SUBMISSION`
+- App Review: 未提出
 
-## 実装済み
+## 2026-08-19 UX再設計
 
-### 単語帳・学習
+- 起動直後をフォルダ一覧へ変更
+- フォルダを2列グリッド表示
+- フォルダ名、枚数、進捗、未学習、弱点を一覧表示
+- 空フォルダの作成・永続保存
+- フォルダ検索
+- フォルダ内で表/裏を同じカード行に同時表示
+- カード検索
+- 未学習 / 苦手 / 表示中 / 非表示フィルター
+- 更新順 / 新しい順 / 弱点順 / 問題順ソート
+- カードの表示/非表示を永続化
+- 表/裏の個別読み上げ
+- 一覧から直接編集・削除
+- UIをティール系へ統一
 
-- カードの直接追加、一括追加、編集、削除
-- 保存カードを表・裏として明示
-- タップによる表裏反転
-- 表と裏の個別読み上げ
-- 重複除外
-- AsyncStorage保存
-- 学習履歴、正答率、連続学習、苦手カード
-- JSONバックアップと復元
+## 読み上げ学習
 
-### 写真・OCR
+- 表→裏 / 裏→表
+- 通常順 / ランダム
+- 表示中 / 全カード
+- 全カード / 弱点 / 定期確認 / 確認不要 / 未学習
+- 音声ON/OFF
+- 全文読み上げON時は表と裏を連続読み上げ
+- 読み上げ完了後の自動送り: オフ / 1秒 / 2秒 / 3秒 / 5秒
+- 既定値: 3秒
+- 手動操作・画面離脱で音声と待機タイマーを停止
+- 自動送りのみでは学習履歴を変更しない
 
-- カメラ撮影と写真選択
-- Apple Vision `VNRecognizeTextRequest`を使うiOSローカルExpo Module
-- 0度・90度・180度・270度を比較する自動向き判定
-- 左90度・右90度の手動指定
-- 日本語・英語認識
-- OCR結果の編集と教材本文への転送
-- OCR空白、罫線、明確な誤認の修復
+## データ互換
 
-Apple Vision OCRはExpo Goでは利用できない。`expo-dev-client`を含むEAS development buildまたは本番ビルドで確認する。
+- `Card.isHidden?: boolean` を後方互換で追加
+- 明示的フォルダ名を別AsyncStorageキーで保存
+- Backup version 1を維持
+- 旧Backup version 1を復元可能
+- 新バックアップでは任意の `decks` を保持
 
-### AI作問
+## OCR / 作問
 
-- AI作問と端末内簡易作問を別操作として実装
-- AI失敗時の別モデル・端末内作問への自動切替なし
-- Google Gemini Developer API、`gemini-3.5-flash-lite`
-- JSON Schemaによる構造化出力
-- 事実単位の重複除外
-- 使用モデル、トークン数、応答時間、除外件数の表示
-- 歴史文章、保険表OCR、重複文、情報不足文の回帰テスト
-- 低品質問題で指定件数を埋めない
+- Apple Vision OCR
+- 写真撮影 / 写真選択
+- OCR編集 / 再撮影
+- Foundation Modelsによる端末内作問
+- Foundation Models非対応時の端末内決定的フォールバック
+- Gemini OCR / Gemini作問は外部送信前確認を維持
+- 候補編集・選択・削除・保存
 
-### API / Worker
+## 最新自動検査
 
-- `POST /generate`
-- Gemini `generateContent` API
-- Worker Secret `GEMINI_API_KEY`
-- `GEMINI_MODEL`
-- 入力長・件数・形式・難易度検証
-- 45秒タイムアウト
-- 重複・不完全カード除外
-- 使用量、品質指標、応答時間返却
-- モバイル側の`EXPO_PUBLIC_AI_API_URL`
-- GitHub ActionsによるCloudflare Workerデプロイworkflow
+対象HEAD: `b3d2876d8704155731d0f25ebaa60164c53a2de2`
 
-## 自動検査
+Toru Tango Mobile CI:
+- Run: `32231050357`
+- Run number: `248`
+- Result: `success`
 
-既存のPR `#3959`では次を検査している。
-
+PASS:
+- dependency install
 - TypeScript
 - ESLint
 - Expo Doctor
-- Expo public config
-- Web作問回帰
-- モバイルOCR対応作問回帰
-- Apple Vision Module構成
-- Expo Modules Autolinking
+- Expo config
+- Web semantic generator regressions
+- Mobile OCR-aware generator regressions
+- Native OCR module / Expo autolinking
 - Expo iOS prebuild
-- Worker構文
+- Worker syntax / API tests
 
-CodexはAPI正常系・異常系のテストを追加し、最新headでGitHub Actionsを成功させる。
+## App Store Connect実確認
 
-## Codexの現在作業
+2026-08-19 17:01〜17:05 JSTにRelease API Command BusからApp Store Connectを読み取り専用で確認。
 
-2026-07-29時点でCloudflare Worker公開、GitHub Repository secrets 3件登録、Worker Secret登録、モバイル公開URL設定、EAS project作成、Apple Bundle ID登録、App Store Connectアプリ作成まで完了した。公開URLは`https://toru-tango-ai.kohei3615.workers.dev`。Worker versionは`95067016-86d6-4246-8b92-24e776f7f15a`。
+確認結果:
+- App ID `6795968222` = 撮る単語帳
+- Bundle ID = `com.allsunday1122.torutango`
+- Build 1〜6はすべて `VALID`
+- Build 7は未到達
+- App Store version `1.0` は `PREPARE_FOR_SUBMISSION`
 
-単発のGemini実通信はHTTP 200、3問生成に成功した。直後の5教材連続試験は全件45秒タイムアウトしたため、無料枠を考慮して間隔を空けた再評価が必要である。最新head `3385359f64a4f79df02c884d2ef118eef50fe84a`ではGenerator CIとMobile CI 2件がすべて成功した。
+Build 7未到達を受け、2026-08-19 17:07 JSTにbuildNumberを`8`へ更新してEAS production workflowを再発火した。
+Build 7が遅れて到達してもBuild 8と番号衝突しない。
 
-1. Worker・モバイルクライアント・デプロイworkflowの整合性監査
-2. API正常系・異常系テスト追加
-3. Cloudflare Worker公開
-4. Gemini APIキーをWorker Secretとして登録
-5. `EXPO_PUBLIC_AI_API_URL`設定（完了）
-6. Gemini 3.5 Flash-Liteで3～5教材の実通信
-7. EAS projectの初期化・リンク確認（完了）
-8. TestFlight用EAS production build（Apple認証待ち）
-9. Apple Vision ModuleのSwiftコンパイル確認
-10. `CODEX_API_REPORT.md`作成
+## 次工程
 
-Secretはコード、Markdown、PRコメント、ログへ保存しない。
+1. App Store ConnectでBuild 8到達をread-back
+2. Build 8のprocessingStateが`VALID`であることを確認
+3. Internal TestFlightでiPhone実機QA
+   - フォルダ作成・再起動後保持
+   - フォルダ一覧→カード一覧
+   - 表/裏の視認性と編集
+   - 表示/非表示と出題範囲
+   - 全文読み上げ→読み上げ完了→3秒→次カード
+   - 手動操作時の音声/タイマー停止
+   - OCR→作問→保存→フォルダ表示
+   - バックアップ/復元
+4. P0/P1が0件なら申請資料を最終化
+5. App Review本提出はユーザー承認後に実施
 
-## 外部操作に必要な情報
+## 禁止
 
-- Apple Developer認証（Apple IDログインと2段階認証）
-- Cloudflare API Token
-- Cloudflare Account ID
-- Gemini APIキー
-
-CodexはSecret値を要求・表示しない。未設定の場合は、必要なSecret名、設定場所、人間操作後の再開手順を報告する。
-
-## Codex完了条件
-
-- Worker公開
-- アプリからWorkerへ接続
-- Gemini 3.5 Flash-Lite 3～5教材の実通信成功
-- API異常系テスト成功
-- GitHub Actions成功
-- EAS iOS build成功
-- Apple Vision Moduleコンパイル成功
-- `CODEX_API_REPORT.md`完成
-- 完了候補head SHA固定
-
-上記完了後にPR `#3959`をReady for reviewへ変更し、Claudeへ渡す。
-
-## Claude QA
-
-ClaudeはAPI実装完了後に開始する。
-
-開始条件:
-
-- `CODEX_API_REPORT.md`が「Claudeへ引渡可能」
-- Worker公開済み
-- アプリ接続済み
-- Gemini実通信済み
-- EAS development build成功
-- GitHub Actions成功
-- PR `#3959`がReady for review
-
-Claudeの成果物は`toru-tango-mobile/CLAUDE_QA_REPORT.md`である。P0・P1を0件にし、固定20教材、主要導線、UI、エラー、空状態、保存・復元を確認する。
-
-## 申請工程
-
-ClaudeのP0・P1が0件となり、ユーザーがリリース候補を承認した後、Codexへ戻す。
-
-Codexが担当する。
-
-- production build
-- EAS Submitまたは採用したクラウド経路
-- App Store Connectアップロード
-- TestFlight
-- 掲載情報・スクリーンショット・審査資料
-- App Review提出と差し戻し対応
-
-ユーザー指示によりTestFlight準備を開始した。Apple DeveloperへのBundle ID登録とApp Store Connectアプリ作成は完了した。`eas build --platform ios --profile production`はApple認証待ちで、ビルド作成・EAS Submit・TestFlight処理は未完了。App Review提出は行わない。
+- Build 6以前を今回の最終候補として扱わない
+- TestFlight実機QA前にApp Reviewへ提出しない
+- Bundle ID / App Store Connect App IDを変更しない
+- Secret値をコード、Markdown、Issue、PRコメントへ保存しない
