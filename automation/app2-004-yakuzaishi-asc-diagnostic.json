@@ -1,0 +1,7 @@
+{
+  "task_id": "APP2-004",
+  "step": "asc_final_audit",
+  "exit_code": 1,
+  "ok": false,
+  "log_tail": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app2_004_yakuzaishi_asc_audit.py\", line 98, in <module>\n    main()\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app2_004_yakuzaishi_asc_audit.py\", line 36, in main\n    _, builds_payload = api_get(token, f\"/v1/apps/{APP_ID}/builds?sort=-uploadedDate&limit=20\")\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_api.py\", line 158, in api_get\n    return api_request(token, path, method=\"GET\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_api.py\", line 152, in api_request\n    raise RuntimeError(\nRuntimeError: App Store Connect API GET /v1/apps/6799753724/builds?sort=-uploadedDate&limit=20 returned HTTP 400: {'errors': [{'id': '239e2867-4be3-4d2c-a535-b744b1221f74', 'status': '400', 'code': 'PARAMETER_ERROR.ILLEGAL', 'title': 'A given parameter is not allowed for this request', 'detail': \"The parameter 'sort' can not be used with this request\", 'source': {'parameter': 'sort'}}]}\n"
+}
