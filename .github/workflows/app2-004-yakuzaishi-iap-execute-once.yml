@@ -1,0 +1,66 @@
+name: APP2-004 Pharmacist IAP Execute Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/app2-004-yakuzaishi-iap-execute-once.yml
+
+permissions:
+  contents: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Execute task-scoped IAP bootstrap
+        shell: bash
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          set +e
+          sed -i '/"availableInAllTerritories": True,/d' scripts/app2_004_yakuzaishi_iap_bootstrap.py
+          python scripts/app2_004_yakuzaishi_iap_bootstrap.py > /tmp/app2-004-iap-once.log 2>&1
+          code=$?
+          python - "$code" <<'PY'
+          import json, re, sys
+          from pathlib import Path
+          code = int(sys.argv[1])
+          raw = Path('/tmp/app2-004-iap-once.log').read_text(encoding='utf-8', errors='replace') if Path('/tmp/app2-004-iap-once.log').exists() else ''
+          raw = re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----', '[REDACTED KEY]', raw, flags=re.S)
+          raw = re.sub(r'Bearer\s+[A-Za-z0-9._-]+', 'Bearer [REDACTED]', raw)
+          raw = re.sub(r'eyJ[A-Za-z0-9._-]{40,}', '[REDACTED JWT]', raw)
+          Path('automation/app2-004-yakuzaishi-iap-diagnostic.json').write_text(json.dumps({
+              'task_id': 'APP2-004', 'step': 'iap_bootstrap_execute_once', 'exit_code': code,
+              'ok': code == 0, 'log_tail': raw[-12000:]
+          }, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+          exit 0
+      - name: Persist result and diagnostic
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add automation/app2-004-yakuzaishi-iap-diagnostic.json
+          test ! -f automation/app2-004-yakuzaishi-iap-result.json || git add automation/app2-004-yakuzaishi-iap-result.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Persist APP2-004 one-shot IAP result"
+            git push origin HEAD:main
+          fi
+      - name: Assert bootstrap success
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('automation/app2-004-yakuzaishi-iap-diagnostic.json').read_text(encoding='utf-8'))
+          if not d.get('ok'):
+              raise SystemExit(f"APP2-004 IAP bootstrap failed: {d.get('exit_code')}")
+          PY
