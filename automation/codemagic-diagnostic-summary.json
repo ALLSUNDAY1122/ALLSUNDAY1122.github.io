@@ -1,23 +1,23 @@
 {
-  "request_id": "app2-005-hm1-prior-asc-diagnostic-20260819-1242",
-  "target_head_sha": "601ab1287574e3eec78aa20ef70e07194dcc8246",
+  "request_id": "app2-004-yakuzaishi-codemagic-diagnostic-20260819-1242",
+  "target_head_sha": "af4b3075a52e20760387e097221f0ab2b2e57a84",
   "workflow": "codemagic-build-gateway.yml",
   "run_found": true,
   "run": {
-    "id": 32212976715,
+    "id": 32212579486,
     "name": "Codemagic Build Gateway",
     "status": "completed",
-    "conclusion": "success",
-    "created_at": "2026-08-19T03:40:25Z",
-    "updated_at": "2026-08-19T03:40:43Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32212976715",
-    "head_sha": "601ab1287574e3eec78aa20ef70e07194dcc8246"
+    "conclusion": "failure",
+    "created_at": "2026-08-19T03:33:40Z",
+    "updated_at": "2026-08-19T03:37:57Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32212579486",
+    "head_sha": "af4b3075a52e20760387e097221f0ab2b2e57a84"
   },
   "jobs": [
     {
       "name": "gateway",
       "status": "completed",
-      "conclusion": "success",
+      "conclusion": "failure",
       "steps": [
         {
           "name": "Set up job",
@@ -42,7 +42,7 @@
         {
           "name": "Execute Codemagic command",
           "status": "completed",
-          "conclusion": "success"
+          "conclusion": "failure"
         },
         {
           "name": "Inspect Codemagic build actions",
@@ -57,7 +57,7 @@
         {
           "name": "Post Set up Python",
           "status": "completed",
-          "conclusion": "success"
+          "conclusion": "skipped"
         },
         {
           "name": "Post Run actions/checkout@v6",
@@ -74,8 +74,8 @@
   ],
   "artifacts": [
     {
-      "id": 9351377507,
-      "name": "codemagic-result-32212976715",
+      "id": 9351324261,
+      "name": "codemagic-result-32212579486",
       "expired": false
     }
   ],
