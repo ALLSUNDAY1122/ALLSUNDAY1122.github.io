@@ -102,7 +102,6 @@ export default function StudyScreen() {
 
     let cancelled = false;
     cancelPlayback();
-    setRevealed(false);
 
     const scheduleAdvance = () => {
       if (cancelled || autoAdvanceDelay === 'off') return;
