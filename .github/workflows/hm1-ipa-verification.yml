@@ -55,14 +55,60 @@ jobs:
           passed=all(checks[k] for k in required)
           summary={'request_id':command.get('request_id'),'build_id':build_id,'codemagic_status':build.get('status'),'app_store_connect_status':build.get('app_store_connect_status'),'ipa_size_in_bytes':len(payload),'checks':checks,'passed':passed}
           Path('automation/hm1-ipa-verification-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-          print(json.dumps(summary,ensure_ascii=False,indent=2))
           if not passed: raise SystemExit('HealthManager1 signed IPA verification failed')
+          PY
+      - name: Read back App Store Connect
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          cat > /tmp/hm1-asc-command.json <<'JSON'
+          {
+            "request_id": "app2-005-hm1-asc-gate",
+            "requests": [
+              {"label":"app","path":"/v1/apps/6799581662"},
+              {"label":"builds","path":"/v1/apps/6799581662/builds?sort=-uploadedDate&limit=10"},
+              {"label":"prerelease-versions","path":"/v1/apps/6799581662/preReleaseVersions?limit=20"},
+              {"label":"beta-groups","path":"/v1/apps/6799581662/betaGroups?limit=50"},
+              {"label":"iap","path":"/v1/apps/6799581662/inAppPurchasesV2?limit=50"},
+              {"label":"subscription-groups","path":"/v1/apps/6799581662/subscriptionGroups?limit=50"}
+            ]
+          }
+          JSON
+          python3 scripts/app_store_connect_gateway.py --command /tmp/hm1-asc-command.json --output /tmp/hm1-asc-result.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          summary=json.loads(Path('automation/hm1-ipa-verification-summary.json').read_text(encoding='utf-8'))
+          src=json.loads(Path('/tmp/hm1-asc-result.json').read_text(encoding='utf-8'))
+          allowed=('name','bundleId','sku','primaryLocale','version','versionString','platform','uploadedDate','processingState','expired','expirationDate','minOsVersion','betaReviewState','productId','referenceName','state')
+          results=[]
+          for result in src.get('results',[]):
+              data=(result.get('response') or {}).get('data') or []
+              if isinstance(data,dict): data=[data]
+              clean=[]
+              for resource in data:
+                  attrs=resource.get('attributes') or {}
+                  clean.append({'id':resource.get('id'),'type':resource.get('type'),'attributes':{k:attrs.get(k) for k in allowed if k in attrs}})
+              results.append({'label':result.get('label'),'http_status':result.get('http_status'),'data':clean})
+          summary['asc_readback']={'completed_at':src.get('completed_at'),'results':results}
+          Path('automation/hm1-ipa-verification-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
       - name: Persist verification summary
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add automation/hm1-ipa-verification-summary.json
-          git commit -m "Record APP2-005 HealthManager1 IPA verification"
-          for attempt in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && exit 0; sleep 2; done
+          git commit -m "Record APP2-005 HealthManager1 IPA and ASC verification"
+          cp automation/hm1-ipa-verification-summary.json /tmp/hm1-summary.json
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/hm1-summary.json automation/hm1-ipa-verification-summary.json
+            git add automation/hm1-ipa-verification-summary.json
+            git diff --cached --quiet || git commit -m "Record APP2-005 HealthManager1 IPA and ASC verification"
+            sleep 2
+          done
           exit 1
