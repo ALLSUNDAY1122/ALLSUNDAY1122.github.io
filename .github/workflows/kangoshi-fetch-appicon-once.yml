@@ -1,0 +1,61 @@
+name: Kangoshi Fetch Canonical AppIcon Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/kangoshi-fetch-appicon-once.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-icon:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download exact Drive canonical PNG
+        shell: bash
+        run: |
+          set -euo pipefail
+          dest='kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+          tmp='/tmp/AppIcon-1024.png'
+          mkdir -p "$(dirname "$dest")"
+          urls=(
+            'https://drive.usercontent.google.com/download?id=1VDnbT0s9gEPde4baCfw9kXYfnEHLQrp3&export=download&confirm=t'
+            'https://drive.google.com/uc?export=download&id=1VDnbT0s9gEPde4baCfw9kXYfnEHLQrp3'
+          )
+          ok=0
+          for url in "${urls[@]}"; do
+            rm -f "$tmp"
+            if curl -L --fail --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 120 "$url" -o "$tmp"; then
+              actual_sha="$(sha256sum "$tmp" | awk '{print $1}')"
+              actual_size="$(stat -c '%s' "$tmp")"
+              if [ "$actual_sha" = '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80' ] && [ "$actual_size" = '683924' ]; then
+                ok=1
+                break
+              fi
+              echo "Downloaded bytes did not match canonical file: sha=$actual_sha size=$actual_size"
+            fi
+          done
+          test "$ok" = '1'
+          file "$tmp" | grep -q 'PNG image data, 1024 x 1024'
+          cp "$tmp" "$dest"
+          test "$(sha256sum "$dest" | awk '{print $1}')" = '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80'
+      - name: Commit canonical AppIcon
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          if ! git diff --cached --quiet; then
+            git commit -m 'kangoshi: add exact canonical AppIcon'
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push; then exit 0; fi
+              sleep 2
+            done
+            exit 1
+          fi
