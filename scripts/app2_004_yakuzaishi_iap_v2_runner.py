@@ -73,33 +73,69 @@ def _normalize_iap_price_schedule(payload):
 
 def _create_starting_subscription_price(token, original_payload):
     rels = original_payload.get("data", {}).get("relationships", {})
-    sub = (rels.get("subscription", {}).get("data") or {})
-    point = (rels.get("subscriptionPricePoint", {}).get("data") or {})
+    sub = rels.get("subscription", {}).get("data") or {}
     sub_id = sub.get("id")
-    point_id = point.get("id")
-    if not sub_id or not point_id:
-        raise RuntimeError("Missing subscription or subscription price point linkage")
+    if not sub_id:
+        raise RuntimeError("Missing subscription linkage")
+
+    _, availability_payload = _original_request(
+        token,
+        f"/v1/subscriptions/{sub_id}/planAvailabilities?include=availableTerritories&limit=200",
+    )
+    availabilities = _data_list(availability_payload)
+    availability_summary = [
+        {
+            "id": item.get("id"),
+            "planType": item.get("attributes", {}).get("planType"),
+            "availableInNewTerritories": item.get("attributes", {}).get("availableInNewTerritories"),
+        }
+        for item in availabilities
+    ]
+    print("APP2-004 plan availabilities:", json.dumps(availability_summary, ensure_ascii=False))
+    if not any(x.get("planType") == "UPFRONT" for x in availability_summary):
+        raise RuntimeError("UPFRONT subscription plan availability is missing")
+
+    _, points_payload = _original_request(
+        token,
+        f"/v1/subscriptions/{sub_id}/pricePoints?filter[territory]=JPN&filter[planType]=UPFRONT&fields[subscriptionPricePoints]=customerPrice,territory&include=territory&limit=8000",
+    )
+    point = next(
+        (
+            x
+            for x in _data_list(points_payload)
+            if bootstrap.decimal_equal(x.get("attributes", {}).get("customerPrice"), bootstrap.MONTHLY_PRICE)
+        ),
+        None,
+    )
+    if point is None:
+        raise RuntimeError("No JPN 200 UPFRONT price point found for monthly subscription")
+    point_id = point["id"]
 
     _, point_detail = _original_request(token, f"/v1/subscriptionPricePoints/{point_id}?include=territory")
     d = point_detail.get("data", {}) if isinstance(point_detail, dict) else {}
-    territory_id = (d.get("relationships", {}).get("territory", {}).get("data") or {}).get("id")
+    territory_id = (d.get("relationships", {}).get("territory", {}).get("data") or {}).get("id") or "JPN"
     print("APP2-004 starting subscription price:", json.dumps({
-        "pointId": d.get("id"), "attributes": d.get("attributes"), "territory": territory_id
+        "pointId": d.get("id"),
+        "attributes": d.get("attributes"),
+        "territory": territory_id,
+        "planType": "UPFRONT",
     }, ensure_ascii=False))
 
     local_id = "${app2-004-starting-price-jpn}"
     inline = {
         "type": "subscriptionPrices",
         "id": local_id,
-        "attributes": {"startDate": None, "preserveCurrentPrice": False},
+        "attributes": {
+            "startDate": None,
+            "preserveCurrentPrice": False,
+            "planType": "UPFRONT",
+        },
         "relationships": {
             "subscription": {"data": {"type": "subscriptions", "id": sub_id}},
             "subscriptionPricePoint": {"data": {"type": "subscriptionPricePoints", "id": point_id}},
+            "territory": {"data": {"type": "territories", "id": territory_id}},
         },
     }
-    if territory_id:
-        inline["relationships"]["territory"] = {"data": {"type": "territories", "id": territory_id}}
-
     patch_payload = {
         "data": {
             "type": "subscriptions",
@@ -141,6 +177,10 @@ def request(token, path, method="GET", payload=None):
 
         elif path == "/v1/subscriptionPrices":
             return _create_starting_subscription_price(token, payload)
+
+        elif path == "/v1/subscriptionIntroductoryOffers":
+            payload = copy.deepcopy(payload)
+            payload.setdefault("data", {}).setdefault("attributes", {})["targetSubscriptionPlanType"] = "UPFRONT"
 
     return _original_request(token, path, method, payload)
 
