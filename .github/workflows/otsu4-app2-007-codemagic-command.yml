@@ -35,7 +35,8 @@ jobs:
             tools/otsu4-build-content.mjs \
             tools/otsu4-build-content-v2.mjs
           grep -q '^  otsu4-ios:' codemagic.yaml
-          grep -q 'bundle_identifier: jp.allsunday1122.otsu4' codemagic.yaml
+          grep -q 'CODEMAGIC_PROFILE: otsu4_appstore' codemagic.yaml
+          grep -q -- '- otsu4_appstore' codemagic.yaml
           grep -q 'submit_to_testflight: true' codemagic.yaml
           grep -q 'submit_to_app_store: false' codemagic.yaml
           grep -q 'testFlightInternalTestingOnly' codemagic.yaml
@@ -115,5 +116,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `APP2-007 Codemagic result: build_id=${buildId}; codemagic_status=${cmStatus}; github_job=${{ job.status }}; branch=release/app2-007-otsu4-testflight; product_source_head=cec69cc72f415367031776d255102fba5261b4c5`
+              body: `APP2-007 Codemagic result: build_id=${buildId}; codemagic_status=${cmStatus}; github_job=${{ job.status }}; run_id=${context.runId}; branch=release/app2-007-otsu4-testflight; product_source_head=cec69cc72f415367031776d255102fba5261b4c5`
             });
