@@ -1,0 +1,140 @@
+name: APP2-010 Codemagic Signing Environment Audit
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'automation/app2-010-codemagic-env-audit-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Audit Codemagic variable names without reading secret values
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request, urllib.error
+          from pathlib import Path
+
+          cmd=json.loads(Path('automation/app2-010-codemagic-env-audit-command.json').read_text(encoding='utf-8'))
+          request_id=cmd['request_id']
+          app_id=cmd['app_id']
+          if not re.fullmatch(r'app2-010-codemagic-env-[A-Za-z0-9._-]{1,60}',request_id):
+              raise SystemExit('invalid request id')
+          if app_id!='6a769d81a1add9d06020b524':
+              raise SystemExit('unexpected app id')
+          token=os.environ.get('CM_API_TOKEN','')
+          if not token:
+              raise SystemExit('missing CM_API_TOKEN')
+
+          def get(path):
+              req=urllib.request.Request('https://codemagic.io'+path,headers={'x-auth-token':token,'Accept':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode('utf-8')
+                      return r.status,json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode('utf-8','replace')
+                  return e.code,{'error':raw[:500]}
+
+          def items(payload):
+              if isinstance(payload,list): return payload
+              if not isinstance(payload,dict): return []
+              for key in ('data','variable_groups','groups','teams'):
+                  value=payload.get(key)
+                  if isinstance(value,list): return value
+                  if isinstance(value,dict):
+                      for nested in ('data','items','groups','teams'):
+                          if isinstance(value.get(nested),list): return value[nested]
+              return []
+
+          def group_summary(group):
+              if not isinstance(group,dict): return None
+              gid=group.get('id') or group.get('_id')
+              name=group.get('name') or group.get('group_name') or group.get('title')
+              return {'id':gid,'name':name} if gid else None
+
+          result={'request_id':request_id,'app_id':app_id,'ok':True,'app_groups':[],'team_groups':[],'teams':[]}
+          status,payload=get(f'/api/v3/apps/{app_id}/variable-groups')
+          result['app_groups_http_status']=status
+          if 200 <= status < 300:
+              for raw_group in items(payload):
+                  g=group_summary(raw_group)
+                  if not g: continue
+                  s2,p2=get(f"/api/v3/variable-groups/{g['id']}/variables")
+                  variables=[]
+                  if 200 <= s2 < 300:
+                      for v in items(p2):
+                          if isinstance(v,dict):
+                              name=v.get('name') or v.get('key')
+                              if name:
+                                  variables.append({'name':name,'secure':bool(v.get('secure') or v.get('is_secure') or v.get('encrypted'))})
+                  g['variables_http_status']=s2
+                  g['variables']=sorted(variables,key=lambda x:x['name'])
+                  result['app_groups'].append(g)
+
+          s3,p3=get('/api/v3/user/teams')
+          result['teams_http_status']=s3
+          if 200 <= s3 < 300:
+              for raw_team in items(p3):
+                  if not isinstance(raw_team,dict): continue
+                  tid=raw_team.get('id') or raw_team.get('_id')
+                  tname=raw_team.get('name') or raw_team.get('team_name')
+                  if not tid: continue
+                  result['teams'].append({'id':tid,'name':tname})
+                  s4,p4=get(f'/api/v3/teams/{tid}/variable-groups')
+                  if 200 <= s4 < 300:
+                      for raw_group in items(p4):
+                          g=group_summary(raw_group)
+                          if not g: continue
+                          s5,p5=get(f"/api/v3/variable-groups/{g['id']}/variables")
+                          variables=[]
+                          if 200 <= s5 < 300:
+                              for v in items(p5):
+                                  if isinstance(v,dict):
+                                      name=v.get('name') or v.get('key')
+                                      if name:
+                                          variables.append({'name':name,'secure':bool(v.get('secure') or v.get('is_secure') or v.get('encrypted'))})
+                          result['team_groups'].append({'team_id':tid,'id':g['id'],'name':g['name'],'variables_http_status':s5,'variables':sorted(variables,key=lambda x:x['name'])})
+
+          wanted={'CERTIFICATE_PRIVATE_KEY','APP_STORE_CONNECT_PRIVATE_KEY','APP_STORE_CONNECT_KEY_IDENTIFIER','APP_STORE_CONNECT_ISSUER_ID'}
+          candidates=[]
+          for scope,groups in [('app',result['app_groups']),('team',result['team_groups'])]:
+              for g in groups:
+                  names={v['name'] for v in g.get('variables',[])}
+                  hits=sorted(names & wanted)
+                  if hits:
+                      candidates.append({'scope':scope,'group_id':g['id'],'group_name':g.get('name'),'matching_variables':hits})
+          result['signing_variable_candidates']=candidates
+          out=Path('automation/codemagic-results')/f'{request_id}.json'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          Path('/tmp/audit-path.txt').write_text(str(out),encoding='utf-8')
+          PY
+      - name: Persist sanitized audit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          P="$(cat /tmp/audit-path.txt)"
+          cp "$P" /tmp/codemagic-env-audit.json
+          git add "$P"
+          git commit -m "Persist APP2-010 Codemagic env audit" || exit 0
+          if git push; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p "$(dirname "$P")"
+          cp /tmp/codemagic-env-audit.json "$P"
+          git add "$P"
+          git commit -m "Persist APP2-010 Codemagic env audit" || exit 0
+          git push
