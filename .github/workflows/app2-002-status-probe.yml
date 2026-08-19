@@ -1,0 +1,33 @@
+name: APP2-002 Status Probe
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  actions: read
+  issues: write
+  contents: read
+
+jobs:
+  probe:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[APP2-002-STATUS]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v8
+        with:
+          script: |
+            const owner=context.repo.owner, repo=context.repo.repo;
+            const res=await github.rest.actions.listWorkflowRuns({
+              owner, repo,
+              workflow_id:'app2-002-nomidokoro-build-only.yml',
+              per_page:5
+            });
+            const rows=res.data.workflow_runs.map(r => ({
+              id:r.id,status:r.status,conclusion:r.conclusion,
+              event:r.event,head_sha:r.head_sha,created_at:r.created_at,updated_at:r.updated_at
+            }));
+            await github.rest.issues.createComment({
+              owner,repo,issue_number:context.issue.number,
+              body:'```json\n'+JSON.stringify(rows,null,2)+'\n```'
+            });
