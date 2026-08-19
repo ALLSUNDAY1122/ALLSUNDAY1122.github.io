@@ -46,16 +46,17 @@ def _create_starting_subscription_price(token, original_payload):
     if not sub_id: raise RuntimeError("Missing subscription linkage")
     _,availability_payload=_original_req(token,f"/v1/subscriptions/{sub_id}/planAvailabilities?include=availableTerritories&limit=200")
     availabilities=_rows(availability_payload)
-    if not any(x.get("attributes",{}).get("planType")=="UPFRONT" for x in availabilities):
-        raise RuntimeError("UPFRONT subscription plan availability is missing")
-    _,points_payload=_original_req(token,f"/v1/subscriptions/{sub_id}/pricePoints?filter[territory]=JPN&filter[planType]=UPFRONT&fields[subscriptionPricePoints]=customerPrice,territory&include=territory&limit=8000")
+    plan_types=[x.get("attributes",{}).get("planType") for x in availabilities if x.get("attributes",{}).get("planType")]
+    plan_type=next((p for p in ("PAY_AS_YOU_GO","UPFRONT") if p in plan_types), plan_types[0] if plan_types else None)
+    if not plan_type: raise RuntimeError("No subscription plan availability returned")
+    _,points_payload=_original_req(token,f"/v1/subscriptions/{sub_id}/pricePoints?filter[territory]=JPN&filter[planType]={plan_type}&fields[subscriptionPricePoints]=customerPrice,territory&include=territory&limit=8000")
     point=next((x for x in _rows(points_payload) if bootstrap.dec(x.get("attributes",{}).get("customerPrice"))==bootstrap.MONTHLY_PRICE),None)
-    if point is None: raise RuntimeError("No JPN 200 UPFRONT price point found for monthly subscription")
+    if point is None: raise RuntimeError(f"No JPN 200 {plan_type} price point found; available_plan_types={plan_types}")
     point_id=point["id"]
     _,detail=_original_req(token,f"/v1/subscriptionPricePoints/{point_id}?include=territory")
     d=detail.get("data",{}) if isinstance(detail,dict) else {}; territory_id=(d.get("relationships",{}).get("territory",{}).get("data") or {}).get("id") or "JPN"
     local_id="${app2-009-starting-price-jpn}"
-    patch_payload={"data":{"type":"subscriptions","id":sub_id,"relationships":{"prices":{"data":[{"type":"subscriptionPrices","id":local_id}]}}},"included":[{"type":"subscriptionPrices","id":local_id,"attributes":{"startDate":None,"preserveCurrentPrice":False,"planType":"UPFRONT"},"relationships":{"subscription":{"data":{"type":"subscriptions","id":sub_id}},"subscriptionPricePoint":{"data":{"type":"subscriptionPricePoints","id":point_id}},"territory":{"data":{"type":"territories","id":territory_id}}}}]}
+    patch_payload={"data":{"type":"subscriptions","id":sub_id,"relationships":{"prices":{"data":[{"type":"subscriptionPrices","id":local_id}]}}},"included":[{"type":"subscriptionPrices","id":local_id,"attributes":{"startDate":None,"preserveCurrentPrice":False,"planType":plan_type},"relationships":{"subscription":{"data":{"type":"subscriptions","id":sub_id}},"subscriptionPricePoint":{"data":{"type":"subscriptionPricePoints","id":point_id}},"territory":{"data":{"type":"territories","id":territory_id}}}}]}
     return _original_req(token,f"/v1/subscriptions/{sub_id}","PATCH",patch_payload)
 
 def req(token,path,method="GET",payload=None):
