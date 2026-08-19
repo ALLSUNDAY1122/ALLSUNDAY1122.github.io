@@ -17,10 +17,20 @@ import type {
 import { loadStoredState, saveStoredState } from '@/src/repositories/storage';
 import { createId, isSameCard, toDateKey } from '@/src/utils/data';
 
+function normalizeDeckName(value: string | undefined): string {
+  return value?.trim() || 'メイン';
+}
+
+function uniqueDecks(values: string[]): string[] {
+  return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
+}
+
 export type AppStoreValue = {
   cards: Card[];
   history: StudyHistory[];
+  decks: string[];
   hydrated: boolean;
+  addDeck: (name: string) => boolean;
   addCard: (question: string, answer: string, deckName?: string) => boolean;
   addCards: (candidates: QuestionCandidate[], deckName?: string) => number;
   updateCard: (id: string, question: string, answer: string, note?: string) => boolean;
@@ -37,6 +47,7 @@ const AppStoreContext = createContext<AppStoreValue | null>(null);
 export function AppStoreProvider({ children }: PropsWithChildren) {
   const [cards, setCards] = useState<Card[]>([]);
   const [history, setHistory] = useState<StudyHistory[]>([]);
+  const [decks, setDecks] = useState<string[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -46,11 +57,13 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
         if (!active) return;
         setCards(stored.cards);
         setHistory(stored.history);
+        setDecks(stored.decks);
       })
       .catch(() => {
         if (!active) return;
         setCards([]);
         setHistory([]);
+        setDecks([]);
       })
       .finally(() => {
         if (active) setHydrated(true);
@@ -62,8 +75,21 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     if (!hydrated) return;
-    void saveStoredState({ cards, history }).catch(() => undefined);
-  }, [cards, history, hydrated]);
+    void saveStoredState({ cards, history, decks }).catch(() => undefined);
+  }, [cards, history, decks, hydrated]);
+
+  const addDeck = useCallback(
+    (name: string): boolean => {
+      const normalized = name.trim();
+      if (!normalized) return false;
+      if (decks.some((deck) => deck.localeCompare(normalized, 'ja', { sensitivity: 'accent' }) === 0)) {
+        return false;
+      }
+      setDecks((current) => [...current, normalized]);
+      return true;
+    },
+    [decks]
+  );
 
   const addCard = useCallback(
     (question: string, answer: string, deckName = 'メイン'): boolean => {
@@ -71,6 +97,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
       if (!candidate.question || !candidate.answer) return false;
       if (cards.some((card) => isSameCard(card, candidate))) return false;
 
+      const normalizedDeck = normalizeDeckName(deckName);
       const now = new Date().toISOString();
       setCards((current) => [
         ...current,
@@ -78,7 +105,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
           id: createId(),
           question: candidate.question,
           answer: candidate.answer,
-          deckName: deckName.trim() || 'メイン',
+          deckName: normalizedDeck,
           note: '',
           isHidden: false,
           correct: 0,
@@ -90,6 +117,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
           updatedAt: now
         }
       ]);
+      setDecks((current) => uniqueDecks([...current, normalizedDeck]));
       return true;
     },
     [cards]
@@ -110,6 +138,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
       }
 
       if (!accepted.length) return 0;
+      const normalizedDeck = normalizeDeckName(deckName);
       const now = new Date().toISOString();
       setCards((current) => [
         ...current,
@@ -117,7 +146,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
           id: createId(),
           question: candidate.question,
           answer: candidate.answer,
-          deckName: deckName.trim() || 'メイン',
+          deckName: normalizedDeck,
           note: '',
           isHidden: false,
           correct: 0,
@@ -129,6 +158,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
           updatedAt: now
         }))
       ]);
+      setDecks((current) => uniqueDecks([...current, normalizedDeck]));
       return accepted.length;
     },
     [cards]
@@ -182,6 +212,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
   const clearAll = useCallback(() => {
     setCards([]);
     setHistory([]);
+    setDecks([]);
   }, []);
 
   const gradeCard = useCallback((cardId: string, stage: CardReviewStage) => {
@@ -225,21 +256,26 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
       version: 1,
       exportedAt: new Date().toISOString(),
       cards,
-      history
+      history,
+      decks
     }),
-    [cards, history]
+    [cards, history, decks]
   );
 
   const restoreBackup = useCallback((backup: BackupData) => {
+    const deckNamesFromCards = backup.cards.map((card) => normalizeDeckName(card.deckName));
     setCards(backup.cards);
     setHistory(backup.history);
+    setDecks(uniqueDecks([...(backup.decks ?? []), ...deckNamesFromCards]));
   }, []);
 
   const value = useMemo<AppStoreValue>(
     () => ({
       cards,
       history,
+      decks,
       hydrated,
+      addDeck,
       addCard,
       addCards,
       updateCard,
@@ -253,7 +289,9 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
     [
       cards,
       history,
+      decks,
       hydrated,
+      addDeck,
       addCard,
       addCards,
       updateCard,
