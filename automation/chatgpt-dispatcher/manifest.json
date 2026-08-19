@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "ChatGPT Queue Dispatcher (PoC)",
-  "version": "0.1.2",
-  "description": "GitHub QueueからChatGPT Workerへタスクを順次送るPoC。診断情報を表示し、ChatGPTの回答本文は収集しません。",
+  "name": "ChatGPT Queue Dispatcher (App Development 2)",
+  "version": "0.2.0",
+  "description": "GitHub Queueからアプリ別ChatGPT Workerへタスクを配車するDispatcher。回答本文は収集しません。",
   "permissions": ["alarms", "storage", "tabs"],
   "host_permissions": ["https://chatgpt.com/*", "https://raw.githubusercontent.com/*"],
   "background": {"service_worker": "service-worker.js"},
