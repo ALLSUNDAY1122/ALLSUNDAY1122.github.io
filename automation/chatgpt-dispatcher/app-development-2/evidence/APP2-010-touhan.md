@@ -3,13 +3,11 @@
 - Worker: `TOUHAN`
 - Session: `登録販売者③`
 - Result: `HUMAN_REQUIRED`
-- Date: `2026-08-19 JST`
+- Date: `2026-08-20 JST`
 - Repository: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
 - App Store review submission: **NOT PERFORMED / PROHIBITED**
 
-## 1. 正本識別情報の再照合
-
-Notion/GitHubの現行正本を再取得し、古い「App record未作成」扱いを破棄した。
+## 1. 正本識別情報
 
 - Bundle ID: `com.allsunday1122.tourokuhanbaisha`
 - App Store Connect App ID: `6802119268`
@@ -18,127 +16,124 @@ Notion/GitHubの現行正本を再取得し、古い「App record未作成」扱
 - Version: `1.0.0`
 - Codemagic repository app id: `6a769d81a1add9d06020b524`
 
-Notion対象ページ `3b309c10-697d-8184-8b61-ff06ea73eaf7` と識別情報正本 `3b709c10-697d-8138-a352-c422d4dd5c47` を更新し、次工程を署名identity gateへ訂正した。
+Notion対象ページ `3b309c10-697d-8184-8b61-ff06ea73eaf7` と識別情報正本 `3b709c10-697d-8138-a352-c422d4dd5c47` はBuild #10実績へ更新済み。
 
-## 2. AppIcon正本
+## 2. 品質ゲート
 
-学びスプリントAppIcon正本ルールに従い、登録販売者の個別PNGを正本化した。
+- canonical question bank: 3試験回 × 120問 = 360問 PASS
+- 各回分野配分: 20 / 20 / 40 / 20 / 20 PASS
+- history calendar regression: completed / same-day inProgress / completed+inProgress / zero-answer exclusion PASS
+- 2026-08-15 iPhone Safari受入: PASS
+- AppIcon: Drive `登録販売者.png` / 1024x1024
+- AppIcon SHA-256: `c0cefbae22cdcd7b614d213ddca7942c7d693f02ead758b11b66d447a66bff03`
+- Privacy Manifest / Bundle ID / Team ID / XcodeGen generation / release validator: PASS
 
-- Drive file: `登録販売者.png`
-- Drive file id: `1mIyCAdiiTBXYe-kjDdbrdKmsrIf4VkTo`
-- Size: `1024x1024`
-- SHA-256: `c0cefbae22cdcd7b614d213ddca7942c7d693f02ead758b11b66d447a66bff03`
-- 官公庁章・公認表示なし
+## 3. Apple / Codemagic署名基盤
 
-GitHubのiOS Release gateとCodemagic buildは上記SHAを署名前に照合する。
+旧HUMAN_REQUIREDだった署名identity不足は自動整備で解消した。
 
-## 3. 履歴カレンダー直近実機指摘の再検証
+### Apple Developer
 
-現行mainの `touroku-hanbaisha-sprint/history-calendar-v02.js` をNode VM上で直接実行する回帰テスト `touroku-hanbaisha-sprint/validate-history-calendar.mjs` を追加済み。
+- 新Apple Distribution certificate: `K2A3VCP583`
+- registration seller App Store profile: `7B328C2DU4`
+- profile name: `tourokuhanbaisha_appstore`
+- profile state: `ACTIVE`
+- 共有certificate `MLDDAKTU69` は変更していない。
+- 旧孤立certificate `27TTVLZ65A` は、AI Handover Logの代替profile `4Z25F68APA` を先に作成・ACTIVE確認した後にのみローテーションした。
 
-検証対象:
-- 完了履歴の日別集計
-- 当日の途中回答 `inProgress` の反映
-- 完了履歴＋途中回答の合算
-- 0問途中状態の除外
+### Codemagic
 
-Codemagic Build #2/#3/#4 の Release input auditで継続PASS。360問canonical監査もPASS。2026-08-15 iPhone Safari実機再確認PASSというNotion記録とも整合した。
+- secure variable group: `app2_010_touhan_signing`
+- secure variables:
+  - `CERTIFICATE_PRIVATE_KEY`
+  - `APP_STORE_CONNECT_PRIVATE_KEY`
+  - `APP_STORE_CONNECT_KEY_IDENTIFIER`
+  - `APP_STORE_CONNECT_ISSUER_ID`
+- secret値はGitHub / Notion / chatへ保存していない。
+- signing fetch / certificate import / profile applyはBuild #10で実動PASS。
 
-## 4. Native iOS / XcodeGen
+## 4. Apple validation 90474修正
 
-PR #4305でSwiftUI + WKWebView native wrapper、Privacy Manifest、AppIcon gate、Release validatorをmainへ統合。
+Build #9はsigned IPA生成後、Apple validationで `90474` を返した。
 
-PR #4330でXcodeGen ProjectSpecを修正し、Assets/Privacy Manifestをtarget `sources` + `buildPhase: resources`へ移行。
+原因:
+- generated Info.plistに `UISupportedInterfaceOrientations` が未指定。
 
-Codemagic Build #2/#3で `Set CI build number and generate native project` が失敗したため、macOS GitHub ActionsでXcodeGen 2.46.0を実行して `project.yml` 自体は生成可能・Bundle/Team grep PASSを確認した。
+修正:
+- `touroku-hanbaisha-ios/native-ios/project.yml` に4方向を追加。
+  - `UIInterfaceOrientationPortrait`
+  - `UIInterfaceOrientationPortraitUpsideDown`
+  - `UIInterfaceOrientationLandscapeLeft`
+  - `UIInterfaceOrientationLandscapeRight`
+- `touroku-hanbaisha-ios/scripts/validate_release.py` に同設定を必須gateとして追加。
 
-その後、Codemagic build number参照を `CM_BUILD_NUMBER` 必須から `CM_BUILD_NUMBER or BUILD_NUMBER`へ修正し、Build #4では以下がPASSした。
+main commits:
+- `592951fcc391e9e7a667b437c409e59234321315` — orientation fix
+- `6c425010c8cf0cee895c05695a48fdc4d334fec6` — release validator gate
 
+## 5. Codemagic Build #10
+
+- request: `app2-010-touhan-build-orientation-fix-20260820-0624`
+- Codemagic build id: `6a861f2e68c24c24844d3f66`
+- build index: `10`
+- workflow: `touhan-ios`
+- version: `1.0.0`
+- build number: `10`
+- result: `finished`
+- IPA: `TouhanSprint.ipa`
+
+PASS actions:
+- Install native build tools
 - Release input audit
 - history calendar regression
 - AppIcon SHA gate
 - XcodeGen generation
-- generated project Bundle ID / Team ID verification
+- Bundle/Team/native input verification
+- signing keychain initialization
+- managed App Store signing files fetch
+- Apple Distribution certificate import
+- provisioning profile apply
+- signed IPA build
+- direct App Store Connect upload for Internal TestFlight
 
-## 5. Codemagic build evidence
+Evidence:
+- `automation/codemagic-results/app2-010-touhan-build-orientation-fix-20260820-0624.json`
 
-### Build #4
+## 6. Apple upload acceptance
 
-- request: `app2-010-touhan-build-internal4-20260819-1524`
-- build id: `6a854b9aea6ced5835d96b07`
-- result: `failed`
-- evidence: `automation/codemagic-results/app2-010-touhan-build-internal4-20260819-1524.json`
+Build #10のsanitized ContentDelivery logをCodemagic artifact bundleから回収した。
 
-PASS:
-- native tools install
-- release input audit
-- XcodeGen generation
-- native input verification
-- keychain initialize
+Evidence:
+- `automation/codemagic-results/app2-010-upload-log-build10-20260820-0637.json`
+- `automation/codemagic-results/app2-010-upload-log-build10-20260820-0637.txt`
 
-FAIL:
-- `app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create`
+Apple uploader final result:
 
-同じ署名取得CLIはAPP2-012でも同様に失敗しており、登録販売者固有のアプリコード障害ではない。
+- `Upload succeeded.`
+- `UPLOAD SUCCEEDED with no errors`
+- Delivery UUID: `d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c`
+- transferred: `131282 bytes`
 
-### Build #5
+したがって旧90474は解消し、signed IPAはApp Store Connectへ正常delivery済み。
 
-Codemagic公式の保存済みCode signing identity自動解決方式へ変更した。
+補助的なApp Store Connect Build resource API read-backはrequest-scoped summaryが本Evidence更新時点で未永続化のため、`processingState` の最新値は推測しない。Apple uploaderの成功ログとCodemagic workflow `finished` をupload成立の証拠とする。
 
-- `environment.ios_signing.distribution_type: app_store`
-- `environment.ios_signing.bundle_identifier: com.allsunday1122.tourokuhanbaisha`
-- manual `keychain initialize / fetch-signing-files / add-certificates` を登録販売者workflowから除去
-- `submit_to_testflight: true`
-- `submit_to_app_store: false`
+## 7. 残る真正な人間gate
 
-Installer evidence:
-`automation/codemagic-results/app2-010-touhan-install-autosign-20260819-1529.json`
+自動化可能な実装・署名・IPA生成・Apple uploadは完了した。残るのはTestFlight処理完了後のiPhone実機受入のみ。
 
-Build:
-- request: `app2-010-touhan-build-internal5-20260819-1530`
-- build id: `6a854cd4783ac97e9935da72`
-- result: `failed`
-- `started_at: null`
-- `instance_type: null`
-- actions: empty
-- evidence: `automation/codemagic-results/app2-010-touhan-build-internal5-20260819-1530.json`
+Build 10をInternal TestFlightからiPhoneへインストールして以下を確認する。
 
-この挙動はrunner起動前のCodemagic signing/config preflightで止まっているため、保存済みCode signing identitiesから当該Bundle用App Store署名identityを解決できていないと判定する。
+1. 起動して白画面・クラッシュがない。
+2. 12問スプリントを開始できる。
+3. 回答→解説→次問が正常。
+4. 途中終了→再開が正常。
+5. 履歴カレンダーに当日回答と完了履歴が正しく反映される。
 
-## 6. App Store Connect再監査
-
-Apple ID `6802119268` を対象にGitHub App Store Connect API Gatewayへ再監査を投入した。
-
-最終投入 request:
-`app2-010-touhan-asc-minimal-20260819-1535`
-
-対象:
-- `/v1/apps/6802119268`
-- `/v1/apps/6802119268/builds`
-- `/v1/apps/6802119268/appStoreVersions`
-- `/v1/apps/6802119268/betaGroups`
-
-本Worker終了時点ではrequest-scoped結果ファイルが未生成。既存ASC Gatewayは成功時のみsummaryを永続化するため、この再監査は「最新Apple API read-back PASS」の証拠としては採用しない。
-
-識別情報はNotion横断監査でApp record存在・Apple ID `6802119268`として正本化済みだが、今回の署名Buildが未成立のため新BuildはASCへ未uploadであり、Internal TestFlightへは未到達。
-
-## 7. 真正な人間ゲート
-
-現時点で自動化可能なコード・CI・Codemagic workflow差分は処理済み。残る停止点はCodemagicアカウント内のApple署名identityで、現在利用可能なGitHub/Codemagic Build APIから安全に作成・アップロードできる管理APIは確認できなかった。
-
-必要な人間操作は次の1点群のみ。
-
-1. Codemagic Team settings → **Code signing identities** を開く。
-2. Bundle ID `com.allsunday1122.tourokuhanbaisha` 用の有効な **Apple Distribution certificate（private key付き）** と **App Store provisioning profile** を利用可能にする。
-3. 必要なら Team settings → integrations / Developer Portal のApp Store Connect API key権限を修復してから、Code signing identities画面でcertificate/profileをFetch/Generateする。
-4. provisioning profile referenceは正本 `tourokuhanbaisha_appstore` と整合させる。
-
-`.p8`、private key、certificate password、API token等をチャット・Notion・GitHubへ貼らない。
-
-このidentityが利用可能になれば、次回は既存 `touhan-ios` を再実行するだけで、signed IPA → App Store Connect upload → Internal TestFlightへ進める。App Store本審査submit/releaseは実行しない。
+実機PASS後にのみApp Store本申請準備へ進める。**本審査submit/releaseはこのTaskでは実行しない。**
 
 ## 8. 最終判定
 
 `HUMAN_REQUIRED`
 
-理由: アプリコード、履歴回帰、360問、AppIcon、Bundle/App ID、XcodeGen、Codemagic workflowは機械的に整合確認済み。Internal TestFlight未到達の唯一の実停止点はCodemagicのApple signing identity availability。
+理由: 旧署名identity gateは解消済み。Build #10はsigned IPA生成とApple uploadまで成功。残件はiPhone/TestFlightでしか判定できない最終実機受入のみ。
