@@ -114,7 +114,7 @@ def main() -> int:
             build_id = str(command.get("build_id", ""))
             if len(build_id) < 8:
                 raise RuntimeError("Invalid build_id")
-            status, response = api_json(token, f"https://api.codemagic.io/v3/builds/{build_id}")
+            status, response = api_json(token, f"https://codemagic.io/api/v3/builds/{build_id}")
             if not 200 <= status < 300:
                 raise RuntimeError(f"Codemagic build inspect HTTP {status}: {sanitize(response)}")
             details = response.get("data") or response
