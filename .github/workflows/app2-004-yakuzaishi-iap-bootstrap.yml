@@ -41,16 +41,7 @@ jobs:
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
           set +e
-          python - <<'PY' > /tmp/app2-004-iap.log 2>&1
-          import sys
-          from pathlib import Path
-          path = Path('scripts/app2_004_yakuzaishi_iap_bootstrap.py')
-          src = path.read_text(encoding='utf-8')
-          src = src.replace('                    "availableInAllTerritories": True,\n', '')
-          sys.path.insert(0, str(path.parent.resolve()))
-          ns = {'__name__': '__main__', '__file__': str(path)}
-          exec(compile(src, str(path), 'exec'), ns)
-          PY
+          python scripts/app2_004_yakuzaishi_iap_v2_runner.py > /tmp/app2-004-iap.log 2>&1
           code=$?
           python - "$code" <<'PY'
           import json, re, sys
@@ -63,7 +54,7 @@ jobs:
           Path('automation/app2-004-yakuzaishi-iap-diagnostic.json').write_text(
               json.dumps({
                   'task_id': 'APP2-004',
-                  'step': 'iap_bootstrap',
+                  'step': 'iap_bootstrap_v2',
                   'exit_code': code,
                   'ok': code == 0,
                   'log_tail': raw[-12000:],
