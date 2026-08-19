@@ -1,29 +1,25 @@
 {
-  "request_id": "app2-004-yakuzaishi-asc-audit-20260819-1221",
+  "request_id": "app2-003-yoru-asc-audit-20260819-1223",
   "requests": [
     {
       "label": "app",
-      "path": "/v1/apps/6799753724"
+      "path": "/v1/apps/6794137637"
     },
     {
       "label": "builds",
-      "path": "/v1/apps/6799753724/builds?limit=200"
+      "path": "/v1/apps/6794137637/builds?sort=-uploadedDate&limit=20"
     },
     {
-      "label": "versions",
-      "path": "/v1/apps/6799753724/appStoreVersions?limit=200"
+      "label": "prerelease-versions",
+      "path": "/v1/apps/6794137637/preReleaseVersions?limit=20"
+    },
+    {
+      "label": "appstore-versions",
+      "path": "/v1/apps/6794137637/appStoreVersions?limit=20"
     },
     {
       "label": "beta-groups",
-      "path": "/v1/apps/6799753724/betaGroups?limit=200"
-    },
-    {
-      "label": "iap",
-      "path": "/v1/apps/6799753724/inAppPurchasesV2?limit=200"
-    },
-    {
-      "label": "subscription-groups",
-      "path": "/v1/apps/6799753724/subscriptionGroups?limit=200"
+      "path": "/v1/apps/6794137637/betaGroups?limit=20"
     }
   ]
 }
