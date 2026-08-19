@@ -1,0 +1,66 @@
+name: APP2-005 HM1 content inspect
+
+on:
+  push:
+    branches:
+      - fix/health-manager-1-icon-content-v2
+    paths:
+      - automation/app2-005-hm1-content-inspect-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Inspect HM1 source and icons
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re,hashlib
+          root=Path('.')
+          p=root/'ios/health-manager-1/Resources/index.html'
+          text=p.read_text(encoding='utf-8')
+          lines=text.splitlines()
+          patterns=('const ','let ','var ','QUEST','question','mock','模擬','試験','過去','set')
+          hits=[]
+          for i,line in enumerate(lines,1):
+              low=line.lower()
+              if any(x.lower() in low for x in patterns):
+                  hits.append({'line':i,'text':line[:500]})
+          # retain script-oriented hits and cap noise
+          useful=[h for h in hits if h['line']>40][-220:]
+          object_key_counts={k:len(re.findall(r'\\b'+re.escape(k)+r'\\s*:',text)) for k in ['id','q','question','choices','options','answer','correct','domain','category','exam','round','memory','reason','detail']}
+          # candidate array assignments
+          arrays=[]
+          for m in re.finditer(r'(?m)^\\s*(?:const|let|var)\\s+([A-Za-z_$][\\w$]*)\\s*=\\s*\\[',text):
+              arrays.append({'name':m.group(1),'offset':m.start(),'line':text.count('\\n',0,m.start())+1})
+          icon_files=[]
+          for base in [root/'ios/health-manager-1', root/'ios/health-manager-2', root/'native-ios/Otsu4Sprint', root/'kangoshi-sprint', root/'tsukanshi-sprint']:
+              if not base.exists(): continue
+              for f in base.rglob('*'):
+                  if f.is_file() and ('AppIcon' in f.name or 'appicon' in str(f).lower()) and f.stat().st_size < 5_000_000:
+                      icon_files.append({'path':str(f),'size':f.stat().st_size,'sha256':hashlib.sha256(f.read_bytes()).hexdigest()[:16]})
+          report={
+            'index_bytes':len(text.encode('utf-8')),
+            'line_count':len(lines),
+            'object_key_counts':object_key_counts,
+            'array_assignments':arrays,
+            'script_hits':useful,
+            'icon_files':icon_files[:200],
+          }
+          out=root/'automation/app2-005-hm1-content-inspect-report.json'
+          out.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')
+          PY
+      - name: Persist report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/app2-005-hm1-content-inspect-report.json
+          git commit -m "Record HM1 content inspection" || exit 0
+          git push origin HEAD:fix/health-manager-1-icon-content-v2
