@@ -1,0 +1,123 @@
+name: APP2-002 ASC Revision
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-002-asc-revise-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  revise:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Cancel approved old submission and align Build 5 metadata
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys, time
+          from pathlib import Path
+          sys.path.insert(0, 'scripts')
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          APP_ID='6794847479'
+          BUNDLE_ID='jp.allsunday1122.nomikaiarcade'
+          VERSION_ID='7dcad63e-8c82-4d19-8dc5-873458bca58b'
+          REVIEW_ID='da842467-2794-4717-a374-3d251d4d657c'
+          LOC_ID='693f9319-d865-4d81-867e-df2df6345a06'
+          BUILD5_ID='f0a3be6b-8857-4c8d-9c31-00594aa6340f'
+          DESIRED={'name':'呑み処アーケード','subtitle':'みんなで遊べる宴会ゲーム19選'}
+          out={'task_id':'APP2-002','app_id':APP_ID,'version_id':VERSION_ID,'review_submission_id':REVIEW_ID,'build_id':BUILD5_ID}
+
+          key_path, cleanup = load_private_key()
+          try:
+              token=make_token(os.environ['ASC_ISSUER_ID'], os.environ['ASC_KEY_ID'], key_path)
+              _, app=api_get(token,f'/v1/apps/{APP_ID}')
+              if app['data']['attributes'].get('bundleId') != BUNDLE_ID:
+                  raise SystemExit('APP2-002 preflight failed: bundle mismatch')
+              _, version=api_get(token,f'/v1/appStoreVersions/{VERSION_ID}')
+              before_state=version['data']['attributes'].get('appStoreState')
+              out['version_state_before']=before_state
+              if before_state != 'PENDING_DEVELOPER_RELEASE':
+                  raise SystemExit(f'APP2-002 preflight failed: expected PENDING_DEVELOPER_RELEASE, got {before_state}')
+              _, review=api_get(token,f'/v1/reviewSubmissions/{REVIEW_ID}')
+              review_state=review['data']['attributes'].get('state')
+              out['review_state_before']=review_state
+              if review_state != 'COMPLETE':
+                  raise SystemExit(f'APP2-002 preflight failed: expected COMPLETE review submission, got {review_state}')
+              _, build=api_get(token,f'/v1/builds/{BUILD5_ID}')
+              build_attrs=build['data']['attributes']
+              if build_attrs.get('version') != '5' or build_attrs.get('processingState') != 'VALID':
+                  raise SystemExit(f'APP2-002 preflight failed: Build 5 not VALID: {build_attrs.get("version")}/{build_attrs.get("processingState")}')
+
+              cancel_payload={'data':{'type':'reviewSubmissions','id':REVIEW_ID,'attributes':{'canceled':True}}}
+              cancel_status,_=api_request(token,f'/v1/reviewSubmissions/{REVIEW_ID}',method='PATCH',payload=cancel_payload)
+              out['cancel_http_status']=cancel_status
+
+              unlocked=None
+              for _ in range(18):
+                  _, current=api_get(token,f'/v1/appStoreVersions/{VERSION_ID}')
+                  unlocked=current['data']['attributes'].get('appStoreState')
+                  if unlocked != 'PENDING_DEVELOPER_RELEASE':
+                      break
+                  time.sleep(5)
+              out['version_state_after_cancel']=unlocked
+              if unlocked == 'PENDING_DEVELOPER_RELEASE':
+                  raise SystemExit('APP2-002 cancel did not unlock version metadata')
+
+              _, loc_before=api_get(token,f'/v1/appInfoLocalizations/{LOC_ID}')
+              before_attrs=loc_before['data']['attributes']
+              changes={k:v for k,v in DESIRED.items() if before_attrs.get(k)!=v}
+              out['metadata_before']={k:before_attrs.get(k) for k in DESIRED}
+              if changes:
+                  payload={'data':{'type':'appInfoLocalizations','id':LOC_ID,'attributes':changes}}
+                  status,_=api_request(token,f'/v1/appInfoLocalizations/{LOC_ID}',method='PATCH',payload=payload)
+                  out['metadata_patch_http_status']=status
+              _, loc_after=api_get(token,f'/v1/appInfoLocalizations/{LOC_ID}')
+              after_attrs=loc_after['data']['attributes']
+              out['metadata_after']={k:after_attrs.get(k) for k in DESIRED}
+              if any(after_attrs.get(k)!=v for k,v in DESIRED.items()):
+                  raise SystemExit(f'APP2-002 metadata read-back mismatch: {out["metadata_after"]}')
+
+              relationship=f'/v1/appStoreVersions/{VERSION_ID}/relationships/build'
+              _, current_rel=api_get(token,relationship)
+              current_id=(current_rel.get('data') or {}).get('id') if isinstance(current_rel.get('data'),dict) else None
+              out['build_before']=current_id
+              if current_id != BUILD5_ID:
+                  payload={'data':{'type':'builds','id':BUILD5_ID}}
+                  status,_=api_request(token,relationship,method='PATCH',payload=payload)
+                  out['attach_build_http_status']=status
+              _, after_rel=api_get(token,relationship)
+              after_id=(after_rel.get('data') or {}).get('id') if isinstance(after_rel.get('data'),dict) else None
+              out['build_after']=after_id
+              if after_id != BUILD5_ID:
+                  raise SystemExit(f'APP2-002 build read-back mismatch: {after_id}')
+
+              _, final_version=api_get(token,f'/v1/appStoreVersions/{VERSION_ID}')
+              out['version_state_final']=final_version['data']['attributes'].get('appStoreState')
+              _, final_review=api_get(token,f'/v1/reviewSubmissions/{REVIEW_ID}')
+              out['review_state_final']=final_review['data']['attributes'].get('state')
+              out['submitted_for_review']=False
+              out['released_to_store']=False
+              Path('automation/app2-002-asc-revise-result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+              print('PASS: APP2-002 old release canceled; metadata and Build 5 aligned without resubmission/release')
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+          PY
+      - name: Persist sanitized ASC revision result
+        if: always() && hashFiles('automation/app2-002-asc-revise-result.json') != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/app2-002-asc-revise-result.json
+          git commit -m "Persist APP2-002 ASC revision result" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
