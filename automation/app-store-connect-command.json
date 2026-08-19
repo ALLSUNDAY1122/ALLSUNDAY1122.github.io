@@ -1,25 +1,29 @@
 {
-  "request_id": "app2-003-yoru-asc-audit-20260819-1223",
+  "request_id": "app2-010-touhan-asc-audit-20260819-1229",
   "requests": [
     {
       "label": "app",
-      "path": "/v1/apps/6794137637"
+      "path": "/v1/apps/6802119268"
     },
     {
       "label": "builds",
-      "path": "/v1/apps/6794137637/builds?sort=-uploadedDate&limit=20"
+      "path": "/v1/apps/6802119268/builds?sort=-uploadedDate&limit=50"
     },
     {
       "label": "prerelease-versions",
-      "path": "/v1/apps/6794137637/preReleaseVersions?limit=20"
+      "path": "/v1/apps/6802119268/preReleaseVersions?limit=50"
     },
     {
       "label": "appstore-versions",
-      "path": "/v1/apps/6794137637/appStoreVersions?limit=20"
+      "path": "/v1/apps/6802119268/appStoreVersions?limit=50"
     },
     {
       "label": "beta-groups",
-      "path": "/v1/apps/6794137637/betaGroups?limit=20"
+      "path": "/v1/apps/6802119268/betaGroups?limit=50"
+    },
+    {
+      "label": "app-infos",
+      "path": "/v1/apps/6802119268/appInfos?limit=20&include=appInfoLocalizations"
     }
   ]
 }
