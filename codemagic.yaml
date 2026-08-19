@@ -1,72 +1,4 @@
 workflows:
-  health-manager-2-ios:
-    name: Health Manager 2 - iOS TestFlight
-    max_build_duration: 60
-    instance_type: mac_mini_m2
-    integrations:
-      app_store_connect: codemagic
-    environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: jp.allsunday1122.healthmanager2
-      vars:
-        BUNDLE_ID: jp.allsunday1122.healthmanager2
-        XCODE_PROJECT: ios/health-manager-2/HealthManager2.xcodeproj
-        XCODE_SCHEME: HealthManager2
-      xcode: latest
-    scripts:
-      - name: Audit learning content before macOS build
-        script: |
-          cd "$CM_BUILD_DIR"
-          node "$CM_BUILD_DIR/ios/health-manager-2/export-audit-data.cjs"
-          python3 "$CM_BUILD_DIR/automation/learning-sprint-question-pipeline/validate_questions.py" \
-            "$CM_BUILD_DIR/ios/health-manager-2/learning-sprint-audit.json"
-          bash -n "$CM_BUILD_DIR/ios/health-manager-2/prepare-web-assets.sh"
-          python3 - <<'PY'
-          import plistlib
-          with open('ios/health-manager-2/HealthManager2/PrivacyInfo.xcprivacy','rb') as f:
-              data=plistlib.load(f)
-          assert data.get('NSPrivacyTracking') is False
-          assert data.get('NSPrivacyCollectedDataTypes') == []
-          print('PASS: Privacy Manifest parses and matches no-data-collection implementation.')
-          PY
-      - name: Install project tools
-        script: |
-          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen imagemagick
-      - name: Prepare bundled web assets
-        script: |
-          bash "$CM_BUILD_DIR/ios/health-manager-2/prepare-web-assets.sh"
-      - name: Generate Xcode project
-        script: |
-          cd "$CM_BUILD_DIR/ios/health-manager-2"
-          xcodegen generate
-      - name: Verify bundled release inputs
-        script: |
-          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/index.html"
-          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/audit-fixes.js"
-          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/question-order-v1.js"
-          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/PrivacyInfo.xcprivacy"
-          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Assets.xcassets/AppIcon.appiconset/AppIcon.png"
-      - name: Apply App Store signing profiles
-        script: |
-          cd "$CM_BUILD_DIR/ios/health-manager-2"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
-      - name: Build signed IPA
-        script: |
-          xcode-project build-ipa \
-            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
-    artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: false
-        submit_to_app_store: false
-
   otsu4-ios:
     name: 危険物乙4 - iOS Internal TestFlight
     max_build_duration: 60
@@ -75,13 +7,12 @@ workflows:
       app_store_connect: codemagic
     environment:
       ios_signing:
-        provisioning_profiles:
-          - otsu4_appstore
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.otsu4
       vars:
         APP_STORE_ID: '6799755566'
         APPLE_TEAM_ID: MN3D2ZM44N
         BUNDLE_ID: jp.allsunday1122.otsu4
-        CODEMAGIC_PROFILE: otsu4_appstore
         XCODE_PROJECT: native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj
         XCODE_SCHEME: Otsu4Sprint
       xcode: latest
@@ -92,7 +23,6 @@ workflows:
           test "$BUNDLE_ID" = "jp.allsunday1122.otsu4"
           test "$APP_STORE_ID" = "6799755566"
           test "$APPLE_TEAM_ID" = "MN3D2ZM44N"
-          test "$CODEMAGIC_PROFILE" = "otsu4_appstore"
       - name: Install XcodeGen
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
       - name: Prepare audited 360-question resources and icon
@@ -107,6 +37,7 @@ workflows:
           agvtool new-version -all "$CM_BUILD_NUMBER"
       - name: Verify release inputs
         script: |
+          set -euo pipefail
           test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json"
           test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy"
           test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png"
@@ -117,7 +48,7 @@ workflows:
           assert len(data['questions'])==360
           print('PASS: audited Otsu4 bundle inputs')
           PY
-      - name: Apply canonical App Store profile for internal TestFlight only
+      - name: Apply App Store signing profiles for internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
@@ -134,5 +65,5 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: false
+        submit_to_testflight: true
         submit_to_app_store: false
