@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py", line 24, in <module>
+    bank.main()
+  File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank.py", line 190, in main
+    for src in build_sources():
+               ^^^^^^^^^^^^^^^
+  File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank.py", line 48, in build_sources
+    am,pm,ans=pdf_links_from_page(pages[n])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank.py", line 29, in pdf_links_from_page
+    if not header: raise RuntimeError(f'OT section not found: {page_url}')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: OT section not found: https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-08_09.html
