@@ -53,7 +53,10 @@ BLOCK = r'''
           import os
           p=Path('project.yml')
           text=p.read_text(encoding='utf-8')
-          text=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)
+          build_number = os.environ.get('CM_BUILD_NUMBER') or os.environ.get('BUILD_NUMBER')
+          if not build_number:
+              raise RuntimeError('Codemagic build number is unavailable')
+          text=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+build_number, 1)
           p.write_text(text, encoding='utf-8')
           PYBUILD
           xcodegen generate
@@ -109,18 +112,15 @@ def replace_workflow(text: str) -> tuple[str, bool]:
     if start < 0:
         return text.rstrip() + BLOCK + "\n", True
 
-    tail_start = start + 1
-    match = re.search(r"(?m)^  [A-Za-z0-9_-]+:\s*$", text[tail_start + len(f'  {WORKFLOW_ID}:\n'):])
-    if match:
-        end = tail_start + len(f"  {WORKFLOW_ID}:\n") + match.start()
-        suffix = text[end:]
-    else:
-        suffix = ""
+    body_start = start + 1
+    search_from = body_start + len(f"  {WORKFLOW_ID}:\n")
+    match = re.search(r"(?m)^  [A-Za-z0-9_-]+:\s*$", text[search_from:])
+    end = search_from + match.start() if match else len(text)
     replacement = BLOCK.lstrip("\n").rstrip() + "\n"
-    current = text[tail_start:end] if match else text[tail_start:]
+    current = text[body_start:end]
     if current == replacement:
         return text, False
-    return text[:tail_start] + replacement + suffix, True
+    return text[:body_start] + replacement + text[end:], True
 
 
 def main() -> int:
@@ -144,6 +144,7 @@ def main() -> int:
         'APP_STORE_CONNECT_APP_ID: "6802119268"',
         "CODEMAGIC_PROFILE_REF: tourokuhanbaisha_appstore",
         "APPICON_SHA256: c0cefbae22cdcd7b614d213ddca7942c7d693f02ead758b11b66d447a66bff03",
+        "os.environ.get('CM_BUILD_NUMBER') or os.environ.get('BUILD_NUMBER')",
         'app-store-connect fetch-signing-files "$BUNDLE_ID"',
         "--type IOS_APP_STORE",
         "--create",
@@ -162,6 +163,7 @@ def main() -> int:
         "action": "install_touhan_workflow",
         "workflow_id": WORKFLOW_ID,
         "changed": changed,
+        "build_number_mode": "CM_BUILD_NUMBER_or_BUILD_NUMBER",
         "signing_mode": "runtime_fetch_or_create",
         "bundle_id": "com.allsunday1122.tourokuhanbaisha",
         "app_store_connect_app_id": "6802119268",
