@@ -1,0 +1,81 @@
+name: APP2-009 Kangoshi Release Ops
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: app2-009-kangoshi-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  run:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      (github.event.issue.title == '[APP2-009] Materialize Kangoshi AppIcon' ||
+       github.event.issue.title == '[APP2-009] Bootstrap Kangoshi subscription')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Materialize exact canonical AppIcon
+        if: github.event.issue.title == '[APP2-009] Materialize Kangoshi AppIcon'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check gdown
+          target='kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+          mkdir -p "$(dirname "$target")"
+          gdown --id '1VDnbT0s9gEPde4baCfw9kXYfnEHLQrp3' -O "$target"
+          test "$(stat -c '%s' "$target")" = '683924'
+          test "$(sha256sum "$target" | awk '{print $1}')" = '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80'
+          file "$target" | grep -q 'PNG image data, 1024 x 1024'
+          python3 kangoshi-sprint/ios/tools/bind_canonical_appicon.py
+      - name: Bootstrap monthly subscription
+        if: github.event.issue.title == '[APP2-009] Bootstrap Kangoshi subscription'
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/app2_009_kangoshi_subscription_bootstrap.py
+      - name: Commit result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [ "${{ github.event.issue.title }}" = '[APP2-009] Materialize Kangoshi AppIcon' ]; then
+            git add kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png kangoshi-sprint/ios/project.yml
+            msg='APP2-009: materialize exact Kangoshi AppIcon'
+          else
+            git add automation/app2-009-kangoshi-subscription-result.json
+            msg='APP2-009: persist Kangoshi subscription result'
+          fi
+          if git diff --cached --quiet; then
+            echo 'No material change.'
+          else
+            git commit -m "$msg"
+            for attempt in 1 2 3 4 5 6; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then break; fi
+              test "$attempt" != 6
+              sleep 2
+            done
+          fi
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `APP2-009 release operation finished. status=${{ job.status }}; run_id=${context.runId}`
+            });
