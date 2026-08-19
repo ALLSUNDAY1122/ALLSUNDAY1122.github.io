@@ -1,9 +1,9 @@
 {
-  "request_id": "app2-010-managed-signing-live-readback-20260819-2012",
+  "request_id": "app2-010-post-build7-asc-readback-20260819-2007",
   "requests": [
-    {"label":"distribution-certificates","method":"GET","path":"/v1/certificates?filter[certificateType]=DISTRIBUTION,IOS_DISTRIBUTION&limit=200"},
-    {"label":"touhan-profiles","method":"GET","path":"/v1/profiles?filter[name]=tourokuhanbaisha_appstore&limit=20"},
-    {"label":"touhan-temp-profile","method":"GET","path":"/v1/profiles?filter[name]=tourokuhanbaisha_appstore_cmkey_temp&limit=20"},
-    {"label":"ai-protected-profile","method":"GET","path":"/v1/profiles/4Z25F68APA"}
+    {"label":"app","method":"GET","path":"/v1/apps/6802119268"},
+    {"label":"builds","method":"GET","path":"/v1/apps/6802119268/builds?sort=-uploadedDate&limit=20"},
+    {"label":"versions","method":"GET","path":"/v1/apps/6802119268/appStoreVersions?limit=20"},
+    {"label":"beta-groups","method":"GET","path":"/v1/apps/6802119268/betaGroups?limit=50"}
   ]
 }
