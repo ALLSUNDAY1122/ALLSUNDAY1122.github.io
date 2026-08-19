@@ -1,0 +1,111 @@
+name: APP2-009 Kangoshi Codemagic Fix and Build
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  fix-and-build:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP2-009] Fix Codemagic and build TestFlight'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install gateway dependency
+        run: python -m pip install --disable-pip-version-check PyYAML
+      - name: Normalize Kangoshi Codemagic workflow
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git reset --hard origin/main
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml')
+          s=p.read_text(encoding='utf-8')
+          start=s.index('\n  kangoshi-ios:\n')
+          end=s.find('\n  ', start+5)
+          if end < 0: end=len(s)
+          block=s[start:end]
+          block=block.replace('      app_store_connect: codemagic\n','      app_store_connect: "Codemagic Shiwake Swipe"\n')
+          block=block.replace('      ios_signing:\n        distribution_type: app_store\n        bundle_identifier: jp.allsunday1122.kangoshi\n','      ios_signing:\n        provisioning_profiles:\n          - kangoshi_appstore\n')
+          if 'IAP_LIFETIME_PRODUCT_ID:' not in block:
+              block=block.replace('        IAP_PRODUCT_ID: jp.allsunday1122.kangoshi.monthly\n','        IAP_PRODUCT_ID: jp.allsunday1122.kangoshi.monthly\n        IAP_LIFETIME_PRODUCT_ID: jp.allsunday1122.kangoshi.lifetime\n')
+          block=block.replace('        submit_to_testflight: false\n','        submit_to_testflight: true\n')
+          if 'app_store_connect: codemagic' in block:
+              raise SystemExit('old app_store_connect integration still present')
+          if 'distribution_type: app_store' in block:
+              raise SystemExit('old dynamic signing block still present')
+          if 'provisioning_profiles:\n          - kangoshi_appstore' not in block:
+              raise SystemExit('kangoshi provisioning profile missing')
+          if 'submit_to_testflight: true' not in block:
+              raise SystemExit('TestFlight publishing not enabled')
+          p.write_text(s[:start]+block+s[end:],encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          if ! git diff --cached --quiet; then
+            git commit -m 'APP2-009: normalize Kangoshi Codemagic signing and TestFlight config'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Build Kangoshi and wait
+        id: build
+        continue-on-error: true
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          CM_APP_ID: ${{ vars.CM_APP_ID }}
+        run: |
+          cat >/tmp/app2-009-command.json <<'JSON'
+          {
+            "request_id": "app2-009-kangoshi-testflight-retry-20260819-1705",
+            "action": "build",
+            "workflow_id": "kangoshi-ios",
+            "branch": "main",
+            "wait": true,
+            "timeout_seconds": 4200
+          }
+          JSON
+          python scripts/codemagic_build_gateway.py --command /tmp/app2-009-command.json --output /tmp/app2-009-result.json
+      - name: Persist sanitized build result
+        if: always()
+        run: |
+          set -euo pipefail
+          if [ ! -f /tmp/app2-009-result.json ]; then exit 0; fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('/tmp/app2-009-result.json').read_text(encoding='utf-8'))
+          allowed={k:r.get(k) for k in ('request_id','ok','workflow_id','branch','resolved_app_id','build_id','status','app_id','error','build_details')}
+          Path('/tmp/app2-009-sanitized.json').write_text(json.dumps(allowed,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/codemagic-results
+          cp /tmp/app2-009-sanitized.json automation/codemagic-results/app2-009-kangoshi-testflight-retry-20260819-1705.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/codemagic-results/app2-009-kangoshi-testflight-retry-20260819-1705.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'APP2-009: persist Kangoshi TestFlight retry result'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Fail if build failed
+        if: steps.build.outcome != 'success'
+        run: exit 1
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`APP2-009 Codemagic fix/build finished. status=${{ job.status }}; build_outcome=${{ steps.build.outcome }}; run_id=${context.runId}`});
