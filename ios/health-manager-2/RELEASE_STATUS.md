@@ -3,28 +3,25 @@
 更新: 2026-08-19
 
 ## 現在地
-**300問化後の製品Build 16はCodemagicで署名・生成・Apple upload済み。App Store Connect APIの2026-08-19 read-backで `VALID / APP_STORE_ELIGIBLE`、App Store Version 1.0への紐付け、Internal Testingグループからの参照を確認済み。**
+**2026-08-19 15:51 JST、ユーザー指示で課金を「月額200円＋買い切り800円」の併売へ正式変更した。Build 16は300問・UI・AppIconの実機確認済みだが、課金なしbinaryのため最終申請Buildとしては失効。StoreKit 2実装をmainへ反映済みで、新署名Buildが必要。**
 
-PR #4216で90問から300問へ拡張した後、10回相当 × 3科目 × 各10問、構造、完全重複、高類似、必須メタデータ、追加210問の内容監査、現行法の高リスク数値、approved AppIconをRelease Gateで検査した。申請用BuildはCodemagic `health-manager-2-ios` Build index 16。旧Build 1はInternal TestFlight履歴としてのみ扱い、現行申請Buildへ戻さない。
-
-本審査Submitは人間の最終承認まで実行しない。次の人間品質ゲートはBuild 16のiPhone実機回帰。
+課金後の無料範囲は最新1回相当30問＋今日のスプリント。月額・買い切りは同一のプレミアム権利を付与し、全300問、全30セット、全分野、苦手復習を解放する。月額は継続学習のきっかけ、買い切りは期限なし利用の選択肢として併売する。
 
 ## 固定値
 - App Store Version: `1.0`
 - Product version: `1.0.0`
-- Current release Build: `16`
-- Apple Build ID: `b53250d3-e005-4da4-bbc0-319c86a321ee`
-- Codemagic Build ID: `6a842f4fb381e0b3a3e7a246`
 - Bundle ID: `jp.allsunday1122.healthmanager2`
-- iOS: SwiftUI + local WKWebView
+- iOS: SwiftUI + local WKWebView + StoreKit 2
 - Web教材: アプリ内同梱
 - 問題数: 300問
 - 構成: 10回相当 × 3科目 × 各10問 = 30セット
-- クイック学習: 標準8問、設定4/8/16問
-- TestFlight: Internal Testing利用可能
-- Beta App Review自動提出: しない
-- App Store本審査自動提出: しない
-- 課金: v1.0ではなし
+- 無料範囲: 最新1回相当30問＋今日のスプリント
+- Premium: 全300問・全30セット・全分野・苦手復習
+- 月額: 200円相当 / Auto-Renewable Subscription
+- 買い切り: 800円相当 / Non-Consumable
+- Product ID候補: `jp.allsunday1122.healthmanager2.monthly` / `jp.allsunday1122.healthmanager2.lifetime`。App Store Connect作成後の実登録値を最終正本とする
+- 価格表示: StoreKit `Product.displayPrice`
+- 購入復元: 必須
 - 広告/解析/ログイン/クラウド同期: なし
 
 ## 300問 Release Gate
@@ -36,59 +33,46 @@ PR #4216で90問から300問へ拡張した後、10回相当 × 3科目 × 各10
 - [x] 問題本文の完全一致を禁止
 - [x] 高類似0.90以上を機械検査
 - [x] 一文ポイント・解説・一次根拠・基準日・作問由来・権利根拠を必須化
-- [x] 追加210問は公開候補＋内容監査済み。法令問題は一次資料照合済みを必須化
+- [x] 追加210問は公開候補＋内容監査済み
 - [x] 法令基準日 `2026-08-18`
-- [x] 2026-08-01施行の産業医の辞任・解任・退任報告を監査
-- [x] 熱中症対策、労働時間、休憩、時間外上限、事務所環境など高リスク数値をRelease Gateへ固定
-- [x] Codemagicビルド前に `export-audit-data.cjs` → `validate_questions.py` を実行
 
 ## approved AppIcon
 - [x] ユーザー承認済みArtworkのみをrelease sourceとして使用
-- [x] `approved-icon-v4` transportは4分割固定
 - [x] transport SHA-256: `4cefe840198dde91fddb6c5fe0fdece7d41a8bebfed415eb034752491cd7977c`
-- [x] placeholder `icon.svg` へのfallback禁止
-- [x] 1024 / 120 / 152 / 167 / 180 px PNGを承認済みsourceから生成
-- [x] Apple側Build 16にiconAssetTokenが存在することをAPI read-backで確認
+- [x] placeholder fallback禁止
+- [x] 1024 / 120 / 152 / 167 / 180 px生成
 
-## Codemagic / App Store Connect機械ゲート
-- [x] Codemagic App ID `6a769d81a1add9d06020b524` をAPIで解決
-- [x] `health-manager-2-ios` Build 16 finished
-- [x] Distribution signing
-- [x] IPA archive/export
+## Build 16の扱い
+- [x] Codemagic Build 16 finished
 - [x] App Store Connect upload
-- [x] Build 16 `processingState=VALID`
-- [x] Build 16 `buildAudienceType=APP_STORE_ELIGIBLE`
-- [x] `usesNonExemptEncryption=false`
-- [x] App Store Version 1.0 (`c0372f0c-c99a-4e4f-a8a3-28d13969091a`) へBuild 16が現在も紐付く
-- [x] Internal Testingグループ `sun` (`168d820a-3671-446d-9918-d75a4dad5b1e`) のbuild一覧にBuild 16が存在
-- [x] 旧Build 1も履歴として保持
+- [x] `VALID / APP_STORE_ELIGIBLE`
+- [x] Version 1.0へ紐付け済み
+- [x] Internal Testingグループ `sun` で確認済み
+- [x] ユーザー実機確認でホーム・問題・学習記録の主要画面に問題なし
+- [!] 2026-08-19の課金仕様変更により最終申請Buildとして失効
 
-## Build 16以降のソース差分監査
-Codemagic Build 16を生成したcommit `f29557c61f7898707f513dc1c1385baa6a6c87c2` 以降、2026-08-19のmainとの比較で第二種衛生管理者の問題バンク・UI・AppIcon release sourceに変更はない。後続差分は共通API gatewayや他アプリ作業が中心で、Build 16の300問品質PASSを失効させる第二種教材変更は確認されていない。
+## StoreKit 2実装
+- [x] 月額・買い切り2商品を取得する`StoreKitManager`を追加
+- [x] verified transactionのみ権利付与
+- [x] `Transaction.currentEntitlements`で月額・買い切り双方を確認
+- [x] revocationを考慮
+- [x] 月額または買い切りのどちらかでPremium解放
+- [x] pending / cancelで誤解放しない
+- [x] `AppStore.sync()`による購入復元
+- [x] 月額のサブスクリプション管理導線
+- [x] 価格は`displayPrice`を表示
+- [x] WKWebViewとのStoreKit bridgeを追加
+- [x] 無料30問 / Premium全300問の導線制御を追加
+- [x] 設定画面・Paywallに月額/買い切り/復元を追加
 
-## App Reviewでの残存リスク
-- Guideline 4.2: WKWebView主体だが、300問完全同梱、短時間学習、30セット、30問模試、履歴、苦手卒業、中断再開、JSON共有、ネイティブ触覚を備え、単純な外部Web再包装ではない構成を維持する。
-- Guideline 4.3(a): 第一種衛生管理者と共通UI/基盤を共有するため、本審査では第二種固有の対象範囲、30問模試、科目別40%判定、有害業務除外、独自作問300問をReview Detailとスクリーンショットで明示する。
-- Metadata accuracy: 「5年分の過去問」「過去問300問」と誤認させる表現は禁止。300問は公式一次資料・公表問題の論点傾向を根拠にした独自作問・独自解説として表示する。
+## 次工程
+1. App Store Connectで月額200円相当のAuto-Renewable Subscriptionを作成
+2. App Store Connectで買い切り800円相当のNon-Consumableを作成
+3. Product IDをread-backし、GitHub/Notionの実装値と一致確認
+4. Release Gate再実行
+5. 新署名BuildをCodemagicで生成
+6. App Store Connect / Internal TestFlightへupload
+7. iPhone実機で無料ロック、月額購入、買い切り購入、復元、再起動後権利を確認
+8. IAP審査情報・スクリーンショット・Review Detailを整え、本申請へ進む
 
-## 次の人間品質ゲート
-Build 16をiPhone実機で確認する。
-
-### 実機合格条件
-- [ ] 起動クラッシュなし
-- [ ] approved AppIconが期待どおり表示
-- [ ] ホーム/模試/記録/設定の4タブ
-- [ ] 10回相当・30セット・全300問への導線
-- [ ] 30問模試と科目別40%判定
-- [ ] 8問スプリント完走
-- [ ] 即時採点・ハプティクス
-- [ ] ○×・ここだけ覚える・詳細解説
-- [ ] 中断→続きから
-- [ ] 苦手3連続正解で解除
-- [ ] 学習記録永続化
-- [ ] JSON書き出し→iOS共有シート
-- [ ] アプリ再起動後も履歴保持
-- [ ] 機内モードでも教材利用可能
-- [ ] レイアウト崩れなし
-
-この実機確認をPASSするまでApp Store本審査へ進めない。
+App Store本審査Submitは最終承認前に実行しない。
