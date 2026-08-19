@@ -21,8 +21,7 @@ def _ensure_draft_version(token, kind, parent_id):
         create_path="/v1/subscriptionGroupVersions"; version_type="subscriptionGroupVersions"; relationship="subscriptionGroup"; parent_type="subscriptionGroups"
     else:
         raise ValueError(kind)
-    _,listing=_original_req(token,list_path)
-    versions=_rows(listing)
+    _,listing=_original_req(token,list_path); versions=_rows(listing)
     if versions: return versions[-1]["id"],version_type
     payload={"data":{"type":version_type,"relationships":{relationship:{"data":{"type":parent_type,"id":parent_id}}}}}
     _,created=_original_req(token,create_path,"POST",payload)
@@ -48,15 +47,18 @@ def _create_starting_subscription_price(token, original_payload):
     availabilities=_rows(availability_payload)
     plan_types=[x.get("attributes",{}).get("planType") for x in availabilities if x.get("attributes",{}).get("planType")]
     plan_type=next((p for p in ("PAY_AS_YOU_GO","UPFRONT") if p in plan_types), plan_types[0] if plan_types else None)
-    if not plan_type: raise RuntimeError("No subscription plan availability returned")
-    _,points_payload=_original_req(token,f"/v1/subscriptions/{sub_id}/pricePoints?filter[territory]=JPN&filter[planType]={plan_type}&fields[subscriptionPricePoints]=customerPrice,territory&include=territory&limit=8000")
+    point_path=f"/v1/subscriptions/{sub_id}/pricePoints?filter[territory]=JPN&fields[subscriptionPricePoints]=customerPrice,territory&include=territory&limit=8000"
+    if plan_type: point_path=f"/v1/subscriptions/{sub_id}/pricePoints?filter[territory]=JPN&filter[planType]={plan_type}&fields[subscriptionPricePoints]=customerPrice,territory&include=territory&limit=8000"
+    _,points_payload=_original_req(token,point_path)
     point=next((x for x in _rows(points_payload) if bootstrap.dec(x.get("attributes",{}).get("customerPrice"))==bootstrap.MONTHLY_PRICE),None)
-    if point is None: raise RuntimeError(f"No JPN 200 {plan_type} price point found; available_plan_types={plan_types}")
+    if point is None: raise RuntimeError(f"No JPN 200 starting price point found; available_plan_types={plan_types}")
     point_id=point["id"]
     _,detail=_original_req(token,f"/v1/subscriptionPricePoints/{point_id}?include=territory")
     d=detail.get("data",{}) if isinstance(detail,dict) else {}; territory_id=(d.get("relationships",{}).get("territory",{}).get("data") or {}).get("id") or "JPN"
+    attrs={"startDate":None,"preserveCurrentPrice":False}
+    if plan_type: attrs["planType"]=plan_type
     local_id="${app2-009-starting-price-jpn}"
-    patch_payload={"data":{"type":"subscriptions","id":sub_id,"relationships":{"prices":{"data":[{"type":"subscriptionPrices","id":local_id}]}}},"included":[{"type":"subscriptionPrices","id":local_id,"attributes":{"startDate":None,"preserveCurrentPrice":False,"planType":plan_type},"relationships":{"subscription":{"data":{"type":"subscriptions","id":sub_id}},"subscriptionPricePoint":{"data":{"type":"subscriptionPricePoints","id":point_id}},"territory":{"data":{"type":"territories","id":territory_id}}}}]}
+    patch_payload={"data":{"type":"subscriptions","id":sub_id,"relationships":{"prices":{"data":[{"type":"subscriptionPrices","id":local_id}]}}},"included":[{"type":"subscriptionPrices","id":local_id,"attributes":attrs,"relationships":{"subscription":{"data":{"type":"subscriptions","id":sub_id}},"subscriptionPricePoint":{"data":{"type":"subscriptionPricePoints","id":point_id}},"territory":{"data":{"type":"territories","id":territory_id}}}}]}
     return _original_req(token,f"/v1/subscriptions/{sub_id}","PATCH",patch_payload)
 
 def req(token,path,method="GET",payload=None):
@@ -71,10 +73,8 @@ def req(token,path,method="GET",payload=None):
         elif path=="/v1/subscriptionGroupLocalizations" and "subscriptionGroup" in relationships:
             parent_id=relationships["subscriptionGroup"]["data"]["id"]; version_id,version_type=_ensure_draft_version(token,"group",parent_id)
             payload=copy.deepcopy(payload); payload["data"]["relationships"]={"version":{"data":{"type":version_type,"id":version_id}}}; path="/v2/subscriptionGroupLocalizations"
-        elif path=="/v1/inAppPurchasePriceSchedules":
-            payload=_normalize_inline_price_payload(payload)
-        elif path=="/v1/subscriptionPrices":
-            return _create_starting_subscription_price(token,payload)
+        elif path=="/v1/inAppPurchasePriceSchedules": payload=_normalize_inline_price_payload(payload)
+        elif path=="/v1/subscriptionPrices": return _create_starting_subscription_price(token,payload)
     return _original_req(token,path,method,payload)
 
 bootstrap.req=req
