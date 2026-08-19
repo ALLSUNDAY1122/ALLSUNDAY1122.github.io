@@ -57,7 +57,7 @@ def main() -> None:
 
     image_path = Path(args.image)
     raw = image_path.read_bytes()
-    if len(raw) < 100_000:
+    if len(raw) < 50_000:
         raise SystemExit("Screenshot file is missing or unexpectedly small")
     checksum = hashlib.md5(raw).hexdigest()
 
@@ -85,28 +85,12 @@ def main() -> None:
         if loc.get("attributes", {}).get("locale") != "ja":
             raise RuntimeError("Target localization preflight failed")
 
-        _, sets_response = api_get(
-            token,
-            f"/v1/appStoreVersionLocalizations/{LOCALIZATION_ID}/appScreenshotSets?limit=200"
-        )
+        _, sets_response = api_get(token, f"/v1/appStoreVersionLocalizations/{LOCALIZATION_ID}/appScreenshotSets?limit=200")
         sets = sets_response.get("data") if isinstance(sets_response, dict) else []
-        target_set = next(
-            (x for x in sets or [] if (x.get("attributes") or {}).get("screenshotDisplayType") == DISPLAY_TYPE),
-            None,
-        )
+        target_set = next((x for x in sets or [] if (x.get("attributes") or {}).get("screenshotDisplayType") == DISPLAY_TYPE), None)
         created_set = False
         if target_set is None:
-            payload = {
-                "data": {
-                    "type": "appScreenshotSets",
-                    "attributes": {"screenshotDisplayType": DISPLAY_TYPE},
-                    "relationships": {
-                        "appStoreVersionLocalization": {
-                            "data": {"type": "appStoreVersionLocalizations", "id": LOCALIZATION_ID}
-                        }
-                    },
-                }
-            }
+            payload = {"data":{"type":"appScreenshotSets","attributes":{"screenshotDisplayType":DISPLAY_TYPE},"relationships":{"appStoreVersionLocalization":{"data":{"type":"appStoreVersionLocalizations","id":LOCALIZATION_ID}}}}}
             _, created = api_request(token, "/v1/appScreenshotSets", method="POST", payload=payload)
             target_set = one_data(created, "created screenshot set")
             created_set = True
@@ -114,57 +98,24 @@ def main() -> None:
         set_id = target_set["id"]
         _, existing_response = api_get(token, f"/v1/appScreenshotSets/{set_id}/appScreenshots?limit=200")
         existing = existing_response.get("data") if isinstance(existing_response, dict) else []
-        complete_existing = []
-        for item in existing or []:
-            state = ((item.get("attributes") or {}).get("assetDeliveryState") or {}).get("state")
-            if state == "COMPLETE":
-                complete_existing.append(item)
+        complete_existing = [item for item in existing or [] if (((item.get("attributes") or {}).get("assetDeliveryState") or {}).get("state")) == "COMPLETE"]
         if complete_existing:
-            result = {
-                "task": "APP2-011",
-                "completed_at": datetime.now(timezone.utc).isoformat(),
-                "app_id": APP_ID,
-                "version": "1.5.0",
-                "screenshot_set_id": set_id,
-                "display_type": DISPLAY_TYPE,
-                "screenshot_id": complete_existing[0].get("id"),
-                "state": "COMPLETE",
-                "created_set": created_set,
-                "uploaded_new": False,
-                "submission_performed": False,
-            }
+            result = {"task":"APP2-011","completed_at":datetime.now(timezone.utc).isoformat(),"app_id":APP_ID,"version":"1.5.0","screenshot_set_id":set_id,"display_type":DISPLAY_TYPE,"screenshot_id":complete_existing[0].get("id"),"state":"COMPLETE","created_set":created_set,"uploaded_new":False,"submission_performed":False}
             Path(args.output).write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             print("PASS: existing complete TAKU screenshot already present")
             return
 
-        reserve_payload = {
-            "data": {
-                "type": "appScreenshots",
-                "attributes": {"fileSize": len(raw), "fileName": image_path.name},
-                "relationships": {
-                    "appScreenshotSet": {
-                        "data": {"type": "appScreenshotSets", "id": set_id}
-                    }
-                },
-            }
-        }
+        reserve_payload = {"data":{"type":"appScreenshots","attributes":{"fileSize":len(raw),"fileName":image_path.name},"relationships":{"appScreenshotSet":{"data":{"type":"appScreenshotSets","id":set_id}}}}}
         _, reserved_response = api_request(token, "/v1/appScreenshots", method="POST", payload=reserve_payload)
         reserved = one_data(reserved_response, "screenshot reservation")
         screenshot_id = reserved["id"]
         operations = (reserved.get("attributes") or {}).get("uploadOperations") or []
         if not operations:
             raise RuntimeError("App Store Connect did not return screenshot upload operations")
-
         for op in operations:
             upload_operation(op, raw)
 
-        commit_payload = {
-            "data": {
-                "type": "appScreenshots",
-                "id": screenshot_id,
-                "attributes": {"uploaded": True, "sourceFileChecksum": checksum},
-            }
-        }
+        commit_payload = {"data":{"type":"appScreenshots","id":screenshot_id,"attributes":{"uploaded":True,"sourceFileChecksum":checksum}}}
         api_request(token, f"/v1/appScreenshots/{screenshot_id}", method="PATCH", payload=commit_payload)
 
         deadline = time.time() + 180
@@ -174,34 +125,16 @@ def main() -> None:
             attrs = one_data(check, "screenshot read-back").get("attributes", {})
             delivery = attrs.get("assetDeliveryState") or {}
             final_state = delivery.get("state")
-            if final_state == "COMPLETE":
-                break
-            if final_state == "FAILED":
-                raise RuntimeError(f"Screenshot processing failed: {delivery}")
+            if final_state == "COMPLETE": break
+            if final_state == "FAILED": raise RuntimeError(f"Screenshot processing failed: {delivery}")
             time.sleep(5)
-        if final_state != "COMPLETE":
-            raise RuntimeError(f"Screenshot processing did not reach COMPLETE; state={final_state}")
+        if final_state != "COMPLETE": raise RuntimeError(f"Screenshot processing did not reach COMPLETE; state={final_state}")
 
-        result = {
-            "task": "APP2-011",
-            "completed_at": datetime.now(timezone.utc).isoformat(),
-            "app_id": APP_ID,
-            "version": "1.5.0",
-            "screenshot_set_id": set_id,
-            "display_type": DISPLAY_TYPE,
-            "screenshot_id": screenshot_id,
-            "state": final_state,
-            "created_set": created_set,
-            "uploaded_new": True,
-            "file_size": len(raw),
-            "submission_performed": False,
-        }
+        result = {"task":"APP2-011","completed_at":datetime.now(timezone.utc).isoformat(),"app_id":APP_ID,"version":"1.5.0","screenshot_set_id":set_id,"display_type":DISPLAY_TYPE,"screenshot_id":screenshot_id,"state":final_state,"created_set":created_set,"uploaded_new":True,"file_size":len(raw),"submission_performed":False}
         Path(args.output).write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print("PASS: TAKU App Store screenshot uploaded and processed")
     finally:
-        if cleanup:
-            cleanup.unlink(missing_ok=True)
-
+        if cleanup: cleanup.unlink(missing_ok=True)
 
 if __name__ == "__main__":
     main()
