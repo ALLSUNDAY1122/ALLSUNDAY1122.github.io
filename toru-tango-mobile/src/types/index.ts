@@ -39,4 +39,5 @@ export type BackupData = {
   exportedAt: string;
   cards: Card[];
   history: StudyHistory[];
+  decks?: string[];
 };
