@@ -2,6 +2,7 @@
 """APP2-004 compatibility runner for App Store Connect API 4.4.1+ metadata versions."""
 
 import copy
+import json
 from datetime import date
 
 import app2_004_yakuzaishi_iap_bootstrap as bootstrap
@@ -118,6 +119,23 @@ def request(token, path, method="GET", payload=None):
             payload.setdefault("data", {}).setdefault("attributes", {}).setdefault(
                 "startDate", date.today().isoformat()
             )
+            point = (
+                payload.get("data", {})
+                .get("relationships", {})
+                .get("subscriptionPricePoint", {})
+                .get("data", {})
+            )
+            point_id = point.get("id")
+            if point_id:
+                _, point_detail = _original_request(token, f"/v1/subscriptionPricePoints/{point_id}?include=territory")
+                d = point_detail.get("data", {}) if isinstance(point_detail, dict) else {}
+                print("APP2-004 selected subscription price point:", json.dumps({
+                    "id": d.get("id"),
+                    "type": d.get("type"),
+                    "attributes": d.get("attributes"),
+                    "territory": (d.get("relationships", {}).get("territory", {}).get("data") or {}).get("id"),
+                    "postAttributes": payload.get("data", {}).get("attributes", {}),
+                }, ensure_ascii=False))
 
     return _original_request(token, path, method, payload)
 
