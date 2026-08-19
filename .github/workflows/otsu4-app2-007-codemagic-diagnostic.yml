@@ -1,0 +1,85 @@
+name: Otsu4 APP2-007 Codemagic Diagnostic
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  inspect:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      github.event.issue.title == '[OTSU4-CM-APP2-007] Inspect failed build actions'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch sanitized Codemagic build actions
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token:
+              raise SystemExit('Missing CM_API_TOKEN')
+          build_id='6a85226a814ebdf468b0ecc9'
+          req=urllib.request.Request(
+              f'https://codemagic.io/api/v3/builds/{build_id}/actions',
+              headers={'x-auth-token': token, 'Accept':'application/json'},
+              method='GET',
+          )
+          try:
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  payload=json.loads(response.read().decode('utf-8') or '{}')
+                  status=response.status
+          except urllib.error.HTTPError as exc:
+              raw=exc.read().decode('utf-8',errors='replace')
+              payload={'http_status':exc.code,'error':raw[:3000]}
+              status=exc.code
+
+          sensitive=('secret','token','password','credential','private','apikey','api_key','environment','variable')
+          def clean(v):
+              if isinstance(v,dict):
+                  out={}
+                  for k,x in v.items():
+                      if any(part in str(k).lower() for part in sensitive):
+                          out[k]='[REDACTED]'
+                      else:
+                          out[k]=clean(x)
+                  return out
+              if isinstance(v,list):
+                  return [clean(x) for x in v]
+              return v
+
+          result={'build_id':build_id,'http_status':status,'actions':clean(payload)}
+          Path('/tmp/otsu4-codemagic-actions.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(result,ensure_ascii=False)[:8000])
+          if status < 200 or status >= 300:
+              raise SystemExit(f'Codemagic actions HTTP {status}')
+          PY
+
+      - name: Upload diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: otsu4-app2-007-codemagic-diagnostic-${{ github.run_id }}
+          path: /tmp/otsu4-codemagic-actions.json
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Report locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `APP2-007 Codemagic diagnostic status=${{ job.status }}; run_id=${context.runId}; artifact=otsu4-app2-007-codemagic-diagnostic-${context.runId}`
+            });
