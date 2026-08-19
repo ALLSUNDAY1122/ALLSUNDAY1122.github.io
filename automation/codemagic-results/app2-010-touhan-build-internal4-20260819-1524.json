@@ -1,0 +1,196 @@
+{
+  "request_id": "app2-010-touhan-build-internal4-20260819-1524",
+  "ok": false,
+  "action": "build",
+  "workflow_id": "touhan-ios",
+  "branch": "main",
+  "resolved_app_id": null,
+  "application_candidates": [
+    {
+      "id": "6a769d81a1add9d06020b524",
+      "name": "ALLSUNDAY1122.github.io",
+      "repositoryUrl": null
+    }
+  ],
+  "note": null,
+  "build_id": "6a854b9aea6ced5835d96b07",
+  "status": "failed",
+  "app_id": "6a769d81a1add9d06020b524",
+  "error": "Codemagic build ended with status: failed",
+  "build_details": {
+    "id": "6a854b9aea6ced5835d96b07",
+    "app_id": "6a769d81a1add9d06020b524",
+    "workflow": {
+      "id": "touhan-ios",
+      "source": "file",
+      "name": "登録販売者 - iOS Internal TestFlight"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "failed",
+    "index": 4,
+    "artifacts": [],
+    "labels": [],
+    "release_notes": [],
+    "created_at": "2026-08-19T06:22:18.895000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "55f9a7bcbc6da1576fa3a7329cf8d0dd077248b6",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "Run 登録販売者 Internal TestFlight build #4",
+      "url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/55f9a7bcbc6da1576fa3a7329cf8d0dd077248b6"
+    },
+    "branch": "main",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-08-19T06:22:26.338000Z",
+    "finished_at": "2026-08-19T06:23:12.600000Z"
+  },
+  "actions": {
+    "data": [
+      {
+        "id": "6a854b9b85ba7653c2ba5cac",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:22:26.676000Z",
+        "finished_at": "2026-08-19T06:22:52.284000Z"
+      },
+      {
+        "id": "6a854b9b85ba7653c2ba5cad",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:22:52.284000Z",
+        "finished_at": "2026-08-19T06:22:58.793000Z"
+      },
+      {
+        "id": "6a854b9b85ba7653c2ba5cae",
+        "name": "Install native build tools",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nHOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen\npython3 -m pip install --disable-pip-version-check 'cairosvg==2.8.2'",
+        "status": "success",
+        "started_at": "2026-08-19T06:22:58.793000Z",
+        "finished_at": "2026-08-19T06:23:08.720000Z"
+      },
+      {
+        "id": "6a854b9b85ba7653c2ba5caf",
+        "name": "Audit registration seller release inputs",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR\"\nnode touroku-hanbaisha-sprint/validate-history-calendar.mjs\nbash -n touroku-hanbaisha-ios/native-ios/prepare-ios.sh\ntest \"$BUNDLE_ID\" = \"com.allsunday1122.tourokuhanbaisha\"\ntest \"$APP_STORE_CONNECT_APP_ID\" = \"6802119268\"\ntest \"$CODEMAGIC_PROFILE_REF\" = \"tourokuhanbaisha_appstore\"\nbash touroku-hanbaisha-ios/native-ios/prepare-ios.sh\npython3 touroku-hanbaisha-ios/scripts/validate_release.py",
+        "status": "success",
+        "started_at": "2026-08-19T06:23:08.720000Z",
+        "finished_at": "2026-08-19T06:23:09.720000Z"
+      },
+      {
+        "id": "6a854b9b85ba7653c2ba5cb0",
+        "name": "Set CI build number and generate native project",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios\"\npython3 - <<'PYBUILD'\nfrom pathlib import Path\nimport os\np=Path('project.yml')\ntext=p.read_text(encoding='utf-8')\nbuild_number = os.environ.get('CM_BUILD_NUMBER') or os.environ.get('BUILD_NUMBER')\nif not build_number:\n    raise RuntimeError('Codemagic build number is unavailable')\ntext=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+build_number, 1)\np.write_text(text, encoding='utf-8')\nPYBUILD\nxcodegen generate",
+        "status": "success",
+        "started_at": "2026-08-19T06:23:09.720000Z",
+        "finished_at": "2026-08-19T06:23:10.169000Z"
+      },
+      {
+        "id": "6a854b9b85ba7653c2ba5cb1",
+        "name": "Verify native inputs before signing",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ntest -f \"$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/PrivacyInfo.xcprivacy\"\ntest -f \"$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\"\necho \"$APPICON_SHA256  $CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\" | shasum -a 256 -c -\ngrep -q 'com.allsunday1122.tourokuhanbaisha' \"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\"\ngrep -q 'MN3D2ZM44N' \"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\"",
+        "status": "success",
+        "started_at": "2026-08-19T06:23:10.169000Z",
+        "finished_at": "2026-08-19T06:23:10.632000Z"
+      },
+      {
+        "id": "6a854b9b85ba7653c2ba5cb2",
+        "name": "Initialize signing keychain",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nkeychain initialize",
+        "status": "success",
+        "started_at": "2026-08-19T06:23:10.632000Z",
+        "finished_at": "2026-08-19T06:23:11.411000Z"
+      },
+      {
+        "id": "6a854b9b85ba7653c2ba5cb3",
+        "name": "Fetch or create App Store signing files",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\napp-store-connect fetch-signing-files \"$BUNDLE_ID\" \\\n  --type IOS_APP_STORE \\\n  --create",
+        "status": "failed",
+        "started_at": "2026-08-19T06:23:11.411000Z",
+        "finished_at": "2026-08-19T06:23:12.299000Z"
+      },
+      {
+        "id": "6a854b9b85ba7653c2ba5cb4",
+        "name": "Add signing certificate to keychain",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nkeychain add-certificates",
+        "status": "skipped",
+        "started_at": "2026-08-19T06:23:12.299000Z",
+        "finished_at": "2026-08-19T06:23:12.299000Z"
+      },
+      {
+        "id": "6a854b9b85ba7653c2ba5cb5",
+        "name": "Apply App Store signing profiles for internal TestFlight only",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios\"\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
+        "status": "skipped",
+        "started_at": "2026-08-19T06:23:12.299000Z",
+        "finished_at": "2026-08-19T06:23:12.300000Z"
+      },
+      {
+        "id": "6a854b9b85ba7653c2ba5cb6",
+        "name": "Build signed IPA",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nxcode-project build-ipa \\\n  --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  --scheme \"$XCODE_SCHEME\"",
+        "status": "skipped",
+        "started_at": "2026-08-19T06:23:12.300000Z",
+        "finished_at": "2026-08-19T06:23:12.300000Z"
+      },
+      {
+        "id": "6a854b9b85ba7653c2ba5cb7",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:23:12.300000Z",
+        "finished_at": "2026-08-19T06:23:12.501000Z"
+      },
+      {
+        "id": "6a854b9b85ba7653c2ba5cb8",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:23:12.501000Z",
+        "finished_at": "2026-08-19T06:23:12.600000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
