@@ -27,8 +27,7 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          p = Path('automation/app2-004-yakuzaishi-iap-command.json')
-          data = json.loads(p.read_text(encoding='utf-8'))
+          data = json.loads(Path('automation/app2-004-yakuzaishi-iap-command.json').read_text(encoding='utf-8'))
           if data.get('task_id') != 'APP2-004' or data.get('action') != 'ensure_iap':
               raise SystemExit('Unexpected APP2-004 command payload')
           PY
@@ -42,10 +41,16 @@ jobs:
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
           set +e
-          # ASC live schema rejects availableInAllTerritories in create payloads even though
-          # older guide examples show it. Availability is configured separately when needed.
-          sed -i '/"availableInAllTerritories": True,/d' scripts/app2_004_yakuzaishi_iap_bootstrap.py
-          python scripts/app2_004_yakuzaishi_iap_bootstrap.py > /tmp/app2-004-iap.log 2>&1
+          python - <<'PY' > /tmp/app2-004-iap.log 2>&1
+          import sys
+          from pathlib import Path
+          path = Path('scripts/app2_004_yakuzaishi_iap_bootstrap.py')
+          src = path.read_text(encoding='utf-8')
+          src = src.replace('                    "availableInAllTerritories": True,\n', '')
+          sys.path.insert(0, str(path.parent.resolve()))
+          ns = {'__name__': '__main__', '__file__': str(path)}
+          exec(compile(src, str(path), 'exec'), ns)
+          PY
           code=$?
           python - "$code" <<'PY'
           import json, re, sys
@@ -55,15 +60,15 @@ jobs:
           raw = re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----', '[REDACTED KEY]', raw, flags=re.S)
           raw = re.sub(r'Bearer\s+[A-Za-z0-9._-]+', 'Bearer [REDACTED]', raw)
           raw = re.sub(r'eyJ[A-Za-z0-9._-]{40,}', '[REDACTED JWT]', raw)
-          diagnostic = {
-              'task_id': 'APP2-004',
-              'step': 'iap_bootstrap',
-              'exit_code': code,
-              'ok': code == 0,
-              'log_tail': raw[-12000:],
-          }
           Path('automation/app2-004-yakuzaishi-iap-diagnostic.json').write_text(
-              json.dumps(diagnostic, ensure_ascii=False, indent=2) + '\n', encoding='utf-8'
+              json.dumps({
+                  'task_id': 'APP2-004',
+                  'step': 'iap_bootstrap',
+                  'exit_code': code,
+                  'ok': code == 0,
+                  'log_tail': raw[-12000:],
+              }, ensure_ascii=False, indent=2) + '\n',
+              encoding='utf-8',
           )
           PY
           exit 0
@@ -71,10 +76,21 @@ jobs:
         if: always()
         shell: bash
         run: |
+          set -euo pipefail
+          mkdir -p /tmp/app2-004-state
+          cp automation/app2-004-yakuzaishi-iap-diagnostic.json /tmp/app2-004-state/diagnostic.json
+          if test -f automation/app2-004-yakuzaishi-iap-result.json; then
+            cp automation/app2-004-yakuzaishi-iap-result.json /tmp/app2-004-state/result.json
+          fi
+          git restore automation/app2-004-yakuzaishi-iap-diagnostic.json 2>/dev/null || true
+          rm -f automation/app2-004-yakuzaishi-iap-result.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git restore scripts/app2_004_yakuzaishi_iap_bootstrap.py
           git pull --rebase origin main
+          cp /tmp/app2-004-state/diagnostic.json automation/app2-004-yakuzaishi-iap-diagnostic.json
+          if test -f /tmp/app2-004-state/result.json; then
+            cp /tmp/app2-004-state/result.json automation/app2-004-yakuzaishi-iap-result.json
+          fi
           git add automation/app2-004-yakuzaishi-iap-diagnostic.json
           if test -f automation/app2-004-yakuzaishi-iap-result.json; then
             git add automation/app2-004-yakuzaishi-iap-result.json
@@ -85,7 +101,7 @@ jobs:
             git commit -m "Persist APP2-004 pharmacist IAP diagnostic"
             git push origin HEAD:main
           fi
-      - name: Fail when bootstrap failed
+      - name: Assert bootstrap success
         if: always()
         shell: bash
         run: |
