@@ -26,6 +26,12 @@ assert app['ios']['icon'].endswith('AppIcon-1024.png')
 project = (NATIVE / "project.yml").read_text(encoding="utf-8")
 for token in (EXPECTED_BUNDLE, EXPECTED_TEAM, 'MARKETING_VERSION: 1.0.0', 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon'):
     assert token in project, f'missing project setting: {token}'
+assert '\n    resources:\n' not in project, 'XcodeGen target resources must be declared under sources'
+for token in (
+    '- path: Assets.xcassets\n        buildPhase: resources',
+    '- path: PrivacyInfo.xcprivacy\n        buildPhase: resources',
+):
+    assert token in project, f'missing XcodeGen resource source: {token}'
 
 icon = NATIVE / "Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
 data = icon.read_bytes()
