@@ -1,20 +1,20 @@
 {
-  "request_id": "app2-010-touhan-signing-audit-20260819-1932",
+  "request_id": "app2-010-touhan-signing-cert-map-20260819-1937",
   "requests": [
     {
-      "label": "bundle-id",
+      "label": "yakuzaishi-cert",
       "method": "GET",
-      "path": "/v1/bundleIds?filter[identifier]=com.allsunday1122.tourokuhanbaisha&include=profiles&limit=10"
+      "path": "/v1/profiles/8C2HK739F2/certificates"
     },
     {
-      "label": "distribution-certificates",
+      "label": "hm2-cert",
       "method": "GET",
-      "path": "/v1/certificates?limit=200"
+      "path": "/v1/profiles/WNAY52GC3F/certificates"
     },
     {
-      "label": "app-store-profiles",
+      "label": "otsu4-cert",
       "method": "GET",
-      "path": "/v1/profiles?filter[profileType]=IOS_APP_STORE&limit=200"
+      "path": "/v1/profiles/T68Z2H66M6/certificates"
     }
   ]
 }
