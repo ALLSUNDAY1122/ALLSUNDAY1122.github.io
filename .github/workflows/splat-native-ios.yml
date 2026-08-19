@@ -13,7 +13,7 @@ concurrency:
   group: splat-native-ios-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
 env:
   GIT_LFS_SKIP_SMUDGE: '1'
@@ -26,62 +26,6 @@ jobs:
       SCANLAB_E2E_PASSWORD: ${{ secrets.SCANLAB_E2E_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
-      # HQ_WORLDMAP_PATCH_BEGIN
-      - name: Apply one-time WorldMap durability patch
-        shell: bash
-        run: |
-          set -euo pipefail
-          git fetch origin feature/splat-native-ios-poc
-          git checkout -B feature/splat-native-ios-poc origin/feature/splat-native-ios-poc
-
-          if [ ! -f splat-native-ios/SplatNative/ScanWorldMapArchiveStore.swift ]; then
-            test -f .github/workflows/hq-worldmap-patch.yml
-            python3 <<'PY'
-          from pathlib import Path
-          import textwrap
-
-          source = Path('.github/workflows/hq-worldmap-patch.yml').read_text().splitlines()
-          marker = '      - name: Apply WorldMap durability patch'
-          next_marker = '      - name: Commit patched source'
-          start = source.index(marker)
-          end = source.index(next_marker)
-          run_index = next(i for i in range(start, end) if source[i].strip() == 'run: |')
-          body = source[run_index + 1:end]
-          script = textwrap.dedent('\n'.join(body)) + '\n'
-          if not script.startswith('python3'):
-              raise SystemExit('failed to extract staged WorldMap patch')
-          Path('/tmp/worldmap-patch.sh').write_text(script)
-          PY
-            bash /tmp/worldmap-patch.sh
-          fi
-
-          python3 splat-native-ios/scripts/test_worldmap_durability_contract.py
-          git diff --check
-
-          python3 <<'PY'
-          from pathlib import Path
-
-          path = Path('.github/workflows/splat-native-ios.yml')
-          text = path.read_text()
-          begin = '      # HQ_WORLDMAP_PATCH_BEGIN\n'
-          end = '      # HQ_WORLDMAP_PATCH_END\n'
-          start = text.index(begin)
-          stop = text.index(end, start) + len(end)
-          text = text[:start] + text[stop:]
-          old = 'permissions:\n  contents: write\n  pull-requests: write\n'
-          new = 'permissions:\n  contents: read\n  pull-requests: write\n'
-          if old not in text:
-              raise SystemExit('temporary write permission block not found')
-          path.write_text(text.replace(old, new, 1))
-          PY
-
-          rm -f .github/workflows/hq-worldmap-patch.yml .github/workflows/hq-worldmap-patch-ubuntu.yml
-          git config user.name 'Scaniverse HQ Automation'
-          git config user.email 'actions@users.noreply.github.com'
-          git add -A
-          git commit -m 'fix(hq): make worldmap persistence transition-safe'
-          git push origin HEAD:feature/splat-native-ios-poc
-      # HQ_WORLDMAP_PATCH_END
       - name: Disable Git LFS smudge for SwiftPM source checkout
         run: git lfs install --skip-smudge --skip-repo
       - name: Install XcodeGen
@@ -94,6 +38,7 @@ jobs:
           python3 splat-native-ios/scripts/test_auth_workflow_contract.py
           python3 splat-native-ios/scripts/d2_trusted_upload_gate.py
           python3 splat-native-ios/scripts/test_mesh_durability_contract.py
+          python3 splat-native-ios/scripts/test_worldmap_durability_contract.py
           test -f splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           sips -g pixelWidth -g pixelHeight splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png | grep -q '1024'
       - name: Hosted ScanLab auth readiness gate
