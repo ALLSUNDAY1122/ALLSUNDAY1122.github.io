@@ -146,7 +146,7 @@ def main() -> None:
         review_after_attrs = one_data(review_after, "review detail after update").get("attributes", {})
         _, category_after = api_get(token, f"/v1/appInfos/{APP_INFO_ID}/primaryCategory")
         category = one_data(category_after, "primary category")
-        _, age_after = api_get(token, f"/v1/ageRatingDeclarations/{AGE_RATING_ID}")
+        _, age_after = api_get(token, f"/v1/appInfos/{APP_INFO_ID}/ageRatingDeclaration")
         age_attrs = one_data(age_after, "age rating after update").get("attributes", {})
         _, build_after = api_get(token, f"/v1/appStoreVersions/{VERSION_ID}/relationships/build")
 
