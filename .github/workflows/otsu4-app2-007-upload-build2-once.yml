@@ -1,0 +1,161 @@
+name: Otsu4 APP2-007 Upload Build 2 Once
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  upload:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      github.event.issue.title == '[OTSU4-ASC-UPLOAD-APP2-007-V2] Upload build 6a852847'
+    runs-on: macos-latest
+    timeout-minutes: 20
+    env:
+      CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+      EXPECTED_CODEMAGIC_BUILD: 6a852847e0a1ce2d5417944d
+      EXPECTED_BUNDLE_ID: jp.allsunday1122.otsu4
+      EXPECTED_VERSION: 1.0.0
+      EXPECTED_BUILD_NUMBER: '2'
+    steps:
+      - name: Download exact signed IPA
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          from pathlib import Path
+          token=os.environ['CM_API_TOKEN'].strip()
+          build_id=os.environ['EXPECTED_CODEMAGIC_BUILD']
+          req=urllib.request.Request(
+              f'https://codemagic.io/api/v3/builds/{build_id}',
+              headers={'x-auth-token':token,'Accept':'application/json'},
+              method='GET')
+          with urllib.request.urlopen(req, timeout=30) as response:
+              payload=json.loads(response.read().decode('utf-8') or '{}')
+          build=payload.get('data') or payload
+          if build.get('id') != build_id:
+              raise SystemExit('build id mismatch')
+          if build.get('status') != 'finished':
+              raise SystemExit(f"build is not finished: {build.get('status')}")
+          if build.get('app_id') != '6a769d81a1add9d06020b524':
+              raise SystemExit('Codemagic app mismatch')
+          if build.get('branch') != 'release/app2-007-otsu4-testflight':
+              raise SystemExit('branch mismatch')
+          workflow=build.get('workflow') or {}
+          workflow_id=workflow.get('id') if isinstance(workflow,dict) else workflow
+          if workflow_id != 'otsu4-ios':
+              raise SystemExit(f'workflow mismatch: {workflow_id!r}')
+          artifacts=build.get('artifacts') or []
+          ipas=[a for a in artifacts if isinstance(a,dict) and (a.get('type')=='ipa' or str(a.get('name','')).endswith('.ipa'))]
+          if len(ipas) != 1:
+              raise SystemExit(f'expected exactly one IPA, found {len(ipas)}')
+          url=ipas[0].get('short_lived_download_url') or ipas[0].get('url')
+          if not url:
+              raise SystemExit('IPA URL missing')
+          with urllib.request.urlopen(urllib.request.Request(url,method='GET'), timeout=120) as response:
+              data=response.read()
+          if len(data) < 100000:
+              raise SystemExit(f'IPA unexpectedly small: {len(data)}')
+          Path('/tmp/Otsu4Sprint.ipa').write_bytes(data)
+          print('PASS: downloaded exact signed IPA', len(data))
+          PY
+
+      - name: Verify IPA identity and signing
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/otsu4-ipa
+          mkdir -p /tmp/otsu4-ipa
+          ditto -x -k /tmp/Otsu4Sprint.ipa /tmp/otsu4-ipa
+          APP="$(find /tmp/otsu4-ipa/Payload -maxdepth 1 -type d -name '*.app' | head -1)"
+          test -n "$APP"
+          INFO="$APP/Info.plist"
+          BUNDLE="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$INFO")"
+          VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$INFO")"
+          BUILD="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$INFO")"
+          python3 - "$BUNDLE" "$VERSION" "$BUILD" <<'PY'
+          import json,sys
+          from pathlib import Path
+          Path('/tmp/ipa-observed.json').write_text(json.dumps({
+              'bundle_id':sys.argv[1],
+              'version':sys.argv[2],
+              'build_number':sys.argv[3]
+          },indent=2)+'\n',encoding='utf-8')
+          PY
+          test "$BUNDLE" = "$EXPECTED_BUNDLE_ID"
+          test "$VERSION" = "$EXPECTED_VERSION"
+          test "$BUILD" = "$EXPECTED_BUILD_NUMBER"
+          codesign --verify --deep --strict "$APP"
+          security cms -D -i "$APP/embedded.mobileprovision" > /tmp/embedded.plist
+          PROFILE_APP_ID="$(/usr/libexec/PlistBuddy -c 'Print :Entitlements:application-identifier' /tmp/embedded.plist)"
+          case "$PROFILE_APP_ID" in
+            *.$EXPECTED_BUNDLE_ID) ;;
+            *) echo "Unexpected application-identifier: $PROFILE_APP_ID"; exit 1 ;;
+          esac
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          Path('/tmp/ipa-verified.json').write_text(json.dumps({
+              'bundle_id':os.environ['EXPECTED_BUNDLE_ID'],
+              'version':os.environ['EXPECTED_VERSION'],
+              'build_number':os.environ['EXPECTED_BUILD_NUMBER'],
+              'codesign':'verified'
+          },indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Install ASC API key
+        run: |
+          set -euo pipefail
+          test -n "$ASC_ISSUER_ID"
+          test -n "$ASC_KEY_ID"
+          test -n "$ASC_PRIVATE_KEY"
+          mkdir -p "$HOME/.appstoreconnect/private_keys"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path.home()/'.appstoreconnect/private_keys'/f"AuthKey_{os.environ['ASC_KEY_ID']}.p8"
+          p.write_text(os.environ['ASC_PRIVATE_KEY'].replace('\\n','\n'),encoding='utf-8')
+          p.chmod(0o600)
+          PY
+
+      - name: Validate IPA with App Store Connect
+        run: |
+          set -euo pipefail
+          xcrun altool --validate-app \
+            --file /tmp/Otsu4Sprint.ipa \
+            --type ios \
+            --apiKey "$ASC_KEY_ID" \
+            --apiIssuer "$ASC_ISSUER_ID" \
+            --output-format json > /tmp/altool-validate.json
+          tail -c 4000 /tmp/altool-validate.json > /tmp/altool-validate-safe.txt
+
+      - name: Upload IPA to App Store Connect
+        run: |
+          set -euo pipefail
+          xcrun altool --upload-app \
+            --file /tmp/Otsu4Sprint.ipa \
+            --type ios \
+            --apiKey "$ASC_KEY_ID" \
+            --apiIssuer "$ASC_ISSUER_ID" \
+            --output-format json > /tmp/altool-upload.json
+          tail -c 4000 /tmp/altool-upload.json > /tmp/altool-upload-safe.txt
+
+      - name: Report sanitized result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const safe = (p) => fs.existsSync(p) ? fs.readFileSync(p,'utf8').slice(-3000).replaceAll('`','') : 'not-created';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `APP2-007 Build 2 upload github_job=${{ job.status }}; run_id=${context.runId}\n\nObserved IPA:\n\`${safe('/tmp/ipa-observed.json')}\`\n\nVerified IPA:\n\`${safe('/tmp/ipa-verified.json')}\`\n\nValidation:\n\`${safe('/tmp/altool-validate-safe.txt')}\`\n\nUpload:\n\`${safe('/tmp/altool-upload-safe.txt')}\``
+            });
