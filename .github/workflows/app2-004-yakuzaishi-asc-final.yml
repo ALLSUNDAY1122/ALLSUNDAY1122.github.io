@@ -24,23 +24,62 @@ jobs:
         with:
           fetch-depth: 0
       - name: Read APP2-004 ASC final state
+        id: audit
+        continue-on-error: true
+        shell: bash
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-        run: python scripts/app2_004_yakuzaishi_asc_audit.py
-      - name: Persist APP2-004 ASC final audit
+        run: |
+          set +e
+          python scripts/app2_004_yakuzaishi_asc_audit.py > /tmp/app2-004-asc.log 2>&1
+          code=$?
+          python - "$code" <<'PY'
+          import json, re, sys
+          from pathlib import Path
+          code = int(sys.argv[1])
+          raw = Path('/tmp/app2-004-asc.log').read_text(encoding='utf-8', errors='replace') if Path('/tmp/app2-004-asc.log').exists() else ''
+          raw = re.sub(r'Bearer\s+[A-Za-z0-9._-]+', 'Bearer [REDACTED]', raw)
+          raw = re.sub(r'eyJ[A-Za-z0-9._-]{40,}', '[REDACTED JWT]', raw)
+          Path('automation/app2-004-yakuzaishi-asc-diagnostic.json').write_text(
+              json.dumps({'task_id':'APP2-004','step':'asc_final_audit','exit_code':code,'ok':code == 0,'log_tail':raw[-12000:]}, ensure_ascii=False, indent=2) + '\n',
+              encoding='utf-8')
+          PY
+          exit 0
+      - name: Persist APP2-004 ASC final audit or diagnostic
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
-          cp automation/app2-004-yakuzaishi-asc-final.json /tmp/app2-004-yakuzaishi-asc-final.json
-          git restore automation/app2-004-yakuzaishi-asc-final.json 2>/dev/null || true
+          mkdir -p /tmp/app2-004-asc-state
+          cp automation/app2-004-yakuzaishi-asc-diagnostic.json /tmp/app2-004-asc-state/diagnostic.json
+          if test -f automation/app2-004-yakuzaishi-asc-final.json; then
+            cp automation/app2-004-yakuzaishi-asc-final.json /tmp/app2-004-asc-state/final.json
+          fi
+          git restore automation/app2-004-yakuzaishi-asc-diagnostic.json 2>/dev/null || true
+          rm -f automation/app2-004-yakuzaishi-asc-final.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase origin main
-          cp /tmp/app2-004-yakuzaishi-asc-final.json automation/app2-004-yakuzaishi-asc-final.json
-          git add automation/app2-004-yakuzaishi-asc-final.json
+          cp /tmp/app2-004-asc-state/diagnostic.json automation/app2-004-yakuzaishi-asc-diagnostic.json
+          git add automation/app2-004-yakuzaishi-asc-diagnostic.json
+          if test -f /tmp/app2-004-asc-state/final.json; then
+            cp /tmp/app2-004-asc-state/final.json automation/app2-004-yakuzaishi-asc-final.json
+            git add automation/app2-004-yakuzaishi-asc-final.json
+          fi
           if ! git diff --cached --quiet; then
             git commit -m "Persist APP2-004 ASC final audit"
             git push origin HEAD:main
           fi
+      - name: Assert APP2-004 ASC final audit success
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('automation/app2-004-yakuzaishi-asc-diagnostic.json').read_text())
+          if not d.get('ok'):
+              raise SystemExit(f"APP2-004 ASC audit failed exit_code={d.get('exit_code')}")
+          PY
