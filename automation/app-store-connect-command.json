@@ -1,21 +1,25 @@
 {
-  "request_id": "app2-005-hm1-asc-readback-20260819-1244",
+  "request_id": "app2-004-yakuzaishi-asc-readback-20260819-1244",
   "requests": [
     {
       "label": "app",
-      "path": "/v1/apps/6799581662"
+      "path": "/v1/apps/6799753724"
     },
     {
       "label": "builds",
-      "path": "/v1/apps/6799581662/builds?sort=-uploadedDate&limit=10"
-    },
-    {
-      "label": "prerelease-versions",
-      "path": "/v1/apps/6799581662/preReleaseVersions?limit=20"
+      "path": "/v1/apps/6799753724/builds?sort=-uploadedDate&limit=10"
     },
     {
       "label": "beta-groups",
-      "path": "/v1/apps/6799581662/betaGroups?limit=50"
+      "path": "/v1/apps/6799753724/betaGroups?limit=50"
+    },
+    {
+      "label": "iap",
+      "path": "/v1/apps/6799753724/inAppPurchasesV2?limit=50"
+    },
+    {
+      "label": "subscription-groups",
+      "path": "/v1/apps/6799753724/subscriptionGroups?limit=50"
     }
   ]
 }
