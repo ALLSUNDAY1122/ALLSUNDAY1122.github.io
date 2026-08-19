@@ -1,60 +1,8 @@
 {
-  "request_id": "app2-003-yoru-final-readback-20260819-1501",
-  "ok": true,
-  "exit_code": 0,
-  "completed_at": "2026-08-19T06:02:16.802180+00:00",
-  "results": [
-    {
-      "label": "appstore-version",
-      "path": "/v1/appStoreVersions/812cd84c-3efb-407b-a04c-f9fb1b5554e6",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "812cd84c-3efb-407b-a04c-f9fb1b5554e6",
-          "type": "appStoreVersions",
-          "attributes": {
-            "versionString": "1.1.0",
-            "platform": "IOS",
-            "appStoreState": "PREPARE_FOR_SUBMISSION"
-          }
-        }
-      ]
-    },
-    {
-      "label": "appstore-version-build",
-      "path": "/v1/appStoreVersions/812cd84c-3efb-407b-a04c-f9fb1b5554e6/relationships/build",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "23521541-e269-4baf-800d-7830b94c36a1",
-          "type": "builds",
-          "attributes": {}
-        }
-      ]
-    },
-    {
-      "label": "appstore-review-detail",
-      "path": "/v1/appStoreReviewDetails/630be79a-3c94-4c4b-8882-6644d165152e",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "630be79a-3c94-4c4b-8882-6644d165152e",
-          "type": "appStoreReviewDetails",
-          "attributes": {}
-        }
-      ]
-    },
-    {
-      "label": "beta-review-build3",
-      "path": "/v1/betaAppReviewSubmissions?filter[build]=23521541-e269-4baf-800d-7830b94c36a1&limit=20",
-      "http_status": 200,
-      "data": []
-    },
-    {
-      "label": "review-submissions",
-      "path": "/v1/apps/6794137637/reviewSubmissions?limit=20",
-      "http_status": 200,
-      "data": []
-    }
-  ]
+  "request_id": "app2-003-pattern-c-postmerge-asc-read-20260819-1738",
+  "ok": false,
+  "exit_code": 1,
+  "completed_at": null,
+  "results": [],
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 329, in <module>\n    main()\n    ~~~~^^\n  File \"/Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 304, in main\n    status, response = api_get(token, req[\"path\"])\n                       ~~~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_api.py\", line 158, in api_get\n    return api_request(token, path, method=\"GET\")\n  File \"/Users/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_api.py\", line 152, in api_request\n    raise RuntimeError(\n        f\"App Store Connect API {method} {path} returned HTTP {exc.code}: {error_payload}\"\n    ) from None\nRuntimeError: App Store Connect API GET /v1/apps/6794137637/builds?sort=-uploadedDate&limit=10 returned HTTP 400: {'errors': [{'id': 'e28f6359-362e-4c42-bda6-edf78c3353c9', 'status': '400', 'code': 'PARAMETER_ERROR.ILLEGAL', 'title': 'A given parameter is not allowed for this request', 'detail': \"The parameter 'sort' can not be used with this request\", 'source': {'parameter': 'sort'}}]}\n"
 }
