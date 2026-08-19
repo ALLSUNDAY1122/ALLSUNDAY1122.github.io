@@ -1,4 +1,4 @@
-name: APP2-003 夜の書架 Codemagic Read
+name: APP2-003 夜の書架 Codemagic Gateway
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  inspect:
+  gateway:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -19,28 +19,31 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
-      - run: python -m pip install --disable-pip-version-check PyYAML
-      - name: Inspect Codemagic app
+      - name: Execute scoped Codemagic action
+        id: cm
+        continue-on-error: true
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
-          python scripts/codemagic_build_gateway.py \
+          python scripts/app2_003_codemagic_gateway.py \
             --command automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-codemagic-command.json \
             --output app2-003-codemagic-result.json
       - name: Persist sanitized result
+        if: always()
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          src = json.loads(Path('app2-003-codemagic-result.json').read_text(encoding='utf-8'))
-          out = {
-            'request_id': src.get('request_id'),
-            'action': src.get('action'),
-            'ok': src.get('ok'),
-            'resolved_app_id': src.get('resolved_app_id'),
-            'application_candidates': src.get('application_candidates', []),
-            'note': src.get('note')
+          src_path = Path('app2-003-codemagic-result.json')
+          if src_path.exists():
+              src = json.loads(src_path.read_text(encoding='utf-8'))
+          else:
+              src = {'ok': False, 'error': 'Codemagic gateway produced no result file'}
+          allowed = {
+            'request_id','action','repository','workflow_id','branch','ok','resolved_app_id',
+            'application_candidates','changed','app_id','build_id','status','build_url','build_details','error'
           }
+          out = {k: v for k, v in src.items() if k in allowed}
           p = Path('automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-codemagic.json')
           p.parent.mkdir(parents=True, exist_ok=True)
           p.write_text(json.dumps(out, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
@@ -50,3 +53,6 @@ jobs:
           git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-codemagic.json
           git commit -m "Persist APP2-003 Codemagic evidence" || exit 0
           git push
+      - name: Fail workflow when scoped action failed
+        if: steps.cm.outcome == 'failure'
+        run: exit 1
