@@ -1,0 +1,53 @@
+name: APP2-004 Pharmacist IAP Bootstrap
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-004-yakuzaishi-iap-command.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-004-yakuzaishi-iap-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate command
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('automation/app2-004-yakuzaishi-iap-command.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          if data.get('task_id') != 'APP2-004' or data.get('action') != 'ensure_iap':
+              raise SystemExit('Unexpected APP2-004 command payload')
+          PY
+      - name: Ensure pharmacist App Store Connect products
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/app2_004_yakuzaishi_iap_bootstrap.py
+      - name: Persist sanitized IAP result
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add automation/app2-004-yakuzaishi-iap-result.json
+          if git diff --cached --quiet; then
+            echo "No result change"
+            exit 0
+          fi
+          git commit -m "Persist APP2-004 pharmacist IAP bootstrap result"
+          git push origin HEAD:main
