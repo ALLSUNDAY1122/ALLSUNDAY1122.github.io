@@ -58,7 +58,9 @@ jobs:
                           key: attrs.get(key)
                           for key in (
                               'name', 'bundleId', 'sku', 'primaryLocale',
-                              'version', 'uploadedDate', 'processingState',
+                              'version', 'versionString', 'platform',
+                              'appStoreState', 'betaReviewState',
+                              'uploadedDate', 'processingState',
                               'expired', 'expirationDate', 'minOsVersion'
                           )
                           if key in attrs
