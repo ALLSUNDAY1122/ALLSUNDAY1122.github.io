@@ -35,8 +35,15 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: python3 scripts/app2_003_asc_review_contact_sync.py
+      - name: Execute scoped Pattern C ASC alignment
+        if: steps.cfg.outputs.mode == 'pattern_c_align'
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/app2_003_asc_pattern_c_align.py
       - name: Execute ASC read command
-        if: steps.cfg.outputs.mode != 'version_build_fix' && steps.cfg.outputs.mode != 'review_contact_sync'
+        if: steps.cfg.outputs.mode != 'version_build_fix' && steps.cfg.outputs.mode != 'review_contact_sync' && steps.cfg.outputs.mode != 'pattern_c_align'
         id: asc
         continue-on-error: true
         env:
@@ -53,7 +60,7 @@ jobs:
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           exit 0
       - name: Persist sanitized read result
-        if: steps.cfg.outputs.mode != 'version_build_fix' && steps.cfg.outputs.mode != 'review_contact_sync'
+        if: steps.cfg.outputs.mode != 'version_build_fix' && steps.cfg.outputs.mode != 'review_contact_sync' && steps.cfg.outputs.mode != 'pattern_c_align'
         env:
           ASC_EXIT_CODE: ${{ steps.asc.outputs.exit_code }}
         run: |
@@ -92,5 +99,6 @@ jobs:
           git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-asc.json 2>/dev/null || true
           git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-version-build-fix.json 2>/dev/null || true
           git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-review-contact-sync.json 2>/dev/null || true
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-pattern-c-asc-align.json 2>/dev/null || true
           git commit -m "Persist APP2-003 ASC evidence" || exit 0
           git push
