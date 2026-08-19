@@ -5,6 +5,7 @@ export type Card = {
   deckName?: string;
   note?: string;
   source?: string;
+  isHidden?: boolean;
   correct: number;
   wrong: number;
   lastStudiedAt: string | null;
