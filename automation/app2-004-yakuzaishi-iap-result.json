@@ -1,0 +1,38 @@
+{
+  "request_id": "APP2-004-yakuzaishi-iap-bootstrap",
+  "app": {
+    "id": "6799753724",
+    "bundleId": "jp.allsunday1122.yakuzaishi",
+    "name": "薬剤師国家試験｜学びスプリント"
+  },
+  "actions": [],
+  "lifetime": {
+    "id": "6802918851",
+    "productId": "jp.allsunday1122.yakuzaishi.lifetime",
+    "state": "MISSING_METADATA",
+    "configuredPriceJPN": "980"
+  },
+  "monthly": {
+    "id": "6802958538",
+    "productId": "jp.allsunday1122.yakuzaishi.monthly",
+    "state": "MISSING_METADATA",
+    "configuredPriceJPN": "200",
+    "introductoryOfferConfigured": true,
+    "introductoryOffer": {
+      "id": "eyJzIjoiNjgwMjk1ODUzOCIsImQiOjE3ODcxMjI4MDAsImkiOiJKUCIsInQiOiIiLCJwIjoiMCJ9",
+      "territory": "JPN",
+      "offerMode": "FREE_TRIAL",
+      "duration": "ONE_WEEK",
+      "numberOfPeriods": 1,
+      "startDate": "2026-08-19",
+      "endDate": null,
+      "targetSubscriptionPlanType": "UPFRONT"
+    }
+  },
+  "subscriptionGroup": {
+    "id": "22318957",
+    "count": 1
+  },
+  "safeForBuild": true,
+  "note": "IAP/subscription and JPN one-week free introductory offer ensured idempotently from pharmacist app metadata."
+}
