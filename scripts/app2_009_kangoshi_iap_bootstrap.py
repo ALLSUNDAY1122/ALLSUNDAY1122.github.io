@@ -1,16 +1,22 @@
 #!/usr/bin/env python3
-import json, os, urllib.request, urllib.error
+import json, os, urllib.request, urllib.error, traceback
 from decimal import Decimal
 from pathlib import Path
 from app_store_connect_api import BASE_URL, load_private_key, make_token
 
 APP_ID = "6801792293"
+BUNDLE_ID = "jp.allsunday1122.kangoshi"
 MONTHLY_ID = "jp.allsunday1122.kangoshi.monthly"
 LIFETIME_ID = "jp.allsunday1122.kangoshi.lifetime"
 JPN = "JPN"
 MONTHLY_PRICE = Decimal("200")
 LIFETIME_PRICE = Decimal("800")
 OUT = Path("automation/app2-009-kangoshi-iap-result.json")
+
+def write_result(payload):
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps(payload, ensure_ascii=False))
 
 def req(token, path, method="GET", payload=None):
     body = None if payload is None else json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode()
@@ -65,6 +71,10 @@ def ensure_monthly(token,actions):
         payload={"data":{"type":"subscriptionGroups","attributes":{"referenceName":"看護師国試プレミアム"},"relationships":{"app":{"data":{"type":"apps","id":APP_ID}}}}}
         _,c=req(token,"/v1/subscriptionGroups","POST",payload); group=c["data"]; actions.append("created_subscription_group")
     gid=group["id"]
+    _,gl=req(token,f"/v1/subscriptionGroups/{gid}/subscriptionGroupLocalizations?limit=200")
+    if not any(x.get("attributes",{}).get("locale")=="ja" for x in rows(gl)):
+        payload={"data":{"type":"subscriptionGroupLocalizations","attributes":{"name":"看護師国試プレミアム","locale":"ja"},"relationships":{"subscriptionGroup":{"data":{"type":"subscriptionGroups","id":gid}}}}}
+        req(token,"/v1/subscriptionGroupLocalizations","POST",payload); actions.append("localized_subscription_group_ja")
     _,sp=req(token,f"/v1/subscriptionGroups/{gid}/subscriptions?limit=200")
     sub=by_product(rows(sp),MONTHLY_ID)
     if sub is None:
@@ -89,9 +99,24 @@ def ensure_monthly(token,actions):
         req(token,"/v1/subscriptionPrices","POST",payload); actions.append("priced_monthly_200_jpn")
     return gid,sid
 
+def collect_state(token, iid, gid, sid, actions):
+    _,app=req(token,f"/v1/apps/{APP_ID}")
+    _,iap=req(token,f"/v2/inAppPurchases/{iid}?include=inAppPurchaseLocalizations,iapPriceSchedule")
+    _,sub=req(token,f"/v1/subscriptions/{sid}?include=subscriptionLocalizations,prices")
+    actual_bundle=app["data"].get("attributes",{}).get("bundleId")
+    if actual_bundle != BUNDLE_ID: raise RuntimeError(f"Bundle mismatch: {actual_bundle}")
+    return {"task_id":"APP2-009","app":{"id":APP_ID,"bundle_id":actual_bundle,"name":app["data"].get("attributes",{}).get("name")},"monthly":{"product_id":MONTHLY_ID,"price_jpn":"200","id":sid,"state":sub["data"].get("attributes",{}).get("state")},"lifetime":{"product_id":LIFETIME_ID,"price_jpn":"800","id":iid,"state":iap["data"].get("attributes",{}).get("state")},"subscription_group_id":gid,"actions":actions,"safe_for_build":True,"ok":True}
+
 def main():
-    issuer=os.environ["ASC_ISSUER_ID"]; kid=os.environ["ASC_KEY_ID"]; key=load_private_key(os.environ["ASC_PRIVATE_KEY"]); token=make_token(issuer,kid,key)
-    actions=[]; iid=ensure_lifetime(token,actions); gid,sid=ensure_monthly(token,actions)
-    result={"task_id":"APP2-009","app_id":APP_ID,"monthly":{"product_id":MONTHLY_ID,"price_jpn":"200","id":sid},"lifetime":{"product_id":LIFETIME_ID,"price_jpn":"800","id":iid},"subscription_group_id":gid,"actions":actions,"ok":True}
-    OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8"); print(json.dumps(result,ensure_ascii=False))
+    actions=[]
+    try:
+        issuer=os.environ["ASC_ISSUER_ID"]; kid=os.environ["ASC_KEY_ID"]; key=load_private_key(os.environ["ASC_PRIVATE_KEY"]); token=make_token(issuer,kid,key)
+        _,app=req(token,f"/v1/apps/{APP_ID}")
+        actual_bundle=app["data"].get("attributes",{}).get("bundleId")
+        if actual_bundle != BUNDLE_ID: raise RuntimeError(f"Bundle mismatch: {actual_bundle}")
+        iid=ensure_lifetime(token,actions); gid,sid=ensure_monthly(token,actions)
+        write_result(collect_state(token,iid,gid,sid,actions))
+    except Exception as exc:
+        write_result({"task_id":"APP2-009","app_id":APP_ID,"monthly_product_id":MONTHLY_ID,"lifetime_product_id":LIFETIME_ID,"actions":actions,"safe_for_build":False,"ok":False,"error":str(exc),"traceback_tail":traceback.format_exc()[-4000:]})
+        raise
 if __name__=="__main__": main()
