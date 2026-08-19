@@ -88,6 +88,7 @@ jobs:
           grep -q 'SplatVideoExporterTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'SplatTransientExportWorkspaceTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportServiceTests.swift' SplatNative.xcodeproj/project.pbxproj
+          grep -q 'MeshThirdPartyReaderCompatibilityTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportAdmissionTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshExportMemoryPolicyTests.swift' SplatNative.xcodeproj/project.pbxproj
           grep -q 'MeshProjectStoreTests.swift' SplatNative.xcodeproj/project.pbxproj
@@ -140,6 +141,7 @@ jobs:
             -only-testing:SplatNativeTests/SplatVideoConfigurationTests \
             -only-testing:SplatNativeTests/SplatVideoExporterTests \
             -only-testing:SplatNativeTests/MeshExportServiceTests \
+            -only-testing:SplatNativeTests/MeshThirdPartyReaderCompatibilityTests \
             -only-testing:SplatNativeTests/MeshExportAdmissionTests \
             -only-testing:SplatNativeTests/MeshExportMemoryPolicyTests \
             -only-testing:SplatNativeTests/MeshProjectStoreTests \
