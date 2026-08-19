@@ -3,6 +3,7 @@ import json
 import os
 import urllib.error
 import urllib.request
+from datetime import date
 from decimal import Decimal
 from pathlib import Path
 
@@ -68,7 +69,6 @@ def ensure_iap(token, actions):
                     "productId": LIFETIME_ID,
                     "inAppPurchaseType": "NON_CONSUMABLE",
                     "reviewNote": "薬剤師国家試験のプレミアム問題・分野別・模試・弱点学習を永久解放します。",
-                    "availableInAllTerritories": True,
                     "familySharable": False,
                 },
                 "relationships": {"app": {"data": {"type": "apps", "id": APP_ID}}},
@@ -139,6 +139,43 @@ def ensure_iap(token, actions):
     return iap_id
 
 
+def ensure_introductory_offer(token, sub_id, actions):
+    _, offers_payload = request(
+        token,
+        f"/v1/subscriptions/{sub_id}/introductoryOffers?filter[territory]={JPN}&include=territory&limit=200",
+    )
+    offers = data_list(offers_payload)
+    for offer in offers:
+        attrs = offer.get("attributes", {})
+        territory = offer.get("relationships", {}).get("territory", {}).get("data") or {}
+        if (
+            attrs.get("offerMode") == "FREE_TRIAL"
+            and attrs.get("duration") == "ONE_WEEK"
+            and int(attrs.get("numberOfPeriods") or 0) == 1
+            and territory.get("id") == JPN
+        ):
+            return offer["id"]
+
+    payload = {
+        "data": {
+            "type": "subscriptionIntroductoryOffers",
+            "attributes": {
+                "startDate": date.today().isoformat(),
+                "duration": "ONE_WEEK",
+                "offerMode": "FREE_TRIAL",
+                "numberOfPeriods": 1,
+            },
+            "relationships": {
+                "subscription": {"data": {"type": "subscriptions", "id": sub_id}},
+                "territory": {"data": {"type": "territories", "id": JPN}},
+            },
+        }
+    }
+    _, created = request(token, "/v1/subscriptionIntroductoryOffers", "POST", payload)
+    actions.append("created_monthly_intro_free_trial_jpn_one_week")
+    return created["data"]["id"]
+
+
 def ensure_subscription(token, actions):
     _, groups_payload = request(token, f"/v1/apps/{APP_ID}/subscriptionGroups?limit=200")
     groups = data_list(groups_payload)
@@ -181,7 +218,6 @@ def ensure_subscription(token, actions):
                     "familySharable": False,
                     "groupLevel": 1,
                     "reviewNote": "薬剤師国家試験のプレミアム問題・分野別・模試・弱点学習を月額で解放します。",
-                    "availableInAllTerritories": True,
                 },
                 "relationships": {"group": {"data": {"type": "subscriptionGroups", "id": group_id}}},
             }
@@ -238,14 +274,18 @@ def ensure_subscription(token, actions):
         request(token, "/v1/subscriptionPrices", "POST", payload)
         actions.append("set_monthly_price_jpn_200")
 
-    return group_id, sub_id
+    intro_id = ensure_introductory_offer(token, sub_id, actions)
+    return group_id, sub_id, intro_id
 
 
-def collect_state(token, iap_id, group_id, sub_id, actions):
+def collect_state(token, iap_id, group_id, sub_id, intro_id, actions):
     _, app = request(token, f"/v1/apps/{APP_ID}")
     _, iap = request(token, f"/v2/inAppPurchases/{iap_id}?include=inAppPurchaseLocalizations,iapPriceSchedule")
     _, sub = request(token, f"/v1/subscriptions/{sub_id}?include=subscriptionLocalizations,prices,introductoryOffers")
+    _, intro = request(token, f"/v1/subscriptionIntroductoryOffers/{intro_id}?include=territory,subscription")
     _, groups = request(token, f"/v1/apps/{APP_ID}/subscriptionGroups?limit=200")
+    intro_attrs = intro["data"].get("attributes", {})
+    intro_territory = intro["data"].get("relationships", {}).get("territory", {}).get("data") or {}
     return {
         "request_id": "APP2-004-yakuzaishi-iap-bootstrap",
         "app": {
@@ -265,11 +305,20 @@ def collect_state(token, iap_id, group_id, sub_id, actions):
             "productId": sub["data"].get("attributes", {}).get("productId"),
             "state": sub["data"].get("attributes", {}).get("state"),
             "configuredPriceJPN": "200",
-            "introductoryOfferConfigured": any(x.get("type") == "subscriptionIntroductoryOffers" for x in sub.get("included", [])),
+            "introductoryOfferConfigured": True,
+            "introductoryOffer": {
+                "id": intro_id,
+                "territory": intro_territory.get("id"),
+                "offerMode": intro_attrs.get("offerMode"),
+                "duration": intro_attrs.get("duration"),
+                "numberOfPeriods": intro_attrs.get("numberOfPeriods"),
+                "startDate": intro_attrs.get("startDate"),
+                "endDate": intro_attrs.get("endDate"),
+            },
         },
         "subscriptionGroup": {"id": group_id, "count": len(data_list(groups))},
         "safeForBuild": True,
-        "note": "IAP/subscription created from existing pharmacist app metadata. Introductory offer is not auto-created by this bootstrap.",
+        "note": "IAP/subscription and JPN one-week free introductory offer ensured idempotently from pharmacist app metadata.",
     }
 
 
@@ -287,8 +336,8 @@ def main():
             raise RuntimeError(f"Bundle mismatch: {actual_bundle}")
         actions = []
         iap_id = ensure_iap(token, actions)
-        group_id, sub_id = ensure_subscription(token, actions)
-        result = collect_state(token, iap_id, group_id, sub_id, actions)
+        group_id, sub_id, intro_id = ensure_subscription(token, actions)
+        result = collect_state(token, iap_id, group_id, sub_id, intro_id, actions)
     finally:
         if cleanup:
             cleanup.unlink(missing_ok=True)
