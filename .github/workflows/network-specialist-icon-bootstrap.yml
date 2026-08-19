@@ -1,6 +1,6 @@
 name: Network Specialist Canonical AppIcon Bootstrap
 
-# APP2-012 bootstrap trigger 2026-08-19
+# APP2-012 diagnostic trigger 2026-08-19
 on:
   push:
     branches:
@@ -21,48 +21,70 @@ jobs:
         with:
           ref: main
 
-      - name: Download exact canonical Drive source
+      - name: Download, verify and run release gates
+        id: gate
+        continue-on-error: true
         shell: bash
         run: |
-          set -euo pipefail
+          set -uo pipefail
           DEST='network-specialist-sprint/ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
           mkdir -p "$(dirname "$DEST")"
           URL='https://drive.google.com/uc?export=download&id=1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8'
-          curl --fail --location --retry 2 --connect-timeout 20 --max-time 120 "$URL" -o /tmp/network-specialist-appicon.png
-          test "$(stat -c%s /tmp/network-specialist-appicon.png)" = '678310'
-          echo '5b53032021cea4a3e71e737c1a48e1aa8d6495b3647cb770b0e5d917bb0d8729  /tmp/network-specialist-appicon.png' | sha256sum --check --strict
-          python - <<'PY'
+          STATUS='FAIL'
+          NOTE='download-or-validation-failed'
+          HTTP=0
+          curl --location --retry 2 --connect-timeout 20 --max-time 120 --write-out '%{http_code}' "$URL" -o /tmp/network-specialist-appicon.png > /tmp/http-code.txt || true
+          HTTP="$(cat /tmp/http-code.txt 2>/dev/null || echo 0)"
+          BYTES="$(stat -c%s /tmp/network-specialist-appicon.png 2>/dev/null || echo 0)"
+          SHA="$(sha256sum /tmp/network-specialist-appicon.png 2>/dev/null | awk '{print $1}' || true)"
+          if [ "$HTTP" = '200' ] && [ "$BYTES" = '678310' ] && [ "$SHA" = '5b53032021cea4a3e71e737c1a48e1aa8d6495b3647cb770b0e5d917bb0d8729' ]; then
+            if python - <<'PY'
           import struct
           from pathlib import Path
-          p=Path('/tmp/network-specialist-appicon.png')
-          d=p.read_bytes()
+          d=Path('/tmp/network-specialist-appicon.png').read_bytes()
           assert d[:8] == b'\x89PNG\r\n\x1a\n' and d[12:16] == b'IHDR'
-          w,h=struct.unpack('>II',d[16:24])
-          assert (w,h)==(1024,1024)
-          assert d[24]==8 and d[25]==2
-          print('PASS canonical PNG metadata')
+          assert struct.unpack('>II', d[16:24]) == (1024,1024)
+          assert d[24] == 8 and d[25] == 2
           PY
-          cp /tmp/network-specialist-appicon.png "$DEST"
+            then
+              cp /tmp/network-specialist-appicon.png "$DEST"
+              if (cd network-specialist-sprint && python3 scripts/build_native_questions.py && python3 scripts/materialize_appicon.py && python3 scripts/validate_release.py && python3 scripts/validate_native_release.py --require-icon --require-iap); then
+                STATUS='PASS'
+                NOTE='canonical-icon-and-release-static-gate-pass'
+              else
+                NOTE='release-static-gate-failed'
+              fi
+            else
+              NOTE='png-metadata-failed'
+            fi
+          fi
+          python - <<PY
+          import json
+          from pathlib import Path
+          Path('automation/chatgpt-dispatcher/app-development-2/evidence/APP2-012-icon-bootstrap-result.json').write_text(json.dumps({
+            'status': '${STATUS}', 'note': '${NOTE}', 'http': '${HTTP}', 'bytes': int('${BYTES}' or 0), 'sha256': '${SHA}'
+          }, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+          if [ "$STATUS" = 'PASS' ]; then
+            echo 'gate_pass=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'gate_pass=false' >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Validate release gates
-        run: |
-          cd network-specialist-sprint
-          python3 scripts/build_native_questions.py
-          python3 scripts/materialize_appicon.py
-          python3 scripts/validate_release.py
-          python3 scripts/validate_native_release.py --require-icon --require-iap
-
-      - name: Commit canonical AppIcon
+      - name: Commit diagnostic and canonical AppIcon when valid
         shell: bash
         run: |
           set -euo pipefail
-          DEST='network-specialist-sprint/ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "$DEST"
-          if git diff --cached --quiet; then
-            echo 'Canonical AppIcon already present; nothing to commit.'
-            exit 0
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-012-icon-bootstrap-result.json
+          if [ '${{ steps.gate.outputs.gate_pass }}' = 'true' ]; then
+            git add network-specialist-sprint/ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
           fi
-          git commit -m 'Materialize network specialist canonical AppIcon'
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Record network specialist AppIcon bootstrap result'
           git push origin HEAD:main
+
+      - name: Fail workflow when bootstrap failed
+        if: steps.gate.outputs.gate_pass != 'true'
+        run: exit 1
