@@ -99,16 +99,18 @@ jobs:
               raise SystemExit('invalid request_id')
           allowed={
               'request_id': request_id,
+              'ok': result.get('ok'),
               'action': command.get('action'),
-              'workflow_id': command.get('workflow_id'),
-              'branch': command.get('branch'),
+              'workflow_id': command.get('workflow_id') or result.get('workflow_id'),
+              'branch': command.get('branch') or result.get('branch'),
+              'resolved_app_id': result.get('resolved_app_id'),
+              'application_candidates': result.get('application_candidates'),
+              'note': result.get('note'),
               'build_id': result.get('build_id'),
               'status': result.get('status'),
-              'started_at': result.get('started_at'),
-              'finished_at': result.get('finished_at'),
               'app_id': result.get('app_id'),
               'error': result.get('error'),
-              'apps': result.get('apps') if command.get('action') == 'inspect' else None,
+              'build_details': result.get('build_details'),
           }
           actions=Path('codemagic-actions.json')
           if actions.exists():
