@@ -745,8 +745,6 @@ workflows:
     name: 登録販売者 - iOS Internal TestFlight
     max_build_duration: 60
     instance_type: mac_mini_m2
-    integrations:
-      app_store_connect: "Codemagic Shiwake Swipe"
     environment:
       groups:
         - app2_010_touhan_signing
@@ -773,6 +771,9 @@ workflows:
           test "$APP_STORE_CONNECT_APP_ID" = "6802119268"
           test "$CODEMAGIC_PROFILE_REF" = "tourokuhanbaisha_appstore"
           test -n "${CERTIFICATE_PRIVATE_KEY:-}"
+          test -n "${APP_STORE_CONNECT_PRIVATE_KEY:-}"
+          test -n "${APP_STORE_CONNECT_KEY_IDENTIFIER:-}"
+          test -n "${APP_STORE_CONNECT_ISSUER_ID:-}"
           bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
           python3 touroku-hanbaisha-ios/scripts/validate_release.py
       - name: Set CI build number and generate native project
@@ -806,7 +807,6 @@ workflows:
       - name: Fetch managed App Store signing files
         script: |
           set -euo pipefail
-          test -n "${CERTIFICATE_PRIVATE_KEY:-}"
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --type IOS_APP_STORE
       - name: Add signing certificate to keychain
@@ -831,8 +831,10 @@ workflows:
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
     publishing:
       app_store_connect:
-        auth: integration
-        submit_to_testflight: true
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: false
         submit_to_app_store: false
   network-specialist-native-ios:
     name: ネットワークスペシャリスト - Native Internal TestFlight
