@@ -31,6 +31,16 @@ function isHistory(value: unknown): value is StudyHistory {
   );
 }
 
+function normalizeDecks(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(
+    value
+      .filter((item): item is string => typeof item === 'string')
+      .map((item) => item.trim())
+      .filter(Boolean)
+  )];
+}
+
 export function validateBackup(value: unknown): BackupData {
   if (!value || typeof value !== 'object') throw new Error('INVALID_BACKUP');
   const data = value as Partial<BackupData>;
@@ -47,12 +57,15 @@ export function validateBackup(value: unknown): BackupData {
     throw new Error('ORPHAN_HISTORY');
   }
 
+  const decks = normalizeDecks(data.decks);
+
   return {
     version: 1,
     exportedAt:
       typeof data.exportedAt === 'string' ? data.exportedAt : new Date().toISOString(),
     cards: data.cards,
-    history: data.history
+    history: data.history,
+    ...(decks.length ? { decks } : {})
   };
 }
 
