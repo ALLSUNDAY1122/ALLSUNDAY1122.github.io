@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""APP2-009 compatibility runner for App Store Connect versioned IAP metadata APIs."""
+"""APP2-009 compatibility runner for current App Store Connect subscription/IAP metadata APIs."""
 import copy
-from datetime import date, timedelta
 import app2_009_kangoshi_iap_bootstrap as bootstrap
 
 _original_req = bootstrap.req
@@ -30,39 +29,51 @@ def _ensure_draft_version(token, kind, parent_id):
     return created["data"]["id"],version_type
 
 def _normalize_inline_price_payload(payload):
-    payload=copy.deepcopy(payload)
-    replacements={}
+    payload=copy.deepcopy(payload); replacements={}
     for item in payload.get("included") or []:
         local_id=item.get("id")
         if isinstance(local_id,str) and not (local_id.startswith("${") and local_id.endswith("}")):
             normalized="${"+local_id+"}"; replacements[local_id]=normalized; item["id"]=normalized
-        rel=(item.get("relationships") or {}).get("inAppPurchaseV2") or {}
-        related=rel.get("data") or {}
+        rel=(item.get("relationships") or {}).get("inAppPurchaseV2") or {}; related=rel.get("data") or {}
         if related.get("type")=="inAppPurchasesV2": related["type"]="inAppPurchases"
     manual=payload.get("data",{}).get("relationships",{}).get("manualPrices",{}).get("data",[])
     for item in manual:
         if item.get("id") in replacements: item["id"]=replacements[item["id"]]
     return payload
 
+def _create_starting_subscription_price(token, original_payload):
+    rels=original_payload.get("data",{}).get("relationships",{}); sub=(rels.get("subscription",{}).get("data") or {}); sub_id=sub.get("id")
+    if not sub_id: raise RuntimeError("Missing subscription linkage")
+    _,availability_payload=_original_req(token,f"/v1/subscriptions/{sub_id}/planAvailabilities?include=availableTerritories&limit=200")
+    availabilities=_rows(availability_payload)
+    if not any(x.get("attributes",{}).get("planType")=="UPFRONT" for x in availabilities):
+        raise RuntimeError("UPFRONT subscription plan availability is missing")
+    _,points_payload=_original_req(token,f"/v1/subscriptions/{sub_id}/pricePoints?filter[territory]=JPN&filter[planType]=UPFRONT&fields[subscriptionPricePoints]=customerPrice,territory&include=territory&limit=8000")
+    point=next((x for x in _rows(points_payload) if bootstrap.dec(x.get("attributes",{}).get("customerPrice"))==bootstrap.MONTHLY_PRICE),None)
+    if point is None: raise RuntimeError("No JPN 200 UPFRONT price point found for monthly subscription")
+    point_id=point["id"]
+    _,detail=_original_req(token,f"/v1/subscriptionPricePoints/{point_id}?include=territory")
+    d=detail.get("data",{}) if isinstance(detail,dict) else {}; territory_id=(d.get("relationships",{}).get("territory",{}).get("data") or {}).get("id") or "JPN"
+    local_id="${app2-009-starting-price-jpn}"
+    patch_payload={"data":{"type":"subscriptions","id":sub_id,"relationships":{"prices":{"data":[{"type":"subscriptionPrices","id":local_id}]}}},"included":[{"type":"subscriptionPrices","id":local_id,"attributes":{"startDate":None,"preserveCurrentPrice":False,"planType":"UPFRONT"},"relationships":{"subscription":{"data":{"type":"subscriptions","id":sub_id}},"subscriptionPricePoint":{"data":{"type":"subscriptionPricePoints","id":point_id}},"territory":{"data":{"type":"territories","id":territory_id}}}}]}
+    return _original_req(token,f"/v1/subscriptions/{sub_id}","PATCH",patch_payload)
+
 def req(token,path,method="GET",payload=None):
     if method=="POST" and payload and isinstance(payload,dict):
         data=payload.get("data") or {}; relationships=data.get("relationships") or {}
         if path=="/v2/inAppPurchaseLocalizations" and "inAppPurchaseV2" in relationships:
-            parent_id=relationships["inAppPurchaseV2"]["data"]["id"]
-            version_id,version_type=_ensure_draft_version(token,"iap",parent_id)
+            parent_id=relationships["inAppPurchaseV2"]["data"]["id"]; version_id,version_type=_ensure_draft_version(token,"iap",parent_id)
             payload=copy.deepcopy(payload); payload["data"]["relationships"]={"version":{"data":{"type":version_type,"id":version_id}}}
         elif path=="/v1/subscriptionLocalizations" and "subscription" in relationships:
-            parent_id=relationships["subscription"]["data"]["id"]
-            version_id,version_type=_ensure_draft_version(token,"subscription",parent_id)
+            parent_id=relationships["subscription"]["data"]["id"]; version_id,version_type=_ensure_draft_version(token,"subscription",parent_id)
             payload=copy.deepcopy(payload); payload["data"]["relationships"]={"version":{"data":{"type":version_type,"id":version_id}}}; path="/v2/subscriptionLocalizations"
         elif path=="/v1/subscriptionGroupLocalizations" and "subscriptionGroup" in relationships:
-            parent_id=relationships["subscriptionGroup"]["data"]["id"]
-            version_id,version_type=_ensure_draft_version(token,"group",parent_id)
+            parent_id=relationships["subscriptionGroup"]["data"]["id"]; version_id,version_type=_ensure_draft_version(token,"group",parent_id)
             payload=copy.deepcopy(payload); payload["data"]["relationships"]={"version":{"data":{"type":version_type,"id":version_id}}}; path="/v2/subscriptionGroupLocalizations"
         elif path=="/v1/inAppPurchasePriceSchedules":
             payload=_normalize_inline_price_payload(payload)
         elif path=="/v1/subscriptionPrices":
-            payload=copy.deepcopy(payload); payload.setdefault("data",{}).setdefault("attributes",{}).setdefault("startDate",(date.today()+timedelta(days=1)).isoformat())
+            return _create_starting_subscription_price(token,payload)
     return _original_req(token,path,method,payload)
 
 bootstrap.req=req
