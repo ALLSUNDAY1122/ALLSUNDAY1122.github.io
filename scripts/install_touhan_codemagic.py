@@ -17,8 +17,6 @@ BLOCK = r'''
     name: 登録販売者 - iOS Internal TestFlight
     max_build_duration: 60
     instance_type: mac_mini_m2
-    integrations:
-      app_store_connect: "Codemagic Shiwake Swipe"
     environment:
       groups:
         - app2_010_touhan_signing
@@ -45,6 +43,9 @@ BLOCK = r'''
           test "$APP_STORE_CONNECT_APP_ID" = "6802119268"
           test "$CODEMAGIC_PROFILE_REF" = "tourokuhanbaisha_appstore"
           test -n "${CERTIFICATE_PRIVATE_KEY:-}"
+          test -n "${APP_STORE_CONNECT_PRIVATE_KEY:-}"
+          test -n "${APP_STORE_CONNECT_KEY_IDENTIFIER:-}"
+          test -n "${APP_STORE_CONNECT_ISSUER_ID:-}"
           bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
           python3 touroku-hanbaisha-ios/scripts/validate_release.py
       - name: Set CI build number and generate native project
@@ -78,7 +79,6 @@ BLOCK = r'''
       - name: Fetch managed App Store signing files
         script: |
           set -euo pipefail
-          test -n "${CERTIFICATE_PRIVATE_KEY:-}"
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --type IOS_APP_STORE
       - name: Add signing certificate to keychain
@@ -103,8 +103,10 @@ BLOCK = r'''
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
     publishing:
       app_store_connect:
-        auth: integration
-        submit_to_testflight: true
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: false
         submit_to_app_store: false
 '''
 
@@ -114,7 +116,6 @@ def replace_workflow(text: str) -> tuple[str, bool]:
     start = text.find(marker)
     if start < 0:
         return text.rstrip() + BLOCK + "\n", True
-
     body_start = start + 1
     search_from = body_start + len(f"  {WORKFLOW_ID}:\n")
     match = re.search(r"(?m)^  [A-Za-z0-9_-]+:\s*$", text[search_from:])
@@ -131,11 +132,9 @@ def main() -> int:
     request_id = str(trigger["request_id"])
     if not request_id.startswith("app2-010-"):
         raise SystemExit("unexpected request_id")
-
     text = CODEMAGIC.read_text(encoding="utf-8")
     if not text.startswith("workflows:\n") and "\nworkflows:\n" not in text:
         raise SystemExit("codemagic.yaml has no workflows root")
-
     updated, changed = replace_workflow(text)
     if changed:
         CODEMAGIC.write_text(updated, encoding="utf-8")
@@ -155,21 +154,27 @@ def main() -> int:
         "APPICON_SHA256: c0cefbae22cdcd7b614d213ddca7942c7d693f02ead758b11b66d447a66bff03",
         "os.environ.get('CM_BUILD_NUMBER') or os.environ.get('BUILD_NUMBER')",
         'test -n "${CERTIFICATE_PRIVATE_KEY:-}"',
+        'test -n "${APP_STORE_CONNECT_PRIVATE_KEY:-}"',
+        'test -n "${APP_STORE_CONNECT_KEY_IDENTIFIER:-}"',
+        'test -n "${APP_STORE_CONNECT_ISSUER_ID:-}"',
         "keychain initialize",
         'app-store-connect fetch-signing-files "$BUNDLE_ID"',
         "--type IOS_APP_STORE",
         "keychain add-certificates",
         "xcode-project use-profiles",
-        "submit_to_testflight: true",
+        "api_key: $APP_STORE_CONNECT_PRIVATE_KEY",
+        "key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER",
+        "issuer_id: $APP_STORE_CONNECT_ISSUER_ID",
+        "submit_to_testflight: false",
         "submit_to_app_store: false",
     ]
-    forbidden = ["--create", "ios_signing:"]
+    forbidden = ["--create", "ios_signing:", "auth: integration", "submit_to_testflight: true"]
     for token in required:
         if token not in workflow:
             raise SystemExit(f"missing required Touhan token: {token}")
     for token in forbidden:
         if token in workflow:
-            raise SystemExit(f"obsolete Touhan signing token remains: {token}")
+            raise SystemExit(f"obsolete or unsafe Touhan token remains: {token}")
 
     RESULT_DIR.mkdir(parents=True, exist_ok=True)
     result = {
@@ -179,16 +184,17 @@ def main() -> int:
         "workflow_id": WORKFLOW_ID,
         "changed": changed,
         "build_number_mode": "CM_BUILD_NUMBER_or_BUILD_NUMBER",
-        "signing_mode": "managed_certificate_private_key_plus_asc_profile_fetch",
+        "signing_mode": "managed_private_key_and_explicit_asc_credentials",
+        "publishing_mode": "explicit_secure_asc_credentials_internal_upload_only",
         "codemagic_group_name": "app2_010_touhan_signing",
         "bundle_id": "com.allsunday1122.tourokuhanbaisha",
         "app_store_connect_app_id": "6802119268",
         "codemagic_profile_ref": "tourokuhanbaisha_appstore",
         "apple_profile_id": "7B328C2DU4",
         "apple_certificate_id": "K2A3VCP583",
-        "create_signing_files": False,
-        "submit_to_testflight": True,
+        "submit_to_testflight_beta_review": False,
         "submit_to_app_store": False,
+        "internal_testflight_only_export": True,
     }
     (RESULT_DIR / f"{request_id}.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, ensure_ascii=False))
