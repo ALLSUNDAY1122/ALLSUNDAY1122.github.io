@@ -1,0 +1,52 @@
+name: APP2-003 夜の書架 Codemagic Read
+
+on:
+  push:
+    branches:
+      - automation/app-development-2-session-dispatcher
+    paths:
+      - automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-codemagic-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check PyYAML
+      - name: Inspect Codemagic app
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python scripts/codemagic_build_gateway.py \
+            --command automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-codemagic-command.json \
+            --output app2-003-codemagic-result.json
+      - name: Persist sanitized result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          src = json.loads(Path('app2-003-codemagic-result.json').read_text(encoding='utf-8'))
+          out = {
+            'request_id': src.get('request_id'),
+            'action': src.get('action'),
+            'ok': src.get('ok'),
+            'resolved_app_id': src.get('resolved_app_id'),
+            'application_candidates': src.get('application_candidates', []),
+            'note': src.get('note')
+          }
+          p = Path('automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-codemagic.json')
+          p.parent.mkdir(parents=True, exist_ok=True)
+          p.write_text(json.dumps(out, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-codemagic.json
+          git commit -m "Persist APP2-003 Codemagic evidence" || exit 0
+          git push
