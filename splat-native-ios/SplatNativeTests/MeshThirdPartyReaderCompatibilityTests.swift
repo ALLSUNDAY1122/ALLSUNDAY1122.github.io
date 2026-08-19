@@ -4,39 +4,24 @@ import ModelIO
 import XCTest
 
 final class MeshThirdPartyReaderCompatibilityTests: XCTestCase {
-    func testExportedMeshFormatsReopenThroughIndependentAssimpImporter() async throws {
-        let root = try makeRoot()
-        defer { try? FileManager.default.removeItem(at: root) }
-        let source = try writeTriangleOBJ(in: root)
+    func testOBJReopensThroughAssimp() async throws {
+        try await assertAssimpCanReopen(.obj)
+    }
 
-        for format in [
-            MeshExportService.Format.obj,
-            .fbx,
-            .glb,
-            .stl,
-            .ply,
-        ] {
-            let output = try await MeshExportService.export(
-                sourceURL: source,
-                format: format,
-                destinationDirectory: root
-            )
+    func testFBXReopensThroughAssimp() async throws {
+        try await assertAssimpCanReopen(.fbx)
+    }
 
-            let scene: UnsafePointer<aiScene>? = output.path.withCString { path in
-                aiImportFile(path, 0)
-            }
-            guard let scene else {
-                let detail = aiGetErrorString().map { String(cString: $0) } ?? "Assimp returned no error detail"
-                return XCTFail("Independent Assimp importer could not reopen \(format.rawValue): \(detail)")
-            }
-            defer { aiReleaseImport(scene) }
+    func testGLBReopensThroughAssimp() async throws {
+        try await assertAssimpCanReopen(.glb)
+    }
 
-            XCTAssertGreaterThan(
-                scene.pointee.mNumMeshes,
-                0,
-                "\(format.rawValue) parsed but contained no mesh/point-cloud payload"
-            )
-        }
+    func testSTLReopensThroughAssimp() async throws {
+        try await assertAssimpCanReopen(.stl)
+    }
+
+    func testPLYReopensThroughAssimp() async throws {
+        try await assertAssimpCanReopen(.ply)
     }
 
     func testUSDZReopensThroughModelIOWhenAdvertised() async throws {
@@ -56,6 +41,32 @@ final class MeshThirdPartyReaderCompatibilityTests: XCTestCase {
         )
         let reopened = MDLAsset(url: output)
         XCTAssertGreaterThan(reopened.count, 0, "USDZ was written but Model I/O could not reopen it")
+    }
+
+    private func assertAssimpCanReopen(_ format: MeshExportService.Format) async throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = try writeTriangleOBJ(in: root)
+        let output = try await MeshExportService.export(
+            sourceURL: source,
+            format: format,
+            destinationDirectory: root
+        )
+
+        let scene: UnsafePointer<aiScene>? = output.path.withCString { path in
+            aiImportFile(path, 0)
+        }
+        guard let scene else {
+            let detail = aiGetErrorString().map { String(cString: $0) } ?? "Assimp returned no error detail"
+            return XCTFail("Assimp could not reopen \(format.rawValue): \(detail)")
+        }
+        defer { aiReleaseImport(scene) }
+
+        XCTAssertGreaterThan(
+            scene.pointee.mNumMeshes,
+            0,
+            "\(format.rawValue) parsed but contained no mesh/point-cloud payload"
+        )
     }
 
     private func writeTriangleOBJ(in root: URL) throws -> URL {
