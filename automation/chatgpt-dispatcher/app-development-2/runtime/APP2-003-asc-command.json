@@ -1,9 +1,25 @@
 {
-  "request_id": "app2-003-yoru-asc-prerelease-20260819-1226",
+  "request_id": "app2-003-yoru-asc-submission-audit-20260819-1227",
   "requests": [
     {
-      "label": "prerelease-versions",
-      "path": "/v1/preReleaseVersions?filter[app]=6794137637&limit=20"
+      "label": "prerelease-110-builds",
+      "path": "/v1/preReleaseVersions/c655ea9f-08a8-4f82-9aa6-6b4f43a527da/builds?limit=20"
+    },
+    {
+      "label": "beta-review-build3",
+      "path": "/v1/betaAppReviewSubmissions?filter[build]=23521541-e269-4baf-800d-7830b94c36a1&limit=20"
+    },
+    {
+      "label": "appstore-version-build",
+      "path": "/v1/appStoreVersions/812cd84c-3efb-407b-a04c-f9fb1b5554e6/relationships/build"
+    },
+    {
+      "label": "review-submissions",
+      "path": "/v1/apps/6794137637/reviewSubmissions?limit=20"
+    },
+    {
+      "label": "beta-review-detail",
+      "path": "/v1/betaAppReviewDetails?filter[app]=6794137637&limit=20"
     }
   ]
 }
