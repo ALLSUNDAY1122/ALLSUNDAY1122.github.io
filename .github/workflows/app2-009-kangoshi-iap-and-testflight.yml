@@ -1,5 +1,5 @@
 name: APP2-009 Kangoshi IAP and TestFlight
-# execution-trigger: 2026-08-19T15:24:00+09:00
+# execution-trigger: 2026-08-19T15:33:00+09:00
 
 on:
   push:
@@ -26,25 +26,34 @@ jobs:
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: python scripts/app2_009_kangoshi_iap_bootstrap.py
       - name: Persist IAP result
+        if: always() && hashFiles('automation/app2-009-kangoshi-iap-result.json') != ''
         run: |
+          cp automation/app2-009-kangoshi-iap-result.json /tmp/app2-009-kangoshi-iap-result.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/app2-009-kangoshi-iap-result.json automation/app2-009-kangoshi-iap-result.json
           git add automation/app2-009-kangoshi-iap-result.json
           if ! git diff --cached --quiet; then
             git commit -m "Persist APP2-009 IAP configuration result"
             git push origin HEAD:main
           fi
 
-  request-testflight:
+  build-testflight:
     needs: configure-iap
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Patch Kangoshi Codemagic workflow for TestFlight upload
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install gateway dependency
+        run: python -m pip install --disable-pip-version-check PyYAML
+      - name: Enable Kangoshi TestFlight publishing
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -68,13 +77,12 @@ jobs:
             git pull --rebase origin main
             git push origin HEAD:main
           fi
-      - name: Request Codemagic build
+      - name: Prepare Codemagic request
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          p=Path('automation/codemagic-build-command.json')
-          p.write_text(json.dumps({
+          Path('automation/codemagic-build-command.json').write_text(json.dumps({
             'request_id':'app2-009-kangoshi-testflight-20260819',
             'action':'build',
             'workflow_id':'kangoshi-ios',
@@ -83,9 +91,66 @@ jobs:
             'timeout_seconds':4200
           },ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
+      - name: Execute Codemagic build and wait
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          CM_APP_ID: ${{ vars.CM_APP_ID }}
+        run: |
+          python scripts/codemagic_build_gateway.py \
+            --command automation/codemagic-build-command.json \
+            --output codemagic-result.json
+      - name: Collect Codemagic action diagnostics
+        if: always() && hashFiles('codemagic-result.json') != ''
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+          result=json.loads(Path('codemagic-result.json').read_text(encoding='utf-8'))
+          build_id=result.get('build_id'); token=os.environ.get('CM_API_TOKEN','').strip()
+          if not build_id or not token: raise SystemExit(0)
+          req=urllib.request.Request(f'https://codemagic.io/api/v3/builds/{build_id}/actions',headers={'x-auth-token':token,'Accept':'application/json'},method='GET')
+          try:
+              with urllib.request.urlopen(req,timeout=30) as response: payload=json.loads(response.read().decode('utf-8'))
+          except urllib.error.HTTPError as exc:
+              payload={'http_status':exc.code,'error':exc.read().decode('utf-8',errors='replace')[:2000]}
+          sensitive=('secret','token','password','credential','private','apikey','api_key','environment','variable')
+          def clean(v):
+              if isinstance(v,dict): return {k:('[REDACTED]' if any(p in str(k).lower() for p in sensitive) else clean(x)) for k,x in v.items()}
+              if isinstance(v,list): return [clean(x) for x in v]
+              return v
+          Path('codemagic-actions.json').write_text(json.dumps(clean(payload),ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - name: Persist Codemagic result
+        if: always() && hashFiles('codemagic-result.json') != ''
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          command=json.loads(Path('automation/codemagic-build-command.json').read_text(encoding='utf-8'))
+          result=json.loads(Path('codemagic-result.json').read_text(encoding='utf-8'))
+          allowed={
+            'request_id':command['request_id'],'ok':result.get('ok'),'action':command.get('action'),
+            'workflow_id':command.get('workflow_id') or result.get('workflow_id'),'branch':command.get('branch'),
+            'resolved_app_id':result.get('resolved_app_id'),'build_id':result.get('build_id'),
+            'status':result.get('status'),'app_id':result.get('app_id'),'error':result.get('error'),
+            'build_details':result.get('build_details')}
+          actions=Path('codemagic-actions.json')
+          if actions.exists(): allowed['actions']=json.loads(actions.read_text(encoding='utf-8'))
+          out=Path('automation/codemagic-results/app2-009-kangoshi-testflight-20260819.json')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps(allowed,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          cp automation/codemagic-results/app2-009-kangoshi-testflight-20260819.json /tmp/app2-009-codemagic.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
-          git add automation/codemagic-build-command.json
-          git commit -m "APP2-009 request Kangoshi Internal TestFlight build"
-          git push origin HEAD:main
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/codemagic-results
+          cp /tmp/app2-009-codemagic.json automation/codemagic-results/app2-009-kangoshi-testflight-20260819.json
+          git add automation/codemagic-results/app2-009-kangoshi-testflight-20260819.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Persist APP2-009 Kangoshi TestFlight result"
+            git push origin HEAD:main
+          fi
