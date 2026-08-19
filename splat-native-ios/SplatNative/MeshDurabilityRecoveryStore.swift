@@ -106,11 +106,11 @@ struct MeshDurabilityRecoveryStore: Sendable {
     func recoverPendingArchives() -> MeshDurabilityRecoveryReport {
         let fileManager = FileManager.default
         try? fileManager.createDirectory(at: recoveryURL, withIntermediateDirectories: true)
-        let projects = ((try? fileManager.contentsOfDirectory(
-            at: recoveryURL,
-            includingPropertiesForKeys: [.isDirectoryKey],
-            options: [.skipsHiddenFiles]
-        )) ?? []).filter { $0.pathExtension.lowercased() == MeshProjectStore.projectExtension }
+
+        let protectedProjects = projectDirectories(in: recoveryURL)
+        let orphanedWorkingProjects = projectDirectories(in: appRootURL)
+            .filter { bestFinishedResult(in: $0) != nil }
+        let projects = protectedProjects + orphanedWorkingProjects
 
         var recoveredCount = 0
         var lastErrorDescription: String?
@@ -118,7 +118,9 @@ struct MeshDurabilityRecoveryStore: Sendable {
 
         for projectURL in projects {
             guard let resultURL = bestFinishedResult(in: projectURL) else {
-                lastErrorDescription = "Recovery内に完成Meshを確認できないprojectがあります。"
+                if projectURL.deletingLastPathComponent().standardizedFileURL == recoveryURL.standardizedFileURL {
+                    lastErrorDescription = "Recovery内に完成Meshを確認できないprojectがあります。"
+                }
                 continue
             }
             do {
@@ -131,17 +133,28 @@ struct MeshDurabilityRecoveryStore: Sendable {
             }
         }
 
-        let remainingCount = ((try? fileManager.contentsOfDirectory(
-            at: recoveryURL,
-            includingPropertiesForKeys: [.isDirectoryKey],
-            options: [.skipsHiddenFiles]
-        )) ?? []).filter { $0.pathExtension.lowercased() == MeshProjectStore.projectExtension }.count
+        let protectedRemaining = projectDirectories(in: recoveryURL).count
+        let orphanedRemaining = projectDirectories(in: appRootURL)
+            .filter { bestFinishedResult(in: $0) != nil }
+            .count
 
         return MeshDurabilityRecoveryReport(
             recoveredCount: recoveredCount,
-            remainingCount: remainingCount,
+            remainingCount: protectedRemaining + orphanedRemaining,
             lastErrorDescription: lastErrorDescription
         )
+    }
+
+    private func projectDirectories(in directoryURL: URL) -> [URL] {
+        let fileManager = FileManager.default
+        return ((try? fileManager.contentsOfDirectory(
+            at: directoryURL,
+            includingPropertiesForKeys: [.isDirectoryKey],
+            options: [.skipsHiddenFiles]
+        )) ?? []).filter { url in
+            guard url.pathExtension.lowercased() == MeshProjectStore.projectExtension else { return false }
+            return (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true
+        }
     }
 
     private func bestFinishedResult(in projectURL: URL) -> URL? {

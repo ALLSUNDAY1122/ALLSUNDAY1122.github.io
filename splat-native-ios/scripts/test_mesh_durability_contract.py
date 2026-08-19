@@ -28,6 +28,7 @@ for needle in (
     "func retry(model: MeshScanModel)",
     "func recoverPendingProjects()",
     "preserveAfterFailure(sourceURL:",
+    "self.cleanupProtectedResult(sourceURL)",
 ):
     if needle not in coordinator:
         raise SystemExit(f"missing fail-closed Mesh lifecycle contract: {needle}")
@@ -45,6 +46,7 @@ for needle in (
     "MeshProjectIntegrity.verifyOrSeal(summary: summary)",
     "try fileManager.removeItem(at: projectURL)",
     'hasPrefix("mesh-reprocessed-")',
+    "projectDirectories(in: appRootURL)",
 ):
     if needle not in recovery:
         raise SystemExit(f"missing Mesh recovery contract: {needle}")

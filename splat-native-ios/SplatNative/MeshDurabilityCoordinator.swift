@@ -125,27 +125,7 @@ final class MeshDurabilityCoordinator: ObservableObject {
             return
         }
 
-        // Keep an independent working-project name alive until integrity verification succeeds.
-        // Because this is a same-volume rename, even low-storage conditions do not require another
-        // physical copy. MeshScanModel still holds the stale pre-move project URL, so reset cannot
-        // delete the protected Recovery project.
-        var protectedSourceURL = sourceURL
-        do {
-            let protected = try protectWorkingResult(sourceURL)
-            protectedSourceURL = protected.resultURL
-            verificationSourceURL = protectedSourceURL
-            archivingSourceURL = protectedSourceURL
-            if model.resultURL == sourceURL {
-                model.resultURL = protectedSourceURL
-            }
-        } catch {
-            // The durable snapshot already exists, but until it is verified we cannot safely permit
-            // destructive interaction if the working copy could not be moved out of reset's reach.
-            verificationSourceURL = sourceURL
-            blockingMessage = "Meshの保存済みコピーを確認中ですが、working projectをRecoveryへ保護できませんでした。整合性確認が終わるまで操作を停止します。"
-        }
-
-        let sourceBeingVerified = protectedSourceURL
+        verificationSourceURL = sourceURL
         verificationTask = Task { @MainActor [weak self, weak model] in
             guard let self, let model else { return }
 
@@ -163,8 +143,8 @@ final class MeshDurabilityCoordinator: ObservableObject {
                 self.blockingMessage = nil
 
                 let currentResult = model.resultURL
-                self.cleanupProtectedResult(sourceBeingVerified)
-                if currentResult == sourceURL || currentResult == sourceBeingVerified {
+                self.cleanupProtectedResult(sourceURL)
+                if currentResult == sourceURL {
                     model.resultURL = durableURL
                     model.statusMessage = "Meshをライブラリへ安全に保存しました"
                     MeshRawProjectBridge.cleanupDerivedWorkingProject(containing: sourceURL)
@@ -178,19 +158,26 @@ final class MeshDurabilityCoordinator: ObservableObject {
                 self.archivingSourceURL = nil
                 self.verificationSourceURL = nil
                 self.verificationTask = nil
-                self.failedSourceURL = sourceBeingVerified
-                self.warningMessage = "Mesh整合性確認が中断されました。Recoveryのworking projectは保持されています。"
+                self.preserveAfterFailure(sourceURL: sourceURL, error: CancellationError(), model: model)
             } catch {
                 self.archivingSourceURL = nil
                 self.verificationSourceURL = nil
                 self.verificationTask = nil
-                self.preserveAfterFailure(sourceURL: sourceBeingVerified, error: error, model: model)
+                self.preserveAfterFailure(sourceURL: sourceURL, error: error, model: model)
             }
         }
     }
 
     private func preserveAfterFailure(sourceURL: URL, error: Error, model: MeshScanModel) {
         let baseMessage = "Meshを安全に保存できませんでした: \(error.localizedDescription)"
+
+        guard FileManager.default.fileExists(atPath: sourceURL.path) else {
+            failedSourceURL = nil
+            blockingMessage = nil
+            warningMessage = baseMessage + "。working projectは既に閉じられています。保存済みライブラリコピーは保持し、次回ライブラリ確認時に再検証します。"
+            model.statusMessage = warningMessage ?? baseMessage
+            return
+        }
 
         if MeshDurabilityRecoveryStore().isProtected(resultURL: sourceURL) {
             failedSourceURL = sourceURL
