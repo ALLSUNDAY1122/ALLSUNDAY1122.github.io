@@ -37,69 +37,60 @@ jobs:
           grep -q '^  otsu4-ios:' codemagic.yaml
           grep -q 'CODEMAGIC_PROFILE: otsu4_appstore' codemagic.yaml
           grep -q -- '- otsu4_appstore' codemagic.yaml
-          grep -q 'submit_to_testflight: true' codemagic.yaml
+          grep -q "RELEASE_BUILD_NUMBER: '2'" codemagic.yaml
+          grep -q 'agvtool new-version -all' codemagic.yaml
+          grep -q 'submit_to_testflight: false' codemagic.yaml
           grep -q 'submit_to_app_store: false' codemagic.yaml
           grep -q 'testFlightInternalTestingOnly' codemagic.yaml
           test -f native-ios/Otsu4Sprint/Otsu4GoldenRootView.swift
           test -f native-ios/Otsu4Sprint/UITests/Otsu4SprintUITests.swift
 
       - name: Start and monitor Codemagic build
-        id: cm
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           python3 - <<'PY'
           import json, os, time, urllib.request, urllib.error
           from pathlib import Path
-
-          token = os.environ.get('CM_API_TOKEN', '').strip()
+          token=os.environ.get('CM_API_TOKEN','').strip()
           if not token:
               raise SystemExit('Missing CM_API_TOKEN')
-
-          app_id = '6a769d81a1add9d06020b524'
-          workflow_id = 'otsu4-ios'
-          branch = 'release/app2-007-otsu4-testflight'
-
-          def api(url, method='GET', payload=None):
-              body = None if payload is None else json.dumps(payload).encode('utf-8')
-              req = urllib.request.Request(url, data=body, method=method)
-              req.add_header('Content-Type', 'application/json')
-              req.add_header('x-auth-token', token)
+          app_id='6a769d81a1add9d06020b524'
+          workflow_id='otsu4-ios'
+          branch='release/app2-007-otsu4-testflight'
+          def api(url,method='GET',payload=None):
+              body=None if payload is None else json.dumps(payload).encode('utf-8')
+              req=urllib.request.Request(url,data=body,method=method)
+              req.add_header('Content-Type','application/json')
+              req.add_header('x-auth-token',token)
               try:
-                  with urllib.request.urlopen(req, timeout=30) as response:
-                      raw = response.read().decode('utf-8')
-                      return response.status, json.loads(raw) if raw else {}
+                  with urllib.request.urlopen(req,timeout=30) as response:
+                      raw=response.read().decode('utf-8')
+                      return response.status,json.loads(raw) if raw else {}
               except urllib.error.HTTPError as exc:
-                  raw = exc.read().decode('utf-8', errors='replace')
+                  raw=exc.read().decode('utf-8',errors='replace')
                   raise RuntimeError(f'HTTP {exc.code}: {raw[:2000]}')
-
-          _, started = api(
-              'https://api.codemagic.io/builds',
-              method='POST',
-              payload={'appId': app_id, 'workflowId': workflow_id, 'branch': branch},
-          )
-          build_id = started.get('buildId') or started.get('id')
+          _,started=api('https://api.codemagic.io/builds',method='POST',payload={'appId':app_id,'workflowId':workflow_id,'branch':branch})
+          build_id=started.get('buildId') or started.get('id')
           if not build_id:
               raise RuntimeError(f'No buildId returned: {started}')
+          Path('/tmp/codemagic-build-id.txt').write_text(build_id,encoding='utf-8')
           print(f'CODEMAGIC_BUILD_ID={build_id}')
-          Path('/tmp/codemagic-build-id.txt').write_text(build_id, encoding='utf-8')
-
-          terminal = {'finished', 'failed', 'canceled', 'timeout', 'skipped'}
-          deadline = time.time() + 4200
-          current = 'started'
-          while time.time() < deadline:
-              _, response = api(f'https://codemagic.io/api/v3/builds/{build_id}')
-              details = response.get('data') or response
-              current = details.get('status') or 'unknown'
+          terminal={'finished','failed','canceled','timeout','skipped'}
+          deadline=time.time()+4200
+          current='started'
+          while time.time()<deadline:
+              _,response=api(f'https://codemagic.io/api/v3/builds/{build_id}')
+              details=response.get('data') or response
+              current=details.get('status') or 'unknown'
               print(f'CODEMAGIC_STATUS={current}')
               if current in terminal:
                   break
               time.sleep(30)
           else:
-              current = 'gateway_timeout'
-
-          Path('/tmp/codemagic-status.txt').write_text(current, encoding='utf-8')
-          if current != 'finished':
+              current='gateway_timeout'
+          Path('/tmp/codemagic-status.txt').write_text(current,encoding='utf-8')
+          if current!='finished':
               raise RuntimeError(f'Codemagic build ended with status {current}')
           PY
 
@@ -116,5 +107,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `APP2-007 Codemagic result: build_id=${buildId}; codemagic_status=${cmStatus}; github_job=${{ job.status }}; run_id=${context.runId}; branch=release/app2-007-otsu4-testflight; product_source_head=cec69cc72f415367031776d255102fba5261b4c5`
+              body: `APP2-007 Codemagic artifact result: build_id=${buildId}; codemagic_status=${cmStatus}; github_job=${{ job.status }}; run_id=${context.runId}; branch=release/app2-007-otsu4-testflight; product_source_head=cec69cc72f415367031776d255102fba5261b4c5`
             });
