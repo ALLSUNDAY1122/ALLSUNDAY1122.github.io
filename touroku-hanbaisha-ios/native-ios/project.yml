@@ -18,9 +18,10 @@ targets:
     platform: iOS
     sources:
       - path: Sources
-    resources:
       - path: Assets.xcassets
+        buildPhase: resources
       - path: PrivacyInfo.xcprivacy
+        buildPhase: resources
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.allsunday1122.tourokuhanbaisha
