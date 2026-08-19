@@ -1,10 +1,9 @@
 {
-  "request_id": "app2-010-all-profile-types-cert-audit-20260819-2006",
+  "request_id": "app2-010-managed-signing-live-readback-20260819-2012",
   "requests": [
-    {
-      "label": "all-profiles-with-certificates",
-      "method": "GET",
-      "path": "/v1/profiles?include=certificates,bundleId&limit=200&limit[certificates]=50"
-    }
+    {"label":"distribution-certificates","method":"GET","path":"/v1/certificates?filter[certificateType]=DISTRIBUTION,IOS_DISTRIBUTION&limit=200"},
+    {"label":"touhan-profiles","method":"GET","path":"/v1/profiles?filter[name]=tourokuhanbaisha_appstore&limit=20"},
+    {"label":"touhan-temp-profile","method":"GET","path":"/v1/profiles?filter[name]=tourokuhanbaisha_appstore_cmkey_temp&limit=20"},
+    {"label":"ai-protected-profile","method":"GET","path":"/v1/profiles/4Z25F68APA"}
   ]
 }
