@@ -781,7 +781,10 @@ workflows:
           import os
           p=Path('project.yml')
           text=p.read_text(encoding='utf-8')
-          text=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)
+          build_number = os.environ.get('CM_BUILD_NUMBER') or os.environ.get('BUILD_NUMBER')
+          if not build_number:
+              raise RuntimeError('Codemagic build number is unavailable')
+          text=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+build_number, 1)
           p.write_text(text, encoding='utf-8')
           PYBUILD
           xcodegen generate
@@ -828,7 +831,6 @@ workflows:
         auth: integration
         submit_to_testflight: true
         submit_to_app_store: false
-
   network-specialist-native-ios:
     name: ネットワークスペシャリスト - Native Internal TestFlight
     max_build_duration: 80
