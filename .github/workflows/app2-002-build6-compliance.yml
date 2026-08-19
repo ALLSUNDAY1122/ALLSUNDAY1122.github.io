@@ -1,0 +1,71 @@
+name: APP2-002 Build 6 Compliance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-002-build6-compliance-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  resolve:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Resolve Build 6 export compliance
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          sys.path.insert(0, 'scripts')
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          APP_ID='6794847479'
+          key_path, cleanup = load_private_key()
+          out={'task_id':'APP2-002','app_id':APP_ID,'build_number':'6'}
+          try:
+              token=make_token(os.environ['ASC_ISSUER_ID'], os.environ['ASC_KEY_ID'], key_path)
+              _, builds=api_get(token, f'/v1/builds?filter[app]={APP_ID}&filter[version]=6&limit=10')
+              items=builds.get('data',[])
+              if len(items) != 1:
+                  raise SystemExit(f'Expected exactly one Build 6, found {len(items)}')
+              build=items[0]
+              bid=build['id']
+              attrs=build.get('attributes',{})
+              out['build_id']=bid
+              out['processing_state_before']=attrs.get('processingState')
+              out['uses_non_exempt_encryption_before']=attrs.get('usesNonExemptEncryption')
+              payload={'data':{'type':'builds','id':bid,'attributes':{'usesNonExemptEncryption':False}}}
+              status,_=api_request(token,f'/v1/builds/{bid}',method='PATCH',payload=payload)
+              out['patch_http_status']=status
+              _, after=api_get(token,f'/v1/builds/{bid}')
+              a=after['data']['attributes']
+              out['processing_state_after']=a.get('processingState')
+              out['uses_non_exempt_encryption_after']=a.get('usesNonExemptEncryption')
+              if a.get('usesNonExemptEncryption') is not False:
+                  raise SystemExit('Build 6 compliance readback mismatch')
+              Path('automation/app2-002-build6-compliance-result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+              print('PASS: Build 6 export compliance set to exempt/non-nonexempt encryption')
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+          PY
+      - name: Persist result
+        if: always() && hashFiles('automation/app2-002-build6-compliance-result.json') != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/app2-002-build6-compliance-result.json
+          git commit -m "Persist APP2-002 Build 6 compliance result" || exit 0
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep $((i*2))
+          done
+          exit 1
