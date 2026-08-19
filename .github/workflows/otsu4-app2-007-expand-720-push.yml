@@ -1,0 +1,65 @@
+name: Otsu4 APP2-007 Expand 720 Push
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/app2-007-otsu4-720-trigger.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: otsu4-app2-007-expand-720-push
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: github.actor == 'ALLSUNDAY1122'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: feat/otsu4-360-productization
+          fetch-depth: 0
+
+      - name: Apply requested 720-question product changes
+        run: python3 automation/otsu4_expand_720_apply.py
+
+      - name: Validate generated bank
+        run: |
+          set -euo pipefail
+          node tools/otsu4-build-content-v2.mjs --check
+          node tools/otsu4-build-content-v2.mjs
+          python3 - <<'PY'
+          import json
+          d=json.load(open('kikenbutsu-otsu4-sprint/questions.generated.json',encoding='utf-8'))
+          assert d['contentVersion']=='otsu4-2026-08-product-v3'
+          assert len(d['questions'])==720
+          counts={}
+          for q in d['questions']:
+              counts[q['subject']]=counts.get(q['subject'],0)+1
+          assert counts=={'法令':288,'物理・化学':192,'性質・消火':240}, counts
+          assert len({q['id'] for q in d['questions']})==720
+          assert len({q['question'] for q in d['questions']})==720
+          print('PASS 720-question expansion',counts)
+          PY
+
+      - name: Commit and push feature implementation
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            kikenbutsu-otsu4-sprint/question-bank-v2-bootstrap.js \
+            kikenbutsu-otsu4-sprint/question-bank-v3-expansion.js \
+            kikenbutsu-otsu4-sprint/questions.generated.json \
+            tools/otsu4-build-content-v2.mjs \
+            native-ios/Otsu4Sprint \
+            .github/workflows/otsu4-content-audit.yml \
+            .github/workflows/otsu4-native-typecheck.yml \
+            .github/workflows/otsu4-xcode-build.yml \
+            codemagic.yaml
+          git commit -m 'feat(otsu4): expand to 720 questions and round selector'
+          git push origin HEAD:feat/otsu4-360-productization
