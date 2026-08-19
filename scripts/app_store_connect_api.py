@@ -117,8 +117,8 @@ def api_request(token: str, path: str, method: str = "GET", payload=None):
     method = method.upper()
     if method not in ALLOWED_METHODS:
         raise ValueError(f"Unsupported App Store Connect method: {method}")
-    if not path.startswith("/v1/"):
-        raise ValueError("Only /v1/ App Store Connect API paths are allowed.")
+    if not path.startswith(("/v1/", "/v2/")):
+        raise ValueError("Only /v1/ or /v2/ App Store Connect API paths are allowed.")
     if len(path) > 2000 or "\n" in path or "\r" in path:
         raise ValueError("Invalid App Store Connect API path.")
 
@@ -165,7 +165,7 @@ def main():
     parser.add_argument(
         "--path",
         default="/v1/apps?limit=1",
-        help="Read-only /v1/ API path (default: /v1/apps?limit=1).",
+        help="Read-only /v1/ or /v2/ API path (default: /v1/apps?limit=1).",
     )
     args = parser.parse_args()
 
