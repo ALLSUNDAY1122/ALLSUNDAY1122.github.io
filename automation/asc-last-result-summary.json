@@ -1,22 +1,78 @@
 {
-  "request_id": "app2-006-hm2-app-discovery-20260819-1221",
-  "completed_at": "2026-08-19T03:17:51.046121+00:00",
+  "request_id": "app2-004-yakuzaishi-asc-audit-20260819-1221",
+  "completed_at": "2026-08-19T03:18:23.331930+00:00",
   "results": [
     {
-      "label": "hm2-app",
+      "label": "app",
       "http_status": 200,
       "data": [
         {
-          "id": "6799751657",
+          "id": "6799753724",
           "type": "apps",
           "attributes": {
-            "name": "第二種衛生管理者｜学びスプリント",
-            "bundleId": "jp.allsunday1122.healthmanager2",
-            "sku": "jp.allsunday1122.healthmanager2",
+            "name": "薬剤師国家試験｜学びスプリント",
+            "bundleId": "jp.allsunday1122.yakuzaishi",
+            "sku": "yakuzaishi-sprint-ios",
             "primaryLocale": "ja"
           }
         }
       ]
+    },
+    {
+      "label": "builds",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "262a8aaa-3e7b-4c2f-81fd-9d41a4f38f80",
+          "type": "builds",
+          "attributes": {
+            "version": "1",
+            "uploadedDate": "2026-08-17T00:18:45-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-14T23:18:45-08:00",
+            "minOsVersion": "16.0"
+          }
+        }
+      ]
+    },
+    {
+      "label": "versions",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "430ba445-fae0-4d1d-9301-95d1ea342ac7",
+          "type": "appStoreVersions",
+          "attributes": {
+            "versionString": "1.0",
+            "platform": "IOS",
+            "appStoreState": "PREPARE_FOR_SUBMISSION"
+          }
+        }
+      ]
+    },
+    {
+      "label": "beta-groups",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "56dfa9cf-bceb-477d-94bd-b65d9ebf26ff",
+          "type": "betaGroups",
+          "attributes": {
+            "name": "sun"
+          }
+        }
+      ]
+    },
+    {
+      "label": "iap",
+      "http_status": 200,
+      "data": []
+    },
+    {
+      "label": "subscription-groups",
+      "http_status": 200,
+      "data": []
     }
   ]
 }
