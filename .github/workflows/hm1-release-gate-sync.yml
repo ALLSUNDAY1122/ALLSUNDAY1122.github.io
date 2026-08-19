@@ -1,0 +1,111 @@
+name: Sync HealthManager1 release gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/hm1-release-gate-sync-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Patch root Codemagic workflow
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml')
+          text=p.read_text(encoding='utf-8')
+          start=text.index('  health-manager-1-testflight:')
+          end=text.index('\n  health-manager-2-ios:',start)
+          b=text[start:end]
+          old='''      - name: Generate Xcode project
+            script: |
+              cd "$CM_BUILD_DIR/ios/health-manager-1"
+              xcodegen generate
+          '''.rstrip()+'\n'
+          new='''      - name: Set CI build number and generate Xcode project
+            script: |
+              cd "$CM_BUILD_DIR/ios/health-manager-1"
+              BUILD_NUM="${CM_BUILD_NUMBER:?CM_BUILD_NUMBER is required}"
+              python3 - "$BUILD_NUM" <<'PY2'
+              from pathlib import Path
+              import re,sys
+              q=Path('project.yml')
+              s=q.read_text(encoding='utf-8')
+              s,n=re.subn(r'CURRENT_PROJECT_VERSION:\\s*\\d+',f'CURRENT_PROJECT_VERSION: {sys.argv[1]}',s,count=1)
+              assert n==1
+              q.write_text(s,encoding='utf-8')
+              PY2
+              xcodegen generate
+          '''.rstrip()+'\n'
+          if old in b: b=b.replace(old,new,1)
+          assert 'Set CI build number and generate Xcode project' in b
+          marker='''      - name: Apply App Store signing profiles
+            script: |
+              cd "$CM_BUILD_DIR/ios/health-manager-1"
+              xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          '''.rstrip()+'\n'
+          verify='''      - name: Verify release inputs
+            script: |
+              test -f "$CM_BUILD_DIR/ios/health-manager-1/Resources/index.html"
+              test -f "$CM_BUILD_DIR/ios/health-manager-1/Resources/PrivacyInfo.xcprivacy"
+              test -f "$CM_BUILD_DIR/ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png"
+              INDEX_BYTES="$(wc -c < "$CM_BUILD_DIR/ios/health-manager-1/Resources/index.html" | tr -d ' ')"
+              test "$INDEX_BYTES" -ge 100000
+              grep -q "第一種衛生管理者" "$CM_BUILD_DIR/ios/health-manager-1/Resources/index.html"
+          '''.rstrip()+'\n'
+          if '      - name: Verify release inputs\n' not in b:
+              assert marker in b
+              b=b.replace(marker,verify+marker,1)
+          am='''    artifacts:
+              - build/ios/ipa/*.ipa
+          '''.rstrip()+'\n'
+          packaged='''      - name: Verify packaged learning content
+            script: |
+              IPA_PATH="$(find build/ios/ipa -type f -name '*.ipa' -print -quit)"
+              test -n "$IPA_PATH"
+              VERIFY_DIR="$(mktemp -d)"
+              unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+              APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+              INDEX_PATH="$APP_DIR/index.html"
+              test -f "$INDEX_PATH"
+              INDEX_BYTES="$(wc -c < "$INDEX_PATH" | tr -d ' ')"
+              test "$INDEX_BYTES" -ge 100000
+              grep -q "第一種衛生管理者" "$INDEX_PATH"
+              echo "Packaged learning content verified: ${INDEX_BYTES} bytes"
+          '''.rstrip()+'\n'
+          if '      - name: Verify packaged learning content\n' not in b:
+              assert am in b
+              b=b.replace(am,packaged+am,1)
+          for x in ['Set CI build number and generate Xcode project','Verify release inputs','Verify packaged learning content','submit_to_testflight: true','submit_to_app_store: false']:
+              assert x in b,x
+          p.write_text(text[:start]+b+text[end:],encoding='utf-8')
+          print('PASS: root HM1 gate patched')
+          PY
+      - name: Validate and push
+        run: |
+          python3 - <<'PY'
+          import yaml
+          from pathlib import Path
+          c=yaml.safe_load(Path('codemagic.yaml').read_text(encoding='utf-8'))
+          w=c['workflows']['health-manager-1-testflight']
+          n=[s['name'] for s in w['scripts']]
+          assert 'Verify packaged learning content' in n
+          assert w['publishing']['app_store_connect']['submit_to_testflight'] is True
+          assert w['publishing']['app_store_connect']['submit_to_app_store'] is False
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add codemagic.yaml
+          git diff --cached --quiet && exit 0
+          git commit -m "Harden HealthManager1 root release gate"
+          for i in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && exit 0; sleep 2; done
+          exit 1
