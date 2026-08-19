@@ -1,21 +1,21 @@
 {
-  "request_id": "app2-004-yakuzaishi-iap-workflow-diagnostic-20260819-1246",
-  "target_head_sha": "c80f5d7dddb1d00262ab680e40beecabf501cfe2",
-  "workflow": "app2-004-yakuzaishi-iap-bootstrap.yml",
+  "request_id": "app2-004-yakuzaishi-build2-diagnostic-20260819-1250",
+  "target_head_sha": "6e928f8c00402ce9cc4e805d9c9eb8a01eaf46cb",
+  "workflow": "codemagic-build-gateway.yml",
   "run_found": true,
   "run": {
-    "id": 32212881705,
-    "name": "APP2-004 Pharmacist IAP Bootstrap",
+    "id": 32213279446,
+    "name": "Codemagic Build Gateway",
     "status": "completed",
     "conclusion": "failure",
-    "created_at": "2026-08-19T03:38:47Z",
-    "updated_at": "2026-08-19T03:39:13Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32212881705",
-    "head_sha": "c80f5d7dddb1d00262ab680e40beecabf501cfe2"
+    "created_at": "2026-08-19T03:45:29Z",
+    "updated_at": "2026-08-19T03:45:45Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32213279446",
+    "head_sha": "6e928f8c00402ce9cc4e805d9c9eb8a01eaf46cb"
   },
   "jobs": [
     {
-      "name": "bootstrap",
+      "name": "gateway",
       "status": "completed",
       "conclusion": "failure",
       "steps": [
@@ -25,32 +25,42 @@
           "conclusion": "success"
         },
         {
-          "name": "Run actions/checkout@v4",
+          "name": "Run actions/checkout@v6",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Validate command",
+          "name": "Set up Python",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Ensure pharmacist App Store Connect products",
+          "name": "Install gateway dependency",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Persist sanitized IAP result or diagnostic",
+          "name": "Execute Codemagic command",
           "status": "completed",
           "conclusion": "failure"
         },
         {
-          "name": "Fail when bootstrap failed",
+          "name": "Inspect Codemagic build actions",
           "status": "completed",
-          "conclusion": "failure"
+          "conclusion": "success"
         },
         {
-          "name": "Post Run actions/checkout@v4",
+          "name": "Upload Codemagic result",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Post Run actions/checkout@v6",
           "status": "completed",
           "conclusion": "success"
         },
@@ -62,5 +72,12 @@
       ]
     }
   ],
-  "artifacts": []
+  "artifacts": [
+    {
+      "id": 9351475258,
+      "name": "codemagic-result-32213279446",
+      "expired": false
+    }
+  ],
+  "artifact_download_error": "HTTPError: HTTP Error 415: Unsupported Media Type"
 }
