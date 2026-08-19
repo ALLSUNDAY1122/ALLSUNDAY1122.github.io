@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/ls16-official-extract.yml'
       - 'sagyo-ryohoshi-sprint/tools/extract_official.py'
+      - 'sagyo-ryohoshi-sprint/tools/extract_official_ci.py'
 permissions:
   contents: write
 jobs:
@@ -18,7 +19,7 @@ jobs:
       - name: Install PDF parser
         run: python -m pip install --quiet 'pypdf>=5,<6'
       - name: Extract official OT exams
-        run: python sagyo-ryohoshi-sprint/tools/extract_official.py
+        run: python sagyo-ryohoshi-sprint/tools/extract_official_ci.py
       - name: Verify raw frame
         run: |
           python - <<'PY'
