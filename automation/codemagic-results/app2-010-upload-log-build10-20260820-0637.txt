@@ -1,0 +1,509 @@
+b468;
+    "x-daiquiri-debug-worker-pid" = "53341, 63658";
+    "x-daiquiri-instance" = "daiquiri:18493001:mr85p00it-hyhk03154801:7987:26RELEASE139:daiquiri-amp-all-shared-ext-001-mr";
+    "x-rate-limit" = "user-hour-lim:3600;user-hour-rem:3567;";
+    "x-request-id" = XX5GFIF34N455LQX65S2CXQUTQ;
+    "x-responding-instance" = "ac-gateway-api:ac-gateway-api-main-854f5df65c-v49t7:ac-gateway-api-main-854f5df65c-v49t7:-1::::prod";
+    "x-unicorn-originated" = true;
+}
+    httpBody: {
+  "data" : {
+    "type" : "buildUploadFiles",
+    "id" : "2bb7488f-db7d-4277-8668-ef3a414ccccb",
+    "attributes" : {
+      "assetDeliveryState" : {
+        "errors" : [ ],
+        "warnings" : [ ],
+        "state" : "COMPLETE"
+      },
+      "assetToken" : "PurpleSource221/v4/fe/0c/ce/fe0cce13-e388-163d-1c75-b11fd475883c/ad841ee5-cae4-4529-b4f3-16ebdf0c4cff",
+      "assetType" : "ASSET_SPI",
+      "fileName" : "DTAppAnalyzerExtractorOutput-A82D65F9-20BB-4147-8F3A-3276FA344499.zip",
+      "fileSize" : 15250,
+      "sourceFileChecksums" : {
+        "file" : {
+          "hash" : "EBA7F49C2153F5F7273E5DD6098EAD22",
+          "algorithm" : "MD5"
+        },
+        "composite" : {
+          "hash" : "10132ACFA839A658968CBF971288F85C-1-15250",
+          "algorithm" : "MD5"
+        }
+      },
+      "uploadOperations" : null,
+      "uti" : "com.pkware.zip-archive"
+    },
+    "links" : {
+      "self" : "https://api.appstoreconnect.apple.com/v1/buildUploadFiles/2bb7488f-db7d-4277-8668-ef3a414ccccb"
+    }
+  },
+  "links" : {
+    "self" : "https://api.appstoreconnect.apple.com/v1/buildUploadFiles/2bb7488f-db7d-4277-8668-ef3a414ccccb"
+  }
+}
+=======================================
+2026-08-19 21:28:06.367 DEBUG: [ContentDelivery.Uploader.8E6C44340] Upload state is 'COMPLETE' (200).
+2026-08-19 21:28:06.368 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+[GRAPH-OVERALL],time,Mbps,totalBytesSent
+[GRAPH-PART-COMPLETE],time,Mbps
+2026-08-19 21:28:06.369 DEBUG: [ContentDelivery.Uploader.8E6C44340] Running state 'CDUploaderStateRetrieveUploadOperations'...
+2026-08-19 21:28:06.369 DEBUG: [ContentDelivery.Uploader.8E6C44340] Saving uploader state (CDUploaderStateRetrieveUploadOperations) for identifier 'com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F'.
+2026-08-19 21:28:06.371 DEBUG: [ContentDelivery.Uploader.8E6C44340] Wrote state to '~/Library/Application Support/com.apple.itunes.altool/CDUploads/com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F.plist'.
+2026-08-19 21:28:06.372 DEBUG: [ContentDelivery.Uploader.8E6C44340] Show Progress: Requesting upload instructions from App Store Connect…
+2026-08-19 21:28:06.374 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+=======================================
+RETRIEVE UPLOAD OPERATIONS (ASSET_UPLOAD) REQUEST:
+
+         URL: https://api.appstoreconnect.apple.com/v1/buildUploadFiles
+     timeout: 900 seconds
+      method: POST
+ httpHeaders: {
+    Accept = "application/json";
+    "Accept-Language" = "en-US";
+    Authorization = "**hidden value**";
+    "Content-Length" = 250;
+    "Content-Type" = "application/json";
+    "User-Agent" = "altool/26.30.4-173004 (Macintosh; macOS 26.4.1 25E253 (arm64)) ContentDelivery/26.30.4-173004";
+}
+    httpBody: {"data":{"attributes":{"assetType":"ASSET","fileName":"TouhanSprint.ipa","fileSize":131282,"uti":"com.apple.ipa"},"relationships":{"buildUpload":{"data":{"id":"d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c","type":"buildUploads"}}},"type":"buildUploadFiles"}}
+========================================
+2026-08-19 21:28:06.376 DEBUG: [ContentDelivery.Uploader.8E64F3400] Download task 25 sent 250 bytes (250 of 250 bytes sent).
+2026-08-19 21:28:06.951 DEBUG: [ContentDelivery.Uploader.8E6C475C0] Download task 25 did write 1795 bytes.
+2026-08-19 21:28:06.952 DEBUG: [ContentDelivery.Uploader.8E6C475C0] Download task 25 did write file: file:///var/folders/w2/rrf5p87d1bbfyphxc7jdnyvh0000gn/T/CFNetworkDownload_OhEBe8.tmp
+2026-08-19 21:28:06.954 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+=======================================
+RETRIEVE UPLOAD OPERATIONS (ASSET_UPLOAD) RESPONSE:
+
+         URL: https://api.appstoreconnect.apple.com/v1/buildUploadFiles
+ status code: 201 (created)
+ httpHeaders: {
+    "Content-Encoding" = gzip;
+    "Content-Type" = "application/json";
+    Date = "Wed, 19 Aug 2026 21:28:07 GMT";
+    Location = "https://api.appstoreconnect.apple.com/v1/buildUploadFiles/7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e";
+    Server = "daiquiri/5";
+    "Strict-Transport-Security" = "max-age=31536000; includeSubDomains";
+    Vary = "accept-encoding";
+    "apple-timing-app" = "479 ms";
+    b3 = "b4a91ea46e1148f40d1475b9b835e4be-860646a4f49b0e96";
+    "x-apple-jingle-correlation-key" = WSUR5JDOCFEPIDIUOW43QNPEXY;
+    "x-b3-parentspanid" = e4b04044d514a35e;
+    "x-b3-spanid" = 860646a4f49b0e96;
+    "x-b3-traceid" = c54de2908ebfc12f;
+    "x-daiquiri-debug-worker-pid" = "57516, 63658";
+    "x-daiquiri-instance" = "daiquiri:18493001:mr85p00it-hyhk03154801:7987:26RELEASE139:daiquiri-amp-all-shared-ext-001-mr";
+    "x-rate-limit" = "user-hour-lim:3600;user-hour-rem:3566;";
+    "x-request-id" = WSUR5JDOCFEPIDIUOW43QNPEXY;
+    "x-responding-instance" = "ac-gateway-api:ac-gateway-api-main-854f5df65c-ntbsp:ac-gateway-api-main-854f5df65c-ntbsp:-1::::prod";
+    "x-unicorn-originated" = true;
+}
+    httpBody: {
+  "data" : {
+    "type" : "buildUploadFiles",
+    "id" : "7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e",
+    "attributes" : {
+      "assetDeliveryState" : {
+        "errors" : [ ],
+        "warnings" : [ ],
+        "state" : "AWAITING_UPLOAD"
+      },
+      "assetToken" : "PurpleSource221/v4/fe/0c/ce/fe0cce13-e388-163d-1c75-b11fd475883c/dfbaa417-d2d9-4fc3-af98-eb608d6d05f8.ipa",
+      "assetType" : "ASSET",
+      "fileName" : "TouhanSprint.ipa",
+      "fileSize" : 131282,
+      "sourceFileChecksums" : {
+        "file" : null,
+        "composite" : null
+      },
+      "uploadOperations" : [ {
+        "method" : "PUT",
+        "url" : "https://northamerica-1.object-storage.apple.com/itms-assets-prod-200001/PurpleSource221/v4/fe/0c/ce/fe0cce13-e388-163d-1c75-b11fd475883c/dXcWIzSLf4cZUBGSi9VEHuS9iwnNsqxYTP6E_eZxV7c_U003d-1787174886801?partNumber=1&uploadId=de4e52f0-9c14-11f1-97b0-6ea55c292d25&apple-asset-repo-correlation-key=WSUR5JDOCFEPIDIUOW43QNPEXY&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260819T212806Z&X-Amz-SignedHeaders=host&X-Amz-Credential=PKIAI0ZGNAD8WKMSOOX0%2F20260819%2Fnorthamerica-1%2Fs3%2Faws4_request&X-Amz-Expires=604800&X-Amz-Signature=6c908042aea62167e086573c2407dd7c6282c9fcb389c01f87b3d53dde540e09",
+        "length" : 131282,
+        "offset" : 0,
+        "requestHeaders" : [ {
+          "name" : "Content-Type",
+          "value" : "application/octet-stream"
+        } ],
+        "expiration" : "2026-08-26T14:28:06.984-07:00",
+        "partNumber" : 1,
+        "entityTag" : null
+      } ],
+      "uti" : "com.apple.ipa"
+    },
+    "links" : {
+      "self" : "https://api.appstoreconnect.apple.com/v1/buildUploadFiles/7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e"
+    }
+  },
+  "links" : {
+    "self" : "https://api.appstoreconnect.apple.com/v1/buildUploadFiles"
+  }
+}
+=======================================
+2026-08-19 21:28:06.956 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+=======================================
+UPDATE buildUploadFiles CHECKSUM REQUEST:
+
+         URL: https://api.appstoreconnect.apple.com/v1/buildUploadFiles/7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e
+     timeout: 900 seconds
+      method: PATCH
+ httpHeaders: {
+    "Accept-Language" = "en-US";
+    Authorization = "**hidden value**";
+    "Content-Length" = 271;
+    "Content-Type" = "application/json";
+    "User-Agent" = "altool/26.30.4-173004 (Macintosh; macOS 26.4.1 25E253 (arm64)) ContentDelivery/26.30.4-173004";
+}
+    httpBody: {"data":{"attributes":{"sourceFileChecksums":{"composite":{"algorithm":"MD5","hash":"F706981B094EDF1BD395887DDCF1C2EE-1-131282"},"file":{"algorithm":"MD5","hash":"9DD9AFA865F4671D03517827E6134B72"}}},"id":"7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e","type":"buildUploadFiles"}}
+========================================
+2026-08-19 21:28:06.958 DEBUG: [ContentDelivery.Uploader.8E64F3400] Download task 26 sent 271 bytes (271 of 271 bytes sent).
+2026-08-19 21:28:07.651 DEBUG: [ContentDelivery.Uploader.8E64F3400] Download task 26 did write 2025 bytes.
+2026-08-19 21:28:07.653 DEBUG: [ContentDelivery.Uploader.8E64F3400] Download task 26 did write file: file:///var/folders/w2/rrf5p87d1bbfyphxc7jdnyvh0000gn/T/CFNetworkDownload_P8257m.tmp
+2026-08-19 21:28:07.654 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+=======================================
+UPDATE buildUploadFiles CHECKSUM RESPONSE:
+
+         URL: https://api.appstoreconnect.apple.com/v1/buildUploadFiles/7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e
+ status code: 200 (no error)
+ httpHeaders: {
+    "Content-Encoding" = gzip;
+    "Content-Type" = "application/json";
+    Date = "Wed, 19 Aug 2026 21:28:07 GMT";
+    Server = "daiquiri/5";
+    "Strict-Transport-Security" = "max-age=31536000; includeSubDomains";
+    Vary = "accept-encoding";
+    "apple-timing-app" = "599 ms";
+    b3 = "05b1b95e2e1f677bbd49e04f303a29d4-0b1595ee6db2a069";
+    "x-apple-jingle-correlation-key" = AWY3SXROD5TXXPKJ4BHTAORJ2Q;
+    "x-b3-parentspanid" = b2a0c4194a53d215;
+    "x-b3-spanid" = 0b1595ee6db2a069;
+    "x-b3-traceid" = a79e110a8cb9eacf;
+    "x-daiquiri-debug-worker-pid" = "53341, 63658";
+    "x-daiquiri-instance" = "daiquiri:18493001:mr85p00it-hyhk03154801:7987:26RELEASE139:daiquiri-amp-all-shared-ext-001-mr";
+    "x-rate-limit" = "user-hour-lim:3600;user-hour-rem:3565;";
+    "x-request-id" = AWY3SXROD5TXXPKJ4BHTAORJ2Q;
+    "x-responding-instance" = "ac-gateway-api:ac-gateway-api-main-854f5df65c-thbf4:ac-gateway-api-main-854f5df65c-thbf4:-1::::prod";
+    "x-unicorn-originated" = true;
+}
+    httpBody: {
+  "data" : {
+    "type" : "buildUploadFiles",
+    "id" : "7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e",
+    "attributes" : {
+      "assetDeliveryState" : {
+        "errors" : [ ],
+        "warnings" : [ ],
+        "state" : "AWAITING_UPLOAD"
+      },
+      "assetToken" : "PurpleSource221/v4/fe/0c/ce/fe0cce13-e388-163d-1c75-b11fd475883c/dfbaa417-d2d9-4fc3-af98-eb608d6d05f8.ipa",
+      "assetType" : "ASSET",
+      "fileName" : "TouhanSprint.ipa",
+      "fileSize" : 131282,
+      "sourceFileChecksums" : {
+        "file" : {
+          "hash" : "9DD9AFA865F4671D03517827E6134B72",
+          "algorithm" : "MD5"
+        },
+        "composite" : {
+          "hash" : "F706981B094EDF1BD395887DDCF1C2EE-1-131282",
+          "algorithm" : "MD5"
+        }
+      },
+      "uploadOperations" : [ {
+        "method" : "PUT",
+        "url" : "https://northamerica-1.object-storage.apple.com/itms-assets-prod-200001/PurpleSource221/v4/fe/0c/ce/fe0cce13-e388-163d-1c75-b11fd475883c/dXcWIzSLf4cZUBGSi9VEHuS9iwnNsqxYTP6E_eZxV7c_U003d-1787174886801?partNumber=1&uploadId=de4e52f0-9c14-11f1-97b0-6ea55c292d25&apple-asset-repo-correlation-key=WSUR5JDOCFEPIDIUOW43QNPEXY&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260819T212806Z&X-Amz-SignedHeaders=host&X-Amz-Credential=PKIAI0ZGNAD8WKMSOOX0%2F20260819%2Fnorthamerica-1%2Fs3%2Faws4_request&X-Amz-Expires=604800&X-Amz-Signature=6c908042aea62167e086573c2407dd7c6282c9fcb389c01f87b3d53dde540e09",
+        "length" : 131282,
+        "offset" : 0,
+        "requestHeaders" : [ {
+          "name" : "Content-Type",
+          "value" : "application/octet-stream"
+        } ],
+        "expiration" : "2026-08-26T14:28:06.984-07:00",
+        "partNumber" : 1,
+        "entityTag" : null
+      } ],
+      "uti" : "com.apple.ipa"
+    },
+    "links" : {
+      "self" : "https://api.appstoreconnect.apple.com/v1/buildUploadFiles/7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e"
+    }
+  },
+  "links" : {
+    "self" : "https://api.appstoreconnect.apple.com/v1/buildUploadFiles/7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e"
+  }
+}
+=======================================
+2026-08-19 21:28:07.655 DEBUG: [ContentDelivery.Uploader.8E6C44340] File checksum matched the file.
+2026-08-19 21:28:07.656 DEBUG: [ContentDelivery.Uploader.8E6C44340] Composite checksum matched the file.
+2026-08-19 21:28:07.657 DEBUG: [ContentDelivery.Uploader.8E6C44340] Running state 'CDUploaderStatePrepareAssetUpload'...
+2026-08-19 21:28:07.658 DEBUG: [ContentDelivery.Uploader.8E6C44340] Saving uploader state (CDUploaderStatePrepareAssetUpload) for identifier 'com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F'.
+2026-08-19 21:28:07.659 DEBUG: [ContentDelivery.Uploader.8E6C44340] Wrote state to '~/Library/Application Support/com.apple.itunes.altool/CDUploads/com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F.plist'.
+2026-08-19 21:28:07.660 DEBUG: [ContentDelivery.Uploader.8E6C44340] Show Progress: Preparing file for upload to App Store Connect…
+2026-08-19 21:28:07.661 DEBUG: [ContentDelivery.Uploader.8E6C44340] Build ID d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c is in state AWAITING_UPLOAD
+2026-08-19 21:28:07.662 DEBUG: [ContentDelivery.Uploader.8E6C44340] Part 1 still needs to be uploaded (131282 bytes).
+2026-08-19 21:28:07.663 DEBUG: [ContentDelivery.Uploader.8E6C44340] Part 1 will expire on 2026-08-26T21:28:06.984000+00:00.
+2026-08-19 21:28:07.663 DEBUG: [ContentDelivery.Uploader.8E6C44340] 1 upload operations were requested for 1 parts. (Build ID = d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c)
+2026-08-19 21:28:07.665 DEBUG: [ContentDelivery.Uploader.8E6C44340] Created RESUME file at path: '~/Library/Caches/com.apple.cds.vbtx/ResumeFiles/6802119268/IOS_10_1.0.0'.
+2026-08-19 21:28:07.666 DEBUG: [ContentDelivery.Uploader.8E6C44340] Created temporary directory '/var/folders/w2/rrf5p87d1bbfyphxc7jdnyvh0000gn/T/com.apple.cds.vbtx/com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F'.
+2026-08-19 21:28:07.667 DEBUG: [ContentDelivery.Uploader.8E6C44340] Running state 'CDUploaderStateUploadAssetDirectly'...
+2026-08-19 21:28:07.668 DEBUG: [ContentDelivery.Uploader.8E6C44340] Saving uploader state (CDUploaderStateUploadAssetDirectly) for identifier 'com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F'.
+2026-08-19 21:28:07.671 DEBUG: [ContentDelivery.Uploader.8E6C44340] Wrote state to '~/Library/Application Support/com.apple.itunes.altool/CDUploads/com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F.plist'.
+2026-08-19 21:28:07.671 DEBUG: [ContentDelivery.Uploader.8E6C44340] Show Progress: Preparing file for upload to App Store Connect…
+2026-08-19 21:28:07.672 DEBUG: [ContentDelivery.Uploader.8E6C44340] Show Progress: Uploading to App Store Connect…
+2026-08-19 21:28:07.674 DEBUG: [ContentDelivery.Uploader.8E6C44340] Will upload up to 6 parts concurrently.
+2026-08-19 21:28:07.674 DEBUG: [ContentDelivery.Uploader.8E6C44340] Waiting for 1 parts to upload.
+2026-08-19 21:28:07.675 DEBUG: [ContentDelivery.Uploader.8E64F3800] Created upload task ID 27 for part 1.
+2026-08-19 21:28:07.677 DEBUG: [ContentDelivery.Uploader.8E64F3800] PART 1 STARTED
+2026-08-19 21:28:07.678 DEBUG: [ContentDelivery.Uploader.8E64F3800] Waiting for part 1 to upload.
+2026-08-19 21:28:07.765 DEBUG: [ContentDelivery.Uploader.8E6C475C0] PROGRESS - PART 1 (131282) - 'TouhanSprint.ipa' 100.00% (131282/131282)
+2026-08-19 21:28:07.766 DEBUG: [ContentDelivery.Uploader.8E6C475C0] Show Progress: Uploading to App Store Connect…
+2026-08-19 21:28:08.041 DEBUG: [ContentDelivery.Uploader.8E64F3B80] COMPLETED - PART 1 - TouhanSprint.ipa - eTag: "9DD9AFA865F4671D03517827E6134B72"
+2026-08-19 21:28:08.042 DEBUG: [ContentDelivery.Uploader.8E64F3800] Done with uploading part 1.
+2026-08-19 21:28:08.042 DEBUG: [ContentDelivery.Uploader.8E64F3B80] Saving uploader state (CDUploaderStateUploadAssetDirectly) for identifier 'com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F'.
+2026-08-19 21:28:08.045 DEBUG: [ContentDelivery.Uploader.8E64F3B80] Wrote state to '~/Library/Application Support/com.apple.itunes.altool/CDUploads/com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F.plist'.
+2026-08-19 21:28:08.046 DEBUG: [ContentDelivery.Uploader.8E64F3B80] All parts have been uploaded.
+2026-08-19 21:28:08.047 DEBUG: [ContentDelivery.Uploader.8E64F3800] PART 1 THROUGHPUT - 131282 bytes in 0.370 seconds, 2.838 Mbps
+[GRAPH-PART-COMPLETE-1],0.1021471666666685,2.838030443160861
+2026-08-19 21:28:08.047 DEBUG: [ContentDelivery.Uploader.8E6C44340] Removed temporary directory '/private/var/folders/w2/rrf5p87d1bbfyphxc7jdnyvh0000gn/T/com.apple.cds.vbtx/com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F'.
+2026-08-19 21:28:08.048 DEBUG: [ContentDelivery.Uploader.8E6C44340] Running state 'CDUploaderStateChangeUploadStateToComplete'...
+2026-08-19 21:28:08.048 DEBUG: [ContentDelivery.Uploader.8E6C44340] Saving uploader state (CDUploaderStateChangeUploadStateToComplete) for identifier 'com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F'.
+2026-08-19 21:28:08.051 DEBUG: [ContentDelivery.Uploader.8E6C44340] Wrote state to '~/Library/Application Support/com.apple.itunes.altool/CDUploads/com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F.plist'.
+2026-08-19 21:28:08.051 DEBUG: [ContentDelivery.Uploader.8E6C44340] Show Progress: Completing upload…
+2026-08-19 21:28:08.053 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+=======================================
+CHANGE UPLOAD STATE TO COMPLETE (ASSET_UPLOAD)
+=======================================
+2026-08-19 21:28:08.055 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+=======================================
+CHANGE UPLOAD STATE TO COMPLETE (ASSET_UPLOAD) REQUEST:
+
+         URL: https://api.appstoreconnect.apple.com/v1/buildUploadFiles/7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e
+     timeout: 900 seconds
+      method: PATCH
+ httpHeaders: {
+    Accept = "application/json";
+    "Accept-Language" = "en-US";
+    Authorization = "**hidden value**";
+    "Content-Length" = 111;
+    "Content-Type" = "application/json";
+    "User-Agent" = "altool/26.30.4-173004 (Macintosh; macOS 26.4.1 25E253 (arm64)) ContentDelivery/26.30.4-173004";
+}
+    httpBody: {"data":{"attributes":{"uploaded":true},"id":"7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e","type":"buildUploadFiles"}}
+========================================
+2026-08-19 21:28:08.057 DEBUG: [ContentDelivery.Uploader.8E6C475C0] Download task 28 sent 111 bytes (111 of 111 bytes sent).
+2026-08-19 21:28:09.780 DEBUG: [ContentDelivery.Uploader.8E6C475C0] Download task 28 did write 1086 bytes.
+2026-08-19 21:28:09.781 DEBUG: [ContentDelivery.Uploader.8E6C475C0] Download task 28 did write file: file:///var/folders/w2/rrf5p87d1bbfyphxc7jdnyvh0000gn/T/CFNetworkDownload_c9YI4L.tmp
+2026-08-19 21:28:09.782 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+=======================================
+CHANGE UPLOAD STATE TO COMPLETE (ASSET_UPLOAD) RESPONSE:
+
+         URL: https://api.appstoreconnect.apple.com/v1/buildUploadFiles/7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e
+ status code: 200 (no error)
+ httpHeaders: {
+    "Content-Encoding" = gzip;
+    "Content-Type" = "application/json";
+    Date = "Wed, 19 Aug 2026 21:28:09 GMT";
+    Server = "daiquiri/5";
+    "Strict-Transport-Security" = "max-age=31536000; includeSubDomains";
+    Vary = "accept-encoding";
+    "apple-timing-app" = "1642 ms";
+    b3 = "5a177102c1790698d8d6cc281b12a6bf-68cd32820d91c57c";
+    "x-apple-jingle-correlation-key" = LILXCAWBPEDJRWGWZQUBWEVGX4;
+    "x-b3-parentspanid" = 6ab041e49a486f15;
+    "x-b3-spanid" = 68cd32820d91c57c;
+    "x-b3-traceid" = 07d0930f2777ae54;
+    "x-daiquiri-debug-worker-pid" = "55222, 63658";
+    "x-daiquiri-instance" = "daiquiri:18493001:mr85p00it-hyhk03154801:7987:26RELEASE139:daiquiri-amp-all-shared-ext-001-mr";
+    "x-rate-limit" = "user-hour-lim:3600;user-hour-rem:3564;";
+    "x-request-id" = LILXCAWBPEDJRWGWZQUBWEVGX4;
+    "x-responding-instance" = "ac-gateway-api:ac-gateway-api-main-854f5df65c-c8ntf:ac-gateway-api-main-854f5df65c-c8ntf:-1::::prod";
+    "x-unicorn-originated" = true;
+}
+    httpBody: {
+  "data" : {
+    "type" : "buildUploadFiles",
+    "id" : "7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e",
+    "attributes" : {
+      "assetDeliveryState" : {
+        "errors" : [ ],
+        "warnings" : [ ],
+        "state" : "COMPLETE"
+      },
+      "assetToken" : "PurpleSource221/v4/fe/0c/ce/fe0cce13-e388-163d-1c75-b11fd475883c/dfbaa417-d2d9-4fc3-af98-eb608d6d05f8.ipa",
+      "assetType" : "ASSET",
+      "fileName" : "TouhanSprint.ipa",
+      "fileSize" : 131282,
+      "sourceFileChecksums" : {
+        "file" : {
+          "hash" : "9DD9AFA865F4671D03517827E6134B72",
+          "algorithm" : "MD5"
+        },
+        "composite" : {
+          "hash" : "F706981B094EDF1BD395887DDCF1C2EE-1-131282",
+          "algorithm" : "MD5"
+        }
+      },
+      "uploadOperations" : null,
+      "uti" : "com.apple.ipa"
+    },
+    "links" : {
+      "self" : "https://api.appstoreconnect.apple.com/v1/buildUploadFiles/7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e"
+    }
+  },
+  "links" : {
+    "self" : "https://api.appstoreconnect.apple.com/v1/buildUploadFiles/7dbeb2ba-a2ed-43c0-b202-dc7ee37e2c2e"
+  }
+}
+=======================================
+2026-08-19 21:28:09.783 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+========================================
+Set ASSET status to COMPLETE
+========================================
+2026-08-19 21:28:09.784 DEBUG: [ContentDelivery.Uploader.8E6C44340] Running state 'CDUploaderStateCheckForProcessing'...
+2026-08-19 21:28:09.784 DEBUG: [ContentDelivery.Uploader.8E64F3800] Sending upload complete (INFO) KPI for 'VoiceBoxClient-CD'. type=app_ipa, numPartsToUpload=1, numPartsUploaded=1, numPartsPreviouslyUploaded=0, numPartsRetried=0, numRetries=0, bytesLost=0, bytesSent=131282, elapsedTimeSecs=0.102s, throughput=1285224 bytes/sec, throughputMbps=10.282, API=1, transport=HTTPS
+2026-08-19 21:28:09.785 DEBUG: [ContentDelivery.Uploader.8E6C44340] Saving uploader state (CDUploaderStateCheckForProcessing) for identifier 'com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F'.
+2026-08-19 21:28:09.785 DEBUG: [ContentDelivery.Uploader.8E6C45940] Task ‘CDTask’ did terminate in ‘CDOSLogFilter’ with exit code 143.
+2026-08-19 21:28:09.786 DEBUG: [ContentDelivery.Uploader.8E64F3800] 
+==========================
+KPI REQUEST (VoiceBoxClient-CD)
+  URLRequest:
+    endpoint: https://contentdelivery.itunes.apple.com/MZContentDeliveryService/iris/v1/metricsAndLogging
+     timeout: 900 seconds
+      method: POST
+ httpHeaders: {
+    "Accept-Language" = "en-US";
+    Authorization = "**hidden value**";
+    "Content-Length" = 565;
+    "Content-Type" = "application/json";
+    "User-Agent" = "altool/26.30.4-173004 (Macintosh; macOS 26.4.1 25E253 (arm64)) ContentDelivery/26.30.4-173004";
+}
+    httpBody: {"data":{"attributes":{"items":[{"correlationKey":"d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c","kpiValue":1285224,"kpiValueType":"Counter","level":"INFO","message":"type=app_ipa, numPartsToUpload=1, numPartsUploaded=1, numPartsPreviouslyUploaded=0, numPartsRetried=0, numRetries=0, bytesLost=0, bytesSent=131282, elapsedTimeSecs=0.102s, throughput=1285224 bytes/sec, throughputMbps=10.282, API=1, transport=HTTPS","name":"VoiceBoxClient-CD - Upload throughput (bytes/sec)","timestamp":"2026-08-19T21:28:09.783"}],"sourceApplication":"altool"},"type":"metricsAndLogging"}}
+==========================
+2026-08-19 21:28:09.790 DEBUG: [ContentDelivery.Uploader.8E6C44340] Wrote state to '~/Library/Application Support/com.apple.itunes.altool/CDUploads/com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F.plist'.
+2026-08-19 21:28:09.794 DEBUG: [ContentDelivery.Uploader.8E6C45940] Finished: '/usr/bin/log stream --predicate process contains "altool" and subsystem == "com.apple.network" --debug --info --style compact' with status 143
+2026-08-19 21:28:09.798 DEBUG: [ContentDelivery.Uploader.8E6C44340] Show Progress: Waiting for package to begin processing…
+2026-08-19 21:28:09.799 DEBUG: [ContentDelivery.Uploader.8E6C45940] *** /usr/bin/log result: 143
+stdout: (null)
+stderr: 
+2026-08-19 21:28:09.800 DEBUG: [altool.8E6C44340] File 'TouhanSprint.ipa' upload complete.
+2026-08-19 21:28:09.800 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+======================
+GET BUILD UPLOAD STATE
+======================
+2026-08-19 21:28:09.802 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+=======================================
+GET BUILD UPLOAD STATE REQUEST:
+
+         URL: https://api.appstoreconnect.apple.com/v1/buildUploads/d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c
+     timeout: 900 seconds
+      method: GET
+ httpHeaders: {
+    Accept = "application/json";
+    "Accept-Language" = "en-US";
+    Authorization = "**hidden value**";
+    "Content-Type" = "application/json";
+    "User-Agent" = "altool/26.30.4-173004 (Macintosh; macOS 26.4.1 25E253 (arm64)) ContentDelivery/26.30.4-173004";
+}
+    httpBody: 
+========================================
+2026-08-19 21:28:10.044 DEBUG: [ContentDelivery.Uploader.8E64F3B80] Download task 29 did write 1665 bytes.
+2026-08-19 21:28:10.046 DEBUG: [ContentDelivery.Uploader.8E64F3B80] Download task 29 did write file: file:///var/folders/w2/rrf5p87d1bbfyphxc7jdnyvh0000gn/T/CFNetworkDownload_2LAu88.tmp
+2026-08-19 21:28:10.047 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+=======================================
+GET BUILD UPLOAD STATE RESPONSE:
+
+         URL: https://api.appstoreconnect.apple.com/v1/buildUploads/d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c
+ status code: 200 (no error)
+ httpHeaders: {
+    "Content-Encoding" = gzip;
+    "Content-Type" = "application/json";
+    Date = "Wed, 19 Aug 2026 21:28:10 GMT";
+    Server = "daiquiri/5";
+    "Strict-Transport-Security" = "max-age=31536000; includeSubDomains";
+    Vary = "accept-encoding";
+    "apple-timing-app" = "124 ms";
+    b3 = "cfaf60b6d991125a280c0885cf9e4924-cec07dd07fc75547";
+    "x-apple-jingle-correlation-key" = Z6XWBNWZSEJFUKAMBCC47HSJEQ;
+    "x-b3-parentspanid" = 69ef666b97afa62c;
+    "x-b3-spanid" = cec07dd07fc75547;
+    "x-b3-traceid" = b944c67be516106a;
+    "x-daiquiri-debug-worker-pid" = "57536, 63658";
+    "x-daiquiri-instance" = "daiquiri:18493001:mr85p00it-hyhk03154801:7987:26RELEASE139:daiquiri-amp-all-shared-ext-001-mr";
+    "x-rate-limit" = "user-hour-lim:3600;user-hour-rem:3563;";
+    "x-request-id" = Z6XWBNWZSEJFUKAMBCC47HSJEQ;
+    "x-responding-instance" = "ac-gateway-api:ac-gateway-api-main-854f5df65c-gqppk:ac-gateway-api-main-854f5df65c-gqppk:-1::::prod";
+    "x-unicorn-originated" = true;
+}
+    httpBody: {
+  "data" : {
+    "type" : "buildUploads",
+    "id" : "d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c",
+    "attributes" : {
+      "cfBundleShortVersionString" : "1.0.0",
+      "cfBundleVersion" : "10",
+      "createdDate" : "2026-08-19T14:26:52-07:00",
+      "state" : {
+        "errors" : [ ],
+        "warnings" : [ ],
+        "infos" : [ ],
+        "state" : "PROCESSING"
+      },
+      "platform" : "IOS",
+      "uploadedDate" : "2026-08-19T14:28:09-07:00"
+    },
+    "relationships" : {
+      "buildUploadFiles" : {
+        "links" : {
+          "self" : "https://api.appstoreconnect.apple.com/v1/buildUploads/d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c/relationships/buildUploadFiles",
+          "related" : "https://api.appstoreconnect.apple.com/v1/buildUploads/d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c/buildUploadFiles"
+        }
+      },
+      "buildUploadBundles" : {
+        "links" : {
+          "self" : "https://api.appstoreconnect.apple.com/v1/buildUploads/d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c/relationships/buildUploadBundles",
+          "related" : "https://api.appstoreconnect.apple.com/v1/buildUploads/d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c/buildUploadBundles"
+        }
+      },
+      "deliveryNotifications" : {
+        "links" : {
+          "self" : "https://api.appstoreconnect.apple.com/v1/buildUploads/d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c/relationships/deliveryNotifications"
+        }
+      }
+    },
+    "links" : {
+      "self" : "https://api.appstoreconnect.apple.com/v1/buildUploads/d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c"
+    }
+  },
+  "links" : {
+    "self" : "https://api.appstoreconnect.apple.com/v1/buildUploads/d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c"
+  }
+}
+=======================================
+2026-08-19 21:28:10.048 DEBUG: [ContentDelivery.Uploader.8E6C44340] 
+==================================
+Upload State: PROCESSING
+==================================
+2026-08-19 21:28:10.049 DEBUG: [ContentDelivery.Uploader.8E6C44340] Show Progress: Uploaded package is processing.
+2026-08-19 21:28:10.050 DEBUG: [ContentDelivery.Uploader.8E6C44340] Removing uploader state for identifier 'com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F'
+2026-08-19 21:28:10.052 DEBUG: [ContentDelivery.Uploader.8E6C44340] Wrote state to '~/Library/Application Support/com.apple.itunes.altool/CDUploads/com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F.plist'.
+2026-08-19 21:28:10.052 DEBUG: [ContentDelivery.Uploader.8E6C44340] Removed the temporary asset directory '~/Library/Caches/com.apple.cds/com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F'.
+2026-08-19 21:28:10.053 DEBUG: [ContentDelivery.Uploader.8E6C44340] Removing uploader saved state for identifier 'com.apple.cds_6C7FFBB6-3CD1-4034-B68A-5DAE4E3B875F'.
+2026-08-19 21:28:10.054 DEBUG: [ContentDelivery.Uploader.8E6C44340] Show Progress: Upload succeeded.
+2026-08-19 21:28:10.054  INFO: [ContentDelivery.Uploader.8E6C44340] 
+==========================================
+UPLOAD SUCCEEDED with no errors
+Delivery UUID: d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c
+Transferred 131282 bytes in 0.102 seconds (1.3MB/s, 10.282Mbps)
+==========================================
+2026-08-19 21:28:10.055 DEBUG: [ContentDelivery.Uploader.8E6C44340] Log file path: ~/Library/Logs/ContentDelivery/com.apple.itunes.altool/com.apple.itunes.altool_Upload_2026-08-19_21-26-52_506.txt
+{
+  "details" : {
+    "delivery-uuid" : "d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c",
+    "transferred" : "131282 bytes in 0.102 seconds (1.3MB/s, 10.282Mbps)"
+  },
+  "os-version" : "Version 26.4.1 (Build 25E253)",
+  "success-message" : "No errors uploading archive at '/Users/builder/clone/build/ios/ipa/TouhanSprint.ipa'.",
+  "tool-path" : "/Applications/Xcode-26.4.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources",
+  "tool-version" : "26.30.4 (173004)"
+}
+
+[32mNo errors uploading archive at '/Users/builder/clone/build/ios/ipa/TouhanSprint.ipa'.[0m
