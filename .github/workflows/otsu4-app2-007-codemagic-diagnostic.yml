@@ -9,66 +9,84 @@ permissions:
   issues: write
 
 jobs:
-  inspect:
+  recent:
     if: >-
       github.actor == 'ALLSUNDAY1122' &&
-      github.event.issue.title == '[OTSU4-CM-APP2-007] Inspect failed build actions'
+      github.event.issue.title == '[OTSU4-CM-APP2-007] Read recent builds'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Fetch sanitized Codemagic build actions
+      - name: Fetch recent Otsu4 builds
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           python3 - <<'PY'
-          import json, os, urllib.request, urllib.error
+          import json, os, urllib.request, urllib.parse
           from pathlib import Path
 
           token=os.environ.get('CM_API_TOKEN','').strip()
           if not token:
               raise SystemExit('Missing CM_API_TOKEN')
-          build_id='6a85226a814ebdf468b0ecc9'
-          req=urllib.request.Request(
-              f'https://codemagic.io/api/v3/builds/{build_id}/actions',
-              headers={'x-auth-token': token, 'Accept':'application/json'},
-              method='GET',
-          )
-          try:
+          app_id='6a769d81a1add9d06020b524'
+
+          def get(url):
+              req=urllib.request.Request(url,headers={'x-auth-token':token,'Accept':'application/json'},method='GET')
               with urllib.request.urlopen(req,timeout=30) as response:
-                  payload=json.loads(response.read().decode('utf-8') or '{}')
-                  status=response.status
-          except urllib.error.HTTPError as exc:
-              raw=exc.read().decode('utf-8',errors='replace')
-              payload={'http_status':exc.code,'error':raw[:3000]}
-              status=exc.code
+                  return json.loads(response.read().decode('utf-8') or '{}')
 
-          sensitive=('secret','token','password','credential','private','apikey','api_key','environment','variable')
-          def clean(v):
-              if isinstance(v,dict):
-                  out={}
-                  for k,x in v.items():
-                      if any(part in str(k).lower() for part in sensitive):
-                          out[k]='[REDACTED]'
-                      else:
-                          out[k]=clean(x)
-                  return out
-              if isinstance(v,list):
-                  return [clean(x) for x in v]
-              return v
+          teams=get('https://codemagic.io/api/v3/user/teams')
+          raw_teams=teams.get('data',teams)
+          if isinstance(raw_teams,dict):
+              raw_teams=raw_teams.get('teams') or raw_teams.get('items') or [raw_teams]
+          if not isinstance(raw_teams,list):
+              raw_teams=[]
 
-          result={'build_id':build_id,'http_status':status,'actions':clean(payload)}
-          Path('/tmp/otsu4-codemagic-actions.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-          print(json.dumps(result,ensure_ascii=False)[:8000])
-          if status < 200 or status >= 300:
-              raise SystemExit(f'Codemagic actions HTTP {status}')
+          matches=[]
+          seen=set()
+          for team in raw_teams:
+              if not isinstance(team,dict):
+                  continue
+              team_id=team.get('id') or team.get('_id')
+              if not team_id:
+                  continue
+              payload=get(f'https://codemagic.io/api/v3/teams/{team_id}/builds?page_size=30&page=1')
+              builds=payload.get('data',payload)
+              if isinstance(builds,dict):
+                  builds=builds.get('builds') or builds.get('items') or []
+              if not isinstance(builds,list):
+                  continue
+              for build in builds:
+                  if not isinstance(build,dict) or build.get('app_id') != app_id:
+                      continue
+                  bid=build.get('id')
+                  if not bid or bid in seen:
+                      continue
+                  seen.add(bid)
+                  matches.append({
+                      'id':bid,
+                      'status':build.get('status'),
+                      'index':build.get('index'),
+                      'branch':build.get('branch'),
+                      'workflow':(build.get('workflow') or {}).get('id') if isinstance(build.get('workflow'),dict) else build.get('workflow'),
+                      'commit_hash':(build.get('commit') or {}).get('hash') if isinstance(build.get('commit'),dict) else None,
+                      'created_at':build.get('created_at'),
+                      'started_at':build.get('started_at'),
+                      'finished_at':build.get('finished_at'),
+                      'artifact_count':len(build.get('artifacts') or []),
+                      'app_store_connect_status':build.get('app_store_connect_status'),
+                  })
+          matches.sort(key=lambda b:b.get('created_at') or '',reverse=True)
+          result={'app_id':app_id,'builds':matches[:10]}
+          Path('/tmp/otsu4-recent-builds.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(result,ensure_ascii=False)[:10000])
           PY
 
-      - name: Upload diagnostic
+      - name: Upload observer result
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: otsu4-app2-007-codemagic-diagnostic-${{ github.run_id }}
-          path: /tmp/otsu4-codemagic-actions.json
+          name: otsu4-app2-007-recent-builds-${{ github.run_id }}
+          path: /tmp/otsu4-recent-builds.json
           if-no-files-found: warn
           retention-days: 7
 
@@ -81,5 +99,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `APP2-007 Codemagic diagnostic status=${{ job.status }}; run_id=${context.runId}; artifact=otsu4-app2-007-codemagic-diagnostic-${context.runId}`
+              body: `APP2-007 recent builds status=${{ job.status }}; run_id=${context.runId}; artifact=otsu4-app2-007-recent-builds-${context.runId}`
             });
