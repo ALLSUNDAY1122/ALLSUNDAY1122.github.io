@@ -1,11 +1,26 @@
 {
   "task_id": "APP2-009",
-  "app_id": "6801792293",
-  "monthly_product_id": "jp.allsunday1122.kangoshi.monthly",
-  "lifetime_product_id": "jp.allsunday1122.kangoshi.lifetime",
-  "actions": [],
-  "safe_for_build": false,
-  "ok": false,
-  "error": "No subscription plan availability returned",
-  "traceback_tail": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app2_009_kangoshi_iap_bootstrap.py\", line 118, in main\n    iid=ensure_lifetime(token,actions); gid,sid=ensure_monthly(token,actions)\n                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app2_009_kangoshi_iap_bootstrap.py\", line 99, in ensure_monthly\n    req(token,\"/v1/subscriptionPrices\",\"POST\",payload); actions.append(\"priced_monthly_200_jpn\")\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app2_009_kangoshi_iap_v2_runner.py\", line 77, in req\n    return _create_starting_subscription_price(token,payload)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app2_009_kangoshi_iap_v2_runner.py\", line 51, in _create_starting_subscription_price\n    if not plan_type: raise RuntimeError(\"No subscription plan availability returned\")\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: No subscription plan availability returned\n"
+  "app": {
+    "id": "6801792293",
+    "bundle_id": "jp.allsunday1122.kangoshi",
+    "name": "看護師国家試験 学びスプリント"
+  },
+  "monthly": {
+    "product_id": "jp.allsunday1122.kangoshi.monthly",
+    "price_jpn": "200",
+    "id": "6802919444",
+    "state": "MISSING_METADATA"
+  },
+  "lifetime": {
+    "product_id": "jp.allsunday1122.kangoshi.lifetime",
+    "price_jpn": "800",
+    "id": "6802961562",
+    "state": "MISSING_METADATA"
+  },
+  "subscription_group_id": "22318786",
+  "actions": [
+    "priced_monthly_200_jpn"
+  ],
+  "safe_for_build": true,
+  "ok": true
 }
