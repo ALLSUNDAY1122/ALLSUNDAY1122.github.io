@@ -27,7 +27,7 @@ jobs:
           cmd=json.loads(Path('automation/app2-010-fetch-upload-log-command.json').read_text(encoding='utf-8'))
           rid=str(cmd.get('request_id','')); build_id=str(cmd.get('build_id',''))
           if not re.fullmatch(r'app2-010-upload-log-[A-Za-z0-9._-]{1,70}',rid): raise SystemExit('invalid request id')
-          if build_id!='6a85913d0d644bae66197db2': raise SystemExit('unexpected build id')
+          if build_id!='6a861f2e68c24c24844d3f66': raise SystemExit('unexpected build id')
           token=os.environ.get('CM_API_TOKEN','').strip()
           if not token: raise SystemExit('missing CM_API_TOKEN')
 
@@ -48,11 +48,9 @@ jobs:
               names=z.namelist()
               target=next((n for n in names if n.endswith('app2-010-asc-publish-sanitized.log')),None)
               if target is None:
-                  # Persist only safe filenames to diagnose artifact collection, never URLs.
                   safe_names=[n for n in names if not any(x in n.lower() for x in ('key','secret','token','credential'))]
                   raise RuntimeError('sanitized upload log missing; artifact files='+repr(safe_names[:50]))
               text=z.read(target).decode('utf-8','replace')
-          # Defense in depth: re-redact anything credential-shaped before Git persistence.
           text=re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----','[REDACTED PEM]',text,flags=re.S)
           text=re.sub(r'eyJ[A-Za-z0-9._-]{20,}','[REDACTED JWT]',text)
           text=re.sub(r'(?i)(api[_ -]?key|private[_ -]?key|token|password)\s*[:=]\s*\S+',r'\1=[REDACTED]',text)
