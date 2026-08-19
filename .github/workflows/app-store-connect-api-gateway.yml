@@ -28,11 +28,15 @@ jobs:
         run: |
           python3 - <<'PY'
           import json
+          import re
           from pathlib import Path
 
           source = json.loads(Path('asc-result.json').read_text(encoding='utf-8'))
+          request_id = source.get('request_id') or 'unknown'
+          if not re.fullmatch(r'[A-Za-z0-9._-]{1,100}', request_id):
+              raise SystemExit('Invalid request_id in asc-result.json')
           summary = {
-              'request_id': source.get('request_id'),
+              'request_id': request_id,
               'completed_at': source.get('completed_at'),
               'results': [],
           }
@@ -68,18 +72,40 @@ jobs:
                   })
               summary['results'].append(item)
 
-          out = Path('automation/asc-last-result-summary.json')
-          out.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          payload = json.dumps(summary, ensure_ascii=False, indent=2) + '\n'
+          Path('automation/asc-last-result-summary.json').write_text(payload, encoding='utf-8')
+          unique = Path('automation/asc-results') / f'{request_id}.json'
+          unique.parent.mkdir(parents=True, exist_ok=True)
+          unique.write_text(payload, encoding='utf-8')
+          Path('/tmp/asc-unique-summary.json').write_text(payload, encoding='utf-8')
+          Path('/tmp/asc-request-id.txt').write_text(request_id, encoding='utf-8')
           PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add automation/asc-last-result-summary.json
+          REQUEST_ID="$(cat /tmp/asc-request-id.txt)"
+          UNIQUE_PATH="automation/asc-results/${REQUEST_ID}.json"
+          git add automation/asc-last-result-summary.json "$UNIQUE_PATH"
           if git diff --cached --quiet; then
             echo "No sanitized status changes to persist"
-          else
-            git commit -m "Persist sanitized App Store Connect status"
-            git push
+            exit 0
           fi
+          git commit -m "Persist sanitized App Store Connect status"
+          if git push; then
+            exit 0
+          fi
+
+          echo "Main advanced concurrently; preserving request-scoped result on latest main"
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/asc-results
+          cp /tmp/asc-unique-summary.json "$UNIQUE_PATH"
+          git add "$UNIQUE_PATH"
+          if git diff --cached --quiet; then
+            echo "Request-scoped result already persisted"
+            exit 0
+          fi
+          git commit -m "Persist App Store Connect status for ${REQUEST_ID}"
+          git push
       - name: Upload API result
         if: always() && hashFiles('asc-result.json') != ''
         uses: actions/upload-artifact@v4
