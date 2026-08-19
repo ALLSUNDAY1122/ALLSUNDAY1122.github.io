@@ -33,7 +33,7 @@ def main():
         if app.get("attributes", {}).get("bundleId") != BUNDLE_ID:
             raise RuntimeError("APP2-004 bundle mismatch")
 
-        _, builds_payload = api_get(token, f"/v1/apps/{APP_ID}/builds?sort=-uploadedDate&limit=20")
+        _, builds_payload = api_get(token, f"/v1/apps/{APP_ID}/builds?limit=20")
         builds = items(builds_payload)
         build2 = next((b for b in builds if b.get("attributes", {}).get("version") == "2"), None)
         if not build2:
