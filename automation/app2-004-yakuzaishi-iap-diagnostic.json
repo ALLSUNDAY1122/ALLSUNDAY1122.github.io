@@ -1,0 +1,7 @@
+{
+  "task_id": "APP2-004",
+  "step": "iap_bootstrap",
+  "exit_code": 1,
+  "ok": false,
+  "log_tail": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app2_004_yakuzaishi_iap_bootstrap.py\", line 301, in <module>\n    main()\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app2_004_yakuzaishi_iap_bootstrap.py\", line 289, in main\n    iap_id = ensure_iap(token, actions)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app2_004_yakuzaishi_iap_bootstrap.py\", line 77, in ensure_iap\n    _, created = request(token, \"/v2/inAppPurchases\", \"POST\", payload)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app2_004_yakuzaishi_iap_bootstrap.py\", line 40, in request\n    raise RuntimeError(f\"ASC {method} {path} HTTP {exc.code}: {detail}\") from None\nRuntimeError: ASC POST /v2/inAppPurchases HTTP 409: {'errors': [{'id': '0d9e7e03-538b-463e-bb37-9eb4ea5dd193', 'status': '409', 'code': 'ENTITY_ERROR.ATTRIBUTE.UNKNOWN', 'title': 'The provided entity includes an unknown attribute', 'detail': \"'availableInAllTerritories' is not an attribute on the resource 'inAppPurchases'\", 'source': {'pointer': '/data/attributes/availableInAllTerritories'}}]}\n"
+}
