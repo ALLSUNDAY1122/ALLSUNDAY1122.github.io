@@ -17,13 +17,22 @@ jobs:
     if: >-
       github.actor == 'ALLSUNDAY1122' &&
       (github.event.issue.title == '[APP2-009] Materialize Kangoshi AppIcon' ||
-       github.event.issue.title == '[APP2-009] Bootstrap Kangoshi subscription')
+       github.event.issue.title == '[APP2-009] Bootstrap Kangoshi subscription' ||
+       github.event.issue.title == '[APP2-009] Configure IAP and TestFlight')
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Set up Python
+        if: github.event.issue.title == '[APP2-009] Configure IAP and TestFlight'
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install Codemagic gateway dependency
+        if: github.event.issue.title == '[APP2-009] Configure IAP and TestFlight'
+        run: python -m pip install --disable-pip-version-check PyYAML
       - name: Materialize exact canonical AppIcon
         if: github.event.issue.title == '[APP2-009] Materialize Kangoshi AppIcon'
         shell: bash
@@ -37,29 +46,47 @@ jobs:
           test "$(sha256sum "$target" | awk '{print $1}')" = '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80'
           file "$target" | grep -q 'PNG image data, 1024 x 1024'
           python3 kangoshi-sprint/ios/tools/bind_canonical_appicon.py
-      - name: Bootstrap monthly subscription
+      - name: Bootstrap legacy monthly subscription
         if: github.event.issue.title == '[APP2-009] Bootstrap Kangoshi subscription'
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: python scripts/app2_009_kangoshi_subscription_bootstrap.py
-      - name: Commit result
+      - name: Configure monthly 200 and lifetime 800
+        id: iap
+        if: github.event.issue.title == '[APP2-009] Configure IAP and TestFlight'
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/app2_009_kangoshi_iap_bootstrap.py
+      - name: Persist operation result
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          if [ "${{ github.event.issue.title }}" = '[APP2-009] Materialize Kangoshi AppIcon' ]; then
+          title='${{ github.event.issue.title }}'
+          if [ "$title" = '[APP2-009] Materialize Kangoshi AppIcon' ]; then
             git add kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png kangoshi-sprint/ios/project.yml
             msg='APP2-009: materialize exact Kangoshi AppIcon'
-          else
+          elif [ "$title" = '[APP2-009] Bootstrap Kangoshi subscription' ]; then
+            test -f automation/app2-009-kangoshi-subscription-result.json || exit 0
             git add automation/app2-009-kangoshi-subscription-result.json
             msg='APP2-009: persist Kangoshi subscription result'
-          fi
-          if git diff --cached --quiet; then
-            echo 'No material change.'
           else
+            test -f automation/app2-009-kangoshi-iap-result.json || exit 0
+            cp automation/app2-009-kangoshi-iap-result.json /tmp/app2-009-iap.json
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/app2-009-iap.json automation/app2-009-kangoshi-iap-result.json
+            git add automation/app2-009-kangoshi-iap-result.json
+            msg='APP2-009: persist monthly and lifetime IAP result'
+          fi
+          if ! git diff --cached --quiet; then
             git commit -m "$msg"
             for attempt in 1 2 3 4 5 6; do
               git pull --rebase origin main
@@ -67,6 +94,74 @@ jobs:
               test "$attempt" != 6
               sleep 2
             done
+          fi
+      - name: Stop before build when IAP failed
+        if: github.event.issue.title == '[APP2-009] Configure IAP and TestFlight' && steps.iap.outcome != 'success'
+        run: exit 1
+      - name: Enable TestFlight publishing on kangoshi-ios
+        if: github.event.issue.title == '[APP2-009] Configure IAP and TestFlight' && steps.iap.outcome == 'success'
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml'); s=p.read_text(encoding='utf-8')
+          start=s.index('\n  kangoshi-ios:\n'); end=s.find('\n  ',start+5)
+          if end < 0: end=len(s)
+          block=s[start:end]
+          if 'IAP_LIFETIME_PRODUCT_ID:' not in block:
+              block=block.replace('        IAP_PRODUCT_ID: jp.allsunday1122.kangoshi.monthly\n','        IAP_PRODUCT_ID: jp.allsunday1122.kangoshi.monthly\n        IAP_LIFETIME_PRODUCT_ID: jp.allsunday1122.kangoshi.lifetime\n')
+          block=block.replace('        submit_to_testflight: false\n','        submit_to_testflight: true\n')
+          p.write_text(s[:start]+block+s[end:],encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          if ! git diff --cached --quiet; then
+            git commit -m 'kangoshi: enable TestFlight with monthly and lifetime IAP'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Execute Codemagic build and wait
+        if: github.event.issue.title == '[APP2-009] Configure IAP and TestFlight' && steps.iap.outcome == 'success'
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          CM_APP_ID: ${{ vars.CM_APP_ID }}
+        run: |
+          cat > /tmp/app2-009-codemagic-command.json <<'JSON'
+          {
+            "request_id": "app2-009-kangoshi-testflight-20260819",
+            "action": "build",
+            "workflow_id": "kangoshi-ios",
+            "branch": "main",
+            "wait": true,
+            "timeout_seconds": 4200
+          }
+          JSON
+          python scripts/codemagic_build_gateway.py --command /tmp/app2-009-codemagic-command.json --output /tmp/app2-009-codemagic-result.json
+      - name: Persist Codemagic result
+        if: always() && github.event.issue.title == '[APP2-009] Configure IAP and TestFlight'
+        run: |
+          if [ ! -f /tmp/app2-009-codemagic-result.json ]; then exit 0; fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('/tmp/app2-009-codemagic-result.json').read_text(encoding='utf-8'))
+          allowed={k:r.get(k) for k in ('request_id','ok','workflow_id','branch','resolved_app_id','build_id','status','app_id','error','build_details')}
+          out=Path('/tmp/app2-009-codemagic-sanitized.json')
+          out.write_text(json.dumps(allowed,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/codemagic-results
+          cp /tmp/app2-009-codemagic-sanitized.json automation/codemagic-results/app2-009-kangoshi-testflight-20260819.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/codemagic-results/app2-009-kangoshi-testflight-20260819.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'APP2-009: persist Kangoshi TestFlight result'
+            git pull --rebase origin main
+            git push origin HEAD:main
           fi
       - name: Report
         if: always()
@@ -77,5 +172,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `APP2-009 release operation finished. status=${{ job.status }}; run_id=${context.runId}`
+              body: `APP2-009 release operation finished. status=${{ job.status }}; iap_outcome=${{ steps.iap.outcome }}; run_id=${context.runId}`
             });
