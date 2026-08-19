@@ -5,6 +5,9 @@ struct PaywallView: View {
     @EnvironmentObject var purchase: PurchaseController
     @Environment(\.dismiss) private var dismiss
 
+    private let monthlyID = "jp.allsunday1122.kangoshi.monthly"
+    private let lifetimeID = "jp.allsunday1122.kangoshi.lifetime"
+
     private var stateMessage: String? {
         switch purchase.state {
         case .pending: return "購入承認を待っています。"
@@ -34,20 +37,37 @@ struct PaywallView: View {
                     if purchase.isPremium {
                         Label("利用中です", systemImage:"checkmark.seal.fill").font(.headline).foregroundStyle(KSTheme.green)
                     } else {
-                        Button {
-                            Task { await purchase.purchase() }
-                        } label: {
-                            VStack(spacing:3) {
-                                Text(purchase.state == .purchasing ? "購入処理中…" : "プレミアムを始める").font(.headline)
-                                Text(purchase.displayPrice.map { "月額 \($0)" } ?? "価格を取得中").font(.caption)
-                            }.frame(maxWidth:.infinity).padding(.vertical,13)
-                        }.buttonStyle(.borderedProminent).tint(KSTheme.ai).disabled(purchase.product == nil || purchase.state == .purchasing)
+                        VStack(spacing: 10) {
+                            Button {
+                                Task { await purchase.purchase(productID: monthlyID) }
+                            } label: {
+                                VStack(spacing:3) {
+                                    Text(purchase.state == .purchasing ? "購入処理中…" : "月額プラン").font(.headline)
+                                    Text(purchase.displayPrice(for: monthlyID).map { "月額 \($0)" } ?? "価格を取得中").font(.caption)
+                                }.frame(maxWidth:.infinity).padding(.vertical,13)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(KSTheme.ai)
+                            .disabled(purchase.product(for: monthlyID) == nil || purchase.state == .purchasing)
+
+                            Button {
+                                Task { await purchase.purchase(productID: lifetimeID) }
+                            } label: {
+                                VStack(spacing:3) {
+                                    Text(purchase.state == .purchasing ? "購入処理中…" : "買い切りプラン").font(.headline)
+                                    Text(purchase.displayPrice(for: lifetimeID).map { "買い切り \($0)" } ?? "価格を取得中").font(.caption)
+                                }.frame(maxWidth:.infinity).padding(.vertical,13)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(KSTheme.ai)
+                            .disabled(purchase.product(for: lifetimeID) == nil || purchase.state == .purchasing)
+                        }
                     }
 
                     Button("購入を復元") { Task { await purchase.restore() } }
                         .font(.subheadline.bold()).foregroundStyle(KSTheme.ai)
                     if let stateMessage { Text(stateMessage).font(.caption).foregroundStyle(KSTheme.shu).multilineTextAlignment(.center) }
-                    Text("価格はApp Storeから取得した表示を使用します。購入・更新・解約はApple IDのサブスクリプション設定に従います。")
+                    Text("月額プランは自動更新、買い切りプランは1回の購入です。価格はApp Storeから取得した表示を使用します。購入・更新・解約・復元はApple IDの設定に従います。")
                         .font(.caption2).foregroundStyle(KSTheme.tertiary).multilineTextAlignment(.center)
                 }.padding(18)
             }.background(KSTheme.paper.ignoresSafeArea())
