@@ -26,6 +26,23 @@ jobs:
       - name: Install gateway dependency
         run: python -m pip install --disable-pip-version-check PyYAML
 
+      - name: Prepare requested Codemagic workflow
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          command=json.loads(Path('automation/codemagic-build-command.json').read_text(encoding='utf-8'))
+          if command.get('prepare_network_specialist'):
+              subprocess.run(['python','scripts/prepare_network_specialist_codemagic.py'],check=True)
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add codemagic.yaml
+          if ! git diff --cached --quiet; then
+            git commit -m "Prepare requested Codemagic workflow"
+            git push origin HEAD:main
+          fi
+
       - name: Execute Codemagic command
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
@@ -43,46 +60,24 @@ jobs:
           python - <<'PY'
           import json, os, urllib.request, urllib.error
           from pathlib import Path
-
           result_path = Path('codemagic-result.json')
-          if not result_path.exists():
-              raise SystemExit(0)
+          if not result_path.exists(): raise SystemExit(0)
           result = json.loads(result_path.read_text(encoding='utf-8'))
           build_id = result.get('build_id')
           token = os.environ.get('CM_API_TOKEN', '').strip()
-          if not build_id or not token:
-              raise SystemExit(0)
-
-          req = urllib.request.Request(
-              f'https://codemagic.io/api/v3/builds/{build_id}/actions',
-              headers={'x-auth-token': token, 'Accept': 'application/json'},
-              method='GET',
-          )
+          if not build_id or not token: raise SystemExit(0)
+          req = urllib.request.Request(f'https://codemagic.io/api/v3/builds/{build_id}/actions',headers={'x-auth-token': token, 'Accept': 'application/json'},method='GET')
           try:
               with urllib.request.urlopen(req, timeout=30) as response:
                   payload = json.loads(response.read().decode('utf-8'))
           except urllib.error.HTTPError as exc:
-              raw = exc.read().decode('utf-8', errors='replace')
-              payload = {'http_status': exc.code, 'error': raw[:2000]}
-
-          sensitive = ('secret', 'token', 'password', 'credential', 'private', 'apikey', 'api_key', 'environment', 'variable')
+              payload = {'http_status': exc.code, 'error': exc.read().decode('utf-8', errors='replace')[:2000]}
+          sensitive = ('secret','token','password','credential','private','apikey','api_key','environment','variable')
           def clean(value):
-              if isinstance(value, dict):
-                  out = {}
-                  for key, child in value.items():
-                      if any(part in str(key).lower() for part in sensitive):
-                          out[key] = '[REDACTED]'
-                      else:
-                          out[key] = clean(child)
-                  return out
-              if isinstance(value, list):
-                  return [clean(item) for item in value]
+              if isinstance(value,dict): return {k:('[REDACTED]' if any(p in str(k).lower() for p in sensitive) else clean(v)) for k,v in value.items()}
+              if isinstance(value,list): return [clean(v) for v in value]
               return value
-
-          Path('codemagic-actions.json').write_text(
-              json.dumps(clean(payload), ensure_ascii=False, indent=2),
-              encoding='utf-8',
-          )
+          Path('codemagic-actions.json').write_text(json.dumps(clean(payload),ensure_ascii=False,indent=2),encoding='utf-8')
           print(f'PASS: collected action diagnostics for Codemagic build {build_id}')
           PY
 
@@ -90,37 +85,24 @@ jobs:
         if: always() && hashFiles('codemagic-result.json') != ''
         run: |
           python - <<'PY'
-          import json, re
+          import json,re
           from pathlib import Path
           command=json.loads(Path('automation/codemagic-build-command.json').read_text(encoding='utf-8'))
           result=json.loads(Path('codemagic-result.json').read_text(encoding='utf-8'))
           request_id=str(command.get('request_id') or result.get('request_id') or 'unknown')
-          if not re.fullmatch(r'[A-Za-z0-9._-]{1,120}', request_id):
-              raise SystemExit('invalid request_id')
+          if not re.fullmatch(r'[A-Za-z0-9._-]{1,120}',request_id): raise SystemExit('invalid request_id')
           allowed={
-              'request_id': request_id,
-              'ok': result.get('ok'),
-              'action': command.get('action'),
-              'workflow_id': command.get('workflow_id') or result.get('workflow_id'),
-              'branch': command.get('branch') or result.get('branch'),
-              'resolved_app_id': result.get('resolved_app_id'),
-              'application_candidates': result.get('application_candidates'),
-              'note': result.get('note'),
-              'build_id': result.get('build_id'),
-              'status': result.get('status'),
-              'app_id': result.get('app_id'),
-              'error': result.get('error'),
-              'build_details': result.get('build_details'),
-          }
+              'request_id':request_id,'ok':result.get('ok'),'action':command.get('action'),
+              'workflow_id':command.get('workflow_id') or result.get('workflow_id'),
+              'branch':command.get('branch') or result.get('branch'),'resolved_app_id':result.get('resolved_app_id'),
+              'application_candidates':result.get('application_candidates'),'note':result.get('note'),
+              'build_id':result.get('build_id'),'status':result.get('status'),'app_id':result.get('app_id'),
+              'error':result.get('error'),'build_details':result.get('build_details')}
           actions=Path('codemagic-actions.json')
-          if actions.exists():
-              allowed['actions']=json.loads(actions.read_text(encoding='utf-8'))
-          payload=json.dumps(allowed, ensure_ascii=False, indent=2)+'\n'
-          out=Path('automation/codemagic-results')/f'{request_id}.json'
-          out.parent.mkdir(parents=True, exist_ok=True)
-          out.write_text(payload, encoding='utf-8')
-          Path('/tmp/codemagic-summary.json').write_text(payload, encoding='utf-8')
-          Path('/tmp/codemagic-request-id.txt').write_text(request_id, encoding='utf-8')
+          if actions.exists(): allowed['actions']=json.loads(actions.read_text(encoding='utf-8'))
+          payload=json.dumps(allowed,ensure_ascii=False,indent=2)+'\n'
+          out=Path('automation/codemagic-results')/f'{request_id}.json'; out.parent.mkdir(parents=True,exist_ok=True); out.write_text(payload,encoding='utf-8')
+          Path('/tmp/codemagic-summary.json').write_text(payload,encoding='utf-8'); Path('/tmp/codemagic-request-id.txt').write_text(request_id,encoding='utf-8')
           PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
