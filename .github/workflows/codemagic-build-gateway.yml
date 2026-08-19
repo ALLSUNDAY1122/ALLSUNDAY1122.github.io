@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   gateway:
@@ -85,6 +85,57 @@ jobs:
           )
           print(f'PASS: collected action diagnostics for Codemagic build {build_id}')
           PY
+
+      - name: Persist request-scoped sanitized result
+        if: always() && hashFiles('codemagic-result.json') != ''
+        run: |
+          python - <<'PY'
+          import json, re
+          from pathlib import Path
+          command=json.loads(Path('automation/codemagic-build-command.json').read_text(encoding='utf-8'))
+          result=json.loads(Path('codemagic-result.json').read_text(encoding='utf-8'))
+          request_id=str(command.get('request_id') or result.get('request_id') or 'unknown')
+          if not re.fullmatch(r'[A-Za-z0-9._-]{1,120}', request_id):
+              raise SystemExit('invalid request_id')
+          allowed={
+              'request_id': request_id,
+              'action': command.get('action'),
+              'workflow_id': command.get('workflow_id'),
+              'branch': command.get('branch'),
+              'build_id': result.get('build_id'),
+              'status': result.get('status'),
+              'started_at': result.get('started_at'),
+              'finished_at': result.get('finished_at'),
+              'app_id': result.get('app_id'),
+              'error': result.get('error'),
+              'apps': result.get('apps') if command.get('action') == 'inspect' else None,
+          }
+          actions=Path('codemagic-actions.json')
+          if actions.exists():
+              allowed['actions']=json.loads(actions.read_text(encoding='utf-8'))
+          payload=json.dumps(allowed, ensure_ascii=False, indent=2)+'\n'
+          out=Path('automation/codemagic-results')/f'{request_id}.json'
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(payload, encoding='utf-8')
+          Path('/tmp/codemagic-summary.json').write_text(payload, encoding='utf-8')
+          Path('/tmp/codemagic-request-id.txt').write_text(request_id, encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          REQUEST_ID="$(cat /tmp/codemagic-request-id.txt)"
+          RESULT_PATH="automation/codemagic-results/${REQUEST_ID}.json"
+          git add "$RESULT_PATH"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Persist Codemagic result for ${REQUEST_ID}"
+          if git push; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/codemagic-results
+          cp /tmp/codemagic-summary.json "$RESULT_PATH"
+          git add "$RESULT_PATH"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Persist Codemagic result for ${REQUEST_ID}"
+          git push origin HEAD:main
 
       - name: Upload Codemagic result
         if: always()
