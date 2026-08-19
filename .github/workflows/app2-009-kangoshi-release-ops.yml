@@ -61,7 +61,7 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-        run: python scripts/app2_009_kangoshi_iap_bootstrap.py
+        run: python scripts/app2_009_kangoshi_iap_v2_runner.py
       - name: Persist operation result
         if: always()
         shell: bash
