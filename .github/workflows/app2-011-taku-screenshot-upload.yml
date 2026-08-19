@@ -1,0 +1,44 @@
+name: APP2-011 TAKU Screenshot Upload
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  upload:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      github.event.issue.title == '[APP2-011] upload TAKU screenshot'
+    runs-on: macos-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Upload screenshot to App Store Connect
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/app2_011_upload_screenshot.py --output app2-011-screenshot-upload-result.json
+      - name: Upload sanitized result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app2-011-screenshot-upload-${{ github.run_id }}
+          path: app2-011-screenshot-upload-result.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Report result locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `APP2-011 screenshot upload finished. status=${{ job.status }}; run_id=${context.runId}; artifact=app2-011-screenshot-upload-${context.runId}`
+            });
