@@ -1,21 +1,29 @@
 {
-  "request_id": "app2-005-hm1-asc-readback-20260819-1232",
+  "request_id": "app2-010-touhan-asc-audit-20260819-1236",
   "requests": [
     {
       "label": "app",
-      "path": "/v1/apps/6799581662"
+      "path": "/v1/apps/6802119268"
     },
     {
       "label": "builds",
-      "path": "/v1/apps/6799581662/builds?sort=-uploadedDate&limit=10"
+      "path": "/v1/apps/6802119268/builds?sort=-uploadedDate&limit=50"
     },
     {
       "label": "prerelease-versions",
-      "path": "/v1/apps/6799581662/preReleaseVersions?limit=20"
+      "path": "/v1/apps/6802119268/preReleaseVersions?limit=50"
+    },
+    {
+      "label": "appstore-versions",
+      "path": "/v1/apps/6802119268/appStoreVersions?limit=50"
     },
     {
       "label": "beta-groups",
-      "path": "/v1/apps/6799581662/betaGroups?limit=50"
+      "path": "/v1/apps/6802119268/betaGroups?limit=50"
+    },
+    {
+      "label": "app-infos",
+      "path": "/v1/apps/6802119268/appInfos?limit=20&include=appInfoLocalizations"
     }
   ]
 }
