@@ -1,0 +1,51 @@
+{
+  "app_id": "6794137637",
+  "version_id": "812cd84c-3efb-407b-a04c-f9fb1b5554e6",
+  "target_version": "1.2.0",
+  "obsolete_build_id": "23521541-e269-4baf-800d-7830b94c36a1",
+  "steps": [
+    {
+      "step": "app_preflight",
+      "ok": true,
+      "bundleId": "io.github.allsunday1122.yorunoshoka"
+    },
+    {
+      "step": "version_preflight",
+      "ok": true,
+      "versionString": "1.1.0",
+      "appStoreState": "PREPARE_FOR_SUBMISSION"
+    },
+    {
+      "step": "submission_preflight",
+      "ok": true,
+      "reviewSubmissionCount": 0
+    },
+    {
+      "step": "build_preflight",
+      "ok": true,
+      "attached_build_id": "23521541-e269-4baf-800d-7830b94c36a1"
+    },
+    {
+      "step": "detach_obsolete_build",
+      "changed": true,
+      "http_status": 204
+    },
+    {
+      "step": "build_readback",
+      "ok": true,
+      "attached_build_id": null
+    },
+    {
+      "step": "update_version",
+      "changed": true,
+      "http_status": 200
+    },
+    {
+      "step": "version_readback",
+      "ok": true,
+      "versionString": "1.2.0",
+      "appStoreState": "PREPARE_FOR_SUBMISSION"
+    }
+  ],
+  "ok": true
+}
