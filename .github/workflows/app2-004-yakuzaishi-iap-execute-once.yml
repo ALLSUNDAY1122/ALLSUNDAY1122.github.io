@@ -1,5 +1,5 @@
 name: APP2-004 Pharmacist IAP Execute Once
-# trigger: 2026-08-19T12:38:00+09:00
+# trigger: 2026-08-19T15:25:00+09:00
 
 on:
   push:
@@ -26,8 +26,7 @@ jobs:
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
           set +e
-          sed -i '/"availableInAllTerritories": True,/d' scripts/app2_004_yakuzaishi_iap_bootstrap.py
-          python scripts/app2_004_yakuzaishi_iap_bootstrap.py > /tmp/app2-004-iap-once.log 2>&1
+          python scripts/app2_004_yakuzaishi_iap_v2_runner.py > /tmp/app2-004-iap-once.log 2>&1
           code=$?
           python - "$code" <<'PY'
           import json, re, sys
@@ -38,7 +37,7 @@ jobs:
           raw = re.sub(r'Bearer\s+[A-Za-z0-9._-]+', 'Bearer [REDACTED]', raw)
           raw = re.sub(r'eyJ[A-Za-z0-9._-]{40,}', '[REDACTED JWT]', raw)
           Path('automation/app2-004-yakuzaishi-iap-diagnostic.json').write_text(json.dumps({
-              'task_id': 'APP2-004', 'step': 'iap_bootstrap_execute_once', 'exit_code': code,
+              'task_id': 'APP2-004', 'step': 'iap_bootstrap_execute_once_v2', 'exit_code': code,
               'ok': code == 0, 'log_tail': raw[-12000:]
           }, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
