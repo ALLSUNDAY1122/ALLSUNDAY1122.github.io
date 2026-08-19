@@ -1,0 +1,81 @@
+name: Otsu4 APP2-007 Registered Worker
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: otsu4-app2-007-registered-worker
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      github.event.issue.title == '[OTSU4-EXPAND-720-APP2-007-REGISTERED]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: feat/otsu4-360-productization
+          fetch-depth: 0
+
+      - name: Apply 720-question product changes
+        run: python3 automation/otsu4_expand_720_apply.py
+
+      - name: Validate generated bank
+        run: |
+          set -euo pipefail
+          node tools/otsu4-build-content-v2.mjs --check
+          node tools/otsu4-build-content-v2.mjs
+          python3 - <<'PY'
+          import json
+          d=json.load(open('kikenbutsu-otsu4-sprint/questions.generated.json',encoding='utf-8'))
+          assert d['contentVersion']=='otsu4-2026-08-product-v3'
+          assert len(d['questions'])==720
+          counts={}
+          for q in d['questions']:
+              counts[q['subject']]=counts.get(q['subject'],0)+1
+          assert counts=={'法令':288,'物理・化学':192,'性質・消火':240}, counts
+          assert len({q['id'] for q in d['questions']})==720
+          assert len({q['question'] for q in d['questions']})==720
+          print('PASS 720',counts)
+          PY
+
+      - name: Commit and push implementation
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            kikenbutsu-otsu4-sprint/question-bank-v2-bootstrap.js \
+            kikenbutsu-otsu4-sprint/question-bank-v3-expansion.js \
+            kikenbutsu-otsu4-sprint/questions.generated.json \
+            tools/otsu4-build-content-v2.mjs \
+            native-ios/Otsu4Sprint \
+            .github/workflows/otsu4-content-audit.yml \
+            .github/workflows/otsu4-native-typecheck.yml \
+            .github/workflows/otsu4-xcode-build.yml \
+            codemagic.yaml
+          git commit -m 'feat(otsu4): expand to 720 questions and round selector'
+          git push origin HEAD:feat/otsu4-360-productization
+          git rev-parse HEAD > /tmp/implementation-head.txt
+
+      - name: Report result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs=require('fs');
+            const head=fs.existsSync('/tmp/implementation-head.txt') ? fs.readFileSync('/tmp/implementation-head.txt','utf8').trim() : 'not-created';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `APP2-007 720q registered-worker status=${{ job.status }}; run_id=${context.runId}; implementation_head=${head}`
+            });
