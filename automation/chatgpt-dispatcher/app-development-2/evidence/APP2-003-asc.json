@@ -1,54 +1,17 @@
 {
-  "request_id": "app2-003-yoru-asc-submission-audit-20260819-1227",
+  "request_id": "app2-003-yoru-review-detail-id-20260819-1229",
   "ok": true,
   "exit_code": 0,
-  "completed_at": "2026-08-19T03:27:19.024336+00:00",
+  "completed_at": "2026-08-19T03:29:22.787935+00:00",
   "results": [
     {
-      "label": "prerelease-110-builds",
-      "path": "/v1/preReleaseVersions/c655ea9f-08a8-4f82-9aa6-6b4f43a527da/builds?limit=20",
+      "label": "appstore-review-detail",
+      "path": "/v1/appStoreVersions/812cd84c-3efb-407b-a04c-f9fb1b5554e6/appStoreReviewDetail",
       "http_status": 200,
       "data": [
         {
-          "id": "23521541-e269-4baf-800d-7830b94c36a1",
-          "type": "builds",
-          "attributes": {
-            "version": "3",
-            "uploadedDate": "2026-08-06T01:59:52-07:00",
-            "processingState": "VALID",
-            "expired": false,
-            "expirationDate": "2026-11-04T00:59:52-08:00",
-            "minOsVersion": "15.0"
-          }
-        }
-      ]
-    },
-    {
-      "label": "beta-review-build3",
-      "path": "/v1/betaAppReviewSubmissions?filter[build]=23521541-e269-4baf-800d-7830b94c36a1&limit=20",
-      "http_status": 200,
-      "data": []
-    },
-    {
-      "label": "appstore-version-build",
-      "path": "/v1/appStoreVersions/812cd84c-3efb-407b-a04c-f9fb1b5554e6/relationships/build",
-      "http_status": 200,
-      "data": []
-    },
-    {
-      "label": "review-submissions",
-      "path": "/v1/apps/6794137637/reviewSubmissions?limit=20",
-      "http_status": 200,
-      "data": []
-    },
-    {
-      "label": "beta-review-detail",
-      "path": "/v1/betaAppReviewDetails?filter[app]=6794137637&limit=20",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "6794137637",
-          "type": "betaAppReviewDetails",
+          "id": "630be79a-3c94-4c4b-8882-6644d165152e",
+          "type": "appStoreReviewDetails",
           "attributes": {}
         }
       ]
