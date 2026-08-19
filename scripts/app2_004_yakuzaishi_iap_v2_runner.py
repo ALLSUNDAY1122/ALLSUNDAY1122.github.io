@@ -185,5 +185,57 @@ def request(token, path, method="GET", payload=None):
     return _original_request(token, path, method, payload)
 
 
+def collect_state(token, iap_id, group_id, sub_id, intro_id, actions):
+    _, app = request(token, f"/v1/apps/{bootstrap.APP_ID}")
+    _, iap = request(token, f"/v2/inAppPurchases/{iap_id}?include=inAppPurchaseLocalizations,iapPriceSchedule")
+    _, sub = request(token, f"/v1/subscriptions/{sub_id}?include=subscriptionLocalizations,prices,introductoryOffers")
+    _, offers_payload = request(
+        token,
+        f"/v1/subscriptions/{sub_id}/introductoryOffers?filter[territory]={bootstrap.JPN}&include=territory&limit=200",
+    )
+    intro = next((x for x in _data_list(offers_payload) if x.get("id") == intro_id), None)
+    if intro is None:
+        raise RuntimeError("Configured introductory offer missing from subscription read-back")
+    _, groups = request(token, f"/v1/apps/{bootstrap.APP_ID}/subscriptionGroups?limit=200")
+    intro_attrs = intro.get("attributes", {})
+    intro_territory = intro.get("relationships", {}).get("territory", {}).get("data") or {}
+    return {
+        "request_id": "APP2-004-yakuzaishi-iap-bootstrap",
+        "app": {
+            "id": bootstrap.APP_ID,
+            "bundleId": app["data"].get("attributes", {}).get("bundleId"),
+            "name": app["data"].get("attributes", {}).get("name"),
+        },
+        "actions": actions,
+        "lifetime": {
+            "id": iap_id,
+            "productId": iap["data"].get("attributes", {}).get("productId"),
+            "state": iap["data"].get("attributes", {}).get("state"),
+            "configuredPriceJPN": "980",
+        },
+        "monthly": {
+            "id": sub_id,
+            "productId": sub["data"].get("attributes", {}).get("productId"),
+            "state": sub["data"].get("attributes", {}).get("state"),
+            "configuredPriceJPN": "200",
+            "introductoryOfferConfigured": True,
+            "introductoryOffer": {
+                "id": intro_id,
+                "territory": intro_territory.get("id"),
+                "offerMode": intro_attrs.get("offerMode"),
+                "duration": intro_attrs.get("duration"),
+                "numberOfPeriods": intro_attrs.get("numberOfPeriods"),
+                "startDate": intro_attrs.get("startDate"),
+                "endDate": intro_attrs.get("endDate"),
+                "targetSubscriptionPlanType": intro_attrs.get("targetSubscriptionPlanType"),
+            },
+        },
+        "subscriptionGroup": {"id": group_id, "count": len(_data_list(groups))},
+        "safeForBuild": True,
+        "note": "IAP/subscription and JPN one-week free introductory offer ensured idempotently from pharmacist app metadata.",
+    }
+
+
 bootstrap.request = request
+bootstrap.collect_state = collect_state
 bootstrap.main()
