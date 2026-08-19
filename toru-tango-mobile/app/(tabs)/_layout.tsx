@@ -6,20 +6,23 @@ export default function TabLayout() {
   const insets = useSafeAreaInsets();
   return (
     <Tabs
+      initialRouteName="cards"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.muted,
-        tabBarLabelStyle: { fontSize: 12, fontWeight: '700' },
+        tabBarLabelStyle: { fontSize: 12, fontWeight: '800' },
         tabBarStyle: {
-          height: 54 + insets.bottom,
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
+          height: 56 + insets.bottom,
           paddingBottom: Math.max(insets.bottom, 8),
-          paddingTop: 6
+          paddingTop: 7
         }
       }}
     >
+      <Tabs.Screen name="cards" options={{ title: 'フォルダ' }} />
       <Tabs.Screen name="create" options={{ title: '作る' }} />
-      <Tabs.Screen name="cards" options={{ title: '単語帳' }} />
       <Tabs.Screen name="study" options={{ title: '学習' }} />
       <Tabs.Screen name="records" options={{ title: '記録' }} />
     </Tabs>
