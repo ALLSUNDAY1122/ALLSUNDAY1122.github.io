@@ -22,7 +22,7 @@ jobs:
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
           python3 - <<'PY'
-          import json, os, sys, time
+          import json, os, sys, time, urllib.request, urllib.error
           from pathlib import Path
           sys.path.insert(0, 'scripts')
           from app_store_connect_api import api_get, api_request, load_private_key, make_token
@@ -57,8 +57,16 @@ jobs:
               if build_attrs.get('version') != '5' or build_attrs.get('processingState') != 'VALID':
                   raise SystemExit(f'APP2-002 preflight failed: Build 5 not VALID: {build_attrs.get("version")}/{build_attrs.get("processingState")}')
 
-              delete_status,_=api_request(token,f'/v1/appStoreVersionSubmissions/{VERSION_SUBMISSION_ID}',method='DELETE')
-              out['remove_version_submission_http_status']=delete_status
+              delete_url=f'https://api.appstoreconnect.apple.com/v1/appStoreVersionSubmissions/{VERSION_SUBMISSION_ID}'
+              req=urllib.request.Request(delete_url,method='DELETE',headers={'Authorization':f'Bearer {token}','Accept':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as resp:
+                      out['remove_version_submission_http_status']=resp.status
+                      if resp.status != 204:
+                          raise SystemExit(f'APP2-002 unexpected DELETE status: {resp.status}')
+              except urllib.error.HTTPError as exc:
+                  body=exc.read().decode('utf-8','replace')
+                  raise SystemExit(f'APP2-002 scoped DELETE failed HTTP {exc.code}: {body[:1200]}')
 
               unlocked=None
               for _ in range(18):
