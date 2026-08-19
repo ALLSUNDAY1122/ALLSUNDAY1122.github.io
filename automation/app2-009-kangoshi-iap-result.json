@@ -1,0 +1,11 @@
+{
+  "task_id": "APP2-009",
+  "app_id": "6801792293",
+  "monthly_product_id": "jp.allsunday1122.kangoshi.monthly",
+  "lifetime_product_id": "jp.allsunday1122.kangoshi.lifetime",
+  "actions": [],
+  "safe_for_build": false,
+  "ok": false,
+  "error": "load_private_key() takes 0 positional arguments but 1 was given",
+  "traceback_tail": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app2_009_kangoshi_iap_bootstrap.py\", line 113, in main\n    issuer=os.environ[\"ASC_ISSUER_ID\"]; kid=os.environ[\"ASC_KEY_ID\"]; key=load_private_key(os.environ[\"ASC_PRIVATE_KEY\"]); token=make_token(issuer,kid,key)\n                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: load_private_key() takes 0 positional arguments but 1 was given\n"
+}
