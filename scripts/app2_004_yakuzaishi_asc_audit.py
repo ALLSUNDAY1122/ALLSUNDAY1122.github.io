@@ -42,11 +42,18 @@ def main():
 
         _, beta_detail_payload = api_get(token, f"/v1/builds/{build_id}/buildBetaDetail")
         beta_detail = beta_detail_payload["data"]
-        _, build_groups_payload = api_get(token, f"/v1/builds/{build_id}/betaGroups?limit=50")
         _, app_groups_payload = api_get(token, f"/v1/apps/{APP_ID}/betaGroups?limit=50")
+        app_groups = items(app_groups_payload)
+        group_membership = []
+        for group in app_groups:
+            gid = group["id"]
+            _, group_builds_payload = api_get(token, f"/v1/betaGroups/{gid}/builds?limit=200")
+            member_ids = {b.get("id") for b in items(group_builds_payload)}
+            if build_id in member_ids:
+                group_membership.append(group)
+
         _, iap_payload = api_get(token, f"/v1/apps/{APP_ID}/inAppPurchasesV2?limit=200")
         _, group_payload = api_get(token, f"/v1/apps/{APP_ID}/subscriptionGroups?limit=200")
-
         subgroups = []
         for group in items(group_payload):
             gid = group["id"]
@@ -66,12 +73,12 @@ def main():
             "build2": {"id": build_id, "attributes": attrs(build2, ["version", "uploadedDate", "processingState", "expired", "expirationDate", "minOsVersion", "buildAudienceType", "usesNonExemptEncryption"])},
             "buildBetaDetail": {"id": beta_detail.get("id"), "attributes": attrs(beta_detail, ["autoNotifyEnabled", "internalBuildState", "externalBuildState"])},
             "buildBetaGroups": [
-                {"id": g.get("id"), "attributes": attrs(g, ["name", "isInternalGroup", "publicLinkEnabled", "createdDate"])}
-                for g in items(build_groups_payload)
+                {"id": g.get("id"), "attributes": attrs(g, ["name", "isInternalGroup", "hasAccessToAllBuilds", "publicLinkEnabled", "createdDate"])}
+                for g in group_membership
             ],
             "appBetaGroups": [
-                {"id": g.get("id"), "attributes": attrs(g, ["name", "isInternalGroup", "publicLinkEnabled", "createdDate"])}
-                for g in items(app_groups_payload)
+                {"id": g.get("id"), "attributes": attrs(g, ["name", "isInternalGroup", "hasAccessToAllBuilds", "publicLinkEnabled", "createdDate"])}
+                for g in app_groups
             ],
             "inAppPurchases": [
                 {"id": x.get("id"), "attributes": attrs(x, ["name", "productId", "inAppPurchaseType", "state", "familySharable"])}
