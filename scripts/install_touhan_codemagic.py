@@ -20,9 +20,6 @@ BLOCK = r'''
     integrations:
       app_store_connect: "Codemagic Shiwake Swipe"
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.allsunday1122.tourokuhanbaisha
       vars:
         BUNDLE_ID: com.allsunday1122.tourokuhanbaisha
         APP_STORE_CONNECT_APP_ID: "6802119268"
@@ -71,6 +68,19 @@ BLOCK = r'''
           echo "$APPICON_SHA256  $CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" | shasum -a 256 -c -
           grep -q 'com.allsunday1122.tourokuhanbaisha' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
           grep -q 'MN3D2ZM44N' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
+      - name: Initialize signing keychain
+        script: |
+          set -euo pipefail
+          keychain initialize
+      - name: Fetch existing App Store signing files
+        script: |
+          set -euo pipefail
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE
+      - name: Add signing certificate to keychain
+        script: |
+          set -euo pipefail
+          keychain add-certificates
       - name: Apply App Store signing profiles for internal TestFlight only
         script: |
           set -euo pipefail
@@ -127,34 +137,36 @@ def main() -> int:
         CODEMAGIC.write_text(updated, encoding="utf-8")
 
     final = CODEMAGIC.read_text(encoding="utf-8")
+    workflow = final[final.index("  touhan-ios:\n"):]
+    next_workflow = re.search(r"(?m)^  [A-Za-z0-9_-]+:\s*$", workflow[len("  touhan-ios:\n"):])
+    if next_workflow:
+        workflow = workflow[:len("  touhan-ios:\n") + next_workflow.start()]
+
     required = [
         "  touhan-ios:\n",
-        "distribution_type: app_store",
-        "bundle_identifier: com.allsunday1122.tourokuhanbaisha",
         "BUNDLE_ID: com.allsunday1122.tourokuhanbaisha",
         'APP_STORE_CONNECT_APP_ID: "6802119268"',
         "CODEMAGIC_PROFILE_REF: tourokuhanbaisha_appstore",
         "APPICON_SHA256: c0cefbae22cdcd7b614d213ddca7942c7d693f02ead758b11b66d447a66bff03",
         "os.environ.get('CM_BUILD_NUMBER') or os.environ.get('BUILD_NUMBER')",
+        "keychain initialize",
+        'app-store-connect fetch-signing-files "$BUNDLE_ID"',
+        "--type IOS_APP_STORE",
+        "keychain add-certificates",
         "xcode-project use-profiles",
         "submit_to_testflight: true",
         "submit_to_app_store: false",
     ]
     forbidden = [
-        'app-store-connect fetch-signing-files "$BUNDLE_ID"',
-        "keychain initialize",
-        "keychain add-certificates",
+        "--create",
+        "ios_signing:",
     ]
     for token in required:
-        if token not in final:
+        if token not in workflow:
             raise SystemExit(f"missing required Touhan token: {token}")
     for token in forbidden:
-        workflow = final[final.index("  touhan-ios:\n"):]
-        next_workflow = re.search(r"(?m)^  [A-Za-z0-9_-]+:\s*$", workflow[len("  touhan-ios:\n"):])
-        if next_workflow:
-            workflow = workflow[:len("  touhan-ios:\n") + next_workflow.start()]
         if token in workflow:
-            raise SystemExit(f"obsolete manual signing token remains in Touhan workflow: {token}")
+            raise SystemExit(f"obsolete Touhan signing token remains: {token}")
 
     RESULT_DIR.mkdir(parents=True, exist_ok=True)
     result = {
@@ -164,10 +176,13 @@ def main() -> int:
         "workflow_id": WORKFLOW_ID,
         "changed": changed,
         "build_number_mode": "CM_BUILD_NUMBER_or_BUILD_NUMBER",
-        "signing_mode": "codemagic_ios_signing_app_store_bundle",
+        "signing_mode": "fetch_existing_apple_profile_and_codemagic_certificate",
         "bundle_id": "com.allsunday1122.tourokuhanbaisha",
         "app_store_connect_app_id": "6802119268",
         "codemagic_profile_ref": "tourokuhanbaisha_appstore",
+        "apple_profile_id": "NW45QQKK8G",
+        "apple_certificate_id": "MLDDAKTU69",
+        "create_signing_files": False,
         "submit_to_testflight": True,
         "submit_to_app_store": False,
     }
