@@ -1,0 +1,140 @@
+{
+  "request_id": "app2-012-network-signing-preflight-inspect-20260819-1513",
+  "ok": true,
+  "action": "inspect_build",
+  "workflow_id": null,
+  "branch": null,
+  "resolved_app_id": null,
+  "application_candidates": null,
+  "note": null,
+  "build_id": "6a854936bad3b38fdec654e4",
+  "status": "failed",
+  "app_id": null,
+  "error": null,
+  "build_details": {
+    "id": "6a854936bad3b38fdec654e4",
+    "app_id": "6a769d81a1add9d06020b524",
+    "workflow": {
+      "id": "network-specialist-signing-preflight",
+      "source": "file",
+      "name": "ネットワークスペシャリスト - Apple Signing Preflight"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "failed",
+    "index": 1,
+    "artifacts": [],
+    "labels": [],
+    "release_notes": [],
+    "created_at": "2026-08-19T06:12:06.410000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "e98382be5fbf42f4482a3e1b3cda66e0d282701b",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "ci: track APP2-002 Build 6",
+      "url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/e98382be5fbf42f4482a3e1b3cda66e0d282701b"
+    },
+    "branch": "main",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-08-19T06:12:18.507000Z",
+    "finished_at": "2026-08-19T06:12:59.733000Z"
+  },
+  "actions": {
+    "data": [
+      {
+        "id": "6a85493715fac8c98eba2b5a",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:12:18.935000Z",
+        "finished_at": "2026-08-19T06:12:49.739000Z"
+      },
+      {
+        "id": "6a85493715fac8c98eba2b5b",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:12:49.739000Z",
+        "finished_at": "2026-08-19T06:12:57.186000Z"
+      },
+      {
+        "id": "6a85493715fac8c98eba2b5c",
+        "name": "Verify canonical identifiers",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ntest \"$BUNDLE_ID\" = 'jp.allsunday1122.networkspecialist'\ntest \"$APP_STORE_CONNECT_APP_ID\" = '6799754573'\ntest \"$CODEMAGIC_PROFILE_REF\" = 'networkspecialist_appstore'\ntest \"$IAP_PRODUCT_ID\" = 'jp.allsunday1122.networkspecialist.premium'",
+        "status": "success",
+        "started_at": "2026-08-19T06:12:57.186000Z",
+        "finished_at": "2026-08-19T06:12:57.533000Z"
+      },
+      {
+        "id": "6a85493715fac8c98eba2b5d",
+        "name": "Initialize signing keychain",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nkeychain initialize",
+        "status": "success",
+        "started_at": "2026-08-19T06:12:57.533000Z",
+        "finished_at": "2026-08-19T06:12:58.373000Z"
+      },
+      {
+        "id": "6a85493715fac8c98eba2b5e",
+        "name": "Fetch or create App Store signing files",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\napp-store-connect fetch-signing-files \"$BUNDLE_ID\" --type IOS_APP_STORE --create",
+        "status": "failed",
+        "started_at": "2026-08-19T06:12:58.373000Z",
+        "finished_at": "2026-08-19T06:12:59.279000Z"
+      },
+      {
+        "id": "6a85493715fac8c98eba2b5f",
+        "name": "Add signing certificate to keychain",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nkeychain add-certificates",
+        "status": "skipped",
+        "started_at": "2026-08-19T06:12:59.279000Z",
+        "finished_at": "2026-08-19T06:12:59.279000Z"
+      },
+      {
+        "id": "6a85493715fac8c98eba2b60",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:12:59.279000Z",
+        "finished_at": "2026-08-19T06:12:59.583000Z"
+      },
+      {
+        "id": "6a85493715fac8c98eba2b61",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T06:12:59.583000Z",
+        "finished_at": "2026-08-19T06:12:59.733000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
