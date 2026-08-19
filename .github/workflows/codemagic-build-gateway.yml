@@ -17,6 +17,8 @@ jobs:
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -26,7 +28,160 @@ jobs:
       - name: Install gateway dependency
         run: python -m pip install --disable-pip-version-check PyYAML
 
+      - name: Read command action
+        id: command
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          d=json.load(open('automation/codemagic-build-command.json',encoding='utf-8'))
+          print('action='+str(d.get('action') or ''))
+          PY
+
+      - name: Install APP2-010 Touhan Codemagic workflow
+        if: steps.command.outputs.action == 'install_touhan'
+        run: |
+          set -euo pipefail
+          cp automation/codemagic-build-command.json /tmp/app2-010-command.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          INSTALLED=0
+          CHANGED=false
+          for attempt in 1 2 3 4 5 6; do
+            git fetch origin main
+            git checkout -B app2-010-install origin/main
+            python3 - <<'PY'
+          from pathlib import Path
+          path=Path('codemagic.yaml')
+          text=path.read_text(encoding='utf-8')
+          if '\n  touhan-ios:\n' in text:
+              print('touhan-ios already present')
+              raise SystemExit(0)
+          block=r'''
+
+  touhan-ios:
+    name: 登録販売者 - iOS Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.allsunday1122.tourokuhanbaisha
+      vars:
+        BUNDLE_ID: com.allsunday1122.tourokuhanbaisha
+        APP_STORE_CONNECT_APP_ID: "6802119268"
+        CODEMAGIC_PROFILE_REF: tourokuhanbaisha_appstore
+        APPICON_SHA256: c0cefbae22cdcd7b614d213ddca7942c7d693f02ead758b11b66d447a66bff03
+        XCODE_PROJECT: touroku-hanbaisha-ios/native-ios/TouhanSprint.xcodeproj
+        XCODE_SCHEME: TouhanSprint
+      xcode: latest
+    scripts:
+      - name: Install native build tools
+        script: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          python3 -m pip install --disable-pip-version-check 'cairosvg==2.8.2'
+      - name: Audit registration seller release inputs
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          node touroku-hanbaisha-sprint/validate-history-calendar.mjs
+          bash -n touroku-hanbaisha-ios/native-ios/prepare-ios.sh
+          test "$BUNDLE_ID" = "com.allsunday1122.tourokuhanbaisha"
+          test "$APP_STORE_CONNECT_APP_ID" = "6802119268"
+          test "$CODEMAGIC_PROFILE_REF" = "tourokuhanbaisha_appstore"
+          bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
+          python3 touroku-hanbaisha-ios/scripts/validate_release.py
+      - name: Set CI build number and generate native project
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios"
+          python3 - <<'PYBUILD'
+          from pathlib import Path
+          import os
+          p=Path('project.yml')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)
+          p.write_text(text, encoding='utf-8')
+          PYBUILD
+          xcodegen generate
+      - name: Verify signed native inputs
+        script: |
+          set -euo pipefail
+          test -f "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/PrivacyInfo.xcprivacy"
+          test -f "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
+          echo "$APPICON_SHA256  $CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" | shasum -a 256 -c -
+          grep -q 'com.allsunday1122.tourokuhanbaisha' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
+          grep -q 'MN3D2ZM44N' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
+      - name: Apply App Store signing profiles for internal TestFlight only
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
+'''
+          path.write_text(text.rstrip()+block+'\n', encoding='utf-8')
+          PY
+            python3 - <<'PY'
+          import yaml
+          data=yaml.safe_load(open('codemagic.yaml',encoding='utf-8'))
+          wf=data['workflows']['touhan-ios']
+          assert wf['environment']['ios_signing']['bundle_identifier']=='com.allsunday1122.tourokuhanbaisha'
+          assert wf['environment']['vars']['APP_STORE_CONNECT_APP_ID']=='6802119268'
+          assert wf['publishing']['app_store_connect']['submit_to_testflight'] is True
+          assert wf['publishing']['app_store_connect']['submit_to_app_store'] is False
+          print('PASS: touhan-ios parsed; Internal TestFlight enabled; App Store submission disabled')
+          PY
+            if git diff --quiet -- codemagic.yaml; then
+              INSTALLED=1
+              CHANGED=false
+              break
+            fi
+            git add codemagic.yaml
+            git commit -m "Add 登録販売者 Internal TestFlight workflow"
+            if git push origin HEAD:main; then
+              INSTALLED=1
+              CHANGED=true
+              break
+            fi
+            echo "main advanced during attempt $attempt; retrying"
+            sleep 2
+          done
+          if [[ "$INSTALLED" != "1" ]]; then
+            echo "Failed to install touhan-ios after concurrency retries" >&2
+            exit 1
+          fi
+          python3 - "$CHANGED" <<'PY'
+          import json,sys
+          command=json.load(open('/tmp/app2-010-command.json',encoding='utf-8'))
+          result={
+            'ok': True,
+            'request_id': command['request_id'],
+            'action': 'install_touhan',
+            'workflow_id': 'touhan-ios',
+            'changed': sys.argv[1].lower()=='true',
+            'status': 'installed',
+          }
+          open('codemagic-result.json','w',encoding='utf-8').write(json.dumps(result,ensure_ascii=False,indent=2))
+          PY
+
       - name: Execute Codemagic command
+        if: steps.command.outputs.action != 'install_touhan'
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
           CM_APP_ID: ${{ vars.CM_APP_ID }}
@@ -92,20 +247,22 @@ jobs:
           python - <<'PY'
           import json, re
           from pathlib import Path
-          command=json.loads(Path('automation/codemagic-build-command.json').read_text(encoding='utf-8'))
+          command_path=Path('automation/codemagic-build-command.json')
+          command=json.loads(command_path.read_text(encoding='utf-8')) if command_path.exists() else {}
           result=json.loads(Path('codemagic-result.json').read_text(encoding='utf-8'))
-          request_id=str(command.get('request_id') or result.get('request_id') or 'unknown')
+          request_id=str(result.get('request_id') or command.get('request_id') or 'unknown')
           if not re.fullmatch(r'[A-Za-z0-9._-]{1,120}', request_id):
               raise SystemExit('invalid request_id')
           allowed={
               'request_id': request_id,
               'ok': result.get('ok'),
-              'action': command.get('action'),
-              'workflow_id': command.get('workflow_id') or result.get('workflow_id'),
-              'branch': command.get('branch') or result.get('branch'),
+              'action': result.get('action') or command.get('action'),
+              'workflow_id': result.get('workflow_id') or command.get('workflow_id'),
+              'branch': result.get('branch') or command.get('branch'),
               'resolved_app_id': result.get('resolved_app_id'),
               'application_candidates': result.get('application_candidates'),
               'note': result.get('note'),
+              'changed': result.get('changed'),
               'build_id': result.get('build_id'),
               'status': result.get('status'),
               'app_id': result.get('app_id'),
@@ -129,7 +286,7 @@ jobs:
           git add "$RESULT_PATH"
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "Persist Codemagic result for ${REQUEST_ID}"
-          if git push; then exit 0; fi
+          if git push origin HEAD:main; then exit 0; fi
           git fetch origin main
           git reset --hard origin/main
           mkdir -p automation/codemagic-results
