@@ -33,21 +33,65 @@ jobs:
               raise SystemExit('Unexpected APP2-004 command payload')
           PY
       - name: Ensure pharmacist App Store Connect products
+        id: ensure
+        continue-on-error: true
+        shell: bash
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-        run: python scripts/app2_004_yakuzaishi_iap_bootstrap.py
-      - name: Persist sanitized IAP result
+        run: |
+          set +e
+          python scripts/app2_004_yakuzaishi_iap_bootstrap.py > /tmp/app2-004-iap.log 2>&1
+          code=$?
+          python - "$code" <<'PY'
+          import json, re, sys
+          from pathlib import Path
+          code = int(sys.argv[1])
+          raw = Path('/tmp/app2-004-iap.log').read_text(encoding='utf-8', errors='replace') if Path('/tmp/app2-004-iap.log').exists() else ''
+          raw = re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----', '[REDACTED KEY]', raw, flags=re.S)
+          raw = re.sub(r'Bearer\s+[A-Za-z0-9._-]+', 'Bearer [REDACTED]', raw)
+          raw = re.sub(r'eyJ[A-Za-z0-9._-]{40,}', '[REDACTED JWT]', raw)
+          diagnostic = {
+              'task_id': 'APP2-004',
+              'step': 'iap_bootstrap',
+              'exit_code': code,
+              'ok': code == 0,
+              'log_tail': raw[-12000:],
+          }
+          Path('automation/app2-004-yakuzaishi-iap-diagnostic.json').write_text(
+              json.dumps(diagnostic, ensure_ascii=False, indent=2) + '\n', encoding='utf-8'
+          )
+          PY
+          exit 0
+      - name: Persist sanitized IAP result or diagnostic
+        if: always()
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase origin main
-          git add automation/app2-004-yakuzaishi-iap-result.json
-          if git diff --cached --quiet; then
-            echo "No result change"
-            exit 0
+          git add automation/app2-004-yakuzaishi-iap-diagnostic.json
+          if test -f automation/app2-004-yakuzaishi-iap-result.json; then
+            git add automation/app2-004-yakuzaishi-iap-result.json
           fi
-          git commit -m "Persist APP2-004 pharmacist IAP bootstrap result"
-          git push origin HEAD:main
+          if git diff --cached --quiet; then
+            echo "No APP2-004 diagnostic/result change"
+          else
+            git commit -m "Persist APP2-004 pharmacist IAP diagnostic"
+            git push origin HEAD:main
+          fi
+      - name: Fail when bootstrap failed
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('automation/app2-004-yakuzaishi-iap-diagnostic.json')
+          if not p.exists():
+              raise SystemExit('APP2-004 diagnostic missing')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          if not data.get('ok'):
+              raise SystemExit(f"APP2-004 IAP bootstrap failed with exit_code={data.get('exit_code')}")
+          PY
