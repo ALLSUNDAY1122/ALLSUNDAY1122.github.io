@@ -1,6 +1,6 @@
 # APP2-003｜夜の書架｜申請状態再確認から再開
 
-更新: 2026-08-19 12:35 JST
+更新: 2026-08-19 15:03 JST
 セッション: 夜の書架②
 Worker: YORU
 対象App: 夜の書架
@@ -17,11 +17,13 @@ Bundle ID: `io.github.allsunday1122.yorunoshoka`
 
 ## 開始時の正本再取得
 
-- Notion台帳: 状態はすでに「公開準備」へ訂正済みだった。
-- Notionアプリ正本: 旧記載として「審査中」「1.0 / Build 1 Beta App Review提出済み」が残存していた。
-- GitHub `ALLSUNDAY1122/yoru-no-shoka` main: `app.json` は `1.1.0 / Build 3`。
+- Notion台帳: 状態は「公開準備」。
+- Notionアプリ正本: `1.1.0 / Build 3`、Beta App Review・本審査とも未提出。
+- GitHub `ALLSUNDAY1122/yoru-no-shoka` main: `28a16ae1ac3f8313bff363be541c9e738945d5d5`、`app.json` は `1.1.0 / Build 3`。
+- Recent PR: なし。
+- 既知GitHub Actions run `30151218263`: `success`。
 - App Store Connect: App ID / Bundle IDをAPIで照合。
-- Codemagic: API接続は成功したが `ALLSUNDAY1122/yoru-no-shoka` のApplication候補は0件。対象リポジトリはEAS設定を持つため、本タスクでCodemagic再Buildは行わなかった。
+- Codemagic: API接続は成功したが `ALLSUNDAY1122/yoru-no-shoka` のApplication候補は0件。対象リポジトリはEAS設定を持つため、本タスクでCodemagic再Buildは行わない。
 
 ## App Store Connect監査｜自動補完前
 
@@ -30,12 +32,12 @@ Bundle ID: `io.github.allsunday1122.yorunoshoka`
 - Bundle ID: `io.github.allsunday1122.yorunoshoka`
 - Build 3: `VALID` / 未失効
 - Pre-release Version: `1.1.0`
-- App Store Version: `1.0` / `PREPARE_FOR_SUBMISSION`
-- App Store VersionのBuild選択: なし
+- App Store Version: 当初 `1.0` / `PREPARE_FOR_SUBMISSION`
+- App Store VersionのBuild選択: 当初なし
 - Build 3 Beta App Review Submission: 0件
 - App Store Review Submission: 0件
 - Beta App Review連絡先: 必須4項目あり
-- App Store本審査Review連絡先: 必須4項目なし
+- App Store本審査Review連絡先: 当初必須4項目なし
 - Store localization: 日本語あり
 - 説明: あり
 - キーワード: あり
@@ -52,6 +54,20 @@ Bundle ID: `io.github.allsunday1122.yorunoshoka`
 5. Beta App Review連絡先の存在を確認し、値をログ・GitHubへ出さずApp Store Review Detailへ同期。
 6. 本審査Review連絡先の4項目が入力済みになったことをread-back確認。
 7. Notion「夜の書架｜iOSアプリ正本」を「公開準備｜1.1.0 / Build 3、Beta App Review・本審査とも未提出」へ訂正し、再fetchで確認。
+
+## 2026-08-19 15:01 再開監査
+
+ユーザーの「つぎ」を受け、会話履歴を正本にせず再取得した。
+
+- Queue: APP2-003は `HUMAN_REQUIRED` のまま。
+- Notion台帳: 「自動申請準備は完了」、残件は実機確認・DSA・最終審査承認のみ。
+- Notionアプリ正本: `1.1.0 / Build 3`、未提出の記載と一致。
+- GitHub main: `28a16ae1ac3f8313bff363be541c9e738945d5d5` のまま。`app.json` も `1.1.0 / Build 3`。
+- Recent PR: なし。
+- App Store Connect再read-back: `1.1.0 / PREPARE_FOR_SUBMISSION`、Build 3 relationshipあり、Build 3 Beta App Review Submission 0件、App Store Review Submission 0件。
+- Codemagic再inspect: API接続成功、対象Application候補0件。
+
+以上から、新たに自動実行すべき差分はない。旧作業の再実行や不要な再Buildは行わない。
 
 ## 最終App Store Connect read-back
 
@@ -74,7 +90,7 @@ Bundle ID: `io.github.allsunday1122.yorunoshoka`
 ## 真正な人間ゲート
 
 1. iPhone TestFlightでの実機受入確認。
-2. EU Digital Services Actのトレーダー自己判定・申告。Appleはトレーダー該当性を開発者本人に自己評価させており、トレーダーの場合は連絡先確認等の本人確認工程があるため自動決定しない。
+2. EU Digital Services Actのトレーダー自己判定・申告。トレーダーの場合は連絡先確認等の本人確認工程があるため自動決定しない。
 3. App Store本審査の最終 `Add for Review` / `Submit for Review`。ユーザー最終承認前には実行しない。
 
 ## Task判定
