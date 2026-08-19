@@ -1,0 +1,130 @@
+name: APP2-010 Codemagic Variable Group Probe
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'automation/app2-010-codemagic-variable-group-probe.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Create verify and remove harmless Codemagic variable group
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request, urllib.error
+          from pathlib import Path
+
+          cmd=json.loads(Path('automation/app2-010-codemagic-variable-group-probe.json').read_text(encoding='utf-8'))
+          request_id=cmd['request_id']; app_id=cmd['app_id']; group_name=cmd['group_name']
+          if not re.fullmatch(r'app2-010-cm-group-probe-[A-Za-z0-9._-]{1,60}',request_id): raise SystemExit('bad request_id')
+          if app_id!='6a769d81a1add9d06020b524': raise SystemExit('bad app id')
+          if group_name!='app2_010_probe': raise SystemExit('bad probe group')
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token: raise SystemExit('missing CM_API_TOKEN')
+
+          def call(method,path,payload=None):
+              data=None if payload is None else json.dumps(payload).encode()
+              req=urllib.request.Request('https://codemagic.io'+path,data=data,method=method,headers={'x-auth-token':token,'Accept':'application/json','Content-Type':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode('utf-8'); return r.status,json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode('utf-8','replace')
+                  try: body=json.loads(raw) if raw else {}
+                  except: body={'raw':raw[:1000]}
+                  return e.code,body
+
+          def groups(payload):
+              if isinstance(payload,list): return payload
+              if isinstance(payload,dict):
+                  for key in ('data','variable_groups','groups'):
+                      v=payload.get(key)
+                      if isinstance(v,list): return v
+                      if isinstance(v,dict):
+                          for k2 in ('data','items','groups'):
+                              if isinstance(v.get(k2),list): return v[k2]
+              return []
+
+          def gid(group): return group.get('id') or group.get('_id') if isinstance(group,dict) else None
+          def gname(group): return group.get('name') or group.get('group_name') if isinstance(group,dict) else None
+
+          before_status,before=call('GET',f'/api/v3/apps/{app_id}/variable-groups')
+          if not 200 <= before_status < 300: raise RuntimeError(f'list groups failed HTTP {before_status}: {before}')
+          existing=next((g for g in groups(before) if gname(g)==group_name),None)
+          created=False
+          group_id=gid(existing) if existing else None
+          create_status=None; create_shape=None
+          if not group_id:
+              create_status,created_body=call('POST',f'/api/v3/apps/{app_id}/variable-groups',{'name':group_name})
+              create_shape=sorted(created_body.keys()) if isinstance(created_body,dict) else type(created_body).__name__
+              if not 200 <= create_status < 300:
+                  out={'request_id':request_id,'ok':False,'create_http_status':create_status,'create_response_keys':create_shape,'error':str(created_body)[:1000]}
+                  Path('automation/codemagic-results').mkdir(parents=True,exist_ok=True)
+                  Path(f'automation/codemagic-results/{request_id}.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+                  Path('/tmp/result-path.txt').write_text(f'automation/codemagic-results/{request_id}.json')
+                  raise SystemExit(2)
+              created=True
+              after_status,after=call('GET',f'/api/v3/apps/{app_id}/variable-groups')
+              if not 200 <= after_status < 300: raise RuntimeError('post-create list failed')
+              existing=next((g for g in groups(after) if gname(g)==group_name),None)
+              group_id=gid(existing) if existing else None
+              if not group_id:
+                  # Fallback to creation response shapes.
+                  candidates=[]
+                  if isinstance(created_body,dict):
+                      candidates=[created_body,created_body.get('data'),created_body.get('variable_group')]
+                  for c in candidates:
+                      if isinstance(c,dict) and gid(c): group_id=gid(c); break
+          if not group_id: raise RuntimeError('created group id could not be resolved')
+
+          var_status,var_body=call('POST',f'/api/v3/variable-groups/{group_id}/variables',{'secure':True,'variables':[{'name':'APP2_010_PROBE','value':'nonsecret-probe-value'}]})
+          if not 200 <= var_status < 300: raise RuntimeError(f'variable insert failed HTTP {var_status}: {var_body}')
+          listv_status,listv=call('GET',f'/api/v3/variable-groups/{group_id}/variables')
+          if not 200 <= listv_status < 300: raise RuntimeError('variable readback failed')
+          rawvars=[]
+          if isinstance(listv,list): rawvars=listv
+          elif isinstance(listv,dict):
+              for k in ('data','variables'):
+                  if isinstance(listv.get(k),list): rawvars=listv[k]; break
+          names=sorted(str(v.get('name')) for v in rawvars if isinstance(v,dict) and v.get('name'))
+          if 'APP2_010_PROBE' not in names: raise RuntimeError('probe variable missing after create')
+
+          delete_status,_=call('DELETE',f'/api/v3/variable-groups/{group_id}')
+          if delete_status not in (200,204): raise RuntimeError(f'probe group cleanup failed HTTP {delete_status}')
+          final_status,final=call('GET',f'/api/v3/apps/{app_id}/variable-groups')
+          still_exists=any(gname(g)==group_name for g in groups(final))
+          if still_exists: raise RuntimeError('probe group still exists after cleanup')
+
+          result={'request_id':request_id,'ok':True,'app_id':app_id,'group_name':group_name,'group_id':group_id,'created':created,'create_http_status':create_status,'variable_create_http_status':var_status,'variable_readback_http_status':listv_status,'variable_names':names,'delete_http_status':delete_status,'cleanup_verified':True}
+          out=Path('automation/codemagic-results')/f'{request_id}.json'; out.parent.mkdir(parents=True,exist_ok=True); out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8'); Path('/tmp/result-path.txt').write_text(str(out))
+          PY
+      - name: Persist sanitized probe result
+        if: always() && hashFiles('/tmp/result-path.txt') != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          P="$(cat /tmp/result-path.txt)"
+          cp "$P" /tmp/cm-probe-result.json
+          git add "$P"
+          git commit -m "Persist APP2-010 Codemagic variable group probe" || exit 0
+          if git push; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p "$(dirname "$P")"
+          cp /tmp/cm-probe-result.json "$P"
+          git add "$P"
+          git commit -m "Persist APP2-010 Codemagic variable group probe" || exit 0
+          git push origin HEAD:main
