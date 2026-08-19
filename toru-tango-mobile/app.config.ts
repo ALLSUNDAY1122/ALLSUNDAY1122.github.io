@@ -13,7 +13,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: 'com.allsunday1122.torutango',
-    buildNumber: '4',
+    buildNumber: '7',
     icon: './assets/icon-appstore.png',
     infoPlist: {
       NSCameraUsageDescription: '教材を撮影して単語カード作成に利用します。',
@@ -29,7 +29,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-splash-screen',
       {
-        backgroundColor: '#4f46e5',
+        backgroundColor: '#14a9bf',
         image: './assets/icon-appstore.png',
         imageWidth: 200,
         resizeMode: 'contain'
