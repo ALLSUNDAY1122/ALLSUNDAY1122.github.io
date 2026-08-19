@@ -10,6 +10,7 @@ on:
     paths:
       - 'touroku-hanbaisha-sprint/**'
       - 'touroku-hanbaisha-ios/**'
+      - '.github/workflows/touroku-hanbaisha-validate.yml'
   workflow_dispatch:
 
 jobs:
@@ -111,3 +112,30 @@ jobs:
               raise SystemExit(1)
           print('PASS: canonical 360, 3x120, 20/20/40/20/20, exact duplicate 0, semantic high-similarity/water-padding 0, runtime answer positions 24 each')
           PY
+
+  xcodegen-release-gate:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install XcodeGen and icon renderer
+        run: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          python -m pip install --disable-pip-version-check 'cairosvg==2.8.2'
+      - name: Prepare canonical native resources
+        run: |
+          bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
+          python touroku-hanbaisha-ios/scripts/validate_release.py
+      - name: Generate Xcode project
+        run: |
+          set -o pipefail
+          cd touroku-hanbaisha-ios/native-ios
+          xcodegen --version
+          xcodegen generate 2>&1 | tee xcodegen-generate.log
+      - name: Verify generated project
+        run: |
+          test -f touroku-hanbaisha-ios/native-ios/TouhanSprint.xcodeproj/project.pbxproj
+          grep -q 'com.allsunday1122.tourokuhanbaisha' touroku-hanbaisha-ios/native-ios/TouhanSprint.xcodeproj/project.pbxproj
+          grep -q 'MN3D2ZM44N' touroku-hanbaisha-ios/native-ios/TouhanSprint.xcodeproj/project.pbxproj
