@@ -24,6 +24,7 @@ export type AppStoreValue = {
   addCard: (question: string, answer: string, deckName?: string) => boolean;
   addCards: (candidates: QuestionCandidate[], deckName?: string) => number;
   updateCard: (id: string, question: string, answer: string, note?: string) => boolean;
+  setCardHidden: (id: string, hidden: boolean) => void;
   deleteCard: (id: string) => void;
   clearAll: () => void;
   gradeCard: (cardId: string, stage: CardReviewStage) => void;
@@ -79,6 +80,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
           answer: candidate.answer,
           deckName: deckName.trim() || 'メイン',
           note: '',
+          isHidden: false,
           correct: 0,
           wrong: 0,
           reviewStage: 'review' as const,
@@ -117,6 +119,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
           answer: candidate.answer,
           deckName: deckName.trim() || 'メイン',
           note: '',
+          isHidden: false,
           correct: 0,
           wrong: 0,
           reviewStage: 'review' as const,
@@ -156,6 +159,20 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
     },
     [cards]
   );
+
+  const setCardHidden = useCallback((id: string, hidden: boolean) => {
+    setCards((current) =>
+      current.map((card) =>
+        card.id === id
+          ? {
+              ...card,
+              isHidden: hidden,
+              updatedAt: new Date().toISOString()
+            }
+          : card
+      )
+    );
+  }, []);
 
   const deleteCard = useCallback((id: string) => {
     setCards((current) => current.filter((card) => card.id !== id));
@@ -226,6 +243,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
       addCard,
       addCards,
       updateCard,
+      setCardHidden,
       deleteCard,
       clearAll,
       gradeCard,
@@ -239,6 +257,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
       addCard,
       addCards,
       updateCard,
+      setCardHidden,
       deleteCard,
       clearAll,
       gradeCard,
