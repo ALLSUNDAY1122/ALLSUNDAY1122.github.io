@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """APP2-003 scoped, idempotent App Store version/build alignment.
 
-This script is intentionally fixed to 夜の書架 and never submits an app for review.
-Credentials are read only from GitHub Actions secrets.
+Fixed to 夜の書架. Never submits an app for review. Credentials come only from
+GitHub Actions secrets. Evidence contains no credentials or personal contact data.
 """
 import json
 import os
@@ -16,22 +16,23 @@ VERSION_ID = "812cd84c-3efb-407b-a04c-f9fb1b5554e6"
 BUILD_ID = "23521541-e269-4baf-800d-7830b94c36a1"
 PRERELEASE_ID = "c655ea9f-08a8-4f82-9aa6-6b4f43a527da"
 TARGET_VERSION = "1.1.0"
+OUTPUT = Path("automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-version-build-fix.json")
+
+
+def save(evidence):
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT.write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def main():
-    issuer = os.environ.get("ASC_ISSUER_ID")
-    key_id = os.environ.get("ASC_KEY_ID")
-    if not issuer or not key_id:
-        raise RuntimeError("Missing ASC issuer/key id")
-    key_path, cleanup = load_private_key()
-    evidence = {
-        "app_id": APP_ID,
-        "version_id": VERSION_ID,
-        "build_id": BUILD_ID,
-        "target_version": TARGET_VERSION,
-        "steps": [],
-    }
+    evidence = {"app_id": APP_ID, "version_id": VERSION_ID, "build_id": BUILD_ID, "target_version": TARGET_VERSION, "steps": [], "ok": False}
+    cleanup = None
     try:
+        issuer = os.environ.get("ASC_ISSUER_ID")
+        key_id = os.environ.get("ASC_KEY_ID")
+        if not issuer or not key_id:
+            raise RuntimeError("Missing ASC issuer/key id")
+        key_path, cleanup = load_private_key()
         token = make_token(issuer, key_id, key_path)
 
         _, app = api_get(token, f"/v1/apps/{APP_ID}")
@@ -91,13 +92,14 @@ def main():
             raise RuntimeError("Build read-back mismatch")
         evidence["steps"].append({"step": "build_readback", "ok": True, "attached_build_id": attached_id})
         evidence["ok"] = True
+    except Exception as exc:
+        evidence["error"] = str(exc)[-800:]
+        save(evidence)
+        raise
     finally:
         if cleanup:
             cleanup.unlink(missing_ok=True)
-
-    output = Path("automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-version-build-fix.json")
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        save(evidence)
 
 
 if __name__ == "__main__":
