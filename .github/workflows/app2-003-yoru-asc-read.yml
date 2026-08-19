@@ -1,4 +1,4 @@
-name: APP2-003 夜の書架 ASC Read
+name: APP2-003 夜の書架 ASC Gateway
 
 on:
   push:
@@ -11,12 +11,25 @@ permissions:
   contents: write
 
 jobs:
-  read:
+  gateway:
     runs-on: macos-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
+      - name: Resolve mode
+        id: cfg
+        run: |
+          mode=$(python3 -c "import json; print(json.load(open('automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-asc-command.json')).get('mode','read'))")
+          echo "mode=$mode" >> "$GITHUB_OUTPUT"
+      - name: Execute scoped version/build fix
+        if: steps.cfg.outputs.mode == 'version_build_fix'
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/app2_003_asc_version_build_fix.py
       - name: Execute ASC read command
+        if: steps.cfg.outputs.mode != 'version_build_fix'
         id: asc
         continue-on-error: true
         env:
@@ -32,8 +45,8 @@ jobs:
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           exit 0
-      - name: Persist sanitized APP2-003 result
-        if: always()
+      - name: Persist sanitized read result
+        if: steps.cfg.outputs.mode != 'version_build_fix'
         env:
           ASC_EXIT_CODE: ${{ steps.asc.outputs.exit_code }}
         run: |
@@ -42,13 +55,7 @@ jobs:
           from pathlib import Path
           result_path = Path('app2-003-asc-result.json')
           command = json.loads(Path('automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-asc-command.json').read_text(encoding='utf-8'))
-          out = {
-              'request_id': command.get('request_id'),
-              'ok': os.environ.get('ASC_EXIT_CODE') == '0' and result_path.exists(),
-              'exit_code': int(os.environ.get('ASC_EXIT_CODE') or -1),
-              'completed_at': None,
-              'results': [],
-          }
+          out = {'request_id': command.get('request_id'), 'ok': os.environ.get('ASC_EXIT_CODE') == '0' and result_path.exists(), 'exit_code': int(os.environ.get('ASC_EXIT_CODE') or -1), 'completed_at': None, 'results': []}
           if result_path.exists():
               src = json.loads(result_path.read_text(encoding='utf-8'))
               out['completed_at'] = src.get('completed_at')
@@ -61,25 +68,21 @@ jobs:
                   for x in data:
                       if not isinstance(x, dict): continue
                       attrs = x.get('attributes') or {}
-                      clean.append({
-                          'id': x.get('id'), 'type': x.get('type'),
-                          'attributes': {k: attrs.get(k) for k in (
-                              'name','bundleId','sku','primaryLocale','version','versionString','platform',
-                              'appStoreState','betaReviewState','externalBuildState','internalBuildState',
-                              'uploadedDate','processingState','expired','expirationDate','minOsVersion'
-                          ) if k in attrs}
-                      })
+                      clean.append({'id': x.get('id'), 'type': x.get('type'), 'attributes': {k: attrs.get(k) for k in ('name','bundleId','sku','primaryLocale','version','versionString','platform','appStoreState','betaReviewState','externalBuildState','internalBuildState','uploadedDate','processingState','expired','expirationDate','minOsVersion') if k in attrs}})
                   out['results'].append({'label': r.get('label'), 'path': r.get('path'), 'http_status': r.get('http_status'), 'data': clean})
           else:
               stderr = Path('app2-003-asc-stderr.txt').read_text(encoding='utf-8', errors='replace') if Path('app2-003-asc-stderr.txt').exists() else ''
-              # Do not persist credentials; Python errors and HTTP status snippets only.
               out['error'] = stderr[-1500:]
           p = Path('automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-asc.json')
           p.parent.mkdir(parents=True, exist_ok=True)
           p.write_text(json.dumps(out, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
+      - name: Persist evidence
+        if: always()
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-asc.json
-          git commit -m "Persist APP2-003 ASC read evidence" || exit 0
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-asc.json 2>/dev/null || true
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-version-build-fix.json 2>/dev/null || true
+          git commit -m "Persist APP2-003 ASC evidence" || exit 0
           git push
