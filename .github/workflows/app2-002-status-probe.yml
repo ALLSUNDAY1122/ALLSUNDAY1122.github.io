@@ -20,7 +20,8 @@ jobs:
             const owner=context.repo.owner, repo=context.repo.repo;
             const workflowIds=[
               'app2-002-nomidokoro-build-only.yml',
-              'app2-002-nomidokoro-release-bridge.yml'
+              'app2-002-nomidokoro-release-bridge.yml',
+              'app2-002-asc-revise.yml'
             ];
             const output={};
             for (const workflow_id of workflowIds) {
