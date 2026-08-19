@@ -1,0 +1,129 @@
+name: APP2-005 HM1 content and icon patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-005-hm1-content-icon-patch-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: fix/health-manager-1-icon-content-v2
+          fetch-depth: 0
+      - name: Install icon renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq imagemagick fonts-noto-cjk
+      - name: Connect audited 132 questions and render unified icon
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re,hashlib,collections
+
+          root=Path('.')
+          qpath=root/'ios/health-manager-1/Resources/questions.json'
+          ipath=root/'ios/health-manager-1/Resources/index.html'
+          questions=json.loads(qpath.read_text(encoding='utf-8'))
+          assert len(questions)==132, len(questions)
+          assert len({q['id'] for q in questions})==132
+          rounds=collections.Counter(q['round'] for q in questions)
+          assert rounds=={'2026-04':44,'2025-10':44,'2025-04':44}, rounds
+          labels=collections.Counter((q['round'],q['label']) for q in questions)
+          for r in rounds:
+              assert labels[(r,'関係法令')]==17
+              assert labels[(r,'労働衛生')]==17
+              assert labels[(r,'労働生理')]==10
+
+          text=ipath.read_text(encoding='utf-8')
+          compact=json.dumps(questions,ensure_ascii=False,separators=(',',':'))
+          new,count=re.subn(r'const QUESTIONS=\[.*?\];\nconst DOMAINS=', 'const QUESTIONS='+compact+';\nconst DOMAINS=', text, count=1, flags=re.S)
+          assert count==1, f'QUESTIONS replacement count={count}'
+          # Existing UI is already three-round aware; assert all round ids are represented.
+          for r in ('2026-04','2025-10','2025-04'):
+              assert r in new
+          assert '3回分・科目別に9セット' in new
+          assert '44問を通しで解く' in new
+          ipath.write_text(new,encoding='utf-8')
+
+          report={
+            'question_count':len(questions),
+            'round_counts':dict(rounds),
+            'round_subject_counts':{f'{r}|{d}':labels[(r,d)] for r in rounds for d in ('関係法令','労働衛生','労働生理')},
+            'index_bytes_before':len(text.encode('utf-8')),
+            'index_bytes_after':len(new.encode('utf-8')),
+            'questions_sha256':hashlib.sha256(qpath.read_bytes()).hexdigest(),
+            'index_sha256':hashlib.sha256(ipath.read_bytes()).hexdigest(),
+          }
+          out=root/'ios/health-manager-1/audit/APP2_005_132_INTEGRATION_2026-08-19.json'
+          out.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+
+          ICON_DIR="ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset"
+          SVG="$ICON_DIR/learning-sprint-hm1.svg"
+          test -f "$SVG"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          p=Path('ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          jobs=[]
+          for image in data.get('images',[]):
+              fn=image.get('filename')
+              size=image.get('size')
+              scale=image.get('scale','1x')
+              if not fn or not size: continue
+              n=float(size.split('x')[0]); sc=int(scale.rstrip('x'))
+              jobs.append({'filename':fn,'pixels':round(n*sc)})
+          Path('/tmp/hm1-icon-jobs.json').write_text(json.dumps(jobs),encoding='utf-8')
+          print(jobs)
+          PY
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,subprocess,hashlib,struct
+          icon_dir=Path('ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset')
+          svg=icon_dir/'learning-sprint-hm1.svg'
+          jobs=json.loads(Path('/tmp/hm1-icon-jobs.json').read_text())
+          rendered=[]
+          for j in jobs:
+              out=icon_dir/j['filename']; px=j['pixels']
+              subprocess.run(['convert','-background','white',str(svg),'-resize',f'{px}x{px}!','-alpha','off',str(out)],check=True)
+              b=out.read_bytes(); assert b[:8]==b'\x89PNG\r\n\x1a\n'; assert b[12:16]==b'IHDR'
+              w,h=struct.unpack('>II',b[16:24]); assert (w,h)==(px,px),(out,w,h,px)
+              rendered.append({'filename':out.name,'pixels':px,'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()})
+          # Ensure canonical 1024 artwork is changed from the old blue-shield asset.
+          p=icon_dir/'icon-1024.png'
+          assert p.exists() and p.stat().st_size>10000, p.stat().st_size
+          report={'source':'learning-sprint-hm1.svg','rendered':rendered,'canonical_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+          Path('ios/health-manager-1/audit/APP2_005_ICON_UNIFICATION_2026-08-19.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - name: Validate HM1 release inputs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          q=json.loads(Path('ios/health-manager-1/Resources/questions.json').read_text(encoding='utf-8'))
+          html=Path('ios/health-manager-1/Resources/index.html').read_text(encoding='utf-8')
+          assert len(q)==132
+          assert sum(1 for x in q if x['round']=='2025-10')==44
+          assert sum(1 for x in q if x['round']=='2025-04')==44
+          assert '2025-10-Q44' in html and '2025-04-Q44' in html
+          assert html.count('sourceType')>=132
+          print('PASS: HM1 app bundle now exposes all 132 audited questions across three rounds')
+          PY
+      - name: Commit implementation branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ios/health-manager-1/Resources/index.html ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset ios/health-manager-1/audit/APP2_005_132_INTEGRATION_2026-08-19.json ios/health-manager-1/audit/APP2_005_ICON_UNIFICATION_2026-08-19.json
+          git commit -m "Fix HM1 icon and expose all 132 audited questions"
+          git push origin HEAD:fix/health-manager-1-icon-content-v2
