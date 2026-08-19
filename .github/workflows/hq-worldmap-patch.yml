@@ -32,5 +32,20 @@ jobs:
           path.write_text('\n'.join(lines) + '\n')
           PY
           python3 splat-native-ios/scripts/apply_worldmap_transition_patch.py
+
+          mkdir -p .git/hooks
+          cat > .git/hooks/pre-commit <<'HOOK'
+          #!/bin/bash
+          set -e
+          for file in \
+            .github/workflows/splat-native-ios.yml \
+            .github/workflows/hq-worldmap-patch.yml \
+            .github/workflows/hq-worldmap-patch-ubuntu.yml
+          do
+            git restore --staged -- "$file" 2>/dev/null || true
+            git restore --source=HEAD --worktree -- "$file" 2>/dev/null || true
+          done
+          HOOK
+          chmod +x .git/hooks/pre-commit
       - name: Commit patched source
-        run: echo 'Commit is performed by the parent PR workflow.'
+        run: echo 'Commit is performed by the parent PR workflow; workflow files are excluded by pre-commit.'
