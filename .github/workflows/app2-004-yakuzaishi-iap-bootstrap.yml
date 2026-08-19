@@ -7,6 +7,7 @@ on:
       - automation/app2-004-yakuzaishi-iap-command.json
       - scripts/app2_004_yakuzaishi_iap_bootstrap.py
       - scripts/app2_004_yakuzaishi_iap_v2_runner.py
+      - scripts/app2_004_yakuzaishi_metadata_probe.py
       - .github/workflows/app2-004-yakuzaishi-iap-bootstrap.yml
 
 permissions:
@@ -66,54 +67,43 @@ jobs:
           )
           PY
           exit 0
-      - name: Persist sanitized IAP result or diagnostic
+      - name: Probe purchase metadata completeness
+        if: always()
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/app2_004_yakuzaishi_metadata_probe.py
+      - name: Persist sanitized IAP result, diagnostic, and metadata probe
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p /tmp/app2-004-state
           cp automation/app2-004-yakuzaishi-iap-diagnostic.json /tmp/app2-004-state/diagnostic.json
+          cp automation/app2-004-yakuzaishi-metadata-probe.json /tmp/app2-004-state/metadata-probe.json
           if test -f automation/app2-004-yakuzaishi-iap-result.json; then
             cp automation/app2-004-yakuzaishi-iap-result.json /tmp/app2-004-state/result.json
           fi
           git restore automation/app2-004-yakuzaishi-iap-diagnostic.json 2>/dev/null || true
+          git restore automation/app2-004-yakuzaishi-metadata-probe.json 2>/dev/null || true
           rm -f automation/app2-004-yakuzaishi-iap-result.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase origin main
           cp /tmp/app2-004-state/diagnostic.json automation/app2-004-yakuzaishi-iap-diagnostic.json
+          cp /tmp/app2-004-state/metadata-probe.json automation/app2-004-yakuzaishi-metadata-probe.json
           if test -f /tmp/app2-004-state/result.json; then
             cp /tmp/app2-004-state/result.json automation/app2-004-yakuzaishi-iap-result.json
           fi
-          git add automation/app2-004-yakuzaishi-iap-diagnostic.json
+          git add automation/app2-004-yakuzaishi-iap-diagnostic.json automation/app2-004-yakuzaishi-metadata-probe.json
           if test -f automation/app2-004-yakuzaishi-iap-result.json; then
             git add automation/app2-004-yakuzaishi-iap-result.json
           fi
           if git diff --cached --quiet; then
-            echo "No APP2-004 diagnostic/result change"
+            echo "No APP2-004 diagnostic/result/probe change"
           else
-            git commit -m "Persist APP2-004 pharmacist IAP diagnostic"
-            git push origin HEAD:main
-          fi
-      - name: Audit Build 2 and Internal TestFlight
-        env:
-          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-        run: python scripts/app2_004_yakuzaishi_asc_audit.py
-      - name: Persist APP2-004 ASC final audit
-        shell: bash
-        run: |
-          set -euo pipefail
-          cp automation/app2-004-yakuzaishi-asc-final.json /tmp/app2-004-yakuzaishi-asc-final.json
-          git restore automation/app2-004-yakuzaishi-asc-final.json 2>/dev/null || true
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
-          cp /tmp/app2-004-yakuzaishi-asc-final.json automation/app2-004-yakuzaishi-asc-final.json
-          git add automation/app2-004-yakuzaishi-asc-final.json
-          if ! git diff --cached --quiet; then
-            git commit -m "Persist APP2-004 App Store Connect final audit"
+            git commit -m "Persist APP2-004 pharmacist purchase metadata probe"
             git push origin HEAD:main
           fi
       - name: Assert bootstrap success
