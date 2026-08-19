@@ -1,3 +1,11 @@
+const FREE_SET=EXAMSETS[0];
+window.SM2_STORE=window.SM2_STORE||{isPremium:false,entitlementSource:'none',monthlyPrice:'App Storeで価格を確認',lifetimePrice:'App Storeで価格を確認',monthlyAvailable:false,lifetimeAvailable:false,message:''};
+function nativeStoreAvailable(){return !!window.webkit?.messageHandlers?.storekit}
+function isPremiumAccess(){return !nativeStoreAvailable()||!!window.SM2_STORE.isPremium}
+function requestStoreStatus(){try{window.webkit.messageHandlers.storekit.postMessage({action:'status'})}catch(_){}}
+function freePool(){return QUESTIONS.filter(q=>q.examSet===FREE_SET)}
+function premiumCTA(){return isPremiumAccess()?'':`<div class="sec"><button class="action" onclick="showPaywall('home')"><span class="aicon mock">${ICON.mock}</span><span><strong>全300問を解放</strong><small>月額または買い切りで、全30セット・苦手復習まで</small></span><span class="pill hot">PLUS</span></button></div>`}
+
 function home(){
   const d=dailyNow(),goal=S.dailyGoal,w=Object.keys(S.weak).length,rate=S.total?Math.round(S.correct/S.total*100):0,days=Object.values(S.daily).filter(x=>x.a>0).length;
   const mockSetCount=EXAMSETS.length*SUBJECTS.length;
@@ -8,27 +16,34 @@ function home(){
   <div class="sec"><button class="primarycta" onclick="startDaily()"><span><strong>今日のスプリント</strong><small>${goal}問・${minutes(goal)}分ほど</small></span><span class="arr">→</span></button></div>
   <div class="sec"><button class="action" onclick="startWeak()"><span class="aicon weak">${ICON.weak}</span><span><strong>苦手をつぶす</strong><small>間違えた問題を3連続正解で卒業</small></span><span class="pill ${w?'hot':''}">${w}</span></button></div>
   <div class="sec"><button class="action" onclick="mockScreen()"><span class="aicon mock">${ICON.mock}</span><span><strong>模擬試験</strong><small>5年分相当・${mockSetCount}セット</small></span><span class="pill">${mockSetCount}</span></button></div>
+  ${premiumCTA()}
   <div class="sec"><div class="sectitle"><h2>分野から解く</h2><span>全${QUESTIONS.length}問</span></div><div class="subjectlist">${SUBJECTS.map(subjectCard).join('')}</div></div>
   <div class="sec"><div class="sectitle"><h2>これまで</h2></div><div class="homestats"><div class="hstat"><b>${S.total}</b><small>のべ回答</small></div><div class="hstat"><b>${rate}%</b><small>正答率</small></div><div class="hstat"><b>${days}</b><small>学習日数</small></div></div></div>`+nav('home');
   setApp(html,true);
+  requestStoreStatus();
 }
 function pickForDaily(pool,n){
   let unseen=pool.filter(q=>!(S.seen[q.id]||0)),seen=pool.filter(q=>(S.seen[q.id]||0));
   let ordered=S.shuffleQuestions?shuffle(unseen).concat(shuffle(seen)):unseen.concat(seen);
   return ordered.slice(0,Math.min(n,ordered.length));
 }
-function startDaily(){begin('今日のスプリント',pickForDaily(QUESTIONS,S.dailyGoal),{mode:'sprint'})}
-function startSubject(s){begin(s+'｜分野学習',pickForDaily(QUESTIONS.filter(q=>q.subject===s),S.dailyGoal),{mode:'subject',subject:s})}
+function startDaily(){begin('今日のスプリント',pickForDaily(isPremiumAccess()?QUESTIONS:freePool(),S.dailyGoal),{mode:'sprint'})}
+function startSubject(s){
+  const pool=(isPremiumAccess()?QUESTIONS:freePool()).filter(q=>q.subject===s);
+  begin(s+'｜分野学習',pickForDaily(pool,S.dailyGoal),{mode:'subject',subject:s})
+}
 function startWeak(){
-  const qs=Object.keys(S.weak).map(id=>QMAP[id]).filter(Boolean);
-  if(!qs.length){toast('いま苦手登録はありません');return}
+  let qs=Object.keys(S.weak).map(id=>QMAP[id]).filter(Boolean);
+  if(!isPremiumAccess())qs=qs.filter(q=>q.examSet===FREE_SET);
+  if(!qs.length){toast(isPremiumAccess()?'いま苦手登録はありません':'無料範囲の苦手登録はありません');return}
   begin('苦手をつぶす',S.shuffleQuestions?shuffle(qs):qs,{mode:'weak'})
 }
 function pairKey(set,sub){return set+'｜'+sub}
 function pairAnswers(set,sub){return S.pairAnswers[pairKey(set,sub)]||0}
 function mockCard(set,sub){
   const k=pairKey(set,sub),r=S.mockResults[k],score=r?.score??null,pct=score===null?0:Math.round(score/10*100);
-  return `<button class="mockcard" onclick="startMock('${set}','${sub}')"><span class="pill ${score===null?'':score>=6?'good':'bad'}">${score===null?'未受験':`前回 ${score}/10`}</span><div class="mockring" style="--pct:${pct}%"></div><b>${sub}</b><small>10問・解答${pairAnswers(set,sub)}回</small></button>`;
+  const locked=!isPremiumAccess()&&set!==FREE_SET;
+  return `<button class="mockcard" onclick="${locked?`showPaywall('mock')`:`startMock('${set}','${sub}')`}"><span class="pill ${locked?'hot':score===null?'':score>=6?'good':'bad'}">${locked?'PLUS':score===null?'未受験':`前回 ${score}/10`}</span><div class="mockring" style="--pct:${pct}%"></div><b>${sub}</b><small>${locked?'プレミアムで解放':`10問・解答${pairAnswers(set,sub)}回`}</small></button>`;
 }
 function mockScreen(){
   const mockSetCount=EXAMSETS.length*SUBJECTS.length;
@@ -37,8 +52,12 @@ function mockScreen(){
     return `<div class="mockgroup"><div class="mocktitle"><b>${set}</b><span>完答 ${done}/${SUBJECTS.length} 科目</span></div><div class="mockgrid">${SUBJECTS.map(s=>mockCard(set,s)).join('')}</div></div>`;
   }).join('');
   setApp(topBlock('模擬試験','本番形式',`5年分相当。全${mockSetCount}セットを10問ずつ解けます。`)+`<div class="sec">${groups}</div>`+nav('mock'));
+  requestStoreStatus();
 }
-function startMock(set,sub){begin(pairKey(set,sub),QUESTIONS.filter(q=>q.examSet===set&&q.subject===sub),{mode:'mock',examSet:set,subject:sub})}
+function startMock(set,sub){
+  if(!isPremiumAccess()&&set!==FREE_SET){showPaywall('mock');return}
+  begin(pairKey(set,sub),QUESTIONS.filter(q=>q.examSet===set&&q.subject===sub),{mode:'mock',examSet:set,subject:sub})
+}
 
 function buildOrders(qs,stored){
   if(stored&&stored.length===qs.length)return stored;
@@ -63,6 +82,7 @@ function storeResume(nextIdx=idx){
 function resumeSession(){
   const r=S.resume;if(!r)return home();
   const qs=r.ids.map(id=>QMAP[id]).filter(Boolean);
+  if(!isPremiumAccess()&&qs.some(q=>q.examSet!==FREE_SET)){showPaywall('resume');return}
   if(!qs.length){S.resume=null;save();return home()}
   begin(r.title,qs,{mode:r.mode,examSet:r.examSet,subject:r.subject},r);
 }
