@@ -1,6 +1,6 @@
 workflows:
   otsu4-ios:
-    name: 危険物乙4 - iOS Internal TestFlight
+    name: 危険物乙4 - iOS Internal TestFlight Artifact
     max_build_duration: 80
     instance_type: mac_mini_m2
     integrations:
@@ -33,29 +33,16 @@ workflows:
         script: |
           set -euo pipefail
           bash "$CM_BUILD_DIR/native-ios/Otsu4Sprint/prepare-ios.sh"
-      - name: Set deterministic build number and generate Xcode project
+      - name: Generate Xcode project and set Build 2 with agvtool
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
-          python3 - <<'PY'
-          from pathlib import Path
-          import os
-          p=Path('project.yml')
-          text=p.read_text(encoding='utf-8')
-          build_number=os.environ['RELEASE_BUILD_NUMBER']
-          old="CURRENT_PROJECT_VERSION: '1'"
-          occurrences=text.count(old)
-          if occurrences != 2:
-              raise RuntimeError(f'Expected exactly 2 CURRENT_PROJECT_VERSION baselines, found {occurrences}')
-          new="CURRENT_PROJECT_VERSION: '"+build_number+"'"
-          p.write_text(text.replace(old,new),encoding='utf-8')
-          verify=p.read_text(encoding='utf-8')
-          if old in verify or verify.count(new) != 2:
-              raise RuntimeError('Build number replacement verification failed')
-          print('CFBundleVersion source fixed to',build_number,'at',occurrences,'settings')
-          PY
           xcodegen generate
-          grep -q 'CURRENT_PROJECT_VERSION = 2;' Otsu4Sprint.xcodeproj/project.pbxproj
+          agvtool new-version -all "$RELEASE_BUILD_NUMBER"
+          SETTINGS="$(xcodebuild -project Otsu4Sprint.xcodeproj -scheme Otsu4Sprint -configuration Release -showBuildSettings)"
+          printf '%s\n' "$SETTINGS" | grep -E '^ *CURRENT_PROJECT_VERSION = 2$'
+          printf '%s\n' "$SETTINGS" | grep -E '^ *PRODUCT_BUNDLE_IDENTIFIER = jp\.allsunday1122\.otsu4$'
+          echo 'PASS: Xcode Release build settings resolve to Build 2'
       - name: Verify release inputs
         script: |
           set -euo pipefail
@@ -73,7 +60,14 @@ workflows:
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          xcode-project use-profiles --project Otsu4Sprint.xcodeproj --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Re-verify Build 2 after signing setup
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
+          SETTINGS="$(xcodebuild -project Otsu4Sprint.xcodeproj -scheme Otsu4Sprint -configuration Release -showBuildSettings)"
+          printf '%s\n' "$SETTINGS" | grep -E '^ *CURRENT_PROJECT_VERSION = 2$'
+          echo 'PASS: signing profile application preserved Build 2'
       - name: Build signed IPA
         script: |
           set -euo pipefail
@@ -88,5 +82,5 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: true
+        submit_to_testflight: false
         submit_to_app_store: false
