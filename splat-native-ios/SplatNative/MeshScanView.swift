@@ -163,17 +163,28 @@ struct MeshScanView: View {
         .preferredColorScheme(.dark)
         .sheet(isPresented: $showingShare) {
             if let url = model.resultURL {
-                ShareSheet(items: [url])
+                MeshExportOptionsView(sourceURL: url)
             }
         }
         .alert("Mesh撮影を終了しますか？", isPresented: $showingResetConfirmation) {
             Button("キャンセル", role: .cancel) {}
-            Button("破棄して戻る", role: .destructive) {
-                model.reset()
-                dismiss()
+            if model.destructiveResetBlockedReason == nil {
+                Button("破棄して戻る", role: .destructive) {
+                    if model.reset() { dismiss() }
+                }
+            } else {
+                Button("閉じて保存を再試行") {
+                    dismiss()
+                }
             }
         } message: {
-            Text("このS4段階ではライブラリ管理はS5担当です。共有していない結果は画面から戻る前に必要に応じて書き出してください。")
+            if let reason = model.destructiveResetBlockedReason {
+                Text("\(reason) この画面を閉じると保存の再試行操作へ戻れます。")
+            } else if model.phase == .finished {
+                Text("完成済みMeshはローカルライブラリへ保存されます。現在のworkingデータを閉じます。")
+            } else {
+                Text("まだライブラリへ完成保存していない撮影・処理データは破棄されます。")
+            }
         }
     }
 
@@ -182,8 +193,7 @@ struct MeshScanView: View {
             VStack(spacing: 18) {
                 HStack {
                     Button {
-                        model.reset()
-                        dismiss()
+                        if model.reset() { dismiss() }
                     } label: {
                         Image(systemName: "xmark")
                             .frame(width: 44, height: 44)
@@ -428,6 +438,22 @@ struct MeshScanView: View {
                             }
                         }
 
+                        if let resetBlockedReason = model.destructiveResetBlockedReason {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Label("Meshを保護中", systemImage: "externaldrive.badge.exclamationmark")
+                                    .font(.subheadline.bold())
+                                    .foregroundStyle(.orange)
+                                Text(resetBlockedReason)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Text("×でこの画面を閉じると、保存を再試行できます。")
+                                    .font(.caption.bold())
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(12)
+                            .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
+                        }
+
                         Toggle("2点タップで計測", isOn: $measurementEnabled)
                             .tint(.mint)
 
@@ -472,11 +498,12 @@ struct MeshScanView: View {
                                 model.reset()
                             }
                             .buttonStyle(PrimaryButtonStyle())
+                            .disabled(model.destructiveResetBlockedReason != nil)
                         }
                     }
                     .padding(16)
                 }
-                .frame(maxHeight: 310)
+                .frame(maxHeight: 340)
                 .background(.black)
             }
         } else if let url = model.resultURL {
@@ -490,10 +517,24 @@ struct MeshScanView: View {
                 Text(url.lastPathComponent)
                     .font(.caption.monospaced())
                     .foregroundStyle(.secondary)
+                if let resetBlockedReason = model.destructiveResetBlockedReason {
+                    VStack(spacing: 6) {
+                        Label("Meshを保護中", systemImage: "externaldrive.badge.exclamationmark")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(.orange)
+                        Text(resetBlockedReason)
+                            .font(.caption)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.secondary)
+                        Text("×でこの画面を閉じると、保存を再試行できます。")
+                            .font(.caption.bold())
+                    }
+                }
                 Button("Meshを書き出す") { showingShare = true }
                     .buttonStyle(PrimaryButtonStyle())
                 Button("新しく撮る") { model.reset() }
                     .foregroundStyle(.secondary)
+                    .disabled(model.destructiveResetBlockedReason != nil)
                 Spacer()
             }
             .padding(24)
@@ -516,8 +557,7 @@ struct MeshScanView: View {
             }
             .buttonStyle(PrimaryButtonStyle())
             Button("Splat画面へ戻る") {
-                model.reset()
-                dismiss()
+                if model.reset() { dismiss() }
             }
             .foregroundStyle(.secondary)
             Spacer()

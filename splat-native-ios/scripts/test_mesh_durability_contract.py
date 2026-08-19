@@ -4,6 +4,7 @@ from pathlib import Path
 coordinator = Path("splat-native-ios/SplatNative/MeshDurabilityCoordinator.swift").read_text()
 recovery = Path("splat-native-ios/SplatNative/MeshDurabilityRecoveryStore.swift").read_text()
 model = Path("splat-native-ios/SplatNative/MeshScanModel.swift").read_text()
+mesh_view = Path("splat-native-ios/SplatNative/MeshScanView.swift").read_text()
 shell = Path("splat-native-ios/SplatNative/IntegratedScanLabShellView.swift").read_text()
 
 snapshot = "summary = try archiveFinishedProject(sourceURL)"
@@ -78,6 +79,18 @@ if not verify_pos < remove_pos:
     raise SystemExit("Recovery working project must only be deleted after archive integrity verification succeeds")
 
 for needle in (
+    "if model.destructiveResetBlockedReason == nil",
+    'Button("閉じて保存を再試行")',
+    "if let resetBlockedReason = model.destructiveResetBlockedReason",
+    ".disabled(model.destructiveResetBlockedReason != nil)",
+    "MeshExportOptionsView(sourceURL: url)",
+):
+    if needle not in mesh_view:
+        raise SystemExit(f"full-screen Mesh UI is missing fail-closed feedback/export contract: {needle}")
+if "このS4段階ではライブラリ管理はS5担当です" in mesh_view:
+    raise SystemExit("stale pre-integration Mesh lifecycle warning returned")
+
+for needle in (
     "if let blocking = meshDurability.blockingMessage",
     "meshDurability.retry(model: meshModel)",
     "meshDurability.recoverPendingProjects()",
@@ -86,4 +99,4 @@ for needle in (
     if needle not in shell:
         raise SystemExit(f"production shell is missing fail-closed Mesh recovery UI: {needle}")
 
-print("PASS: Mesh durability is fail-closed at the model reset boundary with retry/relaunch recovery")
+print("PASS: Mesh durability is fail-closed at model/UI boundaries with retry/relaunch recovery")
