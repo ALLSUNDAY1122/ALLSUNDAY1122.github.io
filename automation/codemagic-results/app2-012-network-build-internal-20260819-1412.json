@@ -1,0 +1,206 @@
+{
+  "request_id": "app2-012-network-build-internal-20260819-1412",
+  "ok": false,
+  "action": "build",
+  "workflow_id": "network-specialist-native-ios",
+  "branch": "main",
+  "resolved_app_id": null,
+  "application_candidates": [
+    {
+      "id": "6a769d81a1add9d06020b524",
+      "name": "ALLSUNDAY1122.github.io",
+      "repositoryUrl": null
+    }
+  ],
+  "note": null,
+  "build_id": "6a853ac7acf98143df9f85d1",
+  "status": "failed",
+  "app_id": "6a769d81a1add9d06020b524",
+  "error": "Codemagic build ended with status: failed",
+  "build_details": {
+    "id": "6a853ac7acf98143df9f85d1",
+    "app_id": "6a769d81a1add9d06020b524",
+    "workflow": {
+      "id": "network-specialist-native-ios",
+      "source": "file",
+      "name": "ネットワークスペシャリスト - Native Internal TestFlight"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "failed",
+    "index": 1,
+    "artifacts": [],
+    "labels": [],
+    "release_notes": [],
+    "created_at": "2026-08-19T05:10:31.332000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "86b947142adac102fc4a621d82a0af3cba851154",
+      "avatar_url": "https://avatars.githubusercontent.com/in/15368?v=4",
+      "author_name": "github-actions[bot]",
+      "author_email": "41898282+github-actions[bot]@users.noreply.github.com",
+      "message": "Prepare requested Codemagic workflow",
+      "url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/86b947142adac102fc4a621d82a0af3cba851154"
+    },
+    "branch": "main",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-08-19T05:10:39.427000Z",
+    "finished_at": "2026-08-19T05:11:21.061000Z"
+  },
+  "actions": {
+    "data": [
+      {
+        "id": "6a853ac898a2cb4e18ba0e4e",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T05:10:39.828000Z",
+        "finished_at": "2026-08-19T05:11:02.349000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e4f",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T05:11:02.349000Z",
+        "finished_at": "2026-08-19T05:11:10.413000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e50",
+        "name": "Install native build tools",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nHOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen",
+        "status": "success",
+        "started_at": "2026-08-19T05:11:10.413000Z",
+        "finished_at": "2026-08-19T05:11:19.131000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e51",
+        "name": "Materialize and verify canonical AppIcon",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR\"\nDEST='network-specialist-sprint/ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'\nmkdir -p \"$(dirname \"$DEST\")\"\ncurl --fail --location --retry 2 --connect-timeout 20 --max-time 120 \\\n  'https://drive.google.com/uc?export=download&id=1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8' \\\n  -o \"$DEST\"\ntest \"$(stat -f%z \"$DEST\")\" = '678310'\ntest \"$(shasum -a 256 \"$DEST\" | awk '{print $1}')\" = \"$APPICON_SHA256\"\npython3 network-specialist-sprint/scripts/build_native_questions.py\npython3 network-specialist-sprint/scripts/materialize_appicon.py\npython3 network-specialist-sprint/scripts/validate_release.py\npython3 network-specialist-sprint/scripts/validate_native_release.py --require-icon --require-iap\ntest \"$BUNDLE_ID\" = 'jp.allsunday1122.networkspecialist'\ntest \"$APP_STORE_CONNECT_APP_ID\" = '6799754573'\ntest \"$CODEMAGIC_PROFILE_REF\" = 'networkspecialist_appstore'\ntest \"$IAP_PRODUCT_ID\" = 'jp.allsunday1122.networkspecialist.premium'",
+        "status": "failed",
+        "started_at": "2026-08-19T05:11:19.131000Z",
+        "finished_at": "2026-08-19T05:11:20.649000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e52",
+        "name": "Generate Xcode project and set build number",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR/network-specialist-sprint/ios\"\npython3 - <<'PY'\nfrom pathlib import Path\nimport os\np=Path('project.yml')\ns=p.read_text(encoding='utf-8')\ns=s.replace('CURRENT_PROJECT_VERSION: \"1\"', 'CURRENT_PROJECT_VERSION: \"'+os.environ['CM_BUILD_NUMBER']+'\"', 1)\np.write_text(s, encoding='utf-8')\nPY\nxcodegen generate",
+        "status": "skipped",
+        "started_at": "2026-08-19T05:11:20.649000Z",
+        "finished_at": "2026-08-19T05:11:20.649000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e53",
+        "name": "Run native unit and UI regression",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR/network-specialist-sprint\"\nbash scripts/run_native_ui_tests.sh",
+        "status": "skipped",
+        "started_at": "2026-08-19T05:11:20.649000Z",
+        "finished_at": "2026-08-19T05:11:20.650000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e54",
+        "name": "Unsigned Release build gate",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR/network-specialist-sprint\"\nxcodebuild build -project ios/NetworkSpecialist.xcodeproj -scheme NetworkSpecialist -configuration Release -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO",
+        "status": "skipped",
+        "started_at": "2026-08-19T05:11:20.650000Z",
+        "finished_at": "2026-08-19T05:11:20.650000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e55",
+        "name": "Initialize signing keychain",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nkeychain initialize",
+        "status": "skipped",
+        "started_at": "2026-08-19T05:11:20.650000Z",
+        "finished_at": "2026-08-19T05:11:20.650000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e56",
+        "name": "Fetch or create App Store signing files",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\napp-store-connect fetch-signing-files \"$BUNDLE_ID\" --type IOS_APP_STORE --create",
+        "status": "skipped",
+        "started_at": "2026-08-19T05:11:20.650000Z",
+        "finished_at": "2026-08-19T05:11:20.651000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e57",
+        "name": "Add signing certificate to keychain",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nkeychain add-certificates",
+        "status": "skipped",
+        "started_at": "2026-08-19T05:11:20.651000Z",
+        "finished_at": "2026-08-19T05:11:20.651000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e58",
+        "name": "Apply App Store signing profiles for Internal TestFlight only",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/network-specialist-sprint/ios\"\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
+        "status": "skipped",
+        "started_at": "2026-08-19T05:11:20.651000Z",
+        "finished_at": "2026-08-19T05:11:20.651000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e59",
+        "name": "Build signed IPA",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nxcode-project build-ipa --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" --scheme \"$XCODE_SCHEME\"",
+        "status": "skipped",
+        "started_at": "2026-08-19T05:11:20.651000Z",
+        "finished_at": "2026-08-19T05:11:20.651000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e5a",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T05:11:20.651000Z",
+        "finished_at": "2026-08-19T05:11:20.925000Z"
+      },
+      {
+        "id": "6a853ac898a2cb4e18ba0e5b",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-19T05:11:20.925000Z",
+        "finished_at": "2026-08-19T05:11:21.061000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
