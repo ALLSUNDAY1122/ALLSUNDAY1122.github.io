@@ -1,9 +1,29 @@
 {
-  "request_id": "app2-006-hm2-app-discovery-20260819-1221",
+  "request_id": "app2-004-yakuzaishi-asc-audit-20260819-1221",
   "requests": [
     {
-      "label": "hm2-app",
-      "path": "/v1/apps?filter[bundleId]=jp.allsunday1122.healthmanager2&limit=10"
+      "label": "app",
+      "path": "/v1/apps/6799753724"
+    },
+    {
+      "label": "builds",
+      "path": "/v1/apps/6799753724/builds?limit=200"
+    },
+    {
+      "label": "versions",
+      "path": "/v1/apps/6799753724/appStoreVersions?limit=200"
+    },
+    {
+      "label": "beta-groups",
+      "path": "/v1/apps/6799753724/betaGroups?limit=200"
+    },
+    {
+      "label": "iap",
+      "path": "/v1/apps/6799753724/inAppPurchasesV2?limit=200"
+    },
+    {
+      "label": "subscription-groups",
+      "path": "/v1/apps/6799753724/subscriptionGroups?limit=200"
     }
   ]
 }
