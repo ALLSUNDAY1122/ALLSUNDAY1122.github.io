@@ -1,0 +1,68 @@
+name: Verify HealthManager1 signed IPA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/hm1-ipa-verification-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Verify Codemagic signed IPA
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import io,json,os,plistlib,urllib.request,zipfile
+          from pathlib import Path
+          command=json.loads(Path('automation/hm1-ipa-verification-command.json').read_text(encoding='utf-8'))
+          build_id=command['build_id']
+          token=os.environ['CM_API_TOKEN']
+          req=urllib.request.Request(f'https://codemagic.io/api/v3/builds/{build_id}',headers={'x-auth-token':token})
+          with urllib.request.urlopen(req,timeout=30) as r: raw=json.load(r)
+          build=raw.get('data') or raw
+          ipa=next(a for a in build.get('artifacts',[]) if a.get('type')=='ipa')
+          with urllib.request.urlopen(ipa['short_lived_download_url'],timeout=60) as r: payload=r.read()
+          z=zipfile.ZipFile(io.BytesIO(payload)); names=z.namelist()
+          app_prefix=next(n for n in names if n.startswith('Payload/') and n.endswith('.app/'))
+          index_path=app_prefix+'index.html'; info_path=app_prefix+'Info.plist'; assets_path=app_prefix+'Assets.car'
+          index=z.read(index_path) if index_path in names else b''
+          info=plistlib.loads(z.read(info_path))
+          checks={
+            'index_present':index_path in names,
+            'index_bytes':len(index),
+            'index_size_ok':len(index)>=100000,
+            'app_marker_present':'第一種衛生管理者' in index.decode('utf-8',errors='ignore'),
+            'assets_car_present':assets_path in names,
+            'code_signature_present':any(n.startswith(app_prefix+'_CodeSignature/') for n in names),
+            'embedded_provision_present':app_prefix+'embedded.mobileprovision' in names,
+            'bundle_id':info.get('CFBundleIdentifier'),
+            'version':info.get('CFBundleShortVersionString'),
+            'build_number':info.get('CFBundleVersion'),
+            'bundle_id_ok':info.get('CFBundleIdentifier')=='jp.allsunday1122.healthmanager1',
+            'build_number_ok':info.get('CFBundleVersion')=='2026081901',
+          }
+          required=['index_present','index_size_ok','app_marker_present','assets_car_present','code_signature_present','embedded_provision_present','bundle_id_ok','build_number_ok']
+          passed=all(checks[k] for k in required)
+          summary={'request_id':command.get('request_id'),'build_id':build_id,'codemagic_status':build.get('status'),'app_store_connect_status':build.get('app_store_connect_status'),'ipa_size_in_bytes':len(payload),'checks':checks,'passed':passed}
+          Path('automation/hm1-ipa-verification-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(summary,ensure_ascii=False,indent=2))
+          if not passed: raise SystemExit('HealthManager1 signed IPA verification failed')
+          PY
+      - name: Persist verification summary
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/hm1-ipa-verification-summary.json
+          git commit -m "Record APP2-005 HealthManager1 IPA verification"
+          for attempt in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && exit 0; sleep 2; done
+          exit 1
