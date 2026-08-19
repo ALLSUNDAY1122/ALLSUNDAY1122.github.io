@@ -18,16 +18,19 @@ jobs:
         with:
           script: |
             const owner=context.repo.owner, repo=context.repo.repo;
-            const res=await github.rest.actions.listWorkflowRuns({
-              owner, repo,
-              workflow_id:'app2-002-nomidokoro-build-only.yml',
-              per_page:5
-            });
-            const rows=res.data.workflow_runs.map(r => ({
-              id:r.id,status:r.status,conclusion:r.conclusion,
-              event:r.event,head_sha:r.head_sha,created_at:r.created_at,updated_at:r.updated_at
-            }));
+            const workflowIds=[
+              'app2-002-nomidokoro-build-only.yml',
+              'app2-002-nomidokoro-release-bridge.yml'
+            ];
+            const output={};
+            for (const workflow_id of workflowIds) {
+              const res=await github.rest.actions.listWorkflowRuns({owner,repo,workflow_id,per_page:5});
+              output[workflow_id]=res.data.workflow_runs.map(r => ({
+                id:r.id,status:r.status,conclusion:r.conclusion,event:r.event,
+                head_sha:r.head_sha,created_at:r.created_at,updated_at:r.updated_at
+              }));
+            }
             await github.rest.issues.createComment({
               owner,repo,issue_number:context.issue.number,
-              body:'```json\n'+JSON.stringify(rows,null,2)+'\n```'
+              body:'```json\n'+JSON.stringify(output,null,2)+'\n```'
             });
