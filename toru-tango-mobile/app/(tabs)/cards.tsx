@@ -46,7 +46,15 @@ function formatUpdatedAt(value: string): string {
 
 export default function CardsScreen() {
   const router = useRouter();
-  const { cards, updateCard, setCardHidden, deleteCard, clearAll } = useAppStore();
+  const {
+    cards,
+    decks,
+    addDeck,
+    updateCard,
+    setCardHidden,
+    deleteCard,
+    clearAll
+  } = useAppStore();
   const [selectedDeck, setSelectedDeck] = useState<string | null>(null);
   const [folderSearch, setFolderSearch] = useState('');
   const [cardSearch, setCardSearch] = useState('');
@@ -59,6 +67,7 @@ export default function CardsScreen() {
 
   const deckSummaries = useMemo<DeckSummary[]>(() => {
     const grouped = new Map<string, Card[]>();
+    decks.forEach((name) => grouped.set(name, []));
     cards.forEach((card) => {
       const name = deckOf(card);
       grouped.set(name, [...(grouped.get(name) ?? []), card]);
@@ -76,8 +85,13 @@ export default function CardsScreen() {
           deckCards[0]?.updatedAt ?? ''
         )
       }))
-      .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
-  }, [cards]);
+      .sort((left, right) => {
+        if (!left.updatedAt && !right.updatedAt) return left.name.localeCompare(right.name, 'ja');
+        if (!left.updatedAt) return 1;
+        if (!right.updatedAt) return -1;
+        return right.updatedAt.localeCompare(left.updatedAt);
+      });
+  }, [cards, decks]);
 
   const visibleDecks = useMemo(() => {
     const query = folderSearch.trim().toLocaleLowerCase('ja-JP');
@@ -147,7 +161,7 @@ export default function CardsScreen() {
   };
 
   const confirmClear = () => {
-    Alert.alert('すべて削除', 'カードと学習履歴をすべて削除しますか？', [
+    Alert.alert('すべて削除', 'フォルダ、カード、学習履歴をすべて削除しますか？', [
       { text: 'キャンセル', style: 'cancel' },
       {
         text: '次へ',
@@ -159,6 +173,29 @@ export default function CardsScreen() {
           ])
       }
     ]);
+  };
+
+  const promptAddFolder = () => {
+    Alert.prompt(
+      'フォルダ追加',
+      'あとからカードを入れられます。分かりやすい名前を入力してください。',
+      [
+        { text: 'キャンセル', style: 'cancel' },
+        {
+          text: '追加',
+          onPress: (value) => {
+            const name = value?.trim() ?? '';
+            if (!addDeck(name)) {
+              Alert.alert('追加できません', 'フォルダ名の未入力または同名フォルダを確認してください。');
+              return;
+            }
+            setFolderSearch('');
+          }
+        }
+      ],
+      'plain-text',
+      ''
+    );
   };
 
   const openCreate = () => router.push('/(tabs)/create');
@@ -178,12 +215,12 @@ export default function CardsScreen() {
           </View>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="カードを追加"
-            onPress={openCreate}
+            accessibilityLabel="フォルダを追加"
+            onPress={promptAddFolder}
             style={({ pressed }) => [styles.addFolderButton, pressed && styles.pressed]}
           >
             <Text style={styles.addFolderPlus}>＋</Text>
-            <Text style={styles.addFolderText}>カード追加</Text>
+            <Text style={styles.addFolderText}>フォルダ追加</Text>
           </Pressable>
         </View>
 
@@ -205,7 +242,7 @@ export default function CardsScreen() {
             <Text style={styles.sectionEyebrow}>フォルダ</Text>
             <Text style={styles.folderCount}>{deckSummaries.length}個</Text>
           </View>
-          {cards.length ? (
+          {deckSummaries.length || cards.length ? (
             <Pressable onPress={confirmClear} style={styles.clearLink}>
               <Text style={styles.clearLinkText}>全データ削除</Text>
             </Pressable>
@@ -216,12 +253,15 @@ export default function CardsScreen() {
           <View style={styles.emptyFolderBox}>
             <Text style={styles.emptyFolderIcon}>📂</Text>
             <Text style={styles.emptyFolderTitle}>
-              {deckSummaries.length ? '該当するフォルダがありません' : 'まだカードがありません'}
+              {deckSummaries.length ? '該当するフォルダがありません' : 'まだフォルダがありません'}
             </Text>
             <Text style={styles.emptyFolderText}>
-              写真から作るか、カードを直接追加するとフォルダがここに並びます。
+              フォルダを先に作るか、カードを作成するとここに整理して表示されます。
             </Text>
-            <AppButton label="カードを作る" onPress={openCreate} />
+            <View style={commonStyles.row}>
+              <AppButton label="フォルダを作る" onPress={promptAddFolder} />
+              <AppButton label="カードを作る" variant="secondary" onPress={openCreate} />
+            </View>
           </View>
         ) : (
           <View style={styles.folderGrid}>
