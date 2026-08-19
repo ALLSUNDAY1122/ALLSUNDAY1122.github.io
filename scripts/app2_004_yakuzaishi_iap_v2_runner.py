@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""APP2-004 compatibility runner for App Store Connect API 4.4.1+ metadata versions."""
+"""APP2-004 compatibility runner for current App Store Connect subscription/IAP metadata APIs."""
 
 import copy
 import json
@@ -40,20 +40,17 @@ def _ensure_draft_version(token, kind, parent_id):
     versions = _data_list(listing)
     if versions:
         return versions[-1]["id"], version_type
-
     payload = {
         "data": {
             "type": version_type,
-            "relationships": {
-                relationship: {"data": {"type": parent_type, "id": parent_id}}
-            },
+            "relationships": {relationship: {"data": {"type": parent_type, "id": parent_id}}},
         }
     }
     _, created = _original_request(token, create_path, "POST", payload)
     return created["data"]["id"], version_type
 
 
-def _normalize_inline_price_payload(payload):
+def _normalize_iap_price_schedule(payload):
     payload = copy.deepcopy(payload)
     included = payload.get("included") or []
     replacements = {}
@@ -67,16 +64,51 @@ def _normalize_inline_price_payload(payload):
         related = relationship.get("data") or {}
         if related.get("type") == "inAppPurchasesV2":
             related["type"] = "inAppPurchases"
-    manual = (
-        payload.get("data", {})
-        .get("relationships", {})
-        .get("manualPrices", {})
-        .get("data", [])
-    )
+    manual = payload.get("data", {}).get("relationships", {}).get("manualPrices", {}).get("data", [])
     for item in manual:
         if item.get("id") in replacements:
             item["id"] = replacements[item["id"]]
     return payload
+
+
+def _create_starting_subscription_price(token, original_payload):
+    rels = original_payload.get("data", {}).get("relationships", {})
+    sub = (rels.get("subscription", {}).get("data") or {})
+    point = (rels.get("subscriptionPricePoint", {}).get("data") or {})
+    sub_id = sub.get("id")
+    point_id = point.get("id")
+    if not sub_id or not point_id:
+        raise RuntimeError("Missing subscription or subscription price point linkage")
+
+    _, point_detail = _original_request(token, f"/v1/subscriptionPricePoints/{point_id}?include=territory")
+    d = point_detail.get("data", {}) if isinstance(point_detail, dict) else {}
+    territory_id = (d.get("relationships", {}).get("territory", {}).get("data") or {}).get("id")
+    print("APP2-004 starting subscription price:", json.dumps({
+        "pointId": d.get("id"), "attributes": d.get("attributes"), "territory": territory_id
+    }, ensure_ascii=False))
+
+    local_id = "${app2-004-starting-price-jpn}"
+    inline = {
+        "type": "subscriptionPrices",
+        "id": local_id,
+        "attributes": {"startDate": None, "preserveCurrentPrice": False},
+        "relationships": {
+            "subscription": {"data": {"type": "subscriptions", "id": sub_id}},
+            "subscriptionPricePoint": {"data": {"type": "subscriptionPricePoints", "id": point_id}},
+        },
+    }
+    if territory_id:
+        inline["relationships"]["territory"] = {"data": {"type": "territories", "id": territory_id}}
+
+    patch_payload = {
+        "data": {
+            "type": "subscriptions",
+            "id": sub_id,
+            "relationships": {"prices": {"data": [{"type": "subscriptionPrices", "id": local_id}]}},
+        },
+        "included": [inline],
+    }
+    return _original_request(token, f"/v1/subscriptions/{sub_id}", "PATCH", patch_payload)
 
 
 def request(token, path, method="GET", payload=None):
@@ -88,51 +120,27 @@ def request(token, path, method="GET", payload=None):
             parent_id = relationships["inAppPurchaseV2"]["data"]["id"]
             version_id, version_type = _ensure_draft_version(token, "iap", parent_id)
             payload = copy.deepcopy(payload)
-            payload["data"]["relationships"] = {
-                "version": {"data": {"type": version_type, "id": version_id}}
-            }
+            payload["data"]["relationships"] = {"version": {"data": {"type": version_type, "id": version_id}}}
 
         elif path == "/v1/subscriptionLocalizations" and "subscription" in relationships:
             parent_id = relationships["subscription"]["data"]["id"]
             version_id, version_type = _ensure_draft_version(token, "subscription", parent_id)
             payload = copy.deepcopy(payload)
-            payload["data"]["relationships"] = {
-                "version": {"data": {"type": version_type, "id": version_id}}
-            }
+            payload["data"]["relationships"] = {"version": {"data": {"type": version_type, "id": version_id}}}
             path = "/v2/subscriptionLocalizations"
 
         elif path == "/v1/subscriptionGroupLocalizations" and "subscriptionGroup" in relationships:
             parent_id = relationships["subscriptionGroup"]["data"]["id"]
             version_id, version_type = _ensure_draft_version(token, "group", parent_id)
             payload = copy.deepcopy(payload)
-            payload["data"]["relationships"] = {
-                "version": {"data": {"type": version_type, "id": version_id}}
-            }
+            payload["data"]["relationships"] = {"version": {"data": {"type": version_type, "id": version_id}}}
             path = "/v2/subscriptionGroupLocalizations"
 
         elif path == "/v1/inAppPurchasePriceSchedules":
-            payload = _normalize_inline_price_payload(payload)
+            payload = _normalize_iap_price_schedule(payload)
 
         elif path == "/v1/subscriptionPrices":
-            payload = copy.deepcopy(payload)
-            payload.setdefault("data", {}).setdefault("attributes", {})["startDate"] = None
-            point = (
-                payload.get("data", {})
-                .get("relationships", {})
-                .get("subscriptionPricePoint", {})
-                .get("data", {})
-            )
-            point_id = point.get("id")
-            if point_id:
-                _, point_detail = _original_request(token, f"/v1/subscriptionPricePoints/{point_id}?include=territory")
-                d = point_detail.get("data", {}) if isinstance(point_detail, dict) else {}
-                print("APP2-004 selected subscription price point:", json.dumps({
-                    "id": d.get("id"),
-                    "type": d.get("type"),
-                    "attributes": d.get("attributes"),
-                    "territory": (d.get("relationships", {}).get("territory", {}).get("data") or {}).get("id"),
-                    "postAttributes": payload.get("data", {}).get("attributes", {}),
-                }, ensure_ascii=False))
+            return _create_starting_subscription_price(token, payload)
 
     return _original_request(token, path, method, payload)
 
