@@ -44,12 +44,18 @@ workflows:
           text=p.read_text(encoding='utf-8')
           build_number=os.environ['RELEASE_BUILD_NUMBER']
           old="CURRENT_PROJECT_VERSION: '1'"
-          if old not in text:
-              raise RuntimeError('Expected CURRENT_PROJECT_VERSION baseline not found')
-          p.write_text(text.replace(old, "CURRENT_PROJECT_VERSION: '"+build_number+"'", 1), encoding='utf-8')
-          print('CFBundleVersion source fixed to', build_number)
+          occurrences=text.count(old)
+          if occurrences != 2:
+              raise RuntimeError(f'Expected exactly 2 CURRENT_PROJECT_VERSION baselines, found {occurrences}')
+          new="CURRENT_PROJECT_VERSION: '"+build_number+"'"
+          p.write_text(text.replace(old,new),encoding='utf-8')
+          verify=p.read_text(encoding='utf-8')
+          if old in verify or verify.count(new) != 2:
+              raise RuntimeError('Build number replacement verification failed')
+          print('CFBundleVersion source fixed to',build_number,'at',occurrences,'settings')
           PY
           xcodegen generate
+          grep -q 'CURRENT_PROJECT_VERSION = 2;' Otsu4Sprint.xcodeproj/project.pbxproj
       - name: Verify release inputs
         script: |
           set -euo pipefail
