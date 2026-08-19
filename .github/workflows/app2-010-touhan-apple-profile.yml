@@ -1,0 +1,71 @@
+name: APP2-010 Touhan Apple Provisioning Profile
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'automation/app2-010-touhan-apple-profile-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  provision:
+    runs-on: macos-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Create or verify Touhan App Store provisioning profile
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/create_touhan_apple_profile.py
+      - name: Persist sanitized profile result
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+          data=json.loads(Path('asc-profile-result.json').read_text(encoding='utf-8'))
+          request_id=data['request_id']
+          if not re.fullmatch(r'app2-010-touhan-profile-[A-Za-z0-9._-]{1,70}', request_id):
+              raise SystemExit('Invalid request id')
+          out=Path('automation/asc-results')/f'{request_id}.json'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          payload=json.dumps(data,ensure_ascii=False,indent=2)+'\n'
+          out.write_text(payload,encoding='utf-8')
+          Path('/tmp/profile-result.json').write_text(payload,encoding='utf-8')
+          Path('/tmp/profile-path.txt').write_text(str(out),encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          RESULT_PATH="$(cat /tmp/profile-path.txt)"
+          git add "$RESULT_PATH"
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Persist Touhan Apple profile result"
+          if git push; then
+            exit 0
+          fi
+          git fetch origin main
+          git reset --hard origin/main
+          RESULT_PATH="$(cat /tmp/profile-path.txt)"
+          mkdir -p "$(dirname "$RESULT_PATH")"
+          cp /tmp/profile-result.json "$RESULT_PATH"
+          git add "$RESULT_PATH"
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Persist Touhan Apple profile result"
+          git push
+      - name: Upload sanitized profile result
+        if: always() && hashFiles('asc-profile-result.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: app2-010-touhan-profile-${{ github.run_id }}
+          path: asc-profile-result.json
+          retention-days: 7
