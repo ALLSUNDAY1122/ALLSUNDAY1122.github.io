@@ -1,0 +1,53 @@
+name: APP2-009 Kangoshi AppIcon Materialize
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/app2-009-kangoshi-appicon-command.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-009-kangoshi-appicon
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download canonical Drive icon
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check gdown
+          target='kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+          mkdir -p "$(dirname "$target")"
+          gdown --id '1VDnbT0s9gEPde4baCfw9kXYfnEHLQrp3' -O "$target"
+          test "$(stat -c '%s' "$target")" = '683924'
+          test "$(sha256sum "$target" | awk '{print $1}')" = '6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80'
+          file "$target" | grep -q 'PNG image data, 1024 x 1024'
+          python3 kangoshi-sprint/ios/tools/bind_canonical_appicon.py
+      - name: Commit exact icon and binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png kangoshi-sprint/ios/project.yml
+          if git diff --cached --quiet; then
+            echo 'Canonical icon already materialized.'
+            exit 0
+          fi
+          git commit -m 'APP2-009: materialize exact Kangoshi AppIcon'
+          for attempt in 1 2 3 4 5 6; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
