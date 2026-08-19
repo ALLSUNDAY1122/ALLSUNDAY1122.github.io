@@ -1,18 +1,19 @@
 workflows:
   otsu4-ios:
     name: 危険物乙4 - iOS Internal TestFlight
-    max_build_duration: 60
+    max_build_duration: 80
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: codemagic
+      app_store_connect: "Codemagic Shiwake Swipe"
     environment:
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: jp.allsunday1122.otsu4
+        provisioning_profiles:
+          - otsu4_appstore
       vars:
         APP_STORE_ID: '6799755566'
         APPLE_TEAM_ID: MN3D2ZM44N
         BUNDLE_ID: jp.allsunday1122.otsu4
+        CODEMAGIC_PROFILE: otsu4_appstore
         XCODE_PROJECT: native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj
         XCODE_SCHEME: Otsu4Sprint
       xcode: latest
@@ -23,18 +24,32 @@ workflows:
           test "$BUNDLE_ID" = "jp.allsunday1122.otsu4"
           test "$APP_STORE_ID" = "6799755566"
           test "$APPLE_TEAM_ID" = "MN3D2ZM44N"
+          test "$CODEMAGIC_PROFILE" = "otsu4_appstore"
       - name: Install XcodeGen
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
       - name: Prepare audited 360-question resources and icon
-        script: bash "$CM_BUILD_DIR/native-ios/Otsu4Sprint/prepare-ios.sh"
-      - name: Generate Xcode project
         script: |
+          set -euo pipefail
+          bash "$CM_BUILD_DIR/native-ios/Otsu4Sprint/prepare-ios.sh"
+      - name: Set CI build number and generate Xcode project
+        script: |
+          set -euo pipefail
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path('project.yml')
+          text=p.read_text(encoding='utf-8')
+          build_number=os.environ.get('CM_BUILD_NUMBER') or os.environ.get('BUILD_NUMBER')
+          if not build_number:
+              raise RuntimeError('Codemagic build number is unavailable')
+          old="CURRENT_PROJECT_VERSION: '1'"
+          if old not in text:
+              raise RuntimeError('Expected CURRENT_PROJECT_VERSION baseline not found')
+          p.write_text(text.replace(old, "CURRENT_PROJECT_VERSION: '"+build_number+"'", 1), encoding='utf-8')
+          print('CFBundleVersion source set to Codemagic build number', build_number)
+          PY
           xcodegen generate
-      - name: Set build number
-        script: |
-          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
-          agvtool new-version -all "$CM_BUILD_NUMBER"
       - name: Verify release inputs
         script: |
           set -euo pipefail
@@ -48,12 +63,14 @@ workflows:
           assert len(data['questions'])==360
           print('PASS: audited Otsu4 bundle inputs')
           PY
-      - name: Apply App Store signing profiles for internal TestFlight only
+      - name: Apply canonical App Store profile for Internal TestFlight only
         script: |
+          set -euo pipefail
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
       - name: Build signed IPA
         script: |
+          set -euo pipefail
           xcode-project build-ipa \
             --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
