@@ -15,14 +15,26 @@ public final class PurchaseController: ObservableObject {
     }
 
     @Published public private(set) var product: Product?
+    @Published public private(set) var products: [Product] = []
     @Published public private(set) var isPremium = false
     @Published public private(set) var state: PurchaseState = .loading
 
     public let productID: String
+    public let productIDs: [String]
     private var transactionTask: Task<Void, Never>?
 
     public init(productID: String) {
         self.productID = productID
+        self.productIDs = [productID]
+        transactionTask = observeTransactions()
+        Task { await refresh() }
+    }
+
+    public init(productIDs: [String]) {
+        let normalized = Array(NSOrderedSet(array: productIDs)) as? [String] ?? productIDs
+        precondition(!normalized.isEmpty, "At least one StoreKit product ID is required")
+        self.productIDs = normalized
+        self.productID = normalized[0]
         transactionTask = observeTransactions()
         Task { await refresh() }
     }
@@ -35,26 +47,38 @@ public final class PurchaseController: ObservableObject {
         product?.displayPrice
     }
 
+    public func product(for id: String) -> Product? {
+        products.first(where: { $0.id == id })
+    }
+
+    public func displayPrice(for id: String) -> String? {
+        product(for: id)?.displayPrice
+    }
+
     public func refresh() async {
         await refreshEntitlement()
-        await loadProduct()
+        await loadProducts()
     }
 
     public func purchase() async {
-        guard let product else {
+        await purchase(productID: productID)
+    }
+
+    public func purchase(productID id: String) async {
+        guard productIDs.contains(id), let selectedProduct = product(for: id) else {
             state = .unavailable("価格を取得できません")
             return
         }
         state = .purchasing
         do {
-            let result = try await product.purchase()
+            let result = try await selectedProduct.purchase()
             switch result {
             case .success(let verification):
                 guard case .verified(let transaction) = verification else {
                     await restoreVerifiedState(or: .failed("購入情報を検証できません"))
                     return
                 }
-                guard transaction.productID == productID,
+                guard productIDs.contains(transaction.productID),
                       transaction.revocationDate == nil,
                       transaction.isUpgraded == false else {
                     await transaction.finish()
@@ -86,17 +110,23 @@ public final class PurchaseController: ObservableObject {
         }
     }
 
-    private func loadProduct() async {
+    private func loadProducts() async {
         do {
-            let products = try await Product.products(for: [productID])
-            guard let product = products.first(where: { $0.id == productID }) else {
-                self.product = nil
+            let loaded = try await Product.products(for: productIDs)
+            products = loaded.sorted { lhs, rhs in
+                let li = productIDs.firstIndex(of: lhs.id) ?? Int.max
+                let ri = productIDs.firstIndex(of: rhs.id) ?? Int.max
+                return li < ri
+            }
+            product = products.first(where: { $0.id == productID })
+            guard !products.isEmpty else {
+                product = nil
                 if !isPremium { state = .unavailable("価格を取得できません") }
                 return
             }
-            self.product = product
             if !isPremium { state = .ready }
         } catch {
+            products = []
             product = nil
             if !isPremium { state = .unavailable("価格を取得できません") }
         }
@@ -106,7 +136,7 @@ public final class PurchaseController: ObservableObject {
         var entitled = false
         for await verification in Transaction.currentEntitlements {
             guard case .verified(let transaction) = verification else { continue }
-            guard transaction.productID == productID else { continue }
+            guard productIDs.contains(transaction.productID) else { continue }
             guard transaction.revocationDate == nil else { continue }
             guard transaction.isUpgraded == false else { continue }
             entitled = true
@@ -125,14 +155,9 @@ public final class PurchaseController: ObservableObject {
             for await verification in Transaction.updates {
                 guard !Task.isCancelled else { return }
                 guard case .verified(let transaction) = verification else { continue }
-                guard let self, transaction.productID == self.productID else { continue }
-                if transaction.revocationDate == nil && !transaction.isUpgraded {
-                    self.isPremium = true
-                    self.state = .purchased
-                } else {
-                    self.isPremium = false
-                    self.state = .ready
-                }
+                guard let self, self.productIDs.contains(transaction.productID) else { continue }
+                await self.refreshEntitlement()
+                self.state = self.isPremium ? .purchased : .ready
                 await transaction.finish()
             }
         }
