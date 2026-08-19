@@ -1,0 +1,44 @@
+name: APP2-004 Pharmacist ASC Final Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-004-yakuzaishi-asc-command.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-004-yakuzaishi-asc-final
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read APP2-004 ASC final state
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/app2_004_yakuzaishi_asc_audit.py
+      - name: Persist APP2-004 ASC final audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp automation/app2-004-yakuzaishi-asc-final.json /tmp/app2-004-yakuzaishi-asc-final.json
+          git restore automation/app2-004-yakuzaishi-asc-final.json 2>/dev/null || true
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          cp /tmp/app2-004-yakuzaishi-asc-final.json automation/app2-004-yakuzaishi-asc-final.json
+          git add automation/app2-004-yakuzaishi-asc-final.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Persist APP2-004 ASC final audit"
+            git push origin HEAD:main
+          fi
