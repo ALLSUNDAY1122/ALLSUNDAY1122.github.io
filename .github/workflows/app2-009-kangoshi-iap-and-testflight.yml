@@ -1,0 +1,90 @@
+name: APP2-009 Kangoshi IAP and TestFlight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/app2-009-kangoshi-iap-and-testflight.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  configure-iap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Configure monthly 200 and lifetime 800
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/app2_009_kangoshi_iap_bootstrap.py
+      - name: Persist IAP result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add automation/app2-009-kangoshi-iap-result.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Persist APP2-009 IAP configuration result"
+            git push origin HEAD:main
+          fi
+
+  request-testflight:
+    needs: configure-iap
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch Kangoshi Codemagic workflow for TestFlight upload
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml')
+          s=p.read_text(encoding='utf-8')
+          start=s.index('\n  kangoshi-ios:\n')
+          end=s.find('\n  ', start+5)
+          if end < 0: end=len(s)
+          block=s[start:end]
+          if 'IAP_LIFETIME_PRODUCT_ID:' not in block:
+              block=block.replace('        IAP_PRODUCT_ID: jp.allsunday1122.kangoshi.monthly\n', '        IAP_PRODUCT_ID: jp.allsunday1122.kangoshi.monthly\n        IAP_LIFETIME_PRODUCT_ID: jp.allsunday1122.kangoshi.lifetime\n')
+          block=block.replace('        submit_to_testflight: false\n', '        submit_to_testflight: true\n')
+          s=s[:start]+block+s[end:]
+          p.write_text(s,encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add codemagic.yaml
+          if ! git diff --cached --quiet; then
+            git commit -m "kangoshi: enable Internal TestFlight publishing"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Request Codemagic build
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('automation/codemagic-build-command.json')
+          p.write_text(json.dumps({
+            'request_id':'app2-009-kangoshi-testflight-20260819',
+            'action':'build',
+            'workflow_id':'kangoshi-ios',
+            'branch':'main',
+            'wait':True,
+            'timeout_seconds':4200
+          },ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "4189828+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add automation/codemagic-build-command.json
+          git commit -m "APP2-009 request Kangoshi Internal TestFlight build"
+          git push origin HEAD:main
