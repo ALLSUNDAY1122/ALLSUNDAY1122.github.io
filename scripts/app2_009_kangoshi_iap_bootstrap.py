@@ -108,9 +108,10 @@ def collect_state(token, iid, gid, sid, actions):
     return {"task_id":"APP2-009","app":{"id":APP_ID,"bundle_id":actual_bundle,"name":app["data"].get("attributes",{}).get("name")},"monthly":{"product_id":MONTHLY_ID,"price_jpn":"200","id":sid,"state":sub["data"].get("attributes",{}).get("state")},"lifetime":{"product_id":LIFETIME_ID,"price_jpn":"800","id":iid,"state":iap["data"].get("attributes",{}).get("state")},"subscription_group_id":gid,"actions":actions,"safe_for_build":True,"ok":True}
 
 def main():
-    actions=[]
+    actions=[]; cleanup=None
     try:
-        issuer=os.environ["ASC_ISSUER_ID"]; kid=os.environ["ASC_KEY_ID"]; key=load_private_key(os.environ["ASC_PRIVATE_KEY"]); token=make_token(issuer,kid,key)
+        issuer=os.environ["ASC_ISSUER_ID"]; kid=os.environ["ASC_KEY_ID"]
+        key_path, cleanup=load_private_key(); token=make_token(issuer,kid,key_path)
         _,app=req(token,f"/v1/apps/{APP_ID}")
         actual_bundle=app["data"].get("attributes",{}).get("bundleId")
         if actual_bundle != BUNDLE_ID: raise RuntimeError(f"Bundle mismatch: {actual_bundle}")
@@ -119,4 +120,8 @@ def main():
     except Exception as exc:
         write_result({"task_id":"APP2-009","app_id":APP_ID,"monthly_product_id":MONTHLY_ID,"lifetime_product_id":LIFETIME_ID,"actions":actions,"safe_for_build":False,"ok":False,"error":str(exc),"traceback_tail":traceback.format_exc()[-4000:]})
         raise
+    finally:
+        if cleanup:
+            try: cleanup.unlink(missing_ok=True)
+            except Exception: pass
 if __name__=="__main__": main()
