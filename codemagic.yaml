@@ -748,6 +748,8 @@ workflows:
     integrations:
       app_store_connect: "Codemagic Shiwake Swipe"
     environment:
+      groups:
+        - app2_010_touhan_signing
       vars:
         BUNDLE_ID: com.allsunday1122.tourokuhanbaisha
         APP_STORE_CONNECT_APP_ID: "6802119268"
@@ -770,6 +772,7 @@ workflows:
           test "$BUNDLE_ID" = "com.allsunday1122.tourokuhanbaisha"
           test "$APP_STORE_CONNECT_APP_ID" = "6802119268"
           test "$CODEMAGIC_PROFILE_REF" = "tourokuhanbaisha_appstore"
+          test -n "${CERTIFICATE_PRIVATE_KEY:-}"
           bash touroku-hanbaisha-ios/native-ios/prepare-ios.sh
           python3 touroku-hanbaisha-ios/scripts/validate_release.py
       - name: Set CI build number and generate native project
@@ -800,9 +803,10 @@ workflows:
         script: |
           set -euo pipefail
           keychain initialize
-      - name: Fetch existing App Store signing files
+      - name: Fetch managed App Store signing files
         script: |
           set -euo pipefail
+          test -n "${CERTIFICATE_PRIVATE_KEY:-}"
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --type IOS_APP_STORE
       - name: Add signing certificate to keychain
