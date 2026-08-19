@@ -1,0 +1,128 @@
+name: APP2-002 Nomidokoro Release Bridge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-002-nomidokoro-release-command.json
+
+permissions:
+  contents: read
+
+jobs:
+  release-bridge:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Align App Store Connect display metadata
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          import sys
+          sys.path.insert(0, 'scripts')
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          APP_ID='6794847479'
+          BUNDLE_ID='jp.allsunday1122.nomikaiarcade'
+          APP_INFO_ID='f48984ff-b308-432a-a8a8-d53db07bb61b'
+          LOC_ID='693f9319-d865-4d81-867e-df2df6345a06'
+          DESIRED={'name':'呑み処アーケード','subtitle':'みんなで遊べる宴会ゲーム19選'}
+
+          key_path, cleanup = load_private_key()
+          try:
+              token=make_token(os.environ['ASC_ISSUER_ID'], os.environ['ASC_KEY_ID'], key_path)
+              _, app=api_get(token, f'/v1/apps/{APP_ID}')
+              attrs=app['data']['attributes']
+              if attrs.get('bundleId') != BUNDLE_ID:
+                  raise SystemExit(f'Bundle mismatch: {attrs.get("bundleId")}')
+              _, infos=api_get(token, f'/v1/apps/{APP_ID}/appInfos?limit=20&include=appInfoLocalizations')
+              info_ids={x['id'] for x in infos.get('data',[])}
+              included={x['id']:x for x in infos.get('included',[]) if x.get('type')=='appInfoLocalizations'}
+              if APP_INFO_ID not in info_ids or LOC_ID not in included:
+                  raise SystemExit('App Info/localization target mismatch')
+              before=included[LOC_ID]['attributes']
+              changes={k:v for k,v in DESIRED.items() if before.get(k)!=v}
+              outcome={'before':{k:before.get(k) for k in DESIRED},'changes':changes}
+              if changes:
+                  payload={'data':{'type':'appInfoLocalizations','id':LOC_ID,'attributes':changes}}
+                  status,_=api_request(token, f'/v1/appInfoLocalizations/{LOC_ID}', method='PATCH', payload=payload)
+                  outcome['patch_status']=status
+              _, after_resp=api_get(token, f'/v1/appInfoLocalizations/{LOC_ID}')
+              after=after_resp['data']['attributes']
+              outcome['after']={k:after.get(k) for k in DESIRED}
+              if any(after.get(k)!=v for k,v in DESIRED.items()):
+                  raise SystemExit(f'Metadata read-back mismatch: {outcome}')
+              Path('app2-002-asc-metadata.json').write_text(json.dumps(outcome,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+              print('PASS: ASC metadata aligned and read back')
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+          PY
+
+      - name: Start and monitor Codemagic Build 5
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, time, urllib.request, urllib.error
+          from pathlib import Path
+
+          TOKEN=os.environ['CM_API_TOKEN'].strip()
+          APP_ID='6a66134ea9f671d548da335a'
+          WORKFLOW='ios-native'
+          BRANCH='codex/nomikai-arcade-ios-release'
+          TERMINAL={'finished','failed','canceled','timeout','skipped'}
+
+          def call(url, method='GET', payload=None):
+              data=None if payload is None else json.dumps(payload).encode()
+              req=urllib.request.Request(url,data=data,method=method,headers={
+                  'Content-Type':'application/json','Accept':'application/json','x-auth-token':TOKEN})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode(); return r.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode(errors='replace')
+                  raise RuntimeError(f'Codemagic HTTP {e.code}: {raw[:1000]}')
+
+          status,resp=call('https://api.codemagic.io/builds','POST',{
+              'appId':APP_ID,'workflowId':WORKFLOW,'branch':BRANCH})
+          build_id=resp.get('buildId') or resp.get('id')
+          if not build_id:
+              raise SystemExit(f'No build id: {resp}')
+          result={'app_id':APP_ID,'workflow_id':WORKFLOW,'branch':BRANCH,'build_id':build_id,'start_http_status':status}
+          deadline=time.time()+2400
+          while time.time()<deadline:
+              _,details=call(f'https://codemagic.io/api/v3/builds/{build_id}')
+              data=details.get('data') or details
+              state=data.get('status')
+              result['status']=state
+              result['finished_at']=data.get('finishedAt')
+              Path('app2-002-codemagic.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+              print('Codemagic status:',state)
+              if state in TERMINAL:
+                  if state!='finished':
+                      raise SystemExit(f'Codemagic build ended: {state}')
+                  print('PASS: Codemagic build finished',build_id)
+                  break
+              time.sleep(30)
+          else:
+              raise SystemExit('Codemagic build monitoring timeout')
+          PY
+
+      - name: Upload APP2-002 release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app2-002-nomidokoro-release-${{ github.run_id }}
+          path: |
+            app2-002-asc-metadata.json
+            app2-002-codemagic.json
+          if-no-files-found: warn
+          retention-days: 14
