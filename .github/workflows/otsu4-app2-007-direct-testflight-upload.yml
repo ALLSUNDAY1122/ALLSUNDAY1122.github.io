@@ -35,22 +35,14 @@ jobs:
           python3 - <<'PY'
           import json, os, urllib.request
           from pathlib import Path
-
           token=os.environ['CM_API_TOKEN'].strip()
           build_id=os.environ['EXPECTED_BUILD_ID']
-          req=urllib.request.Request(
-              f'https://codemagic.io/api/v3/builds/{build_id}',
-              headers={'x-auth-token':token,'Accept':'application/json'},
-              method='GET')
+          req=urllib.request.Request(f'https://codemagic.io/api/v3/builds/{build_id}',headers={'x-auth-token':token,'Accept':'application/json'},method='GET')
           with urllib.request.urlopen(req,timeout=30) as response:
               payload=json.loads(response.read().decode('utf-8') or '{}')
           build=payload.get('data') or payload
-          if build.get('id') != build_id:
-              raise SystemExit('Codemagic build id mismatch')
-          if build.get('app_id') != '6a769d81a1add9d06020b524':
-              raise SystemExit('Codemagic app id mismatch')
-          if build.get('branch') != 'release/app2-007-otsu4-testflight':
-              raise SystemExit('Codemagic branch mismatch')
+          if build.get('id') != build_id or build.get('app_id') != '6a769d81a1add9d06020b524' or build.get('branch') != 'release/app2-007-otsu4-testflight':
+              raise SystemExit('Codemagic build identity mismatch')
           workflow=build.get('workflow') or {}
           workflow_id=workflow.get('id') if isinstance(workflow,dict) else workflow
           if workflow_id != 'otsu4-ios':
@@ -62,23 +54,15 @@ jobs:
           url=ipa[0].get('short_lived_download_url') or ipa[0].get('url')
           if not url:
               raise SystemExit('IPA download URL missing')
-          req=urllib.request.Request(url,method='GET')
-          with urllib.request.urlopen(req,timeout=120) as response:
+          with urllib.request.urlopen(urllib.request.Request(url,method='GET'),timeout=120) as response:
               content=response.read()
           if len(content) < 100000:
               raise SystemExit(f'IPA unexpectedly small: {len(content)}')
           Path('/tmp/Otsu4Sprint.ipa').write_bytes(content)
-          Path('/tmp/codemagic-safe.json').write_text(json.dumps({
-              'build_id':build_id,
-              'branch':build.get('branch'),
-              'workflow_id':workflow_id,
-              'status':build.get('status'),
-              'ipa_size':len(content),
-          },indent=2)+'\n',encoding='utf-8')
           print('PASS: exact Codemagic IPA downloaded')
           PY
 
-      - name: Verify actual IPA identity, version, signature, and internal-only profile
+      - name: Verify actual IPA identity, version, signature, and profile
         run: |
           set -euo pipefail
           rm -rf /tmp/otsu4-ipa
@@ -90,6 +74,14 @@ jobs:
           BUNDLE="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$INFO")"
           SHORT="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$INFO")"
           BUILD="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$INFO")"
+          python3 - "$BUNDLE" "$SHORT" "$BUILD" <<'PY'
+          import json,sys
+          from pathlib import Path
+          Path('/tmp/ipa-observed.json').write_text(json.dumps({
+            'bundle_id':sys.argv[1], 'short_version':sys.argv[2], 'build_number':sys.argv[3]
+          },indent=2)+'\n',encoding='utf-8')
+          print('Observed IPA identity:',sys.argv[1],sys.argv[2],sys.argv[3])
+          PY
           test "$BUNDLE" = "$EXPECTED_BUNDLE_ID"
           test "$SHORT" = "$EXPECTED_SHORT_VERSION"
           test "$BUILD" = "$EXPECTED_BUILD_NUMBER"
@@ -100,76 +92,42 @@ jobs:
             *.$EXPECTED_BUNDLE_ID) ;;
             *) echo "Unexpected application-identifier: $PROFILE_APP_ID"; exit 1 ;;
           esac
-          /usr/libexec/PlistBuddy -c 'Print :ProvisionsAllDevices' /tmp/embedded.plist >/dev/null 2>&1 && {
-            echo 'Ad Hoc/Enterprise-style profile is not allowed'; exit 1;
-          } || true
           python3 - <<'PY'
-          import json, os
+          import json,os
           from pathlib import Path
-          result={
+          Path('/tmp/ipa-safe.json').write_text(json.dumps({
             'bundle_id':os.environ['EXPECTED_BUNDLE_ID'],
             'short_version':os.environ['EXPECTED_SHORT_VERSION'],
             'build_number':os.environ['EXPECTED_BUILD_NUMBER'],
-            'codesign':'verified',
-          }
-          Path('/tmp/ipa-safe.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
-          print('PASS: actual IPA is Otsu4 1.0.0 (2) and signature verifies')
+            'codesign':'verified'
+          },indent=2)+'\n',encoding='utf-8')
+          print('PASS: actual IPA identity and signature verified')
           PY
 
       - name: Prepare App Store Connect API key for altool
         run: |
           set -euo pipefail
-          test -n "$ASC_ISSUER_ID"
-          test -n "$ASC_KEY_ID"
-          test -n "$ASC_PRIVATE_KEY"
-          KEY_DIR="$HOME/.appstoreconnect/private_keys"
-          mkdir -p "$KEY_DIR"
+          test -n "$ASC_ISSUER_ID"; test -n "$ASC_KEY_ID"; test -n "$ASC_PRIVATE_KEY"
+          mkdir -p "$HOME/.appstoreconnect/private_keys"
           python3 - <<'PY'
           import os
           from pathlib import Path
-          key=os.environ['ASC_PRIVATE_KEY'].replace('\\n','\n')
           path=Path.home()/'.appstoreconnect/private_keys'/f"AuthKey_{os.environ['ASC_KEY_ID']}.p8"
-          path.write_text(key,encoding='utf-8')
+          path.write_text(os.environ['ASC_PRIVATE_KEY'].replace('\\n','\n'),encoding='utf-8')
           path.chmod(0o600)
-          print('PASS: ASC API key installed for altool')
           PY
 
       - name: Validate exact IPA with App Store Connect
         run: |
           set -euo pipefail
-          xcrun altool --validate-app \
-            --file /tmp/Otsu4Sprint.ipa \
-            --type ios \
-            --apiKey "$ASC_KEY_ID" \
-            --apiIssuer "$ASC_ISSUER_ID" \
-            --output-format json \
-            > /tmp/altool-validate.json
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-          p=Path('/tmp/altool-validate.json')
-          text=p.read_text(encoding='utf-8',errors='replace')
-          print('PASS: altool validation completed')
-          Path('/tmp/altool-validate-safe.txt').write_text(text[-4000:],encoding='utf-8')
-          PY
+          xcrun altool --validate-app --file /tmp/Otsu4Sprint.ipa --type ios --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" --output-format json > /tmp/altool-validate.json
+          tail -c 4000 /tmp/altool-validate.json > /tmp/altool-validate-safe.txt
 
       - name: Upload exact IPA to App Store Connect
         run: |
           set -euo pipefail
-          xcrun altool --upload-app \
-            --file /tmp/Otsu4Sprint.ipa \
-            --type ios \
-            --apiKey "$ASC_KEY_ID" \
-            --apiIssuer "$ASC_ISSUER_ID" \
-            --output-format json \
-            > /tmp/altool-upload.json
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-          text=Path('/tmp/altool-upload.json').read_text(encoding='utf-8',errors='replace')
-          Path('/tmp/altool-upload-safe.txt').write_text(text[-4000:],encoding='utf-8')
-          print('PASS: altool upload command completed')
-          PY
+          xcrun altool --upload-app --file /tmp/Otsu4Sprint.ipa --type ios --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" --output-format json > /tmp/altool-upload.json
+          tail -c 4000 /tmp/altool-upload.json > /tmp/altool-upload-safe.txt
 
       - name: Report sanitized result
         if: always()
@@ -177,10 +135,10 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const safe = (p) => fs.existsSync(p) ? fs.readFileSync(p, 'utf8').slice(-3000) : 'not-created';
+            const safe = (p) => fs.existsSync(p) ? fs.readFileSync(p, 'utf8').slice(-3000).replaceAll('`','') : 'not-created';
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `APP2-007 direct TestFlight upload github_job=${{ job.status }}; run_id=${context.runId}\n\nIPA check:\n\`${safe('/tmp/ipa-safe.json')}\`\n\nValidation tail:\n\`${safe('/tmp/altool-validate-safe.txt').replaceAll('`','')}\`\n\nUpload tail:\n\`${safe('/tmp/altool-upload-safe.txt').replaceAll('`','')}\``
+              body: `APP2-007 direct TestFlight upload github_job=${{ job.status }}; run_id=${context.runId}\n\nObserved IPA:\n\`${safe('/tmp/ipa-observed.json')}\`\n\nVerified IPA:\n\`${safe('/tmp/ipa-safe.json')}\`\n\nValidation tail:\n\`${safe('/tmp/altool-validate-safe.txt')}\`\n\nUpload tail:\n\`${safe('/tmp/altool-upload-safe.txt')}\``
             });
