@@ -122,7 +122,7 @@ jobs:
           python-version: '3.12'
       - name: Install XcodeGen and icon renderer
         run: |
-          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen cairo pango
           python -m pip install --disable-pip-version-check 'cairosvg==2.8.2'
       - name: Prepare canonical native resources
         run: |
