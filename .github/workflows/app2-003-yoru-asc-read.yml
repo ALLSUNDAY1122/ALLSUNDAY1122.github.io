@@ -17,48 +17,63 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Execute ASC read command
+        id: asc
+        continue-on-error: true
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
+          set +e
           python3 scripts/app_store_connect_gateway.py \
             --command automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-asc-command.json \
-            --output app2-003-asc-result.json
+            --output app2-003-asc-result.json \
+            > app2-003-asc-stdout.txt 2> app2-003-asc-stderr.txt
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
       - name: Persist sanitized APP2-003 result
+        if: always()
+        env:
+          ASC_EXIT_CODE: ${{ steps.asc.outputs.exit_code }}
         run: |
           python3 - <<'PY'
-          import json
+          import json, os
           from pathlib import Path
-          src = json.loads(Path('app2-003-asc-result.json').read_text(encoding='utf-8'))
-          out = {'request_id': src.get('request_id'), 'completed_at': src.get('completed_at'), 'results': []}
-          for r in src.get('results', []):
-              response = r.get('response') or {}
-              data = response.get('data')
-              if isinstance(data, dict):
-                  data = [data]
-              elif not isinstance(data, list):
-                  data = []
-              clean = []
-              for x in data:
-                  if not isinstance(x, dict):
-                      continue
-                  attrs = x.get('attributes') or {}
-                  clean.append({
-                      'id': x.get('id'),
-                      'type': x.get('type'),
-                      'attributes': {k: attrs.get(k) for k in (
-                          'name','bundleId','sku','primaryLocale','version','versionString','platform',
-                          'appStoreState','betaReviewState','externalBuildState','internalBuildState',
-                          'uploadedDate','processingState','expired','expirationDate','minOsVersion'
-                      ) if k in attrs}
-                  })
-              out['results'].append({
-                  'label': r.get('label'),
-                  'path': r.get('path'),
-                  'http_status': r.get('http_status'),
-                  'data': clean,
-              })
+          result_path = Path('app2-003-asc-result.json')
+          command = json.loads(Path('automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-asc-command.json').read_text(encoding='utf-8'))
+          out = {
+              'request_id': command.get('request_id'),
+              'ok': os.environ.get('ASC_EXIT_CODE') == '0' and result_path.exists(),
+              'exit_code': int(os.environ.get('ASC_EXIT_CODE') or -1),
+              'completed_at': None,
+              'results': [],
+          }
+          if result_path.exists():
+              src = json.loads(result_path.read_text(encoding='utf-8'))
+              out['completed_at'] = src.get('completed_at')
+              for r in src.get('results', []):
+                  response = r.get('response') or {}
+                  data = response.get('data')
+                  if isinstance(data, dict): data = [data]
+                  elif not isinstance(data, list): data = []
+                  clean = []
+                  for x in data:
+                      if not isinstance(x, dict): continue
+                      attrs = x.get('attributes') or {}
+                      clean.append({
+                          'id': x.get('id'), 'type': x.get('type'),
+                          'attributes': {k: attrs.get(k) for k in (
+                              'name','bundleId','sku','primaryLocale','version','versionString','platform',
+                              'appStoreState','betaReviewState','externalBuildState','internalBuildState',
+                              'uploadedDate','processingState','expired','expirationDate','minOsVersion'
+                          ) if k in attrs}
+                      })
+                  out['results'].append({'label': r.get('label'), 'path': r.get('path'), 'http_status': r.get('http_status'), 'data': clean})
+          else:
+              stderr = Path('app2-003-asc-stderr.txt').read_text(encoding='utf-8', errors='replace') if Path('app2-003-asc-stderr.txt').exists() else ''
+              # Do not persist credentials; Python errors and HTTP status snippets only.
+              out['error'] = stderr[-1500:]
           p = Path('automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-asc.json')
           p.parent.mkdir(parents=True, exist_ok=True)
           p.write_text(json.dumps(out, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
