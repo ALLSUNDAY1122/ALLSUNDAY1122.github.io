@@ -96,18 +96,43 @@ BLOCK = r'''
           xcode-project build-ipa \
             --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
+      - name: Upload signed IPA to App Store Connect for Internal TestFlight
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          RAW_LOG=/tmp/app2-010-asc-publish-raw.log
+          SAFE_LOG=/tmp/app2-010-asc-publish-sanitized.log
+          set +e
+          app-store-connect publish \
+            --path "$IPA_PATH" \
+            --altool-retries 3 \
+            --altool-retry-wait 2 \
+            --altool-verbose-logging \
+            >"$RAW_LOG" 2>&1
+          STATUS=$?
+          set -e
+          python3 - <<'PYSANITIZE'
+          from pathlib import Path
+          import os,re
+          raw=Path('/tmp/app2-010-asc-publish-raw.log').read_text(encoding='utf-8',errors='replace')
+          raw=re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----','[REDACTED PEM]',raw,flags=re.S)
+          raw=re.sub(r'eyJ[A-Za-z0-9._-]{20,}','[REDACTED JWT]',raw)
+          for name in ('APP_STORE_CONNECT_KEY_IDENTIFIER','APP_STORE_CONNECT_ISSUER_ID'):
+              value=os.environ.get(name,'')
+              if value:
+                  raw=raw.replace(value,f'[REDACTED {name}]')
+          Path('/tmp/app2-010-asc-publish-sanitized.log').write_text(raw[-30000:],encoding='utf-8')
+          PYSANITIZE
+          cat "$SAFE_LOG"
+          rm -f "$RAW_LOG"
+          exit "$STATUS"
     artifacts:
       - build/ios/ipa/*.ipa
+      - /tmp/app2-010-asc-publish-sanitized.log
       - /tmp/xcodebuild_logs/*.log
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
-    publishing:
-      app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        submit_to_testflight: false
-        submit_to_app_store: false
 '''
 
 
@@ -162,13 +187,11 @@ def main() -> int:
         "--type IOS_APP_STORE",
         "keychain add-certificates",
         "xcode-project use-profiles",
-        "api_key: $APP_STORE_CONNECT_PRIVATE_KEY",
-        "key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER",
-        "issuer_id: $APP_STORE_CONNECT_ISSUER_ID",
-        "submit_to_testflight: false",
-        "submit_to_app_store: false",
+        "app-store-connect publish",
+        "--altool-retries 3",
+        "/tmp/app2-010-asc-publish-sanitized.log",
     ]
-    forbidden = ["--create", "ios_signing:", "auth: integration", "submit_to_testflight: true"]
+    forbidden = ["--create", "ios_signing:", "auth: integration", "submit_to_testflight:", "submit_to_app_store:", "publishing:"]
     for token in required:
         if token not in workflow:
             raise SystemExit(f"missing required Touhan token: {token}")
@@ -185,7 +208,7 @@ def main() -> int:
         "changed": changed,
         "build_number_mode": "CM_BUILD_NUMBER_or_BUILD_NUMBER",
         "signing_mode": "managed_private_key_and_explicit_asc_credentials",
-        "publishing_mode": "explicit_secure_asc_credentials_internal_upload_only",
+        "publishing_mode": "codemagic_cli_direct_upload_internal_only_no_magic_actions",
         "codemagic_group_name": "app2_010_touhan_signing",
         "bundle_id": "com.allsunday1122.tourokuhanbaisha",
         "app_store_connect_app_id": "6802119268",
@@ -195,6 +218,7 @@ def main() -> int:
         "submit_to_testflight_beta_review": False,
         "submit_to_app_store": False,
         "internal_testflight_only_export": True,
+        "sanitized_publish_log_artifact": "/tmp/app2-010-asc-publish-sanitized.log",
     }
     (RESULT_DIR / f"{request_id}.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, ensure_ascii=False))
