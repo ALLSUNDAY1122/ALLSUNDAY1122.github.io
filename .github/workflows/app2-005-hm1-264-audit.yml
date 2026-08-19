@@ -1,0 +1,52 @@
+name: APP2-005 HM1 264-question audit
+
+on:
+  push:
+    branches: [fix/health-manager-1-264q]
+    paths:
+      - ios/health-manager-1/**
+      - apps/sanitary-manager-2/q*.js
+      - apps/sanitary-manager-2/audit-*.js
+      - apps/sanitary-manager-2/question-order-v1.js
+      - .github/workflows/app2-005-hm1-264-audit.yml
+  pull_request:
+    paths:
+      - ios/health-manager-1/**
+      - apps/sanitary-manager-2/q*.js
+      - apps/sanitary-manager-2/audit-*.js
+      - apps/sanitary-manager-2/question-order-v1.js
+      - .github/workflows/app2-005-hm1-264-audit.yml
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Expand to 264 audited questions
+        run: node ios/health-manager-1/augment-to-264.cjs
+      - name: Validate HM1 264 bank and UI injection contract
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import collections,json,re
+          qpath=Path('ios/health-manager-1/Resources/questions.json')
+          data=json.loads(qpath.read_text(encoding='utf-8'))
+          assert len(data)==264
+          assert len({q['id'] for q in data})==264
+          assert len({re.sub(r'[\s\W_]+','',q['stem']) for q in data})==264
+          rc=collections.Counter(q['round'] for q in data)
+          assert rc=={'2026-04':44,'2025-10':44,'2025-04':44,'practice-A':44,'practice-B':44,'practice-C':44},rc
+          added=[q for q in data if q['round'].startswith('practice-')]
+          assert len(added)==132
+          assert all(q['auditStatus'] in ('一次資料照合済','内容監査済') for q in added)
+          assert all(q['sourceRef'] for q in added)
+          assert all(len(q['choices'])==5 and 0<=q['ans']<=4 for q in data)
+          print('PASS: 264 questions; 132 new audited additions; 6x44 sets; unique IDs/stems.')
+          PY
