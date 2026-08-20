@@ -34,17 +34,20 @@ export const toDateKey = (date = new Date()): string => {
   return `${year}-${month}-${day}`;
 };
 
-export const calculateStreak = (dateKeys: string[]): number => {
-  const unique = new Set(dateKeys);
-  let streak = 0;
-  const cursor = new Date();
+export const calculateStreak = (dateKeys: string[], now = new Date()): number => {
+  const unique = new Set(dateKeys.filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(value)));
+  if (!unique.size) return 0;
 
-  while (true) {
-    const target = new Date(cursor);
-    target.setDate(cursor.getDate() - streak);
-    if (!unique.has(toDateKey(target))) break;
-    streak += 1;
+  const cursor = new Date(now);
+  cursor.setHours(12, 0, 0, 0);
+  if (!unique.has(toDateKey(cursor))) {
+    cursor.setDate(cursor.getDate() - 1);
   }
 
+  let streak = 0;
+  while (unique.has(toDateKey(cursor))) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
   return streak;
 };
