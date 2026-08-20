@@ -41,7 +41,7 @@ jobs:
               src = {'ok': False, 'error': 'Codemagic gateway produced no result file'}
           allowed = {
             'request_id','action','repository','workflow_id','branch','ok','resolved_app_id',
-            'application_candidates','changed','app_id','build_id','status','build_url','build_details','error'
+            'application_candidates','changed','app_id','app_details','build_id','status','build_url','build_details','error'
           }
           out = {k: v for k, v in src.items() if k in allowed}
           p = Path('automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-codemagic.json')
