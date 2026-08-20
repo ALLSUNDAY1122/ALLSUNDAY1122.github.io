@@ -18,31 +18,44 @@ if [[ "$method" != "testFBXReopensThroughAssimp" ]]; then
 fi
 
 log_file="$(mktemp)"
+host_b64="$(mktemp)"
 host_fbx="/tmp/scanlab-external-reader-$$.fbx"
 cleanup() {
-  rm -f "$log_file" "$host_fbx"
+  rm -f "$log_file" "$host_b64" "$host_fbx"
 }
 trap cleanup EXIT
 
 run_test 2>&1 | tee "$log_file"
 
-# xcodebuild may prefix XCTest stdout. Capture only the emitted .fbx path, then read the file
-# from the same simulator namespace that produced it instead of guessing CoreSimulator host paths.
-simulator_fbx="$(sed -n 's/^.*SCANLAB_HOST_FBX=\(.*\.fbx\).*$/\1/p' "$log_file" | tr -d '\r' | tail -1)"
-if [[ -z "$simulator_fbx" ]]; then
-  echo "FAIL: FBX XCTest did not emit SCANLAB_HOST_FBX" >&2
+# The simulator test emits the exact FBX bytes as base64. Decode those bytes on the macOS host
+# instead of depending on CoreSimulator's private filesystem/container path mapping.
+sed -n 's/^.*SCANLAB_HOST_FBX_BASE64=\([A-Za-z0-9+\/=]*\).*$/\1/p' "$log_file" \
+  | tr -d '\r' \
+  | tail -1 > "$host_b64"
+
+if [[ ! -s "$host_b64" ]]; then
+  echo "FAIL: FBX XCTest did not emit SCANLAB_HOST_FBX_BASE64" >&2
   exit 1
 fi
 
-echo "Copying simulator FBX to host: $simulator_fbx"
-if ! xcrun simctl spawn "$SIMULATOR_ID" /bin/cat "$simulator_fbx" > "$host_fbx"; then
-  echo "FAIL: simctl could not read exported FBX: $simulator_fbx" >&2
-  exit 1
-fi
+python3 - "$host_b64" "$host_fbx" <<'PY'
+import base64
+import pathlib
+import sys
+
+encoded = pathlib.Path(sys.argv[1]).read_text(encoding="ascii").strip()
+if not encoded:
+    raise SystemExit("FAIL: empty FBX base64 payload")
+try:
+    payload = base64.b64decode(encoded, validate=True)
+except Exception as exc:
+    raise SystemExit(f"FAIL: invalid FBX base64 payload: {exc}") from exc
+pathlib.Path(sys.argv[2]).write_bytes(payload)
+PY
 
 fbx_size="$(wc -c < "$host_fbx" | tr -d ' ')"
 if [[ -z "$fbx_size" || "$fbx_size" -le 100 ]]; then
-  echo "FAIL: copied FBX payload is implausibly small (${fbx_size:-0} bytes)" >&2
+  echo "FAIL: decoded FBX payload is implausibly small (${fbx_size:-0} bytes)" >&2
   exit 1
 fi
 
@@ -50,8 +63,8 @@ if ! command -v assimp >/dev/null 2>&1; then
   HOMEBREW_NO_AUTO_UPDATE=1 brew install assimp
 fi
 
-# The embedded iOS XCFramework is an exporter dependency. A complete macOS Assimp installation
-# independently certifies that the emitted FBX can be consumed outside the app process.
+# The embedded iOS XCFramework is only the exporter dependency. A complete macOS Assimp install
+# independently certifies that the emitted FBX is consumable outside the app process.
 echo "Running independent host Assimp reader against $host_fbx ($fbx_size bytes)"
 assimp info "$host_fbx"
 echo "PASS: host Assimp independently reopened exported FBX"
