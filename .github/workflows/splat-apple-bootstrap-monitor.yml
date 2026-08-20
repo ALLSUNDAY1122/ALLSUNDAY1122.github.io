@@ -1,0 +1,176 @@
+name: Splat Apple Bootstrap Monitor
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260820'
+    paths:
+      - '.github/workflows/splat-apple-bootstrap-monitor.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find and monitor existing Codemagic bootstrap
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import pathlib
+          import time
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+
+          token = os.environ.get('CM_API_TOKEN', '').strip()
+          if not token:
+              raise SystemExit('Missing GitHub Actions secret CM_API_TOKEN')
+
+          app_id = '6a769d81a1add9d06020b524'
+          workflow_id = 'splat-apple-bootstrap'
+          workflow_name = 'Splat Lab - Apple Bundle ID Bootstrap'
+          branch = 'testflight/splat-native-ios-20260820'
+          out = pathlib.Path('/tmp/splat-bootstrap-result.json')
+
+          def api(url):
+              req = urllib.request.Request(url, method='GET')
+              req.add_header('x-auth-token', token)
+              req.add_header('Accept', 'application/json')
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      raw = response.read().decode('utf-8')
+                      return response.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as exc:
+                  raw = exc.read().decode('utf-8', errors='replace')
+                  try:
+                      parsed = json.loads(raw) if raw else {}
+                  except json.JSONDecodeError:
+                      parsed = {'error': raw[:1000]}
+                  return exc.code, parsed
+
+          def as_list(payload, *keys):
+              if isinstance(payload, list):
+                  return payload
+              if not isinstance(payload, dict):
+                  return []
+              for key in keys:
+                  value = payload.get(key)
+                  if isinstance(value, list):
+                      return value
+              data = payload.get('data')
+              if isinstance(data, list):
+                  return data
+              if isinstance(data, dict):
+                  for key in keys:
+                      value = data.get(key)
+                      if isinstance(value, list):
+                          return value
+              return []
+
+          status, team_payload = api('https://codemagic.io/api/v3/user/teams')
+          if not 200 <= status < 300:
+              out.write_text(json.dumps({'ok': False, 'status': 'team_lookup_failed', 'http_status': status}, indent=2) + '\n')
+              raise SystemExit(f'Codemagic team lookup failed: HTTP {status}')
+
+          teams = as_list(team_payload, 'teams')
+          candidates = []
+          for team in teams:
+              if not isinstance(team, dict):
+                  continue
+              team_id = team.get('id') or team.get('_id')
+              if not team_id:
+                  continue
+              url = f'https://codemagic.io/api/v3/teams/{urllib.parse.quote(str(team_id))}/builds?page_size=100&page=1'
+              build_status, build_payload = api(url)
+              if not 200 <= build_status < 300:
+                  continue
+              for build in as_list(build_payload, 'builds'):
+                  if not isinstance(build, dict):
+                      continue
+                  serialized = json.dumps(build, ensure_ascii=False)
+                  if app_id not in serialized or branch not in serialized:
+                      continue
+                  if workflow_id not in serialized and workflow_name not in serialized:
+                      continue
+                  build_id = build.get('id') or build.get('_id')
+                  if not build_id:
+                      continue
+                  stamp = str(build.get('created_at') or build.get('started_at') or build.get('createdAt') or '')
+                  candidates.append((stamp, str(build_id)))
+
+          if not candidates:
+              out.write_text(json.dumps({
+                  'request_id': 'splat-bootstrap-20260821',
+                  'ok': False,
+                  'app_id': app_id,
+                  'workflow_id': workflow_id,
+                  'branch': branch,
+                  'status': 'existing_build_not_found'
+              }, indent=2) + '\n', encoding='utf-8')
+              raise SystemExit('No existing Splat bootstrap build found; no duplicate build was started')
+
+          candidates.sort(reverse=True)
+          build_id = candidates[0][1]
+          terminal = {'finished', 'failed', 'canceled', 'timeout', 'skipped'}
+          deadline = time.time() + 1500
+          current = 'unknown'
+          while time.time() < deadline:
+              inspect_status, inspect_payload = api(f'https://codemagic.io/api/v3/builds/{build_id}')
+              if not 200 <= inspect_status < 300:
+                  current = f'inspect_http_{inspect_status}'
+                  time.sleep(15)
+                  continue
+              details = inspect_payload.get('data') if isinstance(inspect_payload, dict) else None
+              if not isinstance(details, dict):
+                  details = inspect_payload if isinstance(inspect_payload, dict) else {}
+              current = str(details.get('status') or 'unknown')
+              print(f'Codemagic bootstrap {build_id}: {current}')
+              if current in terminal:
+                  break
+              time.sleep(15)
+
+          result = {
+              'request_id': 'splat-bootstrap-20260821',
+              'ok': current == 'finished',
+              'app_id': app_id,
+              'workflow_id': workflow_id,
+              'branch': branch,
+              'build_id': build_id,
+              'status': current,
+              'monitor': 'v3-existing-build'
+          }
+          out.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
+          if current != 'finished':
+              raise SystemExit(f'Existing Codemagic bootstrap did not finish successfully: {current}')
+          print(f'PASS: existing Splat Apple bootstrap finished: {build_id}')
+          PY
+
+      - name: Persist sanitized bootstrap result
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f /tmp/splat-bootstrap-result.json || exit 0
+          BRANCH='testflight/splat-native-ios-20260820'
+          RESULT_PATH='automation/codemagic-results/splat-bootstrap-20260821.json'
+          cp /tmp/splat-bootstrap-result.json /tmp/splat-bootstrap-result.saved.json
+          for attempt in 1 2; do
+            git fetch origin "$BRANCH"
+            git reset --hard FETCH_HEAD
+            mkdir -p "$(dirname "$RESULT_PATH")"
+            cp /tmp/splat-bootstrap-result.saved.json "$RESULT_PATH"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- "$RESULT_PATH"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'release: persist Splat Apple bootstrap result'
+            if git push origin HEAD:"$BRANCH"; then exit 0; fi
+          done
+          exit 1
