@@ -1,0 +1,147 @@
+name: Splat Apple Bundle Bootstrap Once
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260820'
+    paths:
+      - '.github/workflows/splat-apple-bootstrap-once.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: splat-apple-bootstrap-once-20260821
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate bootstrap safety contract
+        run: |
+          set -euo pipefail
+          grep -q '^  splat-apple-bootstrap:' codemagic.yaml
+          grep -q 'BUNDLE_ID: jp.allsunday1122.splatlab' codemagic.yaml
+          grep -q 'app-store-connect bundle-ids create' codemagic.yaml
+          grep -q 'submit_to_app_store: false' codemagic.yaml
+          ! grep -q 'submit_to_app_store: true' codemagic.yaml
+
+      - name: Start and monitor Codemagic Apple Bundle ID bootstrap
+        id: codemagic
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import pathlib
+          import time
+          import urllib.error
+          import urllib.request
+
+          token = os.environ.get('CM_API_TOKEN', '').strip()
+          if not token:
+              raise SystemExit('Missing GitHub Actions secret CM_API_TOKEN')
+
+          app_id = '6a769d81a1add9d06020b524'
+          workflow_id = 'splat-apple-bootstrap'
+          branch = 'testflight/splat-native-ios-20260820'
+          result_path = pathlib.Path('/tmp/splat-bootstrap-result.json')
+
+          def api(url, method='GET', payload=None):
+              body = None if payload is None else json.dumps(payload).encode('utf-8')
+              req = urllib.request.Request(url, data=body, method=method)
+              req.add_header('x-auth-token', token)
+              req.add_header('Content-Type', 'application/json')
+              req.add_header('Accept', 'application/json')
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      raw = response.read().decode('utf-8')
+                      return response.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as exc:
+                  raw = exc.read().decode('utf-8', errors='replace')
+                  try:
+                      parsed = json.loads(raw) if raw else {}
+                  except json.JSONDecodeError:
+                      parsed = {'error': raw[:1000]}
+                  return exc.code, parsed
+
+          start_status, start = api(
+              'https://api.codemagic.io/builds',
+              method='POST',
+              payload={'appId': app_id, 'workflowId': workflow_id, 'branch': branch},
+          )
+          if not 200 <= start_status < 300:
+              result = {
+                  'request_id': 'splat-bootstrap-20260821',
+                  'ok': False,
+                  'workflow_id': workflow_id,
+                  'branch': branch,
+                  'status': 'start_failed',
+                  'http_status': start_status,
+              }
+              result_path.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
+              raise SystemExit(f'Codemagic bootstrap start failed: HTTP {start_status}')
+
+          build_id = start.get('buildId') or start.get('id')
+          if not build_id:
+              result_path.write_text(json.dumps({
+                  'request_id': 'splat-bootstrap-20260821',
+                  'ok': False,
+                  'workflow_id': workflow_id,
+                  'branch': branch,
+                  'status': 'missing_build_id',
+              }, indent=2) + '\n', encoding='utf-8')
+              raise SystemExit('Codemagic did not return a build id')
+
+          terminal = {'finished', 'failed', 'canceled', 'timeout', 'skipped'}
+          deadline = time.time() + 1500
+          current = 'started'
+          while time.time() < deadline:
+              status_code, payload = api(f'https://api.codemagic.io/api/v3/builds/{build_id}')
+              if not 200 <= status_code < 300:
+                  current = f'inspect_http_{status_code}'
+                  time.sleep(15)
+                  continue
+              details = payload.get('data') or payload
+              current = str(details.get('status') or 'unknown')
+              print(f'Codemagic bootstrap status: {current}')
+              if current in terminal:
+                  break
+              time.sleep(15)
+
+          result = {
+              'request_id': 'splat-bootstrap-20260821',
+              'ok': current == 'finished',
+              'app_id': app_id,
+              'workflow_id': workflow_id,
+              'branch': branch,
+              'build_id': build_id,
+              'status': current,
+          }
+          result_path.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
+          if current != 'finished':
+              raise SystemExit(f'Codemagic bootstrap did not finish successfully: {current}')
+          print(f'PASS: Splat Apple Bundle ID bootstrap finished: {build_id}')
+          PY
+
+      - name: Persist sanitized bootstrap result
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f /tmp/splat-bootstrap-result.json || exit 0
+          RESULT_PATH='automation/codemagic-results/splat-bootstrap-20260821.json'
+          mkdir -p "$(dirname "$RESULT_PATH")"
+          cp /tmp/splat-bootstrap-result.json "$RESULT_PATH"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$RESULT_PATH"
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'release: persist Splat Apple bootstrap result'
+          git push origin HEAD:testflight/splat-native-ios-20260820
