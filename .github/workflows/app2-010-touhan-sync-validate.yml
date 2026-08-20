@@ -22,23 +22,64 @@ jobs:
         with:
           node-version: '20'
       - name: Validate canonical 360 questions
+        id: canonical
+        continue-on-error: true
         run: node touroku-hanbaisha-sprint/scripts/validate-canonical-questions.mjs
       - name: Rebuild runtime question bank
+        id: runtime
+        continue-on-error: true
         run: node touroku-hanbaisha-sprint/scripts/build-questions.mjs
       - name: Validate release-ready data
+        id: release
+        continue-on-error: true
         run: node touroku-hanbaisha-sprint/scripts/validate-release-ready-data.mjs
       - name: Test history calendar regression
+        id: history
+        continue-on-error: true
         run: node touroku-hanbaisha-sprint/scripts/test-history-calendar.mjs
-      - name: Persist runtime sync evidence
+      - name: Persist validation evidence
+        if: always()
+        env:
+          CANONICAL: ${{ steps.canonical.outcome }}
+          RUNTIME: ${{ steps.runtime.outcome }}
+          RELEASE: ${{ steps.release.outcome }}
+          HISTORY: ${{ steps.history.outcome }}
         run: |
           mkdir -p automation/audits
           REQUEST_ID=$(node -p "require('./automation/app2-010-touhan-sync-validate-command.json').request_id")
-          node -e "const fs=require('fs');fs.writeFileSync('automation/audits/app2-010-touhan-sync-validate.json',JSON.stringify({request_id:process.argv[1],canonical_questions:360,canonical_validation:'PASS',runtime_rebuilt:true,release_ready_validation:'PASS',history_calendar:'PASS',timestamp:new Date().toISOString()},null,2)+'\n')" "$REQUEST_ID"
+          node - <<'NODE' "$REQUEST_ID"
+          const fs=require('fs');
+          const requestId=process.argv[2];
+          const norm=x=>x==='success'?'PASS':'FAIL';
+          const out={
+            request_id:requestId,
+            canonical_questions:360,
+            canonical_validation:norm(process.env.CANONICAL),
+            runtime_rebuilt:norm(process.env.RUNTIME),
+            release_ready_validation:norm(process.env.RELEASE),
+            history_calendar:norm(process.env.HISTORY),
+            timestamp:new Date().toISOString()
+          };
+          fs.writeFileSync('automation/audits/app2-010-touhan-sync-validate.json',JSON.stringify(out,null,2)+'\n');
+          NODE
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add touroku-hanbaisha-sprint/questions.js automation/audits/app2-010-touhan-sync-validate.json
-          git commit -m 'Sync Touhan runtime questions and persist validation' || exit 0
-          if git push origin HEAD:main; then exit 0; fi
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main
+          git commit -m 'Sync Touhan runtime questions and persist validation' || true
+          if ! git push origin HEAD:main; then
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          fi
+      - name: Enforce validation result
+        if: always()
+        env:
+          CANONICAL: ${{ steps.canonical.outcome }}
+          RUNTIME: ${{ steps.runtime.outcome }}
+          RELEASE: ${{ steps.release.outcome }}
+          HISTORY: ${{ steps.history.outcome }}
+        run: |
+          test "$CANONICAL" = success
+          test "$RUNTIME" = success
+          test "$RELEASE" = success
+          test "$HISTORY" = success
