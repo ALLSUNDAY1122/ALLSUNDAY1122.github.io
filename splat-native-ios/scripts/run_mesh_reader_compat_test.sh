@@ -70,7 +70,12 @@ if ! command -v assimp >/dev/null 2>&1; then
 fi
 
 # A complete macOS Assimp install independently certifies that the emitted asset is consumable
-# outside the app process, regardless of which importers the pinned iOS exporter XCFramework ships.
+# outside the app process. PLY is intentionally a point cloud with no faces; Assimp's documented
+# raw mode validates that point-cloud importer path without mesh-only post-processing changing it.
 echo "Running independent host Assimp reader against $host_asset ($asset_size bytes)"
-assimp info "$host_asset"
+if [[ "$host_ext" == "ply" ]]; then
+  assimp info "$host_asset" -r
+else
+  assimp info "$host_asset"
+fi
 echo "PASS: host Assimp independently reopened exported ${host_ext}"
