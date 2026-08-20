@@ -1,0 +1,108 @@
+name: APP2-010 Internal TestFlight Invite
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-010-testflight-invite-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  invite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Send internal TestFlight invitation
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, sys, time
+          from pathlib import Path
+          sys.path.insert(0, str((Path.cwd()/'scripts').resolve()))
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          cmd=json.loads(Path('automation/app2-010-testflight-invite-command.json').read_text(encoding='utf-8'))
+          rid=str(cmd['request_id']); app_id=str(cmd['app_id']); bundle=str(cmd['bundle_id']); build_no=str(cmd['build_number'])
+          if not re.fullmatch(r'app2-010-[A-Za-z0-9._-]{1,90}',rid): raise SystemExit('invalid request id')
+          outdata={'request_id':rid,'app_id':app_id,'bundle_id':bundle,'build_number':build_no,'ok':False,'errors':[],
+                   'internal_build_state':None,'group_id':None,'group_has_access_to_all_builds':None,
+                   'tester_count':None,'tester_state_before':None,'tester_state_after':None,
+                   'invitation_sent':False,'invitation_http_status':None,'persisted_personal_tester_data':False,
+                   'app_store_review_submitted':False,'external_beta_review_submitted':False}
+          cleanup=None
+          try:
+              issuer=os.environ.get('ASC_ISSUER_ID'); kid=os.environ.get('ASC_KEY_ID')
+              if not issuer or not kid: raise RuntimeError('missing ASC API credentials')
+              kp,cleanup=load_private_key(); token=make_token(issuer,kid,kp)
+              _,app=api_get(token,f'/v1/apps/{app_id}')
+              actual=((((app or {}).get('data') or {}).get('attributes') or {}).get('bundleId'))
+              if actual!=bundle: raise RuntimeError(f'app preflight mismatch: {actual!r}')
+              _,br=api_get(token,f'/v1/builds?filter[app]={app_id}&limit=200&fields[builds]=version,processingState,buildAudienceType')
+              builds=[x for x in ((br or {}).get('data') or []) if isinstance(x,dict)]
+              candidates=[b for b in builds if str((b.get('attributes') or {}).get('version'))==build_no]
+              if len(candidates)!=1: raise RuntimeError(f'expected exactly one Build {build_no}; found {len(candidates)}')
+              tid=str(candidates[0]['id']); attrs=candidates[0].get('attributes') or {}
+              if attrs.get('processingState')!='VALID' or attrs.get('buildAudienceType')!='INTERNAL_ONLY':
+                  raise RuntimeError('target Build is not VALID INTERNAL_ONLY')
+              _,dr=api_get(token,f'/v1/builds/{tid}/buildBetaDetail')
+              state=((((dr or {}).get('data') or {}).get('attributes') or {}).get('internalBuildState'))
+              outdata['internal_build_state']=state
+              if state not in ('READY_FOR_BETA_TESTING','IN_BETA_TESTING'):
+                  raise RuntimeError(f'Build not ready for internal testing: {state!r}')
+
+              _,gr=api_get(token,f'/v1/betaGroups?filter[app]={app_id}&limit=200')
+              groups=[g for g in ((gr or {}).get('data') or []) if isinstance(g,dict) and (g.get('attributes') or {}).get('isInternalGroup') is True]
+              access=[g for g in groups if (g.get('attributes') or {}).get('hasAccessToAllBuilds') is True]
+              group=access[0] if len(access)==1 else (groups[0] if len(groups)==1 else None)
+              if group is None: raise RuntimeError(f'unambiguous internal group not found; count={len(groups)}')
+              gid=str(group['id']); outdata['group_id']=gid; outdata['group_has_access_to_all_builds']=bool((group.get('attributes') or {}).get('hasAccessToAllBuilds'))
+
+              _,tr=api_get(token,f'/v1/betaGroups/{gid}/betaTesters?limit=200')
+              testers=[t for t in ((tr or {}).get('data') or []) if isinstance(t,dict)]
+              outdata['tester_count']=len(testers)
+              if len(testers)!=1: raise RuntimeError(f'expected exactly one internal tester; found {len(testers)}')
+              tester=testers[0]; tester_id=str(tester['id']); before=(tester.get('attributes') or {}).get('state')
+              outdata['tester_state_before']=before
+              if before=='NOT_INVITED':
+                  payload={'data':{'type':'betaTesterInvitations','relationships':{
+                      'app':{'data':{'type':'apps','id':app_id}},
+                      'betaTester':{'data':{'type':'betaTesters','id':tester_id}}
+                  }}}
+                  hs,_=api_request(token,'/v1/betaTesterInvitations',method='POST',payload=payload)
+                  outdata['invitation_sent']=True; outdata['invitation_http_status']=hs
+                  time.sleep(2)
+              _,ta=api_get(token,f'/v1/betaTesters/{tester_id}')
+              after=((((ta or {}).get('data') or {}).get('attributes') or {}).get('state'))
+              outdata['tester_state_after']=after
+              outdata['ok']=bool(outdata['invitation_sent'] and outdata['invitation_http_status']==201) or after in ('INVITED','ACCEPTED','INSTALLED')
+          except Exception as e:
+              outdata['errors'].append(type(e).__name__+': '+str(e)[:1500])
+          finally:
+              if cleanup: cleanup.unlink(missing_ok=True)
+
+          out=Path('automation/asc-results')/f'{rid}.json'; out.parent.mkdir(parents=True,exist_ok=True)
+          payload=json.dumps(outdata,ensure_ascii=False,indent=2)+'\n'; out.write_text(payload,encoding='utf-8')
+          Path('/tmp/app2-010-invite.json').write_text(payload,encoding='utf-8'); Path('/tmp/app2-010-invite-path.txt').write_text(str(out),encoding='utf-8')
+          print(json.dumps({'ok':outdata['ok'],'build_state':outdata['internal_build_state'],'tester_state_before':outdata['tester_state_before'],
+                            'tester_state_after':outdata['tester_state_after'],'invitation_sent':outdata['invitation_sent'],'errors':outdata['errors']},ensure_ascii=False))
+          PY
+      - name: Persist invitation evidence
+        if: always()
+        run: |
+          test -f /tmp/app2-010-invite-path.txt || exit 1
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          P="$(cat /tmp/app2-010-invite-path.txt)"
+          git add "$P"; git commit -m "Persist APP2-010 TestFlight invitation" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main; git reset --hard origin/main; mkdir -p "$(dirname "$P")"; cp /tmp/app2-010-invite.json "$P"
+          git add "$P"; git commit -m "Persist APP2-010 TestFlight invitation" || exit 0; git push origin HEAD:main
