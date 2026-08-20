@@ -114,16 +114,21 @@ jobs:
             -parallel-testing-enabled NO \
             CODE_SIGNING_ALLOWED=NO build-for-testing
       - name: Run integrated A2 and C2 regressions
+        id: integrated_tests
+        continue-on-error: true
         timeout-minutes: 12
         working-directory: splat-native-ios
         shell: bash
         run: |
-          set -euo pipefail
+          set +e
+          set -o pipefail
           SIMULATOR_ID="$(xcrun simctl list devices available -j | python3 -c 'import json,sys; data=json.load(sys.stdin); ids=[d["udid"] for runtime,devices in data.get("devices",{}).items() if "iOS" in runtime for d in devices if d.get("isAvailable") and d.get("name","").startswith("iPhone")]; print(ids[0] if ids else "")')"
-          test -n "$SIMULATOR_ID"
+          test -n "$SIMULATOR_ID" || exit 2
+          rm -rf /tmp/splat-integrated.xcresult /tmp/splat-integrated-tests.log /tmp/splat-integrated-diagnostics.txt
           xcodebuild -project SplatNative.xcodeproj -scheme SplatNativeTests \
             -sdk iphonesimulator -destination "platform=iOS Simulator,id=$SIMULATOR_ID" \
             -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO test-without-building \
+            -resultBundlePath /tmp/splat-integrated.xcresult \
             -only-testing:SplatNativeTests/CaptureMotionQualityTests \
             -only-testing:SplatNativeTests/SplatResourceGuardAdaptiveTests \
             -only-testing:SplatNativeTests/SplatSeedColorizerMultiViewTests \
@@ -144,7 +149,48 @@ jobs:
             -only-testing:SplatNativeTests/MeshExportAdmissionTests \
             -only-testing:SplatNativeTests/MeshExportMemoryPolicyTests \
             -only-testing:SplatNativeTests/MeshProjectStoreTests \
-            -only-testing:SplatNativeTests/MeshProjectIntegrityTests
+            -only-testing:SplatNativeTests/MeshProjectIntegrityTests \
+            2>&1 | tee /tmp/splat-integrated-tests.log
+          status=${PIPESTATUS[0]}
+          grep -E 'Test Case.*(failed|passed)|XCTAssert|error:|Testing failed|Failures:|failed on|threw error' /tmp/splat-integrated-tests.log | tail -240 > /tmp/splat-integrated-diagnostics.txt || true
+          if [ "$status" -ne 0 ] && [ ! -s /tmp/splat-integrated-diagnostics.txt ]; then
+            tail -240 /tmp/splat-integrated-tests.log > /tmp/splat-integrated-diagnostics.txt
+          fi
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+      - name: Upload integrated XCTest diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: splat-integrated-xctest-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            /tmp/splat-integrated-tests.log
+            /tmp/splat-integrated-diagnostics.txt
+            /tmp/splat-integrated.xcresult
+      - name: Publish integrated XCTest diagnostics to PR
+        if: always() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          {
+            echo '<!-- splat-native-xctest-diagnostics -->'
+            echo '### Splat Native integrated XCTest diagnostics'
+            echo '```text'
+            if [ -s /tmp/splat-integrated-diagnostics.txt ]; then
+              cat /tmp/splat-integrated-diagnostics.txt
+            else
+              echo 'No XCTest failure lines captured.'
+            fi
+            echo '```'
+          } > /tmp/pr-xctest-comment.md
+          gh pr comment "$PR_NUMBER" --body-file /tmp/pr-xctest-comment.md
+      - name: Fail if integrated regressions failed
+        if: steps.integrated_tests.outcome == 'failure'
+        run: exit 1
       - name: Reader compatibility OBJ
         timeout-minutes: 4
         working-directory: splat-native-ios
