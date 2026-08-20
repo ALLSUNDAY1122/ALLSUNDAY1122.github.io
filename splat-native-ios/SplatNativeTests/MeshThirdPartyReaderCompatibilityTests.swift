@@ -5,38 +5,27 @@ import XCTest
 
 final class MeshThirdPartyReaderCompatibilityTests: XCTestCase {
     func testOBJReopensThroughAssimp() async throws {
-        try await assertAssimpCanReopen(.obj)
+        try await assertEmbeddedAssimpCanReopen(.obj)
     }
 
-    /// The pinned iOS Assimp binary exposes the FBX exporter but does not include an FBX importer.
-    /// Stream the real exported FBX bytes through XCTest stdout so the macOS host-side Assimp CLI in
-    /// `scripts/run_mesh_reader_compat_test.sh` can independently reopen exactly what the app emitted.
-    /// This avoids depending on CoreSimulator's private host/container path mapping.
+    /// The pinned iOS Assimp XCFramework is primarily the exporter dependency and does not expose
+    /// every reader that a complete desktop Assimp build provides. Stream the exact exported bytes
+    /// through XCTest stdout so the macOS host-side Assimp CLI can independently certify the formats
+    /// users are promised. This also avoids depending on CoreSimulator's private path mapping.
     func testFBXReopensThroughAssimp() async throws {
-        let root = try makeRoot()
-        defer { try? FileManager.default.removeItem(at: root) }
-        let source = try writeTriangleOBJ(in: root)
-        let output = try await MeshExportService.export(
-            sourceURL: source,
-            format: .fbx,
-            destinationDirectory: root
-        )
-
-        let payload = try Data(contentsOf: output)
-        XCTAssertGreaterThan(payload.count, 100, "FBX exporter produced no useful payload for host reader")
-        print("SCANLAB_HOST_FBX_BASE64=\(payload.base64EncodedString())")
+        try await emitForHostAssimp(.fbx)
     }
 
     func testGLBReopensThroughAssimp() async throws {
-        try await assertAssimpCanReopen(.glb)
+        try await emitForHostAssimp(.glb)
     }
 
     func testSTLReopensThroughAssimp() async throws {
-        try await assertAssimpCanReopen(.stl)
+        try await emitForHostAssimp(.stl)
     }
 
     func testPLYReopensThroughAssimp() async throws {
-        try await assertAssimpCanReopen(.ply)
+        try await emitForHostAssimp(.ply)
     }
 
     func testUSDZReopensThroughModelIOWhenAdvertised() async throws {
@@ -58,7 +47,26 @@ final class MeshThirdPartyReaderCompatibilityTests: XCTestCase {
         XCTAssertGreaterThan(reopened.count, 0, "USDZ was written but Model I/O could not reopen it")
     }
 
-    private func assertAssimpCanReopen(_ format: MeshExportService.Format) async throws {
+    private func emitForHostAssimp(_ format: MeshExportService.Format) async throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = try writeTriangleOBJ(in: root)
+        let output = try await MeshExportService.export(
+            sourceURL: source,
+            format: format,
+            destinationDirectory: root
+        )
+
+        let payload = try Data(contentsOf: output)
+        XCTAssertGreaterThan(
+            payload.count,
+            100,
+            "\(format.rawValue) exporter produced no useful payload for host reader"
+        )
+        print("SCANLAB_HOST_ASSIMP_BASE64=\(payload.base64EncodedString())")
+    }
+
+    private func assertEmbeddedAssimpCanReopen(_ format: MeshExportService.Format) async throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let source = try writeTriangleOBJ(in: root)
