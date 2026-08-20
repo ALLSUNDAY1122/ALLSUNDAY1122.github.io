@@ -8,8 +8,25 @@ final class MeshThirdPartyReaderCompatibilityTests: XCTestCase {
         try await assertAssimpCanReopen(.obj)
     }
 
+    /// The pinned iOS Assimp binary exposes the FBX exporter but does not include an FBX importer.
+    /// Preserve the real exported FBX for the host-side Assimp CLI in
+    /// `scripts/run_mesh_reader_compat_test.sh`; the workflow step only passes after that independent
+    /// reader opens the file successfully.
     func testFBXReopensThroughAssimp() async throws {
-        try await assertAssimpCanReopen(.fbx)
+        let root = try makeRoot()
+        let source = try writeTriangleOBJ(in: root)
+        let output = try await MeshExportService.export(
+            sourceURL: source,
+            format: .fbx,
+            destinationDirectory: root
+        )
+
+        let attributes = try FileManager.default.attributesOfItem(atPath: output.path)
+        let size = (attributes[.size] as? NSNumber)?.intValue ?? 0
+        XCTAssertGreaterThan(size, 100, "FBX exporter produced no useful payload for host reader")
+        print("SCANLAB_HOST_FBX=\(output.path)")
+        // Do not delete `root` here. The macOS host-side reader consumes the path immediately after
+        // this XCTest process exits and then removes the transient directory.
     }
 
     func testGLBReopensThroughAssimp() async throws {
