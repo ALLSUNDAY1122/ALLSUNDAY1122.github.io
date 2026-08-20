@@ -21,6 +21,7 @@ EXPECTED_ORIENTATIONS = (
     "UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft "
     "UIInterfaceOrientationLandscapeRight\""
 )
+EXPECTED_EXPORT_COMPLIANCE = "INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO"
 
 app = json.loads((IOS / "app.json").read_text(encoding="utf-8"))['expo']
 assert app['version'] == '1.0.0'
@@ -35,6 +36,7 @@ for token in (
     'MARKETING_VERSION: 1.0.0',
     'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon',
     EXPECTED_ORIENTATIONS,
+    EXPECTED_EXPORT_COMPLIANCE,
 ):
     assert token in project, f'missing project setting: {token}'
 assert '\n    resources:\n' not in project, 'XcodeGen target resources must be declared under sources'
@@ -69,4 +71,4 @@ assert f'Bundle ID: {EXPECTED_BUNDLE}' in metadata
 assert f'- サポート: {EXPECTED_WEB_URL}support.html' in metadata
 assert f'- プライバシーポリシー: {EXPECTED_WEB_URL}privacy.html' in metadata
 
-print(f'PASS: Touhan release inputs; bundle={EXPECTED_BUNDLE}; app_id={EXPECTED_APP_ID}; icon_sha256={EXPECTED_ICON_SHA}; orientations=all-four')
+print(f'PASS: Touhan release inputs; bundle={EXPECTED_BUNDLE}; app_id={EXPECTED_APP_ID}; icon_sha256={EXPECTED_ICON_SHA}; orientations=all-four; export_compliance=exempt')
