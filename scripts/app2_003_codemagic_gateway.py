@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """APP2-003 fixed Codemagic gateway for 夜の書架.
 
-Allowed actions are inspect, add_app, build, and inspect_build. The target
-repository, workflow, and branch are hard-coded. App Store review submission is
-not part of this gateway.
+Allowed actions are inspect, inspect_app, add_app, build, and inspect_build. The
+target repository, workflow, and branch are hard-coded. App Store review
+submission is not part of this gateway.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import os
-import sys
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -19,7 +18,7 @@ REPOSITORY = "ALLSUNDAY1122/yoru-no-shoka"
 REPOSITORY_URL = "https://github.com/ALLSUNDAY1122/yoru-no-shoka.git"
 WORKFLOW_ID = "yoru-ios"
 BRANCH = "main"
-SENSITIVE = ("token", "secret", "password", "credential", "private", "api_key", "apikey")
+SENSITIVE = ("token", "secret", "password", "credential", "private", "api_key", "apikey", "sshkey", "ssh_key")
 
 
 def sanitize(value):
@@ -59,6 +58,22 @@ def app_summary(app: dict) -> dict:
     }
 
 
+def safe_app_details(app: dict) -> dict:
+    allowed_exact = {
+        "_id", "id", "appName", "name", "repositoryUrl", "repository_url", "repoUrl",
+        "repositoryId", "repository_id", "repositoryName", "repository_name", "repositoryOwner",
+        "repository_owner", "branches", "branch", "teamId", "team_id", "provider", "scmType",
+        "scm_type", "repositoryType", "repository_type", "integration", "integrationId",
+        "integration_id", "archived", "disabled", "isRepositoryRemoved", "repositoryRemoved",
+        "repositoryUnavailable", "webhookUrl", "workflowIds"
+    }
+    out = {}
+    for key, value in app.items():
+        if key in allowed_exact:
+            out[key] = sanitize(value)
+    return out
+
+
 def list_apps(token: str):
     status, response = api_json(token, "https://api.codemagic.io/apps")
     if not 200 <= status < 300:
@@ -92,7 +107,7 @@ def main() -> int:
     if not request_id.startswith("app2-003-"):
         raise SystemExit("Unexpected request_id")
     action = command.get("action")
-    if action not in {"inspect", "add_app", "build", "inspect_build"}:
+    if action not in {"inspect", "inspect_app", "add_app", "build", "inspect_build"}:
         raise SystemExit("Unsupported APP2-003 Codemagic action")
 
     token = os.environ.get("CM_API_TOKEN", "").strip()
@@ -128,6 +143,16 @@ def main() -> int:
 
         if action == "inspect":
             result["ok"] = True
+            return 0
+
+        if action == "inspect_app":
+            if not app_id:
+                raise RuntimeError("Night Library Codemagic application is not registered")
+            status, response = api_json(token, f"https://api.codemagic.io/apps/{app_id}")
+            if not 200 <= status < 300:
+                raise RuntimeError(f"Codemagic GET /apps/:id HTTP {status}: {sanitize(response)}")
+            app = response.get("application") if isinstance(response.get("application"), dict) else response
+            result.update({"ok": True, "app_id": app_id, "app_details": safe_app_details(app)})
             return 0
 
         if action == "add_app":
