@@ -1,0 +1,145 @@
+name: Toru Tango TestFlight Internal Build 8
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  assign:
+    if: startsWith(github.event.issue.title, '[TORU-TF-ASSIGN]')
+    runs-on: macos-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+
+      - name: Assign Build 8 to internal TestFlight group
+        id: assign
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import sys
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          sys.path.insert(0, 'scripts')
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          APP_ID = '6795968222'
+          BUNDLE_ID = 'com.allsunday1122.torutango'
+          BUILD_ID = '4046db0e-8483-4652-9244-e8e453b7fee7'
+          BUILD_NUMBER = '8'
+          GROUP_ID = '4f2f8315-ba4c-4691-b5fb-afbfff955c11'
+          GROUP_NAME = 'allsunday'
+          OUT = Path('testflight-internal-result.json')
+
+          result = {
+              'app_id': APP_ID,
+              'bundle_id': BUNDLE_ID,
+              'build_id': BUILD_ID,
+              'build_number': BUILD_NUMBER,
+              'beta_group_id': GROUP_ID,
+              'beta_group_name': GROUP_NAME,
+              'completed_at': None,
+              'changed': False,
+              'verified': False,
+          }
+
+          key_path = None
+          cleanup = None
+          try:
+              key_path, cleanup = load_private_key()
+              token = make_token(__import__('os').environ['ASC_ISSUER_ID'], __import__('os').environ['ASC_KEY_ID'], key_path)
+
+              _, app = api_get(token, f'/v1/apps/{APP_ID}')
+              app_data = app.get('data') or {}
+              actual_bundle = (app_data.get('attributes') or {}).get('bundleId')
+              if actual_bundle != BUNDLE_ID:
+                  raise RuntimeError(f'App preflight mismatch: {actual_bundle!r}')
+
+              _, builds = api_get(token, f'/v1/apps/{APP_ID}/builds?limit=200&fields[builds]=version,processingState,expired')
+              target_build = next((x for x in builds.get('data', []) if x.get('id') == BUILD_ID), None)
+              if not target_build:
+                  raise RuntimeError('Build 8 resource does not belong to target app.')
+              attrs = target_build.get('attributes') or {}
+              if attrs.get('version') != BUILD_NUMBER or attrs.get('processingState') != 'VALID' or attrs.get('expired') is True:
+                  raise RuntimeError(f'Build 8 is not a valid TestFlight candidate: {attrs}')
+
+              _, groups = api_get(token, f'/v1/apps/{APP_ID}/betaGroups?limit=200&fields[betaGroups]=name,isInternalGroup')
+              target_group = next((x for x in groups.get('data', []) if x.get('id') == GROUP_ID), None)
+              if not target_group:
+                  raise RuntimeError('Internal beta group does not belong to target app.')
+              gattrs = target_group.get('attributes') or {}
+              if gattrs.get('name') != GROUP_NAME or gattrs.get('isInternalGroup') is not True:
+                  raise RuntimeError(f'Beta group preflight mismatch: {gattrs}')
+
+              rel_path = f'/v1/betaGroups/{GROUP_ID}/relationships/builds?limit=200'
+              _, before = api_get(token, rel_path)
+              before_ids = {str(x.get('id')) for x in before.get('data', []) if isinstance(x, dict) and x.get('id')}
+
+              if BUILD_ID not in before_ids:
+                  payload = {'data': [{'type': 'builds', 'id': BUILD_ID}]}
+                  status, _ = api_request(token, f'/v1/betaGroups/{GROUP_ID}/relationships/builds', method='POST', payload=payload)
+                  if status not in (200, 201, 204):
+                      raise RuntimeError(f'Unexpected relationship POST status: {status}')
+                  result['changed'] = True
+                  result['post_status'] = status
+
+              _, after = api_get(token, rel_path)
+              after_ids = {str(x.get('id')) for x in after.get('data', []) if isinstance(x, dict) and x.get('id')}
+              if BUILD_ID not in after_ids:
+                  raise RuntimeError('TestFlight group relationship read-back mismatch.')
+
+              result['verified'] = True
+              result['group_build_count'] = len(after_ids)
+          except Exception as exc:
+              result['error'] = str(exc)
+              result['completed_at'] = datetime.now(timezone.utc).isoformat()
+              OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+              raise
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+
+          result['completed_at'] = datetime.now(timezone.utc).isoformat()
+          OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps(result, ensure_ascii=False))
+          PY
+
+      - name: Upload sanitized TestFlight result
+        if: always() && hashFiles('testflight-internal-result.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-testflight-internal-${{ github.run_id }}
+          path: testflight-internal-result.json
+          retention-days: 14
+
+      - name: Report result to command issue
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const status = '${{ steps.assign.outcome }}';
+            const artifact = `toru-tango-testflight-internal-${context.runId}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: [
+                'Toru Tango Internal TestFlight Build 8 assignment finished.',
+                `status=${status}`,
+                `run_id=${context.runId}`,
+                'build_id=4046db0e-8483-4652-9244-e8e453b7fee7',
+                'beta_group=allsunday',
+                `artifact=${artifact}`,
+                'App Review submission was not performed.'
+              ].join('\n')
+            });
