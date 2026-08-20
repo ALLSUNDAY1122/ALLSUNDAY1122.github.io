@@ -1,0 +1,64 @@
+name: Toru Tango Codemagic Inspect
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  inspect:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[TORU-CM-INSPECT] Build 8'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect Codemagic app read-only
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+          token=os.environ.get('CM_API_TOKEN','')
+          if not token: raise SystemExit('CM_API_TOKEN missing')
+          def get(url):
+              req=urllib.request.Request(url,method='GET')
+              req.add_header('Content-Type','application/json')
+              req.add_header('x-auth-token',token)
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode(); return r.status,json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode(errors='replace')
+                  try: data=json.loads(raw) if raw else {}
+                  except Exception: data={'error':raw[:1000]}
+                  return e.code,data
+          def sanitize(v):
+              bad=('secret','token','password','credential','private','apikey','api_key','environment','variable')
+              if isinstance(v,dict):
+                  return {k:('[REDACTED]' if any(x in str(k).lower() for x in bad) else sanitize(xv)) for k,xv in v.items()}
+              if isinstance(v,list): return [sanitize(x) for x in v]
+              return v
+          app_id='6a769d81a1add9d06020b524'
+          checks={}
+          for label,url in {
+              'app':f'https://api.codemagic.io/apps/{app_id}',
+              'builds_query':f'https://api.codemagic.io/builds?appId={app_id}',
+          }.items():
+              status,data=get(url); checks[label]={'http_status':status,'response':sanitize(data)}
+          Path('cm-inspect.json').write_text(json.dumps(checks,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({k:v['http_status'] for k,v in checks.items()}))
+          PY
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-cm-inspect-${{ github.run_id }}
+          path: cm-inspect.json
+          retention-days: 2
+      - name: Report locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Toru CM inspect finished. status=${{ job.status }}; run_id=${context.runId}; artifact=toru-cm-inspect-${context.runId}`});
