@@ -107,7 +107,7 @@ export default function StudyScreen() {
   }, [completed, currentCardId, recordStudyActivity, sessionStarted]);
 
   useEffect(() => {
-    if (!sessionStarted || completed || !currentCard || !voiceEnabled || playbackPaused) return;
+    if (!sessionStarted || completed || !currentCardId || !voiceEnabled || playbackPaused) return;
 
     let cancelled = false;
     cancelPlayback();
@@ -162,7 +162,7 @@ export default function StudyScreen() {
     autoAdvanceDelay,
     cancelPlayback,
     completed,
-    currentCard,
+    currentCardId,
     direction,
     firstText,
     fullRead,
