@@ -14,7 +14,7 @@ import { pickBackup, pickCardsCsv, shareBackup, shareCardsCsv } from '@/src/serv
 import { calculateStreak, getCardReviewStage, isReviewDue } from '@/src/utils/data';
 
 export default function RecordsScreen() {
-  const { cards, history, addCards, createBackup, restoreBackup } = useAppStore();
+  const { cards, history, studyDays, addCards, createBackup, restoreBackup } = useAppStore();
 
   const summary = useMemo(() => {
     const total = history.length;
@@ -31,7 +31,8 @@ export default function RecordsScreen() {
     return {
       total,
       accuracy: total ? Math.round((correct / total) * 100) : 0,
-      streak: calculateStreak(history.map((entry) => entry.dateKey)),
+      streak: calculateStreak(studyDays),
+      studyDayCount: new Set(studyDays).size,
       weak: cards.filter((card) => getCardReviewStage(card) === 'weak').length,
       due: cards.filter((card) => isReviewDue(card)).length,
       mastered: cards.filter((card) => getCardReviewStage(card) === 'mastered').length,
@@ -39,7 +40,7 @@ export default function RecordsScreen() {
         .sort(([left], [right]) => right.localeCompare(left))
         .slice(0, 14)
     };
-  }, [cards, history]);
+  }, [cards, history, studyDays]);
 
   const exportData = async () => {
     try {
@@ -102,13 +103,14 @@ export default function RecordsScreen() {
           <Stat label="総回答数" value={`${summary.total}`} />
           <Stat label="正答率" value={`${summary.accuracy}%`} />
           <Stat label="連続学習" value={`${summary.streak}日`} />
+          <Stat label="学習した日" value={`${summary.studyDayCount}日`} />
           <Stat label="弱点カード" value={`${summary.weak}`} />
           <Stat label="今日の定期確認" value={`${summary.due}`} />
-          <Stat label="確認不要" value={`${summary.mastered}`} />
         </View>
+        <Text style={styles.streakHint}>自動読み上げ・自動送りで学習した日も連続学習に含めます。</Text>
 
         {!summary.daily.length ? (
-          <EmptyState>まだ学習記録がありません。</EmptyState>
+          <EmptyState>まだ手動評価の記録がありません。</EmptyState>
         ) : (
           summary.daily.map(([date, value]) => (
             <View key={date} style={styles.historyRow}>
@@ -124,7 +126,7 @@ export default function RecordsScreen() {
 
       <Section title="バックアップ">
         <MutedText>
-          JSONファイルとして保存できます。復元時は現在のカードと履歴を置き換えます。
+          JSONファイルとして保存できます。復元時は現在のカード・学習記録・連続学習日を置き換えます。
         </MutedText>
         <View style={commonStyles.row}>
           <AppButton label="バックアップを保存" onPress={() => void exportData()} />
@@ -163,10 +165,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     borderRadius: 14,
     alignItems: 'center',
-    paddingVertical: 16
+    paddingVertical: 13
   },
-  statValue: { color: colors.text, fontSize: 24, fontWeight: '800' },
+  statValue: { color: colors.text, fontSize: 22, fontWeight: '800' },
   statLabel: { color: colors.muted, fontSize: 12, marginTop: 4 },
+  streakHint: {
+    color: colors.primaryDark,
+    backgroundColor: colors.primarySoft,
+    borderRadius: 10,
+    fontSize: 12,
+    lineHeight: 18,
+    padding: 10
+  },
   historyRow: {
     borderTopColor: colors.border,
     borderTopWidth: 1,
