@@ -1,6 +1,6 @@
 # Splat Lab｜Apple Developer / App Store Connect 登録パケット
 
-更新日: 2026-08-15
+更新日: 2026-08-21
 
 ## 固定値
 
@@ -34,11 +34,11 @@ App Store Connect APIでは新規Appレコードを作成できないため、�
 - SKU: `splatlab-ios-2026`
 - User Access: Full Access（特別に制限する必要がない場合）
 
-作成後に発行されるApple ID（数値）は推測せず、実値をNotion正本とこのパケットへ記録します。
+作成後に発行されるApple ID（数値）は推測せず、Bundle IDからAPIで対象Appを再取得し、実値をNotion正本とこのパケットへ記録します。候補が複数で一意に決まらない場合だけ人間確認へ戻します。
 
 ## Appレコード作成後の自動経路
 
-`testflight/splat-native-ios` ブランチのCodemagic workflow:
+`testflight/splat-native-ios-20260820` ブランチのCodemagic workflow:
 
 1. Release入力監査
 2. Explicit Bundle ID確認/必要時作成
