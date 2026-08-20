@@ -1,4 +1,4 @@
-name: Toru Tango Codemagic Build 8 Command
+name: Toru Tango Codemagic Build 9 Command
 
 on:
   issues:
@@ -9,12 +9,12 @@ permissions:
   issues: write
 
 concurrency:
-  group: toru-tango-codemagic-build-8
+  group: toru-tango-codemagic-build-9
   cancel-in-progress: false
 
 jobs:
   deliver:
-    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[CM-CMD] Toru Tango Build 8 delivery'
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[CM-CMD] Toru Tango Build 9 delivery'
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
@@ -42,12 +42,12 @@ jobs:
           if signing.get('bundle_identifier') != 'com.allsunday1122.torutango':
               raise SystemExit('Bundle ID mismatch')
           app = Path('toru-tango-mobile/app.config.ts').read_text(encoding='utf-8')
-          if "buildNumber: '8'" not in app:
-              raise SystemExit('Build number is not 8')
-          print('PASS: Toru Tango Codemagic workflow is TestFlight-only and Build 8 is fixed')
+          if "buildNumber: '9'" not in app:
+              raise SystemExit('Build number is not 9')
+          print('PASS: Toru Tango Codemagic workflow is TestFlight-only and Build 9 is fixed')
           PY
 
-      - name: Start and monitor Codemagic Build 8
+      - name: Start and monitor Codemagic Build 9
         id: cm
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
@@ -134,7 +134,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: toru-tango-codemagic-build8-${{ github.run_id }}
+          name: toru-tango-codemagic-build9-${{ github.run_id }}
           path: |
             cm-result.json
             cm-build-id.txt
@@ -147,12 +147,12 @@ jobs:
         with:
           script: |
             const body = [
-              'Toru Tango Codemagic Build 8 command finished.',
+              'Toru Tango Codemagic Build 9 command finished.',
               `status=${{ toJSON(job.status) }}`,
               `run_id=${context.runId}`,
               `codemagic_build_id=${{ toJSON(steps.cm.outputs.build_id) }}`,
               `codemagic_status=${{ toJSON(steps.cm.outputs.status) }}`,
-              `artifact=toru-tango-codemagic-build8-${context.runId}`,
+              `artifact=toru-tango-codemagic-build9-${context.runId}`,
             ].join('\n');
             await github.rest.issues.createComment({
               owner: context.repo.owner,
