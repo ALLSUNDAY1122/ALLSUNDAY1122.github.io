@@ -1,12 +1,12 @@
 {
-  "request_id": "app2-010-exam1-difficulty-after-ch1-20260821-0629",
+  "request_id": "app2-010-exam1-full-rewrite-audit-20260821-0641",
   "exam": 1,
   "question_count": 120,
   "grade_counts": {
-    "D": 12,
-    "C": 23,
-    "B-": 55,
-    "B": 30
+    "D": 2,
+    "C": 6,
+    "B-": 60,
+    "B": 52
   },
   "rows": [
     {
@@ -413,13 +413,13 @@
       "id": "RS26-013",
       "chapter": "第2章",
       "topic": "消化器系",
-      "question": "消化器系の働きに関する記述のうち、正しいものはどれか。",
+      "question": "消化器系の構造と働きに関する記述のうち、正しいものはどれか。",
       "choices": [
-        "胃では栄養分の大部分が吸収される。",
-        "肝臓は消化管から吸収された栄養分の代謝や貯蔵などを行う。",
-        "胆汁は膵臓でつくられ、胆のうに蓄えられる。",
-        "大腸では消化酵素による栄養分の消化が主に行われる。",
-        "小腸では水分がまったく吸収されない。"
+        "肝臓は胆汁を一時的に貯蔵し、胆のうが胆汁を産生する。",
+        "肝臓は消化管から吸収された栄養分の代謝・貯蔵に関与し、胆汁を産生する。",
+        "膵臓は胆汁を産生し、胆のうへ送り込む。",
+        "大腸は消化酵素を多量に分泌して栄養分の大部分を吸収する。",
+        "胃は栄養分の大部分を吸収する主要部位である。"
       ],
       "answer": 2,
       "heuristic_grade": "B",
@@ -428,83 +428,78 @@
         "CORRECT_LONGER_20PCT"
       ],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.33
+      "correct_length_ratio": 1.35
     },
     {
       "id": "RS26-014",
       "chapter": "第2章",
       "topic": "呼吸器系",
-      "question": "呼吸器系の働きに関する記述のうち、正しいものはどれか。",
+      "question": "呼吸器系に関する次の記述a〜dのうち、正しいものの組合せはどれか。\na 鼻腔では吸気の加温・加湿や異物除去が行われる。\nb 気管・気管支の線毛は、粘液に捕捉した異物を咽頭側へ運ぶ。\nc 肺胞では肺胞気と血液の間で酸素と二酸化炭素の交換が行われる。\nd 肺胞には異物を処理するマクロファージは存在しない。",
       "choices": [
-        "気管支の末端では尿が生成される。",
-        "肺胞は食物を消化する器官である。",
-        "肺胞では血液との間で酸素と二酸化炭素のガス交換が行われる。",
-        "鼻腔には異物を除く仕組みがない。",
-        "肺胞には異物を処理する細胞は存在しない。"
+        "a・b",
+        "a・c",
+        "a・b・c",
+        "b・c・d",
+        "a・b・d"
       ],
       "answer": 3,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.81
+      "correct_length_ratio": 1.0
     },
     {
       "id": "RS26-015",
       "chapter": "第2章",
       "topic": "循環器系",
-      "question": "循環器系に関する記述のうち、正しいものはどれか。",
+      "question": "血液成分と主な働きの組合せとして、正しいものはどれか。",
       "choices": [
-        "心臓は血液を全身へ送り出すポンプとして働く。",
-        "動脈には必ず静脈血だけが流れる。",
-        "赤血球は主に血液凝固を担う。",
-        "血小板は酸素運搬を主に担う。",
-        "リンパ系は循環器系と無関係である。"
+        "赤血球―ヘモグロビンによる酸素運搬、白血球―感染防御、血小板―止血",
+        "赤血球―抗体産生、白血球―酸素運搬、血小板―胆汁運搬",
+        "赤血球―止血、白血球―血液凝固因子産生、血小板―酸素運搬",
+        "赤血球―リンパ液回収、白血球―血圧維持、血小板―栄養吸収",
+        "赤血球―尿生成、白血球―胆汁産生、血小板―ガス交換"
       ],
       "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.38
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.18
     },
     {
       "id": "RS26-016",
       "chapter": "第2章",
       "topic": "泌尿器系",
-      "question": "泌尿器系に関する記述のうち、正しいものはどれか。",
+      "question": "腎臓の働きに関する記述のうち、正しいものはどれか。",
       "choices": [
-        "腎臓は血液を濾過し、老廃物などを尿として排泄する働きを担う。",
-        "尿は膀胱でつくられる。",
-        "腎臓は体内の水分や電解質の調節には関与しない。",
-        "尿管は尿を体外へ直接排出する器官である。",
-        "腎機能が低下しても医薬品成分の排泄には影響しない。"
+        "糸球体で血液が濾過され、尿細管で必要な物質の再吸収などが行われ、尿が形成される。",
+        "尿は膀胱で生成され、腎臓はその濃度だけを調節する。",
+        "腎臓は老廃物の排泄には関与するが、水分や電解質の調節には関与しない。",
+        "尿管では血液の濾過が行われ、膀胱では尿の再吸収が行われる。",
+        "腎機能の低下は、腎排泄される医薬品の血中濃度へ影響しない。"
       ],
       "answer": 1,
-      "heuristic_grade": "B",
-      "risk_score": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
       "flags": [
-        "CORRECT_LONGER_20PCT"
+        "CORRECT_LONGER_35PCT"
       ],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.3
+      "correct_length_ratio": 1.38
     },
     {
       "id": "RS26-017",
       "chapter": "第2章",
       "topic": "目・鼻・耳",
-      "question": "目の構造と働きに関する記述のうち、正しいものはどれか。",
+      "question": "目の構造と働きの組合せとして、正しいものはどれか。",
       "choices": [
-        "水晶体は光を感じて電気信号へ変換する。",
-        "網膜は水晶体の厚さを変えてピントを調節する。",
-        "水晶体は厚さを変えることで、近くや遠くにピントを合わせる。",
-        "瞳孔は涙液をつくる器官である。",
-        "角膜には光を屈折させる働きがない。"
+        "網膜―水晶体の厚さを変えて遠近調節する。",
+        "虹彩―光刺激を神経信号へ変換する。",
+        "水晶体―毛様体等の働きにより厚さを変え、焦点調節に関与する。",
+        "角膜―瞳孔径を変化させて入射光量を調節する。",
+        "涙腺―眼房水を産生して眼圧だけを調節する。"
       ],
       "answer": 3,
       "heuristic_grade": "B-",
@@ -513,40 +508,38 @@
         "CORRECT_LONGER_35PCT"
       ],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.53
+      "correct_length_ratio": 1.43
     },
     {
       "id": "RS26-018",
       "chapter": "第2章",
       "topic": "皮膚・骨格・筋組織",
-      "question": "皮膚・骨格・筋組織に関する記述のうち、正しいものはどれか。",
+      "question": "皮膚、骨、筋組織に関する次の記述a〜dのうち、正しいものの組合せはどれか。\na 表皮には血管がなく、栄養は主に真皮側から供給される。\nb 皮膚は発汗や血流調節を通じて体温調節に関与する。\nc 骨は身体支持だけでなく、カルシウム等の貯蔵にも関与する。\nd 骨格筋は自律神経のみに支配される不随意筋である。",
       "choices": [
-        "表皮には豊富な血管が走っている。",
-        "骨格筋は自律神経だけによって支配される。",
-        "皮膚には体温調節の働きはない。",
-        "骨格筋は随意筋であり、主に体性運動神経の支配を受ける。",
-        "骨はカルシウムなどの貯蔵には関与しない。"
+        "a・b",
+        "a・c",
+        "b・c・d",
+        "a・b・c",
+        "a・b・d"
       ],
       "answer": 4,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.35
+      "correct_length_ratio": 1.0
     },
     {
       "id": "RS26-019",
       "chapter": "第2章",
       "topic": "中枢神経系と末梢神経系",
-      "question": "中枢神経系と末梢神経系に関する記述のうち、正しいものはどれか。",
+      "question": "神経系の区分に関する記述のうち、正しいものはどれか。",
       "choices": [
-        "中枢神経系は脳と脊髄からなる。",
-        "末梢神経系は脳と脊髄だけからなる。",
-        "自律神経系は随意運動だけを支配する。",
-        "交感神経と副交感神経は常に同じ作用を示す。",
-        "神経系は内臓機能の調節には関与しない。"
+        "中枢神経系は脳と脊髄からなり、末梢神経系には体性神経系や自律神経系が含まれる。",
+        "中枢神経系は脳神経と脊髄神経からなり、脳と脊髄は末梢神経系に含まれる。",
+        "自律神経系は随意運動だけを支配し、内臓機能には関与しない。",
+        "交感神経と副交感神経は同じ器官に対して常に同方向の作用を示す。",
+        "末梢神経系は感覚情報を中枢へ伝える働きを持たず、運動指令だけを伝える。"
       ],
       "answer": 1,
       "heuristic_grade": "B",
@@ -555,84 +548,59 @@
         "ABSOLUTE_DISTRACTOR"
       ],
       "wrong_absolute_count": 1,
-      "correct_length_ratio": 0.83
+      "correct_length_ratio": 1.11
     },
     {
       "id": "RS26-020",
       "chapter": "第2章",
       "topic": "薬の吸収と生体内運命",
-      "question": "薬の吸収と生体内運命に関する記述のうち、正しいものはどれか。",
+      "question": "経口投与された医薬品成分の体内動態に関する次の記述a〜dのうち、正しいものの組合せはどれか。\na 多くの成分は消化管から吸収された後、門脈を介して肝臓を通る。\nb 肝臓で代謝を受けることで、成分の作用が弱まる場合も強まる場合もある。\nc 腎臓は未変化体や代謝物の排泄に関与する。\nd 血中濃度は投与量や吸収・代謝・排泄の影響を受けない。",
       "choices": [
-        "血中濃度が最小有効濃度を超えると、一般に薬効が現れ得る。",
-        "内服薬は消化管から吸収されず、すべて直接血液へ入る。",
-        "肝臓での代謝は医薬品成分に影響を与えない。",
-        "腎臓は医薬品成分や代謝物の排泄に関与しない。",
-        "血中濃度が高いほど副作用の可能性は必ず低くなる。"
+        "a・b・c",
+        "a・b",
+        "b・c・d",
+        "a・c・d",
+        "a・b・d"
       ],
       "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.17
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.0
     },
     {
       "id": "RS26-021",
       "chapter": "第2章",
       "topic": "薬の体内での働き",
-      "question": "薬の体内での働きに関する記述のうち、正しいものはどれか。",
+      "question": "医薬品成分の作用機序に関する記述のうち、正しいものはどれか。",
       "choices": [
-        "医薬品成分は必ず細胞を直接破壊して作用する。",
-        "医薬品成分は受容体や酵素などの働きに影響して作用することがある。",
-        "薬理作用は投与量と無関係である。",
-        "同じ成分なら人による反応差は生じない。",
-        "局所作用する薬は副作用を起こさない。"
+        "薬理作用は有効成分が細胞を物理的に破壊した場合にだけ生じる。",
+        "医薬品成分は受容体、酵素、イオンチャネルなどの機能へ影響して作用することがある。",
+        "同じ受容体へ作用する成分であれば、投与量にかかわらず作用の強さは一定である。",
+        "局所作用を目的とする外用薬では、全身性副作用は生じない。",
+        "同じ成分を同量使えば、年齢や肝腎機能にかかわらず反応は同一である。"
       ],
       "answer": 2,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
+      "heuristic_grade": "B",
+      "risk_score": 1,
       "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
+        "CORRECT_LONGER_20PCT"
       ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.68
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.21
     },
     {
       "id": "RS26-022",
       "chapter": "第2章",
       "topic": "剤形ごとの違いと適切な使用",
-      "question": "剤形ごとの違いと適切な使用に関する記述のうち、正しいものはどれか。",
+      "question": "剤形と使用方法に関する記述のうち、正しいものはどれか。",
       "choices": [
-        "腸溶錠は効果を早めるため、必ず噛み砕いて服用する。",
-        "錠剤は一般に胃や腸で崩壊して成分が溶け出すが、腸溶錠などは噛まずに服用する必要がある。",
-        "カプセル剤はすべて内容物を取り出して服用する。",
-        "外用薬は用法・用量を守る必要がない。",
-        "剤形が異なっても使用方法はすべて同じである。"
-      ],
-      "answer": 2,
-      "heuristic_grade": "C",
-      "risk_score": 5,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_3PLUS",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 3,
-      "correct_length_ratio": 1.87
-    },
-    {
-      "id": "RS26-023",
-      "chapter": "第2章",
-      "topic": "全身・精神神経系の主な副作用",
-      "question": "全身・精神神経系に現れる主な副作用に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "アナフィラキシーは通常、数週間かけてゆっくり進行するだけである。",
-        "アナフィラキシーは医薬品使用後、短時間で全身症状が急速に進行することがある。",
-        "スティーブンス・ジョンソン症候群では皮膚症状は現れない。",
-        "副作用による肝機能障害では倦怠感や黄疸は起こらない。",
-        "精神神経系の副作用に眠気やめまいは含まれない。"
+        "腸溶錠は胃で速やかに溶かすための製剤なので、噛み砕くのが原則である。",
+        "腸溶錠や徐放性製剤では、製剤設計を損なうことがあるため、自己判断で砕いたり噛んだりしない。",
+        "舌下錠は胃で吸収させるため、必ず水で飲み込む。",
+        "カプセル剤は全て内容物を取り出して服用するよう設計されている。",
+        "外用剤は内服剤より副作用が少ないため、用法・用量の制限はない。"
       ],
       "answer": 2,
       "heuristic_grade": "B-",
@@ -642,30 +610,45 @@
         "CORRECT_LONGER_35PCT"
       ],
       "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.36
+      "correct_length_ratio": 1.45
+    },
+    {
+      "id": "RS26-023",
+      "chapter": "第2章",
+      "topic": "全身・精神神経系の主な副作用",
+      "question": "一般用医薬品使用後、短時間のうちに全身のじんましん、喉の締め付け感、息苦しさ、血圧低下が現れた。最も疑うべき重大な副作用はどれか。",
+      "choices": [
+        "スティーブンス・ジョンソン症候群",
+        "アナフィラキシー",
+        "間質性肺炎",
+        "無菌性髄膜炎",
+        "偽アルドステロン症"
+      ],
+      "answer": 2,
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.0
     },
     {
       "id": "RS26-024",
       "chapter": "第2章",
       "topic": "局所に現れる主な副作用",
-      "question": "局所に現れる主な副作用に関する記述のうち、正しいものはどれか。",
+      "question": "外用薬を塗布した部位を中心に発赤、かゆみ、小水疱が生じ、使用を中止すると軽快した。最も考えやすい副作用はどれか。",
       "choices": [
-        "接触皮膚炎は内服薬だけで起こり、外用薬では起こらない。",
-        "接触皮膚炎は外用薬などが皮膚に接触した部位に、発赤・かゆみ・腫れなどを生じることがある。",
-        "点眼薬では局所の刺激感は副作用にならない。",
-        "副作用による皮膚症状が出ても、同じ薬を塗り続けるのが原則である。",
-        "局所副作用は全身状態と無関係なので相談は不要である。"
+        "スティーブンス・ジョンソン症候群",
+        "接触皮膚炎",
+        "間質性肺炎",
+        "無菌性髄膜炎",
+        "偽アルドステロン症"
       ],
       "answer": 2,
-      "heuristic_grade": "D",
-      "risk_score": 6,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.63
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 0.83
     },
     {
       "id": "RS26-069",
@@ -673,18 +656,20 @@
       "topic": "肝臓の働き",
       "question": "肝臓の働きに関する記述のうち、正しいものはどれか。",
       "choices": [
-        "胆汁をつくる働きがある。",
-        "尿を蓄える器官である。",
-        "酸素と二酸化炭素の交換を行う。",
-        "音を感じる感覚器官である。",
-        "血液を濾過して尿をつくる。"
+        "胆汁の産生、栄養分の代謝・貯蔵、有害物質の代謝などに関与する。",
+        "胆汁を貯蔵・濃縮することが主な働きで、胆汁産生には関与しない。",
+        "経口薬の多くは肝臓を経由せず全身循環へ入るため、初回通過効果は生じない。",
+        "医薬品の代謝は腎臓だけで行われ、肝機能は薬効へ影響しない。",
+        "肝臓は消化酵素を腸管内へ直接分泌して栄養分の大部分を吸収する。"
       ],
       "answer": 1,
       "heuristic_grade": "B",
-      "risk_score": 0,
-      "flags": [],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 0.92
+      "risk_score": 1,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.0
     },
     {
       "id": "RS26-070",
@@ -692,11 +677,11 @@
       "topic": "小腸と大腸",
       "question": "小腸と大腸の働きに関する記述のうち、正しいものはどれか。",
       "choices": [
-        "栄養分の大部分は主として小腸で吸収される。",
-        "大腸では胃酸が分泌される。",
-        "小腸では消化は行われない。",
-        "大腸では水分の吸収は行われない。",
-        "胆汁は大腸でつくられる。"
+        "小腸は栄養分の消化・吸収の中心であり、大腸は水分・電解質の吸収や便形成に関与する。",
+        "小腸では水分は吸収されず、大腸だけが水分を吸収する。",
+        "大腸は胃酸を分泌し、たんぱく質の消化を開始する。",
+        "小腸では胆汁や膵液の作用を受けず、消化は主に胃で完結する。",
+        "大腸は栄養分の大部分を吸収する主要部位である。"
       ],
       "answer": 1,
       "heuristic_grade": "B-",
@@ -705,29 +690,28 @@
         "CORRECT_LONGER_35PCT"
       ],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.62
+      "correct_length_ratio": 1.58
     },
     {
       "id": "RS26-071",
       "chapter": "第2章",
       "topic": "自律神経系",
-      "question": "自律神経系に関する記述のうち、正しいものはどれか。",
+      "question": "自律神経系の働きに関する記述のうち、正しいものはどれか。",
       "choices": [
-        "交感神経と副交感神経は、内臓機能などを調節する。",
-        "自律神経は骨だけに存在する。",
-        "自律神経は意識してのみ働く。",
-        "副交感神経は常に心拍数を増加させる。",
-        "交感神経は消化管や血管に影響しない。"
+        "交感神経と副交感神経は、多くの内臓機能を相反する方向に調節し、状況に応じて身体機能を保つ。",
+        "交感神経が優位になると、心拍数は低下し気管支は収縮する。",
+        "副交感神経が優位になると、消化管運動は抑制され瞳孔は散大する。",
+        "自律神経系は意識的な随意運動だけを支配する。",
+        "自律神経系は分泌腺や血管の機能には関与しない。"
       ],
       "answer": 1,
       "heuristic_grade": "B-",
       "risk_score": 2,
       "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_20PCT"
+        "CORRECT_LONGER_35PCT"
       ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.33
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.61
     },
     {
       "id": "RS26-072",
@@ -735,523 +719,114 @@
       "topic": "薬の代謝",
       "question": "医薬品成分の代謝に関する記述のうち、正しいものはどれか。",
       "choices": [
-        "肝臓は医薬品成分の代謝に重要な役割を持つ。",
-        "代謝された成分は必ず元の成分より作用が強くなる。",
-        "内服薬は肝臓を通過することがない。",
-        "代謝は医薬品の持続時間に影響しない。",
-        "肝機能低下は医薬品の作用に影響しない。"
+        "経口投与された成分の一部は全身循環へ入る前に肝臓で代謝されることがあり、これを初回通過効果という。",
+        "代謝を受けた成分は全て薬理活性を失い、活性代謝物が生じることはない。",
+        "肝機能が低下すると代謝が必ず促進され、血中濃度は低下する。",
+        "代謝は薬物の作用時間へ影響せず、排泄だけが作用時間を決める。",
+        "経口薬は門脈を通らず、消化管から直接動脈へ入る。"
       ],
       "answer": 1,
-      "heuristic_grade": "B",
-      "risk_score": 1,
+      "heuristic_grade": "C",
+      "risk_score": 4,
       "flags": [
-        "ABSOLUTE_DISTRACTOR"
+        "ABSOLUTE_DISTRACTORS_2PLUS",
+        "CORRECT_LONGER_35PCT"
       ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.11
+      "wrong_absolute_count": 2,
+      "correct_length_ratio": 1.63
     },
     {
       "id": "RS26-073",
       "chapter": "第2章",
       "topic": "腎臓と排泄",
-      "question": "医薬品成分の排泄に関する記述のうち、正しいものはどれか。",
+      "question": "腎機能と医薬品成分の排泄に関する記述のうち、正しいものはどれか。",
       "choices": [
-        "腎臓は医薬品成分や代謝物の排泄に関与する。",
-        "腎機能が低下すると医薬品成分は必ず速く排泄される。",
-        "尿は肝臓でつくられる。",
-        "腎臓は水分・電解質の調節を行わない。",
-        "排泄は血中濃度に影響しない。"
+        "腎機能が低下すると、腎排泄される薬物や代謝物が体内に蓄積し、副作用リスクが高まることがある。",
+        "腎機能が低下すると糸球体濾過は必ず亢進し、薬物排泄は速くなる。",
+        "腎臓は薬物排泄には関与せず、排泄は全て肝臓から胆汁中へ行われる。",
+        "尿のpHや腎血流は薬物排泄へ影響しない。",
+        "腎機能は水分・電解質の調節だけに関与し、医薬品の体内動態とは無関係である。"
       ],
       "answer": 1,
-      "heuristic_grade": "B",
-      "risk_score": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
       "flags": [
-        "ABSOLUTE_DISTRACTOR"
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
       ],
       "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.17
+      "correct_length_ratio": 1.44
     },
     {
       "id": "RS26-074",
       "chapter": "第2章",
       "topic": "無菌性髄膜炎",
-      "question": "医薬品による無菌性髄膜炎が疑われる症状として、最も適切なものはどれか。",
+      "question": "医薬品による無菌性髄膜炎が疑われる症状の組合せとして、最も適切なのはどれか。",
       "choices": [
-        "発熱、激しい頭痛、首筋のつっぱり、吐き気・嘔吐など。",
-        "黄疸、褐色尿、全身倦怠感など。",
-        "息切れ、息苦しさ、空咳、発熱など。",
-        "高熱、目の充血、口唇のびらん、広範囲の発疹など。",
-        "排尿困難、尿量減少、むくみなど。"
+        "発熱、激しい頭痛、首筋のつっぱり、吐き気・嘔吐",
+        "空咳、息切れ、息苦しさ、発熱",
+        "黄疸、褐色尿、強い倦怠感",
+        "高熱、目の充血、口唇のただれ、広範囲の発疹",
+        "むくみ、血圧上昇、手足のだるさ、筋力低下"
       ],
       "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.53
+      "correct_length_ratio": 1.15
     },
     {
       "id": "RS26-075",
       "chapter": "第2章",
       "topic": "間質性肺炎",
-      "question": "間質性肺炎が疑われる症状として、最も適切なものはどれか。",
+      "question": "医薬品による間質性肺炎が疑われる症状の組合せとして、最も適切なのはどれか。",
       "choices": [
-        "息切れ、息苦しさ、空咳、発熱など。",
-        "高熱、目の充血、口唇のびらん、広範囲の発疹など。",
-        "発熱、激しい頭痛、首筋のつっぱり、吐き気など。",
-        "黄疸、褐色尿、全身倦怠感など。",
-        "顔面蒼白、冷汗、意識の混濁など。"
+        "空咳、息切れ、息苦しさ、発熱",
+        "発熱、激しい頭痛、首筋のつっぱり、吐き気",
+        "黄疸、褐色尿、食欲不振、倦怠感",
+        "高熱、広範囲の発疹、粘膜のただれ",
+        "むくみ、血圧上昇、低カリウム血症に伴う筋力低下"
       ],
       "answer": 1,
       "heuristic_grade": "B",
       "risk_score": 0,
       "flags": [],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.0
+      "correct_length_ratio": 0.88
     },
     {
       "id": "RS26-076",
       "chapter": "第2章",
       "topic": "眼圧上昇と排尿困難",
-      "question": "抗コリン作用によって起こり得る症状の組合せとして、適切なものはどれか。",
+      "question": "抗コリン作用をもつ一般用医薬品で特に注意する症状の組合せとして、最も適切なのはどれか。",
       "choices": [
-        "口渇や排尿困難、眼圧上昇など。",
-        "必ず血糖低下だけが起こる。",
-        "骨折だけが起こる。",
-        "聴力が必ず改善する。",
-        "発毛だけが起こる。"
+        "口渇、排尿困難、眼圧上昇",
+        "唾液分泌増加、縮瞳、下痢",
+        "気管支分泌増加、徐脈、排尿促進",
+        "低血糖、黄疸、出血傾向",
+        "咳、痰、発熱、胸痛"
       ],
       "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.5
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.0
     },
     {
       "id": "RS26-025",
       "chapter": "第3章",
       "topic": "かぜ薬",
-      "question": "かぜ薬に関する記述のうち、正しいものはどれか。",
+      "question": "かぜ薬（総合感冒薬）の基本的な位置づけに関する記述のうち、正しいものはどれか。",
       "choices": [
-        "かぜ薬はかぜの原因となるウイルスを直接死滅させることを主目的とする。",
-        "かぜ薬は発熱、鼻水、せき、のどの痛みなどの諸症状を緩和するために用いられる。",
-        "高熱や激しい頭痛がある場合でも、必ず一般用かぜ薬だけで対応する。",
-        "複数のかぜ薬を併用しても成分重複は起こらない。",
-        "症状が長引いても受診を考える必要はない。"
+        "かぜの原因ウイルスを体内から除去することを主目的とする。",
+        "発熱、鼻水、鼻づまり、せき、のどの痛みなど複数の症状を緩和する目的で用いられる。",
+        "症状にない成分も多いほど治癒が早まるため、成分数の多い製品を優先する。",
+        "解熱鎮痛薬と併用しても有効成分が重複することはない。",
+        "高熱や呼吸困難がある場合も、受診より総合感冒薬の継続を優先する。"
       ],
       "answer": 2,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.19
-    },
-    {
-      "id": "RS26-026",
-      "chapter": "第3章",
-      "topic": "解熱鎮痛薬",
-      "question": "解熱鎮痛薬に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "アセトアミノフェン、エテンザミド、無水カフェインの組合せはACE処方と呼ばれる。",
-        "解熱鎮痛薬は痛みの原因疾患を必ず治癒させる。",
-        "解熱鎮痛成分は複数製品を併用しても重複しない。",
-        "発熱は体の防御反応とは無関係である。",
-        "用法・用量を超えて服用しても副作用リスクは増えない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.74
-    },
-    {
-      "id": "RS26-027",
-      "chapter": "第3章",
-      "topic": "眠気を促す薬・防ぐ薬・乗物酔い防止薬",
-      "question": "眠気を促す薬・防ぐ薬・乗物酔い防止薬に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "抗ヒスタミン成分は、乗物酔いに伴うめまいや吐き気の予防に用いられることがある。",
-        "眠気防止薬は十分な睡眠の代わりとして連用する薬である。",
-        "抗ヒスタミン成分を含む薬では眠気は起こらない。",
-        "乗物酔い防止薬は乗車後に症状が強くなってからだけ使用する。",
-        "カフェインを大量に摂取しても不眠や動悸は生じない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.44
-    },
-    {
-      "id": "RS26-028",
-      "chapter": "第3章",
-      "topic": "鎮咳去痰薬・口腔咽喉薬",
-      "question": "鎮咳去痰薬・口腔咽喉薬に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "鎮咳去痰薬は、せきを鎮めたり痰の排出を助けたりする目的で用いられる。",
-        "せきが長期間続いても、原因疾患を考える必要はない。",
-        "鎮咳成分は用量を増やすほど安全性が高くなる。",
-        "口腔咽喉薬は必ず飲み込んで全身作用を得ることを目的とする。",
-        "トローチ剤はすぐ噛み砕いて飲み込むのが原則である。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.36
-    },
-    {
-      "id": "RS26-029",
-      "chapter": "第3章",
-      "topic": "胃薬・腸薬・胃腸鎮痛鎮痙薬",
-      "question": "胃薬・腸薬・胃腸鎮痛鎮痙薬に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "制酸成分は胃酸を中和し、胃酸による刺激を和らげる目的で用いられる。",
-        "下痢が続き血便があっても、止瀉薬だけで様子を見るのが原則である。",
-        "便秘薬は毎日多量に連用するほど効果が安定する。",
-        "胃腸鎮痛鎮痙薬は腹痛の原因にかかわらず必ず使用できる。",
-        "整腸成分は腸内環境とは無関係である。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_20PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.22
-    },
-    {
-      "id": "RS26-030",
-      "chapter": "第3章",
-      "topic": "強心薬・高コレステロール改善薬・貧血用薬",
-      "question": "強心薬・高コレステロール改善薬・貧血用薬に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "鉄製剤は鉄欠乏性貧血における鉄分の補給を目的として用いられる。",
-        "貧血用薬は原因に関係なくすべての貧血を治療できる。",
-        "鉄製剤では胃腸障害などの副作用は起こらない。",
-        "高コレステロール改善薬を使えば食生活の改善は不要である。",
-        "強い胸痛がある場合は一般用強心薬で長期間様子を見るのが原則である。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.11
-    },
-    {
-      "id": "RS26-031",
-      "chapter": "第3章",
-      "topic": "痔の薬・泌尿器用薬・婦人薬",
-      "question": "痔の薬・泌尿器用薬・婦人薬に関する対応として、正しいものはどれか。",
-      "choices": [
-        "痔出血が大量でも一般用痔疾用薬だけで長期間様子を見る。",
-        "出血が多い、長く続くなどの場合は他の疾患も考え、受診を勧める。",
-        "排尿痛や血尿が続いても必ず一般用泌尿器用薬で対応できる。",
-        "婦人薬は妊娠の有無を確認せず使用できる。",
-        "痔疾用外用薬は内服して使用する。"
-      ],
-      "answer": 2,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.15
-    },
-    {
-      "id": "RS26-032",
-      "chapter": "第3章",
-      "topic": "内服アレルギー用薬・鼻炎用薬・眼科用薬",
-      "question": "内服アレルギー用薬・鼻炎用薬・眼科用薬に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "抗ヒスタミン成分は、ヒスタミンが受容体に結合するのを妨げ、アレルギー症状を和らげる。",
-        "抗ヒスタミン成分には眠気を生じるものはない。",
-        "点眼薬は容器の先端を眼球に触れさせて使用する。",
-        "鼻炎用点鼻薬は長期間使うほど鼻づまりが改善し続ける。",
-        "アレルギー症状が重く呼吸困難があっても一般用薬だけで対応する。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.62
-    },
-    {
-      "id": "RS26-033",
-      "chapter": "第3章",
-      "topic": "皮膚に用いる薬・歯や口中に用いる薬",
-      "question": "皮膚に用いる薬・歯や口中に用いる薬に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "外用ステロイド薬は症状がなくても広範囲へ長期間使用するのが原則である。",
-        "外用ステロイド薬は湿疹・皮膚炎などの炎症を抑える目的で用いられるが、漫然と広範囲・長期間使用しない。",
-        "化膿した患部にはどの外用薬でも自由に使用できる。",
-        "口内炎が長期間治らなくても受診は不要である。",
-        "歯痛薬はむし歯そのものを修復する。"
-      ],
-      "answer": 2,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 2.08
-    },
-    {
-      "id": "RS26-034",
-      "chapter": "第3章",
-      "topic": "禁煙補助剤・滋養強壮保健薬",
-      "question": "禁煙補助剤・滋養強壮保健薬に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "ニコチンを含む禁煙補助剤は、喫煙しながら併用するほど安全である。",
-        "禁煙補助剤は、禁煙時のニコチン離脱症状を軽減して禁煙を助ける目的で用いられる。",
-        "禁煙補助剤を使えば禁煙の意思や行動変容は不要である。",
-        "ビタミン剤は大量に摂取するほど健康効果が高まる。",
-        "滋養強壮保健薬は食事の代替として使用する。"
-      ],
-      "answer": 2,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.5
-    },
-    {
-      "id": "RS26-035",
-      "chapter": "第3章",
-      "topic": "漢方処方製剤・生薬製剤",
-      "question": "漢方処方製剤・生薬製剤に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "漢方処方製剤は天然物由来なので、副作用や相互作用は起こらない。",
-        "漢方処方製剤は症状名だけが同じなら、体質に関係なく同じ処方を選ぶ。",
-        "漢方処方製剤も、体質や症状に合った選択と副作用・相互作用への注意が必要である。",
-        "複数の漢方薬を併用しても同じ生薬が重複することはない。",
-        "症状が悪化しても長期間使用を続けるのが原則である。"
-      ],
-      "answer": 3,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_20PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.26
-    },
-    {
-      "id": "RS26-036",
-      "chapter": "第3章",
-      "topic": "消毒薬・殺虫剤・一般用検査薬",
-      "question": "消毒薬・殺虫剤・一般用検査薬に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "消毒薬は濃度が高いほど常に安全で効果的である。",
-        "殺虫剤は人体に直接使用しないため、誤使用による健康影響を考える必要はない。",
-        "一般用検査薬の結果だけで病気を確定診断できる。",
-        "消毒薬は対象物や用途に応じて適切な濃度・使用方法を守る必要がある。",
-        "検査結果が陰性なら症状があっても受診は不要である。"
-      ],
-      "answer": 4,
-      "heuristic_grade": "D",
-      "risk_score": 6,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_3PLUS",
-        "CORRECT_LONGER_20PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 4,
-      "correct_length_ratio": 1.32
-    },
-    {
-      "id": "RS26-077",
-      "chapter": "第3章",
-      "topic": "かぜ薬の選択",
-      "question": "かぜ薬を選ぶ際の考え方として、適切なものはどれか。",
-      "choices": [
-        "症状がない成分も多く含むほど安全である。",
-        "現在の症状に必要な成分を中心に選び、不要な成分の重複を避ける。",
-        "複数の総合感冒薬を同時に使う。",
-        "治療中の病気や併用薬は確認しない。",
-        "発熱が続いても漫然と連用する。"
-      ],
-      "answer": 2,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.82
-    },
-    {
-      "id": "RS26-078",
-      "chapter": "第3章",
-      "topic": "アセトアミノフェン",
-      "question": "アセトアミノフェンの主な用途として、正しいものはどれか。",
-      "choices": [
-        "解熱鎮痛成分として用いられる。",
-        "抗真菌成分として用いられる。",
-        "止瀉成分として用いられる。",
-        "鼻粘膜収縮成分として用いられる。",
-        "鉄欠乏を補う。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B",
-      "risk_score": 0,
-      "flags": [],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.07
-    },
-    {
-      "id": "RS26-079",
-      "chapter": "第3章",
-      "topic": "解熱鎮痛薬と飲酒",
-      "question": "解熱鎮痛薬と飲酒に関する記述のうち、適切なものはどれか。",
-      "choices": [
-        "飲酒は胃腸障害や肝機能障害などのリスクを高めることがある。",
-        "アルコールはすべての副作用を防ぐ。",
-        "飲酒時は用量を増やしてよい。",
-        "酒類は医薬品と相互作用しない。",
-        "飲酒は薬効だけを消し安全性に影響しない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.71
-    },
-    {
-      "id": "RS26-080",
-      "chapter": "第3章",
-      "topic": "抗ヒスタミン成分と眠気",
-      "question": "内服の抗ヒスタミン成分に関する注意として、正しいものはどれか。",
-      "choices": [
-        "眠気が現れることがあるため、運転等を避ける必要がある製品がある。",
-        "眠気は起こらない。",
-        "飲酒で眠気は必ず消える。",
-        "複数製品の併用ほど安全である。",
-        "排尿への影響はない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 2.67
-    },
-    {
-      "id": "RS26-081",
-      "chapter": "第3章",
-      "topic": "カフェイン",
-      "question": "カフェインを主薬とする眠気防止薬に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "睡眠不足そのものを解消する薬ではない。",
-        "循環器系へ影響しない。",
-        "コーヒーと大量併用するほど安全である。",
-        "休養は不要になる。",
-        "不眠を治療する。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.73
-    },
-    {
-      "id": "RS26-082",
-      "chapter": "第3章",
-      "topic": "乗物酔い防止薬",
-      "question": "乗物酔い防止薬に含まれる抗コリン成分で起こり得る副作用として、最も適切なものはどれか。",
-      "choices": [
-        "口渇や排尿困難。",
-        "黄疸や褐色尿。",
-        "空咳や息苦しさ。",
-        "高熱と広範囲の皮疹。",
-        "出血傾向や紫斑。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B",
-      "risk_score": 0,
-      "flags": [],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.0
-    },
-    {
-      "id": "RS26-083",
-      "chapter": "第3章",
-      "topic": "デキストロメトルファン",
-      "question": "デキストロメトルファンの主な用途として、正しいものはどれか。",
-      "choices": [
-        "咳を抑える鎮咳成分。",
-        "胃酸を中和する制酸成分。",
-        "便を軟らかくする瀉下成分。",
-        "水虫の抗真菌成分。",
-        "鉄欠乏を補う成分。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B",
-      "risk_score": 0,
-      "flags": [],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.0
-    },
-    {
-      "id": "RS26-084",
-      "chapter": "第3章",
-      "topic": "去痰薬",
-      "question": "去痰薬の目的として、最も適切なものはどれか。",
-      "choices": [
-        "痰を出しやすくする。",
-        "胃酸を増やす。",
-        "発熱を必ず下げる。",
-        "血糖を下げる。",
-        "皮膚真菌を殺す。"
-      ],
-      "answer": 1,
       "heuristic_grade": "B-",
       "risk_score": 2,
       "flags": [
@@ -1262,323 +837,137 @@
       "correct_length_ratio": 1.25
     },
     {
-      "id": "RS26-085",
+      "id": "RS26-026",
       "chapter": "第3章",
-      "topic": "口腔咽喉薬",
-      "question": "口腔咽喉薬やうがい薬の使用として、適切なものはどれか。",
+      "topic": "解熱鎮痛薬",
+      "question": "解熱鎮痛成分の組合せと特徴に関する記述のうち、正しいものはどれか。",
       "choices": [
-        "定められた用法を守り、飲み込む目的でない製品は飲み込まない。",
-        "多量に飲み込むほどよい。",
-        "成分による注意事項はない。",
-        "呼吸困難でも受診不要である。",
-        "用法・用量は不要である。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 2.31
-    },
-    {
-      "id": "RS26-086",
-      "chapter": "第3章",
-      "topic": "制酸薬",
-      "question": "制酸薬の働きとして、正しいものはどれか。",
-      "choices": [
-        "胃酸を中和するなどして胃酸過多の症状を和らげる。",
-        "腸内細菌をすべて殺す。",
-        "咳中枢を抑える。",
-        "鼻粘膜を必ず収縮させる。",
-        "皮膚炎を治療する。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 2.18
-    },
-    {
-      "id": "RS26-087",
-      "chapter": "第3章",
-      "topic": "止瀉薬",
-      "question": "下痢への対応として、適切なものはどれか。",
-      "choices": [
-        "高熱や血便を伴う下痢では安易に止瀉薬だけで対処せず受診を考える。",
-        "感染が疑われても必ず腸運動を止める。",
-        "乳幼児の下痢では脱水は起こらない。",
-        "長期間続いても受診不要である。",
-        "水分補給は不要である。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "CORRECT_LONGER_35PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 3,
-      "correct_length_ratio": 1.88
-    },
-    {
-      "id": "RS26-088",
-      "chapter": "第3章",
-      "topic": "瀉下薬",
-      "question": "瀉下薬（便秘薬）の使用に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "漫然と連用せず生活習慣の改善も検討する。",
-        "用量を増やし続ければ安全である。",
-        "激しい腹痛や嘔吐があっても必ず使用する。",
-        "原因疾患を考える必要はない。",
-        "成人用製品を小児に自己判断で使う。"
+        "アセトアミノフェン・エテンザミド・無水カフェインの配合はACE処方と呼ばれることがある。",
+        "アセトアミノフェン・イブプロフェン・ロキソプロフェンの3成分配合だけをACE処方という。",
+        "解熱鎮痛薬は原因疾患を治癒させるため、症状が続いても受診は不要である。",
+        "同じ解熱鎮痛成分が別製品に含まれていても、商品名が違えば併用できる。",
+        "解熱鎮痛成分は用量を増やすほど副作用が減少する。"
       ],
       "answer": 1,
       "heuristic_grade": "B-",
       "risk_score": 2,
       "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS"
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_20PCT"
       ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.18
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.26
     },
     {
-      "id": "RS26-089",
+      "id": "RS26-027",
       "chapter": "第3章",
-      "topic": "胃腸鎮痛鎮痙薬",
-      "question": "胃腸鎮痛鎮痙薬に含まれる抗コリン成分で注意する症状はどれか。",
+      "topic": "眠気を促す薬・防ぐ薬・乗物酔い防止薬",
+      "question": "眠気に関係する一般用医薬品について、次の記述a〜dのうち正しいものの組合せはどれか。\na 第一世代抗ヒスタミン成分は眠気を生じることがある。\nb カフェインを主薬とする眠気防止薬は睡眠不足そのものを解消する薬ではない。\nc 乗物酔い防止薬の抗コリン成分では口渇や排尿困難が起こることがある。\nd 鎮静成分を含む薬は長期連用するほど依存の危険が低下する。",
       "choices": [
-        "口渇や排尿困難。",
-        "必ず低血圧だけ。",
-        "発毛。",
-        "骨折予防。",
-        "視力の永久的改善。"
+        "a・b・c",
+        "a・b",
+        "b・c・d",
+        "a・c・d",
+        "a・b・d"
       ],
       "answer": 1,
       "heuristic_grade": "B",
-      "risk_score": 1,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR"
-      ],
-      "wrong_absolute_count": 1,
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
       "correct_length_ratio": 1.0
     },
     {
-      "id": "RS26-090",
+      "id": "RS26-028",
       "chapter": "第3章",
-      "topic": "鉄欠乏性貧血",
-      "question": "鉄製剤を含む貧血用薬の主な対象として、適切なものはどれか。",
+      "topic": "鎮咳去痰薬・口腔咽喉薬",
+      "question": "鎮咳去痰薬に含まれる成分と主な目的の組合せとして、正しいものはどれか。",
       "choices": [
-        "鉄欠乏による貧血。",
-        "すべての原因の貧血。",
-        "急な大量出血の自己治療。",
-        "白血病の治療。",
-        "感染症の治療。"
+        "デキストロメトルファン―咳中枢に作用して咳を鎮める。",
+        "ブロムヘキシン―咳中枢を抑制して鎮咳する。",
+        "ノスカピン―気道分泌を増やして痰を排出しやすくする。",
+        "グアイフェネシン―局所麻酔作用でのどの痛みだけを抑える。",
+        "トラネキサム酸―気管支を拡張して喘息発作を止める。"
       ],
       "answer": 1,
       "heuristic_grade": "B",
-      "risk_score": 1,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR"
-      ],
-      "wrong_absolute_count": 1,
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
       "correct_length_ratio": 1.0
     },
     {
-      "id": "RS26-091",
+      "id": "RS26-029",
       "chapter": "第3章",
-      "topic": "痔の薬",
-      "question": "痔の薬に関する記述のうち、適切なものはどれか。",
+      "topic": "胃薬・腸薬・胃腸鎮痛鎮痙薬",
+      "question": "胃腸薬の成分と主な作用の組合せとして、正しいものはどれか。",
       "choices": [
-        "出血が多い、痛みが強い、長引く場合は受診を考える。",
-        "大量出血でも一般用薬だけで様子を見る。",
-        "内服薬と外用薬は必ず同じ成分である。",
-        "妊娠中でも注意事項はない。",
-        "肛門出血はすべて痔と断定できる。"
+        "制酸成分―胃酸を中和して胃酸による刺激を和らげる。",
+        "健胃成分―胃酸分泌を完全に止める。",
+        "消化酵素―腸管運動を直接抑制して下痢を止める。",
+        "抗コリン成分―胃酸を中和する。",
+        "整腸成分―刺激性瀉下作用により急速に排便させる。"
       ],
       "answer": 1,
-      "heuristic_grade": "D",
-      "risk_score": 7,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_3PLUS",
-        "CORRECT_LONGER_35PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 3,
-      "correct_length_ratio": 1.39
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.09
     },
     {
-      "id": "RS26-092",
+      "id": "RS26-030",
       "chapter": "第3章",
-      "topic": "泌尿器用薬",
-      "question": "排尿症状への対応として、適切なものはどれか。",
+      "topic": "強心薬・高コレステロール改善薬・貧血用薬",
+      "question": "貧血用薬に含まれる鉄製剤について正しいものはどれか。",
       "choices": [
-        "血尿、発熱、強い痛みを伴う場合は受診を考える。",
-        "排尿困難が強くても必ず一般用薬だけで対処する。",
-        "尿が全く出なくても様子を見る。",
-        "高齢男性の排尿困難は原因確認不要である。",
-        "妊娠中の排尿痛は自己判断のみで対処する。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 5,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_3PLUS",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 4,
-      "correct_length_ratio": 1.15
-    },
-    {
-      "id": "RS26-093",
-      "chapter": "第3章",
-      "topic": "婦人薬",
-      "question": "婦人薬を選ぶ際の対応として、適切なものはどれか。",
-      "choices": [
-        "妊娠の可能性や症状の程度を確認し、必要に応じて受診を勧める。",
-        "不正出血があっても受診不要である。",
-        "妊娠中はすべての婦人薬を使用できる。",
-        "強い腹痛でも一般用薬だけで対処する。",
-        "年齢や治療中の病気は確認しない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "D",
-      "risk_score": 7,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_3PLUS",
-        "CORRECT_LONGER_35PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 3,
-      "correct_length_ratio": 1.67
-    },
-    {
-      "id": "RS26-094",
-      "chapter": "第3章",
-      "topic": "鼻炎用点鼻薬",
-      "question": "血管収縮成分を含む点鼻薬の使用として、適切なものはどれか。",
-      "choices": [
-        "長期連用でかえって鼻づまりが悪化することがあるため、用法を守る。",
-        "連用するほど鼻粘膜は必ず正常化する。",
-        "高血圧などは確認不要である。",
-        "内服薬との重複は起こらない。",
-        "乳幼児にも成人用を自己判断で使用する。"
+        "鉄欠乏性貧血における鉄補給を目的として用いられ、胃腸症状や便の黒色化がみられることがある。",
+        "原因を問わず全ての貧血に有効であり、長期使用前の原因確認は不要である。",
+        "服用後に便が黒くなることは鉄製剤では起こらず、必ず消化管出血を示す。",
+        "鉄製剤は食事中の鉄摂取量とは無関係に、用量を増やすほど効果が高い。",
+        "強い息切れや動悸が持続しても、鉄製剤を増量すれば受診は不要である。"
       ],
       "answer": 1,
       "heuristic_grade": "D",
       "risk_score": 6,
       "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.78
-    },
-    {
-      "id": "RS26-095",
-      "chapter": "第3章",
-      "topic": "点眼薬",
-      "question": "一般用点眼薬の使用方法として、適切なものはどれか。",
-      "choices": [
-        "容器の先端がまつ毛や眼球に触れないようにする。",
-        "複数人で同じ容器を共用する。",
-        "コンタクトレンズ装用中の注意は製品ごとに確認しない。",
-        "変色していても使い続ける。",
-        "点眼後すぐ容器先端を洗面台に置く。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.35
-    },
-    {
-      "id": "RS26-096",
-      "chapter": "第3章",
-      "topic": "ステロイド外用薬",
-      "question": "ステロイド性抗炎症成分を含む外用薬の使用として、適切なものはどれか。",
-      "choices": [
-        "化膿している患部などでは使用が適さない場合がある。",
-        "感染の有無に関係なく必ず使用する。",
-        "顔面には無制限に長期使用する。",
-        "副作用は起こらない。",
-        "用法・用量は不要である。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "D",
-      "risk_score": 6,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.67
-    },
-    {
-      "id": "RS26-097",
-      "chapter": "第3章",
-      "topic": "水虫薬",
-      "question": "水虫（白癬）用薬の使用として、適切なものはどれか。",
-      "choices": [
-        "症状が改善しても定められた期間は継続することが重要である。",
-        "爪白癬も一般用外用薬だけで必ず治る。",
-        "湿疹と白癬の区別は不要である。",
-        "患部を常に湿らせる。",
-        "家族で同じタオルを共用する。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 5,
-      "flags": [
         "ABSOLUTE_DISTRACTORS_3PLUS",
-        "CORRECT_LONGER_35PCT"
+        "CORRECT_LONGER_20PCT",
+        "HEDGE_VS_ABSOLUTE_PATTERN"
       ],
       "wrong_absolute_count": 3,
-      "correct_length_ratio": 1.93
+      "correct_length_ratio": 1.32
     },
     {
-      "id": "RS26-098",
+      "id": "RS26-031",
       "chapter": "第3章",
-      "topic": "口内炎用薬",
-      "question": "口内炎への対応として、受診を考えるべき状況はどれか。",
+      "topic": "痔の薬・泌尿器用薬・婦人薬",
+      "question": "一般用医薬品での対処より受診を優先すべき症状の組合せとして最も適切なのはどれか。\na 痔と思っているが大量の出血が続く。\nb 排尿痛に加えて発熱・腰痛がある。\nc 不正出血が続いている。\nd 軽い一時的な便秘のみで他症状はない。",
       "choices": [
-        "症状が長引く、繰り返す、広範囲に及ぶ。",
-        "1日で軽快した。",
-        "食事で一時的にしみるだけ。",
-        "小さな傷が一度できた。",
-        "睡眠後に軽快した。"
+        "a・d",
+        "a・b・c",
+        "b・c・d",
+        "a・c・d",
+        "a・b・d"
       ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
+      "answer": 2,
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.73
+      "correct_length_ratio": 1.0
     },
     {
-      "id": "RS26-099",
+      "id": "RS26-032",
       "chapter": "第3章",
-      "topic": "ニコチン置換療法",
-      "question": "ニコチンを含む禁煙補助剤に関する記述のうち、正しいものはどれか。",
+      "topic": "内服アレルギー用薬・鼻炎用薬・眼科用薬",
+      "question": "抗ヒスタミン成分を含む内服アレルギー用薬について正しいものはどれか。",
       "choices": [
-        "喫煙しながら漫然と使用するのではなく、製品の用法に従い禁煙を補助する。",
-        "未成年者にも積極的に勧める。",
-        "心臓病等の治療中でも相談不要である。",
-        "ニコチンを含む他製品と多量併用する。",
-        "禁煙意思がなくても永久使用する。"
+        "ヒスタミンの受容体への作用を妨げ、くしゃみ・鼻水等を和らげる一方、成分によって眠気や抗コリン様作用に注意する。",
+        "ヒスタミンの産生を完全に停止するため、服用後の眠気は起こらない。",
+        "鼻炎症状だけに作用し、排尿困難や眼圧への影響は考慮しなくてよい。",
+        "同じ抗ヒスタミン成分を含むかぜ薬との併用では重複を考える必要がない。",
+        "内服アレルギー用薬は局所作用だけなので、運転への注意は不要である。"
       ],
       "answer": 1,
       "heuristic_grade": "B-",
@@ -1588,84 +977,21 @@
         "CORRECT_LONGER_35PCT"
       ],
       "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.94
+      "correct_length_ratio": 1.67
     },
     {
-      "id": "RS26-100",
+      "id": "RS26-033",
       "chapter": "第3章",
-      "topic": "ビタミン主薬製剤",
-      "question": "ビタミン主薬製剤に関する記述のうち、適切なものはどれか。",
+      "topic": "皮膚に用いる薬・歯や口中に用いる薬",
+      "question": "外用ステロイド性抗炎症成分の使用に関する記述のうち、正しいものはどれか。",
       "choices": [
-        "必要量を超えて摂取すれば必ず効果が高まるわけではない。",
-        "脂溶性ビタミンは体内に蓄積しない。",
-        "食品からの摂取は一切考えなくてよい。",
-        "過量摂取による問題はない。",
-        "すべての疲労の原因を治療できる。"
+        "感染が疑われる患部でも炎症があれば最優先で使用する。",
+        "湿疹・皮膚炎等の炎症を抑える目的で用いるが、化膿部位等では不適切な場合があり、漫然と広範囲・長期に用いない。",
+        "症状が消失した後も再発予防のため全身へ長期塗布する。",
+        "局所使用なので全身性副作用を考慮する必要はない。",
+        "顔面では他部位より吸収が少ないため、使用期間の注意は不要である。"
       ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.59
-    },
-    {
-      "id": "RS26-101",
-      "chapter": "第3章",
-      "topic": "漢方薬の選択",
-      "question": "漢方処方製剤を選ぶ考え方として、適切なものはどれか。",
-      "choices": [
-        "体質や症状に合う処方を選ぶ。",
-        "同じ症状なら誰でも同じ処方が最適である。",
-        "複数の漢方薬で生薬が重複しても確認不要である。",
-        "長期使用でも副作用は起こらない。",
-        "甘草を含む製剤はいくつでも併用できる。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B",
-      "risk_score": 1,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 0.74
-    },
-    {
-      "id": "RS26-102",
-      "chapter": "第3章",
-      "topic": "甘草",
-      "question": "甘草を多く含む製剤の長期使用などで注意する副作用はどれか。",
-      "choices": [
-        "偽アルドステロン症。",
-        "白癬。",
-        "虫歯。",
-        "近視。",
-        "骨折。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 3.33
-    },
-    {
-      "id": "RS26-103",
-      "chapter": "第3章",
-      "topic": "消毒薬",
-      "question": "消毒薬の使用として、適切なものはどれか。",
-      "choices": [
-        "対象物や濃度、使用部位に応じて適切な製品を選ぶ。",
-        "濃いほど必ず安全である。",
-        "人体用と器具用は区別しない。",
-        "混ぜるほど効果が高い。",
-        "換気は不要である。"
-      ],
-      "answer": 1,
+      "answer": 2,
       "heuristic_grade": "D",
       "risk_score": 6,
       "flags": [
@@ -1674,43 +1000,410 @@
         "HEDGE_VS_ABSOLUTE_PATTERN"
       ],
       "wrong_absolute_count": 2,
-      "correct_length_ratio": 2.0
+      "correct_length_ratio": 2.08
     },
     {
-      "id": "RS26-104",
+      "id": "RS26-034",
       "chapter": "第3章",
-      "topic": "一般用検査薬",
-      "question": "一般用検査薬の結果の扱いとして、適切なものはどれか。",
+      "topic": "禁煙補助剤・滋養強壮保健薬",
+      "question": "ニコチンを含む禁煙補助剤について正しいものはどれか。",
       "choices": [
-        "検査結果だけで病名を確定せず、必要に応じて医療機関を受診する。",
-        "陽性なら必ず特定の病気と断定する。",
-        "陰性なら症状があっても受診不要である。",
-        "使用期限は確認しない。",
-        "採取方法は結果に影響しない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "CORRECT_LONGER_35PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.82
-    },
-    {
-      "id": "RS26-037",
-      "chapter": "第4章",
-      "topic": "薬機法の目的と医薬品の定義",
-      "question": "薬機法の目的に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "医薬品等の販売数量を増やすことだけを目的とする。",
-        "医薬品等の品質、有効性及び安全性を確保し、使用による保健衛生上の危害の発生・拡大を防止するための規制等を行う。",
-        "医薬品の価格を全国一律に定めることだけを目的とする。",
-        "医療従事者の雇用条件だけを定める法律である。",
-        "一般用医薬品は対象外である。"
+        "喫煙を続けながら使用すると禁断症状を防げるため、併用が基本である。",
+        "禁煙時のニコチン離脱症状を軽減する目的で用い、喫煙との併用や心疾患等の既往に注意する。",
+        "禁煙の意思や行動変容とは関係なく、長期に使用するほど成功率が上がる。",
+        "未成年者では成人量の半量から開始するのが標準である。",
+        "他のニコチン製剤を重ねて使用するほど離脱症状を安全に抑えられる。"
       ],
       "answer": 2,
+      "heuristic_grade": "B",
+      "risk_score": 1,
+      "flags": [
+        "CORRECT_LONGER_20PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.3
+    },
+    {
+      "id": "RS26-035",
+      "chapter": "第3章",
+      "topic": "漢方処方製剤・生薬製剤",
+      "question": "漢方処方製剤に関する次の記述a〜dのうち、正しいものの組合せはどれか。\na 同じ症状名でも体質や症状の現れ方で適する処方が異なることがある。\nb 天然物由来であっても副作用や相互作用が起こり得る。\nc 複数の漢方処方を併用すると、甘草など同じ生薬が重複することがある。\nd 天然物由来なので、長期使用時の副作用確認は不要である。",
+      "choices": [
+        "a・b",
+        "b・c・d",
+        "a・b・c",
+        "a・c・d",
+        "a・b・d"
+      ],
+      "answer": 3,
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.0
+    },
+    {
+      "id": "RS26-036",
+      "chapter": "第3章",
+      "topic": "消毒薬・殺虫剤・一般用検査薬",
+      "question": "消毒薬、殺虫剤、一般用検査薬に関する次の記述a〜dのうち、正しいものの組合せはどれか。\na 消毒薬は対象や成分に適した濃度・用法で使用する。\nb 殺虫剤は人体へ直接用いない製品でも、吸入や誤使用による健康影響に注意する。\nc 一般用検査薬の結果は診断そのものではなく、症状が続く場合は結果にかかわらず受診を考える。\nd 検査薬が陰性なら、採取時期や方法にかかわらず対象疾患を否定できる。",
+      "choices": [
+        "a・b",
+        "a・c",
+        "b・c・d",
+        "a・b・c",
+        "a・b・d"
+      ],
+      "answer": 4,
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.0
+    },
+    {
+      "id": "RS26-077",
+      "chapter": "第3章",
+      "topic": "かぜ薬の選択",
+      "question": "総合感冒薬を選択する際の考え方として、最も適切なのはどれか。",
+      "choices": [
+        "症状が少なくても、将来の症状予防のため含有成分数が最も多い製品を選ぶ。",
+        "現在の症状、年齢、治療中の病気、併用薬を確認し、必要な成分を中心に重複を避けて選ぶ。",
+        "別の商品名であれば同じ解熱鎮痛成分が重複しても問題ない。",
+        "高熱が数日続いても、総合感冒薬を変更しながら自己治療を続ける。",
+        "処方薬使用中でも一般用かぜ薬との相互作用確認は不要である。"
+      ],
+      "answer": 2,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.35
+    },
+    {
+      "id": "RS26-078",
+      "chapter": "第3章",
+      "topic": "アセトアミノフェン",
+      "question": "アセトアミノフェンについて正しいものはどれか。",
+      "choices": [
+        "解熱・鎮痛を目的に用いられ、かぜ薬など他製品にも配合されるため成分重複に注意する。",
+        "主作用は胃酸中和であり、解熱鎮痛作用はない。",
+        "抗ヒスタミン作用により鼻水を止める成分である。",
+        "去痰作用を主目的とし、痰の粘度を下げる。",
+        "外用抗真菌薬として白癬治療に用いる。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.86
+    },
+    {
+      "id": "RS26-079",
+      "chapter": "第3章",
+      "topic": "解熱鎮痛薬と飲酒",
+      "question": "解熱鎮痛薬と飲酒に関する説明として、最も適切なのはどれか。",
+      "choices": [
+        "飲酒は胃腸障害や肝機能への負担など副作用リスクを高める場合があるため、服用時は製品の注意に従い飲酒を避ける。",
+        "アルコールは胃粘膜を保護するため、解熱鎮痛薬との同時摂取が推奨される。",
+        "飲酒により薬物代謝は一律に速くなるため、副作用は減少する。",
+        "飲酒後は薬効が弱まるだけなので、用量を増やして調整する。",
+        "一般用解熱鎮痛薬は食品との相互作用を考慮しなくてよい。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.86
+    },
+    {
+      "id": "RS26-080",
+      "chapter": "第3章",
+      "topic": "抗ヒスタミン成分と眠気",
+      "question": "第一世代抗ヒスタミン成分を含む内服薬について正しいものはどれか。",
+      "choices": [
+        "眠気を生じることがあり、運転等を避ける注意がある製品ではその指示を守る。",
+        "眠気は抗ヒスタミン作用と無関係であり、運転への注意は不要である。",
+        "飲酒すると眠気が相殺されるため、併用が望ましい。",
+        "眠気がある場合は同じ成分を追加服用すると覚醒しやすくなる。",
+        "抗ヒスタミン成分では口渇や排尿困難など抗コリン様症状は起こらない。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B",
+      "risk_score": 1,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.12
+    },
+    {
+      "id": "RS26-081",
+      "chapter": "第3章",
+      "topic": "カフェイン",
+      "question": "カフェインを主薬とする眠気防止薬について正しいものはどれか。",
+      "choices": [
+        "一時的に眠気を抑える目的で用いるが、睡眠不足による疲労そのものを解消する薬ではない。",
+        "睡眠時間を恒常的に短縮しても健康影響が出ないようにする薬である。",
+        "コーヒー等のカフェイン摂取量を考慮する必要はない。",
+        "大量摂取では眠気が強くなるため、追加服用で調整する。",
+        "動悸や不眠はカフェインとは無関係である。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.62
+    },
+    {
+      "id": "RS26-082",
+      "chapter": "第3章",
+      "topic": "乗物酔い防止薬",
+      "question": "乗物酔い防止薬に含まれる抗コリン成分で起こりやすい副作用として、最も適切なのはどれか。",
+      "choices": [
+        "口渇、排尿困難、目のかすみ",
+        "黄疸、褐色尿、強い倦怠感",
+        "空咳、息切れ、発熱",
+        "広範囲の皮膚粘膜障害",
+        "出血傾向、紫斑、鼻出血"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.18
+    },
+    {
+      "id": "RS26-083",
+      "chapter": "第3章",
+      "topic": "デキストロメトルファン",
+      "question": "デキストロメトルファンの主な作用として、正しいものはどれか。",
+      "choices": [
+        "咳中枢に作用して咳を抑える。",
+        "気道分泌を促進して痰を排出しやすくする。",
+        "胃酸を中和して胸やけを抑える。",
+        "腸管運動を刺激して排便を促す。",
+        "真菌の細胞膜に作用して白癬を治療する。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 0.93
+    },
+    {
+      "id": "RS26-084",
+      "chapter": "第3章",
+      "topic": "去痰薬",
+      "question": "去痰成分を含む鎮咳去痰薬の目的として、最も適切なのはどれか。",
+      "choices": [
+        "痰を薄める、分泌を調整するなどして痰を出しやすくする。",
+        "咳反射を完全に停止させ、痰があっても排出させない。",
+        "胃酸分泌を抑えて胸やけを治療する。",
+        "腸管水分を増やして便を軟らかくする。",
+        "鼻粘膜血管を収縮させて鼻づまりを改善する。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B",
+      "risk_score": 1,
+      "flags": [
+        "CORRECT_LONGER_20PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.29
+    },
+    {
+      "id": "RS26-085",
+      "chapter": "第3章",
+      "topic": "口腔咽喉薬",
+      "question": "うがい薬や口腔咽喉薬の使用方法として、最も適切なのはどれか。",
+      "choices": [
+        "製品ごとの希釈方法や使用方法を守り、飲用を目的としない製品は飲み込まない。",
+        "濃度を高くするほど局所刺激が減るため、表示以上に濃くして用いる。",
+        "うがい薬は内服して全身作用を得ることが主目的である。",
+        "局所用製品では成分によるアレルギーや副作用を考慮する必要はない。",
+        "咽頭痛に呼吸困難を伴う場合も、うがい薬だけで経過を見る。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "ABSOLUTE_DISTRACTORS_2PLUS"
+      ],
+      "wrong_absolute_count": 2,
+      "correct_length_ratio": 1.16
+    },
+    {
+      "id": "RS26-086",
+      "chapter": "第3章",
+      "topic": "制酸薬",
+      "question": "制酸成分の主な作用として、正しいものはどれか。",
+      "choices": [
+        "胃酸を中和して、胃酸過多による胸やけ・胃部不快感等を和らげる。",
+        "胃粘膜の知覚神経を麻痺させて胃痛だけを止める。",
+        "胃酸の産生を恒久的に停止させる。",
+        "腸内細菌叢を整えることだけを目的とする。",
+        "胃内容物を急速に大腸へ送る瀉下作用を示す。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.48
+    },
+    {
+      "id": "RS26-087",
+      "chapter": "第3章",
+      "topic": "止瀉薬",
+      "question": "高熱と血便を伴う下痢の人が止瀉薬を希望している。対応として最も適切なのはどれか。",
+      "choices": [
+        "感染性腸炎等も考え、腸運動を抑える薬だけで対処せず受診を勧める。",
+        "止瀉薬で腸運動を止めることを優先し、発熱や血便は評価しない。",
+        "脱水予防のため水分摂取を控える。",
+        "症状が強いほど複数の止瀉薬を併用する。",
+        "成人用止瀉薬を年齢にかかわらず半量で使用する。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.39
+    },
+    {
+      "id": "RS26-088",
+      "chapter": "第3章",
+      "topic": "瀉下薬",
+      "question": "刺激性瀉下薬を長期間連用し、効きにくくなったため用量を増やしている人への対応として適切なのはどれか。",
+      "choices": [
+        "漫然連用を避け、食事・運動等の生活習慣や便秘の原因を見直し、必要に応じて受診・相談する。",
+        "効果が低下した場合は添付文書の上限を超えて増量する。",
+        "刺激性瀉下薬では連用による依存的使用は起こらない。",
+        "便秘薬を使っている間は水分摂取を減らす。",
+        "激しい腹痛や嘔吐がある場合も瀉下薬を追加する。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.76
+    },
+    {
+      "id": "RS26-089",
+      "chapter": "第3章",
+      "topic": "胃腸鎮痛鎮痙薬",
+      "question": "抗コリン成分を含む胃腸鎮痛鎮痙薬で注意すべき副作用として、最も適切なのはどれか。",
+      "choices": [
+        "口渇、排尿困難、眼圧上昇",
+        "唾液分泌増加、縮瞳、下痢",
+        "黄疸、褐色尿、発熱",
+        "空咳、息切れ、発熱",
+        "出血傾向、紫斑、鼻出血"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.09
+    },
+    {
+      "id": "RS26-090",
+      "chapter": "第3章",
+      "topic": "鉄欠乏性貧血",
+      "question": "一般用の鉄製剤が主に対象とする貧血はどれか。",
+      "choices": [
+        "鉄欠乏性貧血",
+        "ビタミンB12欠乏による巨赤芽球性貧血",
+        "再生不良性貧血",
+        "溶血性貧血",
+        "白血病に伴う貧血"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 0.86
+    },
+    {
+      "id": "RS26-091",
+      "chapter": "第3章",
+      "topic": "痔の薬",
+      "question": "一般用痔疾用薬での自己対処より受診を優先すべき状況として、最も適切なのはどれか。",
+      "choices": [
+        "出血量が多い、出血が長く続く、黒い便を伴うなど他疾患が疑われる。",
+        "排便時に軽い違和感が一度だけあり、その後消失した。",
+        "短期間の使用で症状が改善している。",
+        "食事や排便習慣の見直しで症状が軽くなっている。",
+        "外用薬の使用前に患部を清潔にしている。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.39
+    },
+    {
+      "id": "RS26-092",
+      "chapter": "第3章",
+      "topic": "泌尿器用薬",
+      "question": "排尿痛に加えて発熱と腰背部痛がある人が一般用泌尿器用薬を希望している。最も適切な対応はどれか。",
+      "choices": [
+        "尿路感染症等の可能性を考え、一般用医薬品だけで長期対処せず受診を勧める。",
+        "排尿痛が主症状なら、発熱や腰痛は薬選択に関係しない。",
+        "一般用泌尿器用薬を増量して経過を見る。",
+        "水分摂取を完全に控えて排尿回数を減らす。",
+        "血尿がなければ受診は不要と判断する。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.8
+    },
+    {
+      "id": "RS26-093",
+      "chapter": "第3章",
+      "topic": "婦人薬",
+      "question": "婦人薬を希望する人に不正出血が続いている場合の対応として、最も適切なのはどれか。",
+      "choices": [
+        "婦人科疾患や妊娠関連の異常等を除外する必要があるため、一般用医薬品だけで対処せず受診を勧める。",
+        "更年期の年代なら不正出血は正常範囲として扱う。",
+        "妊娠の可能性は婦人薬選択に影響しない。",
+        "症状が続くほど婦人薬を増量する。",
+        "出血量が少なければ数か月自己治療を続ける。"
+      ],
+      "answer": 1,
       "heuristic_grade": "C",
       "risk_score": 4,
       "flags": [
@@ -1718,274 +1411,62 @@
         "CORRECT_STYLE_OUTLIER"
       ],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 2.29
+      "correct_length_ratio": 2.24
     },
     {
-      "id": "RS26-038",
-      "chapter": "第4章",
-      "topic": "容器・外箱等への表示",
-      "question": "医薬品の容器・外箱等への表示に関する記述のうち、正しいものはどれか。",
+      "id": "RS26-094",
+      "chapter": "第3章",
+      "topic": "鼻炎用点鼻薬",
+      "question": "血管収縮成分を含む鼻炎用点鼻薬の連用について正しいものはどれか。",
       "choices": [
-        "医薬品は、直接の容器又は被包に法令で定められた必要事項を表示する必要がある。",
-        "医薬品の表示内容は製造販売業者が自由に省略できる。",
-        "毒薬・劇薬には特別な表示義務はない。",
-        "外箱があれば、直接の容器への表示義務は常に消える。",
-        "一般用医薬品には法定表示事項は存在しない。"
+        "長期間・頻回に使用すると反跳性鼻閉を生じ、かえって鼻づまりが悪化することがある。",
+        "使用回数を増やすほど鼻粘膜の血流は正常化し、連用による悪化は起こらない。",
+        "点鼻薬は局所作用なので高血圧等の基礎疾患を確認する必要はない。",
+        "内服鼻炎薬と併用しても交感神経刺激作用の重複は起こらない。",
+        "成人用点鼻薬は小児へ半量噴霧すれば年齢制限を無視できる。"
       ],
       "answer": 1,
       "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.52
-    },
-    {
-      "id": "RS26-039",
-      "chapter": "第4章",
-      "topic": "医薬部外品・化粧品・保健機能食品",
-      "question": "医薬部外品・化粧品・保健機能食品に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "医薬部外品は医薬品とまったく同じ範囲の効能効果を標榜できる。",
-        "化粧品は疾病の治療を主目的とする製品である。",
-        "保健機能食品は医薬品ではなく、食品として扱われる。",
-        "機能性表示食品は国が個別に効能効果を承認した医薬品である。",
-        "医薬部外品・化粧品・食品はすべて一般用医薬品に分類される。"
-      ],
-      "answer": 3,
-      "heuristic_grade": "B",
-      "risk_score": 1,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 0.86
-    },
-    {
-      "id": "RS26-040",
-      "chapter": "第4章",
-      "topic": "薬局・店舗販売業・配置販売業の許可",
-      "question": "薬局・店舗販売業・配置販売業に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "店舗販売業は許可を受けずに一般用医薬品を販売できる。",
-        "薬局、店舗販売業、配置販売業はいずれも、法令に基づく許可等の制度の下で医薬品を販売する。",
-        "配置販売業では医薬品を配置できない。",
-        "店舗販売業は医療用医薬品を自由に販売できる。",
-        "薬局と店舗販売業には制度上の違いはない。"
-      ],
-      "answer": 2,
-      "heuristic_grade": "B-",
       "risk_score": 2,
       "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 2.0
-    },
-    {
-      "id": "RS26-041",
-      "chapter": "第4章",
-      "topic": "管理者と登録販売者の要件",
-      "question": "店舗の管理者と登録販売者に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "店舗管理者には、医薬品の適正な管理や従事者の監督に関する責務はない。",
-        "登録販売者であれば、要件にかかわらずすべての医薬品販売店舗の管理者になれる。",
-        "店舗管理者は、医薬品の適正な管理や業務が法令に適合するよう必要な管理を行う。",
-        "店舗管理者は営業時間中に店舗の業務を把握する必要はない。",
-        "管理者の要件は取り扱う医薬品の区分と無関係である。"
-      ],
-      "answer": 3,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.12
-    },
-    {
-      "id": "RS26-042",
-      "chapter": "第4章",
-      "topic": "医薬品のリスク区分",
-      "question": "一般用医薬品のリスク区分に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "第一類・第二類・第三類の区分は、副作用等のリスクの程度に応じて設けられている。",
-        "第一類医薬品が最もリスクが低く、第三類医薬品が最も高い。",
-        "一度第三類に分類された医薬品は、将来区分が変更されることはない。",
-        "リスク区分は販売時の情報提供方法とは無関係である。",
-        "一般用医薬品にはリスク区分が存在しない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
         "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.39
-    },
-    {
-      "id": "RS26-043",
-      "chapter": "第4章",
-      "topic": "リスク区分に応じた販売従事者",
-      "question": "一般用医薬品を販売できる専門家に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "第一類医薬品は登録販売者だけで販売できる。",
-        "第二類・第三類医薬品は、薬剤師または登録販売者が販売に従事できる。",
-        "第三類医薬品は専門家がいなくても自由に販売できる。",
-        "登録販売者は要指導医薬品を自由に販売できる。",
-        "第一類・第二類・第三類はすべて販売従事者の要件が同じである。"
-      ],
-      "answer": 2,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
         "CORRECT_LONGER_20PCT"
       ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.32
-    },
-    {
-      "id": "RS26-044",
-      "chapter": "第4章",
-      "topic": "情報提供と相談対応",
-      "question": "一般用医薬品の情報提供と相談対応に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "購入者から相談があっても、第三類医薬品なら情報提供は不要である。",
-        "第一類医薬品は、原則として薬剤師が必要な情報を提供する。",
-        "第二類医薬品について登録販売者が情報提供することは禁止されている。",
-        "情報提供では使用者の年齢や他の医薬品の使用状況を確認してはいけない。",
-        "購入後の相談には応じる必要がない。"
-      ],
-      "answer": 2,
-      "heuristic_grade": "B",
-      "risk_score": 1,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR"
-      ],
       "wrong_absolute_count": 1,
-      "correct_length_ratio": 0.88
+      "correct_length_ratio": 1.29
     },
     {
-      "id": "RS26-045",
-      "chapter": "第4章",
-      "topic": "医薬品の陳列と掲示",
-      "question": "一般用医薬品の陳列と掲示に関する記述のうち、正しいものはどれか。",
+      "id": "RS26-095",
+      "chapter": "第3章",
+      "topic": "点眼薬",
+      "question": "一般用点眼薬の使用方法として、最も適切なのはどれか。",
       "choices": [
-        "第一類・第二類・第三類医薬品は区分を分けず混在させて陳列するのが原則である。",
-        "店舗では、一般用医薬品のリスク区分等が分かるように陳列・表示する必要がある。",
-        "指定第二類医薬品には陳列上の特別な配慮はない。",
-        "店舗の管理・運営に関する事項を掲示する必要はない。",
-        "指定濫用防止医薬品は令和8年5月以降も陳列方法に関する規制はない。"
+        "容器先端を眼球やまつ毛に触れさせず、製品ごとのコンタクトレンズ装用時の注意を確認する。",
+        "容器先端を眼球へ軽く接触させると確実に点眼でき、汚染リスクも下がる。",
+        "家族内で同じ症状なら同一容器を共用する。",
+        "点眼薬が変色しても使用期限内なら使用を続ける。",
+        "コンタクトレンズ装用中は全ての点眼薬を無条件に使用できる。"
       ],
-      "answer": 2,
-      "heuristic_grade": "B",
-      "risk_score": 1,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.15
-    },
-    {
-      "id": "RS26-046",
-      "chapter": "第4章",
-      "topic": "特定販売",
-      "question": "特定販売に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "特定販売とは、店舗内にいる購入者だけに対面販売することをいう。",
-        "特定販売では、当該薬局・店舗に貯蔵または陳列していない医薬品も自由に販売できる。",
-        "特定販売とは、薬局・店舗以外の場所にいる者に対し、一定の医薬品を販売または授与することをいう。",
-        "特定販売では広告表示に関するルールは存在しない。",
-        "特定販売は配置販売業だけに認められる。"
-      ],
-      "answer": 3,
+      "answer": 1,
       "heuristic_grade": "B-",
       "risk_score": 2,
       "flags": [
         "CORRECT_LONGER_35PCT"
       ],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.52
-    },
-    {
-      "id": "RS26-047",
-      "chapter": "第4章",
-      "topic": "指定濫用防止医薬品の販売",
-      "question": "指定濫用防止医薬品の販売に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "指定濫用防止医薬品は通常の第三類医薬品と同じで、追加の確認や情報提供は不要である。",
-        "指定濫用防止医薬品を販売する際は、薬剤師または登録販売者が必要な情報提供や確認を行う。",
-        "購入数量は購入者の希望だけで無制限に決める。",
-        "使用目的や他店での購入状況を確認してはいけない。",
-        "指定濫用防止医薬品の制度は令和8年5月1日以降廃止された。"
-      ],
-      "answer": 2,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 2,
       "correct_length_ratio": 1.48
     },
     {
-      "id": "RS26-048",
-      "chapter": "第4章",
-      "topic": "広告・適正販売・行政監視",
-      "question": "医薬品の広告と行政監視に関する記述のうち、正しいものはどれか。",
+      "id": "RS26-096",
+      "chapter": "第3章",
+      "topic": "ステロイド外用薬",
+      "question": "ステロイド性抗炎症成分を含む外用薬の使用として、最も適切なのはどれか。",
       "choices": [
-        "医薬品広告では、承認された効能効果を超える表現を自由に用いることができる。",
-        "虚偽または誇大な医薬品広告は禁止されている。",
-        "一般用医薬品の広告は薬機法の規制対象外である。",
-        "行政機関は違反販売や不適切な広告に対して監視・指導を行わない。",
-        "医薬品の適正販売は販売業者の自主判断だけに委ねられている。"
-      ],
-      "answer": 2,
-      "heuristic_grade": "B",
-      "risk_score": 0,
-      "flags": [],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 0.76
-    },
-    {
-      "id": "RS26-105",
-      "chapter": "第4章",
-      "topic": "第一類医薬品",
-      "question": "第一類医薬品の販売に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "薬剤師が販売または授与に従事する。",
-        "登録販売者だけで販売できる。",
-        "無資格者が自由に販売できる。",
-        "情報提供の仕組みは不要である。",
-        "一般用医薬品には含まれない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_20PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.21
-    },
-    {
-      "id": "RS26-106",
-      "chapter": "第4章",
-      "topic": "第二類・第三類医薬品",
-      "question": "第二類・第三類医薬品の販売従事者として、適切なものはどれか。",
-      "choices": [
-        "薬剤師または登録販売者。",
-        "医師だけ。",
-        "無資格者だけ。",
-        "歯科医師だけ。",
-        "購入者本人だけ。"
+        "化膿や真菌感染等が疑われる部位では不適切な場合があるため、患部の状態を確認する。",
+        "感染の有無にかかわらず炎症があれば使用を優先する。",
+        "症状がなくなった後も広範囲へ長期使用する。",
+        "顔面では皮膚吸収が少ないため使用期間の制限はない。",
+        "外用薬なので全身性副作用は考慮しなくてよい。"
       ],
       "answer": 1,
       "heuristic_grade": "B-",
@@ -1994,19 +1475,83 @@
         "CORRECT_LONGER_35PCT"
       ],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.71
+      "correct_length_ratio": 1.6
     },
     {
-      "id": "RS26-107",
-      "chapter": "第4章",
-      "topic": "要指導医薬品・特定要指導医薬品",
-      "question": "令和8年5月1日施行後の要指導医薬品の販売・情報提供に関する記述のうち、正しいものはどれか。",
+      "id": "RS26-097",
+      "chapter": "第3章",
+      "topic": "水虫薬",
+      "question": "水虫（白癬）用外用薬を使用する際の考え方として、最も適切なのはどれか。",
       "choices": [
-        "要指導医薬品は薬剤師が販売し、必要な情報提供・指導は対面等で行う。特定要指導医薬品は薬剤師による対面販売が必要である。",
-        "要指導医薬品は登録販売者だけで販売できる。",
-        "要指導医薬品はすべて無制限にインターネット販売できる。",
-        "令和8年5月1日以降、すべての要指導医薬品で対面販売が禁止された。",
-        "要指導医薬品では、使用者の状況に応じた情報提供・指導は不要である。"
+        "白癬と湿疹等の鑑別が難しい場合や一定期間使用しても改善しない場合は、皮膚科等へ相談する。",
+        "赤みやかゆみがあれば原因にかかわらず抗真菌薬を使用する。",
+        "症状が改善した直後に中止するほど再発を防ぎやすい。",
+        "爪白癬も一般用外用薬だけで治療できると考える。",
+        "家族間でタオル等を共用すると治療効果が高まる。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.76
+    },
+    {
+      "id": "RS26-098",
+      "chapter": "第3章",
+      "topic": "口内炎用薬",
+      "question": "口内炎について医療機関への受診を考えるべき状況として、最も適切なのはどれか。",
+      "choices": [
+        "1か月近く治らず、繰り返す、しこりがある、広範囲に及ぶなど通常と異なる経過がある。",
+        "小さな口内炎が1日で軽快した。",
+        "食事の際だけ一時的にしみるが数日で改善している。",
+        "頬を噛んだ直後の小さな傷が治癒傾向にある。",
+        "軽い症状が睡眠後に改善した。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.95
+    },
+    {
+      "id": "RS26-099",
+      "chapter": "第3章",
+      "topic": "ニコチン置換療法",
+      "question": "ニコチンを含む禁煙補助剤の使用について正しいものはどれか。",
+      "choices": [
+        "喫煙と併用せず、製品の用法に従って禁煙を補助し、心疾患等がある場合は使用前に相談する。",
+        "喫煙本数を減らすだけならニコチン製剤との併用量に上限はない。",
+        "他のニコチン製剤を併用するほど安全に離脱症状を抑えられる。",
+        "禁煙の意思がなくても長期に使用し続けることを目的とする。",
+        "循環器疾患の既往はニコチン製剤使用の判断に関係しない。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.48
+    },
+    {
+      "id": "RS26-100",
+      "chapter": "第3章",
+      "topic": "ビタミン主薬製剤",
+      "question": "ビタミン主薬製剤の使用について正しいものはどれか。",
+      "choices": [
+        "複数製品を併用する場合は同じビタミンの重複を確認し、特に脂溶性ビタミンでは過量摂取に注意する。",
+        "ビタミンは水溶性・脂溶性を問わず体内に蓄積しないため、過量摂取の問題はない。",
+        "ビタミン剤は食事に代わるため、栄養バランスを考える必要はない。",
+        "疲労があれば原因にかかわらずビタミン剤だけで治療できる。",
+        "複数のサプリメントと併用しても成分重複を確認する必要はない。"
       ],
       "answer": 1,
       "heuristic_grade": "C",
@@ -2015,88 +1560,20 @@
         "ABSOLUTE_DISTRACTORS_3PLUS",
         "CORRECT_LONGER_35PCT"
       ],
-      "wrong_absolute_count": 4,
-      "correct_length_ratio": 1.79
+      "wrong_absolute_count": 3,
+      "correct_length_ratio": 1.52
     },
     {
-      "id": "RS26-108",
-      "chapter": "第4章",
-      "topic": "特定販売",
-      "question": "一般用医薬品の特定販売に関する考え方として、正しいものはどれか。",
+      "id": "RS26-101",
+      "chapter": "第3章",
+      "topic": "漢方薬の選択",
+      "question": "漢方処方製剤を選択する考え方として、最も適切なのはどれか。",
       "choices": [
-        "店舗における販売制度のルールを踏まえ、販売可能な医薬品を適切に扱う。",
-        "ネットならすべての医薬品を無制限に販売できる。",
-        "購入者への情報提供は不要である。",
-        "店舗販売業の許可は一切不要である。",
-        "販売記録や相談対応は不要である。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "D",
-      "risk_score": 7,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_3PLUS",
-        "CORRECT_LONGER_35PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 4,
-      "correct_length_ratio": 2.0
-    },
-    {
-      "id": "RS26-109",
-      "chapter": "第4章",
-      "topic": "指定濫用防止医薬品の確認",
-      "question": "指定濫用防止医薬品を販売する際の確認事項として、適切なものはどれか。",
-      "choices": [
-        "年齢、他の医薬品の使用状況、他店等での購入状況などを確認する。",
-        "購入者の希望数量だけを聞けばよい。",
-        "年齢は常に確認不要である。",
-        "他店での購入状況は確認してはならない。",
-        "多量購入の理由は確認不要である。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "D",
-      "risk_score": 6,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.82
-    },
-    {
-      "id": "RS26-110",
-      "chapter": "第4章",
-      "topic": "18歳未満への販売",
-      "question": "指定濫用防止医薬品を18歳未満の者へ販売する際の対応として、正しいものはどれか。",
-      "choices": [
-        "氏名など必要事項を確認し、制度に従って対応する。",
-        "年齢確認はしてはならない。",
-        "必ず複数個販売する。",
-        "購入状況の確認は不要である。",
-        "情報提供は行わない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.85
-    },
-    {
-      "id": "RS26-111",
-      "chapter": "第4章",
-      "topic": "指定濫用防止医薬品の多量購入",
-      "question": "指定濫用防止医薬品を大容量または複数個購入しようとする場合の対応として、適切なものはどれか。",
-      "choices": [
-        "購入理由を確認し、適正使用を確保できるか判断する。",
-        "理由に関係なく必ず販売する。",
-        "理由を尋ねてはならない。",
-        "購入者の年齢は無関係である。",
-        "販売数量に関する制度はない。"
+        "同じ症状名でも体質や症状の現れ方を考慮し、適する処方が異なることを踏まえて選ぶ。",
+        "同じ症状名なら年齢・体質にかかわらず同じ処方を選ぶ。",
+        "天然由来なので複数処方の生薬重複を確認する必要はない。",
+        "長期使用するほど副作用の発生率は低下する。",
+        "甘草を含む処方は他の甘草含有製剤と自由に併用できる。"
       ],
       "answer": 1,
       "heuristic_grade": "B-",
@@ -2106,19 +1583,436 @@
         "CORRECT_LONGER_35PCT"
       ],
       "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.79
+      "correct_length_ratio": 1.54
     },
     {
-      "id": "RS26-112",
-      "chapter": "第4章",
-      "topic": "医薬品広告",
-      "question": "医薬品の広告に関する記述のうち、適切なものはどれか。",
+      "id": "RS26-102",
+      "chapter": "第3章",
+      "topic": "甘草",
+      "question": "甘草を含む製剤の長期使用や複数製剤の併用で特に注意する副作用はどれか。",
       "choices": [
-        "承認された効能効果等を逸脱する誇大な広告は行ってはならない。",
-        "治療効果を無条件に保証してよい。",
-        "体験談だけで効能を断定してよい。",
-        "医薬品でない食品を医薬品のように広告してよい。",
-        "副作用の可能性を否定する表現なら自由に使える。"
+        "偽アルドステロン症",
+        "間質性肺炎だけ",
+        "無菌性髄膜炎だけ",
+        "接触皮膚炎だけ",
+        "鉄欠乏性貧血"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B",
+      "risk_score": 1,
+      "flags": [
+        "CORRECT_LONGER_20PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.29
+    },
+    {
+      "id": "RS26-103",
+      "chapter": "第3章",
+      "topic": "消毒薬",
+      "question": "消毒薬の使用方法として、最も適切なのはどれか。",
+      "choices": [
+        "対象物・使用部位・成分に応じて適切な濃度と接触時間を守り、混合による危険にも注意する。",
+        "濃度を高くすればするほど消毒効果と安全性が同時に高まる。",
+        "人体用と器具用は同じ濃度で相互に代用できる。",
+        "異なる消毒薬を混ぜるほど効果が強まり安全である。",
+        "換気が必要な製品でも密閉空間で使用する方が効果的である。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.54
+    },
+    {
+      "id": "RS26-104",
+      "chapter": "第3章",
+      "topic": "一般用検査薬",
+      "question": "一般用検査薬の結果の扱いとして、最も適切なのはどれか。",
+      "choices": [
+        "検査時期・採取方法・感度等による限界を理解し、症状が続く場合は陰性でも受診を考える。",
+        "陰性結果が一度出れば、採取時期にかかわらず対象疾患を完全に否定できる。",
+        "陽性結果だけで病名を確定し、自己判断で治療薬を選ぶ。",
+        "使用期限や保存条件は検査精度に影響しない。",
+        "採取量や操作手順は判定結果へ影響しない。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.62
+    },
+    {
+      "id": "RS26-037",
+      "chapter": "第4章",
+      "topic": "薬機法の目的と医薬品の定義",
+      "question": "薬機法の目的に関する次の記述a〜dのうち、正しいものの組合せはどれか。\na 医薬品等の品質、有効性及び安全性の確保を図る。\nb 医薬品等による保健衛生上の危害の発生・拡大を防止する。\nc 指定薬物の規制や医療上特に必要性の高い医薬品等の研究開発促進に関する措置も含む。\nd 医薬品の小売価格を全国一律に設定することを主目的とする。",
+      "choices": [
+        "a・b",
+        "a・b・c",
+        "b・c・d",
+        "a・c・d",
+        "a・b・d"
+      ],
+      "answer": 2,
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.0
+    },
+    {
+      "id": "RS26-038",
+      "chapter": "第4章",
+      "topic": "容器・外箱等への表示",
+      "question": "一般用医薬品の容器・外箱等への表示に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "法令上必要な事項は、直接の容器・被包や外箱等に所定の方法で表示される。",
+        "外箱に製品名があれば、直接の容器・被包に必要な表示はない。",
+        "毒薬・劇薬では一般用医薬品と同じ表示だけでよく、特別な表示規定はない。",
+        "使用期限は製造販売業者の任意表示であり、品質管理とは関係しない。",
+        "一般用医薬品のリスク区分は購入後だけ分かればよく、販売時に確認できる表示は不要である。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "ABSOLUTE_DISTRACTORS_2PLUS"
+      ],
+      "wrong_absolute_count": 2,
+      "correct_length_ratio": 1.0
+    },
+    {
+      "id": "RS26-039",
+      "chapter": "第4章",
+      "topic": "医薬部外品・化粧品・保健機能食品",
+      "question": "医薬部外品、化粧品、保健機能食品に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "化粧品は疾病の診断・治療を主目的とし、医薬品と同じ効能を表示できる。",
+        "医薬部外品は医薬品と同じ強い薬理作用を目的とし、処方箋による使用を原則とする。",
+        "保健機能食品は食品として扱われ、特定保健用食品・栄養機能食品・機能性表示食品がある。",
+        "機能性表示食品は国が製品ごとの治療効果を審査・承認した医薬品である。",
+        "栄養機能食品は疾病の治療効果を標榜できる医薬部外品である。"
+      ],
+      "answer": 3,
+      "heuristic_grade": "B",
+      "risk_score": 1,
+      "flags": [
+        "CORRECT_LONGER_20PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.24
+    },
+    {
+      "id": "RS26-040",
+      "chapter": "第4章",
+      "topic": "薬局・店舗販売業・配置販売業の許可",
+      "question": "医薬品の販売業に関する次の記述a〜dのうち、正しいものの組合せはどれか。\na 店舗販売業は店舗ごとに許可を受ける。\nb 配置販売業は一般用医薬品を配置により販売する制度である。\nc 店舗販売業の許可だけで処方箋医薬品を自由に販売できる。\nd 薬局は調剤を行う場所としての機能を持ち、店舗販売業とは制度上区別される。",
+      "choices": [
+        "a・b",
+        "a・b・d",
+        "b・c・d",
+        "a・c・d",
+        "a・b・c"
+      ],
+      "answer": 2,
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.0
+    },
+    {
+      "id": "RS26-041",
+      "chapter": "第4章",
+      "topic": "管理者と登録販売者の要件",
+      "question": "店舗管理者に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "店舗管理者は販売実績だけを管理し、医薬品の保管や従事者の業務には関与しない。",
+        "登録販売者の資格があれば、実務経験等の要件に関係なく全ての店舗で直ちに管理者となれる。",
+        "店舗管理者は医薬品の適正な管理や従事者の監督など、店舗業務が法令に適合するために必要な管理を行う。",
+        "店舗管理者の要件は、店舗で取り扱う医薬品の区分や勤務体制とは無関係である。",
+        "店舗管理者は営業時間中に店舗業務を把握する必要がなく、名義上置かれていればよい。"
+      ],
+      "answer": 3,
+      "heuristic_grade": "B",
+      "risk_score": 1,
+      "flags": [
+        "CORRECT_LONGER_20PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.23
+    },
+    {
+      "id": "RS26-042",
+      "chapter": "第4章",
+      "topic": "医薬品のリスク区分",
+      "question": "一般用医薬品のリスク区分に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "第一類・第二類・第三類は、副作用等による健康被害のリスクの程度等に応じた区分で、販売時の情報提供方法にも関係する。",
+        "第三類医薬品は第一類医薬品よりリスクが高いため、薬剤師だけが販売できる。",
+        "一度決まったリスク区分は市販後の安全性情報によって変更されない。",
+        "第二類医薬品と第三類医薬品では、販売に従事できる専門家が必ず異なる。",
+        "リスク区分は広告表示だけに用いられ、陳列や相談対応とは関係しない。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.68
+    },
+    {
+      "id": "RS26-043",
+      "chapter": "第4章",
+      "topic": "リスク区分に応じた販売従事者",
+      "question": "一般用医薬品の販売に従事できる専門家に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "第一類医薬品は薬剤師または登録販売者が販売できる。",
+        "第二類・第三類医薬品は、薬剤師または登録販売者が販売に従事できる。",
+        "要指導医薬品は薬剤師または登録販売者のどちらでも販売できる。",
+        "第三類医薬品は専門家がいない時間帯でも無資格者だけで販売できる。",
+        "登録販売者は一般用医薬品の全区分を同じ条件で販売できる。"
+      ],
+      "answer": 2,
+      "heuristic_grade": "B",
+      "risk_score": 1,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.1
+    },
+    {
+      "id": "RS26-044",
+      "chapter": "第4章",
+      "topic": "情報提供と相談対応",
+      "question": "一般用医薬品の情報提供・相談対応に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "第三類医薬品では購入者から相談を受けても専門家による対応は不要である。",
+        "第一類医薬品は薬剤師が必要な情報提供を行い、第二類・第三類でも相談があれば薬剤師または登録販売者が適切に対応する。",
+        "第二類医薬品では登録販売者による情報提供は禁止されている。",
+        "購入後の副作用相談は販売時の情報提供とは別制度なので、店舗で対応してはならない。",
+        "情報提供では使用者の年齢や併用薬を確認すると医療行為に当たるため確認できない。"
+      ],
+      "answer": 2,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.46
+    },
+    {
+      "id": "RS26-045",
+      "chapter": "第4章",
+      "topic": "医薬品の陳列と掲示",
+      "question": "一般用医薬品の陳列・掲示に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "第一類から第三類まで区分を混在させる方が比較しやすいため、区分表示は行わない。",
+        "店舗ではリスク区分が分かるように陳列し、管理・運営や販売制度に関する必要事項を掲示する。",
+        "指定第二類医薬品は第二類医薬品なので、陳列場所に特別な配慮はない。",
+        "情報提供設備の位置は陳列規制と無関係であり、購入者が専門家へ相談できるかは考慮しない。",
+        "販売しない時間帯でも医薬品売場は常に自由に立ち入れる構造でなければならない。"
+      ],
+      "answer": 2,
+      "heuristic_grade": "B",
+      "risk_score": 1,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.13
+    },
+    {
+      "id": "RS26-046",
+      "chapter": "第4章",
+      "topic": "特定販売",
+      "question": "特定販売に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "特定販売は、購入者が店舗内にいる場合だけに行う販売をいう。",
+        "特定販売では、許可を受けた店舗に貯蔵・陳列していない医薬品を無許可の場所から自由に発送できる。",
+        "特定販売は、薬局・店舗以外の場所にいる者に対し、一定の医薬品を販売・授与する販売方法で、許可店舗を基礎とする。",
+        "特定販売を行えば、店舗販売業等の許可や広告表示のルールは適用されない。",
+        "配置販売業だけに認められ、薬局・店舗販売業では行えない。"
+      ],
+      "answer": 3,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.57
+    },
+    {
+      "id": "RS26-047",
+      "chapter": "第4章",
+      "topic": "指定濫用防止医薬品の販売",
+      "question": "2026年5月1日施行後の指定濫用防止医薬品の販売に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "指定濫用防止医薬品は通常の第三類医薬品と同じ扱いで、使用目的や購入状況の確認は行わない。",
+        "薬剤師または登録販売者が、年齢、使用目的、他の医薬品の使用状況、他店等での購入状況など必要事項を確認し、適正使用に必要な情報を提供する。",
+        "18歳以上の購入者では年齢を確認してはならない。",
+        "大容量・複数個の購入でも、購入理由を確認せず希望数量を販売する。",
+        "指定濫用防止医薬品は2026年5月1日に制度廃止となった。"
+      ],
+      "answer": 2,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 2.12
+    },
+    {
+      "id": "RS26-048",
+      "chapter": "第4章",
+      "topic": "広告・適正販売・行政監視",
+      "question": "医薬品広告と行政監視に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "承認された効能効果を超える表現でも、一般用医薬品なら販売店の責任で表示できる。",
+        "虚偽・誇大な医薬品広告は規制対象となり、違反販売や不適切広告は行政機関による監視・指導等の対象となり得る。",
+        "SNS上の広告は店舗外で行われるため、医薬品広告規制の対象にならない。",
+        "体験談に基づく表現なら、承認範囲外の治療効果を断定できる。",
+        "一般用医薬品の広告は販売者の自主規制だけで管理され、薬機法上の規制はない。"
+      ],
+      "answer": 2,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.43
+    },
+    {
+      "id": "RS26-105",
+      "chapter": "第4章",
+      "topic": "第一類医薬品",
+      "question": "第一類医薬品の販売に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "薬剤師が販売・授与に従事し、必要な情報提供を行う。",
+        "登録販売者だけが勤務する時間帯でも、書面があれば販売できる。",
+        "第二類医薬品よりリスクが低いため、情報提供は任意である。",
+        "購入者から相談がなければ無資格者だけで販売できる。",
+        "一般用医薬品には含まれず、全て処方箋医薬品である。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B",
+      "risk_score": 1,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.0
+    },
+    {
+      "id": "RS26-106",
+      "chapter": "第4章",
+      "topic": "第二類・第三類医薬品",
+      "question": "第二類・第三類一般用医薬品の販売に従事できる者として、正しい組合せはどれか。",
+      "choices": [
+        "薬剤師または登録販売者",
+        "薬剤師のみ",
+        "登録販売者のみ",
+        "医師または歯科医師のみ",
+        "店舗管理者であれば資格を問わない"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.0
+    },
+    {
+      "id": "RS26-107",
+      "chapter": "第4章",
+      "topic": "要指導医薬品・特定要指導医薬品",
+      "question": "2026年5月1日施行後の要指導医薬品・特定要指導医薬品に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "要指導医薬品は薬剤師が販売に従事し、特定要指導医薬品では薬剤師による対面での販売・情報提供が求められる。",
+        "要指導医薬品は第二類医薬品と同じく登録販売者だけで販売できる。",
+        "特定要指導医薬品は一般用医薬品なので、特定販売だけで販売することを原則とする。",
+        "2026年5月1日以降は要指導医薬品という区分自体が廃止された。",
+        "要指導医薬品では使用者の状況確認を行わず、添付文書を渡すだけでよい。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "C",
+      "risk_score": 5,
+      "flags": [
+        "ABSOLUTE_DISTRACTORS_3PLUS",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 3,
+      "correct_length_ratio": 1.53
+    },
+    {
+      "id": "RS26-108",
+      "chapter": "第4章",
+      "topic": "特定販売",
+      "question": "店舗販売業者が一般用医薬品をインターネットで特定販売する場合の考え方として、正しいものはどれか。",
+      "choices": [
+        "許可店舗を基礎として、販売可能な医薬品、表示、情報提供等のルールに従う。",
+        "インターネット上では医薬品のリスク区分に関係なく全て同じ方法で販売できる。",
+        "無許可の倉庫から発送する場合は店舗販売業の許可は不要になる。",
+        "対面でないため購入者からの相談対応は行わない。",
+        "広告ページには店舗情報や販売制度に関する表示を行ってはならない。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B",
+      "risk_score": 1,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.12
+    },
+    {
+      "id": "RS26-109",
+      "chapter": "第4章",
+      "topic": "指定濫用防止医薬品の確認",
+      "question": "指定濫用防止医薬品を販売する際の確認事項として、最も適切なのはどれか。",
+      "choices": [
+        "購入者の年齢、使用目的、他の医薬品の使用状況、他店等での購入状況などを確認する。",
+        "18歳以上では年齢や購入状況の確認を行わず、希望数量だけを確認する。",
+        "購入者が以前使った経験があれば、使用目的や他薬使用状況の確認を省略する。",
+        "指定濫用防止医薬品ではプライバシー保護のため他店購入状況を尋ねてはならない。",
+        "購入数量が1個なら確認事項は全て省略できる。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B",
+      "risk_score": 0,
+      "flags": [],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.11
+    },
+    {
+      "id": "RS26-110",
+      "chapter": "第4章",
+      "topic": "18歳未満への販売",
+      "question": "18歳未満の者が指定濫用防止医薬品を購入する場合の対応として、正しいものはどれか。",
+      "choices": [
+        "年齢の確認に加え、氏名など制度上必要な事項を確認して販売可否・数量を判断する。",
+        "18歳未満には指定濫用防止医薬品を一律に販売してはならない。",
+        "年齢確認は必要だが、氏名を確認することは禁止されている。",
+        "保護者が同伴していれば、使用目的や購入状況の確認は全て不要になる。",
+        "18歳未満では成人より多い数量を販売して継続購入を避ける。"
       ],
       "answer": 1,
       "heuristic_grade": "B-",
@@ -2131,107 +2025,61 @@
       "correct_length_ratio": 1.3
     },
     {
+      "id": "RS26-111",
+      "chapter": "第4章",
+      "topic": "指定濫用防止医薬品の多量購入",
+      "question": "指定濫用防止医薬品を大容量または複数個購入しようとする人への対応として、最も適切なのはどれか。",
+      "choices": [
+        "使用目的や購入理由、他店での購入状況等を確認し、適正使用のため必要と認められる数量か判断する。",
+        "指定商品であっても代金を支払える人には希望数量をそのまま販売する。",
+        "一度に複数個希望する場合は確認せず販売を拒否することが制度上の原則である。",
+        "成人であれば購入理由や他店購入状況を確認してはならない。",
+        "同じ有効成分を含む他製品の使用状況は数量判断と無関係である。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.42
+    },
+    {
+      "id": "RS26-112",
+      "chapter": "第4章",
+      "topic": "医薬品広告",
+      "question": "医薬品の広告表現として、最も適切なのはどれか。",
+      "choices": [
+        "承認された効能効果・用法用量等の範囲を踏まえ、虚偽・誇大な表現や安全性を保証する表現を避ける。",
+        "体験談が複数あれば、承認されていない疾病治療効果を断定できる。",
+        "一般用医薬品なら『副作用は絶対にない』と表示しても購入者の自己責任となる。",
+        "SNSの短い投稿なら医薬品広告の規制を受けない。",
+        "食品を医薬品のように見せる治療効果の広告は、医薬品でないため自由に行える。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_20PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.27
+    },
+    {
       "id": "RS26-049",
       "chapter": "第5章",
       "topic": "添付文書の読み方",
-      "question": "一般用医薬品の添付文書の読み方に関する記述のうち、正しいものはどれか。",
+      "question": "一般用医薬品の添付文書に関する記述のうち、正しいものはどれか。",
       "choices": [
-        "添付文書の「使用上の注意」は、重要度に関係なく末尾にだけ記載される。",
-        "添付文書の「使用上の注意」は、「してはいけないこと」「相談すること」などから構成され、適正使用上重要な事項が目立つよう記載される。",
-        "添付文書は一度読めば、その後は改訂されることがないため確認不要である。",
-        "添付文書には効能・効果や用法・用量は記載されない。",
-        "一般用医薬品では添付文書を確認する必要はない。"
+        "購入時に一度読めば、その後に使用上の注意が改訂されても確認する必要はない。",
+        "『使用上の注意』には『してはいけないこと』『相談すること』等が示され、適正使用上重要な情報を確認できる。",
+        "効能・効果と用法・用量は外箱だけに表示され、添付文書には記載されない。",
+        "副作用情報は専門家向け情報なので、一般用医薬品の添付文書には記載されない。",
+        "添付文書は製造販売開始後に改訂されないことを前提とした文書である。"
       ],
       "answer": 2,
-      "heuristic_grade": "D",
-      "risk_score": 6,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.91
-    },
-    {
-      "id": "RS26-050",
-      "chapter": "第5章",
-      "topic": "製品表示の読み方",
-      "question": "一般用医薬品の製品表示に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "外箱などの製品表示には、リスク区分や使用期限等の適正使用に必要な情報が記載される。",
-        "製品表示には製品名以外の情報を記載してはいけない。",
-        "使用期限を過ぎても未開封なら必ず使用できる。",
-        "製品表示と添付文書の内容が異なる場合は、利用者が好きな方を選べばよい。",
-        "リスク区分の表示は一般用医薬品には不要である。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.64
-    },
-    {
-      "id": "RS26-051",
-      "chapter": "第5章",
-      "topic": "安全性情報と緊急安全性情報",
-      "question": "医薬品の安全性情報に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "緊急安全性情報は、緊急かつ重大な注意喚起や使用制限が必要な場合に作成される。",
-        "緊急安全性情報は販売促進を目的とした広告資料である。",
-        "安全性速報は安全性に関する注意喚起には用いられない。",
-        "一般用医薬品は緊急安全性情報の対象になることはない。",
-        "安全性情報は薬剤師や登録販売者が確認する必要はない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.46
-    },
-    {
-      "id": "RS26-052",
-      "chapter": "第5章",
-      "topic": "副作用情報の収集・評価・措置",
-      "question": "医薬品の副作用情報の収集・評価と安全対策に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "市販後に集められた副作用情報は、承認後の安全対策には利用されない。",
-        "副作用情報は収集・評価され、その結果に応じて使用上の注意の改訂などの安全対策が行われる。",
-        "一度承認された医薬品は、安全性情報により取扱いが変更されることはない。",
-        "副作用情報は製造販売業者だけが知っていればよく、行政へ報告されることはない。",
-        "一般用医薬品は市販後安全対策の対象外である。"
-      ],
-      "answer": 2,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_20PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.26
-    },
-    {
-      "id": "RS26-053",
-      "chapter": "第5章",
-      "topic": "副作用等が疑われる場合の報告",
-      "question": "医薬品による副作用等が疑われる場合の報告に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "登録販売者は副作用報告制度と無関係である。",
-        "医薬品との因果関係が医学的に完全確定するまで報告してはいけない。",
-        "登録販売者などの医薬関係者は、保健衛生上の危害防止のため必要と認めるとき、副作用等を厚生労働大臣へ報告する制度の対象となる。",
-        "一般用医薬品による副作用は報告対象にならない。",
-        "報告できるのは製造販売業者だけである。"
-      ],
-      "answer": 3,
       "heuristic_grade": "B-",
       "risk_score": 3,
       "flags": [
@@ -2239,7 +2087,93 @@
         "CORRECT_LONGER_35PCT"
       ],
       "wrong_absolute_count": 1,
-      "correct_length_ratio": 2.7
+      "correct_length_ratio": 1.41
+    },
+    {
+      "id": "RS26-050",
+      "chapter": "第5章",
+      "topic": "製品表示の読み方",
+      "question": "一般用医薬品の外箱・容器等の表示を確認する目的として、最も適切なのはどれか。",
+      "choices": [
+        "リスク区分、使用期限、保管上の注意など、購入・使用時の適正使用に必要な情報を確認する。",
+        "外箱は広告目的なので、添付文書と異なる用法・用量が記載されていても外箱を優先する。",
+        "未開封なら使用期限を過ぎても品質は保証されるため、期限表示は参考情報にすぎない。",
+        "リスク区分の表示は販売者向けであり、購入者が確認する必要はない。",
+        "製品名が同じなら有効成分や含量は全て同一なので、成分表示は確認しなくてよい。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B",
+      "risk_score": 1,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.07
+    },
+    {
+      "id": "RS26-051",
+      "chapter": "第5章",
+      "topic": "安全性情報と緊急安全性情報",
+      "question": "緊急安全性情報と安全性速報に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "緊急安全性情報はイエローレター、安全性速報はブルーレターと呼ばれ、通常の注意改訂より迅速な安全対策が必要な場合に用いられる。",
+        "緊急安全性情報は販売促進用の黄色い広告資料、安全性速報は価格改定を知らせる青い資料である。",
+        "安全性速報は緊急安全性情報より必ず重大度が高い場合に限って発出される。",
+        "一般用医薬品・要指導医薬品は安全性情報の対象外である。",
+        "緊急安全性情報が発出された場合、最新添付文書を確認する必要はなく、その資料だけを永久に使用する。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.38
+    },
+    {
+      "id": "RS26-052",
+      "chapter": "第5章",
+      "topic": "副作用情報の収集・評価・措置",
+      "question": "市販後の副作用情報と安全対策の流れとして、最も適切なのはどれか。",
+      "choices": [
+        "承認後は安全性評価が完了しているため、副作用情報は収集しない。",
+        "副作用等の情報を収集・評価し、必要に応じて使用上の注意の改訂、情報提供、販売上の対策等へ反映する。",
+        "副作用情報を収集しても、承認済み医薬品の注意事項は変更できない。",
+        "副作用報告は製造販売業者内だけで保管し、行政の安全対策には利用しない。",
+        "一般用医薬品では購入者が自己判断で使用するため、市販後安全対策の対象外である。"
+      ],
+      "answer": 2,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.4
+    },
+    {
+      "id": "RS26-053",
+      "chapter": "第5章",
+      "topic": "副作用等が疑われる場合の報告",
+      "question": "医薬品による副作用等が疑われる場合の医薬品安全性情報報告制度について、正しいものはどれか。",
+      "choices": [
+        "登録販売者は医薬品を処方しないため、報告制度の対象となる医薬関係者には含まれない。",
+        "因果関係が医学的に完全に証明された症例だけが報告対象となる。",
+        "登録販売者を含む医薬関係者は、保健衛生上の危害防止のため必要と認めるとき、副作用等を厚生労働大臣へ報告する制度の対象となる。",
+        "一般用医薬品による副作用疑いは製造販売業者だけが報告でき、店舗の専門家は報告できない。",
+        "死亡例だけが報告対象で、入院や障害につながる副作用は対象にならない。"
+      ],
+      "answer": 3,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.51
     },
     {
       "id": "RS26-054",
@@ -2247,56 +2181,53 @@
       "topic": "医薬品副作用被害救済制度",
       "question": "医薬品副作用被害救済制度に関する記述のうち、正しいものはどれか。",
       "choices": [
-        "医薬品を適正に使用したにもかかわらず一定の副作用健康被害が生じた場合に、迅速な救済を図るための公的制度である。",
-        "医薬品を意図的に過量服用した場合だけを救済する制度である。",
-        "一般用医薬品による健康被害は一切対象にならない。",
-        "給付の可否は販売店が独自に決定する。",
-        "副作用による健康被害が軽微でもすべて自動的に給付される。"
+        "承認・許可を受けた医薬品を適正に使用したにもかかわらず、入院治療を要する程度など一定の副作用健康被害が生じた場合に給付を行う公的制度で、一般用医薬品も対象になり得る。",
+        "用法・用量を意図的に大幅超過した濫用による健康被害を主な対象とする制度である。",
+        "一般用医薬品と要指導医薬品は購入者の自己判断で用いるため、制度の給付対象にならない。",
+        "軽い眠気など全ての副作用に対して、医薬品代を自動返金する制度である。",
+        "給付の可否は購入した店舗の登録販売者が最終決定する。"
       ],
       "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 4,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
       "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
         "CORRECT_LONGER_35PCT"
       ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.96
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 2.13
     },
     {
       "id": "RS26-055",
       "chapter": "第5章",
       "topic": "救済制度の案内と相談窓口",
-      "question": "医薬品副作用被害救済制度の案内に関する対応として、正しいものはどれか。",
+      "question": "一般用医薬品の副作用で入院した人から『救済制度の対象になりますか』と相談された。登録販売者の対応として最も適切なのはどれか。",
       "choices": [
-        "制度の相談を受けても、販売店では一切案内してはいけない。",
-        "制度の利用可否を登録販売者が最終決定する。",
-        "副作用による健康被害が疑われる相談では、必要に応じてPMDAの救済制度相談窓口等を案内する。",
-        "救済制度については医師だけが説明できる。",
-        "一般用医薬品の購入者に救済制度を案内する必要はない。"
+        "店舗で給付要件を全て判定し、対象か否かを確定して伝える。",
+        "医師の診断がある場合だけ制度を案内できるため、店舗では制度名を伝えない。",
+        "給付可否を断定せず、PMDAの医薬品副作用被害救済制度の相談窓口や請求手続を案内する。",
+        "一般用医薬品は制度対象外なので、製造販売業者への返品だけを案内する。",
+        "副作用の因果関係が完全確定するまで救済制度について説明してはならない。"
       ],
       "answer": 3,
-      "heuristic_grade": "D",
-      "risk_score": 6,
+      "heuristic_grade": "B",
+      "risk_score": 1,
       "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
+        "CORRECT_LONGER_20PCT"
       ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.77
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.23
     },
     {
       "id": "RS26-056",
       "chapter": "第5章",
       "topic": "一般用医薬品の主な安全対策",
-      "question": "一般用医薬品に関する安全対策の考え方として、正しいものはどれか。",
+      "question": "一般用医薬品の安全対策に関する記述のうち、正しいものはどれか。",
       "choices": [
-        "安全性上の問題が判明しても、一般用医薬品では使用上の注意を変更しない。",
-        "副作用等の情報に応じて、使用上の注意の改訂、情報提供、販売上の対策などが行われることがある。",
-        "安全対策は医療用医薬品だけが対象である。",
-        "安全性上の問題があっても販売区分は変更されない。",
-        "消費者への注意喚起は安全対策に含まれない。"
+        "一般用医薬品は承認後に購入者が自己判断で使うため、使用上の注意の改訂対象にはならない。",
+        "副作用等の新たな情報に応じて、使用上の注意の改訂、注意喚起、リスク区分・販売上の取扱いの見直し等が行われることがある。",
+        "安全性問題が判明しても、承認時のリスク区分は変更できない。",
+        "一般消費者への注意喚起は広告に当たるため、安全対策として実施できない。",
+        "安全対策は医療用医薬品だけが対象で、一般用医薬品には適用されない。"
       ],
       "answer": 2,
       "heuristic_grade": "B-",
@@ -2305,21 +2236,193 @@
         "CORRECT_LONGER_35PCT"
       ],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.92
+      "correct_length_ratio": 1.69
     },
     {
       "id": "RS26-057",
       "chapter": "第5章",
       "topic": "適正使用のための啓発活動",
-      "question": "医薬品の適正使用のための啓発活動に関する記述のうち、正しいものはどれか。",
+      "question": "医薬品の適正使用に関する啓発活動の目的として、最も適切なのはどれか。",
       "choices": [
-        "医薬品は自己判断で多量に使うほど効果的だと啓発する。",
-        "薬と健康の週間などを通じて、医薬品の正しい使用や専門家への相談について啓発が行われている。",
-        "一般用医薬品は安全なので啓発活動は不要である。",
-        "添付文書を読まないことを推奨する。",
-        "副作用が疑われても使用を継続するよう案内する。"
+        "一般用医薬品は安全性が高いため、自己判断で用量を増やすことを推奨する。",
+        "『薬と健康の週間』等を通じ、用法・用量の遵守、副作用への注意、専門家への相談など正しい医薬品使用を普及する。",
+        "添付文書より広告を優先して製品を選ぶよう促す。",
+        "副作用が疑われても自己判断で継続することをセルフメディケーションとして推奨する。",
+        "若年者には医薬品の濫用防止より購入の利便性を優先するよう啓発する。"
       ],
       "answer": 2,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.54
+    },
+    {
+      "id": "RS26-058",
+      "chapter": "第5章",
+      "topic": "「してはいけないこと」と対象成分",
+      "question": "添付文書の『してはいけないこと』に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "該当しても用量を半分にすれば使用できる事項だけが記載される。",
+        "守らないと症状悪化や副作用・事故の危険が高まるため、使用してはいけない人、併用してはいけない薬、使用後にしてはいけない行為等が記載される。",
+        "医師の治療を受けている人に関する事項は全て『してはいけないこと』に記載され、『相談すること』には記載されない。",
+        "効能・効果の対象疾患だけを列挙する欄である。",
+        "一般用医薬品では自己責任で使用するため、この欄は設けられない。"
+      ],
+      "answer": 2,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 2.23
+    },
+    {
+      "id": "RS26-059",
+      "chapter": "第5章",
+      "topic": "「相談すること」と対象成分",
+      "question": "添付文書の『相談すること』に関する記述のうち、正しいものはどれか。",
+      "choices": [
+        "医師の治療を受けている人、妊婦・授乳婦、特定の既往歴がある人など、使用前に専門家へ相談すべき場合や、使用後に副作用が疑われる場合などが記載される。",
+        "記載された人は全てその医薬品の使用が法律上禁止されていることを意味する。",
+        "『相談すること』に該当しても、用量を減らせば専門家への相談は不要になる。",
+        "副作用と思われる症状が現れた場合は、相談する前に用量を増やして因果関係を確認する。",
+        "購入後に相談が必要となる事項は記載されず、使用前の事項だけが対象である。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 2.03
+    },
+    {
+      "id": "RS26-060",
+      "chapter": "第5章",
+      "topic": "安全性情報・副作用報告様式",
+      "question": "医薬品安全性情報報告書に記載する情報として、評価に特に有用な組合せはどれか。",
+      "choices": [
+        "患者情報、副作用等の症状・経過、被疑薬、使用量・期間、併用薬など",
+        "店舗の月間売上、商品棚の位置、広告閲覧数など",
+        "購入者の職業、来店時刻、支払方法だけ",
+        "製造販売業者の株価と販売店の在庫数だけ",
+        "被疑薬の商品価格とポイント付与率だけ"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.68
+    },
+    {
+      "id": "RS26-113",
+      "chapter": "第5章",
+      "topic": "添付文書の改訂",
+      "question": "一般用医薬品の添付文書が改訂される理由として、最も適切なのはどれか。",
+      "choices": [
+        "市販後に新たに得られた副作用・相互作用等の安全性情報を、適正使用へ反映するため。",
+        "製品名を変えなくても価格を変更できるようにするため。",
+        "承認された効能を販売店独自に追加するため。",
+        "旧製品の在庫を早く販売するため。",
+        "購入者が注意事項を読まなくてもよいよう情報を減らすため。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.54
+    },
+    {
+      "id": "RS26-114",
+      "chapter": "第5章",
+      "topic": "使用上の注意",
+      "question": "添付文書の『してはいけないこと』と『相談すること』の違いに関する説明として、正しいものはどれか。",
+      "choices": [
+        "『してはいけないこと』は原則として避けるべき禁止事項を示し、『相談すること』は使用前後に専門家へ相談して判断すべき条件等を示す。",
+        "どちらも同じ内容を別の見出しで繰り返したものである。",
+        "『相談すること』の方が常に危険度が高く、該当すれば絶対に使用できない。",
+        "『してはいけないこと』は販売者だけが守り、使用者本人には適用されない。",
+        "どちらも効能・効果を分類するための欄である。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.83
+    },
+    {
+      "id": "RS26-115",
+      "chapter": "第5章",
+      "topic": "相談すること",
+      "question": "添付文書の『相談すること』に該当する治療中の病気がある人が一般用医薬品を希望している。対応として最も適切なのはどれか。",
+      "choices": [
+        "治療内容や併用薬を確認し、必要に応じて処方医・薬剤師等へ相談するよう案内し、自己判断で併用可否を断定しない。",
+        "登録販売者が処方薬を一時中止するよう指示してから一般用医薬品を販売する。",
+        "『相談すること』は注意喚起だけなので、治療中でも確認せず販売する。",
+        "一般用医薬品なら処方薬との相互作用はないため、相談は不要である。",
+        "用量を半分にすれば相談事項には該当しなくなる。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.64
+    },
+    {
+      "id": "RS26-116",
+      "chapter": "第5章",
+      "topic": "安全性速報",
+      "question": "安全性速報（ブルーレター）について正しいものはどれか。",
+      "choices": [
+        "一般的な使用上の注意の改訂情報より迅速な安全対策措置をとる必要がある場合に発出される安全性情報である。",
+        "緊急安全性情報より必ず重篤な死亡例だけを扱う制度である。",
+        "黄色背景で作成されるためイエローレターとも呼ばれる。",
+        "販売促進を目的に製造販売業者が任意に作成する広告資料である。",
+        "PMDAメディナビ等で配信される安全性情報の対象にはならない。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.7
+    },
+    {
+      "id": "RS26-117",
+      "chapter": "第5章",
+      "topic": "医薬品・医療機器等安全性情報",
+      "question": "厚生労働省が提供する『医薬品・医療機器等安全性情報』の活用として、最も適切なのはどれか。",
+      "choices": [
+        "重要な副作用、不具合、使用上の注意の改訂等の安全性情報を確認し、販売・情報提供へ反映する。",
+        "医薬品価格の全国比較だけを確認する。",
+        "医療用医薬品だけの情報なので、登録販売者は確認しない。",
+        "製造販売業者の広告審査結果だけが掲載される。",
+        "一度資格取得時に読めば更新情報を確認する必要はない。"
+      ],
+      "answer": 1,
       "heuristic_grade": "C",
       "risk_score": 5,
       "flags": [
@@ -2328,238 +2431,19 @@
         "CORRECT_STYLE_OUTLIER"
       ],
       "wrong_absolute_count": 1,
-      "correct_length_ratio": 1.96
-    },
-    {
-      "id": "RS26-058",
-      "chapter": "第5章",
-      "topic": "「してはいけないこと」と対象成分",
-      "question": "添付文書の「してはいけないこと」に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "守らなくても症状悪化や事故につながることはない事項だけが記載される。",
-        "重篤な副作用や事故の危険が高まるため、使用を避けるべき人や併用を避けるべき薬などが記載される。",
-        "医師の治療を受けている人は必ず「してはいけないこと」にだけ記載される。",
-        "「してはいけないこと」は効能効果の一覧である。",
-        "一般用医薬品ではこの項目は設けられない。"
-      ],
-      "answer": 2,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.38
-    },
-    {
-      "id": "RS26-059",
-      "chapter": "第5章",
-      "topic": "「相談すること」と対象成分",
-      "question": "添付文書の「相談すること」に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "医師の治療を受けている人など、使用前に専門家へ相談すべき場合が記載される。",
-        "「相談すること」は必ず使用を禁止する事項だけを示す。",
-        "妊婦や授乳婦に関する注意が記載されることはない。",
-        "副作用と思われる症状が現れても相談せず使用を続けるよう記載される。",
-        "一般用医薬品では相談先を示す必要はない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "D",
-      "risk_score": 7,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_3PLUS",
-        "CORRECT_LONGER_35PCT",
-        "HEDGE_VS_ABSOLUTE_PATTERN"
-      ],
-      "wrong_absolute_count": 3,
-      "correct_length_ratio": 1.42
-    },
-    {
-      "id": "RS26-060",
-      "chapter": "第5章",
-      "topic": "安全性情報・副作用報告様式",
-      "question": "医薬品安全性情報報告書に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "副作用等の名称・症状、患者情報、被疑薬や使用状況などを記載する報告様式である。",
-        "販売店の売上だけを記載する様式である。",
-        "因果関係が完全に確定しなければ記載してはいけない。",
-        "一般用医薬品に関する副作用疑いでは使用できない。",
-        "報告者の職種を記載する欄はない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 1.62
-    },
-    {
-      "id": "RS26-113",
-      "chapter": "第5章",
-      "topic": "添付文書の改訂",
-      "question": "一般用医薬品の添付文書に関する記述のうち、正しいものはどれか。",
-      "choices": [
-        "市販後の安全性情報等により、使用上の注意が改訂されることがある。",
-        "一度作成されたら変更されない。",
-        "購入者が読む必要はない。",
-        "用法・用量は記載されない。",
-        "副作用に関する情報は記載されない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 2.13
-    },
-    {
-      "id": "RS26-114",
-      "chapter": "第5章",
-      "topic": "使用上の注意",
-      "question": "添付文書の「してはいけないこと」に関する説明として、適切なものはどれか。",
-      "choices": [
-        "守らないと症状悪化や副作用事故につながるため、禁止事項として示される。",
-        "単なる参考情報である。",
-        "販売者だけが守ればよい。",
-        "購入者には説明してはならない。",
-        "どの医薬品にも同じ内容が書かれる。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 2.33
-    },
-    {
-      "id": "RS26-115",
-      "chapter": "第5章",
-      "topic": "相談すること",
-      "question": "添付文書の「相談すること」に該当する場合の対応として、適切なものはどれか。",
-      "choices": [
-        "使用前または使用後の状況に応じて医師・薬剤師・登録販売者等へ相談する。",
-        "必ず無視して使用する。",
-        "相談せず用量を倍にする。",
-        "症状悪化時も連用する。",
-        "購入後は誰にも相談できない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 3,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 2.92
-    },
-    {
-      "id": "RS26-116",
-      "chapter": "第5章",
-      "topic": "安全性速報",
-      "question": "安全性速報に関する記述として、正しいものはどれか。",
-      "choices": [
-        "一般的な使用上の注意の改訂情報より迅速な注意喚起が必要な場合に作成され、青色地の印刷物でブルーレターとも呼ばれる。",
-        "緊急かつ重大な使用制限が必要な場合だけに作成され、黄色地の印刷物である。",
-        "販売促進を目的として製造販売業者が任意に作成する広告資料である。",
-        "一般用医薬品には一切関係しない。",
-        "PMDAを通じて配信されることはない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "ABSOLUTE_DISTRACTORS_2PLUS",
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 2,
-      "correct_length_ratio": 1.78
-    },
-    {
-      "id": "RS26-117",
-      "chapter": "第5章",
-      "topic": "医薬品・医療機器等安全性情報",
-      "question": "厚生労働省が提供する「医薬品・医療機器等安全性情報」に関する記述として、正しいものはどれか。",
-      "choices": [
-        "一般用医薬品を含む医薬品等の重要な副作用や不具合等を取りまとめ、医薬関係者向けに提供する。",
-        "医薬品の価格改定だけを知らせる資料である。",
-        "医療用医薬品のみを対象とし、一般用医薬品は対象外である。",
-        "製造販売業者の広告審査結果だけを掲載する。",
-        "厚生労働省やPMDAのホームページには掲載されない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "B-",
-      "risk_score": 2,
-      "flags": [
-        "CORRECT_LONGER_35PCT"
-      ],
-      "wrong_absolute_count": 0,
       "correct_length_ratio": 1.73
     },
     {
       "id": "RS26-118",
       "chapter": "第5章",
       "topic": "PMDAホームページの安全性情報",
-      "question": "PMDAのホームページで確認できる情報として、適切なものはどれか。",
+      "question": "PMDAのホームページで確認できる医薬品安全性情報の組合せとして、最も適切なのはどれか。",
       "choices": [
-        "緊急安全性情報、使用上の注意の改訂情報、副作用が疑われる症例情報、製品回収情報、一般用医薬品等の添付文書情報など。",
-        "一般用医薬品の広告だけ。",
-        "各店舗の売上順位だけ。",
-        "医薬品と無関係な消費者アンケートだけ。",
-        "医療機関の診療予約情報だけ。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 4,
-      "flags": [
-        "CORRECT_LONGER_35PCT",
-        "CORRECT_STYLE_OUTLIER"
-      ],
-      "wrong_absolute_count": 0,
-      "correct_length_ratio": 4.07
-    },
-    {
-      "id": "RS26-119",
-      "chapter": "第5章",
-      "topic": "PMDAメディナビ",
-      "question": "PMDAメディナビに関する記述として、正しいものはどれか。",
-      "choices": [
-        "医薬品・医療機器等の安全性に関する特に重要な情報を電子メールでタイムリーに配信し、誰でも利用できる。",
-        "登録販売者は利用できない。",
-        "紙の郵送だけで情報を提供するサービスである。",
-        "安全性情報ではなく販売促進情報だけを配信する。",
-        "一度登録すると最新情報は取得できない。"
-      ],
-      "answer": 1,
-      "heuristic_grade": "C",
-      "risk_score": 5,
-      "flags": [
-        "ABSOLUTE_DISTRACTOR",
-        "CORRECT_LONGER_35PCT",
-        "CORRECT_STYLE_OUTLIER"
-      ],
-      "wrong_absolute_count": 1,
-      "correct_length_ratio": 2.27
-    },
-    {
-      "id": "RS26-120",
-      "chapter": "第5章",
-      "topic": "製造販売業者等からの安全性情報提供",
-      "question": "医薬品の製造販売業者等による安全性情報の取扱いとして、正しいものはどれか。",
-      "choices": [
-        "有効性・安全性など適正使用に必要な情報を収集・検討し、薬局や店舗販売業者等とその従事者へ提供するよう努める。",
-        "承認後は安全性情報を収集する必要がない。",
-        "店舗販売業者や登録販売者へ安全性情報を提供してはならない。",
-        "情報提供は広告目的に限られる。",
-        "市販後に得られた情報は適正使用に利用しない。"
+        "緊急安全性情報・安全性速報、添付文書情報、回収情報、副作用が疑われる症例情報等",
+        "店舗別の売上順位、広告費、在庫回転率等",
+        "医薬品購入者個人の診療録と処方履歴",
+        "登録販売者試験受験者の個人成績一覧",
+        "販売店ごとの従業員給与と勤務シフト"
       ],
       "answer": 1,
       "heuristic_grade": "B-",
@@ -2568,7 +2452,50 @@
         "CORRECT_LONGER_35PCT"
       ],
       "wrong_absolute_count": 0,
-      "correct_length_ratio": 2.45
+      "correct_length_ratio": 2.29
+    },
+    {
+      "id": "RS26-119",
+      "chapter": "第5章",
+      "topic": "PMDAメディナビ",
+      "question": "PMDAメディナビの利用目的として、最も適切なのはどれか。",
+      "choices": [
+        "医薬品・医療機器等の重要な安全性情報を電子メール等でタイムリーに把握し、現場の安全対策へ活用する。",
+        "医薬品の販売価格やポイント還元率を毎日比較する。",
+        "医薬品広告を購入者へ自動配信する販売促進サービスとして利用する。",
+        "医療機関の予約を代行するために利用する。",
+        "登録販売者だけは利用対象外なので、薬剤師から転送された情報だけを見る。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 2,
+      "flags": [
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 0,
+      "correct_length_ratio": 1.53
+    },
+    {
+      "id": "RS26-120",
+      "chapter": "第5章",
+      "topic": "製造販売業者等からの安全性情報提供",
+      "question": "製造販売業者等による市販後安全性情報の取扱いとして、正しいものはどれか。",
+      "choices": [
+        "有効性・安全性等の情報を収集・検討し、必要な情報を薬局・店舗販売業者や医薬関係者へ提供して適正使用に役立てる。",
+        "承認後は安全性評価が完了しているため、新しい副作用情報を収集する必要はない。",
+        "登録販売者へ安全性情報を提供すると広告規制に抵触するため、薬剤師にだけ提供する。",
+        "市販後に集めた情報は製品改良には使えるが、使用上の注意の改訂には利用できない。",
+        "安全性情報は販売促進に使える内容だけを選び、リスク情報は行政だけに報告して販売現場へは共有しない。"
+      ],
+      "answer": 1,
+      "heuristic_grade": "B-",
+      "risk_score": 3,
+      "flags": [
+        "ABSOLUTE_DISTRACTOR",
+        "CORRECT_LONGER_35PCT"
+      ],
+      "wrong_absolute_count": 1,
+      "correct_length_ratio": 1.38
     }
   ]
 }
