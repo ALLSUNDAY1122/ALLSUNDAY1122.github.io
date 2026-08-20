@@ -1,0 +1,44 @@
+name: APP2-010 Touhan Sync and Validate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/app2-010-touhan-sync-validate-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate canonical 360 questions
+        run: node touroku-hanbaisha-sprint/scripts/validate-canonical-questions.mjs
+      - name: Rebuild runtime question bank
+        run: node touroku-hanbaisha-sprint/scripts/build-questions.mjs
+      - name: Validate release-ready data
+        run: node touroku-hanbaisha-sprint/scripts/validate-release-ready-data.mjs
+      - name: Test history calendar regression
+        run: node touroku-hanbaisha-sprint/scripts/test-history-calendar.mjs
+      - name: Persist runtime sync evidence
+        run: |
+          mkdir -p automation/audits
+          REQUEST_ID=$(node -p "require('./automation/app2-010-touhan-sync-validate-command.json').request_id")
+          node -e "const fs=require('fs');fs.writeFileSync('automation/audits/app2-010-touhan-sync-validate.json',JSON.stringify({request_id:process.argv[1],canonical_questions:360,canonical_validation:'PASS',runtime_rebuilt:true,release_ready_validation:'PASS',history_calendar:'PASS',timestamp:new Date().toISOString()},null,2)+'\n')" "$REQUEST_ID"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add touroku-hanbaisha-sprint/questions.js automation/audits/app2-010-touhan-sync-validate.json
+          git commit -m 'Sync Touhan runtime questions and persist validation' || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
