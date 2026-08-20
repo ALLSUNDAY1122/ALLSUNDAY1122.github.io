@@ -17,7 +17,7 @@ on:
       - '.github/workflows/toru-tango-mobile-ci.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate:
@@ -106,6 +106,20 @@ jobs:
           set -o pipefail
           node --check ../toru-tango/backend/src/index.js 2>&1 | tee ci-logs/worker.log
           node --test ../toru-tango/backend/tests/worker.test.js 2>&1 | tee ci-logs/worker-tests.log
+
+      - name: Persist refreshed lockfile
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feature/on-device-ai-card-generation'
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          if git diff --quiet -- toru-tango-mobile/package-lock.json; then
+            echo 'package-lock.json already synchronized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add toru-tango-mobile/package-lock.json
+          git commit -m 'chore(toru-tango): refresh Expo lockfile'
+          git push origin HEAD:feature/on-device-ai-card-generation
 
       - name: Upload validation logs and refreshed lockfile
         if: always()
