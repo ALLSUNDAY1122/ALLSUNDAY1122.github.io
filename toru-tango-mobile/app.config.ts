@@ -1,6 +1,6 @@
 import type { ExpoConfig, ConfigContext } from 'expo/config';
 
-// Release delivery retry: 2026-08-20. Keep iOS build number 8 unchanged until Apple accepts the upload.
+// Release delivery retry 2: 2026-08-20 after Expo dependency and lockfile synchronization. Keep iOS build number 8 until Apple accepts it.
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: '撮る単語帳',
