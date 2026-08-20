@@ -356,7 +356,7 @@ export default function CardsScreen() {
       />
 
       <View style={styles.listHeader}>
-        <Text style={styles.cardCount}>{filteredCards.length}枚のカード</Text>
+        <Text style={styles.cardCount}>{filteredCards.length}枚</Text>
         <ChoiceRow
           value={sort}
           onChange={setSort}
@@ -393,6 +393,7 @@ export default function CardsScreen() {
                     variant="secondary"
                     onPress={() => setEditingId(null)}
                   />
+                  <AppButton label="削除" variant="danger" onPress={() => confirmDelete(card.id)} />
                 </View>
               </View>
             ) : (
@@ -400,12 +401,12 @@ export default function CardsScreen() {
                 <View style={styles.facesRow}>
                   <View style={styles.faceColumn}>
                     <Text style={styles.faceLabel}>表</Text>
-                    <Text style={styles.faceText} numberOfLines={4}>{card.question}</Text>
+                    <Text style={styles.faceText} numberOfLines={2}>{card.question}</Text>
                   </View>
                   <View style={styles.faceDivider} />
                   <View style={styles.faceColumn}>
                     <Text style={styles.faceLabel}>裏</Text>
-                    <Text style={styles.faceText} numberOfLines={4}>{card.answer}</Text>
+                    <Text style={styles.faceText} numberOfLines={2}>{card.answer}</Text>
                   </View>
                 </View>
 
@@ -420,40 +421,36 @@ export default function CardsScreen() {
                     ) : (
                       <Text style={[styles.statusChip, styles.visibleChip]}>表示中</Text>
                     )}
-                    <Text style={styles.updatedText}>{formatUpdatedAt(card.updatedAt)}に編集</Text>
+                    <Text style={styles.updatedText}>{formatUpdatedAt(card.updatedAt)}</Text>
                   </View>
                   <Text style={styles.reviewText}>
                     {getCardReviewStage(card) === 'review' && isReviewDue(card)
                       ? '今日確認'
-                      : `正解${card.correct}・弱点${card.wrong}`}
+                      : `○${card.correct}・△${card.wrong}`}
                   </Text>
                 </View>
 
-                {card.note ? <Text style={styles.noteText}>メモ：{card.note}</Text> : null}
+                {card.note ? <Text style={styles.noteText} numberOfLines={1}>メモ：{card.note}</Text> : null}
 
                 <View style={styles.actionGrid}>
                   <Pressable onPress={() => speak(card.question)} style={styles.smallAction}>
-                    <Text style={styles.smallActionText}>🔊 表を読む</Text>
+                    <Text style={styles.smallActionText}>🔊 表</Text>
                   </Pressable>
                   <Pressable onPress={() => speak(card.answer)} style={styles.smallAction}>
-                    <Text style={styles.smallActionText}>🔊 裏を読む</Text>
+                    <Text style={styles.smallActionText}>🔊 裏</Text>
                   </Pressable>
                   <Pressable
                     onPress={() => setCardHidden(card.id, !card.isHidden)}
                     style={[styles.smallAction, card.isHidden && styles.smallActionActive]}
                   >
                     <Text style={[styles.smallActionText, card.isHidden && styles.smallActionActiveText]}>
-                      {card.isHidden ? '表示に戻す' : '非表示にする'}
+                      {card.isHidden ? '表示' : '非表示'}
                     </Text>
                   </Pressable>
                   <Pressable onPress={() => beginEdit(card)} style={styles.smallAction}>
                     <Text style={styles.smallActionText}>✎ 編集</Text>
                   </Pressable>
                 </View>
-
-                <Pressable onPress={() => confirmDelete(card.id)} style={styles.deleteLink}>
-                  <Text style={styles.deleteLinkText}>このカードを削除</Text>
-                </Pressable>
               </>
             )}
           </View>
@@ -478,18 +475,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 18
+    marginBottom: 16
   },
   heroTitleWrap: { alignItems: 'center', flexDirection: 'row', flexShrink: 1, gap: 10 },
   cameraBadge: {
     alignItems: 'center',
     backgroundColor: colors.primarySoft,
     borderRadius: 16,
-    height: 52,
+    height: 50,
     justifyContent: 'center',
-    width: 52
+    width: 50
   },
-  cameraBadgeText: { fontSize: 26 },
+  cameraBadgeText: { fontSize: 25 },
   heroSubtitle: { color: colors.muted, fontSize: 12, marginTop: 2 },
   addFolderButton: {
     alignItems: 'center',
@@ -503,19 +500,19 @@ const styles = StyleSheet.create({
   searchBar: {
     alignItems: 'center',
     backgroundColor: '#eef1f4',
-    borderRadius: 16,
+    borderRadius: 14,
     flexDirection: 'row',
-    minHeight: 52,
-    paddingHorizontal: 14,
-    marginBottom: 16
+    minHeight: 48,
+    paddingHorizontal: 12,
+    marginBottom: 12
   },
-  searchIcon: { color: colors.muted, fontSize: 28, marginRight: 8 },
-  searchInput: { color: colors.text, flex: 1, fontSize: 16, minHeight: 48 },
+  searchIcon: { color: colors.muted, fontSize: 24, marginRight: 7 },
+  searchInput: { color: colors.text, flex: 1, fontSize: 15, minHeight: 44 },
   folderHeader: {
     alignItems: 'flex-end',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 12
+    marginBottom: 10
   },
   sectionEyebrow: { color: colors.primaryDark, fontSize: 16, fontWeight: '800' },
   folderCount: { color: colors.muted, fontSize: 12, marginTop: 2 },
@@ -533,14 +530,14 @@ const styles = StyleSheet.create({
   emptyFolderIcon: { fontSize: 36 },
   emptyFolderTitle: { color: colors.text, fontSize: 18, fontWeight: '800' },
   emptyFolderText: { color: colors.muted, lineHeight: 20, textAlign: 'center' },
-  folderGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  folderGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   folderCard: {
     backgroundColor: colors.surface,
     borderColor: colors.border,
-    borderRadius: 20,
+    borderRadius: 18,
     borderWidth: 1,
-    minHeight: 188,
-    padding: 14,
+    minHeight: 170,
+    padding: 13,
     width: '48%',
     shadowColor: '#0f172a',
     shadowOffset: { width: 0, height: 4 },
@@ -552,112 +549,111 @@ const styles = StyleSheet.create({
   folderCardTop: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   folderIcon: {
     alignItems: 'center',
-    borderRadius: 14,
-    height: 44,
+    borderRadius: 13,
+    height: 40,
     justifyContent: 'center',
-    width: 44
+    width: 40
   },
-  folderIconText: { fontSize: 22 },
+  folderIconText: { fontSize: 20 },
   moreText: { color: '#98a2b3', fontSize: 15, fontWeight: '900' },
-  folderName: { color: colors.text, fontSize: 17, fontWeight: '800', lineHeight: 23, marginTop: 12 },
-  folderMeta: { color: colors.text, fontSize: 14, fontWeight: '700', marginTop: 8 },
-  folderSubMeta: { color: colors.muted, fontSize: 11, marginTop: 2 },
-  progressRow: { alignItems: 'center', flexDirection: 'row', gap: 8, marginTop: 12 },
+  folderName: { color: colors.text, fontSize: 16, fontWeight: '800', lineHeight: 21, marginTop: 10 },
+  folderMeta: { color: colors.text, fontSize: 13, fontWeight: '700', marginTop: 7 },
+  folderSubMeta: { color: colors.muted, fontSize: 10, marginTop: 2 },
+  progressRow: { alignItems: 'center', flexDirection: 'row', gap: 7, marginTop: 10 },
   folderProgressTrack: {
     backgroundColor: '#edf0f3',
     borderRadius: 99,
     flex: 1,
-    height: 6,
+    height: 5,
     overflow: 'hidden'
   },
   folderProgressBar: { borderRadius: 99, height: '100%' },
-  progressPercent: { fontSize: 12, fontWeight: '800' },
+  progressPercent: { fontSize: 11, fontWeight: '800' },
   detailHeader: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 16
+    marginBottom: 12
   },
-  backButton: { justifyContent: 'center', minHeight: 44, minWidth: 70 },
+  backButton: { justifyContent: 'center', minHeight: 44, minWidth: 64 },
   backText: { color: colors.primaryDark, fontSize: 16, fontWeight: '800' },
-  deckTitle: { color: colors.text, flex: 1, fontSize: 22, fontWeight: '800', textAlign: 'center' },
-  headerAddButton: { alignItems: 'center', justifyContent: 'center', minHeight: 44, minWidth: 70 },
+  deckTitle: { color: colors.text, flex: 1, fontSize: 21, fontWeight: '800', textAlign: 'center' },
+  headerAddButton: { alignItems: 'center', justifyContent: 'center', minHeight: 44, minWidth: 64 },
   headerAddText: { color: colors.primary, fontSize: 30, fontWeight: '500' },
-  listHeader: { gap: 10, marginBottom: 10, marginTop: 14 },
-  cardCount: { color: colors.text, fontSize: 15, fontWeight: '800' },
+  listHeader: { gap: 7, marginBottom: 8, marginTop: 10 },
+  cardCount: { color: colors.text, fontSize: 14, fontWeight: '800' },
   cardRow: {
     backgroundColor: colors.surface,
     borderColor: colors.border,
-    borderRadius: 20,
+    borderRadius: 15,
     borderWidth: 1,
-    gap: 12,
-    marginBottom: 12,
-    padding: 14,
+    gap: 7,
+    marginBottom: 8,
+    padding: 10,
     shadowColor: '#0f172a',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
     elevation: 1
   },
   cardRowHidden: { backgroundColor: '#fafafa', opacity: 0.8 },
-  facesRow: { flexDirection: 'row', gap: 12 },
-  faceColumn: { flex: 1, minHeight: 92 },
+  facesRow: { flexDirection: 'row', gap: 9 },
+  faceColumn: { flex: 1, minHeight: 56 },
   faceDivider: { backgroundColor: colors.border, width: 1 },
   faceLabel: {
     alignSelf: 'flex-start',
     backgroundColor: colors.primarySoft,
     borderRadius: 6,
     color: colors.primaryDark,
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '900',
+    overflow: 'hidden',
+    paddingHorizontal: 6,
+    paddingVertical: 2
+  },
+  faceText: { color: colors.text, fontSize: 14, fontWeight: '700', lineHeight: 19, marginTop: 5 },
+  statusRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', gap: 7 },
+  statusChips: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', flexShrink: 1, gap: 6 },
+  statusChip: {
+    backgroundColor: '#f1f3f5',
+    borderRadius: 6,
+    color: colors.muted,
+    fontSize: 10,
+    fontWeight: '800',
     overflow: 'hidden',
     paddingHorizontal: 7,
     paddingVertical: 3
   },
-  faceText: { color: colors.text, fontSize: 15, fontWeight: '700', lineHeight: 22, marginTop: 8 },
-  statusRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', gap: 8 },
-  statusChips: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', flexShrink: 1, gap: 7 },
-  statusChip: {
-    backgroundColor: '#f1f3f5',
-    borderRadius: 7,
-    color: colors.muted,
-    fontSize: 11,
-    fontWeight: '800',
-    overflow: 'hidden',
-    paddingHorizontal: 8,
-    paddingVertical: 4
-  },
   weakChip: { backgroundColor: colors.dangerSoft, color: colors.danger },
   visibleChip: { backgroundColor: colors.successSoft, color: colors.success },
   hiddenChip: { backgroundColor: '#eceff1', color: '#667085' },
-  updatedText: { color: colors.muted, fontSize: 11 },
-  reviewText: { color: colors.muted, fontSize: 11 },
+  updatedText: { color: colors.muted, fontSize: 10 },
+  reviewText: { color: colors.muted, fontSize: 10 },
   noteText: {
     backgroundColor: colors.warningSoft,
-    borderRadius: 10,
+    borderRadius: 8,
     color: colors.text,
-    fontSize: 12,
-    lineHeight: 18,
-    padding: 9
+    fontSize: 11,
+    lineHeight: 16,
+    paddingHorizontal: 8,
+    paddingVertical: 6
   },
-  actionGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  actionGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   smallAction: {
     alignItems: 'center',
     backgroundColor: colors.surface,
     borderColor: colors.border,
-    borderRadius: 12,
+    borderRadius: 10,
     borderWidth: 1,
     justifyContent: 'center',
-    minHeight: 42,
-    paddingHorizontal: 11
+    minHeight: 36,
+    paddingHorizontal: 9
   },
-  smallActionText: { color: colors.text, fontSize: 12, fontWeight: '800' },
+  smallActionText: { color: colors.text, fontSize: 11, fontWeight: '800' },
   smallActionActive: { backgroundColor: colors.primarySoft, borderColor: colors.primary },
   smallActionActiveText: { color: colors.primaryDark },
-  deleteLink: { alignSelf: 'flex-start', justifyContent: 'center', minHeight: 38 },
-  deleteLinkText: { color: colors.danger, fontSize: 11, fontWeight: '700' },
-  editWrap: { gap: 12 },
-  editTitle: { color: colors.text, fontSize: 17, fontWeight: '800' },
+  editWrap: { gap: 10 },
+  editTitle: { color: colors.text, fontSize: 16, fontWeight: '800' },
   floatingAdd: {
     alignItems: 'center',
     alignSelf: 'flex-end',
@@ -665,13 +661,13 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     justifyContent: 'center',
     marginTop: 4,
-    minHeight: 52,
-    paddingHorizontal: 20,
+    minHeight: 48,
+    paddingHorizontal: 18,
     shadowColor: '#0f172a',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.14,
     shadowRadius: 12,
     elevation: 4
   },
-  floatingAddText: { color: '#ffffff', fontSize: 15, fontWeight: '900' }
+  floatingAddText: { color: '#ffffff', fontSize: 14, fontWeight: '900' }
 });
