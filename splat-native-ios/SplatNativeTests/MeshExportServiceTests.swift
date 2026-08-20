@@ -10,6 +10,7 @@ final class MeshExportServiceTests: XCTestCase {
         XCTAssertTrue(exporterIDs.contains("stlb"))
         XCTAssertTrue(exporterIDs.contains("glb2"))
         XCTAssertTrue(exporterIDs.contains("fbx"))
+        XCTAssertTrue(exporterIDs.contains("fbxa"))
     }
 
     func testOBJPassthroughKeepsRealGeometryBytes() async throws {
@@ -52,7 +53,10 @@ final class MeshExportServiceTests: XCTestCase {
         XCTAssertEqual(try byteCount(las), 227 + 3 * 20)
 
         let fbxPrefix = String(decoding: try Data(contentsOf: fbx).prefix(32), as: UTF8.self)
-        XCTAssertTrue(fbxPrefix.contains("Kaydara FBX Binary"))
+        XCTAssertTrue(
+            fbxPrefix.contains("Kaydara FBX Binary") || fbxPrefix.contains("; FBX"),
+            "Expected a real binary or ASCII FBX container"
+        )
 
         let glbBytes = Array(try Data(contentsOf: glb).prefix(12))
         XCTAssertGreaterThanOrEqual(glbBytes.count, 12)
