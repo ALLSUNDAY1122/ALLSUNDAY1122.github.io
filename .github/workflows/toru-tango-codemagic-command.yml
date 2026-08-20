@@ -1,0 +1,162 @@
+name: Toru Tango Codemagic Build 8 Command
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: toru-tango-codemagic-build-8
+  cancel-in-progress: false
+
+jobs:
+  deliver:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[CM-CMD] Toru Tango Build 8 delivery'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - name: Checkout exact release branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/on-device-ai-card-generation
+
+      - name: Validate Codemagic workflow safety
+        run: |
+          python -m pip install --disable-pip-version-check PyYAML
+          python - <<'PY'
+          import yaml
+          from pathlib import Path
+          cfg = yaml.safe_load(Path('codemagic.yaml').read_text(encoding='utf-8')) or {}
+          wf = (cfg.get('workflows') or {}).get('toru-tango-ios-testflight')
+          if not isinstance(wf, dict):
+              raise SystemExit('toru-tango-ios-testflight workflow missing on release branch')
+          asc = ((wf.get('publishing') or {}).get('app_store_connect') or {})
+          if asc.get('submit_to_app_store') is True:
+              raise SystemExit('Blocked: workflow would submit to App Store review')
+          if asc.get('submit_to_testflight') is not True:
+              raise SystemExit('Blocked: workflow is not configured for TestFlight upload')
+          signing = (wf.get('environment') or {}).get('ios_signing') or {}
+          if signing.get('bundle_identifier') != 'com.allsunday1122.torutango':
+              raise SystemExit('Bundle ID mismatch')
+          app = Path('toru-tango-mobile/app.config.ts').read_text(encoding='utf-8')
+          if "buildNumber: '8'" not in app:
+              raise SystemExit('Build number is not 8')
+          print('PASS: Toru Tango Codemagic workflow is TestFlight-only and Build 8 is fixed')
+          PY
+
+      - name: Start and monitor Codemagic Build 8
+        id: cm
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          if [ -z "$CM_API_TOKEN" ]; then
+            echo '::error::CM_API_TOKEN repository secret is not configured'
+            exit 1
+          fi
+          python - <<'PY'
+          import json, os, time, urllib.request, urllib.error
+          from pathlib import Path
+
+          token = os.environ['CM_API_TOKEN']
+          app_id = '6a769d81a1add9d06020b524'
+          workflow_id = 'toru-tango-ios-testflight'
+          branch = 'feature/on-device-ai-card-generation'
+          terminal = {'finished','failed','canceled','timeout','skipped'}
+
+          def api(url, method='GET', payload=None):
+              body = None if payload is None else json.dumps(payload).encode()
+              req = urllib.request.Request(url, data=body, method=method)
+              req.add_header('Content-Type','application/json')
+              req.add_header('x-auth-token', token)
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      raw = r.read().decode()
+                      return r.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw = e.read().decode(errors='replace')
+                  try: data = json.loads(raw) if raw else {}
+                  except Exception: data = {'error': raw[:1000]}
+                  return e.code, data
+
+          status, started = api('https://api.codemagic.io/builds', 'POST', {
+              'appId': app_id,
+              'workflowId': workflow_id,
+              'branch': branch,
+          })
+          if not 200 <= status < 300:
+              raise SystemExit(f'Codemagic start failed HTTP {status}: {started}')
+          build_id = started.get('buildId') or started.get('id')
+          if not build_id:
+              raise SystemExit(f'Codemagic did not return buildId: {started}')
+          Path('cm-build-id.txt').write_text(build_id)
+          print(f'Codemagic build started: {build_id}')
+
+          deadline = time.time() + 4200
+          last = None
+          final = None
+          while time.time() < deadline:
+              s, data = api(f'https://codemagic.io/api/v3/builds/{build_id}')
+              if not 200 <= s < 300:
+                  raise SystemExit(f'Codemagic inspect failed HTTP {s}: {data}')
+              details = data.get('data') or data
+              current = details.get('status')
+              if current != last:
+                  print(f'Codemagic status: {current}')
+                  last = current
+              if current in terminal:
+                  final = details
+                  break
+              time.sleep(30)
+          if final is None:
+              raise SystemExit('Timed out waiting for Codemagic build')
+
+          safe = {
+              'build_id': build_id,
+              'status': final.get('status'),
+              'workflow_id': workflow_id,
+              'branch': branch,
+              'app_id': app_id,
+              'started_at': final.get('startedAt') or final.get('createdAt'),
+              'finished_at': final.get('finishedAt'),
+          }
+          Path('cm-result.json').write_text(json.dumps(safe, indent=2), encoding='utf-8')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write(f'build_id={build_id}\n')
+              out.write(f'status={final.get("status")}\n')
+          if final.get('status') != 'finished':
+              raise SystemExit(f'Codemagic build ended with status {final.get("status")}')
+          PY
+
+      - name: Upload sanitized Codemagic result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-codemagic-build8-${{ github.run_id }}
+          path: |
+            cm-result.json
+            cm-build-id.txt
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Report Codemagic locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const body = [
+              'Toru Tango Codemagic Build 8 command finished.',
+              `status=${{ toJSON(job.status) }}`,
+              `run_id=${context.runId}`,
+              `codemagic_build_id=${{ toJSON(steps.cm.outputs.build_id) }}`,
+              `codemagic_status=${{ toJSON(steps.cm.outputs.status) }}`,
+              `artifact=toru-tango-codemagic-build8-${context.runId}`,
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
