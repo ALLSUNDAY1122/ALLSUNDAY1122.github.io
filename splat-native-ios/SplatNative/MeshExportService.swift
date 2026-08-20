@@ -17,15 +17,20 @@ enum MeshExportService {
         var id: String { rawValue }
         var displayName: String { rawValue.uppercased() }
 
-        var assimpExporterID: String? {
+        var assimpExporterIDs: [String] {
             switch self {
-            case .fbx: return "fbx"
-            case .obj: return "obj"
-            case .glb: return "glb2"
-            case .stl: return "stlb"
-            case .usdz, .ply, .las: return nil
+            // Prefer ASCII FBX because the pinned Assimp binary exporter can emit files that
+            // pass the FBX header check but fail the independent Assimp importer. Keep binary
+            // as a fallback and require a successful reopen before either result is accepted.
+            case .fbx: return ["fbxa", "fbx"]
+            case .obj: return ["obj"]
+            case .glb: return ["glb2"]
+            case .stl: return ["stlb"]
+            case .usdz, .ply, .las: return []
             }
         }
+
+        var assimpExporterID: String? { assimpExporterIDs.first }
     }
 
     enum ExportError: LocalizedError {
@@ -108,8 +113,9 @@ enum MeshExportService {
                 return Capability(format: format, isAvailable: true, reason: nil)
             }
 
-            guard let exporterID = format.assimpExporterID,
-                  exporterIDs.contains(exporterID) else {
+            let candidateIDs = format.assimpExporterIDs
+            guard !candidateIDs.isEmpty,
+                  candidateIDs.contains(where: { exporterIDs.contains($0) }) else {
                 return Capability(
                     format: format,
                     isAvailable: false,
@@ -161,7 +167,17 @@ enum MeshExportService {
                     try MeshPointCloudExportService.exportPLY(sourceOBJ: bridgeURL, outputURL: partialURL)
                 case .las:
                     try MeshPointCloudExportService.exportLAS12(sourceOBJ: bridgeURL, outputURL: partialURL)
-                case .fbx, .obj, .glb, .stl:
+                case .fbx:
+                    let availableIDs = format.assimpExporterIDs.filter { assimpExporterIDs().contains($0) }
+                    guard !availableIDs.isEmpty else {
+                        throw ExportError.assimpExporterUnavailable(format.displayName)
+                    }
+                    try exportFBXWithReadableFallback(
+                        sourceOBJ: bridgeURL,
+                        exporterIDs: availableIDs,
+                        outputURL: partialURL
+                    )
+                case .obj, .glb, .stl:
                     guard let exporterID = format.assimpExporterID else {
                         throw ExportError.unsupportedConversion(source: sourceExtension, destination: format.rawValue)
                     }
@@ -224,6 +240,37 @@ enum MeshExportService {
         return bridgeURL
     }
 
+    private static func exportFBXWithReadableFallback(
+        sourceOBJ: URL,
+        exporterIDs: [String],
+        outputURL: URL
+    ) throws {
+        var failures: [String] = []
+
+        for exporterID in exporterIDs {
+            try Task.checkCancellation()
+            try? FileManager.default.removeItem(at: outputURL)
+
+            do {
+                try exportWithAssimp(sourceOBJ: sourceOBJ, exporterID: exporterID, outputURL: outputURL)
+                try validateOutput(outputURL)
+                try validateContainer(outputURL, as: .fbx)
+                try validateAssimpReadable(outputURL)
+                return
+            } catch is CancellationError {
+                throw CancellationError()
+            } catch {
+                failures.append("\(exporterID): \(error.localizedDescription)")
+            }
+        }
+
+        try? FileManager.default.removeItem(at: outputURL)
+        let detail = failures.isEmpty
+            ? "利用可能なFBX Exporterがありません。"
+            : failures.joined(separator: "\n")
+        throw ExportError.assimpExportFailed("FBXを第三者reader互換として完成できませんでした。\n\(detail)")
+    }
+
     private static func exportWithAssimp(sourceOBJ: URL, exporterID: String, outputURL: URL) throws {
         let scene: UnsafePointer<aiScene>? = sourceOBJ.path.withCString { path in
             aiImportFile(path, 0)
@@ -240,6 +287,20 @@ enum MeshExportService {
         }
         guard result == aiReturn_SUCCESS else {
             throw ExportError.assimpExportFailed(assimpErrorString())
+        }
+    }
+
+    private static func validateAssimpReadable(_ url: URL) throws {
+        let scene: UnsafePointer<aiScene>? = url.path.withCString { path in
+            aiImportFile(path, 0)
+        }
+        guard let scene else {
+            throw ExportError.assimpImporterFailed(assimpErrorString())
+        }
+        defer { aiReleaseImport(scene) }
+
+        guard scene.pointee.mNumMeshes > 0 else {
+            throw ExportError.assimpImporterFailed("Assimpで再読込できましたがMesh payloadが空です。")
         }
     }
 
