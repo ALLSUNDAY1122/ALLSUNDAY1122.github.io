@@ -1,0 +1,96 @@
+name: APP2-010 Touhan Difficulty Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-010-touhan-difficulty-audit-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Audit first 120 questions
+        run: |
+          python3 - <<'PY'
+          import json, re, statistics
+          from pathlib import Path
+
+          cmd=json.loads(Path('automation/app2-010-touhan-difficulty-audit-command.json').read_text(encoding='utf-8'))
+          exam=int(cmd.get('exam',1))
+          if exam not in (1,2,3): raise SystemExit('invalid exam')
+          base=Path(f'touroku-hanbaisha-sprint/questions/exam-{exam}')
+          qs=[]
+          for ch in range(1,6):
+              data=json.loads((base/f'chapter-{ch}.json').read_text(encoding='utf-8'))
+              qs.extend(data)
+          if len(qs)!=120: raise SystemExit(f'expected 120, got {len(qs)}')
+
+          absolute_terms=('必ず','すべて','一切','絶対','常に','例外なく','ことはない','必要はない','不要','のみで','だけで','全く','いかなる','どのような場合でも','自己判断で直ちに')
+          hedge_terms=('場合がある','ことがある','必要に応じ','基本的に','適切','おそれ','可能性','原則','確認する','相談','受診')
+          rows=[]
+          for q in qs:
+              choices=q['choices']; ans=int(q['correct_index'])
+              correct=choices[ans]
+              wrong=[c for i,c in enumerate(choices) if i!=ans]
+              wrong_abs=sum(any(t in c for t in absolute_terms) for c in wrong)
+              correct_abs=any(t in correct for t in absolute_terms)
+              correct_hedge=sum(t in correct for t in hedge_terms)
+              wrong_hedge=sum(sum(t in c for t in hedge_terms) for c in wrong)
+              lens=[len(c) for c in choices]
+              med=statistics.median(lens)
+              length_ratio=(len(correct)/med) if med else 1
+              flags=[]; score=0
+              if wrong_abs>=3 and not correct_abs:
+                  flags.append('ABSOLUTE_DISTRACTORS_3PLUS'); score+=3
+              elif wrong_abs>=2 and not correct_abs:
+                  flags.append('ABSOLUTE_DISTRACTORS_2PLUS'); score+=2
+              elif wrong_abs>=1 and not correct_abs:
+                  flags.append('ABSOLUTE_DISTRACTOR'); score+=1
+              if length_ratio>=1.35:
+                  flags.append('CORRECT_LONGER_35PCT'); score+=2
+              elif length_ratio>=1.20:
+                  flags.append('CORRECT_LONGER_20PCT'); score+=1
+              if correct_hedge>=1 and wrong_abs>=2:
+                  flags.append('HEDGE_VS_ABSOLUTE_PATTERN'); score+=2
+              if all(len(c)<28 for c in wrong) and len(correct)>=45:
+                  flags.append('CORRECT_STYLE_OUTLIER'); score+=2
+              if score>=6: grade='D'
+              elif score>=4: grade='C'
+              elif score>=2: grade='B-'
+              else: grade='B'
+              rows.append({
+                  'id':q['id'],'chapter':q['chapter'],'topic':q.get('topic'),'question':q['question'],
+                  'choices':choices,'answer':ans+1,'heuristic_grade':grade,'risk_score':score,'flags':flags,
+                  'wrong_absolute_count':wrong_abs,'correct_length_ratio':round(length_ratio,2)
+              })
+
+          counts={g:sum(r['heuristic_grade']==g for r in rows) for g in ('D','C','B-','B')}
+          out={'request_id':cmd['request_id'],'exam':exam,'question_count':len(rows),'grade_counts':counts,'rows':rows}
+          p=Path(f'automation/audits/app2-010-touhan-exam{exam}-difficulty.json'); p.parent.mkdir(parents=True,exist_ok=True)
+          p.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          t=Path(f'automation/audits/app2-010-touhan-exam{exam}-compact.tsv')
+          with t.open('w',encoding='utf-8') as f:
+              for r in rows:
+                  choices=' || '.join(f'{i+1}:{c}' for i,c in enumerate(r['choices']))
+                  f.write(f"{r['id']}\t{r['chapter']}\t{r['topic']}\tH={r['heuristic_grade']}({r['risk_score']})\tQ:{r['question']}\t{choices}\tANS:{r['answer']}\tFLAGS:{','.join(r['flags'])}\n")
+          print(json.dumps({'question_count':len(rows),'grade_counts':counts},ensure_ascii=False))
+          PY
+      - name: Persist audit evidence
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/audits/app2-010-touhan-exam*-difficulty.json automation/audits/app2-010-touhan-exam*-compact.tsv
+          git commit -m "Persist APP2-010 Touhan difficulty audit" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
