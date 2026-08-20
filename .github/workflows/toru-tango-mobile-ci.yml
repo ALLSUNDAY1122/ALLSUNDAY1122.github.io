@@ -107,11 +107,13 @@ jobs:
           node --check ../toru-tango/backend/src/index.js 2>&1 | tee ci-logs/worker.log
           node --test ../toru-tango/backend/tests/worker.test.js 2>&1 | tee ci-logs/worker-tests.log
 
-      - name: Upload validation logs
+      - name: Upload validation logs and refreshed lockfile
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: toru-tango-validation-logs
-          path: toru-tango-mobile/ci-logs
+          path: |
+            toru-tango-mobile/ci-logs
+            toru-tango-mobile/package-lock.json
           if-no-files-found: error
           retention-days: 7
