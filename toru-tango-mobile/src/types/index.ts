@@ -40,4 +40,5 @@ export type BackupData = {
   cards: Card[];
   history: StudyHistory[];
   decks?: string[];
+  studyDays?: string[];
 };
