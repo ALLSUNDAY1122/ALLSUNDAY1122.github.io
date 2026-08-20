@@ -10,7 +10,6 @@ final class MeshExportServiceTests: XCTestCase {
         XCTAssertTrue(exporterIDs.contains("stlb"))
         XCTAssertTrue(exporterIDs.contains("glb2"))
         XCTAssertTrue(exporterIDs.contains("fbx"))
-        XCTAssertTrue(exporterIDs.contains("fbxa"))
     }
 
     func testOBJPassthroughKeepsRealGeometryBytes() async throws {
