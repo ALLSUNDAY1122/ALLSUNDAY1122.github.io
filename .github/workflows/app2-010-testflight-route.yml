@@ -18,91 +18,108 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Audit APP2-010 TestFlight route state
+      - name: Fix compliance and route Build 10 to Internal TestFlight
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
           python3 - <<'PY'
-          import json, os, re, sys, traceback
+          import json, os, re, sys, time
           from pathlib import Path
           sys.path.insert(0, str((Path.cwd() / 'scripts').resolve()))
-          from app_store_connect_api import api_get, load_private_key, make_token
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
 
           cmd=json.loads(Path('automation/app2-010-testflight-route-command.json').read_text(encoding='utf-8'))
           rid=str(cmd['request_id']); app_id=str(cmd['app_id']); bundle=str(cmd['bundle_id']); build_no=str(cmd['build_number'])
           if not re.fullmatch(r'app2-010-[A-Za-z0-9._-]{1,90}',rid): raise SystemExit('invalid request id')
           summary={'request_id':rid,'app_id':app_id,'bundle_id':bundle,'target_build_number':build_no,'ok':False,'errors':[],
-                   'known_builds':[],'internal_groups':[],'selected_group':None,'target_build':None,
-                   'assigned_to_selected_group':False,'tester_count':None,'persisted_personal_tester_data':False,
-                   'app_store_review_submitted':False}
-          key_path=cleanup=None
+                   'known_builds':[],'target_build_before':None,'target_build_after':None,
+                   'internal_build_state_before':None,'internal_build_state_after':None,
+                   'compliance_changed':False,'compliance_http_status':None,
+                   'internal_groups':[],'selected_group':None,'route_changed':False,'route_http_status':None,
+                   'assigned_after':False,'tester_count':None,'tester_states':[],
+                   'persisted_personal_tester_data':False,'app_store_review_submitted':False,'external_beta_review_submitted':False}
+          cleanup=None
           try:
               issuer=os.environ.get('ASC_ISSUER_ID'); kid=os.environ.get('ASC_KEY_ID')
               if not issuer or not kid: raise RuntimeError('missing ASC API credentials')
-              key_path, cleanup=load_private_key(); token=make_token(issuer,kid,key_path)
+              key_path,cleanup=load_private_key(); token=make_token(issuer,kid,key_path)
               _,app=api_get(token,f'/v1/apps/{app_id}')
               actual=((((app or {}).get('data') or {}).get('attributes') or {}).get('bundleId'))
               if actual!=bundle: raise RuntimeError(f'app preflight mismatch: {actual!r}')
 
-              _,br=api_get(token,f'/v1/builds?filter[app]={app_id}&sort=-uploadedDate&limit=200')
-              builds=[x for x in ((br or {}).get('data') or []) if isinstance(x,dict)]
+              def list_builds():
+                  _,r=api_get(token,f'/v1/builds?filter[app]={app_id}&sort=-uploadedDate&limit=200&fields[builds]=version,uploadedDate,processingState,expired,buildAudienceType,usesNonExemptEncryption')
+                  return [x for x in ((r or {}).get('data') or []) if isinstance(x,dict)]
+              builds=list_builds()
               for b in builds:
                   a=b.get('attributes') or {}
                   summary['known_builds'].append({'id':b.get('id'),'version':a.get('version'),'uploadedDate':a.get('uploadedDate'),
                                                   'processingState':a.get('processingState'),'expired':a.get('expired'),
-                                                  'buildAudienceType':a.get('buildAudienceType')})
+                                                  'buildAudienceType':a.get('buildAudienceType'),'usesNonExemptEncryption':a.get('usesNonExemptEncryption')})
               candidates=[b for b in builds if str((b.get('attributes') or {}).get('version'))==build_no]
-              if len(candidates)==1:
-                  target=candidates[0]; ta=target.get('attributes') or {}; tid=str(target['id'])
-                  detail={}
-                  try:
-                      _,dr=api_get(token,f'/v1/builds/{tid}/buildBetaDetail')
-                      detail=(((dr or {}).get('data') or {}).get('attributes') or {})
-                  except Exception as e:
-                      summary['errors'].append('buildBetaDetail: '+str(e)[:700])
-                  summary['target_build']={'id':tid,'version':ta.get('version'),'uploadedDate':ta.get('uploadedDate'),
-                                           'processingState':ta.get('processingState'),'expired':ta.get('expired'),
-                                           'buildAudienceType':ta.get('buildAudienceType'),
-                                           'internalBuildState':detail.get('internalBuildState'),
-                                           'externalBuildState':detail.get('externalBuildState')}
-              else:
-                  summary['errors'].append(f'expected one Build {build_no}; found {len(candidates)}')
-                  tid=None
+              if len(candidates)!=1: raise RuntimeError(f'expected exactly one Build {build_no}; found {len(candidates)}')
+              target=candidates[0]; tid=str(target['id']); ta=target.get('attributes') or {}
+              summary['target_build_before']={'id':tid,**{k:ta.get(k) for k in ('version','uploadedDate','processingState','expired','buildAudienceType','usesNonExemptEncryption')}}
+              if ta.get('processingState')!='VALID': raise RuntimeError(f'Build {build_no} processingState is {ta.get("processingState")!r}')
+              if ta.get('buildAudienceType')!='INTERNAL_ONLY': raise RuntimeError(f'Build {build_no} is not INTERNAL_ONLY')
+
+              _,d0=api_get(token,f'/v1/builds/{tid}/buildBetaDetail')
+              s0=((((d0 or {}).get('data') or {}).get('attributes') or {}).get('internalBuildState'))
+              summary['internal_build_state_before']=s0
+
+              # This app contains no custom cryptography; it only uses OS/WebKit HTTPS facilities.
+              # Apple documents that OS-only encryption does not require export documentation.
+              if s0=='MISSING_EXPORT_COMPLIANCE' or ta.get('usesNonExemptEncryption') is None:
+                  payload={'data':{'type':'builds','id':tid,'attributes':{'usesNonExemptEncryption':False}}}
+                  hs,_=api_request(token,f'/v1/builds/{tid}',method='PATCH',payload=payload)
+                  summary['compliance_changed']=True; summary['compliance_http_status']=hs
+                  time.sleep(2)
+
+              _,b1=api_get(token,f'/v1/builds/{tid}?fields[builds]=version,uploadedDate,processingState,expired,buildAudienceType,usesNonExemptEncryption')
+              ba=((((b1 or {}).get('data') or {}).get('attributes') or {}))
+              summary['target_build_after']={'id':tid,**{k:ba.get(k) for k in ('version','uploadedDate','processingState','expired','buildAudienceType','usesNonExemptEncryption')}}
+              _,d1=api_get(token,f'/v1/builds/{tid}/buildBetaDetail')
+              s1=((((d1 or {}).get('data') or {}).get('attributes') or {}).get('internalBuildState'))
+              summary['internal_build_state_after']=s1
 
               _,gr=api_get(token,f'/v1/betaGroups?filter[app]={app_id}&limit=200')
               groups=[x for x in ((gr or {}).get('data') or []) if isinstance(x,dict)]
+              internal=[]
               for g in groups:
                   ga=g.get('attributes') or {}
-                  if ga.get('isInternalGroup') is not True: continue
-                  gid=str(g['id']); row={'id':gid,'name':ga.get('name'),'isInternalGroup':True,
-                                         'hasAccessToAllBuilds':ga.get('hasAccessToAllBuilds'),'build_ids':[],'build_numbers':[]}
-                  try:
-                      _,rel=api_get(token,f'/v1/betaGroups/{gid}/relationships/builds?limit=200')
-                      ids=[str(x.get('id')) for x in ((rel or {}).get('data') or []) if isinstance(x,dict) and x.get('id')]
-                      row['build_ids']=ids
-                      row['build_numbers']=sorted({str((b.get('attributes') or {}).get('version')) for b in builds if str(b.get('id')) in ids})
-                  except Exception as e:
-                      summary['errors'].append('group builds '+gid+': '+str(e)[:700])
-                  summary['internal_groups'].append(row)
+                  if ga.get('isInternalGroup') is True:
+                      internal.append({'id':str(g['id']),'name':ga.get('name'),'hasAccessToAllBuilds':ga.get('hasAccessToAllBuilds')})
+              summary['internal_groups']=internal
+              access=[g for g in internal if g.get('hasAccessToAllBuilds') is True]
+              selected=access[0] if len(access)==1 else (internal[0] if len(internal)==1 else None)
+              if selected is None: raise RuntimeError(f'expected one unambiguous internal group; found {len(internal)}')
+              summary['selected_group']=selected
 
-              preferred=[g for g in summary['internal_groups'] if g.get('name')=='App Store Connect Users']
-              if len(preferred)==1: selected=preferred[0]
-              else:
-                  access=[g for g in summary['internal_groups'] if g.get('hasAccessToAllBuilds') is True]
-                  selected=access[0] if len(access)==1 else (summary['internal_groups'][0] if len(summary['internal_groups'])==1 else None)
-              if selected:
-                  summary['selected_group']={k:selected.get(k) for k in ('id','name','hasAccessToAllBuilds')}
-                  if tid: summary['assigned_to_selected_group']=tid in selected.get('build_ids',[])
-                  try:
-                      _,tr=api_get(token,f"/v1/betaGroups/{selected['id']}/betaTesters?limit=200")
-                      summary['tester_count']=len([x for x in ((tr or {}).get('data') or []) if isinstance(x,dict)])
-                  except Exception as e:
-                      summary['errors'].append('group testers: '+str(e)[:700])
-              summary['ok']=summary['target_build'] is not None and not any(x.startswith('expected one Build') for x in summary['errors'])
+              def group_build_ids():
+                  _,r=api_get(token,f"/v1/betaGroups/{selected['id']}/builds?limit=200")
+                  return [str(x.get('id')) for x in ((r or {}).get('data') or []) if isinstance(x,dict) and x.get('id')]
+              ids=group_build_ids()
+              eligible=s1 in ('READY_FOR_BETA_TESTING','IN_BETA_TESTING')
+              if tid not in ids and not selected.get('hasAccessToAllBuilds') and eligible:
+                  payload={'data':[{'type':'builds','id':tid}]}
+                  hs,_=api_request(token,f"/v1/betaGroups/{selected['id']}/relationships/builds",method='POST',payload=payload)
+                  summary['route_changed']=True; summary['route_http_status']=hs
+                  time.sleep(1); ids=group_build_ids()
+              # hasAccessToAllBuilds is Apple's automatic internal distribution mode.
+              summary['assigned_after']=(tid in ids) or (bool(selected.get('hasAccessToAllBuilds')) and eligible)
+
+              _,tr=api_get(token,f"/v1/betaGroups/{selected['id']}/betaTesters?limit=200")
+              testers=[x for x in ((tr or {}).get('data') or []) if isinstance(x,dict)]
+              summary['tester_count']=len(testers)
+              summary['tester_states']=sorted({str((t.get('attributes') or {}).get('state')) for t in testers if (t.get('attributes') or {}).get('state')})
+
+              summary['ok']=(summary['target_build_after'].get('usesNonExemptEncryption') is False and
+                             summary['internal_build_state_after'] in ('READY_FOR_BETA_TESTING','IN_BETA_TESTING') and
+                             summary['assigned_after'] and summary['tester_count']>0)
           except Exception as e:
-              summary['errors'].append(type(e).__name__+': '+str(e)[:1200])
+              summary['errors'].append(type(e).__name__+': '+str(e)[:1500])
           finally:
               if cleanup: cleanup.unlink(missing_ok=True)
 
@@ -110,8 +127,9 @@ jobs:
           payload=json.dumps(summary,ensure_ascii=False,indent=2)+'\n'; out.write_text(payload,encoding='utf-8')
           Path('/tmp/app2-010-route-result.json').write_text(payload,encoding='utf-8')
           Path('/tmp/app2-010-route-result-path.txt').write_text(str(out),encoding='utf-8')
-          print(json.dumps({'ok':summary['ok'],'target_build':summary['target_build'],'internal_groups':len(summary['internal_groups']),
-                            'assigned':summary['assigned_to_selected_group'],'tester_count':summary['tester_count'],'errors':summary['errors']},ensure_ascii=False))
+          print(json.dumps({'ok':summary['ok'],'before':summary['internal_build_state_before'],'after':summary['internal_build_state_after'],
+                            'compliance_changed':summary['compliance_changed'],'selected_group':summary['selected_group'],
+                            'assigned_after':summary['assigned_after'],'tester_count':summary['tester_count'],'errors':summary['errors']},ensure_ascii=False))
           PY
       - name: Persist sanitized route evidence
         if: always()
