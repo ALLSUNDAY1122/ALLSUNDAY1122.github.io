@@ -25,10 +25,15 @@ function uniqueDecks(values: string[]): string[] {
   return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 }
 
+function uniqueStudyDays(values: string[]): string[] {
+  return [...new Set(values.filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(value)))].sort();
+}
+
 export type AppStoreValue = {
   cards: Card[];
   history: StudyHistory[];
   decks: string[];
+  studyDays: string[];
   hydrated: boolean;
   addDeck: (name: string) => boolean;
   addCard: (question: string, answer: string, deckName?: string) => boolean;
@@ -37,6 +42,7 @@ export type AppStoreValue = {
   setCardHidden: (id: string, hidden: boolean) => void;
   deleteCard: (id: string) => void;
   clearAll: () => void;
+  recordStudyActivity: (cardId?: string) => void;
   gradeCard: (cardId: string, stage: CardReviewStage) => void;
   createBackup: () => BackupData;
   restoreBackup: (backup: BackupData) => void;
@@ -48,6 +54,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
   const [cards, setCards] = useState<Card[]>([]);
   const [history, setHistory] = useState<StudyHistory[]>([]);
   const [decks, setDecks] = useState<string[]>([]);
+  const [studyDays, setStudyDays] = useState<string[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -58,12 +65,14 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
         setCards(stored.cards);
         setHistory(stored.history);
         setDecks(stored.decks);
+        setStudyDays(stored.studyDays);
       })
       .catch(() => {
         if (!active) return;
         setCards([]);
         setHistory([]);
         setDecks([]);
+        setStudyDays([]);
       })
       .finally(() => {
         if (active) setHydrated(true);
@@ -75,8 +84,8 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     if (!hydrated) return;
-    void saveStoredState({ cards, history, decks }).catch(() => undefined);
-  }, [cards, history, decks, hydrated]);
+    void saveStoredState({ cards, history, decks, studyDays }).catch(() => undefined);
+  }, [cards, history, decks, studyDays, hydrated]);
 
   const addDeck = useCallback(
     (name: string): boolean => {
@@ -213,6 +222,21 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
     setCards([]);
     setHistory([]);
     setDecks([]);
+    setStudyDays([]);
+  }, []);
+
+  const recordStudyActivity = useCallback((cardId?: string) => {
+    const studiedAt = new Date();
+    const dateKey = toDateKey(studiedAt);
+    setStudyDays((current) => uniqueStudyDays([...current, dateKey]));
+    if (!cardId) return;
+    setCards((current) =>
+      current.map((card) =>
+        card.id === cardId
+          ? { ...card, lastStudiedAt: studiedAt.toISOString() }
+          : card
+      )
+    );
   }, []);
 
   const gradeCard = useCallback((cardId: string, stage: CardReviewStage) => {
@@ -239,6 +263,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
           : card
       )
     );
+    setStudyDays((current) => uniqueStudyDays([...current, toDateKey(answeredAt)]));
     setHistory((current) => [
       ...current,
       {
@@ -257,16 +282,25 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
       exportedAt: new Date().toISOString(),
       cards,
       history,
-      decks
+      decks,
+      studyDays
     }),
-    [cards, history, decks]
+    [cards, history, decks, studyDays]
   );
 
   const restoreBackup = useCallback((backup: BackupData) => {
     const deckNamesFromCards = backup.cards.map((card) => normalizeDeckName(card.deckName));
+    const legacyStudyDays = [
+      ...backup.history.map((entry) => entry.dateKey),
+      ...backup.cards
+        .map((card) => card.lastStudiedAt)
+        .filter((value): value is string => Boolean(value))
+        .map((value) => toDateKey(new Date(value)))
+    ];
     setCards(backup.cards);
     setHistory(backup.history);
     setDecks(uniqueDecks([...(backup.decks ?? []), ...deckNamesFromCards]));
+    setStudyDays(uniqueStudyDays([...(backup.studyDays ?? []), ...legacyStudyDays]));
   }, []);
 
   const value = useMemo<AppStoreValue>(
@@ -274,6 +308,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
       cards,
       history,
       decks,
+      studyDays,
       hydrated,
       addDeck,
       addCard,
@@ -282,6 +317,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
       setCardHidden,
       deleteCard,
       clearAll,
+      recordStudyActivity,
       gradeCard,
       createBackup,
       restoreBackup
@@ -290,6 +326,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
       cards,
       history,
       decks,
+      studyDays,
       hydrated,
       addDeck,
       addCard,
@@ -298,6 +335,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
       setCardHidden,
       deleteCard,
       clearAll,
+      recordStudyActivity,
       gradeCard,
       createBackup,
       restoreBackup
