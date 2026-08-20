@@ -1,0 +1,191 @@
+name: APP2-010 Internal TestFlight Route
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-010-testflight-route-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Audit and route Build to internal TestFlight
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, sys
+          from pathlib import Path
+
+          sys.path.insert(0, str((Path.cwd() / 'scripts').resolve()))
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          cmd = json.loads(Path('automation/app2-010-testflight-route-command.json').read_text(encoding='utf-8'))
+          request_id = str(cmd['request_id'])
+          if not re.fullmatch(r'app2-010-[A-Za-z0-9._-]{1,90}', request_id):
+              raise SystemExit('invalid request_id')
+          app_id = str(cmd['app_id'])
+          bundle_id = str(cmd['bundle_id'])
+          build_number = str(cmd['build_number'])
+
+          issuer_id = os.environ.get('ASC_ISSUER_ID')
+          key_id = os.environ.get('ASC_KEY_ID')
+          if not issuer_id or not key_id:
+              raise SystemExit('missing App Store Connect API credentials')
+          key_path, cleanup = load_private_key()
+          try:
+              token = make_token(issuer_id, key_id, key_path)
+
+              _, app = api_get(token, f'/v1/apps/{app_id}')
+              app_data = (app or {}).get('data') or {}
+              actual_bundle = (app_data.get('attributes') or {}).get('bundleId')
+              if actual_bundle != bundle_id:
+                  raise RuntimeError(f'app preflight mismatch: {actual_bundle!r}')
+
+              _, builds_resp = api_get(token, f'/v1/apps/{app_id}/builds?sort=-uploadedDate&limit=200')
+              builds = [x for x in ((builds_resp or {}).get('data') or []) if isinstance(x, dict)]
+              build_map = {str((b.get('attributes') or {}).get('version')): b for b in builds}
+              candidates = [b for b in builds if str((b.get('attributes') or {}).get('version')) == build_number]
+              if len(candidates) != 1:
+                  raise RuntimeError(f'expected exactly one build {build_number}, found {len(candidates)}')
+              target = candidates[0]
+              target_id = str(target['id'])
+              target_attrs = target.get('attributes') or {}
+
+              _, beta_detail_resp = api_get(token, f'/v1/builds/{target_id}/buildBetaDetail')
+              beta_detail = ((beta_detail_resp or {}).get('data') or {}).get('attributes') or {}
+
+              _, groups_resp = api_get(token, f'/v1/apps/{app_id}/betaGroups?limit=200')
+              groups = [x for x in ((groups_resp or {}).get('data') or []) if isinstance(x, dict)]
+              internal_groups = [g for g in groups if (g.get('attributes') or {}).get('isInternalGroup') is True]
+
+              group_rows = []
+              for g in internal_groups:
+                  gid = str(g['id'])
+                  _, rel = api_get(token, f'/v1/betaGroups/{gid}/relationships/builds?limit=200')
+                  ids = [str(x.get('id')) for x in ((rel or {}).get('data') or []) if isinstance(x, dict) and x.get('id')]
+                  nums = sorted({str((b.get('attributes') or {}).get('version')) for b in builds if str(b.get('id')) in ids})
+                  group_rows.append({
+                      'id': gid,
+                      'name': (g.get('attributes') or {}).get('name'),
+                      'has_access_to_all_builds': (g.get('attributes') or {}).get('hasAccessToAllBuilds'),
+                      'build_ids': ids,
+                      'build_numbers': nums,
+                  })
+
+              preferred = [x for x in group_rows if x.get('name') == 'App Store Connect Users']
+              if len(preferred) == 1:
+                  selected = preferred[0]
+                  selection_reason = 'app_store_connect_users'
+              else:
+                  access_all = [x for x in group_rows if x.get('has_access_to_all_builds') is True]
+                  if len(access_all) == 1:
+                      selected = access_all[0]
+                      selection_reason = 'single_access_all_internal_group'
+                  elif len(group_rows) == 1:
+                      selected = group_rows[0]
+                      selection_reason = 'single_internal_group'
+                  else:
+                      selected = None
+                      selection_reason = 'ambiguous_or_missing_internal_group'
+
+              processing_state = target_attrs.get('processingState')
+              assigned_before = bool(selected and target_id in selected['build_ids'])
+              changed = False
+              route_status = 'AUDITED'
+              http_status = None
+
+              if processing_state != 'VALID':
+                  route_status = 'WAITING_PROCESSING'
+              elif selected is None:
+                  route_status = 'NEEDS_INTERNAL_GROUP_SELECTION'
+              elif assigned_before:
+                  route_status = 'ALREADY_ASSIGNED'
+              else:
+                  payload = {'data': [{'type': 'builds', 'id': target_id}]}
+                  http_status, _ = api_request(token, f"/v1/betaGroups/{selected['id']}/relationships/builds", method='POST', payload=payload)
+                  changed = True
+                  route_status = 'ASSIGNED'
+
+              assigned_after = assigned_before
+              tester_count = None
+              tester_states = []
+              if selected is not None:
+                  _, rel_after = api_get(token, f"/v1/betaGroups/{selected['id']}/relationships/builds?limit=200")
+                  after_ids = [str(x.get('id')) for x in ((rel_after or {}).get('data') or []) if isinstance(x, dict) and x.get('id')]
+                  assigned_after = target_id in after_ids
+                  _, testers_rel = api_get(token, f"/v1/betaGroups/{selected['id']}/betaTesters?limit=200")
+                  testers = [x for x in ((testers_rel or {}).get('data') or []) if isinstance(x, dict)]
+                  tester_count = len(testers)
+                  tester_states = sorted({str((t.get('attributes') or {}).get('state')) for t in testers if (t.get('attributes') or {}).get('state')})
+
+              if changed and not assigned_after:
+                  raise RuntimeError('build assignment read-back mismatch')
+
+              summary = {
+                  'request_id': request_id,
+                  'app_id': app_id,
+                  'bundle_id': bundle_id,
+                  'target_build_number': build_number,
+                  'target_build_id': target_id,
+                  'uploaded_date': target_attrs.get('uploadedDate'),
+                  'processing_state': processing_state,
+                  'build_audience_type': target_attrs.get('buildAudienceType'),
+                  'internal_build_state': beta_detail.get('internalBuildState'),
+                  'external_build_state': beta_detail.get('externalBuildState'),
+                  'known_build_numbers': sorted(build_map.keys(), key=lambda x: int(x) if x.isdigit() else x),
+                  'internal_groups': group_rows,
+                  'selected_group': None if selected is None else {
+                      'id': selected['id'],
+                      'name': selected['name'],
+                      'has_access_to_all_builds': selected['has_access_to_all_builds'],
+                  },
+                  'selection_reason': selection_reason,
+                  'assigned_before': assigned_before,
+                  'assigned_after': assigned_after,
+                  'changed': changed,
+                  'write_http_status': http_status,
+                  'route_status': route_status,
+                  'tester_count': tester_count,
+                  'tester_states': tester_states,
+                  'persisted_personal_tester_data': False,
+                  'app_store_review_submitted': False,
+              }
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+
+          out = Path('automation/asc-results') / f'{request_id}.json'
+          out.parent.mkdir(parents=True, exist_ok=True)
+          payload = json.dumps(summary, ensure_ascii=False, indent=2) + '\n'
+          out.write_text(payload, encoding='utf-8')
+          Path('/tmp/app2-010-route-result.json').write_text(payload, encoding='utf-8')
+          Path('/tmp/app2-010-route-result-path.txt').write_text(str(out), encoding='utf-8')
+          print(json.dumps({k: summary[k] for k in ('target_build_number','processing_state','internal_build_state','route_status','assigned_after','tester_count')}, ensure_ascii=False))
+          PY
+      - name: Persist sanitized route evidence
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          P="$(cat /tmp/app2-010-route-result-path.txt)"
+          git add "$P"
+          git commit -m "Persist APP2-010 internal TestFlight route" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p "$(dirname "$P")"
+          cp /tmp/app2-010-route-result.json "$P"
+          git add "$P"
+          git commit -m "Persist APP2-010 internal TestFlight route" || exit 0
+          git push origin HEAD:main
