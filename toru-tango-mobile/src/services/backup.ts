@@ -41,6 +41,16 @@ function normalizeDecks(value: unknown): string[] {
   )];
 }
 
+function normalizeStudyDays(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(
+    value
+      .filter((item): item is string => typeof item === 'string')
+      .map((item) => item.trim())
+      .filter((item) => /^\d{4}-\d{2}-\d{2}$/.test(item))
+  )].sort();
+}
+
 export function validateBackup(value: unknown): BackupData {
   if (!value || typeof value !== 'object') throw new Error('INVALID_BACKUP');
   const data = value as Partial<BackupData>;
@@ -58,6 +68,7 @@ export function validateBackup(value: unknown): BackupData {
   }
 
   const decks = normalizeDecks(data.decks);
+  const studyDays = normalizeStudyDays(data.studyDays);
 
   return {
     version: 1,
@@ -65,7 +76,8 @@ export function validateBackup(value: unknown): BackupData {
       typeof data.exportedAt === 'string' ? data.exportedAt : new Date().toISOString(),
     cards: data.cards,
     history: data.history,
-    ...(decks.length ? { decks } : {})
+    ...(decks.length ? { decks } : {}),
+    ...(studyDays.length ? { studyDays } : {})
   };
 }
 
