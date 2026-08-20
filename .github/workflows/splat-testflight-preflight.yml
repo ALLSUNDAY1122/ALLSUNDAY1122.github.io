@@ -1,0 +1,97 @@
+name: Splat TestFlight Preflight
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260820'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: splat-testflight-preflight-20260820
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Refuse stale TestFlight source
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin feature/splat-native-ios-poc
+          HQ_HEAD="$(git rev-parse FETCH_HEAD)"
+          TESTFLIGHT_HEAD="$(git rev-parse HEAD)"
+          echo "Current HQ integration HEAD: $HQ_HEAD"
+          echo "Current TestFlight HEAD: $TESTFLIGHT_HEAD"
+          if ! git merge-base --is-ancestor "$HQ_HEAD" "$TESTFLIGHT_HEAD"; then
+            echo "::error::TestFlight source is stale. Synchronize testflight/splat-native-ios-20260820 with feature/splat-native-ios-poc before building or uploading an IPA."
+            exit 1
+          fi
+          echo "PASS: TestFlight source contains current HQ integration HEAD"
+
+      - name: Validate source and Apple registration packet
+        run: |
+          set -euo pipefail
+          test -f splat-native-ios/project.yml
+          test -f splat-native-ios/SplatNative/PrivacyInfo.xcprivacy
+          test -f splat-native-ios/APP_STORE_METADATA_JA.md
+          test -f splat-native-ios/APP_REVIEW_NOTES_JA.md
+          test -f splat-native-ios/APPLE_CONNECT_PACKET.md
+          test -f splat-native-ios/RELEASE_CHECKLIST.md
+          test -f splat-native-ios/privacy.html
+          test -f splat-native-ios/support.html
+          grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.splatlab' splat-native-ios/project.yml
+          grep -q 'MARKETING_VERSION: 1.0.0' splat-native-ios/project.yml
+          grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO' splat-native-ios/project.yml
+          grep -q 'App name: `Splat Lab`' splat-native-ios/APPLE_CONNECT_PACKET.md
+          grep -q 'Primary language: Japanese' splat-native-ios/APPLE_CONNECT_PACKET.md
+          grep -q 'Bundle ID: `jp.allsunday1122.splatlab`' splat-native-ios/APPLE_CONNECT_PACKET.md
+          grep -q 'SKU: `splatlab-ios-2026`' splat-native-ios/APPLE_CONNECT_PACKET.md
+          grep -q 'App Store review auto-submit: disabled' splat-native-ios/APPLE_CONNECT_PACKET.md
+
+      - name: Validate Codemagic Apple bootstrap contract
+        run: |
+          set -euo pipefail
+          grep -q '^  splat-apple-bootstrap:' codemagic.yaml
+          grep -q 'BUNDLE_ID: jp.allsunday1122.splatlab' codemagic.yaml
+          grep -q 'app-store-connect bundle-ids create' codemagic.yaml
+          grep -q -- '--strict-match-identifier' codemagic.yaml
+
+      - name: Validate armed TestFlight safety contract
+        run: |
+          set -euo pipefail
+          grep -q '^  splat-native-ios:' codemagic.yaml
+          grep -q 'APP_STORE_CONNECT_APP_ID: PENDING_HUMAN_APP_RECORD' codemagic.yaml
+          grep -q 'test.*APP_STORE_CONNECT_APP_ID.*PENDING_HUMAN_APP_RECORD' codemagic.yaml
+          grep -q 'fetch-signing-files.*IOS_APP_STORE.*--create' codemagic.yaml
+          grep -q 'testFlightInternalTestingOnly' codemagic.yaml
+          grep -q 'submit_to_testflight: true' codemagic.yaml
+          grep -q 'submit_to_app_store: false' codemagic.yaml
+          ! grep -q 'submit_to_app_store: true' codemagic.yaml
+
+      - name: Validate Codemagic YAML syntax and workflow values
+        run: |
+          ruby -e '
+            require "yaml"
+            data = YAML.safe_load(File.read("codemagic.yaml"), aliases: true)
+            workflows = data.fetch("workflows")
+            b = workflows.fetch("splat-apple-bootstrap")
+            raise "wrong bootstrap name" unless b["name"] == "Splat Lab - Apple Bundle ID Bootstrap"
+            raise "wrong bootstrap bundle" unless b.dig("environment", "vars", "BUNDLE_ID") == "jp.allsunday1122.splatlab"
+            raise "bootstrap must not auto-trigger" if b.key?("triggering")
+            w = workflows.fetch("splat-native-ios")
+            raise "wrong workflow name" unless w["name"] == "Splat Lab Native - Internal TestFlight"
+            raise "wrong bundle" unless w.dig("environment", "vars", "BUNDLE_ID") == "jp.allsunday1122.splatlab"
+            raise "workflow must remain blocked until human App record exists" unless w.dig("environment", "vars", "APP_STORE_CONNECT_APP_ID") == "PENDING_HUMAN_APP_RECORD"
+            raise "TestFlight workflow must not auto-trigger before human App record gate" if w.key?("triggering")
+            p = w.dig("publishing", "app_store_connect")
+            raise "TestFlight upload disabled" unless p["submit_to_testflight"] == true
+            raise "App Store submission must stay disabled" unless p["submit_to_app_store"] == false
+            puts "PASS: Apple bootstrap and TestFlight gates are safely separated"
+          '
