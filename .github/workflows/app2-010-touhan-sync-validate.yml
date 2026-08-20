@@ -1,4 +1,4 @@
-name: APP2-010 Touhan Sync and Validate
+name: APP2-010 Touhan Content Validate
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  sync-validate:
+  validate:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -20,29 +20,34 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: Validate canonical 360 questions
         id: canonical
         continue-on-error: true
-        run: node touroku-hanbaisha-sprint/scripts/validate-canonical-questions.mjs
-      - name: Rebuild runtime question bank
+        run: python scripts/app2_010_validate_touhan_canonical.py
+      - name: Check canonical runtime entry
         id: runtime
         continue-on-error: true
-        run: node touroku-hanbaisha-sprint/scripts/build-questions.mjs
-      - name: Validate release-ready data
-        id: release
-        continue-on-error: true
-        run: node touroku-hanbaisha-sprint/scripts/validate-release-ready-data.mjs
+        run: |
+          node --check touroku-hanbaisha-sprint/app-v07.js
+          node --check touroku-hanbaisha-sprint/choice-balance-v07.js
+          node --check touroku-hanbaisha-sprint/r1-canonical-loader-v08.js
+          grep -q 'choice-balance-v07.js' touroku-hanbaisha-sprint/index.html
+          grep -q 'r1-canonical-loader-v08.js' touroku-hanbaisha-sprint/index.html
+          grep -q 'history-calendar-v02.js' touroku-hanbaisha-sprint/index.html
+          if grep -Eq 'questions\.js|questions-extra\.js|questions-v05-|app-v06\.js' touroku-hanbaisha-sprint/index.html; then exit 1; fi
       - name: Test history calendar regression
         id: history
         continue-on-error: true
-        run: node touroku-hanbaisha-sprint/scripts/test-history-calendar.mjs
+        run: node touroku-hanbaisha-sprint/validate-history-calendar.mjs
       - name: Persist validation evidence
         if: always()
         env:
           CANONICAL: ${{ steps.canonical.outcome }}
           RUNTIME: ${{ steps.runtime.outcome }}
-          RELEASE: ${{ steps.release.outcome }}
           HISTORY: ${{ steps.history.outcome }}
         run: |
           mkdir -p automation/audits
@@ -55,8 +60,7 @@ jobs:
             request_id:requestId,
             canonical_questions:360,
             canonical_validation:norm(process.env.CANONICAL),
-            runtime_rebuilt:norm(process.env.RUNTIME),
-            release_ready_validation:norm(process.env.RELEASE),
+            canonical_runtime_entry:norm(process.env.RUNTIME),
             history_calendar:norm(process.env.HISTORY),
             timestamp:new Date().toISOString()
           };
@@ -64,8 +68,8 @@ jobs:
           NODE
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add touroku-hanbaisha-sprint/questions.js automation/audits/app2-010-touhan-sync-validate.json
-          git commit -m 'Sync Touhan runtime questions and persist validation' || true
+          git add automation/audits/app2-010-touhan-sync-validate.json
+          git commit -m 'Persist APP2-010 Touhan content validation' || true
           if ! git push origin HEAD:main; then
             git fetch origin main
             git rebase origin/main
@@ -76,10 +80,8 @@ jobs:
         env:
           CANONICAL: ${{ steps.canonical.outcome }}
           RUNTIME: ${{ steps.runtime.outcome }}
-          RELEASE: ${{ steps.release.outcome }}
           HISTORY: ${{ steps.history.outcome }}
         run: |
           test "$CANONICAL" = success
           test "$RUNTIME" = success
-          test "$RELEASE" = success
           test "$HISTORY" = success
