@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "task_id": "MOI-SEP-001",
+  "attempt_branch": "task/MOI-SEP-001/attempt-1",
+  "integration_epoch": 1,
+  "decision": {
+    "first_real_multistem_path": {
+      "model_family": "Spleeter",
+      "stems": ["vocals", "drums", "bass", "other"],
+      "runtime_topology": "server",
+      "client_topology": "native-ios-thin-client",
+      "status": "SELECTED_FOR_IMPLEMENTATION",
+      "reason": "clearest captured commercial-feasibility evidence for source code plus pretrained models, ready 4-stem inference, avoids early iPhone memory and thermal risk"
+    },
+    "optional_baseline_extension": {
+      "model_family": "Spleeter",
+      "stems": ["vocals", "drums", "bass", "piano", "other"],
+      "runtime_topology": "server",
+      "status": "BENCHMARK_OPTION"
+    },
+    "quality_upgrade_path": {
+      "model_family": "Demucs/HTDemucs-class",
+      "weights": "commercial-rights-cleared or internally trained",
+      "runtime_topology": "server",
+      "status": "CONDITIONAL",
+      "blockers": [
+        "official pretrained-weight commercial rights not explicitly cleared by captured evidence",
+        "commercially cleared real multitrack training/fine-tuning corpus required for self-owned weights",
+        "golden-fixture differential benchmark required"
+      ]
+    },
+    "on_device_path": {
+      "runtime": "ONNX Runtime Mobile with XNNPACK/CoreML evaluation",
+      "first_candidate": "Spleeter-class 4-stem conversion",
+      "status": "EXPERIMENTAL",
+      "required_measurements": [
+        "operator coverage",
+        "model load time",
+        "peak RSS",
+        "real-time factor",
+        "thermal state",
+        "battery impact",
+        "scratch-space usage",
+        "cancel/recovery"
+      ]
+    }
+  },
+  "excluded_or_blocked": [
+    {
+      "candidate": "Open-Unmix umxl pretrained",
+      "status": "RESEARCH_ONLY",
+      "reason": "weights documented as CC BY-NC-SA 4.0 / non-commercial"
+    },
+    {
+      "candidate": "Open-Unmix umxhq/umx pretrained",
+      "status": "REVIEW_REQUIRED",
+      "reason": "commercial model-weight grant not captured; source datasets are commercially restricted"
+    },
+    {
+      "candidate": "facebookresearch Demucs official pretrained weights",
+      "status": "REVIEW_REQUIRED",
+      "reason": "MIT code license does not resolve pretrained-weight licensing; upstream issue remains unresolved in archived repository"
+    },
+    {
+      "candidate": "MUSDB18/MUSDB18-HQ as commercial training corpus",
+      "status": "RESEARCH_ONLY",
+      "reason": "dataset records restrict commercial use without express permission"
+    }
+  ],
+  "parity": {
+    "rows": ["MOI-P003", "MOI-P004", "MOI-P005"],
+    "state_change": false,
+    "remaining_state": "MISSING",
+    "reason": "research selection is not functional parity; no project Golden QA inference or product-device evidence has been executed"
+  },
+  "evidence": [
+    "tech-assets/moises-audio/Separation/benchmarks/MOI-SEP-001_MODEL_RUNTIME_BENCHMARK.md",
+    "tech-assets/moises-audio/reference/model-runtime/MOI-SEP-001_LICENSE_MATRIX.md"
+  ]
+}
