@@ -1,6 +1,6 @@
 # 撮る単語帳 App Storeプライバシー回答案
 
-更新日: 2026-07-29
+更新日: 2026-07-31
 
 この文書はApp Store Connectの「Appのプライバシー」回答案である。最終回答は、公開時のアプリ、Cloudflare Worker、Google Gemini APIの契約・設定と一致することをCodexとユーザーが確認する。
 
@@ -12,7 +12,8 @@
 - アクセス解析SDKなし
 - カードと学習履歴は端末内保存
 - 写真は初期版では外部送信しない
-- AI作問を利用した場合だけ教材本文を外部処理する
+- 「AIで作問（Gemini）」を利用した場合だけ教材本文を外部処理する
+- 「iPhone内で問題を作る」はFoundation Modelsまたはルールベース処理を端末内で実行し、教材本文を外部送信しない
 
 ## 収集する可能性があるデータ
 
@@ -27,7 +28,7 @@
 
 取扱い:
 
-- 利用者がAI作問を実行した場合のみ送信
+- 利用者が「AIで作問（Gemini）」を実行した場合のみ送信
 - Cloudflare Workerを経由してGoogle Gemini Developer APIで処理
 - 利用目的は「Appの機能」
 - ユーザーの氏名やアカウントとはリンクしない設計
@@ -80,6 +81,8 @@ App Store Connect回答案:
 - Cloudflare: API中継
 - Google: Gemini APIによる教材本文からの問題生成
 - Apple: App Store、TestFlight、iOSの標準機能
+
+Apple Foundation Modelsによる作問は端末内処理であり、この経路から教材本文を運営者・Cloudflare・Googleへ送信しない。利用できない場合の簡易作問も端末内処理である。
 
 ## 提出前確認
 

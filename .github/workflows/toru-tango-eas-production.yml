@@ -1,0 +1,106 @@
+name: Toru Tango EAS Production
+
+on:
+  push:
+    branches:
+      - feature/on-device-ai-card-generation
+    paths:
+      - 'toru-tango-mobile/app.config.ts'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: toru-tango-eas-production
+  cancel-in-progress: false
+
+jobs:
+  build-and-submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    defaults:
+      run:
+        working-directory: toru-tango-mobile
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+
+      - name: Verify Expo token
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [ -z "$EXPO_TOKEN" ]; then
+            echo '::error::EXPO_TOKEN repository secret is not configured'
+            exit 1
+          fi
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci --include=dev --no-audit --no-fund
+
+      - name: Validate release candidate
+        run: npm run check
+
+      - name: Verify Expo account
+        run: eas whoami
+
+      - name: Build iOS production
+        id: eas_build
+        run: |
+          mkdir -p release-logs
+          set -o pipefail
+          eas build --platform ios --profile production --non-interactive --json 2>&1 | tee release-logs/eas-build.log
+
+      - name: Record EAS build for this commit
+        id: eas_build_record
+        run: |
+          eas build:list --platform ios --git-commit-hash "$GITHUB_SHA" --limit 5 --json --non-interactive > release-logs/eas-build-current-commit.json
+          cat release-logs/eas-build-current-commit.json
+
+      - name: Submit latest build to App Store Connect
+        id: eas_submit
+        run: |
+          set -o pipefail
+          eas submit --platform ios --profile production --latest --non-interactive 2>&1 | tee release-logs/eas-submit.log
+
+      - name: Upload release logs
+        id: upload_logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-eas-production-logs-${{ github.run_id }}
+          path: toru-tango-mobile/release-logs
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Report delivery locator to PR
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const body = [
+              'Toru Tango EAS delivery run finished.',
+              `run_id=${context.runId}`,
+              `sha=${context.sha}`,
+              `build=${{ toJSON(steps.eas_build.outcome) }}`,
+              `build_record=${{ toJSON(steps.eas_build_record.outcome) }}`,
+              `submit=${{ toJSON(steps.eas_submit.outcome) }}`,
+              `artifact=toru-tango-eas-production-logs-${context.runId}`,
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 4064,
+              body,
+            });

@@ -1,5 +1,6 @@
 import type { ExpoConfig, ConfigContext } from 'expo/config';
 
+// Build 9: real-device QA fixes from 2026-08-21 video review.
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: '撮る単語帳',
@@ -13,7 +14,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: 'com.allsunday1122.torutango',
-    buildNumber: '1',
+    buildNumber: '9',
     icon: './assets/icon-appstore.png',
     infoPlist: {
       NSCameraUsageDescription: '教材を撮影して単語カード作成に利用します。',
@@ -29,7 +30,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-splash-screen',
       {
-        backgroundColor: '#4f46e5',
+        backgroundColor: '#14a9bf',
         image: './assets/icon-appstore.png',
         imageWidth: 200,
         resizeMode: 'contain'

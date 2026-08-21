@@ -1,0 +1,60 @@
+workflows:
+  toru-tango-ios-testflight:
+    name: Toru Tango iOS TestFlight
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+
+    # This name must match the Apple Developer Portal API key integration in Codemagic.
+    # Never store the API key, issuer ID, or private key in this repository.
+    integrations:
+      app_store_connect: Codemagic Shiwake Swipe
+
+    environment:
+      vars:
+        BUNDLE_ID: com.allsunday1122.torutango
+        APP_STORE_APPLE_ID: "6795968222"
+        EXPO_PUBLIC_AI_API_URL: https://toru-tango-ai.kohei3615.workers.dev/generate
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.allsunday1122.torutango
+      xcode: latest
+      cocoapods: default
+
+    scripts:
+      - name: Install Node dependencies
+        script: |
+          cd "$CM_BUILD_DIR/toru-tango-mobile"
+          npm ci
+
+      - name: Generate native iOS project from Expo
+        script: |
+          cd "$CM_BUILD_DIR/toru-tango-mobile"
+          npx expo prebuild --platform ios --non-interactive
+
+      - name: Set up iOS code signing
+        script: |
+          cd "$CM_BUILD_DIR/toru-tango-mobile"
+          xcode-project use-profiles
+
+      - name: Build signed IPA
+        script: |
+          cd "$CM_BUILD_DIR/toru-tango-mobile"
+          WORKSPACE=$(find ios -maxdepth 1 -name '*.xcworkspace' -print -quit)
+          SCHEME=$(find ios -maxdepth 1 -name '*.xcodeproj' -print -quit | sed 's#^.*/##; s#\.xcodeproj$##')
+          test -n "$WORKSPACE"
+          test -n "$SCHEME"
+          xcode-project build-ipa \
+            --workspace "$WORKSPACE" \
+            --scheme "$SCHEME"
+
+    artifacts:
+      - toru-tango-mobile/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        # Keep App Store review submission manual per the release procedure.
+        submit_to_app_store: false

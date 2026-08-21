@@ -1,4 +1,4 @@
-import type { Card, QuestionCandidate } from '@/src/types';
+import type { Card, CardReviewStage, QuestionCandidate } from '@/src/types';
 
 export const createId = (): string =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -14,7 +14,18 @@ export const isSameCard = (
   normalizeText(left.answer) === normalizeText(right.answer);
 
 export const isWeakCard = (card: Card): boolean =>
-  card.wrong > card.correct || card.wrong >= 2;
+  getCardReviewStage(card) === 'weak';
+
+export const getCardReviewStage = (card: Card): CardReviewStage => {
+  if (card.reviewStage) return card.reviewStage;
+  return card.wrong > card.correct || card.wrong >= 2 ? 'weak' : 'review';
+};
+
+export const isReviewDue = (card: Card, now = new Date()): boolean => {
+  if (getCardReviewStage(card) !== 'review') return false;
+  if (!card.nextReviewAt) return true;
+  return new Date(card.nextReviewAt).getTime() <= now.getTime();
+};
 
 export const toDateKey = (date = new Date()): string => {
   const year = date.getFullYear();
@@ -23,17 +34,20 @@ export const toDateKey = (date = new Date()): string => {
   return `${year}-${month}-${day}`;
 };
 
-export const calculateStreak = (dateKeys: string[]): number => {
-  const unique = new Set(dateKeys);
-  let streak = 0;
-  const cursor = new Date();
+export const calculateStreak = (dateKeys: string[], now = new Date()): number => {
+  const unique = new Set(dateKeys.filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(value)));
+  if (!unique.size) return 0;
 
-  while (true) {
-    const target = new Date(cursor);
-    target.setDate(cursor.getDate() - streak);
-    if (!unique.has(toDateKey(target))) break;
-    streak += 1;
+  const cursor = new Date(now);
+  cursor.setHours(12, 0, 0, 0);
+  if (!unique.has(toDateKey(cursor))) {
+    cursor.setDate(cursor.getDate() - 1);
   }
 
+  let streak = 0;
+  while (unique.has(toDateKey(cursor))) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
   return streak;
 };

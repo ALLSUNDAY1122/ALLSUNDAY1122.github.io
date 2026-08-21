@@ -7,8 +7,9 @@ Expo / React Native / TypeScriptで作成したiPhoneアプリ版です。
 - 4タブ: 作る / 単語帳 / 学習 / 記録
 - 直接入力と一括入力
 - AI作問API接続
+- Apple Foundation Modelsによる端末内AI作問（iOS 26以降・対応端末）
 - API未設定・失敗時の端末内簡易作問
-- 生成結果の編集と重複除外
+- 生成結果の選択・編集・重複除外
 - AsyncStorageによるカード・履歴保存
 - カード編集・個別削除・二段階全削除
 - 全カード / 苦手優先 / 未学習の学習モード
@@ -19,6 +20,10 @@ Expo / React Native / TypeScriptで作成したiPhoneアプリ版です。
 - カメラ撮影・写真選択と権限拒否処理
 
 写真OCRはApple VisionのローカルExpo Moduleで実装済みです。Expo Goでは動作しないため、EAS development buildまたは本番ビルドで確認します。
+
+端末内AI作問もローカルExpo Moduleです。iOS 26以降でApple Intelligenceのモデルが利用可能な場合はFoundation Modelsを使い、非対応OS・非対応端末・Apple Intelligence無効・モデル準備中・生成失敗・品質基準未達では、端末内のルールベース作問へ自動で切り替えます。端末内作問では教材本文を外部送信しません。
+
+生成した問題・答え・解説・根拠・確信度は保存前に確認できます。既存データとの互換性を守るため、単語帳へ保存するのは従来どおり問題と答えです。
 
 ## 必要環境
 

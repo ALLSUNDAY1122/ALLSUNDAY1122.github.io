@@ -1,7 +1,7 @@
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
-import type { BackupData, Card, StudyHistory } from '@/src/types';
+import type { BackupData, Card, QuestionCandidate, StudyHistory } from '@/src/types';
 import { toDateKey } from '@/src/utils/data';
 
 function isCard(value: unknown): value is Card {
@@ -31,6 +31,26 @@ function isHistory(value: unknown): value is StudyHistory {
   );
 }
 
+function normalizeDecks(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(
+    value
+      .filter((item): item is string => typeof item === 'string')
+      .map((item) => item.trim())
+      .filter(Boolean)
+  )];
+}
+
+function normalizeStudyDays(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(
+    value
+      .filter((item): item is string => typeof item === 'string')
+      .map((item) => item.trim())
+      .filter((item) => /^\d{4}-\d{2}-\d{2}$/.test(item))
+  )].sort();
+}
+
 export function validateBackup(value: unknown): BackupData {
   if (!value || typeof value !== 'object') throw new Error('INVALID_BACKUP');
   const data = value as Partial<BackupData>;
@@ -47,12 +67,17 @@ export function validateBackup(value: unknown): BackupData {
     throw new Error('ORPHAN_HISTORY');
   }
 
+  const decks = normalizeDecks(data.decks);
+  const studyDays = normalizeStudyDays(data.studyDays);
+
   return {
     version: 1,
     exportedAt:
       typeof data.exportedAt === 'string' ? data.exportedAt : new Date().toISOString(),
     cards: data.cards,
-    history: data.history
+    history: data.history,
+    ...(decks.length ? { decks } : {}),
+    ...(studyDays.length ? { studyDays } : {})
   };
 }
 
@@ -86,4 +111,68 @@ export async function pickBackup(): Promise<BackupData | null> {
     encoding: FileSystem.EncodingType.UTF8
   });
   return validateBackup(JSON.parse(text));
+}
+
+function csvCell(value: string): string {
+  const normalized = value.replace(/\r?\n/g, ' ');
+  return /[",]/.test(normalized) ? `"${normalized.replace(/"/g, '""')}"` : normalized;
+}
+
+export async function shareCardsCsv(cards: Card[]): Promise<void> {
+  if (!FileSystem.cacheDirectory) throw new Error('CACHE_UNAVAILABLE');
+  const filename = `toru-tango-cards-${toDateKey()}.csv`;
+  const uri = `${FileSystem.cacheDirectory}${filename}`;
+  const content = [
+    '表,裏,メモ',
+    ...cards.map((card) => [card.question, card.answer, card.note ?? ''].map(csvCell).join(','))
+  ].join('\n');
+  await FileSystem.writeAsStringAsync(uri, `\uFEFF${content}`, {
+    encoding: FileSystem.EncodingType.UTF8
+  });
+  if (!(await Sharing.isAvailableAsync())) throw new Error('SHARING_UNAVAILABLE');
+  await Sharing.shareAsync(uri, { mimeType: 'text/csv', dialogTitle: 'カードCSVを保存' });
+}
+
+function parseCsvLine(line: string): string[] {
+  const cells: string[] = [];
+  let cell = '';
+  let quoted = false;
+  for (let index = 0; index < line.length; index += 1) {
+    const character = line[index];
+    if (character === '"') {
+      if (quoted && line[index + 1] === '"') {
+        cell += '"';
+        index += 1;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (character === ',' && !quoted) {
+      cells.push(cell.trim());
+      cell = '';
+    } else {
+      cell += character;
+    }
+  }
+  cells.push(cell.trim());
+  return cells;
+}
+
+export async function pickCardsCsv(): Promise<QuestionCandidate[] | null> {
+  const result = await DocumentPicker.getDocumentAsync({
+    type: ['text/csv', 'text/*'],
+    copyToCacheDirectory: true,
+    multiple: false
+  });
+  if (result.canceled) return null;
+  const asset = result.assets[0];
+  if (!asset) throw new Error('CSV_NOT_SELECTED');
+  const text = (await FileSystem.readAsStringAsync(asset.uri, {
+    encoding: FileSystem.EncodingType.UTF8
+  })).replace(/^\uFEFF/, '');
+  return text
+    .split(/\r?\n/)
+    .map(parseCsvLine)
+    .slice(1)
+    .map(([question, answer]) => ({ question: question ?? '', answer: answer ?? '' }))
+    .filter((candidate) => candidate.question.trim() && candidate.answer.trim());
 }

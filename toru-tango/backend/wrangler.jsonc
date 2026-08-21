@@ -1,9 +1,13 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "toru-tango-ai",
+  "account_id": "ef13746cd32bdb27de08e1c34482102a",
   "main": "src/index.js",
   "compatibility_date": "2026-07-01",
   "workers_dev": true,
+  "kv_namespaces": [
+    { "binding": "USAGE_KV", "id": "1f9ab2179fd54a44ae90ee41ef2f61a3" }
+  ],
   "vars": {
     "GEMINI_MODEL": "gemini-3.5-flash-lite"
   }

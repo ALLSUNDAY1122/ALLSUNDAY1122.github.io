@@ -2,12 +2,20 @@ export type Card = {
   id: string;
   question: string;
   answer: string;
+  deckName?: string;
+  note?: string;
+  source?: string;
+  isHidden?: boolean;
   correct: number;
   wrong: number;
   lastStudiedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  reviewStage?: CardReviewStage;
+  nextReviewAt?: string | null;
 };
+
+export type CardReviewStage = 'weak' | 'review' | 'mastered';
 
 export type StudyHistory = {
   id: string;
@@ -19,7 +27,7 @@ export type StudyHistory = {
 
 export type QuestionType = 'mix' | 'qa' | 'cloze';
 export type Difficulty = 'easy' | 'normal' | 'hard';
-export type StudyMode = 'all' | 'weak' | 'unseen';
+export type StudyMode = 'all' | 'weak' | 'review' | 'mastered' | 'unseen';
 
 export type QuestionCandidate = {
   question: string;
@@ -31,4 +39,6 @@ export type BackupData = {
   exportedAt: string;
   cards: Card[];
   history: StudyHistory[];
+  decks?: string[];
+  studyDays?: string[];
 };

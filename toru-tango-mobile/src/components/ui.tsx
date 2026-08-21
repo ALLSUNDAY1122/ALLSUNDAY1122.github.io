@@ -11,14 +11,21 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const colors = {
-  background: '#f4f6fb',
+  background: '#f7f9fb',
   surface: '#ffffff',
-  text: '#151821',
-  muted: '#667085',
-  primary: '#4f46e5',
-  border: '#e5e7eb',
+  surfaceMuted: '#f0f7f8',
+  text: '#17202a',
+  muted: '#6b7280',
+  primary: '#14a9bf',
+  primaryDark: '#087f91',
+  primarySoft: '#e7f8fb',
+  border: '#e4e7ec',
   danger: '#c62828',
-  success: '#16803c'
+  dangerSoft: '#fff1f2',
+  success: '#16803c',
+  successSoft: '#edf9f1',
+  warning: '#e58b11',
+  warningSoft: '#fff7e8'
 };
 
 export function Page({ children }: PropsWithChildren) {
@@ -27,6 +34,7 @@ export function Page({ children }: PropsWithChildren) {
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.page}
+        showsVerticalScrollIndicator={false}
       >
         {children}
       </ScrollView>
@@ -126,6 +134,8 @@ export function ChoiceRow<T extends string>({
       {options.map((option) => (
         <Pressable
           key={option.value}
+          accessibilityRole="button"
+          accessibilityState={{ selected: value === option.value }}
           onPress={() => onChange(option.value)}
           style={[
             styles.choice,
@@ -163,10 +173,12 @@ export const commonStyles = StyleSheet.create({
   title: {
     color: colors.text,
     fontSize: 28,
-    fontWeight: '800'
+    fontWeight: '800',
+    letterSpacing: -0.4
   },
   subtitle: {
     color: colors.muted,
+    lineHeight: 20,
     marginTop: 4,
     marginBottom: 12
   }
@@ -174,15 +186,20 @@ export const commonStyles = StyleSheet.create({
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
-  page: { padding: 14, paddingBottom: 40 },
+  page: { padding: 16, paddingBottom: 44 },
   section: {
     backgroundColor: colors.surface,
     borderColor: colors.border,
-    borderRadius: 18,
+    borderRadius: 20,
     borderWidth: 1,
     padding: 16,
-    marginBottom: 12,
-    gap: 10
+    marginBottom: 14,
+    gap: 12,
+    shadowColor: '#0f172a',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 1
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -191,12 +208,12 @@ const styles = StyleSheet.create({
   },
   sectionTitle: { color: colors.text, fontSize: 18, fontWeight: '800' },
   button: {
-    minHeight: 44,
+    minHeight: 46,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 10
+    borderRadius: 14,
+    paddingHorizontal: 15,
+    paddingVertical: 11
   },
   buttonPrimary: { backgroundColor: colors.primary },
   buttonSecondary: {
@@ -210,31 +227,34 @@ const styles = StyleSheet.create({
   secondaryButtonText: { color: colors.text },
   pressed: { opacity: 0.72 },
   disabled: { opacity: 0.45 },
-  fieldWrap: { gap: 5 },
-  label: { color: colors.muted, fontSize: 13, fontWeight: '600' },
+  fieldWrap: { gap: 6 },
+  label: { color: colors.muted, fontSize: 13, fontWeight: '700' },
   input: {
-    backgroundColor: colors.background,
+    backgroundColor: '#f6f8fa',
     borderColor: colors.border,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
     color: colors.text,
-    minHeight: 44,
-    paddingHorizontal: 12,
-    paddingVertical: 10
+    fontSize: 16,
+    minHeight: 48,
+    paddingHorizontal: 13,
+    paddingVertical: 11
   },
   multiline: { minHeight: 120, textAlignVertical: 'top' },
-  choiceRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 7 },
+  choiceRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   choice: {
     borderColor: colors.border,
     borderRadius: 999,
     borderWidth: 1,
-    paddingHorizontal: 12,
+    minHeight: 42,
+    justifyContent: 'center',
+    paddingHorizontal: 14,
     paddingVertical: 8,
     backgroundColor: colors.surface
   },
   choiceActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   choiceText: { color: colors.text, fontWeight: '700', fontSize: 13 },
   choiceTextActive: { color: '#ffffff' },
-  empty: { color: colors.muted, textAlign: 'center', paddingVertical: 28 },
+  empty: { color: colors.muted, lineHeight: 21, textAlign: 'center', paddingVertical: 30 },
   muted: { color: colors.muted, lineHeight: 20 }
 });

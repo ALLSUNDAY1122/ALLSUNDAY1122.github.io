@@ -1,0 +1,31 @@
+{
+  "checkedAtJst": "2026-08-20T22:22:04+09:00",
+  "appStoreConnectAppId": "6795968222",
+  "bundleId": "com.allsunday1122.torutango",
+  "requestedBuildNumber": "8",
+  "builds": [
+    {"version":"1","processingState":"VALID","buildAudienceType":"APP_STORE_ELIGIBLE"},
+    {"version":"2","processingState":"VALID","buildAudienceType":"APP_STORE_ELIGIBLE"},
+    {"version":"3","processingState":"VALID","buildAudienceType":"APP_STORE_ELIGIBLE"},
+    {"version":"4","processingState":"VALID","buildAudienceType":"APP_STORE_ELIGIBLE"},
+    {"version":"5","processingState":"VALID","buildAudienceType":"APP_STORE_ELIGIBLE"},
+    {"version":"6","processingState":"VALID","buildAudienceType":"APP_STORE_ELIGIBLE"}
+  ],
+  "buildUploads": [
+    {"cfBundleVersion":"1","state":"COMPLETE"},
+    {"cfBundleVersion":"2","state":"COMPLETE"},
+    {"cfBundleVersion":"3","state":"COMPLETE"},
+    {"cfBundleVersion":"4","state":"COMPLETE"},
+    {"cfBundleVersion":"5","state":"COMPLETE"},
+    {"cfBundleVersion":"6","state":"COMPLETE"}
+  ],
+  "build8Present": false,
+  "build8UploadPresent": false,
+  "conclusion": "Build 8 is not in Apple processing. No Build Upload record exists for build 8, so the delivery path did not successfully upload build 8 to App Store Connect.",
+  "source": {
+    "commandIssue": 4365,
+    "workflowRunId": 32373818036,
+    "artifactId": 9408188211
+  },
+  "nextAction": "Keep buildNumber 8 and retry EAS production build/submit with explicit GitHub run/build/submit locators. Do not increment the build number unless Apple accepts build 8 or reports a duplicate/conflict."
+}

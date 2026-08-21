@@ -1,4 +1,5 @@
 import type { Difficulty, QuestionCandidate, QuestionType } from '@/src/types';
+import { getAnonymousId } from './anonymousId';
 
 type AiUsage = {
   inputTokens: number;
@@ -57,9 +58,10 @@ export async function generateAiQuestions(input: {
   const timeout = setTimeout(() => controller.abort(), 45_000);
 
   try {
+    const anonymousId = await getAnonymousId();
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Toru-Tango-Anonymous-Id': anonymousId },
       body: JSON.stringify(input),
       signal: controller.signal
     });
