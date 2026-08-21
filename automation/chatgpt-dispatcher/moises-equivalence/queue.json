@@ -58,7 +58,7 @@
     },
     {
       "task_id": "MOI-SEP-001",
-      "status": "CLAIMED",
+      "status": "INTEGRATION_READY",
       "priority": 94,
       "owner_role": "POOL",
       "capability_tags": ["audio-ml", "research", "benchmark"],
@@ -72,10 +72,19 @@
       "claimed_by": "Moises-Worker-2",
       "claim_token": "moises-worker-2-moi-sep-001-epoch1-20260822T0730JST",
       "claim_epoch": 1,
-      "lease_expires_at": "2026-08-22T09:00:00+09:00",
-      "heartbeat_at": "2026-08-22T07:30:00+09:00",
+      "lease_expires_at": null,
+      "heartbeat_at": "2026-08-22T07:35:00+09:00",
       "attempt_branch": "task/MOI-SEP-001/attempt-1",
-      "evidence": []
+      "evidence": [
+        "attempt branch task/MOI-SEP-001/attempt-1",
+        "commit 60f060285b6c33e9a52c8f759ac1d26564b58ef4 adds model/runtime benchmark and topology scoring",
+        "commit 96a25ed4f6038cda0c8169355177b1672be403c9 adds model/weight/dataset license matrix",
+        "commit a1b2264cab0f3449a36d444a049973e38a6244fa adds machine-readable selection decision",
+        "compare claim baseline 50e95c9... -> attempt branch: ahead by 3; changes limited to declared write_scope",
+        "selected path: server-side Spleeter 4-stem for first real multi-stem inference; rights-cleared Demucs-class server model is conditional quality-upgrade path",
+        "on-device ORT/CoreML/XNNPACK path explicitly remains experimental pending peak RSS/RTF/thermal/battery measurements",
+        "MOI-P003/MOI-P004/MOI-P005 remain MISSING; no PARITY state was raised"
+      ]
     },
     {
       "task_id": "MOI-BLD-001",
