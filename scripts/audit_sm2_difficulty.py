@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Difficulty audit benchmarked against current public exam style.
 import json, re, statistics
 from pathlib import Path
 
@@ -43,14 +44,12 @@ def score(q):
     stem=q.get('question','')
     if len(stem)<24 and not any(c.isdigit() for c in stem) and sum(s in stem for s in SPECIAL)<=1:
         flags.append('問いが単純な一問一答型'); points+=1
-    # 本試験型の加点要素がない場合を検出
     complexity=0
     if any(c.isdigit() for c in stem+' '.join(ch)): complexity+=1
     if any(w in stem for w in ('組合せ','誤っている','正しいもの','最も適切','事業場','労働者','場合')): complexity+=1
     if sum(any(s in c for s in SPECIAL) for c in ch)>=3: complexity+=1
     if complexity==0:
         flags.append('近接知識の比較要素が弱い'); points+=2
-    # 誤答肢が極端な短文に集中
     if lens and sum(l < max(12, statistics.median(lens)*0.55) for l in lens)>=2:
         flags.append('短すぎる誤答肢あり'); points+=1
     return points,flags
