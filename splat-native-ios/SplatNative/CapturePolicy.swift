@@ -186,7 +186,10 @@ enum CapturePolicy {
     }
 
     static func objectCoverageSatisfied(orbitSectors: Int, elevationBands: Int) -> Bool {
-        orbitSectors >= 8 && elevationBands >= 2
+        // A broad orbit is the hard completion gate. A second high/low elevation pass remains
+        // a quality recommendation, but must not trap the user in capture indefinitely when
+        // ARKit keeps the target center in the same elevation band.
+        orbitSectors >= 8 && elevationBands >= 1
     }
 
     static func sceneCoverageSatisfied(
