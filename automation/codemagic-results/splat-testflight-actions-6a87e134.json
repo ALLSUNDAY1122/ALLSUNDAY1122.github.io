@@ -1,0 +1,182 @@
+{
+  "request_id": "splat-testflight-actions-6a87e134",
+  "build_id": "6a87e1346086cc3ffd17035c",
+  "http_status": 200,
+  "actions": {
+    "data": [
+      {
+        "id": "6a87e1359ba617f9b0b7c9d9",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-21T05:25:15.554000Z",
+        "finished_at": "2026-08-21T05:25:35.845000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9da",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-21T05:25:35.845000Z",
+        "finished_at": "2026-08-21T05:25:42.529000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9db",
+        "name": "Stop if App Store Connect app record is not registered",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ntest \"$APP_STORE_CONNECT_APP_ID\" != \"PENDING_HUMAN_APP_RECORD\"",
+        "status": "success",
+        "started_at": "2026-08-21T05:25:42.529000Z",
+        "finished_at": "2026-08-21T05:25:42.863000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9dc",
+        "name": "Verify Apple upload toolchain",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nxcodebuild -version\nXCODE_MAJOR=\"$(xcodebuild -version | awk '/^Xcode / {split($2, v, \".\"); print v[1]}')\"\nIOS_SDK_VERSION=\"$(xcrun --sdk iphoneos --show-sdk-version)\"\nIOS_SDK_MAJOR=\"${IOS_SDK_VERSION%%.*}\"\ntest -n \"$XCODE_MAJOR\"\ntest -n \"$IOS_SDK_MAJOR\"\nif [ \"$XCODE_MAJOR\" -lt 26 ] || [ \"$IOS_SDK_MAJOR\" -lt 26 ]; then\n  echo \"App Store Connect upload requires Xcode 26+ and iOS 26 SDK+; found Xcode major $XCODE_MAJOR / iOS SDK $IOS_SDK_VERSION\" >&2\n  exit 1\nfi\necho \"PASS: Xcode major $XCODE_MAJOR / iOS SDK $IOS_SDK_VERSION\"",
+        "status": "success",
+        "started_at": "2026-08-21T05:25:42.863000Z",
+        "finished_at": "2026-08-21T05:25:44.738000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9dd",
+        "name": "Disable unrelated msplat LFS datasets",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ngit lfs install --skip-smudge --skip-repo",
+        "status": "success",
+        "started_at": "2026-08-21T05:25:44.738000Z",
+        "finished_at": "2026-08-21T05:25:45.273000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9de",
+        "name": "Install XcodeGen",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nHOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen",
+        "status": "success",
+        "started_at": "2026-08-21T05:25:45.273000Z",
+        "finished_at": "2026-08-21T05:25:54.179000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9df",
+        "name": "Generate deterministic PoC AppIcon",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\npython3 \"$CM_BUILD_DIR/splat-native-ios/scripts/make_test_icon.py\"\ntest -f \"$CM_BUILD_DIR/splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\"",
+        "status": "success",
+        "started_at": "2026-08-21T05:25:54.179000Z",
+        "finished_at": "2026-08-21T05:25:55.606000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9e0",
+        "name": "Set build number and generate project",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR/splat-native-ios\"\npython3 - <<'PY'\nfrom pathlib import Path\nimport os\np=Path('project.yml')\ntext=p.read_text(encoding='utf-8')\nbuild=os.environ.get('CM_BUILD_NUMBER','1')\ntext=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+build, 1)\np.write_text(text,encoding='utf-8')\nPY\nxcodegen generate",
+        "status": "success",
+        "started_at": "2026-08-21T05:25:55.606000Z",
+        "finished_at": "2026-08-21T05:25:56.022000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9e1",
+        "name": "Static release checks",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nbash \"$CM_BUILD_DIR/splat-native-ios/scripts/validate.sh\"\ntest \"$BUNDLE_ID\" = \"jp.allsunday1122.splatlab\"\ntest -f \"$CM_BUILD_DIR/splat-native-ios/SplatNative/PrivacyInfo.xcprivacy\"\ntest -f \"$CM_BUILD_DIR/splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\"\n! grep -R -nE 'URLSession|Firebase|Amplitude|Mixpanel' \"$CM_BUILD_DIR/splat-native-ios/SplatNative\" --include='*.swift'",
+        "status": "failed",
+        "started_at": "2026-08-21T05:25:56.022000Z",
+        "finished_at": "2026-08-21T05:26:01.243000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9e2",
+        "name": "Initialize signing keychain",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nkeychain initialize",
+        "status": "skipped",
+        "started_at": "2026-08-21T05:26:01.243000Z",
+        "finished_at": "2026-08-21T05:26:01.244000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9e3",
+        "name": "Verify Apple Developer Bundle ID exists",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\napp-store-connect bundle-ids list \\\n  --bundle-id-identifier \"$BUNDLE_ID\" \\\n  --strict-match-identifier | grep -Fq \"$BUNDLE_ID\"",
+        "status": "skipped",
+        "started_at": "2026-08-21T05:26:01.244000Z",
+        "finished_at": "2026-08-21T05:26:01.244000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9e4",
+        "name": "Fetch or create App Store signing files",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\napp-store-connect fetch-signing-files \"$BUNDLE_ID\" --type IOS_APP_STORE --create",
+        "status": "skipped",
+        "started_at": "2026-08-21T05:26:01.244000Z",
+        "finished_at": "2026-08-21T05:26:01.244000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9e5",
+        "name": "Add signing certificate",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nkeychain add-certificates",
+        "status": "skipped",
+        "started_at": "2026-08-21T05:26:01.244000Z",
+        "finished_at": "2026-08-21T05:26:01.245000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9e6",
+        "name": "Apply App Store profile for Internal TestFlight",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR/splat-native-ios\"\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
+        "status": "skipped",
+        "started_at": "2026-08-21T05:26:01.245000Z",
+        "finished_at": "2026-08-21T05:26:01.245000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9e7",
+        "name": "Build signed IPA",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nxcode-project build-ipa \\\n  --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  --scheme \"$XCODE_SCHEME\"",
+        "status": "skipped",
+        "started_at": "2026-08-21T05:26:01.245000Z",
+        "finished_at": "2026-08-21T05:26:01.245000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9e8",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-21T05:26:01.245000Z",
+        "finished_at": "2026-08-21T05:26:01.418000Z"
+      },
+      {
+        "id": "6a87e1359ba617f9b0b7c9e9",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-21T05:26:01.418000Z",
+        "finished_at": "2026-08-21T05:26:01.509000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
