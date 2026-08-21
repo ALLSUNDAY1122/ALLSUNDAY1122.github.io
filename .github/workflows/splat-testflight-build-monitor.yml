@@ -25,8 +25,8 @@ jobs:
           import json, os, time, urllib.error, urllib.request
           from pathlib import Path
 
-          build_id='6a87f5fa38e916af4c805bea'
-          expected_commit='216dc649f9846bda9bfc83f1d9b6674939925a7f'
+          build_id='6a87f7dd2108df402e79beb5'
+          expected_commit='8a418ee8d50120aa2541d8734c16c41bfebf2b41'
           token=os.environ.get('CM_API_TOKEN','').strip()
           if not token:
               raise SystemExit('missing CM_API_TOKEN')
@@ -94,7 +94,7 @@ jobs:
               })
 
           result={
-              'request_id':'splat-testflight-build-monitor-20260821',
+              'request_id':'splat-testflight-build-monitor-metal-20260821',
               'ok':current=='finished',
               'build_id':build_id,
               'status':current,
