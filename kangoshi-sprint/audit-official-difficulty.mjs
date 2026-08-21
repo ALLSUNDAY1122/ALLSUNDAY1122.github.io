@@ -62,6 +62,12 @@ function similarity(a, b) {
 
 const manifest = readJson('manifest.json');
 if (!manifest) process.exit(1);
+const correctionDoc = readJson('required-150/text-corrections.json');
+const officialPdfCorrections = new Map((correctionDoc?.corrections || []).map(x => [x.id, x]));
+if (correctionDoc && !String(correctionDoc.verifiedAgainst || '').includes('厚生労働省')) {
+  errors.push('required text corrections must remain verified against MHLW official PDFs');
+}
+
 if (manifest.targetQuestions !== 720) errors.push('manifest targetQuestions must be 720');
 if (manifest.setCount !== 3 || manifest.questionsPerSet !== 240) errors.push('manifest must be 3 x 240');
 if (JSON.stringify(manifest.compositionPerSet) !== JSON.stringify(expectedCategoryCounts)) {
@@ -91,7 +97,10 @@ for (const exam of Object.keys(expected).map(Number)) {
     errors.push(`exam ${exam}: raw official import must be exactly 240 questions`);
     continue;
   }
-  const rawById = new Map(rawDoc.questions.map(q => [q.id, q]));
+  const rawById = new Map(rawDoc.questions.map(q => {
+    const correction = officialPdfCorrections.get(q.id);
+    return [q.id, correction ? {...q, ...correction, id:q.id} : q];
+  }));
   const slotSet = new Set(rawDoc.questions.map(q => `${q.session}-${q.questionNo}`));
   if (slotSet.size !== 240) errors.push(`exam ${exam}: raw session/questionNo slots are not unique`);
   for (const session of ['AM', 'PM']) {
@@ -137,13 +146,13 @@ for (const exam of Object.keys(expected).map(Number)) {
       if (q[key] !== raw[key]) errors.push(`${q.id}: ${key} differs from official raw import`);
     }
     const stemSim = similarity(q.question, raw.question);
-    if (stemSim < 0.86) errors.push(`${q.id}: stem diverges too far from official raw (${stemSim.toFixed(3)})`);
+    if (stemSim < 0.86) errors.push(`${q.id}: stem diverges too far from official source (${stemSim.toFixed(3)})`);
     if (Array.isArray(raw.choices)) {
       if (!Array.isArray(q.choices) || q.choices.length !== raw.choices.length) {
-        errors.push(`${q.id}: choice count differs from official raw`);
+        errors.push(`${q.id}: choice count differs from official source`);
       } else {
         const choiceSim = q.choices.reduce((sum, x, i) => sum + similarity(x, raw.choices[i]), 0) / q.choices.length;
-        if (choiceSim < 0.80) errors.push(`${q.id}: choices diverge too far from official raw (${choiceSim.toFixed(3)})`);
+        if (choiceSim < 0.80) errors.push(`${q.id}: choices diverge too far from official source (${choiceSim.toFixed(3)})`);
       }
     }
     const excluded = String(q.officialScoringStatus || raw.officialScoringStatus || '').includes('excluded');
@@ -160,4 +169,4 @@ if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
-console.log('PASS: 720 questions map 1:1 to official exams 113-115; 240/exam, AM120+PM120, official difficulty preserved, no generated filler slots.');
+console.log('PASS: 720 questions map 1:1 to official exams 113-115; verified PDF corrections applied; 240/exam, AM120+PM120, official difficulty preserved, no generated filler slots.');
