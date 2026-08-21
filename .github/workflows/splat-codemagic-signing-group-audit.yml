@@ -1,0 +1,112 @@
+name: Splat Codemagic Signing Group Audit
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260820'
+    paths:
+      - '.github/workflows/splat-codemagic-signing-group-audit.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Audit managed signing group without secret values
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+
+          app_id = '6a769d81a1add9d06020b524'
+          expected_group = 'app2_010_touhan_signing'
+          expected_var = 'CERTIFICATE_PRIVATE_KEY'
+          token = os.environ.get('CM_API_TOKEN','').strip()
+          if not token:
+              raise SystemExit('missing CM_API_TOKEN')
+
+          def get(path):
+              req=urllib.request.Request('https://codemagic.io'+path,headers={'x-auth-token':token,'Accept':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode('utf-8')
+                      return r.status,json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode('utf-8','replace')
+                  return e.code,{'error':raw[:500]}
+
+          def items(payload):
+              if isinstance(payload,list): return payload
+              if not isinstance(payload,dict): return []
+              for key in ('data','variable_groups','groups','variables'):
+                  value=payload.get(key)
+                  if isinstance(value,list): return value
+                  if isinstance(value,dict):
+                      for nested in ('data','items','groups','variables'):
+                          if isinstance(value.get(nested),list): return value[nested]
+              return []
+
+          status,payload=get(f'/api/v3/apps/{app_id}/variable-groups')
+          if not 200 <= status < 300:
+              raise SystemExit(f'variable group inventory failed HTTP {status}')
+          matches=[]
+          for group in items(payload):
+              if not isinstance(group,dict): continue
+              gid=group.get('id') or group.get('_id')
+              name=group.get('name') or group.get('group_name')
+              if name != expected_group or not gid: continue
+              s2,p2=get(f'/api/v3/variable-groups/{gid}/variables')
+              if not 200 <= s2 < 300:
+                  raise SystemExit(f'variable inventory failed HTTP {s2}')
+              variables=[]
+              for v in items(p2):
+                  if not isinstance(v,dict): continue
+                  n=v.get('name') or v.get('key')
+                  if n:
+                      variables.append({'name':n,'secure':bool(v.get('secure') or v.get('is_secure') or v.get('encrypted'))})
+              matches.append({'id':str(gid),'name':name,'variables':variables})
+          if len(matches) != 1:
+              raise SystemExit(f'expected exactly one managed signing group, got {len(matches)}')
+          names={v['name'] for v in matches[0]['variables']}
+          secure={v['name']:v['secure'] for v in matches[0]['variables']}
+          if expected_var not in names or not secure.get(expected_var):
+              raise SystemExit('secure CERTIFICATE_PRIVATE_KEY is missing')
+          result={
+              'request_id':'splat-signing-group-audit-20260821',
+              'ok':True,
+              'codemagic_app_id':app_id,
+              'group_id':matches[0]['id'],
+              'group_name':matches[0]['name'],
+              'variable_names':sorted(names),
+              'certificate_private_key_secure':True
+          }
+          Path('/tmp/splat-signing-group.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Persist sanitized audit
+        run: |
+          set -euo pipefail
+          BRANCH='testflight/splat-native-ios-20260820'
+          RESULT_PATH='automation/codemagic-results/splat-signing-group-audit-20260821.json'
+          cp /tmp/splat-signing-group.json /tmp/splat-signing-group.saved.json
+          for attempt in 1 2 3; do
+            git fetch origin "$BRANCH"
+            git reset --hard FETCH_HEAD
+            mkdir -p "$(dirname "$RESULT_PATH")"
+            cp /tmp/splat-signing-group.saved.json "$RESULT_PATH"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- "$RESULT_PATH"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'release: persist Splat signing group audit'
+            if git push origin HEAD:"$BRANCH"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
