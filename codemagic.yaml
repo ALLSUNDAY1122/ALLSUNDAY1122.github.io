@@ -59,6 +59,10 @@ workflows:
             exit 1
           fi
           echo "PASS: Xcode major $XCODE_MAJOR / iOS SDK $IOS_SDK_VERSION"
+      - name: Install required Metal Toolchain
+        script: |
+          set -euo pipefail
+          xcodebuild -downloadComponent MetalToolchain
       - name: Disable unrelated msplat LFS datasets
         script: |
           set -euo pipefail
