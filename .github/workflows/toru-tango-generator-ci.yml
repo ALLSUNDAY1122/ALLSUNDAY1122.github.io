@@ -6,6 +6,11 @@ on:
       - 'toru-tango/generator-v2.js'
       - 'toru-tango/generator-v2.test.cjs'
       - 'toru-tango/generator-test.html'
+      - 'toru-tango/value-test.html'
+      - 'toru-tango/value-test-smoke.test.cjs'
+      - 'toru-tango/value-test-launch.html'
+      - 'toru-tango/value-test-launch-smoke.test.cjs'
+      - 'toru-tango/ocr-enhance-v2.js'
       - 'toru-tango/sw.js'
       - '.github/workflows/toru-tango-generator-ci.yml'
   pull_request:
@@ -13,6 +18,11 @@ on:
       - 'toru-tango/generator-v2.js'
       - 'toru-tango/generator-v2.test.cjs'
       - 'toru-tango/generator-test.html'
+      - 'toru-tango/value-test.html'
+      - 'toru-tango/value-test-smoke.test.cjs'
+      - 'toru-tango/value-test-launch.html'
+      - 'toru-tango/value-test-launch-smoke.test.cjs'
+      - 'toru-tango/ocr-enhance-v2.js'
       - 'toru-tango/sw.js'
       - '.github/workflows/toru-tango-generator-ci.yml'
 
@@ -28,6 +38,10 @@ jobs:
         with:
           node-version: '22.13.1'
       - name: JavaScript syntax
-        run: node --check toru-tango/generator-v2.js && node --check toru-tango/sw.js
-      - name: Regression test
+        run: node --check toru-tango/generator-v2.js && node --check toru-tango/ocr-enhance-v2.js && node --check toru-tango/sw.js
+      - name: Generator regression
         run: node toru-tango/generator-v2.test.cjs
+      - name: Safari value-test smoke
+        run: node toru-tango/value-test-smoke.test.cjs
+      - name: Safari launcher smoke
+        run: node toru-tango/value-test-launch-smoke.test.cjs
