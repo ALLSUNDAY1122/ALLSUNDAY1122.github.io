@@ -46,6 +46,7 @@ jobs:
           grep -q 'test -n.*CERTIFICATE_PRIVATE_KEY' codemagic.yaml
           grep -q 'fetch-signing-files.*IOS_APP_STORE' codemagic.yaml
           ! grep -q 'fetch-signing-files.*IOS_APP_STORE.*--create' codemagic.yaml
+          grep -q 'xcodebuild -downloadComponent MetalToolchain' codemagic.yaml
           grep -q 'testFlightInternalTestingOnly' codemagic.yaml
           grep -q 'submit_to_testflight: true' codemagic.yaml
           grep -q 'submit_to_app_store: false' codemagic.yaml
@@ -81,6 +82,7 @@ jobs:
             "managed_signing_group": "app2_010_touhan_signing",
             "signing_profile_id": "P4927U2ZPC",
             "signing_certificate_id": "K2A3VCP583",
+            "metal_toolchain_bootstrap": true,
             "version": "1.0.0",
             "testflight_only": true,
             "submit_to_app_store": false
