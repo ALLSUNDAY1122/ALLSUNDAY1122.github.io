@@ -1,0 +1,29 @@
+name: APP2-005 HM1 difficulty audit
+
+on:
+  push:
+    paths:
+      - automation/app2-005-hm1-difficulty-audit-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run difficulty audit
+        continue-on-error: true
+        run: node ios/health-manager-1/audit/difficulty-audit-2026-08-21.cjs
+      - name: Persist report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ios/health-manager-1/audit/DIFFICULTY_AUDIT_2026-08-21.json
+          git commit -m "Record HM1 difficulty audit" || exit 0
+          git push
