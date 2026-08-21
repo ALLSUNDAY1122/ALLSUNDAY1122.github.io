@@ -79,7 +79,7 @@
     },
     {
       "task_id": "MOI-BLD-001",
-      "status": "READY",
+      "status": "CLAIMED",
       "priority": 93,
       "owner_role": "POOL",
       "capability_tags": ["swift", "testing", "tooling"],
@@ -90,7 +90,13 @@
       "write_scope": ["tech-assets/moises-audio/Package.swift", "tech-assets/moises-audio/Tests/**"],
       "parity_rows": [],
       "acceptance": ["canonical SwiftPM harness typechecks the existing AudioSeparationCore without moving or redefining feature contracts", "swift test covers SI-SDR and reconstruction error happy/edge cases", "build/test evidence is recorded without raising any PARITY row"],
-      "claimed_by": null, "claim_token": null, "claim_epoch": 0, "lease_expires_at": null, "heartbeat_at": null, "attempt_branch": null, "evidence": []
+      "claimed_by": "Moises-Worker-4",
+      "claim_token": "moises-worker-4-moi-bld-001-epoch1-20260822T0730JST",
+      "claim_epoch": 1,
+      "lease_expires_at": "2026-08-22T09:00:00+09:00",
+      "heartbeat_at": "2026-08-22T07:30:00+09:00",
+      "attempt_branch": "task/MOI-BLD-001/attempt-1",
+      "evidence": []
     },
     {
       "task_id": "MOI-QA-001",
@@ -105,7 +111,13 @@
       "write_scope": ["tech-assets/moises-audio/reference/golden-fixtures/**"],
       "parity_rows": ["MOI-P003", "MOI-P009", "MOI-P011", "MOI-P013", "MOI-P014", "MOI-P021", "MOI-P022"],
       "acceptance": ["copyright-safe differential-test fixture strategy defined", "multi-genre and hard-case matrix defined", "objective metrics plus listening/UX rubric defined so synthetic-only PASS is impossible"],
-      "claimed_by": null, "claim_token": null, "claim_epoch": 0, "lease_expires_at": null, "heartbeat_at": null, "attempt_branch": null, "evidence": []
+      "claimed_by": null,
+      "claim_token": null,
+      "claim_epoch": 0,
+      "lease_expires_at": null,
+      "heartbeat_at": null,
+      "attempt_branch": null,
+      "evidence": []
     },
     {
       "task_id": "MOI-AN-001",
@@ -120,7 +132,13 @@
       "write_scope": ["tech-assets/moises-audio/Analysis/benchmarks/**", "tech-assets/moises-audio/reference/analysis/**"],
       "parity_rows": ["MOI-P009", "MOI-P011", "MOI-P013", "MOI-P016"],
       "acceptance": ["BPM/key/chord/song-part implementation candidates compared", "benchmark datasets and error metrics defined", "licensing and commercial-use constraints documented"],
-      "claimed_by": null, "claim_token": null, "claim_epoch": 0, "lease_expires_at": null, "heartbeat_at": null, "attempt_branch": null, "evidence": []
+      "claimed_by": null,
+      "claim_token": null,
+      "claim_epoch": 0,
+      "lease_expires_at": null,
+      "heartbeat_at": null,
+      "attempt_branch": null,
+      "evidence": []
     },
     {
       "task_id": "MOI-REF-002",
@@ -135,7 +153,13 @@
       "write_scope": ["tech-assets/moises-audio/reference/entitlements/**"],
       "parity_rows": ["MOI-P005", "MOI-P025", "MOI-P026", "MOI-P027", "MOI-P028"],
       "acceptance": ["Free/Premium/Pro/current advanced iOS scope separated", "AI Stem Generation/Video Recording/AI Studio/Voice Studio iOS availability verified rather than inferred"],
-      "claimed_by": null, "claim_token": null, "claim_epoch": 0, "lease_expires_at": null, "heartbeat_at": null, "attempt_branch": null, "evidence": []
+      "claimed_by": null,
+      "claim_token": null,
+      "claim_epoch": 0,
+      "lease_expires_at": null,
+      "heartbeat_at": null,
+      "attempt_branch": null,
+      "evidence": []
     },
     {
       "task_id": "MOI-ARCH-001",
@@ -150,7 +174,13 @@
       "write_scope": ["tech-assets/moises-audio/Shared/**", "tech-assets/moises-audio/App/**"],
       "parity_rows": ["MOI-P022"],
       "acceptance": ["vertical-slice contracts fixed without hiding missing features", "modules communicate through small explicit contracts", "worker write scopes can be separated without semantic overlap"],
-      "claimed_by": null, "claim_token": null, "claim_epoch": 0, "lease_expires_at": null, "heartbeat_at": null, "attempt_branch": null, "evidence": []
+      "claimed_by": null,
+      "claim_token": null,
+      "claim_epoch": 0,
+      "lease_expires_at": null,
+      "heartbeat_at": null,
+      "attempt_branch": null,
+      "evidence": []
     },
     {
       "task_id": "MOI-SEP-002",
@@ -165,7 +195,13 @@
       "write_scope": ["tech-assets/moises-audio/Separation/**"],
       "parity_rows": ["MOI-P003", "MOI-P004"],
       "acceptance": ["real multi-genre audio produces actual stems", "quality evidence is captured against golden rubric", "processing exposes progress cancel retry and deterministic failure state"],
-      "claimed_by": null, "claim_token": null, "claim_epoch": 0, "lease_expires_at": null, "heartbeat_at": null, "attempt_branch": null, "evidence": []
+      "claimed_by": null,
+      "claim_token": null,
+      "claim_epoch": 0,
+      "lease_expires_at": null,
+      "heartbeat_at": null,
+      "attempt_branch": null,
+      "evidence": []
     },
     {
       "task_id": "MOI-PLAY-001",
@@ -180,7 +216,13 @@
       "write_scope": ["tech-assets/moises-audio/Playback/**"],
       "parity_rows": ["MOI-P006", "MOI-P007", "MOI-P008"],
       "acceptance": ["separated stems remain synchronized", "solo/mute/volume/seek/loop work without audible defects", "long-track interaction latency is measured"],
-      "claimed_by": null, "claim_token": null, "claim_epoch": 0, "lease_expires_at": null, "heartbeat_at": null, "attempt_branch": null, "evidence": []
+      "claimed_by": null,
+      "claim_token": null,
+      "claim_epoch": 0,
+      "lease_expires_at": null,
+      "heartbeat_at": null,
+      "attempt_branch": null,
+      "evidence": []
     },
     {
       "task_id": "MOI-DSP-001",
@@ -195,7 +237,13 @@
       "write_scope": ["tech-assets/moises-audio/DSP/**"],
       "parity_rows": ["MOI-P010", "MOI-P012", "MOI-P014", "MOI-P015"],
       "acceptance": ["tempo and pitch controls operate on real tracks", "smart click remains synchronized", "artifact and latency thresholds are recorded"],
-      "claimed_by": null, "claim_token": null, "claim_epoch": 0, "lease_expires_at": null, "heartbeat_at": null, "attempt_branch": null, "evidence": []
+      "claimed_by": null,
+      "claim_token": null,
+      "claim_epoch": 0,
+      "lease_expires_at": null,
+      "heartbeat_at": null,
+      "attempt_branch": null,
+      "evidence": []
     }
   ]
 }
