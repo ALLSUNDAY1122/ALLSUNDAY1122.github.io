@@ -24,7 +24,7 @@ jobs:
           python3 - <<'PY'
           import json, os, urllib.request, urllib.error
           from pathlib import Path
-          build_id = '6a87c9a258fd97265845cf1e'
+          build_id = '6a87e1346086cc3ffd17035c'
           token = os.environ.get('CM_API_TOKEN', '').strip()
           if not token:
               raise SystemExit('Missing GitHub Actions secret CM_API_TOKEN')
@@ -43,7 +43,7 @@ jobs:
               try:
                   payload = json.loads(raw) if raw else {}
               except json.JSONDecodeError:
-                  payload = {'error': raw[:2000]}
+                  payload = {'error': raw[:4000]}
           sensitive = ('secret','token','password','credential','private','apikey','api_key','environment','variable')
           def clean(value):
               if isinstance(value, dict):
@@ -52,7 +52,7 @@ jobs:
                   return [clean(v) for v in value]
               return value
           result = {
-              'request_id': 'splat-bootstrap-actions-6a87c9a2',
+              'request_id': 'splat-testflight-actions-6a87e134',
               'build_id': build_id,
               'http_status': http_status,
               'actions': clean(payload),
@@ -67,9 +67,9 @@ jobs:
           set -euo pipefail
           test -f /tmp/splat-actions.json || exit 0
           BRANCH='testflight/splat-native-ios-20260820'
-          RESULT_PATH='automation/codemagic-results/splat-bootstrap-actions-6a87c9a2.json'
+          RESULT_PATH='automation/codemagic-results/splat-testflight-actions-6a87e134.json'
           cp /tmp/splat-actions.json /tmp/splat-actions.saved.json
-          for attempt in 1 2; do
+          for attempt in 1 2 3; do
             git fetch origin "$BRANCH"
             git reset --hard FETCH_HEAD
             mkdir -p "$(dirname "$RESULT_PATH")"
@@ -78,7 +78,8 @@ jobs:
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git add -- "$RESULT_PATH"
             if git diff --cached --quiet; then exit 0; fi
-            git commit -m 'release: persist Splat Codemagic action diagnostic'
+            git commit -m 'release: persist Splat TestFlight action diagnostic'
             if git push origin HEAD:"$BRANCH"; then exit 0; fi
+            sleep 2
           done
           exit 1
