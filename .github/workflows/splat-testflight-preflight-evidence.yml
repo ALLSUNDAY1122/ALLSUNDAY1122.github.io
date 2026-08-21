@@ -1,0 +1,99 @@
+name: Splat TestFlight Preflight Evidence
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260820'
+    paths:
+      - 'automation/release-requests/splat-testflight-preflight-20260821.run'
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate release candidate
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin feature/splat-native-ios-poc
+          HQ_HEAD="$(git rev-parse FETCH_HEAD)"
+          TESTFLIGHT_HEAD="$(git rev-parse HEAD)"
+          git merge-base --is-ancestor "$HQ_HEAD" "$TESTFLIGHT_HEAD"
+
+          test -f splat-native-ios/project.yml
+          test -f splat-native-ios/SplatNative/PrivacyInfo.xcprivacy
+          test -f splat-native-ios/APPLE_CONNECT_PACKET.md
+          test -f splat-native-ios/APP_STORE_METADATA_JA.md
+          test -f splat-native-ios/APP_REVIEW_NOTES_JA.md
+          test -f splat-native-ios/privacy.html
+          test -f splat-native-ios/support.html
+
+          grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.splatlab' splat-native-ios/project.yml
+          grep -q 'MARKETING_VERSION: 1.0.0' splat-native-ios/project.yml
+          grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO' splat-native-ios/project.yml
+          grep -q 'App Store Connect Apple ID: `6803778932`' splat-native-ios/APPLE_CONNECT_PACKET.md
+          grep -q 'APP_STORE_CONNECT_APP_ID: 6803778932' codemagic.yaml
+          grep -q 'BUNDLE_ID: jp.allsunday1122.splatlab' codemagic.yaml
+          grep -q 'fetch-signing-files.*IOS_APP_STORE.*--create' codemagic.yaml
+          grep -q 'testFlightInternalTestingOnly' codemagic.yaml
+          grep -q 'submit_to_testflight: true' codemagic.yaml
+          grep -q 'submit_to_app_store: false' codemagic.yaml
+          ! grep -q 'submit_to_app_store: true' codemagic.yaml
+
+          ruby -e '
+            require "yaml"
+            data = YAML.safe_load(File.read("codemagic.yaml"), aliases: true)
+            w = data.fetch("workflows").fetch("splat-native-ios")
+            raise "wrong bundle" unless w.dig("environment", "vars", "BUNDLE_ID") == "jp.allsunday1122.splatlab"
+            id = w.dig("environment", "vars", "APP_STORE_CONNECT_APP_ID")
+            raise "wrong app id" unless [6803778932, "6803778932"].include?(id)
+            p = w.dig("publishing", "app_store_connect")
+            raise "testflight disabled" unless p["submit_to_testflight"] == true
+            raise "app store submission enabled" unless p["submit_to_app_store"] == false
+          '
+
+          mkdir -p /tmp/splat-release-evidence
+          cat > /tmp/splat-release-evidence/preflight.json <<EOF
+          {
+            "request_id": "splat-testflight-preflight-20260821",
+            "ok": true,
+            "status": "PASS",
+            "hq_head": "$HQ_HEAD",
+            "candidate_head": "$TESTFLIGHT_HEAD",
+            "bundle_id": "jp.allsunday1122.splatlab",
+            "app_store_connect_app_id": "6803778932",
+            "version": "1.0.0",
+            "testflight_only": true,
+            "submit_to_app_store": false
+          }
+          EOF
+
+      - name: Persist sanitized preflight evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f /tmp/splat-release-evidence/preflight.json || exit 1
+          BRANCH='testflight/splat-native-ios-20260820'
+          RESULT_PATH='automation/release-evidence/splat-testflight-preflight-20260821.json'
+          cp /tmp/splat-release-evidence/preflight.json /tmp/preflight.saved.json
+          for attempt in 1 2 3; do
+            git fetch origin "$BRANCH"
+            git reset --hard FETCH_HEAD
+            mkdir -p "$(dirname "$RESULT_PATH")"
+            cp /tmp/preflight.saved.json "$RESULT_PATH"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- "$RESULT_PATH"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'release: persist Splat TestFlight preflight evidence'
+            if git push origin HEAD:"$BRANCH"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
