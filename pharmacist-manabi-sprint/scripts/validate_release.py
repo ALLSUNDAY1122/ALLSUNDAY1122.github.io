@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import hashlib, json, plistlib, struct, sys
+import hashlib, json, plistlib, struct, subprocess, sys
 
 R = Path(__file__).resolve().parents[1]
 ROOT = R.parent
@@ -25,12 +25,27 @@ if not (ROOT / 'codemagic.yaml').exists(): errors.append('missing: root codemagi
 if errors:
     print('FAIL\n' + '\n'.join('- ' + e for e in errors)); sys.exit(1)
 
+# Always regenerate the final question audit from the current bank. This prevents
+# a stale PASS JSON from hiding generated/easier supplement questions or a source
+# provenance regression introduced after the previous audit was committed.
+try:
+    subprocess.run([sys.executable, str(R/'tools/final_product_audit_v2.py')], cwd=R, check=True)
+except subprocess.CalledProcessError:
+    errors.append('fresh final question audit failed')
+
 # Question/source audit must remain the exact audited 3-exam bank.
 a = json.load(open(R/'content/product/final-audit-v2.json', encoding='utf-8'))
 q = json.load(open(R/'content/product/questions.json', encoding='utf-8'))
 w = json.load(open(R/'content/product/web-static-audit.json', encoding='utf-8'))
 if not a.get('finalPass') or a.get('questionCount') != 1035 or a.get('blockedCount') != 0 or a.get('explanationCoverage') != 1035 or a.get('unresolvedHighSimilarityPairs'):
     errors.append('final question audit not PASS')
+integrity = a.get('difficultyIntegrity') or {}
+if integrity.get('policy') != 'official_exam_only' or integrity.get('sourceExams') != [109, 110, 111]:
+    errors.append('difficulty integrity policy mismatch')
+if a.get('generatedSupplementQuestionCount') != 0 or integrity.get('officialQuestionCount') != 1035:
+    errors.append('generated/non-official question detected')
+if any(integrity.get(k) for k in ('generatedSupplementQuestionIds','unexpectedExamQuestionIds','nonOfficialQuestionIds','nonMhlwSourceQuestionIds','answerLeakQuestionIds')):
+    errors.append('difficulty/source integrity findings remain')
 qs = q.get('questions', [])
 active = [x for x in qs if x.get('scoring_status') != 'excluded']
 exc = [x for x in qs if x.get('scoring_status') == 'excluded']

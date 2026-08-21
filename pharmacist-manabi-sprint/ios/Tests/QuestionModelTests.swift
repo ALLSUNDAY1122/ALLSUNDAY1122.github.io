@@ -77,6 +77,37 @@ final class QuestionModelTests: XCTestCase {
     }
 
     @MainActor
+    func testPremiumDailySprintMatchesOfficialSectionRatio() {
+        let store = LearningStore()
+        XCTAssertEqual(store.questions.count, 1035)
+        XCTAssertEqual(store.activeQuestions.count, 1031)
+        store.updateShuffleQuestions(false)
+
+        let cases: [(goal: Int, mandatory: Int, theory: Int, practical: Int)] = [
+            (4, 1, 1, 2),
+            (8, 2, 2, 4),
+            (16, 4, 5, 7),
+        ]
+        for expected in cases {
+            store.resetLearningData()
+            store.updateShuffleQuestions(false)
+            store.updateGoal(expected.goal)
+            store.startDaily(premium: true)
+            guard let ids = store.activeSession?.ids else {
+                XCTFail("総合スプリントを開始できない")
+                return
+            }
+            let sections = ids.compactMap { store.questionMap[$0]?.section }
+            XCTAssertEqual(sections.filter { $0 == "必須" }.count, expected.mandatory)
+            XCTAssertEqual(sections.filter { $0 == "理論" }.count, expected.theory)
+            XCTAssertEqual(sections.filter { $0 == "実践" }.count, expected.practical)
+            XCTAssertEqual(sections.count, expected.goal)
+        }
+
+        store.resetLearningData()
+    }
+
+    @MainActor
     func testWrongOrUnknownAnswerStillAdvancesDailyHeatmapAndAchievement() {
         let store = LearningStore()
         XCTAssertEqual(store.questions.count, 1035)

@@ -82,7 +82,7 @@ final class LearningStore: ObservableObject {
 
     func startDaily(premium: Bool) {
         let pool = activeQuestions.filter { premium || $0.isFree }
-        startSession(title: "今日のスプリント", field: "総合", pool: pool, count: state.goal, mockKey: nil)
+        startSession(title: "今日のスプリント", field: "総合", pool: pool, count: state.goal, mockKey: nil, examBalanced: true)
     }
 
     func startField(_ field: String, premium: Bool) {
@@ -226,7 +226,7 @@ final class LearningStore: ObservableObject {
         activeQuestions.filter { (premium || $0.isFree) && !state.seen.contains($0.id) }.count
     }
 
-    private func startSession(title: String, field: String, pool: [Question], count: Int, mockKey: String?) {
+    private func startSession(title: String, field: String, pool: [Question], count: Int, mockKey: String?, examBalanced: Bool = false) {
         guard !pool.isEmpty else { return }
         var candidates = pool
         if state.shuffleQuestions { candidates.shuffle() }
@@ -239,7 +239,8 @@ final class LearningStore: ObservableObject {
             }
             candidates = unique
         }
-        let chosen = Array(candidates.prefix(max(1, min(count, candidates.count))))
+        let target = max(1, min(count, candidates.count))
+        let chosen = examBalanced ? examBalancedSelection(from: candidates, count: target) : Array(candidates.prefix(target))
         var orders: [String: [Int]] = [:]
         for q in chosen {
             var order = Array(q.availableChoices.indices)
@@ -251,6 +252,56 @@ final class LearningStore: ObservableObject {
         selectedAnswers = []
         route = .quiz
         persist()
+    }
+
+    private func examBalancedSelection(from candidates: [Question], count: Int) -> [Question] {
+        // The pharmacist national exam has 345 questions per exam:
+        // 90 mandatory, 105 theory, and 150 practical. Keep short daily sessions
+        // close to that composition so random variance does not make them
+        // disproportionately easy or mandatory-question heavy.
+        let sections: [(name: String, weight: Int)] = [("必須", 90), ("理論", 105), ("実践", 150)]
+        let denominator = 345.0
+        var quotas: [String: Int] = [:]
+        var assigned = 0
+        var remainders: [(name: String, value: Double)] = []
+
+        for section in sections {
+            let exact = Double(count * section.weight) / denominator
+            let base = Int(exact.rounded(.down))
+            quotas[section.name] = base
+            assigned += base
+            remainders.append((section.name, exact - Double(base)))
+        }
+
+        let remaining = max(0, count - assigned)
+        let orderedRemainders = remainders.sorted {
+            if $0.value == $1.value { return $0.name < $1.name }
+            return $0.value > $1.value
+        }
+        for item in orderedRemainders.prefix(remaining) {
+            quotas[item.name, default: 0] += 1
+        }
+
+        var selected: [Question] = []
+        var used = Set<String>()
+        for section in sections {
+            let quota = quotas[section.name, default: 0]
+            for question in candidates where question.section == section.name && selected.filter({ $0.section == section.name }).count < quota {
+                selected.append(question)
+                used.insert(question.id)
+            }
+        }
+
+        if selected.count < count {
+            for question in candidates where !used.contains(question.id) {
+                selected.append(question)
+                used.insert(question.id)
+                if selected.count == count { break }
+            }
+        }
+
+        if state.shuffleQuestions { selected.shuffle() }
+        return Array(selected.prefix(count))
     }
 
     private func grade(unknown: Bool) {
