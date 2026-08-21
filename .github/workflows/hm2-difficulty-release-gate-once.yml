@@ -1,0 +1,61 @@
+name: HM2 Difficulty Release Gate Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/hm2-difficulty-gate-trigger.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Run full 300-question release export and difficulty gate
+        run: |
+          node ios/health-manager-2/export-audit-data.cjs
+          node - <<'NODE'
+          const fs=require('fs');
+          const q=JSON.parse(fs.readFileSync('ios/health-manager-2/release-questions.json','utf8'));
+          if(q.length!==300) throw new Error(`expected 300 got ${q.length}`);
+          const covered=q.filter(x=>x.no_common_sense_shortcut&&x.difficulty_model).length;
+          const paired=q.filter(x=>x.difficulty_model==='exam-paired-judgment-v1').length;
+          const manual=q.filter(x=>x.difficulty_model==='manual-exam-rewrite-v1').length;
+          if(covered!==250||paired!==210||manual!==40) throw new Error(`difficulty coverage covered=${covered} paired=${paired} manual=${manual}`);
+          const bad=q.filter(x=>!Array.isArray(x.choices)||x.choices.length!==5||new Set(x.choices).size!==5);
+          if(bad.length) throw new Error(`invalid choices: ${bad.map(x=>x.id).join(',')}`);
+          console.log(`PASS difficulty coverage: ${covered}/300; paired=${paired}; manual=${manual}`);
+          NODE
+      - name: Persist PASS evidence
+        run: |
+          mkdir -p ios/health-manager-2/audit
+          cat > ios/health-manager-2/audit/DIFFICULTY_GATE_PASS.md <<'EOF'
+          # HM2 Difficulty Gate PASS
+
+          - Total questions: 300
+          - Exam-paired generated rewrites: 210
+          - Manual exam-level rewrites: 40
+          - Difficulty-covered questions: 250
+          - Remaining 50: existing official-style / law questions retained subject to existing content and current-law gates
+          - All questions: 5 unique choices
+          - Release export: post-difficulty corpus
+          - Result: PASS
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ios/health-manager-2/audit/DIFFICULTY_GATE_PASS.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "HM2: persist difficulty release gate PASS [skip ci]"
+          git pull --rebase origin main
+          git push origin main
