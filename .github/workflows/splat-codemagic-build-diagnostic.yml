@@ -24,7 +24,7 @@ jobs:
           python3 - <<'PY'
           import json, os, urllib.request, urllib.error
           from pathlib import Path
-          build_id = '6a87e1346086cc3ffd17035c'
+          build_id = '6a87e2ac46bcfca401234c24'
           token = os.environ.get('CM_API_TOKEN', '').strip()
           if not token:
               raise SystemExit('Missing GitHub Actions secret CM_API_TOKEN')
@@ -52,7 +52,7 @@ jobs:
                   return [clean(v) for v in value]
               return value
           result = {
-              'request_id': 'splat-testflight-actions-6a87e134',
+              'request_id': 'splat-testflight-actions-6a87e2ac',
               'build_id': build_id,
               'http_status': http_status,
               'actions': clean(payload),
@@ -67,7 +67,7 @@ jobs:
           set -euo pipefail
           test -f /tmp/splat-actions.json || exit 0
           BRANCH='testflight/splat-native-ios-20260820'
-          RESULT_PATH='automation/codemagic-results/splat-testflight-actions-6a87e134.json'
+          RESULT_PATH='automation/codemagic-results/splat-testflight-actions-6a87e2ac.json'
           cp /tmp/splat-actions.json /tmp/splat-actions.saved.json
           for attempt in 1 2 3; do
             git fetch origin "$BRANCH"
@@ -78,7 +78,7 @@ jobs:
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git add -- "$RESULT_PATH"
             if git diff --cached --quiet; then exit 0; fi
-            git commit -m 'release: persist Splat TestFlight action diagnostic'
+            git commit -m 'release: persist Splat TestFlight attempt 3 diagnostic'
             if git push origin HEAD:"$BRANCH"; then exit 0; fi
             sleep 2
           done
