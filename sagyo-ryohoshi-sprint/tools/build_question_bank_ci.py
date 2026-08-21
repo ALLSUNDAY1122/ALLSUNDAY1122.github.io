@@ -3,11 +3,13 @@
 
 MHLW pages and PDF text layouts differ between exam rounds. Keep the canonical
 parser where it works, pin independently verified official URLs where needed,
-and resolve sources lazily so historical layout differences cannot block newer
+use a PDF extractor that handles newer Japanese font encodings, and resolve
+sources lazily so historical layout differences cannot block newer
 licensed-official questions.
 """
 import re
 import sys
+import pymupdf
 import build_question_bank as bank
 
 R60_PAGE = (
@@ -95,6 +97,16 @@ def corrected_r59_answer():
     return CORRECTED_R59_OT_ANSWER
 
 
+def pdf_text(url, tmpdir):
+    """Extract Japanese PDF text with MuPDF rather than pypdf font maps."""
+    data = bank.get(url, binary=True)
+    doc = pymupdf.open(stream=data, filetype="pdf")
+    try:
+        return "\n".join(page.get_text("text", sort=True) or "" for page in doc)
+    finally:
+        doc.close()
+
+
 def find_q_starts(lines):
     """Accept both `1 stem...` and `1` + next-line stem PDF layouts.
 
@@ -156,6 +168,7 @@ def build_sources():
 
 bank.pdf_links_from_page = pdf_links_from_page
 bank.corrected_r59_answer = corrected_r59_answer
+bank.pdf_text = pdf_text
 bank.find_q_starts = find_q_starts
 bank.build_sources = build_sources
 
