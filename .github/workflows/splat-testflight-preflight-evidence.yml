@@ -41,6 +41,7 @@ jobs:
           grep -q 'App Store Connect Apple ID: `6803778932`' splat-native-ios/APPLE_CONNECT_PACKET.md
           grep -q 'APP_STORE_CONNECT_APP_ID: 6803778932' codemagic.yaml
           grep -q 'BUNDLE_ID: jp.allsunday1122.splatlab' codemagic.yaml
+          grep -q 'app_store_connect: Codemagic Shiwake Swipe' codemagic.yaml
           grep -q 'fetch-signing-files.*IOS_APP_STORE.*--create' codemagic.yaml
           grep -q 'testFlightInternalTestingOnly' codemagic.yaml
           grep -q 'submit_to_testflight: true' codemagic.yaml
@@ -54,6 +55,8 @@ jobs:
             raise "wrong bundle" unless w.dig("environment", "vars", "BUNDLE_ID") == "jp.allsunday1122.splatlab"
             id = w.dig("environment", "vars", "APP_STORE_CONNECT_APP_ID")
             raise "wrong app id" unless [6803778932, "6803778932"].include?(id)
+            integration = w.dig("integrations", "app_store_connect")
+            raise "wrong app store connect integration" unless integration == "Codemagic Shiwake Swipe"
             p = w.dig("publishing", "app_store_connect")
             raise "testflight disabled" unless p["submit_to_testflight"] == true
             raise "app store submission enabled" unless p["submit_to_app_store"] == false
@@ -69,6 +72,7 @@ jobs:
             "candidate_head": "$TESTFLIGHT_HEAD",
             "bundle_id": "jp.allsunday1122.splatlab",
             "app_store_connect_app_id": "6803778932",
+            "app_store_connect_integration": "Codemagic Shiwake Swipe",
             "version": "1.0.0",
             "testflight_only": true,
             "submit_to_app_store": false
