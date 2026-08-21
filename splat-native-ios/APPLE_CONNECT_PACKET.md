@@ -31,27 +31,24 @@ read-back実値:
 
 Codemagic bootstrap build `6a87c9a258fd97265845cf1e` は実行マシン割当前にfailedしたため重複Buildは行わず、Apple公式APIのidempotent ensureへ切り替えました。Bundle ID作成自体は完了しています。
 
-## App Store Connect側で人間が行う登録｜現在の停止点
+## App Store Connect Appレコード｜完了
 
-Appleの現行App Store Connect運用に従い、新規AppレコードだけはWeb UIの `Apps` → `+` → `New App` から1件作成します。
+2026-08-21、人間Gateで新規Appレコードを作成後、App Store Connect APIで全Appsをread-backし、次の1件がBundle ID / name / SKU / localeまで一致することを確認しました。
 
-入力値:
-
-- Platforms: iOS
-- Name: Splat Lab
-- Primary Language: Japanese
+- App Store Connect Apple ID: `6803778932`
+- Name: `Splat Lab`
 - Bundle ID: `jp.allsunday1122.splatlab`
 - SKU: `splatlab-ios-2026`
-- User Access: Full Access（特別に制限する必要がない場合）
+- Primary locale: `ja`
 
-作成後に発行されるApple ID（数値）は推測せず、Bundle IDからAPIで対象Appを再取得し、実値をNotion正本とこのパケットへ記録します。候補が複数で一意に決まらない場合だけ人間確認へ戻します。
+このApple IDはApple実発行値であり、推測値ではありません。
 
-## Appレコード作成後の自動経路
+## Appレコード作成後の自動経路｜進行中
 
 `testflight/splat-native-ios-20260820` ブランチを配布候補として使用します。
 
-1. Bundle IDからApp Store Connect App IDをAPI read-back
-2. `APP_STORE_CONNECT_APP_ID=PENDING_HUMAN_APP_RECORD` を実発行Apple IDへ更新
+1. Bundle IDからApp Store Connect App IDをAPI read-back → **PASS (`6803778932`)**
+2. `APP_STORE_CONNECT_APP_ID` を実発行Apple IDへ更新 → **PASS**
 3. Release入力監査
 4. signing設定・証明書／profile取得または作成
 5. signed IPA生成
