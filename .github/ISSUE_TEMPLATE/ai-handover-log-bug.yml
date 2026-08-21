@@ -1,0 +1,126 @@
+name: "AI引継ぎ帳｜不具合報告"
+description: "AI引継ぎ帳の不具合を報告します。個人情報・顧客情報・秘密情報は記載しないでください。"
+title: "[AI引継ぎ帳][不具合] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ご報告ありがとうございます。
+
+        **氏名、住所、顧客情報、健康情報、金融情報、パスワード、秘密鍵、アクセストークン、認証情報、未公開の社内情報は記載・添付しないでください。**
+        アプリに登録した実データではなく、架空の内容で再現してください。
+
+  - type: checkboxes
+    id: privacy-confirmation
+    attributes:
+      label: 投稿前の確認
+      options:
+        - label: 個人情報・顧客情報・秘密情報を含めていません
+          required: true
+        - label: アプリの実データではなく、架空または加工済みの再現データを使用しています
+          required: true
+
+  - type: input
+    id: app-version
+    attributes:
+      label: アプリのVersion / Build
+      description: 例：0.6.0 / 6
+      placeholder: 0.6.0 / 6
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: 使用端末
+      description: 例：iPhone 16
+      placeholder: iPhone 16
+    validations:
+      required: true
+
+  - type: input
+    id: ios-version
+    attributes:
+      label: iOSバージョン
+      placeholder: 例：iOS 26.5
+    validations:
+      required: true
+
+  - type: dropdown
+    id: network
+    attributes:
+      label: 通信状態
+      options:
+        - 通常接続
+        - Wi-Fi
+        - モバイル通信
+        - 機内モード／オフライン
+        - 不明
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 発生した問題
+      description: 何が起きたかを簡潔に記載してください。
+      placeholder: 例：JSONバックアップを読み込むとエラーが表示され、復元できません。
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順
+      description: 番号付きで、問題が発生するまでの操作を記載してください。
+      placeholder: |
+        1. 設定を開く
+        2. バックアップ読込を選ぶ
+        3. テスト用JSONを選択する
+        4. エラーが表示される
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待した結果
+      placeholder: 保存時点のプロジェクトへ復元されること
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 実際の結果
+      placeholder: エラー表示後も復元されない
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: 再現頻度
+      options:
+        - 毎回
+        - 高い頻度
+        - ときどき
+        - 1回だけ
+        - 再現できない
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: スクリーンショット・画面録画
+      description: 個人情報や実データが映っていないことを確認してください。添付しない場合は「なし」と記載してください。
+      placeholder: なし
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 補足
+      description: 回避方法、発生前後の操作などがあれば記載してください。
