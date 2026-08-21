@@ -1,11 +1,16 @@
 @preconcurrency import ARKit
 import SceneKit
 import SwiftUI
+import UIKit
 
 /// Keeps one ARSession alive for the whole Splat lifecycle.
 /// The camera is not started until ScanModel.startCapture() explicitly runs the session.
 struct PersistentScanCameraView: UIViewRepresentable {
     @EnvironmentObject var model: ScanModel
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
 
     func makeUIView(context: Context) -> ARSCNView {
         let view = ARSCNView(frame: .zero)
@@ -13,11 +18,196 @@ struct PersistentScanCameraView: UIViewRepresentable {
         view.preferredFramesPerSecond = 60
         view.automaticallyUpdatesLighting = false
         view.rendersCameraGrain = false
+        context.coordinator.install(on: view)
         model.attach(session: view.session)
         return view
     }
 
-    func updateUIView(_ uiView: ARSCNView, context: Context) {}
+    func updateUIView(_ uiView: ARSCNView, context: Context) {
+        context.coordinator.refresh(
+            in: uiView,
+            acceptedFrameCount: model.acceptedFrames,
+            isActive: model.phase == .capturing && !model.isCapturePaused
+        )
+    }
+
+    final class Coordinator: NSObject {
+        private weak var sceneView: ARSCNView?
+        private let heatmap = CaptureCoverageHeatmapView()
+        private var acceptedFeatureIDs = Set<UInt64>()
+        private var lastAcceptedFrameCount = 0
+        private var isActive = false
+        private var timer: Timer?
+
+        func install(on sceneView: ARSCNView) {
+            self.sceneView = sceneView
+            heatmap.translatesAutoresizingMaskIntoConstraints = false
+            heatmap.isUserInteractionEnabled = false
+            heatmap.backgroundColor = .clear
+            sceneView.addSubview(heatmap)
+            NSLayoutConstraint.activate([
+                heatmap.leadingAnchor.constraint(equalTo: sceneView.leadingAnchor),
+                heatmap.trailingAnchor.constraint(equalTo: sceneView.trailingAnchor),
+                heatmap.topAnchor.constraint(equalTo: sceneView.topAnchor),
+                heatmap.bottomAnchor.constraint(equalTo: sceneView.bottomAnchor),
+            ])
+
+            let timer = Timer(timeInterval: 0.22, repeats: true) { [weak self] _ in
+                self?.updateHeatmap()
+            }
+            RunLoop.main.add(timer, forMode: .common)
+            self.timer = timer
+        }
+
+        func refresh(in sceneView: ARSCNView, acceptedFrameCount: Int, isActive: Bool) {
+            self.sceneView = sceneView
+            self.isActive = isActive
+            heatmap.isHidden = !isActive
+
+            if acceptedFrameCount < lastAcceptedFrameCount || acceptedFrameCount == 0 {
+                acceptedFeatureIDs.removeAll(keepingCapacity: true)
+                lastAcceptedFrameCount = acceptedFrameCount
+            }
+
+            if acceptedFrameCount > lastAcceptedFrameCount {
+                if let cloud = sceneView.session.currentFrame?.rawFeaturePoints {
+                    acceptedFeatureIDs.formUnion(cloud.identifiers)
+                }
+                lastAcceptedFrameCount = acceptedFrameCount
+            }
+        }
+
+        private func updateHeatmap() {
+            guard isActive,
+                  let sceneView,
+                  sceneView.bounds.width > 1,
+                  sceneView.bounds.height > 1,
+                  let cloud = sceneView.session.currentFrame?.rawFeaturePoints else {
+                heatmap.update(samples: [], viewport: .zero)
+                return
+            }
+
+            var samples: [CaptureCoverageHeatmapView.Sample] = []
+            samples.reserveCapacity(cloud.points.count)
+
+            for (point, identifier) in zip(cloud.points, cloud.identifiers) {
+                let projected = sceneView.projectPoint(SCNVector3(point.x, point.y, point.z))
+                guard projected.z > 0,
+                      projected.z < 1 else { continue }
+                let screenPoint = CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))
+                guard sceneView.bounds.contains(screenPoint) else { continue }
+                samples.append(
+                    .init(
+                        point: screenPoint,
+                        covered: acceptedFeatureIDs.contains(identifier)
+                    )
+                )
+            }
+
+            heatmap.update(samples: samples, viewport: sceneView.bounds)
+        }
+
+        deinit {
+            timer?.invalidate()
+        }
+    }
+}
+
+/// Screen-space guidance derived from real ARKit feature points.
+/// Red hatched cells contain currently visible features that have not appeared in an accepted
+/// capture frame yet. Green cells are predominantly backed by already accepted feature IDs.
+private final class CaptureCoverageHeatmapView: UIView {
+    struct Sample {
+        let point: CGPoint
+        let covered: Bool
+    }
+
+    private struct Cell {
+        var total = 0
+        var covered = 0
+    }
+
+    private struct RenderCell {
+        let rect: CGRect
+        let covered: Bool
+    }
+
+    private var renderCells: [RenderCell] = []
+
+    func update(samples: [Sample], viewport: CGRect) {
+        guard viewport.width > 1, viewport.height > 1, !samples.isEmpty else {
+            if !renderCells.isEmpty {
+                renderCells = []
+                setNeedsDisplay()
+            }
+            return
+        }
+
+        let columns = 10
+        let rows = 18
+        let cellWidth = viewport.width / CGFloat(columns)
+        let cellHeight = viewport.height / CGFloat(rows)
+        var cells: [Int: Cell] = [:]
+
+        for sample in samples {
+            let column = min(columns - 1, max(0, Int(sample.point.x / cellWidth)))
+            let row = min(rows - 1, max(0, Int(sample.point.y / cellHeight)))
+            let key = row * columns + column
+            var cell = cells[key, default: Cell()]
+            cell.total += 1
+            if sample.covered { cell.covered += 1 }
+            cells[key] = cell
+        }
+
+        renderCells = cells.compactMap { key, cell in
+            // A single drifting AR feature should not paint a large warning block.
+            guard cell.total >= 2 else { return nil }
+            let row = key / columns
+            let column = key % columns
+            let rect = CGRect(
+                x: CGFloat(column) * cellWidth,
+                y: CGFloat(row) * cellHeight,
+                width: cellWidth,
+                height: cellHeight
+            ).insetBy(dx: 1.5, dy: 1.5)
+            let coveredRatio = CGFloat(cell.covered) / CGFloat(cell.total)
+            return RenderCell(rect: rect, covered: coveredRatio >= 0.58)
+        }
+        setNeedsDisplay()
+    }
+
+    override func draw(_ rect: CGRect) {
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        context.saveGState()
+        defer { context.restoreGState() }
+
+        for cell in renderCells {
+            if cell.covered {
+                context.setFillColor(UIColor.systemGreen.withAlphaComponent(0.10).cgColor)
+                context.fill(cell.rect)
+                context.setStrokeColor(UIColor.systemGreen.withAlphaComponent(0.42).cgColor)
+                context.setLineWidth(0.8)
+                context.stroke(cell.rect)
+                continue
+            }
+
+            context.setFillColor(UIColor.systemPink.withAlphaComponent(0.20).cgColor)
+            context.fill(cell.rect)
+            context.saveGState()
+            context.clip(to: cell.rect)
+            context.setStrokeColor(UIColor.systemPink.withAlphaComponent(0.78).cgColor)
+            context.setLineWidth(1.4)
+            let spacing: CGFloat = 9
+            var x = cell.rect.minX - cell.rect.height
+            while x < cell.rect.maxX {
+                context.move(to: CGPoint(x: x, y: cell.rect.maxY))
+                context.addLine(to: CGPoint(x: x + cell.rect.height, y: cell.rect.minY))
+                x += spacing
+            }
+            context.strokePath()
+            context.restoreGState()
+        }
+    }
 }
 
 struct RootScanView: View {
@@ -166,6 +356,20 @@ struct RootScanView: View {
                     .background(.black.opacity(0.62), in: Capsule())
                 }
 
+                HStack(spacing: 12) {
+                    Label("未撮影", systemImage: "rectangle.inset.filled")
+                        .foregroundStyle(.pink)
+                    Label("撮影済み", systemImage: "checkmark.square.fill")
+                        .foregroundStyle(.green)
+                    Spacer()
+                    Text("方向 \(model.coverageSectorCount)/\(model.coverageSectorTotal)")
+                        .foregroundStyle(.white)
+                }
+                .font(.caption.bold().monospacedDigit())
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(.black.opacity(0.62), in: Capsule())
+
                 Spacer()
 
                 RoundedRectangle(cornerRadius: 150)
@@ -208,13 +412,24 @@ struct RootScanView: View {
                             }
                             .buttonStyle(SecondaryButtonStyle())
 
-                            if model.canFinishCapture {
-                                Button("停止して生成へ") {
-                                    model.finishCapture()
-                                }
-                                .buttonStyle(PrimaryButtonStyle())
+                            Button("撮影を終了して生成へ") {
+                                model.finishCapture()
                             }
+                            .buttonStyle(PrimaryButtonStyle())
+                            .disabled(!model.canFinishCapture)
+                            .opacity(model.canFinishCapture ? 1 : 0.48)
                         }
+                    }
+
+                    if model.canFinishCapture {
+                        Text("必要な撮影量に達しました。終了して生成できます。")
+                            .font(.caption.bold())
+                            .foregroundStyle(.mint)
+                    } else {
+                        Text("赤い未撮影領域を減らしながら、対象の周囲をゆっくり撮影してください。必要量に達すると終了できます。")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
                     }
 
                     Text(model.captureQualityText)
