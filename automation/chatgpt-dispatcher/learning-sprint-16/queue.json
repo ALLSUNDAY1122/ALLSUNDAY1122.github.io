@@ -50,7 +50,7 @@
       "depends_on": ["LS16-003"],
       "evidence_path": "automation/chatgpt-dispatcher/learning-sprint-16/evidence/LS16-004-question-bank.md",
       "completed_at": null,
-      "prompt": "確定した試験構成とrights basisに従い、必要rounds×本試験1回分の問題バンクを作成する。automation/learning-sprint-question-pipelineを使い、問題数一致、科目配分、重複、高類似、根拠URL、基準日、権利根拠、正答・解説の一次資料監査をPASSまで反復する。水増し問題は禁止。"
+      "prompt": "確定した試験構成とrights basisに従い、必要rounds×本試験1回分の問題バンクを作成する。automation/learning-sprint-question-pipelineを使い、問題数一致、科目配分、重複、高類似、根拠URL、基準日、権利根拠、正答・解説の一次資料監査をPASSまで反復する。水増し問題は禁止。難易度は主観的な自作難易度ではなく国家試験の検証可能な構成に合わせ、全問licensed_official、各200問を一般160＋実地40とする。図版等のtext-only除外で易化偏りを起こさないよう、症例型・複数選択・短文暗記型proxyのround間偏差をdifficulty-auditで監査し、Gate PASSを必須とする。"
     },
     {
       "id": "LS16-005",
@@ -60,7 +60,7 @@
       "depends_on": ["LS16-004"],
       "evidence_path": "automation/chatgpt-dispatcher/learning-sprint-16/evidence/LS16-005-product.md",
       "completed_at": null,
-      "prompt": "現行学びスプリントUI正本へ揃え、4/8/16問設定、分野演習、履歴、苦手、途中再開、無料/購入版の正しいロック境界、購入復元、オフライン挙動を実装する。旧UIの残存やボタン不能を重大バグとして除去し、UI品質ループをPASSまで回す。"
+      "prompt": "現行学びスプリントUI正本へ揃え、4/8/16問設定、分野演習、履歴、苦手、途中再開、無料/購入版の正しいロック境界、購入復元、オフライン挙動を実装する。通常学習の出題は国家試験の一般80%・実地20%を長期比率として維持する層化抽出とし、16問では13一般＋3実地を基本形にする。短い学習回でも実地問題が恒常的に欠落しないようローテーションし、一般問題だけに偏ったMVP選定を残さない。旧UIの残存やボタン不能を重大バグとして除去し、UI品質ループをPASSまで回す。"
     },
     {
       "id": "LS16-006",
