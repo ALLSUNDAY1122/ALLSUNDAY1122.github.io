@@ -1,0 +1,64 @@
+name: Toru Tango App Store Preflight Finalize
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/toru-tango-store-finalize-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Validate command
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('automation/toru-tango-store-finalize-command.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          expected={
+            'app_id':'6795968222',
+            'bundle_id':'com.allsunday1122.torutango',
+            'version':'1.0',
+            'build_number':'9',
+            'submit_for_review':False,
+          }
+          for k,v in expected.items():
+              if d.get(k)!=v: raise SystemExit(f'command mismatch: {k}')
+          PY
+      - name: Finalize review metadata without submission
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python scripts/toru_tango_store_finalize.py --output /tmp/toru-tango-store-finalize-result.json
+      - name: Persist sanitized evidence
+        run: |
+          set -e
+          mkdir -p toru-tango-mobile/release-evidence
+          cp /tmp/toru-tango-store-finalize-result.json toru-tango-mobile/release-evidence/appstore-preflight-finalize-20260821.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add toru-tango-mobile/release-evidence/appstore-preflight-finalize-20260821.json
+          git commit -m "Persist Toru Tango App Store preflight evidence" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p toru-tango-mobile/release-evidence
+          cp /tmp/toru-tango-store-finalize-result.json toru-tango-mobile/release-evidence/appstore-preflight-finalize-20260821.json
+          git add toru-tango-mobile/release-evidence/appstore-preflight-finalize-20260821.json
+          git commit -m "Persist Toru Tango App Store preflight evidence" || exit 0
+          git push origin HEAD:main
