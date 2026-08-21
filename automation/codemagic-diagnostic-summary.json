@@ -1,21 +1,21 @@
 {
-  "request_id": "splat-signing-profile-diagnostic-20260821-1548",
-  "target_head_sha": "1914500ac2a208ff3d09927df6dacdfc6bbe3ab0",
-  "workflow": "splat-apple-signing-profile-ensure.yml",
+  "request_id": "splat-managed-signing-preflight-diagnostic-20260821-1549",
+  "target_head_sha": "7e1e565cae0fb2659a336139ac561275550d7a60",
+  "workflow": "splat-testflight-preflight-evidence.yml",
   "run_found": true,
   "run": {
-    "id": 32456001579,
-    "name": "Splat Apple Signing Profile Ensure",
+    "id": 32456174831,
+    "name": "Splat TestFlight Preflight Evidence",
     "status": "completed",
     "conclusion": "success",
-    "created_at": "2026-08-21T06:49:59Z",
-    "updated_at": "2026-08-21T06:50:22Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32456001579",
-    "head_sha": "1914500ac2a208ff3d09927df6dacdfc6bbe3ab0"
+    "created_at": "2026-08-21T06:52:28Z",
+    "updated_at": "2026-08-21T06:52:56Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32456174831",
+    "head_sha": "7e1e565cae0fb2659a336139ac561275550d7a60"
   },
   "jobs": [
     {
-      "name": "ensure",
+      "name": "preflight",
       "status": "completed",
       "conclusion": "success",
       "steps": [
@@ -30,27 +30,12 @@
           "conclusion": "success"
         },
         {
-          "name": "Run actions/setup-python@v5",
+          "name": "Validate release candidate",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Install JWT dependency",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Ensure canonical Splat App Store profile",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Persist sanitized Apple profile result",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/setup-python@v5",
+          "name": "Persist sanitized preflight evidence",
           "status": "completed",
           "conclusion": "success"
         },
