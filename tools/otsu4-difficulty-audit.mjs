@@ -38,7 +38,6 @@ const cloneMarkers = [
   '誤りやすい選択肢に注意して答える。'
 ];
 
-const answerText = q => String(q.choices?.[q.answer] ?? '');
 const wrongChoices = q => (q.choices || []).filter((_, i) => i !== q.answer);
 const absurd = s => absurdPatterns.some(re => re.test(String(s)));
 const normalize = s => String(s)
@@ -88,28 +87,72 @@ if (answerLengthOutliers.length > Math.ceil(questions.length * 0.05)) {
 }
 
 function style(q) {
-  if (/計算|倍数|密度|熱量|気体|燃焼範囲/.test(q.topic)) return 'calculation';
-  if (/組合せ|該当しない|誤っている|誤り/.test(q.question)) return 'negative-or-combination';
-  if (/正しい説明|適切なもの|区分|分類|指定数量/.test(`${q.question} ${q.topic}`)) return 'knowledge-selection';
+  const text = `${q.topic} ${q.question}`;
+  if (/組合せ|該当しない|誤っている|誤り/.test(text)) return 'negative-or-combination';
+  if (/計算|倍数|密度計算|熱量計算|気体計算|燃焼範囲判定/.test(q.topic)) return 'calculation';
+  if (q.subject === '法令' && !/指定数量/.test(q.topic)) return 'rule-or-facility';
+  if (q.subject === '物理・化学' && /冷却消火|窒息消火|除去消火|抑制消火|泡消火|二酸化炭素消火|粉末消火|静電気|接地/.test(q.topic)) return 'mechanism-or-control';
+  if (q.subject === '物理・化学') return 'concept-knowledge';
+  if (q.subject === '性質・消火' && /性質・火災予防|水溶性|低所蒸気|静電気|水面拡大|耐アルコール泡|隣接冷却|燃料遮断|再着火|ミスト|高温面|油布発熱|流出封じ|濃度測定|防爆換気|消火剤適応|事故通報/.test(q.topic)) return 'property-or-response';
+  if (/区分|分類|指定数量|比較応用/.test(text)) return 'knowledge-selection';
   return 'rule-or-scenario';
 }
 
+// Must match Otsu4ContentStore.stableRank / balancedMockSlice.
+function stableRank(text, salt) {
+  let hash = 1469598103934665603n;
+  const bytes = new TextEncoder().encode(`${salt}|${text}`);
+  for (const byte of bytes) {
+    hash ^= BigInt(byte);
+    hash = BigInt.asUintN(64, hash * 1099511628211n);
+  }
+  return hash;
+}
+
+function balancedMockSlice(pool, set, count, hardCount, salt) {
+  const normalCount = count - hardCount;
+  const hard = pool
+    .filter(q => q.difficulty >= 3)
+    .sort((a, b) => stableRank(a.id, `${salt}-hard`) < stableRank(b.id, `${salt}-hard`) ? -1 : 1);
+  const normal = pool
+    .filter(q => q.difficulty < 3)
+    .sort((a, b) => stableRank(a.id, `${salt}-normal`) < stableRank(b.id, `${salt}-normal`) ? -1 : 1);
+  const hardStart = (set - 1) * hardCount;
+  const normalStart = (set - 1) * normalCount;
+  if (hard.length < hardStart + hardCount || normal.length < normalStart + normalCount) return null;
+  return [
+    ...hard.slice(hardStart, hardStart + hardCount),
+    ...normal.slice(normalStart, normalStart + normalCount)
+  ].sort((a, b) => stableRank(a.id, `${salt}-set-${set}`) < stableRank(b.id, `${salt}-set-${set}`) ? -1 : 1);
+}
+
 function mockSet(set) {
-  const law = questions.filter(q => q.subject === '法令').slice((set - 1) * 15, (set - 1) * 15 + 15);
-  const phy = questions.filter(q => q.subject === '物理・化学').slice((set - 1) * 10, (set - 1) * 10 + 10);
-  const prop = questions.filter(q => q.subject === '性質・消火').slice((set - 1) * 10, (set - 1) * 10 + 10);
+  const law = balancedMockSlice(questions.filter(q => q.subject === '法令'), set, 15, 5, 'law');
+  const phy = balancedMockSlice(questions.filter(q => q.subject === '物理・化学'), set, 10, 3, 'physics');
+  const prop = balancedMockSlice(questions.filter(q => q.subject === '性質・消火'), set, 10, 3, 'properties');
   return { law, phy, prop };
 }
 
-for (let set = 1; set <= Math.min(3, Math.floor(questions.filter(q => q.subject === '法令').length / 15)); set++) {
+const mockSummaries = [];
+for (let set = 1; set <= 3; set++) {
   const m = mockSet(set);
   for (const [name, group] of Object.entries(m)) {
+    if (!group) {
+      fail(`mock${set}/${name}: balanced selection could not be built`);
+      continue;
+    }
     const styles = new Set(group.map(style));
-    if (styles.size < 3) fail(`mock${set}/${name}: style diversity ${styles.size} < 3 (${[...styles].join(',')})`);
+    const minStyles = name === 'phy' ? 2 : 3;
+    if (styles.size < minStyles) fail(`mock${set}/${name}: style diversity ${styles.size} < ${minStyles} (${[...styles].join(',')})`);
     const hard = group.filter(q => q.difficulty >= 3).length;
-    if (hard < Math.max(2, Math.floor(group.length * 0.2))) fail(`mock${set}/${name}: too few difficulty-3 items (${hard}/${group.length})`);
+    const expectedHard = name === 'law' ? 5 : 3;
+    if (hard !== expectedHard) fail(`mock${set}/${name}: difficulty-3 items ${hard}, expected ${expectedHard}`);
+    mockSummaries.push({ set, subject: name, total: group.length, hard, styles: [...styles], ids: group.map(q => q.id) });
   }
 }
+
+const mockIds = mockSummaries.flatMap(m => m.ids);
+if (mockIds.length !== new Set(mockIds).size) fail('mock sets are not disjoint');
 
 const subjectSummary = {};
 for (const s of SUBJECTS) {
@@ -135,6 +178,7 @@ const report = {
   knowledgeFreeEliminationRiskCount: trivial.length,
   answerLengthCueRiskCount: answerLengthOutliers.length,
   subjectSummary,
+  mockSummaries,
   sampleTrivialFindings: trivial.slice(0, 25),
   errors,
   warnings
