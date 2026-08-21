@@ -28,10 +28,13 @@ jobs:
           node --check kangoshi-sprint/product-availability.js
           node --check kangoshi-sprint/sw.js
           node --check kangoshi-sprint/audit-product-content.mjs
+          node --check kangoshi-sprint/audit-official-difficulty.mjs
       - name: MVP question data audit
         run: node kangoshi-sprint/audit-v02.mjs
       - name: Product 720-question release gate
         run: node kangoshi-sprint/audit-product-content.mjs
+      - name: Official exam difficulty gate
+        run: node kangoshi-sprint/audit-official-difficulty.mjs
       - name: Golden Master UI contract
         run: |
           grep -q 'id="app"' kangoshi-sprint/index.html
