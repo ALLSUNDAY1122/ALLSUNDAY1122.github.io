@@ -1,0 +1,32 @@
+name: HM2 Difficulty Audit Once
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/hm2-difficulty-audit-trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Run 300-question difficulty audit
+        run: python3 scripts/audit_sm2_difficulty.py
+      - name: Persist audit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ios/health-manager-2/audit/DIFFICULTY_AUDIT.md
+          if git diff --cached --quiet; then
+            echo "No audit changes"
+            exit 0
+          fi
+          git commit -m "Audit HM2 question difficulty against exam-style heuristics"
+          git pull --rebase origin main
+          git push origin main
