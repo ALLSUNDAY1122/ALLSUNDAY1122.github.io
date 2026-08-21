@@ -17,68 +17,77 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch sanitized Codemagic build actions
+      - name: Probe failed Codemagic action diagnostics
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           python3 - <<'PY'
-          import json, os, urllib.request, urllib.error
+          import json, os, re, urllib.request, urllib.error
           from pathlib import Path
           build_id = '6a87e2ac46bcfca401234c24'
+          action_id = '6a87e2ad9ba617f9b0b7cc16'
           token = os.environ.get('CM_API_TOKEN', '').strip()
           if not token:
               raise SystemExit('Missing GitHub Actions secret CM_API_TOKEN')
-          req = urllib.request.Request(
-              f'https://codemagic.io/api/v3/builds/{build_id}/actions',
-              headers={'x-auth-token': token, 'Accept': 'application/json'},
-              method='GET',
-          )
-          try:
-              with urllib.request.urlopen(req, timeout=30) as response:
-                  payload = json.loads(response.read().decode('utf-8'))
-                  http_status = response.status
-          except urllib.error.HTTPError as exc:
-              http_status = exc.code
-              raw = exc.read().decode('utf-8', errors='replace')
+
+          urls = [
+              f'https://codemagic.io/api/v3/builds/{build_id}/actions/{action_id}',
+              f'https://codemagic.io/api/v3/builds/{build_id}/actions/{action_id}/logs',
+              f'https://codemagic.io/api/v3/actions/{action_id}/logs',
+          ]
+
+          def fetch(url):
+              req = urllib.request.Request(url, headers={'x-auth-token': token, 'Accept': 'application/json,text/plain,*/*'}, method='GET')
               try:
-                  payload = json.loads(raw) if raw else {}
-              except json.JSONDecodeError:
-                  payload = {'error': raw[:4000]}
-          sensitive = ('secret','token','password','credential','private','apikey','api_key','environment','variable')
-          def clean(value):
-              if isinstance(value, dict):
-                  return {k: ('[REDACTED]' if any(p in str(k).lower() for p in sensitive) else clean(v)) for k,v in value.items()}
-              if isinstance(value, list):
-                  return [clean(v) for v in value]
-              return value
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      return response.status, response.read().decode('utf-8', errors='replace')
+              except urllib.error.HTTPError as exc:
+                  return exc.code, exc.read().decode('utf-8', errors='replace')
+
+          def sanitize(text):
+              text = re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----', '[REDACTED_PRIVATE_MATERIAL]', text, flags=re.S)
+              text = re.sub(r'(?i)(token|password|private[_ -]?key|api[_ -]?key)\s*[:=]\s*[^\s,}\]]+', r'\1=[REDACTED]', text)
+              lines = []
+              for line in text.splitlines():
+                  if re.search(r'(?i)(error|fail|certificate|profile|signing|private key|missing|not found|unauthor|forbidden|invalid)', line):
+                      if len(line) > 1000:
+                          line = line[:1000] + '…'
+                      lines.append(line)
+              return lines[:50]
+
+          probes = []
+          for url in urls:
+              status, raw = fetch(url)
+              probes.append({'url_path': url.split('codemagic.io')[-1], 'http_status': status, 'diagnostic_lines': sanitize(raw)})
+
           result = {
-              'request_id': 'splat-testflight-actions-6a87e2ac',
+              'request_id': 'splat-testflight-action-log-probe-6a87e2ac',
               'build_id': build_id,
-              'http_status': http_status,
-              'actions': clean(payload),
+              'action_id': action_id,
+              'probes': probes,
           }
-          Path('/tmp/splat-actions.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
-          print(f'PASS: fetched Codemagic build actions HTTP {http_status}')
+          Path('/tmp/splat-action-log-probe.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+          print('PASS: probed failed Codemagic action diagnostics')
           PY
 
       - name: Persist sanitized diagnostic
         if: always()
         run: |
           set -euo pipefail
-          test -f /tmp/splat-actions.json || exit 0
+          test -f /tmp/splat-action-log-probe.json || exit 1
           BRANCH='testflight/splat-native-ios-20260820'
-          RESULT_PATH='automation/codemagic-results/splat-testflight-actions-6a87e2ac.json'
-          cp /tmp/splat-actions.json /tmp/splat-actions.saved.json
+          RESULT_PATH='automation/codemagic-results/splat-testflight-action-log-probe-6a87e2ac.json'
+          cp /tmp/splat-action-log-probe.json /tmp/splat-action-log-probe.saved.json
           for attempt in 1 2 3; do
             git fetch origin "$BRANCH"
             git reset --hard FETCH_HEAD
             mkdir -p "$(dirname "$RESULT_PATH")"
-            cp /tmp/splat-actions.saved.json "$RESULT_PATH"
+            cp /tmp/splat-action-log-probe.saved.json "$RESULT_PATH"
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git add -- "$RESULT_PATH"
             if git diff --cached --quiet; then exit 0; fi
-            git commit -m 'release: persist Splat TestFlight attempt 3 diagnostic'
+            git commit -m 'release: persist Splat signing action log probe'
             if git push origin HEAD:"$BRANCH"; then exit 0; fi
             sleep 2
           done
