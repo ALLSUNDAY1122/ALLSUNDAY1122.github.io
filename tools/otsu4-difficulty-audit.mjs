@@ -82,8 +82,8 @@ for (const q of questions) {
   const median = (other[1] + other[2]) / 2;
   if (a >= Math.max(18, median * 2.4)) answerLengthOutliers.push(q.id);
 }
-if (answerLengthOutliers.length > Math.ceil(questions.length * 0.05)) {
-  fail(`answer-length cue risk: ${answerLengthOutliers.length} questions`);
+if (answerLengthOutliers.length) {
+  fail(`answer-length cue risk: ${answerLengthOutliers.length} questions (${answerLengthOutliers.join(',')})`);
 }
 
 function style(q) {
@@ -107,7 +107,6 @@ function style(q) {
   return 'other';
 }
 
-// Must match Otsu4ContentStore.stableRank.
 function stableRank(text, salt) {
   let hash = 1469598103934665603n;
   const bytes = new TextEncoder().encode(`${salt}|${text}`);
@@ -222,6 +221,7 @@ const report = {
   difficultyValues: [...difficultyValues].sort(),
   knowledgeFreeEliminationRiskCount: trivial.length,
   answerLengthCueRiskCount: answerLengthOutliers.length,
+  answerLengthCueIds: answerLengthOutliers,
   subjectSummary,
   mockSummaries,
   sampleTrivialFindings: trivial.slice(0, 25),
