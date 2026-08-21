@@ -1,0 +1,34 @@
+name: SM2 Difficulty Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/audit_sm2_difficulty.py'
+      - 'apps/sanitary-manager-2/q*.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Audit all 300 questions
+        run: python scripts/audit_sm2_difficulty.py
+      - name: Persist report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ios/health-manager-2/audit/DIFFICULTY_AUDIT.md
+          if git diff --cached --quiet; then
+            echo "No audit report changes"
+            exit 0
+          fi
+          git commit -m "Persist SM2 difficulty audit"
+          git push
