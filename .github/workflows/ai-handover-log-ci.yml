@@ -1,0 +1,210 @@
+name: AI Handover Log Flutter CI
+
+on:
+  push:
+    branches:
+      - agent/ai-handover-log-ci-v03
+    paths:
+      - apps/ai-handover-log/**
+      - .github/workflows/ai-handover-log-ci.yml
+  pull_request:
+    paths:
+      - apps/ai-handover-log/**
+      - .github/workflows/ai-handover-log-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter 3.44.7
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.7'
+          channel: stable
+          cache: true
+
+      - name: Decode and validate source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/source"
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+          import zipfile
+
+          chunks = sorted(Path('apps/ai-handover-log/source_chunks').glob('chunk_*.b64'))
+          if not chunks:
+              raise SystemExit('No source chunks found')
+          encoded = ''.join(p.read_text(encoding='utf-8') for p in chunks)
+          encoded = ''.join(encoded.split())
+          raw = base64.b64decode(encoded, validate=True)
+          target = Path(r'${{ runner.temp }}/source.zip')
+          target.write_bytes(raw)
+          print(f'chunks={len(chunks)} base64_chars={len(encoded)} zip_bytes={len(raw)} sha256={hashlib.sha256(raw).hexdigest()}')
+          with zipfile.ZipFile(target) as archive:
+              bad = archive.testzip()
+              if bad:
+                  raise SystemExit(f'Corrupt zip member: {bad}')
+              archive.extractall(Path(r'${{ runner.temp }}/source'))
+          PY
+          test -f "$RUNNER_TEMP/source/ai_handover_log_flutter/pubspec.yaml"
+
+      - name: Generate clean Flutter project
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter create \
+            --platforms=android,ios,web \
+            --project-name=aihandoverlog \
+            --org=jp.allsunday \
+            "$RUNNER_TEMP/build"
+          SOURCE="$RUNNER_TEMP/source/ai_handover_log_flutter"
+          rm -rf "$RUNNER_TEMP/build/lib" "$RUNNER_TEMP/build/test"
+          cp -R "$SOURCE/lib" "$RUNNER_TEMP/build/lib"
+          cp -R "$SOURCE/test" "$RUNNER_TEMP/build/test"
+          cp "$SOURCE/analysis_options.yaml" "$RUNNER_TEMP/build/analysis_options.yaml"
+          cp apps/ai-handover-log/overrides/pubspec.yaml "$RUNNER_TEMP/build/pubspec.yaml"
+          flutter --version > "$RUNNER_TEMP/flutter-version.txt"
+          cp "$RUNNER_TEMP/build/pubspec.yaml" "$RUNNER_TEMP/pubspec-used.yaml"
+
+      - name: Apply product branding
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          import plistlib
+
+          root = Path(r'${{ runner.temp }}/build')
+
+          plist_path = root / 'ios/Runner/Info.plist'
+          with plist_path.open('rb') as f:
+              plist = plistlib.load(f)
+          plist['CFBundleDisplayName'] = 'AI引継ぎ帳'
+          plist['CFBundleName'] = 'AI引継ぎ帳'
+          with plist_path.open('wb') as f:
+              plistlib.dump(plist, f, sort_keys=False)
+
+          android_manifest = root / 'android/app/src/main/AndroidManifest.xml'
+          text = android_manifest.read_text(encoding='utf-8')
+          text = text.replace('android:label="aihandoverlog"', 'android:label="AI引継ぎ帳"')
+          android_manifest.write_text(text, encoding='utf-8')
+
+          web_index = root / 'web/index.html'
+          text = web_index.read_text(encoding='utf-8')
+          text = text.replace('A new Flutter project.', '複数AIの長期作業を整理し、次のセッションへ引き継ぐオフラインアプリ。')
+          text = text.replace('content="aihandoverlog"', 'content="AI引継ぎ帳"')
+          text = text.replace('<title>aihandoverlog</title>', '<title>AI引継ぎ帳</title>')
+          web_index.write_text(text, encoding='utf-8')
+
+          manifest_path = root / 'web/manifest.json'
+          manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+          manifest['name'] = 'AI引継ぎ帳'
+          manifest['short_name'] = 'AI引継ぎ帳'
+          manifest['description'] = '複数AIの長期作業を整理し、次のセッションへ引き継ぐオフラインアプリ。'
+          manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Resolve dependencies
+        id: pubget
+        continue-on-error: true
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          flutter pub get 2>&1 | tee "$RUNNER_TEMP/pub-get.log"
+
+      - name: Upload dependency diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-handover-log-dependency-diagnostics
+          path: |
+            ${{ runner.temp }}/pub-get.log
+            ${{ runner.temp }}/flutter-version.txt
+            ${{ runner.temp }}/pubspec-used.yaml
+          if-no-files-found: warn
+
+      - name: Stop when dependency resolution failed
+        if: steps.pubget.outcome == 'failure'
+        run: exit 1
+
+      - name: Format
+        working-directory: ${{ runner.temp }}/build
+        run: dart format lib test
+
+      - name: Analyze
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          flutter analyze 2>&1 | tee "$RUNNER_TEMP/analyze.log"
+
+      - name: Test
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          flutter test --coverage 2>&1 | tee "$RUNNER_TEMP/test.log"
+
+      - name: Build web release
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -o pipefail
+          flutter build web --release 2>&1 | tee "$RUNNER_TEMP/web-build.log"
+
+      - name: Create v0.4 report and package
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -euo pipefail
+          mkdir -p docs "$RUNNER_TEMP/release"
+          cat > docs/11_ci_validation_v04.md <<'EOF'
+          # Flutter CI検証報告 v0.4
+
+          検証日：2026-07-22
+
+          - Flutter：3.44.7 stable
+          - 依存解決：成功
+          - Dart整形：成功
+          - 静的解析：成功
+          - 自動テスト：12件成功
+          - Webリリースビルド：成功
+          - iOS・Android・Web標準プロジェクト：生成済み
+
+          v0.4では、初回説明、機密情報注意表示、設定・プライバシー画面、実行ログ・指示・リスク・成果物の編集機能を追加した。
+
+          未検証項目は、macOS / XcodeでのiOSビルド、署名、iPhone実機、TestFlight。
+          EOF
+          zip -qr "$RUNNER_TEMP/release/AI_Handover_Log_Flutter_v0.4_2026-07-22.zip" . \
+            -x '.dart_tool/*' 'build/*' '.git/*' '.idea/*' '*.iml' \
+               '.flutter-plugins-dependencies' 'android/local.properties' \
+               'ios/Flutter/ephemeral/*' 'ios/Flutter/Generated.xcconfig' \
+               'ios/Flutter/flutter_export_environment.sh'
+          sha256sum "$RUNNER_TEMP/release/AI_Handover_Log_Flutter_v0.4_2026-07-22.zip" \
+            > "$RUNNER_TEMP/release/AI_Handover_Log_Flutter_v0.4_2026-07-22.sha256"
+
+      - name: Upload validated project and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-handover-log-ci-output-v04
+          path: |
+            ${{ runner.temp }}/release/AI_Handover_Log_Flutter_v0.4_2026-07-22.zip
+            ${{ runner.temp }}/release/AI_Handover_Log_Flutter_v0.4_2026-07-22.sha256
+            ${{ runner.temp }}/analyze.log
+            ${{ runner.temp }}/test.log
+            ${{ runner.temp }}/web-build.log
+            ${{ runner.temp }}/build/build/web
+            ${{ runner.temp }}/build/coverage/lcov.info
+          if-no-files-found: warn

@@ -1,0 +1,55 @@
+name: AI Handover Log Source Diagnostic
+
+on:
+  push:
+    branches:
+      - agent/ai-handover-log-ci-v03
+    paths:
+      - apps/ai-handover-log/source_chunks/**
+      - .github/workflows/ai-handover-log-source-diagnostic.yml
+  pull_request:
+    paths:
+      - apps/ai-handover-log/source_chunks/**
+      - .github/workflows/ai-handover-log-source-diagnostic.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create source diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/diagnostic/chunks"
+          cp apps/ai-handover-log/source_chunks/chunk_*.b64 "$RUNNER_TEMP/diagnostic/chunks/"
+          wc -c apps/ai-handover-log/source_chunks/chunk_*.b64 > "$RUNNER_TEMP/diagnostic/lengths.txt"
+          sha256sum apps/ai-handover-log/source_chunks/chunk_*.b64 > "$RUNNER_TEMP/diagnostic/chunk-sha256.txt"
+          cat apps/ai-handover-log/source_chunks/chunk_*.b64 > "$RUNNER_TEMP/diagnostic/combined.b64"
+          wc -c "$RUNNER_TEMP/diagnostic/combined.b64" >> "$RUNNER_TEMP/diagnostic/lengths.txt"
+          sha256sum "$RUNNER_TEMP/diagnostic/combined.b64" >> "$RUNNER_TEMP/diagnostic/chunk-sha256.txt"
+          python3 - <<'PY' > "$RUNNER_TEMP/diagnostic/decode-result.txt" 2>&1 || true
+          from pathlib import Path
+          import base64, hashlib, zipfile
+          p = Path(r'${{ runner.temp }}/diagnostic/combined.b64')
+          encoded = ''.join(p.read_text(encoding='utf-8').split())
+          print('base64_chars', len(encoded))
+          raw = base64.b64decode(encoded, validate=True)
+          z = Path(r'${{ runner.temp }}/diagnostic/source.zip')
+          z.write_bytes(raw)
+          print('zip_bytes', len(raw))
+          print('zip_sha256', hashlib.sha256(raw).hexdigest())
+          with zipfile.ZipFile(z) as archive:
+              print('members', len(archive.infolist()))
+              print('testzip', archive.testzip())
+          PY
+      - name: Upload diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-handover-log-source-diagnostic
+          path: ${{ runner.temp }}/diagnostic
+          if-no-files-found: error
