@@ -32,6 +32,8 @@ workflows:
     integrations:
       app_store_connect: Codemagic Shiwake Swipe
     environment:
+      groups:
+        - app2_010_touhan_signing
       vars:
         BUNDLE_ID: jp.allsunday1122.splatlab
         APP_STORE_CONNECT_APP_ID: 6803778932
@@ -91,16 +93,20 @@ workflows:
           test -f "$CM_BUILD_DIR/splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
       - name: Initialize signing keychain
         script: keychain initialize
+      - name: Verify managed certificate private key is available
+        script: |
+          set -euo pipefail
+          test -n "${CERTIFICATE_PRIVATE_KEY:-}"
       - name: Verify Apple Developer Bundle ID exists
         script: |
           set -euo pipefail
           app-store-connect bundle-ids list \
             --bundle-id-identifier "$BUNDLE_ID" \
             --strict-match-identifier | grep -Fq "$BUNDLE_ID"
-      - name: Fetch or create App Store signing files
+      - name: Fetch existing App Store signing files
         script: |
           set -euo pipefail
-          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE
       - name: Add signing certificate
         script: keychain add-certificates
       - name: Apply App Store profile for Internal TestFlight
