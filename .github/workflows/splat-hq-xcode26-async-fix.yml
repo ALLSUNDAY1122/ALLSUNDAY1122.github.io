@@ -1,0 +1,81 @@
+name: Splat HQ Xcode 26 Async Fix
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260820'
+    paths:
+      - 'automation/release-requests/splat-xcode26-async-fix-20260821.run'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: splat-hq-xcode26-async-fix
+  cancel-in-progress: false
+
+jobs:
+  patch-and-sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch HQ with exact Swift 6 async replacement
+        run: |
+          set -euo pipefail
+          HQ_BRANCH='feature/splat-native-ios-poc'
+          RELEASE_BRANCH='testflight/splat-native-ios-20260820'
+          TARGET='splat-native-ios/SplatNative/SplatVideoExporter.swift'
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch --no-tags origin "$HQ_BRANCH" "$RELEASE_BRANCH"
+          git checkout -B hq "origin/$HQ_BRANCH"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('splat-native-ios/SplatNative/SplatVideoExporter.swift')
+          text = p.read_text(encoding='utf-8')
+          old = '                commandBuffer.waitUntilCompleted()\n'
+          new = '                await commandBuffer.completed()\n'
+          count = text.count(old)
+          if count != 1:
+              raise SystemExit(f'expected exactly one waitUntilCompleted occurrence, found {count}')
+          if new in text:
+              raise SystemExit('replacement already present unexpectedly')
+          p.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
+          git diff --check
+          test "$(git diff --numstat -- "$TARGET" | awk '{print $1":"$2}')" = '1:1'
+          grep -Fq 'await commandBuffer.completed()' "$TARGET"
+          ! grep -Fq 'commandBuffer.waitUntilCompleted()' "$TARGET"
+          git add -- "$TARGET"
+          git commit -m 'fix: await Metal command buffer completion'
+          HQ_NEW="$(git rev-parse HEAD)"
+          git push origin HEAD:"$HQ_BRANCH"
+
+          git fetch --no-tags origin "$RELEASE_BRANCH" "$HQ_BRANCH"
+          git checkout -B release "origin/$RELEASE_BRANCH"
+          git merge-base --is-ancestor "$HQ_NEW" "origin/$HQ_BRANCH"
+          git merge --no-ff "$HQ_NEW" -m 'release: sync Xcode 26 async Metal fix from HQ'
+          git push origin HEAD:"$RELEASE_BRANCH"
+
+          printf '%s\n' "$HQ_NEW" > /tmp/hq-new-sha.txt
+          printf '%s\n' "$(git rev-parse HEAD)" > /tmp/release-new-sha.txt
+
+      - name: Verify remote read-back
+        run: |
+          set -euo pipefail
+          HQ_BRANCH='feature/splat-native-ios-poc'
+          RELEASE_BRANCH='testflight/splat-native-ios-20260820'
+          HQ_NEW="$(cat /tmp/hq-new-sha.txt)"
+          RELEASE_NEW="$(cat /tmp/release-new-sha.txt)"
+          git fetch --no-tags origin "$HQ_BRANCH" "$RELEASE_BRANCH"
+          test "$(git rev-parse "origin/$HQ_BRANCH")" = "$HQ_NEW"
+          test "$(git rev-parse "origin/$RELEASE_BRANCH")" = "$RELEASE_NEW"
+          git merge-base --is-ancestor "$HQ_NEW" "origin/$RELEASE_BRANCH"
+          echo "PASS: HQ fix is integrated in TestFlight candidate"
