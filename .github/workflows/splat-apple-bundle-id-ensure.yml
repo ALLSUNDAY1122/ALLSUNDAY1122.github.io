@@ -1,0 +1,129 @@
+name: Splat Apple Bundle ID Ensure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'automation/app-store-connect-requests/splat-bundle-id-20260821.ensure'
+
+permissions:
+  contents: write
+
+jobs:
+  ensure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Ensure exact Splat Bundle ID through Apple API
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          sys.path.insert(0, 'scripts')
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          identifier = 'jp.allsunday1122.splatlab'
+          name = 'Splat Lab Native'
+          platform = 'IOS'
+          request_id = 'splat-bundle-id-20260821-ensure'
+          out = Path('/tmp/splat-bundle-id-result.json')
+
+          issuer_id = os.environ.get('ASC_ISSUER_ID', '').strip()
+          key_id = os.environ.get('ASC_KEY_ID', '').strip()
+          if not issuer_id or not key_id:
+              out.write_text(json.dumps({'request_id': request_id, 'ok': False, 'status': 'missing_asc_credentials'}, indent=2)+'\n')
+              raise SystemExit('Missing App Store Connect API credentials')
+
+          key_path, cleanup = load_private_key()
+          try:
+              token = make_token(issuer_id, key_id, key_path)
+              query = f'/v1/bundleIds?filter[identifier]={identifier}&limit=10'
+              _, before = api_get(token, query)
+              items = before.get('data', []) if isinstance(before, dict) else []
+              changed = False
+              create_http_status = None
+              if not items:
+                  payload = {
+                      'data': {
+                          'type': 'bundleIds',
+                          'attributes': {
+                              'identifier': identifier,
+                              'name': name,
+                              'platform': platform,
+                          },
+                      }
+                  }
+                  create_http_status, _ = api_request(token, '/v1/bundleIds', method='POST', payload=payload)
+                  changed = True
+
+              _, after = api_get(token, query)
+              found = after.get('data', []) if isinstance(after, dict) else []
+              exact = [
+                  item for item in found
+                  if isinstance(item, dict)
+                  and (item.get('attributes') or {}).get('identifier') == identifier
+              ]
+              if len(exact) != 1:
+                  raise RuntimeError(f'Bundle ID read-back expected exactly one match, got {len(exact)}')
+              resource = exact[0]
+              attrs = resource.get('attributes') or {}
+              if attrs.get('platform') != platform:
+                  raise RuntimeError(f'Bundle ID platform mismatch: {attrs.get("platform")!r}')
+
+              result = {
+                  'request_id': request_id,
+                  'ok': True,
+                  'status': 'created' if changed else 'already_exists',
+                  'changed': changed,
+                  'bundle_id_resource_id': resource.get('id'),
+                  'identifier': attrs.get('identifier'),
+                  'name': attrs.get('name'),
+                  'platform': attrs.get('platform'),
+                  'create_http_status': create_http_status,
+              }
+              out.write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+              print(f'PASS: Bundle ID ensured; status={result["status"]}')
+          except Exception as exc:
+              out.write_text(json.dumps({
+                  'request_id': request_id,
+                  'ok': False,
+                  'status': 'ensure_failed',
+                  'error': str(exc)[:2000],
+              }, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+              raise
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+          PY
+
+      - name: Persist sanitized Apple result
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f /tmp/splat-bundle-id-result.json || exit 0
+          RESULT_PATH='automation/app-store-connect-results/splat-bundle-id-20260821-ensure.json'
+          cp /tmp/splat-bundle-id-result.json /tmp/splat-bundle-id-result.saved.json
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p "$(dirname "$RESULT_PATH")"
+            cp /tmp/splat-bundle-id-result.saved.json "$RESULT_PATH"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- "$RESULT_PATH"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'release: persist Splat Apple Bundle ID result'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
