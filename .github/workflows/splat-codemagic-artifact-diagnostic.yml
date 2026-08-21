@@ -1,0 +1,138 @@
+name: Splat Codemagic Artifact Diagnostic
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260820'
+    paths:
+      - 'automation/release-requests/splat-artifact-diagnostic-20260821.run'
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download and sanitize exact Codemagic artifact log
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import io
+          import json
+          import os
+          import re
+          import urllib.request
+          import urllib.error
+          import zipfile
+          from pathlib import Path
+
+          build_id = '6a87f7dd2108df402e79beb5'
+          expected_commit = '8a418ee8d50120aa2541d8734c16c41bfebf2b41'
+          token = os.environ.get('CM_API_TOKEN', '').strip()
+          if not token:
+              raise SystemExit('missing CM_API_TOKEN')
+
+          def api_json(path):
+              req = urllib.request.Request(
+                  'https://codemagic.io' + path,
+                  headers={'x-auth-token': token, 'Accept': 'application/json'},
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  return json.loads(response.read().decode('utf-8'))
+
+          payload = api_json(f'/api/v3/builds/{build_id}')
+          build = payload.get('data') if isinstance(payload, dict) and isinstance(payload.get('data'), dict) else payload
+          if not isinstance(build, dict):
+              raise SystemExit('unexpected build response')
+          actual_commit = ((build.get('commit') or {}).get('hash'))
+          if actual_commit != expected_commit:
+              raise SystemExit(f'build commit mismatch: {actual_commit}')
+
+          artifact = None
+          for item in build.get('artifacts') or []:
+              if isinstance(item, dict) and item.get('type') == 'bundle' and item.get('short_lived_download_url'):
+                  artifact = item
+                  break
+          if artifact is None:
+              raise SystemExit('bundle artifact not found')
+
+          url = str(artifact['short_lived_download_url'])
+          req = urllib.request.Request(url, headers={'x-auth-token': token, 'Accept': 'application/octet-stream'})
+          with urllib.request.urlopen(req, timeout=60) as response:
+              archive = response.read()
+
+          sensitive = re.compile(r'(?i)(token|password|private[_ -]?key|api[_ -]?key|secret)\s*[:=]\s*[^\s,}\]]+')
+          user_path = re.compile(r'/Users/[^/\s]+')
+          email = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b')
+          indicators = re.compile(r'(?i)(error:|fatal error|archive failed|the following build commands failed|provisioning|codesign|code sign|linker command failed|swift compiler error|metal|no such module|undefined symbol|duplicate symbol)')
+
+          files = []
+          diagnostics = []
+          with zipfile.ZipFile(io.BytesIO(archive)) as z:
+              for info in z.infolist():
+                  if info.is_dir():
+                      continue
+                  files.append({'name': info.filename, 'size': info.file_size})
+                  if info.file_size > 8_000_000:
+                      continue
+                  try:
+                      text = z.read(info.filename).decode('utf-8', errors='replace')
+                  except Exception:
+                      continue
+                  lines = text.splitlines()
+                  for idx, line in enumerate(lines):
+                      if not indicators.search(line):
+                          continue
+                      clean = sensitive.sub(r'\1=[REDACTED]', line)
+                      clean = user_path.sub('/Users/[USER]', clean)
+                      clean = email.sub('[EMAIL]', clean)
+                      if len(clean) > 1600:
+                          clean = clean[:1600] + '…'
+                      diagnostics.append({'file': info.filename, 'line_number': idx + 1, 'line': clean})
+
+          # Keep the tail because archive failures are normally explained at the end.
+          result = {
+              'request_id': 'splat-testflight-failure-diagnostic-metal-20260821',
+              'ok': True,
+              'build_id': build_id,
+              'build_status': build.get('status'),
+              'expected_commit': expected_commit,
+              'actual_commit': actual_commit,
+              'artifact_files': files[:50],
+              'diagnostic_lines': diagnostics[-120:],
+          }
+          Path('/tmp/splat-artifact-diagnostic.json').write_text(
+              json.dumps(result, ensure_ascii=False, indent=2) + '\n',
+              encoding='utf-8',
+          )
+          print(f'PASS: extracted {len(diagnostics)} diagnostic lines')
+          PY
+
+      - name: Persist sanitized diagnostic
+        run: |
+          set -euo pipefail
+          BRANCH='testflight/splat-native-ios-20260820'
+          RESULT_PATH='automation/codemagic-results/splat-testflight-failure-diagnostic-metal-20260821.json'
+          cp /tmp/splat-artifact-diagnostic.json /tmp/splat-artifact-diagnostic.saved.json
+          for attempt in 1 2 3; do
+            git fetch origin "$BRANCH"
+            git reset --hard FETCH_HEAD
+            mkdir -p "$(dirname "$RESULT_PATH")"
+            cp /tmp/splat-artifact-diagnostic.saved.json "$RESULT_PATH"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- "$RESULT_PATH"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'release: persist Splat artifact diagnostic'
+            if git push origin HEAD:"$BRANCH"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
