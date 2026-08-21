@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "project": "moises-equivalence",
+  "integration_branch": "tech/moises-separation",
+  "integration_epoch": 1,
+  "locks": [
+    {"id":"shared-contract","owner":"HQ","scope":["tech-assets/moises-audio/Shared/**"],"notes":"shared data model / cross-module protocol"},
+    {"id":"app-shell","owner":"HQ","scope":["tech-assets/moises-audio/App/**"],"notes":"navigation, global app state, root composition"},
+    {"id":"source-separation-model","owner":"POOL","scope":["tech-assets/moises-audio/Separation/**"],"notes":"model/runtime/inference pipeline"},
+    {"id":"audio-playback-engine","owner":"POOL","scope":["tech-assets/moises-audio/Playback/**"],"notes":"multi-track playback, solo/mute/volume, seek, loop"},
+    {"id":"music-analysis-engine","owner":"POOL","scope":["tech-assets/moises-audio/Analysis/**"],"notes":"BPM, beat grid, key, chords, song parts"},
+    {"id":"time-pitch-dsp","owner":"POOL","scope":["tech-assets/moises-audio/DSP/**"],"notes":"speed, pitch/key shifting, metronome synchronization"},
+    {"id":"library-persistence","owner":"POOL","scope":["tech-assets/moises-audio/Library/**"],"notes":"projects, setlists, resume, persistence"},
+    {"id":"import-export","owner":"POOL","scope":["tech-assets/moises-audio/IO/**"],"notes":"audio/video import, export, share"},
+    {"id":"reference-ledger","owner":"POOL","scope":["tech-assets/moises-audio/reference/**"],"notes":"read-only reverse engineering evidence and golden reference"},
+    {"id":"parity-ledger","owner":"HQ","scope":["tech-assets/moises-audio/PARITY_MATRIX.json"],"notes":"Workers may propose evidence; HQ finalizes parity state"},
+    {"id":"queue-control","owner":"FINALIZER","scope":["automation/chatgpt-dispatcher/moises-equivalence/queue.json"],"notes":"atomic claim/finalize only"}
+  ],
+  "rules": [
+    "Different files do not imply different logical resources.",
+    "A task must hold every logical resource it semantically redefines.",
+    "shared-contract, app-shell, parity-ledger are HQ controlled.",
+    "Locks are acquired atomically with task claim and released on finalize/cancel/stale."
+  ]
+}
