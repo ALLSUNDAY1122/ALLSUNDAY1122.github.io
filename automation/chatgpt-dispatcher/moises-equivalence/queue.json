@@ -79,7 +79,7 @@
     },
     {
       "task_id": "MOI-BLD-001",
-      "status": "CLAIMED",
+      "status": "INTEGRATION_READY",
       "priority": 93,
       "owner_role": "POOL",
       "capability_tags": ["swift", "testing", "tooling"],
@@ -93,10 +93,10 @@
       "claimed_by": "Moises-Worker-4",
       "claim_token": "moises-worker-4-moi-bld-001-epoch1-20260822T0730JST",
       "claim_epoch": 1,
-      "lease_expires_at": "2026-08-22T09:00:00+09:00",
-      "heartbeat_at": "2026-08-22T07:30:00+09:00",
+      "lease_expires_at": null,
+      "heartbeat_at": "2026-08-22T07:33:00+09:00",
       "attempt_branch": "task/MOI-BLD-001/attempt-1",
-      "evidence": []
+      "evidence": ["attempt branch task/MOI-BLD-001/attempt-1", "commit ff8f943ac1e1faa36b9d0d6607ec770e52604efc adds canonical Package.swift", "commit e3fd8801a908ec463a8b8c31a135682ed6ffeb8e adds SeparationQualityTests.swift", "swift test on Swift 6.2.1 Linux: 8 tests executed, 0 failures", "compare baseline 0b161104... -> attempt branch: ahead by 2, changed only Package.swift and Tests/**", "PARITY_MATRIX unchanged"]
     },
     {
       "task_id": "MOI-QA-001",
