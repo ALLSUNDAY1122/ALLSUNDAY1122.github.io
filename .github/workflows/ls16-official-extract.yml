@@ -24,16 +24,11 @@ jobs:
         run: |
           set -o pipefail
           python sagyo-ryohoshi-sprint/tools/extract_official_ci.py 2>&1 | tee sagyo-ryohoshi-sprint/audit/official-extract-ci.log
-      - name: Commit extraction diagnostic
-        if: steps.extract.outcome != 'success'
-        run: |
-          git config user.name 'LS16 Dispatcher'
-          git config user.email 'actions@users.noreply.github.com'
-          git add sagyo-ryohoshi-sprint/audit/official-extract-ci.log
-          git commit -m 'diagnose LS16 official extract [skip ci]'
-          git push origin HEAD:${{ github.head_ref }}
+      - name: Show extraction diagnostic
+        if: always() && steps.extract.outcome != 'success'
+        run: cat sagyo-ryohoshi-sprint/audit/official-extract-ci.log
       - name: Stop on extraction failure
-        if: steps.extract.outcome != 'success'
+        if: always() && steps.extract.outcome != 'success'
         run: exit 1
       - name: Verify raw frame
         if: steps.extract.outcome == 'success'
@@ -60,5 +55,6 @@ jobs:
           git add sagyo-ryohoshi-sprint/audit/raw-official.json
           if ! git diff --cached --quiet; then
             git commit -m 'chore: extract LS16 official 58-60 frames [skip ci]'
+            git pull --rebase origin "${{ github.head_ref }}"
             git push origin HEAD:${{ github.head_ref }}
           fi
