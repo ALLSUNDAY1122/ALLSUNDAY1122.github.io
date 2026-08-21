@@ -5,6 +5,7 @@ on:
     paths:
       - 'kikenbutsu-otsu4-sprint/**'
       - 'tools/otsu4-build-content-v2.mjs'
+      - 'tools/otsu4-apply-difficulty-hardening.mjs'
       - 'tools/otsu4-difficulty-audit.mjs'
       - '.github/workflows/otsu4-content-audit.yml'
   push:
@@ -12,6 +13,7 @@ on:
     paths:
       - 'kikenbutsu-otsu4-sprint/**'
       - 'tools/otsu4-build-content-v2.mjs'
+      - 'tools/otsu4-apply-difficulty-hardening.mjs'
       - 'tools/otsu4-difficulty-audit.mjs'
       - '.github/workflows/otsu4-content-audit.yml'
 
@@ -35,6 +37,9 @@ jobs:
       - name: Generate native question JSON v2
         if: ${{ hashFiles('tools/otsu4-build-content-v2.mjs') != '' }}
         run: node tools/otsu4-build-content-v2.mjs
+      - name: Apply deterministic exam-difficulty hardening
+        if: ${{ hashFiles('tools/otsu4-apply-difficulty-hardening.mjs') != '' }}
+        run: node tools/otsu4-apply-difficulty-hardening.mjs
       - name: Exam-level difficulty gate
         if: ${{ hashFiles('tools/otsu4-difficulty-audit.mjs') != '' }}
         run: node tools/otsu4-difficulty-audit.mjs
