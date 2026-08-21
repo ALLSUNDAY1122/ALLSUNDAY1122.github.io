@@ -1,0 +1,47 @@
+{
+  "request_id": "app2-010-codemagic-env-splat-recheck-20260821-1546",
+  "app_id": "6a769d81a1add9d06020b524",
+  "ok": true,
+  "app_groups": [
+    {
+      "id": "6a858cbdf36a890a9fa2c3f4",
+      "name": "app2_010_touhan_signing",
+      "variables_http_status": 200,
+      "variables": [
+        {
+          "name": "APP_STORE_CONNECT_ISSUER_ID",
+          "secure": true
+        },
+        {
+          "name": "APP_STORE_CONNECT_KEY_IDENTIFIER",
+          "secure": true
+        },
+        {
+          "name": "APP_STORE_CONNECT_PRIVATE_KEY",
+          "secure": true
+        },
+        {
+          "name": "CERTIFICATE_PRIVATE_KEY",
+          "secure": true
+        }
+      ]
+    }
+  ],
+  "team_groups": [],
+  "teams": [],
+  "app_groups_http_status": 200,
+  "teams_http_status": 200,
+  "signing_variable_candidates": [
+    {
+      "scope": "app",
+      "group_id": "6a858cbdf36a890a9fa2c3f4",
+      "group_name": "app2_010_touhan_signing",
+      "matching_variables": [
+        "APP_STORE_CONNECT_ISSUER_ID",
+        "APP_STORE_CONNECT_KEY_IDENTIFIER",
+        "APP_STORE_CONNECT_PRIVATE_KEY",
+        "CERTIFICATE_PRIVATE_KEY"
+      ]
+    }
+  ]
+}
