@@ -58,7 +58,7 @@
     },
     {
       "task_id": "MOI-SEP-001",
-      "status": "READY",
+      "status": "CLAIMED",
       "priority": 94,
       "owner_role": "POOL",
       "capability_tags": ["audio-ml", "research", "benchmark"],
@@ -69,7 +69,13 @@
       "write_scope": ["tech-assets/moises-audio/Separation/benchmarks/**", "tech-assets/moises-audio/reference/model-runtime/**"],
       "parity_rows": ["MOI-P003", "MOI-P004", "MOI-P005"],
       "acceptance": ["commercial-license-feasible model/runtime candidates compared", "on-device/server/hybrid options scored for quality latency memory thermal cost", "at least one path to real multi-stem inference selected with explicit risks"],
-      "claimed_by": null, "claim_token": null, "claim_epoch": 0, "lease_expires_at": null, "heartbeat_at": null, "attempt_branch": null, "evidence": []
+      "claimed_by": "Moises-Worker-2",
+      "claim_token": "moises-worker-2-moi-sep-001-epoch1-20260822T0730JST",
+      "claim_epoch": 1,
+      "lease_expires_at": "2026-08-22T09:00:00+09:00",
+      "heartbeat_at": "2026-08-22T07:30:00+09:00",
+      "attempt_branch": "task/MOI-SEP-001/attempt-1",
+      "evidence": []
     },
     {
       "task_id": "MOI-BLD-001",
