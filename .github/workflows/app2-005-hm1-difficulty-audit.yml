@@ -28,6 +28,6 @@ jobs:
           rm -f ios/health-manager-1/audit/APP2_005_264_EXPANSION_2026-08-19.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ios/health-manager-1/audit/DIFFICULTY_AUDIT_2026-08-21.json
+          git add ios/health-manager-1/audit/DIFFICULTY_AUDIT_2026-08-21.json ios/health-manager-1/audit/DIFFICULTY_FLAGGED_2026-08-21.tsv
           git commit -m "Record full 264-question HM1 difficulty audit" || exit 0
           git push
