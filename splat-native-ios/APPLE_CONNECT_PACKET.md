@@ -15,15 +15,25 @@
 - TestFlight: Internal Testing only
 - App Store review auto-submit: disabled
 
-## Apple Developer側
+## Apple Developer側｜完了
 
-CodemagicのTestFlight workflowは、Bundle IDが存在しない場合に `jp.allsunday1122.splatlab` のExplicit App IDを作成し、App Store配布用の署名ファイルを取得・生成する構成です。
+2026-08-21、Apple公式App Store Connect APIで事前検索し、`jp.allsunday1122.splatlab` が0件であることを確認後にBundle IDを1件だけ登録しました。
 
-したがって、手作業で先にBundle IDを作る必要はありません。Codemagicが権限不足等で失敗した場合のみ、その失敗内容に応じて人間操作へ切り替えます。
+read-back実値:
 
-## App Store Connect側で人間が行う登録
+- Bundle ID resource ID: `6AWU9TD858`
+- Name: `Splat Lab Native`
+- Identifier: `jp.allsunday1122.splatlab`
+- Platform: `UNIVERSAL`
+- Team seed ID: `MN3D2ZM44N`
 
-App Store Connect APIでは新規Appレコードを作成できないため、新規AppレコードだけはWeb UIで作成します。
+再実行時は `already_exists` / `changed=false` でread-back PASS。二重登録はありません。
+
+Codemagic bootstrap build `6a87c9a258fd97265845cf1e` は実行マシン割当前にfailedしたため重複Buildは行わず、Apple公式APIのidempotent ensureへ切り替えました。Bundle ID作成自体は完了しています。
+
+## App Store Connect側で人間が行う登録｜現在の停止点
+
+Appleの現行App Store Connect運用に従い、新規AppレコードだけはWeb UIの `Apps` → `+` → `New App` から1件作成します。
 
 入力値:
 
@@ -38,22 +48,25 @@ App Store Connect APIでは新規Appレコードを作成できないため、�
 
 ## Appレコード作成後の自動経路
 
-`testflight/splat-native-ios-20260820` ブランチのCodemagic workflow:
+`testflight/splat-native-ios-20260820` ブランチを配布候補として使用します。
 
-1. Release入力監査
-2. Explicit Bundle ID確認/必要時作成
-3. App Store signing files取得/必要時作成
-4. signed IPA生成
-5. App Store Connectへupload
-6. Internal TestFlightへ送信
-7. App Store本審査には送信しない
+1. Bundle IDからApp Store Connect App IDをAPI read-back
+2. `APP_STORE_CONNECT_APP_ID=PENDING_HUMAN_APP_RECORD` を実発行Apple IDへ更新
+3. Release入力監査
+4. signing設定・証明書／profile取得または作成
+5. signed IPA生成
+6. App Store Connectへupload
+7. processing確認
+8. Internal TestFlightへ送信
+9. Internal TestFlight実機受入
+10. App Store本審査には自動送信しない
 
 ## Internal TestFlight後に必要な人間判断
 
 実機で中心経路を確認し、次のどれかを判断します。
 
-- PASS: 立体の思い出として十分識別できる → おもちゃばこMVPへ進む
-- CONDITIONAL: 生成可能だが品質・速度・熱に課題 → パラメータ/撮影方法を改善し再試験
+- PASS: Scaniverse同等化の代表フローと品質Gateを満たす → 残Parity Gateへ進む
+- CONDITIONAL: 生成可能だが品質・速度・熱・復旧に課題 → パラメータ／実装を改善し再試験
 - FAIL: オンデバイス方式が実用品質に届かない → 方式再設計
 
-この判断以前にApp Store本審査へ提出しません。
+Scaniverse同等化が完了する前におもちゃばこ固有MVPへ進めません。また、この判断以前にApp Store本審査へ提出しません。
