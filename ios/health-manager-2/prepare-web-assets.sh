@@ -37,6 +37,7 @@ files=(
   index.html
   gm-style.css
   q1.js q2.js q3.js q4.js q5.js q6.js q7.js q8.js q9.js q10.js q11.js q12.js
+  difficulty-patch-v5.js
   audit-patch-v2.js audit-patch-v3.js audit-patch-v4.js audit-fixes.js question-order-v1.js
   gm1.js gm2.js gm3.js gm4.js
   manifest.json icon.svg
