@@ -1,0 +1,29 @@
+name: Toru Tango Screenshot Capture Report
+
+on:
+  workflow_run:
+    workflows: ['Toru Tango App Store Screenshots']
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  STATUS_ISSUE: '4425'
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report capture run locator
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: Number(process.env.STATUS_ISSUE),
+              body: `Screenshot capture finished. status=${run.conclusion}; run_id=${run.id}; head_sha=${run.head_sha}; artifact=toru-tango-appstore-screenshots-build9`
+            });
