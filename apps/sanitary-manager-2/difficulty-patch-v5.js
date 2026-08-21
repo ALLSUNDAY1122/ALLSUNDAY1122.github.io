@@ -2,6 +2,13 @@
 'use strict';
 const qs=window.Q_PARTS||[];
 const groups=new Map();
+const STEMS=[
+  '次の「項目―内容」の組合せのうち、正しいものはどれか。',
+  '次の用語・制度と説明の組合せのうち、適切なものはどれか。',
+  '次の項目とその内容の対応として、正しいものはどれか。',
+  '次の組合せのうち、名称と内容が正しく対応しているものはどれか。',
+  '次の5つの対応関係のうち、正しいものはどれか。'
+];
 for(const q of qs){
   if(!q.fiveYearExpansion) continue;
   const key=`${q.examSet}｜${q.subject}`;
@@ -19,9 +26,6 @@ for(const group of groups.values()){
   const clues=group.map(clueOf);
   group.forEach((q,j)=>{
     const answerIndex=Math.max(0,Math.min(4,(Number(q.answer)||1)-1));
-    // Nearby terms/clues are drawn from the same 10-question exam block. Four
-    // distractors deliberately pair a real term with another real rule/fact,
-    // so wording or general common sense alone cannot identify the answer.
     const termPool=[];
     for(let k=1;termPool.length<4&&k<group.length;k++) termPool.push(terms[(j+k)%group.length]);
     const cluePool=[];
@@ -34,7 +38,7 @@ for(const group of groups.values()){
     const correct=`${q.topic} ― ${clueOf(q)}`;
     const choices=distractors.slice(0,4);
     choices.splice(answerIndex,0,correct);
-    q.question='次の「項目―内容」の組合せのうち、正しいものはどれか。';
+    q.question=STEMS[j%STEMS.length];
     q.choices=choices;
     q.quick=`${q.topic}：${clueOf(q)}`;
     q.explanation=`正解は「${correct}」。他の選択肢は、同じ出題範囲にある実在の制度・用語と別の制度・用語の内容を組み替えたもの。名称だけでなく、数値・期限・対象・作用まで対応づけて判定する。根拠：${q.basis||'各分野の一次資料・標準知識'}。`;
@@ -43,9 +47,6 @@ for(const group of groups.values()){
     q.noCommonSenseShortcut=true;
   });
 }
-
-// The two legacy public-style rounds had 40 especially weak occupational
-// hygiene/physiology questions. They are hand-rewritten in q5/q6/q8/q9.
 let manual=0;
 for(const q of qs){
   if(!['令和7年10月','令和7年4月'].includes(q.examSet)) continue;
