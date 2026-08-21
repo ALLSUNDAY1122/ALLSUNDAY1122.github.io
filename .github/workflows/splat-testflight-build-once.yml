@@ -1,0 +1,198 @@
+name: Splat Internal TestFlight Build Once
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260820'
+    paths:
+      - 'automation/release-requests/splat-testflight-build-20260821.start'
+
+permissions:
+  contents: write
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate final release gate
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin feature/splat-native-ios-poc
+          HQ_HEAD="$(git rev-parse FETCH_HEAD)"
+          git merge-base --is-ancestor "$HQ_HEAD" HEAD
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('automation/release-evidence/splat-testflight-preflight-20260821.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['ok'] is True and d['status'] == 'PASS'
+          assert d['bundle_id'] == 'jp.allsunday1122.splatlab'
+          assert d['app_store_connect_app_id'] == '6803778932'
+          assert d['version'] == '1.0.0'
+          assert d['testflight_only'] is True
+          assert d['submit_to_app_store'] is False
+          PY
+          grep -q 'APP_STORE_CONNECT_APP_ID: 6803778932' codemagic.yaml
+          grep -q 'BUNDLE_ID: jp.allsunday1122.splatlab' codemagic.yaml
+          grep -q 'submit_to_testflight: true' codemagic.yaml
+          grep -q 'submit_to_app_store: false' codemagic.yaml
+          ! grep -q 'submit_to_app_store: true' codemagic.yaml
+          echo "PASS: final release gate"
+
+      - name: Start or reuse exact Codemagic TestFlight build
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import pathlib
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+
+          token = os.environ.get('CM_API_TOKEN', '').strip()
+          if not token:
+              raise SystemExit('Missing GitHub Actions secret CM_API_TOKEN')
+
+          cm_app_id = '6a769d81a1add9d06020b524'
+          workflow_id = 'splat-native-ios'
+          workflow_name = 'Splat Lab Native - Internal TestFlight'
+          branch = 'testflight/splat-native-ios-20260820'
+          candidate_sha = os.environ.get('GITHUB_SHA', '').strip()
+          out = pathlib.Path('/tmp/splat-testflight-build.json')
+
+          def api(url, method='GET', payload=None):
+              body = None if payload is None else json.dumps(payload).encode('utf-8')
+              req = urllib.request.Request(url, data=body, method=method)
+              req.add_header('x-auth-token', token)
+              req.add_header('Content-Type', 'application/json')
+              req.add_header('Accept', 'application/json')
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      raw = response.read().decode('utf-8')
+                      return response.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as exc:
+                  raw = exc.read().decode('utf-8', errors='replace')
+                  try:
+                      parsed = json.loads(raw) if raw else {}
+                  except json.JSONDecodeError:
+                      parsed = {'error': raw[:1000]}
+                  return exc.code, parsed
+
+          def as_list(payload, *keys):
+              if isinstance(payload, list):
+                  return payload
+              if not isinstance(payload, dict):
+                  return []
+              for key in keys:
+                  value = payload.get(key)
+                  if isinstance(value, list):
+                      return value
+              data = payload.get('data')
+              if isinstance(data, list):
+                  return data
+              if isinstance(data, dict):
+                  for key in keys:
+                      value = data.get(key)
+                      if isinstance(value, list):
+                          return value
+              return []
+
+          # Refuse duplicate build for the exact release commit when discoverable.
+          candidates = []
+          status, teams_payload = api('https://codemagic.io/api/v3/user/teams')
+          if 200 <= status < 300:
+              for team in as_list(teams_payload, 'teams'):
+                  if not isinstance(team, dict):
+                      continue
+                  team_id = team.get('id') or team.get('_id')
+                  if not team_id:
+                      continue
+                  u = f'https://codemagic.io/api/v3/teams/{urllib.parse.quote(str(team_id))}/builds?page_size=100&page=1'
+                  s, payload = api(u)
+                  if not 200 <= s < 300:
+                      continue
+                  for build in as_list(payload, 'builds'):
+                      if not isinstance(build, dict):
+                          continue
+                      serialized = json.dumps(build, ensure_ascii=False)
+                      if cm_app_id not in serialized or branch not in serialized:
+                          continue
+                      if workflow_id not in serialized and workflow_name not in serialized:
+                          continue
+                      if candidate_sha and candidate_sha not in serialized:
+                          continue
+                      build_id = build.get('id') or build.get('_id')
+                      if build_id:
+                          candidates.append(str(build_id))
+
+          reused = bool(candidates)
+          if reused:
+              build_id = candidates[0]
+              state = 'reused_existing_exact_build'
+          else:
+              start_status, start = api(
+                  'https://api.codemagic.io/builds',
+                  method='POST',
+                  payload={'appId': cm_app_id, 'workflowId': workflow_id, 'branch': branch},
+              )
+              if not 200 <= start_status < 300:
+                  out.write_text(json.dumps({
+                      'request_id': 'splat-testflight-build-20260821',
+                      'ok': False,
+                      'status': 'start_failed',
+                      'http_status': start_status,
+                      'workflow_id': workflow_id,
+                      'branch': branch,
+                      'candidate_sha': candidate_sha,
+                  }, indent=2) + '\n', encoding='utf-8')
+                  raise SystemExit(f'Codemagic build start failed: HTTP {start_status}')
+              build_id = start.get('buildId') or start.get('id')
+              if not build_id:
+                  raise SystemExit('Codemagic did not return build id')
+              state = 'started'
+
+          out.write_text(json.dumps({
+              'request_id': 'splat-testflight-build-20260821',
+              'ok': True,
+              'status': state,
+              'codemagic_app_id': cm_app_id,
+              'workflow_id': workflow_id,
+              'branch': branch,
+              'candidate_sha': candidate_sha,
+              'build_id': build_id,
+              'reused': reused,
+              'app_store_connect_app_id': '6803778932',
+              'submit_to_app_store': False,
+          }, indent=2) + '\n', encoding='utf-8')
+          print(f'PASS: Codemagic TestFlight build {state}: {build_id}')
+          PY
+
+      - name: Persist sanitized build locator
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f /tmp/splat-testflight-build.json || exit 1
+          BRANCH='testflight/splat-native-ios-20260820'
+          RESULT_PATH='automation/codemagic-results/splat-testflight-build-20260821.json'
+          cp /tmp/splat-testflight-build.json /tmp/splat-testflight-build.saved.json
+          for attempt in 1 2 3; do
+            git fetch origin "$BRANCH"
+            git reset --hard FETCH_HEAD
+            mkdir -p "$(dirname "$RESULT_PATH")"
+            cp /tmp/splat-testflight-build.saved.json "$RESULT_PATH"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- "$RESULT_PATH"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'release: persist Splat TestFlight build locator'
+            if git push origin HEAD:"$BRANCH"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
