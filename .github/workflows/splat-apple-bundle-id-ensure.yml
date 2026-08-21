@@ -34,7 +34,8 @@ jobs:
 
           identifier = 'jp.allsunday1122.splatlab'
           name = 'Splat Lab Native'
-          platform = 'IOS'
+          create_platform = 'IOS'
+          accepted_platforms = {'IOS', 'UNIVERSAL'}
           request_id = 'splat-bundle-id-20260821-ensure'
           out = Path('/tmp/splat-bundle-id-result.json')
 
@@ -59,7 +60,7 @@ jobs:
                           'attributes': {
                               'identifier': identifier,
                               'name': name,
-                              'platform': platform,
+                              'platform': create_platform,
                           },
                       }
                   }
@@ -77,7 +78,7 @@ jobs:
                   raise RuntimeError(f'Bundle ID read-back expected exactly one match, got {len(exact)}')
               resource = exact[0]
               attrs = resource.get('attributes') or {}
-              if attrs.get('platform') != platform:
+              if attrs.get('platform') not in accepted_platforms:
                   raise RuntimeError(f'Bundle ID platform mismatch: {attrs.get("platform")!r}')
 
               result = {
