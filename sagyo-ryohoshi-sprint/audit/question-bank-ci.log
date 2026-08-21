@@ -1,5 +1,5 @@
 Traceback (most recent call last):
-  File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py", line 48, in <module>
+  File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py", line 62, in <module>
     bank.main()
   File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank.py", line 190, in main
     for src in build_sources():
@@ -7,10 +7,10 @@ Traceback (most recent call last):
   File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank.py", line 48, in build_sources
     am,pm,ans=pdf_links_from_page(pages[n])
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py", line 37, in pdf_links_from_page
+  File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py", line 51, in pdf_links_from_page
     return _original_pdf_links_from_page(page_url)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/sagyo-ryohoshi-sprint/tools/build_question_bank.py", line 29, in pdf_links_from_page
     if not header: raise RuntimeError(f'OT section not found: {page_url}')
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-RuntimeError: OT section not found: https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp240424-08_09.html
+RuntimeError: OT section not found: https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp220421-08_09.html
