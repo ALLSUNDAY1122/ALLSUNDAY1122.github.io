@@ -12,6 +12,10 @@ ICON_DIR="$SCRIPT_DIR/Resources/Assets.xcassets/AppIcon.appiconset"
 # rejects unpublished/unaudited items and near-duplicate stems.
 node "$SCRIPT_DIR/augment-to-264.cjs"
 
+# Difficulty gate: do not ship questions that can be solved by obvious dummy
+# choices, answer-length cues, or extreme wording without domain knowledge.
+node "$SCRIPT_DIR/audit/difficulty-audit-2026-08-21.cjs"
+
 python3 - "$INDEX" "$QUESTIONS" <<'PY'
 from pathlib import Path
 import collections, json, re, sys
