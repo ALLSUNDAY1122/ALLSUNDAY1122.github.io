@@ -5,6 +5,8 @@ on:
   push:
     paths:
       - 'kangoshi-sprint/ios/**'
+      - 'kangoshi-sprint/questions-runtime.js'
+      - 'kangoshi-sprint/audit-official-exam-difficulty.mjs'
       - 'kangoshi-sprint/product-content/enriched-draft/**'
       - 'kangoshi-sprint/product-content/scoring-runtime-audit.json'
       - 'kangoshi-sprint/media/**'
@@ -42,6 +44,8 @@ jobs:
           grep -q 'let session: StudySession' kangoshi-sprint/ios/Sources/QuizViews.swift
       - name: Validate privacy manifest
         run: plutil -lint kangoshi-sprint/ios/PrivacyInfo.xcprivacy
+      - name: Lock question difficulty to real national-exam provenance
+        run: node kangoshi-sprint/audit-official-exam-difficulty.mjs
       - name: Prepare canonical 720-question resources
         run: python3 kangoshi-sprint/ios/tools/prepare_native_content.py
       - name: Validate native resources
@@ -106,6 +110,7 @@ jobs:
             'productId':'jp.allsunday1122.kangoshi.monthly','questions':720,'examSets':3,
             'mediaAssets':38,'storeKit2CodeReady':True,'displayPriceFromStoreKit':True,
             'privacyManifest':True,'sessionDismissalSafetyGate':True,
+            'officialExamDifficultyProvenanceGate':True,
             'debugSimulatorBuild':True,'releaseSimulatorBuild':True,'pass':True
           },ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
