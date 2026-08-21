@@ -5,6 +5,7 @@ on:
     paths:
       - 'sagyo-ryohoshi-sprint/tools/build_question_bank.py'
       - 'sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py'
+      - 'sagyo-ryohoshi-sprint/tools/audit_difficulty.py'
       - 'sagyo-ryohoshi-sprint/audit/exam-config.json'
       - 'automation/learning-sprint-question-pipeline/validate_questions_v2.py'
       - '.github/workflows/ls16-question-bank-audit.yml'
@@ -13,6 +14,7 @@ on:
     paths:
       - 'sagyo-ryohoshi-sprint/tools/build_question_bank.py'
       - 'sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py'
+      - 'sagyo-ryohoshi-sprint/tools/audit_difficulty.py'
       - 'sagyo-ryohoshi-sprint/audit/exam-config.json'
       - 'automation/learning-sprint-question-pipeline/validate_questions_v2.py'
       - '.github/workflows/ls16-question-bank-audit.yml'
@@ -55,12 +57,20 @@ jobs:
           sagyo-ryohoshi-sprint/data/questions-r1.json
           sagyo-ryohoshi-sprint/data/questions-r2.json
           sagyo-ryohoshi-sprint/data/questions-r3.json
+      - name: Audit national-exam difficulty profile
+        if: steps.build.outcome == 'success'
+        run: >-
+          python sagyo-ryohoshi-sprint/tools/audit_difficulty.py
+          --out sagyo-ryohoshi-sprint/audit/difficulty-audit.json
+          sagyo-ryohoshi-sprint/data/questions-r1.json
+          sagyo-ryohoshi-sprint/data/questions-r2.json
+          sagyo-ryohoshi-sprint/data/questions-r3.json
       - name: Commit canonical output and audit evidence
         if: steps.build.outcome == 'success'
         run: |
           git config user.name 'LS16 Question Bank Bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add sagyo-ryohoshi-sprint/data/questions-r1.json sagyo-ryohoshi-sprint/data/questions-r2.json sagyo-ryohoshi-sprint/data/questions-r3.json sagyo-ryohoshi-sprint/audit/bank-audit.json
+          git add sagyo-ryohoshi-sprint/data/questions-r1.json sagyo-ryohoshi-sprint/data/questions-r2.json sagyo-ryohoshi-sprint/data/questions-r3.json sagyo-ryohoshi-sprint/audit/bank-audit.json sagyo-ryohoshi-sprint/audit/difficulty-audit.json
           if git diff --cached --quiet; then
             echo 'CANONICAL_NO_CHANGE'
           else
