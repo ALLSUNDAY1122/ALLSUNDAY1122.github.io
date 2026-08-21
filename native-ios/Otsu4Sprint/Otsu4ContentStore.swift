@@ -106,16 +106,11 @@ struct Otsu4ContentStore {
         let physicsPool = bank.questions.filter { $0.subject == "物理・化学" }
         let propertiesPool = bank.questions.filter { $0.subject == "性質・消火" }
 
-        let lawStart = (set - 1) * 15
-        let physicsStart = (set - 1) * 10
-        let propertiesStart = (set - 1) * 10
-        guard lawPool.count >= lawStart + 15,
-              physicsPool.count >= physicsStart + 10,
-              propertiesPool.count >= propertiesStart + 10 else { return nil }
-
-        let law = Array(lawPool[lawStart..<(lawStart + 15)])
-        let physics = Array(physicsPool[physicsStart..<(physicsStart + 10)])
-        let properties = Array(propertiesPool[propertiesStart..<(propertiesStart + 10)])
+        guard let law = Self.balancedMockSlice(lawPool, set: set, count: 15, hardCount: 5, salt: "law"),
+              let physics = Self.balancedMockSlice(physicsPool, set: set, count: 10, hardCount: 3, salt: "physics"),
+              let properties = Self.balancedMockSlice(propertiesPool, set: set, count: 10, hardCount: 3, salt: "properties") else {
+            return nil
+        }
         return law + physics + properties
     }
 
@@ -124,6 +119,42 @@ struct Otsu4ContentStore {
         guard sets.count == mockSetCount else { return false }
         let ids = sets.flatMap { $0.map(\.id) }
         return ids.count == Set(ids).count
+    }
+
+    private static func balancedMockSlice(
+        _ pool: [Otsu4Question],
+        set: Int,
+        count: Int,
+        hardCount: Int,
+        salt: String
+    ) -> [Otsu4Question]? {
+        let normalCount = count - hardCount
+        let hard = pool
+            .filter { $0.difficulty >= 3 }
+            .sorted { stableRank($0.id, salt: salt + "-hard") < stableRank($1.id, salt: salt + "-hard") }
+        let normal = pool
+            .filter { $0.difficulty < 3 }
+            .sorted { stableRank($0.id, salt: salt + "-normal") < stableRank($1.id, salt: salt + "-normal") }
+
+        let hardStart = (set - 1) * hardCount
+        let normalStart = (set - 1) * normalCount
+        guard hard.count >= hardStart + hardCount,
+              normal.count >= normalStart + normalCount else { return nil }
+
+        let selected = Array(hard[hardStart..<(hardStart + hardCount)])
+            + Array(normal[normalStart..<(normalStart + normalCount)])
+        return selected.sorted {
+            stableRank($0.id, salt: salt + "-set-\(set)") < stableRank($1.id, salt: salt + "-set-\(set)")
+        }
+    }
+
+    private static func stableRank(_ text: String, salt: String) -> UInt64 {
+        var hash: UInt64 = 1_469_598_103_934_665_603
+        for byte in (salt + "|" + text).utf8 {
+            hash ^= UInt64(byte)
+            hash &*= 1_099_511_628_211
+        }
+        return hash
     }
 
     private static func sprintAllocation(for goal: Int) -> (law: Int, physics: Int, properties: Int) {
@@ -151,6 +182,7 @@ struct Otsu4ContentStore {
                   q.choices.count == 5,
                   Set(q.choices).count == 5,
                   (0..<5).contains(q.answer),
+                  (2...3).contains(q.difficulty),
                   !q.question.isEmpty,
                   !q.point.isEmpty,
                   !q.detail.isEmpty,
