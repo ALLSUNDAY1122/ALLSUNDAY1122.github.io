@@ -10,6 +10,7 @@ from pathlib import Path
 EXPECTED_YEARS = (2025, 2024, 2023)
 EXPECTED_OCCURRENCES = 75
 EXPECTED_UNIQUE = 68
+MIN_EXAM_DIFFICULTY_OVERRIDES = 40
 
 
 def extract_json_assignment(text: str, name: str):
@@ -42,6 +43,21 @@ def read_ui_fix(path: Path) -> tuple[set[str], str] | None:
         return None
     ids = set(re.findall(r"'((?:NW-)[^']+)'", text))
     return ids, target.group(1)
+
+
+def read_difficulty_overrides(path: Path) -> dict:
+    if not path.exists():
+        raise ValueError("questions-difficulty-overrides.js is required")
+    text = path.read_text(encoding="utf-8")
+    match = re.search(r"window\.NW_DIFFICULTY_OVERRIDES\s*=\s*(\{.*?\});\s*\nfor\(", text, re.S)
+    if not match:
+        raise ValueError("Could not parse NW_DIFFICULTY_OVERRIDES")
+    overrides = json.loads(match.group(1))
+    if len(overrides) < MIN_EXAM_DIFFICULTY_OVERRIDES:
+        raise ValueError(
+            f"difficulty overrides={len(overrides)}, expected >= {MIN_EXAM_DIFFICULTY_OVERRIDES}"
+        )
+    return overrides
 
 
 def write_embedded_swift(payload: dict, output: Path) -> None:
@@ -78,6 +94,15 @@ def build(root: Path, output: Path, swift_output: Path) -> dict:
     for path in sorted(root.glob("questions-20??-*.js"), reverse=True):
         questions.extend(extract_question_array(path.read_text(encoding="utf-8"), path))
 
+    overrides = read_difficulty_overrides(root / "questions-difficulty-overrides.js")
+    by_id = {q["id"]: q for q in questions}
+    unknown = sorted(set(overrides) - set(by_id))
+    if unknown:
+        raise ValueError(f"difficulty overrides reference unknown IDs: {unknown}")
+    for question_id, patch in overrides.items():
+        by_id[question_id].update(patch)
+        by_id[question_id]["difficultyLevel"] = "NW_A2_EXAM"
+
     fix = read_ui_fix(root / "questions-ui-fixes.js")
     if fix:
         ids, target = fix
@@ -88,8 +113,6 @@ def build(root: Path, output: Path, swift_output: Path) -> dict:
     for question in questions:
         question["sourceAttribution"] = "IPA公開問題を基に改変。解説は独自制作。"
 
-    # The current #7 canonical sources do not define a sourceCheckedAt or
-    # lawBaselineDate value. Preserve the schema without inventing dates.
     payload = {
         "schemaVersion": 1,
         "contentVersion": content_version,
@@ -135,11 +158,17 @@ def validate(payload: dict) -> None:
                 raise ValueError(f"{question.get('id', '?')} missing {key}")
         if len(question["choices"]) != 4:
             raise ValueError(f"{question['id']} choices != 4")
+        if len(set(question["choices"])) != 4:
+            raise ValueError(f"{question['id']} duplicate choices")
         if not 0 <= int(question["answerIndex"]) < 4:
             raise ValueError(f"{question['id']} invalid answerIndex")
         for key in ("question", "memoryLine", "shortExplanation", "detailExplanation"):
             if not str(question[key]).strip():
                 raise ValueError(f"{question['id']} empty {key}")
+
+    hard_count = sum(1 for q in questions if q.get("difficultyLevel") == "NW_A2_EXAM")
+    if hard_count < MIN_EXAM_DIFFICULTY_OVERRIDES:
+        raise ValueError(f"exam-level audited questions={hard_count}, expected >= {MIN_EXAM_DIFFICULTY_OVERRIDES}")
 
 
 def main() -> None:
@@ -163,6 +192,7 @@ def main() -> None:
         {
             "occurrences": len(payload["questions"]),
             "unique": len(payload["uniqueIDs"]),
+            "examLevelAudited": sum(1 for q in payload["questions"] if q.get("difficultyLevel") == "NW_A2_EXAM"),
             "output": str(args.output),
             "swiftOutput": str(args.swift_output),
         },
