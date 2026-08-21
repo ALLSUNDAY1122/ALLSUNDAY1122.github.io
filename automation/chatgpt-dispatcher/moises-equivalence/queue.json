@@ -130,7 +130,7 @@
     },
     {
       "task_id": "MOI-AN-001",
-      "status": "CLAIMED",
+      "status": "INTEGRATION_READY",
       "priority": 90,
       "owner_role": "POOL",
       "capability_tags": ["music-analysis", "research", "benchmark"],
@@ -144,10 +144,18 @@
       "claimed_by": "Moises-Worker-2",
       "claim_token": "moises-worker-2-moi-an-001-epoch1-20260822T0735JST",
       "claim_epoch": 1,
-      "lease_expires_at": "2026-08-22T09:05:00+09:00",
-      "heartbeat_at": "2026-08-22T07:35:00+09:00",
+      "lease_expires_at": null,
+      "heartbeat_at": "2026-08-22T07:38:00+09:00",
       "attempt_branch": "task/MOI-AN-001/attempt-1",
-      "evidence": []
+      "evidence": [
+        "attempt branch task/MOI-AN-001/attempt-1",
+        "commit 87f5fe1ecd1c7d018e3638c5d16c7f803646832d compares BPM/key/chord/song-part candidates and commercial constraints",
+        "commit 98a143f278c2890d94525d8fec6071be1417abe1 defines rights-aware real-audio fixture strategy, datasets and canonical error metrics",
+        "compare claim baseline b9d1b02... -> attempt branch: ahead by 2, behind by 0; changed only declared write_scope",
+        "selected product baseline: project-owned DSP contracts with permissive librosa reference; MSAF MIT as structure research baseline; mir_eval MIT as canonical evaluator",
+        "Essentia/madmom/aubio/libKeyFinder and All-In-One dependency/model constraints remain explicitly documented rather than inferred as commercially shippable",
+        "MOI-P009/MOI-P011/MOI-P013/MOI-P016 remain MISSING; no PARITY state was raised"
+      ]
     },
     {
       "task_id": "MOI-REF-002",
