@@ -1,0 +1,45 @@
+name: Toru Tango Screenshot Status
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  actions: read
+  issues: write
+  contents: read
+
+jobs:
+  status:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[TT-SHOT-STATUS]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read latest screenshot capture runs
+        id: read
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/$REPO/actions/workflows/toru-tango-appstore-screenshots.yml/runs?per_page=5" \
+            --jq '{runs:[.workflow_runs[]|{id,status,conclusion,event,head_sha,created_at,updated_at,html_url}]}' \
+            > /tmp/runs.json
+          cat /tmp/runs.json
+          echo 'payload<<EOF' >> "$GITHUB_OUTPUT"
+          cat /tmp/runs.json >> "$GITHUB_OUTPUT"
+          echo 'EOF' >> "$GITHUB_OUTPUT"
+      - name: Comment status
+        uses: actions/github-script@v8
+        env:
+          PAYLOAD: ${{ steps.read.outputs.payload }}
+        with:
+          script: |
+            const data = JSON.parse(process.env.PAYLOAD || '{"runs":[]}');
+            const lines = data.runs.map(r => `- run_id=${r.id} status=${r.status} conclusion=${r.conclusion ?? 'null'} event=${r.event} head_sha=${r.head_sha}`);
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Toru Tango screenshot workflow status\n${lines.length ? lines.join('\n') : '- no runs found'}`
+            });
