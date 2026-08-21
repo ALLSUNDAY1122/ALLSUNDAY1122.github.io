@@ -1,0 +1,185 @@
+name: Splat Apple Signing Profile Ensure
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260820'
+    paths:
+      - '.github/workflows/splat-apple-signing-profile-ensure.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  ensure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install JWT dependency
+        run: python -m pip install --disable-pip-version-check PyJWT cryptography
+
+      - name: Ensure canonical Splat App Store profile
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, tempfile, time, urllib.error, urllib.request
+          from pathlib import Path
+          import jwt
+
+          bundle_resource_id = '6AWU9TD858'
+          bundle_identifier = 'jp.allsunday1122.splatlab'
+          certificate_id = 'K2A3VCP583'
+          profile_name = 'splatlab_appstore'
+          profile_type = 'IOS_APP_STORE'
+          out = Path('/tmp/splat-profile.json')
+
+          issuer = os.environ.get('ASC_ISSUER_ID','').strip()
+          key_id = os.environ.get('ASC_KEY_ID','').strip()
+          private_key = os.environ.get('ASC_PRIVATE_KEY','').replace('\\n','\n').strip()
+          if not issuer or not key_id or 'PRIVATE KEY' not in private_key:
+              raise SystemExit('missing App Store Connect API credentials')
+
+          now = int(time.time())
+          token = jwt.encode(
+              {'iss': issuer, 'iat': now - 5, 'exp': now + 900, 'aud': 'appstoreconnect-v1'},
+              private_key,
+              algorithm='ES256',
+              headers={'kid': key_id, 'typ': 'JWT'},
+          )
+
+          def api(method, path, payload=None):
+              body = None if payload is None else json.dumps(payload,separators=(',',':')).encode('utf-8')
+              req = urllib.request.Request(
+                  'https://api.appstoreconnect.apple.com' + path,
+                  data=body,
+                  method=method,
+                  headers={'Authorization':f'Bearer {token}','Accept':'application/json','Content-Type':'application/json'},
+              )
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode('utf-8')
+                      return r.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode('utf-8','replace')
+                  try: parsed=json.loads(raw) if raw else {}
+                  except json.JSONDecodeError: parsed={'raw':raw[:1000]}
+                  return e.code, parsed
+
+          def data_list(payload):
+              data=payload.get('data') if isinstance(payload,dict) else None
+              if isinstance(data,list): return data
+              if isinstance(data,dict): return [data]
+              return []
+
+          def attrs(resource):
+              a=resource.get('attributes') if isinstance(resource,dict) else None
+              return a if isinstance(a,dict) else {}
+
+          # Verify exact bundle and certificate exist before any write.
+          s,bundle=api('GET',f'/v1/bundleIds/{bundle_resource_id}')
+          if s != 200 or attrs(data_list(bundle)[0]).get('identifier') != bundle_identifier:
+              raise SystemExit('bundle preflight mismatch')
+          s,cert=api('GET',f'/v1/certificates/{certificate_id}')
+          cert_data=data_list(cert)
+          if s != 200 or not cert_data or attrs(cert_data[0]).get('activated') is False:
+              raise SystemExit('certificate preflight mismatch')
+
+          s,profiles=api('GET',f'/v1/bundleIds/{bundle_resource_id}/profiles?limit=200')
+          if s != 200:
+              raise SystemExit(f'profile inventory failed HTTP {s}')
+          matching=[]
+          for p in data_list(profiles):
+              a=attrs(p)
+              if a.get('name') == profile_name and a.get('profileType') == profile_type and a.get('profileState') == 'ACTIVE':
+                  matching.append(p)
+          changed=False
+          create_http_status=None
+          if len(matching) > 1:
+              raise SystemExit('duplicate active canonical profiles found')
+          if not matching:
+              payload={
+                  'data':{
+                      'type':'profiles',
+                      'attributes':{'name':profile_name,'profileType':profile_type},
+                      'relationships':{
+                          'bundleId':{'data':{'type':'bundleIds','id':bundle_resource_id}},
+                          'certificates':{'data':[{'type':'certificates','id':certificate_id}]},
+                      },
+                  }
+              }
+              create_http_status,created=api('POST','/v1/profiles',payload)
+              if create_http_status != 201:
+                  raise SystemExit(f'profile create failed HTTP {create_http_status}: {str(created)[:700]}')
+              created_data=data_list(created)
+              if len(created_data) != 1:
+                  raise SystemExit('profile create returned no unique resource')
+              matching=created_data
+              changed=True
+
+          profile_id=str(matching[0].get('id'))
+          s,profile=api('GET',f'/v1/profiles/{profile_id}')
+          pitems=data_list(profile)
+          if s != 200 or len(pitems) != 1:
+              raise SystemExit('profile read-back failed')
+          pa=attrs(pitems[0])
+          if pa.get('name') != profile_name or pa.get('profileType') != profile_type or pa.get('profileState') != 'ACTIVE':
+              raise SystemExit('profile attribute read-back mismatch')
+          s,pbundle=api('GET',f'/v1/profiles/{profile_id}/bundleId')
+          bitems=data_list(pbundle)
+          if s != 200 or len(bitems) != 1 or str(bitems[0].get('id')) != bundle_resource_id:
+              raise SystemExit('profile bundle read-back mismatch')
+          s,rels=api('GET',f'/v1/profiles/{profile_id}/relationships/certificates?limit=200')
+          cert_ids={str(x.get('id')) for x in data_list(rels) if x.get('id')}
+          if s != 200 or certificate_id not in cert_ids:
+              raise SystemExit('profile certificate read-back mismatch')
+
+          result={
+              'request_id':'splat-apple-signing-profile-ensure-20260821',
+              'ok':True,
+              'status':'created' if changed else 'already_exists',
+              'changed':changed,
+              'create_http_status':create_http_status,
+              'bundle_identifier':bundle_identifier,
+              'bundle_resource_id':bundle_resource_id,
+              'certificate_id':certificate_id,
+              'profile_id':profile_id,
+              'profile_name':pa.get('name'),
+              'profile_type':pa.get('profileType'),
+              'profile_state':pa.get('profileState'),
+              'profile_expiration':pa.get('expirationDate'),
+          }
+          out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(f'PASS: Splat App Store profile {result["status"]}')
+          PY
+
+      - name: Persist sanitized Apple profile result
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f /tmp/splat-profile.json || exit 1
+          BRANCH='testflight/splat-native-ios-20260820'
+          RESULT_PATH='automation/app-store-connect-results/splat-signing-profile-20260821.json'
+          cp /tmp/splat-profile.json /tmp/splat-profile.saved.json
+          for attempt in 1 2 3; do
+            git fetch origin "$BRANCH"
+            git reset --hard FETCH_HEAD
+            mkdir -p "$(dirname "$RESULT_PATH")"
+            cp /tmp/splat-profile.saved.json "$RESULT_PATH"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- "$RESULT_PATH"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'release: persist Splat Apple signing profile result'
+            if git push origin HEAD:"$BRANCH"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
