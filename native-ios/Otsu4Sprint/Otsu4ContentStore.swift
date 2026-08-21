@@ -106,9 +106,9 @@ struct Otsu4ContentStore {
         let physicsPool = bank.questions.filter { $0.subject == "物理・化学" }
         let propertiesPool = bank.questions.filter { $0.subject == "性質・消火" }
 
-        guard let law = Self.balancedMockSlice(lawPool, set: set, count: 15, hardCount: 5, salt: "law"),
-              let physics = Self.balancedMockSlice(physicsPool, set: set, count: 10, hardCount: 3, salt: "physics"),
-              let properties = Self.balancedMockSlice(propertiesPool, set: set, count: 10, hardCount: 3, salt: "properties") else {
+        guard let law = Self.lawMockSlice(lawPool, set: set),
+              let physics = Self.physicsMockSlice(physicsPool, set: set),
+              let properties = Self.propertiesMockSlice(propertiesPool, set: set) else {
             return nil
         }
         return law + physics + properties
@@ -121,31 +121,59 @@ struct Otsu4ContentStore {
         return ids.count == Set(ids).count
     }
 
-    private static func balancedMockSlice(
+    private static func lawMockSlice(_ pool: [Otsu4Question], set: Int) -> [Otsu4Question]? {
+        let hard = pool.filter { $0.difficulty >= 3 }
+        let knowledge = pool.filter { $0.difficulty < 3 && $0.topic.contains("指定数量") }
+        let rule = pool.filter { $0.difficulty < 3 && !$0.topic.contains("指定数量") }
+        guard let hardPart = take(hard, set: set, count: 5, salt: "law-hard"),
+              let knowledgePart = take(knowledge, set: set, count: 2, salt: "law-knowledge"),
+              let rulePart = take(rule, set: set, count: 8, salt: "law-rule") else { return nil }
+        return ordered(hardPart + knowledgePart + rulePart, salt: "law-set-\(set)")
+    }
+
+    private static func physicsMockSlice(_ pool: [Otsu4Question], set: Int) -> [Otsu4Question]? {
+        let mechanismTopics: Set<String> = [
+            "冷却消火", "窒息消火", "除去消火", "抑制消火",
+            "泡消火", "二酸化炭素消火", "粉末消火", "静電気", "接地"
+        ]
+        let hard = pool.filter { $0.difficulty >= 3 }
+        let mechanism = pool.filter { $0.difficulty < 3 && mechanismTopics.contains($0.topic) }
+        let concept = pool.filter { $0.difficulty < 3 && !mechanismTopics.contains($0.topic) }
+        guard let hardPart = take(hard, set: set, count: 3, salt: "physics-hard"),
+              let conceptPart = take(concept, set: set, count: 5, salt: "physics-concept"),
+              let mechanismPart = take(mechanism, set: set, count: 2, salt: "physics-mechanism") else { return nil }
+        return ordered(hardPart + conceptPart + mechanismPart, salt: "physics-set-\(set)")
+    }
+
+    private static func propertiesMockSlice(_ pool: [Otsu4Question], set: Int) -> [Otsu4Question]? {
+        let hardClassification = pool.filter { $0.difficulty >= 3 && $0.topic == "石油類区分" }
+        let hardApplication = pool.filter { $0.difficulty >= 3 && ($0.topic == "指定数量応用" || $0.topic == "比較応用") }
+        let normalClassification = pool.filter { $0.difficulty < 3 && $0.topic == "品名分類" }
+        let normalResponse = pool.filter { $0.difficulty < 3 && $0.topic != "品名分類" }
+        guard let hardClassificationPart = take(hardClassification, set: set, count: 1, salt: "properties-hard-classification"),
+              let hardApplicationPart = take(hardApplication, set: set, count: 2, salt: "properties-hard-application"),
+              let normalClassificationPart = take(normalClassification, set: set, count: 2, salt: "properties-normal-classification"),
+              let normalResponsePart = take(normalResponse, set: set, count: 5, salt: "properties-response") else { return nil }
+        return ordered(
+            hardClassificationPart + hardApplicationPart + normalClassificationPart + normalResponsePart,
+            salt: "properties-set-\(set)"
+        )
+    }
+
+    private static func take(
         _ pool: [Otsu4Question],
         set: Int,
         count: Int,
-        hardCount: Int,
         salt: String
     ) -> [Otsu4Question]? {
-        let normalCount = count - hardCount
-        let hard = pool
-            .filter { $0.difficulty >= 3 }
-            .sorted { stableRank($0.id, salt: salt + "-hard") < stableRank($1.id, salt: salt + "-hard") }
-        let normal = pool
-            .filter { $0.difficulty < 3 }
-            .sorted { stableRank($0.id, salt: salt + "-normal") < stableRank($1.id, salt: salt + "-normal") }
+        let sorted = ordered(pool, salt: salt)
+        let start = (set - 1) * count
+        guard sorted.count >= start + count else { return nil }
+        return Array(sorted[start..<(start + count)])
+    }
 
-        let hardStart = (set - 1) * hardCount
-        let normalStart = (set - 1) * normalCount
-        guard hard.count >= hardStart + hardCount,
-              normal.count >= normalStart + normalCount else { return nil }
-
-        let selected = Array(hard[hardStart..<(hardStart + hardCount)])
-            + Array(normal[normalStart..<(normalStart + normalCount)])
-        return selected.sorted {
-            stableRank($0.id, salt: salt + "-set-\(set)") < stableRank($1.id, salt: salt + "-set-\(set)")
-        }
+    private static func ordered(_ pool: [Otsu4Question], salt: String) -> [Otsu4Question] {
+        pool.sorted { stableRank($0.id, salt: salt) < stableRank($1.id, salt: salt) }
     }
 
     private static func stableRank(_ text: String, salt: String) -> UInt64 {
