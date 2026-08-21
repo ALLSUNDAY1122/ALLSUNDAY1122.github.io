@@ -1,0 +1,616 @@
+{
+  "request_id": "splat-testflight-failure-diagnostic-metal-20260821",
+  "ok": true,
+  "build_id": "6a87f7dd2108df402e79beb5",
+  "build_status": "failed",
+  "expected_commit": "8a418ee8d50120aa2541d8734c16c41bfebf2b41",
+  "actual_commit": "8a418ee8d50120aa2541d8734c16c41bfebf2b41",
+  "artifact_files": [
+    {
+      "name": "SplatNative.log",
+      "size": 1501425
+    }
+  ],
+  "diagnostic_lines": [
+    {
+      "file": "SplatNative.log",
+      "line_number": 2957,
+      "line": "    builtin-swiftHeaderTool -arch arm64 /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/PLYIO.build/Objects-normal/arm64/PLYIO-Swift.h -o /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/GeneratedModuleMaps-iphoneos/PLYIO-Swift.h"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2959,
+      "line": "Copy /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PLYIO.swiftmodule/arm64-apple-ios.swiftdoc /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/PLYIO.build/Objects-normal/arm64/PLYIO.swiftdoc (in target 'PLYIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2960,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2961,
+      "line": "    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/PLYIO.build/Objects-normal/arm64/PLYIO.swiftdoc /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PLYIO.swiftmodule/arm64-apple-ios.swiftdoc"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2963,
+      "line": "Copy /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PLYIO.swiftmodule/arm64-apple-ios.swiftmodule /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/PLYIO.build/Objects-normal/arm64/PLYIO.swiftmodule (in target 'PLYIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2964,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2965,
+      "line": "    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/PLYIO.build/Objects-normal/arm64/PLYIO.swiftmodule /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PLYIO.swiftmodule/arm64-apple-ios.swiftmodule"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2967,
+      "line": "Copy /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PLYIO.swiftmodule/arm64-apple-ios.abi.json /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/PLYIO.build/Objects-normal/arm64/PLYIO.abi.json (in target 'PLYIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2968,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2969,
+      "line": "    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/PLYIO.build/Objects-normal/arm64/PLYIO.abi.json /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PLYIO.swiftmodule/arm64-apple-ios.abi.json"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2971,
+      "line": "Ld /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/PLYIO.o normal (in target 'PLYIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2972,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2973,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios18.0 -r -isysroot /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -Os -w -F/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/EagerLinkingTBDs/Release-iphoneos -F/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos -iframework /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/Frameworks -iframework /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk/Developer/Library/Frameworks -filelist /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/PLYIO.build/Objects-normal/arm64/PLYIO.LinkFileList -nostdlib -Xlinker -object_path_lto -Xlinker /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/PLYIO.build/Objects-normal/arm64/PLYIO_lto.o -Xlinker -dependency_info -Xlinker /Users/[USER]/Library/Develope…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2975,
+      "line": "SwiftDriver SplatIO normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2977,
+      "line": "    builtin-SwiftDriver -- /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SplatIO -O -whole-module-optimization @/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/SplatIO.SwiftFileList -DSWIFT_PACKAGE -DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -DXcode -plugin-path /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -target arm64-apple-ios18.0 -g -module-cache-path /Users/[USER]/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -suppress-warnings -swift-version 6 -I /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos -Isystem /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib -F /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PackageFrameworks -F /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrc…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2979,
+      "line": "ExtractAppIntentsMetadata (in target 'PLYIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2980,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2981,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.5.188.0.7apCKk/Metal.xctoolchain --module-name PLYIO --sdk-root /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk --xcode-version 17E202 --platform-family iOS --deployment-target 18.0 --bundle-identifier metalsplatter.PLYIO --output /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/PLYIO.appintents --target-triple arm64-apple-ios18.0 --binary-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/PLYIO.o --dependency-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/PLYIO.build/Objects-normal/arm64/PLYIO_dependency_info.dat --stringsdata-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/PLYIO.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.strin…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2985,
+      "line": "SetOwnerAndGroup builder:staff /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/PLYIO.o (in target 'PLYIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2986,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2989,
+      "line": "SetMode u+w,go-w,a+rX /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/PLYIO.o (in target 'PLYIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2990,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2993,
+      "line": "RegisterExecutionPolicyException /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/PLYIO.o (in target 'PLYIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2994,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2997,
+      "line": "SwiftDriver\\ Compilation SplatIO normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 2999,
+      "line": "    builtin-Swift-Compilation -- /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SplatIO -O -whole-module-optimization @/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/SplatIO.SwiftFileList -DSWIFT_PACKAGE -DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -DXcode -plugin-path /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -target arm64-apple-ios18.0 -g -module-cache-path /Users/[USER]/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -suppress-warnings -swift-version 6 -I /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos -Isystem /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib -F /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PackageFrameworks -F /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiyc…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3003,
+      "line": "SwiftCompile normal arm64 Compiling\\ AutodetectSceneReader.swift,\\ Comparable+clamped.swift,\\ DotSplatEncodedPoint.swift,\\ DotSplatSceneReader.swift,\\ DotSplatSceneWriter.swift,\\ SPZSceneReader.swift,\\ SPZSceneWriter.swift,\\ SplatFileFormat.swift,\\ SplatMemoryBuffer.swift,\\ SplatPLYConstants.swift,\\ SplatPLYSceneReader.swift,\\ SplatPLYSceneWriter.swift,\\ SplatPoint+CustomStringConvertible.swift,\\ SplatPoint.swift,\\ SplatSceneReader.swift,\\ SplatSceneWriter.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter/SplatIO/Sources/AutodetectSceneReader.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter/SplatIO/Sources/Comparable+clamped.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter/SplatIO/Sources/DotSplatEncodedPoint.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter/SplatIO/Sources/DotSplatSceneReader.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter/SplatIO/Sources/DotSplatSceneWriter.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter/SplatIO/Sources/SPZSceneReader.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackage…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3004,
+      "line": "CompileSwift normal arm64 (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3056,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.5.188.0.7apCKk/Metal.xctoolchain --module-name Helpers --sdk-root /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk --xcode-version 17E202 --platform-family iOS --deployment-target 16.0 --bundle-identifier supabase-swift.Helpers --output /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Helpers.appintents --target-triple arm64-apple-ios16.0 --binary-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Helpers.o --dependency-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/Helpers.build/Objects-normal/arm64/Helpers_dependency_info.dat --stringsdata-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/Helpers.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3100,
+      "line": "SwiftCompile normal arm64 Compiling\\ CallbackManager.swift,\\ ChannelEvent.swift,\\ ChannelStateManager.swift,\\ ConnectionManager.swift,\\ Exports.swift,\\ PostgresAction.swift,\\ PostgresActionData.swift,\\ PresenceAction.swift,\\ PushV2.swift,\\ RealtimeChannel+AsyncAwait.swift,\\ RealtimeChannel+Status.swift,\\ RealtimeChannelV2.swift,\\ RealtimeClient+HeartbeatStatus.swift,\\ RealtimeClient+Status.swift,\\ RealtimeClientV2.swift,\\ RealtimeError.swift,\\ RealtimeJoinConfig.swift,\\ RealtimeLifecycleManager.swift,\\ RealtimeMessageV2.swift,\\ RealtimePostgresFilter.swift,\\ RealtimePostgresFilterValue.swift,\\ RealtimeSerializer.swift,\\ Types.swift,\\ URLSessionWebSocket.swift,\\ WebSocket.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/RealtimeV2/CallbackManager.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/RealtimeV2/ChannelEvent.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/RealtimeV2/ChannelStateManager.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/RealtimeV2/ConnectionManager.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/RealtimeV2/Exports.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNati…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3115,
+      "line": "SwiftCompile normal arm64 Compiling\\ AuthAdmin.swift,\\ AuthAdminOAuth.swift,\\ AuthClient.swift,\\ AuthClientConfiguration.swift,\\ AuthError.swift,\\ AuthMFA.swift,\\ AuthOAuthServer.swift,\\ AuthStateChangeListener.swift,\\ Defaults.swift,\\ Deprecated.swift,\\ Exports.swift,\\ APIClient.swift,\\ CodeVerifierStorage.swift,\\ Constants.swift,\\ Dependencies.swift,\\ EventEmitter.swift,\\ FixedWidthInteger+Random.swift,\\ Helpers.swift,\\ JWK+RSA.swift,\\ JWTAlgorithm.swift,\\ Keychain.swift,\\ PKCE.swift,\\ SessionManager.swift,\\ SessionStorage.swift,\\ URLOpener.swift,\\ AuthLocalStorage.swift,\\ KeychainLocalStorage.swift,\\ WinCredLocalStorage.swift,\\ Types.swift,\\ AuthAdmin+Passkey.swift,\\ AuthClient+Passkey.swift,\\ AuthMFA+WebAuthn.swift,\\ WebAuthnAuthenticator.swift,\\ WebAuthnTypes.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Auth/AuthAdmin.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Auth/AuthAdminOAuth.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Auth/AuthClient.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Auth/AuthClientConfiguration.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Auth/AuthError.swift…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3120,
+      "line": "SwiftDriverJobDiscovery normal arm64 Compiling AutodetectSceneReader.swift, Comparable+clamped.swift, DotSplatEncodedPoint.swift, DotSplatSceneReader.swift, DotSplatSceneWriter.swift, SPZSceneReader.swift, SPZSceneWriter.swift, SplatFileFormat.swift, SplatMemoryBuffer.swift, SplatPLYConstants.swift, SplatPLYSceneReader.swift, SplatPLYSceneWriter.swift, SplatPoint+CustomStringConvertible.swift, SplatPoint.swift, SplatSceneReader.swift, SplatSceneWriter.swift (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3122,
+      "line": "SwiftDriver\\ Compilation\\ Requirements SplatIO normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3124,
+      "line": "    builtin-Swift-Compilation-Requirements -- /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SplatIO -O -whole-module-optimization @/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/SplatIO.SwiftFileList -DSWIFT_PACKAGE -DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -DXcode -plugin-path /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -target arm64-apple-ios18.0 -g -module-cache-path /Users/[USER]/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -suppress-warnings -swift-version 6 -I /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos -Isystem /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib -F /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PackageFrameworks -F /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsv…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3126,
+      "line": "SwiftMergeGeneratedHeaders /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/GeneratedModuleMaps-iphoneos/SplatIO-Swift.h /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/SplatIO-Swift.h (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3127,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3128,
+      "line": "    builtin-swiftHeaderTool -arch arm64 /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/SplatIO-Swift.h -o /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/GeneratedModuleMaps-iphoneos/SplatIO-Swift.h"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3130,
+      "line": "Copy /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/SplatIO.swiftmodule/arm64-apple-ios.swiftdoc /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/SplatIO.swiftdoc (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3131,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3132,
+      "line": "    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/SplatIO.swiftdoc /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/SplatIO.swiftmodule/arm64-apple-ios.swiftdoc"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3134,
+      "line": "Copy /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/SplatIO.swiftmodule/arm64-apple-ios.swiftmodule /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/SplatIO.swiftmodule (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3135,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3136,
+      "line": "    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/SplatIO.swiftmodule /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/SplatIO.swiftmodule/arm64-apple-ios.swiftmodule"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3138,
+      "line": "Copy /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/SplatIO.swiftmodule/arm64-apple-ios.abi.json /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/SplatIO.abi.json (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3139,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3140,
+      "line": "    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/SplatIO.abi.json /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/SplatIO.swiftmodule/arm64-apple-ios.abi.json"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3142,
+      "line": "Ld /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/SplatIO.o normal (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3143,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3144,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios18.0 -r -isysroot /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -Os -w -F/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/EagerLinkingTBDs/Release-iphoneos -F/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PackageFrameworks -F/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PackageFrameworks -F/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos -iframework /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/Frameworks -iframework /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk/Developer/Library/Frameworks -filelist /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.b…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3146,
+      "line": "SwiftDriver MetalSplatter normal arm64 com.apple.xcode.tools.swift.compiler (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3148,
+      "line": "    builtin-SwiftDriver -- /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name MetalSplatter -O -whole-module-optimization @/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/Objects-normal/arm64/MetalSplatter.SwiftFileList -DSWIFT_PACKAGE -DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE -DXcode -plugin-path /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -target arm64-apple-ios18.0 -g -module-cache-path /Users/[USER]/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -suppress-warnings -swift-version 6 -I /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos -Isystem /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib -F /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PackageFrameworks -F /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmo…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3150,
+      "line": "ExtractAppIntentsMetadata (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3151,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3152,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.5.188.0.7apCKk/Metal.xctoolchain --module-name SplatIO --sdk-root /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk --xcode-version 17E202 --platform-family iOS --deployment-target 18.0 --bundle-identifier metalsplatter.SplatIO --output /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/SplatIO.appintents --target-triple arm64-apple-ios18.0 --binary-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/SplatIO.o --dependency-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/SplatIO_dependency_info.dat --stringsdata-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/SplatIO.build/Objects-normal/arm64/ExtractedAppShortcuts…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3156,
+      "line": "SetOwnerAndGroup builder:staff /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/SplatIO.o (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3157,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3160,
+      "line": "SetMode u+w,go-w,a+rX /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/SplatIO.o (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3161,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3164,
+      "line": "RegisterExecutionPolicyException /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/SplatIO.o (in target 'SplatIO' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3165,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3196,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.5.188.0.7apCKk/Metal.xctoolchain --module-name Functions --sdk-root /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk --xcode-version 17E202 --platform-family iOS --deployment-target 16.0 --bundle-identifier supabase-swift.Functions --output /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Functions.appintents --target-triple arm64-apple-ios16.0 --binary-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Functions.o --dependency-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/Functions.build/Objects-normal/arm64/Functions_dependency_info.dat --stringsdata-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/Functions.build/Objects-normal/arm64/ExtractedAppShor…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3212,
+      "line": "SwiftDriver\\ Compilation MetalSplatter normal arm64 com.apple.xcode.tools.swift.compiler (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3214,
+      "line": "    builtin-Swift-Compilation -- /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name MetalSplatter -O -whole-module-optimization @/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/Objects-normal/arm64/MetalSplatter.SwiftFileList -DSWIFT_PACKAGE -DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE -DXcode -plugin-path /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -target arm64-apple-ios18.0 -g -module-cache-path /Users/[USER]/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -suppress-warnings -swift-version 6 -I /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos -Isystem /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib -F /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PackageFrameworks -F /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dv…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3218,
+      "line": "SwiftExplicitDependencyGeneratePcm arm64 /Users/[USER]/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/MetalKit-4MIG3J483R9LCDM45BRORMOKL.pcm"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3220,
+      "line": "SwiftCompile normal arm64 Compiling\\ resource_bundle_accessor.swift,\\ EncodedSplatPoint.swift,\\ MTLBufferPool.swift,\\ MetalBuffer.swift,\\ SplatChunk+sortByLocality.swift,\\ SplatChunk.swift,\\ SplatRenderer+Deprecated.swift,\\ SplatRenderer.swift,\\ SplatSorter.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/DerivedSources/resource_bundle_accessor.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter/MetalSplatter/Sources/EncodedSplatPoint.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter/MetalSplatter/Sources/MTLBufferPool.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter/MetalSplatter/Sources/MetalBuffer.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter/MetalSplatter/Sources/SplatChunk+sortByLocality.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter/MetalSplatter/Sources/SplatChunk.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter/MetalSplatter/Sources/SplatRenderer+Deprecated.swift …"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3222,
+      "line": "CompileSwift normal arm64 (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3254,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.5.188.0.7apCKk/Metal.xctoolchain --module-name PostgREST --sdk-root /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk --xcode-version 17E202 --platform-family iOS --deployment-target 16.0 --bundle-identifier supabase-swift.PostgREST --output /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/PostgREST.appintents --target-triple arm64-apple-ios16.0 --binary-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/PostgREST.o --dependency-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/PostgREST.build/Objects-normal/arm64/PostgREST_dependency_info.dat --stringsdata-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/PostgREST.build/Objects-normal/arm64/ExtractedAppShor…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3298,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.5.188.0.7apCKk/Metal.xctoolchain --module-name Storage --sdk-root /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk --xcode-version 17E202 --platform-family iOS --deployment-target 16.0 --bundle-identifier supabase-swift.Storage --output /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Storage.appintents --target-triple arm64-apple-ios16.0 --binary-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Storage.o --dependency-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/Storage.build/Objects-normal/arm64/Storage_dependency_info.dat --stringsdata-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/Storage.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3314,
+      "line": "SwiftDriverJobDiscovery normal arm64 Compiling resource_bundle_accessor.swift, EncodedSplatPoint.swift, MTLBufferPool.swift, MetalBuffer.swift, SplatChunk+sortByLocality.swift, SplatChunk.swift, SplatRenderer+Deprecated.swift, SplatRenderer.swift, SplatSorter.swift (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3316,
+      "line": "SwiftDriver\\ Compilation\\ Requirements MetalSplatter normal arm64 com.apple.xcode.tools.swift.compiler (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3318,
+      "line": "    builtin-Swift-Compilation-Requirements -- /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name MetalSplatter -O -whole-module-optimization @/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/Objects-normal/arm64/MetalSplatter.SwiftFileList -DSWIFT_PACKAGE -DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE -DXcode -plugin-path /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -target arm64-apple-ios18.0 -g -module-cache-path /Users/[USER]/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -suppress-warnings -swift-version 6 -I /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos -Isystem /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib -F /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PackageFrameworks -F /Users/[USER]/Library/Developer/Xcode/DerivedData/S…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3320,
+      "line": "SwiftMergeGeneratedHeaders /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/GeneratedModuleMaps-iphoneos/MetalSplatter-Swift.h /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/Objects-normal/arm64/MetalSplatter-Swift.h (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3321,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3322,
+      "line": "    builtin-swiftHeaderTool -arch arm64 /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/Objects-normal/arm64/MetalSplatter-Swift.h -o /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/GeneratedModuleMaps-iphoneos/MetalSplatter-Swift.h"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3324,
+      "line": "Copy /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/MetalSplatter.swiftmodule/arm64-apple-ios.abi.json /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/Objects-normal/arm64/MetalSplatter.abi.json (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3325,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3326,
+      "line": "    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/Objects-normal/arm64/MetalSplatter.abi.json /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/MetalSplatter.swiftmodule/arm64-apple-ios.abi.json"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3328,
+      "line": "Copy /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/MetalSplatter.swiftmodule/arm64-apple-ios.swiftmodule /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/Objects-normal/arm64/MetalSplatter.swiftmodule (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3329,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3330,
+      "line": "    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/Objects-normal/arm64/MetalSplatter.swiftmodule /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/MetalSplatter.swiftmodule/arm64-apple-ios.swiftmodule"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3332,
+      "line": "Copy /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/MetalSplatter.swiftmodule/arm64-apple-ios.swiftdoc /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/Objects-normal/arm64/MetalSplatter.swiftdoc (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3333,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3334,
+      "line": "    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/Objects-normal/arm64/MetalSplatter.swiftdoc /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/MetalSplatter.swiftmodule/arm64-apple-ios.swiftdoc"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3336,
+      "line": "Ld /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/MetalSplatter.o normal (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3337,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3338,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios18.0 -r -isysroot /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk -Os -w -F/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/EagerLinkingTBDs/Release-iphoneos -F/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PackageFrameworks -F/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PackageFrameworks -F/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/PackageFrameworks -F/Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos -iframework /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/Frameworks -iframework /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk/Developer/Library/Frameworks -filelist /Users/[USER]/Libr…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3340,
+      "line": "ExtractAppIntentsMetadata (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3341,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3342,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.5.188.0.7apCKk/Metal.xctoolchain --module-name MetalSplatter --sdk-root /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk --xcode-version 17E202 --platform-family iOS --deployment-target 18.0 --bundle-identifier metalsplatter.MetalSplatter --output /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/MetalSplatter.appintents --target-triple arm64-apple-ios18.0 --binary-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/MetalSplatter.o --dependency-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/Objects-normal/arm64/MetalSplatter_dependency_info.dat --stringsdata-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/MetalSplatter.build/Release-iphoneos/MetalSplatter.build/…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3346,
+      "line": "SetOwnerAndGroup builder:staff /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/MetalSplatter.o (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3347,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3348,
+      "line": "    /usr/sbin/chown -RH builder:staff /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/MetalSplatter.o"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3350,
+      "line": "SetMode u+w,go-w,a+rX /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/MetalSplatter.o (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3351,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3352,
+      "line": "    /bin/chmod -RH u+w,go-w,a+rX /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/MetalSplatter.o"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3354,
+      "line": "RegisterExecutionPolicyException /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/MetalSplatter.o (in target 'MetalSplatter' from project 'MetalSplatter')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3355,
+      "line": "    cd /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/MetalSplatter"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3356,
+      "line": "    builtin-RegisterExecutionPolicyException /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/MetalSplatter.o"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3390,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.5.188.0.7apCKk/Metal.xctoolchain --module-name RealtimeV2 --sdk-root /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk --xcode-version 17E202 --platform-family iOS --deployment-target 16.0 --bundle-identifier supabase-swift.RealtimeV2 --output /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/RealtimeV2.appintents --target-triple arm64-apple-ios16.0 --binary-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/RealtimeV2.o --dependency-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/RealtimeV2.build/Objects-normal/arm64/RealtimeV2_dependency_info.dat --stringsdata-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/RealtimeV2.build/Objects-normal/arm64/Extracted…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3442,
+      "line": "SwiftExplicitDependencyGeneratePcm arm64 /Users/[USER]/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Metal-211JTVP22W8MF4PMI4C8GWR38.pcm"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3460,
+      "line": "SwiftCompile normal arm64 Compiling\\ Defaults.swift,\\ Delegated.swift,\\ Deprecated.swift,\\ HeartbeatTimer.swift,\\ PhoenixTransport.swift,\\ Presence.swift,\\ Push.swift,\\ RealtimeChannel.swift,\\ RealtimeClient.swift,\\ RealtimeMessage.swift,\\ TimeoutTimer.swift,\\ Exports.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Realtime/Deprecated/Defaults.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Realtime/Deprecated/Delegated.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Realtime/Deprecated/Deprecated.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Realtime/Deprecated/HeartbeatTimer.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Realtime/Deprecated/PhoenixTransport.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Realtime/Deprecated/Presence.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Realtime/Deprecated/Push.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Sou…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3493,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.5.188.0.7apCKk/Metal.xctoolchain --module-name Auth --sdk-root /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk --xcode-version 17E202 --platform-family iOS --deployment-target 16.0 --bundle-identifier supabase-swift.Auth --output /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Auth.appintents --target-triple arm64-apple-ios16.0 --binary-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Auth.o --dependency-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/Auth.build/Objects-normal/arm64/Auth_dependency_info.dat --stringsdata-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/Auth.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3541,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.5.188.0.7apCKk/Metal.xctoolchain --module-name Realtime --sdk-root /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk --xcode-version 17E202 --platform-family iOS --deployment-target 16.0 --bundle-identifier supabase-swift.Realtime --output /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Realtime.appintents --target-triple arm64-apple-ios16.0 --binary-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Realtime.o --dependency-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/Realtime.build/Objects-normal/arm64/Realtime_dependency_info.dat --stringsdata-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/Realtime.build/Objects-normal/arm64/ExtractedAppShortcutsMe…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3561,
+      "line": "SwiftCompile normal arm64 Compiling\\ Constants.swift,\\ Deprecated.swift,\\ Exports.swift,\\ SupabaseClient.swift,\\ Tracing.swift,\\ Types.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Supabase/Constants.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Supabase/Deprecated.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Supabase/Exports.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Supabase/SupabaseClient.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Supabase/Tracing.swift /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/SourcePackages/checkouts/supabase-swift/Sources/Supabase/Types.swift /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/prebuilt-modules/26.4/_DarwinFoundation1.swiftmodule/arm64e-apple-ios.swiftmodule /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/prebuilt-modules/26.4/os.swiftmodule/arm64e-apple-ios.swiftmodule /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noin…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3607,
+      "line": "ProcessProductPackaging /Users/[USER]/Library/Developer/Xcode/UserData/Provisioning\\ Profiles/IOS_APP_STORE_P4927U2ZPC_i6eqvawo.mobileprovision /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/InstallationBuildProductsLocation/Applications/Splat\\ Lab\\ Native.app/embedded.mobileprovision (in target 'SplatNative' from project 'SplatNative')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3609,
+      "line": "    builtin-productPackagingUtility /Users/[USER]/Library/Developer/Xcode/UserData/Provisioning\\ Profiles/IOS_APP_STORE_P4927U2ZPC_i6eqvawo.mobileprovision -o /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/InstallationBuildProductsLocation/Applications/Splat\\ Lab\\ Native.app/embedded.mobileprovision"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3644,
+      "line": "    /Applications/Xcode-26.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.5.188.0.7apCKk/Metal.xctoolchain --module-name Supabase --sdk-root /Applications/Xcode-26.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.4.sdk --xcode-version 17E202 --platform-family iOS --deployment-target 16.0 --bundle-identifier supabase-swift.Supabase --output /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Supabase.appintents --target-triple arm64-apple-ios16.0 --binary-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Supabase.o --dependency-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/Supabase.build/Objects-normal/arm64/Supabase_dependency_info.dat --stringsdata-file /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/Supabase.build/Release-iphoneos/Supabase.build/Objects-normal/arm64/ExtractedAppShortcutsMe…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3684,
+      "line": "CpResource /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/InstallationBuildProductsLocation/Applications/Splat\\ Lab\\ Native.app/MetalSplatter-MIT.txt /Users/[USER]/clone/splat-native-ios/SplatNative/Resources/Licenses/MetalSplatter-MIT.txt (in target 'SplatNative' from project 'SplatNative')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3686,
+      "line": "    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/[USER]/clone/splat-native-ios/SplatNative/Resources/Licenses/MetalSplatter-MIT.txt /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/InstallationBuildProductsLocation/Applications/Splat\\ Lab\\ Native.app"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3696,
+      "line": "Copy /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/InstallationBuildProductsLocation/Applications/Splat\\ Lab\\ Native.app/MetalSplatter_MetalSplatter.bundle /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/MetalSplatter_MetalSplatter.bundle (in target 'SplatNative' from project 'SplatNative')"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3698,
+      "line": "    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/BuildProductsPath/Release-iphoneos/MetalSplatter_MetalSplatter.bundle /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/InstallationBuildProductsLocation/Applications/Splat\\ Lab\\ Native.app"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3842,
+      "line": "SwiftExplicitDependencyGeneratePcm arm64 /Users/[USER]/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Metal-K3KJ3LSXLWGZAS7AT1JDBLSE.pcm"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3884,
+      "line": "SwiftExplicitDependencyGeneratePcm arm64 /Users/[USER]/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/MetalKit-4QMEDPVYKH3C6TBW8ALTZPNIW.pcm"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3904,
+      "line": "SwiftCompile normal arm64 Compiling\\ CapturePolicy.swift,\\ ContentView.swift,\\ IntegratedScanLabShellView.swift,\\ MeshARViewer.swift,\\ MeshAdvancedSupervisor.swift,\\ MeshAppearanceEditor.swift,\\ MeshAssetContract.swift,\\ MeshCaptureQualityAdvisor.swift,\\ MeshDenseMVS.swift,\\ MeshDenseTextureBaker.swift,\\ MeshDepthRecorder.swift,\\ MeshDetailSimplifier.swift,\\ MeshDurabilityCoordinator.swift,\\ MeshDurabilityRecoveryStore.swift,\\ MeshExportAdmission.swift,\\ MeshExportMemoryPolicy.swift,\\ MeshExportOptionsView.swift,\\ MeshExportService.swift,\\ MeshGeometryRefiner.swift,\\ MeshLiDARDenseFusion.swift,\\ MeshLibraryView.swift,\\ MeshParityAuditor.swift,\\ MeshPointCloudExportService.swift,\\ MeshProjectIntegrity.swift,\\ MeshProjectStore.swift,\\ MeshRGBTextureBaker.swift,\\ MeshRawProjectBridge.swift,\\ MeshRawReprocess.swift,\\ MeshScanModel.swift,\\ MeshScanView.swift,\\ MeshSimplifier.swift,\\ MeshTrimEditor.swift,\\ MeshVisualFallback.swift,\\ PublicBrowsePolicy.swift,\\ PublishScanView.swift,\\ RootScanView.swift,\\ ScanLabAccountView.swift,\\ ScanLabAuthCallbackPolicy.swift,\\ ScanLabAuthErrorPolicy.swift,\\ ScanLabAuthStatePolicy.swift,\\ ScanLabBackend+AuthCallback.swift,\\ ScanLabBackend+ProfileConflict.swift,\\ ScanLabBackend+PublishLifecycle.swift,\\ ScanLabBackend+SafeSignOut.swift,\\ ScanLabBackend+TrustedPublish.swift,\\ ScanLabBackend.swift,\\ ScanLabDiscoverFeedStore.swift,\\ ScanLabGeotagPolicy.swift,\\ ScanLabMapQuery.swift,\\ ScanLabPasswordRecoveryCoordinator.swift,\\ ScanLabPasswordRecoveryPolicy.swift,\\ ScanLabProfilePolicy.swift,\\ ScanLabProfileService.swift,\\ ScanLabProfileView.swift,\\ S…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3947,
+      "line": "/Users/[USER]/clone/splat-native-ios/SplatNative/SplatVideoExporter.swift:280:31: error: instance method 'waitUntilCompleted' is unavailable from asynchronous contexts; Use 'await completed()' instead."
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3950,
+      "line": "Metal.MTLCommandBuffer.waitUntilCompleted:2:6: note: 'waitUntilCompleted()' declared here"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3971,
+      "line": "    builtin-infoPlistUtility /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/SplatNative.build/Release-iphoneos/SplatNative.build/empty-Splat\\ Lab\\ Native.plist -producttype com.apple.product-type.application -genpkginfo /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/InstallationBuildProductsLocation/Applications/Splat\\ Lab\\ Native.app/PkgInfo -expandbuildsettings -format binary -platform iphoneos -additionalcontentfile /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/IntermediateBuildFilesPath/SplatNative.build/Release-iphoneos/SplatNative.build/assetcatalog_generated_info.plist -scanforprivacyfile /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/InstallationBuildProductsLocation/Applications/Splat\\ Lab\\ Native.app/MetalSplatter_MetalSplatter.bundle -scanforprivacyfile /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noindex/ArchiveIntermediates/SplatNative/InstallationBuildProductsLocation/Applications/Splat\\ Lab\\ Native.app/Msplat_Msplat.bundle -scanforprivacyfile /Users/[USER]/Library/Developer/Xcode/DerivedData/SplatNative-dvzsvmmokwbnlkhiycdopbrcrzso/Build/Intermediates.noi…"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3973,
+      "line": "** ARCHIVE FAILED **"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3976,
+      "line": "The following build commands failed:"
+    },
+    {
+      "file": "SplatNative.log",
+      "line_number": 3978,
+      "line": "\tSwiftCompile normal arm64 Compiling\\ CapturePolicy.swift,\\ ContentView.swift,\\ IntegratedScanLabShellView.swift,\\ MeshARViewer.swift,\\ MeshAdvancedSupervisor.swift,\\ MeshAppearanceEditor.swift,\\ MeshAssetContract.swift,\\ MeshCaptureQualityAdvisor.swift,\\ MeshDenseMVS.swift,\\ MeshDenseTextureBaker.swift,\\ MeshDepthRecorder.swift,\\ MeshDetailSimplifier.swift,\\ MeshDurabilityCoordinator.swift,\\ MeshDurabilityRecoveryStore.swift,\\ MeshExportAdmission.swift,\\ MeshExportMemoryPolicy.swift,\\ MeshExportOptionsView.swift,\\ MeshExportService.swift,\\ MeshGeometryRefiner.swift,\\ MeshLiDARDenseFusion.swift,\\ MeshLibraryView.swift,\\ MeshParityAuditor.swift,\\ MeshPointCloudExportService.swift,\\ MeshProjectIntegrity.swift,\\ MeshProjectStore.swift,\\ MeshRGBTextureBaker.swift,\\ MeshRawProjectBridge.swift,\\ MeshRawReprocess.swift,\\ MeshScanModel.swift,\\ MeshScanView.swift,\\ MeshSimplifier.swift,\\ MeshTrimEditor.swift,\\ MeshVisualFallback.swift,\\ PublicBrowsePolicy.swift,\\ PublishScanView.swift,\\ RootScanView.swift,\\ ScanLabAccountView.swift,\\ ScanLabAuthCallbackPolicy.swift,\\ ScanLabAuthErrorPolicy.swift,\\ ScanLabAuthStatePolicy.swift,\\ ScanLabBackend+AuthCallback.swift,\\ ScanLabBackend+ProfileConflict.swift,\\ ScanLabBackend+PublishLifecycle.swift,\\ ScanLabBackend+SafeSignOut.swift,\\ ScanLabBackend+TrustedPublish.swift,\\ ScanLabBackend.swift,\\ ScanLabDiscoverFeedStore.swift,\\ ScanLabGeotagPolicy.swift,\\ ScanLabMapQuery.swift,\\ ScanLabPasswordRecoveryCoordinator.swift,\\ ScanLabPasswordRecoveryPolicy.swift,\\ ScanLabProfilePolicy.swift,\\ ScanLabProfileService.swift,\\ ScanLabProfileView.swift,\\ …"
+    }
+  ]
+}
