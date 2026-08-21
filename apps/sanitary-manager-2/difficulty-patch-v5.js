@@ -13,7 +13,6 @@ function clueOf(q){
   const i=s.indexOf('：');
   return i>=0?s.slice(i+1).trim():String(q.explanation||'').replace(/^正解は[^。]+。/,'').split(' 根拠・学習基準：')[0].trim();
 }
-function rotate(arr,n){return arr.map((_,i)=>arr[(i+n)%arr.length]);}
 for(const group of groups.values()){
   group.sort((a,b)=>String(a.id).localeCompare(String(b.id),'ja'));
   const terms=group.map(q=>q.topic);
@@ -28,7 +27,6 @@ for(const group of groups.values()){
     const cluePool=[];
     for(let k=2;cluePool.length<4&&k<group.length+2;k++){
       const c=clues[(j+k)%group.length];
-      const t=terms[(j+cluePool.length+1)%group.length];
       if(c!==clueOf(q)) cluePool.push(c);
     }
     while(cluePool.length<4) cluePool.push(clues[(j+cluePool.length+3)%group.length]);
@@ -45,5 +43,21 @@ for(const group of groups.values()){
     q.noCommonSenseShortcut=true;
   });
 }
-window.SM2_DIFFICULTY_PATCH_V5={groups:groups.size,questions:[...groups.values()].reduce((n,g)=>n+g.length,0)};
+
+// The two legacy public-style rounds had 40 especially weak occupational
+// hygiene/physiology questions. They are hand-rewritten in q5/q6/q8/q9.
+let manual=0;
+for(const q of qs){
+  if(!['令和7年10月','令和7年4月'].includes(q.examSet)) continue;
+  if(!['労働衛生','労働生理'].includes(q.subject)) continue;
+  q.difficultyModel='manual-exam-rewrite-v1';
+  q.noCommonSenseShortcut=true;
+  manual++;
+}
+window.SM2_DIFFICULTY_PATCH_V5={
+  generatedGroups:groups.size,
+  generatedQuestions:[...groups.values()].reduce((n,g)=>n+g.length,0),
+  manualQuestions:manual,
+  coveredQuestions:[...groups.values()].reduce((n,g)=>n+g.length,0)+manual
+};
 })();
