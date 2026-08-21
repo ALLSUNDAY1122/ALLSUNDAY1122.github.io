@@ -14,7 +14,6 @@ permissions:
   contents: read
 
 env:
-  BUILD9_SOURCE_SHA: a1385d1f997c25dff56b635906ed852d0b54567c
   APP_BUNDLE_ID: com.allsunday1122.torutango
   EXPO_PUBLIC_SCREENSHOT_FIXTURES: '1'
   CI: '1'
@@ -27,7 +26,7 @@ jobs:
       - name: Checkout exact Build 9 source
         uses: actions/checkout@v6
         with:
-          ref: ${{ env.BUILD9_SOURCE_SHA }}
+          ref: a1385d1f997c25dff56b635906ed852d0b54567c
 
       - name: Select newest installed Xcode
         shell: bash
@@ -36,9 +35,8 @@ jobs:
           echo "Installed Xcodes:"
           ls -1 /Applications | grep '^Xcode' || true
           latest=$(find /Applications -maxdepth 1 -type d -name 'Xcode*.app' -print | sort -V | tail -1)
-          if [ -n "$latest" ]; then
-            sudo xcode-select -s "$latest/Contents/Developer"
-          fi
+          test -n "$latest"
+          sudo xcode-select -s "$latest/Contents/Developer"
           xcodebuild -version
           xcrun simctl list runtimes
 
@@ -64,36 +62,38 @@ jobs:
           marker = "  return {\n    cards,\n    history,\n    decks: normalizeDecks([...storedDecks, ...decksFromCards]),\n    studyDays: normalizeStudyDays([...storedStudyDays, ...legacyStudyDays])\n  };"
           if marker not in text:
               raise SystemExit('storage fixture injection marker not found')
-          fixture = r'''  if (!cards.length && process.env.EXPO_PUBLIC_SCREENSHOT_FIXTURES === '1') {
-    const now = '2026-08-21T09:00:00.000Z';
-    const fixtureCards: Card[] = [
-      { id:'e1', question:'abandon', answer:'捨てる・断念する', deckName:'英単語 TOEIC', correct:5, wrong:1, lastStudiedAt:now, createdAt:now, updatedAt:now },
-      { id:'e2', question:'accurate', answer:'正確な', deckName:'英単語 TOEIC', correct:4, wrong:0, lastStudiedAt:now, createdAt:now, updatedAt:now },
-      { id:'e3', question:'implement', answer:'実行する・実装する', deckName:'英単語 TOEIC', correct:1, wrong:2, lastStudiedAt:now, createdAt:now, updatedAt:now },
-      { id:'e4', question:'reliable', answer:'信頼できる', deckName:'英単語 TOEIC', correct:0, wrong:0, lastStudiedAt:null, createdAt:now, updatedAt:now },
-      { id:'j1', question:'鎌倉幕府を開いた人物は？', answer:'源頼朝', deckName:'日本史', correct:6, wrong:0, lastStudiedAt:now, createdAt:now, updatedAt:now },
-      { id:'j2', question:'大政奉還が行われた年は？', answer:'1867年', deckName:'日本史', correct:2, wrong:1, lastStudiedAt:now, createdAt:now, updatedAt:now },
-      { id:'j3', question:'廃藩置県が行われた年は？', answer:'1871年', deckName:'日本史', correct:0, wrong:0, lastStudiedAt:null, createdAt:now, updatedAt:now },
-      { id:'b1', question:'DNAを構成する糖は？', answer:'デオキシリボース', deckName:'生物', correct:3, wrong:1, lastStudiedAt:now, createdAt:now, updatedAt:now },
-      { id:'b2', question:'光合成を行う細胞小器官は？', answer:'葉緑体', deckName:'生物', correct:0, wrong:0, lastStudiedAt:null, createdAt:now, updatedAt:now },
-      { id:'w1', question:'Could you clarify that?', answer:'もう少し詳しく説明していただけますか？', deckName:'仕事で使う英語', correct:2, wrong:0, lastStudiedAt:now, createdAt:now, updatedAt:now },
-      { id:'w2', question:'I will follow up tomorrow.', answer:'明日改めて連絡します。', deckName:'仕事で使う英語', correct:0, wrong:0, lastStudiedAt:null, createdAt:now, updatedAt:now }
-    ];
-    const fixtureHistory: StudyHistory[] = [
-      { id:'h1', cardId:'e1', answeredAt:now, dateKey:'2026-08-21', correct:true },
-      { id:'h2', cardId:'e3', answeredAt:now, dateKey:'2026-08-21', correct:false },
-      { id:'h3', cardId:'j1', answeredAt:'2026-08-20T09:00:00.000Z', dateKey:'2026-08-20', correct:true },
-      { id:'h4', cardId:'b1', answeredAt:'2026-08-19T09:00:00.000Z', dateKey:'2026-08-19', correct:true }
-    ];
-    return {
-      cards: fixtureCards,
-      history: fixtureHistory,
-      decks: ['英単語 TOEIC', '日本史', '生物', '仕事で使う英語'],
-      studyDays: ['2026-08-19', '2026-08-20', '2026-08-21']
-    };
-  }
-
-''' + marker
+          lines = [
+              "  if (!cards.length && process.env.EXPO_PUBLIC_SCREENSHOT_FIXTURES === '1') {",
+              "    const now = '2026-08-21T09:00:00.000Z';",
+              "    const fixtureCards: Card[] = [",
+              "      { id:'e1', question:'abandon', answer:'捨てる・断念する', deckName:'英単語 TOEIC', correct:5, wrong:1, lastStudiedAt:now, createdAt:now, updatedAt:now },",
+              "      { id:'e2', question:'accurate', answer:'正確な', deckName:'英単語 TOEIC', correct:4, wrong:0, lastStudiedAt:now, createdAt:now, updatedAt:now },",
+              "      { id:'e3', question:'implement', answer:'実行する・実装する', deckName:'英単語 TOEIC', correct:1, wrong:2, lastStudiedAt:now, createdAt:now, updatedAt:now },",
+              "      { id:'e4', question:'reliable', answer:'信頼できる', deckName:'英単語 TOEIC', correct:0, wrong:0, lastStudiedAt:null, createdAt:now, updatedAt:now },",
+              "      { id:'j1', question:'鎌倉幕府を開いた人物は？', answer:'源頼朝', deckName:'日本史', correct:6, wrong:0, lastStudiedAt:now, createdAt:now, updatedAt:now },",
+              "      { id:'j2', question:'大政奉還が行われた年は？', answer:'1867年', deckName:'日本史', correct:2, wrong:1, lastStudiedAt:now, createdAt:now, updatedAt:now },",
+              "      { id:'j3', question:'廃藩置県が行われた年は？', answer:'1871年', deckName:'日本史', correct:0, wrong:0, lastStudiedAt:null, createdAt:now, updatedAt:now },",
+              "      { id:'b1', question:'DNAを構成する糖は？', answer:'デオキシリボース', deckName:'生物', correct:3, wrong:1, lastStudiedAt:now, createdAt:now, updatedAt:now },",
+              "      { id:'b2', question:'光合成を行う細胞小器官は？', answer:'葉緑体', deckName:'生物', correct:0, wrong:0, lastStudiedAt:null, createdAt:now, updatedAt:now },",
+              "      { id:'w1', question:'Could you clarify that?', answer:'もう少し詳しく説明していただけますか？', deckName:'仕事で使う英語', correct:2, wrong:0, lastStudiedAt:now, createdAt:now, updatedAt:now },",
+              "      { id:'w2', question:'I will follow up tomorrow.', answer:'明日改めて連絡します。', deckName:'仕事で使う英語', correct:0, wrong:0, lastStudiedAt:null, createdAt:now, updatedAt:now }",
+              "    ];",
+              "    const fixtureHistory: StudyHistory[] = [",
+              "      { id:'h1', cardId:'e1', answeredAt:now, dateKey:'2026-08-21', correct:true },",
+              "      { id:'h2', cardId:'e3', answeredAt:now, dateKey:'2026-08-21', correct:false },",
+              "      { id:'h3', cardId:'j1', answeredAt:'2026-08-20T09:00:00.000Z', dateKey:'2026-08-20', correct:true },",
+              "      { id:'h4', cardId:'b1', answeredAt:'2026-08-19T09:00:00.000Z', dateKey:'2026-08-19', correct:true }",
+              "    ];",
+              "    return {",
+              "      cards: fixtureCards,",
+              "      history: fixtureHistory,",
+              "      decks: ['英単語 TOEIC', '日本史', '生物', '仕事で使う英語'],",
+              "      studyDays: ['2026-08-19', '2026-08-20', '2026-08-21']",
+              "    };",
+              "  }",
+              "",
+          ]
+          fixture = "\n".join(lines) + marker
           p.write_text(text.replace(marker, fixture), encoding='utf-8')
           print('Injected screenshot-only fixture data; Build 9 UI source otherwise unchanged.')
           PY
@@ -117,27 +117,26 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json, subprocess
-          data=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
-          rows=[]
-          for runtime, items in data.get('devices',{}).items():
+          import json
+          import subprocess
+          data = json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          rows = []
+          for runtime, items in data.get('devices', {}).items():
               if 'iOS' not in runtime:
                   continue
-              for item in items:
-                  if item.get('isAvailable') and str(item.get('name','')).startswith('iPhone'):
-                      rows.append(item)
-          preferred=['iPhone 16 Pro Max','iPhone 16 Plus','iPhone 15 Pro Max','iPhone 15 Plus','iPhone 14 Pro Max']
-          hit=None
+              rows.extend([item for item in items if item.get('isAvailable') and str(item.get('name','')).startswith('iPhone')])
+          preferred = ['iPhone 16 Pro Max','iPhone 16 Plus','iPhone 15 Pro Max','iPhone 15 Plus','iPhone 14 Pro Max']
+          hit = None
           for name in preferred:
-              hit=next((x for x in rows if x.get('name')==name),None)
+              hit = next((item for item in rows if item.get('name') == name), None)
               if hit:
                   break
           if not hit:
-              raise SystemExit('No 6.9-inch compatible iPhone simulator is available')
-          Path='/tmp/toru-device'
-          open('/tmp/toru-shot-udid','w').write(hit['udid'])
-          open('/tmp/toru-shot-device','w').write(hit['name'])
-          print(hit['name'],hit['udid'])
+              raise SystemExit('No accepted large-iPhone simulator is available')
+          Path = __import__('pathlib').Path
+          Path('/tmp/toru-shot-udid').write_text(hit['udid'])
+          Path('/tmp/toru-shot-device').write_text(hit['name'])
+          print(hit['name'], hit['udid'])
           PY
 
       - name: Build release app for Simulator
@@ -146,7 +145,7 @@ jobs:
         run: |
           set -euo pipefail
           workspace=$(find ios -maxdepth 2 -name '*.xcworkspace' -print | head -1)
-          if [ -z "$workspace" ]; then echo 'xcworkspace not found'; exit 1; fi
+          test -n "$workspace"
           scheme=$(xcodebuild -workspace "$workspace" -list -json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["workspace"]["schemes"][0])')
           udid=$(cat /tmp/toru-shot-udid)
           echo "workspace=$workspace scheme=$scheme destination=$udid"
@@ -158,10 +157,9 @@ jobs:
             -derivedDataPath /tmp/toru-derived \
             CODE_SIGNING_ALLOWED=NO \
             build | tee /tmp/toru-xcodebuild.log
-          app=$(find /tmp/toru-derived/Build/Products -path '*Release-iphonesimulator/*.app' -maxdepth 3 -print | head -1)
+          app=$(find /tmp/toru-derived/Build/Products -path '*Release-iphonesimulator/*.app' -print | head -1)
           test -n "$app"
           echo "$app" > /tmp/toru-app-path
-          echo "Built $app"
 
       - name: Boot, install, and capture real app UI
         shell: bash
@@ -176,7 +174,6 @@ jobs:
           xcrun simctl install "$udid" "$app"
           xcrun simctl launch --terminate-running-process "$udid" "$APP_BUNDLE_ID"
           sleep 7
-
           capture() {
             name="$1"
             tmp="/tmp/${name}.png"
@@ -189,20 +186,19 @@ jobs:
             echo "$name ${width}x${height}"
             case "${width}x${height}" in
               1260x2736|1290x2796|1320x2868) ;;
-              *) echo "Unexpected screenshot size: ${width}x${height}"; exit 1;;
+              *) echo "Unexpected screenshot size: ${width}x${height}"; exit 1 ;;
             esac
           }
-
           capture '01-folders'
-          for route in create study records; do
-            xcrun simctl openurl "$udid" "torutango://$route"
-            sleep 4
-            case "$route" in
-              create) capture '02-create' ;;
-              study) capture '03-study' ;;
-              records) capture '04-records' ;;
-            esac
-          done
+          xcrun simctl openurl "$udid" 'torutango://create'
+          sleep 4
+          capture '02-create'
+          xcrun simctl openurl "$udid" 'torutango://study'
+          sleep 4
+          capture '03-study'
+          xcrun simctl openurl "$udid" 'torutango://records'
+          sleep 4
+          capture '04-records'
 
       - name: Write manifest and validate assets
         shell: bash
@@ -211,20 +207,24 @@ jobs:
           count=$(find /tmp/toru-screens -maxdepth 1 -type f -name '*.jpg' | wc -l | tr -d ' ')
           test "$count" -eq 4
           device=$(cat /tmp/toru-shot-device)
-          cat > /tmp/toru-screens/manifest.json <<EOF
-          {
-            "app": "撮る単語帳",
-            "appStoreConnectAppId": "6795968222",
-            "bundleId": "com.allsunday1122.torutango",
-            "version": "1.0",
-            "build": "9",
-            "build9SourceSha": "$BUILD9_SOURCE_SHA",
-            "simulator": "$device",
-            "fixturePolicy": "sample study data only; no UI code changes",
-            "screens": ["01-folders.jpg","02-create.jpg","03-study.jpg","04-records.jpg"],
-            "appReviewSubmitted": false
+          python3 - "$device" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          manifest = {
+              'app': '撮る単語帳',
+              'appStoreConnectAppId': '6795968222',
+              'bundleId': 'com.allsunday1122.torutango',
+              'version': '1.0',
+              'build': '9',
+              'build9SourceSha': 'a1385d1f997c25dff56b635906ed852d0b54567c',
+              'simulator': sys.argv[1],
+              'fixturePolicy': 'sample study data only; no UI code changes',
+              'screens': ['01-folders.jpg','02-create.jpg','03-study.jpg','04-records.jpg'],
+              'appReviewSubmitted': False,
           }
-          EOF
+          Path('/tmp/toru-screens/manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
           cat /tmp/toru-screens/manifest.json
 
       - name: Upload screenshot artifact
