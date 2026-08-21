@@ -6,6 +6,8 @@ on:
       - 'native-ios/Otsu4Sprint/**'
       - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
       - 'tools/otsu4-build-content-v2.mjs'
+      - 'tools/otsu4-apply-difficulty-hardening.mjs'
+      - 'tools/otsu4-difficulty-audit.mjs'
       - '.github/workflows/otsu4-native-typecheck.yml'
   push:
     branches: [ main ]
@@ -13,6 +15,8 @@ on:
       - 'native-ios/Otsu4Sprint/**'
       - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
       - 'tools/otsu4-build-content-v2.mjs'
+      - 'tools/otsu4-apply-difficulty-hardening.mjs'
+      - 'tools/otsu4-difficulty-audit.mjs'
       - '.github/workflows/otsu4-native-typecheck.yml'
 
 concurrency:
@@ -39,9 +43,12 @@ jobs:
         run: |
           xcodebuild -version
           xcrun swiftc --version
-      - name: Generate audited 360-question JSON
+      - name: Generate and harden audited 360-question JSON
         if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
-        run: node tools/otsu4-build-content-v2.mjs
+        run: |
+          node tools/otsu4-build-content-v2.mjs
+          node tools/otsu4-apply-difficulty-hardening.mjs
+          node tools/otsu4-difficulty-audit.mjs
       - name: Runtime-decode v2.1 learning selections
         if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
         run: |
@@ -66,9 +73,13 @@ jobs:
                       guard counts["法令"] == 15, counts["物理・化学"] == 10, counts["性質・消火"] == 10 else {
                           fatalError("mock subject counts mismatch set \(set)")
                       }
+                      let hard = Dictionary(grouping: mock.filter { $0.difficulty >= 3 }, by: \.subject).mapValues(\.count)
+                      guard hard["法令"] == 5, hard["物理・化学"] == 3, hard["性質・消火"] == 3 else {
+                          fatalError("mock difficulty mix mismatch set \(set)")
+                      }
                   }
                   guard Otsu4ContentStore.mockSetsAreDisjoint(in: store) else { fatalError("mock sets overlap") }
-                  print("decoded=360 free=72 sprint=4/8/16 mockSets=3x35 disjoint=true")
+                  print("decoded=360 free=72 sprint=4/8/16 mockSets=3x35 disjoint=true difficultyMix=5/3/3")
               }
           }
           SWIFT
