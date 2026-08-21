@@ -5,12 +5,14 @@ on:
     paths:
       - 'kikenbutsu-otsu4-sprint/**'
       - 'tools/otsu4-build-content-v2.mjs'
+      - 'tools/otsu4-difficulty-audit.mjs'
       - '.github/workflows/otsu4-content-audit.yml'
   push:
     branches: [ main, feat/otsu4-360-productization ]
     paths:
       - 'kikenbutsu-otsu4-sprint/**'
       - 'tools/otsu4-build-content-v2.mjs'
+      - 'tools/otsu4-difficulty-audit.mjs'
       - '.github/workflows/otsu4-content-audit.yml'
 
 permissions:
@@ -33,6 +35,9 @@ jobs:
       - name: Generate native question JSON v2
         if: ${{ hashFiles('tools/otsu4-build-content-v2.mjs') != '' }}
         run: node tools/otsu4-build-content-v2.mjs
+      - name: Exam-level difficulty gate
+        if: ${{ hashFiles('tools/otsu4-difficulty-audit.mjs') != '' }}
+        run: node tools/otsu4-difficulty-audit.mjs
       - name: Upload native question JSON v2
         if: ${{ hashFiles('tools/otsu4-build-content-v2.mjs') != '' }}
         uses: actions/upload-artifact@v4
