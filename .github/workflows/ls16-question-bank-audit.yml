@@ -39,15 +39,18 @@ jobs:
           set -o pipefail
           python sagyo-ryohoshi-sprint/tools/build_question_bank_ci.py 2>&1 | tee sagyo-ryohoshi-sprint/audit/question-bank-ci.log
       - name: Commit build diagnostic
-        if: steps.build.outcome != 'success'
+        if: always() && steps.build.outcome != 'success'
         run: |
           git config user.name 'LS16 Question Bank Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add sagyo-ryohoshi-sprint/audit/question-bank-ci.log
-          git commit -m 'diagnose LS16 question bank build [skip ci]'
-          git push origin HEAD:learning-sprint-16-sagyo-dispatcher
+          if ! git diff --cached --quiet; then
+            git commit -m 'diagnose LS16 question bank build [skip ci]'
+            git pull --rebase origin learning-sprint-16-sagyo-dispatcher
+            git push origin HEAD:learning-sprint-16-sagyo-dispatcher
+          fi
       - name: Stop on build failure
-        if: steps.build.outcome != 'success'
+        if: always() && steps.build.outcome != 'success'
         run: exit 1
       - name: Validate v2 contract
         if: steps.build.outcome == 'success'
@@ -75,5 +78,6 @@ jobs:
             echo 'CANONICAL_NO_CHANGE'
           else
             git commit -m 'Build audited LS16 OT 600-question bank [skip ci]'
+            git pull --rebase origin learning-sprint-16-sagyo-dispatcher
             git push origin HEAD:learning-sprint-16-sagyo-dispatcher
           fi
