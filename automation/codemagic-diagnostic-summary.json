@@ -1,21 +1,21 @@
 {
-  "request_id": "splat-metal-preflight-diagnostic-20260821-1600",
-  "target_head_sha": "0d303c2be617e59eaa96100980eeafe36e31d25e",
-  "workflow": "splat-testflight-preflight-evidence.yml",
+  "request_id": "splat-metal-build-start-diagnostic-20260821-1601",
+  "target_head_sha": "8a418ee8d50120aa2541d8734c16c41bfebf2b41",
+  "workflow": "splat-testflight-build-once.yml",
   "run_found": true,
   "run": {
-    "id": 32456719071,
-    "name": "Splat TestFlight Preflight Evidence",
+    "id": 32456818231,
+    "name": "Splat Internal TestFlight Build Once",
     "status": "completed",
     "conclusion": "success",
-    "created_at": "2026-08-21T07:00:12Z",
-    "updated_at": "2026-08-21T07:00:37Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32456719071",
-    "head_sha": "0d303c2be617e59eaa96100980eeafe36e31d25e"
+    "created_at": "2026-08-21T07:01:28Z",
+    "updated_at": "2026-08-21T07:01:54Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32456818231",
+    "head_sha": "8a418ee8d50120aa2541d8734c16c41bfebf2b41"
   },
   "jobs": [
     {
-      "name": "preflight",
+      "name": "start",
       "status": "completed",
       "conclusion": "success",
       "steps": [
@@ -30,12 +30,17 @@
           "conclusion": "success"
         },
         {
-          "name": "Validate release candidate",
+          "name": "Validate final release gate",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Persist sanitized preflight evidence",
+          "name": "Start or reuse exact Codemagic TestFlight build",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Persist sanitized build locator",
           "status": "completed",
           "conclusion": "success"
         },
