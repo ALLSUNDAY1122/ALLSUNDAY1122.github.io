@@ -25,6 +25,7 @@ const flagged=rows.filter(r=>r.score>=2).sort((a,b)=>b.score-a.score||a.id.local
 const severe=rows.filter(r=>r.score>=4);
 const report={generatedAt:'2026-08-21',total:qs.length,flagged:flagged.length,severe:severe.length,policy:'difficulty-policy-2026-08-21.md',items:flagged};
 fs.writeFileSync(path.join(__dirname,'DIFFICULTY_AUDIT_2026-08-21.json'),JSON.stringify(report,null,2)+'\n');
+const compact=flagged.map(r=>`${r.score}\t${r.id}\t${r.label}\t${r.stem}\t${r.choices.map((x,i)=>`${i===r.ans?'*':''}${i+1}:${String(x).replace(/\t|\n/g,' ')}`).join(' || ')}`).join('\n')+'\n';
+fs.writeFileSync(path.join(__dirname,'DIFFICULTY_FLAGGED_2026-08-21.tsv'),compact);
 console.log(`HM1 difficulty audit total=${qs.length} flagged=${flagged.length} severe=${severe.length}`);
-for(const r of flagged.slice(0,80)) console.log(`${r.score}\t${r.id}\t${r.reasons.join(',')}\t${r.stem}`);
 if(severe.length) process.exitCode=2;
