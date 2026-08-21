@@ -1,0 +1,259 @@
+name: Splat Internal TestFlight Distribution
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260820'
+    paths:
+      - 'automation/release-requests/splat-internal-testflight-distribute-20260821.run'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: splat-internal-testflight-distribution
+  cancel-in-progress: false
+
+jobs:
+  distribute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create or reuse internal group and tester safely
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import sys
+          import urllib.parse
+          from pathlib import Path
+
+          sys.path.insert(0, 'scripts')
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          APP_ID = '6803778932'
+          BUNDLE_ID = 'jp.allsunday1122.splatlab'
+          BUILD_ID = '77111587-92fb-49a2-b622-fd21de0d7f8a'
+          GROUP_NAME = 'Splat Lab Internal'
+
+          def data_list(response):
+              if not isinstance(response, dict):
+                  return []
+              value = response.get('data')
+              if isinstance(value, list):
+                  return [x for x in value if isinstance(x, dict)]
+              if isinstance(value, dict):
+                  return [value]
+              return []
+
+          def attrs(resource):
+              value = resource.get('attributes') if isinstance(resource, dict) else None
+              return value if isinstance(value, dict) else {}
+
+          key_path, cleanup = load_private_key()
+          result = {
+              'request_id': 'splat-internal-testflight-distribute-20260821',
+              'ok': False,
+              'app_id': APP_ID,
+              'bundle_id': BUNDLE_ID,
+              'build_id': BUILD_ID,
+              'group_name': GROUP_NAME,
+              'submit_to_app_store': False,
+          }
+          try:
+              token = make_token(
+                  __import__('os').environ['ASC_ISSUER_ID'].strip(),
+                  __import__('os').environ['ASC_KEY_ID'].strip(),
+                  key_path,
+              )
+
+              _, app_response = api_get(token, f'/v1/apps/{APP_ID}')
+              app = data_list(app_response)[0]
+              if attrs(app).get('bundleId') != BUNDLE_ID:
+                  raise RuntimeError('app/bundle preflight mismatch')
+
+              _, build_response = api_get(token, f'/v1/builds/{BUILD_ID}')
+              build = data_list(build_response)[0]
+              ba = attrs(build)
+              if ba.get('processingState') != 'VALID' or ba.get('buildAudienceType') != 'INTERNAL_ONLY':
+                  raise RuntimeError(f'build is not eligible for internal testing: {ba.get("processingState")}/{ba.get("buildAudienceType")}')
+              _, build_app_response = api_get(token, f'/v1/builds/{BUILD_ID}/app')
+              if not data_list(build_app_response) or str(data_list(build_app_response)[0].get('id')) != APP_ID:
+                  raise RuntimeError('build does not belong to expected app')
+
+              # Resolve the single eligible App Store Connect account at runtime.
+              _, users_response = api_get(token, '/v1/users?limit=200')
+              eligible = []
+              for user in data_list(users_response):
+                  ua = attrs(user)
+                  roles = set(ua.get('roles') or [])
+                  if 'ACCOUNT_HOLDER' in roles and ua.get('allAppsVisible') is True and ua.get('username'):
+                      eligible.append(user)
+              if len(eligible) != 1:
+                  raise RuntimeError(f'expected exactly one eligible account holder; found {len(eligible)}')
+              user = eligible[0]
+              ua = attrs(user)
+              email = str(ua['username']).strip()
+              first_name = str(ua.get('firstName') or '').strip()
+              last_name = str(ua.get('lastName') or '').strip()
+              result['eligible_account_holder_count'] = 1
+
+              encoded_name = urllib.parse.quote(GROUP_NAME, safe='')
+              _, groups_response = api_get(token, f'/v1/betaGroups?filter[app]={APP_ID}&filter[name]={encoded_name}&limit=200')
+              groups = data_list(groups_response)
+              if len(groups) > 1:
+                  raise RuntimeError('duplicate internal beta groups already exist')
+              group_created = False
+              if groups:
+                  group = groups[0]
+                  ga = attrs(group)
+                  if ga.get('isInternalGroup') is not True:
+                      raise RuntimeError('existing named beta group is not internal')
+              else:
+                  group_payload = {
+                      'data': {
+                          'type': 'betaGroups',
+                          'attributes': {
+                              'name': GROUP_NAME,
+                              'isInternalGroup': True,
+                              'hasAccessToAllBuilds': True,
+                              'feedbackEnabled': True,
+                          },
+                          'relationships': {
+                              'app': {'data': {'type': 'apps', 'id': APP_ID}},
+                          },
+                      }
+                  }
+                  status, created_response = api_request(token, '/v1/betaGroups', method='POST', payload=group_payload)
+                  if status != 201 or not data_list(created_response):
+                      raise RuntimeError(f'internal beta group create failed: HTTP {status}')
+                  group = data_list(created_response)[0]
+                  group_created = True
+              group_id = str(group.get('id'))
+              result['group_id'] = group_id
+              result['group_created'] = group_created
+
+              # Explicitly ensure the exact VALID internal build belongs to the group.
+              _, group_builds_response = api_get(token, f'/v1/betaGroups/{group_id}/relationships/builds?limit=200')
+              group_build_ids = {str(x.get('id')) for x in data_list(group_builds_response) if x.get('id')}
+              build_added = False
+              if BUILD_ID not in group_build_ids:
+                  link_payload = {'data': [{'type': 'builds', 'id': BUILD_ID}]}
+                  status, _ = api_request(token, f'/v1/betaGroups/{group_id}/relationships/builds', method='POST', payload=link_payload)
+                  if status != 204:
+                      raise RuntimeError(f'build/group relationship create failed: HTTP {status}')
+                  build_added = True
+              result['build_added_to_group'] = build_added
+
+              # Resolve/create tester by the runtime account-holder email without persisting PII.
+              encoded_email = urllib.parse.quote(email, safe='')
+              _, tester_response = api_get(token, f'/v1/betaTesters?filter[email]={encoded_email}&limit=200')
+              testers = data_list(tester_response)
+              if len(testers) > 1:
+                  raise RuntimeError('duplicate beta tester resources found for account holder')
+              tester_created = False
+              if testers:
+                  tester = testers[0]
+              else:
+                  tester_payload = {
+                      'data': {
+                          'type': 'betaTesters',
+                          'attributes': {
+                              'email': email,
+                              'firstName': first_name or None,
+                              'lastName': last_name or None,
+                          },
+                          'relationships': {
+                              'betaGroups': {'data': [{'type': 'betaGroups', 'id': group_id}]},
+                          },
+                      }
+                  }
+                  # Remove optional null names instead of sending nulls.
+                  tester_payload['data']['attributes'] = {
+                      k: v for k, v in tester_payload['data']['attributes'].items() if v is not None
+                  }
+                  status, created_tester_response = api_request(token, '/v1/betaTesters', method='POST', payload=tester_payload)
+                  if status != 201 or not data_list(created_tester_response):
+                      raise RuntimeError(f'beta tester create failed: HTTP {status}')
+                  tester = data_list(created_tester_response)[0]
+                  tester_created = True
+              tester_id = str(tester.get('id'))
+              result['tester_id'] = tester_id
+              result['tester_created'] = tester_created
+
+              # Ensure tester is a member even when the tester resource pre-existed.
+              _, members_response = api_get(token, f'/v1/betaGroups/{group_id}/betaTesters?limit=200')
+              member_ids = {str(x.get('id')) for x in data_list(members_response) if x.get('id')}
+              tester_added = False
+              if tester_id not in member_ids:
+                  member_payload = {'data': [{'type': 'betaTesters', 'id': tester_id}]}
+                  status, _ = api_request(token, f'/v1/betaGroups/{group_id}/relationships/betaTesters', method='POST', payload=member_payload)
+                  if status != 204:
+                      raise RuntimeError(f'tester/group relationship create failed: HTTP {status}')
+                  tester_added = True
+              result['tester_added_to_group'] = tester_added
+
+              # Final read-backs. Persist no tester name/email.
+              _, final_group_response = api_get(token, f'/v1/betaGroups/{group_id}')
+              final_group = data_list(final_group_response)[0]
+              final_group_attrs = attrs(final_group)
+              _, final_builds_response = api_get(token, f'/v1/betaGroups/{group_id}/relationships/builds?limit=200')
+              final_build_ids = {str(x.get('id')) for x in data_list(final_builds_response) if x.get('id')}
+              _, final_members_response = api_get(token, f'/v1/betaGroups/{group_id}/betaTesters?limit=200')
+              final_member_ids = {str(x.get('id')) for x in data_list(final_members_response) if x.get('id')}
+              _, detail_response = api_get(token, f'/v1/builds/{BUILD_ID}/buildBetaDetail')
+              detail = data_list(detail_response)[0]
+
+              if final_group_attrs.get('isInternalGroup') is not True:
+                  raise RuntimeError('final group read-back is not internal')
+              if BUILD_ID not in final_build_ids:
+                  raise RuntimeError('final build/group read-back mismatch')
+              if tester_id not in final_member_ids:
+                  raise RuntimeError('final tester/group read-back mismatch')
+
+              result['is_internal_group'] = True
+              result['has_access_to_all_builds'] = final_group_attrs.get('hasAccessToAllBuilds')
+              result['group_build_count'] = len(final_build_ids)
+              result['group_tester_count'] = len(final_member_ids)
+              result['internal_build_state'] = attrs(detail).get('internalBuildState')
+              result['external_build_state'] = attrs(detail).get('externalBuildState')
+              result['ok'] = True
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+              Path('/tmp/splat-internal-testflight-result.json').write_text(
+                  json.dumps(result, ensure_ascii=False, indent=2) + '\n',
+                  encoding='utf-8',
+              )
+          PY
+
+      - name: Persist non-PII distribution evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f /tmp/splat-internal-testflight-result.json || exit 1
+          BRANCH='testflight/splat-native-ios-20260820'
+          RESULT_PATH='automation/app-store-connect-results/splat-internal-testflight-20260821.json'
+          cp /tmp/splat-internal-testflight-result.json /tmp/splat-internal-testflight-result.saved.json
+          for attempt in 1 2 3; do
+            git fetch origin "$BRANCH"
+            git reset --hard FETCH_HEAD
+            mkdir -p "$(dirname "$RESULT_PATH")"
+            cp /tmp/splat-internal-testflight-result.saved.json "$RESULT_PATH"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- "$RESULT_PATH"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'release: persist Splat Internal TestFlight evidence'
+            if git push origin HEAD:"$BRANCH"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
