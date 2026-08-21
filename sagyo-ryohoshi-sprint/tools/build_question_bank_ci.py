@@ -12,6 +12,22 @@ import sys
 import pymupdf
 import build_question_bank as bank
 
+R61_PAGE = (
+    "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/"
+    "tp260424-08_09.html"
+)
+R61_OT_AM = (
+    "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/"
+    "tp260424-09a_01.pdf"
+)
+R61_OT_PM = (
+    "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/"
+    "tp260424-09b_01.pdf"
+)
+R61_OT_ANSWER = (
+    "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/"
+    "tp260424-09seitou.pdf"
+)
 R60_PAGE = (
     "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/"
     "tp250428-08_09.html"
@@ -99,6 +115,7 @@ _original_find_q_starts = bank.find_q_starts
 
 def pdf_links_from_page(page_url):
     pinned = {
+        R61_PAGE: (R61_OT_AM, R61_OT_PM, R61_OT_ANSWER),
         R60_PAGE: (R60_OT_AM, R60_OT_PM, R60_OT_ANSWER),
         R59_PAGE: (R59_OT_AM, R59_OT_PM, CORRECTED_R59_OT_ANSWER),
         R58_PAGE: (R58_OT_AM, R58_OT_PM, R58_OT_ANSWER),
@@ -182,9 +199,9 @@ def build_sources():
     """Yield newest official rounds as they are resolved."""
     pages = bank.discover_exam_pages()
     # Pin current official archive pages where the index/markup is obsolete.
-    pages.update({60: R60_PAGE, 59: R59_PAGE, 58: R58_PAGE, 57: R57_PAGE, 56: R56_PAGE})
+    pages.update({61: R61_PAGE, 60: R60_PAGE, 59: R59_PAGE, 58: R58_PAGE, 57: R57_PAGE, 56: R56_PAGE})
     fix = None
-    for exam in range(60, 44, -1):
+    for exam in range(61, 44, -1):
         page_url = pages.get(exam)
         if not page_url:
             continue
@@ -199,6 +216,7 @@ def build_sources():
         yield bank.Source(exam, page_url, am_url, pm_url, answer_url)
 
 
+bank.EXAM_DATES[61] = "2026-02-23"
 bank.pdf_links_from_page = pdf_links_from_page
 bank.corrected_r59_answer = corrected_r59_answer
 bank.pdf_text = pdf_text
