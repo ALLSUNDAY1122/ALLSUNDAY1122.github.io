@@ -17,13 +17,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Run difficulty audit
+      - name: Expand ephemeral bank to 264
+        run: node ios/health-manager-1/augment-to-264.cjs
+      - name: Run difficulty audit on all 264
         continue-on-error: true
         run: node ios/health-manager-1/audit/difficulty-audit-2026-08-21.cjs
-      - name: Persist report
+      - name: Persist report only
         run: |
+          git restore ios/health-manager-1/Resources/questions.json
+          rm -f ios/health-manager-1/audit/APP2_005_264_EXPANSION_2026-08-19.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add ios/health-manager-1/audit/DIFFICULTY_AUDIT_2026-08-21.json
-          git commit -m "Record HM1 difficulty audit" || exit 0
+          git commit -m "Record full 264-question HM1 difficulty audit" || exit 0
           git push
