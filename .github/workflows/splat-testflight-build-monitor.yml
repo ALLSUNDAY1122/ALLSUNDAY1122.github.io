@@ -1,0 +1,137 @@
+name: Splat TestFlight Build Monitor
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260820'
+    paths:
+      - '.github/workflows/splat-testflight-build-monitor.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Monitor exact Codemagic build to terminal state
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, time, urllib.error, urllib.request
+          from pathlib import Path
+
+          build_id='6a87f5fa38e916af4c805bea'
+          expected_commit='216dc649f9846bda9bfc83f1d9b6674939925a7f'
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token:
+              raise SystemExit('missing CM_API_TOKEN')
+
+          def get(path):
+              req=urllib.request.Request('https://codemagic.io'+path,headers={'x-auth-token':token,'Accept':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode('utf-8')
+                      return r.status,json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode('utf-8','replace')
+                  try: parsed=json.loads(raw) if raw else {}
+                  except json.JSONDecodeError: parsed={'error':raw[:500]}
+                  return e.code,parsed
+
+          def details(payload):
+              if isinstance(payload,dict) and isinstance(payload.get('data'),dict): return payload['data']
+              return payload if isinstance(payload,dict) else {}
+
+          terminal={'finished','failed','canceled','timeout','skipped'}
+          deadline=time.time()+1800
+          current='unknown'
+          final={}
+          while time.time()<deadline:
+              status,payload=get(f'/api/v3/builds/{build_id}')
+              if not 200 <= status < 300:
+                  current=f'inspect_http_{status}'
+                  time.sleep(20)
+                  continue
+              final=details(payload)
+              commit=(final.get('commit') or {}).get('hash')
+              if commit and commit != expected_commit:
+                  raise SystemExit(f'build commit mismatch: {commit}')
+              current=str(final.get('status') or 'unknown')
+              print(f'Codemagic build {build_id}: {current}')
+              if current in terminal:
+                  break
+              time.sleep(20)
+
+          action_status,action_payload=get(f'/api/v3/builds/{build_id}/actions')
+          actions=[]
+          raw_actions=[]
+          if isinstance(action_payload,dict):
+              d=action_payload.get('data')
+              if isinstance(d,list): raw_actions=d
+          for a in raw_actions:
+              if not isinstance(a,dict): continue
+              actions.append({
+                  'id':a.get('id'),
+                  'name':a.get('name'),
+                  'type':a.get('type'),
+                  'status':a.get('status'),
+                  'started_at':a.get('started_at'),
+                  'finished_at':a.get('finished_at'),
+              })
+
+          artifacts=[]
+          for a in final.get('artifacts') or []:
+              if not isinstance(a,dict): continue
+              artifacts.append({
+                  'name':a.get('name'),
+                  'type':a.get('type'),
+                  'size':a.get('size'),
+              })
+
+          result={
+              'request_id':'splat-testflight-build-monitor-20260821',
+              'ok':current=='finished',
+              'build_id':build_id,
+              'status':current,
+              'expected_commit':expected_commit,
+              'actual_commit':(final.get('commit') or {}).get('hash'),
+              'started_at':final.get('started_at'),
+              'finished_at':final.get('finished_at'),
+              'app_store_connect_status':final.get('app_store_connect_status'),
+              'artifacts':artifacts,
+              'actions_http_status':action_status,
+              'actions':actions,
+              'submit_to_app_store':False,
+          }
+          Path('/tmp/splat-build-monitor.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          if current != 'finished':
+              raise SystemExit(f'Codemagic build terminal status: {current}')
+          PY
+
+      - name: Persist sanitized terminal build result
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f /tmp/splat-build-monitor.json || exit 1
+          BRANCH='testflight/splat-native-ios-20260820'
+          RESULT_PATH='automation/codemagic-results/splat-testflight-build-terminal-20260821.json'
+          cp /tmp/splat-build-monitor.json /tmp/splat-build-monitor.saved.json
+          for attempt in 1 2 3; do
+            git fetch origin "$BRANCH"
+            git reset --hard FETCH_HEAD
+            mkdir -p "$(dirname "$RESULT_PATH")"
+            cp /tmp/splat-build-monitor.saved.json "$RESULT_PATH"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- "$RESULT_PATH"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'release: persist Splat TestFlight terminal build result'
+            if git push origin HEAD:"$BRANCH"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
