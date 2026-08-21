@@ -1,8 +1,8 @@
 # 撮る単語帳 App Storeプライバシー回答案
 
-更新日: 2026-07-31
+更新日: 2026-08-21
 
-この文書はApp Store Connectの「Appのプライバシー」回答案である。最終回答は、公開時のアプリ、Cloudflare Worker、Google Gemini APIの契約・設定と一致することをCodexとユーザーが確認する。
+この文書はBuild 9時点のApp Store Connect「Appのプライバシー」回答案である。公開時のアプリ、Cloudflare Worker、Google Gemini APIおよび公開プライバシーポリシーと一致させる。
 
 ## 基本方針
 
@@ -10,44 +10,60 @@
 - 広告なし
 - トラッキングなし
 - アクセス解析SDKなし
-- カードと学習履歴は端末内保存
-- 写真は初期版では外部送信しない
-- 「AIで作問（Gemini）」を利用した場合だけ教材本文を外部処理する
-- 「iPhone内で問題を作る」はFoundation Modelsまたはルールベース処理を端末内で実行し、教材本文を外部送信しない
+- カードと学習履歴は原則として端末内保存
+- Apple Vision OCRは端末内処理で、教材画像を外部送信しない
+- 「iPhone内で問題を作る」はApple Foundation Modelsまたは端末内簡易作問を利用し、教材本文を外部送信しない
+- 利用者が明示的にGemini OCRを選んだ場合のみ、選択した教材画像をCloudflare Worker経由でGoogle Gemini APIへ送信する
+- 利用者が明示的にクラウドAI作問を選んだ場合のみ、教材本文等をCloudflare Worker経由でGoogle Gemini APIへ送信する
+- クラウドAI利用回数管理のため、アプリ内で生成した匿名IDをCloudflare Workerへ送信し、月次利用回数をKVで保持する
 
-## 収集する可能性があるデータ
+## App Store Connect回答案
 
-### ユーザーコンテンツ: その他のユーザーコンテンツ
+### 1. User Content / Photos or Videos
 
 対象:
+- 利用者がGemini OCRを明示的に選択した場合の教材画像
 
-- AI作問画面へ入力した教材本文
-- 作問形式
-- 難易度
-- 問題数
+用途:
+- App Functionality
 
-取扱い:
+回答:
+- 収集: あり
+- ユーザーのアイデンティティにリンク: いいえ
+- トラッキング: いいえ
 
-- 利用者が「AIで作問（Gemini）」を実行した場合のみ送信
-- Cloudflare Workerを経由してGoogle Gemini Developer APIで処理
-- 利用目的は「Appの機能」
-- ユーザーの氏名やアカウントとはリンクしない設計
-- トラッキングには使用しない
-- 広告やマーケティングには使用しない
-- Gemini API無料枠では、Googleの料金表上、入力・出力が製品改善に使われる
-- 無料枠のデータ取扱いと利用規約を公開直前に再確認する
+### 2. User Content / Other User Content
 
-App Store Connect回答案:
+対象:
+- クラウドAI作問へ入力した教材本文
+- 作問形式、難易度、問題数
 
-- データ収集: あり
-- データ種類: User Content / Other User Content
-- 用途: App Functionality
-- ユーザーにリンク: いいえ
+用途:
+- App Functionality
+
+回答:
+- 収集: あり
+- ユーザーのアイデンティティにリンク: いいえ
+- トラッキング: いいえ
+
+### 3. Identifiers / User ID
+
+対象:
+- アプリ内でランダム生成しAsyncStorageへ保存する匿名ID
+- Cloudflare Workerで月間AI利用回数を管理するために使用
+- Worker側の利用回数キーは約45日で期限切れになる
+
+用途:
+- App Functionality
+
+回答:
+- 収集: あり
+- ユーザーのアイデンティティにリンク: いいえ
 - トラッキング: いいえ
 
 ## 収集しないデータ
 
-現行実装では、運営者が次の情報を収集するSDKやサーバー処理はない。
+現行Build 9では、次の情報を広告・分析・運営者サーバー収集のために取得するSDKや処理はない。
 
 - 連絡先情報
 - 健康・フィットネス情報
@@ -56,9 +72,8 @@ App Store Connect回答案:
 - 連絡先一覧
 - 閲覧履歴
 - 検索履歴
-- 識別子
 - 購入履歴
-- 使用状況データ
+- 使用状況データ（上記の匿名AI利用回数を除く）
 - 診断データ
 - 広告データ
 
@@ -66,11 +81,11 @@ App Store Connect回答案:
 
 ### カメラ
 
-教材写真の撮影に使用する。撮影した画像は初期版では外部AIへ送信しない。
+教材写真の撮影に使用する。Apple Vision OCRを選択している場合は端末内で認識する。Gemini OCRを利用者が明示的に選択した場合のみ、選択画像を外部AI処理へ送信する。
 
 ### 写真ライブラリ
 
-利用者が選んだ教材写真の表示に使用する。選択していない写真へアクセスしない。
+利用者が選んだ教材写真にのみアクセスする。選択していない写真へアクセスしない。
 
 ## バックアップ
 
@@ -78,19 +93,17 @@ App Store Connect回答案:
 
 ## 外部事業者
 
-- Cloudflare: API中継
-- Google: Gemini APIによる教材本文からの問題生成
-- Apple: App Store、TestFlight、iOSの標準機能
-
-Apple Foundation Modelsによる作問は端末内処理であり、この経路から教材本文を運営者・Cloudflare・Googleへ送信しない。利用できない場合の簡易作問も端末内処理である。
+- Cloudflare: AI API中継、匿名IDによる月間利用回数管理
+- Google: 利用者が明示的に選んだ場合のGemini APIによる教材本文の作問または教材画像OCR
+- Apple: App Store、TestFlight、Apple Vision OCR、Foundation Models、iOS標準機能
 
 ## 提出前確認
 
-- [ ] 本番Workerでログへ教材本文を出力していない
-- [ ] Gemini API無料枠の最新データ取扱いを確認した
-- [ ] プライバシーポリシーにGoogle Geminiへの教材本文送信を明記した
-- [ ] アクセス解析SDKを追加していない
-- [ ] 写真OCRを追加した場合、写真送信の有無を反映した
-- [ ] クラッシュ解析を追加した場合、診断データ回答を更新した
-- [ ] 課金を追加した場合、購入情報回答を更新した
-- [ ] プライバシーポリシーとApp Store回答が一致している
+- [x] Build 9のWorkerは教材本文・画像そのものをアプリ独自ログへ保存する処理を持たない
+- [x] 公開プライバシーポリシーへGemini作問・Gemini OCR・匿名利用IDを明記
+- [x] Apple Vision OCR / Foundation Modelsの端末内経路を明記
+- [x] アクセス解析SDK・広告SDKなし
+- [x] Gemini OCRの画像外部送信を回答案へ反映
+- [x] 匿名IDとKV利用回数管理をIdentifiers回答案へ反映
+- [ ] App Store ConnectのApp Privacy画面で Photos or Videos / Other User Content / User ID を設定し公開
+- [ ] App Store Connectの表示プレビューと公開プライバシーポリシーを最終照合
