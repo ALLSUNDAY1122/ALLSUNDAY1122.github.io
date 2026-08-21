@@ -53,6 +53,7 @@ jobs:
           grep -q 'Primary language: Japanese' splat-native-ios/APPLE_CONNECT_PACKET.md
           grep -q 'Bundle ID: `jp.allsunday1122.splatlab`' splat-native-ios/APPLE_CONNECT_PACKET.md
           grep -q 'SKU: `splatlab-ios-2026`' splat-native-ios/APPLE_CONNECT_PACKET.md
+          grep -q 'App Store Connect Apple ID: `6803778932`' splat-native-ios/APPLE_CONNECT_PACKET.md
           grep -q 'App Store review auto-submit: disabled' splat-native-ios/APPLE_CONNECT_PACKET.md
 
       - name: Validate Codemagic Apple bootstrap contract
@@ -67,7 +68,7 @@ jobs:
         run: |
           set -euo pipefail
           grep -q '^  splat-native-ios:' codemagic.yaml
-          grep -Eq 'APP_STORE_CONNECT_APP_ID: (PENDING_HUMAN_APP_RECORD|6803778932)' codemagic.yaml
+          grep -q 'APP_STORE_CONNECT_APP_ID: 6803778932' codemagic.yaml
           grep -q 'test.*APP_STORE_CONNECT_APP_ID.*PENDING_HUMAN_APP_RECORD' codemagic.yaml
           grep -q 'fetch-signing-files.*IOS_APP_STORE.*--create' codemagic.yaml
           grep -q 'testFlightInternalTestingOnly' codemagic.yaml
@@ -89,10 +90,10 @@ jobs:
             raise "wrong workflow name" unless w["name"] == "Splat Lab Native - Internal TestFlight"
             raise "wrong bundle" unless w.dig("environment", "vars", "BUNDLE_ID") == "jp.allsunday1122.splatlab"
             app_id = w.dig("environment", "vars", "APP_STORE_CONNECT_APP_ID")
-            raise "unexpected App Store Connect App ID" unless ["PENDING_HUMAN_APP_RECORD", 6803778932, "6803778932"].include?(app_id)
+            raise "wrong App Store Connect App ID" unless [6803778932, "6803778932"].include?(app_id)
             raise "TestFlight workflow must not auto-trigger before explicit release command" if w.key?("triggering")
             p = w.dig("publishing", "app_store_connect")
             raise "TestFlight upload disabled" unless p["submit_to_testflight"] == true
             raise "App Store submission must stay disabled" unless p["submit_to_app_store"] == false
-            puts "PASS: Apple registration and TestFlight safety gates are valid"
+            puts "PASS: real App ID and TestFlight safety gates are valid"
           '
