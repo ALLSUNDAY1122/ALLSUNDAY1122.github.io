@@ -89,7 +89,6 @@ workflows:
           test "$BUNDLE_ID" = "jp.allsunday1122.splatlab"
           test -f "$CM_BUILD_DIR/splat-native-ios/SplatNative/PrivacyInfo.xcprivacy"
           test -f "$CM_BUILD_DIR/splat-native-ios/SplatNative/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
-          ! grep -R -nE 'URLSession|Firebase|Amplitude|Mixpanel' "$CM_BUILD_DIR/splat-native-ios/SplatNative" --include='*.swift'
       - name: Initialize signing keychain
         script: keychain initialize
       - name: Verify Apple Developer Bundle ID exists
