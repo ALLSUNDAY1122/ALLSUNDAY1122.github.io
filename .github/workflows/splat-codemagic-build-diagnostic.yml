@@ -1,0 +1,84 @@
+name: Splat Codemagic Build Diagnostic
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260820'
+    paths:
+      - '.github/workflows/splat-codemagic-build-diagnostic.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch sanitized Codemagic build actions
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+          build_id = '6a87c9a258fd97265845cf1e'
+          token = os.environ.get('CM_API_TOKEN', '').strip()
+          if not token:
+              raise SystemExit('Missing GitHub Actions secret CM_API_TOKEN')
+          req = urllib.request.Request(
+              f'https://codemagic.io/api/v3/builds/{build_id}/actions',
+              headers={'x-auth-token': token, 'Accept': 'application/json'},
+              method='GET',
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  payload = json.loads(response.read().decode('utf-8'))
+                  http_status = response.status
+          except urllib.error.HTTPError as exc:
+              http_status = exc.code
+              raw = exc.read().decode('utf-8', errors='replace')
+              try:
+                  payload = json.loads(raw) if raw else {}
+              except json.JSONDecodeError:
+                  payload = {'error': raw[:2000]}
+          sensitive = ('secret','token','password','credential','private','apikey','api_key','environment','variable')
+          def clean(value):
+              if isinstance(value, dict):
+                  return {k: ('[REDACTED]' if any(p in str(k).lower() for p in sensitive) else clean(v)) for k,v in value.items()}
+              if isinstance(value, list):
+                  return [clean(v) for v in value]
+              return value
+          result = {
+              'request_id': 'splat-bootstrap-actions-6a87c9a2',
+              'build_id': build_id,
+              'http_status': http_status,
+              'actions': clean(payload),
+          }
+          Path('/tmp/splat-actions.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+          print(f'PASS: fetched Codemagic build actions HTTP {http_status}')
+          PY
+
+      - name: Persist sanitized diagnostic
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f /tmp/splat-actions.json || exit 0
+          BRANCH='testflight/splat-native-ios-20260820'
+          RESULT_PATH='automation/codemagic-results/splat-bootstrap-actions-6a87c9a2.json'
+          cp /tmp/splat-actions.json /tmp/splat-actions.saved.json
+          for attempt in 1 2; do
+            git fetch origin "$BRANCH"
+            git reset --hard FETCH_HEAD
+            mkdir -p "$(dirname "$RESULT_PATH")"
+            cp /tmp/splat-actions.saved.json "$RESULT_PATH"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- "$RESULT_PATH"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'release: persist Splat Codemagic action diagnostic'
+            if git push origin HEAD:"$BRANCH"; then exit 0; fi
+          done
+          exit 1
