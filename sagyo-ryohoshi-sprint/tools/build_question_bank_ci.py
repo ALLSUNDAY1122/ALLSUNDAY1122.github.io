@@ -42,6 +42,22 @@ CORRECTED_R59_OT_ANSWER = (
     "https://www.mhlw.go.jp/general/sikaku/successlist/2024/"
     "siken08_09-2/dl/OT_seitou.pdf"
 )
+R58_PAGE = (
+    "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/"
+    "tp230524-08_09.html"
+)
+R58_OT_AM = (
+    "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/"
+    "tp230524-09a_01.pdf"
+)
+R58_OT_PM = (
+    "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/"
+    "tp230524-09b_01.pdf"
+)
+R58_OT_ANSWER = (
+    "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/"
+    "tp230524-09seitou.pdf"
+)
 R57_PAGE = (
     "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/"
     "tp220421-08_09.html"
@@ -68,6 +84,8 @@ def pdf_links_from_page(page_url):
         return R60_OT_AM, R60_OT_PM, R60_OT_ANSWER
     if page_url == R59_PAGE:
         return R59_OT_AM, R59_OT_PM, CORRECTED_R59_OT_ANSWER
+    if page_url == R58_PAGE:
+        return R58_OT_AM, R58_OT_PM, R58_OT_ANSWER
     if page_url == R57_PAGE:
         return R57_OT_AM, R57_OT_PM, R57_OT_ANSWER
     return _original_pdf_links_from_page(page_url)
@@ -117,6 +135,9 @@ def find_q_starts(lines):
 def build_sources():
     """Yield newest official rounds as they are resolved."""
     pages = bank.discover_exam_pages()
+    # The MHLW topics index still exposes an obsolete R58 URL; use the current
+    # official archive that actually publishes the R58 OT question PDFs.
+    pages[58] = R58_PAGE
     fix = None
     for exam in range(60, 44, -1):
         page_url = pages.get(exam)
