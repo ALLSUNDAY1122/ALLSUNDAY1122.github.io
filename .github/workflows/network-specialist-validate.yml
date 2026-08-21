@@ -47,10 +47,11 @@ jobs:
           node --check network-specialist-sprint/questions-2024-b.js
           node --check network-specialist-sprint/questions-2023-a.js
           node --check network-specialist-sprint/questions-2023-b.js
+          node --check network-specialist-sprint/questions-difficulty-overrides.js
           node --check network-specialist-sprint/questions-ui-fixes.js
           node --check network-specialist-sprint/sw.js
 
-      - name: Verify question counts
+      - name: Verify question counts and exam difficulty floor
         run: |
           node <<'NODE'
           global.window = {};
@@ -59,17 +60,19 @@ jobs:
           for (const f of [
             'questions-meta.js','questions-2025-a.js','questions-2025-b.js',
             'questions-2024-a.js','questions-2024-b.js','questions-2023-a.js','questions-2023-b.js',
-            'questions-ui-fixes.js'
+            'questions-difficulty-overrides.js','questions-ui-fixes.js'
           ]) vm.runInThisContext(fs.readFileSync('network-specialist-sprint/' + f, 'utf8'), {filename:f});
           const occ = window.NW_EXAM_OCCURRENCES || [];
           const uniq = window.NW_UNIQUE_IDS || [];
           const perYear = [2025,2024,2023].map(y => occ.filter(q => q.examYear === y).length);
+          const examLevel = occ.filter(q => q.difficultyLevel === 'NW_A2_EXAM').length;
           if (occ.length !== 75) throw new Error(`exam occurrences=${occ.length}, expected 75`);
           if (uniq.length !== 68) throw new Error(`unique ids=${uniq.length}, expected 68`);
           if (perYear.some(n => n !== 25)) throw new Error(`per-year counts=${perYear.join(',')}, expected 25 each`);
+          if (examLevel < 40) throw new Error(`exam-level audited=${examLevel}, expected >=40`);
           const ids = new Set(occ.map(q => q.id));
           for (const id of uniq) if (!ids.has(id)) throw new Error(`unique id missing from occurrences: ${id}`);
-          console.log('PASS', {occurrences:occ.length, unique:uniq.length, perYear});
+          console.log('PASS', {occurrences:occ.length, unique:uniq.length, perYear, examLevel});
           NODE
 
       - name: Native source policy
