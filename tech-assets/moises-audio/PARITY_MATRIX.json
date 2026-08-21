@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "project": "moises-equivalence",
+  "reference": {
+    "app": "Moises: The Musician's App",
+    "app_store_jp": "https://apps.apple.com/jp/app/id1515796612",
+    "official_product": "https://moises.ai/ja/products/moises-app/",
+    "captured_at": "2026-08-22"
+  },
+  "states": ["MISSING", "PARTIAL", "NEAR_PARITY", "PARITY"],
+  "parity_rows": [
+    {"id":"MOI-P001","area":"import","feature":"audio file import","tier":"FREE_CORE","state":"MISSING","gate":"actual user file import succeeds; supported formats and error UX verified"},
+    {"id":"MOI-P002","area":"import","feature":"video/public URL/cloud import pathways","tier":"MAJOR","state":"MISSING","gate":"reference-supported pathways are inventoried and equivalent supported routes verified"},
+    {"id":"MOI-P003","area":"separation","feature":"vocals/drums/bass stem separation","tier":"FREE_CORE","state":"MISSING","gate":"real multi-genre audio; audible quality and latency A/B; no fake/prebaked result"},
+    {"id":"MOI-P004","area":"separation","feature":"other/instrument stem separation","tier":"MAJOR","state":"MISSING","gate":"reference stem options captured; representative modes verified"},
+    {"id":"MOI-P005","area":"separation","feature":"advanced instrument separation","tier":"PREMIUM_PRO","state":"MISSING","gate":"premium/pro reference modes inventoried and equivalent quality demonstrated"},
+    {"id":"MOI-P006","area":"mixer","feature":"stem solo mute volume remix","tier":"FREE_CORE","state":"MISSING","gate":"sample-accurate-enough multitrack playback; no desync/click/pop; comparable operation count"},
+    {"id":"MOI-P007","area":"player","feature":"waveform timeline seek","tier":"FREE_CORE","state":"MISSING","gate":"seek responsiveness, visual sync and long-track stability verified"},
+    {"id":"MOI-P008","area":"practice","feature":"trim and loop","tier":"FREE_CORE","state":"MISSING","gate":"loop boundaries remain stable across repeated playback and tempo changes"},
+    {"id":"MOI-P009","area":"analysis","feature":"BPM detection","tier":"FREE_CORE","state":"MISSING","gate":"multi-genre benchmark; octave errors and confidence handling measured"},
+    {"id":"MOI-P010","area":"practice","feature":"audio speed changer","tier":"FREE_CORE","state":"MISSING","gate":"tempo changes without unacceptable pitch/formant artifacts; A/B UX and latency"},
+    {"id":"MOI-P011","area":"analysis","feature":"AI key detection","tier":"FREE_CORE","state":"MISSING","gate":"benchmark set with major/minor/modal edge cases and confidence handling"},
+    {"id":"MOI-P012","area":"practice","feature":"pitch/key changer","tier":"FREE_CORE","state":"MISSING","gate":"semitone shift is stable and chords display transposes consistently"},
+    {"id":"MOI-P013","area":"analysis","feature":"chord detection","tier":"FREE_CORE","state":"MISSING","gate":"timestamped chord sequence benchmark including inversions/complex chords where reference supports them"},
+    {"id":"MOI-P014","area":"practice","feature":"smart metronome / click track","tier":"FREE_CORE","state":"MISSING","gate":"beat-aligned click remains synchronized on studio/live recordings"},
+    {"id":"MOI-P015","area":"practice","feature":"count-in","tier":"FREE_CORE","state":"MISSING","gate":"count-in timing and start behavior match practice flow"},
+    {"id":"MOI-P016","area":"analysis","feature":"song parts / section detection","tier":"MAJOR","state":"MISSING","gate":"section boundaries support navigation/looping and are benchmarked on varied structures"},
+    {"id":"MOI-P017","area":"library","feature":"project/library persistence and resume","tier":"FREE_CORE","state":"MISSING","gate":"relaunch/interruption preserves user work and processing state safely"},
+    {"id":"MOI-P018","area":"library","feature":"setlists","tier":"FREE_CORE","state":"MISSING","gate":"create/reorder/use setlists with comparable flow"},
+    {"id":"MOI-P019","area":"export","feature":"export custom mix and separated stems","tier":"FREE_CORE","state":"MISSING","gate":"exported audio is valid, synchronized, correctly named and shareable"},
+    {"id":"MOI-P020","area":"processing","feature":"progress cancel retry resume","tier":"FREE_CORE","state":"MISSING","gate":"long processing survives cancellation/retry/interruption without corrupting project"},
+    {"id":"MOI-P021","area":"performance","feature":"long audio memory thermal battery stability","tier":"QUALITY","state":"MISSING","gate":"device benchmark with representative long tracks and thermal/memory evidence"},
+    {"id":"MOI-P022","area":"ux","feature":"free-core vertical flow","tier":"QUALITY","state":"MISSING","gate":"import -> process -> mixer -> practice -> save/export works end-to-end with no obvious UX inferiority"},
+    {"id":"MOI-P023","area":"accessibility","feature":"VoiceOver Dynamic Type reduced motion basic accessibility","tier":"QUALITY","state":"MISSING","gate":"core flow operable and labels/focus validated"},
+    {"id":"MOI-P024","area":"privacy","feature":"user content privacy and deletion behavior","tier":"QUALITY","state":"MISSING","gate":"storage/telemetry policy documented; deletion/account paths do not leak user content"},
+    {"id":"MOI-P025","area":"advanced","feature":"AI stem generation","tier":"CURRENT_ADVANCED","state":"MISSING","gate":"verify exact current iOS scope first; if present, functional parity remains tracked"},
+    {"id":"MOI-P026","area":"advanced","feature":"video recording / performance capture","tier":"CURRENT_ADVANCED","state":"MISSING","gate":"verify exact current iOS scope first; if present, capture quality and flow benchmarked"},
+    {"id":"MOI-P027","area":"advanced","feature":"AI Studio / generative production features","tier":"CURRENT_ADVANCED","state":"MISSING","gate":"verify exact current iOS availability, entitlement and observable behavior before implementation"},
+    {"id":"MOI-P028","area":"advanced","feature":"Voice Studio / vocal generation features","tier":"CURRENT_ADVANCED","state":"MISSING","gate":"verify exact iOS/pro scope and legal/model feasibility; keep BLOCKED rather than delete if constrained"}
+  ],
+  "completion_rule": "Project completion requires every in-scope major iPhone parity row to be PARITY or explicitly BLOCKED with HQ-approved evidence that exact functional equivalence is technically/legal impossible. Engine extraction happens after product parity."
+}
