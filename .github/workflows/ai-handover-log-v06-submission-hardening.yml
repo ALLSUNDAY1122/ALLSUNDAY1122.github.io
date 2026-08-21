@@ -1,0 +1,164 @@
+name: AI Handover Log v0.6 Submission Hardening
+
+on:
+  push:
+    branches:
+      - agent/ai-handover-log-v04-binary
+    paths:
+      - .github/workflows/ai-handover-log-v06-submission-hardening.yml
+      - scripts/harden_v06_ios_submission.py
+      - scripts/generate_v05_brand_assets.py
+      - patches/**
+      - source_parts/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hardened-unsigned-archive:
+    runs-on: macos-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter 3.44.7
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.7'
+          channel: stable
+          cache: true
+
+      - name: Reconstruct v0.6 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/source" "$RUNNER_TEMP/logs"
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, hashlib, os
+          target = Path(os.environ['RUNNER_TEMP']) / 'source.tar.xz'
+          parts = sorted(Path('source_parts').glob('part_*.b64'))
+          with target.open('wb') as output:
+              for part in parts:
+                  output.write(base64.b64decode(''.join(part.read_text().split()), validate=True))
+          digest = hashlib.sha256(target.read_bytes()).hexdigest()
+          expected = 'cdb7067a29385d346edadb7506f39f7e5cfd567a07e930e5b43344ae4f50e234'
+          print(f'parts={len(parts)} sha256={digest}')
+          if digest != expected:
+              raise SystemExit('source archive SHA-256 mismatch')
+          PY
+          tar -xJf "$RUNNER_TEMP/source.tar.xz" -C "$RUNNER_TEMP/source"
+          python3 patches/fix_v04_migration.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v05_mobile_ui.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v05_mobile_tests.py "$RUNNER_TEMP/source"
+          python3 patches/fix_v05_dialog_disposal.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v06_release_prep.py "$RUNNER_TEMP/source"
+          grep -q 'version: 0.6.0+6' "$RUNNER_TEMP/source/pubspec.yaml"
+
+      - name: Generate hardened iPhone-only project
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter create --platforms=ios --project-name=aihandoverlog --org=jp.allsunday "$RUNNER_TEMP/build"
+          SOURCE="$RUNNER_TEMP/source"
+          rm -rf "$RUNNER_TEMP/build/lib" "$RUNNER_TEMP/build/test"
+          cp -R "$SOURCE/lib" "$RUNNER_TEMP/build/lib"
+          cp -R "$SOURCE/test" "$RUNNER_TEMP/build/test"
+          cp "$SOURCE/pubspec.yaml" "$RUNNER_TEMP/build/pubspec.yaml"
+          cp "$SOURCE/analysis_options.yaml" "$RUNNER_TEMP/build/analysis_options.yaml"
+          cp -R "$SOURCE/docs" "$RUNNER_TEMP/build/docs" 2>/dev/null || true
+          cp "$SOURCE/README.md" "$RUNNER_TEMP/build/README.md" 2>/dev/null || true
+          cp "$SOURCE/CHANGELOG.md" "$RUNNER_TEMP/build/CHANGELOG.md" 2>/dev/null || true
+          python3 scripts/generate_v05_brand_assets.py "$RUNNER_TEMP/build"
+          python3 scripts/harden_v06_ios_submission.py "$RUNNER_TEMP/build" | tee "$RUNNER_TEMP/logs/hardening.log"
+          plutil -lint "$RUNNER_TEMP/build/ios/Runner/Info.plist"
+          plutil -lint "$RUNNER_TEMP/build/ios/Runner/PrivacyInfo.xcprivacy"
+          grep -q 'TARGETED_DEVICE_FAMILY = 1;' "$RUNNER_TEMP/build/ios/Runner.xcodeproj/project.pbxproj"
+          ! grep -q 'TARGETED_DEVICE_FAMILY = "1,2";' "$RUNNER_TEMP/build/ios/Runner.xcodeproj/project.pbxproj"
+
+      - name: Test and build hardened iPhone Release
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -euo pipefail
+          set -o pipefail
+          flutter --version | tee "$RUNNER_TEMP/logs/flutter-version.log"
+          flutter pub get 2>&1 | tee "$RUNNER_TEMP/logs/pub-get.log"
+          flutter analyze 2>&1 | tee "$RUNNER_TEMP/logs/flutter-analyze.log"
+          flutter test 2>&1 | tee "$RUNNER_TEMP/logs/flutter-test.log"
+          flutter build ios --release --no-codesign 2>&1 | tee "$RUNNER_TEMP/logs/flutter-ios-release.log"
+
+      - name: Create hardened unsigned archive
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -euo pipefail
+          set -o pipefail
+          mkdir -p "$RUNNER_TEMP/archive"
+          xcodebuild \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/archive/AI_Handover_Log_v0.6_iPhoneOnly.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            archive 2>&1 | tee "$RUNNER_TEMP/logs/xcode-archive.log"
+
+      - name: Inspect submission settings and privacy manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$RUNNER_TEMP/archive/AI_Handover_Log_v0.6_iPhoneOnly.xcarchive/Products/Applications/Runner.app"
+          INFO="$APP/Info.plist"
+          test -f "$INFO"
+          test -f "$APP/PrivacyInfo.xcprivacy"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :UIDeviceFamily:0' "$INFO")" = "1"
+          if /usr/libexec/PlistBuddy -c 'Print :UIDeviceFamily:1' "$INFO" >/dev/null 2>&1; then
+            echo 'Unexpected iPad device family' >&2
+            exit 1
+          fi
+          test "$(/usr/libexec/PlistBuddy -c 'Print :UISupportedInterfaceOrientations:0' "$INFO")" = "UIInterfaceOrientationPortrait"
+          if /usr/libexec/PlistBuddy -c 'Print :UISupportedInterfaceOrientations:1' "$INFO" >/dev/null 2>&1; then
+            echo 'Unexpected second orientation' >&2
+            exit 1
+          fi
+          find "$APP" -name PrivacyInfo.xcprivacy -print -exec plutil -lint {} \; | tee "$RUNNER_TEMP/logs/privacy-manifests.log"
+          {
+            echo 'Bundle ID:'
+            /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$INFO"
+            echo 'Version:'
+            /usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$INFO"
+            echo 'Build:'
+            /usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$INFO"
+            echo 'Device family:'
+            /usr/libexec/PlistBuddy -c 'Print :UIDeviceFamily' "$INFO"
+            echo 'Orientations:'
+            /usr/libexec/PlistBuddy -c 'Print :UISupportedInterfaceOrientations' "$INFO"
+            echo 'Encryption:'
+            /usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$INFO"
+          } | tee "$RUNNER_TEMP/logs/submission-audit.log"
+
+      - name: Package hardened source and archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          ditto -c -k --sequesterRsrc --keepParent "$RUNNER_TEMP/build" \
+            "$RUNNER_TEMP/AI_Handover_Log_Flutter_v0.6.0_build6_iPhoneOnly_SubmissionReady.zip"
+          ditto -c -k --sequesterRsrc --keepParent "$RUNNER_TEMP/archive/AI_Handover_Log_v0.6_iPhoneOnly.xcarchive" \
+            "$RUNNER_TEMP/AI_Handover_Log_v0.6_iPhoneOnly_Unsigned.xcarchive.zip"
+          shasum -a 256 "$RUNNER_TEMP"/AI_Handover_Log_*.zip > "$RUNNER_TEMP/AI_Handover_Log_v0.6_Submission_Hardening_SHA256SUMS.txt"
+
+      - name: Upload hardened submission artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-handover-log-v06-submission-hardening-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/AI_Handover_Log_Flutter_v0.6.0_build6_iPhoneOnly_SubmissionReady.zip
+            ${{ runner.temp }}/AI_Handover_Log_v0.6_iPhoneOnly_Unsigned.xcarchive.zip
+            ${{ runner.temp }}/AI_Handover_Log_v0.6_Submission_Hardening_SHA256SUMS.txt
+            ${{ runner.temp }}/logs
+          compression-level: 0
+          if-no-files-found: error

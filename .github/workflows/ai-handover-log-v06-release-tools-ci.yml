@@ -1,0 +1,218 @@
+name: AI Handover Log v0.6 Release Tools CI
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/ai-handover-log-v06-release-tools-ci.yml
+      - scripts/verify_app_store_connect_api_key.py
+      - scripts/validate_apple_release_credentials_macos.sh
+      - scripts/audit_apply_app_store_metadata_ja.py
+      - scripts/configure_github_testflight_environment_macos.sh
+      - config/app_store_metadata_ja_v06.json
+  push:
+    branches:
+      - agent/ai-handover-log-v04-binary
+    paths:
+      - .github/workflows/ai-handover-log-v06-release-tools-ci.yml
+      - scripts/verify_app_store_connect_api_key.py
+      - scripts/validate_apple_release_credentials_macos.sh
+      - scripts/audit_apply_app_store_metadata_ja.py
+      - scripts/configure_github_testflight_environment_macos.sh
+      - config/app_store_metadata_ja_v06.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-release-tools:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Record toolchain
+        run: |
+          set -euo pipefail
+          python3 --version
+          openssl version
+
+      - name: Compile Python tools
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/verify_app_store_connect_api_key.py \
+            scripts/audit_apply_app_store_metadata_ja.py
+
+      - name: Validate metadata JSON and release limits
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import importlib.util
+          import json
+          from pathlib import Path
+
+          script = Path('scripts/audit_apply_app_store_metadata_ja.py')
+          spec = importlib.util.spec_from_file_location('metadata_tool', script)
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+
+          data = json.loads(Path('config/app_store_metadata_ja_v06.json').read_text(encoding='utf-8'))
+          errors = module.validate_metadata(data)
+          if errors:
+              raise SystemExit('\n'.join(errors))
+
+          assert data['app']['bundle_id'] == 'jp.allsunday.aihandoverlog'
+          assert data['app']['locale'] == 'ja'
+          assert data['version']['platform'] == 'IOS'
+          assert data['version']['version_string'] == '0.6.0'
+          assert len(data['version']['keywords'].encode('utf-8')) <= 100
+          assert len(data['version']['promotional_text']) <= 170
+          assert len(data['version']['description']) <= 4000
+          print('METADATA_VALID')
+          PY
+
+      - name: Test triple production confirmation offline
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import importlib.util
+          import json
+          from pathlib import Path
+          from types import SimpleNamespace
+
+          script = Path('scripts/audit_apply_app_store_metadata_ja.py')
+          spec = importlib.util.spec_from_file_location('metadata_tool', script)
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+
+          data = json.loads(Path('config/app_store_metadata_ja_v06.json').read_text(encoding='utf-8'))
+          app = data['app']
+          version = data['version']
+
+          good = SimpleNamespace(
+              confirm_bundle_id=app['bundle_id'],
+              confirm_version=version['version_string'],
+              confirm_apply=module.APPLY_CONFIRMATION,
+          )
+          module.verify_apply_confirmation(good, app, version)
+
+          invalid = [
+              SimpleNamespace(confirm_bundle_id='wrong.bundle', confirm_version=version['version_string'], confirm_apply=module.APPLY_CONFIRMATION),
+              SimpleNamespace(confirm_bundle_id=app['bundle_id'], confirm_version='9.9.9', confirm_apply=module.APPLY_CONFIRMATION),
+              SimpleNamespace(confirm_bundle_id=app['bundle_id'], confirm_version=version['version_string'], confirm_apply='APPLY'),
+          ]
+          for case in invalid:
+              try:
+                  module.verify_apply_confirmation(case, app, version)
+              except SystemExit:
+                  continue
+              raise SystemExit('invalid production confirmation was accepted')
+
+          print('TRIPLE_CONFIRMATION_VALID')
+          PY
+
+      - name: Test ES256 JWT creation offline
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/jwt-test"
+          openssl genpkey \
+            -algorithm EC \
+            -pkeyopt ec_paramgen_curve:P-256 \
+            -out "$RUNNER_TEMP/jwt-test/AuthKey_ABCDEFGHIJ.p8"
+
+          python3 scripts/verify_app_store_connect_api_key.py \
+            --key "$RUNNER_TEMP/jwt-test/AuthKey_ABCDEFGHIJ.p8" \
+            --key-id ABCDEFGHIJ \
+            --issuer-id 00000000-0000-0000-0000-000000000000 \
+            --offline-only \
+            --output "$RUNNER_TEMP/jwt-test/result.json"
+
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          data = json.loads((Path(os.environ['RUNNER_TEMP']) / 'jwt-test/result.json').read_text())
+          assert data['jwt_created'] is True
+          assert data['jwt_signature_bytes'] == 64
+          assert data['network_validation_performed'] is False
+          print('JWT_OFFLINE_VALID')
+          PY
+
+      - name: Verify metadata automation safety boundaries
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('scripts/audit_apply_app_store_metadata_ja.py').read_text(encoding='utf-8')
+          required = [
+              'parser.add_argument("--apply", action="store_true")',
+              'parser.add_argument("--confirm-bundle-id")',
+              'parser.add_argument("--confirm-version")',
+              'parser.add_argument("--confirm-apply")',
+              'APPLY_CONFIRMATION = "APPLY_METADATA"',
+              'verify_apply_confirmation',
+              'save_report(args.output, report)',
+              'submission_performed',
+              'build_selected',
+              'screenshots_uploaded',
+              'Do not apply metadata before PR #1661 is merged and verified',
+          ]
+          for marker in required:
+              if marker not in text:
+                  raise SystemExit(f'missing safety marker: {marker}')
+          forbidden = [
+              '/appStoreVersionSubmissions',
+              '/reviewSubmissions',
+              '/appStoreVersionReleaseRequests',
+              '/appScreenshots',
+              '/builds/',
+          ]
+          for marker in forbidden:
+              if marker in text:
+                  raise SystemExit(f'forbidden production endpoint found: {marker}')
+          print('SAFETY_BOUNDARIES_VALID')
+          PY
+
+  macos-shell-tools:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Bash syntax
+        run: |
+          set -euo pipefail
+          bash -n scripts/validate_apple_release_credentials_macos.sh
+          bash -n scripts/configure_github_testflight_environment_macos.sh
+
+      - name: Check required macOS tools
+        run: |
+          set -euo pipefail
+          command -v security
+          command -v openssl
+          command -v plutil
+          command -v /usr/libexec/PlistBuddy
+          command -v python3
+          command -v shasum
+
+      - name: Verify credential report excludes secret content fields
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('scripts/validate_apple_release_credentials_macos.sh').read_text(encoding='utf-8')
+          required = [
+              'sensitive_values_in_report',
+              'P12_SHA256',
+              'PROFILE_SHA256',
+              'API_KEY_SHA256',
+              'unset P12_PASSWORD KEYCHAIN_PASSWORD',
+              'App Store Connect API authentication failed',
+          ]
+          for marker in required:
+              if marker not in text:
+                  raise SystemExit(f'missing secret-handling marker: {marker}')
+          print('CREDENTIAL_REPORT_BOUNDARY_VALID')
+          PY
