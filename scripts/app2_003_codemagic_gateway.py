@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """APP2-003 fixed Codemagic gateway for 夜の書架.
 
-Allowed actions are inspect, inspect_app, add_app, build, and inspect_build. The
-target repository, workflow, and branch are hard-coded. App Store review
-submission is not part of this gateway.
+Allowed actions are inspect, inspect_app, add_app, add_fresh_app, build, and
+inspect_build. The target repository, workflow, and branch are hard-coded.
+App Store review submission is not part of this gateway.
 """
 from __future__ import annotations
 
@@ -55,6 +55,7 @@ def app_summary(app: dict) -> dict:
         "id": app.get("_id") or app.get("id"),
         "name": app.get("appName") or app.get("name"),
         "repositoryUrl": app.get("repositoryUrl") or app.get("repository_url") or app.get("repoUrl"),
+        "branches": app.get("branches"),
     }
 
 
@@ -84,14 +85,20 @@ def list_apps(token: str):
     return apps
 
 
-def find_app(apps: list[dict]) -> tuple[str | None, list[dict]]:
+def matching_apps(apps: list[dict]) -> list[dict]:
     needle = REPOSITORY.lower()
     short = needle.split("/")[-1]
-    candidates = []
+    matched = []
     for app in apps:
         serial = json.dumps(app, ensure_ascii=False).lower().replace(".git", "")
         if needle in serial or short in serial:
-            candidates.append(app_summary(app))
+            matched.append(app)
+    return matched
+
+
+def find_app(apps: list[dict]) -> tuple[str | None, list[dict]]:
+    matched = matching_apps(apps)
+    candidates = [app_summary(app) for app in matched]
     ids = {item.get("id") for item in candidates if item.get("id")}
     return (next(iter(ids)) if len(ids) == 1 else None), candidates
 
@@ -107,7 +114,7 @@ def main() -> int:
     if not request_id.startswith("app2-003-"):
         raise SystemExit("Unexpected request_id")
     action = command.get("action")
-    if action not in {"inspect", "inspect_app", "add_app", "build", "inspect_build"}:
+    if action not in {"inspect", "inspect_app", "add_app", "add_fresh_app", "build", "inspect_build"}:
         raise SystemExit("Unsupported APP2-003 Codemagic action")
 
     token = os.environ.get("CM_API_TOKEN", "").strip()
@@ -146,17 +153,19 @@ def main() -> int:
             return 0
 
         if action == "inspect_app":
-            if not app_id:
-                raise RuntimeError("Night Library Codemagic application is not registered")
-            status, response = api_json(token, f"https://api.codemagic.io/apps/{app_id}")
+            explicit_id = str(command.get("app_id", "")).strip()
+            target_id = explicit_id or app_id
+            if not target_id:
+                raise RuntimeError("Night Library Codemagic application is not uniquely resolved")
+            status, response = api_json(token, f"https://api.codemagic.io/apps/{target_id}")
             if not 200 <= status < 300:
                 raise RuntimeError(f"Codemagic GET /apps/:id HTTP {status}: {sanitize(response)}")
             app = response.get("application") if isinstance(response.get("application"), dict) else response
-            result.update({"ok": True, "app_id": app_id, "app_details": safe_app_details(app)})
+            result.update({"ok": True, "app_id": target_id, "app_details": safe_app_details(app)})
             return 0
 
-        if action == "add_app":
-            if app_id:
+        if action in {"add_app", "add_fresh_app"}:
+            if action == "add_app" and app_id:
                 result.update({"ok": True, "changed": False, "app_id": app_id})
                 return 0
             status, response = api_json(
@@ -171,26 +180,29 @@ def main() -> int:
             created_id = created.get("_id") or created.get("id")
             if not created_id:
                 raise RuntimeError(f"Codemagic app create returned no id: {sanitize(response)}")
+            status, readback = api_json(token, f"https://api.codemagic.io/apps/{created_id}")
+            if not 200 <= status < 300:
+                raise RuntimeError(f"Codemagic created app read-back HTTP {status}: {sanitize(readback)}")
+            created_app = readback.get("application") if isinstance(readback.get("application"), dict) else readback
             apps_after = list_apps(token)
-            readback_id, readback_candidates = find_app(apps_after)
-            if readback_id != created_id:
-                raise RuntimeError("Codemagic app read-back mismatch")
             result.update({
                 "ok": True,
                 "changed": True,
                 "app_id": created_id,
-                "resolved_app_id": readback_id,
-                "application_candidates": readback_candidates,
+                "created_app_details": safe_app_details(created_app),
+                "application_candidates": [app_summary(app) for app in matching_apps(apps_after)],
             })
             return 0
 
-        if not app_id:
-            raise RuntimeError("Night Library Codemagic application is not registered")
+        explicit_id = str(command.get("app_id", "")).strip()
+        target_id = explicit_id or app_id
+        if not target_id:
+            raise RuntimeError("Night Library Codemagic application is not uniquely resolved")
         status, response = api_json(
             token,
             "https://api.codemagic.io/builds",
             method="POST",
-            payload={"appId": app_id, "workflowId": WORKFLOW_ID, "branch": BRANCH},
+            payload={"appId": target_id, "workflowId": WORKFLOW_ID, "branch": BRANCH},
         )
         if not 200 <= status < 300:
             raise RuntimeError(f"Codemagic POST /builds HTTP {status}: {sanitize(response)}")
@@ -199,10 +211,10 @@ def main() -> int:
             raise RuntimeError(f"Codemagic build start returned no build id: {sanitize(response)}")
         result.update({
             "ok": True,
-            "app_id": app_id,
+            "app_id": target_id,
             "build_id": build_id,
             "status": "started",
-            "build_url": f"https://codemagic.io/app/{app_id}/build/{build_id}",
+            "build_url": f"https://codemagic.io/app/{target_id}/build/{build_id}",
         })
         return 0
     except Exception as exc:
