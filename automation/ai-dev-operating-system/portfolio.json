@@ -1,21 +1,30 @@
 {
-  "schema_version": "0.1",
-  "updated_at": "2026-08-22T20:33:00+09:00",
-  "integration_epoch": 1,
-  "operating_mode": "BOOTSTRAP",
+  "schema_version": "0.2",
+  "updated_at": "2026-08-22T21:44:00+09:00",
+  "integration_epoch": 2,
+  "operating_mode": "DISPATCHER_V2_BOOTSTRAP",
   "wip_limits": {
     "parity_projects": 3,
     "normal_apps": 5,
     "release_projects": 8,
     "sev_interrupts": 2
   },
+  "dispatcher_policy": {
+    "normal_dispatch_plane": "local_chrome_dispatcher",
+    "codex_role": "exception_only",
+    "session_run_limit": 3,
+    "max_active_green": 3,
+    "max_heavy_io": 1,
+    "resource_governor": "chrome_system_memory_cpu",
+    "auto_session_rotation": "NOT_YET_VERIFIED"
+  },
   "project_registry": [
     {
       "project_id": "app-development-2",
       "kind": "normal_apps",
       "priority": "high",
-      "queue_locator": "DISCOVER_FROM_GITHUB",
-      "status": "DISCOVERY_REQUIRED"
+      "queue_locator": "https://raw.githubusercontent.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/refs/heads/automation/app-development-2-session-dispatcher/automation/chatgpt-dispatcher/app-development-2/queue.json",
+      "status": "ACTIVE"
     },
     {
       "project_id": "scaniverse-parity",
@@ -40,12 +49,11 @@
     }
   ],
   "policy": {
-    "default_worker_model": "gpt-5.6-luna",
-    "decision_model": "gpt-5.6-terra",
-    "exception_model": "gpt-5.6-sol",
     "session_history_is_source_of_truth": false,
     "auto_continue": true,
-    "auto_recover_stale_attempts": true,
-    "human_gate_only_for_genuine_decisions": true
+    "human_gate_only_for_genuine_decisions": true,
+    "codex_normal_dispatch": false,
+    "codex_exception_escalation": true,
+    "quality_may_not_be_reduced_for_budget": true
   }
 }
