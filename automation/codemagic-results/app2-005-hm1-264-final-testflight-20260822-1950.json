@@ -1,0 +1,195 @@
+{
+  "request_id": "app2-005-hm1-264-final-testflight-20260822-1950",
+  "ok": false,
+  "action": "build",
+  "workflow_id": "health-manager-1-testflight",
+  "branch": "main",
+  "resolved_app_id": null,
+  "application_candidates": [
+    {
+      "id": "6a769d81a1add9d06020b524",
+      "name": "ALLSUNDAY1122.github.io",
+      "repositoryUrl": null
+    }
+  ],
+  "note": null,
+  "build_id": "6a897ea8f2d07d247d43650c",
+  "status": "failed",
+  "app_id": "6a769d81a1add9d06020b524",
+  "error": "Codemagic build ended with status: failed",
+  "build_details": {
+    "id": "6a897ea8f2d07d247d43650c",
+    "app_id": "6a769d81a1add9d06020b524",
+    "workflow": {
+      "id": "health-manager-1-testflight",
+      "source": "file",
+      "name": "Health Manager 1 - iOS TestFlight"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "failed",
+    "index": 11,
+    "artifacts": [
+      {
+        "name": "ALLSUNDAY1122.github.io_11_artifacts.zip",
+        "size_in_bytes": 1333,
+        "type": "bundle",
+        "short_lived_download_url": "https://api.codemagic.io//artifacts/.eJwVx0mSgjAAQNG7uKcKhYguQ4cmgIRJGdxYBJkRgYAMp2_7L17V3-XwP7kvQ6leMPzFQ3cVZ4e-hA8IKjJousL7h04UdNJ6rNiGt1FDPN0cTSA9g3q_CEkI0NnIfsRmDe8lg3TlU3ckwphitVQx4exgDMWnjpJjMaURGpA2Saml869gqa6Mm7tgNp_UgLNtnxbHt9Y6V82TJ3xqq6NT4qYT8KX4Qn7A0hbF-boBeUpJf1NTYmTq6fB2LTDALwq_Ty0b9RkrQvpwFt_jZOhuF3roIjpyb76IZcZKzbRyv323jeff2W34LtDs2bTr1g0qabSVDBEBzyBuKCduYgicO98lcnXJkWUeheiB9IZbq0iJC_Xo2dme5XjqcbH7AzKGb9w.yaU9GMpzqHUalV8wAML_-f6sLzw",
+        "version_code": null,
+        "version_name": null
+      }
+    ],
+    "labels": [],
+    "release_notes": [],
+    "created_at": "2026-08-22T10:49:12.137000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "6b0772af80da1efa9b07940860ee0dec202d157d",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "Retry APP2-005 HM1 from known-good XcodeGen structure",
+      "url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/6b0772af80da1efa9b07940860ee0dec202d157d"
+    },
+    "branch": "main",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-08-22T10:49:21.420000Z",
+    "finished_at": "2026-08-22T10:50:02.285000Z"
+  },
+  "actions": {
+    "data": [
+      {
+        "id": "6a897ea8f061af3624b7ab5e",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-22T10:49:21.691000Z",
+        "finished_at": "2026-08-22T10:49:42.817000Z"
+      },
+      {
+        "id": "6a897ea8f061af3624b7ab5f",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-22T10:49:42.817000Z",
+        "finished_at": "2026-08-22T10:49:49.204000Z"
+      },
+      {
+        "id": "6a897ea8f061af3624b7ab5d",
+        "name": "Set up code signing identities",
+        "type": "setup_code_signing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-22T10:49:49.204000Z",
+        "finished_at": "2026-08-22T10:49:51.427000Z"
+      },
+      {
+        "id": "6a897ea8f061af3624b7ab60",
+        "name": "Install XcodeGen",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nHOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen",
+        "status": "success",
+        "started_at": "2026-08-22T10:49:51.427000Z",
+        "finished_at": "2026-08-22T10:49:59.307000Z"
+      },
+      {
+        "id": "6a897ea8f061af3624b7ab61",
+        "name": "Prepare audited 264-question bundle and icon",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -o pipefail\nbash -x \"$CM_BUILD_DIR/ios/health-manager-1/prepare-ios.sh\" 2>&1 | tee /tmp/hm1-prepare.log",
+        "status": "success",
+        "started_at": "2026-08-22T10:49:59.307000Z",
+        "finished_at": "2026-08-22T10:50:00.408000Z"
+      },
+      {
+        "id": "6a897ea8f061af3624b7ab62",
+        "name": "Set CI build number and generate Xcode project",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -o pipefail\n{\n  set -x\n  cd \"$CM_BUILD_DIR/ios/health-manager-1\"\n  BUILD_NUM=\"${CM_BUILD_NUMBER:?CM_BUILD_NUMBER is required}\"\n  echo \"CM_BUILD_NUMBER=$BUILD_NUM\"\n  python3 - \"$BUILD_NUM\" <<'PY2'\nfrom pathlib import Path\nimport re,sys\nq=Path('project.yml')\ns=q.read_text(encoding='utf-8')\ns,n=re.subn(r'CURRENT_PROJECT_VERSION:\\s*\\d+',f'CURRENT_PROJECT_VERSION: {sys.argv[1]}',s,count=1)\nif n != 1:\n    raise SystemExit('CURRENT_PROJECT_VERSION replacement failed')\nq.write_text(s,encoding='utf-8')\nprint('PASS: CURRENT_PROJECT_VERSION='+sys.argv[1])\nPY2\n  xcodegen --version\n  xcodegen generate\n} 2>&1 | tee /tmp/hm1-xcodegen.log",
+        "status": "failed",
+        "started_at": "2026-08-22T10:50:00.408000Z",
+        "finished_at": "2026-08-22T10:50:00.910000Z"
+      },
+      {
+        "id": "6a897ea8f061af3624b7ab63",
+        "name": "Verify HM1 release inputs",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\npython3 - \"$CM_BUILD_DIR/ios/health-manager-1\" <<'PY2'\nfrom pathlib import Path\nimport collections,json,re\nimport sys\nroot=Path(sys.argv[1])\nq=json.loads((root/'Resources/questions.json').read_text(encoding='utf-8'))\nhtml=(root/'Resources/index.html').read_text(encoding='utf-8')\nassert len(q)==264, len(q)\nassert len({x['id'] for x in q})==264\nassert collections.Counter(x['round'] for x in q)=={'2026-04':44,'2025-10':44,'2025-04':44,'practice-A':44,'practice-B':44,'practice-C':44}\nassert 'practice-C-Q44' in html and '合計264問' in html\nassert (root/'Resources/PrivacyInfo.xcprivacy').is_file()\nassert (root/'Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png').is_file()\nprint('PASS: HM1 audited release inputs contain 264 questions / 6x44 sets')\nPY2",
+        "status": "skipped",
+        "started_at": "2026-08-22T10:50:00.910000Z",
+        "finished_at": "2026-08-22T10:50:00.911000Z"
+      },
+      {
+        "id": "6a897ea8f061af3624b7ab64",
+        "name": "Apply App Store signing profiles",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR/ios/health-manager-1\"\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
+        "status": "skipped",
+        "started_at": "2026-08-22T10:50:00.911000Z",
+        "finished_at": "2026-08-22T10:50:00.911000Z"
+      },
+      {
+        "id": "6a897ea8f061af3624b7ab65",
+        "name": "Build signed IPA",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nxcode-project build-ipa \\\n  --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  --scheme \"$XCODE_SCHEME\"",
+        "status": "skipped",
+        "started_at": "2026-08-22T10:50:00.911000Z",
+        "finished_at": "2026-08-22T10:50:00.911000Z"
+      },
+      {
+        "id": "6a897ea8f061af3624b7ab66",
+        "name": "Verify packaged HM1 IPA content",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nIPA_PATH=\"$(find build/ios/ipa -type f -name '*.ipa' -print -quit)\"\ntest -n \"$IPA_PATH\"\nVERIFY_DIR=\"$(mktemp -d)\"\nunzip -q \"$IPA_PATH\" -d \"$VERIFY_DIR\"\nAPP_DIR=\"$(find \"$VERIFY_DIR/Payload\" -maxdepth 1 -type d -name '*.app' -print -quit)\"\npython3 - \"$APP_DIR\" <<'PY2'\nfrom pathlib import Path\nimport collections,json,plistlib,re,sys\napp=Path(sys.argv[1])\nindex=(app/'index.html').read_text(encoding='utf-8')\nm=re.search(r'const QUESTIONS=(\\[.*?\\]);\\nconst DOMAINS=',index,re.S)\nassert m, 'embedded QUESTIONS not found'\nq=json.loads(m.group(1))\nassert len(q)==264, len(q)\nassert len({x['id'] for x in q})==264\nassert collections.Counter(x['round'] for x in q)=={'2026-04':44,'2025-10':44,'2025-04':44,'practice-A':44,'practice-B':44,'practice-C':44}\nassert 'practice-C-Q44' in index and '合計264問' in index\ninfo=plistlib.loads((app/'Info.plist').read_bytes())\nassert info.get('CFBundleIdentifier')=='jp.allsunday1122.healthmanager1'\nassert str(info.get('CFBundleVersion','')).isdigit()\nassert (app/'Assets.car').is_file()\nassert (app/'embedded.mobileprovision').is_file()\nassert (app/'_CodeSignature').is_dir()\nprint('PASS: signed HM1 IPA contains audited 264-question bundle')\nPY2",
+        "status": "skipped",
+        "started_at": "2026-08-22T10:50:00.911000Z",
+        "finished_at": "2026-08-22T10:50:00.912000Z"
+      },
+      {
+        "id": "6a897ea8f061af3624b7ab67",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-22T10:50:00.912000Z",
+        "finished_at": "2026-08-22T10:50:02.205000Z"
+      },
+      {
+        "id": "6a897ea8f061af3624b7ab68",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-22T10:50:02.205000Z",
+        "finished_at": "2026-08-22T10:50:02.285000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
