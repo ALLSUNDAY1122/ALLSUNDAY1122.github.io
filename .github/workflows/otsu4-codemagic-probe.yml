@@ -1,0 +1,54 @@
+name: Otsu4 Codemagic Init Probe
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  probe:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTS4-CM-PROBE]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Start minimal Codemagic Mac workflow and wait
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json,os,time,urllib.request,urllib.error
+          token=os.environ['CM_API_TOKEN']
+          app_id='6a769d81a1add9d06020b524'
+          build={}
+          def api(url,method='GET',payload=None):
+              req=urllib.request.Request(url,data=None if payload is None else json.dumps(payload).encode(),method=method,headers={'Content-Type':'application/json','x-auth-token':token})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:return r.status,json.loads(r.read().decode() or '{}')
+              except urllib.error.HTTPError as e:return e.code,{'error':e.read().decode(errors='replace')[:1500]}
+          s,d=api('https://api.codemagic.io/builds','POST',{'appId':app_id,'workflowId':'otsu4-ios','branch':'release/otsu4-720-internal-testflight'})
+          if not 200<=s<300: raise SystemExit(f'start failed {s}: {d}')
+          bid=d.get('buildId') or d.get('id'); print('build_id='+str(bid))
+          for _ in range(28):
+              time.sleep(15)
+              s,d=api(f'https://codemagic.io/api/v3/builds/{bid}')
+              x=d.get('data') or d; state=x.get('status'); print('status='+str(state),'instance='+str(x.get('instance_type')),'started='+str(x.get('started_at')))
+              build=x
+              if state in {'finished','failed','canceled','timeout','skipped'}: break
+          open('otsu4-codemagic-probe.json','w').write(json.dumps({'build_id':bid,'status':build.get('status'),'instance_type':build.get('instance_type'),'started_at':build.get('started_at'),'finished_at':build.get('finished_at')},indent=2))
+          if build.get('status')!='finished': raise SystemExit('probe ended '+str(build.get('status')))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: otsu4-codemagic-probe-${{ github.run_id }}
+          path: otsu4-codemagic-probe.json
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Otsu4 Codemagic probe finished. status=${{ job.status }}; run_id=${context.runId}`});
