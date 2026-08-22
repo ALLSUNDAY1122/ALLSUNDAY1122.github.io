@@ -1,0 +1,63 @@
+name: APP2-005 HM1 XcodeGen diagnostics patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-005-hm1-xcodegen-diagnostics-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-005-hm1-xcodegen-diagnostics
+  cancel-in-progress: false
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Add HM1 XcodeGen diagnostics to Codemagic
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml')
+          s=p.read_text(encoding='utf-8')
+          start=s.index('  health-manager-1-testflight:')
+          end=s.index('\n  health-manager-2-ios:', start)
+          block=s[start:end]
+          old='''      - name: Set CI build number and generate Xcode project\n        script: |\n          cd "$CM_BUILD_DIR/ios/health-manager-1"\n          BUILD_NUM="${CM_BUILD_NUMBER:?CM_BUILD_NUMBER is required}"\n          python3 - "$BUILD_NUM" <<'PY2'\n          from pathlib import Path\n          import re,sys\n          q=Path('project.yml')\n          s=q.read_text(encoding='utf-8')\n          s,n=re.subn(r'CURRENT_PROJECT_VERSION:\\s*\\d+',f'CURRENT_PROJECT_VERSION: {sys.argv[1]}',s,count=1)\n          if n != 1:\n              raise SystemExit('CURRENT_PROJECT_VERSION replacement failed')\n          q.write_text(s,encoding='utf-8')\n          PY2\n          xcodegen generate\n'''
+          new='''      - name: Set CI build number and generate Xcode project\n        script: |\n          set -o pipefail\n          {\n            set -x\n            cd "$CM_BUILD_DIR/ios/health-manager-1"\n            BUILD_NUM="${CM_BUILD_NUMBER:?CM_BUILD_NUMBER is required}"\n            echo "CM_BUILD_NUMBER=$BUILD_NUM"\n            python3 - "$BUILD_NUM" <<'PY2'\n          from pathlib import Path\n          import re,sys\n          q=Path('project.yml')\n          s=q.read_text(encoding='utf-8')\n          s,n=re.subn(r'CURRENT_PROJECT_VERSION:\\s*\\d+',f'CURRENT_PROJECT_VERSION: {sys.argv[1]}',s,count=1)\n          if n != 1:\n              raise SystemExit('CURRENT_PROJECT_VERSION replacement failed')\n          q.write_text(s,encoding='utf-8')\n          print('PASS: CURRENT_PROJECT_VERSION='+sys.argv[1])\n          PY2\n            xcodegen --version\n            xcodegen generate\n          } 2>&1 | tee /tmp/hm1-xcodegen.log\n'''
+          if old not in block:
+              if '/tmp/hm1-xcodegen.log' in block:
+                  print('Already patched')
+              else:
+                  raise SystemExit('Expected HM1 XcodeGen block not found')
+          else:
+              block=block.replace(old,new,1)
+          if '      - /tmp/hm1-xcodegen.log\n' not in block:
+              block=block.replace('      - /tmp/hm1-prepare.log\n','      - /tmp/hm1-prepare.log\n      - /tmp/hm1-xcodegen.log\n',1)
+          s=s[:start]+block+s[end:]
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit diagnostics patch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add codemagic.yaml
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Add HM1 XcodeGen Codemagic diagnostics"
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 2))
+          done
+          exit 1
