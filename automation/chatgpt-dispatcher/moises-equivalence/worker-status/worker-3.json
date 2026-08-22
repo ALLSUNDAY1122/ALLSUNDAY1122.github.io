@@ -4,9 +4,9 @@
   "work_package_id": "MOI-WP3-PLAYBACK-DSP",
   "assignment_epoch": 1,
   "work_branch": "moises/wp3-playback-dsp",
-  "state": "BLOCKED",
-  "current_task": "MOI-DSP-001",
-  "base_integration_sha": "2299de76407556e24b64f363a277933f30daffdb",
+  "state": "IN_PROGRESS",
+  "current_task": "MOI-PLAY-001",
+  "base_integration_sha": "5e958ec999ad9f3d8f3a4a6225d4b6ec06a5c7a3",
   "head_sha": "c97d8917352460798b704da502b733c690b82e61",
   "commits": [
     "73cfe23aab98dc5275d9a8dabaccafdb6934d9ec",
@@ -22,36 +22,19 @@
     "c97d8917352460798b704da502b733c690b82e61"
   ],
   "tests": [
-    "Swift 6.2.1 Linux contract-compatible core self-test: PASS",
-    "10-minute/1200-beat sample-time mapping <=1 frame planner error",
-    "100 loop repetitions at 0.9x: no accumulated planner drift",
-    "60-minute/7200-beat planner x200: median 0.0384ms, p99 0.0700ms, max 0.1055ms",
-    "2026-08-22 14:55 JST boundary regression compile/run PASS: render-origin overflow, count-in multiplication overflow, non-finite source range, invalid downbeat stride fail closed",
-    "Apple-only offline renderer source audit against current Apple scheduleFile callback-type API: completion changed to lock-protected @Sendable-safe flag + dataRendered callback + bounded failure guard; target compile still pending"
+    "MOI-DSP-001 portable core self-test: PASS; target AVFAudio/device validation remains blocked on MOI-BLD-IOS-001"
   ],
   "evidence": [
-    "DSP/benchmarks/MOI-DSP-001_IMPLEMENTATION_VALIDATION.md",
-    "DSP/benchmarks/MOI-DSP-001_MEASUREMENT_STATUS.json",
-    "remote read-back confirmed DSP evidence",
-    "initial DSP implementation through 2299de76407556e24b64f363a277933f30daffdb is now common with integration history",
-    "latest opposite compare after safety wave: integration-only files are worker status, IO, Separation and HQ Shared/DomainContracts; no DSP logical-resource conflict",
-    "HQ integration commit facd51a2724a68a5e1cdedbf2ace5e88a28711fc fixed ProcessingSnapshot Hashable blocker requested by WP4",
-    "integration Package.swift still excludes DSP/** at latest direct read"
+    "HQ queue at 2026-08-22 15:22 JST changed MOI-DSP-001 to BLOCKED_DEPENDENCY on MOI-BLD-IOS-001 and explicitly set MOI-PLAY-001 READY_ASSIGNED",
+    "HQ integration PR explicitly permits Worker 3 to continue MOI-PLAY-001 while DSP device validation is blocked",
+    "latest integration -> work branch compare: branch-only changes are DSP safety hardening; no Playback logical-resource conflict"
   ],
   "known_gaps": [
-    "AVFAudio backend has not been compiled/executed on macOS/iPhone in the current worker environment",
-    "rights-cleared real-track tempo/pitch artifact gates not yet measured",
-    "actual AVAudioEngine click onset/drift and target-device render latency not yet measured",
-    "WP4 build harness had not yet rerun after the newly landed HQ Shared Hashable fix at the time of this status update",
-    "canonical integration Package.swift still excludes DSP/** and the baseline still lacks an iOS app target",
-    "MOI-PLAY-001 remains BLOCKED_DEPENDENCY on MOI-SEP-002",
-    "MOI-P010/MOI-P012/MOI-P014/MOI-P015 remain MISSING"
+    "MOI-DSP-001 still lacks AVFAudio real-track/device artifact, latency and click-onset evidence",
+    "MOI-P010/MOI-P012/MOI-P014/MOI-P015 remain MISSING",
+    "MOI-PLAY-001 has not yet produced target-device audio evidence"
   ],
-  "hq_requests": [
-    "WP4 blocker prerequisite is now fixed in integration; rerun MOI-BLD-003 and continue its assigned build/iOS sequence under WP4 ownership",
-    "After build harness/iOS execution is available, compile the existing DSP-owned sources unchanged and route macOS/iPhone AVFAudio execution back to WP3 for real-track artifact/latency and click onset/drift gates",
-    "The four post-integration DSP safety commits 6e920130, b1ed01eb, 09c0bdee, c97d8917 are scope-clean and may be semantically integrated as partial hardening without changing MOI-DSP-001 BLOCKED/PARITY state"
-  ],
-  "last_updated": "2026-08-22T14:56:00+09:00",
+  "hq_requests": [],
+  "last_updated": "2026-08-22T15:24:00+09:00",
   "writer_policy": "Only Moises-Worker-3 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
 }
