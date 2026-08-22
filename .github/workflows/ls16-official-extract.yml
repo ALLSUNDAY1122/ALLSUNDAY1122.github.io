@@ -17,7 +17,7 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
       - name: Install PDF parser
-        run: python -m pip install --quiet 'pypdf>=5,<6'
+        run: python -m pip install --quiet 'pypdf>=5,<6' 'pymupdf>=1.26,<2'
       - name: Extract official OT exams
         id: extract
         continue-on-error: true
@@ -38,11 +38,15 @@ jobs:
           p='sagyo-ryohoshi-sprint/audit/raw-official.json'
           q=json.load(open(p))
           assert len(q)==600, len(q)
+          assert {x['reference_exam_round'] for x in q} == {59,60,61}
           for r in (1,2,3):
             for s in ('am','pm'):
               z=[x for x in q if x['round']==r and x['session']==s]
               assert len(z)==100,(r,s,len(z))
+              assert sorted(x['slot'] for x in z)==list(range(1,101)),(r,s)
+          assert len({x['id'] for x in q})==600
           print('RAW_FRAME_600_OK')
+          print('exam_rounds',sorted({x['reference_exam_round'] for x in q}))
           print('media',sum(x['requires_media'] for x in q),'excluded',sum(x['scoring_status']=='excluded' for x in q))
           print('bad_choices',sum(len(x['choices'])!=5 for x in q))
           print('answer_missing_nonexcluded',sum((x['answer'] is None and x['scoring_status']!='excluded') for x in q))
@@ -54,7 +58,7 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           git add sagyo-ryohoshi-sprint/audit/raw-official.json
           if ! git diff --cached --quiet; then
-            git commit -m 'chore: extract LS16 official 58-60 frames [skip ci]'
+            git commit -m 'chore: extract LS16 official 59-61 frames [skip ci]'
             git pull --rebase origin "${{ github.head_ref }}"
             git push origin HEAD:${{ github.head_ref }}
           fi
