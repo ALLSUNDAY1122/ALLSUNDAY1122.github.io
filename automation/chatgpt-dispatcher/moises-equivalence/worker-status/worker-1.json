@@ -6,8 +6,8 @@
   "work_branch": "moises/wp1-separation-processing",
   "state": "BLOCKED",
   "current_task": "MOI-SEP-002",
-  "base_integration_sha": "16a573f614b4851fdb2cdb88b2444e97db242216",
-  "head_sha": "a8087c8136759c815111221e0eb72c6ef92c7a79",
+  "base_integration_sha": "1362c87fbd90803c0fe7243376d78038034f2ead",
+  "head_sha": "090d45e1ca483b5561ae769c16ab767cf56a5e3e",
   "commits": [
     "fca2b1900ee07f46e8b29937833df9a503751e56",
     "2c8be5a27ccd73f868dd1f56e78f48dad0b93468",
@@ -17,38 +17,43 @@
     "ba3404236f000e6013d56ca8f49b2f191bbe086e",
     "fb6f6ff6b3fbeb1d54e6e7b1f1d23f6462e30c07",
     "f31698807bcebcea5ba937776774080eb8a0ed2a",
-    "a8087c8136759c815111221e0eb72c6ef92c7a79"
+    "a8087c8136759c815111221e0eb72c6ef92c7a79",
+    "d0634ac16ddd65fdc49e9bd74458dc6dd79e1c90",
+    "ab7a7951eb3401a4c850ce0fd7dfb0cffb5bd780",
+    "91d6c85cb8677645b1c0260577ad20fd151c2856",
+    "090d45e1ca483b5561ae769c16ab767cf56a5e3e"
   ],
   "tests": [
-    "Swift 6.2.1: swiftc -typecheck Shared-shaped DomainStubs.swift + current ServerSeparationProvider logic => exit 0",
+    "Swift 6.2.1: ServerSeparationProvider contract typecheck => exit 0",
     "Python unittest rights gate: 6 tests, 0 failures",
-    "scope compare: work branch ahead 9 / behind 5; all ahead files are tech-assets/moises-audio/Separation/**",
-    "integration commits since merge-base touch only worker-2/3/4 status files; no Worker-1 owned-scope conflict"
+    "AudioShake adapter reconstructed-readback py_compile: PASS",
+    "AudioShake adapter contract unittest: 10 tests, 0 failures",
+    "scope compare after canonical integration of prior Worker-1 batch: only three new files remain ahead under tech-assets/moises-audio/Separation/**; canonical changes since merge-base contain no Separation/** conflict"
   ],
   "evidence": [
-    "tech-assets/moises-audio/Separation/Sources/ServerSeparationProvider.swift",
-    "tech-assets/moises-audio/Separation/Server/rights_gate.py",
-    "tech-assets/moises-audio/Separation/Tests/test_rights_gate.py",
-    "tech-assets/moises-audio/Separation/MOI-SEP-002_PARTIAL_EVIDENCE.md",
-    "tech-assets/moises-audio/Separation/MOI-SEP-002_COMMERCIAL_FAST_TRACK.md",
-    "server provider streams source files, preserves stable project/stem IDs, exposes canonical snapshot/cancel/result behavior, atomically finalizes downloaded stems and fails closed on malformed/path-unsafe results",
-    "rights gate refuses checkpoint startup without approved commercial rights manifest and matching checkpoint SHA-256",
-    "AudioShake current developer surface is the preferred external fast-track candidate; LALAL.AI is secondary; neither is treated as commercially approved without account/terms review"
+    "Earlier Separator provider/rights-gate batch through a8087c8136759c815111221e0eb72c6ef92c7a79 is now contained in canonical integration history.",
+    "tech-assets/moises-audio/Separation/Server/audioshake_api.py",
+    "tech-assets/moises-audio/Separation/Tests/test_audioshake_api.py",
+    "tech-assets/moises-audio/Separation/AUDIOSHAKE_API_CONTRACT.md",
+    "Current official AudioShake API verified: server-side x-api-key, POST /assets up to 2 GB, asset expiry 72h, async POST/GET /tasks, vocals/drums/bass/other WAV targets, output links expire after one hour.",
+    "Current published core stem pricing is 1 credit per input minute per target; four-target vocals/drums/bass/other evaluates at 4 credits per input minute under current docs.",
+    "Current official AudioShake Local Inference SDK verified for iOS ARM64 with Metal/Neural Engine, encrypted vendor model, progress-capable SourceSeparationTask; access requires vendor Client ID/Secret/model package.",
+    "No current public Task cancellation endpoint was found; upstream-compute cancellation must remain UNKNOWN until superseding API/contract evidence."
   ],
   "known_gaps": [
     "No project-owned rights-cleared trained separator checkpoint exists in canonical project state.",
-    "No written commercial separator API/model agreement plus production credentials exists in canonical project state.",
-    "Golden QA requires actual G1 project-owned/licensed real multitracks and G2 rights-cleared real Reference tracks; canonical repo currently contains strategy/rubric but not the required 12+12 real-audio corpus and rights records.",
-    "No real production separator inference, real stems, SI-SDR/listening A/B, latency/cost, or cancellation/retry evidence has therefore been executed.",
+    "No authorized AudioShake API key or written commercial production terms are available to this Worker; credentials must never be committed to GitHub.",
+    "Golden QA still lacks the required G1/G2 rights-cleared real-audio corpus in executable project state.",
+    "No live AudioShake or project-owned-model four-stem run has been executed; no real stems, SI-SDR/listening A/B, latency/cost, retention/deletion, upstream cancellation, or production entitlement evidence exists yet.",
     "MOI-P003 and MOI-P004 remain MISSING; no PARITY promotion is justified."
   ],
   "hq_requests": [
-    "Explicit blocker review: choose one lawful separator supply route before SEP-002 can complete.",
-    "Fast-track option: authorize/provision an AudioShake evaluation/API account and API key outside GitHub, then verify exact commercial embedding, user-audio retention/deletion, confidentiality, output-use and production pricing terms before shipping.",
-    "Alternative: authorize another written commercial separator contract such as LALAL.AI Business/Enterprise only after equivalent terms audit.",
-    "Project-owned option: create a prerequisite corpus/procurement/training workstream for rights-cleared real multitracks with explicit ML-training/commercial-result rights, then deliver a project-owned checkpoint, model card, training manifest and rights-record references.",
-    "Provide/acquire rights-cleared G1/G2 real-audio evaluation fixtures before any separation quality/PARITY gate is run."
+    "Human/external gate: authorize an AudioShake developer evaluation account/API key outside GitHub. Current official quickstart advertises 10 free starter credits, sufficient for limited evaluation but not a full 5-minute four-target run at current 4 credits/minute pricing.",
+    "Before production use, review/accept exact commercial embedding, user-audio retention/deletion, confidentiality, output-use, privacy geography, production pricing/limits and cancellation terms.",
+    "Evaluate AudioShake cloud API first; if quality passes, compare licensed iOS Local Inference SDK because it avoids cloud audio transfer and is current iOS ARM64/Metal/Neural Engine capable.",
+    "Alternative remains project-owned from-scratch checkpoint with rights-cleared training corpus and model/training manifests.",
+    "Provide/acquire rights-cleared G1/G2 real-audio evaluation fixtures before any separation quality/PARITY gate."
   ],
-  "last_updated": "2026-08-22T14:32:43+09:00",
+  "last_updated": "2026-08-22T15:08:00+09:00",
   "writer_policy": "Only Moises-Worker-1 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
 }
