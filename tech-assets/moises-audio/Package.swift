@@ -23,6 +23,7 @@ let package = Package(
             sources: [
                 "AudioSeparationCore.swift",
                 "Shared/DomainContracts.swift",
+                "Shared/LibraryContracts.swift",
                 "App/VerticalSliceCoordinator.swift"
             ]
         ),
