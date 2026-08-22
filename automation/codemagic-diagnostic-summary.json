@@ -1,23 +1,23 @@
 {
-  "request_id": "app2-005-hm1-prebuild-exact-inspect-20260822-1918",
-  "target_head_sha": "866c95429a3eb9eda769d7717d54d826113253f0",
-  "workflow": "hm1-prebuild-diagnose.yml",
+  "request_id": "app2-005-hm1-release-logging-inspect-20260822-1924",
+  "target_head_sha": "14fddd5d1421262d757a5f98462fb4a6dc9152ef",
+  "workflow": "hm1-final-release-prep.yml",
   "run_found": true,
   "run": {
-    "id": 32567264752,
-    "name": "Diagnose HealthManager1 264 prebuild",
-    "status": "in_progress",
-    "conclusion": null,
-    "created_at": "2026-08-22T10:18:24Z",
-    "updated_at": "2026-08-22T10:18:29Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32567264752",
-    "head_sha": "866c95429a3eb9eda769d7717d54d826113253f0"
+    "id": 32567472500,
+    "name": "Prepare HealthManager1 final release workflow",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-08-22T10:23:19Z",
+    "updated_at": "2026-08-22T10:23:43Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32567472500",
+    "head_sha": "14fddd5d1421262d757a5f98462fb4a6dc9152ef"
   },
   "jobs": [
     {
-      "name": "diagnose",
-      "status": "in_progress",
-      "conclusion": null,
+      "name": "prepare",
+      "status": "completed",
+      "conclusion": "failure",
       "steps": [
         {
           "name": "Set up job",
@@ -30,39 +30,34 @@
           "conclusion": "success"
         },
         {
-          "name": "Run actions/setup-node@v4",
+          "name": "Patch root Codemagic HM1 workflow",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Install ImageMagick for exact prepare reproduction",
-          "status": "in_progress",
-          "conclusion": null
+          "name": "Enable HM1 preparation diagnostics",
+          "status": "completed",
+          "conclusion": "success"
         },
         {
-          "name": "Provide ImageMagick 7 compatible magick shim when runner has IM6",
-          "status": "pending",
-          "conclusion": null
+          "name": "Validate HM1 release workflow contract",
+          "status": "completed",
+          "conclusion": "failure"
         },
         {
-          "name": "Run exact HM1 prepare script",
-          "status": "pending",
-          "conclusion": null
-        },
-        {
-          "name": "Validate final prepared outputs",
-          "status": "pending",
-          "conclusion": null
-        },
-        {
-          "name": "Post Run actions/setup-node@v4",
-          "status": "pending",
-          "conclusion": null
+          "name": "Persist root Codemagic release gate",
+          "status": "completed",
+          "conclusion": "skipped"
         },
         {
           "name": "Post Run actions/checkout@v6",
-          "status": "pending",
-          "conclusion": null
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
         }
       ]
     }
