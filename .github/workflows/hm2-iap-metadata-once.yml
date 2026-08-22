@@ -1,0 +1,46 @@
+name: HM2 IAP Metadata Once
+
+on:
+  push:
+    paths:
+      - 'automation/hm2-iap-metadata-trigger.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Configure HM2 IAP metadata
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/hm2_configure_iap_metadata.py
+      - name: Upload sanitized result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hm2-iap-metadata-result-${{ github.run_id }}
+          path: hm2-iap-metadata-result.json
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Report run locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 4471,
+              body: `HM2 IAP metadata job finished. status=${{ job.status }}; run_id=${context.runId}`
+            });
