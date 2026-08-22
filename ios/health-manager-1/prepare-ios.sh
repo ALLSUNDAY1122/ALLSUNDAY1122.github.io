@@ -48,10 +48,16 @@ round_defs=[
  {'id':'practice-C','title':'追加演習C','period':'監査済み共通範囲・44問'},
 ]
 round_js='const ROUNDS='+json.dumps(round_defs,ensure_ascii=False,separators=(',',':'))+';'
-updated,n=re.subn(r'const ROUNDS=\[.*?\];',round_js,updated,count=1,flags=re.S)
-assert n==1, f'ROUNDS replacement count={n}'
+updated,n=re.subn(r'const ROUNDS\s*=\s*\[.*?\];',round_js,updated,count=1,flags=re.S)
+if n==0:
+    marker="const DOMAINS=['関係法令','労働衛生','労働生理'];"
+    assert marker in updated, 'DOMAINS insertion marker missing'
+    updated=updated.replace(marker,marker+'\n'+round_js,1)
+else:
+    assert n==1, f'ROUNDS replacement count={n}'
 updated=updated.replace('3回分・科目別に9セット','公表回3＋追加演習3・合計264問')
 updated=updated.replace('3回分を科目ごとに。1科目ずつでも通しでも解けます。','公表回3回分＋追加演習3セット。1科目ずつでも44問通しでも解けます。')
+assert 'const ROUNDS=' in updated
 assert 'practice-C-Q44' in updated
 assert '合計264問' in updated
 index.write_text(updated,encoding='utf-8')
@@ -86,6 +92,6 @@ expected={'icon-20@2x.png':40,'icon-20@3x.png':60,'icon-29@2x.png':58,'icon-29@3
 for name,px in expected.items():
     b=(root/name).read_bytes()
     assert b[:8]==b'\x89PNG\r\n\x1a\n' and b[12:16]==b'IHDR', name
-    w,h=struct.unpack('>II',b[16:24]); assert (w,h)==(px,px),(name,w,h)
+    w,h=struct.unpack('>II',b[16:24]); assert (w,h)==(px,px),(name,w,h,px)
 print('PASS: unified Learning Sprint HM1 AppIcon rendered; canonical sha256='+hashlib.sha256((root/'icon-1024.png').read_bytes()).hexdigest())
 PY
