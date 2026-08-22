@@ -1,90 +1,102 @@
-# Moises同等化｜HQ BOOTSTRAP v2 — Fixed Work Package運用
+# Moises同等化｜HQ BOOTSTRAP v3 — 4 Independent Lanes / Late Integration
 
 ## 正本
 - Notion: Moises技術同等化｜AI音源分離アプリ 正本
 - GitHub: ALLSUNDAY1122/ALLSUNDAY1122.github.io
 - Integration branch: `tech/moises-separation`
 - Integration PR: #4431
-- Global Queue: `automation/chatgpt-dispatcher/moises-equivalence/queue.json`
-- Work Package manifest: `automation/chatgpt-dispatcher/moises-equivalence/work-packages.json`
+- Global Queue: `automation/chatgpt-dispatcher/moises-equivalence/queue.json`（履歴・統合ledger。Worker配車には使わない）
+- Work Package: `automation/chatgpt-dispatcher/moises-equivalence/work-packages.json`
+- Lane Plan: `automation/chatgpt-dispatcher/moises-equivalence/lane-plan-v3.json`
 - Worker status: `automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-N.json`
 - Parity: `tech-assets/moises-audio/PARITY_MATRIX.json`
 - Resource locks: `automation/chatgpt-dispatcher/moises-equivalence/resource-locks.json`
 
 ## 運営方式
-本プロジェクトは「同等化パック」をFixed Work Package方式で運用する。
-1. AIアプリ開発・公開フロー v2.7
-2. Phase単位のWork Package固定割当
-3. HQ単独Global Queue writer/finalizer
-4. Worker専用status file
-5. 完全同等化PARITY契約
+本プロジェクトは4本の独立Laneを先に進め、後段でHQがまとめて統合する。
 
-自由claim型Worker Poolは廃止する。
+旧方式の問題:
+- 1 Taskが細かすぎ、1回の「次」が短時間で終わる。
+- dependencies / READY_ASSIGNED解放待ちでWorkerがTaskを取得できない空白が生じる。
+- 小TaskごとのintegrationがWorker実装時間を削る。
 
-## 最終目的
-Moisesの名称・ロゴ・非公開コード・学習データ・著作物を複製せず、公開されている主要iPhone体験を独自実装で実用品質まで同等化する。Engine抽出はPARITY達成後。
+v3解決策:
+1. 4 Workerをexclusive Laneへ完全固定。
+2. 各Laneへ最低4件のMacro Bundleを事前配布。
+3. 1回の「次」= 1 Macro Bundle。従来小Task約4件分をまとめ、実装・edge cases・tests・evidenceまで一続きで完遂する。
+4. WorkerはGlobal QueueからTaskを取得しない。Lane内はHQ解放なしで順次自動継続する。
+5. Shared/Appはassignment epoch中freezeし、Worker間依存を通常実行から除去する。
+6. HQは小Bundleごとにmergeせず、複数BundleのLane checkpointを後でsemantic integrationする。
+
+## Lane
+- Lane 1: Separation + Processing
+- Lane 2: IO + Library
+- Lane 3: Playback + DSP
+- Lane 4: iOS Platform + Analysis
+
+各Laneのbranch、scope、Macro Bundle列は `work-packages.json` と `lane-plan-v3.json` を正本とする。
 
 ## HQ専有責任
-- integration mainline / integration_epoch
 - Shared contract / shared data model / App shell
-- Global Queueの唯一のwrite権限
-- Work Package作成・工数配分・Phase境界rebalance
-- logical resource ownership定義
-- Worker成果のsemantic integration
-- cross-feature regression / build harness統合
-- PARITY最終判定
-- BLOCKED_HUMAN提示
+- integration mainline
+- lane-plan / work-package / resource ownership
+- Global Queue ledger
+- lane checkpoint integration
+- cross-lane build and semantic conflict resolution
+- actual integrated iOS compile/device validation
+- Differential Moises comparison
+- PARITY final judgment
+- external/human blocker handling
 
-## Fixed Work Package原則
-- Phase開始時に `工数 × 依存関係 × logical resource` でWork Packageを作る。
-- Worker 1〜4へpackageを固定割当する。
-- packageには専用long-lived `work_branch` と専用status fileを持たせる。
-- Workerはpackage外へ移動しない。
-- 空きWorkerの再配置はHQのみがPhase境界で実施する。
-- 同一logical resourceを複数packageへ割り当てない。
+## Worker starvation防止
+- Active Laneには常に最低4 Macro Bundleをpreloadする。
+- 4件を使い切る前に次checkpoint分をHQが追加する。
+- Workerは `READY_ASSIGNED` やHQの都度解放を待たない。
+- 外部gateで1 Bundleが止まっても、同Lane内の外部gate不要Bundleへ進む。
+- 他Laneへのtask stealingは禁止。
 
-## Canonical write ownership
-HQのみ:
-- `queue.json`
-- `work-packages.json`
-- `resource-locks.json`
-- `Shared/**`
-- `App/**`
-- `PARITY_MATRIX.json`
+## Epoch / contract freeze
+- assignment_epoch開始時にWorkerは一度だけlatest integrationへ同期しbase SHAを記録。
+- epoch中は他Lane由来のintegration変更を理由に各回rebaseしない。
+- Shared/App契約変更はHQだけが行い、原則次checkpointで4 Laneへまとめて配布する。
+- critical contract bugだけはHQが緊急修正し、影響Laneへ明示する。
 
-Worker Nのみ:
-- 自分のWork Package owned scope
-- `worker-status/worker-N.json`
+## Macro Bundle品質
+1回分の終了条件:
+- bundle goalの実装完了
+- edge/negative case処理
+- tests / benchmark / typecheck等の適切な検証
+- durable evidence保存
+- known gaps明記
+- status更新
 
-Worker status fileは進捗通信専用であり、製品状態・PARITY・Task VERIFIEDの正本ではない。
+1 subtask / 1 commit / compileだけで終了しない。
 
-## Task状態
-Global QueueはHQが以下を管理する。
-`PLANNED -> ASSIGNED -> BLOCKED_DEPENDENCY -> READY_ASSIGNED -> INTEGRATING -> VERIFIED`
-補助: `BLOCKED_HUMAN`, `REWORK_REQUIRED`, `CANCELLED`
+## Integration checkpoint
+HQは原則として各小Bundle直後には統合しない。以下のとき統合する。
+- Laneが複数Bundleを完了しcoherent checkpointになった
+- cross-lane統合しないと次の品質Gateへ進めない
+- critical blocker rescueが必要
+- Phase境界
 
-Worker側の実行状態は専用status fileで管理する。
-`ASSIGNED -> IN_PROGRESS -> INTEGRATION_READY`
-補助: `BLOCKED`, `NEEDS_HQ_REBASE`
-
-## Branch運用
-- WorkerはWork Packageごとのlong-lived branchを使う。
-- Taskごとのattempt branch乱立を廃止する。
-- WorkerがINTEGRATION_READYを出したらHQがintegrationとの差分・owned scope・テスト・証拠を検証してmergeする。
-- merge後も同じWork Package branchを継続する場合、次Task開始前にcanonical integrationとの同期を確認する。
+統合時:
+1. 各Laneのfrozen baseとcheckpoint headを確認
+2. owned scope越境を監査
+3. semantic conflictをHQで解消
+4. Shared/App adapterをHQが実装
+5. integrated iOS build / cross-feature regression
+6. real-device / real-audio / differential evidence
+7. PARITY_MATRIX更新
+8. 次の4本×最低4 Macro BundleをpreloadしてからLaneを再開
 
 ## PARITY Gate
 `MISSING -> PARTIAL -> NEAR_PARITY -> PARITY`
-PARITYには機能存在・結果品質・操作性・速度・安定性・失敗復旧・実機証拠が必要。compile/testのみ、synthetic-only、単一fixtureのみでは上げない。
-
-## Differential Test
-可能な限り同じ入力をMoisesと自作へ与え、結果品質・処理時間・操作手数・失敗復旧・実機性能を比較する。
+compile/test/harness/synthetic-onlyでは上げない。実音源・実機・品質・失敗復旧を含む。
 
 ## 禁止
-- WorkerによるGlobal Queue更新
-- Workerによる他package taskの自律claim
-- Worker間で同一logical resourceを共有
-- Shared/App/PARITYのWorker直接編集
-- stale branchを無検証でmerge
-- PoCを完成扱い
-- 実装困難を理由にParity行を削除
+- Workerへの都度task claim要求
+- 小TaskごとのHQ merge待ち
+- Worker間の相互依存を通常作業の停止条件にすること
+- WorkerによるShared/App/PARITY/他Lane編集
+- PoC/compile成功を完成扱い
+- 困難を理由にscopeを削ること
