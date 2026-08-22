@@ -18,13 +18,18 @@ let package = Package(
                 "DSP",
                 "IO",
                 "Library",
-                "reference"
+                "reference",
+                "iOS/App",
+                "iOS/project.yml",
+                "iOS/README.md"
             ],
             sources: [
                 "AudioSeparationCore.swift",
                 "Shared/DomainContracts.swift",
                 "Shared/LibraryContracts.swift",
-                "App/VerticalSliceCoordinator.swift"
+                "App/VerticalSliceCoordinator.swift",
+                "iOS/HostCore/HostModuleSlots.swift",
+                "iOS/HostCore/ApplePlatformSmoke.swift"
             ]
         ),
         .testTarget(
