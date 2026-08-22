@@ -9,7 +9,7 @@ const input=[
   path.join(repo,'kikenbutsu-otsu4-sprint','question-bank-v2-bootstrap.js'),
   path.join(repo,'kikenbutsu-otsu4-sprint','question-bank-v2.js'),
   path.join(repo,'kikenbutsu-otsu4-sprint','question-bank-v2-fixups.js'),
-  path.join(repo,'kikenbutsu-otsu4-sprint','question-bank-v3-wave1.js')
+  path.join(repo,'kikenbutsu-otsu4-sprint','question-bank-v3-wave1-certified.js')
 ];
 const output=path.join(repo,'kikenbutsu-otsu4-sprint','questions.generated.json');
 const src=[...input.map(f=>fs.readFileSync(f,'utf8')),';globalThis.__BANK={QUESTIONS,CONTENT_VERSION,OTSU4_BANK_VERSION,OTSU4_BANK_AUDIT_DATE};'].join('\n');
