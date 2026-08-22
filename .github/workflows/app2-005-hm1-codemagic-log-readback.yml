@@ -1,4 +1,4 @@
-name: APP2-005 HM1 Codemagic prepare log readback
+name: APP2-005 HM1 Codemagic log readback
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download Codemagic diagnostic bundle
+      - name: Download Codemagic diagnostic log
         shell: bash
         run: |
           set -euo pipefail
@@ -32,6 +32,7 @@ jobs:
 
           cmd = json.loads(pathlib.Path('automation/app2-005-hm1-codemagic-log-command.json').read_text())
           request_id = cmd['request_id']
+          suffix = cmd.get('log_suffix', 'hm1-prepare.log')
           source = pathlib.Path(cmd['result_path'])
           data = json.loads(source.read_text())
           artifacts = data.get('build_details', {}).get('artifacts', [])
@@ -44,17 +45,17 @@ jobs:
               payload = r.read()
           z = zipfile.ZipFile(io.BytesIO(payload))
           names = z.namelist()
-          matches = [n for n in names if n.endswith('hm1-prepare.log')]
+          matches = [n for n in names if n.endswith(suffix)]
           if not matches:
-              raise SystemExit('hm1-prepare.log not found in Codemagic artifact: ' + ', '.join(names))
+              raise SystemExit(f'{suffix} not found in Codemagic artifact: ' + ', '.join(names))
           text = z.read(matches[0]).decode('utf-8', errors='replace')
           out = pathlib.Path('automation/codemagic-results') / f'{request_id}.log'
           out.parent.mkdir(parents=True, exist_ok=True)
           out.write_text(text, encoding='utf-8')
-          print(f'Wrote {out} ({len(text)} chars)')
+          print(f'Wrote {out} from {matches[0]} ({len(text)} chars)')
           PY
 
-      - name: Commit prepare log
+      - name: Commit diagnostic log
         shell: bash
         run: |
           set -euo pipefail
@@ -63,12 +64,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "$OUT"
-          git commit -m "Persist APP2-005 HM1 Codemagic prepare log" || exit 0
+          git commit -m "Persist APP2-005 HM1 Codemagic diagnostic log" || exit 0
           for attempt in 1 2 3 4 5; do
             git pull --rebase origin main
-            if git push origin HEAD:main; then
-              exit 0
-            fi
+            if git push origin HEAD:main; then exit 0; fi
             sleep $((attempt * 2))
           done
           exit 1
