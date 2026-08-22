@@ -7,15 +7,16 @@ public enum ProcessingRecoveryAction: Equatable, Sendable {
     case ambiguousStart
 }
 
-/// Coordinates the canonical SourceSeparationProviding contract with durable processing state.
+/// Durable orchestration around the canonical `SourceSeparationProviding` contract.
 ///
-/// Key safety rules:
-/// - a project has one durable processing generation at a time;
-/// - an observed active job is reused instead of starting a duplicate;
-/// - a start request that may have reached the server but lost its response is never auto-retried;
-/// - provider progress may advance but may not regress;
-/// - cancelled/failed generations rollback partial local stem output;
-/// - result finalization is two-phase so relaunch can resume after files or DB state were written.
+/// Safety properties:
+/// - one durable generation per project;
+/// - observed jobs are reused rather than duplicated;
+/// - an uncertain `start()` outcome is never auto-retried;
+/// - progress/phase regressions are rejected;
+/// - cancel/failure rolls back partial local output;
+/// - result finalization uses `resultStaged -> resultPersisted -> completed` so relaunch can resume
+///   without re-running separation or corrupting the previous stem set.
 public actor ProcessingLifecycleCoordinator {
     private let provider: SourceSeparationProviding
     private let projectPersistence: ProjectPersisting
@@ -38,8 +39,6 @@ public actor ProcessingLifecycleCoordinator {
         self.now = now
     }
 
-    /// Starts a new generation or returns the already-bound job for the same request.
-    /// It never retries an ambiguous server start automatically.
     public func startOrReconnect(_ request: SeparationRequest) async throws -> ProcessingJobID {
         if let record = try await stateStore.load(projectID: request.projectID) {
             guard record.request == request else {
@@ -65,14 +64,16 @@ public actor ProcessingLifecycleCoordinator {
             case .startAmbiguous:
                 throw DomainFailure.processingFailed(code: "PROC_START_AMBIGUOUS", retryable: false)
             case .failed, .cancelled:
-                throw DomainFailure.processingFailed(code: record.stableErrorCode ?? "PROC_RETRY_REQUIRED", retryable: record.retryable)
+                throw DomainFailure.processingFailed(
+                    code: record.stableErrorCode ?? "PROC_RETRY_REQUIRED",
+                    retryable: record.retryable
+                )
             }
         }
 
         return try await startNew(request: request, retryCount: 0)
     }
 
-    /// Reads authoritative server state and durably mirrors it into ProjectPersisting.
     @discardableResult
     public func poll(projectID: ProjectID) async throws -> ProcessingSnapshot {
         guard var record = try await stateStore.load(projectID: projectID) else {
@@ -85,9 +86,15 @@ public actor ProcessingLifecycleCoordinator {
                 throw DomainFailure.processingFailed(code: "PROC_SNAPSHOT_MISSING", retryable: false)
             }
             return snapshot
+        case .failed, .cancelled:
+            if let snapshot = record.lastSnapshot { return snapshot }
+            throw DomainFailure.processingFailed(
+                code: record.stableErrorCode ?? "PROC_TERMINAL_WITHOUT_SNAPSHOT",
+                retryable: record.retryable
+            )
         case .starting, .startAmbiguous:
             throw DomainFailure.processingFailed(code: "PROC_JOB_BINDING_UNKNOWN", retryable: false)
-        default:
+        case .active, .cancellationRequested, .ready:
             break
         }
 
@@ -98,6 +105,8 @@ public actor ProcessingLifecycleCoordinator {
         var snapshot = try await provider.snapshot(jobID: jobID)
         snapshot = try normalized(snapshot: snapshot, previous: record.lastSnapshot)
 
+        // User cancellation wins a race with a server that reaches ready before DELETE takes effect.
+        // We do not download the newly completed outputs in that case.
         if record.state == .cancellationRequested, snapshot.phase == .ready {
             let cancelled = ProcessingSnapshot(
                 jobID: jobID,
@@ -115,8 +124,8 @@ public actor ProcessingLifecycleCoordinator {
                 updatedAt: now()
             )
             try await stateStore.save(record)
-            try await projectPersistence.recordProcessing(projectID: projectID, snapshot: cancelled)
             try await outputTransaction.rollback(projectID: projectID, generationID: record.generationID)
+            try await projectPersistence.recordProcessing(projectID: projectID, snapshot: cancelled)
             return cancelled
         }
 
@@ -141,46 +150,56 @@ public actor ProcessingLifecycleCoordinator {
             updatedAt: now()
         )
         try await stateStore.save(record)
-        try await projectPersistence.recordProcessing(projectID: projectID, snapshot: snapshot)
-
         if nextState == .failed || nextState == .cancelled {
             try await outputTransaction.rollback(projectID: projectID, generationID: record.generationID)
         }
-
+        try await projectPersistence.recordProcessing(projectID: projectID, snapshot: snapshot)
         return snapshot
     }
 
-    /// Marks cancellation intent durably before issuing the non-throwing provider cancel call.
-    /// A relaunch will reconnect until the provider confirms a terminal state.
+    /// Persists cancellation intent before touching the provider. `cancel` is expected to be
+    /// idempotent; relaunch reconnects until a terminal provider state is observed.
     public func requestCancel(projectID: ProjectID) async throws {
         guard var record = try await stateStore.load(projectID: projectID) else { return }
 
         switch record.state {
         case .failed, .cancelled, .completed:
             return
-        case .ready, .resultStaged, .resultPersisted:
-            try await outputTransaction.rollback(projectID: projectID, generationID: record.generationID)
-            if let jobID = record.jobID {
-                let cancelled = ProcessingSnapshot(
-                    jobID: jobID,
-                    phase: .cancelled,
-                    fractionComplete: record.lastSnapshot?.fractionComplete,
-                    retryable: true,
-                    stableErrorCode: "PROC_CANCELLED_AFTER_READY"
-                )
-                record = record.replacing(
-                    state: .cancelled,
-                    lastSnapshot: cancelled,
-                    resultArtifacts: nil,
-                    preserveArtifactsWhenNil: false,
-                    retryable: true,
-                    stableErrorCode: cancelled.stableErrorCode,
-                    preserveErrorWhenNil: false,
-                    updatedAt: now()
-                )
-                try await stateStore.save(record)
-                try await projectPersistence.recordProcessing(projectID: projectID, snapshot: cancelled)
+        case .resultPersisted:
+            // DB already points at the new artifacts. Complete the local transaction rather than
+            // restoring old bytes under paths the DB now considers current.
+            guard let artifacts = record.resultArtifacts else {
+                throw DomainFailure.processingFailed(code: "PROC_RESULT_JOURNAL_MISSING", retryable: false)
             }
+            try await outputTransaction.validateFinalArtifacts(artifacts, projectID: projectID)
+            try await outputTransaction.commit(projectID: projectID, generationID: record.generationID)
+            record = record.replacing(state: .completed, retryable: false, updatedAt: now())
+            try await stateStore.save(record)
+            return
+        case .ready, .resultStaged:
+            try await outputTransaction.rollback(projectID: projectID, generationID: record.generationID)
+            guard let jobID = record.jobID else {
+                throw DomainFailure.processingFailed(code: "PROC_JOB_BINDING_MISSING", retryable: false)
+            }
+            let cancelled = ProcessingSnapshot(
+                jobID: jobID,
+                phase: .cancelled,
+                fractionComplete: record.lastSnapshot?.fractionComplete,
+                retryable: true,
+                stableErrorCode: "PROC_CANCELLED_AFTER_READY"
+            )
+            record = record.replacing(
+                state: .cancelled,
+                lastSnapshot: cancelled,
+                resultArtifacts: nil,
+                preserveArtifactsWhenNil: false,
+                retryable: true,
+                stableErrorCode: cancelled.stableErrorCode,
+                preserveErrorWhenNil: false,
+                updatedAt: now()
+            )
+            try await stateStore.save(record)
+            try await projectPersistence.recordProcessing(projectID: projectID, snapshot: cancelled)
             return
         case .starting:
             record = record.replacing(
@@ -212,23 +231,27 @@ public actor ProcessingLifecycleCoordinator {
         await provider.cancel(jobID: jobID)
     }
 
-    /// Finalizes a ready job. The staged/resultPersisted states close crash windows between
-    /// provider file creation, DB persistence and rollback-backup deletion.
     public func finish(projectID: ProjectID) async throws -> [StemArtifact] {
         guard var record = try await stateStore.load(projectID: projectID) else {
             throw DomainFailure.processingFailed(code: "PROC_STATE_MISSING", retryable: false)
         }
 
-        if record.state == .resultPersisted || record.state == .completed {
+        if record.state == .completed {
             guard let artifacts = record.resultArtifacts else {
                 throw DomainFailure.processingFailed(code: "PROC_RESULT_JOURNAL_MISSING", retryable: false)
             }
             try await outputTransaction.validateFinalArtifacts(artifacts, projectID: projectID)
-            if record.state == .resultPersisted {
-                try await outputTransaction.commit(projectID: projectID, generationID: record.generationID)
-                record = record.replacing(state: .completed, retryable: false, updatedAt: now())
-                try await stateStore.save(record)
+            return artifacts
+        }
+
+        if record.state == .resultPersisted {
+            guard let artifacts = record.resultArtifacts else {
+                throw DomainFailure.processingFailed(code: "PROC_RESULT_JOURNAL_MISSING", retryable: false)
             }
+            try await outputTransaction.validateFinalArtifacts(artifacts, projectID: projectID)
+            try await outputTransaction.commit(projectID: projectID, generationID: record.generationID)
+            record = record.replacing(state: .completed, retryable: false, updatedAt: now())
+            try await stateStore.save(record)
             return artifacts
         }
 
@@ -251,12 +274,12 @@ public actor ProcessingLifecycleCoordinator {
             throw DomainFailure.processingFailed(code: "PROC_JOB_BINDING_MISSING", retryable: false)
         }
 
+        let staged: DurableProcessingRecord
         do {
             let artifacts = try await provider.result(jobID: jobID)
             try validateResultArtifacts(artifacts, record: record)
             try await outputTransaction.validateFinalArtifacts(artifacts, projectID: projectID)
-
-            let staged = record.replacing(
+            staged = record.replacing(
                 state: .resultStaged,
                 resultArtifacts: artifacts,
                 preserveArtifactsWhenNil: false,
@@ -266,7 +289,6 @@ public actor ProcessingLifecycleCoordinator {
                 updatedAt: now()
             )
             try await stateStore.save(staged)
-            return try await persistStagedResult(staged)
         } catch {
             let classification = classify(error)
             if classification.retryable {
@@ -299,15 +321,16 @@ public actor ProcessingLifecycleCoordinator {
                 updatedAt: now()
             )
             try? await stateStore.save(failed)
-            try? await projectPersistence.recordProcessing(projectID: projectID, snapshot: failedSnapshot)
             try? await outputTransaction.rollback(projectID: projectID, generationID: record.generationID)
+            try? await projectPersistence.recordProcessing(projectID: projectID, snapshot: failedSnapshot)
             throw DomainFailure.processingFailed(code: classification.code, retryable: false)
         }
+
+        // Persistence errors after this point intentionally leave `resultStaged` durable so a
+        // relaunch can repeat the idempotent recordStems write without re-downloading outputs.
+        return try await persistStagedResult(staged)
     }
 
-    /// Creates a new generation only after a terminal/retryable state. Ambiguous starts require
-    /// explicit opt-in because the canonical SourceSeparationProviding.start contract cannot pass a
-    /// deterministic client idempotency key to the backend.
     public func retry(
         _ request: SeparationRequest,
         allowPotentialDuplicateStart: Bool = false
@@ -317,13 +340,23 @@ public actor ProcessingLifecycleCoordinator {
         }
 
         switch record.state {
-        case .startAmbiguous, .starting:
+        case .starting:
+            if inFlightStartGenerations.contains(record.generationID) {
+                throw DomainFailure.processingFailed(code: "PROC_START_IN_FLIGHT", retryable: true)
+            }
+            guard allowPotentialDuplicateStart else {
+                throw DomainFailure.processingFailed(code: "PROC_AMBIGUOUS_RETRY_REQUIRES_CONFIRMATION", retryable: false)
+            }
+        case .startAmbiguous:
             guard allowPotentialDuplicateStart else {
                 throw DomainFailure.processingFailed(code: "PROC_AMBIGUOUS_RETRY_REQUIRES_CONFIRMATION", retryable: false)
             }
         case .failed, .cancelled:
             guard record.retryable else {
-                throw DomainFailure.processingFailed(code: record.stableErrorCode ?? "PROC_FAILURE_NOT_RETRYABLE", retryable: false)
+                throw DomainFailure.processingFailed(
+                    code: record.stableErrorCode ?? "PROC_FAILURE_NOT_RETRYABLE",
+                    retryable: false
+                )
             }
         case .completed:
             break
@@ -335,8 +368,6 @@ public actor ProcessingLifecycleCoordinator {
         return try await startNew(request: request, retryCount: record.retryCount + 1)
     }
 
-    /// Safe relaunch recovery. Active jobs reconnect, ready jobs finish immediately so expiring
-    /// result URLs are captured, and two-phase local finalization resumes without re-running AI.
     @discardableResult
     public func recoverAfterRelaunch(projectID: ProjectID) async throws -> ProcessingRecoveryAction {
         guard let record = try await stateStore.load(projectID: projectID) else { return .none }
@@ -344,17 +375,11 @@ public actor ProcessingLifecycleCoordinator {
         switch record.state {
         case .completed:
             return .none
-        case .startAmbiguous, .starting:
+        case .starting, .startAmbiguous:
             return .ambiguousStart
         case .failed, .cancelled:
             return .retryRequired(stableErrorCode: record.stableErrorCode)
-        case .resultStaged:
-            _ = try await persistStagedResult(record)
-            return .none
-        case .resultPersisted:
-            _ = try await finish(projectID: projectID)
-            return .none
-        case .ready:
+        case .resultStaged, .resultPersisted, .ready:
             _ = try await finish(projectID: projectID)
             return .none
         case .active, .cancellationRequested:
@@ -419,61 +444,25 @@ public actor ProcessingLifecycleCoordinator {
                 updatedAt: now()
             )
             try? await stateStore.save(record)
-            throw error
+            throw DomainFailure.processingFailed(code: classification.code, retryable: classification.retryable)
         }
 
+        let jobID: ProcessingJobID
         do {
-            let jobID = try await provider.start(request)
-
-            if let latest = try await stateStore.load(projectID: request.projectID),
+            jobID = try await provider.start(request)
+        } catch {
+            if let latest = try? await stateStore.load(projectID: request.projectID),
                latest.generationID == generationID,
                latest.state == .cancellationRequested {
-                await provider.cancel(jobID: jobID)
-                let cancelled = ProcessingSnapshot(
-                    jobID: jobID,
-                    phase: .cancelled,
-                    fractionComplete: nil,
-                    retryable: true,
-                    stableErrorCode: "PROC_CANCELLED_DURING_START"
-                )
-                record = latest.replacing(
-                    jobID: jobID,
+                let cancelled = latest.replacing(
                     state: .cancelled,
-                    lastSnapshot: cancelled,
                     retryable: true,
-                    stableErrorCode: cancelled.stableErrorCode,
+                    stableErrorCode: "PROC_CANCELLED_DURING_START_NO_JOB",
                     preserveErrorWhenNil: false,
                     updatedAt: now()
                 )
-                try await stateStore.save(record)
-                try await projectPersistence.recordProcessing(projectID: request.projectID, snapshot: cancelled)
-                try await outputTransaction.rollback(projectID: request.projectID, generationID: generationID)
-                return jobID
-            }
-
-            let queued = ProcessingSnapshot(
-                jobID: jobID,
-                phase: .queued,
-                fractionComplete: 0,
-                retryable: true,
-                stableErrorCode: nil
-            )
-            record = record.replacing(
-                jobID: jobID,
-                state: .active,
-                lastSnapshot: queued,
-                retryable: true,
-                stableErrorCode: nil,
-                preserveErrorWhenNil: false,
-                updatedAt: now()
-            )
-            try await stateStore.save(record)
-            try await projectPersistence.recordProcessing(projectID: request.projectID, snapshot: queued)
-            return jobID
-        } catch {
-            if let latest = try? await stateStore.load(projectID: request.projectID),
-               latest?.generationID == generationID,
-               latest?.state == .cancelled {
+                try? await stateStore.save(cancelled)
+                try? await outputTransaction.rollback(projectID: request.projectID, generationID: generationID)
                 throw DomainFailure.cancelled
             }
 
@@ -489,6 +478,81 @@ public actor ProcessingLifecycleCoordinator {
             try? await outputTransaction.rollback(projectID: request.projectID, generationID: generationID)
             throw DomainFailure.processingFailed(code: classification.code, retryable: classification.retryable)
         }
+
+        guard let latest = try await stateStore.load(projectID: request.projectID),
+              latest.generationID == generationID else {
+            await provider.cancel(jobID: jobID)
+            try? await outputTransaction.rollback(projectID: request.projectID, generationID: generationID)
+            throw DomainFailure.processingFailed(code: "PROC_START_SUPERSEDED", retryable: false)
+        }
+
+        if latest.state == .cancellationRequested {
+            await provider.cancel(jobID: jobID)
+            let cancelledSnapshot = ProcessingSnapshot(
+                jobID: jobID,
+                phase: .cancelled,
+                fractionComplete: nil,
+                retryable: true,
+                stableErrorCode: "PROC_CANCELLED_DURING_START"
+            )
+            let cancelled = latest.replacing(
+                jobID: jobID,
+                state: .cancelled,
+                lastSnapshot: cancelledSnapshot,
+                retryable: true,
+                stableErrorCode: cancelledSnapshot.stableErrorCode,
+                preserveErrorWhenNil: false,
+                updatedAt: now()
+            )
+            try await stateStore.save(cancelled)
+            try await outputTransaction.rollback(projectID: request.projectID, generationID: generationID)
+            try await projectPersistence.recordProcessing(projectID: request.projectID, snapshot: cancelledSnapshot)
+            throw DomainFailure.cancelled
+        }
+
+        guard latest.state == .starting else {
+            await provider.cancel(jobID: jobID)
+            try? await outputTransaction.rollback(projectID: request.projectID, generationID: generationID)
+            throw DomainFailure.processingFailed(code: "PROC_START_STATE_CHANGED", retryable: false)
+        }
+
+        let queued = ProcessingSnapshot(
+            jobID: jobID,
+            phase: .queued,
+            fractionComplete: 0,
+            retryable: true,
+            stableErrorCode: nil
+        )
+        record = latest.replacing(
+            jobID: jobID,
+            state: .active,
+            lastSnapshot: queued,
+            retryable: true,
+            stableErrorCode: nil,
+            preserveErrorWhenNil: false,
+            updatedAt: now()
+        )
+
+        do {
+            try await stateStore.save(record)
+        } catch {
+            await provider.cancel(jobID: jobID)
+            try? await outputTransaction.rollback(projectID: request.projectID, generationID: generationID)
+            let failed = latest.replacing(
+                state: .failed,
+                retryable: true,
+                stableErrorCode: "PROC_JOB_BINDING_PERSIST_FAILED",
+                preserveErrorWhenNil: false,
+                updatedAt: now()
+            )
+            try? await stateStore.save(failed)
+            throw DomainFailure.processingFailed(code: "PROC_JOB_BINDING_PERSIST_FAILED", retryable: true)
+        }
+
+        // If this persistence seam fails, keep the durable job binding. Relaunch can reconnect and
+        // replay recordProcessing without starting a duplicate server job.
+        try await projectPersistence.recordProcessing(projectID: request.projectID, snapshot: queued)
+        return jobID
     }
 
     private func persistStagedResult(_ staged: DurableProcessingRecord) async throws -> [StemArtifact] {
@@ -497,6 +561,7 @@ public actor ProcessingLifecycleCoordinator {
               let jobID = staged.jobID else {
             throw DomainFailure.processingFailed(code: "PROC_STAGED_RESULT_INVALID", retryable: false)
         }
+
         try await outputTransaction.validateFinalArtifacts(artifacts, projectID: staged.projectID)
         try validateResultArtifacts(artifacts, record: staged)
 
@@ -552,15 +617,16 @@ public actor ProcessingLifecycleCoordinator {
         guard snapshot.jobID == previous.jobID else {
             throw DomainFailure.processingFailed(code: "PROC_JOB_ID_CHANGED", retryable: false)
         }
-
-        let previousRank = phaseRank(previous.phase)
-        let nextRank = phaseRank(snapshot.phase)
-        if !isTerminal(previous.phase), !isTerminal(snapshot.phase), nextRank < previousRank {
+        if isTerminal(previous.phase), snapshot.phase != previous.phase {
+            throw DomainFailure.processingFailed(code: "PROC_TERMINAL_STATE_CHANGED", retryable: false)
+        }
+        if !isTerminal(previous.phase), !isTerminal(snapshot.phase), phaseRank(snapshot.phase) < phaseRank(previous.phase) {
             throw DomainFailure.processingFailed(code: "PROC_PHASE_REGRESSION", retryable: false)
         }
 
         var fraction = snapshot.fractionComplete
-        if let old = previous.fractionComplete, let new = fraction, new + 0.000_001 < old, !isTerminal(snapshot.phase) {
+        if let old = previous.fractionComplete, let new = fraction,
+           new + 0.000_001 < old, !isTerminal(snapshot.phase) {
             throw DomainFailure.processingFailed(code: "PROC_PROGRESS_REGRESSION", retryable: false)
         }
         if fraction == nil, let old = previous.fractionComplete, !isTerminal(snapshot.phase) {
@@ -593,16 +659,16 @@ public actor ProcessingLifecycleCoordinator {
 
     private func classifyStart(_ error: Error) -> (code: String, retryable: Bool, ambiguous: Bool) {
         let base = classify(error)
-        switch error {
-        case DomainFailure.networkUnavailable,
-             DomainFailure.networkTimeout,
-             DomainFailure.providerUnavailable,
-             DomainFailure.cancelled:
+        guard let failure = error as? DomainFailure else {
             return (base.code, false, true)
-        case DomainFailure.processingFailed(_, let retryable) where retryable:
-            return (base.code, false, true)
-        default:
+        }
+        switch failure {
+        case .accessDenied, .unsupportedMedia, .protectedMedia, .corruptMedia, .noAudioTrack, .insufficientStorage:
             return (base.code, base.retryable, false)
+        default:
+            // The shared start contract exposes no caller-supplied deterministic idempotency key.
+            // Conservatively assume any other error may have happened after server acceptance.
+            return (base.code, false, true)
         }
     }
 
