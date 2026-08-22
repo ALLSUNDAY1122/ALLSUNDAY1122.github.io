@@ -7,8 +7,10 @@ on:
       - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
       - 'kikenbutsu-otsu4-sprint/question-bank-v3-wave*.js'
       - 'tools/otsu4-build-content-v2.mjs'
+      - 'tools/otsu4-build-content-v3.mjs'
       - 'tools/otsu4-apply-difficulty-hardening.mjs'
       - 'tools/otsu4-difficulty-audit.mjs'
+      - 'tools/otsu4-difficulty-audit-v3.mjs'
       - '.github/workflows/otsu4-native-typecheck.yml'
   push:
     branches: [ main ]
@@ -17,8 +19,10 @@ on:
       - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
       - 'kikenbutsu-otsu4-sprint/question-bank-v3-wave*.js'
       - 'tools/otsu4-build-content-v2.mjs'
+      - 'tools/otsu4-build-content-v3.mjs'
       - 'tools/otsu4-apply-difficulty-hardening.mjs'
       - 'tools/otsu4-difficulty-audit.mjs'
+      - 'tools/otsu4-difficulty-audit-v3.mjs'
       - '.github/workflows/otsu4-native-typecheck.yml'
 
 concurrency:
@@ -37,22 +41,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Foundation-only notice
-        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') == '' }}
-        run: echo 'Otsu4 native product files are not present yet; typecheck will run on the product PR.'
       - name: Show Xcode and Swift versions
-        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
         run: |
           xcodebuild -version
           xcrun swiftc --version
-      - name: Generate and harden audited 600-question Wave 2 JSON
-        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
+      - name: Generate and harden audited final 720-question JSON
         run: |
-          node tools/otsu4-build-content-v2.mjs
+          node tools/otsu4-build-content-v3.mjs
           node tools/otsu4-apply-difficulty-hardening.mjs
-          node tools/otsu4-difficulty-audit.mjs
-      - name: Runtime-decode v2.1 learning selections
-        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
+          node tools/otsu4-difficulty-audit-v3.mjs
+      - name: Runtime-decode final learning selections and six mocks
         run: |
           cat > /tmp/Otsu4ContentDecodeCheck.swift <<'SWIFT'
           import Foundation
@@ -62,36 +60,33 @@ jobs:
               static func main() throws {
                   let url = URL(fileURLWithPath: "kikenbutsu-otsu4-sprint/questions.generated.json")
                   let store = try Otsu4ContentStore(url: url)
-                  guard store.allQuestions.count == 600 else { fatalError("question count mismatch") }
+                  guard store.allQuestions.count == 720 else { fatalError("question count mismatch") }
                   guard store.freeQuestions.count == 72 else { fatalError("free count mismatch") }
                   guard store.sprint(goal: 4, isPremium: true).count == 4 else { fatalError("sprint4 mismatch") }
                   guard store.sprint(goal: 8, isPremium: true).count == 8 else { fatalError("sprint8 mismatch") }
                   guard store.sprint(goal: 16, isPremium: true).count == 16 else { fatalError("sprint16 mismatch") }
-                  for set in 1...3 {
-                      guard let mock = store.mockExamQuestions(set: set), mock.count == 35 else {
-                          fatalError("mock set \(set) mismatch")
-                      }
+                  guard store.practiceRoundQuestions(set: 1, isPremium: false)?.count == 35 else { fatalError("free round1 mismatch") }
+                  guard store.practiceRoundQuestions(set: 2, isPremium: false) == nil else { fatalError("free round2 must be locked") }
+                  var allMockIDs: [String] = []
+                  for set in 1...Otsu4ContentStore.mockSetCount {
+                      guard let mock = store.mockExamQuestions(set: set), mock.count == 35 else { fatalError("mock set \(set) mismatch") }
+                      guard store.practiceRoundQuestions(set: set, isPremium: true)?.count == 35 else { fatalError("premium round \(set) mismatch") }
                       let counts = Dictionary(grouping: mock, by: \.subject).mapValues(\.count)
-                      guard counts["法令"] == 15, counts["物理・化学"] == 10, counts["性質・消火"] == 10 else {
-                          fatalError("mock subject counts mismatch set \(set)")
-                      }
+                      guard counts["法令"] == 15, counts["物理・化学"] == 10, counts["性質・消火"] == 10 else { fatalError("mock subject counts mismatch set \(set)") }
                       let hard = Dictionary(grouping: mock.filter { $0.difficulty >= 3 }, by: \.subject).mapValues(\.count)
-                      guard hard["法令"] == 5, hard["物理・化学"] == 3, hard["性質・消火"] == 3 else {
-                          fatalError("mock difficulty mix mismatch set \(set)")
-                      }
+                      guard hard["法令"] == 5, hard["物理・化学"] == 3, hard["性質・消火"] == 3 else { fatalError("mock difficulty mix mismatch set \(set)") }
+                      allMockIDs += mock.map(\.id)
                   }
-                  guard Otsu4ContentStore.mockSetsAreDisjoint(in: store) else { fatalError("mock sets overlap") }
-                  print("decoded=600 free=72 sprint=4/8/16 mockSets=3x35 disjoint=true difficultyMix=5/3/3")
+                  guard Otsu4ContentStore.mockSetCount == 6 else { fatalError("mock set count mismatch") }
+                  guard allMockIDs.count == 210, Set(allMockIDs).count == 210 else { fatalError("six mock sets overlap") }
+                  guard Otsu4ContentStore.mockSetsAreDisjoint(in: store) else { fatalError("mock set helper overlap") }
+                  print("decoded=720 free=72 sprint=4/8/16 practiceRound=1-free/1-6-premium mockSets=6x35 disjoint=210 difficultyMix=5/3/3")
               }
           }
           SWIFT
-          xcrun swiftc \
-            native-ios/Otsu4Sprint/Otsu4ContentStore.swift \
-            /tmp/Otsu4ContentDecodeCheck.swift \
-            -o /tmp/otsu4-content-check
+          xcrun swiftc native-ios/Otsu4Sprint/Otsu4ContentStore.swift /tmp/Otsu4ContentDecodeCheck.swift -o /tmp/otsu4-content-check
           /tmp/otsu4-content-check
-      - name: Typecheck complete Learning Sprint v2.1 native flow and StoreKit
-        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
+      - name: Typecheck final Learning Sprint native flow and StoreKit
         run: |
           xcrun --sdk iphonesimulator swiftc \
             -target arm64-apple-ios17.0-simulator \
@@ -104,4 +99,5 @@ jobs:
             native-ios/Otsu4Sprint/Otsu4StudySession.swift \
             native-ios/Otsu4Sprint/Otsu4LearningView.swift \
             native-ios/Otsu4Sprint/Otsu4GoldenRootView.swift \
+            native-ios/Otsu4Sprint/Otsu4FinalRootView.swift \
             native-ios/Otsu4Sprint/Otsu4SprintApp.swift
