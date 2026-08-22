@@ -16,8 +16,8 @@ final class ChordTimelineAnalysisTests: XCTestCase {
         XCTAssertEqual(label(at: 3.0, in: chords), "A:min")
         XCTAssertEqual(label(at: 4.5, in: chords), "N")
         XCTAssertEqual(label(at: 6.0, in: chords), "G")
-        XCTAssertEqual(chords.first?.startSeconds, 0, accuracy: 1e-9)
-        XCTAssertEqual(chords.last?.endSeconds, signal.durationSeconds, accuracy: 1e-9)
+        XCTAssertEqual(try XCTUnwrap(chords.first).startSeconds, 0, accuracy: 1e-9)
+        XCTAssertEqual(try XCTUnwrap(chords.last).endSeconds, signal.durationSeconds, accuracy: 1e-9)
         XCTAssertTrue(chords.allSatisfy { $0.endSeconds > $0.startSeconds })
         for index in 1..<chords.count {
             XCTAssertEqual(chords[index - 1].endSeconds, chords[index].startSeconds, accuracy: 1e-9)
