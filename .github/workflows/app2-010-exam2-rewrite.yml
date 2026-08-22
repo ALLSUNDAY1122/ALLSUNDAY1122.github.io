@@ -27,10 +27,20 @@ jobs:
       - name: Decode and apply audited Exam 2 bank
         run: |
           python3 - <<'PY'
-          import base64, io, json, statistics, tarfile
+          import base64, hashlib, io, json, tarfile
           from pathlib import Path
 
-          raw=base64.b64decode(Path('automation/app2-010-exam2-rewrite-bundle.b64').read_text().strip())
+          chunk_dir=Path('automation/app2-010-exam2-bundle-chunks')
+          parts=sorted(chunk_dir.glob('*.txt'))
+          expected_names=[f'{i:02d}.txt' for i in range(8)]
+          if [p.name for p in parts] != expected_names:
+              raise SystemExit(f'unexpected bundle chunks: {[p.name for p in parts]}')
+          encoded=''.join(p.read_text(encoding='utf-8').strip() for p in parts)
+          raw=base64.b64decode(encoded,validate=True)
+          expected_sha='0bbf3cc5b4799c1a092b8c1c7b267d24d2b94594dcd0a44619032651e80ff0e4'
+          actual_sha=hashlib.sha256(raw).hexdigest()
+          if actual_sha != expected_sha:
+              raise SystemExit(f'bundle sha mismatch: {actual_sha}')
           with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as tf:
               members={m.name:m for m in tf.getmembers() if m.isfile()}
               expected={f'chapter-{i}.json' for i in range(1,6)}
@@ -39,8 +49,11 @@ jobs:
               base=Path('touroku-hanbaisha-sprint/questions/exam-2')
               for name in sorted(expected):
                   data=tf.extractfile(members[name]).read()
-                  json.loads(data.decode('utf-8'))
+                  parsed=json.loads(data.decode('utf-8'))
+                  if not isinstance(parsed,list):
+                      raise SystemExit(f'{name}: not a list')
                   (base/name).write_bytes(data)
+          print('Applied verified Exam 2 bundle',actual_sha)
           PY
 
       - name: Validate Exam 2 structure and difficulty
@@ -64,6 +77,7 @@ jobs:
               if q.get('round')!=2: errors.append(f"{q.get('id')}: round")
               if not isinstance(q.get('choices'),list) or len(q['choices'])!=5 or len(set(q['choices']))!=5: errors.append(f"{q.get('id')}: choices")
               if not isinstance(q.get('correct_index'),int) or not 0<=q['correct_index']<5: errors.append(f"{q.get('id')}: correct_index")
+              if q.get('answer') != q.get('correct_index'): errors.append(f"{q.get('id')}: answer mismatch")
               for k in ('subject','topic','question','explanation','source_url','reference_date','origin_type','rights_basis'):
                   if not str(q.get(k,'')).strip(): errors.append(f"{q.get('id')}: missing {k}")
           if len(ids)!=len(set(ids)): errors.append('duplicate ids')
