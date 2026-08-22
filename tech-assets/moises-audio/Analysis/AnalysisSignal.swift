@@ -34,6 +34,16 @@ public struct MusicAnalysisConfiguration: Equatable, Sendable {
     public var chordHopSeconds: Double
     public var minimumChordSegmentSeconds: Double
     public var chordAnalysisSampleRate: Double
+    public var sectionContextSeconds: Double
+    public var sectionHopSeconds: Double
+    public var minimumSectionSeconds: Double
+    public var minimumEdgeSectionSeconds: Double
+    public var sectionNoveltyThreshold: Double
+    public var sectionEnergyJumpThreshold: Double
+    public var sectionClusterSimilarity: Double
+    public var minimumFunctionalSectionConfidence: Double
+    public var minimumSectionChordCoverage: Double
+    public var sectionSilenceRMS: Double
 
     public init(
         minimumDurationSeconds: Double = 1.5,
@@ -49,7 +59,17 @@ public struct MusicAnalysisConfiguration: Equatable, Sendable {
         chordWindowSeconds: Double = 0.70,
         chordHopSeconds: Double = 0.25,
         minimumChordSegmentSeconds: Double = 0.35,
-        chordAnalysisSampleRate: Double = 8_000
+        chordAnalysisSampleRate: Double = 8_000,
+        sectionContextSeconds: Double = 2.0,
+        sectionHopSeconds: Double = 1.0,
+        minimumSectionSeconds: Double = 4.0,
+        minimumEdgeSectionSeconds: Double = 4.0,
+        sectionNoveltyThreshold: Double = 0.42,
+        sectionEnergyJumpThreshold: Double = 0.25,
+        sectionClusterSimilarity: Double = 0.82,
+        minimumFunctionalSectionConfidence: Double = 0.58,
+        minimumSectionChordCoverage: Double = 0.25,
+        sectionSilenceRMS: Double = 0.0005
     ) {
         precondition(minimumDurationSeconds >= 0)
         precondition((0...1).contains(minimumTempoConfidence))
@@ -66,6 +86,17 @@ public struct MusicAnalysisConfiguration: Equatable, Sendable {
         precondition(chordHopSeconds <= chordWindowSeconds)
         precondition(minimumChordSegmentSeconds >= 0 && minimumChordSegmentSeconds.isFinite)
         precondition(chordAnalysisSampleRate >= 2_000 && chordAnalysisSampleRate.isFinite)
+        precondition(sectionContextSeconds > 0 && sectionContextSeconds.isFinite)
+        precondition(sectionHopSeconds > 0 && sectionHopSeconds.isFinite)
+        precondition(sectionHopSeconds <= sectionContextSeconds)
+        precondition(minimumSectionSeconds > 0 && minimumSectionSeconds.isFinite)
+        precondition(minimumEdgeSectionSeconds > 0 && minimumEdgeSectionSeconds.isFinite)
+        precondition((0...1).contains(sectionNoveltyThreshold))
+        precondition((0...1).contains(sectionEnergyJumpThreshold))
+        precondition((0...1).contains(sectionClusterSimilarity))
+        precondition((0...1).contains(minimumFunctionalSectionConfidence))
+        precondition((0...1).contains(minimumSectionChordCoverage))
+        precondition(sectionSilenceRMS >= 0 && sectionSilenceRMS.isFinite)
         self.minimumDurationSeconds = minimumDurationSeconds
         self.minimumTempoConfidence = minimumTempoConfidence
         self.minimumKeyConfidence = minimumKeyConfidence
@@ -80,6 +111,16 @@ public struct MusicAnalysisConfiguration: Equatable, Sendable {
         self.chordHopSeconds = chordHopSeconds
         self.minimumChordSegmentSeconds = minimumChordSegmentSeconds
         self.chordAnalysisSampleRate = chordAnalysisSampleRate
+        self.sectionContextSeconds = sectionContextSeconds
+        self.sectionHopSeconds = sectionHopSeconds
+        self.minimumSectionSeconds = minimumSectionSeconds
+        self.minimumEdgeSectionSeconds = minimumEdgeSectionSeconds
+        self.sectionNoveltyThreshold = sectionNoveltyThreshold
+        self.sectionEnergyJumpThreshold = sectionEnergyJumpThreshold
+        self.sectionClusterSimilarity = sectionClusterSimilarity
+        self.minimumFunctionalSectionConfidence = minimumFunctionalSectionConfidence
+        self.minimumSectionChordCoverage = minimumSectionChordCoverage
+        self.sectionSilenceRMS = sectionSilenceRMS
     }
 
     public static let productBaseline = MusicAnalysisConfiguration()
@@ -103,6 +144,7 @@ public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
         let tempo = TempoBeatAnalyzer.analyze(signal: signal, configuration: configuration)
         let key = MusicalKeyAnalyzer.analyze(signal: signal, configuration: configuration)
         let chords = ChordTimelineAnalyzer.analyze(signal: signal, configuration: configuration)
-        return AnalysisSnapshot(tempo: tempo, key: key, chords: chords, sections: [])
+        let sections = SongSectionAnalyzer.analyze(signal: signal, chords: chords, configuration: configuration)
+        return AnalysisSnapshot(tempo: tempo, key: key, chords: chords, sections: sections)
     }
 }
