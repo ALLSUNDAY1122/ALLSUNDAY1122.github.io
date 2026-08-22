@@ -4,15 +4,41 @@
   "work_package_id": "MOI-WP3-PLAYBACK-DSP",
   "assignment_epoch": 1,
   "work_branch": "moises/wp3-playback-dsp",
-  "state": "IN_PROGRESS",
+  "state": "BLOCKED",
   "current_task": "MOI-DSP-001",
   "base_integration_sha": "13b0b559cd68f109212e8d46ad0167f43d1d7d1d",
-  "head_sha": "13b0b559cd68f109212e8d46ad0167f43d1d7d1d",
-  "commits": [],
-  "tests": [],
-  "evidence": [],
-  "known_gaps": [],
-  "hq_requests": [],
-  "last_updated": "2026-08-22T14:21:00+09:00",
+  "head_sha": "2299de76407556e24b64f363a277933f30daffdb",
+  "commits": [
+    "73cfe23aab98dc5275d9a8dabaccafdb6934d9ec",
+    "bcbae199068c7154a572875302473a58e7da34d3",
+    "8de82ea63791a4453c128a0d125e1a06e4d9051c",
+    "2bf18fd4d26aed24c5e4653b4e4b432c3250bd16",
+    "560ee4e0bdf793963172cb6eb1711e262eb30fbc",
+    "296c9381b5a4bb5e173b09f38561b28a9cd7e61c",
+    "2299de76407556e24b64f363a277933f30daffdb"
+  ],
+  "tests": [
+    "Swift 6.2.1 Linux contract-compatible core self-test: PASS",
+    "10-minute/1200-beat sample-time mapping <=1 frame planner error",
+    "100 loop repetitions at 0.9x: no accumulated planner drift",
+    "60-minute/7200-beat planner x200: median 0.0384ms, p99 0.0700ms, max 0.1055ms"
+  ],
+  "evidence": [
+    "DSP/benchmarks/MOI-DSP-001_IMPLEMENTATION_VALIDATION.md",
+    "DSP/benchmarks/MOI-DSP-001_MEASUREMENT_STATUS.json",
+    "remote read-back confirmed both evidence files",
+    "compare integration -> work branch: ahead 7 / behind 5; all 7 changed files are under tech-assets/moises-audio/DSP/**"
+  ],
+  "known_gaps": [
+    "AVFAudio backend has not been compiled/executed on macOS/iPhone in the current worker environment",
+    "rights-cleared real-track tempo/pitch artifact gates not yet measured",
+    "actual AVAudioEngine click onset/drift and target-device render latency not yet measured",
+    "canonical baseline still lacks iOS app target",
+    "MOI-P010/MOI-P012/MOI-P014/MOI-P015 remain MISSING"
+  ],
+  "hq_requests": [
+    "Provide or route a macOS/iPhone AVFAudio executor, or have the HQ/WP4 build harness compile the existing DSP-owned sources unchanged, so WP3 can execute the mandatory real-track/device validation gates before INTEGRATION_READY"
+  ],
+  "last_updated": "2026-08-22T14:34:00+09:00",
   "writer_policy": "Only Moises-Worker-3 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
 }
