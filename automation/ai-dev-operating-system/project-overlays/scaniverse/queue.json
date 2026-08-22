@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1",
+  "project": "scaniverse-parity-control",
+  "updated_at": "2026-08-22T22:01:00+09:00",
+  "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+  "branch": "automation/ai-dev-operating-system",
+  "integration_branch": "feature/splat-native-ios-poc",
+  "integration_head_observed": "c45e722fec3ba96e07d298a4bc2a7803f64c576d",
+  "worker_bootstrap": "splat-native-ios/ACTIVE_SESSION_PROMPTS.md",
+  "paused": false,
+  "lane_observation": {
+    "A2": {"branch":"scaniverse/a2-capture-reconstruction","ahead":0,"behind":141,"auto_dispatch":false},
+    "B2": {"branch":"scaniverse/b2-view-edit-mesh","ahead":0,"behind":150,"auto_dispatch":false},
+    "C2": {"branch":"scaniverse/c2-library-export","ahead":0,"behind":61,"auto_dispatch":false},
+    "D2": {"branch":"scaniverse/d2-share-discover","ahead":0,"behind":137,"auto_dispatch":false}
+  },
+  "tasks": [
+    {
+      "id": "SCAN-HQ-REBASE-001",
+      "title": "最新統合HEADから4 Lane運用を再基準化",
+      "status": "READY",
+      "priority": "critical",
+      "worker_role": "HQ",
+      "human_gate": false,
+      "prompt": "会話履歴を正本にせずNotion Scaniverse正本、PR #4145、feature/splat-native-ios-poc、A2/B2/C2/D2の最新実状態を再取得する。4 laneが現在もintegrationに対しahead=0であることを再確認し、古い8/15 handoffをそのまま再利用しない。最新統合HEADを基準に未完了PARITY差分を再評価し、A2-D2へ相互依存を最小化したMacro Bundleを事前配布する新しい機械可読Lane Plan/worker statusをGitHub正本として作る。各lane branchを進める必要がある場合、ahead=0をread-back確認したlaneだけ安全に最新integrationへfast-forwardしてから再開可能にする。共有契約・統合・最終PARITY判定はHQ所有とする。Dispatcherが読める正本を作成したら本control taskをDONEへ更新し、Portfolio側のScaniverseをfixed_lane_planへ移行可能な状態にする。通常経路でCodexは使わない。",
+      "acceptance": [
+        "実行直前の5 branch比較を再取得して証拠保存",
+        "最新integration HEAD基準の未完了PARITY差分を再評価",
+        "A2-D2の新Macro Bundleを機械可読planへ事前配布",
+        "各laneのowned scope/shared contract境界を明示",
+        "worker statusを作成しCHECKPOINT/WAITING/ACTIVEを機械判定可能にする",
+        "旧8/15 handoffを最新状態と誤認しない",
+        "control taskをDONEへ更新"
+      ]
+    }
+  ]
+}
