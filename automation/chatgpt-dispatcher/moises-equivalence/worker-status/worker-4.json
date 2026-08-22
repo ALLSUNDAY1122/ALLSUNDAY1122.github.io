@@ -1,42 +1,36 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "worker_id": "Moises-Worker-4",
-  "work_package_id": "MOI-WP4-ANALYSIS-PLATFORM",
-  "assignment_epoch": 1,
+  "lane_id": "LANE-4-IOS-ANALYSIS",
+  "assignment_epoch": 2,
   "work_branch": "moises/wp4-analysis-platform",
-  "state": "INTEGRATION_READY",
-  "current_task": "MOI-BLD-003",
-  "base_integration_sha": "a9167adbb3a983ba7ab4f276c971b00af1fde53c",
-  "head_sha": "ddbfcf1ec73f8329cb3ae3e74843d47511c2d9ed",
-  "commits": [
-    "9dd5e560720070ec85551fd62d4b3b953cdc0808",
-    "81d1fae9f5f2223db9a631ccce030d9cad45c45c",
-    "ddbfcf1ec73f8329cb3ae3e74843d47511c2d9ed"
-  ],
+  "state": "IN_PROGRESS",
+  "current_bundle": "L4-M01",
+  "completed_bundles": [],
+  "epoch_contract_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
+  "base_integration_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
+  "head_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
+  "existing_unintegrated_commits": [],
+  "commits": [],
   "tests": [
-    "Swift 6.2.1 x86_64-unknown-linux-gnu: swift test --disable-sandbox => 17 tests, 0 failures, 0 unexpected",
-    "Existing SeparationQualityTests: 8/8 PASS",
-    "Existing DomainContractCoordinatorTests: 5/5 PASS",
-    "New LibraryContractTests: 4/4 PASS",
-    "HQ Hashable blocker regression: PersistedProjectSnapshot now compiles and Codable/equality round-trip passes with ProcessingSnapshot Hashable"
+    "Inherited canonical v2 baseline: MOI-BLD-003 SwiftPM regression 17/17 PASS before v3 migration"
   ],
   "evidence": [
-    "Canonical Queue re-read 2026-08-22 15:53 JST: MOI-BLD-003 still READY_ASSIGNED; MOI-BLD-IOS-001 still PLANNED",
-    "HQ Shared fix facd51a2724a68a5e1cdedbf2ace5e88a28711fc remains present in canonical DomainContracts",
-    "commit 9dd5e560720070ec85551fd62d4b3b953cdc0808 adds Shared/LibraryContracts.swift to the explicit SwiftPM target source list",
-    "commit 81d1fae9f5f2223db9a631ccce030d9cad45c45c adds four Library contract regression tests",
-    "commit ddbfcf1ec73f8329cb3ae3e74843d47511c2d9ed records durable MOI-BLD-003 validation evidence under Tests/**",
-    "2026-08-22 15:53 JST compare: work branch is 3 commits ahead and 18 commits behind integration; incoming changes touch worker status, DSP, and Separation only, with no Package.swift / Tests/** / iOS/** conflict",
-    "Worker 4 changed no Shared/**, App/**, PARITY_MATRIX.json, Queue, work-package manifest or resource-lock files"
+    "2026-08-22 17:26 JST v3 migration: WORKER_BOOTSTRAP.md v3, lane-plan-v3.json and work-packages.json epoch 2 read from canonical integration",
+    "LANE-4-IOS-ANALYSIS owns Analysis/**, Package.swift, Tests/** and iOS/** with macro sequence L4-M01 -> L4-M02 -> L4-M03 -> L4-M04",
+    "Pre-migration compare showed work branch ahead_by 0 and behind_by 57 relative to integration; all prior Worker-4 v2 owned commits were already canonically integrated, including MOI-BLD-003 via HQ PR #4455",
+    "Work branch safely fast-forwarded without force/reset/discard to epoch contract SHA be1c84314db182d6eee5097de34e017af1a4a7de",
+    "Frozen epoch-2 Shared/App contract snapshot read at be1c84314db182d6eee5097de34e017af1a4a7de: Shared/DomainContracts.swift, Shared/LibraryContracts.swift, App/VerticalSliceCoordinator.swift",
+    "L4-M01 implementation has not started; per user instruction actual Macro Bundle work begins on the next user '次'"
   ],
   "known_gaps": [
-    "MOI-BLD-003 is not yet HQ-integrated/VERIFIED, therefore MOI-BLD-IOS-001 is not yet released and Worker 4 must not start it",
-    "This is SwiftPM/Linux build-contract validation only; canonical iOS host target and AVFoundation/AVFAudio simulator/device validation remain for MOI-BLD-IOS-001",
-    "No PARITY row is promoted by BLD-003"
+    "L4-M01 still requires standalone iOS host/project/scheme/build configuration, dependency-injection module slots, negative/smoke validation, build evidence and physical-device gap recording",
+    "Cross-lane IO/Library/Playback/DSP/Separation implementations must not be copied into this branch; actual four-lane compile is deferred to HQ Late Integration",
+    "PARITY remains unchanged; compile/harness evidence alone cannot promote any row"
   ],
   "hq_requests": [
-    "Semantically integrate the three BLD-003 commits, rerun canonical regression, mark MOI-BLD-003 VERIFIED if accepted, then release MOI-BLD-IOS-001 per the fixed Worker 4 critical path"
+    "resource-locks.json still reports assignment_epoch 1 / v2 owner labels while lane-plan-v3.json and work-packages.json are assignment_epoch 2. Scope ownership for Worker 4 is unchanged, so this is non-blocking metadata drift; HQ should align the lock ledger at a convenient canonical update."
   ],
-  "last_updated": "2026-08-22T15:53:00+09:00",
-  "writer_policy": "Only Moises-Worker-4 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
+  "last_updated": "2026-08-22T17:26:00+09:00",
+  "writer_policy": "Only Moises-Worker-4 may update this status file. Global Queue is not used for Worker dispatch in v3."
 }
