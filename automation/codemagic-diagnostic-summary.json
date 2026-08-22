@@ -1,23 +1,23 @@
 {
-  "request_id": "app2-005-hm1-final-build2-diagnostic-20260822-1915",
-  "target_head_sha": "1cf08cf03f6afb1439a3578bceabc10a24e51b64",
-  "workflow": "codemagic-build-gateway.yml",
+  "request_id": "app2-005-hm1-prebuild-exact-inspect-20260822-1918",
+  "target_head_sha": "866c95429a3eb9eda769d7717d54d826113253f0",
+  "workflow": "hm1-prebuild-diagnose.yml",
   "run_found": true,
   "run": {
-    "id": 32567149015,
-    "name": "Codemagic Build Gateway",
-    "status": "completed",
-    "conclusion": "failure",
-    "created_at": "2026-08-22T10:15:41Z",
-    "updated_at": "2026-08-22T10:17:00Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32567149015",
-    "head_sha": "1cf08cf03f6afb1439a3578bceabc10a24e51b64"
+    "id": 32567264752,
+    "name": "Diagnose HealthManager1 264 prebuild",
+    "status": "in_progress",
+    "conclusion": null,
+    "created_at": "2026-08-22T10:18:24Z",
+    "updated_at": "2026-08-22T10:18:29Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32567264752",
+    "head_sha": "866c95429a3eb9eda769d7717d54d826113253f0"
   },
   "jobs": [
     {
-      "name": "gateway",
-      "status": "completed",
-      "conclusion": "failure",
+      "name": "diagnose",
+      "status": "in_progress",
+      "conclusion": null,
       "steps": [
         {
           "name": "Set up job",
@@ -30,64 +30,42 @@
           "conclusion": "success"
         },
         {
-          "name": "Set up Python",
+          "name": "Run actions/setup-node@v4",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Install gateway dependency",
-          "status": "completed",
-          "conclusion": "success"
+          "name": "Install ImageMagick for exact prepare reproduction",
+          "status": "in_progress",
+          "conclusion": null
         },
         {
-          "name": "Prepare requested Codemagic workflow",
-          "status": "completed",
-          "conclusion": "success"
+          "name": "Provide ImageMagick 7 compatible magick shim when runner has IM6",
+          "status": "pending",
+          "conclusion": null
         },
         {
-          "name": "Execute Codemagic command",
-          "status": "completed",
-          "conclusion": "failure"
+          "name": "Run exact HM1 prepare script",
+          "status": "pending",
+          "conclusion": null
         },
         {
-          "name": "Inspect Codemagic build actions",
-          "status": "completed",
-          "conclusion": "success"
+          "name": "Validate final prepared outputs",
+          "status": "pending",
+          "conclusion": null
         },
         {
-          "name": "Persist request-scoped sanitized result",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Upload Codemagic result",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Set up Python",
-          "status": "completed",
-          "conclusion": "skipped"
+          "name": "Post Run actions/setup-node@v4",
+          "status": "pending",
+          "conclusion": null
         },
         {
           "name": "Post Run actions/checkout@v6",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "status": "completed",
-          "conclusion": "success"
+          "status": "pending",
+          "conclusion": null
         }
       ]
     }
   ],
-  "artifacts": [
-    {
-      "id": 9474390340,
-      "name": "codemagic-result-32567149015",
-      "expired": false
-    }
-  ],
-  "artifact_download_error": "HTTPError: HTTP Error 415: Unsupported Media Type"
+  "artifacts": []
 }
