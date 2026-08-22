@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "batch_id": "REAL-GATE-YYYYMMDD-R1",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "purpose": "PARITY_CANDIDATE",
+  "reference_system": "MOISES_CURRENT_IPHONE",
+  "legal_gate": {
+    "commercial_approval_basis_id": "REPLACE_WITH_APPROVED_PROVIDER_TERMS_RECORD",
+    "privacy_retention_approval_id": "REPLACE_WITH_PRIVACY_RETENTION_REVIEW_RECORD",
+    "reference_comparison_rights_id": "REPLACE_WITH_REFERENCE_COMPARISON_RIGHTS_RECORD",
+    "provider_idempotency_contract_id": "REPLACE_WITH_STABLE_IDEMPOTENCY_CONTRACT_RECORD",
+    "production_credentials_env": ["SEPARATION_PRODUCTION_API_KEY"]
+  },
+  "coverage_requirements": {
+    "min_cases": 8,
+    "min_genres": 5,
+    "required_duration_buckets": ["short", "medium", "long"],
+    "required_target_role_sets": [["vocals", "drums", "bass", "other"], ["vocals", "instrumental"]]
+  },
+  "execution": {
+    "max_attempts_per_case": 2,
+    "timeout_seconds": 1800,
+    "driver_guarantees_stable_idempotency": true,
+    "provider_command": ["python3", "REPLACE_WITH_LIVE_PROVIDER_DRIVER.py", "--fixture", "{fixture}", "--output", "{project_run}", "--root", "{root}", "--roles", "{roles_csv}", "--idempotency-key", "{idempotency_key}"]
+  },
+  "acceptance_policy": {
+    "policy_id": "L1-M04-DIFFERENTIAL-CANDIDATE-V1-HQ-REVIEW-BEFORE-LIVE",
+    "max_case_failure_rate": 0.0,
+    "max_retry_fraction": 0.125,
+    "max_mean_wall_time_ratio_vs_reference": 1.25,
+    "min_mean_objective_si_sdr_delta_db": -0.5,
+    "min_mean_listening_delta": -0.15,
+    "min_worst_role_overall_usability_delta": -0.25,
+    "min_reviewers_per_system_per_role": 2,
+    "minimum_objective_cases": 3,
+    "max_project_cost_per_audio_minute": null,
+    "cost_currency": null
+  },
+  "cases": [
+    {"case_id":"g1-rock-short-4stem","genre":"rock","duration_bucket":"short","target_roles":["vocals","drums","bass","other"],"fixture_manifest":"fixtures/g1-rock-short.json","project_run_manifest":"runs/project/g1-rock-short-4stem.json","reference_run_manifest":"runs/reference/g1-rock-short-4stem.json"},
+    {"case_id":"g1-pop-medium-4stem","genre":"pop","duration_bucket":"medium","target_roles":["vocals","drums","bass","other"],"fixture_manifest":"fixtures/g1-pop-medium.json","project_run_manifest":"runs/project/g1-pop-medium-4stem.json","reference_run_manifest":"runs/reference/g1-pop-medium-4stem.json"},
+    {"case_id":"g1-jazz-long-4stem","genre":"jazz","duration_bucket":"long","target_roles":["vocals","drums","bass","other"],"fixture_manifest":"fixtures/g1-jazz-long.json","project_run_manifest":"runs/project/g1-jazz-long-4stem.json","reference_run_manifest":"runs/reference/g1-jazz-long-4stem.json"},
+    {"case_id":"g1-acoustic-medium-2stem","genre":"acoustic","duration_bucket":"medium","target_roles":["vocals","instrumental"],"fixture_manifest":"fixtures/g1-acoustic-medium.json","project_run_manifest":"runs/project/g1-acoustic-medium-2stem.json","reference_run_manifest":"runs/reference/g1-acoustic-medium-2stem.json"},
+    {"case_id":"g2-electronic-short-4stem","genre":"electronic","duration_bucket":"short","target_roles":["vocals","drums","bass","other"],"fixture_manifest":"fixtures/g2-electronic-short.json","project_run_manifest":"runs/project/g2-electronic-short-4stem.json","reference_run_manifest":"runs/reference/g2-electronic-short-4stem.json"},
+    {"case_id":"g2-live-long-4stem","genre":"live","duration_bucket":"long","target_roles":["vocals","drums","bass","other"],"fixture_manifest":"fixtures/g2-live-long.json","project_run_manifest":"runs/project/g2-live-long-4stem.json","reference_run_manifest":"runs/reference/g2-live-long-4stem.json"},
+    {"case_id":"g2-classical-medium-2stem","genre":"classical","duration_bucket":"medium","target_roles":["vocals","instrumental"],"fixture_manifest":"fixtures/g2-classical-medium.json","project_run_manifest":"runs/project/g2-classical-medium-2stem.json","reference_run_manifest":"runs/reference/g2-classical-medium-2stem.json"},
+    {"case_id":"g2-dense-long-4stem","genre":"dense-mix","duration_bucket":"long","target_roles":["vocals","drums","bass","other"],"fixture_manifest":"fixtures/g2-dense-long.json","project_run_manifest":"runs/project/g2-dense-long-4stem.json","reference_run_manifest":"runs/reference/g2-dense-long-4stem.json"}
+  ]
+}
