@@ -31,10 +31,10 @@ jobs:
       - name: Foundation-only notice
         if: ${{ hashFiles('tools/otsu4-build-content-v2.mjs') == '' }}
         run: echo 'Otsu4 product files are not present yet; audit will run on the product PR.'
-      - name: Validate audited 360-question bank v2
+      - name: Validate audited 600-question Wave 2 bank
         if: ${{ hashFiles('tools/otsu4-build-content-v2.mjs') != '' }}
         run: node tools/otsu4-build-content-v2.mjs --check
-      - name: Generate native question JSON v2
+      - name: Generate native 600-question JSON
         if: ${{ hashFiles('tools/otsu4-build-content-v2.mjs') != '' }}
         run: node tools/otsu4-build-content-v2.mjs
       - name: Apply deterministic exam-difficulty hardening
@@ -43,11 +43,11 @@ jobs:
       - name: Exam-level difficulty gate
         if: ${{ hashFiles('tools/otsu4-difficulty-audit.mjs') != '' }}
         run: node tools/otsu4-difficulty-audit.mjs
-      - name: Upload native question JSON v2
+      - name: Upload native question JSON
         if: ${{ hashFiles('tools/otsu4-build-content-v2.mjs') != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: otsu4-questions-product-v2
+          name: otsu4-questions-wave2-600
           path: kikenbutsu-otsu4-sprint/questions.generated.json
           if-no-files-found: error
           retention-days: 30
