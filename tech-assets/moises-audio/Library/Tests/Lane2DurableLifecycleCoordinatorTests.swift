@@ -61,6 +61,36 @@ final class Lane2DurableLifecycleCoordinatorTests: XCTestCase {
         XCTAssertTrue(afterCleanup.exports.isEmpty)
     }
 
+    func testInterruptedImportOwnershipHandoffIsRepairedFromCanonicalLibrary() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("Lane2E2E-" + UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let sourcePath = "Imports/reconcile/source.m4a"
+        let sourceURL = root.appendingPathComponent(sourcePath)
+        try FileManager.default.createDirectory(at: sourceURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try Data("source".utf8).write(to: sourceURL)
+
+        let library = Lane2FakeLibrary()
+        let source = LocalAudioAsset(id: AssetID(), relativePath: sourcePath, mediaKind: .audio, durationSeconds: 8)
+        let projectID = try await library.createProject(source: source)
+        let metadata = Lane2LifecycleMetadataStore(rootURL: root)
+        let before = try await metadata.snapshot()
+        XCTAssertTrue(before.projects.isEmpty)
+
+        let coordinator = Lane2DurableLifecycleCoordinator(
+            rootURL: root,
+            importer: Lane2FakeImporter(root: root, failure: nil),
+            exporter: Lane2FakeExporter(root: root),
+            library: library,
+            metadata: metadata,
+            storageReserveBytes: 64
+        )
+        try await coordinator.reconcileProjectOwnership()
+        let repaired = try await coordinator.lifecycleSnapshot()
+        XCTAssertEqual(repaired.projects.first?.projectUUID, projectID.rawValue)
+        XCTAssertEqual(repaired.projects.first?.sourceAssetUUID, source.id.rawValue)
+        XCTAssertEqual(repaired.projects.first?.sourceRelativePath, sourcePath)
+    }
+
     func testCanonicalDeleteConvergesExportAndOwnershipCleanup() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("Lane2E2E-" + UUID().uuidString, isDirectory: true)
         defer { try? FileManager.default.removeItem(at: root) }
