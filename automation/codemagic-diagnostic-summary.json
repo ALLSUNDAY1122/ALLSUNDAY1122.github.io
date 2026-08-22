@@ -1,21 +1,21 @@
 {
-  "request_id": "app2-005-hm1-prebuild-diagnose-inspect-20260822-1912",
-  "target_head_sha": "f335415360eecc216ce8fad520eba79f8f9ad0ed",
-  "workflow": "hm1-prebuild-diagnose.yml",
+  "request_id": "app2-005-hm1-final-build2-diagnostic-20260822-1915",
+  "target_head_sha": "1cf08cf03f6afb1439a3578bceabc10a24e51b64",
+  "workflow": "codemagic-build-gateway.yml",
   "run_found": true,
   "run": {
-    "id": 32567013928,
-    "name": "Diagnose HealthManager1 264 prebuild",
+    "id": 32567149015,
+    "name": "Codemagic Build Gateway",
     "status": "completed",
     "conclusion": "failure",
-    "created_at": "2026-08-22T10:12:41Z",
-    "updated_at": "2026-08-22T10:12:59Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32567013928",
-    "head_sha": "f335415360eecc216ce8fad520eba79f8f9ad0ed"
+    "created_at": "2026-08-22T10:15:41Z",
+    "updated_at": "2026-08-22T10:17:00Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32567149015",
+    "head_sha": "1cf08cf03f6afb1439a3578bceabc10a24e51b64"
   },
   "jobs": [
     {
-      "name": "diagnose",
+      "name": "gateway",
       "status": "completed",
       "conclusion": "failure",
       "steps": [
@@ -30,32 +30,42 @@
           "conclusion": "success"
         },
         {
-          "name": "Run actions/setup-node@v4",
+          "name": "Set up Python",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Check canonical bank",
+          "name": "Install gateway dependency",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Expand canonical bank to 264",
+          "name": "Prepare requested Codemagic workflow",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Run final difficulty gate",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Validate 264 output for UI injection",
+          "name": "Execute Codemagic command",
           "status": "completed",
           "conclusion": "failure"
         },
         {
-          "name": "Post Run actions/setup-node@v4",
+          "name": "Inspect Codemagic build actions",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Persist request-scoped sanitized result",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload Codemagic result",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Set up Python",
           "status": "completed",
           "conclusion": "skipped"
         },
@@ -72,5 +82,12 @@
       ]
     }
   ],
-  "artifacts": []
+  "artifacts": [
+    {
+      "id": 9474390340,
+      "name": "codemagic-result-32567149015",
+      "expired": false
+    }
+  ],
+  "artifact_download_error": "HTTPError: HTTP Error 415: Unsupported Media Type"
 }
