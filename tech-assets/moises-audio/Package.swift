@@ -14,7 +14,7 @@ let package = Package(
                 "Tests",
                 "PARITY_MATRIX.json",
                 "Separation",
-                "Analysis",
+                "Analysis/benchmarks",
                 "DSP",
                 "IO",
                 "Library",
@@ -28,6 +28,10 @@ let package = Package(
                 "Shared/DomainContracts.swift",
                 "Shared/LibraryContracts.swift",
                 "App/VerticalSliceCoordinator.swift",
+                "Analysis/AnalysisSignal.swift",
+                "Analysis/TempoBeatAnalyzer.swift",
+                "Analysis/MusicalKeyAnalyzer.swift",
+                "Analysis/AnalysisBenchmarkRunner.swift",
                 "iOS/HostCore/HostModuleSlots.swift",
                 "iOS/HostCore/ApplePlatformSmoke.swift"
             ]
