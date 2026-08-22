@@ -1,47 +1,49 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "worker_id": "Moises-Worker-2",
+  "lane_id": "LANE-2-IO-LIBRARY",
   "work_package_id": "MOI-WP2-IO-LIBRARY",
-  "assignment_epoch": 1,
+  "assignment_epoch": 2,
+  "operating_model": "FOUR_INDEPENDENT_LANES_LATE_INTEGRATION",
   "work_branch": "moises/wp2-io-library",
-  "state": "INTEGRATION_READY",
-  "current_task": "MOI-IO-001",
-  "base_integration_sha": "c3843c57816fa636e364c9f5225b56f5828b01e3",
-  "head_sha": "bf4b7a552cfbe025608079f7fe11093af7526b0b",
-  "commits": [
+  "state": "IN_PROGRESS",
+  "current_bundle": "L2-M01",
+  "completed_bundles": [],
+  "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
+  "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
+  "head_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
+  "existing_unintegrated_commits_at_epoch_start": [],
+  "commits": [],
+  "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
     "1c698b0ffe9790fd46e10f2ef564105ad6d1a885",
     "1c0cee2312eccabbc47d52a17ba5729207fe68c3",
     "bf4b7a552cfbe025608079f7fe11093af7526b0b"
   ],
   "tests": [
-    "Swift 6.2.1 Linux: swiftc -typecheck IOFileStore.swift IOFileStoreTests.swift -module-name MoisesIOTests => PASS",
-    "Swift 6.2.1 Linux executable self-check => PASS traversal stage import export finalize",
-    "Swift 6.2.1 Linux: cross-platform declarations/conditional syntax typecheck with Shared-equivalent contract stubs => PASS; AVFoundation body not executed on Linux"
+    "v3 migration safety check: integration -> work branch before sync was ahead 0 / behind 90; no unintegrated Worker-2 owned-scope commits",
+    "legacy MOI-IO-001: Swift 6.2.1 Linux typecheck PASS",
+    "legacy MOI-IO-001: traversal/stage/import/export/finalize self-check PASS"
   ],
   "evidence": [
-    "IO/Sources/IOFileStore.swift implements app-owned Staging/Imports/Exports transaction store, traversal rejection, cleanup, filename sanitization and storage preflight",
-    "IO/Sources/IOSAudioIOService.swift conforms to HQ AudioImporting/AudioExporting, performs AVURLAsset protected/audio probe, AVAssetReader Linear PCM decode sample validation, direct HTTP(S) download normalization, Apple M4A export, cancellation and finalized share URL handoff",
-    "IO/Tests/IOFileStoreTests.swift adds path/staging/finalize policy tests",
-    "IO/MOI-IO-001_VALIDATION.md maps acceptance, explicit errors, tests and unresolved codec/device gates",
-    "remote read-back confirmed IOSAudioIOService.swift on moises/wp2-io-library",
-    "compare base c3843c57816fa636e364c9f5225b56f5828b01e3 -> work branch: ahead 4 / behind 0 at implementation snapshot; exactly four IO/** files changed",
-    "later integration divergence is only worker-4 status metadata; no canonical IO overlap"
+    "Independent Lane Worker contract v3 read at WORKER_BOOTSTRAP.md SHA 2edf4411f69af37f9b57a363096fb2787ecfc713",
+    "Lane plan v3 read at SHA 32be5c934fcdf8f17c677c4c2d30db0808813fa5; Lane 2 sequence fixed to L2-M01 -> L2-M02 -> L2-M03 -> L2-M04",
+    "work-packages epoch 2 read at SHA fbfff55c3fec86f309af0ddd88e8afb883e8c2be",
+    "old v2 IO implementation is already canonical/integrated; no branch-only owned-scope changes were discarded",
+    "work branch fast-forwarded without force/reset to frozen epoch-2 integration SHA a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
+    "No Queue claim/READY_ASSIGNED dependency is used in v3"
   ],
   "known_gaps": [
-    "Canonical Package.swift still excludes IO/** and iOS host/target belongs to Worker 4; actual AVFoundation compile/device run is pending MOI-BLD-IOS-001",
-    "M4A runtime artifact and system share must still be exercised on iPhone before P019 readiness",
-    "MP3 export encoder path remains unresolved and is not falsely claimed",
-    "WMA import is not claimed; FLAC requires exact target-iOS runtime proof",
-    "Photos/File Provider picker presentation belongs to App/iOS composition; IO exposes stable provider/acquisition error mapping",
-    "MOI-P001/MOI-P002/MOI-P019 remain MISSING until HQ receives full real-device Reference gate evidence"
+    "L2-M01 Core Data persistence adapter not yet executed; user explicitly requested actual bundle work to begin on the next '次'",
+    "Library PARITY rows MOI-P017/MOI-P018/MOI-P020 remain MISSING until implementation plus later integrated/device evidence",
+    "Legacy IO iPhone picker/share/runtime codec evidence remains late-integration work and does not block Lane 2 durability implementation"
   ],
   "hq_requests": [
-    "Worker 4 iOS platform task should compile IO/Sources and wire IO/Tests or equivalent platform tests without moving IO ownership",
-    "Compose IOExportSourceProviding from canonical stems/upstream custom-mix render; do not push DSP/mixing into IO",
-    "Run real-device Files/File Provider/direct URL/protected/corrupt/no-audio/storage/cancel/M4A/share scenarios",
-    "Keep MP3/WMA/FLAC gaps visible until independently proven"
+    "Keep Shared/** and App/** frozen for Lane 2 at epoch contract SHA a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f until checkpoint unless explicit contract rescue is required",
+    "Late integration must still run actual iPhone Files/File Provider/direct URL/M4A share and codec scenarios; Lane 2 will not edit iOS shell",
+    "Any Shared contract gap discovered by L2-M01..M04 will be recorded here rather than edited by Worker 2"
   ],
-  "last_updated": "2026-08-22T14:28:00+09:00",
-  "writer_policy": "Only Moises-Worker-2 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
+  "migration_note": "v3 migration prepared only. No L2-M01 implementation was performed in this turn; actual Macro Bundle execution starts on the next user '次'.",
+  "last_updated": "2026-08-22T17:29:00+09:00",
+  "writer_policy": "Only Moises-Worker-2 may update this status file; HQ reads it for lane checkpoint integration and remains sole PARITY authority."
 }
