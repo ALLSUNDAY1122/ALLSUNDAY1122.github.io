@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   configure:
@@ -32,3 +33,14 @@ jobs:
           path: hm2-iap-price-result.json
           if-no-files-found: warn
           retention-days: 7
+      - name: Report run locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 4461,
+              body: `HM2 IAP pricing job finished. status=${{ job.status }}; run_id=${context.runId}`
+            });
