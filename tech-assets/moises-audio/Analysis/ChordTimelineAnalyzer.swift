@@ -47,12 +47,18 @@ public enum ChordTimelineAnalyzer {
                 analysisEnd = min(samples.count, analysisStart + windowSamples)
             }
 
-            let slice = Array(samples[analysisStart..<analysisEnd])
-            let decision = classify(
-                samples: slice,
-                sampleRate: sampleRate,
-                configuration: configuration
-            )
+            let localHop = Array(samples[segmentStart..<segmentEnd])
+            let decision: (label: String, confidence: Double?)
+            if rms(localHop) < configuration.noChordRMS {
+                decision = ("N", 1)
+            } else {
+                let slice = Array(samples[analysisStart..<analysisEnd])
+                decision = classify(
+                    samples: slice,
+                    sampleRate: sampleRate,
+                    configuration: configuration
+                )
+            }
             decisions.append(
                 FrameDecision(
                     startSeconds: Double(segmentStart) / sampleRate,
