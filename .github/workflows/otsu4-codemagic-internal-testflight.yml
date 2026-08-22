@@ -20,6 +20,7 @@ jobs:
     env:
       TARGET_BRANCH: feat/otsu4-360-productization
       TARGET_WORKFLOW: otsu4-ios
+      CONFIRMED_CM_APP_ID: 6a769d81a1add9d06020b524
     steps:
       - uses: actions/checkout@v6
         with:
@@ -60,9 +61,14 @@ jobs:
           from pathlib import Path
 
           token=os.environ.get('CM_API_TOKEN','').strip()
-          app_id=os.environ.get('CM_APP_ID','').strip()
+          app_id=os.environ.get('CM_APP_ID','').strip() or os.environ['CONFIRMED_CM_APP_ID']
+          out=Path('otsu4-codemagic-result.json')
+          result={'ok':False,'app_id':app_id,'workflow_id':'otsu4-ios','branch':'feat/otsu4-360-productization','status':'preflight'}
+          out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
           if not token:
-              raise SystemExit('CM_API_TOKEN is not configured')
+              result['error']='CM_API_TOKEN is not configured'
+              out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+              raise SystemExit(result['error'])
 
           def api(url, method='GET', payload=None):
               body=None if payload is None else json.dumps(payload).encode()
@@ -77,33 +83,21 @@ jobs:
                   except Exception: data={'error':raw[:1000]}
                   return e.code,data
 
-          if not app_id:
-              status,data=api('https://api.codemagic.io/apps')
-              if not 200 <= status < 300:
-                  raise SystemExit(f'GET apps failed HTTP {status}')
-              apps=data.get('applications') or data.get('data') or []
-              if isinstance(apps,dict): apps=apps.get('applications') or []
-              candidates=[]
-              for app in apps:
-                  text=json.dumps(app,ensure_ascii=False).lower().replace('.git','')
-                  if 'allsunday1122.github.io' in text:
-                      found=app.get('_id') or app.get('id')
-                      if found: candidates.append(found)
-              candidates=list(dict.fromkeys(candidates))
-              if len(candidates)!=1:
-                  raise SystemExit(f'Codemagic app resolution is not unique: {len(candidates)}')
-              app_id=candidates[0]
-
           payload={'appId':app_id,'workflowId':'otsu4-ios','branch':'feat/otsu4-360-productization'}
           status,data=api('https://api.codemagic.io/builds','POST',payload)
           if not 200 <= status < 300:
-              raise SystemExit(f'POST build failed HTTP {status}: {data}')
+              result['status']='start_failed'
+              result['error']=f'POST build failed HTTP {status}: {data}'
+              out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+              raise SystemExit(result['error'])
           build_id=data.get('buildId') or data.get('id')
           if not build_id:
-              raise SystemExit('Codemagic did not return buildId')
+              result['status']='start_failed'
+              result['error']='Codemagic did not return buildId'
+              out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+              raise SystemExit(result['error'])
 
-          result={'ok':False,'app_id':app_id,'workflow_id':'otsu4-ios','branch':'feat/otsu4-360-productization','build_id':build_id,'status':'started'}
-          out=Path('otsu4-codemagic-result.json')
+          result.update({'build_id':build_id,'status':'started'})
           out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
           print('Codemagic build started:',build_id)
 
@@ -113,7 +107,9 @@ jobs:
           while time.time() < deadline:
               status,data=api(f'https://codemagic.io/api/v3/builds/{build_id}')
               if not 200 <= status < 300:
-                  raise SystemExit(f'GET build failed HTTP {status}')
+                  result['error']=f'GET build failed HTTP {status}'
+                  out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+                  raise SystemExit(result['error'])
               details=data.get('data') or data
               state=details.get('status')
               if state != last:
@@ -126,11 +122,15 @@ jobs:
               out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
               if state in terminal:
                   if state!='finished':
-                      raise SystemExit(f'Codemagic build ended with {state}')
+                      result['error']=f'Codemagic build ended with {state}'
+                      out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+                      raise SystemExit(result['error'])
                   break
               time.sleep(30)
           else:
-              raise SystemExit('Timed out waiting for Codemagic build')
+              result['error']='Timed out waiting for Codemagic build'
+              out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+              raise SystemExit(result['error'])
           PY
 
       - name: Upload sanitized result
