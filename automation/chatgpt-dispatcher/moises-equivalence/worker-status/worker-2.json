@@ -4,15 +4,44 @@
   "work_package_id": "MOI-WP2-IO-LIBRARY",
   "assignment_epoch": 1,
   "work_branch": "moises/wp2-io-library",
-  "state": "IN_PROGRESS",
+  "state": "INTEGRATION_READY",
   "current_task": "MOI-IO-001",
-  "base_integration_sha": "d23c6793b4b6e682f1a0b7873ca338a48773ec61",
-  "head_sha": "d23c6793b4b6e682f1a0b7873ca338a48773ec61",
-  "commits": [],
-  "tests": [],
-  "evidence": ["Work Package manifest and Queue schema v2 read-back confirmed fixed assignment to MOI-WP2-IO-LIBRARY / MOI-IO-001", "work branch moises/wp2-io-library was identical to integration head at task start"],
-  "known_gaps": [],
-  "hq_requests": [],
-  "last_updated": "2026-08-22T14:22:00+09:00",
+  "base_integration_sha": "c3843c57816fa636e364c9f5225b56f5828b01e3",
+  "head_sha": "bf4b7a552cfbe025608079f7fe11093af7526b0b",
+  "commits": [
+    "b287a7ec0807663fe6dcfc8be312237c639cbc74",
+    "1c698b0ffe9790fd46e10f2ef564105ad6d1a885",
+    "1c0cee2312eccabbc47d52a17ba5729207fe68c3",
+    "bf4b7a552cfbe025608079f7fe11093af7526b0b"
+  ],
+  "tests": [
+    "Swift 6.2.1 Linux: swiftc -typecheck IOFileStore.swift IOFileStoreTests.swift -module-name MoisesIOTests => PASS",
+    "Swift 6.2.1 Linux executable self-check => PASS traversal stage import export finalize",
+    "Swift 6.2.1 Linux: cross-platform declarations/conditional syntax typecheck with Shared-equivalent contract stubs => PASS; AVFoundation body not executed on Linux"
+  ],
+  "evidence": [
+    "IO/Sources/IOFileStore.swift implements app-owned Staging/Imports/Exports transaction store, traversal rejection, cleanup, filename sanitization and storage preflight",
+    "IO/Sources/IOSAudioIOService.swift conforms to HQ AudioImporting/AudioExporting, performs AVURLAsset protected/audio probe, AVAssetReader Linear PCM decode sample validation, direct HTTP(S) download normalization, Apple M4A export, cancellation and finalized share URL handoff",
+    "IO/Tests/IOFileStoreTests.swift adds path/staging/finalize policy tests",
+    "IO/MOI-IO-001_VALIDATION.md maps acceptance, explicit errors, tests and unresolved codec/device gates",
+    "remote read-back confirmed IOSAudioIOService.swift on moises/wp2-io-library",
+    "compare base c3843c57816fa636e364c9f5225b56f5828b01e3 -> work branch: ahead 4 / behind 0 at implementation snapshot; exactly four IO/** files changed",
+    "later integration divergence is only worker-4 status metadata; no canonical IO overlap"
+  ],
+  "known_gaps": [
+    "Canonical Package.swift still excludes IO/** and iOS host/target belongs to Worker 4; actual AVFoundation compile/device run is pending MOI-BLD-IOS-001",
+    "M4A runtime artifact and system share must still be exercised on iPhone before P019 readiness",
+    "MP3 export encoder path remains unresolved and is not falsely claimed",
+    "WMA import is not claimed; FLAC requires exact target-iOS runtime proof",
+    "Photos/File Provider picker presentation belongs to App/iOS composition; IO exposes stable provider/acquisition error mapping",
+    "MOI-P001/MOI-P002/MOI-P019 remain MISSING until HQ receives full real-device Reference gate evidence"
+  ],
+  "hq_requests": [
+    "Worker 4 iOS platform task should compile IO/Sources and wire IO/Tests or equivalent platform tests without moving IO ownership",
+    "Compose IOExportSourceProviding from canonical stems/upstream custom-mix render; do not push DSP/mixing into IO",
+    "Run real-device Files/File Provider/direct URL/protected/corrupt/no-audio/storage/cancel/M4A/share scenarios",
+    "Keep MP3/WMA/FLAC gaps visible until independently proven"
+  ],
+  "last_updated": "2026-08-22T14:28:00+09:00",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
 }
