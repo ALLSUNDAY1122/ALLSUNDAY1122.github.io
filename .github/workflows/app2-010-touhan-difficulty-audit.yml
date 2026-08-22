@@ -18,7 +18,34 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Audit first 120 questions
+
+      - name: Apply optional audited rewrite bundle
+        run: |
+          python3 - <<'PY'
+          import base64, io, json, tarfile
+          from pathlib import Path
+          cmd=json.loads(Path('automation/app2-010-touhan-difficulty-audit-command.json').read_text(encoding='utf-8'))
+          if not cmd.get('apply_exam2_bundle'):
+              print('No rewrite bundle requested')
+              raise SystemExit(0)
+          if int(cmd.get('exam',0)) != 2:
+              raise SystemExit('Exam 2 bundle may only be applied with exam=2')
+          raw=base64.b64decode(Path('automation/app2-010-exam2-rewrite-bundle.b64').read_text().strip())
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as tf:
+              members={m.name:m for m in tf.getmembers() if m.isfile()}
+              expected={f'chapter-{i}.json' for i in range(1,6)}
+              if set(members)!=expected:
+                  raise SystemExit(f'unexpected bundle members: {sorted(members)}')
+              base=Path('touroku-hanbaisha-sprint/questions/exam-2')
+              for name in sorted(expected):
+                  data=tf.extractfile(members[name]).read()
+                  parsed=json.loads(data.decode('utf-8'))
+                  if not isinstance(parsed,list): raise SystemExit(f'{name}: not a list')
+                  (base/name).write_bytes(data)
+          print('Applied audited Exam 2 rewrite bundle')
+          PY
+
+      - name: Audit 120 questions
         run: |
           python3 - <<'PY'
           import json, re, statistics
@@ -44,7 +71,6 @@ jobs:
               wrong_abs=sum(any(t in c for t in absolute_terms) for c in wrong)
               correct_abs=any(t in correct for t in absolute_terms)
               correct_hedge=sum(t in correct for t in hedge_terms)
-              wrong_hedge=sum(sum(t in c for t in hedge_terms) for c in wrong)
               lens=[len(c) for c in choices]
               med=statistics.median(lens)
               length_ratio=(len(correct)/med) if med else 1
@@ -82,14 +108,17 @@ jobs:
               for r in rows:
                   choices=' || '.join(f'{i+1}:{c}' for i,c in enumerate(r['choices']))
                   f.write(f"{r['id']}\t{r['chapter']}\t{r['topic']}\tH={r['heuristic_grade']}({r['risk_score']})\tQ:{r['question']}\t{choices}\tANS:{r['answer']}\tFLAGS:{','.join(r['flags'])}\n")
+          if cmd.get('require_no_cd') and (counts['C'] or counts['D']):
+              raise SystemExit(f"C/D remain: C={counts['C']} D={counts['D']}")
           print(json.dumps({'question_count':len(rows),'grade_counts':counts},ensure_ascii=False))
           PY
-      - name: Persist audit evidence
+
+      - name: Persist rewrite and audit evidence
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add automation/audits/app2-010-touhan-exam*-difficulty.json automation/audits/app2-010-touhan-exam*-compact.tsv
-          git commit -m "Persist APP2-010 Touhan difficulty audit" || exit 0
+          git add -- automation/audits/app2-010-touhan-exam*-difficulty.json automation/audits/app2-010-touhan-exam*-compact.tsv touroku-hanbaisha-sprint/questions/exam-2/chapter-1.json touroku-hanbaisha-sprint/questions/exam-2/chapter-2.json touroku-hanbaisha-sprint/questions/exam-2/chapter-3.json touroku-hanbaisha-sprint/questions/exam-2/chapter-4.json touroku-hanbaisha-sprint/questions/exam-2/chapter-5.json
+          git commit -m "Rewrite and audit APP2-010 Touhan exam 2" || exit 0
           if git push origin HEAD:main; then exit 0; fi
           git fetch origin main
           git rebase origin/main
