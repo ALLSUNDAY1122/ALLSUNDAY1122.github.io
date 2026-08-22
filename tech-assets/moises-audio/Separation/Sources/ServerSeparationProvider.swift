@@ -43,6 +43,7 @@ private struct StemResultResponse: Decodable {
 
 private struct JobResultResponse: Decodable {
     let jobID: UUID
+    let projectID: UUID
     let stems: [StemResultResponse]
 }
 
@@ -51,12 +52,12 @@ private struct ServerFailureEnvelope: Decodable {
     let retryable: Bool?
 }
 
-/// Production-oriented server-backed separator adapter.
+/// Server-backed implementation of the HQ-owned `SourceSeparationProviding` contract.
 ///
-/// This type deliberately contains no model weights and never fabricates stems. It is usable only
-/// against a backend that has passed the project's checkpoint/data-rights gate. Model provenance is
-/// enforced server-side; the client refuses a result that is incomplete, path-unsafe, malformed or
-/// not in the terminal ready state.
+/// No model or fake separator lives in this client. The production backend must pass the project's
+/// checkpoint/data-rights gate. Large source audio is uploaded from a file URL so the client does not
+/// materialize an entire long track in memory. Downloaded stems are staged and atomically finalized
+/// under the app-owned root before a `StemArtifact` is exposed.
 public actor ServerSeparationProvider: SourceSeparationProviding {
     private let configuration: SeparationServerConfiguration
     private let session: URLSession
@@ -81,23 +82,20 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
             throw DomainFailure.processingFailed(code: "SEP_NO_ROLES", retryable: false)
         }
 
-        let boundary = "moises-equivalence-\(UUID().uuidString)"
-        let body = try multipartBody(
-            boundary: boundary,
-            sourceURL: sourceURL,
-            request: request
-        )
-
         var urlRequest = URLRequest(url: configuration.baseURL.appendingPathComponent("v1/separations"))
         urlRequest.httpMethod = "POST"
         urlRequest.timeoutInterval = configuration.requestTimeoutSeconds
-        urlRequest.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        urlRequest.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
         urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
         urlRequest.setValue(UUID().uuidString, forHTTPHeaderField: "Idempotency-Key")
+        urlRequest.setValue(request.projectID.rawValue.uuidString, forHTTPHeaderField: "X-Project-ID")
+        urlRequest.setValue(request.asset.id.rawValue.uuidString, forHTTPHeaderField: "X-Asset-ID")
+        urlRequest.setValue(request.requestedRoles.map(\.rawValue).sorted().joined(separator: ","), forHTTPHeaderField: "X-Stem-Roles")
+        urlRequest.setValue(request.qualityProfile, forHTTPHeaderField: "X-Quality-Profile")
         try await applyAuthorization(to: &urlRequest)
 
         do {
-            let (data, response) = try await session.upload(for: urlRequest, from: body)
+            let (data, response) = try await session.upload(for: urlRequest, fromFile: sourceURL)
             try validateHTTP(response: response, data: data)
             let payload = try JSONDecoder().decode(CreateJobResponse.self, from: data)
             return ProcessingJobID(rawValue: payload.jobID)
@@ -176,29 +174,30 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
                 throw DomainFailure.processingFailed(code: "SEP_EMPTY_RESULT", retryable: false)
             }
 
+            let projectID = ProjectID(rawValue: payload.projectID)
             var artifacts: [StemArtifact] = []
             artifacts.reserveCapacity(payload.stems.count)
 
             for remoteStem in payload.stems {
-                let role = StemRole(rawValue: remoteStem.role)
-                let destination = try finalStemURL(
-                    projectID: snapshot.jobID.rawValue,
-                    role: role,
-                    mediaExtension: remoteStem.mediaExtension
-                )
-                let local = try await downloadAtomically(from: remoteStem.downloadURL, to: destination)
-                let relativePath = try relativeAppOwnedPath(for: local)
-
                 guard remoteStem.sampleRate > 0,
                       remoteStem.channels > 0,
                       remoteStem.frameCount >= 0 else {
                     throw DomainFailure.processingFailed(code: "SEP_INVALID_STEM_METADATA", retryable: false)
                 }
 
+                let role = StemRole(rawValue: remoteStem.role)
+                let destination = try finalStemURL(
+                    projectID: projectID,
+                    role: role,
+                    mediaExtension: remoteStem.mediaExtension
+                )
+                let local = try await downloadAtomically(from: remoteStem.downloadURL, to: destination)
+                let relativePath = try relativeAppOwnedPath(for: local)
+
                 artifacts.append(
                     StemArtifact(
                         id: StemID(),
-                        projectID: ProjectID(rawValue: snapshot.jobID.rawValue),
+                        projectID: projectID,
                         role: role,
                         relativePath: relativePath,
                         sampleRate: remoteStem.sampleRate,
@@ -232,41 +231,10 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
         if let authorization = try? await configuration.authorizationHeader(), let authorization {
             request.setValue(authorization, forHTTPHeaderField: "Authorization")
         }
+
+        // Shared contract is intentionally non-throwing. The backend DELETE is idempotent and the
+        // authoritative cancellation/failure state is observed through the next snapshot poll.
         _ = try? await session.data(for: request)
-    }
-
-    private func multipartBody(
-        boundary: String,
-        sourceURL: URL,
-        request: SeparationRequest
-    ) throws -> Data {
-        let fileData: Data
-        do {
-            fileData = try Data(contentsOf: sourceURL, options: [.mappedIfSafe])
-        } catch {
-            throw DomainFailure.processingFailed(code: "SEP_SOURCE_READ_FAILED", retryable: false)
-        }
-
-        let roles = request.requestedRoles.map(\.rawValue).sorted().joined(separator: ",")
-        var data = Data()
-
-        func appendField(_ name: String, _ value: String) {
-            data.append("--\(boundary)\r\n".data(using: .utf8)!)
-            data.append("Content-Disposition: form-data; name=\"\(name)\"\r\n\r\n".data(using: .utf8)!)
-            data.append("\(value)\r\n".data(using: .utf8)!)
-        }
-
-        appendField("project_id", request.projectID.rawValue.uuidString)
-        appendField("asset_id", request.asset.id.rawValue.uuidString)
-        appendField("requested_roles", roles)
-        appendField("quality_profile", request.qualityProfile)
-
-        data.append("--\(boundary)\r\n".data(using: .utf8)!)
-        data.append("Content-Disposition: form-data; name=\"audio\"; filename=\"source\"\r\n".data(using: .utf8)!)
-        data.append("Content-Type: application/octet-stream\r\n\r\n".data(using: .utf8)!)
-        data.append(fileData)
-        data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
-        return data
     }
 
     private func applyAuthorization(to request: inout URLRequest) async throws {
@@ -325,7 +293,7 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
         return candidate
     }
 
-    private func finalStemURL(projectID: UUID, role: StemRole, mediaExtension: String) throws -> URL {
+    private func finalStemURL(projectID: ProjectID, role: StemRole, mediaExtension: String) throws -> URL {
         let safeExtension = mediaExtension.lowercased().filter { $0.isLetter || $0.isNumber }
         guard !safeExtension.isEmpty else {
             throw DomainFailure.processingFailed(code: "SEP_INVALID_EXTENSION", retryable: false)
@@ -333,7 +301,7 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
         let root = configuration.appDataRoot.standardizedFileURL
         let directory = root
             .appendingPathComponent("separation-stems", isDirectory: true)
-            .appendingPathComponent(projectID.uuidString, isDirectory: true)
+            .appendingPathComponent(projectID.rawValue.uuidString, isDirectory: true)
         do {
             try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
         } catch {
