@@ -1,17 +1,18 @@
 workflows:
   otsu4-ios:
-    name: 危険物乙4 - Codemagic signing probe
+    name: 危険物乙4 - Codemagic ASC integration probe
     max_build_duration: 10
     instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
     environment:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: jp.allsunday1122.otsu4
       xcode: latest
     scripts:
-      - name: Probe signing identities
+      - name: Probe App Store Connect integration
         script: |
           set -euo pipefail
-          echo "Codemagic signing workflow initialized"
+          echo "Codemagic ASC integration workflow initialized"
           xcodebuild -version
-          find "$HOME/Library/MobileDevice" -maxdepth 3 -type f -print 2>/dev/null || true
