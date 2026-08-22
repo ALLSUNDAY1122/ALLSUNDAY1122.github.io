@@ -7,6 +7,7 @@ struct MOIDSP001CoreSelfTest {
         try testCountIn()
         try testTenMinuteClickGateMath()
         try testLoopNoDriftMath()
+        try testBoundaryValidation()
         try await testController()
         print("MOI-DSP-001 core self-test: PASS")
     }
@@ -82,6 +83,79 @@ struct MOIDSP001CoreSelfTest {
             origin = mappedEnd
         }
         precondition(origin == expectedLoopFrames * 100)
+    }
+
+    static func testBoundaryValidation() throws {
+        do {
+            _ = try SampleTimelinePlanner.mapSourceTimeToRenderSample(
+                sourceTimeSeconds: 1,
+                sourceOriginSeconds: 0,
+                renderOriginSampleTime: Int64.max,
+                tempoRatio: 1,
+                sampleRate: 48_000
+            )
+            preconditionFailure("render-origin overflow must fail")
+        } catch DSPTimelinePlanningError.timelineOverflow {
+            // expected
+        }
+
+        do {
+            _ = try SampleTimelinePlanner.planClicks(
+                beatTimesSeconds: [0, 0.5],
+                sourceStartSeconds: .nan,
+                renderStartSampleTime: 0,
+                tempoRatio: 1,
+                sampleRate: 48_000,
+                generation: 1
+            )
+            preconditionFailure("non-finite source start must fail")
+        } catch DSPTimelinePlanningError.invalidSourceOrigin {
+            // expected
+        }
+
+        do {
+            _ = try SampleTimelinePlanner.planClicks(
+                beatTimesSeconds: [0, 0.5],
+                sourceStartSeconds: 0,
+                renderStartSampleTime: 0,
+                tempoRatio: 1,
+                sampleRate: 48_000,
+                generation: 1,
+                sourceEndSeconds: -.infinity
+            )
+            preconditionFailure("invalid source end must fail")
+        } catch DSPTimelinePlanningError.invalidSourceEnd {
+            // expected
+        }
+
+        do {
+            _ = try SampleTimelinePlanner.planCountIn(
+                clicks: Int.max,
+                sourceBeatIntervalSeconds: 1,
+                musicStartSampleTime: Int64.max,
+                tempoRatio: 1,
+                sampleRate: 48_000,
+                generation: 1
+            )
+            preconditionFailure("count-in multiplication overflow must fail")
+        } catch DSPTimelinePlanningError.timelineOverflow {
+            // expected
+        }
+
+        do {
+            _ = try SampleTimelinePlanner.planCountIn(
+                clicks: 4,
+                sourceBeatIntervalSeconds: 0.5,
+                musicStartSampleTime: 96_000,
+                tempoRatio: 1,
+                sampleRate: 48_000,
+                generation: 1,
+                downbeatStride: 0
+            )
+            preconditionFailure("invalid downbeat stride must fail")
+        } catch DSPTimelinePlanningError.invalidDownbeatStride {
+            // expected
+        }
     }
 
     static func testController() async throws {

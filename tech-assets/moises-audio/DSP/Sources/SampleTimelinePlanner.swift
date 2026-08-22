@@ -24,9 +24,12 @@ public enum DSPTimelinePlanningError: Error, Equatable, Sendable {
     case invalidSampleRate(Double)
     case invalidTempoRatio(Double)
     case invalidSourceOrigin(Double)
+    case invalidSourceEnd(Double)
     case invalidBeatTime(Double)
     case invalidBeatInterval(Double)
     case invalidCountInClicks(Int)
+    case invalidDownbeatStride(Int)
+    case timelineOverflow
     case insufficientPreroll
 }
 
@@ -56,10 +59,14 @@ public enum SampleTimelinePlanner {
         let sourceDelta = sourceTimeSeconds - sourceOriginSeconds
         let renderDeltaSeconds = sourceDelta / tempoRatio
         let renderDeltaFrames = (renderDeltaSeconds * sampleRate).rounded()
-        guard renderDeltaFrames <= Double(Int64.max), renderDeltaFrames >= Double(Int64.min) else {
-            throw DSPTimelinePlanningError.invalidBeatTime(sourceTimeSeconds)
+        guard renderDeltaFrames.isFinite,
+              renderDeltaFrames <= Double(Int64.max),
+              renderDeltaFrames >= Double(Int64.min) else {
+            throw DSPTimelinePlanningError.timelineOverflow
         }
-        return renderOriginSampleTime + Int64(renderDeltaFrames)
+        let (mapped, overflow) = renderOriginSampleTime.addingReportingOverflow(Int64(renderDeltaFrames))
+        guard !overflow else { throw DSPTimelinePlanningError.timelineOverflow }
+        return mapped
     }
 
     public static func planClicks(
@@ -72,7 +79,18 @@ public enum SampleTimelinePlanner {
         downbeatStride: Int = 4,
         sourceEndSeconds: Double? = nil
     ) throws -> [DSPClickEvent] {
-        guard downbeatStride > 0 else { return [] }
+        guard sourceStartSeconds.isFinite else {
+            throw DSPTimelinePlanningError.invalidSourceOrigin(sourceStartSeconds)
+        }
+        if let sourceEndSeconds {
+            guard sourceEndSeconds.isFinite, sourceEndSeconds >= sourceStartSeconds else {
+                throw DSPTimelinePlanningError.invalidSourceEnd(sourceEndSeconds)
+            }
+        }
+        guard downbeatStride > 0 else {
+            throw DSPTimelinePlanningError.invalidDownbeatStride(downbeatStride)
+        }
+
         var result: [DSPClickEvent] = []
         result.reserveCapacity(beatTimesSeconds.count)
 
@@ -113,6 +131,9 @@ public enum SampleTimelinePlanner {
         downbeatStride: Int = 4
     ) throws -> DSPCountInPlan {
         guard clicks > 0 else { throw DSPTimelinePlanningError.invalidCountInClicks(clicks) }
+        guard downbeatStride > 0 else {
+            throw DSPTimelinePlanningError.invalidDownbeatStride(downbeatStride)
+        }
         guard sourceBeatIntervalSeconds.isFinite, sourceBeatIntervalSeconds > 0 else {
             throw DSPTimelinePlanningError.invalidBeatInterval(sourceBeatIntervalSeconds)
         }
@@ -124,20 +145,31 @@ public enum SampleTimelinePlanner {
         }
 
         let renderBeatFrames = (sourceBeatIntervalSeconds / tempoRatio * sampleRate).rounded()
-        guard renderBeatFrames >= 1, renderBeatFrames <= Double(Int64.max) else {
+        guard renderBeatFrames.isFinite,
+              renderBeatFrames >= 1,
+              renderBeatFrames <= Double(Int64.max) else {
             throw DSPTimelinePlanningError.invalidBeatInterval(sourceBeatIntervalSeconds)
         }
         let beatFrames = Int64(renderBeatFrames)
-        let firstClick = musicStartSampleTime - beatFrames * Int64(clicks)
+        let (prerollFrames, multiplicationOverflow) = beatFrames.multipliedReportingOverflow(by: Int64(clicks))
+        guard !multiplicationOverflow else { throw DSPTimelinePlanningError.timelineOverflow }
+        let (firstClick, subtractionOverflow) = musicStartSampleTime.subtractingReportingOverflow(prerollFrames)
+        guard !subtractionOverflow else { throw DSPTimelinePlanningError.timelineOverflow }
         guard firstClick >= 0 else { throw DSPTimelinePlanningError.insufficientPreroll }
 
-        let events = (0..<clicks).map { index in
-            DSPClickEvent(
-                sampleTime: firstClick + Int64(index) * beatFrames,
+        var events: [DSPClickEvent] = []
+        events.reserveCapacity(clicks)
+        for index in 0..<clicks {
+            let (offset, offsetOverflow) = beatFrames.multipliedReportingOverflow(by: Int64(index))
+            guard !offsetOverflow else { throw DSPTimelinePlanningError.timelineOverflow }
+            let (sampleTime, additionOverflow) = firstClick.addingReportingOverflow(offset)
+            guard !additionOverflow else { throw DSPTimelinePlanningError.timelineOverflow }
+            events.append(DSPClickEvent(
+                sampleTime: sampleTime,
                 beatIndex: index,
-                accent: downbeatStride > 0 && index % downbeatStride == 0,
+                accent: index % downbeatStride == 0,
                 generation: generation
-            )
+            ))
         }
         return DSPCountInPlan(clicks: events, musicStartSampleTime: musicStartSampleTime, generation: generation)
     }

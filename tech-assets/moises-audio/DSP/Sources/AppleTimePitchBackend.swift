@@ -7,6 +7,25 @@ public enum ApplePracticeDSPBackendError: Error, Equatable, Sendable {
     case invalidPitchSemitones(Double)
     case invalidSampleRate(Double)
     case staleSchedule(expectedGeneration: UInt64, eventGeneration: UInt64)
+    case renderDidNotComplete
+}
+
+private final class AppleRenderCompletionFlag: @unchecked Sendable {
+    private let lock = NSLock()
+    private var completed = false
+
+    func markCompleted() {
+        lock.lock()
+        completed = true
+        lock.unlock()
+    }
+
+    func isCompleted() -> Bool {
+        lock.lock()
+        let value = completed
+        lock.unlock()
+        return value
+    }
 }
 
 /// Replaceable Apple baseline node. Playback owns the AVAudioEngine/transport and inserts this node
@@ -114,17 +133,31 @@ public final class AppleOfflineTimePitchRenderer: @unchecked Sendable {
             throw CocoaError(.fileWriteUnknown)
         }
 
-        var sourceCompleted = false
-        player.scheduleFile(input, at: nil) {
-            sourceCompleted = true
+        let completion = AppleRenderCompletionFlag()
+        player.scheduleFile(
+            input,
+            at: nil,
+            completionCallbackType: .dataRendered
+        ) { _ in
+            completion.markCompleted()
         }
         try engine.start()
         player.play()
 
-        // TimePitch may emit a short algorithmic tail. Drain bounded extra buffers after source completion.
+        // TimePitch may emit a short algorithmic tail. Drain bounded extra buffers after all source
+        // data has actually been rendered. The safety budget prevents a callback/runtime failure from
+        // turning an offline benchmark into an infinite render loop.
         var completedDrainBuffers = 0
         let maxDrainBuffers = 8
-        while !sourceCompleted || completedDrainBuffers < maxDrainBuffers {
+        let requestedFrames = Double(engine.manualRenderingMaximumFrameCount)
+        let estimatedOutputFrames = max(1.0, ceil(Double(input.length) / tempoRatio))
+        let hardAttemptFrameLimit = min(
+            Double(Int64.max),
+            estimatedOutputFrames + requestedFrames * 64.0
+        )
+        var attemptedFrames = 0.0
+
+        while !completion.isCompleted() || completedDrainBuffers < maxDrainBuffers {
             let frames = engine.manualRenderingMaximumFrameCount
             let status = try engine.renderOffline(frames, to: buffer)
             switch status {
@@ -132,15 +165,21 @@ public final class AppleOfflineTimePitchRenderer: @unchecked Sendable {
                 if buffer.frameLength > 0 {
                     try output.write(from: buffer)
                 }
-                if sourceCompleted { completedDrainBuffers += 1 }
+                attemptedFrames += Double(frames)
+                if completion.isCompleted() { completedDrainBuffers += 1 }
             case .insufficientDataFromInputNode:
-                if sourceCompleted { completedDrainBuffers += 1 }
+                attemptedFrames += Double(frames)
+                if completion.isCompleted() { completedDrainBuffers += 1 }
             case .cannotDoInCurrentContext:
                 continue
             case .error:
                 throw CocoaError(.fileWriteUnknown)
             @unknown default:
                 throw CocoaError(.fileWriteUnknown)
+            }
+
+            if !completion.isCompleted(), attemptedFrames > hardAttemptFrameLimit {
+                throw ApplePracticeDSPBackendError.renderDidNotComplete
             }
         }
 
