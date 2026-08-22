@@ -41,6 +41,58 @@ function diagnosticState() {
     sendButtonFound: Boolean(findSendButton()), url: location.href
   };
 }
+function safeText(value, max = 160) {
+  return String(value || '').replace(/\s+/g, ' ').trim().slice(0, max);
+}
+function projectContextProbe() {
+  const candidates = [];
+  const seen = new Set();
+  const matcher = /(project|projects|プロジェクト|new chat|new conversation|chat|チャット|work|新しいチャット|新規チャット)/i;
+  const nodes = Array.from(document.querySelectorAll('a, button, [role="button"]'));
+  for (const element of nodes) {
+    const text = safeText(element.innerText || element.textContent || '');
+    const ariaLabel = safeText(element.getAttribute('aria-label') || '');
+    const dataTestId = safeText(element.getAttribute('data-testid') || '');
+    const hrefRaw = element instanceof HTMLAnchorElement ? element.href : (element.getAttribute('href') || '');
+    const href = safeText(hrefRaw, 300);
+    const haystack = [text, ariaLabel, dataTestId, href].join(' ');
+    if (!matcher.test(haystack)) continue;
+    const key = [element.tagName, text, ariaLabel, dataTestId, href].join('|');
+    if (seen.has(key)) continue;
+    seen.add(key);
+    candidates.push({
+      tag: element.tagName.toLowerCase(),
+      text,
+      ariaLabel,
+      dataTestId,
+      href,
+      visible: visible(element)
+    });
+    if (candidates.length >= 80) break;
+  }
+
+  const projectSignals = candidates.filter((item) =>
+    /(project|projects|プロジェクト)/i.test([item.text, item.ariaLabel, item.dataTestId, item.href].join(' '))
+  );
+  const newChatSignals = candidates.filter((item) =>
+    /(new chat|new conversation|新しいチャット|新規チャット)/i.test([item.text, item.ariaLabel, item.dataTestId].join(' '))
+  );
+
+  return {
+    ok: true,
+    probeVersion: 1,
+    url: location.href,
+    pathname: location.pathname,
+    title: safeText(document.title, 200),
+    conversationId: (location.pathname.match(/\/c\/([^/?#]+)/) || [null, ''])[1],
+    composerFound: Boolean(findComposer().element),
+    candidateCount: candidates.length,
+    projectSignalCount: projectSignals.length,
+    newChatSignalCount: newChatSignals.length,
+    candidates,
+    privacyNote: 'Probe returns navigation metadata only; message bodies are not collected.'
+  };
+}
 function clearEditable(element) {
   element.focus();
   try {
@@ -106,6 +158,7 @@ async function dispatch(prompt) {
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   (async () => {
     if (message && (message.type === 'PING' || message.type === 'GET_STATE')) return sendResponse(diagnosticState());
+    if (message && message.type === 'PROJECT_CONTEXT_PROBE') return sendResponse(projectContextProbe());
     if (message && message.type === 'DISPATCH') return sendResponse(await dispatch(String(message.prompt || '')));
     sendResponse({ ok: false, error: 'unknown_message' });
   })().catch((error) => sendResponse({ ok: false, error: String(error) }));
