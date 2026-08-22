@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
   "name": "AI Dev Portfolio Dispatcher",
-  "version": "0.2.1",
-  "description": "Resource-governed adapter dispatcher for short-lived ChatGPT development sessions.",
+  "version": "0.2.2",
+  "description": "Resource-governed adapter dispatcher with atomic recovery for short-lived ChatGPT development sessions.",
   "permissions": ["storage", "alarms", "tabs", "system.memory", "system.cpu"],
   "host_permissions": ["https://chatgpt.com/*", "https://raw.githubusercontent.com/*"],
-  "background": { "service_worker": "service-worker-v21.js" },
+  "background": { "service_worker": "service-worker-v22.js" },
   "content_scripts": [
     { "matches": ["https://chatgpt.com/*"], "js": ["content-script.js"], "run_at": "document_idle" }
   ],
