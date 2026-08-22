@@ -32,7 +32,9 @@ let package = Package(
                 "Analysis/TempoBeatAnalyzer.swift",
                 "Analysis/MusicalKeyAnalyzer.swift",
                 "Analysis/ChordTimelineAnalyzer.swift",
+                "Analysis/SongSectionAnalyzer.swift",
                 "Analysis/AnalysisBenchmarkRunner.swift",
+                "Analysis/SectionBenchmarkEvaluator.swift",
                 "iOS/HostCore/HostModuleSlots.swift",
                 "iOS/HostCore/ApplePlatformSmoke.swift"
             ]
