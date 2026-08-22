@@ -1,0 +1,56 @@
+name: APP2-010 ASC Readback PR Trigger
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - automation/app2-010-asc-readback-pr-trigger.txt
+
+permissions:
+  contents: write
+
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Read current App Store Connect state
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 scripts/app_store_connect_gateway.py --command automation/app2-010-asc-readback-command.json --output /tmp/app2-010-asc-result.json
+      - name: Persist sanitized readback
+        run: |
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          source=json.loads(Path('/tmp/app2-010-asc-result.json').read_text(encoding='utf-8'))
+          rid=str(source.get('request_id') or '')
+          if not re.fullmatch(r'app2-010-[A-Za-z0-9._-]{1,90}',rid): raise SystemExit('invalid request id')
+          summary={'request_id':rid,'completed_at':source.get('completed_at'),'results':[]}
+          for result in source.get('results',[]):
+              item={'label':result.get('label'),'http_status':result.get('http_status'),'data':[]}
+              data=((result.get('response') or {}).get('data') or [])
+              if isinstance(data,dict): data=[data]
+              for resource in data:
+                  if not isinstance(resource,dict): continue
+                  attrs=resource.get('attributes') or {}
+                  item['data'].append({'id':resource.get('id'),'type':resource.get('type'),'attributes':{k:attrs.get(k) for k in ('name','bundleId','version','versionString','uploadedDate','processingState','expired','minOsVersion','platform','buildAudienceType','usesNonExemptEncryption','isInternalGroup','hasAccessToAllBuilds') if k in attrs}})
+              summary['results'].append(item)
+          out=Path('automation/asc-results')/f'{rid}.json'; out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          Path('/tmp/app2-010-asc-summary.json').write_text(out.read_text(encoding='utf-8'),encoding='utf-8')
+          Path('/tmp/app2-010-asc-result-path.txt').write_text(str(out),encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          P="$(cat /tmp/app2-010-asc-result-path.txt)"
+          git add "$P"
+          git commit -m 'Persist APP2-010 current ASC readback' || exit 0
+          git push origin HEAD:main
