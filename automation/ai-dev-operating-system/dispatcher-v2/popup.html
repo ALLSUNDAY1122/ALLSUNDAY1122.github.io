@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI Dev Dispatcher</title>
+  <style>
+    body { font-family: system-ui, sans-serif; width: 330px; margin: 14px; }
+    h1 { font-size: 16px; margin: 0 0 12px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; font-size: 12px; }
+    .k { color: #666; }
+    .v { font-weight: 600; text-align: right; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+    button { padding: 8px; }
+    pre { white-space: pre-wrap; word-break: break-word; max-height: 130px; overflow: auto; font-size: 10px; background: #f5f5f5; padding: 8px; }
+  </style>
+</head>
+<body>
+  <h1>AI Dev Portfolio Dispatcher</h1>
+  <div class="grid">
+    <div class="k">Dispatcher</div><div id="enabled" class="v">-</div>
+    <div class="k">Governor</div><div id="governor" class="v">-</div>
+    <div class="k">RAM</div><div id="memory" class="v">-</div>
+    <div class="k">CPU</div><div id="cpu" class="v">-</div>
+    <div class="k">ChatGPT tabs</div><div id="tabs" class="v">-</div>
+    <div class="k">Workers</div><div id="workers" class="v">-</div>
+    <div class="k">Rotate required</div><div id="rotate" class="v">-</div>
+  </div>
+  <div class="actions">
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <button id="tick">Run now</button>
+    <button id="preflight">Preflight</button>
+  </div>
+  <pre id="last">-</pre>
+  <script src="popup.js"></script>
+</body>
+</html>
