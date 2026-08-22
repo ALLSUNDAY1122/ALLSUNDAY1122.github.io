@@ -56,6 +56,8 @@ public final class AppleTimePitchBackend: @unchecked Sendable {
     }
 }
 
+extension AppleTimePitchBackend: PracticeDSPBackendApplying {}
+
 /// Schedules project-owned/rights-cleared click buffers on a player node using absolute sample time.
 /// It intentionally does not start/stop the engine or own transport state.
 public final class AppleSampleTimeClickScheduler: @unchecked Sendable {
