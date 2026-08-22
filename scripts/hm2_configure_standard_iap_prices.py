@@ -90,7 +90,7 @@ def set_iap_price(t,r):
                     r['lifetime_price']={'changed':False,'price':'800','price_point_id':p['id']}; return
     except RuntimeError as e:
         if 'HTTP 404' not in str(e): raise
-    tmp='manualPrice-0'
+    tmp='${manualPrice-0}'
     payload={'data':{'type':'inAppPurchasePriceSchedules','relationships':{'inAppPurchase':{'data':{'type':'inAppPurchases','id':IAP_ID}},'baseTerritory':{'data':{'type':'territories','id':JPN}},'manualPrices':{'data':[{'type':'inAppPurchasePrices','id':tmp}]}}},'included':[{'type':'inAppPurchasePrices','id':tmp,'attributes':{'startDate':None},'relationships':{'inAppPurchasePricePoint':{'data':{'type':'inAppPurchasePricePoints','id':p['id']}},'inAppPurchaseV2':{'data':{'type':'inAppPurchases','id':IAP_ID}}}}]}
     status,res=api_request(t,'/v1/inAppPurchasePriceSchedules',method='POST',payload=payload)
     r['lifetime_price']={'changed':True,'http_status':status,'price':'800','price_point_id':p['id'],'created_id':((res or {}).get('data') or {}).get('id')}
