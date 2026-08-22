@@ -9,9 +9,9 @@ ICON_PATH="$ICON_DIR/Icon-1024.png"
 EXPECTED_ICON_SHA="d0cb19b237ca3306413c481e4fbc0fb871705b390a1bc37619d9683fff19ff2d"
 
 cd "$REPO_ROOT"
-node tools/otsu4-build-content-v2.mjs
+node tools/otsu4-build-content-v3.mjs
 node tools/otsu4-apply-difficulty-hardening.mjs
-node tools/otsu4-difficulty-audit.mjs
+node tools/otsu4-difficulty-audit-v3.mjs
 mkdir -p "$GENERATED_DIR" "$ICON_DIR"
 cp kikenbutsu-otsu4-sprint/questions.generated.json "$GENERATED_DIR/questions.generated.json"
 
@@ -30,9 +30,11 @@ expected_sha=sys.argv[3]
 
 data=json.loads(questions_path.read_text(encoding='utf-8'))
 assert data['contentVersion']=='otsu4-2026-08-product-v2'
-assert len(data['questions'])==600
+assert len(data['questions'])==720
 assert data.get('difficultyAudit',{}).get('policy')=='2026-08 exam-level v1'
-print('prepared native questions:',len(data['questions']))
+counts={s:sum(1 for q in data['questions'] if q['subject']==s) for s in ['法令','物理・化学','性質・消火']}
+assert counts=={'法令':288,'物理・化学':192,'性質・消火':240}, counts
+print('prepared native questions:',len(data['questions']),counts)
 
 png=icon_path.read_bytes()
 actual_sha=hashlib.sha256(png).hexdigest()
