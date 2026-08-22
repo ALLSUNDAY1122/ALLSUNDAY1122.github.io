@@ -75,8 +75,8 @@ workflows:
       app_store_connect: codemagic
     environment:
       ios_signing:
-        provisioning_profiles:
-          - otsu4_appstore
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.otsu4
       vars:
         APP_STORE_ID: '6799755566'
         APPLE_TEAM_ID: MN3D2ZM44N
@@ -120,7 +120,7 @@ workflows:
           assert data.get('difficultyAudit',{}).get('policy')=='2026-08 exam-level v1'
           print('PASS: audited final Otsu4 720 bundle inputs',counts)
           PY
-      - name: Apply canonical App Store profile for internal TestFlight only
+      - name: Apply matching App Store signing files for internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
