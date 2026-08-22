@@ -89,6 +89,23 @@ final class CrashSafeProjectLibraryStoreTests: XCTestCase {
         }
     }
 
+    func testDeleteRetainsArtifactReferencedByAnotherLiveProject() async throws {
+        try await withEnvironment { storeURL, artifactRoot in
+            let source = makeSource(path: "Imports/shared/source.m4a")
+            try writeArtifact(source.relativePath, under: artifactRoot)
+            let raw = try CoreDataProjectLibraryStore(configuration: .init(storeURL: storeURL))
+            let store = try CrashSafeProjectLibraryStore(metadata: raw, artifactRootURL: artifactRoot)
+            let first = try await store.createProject(source: source)
+            let second = try await store.createProject(source: source)
+
+            try await store.deleteProject(projectID: first)
+
+            let survivor = try await store.loadProject(projectID: second)
+            XCTAssertNotNil(survivor)
+            XCTAssertTrue(FileManager.default.fileExists(atPath: artifactRoot.appendingPathComponent(source.relativePath).path))
+        }
+    }
+
     func testMissingOrEmptyArtifactsNeverBecomeVisibleMetadata() async throws {
         try await withEnvironment { storeURL, artifactRoot in
             let raw = try CoreDataProjectLibraryStore(configuration: .init(storeURL: storeURL))
