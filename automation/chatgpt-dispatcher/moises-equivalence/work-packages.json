@@ -1,12 +1,22 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "project": "moises-equivalence",
-  "assignment_epoch": 1,
-  "assignment_scope": "Phase 2 through Phase 4 initial allocation",
-  "allocation_rule": "Balance estimated effort while keeping logical resources exclusive. Rebalance only by HQ at phase boundaries or explicit blocker review.",
+  "assignment_epoch": 2,
+  "operating_model": "FOUR_INDEPENDENT_LANES_LATE_INTEGRATION",
+  "lane_plan": "automation/chatgpt-dispatcher/moises-equivalence/lane-plan-v3.json",
+  "allocation_rule": "Four exclusive lanes run independently against one frozen Shared/App contract snapshot. Workers do not wait for other lanes or HQ release between macro bundles. HQ integrates at checkpoints later.",
+  "macro_rule": {
+    "one_next_equals": "one macro bundle",
+    "target_work_size": "approximately 25-40 minutes equivalent meaningful work",
+    "minimum_preloaded_bundles": 4,
+    "worker_auto_advance": true,
+    "hq_release_between_bundles": false,
+    "integration_after_each_bundle": false
+  },
   "global_hq_owned": [
     "automation/chatgpt-dispatcher/moises-equivalence/queue.json",
     "automation/chatgpt-dispatcher/moises-equivalence/work-packages.json",
+    "automation/chatgpt-dispatcher/moises-equivalence/lane-plan-v3.json",
     "automation/chatgpt-dispatcher/moises-equivalence/resource-locks.json",
     "tech-assets/moises-audio/Shared/**",
     "tech-assets/moises-audio/App/**",
@@ -14,73 +24,59 @@
   ],
   "packages": [
     {
-      "work_package_id": "MOI-WP1-SEPARATION-PROCESSING",
+      "lane_id": "LANE-1-SEPARATION-PROCESSING",
       "worker_id": "Moises-Worker-1",
       "worker_number": 1,
       "work_branch": "moises/wp1-separation-processing",
       "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-1.json",
-      "estimated_effort_points": 14,
       "owned_resources": ["source-separation-model", "processing-lifecycle"],
       "write_scope": ["tech-assets/moises-audio/Separation/**", "tech-assets/moises-audio/Processing/**"],
-      "task_sequence": [
-        {"task_id": "MOI-SEP-002", "effort_points": 8, "phase": 2},
-        {"task_id": "MOI-PROC-001", "effort_points": 3, "phase": 2},
-        {"task_id": "MOI-SEP-EVAL-001", "effort_points": 3, "phase": 2}
-      ],
-      "notes": "Owns real separation plus server/client processing lifecycle. SEP-EVAL-001 is a JIT real-audio evaluation harness added while SEP-002 waits on external commercial/fixture gates; it must never substitute harness success for real quality evidence. Does not own Playback, Shared contracts, or Queue."
+      "macro_sequence": ["L1-M01", "L1-M02", "L1-M03", "L1-M04"]
     },
     {
-      "work_package_id": "MOI-WP2-IO-LIBRARY",
+      "lane_id": "LANE-2-IO-LIBRARY",
       "worker_id": "Moises-Worker-2",
       "worker_number": 2,
       "work_branch": "moises/wp2-io-library",
       "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-2.json",
-      "estimated_effort_points": 10,
       "owned_resources": ["import-export", "library-persistence"],
       "write_scope": ["tech-assets/moises-audio/IO/**", "tech-assets/moises-audio/Library/**"],
-      "task_sequence": [
-        {"task_id": "MOI-IO-001", "effort_points": 4, "phase": 2},
-        {"task_id": "MOI-LIB-001", "effort_points": 6, "phase": 3}
-      ],
-      "notes": "Owns durable import/export and persistence/recovery. Shared contract changes are HQ requests only."
+      "macro_sequence": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"]
     },
     {
-      "work_package_id": "MOI-WP3-PLAYBACK-DSP",
+      "lane_id": "LANE-3-PLAYBACK-DSP",
       "worker_id": "Moises-Worker-3",
       "worker_number": 3,
       "work_branch": "moises/wp3-playback-dsp",
       "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-3.json",
-      "estimated_effort_points": 13,
       "owned_resources": ["audio-playback-engine", "time-pitch-dsp"],
       "write_scope": ["tech-assets/moises-audio/Playback/**", "tech-assets/moises-audio/DSP/**"],
-      "task_sequence": [
-        {"task_id": "MOI-DSP-001", "effort_points": 4, "phase": 2},
-        {"task_id": "MOI-PLAY-001", "effort_points": 6, "phase": 3},
-        {"task_id": "MOI-PLAYDSP-EVAL-001", "effort_points": 3, "phase": 2}
-      ],
-      "notes": "Owns synchronized playback/practice DSP. PLAYDSP-EVAL-001 prepares machine-readable AVFAudio/device measurement harnesses while WP4 builds the iOS target; harness-only or synthetic-only success never promotes PARITY. Analysis output is consumed through HQ Shared contracts."
+      "macro_sequence": ["L3-M01", "L3-M02", "L3-M03", "L3-M04"]
     },
     {
-      "work_package_id": "MOI-WP4-ANALYSIS-PLATFORM",
+      "lane_id": "LANE-4-IOS-ANALYSIS",
       "worker_id": "Moises-Worker-4",
       "worker_number": 4,
       "work_branch": "moises/wp4-analysis-platform",
       "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-4.json",
-      "estimated_effort_points": 10,
       "owned_resources": ["music-analysis-engine", "build-harness", "ios-platform"],
       "write_scope": ["tech-assets/moises-audio/Analysis/**", "tech-assets/moises-audio/Package.swift", "tech-assets/moises-audio/Tests/**", "tech-assets/moises-audio/iOS/**"],
-      "task_sequence": [
-        {"task_id": "MOI-BLD-003", "effort_points": 2, "phase": 2},
-        {"task_id": "MOI-BLD-IOS-001", "effort_points": 4, "phase": 2},
-        {"task_id": "MOI-AN-002", "effort_points": 4, "phase": 2}
-      ],
-      "notes": "Explicit blocker review on 2026-08-22 moved iOS platform build ahead of AN-002 because canonical IO/DSP/Playback seams require AVFoundation/AVFAudio compile and device validation. Dedicated platform/build ownership still prevents Package.swift and iOS target collisions."
+      "macro_sequence": ["L4-M01", "L4-M02", "L4-M03", "L4-M04"]
     }
   ],
-  "rebalance_rules": [
-    "No worker may take another package because it becomes idle.",
-    "HQ may rebalance only after reviewing remaining effort, dependency critical path, and resource ownership.",
-    "A resource moves between packages only when no unintegrated changes remain on the old owner branch.",
-    "Branch and status-file ownership change atomically with assignment_epoch increment."
+  "lane_execution_rules": [
+    "At epoch-2 start each Worker syncs once to latest integration and records base_integration_sha.",
+    "After that, normal integration-branch movement in other lanes is ignored until lane checkpoint; do not rebase on unrelated changes.",
+    "On each user '次', execute exactly the next incomplete macro bundle in lane-plan-v3.json through implementation, tests and durable evidence.",
+    "Do not stop because an internal subtask finished. Stop only when the macro bundle done_when is met or a hard blocker/ownership conflict exists.",
+    "When a bundle finishes, record it in the Worker status file and immediately nominate the next bundle; HQ approval is not required.",
+    "If one bundle is externally blocked, continue the next preloaded bundle that does not require that external input while staying inside the same lane.",
+    "Worker-to-Worker code dependencies are deferred to HQ late integration. A Worker must not modify another lane to make its own bundle pass."
+  ],
+  "integration_rules": [
+    "HQ does not merge after every macro bundle.",
+    "Default checkpoint is after multiple completed bundles or when a lane reaches a coherent integration milestone.",
+    "HQ performs semantic merge, cross-lane compile, device validation and PARITY judgment later.",
+    "Before the next checkpoint is consumed, HQ preloads the next set of at least four macro bundles per active lane so task starvation cannot recur."
   ]
 }
