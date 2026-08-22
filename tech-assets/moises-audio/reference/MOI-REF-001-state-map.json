@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "task_id": "MOI-REF-001",
+  "attempt": 2,
+  "captured_at": "2026-08-22",
+  "reference": "current iPhone Moises experience",
+  "evidence_precedence": [
+    "user_current_iphone_recording_via_notion",
+    "apple_jp_app_store_current_listing",
+    "official_moises_help_mobile_specific",
+    "older_cross_platform_help_supporting_only"
+  ],
+  "states": [
+    {
+      "id": "library_import",
+      "observed_current_device": true,
+      "operations": ["add_song", "files", "camera_roll", "recording", "itunes", "cloud_storage"],
+      "public_corroboration": ["public_url", "itunes", "camera_roll_gallery", "files_app", "google_drive", "dropbox", "icloud"],
+      "unknown": ["route_ordering_by_region_or_account"]
+    },
+    {
+      "id": "separation_selection",
+      "observed_current_device": true,
+      "operations": ["two_track_vocals_instrumental", "four_track_vocals_drums_bass_other", "custom_selection", "hifi_toggle"],
+      "unknown": ["complete_tier_lock_map", "complete_current_instrument_catalog"]
+    },
+    {
+      "id": "upload_processing",
+      "observed_current_device": true,
+      "operations": ["upload_progress_100_percent", "transition_to_project_before_stems_ready", "player_clock_advances_while_stems_preparing"],
+      "unknown": ["cancel", "retry", "resume_after_termination", "background_interruption", "partial_result_operations"]
+    },
+    {
+      "id": "project_player_mixer",
+      "observed_current_device": true,
+      "operations": ["four_stem_rows", "continuous_volume_change", "per_track_overflow", "play_pause", "previous_rewind", "next_forward", "metronome_entry", "key_pitch_entry"],
+      "unknown": ["exact_current_solo_gesture", "exact_current_mute_gesture", "initial_volume_value_on_current_build"]
+    },
+    {
+      "id": "chord_timeline",
+      "observed_current_device": true,
+      "operations": ["playback_synchronized_chord_tiles", "current_position_highlight"],
+      "examples_observed": ["E", "B", "C#m", "B/D#"],
+      "unknown": []
+    },
+    {
+      "id": "export",
+      "observed_current_device": true,
+      "operations": ["project_player_export_entry", "left_right_menu_entry"],
+      "public_corroboration": ["save_to_device", "share", "separated_tracks", "audio_mix", "mp3_mobile", "m4a_mobile", "individual_track_export"],
+      "unknown": ["current_export_bitrate_quality", "current_naming_rules"]
+    }
+  ],
+  "free_entitlements": {
+    "processing_songs_per_month": 5,
+    "max_track_separation_minutes": 5,
+    "basic_separation_modes": ["vocals_instrumental_2_track", "vocals_drums_bass_other_4_track"],
+    "smart_metronome": "first_minute",
+    "chords": "first_minute",
+    "lyrics_transcription": "first_minute",
+    "key_pitch": "up_to_2_semitones",
+    "count_in": "up_to_4_clicks",
+    "speed_change": "free_limited_public_help_says_20_percent_exact_current_mobile_scale_unknown",
+    "setlists": "available"
+  },
+  "premium_pro": {
+    "custom_track_separation": true,
+    "premium_custom_tracks_including_others": 6,
+    "pro_custom_selection": "unlimited_in_2025_mobile_custom_upload_help",
+    "pro_hifi": true,
+    "pro_max_duration_current": "CONFLICT_UNKNOWN_20_vs_180_minutes"
+  },
+  "waveform_reference": {
+    "current_device_observed": false,
+    "official_cross_platform_help_2024": "mobile_player_waveform_not_available",
+    "decision": "do_not_treat_waveform_as_confirmed_current_iphone_reference_without_hq_review"
+  },
+  "parity_rows_informed": ["MOI-P001", "MOI-P002", "MOI-P003", "MOI-P006", "MOI-P007", "MOI-P008", "MOI-P009", "MOI-P010", "MOI-P011", "MOI-P012", "MOI-P013", "MOI-P014", "MOI-P015", "MOI-P016", "MOI-P017", "MOI-P018", "MOI-P019", "MOI-P020", "MOI-P022"],
+  "parity_state_changes": [],
+  "unknowns": [
+    "exact_2026_tab_structure_outside_recorded_flow",
+    "processing_cancel_retry_resume_interruption_behavior",
+    "operations_available_while_stems_preparing",
+    "exact_trim_loop_gesture_and_limits",
+    "exact_current_mobile_speed_scale",
+    "corrupt_network_quota_storage_processing_error_screens",
+    "export_bitrate_quality_naming",
+    "exact_current_pro_max_duration",
+    "full_premium_pro_advanced_entitlement_matrix"
+  ]
+}
