@@ -67,10 +67,41 @@ workflows:
     scripts:
       - name: Install XcodeGen
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-      - name: Generate Xcode project
+      - name: Prepare audited 264-question bundle and icon
+        script: |
+          bash "$CM_BUILD_DIR/ios/health-manager-1/prepare-ios.sh"
+      - name: Set CI build number and generate Xcode project
         script: |
           cd "$CM_BUILD_DIR/ios/health-manager-1"
+          BUILD_NUM="${CM_BUILD_NUMBER:?CM_BUILD_NUMBER is required}"
+          python3 - "$BUILD_NUM" <<'PY2'
+          from pathlib import Path
+          import re,sys
+          q=Path('project.yml')
+          s=q.read_text(encoding='utf-8')
+          s,n=re.subn(r'CURRENT_PROJECT_VERSION:\s*\d+',f'CURRENT_PROJECT_VERSION: {sys.argv[1]}',s,count=1)
+          if n != 1:
+              raise SystemExit('CURRENT_PROJECT_VERSION replacement failed')
+          q.write_text(s,encoding='utf-8')
+          PY2
           xcodegen generate
+      - name: Verify HM1 release inputs
+        script: |
+          python3 - "$CM_BUILD_DIR/ios/health-manager-1" <<'PY2'
+          from pathlib import Path
+          import collections,json,re
+          import sys
+          root=Path(sys.argv[1])
+          q=json.loads((root/'Resources/questions.json').read_text(encoding='utf-8'))
+          html=(root/'Resources/index.html').read_text(encoding='utf-8')
+          assert len(q)==264, len(q)
+          assert len({x['id'] for x in q})==264
+          assert collections.Counter(x['round'] for x in q)=={'2026-04':44,'2025-10':44,'2025-04':44,'practice-A':44,'practice-B':44,'practice-C':44}
+          assert 'practice-C-Q44' in html and '合計264問' in html
+          assert (root/'Resources/PrivacyInfo.xcprivacy').is_file()
+          assert (root/'Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png').is_file()
+          print('PASS: HM1 audited release inputs contain 264 questions / 6x44 sets')
+          PY2
       - name: Apply App Store signing profiles
         script: |
           cd "$CM_BUILD_DIR/ios/health-manager-1"
@@ -80,6 +111,33 @@ workflows:
           xcode-project build-ipa \
             --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
+      - name: Verify packaged HM1 IPA content
+        script: |
+          IPA_PATH="$(find build/ios/ipa -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          python3 - "$APP_DIR" <<'PY2'
+          from pathlib import Path
+          import collections,json,plistlib,re,sys
+          app=Path(sys.argv[1])
+          index=(app/'index.html').read_text(encoding='utf-8')
+          m=re.search(r'const QUESTIONS=(\[.*?\]);\nconst DOMAINS=',index,re.S)
+          assert m, 'embedded QUESTIONS not found'
+          q=json.loads(m.group(1))
+          assert len(q)==264, len(q)
+          assert len({x['id'] for x in q})==264
+          assert collections.Counter(x['round'] for x in q)=={'2026-04':44,'2025-10':44,'2025-04':44,'practice-A':44,'practice-B':44,'practice-C':44}
+          assert 'practice-C-Q44' in index and '合計264問' in index
+          info=plistlib.loads((app/'Info.plist').read_bytes())
+          assert info.get('CFBundleIdentifier')=='jp.allsunday1122.healthmanager1'
+          assert str(info.get('CFBundleVersion','')).isdigit()
+          assert (app/'Assets.car').is_file()
+          assert (app/'embedded.mobileprovision').is_file()
+          assert (app/'_CodeSignature').is_dir()
+          print('PASS: signed HM1 IPA contains audited 264-question bundle')
+          PY2
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
