@@ -30,7 +30,7 @@ expected_sha=sys.argv[3]
 
 data=json.loads(questions_path.read_text(encoding='utf-8'))
 assert data['contentVersion']=='otsu4-2026-08-product-v2'
-assert len(data['questions'])==480
+assert len(data['questions'])==600
 assert data.get('difficultyAudit',{}).get('policy')=='2026-08 exam-level v1'
 print('prepared native questions:',len(data['questions']))
 
