@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - 'automation/app2-010-exam2-rewrite-command.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'automation/app2-010-exam2-rewrite-pr-trigger.txt'
   workflow_dispatch:
 
 permissions:
@@ -17,6 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Decode and apply audited Exam 2 bank
@@ -41,7 +46,7 @@ jobs:
       - name: Validate Exam 2 structure and difficulty
         run: |
           python3 - <<'PY'
-          import json, re, statistics
+          import json, statistics
           from collections import Counter
           from pathlib import Path
 
@@ -87,12 +92,10 @@ jobs:
               print('FAIL')
               for e in errors: print('-',e)
               raise SystemExit(1)
-          print('PASS', {'questions':len(qs),'chapters':dict(counts),'grades':dict(gc)})
-          Path('automation/audits/app2-010-exam2-rewrite-apply.json').write_text(json.dumps({
-              'request_id':json.loads(Path('automation/app2-010-exam2-rewrite-command.json').read_text())['request_id'],
-              'questions':len(qs),'chapter_counts':dict(counts),'grade_counts':dict(gc),'C_D':0,
-              'result':'PASS'
-          },ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          cmd=json.loads(Path('automation/app2-010-exam2-rewrite-command.json').read_text())
+          out={'request_id':cmd['request_id'],'questions':len(qs),'chapter_counts':dict(counts),'grade_counts':dict(gc),'C_D':0,'result':'PASS'}
+          Path('automation/audits/app2-010-exam2-rewrite-apply.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PASS',out)
           PY
 
       - name: Persist rewritten Exam 2
@@ -100,7 +103,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -- touroku-hanbaisha-sprint/questions/exam-2/chapter-1.json touroku-hanbaisha-sprint/questions/exam-2/chapter-2.json touroku-hanbaisha-sprint/questions/exam-2/chapter-3.json touroku-hanbaisha-sprint/questions/exam-2/chapter-4.json touroku-hanbaisha-sprint/questions/exam-2/chapter-5.json automation/audits/app2-010-exam2-rewrite-apply.json
-          git commit -m 'Rewrite Touhan exam 2 for exam-level difficulty'
+          git commit -m 'Rewrite Touhan exam 2 for exam-level difficulty' || exit 0
           if git push origin HEAD:main; then exit 0; fi
           git fetch origin main
           git rebase origin/main
