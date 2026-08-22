@@ -26,6 +26,8 @@ public enum DSPTimelinePlanningError: Error, Equatable, Sendable {
     case invalidSourceOrigin(Double)
     case invalidSourceEnd(Double)
     case invalidBeatTime(Double)
+    case nonIncreasingBeatSequence(previous: Double, current: Double)
+    case nonIncreasingRenderSample(previous: Int64, current: Int64)
     case invalidBeatInterval(Double)
     case invalidCountInClicks(Int)
     case invalidDownbeatStride(Int)
@@ -66,6 +68,7 @@ public enum SampleTimelinePlanner {
         }
         let (mapped, overflow) = renderOriginSampleTime.addingReportingOverflow(Int64(renderDeltaFrames))
         guard !overflow else { throw DSPTimelinePlanningError.timelineOverflow }
+        guard mapped >= 0 else { throw DSPTimelinePlanningError.insufficientPreroll }
         return mapped
     }
 
@@ -94,10 +97,17 @@ public enum SampleTimelinePlanner {
         var result: [DSPClickEvent] = []
         result.reserveCapacity(beatTimesSeconds.count)
 
-        var previousSourceBeat = -Double.infinity
+        var previousSourceBeat: Double?
+        var previousRenderSample: Int64?
         for (index, beatTime) in beatTimesSeconds.enumerated() {
-            guard beatTime.isFinite, beatTime >= previousSourceBeat else {
+            guard beatTime.isFinite else {
                 throw DSPTimelinePlanningError.invalidBeatTime(beatTime)
+            }
+            if let previousSourceBeat, beatTime <= previousSourceBeat {
+                throw DSPTimelinePlanningError.nonIncreasingBeatSequence(
+                    previous: previousSourceBeat,
+                    current: beatTime
+                )
             }
             previousSourceBeat = beatTime
             guard beatTime >= sourceStartSeconds else { continue }
@@ -109,6 +119,13 @@ public enum SampleTimelinePlanner {
                 tempoRatio: tempoRatio,
                 sampleRate: sampleRate
             )
+            if let previousRenderSample, sample <= previousRenderSample {
+                throw DSPTimelinePlanningError.nonIncreasingRenderSample(
+                    previous: previousRenderSample,
+                    current: sample
+                )
+            }
+            previousRenderSample = sample
             result.append(DSPClickEvent(
                 sampleTime: sample,
                 beatIndex: index,
@@ -159,11 +176,16 @@ public enum SampleTimelinePlanner {
 
         var events: [DSPClickEvent] = []
         events.reserveCapacity(clicks)
+        var previousSample: Int64?
         for index in 0..<clicks {
             let (offset, offsetOverflow) = beatFrames.multipliedReportingOverflow(by: Int64(index))
             guard !offsetOverflow else { throw DSPTimelinePlanningError.timelineOverflow }
             let (sampleTime, additionOverflow) = firstClick.addingReportingOverflow(offset)
             guard !additionOverflow else { throw DSPTimelinePlanningError.timelineOverflow }
+            if let previousSample, sampleTime <= previousSample {
+                throw DSPTimelinePlanningError.nonIncreasingRenderSample(previous: previousSample, current: sampleTime)
+            }
+            previousSample = sampleTime
             events.append(DSPClickEvent(
                 sampleTime: sampleTime,
                 beatIndex: index,
