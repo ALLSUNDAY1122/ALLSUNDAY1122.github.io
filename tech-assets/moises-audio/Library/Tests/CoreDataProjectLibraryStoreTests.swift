@@ -36,13 +36,15 @@ final class CoreDataProjectLibraryStoreTests: XCTestCase {
         )
         try await store.saveUserEdits(projectID: projectID, edits: edits)
 
-        let loaded = try XCTUnwrap(await store.loadProject(projectID: projectID))
+        let loadedValue = try await store.loadProject(projectID: projectID)
+        let loaded = try XCTUnwrap(loadedValue)
         XCTAssertEqual(loaded.projectID, projectID)
         XCTAssertEqual(loaded.source, source)
         XCTAssertEqual(loaded.processing, processing)
         XCTAssertEqual(Set(loaded.stems.map(\.id)), Set([vocals.id, drums.id]))
         XCTAssertEqual(loaded.edits, edits)
-        XCTAssertEqual(try await store.listProjects().count, 1)
+        let projects = try await store.listProjects()
+        XCTAssertEqual(projects.count, 1)
     }
 
     func testSQLiteStoreReopensAndPreservesProjectAndSetlist() async throws {
@@ -64,9 +66,12 @@ final class CoreDataProjectLibraryStoreTests: XCTestCase {
         }
 
         let reopened = try CoreDataProjectLibraryStore(configuration: .init(storeURL: storeURL))
-        let loaded = try XCTUnwrap(await reopened.loadProject(projectID: projectID))
+        let reopenedValue = try await reopened.loadProject(projectID: projectID)
+        let loaded = try XCTUnwrap(reopenedValue)
         XCTAssertEqual(loaded.projectID, projectID)
-        XCTAssertEqual(try await reopened.recoveryPlan(projectID: projectID), .resume(jobID: try XCTUnwrap(loaded.processing?.jobID)))
+        let loadedJobID = try XCTUnwrap(loaded.processing?.jobID)
+        let reopenedPlan = try await reopened.recoveryPlan(projectID: projectID)
+        XCTAssertEqual(reopenedPlan, .resume(jobID: loadedJobID))
         let setlists = try await reopened.listSetlists()
         XCTAssertEqual(setlists.count, 1)
         XCTAssertEqual(setlists.first?.id, setlistID)
@@ -81,7 +86,8 @@ final class CoreDataProjectLibraryStoreTests: XCTestCase {
         try await store.replaceSetlistEntries(setlistID: setlistID, orderedProjectIDs: [second, first, second])
         try await store.renameSetlist(setlistID: setlistID, name: "Live")
 
-        let snapshot = try XCTUnwrap((try await store.listSetlists()).first)
+        let listedSetlists = try await store.listSetlists()
+        let snapshot = try XCTUnwrap(listedSetlists.first)
         XCTAssertEqual(snapshot.name, "Live")
         XCTAssertEqual(snapshot.entries.map(\.projectID), [second, first, second])
         XCTAssertEqual(snapshot.entries.map(\.position), [0, 1, 2])
@@ -89,7 +95,8 @@ final class CoreDataProjectLibraryStoreTests: XCTestCase {
 
         try await store.deleteSetlist(setlistID: setlistID)
         try await store.deleteSetlist(setlistID: setlistID)
-        XCTAssertTrue(try await store.listSetlists().isEmpty)
+        let emptySetlists = try await store.listSetlists()
+        XCTAssertTrue(emptySetlists.isEmpty)
     }
 
     func testInvalidPathCrossProjectStemAndAssetIdentityConflictAreRejected() async throws {
@@ -102,7 +109,8 @@ final class CoreDataProjectLibraryStoreTests: XCTestCase {
         let otherProject = ProjectID()
         let foreignStem = makeStem(projectID: otherProject, role: .vocals, name: "foreign")
         await XCTAssertThrowsErrorAsync { try await store.recordStems(projectID: projectID, stems: [foreignStem]) }
-        XCTAssertTrue(try XCTUnwrap(await store.loadProject(projectID: projectID)).stems.isEmpty)
+        let projectValue = try await store.loadProject(projectID: projectID)
+        XCTAssertTrue(try XCTUnwrap(projectValue).stems.isEmpty)
 
         let conflicting = LocalAudioAsset(
             id: source.id,
@@ -122,19 +130,22 @@ final class CoreDataProjectLibraryStoreTests: XCTestCase {
             projectID: projectID,
             snapshot: ProcessingSnapshot(jobID: jobID, phase: .finalizing, fractionComplete: 0.9)
         )
-        XCTAssertEqual(try await store.recoveryPlan(projectID: projectID), .resume(jobID: jobID))
+        let resumePlan = try await store.recoveryPlan(projectID: projectID)
+        XCTAssertEqual(resumePlan, .resume(jobID: jobID))
 
         try await store.recordProcessing(
             projectID: projectID,
             snapshot: ProcessingSnapshot(jobID: jobID, phase: .failed, fractionComplete: 0.9, retryable: true, stableErrorCode: "NETWORK_TIMEOUT")
         )
-        XCTAssertEqual(try await store.recoveryPlan(projectID: projectID), .retryRequired(stableErrorCode: "NETWORK_TIMEOUT"))
+        let retryPlan = try await store.recoveryPlan(projectID: projectID)
+        XCTAssertEqual(retryPlan, .retryRequired(stableErrorCode: "NETWORK_TIMEOUT"))
 
         try await store.recordProcessing(
             projectID: projectID,
             snapshot: ProcessingSnapshot(jobID: jobID, phase: .ready, fractionComplete: 1)
         )
-        XCTAssertEqual(try await store.recoveryPlan(projectID: projectID), .none)
+        let readyPlan = try await store.recoveryPlan(projectID: projectID)
+        XCTAssertEqual(readyPlan, .none)
     }
 
     func testDeleteProjectIsIdempotentAndCompactsSetlistPositions() async throws {
@@ -147,9 +158,12 @@ final class CoreDataProjectLibraryStoreTests: XCTestCase {
         try await store.deleteProject(projectID: first)
         try await store.deleteProject(projectID: first)
 
-        XCTAssertNil(try await store.loadProject(projectID: first))
-        XCTAssertEqual(try await store.listProjects().map(\.projectID), [second])
-        let setlist = try XCTUnwrap((try await store.listSetlists()).first)
+        let deletedValue = try await store.loadProject(projectID: first)
+        XCTAssertNil(deletedValue)
+        let remainingProjects = try await store.listProjects()
+        XCTAssertEqual(remainingProjects.map(\.projectID), [second])
+        let remainingSetlists = try await store.listSetlists()
+        let setlist = try XCTUnwrap(remainingSetlists.first)
         XCTAssertEqual(setlist.entries.map(\.projectID), [second])
         XCTAssertEqual(setlist.entries.map(\.position), [0])
     }
