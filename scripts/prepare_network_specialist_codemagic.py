@@ -34,13 +34,13 @@ block = r'''
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR"
+          SRC='network-specialist-sprint/07_ネットワークスペシャリスト試験.png'
           DEST='network-specialist-sprint/ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+          test -f "$SRC"
+          test "$(stat -f%z "$SRC")" = '678310'
+          test "$(shasum -a 256 "$SRC" | awk '{print $1}')" = "$APPICON_SHA256"
           mkdir -p "$(dirname "$DEST")"
-          curl --fail --location --retry 2 --connect-timeout 20 --max-time 120 \
-            'https://drive.google.com/uc?export=download&id=1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8' \
-            -o "$DEST"
-          test "$(stat -f%z "$DEST")" = '678310'
-          test "$(shasum -a 256 "$DEST" | awk '{print $1}')" = "$APPICON_SHA256"
+          cp "$SRC" "$DEST"
           python3 network-specialist-sprint/scripts/build_native_questions.py
           python3 network-specialist-sprint/scripts/materialize_appicon.py
           python3 network-specialist-sprint/scripts/validate_release.py
