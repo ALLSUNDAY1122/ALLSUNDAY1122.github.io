@@ -64,15 +64,29 @@ index.write_text(updated,encoding='utf-8')
 print(f'PASS: bundled audited HM1 questions={len(questions)} rounds={dict(rounds)}')
 PY
 
-if ! command -v magick >/dev/null 2>&1; then
+# Codemagic images may expose ImageMagick 7 as `magick` or ImageMagick 6 as
+# `convert`. Support both rather than assuming one executable name.
+if command -v magick >/dev/null 2>&1; then
+  IMAGEMAGICK_CMD="$(command -v magick)"
+elif command -v convert >/dev/null 2>&1; then
+  IMAGEMAGICK_CMD="$(command -v convert)"
+else
   HOMEBREW_NO_AUTO_UPDATE=1 brew install imagemagick
+  if command -v magick >/dev/null 2>&1; then
+    IMAGEMAGICK_CMD="$(command -v magick)"
+  elif command -v convert >/dev/null 2>&1; then
+    IMAGEMAGICK_CMD="$(command -v convert)"
+  else
+    echo "ImageMagick executable not found after installation" >&2
+    exit 1
+  fi
 fi
 
 test -f "$ICON_SRC"
 mkdir -p "$ICON_DIR"
 render() {
   local px="$1" out="$2"
-  magick "$ICON_SRC" -background white -alpha remove -alpha off -resize "${px}x${px}!" "$ICON_DIR/$out"
+  "$IMAGEMAGICK_CMD" "$ICON_SRC" -background white -alpha remove -alpha off -resize "${px}x${px}!" "$ICON_DIR/$out"
 }
 render 40 icon-20@2x.png
 render 60 icon-20@3x.png
