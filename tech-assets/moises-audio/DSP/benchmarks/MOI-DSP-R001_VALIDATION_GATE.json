@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "task_id": "MOI-DSP-R001",
+  "gate_version": "1.0",
+  "selected_baseline": {
+    "interactive_time_pitch": "Apple AVAudioUnitTimePitch",
+    "intentional_varispeed_only": "Apple AVAudioUnitVarispeed",
+    "click_countin": "AVAudioPlayerNode sample-time scheduling on common AVAudioEngine clock",
+    "quality_challenger": "Rubber Band 4.x with commercial licence"
+  },
+  "licensing": {
+    "apple_system_framework": "baseline_ok",
+    "rubber_band_gpl_app_store": "not_selected_for_proprietary_distribution",
+    "rubber_band_commercial": "purchase_required_before_release",
+    "superpowered_evaluation": "evaluation_only",
+    "superpowered_public_app": "launch_capable_licence_required",
+    "soundtouch_lgpl": "legal_review_required_for_distribution_package",
+    "soundtouch_commercial": "commercial_licence_required"
+  },
+  "real_track_validation_required": true,
+  "synthetic_only_parity_forbidden": true,
+  "tempo_speed_gates": {
+    "test_ratios": [0.5, 0.75, 0.9, 1.1, 1.25, 1.5, 2.0],
+    "duration_ratio_relative_error_max": 0.001,
+    "render_underruns_30min_max": 0,
+    "loop_repetitions": 100,
+    "monotonic_loop_phase_drift_allowed": false,
+    "listening_dimensions": [
+      "transient_integrity",
+      "vocal_formant_timbre",
+      "musical_noise",
+      "stereo_phase_integrity",
+      "low_frequency_integrity",
+      "reverb_decay",
+      "overall_practice_usability"
+    ]
+  },
+  "pitch_key_gates": {
+    "test_semitones": [-12, -7, -3, -1, 1, 3, 7, 12],
+    "steady_tone_or_monophonic_pitch_error_cents_median_max": 10,
+    "clipping_introduced_allowed": false,
+    "nan_inf_allowed": false,
+    "reference_relative_listening_median_gap_max": 0.5,
+    "critical_dimension_rule": "reject if project score <=1 while Reference >=3 on a mandatory real-track dimension"
+  },
+  "control_latency_gates": {
+    "measure": [
+      "rate_change_to_audible_effect_ms",
+      "pitch_change_to_audible_effect_ms",
+      "play_after_countin_schedule_ms",
+      "seek_reschedule_stale_click_count"
+    ],
+    "stale_click_after_seek_max": 0,
+    "hardcoded_unmeasured_latency_pass_forbidden": true
+  },
+  "click_countin_gates": {
+    "constant_tempo_10min_click_error_ms_median_max": 1.0,
+    "constant_tempo_10min_click_error_ms_p99_max": 3.0,
+    "loop_100x_click_error_ms_p99_max": 3.0,
+    "countin_music_start_error_ms_max": 3.0,
+    "render_underruns_30min_max": 0,
+    "tempo_change_accumulated_phase_drift_allowed": false,
+    "ui_timer_as_audio_clock_allowed": false
+  },
+  "device_performance_measurements": {
+    "required_durations_minutes": [5, 15, 30, 60],
+    "required": [
+      "cpu_percent_or_equivalent_profile",
+      "peak_rss_mb",
+      "thermal_state",
+      "battery_delta",
+      "audio_underruns",
+      "control_latency",
+      "seek_latency",
+      "loop_phase_error"
+    ],
+    "threshold_rule": "absolute CPU/memory/thermal acceptance is fixed after target-device baseline measurement; missing measurements cannot pass"
+  },
+  "challenger_promotion": {
+    "required": [
+      "public_distribution_right_confirmed_for_exact_version_and_app",
+      "same_real_track_fixture_set_as_baseline",
+      "blind_listening_completed",
+      "latency_cpu_memory_measured_on_target_iPhone",
+      "no_regression_in_click_countin_sync",
+      "quality_improvement_material_enough_to_justify_dependency_and_licence_cost"
+    ],
+    "automatic_promotion": false,
+    "owner": "HQ"
+  },
+  "known_unknowns": [
+    "exact Reference speed range",
+    "exact Reference pitch/key range",
+    "Reference smoothing/ramping behavior",
+    "Reference count-in start rule",
+    "target-iPhone Apple TimePitch CPU/memory/thermal data",
+    "target-iPhone challenger CPU/memory/thermal data"
+  ],
+  "parity_rows_informed": ["MOI-P010", "MOI-P012", "MOI-P014", "MOI-P015"],
+  "parity_state_change": false
+}
