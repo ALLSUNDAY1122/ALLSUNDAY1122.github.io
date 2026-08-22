@@ -36,12 +36,13 @@
     {"task_id":"MOI-ARCH-001","status":"VERIFIED","integration_pr":4443},
     {"task_id":"MOI-BLD-002","status":"VERIFIED","integration_pr":4445},
     {"task_id":"MOI-LIB-R001","status":"VERIFIED","integration_pr":4446},
-    {"task_id":"MOI-HQ-ARCH-002","status":"VERIFIED","integration_pr":4447}
+    {"task_id":"MOI-HQ-ARCH-002","status":"VERIFIED","integration_pr":4447},
+    {"task_id":"MOI-IO-001","status":"VERIFIED","integration_pr":4449}
   ],
   "tasks": [
     {
       "task_id": "MOI-SEP-002",
-      "status": "READY_ASSIGNED",
+      "status": "BLOCKED_HUMAN",
       "work_package_id": "MOI-WP1-SEPARATION-PROCESSING",
       "worker_id": "Moises-Worker-1",
       "effort_points": 8,
@@ -49,23 +50,26 @@
       "resource_locks": ["source-separation-model"],
       "write_scope": ["tech-assets/moises-audio/Separation/**"],
       "parity_rows": ["MOI-P003", "MOI-P004"],
-      "acceptance": ["rights-cleared actual multi-stem path implemented", "real multi-genre quality evidence", "deterministic progress/cancel/retry/failure behavior", "no PARITY promotion without real evidence"]
+      "acceptance": ["rights-cleared actual multi-stem path implemented", "real multi-genre quality evidence", "deterministic progress/cancel/retry/failure behavior", "no PARITY promotion without real evidence"],
+      "evidence": ["status-evidenced partial server provider + rights gate integrated via HQ PR #4451, merge 5aa5e8168c3a69a44ccbdf8fb6c7a7d74533028c", "P003/P004 remain MISSING"],
+      "blockers": ["no project-owned rights-cleared trained separator checkpoint", "no written commercially approved production separator API/model agreement and credentials", "required rights-cleared G1/G2 real-audio evaluation corpus is absent"]
     },
     {
       "task_id": "MOI-PROC-001",
-      "status": "BLOCKED_DEPENDENCY",
+      "status": "READY_ASSIGNED",
       "work_package_id": "MOI-WP1-SEPARATION-PROCESSING",
       "worker_id": "Moises-Worker-1",
       "effort_points": 3,
-      "dependencies": ["MOI-SEP-002"],
+      "dependencies": ["MOI-SEP-001", "MOI-ARCH-001"],
       "resource_locks": ["processing-lifecycle"],
       "write_scope": ["tech-assets/moises-audio/Processing/**"],
       "parity_rows": ["MOI-P020"],
-      "acceptance": ["durable server/client job lifecycle", "cancel/retry/reconnect/idempotency", "partial-output cleanup and relaunch recovery"]
+      "acceptance": ["durable server/client job lifecycle implementation behind canonical separation contract", "cancel/retry/reconnect/idempotency", "partial-output cleanup and relaunch recovery", "real production separator recovery evidence remains required before P020 PARITY"],
+      "evidence": ["HQ blocker review allows lifecycle implementation to proceed while SEP-002 commercial supply is blocked"]
     },
     {
       "task_id": "MOI-IO-001",
-      "status": "READY_ASSIGNED",
+      "status": "VERIFIED",
       "work_package_id": "MOI-WP2-IO-LIBRARY",
       "worker_id": "Moises-Worker-2",
       "effort_points": 4,
@@ -73,7 +77,8 @@
       "resource_locks": ["import-export"],
       "write_scope": ["tech-assets/moises-audio/IO/**"],
       "parity_rows": ["MOI-P001", "MOI-P002", "MOI-P019"],
-      "acceptance": ["actual app-owned import/decode seam", "M4A/AAC export/share", "protected/corrupt/no-audio/storage/network/provider/cancel errors explicit", "unsupported codec gaps remain visible"]
+      "acceptance": ["actual app-owned import/decode seam", "M4A/AAC export/share", "protected/corrupt/no-audio/storage/network/provider/cancel errors explicit", "unsupported codec gaps remain visible"],
+      "evidence": ["HQ PR #4449 merged at ce1cc0d6bee03829e97b01f274680ec91c873de1", "four IO/** files only", "Linux typecheck/self-check green; AVFoundation/iPhone compile remains BLD-IOS gate", "MP3 export/WMA import/FLAC target-runtime support remain unclaimed", "P001/P002/P019 remain MISSING"]
     },
     {
       "task_id": "MOI-LIB-001",
@@ -89,27 +94,29 @@
     },
     {
       "task_id": "MOI-DSP-001",
-      "status": "READY_ASSIGNED",
-      "work_package_id": "MOI-WP3-PLAYBACK-DSP",
-      "worker_id": "Moises-Worker-3",
-      "effort_points": 4,
-      "dependencies": ["MOI-AN-001", "MOI-DSP-R001", "MOI-ARCH-001", "MOI-BLD-002"],
-      "resource_locks": ["time-pitch-dsp"],
-      "write_scope": ["tech-assets/moises-audio/DSP/**"],
-      "parity_rows": ["MOI-P010", "MOI-P012", "MOI-P014", "MOI-P015"],
-      "acceptance": ["tempo/pitch operate on real tracks", "sample-time metronome/count-in synchronization", "artifact/latency gates measured"]
-    },
-    {
-      "task_id": "MOI-PLAY-001",
       "status": "BLOCKED_DEPENDENCY",
       "work_package_id": "MOI-WP3-PLAYBACK-DSP",
       "worker_id": "Moises-Worker-3",
+      "effort_points": 4,
+      "dependencies": ["MOI-AN-001", "MOI-DSP-R001", "MOI-ARCH-001", "MOI-BLD-002", "MOI-BLD-IOS-001"],
+      "resource_locks": ["time-pitch-dsp"],
+      "write_scope": ["tech-assets/moises-audio/DSP/**"],
+      "parity_rows": ["MOI-P010", "MOI-P012", "MOI-P014", "MOI-P015"],
+      "acceptance": ["tempo/pitch operate on real tracks", "sample-time metronome/count-in synchronization", "artifact/latency gates measured"],
+      "evidence": ["status-evidenced partial DSP implementation integrated via HQ PR #4450, merge 52a74b79a7531486d4d6cda8de9e4ef56c8fc60e", "planner evidence: <=1-frame mapping error and no accumulated loop planner drift", "AVFAudio compile/real-track/device measurements remain missing", "P010/P012/P014/P015 remain MISSING"]
+    },
+    {
+      "task_id": "MOI-PLAY-001",
+      "status": "READY_ASSIGNED",
+      "work_package_id": "MOI-WP3-PLAYBACK-DSP",
+      "worker_id": "Moises-Worker-3",
       "effort_points": 6,
-      "dependencies": ["MOI-SEP-002", "MOI-BLD-002"],
+      "dependencies": ["MOI-ARCH-001", "MOI-BLD-002"],
       "resource_locks": ["audio-playback-engine"],
       "write_scope": ["tech-assets/moises-audio/Playback/**"],
       "parity_rows": ["MOI-P006", "MOI-P007", "MOI-P008"],
-      "acceptance": ["stems stay synchronized", "solo/mute/volume/seek/loop without click/pop/drift", "long-track interaction latency measured", "waveform not mandatory until Reference verifies"]
+      "acceptance": ["stems stay synchronized behind canonical StemArtifact contracts", "solo/mute/volume/seek/loop without click/pop/drift", "long-track interaction latency measured", "waveform not mandatory until Reference verifies", "real separated-stem/device PARITY validation remains a later gate"],
+      "evidence": ["HQ blocker review removed unnecessary implementation dependency on completed SEP-002; playback can be built against stable Shared stem contracts while separation supply remains blocked"]
     },
     {
       "task_id": "MOI-BLD-003",
@@ -121,20 +128,8 @@
       "resource_locks": ["build-harness"],
       "write_scope": ["tech-assets/moises-audio/Package.swift", "tech-assets/moises-audio/Tests/**"],
       "parity_rows": [],
-      "acceptance": ["LibraryContracts included in SwiftPM", "existing 13 tests remain green plus library-contract tests", "no Shared/App edits", "no PARITY promotion"]
-    },
-    {
-      "task_id": "MOI-AN-002",
-      "status": "PLANNED",
-      "work_package_id": "MOI-WP4-ANALYSIS-PLATFORM",
-      "worker_id": "Moises-Worker-4",
-      "effort_points": 4,
-      "sequence_after": "MOI-BLD-003",
-      "dependencies": ["MOI-AN-001", "MOI-BLD-003"],
-      "resource_locks": ["music-analysis-engine"],
-      "write_scope": ["tech-assets/moises-audio/Analysis/**"],
-      "parity_rows": ["MOI-P009", "MOI-P011", "MOI-P013", "MOI-P016"],
-      "acceptance": ["BPM/key/chord/section implementation behind HQ contracts", "benchmark metrics from AN-001 executed", "timestamped chord output supports playback-clock presentation"]
+      "acceptance": ["LibraryContracts included in SwiftPM", "existing 13 tests remain green plus library-contract tests", "no Shared/App edits", "no PARITY promotion"],
+      "evidence": ["Worker-4 exact reproducer found HQ Hashable mismatch", "HQ fixed ProcessingSnapshot Hashable on integration at facd51a2724a68a5e1cdedbf2ace5e88a28711fc; blocker cleared for rerun"]
     },
     {
       "task_id": "MOI-BLD-IOS-001",
@@ -142,12 +137,26 @@
       "work_package_id": "MOI-WP4-ANALYSIS-PLATFORM",
       "worker_id": "Moises-Worker-4",
       "effort_points": 4,
-      "sequence_after": "MOI-AN-002",
+      "sequence_after": "MOI-BLD-003",
       "dependencies": ["MOI-BLD-003"],
       "resource_locks": ["build-harness", "ios-platform"],
       "write_scope": ["tech-assets/moises-audio/Package.swift", "tech-assets/moises-audio/Tests/**", "tech-assets/moises-audio/iOS/**"],
       "parity_rows": ["MOI-P022"],
-      "acceptance": ["canonical iOS host/app target compiles integrated seams", "reproducible Xcode scheme/build instructions", "simulator/device evidence before readiness claim", "build-only does not raise PARITY"]
+      "acceptance": ["canonical iOS host/app target compiles Shared/App plus integrated IO and DSP seams", "reproducible Xcode scheme/build instructions", "macOS/Xcode or simulator compile evidence", "run AVFoundation/AVFAudio smoke validation available to the platform environment and record physical-device gaps explicitly", "build-only does not raise PARITY"],
+      "evidence": ["HQ explicit blocker review moved iOS platform task ahead of AN-002 because IO/DSP are currently platform-validation blocked"]
+    },
+    {
+      "task_id": "MOI-AN-002",
+      "status": "PLANNED",
+      "work_package_id": "MOI-WP4-ANALYSIS-PLATFORM",
+      "worker_id": "Moises-Worker-4",
+      "effort_points": 4,
+      "sequence_after": "MOI-BLD-IOS-001",
+      "dependencies": ["MOI-AN-001", "MOI-BLD-003"],
+      "resource_locks": ["music-analysis-engine"],
+      "write_scope": ["tech-assets/moises-audio/Analysis/**"],
+      "parity_rows": ["MOI-P009", "MOI-P011", "MOI-P013", "MOI-P016"],
+      "acceptance": ["BPM/key/chord/section implementation behind HQ contracts", "benchmark metrics from AN-001 executed", "timestamped chord output supports playback-clock presentation"]
     }
   ],
   "phase_boundary_backlog": [
