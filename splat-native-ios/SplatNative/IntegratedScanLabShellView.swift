@@ -99,8 +99,21 @@ private struct IntegratedScanTab: View {
     @EnvironmentObject private var model: ScanModel
     @State private var showingPublish = false
 
+    private var hidesMainTabBar: Bool {
+        switch model.phase {
+        case .ready, .finished:
+            return false
+        case .capturing, .captured, .training, .failed:
+            return true
+        }
+    }
+
     var body: some View {
         ScanHomeView()
+            // Capture/generation controls live at the bottom of RootScanView. Keeping the
+            // production TabView visible during that lifecycle covers the primary finish button
+            // on real iPhone layouts, so make the scan workflow immersive until it returns home.
+            .toolbar(hidesMainTabBar ? .hidden : .visible, for: .tabBar)
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 if model.phase == .finished, model.resultURL != nil {
                     Button {
