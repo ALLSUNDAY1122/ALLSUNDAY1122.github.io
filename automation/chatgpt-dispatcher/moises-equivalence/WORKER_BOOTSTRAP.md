@@ -23,9 +23,11 @@
 ## 作業開始
 1. `work-packages.json` で自分のWorker IDとWork Packageを照合する。
 2. Queueで自分のpackageに割り当てられ、dependenciesがHQにより解放済みのTaskだけを対象にする。
-3. 自分のstatus fileで `current_task` を確認する。別Taskが進行中ならそれを継続する。
-4. 最新integrationとの差分を確認し、自分のowned scopeと競合するcanonical変更があれば実装を止めてstatusを `NEEDS_HQ_REBASE` にする。競合しないmetadata更新だけを理由に成果を破棄しない。
-5. status fileを `IN_PROGRESS` に更新してから作業する。status fileだけは自分専用writerとしてintegration branchへ直接更新してよい。
+3. 自分のstatus fileで `current_task` を確認する。Queue上でもそのTaskが `READY_ASSIGNED` なら継続する。
+4. current_taskがHQにより `BLOCKED_DEPENDENCY` / `BLOCKED_HUMAN` へ変更され、同じWork Package内の別Taskが `READY_ASSIGNED` になっている場合だけ、そのREADY_ASSIGNED Taskへ切り替えてよい。これはtask stealing/rebalanceではなくHQによるpackage内critical-path変更である。切替時は自分のstatus fileの `current_task`・state・base/headを更新する。
+5. current_taskがblockedでも、同じpackage内にHQが解放した別Taskがなければ勝手に別仕事へ移らない。
+6. 最新integrationとの差分を確認し、自分のowned scopeと競合するcanonical変更があれば実装を止めてstatusを `NEEDS_HQ_REBASE` にする。競合しないmetadata更新だけを理由に成果を破棄しない。
+7. status fileを `IN_PROGRESS` に更新してから作業する。status fileだけは自分専用writerとしてintegration branchへ直接更新してよい。
 
 ## 実装
 - 1 Macro Wave = 自分のWork Package内の1 assigned Task。
@@ -53,7 +55,7 @@ Workerの進捗報告はGlobal Queueではなく、自分専用status fileに書
 ## 完了
 Acceptanceを満たしたら、自分のstatus fileを `INTEGRATION_READY` にする。WorkerはQueue状態やPARITYを確定しない。
 HQがsemantic review、merge、regression、PARITY判定、Queue更新を行う。
-HQが次Taskを解放するまでは他Packageへ移動しない。
+HQが次Taskを解放するまでは他Packageへ移動しない。ただしHQがcurrent_taskをblocked化し、同一package内の別TaskをREADY_ASSIGNEDにした場合は上記のpackage内critical-path変更ルールに従う。
 
 ## 再配分
 担当変更はPhase境界またはHQの明示的rebalanceだけで行う。空いたWorkerが自律的に他packageへ移動することは禁止。
