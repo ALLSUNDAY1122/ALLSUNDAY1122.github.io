@@ -80,7 +80,7 @@ def set_iap_price(t,r):
     _,points=api_get(t,f'/v2/inAppPurchases/{IAP_ID}/pricePoints?filter[territory]=JPN&include=territory&limit=200')
     p=pp_for(points,'800')
     try:
-        _,sch=api_get(t,f'/v2/inAppPurchases/{IAP_ID}/iapPriceSchedule?include=baseTerritory,manualPrices&limit[manualPrices]=200')
+        _,sch=api_get(t,f'/v2/inAppPurchases/{IAP_ID}/iapPriceSchedule?include=baseTerritory,manualPrices&limit[manualPrices]=50')
         if isinstance(sch.get('data'),dict):
             base=((((sch['data'].get('relationships') or {}).get('baseTerritory') or {}).get('data') or {}).get('id'))
             for x in sch.get('included') or []:
@@ -103,7 +103,7 @@ def main():
     try:
         t=make_token(issuer,keyid,kp); preflight(t); set_sub_price(t,r); set_iap_price(t,r)
         _,r['monthly_readback']=api_get(t,f'/v1/subscriptions/{SUB_ID}/prices?filter[territory]=JPN&include=subscriptionPricePoint,territory&limit=200')
-        _,r['lifetime_readback']=api_get(t,f'/v2/inAppPurchases/{IAP_ID}/iapPriceSchedule?include=baseTerritory,manualPrices&limit[manualPrices]=200')
+        _,r['lifetime_readback']=api_get(t,f'/v2/inAppPurchases/{IAP_ID}/iapPriceSchedule?include=baseTerritory,manualPrices&limit[manualPrices]=50')
     finally:
         if cleanup: cleanup.unlink(missing_ok=True)
     Path('hm2-iap-price-result.json').write_text(json.dumps(r,ensure_ascii=False,indent=2),encoding='utf-8')
