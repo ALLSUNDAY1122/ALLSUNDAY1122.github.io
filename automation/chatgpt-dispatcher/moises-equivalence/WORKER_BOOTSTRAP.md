@@ -10,15 +10,22 @@
 - 自分専用 `automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-N.json`
 - `resource-locks.json`
 - `tech-assets/moises-audio/PARITY_MATRIX.json`
-- integration branch `tech/moises-separation` はepoch開始時またはHQ checkpoint指示時のみ同期対象。通常の各「次」で他Lane由来のintegration更新へ追従しない。
+- integration branch `tech/moises-separation` はepoch開始時またはHQ checkpoint指示時のみ契約参照対象。通常の各「次」で他Lane由来のintegration更新へ追従しない。
 
 会話履歴を正本にしない。
+
+## v2 -> v3 移行保全
+1. epoch 2の最初の「次」で、現work branchとlatest integrationを比較する。
+2. work branchに未統合のowned-scope commitが無い場合だけ、安全にlatest integrationへ同期してよい。
+3. 未統合のowned-scope commitがある場合は **reset / force update / discard禁止**。既存成果を保持したままv3契約とLane Planを読み、内容が次Macro Bundleに重なる場合はその成果をbundleへ引き継ぐ。
+4. statusへ `epoch_contract_sha` と、その時点の `base_integration_sha` / existing unintegrated commits を記録する。
+5. v3移行そのものを理由に既存の正しい実装をやり直さない。
 
 ## 最重要ルール
 1. Workerは自分のLaneだけを実装する。他Laneのコードを変更しない。
 2. Workerは `queue.json`, `work-packages.json`, `lane-plan-v3.json`, `Shared/**`, `App/**`, `PARITY_MATRIX.json`, `resource-locks.json` を編集しない。
 3. 自分のlong-lived branchと自分専用status fileを使う。
-4. epoch開始時に一度だけ最新integrationへ同期して `base_integration_sha` をstatusへ記録する。その後はLane checkpointまで他Laneのintegration更新を理由にrebase/停止しない。
+4. epoch開始時に最新integrationのShared/App契約を一度読み、そのSHAをstatusへ固定する。その後はLane checkpointまで他Laneのintegration更新を理由にrebase/停止しない。
 5. Shared/App契約はepoch内freezeとして扱う。契約変更が必要ならstatusの `hq_requests` に具体的に記録し、自分で変更しない。
 
 ## 1回の「次」
@@ -52,6 +59,7 @@
 - `current_bundle`
 - `completed_bundles`
 - `work_branch`
+- `epoch_contract_sha`
 - `base_integration_sha`
 - `head_sha`
 - `commits`
