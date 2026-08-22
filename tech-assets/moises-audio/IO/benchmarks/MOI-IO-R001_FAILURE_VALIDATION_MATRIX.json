@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "task_id": "MOI-IO-R001",
+  "selected_flow": [
+    "acquire",
+    "durable_local_copy",
+    "probe",
+    "decode",
+    "handoff_to_processing",
+    "render_or_stem_input",
+    "encode",
+    "finalize",
+    "save_or_share"
+  ],
+  "failures": [
+    {
+      "code": "CANCELLED",
+      "stage": ["acquire", "download", "export", "share"],
+      "retryable": true,
+      "preserve_existing_project": true,
+      "handling": "clean temp files; do not classify as corruption"
+    },
+    {
+      "code": "ACCESS_DENIED",
+      "stage": ["acquire"],
+      "retryable": true,
+      "preserve_existing_project": true,
+      "handling": "release security scope; user can reselect"
+    },
+    {
+      "code": "PROVIDER_UNAVAILABLE",
+      "stage": ["Files/File Provider", "Photos/iCloud"],
+      "retryable": true,
+      "preserve_existing_project": true,
+      "handling": "surface provider retrieval failure separately from decoder failure"
+    },
+    {
+      "code": "NETWORK_UNAVAILABLE",
+      "stage": ["public URL", "Photos iCloud retrieval"],
+      "retryable": true,
+      "preserve_existing_project": true,
+      "handling": "retain retryable task metadata, no partial durable asset"
+    },
+    {
+      "code": "NETWORK_TIMEOUT",
+      "stage": ["public URL"],
+      "retryable": true,
+      "preserve_existing_project": true,
+      "handling": "background URLSession/resume where supported; temp cleanup on terminal failure"
+    },
+    {
+      "code": "HTTP_ERROR",
+      "stage": ["public URL"],
+      "retryable": "BY_STATUS",
+      "preserve_existing_project": true,
+      "handling": "validate response/status; 4xx generally terminal except auth/retry cases; 5xx retryable"
+    },
+    {
+      "code": "REMOTE_NOT_DIRECT_MEDIA",
+      "stage": ["public URL"],
+      "retryable": false,
+      "preserve_existing_project": true,
+      "handling": "reject HTML/playlist/streaming-service page after byte/media probe"
+    },
+    {
+      "code": "UNSUPPORTED_MEDIA",
+      "stage": ["probe", "decode"],
+      "retryable": false,
+      "preserve_existing_project": true,
+      "handling": "do not infer support from extension/MIME; report actual unsupported container/codec"
+    },
+    {
+      "code": "PROTECTED_MEDIA",
+      "stage": ["probe"],
+      "retryable": false,
+      "preserve_existing_project": true,
+      "handling": "reject AVAsset protected content before separation/export"
+    },
+    {
+      "code": "CORRUPT_MEDIA",
+      "stage": ["probe", "decode"],
+      "retryable": false,
+      "preserve_existing_project": true,
+      "handling": "record reader/parser error; remove staging derivative, retain original only if product policy allows"
+    },
+    {
+      "code": "NO_AUDIO_TRACK",
+      "stage": ["video probe"],
+      "retryable": false,
+      "preserve_existing_project": true,
+      "handling": "reject video/container with no usable audio track"
+    },
+    {
+      "code": "STORAGE_INSUFFICIENT",
+      "stage": ["copy", "decode derivative", "render", "encode"],
+      "retryable": true,
+      "preserve_existing_project": true,
+      "handling": "preflight capacity; write to new temp path; never replace valid artifact until finalization succeeds"
+    },
+    {
+      "code": "EXPORT_UNSUPPORTED",
+      "stage": ["encode"],
+      "retryable": false,
+      "preserve_existing_project": true,
+      "handling": "check runtime supported output types; do not silently change user-selected format"
+    },
+    {
+      "code": "EXPORT_FAILED",
+      "stage": ["encode", "finalize"],
+      "retryable": true,
+      "preserve_existing_project": true,
+      "handling": "remove partial output; preserve source/stems; expose underlying writer/export error"
+    },
+    {
+      "code": "SHARE_FAILED",
+      "stage": ["share"],
+      "retryable": true,
+      "preserve_existing_project": true,
+      "handling": "keep finalized export available for retry while respecting temp-retention policy"
+    }
+  ],
+  "validation_gates": {
+    "import_matrix": [
+      "real device: Files local file",
+      "real device: iCloud/File Provider file",
+      "real device: Photos video requiring file-backed transfer",
+      "real device: direct HTTPS media URL",
+      "hard case: network loss during remote fetch",
+      "hard case: provider unavailable/offline iCloud item",
+      "hard case: protected media",
+      "hard case: corrupt/truncated media",
+      "hard case: video without audio",
+      "hard case: storage preflight failure",
+      "format probes: MP3/WAV/FLAC/M4A/MP4/MOV/WMA"
+    ],
+    "decode_metrics": [
+      "duration delta <= one output sample-frame after canonicalization contract is fixed",
+      "channel count and sample-rate metadata recorded",
+      "decoder peak memory measured for 5-minute Free limit and longer paid-tier fixtures",
+      "time-to-first-decodable-PCM and total decode RTF recorded",
+      "no dependence on external security-scoped URL after durable copy"
+    ],
+    "export_metrics": [
+      "exported M4A decodes successfully on-device",
+      "duration/timeline origin match input render within one output sample-frame or Shared-contract tolerance",
+      "all stems begin from common time origin and remain synchronized after round-trip",
+      "custom mix audibly matches upstream render snapshot; IO applies no duplicate DSP",
+      "no partial file is shared or replaces a valid prior export",
+      "size/bitrate/sample-rate/channel metadata recorded",
+      "MP3 is not marked passed until lawful encoder and real-device evidence exist"
+    ],
+    "long_track_and_failure": [
+      "background URL download survives app suspension/system relaunch path where applicable",
+      "large video import uses file representation and avoids whole-file Data loading",
+      "cancel/retry leaves no orphan staging files beyond cleanup policy",
+      "storage exhaustion is injected before copy and during export write",
+      "device thermal/memory captured during representative long decode/export"
+    ]
+  },
+  "privacy_and_app_store": [
+    "system pickers minimize broad library/file access; do not request unneeded persistent access",
+    "security-scoped access is balanced and short-lived",
+    "volumeAvailableCapacityForImportantUsageKey requires PrivacyInfo.xcprivacy required-reason declaration if shipped",
+    "public URL path remains ATS-compliant by default; no blanket insecure transport exception selected"
+  ],
+  "hq_contract_requests": [
+    "Shared normalized local asset descriptor must provide durable local identity plus timing/media metadata without leaking AVFoundation concrete types",
+    "Shared/export composition needs an upstream-render artifact contract for custom mix so IO does not reimplement Playback/DSP",
+    "Shared stem descriptors need a common time-origin/duration semantic sufficient to verify synchronized exports",
+    "Exact canonical sample-rate/channel policy is HQ-owned and remains intentionally unspecified here"
+  ],
+  "parity_effect": {
+    "MOI-P001": "MISSING",
+    "MOI-P002": "MISSING",
+    "MOI-P019": "MISSING"
+  }
+}
