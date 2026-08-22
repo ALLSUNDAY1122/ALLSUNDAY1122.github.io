@@ -1,23 +1,23 @@
 {
-  "request_id": "splat-metal-build-start-diagnostic-20260821-1601",
-  "target_head_sha": "8a418ee8d50120aa2541d8734c16c41bfebf2b41",
-  "workflow": "splat-testflight-build-once.yml",
+  "request_id": "app2-005-hm1-final-difficulty-diagnostic-20260822-1808",
+  "target_head_sha": "2ee19ea6c2c5fdcf15ccbb655f6888eb7cb76138",
+  "workflow": "app2-005-hm1-difficulty-audit.yml",
   "run_found": true,
   "run": {
-    "id": 32456818231,
-    "name": "Splat Internal TestFlight Build Once",
+    "id": 32565417308,
+    "name": "APP2-005 HM1 difficulty audit",
     "status": "completed",
-    "conclusion": "success",
-    "created_at": "2026-08-21T07:01:28Z",
-    "updated_at": "2026-08-21T07:01:54Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32456818231",
-    "head_sha": "8a418ee8d50120aa2541d8734c16c41bfebf2b41"
+    "conclusion": "failure",
+    "created_at": "2026-08-22T09:37:00Z",
+    "updated_at": "2026-08-22T09:37:19Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32565417308",
+    "head_sha": "2ee19ea6c2c5fdcf15ccbb655f6888eb7cb76138"
   },
   "jobs": [
     {
-      "name": "start",
+      "name": "audit",
       "status": "completed",
-      "conclusion": "success",
+      "conclusion": "failure",
       "steps": [
         {
           "name": "Set up job",
@@ -30,19 +30,49 @@
           "conclusion": "success"
         },
         {
-          "name": "Validate final release gate",
+          "name": "Run actions/setup-node@v4",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Start or reuse exact Codemagic TestFlight build",
+          "name": "Harden severe canonical questions",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Persist sanitized build locator",
+          "name": "Harden remaining easy distractors",
           "status": "completed",
           "conclusion": "success"
+        },
+        {
+          "name": "Save hardened canonical bank",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Expand bank to 264",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Run difficulty audit on all 264",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Persist audit and hardened canonical bank",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Enforce release gate",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "skipped"
         },
         {
           "name": "Post Run actions/checkout@v4",
