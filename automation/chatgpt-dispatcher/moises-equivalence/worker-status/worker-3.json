@@ -26,7 +26,7 @@
     "10-minute/1200-beat sample-time mapping <=1 frame planner error",
     "100 loop repetitions at 0.9x: no accumulated planner drift",
     "60-minute/7200-beat planner x200: median 0.0384ms, p99 0.0700ms, max 0.1055ms",
-    "2026-08-22 14:58 JST boundary regression compile/run PASS: render-origin overflow, count-in multiplication overflow, non-finite source range, invalid downbeat stride fail closed",
+    "2026-08-22 14:55 JST boundary regression compile/run PASS: render-origin overflow, count-in multiplication overflow, non-finite source range, invalid downbeat stride fail closed",
     "Apple-only offline renderer source audit against current Apple scheduleFile callback-type API: completion changed to lock-protected @Sendable-safe flag + dataRendered callback + bounded failure guard; target compile still pending"
   ],
   "evidence": [
@@ -52,6 +52,6 @@
     "After build harness/iOS execution is available, compile the existing DSP-owned sources unchanged and route macOS/iPhone AVFAudio execution back to WP3 for real-track artifact/latency and click onset/drift gates",
     "The four post-integration DSP safety commits 6e920130, b1ed01eb, 09c0bdee, c97d8917 are scope-clean and may be semantically integrated as partial hardening without changing MOI-DSP-001 BLOCKED/PARITY state"
   ],
-  "last_updated": "2026-08-22T15:06:00+09:00",
+  "last_updated": "2026-08-22T14:56:00+09:00",
   "writer_policy": "Only Moises-Worker-3 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
 }
