@@ -16,10 +16,6 @@ targets:
       - path: HealthManager1
       - path: Resources
         buildPhase: resources
-    preBuildScripts:
-      - name: Prepare audited 264 questions and unified AppIcon
-        script: |
-          bash "$SRCROOT/prepare-ios.sh"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.healthmanager1
