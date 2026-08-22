@@ -4,9 +4,9 @@
   "work_package_id": "MOI-WP1-SEPARATION-PROCESSING",
   "assignment_epoch": 1,
   "work_branch": "moises/wp1-separation-processing",
-  "state": "BLOCKED",
-  "current_task": "MOI-SEP-002",
-  "base_integration_sha": "1362c87fbd90803c0fe7243376d78038034f2ead",
+  "state": "IN_PROGRESS",
+  "current_task": "MOI-PROC-001",
+  "base_integration_sha": "5e958ec999ad9f3d8f3a4a6225d4b6ec06a5c7a3",
   "head_sha": "090d45e1ca483b5561ae769c16ab767cf56a5e3e",
   "commits": [
     "fca2b1900ee07f46e8b29937833df9a503751e56",
@@ -28,32 +28,18 @@
     "Python unittest rights gate: 6 tests, 0 failures",
     "AudioShake adapter reconstructed-readback py_compile: PASS",
     "AudioShake adapter contract unittest: 10 tests, 0 failures",
-    "scope compare after canonical integration of prior Worker-1 batch: only three new files remain ahead under tech-assets/moises-audio/Separation/**; canonical changes since merge-base contain no Separation/** conflict"
+    "2026-08-22 15:25 JST branch review: canonical is 28 commits ahead from merge-base but contains no Processing/** changes; Worker-1 unintegrated files remain Separation/** only"
   ],
   "evidence": [
-    "Earlier Separator provider/rights-gate batch through a8087c8136759c815111221e0eb72c6ef92c7a79 is now contained in canonical integration history.",
-    "tech-assets/moises-audio/Separation/Server/audioshake_api.py",
-    "tech-assets/moises-audio/Separation/Tests/test_audioshake_api.py",
-    "tech-assets/moises-audio/Separation/AUDIOSHAKE_API_CONTRACT.md",
-    "Current official AudioShake API verified: server-side x-api-key, POST /assets up to 2 GB, asset expiry 72h, async POST/GET /tasks, vocals/drums/bass/other WAV targets, output links expire after one hour.",
-    "Current published core stem pricing is 1 credit per input minute per target; four-target vocals/drums/bass/other evaluates at 4 credits per input minute under current docs.",
-    "Current official AudioShake Local Inference SDK verified for iOS ARM64 with Metal/Neural Engine, encrypted vendor model, progress-capable SourceSeparationTask; access requires vendor Client ID/Secret/model package.",
-    "No current public Task cancellation endpoint was found; upstream-compute cancellation must remain UNKNOWN until superseding API/contract evidence."
+    "MOI-SEP-002 is now canonical BLOCKED_HUMAN; its partial server provider/rights gate is integrated by HQ while the AudioShake adapter batch remains on the Worker-1 branch.",
+    "HQ explicitly released MOI-PROC-001 so processing lifecycle may proceed independently behind canonical separation contracts.",
+    "Processing lifecycle owned scope confirmed: tech-assets/moises-audio/Processing/**."
   ],
   "known_gaps": [
-    "No project-owned rights-cleared trained separator checkpoint exists in canonical project state.",
-    "No authorized AudioShake API key or written commercial production terms are available to this Worker; credentials must never be committed to GitHub.",
-    "Golden QA still lacks the required G1/G2 rights-cleared real-audio corpus in executable project state.",
-    "No live AudioShake or project-owned-model four-stem run has been executed; no real stems, SI-SDR/listening A/B, latency/cost, retention/deletion, upstream cancellation, or production entitlement evidence exists yet.",
-    "MOI-P003 and MOI-P004 remain MISSING; no PARITY promotion is justified."
+    "MOI-SEP-002 remains BLOCKED_HUMAN on lawful separator supply/credentials and G1/G2 real-audio corpus.",
+    "MOI-P020 cannot reach PARITY from lifecycle implementation alone; real production separator interruption/recovery evidence remains required."
   ],
-  "hq_requests": [
-    "Human/external gate: authorize an AudioShake developer evaluation account/API key outside GitHub. Current official quickstart advertises 10 free starter credits, sufficient for limited evaluation but not a full 5-minute four-target run at current 4 credits/minute pricing.",
-    "Before production use, review/accept exact commercial embedding, user-audio retention/deletion, confidentiality, output-use, privacy geography, production pricing/limits and cancellation terms.",
-    "Evaluate AudioShake cloud API first; if quality passes, compare licensed iOS Local Inference SDK because it avoids cloud audio transfer and is current iOS ARM64/Metal/Neural Engine capable.",
-    "Alternative remains project-owned from-scratch checkpoint with rights-cleared training corpus and model/training manifests.",
-    "Provide/acquire rights-cleared G1/G2 real-audio evaluation fixtures before any separation quality/PARITY gate."
-  ],
-  "last_updated": "2026-08-22T15:08:00+09:00",
+  "hq_requests": [],
+  "last_updated": "2026-08-22T15:25:00+09:00",
   "writer_policy": "Only Moises-Worker-1 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
 }
