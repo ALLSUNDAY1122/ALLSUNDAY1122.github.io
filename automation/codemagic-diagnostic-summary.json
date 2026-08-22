@@ -1,23 +1,23 @@
 {
-  "request_id": "app2-005-hm1-release-logging-inspect-20260822-1924",
-  "target_head_sha": "14fddd5d1421262d757a5f98462fb4a6dc9152ef",
+  "request_id": "app2-005-hm1-release-logging-inspect-20260822-1925",
+  "target_head_sha": "ea3933895078bdab9a6dc6337cda42e8f428ca43",
   "workflow": "hm1-final-release-prep.yml",
   "run_found": true,
   "run": {
-    "id": 32567472500,
+    "id": 32567627805,
     "name": "Prepare HealthManager1 final release workflow",
-    "status": "completed",
-    "conclusion": "failure",
-    "created_at": "2026-08-22T10:23:19Z",
-    "updated_at": "2026-08-22T10:23:43Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32567472500",
-    "head_sha": "14fddd5d1421262d757a5f98462fb4a6dc9152ef"
+    "status": "in_progress",
+    "conclusion": null,
+    "created_at": "2026-08-22T10:26:58Z",
+    "updated_at": "2026-08-22T10:27:03Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32567627805",
+    "head_sha": "ea3933895078bdab9a6dc6337cda42e8f428ca43"
   },
   "jobs": [
     {
       "name": "prepare",
-      "status": "completed",
-      "conclusion": "failure",
+      "status": "in_progress",
+      "conclusion": null,
       "steps": [
         {
           "name": "Set up job",
@@ -42,22 +42,17 @@
         {
           "name": "Validate HM1 release workflow contract",
           "status": "completed",
-          "conclusion": "failure"
+          "conclusion": "success"
         },
         {
           "name": "Persist root Codemagic release gate",
           "status": "completed",
-          "conclusion": "skipped"
+          "conclusion": "success"
         },
         {
           "name": "Post Run actions/checkout@v6",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "status": "completed",
-          "conclusion": "success"
+          "status": "in_progress",
+          "conclusion": null
         }
       ]
     }
