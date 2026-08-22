@@ -40,8 +40,22 @@ def ensure_v1_localization(t,parent_path,create_path,res_type,rel_key,rel_type,r
     status,out=api_request(t,create_path,method='POST',payload=payload)
     r[label]={'changed':True,'http_status':status,'id':((out or {}).get('data') or {}).get('id')}
 
+def ensure_iap_version(t,r):
+    _,versions=api_get(t,f'/v2/inAppPurchases/{IAP}/versions?limit=50')
+    for v in data(versions):
+        if (v.get('attributes') or {}).get('state')=='PREPARE_FOR_SUBMISSION':
+            r['lifetime_version']={'changed':False,'id':v['id'],'state':'PREPARE_FOR_SUBMISSION'}
+            return v['id']
+    payload={'data':{'type':'inAppPurchaseVersions','relationships':{'inAppPurchase':{'data':{'type':'inAppPurchases','id':IAP}}}}}
+    status,out=api_request(t,'/v1/inAppPurchaseVersions',method='POST',payload=payload)
+    vid=((out or {}).get('data') or {}).get('id')
+    if not vid: raise RuntimeError('IAP version create returned no id')
+    r['lifetime_version']={'changed':True,'http_status':status,'id':vid,'state':(((out or {}).get('data') or {}).get('attributes') or {}).get('state')}
+    return vid
+
 def ensure_iap_loc(t,r):
-    _,listed=api_get(t,f'/v2/inAppPurchases/{IAP}/inAppPurchaseLocalizations?limit=50')
+    vid=ensure_iap_version(t,r)
+    _,listed=api_get(t,f'/v1/inAppPurchaseVersions/{vid}/localizations?limit=50')
     cur=find_locale(listed)
     attrs={'locale':LOCALE,'name':LIFETIME_NAME,'description':LIFETIME_DESC}
     if cur:
@@ -49,12 +63,13 @@ def ensure_iap_loc(t,r):
         if changes:
             payload={'data':{'type':'inAppPurchaseLocalizations','id':cur['id'],'attributes':changes}}
             status,_=api_request(t,f"/v2/inAppPurchaseLocalizations/{cur['id']}",method='PATCH',payload=payload)
-            r['lifetime_localization']={'changed':True,'http_status':status,'id':cur['id']}
-        else:r['lifetime_localization']={'changed':False,'id':cur['id']}
-        return
-    payload={'data':{'type':'inAppPurchaseLocalizations','attributes':attrs,'relationships':{'inAppPurchaseV2':{'data':{'type':'inAppPurchases','id':IAP}}}}}
+            r['lifetime_localization']={'changed':True,'http_status':status,'id':cur['id'],'version_id':vid}
+        else:r['lifetime_localization']={'changed':False,'id':cur['id'],'version_id':vid}
+        return vid
+    payload={'data':{'type':'inAppPurchaseLocalizations','attributes':attrs,'relationships':{'version':{'data':{'type':'inAppPurchaseVersions','id':vid}}}}}
     status,out=api_request(t,'/v2/inAppPurchaseLocalizations',method='POST',payload=payload)
-    r['lifetime_localization']={'changed':True,'http_status':status,'id':((out or {}).get('data') or {}).get('id')}
+    r['lifetime_localization']={'changed':True,'http_status':status,'id':((out or {}).get('data') or {}).get('id'),'version_id':vid}
+    return vid
 
 def patch_notes(t,r):
     _,s=api_get(t,f'/v1/subscriptions/{SUB}'); sa=(s.get('data') or {}).get('attributes') or {}
@@ -76,10 +91,11 @@ def main():
         t=make_token(issuer,keyid,kp)
         ensure_v1_localization(t,f'/v1/subscriptions/{SUB}/subscriptionLocalizations?limit=50','/v1/subscriptionLocalizations','subscriptionLocalizations','subscription','subscriptions',SUB,{'locale':LOCALE,'name':MONTHLY_NAME,'description':MONTHLY_DESC},'monthly_localization',r)
         ensure_v1_localization(t,f'/v1/subscriptionGroups/{GROUP}/subscriptionGroupLocalizations?limit=50','/v1/subscriptionGroupLocalizations','subscriptionGroupLocalizations','subscriptionGroup','subscriptionGroups',GROUP,{'locale':LOCALE,'name':GROUP_NAME},'group_localization',r)
-        ensure_iap_loc(t,r); patch_notes(t,r)
+        vid=ensure_iap_loc(t,r); patch_notes(t,r)
         _,r['monthly_readback']=api_get(t,f'/v1/subscriptions/{SUB}?include=subscriptionLocalizations')
         _,r['group_readback']=api_get(t,f'/v1/subscriptionGroups/{GROUP}?include=subscriptionGroupLocalizations')
-        _,r['lifetime_readback']=api_get(t,f'/v2/inAppPurchases/{IAP}?include=inAppPurchaseLocalizations')
+        _,r['lifetime_product_readback']=api_get(t,f'/v2/inAppPurchases/{IAP}')
+        _,r['lifetime_version_readback']=api_get(t,f'/v1/inAppPurchaseVersions/{vid}?include=localizations')
     finally:
         if cleanup: cleanup.unlink(missing_ok=True)
     Path('hm2-iap-metadata-result.json').write_text(json.dumps(r,ensure_ascii=False,indent=2),encoding='utf-8')
