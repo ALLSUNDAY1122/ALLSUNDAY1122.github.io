@@ -1,5 +1,6 @@
 import importlib.util
 import pathlib
+import sys
 import tempfile
 import unittest
 
@@ -8,6 +9,7 @@ MODULE_PATH = pathlib.Path(__file__).resolve().parents[1] / "Server" / "audiosha
 spec = importlib.util.spec_from_file_location("audioshake_api", MODULE_PATH)
 module = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
+sys.modules[spec.name] = module
 spec.loader.exec_module(module)
 
 AudioShakeAPIError = module.AudioShakeAPIError
