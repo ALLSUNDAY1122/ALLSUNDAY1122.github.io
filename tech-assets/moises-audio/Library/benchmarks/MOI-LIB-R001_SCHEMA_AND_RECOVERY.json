@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "task_id": "MOI-LIB-R001",
+  "attempt": 1,
+  "captured_at": "2026-08-22",
+  "selected_path": {
+    "metadata_store": "core_data_sqlite",
+    "large_artifacts": "app_owned_files",
+    "write_serialization": "dedicated_persistence_actor_or_service",
+    "module_boundary": "adapter_maps_private_persistence_records_to_shared_value_types"
+  },
+  "candidates": [
+    {
+      "id": "core_data_sqlite",
+      "selected": true,
+      "scores": {
+        "reliability_atomic_metadata": 5,
+        "migration_control": 5,
+        "ios_fit": 5,
+        "domain_isolation": 5,
+        "query_setlist_ordering": 5,
+        "ops_testability": 4
+      },
+      "reason": "Apple-native SQLite-backed store with mature concurrency and lightweight/staged/manual migration while remaining hidden behind the HQ domain contracts."
+    },
+    {
+      "id": "swiftdata",
+      "selected": false,
+      "scores": {
+        "reliability_atomic_metadata": 4,
+        "migration_control": 4,
+        "ios_fit": 5,
+        "domain_isolation": 4,
+        "query_setlist_ordering": 5,
+        "ops_testability": 4
+      },
+      "reason": "Viable future simplification, but first parity path prefers Core Data's longer-established migration/recovery control and keeps persistence annotations out of Shared contracts."
+    },
+    {
+      "id": "direct_sqlite",
+      "selected": false,
+      "scores": {
+        "reliability_atomic_metadata": 5,
+        "migration_control": 5,
+        "ios_fit": 4,
+        "domain_isolation": 5,
+        "query_setlist_ordering": 5,
+        "ops_testability": 4
+      },
+      "reason": "Strong technically but adds unnecessary low-level concurrency/migration/WAL policy and requires exact OS SQLite behavior/version validation."
+    },
+    {
+      "id": "file_backed_only",
+      "selected": false,
+      "scores": {
+        "reliability_atomic_metadata": 3,
+        "migration_control": 2,
+        "ios_fit": 5,
+        "domain_isolation": 5,
+        "query_setlist_ordering": 2,
+        "ops_testability": 3
+      },
+      "reason": "Retained for large artifact files and sidecars only; insufficient as the canonical relational project/setlist metadata store."
+    }
+  ],
+  "metadata_records": {
+    "ProjectRecord": [
+      "project_id",
+      "source_asset_id",
+      "created_at",
+      "updated_at",
+      "display_name_optional",
+      "lifecycle_state",
+      "tombstone_state"
+    ],
+    "AssetRecord": [
+      "asset_id",
+      "relative_path",
+      "media_kind",
+      "duration_seconds_optional",
+      "readiness_state",
+      "byte_length_optional",
+      "integrity_hash_optional"
+    ],
+    "ProcessingRecord": [
+      "project_id",
+      "processing_job_id",
+      "phase",
+      "fraction_complete_optional",
+      "retryable",
+      "stable_error_code_optional",
+      "updated_at"
+    ],
+    "StemRecord": [
+      "stem_id",
+      "project_id",
+      "role",
+      "relative_path",
+      "sample_rate",
+      "channels",
+      "frame_count",
+      "start_time_seconds",
+      "readiness_state",
+      "integrity_state"
+    ],
+    "ProjectEditRecord": [
+      "project_id",
+      "edit_schema_version",
+      "explicit_versioned_primitives_only"
+    ],
+    "SetlistRecord": [
+      "setlist_id",
+      "name",
+      "created_at",
+      "updated_at"
+    ],
+    "SetlistEntryRecord": [
+      "entry_id_or_uniqueness_key",
+      "setlist_id",
+      "project_id",
+      "stable_order_index"
+    ]
+  },
+  "forbidden_persistence_payloads": [
+    "AVFoundation_live_objects",
+    "ML_model_or_runtime_instances",
+    "Task_or_continuation_handles",
+    "transient_file_provider_urls",
+    "live_playback_engine_objects",
+    "opaque_unversioned_engine_archives"
+  ],
+  "artifact_commit_protocol": [
+    "write_unique_staging_file_inside_app_owned_container",
+    "validate_existence_size_and_basic_media_integrity",
+    "atomically_move_or_replace_to_final_uuid_based_relative_path",
+    "commit_core_data_transaction_that_exposes_only_final_ready_path",
+    "if_metadata_commit_fails_leave_orphan_final_file_for_startup_gc",
+    "never_commit_database_row_referencing_staging_path"
+  ],
+  "delete_protocol": [
+    "transactionally_mark_project_and_artifacts_tombstoned",
+    "commit_tombstone_so_live_queries_stop_returning_project",
+    "delete_referenced_files",
+    "hard_delete_tombstoned_metadata_after_file_cleanup",
+    "resume_incomplete_tombstone_cleanup_on_next_launch"
+  ],
+  "relaunch_recovery": [
+    {
+      "failure": "crash_after_file_finalization_before_db_commit",
+      "expected_recovery": "orphan_final_file_removed_by_startup_gc_after_grace_period"
+    },
+    {
+      "failure": "crash_before_file_finalization",
+      "expected_recovery": "staging_file_removed_or_resumed_by_owner_operation"
+    },
+    {
+      "failure": "db_metadata_committed_but_file_missing",
+      "expected_recovery": "project_preserved_and_asset_or_stem_marked_recoverable_missing"
+    },
+    {
+      "failure": "processing_nonterminal_at_termination",
+      "expected_recovery": "restore_source_job_id_and_snapshot_then_query_durable_backend_or_surface_retry"
+    },
+    {
+      "failure": "setlist_reorder_interrupted",
+      "expected_recovery": "database_transaction_yields_old_or_new_order_never_partial_mix"
+    },
+    {
+      "failure": "delete_interrupted_after_tombstone",
+      "expected_recovery": "next_launch_resumes_file_cleanup_then_hard_delete"
+    }
+  ],
+  "migration_policy": {
+    "explicit_model_versions_from_first_release": true,
+    "lightweight_migration_for_inferable_changes": true,
+    "staged_or_manual_migration_for_incompatible_changes": true,
+    "silent_destructive_reset_allowed": false,
+    "preserve_original_store_on_migration_failure": true,
+    "migration_fixture_required_for_each_released_schema": true
+  },
+  "concurrency_policy": {
+    "serialize_writes": true,
+    "queue_confined_core_data_contexts": true,
+    "managed_objects_cross_module_boundary": false,
+    "multiple_independent_direct_sqlite_writers": false
+  },
+  "validation_gates": [
+    "force_terminate_during_project_create_or_update",
+    "force_terminate_during_processing_snapshot_update",
+    "force_terminate_between_artifact_finalization_and_metadata_save",
+    "force_terminate_during_setlist_reorder",
+    "relaunch_with_leftover_staging_files",
+    "relaunch_with_orphan_final_files",
+    "relaunch_with_referenced_file_deliberately_removed",
+    "migrate_from_every_previously_released_schema_fixture",
+    "simulated_migration_failure_preserves_original_store_and_returns_explicit_recoverable_error",
+    "corrupt_metadata_store_does_not_trigger_automatic_destructive_reset",
+    "interrupted_project_delete_completes_after_relaunch"
+  ],
+  "hq_contract_requests": [
+    "project_list_and_load_semantics",
+    "versioned_user_edit_save_and_load_semantics",
+    "setlist_create_rename_delete_list_and_atomic_reorder_semantics",
+    "project_tombstone_delete_and_artifact_cleanup_semantics",
+    "durable_processing_job_resume_vs_retry_semantics",
+    "optional_analysis_snapshot_persistence_if_relaunch_parity_requires_immediate_restore"
+  ],
+  "acceptance_coverage": {
+    "swiftdata_coredata_sqlite_file_comparison": true,
+    "commercial_native_path_selected": true,
+    "schema_and_version_strategy_defined": true,
+    "atomic_write_strategy_defined": true,
+    "processing_stem_edit_relaunch_strategy_defined": true,
+    "opaque_engine_object_persistence_forbidden": true,
+    "corruption_migration_deletion_interrupted_write_gates_defined": true,
+    "shared_or_app_edits": false
+  },
+  "parity_rows_informed": ["MOI-P017", "MOI-P018", "MOI-P020"],
+  "parity_state_changes": [],
+  "remaining_unknowns": [
+    "final_product_level_user_edit_domain_fields_until_hq_contract_is_extended",
+    "whether_analysis_snapshot_must_be_persisted_for_reference_relaunch_latency",
+    "exact_supported_ios_deployment_target_after_bld_002",
+    "real_device_storage_pressure_and_corruption_behavior_until_implementation_task_exists",
+    "backend_specific_durable_processing_job_recovery_semantics"
+  ]
+}
