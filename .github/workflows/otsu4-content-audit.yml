@@ -5,16 +5,20 @@ on:
     paths:
       - 'kikenbutsu-otsu4-sprint/**'
       - 'tools/otsu4-build-content-v2.mjs'
+      - 'tools/otsu4-build-content-v3.mjs'
       - 'tools/otsu4-apply-difficulty-hardening.mjs'
       - 'tools/otsu4-difficulty-audit.mjs'
+      - 'tools/otsu4-difficulty-audit-v3.mjs'
       - '.github/workflows/otsu4-content-audit.yml'
   push:
     branches: [ main, feat/otsu4-360-productization ]
     paths:
       - 'kikenbutsu-otsu4-sprint/**'
       - 'tools/otsu4-build-content-v2.mjs'
+      - 'tools/otsu4-build-content-v3.mjs'
       - 'tools/otsu4-apply-difficulty-hardening.mjs'
       - 'tools/otsu4-difficulty-audit.mjs'
+      - 'tools/otsu4-difficulty-audit-v3.mjs'
       - '.github/workflows/otsu4-content-audit.yml'
 
 permissions:
@@ -29,25 +33,25 @@ jobs:
         with:
           node-version: '22'
       - name: Foundation-only notice
-        if: ${{ hashFiles('tools/otsu4-build-content-v2.mjs') == '' }}
-        run: echo 'Otsu4 product files are not present yet; audit will run on the product PR.'
-      - name: Validate audited 600-question Wave 2 bank
-        if: ${{ hashFiles('tools/otsu4-build-content-v2.mjs') != '' }}
-        run: node tools/otsu4-build-content-v2.mjs --check
-      - name: Generate native 600-question JSON
-        if: ${{ hashFiles('tools/otsu4-build-content-v2.mjs') != '' }}
-        run: node tools/otsu4-build-content-v2.mjs
+        if: ${{ hashFiles('tools/otsu4-build-content-v3.mjs') == '' }}
+        run: echo 'Otsu4 final product files are not present yet; audit will run on the product PR.'
+      - name: Validate audited final 720-question bank
+        if: ${{ hashFiles('tools/otsu4-build-content-v3.mjs') != '' }}
+        run: node tools/otsu4-build-content-v3.mjs --check
+      - name: Generate native 720-question JSON
+        if: ${{ hashFiles('tools/otsu4-build-content-v3.mjs') != '' }}
+        run: node tools/otsu4-build-content-v3.mjs
       - name: Apply deterministic exam-difficulty hardening
         if: ${{ hashFiles('tools/otsu4-apply-difficulty-hardening.mjs') != '' }}
         run: node tools/otsu4-apply-difficulty-hardening.mjs
-      - name: Exam-level difficulty gate
-        if: ${{ hashFiles('tools/otsu4-difficulty-audit.mjs') != '' }}
-        run: node tools/otsu4-difficulty-audit.mjs
+      - name: Final exam-level difficulty and six-mock gate
+        if: ${{ hashFiles('tools/otsu4-difficulty-audit-v3.mjs') != '' }}
+        run: node tools/otsu4-difficulty-audit-v3.mjs
       - name: Upload native question JSON
-        if: ${{ hashFiles('tools/otsu4-build-content-v2.mjs') != '' }}
+        if: ${{ hashFiles('tools/otsu4-build-content-v3.mjs') != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: otsu4-questions-wave2-600
+          name: otsu4-questions-final-720
           path: kikenbutsu-otsu4-sprint/questions.generated.json
           if-no-files-found: error
           retention-days: 30
