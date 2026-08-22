@@ -1,0 +1,74 @@
+name: APP2-005 HM1 Codemagic prepare log readback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-005-hm1-codemagic-log-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-005-hm1-codemagic-log-readback
+  cancel-in-progress: false
+
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download Codemagic diagnostic bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib, urllib.request, zipfile, io
+
+          cmd = json.loads(pathlib.Path('automation/app2-005-hm1-codemagic-log-command.json').read_text())
+          request_id = cmd['request_id']
+          source = pathlib.Path(cmd['result_path'])
+          data = json.loads(source.read_text())
+          artifacts = data.get('build_details', {}).get('artifacts', [])
+          if not artifacts:
+              raise SystemExit('No Codemagic artifacts found')
+          url = artifacts[0].get('short_lived_download_url')
+          if not url:
+              raise SystemExit('No Codemagic artifact download URL')
+          with urllib.request.urlopen(url, timeout=60) as r:
+              payload = r.read()
+          z = zipfile.ZipFile(io.BytesIO(payload))
+          names = z.namelist()
+          matches = [n for n in names if n.endswith('hm1-prepare.log')]
+          if not matches:
+              raise SystemExit('hm1-prepare.log not found in Codemagic artifact: ' + ', '.join(names))
+          text = z.read(matches[0]).decode('utf-8', errors='replace')
+          out = pathlib.Path('automation/codemagic-results') / f'{request_id}.log'
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(text, encoding='utf-8')
+          print(f'Wrote {out} ({len(text)} chars)')
+          PY
+
+      - name: Commit prepare log
+        shell: bash
+        run: |
+          set -euo pipefail
+          REQUEST_ID="$(python3 -c "import json; print(json.load(open('automation/app2-005-hm1-codemagic-log-command.json'))['request_id'])")"
+          OUT="automation/codemagic-results/${REQUEST_ID}.log"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$OUT"
+          git commit -m "Persist APP2-005 HM1 Codemagic prepare log" || exit 0
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          exit 1
