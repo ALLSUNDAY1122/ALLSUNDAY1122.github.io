@@ -5,18 +5,26 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>AI Dev Dispatcher</title>
   <style>
-    body { font-family: system-ui, sans-serif; width: 330px; margin: 14px; }
+    body { font-family: system-ui, sans-serif; width: 380px; margin: 14px; }
     h1 { font-size: 16px; margin: 0 0 12px; }
+    h2 { font-size: 13px; margin: 16px 0 8px; }
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; font-size: 12px; }
     .k { color: #666; }
     .v { font-weight: 600; text-align: right; }
-    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
-    button { padding: 8px; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    button { padding: 7px; }
+    input, select { box-sizing: border-box; width: 100%; padding: 6px; margin: 3px 0; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .wide { grid-column: 1 / -1; }
+    label { font-size: 10px; color: #555; }
+    .worker { border-top: 1px solid #ddd; padding: 7px 0; font-size: 11px; display: grid; grid-template-columns: 1fr auto; gap: 6px; }
+    .worker button { padding: 3px 7px; }
     pre { white-space: pre-wrap; word-break: break-word; max-height: 130px; overflow: auto; font-size: 10px; background: #f5f5f5; padding: 8px; }
+    .hint { font-size: 10px; color: #666; margin-top: 4px; }
   </style>
 </head>
 <body>
-  <h1>AI Dev Portfolio Dispatcher</h1>
+  <h1>AI Dev Portfolio Dispatcher v2.1</h1>
   <div class="grid">
     <div class="k">Dispatcher</div><div id="enabled" class="v">-</div>
     <div class="k">Governor</div><div id="governor" class="v">-</div>
@@ -32,6 +40,32 @@
     <button id="tick">Run now</button>
     <button id="preflight">Preflight</button>
   </div>
+
+  <h2>現在のChatGPTタブをWorker登録</h2>
+  <div class="form-grid">
+    <label class="wide">Project
+      <select id="projectId">
+        <option value="app-development-2">app-development-2</option>
+        <option value="moises-parity">moises-parity</option>
+        <option value="homecourt-parity">homecourt-parity</option>
+        <option value="scaniverse-parity">scaniverse-parity</option>
+      </select>
+    </label>
+    <label>Worker ID<input id="workerId" placeholder="app2-hm1"></label>
+    <label>Role<input id="role" placeholder="HM1 / HQ / POOL"></label>
+    <label>Remote Worker ID<input id="remoteWorkerId" placeholder="Moises-Worker-2"></label>
+    <label>Lane ID<input id="laneId" placeholder="LANE-2-IO-LIBRARY"></label>
+    <label class="wide">Label<input id="label" placeholder="第一種衛生管理者②"></label>
+    <label>Run limit<input id="runLimit" type="number" min="1" max="5" value="3"></label>
+    <label><input id="heavyIo" type="checkbox" style="width:auto"> Heavy I/O</label>
+    <button id="register" class="wide">このタブを登録</button>
+  </div>
+  <div class="hint">Moises: role=HQ または Worker role、remoteWorkerId=Moises-Worker-N。HomeCourt: role=POOL。通常はRun limit=3。</div>
+
+  <h2>登録Worker</h2>
+  <div id="workerList"></div>
+
+  <h2>状態</h2>
   <pre id="last">-</pre>
   <script src="popup.js"></script>
 </body>
