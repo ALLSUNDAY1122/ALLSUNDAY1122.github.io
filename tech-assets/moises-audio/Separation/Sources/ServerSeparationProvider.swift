@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 public struct SeparationServerConfiguration: Sendable {
     public let baseURL: URL
@@ -228,12 +231,13 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
         request.timeoutInterval = configuration.requestTimeoutSeconds
-        if let authorization = try? await configuration.authorizationHeader(), let authorization {
+        if let optionalAuthorization = try? await configuration.authorizationHeader(),
+           let authorization = optionalAuthorization {
             request.setValue(authorization, forHTTPHeaderField: "Authorization")
         }
 
-        // Shared contract is intentionally non-throwing. The backend DELETE is idempotent and the
-        // authoritative cancellation/failure state is observed through the next snapshot poll.
+        // Shared contract is non-throwing. DELETE must be idempotent; the authoritative cancelled or
+        // failed state is observed through a subsequent snapshot poll.
         _ = try? await session.data(for: request)
     }
 
