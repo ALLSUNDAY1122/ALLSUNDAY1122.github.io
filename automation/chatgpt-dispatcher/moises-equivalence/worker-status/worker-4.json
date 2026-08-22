@@ -5,11 +5,11 @@
   "assignment_epoch": 2,
   "work_branch": "moises/wp4-analysis-platform",
   "state": "IN_PROGRESS",
-  "current_bundle": "L4-M03",
-  "completed_bundles": ["L4-M01", "L4-M02"],
+  "current_bundle": "L4-M04",
+  "completed_bundles": ["L4-M01", "L4-M02", "L4-M03"],
   "epoch_contract_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
   "base_integration_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
-  "head_sha": "53df131be3e0fa88f0540735159aecc806d91eee",
+  "head_sha": "ee8b3d4d4a4babacd1c09706b67270fadc80b1db",
   "existing_unintegrated_commits": [
     "1811f335e121783daf00a5850b3b3bccdf75ca91",
     "1e55469c088b9724905b9df64989db2310f329ba",
@@ -30,7 +30,16 @@
     "a671eb4b768ef6f3a725e116306abd1caf0c3296",
     "11e6ac70e8bfd56414fa4c51894c0f62d3e2367e",
     "473d16c8e1f28daeebea1f946134d74eddcb816b",
-    "53df131be3e0fa88f0540735159aecc806d91eee"
+    "53df131be3e0fa88f0540735159aecc806d91eee",
+    "a8fabe5a9ba9048d21e1ec5c7b1248c1a9e8c2be",
+    "f2ea0932d2008069cc9947b78d13f910a9948514",
+    "8619f07116b5a6c94a2f1db9af8da24e5674f9a1",
+    "4256bcc3b62406b1260c21ccefa5917090ba0cba",
+    "ed5b3a4b4e98e2b327227d7ad1e7d80cb0c58f5e",
+    "82e1a6cd7d6d5dc5418f108a7371934784c0d191",
+    "a115f07f8e8f1ad17f2a9263d6e75e7c22fc5619",
+    "6d6772955e1e1228a9ceeaa823bba68ec85e3e0e",
+    "ee8b3d4d4a4babacd1c09706b67270fadc80b1db"
   ],
   "commits": [
     "1811f335e121783daf00a5850b3b3bccdf75ca91",
@@ -52,7 +61,16 @@
     "a671eb4b768ef6f3a725e116306abd1caf0c3296",
     "11e6ac70e8bfd56414fa4c51894c0f62d3e2367e",
     "473d16c8e1f28daeebea1f946134d74eddcb816b",
-    "53df131be3e0fa88f0540735159aecc806d91eee"
+    "53df131be3e0fa88f0540735159aecc806d91eee",
+    "a8fabe5a9ba9048d21e1ec5c7b1248c1a9e8c2be",
+    "f2ea0932d2008069cc9947b78d13f910a9948514",
+    "8619f07116b5a6c94a2f1db9af8da24e5674f9a1",
+    "4256bcc3b62406b1260c21ccefa5917090ba0cba",
+    "ed5b3a4b4e98e2b327227d7ad1e7d80cb0c58f5e",
+    "82e1a6cd7d6d5dc5418f108a7371934784c0d191",
+    "a115f07f8e8f1ad17f2a9263d6e75e7c22fc5619",
+    "6d6772955e1e1228a9ceeaa823bba68ec85e3e0e",
+    "ee8b3d4d4a4babacd1c09706b67270fadc80b1db"
   ],
   "tests": [
     "L4-M01 Swift 6.2.1 Linux portable HostCore build PASS; previous reconstructed regression 21/21 PASS",
@@ -61,7 +79,12 @@
     "L4-M02 90 BPM A-minor fixture: 89.5522 BPM, rel error 0.00498, Beat F@70ms 0.9444, median beat abs error 0.00767s, exact key PASS",
     "L4-M02 180 BPM C-major half-tempo regression: 181.8182 BPM, rel error 0.01010, Beat F@70ms 0.9180, exact key PASS",
     "L4-M02 negative cases PASS: silence, short audio, NaN/non-finite, sustained-tonal false-tempo rejection, chromatic/ambiguous-key rejection",
-    "L4-M02 serialization PASS: AnalysisSnapshot Codable round-trip and benchmark row JSON round-trip with unmeasured peak_rss_mb/thermal encoded as null"
+    "L4-M02 serialization PASS: AnalysisSnapshot Codable round-trip and benchmark row JSON round-trip with unmeasured peak_rss_mb/thermal encoded as null",
+    "L4-M03 Swift 6.2.1 x86_64 Linux targeted SwiftPM/XCTest harness: ChordTests 8/8 PASS, 0 failures, 0 unexpected",
+    "L4-M03 C->A:min->N->G synthetic timeline exact 0-2/2-4/4-5/5-7; root/majmin/no-chord precision-recall/coverage=1 and boundary median error=0",
+    "L4-M03 unknown-coverage negative: half timeline X preserves root accuracy on decided material at 1.0 while coverage falls to 0.5",
+    "L4-M03 negative/resample cases PASS: silence N, chromatic X, 50ms glitch absorbed, 44.1kHz downsample C, NaN/Inf A:min, empty signal []",
+    "L4-M03 optimized Linux synthetic runtime: wall 0.0180936s, RTF 0.0025848; peak RSS/thermal/battery unmeasured"
   ],
   "evidence": [
     "L4-M02 completed against the same frozen epoch contract SHA be1c84314db182d6eee5097de34e017af1a4a7de; no rebase on other-Lane integration movement",
@@ -72,23 +95,30 @@
     "Machine-readable synthetic sanity run saved at tech-assets/moises-audio/Analysis/benchmarks/L4-M02_SYNTHETIC_BENCHMARK.json",
     "Fixture rights/non-PARITY manifest saved at tech-assets/moises-audio/Analysis/benchmarks/L4-M02_FIXTURE_MANIFEST.json",
     "Durable validation saved at tech-assets/moises-audio/Tests/L4-M02_VALIDATION.md",
-    "Epoch-base compare after L4-M02: work branch ahead 20, behind 0; all changed files remain inside Analysis/**, Package.swift, Tests/** and iOS/**",
+    "L4-M03 ChordTimelineAnalyzer implements deterministic major/minor/N/X timestamped events, confidence/unknown handling, local-hop no-chord detection, flicker suppression, segment merge and gap-free clock normalization",
+    "L4-M03 failure-driven fix: wide chroma window initially shrank a 1s N reference to 0.5s; local-hop RMS gate restored exact 4.0-5.0s N boundary and no-chord recall 1.0",
+    "L4-M03 AnalysisBenchmarkRunner now records duration-weighted root/majmin accuracy, no-chord precision/recall, boundary error and explicit coverage",
+    "Machine-readable L4-M03 synthetic evidence saved at tech-assets/moises-audio/Analysis/benchmarks/L4-M03_SYNTHETIC_BENCHMARK.json with parity_eligible=false and unmeasured device fields null",
+    "Durable L4-M03 validation saved at tech-assets/moises-audio/Tests/L4-M03_VALIDATION.md",
+    "Epoch-base compare after L4-M03: work branch ahead 29, behind 0; all changed files remain inside Analysis/**, Package.swift, Tests/** and iOS/**",
     "No Shared/**, App/**, IO/**, Library/**, Playback/**, DSP/**, Separation/**, PARITY_MATRIX.json, Queue, lane-plan, work-packages or resource-lock file was edited by Worker 4",
-    "MOI-P009 and MOI-P011 remain MISSING; all current benchmark fixtures are explicitly synthetic_only=true and parity_eligible=false"
+    "MOI-P009, MOI-P011 and MOI-P013 remain MISSING; current Analysis benchmark evidence is explicitly synthetic/test-only and non-PARITY"
   ],
   "known_gaps": [
-    "No project-owned or explicitly rights-cleared multi-genre real-audio Golden MIR corpus was available in this bundle; MOI-P009/MOI-P011 cannot be promoted",
+    "No project-owned or explicitly rights-cleared multi-genre real-audio Golden MIR corpus has yet been run; MOI-P009/MOI-P011/MOI-P013 cannot be promoted",
     "Real-recording octave ambiguity, live timing drift, weak percussion, syncopation, meter ambiguity, modal material and modulation remain unverified",
-    "Current key baseline intentionally emits only major/minor and returns unknown on low-confidence material; modal/functional extension requires later quality evidence rather than a forced label",
-    "Current benchmark runner covers core tempo relative/exact/octave-aware, Beat F@70ms and exact/weighted key metrics; full AN-001 Cemgil/continuity/confidence calibration remains for real-audio evaluation",
-    "iPhone wall time, peak RSS, thermal, battery and Moises differential evidence are unmeasured; machine-readable fields remain null where unmeasured",
-    "A fresh full canonical 27-test GitHub checkout could not be executed because the Worker Linux container cannot resolve github.com; L4-M02 exact Analysis sources passed 6/6 in a reconstructed SwiftPM harness and the prior L4-M01 21/21 baseline is retained for HQ checkpoint rerun"
+    "Current key baseline intentionally emits only major/minor and returns unknown on low-confidence material",
+    "Current chord baseline vocabulary is major/minor/N/X; inversions, sevenths, extensions, slash chords and any richer current-Moises-supported vocabulary remain unverified",
+    "Chord UI/playback-clock synchronization has not been measured on a physical iPhone",
+    "iPhone wall time, peak RSS, thermal, battery and current Moises differential evidence are unmeasured; machine-readable fields remain null where unmeasured",
+    "A fresh full canonical GitHub checkout regression could not be executed because the Worker Linux container cannot resolve github.com; L4-M03 exact portable algorithm/evaluator logic passed targeted 8/8 and HQ must rerun the full canonical suite at checkpoint"
   ],
   "hq_requests": [
-    "At Late Integration, inject a rights-safe app-owned audio-to-AnalysisSignal loader through AnalysisSignalLoading without moving IO implementation into Lane 4, then run the Project Golden MIR real-audio P009/P011 gate on iPhone and against current Moises.",
-    "Rerun the full canonical SwiftPM suite plus Apple/iOS build at checkpoint and collect full AN-001 beat continuity/Cemgil, key confidence calibration, RSS/thermal/battery evidence before any PARITY promotion.",
+    "At Late Integration, inject a rights-safe app-owned audio-to-AnalysisSignal loader through AnalysisSignalLoading without moving IO implementation into Lane 4, then run the Project Golden MIR real-audio P009/P011/P013 gates on iPhone and against current Moises.",
+    "Verify the current iPhone reference chord vocabulary, including whether inversions/complex chords/slash chords are actually exposed, before deciding the required vocabulary expansion and PARITY gate.",
+    "Rerun the full canonical SwiftPM suite plus Apple/iOS Xcode build at checkpoint and collect full real-device timing/RSS/thermal/battery plus playback-clock synchronization evidence.",
     "resource-locks.json still reports assignment_epoch 1/v2 labels while lane-plan/work-packages are epoch 2; scope ownership is unchanged, so this remains non-blocking metadata drift for HQ to align."
   ],
-  "last_updated": "2026-08-22T18:16:00+09:00",
+  "last_updated": "2026-08-22T18:42:00+09:00",
   "writer_policy": "Only Moises-Worker-4 may update this status file. Global Queue is not used for Worker dispatch in v3."
 }
