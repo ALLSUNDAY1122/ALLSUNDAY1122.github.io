@@ -5,14 +5,18 @@ import { fileURLToPath } from 'node:url';
 
 const here=path.dirname(fileURLToPath(import.meta.url));
 const repo=path.resolve(here,'..');
+const bankDir=path.join(repo,'kikenbutsu-otsu4-sprint');
+const waveInputs=fs.readdirSync(bankDir)
+  .filter(name=>/^question-bank-v3-wave\d+-(?:certified|fixups)\.js$/.test(name))
+  .sort()
+  .map(name=>path.join(bankDir,name));
 const input=[
-  path.join(repo,'kikenbutsu-otsu4-sprint','question-bank-v2-bootstrap.js'),
-  path.join(repo,'kikenbutsu-otsu4-sprint','question-bank-v2.js'),
-  path.join(repo,'kikenbutsu-otsu4-sprint','question-bank-v2-fixups.js'),
-  path.join(repo,'kikenbutsu-otsu4-sprint','question-bank-v3-wave1-certified.js'),
-  path.join(repo,'kikenbutsu-otsu4-sprint','question-bank-v3-wave2-certified.js')
+  path.join(bankDir,'question-bank-v2-bootstrap.js'),
+  path.join(bankDir,'question-bank-v2.js'),
+  path.join(bankDir,'question-bank-v2-fixups.js'),
+  ...waveInputs
 ];
-const output=path.join(repo,'kikenbutsu-otsu4-sprint','questions.generated.json');
+const output=path.join(bankDir,'questions.generated.json');
 const src=[...input.map(f=>fs.readFileSync(f,'utf8')),';globalThis.__BANK={QUESTIONS,CONTENT_VERSION,OTSU4_BANK_VERSION,OTSU4_BANK_AUDIT_DATE};'].join('\n');
 const ctx={console}; vm.createContext(ctx); vm.runInContext(src,ctx,{timeout:10000});
 const {QUESTIONS,CONTENT_VERSION,OTSU4_BANK_VERSION,OTSU4_BANK_AUDIT_DATE}=ctx.__BANK;
