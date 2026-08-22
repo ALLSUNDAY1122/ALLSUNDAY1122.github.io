@@ -109,7 +109,7 @@
     },
     {
       "task_id": "MOI-QA-001",
-      "status": "CLAIMED",
+      "status": "INTEGRATION_READY",
       "priority": 92,
       "owner_role": "POOL",
       "capability_tags": ["qa", "audio", "benchmark"],
@@ -123,10 +123,22 @@
       "claimed_by": "Moises-Worker-2",
       "claim_token": "moises-worker-2-moi-qa-001-epoch1-20260822T1151JST",
       "claim_epoch": 1,
-      "lease_expires_at": "2026-08-22T13:21:00+09:00",
-      "heartbeat_at": "2026-08-22T11:51:00+09:00",
+      "lease_expires_at": null,
+      "heartbeat_at": "2026-08-22T12:01:00+09:00",
       "attempt_branch": "task/MOI-QA-001/attempt-1",
-      "evidence": []
+      "evidence": [
+        "attempt branch task/MOI-QA-001/attempt-1",
+        "commit 9bde1defcc88dc550c4d14e20f279a60beced634 defines copyright-safe Golden fixture classes and real-audio mandatory gates",
+        "commit f5c9be16c7c3a39acca1f56e39a74b2266b519f3 adds 10 style buckets, 24 hard cases, and 5/15/30/60-minute stress matrix",
+        "commit d9de58cc31a58bb0e3882b0794ba15731c816d4c defines blind listening, UX, long-track and failure/recovery rubric",
+        "commit 9e486b6c274c08c89038a3f28639c111967bb19d records MedleyDB/MUSDB18-HQ/Slakh/mir_eval rights boundaries",
+        "commit decfbc74cfb8fc7d04b0eb4c1676f1fa7a1091de adds machine-readable QA gate spec forbidding synthetic-only and NC-dataset-only PASS",
+        "commit aeba5945f9013ecffc09cf61a9235b08628fa1be records acceptance, repository verification, self-review and remaining real-fixture work",
+        "compare claim commit 77c843c0... -> attempt branch: ahead by 6, behind by 0; all six changed files are under tech-assets/moises-audio/reference/golden-fixtures/**",
+        "remote read-back confirmed HARD_CASE_MATRIX.json and QA_GATE_SPEC.json; no Shared/App/PARITY file changed",
+        "public license evidence: MUSDB18-HQ educational-only, MedleyDB non-commercial, Slakh2100 CC BY 4.0 synthetic; final gate requires rights-cleared real audio",
+        "MOI-P003/P009/P011/P013/P014/P021/P022 remain MISSING; no PARITY state was raised"
+      ]
     },
     {
       "task_id": "MOI-AN-001",
