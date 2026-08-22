@@ -5,11 +5,11 @@
   "assignment_epoch": 2,
   "work_branch": "moises/wp4-analysis-platform",
   "state": "IN_PROGRESS",
-  "current_bundle": "L4-M02",
-  "completed_bundles": ["L4-M01"],
+  "current_bundle": "L4-M03",
+  "completed_bundles": ["L4-M01", "L4-M02"],
   "epoch_contract_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
   "base_integration_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
-  "head_sha": "d47557f0130959fdfebfa02324c9ab5f3a49687f",
+  "head_sha": "53df131be3e0fa88f0540735159aecc806d91eee",
   "existing_unintegrated_commits": [
     "1811f335e121783daf00a5850b3b3bccdf75ca91",
     "1e55469c088b9724905b9df64989db2310f329ba",
@@ -20,7 +20,17 @@
     "e8a4d25469e6d92e24760539d8f21aca358a9170",
     "3a754fd96bffdd0605eddfc5facf939b385e0a2a",
     "33d692e8121d1442b6a2e00baae1fb76b3633c9a",
-    "d47557f0130959fdfebfa02324c9ab5f3a49687f"
+    "d47557f0130959fdfebfa02324c9ab5f3a49687f",
+    "410cd8c20d700df368f9b0383b6c48e978b2a110",
+    "4066427d9e876529115ae8bff2ca20de34981acc",
+    "bc0a26b3ad353908c173088c9e9877c9efb4d49b",
+    "2768f576f084523360626616c0273bbb0ec70cb1",
+    "399b664ff061aab13700f918e7f21b17855526a9",
+    "e84a83b76c1fe024176a303033a016eaed6c2e9d",
+    "a671eb4b768ef6f3a725e116306abd1caf0c3296",
+    "11e6ac70e8bfd56414fa4c51894c0f62d3e2367e",
+    "473d16c8e1f28daeebea1f946134d74eddcb816b",
+    "53df131be3e0fa88f0540735159aecc806d91eee"
   ],
   "commits": [
     "1811f335e121783daf00a5850b3b3bccdf75ca91",
@@ -32,38 +42,53 @@
     "e8a4d25469e6d92e24760539d8f21aca358a9170",
     "3a754fd96bffdd0605eddfc5facf939b385e0a2a",
     "33d692e8121d1442b6a2e00baae1fb76b3633c9a",
-    "d47557f0130959fdfebfa02324c9ab5f3a49687f"
+    "d47557f0130959fdfebfa02324c9ab5f3a49687f",
+    "410cd8c20d700df368f9b0383b6c48e978b2a110",
+    "4066427d9e876529115ae8bff2ca20de34981acc",
+    "bc0a26b3ad353908c173088c9e9877c9efb4d49b",
+    "2768f576f084523360626616c0273bbb0ec70cb1",
+    "399b664ff061aab13700f918e7f21b17855526a9",
+    "e84a83b76c1fe024176a303033a016eaed6c2e9d",
+    "a671eb4b768ef6f3a725e116306abd1caf0c3296",
+    "11e6ac70e8bfd56414fa4c51894c0f62d3e2367e",
+    "473d16c8e1f28daeebea1f946134d74eddcb816b",
+    "53df131be3e0fa88f0540735159aecc806d91eee"
   ],
   "tests": [
-    "L4-M01 Swift 6.2.1 Linux portable HostCore build: swift build --disable-sandbox => PASS (5.45s)",
-    "L4-M01 reconstructed full regression: DomainContractCoordinatorTests 5/5, SeparationQualityTests 8/8, LibraryContractTests 4/4, IOSHostCompositionTests 4/4 => 21/21 PASS, 0 failures",
-    "L4-M01 negative case: empty HostModuleSlots fails closed with deterministic missing IO/Separation/Playback/Analysis/Library/Export list",
-    "L4-M01 late-integration case: DSP remains explicit separate slot; all slots can be satisfied through frozen protocols without copying other Lane implementations",
-    "L4-M01 non-Apple smoke: AVFoundation/AVFAudio reports unavailable rather than faking platform support",
-    "L4-M01 project.yml PyYAML parse PASS; targets/scheme present; forbidden ../IO ../Library ../Playback ../DSP ../Separation source paths absent"
+    "L4-M01 Swift 6.2.1 Linux portable HostCore build PASS; previous reconstructed regression 21/21 PASS",
+    "L4-M02 Swift 6.2.1 x86_64 Linux targeted regression: TempoKeyAnalysisTests 6/6 PASS, 0 failures, 0 unexpected",
+    "L4-M02 120 BPM C-major fixture: 120.00 BPM, Beat F@70ms 0.9583, median beat abs error 0.0060s, exact key PASS",
+    "L4-M02 90 BPM A-minor fixture: 89.5522 BPM, rel error 0.00498, Beat F@70ms 0.9444, median beat abs error 0.00767s, exact key PASS",
+    "L4-M02 180 BPM C-major half-tempo regression: 181.8182 BPM, rel error 0.01010, Beat F@70ms 0.9180, exact key PASS",
+    "L4-M02 negative cases PASS: silence, short audio, NaN/non-finite, sustained-tonal false-tempo rejection, chromatic/ambiguous-key rejection",
+    "L4-M02 serialization PASS: AnalysisSnapshot Codable round-trip and benchmark row JSON round-trip with unmeasured peak_rss_mb/thermal encoded as null"
   ],
   "evidence": [
-    "L4-M01 completed against frozen epoch contract SHA be1c84314db182d6eee5097de34e017af1a4a7de; normal other-Lane integration movement was not rebased into the work branch",
-    "XcodeGen host spec: tech-assets/moises-audio/iOS/project.yml; remote read-back confirms Shared/App/Analysis/HostCore/App sources only and scheme MoisesLane4Host",
-    "HostModuleSlots implements fail-closed dependency injection for frozen AudioImporting, SourceSeparationProviding, PlaybackPreparing, MusicAnalyzing, ProjectPersisting, AudioExporting and PracticeDSPConfiguring contracts",
-    "ApplePlatformSmoke conditionally links AVAsset, AVAudioEngine and AVAudioUnitTimePitch on Apple and fails closed off Apple",
-    "Standalone SwiftUI host displays frozen-contract/module-slot/platform-smoke diagnostics; it contains no fake concrete implementation for other Lanes",
-    "Portable HostCore added to Package.swift so Linux SwiftPM regression checks the same composition boundary",
-    "Durable evidence saved at tech-assets/moises-audio/Tests/L4-M01_VALIDATION.md; simulator/device commands and evidence boundary saved at tech-assets/moises-audio/iOS/README.md",
-    "Worker environment is Linux x86_64 with Swift 6.2.1; xcodebuild and xcodegen are unavailable, so actual Apple simulator compile is explicitly not claimed",
-    "Epoch-base compare after L4-M01: work branch ahead 10, behind 0; changed files are only Package.swift, Tests/** and iOS/**",
-    "No Shared/**, App/**, IO/**, Library/**, Playback/**, DSP/**, Separation/**, PARITY_MATRIX.json, Queue, lane-plan, work-packages or resource-lock file was edited by Worker 4"
+    "L4-M02 completed against the same frozen epoch contract SHA be1c84314db182d6eee5097de34e017af1a4a7de; no rebase on other-Lane integration movement",
+    "ProjectOwnedMusicAnalyzer conforms to frozen MusicAnalyzing and obtains mono PCM only through Lane-4-owned AnalysisSignalLoading DI; no IO implementation copied",
+    "TempoBeatAnalyzer implements project-owned onset/periodicity, transientness gating, half/double-tempo suppression, beat alignment and confidence",
+    "MusicalKeyAnalyzer implements project-owned Hann/Goertzel chroma and major/minor profile scoring with confidence/unknown handling and no pretrained model",
+    "AnalysisBenchmarkRunner records AN-001 core tempo/beat/key metrics and fail-closed NON_PARITY metadata",
+    "Machine-readable synthetic sanity run saved at tech-assets/moises-audio/Analysis/benchmarks/L4-M02_SYNTHETIC_BENCHMARK.json",
+    "Fixture rights/non-PARITY manifest saved at tech-assets/moises-audio/Analysis/benchmarks/L4-M02_FIXTURE_MANIFEST.json",
+    "Durable validation saved at tech-assets/moises-audio/Tests/L4-M02_VALIDATION.md",
+    "Epoch-base compare after L4-M02: work branch ahead 20, behind 0; all changed files remain inside Analysis/**, Package.swift, Tests/** and iOS/**",
+    "No Shared/**, App/**, IO/**, Library/**, Playback/**, DSP/**, Separation/**, PARITY_MATRIX.json, Queue, lane-plan, work-packages or resource-lock file was edited by Worker 4",
+    "MOI-P009 and MOI-P011 remain MISSING; all current benchmark fixtures are explicitly synthetic_only=true and parity_eligible=false"
   ],
   "known_gaps": [
-    "Actual XcodeGen generation and iOS Simulator build/test require an Apple/Xcode-capable runner; current Worker environment has neither xcodebuild nor xcodegen",
-    "Physical-device AVFoundation/AVFAudio routing, latency, interruption, thermal/memory and real-audio evidence remain HQ Late Integration gates",
-    "Actual four-Lane compile with concrete IO/Library/Playback/DSP/Separation implementations is intentionally deferred to HQ Late Integration",
-    "L4-M01 is platform/build infrastructure only; no PARITY row is promoted"
+    "No project-owned or explicitly rights-cleared multi-genre real-audio Golden MIR corpus was available in this bundle; MOI-P009/MOI-P011 cannot be promoted",
+    "Real-recording octave ambiguity, live timing drift, weak percussion, syncopation, meter ambiguity, modal material and modulation remain unverified",
+    "Current key baseline intentionally emits only major/minor and returns unknown on low-confidence material; modal/functional extension requires later quality evidence rather than a forced label",
+    "Current benchmark runner covers core tempo relative/exact/octave-aware, Beat F@70ms and exact/weighted key metrics; full AN-001 Cemgil/continuity/confidence calibration remains for real-audio evaluation",
+    "iPhone wall time, peak RSS, thermal, battery and Moises differential evidence are unmeasured; machine-readable fields remain null where unmeasured",
+    "A fresh full canonical 27-test GitHub checkout could not be executed because the Worker Linux container cannot resolve github.com; L4-M02 exact Analysis sources passed 6/6 in a reconstructed SwiftPM harness and the prior L4-M01 21/21 baseline is retained for HQ checkpoint rerun"
   ],
   "hq_requests": [
-    "At Late Integration, run the documented XcodeGen + xcodebuild simulator gate, inject concrete Lane implementations through HostModuleSlots, then perform integrated Apple/iPhone validation without treating host compile as PARITY.",
-    "resource-locks.json still reports assignment_epoch 1 / v2 owner labels while lane-plan-v3.json and work-packages.json are assignment_epoch 2. Scope ownership for Worker 4 is unchanged, so this remains non-blocking metadata drift for HQ to align."
+    "At Late Integration, inject a rights-safe app-owned audio-to-AnalysisSignal loader through AnalysisSignalLoading without moving IO implementation into Lane 4, then run the Project Golden MIR real-audio P009/P011 gate on iPhone and against current Moises.",
+    "Rerun the full canonical SwiftPM suite plus Apple/iOS build at checkpoint and collect full AN-001 beat continuity/Cemgil, key confidence calibration, RSS/thermal/battery evidence before any PARITY promotion.",
+    "resource-locks.json still reports assignment_epoch 1/v2 labels while lane-plan/work-packages are epoch 2; scope ownership is unchanged, so this remains non-blocking metadata drift for HQ to align."
   ],
-  "last_updated": "2026-08-22T17:42:00+09:00",
+  "last_updated": "2026-08-22T18:16:00+09:00",
   "writer_policy": "Only Moises-Worker-4 may update this status file. Global Queue is not used for Worker dispatch in v3."
 }
