@@ -4,7 +4,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 INDEX="$SCRIPT_DIR/Resources/index.html"
 QUESTIONS="$SCRIPT_DIR/Resources/questions.json"
-ICON_SRC="$SCRIPT_DIR/learning-sprint-hm1.svg"
 ICON_DIR="$SCRIPT_DIR/Resources/Assets.xcassets/AppIcon.appiconset"
 
 # Expand the canonical 132 HM1 bank with 132 already-audited common-scope
@@ -64,48 +63,28 @@ index.write_text(updated,encoding='utf-8')
 print(f'PASS: bundled audited HM1 questions={len(questions)} rounds={dict(rounds)}')
 PY
 
-# Codemagic images may expose ImageMagick 7 as `magick` or ImageMagick 6 as
-# `convert`. Support both rather than assuming one executable name.
-if command -v magick >/dev/null 2>&1; then
-  IMAGEMAGICK_CMD="$(command -v magick)"
-elif command -v convert >/dev/null 2>&1; then
-  IMAGEMAGICK_CMD="$(command -v convert)"
-else
-  HOMEBREW_NO_AUTO_UPDATE=1 brew install imagemagick
-  if command -v magick >/dev/null 2>&1; then
-    IMAGEMAGICK_CMD="$(command -v magick)"
-  elif command -v convert >/dev/null 2>&1; then
-    IMAGEMAGICK_CMD="$(command -v convert)"
-  else
-    echo "ImageMagick executable not found after installation" >&2
-    exit 1
-  fi
-fi
-
-test -f "$ICON_SRC"
-mkdir -p "$ICON_DIR"
-render() {
-  local px="$1" out="$2"
-  "$IMAGEMAGICK_CMD" "$ICON_SRC" -background white -alpha remove -alpha off -resize "${px}x${px}!" "$ICON_DIR/$out"
-}
-render 40 icon-20@2x.png
-render 60 icon-20@3x.png
-render 58 icon-29@2x.png
-render 87 icon-29@3x.png
-render 80 icon-40@2x.png
-render 120 icon-40@3x.png
-render 120 icon-60@2x.png
-render 180 icon-60@3x.png
-render 1024 icon-1024.png
-
+# The approved unified Learning Sprint AppIcon PNGs are versioned assets.
+# Do not re-render them during release builds: SVG text rendering depends on
+# host fonts and can change/fail across macOS images. Validate the committed
+# approved files and dimensions instead.
 python3 - "$ICON_DIR" <<'PY'
 from pathlib import Path
-import struct,sys,hashlib
+import json, struct, sys, hashlib
 root=Path(sys.argv[1])
-expected={'icon-20@2x.png':40,'icon-20@3x.png':60,'icon-29@2x.png':58,'icon-29@3x.png':87,'icon-40@2x.png':80,'icon-40@3x.png':120,'icon-60@2x.png':120,'icon-60@3x.png':180,'icon-1024.png':1024}
+expected={
+ 'icon-20@2x.png':40,'icon-20@3x.png':60,
+ 'icon-29@2x.png':58,'icon-29@3x.png':87,
+ 'icon-40@2x.png':80,'icon-40@3x.png':120,
+ 'icon-60@2x.png':120,'icon-60@3x.png':180,
+ 'icon-1024.png':1024,
+}
+contents=json.loads((root/'Contents.json').read_text(encoding='utf-8'))
+listed={x.get('filename') for x in contents.get('images',[]) if x.get('filename')}
+assert listed==set(expected), (listed,set(expected))
 for name,px in expected.items():
     b=(root/name).read_bytes()
     assert b[:8]==b'\x89PNG\r\n\x1a\n' and b[12:16]==b'IHDR', name
-    w,h=struct.unpack('>II',b[16:24]); assert (w,h)==(px,px),(name,w,h,px)
-print('PASS: unified Learning Sprint HM1 AppIcon rendered; canonical sha256='+hashlib.sha256((root/'icon-1024.png').read_bytes()).hexdigest())
+    w,h=struct.unpack('>II',b[16:24])
+    assert (w,h)==(px,px),(name,w,h,px)
+print('PASS: approved unified Learning Sprint HM1 AppIcon assets verified; canonical sha256='+hashlib.sha256((root/'icon-1024.png').read_bytes()).hexdigest())
 PY
