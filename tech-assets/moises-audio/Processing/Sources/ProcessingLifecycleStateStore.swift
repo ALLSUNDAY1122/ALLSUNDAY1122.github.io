@@ -14,6 +14,7 @@ public enum DurableProcessingState: String, Codable, Sendable {
 }
 
 public struct DurableProcessingRecord: Hashable, Codable, Sendable {
+    public let schemaVersion: Int
     public let projectID: ProjectID
     public let request: SeparationRequest
     public let generationID: UUID
@@ -22,10 +23,12 @@ public struct DurableProcessingRecord: Hashable, Codable, Sendable {
     public let lastSnapshot: ProcessingSnapshot?
     public let resultArtifacts: [StemArtifact]?
     public let retryCount: Int
+    public let retryable: Bool
     public let stableErrorCode: String?
     public let updatedAt: Date
 
     public init(
+        schemaVersion: Int = 1,
         projectID: ProjectID,
         request: SeparationRequest,
         generationID: UUID,
@@ -34,10 +37,13 @@ public struct DurableProcessingRecord: Hashable, Codable, Sendable {
         lastSnapshot: ProcessingSnapshot?,
         resultArtifacts: [StemArtifact]? = nil,
         retryCount: Int,
+        retryable: Bool,
         stableErrorCode: String?,
         updatedAt: Date = Date()
     ) {
+        precondition(schemaVersion > 0)
         precondition(retryCount >= 0)
+        self.schemaVersion = schemaVersion
         self.projectID = projectID
         self.request = request
         self.generationID = generationID
@@ -46,6 +52,7 @@ public struct DurableProcessingRecord: Hashable, Codable, Sendable {
         self.lastSnapshot = lastSnapshot
         self.resultArtifacts = resultArtifacts
         self.retryCount = retryCount
+        self.retryable = retryable
         self.stableErrorCode = stableErrorCode
         self.updatedAt = updatedAt
     }
@@ -58,11 +65,13 @@ public struct DurableProcessingRecord: Hashable, Codable, Sendable {
         preserveSnapshotWhenNil: Bool = true,
         resultArtifacts: [StemArtifact]? = nil,
         preserveArtifactsWhenNil: Bool = true,
+        retryable: Bool? = nil,
         stableErrorCode: String? = nil,
         preserveErrorWhenNil: Bool = true,
         updatedAt: Date = Date()
     ) -> DurableProcessingRecord {
         DurableProcessingRecord(
+            schemaVersion: schemaVersion,
             projectID: projectID,
             request: request,
             generationID: generationID,
@@ -71,6 +80,7 @@ public struct DurableProcessingRecord: Hashable, Codable, Sendable {
             lastSnapshot: lastSnapshot ?? (preserveSnapshotWhenNil ? self.lastSnapshot : nil),
             resultArtifacts: resultArtifacts ?? (preserveArtifactsWhenNil ? self.resultArtifacts : nil),
             retryCount: retryCount,
+            retryable: retryable ?? self.retryable,
             stableErrorCode: stableErrorCode ?? (preserveErrorWhenNil ? self.stableErrorCode : nil),
             updatedAt: updatedAt
         )
@@ -109,6 +119,9 @@ public actor FileProcessingLifecycleStateStore: ProcessingLifecycleStateStoring 
         do {
             let data = try Data(contentsOf: url)
             let record = try decoder.decode(DurableProcessingRecord.self, from: data)
+            guard record.schemaVersion == 1 else {
+                throw DomainFailure.processingFailed(code: "PROC_STATE_SCHEMA_UNSUPPORTED", retryable: false)
+            }
             guard record.projectID == projectID else {
                 throw DomainFailure.processingFailed(code: "PROC_STATE_PROJECT_MISMATCH", retryable: false)
             }
