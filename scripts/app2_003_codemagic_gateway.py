@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """APP2-003 fixed Codemagic gateway for 夜の書架.
 
-Allowed actions are inspect, inspect_app, add_app, add_fresh_app, build, and
-inspect_build. The target repository, workflow, and branch are hard-coded.
-App Store review submission is not part of this gateway.
+Allowed actions are inspect, inspect_app, add_app, add_fresh_app, delete_app,
+build, and inspect_build. The target repository, workflow, and branch are
+hard-coded. App Store review submission is not part of this gateway.
 """
 from __future__ import annotations
 
@@ -68,11 +68,7 @@ def safe_app_details(app: dict) -> dict:
         "integration_id", "archived", "disabled", "isRepositoryRemoved", "repositoryRemoved",
         "repositoryUnavailable", "webhookUrl", "workflowIds"
     }
-    out = {}
-    for key, value in app.items():
-        if key in allowed_exact:
-            out[key] = sanitize(value)
-    return out
+    return {key: sanitize(value) for key, value in app.items() if key in allowed_exact}
 
 
 def list_apps(token: str):
@@ -114,7 +110,7 @@ def main() -> int:
     if not request_id.startswith("app2-003-"):
         raise SystemExit("Unexpected request_id")
     action = command.get("action")
-    if action not in {"inspect", "inspect_app", "add_app", "add_fresh_app", "build", "inspect_build"}:
+    if action not in {"inspect", "inspect_app", "add_app", "add_fresh_app", "delete_app", "build", "inspect_build"}:
         raise SystemExit("Unsupported APP2-003 Codemagic action")
 
     token = os.environ.get("CM_API_TOKEN", "").strip()
@@ -164,16 +160,25 @@ def main() -> int:
             result.update({"ok": True, "app_id": target_id, "app_details": safe_app_details(app)})
             return 0
 
+        if action == "delete_app":
+            target_id = str(command.get("app_id", "")).strip()
+            if target_id not in {item.get("id") for item in candidates}:
+                raise RuntimeError("Refusing to delete an app that is not a current 夜の書架 candidate")
+            status, response = api_json(token, f"https://api.codemagic.io/apps/{target_id}", method="DELETE")
+            if not 200 <= status < 300:
+                raise RuntimeError(f"Codemagic DELETE /apps/:id HTTP {status}: {sanitize(response)}")
+            apps_after = list_apps(token)
+            remaining = [app_summary(app) for app in matching_apps(apps_after)]
+            if target_id in {item.get("id") for item in remaining}:
+                raise RuntimeError("Codemagic delete read-back still contains target app")
+            result.update({"ok": True, "changed": True, "app_id": target_id, "application_candidates": remaining})
+            return 0
+
         if action in {"add_app", "add_fresh_app"}:
             if action == "add_app" and app_id:
                 result.update({"ok": True, "changed": False, "app_id": app_id})
                 return 0
-            status, response = api_json(
-                token,
-                "https://api.codemagic.io/apps",
-                method="POST",
-                payload={"repositoryUrl": REPOSITORY_URL},
-            )
+            status, response = api_json(token, "https://api.codemagic.io/apps", method="POST", payload={"repositoryUrl": REPOSITORY_URL})
             if not 200 <= status < 300:
                 raise RuntimeError(f"Codemagic POST /apps HTTP {status}: {sanitize(response)}")
             created = response.get("application") if isinstance(response.get("application"), dict) else response
@@ -198,24 +203,13 @@ def main() -> int:
         target_id = explicit_id or app_id
         if not target_id:
             raise RuntimeError("Night Library Codemagic application is not uniquely resolved")
-        status, response = api_json(
-            token,
-            "https://api.codemagic.io/builds",
-            method="POST",
-            payload={"appId": target_id, "workflowId": WORKFLOW_ID, "branch": BRANCH},
-        )
+        status, response = api_json(token, "https://api.codemagic.io/builds", method="POST", payload={"appId": target_id, "workflowId": WORKFLOW_ID, "branch": BRANCH})
         if not 200 <= status < 300:
             raise RuntimeError(f"Codemagic POST /builds HTTP {status}: {sanitize(response)}")
         build_id = response.get("buildId") or response.get("id")
         if not build_id:
             raise RuntimeError(f"Codemagic build start returned no build id: {sanitize(response)}")
-        result.update({
-            "ok": True,
-            "app_id": target_id,
-            "build_id": build_id,
-            "status": "started",
-            "build_url": f"https://codemagic.io/app/{target_id}/build/{build_id}",
-        })
+        result.update({"ok": True, "app_id": target_id, "build_id": build_id, "status": "started", "build_url": f"https://codemagic.io/app/{target_id}/build/{build_id}"})
         return 0
     except Exception as exc:
         result["error"] = str(exc)
