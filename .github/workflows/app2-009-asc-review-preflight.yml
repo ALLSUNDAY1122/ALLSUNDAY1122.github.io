@@ -1,0 +1,80 @@
+name: APP2-009 ASC Review Preflight
+
+on:
+  push:
+    branches: [main]
+    paths: ['automation/app2-009-asc-review-preflight-command.json']
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Read App Store Connect submission state
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json,os,sys
+          from pathlib import Path
+          sys.path.insert(0,'scripts')
+          from app_store_connect_api import api_get,load_private_key,make_token
+          APP='6801792293'; BUNDLE='jp.allsunday1122.kangoshi'
+          kp,cleanup=load_private_key(); token=make_token(os.environ['ASC_ISSUER_ID'].strip(),os.environ['ASC_KEY_ID'].strip(),kp)
+          out={'task_id':'APP2-009','app_id':APP,'bundle_id':BUNDLE}
+          try:
+            st,a=api_get(token,f'/v1/apps/{APP}'); d=a.get('data') if isinstance(a,dict) else None
+            attrs=(d or {}).get('attributes') or {}; out['app_status']=st; out['app_attributes']={k:attrs.get(k) for k in ('name','bundleId','sku','primaryLocale')}
+            if attrs.get('bundleId')!=BUNDLE: raise RuntimeError('bundle mismatch')
+            st,v=api_get(token,f'/v1/apps/{APP}/appStoreVersions?limit=50')
+            versions=[]
+            for x in v.get('data',[]) if isinstance(v,dict) else []:
+              va=x.get('attributes') or {}
+              if va.get('platform')=='IOS' or va.get('platform') is None:
+                versions.append({'id':x.get('id'),'versionString':va.get('versionString'),'state':va.get('appStoreState') or va.get('appVersionState'),'releaseType':va.get('releaseType'),'createdDate':va.get('createdDate')})
+            out['versions_status']=st; out['versions']=versions
+            target=next((x for x in versions if x.get('versionString')=='1.0'),None) or next((x for x in versions if x.get('state')=='PREPARE_FOR_SUBMISSION'),None)
+            out['target_version']=target
+            if target:
+              vid=target['id']
+              st,l=api_get(token,f'/v1/appStoreVersions/{vid}/appStoreVersionLocalizations?limit=50')
+              locs=[]
+              for loc in l.get('data',[]) if isinstance(l,dict) else []:
+                la=loc.get('attributes') or {}; lid=loc.get('id')
+                ss,sets=api_get(token,f'/v1/appStoreVersionLocalizations/{lid}/appScreenshotSets?limit=200&include=appScreenshots')
+                complete=0; set_count=len(sets.get('data',[]) if isinstance(sets,dict) else [])
+                for inc in sets.get('included',[]) if isinstance(sets,dict) else []:
+                  if inc.get('type')=='appScreenshots' and (((inc.get('attributes') or {}).get('assetDeliveryState') or {}).get('state'))=='COMPLETE': complete+=1
+                locs.append({'id':lid,'locale':la.get('locale'),'description_present':bool(la.get('description')),'keywords_present':bool(la.get('keywords')),'whatsNew_present':bool(la.get('whatsNew')),'screenshot_sets':set_count,'complete_screenshots':complete,'screenshots_status':ss})
+              out['localizations_status']=st; out['localizations']=locs
+              rs,rd=api_get(token,f'/v1/appStoreVersions/{vid}/appStoreReviewDetail')
+              rdata=rd.get('data') if isinstance(rd,dict) else None; ra=(rdata or {}).get('attributes') or {}
+              out['review_detail_status']=rs; out['review_detail']={'id':(rdata or {}).get('id'),'contactFirstName':bool(ra.get('contactFirstName')),'contactLastName':bool(ra.get('contactLastName')),'contactPhone':bool(ra.get('contactPhone')),'contactEmail':bool(ra.get('contactEmail')),'notes':bool(ra.get('notes')),'demoAccountRequired':ra.get('demoAccountRequired')}
+              bs,br=api_get(token,f'/v1/appStoreVersions/{vid}/relationships/build'); out['selected_build_status']=bs; out['selected_build_id']=((br.get('data') or {}).get('id') if isinstance(br,dict) and isinstance(br.get('data'),dict) else None)
+            bs,br=api_get(token,f'/v1/apps/{APP}/builds?limit=50')
+            builds=[]
+            for b in br.get('data',[]) if isinstance(br,dict) else []:
+              ba=b.get('attributes') or {}; builds.append({'id':b.get('id'),'version':ba.get('version'),'uploadedDate':ba.get('uploadedDate'),'processingState':ba.get('processingState'),'expired':ba.get('expired')})
+            out['builds_status']=bs; out['builds']=builds
+            ss,sr=api_get(token,f'/v1/apps/{APP}/reviewSubmissions?limit=50')
+            out['review_submissions_status']=ss; out['review_submissions']=[{'id':x.get('id'),'state':(x.get('attributes') or {}).get('state'),'submittedDate':(x.get('attributes') or {}).get('submittedDate')} for x in sr.get('data',[]) if isinstance(sr,dict)]
+          finally:
+            if cleanup: cleanup.unlink(missing_ok=True)
+          Path('/tmp/preflight.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Persist preflight
+        run: |
+          git fetch origin main; git reset --hard origin/main
+          mkdir -p automation/chatgpt-dispatcher/app-development-2/evidence
+          cp /tmp/preflight.json automation/chatgpt-dispatcher/app-development-2/evidence/APP2-009-asc-review-preflight.json
+          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-009-asc-review-preflight.json
+          git commit -m 'APP2-009: persist ASC review preflight' || exit 0
+          git pull --rebase origin main; git push origin HEAD:main
