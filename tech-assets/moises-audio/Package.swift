@@ -31,6 +31,7 @@ let package = Package(
                 "Analysis/AnalysisSignal.swift",
                 "Analysis/TempoBeatAnalyzer.swift",
                 "Analysis/MusicalKeyAnalyzer.swift",
+                "Analysis/ChordTimelineAnalyzer.swift",
                 "Analysis/AnalysisBenchmarkRunner.swift",
                 "iOS/HostCore/HostModuleSlots.swift",
                 "iOS/HostCore/ApplePlatformSmoke.swift"
