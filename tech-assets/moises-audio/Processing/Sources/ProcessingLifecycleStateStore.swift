@@ -184,6 +184,11 @@ public actor FileProcessingOutputTransaction: ProcessingOutputTransacting {
         if fileManager.fileExists(atPath: marker.path) { return }
 
         do {
+            if fileManager.fileExists(atPath: transaction.path) {
+                // A directory without the marker is an interrupted backup preparation. The live
+                // final stem directory was never declared replaceable, so leave it untouched.
+                try fileManager.removeItem(at: transaction)
+            }
             try fileManager.createDirectory(at: transaction, withIntermediateDirectories: true)
             let final = finalStemDirectory(projectID: projectID)
             let hadExisting = fileManager.fileExists(atPath: final.path)
@@ -203,19 +208,19 @@ public actor FileProcessingOutputTransaction: ProcessingOutputTransacting {
         guard !artifacts.isEmpty else {
             throw DomainFailure.processingFailed(code: "PROC_RESULT_EMPTY", retryable: false)
         }
-        let root = appDataRoot.resolvingSymlinksInPath().standardizedFileURL
+        let expectedRoot = finalStemDirectory(projectID: projectID).resolvingSymlinksInPath().standardizedFileURL
         for artifact in artifacts {
             guard artifact.projectID == projectID,
                   !artifact.relativePath.isEmpty,
                   !artifact.relativePath.hasPrefix("/") else {
                 throw DomainFailure.processingFailed(code: "PROC_RESULT_ARTIFACT_MISMATCH", retryable: false)
             }
-            let candidate = root
+            let candidate = appDataRoot
                 .appendingPathComponent(artifact.relativePath)
                 .resolvingSymlinksInPath()
                 .standardizedFileURL
-            guard candidate.path.hasPrefix(root.path + "/") else {
-                throw DomainFailure.processingFailed(code: "PROC_RESULT_OUTSIDE_APP_ROOT", retryable: false)
+            guard candidate.path.hasPrefix(expectedRoot.path + "/") else {
+                throw DomainFailure.processingFailed(code: "PROC_RESULT_OUTSIDE_STEM_ROOT", retryable: false)
             }
             var isDirectory: ObjCBool = false
             guard fileManager.fileExists(atPath: candidate.path, isDirectory: &isDirectory), !isDirectory.boolValue else {
@@ -241,20 +246,44 @@ public actor FileProcessingOutputTransaction: ProcessingOutputTransacting {
     public func rollback(projectID: ProjectID, generationID: UUID) async throws {
         let transaction = transactionURL(projectID: projectID, generationID: generationID)
         guard fileManager.fileExists(atPath: transaction.path) else { return }
-        let final = finalStemDirectory(projectID: projectID)
+        let marker = transaction.appendingPathComponent("state.json")
+
+        // No marker means backup preparation never completed. The current final output is still the
+        // authoritative pre-run data and must not be deleted.
+        guard fileManager.fileExists(atPath: marker.path) else {
+            do {
+                try fileManager.removeItem(at: transaction)
+                return
+            } catch {
+                throw DomainFailure.processingFailed(code: "PROC_PARTIAL_BACKUP_CLEANUP_FAILED", retryable: true)
+            }
+        }
 
         do {
+            let markerData = try Data(contentsOf: marker)
+            guard let object = try JSONSerialization.jsonObject(with: markerData) as? [String: Any],
+                  let hadExisting = object["had_existing_outputs"] as? Bool else {
+                throw DomainFailure.processingFailed(code: "PROC_OUTPUT_TRANSACTION_MARKER_CORRUPT", retryable: false)
+            }
+
+            let backup = transaction.appendingPathComponent("previous", isDirectory: true)
+            if hadExisting && !fileManager.fileExists(atPath: backup.path) {
+                // Fail before touching the live directory; losing both old and new outputs is worse
+                // than leaving a partial new result for later repair.
+                throw DomainFailure.processingFailed(code: "PROC_OUTPUT_BACKUP_MISSING", retryable: false)
+            }
+
+            let final = finalStemDirectory(projectID: projectID)
             if fileManager.fileExists(atPath: final.path) {
                 try fileManager.removeItem(at: final)
             }
-            let backup = transaction.appendingPathComponent("previous", isDirectory: true)
-            if fileManager.fileExists(atPath: backup.path) {
+            if hadExisting {
                 try fileManager.createDirectory(at: final.deletingLastPathComponent(), withIntermediateDirectories: true)
                 try fileManager.moveItem(at: backup, to: final)
             }
-            if fileManager.fileExists(atPath: transaction.path) {
-                try fileManager.removeItem(at: transaction)
-            }
+            try fileManager.removeItem(at: transaction)
+        } catch let failure as DomainFailure {
+            throw failure
         } catch {
             throw DomainFailure.processingFailed(code: "PROC_OUTPUT_TRANSACTION_ROLLBACK_FAILED", retryable: true)
         }
