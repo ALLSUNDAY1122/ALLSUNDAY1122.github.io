@@ -1,0 +1,104 @@
+'use strict';
+(function(){
+const V=CONTENT_VERSION,CHECK=LAW_BASELINE;
+const LAW_URL='https://laws.e-gov.go.jp/law/323AC1000000186?occasion_date=20260809';
+const DECREE_URL='https://laws.e-gov.go.jp/law/334CO0000000306?occasion_date=20260809';
+const CHEM_URL='https://www.fdma.go.jp/relocation/e-college/pdf/08-1-2.pdf';
+const LAW_TITLE='消防法（e-Gov法令検索）';
+const DECREE_TITLE='危険物の規制に関する政令（e-Gov法令検索）';
+const CHEM_TITLE='総務省消防庁 e-カレッジ｜危険物・基礎物理化学';
+const BASE=[...QUESTIONS];
+function hash(s){let x=2166136261;for(const c of s){x^=c.charCodeAt(0);x=Math.imul(x,16777619)}return x>>>0}
+function shuffled(id,correct,wrong){const pool=[correct,...wrong.filter(x=>x!==correct)];const uniq=[...new Set(pool)].slice(0,5);if(uniq.length!==5)throw new Error(id+': choices<5');let seed=hash(id),out=[];while(uniq.length){seed=(seed*1664525+1013904223)>>>0;out.push(uniq.splice(seed%uniq.length,1)[0])}return[out,out.indexOf(correct)]}
+function pushQ({id,subject,topic,question,correct,wrong,point,detail,tags,sourceTitle,sourceURL,legalEffectiveDate=null,sourceLocator,sourceRefs,objective}){const [choices,answer]=shuffled(id,correct,wrong);QUESTIONS.push({id,subject,topic,question,choices,answer,point,detail,tags,sourceTitle,sourceURL,sourceCheckedAt:CHECK,legalEffectiveDate,contentVersion:V,difficulty:3,premium:true,sourceLocator,sourceRefs,learningObjective:objective,conceptKey:objective})}
+function lawRefs(locator='第10条・第11条関係'){return[{title:LAW_TITLE,url:LAW_URL,locator},{title:DECREE_TITLE,url:DECREE_URL,locator:'別表第三'}]}
+function chemRefs(locator){return[{title:CHEM_TITLE,url:CHEM_URL,locator}]}
+function fmt(x,d=3){const n=Math.round(x*10**d)/10**d;return Number.isInteger(n)?String(n):String(n)}
+const CAT=[['特殊引火物',50],['第一石油類（非水溶性）',200],['第一石油類（水溶性）',400],['アルコール類',400],['第二石油類（非水溶性）',1000],['第二石油類（水溶性）',2000],['第三石油類（非水溶性）',2000],['第三石油類（水溶性）',4000],['第四石油類',6000],['動植物油類',10000]];
+
+// LAW WAVE 1A: reverse designated-quantity calculations. The unknown is a third material,
+// so these are not number-swapped copies of the existing one/two-material questions.
+const reverseCases=[
+[0,4,1,.20,.25],[1,5,8,.25,.20],[2,6,9,.30,.15],[3,8,0,.20,.35],
+[4,9,2,.15,.30],[5,0,6,.25,.20],[6,1,7,.35,.15],[7,2,4,.20,.25],
+[8,3,5,.30,.20],[9,4,1,.25,.25],[0,7,8,.15,.35],[2,9,3,.20,.30]
+];
+let li=145;
+for(const [ai,bi,ci,fa,fb] of reverseCases){const [an,aq]=CAT[ai],[bn,bq]=CAT[bi],[cn,cq]=CAT[ci];const av=Math.round(aq*fa),bv=Math.round(bq*fb),remain=Math.round((1-fa-fb)*1000)/1000,correct=Math.round(cq*remain);const candidates=[Math.round(correct*.75),Math.round(correct*1.25),Math.round(cq*(1-fa)),Math.round(cq*(1-fb)),Math.round(cq*(fa+fb))].filter(x=>x>=0);pushQ({id:'L'+String(li).padStart(3,'0'),subject:'法令',topic:'倍数合算逆算',question:`${an}を${av.toLocaleString('ja-JP')} L、${bn}を${bv.toLocaleString('ja-JP')} L扱っている。同一場所で${cn}を追加し、指定数量の倍数合計をちょうど1.00倍にするには、${cn}を何L追加すればよいか。`,correct:`${correct.toLocaleString('ja-JP')} L`,wrong:[...new Set(candidates.filter(x=>x!==correct))].slice(0,4).map(x=>`${x.toLocaleString('ja-JP')} L`),point:`既存分は${fmt(fa)}＋${fmt(fb)}＝${fmt(fa+fb)}倍。残り${fmt(remain)}倍×${cq.toLocaleString('ja-JP')} L＝${correct.toLocaleString('ja-JP')} L。`,detail:'異なる第四類を同一場所で扱う場合は各数量÷各指定数量を合計する。逆算では1から既存の倍数合計を差し引き、追加する品名の指定数量を掛ける。',tags:['法令','指定数量','逆算','計算'],sourceTitle:DECREE_TITLE,sourceURL:DECREE_URL,legalEffectiveDate:'2026-04-04',sourceLocator:'別表第三／指定数量の倍数計算',sourceRefs:lawRefs('第10条第2項'),objective:`wave1-${li}-${an}-${bn}-${cn}の3品目逆算を行う`});li++}
+
+// LAW WAVE 1B: quantity after a partial transfer to another location.
+const moveCases=[
+[0,4,.60,.35,.20],[1,5,.55,.30,.15],[2,6,.45,.40,.10],[3,7,.70,.20,.25],
+[4,8,.50,.35,.15],[5,9,.40,.45,.20],[6,0,.65,.20,.30],[7,1,.35,.55,.10],
+[8,2,.60,.25,.20],[9,3,.50,.30,.15],[1,6,.75,.15,.25],[2,8,.55,.35,.20]
+];
+for(const [ai,bi,fa,fb,removed] of moveCases){const [an,aq]=CAT[ai],[bn,bq]=CAT[bi],av=Math.round(aq*fa),bv=Math.round(bq*fb),rv=Math.round(aq*removed),before=fa+fb,after=Math.round((fa-removed+fb)*1000)/1000;const wrongVals=[before,Math.round((fa+removed+fb)*1000)/1000,Math.round((fa-removed)*1000)/1000,Math.round((fb-removed)*1000)/1000,Math.round((before-removed/2)*1000)/1000].filter(x=>x>=0);pushQ({id:'L'+String(li).padStart(3,'0'),subject:'法令',topic:'指定数量判定',question:`同一場所に${an}${av.toLocaleString('ja-JP')} Lと${bn}${bv.toLocaleString('ja-JP')} Lがある。ここから${an}${rv.toLocaleString('ja-JP')} Lだけを別の場所へ移した。移動後に元の場所に残る危険物の指定数量倍数の合計はいくつか。`,correct:`${fmt(after)}倍`,wrong:[...new Set(wrongVals.filter(x=>Math.abs(x-after)>1e-9))].slice(0,4).map(x=>`${fmt(x)}倍`),point:`${an}: ${fmt(fa)}−${fmt(removed)}＝${fmt(fa-removed)}倍、${bn}: ${fmt(fb)}倍。合計${fmt(after)}倍。`,detail:'移動後の場所ごとに実在する数量で倍数を再計算する。移した数量を元の場所の倍数へ残したまま計算してはいけない。',tags:['法令','指定数量','移動後','再計算'],sourceTitle:LAW_TITLE,sourceURL:LAW_URL,legalEffectiveDate:'2025-06-01',sourceLocator:'第10条第2項',sourceRefs:lawRefs('第10条第2項'),objective:`wave1-${li}-${an}一部移動後の倍数を再計算する`});li++}
+
+function baseTopic(topic){const q=BASE.find(x=>x.subject==='法令'&&x.topic===topic);if(!q)throw new Error('missing base law topic '+topic);return q}
+function answerOf(q){return q.choices[q.answer]}
+const lawGroups=[
+['仮貯蔵承認','許可権者市町村','許可権者都道府県','広域移送許可','免状交付'],
+['設置許可','変更許可','完成検査','仮使用','承継届','廃止届','監督者届','予防規程'],
+['保安監督資格','保安監督実務','無資格者取扱','免状種類','乙種範囲','保安講習','施設保安員','保安統括管理者']
+];
+const pairIndexes=[[0,1],[1,2],[2,3],[3,4],[0,2],[1,3],[0,4],[2,4]];
+for(const group of lawGroups){for(const [ia,ib] of pairIndexes){if(li>192)break;const ta=group[ia%group.length],tb=group[ib%group.length],qa=baseTopic(ta),qb=baseTopic(tb),aa=answerOf(qa),ab=answerOf(qb);const alt1=answerOf(baseTopic(group[(ib+1)%group.length])),alt2=answerOf(baseTopic(group[(ia+2)%group.length]));const correct=`${ta}：${aa}／${tb}：${ab}`;const wrong=[`${ta}：${ab}／${tb}：${aa}`,`${ta}：${alt1}／${tb}：${ab}`,`${ta}：${aa}／${tb}：${alt2}`,`${ta}：${alt2}／${tb}：${alt1}`];const refs=[...(qa.sourceRefs||[]),...(qb.sourceRefs||[])].filter((r,i,a)=>a.findIndex(x=>x.url===r.url&&x.locator===r.locator)===i);pushQ({id:'L'+String(li).padStart(3,'0'),subject:'法令',topic:'法令手続組合せ',question:`「${ta}」と「${tb}」の2論点について、法令上の結論の組合せとして正しいものはどれか。`,correct,wrong,point:`${ta}は「${aa}」、${tb}は「${ab}」。`,detail:'似た手続・権限・資格要件を横並びで区別する。本問は単独知識ではなく、2つの法令論点を同時に正しく識別できるかを確認する。',tags:['法令','組合せ',ta,tb],sourceTitle:qa.sourceTitle,sourceURL:qa.sourceURL,legalEffectiveDate:qa.legalEffectiveDate,sourceLocator:`${qa.sourceLocator}／${qb.sourceLocator}`,sourceRefs:refs,objective:`wave1-${li}-${ta}と${tb}を同時識別する`});li++}}
+if(li!==193)throw new Error('wave1 law count '+(li-145));
+
+// PHYSICS WAVE 1: reverse heat, gas-law, density and dilution calculations.
+let pi=97;
+const heatCases=[
+['dt',2,2.0,84],['dt',1.5,4.0,90],['dt',0.8,2.5,60],['dt',3.0,1.2,108],
+['c',2.5,20,150],['c',1.2,25,90],['c',0.75,40,120],['c',3.0,15,135]
+];
+for(const c of heatCases){let question,correct,wrong,point;if(c[0]==='dt'){const [,m,sp,q]=c,dt=q/(m*sp);question=`質量${m} kg、比熱${sp} kJ/(kg·K)の物質に${q} kJの熱を与え、熱損失を無視する。温度上昇は何Kか。`;correct=`${fmt(dt)} K`;wrong=[dt+5,Math.max(1,dt-5),dt*2,dt/2].map(x=>`${fmt(x)} K`);point=`ΔT＝Q/(mc)＝${q}/(${m}×${sp})＝${fmt(dt)} K。`}else{const [,m,dt,q]=c,sp=q/(m*dt);question=`質量${m} kgの物質へ${q} kJを与えると温度が${dt} K上昇した。熱損失を無視すると比熱はいくらか。`;correct=`${fmt(sp)} kJ/(kg·K)`;wrong=[sp+.5,Math.max(.1,sp-.5),sp*2,sp/2].map(x=>`${fmt(x)} kJ/(kg·K)`);point=`c＝Q/(mΔT)＝${q}/(${m}×${dt})＝${fmt(sp)} kJ/(kg·K)。`}pushQ({id:'P'+String(pi).padStart(3,'0'),subject:'物理・化学',topic:'熱量逆算計算',question,correct,wrong,point,detail:'熱量式Q＝mcΔTを、求める量について変形して使う。単位を揃え、比例関係だけで推測しない。',tags:['物理・化学','熱量','逆算'],sourceTitle:CHEM_TITLE,sourceURL:CHEM_URL,sourceLocator:'熱・比熱',sourceRefs:chemRefs('熱量と比熱'),objective:`wave1-${pi}-熱量式を逆算する`});pi++}
+const gasCases=[
+['V',300,360,2.5],['V',280,350,4.0],['V',320,400,1.6],['V',250,300,5.0],
+['P',300,360,100],['P',280,350,120],['P',320,400,90],['P',250,300,150]
+];
+for(const [mode,t1,t2,x1] of gasCases){const x2=x1*t2/t1,unit=mode==='V'?'L':'kPa',question=mode==='V'?`一定圧力で${t1} K、${x1} Lの気体を${t2} Kまで加熱した。体積は何Lになるか。`:`一定容積で${t1} K、${x1} kPaの気体を${t2} Kまで加熱した。圧力は何kPaになるか。`;pushQ({id:'P'+String(pi).padStart(3,'0'),subject:'物理・化学',topic:'気体法則計算',question,correct:`${fmt(x2)} ${unit}`,wrong:[x1*t1/t2,x1+(x2-x1)/2,x2*1.2,x2*.8].map(x=>`${fmt(x)} ${unit}`),point:`絶対温度に比例するので ${fmt(x1)}×${t2}/${t1}＝${fmt(x2)} ${unit}。`,detail:mode==='V'?'一定圧力ではV/Tが一定。温度は必ず絶対温度で扱う。':'一定容積ではP/Tが一定。温度は必ず絶対温度で扱う。',tags:['物理・化学','気体','計算'],sourceTitle:CHEM_TITLE,sourceURL:CHEM_URL,sourceLocator:'気体の状態変化',sourceRefs:chemRefs('気体の状態変化'),objective:`wave1-${pi}-${mode}を絶対温度比から計算する`});pi++}
+const densityCases=[
+['V',720,.80],['V',950,.95],['V',630,.70],['V',1080,1.20],
+['M',750,.84],['M',600,.72],['M',900,1.10],['M',500,.88]
+];
+for(const [mode,a,d] of densityCases){let question,ans,unit;if(mode==='V'){ans=a/d;unit='mL';question=`液体の質量が${a} g、密度が${d} g/cm³である。体積は何mLか。`}else{ans=a*d;unit='g';question=`液体の体積が${a} mL、密度が${d} g/cm³である。質量は何gか。`}pushQ({id:'P'+String(pi).padStart(3,'0'),subject:'物理・化学',topic:'密度逆算計算',question,correct:`${fmt(ans)} ${unit}`,wrong:[ans*.8,ans*1.2,ans+d*100,Math.max(.1,ans-d*100)].map(x=>`${fmt(x)} ${unit}`),point:mode==='V'?`体積＝質量÷密度＝${a}÷${d}＝${fmt(ans)} mL。`:`質量＝密度×体積＝${d}×${a}＝${fmt(ans)} g。`,detail:'密度＝質量÷体積を求める量について変形する。1 mL＝1 cm³として計算する。',tags:['物理・化学','密度','逆算'],sourceTitle:CHEM_TITLE,sourceURL:CHEM_URL,sourceLocator:'密度',sourceRefs:chemRefs('密度'),objective:`wave1-${pi}-密度式を逆算する`});pi++}
+const diluteCases=[
+[1.4,7.6,5.0,100,50],[1.4,7.6,8.0,100,100],[2,12,10,80,40],[2,12,4,120,60],
+[3,15,14,100,100],[3,15,6,90,30],[1,6,5,60,60],[1,6,2,100,25]
+];
+for(const [lo,hi,x,v,air] of diluteCases){const after=x*v/(v+air),status=after<lo?'下限未満':after>hi?'上限超過':'燃焼範囲内',correct=`${fmt(after)} vol%（${status}）`;const vals=[after*.8,after*1.2,x,(x*v)/(v+air/2)].map(z=>Math.round(z*1000)/1000);const wrong=vals.map(z=>`${fmt(z)} vol%（${z<lo?'下限未満':z>hi?'上限超過':'燃焼範囲内'}）`);pushQ({id:'P'+String(pi).padStart(3,'0'),subject:'物理・化学',topic:'燃焼範囲判定',question:`燃焼範囲${lo}～${hi} vol%の蒸気が、容積${v} Lの混合気中に${x} vol%含まれている。蒸気量を変えずに空気${air} Lを加えた。新しい濃度と判定の組合せはどれか。`,correct,wrong,point:`蒸気量は${fmt(x*v/100)} L。全容積${v+air} Lなので濃度は${fmt(after)} vol%、したがって${status}。`,detail:'空気で希釈するときは蒸気の絶対量を保ったまま全容積を増やし、新濃度を計算して燃焼下限・上限と比較する。',tags:['物理・化学','燃焼範囲','希釈','計算'],sourceTitle:CHEM_TITLE,sourceURL:CHEM_URL,sourceLocator:'燃焼範囲',sourceRefs:chemRefs('燃焼範囲'),objective:`wave1-${pi}-希釈後濃度と燃焼範囲を二段階判定する`});pi++}
+if(pi!==129)throw new Error('wave1 physics count '+(pi-97));
+
+// PROPERTY WAVE 1: named-substance questions combine classification, designated quantity,
+// cross-substance comparison and mixed calculations instead of restating the base question.
+const SUB=[
+['ジエチルエーテル','特殊引火物',50,true,'https://pubchem.ncbi.nlm.nih.gov/compound/Diethyl-Ether'],
+['二硫化炭素','特殊引火物',50,false,'https://pubchem.ncbi.nlm.nih.gov/compound/Carbon-Disulfide'],
+['ガソリン','第一石油類（非水溶性）',200,false,'https://pubchem.ncbi.nlm.nih.gov/compound/Gasoline_-Automotive'],
+['ベンゼン','第一石油類（非水溶性）',200,false,'https://pubchem.ncbi.nlm.nih.gov/compound/Benzene'],
+['トルエン','第一石油類（非水溶性）',200,false,'https://pubchem.ncbi.nlm.nih.gov/compound/Toluene'],
+['アセトン','第一石油類（水溶性）',400,true,'https://pubchem.ncbi.nlm.nih.gov/compound/Acetone'],
+['メタノール','アルコール類',400,true,'https://pubchem.ncbi.nlm.nih.gov/compound/Methanol'],
+['エタノール','アルコール類',400,true,'https://pubchem.ncbi.nlm.nih.gov/compound/Ethanol'],
+['イソプロピルアルコール','アルコール類',400,true,'https://pubchem.ncbi.nlm.nih.gov/compound/Isopropanol'],
+['灯油','第二石油類（非水溶性）',1000,false,'https://pubchem.ncbi.nlm.nih.gov/compound/Kerosene'],
+['軽油','第二石油類（非水溶性）',1000,false,'https://pubchem.ncbi.nlm.nih.gov/compound/Diesel-Fuel'],
+['重油','第三石油類（非水溶性）',2000,false,'https://pubchem.ncbi.nlm.nih.gov/compound/Fuel-Oil'],
+['エチレングリコール','第三石油類（水溶性）',4000,true,'https://pubchem.ncbi.nlm.nih.gov/compound/Ethylene-Glycol'],
+['引火点200℃以上250℃未満の潤滑油','第四石油類',6000,false,'https://pubchem.ncbi.nlm.nih.gov/compound/Lubricating-oils'],
+['動植物油類の定義に該当するなたね油','動植物油類',10000,false,'https://pubchem.ncbi.nlm.nih.gov/compound/Canola-Oil']
+];
+const CLASS_PAIR=[...new Set(SUB.map(x=>`${x[1]}／${x[2].toLocaleString('ja-JP')} L`))];
+function propRefs(sub){return[{title:LAW_TITLE,url:LAW_URL,locator:'別表第一'},{title:DECREE_TITLE,url:DECREE_URL,locator:'別表第三'},{title:`PubChem｜${sub[0]}`,url:sub[4],locator:'Chemical and Physical Properties / Safety and Hazards'}]}
+let si=121;
+for(const sub of SUB){const [name,cls,qty]=sub,correct=`${cls}／${qty.toLocaleString('ja-JP')} L`,wrong=CLASS_PAIR.filter(x=>x!==correct).slice((si-121)%Math.max(1,CLASS_PAIR.length-4)).concat(CLASS_PAIR).filter((x,i,a)=>x!==correct&&a.indexOf(x)===i).slice(0,4);pushQ({id:'S'+String(si).padStart(3,'0'),subject:'性質・消火',topic:'品名・数量組合せ',question:`${name}について、法令上の品名区分と指定数量の組合せとして正しいものはどれか。`,correct,wrong,point:`${name}は${cls}、指定数量は${qty.toLocaleString('ja-JP')} L。`,detail:'品名区分だけでなく、その区分に対応する指定数量まで同時に結び付けて判断する。',tags:['性質・消火','品名','指定数量','組合せ',name],sourceTitle:LAW_TITLE,sourceURL:LAW_URL,sourceLocator:'別表第一／政令別表第三',sourceRefs:propRefs(sub),objective:`wave1-${si}-${name}の区分と指定数量を同時識別する`});si++}
+const comparePairs=[[0,2,100],[1,5,100],[2,9,200],[5,11,400],[6,12,400],[7,13,400],[8,14,400],[9,11,1000],[10,12,1000],[11,14,2000]];
+for(const [ai,bi,amt] of comparePairs){const a=SUB[ai],b=SUB[bi],ma=amt/a[2],mb=amt/b[2],correct=`${a[0]}：${fmt(ma)}倍／${b[0]}：${fmt(mb)}倍`;pushQ({id:'S'+String(si).padStart(3,'0'),subject:'性質・消火',topic:'比較応用',question:`${a[0]}と${b[0]}をそれぞれ${amt.toLocaleString('ja-JP')} L扱う。各物質の指定数量倍数の組合せとして正しいものはどれか。`,correct,wrong:[`${a[0]}：${fmt(mb)}倍／${b[0]}：${fmt(ma)}倍`,`${a[0]}：${fmt(ma*2)}倍／${b[0]}：${fmt(mb)}倍`,`${a[0]}：${fmt(ma)}倍／${b[0]}：${fmt(mb*2)}倍`,`${a[0]}：${fmt(ma/2)}倍／${b[0]}：${fmt(mb/2)}倍`],point:`${a[0]}は${amt}/${a[2]}＝${fmt(ma)}倍、${b[0]}は${amt}/${b[2]}＝${fmt(mb)}倍。`,detail:'同じ実量でも指定数量が異なれば倍数は異なる。物質ごとの法令区分を先に確定してから比較する。',tags:['性質・消火','指定数量','比較',a[0],b[0]],sourceTitle:DECREE_TITLE,sourceURL:DECREE_URL,sourceLocator:'別表第三',sourceRefs:[...propRefs(a),...propRefs(b)].filter((r,i,x)=>x.findIndex(y=>y.url===r.url&&y.locator===r.locator)===i),objective:`wave1-${si}-${a[0]}と${b[0]}を同量比較する`});si++}
+const mixedCases=[[0,5,.4,.5],[2,9,.5,.4],[3,11,.6,.3],[4,12,.4,.25],[5,13,.75,.2],[6,14,.5,.15],[7,9,.35,.45],[8,10,.65,.3],[11,13,.4,.25],[12,14,.2,.2]];
+for(const [ai,bi,fa,fb] of mixedCases){const a=SUB[ai],b=SUB[bi],av=Math.round(a[2]*fa),bv=Math.round(b[2]*fb),sum=Math.round((fa+fb)*1000)/1000;pushQ({id:'S'+String(si).padStart(3,'0'),subject:'性質・消火',topic:'比較応用',question:`同一場所で${a[0]}${av.toLocaleString('ja-JP')} Lと${b[0]}${bv.toLocaleString('ja-JP')} Lを扱う。指定数量の倍数合計はいくつか。`,correct:`${fmt(sum)}倍`,wrong:[sum+.25,Math.max(.05,sum-.25),sum+.5,Math.max(.05,sum-.5)].map(x=>`${fmt(x)}倍`),point:`${a[0]}: ${fmt(fa)}倍、${b[0]}: ${fmt(fb)}倍、合計${fmt(sum)}倍。`,detail:'名前の異なる危険物は、それぞれの指定数量で割った倍数を求めてから合算する。総リットル数を単一の指定数量で割ってはいけない。',tags:['性質・消火','指定数量','混合計算',a[0],b[0]],sourceTitle:DECREE_TITLE,sourceURL:DECREE_URL,sourceLocator:'別表第三',sourceRefs:[...propRefs(a),...propRefs(b)].filter((r,i,x)=>x.findIndex(y=>y.url===r.url&&y.locator===r.locator)===i),objective:`wave1-${si}-${a[0]}と${b[0]}の混合倍数を計算する`});si++}
+const soluble=SUB.filter(x=>x[3]),insoluble=SUB.filter(x=>!x[3]);
+const solublePairs=[[0,1],[1,2],[2,3],[3,4],[0,5]];
+for(let k=0;k<5;k++){const [a,b]=solublePairs[k],sa=soluble[a%soluble.length],sb=soluble[b%soluble.length],correct=`${sa[0]}・${sb[0]}`;const wrong=[];for(let j=0;j<4;j++){wrong.push(`${soluble[(k+j+1)%soluble.length][0]}・${insoluble[(k+j)%insoluble.length][0]}`)}pushQ({id:'S'+String(si).padStart(3,'0'),subject:'性質・消火',topic:'水溶性組合せ',question:'次の組合せのうち、両方とも水とよく混ざる、または水と任意の割合で混ざる第四類危険物の組合せはどれか。',correct,wrong,point:`${sa[0]}と${sb[0]}はいずれも水との混和性が高い。`,detail:'水溶性は流出挙動と泡消火剤の選定に影響する。名称だけでなく、各物質の水への挙動を組合せで識別する。',tags:['性質・消火','水溶性','組合せ'],sourceTitle:CHEM_TITLE,sourceURL:CHEM_URL,sourceLocator:'第四類危険物の性状',sourceRefs:[...propRefs(sa),...propRefs(sb)].filter((r,i,x)=>x.findIndex(y=>y.url===r.url&&y.locator===r.locator)===i),objective:`wave1-${si}-${sa[0]}と${sb[0]}の水溶性を同時識別する`});si++}
+if(si!==161)throw new Error('wave1 property count '+(si-121));
+if(QUESTIONS.length!==480)throw new Error('OTSU4 wave1 total='+QUESTIONS.length);
+})();
