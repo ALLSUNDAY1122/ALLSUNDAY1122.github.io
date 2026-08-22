@@ -31,7 +31,8 @@ jobs:
           import json,re
           from pathlib import Path
           source=json.loads(Path('/tmp/app2-010-asc-result.json').read_text(encoding='utf-8'))
-          rid=str(source.get('request_id') or '')
+          command=json.loads(Path('automation/app2-010-asc-readback-command.json').read_text(encoding='utf-8'))
+          rid=str(command.get('request_id') or '')
           if not re.fullmatch(r'app2-010-[A-Za-z0-9._-]{1,90}',rid): raise SystemExit('invalid request id')
           summary={'request_id':rid,'completed_at':source.get('completed_at'),'results':[]}
           for result in source.get('results',[]):
@@ -45,7 +46,6 @@ jobs:
               summary['results'].append(item)
           out=Path('automation/asc-results')/f'{rid}.json'; out.parent.mkdir(parents=True,exist_ok=True)
           out.write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-          Path('/tmp/app2-010-asc-summary.json').write_text(out.read_text(encoding='utf-8'),encoding='utf-8')
           Path('/tmp/app2-010-asc-result-path.txt').write_text(str(out),encoding='utf-8')
           PY
           git config user.name 'github-actions[bot]'
