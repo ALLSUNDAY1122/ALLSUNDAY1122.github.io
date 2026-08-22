@@ -1,7 +1,7 @@
 {
-  "schema_version": "0.3",
-  "updated_at": "2026-08-22T21:52:00+09:00",
-  "integration_epoch": 3,
+  "schema_version": "0.4",
+  "updated_at": "2026-08-22T22:02:00+09:00",
+  "integration_epoch": 4,
   "operating_mode": "DISPATCHER_V21_BOOTSTRAP",
   "wip_limits": {
     "parity_projects": 3,
@@ -59,11 +59,12 @@
     {
       "project_id": "scaniverse-parity",
       "kind": "parity",
-      "priority": "high",
-      "dispatch_mode": "LEGACY_FIXED_SESSIONS",
-      "queue_locator": "DISCOVERY_REQUIRED",
-      "status": "DISCOVERY_REQUIRED",
-      "note": "A2/B2/C2/D2 + HQ legacy structure requires adapter/queue migration before automatic dispatch."
+      "priority": "critical",
+      "dispatch_mode": "fixed_role_queue",
+      "queue_locator": "https://raw.githubusercontent.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/refs/heads/automation/ai-dev-operating-system/automation/ai-dev-operating-system/project-overlays/scaniverse/queue.json",
+      "integration_branch": "feature/splat-native-ios-poc",
+      "status": "ACTIVE_HQ_ONLY",
+      "note": "A2/B2/C2/D2 are currently fully behind integration with ahead=0. Only HQ may be auto-dispatched until a fresh machine-readable lane plan is created."
     }
   ],
   "policy": {
