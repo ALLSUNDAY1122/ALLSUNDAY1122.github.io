@@ -19,6 +19,8 @@ jobs:
           fetch-depth: 0
       - name: Patch root Codemagic HM1 workflow
         run: python3 scripts/patch_hm1_final_release.py
+      - name: Enable HM1 preparation diagnostics
+        run: python3 scripts/patch_hm1_prepare_logging.py
       - name: Validate HM1 release workflow contract
         run: |
           python3 - <<'PY'
@@ -34,10 +36,13 @@ jobs:
             'Verify packaged HM1 IPA content',
           ]
           for x in required: assert x in names, (x,names)
+          prepare=next(x for x in w['scripts'] if x['name']=='Prepare audited 264-question bundle and icon')
+          assert '/tmp/hm1-prepare.log' in prepare['script']
+          assert '/tmp/hm1-prepare.log' in w['artifacts']
           assert w['environment']['ios_signing']['bundle_identifier']=='jp.allsunday1122.healthmanager1'
           assert w['publishing']['app_store_connect']['submit_to_testflight'] is True
           assert w['publishing']['app_store_connect']['submit_to_app_store'] is False
-          print('PASS: root Codemagic HM1 final release contract')
+          print('PASS: root Codemagic HM1 final release contract with diagnostics')
           PY
       - name: Persist root Codemagic release gate
         run: |
