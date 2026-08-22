@@ -1,21 +1,21 @@
 {
-  "request_id": "app2-005-hm1-exam-level-final-diagnostic-20260822-1852",
-  "target_head_sha": "14ecd30580efd8d43a588bd10f7ec73c07e8bc31",
-  "workflow": "app2-005-hm1-difficulty-audit.yml",
+  "request_id": "app2-005-hm1-final-release-prep-diagnostic-20260822-1909",
+  "target_head_sha": "06d7a0af5ac6a18c9ff8ab3de1cc4b72067acadd",
+  "workflow": "hm1-final-release-prep.yml",
   "run_found": true,
   "run": {
-    "id": 32565967662,
-    "name": "APP2-005 HM1 difficulty audit",
+    "id": 32566755354,
+    "name": "Prepare HealthManager1 final release workflow",
     "status": "completed",
     "conclusion": "success",
-    "created_at": "2026-08-22T09:49:19Z",
-    "updated_at": "2026-08-22T09:49:38Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32565967662",
-    "head_sha": "14ecd30580efd8d43a588bd10f7ec73c07e8bc31"
+    "created_at": "2026-08-22T10:06:52Z",
+    "updated_at": "2026-08-22T10:07:12Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32566755354",
+    "head_sha": "06d7a0af5ac6a18c9ff8ab3de1cc4b72067acadd"
   },
   "jobs": [
     {
-      "name": "audit",
+      "name": "prepare",
       "status": "completed",
       "conclusion": "success",
       "steps": [
@@ -25,77 +25,27 @@
           "conclusion": "success"
         },
         {
-          "name": "Run actions/checkout@v4",
+          "name": "Run actions/checkout@v6",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Run actions/setup-node@v4",
+          "name": "Patch root Codemagic HM1 workflow",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Harden severe canonical questions",
+          "name": "Validate HM1 release workflow contract",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Harden remaining easy distractors",
+          "name": "Persist root Codemagic release gate",
           "status": "completed",
           "conclusion": "success"
         },
         {
-          "name": "Harden final knowledge-free risks",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Harden final three blockers",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Harden overly simple direct-recall items",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Resolve hardened stem collisions",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Save hardened canonical bank",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Expand bank to 264",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Run difficulty audit on all 264",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Enforce release gate",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Persist audit and hardened canonical bank",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/setup-node@v4",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@v4",
+          "name": "Post Run actions/checkout@v6",
           "status": "completed",
           "conclusion": "success"
         },
