@@ -10,11 +10,21 @@ public struct TempoBeatKeyReference: Equatable, Sendable {
     public let bpm: Double?
     public let beatTimesSeconds: [Double]
     public let key: MusicalKey?
+    public let chords: [ChordEvent]
 
-    public init(bpm: Double?, beatTimesSeconds: [Double] = [], key: MusicalKey? = nil) {
+    public init(
+        bpm: Double?,
+        beatTimesSeconds: [Double] = [],
+        key: MusicalKey? = nil,
+        chords: [ChordEvent] = []
+    ) {
         self.bpm = bpm
         self.beatTimesSeconds = beatTimesSeconds.sorted()
         self.key = key
+        self.chords = chords.sorted {
+            if $0.startSeconds == $1.startSeconds { return $0.endSeconds < $1.endSeconds }
+            return $0.startSeconds < $1.startSeconds
+        }
     }
 }
 
@@ -97,7 +107,7 @@ public enum AnalysisBenchmarkRunner {
         snapshot: AnalysisSnapshot,
         wallSeconds: Double,
         engine: String = "project-owned-dsp",
-        engineVersion: String = "l4-m02-v1"
+        engineVersion: String = "l4-m03-v1"
     ) -> [AnalysisBenchmarkRow] {
         var rows: [AnalysisBenchmarkRow] = []
         let duration = fixture.signal.durationSeconds
@@ -147,6 +157,16 @@ public enum AnalysisBenchmarkRunner {
             }
             rows.append(row(fixture, parityEligible, engine, engineVersion, "key", metrics, wallSeconds, rtf, limitations))
         }
+
+        if !fixture.reference.chords.isEmpty {
+            let metrics = chordMetrics(
+                reference: fixture.reference.chords,
+                estimated: snapshot.chords,
+                duration: duration
+            )
+            rows.append(row(fixture, parityEligible, engine, engineVersion, "chord", metrics, wallSeconds, rtf, limitations))
+        }
+
         return rows
     }
 
@@ -191,12 +211,116 @@ public enum AnalysisBenchmarkRunner {
         return 0
     }
 
+    public static func chordMetrics(reference: [ChordEvent], estimated: [ChordEvent], duration: Double) -> [String: Double] {
+        guard duration > 0 else {
+            return [
+                "root_weighted_accuracy": 0,
+                "majmin_weighted_accuracy": 0,
+                "no_chord_precision": 0,
+                "no_chord_recall": 0,
+                "coverage": 0
+            ]
+        }
+
+        let clippedReference = normalizeChordEvents(reference, duration: duration)
+        let clippedEstimated = normalizeChordEvents(estimated, duration: duration)
+        var boundaries: [Double] = [0, duration]
+        boundaries.append(contentsOf: clippedReference.flatMap { [$0.startSeconds, $0.endSeconds] })
+        boundaries.append(contentsOf: clippedEstimated.flatMap { [$0.startSeconds, $0.endSeconds] })
+        boundaries = Array(Set(boundaries.map { min(duration, max(0, $0)) })).sorted()
+
+        var comparableDuration = 0.0
+        var rootCorrect = 0.0
+        var majMinCorrect = 0.0
+        var estimatedNoChord = 0.0
+        var referenceNoChord = 0.0
+        var noChordIntersection = 0.0
+        var decidedDuration = 0.0
+
+        for index in 0..<(max(0, boundaries.count - 1)) {
+            let start = boundaries[index]
+            let end = boundaries[index + 1]
+            let span = end - start
+            guard span > 0 else { continue }
+            let midpoint = (start + end) / 2
+            let refLabel = chordLabel(at: midpoint, events: clippedReference) ?? "X"
+            let estLabel = chordLabel(at: midpoint, events: clippedEstimated) ?? "X"
+
+            if estLabel != "X" { decidedDuration += span }
+            if refLabel == "N" { referenceNoChord += span }
+            if estLabel == "N" { estimatedNoChord += span }
+            if refLabel == "N", estLabel == "N" { noChordIntersection += span }
+
+            guard refLabel != "N", refLabel != "X", estLabel != "N", estLabel != "X" else { continue }
+            comparableDuration += span
+            if chordRoot(refLabel) == chordRoot(estLabel) { rootCorrect += span }
+            if normalizeMajMinLabel(refLabel) == normalizeMajMinLabel(estLabel) { majMinCorrect += span }
+        }
+
+        var metrics: [String: Double] = [:]
+        metrics["root_weighted_accuracy"] = comparableDuration > 0 ? rootCorrect / comparableDuration : 0
+        metrics["majmin_weighted_accuracy"] = comparableDuration > 0 ? majMinCorrect / comparableDuration : 0
+        metrics["no_chord_precision"] = estimatedNoChord > 0 ? noChordIntersection / estimatedNoChord : (referenceNoChord == 0 ? 1 : 0)
+        metrics["no_chord_recall"] = referenceNoChord > 0 ? noChordIntersection / referenceNoChord : 1
+        metrics["coverage"] = decidedDuration / duration
+        metrics["reference_events"] = Double(clippedReference.count)
+        metrics["estimated_events"] = Double(clippedEstimated.count)
+        if let error = medianChordBoundaryError(reference: clippedReference, estimated: clippedEstimated, duration: duration) {
+            metrics["boundary_median_abs_error_seconds"] = error
+        }
+        return metrics
+    }
+
     private static func medianAbsoluteBeatError(reference: [Double], estimated: [Double]) -> Double? {
         guard !reference.isEmpty, !estimated.isEmpty else { return nil }
         let errors = reference.map { ref in estimated.map { abs($0 - ref) }.min() ?? Double.greatestFiniteMagnitude }.sorted()
-        let mid = errors.count / 2
-        if errors.count % 2 == 0 { return (errors[mid - 1] + errors[mid]) / 2 }
-        return errors[mid]
+        return median(errors)
+    }
+
+    private static func medianChordBoundaryError(reference: [ChordEvent], estimated: [ChordEvent], duration: Double) -> Double? {
+        let referenceBoundaries = reference.map(\.endSeconds).filter { $0 > 1e-9 && $0 < duration - 1e-9 }
+        let estimatedBoundaries = estimated.map(\.endSeconds).filter { $0 > 1e-9 && $0 < duration - 1e-9 }
+        guard !referenceBoundaries.isEmpty, !estimatedBoundaries.isEmpty else {
+            return referenceBoundaries.isEmpty && estimatedBoundaries.isEmpty ? 0 : nil
+        }
+        let errors = referenceBoundaries.map { ref in
+            estimatedBoundaries.map { abs($0 - ref) }.min() ?? duration
+        }.sorted()
+        return median(errors)
+    }
+
+    private static func normalizeChordEvents(_ events: [ChordEvent], duration: Double) -> [ChordEvent] {
+        events.compactMap { event in
+            let start = min(duration, max(0, event.startSeconds))
+            let end = min(duration, max(start, event.endSeconds))
+            guard end > start else { return nil }
+            return ChordEvent(startSeconds: start, endSeconds: end, normalizedLabel: event.normalizedLabel, confidence: event.confidence)
+        }.sorted {
+            if $0.startSeconds == $1.startSeconds { return $0.endSeconds < $1.endSeconds }
+            return $0.startSeconds < $1.startSeconds
+        }
+    }
+
+    private static func chordLabel(at time: Double, events: [ChordEvent]) -> String? {
+        events.first { time >= $0.startSeconds && time < $0.endSeconds }?.normalizedLabel
+    }
+
+    private static func chordRoot(_ label: String) -> String? {
+        guard label != "N", label != "X" else { return nil }
+        return label.split(separator: ":", maxSplits: 1).first.map(String.init)
+    }
+
+    private static func normalizeMajMinLabel(_ label: String) -> String? {
+        guard let root = chordRoot(label) else { return nil }
+        let quality = label.contains(":min") ? "min" : "maj"
+        return "\(root):\(quality)"
+    }
+
+    private static func median(_ values: [Double]) -> Double? {
+        guard !values.isEmpty else { return nil }
+        let mid = values.count / 2
+        if values.count % 2 == 0 { return (values[mid - 1] + values[mid]) / 2 }
+        return values[mid]
     }
 
     private static func row(_ fixture: AnalysisBenchmarkFixture, _ parityEligible: Bool, _ engine: String, _ engineVersion: String, _ domain: String, _ metrics: [String: Double], _ wallSeconds: Double, _ rtf: Double?, _ limitations: [String]) -> AnalysisBenchmarkRow {
