@@ -11,7 +11,7 @@ permissions:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,22 +19,29 @@ jobs:
           node-version: '22'
       - name: Harden severe canonical questions
         run: node ios/health-manager-1/audit/harden-severe-difficulty-2026-08-22.cjs
-      - name: Persist canonical hardening
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ios/health-manager-1/Resources/questions.json
-          git commit -m "Harden HM1 severe difficulty questions" || true
+      - name: Harden remaining easy distractors
+        run: node ios/health-manager-1/audit/harden-base-questions-2026-08-22.cjs
+      - name: Save hardened canonical bank
+        run: cp ios/health-manager-1/Resources/questions.json /tmp/hm1-hardened-132.json
       - name: Expand bank to 264
         run: node ios/health-manager-1/augment-to-264.cjs
       - name: Run difficulty audit on all 264
         continue-on-error: true
         run: node ios/health-manager-1/audit/difficulty-audit-2026-08-21.cjs
-      - name: Persist audit and canonical bank
+      - name: Persist audit and hardened canonical bank
         run: |
-          git restore ios/health-manager-1/Resources/questions.json
-          node ios/health-manager-1/audit/harden-severe-difficulty-2026-08-22.cjs
+          cp /tmp/hm1-hardened-132.json ios/health-manager-1/Resources/questions.json
           rm -f ios/health-manager-1/audit/APP2_005_264_EXPANSION_2026-08-19.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add ios/health-manager-1/Resources/questions.json ios/health-manager-1/audit/DIFFICULTY_AUDIT_2026-08-21.json ios/health-manager-1/audit/DIFFICULTY_FLAGGED_2026-08-21.tsv
-          git commit -m "Record HM1 hardened difficulty audit" || true
+          git commit -m "Harden HM1 exam difficulty and record 264-question audit" || true
           git push
+      - name: Enforce release gate
+        run: |
+          node - <<'NODE'
+          const r=require('./ios/health-manager-1/audit/DIFFICULTY_AUDIT_2026-08-21.json');
+          if(r.total!==264) throw new Error(`expected 264, got ${r.total}`);
+          if(r.knowledgeFreeEliminationRisk!==0) throw new Error(`knowledge-free elimination risk=${r.knowledgeFreeEliminationRisk}`);
+          console.log(`PASS: 264 questions; knowledge-free elimination risk=0; direct recall review=${r.directRecallReview}`);
+          NODE
