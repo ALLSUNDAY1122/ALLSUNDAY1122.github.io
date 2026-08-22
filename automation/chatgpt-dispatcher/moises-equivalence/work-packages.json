@@ -21,10 +21,7 @@
       "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-1.json",
       "estimated_effort_points": 14,
       "owned_resources": ["source-separation-model", "processing-lifecycle"],
-      "write_scope": [
-        "tech-assets/moises-audio/Separation/**",
-        "tech-assets/moises-audio/Processing/**"
-      ],
+      "write_scope": ["tech-assets/moises-audio/Separation/**", "tech-assets/moises-audio/Processing/**"],
       "task_sequence": [
         {"task_id": "MOI-SEP-002", "effort_points": 8, "phase": 2},
         {"task_id": "MOI-PROC-001", "effort_points": 3, "phase": 2},
@@ -40,10 +37,7 @@
       "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-2.json",
       "estimated_effort_points": 10,
       "owned_resources": ["import-export", "library-persistence"],
-      "write_scope": [
-        "tech-assets/moises-audio/IO/**",
-        "tech-assets/moises-audio/Library/**"
-      ],
+      "write_scope": ["tech-assets/moises-audio/IO/**", "tech-assets/moises-audio/Library/**"],
       "task_sequence": [
         {"task_id": "MOI-IO-001", "effort_points": 4, "phase": 2},
         {"task_id": "MOI-LIB-001", "effort_points": 6, "phase": 3}
@@ -56,17 +50,15 @@
       "worker_number": 3,
       "work_branch": "moises/wp3-playback-dsp",
       "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-3.json",
-      "estimated_effort_points": 10,
+      "estimated_effort_points": 13,
       "owned_resources": ["audio-playback-engine", "time-pitch-dsp"],
-      "write_scope": [
-        "tech-assets/moises-audio/Playback/**",
-        "tech-assets/moises-audio/DSP/**"
-      ],
+      "write_scope": ["tech-assets/moises-audio/Playback/**", "tech-assets/moises-audio/DSP/**"],
       "task_sequence": [
         {"task_id": "MOI-DSP-001", "effort_points": 4, "phase": 2},
-        {"task_id": "MOI-PLAY-001", "effort_points": 6, "phase": 3}
+        {"task_id": "MOI-PLAY-001", "effort_points": 6, "phase": 3},
+        {"task_id": "MOI-PLAYDSP-EVAL-001", "effort_points": 3, "phase": 2}
       ],
-      "notes": "Owns synchronized playback/practice DSP. Both tasks may wait on the WP4 iOS platform target for AVFAudio/device validation; Analysis output is consumed through HQ Shared contracts."
+      "notes": "Owns synchronized playback/practice DSP. PLAYDSP-EVAL-001 prepares machine-readable AVFAudio/device measurement harnesses while WP4 builds the iOS target; harness-only or synthetic-only success never promotes PARITY. Analysis output is consumed through HQ Shared contracts."
     },
     {
       "work_package_id": "MOI-WP4-ANALYSIS-PLATFORM",
@@ -76,12 +68,7 @@
       "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-4.json",
       "estimated_effort_points": 10,
       "owned_resources": ["music-analysis-engine", "build-harness", "ios-platform"],
-      "write_scope": [
-        "tech-assets/moises-audio/Analysis/**",
-        "tech-assets/moises-audio/Package.swift",
-        "tech-assets/moises-audio/Tests/**",
-        "tech-assets/moises-audio/iOS/**"
-      ],
+      "write_scope": ["tech-assets/moises-audio/Analysis/**", "tech-assets/moises-audio/Package.swift", "tech-assets/moises-audio/Tests/**", "tech-assets/moises-audio/iOS/**"],
       "task_sequence": [
         {"task_id": "MOI-BLD-003", "effort_points": 2, "phase": 2},
         {"task_id": "MOI-BLD-IOS-001", "effort_points": 4, "phase": 2},
