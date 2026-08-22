@@ -21,6 +21,8 @@ jobs:
         run: node ios/health-manager-1/audit/harden-severe-difficulty-2026-08-22.cjs
       - name: Harden remaining easy distractors
         run: node ios/health-manager-1/audit/harden-base-questions-2026-08-22.cjs
+      - name: Harden final knowledge-free risks
+        run: node ios/health-manager-1/audit/harden-final-risk-2026-08-22.cjs
       - name: Resolve hardened stem collisions
         run: node ios/health-manager-1/audit/resolve-stem-collisions-2026-08-22.cjs
       - name: Save hardened canonical bank
