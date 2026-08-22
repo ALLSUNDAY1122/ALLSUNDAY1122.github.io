@@ -129,6 +129,31 @@ workflows:
           xcode-project build-ipa \
             --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
+      - name: Verify signed final IPA before TestFlight
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find build/ios/ipa -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          python3 - "$APP_DIR" <<'PY'
+          import json,plistlib,sys
+          from pathlib import Path
+          app=Path(sys.argv[1])
+          data=json.loads((app/'questions.generated.json').read_text(encoding='utf-8'))
+          assert len(data['questions'])==720
+          counts={s:sum(1 for q in data['questions'] if q['subject']==s) for s in ['法令','物理・化学','性質・消火']}
+          assert counts=={'法令':288,'物理・化学':192,'性質・消火':240}, counts
+          info=plistlib.loads((app/'Info.plist').read_bytes())
+          assert info.get('CFBundleIdentifier')=='jp.allsunday1122.otsu4'
+          assert str(info.get('CFBundleVersion','')).isdigit()
+          assert (app/'PrivacyInfo.xcprivacy').is_file()
+          assert (app/'Assets.car').is_file()
+          assert (app/'embedded.mobileprovision').is_file()
+          assert (app/'_CodeSignature').is_dir()
+          print('PASS: signed Otsu4 IPA contains audited 720-question bundle',counts,'build',info.get('CFBundleVersion'))
+          PY
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -137,5 +162,5 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: false
+        submit_to_testflight: true
         submit_to_app_store: false
