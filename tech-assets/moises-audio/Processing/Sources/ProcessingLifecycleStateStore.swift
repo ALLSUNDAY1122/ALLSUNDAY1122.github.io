@@ -147,6 +147,7 @@ public actor FileProcessingLifecycleStateStore: ProcessingLifecycleStateStoring 
 
 public protocol ProcessingOutputTransacting: Sendable {
     func begin(projectID: ProjectID, generationID: UUID) async throws
+    func validateFinalArtifacts(_ artifacts: [StemArtifact], projectID: ProjectID) async throws
     func commit(projectID: ProjectID, generationID: UUID) async throws
     func rollback(projectID: ProjectID, generationID: UUID) async throws
 }
@@ -182,6 +183,35 @@ public actor FileProcessingOutputTransaction: ProcessingOutputTransacting {
         } catch {
             try? fileManager.removeItem(at: transaction)
             throw DomainFailure.processingFailed(code: "PROC_OUTPUT_TRANSACTION_BEGIN_FAILED", retryable: false)
+        }
+    }
+
+    public func validateFinalArtifacts(_ artifacts: [StemArtifact], projectID: ProjectID) async throws {
+        guard !artifacts.isEmpty else {
+            throw DomainFailure.processingFailed(code: "PROC_RESULT_EMPTY", retryable: false)
+        }
+        let root = appDataRoot.resolvingSymlinksInPath().standardizedFileURL
+        for artifact in artifacts {
+            guard artifact.projectID == projectID,
+                  !artifact.relativePath.isEmpty,
+                  !artifact.relativePath.hasPrefix("/") else {
+                throw DomainFailure.processingFailed(code: "PROC_RESULT_ARTIFACT_MISMATCH", retryable: false)
+            }
+            let candidate = root
+                .appendingPathComponent(artifact.relativePath)
+                .resolvingSymlinksInPath()
+                .standardizedFileURL
+            guard candidate.path.hasPrefix(root.path + "/") else {
+                throw DomainFailure.processingFailed(code: "PROC_RESULT_OUTSIDE_APP_ROOT", retryable: false)
+            }
+            var isDirectory: ObjCBool = false
+            guard fileManager.fileExists(atPath: candidate.path, isDirectory: &isDirectory), !isDirectory.boolValue else {
+                throw DomainFailure.processingFailed(code: "PROC_RESULT_FILE_MISSING", retryable: true)
+            }
+            let attributes = try fileManager.attributesOfItem(atPath: candidate.path)
+            if let size = attributes[.size] as? NSNumber, size.int64Value <= 0 {
+                throw DomainFailure.processingFailed(code: "PROC_RESULT_FILE_EMPTY", retryable: true)
+            }
         }
     }
 
