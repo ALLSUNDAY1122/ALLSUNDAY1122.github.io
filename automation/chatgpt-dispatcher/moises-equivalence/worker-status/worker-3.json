@@ -5,14 +5,14 @@
   "lane_id": "LANE-3-PLAYBACK-DSP",
   "assignment_epoch": 2,
   "work_branch": "moises/wp3-playback-dsp",
-  "state": "IN_PROGRESS",
-  "current_bundle": "L3-M04",
-  "completed_bundles": ["L3-M01", "L3-M02", "L3-M03"],
+  "state": "CHECKPOINT_READY",
+  "current_bundle": null,
+  "completed_bundles": ["L3-M01", "L3-M02", "L3-M03", "L3-M04"],
   "epoch_contract_sha": "2edf4411f69af37f9b57a363096fb2787ecfc713",
   "frozen_integration_sha": "1648a275833ad4e8aed3245347e6de231fd0487f",
   "base_integration_sha": "1648a275833ad4e8aed3245347e6de231fd0487f",
   "branch_merge_base_sha": "7948195f1d94f28bc212c79b310fdaed00a4f580",
-  "head_sha": "cbb57c3bde5d0e8ab8e944c3e99b8f3fab7151f6",
+  "head_sha": "d63cecbfa53007bf9593b628ae291702f496bb17",
   "existing_unintegrated_commits": [
     "177ff61eca12c2920656a995d1fe879ea9f17237",
     "d90e3bf264940723e0b2e41ce87e5cc36fd50c4b",
@@ -50,7 +50,16 @@
     "4ffc4cd3606455e6424e6a8a2c42eae8a60d7e29",
     "46b9cd421670205164f0a9d3c7f975e97407d6ca",
     "51b44cddeb0ed27c960ce65f07b2ce7570911500",
-    "cbb57c3bde5d0e8ab8e944c3e99b8f3fab7151f6"
+    "cbb57c3bde5d0e8ab8e944c3e99b8f3fab7151f6",
+    "de5df5a5a49e7ddbb860bb74087815152a98ce20",
+    "9f197ca599997f1930732a36d5351bf04c03ea54",
+    "9e6d354b254b9b781af3f4dd1956d1c883354819",
+    "322552322c670f7d648e9c092eee2a7edd29fbec",
+    "0ac669aa1c7658f2bc597c9b8e0205d4680a6b07",
+    "3f930c8b3ab48c0651707fa3d3486141a8a62cc6",
+    "445a9bd5b0ca783402ab7ac3aba4a56fa37458fa",
+    "225f4365feec4aa599fb96cad089e80dab135927",
+    "d63cecbfa53007bf9593b628ae291702f496bb17"
   ],
   "tests": [
     "Inherited epoch-1 Playback portable/core and scheduling-safety regressions remain preserved on branch",
@@ -67,7 +76,11 @@
     "L3-M03 Swift 6.2.1 portable control-safety self-test: PASS using contract-compatible frozen Shared stubs",
     "L3-M03 exhaustive two-stem solo/mute Boolean matrix: 16/16 PASS; mute wins over solo and active solo suppresses non-solo",
     "L3-M03 fail-closed regression PASS for NaN gain, duplicate StemID, invalid sample rate, nonfinite tempo, invalid restored pitch, generation overflow, backend unavailable/rejection, duplicate beat time, same-sample click collision, negative render sample and insufficient count-in preroll",
-    "L3-M03 optimized benchmark: 20 rounds each with 50,000 eight-stem gain transitions + 5,000 state validations + 1,280,000 planned click events; median 1059.026ms, p95 1094.893ms, p99/max 1094.893ms"
+    "L3-M03 optimized benchmark: 20 rounds each with 50,000 eight-stem gain transitions + 5,000 state validations + 1,280,000 planned click events; median 1059.026ms, p95 1094.893ms, p99/max 1094.893ms",
+    "L3-M04 Swift 6.2.1 portable offline/reference self-test: PASS; deterministic signature e92134276828f523",
+    "L3-M04 fail-closed coverage: empty/duplicate stems, tempo/pitch bounds, non-monotonic or same-render-frame beats, missing count-in interval, invalid PCM configuration, Int64-min observation values and non-finite PCM",
+    "L3-M04 fixture comparison coverage: signature/duration/event identity and timing tolerance plus optional PCM summary comparison; parityPromotionAllowed is always false",
+    "L3-M04 optimized 24h/8-stem benchmark: 172,801 beats, 172,824 events, x12 => median 118.834ms, p95 143.252ms, p99 143.252ms, max 143.252ms; deterministic signature bceee1be47217988"
   ],
   "evidence": [
     "Playback/Measurements/Lane3DeviceMeasurementHarness.swift",
@@ -93,28 +106,40 @@
     "DSP/Tests/L3_M03_ControlSafetyBenchmark.swift",
     "DSP/benchmarks/L3-M03_CONTROL_SAFETY.md",
     "DSP/benchmarks/L3-M03_VALIDATION.json",
-    "L3-M03 defines a deterministic 12ms engineering gain-ramp plan, atomic practice-state restore, checked schedule-generation invalidation, transactional backend application and strict sample-time click collision rejection",
-    "L3-M03 AppleTimePitchBackend now conforms to the portable PracticeDSPBackendApplying seam under AVFAudio; Apple SDK compile remains a Late Integration check",
-    "epoch-2 compare from frozen integration 1648a275... shows 29 branch commits ahead and every changed file remains inside Playback/** or DSP/**"
+    "Playback/Sources/Lane3OfflineReferenceRender.swift",
+    "Playback/Tests/L3_M04_OfflineReferenceSelfTest.swift",
+    "Playback/Tests/L3_M04_OfflineReferenceBenchmark.swift",
+    "Playback/benchmarks/L3-M04_REFERENCE_FIXTURE.schema.json",
+    "Playback/benchmarks/L3-M04_REFERENCE_FIXTURE.example.json",
+    "Playback/benchmarks/L3-M04_PLAN.example.json",
+    "Playback/benchmarks/L3-M04_OBSERVATION_TEMPLATE.example.json",
+    "Playback/benchmarks/L3-M04_OFFLINE_REFERENCE_RENDER.md",
+    "Playback/benchmarks/L3-M04_VALIDATION.json",
+    "L3-M04 generates deterministic frame-domain stem/practice plans, expected event metadata, sorted JSON evidence, a non-cryptographic control signature and fixture-driven comparison hooks independently of the final app shell",
+    "L3-M04 portable comparator supports decoded Float PCM summaries but deliberately cannot promote PARITY; actual waveform/artifact/device/reference gates remain external",
+    "epoch-2 compare from frozen integration 1648a275... shows 38 branch commits ahead and every changed file remains inside Playback/** or DSP/**"
   ],
   "known_gaps": [
-    "Physical-iPhone AVAudioEngine capture and Apple SDK execution remain HQ late-integration work; harness-only or portable planner results cannot satisfy PARITY",
+    "Physical-iPhone AVAudioEngine capture and Apple SDK execution remain HQ late-integration work; harness-only, planner-only, summary-only or portable-reference results cannot satisfy PARITY",
+    "L3-M04 control-reference path does not claim to synthesize production-quality tempo/pitch PCM on Linux; actual Apple/integrated offline PCM rendering must consume the deterministic plan and be measured",
     "The deterministic gain-ramp plan is not yet executed by the live Apple mixer graph; direct AVAudioPlayerNode volume behavior must not be claimed click/pop/zipper-free",
-    "AppleTimePitchBackend conformance to the new transactional gate has not yet been compiled under AVFAudio/Xcode",
+    "AppleTimePitchBackend conformance to the transactional gate and all Lane-3 Apple sources have not yet been compiled under the final Xcode/AVFAudio integration target",
     "Rights-cleared real source/stem fixtures and Moises differential evidence are still required for final Playback/DSP quality judgment",
     "Audible click/pop/zipper and tempo/pitch artifact acceptance still requires physical-device capture and human listening review",
     "resource-locks.json metadata still reports assignment_epoch 1 while v3 work-packages/lane-plan are epoch 2; ownership scopes are unchanged so Lane 3 execution is not blocked",
     "MOI-P006/P007/P008/P010/P012/P014/P015 remain MISSING"
   ],
   "hq_requests": [
-    "At late integration, wire physical-device/Apple capture observations into Lane3DeviceMeasurementHarness without changing the metric contract, then independently validate underlying evidence before any PARITY promotion",
-    "At late integration, connect PortableTransportSemantics/PlaybackTransportStateMachine to the integrated Apple transport and verify the same source->stems, interruption, long-seek and loop invariants on Apple runtime/device",
-    "Compile the complete Lane-3 Apple sources with AVFAudio, including AppleTimePitchBackend: PracticeDSPBackendApplying, and route any Lane-3 compile findings back without changing Package/iOS ownership",
-    "Provide a sample/ramp-capable live Apple mixer execution path for PlaybackControlSafety gain plans, then measure click/pop/zipper on a physical iPhone before accepting mixer quality",
-    "Wire PracticeDSPApplicationGate to the selected Apple/approved backend and verify backend-unavailable/rejection preserves last-applied state in the integrated app",
+    "Consume the coherent Lane-3 checkpoint at head d63cecbfa53007bf9593b628ae291702f496bb17; preserve inherited epoch-1 hardening plus L3-M01 through L3-M04 during semantic integration",
+    "Compile the complete Lane-3 Apple sources with the selected Xcode/iOS SDK, including AppleTimePitchBackend, Apple offline renderer and Playback backend; route Lane-3 compile findings back without changing Worker ownership",
+    "Map integrated stem artifacts plus effective solo/mute/volume and practice state into Lane3ReferenceRenderRequest without changing the proven frame-domain contract",
+    "Run the Apple offline/integrated graph against the deterministic plan, capture actual event/sample-time observations and decoded audio summary, then feed the same rights-cleared fixture through the L3-M01 physical-device measurement gate",
+    "Provide a sample/ramp-capable live Apple mixer execution path for PlaybackControlSafety gain plans and verify click/pop/zipper on a physical iPhone before mixer quality acceptance",
+    "Verify PracticeDSPApplicationGate backend-unavailable/rejection semantics and stale generation-token rejection in the integrated Apple app",
+    "Run rights-cleared real multi-genre physical-iPhone captures, human listening and current-Moises differential comparison before any affected PARITY promotion",
     "Normalize resource-lock manifest assignment_epoch metadata to epoch 2 when HQ next edits that ledger; Lane 3 ownership itself is unchanged",
-    "Do not merge/release per bundle under v3; preserve inherited Playback hardening plus L3-M01/L3-M02/L3-M03 until the Lane-3 checkpoint"
+    "Preload the next set of at least four Lane-3 Macro Bundles before Worker 3 resumes after this checkpoint"
   ],
-  "last_updated": "2026-08-22T18:07:00+09:00",
+  "last_updated": "2026-08-22T18:28:00+09:00",
   "writer_policy": "Only Moises-Worker-3 may update this status file; HQ remains semantic integration and PARITY authority."
 }
