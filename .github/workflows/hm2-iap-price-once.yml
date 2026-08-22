@@ -24,7 +24,7 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-        run: python scripts/hm2_configure_iap_prices.py
+        run: python scripts/hm2_configure_standard_iap_prices.py
       - name: Upload sanitized result
         if: always()
         uses: actions/upload-artifact@v4
