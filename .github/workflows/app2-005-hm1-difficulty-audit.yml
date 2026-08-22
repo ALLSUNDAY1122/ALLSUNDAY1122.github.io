@@ -25,6 +25,8 @@ jobs:
         run: node ios/health-manager-1/audit/harden-final-risk-2026-08-22.cjs
       - name: Harden final three blockers
         run: node ios/health-manager-1/audit/harden-last3-2026-08-22.cjs
+      - name: Harden overly simple direct-recall items
+        run: node ios/health-manager-1/audit/harden-direct-recall-2026-08-22.cjs
       - name: Resolve hardened stem collisions
         run: node ios/health-manager-1/audit/resolve-stem-collisions-2026-08-22.cjs
       - name: Save hardened canonical bank
