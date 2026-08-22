@@ -195,11 +195,11 @@ struct Otsu4ContentStore {
 
     private static func validate(_ bank: Otsu4QuestionBank) throws {
         guard bank.contentVersion == expectedContentVersion else { throw Otsu4ContentError.invalidVersion }
-        guard bank.questions.count == 480 else { throw Otsu4ContentError.invalidCounts }
+        guard bank.questions.count == 600 else { throw Otsu4ContentError.invalidCounts }
         let counts = Dictionary(grouping: bank.questions, by: \.subject).mapValues(\.count)
-        guard counts["法令"] == 192,
-              counts["物理・化学"] == 128,
-              counts["性質・消火"] == 160 else {
+        guard counts["法令"] == 240,
+              counts["物理・化学"] == 160,
+              counts["性質・消火"] == 200 else {
             throw Otsu4ContentError.invalidCounts
         }
 
