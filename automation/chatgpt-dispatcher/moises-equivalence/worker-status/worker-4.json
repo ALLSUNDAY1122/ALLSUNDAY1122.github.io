@@ -6,7 +6,7 @@
   "work_branch": "moises/wp4-analysis-platform",
   "state": "BLOCKED",
   "current_task": "MOI-BLD-003",
-  "base_integration_sha": "13b0b559cd68f109212e8d46ad0167f43d1d7d1d",
+  "base_integration_sha": "eadc3507141bc20eca8ec710378d195892b86b5a",
   "head_sha": "32fca8cd0fd2392b2b33350b49b44af9b8d1bfd5",
   "commits": [
     "8dbe4192176cbfae32e39d53500a50eb72f5c783",
@@ -15,7 +15,8 @@
   "tests": [
     "Swift 6 exact relevant contract typecheck reproducer: FAIL — PersistedProjectSnapshot cannot synthesize Hashable because ProcessingSnapshot? is not Hashable",
     "Same reproducer with only ProcessingSnapshot conformance changed to Equatable, Hashable, Codable, Sendable: PASS (exit 0)",
-    "Full existing 13 + new 4 SwiftPM tests cannot execute until HQ Shared contract mismatch is fixed"
+    "Full existing 13 + new 4 SwiftPM tests cannot execute until HQ Shared contract mismatch is fixed",
+    "2026-08-22 14:52 JST canonical Shared/DomainContracts.swift re-read: ProcessingSnapshot remains Equatable, Codable, Sendable; blocker persists"
   ],
   "evidence": [
     "Fixed Work Package manifest and Queue schema v2 read-back confirmed Worker 4 assignment to MOI-WP4-ANALYSIS-PLATFORM / MOI-BLD-003",
@@ -24,7 +25,9 @@
     "commit 32fca8cd0fd2392b2b33350b49b44af9b8d1bfd5 adds four Library contract regression tests: user-edit Codable round-trip, persisted-project round-trip, setlist ordering, processing-recovery Codable round-trip",
     "remote read-back confirmed Package.swift and LibraryContractTests.swift",
     "compare integration -> work branch shows only Package.swift and Tests/MoisesAudioCoreTests/LibraryContractTests.swift changed in Worker 4 owned scope",
-    "Shared/HQ_ARCH_002_VALIDATION delegated exact integrated DomainContracts + LibraryContracts package compilation to this build-harness task; the exact type boundary exposes the Hashable mismatch"
+    "Shared/HQ_ARCH_002_VALIDATION delegated exact integrated DomainContracts + LibraryContracts package compilation to this build-harness task; the exact type boundary exposes the Hashable mismatch",
+    "2026-08-22 14:52 JST recheck: integration advanced to eadc3507141bc20eca8ec710378d195892b86b5a; opposite compare shows the seven integration-only commits touch worker-status files only, not Worker 4 owned build scope",
+    "2026-08-22 14:52 JST canonical DomainContracts still declares ProcessingSnapshot: Equatable, Codable, Sendable; no HQ Shared fix present"
   ],
   "known_gaps": [
     "HQ-owned Shared/LibraryContracts.swift declares PersistedProjectSnapshot: Hashable while storing ProcessingSnapshot?, but Shared/DomainContracts.swift declares ProcessingSnapshot: Equatable, Codable, Sendable only",
@@ -34,6 +37,6 @@
   "hq_requests": [
     "Preferred minimal Shared fix: add Hashable conformance to ProcessingSnapshot (all current stored fields are Hashable), then rerun/release MOI-BLD-003. Alternative is removing Hashable from PersistedProjectSnapshot if HQ does not require snapshot hashing. Worker 4 will not make either Shared contract change."
   ],
-  "last_updated": "2026-08-22T14:29:00+09:00",
+  "last_updated": "2026-08-22T14:52:00+09:00",
   "writer_policy": "Only Moises-Worker-4 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
 }
