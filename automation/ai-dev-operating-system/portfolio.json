@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.1",
+  "updated_at": "2026-08-22T20:33:00+09:00",
+  "integration_epoch": 1,
+  "operating_mode": "BOOTSTRAP",
+  "wip_limits": {
+    "parity_projects": 3,
+    "normal_apps": 5,
+    "release_projects": 8,
+    "sev_interrupts": 2
+  },
+  "project_registry": [
+    {
+      "project_id": "app-development-2",
+      "kind": "normal_apps",
+      "priority": "high",
+      "queue_locator": "DISCOVER_FROM_GITHUB",
+      "status": "DISCOVERY_REQUIRED"
+    },
+    {
+      "project_id": "scaniverse-parity",
+      "kind": "parity",
+      "priority": "high",
+      "queue_locator": "DISCOVER_FROM_GITHUB",
+      "status": "DISCOVERY_REQUIRED"
+    },
+    {
+      "project_id": "moises-parity",
+      "kind": "parity",
+      "priority": "high",
+      "queue_locator": "DISCOVER_FROM_GITHUB",
+      "status": "DISCOVERY_REQUIRED"
+    },
+    {
+      "project_id": "homecourt-parity",
+      "kind": "parity",
+      "priority": "high",
+      "queue_locator": "DISCOVER_FROM_GITHUB",
+      "status": "DISCOVERY_REQUIRED"
+    }
+  ],
+  "policy": {
+    "default_worker_model": "gpt-5.6-luna",
+    "decision_model": "gpt-5.6-terra",
+    "exception_model": "gpt-5.6-sol",
+    "session_history_is_source_of_truth": false,
+    "auto_continue": true,
+    "auto_recover_stale_attempts": true,
+    "human_gate_only_for_genuine_decisions": true
+  }
+}
