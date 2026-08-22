@@ -1,53 +1,42 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "worker_id": "Moises-Worker-1",
-  "work_package_id": "MOI-WP1-SEPARATION-PROCESSING",
-  "assignment_epoch": 1,
+  "assignment_epoch": 2,
+  "operating_model": "FOUR_INDEPENDENT_LANES_LATE_INTEGRATION",
+  "lane_id": "LANE-1-SEPARATION-PROCESSING",
   "work_branch": "moises/wp1-separation-processing",
-  "state": "INTEGRATION_READY",
-  "current_task": "MOI-PROC-001",
-  "base_integration_sha": "162e38ec57fadfb9a9dae2d657fe405f0445f180",
-  "head_sha": "8b85f8e8b4c3263236c610a336ce9391c205c193",
-  "commits": [
-    "c9240a71a47ce0a953b28e190fa96205f1b50380",
-    "c57f8f30290f8d1192f1aa7ff2d778076ae4dd79",
-    "bebd6712920fef2e0b1c300f2f9060211ee234f6",
-    "9be6f82c2b5d694b696a17824fbd9ba365c6975d",
-    "fa250f9f6a5e7fcd58b11df0745440aa0c9bf529",
-    "c2c85ce97bc252f60e197a53bca49fb069e60f9c",
-    "3d0a762bac3faced6b4a373aac0013df842de15b",
-    "bc81252f4814bc2877deb98af063edd268f4b305",
-    "ec54f6440d26cd122f28e46887e459864c40d5b3",
-    "cef31d03d3048e99ddf2cad1418def3b4685bcca",
-    "8b85f8e8b4c3263236c610a336ce9391c205c193"
-  ],
+  "state": "IN_PROGRESS",
+  "current_bundle": "L1-M01",
+  "completed_bundles": [],
+  "epoch_contract_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
+  "frozen_contracts": {
+    "Shared/DomainContracts.swift": "666068b7fb8fc5964138eca96062c059beec4bdd",
+    "App/VerticalSliceCoordinator.swift": "812160b1d8f0491a1e3b3af126e1b0638ed2c3fb",
+    "App/APP_SHELL_BOUNDARY.md": "d570517220972ab4567ee19e499972f40a42ceb9"
+  },
+  "base_integration_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
+  "head_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
+  "epoch_start_existing_unintegrated_commits": [],
+  "commits": [],
   "tests": [
-    "Swift 6.2.1: -parse-as-library -strict-concurrency=complete -warnings-as-errors compile => PASS",
-    "MOI_PROC_001_SELF_TEST_PASS: 7 lifecycle/recovery scenarios passed",
-    "MOI_PROC_001_FILE_STORE_PASS: semantic durable-state roundtrip, removal, corrupt-state fail-closed classification passed",
-    "scope compare at 2026-08-22 15:38 JST: branch ahead 11 / behind 40; all four ahead files are tech-assets/moises-audio/Processing/**",
-    "integration changes since merge-base 090d45e1 contain no Processing/** file; no owned-scope conflict"
+    "epoch-2 migration compare: branch had ahead_by=0 and behind_by=74 versus integration 17d129c9; no unintegrated owned-scope commits existed",
+    "branch fast-forwarded non-destructively to frozen integration contract SHA 17d129c9"
   ],
   "evidence": [
-    "tech-assets/moises-audio/Processing/Sources/ProcessingLifecycleStateStore.swift",
-    "tech-assets/moises-audio/Processing/Sources/ProcessingLifecycleCoordinator.swift",
-    "tech-assets/moises-audio/Processing/Tests/MOI_PROC_001_SelfTest.swift",
-    "tech-assets/moises-audio/Processing/MOI-PROC-001_VALIDATION.md",
-    "durable start/job binding, reconnect, cancel intent, terminal rollback, retry gating and relaunch recovery implemented",
-    "result finalization journaled resultStaged -> resultPersisted -> completed; DB write failure resumes without refetching provider result",
-    "old stem set is protected by marker-backed transaction; markerless interrupted backup never deletes live outputs",
-    "ambiguous provider.start response is fail-closed and cannot auto-retry because current HQ SourceSeparationProviding.start contract exposes no caller idempotency token"
+    "v2 Separation/Processing implementation was already contained in integration before epoch-2 migration; no reset/discard occurred",
+    "Shared/App contract frozen once for epoch 2 at integration SHA 17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
+    "L1-M01 started under lane-plan-v3"
   ],
   "known_gaps": [
-    "MOI-SEP-002 remains BLOCKED_HUMAN on production separator commercial/privacy/credential terms plus G1/G2 rights-cleared real-audio fixtures.",
-    "MOI-P020 remains MISSING: real production-backend interruption/relaunch/cancel/retry, long-track/network/storage-pressure and current-iPhone differential evidence are still required before PARITY.",
-    "Exactly-once server start after response loss cannot be guaranteed by the current Shared start(request) signature; automatic duplicate retry is intentionally suppressed."
+    "Real production separation credentials/approved commercial route and rights-cleared G1/G2 real-audio fixtures remain external gates.",
+    "MOI-P003/MOI-P004/MOI-P020 remain MISSING; v3 does not relax PARITY evidence requirements."
   ],
-  "hq_requests": [
-    "Semantic review/integration of the four Processing/** files for MOI-PROC-001.",
-    "Consider a future HQ Shared contract extension carrying a durable caller-generated idempotency token through SourceSeparationProviding.start, or require the selected provider implementation to guarantee equivalent stable idempotency internally.",
-    "When MOI-SEP-002 Human Gate clears, schedule real-backend lifecycle/recovery evidence before any MOI-P020 PARITY promotion."
-  ],
-  "last_updated": "2026-08-22T15:39:00+09:00",
-  "writer_policy": "Only Moises-Worker-1 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
+  "hq_requests": [],
+  "legacy_v2": {
+    "last_task": "MOI-PROC-001",
+    "last_state": "INTEGRATION_READY",
+    "note": "All prior owned-scope commits were already integrated before v3 epoch start."
+  },
+  "last_updated": "2026-08-22T17:31:00+09:00",
+  "writer_policy": "Only Moises-Worker-1 may update this status file. Queue/lane plan/work packages/Shared/App/PARITY/resource locks are read-only to this Worker."
 }
