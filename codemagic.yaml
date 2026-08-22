@@ -69,7 +69,8 @@ workflows:
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
       - name: Prepare audited 264-question bundle and icon
         script: |
-          bash "$CM_BUILD_DIR/ios/health-manager-1/prepare-ios.sh"
+          set -o pipefail
+          bash -x "$CM_BUILD_DIR/ios/health-manager-1/prepare-ios.sh" 2>&1 | tee /tmp/hm1-prepare.log
       - name: Set CI build number and generate Xcode project
         script: |
           cd "$CM_BUILD_DIR/ios/health-manager-1"
@@ -141,6 +142,7 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
+      - /tmp/hm1-prepare.log
     publishing:
       app_store_connect:
         auth: integration
