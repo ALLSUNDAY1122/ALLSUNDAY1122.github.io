@@ -24,17 +24,54 @@ jobs:
           ref: main
           fetch-depth: 0
 
+      - name: Diagnose bundle chunks
+        run: |
+          python3 - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          expected={
+            '00.txt':(4800,'5efae95f7d49581f201a405a43c1295c44c3099d955901692a5ab84c754e732e'),
+            '01.txt':(4800,'07a3f4945af972c93656222f3ecbb972ec64059b137b99be54523b39882c8bb4'),
+            '02.txt':(4800,'7fd842d9012c3a5ff44362f11e1163f8811c20d277bce2509d5177e18c4155b1'),
+            '03.txt':(4800,'26aca15d7d49f6c1f69eaf704b0ea24a1959c3063b8afdc68bd664aa6c2311c7'),
+            '04.txt':(4800,'681d4377278c3ca9cbd0436aab23ec0c72d016cce66cb3c6b23a064ca548f3cd'),
+            '05.txt':(4800,'b2396d20a31ea576ec0319ae1baa668397a04366299caa90120e8bd10346f4e1'),
+            '06.txt':(4800,'9754595c4860bd18620d3939b94c96f7e442104af5cdbfe75a1d90c6ae3f5b4a'),
+            '07.txt':(3832,'75467d887335aa1f47c2e9b3e4684d46a96f7d033cd56e597d71959977bc2c93'),
+          }
+          rows=[]
+          for name,(exp_len,exp_sha) in expected.items():
+            p=Path('automation/app2-010-exam2-bundle-chunks')/name
+            b=p.read_text(encoding='utf-8').strip().encode()
+            sha=hashlib.sha256(b).hexdigest()
+            rows.append({'name':name,'expected_length':exp_len,'actual_length':len(b),'expected_sha256':exp_sha,'actual_sha256':sha,'match':len(b)==exp_len and sha==exp_sha})
+          out={'all_match':all(r['match'] for r in rows),'chunks':rows}
+          Path('automation/audits/app2-010-exam2-bundle-diagnostic.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(out))
+          PY
+
+      - name: Persist bundle diagnostics
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/audits/app2-010-exam2-bundle-diagnostic.json
+          git commit -m 'Record APP2-010 Exam2 bundle diagnostics' || true
+          if ! git push origin HEAD:main; then
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          fi
+
       - name: Decode and apply audited Exam 2 bank
         run: |
           python3 - <<'PY'
           import base64, hashlib, io, json, tarfile
           from pathlib import Path
-
+          diag=json.loads(Path('automation/audits/app2-010-exam2-bundle-diagnostic.json').read_text())
+          if not diag['all_match']:
+              raise SystemExit('bundle chunk mismatch; see diagnostic json')
           chunk_dir=Path('automation/app2-010-exam2-bundle-chunks')
           parts=sorted(chunk_dir.glob('*.txt'))
-          expected_names=[f'{i:02d}.txt' for i in range(8)]
-          if [p.name for p in parts] != expected_names:
-              raise SystemExit(f'unexpected bundle chunks: {[p.name for p in parts]}')
           encoded=''.join(p.read_text(encoding='utf-8').strip() for p in parts)
           raw=base64.b64decode(encoded,validate=True)
           expected_sha='0bbf3cc5b4799c1a092b8c1c7b267d24d2b94594dcd0a44619032651e80ff0e4'
@@ -50,8 +87,7 @@ jobs:
               for name in sorted(expected):
                   data=tf.extractfile(members[name]).read()
                   parsed=json.loads(data.decode('utf-8'))
-                  if not isinstance(parsed,list):
-                      raise SystemExit(f'{name}: not a list')
+                  if not isinstance(parsed,list): raise SystemExit(f'{name}: not a list')
                   (base/name).write_bytes(data)
           print('Applied verified Exam 2 bundle',actual_sha)
           PY
@@ -59,10 +95,9 @@ jobs:
       - name: Validate Exam 2 structure and difficulty
         run: |
           python3 - <<'PY'
-          import json, statistics
+          import json,statistics
           from collections import Counter
           from pathlib import Path
-
           base=Path('touroku-hanbaisha-sprint/questions/exam-2')
           expected={'第1章':20,'第2章':20,'第3章':40,'第4章':20,'第5章':20}
           qs=[]
@@ -81,7 +116,6 @@ jobs:
               for k in ('subject','topic','question','explanation','source_url','reference_date','origin_type','rights_basis'):
                   if not str(q.get(k,'')).strip(): errors.append(f"{q.get('id')}: missing {k}")
           if len(ids)!=len(set(ids)): errors.append('duplicate ids')
-
           absolute_terms=('必ず','すべて','一切','絶対','常に','例外なく','ことはない','必要はない','不要','のみで','だけで','全く','いかなる','どのような場合でも','自己判断で直ちに')
           hedge_terms=('場合がある','ことがある','必要に応じ','基本的に','適切','おそれ','可能性','原則','確認する','相談','受診')
           grades=[]; flagged=[]
@@ -103,9 +137,7 @@ jobs:
           gc=Counter(grades)
           if flagged: errors.append(f'C/D remain: {flagged}')
           if errors:
-              print('FAIL')
-              for e in errors: print('-',e)
-              raise SystemExit(1)
+              print('FAIL'); [print('-',e) for e in errors]; raise SystemExit(1)
           cmd=json.loads(Path('automation/app2-010-exam2-rewrite-command.json').read_text())
           out={'request_id':cmd['request_id'],'questions':len(qs),'chapter_counts':dict(counts),'grade_counts':dict(gc),'C_D':0,'result':'PASS'}
           Path('automation/audits/app2-010-exam2-rewrite-apply.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
