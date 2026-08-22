@@ -4,42 +4,50 @@
   "work_package_id": "MOI-WP1-SEPARATION-PROCESSING",
   "assignment_epoch": 1,
   "work_branch": "moises/wp1-separation-processing",
-  "state": "IN_PROGRESS",
+  "state": "INTEGRATION_READY",
   "current_task": "MOI-PROC-001",
-  "base_integration_sha": "5e958ec999ad9f3d8f3a4a6225d4b6ec06a5c7a3",
-  "head_sha": "090d45e1ca483b5561ae769c16ab767cf56a5e3e",
+  "base_integration_sha": "162e38ec57fadfb9a9dae2d657fe405f0445f180",
+  "head_sha": "8b85f8e8b4c3263236c610a336ce9391c205c193",
   "commits": [
-    "fca2b1900ee07f46e8b29937833df9a503751e56",
-    "2c8be5a27ccd73f868dd1f56e78f48dad0b93468",
-    "5ca42e901039b0c9481248d847848db02b3bae18",
-    "5d7e89c273ae048ba6fc9b5c4499f335fcd9a434",
-    "91dadd9403a31866f7486b592c94cf8aab1b56c6",
-    "ba3404236f000e6013d56ca8f49b2f191bbe086e",
-    "fb6f6ff6b3fbeb1d54e6e7b1f1d23f6462e30c07",
-    "f31698807bcebcea5ba937776774080eb8a0ed2a",
-    "a8087c8136759c815111221e0eb72c6ef92c7a79",
-    "d0634ac16ddd65fdc49e9bd74458dc6dd79e1c90",
-    "ab7a7951eb3401a4c850ce0fd7dfb0cffb5bd780",
-    "91d6c85cb8677645b1c0260577ad20fd151c2856",
-    "090d45e1ca483b5561ae769c16ab767cf56a5e3e"
+    "c9240a71a47ce0a953b28e190fa96205f1b50380",
+    "c57f8f30290f8d1192f1aa7ff2d778076ae4dd79",
+    "bebd6712920fef2e0b1c300f2f9060211ee234f6",
+    "9be6f82c2b5d694b696a17824fbd9ba365c6975d",
+    "fa250f9f6a5e7fcd58b11df0745440aa0c9bf529",
+    "c2c85ce97bc252f60e197a53bca49fb069e60f9c",
+    "3d0a762bac3faced6b4a373aac0013df842de15b",
+    "bc81252f4814bc2877deb98af063edd268f4b305",
+    "ec54f6440d26cd122f28e46887e459864c40d5b3",
+    "cef31d03d3048e99ddf2cad1418def3b4685bcca",
+    "8b85f8e8b4c3263236c610a336ce9391c205c193"
   ],
   "tests": [
-    "Swift 6.2.1: ServerSeparationProvider contract typecheck => exit 0",
-    "Python unittest rights gate: 6 tests, 0 failures",
-    "AudioShake adapter reconstructed-readback py_compile: PASS",
-    "AudioShake adapter contract unittest: 10 tests, 0 failures",
-    "2026-08-22 15:25 JST branch review: canonical is 28 commits ahead from merge-base but contains no Processing/** changes; Worker-1 unintegrated files remain Separation/** only"
+    "Swift 6.2.1: -parse-as-library -strict-concurrency=complete -warnings-as-errors compile => PASS",
+    "MOI_PROC_001_SELF_TEST_PASS: 7 lifecycle/recovery scenarios passed",
+    "MOI_PROC_001_FILE_STORE_PASS: semantic durable-state roundtrip, removal, corrupt-state fail-closed classification passed",
+    "scope compare at 2026-08-22 16:03 JST: branch ahead 11 / behind 40; all four ahead files are tech-assets/moises-audio/Processing/**",
+    "integration changes since merge-base 090d45e1 contain no Processing/** file; no owned-scope conflict"
   ],
   "evidence": [
-    "MOI-SEP-002 is now canonical BLOCKED_HUMAN; its partial server provider/rights gate is integrated by HQ while the AudioShake adapter batch remains on the Worker-1 branch.",
-    "HQ explicitly released MOI-PROC-001 so processing lifecycle may proceed independently behind canonical separation contracts.",
-    "Processing lifecycle owned scope confirmed: tech-assets/moises-audio/Processing/**."
+    "tech-assets/moises-audio/Processing/Sources/ProcessingLifecycleStateStore.swift",
+    "tech-assets/moises-audio/Processing/Sources/ProcessingLifecycleCoordinator.swift",
+    "tech-assets/moises-audio/Processing/Tests/MOI_PROC_001_SelfTest.swift",
+    "tech-assets/moises-audio/Processing/MOI-PROC-001_VALIDATION.md",
+    "durable start/job binding, reconnect, cancel intent, terminal rollback, retry gating and relaunch recovery implemented",
+    "result finalization journaled resultStaged -> resultPersisted -> completed; DB write failure resumes without refetching provider result",
+    "old stem set is protected by marker-backed transaction; markerless interrupted backup never deletes live outputs",
+    "ambiguous provider.start response is fail-closed and cannot auto-retry because current HQ SourceSeparationProviding.start contract exposes no caller idempotency token"
   ],
   "known_gaps": [
-    "MOI-SEP-002 remains BLOCKED_HUMAN on lawful separator supply/credentials and G1/G2 real-audio corpus.",
-    "MOI-P020 cannot reach PARITY from lifecycle implementation alone; real production separator interruption/recovery evidence remains required."
+    "MOI-SEP-002 remains BLOCKED_HUMAN on production separator commercial/privacy/credential terms plus G1/G2 rights-cleared real-audio fixtures.",
+    "MOI-P020 remains MISSING: real production-backend interruption/relaunch/cancel/retry, long-track/network/storage-pressure and current-iPhone differential evidence are still required before PARITY.",
+    "Exactly-once server start after response loss cannot be guaranteed by the current Shared start(request) signature; automatic duplicate retry is intentionally suppressed."
   ],
-  "hq_requests": [],
-  "last_updated": "2026-08-22T15:25:00+09:00",
+  "hq_requests": [
+    "Semantic review/integration of the four Processing/** files for MOI-PROC-001.",
+    "Consider a future HQ Shared contract extension carrying a durable caller-generated idempotency token through SourceSeparationProviding.start, or require the selected provider implementation to guarantee equivalent stable idempotency internally.",
+    "When MOI-SEP-002 Human Gate clears, schedule real-backend lifecycle/recovery evidence before any MOI-P020 PARITY promotion."
+  ],
+  "last_updated": "2026-08-22T16:04:00+09:00",
   "writer_policy": "Only Moises-Worker-1 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
 }
