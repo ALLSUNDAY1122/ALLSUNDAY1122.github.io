@@ -1,0 +1,91 @@
+name: APP2-003 夜の書架 Age Rating Audit
+
+on:
+  push:
+    branches:
+      - automation/app-development-2-session-dispatcher
+    paths:
+      - automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-age-rating-trigger.json
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: macos-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Read current age rating declaration
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          sys.path.insert(0, 'scripts')
+          from app_store_connect_api import api_get, load_private_key, make_token
+
+          APP_ID = '6794137637'
+          out = {'app_id': APP_ID, 'ok': False}
+          issuer = os.environ.get('ASC_ISSUER_ID')
+          key_id = os.environ.get('ASC_KEY_ID')
+          key_path, cleanup = load_private_key()
+          token = make_token(issuer, key_id, key_path)
+          try:
+              status, infos = api_get(token, f'/v1/apps/{APP_ID}/appInfos?limit=20')
+              rows = infos.get('data') or []
+              if not rows:
+                  raise RuntimeError('No appInfo resource found')
+              info = rows[0]
+              info_id = info.get('id')
+              attrs = info.get('attributes') or {}
+              status2, decl = api_get(token, f'/v1/appInfos/{info_id}/ageRatingDeclaration')
+              d = decl.get('data') or {}
+              da = d.get('attributes') or {}
+              status3, territories = api_get(token, f'/v1/appInfos/{info_id}/territoryAgeRatings?limit=200')
+              territory_rows = []
+              for row in territories.get('data') or []:
+                  a = row.get('attributes') or {}
+                  territory_rows.append({
+                      'territory': a.get('territory'),
+                      'appStoreAgeRating': a.get('appStoreAgeRating'),
+                      'brazilAgeRating': a.get('brazilAgeRating') or a.get('brazilAgeRatingV2'),
+                      'koreaAgeRating': a.get('koreaAgeRating'),
+                  })
+              keep = [
+                  'horrorOrFearThemes','matureOrSuggestiveThemes','profanityOrCrudeHumor',
+                  'violenceCartoonOrFantasy','violenceRealistic','violenceRealisticProlongedGraphicOrSadistic',
+                  'sexualContentOrNudity','sexualContentGraphicAndNudity','gambling','gamblingSimulated',
+                  'alcoholTobaccoOrDrugUseOrReferences','gunsOrOtherWeapons','unrestrictedWebAccess',
+                  'userGeneratedContent','messagingAndChat','socialMedia','socialMediaAgeRestricted',
+                  'ageAssurance','parentalControls','medicalOrTreatmentInformation','healthOrWellnessTopics',
+                  'contests','lootBox','advertising','ageRatingOverride','ageRatingOverrideV2',
+                  'koreaAgeRatingOverride','developerAgeRatingInfoUrl','kidsAgeBand'
+              ]
+              out.update({
+                  'ok': status == 200 and status2 == 200,
+                  'app_info_id': info_id,
+                  'appStoreAgeRating': attrs.get('appStoreAgeRating'),
+                  'appInfoState': attrs.get('state') or attrs.get('appStoreState'),
+                  'declaration_id': d.get('id'),
+                  'declaration': {k: da.get(k) for k in keep if k in da},
+                  'territory_age_ratings': territory_rows,
+                  'http': {'appInfos': status, 'ageRatingDeclaration': status2, 'territoryAgeRatings': status3}
+              })
+          finally:
+              if cleanup: cleanup.unlink(missing_ok=True)
+
+          p = Path('automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-age-rating.json')
+          p.parent.mkdir(parents=True, exist_ok=True)
+          p.write_text(json.dumps(out, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+      - name: Persist audit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-age-rating.json
+          git commit -m "Persist APP2-003 age rating audit" || exit 0
+          git push
