@@ -6,13 +6,13 @@
   "assignment_epoch": 2,
   "work_branch": "moises/wp3-playback-dsp",
   "state": "IN_PROGRESS",
-  "current_bundle": "L3-M01",
-  "completed_bundles": [],
+  "current_bundle": "L3-M02",
+  "completed_bundles": ["L3-M01"],
   "epoch_contract_sha": "2edf4411f69af37f9b57a363096fb2787ecfc713",
   "frozen_integration_sha": "1648a275833ad4e8aed3245347e6de231fd0487f",
   "base_integration_sha": "1648a275833ad4e8aed3245347e6de231fd0487f",
   "branch_merge_base_sha": "7948195f1d94f28bc212c79b310fdaed00a4f580",
-  "head_sha": "8809eea5fca0ecd6e0e620455b96c55c899654d7",
+  "head_sha": "1314dadb02b981cfffb28b70fe8ce96a1bed2226",
   "existing_unintegrated_commits": [
     "177ff61eca12c2920656a995d1fe879ea9f17237",
     "d90e3bf264940723e0b2e41ce87e5cc36fd50c4b",
@@ -27,25 +27,47 @@
     "a2b0db1eac2b18d82e2adbdde51e6c28e792fd55",
     "5aca919013e2fe58475529f256258eb72ea13b95",
     "552e41fab118820e7f7abb87be0af73c07779f58",
-    "8809eea5fca0ecd6e0e620455b96c55c899654d7"
+    "8809eea5fca0ecd6e0e620455b96c55c899654d7",
+    "1ae52911c70e7284be76a947120ba0c74613d4ac",
+    "ba37504e5213ddfdb6d522cceffbdb2d37990b22",
+    "b100b4b05cba8ca0b58fcacafea0bd2adf12df8a",
+    "9b6bc90d11d345818844a7824f824f0d7e1c76ad",
+    "14fdfcef7cd695c8391b108010a9aed90820e931",
+    "b0e42bc7fca45f6e51bc023c13a0bcf4dd003a18",
+    "f67e0e3e2f116fd51f309760eb4060219f1495f8",
+    "1314dadb02b981cfffb28b70fe8ce96a1bed2226"
   ],
   "tests": [
-    "Epoch-1 Playback portable/core and scheduling-safety regressions remain green from prior wave"
+    "Inherited epoch-1 Playback portable/core and scheduling-safety regressions remain preserved on branch",
+    "L3-M01 Swift 6.2.1 portable measurement harness self-test: PASS",
+    "L3-M01 fail-closed coverage: harness-only cannot claim parity, synthetic-only blocked, timing count mismatch blocked, non-monotonic capture blocked, excessive onset/seek values fail automated gate",
+    "L3-M01 long measurement benchmark: 1000 loop boundaries + 7200 clicks per run x200 => median 0.0395ms, p95 0.0405ms, p99 0.0680ms, max 0.1162ms"
   ],
   "evidence": [
-    "v3 epoch-2 contract captured from WORKER_BOOTSTRAP.md blob 2edf4411f69af37f9b57a363096fb2787ecfc713",
-    "Shared/App frozen contract snapshot captured at integration 1648a275833ad4e8aed3245347e6de231fd0487f",
-    "epoch migration compare: work branch has six unintegrated owned-scope Playback commits; destructive sync/reset is therefore forbidden and results are carried forward",
-    "next execution source is lane-plan-v3 L3-M01; Global Queue is not used for dispatch"
+    "Playback/Measurements/Lane3DeviceMeasurementHarness.swift",
+    "Playback/Tests/L3_M01_MeasurementHarnessSelfTest.swift",
+    "Playback/Tests/L3_M01_MeasurementHarnessBenchmark.swift",
+    "Playback/benchmarks/L3-M01_DEVICE_MEASUREMENT_GATE.md",
+    "Playback/benchmarks/L3-M01_RESULT.schema.json",
+    "Playback/benchmarks/L3-M01_FIXTURE_MANIFEST.example.json",
+    "Playback/benchmarks/L3-M01_RESULT.example.json",
+    "Playback/benchmarks/L3-M01_VALIDATION.json",
+    "L3-M01 defines 14 automated metrics covering onset skew, seek gap, loop drift, gain transitions, metronome/count-in timing, tempo/pitch accuracy, render/control latency, transient loss and noise-floor increase",
+    "parityEvidenceEligible is fail-closed unless rights-cleared real audio, physical iPhone capture, actual audio capture, automated gates, human artifact review and Reference differential are all present",
+    "epoch-2 compare from frozen integration 1648a275... shows 14 branch commits ahead, all changed files inside Playback/**; no Shared/App/Package/PARITY modifications"
   ],
   "known_gaps": [
-    "The six inherited Playback hardening commits remain unintegrated by HQ",
-    "Apple AVFAudio/device measurements remain unavailable in the current Linux worker environment",
-    "MOI-P006/P007/P008/P010/P012/P014/P015 remain MISSING and cannot be promoted by harness-only evidence"
+    "Physical-iPhone AVAudioEngine capture and Apple SDK execution remain HQ late-integration work; harness-only results cannot satisfy PARITY",
+    "Rights-cleared real source/stem fixtures and Moises differential evidence are still required for final Playback/DSP quality judgment",
+    "Audible click/pop/zipper and tempo/pitch artifact acceptance still requires human listening review",
+    "resource-locks.json metadata still reports assignment_epoch 1 while v3 work-packages/lane-plan are epoch 2; ownership scopes are unchanged so Lane 3 execution is not blocked",
+    "MOI-P006/P007/P008/P010/P012/P014/P015 remain MISSING"
   ],
   "hq_requests": [
-    "At the next late-integration checkpoint, preserve and semantically integrate inherited Playback hardening plus completed L3 Macro Bundles; do not require per-bundle merge/release"
+    "At late integration, wire physical-device/Apple capture observations into Lane3DeviceMeasurementHarness without changing the metric contract, then independently validate underlying evidence before any PARITY promotion",
+    "Normalize resource-lock manifest assignment_epoch metadata to epoch 2 when HQ next edits that ledger; Lane 3 ownership itself is unchanged",
+    "Do not merge/release per bundle under v3; preserve inherited six Playback hardening commits plus L3-M01 until coherent Lane 3 checkpoint"
   ],
-  "last_updated": "2026-08-22T17:20:00+09:00",
-  "writer_policy": "Only Moises-Worker-3 may update this status file; HQ reads it but remains final integration/PARITY authority."
+  "last_updated": "2026-08-22T17:32:00+09:00",
+  "writer_policy": "Only Moises-Worker-3 may update this status file; HQ remains semantic integration and PARITY authority."
 }
