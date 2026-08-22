@@ -1,23 +1,23 @@
 {
-  "request_id": "app2-005-hm1-asc-inspect-20260822-1938",
-  "target_head_sha": "d60b800cba91573d8437f8e7bc8fce08e6b76a96",
-  "workflow": "app2-005-hm1-asc-readback.yml",
+  "request_id": "app2-005-hm1-build-inspect-20260822-1951",
+  "target_head_sha": "6b0772af80da1efa9b07940860ee0dec202d157d",
+  "workflow": "codemagic-build-gateway.yml",
   "run_found": true,
   "run": {
-    "id": 32568001887,
-    "name": "APP2-005 HealthManager1 ASC read-back",
-    "status": "completed",
-    "conclusion": "failure",
-    "created_at": "2026-08-22T10:35:27Z",
-    "updated_at": "2026-08-22T10:35:45Z",
-    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32568001887",
-    "head_sha": "d60b800cba91573d8437f8e7bc8fce08e6b76a96"
+    "id": 32568601073,
+    "name": "Codemagic Build Gateway",
+    "status": "in_progress",
+    "conclusion": null,
+    "created_at": "2026-08-22T10:48:51Z",
+    "updated_at": "2026-08-22T10:48:56Z",
+    "html_url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/actions/runs/32568601073",
+    "head_sha": "6b0772af80da1efa9b07940860ee0dec202d157d"
   },
   "jobs": [
     {
-      "name": "readback",
-      "status": "completed",
-      "conclusion": "failure",
+      "name": "gateway",
+      "status": "in_progress",
+      "conclusion": null,
       "steps": [
         {
           "name": "Set up job",
@@ -30,24 +30,49 @@
           "conclusion": "success"
         },
         {
-          "name": "Query App Store Connect",
+          "name": "Set up Python",
           "status": "completed",
-          "conclusion": "failure"
+          "conclusion": "success"
         },
         {
-          "name": "Persist scoped summary",
+          "name": "Install gateway dependency",
           "status": "completed",
-          "conclusion": "skipped"
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare requested Codemagic workflow",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Execute Codemagic command",
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "name": "Inspect Codemagic build actions",
+          "status": "pending",
+          "conclusion": null
+        },
+        {
+          "name": "Persist request-scoped sanitized result",
+          "status": "pending",
+          "conclusion": null
+        },
+        {
+          "name": "Upload Codemagic result",
+          "status": "pending",
+          "conclusion": null
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "pending",
+          "conclusion": null
         },
         {
           "name": "Post Run actions/checkout@v6",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "status": "completed",
-          "conclusion": "success"
+          "status": "pending",
+          "conclusion": null
         }
       ]
     }
