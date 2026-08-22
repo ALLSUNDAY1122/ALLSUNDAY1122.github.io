@@ -6,8 +6,11 @@
   "lane_id": "LANE-1-SEPARATION-PROCESSING",
   "work_branch": "moises/wp1-separation-processing",
   "state": "IN_PROGRESS",
-  "current_bundle": "L1-M02",
-  "completed_bundles": ["L1-M01"],
+  "current_bundle": "L1-M03",
+  "completed_bundles": [
+    "L1-M01",
+    "L1-M02"
+  ],
   "epoch_contract_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
   "frozen_contracts": {
     "Shared/DomainContracts.swift": "666068b7fb8fc5964138eca96062c059beec4bdd",
@@ -15,7 +18,7 @@
     "App/APP_SHELL_BOUNDARY.md": "d570517220972ab4567ee19e499972f40a42ceb9"
   },
   "base_integration_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
-  "head_sha": "dd3272d45c8e5bb5888d208bba035d3fb6f7d3f8",
+  "head_sha": "3830e3b70ea5ccfb42efe0385421c0b0c64a335e",
   "epoch_start_existing_unintegrated_commits": [],
   "commits": [
     "1f5ffda14c8d0d9ae7f697920ba3a9014b22f610",
@@ -31,7 +34,12 @@
     "6e4ed18f55018efbecad41a7ef5c00d7a17a2ab2",
     "41c1d892db315c7713120e860a961c6372f843e2",
     "5315cf30f488115ff408b98c82ec2407532cad00",
-    "dd3272d45c8e5bb5888d208bba035d3fb6f7d3f8"
+    "dd3272d45c8e5bb5888d208bba035d3fb6f7d3f8",
+    "b734e524b1a11bb6cfb14d88d37640cfa7325b95",
+    "459bf1355731a6888ac063bf98cd1b3acb0e936d",
+    "0b25303c79a11bd1e33826c7375ef5bb6515fa91",
+    "c36aeaeb86b0677f0a3733c70d91a057b7a3d781",
+    "3830e3b70ea5ccfb42efe0385421c0b0c64a335e"
   ],
   "tests": [
     "epoch-2 migration compare: branch had ahead_by=0 and behind_by=74 versus integration 17d129c9; all prior Worker-1 owned-scope work was already canonical; branch fast-forwarded without force/reset/discard",
@@ -39,7 +47,13 @@
     "L1-M01 unittest suite => 16 tests, 0 failures",
     "L1-M01 CLI evaluate smoke => exit 0; objective role set bass/drums/other/vocals; emitted parity_state NON_PARITY_EVIDENCE_ONLY",
     "GitHub read-back confirmed persisted evaluator core, CLI and test suite on the lane branch",
-    "frozen-base scope compare => branch ahead 14 / behind 0; every changed file is under tech-assets/moises-audio/Separation/**"
+    "L1-M01 frozen-base scope compare => branch ahead 14 / behind 0; every changed file is under tech-assets/moises-audio/Separation/**",
+    "L1-M02 Swift 6.2.1 production additions compiled with -parse-as-library -strict-concurrency=complete -warnings-as-errors against frozen-contract-compatible lane harness => PASS",
+    "L1-M02 failure self-test compiled with -strict-concurrency=complete -warnings-as-errors => PASS",
+    "L1_M02_SELF_TEST_PASS scenarios=7",
+    "L1_M02_MATRIX_PASS scenarios=14; unique lifecycle cases include ambiguous start, reconnect, cancel, storage/network/provider failures and crash-safe output recovery",
+    "GitHub read-back confirmed persisted L1-M02 capability, stable server-start adapter, self-test, failure matrix and validation evidence",
+    "L1-M02 frozen-base scope compare => branch ahead 19 / behind 0; all 19 epoch-2 changed files are under tech-assets/moises-audio/Separation/** or Processing/**"
   ],
   "evidence": [
     "tech-assets/moises-audio/Separation/Evaluation/evaluation_core.py",
@@ -58,22 +72,34 @@
     "tech-assets/moises-audio/Separation/benchmarks/L1-M01_VALIDATION.md",
     "G1/G2 rights/provenance claims are bound to immutable audio hashes and fail closed on missing permissions/classes/roles; legal authenticity of the private signed grant remains a Human Gate outside GitHub",
     "objective G1 evaluator is chunked/streaming and records per-stem SI-SDR/RMSE plus mixture reconstruction without allowing synthetic-only evidence to become PARITY",
-    "all generated-signal unit/smoke data is explicitly mechanics-only and is not separation-quality evidence"
+    "all generated-signal unit/smoke data is explicitly mechanics-only and is not separation-quality evidence",
+    "tech-assets/moises-audio/Processing/Sources/ProcessingProviderCapabilities.swift",
+    "tech-assets/moises-audio/Processing/Sources/ServerStableStartCapability.swift",
+    "tech-assets/moises-audio/Processing/Tests/L1_M02_SelfTest.swift",
+    "tech-assets/moises-audio/Processing/Tests/L1-M02_FAILURE_MATRIX.json",
+    "tech-assets/moises-audio/Processing/L1-M02_VALIDATION.md",
+    "L1-M02 uses the durable processing generation UUID as a stable provider idempotency key only when the selected provider exposes a lane-local stable-start capability; providers without it remain fail-closed on ambiguous start",
+    "ambiguous-start cancellation now durably binds the recovered provider job before remote cancel and local rollback, so cleanup/storage failure leaves a recoverable cancellationRequested + jobID state"
   ],
   "known_gaps": [
     "No approved production separator credentials/commercial/privacy/retention/cancellation terms or project-owned rights-cleared trained checkpoint are available.",
     "No executable G1/G2 rights-cleared real-audio corpus is available; therefore no real quality, differential listening, latency/cost distribution or production recovery evidence exists.",
     "A public JSON manifest cannot independently authenticate a signed music-rights grant or prove an operator did not mislabel synthetic audio; private rights-record verification remains a required Human Gate.",
-    "MOI-P003/MOI-P004/MOI-P020 remain MISSING; L1-M01 adds evidence infrastructure only and does not promote PARITY."
+    "The selected live server/provider must contractually and behaviorally guarantee same-idempotency-key => same job/no duplicate billing semantics; the lane test harness cannot prove upstream production deduplication.",
+    "The new ServerStableStartCapability is an optional lane-local seam and must be injected during composition; the existing ServerSeparationProvider.start still creates its own random Idempotency-Key when used directly.",
+    "Real network interruption, vendor cancellation, billing deduplication, long-track survival, iPhone background/relaunch and storage-pressure evidence are still absent.",
+    "MOI-P003/MOI-P004/MOI-P020 remain MISSING; L1-M01/L1-M02 are infrastructure and lifecycle evidence only and do not promote PARITY."
   ],
   "hq_requests": [
-    "At the next HQ checkpoint, align resource-locks.json assignment_epoch metadata with v3 epoch 2; current ownership scopes still match Lane 1 so execution was not blocked."
+    "At the next HQ checkpoint, align resource-locks.json assignment_epoch metadata with v3 epoch 2; current ownership scopes still match Lane 1 so execution was not blocked.",
+    "At Late Integration, decide whether to keep the lane-local StableIdempotentSeparationStarting injection or centrally extend the frozen Shared start contract with a caller-supplied idempotency token; L1-M02 itself requires no Shared edit.",
+    "Before real-backend lifecycle evidence, verify the selected project-controlled server/provider guarantees repeated identical Idempotency-Key requests return/recover the same logical job and do not duplicate charge or processing."
   ],
   "legacy_v2": {
     "last_task": "MOI-PROC-001",
     "last_state": "INTEGRATION_READY",
     "note": "All prior owned-scope commits were already integrated before v3 epoch start."
   },
-  "last_updated": "2026-08-22T17:40:00+09:00",
+  "last_updated": "2026-08-22T18:08:00+09:00",
   "writer_policy": "Only Moises-Worker-1 may update this status file. Queue/lane plan/work packages/Shared/App/PARITY/resource locks are read-only to this Worker."
 }
