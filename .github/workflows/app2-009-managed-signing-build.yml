@@ -1,0 +1,223 @@
+name: APP2-009 Managed Signing Build
+
+on:
+  push:
+    branches: [main]
+    paths: ['automation/app2-009-managed-signing-build-command.json']
+
+permissions:
+  contents: write
+
+jobs:
+  prepare-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      TARGET_BUNDLE: jp.allsunday1122.kangoshi
+      TARGET_BUNDLE_RESOURCE: TR32RTG3X3
+      TARGET_CERTIFICATE: K2A3VCP583
+      CM_APP_ID: 6a769d81a1add9d06020b524
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Prepare or reuse Kangoshi App Store profile
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json,os,sys,urllib.request,urllib.error
+          from pathlib import Path
+          sys.path.insert(0,'scripts')
+          from app_store_connect_api import load_private_key, make_token
+          base='https://api.appstoreconnect.apple.com'
+          bundle=os.environ['TARGET_BUNDLE']; bid=os.environ['TARGET_BUNDLE_RESOURCE']; cert=os.environ['TARGET_CERTIFICATE']
+          kp,cleanup=load_private_key(); token=make_token(os.environ['ASC_ISSUER_ID'].strip(),os.environ['ASC_KEY_ID'].strip(),kp)
+          def call(method,path,payload=None):
+            body=None if payload is None else json.dumps(payload,separators=(',',':')).encode()
+            h={'Authorization':'Bearer '+token,'Accept':'application/json'}
+            if body is not None:h['Content-Type']='application/json'
+            req=urllib.request.Request(base+path,data=body,headers=h,method=method)
+            try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                raw=r.read().decode(); return r.status,json.loads(raw) if raw else {}
+            except urllib.error.HTTPError as e:
+              raw=e.read().decode(errors='replace'); return e.code,{'error':raw[:1500]}
+          try:
+            cs,cp=call('GET',f'/v1/certificates/{cert}')
+            if cs!=200: raise SystemExit(f'certificate {cert} unavailable: HTTP {cs}')
+            ca=(cp.get('data') or {}).get('attributes') or {}
+            if ca.get('activated') is False: raise SystemExit('target distribution certificate is not active')
+            ps,pp=call('GET','/v1/profiles?limit=200')
+            if ps!=200: raise SystemExit(f'profile inventory failed: HTTP {ps}')
+            chosen=None
+            for p in pp.get('data',[]):
+              a=p.get('attributes') or {}
+              if a.get('profileType')!='IOS_APP_STORE' or a.get('profileState')!='ACTIVE': continue
+              pid=p.get('id')
+              bs,bp=call('GET',f'/v1/profiles/{pid}/bundleId')
+              if bs!=200 or (bp.get('data') or {}).get('id')!=bid: continue
+              xs,xp=call('GET',f'/v1/profiles/{pid}/relationships/certificates?limit=50')
+              ids={x.get('id') for x in xp.get('data',[])} if xs==200 else set()
+              if cert in ids:
+                chosen={'id':pid,'name':a.get('name'),'state':a.get('profileState'),'created':False}; break
+            if chosen is None:
+              payload={'data':{'type':'profiles','attributes':{'name':'kangoshi_appstore_20260822','profileType':'IOS_APP_STORE'},'relationships':{'bundleId':{'data':{'type':'bundleIds','id':bid}},'certificates':{'data':[{'type':'certificates','id':cert}]}}}}
+              cs2,cr=call('POST','/v1/profiles',payload)
+              if cs2!=201: raise SystemExit(f'Kangoshi profile creation failed: HTTP {cs2}; {str(cr)[:900]}')
+              d=cr.get('data') or {}; a=d.get('attributes') or {}
+              chosen={'id':d.get('id'),'name':a.get('name'),'state':a.get('profileState'),'created':True}
+            out={'task_id':'APP2-009','bundle_id':bundle,'bundle_resource_id':bid,'certificate_id':cert,'certificate_expiration':ca.get('expirationDate'),'profile':chosen,'ok':chosen.get('state')=='ACTIVE'}
+            Path('/tmp/app2-009-managed-profile.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+            if not out['ok']: raise SystemExit('Kangoshi profile is not ACTIVE')
+          finally:
+            if cleanup:
+              try: Path(kp).unlink(missing_ok=True)
+              except Exception: pass
+          PY
+      - name: Install explicit Kangoshi Codemagic workflow
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('codemagic.yaml'); s=p.read_text(encoding='utf-8')
+          block=r'''
+  kangoshi-ios:
+    name: 看護師国家試験 - iOS App Store Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      groups:
+        - app2_010_touhan_signing
+      vars:
+        BUNDLE_ID: jp.allsunday1122.kangoshi
+        APP_STORE_CONNECT_APP_ID: "6801792293"
+        CODEMAGIC_PROFILE_REF: kangoshi_appstore_20260822
+        IAP_PRODUCT_ID: jp.allsunday1122.kangoshi.monthly
+        IAP_LIFETIME_PRODUCT_ID: jp.allsunday1122.kangoshi.lifetime
+        APPICON_SHA256: 6afe16483852c98e0e030874ce7829f0e1a42fe017bb2f854eee1d9410f8ee80
+        XCODE_PROJECT: kangoshi-sprint/ios/KangoshiSprint.xcodeproj
+        XCODE_SCHEME: KangoshiSprint
+      xcode: latest
+    scripts:
+      - name: Install native build tools
+        script: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          python3 -m pip install --disable-pip-version-check 'cairosvg==2.8.2'
+      - name: Audit Kangoshi release inputs
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          test -n "${CERTIFICATE_PRIVATE_KEY:-}"
+          test -n "${APP_STORE_CONNECT_PRIVATE_KEY:-}"
+          test -n "${APP_STORE_CONNECT_KEY_IDENTIFIER:-}"
+          test -n "${APP_STORE_CONNECT_ISSUER_ID:-}"
+          test "$BUNDLE_ID" = "jp.allsunday1122.kangoshi"
+          test "$IAP_PRODUCT_ID" = "jp.allsunday1122.kangoshi.monthly"
+          test "$IAP_LIFETIME_PRODUCT_ID" = "jp.allsunday1122.kangoshi.lifetime"
+          node kangoshi-sprint/audit-official-difficulty.mjs
+          python3 kangoshi-sprint/ios/tools/normalize_swift_numeric_literals.py
+          python3 kangoshi-sprint/ios/tools/prepare_native_content.py
+          test -f kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          echo "$APPICON_SHA256  kangoshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" | shasum -a 256 -c -
+          python3 -c "import json;d=json.load(open('kangoshi-sprint/ios/GeneratedResources/native-content-audit.json',encoding='utf-8'));assert d['pass'] and d['questions']==720 and d['byExam']=={'115':240,'114':240,'113':240};print('PASS: canonical 720-question payload')"
+      - name: Set CI build number and generate native project
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/kangoshi-sprint/ios"
+          BUILD_NUM="${CM_BUILD_NUMBER:?CM_BUILD_NUMBER is required}"
+          python3 - "$BUILD_NUM" <<'PYBUILD'
+          from pathlib import Path
+          import re,sys
+          p=Path('project.yml'); text=p.read_text(encoding='utf-8')
+          text,n=re.subn(r'CURRENT_PROJECT_VERSION:\s*\d+', 'CURRENT_PROJECT_VERSION: '+sys.argv[1], text, count=1)
+          if n!=1: raise RuntimeError('CURRENT_PROJECT_VERSION replacement failed')
+          p.write_text(text,encoding='utf-8')
+          PYBUILD
+          xcodegen generate
+      - name: Initialize signing keychain
+        script: |
+          set -euo pipefail
+          keychain initialize
+      - name: Fetch managed App Store signing files
+        script: |
+          set -euo pipefail
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE
+      - name: Add signing certificate to keychain
+        script: |
+          set -euo pipefail
+          keychain add-certificates
+      - name: Apply App Store signing profile
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/kangoshi-sprint/ios"
+          xcode-project use-profiles
+      - name: Build signed IPA
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+      - name: Upload signed IPA to App Store Connect
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          app-store-connect publish --path "$IPA_PATH" --altool-retries 3 --altool-retry-wait 2
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+'''
+          m=re.search(r'(?ms)^  kangoshi-ios:\n.*?(?=^  \S[^\n]*:\n|\Z)',s)
+          if not m: raise SystemExit('kangoshi-ios block not found')
+          out=s[:m.start()]+block+s[m.end():]
+          p.write_text(out,encoding='utf-8')
+          check=p.read_text(encoding='utf-8')
+          for token in ['- app2_010_touhan_signing','CERTIFICATE_PRIVATE_KEY','fetch-signing-files "$BUNDLE_ID"','keychain add-certificates','xcode-project use-profiles','app-store-connect publish','jp.allsunday1122.kangoshi.lifetime']:
+            if token not in check: raise SystemExit('missing Kangoshi managed-signing token: '+token)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          git commit -m 'APP2-009: use explicit managed signing for Kangoshi' || true
+          if ! git diff HEAD^ --quiet 2>/dev/null; then git pull --rebase origin main; git push origin HEAD:main; fi
+      - name: Persist profile evidence
+        run: |
+          cp /tmp/app2-009-managed-profile.json /tmp/profile.json
+          git fetch origin main; git reset --hard origin/main
+          mkdir -p automation/chatgpt-dispatcher/app-development-2/evidence
+          cp /tmp/profile.json automation/chatgpt-dispatcher/app-development-2/evidence/APP2-009-managed-signing.json
+          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-009-managed-signing.json
+          git commit -m 'APP2-009: persist managed signing evidence' || true
+          if ! git diff HEAD^ --quiet 2>/dev/null; then git pull --rebase origin main; git push origin HEAD:main; fi
+      - name: Trigger Kangoshi build and wait
+        id: build
+        continue-on-error: true
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          CM_APP_ID: ${{ env.CM_APP_ID }}
+        run: |
+          cat >/tmp/cmd.json <<'JSON'
+          {"request_id":"app2-009-kangoshi-managed-build-20260822","action":"build","workflow_id":"kangoshi-ios","branch":"main","wait":true,"timeout_seconds":4200}
+          JSON
+          python scripts/codemagic_build_gateway.py --command /tmp/cmd.json --output /tmp/result.json
+      - name: Persist build result
+        if: always() && hashFiles('/tmp/result.json') != ''
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('/tmp/result.json').read_text())
+          keep={k:r.get(k) for k in ('request_id','ok','workflow_id','branch','resolved_app_id','build_id','status','app_id','error','build_details')}
+          Path('/tmp/safe.json').write_text(json.dumps(keep,ensure_ascii=False,indent=2)+'\n')
+          PY
+          git fetch origin main; git reset --hard origin/main
+          mkdir -p automation/codemagic-results
+          cp /tmp/safe.json automation/codemagic-results/app2-009-kangoshi-managed-build-20260822.json
+          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/codemagic-results/app2-009-kangoshi-managed-build-20260822.json
+          git commit -m 'APP2-009: persist managed Kangoshi build result' || true
+          if ! git diff HEAD^ --quiet 2>/dev/null; then git pull --rebase origin main; git push origin HEAD:main; fi
+      - name: Enforce build success
+        if: steps.build.outcome != 'success'
+        run: exit 1
