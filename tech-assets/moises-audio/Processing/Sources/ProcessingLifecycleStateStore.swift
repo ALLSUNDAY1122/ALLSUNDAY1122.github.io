@@ -6,6 +6,8 @@ public enum DurableProcessingState: String, Codable, Sendable {
     case active
     case cancellationRequested
     case ready
+    case resultStaged
+    case resultPersisted
     case failed
     case cancelled
     case completed
@@ -18,6 +20,7 @@ public struct DurableProcessingRecord: Hashable, Codable, Sendable {
     public let jobID: ProcessingJobID?
     public let state: DurableProcessingState
     public let lastSnapshot: ProcessingSnapshot?
+    public let resultArtifacts: [StemArtifact]?
     public let retryCount: Int
     public let stableErrorCode: String?
     public let updatedAt: Date
@@ -29,6 +32,7 @@ public struct DurableProcessingRecord: Hashable, Codable, Sendable {
         jobID: ProcessingJobID?,
         state: DurableProcessingState,
         lastSnapshot: ProcessingSnapshot?,
+        resultArtifacts: [StemArtifact]? = nil,
         retryCount: Int,
         stableErrorCode: String?,
         updatedAt: Date = Date()
@@ -40,6 +44,7 @@ public struct DurableProcessingRecord: Hashable, Codable, Sendable {
         self.jobID = jobID
         self.state = state
         self.lastSnapshot = lastSnapshot
+        self.resultArtifacts = resultArtifacts
         self.retryCount = retryCount
         self.stableErrorCode = stableErrorCode
         self.updatedAt = updatedAt
@@ -51,6 +56,8 @@ public struct DurableProcessingRecord: Hashable, Codable, Sendable {
         state: DurableProcessingState? = nil,
         lastSnapshot: ProcessingSnapshot? = nil,
         preserveSnapshotWhenNil: Bool = true,
+        resultArtifacts: [StemArtifact]? = nil,
+        preserveArtifactsWhenNil: Bool = true,
         stableErrorCode: String? = nil,
         preserveErrorWhenNil: Bool = true,
         updatedAt: Date = Date()
@@ -62,6 +69,7 @@ public struct DurableProcessingRecord: Hashable, Codable, Sendable {
             jobID: jobID ?? (preserveJobIDWhenNil ? self.jobID : nil),
             state: state ?? self.state,
             lastSnapshot: lastSnapshot ?? (preserveSnapshotWhenNil ? self.lastSnapshot : nil),
+            resultArtifacts: resultArtifacts ?? (preserveArtifactsWhenNil ? self.resultArtifacts : nil),
             retryCount: retryCount,
             stableErrorCode: stableErrorCode ?? (preserveErrorWhenNil ? self.stableErrorCode : nil),
             updatedAt: updatedAt
@@ -189,7 +197,6 @@ public actor FileProcessingOutputTransaction: ProcessingOutputTransacting {
 
     public func rollback(projectID: ProjectID, generationID: UUID) async throws {
         let transaction = transactionURL(projectID: projectID, generationID: generationID)
-        let marker = transaction.appendingPathComponent("state.json")
         let final = finalStemDirectory(projectID: projectID)
 
         do {
@@ -203,8 +210,6 @@ public actor FileProcessingOutputTransaction: ProcessingOutputTransacting {
             }
             if fileManager.fileExists(atPath: transaction.path) {
                 try fileManager.removeItem(at: transaction)
-            } else if fileManager.fileExists(atPath: marker.path) {
-                try fileManager.removeItem(at: marker)
             }
         } catch {
             throw DomainFailure.processingFailed(code: "PROC_OUTPUT_TRANSACTION_ROLLBACK_FAILED", retryable: true)
