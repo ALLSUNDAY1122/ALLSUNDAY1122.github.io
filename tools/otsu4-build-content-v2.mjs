@@ -6,8 +6,9 @@ import { fileURLToPath } from 'node:url';
 const here=path.dirname(fileURLToPath(import.meta.url));
 const repo=path.resolve(here,'..');
 const bankDir=path.join(repo,'kikenbutsu-otsu4-sprint');
+// Wave2 builder must stay pinned to Wave1+Wave2. Wave3 is appended only by otsu4-build-content-v3.mjs.
 const waveInputs=fs.readdirSync(bankDir)
-  .filter(name=>/^question-bank-v3-wave\d+-(?:certified|fixups)\.js$/.test(name))
+  .filter(name=>/^question-bank-v3-wave[12]-(?:certified|fixups)\.js$/.test(name))
   .sort()
   .map(name=>path.join(bankDir,name));
 const input=[
