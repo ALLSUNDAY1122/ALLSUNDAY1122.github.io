@@ -1,13 +1,17 @@
 workflows:
   otsu4-ios:
-    name: 危険物乙4 - Codemagic Mac initialization probe
+    name: 危険物乙4 - Codemagic signing probe
     max_build_duration: 10
     instance_type: mac_mini_m2
     environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.otsu4
       xcode: latest
     scripts:
-      - name: Probe Mac workflow
+      - name: Probe signing identities
         script: |
           set -euo pipefail
-          echo "Codemagic Mac workflow initialized"
+          echo "Codemagic signing workflow initialized"
           xcodebuild -version
+          find "$HOME/Library/MobileDevice" -maxdepth 3 -type f -print 2>/dev/null || true
