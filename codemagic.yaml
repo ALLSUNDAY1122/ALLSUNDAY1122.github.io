@@ -755,7 +755,7 @@ workflows:
     max_build_duration: 60
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: codemagic
+      app_store_connect: "Codemagic Shiwake Swipe"
     environment:
       ios_signing:
         distribution_type: app_store
@@ -764,6 +764,7 @@ workflows:
         BUNDLE_ID: jp.allsunday1122.kangoshi
         CODEMAGIC_PROFILE_REF: kangoshi_appstore
         IAP_PRODUCT_ID: jp.allsunday1122.kangoshi.monthly
+        IAP_LIFETIME_PRODUCT_ID: jp.allsunday1122.kangoshi.lifetime
         XCODE_PROJECT: kangoshi-sprint/ios/KangoshiSprint.xcodeproj
         XCODE_SCHEME: KangoshiSprint
       xcode: latest
@@ -806,7 +807,7 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: false
+        submit_to_testflight: true
         submit_to_app_store: false
 
   touhan-ios:
