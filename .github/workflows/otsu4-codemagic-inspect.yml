@@ -1,0 +1,59 @@
+name: Otsu4 Codemagic Inspect
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  inspect:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTS4-CM-INSPECT]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch sanitized Codemagic build diagnostics
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          python - <<'PY'
+          import json, os, re, urllib.error, urllib.request
+          from pathlib import Path
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token: raise SystemExit('CM_API_TOKEN missing')
+          body=json.loads(os.environ.get('ISSUE_BODY','{}'))
+          build_id=str(body.get('build_id',''))
+          if not re.fullmatch(r'[A-Za-z0-9_-]{8,120}',build_id): raise SystemExit('invalid build_id')
+          def get(url):
+              req=urllib.request.Request(url,headers={'x-auth-token':token,'Accept':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r: return json.loads(r.read().decode('utf-8'))
+              except urllib.error.HTTPError as e:
+                  return {'http_status':e.code,'error':e.read().decode('utf-8',errors='replace')[:2000]}
+          sensitive=('secret','token','password','credential','private','apikey','api_key','environment','variable')
+          def clean(v):
+              if isinstance(v,dict): return {k:('[REDACTED]' if any(p in str(k).lower() for p in sensitive) else clean(x)) for k,x in v.items()}
+              if isinstance(v,list): return [clean(x) for x in v]
+              return v
+          payload={
+              'build_id':build_id,
+              'build':clean(get(f'https://codemagic.io/api/v3/builds/{build_id}')),
+              'actions':clean(get(f'https://codemagic.io/api/v3/builds/{build_id}/actions'))
+          }
+          Path('otsu4-codemagic-inspect.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
+          print('PASS: diagnostics fetched for',build_id)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: otsu4-codemagic-inspect-${{ github.run_id }}
+          path: otsu4-codemagic-inspect.json
+          retention-days: 7
+      - name: Report run locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`Otsu4 Codemagic inspect finished. status=${{ job.status }}; run_id=${context.runId}`});
