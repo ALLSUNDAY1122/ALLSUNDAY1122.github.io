@@ -19,6 +19,42 @@ vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(wave3Path, 'utf8'), ctx, { timeout: 10000, filename: wave3Path });
 const questions = ctx.QUESTIONS;
 
+// Final psychometric review: these legacy physics items had correct answers that
+// were visibly longer than their distractors after the 720-question expansion.
+// Keep the verified correct answer unchanged and replace only the four wrong
+// choices with plausible, same-domain alternatives of comparable length.
+const finalReviewedDistractors = {
+  P001: [
+    '外部点火源を用いず加熱したとき、自ら燃焼を始める最低温度',
+    '液体内部から気泡が連続して発生し、沸騰を始める温度',
+    '液面上の可燃性蒸気濃度が燃焼上限に達する温度',
+    '液体の蒸気圧が標準大気圧の半分に達する温度'
+  ],
+  P002: [
+    '点火源を近づけたとき、蒸気が瞬間的に燃え始める最低温度',
+    '液体の蒸気圧が外圧と等しくなり、沸騰を始める温度',
+    '可燃性蒸気の濃度が燃焼下限に達する最低濃度そのもの',
+    '液体を加熱したとき、蒸発速度が最大になる最低温度'
+  ],
+  P023: [
+    '比熱が小さい物質ほど、同じ質量・温度上昇に多くの熱が必要',
+    '比熱が大きい物質ほど、同じ熱量で生じる温度上昇が大きい',
+    '比熱が同じなら、質量に関係なく同じ熱量で同じ温度上昇となる',
+    '比熱は物質の温度変化には関係せず、蒸発時の潜熱だけを表す'
+  ]
+};
+const byID = new Map(questions.map(q => [q.id, q]));
+for (const [id, wrongs] of Object.entries(finalReviewedDistractors)) {
+  const q = byID.get(id);
+  if (!q) throw new Error(`${id}: final reviewed item missing`);
+  const correct = q.choices[q.answer];
+  const pool = [correct, ...wrongs];
+  if (new Set(pool).size !== 5) throw new Error(`${id}: duplicate final reviewed choices`);
+  const shift = Number(id.slice(1)) % 5;
+  q.choices = pool.slice(shift).concat(pool.slice(0, shift));
+  q.answer = q.choices.indexOf(correct);
+}
+
 const expected = { total: 720, subjects: { '法令': 288, '物理・化学': 192, '性質・消火': 240 } };
 const errors = [];
 const counts = {};
@@ -67,7 +103,7 @@ if (wave3.length !== 120) errors.push(`wave3 ${wave3.length} != 120`);
 if (wave3.filter(q => q.subject === '法令').length !== 48) errors.push('wave3 law count != 48');
 if (wave3.filter(q => q.subject === '物理・化学').length !== 32) errors.push('wave3 physics count != 32');
 if (wave3.filter(q => q.subject === '性質・消火').length !== 40) errors.push('wave3 properties count != 40');
-const report = { ok: errors.length === 0, stage: 'Wave3 final 720', total: questions.length, counts, exactQuestionDuplicates: questions.length - seen.question.size, duplicateLearningObjectives: questions.length - seen.objective.size, duplicateExplanationPackages: questions.length - seen.explanation.size, wave3Count: wave3.length, errors };
+const report = { ok: errors.length === 0, stage: 'Wave3 final 720', total: questions.length, counts, exactQuestionDuplicates: questions.length - seen.question.size, duplicateLearningObjectives: questions.length - seen.objective.size, duplicateExplanationPackages: questions.length - seen.explanation.size, wave3Count: wave3.length, finalReviewedAnswerCueItems: Object.keys(finalReviewedDistractors), errors };
 console.log(JSON.stringify(report, null, 2));
 if (errors.length) process.exit(1);
 if (!process.argv.includes('--check')) fs.writeFileSync(bankPath, JSON.stringify({ ...bank, questions }, null, 2) + '\n');
