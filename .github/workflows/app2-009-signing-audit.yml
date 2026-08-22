@@ -45,32 +45,39 @@ jobs:
             st,bp=call('https://api.appstoreconnect.apple.com/v1/bundleIds?'+q,ah)
             bids=bp.get('data',[]) if isinstance(bp,dict) else []
             bid=bids[0]['id'] if st==200 and bids else None
-            profiles=[]
+            profiles=[]; ps=None; total_profiles=0
             if bid:
-              q=urllib.parse.urlencode({'filter[bundleId]':bid,'filter[profileType]':'IOS_APP_STORE','limit':'200'})
-              ps,pp=call('https://api.appstoreconnect.apple.com/v1/profiles?'+q,ah)
-              for p in pp.get('data',[]) if isinstance(pp,dict) else []:
-                a=p.get('attributes') or {}
-                pid=p.get('id')
+              ps,pp=call('https://api.appstoreconnect.apple.com/v1/profiles?limit=200',ah)
+              raw_profiles=pp.get('data',[]) if ps==200 and isinstance(pp,dict) else []
+              total_profiles=len(raw_profiles)
+              for p in raw_profiles:
+                pid=p.get('id'); a=p.get('attributes') or {}
+                if a.get('profileType') != 'IOS_APP_STORE': continue
+                bs,bp2=call(f'https://api.appstoreconnect.apple.com/v1/profiles/{pid}/bundleId',ah)
+                bres=bp2.get('data') if bs==200 and isinstance(bp2,dict) else None
+                if not isinstance(bres,dict) or bres.get('id') != bid: continue
                 cs,cp=call(f'https://api.appstoreconnect.apple.com/v1/profiles/{pid}/certificates?limit=50',ah)
                 certs=[]
-                for c in cp.get('data',[]) if isinstance(cp,dict) else []:
+                for c in cp.get('data',[]) if cs==200 and isinstance(cp,dict) else []:
                   ca=c.get('attributes') or {}
-                  certs.append({'id':c.get('id'),'type':ca.get('certificateType'),'name':ca.get('name'),'expirationDate':ca.get('expirationDate')})
+                  certs.append({'id':c.get('id'),'type':ca.get('certificateType'),'name':ca.get('name'),'expirationDate':ca.get('expirationDate'),'activated':ca.get('activated')})
                 profiles.append({'id':pid,'name':a.get('name'),'state':a.get('profileState'),'type':a.get('profileType'),'expirationDate':a.get('expirationDate'),'certificates':certs})
-            else:
-              ps=None
             ch={'x-auth-token':cmt,'Accept':'application/json'}
             gs,gp=call(f'https://codemagic.io/api/v3/apps/{cm_app}/variable-groups',ch)
-            groups=[]
-            rawgroups=[]
+            groups=[]; rawgroups=[]
             if isinstance(gp,dict):
               for k in ('data','variable_groups','groups'):
                 if isinstance(gp.get(k),list): rawgroups=gp[k]; break
             elif isinstance(gp,list): rawgroups=gp
             for g in rawgroups:
               if isinstance(g,dict): groups.append({'id':g.get('id') or g.get('_id'),'name':g.get('name') or g.get('group_name')})
-            out={'task_id':'APP2-009','bundle_id':bundle,'bundle_resource_id':bid,'bundle_query_status':st,'profiles_query_status':ps,'app_store_profiles':profiles,'codemagic_app_id':cm_app,'codemagic_groups_status':gs,'codemagic_variable_groups':groups}
+            cs_all,cp_all=call('https://api.appstoreconnect.apple.com/v1/certificates?limit=200',ah)
+            cert_inventory=[]
+            for c in cp_all.get('data',[]) if cs_all==200 and isinstance(cp_all,dict) else []:
+              ca=c.get('attributes') or {}
+              if ca.get('certificateType') in ('DISTRIBUTION','IOS_DISTRIBUTION'):
+                cert_inventory.append({'id':c.get('id'),'type':ca.get('certificateType'),'name':ca.get('name'),'expirationDate':ca.get('expirationDate'),'activated':ca.get('activated')})
+            out={'task_id':'APP2-009','bundle_id':bundle,'bundle_resource_id':bid,'bundle_query_status':st,'profiles_query_status':ps,'total_profiles_seen':total_profiles,'app_store_profiles':profiles,'distribution_certificates_status':cs_all,'distribution_certificates':cert_inventory,'codemagic_app_id':cm_app,'codemagic_groups_status':gs,'codemagic_variable_groups':groups}
             Path('/tmp/app2-009-signing-audit.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
           finally:
             if cleanup:
