@@ -1,26 +1,43 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_epoch": 1,
+  "assignment_epoch": 1,
   "locks": [
     {"id":"shared-contract","owner":"HQ","scope":["tech-assets/moises-audio/Shared/**"],"notes":"shared data model / cross-module protocol"},
     {"id":"app-shell","owner":"HQ","scope":["tech-assets/moises-audio/App/**"],"notes":"navigation, global app state, root composition"},
-    {"id":"source-separation-model","owner":"POOL","scope":["tech-assets/moises-audio/Separation/**"],"notes":"model/runtime/inference pipeline"},
-    {"id":"audio-playback-engine","owner":"POOL","scope":["tech-assets/moises-audio/Playback/**"],"notes":"multi-track playback, solo/mute/volume, seek, loop"},
-    {"id":"music-analysis-engine","owner":"POOL","scope":["tech-assets/moises-audio/Analysis/**"],"notes":"BPM, beat grid, key, chords, song parts"},
-    {"id":"time-pitch-dsp","owner":"POOL","scope":["tech-assets/moises-audio/DSP/**"],"notes":"speed, pitch/key shifting, metronome synchronization"},
-    {"id":"library-persistence","owner":"POOL","scope":["tech-assets/moises-audio/Library/**"],"notes":"projects, setlists, resume, persistence"},
-    {"id":"import-export","owner":"POOL","scope":["tech-assets/moises-audio/IO/**"],"notes":"audio/video import, export, share"},
-    {"id":"reference-ledger","owner":"POOL","scope":["tech-assets/moises-audio/reference/**"],"notes":"read-only reverse engineering evidence and golden reference"},
-    {"id":"build-harness","owner":"POOL","scope":["tech-assets/moises-audio/Package.swift","tech-assets/moises-audio/Tests/**"],"notes":"canonical Swift package/typecheck/test harness for the existing core without redefining feature contracts"},
-    {"id":"parity-ledger","owner":"HQ","scope":["tech-assets/moises-audio/PARITY_MATRIX.json"],"notes":"Workers may propose evidence; HQ finalizes parity state"},
-    {"id":"queue-control","owner":"FINALIZER","scope":["automation/chatgpt-dispatcher/moises-equivalence/queue.json"],"notes":"atomic claim/finalize only"}
+    {"id":"parity-ledger","owner":"HQ","scope":["tech-assets/moises-audio/PARITY_MATRIX.json"],"notes":"Workers propose evidence only; HQ finalizes parity"},
+    {"id":"queue-control","owner":"HQ","scope":["automation/chatgpt-dispatcher/moises-equivalence/queue.json"],"notes":"Global Queue is HQ-only. Workers never claim or finalize by editing queue."},
+    {"id":"work-package-control","owner":"HQ","scope":["automation/chatgpt-dispatcher/moises-equivalence/work-packages.json"],"notes":"Assignment and rebalance are HQ-only"},
+    {"id":"resource-lock-control","owner":"HQ","scope":["automation/chatgpt-dispatcher/moises-equivalence/resource-locks.json"],"notes":"Logical ownership changes are HQ-only"},
+
+    {"id":"source-separation-model","owner":"MOI-WP1-SEPARATION-PROCESSING","worker":"Moises-Worker-1","scope":["tech-assets/moises-audio/Separation/**"],"notes":"model/runtime/inference pipeline"},
+    {"id":"processing-lifecycle","owner":"MOI-WP1-SEPARATION-PROCESSING","worker":"Moises-Worker-1","scope":["tech-assets/moises-audio/Processing/**"],"notes":"server/client processing job lifecycle, cancel/retry/recovery adapter"},
+
+    {"id":"import-export","owner":"MOI-WP2-IO-LIBRARY","worker":"Moises-Worker-2","scope":["tech-assets/moises-audio/IO/**"],"notes":"audio/video import, export, share"},
+    {"id":"library-persistence","owner":"MOI-WP2-IO-LIBRARY","worker":"Moises-Worker-2","scope":["tech-assets/moises-audio/Library/**"],"notes":"projects, setlists, resume, persistence"},
+
+    {"id":"audio-playback-engine","owner":"MOI-WP3-PLAYBACK-DSP","worker":"Moises-Worker-3","scope":["tech-assets/moises-audio/Playback/**"],"notes":"multi-track playback, solo/mute/volume, seek, loop"},
+    {"id":"time-pitch-dsp","owner":"MOI-WP3-PLAYBACK-DSP","worker":"Moises-Worker-3","scope":["tech-assets/moises-audio/DSP/**"],"notes":"speed, pitch/key shifting, metronome/count-in synchronization"},
+
+    {"id":"music-analysis-engine","owner":"MOI-WP4-ANALYSIS-PLATFORM","worker":"Moises-Worker-4","scope":["tech-assets/moises-audio/Analysis/**"],"notes":"BPM, beat grid, key, chords, song parts"},
+    {"id":"build-harness","owner":"MOI-WP4-ANALYSIS-PLATFORM","worker":"Moises-Worker-4","scope":["tech-assets/moises-audio/Package.swift","tech-assets/moises-audio/Tests/**"],"notes":"single platform owner prevents package/test harness collisions"},
+    {"id":"ios-platform","owner":"MOI-WP4-ANALYSIS-PLATFORM","worker":"Moises-Worker-4","scope":["tech-assets/moises-audio/iOS/**"],"notes":"iOS app host/target/project/scheme/build integration"},
+
+    {"id":"reference-ledger","owner":"HQ","scope":["tech-assets/moises-audio/reference/**"],"notes":"Reference research wave completed; further reference changes are HQ-dispatched explicitly to avoid cross-package collision"},
+
+    {"id":"worker-1-status","owner":"Moises-Worker-1","scope":["automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-1.json"]},
+    {"id":"worker-2-status","owner":"Moises-Worker-2","scope":["automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-2.json"]},
+    {"id":"worker-3-status","owner":"Moises-Worker-3","scope":["automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-3.json"]},
+    {"id":"worker-4-status","owner":"Moises-Worker-4","scope":["automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-4.json"]}
   ],
   "rules": [
     "Different files do not imply different logical resources.",
-    "A task must hold every logical resource it semantically redefines.",
-    "shared-contract, app-shell, parity-ledger are HQ controlled.",
-    "Locks are acquired atomically with task claim and released on finalize/cancel/stale."
+    "Each non-HQ logical resource has exactly one Work Package owner per assignment_epoch.",
+    "Workers never update Global Queue, Work Package manifest, Resource Lock manifest, Shared, App, or PARITY.",
+    "Worker N may update only its own status file as canonical progress signaling.",
+    "A resource may move to another package only after HQ verifies no unintegrated changes remain on the previous owner branch and increments assignment_epoch.",
+    "Phase-boundary rebalance is preferred over opportunistic task stealing."
   ]
 }
