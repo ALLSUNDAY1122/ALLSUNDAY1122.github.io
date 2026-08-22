@@ -18,13 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 75
     env:
-      TARGET_BRANCH: feat/otsu4-360-productization
+      TARGET_BRANCH: release/otsu4-720-internal-testflight
       TARGET_WORKFLOW: otsu4-ios
       CONFIRMED_CM_APP_ID: 6a769d81a1add9d06020b524
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: feat/otsu4-360-productization
+          ref: release/otsu4-720-internal-testflight
           fetch-depth: 1
 
       - name: Set up Python
@@ -42,13 +42,17 @@ jobs:
           cfg=yaml.safe_load(open('codemagic.yaml',encoding='utf-8'))
           wf=(cfg.get('workflows') or {}).get('otsu4-ios')
           assert wf, 'otsu4-ios workflow missing'
+          signing=((wf.get('environment') or {}).get('ios_signing') or {})
+          assert signing.get('distribution_type') == 'app_store'
+          assert signing.get('bundle_identifier') == 'jp.allsunday1122.otsu4'
+          assert not signing.get('certificates') and not signing.get('provisioning_profiles')
           pub=((wf.get('publishing') or {}).get('app_store_connect') or {})
           assert pub.get('submit_to_testflight') is True, 'TestFlight upload must be explicitly enabled'
           assert pub.get('submit_to_app_store') is False, 'App Store submission must remain disabled'
           joined=str(wf)
           assert 'testFlightInternalTestingOnly' in joined, 'internal-only export option missing'
           sha=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
-          print('PASS: Internal TestFlight-only workflow; target head='+sha)
+          print('PASS: isolated Internal TestFlight workflow; target head='+sha)
           PY
 
       - name: Start and wait for Codemagic build
@@ -62,8 +66,9 @@ jobs:
 
           token=os.environ.get('CM_API_TOKEN','').strip()
           app_id=os.environ.get('CM_APP_ID','').strip() or os.environ['CONFIRMED_CM_APP_ID']
+          branch=os.environ['TARGET_BRANCH']
           out=Path('otsu4-codemagic-result.json')
-          result={'ok':False,'app_id':app_id,'workflow_id':'otsu4-ios','branch':'feat/otsu4-360-productization','status':'preflight'}
+          result={'ok':False,'app_id':app_id,'workflow_id':'otsu4-ios','branch':branch,'status':'preflight'}
           out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
           if not token:
               result['error']='CM_API_TOKEN is not configured'
@@ -83,7 +88,7 @@ jobs:
                   except Exception: data={'error':raw[:1000]}
                   return e.code,data
 
-          payload={'appId':app_id,'workflowId':'otsu4-ios','branch':'feat/otsu4-360-productization'}
+          payload={'appId':app_id,'workflowId':'otsu4-ios','branch':branch}
           status,data=api('https://api.codemagic.io/builds','POST',payload)
           if not 200 <= status < 300:
               result['status']='start_failed'
