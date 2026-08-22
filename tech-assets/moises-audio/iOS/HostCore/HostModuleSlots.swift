@@ -1,6 +1,6 @@
 import Foundation
 
-public enum HostModuleSlot: String, CaseIterable, Equatable, Sendable {
+public enum HostModuleSlot: String, CaseIterable, Equatable, Hashable, Sendable {
     case io
     case separation
     case playback
