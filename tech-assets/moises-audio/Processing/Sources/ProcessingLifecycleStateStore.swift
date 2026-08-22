@@ -240,6 +240,7 @@ public actor FileProcessingOutputTransaction: ProcessingOutputTransacting {
 
     public func rollback(projectID: ProjectID, generationID: UUID) async throws {
         let transaction = transactionURL(projectID: projectID, generationID: generationID)
+        guard fileManager.fileExists(atPath: transaction.path) else { return }
         let final = finalStemDirectory(projectID: projectID)
 
         do {
