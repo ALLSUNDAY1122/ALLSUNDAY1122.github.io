@@ -28,7 +28,9 @@ artifact_new='''    artifacts:
       - /tmp/xcodebuild_logs/*.log
       - /tmp/hm1-prepare.log
 '''
-if '/tmp/hm1-prepare.log' not in block:
+# The prepare command itself contains /tmp/hm1-prepare.log, so check for the
+# exact artifact-list entry rather than the substring anywhere in the workflow.
+if '      - /tmp/hm1-prepare.log\n' not in block:
     if artifact_marker not in block:
         raise SystemExit('HM1 artifact marker not found')
     block=block.replace(artifact_marker,artifact_new,1)
