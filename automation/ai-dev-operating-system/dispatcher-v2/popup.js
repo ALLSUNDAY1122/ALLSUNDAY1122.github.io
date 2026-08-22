@@ -35,12 +35,29 @@ async function render() {
   for (const worker of status.workers || []) list.appendChild(workerRow(worker));
 }
 
+async function activeProjectProbe() {
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const tab = tabs[0];
+  if (!tab || !tab.id || !String(tab.url || '').startsWith('https://chatgpt.com/')) {
+    return { ok: false, error: 'active_tab_is_not_chatgpt' };
+  }
+  try {
+    return await chrome.tabs.sendMessage(tab.id, { type: 'PROJECT_CONTEXT_PROBE' });
+  } catch (error) {
+    return { ok: false, error: String(error && error.message ? error.message : error) };
+  }
+}
+
 el('start').addEventListener('click', async () => { await ask('PORTFOLIO_START'); await render(); });
 el('stop').addEventListener('click', async () => { await ask('PORTFOLIO_STOP'); await render(); });
 el('tick').addEventListener('click', async () => { await ask('PORTFOLIO_TICK'); await render(); });
 el('preflight').addEventListener('click', async () => {
   const result = await ask('PORTFOLIO_PREFLIGHT');
   await render();
+  el('last').textContent = JSON.stringify(result, null, 2);
+});
+el('projectProbe').addEventListener('click', async () => {
+  const result = await activeProjectProbe();
   el('last').textContent = JSON.stringify(result, null, 2);
 });
 el('register').addEventListener('click', async () => {
