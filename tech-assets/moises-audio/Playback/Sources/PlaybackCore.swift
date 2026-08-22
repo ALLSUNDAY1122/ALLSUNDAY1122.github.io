@@ -118,6 +118,33 @@ public enum PlaybackTimelinePlanner {
         return gains
     }
 
+    public static func normalizedProjectPosition(
+        rawPositionSeconds: Double,
+        loop: PlaybackLoopRange?
+    ) throws -> Double {
+        guard rawPositionSeconds.isFinite, rawPositionSeconds >= 0 else {
+            throw PlaybackControlError.invalidSeek(rawPositionSeconds)
+        }
+        guard let loop else { return rawPositionSeconds }
+        guard loop.startSeconds.isFinite,
+              loop.endSeconds.isFinite,
+              loop.startSeconds >= 0,
+              loop.endSeconds > loop.startSeconds else {
+            throw PlaybackControlError.invalidLoop(
+                start: loop.startSeconds,
+                end: loop.endSeconds
+            )
+        }
+        if rawPositionSeconds < loop.endSeconds {
+            return rawPositionSeconds
+        }
+        let repeated = rawPositionSeconds - loop.endSeconds
+        return loop.startSeconds
+            + repeated.truncatingRemainder(
+                dividingBy: loop.durationSeconds
+            )
+    }
+
     public static func projectDuration(
         stems: [StemArtifact],
         sourceDurationSeconds: Double?
@@ -134,7 +161,9 @@ public enum PlaybackTimelinePlanner {
                 throw PlaybackControlError.invalidStemTiming(stem.id)
             }
             let end = stem.startTimeSeconds + stem.durationSeconds
-            guard end.isFinite else { throw PlaybackControlError.timelineOverflow }
+            guard end.isFinite else {
+                throw PlaybackControlError.timelineOverflow
+            }
             duration = max(duration ?? 0, end)
         }
         return duration
