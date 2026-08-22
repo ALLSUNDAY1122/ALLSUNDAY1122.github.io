@@ -1,104 +1,124 @@
-# APP2-003｜夜の書架｜Pattern C UI刷新後の現在状態
+# APP2-003｜夜の書架｜Pattern C / 申請前preflight
 
-更新: 2026-08-20 17:30 JST
+更新: 2026-08-22 19:44 JST
 セッション: 夜の書架②
 Worker: YORU
 対象App: 夜の書架
 App Store Connect App ID: `6794137637`
 Bundle ID: `io.github.allsunday1122.yorunoshoka`
 
-## 結論
+## 現在結論
 
-ユーザー採用のパターンC「紙面・温かみ」は `ALLSUNDAY1122/yoru-no-shoka` mainへ統合済み。現行ソースは `1.2.0 / Build 4`。App Store Connectも `1.2.0 / PREPARE_FOR_SUBMISSION` へ整合し、旧Build 3のrelationshipは解除済み。本審査Review Submissionは0件で、最終提出操作は実施していない。
+Pattern C「紙面・温かみ」は `ALLSUNDAY1122/yoru-no-shoka` mainへ統合済み。現行ソースは `1.2.0 / Build 4`。
 
-2026-08-20、ユーザーがGitHubの Codemagic CI/CD GitHub App に `ALLSUNDAY1122/yoru-no-shoka` を6件目の許可repositoryとして追加しSaveした。GitHub側repository access authorizationは解消した。
+App Store Connect fresh preflightでは App Store Version `1.2.0 / PREPARE_FOR_SUBMISSION`、attached Buildなし、Review Submission 0件。Build 4はまだAppleへ未到着。最終 `Add for Review / Submit for Review` は実施していない。
 
-ただしCodemagicで以前API作成したApplication `6a856ad0cfa731a85617d8fb` 自体がGitHub repository integrationへ結合されていない。API read-backでは `appName=yoru-no-shoka` だが `branches=null`、repository URL/ID/provider情報なし。GitHub認可後のBuild再試行 `6a86b9c3f0e709353c165efe` も `started_at=null / commit=null / branch=null / artifacts=0` でsource checkout前に即時failedした。
-
-Codemagic公式仕様ではGitHub App連携アプリはCodemagic UIの Add application → GitHub → repository選択で作成するか、既存GitHub連携アプリなら App settings → Repository settings → Update repository URL で再結合する。REST Applications APIのprivate repository追加はSSH key方式 `/apps/new` であり、現在のAPI作成済み空ApplicationをGitHub App統合へ変更する公開APIは確認できない。
-
-EAS fallbackとして `yoru-no-shoka/.github/workflows/eas-build4.yml` を追加したが、private repositoryのGitHub Actions hosted runnerは以前と同様にStep開始前で停止する状態が継続。直近既知run `32232306085` はjob failure、steps 0件。EAS_BUILD4_STATUS.jsonも生成されず、GitHub Actions経由のEAS起動は現時点では使用できない。
+申請手順はNotion正本「AIアプリ開発・公開フロー v2.7」および「申請手順」を再取得して確認した。標準順序は `API preflight → AUTO-FIX → Build → Apple processing → Internal TestFlight → 実機受入 → submission audit → 最終承認 → Add for Review / Submit for Review`。ログイン/2FA、契約・税務・銀行、実機受入、DSA自己判定/本人確認、最終Submit承認以外は原則AI/API/CI側で処理する。
 
 ## Pattern C 実装済み
 
 - 紙面 / 深いセピア / 漆黒の3テーマ
-- 明るさ 70–120% 調整
-- 本文文字サイズ・行間調整
-- 明朝 / ゴシック切替
-- 設定値を端末内保存
-- ホーム主CTAを「今夜の一話を読む」に一本化
+- 明るさ 70–120%
+- 本文文字サイズ・行間
+- 明朝 / ゴシック
+- 設定値端末保存
+- ホーム主CTA「今夜の一話を読む」
 - おまかせ / シリーズから選ぶ / 書架を見るを副導線化
-- シリーズ/話者の役割・読み味ガイド追加
-- 各作品カードに「この話を読む」明示
-- 検索 / 怖さ / 長さ / シリーズ絞り込み明示
-- 保存済み / 読了状態可視化
-- 読書画面上部を 戻る / タイトル / Aa / その他 に整理
+- シリーズ/話者の役割・読み味ガイド
+- 各作品カードの明示的「この話を読む」
+- 検索 / 怖さ / 長さ / シリーズ絞り込み
+- 保存済み / 読了状態
+- 読書画面を 戻る / タイトル / Aa / その他 に整理
 - 保存 / 共有 / 読了 / ホームをその他メニューへ集約
-- 読書進捗バー追加
+- 読書進捗バー
 
-## GitHub
+## App Store Connect fresh preflight｜2026-08-22
 
-- repository: `ALLSUNDAY1122/yoru-no-shoka`
-- Pattern C PR #1: main統合済み
-- Release status PR #2: main統合済み
-- `app.json`: `1.2.0 / Build 4`
-- Build用version sync: `scripts/sync-ios-release-version.mjs`
-- Codemagic workflow: `codemagic.yaml` / `yoru-ios`
-- EAS fallback workflow: `.github/workflows/eas-build4.yml`
-
-## App Store Connect
-
+- App: 夜の書架
+- App ID: `6794137637`
+- Bundle ID: `io.github.allsunday1122.yorunoshoka`
 - App Store Version: `1.2.0`
 - State: `PREPARE_FOR_SUBMISSION`
-- 旧Build 3 relationship: 解除済み
+- attached Build: なし
 - Review Submission: 0件
-- Build 4: Appleへ未到着
-- 最終App Review提出: 未実施
+- Apple上に存在するBuild: 1 / 2 / 3のみ
+- Build 4: 未到着
+- 日本語description: あり
+- keywords: あり
+- Support URL: あり
+- Marketing URL: あり
+- App Review contact: 必須4項目あり
+- demo account: 不要
+- Beta Review contact: 必須4項目あり
+- Internal/Beta groups: 既存3グループ
+- App Info subtitle / Privacy Policy URL: あり
+- iPhone screenshot set: 4枚あり
 
-## Codemagic 2026-08-20再監査
+ただし既存4枚はPattern C刷新前の画像である可能性を排除できないため、Build 4の実機受入後にPattern C現UIのホーム・書架・読書画面を含む画像へ差し替える。旧4枚の存在だけではScreenshot gateをPASSにしない。
 
-GitHub側:
+## Age Rating fresh audit｜2026-08-22
 
-- Codemagic CI/CD GitHub Appはインストール済み
-- repository accessは `Only select repositories`
-- `ALLSUNDAY1122/yoru-no-shoka` を追加しSave済み
+App Store Connect APIのAge Rating Declarationを直接read-back。
 
-既存Codemagic Application:
+- `horrorOrFearThemes = FREQUENT_OR_INTENSE`
+- `matureOrSuggestiveThemes = NONE`
+- `profanityOrCrudeHumor = NONE`
+- cartoon/fantasy violence = INFREQUENT_OR_MILD
+- realistic violence = INFREQUENT_OR_MILD
+- prolonged graphic/sadistic violence = NONE
+- sexual content = NONE
+- simulated gambling = NONE
+- drugs/alcohol/tobacco references = NONE
+- guns/other weapons = INFREQUENT_OR_MILD
+- unrestricted web access = false
+- UGC / messaging / social media = false
+- advertising = false
+- override = NONE
 
-- App ID: `6a856ad0cfa731a85617d8fb`
-- `appName`: `yoru-no-shoka`
-- `branches`: null
-- repository integration識別情報: API read-backで確認できず
+AppInfoのlegacy `appStoreAgeRating` は `TWELVE_PLUS` が残っているが、territory age ratingは `THIRTEEN_PLUS`。提出時は新体系の13+を現行判定として扱い、legacy 12+を根拠にしない。ASCが質問移行を要求した場合のみ現行UIで再回答する。
 
-認可後Build retry:
+証拠: `automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-age-rating.json`
 
-- Build ID: `6a86b9c3f0e709353c165efe`
-- status: `failed`
-- `started_at`: null
-- `commit`: null
-- `branch`: null
-- artifacts: 0
+## Codemagic｜2026-08-22
 
-したがってGitHub Appのrepository permission不足は解消したが、Codemagic内のApplication repository bindingが残る停止点。
+GitHub側では Codemagic CI/CD GitHub App に `ALLSUNDAY1122/yoru-no-shoka` のprivate repository accessを許可済み。
 
-## 次の真正な人間操作
+以前API/URL方式で作成したCodemagic ApplicationはGitHub provider integrationに結合されず `branches=null` の空Applicationとなっていた。ユーザーの明示許可後、以下を削除した。
 
-Codemagic UIで既存 `yoru-no-shoka` ApplicationをGitHub repository integrationへ結び直す。
+- 元の空Application `6a856ad0cfa731a85617d8fb`
+- 検証用重複Application `6a89709c57ba683ac5fcdbe8`
 
-推奨順:
-1. Codemagic → Applications → `yoru-no-shoka` → App settings → Repository settings。
-2. `Update repository URL` がある場合は実行し、GitHub上の `ALLSUNDAY1122/yoru-no-shoka` を選択/再結合。
-3. 更新できない場合は既存の空ApplicationをArchive/Deleteし、Add application → GitHub → `ALLSUNDAY1122/yoru-no-shoka` → codemagic.yaml を使用して再追加。
+削除後、Codemagic Applications API read-backで対象候補0件を確認済み。GitHub repositoryやApp Store Connectレコードは削除していない。
 
-repository bindingが成立すれば、ChatGPT側でBuild 4開始→監視→ASC/Internal TestFlight到着確認まで再開できる。
+Codemagic公開REST Applications APIでは、GitHub App integrationで認可済みprivate repositoryをprovider-bound Applicationとして作成する方法は確認できない。`POST /apps` はURL追加、private repoのAPI追加はSSH key方式であり、GitHub App UI選択を代替しない。
 
-その後の人間ゲート:
-- iPhone TestFlightでPattern C実機受入確認
-- DSAトレーダー自己判定・必要な本人確認
-- App Store本審査の最終 `Add for Review` / `Submit for Review` 承認
+したがって現在の唯一のBuild前UIゲートは、Codemagic上で新規ApplicationをGitHub App経由で作成する操作:
+
+`Add application → GitHub → ALLSUNDAY1122/yoru-no-shoka → Other → Finish`
+
+この1回が成立した後は、ChatGPT側のCodemagic Gatewayで新App IDを再取得し、mainの `codemagic.yaml` workflow `yoru-ios` を使用して以下を自動実行する。
+
+1. 1.2.0 / Build 4署名Build
+2. App Store Connect upload
+3. Apple processing監視 / validation error解析
+4. Internal TestFlight割当
+5. App Store Version 1.2.0へBuild 4紐付け
+6. submission audit再実行
+7. Pattern C実機受入後、現UI screenshotsへ更新
+8. Review Notes / Privacy / Age Rating / export compliance最終監査
+9. `WAITING_FINAL_APPROVAL` まで進行
+
+`submit_to_app_store` は禁止し、本審査Submitはユーザー最終承認後のみ実行する。
+
+## 現在の人間ゲート
+
+1. CodemagicでGitHub App経由の `yoru-no-shoka` Application新規作成（公開REST APIでは代替不能）
+2. Build 4到着後のiPhone TestFlight実機受入
+3. DSAトレーダー自己判定・該当時の本人確認
+4. 最終 `Add for Review / Submit for Review` 承認
 
 ## Task判定
 
 `HUMAN_REQUIRED`
 
-理由: GitHub App repository authorizationは解消済み。残る技術停止点はCodemagic UI内のApplication repository bindingで、公開REST APIからの更新手段を確認できないため。
+理由: 申請前preflightと自動補完可能部分は実行済み。現在の停止点はCodemagicのGitHub App provider-bound Application新規作成という認証済みWeb UI操作であり、利用可能な公式API/接続ツールでは代替不能。その操作後はBuild 4→TestFlight→submission auditをAI側で継続できる。
