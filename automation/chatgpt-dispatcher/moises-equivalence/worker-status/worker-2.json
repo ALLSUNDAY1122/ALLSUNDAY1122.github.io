@@ -7,11 +7,11 @@
   "operating_model": "FOUR_INDEPENDENT_LANES_LATE_INTEGRATION",
   "work_branch": "moises/wp2-io-library",
   "state": "IN_PROGRESS",
-  "current_bundle": "L2-M03",
-  "completed_bundles": ["L2-M01", "L2-M02"],
+  "current_bundle": "L2-M04",
+  "completed_bundles": ["L2-M01", "L2-M02", "L2-M03"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "037ebaf1e0ebdbcf6bb453beb425233e3d00ede3",
+  "head_sha": "f4d4fa853454d9e01a4b66d756284fb5cde27473",
   "existing_unintegrated_commits_at_epoch_start": [],
   "commits": [
     "0bd1887a479dd6098a28d47d3051ea22b7a2a1eb",
@@ -26,7 +26,13 @@
     "276463eb3ab84422865acf92ee7720cb7bc12e0e",
     "6e534ec93dff64137ccdf81dbe7476a95e6a2c1a",
     "d23eac193ba6067b9d562294b76e410b685e474d",
-    "037ebaf1e0ebdbcf6bb453beb425233e3d00ede3"
+    "037ebaf1e0ebdbcf6bb453beb425233e3d00ede3",
+    "8c78fb8f3157cdbdf559b40352f9130623b82f93",
+    "bd2485b35634f78e83eeb3dab8a1d107a112f351",
+    "f220e6fcebbb3df8b419c36cabed248ad8503a0d",
+    "edceaf3f0e1612c843dffecd2266124e375bfc49",
+    "cd5e64f2e3c3f1c7b531aadc2567a75dbff41c3b",
+    "f4d4fa853454d9e01a4b66d756284fb5cde27473"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -40,37 +46,42 @@
     "L2-M01 executable path/recovery/stem invariant self-check => PASS",
     "L2-M01 frozen ProjectLibraryPersisting surface scan => PASS all 13 methods present",
     "L2-M02 Swift 6.2.1 Linux: LibraryArtifactLifecycle.swift typecheck => PASS",
-    "L2-M02 Swift 6.2.1 Linux: artifact lifecycle + crash-safe facade + portable/CoreData-gated test sources typecheck/conditional parse => PASS",
     "L2-M02 FULL executable filesystem self-check => PASS traversal, empty-result rejection, no-overwrite promotion, PREPARED non-deletion, COMMITTED relaunch cleanup, idempotency, live-intent discard, orphan grace/reference behavior, unmanaged-root retention, corrupt-journal fail-closed",
-    "L2-M02 frozen ProjectLibraryPersisting facade surface scan => PASS all 13 methods present",
-    "L2-M02 Apple Core Data interruption suite committed: prepared/live reopen, prepared-after-tombstone recovery, partial cleanup recovery, missing-artifact visibility rejection, shared-artifact retention; execution pending Apple SDK"
+    "L2-M02 Apple Core Data interruption suite committed; execution pending Apple SDK",
+    "L2-M03 Swift 6.2.1 Linux: LibraryStoreRecovery.swift typecheck => PASS",
+    "L2-M03 Swift 6.2.1 Linux: LibraryStoreRecovery.swift + LibraryStoreRecoveryTests.swift typecheck => PASS",
+    "L2-M03 executable recovery self-check => PASS missing/current/corrupt plan, store-family snapshot, working-copy failure preservation, active-pointer activation, corruption export, tampered-snapshot rejection",
+    "L2-M03 destructive-reset static scan => PASS no destroyPersistentStore, no original storeURL removal, no original-path replacement API",
+    "L2-M03 Apple-gated legacy V0 migration, migration-failure preservation and corrupt-store export fixtures committed; runtime execution pending Apple SDK"
   ],
   "evidence": [
-    "Independent Lane Worker contract v3 SHA 2edf4411f69af37f9b57a363096fb2787ecfc713 and Lane plan v3 SHA 32be5c934fcdf8f17c677c4c2d30db0808813fa5 re-read before L2-M02",
-    "L2-M01 complete on branch through d1ee036a03910904a1106823821eeacd3e13495d",
-    "Library/Sources/LibraryArtifactLifecycle.swift implements PREPARED/COMMITTED durable deletion journal, ready-artifact promotion, idempotent cleanup and grace-based orphan sweep",
-    "Library/Sources/CrashSafeProjectLibraryStore.swift wraps the frozen L2-M01 Core Data adapter and enforces artifact readiness before metadata visibility plus tombstone-first destructive ordering",
-    "Reopen reconciliation distinguishes PREPARED+live from PREPARED+tombstoned so crash-before-tombstone can never delete a live project's files",
-    "Deletion excludes source/stem relative paths still referenced by another live project",
-    "Library/Tests/LibraryArtifactLifecycleTests.swift and CrashSafeProjectLibraryStoreTests.swift cover negative/interruption/shared-reference cases",
-    "Library/L2-M02_VALIDATION.md records the executable evidence and explicit Apple-runtime gap",
-    "L2-M01 head d1ee036a03910904a1106823821eeacd3e13495d -> L2-M02 pre-status head 037ebaf1e0ebdbcf6bb453beb425233e3d00ede3 contains only Library/** implementation/test/evidence changes"
+    "Independent Lane Worker contract v3 SHA 2edf4411f69af37f9b57a363096fb2787ecfc713 and Lane plan v3 SHA 32be5c934fcdf8f17c677c4c2d30db0808813fa5 re-read before L2-M03",
+    "L2-M01 and L2-M02 remain preserved on the same long-lived branch; no reset/rebase/discard occurred",
+    "Library/Sources/LibraryStoreRecovery.swift adds Foundation-only SQLite header inspection, full store-family snapshotting, fingerprinted recovery manifests, isolated migration working copies, corruption export packages and active-generation pointer manifests",
+    "Library/Sources/PreservingCoreDataStoreOpener.swift never auto-migrates the only user copy: existing stores are snapshotted, migrated and validated on a working copy, then activated as a separate generation while original and snapshot remain preserved",
+    "Library/Sources/CrashSafeProjectLibraryStore+Recovery.swift composes preserving metadata open with L2-M02 tombstone/artifact recovery without Shared/App changes",
+    "Library/Tests/LibraryStoreRecoveryTests.swift covers original-byte preservation, active-pointer activation, corruption export, tampered snapshot rejection and destructive-reset prohibition",
+    "Library/Tests/PreservingCoreDataStoreOpenerTests.swift defines versioned Core Data L2-V0 legacy migration fixture plus migration-failure and invalid-header corruption fixtures",
+    "Library/L2-M03_VALIDATION.md explicitly forbids silent destructive reset and records Linux-vs-Apple validation boundaries",
+    "L2-M02 status commit d4c8dc5b93f8ba8cbad8d467aa0f3cb1281f3295 -> L2-M03 implementation/evidence head f4d4fa853454d9e01a4b66d756284fb5cde27473 = ahead 6 / behind 0; all six changed files are Library/**"
   ],
   "known_gaps": [
-    "Apple Core Data runtime execution of the committed L2-M01/L2-M02 XCTest suites remains pending an Apple/Xcode environment",
-    "The frozen L2-M01 adapter retains tombstone rows after file cleanup; they are hidden from live project/list/setlist surfaces. Privacy-oriented physical tombstone compaction is a later hard-delete concern and must preserve the same crash ordering",
-    "L2-M03 migration/corruption recovery is not yet implemented",
+    "Apple Core Data runtime execution of the L2-M01/L2-M02/L2-M03 XCTest suites remains pending an Apple/Xcode environment",
+    "The L2-V0 -> current inferred migration fixture is implemented but cannot be truthfully marked runtime PASS until executed with Core Data",
+    "User-facing choose/restore/export recovery UI belongs to HQ App/iOS late integration; Lane 2 returns preserved snapshot/recovery package paths and never silently resets data",
+    "The legacy CrashSafeProjectLibraryStore.open(metadataConfiguration:artifactRootURL:) compatibility entry point still exists; production composition should use openPreservingUserData(...) so existing on-disk metadata is protected before migration",
+    "L2-M04 IO/Library durable integration is not yet implemented",
     "Library PARITY rows MOI-P017/MOI-P018/MOI-P020 remain MISSING until Apple runtime, integrated iPhone interruption, and full product-gate evidence",
     "Legacy IO iPhone picker/share/runtime codec evidence remains late-integration work"
   ],
   "hq_requests": [
     "Keep Shared/** and App/** frozen for Lane 2 at epoch contract SHA a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f until checkpoint unless explicit contract rescue is required",
-    "At late integration compose CrashSafeProjectLibraryStore rather than exposing raw CoreDataProjectLibraryStore as the production ProjectLibraryPersisting implementation",
-    "Run the Core Data SQLite reopen/interruption suite with the supported Apple SDK/iOS host",
-    "Late integration must still run actual iPhone Files/File Provider/direct URL/M4A share and codec scenarios; Lane 2 will not edit iOS shell",
-    "No Shared contract change was required by L2-M01 or L2-M02"
+    "At late integration use CrashSafeProjectLibraryStore.openPreservingUserData(...) as the production Library startup path rather than the legacy direct Core Data open path",
+    "Run the L2-V0 migration fixture, migration-failure preservation fixture, corrupt-store export fixture, and prior SQLite interruption suites under the supported Apple SDK/iOS host",
+    "App/iOS should surface an explicit recovery/export decision when PreservingStoreOpenFailure is returned; it must not convert that failure into an empty-store reset",
+    "No Shared contract change was required by L2-M01, L2-M02, or L2-M03"
   ],
-  "migration_note": "At L2-M02 start the branch-local worker-status file was still legacy v2 even though L2-M01 implementation commits were present. This status update repairs the branch-local v3 ledger from branch evidence without reset, force update, or discarded implementation.",
-  "last_updated": "2026-08-22T18:05:00+09:00",
+  "migration_note": "L2-M03 preserves existing user stores by snapshot + working-copy migration + active-generation pointer. The original store is never automatically deleted or overwritten by the migration path.",
+  "last_updated": "2026-08-22T18:42:00+09:00",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ reads it for lane checkpoint integration and remains sole PARITY authority."
 }
