@@ -1,20 +1,62 @@
-async function ask(type) { return await chrome.runtime.sendMessage({ type }); }
+async function ask(type, extra = {}) { return await chrome.runtime.sendMessage({ type, ...extra }); }
 function pct(value) { return Number.isFinite(value) ? value.toFixed(1) + '%' : '-'; }
+function el(id) { return document.querySelector('#' + id); }
+
+function workerRow(worker) {
+  const row = document.createElement('div');
+  row.className = 'worker';
+  const text = document.createElement('div');
+  text.textContent = `${worker.label || worker.id} | ${worker.projectId} | ${worker.role || '-'} | ${worker.status} | ${worker.sessionWaveCount}/${worker.runLimit}`;
+  const remove = document.createElement('button');
+  remove.textContent = '削除';
+  remove.addEventListener('click', async () => {
+    await ask('PORTFOLIO_REMOVE_WORKER', { workerId: worker.id });
+    await render();
+  });
+  row.append(text, remove);
+  return row;
+}
+
 async function render() {
   const status = await ask('PORTFOLIO_STATUS');
-  document.querySelector('#enabled').textContent = status.enabled ? 'ON' : 'OFF';
+  el('enabled').textContent = status.enabled ? 'ON' : 'OFF';
   const g = status.lastGovernor;
-  document.querySelector('#governor').textContent = g ? g.mode + ' / active ' + g.maxActive : '-';
-  document.querySelector('#memory').textContent = g ? pct(g.snapshot.memoryUsedPct) : '-';
-  document.querySelector('#cpu').textContent = g ? pct(g.snapshot.cpuUsedPct) : '-';
-  document.querySelector('#tabs').textContent = g ? String(g.snapshot.chatgptTabCount) : '-';
-  document.querySelector('#workers').textContent = String(status.workerCount || 0);
+  el('governor').textContent = g ? g.mode + ' / active ' + g.maxActive : '-';
+  el('memory').textContent = g ? pct(g.snapshot.memoryUsedPct) : '-';
+  el('cpu').textContent = g ? pct(g.snapshot.cpuUsedPct) : '-';
+  el('tabs').textContent = g ? String(g.snapshot.chatgptTabCount) : '-';
+  el('workers').textContent = String(status.workerCount || 0);
   const rotate = (status.workers || []).filter((w) => String(w.status).startsWith('ROTATE')).length;
-  document.querySelector('#rotate').textContent = String(rotate);
-  document.querySelector('#last').textContent = status.lastTick ? JSON.stringify(status.lastTick) : '-';
+  el('rotate').textContent = String(rotate);
+  el('last').textContent = status.lastTick ? JSON.stringify(status.lastTick, null, 2) : '-';
+
+  const list = el('workerList');
+  list.replaceChildren();
+  for (const worker of status.workers || []) list.appendChild(workerRow(worker));
 }
-document.querySelector('#start').addEventListener('click', async () => { await ask('PORTFOLIO_START'); await render(); });
-document.querySelector('#stop').addEventListener('click', async () => { await ask('PORTFOLIO_STOP'); await render(); });
-document.querySelector('#tick').addEventListener('click', async () => { await ask('PORTFOLIO_TICK'); await render(); });
-document.querySelector('#preflight').addEventListener('click', async () => { const x = await ask('PORTFOLIO_PREFLIGHT'); document.querySelector('#last').textContent = JSON.stringify(x); await render(); });
+
+el('start').addEventListener('click', async () => { await ask('PORTFOLIO_START'); await render(); });
+el('stop').addEventListener('click', async () => { await ask('PORTFOLIO_STOP'); await render(); });
+el('tick').addEventListener('click', async () => { await ask('PORTFOLIO_TICK'); await render(); });
+el('preflight').addEventListener('click', async () => {
+  const result = await ask('PORTFOLIO_PREFLIGHT');
+  await render();
+  el('last').textContent = JSON.stringify(result, null, 2);
+});
+el('register').addEventListener('click', async () => {
+  const worker = {
+    id: el('workerId').value.trim(),
+    projectId: el('projectId').value,
+    role: el('role').value.trim(),
+    remoteWorkerId: el('remoteWorkerId').value.trim(),
+    laneId: el('laneId').value.trim(),
+    label: el('label').value.trim(),
+    runLimit: Number(el('runLimit').value || 3),
+    heavyIo: el('heavyIo').checked
+  };
+  const result = await ask('PORTFOLIO_REGISTER_ACTIVE', { worker });
+  el('last').textContent = JSON.stringify(result, null, 2);
+  if (result.ok) await render();
+});
+
 render();
