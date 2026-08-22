@@ -1,0 +1,107 @@
+name: APP2-010 Exam2 Rewrite
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/app2-010-exam2-rewrite-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rewrite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Decode and apply audited Exam 2 bank
+        run: |
+          python3 - <<'PY'
+          import base64, io, json, statistics, tarfile
+          from pathlib import Path
+
+          raw=base64.b64decode(Path('automation/app2-010-exam2-rewrite-bundle.b64').read_text().strip())
+          with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as tf:
+              members={m.name:m for m in tf.getmembers() if m.isfile()}
+              expected={f'chapter-{i}.json' for i in range(1,6)}
+              if set(members)!=expected:
+                  raise SystemExit(f'unexpected bundle members: {sorted(members)}')
+              base=Path('touroku-hanbaisha-sprint/questions/exam-2')
+              for name in sorted(expected):
+                  data=tf.extractfile(members[name]).read()
+                  json.loads(data.decode('utf-8'))
+                  (base/name).write_bytes(data)
+          PY
+
+      - name: Validate Exam 2 structure and difficulty
+        run: |
+          python3 - <<'PY'
+          import json, re, statistics
+          from collections import Counter
+          from pathlib import Path
+
+          base=Path('touroku-hanbaisha-sprint/questions/exam-2')
+          expected={'第1章':20,'第2章':20,'第3章':40,'第4章':20,'第5章':20}
+          qs=[]
+          for i in range(1,6): qs += json.loads((base/f'chapter-{i}.json').read_text(encoding='utf-8'))
+          errors=[]
+          if len(qs)!=120: errors.append(f'count={len(qs)}')
+          counts=Counter(q.get('chapter') for q in qs)
+          if counts != Counter(expected): errors.append(f'chapters={dict(counts)}')
+          ids=[]
+          for q in qs:
+              ids.append(q.get('id'))
+              if q.get('round')!=2: errors.append(f"{q.get('id')}: round")
+              if not isinstance(q.get('choices'),list) or len(q['choices'])!=5 or len(set(q['choices']))!=5: errors.append(f"{q.get('id')}: choices")
+              if not isinstance(q.get('correct_index'),int) or not 0<=q['correct_index']<5: errors.append(f"{q.get('id')}: correct_index")
+              for k in ('subject','topic','question','explanation','source_url','reference_date','origin_type','rights_basis'):
+                  if not str(q.get(k,'')).strip(): errors.append(f"{q.get('id')}: missing {k}")
+          if len(ids)!=len(set(ids)): errors.append('duplicate ids')
+
+          absolute_terms=('必ず','すべて','一切','絶対','常に','例外なく','ことはない','必要はない','不要','のみで','だけで','全く','いかなる','どのような場合でも','自己判断で直ちに')
+          hedge_terms=('場合がある','ことがある','必要に応じ','基本的に','適切','おそれ','可能性','原則','確認する','相談','受診')
+          grades=[]; flagged=[]
+          for q in qs:
+              ans=q['correct_index']; choices=q['choices']; correct=choices[ans]; wrong=[c for i,c in enumerate(choices) if i!=ans]
+              wrong_abs=sum(any(t in c for t in absolute_terms) for c in wrong); correct_abs=any(t in correct for t in absolute_terms)
+              correct_hedge=sum(t in correct for t in hedge_terms); med=statistics.median(map(len,choices)); ratio=len(correct)/med if med else 1
+              score=0
+              if wrong_abs>=3 and not correct_abs: score+=3
+              elif wrong_abs>=2 and not correct_abs: score+=2
+              elif wrong_abs>=1 and not correct_abs: score+=1
+              if ratio>=1.35: score+=2
+              elif ratio>=1.20: score+=1
+              if correct_hedge>=1 and wrong_abs>=2: score+=2
+              if all(len(c)<28 for c in wrong) and len(correct)>=45: score+=2
+              grade='D' if score>=6 else 'C' if score>=4 else 'B-' if score>=2 else 'B'
+              grades.append(grade)
+              if grade in ('C','D'): flagged.append((q['id'],grade,score))
+          gc=Counter(grades)
+          if flagged: errors.append(f'C/D remain: {flagged}')
+          if errors:
+              print('FAIL')
+              for e in errors: print('-',e)
+              raise SystemExit(1)
+          print('PASS', {'questions':len(qs),'chapters':dict(counts),'grades':dict(gc)})
+          Path('automation/audits/app2-010-exam2-rewrite-apply.json').write_text(json.dumps({
+              'request_id':json.loads(Path('automation/app2-010-exam2-rewrite-command.json').read_text())['request_id'],
+              'questions':len(qs),'chapter_counts':dict(counts),'grade_counts':dict(gc),'C_D':0,
+              'result':'PASS'
+          },ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Persist rewritten Exam 2
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- touroku-hanbaisha-sprint/questions/exam-2/chapter-1.json touroku-hanbaisha-sprint/questions/exam-2/chapter-2.json touroku-hanbaisha-sprint/questions/exam-2/chapter-3.json touroku-hanbaisha-sprint/questions/exam-2/chapter-4.json touroku-hanbaisha-sprint/questions/exam-2/chapter-5.json automation/audits/app2-010-exam2-rewrite-apply.json
+          git commit -m 'Rewrite Touhan exam 2 for exam-level difficulty'
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
