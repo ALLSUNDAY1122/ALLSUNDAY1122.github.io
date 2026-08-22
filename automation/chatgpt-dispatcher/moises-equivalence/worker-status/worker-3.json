@@ -1,22 +1,27 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "worker_id": "Moises-Worker-3",
   "work_package_id": "MOI-WP3-PLAYBACK-DSP",
-  "assignment_epoch": 1,
+  "lane_id": "LANE-3-PLAYBACK-DSP",
+  "assignment_epoch": 2,
   "work_branch": "moises/wp3-playback-dsp",
-  "state": "BLOCKED",
-  "current_task": "MOI-PLAY-001",
-  "base_integration_sha": "7948195f1d94f28bc212c79b310fdaed00a4f580",
+  "state": "IN_PROGRESS",
+  "current_bundle": "L3-M01",
+  "completed_bundles": [],
+  "epoch_contract_sha": "2edf4411f69af37f9b57a363096fb2787ecfc713",
+  "frozen_integration_sha": "1648a275833ad4e8aed3245347e6de231fd0487f",
+  "base_integration_sha": "1648a275833ad4e8aed3245347e6de231fd0487f",
+  "branch_merge_base_sha": "7948195f1d94f28bc212c79b310fdaed00a4f580",
   "head_sha": "8809eea5fca0ecd6e0e620455b96c55c899654d7",
+  "existing_unintegrated_commits": [
+    "177ff61eca12c2920656a995d1fe879ea9f17237",
+    "d90e3bf264940723e0b2e41ce87e5cc36fd50c4b",
+    "a2b0db1eac2b18d82e2adbdde51e6c28e792fd55",
+    "5aca919013e2fe58475529f256258eb72ea13b95",
+    "552e41fab118820e7f7abb87be0af73c07779f58",
+    "8809eea5fca0ecd6e0e620455b96c55c899654d7"
+  ],
   "commits": [
-    "da48342f206a83f324dfd1b9daf0a4bb943cae38",
-    "0c80edc99c68c37b4e8d64b748c2d4c0e4bee95a",
-    "e24ba740274220221b4301dc6a5fa1f4aa5ed806",
-    "6f9def351ae61a77bbe46b07b7a4d75594e7c3f0",
-    "3892fea90f833b514f39141ae23ce21239e20b84",
-    "e135d05556fd23322e325e712b13b00bf028e560",
-    "69b623dc8c22de30325851f1507c899b63e0c0b9",
-    "7948195f1d94f28bc212c79b310fdaed00a4f580",
     "177ff61eca12c2920656a995d1fe879ea9f17237",
     "d90e3bf264940723e0b2e41ce87e5cc36fd50c4b",
     "a2b0db1eac2b18d82e2adbdde51e6c28e792fd55",
@@ -25,39 +30,22 @@
     "8809eea5fca0ecd6e0e620455b96c55c899654d7"
   ],
   "tests": [
-    "Initial integrated Playback wave: Swift 6.2.1 Linux contract-compatible PlaybackCore typecheck PASS",
-    "Initial integrated MOI-PLAY-001 portable self-test PASS",
-    "non-zero stem offset/sample-frame mapping PASS",
-    "source -> stems transition preserves backend-reported 31.25s position PASS",
-    "solo/mute/volume effective-gain semantics PASS",
-    "3-hour 48kHz seek frame mapping regression PASS",
-    "absolute loop normalization through up to 100,000 repetitions PASS with no incremental position accumulation",
-    "20,000 randomized four-stem/3-hour planning iterations: median 0.000311ms, p95 0.000480ms, p99 0.000481ms, max 0.122321ms",
-    "Post-integration exact PlaybackSchedulingSafety Swift 6.2.1 focused compile/run PASS for mixed sample-rate leader, delayed-start leader and loop seek normalization",
-    "Post-integration focused controller state reproducer PASS for natural terminal -> stopped, play-from-end -> zero restart, and 87.5s seek under 55...65s loop -> 57.5s"
+    "Epoch-1 Playback portable/core and scheduling-safety regressions remain green from prior wave"
   ],
   "evidence": [
-    "Playback/benchmarks/MOI-PLAY-001_IMPLEMENTATION_VALIDATION.md",
-    "HQ PR #4456 integrated the initial eight Playback commits as partial implementation; P006/P007/P008 were not promoted",
-    "post-integration hardening stages and validates every stem file before destroying the old graph, fails closed on material sample-rate/channel/frame metadata mismatch, selects completion leader by scheduled end time rather than raw frame count, and clamps the display clock to actual loaded-file duration",
-    "controller hardening synchronizes natural terminal, restart-from-end and active-loop seek state",
-    "latest integration -> work branch compare: merge base 7948195f1d94f28bc212c79b310fdaed00a4f580; ahead 6; all six changed files are under tech-assets/moises-audio/Playback/**",
-    "canonical Queue now marks both MOI-DSP-001 and MOI-PLAY-001 BLOCKED_DEPENDENCY on MOI-BLD-IOS-001; Worker 4 owns the READY iOS target task"
+    "v3 epoch-2 contract captured from WORKER_BOOTSTRAP.md blob 2edf4411f69af37f9b57a363096fb2787ecfc713",
+    "Shared/App frozen contract snapshot captured at integration 1648a275833ad4e8aed3245347e6de231fd0487f",
+    "epoch migration compare: work branch has six unintegrated owned-scope Playback commits; destructive sync/reset is therefore forbidden and results are carried forward",
+    "next execution source is lane-plan-v3 L3-M01; Global Queue is not used for dispatch"
   ],
   "known_gaps": [
-    "The six post-PR #4456 Playback hardening commits are not yet HQ-integrated",
-    "The newly edited complete PlaybackCore and Apple backend have not yet been compiled under the canonical WP4 iOS/macOS harness",
-    "AppleMultiTrackPlaybackBackend cannot be AVFAudio-compiled/executed in the current Linux worker environment",
-    "actual multi-stem onset skew, seek audible gap, loop boundary drift and source-to-stem transition discontinuity are not yet device-measured",
-    "continuous volume/solo/mute changes use AVAudioPlayerNode volume and must not be claimed click/pop/zipper-free until target-device audio evidence exists",
-    "real separated-stem Reference differential evidence remains a later gate while separator supply is independently BLOCKED_HUMAN",
-    "MOI-P006/MOI-P007/MOI-P008 remain MISSING; waveform remains non-mandatory pending current-iPhone Reference evidence"
+    "The six inherited Playback hardening commits remain unintegrated by HQ",
+    "Apple AVFAudio/device measurements remain unavailable in the current Linux worker environment",
+    "MOI-P006/P007/P008/P010/P012/P014/P015 remain MISSING and cannot be promoted by harness-only evidence"
   ],
   "hq_requests": [
-    "Semantically integrate the six scope-clean post-PR #4456 Playback hardening commits 177ff61e, d90e3bf2, a2b0db1e, 5aca9190, 552e41fa, 8809eea5 without promoting MOI-P006/MOI-P007/MOI-P008",
-    "Complete MOI-BLD-IOS-001 and compile the integrated Playback + DSP Apple backends under the canonical iOS/macOS target; route any AVFAudio compiler findings back to WP3 without moving Package/iOS ownership",
-    "After target compile, run rights-cleared real source/stem fixtures to measure click/pop, onset skew, seek/loop latency/drift, source-to-stem transition discontinuity and long-track behavior before accepting MOI-PLAY-001"
+    "At the next late-integration checkpoint, preserve and semantically integrate inherited Playback hardening plus completed L3 Macro Bundles; do not require per-bundle merge/release"
   ],
-  "last_updated": "2026-08-22T15:59:00+09:00",
-  "writer_policy": "Only Moises-Worker-3 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
+  "last_updated": "2026-08-22T17:20:00+09:00",
+  "writer_policy": "Only Moises-Worker-3 may update this status file; HQ reads it but remains final integration/PARITY authority."
 }
