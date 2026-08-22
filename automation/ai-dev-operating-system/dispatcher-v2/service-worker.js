@@ -265,16 +265,20 @@ function priorityRank(value) {
 
 function eligibleTasks(project, queue) {
   return (queue.tasks || [])
-    .filter((task) => task && task.status === 'READY' && task.human_gate !== true)
+    .filter((task) => task && ['READY', 'CLAIMED', 'WORKING'].includes(String(task.status || '').toUpperCase()) && task.human_gate !== true)
     .map((task) => ({ project, queue, task }))
     .sort((a, b) => priorityRank(a.task.priority || project.priority) - priorityRank(b.task.priority || project.priority));
 }
 
 function taskForWorker(workItems, worker) {
-  return workItems.find((item) =>
-    item.project.project_id === worker.projectId &&
-    (!item.task.worker_role || item.task.worker_role === worker.role)
-  ) || null;
+  return workItems.find((item) => {
+    if (item.project.project_id !== worker.projectId) return false;
+    if (item.task.worker_role && item.task.worker_role !== worker.role) return false;
+    const status = String(item.task.status || '').toUpperCase();
+    const claimedBy = String(item.task.claimed_by || item.task.claimedBy || '');
+    if (status !== 'READY' && claimedBy && claimedBy !== worker.id) return false;
+    return true;
+  }) || null;
 }
 
 function compactTask(task) {
@@ -385,11 +389,22 @@ async function tick(trigger) {
 
     const portfolio = await fetchJson(state.portfolioUrl);
     const workItems = await loadWorkItems(portfolio);
-    let dispatched = 0;
-    let heavyActive = 0;
 
+    let busyCount = 0;
+    let heavyActive = 0;
     for (const worker of state.workers) {
-      if (dispatched >= governor.maxActive) break;
+      if (worker.status === 'ROTATE' || worker.status === 'ROTATE_AFTER_RESPONSE') continue;
+      const ui = await workerUiState(worker);
+      if (ui && ui.ok && (ui.busy || !ui.idle)) {
+        busyCount += 1;
+        if (worker.heavyIo) heavyActive += 1;
+      }
+    }
+
+    const availableSlots = Math.max(0, governor.maxActive - busyCount);
+    let dispatched = 0;
+    for (const worker of state.workers) {
+      if (dispatched >= availableSlots) break;
       if (worker.status === 'ROTATE' || worker.status === 'ROTATE_AFTER_RESPONSE') continue;
       const item = taskForWorker(workItems, worker);
       if (!item) continue;
@@ -403,9 +418,9 @@ async function tick(trigger) {
       await saveState(state);
     }
 
-    state.lastTick = { at: nowIso(), ok: true, trigger, dispatched, readyTasks: workItems.length };
-    appendLog(state, { kind: 'tick', result: 'DONE', trigger, dispatched, readyTasks: workItems.length, governorMode: governor.mode });
-    return { ok: true, governor, dispatched, readyTasks: workItems.length };
+    state.lastTick = { at: nowIso(), ok: true, trigger, dispatched, busyCount, availableSlots, readyTasks: workItems.length };
+    appendLog(state, { kind: 'tick', result: 'DONE', trigger, dispatched, busyCount, availableSlots, readyTasks: workItems.length, governorMode: governor.mode });
+    return { ok: true, governor, dispatched, busyCount, availableSlots, readyTasks: workItems.length };
   } catch (error) {
     state.lastTick = { at: nowIso(), ok: false, trigger, error: errorText(error) };
     appendLog(state, { kind: 'tick', result: 'FAIL', trigger, error: errorText(error) });
