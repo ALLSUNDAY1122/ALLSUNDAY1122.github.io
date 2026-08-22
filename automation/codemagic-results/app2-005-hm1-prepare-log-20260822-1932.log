@@ -1,0 +1,77 @@
++ set -euo pipefail
++++ dirname /Users/builder/clone/ios/health-manager-1/prepare-ios.sh
+++ cd /Users/builder/clone/ios/health-manager-1
+++ pwd
++ SCRIPT_DIR=/Users/builder/clone/ios/health-manager-1
++ INDEX=/Users/builder/clone/ios/health-manager-1/Resources/index.html
++ QUESTIONS=/Users/builder/clone/ios/health-manager-1/Resources/questions.json
++ ICON_SRC=/Users/builder/clone/ios/health-manager-1/learning-sprint-hm1.svg
++ ICON_DIR=/Users/builder/clone/ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset
++ node /Users/builder/clone/ios/health-manager-1/augment-to-264.cjs
+{
+  "generatedAt": "2026-08-19",
+  "baseQuestions": 132,
+  "addedQuestions": 132,
+  "totalQuestions": 264,
+  "sourceAuditedBank": 300,
+  "sourceExpansionCandidates": 210,
+  "similarityThreshold": 0.58,
+  "subjectAddedCounts": {
+    "関係法令": 44,
+    "労働衛生": 44,
+    "労働生理": 44
+  },
+  "roundCounts": {
+    "2026-04": {
+      "total": 44,
+      "関係法令": 17,
+      "労働衛生": 17,
+      "労働生理": 10
+    },
+    "2025-10": {
+      "total": 44,
+      "関係法令": 17,
+      "労働衛生": 17,
+      "労働生理": 10
+    },
+    "2025-04": {
+      "total": 44,
+      "関係法令": 17,
+      "労働衛生": 17,
+      "労働生理": 10
+    },
+    "practice-A": {
+      "total": 44,
+      "関係法令": 15,
+      "労働衛生": 15,
+      "労働生理": 14
+    },
+    "practice-B": {
+      "total": 44,
+      "関係法令": 15,
+      "労働衛生": 14,
+      "労働生理": 15
+    },
+    "practice-C": {
+      "total": 44,
+      "関係法令": 14,
+      "労働衛生": 15,
+      "労働生理": 15
+    }
+  },
+  "sourcePolicy": "Only HM2 fiveYearExpansion questions already marked 公開候補 and audited are eligible; high-similarity stems against HM1 base/selected additions are excluded."
+}
+PASS: HealthManager1 expanded from 132 to 264 audited questions.
++ node /Users/builder/clone/ios/health-manager-1/audit/difficulty-audit-2026-08-21.cjs
+HM1 difficulty audit total=264 review=14 knowledge_free_risk=0 direct_recall_review=10
++ python3 - /Users/builder/clone/ios/health-manager-1/Resources/index.html /Users/builder/clone/ios/health-manager-1/Resources/questions.json
+PASS: bundled audited HM1 questions=264 rounds={'2026-04': 44, '2025-10': 44, '2025-04': 44, 'practice-A': 44, 'practice-B': 44, 'practice-C': 44}
++ command -v magick
+++ command -v magick
++ IMAGEMAGICK_CMD=/opt/homebrew/bin/magick
++ test -f /Users/builder/clone/ios/health-manager-1/learning-sprint-hm1.svg
++ mkdir -p /Users/builder/clone/ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset
++ render 40 icon-20@2x.png
++ local px=40 out=icon-20@2x.png
++ /opt/homebrew/bin/magick /Users/builder/clone/ios/health-manager-1/learning-sprint-hm1.svg -background white -alpha remove -alpha off -resize '40x40!' /Users/builder/clone/ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset/icon-20@2x.png
+magick: unable to read font `' @ error/annotate.c/RenderFreetype/1660.
