@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "AI Dev Portfolio Dispatcher",
+  "version": "0.2.0",
+  "description": "Resource-governed dispatcher for short-lived ChatGPT development sessions.",
+  "permissions": ["storage", "alarms", "tabs", "system.memory", "system.cpu"],
+  "host_permissions": ["https://chatgpt.com/*", "https://raw.githubusercontent.com/*"],
+  "background": { "service_worker": "service-worker.js" },
+  "content_scripts": [
+    { "matches": ["https://chatgpt.com/*"], "js": ["content-script.js"], "run_at": "document_idle" }
+  ],
+  "action": { "default_popup": "popup.html", "default_title": "AI Dev Dispatcher" }
+}
