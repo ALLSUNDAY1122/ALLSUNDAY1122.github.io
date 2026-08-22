@@ -103,7 +103,7 @@ public enum ProcessingPhase: String, Codable, Sendable {
     case failed
 }
 
-public struct ProcessingSnapshot: Equatable, Codable, Sendable {
+public struct ProcessingSnapshot: Equatable, Hashable, Codable, Sendable {
     public let jobID: ProcessingJobID
     public let phase: ProcessingPhase
     public let fractionComplete: Double?
