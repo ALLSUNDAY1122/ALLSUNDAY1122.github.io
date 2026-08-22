@@ -1,9 +1,34 @@
 #!/usr/bin/env python3
-"""Robust CI entrypoint for the LS16 58-60 raw official frame."""
+"""Robust CI entrypoint for the LS16 latest-three raw official frame."""
 import re
 import unicodedata
-from pypdf import PdfReader
+import pymupdf
 import extract_official as base
+
+MEDIA_PAGE_MARKER = "__LS16_MEDIA_PAGE__"
+
+R61 = {
+    "exam_round": 61,
+    "am": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-09a_01.pdf",
+    "pm": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-09b_01.pdf",
+    "answer": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-09seitou.pdf",
+}
+R60 = {
+    "exam_round": 60,
+    "am": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-09a_01.pdf",
+    "pm": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-09b_01.pdf",
+    "answer": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-09seitou.pdf",
+}
+R59 = {
+    "exam_round": 59,
+    "am": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-09a_01.pdf",
+    "pm": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-09b_01.pdf",
+    "answer": "https://www.mhlw.go.jp/general/sikaku/successlist/2024/siken08_09-2/dl/OT_seitou.pdf",
+}
+
+# LS16-004 requires exactly three complete examinations. Use the newest three
+# official rounds so the audit also anchors the bank to the current exam level.
+base.SOURCES = {1: R61, 2: R60, 3: R59}
 
 
 def norm(value):
@@ -18,10 +43,36 @@ def clean_line(line):
     return line
 
 
+def _page_has_media(page):
+    """Conservatively tag pages containing non-text graphics for audit."""
+    if page.get_images(full=True):
+        return True
+    # MuPDF reports vector illustrations as drawings. Ignore tiny printer marks,
+    # but retain substantive drawings so image-choice questions do not leak into
+    # the text-only bank merely because their stem lacks the word 'figure'.
+    try:
+        for drawing in page.get_drawings():
+            rect = drawing.get("rect")
+            if rect and rect.width * rect.height >= 2500:
+                return True
+    except Exception:
+        pass
+    return False
+
+
 def text(pdf):
-    # Default extraction preserves question/choice reading order better than the
-    # layout mode used by the first gate implementation.
-    return "\n".join((page.extract_text() or "") for page in PdfReader(str(pdf)).pages)
+    """Extract Japanese text with MuPDF and preserve a page-level media flag."""
+    doc = pymupdf.open(str(pdf))
+    try:
+        chunks = []
+        for page in doc:
+            page_text = page.get_text("text", sort=True) or ""
+            if _page_has_media(page):
+                page_text = MEDIA_PAGE_MARKER + "\n" + page_text
+            chunks.append(page_text)
+        return "\n".join(chunks)
+    finally:
+        doc.close()
 
 
 def find_starts(lines):
@@ -33,7 +84,6 @@ def find_starts(lines):
         if not m or int(m.group(1)) != expected:
             continue
         rest = m.group(2).strip()
-        # Reject answer-sheet numerals/instructions and require Japanese prose.
         japanese = sum(
             1 for c in rest
             if "\u3040" <= c <= "\u30ff" or "\u4e00" <= c <= "\u9fff"
@@ -84,14 +134,16 @@ def parse_questions(raw_text):
     out = []
     for n in range(1, 101):
         stop = starts.get(n + 1, len(lines))
-        block_lines = [clean_line(x) for x in lines[starts[n]:stop]]
-        block_lines = [x for x in block_lines if x]
+        original = [clean_line(x) for x in lines[starts[n]:stop]]
+        page_media = MEDIA_PAGE_MARKER in original
+        block_lines = [x for x in original if x and x != MEDIA_PAGE_MARKER]
         block = " ".join(block_lines)
         block = re.sub(r"^\s*" + str(n) + r"\s+", "", block, count=1)
         stem, choices = split_choices(block)
         combined = stem + " " + " ".join(choices)
         requires_media = (
-            len(choices) != 5
+            page_media
+            or len(choices) != 5
             or bool(re.search(
                 r"別冊|図(?:に|を|で|から)|画像|写真|MRI|CT|エックス線|X線|"
                 r"グラフ|模式図|標本|①|②|③|④|⑤",
