@@ -71,24 +71,20 @@ workflows:
         script: |
           set -o pipefail
           bash -x "$CM_BUILD_DIR/ios/health-manager-1/prepare-ios.sh" 2>&1 | tee /tmp/hm1-prepare.log
-      - name: Set CI build number and generate Xcode project
+      - name: Generate Xcode project
         script: |
           set -o pipefail
           {
             set -x
             cd "$CM_BUILD_DIR/ios/health-manager-1"
-            BUILD_NUM="${CM_BUILD_NUMBER:?CM_BUILD_NUMBER is required}"
-            echo "CM_BUILD_NUMBER=$BUILD_NUM"
-            python3 - "$BUILD_NUM" <<'PY2'
+            python3 - <<'PY2'
           from pathlib import Path
-          import re,sys
-          q=Path('project.yml')
-          s=q.read_text(encoding='utf-8')
-          s,n=re.subn(r'CURRENT_PROJECT_VERSION:\s*\d+',f'CURRENT_PROJECT_VERSION: {sys.argv[1]}',s,count=1)
-          if n != 1:
-              raise SystemExit('CURRENT_PROJECT_VERSION replacement failed')
-          q.write_text(s,encoding='utf-8')
-          print('PASS: CURRENT_PROJECT_VERSION='+sys.argv[1])
+          import re
+          s=Path('project.yml').read_text(encoding='utf-8')
+          m=re.search(r'CURRENT_PROJECT_VERSION:\s*(\d+)',s)
+          if not m:
+              raise SystemExit('CURRENT_PROJECT_VERSION missing')
+          print('PASS: CURRENT_PROJECT_VERSION='+m.group(1))
           PY2
             xcodegen --version
             xcodegen generate
