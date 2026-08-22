@@ -1,0 +1,91 @@
+name: APP2-009 Signing Readonly Audit
+
+on:
+  push:
+    branches: [main]
+    paths: ['automation/app2-009-signing-audit-command.json']
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Audit Apple and Codemagic signing inventory
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys, urllib.request, urllib.parse, urllib.error
+          from pathlib import Path
+          sys.path.insert(0,'scripts')
+          from app_store_connect_api import load_private_key, make_token
+          bundle='jp.allsunday1122.kangoshi'
+          cm_app='6a769d81a1add9d06020b524'
+          issuer=os.environ['ASC_ISSUER_ID'].strip(); keyid=os.environ['ASC_KEY_ID'].strip(); cmt=os.environ['CM_API_TOKEN'].strip()
+          keypath, cleanup=load_private_key()
+          def call(url,headers):
+            req=urllib.request.Request(url,headers=headers)
+            try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                raw=r.read().decode(); return r.status, json.loads(raw) if raw else {}
+            except urllib.error.HTTPError as e:
+              raw=e.read().decode(errors='replace'); return e.code, {'error':raw[:1200]}
+          try:
+            jwt=make_token(issuer,keyid,keypath)
+            ah={'Authorization':'Bearer '+jwt,'Accept':'application/json'}
+            q=urllib.parse.urlencode({'filter[identifier]':bundle,'limit':'10'})
+            st,bp=call('https://api.appstoreconnect.apple.com/v1/bundleIds?'+q,ah)
+            bids=bp.get('data',[]) if isinstance(bp,dict) else []
+            bid=bids[0]['id'] if st==200 and bids else None
+            profiles=[]
+            if bid:
+              q=urllib.parse.urlencode({'filter[bundleId]':bid,'filter[profileType]':'IOS_APP_STORE','limit':'200'})
+              ps,pp=call('https://api.appstoreconnect.apple.com/v1/profiles?'+q,ah)
+              for p in pp.get('data',[]) if isinstance(pp,dict) else []:
+                a=p.get('attributes') or {}
+                pid=p.get('id')
+                cs,cp=call(f'https://api.appstoreconnect.apple.com/v1/profiles/{pid}/certificates?limit=50',ah)
+                certs=[]
+                for c in cp.get('data',[]) if isinstance(cp,dict) else []:
+                  ca=c.get('attributes') or {}
+                  certs.append({'id':c.get('id'),'type':ca.get('certificateType'),'name':ca.get('name'),'expirationDate':ca.get('expirationDate')})
+                profiles.append({'id':pid,'name':a.get('name'),'state':a.get('profileState'),'type':a.get('profileType'),'expirationDate':a.get('expirationDate'),'certificates':certs})
+            else:
+              ps=None
+            ch={'x-auth-token':cmt,'Accept':'application/json'}
+            gs,gp=call(f'https://codemagic.io/api/v3/apps/{cm_app}/variable-groups',ch)
+            groups=[]
+            rawgroups=[]
+            if isinstance(gp,dict):
+              for k in ('data','variable_groups','groups'):
+                if isinstance(gp.get(k),list): rawgroups=gp[k]; break
+            elif isinstance(gp,list): rawgroups=gp
+            for g in rawgroups:
+              if isinstance(g,dict): groups.append({'id':g.get('id') or g.get('_id'),'name':g.get('name') or g.get('group_name')})
+            out={'task_id':'APP2-009','bundle_id':bundle,'bundle_resource_id':bid,'bundle_query_status':st,'profiles_query_status':ps,'app_store_profiles':profiles,'codemagic_app_id':cm_app,'codemagic_groups_status':gs,'codemagic_variable_groups':groups}
+            Path('/tmp/app2-009-signing-audit.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          finally:
+            if cleanup:
+              try: Path(keypath).unlink(missing_ok=True)
+              except Exception: pass
+          PY
+      - name: Persist sanitized audit
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/chatgpt-dispatcher/app-development-2/evidence
+          cp /tmp/app2-009-signing-audit.json automation/chatgpt-dispatcher/app-development-2/evidence/APP2-009-signing-audit.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-009-signing-audit.json
+          git commit -m 'APP2-009: persist signing inventory audit' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
