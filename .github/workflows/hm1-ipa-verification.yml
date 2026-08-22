@@ -12,52 +12,90 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Verify Codemagic signed IPA
+
+      - name: Verify Codemagic signed IPA and audited 264-question payload
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           python3 - <<'PY'
-          import io,json,os,plistlib,urllib.request,zipfile
+          import collections,io,json,os,plistlib,re,urllib.request,zipfile
           from pathlib import Path
+
           command=json.loads(Path('automation/hm1-ipa-verification-command.json').read_text(encoding='utf-8'))
           build_id=command['build_id']
           token=os.environ['CM_API_TOKEN']
           req=urllib.request.Request(f'https://codemagic.io/api/v3/builds/{build_id}',headers={'x-auth-token':token})
-          with urllib.request.urlopen(req,timeout=30) as r: raw=json.load(r)
+          with urllib.request.urlopen(req,timeout=30) as r:
+              raw=json.load(r)
           build=raw.get('data') or raw
-          ipa=next(a for a in build.get('artifacts',[]) if a.get('type')=='ipa')
-          with urllib.request.urlopen(ipa['short_lived_download_url'],timeout=60) as r: payload=r.read()
+          artifacts=build.get('artifacts') or []
+          ipa=next((a for a in artifacts if a.get('type')=='ipa' or str(a.get('name','')).lower().endswith('.ipa')),None)
+          if not ipa:
+              raise SystemExit('No signed IPA artifact found on Codemagic build')
+          with urllib.request.urlopen(ipa['short_lived_download_url'],timeout=90) as r:
+              payload=r.read()
           z=zipfile.ZipFile(io.BytesIO(payload)); names=z.namelist()
           app_prefix=next(n for n in names if n.startswith('Payload/') and n.endswith('.app/'))
           index_path=app_prefix+'index.html'; info_path=app_prefix+'Info.plist'; assets_path=app_prefix+'Assets.car'
           index=z.read(index_path) if index_path in names else b''
+          text=index.decode('utf-8',errors='replace')
           info=plistlib.loads(z.read(info_path))
+
+          m=re.search(r'const QUESTIONS=(\[.*?\]);\nconst DOMAINS=',text,re.S)
+          questions=json.loads(m.group(1)) if m else []
+          rounds=collections.Counter(q.get('round') for q in questions)
+          expected_rounds={'2026-04':44,'2025-10':44,'2025-04':44,'practice-A':44,'practice-B':44,'practice-C':44}
+          build_number=str(info.get('CFBundleVersion') or '')
+          expected_build=str(command.get('expected_build_number') or '')
+
           checks={
             'index_present':index_path in names,
             'index_bytes':len(index),
             'index_size_ok':len(index)>=100000,
-            'app_marker_present':'第一種衛生管理者' in index.decode('utf-8',errors='ignore'),
+            'app_marker_present':'第一種衛生管理者' in text,
+            'questions_payload_present':bool(m),
+            'question_count':len(questions),
+            'question_count_ok':len(questions)==264,
+            'unique_question_ids_ok':len(questions)==264 and len({q.get('id') for q in questions})==264,
+            'round_counts':dict(rounds),
+            'six_by_44_ok':rounds==expected_rounds,
+            'final_question_present':'practice-C-Q44' in text,
+            'ui_264_marker_present':'合計264問' in text,
             'assets_car_present':assets_path in names,
             'code_signature_present':any(n.startswith(app_prefix+'_CodeSignature/') for n in names),
             'embedded_provision_present':app_prefix+'embedded.mobileprovision' in names,
             'bundle_id':info.get('CFBundleIdentifier'),
             'version':info.get('CFBundleShortVersionString'),
-            'build_number':info.get('CFBundleVersion'),
+            'build_number':build_number,
             'bundle_id_ok':info.get('CFBundleIdentifier')=='jp.allsunday1122.healthmanager1',
-            'build_number_ok':info.get('CFBundleVersion')=='2026081901',
+            'build_number_numeric':build_number.isdigit(),
+            'expected_build_number':expected_build or None,
+            'expected_build_number_ok':(not expected_build) or build_number==expected_build,
           }
-          required=['index_present','index_size_ok','app_marker_present','assets_car_present','code_signature_present','embedded_provision_present','bundle_id_ok','build_number_ok']
-          passed=all(checks[k] for k in required)
-          summary={'request_id':command.get('request_id'),'build_id':build_id,'codemagic_status':build.get('status'),'app_store_connect_status':build.get('app_store_connect_status'),'ipa_size_in_bytes':len(payload),'checks':checks,'passed':passed}
+          required=[
+            'index_present','index_size_ok','app_marker_present','questions_payload_present',
+            'question_count_ok','unique_question_ids_ok','six_by_44_ok','final_question_present',
+            'ui_264_marker_present','assets_car_present','code_signature_present',
+            'embedded_provision_present','bundle_id_ok','build_number_numeric','expected_build_number_ok'
+          ]
+          passed=all(bool(checks[k]) for k in required)
+          summary={
+            'request_id':command.get('request_id'),'build_id':build_id,
+            'codemagic_status':build.get('status'),'app_store_connect_status':build.get('app_store_connect_status'),
+            'ipa_size_in_bytes':len(payload),'checks':checks,'passed':passed
+          }
           Path('automation/hm1-ipa-verification-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-          if not passed: raise SystemExit('HealthManager1 signed IPA verification failed')
+          print(json.dumps({'build_id':build_id,'passed':passed,'build_number':build_number,'question_count':len(questions),'rounds':dict(rounds)},ensure_ascii=False))
+          if not passed:
+              raise SystemExit('HealthManager1 signed IPA verification failed')
           PY
-      - name: Read back App Store Connect
+
+      - name: Read back App Store Connect and match uploaded build
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
@@ -68,7 +106,7 @@ jobs:
             "request_id": "app2-005-hm1-asc-gate",
             "requests": [
               {"label":"app","path":"/v1/apps/6799581662"},
-              {"label":"builds","path":"/v1/apps/6799581662/builds?sort=-uploadedDate&limit=10"},
+              {"label":"builds","path":"/v1/apps/6799581662/builds?sort=-uploadedDate&limit=20"},
               {"label":"prerelease-versions","path":"/v1/apps/6799581662/preReleaseVersions?limit=20"},
               {"label":"beta-groups","path":"/v1/apps/6799581662/betaGroups?limit=50"},
               {"label":"iap","path":"/v1/apps/6799581662/inAppPurchasesV2?limit=50"},
@@ -84,26 +122,38 @@ jobs:
           src=json.loads(Path('/tmp/hm1-asc-result.json').read_text(encoding='utf-8'))
           allowed=('name','bundleId','sku','primaryLocale','version','versionString','platform','uploadedDate','processingState','expired','expirationDate','minOsVersion','betaReviewState','productId','referenceName','state')
           results=[]
+          build_resources=[]
           for result in src.get('results',[]):
               data=(result.get('response') or {}).get('data') or []
               if isinstance(data,dict): data=[data]
               clean=[]
               for resource in data:
                   attrs=resource.get('attributes') or {}
-                  clean.append({'id':resource.get('id'),'type':resource.get('type'),'attributes':{k:attrs.get(k) for k in allowed if k in attrs}})
+                  item={'id':resource.get('id'),'type':resource.get('type'),'attributes':{k:attrs.get(k) for k in allowed if k in attrs}}
+                  clean.append(item)
+                  if result.get('label')=='builds': build_resources.append(item)
               results.append({'label':result.get('label'),'http_status':result.get('http_status'),'data':clean})
-          summary['asc_readback']={'completed_at':src.get('completed_at'),'results':results}
+          expected=str(summary['checks']['build_number'])
+          matches=[x for x in build_resources if str((x.get('attributes') or {}).get('version'))==expected]
+          summary['asc_readback']={'completed_at':src.get('completed_at'),'results':results,'expected_build_number':expected,'matching_builds':matches,'build_match':bool(matches)}
           Path('automation/hm1-ipa-verification-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps({'expected_build_number':expected,'asc_build_match':bool(matches),'matches':matches},ensure_ascii=False))
+          if not matches:
+              raise SystemExit(f'App Store Connect does not yet show HM1 build {expected}')
           PY
+
       - name: Persist verification summary
+        if: always()
         run: |
+          test -f automation/hm1-ipa-verification-summary.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add automation/hm1-ipa-verification-summary.json
-          git commit -m "Record APP2-005 HealthManager1 IPA and ASC verification"
           cp automation/hm1-ipa-verification-summary.json /tmp/hm1-summary.json
-          for attempt in 1 2 3; do
+          git add automation/hm1-ipa-verification-summary.json
+          git diff --cached --quiet || git commit -m "Record APP2-005 HealthManager1 IPA and ASC verification"
+          for attempt in 1 2 3 4 5; do
             if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
             git fetch origin main
             git reset --hard origin/main
             cp /tmp/hm1-summary.json automation/hm1-ipa-verification-summary.json
