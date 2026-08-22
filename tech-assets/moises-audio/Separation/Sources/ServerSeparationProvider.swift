@@ -247,8 +247,7 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
         request.timeoutInterval = configuration.requestTimeoutSeconds
-        if let optionalAuthorization = try? await configuration.authorizationHeader(),
-           let authorization = optionalAuthorization {
+        if let authorization = try? await configuration.authorizationHeader() {
             request.setValue(authorization, forHTTPHeaderField: "Authorization")
         }
 
