@@ -4,39 +4,19 @@
   "work_package_id": "MOI-WP4-ANALYSIS-PLATFORM",
   "assignment_epoch": 1,
   "work_branch": "moises/wp4-analysis-platform",
-  "state": "BLOCKED",
+  "state": "IN_PROGRESS",
   "current_task": "MOI-BLD-003",
-  "base_integration_sha": "eadc3507141bc20eca8ec710378d195892b86b5a",
-  "head_sha": "32fca8cd0fd2392b2b33350b49b44af9b8d1bfd5",
-  "commits": [
-    "8dbe4192176cbfae32e39d53500a50eb72f5c783",
-    "32fca8cd0fd2392b2b33350b49b44af9b8d1bfd5"
-  ],
-  "tests": [
-    "Swift 6 exact relevant contract typecheck reproducer: FAIL — PersistedProjectSnapshot cannot synthesize Hashable because ProcessingSnapshot? is not Hashable",
-    "Same reproducer with only ProcessingSnapshot conformance changed to Equatable, Hashable, Codable, Sendable: PASS (exit 0)",
-    "Full existing 13 + new 4 SwiftPM tests cannot execute until HQ Shared contract mismatch is fixed",
-    "2026-08-22 14:52 JST canonical Shared/DomainContracts.swift re-read: ProcessingSnapshot remains Equatable, Codable, Sendable; blocker persists"
-  ],
+  "base_integration_sha": "5e958ec999ad9f3d8f3a4a6225d4b6ec06a5c7a3",
+  "head_sha": "5e958ec999ad9f3d8f3a4a6225d4b6ec06a5c7a3",
+  "commits": [],
+  "tests": [],
   "evidence": [
-    "Fixed Work Package manifest and Queue schema v2 read-back confirmed Worker 4 assignment to MOI-WP4-ANALYSIS-PLATFORM / MOI-BLD-003",
-    "moises/wp4-analysis-platform was fast-forwarded to integration start head 13b0b559cd68f109212e8d46ad0167f43d1d7d1d; intervening commit only updated worker-2 status",
-    "commit 8dbe4192176cbfae32e39d53500a50eb72f5c783 adds Shared/LibraryContracts.swift to the explicit SwiftPM source list without editing Shared/App",
-    "commit 32fca8cd0fd2392b2b33350b49b44af9b8d1bfd5 adds four Library contract regression tests: user-edit Codable round-trip, persisted-project round-trip, setlist ordering, processing-recovery Codable round-trip",
-    "remote read-back confirmed Package.swift and LibraryContractTests.swift",
-    "compare integration -> work branch shows only Package.swift and Tests/MoisesAudioCoreTests/LibraryContractTests.swift changed in Worker 4 owned scope",
-    "Shared/HQ_ARCH_002_VALIDATION delegated exact integrated DomainContracts + LibraryContracts package compilation to this build-harness task; the exact type boundary exposes the Hashable mismatch",
-    "2026-08-22 14:52 JST recheck: integration advanced to eadc3507141bc20eca8ec710378d195892b86b5a; opposite compare shows the seven integration-only commits touch worker-status files only, not Worker 4 owned build scope",
-    "2026-08-22 14:52 JST canonical DomainContracts still declares ProcessingSnapshot: Equatable, Codable, Sendable; no HQ Shared fix present"
+    "2026-08-22 15:24 JST canonical Queue re-read: MOI-BLD-003 remains READY_ASSIGNED and records HQ Hashable fix at facd51a2724a68a5e1cdedbf2ace5e88a28711fc",
+    "canonical Shared/DomainContracts.swift now declares ProcessingSnapshot: Equatable, Hashable, Codable, Sendable",
+    "integration->old work-branch comparison showed no incoming changes in Worker 4 owned Package.swift or Tests/** scope; branch was safely rebased by resetting to integration head and will reapply the two owned BLD-003 diffs"
   ],
-  "known_gaps": [
-    "HQ-owned Shared/LibraryContracts.swift declares PersistedProjectSnapshot: Hashable while storing ProcessingSnapshot?, but Shared/DomainContracts.swift declares ProcessingSnapshot: Equatable, Codable, Sendable only",
-    "MOI-BLD-003 Acceptance cannot be met and MOI-LIB-001 should not rely on the extended contract until exact package compilation is green",
-    "No PARITY state changed; this is a build-contract blocker only"
-  ],
-  "hq_requests": [
-    "Preferred minimal Shared fix: add Hashable conformance to ProcessingSnapshot (all current stored fields are Hashable), then rerun/release MOI-BLD-003. Alternative is removing Hashable from PersistedProjectSnapshot if HQ does not require snapshot hashing. Worker 4 will not make either Shared contract change."
-  ],
-  "last_updated": "2026-08-22T14:52:00+09:00",
+  "known_gaps": [],
+  "hq_requests": [],
+  "last_updated": "2026-08-22T15:24:00+09:00",
   "writer_policy": "Only Moises-Worker-4 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
 }
