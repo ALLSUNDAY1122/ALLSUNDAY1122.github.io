@@ -4,12 +4,6 @@ const path=require('path');
 const qpath=path.join(__dirname,'..','Resources','questions.json');
 const qs=JSON.parse(fs.readFileSync(qpath,'utf8'));
 
-// Detect items that can be solved without domain knowledge because several
-// distractors are visibly absurd, extremely short/absolute, or because the keyed
-// answer is uniquely detailed while another cue is also present. A long correct
-// statement by itself is not a failure: real exam choices frequently differ in
-// length. Direct-recall questions are retained for review but are not blockers by
-// themselves because the official exam also contains numeric/definition recall.
 const absurd=/(虫歯だけ|骨折だけ|胆石だけ|聴力改善|尿を逆流|血液凝固を完全停止|色覚だけ|普通救命講習|防火管理講習|潜水士免許|危険物乙4|産業医研修|市区町村への届出だけ|労働者代表の同意だけ)/;
 const absolute=/(だけ|一切|全て|必ず|絶対|不要|なくてよい|しなくてよい|常に)/;
 const rows=[];
@@ -40,4 +34,5 @@ fs.writeFileSync(path.join(__dirname,'DIFFICULTY_AUDIT_2026-08-21.json'),JSON.st
 const compact=flagged.map(r=>`${r.severe?'SEVERE':'REVIEW'}\t${r.score}\t${r.id}\t${r.label}\t${r.stem}\t${r.choices.map((x,i)=>`${i===r.ans?'*':''}${i+1}:${String(x).replace(/\t|\n/g,' ')}`).join(' || ')}`).join('\n')+'\n';
 fs.writeFileSync(path.join(__dirname,'DIFFICULTY_FLAGGED_2026-08-21.tsv'),compact);
 console.log(`HM1 difficulty audit total=${qs.length} review=${flagged.length} knowledge_free_risk=${severe.length} direct_recall_review=${directReview.length}`);
+for(const r of severe) console.log(`BLOCKER\t${r.id}\t${r.reasons.join(',')}\t${r.stem}\t${r.choices.join(' || ')}`);
 if(severe.length) process.exitCode=2;
