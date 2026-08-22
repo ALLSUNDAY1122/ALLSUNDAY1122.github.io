@@ -65,8 +65,9 @@
     }
   ],
   "lane_execution_rules": [
-    "At epoch-2 start each Worker syncs once to latest integration and records base_integration_sha.",
-    "After that, normal integration-branch movement in other lanes is ignored until lane checkpoint; do not rebase on unrelated changes.",
+    "At epoch-2 start each Worker reads the latest integration Shared/App contracts and records the contract SHA.",
+    "If the existing work branch has no unintegrated owned-scope commits, it may safely sync to latest integration. If unintegrated owned-scope commits exist, they must be preserved; destructive reset/force update is forbidden and the existing work is carried into the first applicable Macro Bundle.",
+    "After epoch contract capture, normal integration-branch movement in other lanes is ignored until lane checkpoint; do not rebase on unrelated changes.",
     "On each user '次', execute exactly the next incomplete macro bundle in lane-plan-v3.json through implementation, tests and durable evidence.",
     "Do not stop because an internal subtask finished. Stop only when the macro bundle done_when is met or a hard blocker/ownership conflict exists.",
     "When a bundle finishes, record it in the Worker status file and immediately nominate the next bundle; HQ approval is not required.",
