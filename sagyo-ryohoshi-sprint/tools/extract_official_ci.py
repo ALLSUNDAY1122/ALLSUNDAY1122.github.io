@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """Robust CI entrypoint for the LS16 latest-three raw official frame."""
+import json
 import re
 import unicodedata
+from pathlib import Path
+
 import pymupdf
 import extract_official as base
 
 MEDIA_PAGE_MARKER = "__LS16_MEDIA_PAGE__"
+MEDIA_QUEUE = Path(__file__).resolve().parents[1] / "audit" / "media-audit-queue.json"
 
 R61 = {
     "exam_round": 61,
@@ -160,8 +164,20 @@ def parse_questions(raw_text):
     return out
 
 
+def write_media_audit_queue():
+    rows = json.loads(base.OUT.read_text(encoding="utf-8"))
+    queue = [row for row in rows if row.get("requires_media")]
+    MEDIA_QUEUE.parent.mkdir(parents=True, exist_ok=True)
+    MEDIA_QUEUE.write_text(
+        json.dumps(queue, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print("MEDIA_AUDIT_QUEUE", len(queue), flush=True)
+
+
 base.text = text
 base.parse_questions = parse_questions
 
 if __name__ == "__main__":
     base.main()
+    write_media_audit_queue()
