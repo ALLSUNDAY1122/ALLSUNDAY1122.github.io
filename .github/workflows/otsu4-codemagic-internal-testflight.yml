@@ -1,0 +1,155 @@
+name: Otsu4 Codemagic Internal TestFlight
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: otsu4-internal-testflight
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTS4-CM]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      TARGET_BRANCH: feat/otsu4-360-productization
+      TARGET_WORKFLOW: otsu4-ios
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: feat/otsu4-360-productization
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install YAML parser
+        run: python -m pip install --disable-pip-version-check PyYAML
+
+      - name: Verify Internal TestFlight-only target
+        run: |
+          python - <<'PY'
+          import subprocess, yaml
+          cfg=yaml.safe_load(open('codemagic.yaml',encoding='utf-8'))
+          wf=(cfg.get('workflows') or {}).get('otsu4-ios')
+          assert wf, 'otsu4-ios workflow missing'
+          pub=((wf.get('publishing') or {}).get('app_store_connect') or {})
+          assert pub.get('submit_to_testflight') is True, 'TestFlight upload must be explicitly enabled'
+          assert pub.get('submit_to_app_store') is False, 'App Store submission must remain disabled'
+          joined=str(wf)
+          assert 'testFlightInternalTestingOnly' in joined, 'internal-only export option missing'
+          sha=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          print('PASS: Internal TestFlight-only workflow; target head='+sha)
+          PY
+
+      - name: Start and wait for Codemagic build
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          CM_APP_ID: ${{ vars.CM_APP_ID }}
+        run: |
+          python - <<'PY'
+          import json, os, time, urllib.error, urllib.request
+          from pathlib import Path
+
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          app_id=os.environ.get('CM_APP_ID','').strip()
+          if not token:
+              raise SystemExit('CM_API_TOKEN is not configured')
+
+          def api(url, method='GET', payload=None):
+              body=None if payload is None else json.dumps(payload).encode()
+              req=urllib.request.Request(url,data=body,method=method,headers={'Content-Type':'application/json','x-auth-token':token})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode('utf-8')
+                      return r.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode('utf-8',errors='replace')
+                  try: data=json.loads(raw) if raw else {}
+                  except Exception: data={'error':raw[:1000]}
+                  return e.code,data
+
+          if not app_id:
+              status,data=api('https://api.codemagic.io/apps')
+              if not 200 <= status < 300:
+                  raise SystemExit(f'GET apps failed HTTP {status}')
+              apps=data.get('applications') or data.get('data') or []
+              if isinstance(apps,dict): apps=apps.get('applications') or []
+              candidates=[]
+              for app in apps:
+                  text=json.dumps(app,ensure_ascii=False).lower().replace('.git','')
+                  if 'allsunday1122.github.io' in text:
+                      found=app.get('_id') or app.get('id')
+                      if found: candidates.append(found)
+              candidates=list(dict.fromkeys(candidates))
+              if len(candidates)!=1:
+                  raise SystemExit(f'Codemagic app resolution is not unique: {len(candidates)}')
+              app_id=candidates[0]
+
+          payload={'appId':app_id,'workflowId':'otsu4-ios','branch':'feat/otsu4-360-productization'}
+          status,data=api('https://api.codemagic.io/builds','POST',payload)
+          if not 200 <= status < 300:
+              raise SystemExit(f'POST build failed HTTP {status}: {data}')
+          build_id=data.get('buildId') or data.get('id')
+          if not build_id:
+              raise SystemExit('Codemagic did not return buildId')
+
+          result={'ok':False,'app_id':app_id,'workflow_id':'otsu4-ios','branch':'feat/otsu4-360-productization','build_id':build_id,'status':'started'}
+          out=Path('otsu4-codemagic-result.json')
+          out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          print('Codemagic build started:',build_id)
+
+          terminal={'finished','failed','canceled','timeout','skipped'}
+          deadline=time.time()+4200
+          last=None
+          while time.time() < deadline:
+              status,data=api(f'https://codemagic.io/api/v3/builds/{build_id}')
+              if not 200 <= status < 300:
+                  raise SystemExit(f'GET build failed HTTP {status}')
+              details=data.get('data') or data
+              state=details.get('status')
+              if state != last:
+                  print('Codemagic status:',state)
+                  last=state
+              result['status']=state
+              result['commit']=(details.get('commit') or {}).get('hash')
+              result['app_store_connect_status']=details.get('app_store_connect_status')
+              result['ok']=state=='finished'
+              out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+              if state in terminal:
+                  if state!='finished':
+                      raise SystemExit(f'Codemagic build ended with {state}')
+                  break
+              time.sleep(30)
+          else:
+              raise SystemExit('Timed out waiting for Codemagic build')
+          PY
+
+      - name: Upload sanitized result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: otsu4-codemagic-internal-${{ github.run_id }}
+          path: otsu4-codemagic-result.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Report run locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Otsu4 Internal TestFlight gateway finished. status=${{ job.status }}; run_id=${context.runId}`
+            });
