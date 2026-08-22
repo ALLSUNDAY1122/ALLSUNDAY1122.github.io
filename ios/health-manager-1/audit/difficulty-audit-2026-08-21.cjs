@@ -4,10 +4,12 @@ const path=require('path');
 const qpath=path.join(__dirname,'..','Resources','questions.json');
 const qs=JSON.parse(fs.readFileSync(qpath,'utf8'));
 
-// This gate is intentionally aimed at "knowledge-free elimination" rather than
-// rejecting legitimate exam-style absolutes. Official questions can contain
-// words such as 「必ず」 or 「だけ」; they become a quality problem when several
-// short/absurd distractors make the keyed answer visually or semantically obvious.
+// Detect items that can be solved without domain knowledge because several
+// distractors are visibly absurd, extremely short/absolute, or because the keyed
+// answer is uniquely detailed while another cue is also present. A long correct
+// statement by itself is not a failure: real exam choices frequently differ in
+// length. Direct-recall questions are retained for review but are not blockers by
+// themselves because the official exam also contains numeric/definition recall.
 const absurd=/(虫歯だけ|骨折だけ|胆石だけ|聴力改善|尿を逆流|血液凝固を完全停止|色覚だけ|普通救命講習|防火管理講習|潜水士免許|危険物乙4|産業医研修|市区町村への届出だけ|労働者代表の同意だけ)/;
 const absolute=/(だけ|一切|全て|必ず|絶対|不要|なくてよい|しなくてよい|常に)/;
 const rows=[];
@@ -23,10 +25,11 @@ for(const q of qs){
   const lens=choices.map(x=>String(x).length), al=lens[q.ans]||0;
   const wrongLens=lens.filter((_,i)=>i!==q.ans).sort((a,b)=>b-a);
   const wavg=wrongLens.reduce((a,b)=>a+b,0)/Math.max(1,wrongLens.length);
-  if(al>=22 && al>wavg*1.65 && al-(wrongLens[0]||0)>=8){score+=2;reasons.push('answer_length_cue')}
+  let answerLengthCue=false;
+  if(al>=22 && al>wavg*1.65 && al-(wrongLens[0]||0)>=8){score+=2;reasons.push('answer_length_cue');answerLengthCue=true}
   const direct=(q.stem||'').length<25 && /(どれか|何年|何人|頻度|必要な|場所は)/.test(q.stem||'');
   if(direct) reasons.push('direct_recall_review');
-  const severe=score>=4 || (score>=2 && reasons.includes('answer_length_cue'));
+  const severe=(choices.length!==5) || absurdN>0 || shortAbsolute>=2 || (answerLengthCue && shortAbsolute>=1);
   rows.push({id:q.id,round:q.round,label:q.label,score,severe,reasons,stem:q.stem,choices:q.choices,ans:q.ans});
 }
 const flagged=rows.filter(r=>r.score>=2 || r.reasons.includes('direct_recall_review')).sort((a,b)=>Number(b.severe)-Number(a.severe)||b.score-a.score||a.id.localeCompare(b.id));
