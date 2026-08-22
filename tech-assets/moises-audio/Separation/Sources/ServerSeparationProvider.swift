@@ -35,6 +35,7 @@ private struct JobSnapshotResponse: Decodable {
 }
 
 private struct StemResultResponse: Decodable {
+    let stemID: UUID
     let role: String
     let downloadURL: URL
     let mediaExtension: String
@@ -85,6 +86,12 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
             throw DomainFailure.processingFailed(code: "SEP_NO_ROLES", retryable: false)
         }
 
+        let rolesHeader = try validatedHeaderValue(
+            request.requestedRoles.map(\.rawValue).sorted().joined(separator: ","),
+            code: "SEP_INVALID_ROLE_HEADER"
+        )
+        let qualityHeader = try validatedHeaderValue(request.qualityProfile, code: "SEP_INVALID_QUALITY_HEADER")
+
         var urlRequest = URLRequest(url: configuration.baseURL.appendingPathComponent("v1/separations"))
         urlRequest.httpMethod = "POST"
         urlRequest.timeoutInterval = configuration.requestTimeoutSeconds
@@ -93,8 +100,8 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
         urlRequest.setValue(UUID().uuidString, forHTTPHeaderField: "Idempotency-Key")
         urlRequest.setValue(request.projectID.rawValue.uuidString, forHTTPHeaderField: "X-Project-ID")
         urlRequest.setValue(request.asset.id.rawValue.uuidString, forHTTPHeaderField: "X-Asset-ID")
-        urlRequest.setValue(request.requestedRoles.map(\.rawValue).sorted().joined(separator: ","), forHTTPHeaderField: "X-Stem-Roles")
-        urlRequest.setValue(request.qualityProfile, forHTTPHeaderField: "X-Quality-Profile")
+        urlRequest.setValue(rolesHeader, forHTTPHeaderField: "X-Stem-Roles")
+        urlRequest.setValue(qualityHeader, forHTTPHeaderField: "X-Quality-Profile")
         try await applyAuthorization(to: &urlRequest)
 
         do {
@@ -180,6 +187,8 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
             let projectID = ProjectID(rawValue: payload.projectID)
             var artifacts: [StemArtifact] = []
             artifacts.reserveCapacity(payload.stems.count)
+            var seenRoles = Set<StemRole>()
+            var seenStemIDs = Set<UUID>()
 
             for remoteStem in payload.stems {
                 guard remoteStem.sampleRate > 0,
@@ -189,6 +198,13 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
                 }
 
                 let role = StemRole(rawValue: remoteStem.role)
+                guard seenRoles.insert(role).inserted else {
+                    throw DomainFailure.processingFailed(code: "SEP_DUPLICATE_ROLE", retryable: false)
+                }
+                guard seenStemIDs.insert(remoteStem.stemID).inserted else {
+                    throw DomainFailure.processingFailed(code: "SEP_DUPLICATE_STEM_ID", retryable: false)
+                }
+
                 let destination = try finalStemURL(
                     projectID: projectID,
                     role: role,
@@ -199,7 +215,7 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
 
                 artifacts.append(
                     StemArtifact(
-                        id: StemID(),
+                        id: StemID(rawValue: remoteStem.stemID),
                         projectID: projectID,
                         role: role,
                         relativePath: relativePath,
@@ -285,12 +301,25 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
         return phase
     }
 
+    private func validatedHeaderValue(_ value: String, code: String) throws -> String {
+        guard !value.isEmpty,
+              value.utf8.count <= 512,
+              !value.contains("\r"),
+              !value.contains("\n") else {
+            throw DomainFailure.processingFailed(code: code, retryable: false)
+        }
+        return value
+    }
+
     private func resolvedAppOwnedURL(relativePath: String) throws -> URL {
         guard !relativePath.isEmpty, !relativePath.hasPrefix("/") else {
             throw DomainFailure.processingFailed(code: "SEP_UNSAFE_SOURCE_PATH", retryable: false)
         }
-        let root = configuration.appDataRoot.standardizedFileURL
-        let candidate = root.appendingPathComponent(relativePath).standardizedFileURL
+        let root = configuration.appDataRoot.resolvingSymlinksInPath().standardizedFileURL
+        let candidate = root
+            .appendingPathComponent(relativePath)
+            .resolvingSymlinksInPath()
+            .standardizedFileURL
         guard candidate.path == root.path || candidate.path.hasPrefix(root.path + "/") else {
             throw DomainFailure.processingFailed(code: "SEP_UNSAFE_SOURCE_PATH", retryable: false)
         }
@@ -299,10 +328,16 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
 
     private func finalStemURL(projectID: ProjectID, role: StemRole, mediaExtension: String) throws -> URL {
         let safeExtension = mediaExtension.lowercased().filter { $0.isLetter || $0.isNumber }
-        guard !safeExtension.isEmpty else {
+        guard !safeExtension.isEmpty, safeExtension.utf8.count <= 8 else {
             throw DomainFailure.processingFailed(code: "SEP_INVALID_EXTENSION", retryable: false)
         }
-        let root = configuration.appDataRoot.standardizedFileURL
+        guard !role.rawValue.isEmpty,
+              role.rawValue.utf8.count <= 64,
+              role.rawValue.allSatisfy({ $0.isLetter || $0.isNumber || $0 == "-" || $0 == "_" }) else {
+            throw DomainFailure.processingFailed(code: "SEP_UNSAFE_ROLE", retryable: false)
+        }
+
+        let root = configuration.appDataRoot.resolvingSymlinksInPath().standardizedFileURL
         let directory = root
             .appendingPathComponent("separation-stems", isDirectory: true)
             .appendingPathComponent(projectID.rawValue.uuidString, isDirectory: true)
@@ -344,8 +379,8 @@ public actor ServerSeparationProvider: SourceSeparationProviding {
     }
 
     private func relativeAppOwnedPath(for url: URL) throws -> String {
-        let root = configuration.appDataRoot.standardizedFileURL.path
-        let path = url.standardizedFileURL.path
+        let root = configuration.appDataRoot.resolvingSymlinksInPath().standardizedFileURL.path
+        let path = url.resolvingSymlinksInPath().standardizedFileURL.path
         guard path.hasPrefix(root + "/") else {
             throw DomainFailure.processingFailed(code: "SEP_OUTPUT_OUTSIDE_ROOT", retryable: false)
         }
