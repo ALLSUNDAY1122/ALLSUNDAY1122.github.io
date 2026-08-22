@@ -83,10 +83,10 @@
       ],
       "task_sequence": [
         {"task_id": "MOI-BLD-003", "effort_points": 2, "phase": 2},
-        {"task_id": "MOI-AN-002", "effort_points": 4, "phase": 2},
-        {"task_id": "MOI-BLD-IOS-001", "effort_points": 4, "phase": 2}
+        {"task_id": "MOI-BLD-IOS-001", "effort_points": 4, "phase": 2},
+        {"task_id": "MOI-AN-002", "effort_points": 4, "phase": 2}
       ],
-      "notes": "Dedicated platform/build owner prevents Package.swift and iOS target collisions. Future Advanced work is assigned only by HQ after Phase 2 rebalance."
+      "notes": "Explicit blocker review on 2026-08-22 moved iOS platform build ahead of AN-002 because canonical IO/DSP seams require AVFoundation/AVFAudio compile and device validation. Dedicated platform/build ownership still prevents Package.swift and iOS target collisions."
     }
   ],
   "rebalance_rules": [
