@@ -1,0 +1,96 @@
+name: APP2-009 Create Kangoshi App Store Profile
+
+on:
+  push:
+    branches: [main]
+    paths: ['automation/app2-009-create-profile-command.json']
+
+permissions:
+  contents: write
+
+jobs:
+  create-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Create or locate Kangoshi profile
+        id: provision
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json,os,sys,urllib.request,urllib.error
+          from pathlib import Path
+          sys.path.insert(0,'scripts')
+          from app_store_connect_api import load_private_key, make_token
+          base='https://api.appstoreconnect.apple.com'; bid='TR32RTG3X3'; cert='K2A3VCP583'; name='kangoshi_appstore_20260822'
+          kp,cleanup=load_private_key(); token=make_token(os.environ['ASC_ISSUER_ID'].strip(),os.environ['ASC_KEY_ID'].strip(),kp)
+          def call(method,path,payload=None):
+            body=None if payload is None else json.dumps(payload,separators=(',',':')).encode()
+            h={'Authorization':'Bearer '+token,'Accept':'application/json'}
+            if body is not None:h['Content-Type']='application/json'
+            req=urllib.request.Request(base+path,data=body,headers=h,method=method)
+            try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                raw=r.read().decode(); return r.status,json.loads(raw) if raw else {}
+            except urllib.error.HTTPError as e:
+              raw=e.read().decode(errors='replace')
+              try: data=json.loads(raw) if raw else {}
+              except Exception: data={'raw':raw[:1000]}
+              return e.code,data
+          result={'task_id':'APP2-009','bundle_id':'jp.allsunday1122.kangoshi','bundle_resource_id':bid,'certificate_id':cert,'profile_name':name,'ok':False}
+          try:
+            cs,cp=call('GET',f'/v1/certificates/{cert}')
+            result['certificate_status']=cs
+            if cs!=200: raise RuntimeError('target distribution certificate unavailable')
+            ca=(cp.get('data') or {}).get('attributes') or {}
+            result['certificate_expiration']=ca.get('expirationDate')
+            payload={'data':{'type':'profiles','attributes':{'name':name,'profileType':'IOS_APP_STORE'},'relationships':{'bundleId':{'data':{'type':'bundleIds','id':bid}},'certificates':{'data':[{'type':'certificates','id':cert}]}}}}
+            st,res=call('POST','/v1/profiles',payload)
+            result['create_status']=st
+            if st==201:
+              d=res.get('data') or {}; a=d.get('attributes') or {}
+              result.update({'profile_id':d.get('id'),'profile_state':a.get('profileState'),'profile_expiration':a.get('expirationDate'),'created':True,'ok':a.get('profileState')=='ACTIVE'})
+            else:
+              # Creation may race with another APP2-009 run. Locate an existing ACTIVE profile for this bundle/certificate.
+              ps,pp=call('GET','/v1/profiles?limit=200'); result['inventory_status']=ps
+              if ps==200:
+                for p in pp.get('data',[]):
+                  a=p.get('attributes') or {}; pid=p.get('id')
+                  if a.get('profileType')!='IOS_APP_STORE' or a.get('profileState')!='ACTIVE': continue
+                  bs,bp=call('GET',f'/v1/profiles/{pid}/bundleId')
+                  if bs!=200 or (bp.get('data') or {}).get('id')!=bid: continue
+                  xs,xp=call('GET',f'/v1/profiles/{pid}/relationships/certificates?limit=50')
+                  ids={x.get('id') for x in xp.get('data',[])} if xs==200 else set()
+                  if cert in ids:
+                    result.update({'profile_id':pid,'profile_state':a.get('profileState'),'profile_expiration':a.get('expirationDate'),'created':False,'ok':True}); break
+              if not result['ok']:
+                result['create_error_summary']=str(res)[:1200]
+          except Exception as e:
+            result['exception']=str(e)[:1000]
+          finally:
+            if cleanup:
+              try: Path(kp).unlink(missing_ok=True)
+              except Exception: pass
+            Path('/tmp/profile-result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          if not result['ok']: raise SystemExit('Kangoshi profile provisioning failed')
+          PY
+      - name: Persist sanitized profile result
+        if: always()
+        run: |
+          test -f /tmp/profile-result.json || echo '{"task_id":"APP2-009","ok":false,"error":"result missing"}' >/tmp/profile-result.json
+          git fetch origin main; git reset --hard origin/main
+          mkdir -p automation/chatgpt-dispatcher/app-development-2/evidence
+          cp /tmp/profile-result.json automation/chatgpt-dispatcher/app-development-2/evidence/APP2-009-managed-signing.json
+          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-009-managed-signing.json
+          git commit -m 'APP2-009: persist managed signing evidence' || exit 0
+          git pull --rebase origin main; git push origin HEAD:main
+      - name: Enforce profile success
+        if: steps.provision.outcome != 'success'
+        run: exit 1
