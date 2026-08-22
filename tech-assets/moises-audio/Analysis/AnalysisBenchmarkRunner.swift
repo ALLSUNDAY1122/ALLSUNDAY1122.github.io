@@ -70,6 +70,25 @@ public struct AnalysisBenchmarkRow: Codable, Equatable, Sendable {
         case thermal
         case knownLimitations = "known_limitations"
     }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(fixtureID, forKey: .fixtureID)
+        try container.encode(rightsClass, forKey: .rightsClass)
+        try container.encode(genre, forKey: .genre)
+        try container.encode(durationSeconds, forKey: .durationSeconds)
+        try container.encode(syntheticOnly, forKey: .syntheticOnly)
+        try container.encode(parityEligible, forKey: .parityEligible)
+        try container.encode(engine, forKey: .engine)
+        try container.encode(engineVersion, forKey: .engineVersion)
+        try container.encode(domain, forKey: .domain)
+        try container.encode(metrics, forKey: .metrics)
+        try container.encode(wallSeconds, forKey: .wallSeconds)
+        if let rtf { try container.encode(rtf, forKey: .rtf) } else { try container.encodeNil(forKey: .rtf) }
+        if let peakRSSMB { try container.encode(peakRSSMB, forKey: .peakRSSMB) } else { try container.encodeNil(forKey: .peakRSSMB) }
+        if let thermal { try container.encode(thermal, forKey: .thermal) } else { try container.encodeNil(forKey: .thermal) }
+        try container.encode(knownLimitations, forKey: .knownLimitations)
+    }
 }
 
 public enum AnalysisBenchmarkRunner {
