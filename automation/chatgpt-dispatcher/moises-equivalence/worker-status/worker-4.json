@@ -4,19 +4,39 @@
   "work_package_id": "MOI-WP4-ANALYSIS-PLATFORM",
   "assignment_epoch": 1,
   "work_branch": "moises/wp4-analysis-platform",
-  "state": "IN_PROGRESS",
+  "state": "INTEGRATION_READY",
   "current_task": "MOI-BLD-003",
-  "base_integration_sha": "5e958ec999ad9f3d8f3a4a6225d4b6ec06a5c7a3",
-  "head_sha": "5e958ec999ad9f3d8f3a4a6225d4b6ec06a5c7a3",
-  "commits": [],
-  "tests": [],
-  "evidence": [
-    "2026-08-22 15:24 JST canonical Queue re-read: MOI-BLD-003 remains READY_ASSIGNED and records HQ Hashable fix at facd51a2724a68a5e1cdedbf2ace5e88a28711fc",
-    "canonical Shared/DomainContracts.swift now declares ProcessingSnapshot: Equatable, Hashable, Codable, Sendable",
-    "integration->old work-branch comparison showed no incoming changes in Worker 4 owned Package.swift or Tests/** scope; branch was safely rebased by resetting to integration head and will reapply the two owned BLD-003 diffs"
+  "base_integration_sha": "a1d62ae2a0b241f6f35f928851351dbfb773082e",
+  "head_sha": "ddbfcf1ec73f8329cb3ae3e74843d47511c2d9ed",
+  "commits": [
+    "9dd5e560720070ec85551fd62d4b3b953cdc0808",
+    "81d1fae9f5f2223db9a631ccce030d9cad45c45c",
+    "ddbfcf1ec73f8329cb3ae3e74843d47511c2d9ed"
   ],
-  "known_gaps": [],
-  "hq_requests": [],
-  "last_updated": "2026-08-22T15:24:00+09:00",
+  "tests": [
+    "Swift 6.2.1 x86_64-unknown-linux-gnu: swift test --disable-sandbox => 17 tests, 0 failures, 0 unexpected",
+    "Existing SeparationQualityTests: 8/8 PASS",
+    "Existing DomainContractCoordinatorTests: 5/5 PASS",
+    "New LibraryContractTests: 4/4 PASS",
+    "HQ Hashable blocker regression: PersistedProjectSnapshot now compiles and Codable/equality round-trip passes with ProcessingSnapshot Hashable"
+  ],
+  "evidence": [
+    "Canonical Queue re-read immediately before completion: MOI-BLD-003 remains READY_ASSIGNED, assignment_epoch/integration_epoch both 1",
+    "HQ Shared fix facd51a2724a68a5e1cdedbf2ace5e88a28711fc confirmed in canonical DomainContracts: ProcessingSnapshot is Equatable, Hashable, Codable, Sendable",
+    "commit 9dd5e560720070ec85551fd62d4b3b953cdc0808 adds Shared/LibraryContracts.swift to the explicit SwiftPM target source list",
+    "commit 81d1fae9f5f2223db9a631ccce030d9cad45c45c adds four Library contract regression tests",
+    "commit ddbfcf1ec73f8329cb3ae3e74843d47511c2d9ed records durable MOI-BLD-003 validation evidence under Tests/**",
+    "remote read-back confirmed Package.swift contains Shared/LibraryContracts.swift and LibraryContractTests.swift contains the four expected tests",
+    "latest integration advanced while testing, but reverse compare showed incoming changes only in Worker status, DSP and Separation; no incoming Package.swift or Tests/** conflict",
+    "Worker 4 changed no Shared/**, App/**, PARITY_MATRIX.json, Queue, work-package manifest or resource-lock files"
+  ],
+  "known_gaps": [
+    "This is SwiftPM/Linux build-contract validation only; canonical iOS host target and AVFoundation/AVFAudio simulator/device validation remain for MOI-BLD-IOS-001",
+    "No PARITY row is promoted by BLD-003"
+  ],
+  "hq_requests": [
+    "Semantically integrate the three BLD-003 commits, rerun canonical regression, mark MOI-BLD-003 VERIFIED if accepted, then release MOI-BLD-IOS-001 per the fixed Worker 4 critical path"
+  ],
+  "last_updated": "2026-08-22T15:29:00+09:00",
   "writer_policy": "Only Moises-Worker-4 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
 }
