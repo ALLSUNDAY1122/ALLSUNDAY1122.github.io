@@ -4,15 +4,51 @@
   "work_package_id": "MOI-WP1-SEPARATION-PROCESSING",
   "assignment_epoch": 1,
   "work_branch": "moises/wp1-separation-processing",
-  "state": "IN_PROGRESS",
+  "state": "BLOCKED",
   "current_task": "MOI-SEP-002",
-  "base_integration_sha": "d23c6793b4b6e682f1a0b7873ca338a48773ec61",
-  "head_sha": null,
-  "commits": [],
-  "tests": [],
-  "evidence": ["Fixed Work Package v2 source-of-truth refreshed 2026-08-22T14:20+09:00"],
-  "known_gaps": ["Project-owned/contract-cleared separator weights and rights-cleared real multitrack training corpus are not yet present in canonical evidence."],
-  "hq_requests": [],
-  "last_updated": "2026-08-22T14:22:00+09:00",
+  "base_integration_sha": "16a573f614b4851fdb2cdb88b2444e97db242216",
+  "head_sha": "a8087c8136759c815111221e0eb72c6ef92c7a79",
+  "commits": [
+    "fca2b1900ee07f46e8b29937833df9a503751e56",
+    "2c8be5a27ccd73f868dd1f56e78f48dad0b93468",
+    "5ca42e901039b0c9481248d847848db02b3bae18",
+    "5d7e89c273ae048ba6fc9b5c4499f335fcd9a434",
+    "91dadd9403a31866f7486b592c94cf8aab1b56c6",
+    "ba3404236f000e6013d56ca8f49b2f191bbe086e",
+    "fb6f6ff6b3fbeb1d54e6e7b1f1d23f6462e30c07",
+    "f31698807bcebcea5ba937776774080eb8a0ed2a",
+    "a8087c8136759c815111221e0eb72c6ef92c7a79"
+  ],
+  "tests": [
+    "Swift 6.2.1: swiftc -typecheck Shared-shaped DomainStubs.swift + current ServerSeparationProvider logic => exit 0",
+    "Python unittest rights gate: 6 tests, 0 failures",
+    "scope compare: work branch ahead 9 / behind 5; all ahead files are tech-assets/moises-audio/Separation/**",
+    "integration commits since merge-base touch only worker-2/3/4 status files; no Worker-1 owned-scope conflict"
+  ],
+  "evidence": [
+    "tech-assets/moises-audio/Separation/Sources/ServerSeparationProvider.swift",
+    "tech-assets/moises-audio/Separation/Server/rights_gate.py",
+    "tech-assets/moises-audio/Separation/Tests/test_rights_gate.py",
+    "tech-assets/moises-audio/Separation/MOI-SEP-002_PARTIAL_EVIDENCE.md",
+    "tech-assets/moises-audio/Separation/MOI-SEP-002_COMMERCIAL_FAST_TRACK.md",
+    "server provider streams source files, preserves stable project/stem IDs, exposes canonical snapshot/cancel/result behavior, atomically finalizes downloaded stems and fails closed on malformed/path-unsafe results",
+    "rights gate refuses checkpoint startup without approved commercial rights manifest and matching checkpoint SHA-256",
+    "AudioShake current developer surface is the preferred external fast-track candidate; LALAL.AI is secondary; neither is treated as commercially approved without account/terms review"
+  ],
+  "known_gaps": [
+    "No project-owned rights-cleared trained separator checkpoint exists in canonical project state.",
+    "No written commercial separator API/model agreement plus production credentials exists in canonical project state.",
+    "Golden QA requires actual G1 project-owned/licensed real multitracks and G2 rights-cleared real Reference tracks; canonical repo currently contains strategy/rubric but not the required 12+12 real-audio corpus and rights records.",
+    "No real production separator inference, real stems, SI-SDR/listening A/B, latency/cost, or cancellation/retry evidence has therefore been executed.",
+    "MOI-P003 and MOI-P004 remain MISSING; no PARITY promotion is justified."
+  ],
+  "hq_requests": [
+    "Explicit blocker review: choose one lawful separator supply route before SEP-002 can complete.",
+    "Fast-track option: authorize/provision an AudioShake evaluation/API account and API key outside GitHub, then verify exact commercial embedding, user-audio retention/deletion, confidentiality, output-use and production pricing terms before shipping.",
+    "Alternative: authorize another written commercial separator contract such as LALAL.AI Business/Enterprise only after equivalent terms audit.",
+    "Project-owned option: create a prerequisite corpus/procurement/training workstream for rights-cleared real multitracks with explicit ML-training/commercial-result rights, then deliver a project-owned checkpoint, model card, training manifest and rights-record references.",
+    "Provide/acquire rights-cleared G1/G2 real-audio evaluation fixtures before any separation quality/PARITY gate is run."
+  ],
+  "last_updated": "2026-08-22T14:32:43+09:00",
   "writer_policy": "Only Moises-Worker-1 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
 }
