@@ -102,7 +102,15 @@ public final class CrashSafeProjectLibraryStore: @unchecked Sendable, ProjectLib
             return
         }
 
-        let relativePaths = [snapshot.source.relativePath] + snapshot.stems.map(\.relativePath)
+        let otherProjects = try await metadata.listProjects().filter { $0.projectID != projectID }
+        var otherReferences = Set<String>()
+        for other in otherProjects {
+            otherReferences.insert(other.source.relativePath)
+            for stem in other.stems { otherReferences.insert(stem.relativePath) }
+        }
+        let ownedReferences = [snapshot.source.relativePath] + snapshot.stems.map(\.relativePath)
+        let relativePaths = ownedReferences.filter { !otherReferences.contains($0) }
+
         try artifacts.persistPreparedDeletion(projectUUID: projectID.rawValue, relativePaths: relativePaths)
         try await metadata.deleteProject(projectID: projectID)
         try artifacts.markDeletionCommitted(projectUUID: projectID.rawValue)
