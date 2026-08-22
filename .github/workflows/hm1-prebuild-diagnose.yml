@@ -12,49 +12,44 @@ permissions:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Check canonical bank
+      - name: Install ImageMagick for exact prepare reproduction
         run: |
-          python3 - <<'PY'
-          import json
-          q=json.load(open('ios/health-manager-1/Resources/questions.json',encoding='utf-8'))
-          print('canonical_count=',len(q))
-          assert len(q)==132
-          PY
-      - name: Expand canonical bank to 264
-        run: node ios/health-manager-1/augment-to-264.cjs
-      - name: Run final difficulty gate
-        run: node ios/health-manager-1/audit/difficulty-audit-2026-08-21.cjs
-      - name: Validate 264 output for UI injection
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq imagemagick
+          command -v magick || command -v convert
+      - name: Provide ImageMagick 7 compatible magick shim when runner has IM6
+        run: |
+          if ! command -v magick >/dev/null 2>&1; then
+            mkdir -p "$HOME/bin"
+            cat > "$HOME/bin/magick" <<'SH'
+          #!/usr/bin/env bash
+          exec convert "$@"
+          SH
+            chmod +x "$HOME/bin/magick"
+            echo "$HOME/bin" >> "$GITHUB_PATH"
+          fi
+      - name: Run exact HM1 prepare script
+        run: bash -x ios/health-manager-1/prepare-ios.sh
+      - name: Validate final prepared outputs
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import collections,json,re
-          q=json.load(open('ios/health-manager-1/Resources/questions.json',encoding='utf-8'))
+          import collections,json,re,struct
+          root=Path('ios/health-manager-1')
+          q=json.loads((root/'Resources/questions.json').read_text(encoding='utf-8'))
+          html=(root/'Resources/index.html').read_text(encoding='utf-8')
           assert len(q)==264
           assert len({x['id'] for x in q})==264
           assert collections.Counter(x['round'] for x in q)=={'2026-04':44,'2025-10':44,'2025-04':44,'practice-A':44,'practice-B':44,'practice-C':44}
-          text=Path('ios/health-manager-1/Resources/index.html').read_text(encoding='utf-8')
-          compact=json.dumps(q,ensure_ascii=False,separators=(',',':'))
-          assert '</script>' not in compact.lower()
-          updated,count=re.subn(r'const QUESTIONS=\[.*?\];\nconst DOMAINS=', 'const QUESTIONS='+compact+';\nconst DOMAINS=', text, count=1, flags=re.S)
-          print('questions_replacement_count=',count,'index_before=',len(text.encode()),'index_after=',len(updated.encode()))
-          assert count==1
-          round_defs=[
-            {'id':'2026-04','title':'2026年4月公表回対応','period':'2025年7〜12月実施分'},
-            {'id':'2025-10','title':'2025年10月公表回対応','period':'2025年1〜6月実施分'},
-            {'id':'2025-04','title':'2025年4月公表回対応','period':'2024年7〜12月実施分'},
-            {'id':'practice-A','title':'追加演習A','period':'監査済み共通範囲・44問'},
-            {'id':'practice-B','title':'追加演習B','period':'監査済み共通範囲・44問'},
-            {'id':'practice-C','title':'追加演習C','period':'監査済み共通範囲・44問'}]
-          round_js='const ROUNDS='+json.dumps(round_defs,ensure_ascii=False,separators=(',',':'))+';'
-          updated,n=re.subn(r'const ROUNDS=\[.*?\];',round_js,updated,count=1,flags=re.S)
-          print('rounds_replacement_count=',n)
-          assert n==1
-          print('PASS: HM1 non-image prepare stages')
+          assert 'const ROUNDS=' in html and 'practice-C-Q44' in html and '合計264問' in html
+          icon=root/'Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png'
+          b=icon.read_bytes(); assert b[:8]==b'\x89PNG\r\n\x1a\n'
+          w,h=struct.unpack('>II',b[16:24]); assert (w,h)==(1024,1024)
+          print('PASS: exact HM1 prepare script produced release-ready 264 bundle and icon')
           PY
