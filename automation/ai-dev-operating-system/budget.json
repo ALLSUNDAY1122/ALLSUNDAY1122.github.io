@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.1",
+  "updated_at": "2026-08-22T20:33:00+09:00",
+  "mode": "GREEN",
+  "source": "Codex Usage Dashboard or /status",
+  "thresholds": {
+    "yellow_when_remaining_ratio_lte": 0.35,
+    "red_when_remaining_ratio_lte": 0.12
+  },
+  "green": {
+    "allow_new_low_priority_claims": true,
+    "luna_parallelism": 4,
+    "terra_policy": "event_or_low_frequency",
+    "sol_policy": "exception_only"
+  },
+  "yellow": {
+    "allow_new_low_priority_claims": false,
+    "luna_parallelism": 2,
+    "terra_policy": "event_only",
+    "sol_policy": "disabled_unless_sev1",
+    "prioritize": ["release", "sev1", "sev2", "high_priority", "recovery"]
+  },
+  "red": {
+    "allow_new_claims": false,
+    "actions": ["checkpoint_active_attempts", "release_safe_locks", "persist_evidence", "wait_for_reset"],
+    "resume": "automatic_after_usage_recovers"
+  },
+  "quality_policy": "Never lower acceptance or parity criteria to save usage; reduce frequency, parallelism, and low-priority work instead."
+}
