@@ -50,7 +50,39 @@ def preflight(token):
         raise RuntimeError(f"Unexpected IAP productId: {iap_product!r}")
 
 
+def ensure_monthly_plan_availability(token, result):
+    _, avail = api_get(token, f"/v1/subscriptions/{SUBSCRIPTION_ID}/planAvailabilities?include=availableTerritories&limit=20")
+    for item in data_list(avail):
+        attrs = item.get("attributes") or {}
+        if attrs.get("planType") != "MONTHLY":
+            continue
+        rel = ((item.get("relationships") or {}).get("availableTerritories") or {}).get("data") or []
+        if any(x.get("id") == TERRITORY for x in rel if isinstance(x, dict)):
+            result["monthly_plan_availability"] = {"changed": False, "id": item.get("id"), "territory": TERRITORY}
+            return
+        # Existing MONTHLY config: replace available territories with JPN only for
+        # this launch configuration rather than creating a duplicate plan.
+        payload = {"data": [{"type": "territories", "id": TERRITORY}]}
+        status, _ = api_request(token, f"/v1/subscriptionPlanAvailabilities/{item['id']}/relationships/availableTerritories", method="PATCH", payload=payload)
+        result["monthly_plan_availability"] = {"changed": True, "http_status": status, "id": item.get("id"), "territory": TERRITORY}
+        return
+
+    payload = {
+        "data": {
+            "type": "subscriptionPlanAvailabilities",
+            "attributes": {"planType": "MONTHLY", "availableInNewTerritories": True},
+            "relationships": {
+                "subscription": {"data": {"type": "subscriptions", "id": SUBSCRIPTION_ID}},
+                "availableTerritories": {"data": [{"type": "territories", "id": TERRITORY}]},
+            },
+        }
+    }
+    status, created = api_request(token, "/v1/subscriptionPlanAvailabilities", method="POST", payload=payload)
+    result["monthly_plan_availability"] = {"changed": True, "http_status": status, "id": (created.get("data") or {}).get("id") if isinstance(created, dict) else None, "territory": TERRITORY}
+
+
 def configure_subscription(token, result):
+    ensure_monthly_plan_availability(token, result)
     _, points = api_get(token, f"/v1/subscriptions/{SUBSCRIPTION_ID}/pricePoints?filter[territory]={TERRITORY}&include=territory&limit=200")
     point = find_price_point(points, MONTHLY_PRICE)
 
