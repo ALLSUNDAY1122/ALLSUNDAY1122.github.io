@@ -1,1 +1,159 @@
-{"schema_version":1,"project":"moises-equivalence","integration_branch":"tech/moises-separation","integration_pr":4431,"integration_epoch":1,"code_baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","baseline_state":"SWIFTPM_SHARED_APP_GREEN_IOS_APP_TARGET_MISSING","claim_policy":{"mode":"atomic-cas-fenced","lease_minutes":90,"attempt_branch_pattern":"task/<task-id>/attempt-<claim-epoch>","require_readback":true,"finalizer":"HQ"},"tasks":[{"task_id":"MOI-HQ-001","status":"VERIFIED","priority":100,"owner_role":"HQ","capability_tags":["integration","swift","architecture"],"dependencies":[],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["shared-contract","app-shell"],"write_scope":["tech-assets/moises-audio/Shared/**","tech-assets/moises-audio/App/**"],"parity_rows":[],"acceptance":["baseline structurally audited","module boundaries fixed"],"claimed_by":"Moises-HQ-1","claim_token":"hq1-moi-hq-001-epoch1","claim_epoch":1,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-HQ-001/attempt-1","evidence":["Shared/BASELINE_AUDIT.md","Shared/MODULE_BOUNDARIES.md","App/APP_SHELL_BOUNDARY.md"]},{"task_id":"MOI-REF-001","status":"VERIFIED","priority":95,"owner_role":"POOL","capability_tags":["research","reference"],"dependencies":[],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["reference-ledger"],"write_scope":["tech-assets/moises-audio/reference/**"],"parity_rows":["MOI-P001","MOI-P002","MOI-P003","MOI-P006","MOI-P007","MOI-P008","MOI-P009","MOI-P010","MOI-P011","MOI-P012","MOI-P013","MOI-P014","MOI-P015","MOI-P016","MOI-P017","MOI-P018","MOI-P019","MOI-P020","MOI-P022"],"acceptance":["current iPhone free-core inventory","state/operation map","UNKNOWN retained"],"claimed_by":"Moises-Worker-1","claim_token":"moises-worker-1-moi-ref-001-epoch2-20260822T1220JST","claim_epoch":2,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-REF-001/attempt-2","evidence":["HQ PR #4439 merged","waveform remains current-iPhone UNKNOWN"]},{"task_id":"MOI-SEP-LIC-001","status":"VERIFIED","priority":94,"owner_role":"POOL","capability_tags":["audio-ml","research","licensing"],"dependencies":[],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["source-separation-model"],"write_scope":["tech-assets/moises-audio/Separation/benchmarks/licensing/**"],"parity_rows":["MOI-P003","MOI-P004","MOI-P005"],"acceptance":["code/weight/data rights separated","lawful commercial path identified"],"claimed_by":"Moises-Worker-4","claim_token":"moises-worker-4-moi-sep-lic-001-epoch1-20260822T1221JST","claim_epoch":1,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-SEP-LIC-001/attempt-1","evidence":["HQ PR #4440 merged","official Demucs weights excluded; Spleeter weights not cleared"]},{"task_id":"MOI-SEP-001","status":"VERIFIED","priority":94,"owner_role":"POOL","capability_tags":["audio-ml","research","benchmark"],"dependencies":["MOI-SEP-LIC-001"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["source-separation-model"],"write_scope":["tech-assets/moises-audio/Separation/benchmarks/**","tech-assets/moises-audio/reference/model-runtime/**"],"parity_rows":["MOI-P003","MOI-P004","MOI-P005"],"acceptance":["licence-permitted runtime candidates compared","server/on-device/hybrid scored","lawful real multi-stem route selected"],"claimed_by":"Moises-Worker-2","claim_token":"moises-worker-2-moi-sep-001-epoch2-20260822T1320JST","claim_epoch":2,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-SEP-001/attempt-2","evidence":["HQ PR #4444 merged at 5b7a80174fa3d0c222bae3632f33995ad5292307","selected PyTorch/CUDA server + durable iPhone job/stem cache","project-owned weights still need training; no PARITY promotion"]},{"task_id":"MOI-BLD-001","status":"VERIFIED","priority":93,"owner_role":"POOL","capability_tags":["swift","testing","tooling"],"dependencies":[],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["build-harness"],"write_scope":["tech-assets/moises-audio/Package.swift","tech-assets/moises-audio/Tests/**"],"parity_rows":[],"acceptance":["canonical SwiftPM core harness","SI-SDR/reconstruction tests"],"claimed_by":"Moises-Worker-4","claim_token":"moises-worker-4-moi-bld-001-epoch1-20260822T0730JST","claim_epoch":1,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-BLD-001/attempt-1","evidence":["8 tests 0 failures","HQ PR #4436 merged"]},{"task_id":"MOI-QA-001","status":"VERIFIED","priority":92,"owner_role":"POOL","capability_tags":["qa","audio","benchmark"],"dependencies":[],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["reference-ledger"],"write_scope":["tech-assets/moises-audio/reference/golden-fixtures/**"],"parity_rows":["MOI-P003","MOI-P009","MOI-P011","MOI-P013","MOI-P014","MOI-P021","MOI-P022"],"acceptance":["copyright-safe differential fixtures","real audio required","synthetic-only PASS forbidden"],"claimed_by":"Moises-Worker-2","claim_token":"moises-worker-2-moi-qa-001-epoch1-20260822T1151JST","claim_epoch":1,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-QA-001/attempt-1","evidence":["HQ PR #4438 merged"]},{"task_id":"MOI-DSP-R001","status":"VERIFIED","priority":91,"owner_role":"POOL","capability_tags":["dsp","audio","research","benchmark"],"dependencies":["MOI-AN-001"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["time-pitch-dsp"],"write_scope":["tech-assets/moises-audio/DSP/benchmarks/**"],"parity_rows":["MOI-P010","MOI-P012","MOI-P014","MOI-P015"],"acceptance":["commercial DSP paths compared","sample-time click/count-in architecture","artifact/latency gates"],"claimed_by":"Moises-Worker-2","claim_token":"moises-worker-2-moi-dsp-r001-epoch1-20260822T1223JST","claim_epoch":1,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-DSP-R001/attempt-1","evidence":["Apple AVAudioUnitTimePitch baseline","HQ PR #4441 merged"]},{"task_id":"MOI-AN-001","status":"VERIFIED","priority":90,"owner_role":"POOL","capability_tags":["music-analysis","research","benchmark"],"dependencies":[],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["music-analysis-engine"],"write_scope":["tech-assets/moises-audio/Analysis/benchmarks/**","tech-assets/moises-audio/reference/analysis/**"],"parity_rows":["MOI-P009","MOI-P011","MOI-P013","MOI-P016"],"acceptance":["BPM/key/chord/song-parts candidates","metrics and rights documented"],"claimed_by":"Moises-Worker-2","claim_token":"moises-worker-2-moi-an-001-epoch1-20260822T0735JST","claim_epoch":1,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-AN-001/attempt-1","evidence":["HQ PR #4437 merged"]},{"task_id":"MOI-IO-R001","status":"VERIFIED","priority":89,"owner_role":"POOL","capability_tags":["ios","audio","io","research"],"dependencies":["MOI-BLD-001"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["import-export"],"write_scope":["tech-assets/moises-audio/IO/benchmarks/**"],"parity_rows":["MOI-P001","MOI-P002","MOI-P019"],"acceptance":["iOS import/decode architecture","export/share architecture","explicit failure boundaries"],"claimed_by":"Moises-Worker-3","claim_token":"moises-worker-3-moi-io-r001-epoch1-20260822T1232JST","claim_epoch":1,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-IO-R001/attempt-1","evidence":["HQ PR #4442 merged","MP3/WMA/FLAC gaps remain explicit"]},{"task_id":"MOI-REF-002","status":"VERIFIED","priority":88,"owner_role":"POOL","capability_tags":["research","reference"],"dependencies":["MOI-REF-001"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["reference-ledger"],"write_scope":["tech-assets/moises-audio/reference/entitlements/**"],"parity_rows":["MOI-P005","MOI-P025","MOI-P026","MOI-P027","MOI-P028"],"acceptance":["Free/Premium/Pro/current advanced scope separated","advanced iOS availability verified"],"claimed_by":"Moises-Worker-3","claim_token":"moises-worker-3-moi-ref-002-epoch1-20260822T1322JST","claim_epoch":1,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-REF-002/attempt-1","evidence":["attempt branch task/MOI-REF-002/attempt-1","commit fa196e936b9ca8715db6cb306b163733fb6db8ae documents current Free/Premium/Pro and iPhone-native vs account-entitlement boundaries","commit c4bf293e35d2818d245e552d93dae8d29ae4f0a3 adds machine-readable advanced scope matrix","MOI-P005 advanced separation confirmed current iPhone scope; Premium custom instruments and Pro Hi-Fi/pro stem modules remain implementation targets","MOI-P025 AI Stem Generation confirmed mobile/iOS across Free/Premium/Pro; remains MISSING","MOI-P026 Video Recording confirmed mobile-only on iOS/Android and all plans; smart sync/PiP/headphone behavior documented; remains MISSING","MOI-P027 AI Studio current official execution surface Web/Desktop; no authoritative native-iPhone workspace evidence; retained for HQ canonical scope decision","MOI-P028 Voice Studio current official workflow Web/Desktop; App Store Pro benefit treated as account entitlement rather than native-iPhone UI evidence; retained for HQ canonical scope decision","compare integration -> attempt branch: exactly two added files under tech-assets/moises-audio/reference/entitlements/**; branch behind due parallel integration only","remote read-back confirmed both evidence files; no Shared/App/PARITY edits","remaining UNKNOWN: exact in-app 2026 AI Stem Generation credit counters by tier, region/account paywall experiments, future mobile release changes","MOI-P005/MOI-P025/MOI-P026/MOI-P027/MOI-P028 remain MISSING; no PARITY state was raised","HQ PR #4448 merged at 718669d69ba1507fcf983ef5804ea089aae3fefb","HQ scope decision: P005/P025/P026 IN_SCOPE_CURRENT_IPHONE; P027/P028 OUT_OF_SCOPE_CURRENT_IPHONE but retained","PARITY scope canonicalized at commit b39748bfeb1780a88e3ea0a9cff2ac3b6fa2b379; no state promotion"]},{"task_id":"MOI-ARCH-001","status":"VERIFIED","priority":87,"owner_role":"HQ","capability_tags":["architecture","swift"],"dependencies":["MOI-HQ-001","MOI-REF-001"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["shared-contract","app-shell"],"write_scope":["tech-assets/moises-audio/Shared/**","tech-assets/moises-audio/App/**"],"parity_rows":["MOI-P022"],"acceptance":["vertical-slice contracts fixed","small explicit contracts","write scopes separable"],"claimed_by":"Moises-HQ-1","claim_token":"hq1-moi-arch-001-epoch1-20260822T1305JST","claim_epoch":1,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-ARCH-001/attempt-1","evidence":["HQ PR #4443 merged","MOI-P022 remains MISSING"]},{"task_id":"MOI-BLD-002","status":"VERIFIED","priority":86,"owner_role":"POOL","capability_tags":["swift","testing","tooling","architecture"],"dependencies":["MOI-BLD-001","MOI-ARCH-001"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["build-harness"],"write_scope":["tech-assets/moises-audio/Package.swift","tech-assets/moises-audio/Tests/**"],"parity_rows":[],"acceptance":["Package compiles HQ Shared/App contracts","existing 8 + new contract tests green","no parity from build-only"],"claimed_by":"Moises-Worker-4","claim_token":"moises-worker-4-moi-bld-002-epoch1-20260822T1322JST","claim_epoch":1,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-BLD-002/attempt-1","evidence":["HQ PR #4445 merged at 49e5fd8bbf08568e2f4c514e9c4cf23a1a321e10","Worker Swift 6.2.1: 13 tests, 0 failures","HQ inspected Package/test diff; external clone rerun unavailable due execution-environment DNS","iOS app target still missing"]},{"task_id":"MOI-LIB-R001","status":"VERIFIED","priority":85,"owner_role":"POOL","capability_tags":["ios","persistence","research","architecture"],"dependencies":["MOI-ARCH-001"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["library-persistence"],"write_scope":["tech-assets/moises-audio/Library/benchmarks/**"],"parity_rows":["MOI-P017","MOI-P018","MOI-P020"],"acceptance":["persistence options compared","native path selected","migration/corruption/deletion/interruption recovery defined"],"claimed_by":"Moises-Worker-1","claim_token":"moises-worker-1-moi-lib-r001-epoch1-20260822T1324JST","claim_epoch":1,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-LIB-R001/attempt-1","evidence":["HQ PR #4446 merged at 2e979ba8c1d50958fc3c3429fb9da6ab9f4bba66","Core Data SQLite metadata + app-owned audio files","two-phase artifact commit/tombstone/non-destructive migration failure","no PARITY promotion"]},{"task_id":"MOI-HQ-ARCH-002","status":"VERIFIED","priority":85,"owner_role":"HQ","capability_tags":["architecture","swift","persistence"],"dependencies":["MOI-ARCH-001","MOI-LIB-R001"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["shared-contract"],"write_scope":["tech-assets/moises-audio/Shared/**"],"parity_rows":["MOI-P017","MOI-P018","MOI-P020"],"acceptance":["add HQ-owned read/list/edit/setlist/delete/recovery contracts without feature implementation","do not break existing ProjectPersisting consumers","typecheck contract surface"],"claimed_by":"Moises-HQ-1","claim_token":"hq1-moi-hq-arch-002-epoch1-20260822T1358JST","claim_epoch":1,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":"task/MOI-HQ-ARCH-002/attempt-1","evidence":["Shared/LibraryContracts.swift adds non-breaking ProjectLibraryPersisting extension","Shared/HQ_ARCH_002_VALIDATION.md","contract-surface typecheck with representative integrated-domain stubs: exit 0","HQ PR #4447 merged at d12c9741b9373b9915fabfa58cba9b9f812837d7","no PARITY promotion"]},{"task_id":"MOI-BLD-003","status":"READY","priority":84,"owner_role":"POOL","capability_tags":["swift","testing","tooling","architecture"],"dependencies":["MOI-BLD-002","MOI-HQ-ARCH-002"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["build-harness"],"write_scope":["tech-assets/moises-audio/Package.swift","tech-assets/moises-audio/Tests/**"],"parity_rows":[],"acceptance":["Package.swift compiles Shared/LibraryContracts.swift with existing Shared/App sources","all existing 13 tests remain green and library-contract Codable/conformance tests are added","no Shared/App contract edits and no PARITY promotion","failure blocks MOI-LIB-001"],"claimed_by":null,"claim_token":null,"claim_epoch":0,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":null,"evidence":["HQ-ARCH-002 added Shared/LibraryContracts.swift; integrated regression required before Library implementation"]},{"task_id":"MOI-SEP-002","status":"READY","priority":84,"owner_role":"POOL","capability_tags":["audio-ml","swift"],"dependencies":["MOI-SEP-001","MOI-ARCH-001","MOI-QA-001","MOI-BLD-002"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["source-separation-model"],"write_scope":["tech-assets/moises-audio/Separation/**"],"parity_rows":["MOI-P003","MOI-P004"],"acceptance":["real multigenre audio produces actual stems","golden quality evidence","progress/cancel/retry deterministic failure"],"claimed_by":null,"claim_token":null,"claim_epoch":0,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":null,"evidence":["must obey SEP-LIC and SEP-001; project-owned/contract-cleared weights only"]},{"task_id":"MOI-IO-001","status":"READY","priority":83,"owner_role":"POOL","capability_tags":["ios","audio","io","swift"],"dependencies":["MOI-IO-R001","MOI-ARCH-001","MOI-BLD-002"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["import-export"],"write_scope":["tech-assets/moises-audio/IO/Sources/**","tech-assets/moises-audio/IO/Tests/**"],"parity_rows":["MOI-P001","MOI-P002","MOI-P019"],"acceptance":["actual local normalization/decode behind Shared","M4A/AAC export/share","explicit error mapping","MP3/WMA/FLAC gaps visible"],"claimed_by":null,"claim_token":null,"claim_epoch":0,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":null,"evidence":[]},{"task_id":"MOI-PLAY-001","status":"BLOCKED_DEPENDENCY","priority":82,"owner_role":"POOL","capability_tags":["audio","swift","ui"],"dependencies":["MOI-ARCH-001","MOI-SEP-002","MOI-BLD-002"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["audio-playback-engine"],"write_scope":["tech-assets/moises-audio/Playback/**"],"parity_rows":["MOI-P006","MOI-P007","MOI-P008"],"acceptance":["synchronized stems","solo/mute/volume/seek/loop","long-track latency","waveform only if Reference verifies"],"claimed_by":null,"claim_token":null,"claim_epoch":0,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":null,"evidence":[]},{"task_id":"MOI-DSP-001","status":"READY","priority":81,"owner_role":"POOL","capability_tags":["dsp","audio","swift"],"dependencies":["MOI-AN-001","MOI-DSP-R001","MOI-ARCH-001","MOI-BLD-002"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["time-pitch-dsp"],"write_scope":["tech-assets/moises-audio/DSP/Sources/**","tech-assets/moises-audio/DSP/Tests/**"],"parity_rows":["MOI-P010","MOI-P012","MOI-P014","MOI-P015"],"acceptance":["tempo/pitch on real tracks","sample-time click/count-in sync","artifact/latency gates measured"],"claimed_by":null,"claim_token":null,"claim_epoch":0,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":null,"evidence":[]},{"task_id":"MOI-LIB-001","status":"BLOCKED_DEPENDENCY","priority":80,"owner_role":"POOL","capability_tags":["ios","persistence","swift"],"dependencies":["MOI-LIB-R001","MOI-BLD-002","MOI-HQ-ARCH-002","MOI-BLD-003"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["library-persistence"],"write_scope":["tech-assets/moises-audio/Library/Sources/**","tech-assets/moises-audio/Library/Tests/**"],"parity_rows":["MOI-P017","MOI-P018","MOI-P020"],"acceptance":["Core Data adapter implements HQ library contracts","project/setlist/edit/resume/delete persistence","migration/corruption/interruption recovery tests"],"claimed_by":null,"claim_token":null,"claim_epoch":0,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":null,"evidence":[]},{"task_id":"MOI-BLD-IOS-001","status":"BLOCKED_DEPENDENCY","priority":79,"owner_role":"POOL","capability_tags":["ios","swift","xcode","tooling"],"dependencies":["MOI-BLD-003"],"baseline_sha":"0b161104c9d905c85e65983b5d20ec98b5163b1e","integration_epoch":1,"resource_locks":["build-harness"],"write_scope":["tech-assets/moises-audio/Package.swift","tech-assets/moises-audio/iOS/**","tech-assets/moises-audio/Tests/**"],"parity_rows":["MOI-P022"],"acceptance":["canonical iOS app/host target compiles the integrated Shared/App seams without redefining feature contracts","scheme/build instructions are reproducible on macOS/Xcode and retain SwiftPM regression","simulator/device build evidence is required before any iOS readiness claim","build success alone does not raise PARITY"],"claimed_by":null,"claim_token":null,"claim_epoch":0,"lease_expires_at":null,"heartbeat_at":null,"attempt_branch":null,"evidence":["baseline still lacks an iOS app target; this task prevents that gap from being lost"]}]}
+{
+  "schema_version": 2,
+  "project": "moises-equivalence",
+  "integration_branch": "tech/moises-separation",
+  "integration_pr": 4431,
+  "integration_epoch": 1,
+  "assignment_epoch": 1,
+  "baseline_state": "SWIFTPM_SHARED_APP_GREEN_IOS_APP_TARGET_MISSING",
+  "operating_model": "HQ_DISPATCHED_FIXED_WORK_PACKAGES",
+  "write_policy": {
+    "global_queue_writer": "HQ_ONLY",
+    "worker_may_edit_queue": false,
+    "worker_progress_source": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-N.json",
+    "work_package_manifest": "automation/chatgpt-dispatcher/moises-equivalence/work-packages.json",
+    "task_claiming": "DISABLED",
+    "opportunistic_task_stealing": "DISABLED",
+    "rebalance": "HQ_ONLY_AT_PHASE_BOUNDARY_OR_EXPLICIT_BLOCKER_REVIEW"
+  },
+  "migration": {
+    "from_schema_version": 1,
+    "migrated_at": "2026-08-22T14:16:00+09:00",
+    "reason": "Concurrent Worker/HQ queue writes caused CAS conflicts. Fixed package ownership removes shared queue mutation and dynamic claim races.",
+    "history": "Detailed v1 claims/evidence remain preserved in Git history, attempt branches, merged PRs #4436-#4448, and canonical evidence files."
+  },
+  "verified_history": [
+    {"task_id":"MOI-HQ-001","status":"VERIFIED"},
+    {"task_id":"MOI-REF-001","status":"VERIFIED","integration_pr":4439},
+    {"task_id":"MOI-SEP-LIC-001","status":"VERIFIED","integration_pr":4440},
+    {"task_id":"MOI-SEP-001","status":"VERIFIED","integration_pr":4444},
+    {"task_id":"MOI-BLD-001","status":"VERIFIED","integration_pr":4436},
+    {"task_id":"MOI-QA-001","status":"VERIFIED","integration_pr":4438},
+    {"task_id":"MOI-DSP-R001","status":"VERIFIED","integration_pr":4441},
+    {"task_id":"MOI-AN-001","status":"VERIFIED","integration_pr":4437},
+    {"task_id":"MOI-IO-R001","status":"VERIFIED","integration_pr":4442},
+    {"task_id":"MOI-REF-002","status":"VERIFIED","integration_pr":4448},
+    {"task_id":"MOI-ARCH-001","status":"VERIFIED","integration_pr":4443},
+    {"task_id":"MOI-BLD-002","status":"VERIFIED","integration_pr":4445},
+    {"task_id":"MOI-LIB-R001","status":"VERIFIED","integration_pr":4446},
+    {"task_id":"MOI-HQ-ARCH-002","status":"VERIFIED","integration_pr":4447}
+  ],
+  "tasks": [
+    {
+      "task_id": "MOI-SEP-002",
+      "status": "READY_ASSIGNED",
+      "work_package_id": "MOI-WP1-SEPARATION-PROCESSING",
+      "worker_id": "Moises-Worker-1",
+      "effort_points": 8,
+      "dependencies": ["MOI-SEP-001", "MOI-ARCH-001", "MOI-QA-001", "MOI-BLD-002"],
+      "resource_locks": ["source-separation-model"],
+      "write_scope": ["tech-assets/moises-audio/Separation/**"],
+      "parity_rows": ["MOI-P003", "MOI-P004"],
+      "acceptance": ["rights-cleared actual multi-stem path implemented", "real multi-genre quality evidence", "deterministic progress/cancel/retry/failure behavior", "no PARITY promotion without real evidence"]
+    },
+    {
+      "task_id": "MOI-PROC-001",
+      "status": "BLOCKED_DEPENDENCY",
+      "work_package_id": "MOI-WP1-SEPARATION-PROCESSING",
+      "worker_id": "Moises-Worker-1",
+      "effort_points": 3,
+      "dependencies": ["MOI-SEP-002"],
+      "resource_locks": ["processing-lifecycle"],
+      "write_scope": ["tech-assets/moises-audio/Processing/**"],
+      "parity_rows": ["MOI-P020"],
+      "acceptance": ["durable server/client job lifecycle", "cancel/retry/reconnect/idempotency", "partial-output cleanup and relaunch recovery"]
+    },
+    {
+      "task_id": "MOI-IO-001",
+      "status": "READY_ASSIGNED",
+      "work_package_id": "MOI-WP2-IO-LIBRARY",
+      "worker_id": "Moises-Worker-2",
+      "effort_points": 4,
+      "dependencies": ["MOI-IO-R001", "MOI-ARCH-001", "MOI-BLD-002"],
+      "resource_locks": ["import-export"],
+      "write_scope": ["tech-assets/moises-audio/IO/**"],
+      "parity_rows": ["MOI-P001", "MOI-P002", "MOI-P019"],
+      "acceptance": ["actual app-owned import/decode seam", "M4A/AAC export/share", "protected/corrupt/no-audio/storage/network/provider/cancel errors explicit", "unsupported codec gaps remain visible"]
+    },
+    {
+      "task_id": "MOI-LIB-001",
+      "status": "BLOCKED_DEPENDENCY",
+      "work_package_id": "MOI-WP2-IO-LIBRARY",
+      "worker_id": "Moises-Worker-2",
+      "effort_points": 6,
+      "dependencies": ["MOI-LIB-R001", "MOI-HQ-ARCH-002", "MOI-BLD-003"],
+      "resource_locks": ["library-persistence"],
+      "write_scope": ["tech-assets/moises-audio/Library/**"],
+      "parity_rows": ["MOI-P017", "MOI-P018", "MOI-P020"],
+      "acceptance": ["Core Data adapter implements HQ library contracts", "project/setlist/edit/resume/delete persistence", "migration/corruption/interruption recovery tests"]
+    },
+    {
+      "task_id": "MOI-DSP-001",
+      "status": "READY_ASSIGNED",
+      "work_package_id": "MOI-WP3-PLAYBACK-DSP",
+      "worker_id": "Moises-Worker-3",
+      "effort_points": 4,
+      "dependencies": ["MOI-AN-001", "MOI-DSP-R001", "MOI-ARCH-001", "MOI-BLD-002"],
+      "resource_locks": ["time-pitch-dsp"],
+      "write_scope": ["tech-assets/moises-audio/DSP/**"],
+      "parity_rows": ["MOI-P010", "MOI-P012", "MOI-P014", "MOI-P015"],
+      "acceptance": ["tempo/pitch operate on real tracks", "sample-time metronome/count-in synchronization", "artifact/latency gates measured"]
+    },
+    {
+      "task_id": "MOI-PLAY-001",
+      "status": "BLOCKED_DEPENDENCY",
+      "work_package_id": "MOI-WP3-PLAYBACK-DSP",
+      "worker_id": "Moises-Worker-3",
+      "effort_points": 6,
+      "dependencies": ["MOI-SEP-002", "MOI-BLD-002"],
+      "resource_locks": ["audio-playback-engine"],
+      "write_scope": ["tech-assets/moises-audio/Playback/**"],
+      "parity_rows": ["MOI-P006", "MOI-P007", "MOI-P008"],
+      "acceptance": ["stems stay synchronized", "solo/mute/volume/seek/loop without click/pop/drift", "long-track interaction latency measured", "waveform not mandatory until Reference verifies"]
+    },
+    {
+      "task_id": "MOI-BLD-003",
+      "status": "READY_ASSIGNED",
+      "work_package_id": "MOI-WP4-ANALYSIS-PLATFORM",
+      "worker_id": "Moises-Worker-4",
+      "effort_points": 2,
+      "dependencies": ["MOI-BLD-002", "MOI-HQ-ARCH-002"],
+      "resource_locks": ["build-harness"],
+      "write_scope": ["tech-assets/moises-audio/Package.swift", "tech-assets/moises-audio/Tests/**"],
+      "parity_rows": [],
+      "acceptance": ["LibraryContracts included in SwiftPM", "existing 13 tests remain green plus library-contract tests", "no Shared/App edits", "no PARITY promotion"]
+    },
+    {
+      "task_id": "MOI-AN-002",
+      "status": "PLANNED",
+      "work_package_id": "MOI-WP4-ANALYSIS-PLATFORM",
+      "worker_id": "Moises-Worker-4",
+      "effort_points": 4,
+      "sequence_after": "MOI-BLD-003",
+      "dependencies": ["MOI-AN-001", "MOI-BLD-003"],
+      "resource_locks": ["music-analysis-engine"],
+      "write_scope": ["tech-assets/moises-audio/Analysis/**"],
+      "parity_rows": ["MOI-P009", "MOI-P011", "MOI-P013", "MOI-P016"],
+      "acceptance": ["BPM/key/chord/section implementation behind HQ contracts", "benchmark metrics from AN-001 executed", "timestamped chord output supports playback-clock presentation"]
+    },
+    {
+      "task_id": "MOI-BLD-IOS-001",
+      "status": "PLANNED",
+      "work_package_id": "MOI-WP4-ANALYSIS-PLATFORM",
+      "worker_id": "Moises-Worker-4",
+      "effort_points": 4,
+      "sequence_after": "MOI-AN-002",
+      "dependencies": ["MOI-BLD-003"],
+      "resource_locks": ["build-harness", "ios-platform"],
+      "write_scope": ["tech-assets/moises-audio/Package.swift", "tech-assets/moises-audio/Tests/**", "tech-assets/moises-audio/iOS/**"],
+      "parity_rows": ["MOI-P022"],
+      "acceptance": ["canonical iOS host/app target compiles integrated seams", "reproducible Xcode scheme/build instructions", "simulator/device evidence before readiness claim", "build-only does not raise PARITY"]
+    }
+  ],
+  "phase_boundary_backlog": [
+    {"family":"ADV","parity_rows":["MOI-P005","MOI-P025","MOI-P026"],"assignment":"DEFER_TO_PHASE_4_REBALANCE"},
+    {"family":"A11Y","parity_rows":["MOI-P023"],"assignment":"DEFER_TO_PHASE_5_REBALANCE"},
+    {"family":"PRIV","parity_rows":["MOI-P024"],"assignment":"DEFER_TO_PHASE_8_REBALANCE"},
+    {"family":"PERF","parity_rows":["MOI-P021"],"assignment":"DEFER_TO_HARDENING_REBALANCE"}
+  ]
+}
