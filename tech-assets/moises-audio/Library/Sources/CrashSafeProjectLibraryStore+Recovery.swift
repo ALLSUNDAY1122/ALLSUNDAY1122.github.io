@@ -18,6 +18,7 @@ public struct RecoverableLibraryOpenResult: Sendable {
 public extension CrashSafeProjectLibraryStore {
     /// Production-safe open path for L2-M03.
     /// Existing metadata is preserved before migration; corruption never triggers a silent empty-store reset.
+    /// Delete recovery converges first, then setlists are reconciled against the resulting live-project set.
     static func openPreservingUserData(
         metadataStoreURL: URL,
         artifactRootURL: URL,
@@ -32,6 +33,7 @@ public extension CrashSafeProjectLibraryStore {
             artifactRootURL: artifactRootURL
         )
         _ = try await library.recoverInterruptedOperations()
+        _ = try await library.reconcileSetlistIntegrity()
         return RecoverableLibraryOpenResult(library: library, metadataOpen: metadataOpen)
     }
 }
