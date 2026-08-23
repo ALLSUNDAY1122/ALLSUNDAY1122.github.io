@@ -152,7 +152,7 @@ public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
         let tempo = TempoBeatAnalyzer.analyze(signal: signal, configuration: configuration)
         let key = MusicalKeyAnalyzer.analyze(signal: signal, configuration: configuration)
         let chords = ChordTimelineAnalyzer.analyze(signal: signal, configuration: configuration)
-        let sections = SongSectionAnalyzer.analyze(signal: signal, chords: chords, configuration: configuration)
+        let sections = SongSectionHardener.analyze(signal: signal, chords: chords, configuration: configuration)
         return AnalysisSnapshot(tempo: tempo, key: key, chords: chords, sections: sections)
     }
 }
