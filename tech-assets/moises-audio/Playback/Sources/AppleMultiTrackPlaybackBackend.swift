@@ -9,6 +9,7 @@ public enum ApplePlaybackBackendError: Error, Equatable, Sendable {
     case projectMismatch
     case invalidGain
     case frameRangeOverflow
+    case artifactFileMismatch(StemID)
     case engineStartFailed
 }
 
@@ -46,6 +47,7 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
     }
 
     public func loadSource(projectID: ProjectID, asset: LocalAudioAsset) async throws {
+        // Open before clearing the existing graph so a bad replacement source does not destroy playback.
         let file = try AVAudioFile(forReading: resolve(relativePath: asset.relativePath))
         try clearGraph()
         let player = AVAudioPlayerNode()
@@ -67,17 +69,33 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
         resume: Bool,
         loop: PlaybackLoopRange?
     ) async throws {
+        // Stage and validate every file before destroying the source/previous-stem graph.
+        // This keeps a failed source->stems transition non-destructive.
+        var staged: [(artifact: StemArtifact, file: AVAudioFile)] = []
+        staged.reserveCapacity(stems.count)
+        for artifact in stems {
+            guard artifact.projectID == projectID else {
+                throw ApplePlaybackBackendError.projectMismatch
+            }
+            let file = try AVAudioFile(forReading: resolve(relativePath: artifact.relativePath))
+            try validate(file: file, against: artifact)
+            staged.append((artifact, file))
+        }
+
         try clearGraph()
         var loaded: [StemID: LoadedStem] = [:]
-        loaded.reserveCapacity(stems.count)
-        for artifact in stems {
-            guard artifact.projectID == projectID else { throw ApplePlaybackBackendError.projectMismatch }
-            let file = try AVAudioFile(forReading: resolve(relativePath: artifact.relativePath))
+        loaded.reserveCapacity(staged.count)
+        for item in staged {
             let player = AVAudioPlayerNode()
             engine.attach(player)
-            engine.connect(player, to: engine.mainMixerNode, format: file.processingFormat)
-            loaded[artifact.id] = LoadedStem(artifact: artifact, file: file, player: player)
+            engine.connect(player, to: engine.mainMixerNode, format: item.file.processingFormat)
+            loaded[item.artifact.id] = LoadedStem(
+                artifact: item.artifact,
+                file: item.file,
+                player: player
+            )
         }
+
         activeProjectID = projectID
         mode = .stems(loaded)
         self.positionSeconds = positionSeconds
@@ -90,12 +108,19 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
 
     public func setEffectiveGains(projectID: ProjectID, gains: [StemID: Double]) async throws {
         try requireProject(projectID)
-        guard gains.values.allSatisfy({ $0.isFinite && (0...1).contains($0) }) else { throw ApplePlaybackBackendError.invalidGain }
+        guard gains.values.allSatisfy({ $0.isFinite && (0...1).contains($0) }) else {
+            throw ApplePlaybackBackendError.invalidGain
+        }
         self.gains = gains
         applyStoredGains()
     }
 
-    public func seek(projectID: ProjectID, to positionSeconds: Double, resume: Bool, loop: PlaybackLoopRange?) async throws {
+    public func seek(
+        projectID: ProjectID,
+        to positionSeconds: Double,
+        resume: Bool,
+        loop: PlaybackLoopRange?
+    ) async throws {
         try requireProject(projectID)
         stopPlayers()
         self.positionSeconds = positionSeconds
@@ -111,7 +136,13 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
         if resume { positionSeconds = currentPositionValue() }
         stopPlayers()
         self.loop = loop
-        if let loop, positionSeconds >= loop.endSeconds { positionSeconds = loop.startSeconds }
+        if let loop, positionSeconds >= loop.endSeconds {
+            positionSeconds = try PlaybackSchedulingSafety.normalizedSeekPosition(
+                requestedSeconds: positionSeconds,
+                durationSeconds: activeDurationSeconds(),
+                loop: loop
+            )
+        }
         scheduleGeneration &+= 1
         isPlaying = false
         if resume { try startScheduledPlayback(projectID: projectID) }
@@ -141,13 +172,15 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
         switch mode {
         case .none:
             throw ApplePlaybackBackendError.noAudioLoaded
+
         case .source(_, let file, let player):
             try ensureEngineRunning()
             let generation = scheduleGeneration &+ 1
             scheduleGeneration = generation
             player.stop()
-            let commonHost = mach_absolute_time() &+ AVAudioTime.hostTime(forSeconds: startLeadSeconds)
-            try scheduleSourceCycle(
+            let commonHost = mach_absolute_time()
+                &+ AVAudioTime.hostTime(forSeconds: startLeadSeconds)
+            let scheduled = try scheduleSourceCycle(
                 file: file,
                 player: player,
                 projectPosition: positionSeconds,
@@ -155,25 +188,39 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
                 generation: generation,
                 startPlayer: true
             )
+            guard scheduled else {
+                positionSeconds = activeDurationSeconds() ?? positionSeconds
+                isPlaying = false
+                return
+            }
             beginClock(at: positionSeconds, leadSeconds: startLeadSeconds)
+            isPlaying = true
+
         case .stems(let tracks):
             try ensureEngineRunning()
             let generation = scheduleGeneration &+ 1
             scheduleGeneration = generation
             stopPlayers()
-            let commonHost = mach_absolute_time() &+ AVAudioTime.hostTime(forSeconds: startLeadSeconds)
-            try scheduleStemCycle(
+            let commonHost = mach_absolute_time()
+                &+ AVAudioTime.hostTime(forSeconds: startLeadSeconds)
+            let scheduled = try scheduleStemCycle(
                 tracks: tracks,
                 projectPosition: positionSeconds,
                 commonHostTime: commonHost,
                 generation: generation,
                 startPlayers: true
             )
+            guard scheduled else {
+                positionSeconds = activeDurationSeconds() ?? positionSeconds
+                isPlaying = false
+                return
+            }
             beginClock(at: positionSeconds, leadSeconds: startLeadSeconds)
+            isPlaying = true
         }
-        isPlaying = true
     }
 
+    @discardableResult
     private func scheduleSourceCycle(
         file: AVAudioFile,
         player: AVAudioPlayerNode,
@@ -181,16 +228,27 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
         commonHostTime: UInt64,
         generation: UInt64,
         startPlayer: Bool
-    ) throws {
+    ) throws -> Bool {
         let startFrame = try sourceFrame(positionSeconds: projectPosition, file: file)
         var frames = file.length - startFrame
         if let loop {
             let remainingSeconds = max(0, loop.endSeconds - projectPosition)
-            let loopFrames = AVAudioFramePosition((remainingSeconds * file.processingFormat.sampleRate).rounded(.down))
-            frames = min(frames, max(0, loopFrames))
+            let loopFrameDouble = (
+                remainingSeconds * file.processingFormat.sampleRate
+            ).rounded(.down)
+            guard loopFrameDouble.isFinite,
+                  loopFrameDouble >= 0,
+                  loopFrameDouble <= Double(Int64.max) else {
+                throw ApplePlaybackBackendError.frameRangeOverflow
+            }
+            let loopFrames = AVAudioFramePosition(loopFrameDouble)
+            frames = min(frames, loopFrames)
         }
-        guard frames > 0 else { return }
-        let callbackType: AVAudioPlayerNodeCompletionCallbackType = loop == nil ? .dataPlayedBack : .dataConsumed
+        guard frames > 0 else { return false }
+
+        let callbackType: AVAudioPlayerNodeCompletionCallbackType = loop == nil
+            ? .dataPlayedBack
+            : .dataConsumed
         player.scheduleSegment(
             file,
             startingFrame: startFrame,
@@ -207,7 +265,10 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
                 )
             }
         }
-        if startPlayer { player.play(at: AVAudioTime(hostTime: commonHostTime)) }
+        if startPlayer {
+            player.play(at: AVAudioTime(hostTime: commonHostTime))
+        }
+        return true
     }
 
     private func handleSourceCycleCompletion(
@@ -223,9 +284,10 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
             return
         }
         let firstDuration = max(0, loop.endSeconds - previousProjectPosition)
-        let nextHost = previousStartHostTime &+ AVAudioTime.hostTime(forSeconds: firstDuration)
+        let nextHost = previousStartHostTime
+            &+ AVAudioTime.hostTime(forSeconds: firstDuration)
         do {
-            try scheduleSourceCycle(
+            let scheduled = try scheduleSourceCycle(
                 file: file,
                 player: player,
                 projectPosition: loop.startSeconds,
@@ -233,6 +295,11 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
                 generation: generation,
                 startPlayer: false
             )
+            if !scheduled {
+                player.stop()
+                positionSeconds = loop.startSeconds
+                isPlaying = false
+            }
         } catch {
             player.stop()
             positionSeconds = loop.startSeconds
@@ -240,44 +307,94 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
         }
     }
 
+    @discardableResult
     private func scheduleStemCycle(
         tracks: [StemID: LoadedStem],
         projectPosition: Double,
         commonHostTime: UInt64,
         generation: UInt64,
         startPlayers: Bool
-    ) throws {
-        let ordered = tracks.values.sorted { $0.artifact.id.rawValue.uuidString < $1.artifact.id.rawValue.uuidString }
-        var plans: [(track: LoadedStem, plan: StemSchedulePlan, frames: Int64)] = []
-        plans.reserveCapacity(ordered.count)
-        for track in ordered {
-            let plan = try PlaybackTimelinePlanner.planStem(track.artifact, projectPositionSeconds: projectPosition)
-            var frames = plan.availableFrameCount
-            if let loop {
-                let remainingSeconds = max(0, loop.endSeconds - max(projectPosition, track.artifact.startTimeSeconds))
-                let loopFrames = Int64((remainingSeconds * track.artifact.sampleRate).rounded(.down))
-                frames = min(frames, max(0, loopFrames))
-            }
-            guard frames >= 0 else { throw ApplePlaybackBackendError.frameRangeOverflow }
-            guard frames <= Int64(UInt32.max) else { throw ApplePlaybackBackendError.frameRangeOverflow }
-            if frames > 0 { plans.append((track, plan, frames)) }
+    ) throws -> Bool {
+        let ordered = tracks.values.sorted {
+            $0.artifact.id.rawValue.uuidString
+                < $1.artifact.id.rawValue.uuidString
         }
-        let leaderID = plans.max(by: { $0.frames < $1.frames })?.track.artifact.id
+        var plans: [(
+            track: LoadedStem,
+            plan: StemSchedulePlan,
+            sourceStartFrame: Int64,
+            frames: Int64
+        )] = []
+        plans.reserveCapacity(ordered.count)
+
+        for track in ordered {
+            let plan = try PlaybackTimelinePlanner.planStem(
+                track.artifact,
+                projectPositionSeconds: projectPosition
+            )
+            let sourceStartFrame = min(plan.sourceStartFrame, track.file.length)
+            let fileAvailableFrames = max(0, track.file.length - sourceStartFrame)
+            var frames = min(plan.availableFrameCount, fileAvailableFrames)
+
+            if let loop {
+                let remainingSeconds = max(
+                    0,
+                    loop.endSeconds
+                        - max(projectPosition, track.artifact.startTimeSeconds)
+                )
+                let loopFrameDouble = (
+                    remainingSeconds * track.file.processingFormat.sampleRate
+                ).rounded(.down)
+                guard loopFrameDouble.isFinite,
+                      loopFrameDouble >= 0,
+                      loopFrameDouble <= Double(Int64.max) else {
+                    throw ApplePlaybackBackendError.frameRangeOverflow
+                }
+                let loopFrames = Int64(loopFrameDouble)
+                frames = min(frames, loopFrames)
+            }
+
+            guard frames >= 0,
+                  frames <= Int64(UInt32.max) else {
+                throw ApplePlaybackBackendError.frameRangeOverflow
+            }
+            if frames > 0 {
+                plans.append((track, plan, sourceStartFrame, frames))
+            }
+        }
+
+        guard !plans.isEmpty else { return false }
+        let leaderID = try PlaybackSchedulingSafety.latestEndingStemID(
+            windows: plans.map { entry in
+                PlaybackScheduledTrackWindow(
+                    stemID: entry.track.artifact.id,
+                    delayedStartSeconds: entry.plan.delayedStartSeconds,
+                    frameCount: entry.frames,
+                    sampleRate: entry.track.file.processingFormat.sampleRate
+                )
+            }
+        )
+
         for entry in plans {
-            let delayHost = AVAudioTime.hostTime(forSeconds: entry.plan.delayedStartSeconds)
+            let delayHost = AVAudioTime.hostTime(
+                forSeconds: entry.plan.delayedStartSeconds
+            )
             let when = AVAudioTime(hostTime: commonHostTime &+ delayHost)
             let isLeader = entry.track.artifact.id == leaderID
-            let callbackType: AVAudioPlayerNodeCompletionCallbackType = loop == nil ? .dataPlayedBack : .dataConsumed
+            let callbackType: AVAudioPlayerNodeCompletionCallbackType = loop == nil
+                ? .dataPlayedBack
+                : .dataConsumed
+
             entry.track.player.scheduleSegment(
                 entry.track.file,
-                startingFrame: entry.plan.sourceStartFrame,
+                startingFrame: entry.sourceStartFrame,
                 frameCount: AVAudioFrameCount(entry.frames),
                 at: when,
                 completionCallbackType: callbackType
             ) { [weak self] _ in
                 guard let self, isLeader else { return }
                 Task {
-                    await self.handleCycleConsumed(
+                    await self.handleStemCycleCompletion(
                         generation: generation,
                         previousStartHostTime: commonHostTime,
                         previousProjectPosition: projectPosition
@@ -285,34 +402,49 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
                 }
             }
         }
+
         applyStoredGains()
         if startPlayers {
-            for track in ordered { track.player.play(at: AVAudioTime(hostTime: commonHostTime)) }
+            for track in ordered {
+                track.player.play(at: AVAudioTime(hostTime: commonHostTime))
+            }
         }
+        return true
     }
 
-    private func handleCycleConsumed(
+    private func handleStemCycleCompletion(
         generation: UInt64,
         previousStartHostTime: UInt64,
         previousProjectPosition: Double
     ) async {
-        guard isPlaying, scheduleGeneration == generation, activeProjectID != nil else { return }
+        guard isPlaying,
+              scheduleGeneration == generation,
+              activeProjectID != nil else {
+            return
+        }
         guard case .stems(let tracks) = mode else { return }
         guard let loop else {
-            positionSeconds = tracks.values.map { $0.artifact.startTimeSeconds + $0.artifact.durationSeconds }.max() ?? previousProjectPosition
+            positionSeconds = activeDurationSeconds() ?? previousProjectPosition
             isPlaying = false
             return
         }
+
         let firstDuration = max(0, loop.endSeconds - previousProjectPosition)
-        let nextHost = previousStartHostTime &+ AVAudioTime.hostTime(forSeconds: firstDuration)
+        let nextHost = previousStartHostTime
+            &+ AVAudioTime.hostTime(forSeconds: firstDuration)
         do {
-            try scheduleStemCycle(
+            let scheduled = try scheduleStemCycle(
                 tracks: tracks,
                 projectPosition: loop.startSeconds,
                 commonHostTime: nextHost,
                 generation: generation,
                 startPlayers: false
             )
+            if !scheduled {
+                stopPlayers()
+                isPlaying = false
+                positionSeconds = loop.startSeconds
+            }
         } catch {
             stopPlayers()
             isPlaying = false
@@ -326,39 +458,77 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
     }
 
     private func currentPositionValue() -> Double {
-        let elapsed = max(0, ProcessInfo.processInfo.systemUptime - anchorUptimeSeconds)
+        let elapsed = max(
+            0,
+            ProcessInfo.processInfo.systemUptime - anchorUptimeSeconds
+        )
         let raw = anchorPositionSeconds + elapsed
-        guard let loop else { return raw }
+        guard let loop else {
+            if let duration = activeDurationSeconds() {
+                return min(raw, duration)
+            }
+            return raw
+        }
         if raw < loop.endSeconds { return raw }
         let repeated = raw - loop.endSeconds
-        return loop.startSeconds + repeated.truncatingRemainder(dividingBy: loop.durationSeconds)
+        return loop.startSeconds
+            + repeated.truncatingRemainder(dividingBy: loop.durationSeconds)
+    }
+
+    private func activeDurationSeconds() -> Double? {
+        switch mode {
+        case .none:
+            return nil
+        case .source(_, let file, _):
+            let rate = file.processingFormat.sampleRate
+            guard rate.isFinite, rate > 0 else { return nil }
+            return Double(file.length) / rate
+        case .stems(let tracks):
+            return tracks.values.map { track in
+                track.artifact.startTimeSeconds
+                    + Double(track.file.length)
+                    / track.file.processingFormat.sampleRate
+            }.max()
+        }
     }
 
     private func applyStoredGains() {
         guard case .stems(let tracks) = mode else { return }
-        for (id, track) in tracks { track.player.volume = Float(gains[id] ?? 1) }
+        for (id, track) in tracks {
+            track.player.volume = Float(gains[id] ?? 1)
+        }
     }
 
     private func ensureEngineRunning() throws {
         if !engine.isRunning {
             engine.prepare()
-            do { try engine.start() } catch { throw ApplePlaybackBackendError.engineStartFailed }
+            do {
+                try engine.start()
+            } catch {
+                throw ApplePlaybackBackendError.engineStartFailed
+            }
         }
     }
 
     private func stopPlayers() {
         switch mode {
-        case .none: break
-        case .source(_, _, let player): player.stop()
-        case .stems(let tracks): for track in tracks.values { track.player.stop() }
+        case .none:
+            break
+        case .source(_, _, let player):
+            player.stop()
+        case .stems(let tracks):
+            for track in tracks.values { track.player.stop() }
         }
     }
 
     private func pausePlayers() {
         switch mode {
-        case .none: break
-        case .source(_, _, let player): player.pause()
-        case .stems(let tracks): for track in tracks.values { track.player.pause() }
+        case .none:
+            break
+        case .source(_, _, let player):
+            player.pause()
+        case .stems(let tracks):
+            for track in tracks.values { track.player.pause() }
         }
     }
 
@@ -366,33 +536,85 @@ public actor AppleMultiTrackPlaybackBackend: PlaybackBackendDriving {
         stopPlayers()
         engine.stop()
         switch mode {
-        case .none: break
-        case .source(_, _, let player): engine.detach(player)
-        case .stems(let tracks): for track in tracks.values { engine.detach(track.player) }
+        case .none:
+            break
+        case .source(_, _, let player):
+            engine.detach(player)
+        case .stems(let tracks):
+            for track in tracks.values { engine.detach(track.player) }
         }
         mode = .none
         isPlaying = false
     }
 
     private func requireProject(_ projectID: ProjectID) throws {
-        guard activeProjectID == projectID else { throw ApplePlaybackBackendError.projectMismatch }
+        guard activeProjectID == projectID else {
+            throw ApplePlaybackBackendError.projectMismatch
+        }
     }
 
     private func resolve(relativePath: String) throws -> URL {
-        let candidate = appOwnedRoot.appendingPathComponent(relativePath).standardizedFileURL.resolvingSymlinksInPath()
-        let rootPath = appOwnedRoot.path.hasSuffix("/") ? appOwnedRoot.path : appOwnedRoot.path + "/"
-        guard candidate.path == appOwnedRoot.path || candidate.path.hasPrefix(rootPath) else { throw ApplePlaybackBackendError.appOwnedPathEscape }
+        let candidate = appOwnedRoot
+            .appendingPathComponent(relativePath)
+            .standardizedFileURL
+            .resolvingSymlinksInPath()
+        let rootPath = appOwnedRoot.path.hasSuffix("/")
+            ? appOwnedRoot.path
+            : appOwnedRoot.path + "/"
+        guard candidate.path == appOwnedRoot.path
+                || candidate.path.hasPrefix(rootPath) else {
+            throw ApplePlaybackBackendError.appOwnedPathEscape
+        }
         return candidate
     }
 
-    private func sourceFrame(positionSeconds: Double, file: AVAudioFile) throws -> AVAudioFramePosition {
-        let value = (positionSeconds * file.processingFormat.sampleRate).rounded(.down)
-        guard value.isFinite, value >= 0, value <= Double(Int64.max) else { throw ApplePlaybackBackendError.frameRangeOverflow }
+    private func validate(
+        file: AVAudioFile,
+        against artifact: StemArtifact
+    ) throws {
+        let format = file.processingFormat
+        guard format.sampleRate.isFinite,
+              format.sampleRate > 0,
+              abs(format.sampleRate - artifact.sampleRate) <= 0.5,
+              Int(format.channelCount) == artifact.channels,
+              file.length >= 0 else {
+            throw ApplePlaybackBackendError.artifactFileMismatch(artifact.id)
+        }
+
+        let frameDifference: Int64
+        if file.length >= artifact.frameCount {
+            frameDifference = file.length - artifact.frameCount
+        } else {
+            frameDifference = artifact.frameCount - file.length
+        }
+        // Allow small codec/container padding but reject metadata mismatches large enough to threaten sync.
+        guard frameDifference <= 2_048 else {
+            throw ApplePlaybackBackendError.artifactFileMismatch(artifact.id)
+        }
+    }
+
+    private func sourceFrame(
+        positionSeconds: Double,
+        file: AVAudioFile
+    ) throws -> AVAudioFramePosition {
+        let value = (
+            positionSeconds * file.processingFormat.sampleRate
+        ).rounded(.down)
+        guard value.isFinite,
+              value >= 0,
+              value <= Double(Int64.max) else {
+            throw ApplePlaybackBackendError.frameRangeOverflow
+        }
         return min(AVAudioFramePosition(value), file.length)
     }
 
-    private func frameCount(_ frames: AVAudioFramePosition) throws -> AVAudioFrameCount {
-        guard frames >= 0, frames <= AVAudioFramePosition(UInt32.max) else { throw ApplePlaybackBackendError.frameRangeOverflow }
+    private func frameCount(
+        _ frames: AVAudioFramePosition
+    ) throws -> AVAudioFrameCount {
+        guard frames >= 0,
+              frames <= AVAudioFramePosition(UInt32.max) else {
+            throw ApplePlaybackBackendError.frameRangeOverflow
+        }
         return AVAudioFrameCount(frames)
     }
 }

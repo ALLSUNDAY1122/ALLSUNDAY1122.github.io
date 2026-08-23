@@ -255,12 +255,7 @@ public actor MultiTrackPlaybackController: PlaybackPreparing {
             )
         }
 
-        if state.isPlaying,
-           let current = await backend.currentPositionSeconds(projectID: projectID),
-           current.isFinite,
-           current >= 0 {
-            state.positionSeconds = current
-        }
+        try await refreshBackendPosition(&state, projectID: projectID)
 
         state.stems = stems
         state.mixes = Dictionary(uniqueKeysWithValues: stems.map { stem in
@@ -340,22 +335,22 @@ public actor MultiTrackPlaybackController: PlaybackPreparing {
         to positionSeconds: Double,
         projectID: ProjectID
     ) async throws {
-        guard positionSeconds.isFinite, positionSeconds >= 0 else {
-            throw PlaybackControlError.invalidSeek(positionSeconds)
-        }
         var state = try requireProject(projectID)
+        try await refreshBackendPosition(&state, projectID: projectID)
         let duration = try PlaybackTimelinePlanner.projectDuration(
             stems: state.stems,
             sourceDurationSeconds: state.source?.durationSeconds
         )
-        if let duration, positionSeconds > duration {
-            throw PlaybackControlError.invalidSeek(positionSeconds)
-        }
-        state.positionSeconds = positionSeconds
+        let normalizedPosition = try PlaybackSchedulingSafety.normalizedSeekPosition(
+            requestedSeconds: positionSeconds,
+            durationSeconds: duration,
+            loop: state.loop
+        )
+        state.positionSeconds = normalizedPosition
         state.scheduleGeneration &+= 1
         try await backend.seek(
             projectID: projectID,
-            to: positionSeconds,
+            to: normalizedPosition,
             resume: state.isPlaying,
             loop: state.loop
         )
@@ -377,10 +372,12 @@ public actor MultiTrackPlaybackController: PlaybackPreparing {
             )
         }
         var state = try requireProject(projectID)
-        if let duration = try PlaybackTimelinePlanner.projectDuration(
+        try await refreshBackendPosition(&state, projectID: projectID)
+        let duration = try PlaybackTimelinePlanner.projectDuration(
             stems: state.stems,
             sourceDurationSeconds: state.source?.durationSeconds
-        ), endSeconds > duration {
+        )
+        if let duration, endSeconds > duration {
             throw PlaybackControlError.invalidLoop(
                 start: startSeconds,
                 end: endSeconds
@@ -390,17 +387,33 @@ public actor MultiTrackPlaybackController: PlaybackPreparing {
             startSeconds: startSeconds,
             endSeconds: endSeconds
         )
+        state.positionSeconds = try PlaybackSchedulingSafety.normalizedSeekPosition(
+            requestedSeconds: state.positionSeconds,
+            durationSeconds: duration,
+            loop: loop
+        )
         state.loop = loop
         state.scheduleGeneration &+= 1
         try await backend.setLoop(projectID: projectID, loop: loop)
+        if let current = await backend.currentPositionSeconds(projectID: projectID),
+           current.isFinite,
+           current >= 0 {
+            state.positionSeconds = current
+        }
         projects[projectID] = state
     }
 
     public func clearLoop(projectID: ProjectID) async throws {
         var state = try requireProject(projectID)
+        try await refreshBackendPosition(&state, projectID: projectID)
         state.loop = nil
         state.scheduleGeneration &+= 1
         try await backend.setLoop(projectID: projectID, loop: nil)
+        if let current = await backend.currentPositionSeconds(projectID: projectID),
+           current.isFinite,
+           current >= 0 {
+            state.positionSeconds = current
+        }
         projects[projectID] = state
     }
 
@@ -408,6 +421,24 @@ public actor MultiTrackPlaybackController: PlaybackPreparing {
         var state = try requireProject(projectID)
         guard state.source != nil || !state.stems.isEmpty else {
             throw PlaybackControlError.noPlayableMedia(projectID)
+        }
+        try await refreshBackendPosition(&state, projectID: projectID)
+        let duration = try PlaybackTimelinePlanner.projectDuration(
+            stems: state.stems,
+            sourceDurationSeconds: state.source?.durationSeconds
+        )
+        if let duration,
+           duration > 0,
+           state.loop == nil,
+           state.positionSeconds >= duration {
+            state.positionSeconds = 0
+            state.scheduleGeneration &+= 1
+            try await backend.seek(
+                projectID: projectID,
+                to: 0,
+                resume: false,
+                loop: nil
+            )
         }
         try await backend.play(projectID: projectID)
         state.isPlaying = true
@@ -430,17 +461,12 @@ public actor MultiTrackPlaybackController: PlaybackPreparing {
         projectID: ProjectID
     ) async throws -> PlaybackProjectSnapshot {
         var state = try requireProject(projectID)
-        if state.isPlaying,
-           let current = await backend.currentPositionSeconds(projectID: projectID),
-           current.isFinite,
-           current >= 0 {
-            state.positionSeconds = current
-            projects[projectID] = state
-        }
+        try await refreshBackendPosition(&state, projectID: projectID)
         let duration = try PlaybackTimelinePlanner.projectDuration(
             stems: state.stems,
             sourceDurationSeconds: state.source?.durationSeconds
         )
+        projects[projectID] = state
         return PlaybackProjectSnapshot(
             projectID: projectID,
             hasSource: state.source != nil,
@@ -466,6 +492,31 @@ public actor MultiTrackPlaybackController: PlaybackPreparing {
             throw PlaybackControlError.noProject(projectID)
         }
         return state
+    }
+
+    private func refreshBackendPosition(
+        _ state: inout ProjectState,
+        projectID: ProjectID
+    ) async throws {
+        guard let current = await backend.currentPositionSeconds(projectID: projectID),
+              current.isFinite,
+              current >= 0 else {
+            return
+        }
+        state.positionSeconds = current
+
+        // PlaybackBackendDriving deliberately stays small and does not expose a second playback-state
+        // channel. A non-loop project at its known terminal duration is therefore the portable signal
+        // that a previously active backend has naturally completed.
+        if state.isPlaying,
+           state.loop == nil,
+           let duration = try PlaybackTimelinePlanner.projectDuration(
+               stems: state.stems,
+               sourceDurationSeconds: state.source?.durationSeconds
+           ),
+           current >= duration {
+            state.isPlaying = false
+        }
     }
 
     private func applyMix(

@@ -1,0 +1,55 @@
+{
+  "bundle": "L3-M04",
+  "lane": "LANE-3-PLAYBACK-DSP",
+  "scope": "offline/reference control render and future differential evidence input",
+  "environment": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu",
+    "avfaudio_available": false
+  },
+  "portable_self_test": {
+    "status": "PASS",
+    "deterministic_fixture_signature": "e92134276828f523",
+    "checks": [
+      "identical fixture produces identical plan/signature",
+      "count-in and metronome frame positions",
+      "mixed sample-rate stem source/render windows",
+      "fixture comparison within and outside frame tolerance",
+      "empty/duplicate stem rejection",
+      "tempo/pitch range rejection",
+      "non-monotonic/duplicate-render-frame beat rejection",
+      "missing count-in interval rejection",
+      "invalid PCM configuration rejection",
+      "negative/Int64-min observation values do not trap comparator",
+      "non-finite PCM samples block comparison",
+      "parityPromotionAllowed is always false"
+    ]
+  },
+  "long_track_benchmark": {
+    "status": "PASS",
+    "build": "swiftc -O",
+    "project_hours": 24,
+    "stems": 8,
+    "source_beats": 172801,
+    "events_per_plan": 172824,
+    "rounds": 12,
+    "median_ms": 118.834,
+    "p95_ms": 143.252,
+    "p99_ms": 143.252,
+    "max_ms": 143.252,
+    "deterministic_signature": "bceee1be47217988",
+    "measurement_scope": "control-plan generation CPU only; not PCM render/device latency/thermal/battery"
+  },
+  "machine_readable_outputs": [
+    "L3-M04_REFERENCE_FIXTURE.schema.json",
+    "L3-M04_REFERENCE_FIXTURE.example.json",
+    "L3-M04_PLAN.example.json",
+    "L3-M04_OBSERVATION_TEMPLATE.example.json"
+  ],
+  "deferred_hq_apple_runtime_checks": true,
+  "real_audio_required_for_final_quality": true,
+  "physical_iphone_required_for_final_quality": true,
+  "reference_differential_required": true,
+  "parity_promotion": false,
+  "affected_rows_unchanged": ["MOI-P006", "MOI-P007", "MOI-P008", "MOI-P010", "MOI-P012", "MOI-P014", "MOI-P015"]
+}

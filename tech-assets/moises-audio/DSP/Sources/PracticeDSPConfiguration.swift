@@ -46,6 +46,7 @@ public enum PracticeDSPConfigurationError: Error, Equatable, Sendable {
     case nonFinitePitch
     case pitchOutOfBackendRange(Double)
     case countInOutOfBackendRange(Int)
+    case scheduleGenerationOverflow
 }
 
 public enum PracticeDSPMath {
@@ -75,8 +76,9 @@ public actor PracticeDSPController: PracticeDSPConfiguring {
             throw PracticeDSPConfigurationError.tempoRatioOutOfBackendRange(ratio)
         }
         var state = states[projectID] ?? PracticeDSPState()
+        let nextGeneration = try PracticeDSPStateValidator.nextGeneration(after: state.scheduleGeneration)
         state.tempoRatio = ratio
-        state.scheduleGeneration &+= 1
+        state.scheduleGeneration = nextGeneration
         states[projectID] = state
     }
 
@@ -92,8 +94,9 @@ public actor PracticeDSPController: PracticeDSPConfiguring {
 
     public func setMetronomeEnabled(_ enabled: Bool, projectID: ProjectID) async throws {
         var state = states[projectID] ?? PracticeDSPState()
+        let nextGeneration = try PracticeDSPStateValidator.nextGeneration(after: state.scheduleGeneration)
         state.metronomeEnabled = enabled
-        state.scheduleGeneration &+= 1
+        state.scheduleGeneration = nextGeneration
         states[projectID] = state
     }
 
@@ -102,13 +105,21 @@ public actor PracticeDSPController: PracticeDSPConfiguring {
             throw PracticeDSPConfigurationError.countInOutOfBackendRange(clicks)
         }
         var state = states[projectID] ?? PracticeDSPState()
+        let nextGeneration = try PracticeDSPStateValidator.nextGeneration(after: state.scheduleGeneration)
         state.pendingCountInClicks = clicks
-        state.scheduleGeneration &+= 1
+        state.scheduleGeneration = nextGeneration
         states[projectID] = state
     }
 
     public func snapshot(projectID: ProjectID) -> PracticeDSPState {
         states[projectID] ?? PracticeDSPState()
+    }
+
+    /// Atomically restores validated persisted settings and invalidates every pre-restore click plan.
+    /// On any invalid field or generation overflow, the existing project state is left untouched.
+    public func restoreState(_ restored: PracticeDSPState, projectID: ProjectID) throws {
+        let validated = try PracticeDSPStateValidator.restored(restored, capabilities: capabilities)
+        states[projectID] = validated
     }
 
     /// Called by the WP3 playback integration after a count-in has been consumed.
@@ -119,9 +130,9 @@ public actor PracticeDSPController: PracticeDSPConfiguring {
     }
 
     /// Explicit invalidation hook for seek/loop/transport discontinuities.
-    public func invalidateScheduledClicks(projectID: ProjectID) -> UInt64 {
+    public func invalidateScheduledClicks(projectID: ProjectID) throws -> UInt64 {
         var state = states[projectID] ?? PracticeDSPState()
-        state.scheduleGeneration &+= 1
+        state.scheduleGeneration = try PracticeDSPStateValidator.nextGeneration(after: state.scheduleGeneration)
         states[projectID] = state
         return state.scheduleGeneration
     }
