@@ -1,0 +1,42 @@
+name: Scanner Parity Apple Validation
+
+on:
+  push:
+    branches:
+      - scanner-parity/integration
+    paths:
+      - 'scanner-parity/**'
+      - '.github/workflows/scanner-parity-apple-validation.yml'
+  pull_request:
+    branches:
+      - scanner-parity/integration
+    paths:
+      - 'scanner-parity/**'
+      - '.github/workflows/scanner-parity-apple-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  apple-sdk-compile:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate harness contract
+        run: python3 scanner-parity/Tests/AppleValidation/harness_contract_test.py
+
+      - name: Compile Apple adapters with iPhoneOS SDK
+        run: bash scanner-parity/AppleValidation/run-apple-sdk-compile.sh "$RUNNER_TEMP/scanner-parity-apple-validation"
+
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scanner-parity-apple-validation
+          path: |
+            ${{ runner.temp }}/scanner-parity-apple-validation/report.json
+            ${{ runner.temp }}/scanner-parity-apple-validation/compile.log
+          if-no-files-found: warn
