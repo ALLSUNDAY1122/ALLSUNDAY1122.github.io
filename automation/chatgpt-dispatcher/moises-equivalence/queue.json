@@ -63,13 +63,17 @@
   "autonomous_wave_policy": {
     "merge_rule": "Do not merge every Wave. Workers accumulate meaningful lane-local waves; HQ semantic-integrates only coherent checkpoints.",
     "current_unintegrated_snapshot": {
-      "lane1": "L1-A06 through L1-A10 canonical at epoch 4; L1-A11 is the current post-checkpoint autonomous wave",
+      "lane1": "L1-A06 through L1-A10 canonical at epoch 4; L1-A11 completed post-checkpoint and L1-A12 is current; A11 remains unintegrated pending a coherent checkpoint",
       "lane2": "L2-AW06 through L2-AW07 canonical at epoch 4; later waves continue accumulating autonomously",
       "lane3": "L3-AW01 through L3-AW05 canonical at epoch 4; L3-AW06 is a post-checkpoint autonomous wave and remains unintegrated",
       "lane4": "L4-W05 through L4-W09 canonical at epoch 4; L4-W10 was in progress at the last branch-status read"
     }
   },
   "hq_requests_status": {
+    "lane1": {
+      "metadata_cleanup_request": "RESOLVED_CANONICAL_V4_CONFIRMED",
+      "evidence": "HQ_BOOTSTRAP.md and WORKER_BOOTSTRAP.md are v4; work-packages/lane-plan/resource-locks are planning revision 4 with assignment epoch 2. Worker-1 status request is obsolete and does not require a canonical contract rewrite."
+    },
     "lane2": {
       "checkpoint_consumed_semantically": true,
       "startup_composition_request": "PENDING_HQ_APP_INTEGRATION",
@@ -79,6 +83,12 @@
       "atomic_m4a_export_device_validation": "PENDING_APPLE_RUNTIME",
       "parity_promotion": "NONE"
     }
+  },
+  "branch_hygiene": {
+    "worker3_status": "WORKER_BRANCH_STATUS_STALE",
+    "worker3_branch_status_schema": 1,
+    "observed_integration_status_commit": "1ecfd76a4cd8c5bc64478814bd8ae0b1e4fd6e95",
+    "assessment": "AW06 implementation exists in Playback/** and DSP/** on the Worker branch, but the Worker-branch status file remains old while a status update was observed on integration history. HQ must continue to trust branch compare over stale status and must not reset/discard Worker code."
   },
   "hq_integration_validation": {
     "workflow": ".github/workflows/moises-hq-integration.yml",
