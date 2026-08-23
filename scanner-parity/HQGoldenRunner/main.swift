@@ -91,6 +91,8 @@ struct HQGoldenExecutionReport: Codable {
     let packageIntegrity: PackageIntegrityReport
     let referenceMatches: [ReferenceNearestMatch]
     let referenceMetrics: ReferenceAlignmentMetrics?
+    let reviewBundleRelativePath: String
+    let reviewBundlePageCount: Int
     let machineGateAssessment: FormalGoldenMachineAssessment
     let formalGoldenVerdict: String
 }
@@ -220,6 +222,24 @@ enum HQGoldenRunner {
             )
         }
 
+        let reviewBundleURL = options.workspaceURL.appendingPathComponent("06-golden-review", isDirectory: true)
+        let reviewOCRPages = ocr.pages.enumerated().map { index, page in
+            GoldenReviewOCRPage(
+                sequence: index + 1,
+                text: page.text,
+                confidence: page.ocrConfidence,
+                layout: page.layout.rawValue,
+                needsReview: page.needsReview
+            )
+        }
+        let reviewBundle = try GoldenReviewBundleBuilder.write(
+            referencePDFURL: options.referencePDFURL,
+            outputImageURLs: outputImageURLs,
+            referenceMatches: referenceMatches,
+            ocrPages: reviewOCRPages,
+            destinationURL: reviewBundleURL
+        )
+
         let videoSHAMatch = match(expected: options.expectedVideoSHA256, observed: videoSHA)
         let pdfSHAMatch = match(expected: options.expectedPDFSHA256, observed: pdfSHA)
         let machineAssessment = FormalGoldenMachineGate.evaluate(.init(
@@ -251,7 +271,7 @@ enum HQGoldenRunner {
         }
 
         let report = HQGoldenExecutionReport(
-            schemaVersion: 3,
+            schemaVersion: 4,
             bookID: options.bookID,
             generatedAt: ISO8601DateFormatter().string(from: Date()),
             videoFileName: options.videoURL.lastPathComponent,
@@ -275,6 +295,8 @@ enum HQGoldenRunner {
             packageIntegrity: integrity,
             referenceMatches: referenceMatches,
             referenceMetrics: referenceMetrics,
+            reviewBundleRelativePath: relativePath(reviewBundleURL, under: options.workspaceURL),
+            reviewBundlePageCount: reviewBundle.pageCount,
             machineGateAssessment: machineAssessment,
             formalGoldenVerdict: formalVerdict
         )
