@@ -277,7 +277,7 @@ enum SplatVideoExporter {
                     throw error
                 }
                 commandBuffer.commit()
-                await commandBuffer.completed()
+                commandBuffer.waitUntilCompleted()
                 guard commandBuffer.status != .error else {
                     writer.cancelWriting()
                     throw ExportError.writerFailed(commandBuffer.error?.localizedDescription ?? "Metal command failed")
