@@ -189,7 +189,7 @@ class LongTrackProductionTests(unittest.TestCase):
         self.assertFalse((self.artifact_root / (record.logical_job_id + ".staging")).exists())
         self.assertFalse(self.orch.get(record.logical_job_id).outputs_committed)
 
-    def test_global_download_semaphore_bounds_parallel_jobs_to_one(self):
+    def test_global_download_semaphore_bounds_parallel_transfers_to_one(self):
         active = 0
         peak = 0
         lock = threading.Lock()
@@ -208,21 +208,27 @@ class LongTrackProductionTests(unittest.TestCase):
                     active -= 1
 
         self.orch._custom_downloader = slow_downloader
-        records = [self.start(key=f"idem-{index}", models=("vocals",)) for index in range(2)]
-        # FakeProvider exposes one state for both task IDs; identical ready target is sufficient here.
-        self.provider.state = State(
-            "ready", 1.0, False, targets=(Target("vocals", output_url="https://example.test/v.wav"),)
-        )
+        destinations = []
+        for index in range(2):
+            parent = self.artifact_root / f"parallel-{index}.staging"
+            parent.mkdir(parents=True)
+            destination = parent / "vocals.wav"
+            destinations.append(destination)
+            with self.orch._transfer_lock:
+                self.orch._max_bytes_by_staging[str(parent.resolve())] = MIB
+
         errors = []
 
-        def run(record):
+        def run(index):
             try:
                 gate.wait()
-                self.orch.collect_ready_outputs(record.logical_job_id)
+                self.orch._guarded_downloader(
+                    f"https://example.test/{index}.wav", destinations[index]
+                )
             except Exception as exc:  # pragma: no cover - asserted below
                 errors.append(exc)
 
-        threads = [threading.Thread(target=run, args=(record,)) for record in records]
+        threads = [threading.Thread(target=run, args=(index,)) for index in range(2)]
         for thread in threads:
             thread.start()
         for thread in threads:
