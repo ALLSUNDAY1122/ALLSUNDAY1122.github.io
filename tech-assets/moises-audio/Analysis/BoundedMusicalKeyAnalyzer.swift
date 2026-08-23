@@ -34,23 +34,55 @@ public enum BoundedMusicalKeyAnalyzer {
         ("locrian", [0, 1, 3, 5, 6, 8, 10], 6, 7, 3)
     ]
 
-    public static func analyze(signal: AnalysisSignal, configuration: MusicAnalysisConfiguration = .productBaseline) -> MusicalKey? {
+    public static func analyze(
+        signal: AnalysisSignal,
+        configuration: MusicAnalysisConfiguration = .productBaseline
+    ) -> MusicalKey? {
+        try? analyzeInternal(signal: signal, configuration: configuration, cancellationChecksEnabled: false)
+    }
+
+    public static func analyzeCancellable(
+        signal: AnalysisSignal,
+        configuration: MusicAnalysisConfiguration = .productBaseline
+    ) throws -> MusicalKey? {
+        try analyzeInternal(signal: signal, configuration: configuration, cancellationChecksEnabled: true)
+    }
+
+    private static func analyzeInternal(
+        signal: AnalysisSignal,
+        configuration: MusicAnalysisConfiguration,
+        cancellationChecksEnabled: Bool
+    ) throws -> MusicalKey? {
+        try AnalysisCancellationPolicy.checkIfNeeded(enabled: cancellationChecksEnabled, iteration: 0, stride: 1)
         let samples = signal.monoSamples
         guard samples.count >= configuration.analysisWindowSize,
               AnalysisWorkingSetPolicy.rms(samples, maximumSamples: AnalysisWorkingSetPolicy.maximumRMSProbeSamples) > 1e-5 else { return nil }
+        try AnalysisCancellationPolicy.checkIfNeeded(enabled: cancellationChecksEnabled, iteration: 0, stride: 1)
         let windowSize = configuration.analysisWindowSize
         let availableWindows = max(1, (samples.count - windowSize) / max(1, configuration.analysisHopSize) + 1)
         let selectedCount = min(configuration.maximumKeyWindows, availableWindows)
         let starts = uniformlySpacedWindowStarts(sampleCount: samples.count, windowSize: windowSize, count: selectedCount)
         var localChromas: [[Double]] = []
         localChromas.reserveCapacity(starts.count)
-        for start in starts {
-            let local = chromaForWindow(samples, start: start, count: windowSize, sampleRate: signal.sampleRate)
+        for (windowIndex, start) in starts.enumerated() {
+            try AnalysisCancellationPolicy.checkIfNeeded(
+                enabled: cancellationChecksEnabled,
+                iteration: windowIndex,
+                stride: AnalysisCancellationPolicy.keyWindowCheckStride
+            )
+            let local = try chromaForWindow(
+                samples,
+                start: start,
+                count: windowSize,
+                sampleRate: signal.sampleRate,
+                cancellationChecksEnabled: cancellationChecksEnabled
+            )
             let localTotal = local.reduce(0, +)
             guard localTotal > 1e-10 else { continue }
             localChromas.append(local.map { $0 / localTotal })
         }
         guard localChromas.count >= 2 else { return nil }
+        try AnalysisCancellationPolicy.checkIfNeeded(enabled: cancellationChecksEnabled, iteration: 0, stride: 1)
         let chroma = normalizedSum(localChromas)
         guard let global = keyEvidence(chroma), global.activePitchClasses >= 3 else { return nil }
         let ranked = rankedCandidates(chroma)
@@ -83,10 +115,17 @@ public enum BoundedMusicalKeyAnalyzer {
         let calibratedMargin = min(1, global.normalizedMargin / 0.08)
         let confidence = clamp01(calibratedMargin * 0.68 + global.best.triadSupport * 0.20 + temporalAgreement * 0.12)
         guard confidence >= configuration.minimumKeyConfidence else { return nil }
+        try AnalysisCancellationPolicy.checkIfNeeded(enabled: cancellationChecksEnabled, iteration: 0, stride: 1)
         return MusicalKey(tonicPitchClass: global.best.tonic, mode: global.best.mode, confidence: confidence)
     }
 
-    private static func chromaForWindow(_ samples: [Float], start: Int, count: Int, sampleRate: Double) -> [Double] {
+    private static func chromaForWindow(
+        _ samples: [Float],
+        start: Int,
+        count: Int,
+        sampleRate: Double,
+        cancellationChecksEnabled: Bool
+    ) throws -> [Double] {
         let lower = max(0, min(samples.count, start))
         let upper = max(lower, min(samples.count, start + count))
         let n = upper - lower
@@ -97,7 +136,12 @@ public enum BoundedMusicalKeyAnalyzer {
             windowed[localIndex] = Double(AnalysisWorkingSetPolicy.boundedFinite(samples[lower + localIndex])) * hann
         }
         var chroma = Array(repeating: 0.0, count: 12)
-        for midi in 36...83 {
+        for (midiOffset, midi) in (36...83).enumerated() {
+            try AnalysisCancellationPolicy.checkIfNeeded(
+                enabled: cancellationChecksEnabled,
+                iteration: midiOffset,
+                stride: 8
+            )
             let frequency = 440 * pow(2, Double(midi - 69) / 12)
             guard frequency < sampleRate * 0.45 else { continue }
             let power = goertzelPower(windowed, sampleRate: sampleRate, frequency: frequency)
