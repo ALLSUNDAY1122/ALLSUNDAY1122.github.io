@@ -1,8 +1,8 @@
 """Production separation backend orchestration for Lane 1.
 
 Provider-neutral orchestration. A concrete provider client exposes upload_asset(path),
-create_separation_task(asset_id, models, metadata=...) and get_task_state(task_id).
-The existing AudioShakeClient satisfies that surface.
+create_separation_task(asset_id, models, metadata=...), get_task_state(task_id), and may
+optionally expose find_tasks_by_metadata(metadata) for ambiguous-start reconciliation.
 
 This module does not claim commercial approval or PARITY. Secrets are injected through the
 provider object and are never serialized by this module.
@@ -21,7 +21,8 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Protocol
 from urllib.parse import urlparse
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
+_ACCEPTED_SCHEMA_VERSIONS = {1, SCHEMA_VERSION}
 _SAFE_ID = re.compile(r"^[A-Za-z0-9._:-]{1,160}$")
 _SAFE_MODEL = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
 
@@ -60,6 +61,11 @@ class JobRecord:
     retryable: bool = False
     outputs_committed: bool = False
     outputs: list[dict[str, Any]] = field(default_factory=list)
+    start_reconciliation_attempts: int = 0
+    start_reconciliation_state: str | None = None
+    provider_task_match_count: int | None = None
+    recovered_provider_task: bool = False
+    billing_safety_state: str = "not_applicable"
 
 
 class AtomicJobRegistry:
@@ -74,7 +80,7 @@ class AtomicJobRegistry:
             raw = json.loads(self.path.read_text(encoding="utf-8"))
         except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise OrchestratorError("SEP_REGISTRY_CORRUPT") from exc
-        if not isinstance(raw, dict) or raw.get("schema_version") != SCHEMA_VERSION:
+        if not isinstance(raw, dict) or raw.get("schema_version") not in _ACCEPTED_SCHEMA_VERSIONS:
             raise OrchestratorError("SEP_REGISTRY_SCHEMA_INVALID")
         jobs = raw.get("jobs")
         if not isinstance(jobs, dict):
@@ -165,6 +171,7 @@ class ProductionSeparationOrchestrator:
             source_bytes=source_bytes,
             requested_models=list(selected_models),
             state="uploading",
+            billing_safety_state="pre_provider_create",
         )
         jobs[logical_job_id] = record
         self.registry.save(jobs)
@@ -180,25 +187,21 @@ class ProductionSeparationOrchestrator:
 
         record.provider_asset_id = _validate_id(provider_asset_id, "SEP_PROVIDER_ASSET_ID_INVALID")
         record.state = "starting"
+        record.billing_safety_state = "provider_create_in_flight"
         self.registry.save(jobs)
 
-        # Persist `starting` before remote POST. An ambiguous exception after vendor acceptance is
-        # never auto-retried into a possible duplicate provider job/charge.
         try:
             provider_task_id = self.provider.create_separation_task(
                 record.provider_asset_id,
                 selected_models,
-                metadata={
-                    "logical_job_id": logical_job_id,
-                    "project_id": project_id,
-                    "asset_id": asset_id,
-                    "source_sha256": source_sha,
-                },
+                metadata=_provider_metadata(record),
             )
         except Exception as exc:
             record.state = "start_ambiguous"
             record.stable_error_code = _stable_error(exc, "SEP_PROVIDER_START_AMBIGUOUS")
             record.retryable = False
+            record.start_reconciliation_state = "not_attempted"
+            record.billing_safety_state = "unknown_do_not_retry"
             self.registry.save(jobs)
             raise OrchestratorError(record.stable_error_code, retryable=False) from exc
 
@@ -207,6 +210,76 @@ class ProductionSeparationOrchestrator:
         record.provider_phase = "separating"
         record.stable_error_code = None
         record.retryable = True
+        record.start_reconciliation_state = "not_needed"
+        record.provider_task_match_count = 1
+        record.billing_safety_state = "single_provider_task_confirmed"
+        self.registry.save(jobs)
+        return record
+
+    def reconcile_ambiguous_start(self, logical_job_id: str) -> JobRecord:
+        """Reconcile an ambiguous provider create without ever issuing another create request."""
+        jobs = self.registry.load()
+        record = _require_job(jobs, logical_job_id)
+        if record.provider_task_id is not None:
+            return record
+        if record.state not in {
+            "start_ambiguous",
+            "start_reconciliation_unresolved",
+            "start_reconciliation_error",
+            "start_reconciliation_unsupported",
+        }:
+            raise OrchestratorError("SEP_START_RECONCILIATION_STATE_INVALID")
+
+        finder = getattr(self.provider, "find_tasks_by_metadata", None)
+        record.start_reconciliation_attempts += 1
+        if not callable(finder):
+            record.state = "start_reconciliation_unsupported"
+            record.start_reconciliation_state = "unsupported"
+            record.stable_error_code = "SEP_PROVIDER_RECONCILIATION_UNSUPPORTED"
+            record.retryable = False
+            record.billing_safety_state = "manual_review_required"
+            self.registry.save(jobs)
+            raise OrchestratorError(record.stable_error_code, retryable=False)
+
+        try:
+            raw_matches = finder(_provider_metadata(record))
+            matches = _normalize_task_matches(raw_matches)
+        except Exception as exc:
+            record.state = "start_reconciliation_error"
+            record.start_reconciliation_state = "error"
+            record.stable_error_code = _stable_error(exc, "SEP_PROVIDER_RECONCILIATION_FAILED")
+            record.retryable = False
+            record.billing_safety_state = "unknown_do_not_retry"
+            self.registry.save(jobs)
+            raise OrchestratorError(record.stable_error_code, retryable=False) from exc
+
+        record.provider_task_match_count = len(matches)
+        if not matches:
+            record.state = "start_reconciliation_unresolved"
+            record.start_reconciliation_state = "not_found"
+            record.stable_error_code = "SEP_PROVIDER_START_NOT_FOUND"
+            record.retryable = False
+            record.billing_safety_state = "unknown_do_not_retry"
+            self.registry.save(jobs)
+            return record
+
+        if len(matches) > 1:
+            record.state = "duplicate_provider_tasks_detected"
+            record.start_reconciliation_state = "multiple"
+            record.stable_error_code = "SEP_PROVIDER_DUPLICATE_TASKS_DETECTED"
+            record.retryable = False
+            record.billing_safety_state = "billing_incident"
+            self.registry.save(jobs)
+            raise OrchestratorError(record.stable_error_code, retryable=False)
+
+        record.provider_task_id = _validate_id(matches[0], "SEP_PROVIDER_TASK_ID_INVALID")
+        record.state = "separating"
+        record.provider_phase = "separating"
+        record.stable_error_code = None
+        record.retryable = True
+        record.start_reconciliation_state = "matched"
+        record.recovered_provider_task = True
+        record.billing_safety_state = "single_provider_task_confirmed"
         self.registry.save(jobs)
         return record
 
@@ -360,11 +433,35 @@ def _sha256_file(path: Path) -> tuple[str, int]:
 
 def _request_fingerprint(project_id: str, asset_id: str, source_sha: str, models: tuple[str, ...]) -> str:
     payload = json.dumps(
-        {"project_id": project_id, "asset_id": asset_id, "source_sha256": source_sha, "models": models},
+        {"project_id": project_id, "asset_id": asset_id, "source_sha256": source_sha, "models": sorted(models)},
         separators=(",", ":"),
         sort_keys=True,
     )
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _provider_metadata(record: JobRecord) -> dict[str, Any]:
+    return {
+        "logical_job_id": record.logical_job_id,
+        "project_id": record.project_id,
+        "asset_id": record.asset_id,
+        "source_sha256": record.source_sha256,
+        "requested_models": sorted(record.requested_models),
+        "request_fingerprint": record.request_fingerprint,
+    }
+
+
+def _normalize_task_matches(matches: Any) -> tuple[str, ...]:
+    if isinstance(matches, (str, bytes)) or not isinstance(matches, Iterable):
+        raise OrchestratorError("SEP_PROVIDER_RECONCILIATION_RESPONSE_INVALID")
+    normalized: list[str] = []
+    seen: set[str] = set()
+    for value in matches:
+        task_id = _validate_id(value, "SEP_PROVIDER_TASK_ID_INVALID")
+        if task_id not in seen:
+            normalized.append(task_id)
+            seen.add(task_id)
+    return tuple(normalized)
 
 
 def _stable_error(exc: Exception, fallback: str) -> str:
