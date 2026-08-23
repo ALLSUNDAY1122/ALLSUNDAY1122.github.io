@@ -10,7 +10,7 @@
   "completed_bundles": ["L4-M01", "L4-M02", "L4-M03", "L4-M04"],
   "epoch_contract_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
   "base_integration_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
-  "head_sha": "26585adb718cb007c20e6db2c16c317f5eaa9182",
+  "head_sha": "0da56b8a31608dda55158708d6e886dd6fe23c7f",
   "existing_unintegrated_commits": [
     "1811f335e121783daf00a5850b3b3bccdf75ca91",
     "1e55469c088b9724905b9df64989db2310f329ba",
@@ -59,7 +59,11 @@
     "0233419d1e837856f1ec19a9249dc0b78bcd8123",
     "f2352c95055b908fbf7465769ef4aaa374b466ea",
     "747a4bc9f933e470ed42ccfb98aa988feaaf23e1",
-    "26585adb718cb007c20e6db2c16c317f5eaa9182"
+    "26585adb718cb007c20e6db2c16c317f5eaa9182",
+    "056f1c5a3e815932fb044ae7f736b6c8dead37e7",
+    "9b5c68fbfc4dafc038d28a0c38f45b25998d3c79",
+    "38dc9b436cc8023a4183385f546e907a45b503df",
+    "0da56b8a31608dda55158708d6e886dd6fe23c7f"
   ],
   "commits": [
     "1811f335e121783daf00a5850b3b3bccdf75ca91",
@@ -109,15 +113,19 @@
     "0233419d1e837856f1ec19a9249dc0b78bcd8123",
     "f2352c95055b908fbf7465769ef4aaa374b466ea",
     "747a4bc9f933e470ed42ccfb98aa988feaaf23e1",
-    "26585adb718cb007c20e6db2c16c317f5eaa9182"
+    "26585adb718cb007c20e6db2c16c317f5eaa9182",
+    "056f1c5a3e815932fb044ae7f736b6c8dead37e7",
+    "9b5c68fbfc4dafc038d28a0c38f45b25998d3c79",
+    "38dc9b436cc8023a4183385f546e907a45b503df",
+    "0da56b8a31608dda55158708d6e886dd6fe23c7f"
   ],
   "autonomous_wave": {
-    "wave_id": "L4-W05",
-    "goal": "Create a rights-safe multi-domain real-audio MIR benchmark gate for BPM/beat/key/chord/song-section evidence.",
-    "rationale": "P009/P011/P013/P016 remain MISSING mainly because Lane 4 had only synthetic evidence and no fail-closed real-audio corpus runner. This is the highest-value lane-local preparation that can be completed without waiting for rights-cleared files or an Apple device.",
-    "done_when": "A manifest, rights/checksum validation layer, batch runner, JSON codec, negative tests, Golden MIR template, runbook and durable evidence exist; synthetic or invalid-rights inputs cannot become PARITY evidence.",
-    "result": "COMPLETE_NON_PARITY: implemented RealAudioBenchmarkSuite and codec, 7 committed XCTest cases across suite/codec, fail-closed rights/path/hash/timeline/checksum/duration/non-finite guards, five-domain batch reporting, Golden MIR template/runbook and validation evidence. Actual rights-cleared corpus/device/Moises differential remains HQ/external gate.",
-    "completed_at": "2026-08-23T16:31:00+09:00"
+    "wave_id": "L4-W06",
+    "goal": "Harden tempo and beat analysis for half/double tempo, gradual tempo drift, weak percussion, syncopated onset energy and common meter ambiguity.",
+    "rationale": "MOI-P009 remains MISSING and W05 removed the evaluation-infrastructure blocker. The highest-value lane-local next step was reducing known tempo correctness failures that can be exercised without rights-cleared external audio.",
+    "done_when": "Production tempo candidate selection and beat tracking are materially hardened; octave/meter ambiguity fails closed; weak percussion does not reintroduce sustained-tone false positives; deterministic adversarial tests, benchmark evidence and validation are committed.",
+    "result": "COMPLETE_NON_PARITY: replaced fixed-period beat alignment with adaptive tracking and robust median tracked BPM, added joint autocorrelation+grid/onset-coverage scoring, subharmonic suppression, common-ratio ambiguity confidence gating and sustained-tone transient-contrast rejection. Seven adversarial cases pass in the targeted executable harness. Real-audio, Apple-device and current-Moises evidence remain external/HQ gates.",
+    "completed_at": "2026-08-23T17:01:00+09:00"
   },
   "tests": [
     "L4-M01 portable HostCore build PASS; reconstructed baseline regression 21/21 PASS",
@@ -128,23 +136,32 @@
     "L4-W05 swiftc parse/typecheck against frozen-contract-shaped stubs PASS on Swift 6.2.1 Linux",
     "L4-W05 executable validator/batch harness PASS: real eligibility, synthetic non-eligibility, rights/path/hash defects, five-domain report, checksum failure",
     "L4-W05 ISO-8601 codec executable round-trip PASS",
-    "L4-W05 committed XCTest: 6 RealAudioBenchmarkSuiteTests + 1 codec test; fresh canonical swift test remains pending because Worker container cannot resolve github.com"
+    "L4-W05 committed XCTest: 6 RealAudioBenchmarkSuiteTests + 1 codec test; fresh canonical swift test remains pending because Worker container cannot resolve github.com",
+    "L4-W06 production TempoBeatAnalyzer targeted swiftc typecheck PASS on Swift 6.2.1 Linux",
+    "L4-W06 executable adversarial harness PASS 7/7 after failure-driven sustained-tone correction",
+    "L4-W06 75 BPM weak subdivisions -> 75.0 BPM, confidence 0.9650, Beat F@70ms 1.0",
+    "L4-W06 150 BPM alternating accents -> 150.0 BPM, confidence 0.8423, Beat F@70ms 1.0",
+    "L4-W06 100->130 BPM drift -> tracked median 115.3846 BPM, confidence 0.3720, Beat F@70ms 0.9828",
+    "L4-W06 96 BPM weak percussion -> 96.7742 BPM, confidence 0.6938, Beat F@70ms 0.9744; equal-subdivision meter ambiguity and sustained tone -> nil",
+    "L4-W06 committed XCTest file adds 7 deterministic cases; complete canonical swift test remains HQ/integrated-checkout gate"
   ],
   "evidence": [
     "L4-M01 through L4-M04 remain complete against frozen contract SHA be1c84314db182d6eee5097de34e017af1a4a7de",
-    "L4-W05 adds Analysis/RealAudioBenchmarkSuite.swift and Analysis/RealAudioBenchmarkCodec.swift",
-    "L4-W05 manifest validation fails closed for missing/expired rights, absent ANALYSIS_BENCHMARK permission, invalid SHA, unsafe path, invalid annotations and duplicate fixtures",
-    "L4-W05 batch execution verifies loaded source checksum, decoded duration and finite PCM before evaluating tempo/beat/key/chord/structure",
-    "L4-W05 SYNTHETIC_TEST can never be parity eligible even with perfect metrics",
-    "L4-W05 Golden MIR template and operator runbook stored under Analysis/benchmarks",
-    "L4-W05 durable validation stored at Tests/L4-W05_VALIDATION.md",
-    "Epoch-base compare after L4-W05: branch ahead 48, behind 0; every changed path remains inside Analysis/**, Package.swift, Tests/** or iOS/**",
-    "MOI-P009, MOI-P011, MOI-P013 and MOI-P016 remain MISSING pending actual rights-cleared real-audio and HQ judgment"
+    "L4-W05 provides rights-safe five-domain Golden MIR benchmark infrastructure and fail-closed real-audio evidence admission",
+    "L4-W06 hardens TempoBeatAnalyzer candidate scoring with onset-coverage-aware meter evidence and alternating-accent subharmonic suppression",
+    "L4-W06 replaces fixed-grid beat alignment with bounded adaptive period tracking and robust median tracked BPM for gradual drift",
+    "L4-W06 common 1:2/2:1/2:3/3:2/1:3/3:1 near-tie ambiguity lowers confidence until product threshold fails closed",
+    "L4-W06 failure-driven transientContrast guard prevents sustained tonal frame-RMS beating from becoming a fake tempo while preserving the weak-percussion fixture",
+    "L4-W06 machine-readable NON_PARITY evidence saved at Analysis/benchmarks/L4-W06_TEMPO_BEAT_ADVERSARIAL.json",
+    "L4-W06 durable validation saved at Tests/L4-W06_VALIDATION.md",
+    "Epoch-base compare after L4-W06: branch ahead 52, behind 0; every changed path remains inside Analysis/**, Package.swift, Tests/** or iOS/**",
+    "MOI-P009 remains MISSING because all W06 accuracy evidence is synthetic/adversarial rather than rights-cleared real-audio and no current-Moises differential exists"
   ],
   "known_gaps": [
-    "Rights-safe Golden MIR benchmark infrastructure now exists, but no rights-cleared multi-genre real-audio corpus with trustworthy ground truth has been supplied/run; P009/P011/P013/P016 cannot be promoted",
-    "Tempo live drift/syncopation/weak percussion/meter ambiguity remains unverified on real audio and is the next lane-local algorithm-hardening priority",
-    "Modal/modulating key, complex chord vocabulary and varied real-world song structures remain unverified",
+    "Rights-safe Golden MIR infrastructure exists, but no rights-cleared multi-genre real-audio corpus with trustworthy ground truth has been supplied/run; P009/P011/P013/P016 cannot be promoted",
+    "Tempo synthetic hardening now covers half/double, gradual drift, weak percussion, syncopated rate and common meter ambiguity, but live drummer/rubato/swing/varied-meter behavior and authoritative beat phase remain unverified on real audio",
+    "Modal/modulating key behavior remains unverified and is the next highest-value Lane 4 algorithm-hardening target",
+    "Complex chord vocabulary/inversions and varied real-world song structures remain unverified",
     "Current section functional labels remain conservative; exact current-iPhone Moises section vocabulary and unknown semantics require reference verification",
     "A fresh full canonical checkout regression cannot run in the Worker Linux container because github.com DNS is unavailable",
     "Actual XcodeGen/Xcode Simulator build, four-Lane compile, physical-iPhone latency/RSS/thermal/battery/long-track behavior and playback-clock synchronization remain HQ Late Integration gates",
@@ -152,13 +169,12 @@
   ],
   "hq_requests": [
     "Consume Lane 4 as a semantic checkpoint when useful; preserve all owned-scope commits and resolve cross-Lane adapters centrally.",
-    "Bind the final app-owned file/decode path to AnalysisBenchmarkSignalLoading and return SHA-256 for the exact source file so L4-W05 can execute real Golden MIR runs without weakening checksum verification.",
+    "Bind the final app-owned file/decode path to AnalysisBenchmarkSignalLoading and return SHA-256 for the exact source file so the Golden MIR gate can execute real evidence without weakening checksum verification.",
     "Run a fresh canonical SwiftPM regression, XcodeGen/Xcode Simulator gate and physical-iPhone tests before treating Lane 4 evidence as product evidence.",
     "Supply/approve a rights-cleared multi-genre Golden MIR corpus and trustworthy BPM/beat/key/chord/section ground truth, then run P009/P011/P013/P016 and current-Moises differential.",
-    "Verify current iPhone Moises chord vocabulary and section functional-label/unknown behavior before expanding or narrowing the product-required vocabulary.",
-    "resource-locks.json still carries assignment_epoch 1 metadata while planning files are epoch 2/revision 4; ownership scope is unchanged, so align metadata during HQ maintenance."
+    "Verify current iPhone Moises chord vocabulary and section functional-label/unknown behavior before expanding or narrowing the product-required vocabulary."
   ],
-  "next_priority": "Autonomous Wave L4-W06: tempo/beat real-world hardening for half/double tempo, tempo drift, weak percussion, syncopation and meter ambiguity using deterministic adversarial fixtures plus the new benchmark metrics, while leaving actual Golden MIR execution external-gated.",
-  "last_updated": "2026-08-23T16:31:00+09:00",
+  "next_priority": "Autonomous Wave L4-W07: musical-key hardening for modal ambiguity, relative major/minor, modulation and confidence calibration using deterministic adversarial fixtures, while preserving current frozen MusicalKey contract and leaving real Golden MIR/current-Moises judgment external-gated.",
+  "last_updated": "2026-08-23T17:01:00+09:00",
   "writer_policy": "Only Moises-Worker-4 may update this status file. Global Queue is not used for Worker dispatch in v4."
 }
