@@ -3,10 +3,10 @@
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_pr": 4431,
-  "integration_epoch": 6,
+  "integration_epoch": 7,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "EPOCH6_L1_A11_A12_L2_AW08_AW09_L4_W10_W11_CANONICAL_PORTABLE_94_PASS_FINAL_APPLE_REAL_AUDIO_GATES_PENDING",
+  "baseline_state": "EPOCH7_L3_AW08_AW09_CANONICAL_PORTABLE_94_PASS_PLAYBACK_XCODE_DEVICE_REAL_AUDIO_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
@@ -50,11 +50,12 @@
     {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW06 through L3-AW07","semantic_commit":"14084e4342b41542ab2a06865d81cd5545488963","scope":["Playback/**"],"integration_note":"Semantic integration copied only the 11 AW06/AW07 Playback source/test/evidence files onto the current integration tree; no Worker branch merge and no Shared/App/PARITY/other-lane overwrite.","parity_promoted":false},
     {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A11 through L1-A12","semantic_commit":"d8c0df3a97da57bfbce57f5e848f88024818a3dd","scope":["Separation/**","Processing/**"],"integration_note":"Integrated only A11/A12 profile, advanced capability, provider-neutral boundary, test and validation files onto the current canonical tree.","parity_promoted":false},
     {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"L2-AW08 through L2-AW09","semantic_commit":"d8c0df3a97da57bfbce57f5e848f88024818a3dd","scope":["Library/**"],"integration_note":"Integrated only AW08 metadata sharding/scalability and AW09 export-compensation/recovery files. Apple runtime validation remains external-gated.","parity_promoted":false},
-    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"L4-W10 through L4-W11","semantic_commit":"d8c0df3a97da57bfbce57f5e848f88024818a3dd","integration_fix_commit":"e1cd2444a291d5d3a9aed338ad2a525c29a16e1f","scope":["Analysis/**","Tests/**","Package.swift"],"integration_note":"Integrated W10 robustness and W11 bounded-memory analysis layers without replacing prior HQ-fixed canonical Tempo/Chord/Section implementations. Run #43 exposed a sustained-tone false-tempo regression in the new bounded path; HQ fixed it by mirroring canonical transient fail-closed gates, then Run #46 passed 94 tests.","parity_promoted":false}
+    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"L4-W10 through L4-W11","semantic_commit":"d8c0df3a97da57bfbce57f5e848f88024818a3dd","integration_fix_commit":"e1cd2444a291d5d3a9aed338ad2a525c29a16e1f","scope":["Analysis/**","Tests/**","Package.swift"],"integration_note":"Integrated W10 robustness and W11 bounded-memory analysis layers without replacing prior HQ-fixed canonical Tempo/Chord/Section implementations. Run #43 exposed a sustained-tone false-tempo regression in the new bounded path; HQ fixed it by mirroring canonical transient fail-closed gates, then Run #46 passed 94 tests.","parity_promoted":false},
+    {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW08 through L3-AW09","semantic_commit":"0fedd47642f7c436edef2aec8c6e58b193b8c68a","scope":["Playback/**"],"integration_note":"Integrated exactly 14 AW08/AW09 Playback source/test/evidence files: spectral/perceptual-proxy differential plus a fail-closed integrated evidence chain binding AW05 transport, AW06 render identity, AW07 time-domain evidence and AW08 spectral evidence. Worker branch/status, Shared/App/PARITY and other-lane trees were not merged.","parity_promoted":false}
   ],
   "partial_canonical": [
     {"family":"SEPARATION_PROCESSING","prs":[4451,4452,4508],"parity_rows":["MOI-P003","MOI-P004","MOI-P005","MOI-P020","MOI-P021","MOI-P024"],"state":"MISSING","remaining":"commercial credentials/terms, authenticated live provider capability, rights-cleared real audio, live quality/latency/cost/cancel/retention and current-iPhone recovery/device evidence"},
-    {"family":"DSP_PLAYBACK","prs":[4450,4453,4456,4509],"parity_rows":["MOI-P006","MOI-P007","MOI-P008","MOI-P010","MOI-P012","MOI-P014","MOI-P015"],"state":"MISSING","remaining":"selected Xcode/AVFAudio compile, Apple offline/device PCM execution, physical-iPhone timing/audio-artifact evidence, spectral/perceptual tempo-pitch quality evidence, rights-cleared real-track and current-Moises differential evidence"},
+    {"family":"DSP_PLAYBACK","prs":[4450,4453,4456,4509],"parity_rows":["MOI-P006","MOI-P007","MOI-P008","MOI-P010","MOI-P012","MOI-P014","MOI-P015"],"state":"MISSING","remaining":"AW08/AW09 spectral and integrated evidence tooling is canonical, but selected Xcode/AVFAudio compile, Apple offline/device PCM execution, physical-iPhone timing/audio-artifact evidence, rights-cleared real-track/current-Moises differential, standardized perceptual/formant evidence and human listening remain"},
     {"family":"IOS_ANALYSIS","prs":[4510],"parity_rows":["MOI-P009","MOI-P011","MOI-P013","MOI-P016","MOI-P021","MOI-P022"],"state":"MISSING","remaining":"W10/W11 portable robustness and bounded-memory code is canonical and SwiftPM-tested, but actual Xcode/simulator/device build, rights-cleared MIR real-audio accuracy, current-Moises differential and physical-device RSS/thermal/battery evidence remain"},
     {"family":"IO_LIBRARY","prs":[4449,4520],"parity_rows":["MOI-P001","MOI-P002","MOI-P017","MOI-P018","MOI-P019","MOI-P020"],"state":"MISSING","remaining":"AW08/AW09 metadata durability/export compensation are canonical, but Apple Core Data runtime, actual iPhone Files/File Provider/security-scoped behavior, real codec/container execution including WMA fallback policy, storage-pressure and export/share device evidence remain"}
   ],
@@ -67,9 +68,9 @@
   "autonomous_wave_policy": {
     "merge_rule": "Do not merge every Wave. Workers accumulate meaningful lane-local waves; HQ semantic-integrates only coherent checkpoints.",
     "current_unintegrated_snapshot": {
-      "lane1": "L1-A06 through L1-A12 canonical at epoch 6; L1-A13 is current.",
-      "lane2": "L2-AW06 through L2-AW09 canonical at epoch 6; no later completed wave was reported in the latest Worker-2 status read.",
-      "lane3": "L3-AW01 through L3-AW07 canonical; L3-AW08 spectral/perceptual proxy is complete post-checkpoint but remains unintegrated as a single Wave.",
+      "lane1": "L1-A06 through L1-A12 canonical; L1-A13 is complete post-checkpoint and L1-A14 is current. A13 remains unintegrated as a single Wave.",
+      "lane2": "L2-AW06 through L2-AW09 canonical; L2-AW10 export-registration relaunch journal is complete post-checkpoint and remains unintegrated as a single Wave.",
+      "lane3": "L3-AW01 through L3-AW09 are canonical after epoch-7 semantic integration.",
       "lane4": "L4-W05 through L4-W11 canonical; L4-W12 cancellation hardening is complete and L4-W13 section cooperative-cancellation hardening is current. W12 remains unintegrated until a coherent checkpoint forms."
     }
   },
@@ -80,10 +81,12 @@
       "authenticated_advanced_model_access": "PENDING_EXTERNAL",
       "complete_current_iphone_custom_instrument_lock_map": "PENDING_REFERENCE_EVIDENCE",
       "hifi_provider_mapping": "PENDING_AUTHORITATIVE_PROVIDER_EVIDENCE",
+      "a13_source_relative_start_time_contract": "PENDING_ONLY_IF_REFERENCE_REQUIRES_NONZERO_MEDIA_START_METADATA",
       "parity_promotion": "NONE"
     },
     "lane2": {
       "aw08_aw09_checkpoint_consumed_semantically": true,
+      "aw10_export_registration_relaunch": "COMPLETE_POST_CHECKPOINT_SINGLE_WAVE_UNINTEGRATED",
       "startup_composition_request": "PENDING_HQ_APP_INTEGRATION",
       "apple_core_data_and_file_provider_device_suite": "PENDING_APPLE_RUNTIME",
       "real_codec_fixture_matrix": "PENDING_APPLE_RUNTIME",
@@ -94,11 +97,13 @@
     },
     "lane3": {
       "aw06_aw07_checkpoint_consumed_semantically": true,
-      "aw08_spectral_proxy": "COMPLETE_POST_CHECKPOINT_SINGLE_WAVE_UNINTEGRATED",
+      "aw08_aw09_checkpoint_consumed_semantically": true,
       "selected_xcode_avfaudio_compile": "PENDING_APPLE_RUNTIME",
+      "integrated_evidence_apple_bridge_typecheck": "PENDING_APPLE_RUNTIME",
       "offline_real_pcm_execution": "PENDING_RIGHTS_CLEARED_APPLE_RUNTIME",
       "physical_device_capture_and_listening": "PENDING_APPLE_RUNTIME_HUMAN_GATE",
       "current_moises_pcm_differential": "PENDING_REFERENCE_EVIDENCE",
+      "standardized_perceptual_formant_evidence": "PENDING_REAL_AUDIO_HUMAN_REVIEW",
       "parity_promotion": "NONE"
     },
     "lane4": {
@@ -115,15 +120,22 @@
   "branch_hygiene": {
     "worker3_status": "WORKER_BRANCH_STATUS_STALE",
     "worker3_branch_status_schema": 1,
-    "latest_observed_integration_status_commit": "e280c30ae016243258f71f74f2de3f31fc227b0b",
-    "assessment": "Worker-branch worker-3.json remains schema-1 stale while autonomous AW08 status was again written directly to the integration branch. Branch and integration history prove AW08 code/evidence exists on the Worker branch; HQ continues to trust branch reality, does not reset/discard Worker code, and leaves the single AW08 wave unintegrated until a coherent checkpoint forms."
+    "latest_observed_integration_status_commit": "5300111197e8a72e105a9d538e5ff3b5600615ec",
+    "worker3_actual_lane_head_recorded_by_status": "f577e55613c695a61886197d4a6e1bae9e49144e",
+    "assessment": "Worker-branch worker-3.json remains schema-1 stale while AW09 status was again written directly to the integration branch. Branch compare and integration status history prove AW08/AW09 code/evidence exists on moises/wp3-playback-dsp; HQ trusted branch reality, semantic-integrated only the 14 owned Playback files, did not reset/discard Worker code and did not HQ-edit the Worker-branch status file."
   },
   "hq_integration_validation": {
     "workflow": ".github/workflows/moises-hq-integration.yml",
     "workflow_commit": "3007de9ed70f1ad5d8f0fc321560e1259dc8a437",
     "validation_pr": 4517,
-    "state": "PORTABLE_SWIFTPM_94_PASS_EPOCH6_FINAL_APPLE_GATES_PENDING",
-    "epoch6_semantic_commit": "d8c0df3a97da57bfbce57f5e848f88024818a3dd",
+    "state": "PORTABLE_SWIFTPM_94_PASS_EPOCH7_PLAYBACK_FILES_UNHANDLED_FINAL_APPLE_GATES_PENDING",
+    "epoch7_semantic_commit": "0fedd47642f7c436edef2aec8c6e58b193b8c68a",
+    "successful_code_commit": "0fedd47642f7c436edef2aec8c6e58b193b8c68a",
+    "successful_run_id": 32646370188,
+    "successful_run_number": 50,
+    "successful_result": "SUCCESS",
+    "successful_test_count": 94,
+    "unhandled_file_count": 95,
     "epoch6_regression_failure": {
       "run_id": 32644877536,
       "run_number": 43,
@@ -132,21 +144,15 @@
       "fix_commit": "e1cd2444a291d5d3a9aed338ad2a525c29a16e1f",
       "resolution": "Added bounded-memory transientness/contrast fail-closed gates aligned with canonical TempoBeatAnalyzer; tests were not weakened."
     },
-    "successful_code_commit": "e1cd2444a291d5d3a9aed338ad2a525c29a16e1f",
-    "successful_run_id": 32645019238,
-    "successful_run_number": 46,
-    "successful_result": "SUCCESS",
-    "successful_test_count": 94,
-    "unhandled_file_count": 81,
     "prior_failures": [
       {"run_id":32640524078,"run_number":18,"failure":"stale ChordTimeline section-empty expectation","fix_commit":"4b56de63e2c69285828b99f535d72632d7671d5c"},
       {"run_id":32641186318,"run_number":28,"failure":"ChordVocabularyHardeningTests Optional Double accuracy compile error","fix_commit":"aa8e614dbdcaf8300b85ecf8de051e51b31d24b2"},
       {"run_id":32641325804,"run_number":30,"failure":"tempo 180 BPM false ambiguity rejection plus sustained-chord false tempo","fix_commit":"4059424833265857f79a7ed080ee0720fadac41a"}
     ],
-    "portable_scope_note": "Run #46 compiles and executes the newly canonical W10/W11 Analysis robustness/bounded-memory sources and tests through Package.swift. It still reports 81 unhandled files, including substantial Playback/Processing source/test/evidence. Therefore SUCCESS is not a full Playback/Processing/AVFAudio/Xcode/iPhone compile claim. Lane1 Python/provider code and Lane2 Library code also retain their own lane-local validation rather than being proven by this SwiftPM gate.",
-    "resource_locks_epoch6_commit": "890b35a5f8b63663e327baae28858432e80252df",
+    "portable_scope_note": "Run #50 passes the existing 94 portable SwiftPM tests, but reports 95 unhandled files. The increase from 81 to 95 is exactly the 14 AW08/AW09 Playback source/test/evidence files integrated in Epoch7; the log explicitly lists them as unhandled. Therefore Run #50 proves no regression in the selected MoisesAudioCore/Analysis/HostCore package, but does NOT compile or execute the new Lane3 spectral/integrated-evidence code, AVFAudio, full Playback, Xcode or iPhone runtime.",
+    "resource_locks_epoch7_commit": "c0216b2fa7c30e93f9706f38a9521548795d797a",
     "parity_effect": "NONE",
-    "rule": "Portable SwiftPM PASS does not promote PARITY and does not replace selected Xcode/Apple runtime, real-device, real-audio or current-Moises differential gates."
+    "rule": "Portable SwiftPM PASS does not promote PARITY and does not replace selected Xcode/Apple runtime, real-device, real-audio, standardized perceptual/human listening or current-Moises differential gates."
   },
   "worker_stop_policy": {
     "valid": ["all meaningful lane-local work and preparation exhausted pending an external/human input", "required frozen Shared/App contract change", "ownership boundary", "unsafe or technically impossible operation"],
