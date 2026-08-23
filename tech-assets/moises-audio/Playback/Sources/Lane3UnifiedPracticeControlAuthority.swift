@@ -10,6 +10,7 @@ public enum Lane3PitchControlRejectionReason: String, Codable, Sendable {
     case coordinatorChangedDuringMutation
     case clickGenerationChangedDuringPitch
     case pitchReadbackMismatch
+    case backendRequiresRecovery
     case ticketOverflow
 }
 
@@ -49,6 +50,8 @@ public struct Lane3PitchControlFailureReceipt: Equatable, Sendable {
     public let requestedSemitones: Double
     public let reason: Lane3PitchControlRejectionReason?
     public let errorDescription: String
+    public let automaticRecoveryAttempted: Bool
+    public let automaticRecoverySucceeded: Bool
     public let callerCancellationObservedAfterDispatch: Bool
     public let parityPromotionAllowed: Bool
 
@@ -57,6 +60,8 @@ public struct Lane3PitchControlFailureReceipt: Equatable, Sendable {
         requestedSemitones: Double,
         reason: Lane3PitchControlRejectionReason?,
         errorDescription: String,
+        automaticRecoveryAttempted: Bool = false,
+        automaticRecoverySucceeded: Bool = false,
         callerCancellationObservedAfterDispatch: Bool,
         parityPromotionAllowed: Bool = false
     ) {
@@ -64,6 +69,8 @@ public struct Lane3PitchControlFailureReceipt: Equatable, Sendable {
         self.requestedSemitones = requestedSemitones
         self.reason = reason
         self.errorDescription = errorDescription
+        self.automaticRecoveryAttempted = automaticRecoveryAttempted
+        self.automaticRecoverySucceeded = automaticRecoverySucceeded
         self.callerCancellationObservedAfterDispatch = callerCancellationObservedAfterDispatch
         self.parityPromotionAllowed = parityPromotionAllowed
     }
@@ -104,18 +111,14 @@ public struct Lane3UnifiedPracticeControlSnapshot: Equatable, Sendable {
 
 /// AW23 selected product-facing Lane-3 practice authority.
 ///
-/// Pitch/key is intentionally not modeled as a Playback reschedule token because it does not move the
-/// transport or the click timeline. It still must not bypass the coordinator-backed tempo/click path:
-/// a stale pitch candidate can otherwise overwrite a concurrently committed tempo state inside the
-/// transactional DSP controller. This actor therefore gives pitch an exclusive DSP mutation barrier
-/// while allowing normal Playback/AW16 coalescing to remain concurrent whenever no pitch is executing.
+/// Pitch/key does not move transport or click time, so it deliberately consumes no Playback or click
+/// generation. It nevertheless must be serialized against coordinator-backed tempo/click/transport
+/// work: a direct controller pitch call can otherwise apply a candidate built from stale tempo state
+/// and overwrite a newer transaction. This actor provides an exclusive pitch barrier while leaving
+/// normal AW16 continuous-control concurrency/coalescing intact whenever no pitch is executing.
 ///
-/// Selected product integration rules:
-/// - all Lane-3 product transport/practice operations pass through this object;
-/// - pitch/key changes use `submitPitchSemitones` and never call the controller directly;
-/// - interruption begin closes pitch admission before awaiting any older in-flight pitch;
-/// - rapid pitch changes keep at most one pending latest value while one mutation is executing;
-/// - pitch never advances click generation and must preserve coordinator/lifecycle authority.
+/// Selected integration must route ALL Lane-3 product transport/practice controls through this object.
+/// Direct App calls to `PracticeDSPProductionController.setPitchSemitones` are a bypass.
 public actor Lane3UnifiedPracticeControlAuthority {
     private struct PendingPitch {
         let ticket: UInt64
@@ -123,6 +126,7 @@ public actor Lane3UnifiedPracticeControlAuthority {
         let continuation: CheckedContinuation<Lane3PitchControlOutcome, Never>
     }
 
+    private let projectID: ProjectID
     private let transport: Lane3InstrumentedInterruptionGate
     private let practice: Lane3SerializedPracticeClickGate
     private let controller: PracticeDSPProductionController
@@ -136,6 +140,8 @@ public actor Lane3UnifiedPracticeControlAuthority {
     private var pitchBarrierClosed = false
     private var interruptionBlocksPitch = false
     private var executingPitchTicket: UInt64?
+    private var backendDispatchStarted = false
+    private var cancellationBeforeDispatch: Set<UInt64> = []
     private var cancellationAfterDispatch: Set<UInt64> = []
 
     private var sharedOperationsInFlight = 0
@@ -143,6 +149,7 @@ public actor Lane3UnifiedPracticeControlAuthority {
     private var sharedQuiescenceWaiters: [CheckedContinuation<Void, Never>] = []
 
     public init(
+        projectID: ProjectID,
         transport: Lane3InstrumentedInterruptionGate,
         practice: Lane3SerializedPracticeClickGate,
         controller: PracticeDSPProductionController,
@@ -150,6 +157,7 @@ public actor Lane3UnifiedPracticeControlAuthority {
         telemetryProbe: Lane3DSPRuntimeTelemetryProbe? = nil,
         pitchRange: ClosedRange<Double> = PracticeDSPCapabilities.appleTimePitchBaseline.pitchSemitoneRange
     ) {
+        self.projectID = projectID
         self.transport = transport
         self.practice = practice
         self.controller = controller
@@ -182,133 +190,83 @@ public actor Lane3UnifiedPracticeControlAuthority {
         }
     }
 
-    // MARK: - Selected product transport route
+    // MARK: Selected transport route
 
-    public func submitSeek(
-        to positionSeconds: Double,
-        resume: Bool,
-        loop: PlaybackLoopRange?
-    ) async -> Lane3InterruptionGuardedOutcome {
-        await enterSharedOperation()
-        let result = await transport.submitSeek(to: positionSeconds, resume: resume, loop: loop)
-        leaveSharedOperation()
-        return result
+    public func submitSeek(to positionSeconds: Double, resume: Bool, loop: PlaybackLoopRange?) async -> Lane3InterruptionGuardedOutcome {
+        await withShared { await transport.submitSeek(to: positionSeconds, resume: resume, loop: loop) }
     }
 
     public func submitLoop(_ loop: PlaybackLoopRange?) async -> Lane3InterruptionGuardedOutcome {
-        await enterSharedOperation()
-        let result = await transport.submitLoop(loop)
-        leaveSharedOperation()
-        return result
+        await withShared { await transport.submitLoop(loop) }
     }
 
     public func submitTempoRatio(_ ratio: Double) async -> Lane3InterruptionGuardedOutcome {
-        await enterSharedOperation()
-        let result: Lane3InterruptionGuardedOutcome
-        if let telemetryProbe {
-            result = await telemetryProbe.measureAsync(kind: .tempo) {
-                await transport.submitTempoRatio(ratio)
+        await withShared {
+            if let telemetryProbe {
+                return await telemetryProbe.measureAsync(kind: .tempo) {
+                    await transport.submitTempoRatio(ratio)
+                }
             }
-        } else {
-            result = await transport.submitTempoRatio(ratio)
+            return await transport.submitTempoRatio(ratio)
         }
-        leaveSharedOperation()
-        return result
     }
 
     public func submitMediaLoad(_ asset: LocalAudioAsset) async -> Lane3InterruptionGuardedOutcome {
-        await enterSharedOperation()
-        let result = await transport.submitMediaLoad(asset)
-        leaveSharedOperation()
-        return result
+        await withShared { await transport.submitMediaLoad(asset) }
     }
 
     public func submitMediaReplacement(
-        stems: [StemArtifact],
-        positionSeconds: Double,
-        resume: Bool,
-        loop: PlaybackLoopRange?
+        stems: [StemArtifact], positionSeconds: Double, resume: Bool, loop: PlaybackLoopRange?
     ) async -> Lane3InterruptionGuardedOutcome {
-        await enterSharedOperation()
-        let result = await transport.submitMediaReplacement(
-            stems: stems,
-            positionSeconds: positionSeconds,
-            resume: resume,
-            loop: loop
-        )
-        leaveSharedOperation()
-        return result
+        await withShared {
+            await transport.submitMediaReplacement(
+                stems: stems, positionSeconds: positionSeconds, resume: resume, loop: loop
+            )
+        }
     }
 
     public func submitPlay() async -> Lane3InterruptionGuardedOutcome {
-        await enterSharedOperation()
-        let result = await transport.submitPlay()
-        leaveSharedOperation()
-        return result
+        await withShared { await transport.submitPlay() }
     }
 
     public func submitPause() async -> Lane3InterruptionGuardedOutcome {
-        await enterSharedOperation()
-        let result = await transport.submitPause()
-        leaveSharedOperation()
-        return result
+        await withShared { await transport.submitPause() }
     }
 
     public func submitRecovery() async -> Lane3InterruptionGuardedOutcome {
-        await enterSharedOperation()
-        let result: Lane3InterruptionGuardedOutcome
-        if let telemetryProbe {
-            result = await telemetryProbe.measureAsync(kind: .recovery) {
-                await transport.submitRecovery()
+        await withShared {
+            if let telemetryProbe {
+                return await telemetryProbe.measureAsync(kind: .recovery) {
+                    await transport.submitRecovery()
+                }
             }
-        } else {
-            result = await transport.submitRecovery()
+            return await transport.submitRecovery()
         }
-        leaveSharedOperation()
-        return result
     }
 
-    // MARK: - Selected practice click route
+    // MARK: Selected click/practice route
 
     @discardableResult
-    public func setMetronomeEnabled(
-        _ enabled: Bool
-    ) async throws -> PracticeDSPGenerationCoordinatorReceipt {
-        await enterSharedOperation()
-        do {
-            let result: PracticeDSPGenerationCoordinatorReceipt
+    public func setMetronomeEnabled(_ enabled: Bool) async throws -> PracticeDSPGenerationCoordinatorReceipt {
+        try await withSharedThrowing {
             if let telemetryProbe {
-                result = try await telemetryProbe.measureAsync(kind: .metronomeMutation) {
+                return try await telemetryProbe.measureAsync(kind: .metronomeMutation) {
                     try await practice.setMetronomeEnabled(enabled)
                 }
-            } else {
-                result = try await practice.setMetronomeEnabled(enabled)
             }
-            leaveSharedOperation()
-            return result
-        } catch {
-            leaveSharedOperation()
-            throw error
+            return try await practice.setMetronomeEnabled(enabled)
         }
     }
 
     @discardableResult
     public func scheduleCountIn(clicks: Int) async throws -> Lane3CountInArmAuthorization {
-        await enterSharedOperation()
-        do {
-            let result: Lane3CountInArmAuthorization
+        try await withSharedThrowing {
             if let telemetryProbe {
-                result = try await telemetryProbe.measureAsync(kind: .countInArm) {
+                return try await telemetryProbe.measureAsync(kind: .countInArm) {
                     try await practice.scheduleCountIn(clicks: clicks)
                 }
-            } else {
-                result = try await practice.scheduleCountIn(clicks: clicks)
             }
-            leaveSharedOperation()
-            return result
-        } catch {
-            leaveSharedOperation()
-            throw error
+            return try await practice.scheduleCountIn(clicks: clicks)
         }
     }
 
@@ -320,9 +278,8 @@ public actor Lane3UnifiedPracticeControlAuthority {
         sampleRate: Double,
         downbeatStride: Int = 4
     ) async throws -> DSPCountInPlan {
-        await enterSharedOperation()
-        do {
-            let result = try await practice.makeCountInPlan(
+        try await withSharedThrowing {
+            try await practice.makeCountInPlan(
                 authorization: authorization,
                 sourceBeatIntervalSeconds: sourceBeatIntervalSeconds,
                 musicStartSampleTime: musicStartSampleTime,
@@ -330,11 +287,6 @@ public actor Lane3UnifiedPracticeControlAuthority {
                 sampleRate: sampleRate,
                 downbeatStride: downbeatStride
             )
-            leaveSharedOperation()
-            return result
-        } catch {
-            leaveSharedOperation()
-            throw error
         }
     }
 
@@ -342,21 +294,13 @@ public actor Lane3UnifiedPracticeControlAuthority {
     public func markCountInScheduleCommitted(
         authorization: Lane3CountInArmAuthorization
     ) async throws -> PracticeDSPSerializedCountInReceipt {
-        await enterSharedOperation()
-        do {
-            let result: PracticeDSPSerializedCountInReceipt
+        try await withSharedThrowing {
             if let telemetryProbe {
-                result = try await telemetryProbe.measureAsync(kind: .countInConsume) {
+                return try await telemetryProbe.measureAsync(kind: .countInConsume) {
                     try await practice.markCountInScheduleCommitted(authorization: authorization)
                 }
-            } else {
-                result = try await practice.markCountInScheduleCommitted(authorization: authorization)
             }
-            leaveSharedOperation()
-            return result
-        } catch {
-            leaveSharedOperation()
-            throw error
+            return try await practice.markCountInScheduleCommitted(authorization: authorization)
         }
     }
 
@@ -369,9 +313,8 @@ public actor Lane3UnifiedPracticeControlAuthority {
         sampleRate: Double,
         downbeatStride: Int = 4
     ) async throws -> PracticeDSPMetronomeExecutionPlan {
-        await enterSharedOperation()
-        do {
-            let result = try await practice.makeMetronomeRestorePlan(
+        try await withSharedThrowing {
+            try await practice.makeMetronomeRestorePlan(
                 authorization: authorization,
                 beatTimesSeconds: beatTimesSeconds,
                 sourceStartSeconds: sourceStartSeconds,
@@ -380,20 +323,14 @@ public actor Lane3UnifiedPracticeControlAuthority {
                 sampleRate: sampleRate,
                 downbeatStride: downbeatStride
             )
-            leaveSharedOperation()
-            return result
-        } catch {
-            leaveSharedOperation()
-            throw error
         }
     }
 
-    // MARK: - Interruption lifecycle route
+    // MARK: Interruption lifecycle route
 
     public func submitInterruptionBegan() async -> Lane3SerializedInterruptionBeginEnvelope {
-        // Close pitch admission synchronously before the first await. Pending pitch is not an issued
-        // mutation and may be safely superseded. An already executing pitch is allowed to finish;
-        // interruption then observes its committed state before entering AW20/AW18.
+        // Close pitch admission before the first await. A pending pitch has not touched the backend
+        // and is rejected; a backend-dispatched pitch is allowed to complete before the boundary.
         interruptionBlocksPitch = true
         if let pendingPitch {
             self.pendingPitch = nil
@@ -402,34 +339,19 @@ public actor Lane3UnifiedPracticeControlAuthority {
                 reason: .interruptionOrLifecycleBlocked
             ))
         }
-
-        await enterSharedOperation()
-        let result: Lane3SerializedInterruptionBeginEnvelope
-        if let telemetryProbe {
-            result = await telemetryProbe.measureAsync(kind: .countInDiscard) {
-                await practice.submitInterruptionBegan()
-            }
-        } else {
-            result = await practice.submitInterruptionBegan()
-        }
-        leaveSharedOperation()
-        return result
+        return await withShared { await practice.submitInterruptionBegan() }
     }
 
-    public func submitInterruptionEnded(
-        shouldResume: Bool
-    ) async -> Lane3PracticeInterruptionEndEnvelope {
-        await enterSharedOperation()
-        let result = await practice.submitInterruptionEnded(shouldResume: shouldResume)
-        leaveSharedOperation()
+    public func submitInterruptionEnded(shouldResume: Bool) async -> Lane3PracticeInterruptionEndEnvelope {
+        let result = await withShared {
+            await practice.submitInterruptionEnded(shouldResume: shouldResume)
+        }
         await reopenPitchIfLifecycleIdle()
         return result
     }
 
     public func retryEndedInterruptionRecovery() async -> Lane3PracticeInterruptionEndEnvelope {
-        await enterSharedOperation()
-        let result = await practice.retryEndedInterruptionRecovery()
-        leaveSharedOperation()
+        let result = await withShared { await practice.retryEndedInterruptionRecovery() }
         await reopenPitchIfLifecycleIdle()
         return result
     }
@@ -445,7 +367,7 @@ public actor Lane3UnifiedPracticeControlAuthority {
         )
     }
 
-    // MARK: - Pitch latest-wins drain
+    // MARK: Pitch latest-wins queue
 
     private func allocatePitchTicket() -> UInt64? {
         let (next, overflow) = nextPitchTicket.addingReportingOverflow(1)
@@ -457,68 +379,76 @@ public actor Lane3UnifiedPracticeControlAuthority {
     private func enqueuePitch(_ command: PendingPitch) {
         if interruptionBlocksPitch {
             command.continuation.resume(returning: .rejectedBeforeDispatch(
-                ticket: command.ticket,
-                reason: .interruptionOrLifecycleBlocked
+                ticket: command.ticket, reason: .interruptionOrLifecycleBlocked
             ))
             return
         }
         if let previous = pendingPitch {
             previous.continuation.resume(returning: .supersededBeforeDispatch(
-                ticket: previous.ticket,
-                byTicket: command.ticket
+                ticket: previous.ticket, byTicket: command.ticket
             ))
         }
         pendingPitch = command
-        guard !pitchDrainRunning else { return }
-        pitchDrainRunning = true
-        Task { await self.drainPitchQueue() }
+        if !pitchDrainRunning {
+            pitchDrainRunning = true
+            Task { await self.drainPitchQueue() }
+        }
+    }
+
+    private func cancelPitch(ticket: UInt64) {
+        if let pendingPitch, pendingPitch.ticket == ticket {
+            self.pendingPitch = nil
+            pendingPitch.continuation.resume(returning: .cancelledBeforeDispatch(ticket: ticket))
+            return
+        }
+        guard executingPitchTicket == ticket else { return }
+        if backendDispatchStarted {
+            cancellationAfterDispatch.insert(ticket)
+        } else {
+            cancellationBeforeDispatch.insert(ticket)
+        }
     }
 
     private func drainPitchQueue() async {
         while let command = pendingPitch {
             pendingPitch = nil
-            if Task.isCancelled {
+            executingPitchTicket = command.ticket
+            backendDispatchStarted = false
+            pitchBarrierClosed = true
+            await waitForSharedQuiescence()
+
+            if cancellationBeforeDispatch.remove(command.ticket) != nil {
+                finishPitchBarrier()
                 command.continuation.resume(returning: .cancelledBeforeDispatch(ticket: command.ticket))
                 continue
             }
             if interruptionBlocksPitch {
+                finishPitchBarrier()
                 command.continuation.resume(returning: .rejectedBeforeDispatch(
-                    ticket: command.ticket,
-                    reason: .interruptionOrLifecycleBlocked
+                    ticket: command.ticket, reason: .interruptionOrLifecycleBlocked
                 ))
                 continue
             }
 
-            pitchBarrierClosed = true
-            await waitForSharedQuiescence()
-
-            if interruptionBlocksPitch {
-                pitchBarrierClosed = false
-                resumeSharedAdmissionWaiters()
-                command.continuation.resume(returning: .rejectedBeforeDispatch(
-                    ticket: command.ticket,
-                    reason: .interruptionOrLifecycleBlocked
-                ))
-                continue
-            }
-
-            executingPitchTicket = command.ticket
+            backendDispatchStarted = true
             let outcome = await executePitch(command)
-            executingPitchTicket = nil
-            pitchBarrierClosed = false
-            resumeSharedAdmissionWaiters()
+            finishPitchBarrier()
             command.continuation.resume(returning: outcome)
         }
         pitchDrainRunning = false
     }
 
+    private func finishPitchBarrier() {
+        executingPitchTicket = nil
+        backendDispatchStarted = false
+        pitchBarrierClosed = false
+        resumeSharedAdmissionWaiters()
+    }
+
     private func executePitch(_ command: PendingPitch) async -> Lane3PitchControlOutcome {
         let lifecycleBefore = await transport.snapshot()
         guard lifecycleBefore.phase == .idle else {
-            return .rejectedBeforeDispatch(
-                ticket: command.ticket,
-                reason: .interruptionOrLifecycleBlocked
-            )
+            return .rejectedBeforeDispatch(ticket: command.ticket, reason: .interruptionOrLifecycleBlocked)
         }
         guard !lifecycleBefore.authorityRecoveryBlocked else {
             return .rejectedBeforeDispatch(ticket: command.ticket, reason: .transportRecoveryBlocked)
@@ -529,40 +459,34 @@ public actor Lane3UnifiedPracticeControlAuthority {
             return .rejectedBeforeDispatch(ticket: command.ticket, reason: .coordinatorPoisoned)
         }
         guard !authorityBefore.operationInFlight else {
-            return .rejectedBeforeDispatch(
-                ticket: command.ticket,
-                reason: .coordinatorBusyOutsideSelectedRoute
-            )
+            return .rejectedBeforeDispatch(ticket: command.ticket, reason: .coordinatorBusyOutsideSelectedRoute)
         }
 
         let stateBefore: PracticeDSPGenerationCoordinatorSnapshot
         do {
             stateBefore = try await coordinator.snapshot()
         } catch {
-            return .failedAfterDispatch(Lane3PitchControlFailureReceipt(
-                ticket: command.ticket,
-                requestedSemitones: command.semitones,
-                reason: nil,
-                errorDescription: "preflight snapshot failed: \(error)",
-                callerCancellationObservedAfterDispatch: false
+            return .failedAfterDispatch(makeFailure(
+                command, reason: nil, error: "preflight snapshot failed: \(error)", recovery: nil
             ))
         }
 
         do {
             if let telemetryProbe {
                 try await telemetryProbe.measureAsync(kind: .pitch) {
-                    try await controller.setPitchSemitones(command.semitones, projectID: ProjectIDBridge.id(from: stateBefore))
+                    try await controller.setPitchSemitones(command.semitones, projectID: projectID)
                 }
             } else {
-                try await controller.setPitchSemitones(command.semitones, projectID: ProjectIDBridge.id(from: stateBefore))
+                try await controller.setPitchSemitones(command.semitones, projectID: projectID)
             }
         } catch {
-            return .failedAfterDispatch(Lane3PitchControlFailureReceipt(
-                ticket: command.ticket,
-                requestedSemitones: command.semitones,
-                reason: nil,
-                errorDescription: String(describing: error),
-                callerCancellationObservedAfterDispatch: cancellationAfterDispatch.remove(command.ticket) != nil
+            let needsRecovery = (try? await controller.requiresBackendResynchronization(projectID: projectID)) == true
+            let recovery = needsRecovery ? await automaticRecovery() : nil
+            return .failedAfterDispatch(makeFailure(
+                command,
+                reason: needsRecovery ? .backendRequiresRecovery : nil,
+                error: String(describing: error),
+                recovery: recovery
             ))
         }
 
@@ -572,49 +496,37 @@ public actor Lane3UnifiedPracticeControlAuthority {
         do {
             stateAfter = try await coordinator.snapshot()
         } catch {
-            return .failedAfterDispatch(Lane3PitchControlFailureReceipt(
-                ticket: command.ticket,
-                requestedSemitones: command.semitones,
-                reason: nil,
-                errorDescription: "postflight snapshot failed: \(error)",
-                callerCancellationObservedAfterDispatch: cancellationAfterDispatch.remove(command.ticket) != nil
+            return .failedAfterDispatch(makeFailure(
+                command, reason: nil, error: "postflight snapshot failed: \(error)", recovery: nil
             ))
         }
 
-        guard lifecycleAfter.phase == .idle,
-              lifecycleAfter.lifecycleRevision == lifecycleBefore.lifecycleRevision else {
-            return .failedAfterDispatch(failure(
-                command,
-                reason: .lifecycleChangedDuringMutation,
-                cancellation: cancellationAfterDispatch.remove(command.ticket) != nil
-            ))
+        let structuralFailure: Lane3PitchControlRejectionReason?
+        if lifecycleAfter.phase != .idle || lifecycleAfter.lifecycleRevision != lifecycleBefore.lifecycleRevision {
+            structuralFailure = .lifecycleChangedDuringMutation
+        } else if authorityAfter.operationSerial != authorityBefore.operationSerial
+                    || authorityAfter.operationInFlight
+                    || authorityAfter.isPoisoned
+                    || authorityAfter.activeBinding != authorityBefore.activeBinding {
+            structuralFailure = .coordinatorChangedDuringMutation
+        } else if stateAfter.dspState.scheduleGeneration != stateBefore.dspState.scheduleGeneration {
+            structuralFailure = .clickGenerationChangedDuringPitch
+        } else if abs(stateAfter.dspState.pitchSemitones - command.semitones) > 0.000_001 {
+            structuralFailure = .pitchReadbackMismatch
+        } else {
+            structuralFailure = nil
         }
-        guard authorityAfter.operationSerial == authorityBefore.operationSerial,
-              !authorityAfter.operationInFlight,
-              !authorityAfter.isPoisoned,
-              authorityAfter.activeBinding == authorityBefore.activeBinding else {
-            return .failedAfterDispatch(failure(
+
+        if let structuralFailure {
+            let recovery = await automaticRecovery()
+            return .failedAfterDispatch(makeFailure(
                 command,
-                reason: .coordinatorChangedDuringMutation,
-                cancellation: cancellationAfterDispatch.remove(command.ticket) != nil
-            ))
-        }
-        guard stateAfter.dspState.scheduleGeneration == stateBefore.dspState.scheduleGeneration else {
-            return .failedAfterDispatch(failure(
-                command,
-                reason: .clickGenerationChangedDuringPitch,
-                cancellation: cancellationAfterDispatch.remove(command.ticket) != nil
-            ))
-        }
-        guard abs(stateAfter.dspState.pitchSemitones - command.semitones) <= 0.000_001 else {
-            return .failedAfterDispatch(failure(
-                command,
-                reason: .pitchReadbackMismatch,
-                cancellation: cancellationAfterDispatch.remove(command.ticket) != nil
+                reason: structuralFailure,
+                error: structuralFailure.rawValue,
+                recovery: recovery
             ))
         }
 
-        let cancellation = cancellationAfterDispatch.remove(command.ticket) != nil
         return .executed(Lane3PitchControlExecutionReceipt(
             ticket: command.ticket,
             requestedSemitones: command.semitones,
@@ -622,42 +534,61 @@ public actor Lane3UnifiedPracticeControlAuthority {
             clickGenerationPreserved: true,
             lifecycleRevisionPreserved: true,
             coordinatorOperationSerialPreserved: true,
-            callerCancellationObservedAfterDispatch: cancellation
+            callerCancellationObservedAfterDispatch: cancellationAfterDispatch.remove(command.ticket) != nil
         ))
     }
 
-    private func failure(
+    private func automaticRecovery() async -> Bool {
+        let outcome: Lane3InterruptionGuardedOutcome
+        if let telemetryProbe {
+            outcome = await telemetryProbe.measureAsync(kind: .recovery) {
+                await transport.submitRecovery()
+            }
+        } else {
+            outcome = await transport.submitRecovery()
+        }
+        guard case let .transport(transportOutcome) = outcome else { return false }
+        if case .executed = transportOutcome { return true }
+        if case let .failedAfterDispatch(receipt) = transportOutcome {
+            return receipt.automaticRecovery.succeeded
+        }
+        return false
+    }
+
+    private func makeFailure(
         _ command: PendingPitch,
-        reason: Lane3PitchControlRejectionReason,
-        cancellation: Bool
+        reason: Lane3PitchControlRejectionReason?,
+        error: String,
+        recovery: Bool?
     ) -> Lane3PitchControlFailureReceipt {
         Lane3PitchControlFailureReceipt(
             ticket: command.ticket,
             requestedSemitones: command.semitones,
             reason: reason,
-            errorDescription: reason.rawValue,
-            callerCancellationObservedAfterDispatch: cancellation
+            errorDescription: error,
+            automaticRecoveryAttempted: recovery != nil,
+            automaticRecoverySucceeded: recovery ?? false,
+            callerCancellationObservedAfterDispatch: cancellationAfterDispatch.remove(command.ticket) != nil
         )
     }
 
-    private func cancelPitch(ticket: UInt64) {
-        if let pendingPitch, pendingPitch.ticket == ticket {
-            self.pendingPitch = nil
-            pendingPitch.continuation.resume(returning: .cancelledBeforeDispatch(ticket: ticket))
-            return
-        }
-        if executingPitchTicket == ticket {
-            cancellationAfterDispatch.insert(ticket)
-        }
+    // MARK: Shared/exclusive barrier
+
+    private func withShared<T>(_ operation: () async -> T) async -> T {
+        await enterSharedOperation()
+        defer { leaveSharedOperation() }
+        return await operation()
     }
 
-    // MARK: - Shared/exclusive mutation barrier
+    private func withSharedThrowing<T>(_ operation: () async throws -> T) async throws -> T {
+        await enterSharedOperation()
+        defer { leaveSharedOperation() }
+        return try await operation()
+    }
 
     private func enterSharedOperation() async {
         while pitchBarrierClosed {
-            await withCheckedContinuation { continuation in
-                sharedAdmissionWaiters.append(continuation)
-            }
+            await withCheckedContinuation { sharedAdmissionWaiters.append($0) }
         }
         sharedOperationsInFlight += 1
     }
@@ -674,9 +605,7 @@ public actor Lane3UnifiedPracticeControlAuthority {
 
     private func waitForSharedQuiescence() async {
         while sharedOperationsInFlight > 0 {
-            await withCheckedContinuation { continuation in
-                sharedQuiescenceWaiters.append(continuation)
-            }
+            await withCheckedContinuation { sharedQuiescenceWaiters.append($0) }
         }
     }
 
@@ -691,15 +620,5 @@ public actor Lane3UnifiedPracticeControlAuthority {
         if lifecycle.phase == .idle, !lifecycle.authorityRecoveryBlocked {
             interruptionBlocksPitch = false
         }
-    }
-}
-
-/// `PracticeDSPGenerationCoordinatorSnapshot` intentionally does not expose ProjectID. The selected
-/// AW23 authority therefore needs the exact project-scoped controller ID at construction time rather
-/// than deriving it from snapshots. This placeholder is deliberately unavailable and prevents an
-/// accidental attempt to infer or persist project identity through telemetry/evidence.
-private enum ProjectIDBridge {
-    static func id(from snapshot: PracticeDSPGenerationCoordinatorSnapshot) -> ProjectID {
-        fatalError("Lane3UnifiedPracticeControlAuthority must be constructed with explicit projectID")
     }
 }
