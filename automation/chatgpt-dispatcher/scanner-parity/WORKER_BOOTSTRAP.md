@@ -8,7 +8,7 @@
 ## 正本
 - Notion「🚀 【標準手順】AIアプリ開発・公開フロー v2.7」
 - Notion「分割セッション手順 v1.1｜AIアプリ開発のQueue駆動・並列化・統合運用」
-- 本プロジェクトNotion正本（作成後にURL/IDを追記）
+- Notion「書籍スキャナー同等化｜動画式ブックスキャナー＋AIデータ化 正本」 page id `3c509c10-697d-8139-867e-c3f7605665ed`
 - GitHub `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
 - Integration branch `scanner-parity/integration`
 - Dispatcher branch `automation/scanner-parity-dispatcher`
