@@ -62,9 +62,11 @@ struct L3AW19ProductionTelemetryBenchmark {
                     tempoQuietPeriodNanoseconds: 2_000_000
                 )
             )
+            let correlations = Lane3TelemetryDispatchCorrelationBridge(maxPendingPerKind: 256)
             let measuredBackend = Lane3TelemetryPlaybackBackend(
                 backend: AW19BenchmarkPlaybackBackend(),
-                telemetry: telemetry
+                telemetry: telemetry,
+                correlations: correlations
             )
             let playback = RescheduleFencedPlaybackBackend(backend: measuredBackend)
             let controller = try PracticeDSPProductionController(
@@ -87,7 +89,11 @@ struct L3AW19ProductionTelemetryBenchmark {
                 )
             )
             let gate = Lane3InterruptionLifecycleGate(authority: authority)
-            let instrumented = Lane3InstrumentedInterruptionGate(gate: gate, telemetry: telemetry)
+            let instrumented = Lane3InstrumentedInterruptionGate(
+                gate: gate,
+                telemetry: telemetry,
+                correlations: correlations
+            )
 
             let start = clock.now
             var seekExecuted = 0
@@ -115,6 +121,7 @@ struct L3AW19ProductionTelemetryBenchmark {
                 }
             }
             let snapshot = await instrumented.telemetrySnapshot()
+            let correlationHealth = await instrumented.telemetryCorrelationHealthSnapshot()!
             let duration = start.duration(to: clock.now).components
             let ms = Double(duration.seconds) * 1_000
                 + Double(duration.attoseconds) / 1_000_000_000_000_000
@@ -126,6 +133,9 @@ struct L3AW19ProductionTelemetryBenchmark {
             precondition(snapshot.backendDispatchEntrySamplesUnmatched == 0)
             precondition(snapshot.privacy.aggregationOnly)
             precondition(!snapshot.counterOverflowed)
+            precondition(correlationHealth.pendingEntries == 0)
+            precondition(correlationHealth.overflowDrops == 0)
+            precondition(correlationHealth.unmatchedBackendOutcomes == 0)
             checksum &+= snapshot.totalProductSubmissions
             checksum &+= snapshot.totalPlaybackTokensObserved
             checksum &+= snapshot.totalPreTokenSuperseded
