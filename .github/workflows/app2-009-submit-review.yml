@@ -1,0 +1,51 @@
+name: APP2-009 Submit App Review
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  submit:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP2-009] Submit App Review'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Submit app and first purchases together
+        id: submit
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 scripts/app2_009_kangoshi_submit_review.py --output /tmp/app2-009-submit-review-result.json
+      - name: Persist sanitized submission result
+        if: always() && hashFiles('/tmp/app2-009-submit-review-result.json') != ''
+        run: |
+          cp /tmp/app2-009-submit-review-result.json /tmp/result.json
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/chatgpt-dispatcher/app-development-2/evidence
+          cp /tmp/result.json automation/chatgpt-dispatcher/app-development-2/evidence/APP2-009-submit-review-result.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-009-submit-review-result.json
+          git commit -m 'APP2-009: persist App Review submission result' || true
+          git pull --rebase origin main || true
+          git push origin HEAD:main || true
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`APP2-009 App Review submission finished. status=${{ job.status }}; submit=${{ steps.submit.outcome }}; run_id=${context.runId}`});
+      - name: Enforce submission success
+        if: steps.submit.outcome != 'success'
+        run: exit 1
