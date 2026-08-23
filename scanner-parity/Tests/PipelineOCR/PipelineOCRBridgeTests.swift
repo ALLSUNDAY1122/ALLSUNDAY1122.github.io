@@ -265,7 +265,7 @@ struct PipelineOCRBridgeFixtureTests {
     }
 
     static func writeTinyPNG(to url: URL) throws {
-        let base64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2zD8AAAAASUVORK5CYII="
+        let base64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
         guard let data = Data(base64Encoded: base64) else { throw FixtureError.invalidFixture }
         try data.write(to: url, options: .atomic)
     }
