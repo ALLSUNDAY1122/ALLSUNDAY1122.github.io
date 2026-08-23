@@ -21,10 +21,6 @@ public struct ProductPipelineStageBinding: Sendable {
     }
 }
 
-/// Sequences the integrated scanner stages without copying their domain models.
-/// Each concrete app target binds the real engine at this boundary and may use
-/// its native types internally. Cross-lane changes therefore do not redefine
-/// the shared contract inside the product shell.
 public actor BoundProductPipelineDriver: ProductPipelineDriving {
     private let bindings: [ProductProcessingStage: ProductPipelineStageBinding]
     private var cancelRequested = false
@@ -33,9 +29,7 @@ public actor BoundProductPipelineDriver: ProductPipelineDriving {
         self.bindings = Dictionary(uniqueKeysWithValues: bindings.map { ($0.stage, $0) })
     }
 
-    public func cancel() async {
-        cancelRequested = true
-    }
+    public func cancel() async { cancelRequested = true }
 
     public func run(
         request: ProductPipelineRequest,
@@ -44,12 +38,12 @@ public actor BoundProductPipelineDriver: ProductPipelineDriving {
         checkpoint: @escaping ProductCheckpointHandler
     ) async throws -> ProductPipelineCompletion {
         cancelRequested = false
-
         let runID: String
         var artifacts: [ProductStageArtifact]
         if let resume {
             guard resume.bookID == request.bookID,
-                  resume.inputAssetIDs == request.inputs.map(\.id) else {
+                  resume.inputAssetIDs == request.inputs.map(\.id),
+                  resume.hasCanonicalExistingArtifacts else {
                 throw ProductPipelineDriverError.invalidResumeCheckpoint
             }
             runID = resume.runID
@@ -62,16 +56,11 @@ public actor BoundProductPipelineDriver: ProductPipelineDriving {
         let completedStages = Set(artifacts.map(\.stage))
         for stage in ProductProcessingStage.allCases where !completedStages.contains(stage) {
             try checkCancellation()
-            guard let binding = bindings[stage] else {
-                throw ProductPipelineDriverError.missingStageBinding(stage)
-            }
-
+            guard let binding = bindings[stage] else { throw ProductPipelineDriverError.missingStageBinding(stage) }
             await progress(ProductProgress(stage: stage, fraction: 0, completedUnits: 0, totalUnits: nil))
             let artifact: ProductStageArtifact
             do {
-                artifact = try await binding.execute(request, artifacts) { update in
-                    await progress(update)
-                }
+                artifact = try await binding.execute(request, artifacts) { update in await progress(update) }
             } catch is CancellationError {
                 throw ProductPipelineDriverError.cancelled
             } catch let error as ProductPipelineDriverError {
@@ -79,44 +68,33 @@ public actor BoundProductPipelineDriver: ProductPipelineDriving {
             } catch {
                 throw ProductPipelineDriverError.stageFailed(stage: stage, detail: error.localizedDescription)
             }
-
             try checkCancellation()
-            guard artifact.stage == stage else {
-                throw ProductPipelineDriverError.stageFailed(stage: stage, detail: "binding returned artifact for \(artifact.stage.rawValue)")
+            guard artifact.stage == stage, FileManager.default.fileExists(atPath: artifact.outputURL.path) else {
+                throw ProductPipelineDriverError.stageFailed(stage: stage, detail: "binding returned a mismatched or missing artifact")
             }
             artifacts.append(artifact)
-            let stageProgress = ProductProgress(
-                stage: stage,
-                fraction: 1,
-                completedUnits: artifact.pageCount,
-                totalUnits: artifact.pageCount
-            )
+            let stageProgress = ProductProgress(stage: stage, fraction: 1, completedUnits: artifact.pageCount, totalUnits: artifact.pageCount)
             await progress(stageProgress)
             await checkpoint(ProductPipelineCheckpoint(
                 runID: runID,
                 bookID: request.bookID,
                 inputAssetIDs: request.inputs.map(\.id),
+                inputAssets: request.inputs,
                 completedArtifacts: artifacts,
                 lastProgress: stageProgress
             ))
         }
 
         try checkCancellation()
-        guard let package = artifacts.last(where: { $0.stage == .packageWrite }) else {
+        guard let package = artifacts.last(where: { $0.stage == .packageWrite }), FileManager.default.fileExists(atPath: package.outputURL.path) else {
             throw ProductPipelineDriverError.missingStageBinding(.packageWrite)
         }
         let reviews = Self.deduplicatedReviews(artifacts.flatMap(\.reviewItems))
-        return ProductPipelineCompletion(
-            bookPackageURL: package.outputURL,
-            reviewItems: reviews,
-            pageCount: package.pageCount
-        )
+        return ProductPipelineCompletion(bookPackageURL: package.outputURL, reviewItems: reviews, pageCount: package.pageCount)
     }
 
     private func checkCancellation() throws {
-        if cancelRequested || Task.isCancelled {
-            throw ProductPipelineDriverError.cancelled
-        }
+        if cancelRequested || Task.isCancelled { throw ProductPipelineDriverError.cancelled }
     }
 
     private static func deduplicatedReviews(_ items: [ProductReviewItem]) -> [ProductReviewItem] {
