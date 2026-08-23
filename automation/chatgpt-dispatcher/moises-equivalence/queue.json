@@ -3,10 +3,10 @@
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_pr": 4431,
-  "integration_epoch": 1,
+  "integration_epoch": 2,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "SWIFTPM_SHARED_APP_LIBRARY_GREEN_IOS_HOST_PENDING_LATE_INTEGRATION",
+  "baseline_state": "LANE1_LANE3_LANE4_CHECKPOINTS_CANONICAL_LANE2_IN_PROGRESS_FINAL_DEVICE_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
@@ -38,16 +38,22 @@
     {"task_id":"MOI-PROC-001","status":"VERIFIED","integration_pr":4454},
     {"task_id":"MOI-BLD-003","status":"VERIFIED","integration_pr":4455}
   ],
+  "checkpoint_integrations": [
+    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"epoch2 M01-M04","semantic_pr":4508,"merge_sha":"48cc74e9e192813fa6fafc0c83c8ed882cf83578","scope":["Separation/**","Processing/**"],"parity_promoted":false},
+    {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"epoch2 M01-M04","semantic_pr":4509,"merge_sha":"b586c3386af0183881741998d3691bb2a282fbcf","scope":["Playback/**","DSP/**"],"parity_promoted":false},
+    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"epoch2 M01-M04","semantic_pr":4510,"merge_sha":"f218be65facd8e3f32342daf5e77545dd8924f6a","scope":["Analysis/**","Tests/**","iOS/**","Package.swift"],"parity_promoted":false}
+  ],
   "partial_canonical": [
-    {"family":"SEPARATION","prs":[4451,4452],"parity_rows":["MOI-P003","MOI-P004"],"state":"MISSING","remaining":"commercial/credentials/rights-cleared real-audio/live quality-latency-cost evidence"},
-    {"family":"DSP","prs":[4450,4453],"parity_rows":["MOI-P010","MOI-P012","MOI-P014","MOI-P015"],"state":"MISSING","remaining":"Apple runtime/real-track/device evidence"},
-    {"family":"PLAYBACK","prs":[4456],"parity_rows":["MOI-P006","MOI-P007","MOI-P008"],"state":"MISSING","remaining":"integrated Apple runtime/device audio evidence"}
+    {"family":"SEPARATION_PROCESSING","prs":[4451,4452,4508],"parity_rows":["MOI-P003","MOI-P004","MOI-P020","MOI-P021","MOI-P024"],"state":"MISSING","remaining":"commercial credentials/terms, rights-cleared real audio, live quality/latency/cost/cancel/retention and current-iPhone recovery/device evidence"},
+    {"family":"DSP_PLAYBACK","prs":[4450,4453,4456,4509],"parity_rows":["MOI-P006","MOI-P007","MOI-P008","MOI-P010","MOI-P012","MOI-P014","MOI-P015"],"state":"MISSING","remaining":"final Xcode/AVFAudio compile, physical-iPhone timing/audio artifact evidence, live gain-ramp and real-track differential evidence"},
+    {"family":"IOS_ANALYSIS","prs":[4510],"parity_rows":["MOI-P009","MOI-P011","MOI-P013","MOI-P016","MOI-P022"],"state":"MISSING","remaining":"actual Xcode/simulator/device build, rights-cleared MIR real-audio accuracy, current-Moises differential and physical-device performance evidence"},
+    {"family":"IO_LIBRARY","state":"IN_PROGRESS","worker":"Moises-Worker-2","remaining":"Worker 2 checkpoint not yet complete; keep autonomous lane work running and integrate only when coherent"}
   ],
   "lane_execution": [
-    {"lane_id":"LANE-1-SEPARATION-PROCESSING","worker_id":"Moises-Worker-1","planning":"WORKER_AUTONOMOUS","worker_may_advance_without_hq":true,"external_gate":"Production commercial terms/credentials and rights-cleared G1/G2 fixtures remain external, but they do not block independent lane-local hardening/evidence preparation."},
-    {"lane_id":"LANE-2-IO-LIBRARY","worker_id":"Moises-Worker-2","planning":"WORKER_AUTONOMOUS","worker_may_advance_without_hq":true},
-    {"lane_id":"LANE-3-PLAYBACK-DSP","worker_id":"Moises-Worker-3","planning":"WORKER_AUTONOMOUS","worker_may_advance_without_hq":true,"device_gate":"Real Apple/iPhone execution is deferred to HQ late integration, but portable/backend/evidence preparation continues autonomously."},
-    {"lane_id":"LANE-4-IOS-ANALYSIS","worker_id":"Moises-Worker-4","planning":"WORKER_AUTONOMOUS","worker_may_advance_without_hq":true,"cross_lane_gate":"Worker 4 must not merge other lanes; cross-lane compile remains HQ late-integration work."}
+    {"lane_id":"LANE-1-SEPARATION-PROCESSING","worker_id":"Moises-Worker-1","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":true,"worker_may_advance_without_hq":true},
+    {"lane_id":"LANE-2-IO-LIBRARY","worker_id":"Moises-Worker-2","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":false,"worker_may_advance_without_hq":true},
+    {"lane_id":"LANE-3-PLAYBACK-DSP","worker_id":"Moises-Worker-3","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":true,"worker_may_advance_without_hq":true},
+    {"lane_id":"LANE-4-IOS-ANALYSIS","worker_id":"Moises-Worker-4","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":true,"worker_may_advance_without_hq":true}
   ],
   "worker_stop_policy": {
     "valid": ["all meaningful lane-local work and preparation exhausted pending an external/human input", "required frozen Shared/App contract change", "ownership boundary", "unsafe or technically impossible operation"],
