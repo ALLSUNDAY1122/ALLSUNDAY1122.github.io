@@ -34,6 +34,23 @@ public enum BoundedTempoBeatAnalyzer {
         let meanOnset = onset.reduce(0, +) / Double(onset.count)
         guard maxOnset > 1e-7, meanOnset > 1e-9 else { return nil }
 
+        // Keep the bounded-memory path aligned with the canonical tempo analyzer's
+        // fail-closed transient gate. A sustained sinusoid can produce tiny periodic
+        // RMS-window leakage when frame and carrier periods are incommensurate; high
+        // autocorrelation alone must not turn that leakage into a confident tempo.
+        let peakiness = maxOnset / meanOnset
+        let strongFraction = Double(onset.filter { $0 >= maxOnset * 0.5 }.count) / Double(onset.count)
+        let transientness = peakiness * max(0, 1 - min(1, strongFraction * 4))
+        let signalRMS = AnalysisWorkingSetPolicy.rms(
+            samples,
+            maximumSamples: AnalysisWorkingSetPolicy.maximumRMSProbeSamples
+        )
+        let transientContrast = maxOnset / max(log1p(signalRMS), 1e-9)
+        guard transientContrast >= 0.01 else { return nil }
+        if transientness < 2.5, transientContrast < 0.08 {
+            return nil
+        }
+
         let envelopeRate = signal.sampleRate / Double(hopSize)
         let minLag = max(1, Int(floor(60 * envelopeRate / configuration.tempoRange.upperBound)))
         let maxLag = min(onset.count - 2, Int(ceil(60 * envelopeRate / configuration.tempoRange.lowerBound)))
@@ -68,6 +85,10 @@ public enum BoundedTempoBeatAnalyzer {
         }
 
         guard let best = resolveMetricalCandidate(candidates) else { return nil }
+        guard transientness >= 2.5 || best.correlation >= 0.22 || best.gridAlignment >= 0.35 else {
+            return nil
+        }
+
         let hopSeconds = Double(hopSize) / signal.sampleRate
         let onsetOffsetSeconds = Double(frameSize) / signal.sampleRate
         let beatTimes = trackedBeatTimes(
