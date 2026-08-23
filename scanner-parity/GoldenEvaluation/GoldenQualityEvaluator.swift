@@ -24,9 +24,11 @@ public enum GoldenQualityEvaluator {
             return Double(found) / Double(expectedIDs.count)
         }()
 
+        let knownCandidateIDs = Set(candidates.map(\.candidateID))
         let correctedCandidateIDs = Set(correctedPages.map(\.candidateID))
         let transitionAcceptedCount = correctedCandidateIDs
             .intersection(groundTruth.transitionCandidateIDs)
+            .intersection(knownCandidateIDs)
             .count
 
         let duplicateExtraIDs: Set<String> = auditResult.duplicateGroups.reduce(into: Set<String>()) { partial, group in
