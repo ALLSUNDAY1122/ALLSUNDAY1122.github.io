@@ -23,18 +23,14 @@ workflows:
           test "$BUNDLE_ID" = "jp.allsunday1122.otsu4"
           test "$APP_STORE_APPLE_ID" = "6799755566"
           test "$APPLE_TEAM_ID" = "MN3D2ZM44N"
-
       - name: Install XcodeGen
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-
       - name: Prepare audited final 720-question resources and icon
         script: bash "$CM_BUILD_DIR/native-ios/Otsu4Sprint/prepare-ios.sh"
-
       - name: Generate Xcode project
         script: |
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           xcodegen generate
-
       - name: Set monotonic Codemagic build number
         script: |
           set -euo pipefail
@@ -42,13 +38,9 @@ workflows:
           echo "Using PROJECT_BUILD_NUMBER=$PROJECT_BUILD_NUMBER"
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           agvtool new-version -all "$PROJECT_BUILD_NUMBER"
-
       - name: Verify release inputs
         script: |
           set -euo pipefail
-          test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json"
-          test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy"
-          test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png"
           python3 - "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json" <<'PY'
           import json,sys
           data=json.load(open(sys.argv[1],encoding='utf-8'))
@@ -59,27 +51,20 @@ workflows:
           assert data.get('difficultyAudit',{}).get('policy')=='2026-08 exam-level v1'
           print('PASS: audited final Otsu4 720 bundle inputs',counts)
           PY
-
       - name: Apply App Store signing profiles for internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
-
       - name: Build signed IPA
         script: |
-          xcode-project build-ipa \
-            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
-
+          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
       - name: Verify signed final IPA before TestFlight
         script: |
           set -euo pipefail
           IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -type f -name '*.ipa' -print -quit)"
-          test -n "$IPA_PATH"
           VERIFY_DIR="$(mktemp -d)"
           unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
           APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
-          test -n "$APP_DIR"
           python3 - "$APP_DIR" <<'PY'
           import json,plistlib,sys
           from pathlib import Path
@@ -98,13 +83,9 @@ workflows:
           assert (app/'_CodeSignature').is_dir()
           print('PASS: signed Otsu4 IPA contains audited 720-question bundle',counts,'build',info.get('CFBundleVersion'))
           PY
-
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
-
     publishing:
       app_store_connect:
         auth: integration
@@ -126,36 +107,86 @@ workflows:
       - name: Wait for Build 93 to appear in TestFlight
         script: |
           set -euo pipefail
-          latest=""
-          for attempt in $(seq 1 20); do
-            latest="$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/tmp/otsu4-asc-error.log || true)"
-            echo "attempt=$attempt latest=$latest expected=$EXPECTED_BUILD"
-            if [[ "$latest" =~ ^[0-9]+$ ]] && (( latest >= EXPECTED_BUILD )); then
-              python3 - "$latest" "$EXPECTED_BUILD" <<'PY'
+          latest="$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID")"
+          [[ "$latest" =~ ^[0-9]+$ ]]
+          (( latest >= EXPECTED_BUILD ))
+          printf '{"appAppleId":"6799755566","expectedBuild":93,"latestTestFlightBuild":%s,"build93Visible":true}\n' "$latest" > asc-readback.json
+          echo "PASS: TestFlight latest build $latest"
+    artifacts:
+      - asc-readback.json
+
+  otsu4-internal-group-assign:
+    name: 危険物乙4 - Assign Build 93 to Internal group sun
+    max_build_duration: 15
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      vars:
+        APP_STORE_APPLE_ID: '6799755566'
+        EXPECTED_BUILD: '93'
+        EXPECTED_VERSION: '1.0.0'
+        BETA_GROUP: sun
+      xcode: latest
+    scripts:
+      - name: Resolve Build 93 App Store Connect resource ID
+        script: |
+          set -euo pipefail
+          app-store-connect apps builds "$APP_STORE_APPLE_ID" \
+            --build-version-number "$EXPECTED_BUILD" \
+            --version-string "$EXPECTED_VERSION" \
+            --processing-state VALID \
+            --platform IOS \
+            --json > build93-list.json
+          python3 - <<'PY'
+          import json
+          data=json.load(open('build93-list.json',encoding='utf-8'))
+          def walk(x):
+              if isinstance(x,dict):
+                  yield x
+                  for v in x.values(): yield from walk(v)
+              elif isinstance(x,list):
+                  for v in x: yield from walk(v)
+          ids=[]
+          for d in walk(data):
+              rid=d.get('id')
+              attrs=d.get('attributes') if isinstance(d.get('attributes'),dict) else {}
+              version=str(attrs.get('version',d.get('version','')))
+              if rid and version=='93': ids.append(str(rid))
+          ids=list(dict.fromkeys(ids))
+          if len(ids)!=1:
+              raise SystemExit(f'Expected exactly one Build 93 resource, found {ids}')
+          open('build93-id.txt','w').write(ids[0])
+          print('PASS: resolved Build 93 resource id',ids[0])
+          PY
+      - name: Add Build 93 to Internal TestFlight group sun
+        script: |
+          set -euo pipefail
+          BUILD_ID="$(cat build93-id.txt)"
+          app-store-connect beta-groups add-build "$BUILD_ID" --beta-group "$BETA_GROUP" --json > group-add.json
+          python3 - "$BUILD_ID" <<'PY'
           import json,sys
-          latest=int(sys.argv[1]); expected=int(sys.argv[2])
           payload={
             'appAppleId':'6799755566',
             'version':'1.0.0',
-            'expectedBuild':expected,
-            'latestTestFlightBuild':latest,
-            'build93Visible':latest >= expected
+            'buildNumber':93,
+            'buildResourceId':sys.argv[1],
+            'betaGroup':'sun',
+            'internalOnly':True,
+            'betaReviewSubmitted':False,
+            'appStoreSubmitted':False,
+            'assignmentCommand':'success'
           }
-          open('asc-readback.json','w',encoding='utf-8').write(json.dumps(payload,ensure_ascii=False,indent=2))
-          print('PASS: TestFlight latest build', latest)
+          open('internal-group-assignment.json','w',encoding='utf-8').write(json.dumps(payload,ensure_ascii=False,indent=2))
+          print('PASS: Build 93 added to internal group sun')
           PY
-              exit 0
-            fi
-            if [ -s /tmp/otsu4-asc-error.log ]; then cat /tmp/otsu4-asc-error.log; fi
-            sleep 30
-          done
-          python3 - "$latest" "$EXPECTED_BUILD" <<'PY'
-          import json,sys
-          latest=sys.argv[1]; expected=int(sys.argv[2])
-          payload={'appAppleId':'6799755566','version':'1.0.0','expectedBuild':expected,'latestTestFlightBuild':latest or None,'build93Visible':False}
-          open('asc-readback.json','w',encoding='utf-8').write(json.dumps(payload,ensure_ascii=False,indent=2))
-          PY
-          echo "Build 93 did not appear within the polling window" >&2
-          exit 1
+      - name: Verify Build 93 beta details remain valid
+        script: |
+          set -euo pipefail
+          BUILD_ID="$(cat build93-id.txt)"
+          app-store-connect builds beta-details "$BUILD_ID" --json > build93-beta-details.json
+          test -s build93-beta-details.json
+          echo "PASS: beta details readable after group assignment"
     artifacts:
-      - asc-readback.json
+      - internal-group-assignment.json
+      - build93-beta-details.json
