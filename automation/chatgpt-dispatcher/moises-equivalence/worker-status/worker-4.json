@@ -7,7 +7,7 @@
   "operating_model": "v4｜4 Autonomous Independent Lanes / Late Integration",
   "work_branch": "moises/wp4-analysis-platform",
   "state": "IN_PROGRESS",
-  "current_bundle": "L4-W10｜Combined Analysis confidence / cross-feature robustness hardening",
+  "current_bundle": "L4-W11｜Analysis long-audio bounded-memory / performance hardening",
   "completed_bundles": [
     "L4-M01",
     "L4-M02",
@@ -17,30 +17,39 @@
     "L4-W06",
     "L4-W07",
     "L4-W08",
-    "L4-W09"
+    "L4-W09",
+    "L4-W10"
   ],
   "epoch_contract_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
   "base_integration_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
-  "head_sha": "79e937ad8a9f63504e2fa03ae63c65a6f233db29",
+  "head_sha": "6dd96cd0f59b2cf9904ad184e8bc27a824c9ef8d",
   "commits": [
-    "d4dbea158040d6b2760547fbe7cbbd61f86fcd44",
-    "753a9f760896840ce3d5c303169316c668af064c",
-    "8aa9bf8ce3040c1c000ca37caed3b6540cd53bbd",
-    "df6f288cc468813b1de83d7dd0acceafcc2f7e4f",
-    "3cd015512d9cb3fc15d0127d2bc51738ee0d98f2",
-    "79e937ad8a9f63504e2fa03ae63c65a6f233db29"
+    "74bff8f1ed808e5679d6d4201e67a0070fd16780",
+    "9aefeb9fb7a4a1343ad0700e9a3ed61f277aeaef",
+    "c27b75ed6f3b786e75cb43c0e0bce4ac713ccc88",
+    "361dae7a883ccda015f8511b14534469f8c210ed",
+    "eaf3e1a78677e3c64848a30643e48bc63df84dac",
+    "51aa2efc8be65614d08c961e8779a1530b103d73",
+    "46c6418d236880d57f73a9027a7d203ceed24bf2",
+    "9ee2f4d4ac24a214de5594d3fa5c34dcf6c43202",
+    "6dd96cd0f59b2cf9904ad184e8bc27a824c9ef8d"
   ],
   "tests": [
-    "W09 exact production SongSectionHardener.swift compiled with Swift 6.2.1 x86_64-unknown-linux-gnu against frozen-contract-shaped stubs",
+    "W10 production AnalysisSnapshotRobustness behavior compiled with Swift 6.2.1 x86_64-unknown-linux-gnu against frozen-contract-shaped stubs",
+    "W10 portable executable robustness harness: 15/15 assertions PASS",
+    "W10 five portable harness runs wall seconds: 0.02, 0.01, 0.01, 0.01, 0.02",
+    "W10 8,000,000-sample clean sanitizer scan seconds: 0.0053, 0.0053, 0.0050, 0.0049, 0.0049",
+    "W10 committed AnalysisSnapshotRobustnessTests.swift typechecks against an -enable-testing portable MoisesAudioCore-shaped module: PASS",
+    "W10 AnalysisSnapshotHealthBenchmark portable execution: PASS; synthetic parityEligible=false",
     "W09 portable executable adversarial harness: 6/6 groups PASS; 18/18 assertions PASS",
-    "W09 five portable harness runs wall seconds: 0.01, 0.00, 0.01, 0.01, 0.00",
-    "Committed SongSectionHardeningTests.swift covers varied functional structure, A/B/A reuse, false-boundary suppression, local X fail-closed behavior, ambiguous functional semantics, and diagnostics",
     "W08 classifier portable harness: 10/10 PASS; timeline regression C -> A:min -> N -> G PASS"
   ],
   "evidence": [
+    "tech-assets/moises-audio/Tests/L4-W10_VALIDATION.md",
+    "tech-assets/moises-audio/Analysis/benchmarks/L4-W10_COMBINED_ANALYSIS_ROBUSTNESS.json",
+    "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisSnapshotRobustnessTests.swift",
     "tech-assets/moises-audio/Tests/L4-W09_VALIDATION.md",
     "tech-assets/moises-audio/Analysis/benchmarks/L4-W09_SECTION_STRUCTURE_ADVERSARIAL.json",
-    "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/SongSectionHardeningTests.swift",
     "tech-assets/moises-audio/Tests/L4-W08_VALIDATION.md",
     "tech-assets/moises-audio/Analysis/benchmarks/L4-W08_CHORD_VOCABULARY_ADVERSARIAL.json"
   ],
@@ -48,11 +57,12 @@
     "MOI-P009 BPM remains MISSING until rights-cleared multi-genre real-audio, current-iPhone Moises differential, and physical-iPhone evidence are completed by HQ Late Integration.",
     "MOI-P011 Key remains MISSING until rights-cleared major/minor/modal real-audio differential and physical-iPhone evidence are completed by HQ Late Integration.",
     "MOI-P013 Chord remains MISSING until current-iPhone complex-chord vocabulary is reference-verified and rights-cleared real-audio timestamp/inversion differential is completed.",
-    "MOI-P016 Song Section remains MISSING. W09 is synthetic NON_PARITY hardening evidence only; varied-structure real audio, current-iPhone boundary/functional-label differential, section navigation/loop integration, and physical-iPhone evidence remain.",
+    "MOI-P016 Song Section remains MISSING. W09/W10 are NON_PARITY hardening evidence only; varied-structure real audio, current-iPhone boundary/functional-label differential, section navigation/loop integration, and physical-iPhone evidence remain.",
+    "W10 integrity/coverage metrics are not MIR accuracy evidence and cannot promote PARITY without rights-cleared real-audio accuracy/differential gates.",
     "Full canonical swift test / Xcode build is not executable in this Worker runtime because the canonical repository checkout is unavailable locally; portable production-source harness evidence is durable but does not replace HQ integrated build/device gates."
   ],
   "hq_requests": [],
-  "next_priority": "Audit combined AnalysisSnapshot robustness across tempo/key/chord/section confidence interactions, short/noisy/non-finite/long inputs, deterministic serialization, and benchmark diagnostics without changing frozen Shared/App contracts.",
-  "last_updated": "2026-08-23T21:42:00+09:00",
+  "next_priority": "Reduce Lane-4 Analysis memory amplification and runtime risk on long audio: eliminate avoidable whole-track Double copies, bound key/tempo/chord/section working sets where accuracy permits, add deterministic long-duration stress fixtures, and expose Analysis-specific peak-memory/runtime evidence hooks without changing frozen Shared/App contracts.",
+  "last_updated": "2026-08-23T22:08:00+09:00",
   "writer_policy": "Only Moises-Worker-4 may update this status file. Worker 4 never declares PARITY; HQ Late Integration owns final PARITY_MATRIX judgment."
 }
