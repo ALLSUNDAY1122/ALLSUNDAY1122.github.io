@@ -8,7 +8,12 @@ let package = Package(
         .macOS(.v14)
     ],
     products: [
-        .library(name: "ScannerRuntime", targets: ["ScannerRuntime"])
+        .library(name: "ScannerRuntime", targets: ["ScannerRuntime"]),
+        .library(name: "RuntimeComposition", targets: ["RuntimeComposition"]),
+        .executable(name: "scanner-hq-golden-runner", targets: ["HQGoldenRunner"])
+    ],
+    dependencies: [
+        .package(name: "ProductFlow", path: "ProductFlow")
     ],
     targets: [
         .target(
@@ -18,6 +23,7 @@ let package = Package(
                 "AppShell",
                 "AppleValidation",
                 "GoldenEvaluation",
+                "HQGoldenRunner",
                 "LongRun",
                 "PackageQuality",
                 "PrivacyAudit",
@@ -37,6 +43,26 @@ let package = Package(
                 "PipelineOCR",
                 "PackageValidation/Sources/PackageValidation"
             ]
+        ),
+        .target(
+            name: "RuntimeComposition",
+            dependencies: [
+                "ScannerRuntime",
+                .product(name: "ProductFlow", package: "ProductFlow")
+            ],
+            path: "AppShell/Sources/AppShell",
+            sources: [
+                "ProductionScannerRuntime.swift",
+                "GoldenHardenedScannerRuntime.swift"
+            ]
+        ),
+        .executableTarget(
+            name: "HQGoldenRunner",
+            dependencies: [
+                "RuntimeComposition",
+                .product(name: "ProductFlow", package: "ProductFlow")
+            ],
+            path: "HQGoldenRunner"
         )
     ]
 )
