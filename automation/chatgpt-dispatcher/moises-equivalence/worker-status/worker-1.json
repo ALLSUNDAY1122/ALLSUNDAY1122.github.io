@@ -8,7 +8,7 @@
   "work_branch": "moises/wp1-separation-processing",
   "state": "IN_PROGRESS",
   "parity_claim": "NONE",
-  "current_wave": "L1-A11",
+  "current_wave": "L1-A12",
   "completed_bundles": [
     "L1-M01",
     "L1-M02",
@@ -21,20 +21,29 @@
     "L1-A07",
     "L1-A08",
     "L1-A09",
-    "L1-A10"
+    "L1-A10",
+    "L1-A11"
   ],
   "base_integration_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
-  "prior_head_sha": "98fef0d8f377c0cb40c979b72183e0522e16e26e",
-  "head_sha": "6e6fee7efdb51255d2a6a186857cc0aece26cebb",
+  "prior_head_sha": "6e6fee7efdb51255d2a6a186857cc0aece26cebb",
+  "head_sha": "5cf52614abbf9bb8275ad99bf8863ed2c9836059",
   "commits": [
     "98fef0d8f377c0cb40c979b72183e0522e16e26e",
-    "6e6fee7efdb51255d2a6a186857cc0aece26cebb"
+    "6e6fee7efdb51255d2a6a186857cc0aece26cebb",
+    "9b903174cadaad00c5cf3841eaf20a76fa45c5a9",
+    "4ed055fa027b2b5ad852afbab01dc24ebc3c863c",
+    "10b07b1e8ef5073ea631ebae6c7177d0b21faf08",
+    "51d0362074e43d2ab389749f86bd22a440b2145f",
+    "5cf52614abbf9bb8275ad99bf8863ed2c9836059"
   ],
   "tests": [
     "L1-A10 cost_quota_guard: 28/28 PASS",
     "L1-A10 budgeted provider adapter against A06/A07-compatible start/create contract stub: 5/5 PASS",
     "L1-A10 py_compile cost_quota_guard.py + budgeted_production_orchestrator.py: PASS",
-    "A10 negative/recovery coverage includes per-job/daily/monthly fail-close, idempotent reservation, exactly-once provider-create authorization, ambiguous 429 budget hold, actual-cost relaunch persistence, actual daily/monthly overrun incidents, quota/credit/402 semantics and privacy-safe evidence"
+    "A10 negative/recovery coverage includes per-job/daily/monthly fail-close, idempotent reservation, exactly-once provider-create authorization, ambiguous 429 budget hold, actual-cost relaunch persistence, actual daily/monthly overrun incidents, quota/credit/402 semantics and privacy-safe evidence",
+    "L1-A11 reference profile registry: 24/24 PASS",
+    "L1-A11 py_compile reference_profiles.py + test_reference_profiles.py: PASS",
+    "A11 negative/recovery coverage includes fixed-profile override rejection, custom entitlement/empty/duplicate/unverified-role rejection, Hi-Fi tier and provider capability guards, role-map collision, target limits, incompatible combinations, exact output-set completeness, corrupt/duplicate registry fail-close and vendor-neutral snapshot"
   ],
   "evidence": [
     "tech-assets/moises-audio/Separation/Server/cost_quota_guard.py",
@@ -42,22 +51,30 @@
     "tech-assets/moises-audio/Separation/Tests/test_cost_quota_guard.py",
     "tech-assets/moises-audio/Separation/Tests/test_budgeted_production_orchestrator.py",
     "tech-assets/moises-audio/Processing/L1-A10_VALIDATION.md",
-    "tech-assets/moises-audio/Processing/Tests/L1-A10_COST_MATRIX.json"
+    "tech-assets/moises-audio/Processing/Tests/L1-A10_COST_MATRIX.json",
+    "tech-assets/moises-audio/Separation/Profiles/reference_profiles.v1.json",
+    "tech-assets/moises-audio/Separation/Server/reference_profiles.py",
+    "tech-assets/moises-audio/Separation/Tests/test_reference_profiles.py",
+    "tech-assets/moises-audio/Processing/L1-A11_VALIDATION.md",
+    "tech-assets/moises-audio/Processing/Tests/L1-A11_PROFILE_MATRIX.json"
   ],
   "known_gaps": [
     "Production separator credentials and written commercial/privacy/DPA approval are still unavailable.",
     "Approved live provider pricing/billing units and authoritative usage/invoice reconciliation are still unavailable; A10 intentionally does not hard-code an unverified vendor price.",
     "Live provider 429/quota/credit payloads and real duplicate-billing behavior under network ambiguity remain unverified.",
     "The included file-backed A10 ledger is safe only on a genuinely durable coherently locked single-writer/shared path; horizontally scaled production requires an equivalently transactional shared ledger before global daily/monthly limits can be relied upon.",
-    "Rights-cleared G1/G2 real-audio corpus, current-iPhone Moises reference run and blind human review remain unavailable.",
+    "A11 intentionally limits custom selection to the directly observed current-iPhone role floor vocals/guitar/bass; the complete custom instrument list, lock map and advanced role combinations remain unverified and are assigned to A12.",
+    "The current checked-in AudioShake adapter advertises only standard core models; custom separation and Hi-Fi provider capability remain unsupported/unverified and fail closed.",
+    "Rights-cleared G1/G2 real-audio corpus, current-iPhone Moises differential run and blind human review remain unavailable.",
     "P003/P004/P005/P020/P021/P024 remain MISSING pending live provider, real-audio, real-device and HQ integrated differential evidence."
   ],
   "hq_requests": [
     "Canonical metadata cleanup at the next HQ checkpoint: Notion is already v4 autonomous-wave authority, while HQ-owned WORKER_BOOTSTRAP.md, lane-plan-v3.json, work-packages.json and resource-lock assignment metadata still contain v3/epoch-1 or finite-M01-M04 wording. Worker 1 did not edit those HQ-owned files.",
     "Provide/approve production provider credentials, current pricing/billing units, commercial/privacy/DPA terms and authoritative usage reconciliation when available so A10 can be run as a live billing gate.",
     "For horizontally scaled production, provide a transactional shared cost-ledger deployment seam or constrain the service to a coherently locked durable single-writer store; local file locking alone is not a global multi-instance budget guarantee.",
-    "Do not promote any Lane 1 PARITY row from A10 synthetic/contract evidence; live real-audio/provider/device differential evidence remains mandatory."
+    "Capture/approve the complete current-iPhone custom-instrument/lock map when available. A11 deliberately exposes only directly observed vocals/guitar/bass; A12 must not infer additional current roles without Reference/provider capability evidence.",
+    "Do not promote any Lane 1 PARITY row from A10/A11 synthetic/contract evidence; live real-audio/provider/device differential evidence remains mandatory."
   ],
-  "last_updated": "2026-08-23T21:55:20+09:00",
+  "last_updated": "2026-08-23T22:09:00+09:00",
   "writer_policy": "Only Moises-Worker-1 updates this status file. HQ owns Shared/App/PARITY/queue/work-package/lane-plan/resource-lock authority and final PARITY judgment."
 }
