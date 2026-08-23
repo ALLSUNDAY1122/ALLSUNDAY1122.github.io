@@ -7,12 +7,14 @@ public enum LibraryArtifactFailure: Error, Equatable, Sendable {
     case destinationAlreadyExists(String)
     case journalCorrupt(String)
     case journalNotCommitted(UUID)
+    case journalNotArtifactsDeleted(UUID)
     case cleanupFailed(String)
 }
 
 public enum LibraryDeletionPhase: String, Codable, Hashable, Sendable {
     case prepared
     case committed
+    case artifactsDeleted
 }
 
 public struct LibraryDeletionJournal: Codable, Hashable, Sendable {
@@ -125,13 +127,44 @@ public struct LibraryArtifactLifecycle: Sendable {
     /// Called only after the metadata tombstone transaction commits.
     public func markDeletionCommitted(projectUUID: UUID) throws {
         let existing = try requireJournal(projectUUID: projectUUID)
-        let committed = LibraryDeletionJournal(
-            projectUUID: existing.projectUUID,
-            relativePaths: existing.relativePaths,
-            createdAt: existing.createdAt,
-            phase: .committed
+        switch existing.phase {
+        case .prepared:
+            let committed = LibraryDeletionJournal(
+                projectUUID: existing.projectUUID,
+                relativePaths: existing.relativePaths,
+                createdAt: existing.createdAt,
+                phase: .committed
+            )
+            _ = try write(journal: committed)
+        case .committed, .artifactsDeleted:
+            return
+        }
+    }
+
+    /// Backfills a durable COMMITTED journal for a tombstone created by an older build or by an
+    /// interrupted metadata-only delete. The tombstone itself is the already-durable deletion intent.
+    @discardableResult
+    public func persistCommittedDeletion(projectUUID: UUID, relativePaths: [String]) throws -> URL {
+        try ensureLayout()
+        let normalized = Array(Set(try relativePaths.map(Self.normalize))).sorted()
+        let url = deletionJournalURL(projectUUID: projectUUID)
+        if FileManager.default.fileExists(atPath: url.path) {
+            let existing = try loadJournal(at: url)
+            guard existing.projectUUID == projectUUID, existing.relativePaths == normalized else {
+                throw LibraryArtifactFailure.journalCorrupt(url.lastPathComponent)
+            }
+            if existing.phase == .prepared {
+                try markDeletionCommitted(projectUUID: projectUUID)
+            }
+            return url
+        }
+        return try write(
+            journal: LibraryDeletionJournal(
+                projectUUID: projectUUID,
+                relativePaths: normalized,
+                phase: .committed
+            )
         )
-        _ = try write(journal: committed)
     }
 
     /// A PREPARED journal can be discarded only when metadata is proven live after relaunch.
@@ -143,8 +176,9 @@ public struct LibraryArtifactLifecycle: Sendable {
         try FileManager.default.removeItem(at: url)
     }
 
-    /// Idempotent artifact deletion. Missing files are already-clean.
-    /// The journal is removed only after every artifact delete succeeds.
+    /// Idempotent artifact deletion. Missing files are already-clean. The journal remains durable
+    /// in ARTIFACTS_DELETED until Core Data metadata compaction commits, closing the old crash window
+    /// where file cleanup could finish and erase the only recovery signal before physical metadata cleanup.
     public func executeCommittedDeletion(projectUUID: UUID) throws {
         let journalURL = deletionJournalURL(projectUUID: projectUUID)
         guard FileManager.default.fileExists(atPath: journalURL.path) else { return }
@@ -152,6 +186,7 @@ public struct LibraryArtifactLifecycle: Sendable {
         guard journal.projectUUID == projectUUID else {
             throw LibraryArtifactFailure.journalCorrupt(journalURL.lastPathComponent)
         }
+        if journal.phase == .artifactsDeleted { return }
         guard journal.phase == .committed else {
             throw LibraryArtifactFailure.journalNotCommitted(projectUUID)
         }
@@ -165,7 +200,29 @@ public struct LibraryArtifactLifecycle: Sendable {
                 }
             }
         }
-        try FileManager.default.removeItem(at: journalURL)
+        _ = try write(
+            journal: LibraryDeletionJournal(
+                projectUUID: journal.projectUUID,
+                relativePaths: journal.relativePaths,
+                createdAt: journal.createdAt,
+                phase: .artifactsDeleted
+            )
+        )
+    }
+
+    /// Final journal retirement is legal only after metadata compaction has committed. Missing is
+    /// idempotently treated as already complete for the post-removal crash boundary.
+    public func completeMetadataCompaction(projectUUID: UUID) throws {
+        let url = deletionJournalURL(projectUUID: projectUUID)
+        guard FileManager.default.fileExists(atPath: url.path) else { return }
+        let journal = try loadJournal(at: url)
+        guard journal.projectUUID == projectUUID else {
+            throw LibraryArtifactFailure.journalCorrupt(url.lastPathComponent)
+        }
+        guard journal.phase == .artifactsDeleted else {
+            throw LibraryArtifactFailure.journalNotArtifactsDeleted(projectUUID)
+        }
+        try FileManager.default.removeItem(at: url)
     }
 
     public func pendingDeletionJournals() throws -> [LibraryDeletionJournal] {
