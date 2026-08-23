@@ -35,7 +35,6 @@ workflows:
         script: |
           set -euo pipefail
           test -n "${PROJECT_BUILD_NUMBER:-}"
-          echo "Using PROJECT_BUILD_NUMBER=$PROJECT_BUILD_NUMBER"
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           agvtool new-version -all "$PROJECT_BUILD_NUMBER"
       - name: Verify release inputs
@@ -49,15 +48,13 @@ workflows:
           counts={s:sum(1 for q in data['questions'] if q['subject']==s) for s in ['法令','物理・化学','性質・消火']}
           assert counts=={'法令':288,'物理・化学':192,'性質・消火':240}, counts
           assert data.get('difficultyAudit',{}).get('policy')=='2026-08 exam-level v1'
-          print('PASS: audited final Otsu4 720 bundle inputs',counts)
           PY
       - name: Apply App Store signing profiles for internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
       - name: Build signed IPA
-        script: |
-          xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+        script: xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
       - name: Verify signed final IPA before TestFlight
         script: |
           set -euo pipefail
@@ -81,7 +78,6 @@ workflows:
           assert (app/'Assets.car').is_file()
           assert (app/'embedded.mobileprovision').is_file()
           assert (app/'_CodeSignature').is_dir()
-          print('PASS: signed Otsu4 IPA contains audited 720-question bundle',counts,'build',info.get('CFBundleVersion'))
           PY
     artifacts:
       - build/ios/ipa/*.ipa
@@ -111,7 +107,6 @@ workflows:
           [[ "$latest" =~ ^[0-9]+$ ]]
           (( latest >= EXPECTED_BUILD ))
           printf '{"appAppleId":"6799755566","expectedBuild":93,"latestTestFlightBuild":%s,"build93Visible":true}\n' "$latest" > asc-readback.json
-          echo "PASS: TestFlight latest build $latest"
     artifacts:
       - asc-readback.json
 
@@ -154,39 +149,38 @@ workflows:
               version=str(attrs.get('version',d.get('version','')))
               if rid and version=='93': ids.append(str(rid))
           ids=list(dict.fromkeys(ids))
-          if len(ids)!=1:
-              raise SystemExit(f'Expected exactly one Build 93 resource, found {ids}')
+          if len(ids)!=1: raise SystemExit(f'Expected exactly one Build 93 resource, found {ids}')
           open('build93-id.txt','w').write(ids[0])
           print('PASS: resolved Build 93 resource id',ids[0])
           PY
       - name: Add Build 93 to Internal TestFlight group sun
         script: |
-          set -euo pipefail
           BUILD_ID="$(cat build93-id.txt)"
-          app-store-connect beta-groups add-build "$BUILD_ID" --beta-group "$BETA_GROUP" --json > group-add.json
-          python3 - "$BUILD_ID" <<'PY'
+          set +e
+          app-store-connect beta-groups add-build "$BUILD_ID" --beta-group "$BETA_GROUP" --json > group-add.json 2> group-add-error.txt
+          RC=$?
+          set -e
+          python3 - "$BUILD_ID" "$RC" <<'PY'
           import json,sys
-          payload={
-            'appAppleId':'6799755566',
-            'version':'1.0.0',
-            'buildNumber':93,
-            'buildResourceId':sys.argv[1],
-            'betaGroup':'sun',
-            'internalOnly':True,
-            'betaReviewSubmitted':False,
-            'appStoreSubmitted':False,
-            'assignmentCommand':'success'
-          }
+          err=''
+          try: err=open('group-add-error.txt',encoding='utf-8').read()
+          except Exception: pass
+          payload={'appAppleId':'6799755566','version':'1.0.0','buildNumber':93,'buildResourceId':sys.argv[1],'betaGroup':'sun','internalOnly':True,'betaReviewSubmitted':False,'appStoreSubmitted':False,'returnCode':int(sys.argv[2]),'error':err[-4000:]}
           open('internal-group-assignment.json','w',encoding='utf-8').write(json.dumps(payload,ensure_ascii=False,indent=2))
-          print('PASS: Build 93 added to internal group sun')
           PY
+          cat group-add-error.txt || true
+          if [ "$RC" -ne 0 ]; then exit "$RC"; fi
+          echo "PASS: Build 93 added to internal group sun"
       - name: Verify Build 93 beta details remain valid
         script: |
           set -euo pipefail
           BUILD_ID="$(cat build93-id.txt)"
           app-store-connect builds beta-details "$BUILD_ID" --json > build93-beta-details.json
           test -s build93-beta-details.json
-          echo "PASS: beta details readable after group assignment"
     artifacts:
+      - build93-id.txt
+      - build93-list.json
+      - group-add.json
+      - group-add-error.txt
       - internal-group-assignment.json
       - build93-beta-details.json
