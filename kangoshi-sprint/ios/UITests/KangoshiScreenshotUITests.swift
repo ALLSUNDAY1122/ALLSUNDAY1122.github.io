@@ -22,10 +22,19 @@ final class KangoshiScreenshotUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["本番形式"].waitForExistence(timeout: 8))
         capture("03-mock")
 
+        app.buttons["プレミアムを見る"].tap()
+        XCTAssertTrue(app.staticTexts["学びスプリント プレミアム"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.buttons["月額プラン"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "200")).firstMatch.waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "800")).firstMatch.waitForExistence(timeout: 8))
+        capture("04-premium")
+        app.buttons["閉じる"].tap()
+        XCTAssertTrue(app.staticTexts["学びスプリント プレミアム"].waitForNonExistence(timeout: 8))
+
         app.tabBars.buttons["設定"].tap()
         XCTAssertTrue(app.staticTexts["学びかた"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.buttons["購入を復元"].exists)
-        capture("04-settings")
+        capture("05-settings")
     }
 
     private func capture(_ name: String) {
