@@ -47,8 +47,33 @@ jobs:
           safe_keys = (
               'name','bundleId','sku','primaryLocale','version','platform','uploadedDate',
               'processingState','expired','expirationDate','minOsVersion','betaReviewState',
-              'referenceName','productId','state','subscriptionPeriod','inAppPurchaseType'
+              'referenceName','productId','state','subscriptionPeriod','inAppPurchaseType',
+              'customerPrice','proceeds','startDate','endDate','manual','currency','locale','description'
           )
+
+          def clean_resources(resources):
+              if isinstance(resources, dict):
+                  resources = [resources]
+              clean = []
+              for resource in resources or []:
+                  attrs = resource.get('attributes') or {}
+                  relationships = {}
+                  for name, rel in (resource.get('relationships') or {}).items():
+                      data = (rel or {}).get('data')
+                      if isinstance(data, dict):
+                          relationships[name] = {'type': data.get('type'), 'id': data.get('id')}
+                      elif isinstance(data, list):
+                          relationships[name] = [{'type': x.get('type'), 'id': x.get('id')} for x in data if isinstance(x, dict)]
+                  item = {
+                      'id': resource.get('id'),
+                      'type': resource.get('type'),
+                      'attributes': {k: attrs.get(k) for k in safe_keys if k in attrs},
+                  }
+                  if relationships:
+                      item['relationships'] = relationships
+                  clean.append(item)
+              return clean
+
           out = {
               'request_id': command.get('request_id'),
               'completed_at': datetime.now(timezone.utc).isoformat(),
@@ -61,22 +86,15 @@ jobs:
               out['completed_at'] = src.get('completed_at') or out['completed_at']
               for result in src.get('results', []):
                   response = result.get('response') or {}
-                  data = response.get('data') or []
-                  if isinstance(data, dict):
-                      data = [data]
-                  clean = []
-                  for resource in data:
-                      attrs = resource.get('attributes') or {}
-                      clean.append({
-                          'id': resource.get('id'),
-                          'type': resource.get('type'),
-                          'attributes': {k: attrs.get(k) for k in safe_keys if k in attrs},
-                      })
-                  out['results'].append({
+                  entry = {
                       'label': result.get('label'),
                       'http_status': result.get('http_status'),
-                      'data': clean,
-                  })
+                      'data': clean_resources(response.get('data')),
+                  }
+                  included = clean_resources(response.get('included'))
+                  if included:
+                      entry['included'] = included
+                  out['results'].append(entry)
           else:
               out['error'] = stderr or stdout or 'ASC gateway produced no result file.'
 
