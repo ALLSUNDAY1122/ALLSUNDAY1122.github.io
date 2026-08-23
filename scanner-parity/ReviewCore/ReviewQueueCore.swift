@@ -65,7 +65,7 @@ public struct ReviewResolution: Codable, Hashable, Sendable {
     }
 }
 
-public struct ReviewQueueSnapshot: Codable, Sendable {
+public struct ReviewQueueSnapshot: Codable, Hashable, Sendable {
     public var pending: [ReviewItem]
     public var resolutions: [String: ReviewResolution]
 
