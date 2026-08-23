@@ -164,7 +164,8 @@ struct L3AW16ProductionIntentDispatcherSelfTest {
         guard case .rejectedBeforeToken(_, .tempo, "invalidTempoRatio") = invalidTempo else {
             preconditionFailure("invalid tempo must be rejected before token generation")
         }
-        precondition(await playback.rescheduleTokenSnapshot(projectID: project) == beforeInvalid)
+        let afterInvalid = await playback.rescheduleTokenSnapshot(projectID: project)
+        precondition(afterInvalid == beforeInvalid)
 
         rawPlayback.failNextSeek()
         let failedSeek = await dispatcher.submitSeek(to: 777, resume: true, loop: nil)
@@ -176,7 +177,8 @@ struct L3AW16ProductionIntentDispatcherSelfTest {
         precondition(failure.automaticRecovery.attempted)
         precondition(failure.automaticRecovery.succeeded)
         precondition(failure.automaticRecovery.playbackGeneration == 3)
-        precondition(!(await dispatcher.isRecoveryBlocked()))
+        let blockedAfterSeekRecovery = await dispatcher.isRecoveryBlocked()
+        precondition(!blockedAfterSeekRecovery)
 
         let tempo = await dispatcher.submitTempoRatio(1.25)
         guard case let .executed(tempoReceipt) = tempo else {
@@ -195,7 +197,8 @@ struct L3AW16ProductionIntentDispatcherSelfTest {
         guard case .cancelledBeforeDispatch(_, .loop) = cancelled else {
             preconditionFailure("pending caller cancellation must remain pre-token")
         }
-        precondition(await playback.rescheduleTokenSnapshot(projectID: project) == tokenBeforeCancellation)
+        let tokenAfterCancellation = await playback.rescheduleTokenSnapshot(projectID: project)
+        precondition(tokenAfterCancellation == tokenBeforeCancellation)
 
         // Force coordinator click invalidation and its immediate automatic recovery to both fail.
         // Dispatcher must block further token generation until explicit retryRecovery succeeds.
@@ -207,18 +210,21 @@ struct L3AW16ProductionIntentDispatcherSelfTest {
         precondition(blockedReceipt.playbackGeneration == 5)
         precondition(blockedReceipt.automaticRecovery.attempted)
         precondition(!blockedReceipt.automaticRecovery.succeeded)
-        precondition(await dispatcher.isRecoveryBlocked())
+        let isBlocked = await dispatcher.isRecoveryBlocked()
+        precondition(isBlocked)
 
         let blockedSnapshot = await playback.rescheduleTokenSnapshot(projectID: project)
         let rejectedWhileBlocked = await dispatcher.submitTempoRatio(1.5)
         guard case .rejectedBeforeToken(_, .tempo, "dispatcherRecoveryBlocked") = rejectedWhileBlocked else {
             preconditionFailure("blocked dispatcher must reject without issuing another control token")
         }
-        precondition(await playback.rescheduleTokenSnapshot(projectID: project) == blockedSnapshot)
+        let blockedSnapshotAfterRejection = await playback.rescheduleTokenSnapshot(projectID: project)
+        precondition(blockedSnapshotAfterRejection == blockedSnapshot)
 
         let retry = await dispatcher.retryRecovery()
         precondition(retry.attempted && retry.succeeded)
-        precondition(!(await dispatcher.isRecoveryBlocked()))
+        let blockedAfterRetry = await dispatcher.isRecoveryBlocked()
+        precondition(!blockedAfterRetry)
 
         let finalLoop = await dispatcher.submitLoop(PlaybackLoopRange(startSeconds: 1, endSeconds: 3))
         guard case let .executed(loopReceipt) = finalLoop else {
