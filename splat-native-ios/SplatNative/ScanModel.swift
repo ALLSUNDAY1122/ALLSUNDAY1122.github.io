@@ -588,6 +588,28 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     return
                 }
 
+                // Reject before GaussianDataset/GaussianTrainer allocation when the device is
+                // already under memory or thermal pressure. This protects the largest allocation spike.
+                let preflightEvaluation = passResourceGuard.evaluate(splatCount: 0)
+                if let reason = preflightEvaluation.reason {
+                    let report = passResourceGuard.makeReport(
+                        startedAt: runStartedAt,
+                        startUptime: runStartUptime,
+                        passStartIteration: 0,
+                        targetIteration: requestedTarget,
+                        finalIteration: 0,
+                        finalSplatCount: 0,
+                        initialThermalState: initialThermalState,
+                        finalThermalState: splatThermalStateName(ProcessInfo.processInfo.thermalState),
+                        outcome: "preflight-\(reason.rawValue)"
+                    )
+                    SplatReconstructionRunReport.write(report, projectURL: projectURL)
+                    Task { @MainActor [weak self] in
+                        self?.failTraining(reason.userMessage)
+                    }
+                    return
+                }
+
                 let dataset = GaussianDataset(
                     path: path,
                     downscaleFactor: SplatReconstructionPolicy.datasetDownscale,
@@ -812,6 +834,12 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     : "保存容量を守るため、未撮影の方向・高さだけを追加してください"
                 return
             }
+        }
+
+        if let stats = CaptureImageQualityEvaluator.evaluate(pixelBuffer: frame.capturedImage),
+           let rejection = CaptureImageQualityPolicy.rejection(for: stats) {
+            trackingMessage = rejection.userMessage
+            return
         }
 
         guard let jpegData = makeJPEGData(pixelBuffer: frame.capturedImage) else {
