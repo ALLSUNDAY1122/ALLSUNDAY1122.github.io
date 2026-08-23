@@ -1,8 +1,7 @@
 import Foundation
 
-private final class AW16PlaybackBackend: PlaybackBackendDriving, @unchecked Sendable {
+private actor AW16PlaybackBackend: PlaybackBackendDriving {
     private struct ForcedFailure: Error {}
-    private let lock = NSLock()
     private var failSeekCount = 0
     private var failLoopCount = 0
     private var seekCount = 0
@@ -10,13 +9,11 @@ private final class AW16PlaybackBackend: PlaybackBackendDriving, @unchecked Send
     private var position = 0.0
 
     func failNextSeek(_ count: Int = 1) {
-        lock.lock(); defer { lock.unlock() }
         failSeekCount += count
     }
 
     func counts() -> (seek: Int, loop: Int) {
-        lock.lock(); defer { lock.unlock() }
-        return (seekCount, loopCount)
+        (seekCount, loopCount)
     }
 
     func loadSource(projectID: ProjectID, asset: LocalAudioAsset) async throws {}
@@ -24,35 +21,25 @@ private final class AW16PlaybackBackend: PlaybackBackendDriving, @unchecked Send
     func setEffectiveGains(projectID: ProjectID, gains: [StemID: Double]) async throws {}
 
     func seek(projectID: ProjectID, to positionSeconds: Double, resume: Bool, loop: PlaybackLoopRange?) async throws {
-        lock.lock()
         seekCount += 1
         if failSeekCount > 0 {
             failSeekCount -= 1
-            lock.unlock()
             throw ForcedFailure()
         }
         position = positionSeconds
-        lock.unlock()
     }
 
     func setLoop(projectID: ProjectID, loop: PlaybackLoopRange?) async throws {
-        lock.lock()
         loopCount += 1
         if failLoopCount > 0 {
             failLoopCount -= 1
-            lock.unlock()
             throw ForcedFailure()
         }
-        lock.unlock()
     }
 
     func play(projectID: ProjectID) async throws {}
     func pause(projectID: ProjectID) async {}
-
-    func currentPositionSeconds(projectID: ProjectID) async -> Double? {
-        lock.lock(); defer { lock.unlock() }
-        return position
-    }
+    func currentPositionSeconds(projectID: ProjectID) async -> Double? { position }
 }
 
 private final class AW16DSPBackend: PracticeDSPTransactionalBackendApplying, @unchecked Sendable {
@@ -157,7 +144,8 @@ struct L3AW16ProductionIntentDispatcherSelfTest {
         precondition(seekSuperseded == 499)
         precondition(finalSeekReceipt?.coalescedPredecessorCount == 499)
         precondition(finalSeekReceipt?.playbackGeneration == 1)
-        precondition(rawPlayback.counts().seek == 1)
+        let burstCounts = await rawPlayback.counts()
+        precondition(burstCounts.seek == 1)
 
         let beforeInvalid = await playback.rescheduleTokenSnapshot(projectID: project)
         let invalidTempo = await dispatcher.submitTempoRatio(.nan)
@@ -167,7 +155,7 @@ struct L3AW16ProductionIntentDispatcherSelfTest {
         let afterInvalid = await playback.rescheduleTokenSnapshot(projectID: project)
         precondition(afterInvalid == beforeInvalid)
 
-        rawPlayback.failNextSeek()
+        await rawPlayback.failNextSeek()
         let failedSeek = await dispatcher.submitSeek(to: 777, resume: true, loop: nil)
         guard case let .failedAfterDispatch(failure) = failedSeek else {
             preconditionFailure("forced seek failure must return a durable failure receipt")
@@ -200,8 +188,6 @@ struct L3AW16ProductionIntentDispatcherSelfTest {
         let tokenAfterCancellation = await playback.rescheduleTokenSnapshot(projectID: project)
         precondition(tokenAfterCancellation == tokenBeforeCancellation)
 
-        // Force coordinator click invalidation and its immediate automatic recovery to both fail.
-        // Dispatcher must block further token generation until explicit retryRecovery succeeds.
         invalidator.failNext(2)
         let blockedFailure = await dispatcher.submitSeek(to: 888, resume: true, loop: nil)
         guard case let .failedAfterDispatch(blockedReceipt) = blockedFailure else {
