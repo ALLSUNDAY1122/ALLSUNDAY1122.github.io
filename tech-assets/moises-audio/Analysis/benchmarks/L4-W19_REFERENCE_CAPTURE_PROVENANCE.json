@@ -1,0 +1,68 @@
+{
+  "wave": "L4-W19",
+  "title": "Current-iPhone Moises reference capture provenance / repeatability hardening",
+  "evidence_class": "NON_PARITY_SYNTHETIC_PORTABLE",
+  "environment": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu",
+    "physical_iphone": false,
+    "real_moises_capture": false,
+    "rights_cleared_production_audio": false
+  },
+  "source_shaped_validation": {
+    "production_source_typecheck": "PASS",
+    "xctest_source_typecheck": "PASS"
+  },
+  "portable_harness": {
+    "assertions_per_run": 15,
+    "complete_runs": 5,
+    "all_runs_passed": true,
+    "covered_gates": [
+      "stable repeated capture",
+      "median consensus compile",
+      "stale capture rejection",
+      "mixed app/build rejection",
+      "mixed source-manifest rejection",
+      "fixture/domain row-set anti-cherry-pick",
+      "metric-set anti-cherry-pick",
+      "missing repeatability rule rejection",
+      "repeatability spread rejection",
+      "synthetic Reference rejection",
+      "evidence-artifact binding rejection",
+      "future timestamp rejection",
+      "HQ authority enforcement",
+      "minimum repeat-run enforcement",
+      "ISO-8601 sorted-key capture codec round-trip"
+    ]
+  },
+  "stress": {
+    "fixture_count": 50000,
+    "repeat_runs": 2,
+    "diagnostics_expected": 50000,
+    "diagnostics_observed_each_run": 50000,
+    "internal_elapsed_seconds": [0.496347, 0.471309, 0.533963, 0.465598, 0.492090],
+    "process_wall_seconds": [0.52, 0.49, 0.56, 0.49, 0.52],
+    "max_rss_kb": [99820, 99832, 99680, 99632, 99764],
+    "worst_internal_elapsed_seconds": 0.533963,
+    "worst_process_wall_seconds": 0.56,
+    "maximum_rss_kb": 99832
+  },
+  "integrity_properties": [
+    "current Reference epoch/app/build/device/iOS/locale/tier are supplied by HQ policy rather than guessed by Worker 4",
+    "exact source-manifest SHA-256 is bound into every repeat run",
+    "all repeats must contain identical fixture/domain and quality-metric sets",
+    "every observed quality metric requires an HQ-supplied repeatability spread rule",
+    "unstable repeated observations cannot compile into the W18 Reference report",
+    "compiled Reference quality values use deterministic median consensus only after complete validation",
+    "capture artifacts remain SHA-bound and archived separately from the compiled median report",
+    "STABLE_REFERENCE_CAPTURE_PENDING_HQ and W18 pending-HQ states never declare PARITY"
+  ],
+  "not_claimed": [
+    "actual current-iPhone Moises app/build observations",
+    "actual Moises Analysis accuracy",
+    "physical-iPhone performance or thermal behavior",
+    "production repeatability tolerances",
+    "Project-vs-Moises non-inferiority",
+    "PARITY"
+  ]
+}
