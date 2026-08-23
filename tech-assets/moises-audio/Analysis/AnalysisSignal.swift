@@ -171,7 +171,14 @@ public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
         )
         try AnalysisCancellationPolicy.check()
 
-        let sections = try CancellableSongSectionPipeline.analyze(
+        let detectedSections = try CancellableSongSectionPipeline.analyze(
+            signal: signal,
+            chords: chords,
+            configuration: configuration
+        )
+        try AnalysisCancellationPolicy.check()
+        let sections = try SongSectionBoundaryHardener.harden(
+            sections: detectedSections,
             signal: signal,
             chords: chords,
             configuration: configuration
