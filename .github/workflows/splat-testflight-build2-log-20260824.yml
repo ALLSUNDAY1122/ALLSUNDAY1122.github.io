@@ -1,0 +1,72 @@
+name: Splat TestFlight Build 2 Log Diagnostic
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260824'
+    paths:
+      - '.github/workflows/splat-testflight-build2-log-20260824.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract safe diagnostics from Codemagic artifact bundle
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import io,json,os,re,urllib.request,zipfile
+          from pathlib import Path
+          build_id='6a8b0f7ebd7eece7954737e9'
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token: raise SystemExit('Missing CM_API_TOKEN')
+          req=urllib.request.Request(f'https://codemagic.io/api/v3/builds/{build_id}',headers={'x-auth-token':token,'Accept':'application/json'})
+          with urllib.request.urlopen(req,timeout=30) as r: payload=json.loads(r.read().decode())
+          build=payload.get('data') if isinstance(payload,dict) and isinstance(payload.get('data'),dict) else payload
+          artifacts=build.get('artifacts') or []
+          bundle=next((a for a in artifacts if isinstance(a,dict) and a.get('type')=='bundle' and a.get('short_lived_download_url')),None)
+          if not bundle: raise SystemExit('No diagnostic artifact bundle')
+          req=urllib.request.Request(bundle['short_lived_download_url'],headers={'x-auth-token':token})
+          with urllib.request.urlopen(req,timeout=60) as r: raw=r.read()
+          interesting=re.compile(r'(error:|fatal error|archive failed|build failed|command .* failed|codesign|code ?sign|provision|signing|no profiles|requires a provisioning profile|undefined symbol|duplicate symbol|cannot|failed)',re.I)
+          secretish=re.compile(r'(token|password|private[_ -]?key|issuer[_ -]?id|api[_ -]?key|credential)',re.I)
+          hits=[]; files=[]
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              for name in z.namelist():
+                  info=z.getinfo(name); files.append({'name':name,'size':info.file_size})
+                  if info.is_dir() or info.file_size>8_000_000: continue
+                  try: text=z.read(name).decode('utf-8','replace')
+                  except Exception: continue
+                  for line in text.splitlines():
+                      if not interesting.search(line): continue
+                      clean=line.strip()
+                      if secretish.search(clean): continue
+                      clean=re.sub(r'/Users/[^/]+','/Users/[USER]',clean)
+                      clean=re.sub(r'/tmp/[^ ]+','/tmp/[PATH]',clean)
+                      hits.append({'file':name,'line':clean[:1600]})
+                      if len(hits)>=300: break
+                  if len(hits)>=300: break
+          out={'request_id':'scanlab-testflight-build2-log-20260824','ok':True,'build_id':build_id,'artifact_files':files[:120],'diagnostic_lines':hits}
+          Path('/tmp/log.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          print('PASS: extracted',len(hits),'diagnostic lines')
+          PY
+      - name: Persist sanitized diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESULT='automation/codemagic-results/scanlab-testflight-build2-log-20260824.json'
+          mkdir -p "$(dirname "$RESULT")"
+          cp /tmp/log.json "$RESULT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'release(splat): persist signed IPA failure diagnostics'
+          git push origin HEAD:testflight/splat-native-ios-20260824
