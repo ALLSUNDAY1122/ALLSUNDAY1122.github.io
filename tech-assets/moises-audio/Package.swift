@@ -53,6 +53,7 @@ let package = Package(
                 "Analysis/AnalysisReferenceRawObservation.swift",
                 "Analysis/AnalysisReferenceReviewConsensus.swift",
                 "Analysis/AnalysisBenchmarkCorpusCoverage.swift",
+                "Analysis/AnalysisDevicePerformanceEvidence.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
@@ -60,7 +61,8 @@ let package = Package(
                 "Analysis/AnalysisRealAudioBenchmarkProductRunner.swift",
                 "Analysis/RealAudioBenchmarkCodec.swift",
                 "iOS/HostCore/HostModuleSlots.swift",
-                "iOS/HostCore/ApplePlatformSmoke.swift"
+                "iOS/HostCore/ApplePlatformSmoke.swift",
+                "iOS/HostCore/AnalysisIOSDevicePerformanceSession.swift"
             ]
         ),
         .testTarget(
