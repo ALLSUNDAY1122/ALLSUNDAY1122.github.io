@@ -32,6 +32,25 @@ public enum AnalysisWorkingSetPolicy {
     public static let maximumRMSProbeSamples = 1_000_000
 
     public static func prepare(signal: AnalysisSignal) -> (signal: AnalysisSignal, diagnostics: AnalysisPreparationDiagnostics) {
+        // Compatibility path for deterministic benchmark/test callers. The
+        // internal implementation cannot throw when cancellation is disabled.
+        return try! prepareInternal(signal: signal, cancellationChecksEnabled: false)
+    }
+
+    public static func prepareCancellable(signal: AnalysisSignal) throws -> (signal: AnalysisSignal, diagnostics: AnalysisPreparationDiagnostics) {
+        try prepareInternal(signal: signal, cancellationChecksEnabled: true)
+    }
+
+    private static func prepareInternal(
+        signal: AnalysisSignal,
+        cancellationChecksEnabled: Bool
+    ) throws -> (signal: AnalysisSignal, diagnostics: AnalysisPreparationDiagnostics) {
+        try AnalysisCancellationPolicy.checkIfNeeded(
+            enabled: cancellationChecksEnabled,
+            iteration: 0,
+            stride: 1
+        )
+
         let targetSampleRate = min(signal.sampleRate, maximumAnalysisSampleRate)
         let needsResampling = signal.sampleRate > targetSampleRate * 1.05
         let prepared: AnalysisSignal
@@ -42,6 +61,11 @@ public enum AnalysisWorkingSetPolicy {
             var output = Array(repeating: Float(0), count: outputCount)
 
             for outputIndex in 0..<outputCount {
+                try AnalysisCancellationPolicy.checkIfNeeded(
+                    enabled: cancellationChecksEnabled,
+                    iteration: outputIndex,
+                    stride: AnalysisCancellationPolicy.preparationCheckStride
+                )
                 let rawStart = Int((Double(outputIndex) * ratio).rounded(.down))
                 let rawEnd = Int((Double(outputIndex + 1) * ratio).rounded(.down))
                 let sourceStart = min(signal.monoSamples.count, max(0, rawStart))
@@ -63,22 +87,38 @@ public enum AnalysisWorkingSetPolicy {
             prepared = AnalysisSignal(sampleRate: targetSampleRate, monoSamples: output)
         } else {
             var requiresCopy = false
-            for sample in signal.monoSamples {
+            for (index, sample) in signal.monoSamples.enumerated() {
+                try AnalysisCancellationPolicy.checkIfNeeded(
+                    enabled: cancellationChecksEnabled,
+                    iteration: index,
+                    stride: AnalysisCancellationPolicy.preparationCheckStride * 4
+                )
                 if !sample.isFinite || abs(sample) > maximumAbsoluteSample {
                     requiresCopy = true
                     break
                 }
             }
             if requiresCopy {
-                prepared = AnalysisSignal(
-                    sampleRate: signal.sampleRate,
-                    monoSamples: signal.monoSamples.map(boundedFinite)
-                )
+                var sanitized = Array(repeating: Float(0), count: signal.monoSamples.count)
+                for index in signal.monoSamples.indices {
+                    try AnalysisCancellationPolicy.checkIfNeeded(
+                        enabled: cancellationChecksEnabled,
+                        iteration: index,
+                        stride: AnalysisCancellationPolicy.preparationCheckStride * 4
+                    )
+                    sanitized[index] = boundedFinite(signal.monoSamples[index])
+                }
+                prepared = AnalysisSignal(sampleRate: signal.sampleRate, monoSamples: sanitized)
             } else {
                 prepared = signal
             }
         }
 
+        try AnalysisCancellationPolicy.checkIfNeeded(
+            enabled: cancellationChecksEnabled,
+            iteration: 0,
+            stride: 1
+        )
         return (
             prepared,
             diagnostics(
