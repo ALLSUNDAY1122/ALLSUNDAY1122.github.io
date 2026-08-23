@@ -1,0 +1,179 @@
+name: APP2-010 360 Question Final Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/app2-010-360-audit-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Audit all 360 questions
+        run: |
+          python3 - <<'PY'
+          import json, re, statistics
+          from collections import Counter, defaultdict
+          from difflib import SequenceMatcher
+          from pathlib import Path
+          from urllib.parse import urlparse
+
+          root = Path('touroku-hanbaisha-sprint/questions')
+          expected_ch = {1:20,2:20,3:40,4:20,5:20}
+          rounds = {}
+          all_qs = []
+          errors, warnings = [], []
+          required = ('id','round','chapter','subject','topic','question','choices','correct_index','answer','explanation','source_url','reference_date','origin_type','rights_basis')
+          for r in (1,2,3):
+              rqs=[]
+              for ch in range(1,6):
+                  p=root/f'exam-{r}'/f'chapter-{ch}.json'
+                  if not p.exists():
+                      errors.append(f'missing {p}')
+                      continue
+                  qs=json.loads(p.read_text(encoding='utf-8'))
+                  if len(qs)!=expected_ch[ch]: errors.append(f'R{r}C{ch} count={len(qs)}')
+                  rqs.extend(qs)
+              rounds[r]=rqs
+              all_qs.extend(rqs)
+              if len(rqs)!=120: errors.append(f'round {r} total={len(rqs)}')
+
+          ids=[]
+          exact=defaultdict(list)
+          sources=Counter()
+          format_counts={}
+          answer_positions={}
+          for r,qs in rounds.items():
+              apos=Counter(); formats=Counter()
+              for q in qs:
+                  ids.append(q.get('id'))
+                  for k in required:
+                      if k not in q or (k!='correct_index' and k!='answer' and not q.get(k)):
+                          errors.append(f"{q.get('id')}: missing {k}")
+                  if q.get('round')!=r: errors.append(f"{q.get('id')}: round mismatch")
+                  choices=q.get('choices',[])
+                  if not isinstance(choices,list) or len(choices)!=5 or len(set(choices))!=5:
+                      errors.append(f"{q.get('id')}: invalid choices")
+                      continue
+                  ci=q.get('correct_index')
+                  if not isinstance(ci,int) or not 0<=ci<5: errors.append(f"{q.get('id')}: invalid correct_index")
+                  else: apos[ci]+=1
+                  if q.get('answer')!=ci: errors.append(f"{q.get('id')}: answer mismatch")
+                  text=re.sub(r'\s+','',str(q.get('question','')))
+                  exact[text].append(q.get('id'))
+                  if '\na ' in q.get('question','') or '\na　' in q.get('question','') or re.search(r'\na\s',q.get('question','')):
+                      formats['multi_statement']+=1
+                  elif '正誤' in q.get('question','') or '組合せ' in q.get('question',''):
+                      formats['multi_statement']+=1
+                  else: formats['single_best']+=1
+                  host=urlparse(q.get('source_url','')).netloc.lower()
+                  sources[host]+=1
+                  if host and not (host.endswith('mhlw.go.jp') or host.endswith('pmda.go.jp')):
+                      warnings.append(f"{q.get('id')}: non-primary-domain {host}")
+              answer_positions[str(r)]={str(i):apos[i] for i in range(5)}
+              format_counts[str(r)]=dict(formats)
+              # no answer position should dominate a whole 120-question round
+              if apos and max(apos.values())>48: errors.append(f'round {r}: answer-position dominance {dict(apos)}')
+              if apos and min(apos.values())<12: errors.append(f'round {r}: answer-position scarcity {dict(apos)}')
+
+          if len(all_qs)!=360: errors.append(f'all total={len(all_qs)}')
+          if len(ids)!=len(set(ids)): errors.append('duplicate IDs')
+          exact_dupes={k:v for k,v in exact.items() if k and len(v)>1}
+          if exact_dupes: errors.append(f'exact duplicate questions={list(exact_dupes.values())}')
+
+          # Difficulty heuristic shared with exam rewrite gates.
+          absolute_terms=('必ず','すべて','一切','絶対','常に','例外なく','ことはない','必要はない','不要','のみで','だけで','全く','いかなる','どのような場合でも','自己判断で直ちに')
+          hedge_terms=('場合がある','ことがある','必要に応じ','基本的に','適切','おそれ','可能性','原則','確認する','相談','受診')
+          grade_counts=Counter(); flagged=[]
+          for q in all_qs:
+              choices=q['choices']; ans=q['correct_index']; correct=choices[ans]; wrong=[c for i,c in enumerate(choices) if i!=ans]
+              wrong_abs=sum(any(t in c for t in absolute_terms) for c in wrong)
+              correct_abs=any(t in correct for t in absolute_terms)
+              correct_hedge=sum(t in correct for t in hedge_terms)
+              med=statistics.median(map(len,choices)); ratio=len(correct)/med if med else 1
+              score=0
+              if wrong_abs>=3 and not correct_abs: score+=3
+              elif wrong_abs>=2 and not correct_abs: score+=2
+              elif wrong_abs>=1 and not correct_abs: score+=1
+              if ratio>=1.35: score+=2
+              elif ratio>=1.20: score+=1
+              if correct_hedge>=1 and wrong_abs>=2: score+=2
+              if all(len(c)<28 for c in wrong) and len(correct)>=45: score+=2
+              grade='D' if score>=6 else 'C' if score>=4 else 'B-' if score>=2 else 'B'
+              grade_counts[grade]+=1
+              if grade in ('C','D'): flagged.append({'id':q['id'],'grade':grade,'score':score})
+          if flagged: errors.append(f'C/D questions={flagged}')
+
+          # Near duplicate reporting (not hard fail): high similarity of normalized stems across different rounds.
+          near=[]
+          by_ch=defaultdict(list)
+          for q in all_qs:
+              ch=q['chapter']; norm=re.sub(r'[\s、。・（）()「」『』]','',q['question'])
+              by_ch[ch].append((q['id'],q['round'],norm))
+          for ch,rows in by_ch.items():
+              for i in range(len(rows)):
+                  for j in range(i+1,len(rows)):
+                      a,ra,ta=rows[i]; b,rb,tb=rows[j]
+                      if ra==rb: continue
+                      if min(len(ta),len(tb))<20: continue
+                      ratio=SequenceMatcher(None,ta,tb).ratio()
+                      if ratio>=0.94: near.append({'a':a,'b':b,'ratio':round(ratio,3)})
+          if len(near)>20: warnings.append(f'near duplicates >=0.94: {len(near)}')
+
+          cmd=json.loads(Path('automation/app2-010-360-audit-command.json').read_text(encoding='utf-8'))
+          result={
+              'request_id':cmd.get('request_id'),
+              'result':'FAIL' if errors else 'PASS',
+              'total_questions':len(all_qs),
+              'round_counts':{str(r):len(qs) for r,qs in rounds.items()},
+              'answer_positions':answer_positions,
+              'format_counts':format_counts,
+              'grade_counts':dict(grade_counts),
+              'C_D':len(flagged),
+              'exact_duplicate_count':len(exact_dupes),
+              'near_duplicate_count':len(near),
+              'near_duplicates':near[:30],
+              'source_domains':dict(sources),
+              'errors':errors,
+              'warnings':warnings[:50],
+              'reference_date':'2026-08-23'
+          }
+          Path('automation/audits/app2-010-360-final-audit.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          md=f'''# APP2-010 登録販売者｜360問 最終横断監査\n\n日時: 2026-08-23 JST\n\n- 総問題数: {result['total_questions']}\n- 各回: {result['round_counts']}\n- 難易度: {result['grade_counts']}\n- C/D: {result['C_D']}\n- 完全重複: {result['exact_duplicate_count']}\n- 高類似候補: {result['near_duplicate_count']}\n- 正答位置: {result['answer_positions']}\n- 出典ドメイン: {result['source_domains']}\n- 結果: {result['result']}\n\n詳細は `automation/audits/app2-010-360-final-audit.json` を正本とする。\n'''
+          Path('automation/audits/app2-010-360-final-audit.md').write_text(md,encoding='utf-8')
+          print(json.dumps(result,ensure_ascii=False,indent=2))
+          PY
+
+      - name: Persist 360-question audit evidence
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/audits/app2-010-360-final-audit.json automation/audits/app2-010-360-final-audit.md
+          git commit -m 'Audit Touhan all 360 questions' || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
+
+      - name: Enforce final gate
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('automation/audits/app2-010-360-final-audit.json').read_text(encoding='utf-8'))
+          if d['result']!='PASS':
+              raise SystemExit('360-question gate failed: '+json.dumps(d['errors'],ensure_ascii=False))
+          print('PASS: 360-question final gate')
+          PY
