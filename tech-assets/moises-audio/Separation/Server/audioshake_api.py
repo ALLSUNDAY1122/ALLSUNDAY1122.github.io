@@ -1,4 +1,4 @@
-"""Minimal server-side AudioShake API adapter for MOI-SEP-002.
+"""Server-side AudioShake API adapter for Lane 1 source separation.
 
 This module intentionally keeps the vendor API key on the server side. It does not imply that
 AudioShake has been commercially approved for shipping; production enablement still requires HQ
@@ -15,11 +15,13 @@ import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
-from urllib.parse import urlparse
+from urllib.parse import urlencode, urlparse
 
 
 AUDIOSHAKE_MAX_ASSET_BYTES = 2 * 1024 * 1024 * 1024
 SUPPORTED_CORE_MODELS = frozenset({"vocals", "drums", "bass", "other", "instrumental"})
+AUDIOSHAKE_LIST_TAKE_MAX = 100
+AUDIOSHAKE_DEFAULT_TASK_SCAN_PAGES = 100
 
 
 class AudioShakeAPIError(RuntimeError):
@@ -104,6 +106,8 @@ class AudioShakeClient:
         finally:
             conn.close()
 
+        if not isinstance(payload, dict):
+            raise AudioShakeAPIError("AUDIOSHAKE_ASSET_RESPONSE_INVALID")
         asset_id = payload.get("id")
         if not isinstance(asset_id, str) or not asset_id:
             raise AudioShakeAPIError("AUDIOSHAKE_ASSET_RESPONSE_INVALID")
@@ -130,12 +134,11 @@ class AudioShakeClient:
             "targets": [{"model": model, "formats": ["wav"]} for model in selected],
         }
         if metadata is not None:
-            encoded_metadata = json.dumps(metadata, separators=(",", ":"), sort_keys=True)
-            if len(encoded_metadata.encode("utf-8")) > 4096:
-                raise AudioShakeAPIError("AUDIOSHAKE_METADATA_TOO_LARGE")
-            body["metadata"] = encoded_metadata
+            body["metadata"] = _encode_metadata(metadata)
 
         payload = self._json_request("POST", "/tasks", body)
+        if not isinstance(payload, dict):
+            raise AudioShakeAPIError("AUDIOSHAKE_TASK_RESPONSE_INVALID")
         task_id = payload.get("id")
         if not isinstance(task_id, str) or not task_id:
             raise AudioShakeAPIError("AUDIOSHAKE_TASK_RESPONSE_INVALID")
@@ -145,9 +148,55 @@ class AudioShakeClient:
         if not task_id or "/" in task_id or "?" in task_id:
             raise AudioShakeAPIError("AUDIOSHAKE_TASK_ID_INVALID")
         payload = self._json_request("GET", f"/tasks/{task_id}")
+        if not isinstance(payload, dict):
+            raise AudioShakeAPIError("AUDIOSHAKE_TASK_STATE_INVALID")
         return parse_task_state(payload)
 
-    def _json_request(self, method: str, path: str, body: dict[str, Any] | None = None) -> dict[str, Any]:
+    def list_tasks(self, *, skip: int = 0, take: int = AUDIOSHAKE_LIST_TAKE_MAX) -> tuple[dict[str, Any], ...]:
+        if not isinstance(skip, int) or skip < 0:
+            raise AudioShakeAPIError("AUDIOSHAKE_LIST_SKIP_INVALID")
+        if not isinstance(take, int) or not 1 <= take <= AUDIOSHAKE_LIST_TAKE_MAX:
+            raise AudioShakeAPIError("AUDIOSHAKE_LIST_TAKE_INVALID")
+        query = urlencode({"skip": skip, "take": take})
+        payload = self._json_request("GET", f"/tasks?{query}")
+        if not isinstance(payload, list):
+            raise AudioShakeAPIError("AUDIOSHAKE_TASK_LIST_INVALID")
+        if any(not isinstance(item, dict) for item in payload):
+            raise AudioShakeAPIError("AUDIOSHAKE_TASK_LIST_INVALID")
+        return tuple(payload)
+
+    def find_tasks_by_metadata(
+        self,
+        metadata: dict[str, Any],
+        *,
+        max_pages: int = AUDIOSHAKE_DEFAULT_TASK_SCAN_PAGES,
+    ) -> tuple[str, ...]:
+        """Find exact task metadata matches without creating a new provider task."""
+        if not isinstance(metadata, dict) or not metadata:
+            raise AudioShakeAPIError("AUDIOSHAKE_METADATA_INVALID")
+        encoded = _encode_metadata(metadata)
+        if not isinstance(max_pages, int) or max_pages <= 0:
+            raise AudioShakeAPIError("AUDIOSHAKE_TASK_SCAN_LIMIT_INVALID")
+
+        matches: list[str] = []
+        seen_ids: set[str] = set()
+        take = AUDIOSHAKE_LIST_TAKE_MAX
+        for page in range(max_pages):
+            tasks = self.list_tasks(skip=page * take, take=take)
+            for task in tasks:
+                task_id = task.get("id")
+                task_metadata = task.get("metadata")
+                if not isinstance(task_id, str) or not task_id:
+                    raise AudioShakeAPIError("AUDIOSHAKE_TASK_LIST_INVALID")
+                if task_metadata == encoded and task_id not in seen_ids:
+                    matches.append(task_id)
+                    seen_ids.add(task_id)
+            if len(tasks) < take:
+                return tuple(matches)
+
+        raise AudioShakeAPIError("AUDIOSHAKE_TASK_SCAN_LIMIT_REACHED", retryable=False)
+
+    def _json_request(self, method: str, path: str, body: dict[str, Any] | None = None) -> Any:
         encoded = None if body is None else json.dumps(body, separators=(",", ":")).encode("utf-8")
         conn = self._connection()
         headers = {"x-api-key": self.config.api_key, "Accept": "application/json"}
@@ -172,7 +221,7 @@ class AudioShakeClient:
         return f"{prefix}{path}" if prefix else path
 
     @staticmethod
-    def _read_json_response(response: http.client.HTTPResponse) -> dict[str, Any]:
+    def _read_json_response(response: http.client.HTTPResponse) -> Any:
         raw = response.read()
         if not 200 <= response.status < 300:
             retryable = response.status in {408, 429} or response.status >= 500
@@ -183,9 +232,19 @@ class AudioShakeClient:
             payload = json.loads(raw.decode("utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise AudioShakeAPIError("AUDIOSHAKE_RESPONSE_INVALID_JSON") from exc
-        if not isinstance(payload, dict):
+        if not isinstance(payload, (dict, list)):
             raise AudioShakeAPIError("AUDIOSHAKE_RESPONSE_INVALID_SHAPE")
         return payload
+
+
+def _encode_metadata(metadata: dict[str, Any]) -> str:
+    try:
+        encoded_metadata = json.dumps(metadata, separators=(",", ":"), sort_keys=True)
+    except (TypeError, ValueError) as exc:
+        raise AudioShakeAPIError("AUDIOSHAKE_METADATA_INVALID") from exc
+    if len(encoded_metadata.encode("utf-8")) > 4096:
+        raise AudioShakeAPIError("AUDIOSHAKE_METADATA_TOO_LARGE")
+    return encoded_metadata
 
 
 def parse_task_state(payload: dict[str, Any]) -> AudioShakeTaskState:
