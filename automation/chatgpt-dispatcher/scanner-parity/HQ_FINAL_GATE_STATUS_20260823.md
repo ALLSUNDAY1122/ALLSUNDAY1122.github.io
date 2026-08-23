@@ -21,7 +21,9 @@ Integration branch: `scanner-parity/integration`
 - PR #4574 synchronized HQ evidence after machine-gate aggregation; merge commit: `2bded3d2417dfa0f5788ba58671a3b3f4afd001e`.
 - PR #4580 added the local Formal Golden visual/OCR review bundle; merge commit: `315c085a72303cdffc0edcf8932f7bb3363320a8`.
 - PR #4581 synchronized HQ evidence after the review-bundle integration; merge commit: `050c3a02e36eee049838bc63bd13e4084061bf91`.
-- PR #4584 added the SHA-bound Formal Golden human-review finalizer; product merge commit/current integration HEAD before this evidence-only update: `4e92833193b835bbf09158551847febb3bbfc8c1`.
+- PR #4584 added the SHA-bound Formal Golden human-review finalizer; merge commit: `4e92833193b835bbf09158551847febb3bbfc8c1`.
+- PR #4585 synchronized HQ evidence after the finalizer integration; merge commit: `25216b4f12b5bb06bad188bea8b5033ab9d24028`.
+- PR #4588 added fail-safe Formal Golden pipeline-failure evidence; product merge commit/current integration HEAD before this evidence-only update: `705e7608e038f5e6566a26c0a61ffe3dae9a0c85`.
 
 ## Non-Golden acceptance
 
@@ -190,6 +192,33 @@ CI verifies finalizer build plus template binding, pending review rejection, exp
 
 PR #4584 changed only HQ finalizer/support/tests/package manifest/workflow. It did not change product runtime, `scanner-parity/SHARED_CONTRACT.md`, or any Golden identity SHA.
 
+## Fail-safe Formal Golden pipeline-failure evidence
+
+PR #4588 exact head `8e40ffe847ea159318523e3c70a40942c6d08f8e` passed `Scanner Parity Apple Validation` run `32658672807` in full and merged as `705e7608e038f5e6566a26c0a61ffe3dae9a0c85`.
+
+Formal Golden execution now has a canonical launcher at `scanner-parity/HQGoldenRunner/run-formal-golden.sh`. The launcher:
+
+- requires an explicit workspace;
+- invokes the unchanged production `scanner-hq-golden-runner`;
+- preserves the runner's original nonzero exit code;
+- captures raw stderr only in a temporary local file and deletes it after use;
+- on runner failure invokes `scanner-hq-golden-failure-recorder`;
+- never converts a failed pipeline execution into a Golden PASS or pending-human-review result.
+
+Failure evidence is written locally to `hq-golden-execution-failure.json` and records:
+
+- Golden video/PDF filenames and observed SHA-256 when readable;
+- expected SHA values and match state when supplied;
+- book ID and runner exit code;
+- completed stage marker relative paths;
+- any discovered `integrity-report.json` relative paths;
+- sanitized stderr with known raw video/PDF/workspace/temp-log absolute paths redacted;
+- terminal verdict `FORMAL_GOLDEN_FAIL_PIPELINE_EXECUTION`.
+
+CI builds the recorder, unit-tests path sanitization, and creates a synthetic failure report with exit code 17. The fixture verifies SHA match, completed-stage marker discovery, integrity-report discovery, absence of local absolute paths, and absence of `FORMAL_GOLDEN_PASS`. Existing reference metrics, machine gate, visual/OCR review bundle, finalizer, searchable PDF, Apple adapters, product modules, Privacy manifest, XcodeGen, unsigned iPhoneOS Release app, and bundle verification all remained green in the same run.
+
+PR #4588 did not modify product runtime, `scanner-parity/SHARED_CONTRACT.md`, the successful schema-v4 execution report, the finalizer PASS contract, or any Golden identity SHA.
+
 ## Formal HQ Golden Gate
 
 Status: `PENDING_HQ_GOLDEN_EXECUTION`
@@ -227,18 +256,19 @@ Current Formal Golden metrics remain unissued until the same raw dataset is proc
 
 ## Raw Golden availability and next execution
 
-Raw Golden files are intentionally not committed to GitHub. On 2026-08-24 HQ rechecked both the current ChatGPT File Library and connected Google Drive again before PR #4584; neither current source file was found. File Library returned unrelated files only and Drive returned zero exact-name matches for both Golden files. No fixture result, compile result, synthetic metric result, searchable-PDF fixture result, machine-gate unit test, review-bundle synthetic test, finalizer unit test, or historical measurement is promoted to Golden PASS in place of the real rerun.
+Raw Golden files are intentionally not committed to GitHub. On 2026-08-24 HQ rechecked both the current ChatGPT File Library and connected Google Drive again before PR #4588; neither current source file was found. File Library returned unrelated files only and Drive returned zero exact-name matches for both Golden files. No fixture result, compile result, synthetic metric result, searchable-PDF fixture result, machine-gate unit test, review-bundle synthetic test, finalizer unit test, failure-report synthetic test, or historical measurement is promoted to Golden PASS in place of the real rerun.
 
 When the current raw Golden bytes are accessible, HQ execution order is fixed:
 
-1. run the integrated `scanner-hq-golden-runner` without `--match-threshold` on the current video/PDF while supplying the versioned current expected SHA values;
+1. use `bash scanner-parity/HQGoldenRunner/run-formal-golden.sh` with explicit `--workspace`, current expected Golden SHA values, and no `--match-threshold` for the first run; the launcher invokes the integrated production runner;
 2. verify observed SHA-256 against the versioned current identity and preserve old migration hashes as history;
 3. capture nearest/second-best reference distance distribution and the schema-v4 E2E/BookPackage evidence;
 4. calibrate the page-match threshold from the real distribution rather than guessing it;
-5. rerun with the calibrated threshold; the runner automatically evaluates hard machine gates and emits either machine failure or `PENDING_HUMAN_VISUAL_OCR_REVIEW`;
-6. HQ opens local `06-golden-review/index.html` and reviews all actual page pairs plus OCR text for perspective/skew/crop/color/shadow/spread-split quality and semantic Japanese OCR accuracy;
-7. generate a SHA-bound `review-decisions.json` with `scanner-hq-golden-finalizer --create-template`, record every page's visual/OCR decision, reviewer, ISO-8601 reviewedAt, and `reviewComplete=true` only after the review is actually complete;
-8. run `scanner-hq-golden-finalizer --review-decisions`; only an emitted `FORMAL_GOLDEN_PASS` may advance the project to Release Gate.
+5. rerun through the same fail-safe launcher with the calibrated threshold; pipeline execution failure emits `hq-golden-execution-failure.json`, while a completed run evaluates hard machine gates and emits either machine failure or `PENDING_HUMAN_VISUAL_OCR_REVIEW`;
+6. if pipeline or machine gates fail, HQ performs root-cause analysis, HQ fix PR, non-Golden regression, integration merge, then reruns the same Golden; Workers are not reopened;
+7. if machine gates pass, HQ opens local `06-golden-review/index.html` and reviews all actual page pairs plus OCR text for perspective/skew/crop/color/shadow/spread-split quality and semantic Japanese OCR accuracy;
+8. generate a SHA-bound `review-decisions.json` with `scanner-hq-golden-finalizer --create-template`, record every page's visual/OCR decision, reviewer, ISO-8601 reviewedAt, and `reviewComplete=true` only after the review is actually complete;
+9. run `scanner-hq-golden-finalizer --review-decisions`; only an emitted `FORMAL_GOLDEN_PASS` may advance the project to Release Gate.
 
 This does not reopen Worker work and is not a Worker `BLOCKED_HUMAN` condition. Workers 1-4 remain complete. Queue driving remains stopped. Golden validation remains HQ-owned.
 
