@@ -38,6 +38,28 @@ final class Otsu4LearningStoreTests: XCTestCase {
         XCTAssertEqual(store.weakCount, 0)
     }
 
+    func testQuestionProgressUpdatesImmediatelyAndPersists() throws {
+        let (store, defaults, suite) = makeLearningStore()
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let question = makeQuestion(id: "progress-1")
+        let session = Otsu4StudySession(
+            kind: .subject("法令"),
+            questions: [question],
+            onAnswer: { questionID, correct in
+                store.recordQuestionAnswer(questionID: questionID, correct: correct)
+            }
+        )
+
+        session.choose(0)
+        XCTAssertEqual(store.questionProgress(for: question.id), Otsu4QuestionProgress(correctCount: 1, answerCount: 1))
+
+        let data = try store.exportData()
+        let (restored, restoredDefaults, restoredSuite) = makeLearningStore()
+        defer { restoredDefaults.removePersistentDomain(forName: restoredSuite) }
+        try restored.importData(data)
+        XCTAssertEqual(restored.questionProgress(for: question.id), Otsu4QuestionProgress(correctCount: 1, answerCount: 1))
+    }
+
     func testBackupRoundTripPreservesSettingsAndLearningState() throws {
         let (source, sourceDefaults, sourceSuite) = makeLearningStore()
         defer { sourceDefaults.removePersistentDomain(forName: sourceSuite) }
@@ -46,6 +68,7 @@ final class Otsu4LearningStoreTests: XCTestCase {
         source.setExamDate(examDate)
         source.setFontScale(2)
         completeOneQuestion(makeQuestion(id: "backup-weak"), choice: nil, store: source)
+        source.recordQuestionAnswer(questionID: "backup-weak", correct: false)
 
         let data = try source.exportData()
 
@@ -60,6 +83,7 @@ final class Otsu4LearningStoreTests: XCTestCase {
         XCTAssertEqual(restored.weakCount, 1)
         XCTAssertEqual(restored.history.count, 1)
         XCTAssertEqual(restored.seenCount, 1)
+        XCTAssertEqual(restored.questionProgress(for: "backup-weak").answerCount, 1)
     }
 
     func testMockTimerUsesOriginalStartedAtAfterRestore() {
