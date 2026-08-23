@@ -8,19 +8,24 @@
   "work_branch": "moises/wp2-io-library",
   "state": "IN_PROGRESS",
   "current_bundle": null,
-  "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
+  "completed_bundles": [
+    "L2-M01",
+    "L2-M02",
+    "L2-M03",
+    "L2-M04"
+  ],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "a0363f756afd64d88cac724515be6e5e9b31e185",
-  "prior_status_blob_sha": "925500f49142b12fe42570d077ee313ea134fe66",
-  "historical_commit_ledger_through": "b40b06eacca15b60063558f71e6f69c4eff43ca6",
+  "head_sha": "5c57529d64bc0999f2e6a8808a7463e8c38dde05",
+  "prior_status_blob_sha": "afbc25ee0d4f0b14db9997b7b80bc1508c7d6494",
+  "historical_commit_ledger_through": "a0363f756afd64d88cac724515be6e5e9b31e185",
   "commits": [
-    "0091d2b93a86660501e6ff70b14dde3190ce716c",
-    "7dbf02c0699ddbc17f0566d912ff5e4c63b14d3d",
-    "f4ee9b8981a09aeb088d7b80204daf874f31a8b2",
-    "bbd016e701090e20a835789e327552a6b04e1f5b",
-    "711d7b8768534019828a23d998f7951009bd659b",
-    "a0363f756afd64d88cac724515be6e5e9b31e185"
+    "24ec8292fbfd75c0d854e5ced7952ff13eb80464",
+    "1defb51fd2952b46424755bb955f151eee5ca657",
+    "2f7461f3500e9a6a6f00846bdbea13b0188fd764",
+    "7ce50f67cdeb7f4fe5af8881246257cad0c341f3",
+    "046511c78dbcc378a8a36861eacaf762daae2ae0",
+    "5c57529d64bc0999f2e6a8808a7463e8c38dde05"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -29,55 +34,57 @@
     "bf4b7a552cfbe025608079f7fe11093af7526b0b"
   ],
   "tests": [
-    "L2-M01..L2-AW17 historical validation remains durable in Git history and prior status blob 925500f49142b12fe42570d077ee313ea134fe66.",
-    "L2-AW18 SetlistIntegrityRecovery.swift Swift 6.2.1 Linux strict-concurrency/warnings-as-errors compile => PASS.",
-    "L2-AW18 SetlistIntegrityRecoveryTests.swift strict XCTest typecheck => PASS.",
-    "L2-AW18 CoreData-gated CrashSafe adapter/startup files syntax parse => PASS; startup wiring audit => PASS 4/4.",
-    "L2-AW18 validated self-check source blob 1d94fddcdaf25768872402f36d70974a83ec5e12 => PASS; marker L2_AW18_SELF_TEST_PASS scenarios=8 entries=100000 elapsed_seconds=1.751035.",
-    "L2-AW18 Apple Core Data/SQLite reopen and iPhone setlist UX were not marked PASS; those remain HQ/device gates."
+    "L2-M01..L2-AW18 historical validation remains durable in Git history and prior status blob afbc25ee0d4f0b14db9997b7b80bc1508c7d6494.",
+    "L2-AW19 Lane2PrejournalExportQuarantine.swift Swift 6.2.1 Linux strict-concurrency/warnings-as-errors typecheck => PASS.",
+    "L2-AW19 PrejournalExportQuarantineTests.swift strict XCTest typecheck => PASS.",
+    "L2-AW19 Lane2PrejournalExportRecoveryService.swift strict typecheck against the exact AW17 journal method shape via contract-equivalent stub => PASS.",
+    "L2-AW19 static production audit => PASS 15/15: recovery roots, marker/artifact validation, symlink/nested rejection, stale snapshot checks, durable intent-before-mutation and recovery ordering.",
+    "L2-AW19 exact committed self-check blob 2ed7451c5a047cb586957e23afb628765d4e0112 rerun => PASS; marker L2_AW19_SELF_TEST_PASS scenarios=9 batches=1000 artifacts=2000 elapsed_seconds=0.324857.",
+    "L2-AW19 real APFS force termination, iPhone share/save UX and Files destination behavior were not marked PASS."
   ],
   "evidence": [
-    "L2-AW18 re-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock 7867f497d78bacc5950b5dec119cafbf7813bd3f at integration epoch 12, Worker status and PARITY ledger before selection.",
-    "Existing replaceSetlistEntries is already one serialized Core Data mutation and the frozen contract intentionally allows duplicate project references; AW18 does not remove repeated songs.",
-    "SetlistIntegrityRecovery adds deterministic dead-project pruning and position normalization using stored position then entryUUID tie-break, fails closed on duplicate entry identity, and read-backs the store after repair.",
-    "CrashSafeProjectLibraryStore adapts the frozen setlist surface to the portable reconciler; canonical openPreservingUserData now runs interrupted-delete recovery first and setlist reconciliation second.",
-    "Remote Git blobs matched local validated sources: policy 2108a8ce5328023410949138cc36e3361189be32, adapter 5d27278ae8f033deb5493c704b3cb8174de88e32, startup 3f55bd9f3dce13f7809e986e384929a90938e2fb, tests 97ede10221187d436a108fcbd609d564d0e9de81, self-check 1d94fddcdaf25768872402f36d70974a83ec5e12, evidence 9939249a5df37e9d4f1492cc74e502575e51d3f2.",
-    "Library/L2-AW18_SETLIST_INTEGRITY_RECOVERY_VALIDATION.md records mutation audit, recovery semantics, portable execution, Apple gates and explicit NON-PARITY status."
+    "L2-AW19 re-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock 7867f497d78bacc5950b5dec119cafbf7813bd3f at integration epoch 12, Worker status and PARITY ledger before selection.",
+    "AW17 prejournal quarantine preserved ownership-unknown bytes safely but had no lane-local inventory/disposition contract; AW19 adds explicit non-destructive inventory, preserve-for-user and purge decisions without inventing ProjectID or export metadata.",
+    "Lane2PrejournalExportQuarantineManager keeps unresolved and recovered-for-user batches outside Exports, validates UUID/direct-child/marker/regular-nonempty artifact constraints, isolates malformed batch issues and excludes the marker from returned media artifacts.",
+    "Every preserve/purge requires exact v1 snapshot-token confirmation and atomically persists a disposition intent before filesystem mutation; recoverPendingDispositions replays before/after-move and before/after-delete crash states.",
+    "Lane2PrejournalExportRecoveryService explicitly sequences AW17 previous-process publication recovery -> AW19 disposition replay -> inventory for App/HQ recovery UX.",
+    "Remote Git blobs matched validated production/test sources: manager 802f9590a6328755fdf1149d10d71609ac2d3732, service aac3d41bc5a1023636da1e69f976f2a5c58212cd, tests fdaacb0c962b8c98c60ccefd19f70fb750e63b9d, committed self-check 2ed7451c5a047cb586957e23afb628765d4e0112 and final evidence 5b5d85c0af478bc066c52c21657945745676bf35.",
+    "Library/L2-AW19_PREJOURNAL_QUARANTINE_DISPOSITION_VALIDATION.md records recovery semantics, portable execution, ownership non-inference and explicit NON-PARITY boundary."
   ],
   "known_gaps": [
     "Apple Core Data runtime execution and real SQLite wall-time/query-plan/RSS/index evidence remain pending.",
-    "AW18 setlist reconciliation still requires Apple SQLite reopen/forced-termination evidence; low-level orphan SetlistEntryRecord rows whose setlistUUID has no SetlistRecord are outside the frozen snapshot repair surface.",
-    "AW18 startup repair is wired to canonical openPreservingUserData; legacy/non-preserving construction does not automatically receive the pass, and recovery should run before interactive setlist editing is exposed.",
+    "AW18 setlist reconciliation still requires Apple SQLite reopen/forced-termination evidence; low-level orphan SetlistEntryRecord rows whose setlistUUID has no SetlistRecord remain a lane-local cleanup gap.",
+    "AW19 gives AW17 prejournal bytes explicit inventory/keep/purge handling, but real iPhone recovery UX, share sheet/Files destination behavior, retention policy presentation and force-termination around disposition intent/move/delete remain HQ/device gates.",
+    "AW19 deliberately does not infer a project or recreate canonical Exports metadata for ownership-unknown batches; any future user-selected project adoption needs its own durable ownership contract and HQ/App UX.",
     "AW13 lifecycle metadata recovery still requires real iPhone/APFS forced-termination and App recovery UX evidence.",
     "AW14 public URL transport still requires Apple URLSessionDownloadDelegate runtime, real endpoint behavior and DNS-resolution/rebinding evidence.",
     "AW15/AW16 File Provider/security-scoped, real ENOSPC and background-suspension evidence remain pending on iPhone.",
-    "AW17 previous-process prejournal quarantine requires App/HQ inventory, user-facing recovery and retention/purge policy plus APFS force-termination evidence.",
     "Reference codec policy remains MP3/WAV/FLAC/M4A/MP4/MOV/WMA; real Apple fixtures and an audited production WMA compatibility decoder/license remain required if native WMA is unavailable.",
     "Real AVFoundation export/share/playback, storage-pressure/APFS interruption and Differential Moises remain HQ gates.",
     "MOI-P001/P002/P017/P018/P019/P020 remain MISSING until Apple runtime, integrated iPhone, real-audio/reference and differential gates are satisfied."
   ],
   "hq_requests": [
-    "Keep CrashSafeProjectLibraryStore.openPreservingUserData(...) as the production Library startup path so delete recovery completes before AW18 setlist integrity repair.",
-    "Run Apple Core Data reopen tests with dead project references, negative/gapped/colliding positions and repeated project references; verify repair preserves repeated songs and converges to contiguous ordering.",
-    "Force terminate on iPhone around project deletion and relaunch repair; do not expose interactive setlist editing until startup reconciliation completes.",
-    "Verify current-Moises iPhone setlist create/reorder/use UX and operation count before any MOI-P018 promotion.",
-    "Retain AW17 canonical exporter/prejournal guard and define inventory/recovery/retention policy for .LibraryRecovery/PrejournalExport.",
-    "Run the pending AW14/AW16 real import/codec/File Provider/storage-pressure gates including MP3/WAV/FLAC/M4A/MP4/MOV/WMA.",
-    "Do not promote MOI-P018 or other Lane-2 PARITY rows from portable evidence alone; final PARITY remains HQ-owned.",
-    "No Shared/App/PARITY contract change was required by L2-AW18."
+    "Compose Lane2PrejournalExportRecoveryService for recovery UX and call inventoryAfterRelaunch() before presenting unresolved prejournal items.",
+    "Present explicit Keep/Recover-for-user versus Discard choices; never infer project ownership from filenames, timestamps, ordering or adjacent metadata.",
+    "Feed share/save UX only with recoveredArtifactURLs(...) after snapshot revalidation; do not place ownership-unknown batches back into canonical Exports automatically.",
+    "Do not age-purge .LibraryRecovery/PrejournalExport or RecoveredPrejournalExport without an explicit product retention decision.",
+    "Force terminate on iPhone after disposition intent write, during preserve move, after move before intent removal, during purge and after purge before intent removal; verify replay convergence.",
+    "Keep AW17 canonical exporter/pre-registration marker behavior and run the pending AW14/AW16 import/codec/File Provider/storage-pressure gates including MP3/WAV/FLAC/M4A/MP4/MOV/WMA.",
+    "Do not promote MOI-P019 or any other Lane-2 PARITY row from portable AW19 evidence alone; final PARITY remains HQ-owned.",
+    "No Shared/App/PARITY contract change was required by L2-AW19."
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW18",
-    "goal": "Make setlists converge after relaunch when legacy/migrated/abnormal metadata contains dead project references or non-canonical ordering, while preserving the existing repeated-project setlist contract.",
-    "rationale": "MOI-P018 remains MISSING. Ordinary replace/reorder is already serialized and atomic within the existing Core Data store, but canonical startup had no integrity pass for stale project references or position gaps/collisions after older builds or abnormal states. This is solvable entirely inside Library ownership without changing Shared/App.",
-    "done_when": "A portable deterministic policy removes only non-live references, preserves repeated projects, normalizes ordering with stable entry identity tie-breaks, fails closed on ambiguous identity corruption, performs read-back verification, is wired after delete recovery in canonical preserving startup, tests/self-check/evidence pass, and Apple/iPhone/PARITY gates remain explicit.",
+    "wave_id": "L2-AW19",
+    "goal": "Turn AW17 ownership-unknown prejournal export quarantine into an explicit, crash-recoverable inventory/keep/purge surface without fabricating project ownership or canonical export metadata.",
+    "rationale": "AW17 prevented data loss by preservation-quarantining batches when process death happened before any Library project intent was durable, but App/HQ had no safe lane-local way to enumerate valid candidates or record explicit retain/discard decisions. This gap is fully solvable inside Library ownership.",
+    "done_when": "Valid and malformed batches can be inventoried independently, Keep moves exact-confirmed bytes into a non-orphan-swept recovered root, Discard is explicit and snapshot-guarded, every decision is durable before mutation and replayable after process death, recovered media URLs exclude marker metadata, production sequencing with AW17 is explicit, portable tests/self-check/evidence pass, and device/PARITY gates remain explicit.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "a0363f756afd64d88cac724515be6e5e9b31e185",
-    "next_priority": "Add explicit inventory and safe disposition tooling for AW17 .LibraryRecovery/PrejournalExport quarantine so preserved exports can be surfaced/recovered/purged without guessing ownership; then continue remaining Lane-2 Apple-gated integration readiness."
+    "implementation_head_sha": "5c57529d64bc0999f2e6a8808a7463e8c38dde05",
+    "next_priority": "Close the remaining low-level orphan SetlistEntryRecord -> missing SetlistRecord cleanup gap during canonical Library startup without changing the frozen Shared contract; then continue Apple Core Data/device integration readiness."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW18 continue the Lane-2 completion roadmap without waiting for HQ task replenishment.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW19 continue the Lane-2 completion roadmap without waiting for HQ task replenishment.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-24T03:28:00+09:00",
-  "status_compaction_note": "To keep worker status bounded, the full pre-AW18 ledger remains addressable through prior_status_blob_sha 925500f49142b12fe42570d077ee313ea134fe66 and Git history; the commits array contains AW18 only. No implementation/evidence history was deleted from Git.",
+  "last_updated": "2026-08-24T04:03:00+09:00",
+  "status_compaction_note": "To keep worker status bounded, the full pre-AW19 ledger remains addressable through prior_status_blob_sha afbc25ee0d4f0b14db9997b7b80bc1508c7d6494 and Git history; the commits array contains AW19 only. No implementation/evidence history was deleted from Git.",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ reads it for lane checkpoint integration and remains sole PARITY authority."
 }
