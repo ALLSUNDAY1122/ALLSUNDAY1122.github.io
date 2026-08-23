@@ -4,125 +4,156 @@
 - worker: `worker1`
 - lane: `LANE-1-PRODUCT`
 - branch: `scanner-parity/worker1-product-lane`
-- original lane baseline: `fd9cb2ec7745a927fae80a82f5cfc514ebc40020`
-- original final PR: `#4523`, merged by HQ as `df0f56ad68e8db184538d9c968380eb47d20c61e`
-- post-merge hardening PR: `#4531`
-- policy: `AUTONOMOUS_LANES`
+- original Product Lane PR: `#4523` -> HQ merge `df0f56ad68e8db184538d9c968380eb47d20c61e`
+- HQ cross-lane composition PR: `#4532` -> merge `846bef866502bbb4065381c6845d2aacf28590d6`
+- post-integration hardening PR: `#4531`
+- Shared Contract: unchanged
+- Golden decision: not made by Worker1
 
-## Current disposition
+## Disposition
 `LANE_INTEGRATION_READY_POST_MERGE_HARDENING`
 
-The original Product Lane was integrated by HQ. A subsequent large-loop audit found recovery/privacy defects that were not acceptable to leave behind. This branch now contains a focused post-merge hardening delta for HQ integration.
+HQ final composition connected the real five-stage runtime, Worker4 Review/Recovery and Worker3 package integrity, but the integrated Product Shell still retained several recovery/privacy defects. This hardening delta corrects them without editing HQ-owned Shared Contract or other lane-owned source.
 
-## Product capability
-- SwiftUI reducer-backed app shell and navigation.
-- Photos/video/Files import with camera-denial fallback.
-- Canonical `frameExtraction -> imageCorrection -> pageAudit -> ocr -> packageWrite` orchestration boundary.
-- incremental progress, cancellation and checkpoint resume.
-- replaceable ReviewCore workflow boundary.
-- BookPackage Share + Save to Files UX.
-- bounded iOS background grace; no false claim of unlimited background processing.
-
-## Hardening defects found after original integration
-### H1 — relaunch Resume was not actually restorable
-The original checkpoint stored input IDs but not durable input descriptors. After process relaunch, `ProductFlowState.inputAssets` was empty, so Resume could not actually start.
+## Defects found and fixed
+### H1 — relaunch Resume could not reconstruct input
+Old checkpoints retained input IDs but process relaunch lost the actual imported media descriptors.
 
 Fix:
-- checkpoint schema defaults to v2 and stores optional `inputAssets` alongside IDs.
-- optional field preserves decode compatibility with schema-v1 checkpoints.
-- relaunch restores input descriptors only when every managed file still exists and IDs match.
-- stale checkpoint is invalidated when the user selects different input.
+- active checkpoint retains `inputAssets` descriptors while the run is resumable.
+- schema-v1/v2 decode compatibility remains.
+- every referenced input must still exist before relaunch resume is enabled.
+- input replacement invalidates stale checkpoint state.
 
-### H2 — source media lived in OS temporary storage
-Photo/video/Files imports were copied to `temporaryDirectory`, which cannot support reliable long-book relaunch recovery.
-
-Fix:
-- active-run media is copied into app-managed `Application Support/ScannerParity/Imports`.
-- the recovery import directory is explicitly excluded from device backup.
-- movie import still uses `Transferable.FileRepresentation`, avoiding whole-long-video `Data` loading.
-- only app-managed import paths are eligible for automatic deletion; arbitrary external URLs are never deleted.
-
-### H3 — durable recovery could conflict with Privacy retention
-Worker2 Privacy/Security lane defines raw book source/page data as processing-only data that must be purged after use; only final BookPackage may persist normally.
+### H2 — imported source media used OS temporary storage
+`MediaImportCoordinator` originally copied Photos/Files inputs to `temporaryDirectory`.
 
 Fix:
-- managed raw imported media is retained only while needed for active-run/relaunch recovery.
-- after pipeline completion, raw managed inputs are purged and removed from live UI state.
-- the completed `packageWrite` checkpoint remains until export completion so relaunch can reopen final review/export without retaining raw source media.
-- `markExportFinished` clears that completed checkpoint.
+- active imports use `Application Support/ScannerParity/Imports`.
+- directory is marked `isExcludedFromBackup=true`.
+- only app-managed import paths may be automatically deleted.
+- long movies still use `Transferable.FileRepresentation`; they are not loaded as one large Data blob.
 
-### H4 — resume trusted broken checkpoint artifacts
-The original resume path skipped any stage named in checkpoint metadata even if the output had disappeared or stages were out of canonical order.
-
-Fix:
-- `ProductPipelineCheckpoint.hasCanonicalExistingArtifacts` centralizes artifact validation.
-- completed artifacts must be exactly a canonical stage prefix.
-- every checkpoint artifact output URL must exist.
-- every newly returned stage artifact must match its expected stage and exist on disk.
-- malformed/missing resume state fails closed as `invalidResumeCheckpoint`.
-
-### H5 — completed-session restore could trust only packageWrite
-A checkpoint containing a packageWrite artifact could previously reopen review/export even if the preceding chain was malformed.
+### H3 — processing intermediates had no deterministic terminal purge
+HQ `ProductionScannerRuntime` writes frame extraction, corrected images, audit snapshots, OCR snapshots and BookPackage under the per-book workspace. A successful run previously left those intermediates under Application Support.
 
 Fix:
-- completed-session restoration now requires `isCompletedPackageCheckpoint`: all five canonical stage artifacts, in order, with existing outputs.
-- corrupt completed checkpoints are rejected before UI restore.
+- per-book processing workspace is backup-excluded while active.
+- on successful package completion the final BookPackage is first moved to backup-excluded `Application Support/ScannerParity/Completed/<bookID>`.
+- then raw imported media and the full processing workspace are removed through explicit `purgeProcessingWorkspace(bookID:)`.
+- this removes `01-frame-extraction` through `04-ocr` and the old package workspace after final package promotion.
 
-### H6 — checkpoint date decode mismatch
-Earlier runtime verification found ISO-8601 encoding paired with default date decoding. `JSONDecoder.dateDecodingStrategy = .iso8601` was added and roundtrip verification passed.
+### H4 — terminal state still depended on intermediate artifact paths
+Retaining a full five-stage checkpoint after deleting intermediates would make review/export relaunch depend on deleted files.
 
-## Cross-lane compatibility read-back
-### Worker2 Privacy/Security
-`BookDataLifecyclePolicy` requires raw/intermediate book data to remain local and be purged after processing; network/log paths are denied in the standard flow. LANE-1 now uses backup-excluded recoverable storage only while an active run may need resume, then purges managed raw input at completion.
+Fix:
+- checkpoint schema v3 adds `ProductCompletionSnapshot`.
+- terminal state stores only staged BookPackage URL, review metadata, page count and completion time.
+- terminal checkpoint has `inputAssets=nil` and `completedArtifacts=[]`.
+- legacy completed v2 five-stage checkpoint is validated, promoted to Completed staging and migrated to v3 before workspace cleanup.
+- review decisions update only terminal review metadata.
 
-### Worker3 Package Quality
-Worker3 final evidence reports PackageValidation/PackageQuality non-Golden completion with 16/16 fixtures PASS. LANE-1 keeps `packageWrite` as the final composition boundary; PackageValidation/Quality can run there or immediately afterward without changing the shared scanner contract.
+### H5 — broken checkpoints could be trusted
+Fix:
+- active resume artifacts must be exactly a canonical stage prefix.
+- every active artifact output must exist.
+- returned stage output must match expected stage and exist.
+- terminal snapshot requires an existing staged BookPackage.
+- malformed state fails closed.
 
-### Worker4 Review/Recovery
-Worker4 provides `AppShellReviewAdapter`, stable ReviewQueue IDs and retry/reOCR/recapture/defer/exclude/accept decisions. LANE-1 keeps a type-erased `ProductReviewWorkflow` factory so HQ can bind the concrete Worker4 adapter without changing navigation or Shared Contract.
+### H6 — checkpoint date encode/decode mismatch
+ISO-8601 encoding had been paired with default JSON date decoding.
+
+Fix:
+- `JSONDecoder.dateDecodingStrategy = .iso8601`.
+
+### H7 — local Completed staging could remain after user finished
+Fix:
+- successful Files export or explicit `Finish and remove local staging` removes managed Completed package and clears terminal checkpoint.
+- completed UI no longer offers a stale local `Share again` reference after cleanup.
+
+### H8 — unused camera authorization path created an unnecessary permission requirement
+AppShell had `AVCaptureDevice` permission checks but no camera-capture UI; actual supported Product inputs are Photos and Files.
+
+Fix:
+- removed AVFoundation from `MediaImportCoordinator`.
+- removed `AVCaptureDevice` authorization calls and camera-permission UI.
+- therefore Product Shell does not require a host-app `NSCameraUsageDescription` until an actual camera capture feature is implemented.
+
+## Worker2 post-integration privacy alignment
+Worker2 PR `#4530` adds `ProcessingStorageLifecycleAuditor`. Its relevant contract requires:
+- Application Support processing storage to be managed and backup-excluded,
+- deterministic imported-media purge,
+- deterministic processing-workspace purge,
+- no camera usage description when no camera API is used.
+
+The current LANE-1 hardening deliberately exposes those invariants through:
+- `isExcludedFromBackup = true`
+- `discardImportedAssets`
+- `purgeManagedInputs`
+- `purgeProcessingWorkspace`
+- no `AVCaptureDevice` token in AppShell input code.
+
+Worker2's strengthened gate itself remains a separate HQ integration PR and is not merged by Worker1.
 
 ## Verification
-Environment used for executable ProductFlow verification:
-- Swift 6.2.1
-- Linux x86_64
-- strict concurrency enabled for reconstructed production-core checks.
+### Swift production-core execution
+Environment: Swift 6.2.1 / Linux x86_64 / strict concurrency.
 
-Observed executable checks after recovery hardening:
-- canonical five-stage run/checkpoints: PASS
-- checkpoint contains durable input descriptor: PASS
-- package completion: PASS
-- schema-v2 encode/decode roundtrip: PASS
-- durable input descriptor survives roundtrip and points to an existing file: PASS
-- resume skips already-completed canonical prefix: PASS
-- schema-v1 checkpoint remains decodable: PASS
-- schema-v1 missing `inputAssets` resolves to nil: PASS
-- completed-session `restoreCompleted` state restores package/review while dropping raw input: PASS
+Reconstructed production-core execution passed for:
+- canonical five-stage orchestration
+- canonical-prefix resume
+- missing resume artifact fail-close
+- schema-v3 terminal checkpoint encode/decode
+- legacy full completion derivation
+- missing terminal package fail-close
+- schema-v1 decode compatibility
 
-Repository fixtures additionally define fail-close cases for mismatched identity, missing resume artifacts, non-prefix stage order, missing bindings, 200-page incremental progress and stable review dedupe.
+Repository fixture additionally covers mismatched identity, non-prefix order, review-ID dedupe and 200-page incremental progress.
 
-AppShell static contract now covers durable import storage, backup exclusion, managed cleanup, relaunch input restoration, completed-session canonical validation, corrupt-checkpoint rejection, raw input purge after completion, stale checkpoint invalidation, share/Files export and bounded background grace.
+### Apple / final assembled-tree validation
+GitHub Actions workflow: `Scanner Parity Apple Validation`
+- successful run: `32630191967`
+- runner: macOS 26 arm64
+- Xcode: 26.6
+- Apple Swift: 6.3.3
+- iPhoneOS SDK: 26.5
+- target: `arm64-apple-ios17.0`
 
-## Apple SDK boundary
-`scanner-parity/Tests/AppShell/run-apple-product-compile.sh` remains the ProductShell iPhoneOS compile harness.
+Observed in the PR merge tree:
+- AppleValidation contract: PASS
+- FrameExtraction Apple module: PASS
+- ImageCorrection Apple module: PASS
+- PageAudit Apple module: PASS
+- final AppShell source contract: `34/34 PASS`
+- existing Lane2 privacy/security gate: PASS
+- SwiftPM dump-package for root / ReviewCore / Recovery / ProductFlow / AppShell: PASS
+- ScannerRuntime iPhoneOS module: PASS
+- ReviewCore iPhoneOS module: PASS
+- Recovery iPhoneOS module: PASS
+- ProductFlow iPhoneOS module: PASS
+- AppShell iPhoneOS module: PASS
+- terminal marker: `PRODUCT_APPLE_SDK_COMPILE_PASS`
 
-The existing `.github/workflows/scanner-parity-apple-validation.yml` runs the established Apple adapter harness only; it does not execute the AppShell-specific harness. Worker1 write scope does not permit editing `.github/workflows/**`, so no ProductShell Apple SDK PASS is claimed here. HQ/final integration must run the retained AppShell harness on an allowed macOS/Xcode runner before marking ProductShell Apple compile PASS.
+Earlier failed runs were used as defect discovery evidence:
+- `32630033711`: stale source-contract function-name expectation
+- `32630094554`: legacy `ProductCompletionSnapshot` -> `ProductPipelineCompletion` bridge type mismatch
+Both were corrected before successful run `32630191967`.
 
 ## Scope audit
-The hardening delta is limited to:
+Hardening changes remain limited to:
 - `scanner-parity/AppShell/**`
 - `scanner-parity/ProductFlow/**`
 - `scanner-parity/Tests/AppShell/**`
 - `scanner-parity/Tests/ProductFlow/**`
 - `automation/chatgpt-dispatcher/scanner-parity/evidence/LANE-1-*.md`
 
-No `scanner-parity/SHARED_CONTRACT.md` change. No Golden Dataset PASS/FAIL or canonical SHA decision.
+No Shared Contract modification. No Golden original committed. No Golden SHA/PASS/FAIL decision.
 
-## Remaining HQ final-integration gates
-1. Merge post-merge hardening PR #4531.
-2. Bind real integrated FrameExtraction/ImageCorrection/PageAudit/OCRExport/PipelineOCR implementations at `ScannerPipelineBindings`.
-3. Bind Worker4 Review/Recovery adapter through `ProductReviewWorkflow`.
-4. Run Worker3 package validation/quality in final `packageWrite` path.
-5. Execute the AppShell-specific iPhoneOS compile harness on macOS/Xcode.
-6. Run HQ Golden Gate with the user-provided Golden Dataset.
+## Remaining HQ gates
+1. Merge hardening PR `#4531`.
+2. Merge/refresh Worker2 post-integration privacy regression PR `#4530` so the strengthened lifecycle auditor becomes canonical.
+3. Re-run the combined final Release/Privacy gate after both are canonical.
+4. Execute `HQ_GOLDEN_GATE` with the user-provided real-book Golden Dataset.
 
-Worker1 does not merge its own integration PR and does not issue formal Golden or Release PASS.
+Worker1 must not merge its own PR and does not claim formal Golden or Release PASS.
