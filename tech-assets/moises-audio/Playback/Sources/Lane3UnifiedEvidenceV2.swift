@@ -113,8 +113,8 @@ public enum Lane3ProductionGenerationEvidenceCapture {
 
 public struct Lane3PCMIdentityReceipt: Equatable, Codable, Sendable {
     public let algorithm: String
-    public let referenceDigestFNV1A64: String
-    public let observedDigestFNV1A64: String
+    public let referenceDigestSHA256: String
+    public let observedDigestSHA256: String
     public let channels: Int
     public let sampleRate: Double
     public let referenceFrameCount: Int64
@@ -139,9 +139,9 @@ public enum Lane3PCMIdentityHasher {
             throw Lane3UnifiedEvidenceV2Error.invalidPCMIdentity
         }
         return Lane3PCMIdentityReceipt(
-            algorithm: "FNV1A64_FLOAT32_LE_V1",
-            referenceDigestFNV1A64: digest(reference),
-            observedDigestFNV1A64: digest(observed),
+            algorithm: "SHA256_FLOAT32_LE_V1",
+            referenceDigestSHA256: digest(reference),
+            observedDigestSHA256: digest(observed),
             channels: reference.channels,
             sampleRate: reference.sampleRate,
             referenceFrameCount: reference.frameCount,
@@ -150,39 +150,128 @@ public enum Lane3PCMIdentityHasher {
     }
 
     private static func digest(_ pcm: Lane3PCMBufferDescriptor) -> String {
-        var hash: UInt64 = 0xcbf29ce484222325
-        feed("LANE3_PCM_IDENTITY_V1", into: &hash)
-        feed(UInt64(pcm.channels), into: &hash)
-        feed(pcm.sampleRate.bitPattern, into: &hash)
-        feed(UInt64(pcm.frameCount), into: &hash)
-        feed(UInt64(pcm.interleavedSamples.count), into: &hash)
+        var bytes: [UInt8] = []
+        bytes.reserveCapacity(64 + pcm.interleavedSamples.count * 4)
+        append("LANE3_PCM_IDENTITY_V1", to: &bytes)
+        append(UInt64(pcm.channels), byteCount: 8, to: &bytes)
+        append(pcm.sampleRate.bitPattern, byteCount: 8, to: &bytes)
+        append(UInt64(pcm.frameCount), byteCount: 8, to: &bytes)
+        append(UInt64(pcm.interleavedSamples.count), byteCount: 8, to: &bytes)
         for sample in pcm.interleavedSamples {
-            feed(UInt64(sample.bitPattern), byteCount: 4, into: &hash)
+            append(UInt64(sample.bitPattern), byteCount: 4, to: &bytes)
         }
-        return String(format: "%016llx", hash)
+        return SHA256.hexDigest(bytes)
     }
 
     fileprivate static func digestFields(_ fields: [String]) -> String {
-        var hash: UInt64 = 0xcbf29ce484222325
-        feed("LANE3_UNIFIED_RUN_BINDING_V2", into: &hash)
-        for field in fields { feed(field, into: &hash) }
-        return String(format: "%016llx", hash)
+        var bytes: [UInt8] = []
+        append("LANE3_UNIFIED_RUN_BINDING_V2", to: &bytes)
+        for field in fields { append(field, to: &bytes) }
+        return SHA256.hexDigest(bytes)
     }
 
-    private static func feed(_ string: String, into hash: inout UInt64) {
-        for byte in string.utf8 {
-            hash ^= UInt64(byte)
-            hash &*= 0x100000001b3
-        }
-        hash ^= 0xff
-        hash &*= 0x100000001b3
+    private static func append(_ string: String, to bytes: inout [UInt8]) {
+        bytes.append(contentsOf: string.utf8)
+        bytes.append(0xff)
     }
 
-    private static func feed(_ value: UInt64, byteCount: Int = 8, into hash: inout UInt64) {
+    private static func append(_ value: UInt64, byteCount: Int, to bytes: inout [UInt8]) {
         for offset in 0..<byteCount {
-            let byte = UInt8(truncatingIfNeeded: value >> UInt64(offset * 8))
-            hash ^= UInt64(byte)
-            hash &*= 0x100000001b3
+            bytes.append(UInt8(truncatingIfNeeded: value >> UInt64(offset * 8)))
+        }
+    }
+
+    private enum SHA256 {
+        private static let initial: [UInt32] = [
+            0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+            0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+        ]
+        private static let constants: [UInt32] = [
+            0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+            0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+            0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+            0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+            0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+            0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+            0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+            0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+        ]
+
+        static func hexDigest(_ input: [UInt8]) -> String {
+            let digest = hash(input)
+            return digest.map { String(format: "%02x", $0) }.joined()
+        }
+
+        private static func hash(_ input: [UInt8]) -> [UInt8] {
+            var message = input
+            let bitLength = UInt64(message.count) * 8
+            message.append(0x80)
+            while message.count % 64 != 56 { message.append(0) }
+            for shift in stride(from: 56, through: 0, by: -8) {
+                message.append(UInt8(truncatingIfNeeded: bitLength >> UInt64(shift)))
+            }
+
+            var h = initial
+            var w = [UInt32](repeating: 0, count: 64)
+            for chunkStart in stride(from: 0, to: message.count, by: 64) {
+                for index in 0..<16 {
+                    let offset = chunkStart + index * 4
+                    w[index] = (UInt32(message[offset]) << 24)
+                        | (UInt32(message[offset + 1]) << 16)
+                        | (UInt32(message[offset + 2]) << 8)
+                        | UInt32(message[offset + 3])
+                }
+                for index in 16..<64 {
+                    let s0 = rotateRight(w[index - 15], by: 7)
+                        ^ rotateRight(w[index - 15], by: 18)
+                        ^ (w[index - 15] >> 3)
+                    let s1 = rotateRight(w[index - 2], by: 17)
+                        ^ rotateRight(w[index - 2], by: 19)
+                        ^ (w[index - 2] >> 10)
+                    w[index] = w[index - 16] &+ s0 &+ w[index - 7] &+ s1
+                }
+
+                var a = h[0], b = h[1], c = h[2], d = h[3]
+                var e = h[4], f = h[5], g = h[6], hh = h[7]
+                for index in 0..<64 {
+                    let s1 = rotateRight(e, by: 6) ^ rotateRight(e, by: 11) ^ rotateRight(e, by: 25)
+                    let ch = (e & f) ^ ((~e) & g)
+                    let temp1 = hh &+ s1 &+ ch &+ constants[index] &+ w[index]
+                    let s0 = rotateRight(a, by: 2) ^ rotateRight(a, by: 13) ^ rotateRight(a, by: 22)
+                    let maj = (a & b) ^ (a & c) ^ (b & c)
+                    let temp2 = s0 &+ maj
+                    hh = g
+                    g = f
+                    f = e
+                    e = d &+ temp1
+                    d = c
+                    c = b
+                    b = a
+                    a = temp1 &+ temp2
+                }
+                h[0] &+= a
+                h[1] &+= b
+                h[2] &+= c
+                h[3] &+= d
+                h[4] &+= e
+                h[5] &+= f
+                h[6] &+= g
+                h[7] &+= hh
+            }
+
+            var output: [UInt8] = []
+            output.reserveCapacity(32)
+            for word in h {
+                output.append(UInt8(truncatingIfNeeded: word >> 24))
+                output.append(UInt8(truncatingIfNeeded: word >> 16))
+                output.append(UInt8(truncatingIfNeeded: word >> 8))
+                output.append(UInt8(truncatingIfNeeded: word))
+            }
+            return output
+        }
+
+        private static func rotateRight(_ value: UInt32, by amount: UInt32) -> UInt32 {
+            (value >> amount) | (value << (32 - amount))
         }
     }
 }
@@ -236,7 +325,7 @@ public struct Lane3UnifiedEvidenceReportV2: Equatable, Codable, Sendable {
     public let pcmIdentity: Lane3PCMIdentityReceipt
     public let coreEvidence: Lane3IntegratedEvidenceReport
     public let envelope: Lane3EnvelopeEvidenceSnapshot
-    public let runBindingFNV1A64: String
+    public let runBindingSHA256: String
     public let sourceEvidenceScopes: [String]
     public let readyForRealAudioReview: Bool
     public let humanAudibilityClaimed: Bool
@@ -315,8 +404,8 @@ public enum Lane3UnifiedEvidencePipelineV2 {
             productionGeneration.activeReason,
             String(receipt.operationSerial),
             pcmIdentity.algorithm,
-            pcmIdentity.referenceDigestFNV1A64,
-            pcmIdentity.observedDigestFNV1A64,
+            pcmIdentity.referenceDigestSHA256,
+            pcmIdentity.observedDigestSHA256,
             String(timeReport.globalLagFrames),
             String(envelope.windowsAnalyzed),
             String(expectedEventFrames.count)
@@ -333,7 +422,7 @@ public enum Lane3UnifiedEvidencePipelineV2 {
             pcmIdentity: pcmIdentity,
             coreEvidence: core,
             envelope: envelope,
-            runBindingFNV1A64: runBinding,
+            runBindingSHA256: runBinding,
             sourceEvidenceScopes: core.sourceEvidenceScopes + [
                 envelope.evidenceScope,
                 recoveryLineage.evidenceScope,
