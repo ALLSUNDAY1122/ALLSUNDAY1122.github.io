@@ -30,12 +30,15 @@ public final class CrashSafeProjectLibraryStore:
 {
     private let metadata: CoreDataProjectLibraryStore
     private let artifacts: LibraryArtifactLifecycle
+    private let deletionOwnership: Lane2DeletionOwnershipIndex
     private let mutationGate = Lane2LibraryMutationGate()
 
     public init(metadata: CoreDataProjectLibraryStore, artifactRootURL: URL) throws {
         self.metadata = metadata
         self.artifacts = LibraryArtifactLifecycle(rootURL: artifactRootURL)
+        self.deletionOwnership = Lane2DeletionOwnershipIndex(rootURL: artifactRootURL)
         try artifacts.ensureLayout()
+        try deletionOwnership.ensureLayout()
     }
 
     /// Preferred construction path: open metadata then reconcile any delete journal/tombstone left by interruption.
@@ -123,13 +126,14 @@ public final class CrashSafeProjectLibraryStore:
 
     /// Sequence:
     /// 1) read a lightweight live-project artifact projection,
-    /// 2) durable PREPARED journal (non-destructive),
-    /// 3) metadata tombstone transaction,
-    /// 4) mark journal COMMITTED,
-    /// 5) validate journal ownership/live references,
-    /// 6) idempotent file deletion and durable ARTIFACTS_DELETED marker,
-    /// 7) physical Core Data project/child compaction,
-    /// 8) retire the journal only after metadata compaction commits.
+    /// 2) persist durable deletion ownership evidence,
+    /// 3) durable PREPARED journal (non-destructive),
+    /// 4) metadata tombstone transaction,
+    /// 5) mark journal COMMITTED,
+    /// 6) validate journal ownership/live references,
+    /// 7) idempotent file deletion and durable ARTIFACTS_DELETED marker,
+    /// 8) physical Core Data project/child compaction,
+    /// 9) retire journal and ownership evidence only after metadata compaction commits.
     /// A crash in every gap converges safely during recoverInterruptedOperations().
     public func deleteProject(projectID: ProjectID) async throws {
         try await withMutationGate {
@@ -147,6 +151,13 @@ public final class CrashSafeProjectLibraryStore:
                 !otherReferences.contains($0)
             }
 
+            try deletionOwnership.persist(
+                Lane2DeletionOwnershipRecord(
+                    projectUUID: projectID.rawValue,
+                    sourceAssetUUID: target.sourceAssetID.rawValue,
+                    artifactRelativePaths: target.artifactRelativePaths
+                )
+            )
             try artifacts.persistPreparedDeletion(
                 projectUUID: projectID.rawValue,
                 relativePaths: relativePaths
@@ -161,10 +172,9 @@ public final class CrashSafeProjectLibraryStore:
         try await metadata.recoveryPlan(projectID: projectID)
     }
 
-    /// Reconciles durable delete journals and also backfills older physically retained tombstones.
-    /// Destructive journal paths are re-authorized against current tombstone ownership and live
-    /// references before any file is removed. Metadata is compacted only after artifact deletion is
-    /// durably recorded as ARTIFACTS_DELETED.
+    /// AW22 steady-state recovery uses the durable deletion-ownership index and does not globally
+    /// materialize tombstoned Core Data candidates. The older N+1 candidate scan is restricted to a
+    /// one-time legacy migration or an interrupted AW21 destructive journal that predates the index.
     @discardableResult
     public func recoverInterruptedOperations() async throws -> LibraryRecoveryReport {
         try await withMutationGate {
@@ -174,9 +184,11 @@ public final class CrashSafeProjectLibraryStore:
 
     private func recoverInterruptedOperationsUnlocked() async throws -> LibraryRecoveryReport {
         let journals = try artifacts.pendingDeletionJournals()
-        let candidates = try await metadata.listTombstonedProjectCompactionCandidates()
+        let indexedRecords = try deletionOwnership.pendingRecords()
 
-        guard !journals.isEmpty || !candidates.isEmpty else {
+        if journals.isEmpty,
+           indexedRecords.isEmpty,
+           deletionOwnership.isLegacyScanComplete {
             return LibraryRecoveryReport(
                 discardedPrepared: [],
                 completedCommitted: [],
@@ -187,10 +199,34 @@ public final class CrashSafeProjectLibraryStore:
         let liveProjects = try await metadata.listMaintenanceProjects()
         let liveIDs = Set(liveProjects.map(\.projectID))
         let liveReferences = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(in: liveProjects)
-        let candidateByID = Dictionary(
-            uniqueKeysWithValues: candidates.map { ($0.projectUUID, $0) }
+        let indexedByID = Dictionary(
+            uniqueKeysWithValues: indexedRecords.map { ($0.projectUUID, $0) }
+        )
+
+        let destructiveJournalMissingOwnership = journals.contains { journal in
+            guard indexedByID[journal.projectUUID] == nil else { return false }
+            switch journal.phase {
+            case .prepared:
+                return !liveIDs.contains(ProjectID(rawValue: journal.projectUUID))
+            case .committed:
+                return true
+            case .artifactsDeleted:
+                return false
+            }
+        }
+        let needsLegacyScan = !deletionOwnership.isLegacyScanComplete || destructiveJournalMissingOwnership
+        let legacyCandidates = needsLegacyScan
+            ? try await metadata.listTombstonedProjectCompactionCandidates()
+            : []
+        let legacyByID = Dictionary(
+            uniqueKeysWithValues: legacyCandidates.map { ($0.projectUUID, $0) }
         )
         let journalProjectIDs = Set(journals.map(\.projectUUID))
+        let indexedProjectIDs = Set(indexedRecords.map(\.projectUUID))
+
+        func candidate(projectUUID: UUID) -> Lane2TombstonedProjectCompactionCandidate? {
+            indexedByID[projectUUID]?.compactionCandidate ?? legacyByID[projectUUID]
+        }
 
         var discarded: [ProjectID] = []
         var completed: [ProjectID] = []
@@ -203,23 +239,25 @@ public final class CrashSafeProjectLibraryStore:
             case .prepared:
                 if liveIDs.contains(projectID) {
                     try artifacts.discardPreparedDeletion(projectUUID: journal.projectUUID)
+                    try deletionOwnership.remove(projectUUID: journal.projectUUID)
                     discarded.append(projectID)
                     continue
                 }
-                guard let candidate = candidateByID[journal.projectUUID] else {
+                guard let ownership = candidate(projectUUID: journal.projectUUID) else {
                     throw Lane2TombstonedMetadataCompactionFailure.missingTombstoneCandidate(
                         journal.projectUUID
                     )
                 }
                 try Lane2TombstonedMetadataCompactionPolicy.requireAuthorizedJournal(
                     relativePaths: journal.relativePaths,
-                    candidate: candidate,
+                    candidate: ownership,
                     liveReferencedArtifactPaths: liveReferences
                 )
                 try artifacts.markDeletionCommitted(projectUUID: journal.projectUUID)
                 try artifacts.executeCommittedDeletion(projectUUID: journal.projectUUID)
                 _ = try await metadata.compactTombstonedProject(projectID: projectID)
                 try artifacts.completeMetadataCompaction(projectUUID: journal.projectUUID)
+                try deletionOwnership.remove(projectUUID: journal.projectUUID)
                 promoted.append(projectID)
 
             case .committed:
@@ -228,19 +266,20 @@ public final class CrashSafeProjectLibraryStore:
                         journal.projectUUID
                     )
                 }
-                guard let candidate = candidateByID[journal.projectUUID] else {
+                guard let ownership = candidate(projectUUID: journal.projectUUID) else {
                     throw Lane2TombstonedMetadataCompactionFailure.missingTombstoneCandidate(
                         journal.projectUUID
                     )
                 }
                 try Lane2TombstonedMetadataCompactionPolicy.requireAuthorizedJournal(
                     relativePaths: journal.relativePaths,
-                    candidate: candidate,
+                    candidate: ownership,
                     liveReferencedArtifactPaths: liveReferences
                 )
                 try artifacts.executeCommittedDeletion(projectUUID: journal.projectUUID)
                 _ = try await metadata.compactTombstonedProject(projectID: projectID)
                 try artifacts.completeMetadataCompaction(projectUUID: journal.projectUUID)
+                try deletionOwnership.remove(projectUUID: journal.projectUUID)
                 completed.append(projectID)
 
             case .artifactsDeleted:
@@ -249,31 +288,61 @@ public final class CrashSafeProjectLibraryStore:
                         journal.projectUUID
                     )
                 }
-                if candidateByID[journal.projectUUID] != nil {
-                    _ = try await metadata.compactTombstonedProject(projectID: projectID)
-                }
+                _ = try await metadata.compactTombstonedProject(projectID: projectID)
                 try artifacts.completeMetadataCompaction(projectUUID: journal.projectUUID)
+                try deletionOwnership.remove(projectUUID: journal.projectUUID)
                 completed.append(projectID)
             }
         }
 
-        // Older builds could leave tombstones after deleting artifacts and removing their journal.
-        // Recreate a COMMITTED intent from the still-durable tombstone, but only for validated
-        // source/stem paths not referenced by any live project.
-        for candidate in candidates where !journalProjectIDs.contains(candidate.projectUUID) {
+        // If ownership was written but the journal was never made durable, a live project means the
+        // delete never committed. A hidden project means the durable ownership record can reconstruct
+        // a conservative COMMITTED journal without a global Core Data tombstone scan.
+        for record in indexedRecords where !journalProjectIDs.contains(record.projectUUID) {
+            let projectID = ProjectID(rawValue: record.projectUUID)
+            if liveIDs.contains(projectID) {
+                try deletionOwnership.remove(projectUUID: record.projectUUID)
+                continue
+            }
+
             let plan = try Lane2TombstonedMetadataCompactionPolicy.plan(
-                candidate: candidate,
+                candidate: record.compactionCandidate,
                 liveReferencedArtifactPaths: liveReferences
             )
             try artifacts.persistCommittedDeletion(
-                projectUUID: candidate.projectUUID,
+                projectUUID: record.projectUUID,
                 relativePaths: plan.artifactRelativePathsToDelete
             )
-            try artifacts.executeCommittedDeletion(projectUUID: candidate.projectUUID)
-            let projectID = ProjectID(rawValue: candidate.projectUUID)
+            try artifacts.executeCommittedDeletion(projectUUID: record.projectUUID)
             _ = try await metadata.compactTombstonedProject(projectID: projectID)
-            try artifacts.completeMetadataCompaction(projectUUID: candidate.projectUUID)
+            try artifacts.completeMetadataCompaction(projectUUID: record.projectUUID)
+            try deletionOwnership.remove(projectUUID: record.projectUUID)
             completed.append(projectID)
+        }
+
+        // One-time compatibility migration for journal-less tombstones created before AW22 ownership
+        // indexing. After successful convergence the durable marker prevents this global N+1 scan on
+        // normal future launches. A missing ownership record on an old PREPARED/COMMITTED journal also
+        // forces this compatibility scan even after the marker exists.
+        if needsLegacyScan {
+            for legacy in legacyCandidates
+            where !journalProjectIDs.contains(legacy.projectUUID)
+                && !indexedProjectIDs.contains(legacy.projectUUID) {
+                let plan = try Lane2TombstonedMetadataCompactionPolicy.plan(
+                    candidate: legacy,
+                    liveReferencedArtifactPaths: liveReferences
+                )
+                try artifacts.persistCommittedDeletion(
+                    projectUUID: legacy.projectUUID,
+                    relativePaths: plan.artifactRelativePathsToDelete
+                )
+                try artifacts.executeCommittedDeletion(projectUUID: legacy.projectUUID)
+                let projectID = ProjectID(rawValue: legacy.projectUUID)
+                _ = try await metadata.compactTombstonedProject(projectID: projectID)
+                try artifacts.completeMetadataCompaction(projectUUID: legacy.projectUUID)
+                completed.append(projectID)
+            }
+            try deletionOwnership.markLegacyScanComplete()
         }
 
         return LibraryRecoveryReport(
