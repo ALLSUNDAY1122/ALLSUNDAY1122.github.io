@@ -15,7 +15,7 @@ final class LibraryArtifactLifecycleTests: XCTestCase {
         }
     }
 
-    func testCommittedJournalSurvivesRelaunchAndCleanupIsIdempotent() throws {
+    func testCommittedJournalSurvivesArtifactDeletionUntilMetadataCompaction() throws {
         try withTempRoot { root in
             let first = LibraryArtifactLifecycle(rootURL: root)
             let source = try write("Imports/p/source.m4a", data: Data("source".utf8), under: root)
@@ -31,7 +31,37 @@ final class LibraryArtifactLifecycleTests: XCTestCase {
 
             XCTAssertFalse(FileManager.default.fileExists(atPath: source.path))
             XCTAssertFalse(FileManager.default.fileExists(atPath: stem.path))
+            XCTAssertEqual(try relaunched.pendingDeletionJournals().first?.phase, .artifactsDeleted)
+
+            try relaunched.completeMetadataCompaction(projectUUID: project)
             XCTAssertTrue(try relaunched.pendingDeletionJournals().isEmpty)
+        }
+    }
+
+    func testMetadataCompactionCannotRetireCommittedJournalEarly() throws {
+        try withTempRoot { root in
+            let lifecycle = LibraryArtifactLifecycle(rootURL: root)
+            let project = UUID()
+            try lifecycle.persistCommittedDeletion(projectUUID: project, relativePaths: [])
+            XCTAssertThrowsError(try lifecycle.completeMetadataCompaction(projectUUID: project)) { error in
+                XCTAssertEqual(error as? LibraryArtifactFailure, .journalNotArtifactsDeleted(project))
+            }
+        }
+    }
+
+    func testCommittedBackfillRefusesPathMismatchAgainstExistingJournal() throws {
+        try withTempRoot { root in
+            let lifecycle = LibraryArtifactLifecycle(rootURL: root)
+            let project = UUID()
+            try lifecycle.persistPreparedDeletion(projectUUID: project, relativePaths: ["Imports/a/source.m4a"])
+            XCTAssertThrowsError(
+                try lifecycle.persistCommittedDeletion(
+                    projectUUID: project,
+                    relativePaths: ["Imports/b/source.m4a"]
+                )
+            ) { error in
+                XCTAssertEqual(error as? LibraryArtifactFailure, .journalCorrupt(project.uuidString + ".json"))
+            }
         }
     }
 
