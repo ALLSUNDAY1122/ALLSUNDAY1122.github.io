@@ -1,6 +1,6 @@
 # Lane 4 Real-Audio MIR Benchmark Runbook
 
-Purpose: make MOI-P009 / P011 / P013 / P016 measurable from rights-cleared audio without allowing synthetic, unverified, expired-rights, checksum-mismatched, evaluator-overflow, or non-product analysis paths to become PARITY evidence.
+Purpose: make MOI-P009 / P011 / P013 / P016 measurable from rights-cleared audio without allowing synthetic, unverified, expired-rights, checksum-mismatched, evaluator-overflow, non-product analysis paths, or misleading aggregate means to become PARITY evidence.
 
 ## Inputs
 
@@ -26,17 +26,17 @@ HQ/integration supplies an `AnalysisBenchmarkSignalLoading` adapter. It must:
 
 The runner compares the returned checksum to the rights evidence before analysis. A mismatch aborts the run.
 
-## Canonical W16 execution path
+## Canonical W17 execution and report path
 
 Use:
 
 ```swift
-try await AnalysisRealAudioBenchmarkRunner.runProductAligned(...)
+try await AnalysisRealAudioBenchmarkRunner.runProductAlignedAudited(...)
 ```
 
 for all new differential evidence.
 
-`runProductAligned` executes the same current Lane-4 product stages used by `ProjectOwnedMusicAnalyzer`:
+`runProductAlignedAudited` executes the W16 product-aligned Analysis pipeline, then applies W17 anti-masking aggregation:
 
 1. bounded/cancellable working-set preparation;
 2. bounded Tempo/Beat analysis;
@@ -45,9 +45,10 @@ for all new differential evidence.
 5. W13 cancellable Section detection;
 6. W14 Section boundary over-segmentation hardening;
 7. W15 cancellable/cardinality-safe final `AnalysisSnapshot` publication;
-8. W16 scalable/cancellable metric evaluation.
+8. W16 scalable/cancellable metric evaluation;
+9. W17 audited quality aggregation with genre and worst-fixture visibility.
 
-The older `AnalysisRealAudioBenchmarkRunner.run` entry point is retained only for compatibility with pre-W16 evidence/tests. Do not use it for new PARITY evidence because it does not guarantee the complete current product Analysis path.
+The older `AnalysisRealAudioBenchmarkRunner.run` and W16 `runProductAligned` entry points remain for compatibility with prior evidence/tests. Do not use either entry point as the final report for new PARITY evidence; W17 `runProductAlignedAudited` is the canonical report path.
 
 ## W16 evaluator behavior
 
@@ -59,7 +60,44 @@ The older `AnalysisRealAudioBenchmarkRunner.run` entry point is retained only fo
 - evaluator cardinality overflow fails closed: the affected row becomes `parity_eligible=false` and carries an explicit `EVALUATOR_*_CARDINALITY_REJECTED_NOT_PARITY_EVIDENCE` limitation;
 - no metric array is silently truncated to manufacture an accuracy score.
 
-Every W16 product-aligned row includes W15 snapshot cardinality diagnostics. Structure rows additionally include W14 before/after section-fragmentation diagnostics. These diagnostic values describe integrity/performance context; they are not accuracy or PARITY proof by themselves.
+Every W16/W17 product-aligned row includes W15 snapshot cardinality diagnostics. Structure rows additionally include W14 before/after section-fragmentation diagnostics. These diagnostic values describe integrity/performance context; they are not accuracy or PARITY proof by themselves.
+
+## W17 aggregation integrity
+
+W17 does not average every finite number in a benchmark row.
+
+Only metrics with an explicit quality direction are aggregatable. Examples include:
+
+- higher-is-better accuracy/coverage/F metrics;
+- lower-is-better tempo and boundary errors;
+- derived tempo/key decision rate.
+
+The following remain raw row context and are intentionally excluded from quality means:
+
+- reference/estimated counts;
+- evaluator and snapshot cardinality limits;
+- raw predicted BPM;
+- confidence values;
+- W14 boundary-fragmentation diagnostics;
+- W15 snapshot cardinality diagnostics;
+- W16 pipeline/evaluator flags;
+- runtime/context values without a defined quality direction.
+
+The audited report provides both domain-level and domain+genre quality summaries. Every quality metric records:
+
+- sample count;
+- parity-eligible sample count;
+- whether the metric population is complete for the scope;
+- ordinary mean for all evaluator-accepted rows;
+- PARITY-eligible mean using only `row.parityEligible == true` rows;
+- worst fixture/value with direction-aware ordering;
+- PARITY-eligible worst fixture/value.
+
+This prevents a high overall mean from hiding one weak genre or fixture. Synthetic rows can remain useful for regression analysis but cannot improve `parityEligibleMean` or `parityEligibleWorst`.
+
+Rows rejected by W16 evaluator cardinality gates are excluded from quality means and are listed explicitly under `evaluatorRejectedRows`; they cannot contribute a perfect-looking score. All rows with `parityEligible == false` are separately listed under `nonParityRows` with their limitations.
+
+`excludedContextMetricNames` is emitted so reviewers can verify which raw metrics were deliberately not aggregated.
 
 ## Fail-closed gates
 
@@ -99,22 +137,27 @@ A case is eligible only when:
 - evaluator inputs remain within cardinality safety limits;
 - the produced benchmark rows are themselves parity-eligible.
 
+The audited report itself is `parityEligible` only when the underlying product-aligned report is eligible and no evaluator-rejected row exists.
+
 `SYNTHETIC_TEST` always remains non-PARITY, even when every metric is perfect.
 
 ## Outputs
 
-`AnalysisRealAudioBenchmarkRunner.runProductAligned` produces:
+`AnalysisRealAudioBenchmarkRunner.runProductAlignedAudited` produces:
 
-- one row per available tempo / beat / key / chord domain;
-- one section row when section ground truth exists;
-- W15 snapshot cardinality diagnostics on every row;
-- W14 section-fragmentation diagnostics on the structure row;
-- W16 evaluator acceptance/limit metrics;
-- per-domain aggregate mean metrics;
-- fixture and parity-eligible counts;
-- machine-readable report metadata.
+- every raw tempo / beat / key / chord / structure row;
+- W15 snapshot cardinality diagnostics on raw rows;
+- W14 section-fragmentation diagnostics on structure rows;
+- W16 evaluator acceptance/limit metrics on raw rows;
+- W17 domain quality summaries;
+- W17 domain+genre quality summaries;
+- direction-aware worst-fixture evidence;
+- evaluator-rejected row list;
+- non-PARITY row list;
+- excluded context-metric name list;
+- machine-readable report metadata and validation issues.
 
-Use `AnalysisRealAudioBenchmarkCodec` for ISO-8601, sorted-key JSON manifest/report serialization.
+The W17 audited report is directly `Codable`; use sorted-key / ISO-8601 encoding in the evidence writer used by HQ integration. The existing `AnalysisRealAudioBenchmarkCodec` remains valid for the legacy W16 report shape.
 
 ## Required Golden MIR coverage before HQ PARITY judgment
 

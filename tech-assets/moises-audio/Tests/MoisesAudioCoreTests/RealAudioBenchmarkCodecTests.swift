@@ -33,4 +33,52 @@ final class RealAudioBenchmarkCodecTests: XCTestCase {
         XCTAssertTrue(text.contains("2027-01-15T08:00:00Z") || text.contains("2027-01-15T08:00:00.000Z"))
         XCTAssertEqual(try AnalysisRealAudioBenchmarkCodec.decodeManifest(data), manifest)
     }
+
+    func testAuditedReportUsesStableSortedISO8601RoundTrip() throws {
+        let row = AnalysisBenchmarkRow(
+            fixtureID: "real-weak",
+            rightsClass: .projectOwned,
+            genre: "live",
+            durationSeconds: 10,
+            syntheticOnly: false,
+            parityEligible: true,
+            engine: "test",
+            engineVersion: "w17",
+            domain: "tempo",
+            metrics: [
+                "exact_within_4pct": 0,
+                "tempo_rel_error": 0.2,
+                "predicted_bpm": 96,
+                "w15_snapshot_beat_input_limit": 2_048
+            ],
+            wallSeconds: 0.1,
+            rtf: 0.01,
+            peakRSSMB: nil,
+            thermal: nil,
+            knownLimitations: []
+        )
+        let report = AnalysisAuditedRealAudioBenchmarkReport(
+            manifestID: "audited-codec",
+            generatedAt: Date(timeIntervalSince1970: 1_800_000_000),
+            engine: "test",
+            engineVersion: "w17",
+            parityEligible: true,
+            rows: [row],
+            domainQualitySummaries: AnalysisBenchmarkAggregation.domainSummaries(rows: [row]),
+            genreQualitySummaries: AnalysisBenchmarkAggregation.genreSummaries(rows: [row]),
+            evaluatorRejectedRows: [],
+            nonParityRows: [],
+            excludedContextMetricNames: AnalysisBenchmarkAggregation.excludedContextMetricNames(rows: [row]),
+            validationIssues: []
+        )
+
+        let first = try AnalysisRealAudioBenchmarkCodec.encodeAuditedReport(report)
+        let second = try AnalysisRealAudioBenchmarkCodec.encodeAuditedReport(report)
+        XCTAssertEqual(first, second)
+        let text = try XCTUnwrap(String(data: first, encoding: .utf8))
+        XCTAssertTrue(text.contains("2027-01-15T08:00:00Z") || text.contains("2027-01-15T08:00:00.000Z"))
+        XCTAssertTrue(text.contains("\"parityEligibleWorst\""))
+        XCTAssertTrue(text.contains("\"excludedContextMetricNames\""))
+        XCTAssertEqual(try AnalysisRealAudioBenchmarkCodec.decodeAuditedReport(first), report)
+    }
 }
