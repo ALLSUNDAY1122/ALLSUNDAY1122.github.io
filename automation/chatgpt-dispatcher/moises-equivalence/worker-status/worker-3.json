@@ -15,7 +15,7 @@
   "base_integration_sha": "1648a275833ad4e8aed3245347e6de231fd0487f",
   "branch_merge_base_sha": "7948195f1d94f28bc212c79b310fdaed00a4f580",
   "preserved_checkpoint_head": "d63cecbfa53007bf9593b628ae291702f496bb17",
-  "head_sha": "8f8757d65bdc0125f690ef99ec473d477e0ab4fa",
+  "head_sha": "61c870a9d9515452ecfffc3bbfc2155e8f02f674",
   "existing_unintegrated_commits": [
     "177ff61eca12c2920656a995d1fe879ea9f17237",
     "d90e3bf264940723e0b2e41ce87e5cc36fd50c4b",
@@ -50,7 +50,13 @@
     "e28ce306ae100f82283670bacb050052825afa3e",
     "864d5ca8590d4cc8ad23fe5caf5d4bb1564e699e",
     "aba07f3b2cf8308ea1fd09ff3ded095d76686e4a",
-    "8f8757d65bdc0125f690ef99ec473d477e0ab4fa"
+    "8f8757d65bdc0125f690ef99ec473d477e0ab4fa",
+    "983219ec5e26669486510fbf2c01233c10044aa2",
+    "cf90642418780886ddf840c9115af53bc4634686",
+    "73cf8c5064e7a5ecea7150c138e44345457fbff4",
+    "334a215fdcf5a81757e66c278d5e4e03bc2decc1",
+    "a100ec71d9c6dbe1e1fc99c79891d9c2c8df8cd4",
+    "61c870a9d9515452ecfffc3bbfc2155e8f02f674"
   ],
   "tests": [
     "L3-M01 through L3-M04 portable measurement/transport/control/offline-reference suites remain preserved at checkpoint d63cecb...",
@@ -65,7 +71,12 @@
     "L3-AW04 PracticeDSP tempo/generation binding and disabled/missing-control rejection PASS",
     "L3-AW04 100000 rolling append regression PASS",
     "L3-AW04 optimized planner benchmark 20 rounds x 50000 eight-click batches: median 4.712ms, p95 7.540ms, p99/max 11.517ms, checksum 51297024000000",
-    "Apple-specific AW01-AW04 sources remain pending selected Xcode/iOS SDK compile and physical-device execution"
+    "L3-AW05 Swift 6.2.1 source-equivalent portable transport reschedule self-test PASS",
+    "L3-AW05 stale Playback completion token, stale click generation, pending replacement, generation regression/equality and fail-closed overflow cases PASS",
+    "L3-AW05 invalidation failure poisons the DSP binding gate; recovery requires both Playback and click generations to advance PASS",
+    "L3-AW05 1000000 discontinuity stress regression PASS",
+    "L3-AW05 benchmark 20 rounds x 100000 Playback-token + DSP begin/commit bindings: median 5.936ms, p95 6.203ms, p99/max 6.203ms, checksum 200021000000",
+    "Apple-specific AW01-AW05 sources remain pending selected Xcode/iOS SDK compile and physical-device execution"
   ],
   "evidence": [
     "Playback/Measurements/Lane3DeviceMeasurementHarness.swift",
@@ -75,6 +86,7 @@
     "Playback/Sources/PlaybackGainRampExecution.swift",
     "Playback/Sources/AppleTransactionalStemGainRampStage.swift",
     "Playback/Sources/AppleRampedMultiTrackPlaybackBackend.swift",
+    "Playback/Sources/PlaybackTransportRescheduleFence.swift",
     "DSP/Sources/PracticeDSPControlSafety.swift",
     "DSP/Sources/PracticeDSPConfiguration.swift",
     "DSP/Sources/SampleTimelinePlanner.swift",
@@ -84,10 +96,15 @@
     "DSP/Sources/ClickExecution.swift",
     "DSP/Sources/PracticeDSPClickExecutionPlanning.swift",
     "DSP/Sources/AppleSampleAccurateClickExecutor.swift",
+    "DSP/Sources/PracticeDSPTransportReschedule.swift",
     "DSP/Tests/L3_AW04_ClickExecutionSelfTest.swift",
     "DSP/Tests/L3_AW04_ClickExecutionBenchmark.swift",
+    "DSP/Tests/L3_AW05_TransportRescheduleSelfTest.swift",
+    "DSP/Tests/L3_AW05_TransportRescheduleBenchmark.swift",
     "DSP/benchmarks/L3-AW04_SAMPLE_TIME_CLICK_EXECUTION.md",
     "DSP/benchmarks/L3-AW04_VALIDATION.json",
+    "DSP/benchmarks/L3-AW05_TRANSPORT_RESCHEDULE_HARDENING.md",
+    "DSP/benchmarks/L3-AW05_VALIDATION.json",
     "Playback/Sources/Lane3OfflineReferenceRender.swift"
   ],
   "known_gaps": [
@@ -96,40 +113,42 @@
     "The preserved legacy AppleMultiTrackPlaybackBackend still uses direct AVAudioPlayerNode.volume; it must not be used as P006 mixer-quality proof",
     "PracticeDSPProductionController transactionally aligns logical tempo/pitch with a read-back-capable backend, but AppleTimePitchTransactionalBackend still requires final Xcode/iPhone runtime verification",
     "AppleSampleAccurateClickExecutor now provides full-batch stale-generation preflight, generation-bound queue invalidation and same-anchor rolling append, but selected Xcode/iOS compile plus integrated authoritative render-origin/common-host anchor and physical-device execution remain unverified",
-    "Seek/loop/interruption must be wired during HQ integration so every transport discontinuity advances PracticeDSP scheduleGeneration and invalidates the dedicated click queue before replacement scheduling",
+    "AW05 adds RescheduleFencedPlaybackBackend plus a two-phase Playback-to-PracticeDSP generation binding gate, but HQ must select the wrapper and wire begin -> PracticeDSP generation advance -> Apple click invalidation -> commit before replacement scheduling",
+    "The AW05 portable fence proves cross-system stale-token rejection, but actual AVAudioPlayerNode completion-callback and queue behavior still requires selected Xcode and physical-device execution",
     "L3-M04 control-reference path still needs actual Apple/integrated offline PCM rendering and measurement",
     "Rights-cleared real source/stem fixtures and current-Moises differential evidence are required for final Playback/DSP quality judgment",
     "Audible click/pop/zipper, metronome drift, count-in start timing and tempo/pitch artifact acceptance require physical-device capture and human listening review",
     "MOI-P006/P007/P008/P010/P012/P014/P015 remain MISSING"
   ],
   "hq_requests": [
-    "Preserve checkpoint d63cecb... plus AW01-AW04 commits during semantic integration",
-    "Compile AppleRampedMultiTrackPlaybackBackend, AppleTransactionalStemGainRampStage, AppleTimePitchBackend, AppleTimePitchTransactionalBackend and AppleSampleAccurateClickExecutor with the selected Xcode/iOS SDK and report incompatibilities back to Lane 3",
+    "Preserve checkpoint d63cecb... plus AW01-AW05 commits during semantic integration",
+    "Compile AppleRampedMultiTrackPlaybackBackend, RescheduleFencedPlaybackBackend, AppleTransactionalStemGainRampStage, AppleTimePitchBackend, AppleTimePitchTransactionalBackend, AppleSampleAccurateClickExecutor and PracticeDSPTransportReschedule with the selected Xcode/iOS SDK and report incompatibilities back to Lane 3",
+    "Wrap the selected AppleRampedMultiTrackPlaybackBackend with RescheduleFencedPlaybackBackend for seek/loop/play/pause/media replacement integration so a transport token is created before delegated discontinuity work",
+    "For seek/loop/tempo/interruption/resume: call PracticeDSPTransportRescheduleGate.begin with the new Playback token, advance PracticeDSP scheduleGeneration, invalidate AppleSampleAccurateClickExecutor, then commit the pair before replacement click scheduling; on invalidation failure call fail and recover only after both generations advance again",
     "Use AppleRampedMultiTrackPlaybackBackend for P006 device evidence and PracticeDSPProductionController plus AppleTimePitchBackend transactional adapter for P010/P012 evidence",
     "Provide AppleSampleAccurateClickExecutor one authoritative project render-origin sample and common host-time anchor from integrated Playback",
-    "On seek, loop, tempo change and interruption/resume discontinuities, advance PracticeDSP scheduleGeneration and call click executor invalidation before scheduling the replacement generation",
-    "Verify on target iPhones that stopping the dedicated click AVAudioPlayerNode purges previously queued stale click buffers",
+    "Verify on target iPhones that stopping the dedicated click AVAudioPlayerNode purges previously queued stale click buffers and that old music/stem completion callbacks cannot alter the replacement transport",
     "Run L3-M01 physical-iPhone capture for mixer transitions, metronome onset/drift and count-in final-click-to-music-start timing",
     "Run Apple offline/integrated graph against L3-M04 deterministic plans and capture actual PCM/sample-time observations",
     "Run rights-cleared studio/live multi-genre captures, human listening and current-Moises differential comparison before affected PARITY promotion"
   ],
   "previous_autonomous_wave": {
-    "wave_id": "L3-AW03",
-    "result": "Added transactional PracticeDSP tempo/pitch production path with read-back, rollback and recovery; portable tests passed; PARITY not promoted."
+    "wave_id": "L3-AW04",
+    "result": "Added sample-time metronome/count-in execution with full-batch stale-generation preflight, dedicated click-queue invalidation and rolling append guards; portable tests passed; PARITY not promoted."
   },
   "latest_autonomous_wave": {
-    "wave_id": "L3-AW04",
-    "goal": "Provide a sample-time metronome/count-in execution path that rejects stale generations before enqueue and can purge an old dedicated click queue on seek/loop/tempo/interruption generation changes.",
-    "rationale": "MOI-P014/P015 remain MISSING and Worker 3 status identified sample-accurate metronome/count-in production execution plus stale-generation rejection as the highest-value Lane-local gap after AW03.",
-    "done_when": "The complete click batch is preflighted before enqueue; rolling windows are anchor-safe; PracticeDSP scheduleGeneration is carried into plans; an Apple dedicated click-node executor supports replacement, append and generation invalidation; portable negative/stress tests and durable evidence pass.",
-    "result": "COMPLETE_NON_PARITY: added ClickExecution, PracticeDSPClickExecutionPlanning and AppleSampleAccurateClickExecutor; portable regression PASS including stale generation, count-in boundary, anchor/rate/kind mismatches and 100000 rolling appends; benchmark median 4.712ms; seven work-branch commits all DSP/**; Xcode/integrated anchor/device/audio/Moises gates remain open."
+    "wave_id": "L3-AW05",
+    "goal": "Harden seek/loop/tempo/interruption/resume rescheduling so Playback transport generations and PracticeDSP click generations cannot be mixed across a discontinuity, and incomplete invalidation fails closed.",
+    "rationale": "After AW04, the highest-value Lane-3 gap was the integration ordering between ramped Playback rescheduling and PracticeDSP click queue invalidation; stale audio/click generations could not be allowed to authorize a replacement transport independently.",
+    "done_when": "Playback exposes a checked monotonic reschedule token before delegated discontinuity work; DSP uses a two-phase begin/invalidate/commit gate; stale/reused/regressed generations and overflow are rejected; invalidation failure poisons replacement until dual-generation recovery; stress/benchmark/evidence pass.",
+    "result": "COMPLETE_NON_PARITY: added PlaybackTransportRescheduleFence and RescheduleFencedPlaybackBackend plus PracticeDSPTransportRescheduleGate; portable Swift 6.2.1 validation PASS including 1000000 discontinuities, stale token rejection, failure poison/recovery and overflow; benchmark median 5.936ms; six work-branch commits; Xcode/integrated wiring/device/audio/Moises gates remain open."
   },
   "next_wave_candidates": [
-    "seek/loop reschedule token hardening across ramped Playback and PracticeDSP click generation",
     "Apple offline-reference render adapter preparation inside Playback/DSP",
     "long-running combined mixer+tempo+pitch+metronome+count-in recovery stress",
-    "device-evidence runbook hardening for late integration"
+    "device-evidence runbook hardening for late integration",
+    "portable transport/DSP fuzzing around repeated seek-loop-tempo-interruption interleavings"
   ],
-  "last_updated": "2026-08-23T18:02:00+09:00",
+  "last_updated": "2026-08-23T21:49:00+09:00",
   "writer_policy": "Only Moises-Worker-3 may update this status file; HQ remains semantic integration and PARITY authority."
 }
