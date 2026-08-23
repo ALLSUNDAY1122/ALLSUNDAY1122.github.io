@@ -51,6 +51,7 @@ let package = Package(
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
                 "Analysis/RealAudioBenchmarkSuite.swift",
+                "Analysis/AnalysisRealAudioBenchmarkProductRunner.swift",
                 "Analysis/RealAudioBenchmarkCodec.swift",
                 "iOS/HostCore/HostModuleSlots.swift",
                 "iOS/HostCore/ApplePlatformSmoke.swift"
