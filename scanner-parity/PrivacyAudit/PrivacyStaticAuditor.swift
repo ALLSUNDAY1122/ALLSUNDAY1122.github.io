@@ -7,11 +7,13 @@ public enum PrivacyFindingCategory: String, Codable, Sendable {
     case localCLI
     case appleLocalFramework
     case remotePackageDependency
+    case sensitivePersistence
 }
 
 public enum PrivacyRiskLevel: String, Codable, Sendable {
     case info
     case review
+    case privacyRisk
     case egressRisk
 }
 
@@ -29,12 +31,14 @@ public struct PrivacyAuditReport: Codable, Equatable, Sendable {
     public let scannedFiles: Int
     public let findings: [PrivacyAuditFinding]
     public let productionEgressRisks: [PrivacyAuditFinding]
+    public let releaseBlockingFindings: [PrivacyAuditFinding]
     public let hqReleaseGateRequired: Bool
 
     public init(scannedFiles: Int, findings: [PrivacyAuditFinding]) {
         self.scannedFiles = scannedFiles
         self.findings = findings
         self.productionEgressRisks = findings.filter { $0.risk == .egressRisk }
+        self.releaseBlockingFindings = findings.filter { $0.risk == .egressRisk || $0.risk == .privacyRisk }
         self.hqReleaseGateRequired = true
     }
 }
@@ -73,6 +77,8 @@ public struct PrivacyStaticAuditor: Sendable {
                   tokens: ["FirebaseAnalytics", "Analytics.logEvent", "Mixpanel", "Amplitude", "SentrySDK", "PostHog", "TelemetryDeck", "Datadog", "AppCenter"]),
             .init(id: "external-ai", category: .externalAI, risk: .egressRisk,
                   tokens: ["api.openai.com", "OpenAI(", "Anthropic", "api.anthropic.com", "generativelanguage.googleapis.com", "Gemini", "Replicate", "api-inference.huggingface.co", "/chat/completions"]),
+            .init(id: "persistent-processing-storage", category: .sensitivePersistence, risk: .privacyRisk,
+                  tokens: ["applicationSupportDirectory"]),
             .init(id: "local-cli", category: .localCLI, risk: .review,
                   tokens: ["Process()", "Process(", "executableURL", "tesseract", "ocrmypdf", "python3", "ffmpeg", "swiftc", "xcrun"]),
             .init(id: "apple-local-framework", category: .appleLocalFramework, risk: .info,
@@ -85,7 +91,8 @@ public struct PrivacyStaticAuditor: Sendable {
         }
         let allow = Set(extraAllowlist.map { $0.lowercased() })
         self.rules = builtins.map { rule in
-            let effectiveTokens = rule.risk == .egressRisk
+            let nonBypassable = rule.risk == .egressRisk || rule.risk == .privacyRisk
+            let effectiveTokens = nonBypassable
                 ? rule.tokens
                 : rule.tokens.filter { !allow.contains($0.lowercased()) }
             return PrivacyAuditRule(id: rule.id, category: rule.category, risk: rule.risk,
@@ -149,6 +156,7 @@ public struct PrivacyStaticAuditor: Sendable {
             "# Privacy Static Audit Report", "",
             "- scanned_files: \(report.scannedFiles)",
             "- egress_risk_findings: \(report.productionEgressRisks.count)",
+            "- release_blocking_findings: \(report.releaseBlockingFindings.count)",
             "- hq_release_gate_required: \(report.hqReleaseGateRequired)", "", "## Findings"
         ]
         if report.findings.isEmpty {
