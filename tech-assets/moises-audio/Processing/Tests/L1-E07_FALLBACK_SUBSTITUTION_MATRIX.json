@@ -1,0 +1,32 @@
+{
+  "wave_id": "L1-E07",
+  "title": "Provider Fallback Substitution Conformance local control matrix",
+  "engineering_readiness": "READY_PENDING_EXTERNAL_INPUT",
+  "live_gate": "PENDING_EXTERNAL_INPUT",
+  "parity_claim": "NONE",
+  "evidence_class": "SYNTHETIC_CONTROL_NON_PARITY",
+  "local_regression": {"tests_run": 30, "passed": 30, "failed": 0, "py_compile": "PASS"},
+  "coverage": [
+    {"id":"E07-01","case":"licensed local SDK uses LOCAL_RUNTIME authority","expected":"conformant; generic live authority gate required"},
+    {"id":"E07-02","case":"alternate hosted route uses HOSTED_PROVIDER_ACCOUNT authority","expected":"conformant with legacy E05/E06 hosted vocabulary"},
+    {"id":"E07-03","case":"project-owned model uses PROJECT_OWNED_RUNTIME plus training rights","expected":"conformant; generic live authority gate required"},
+    {"id":"E07-04","case":"local/project-owned route fabricates provider account","expected":"fail closed"},
+    {"id":"E07-05","case":"capacity authority kind does not match fallback kind","expected":"fail closed"},
+    {"id":"E07-06","case":"adapter source SHA/class/method surface mismatch","expected":"fail closed"},
+    {"id":"E07-07","case":"repo/private path unsafe, symlink or SHA mismatch","expected":"fail closed"},
+    {"id":"E07-08","case":"A06-A20 invariant missing, duplicate, FAIL, waived or mutated","expected":"fail closed"},
+    {"id":"E07-09","case":"Shared/App contract changed or provider-neutral publication contract weakened","expected":"fail closed"},
+    {"id":"E07-10","case":"fallback order skipped without disposition evidence","expected":"fail closed"},
+    {"id":"E07-11","case":"commercial/export rights absent or provider training allowed","expected":"fail closed"},
+    {"id":"E07-12","case":"project-owned training rights absent","expected":"fail closed"},
+    {"id":"E07-13","case":"public report privacy contract","expected":"no private paths/credentials/account ids/license text/training data/audio"},
+    {"id":"E07-14","case":"invariant input ordering changes","expected":"same substitution identity"},
+    {"id":"E07-15","case":"authority/runtime evidence changes","expected":"substitution lock changes"}
+  ],
+  "important_gap": "E05/E06 v1 provider-account provenance vocabulary is hosted-route-specific. E07 forbids pretending a local/project-owned runtime has a provider account and explicitly requires a future generic live-authority gate for those fallback kinds.",
+  "non_claims": [
+    "No fallback provider/runtime has been selected live.",
+    "No local/project-owned model quality has been proven.",
+    "No PARITY row may be promoted from E07 readiness."
+  ]
+}
