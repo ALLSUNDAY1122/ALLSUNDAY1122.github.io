@@ -4,6 +4,10 @@ on:
   push:
     paths:
       - '.github/workflows/splat-smoke-diagnostic.yml'
+  pull_request:
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-smoke-diagnostic.yml'
   workflow_dispatch:
 permissions:
   contents: read
