@@ -2,7 +2,7 @@
   "wave": "L1-A13",
   "result": "COMPLETE_NON_PARITY",
   "parity_claim": "NONE",
-  "hard_reject_policy": "Structural corruption, invalid numeric audio, impossible metadata and cross-stem timing/container inconsistencies fail closed before StemArtifact promotion.",
+  "hard_reject_policy": "Structural corruption, invalid numeric audio, impossible metadata, cross-stem timing/container inconsistencies and cached-manifest identity changes fail closed before StemArtifact promotion or reuse.",
   "quality_flag_policy": "Digital silence, near-silence and pathological clipping are detected as inspection flags rather than unconditional corruption failures because a legitimate separated role may be absent or extremely sparse in a song.",
   "scenarios": [
     {"id":"pcm16-valid","expected":"PASS"},
@@ -36,18 +36,25 @@
     {"id":"set-duration-mismatch","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_SET_DURATION_MISMATCH"},
     {"id":"declared-duration-inconsistent","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_DECLARED_DURATION_INCONSISTENT"},
     {"id":"empty-output-set","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_COUNT_MISMATCH"},
-    {"id":"invalid-duration-tolerance","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_TIMING_TOLERANCE_INVALID"}
+    {"id":"invalid-duration-tolerance","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_TIMING_TOLERANCE_INVALID"},
+    {"id":"cached-manifest-identity-stable","expected":"PASS"},
+    {"id":"cached-provider-model-identity-changed","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_CACHED_MANIFEST_PROVIDER_IDENTITY_MISMATCH"},
+    {"id":"cached-role-set-changed","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_CACHED_MANIFEST_ROLE_SET_MISMATCH"},
+    {"id":"cached-role-stem-identity-changed","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_CACHED_MANIFEST_STEM_IDENTITY_MISMATCH"}
   ],
   "machine_tests": {
     "deep_wav_suite": {"tests": 22, "failures": 0},
-    "artifact_set_suite": {"tests": 10, "failures": 0},
-    "total": {"tests": 32, "failures": 0},
+    "artifact_set_baseline_suite": {"tests": 10, "failures": 0},
+    "cached_identity_and_set_regression_suite": {"tests": 11, "failures": 0},
+    "total_test_executions": {"tests": 43, "failures": 0},
+    "swift_typecheck_assured_provider_plus_set_gate": "PASS",
     "swift_version": "6.2.1",
     "platform": "x86_64-unknown-linux-gnu"
   },
   "durable_self_test": "tech-assets/moises-audio/Separation/Tests/L1_A13_ArtifactIntegritySelfTest.swift",
   "promotion_path": [
-    "AssuredSeparationProvider.result validates declared artifact set before cached/prepared result lookup",
+    "AssuredSeparationProvider.result validates the full manifest and declared artifact set before cached/prepared result lookup",
+    "cached result reuse additionally requires stable provider/model/profile, requested-role and role-to-stem identity",
     "SeparationOutputAssurance.prepare copies the downloaded file to project staging",
     "WAVInspection performs full streaming structural/sample scan",
     "declared metadata, file size and SHA-256 are bound to VerifiedSeparationOutput",
