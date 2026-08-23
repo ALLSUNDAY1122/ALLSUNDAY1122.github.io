@@ -106,10 +106,15 @@ public struct PipelineAuditBridge: Sendable {
     }
 
     public func makeAuditInput(from record: PipelinePageRecord) -> PageAuditInput {
-        PageAuditInput(
+        // A page-number observation belonging to a different page is conflicting
+        // evidence. Never allow it to drive duplicate/order auto-fixes.
+        let trustedPageNumber = record.auditSignals.pageNumber.flatMap { observation in
+            observation.pageID == record.pageID ? observation : nil
+        }
+        return PageAuditInput(
             pageID: record.pageID,
             sourceTimeMs: record.candidate.sourceTimeMS,
-            pageNumber: record.auditSignals.pageNumber,
+            pageNumber: trustedPageNumber,
             perceptualHash: record.auditSignals.perceptualHash,
             text: record.auditSignals.text
         )
@@ -154,6 +159,16 @@ public struct PipelineAuditBridge: Sendable {
                 reason: .conflictingEvidence,
                 confidence: 1,
                 detail: "stage_failure: \(failure)"
+            ))
+        }
+
+        if let observation = record.auditSignals.pageNumber,
+           observation.pageID != record.pageID {
+            items.append(PageReviewItem(
+                pageIDs: [record.pageID],
+                reason: .conflictingEvidence,
+                confidence: 1,
+                detail: "contract_mismatch: page_number.page_id does not match pipeline page_id"
             ))
         }
 
