@@ -1,5 +1,6 @@
 import XCTest
 
+// APP2-009 submission capture: app screens plus priced premium review screen.
 final class KangoshiScreenshotUITests: XCTestCase {
     override func setUpWithError() throws { continueAfterFailure = false }
 
