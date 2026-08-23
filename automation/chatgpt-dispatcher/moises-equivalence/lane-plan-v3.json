@@ -1,18 +1,45 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "project": "moises-equivalence",
-  "operating_model": "FOUR_INDEPENDENT_LANES_LATE_INTEGRATION",
+  "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "assignment_epoch": 2,
-  "macro_policy": {
-    "one_next_equals": "ONE_MACRO_BUNDLE",
-    "target_work_size": "approximately 25-40 minutes equivalent meaningful work; calibrated around about four former small tasks",
-    "early_stop_forbidden": true,
-    "allowed_early_stop_reasons": ["hard external blocker", "ownership conflict", "unsafe or impossible operation"],
-    "worker_auto_advance_within_lane": true,
-    "hq_release_required_between_bundles": false,
-    "minimum_preloaded_bundles_per_lane": 4,
-    "integration_policy": "HQ integrates only at lane checkpoint or explicit blocker rescue; workers do not wait for other lanes during normal execution",
-    "shared_contract_policy": "At epoch start each lane syncs once to the latest integration Shared/App contracts, records that base SHA, then works independently until checkpoint. Shared/App changes remain HQ-only."
+  "planning_revision": 4,
+  "planning_policy": {
+    "task_author": "WORKER_WITHIN_OWN_LANE",
+    "hq_preloads_tasks": false,
+    "global_queue_dispatch": false,
+    "one_next_equals": "ONE_SELF_PLANNED_MACRO_WAVE",
+    "target_work_size": "approximately 25-40 minutes equivalent meaningful work",
+    "worker_replans_every_next": true,
+    "worker_may_continue_without_hq": true,
+    "finite_backlog_exhaustion_is_not_a_stop_condition": true,
+    "quality_rule": "Every self-planned wave must reduce a real implementation, correctness, recovery, performance, security, privacy, evidence, integration-readiness or PARITY gap. Filler work is forbidden.",
+    "shared_contract_policy": "Shared/App remain HQ-owned and epoch-frozen. A Worker records a precise HQ contract request rather than editing them.",
+    "integration_policy": "HQ performs semantic late integration at useful checkpoints; normal Worker progress does not depend on HQ task release or other lanes completing."
+  },
+  "self_planning_priority": [
+    "current-iPhone PARITY gaps directly owned by the lane",
+    "known_gaps in the worker status that can be solved within owned scope",
+    "missing failure/recovery/edge-case behavior",
+    "correctness, durability, performance, security and privacy hardening",
+    "missing tests, benchmarks and durable evidence",
+    "late-integration adapters, measurement hooks and runbooks that can be prepared without editing other lanes",
+    "external-gated work: finish all meaningful preparation that does not require the missing credential, rights-cleared fixture, device or human decision"
+  ],
+  "stop_policy": {
+    "allowed": [
+      "No meaningful lane-local implementation, hardening or validation preparation remains without an external/human input",
+      "A frozen Shared/App contract change is genuinely required",
+      "The remaining solution requires editing another lane's owned scope",
+      "The operation would be unsafe or technically impossible"
+    ],
+    "forbidden": [
+      "No preloaded task exists",
+      "All old Macro Bundle IDs were consumed",
+      "HQ did not replenish work",
+      "Another worker has not finished",
+      "Global Queue has no READY task"
+    ]
   },
   "lanes": [
     {
@@ -20,133 +47,50 @@
       "worker_id": "Moises-Worker-1",
       "work_branch": "moises/wp1-separation-processing",
       "owned_scope": ["tech-assets/moises-audio/Separation/**", "tech-assets/moises-audio/Processing/**"],
-      "macro_backlog": [
-        {
-          "bundle_id": "L1-M01",
-          "goal": "Finish the rights-aware real-audio separation evaluation system as an executable package, not only a skeleton.",
-          "subtasks": ["complete G1/G2 rights manifest ingestion and fail-closed validation", "complete machine-readable provider/model/version/cost/latency/result evidence schema", "complete objective reference-stem metric runner plus blind-listening capture format", "add negative/edge tests for missing rights, fake/synthetic-only fixtures, incomplete stems and expired outputs", "write reproducible operator instructions and evidence examples clearly marked NON-PARITY"],
-          "done_when": "evaluation package, tests and validation evidence are committed; no real quality claim is made without real rights-cleared fixtures"
-        },
-        {
-          "bundle_id": "L1-M02",
-          "goal": "Harden processing lifecycle around provider ambiguity, cancellation, reconnect and idempotency without changing Shared contracts.",
-          "subtasks": ["exercise ambiguous start/reconnect/cancel/retry state matrix", "add provider-capability adapter for stable idempotency when a provider supports it internally", "add crash/relaunch and partial-result transaction tests", "add storage/network/provider failure injection", "document exact remaining Shared-contract request only if unavoidable"],
-          "done_when": "lifecycle failure matrix is executable and all supported recovery paths have tests/evidence"
-        },
-        {
-          "bundle_id": "L1-M03",
-          "goal": "Build production separation output validation and retention/cost accounting around the existing server/provider seam.",
-          "subtasks": ["validate stem count/role/container/duration/sample properties", "implement project-controlled copy verification before vendor URL expiry", "record retention/delete lifecycle and cost inputs", "add corrupt/partial/duplicate output handling", "produce machine-readable run manifest ready for future live AudioShake or project-owned model evidence"],
-          "done_when": "output validator/accounting layer and tests are committed and can consume a live provider later without redesign"
-        },
-        {
-          "bundle_id": "L1-M04",
-          "goal": "Prepare the full real-separator differential runbook and batch executor for immediate use when credentials and G1/G2 fixtures arrive.",
-          "subtasks": ["batch multiple genres/durations/targets", "capture wall time/retry/failure/cost and artifact paths", "generate Moises-vs-project comparison input manifest without copying Moises assets", "produce reviewer worksheet and acceptance calculation", "fail closed when required real fixtures or legal grants are absent"],
-          "done_when": "one command/runbook can execute the complete future real-audio separation gate once external inputs are supplied"
-        }
-      ]
+      "mission": "Own the complete lawful source-separation and processing lifecycle surface, including provider/runtime behavior, artifact assurance, failure recovery, evaluation readiness and production hardening.",
+      "current_major_gaps": ["real lawful production separator route/credentials", "rights-cleared G1/G2 real-audio evidence", "live quality/latency/cost/cancellation/retention evidence", "current-iPhone long-track/background/relaunch evidence"],
+      "worker_instruction": "At every next, inspect current branch/status/PARITY and choose the highest-value lane-local wave. External separation credentials or fixtures must not prevent independent processing, validation, security, recovery or evidence-readiness work."
     },
     {
       "lane_id": "LANE-2-IO-LIBRARY",
       "worker_id": "Moises-Worker-2",
       "work_branch": "moises/wp2-io-library",
       "owned_scope": ["tech-assets/moises-audio/IO/**", "tech-assets/moises-audio/Library/**"],
-      "macro_backlog": [
-        {
-          "bundle_id": "L2-M01",
-          "goal": "Implement the complete Core Data persistence adapter behind frozen HQ Library contracts.",
-          "subtasks": ["project create/load/list/update mapping", "setlist create/rename/order/delete mapping", "persist user edits and processing recovery snapshot", "store only stable IDs/scalars/relative file paths", "add in-memory or isolated-store contract tests"],
-          "done_when": "ProjectLibraryPersisting behavior is implemented across the full current contract surface with tests"
-        },
-        {
-          "bundle_id": "L2-M02",
-          "goal": "Implement destructive-operation and crash-safety semantics for Library persistence.",
-          "subtasks": ["tombstone-first project deletion", "idempotent artifact cleanup and orphan sweep", "interrupted delete/relaunch recovery", "result artifact atomicity checks", "tests proving metadata never points to incomplete files after simulated interruption"],
-          "done_when": "delete/recovery lifecycle is executable, repeatable and covered by interruption tests"
-        },
-        {
-          "bundle_id": "L2-M03",
-          "goal": "Implement migration/corruption recovery and explicit user-data preservation behavior.",
-          "subtasks": ["versioned store migration fixture", "migration failure preserves original store", "corruption detection/recovery/export path", "relaunch recovery plan generation", "validation document with destructive reset explicitly forbidden"],
-          "done_when": "migration/corruption scenarios have tests and no silent user-data deletion path exists"
-        },
-        {
-          "bundle_id": "L2-M04",
-          "goal": "Complete IO/Library integration inside Lane 2 without depending on the iOS shell.",
-          "subtasks": ["durable imported-file ownership handoff into Library metadata", "export artifact bookkeeping and cleanup", "storage-pressure/preflight behavior", "unsupported codec/error state persistence", "end-to-end lane-local import->persist->edit->export metadata test using owned seams"],
-          "done_when": "Lane 2 can prove its own durable lifecycle independently; actual iPhone picker/share UI remains late-integration evidence"
-        }
-      ]
+      "mission": "Own durable media import/export and project/library persistence from app-owned file acquisition through metadata lifecycle, migration, corruption handling, deletion and recovery.",
+      "current_major_gaps": ["Apple Core Data runtime execution", "actual iPhone picker/share/codec evidence", "interruption and storage-pressure recovery", "large-library and migration/corruption hardening"],
+      "worker_instruction": "Do not wait for iOS shell integration. Continue selecting persistence, IO safety, recovery, scalability, codec-boundary and evidence work that can be completed inside IO/Library."
     },
     {
       "lane_id": "LANE-3-PLAYBACK-DSP",
       "worker_id": "Moises-Worker-3",
       "work_branch": "moises/wp3-playback-dsp",
       "owned_scope": ["tech-assets/moises-audio/Playback/**", "tech-assets/moises-audio/DSP/**"],
-      "macro_backlog": [
-        {
-          "bundle_id": "L3-M01",
-          "goal": "Complete the device-measurement harness for Playback and DSP, including thresholds and evidence format.",
-          "subtasks": ["onset skew/seek gap/loop drift measurements", "continuous gain/solo/mute transition measurement", "metronome/count-in click onset and drift", "tempo/pitch artifact and render latency capture", "machine-readable result schema plus fixture manifest and pass/fail threshold documentation"],
-          "done_when": "harness can be compiled/wired later by HQ without editing Lane 3 core and harness-only evidence cannot falsely pass PARITY"
-        },
-        {
-          "bundle_id": "L3-M02",
-          "goal": "Harden multitrack transport semantics and long-track behavior independent of an iOS host target.",
-          "subtasks": ["source-to-stems transition state machine", "sample-frame seek/loop normalization at long durations", "pause/resume/interruption planning", "stem offset and duration mismatch handling", "stress/property tests for drift and overflow"],
-          "done_when": "portable transport semantics pass deterministic stress tests with no accumulated timing drift"
-        },
-        {
-          "bundle_id": "L3-M03",
-          "goal": "Harden gain, solo/mute and practice DSP control behavior for click/pop risk and invalid state handling.",
-          "subtasks": ["gain ramp/control transition strategy", "solo/mute precedence matrix", "tempo/pitch range validation and state restoration", "metronome/count-in scheduling edge cases", "failure-safe behavior when Apple backend is unavailable"],
-          "done_when": "control semantics and safety tests are complete; audible quality remains explicitly pending device evidence"
-        },
-        {
-          "bundle_id": "L3-M04",
-          "goal": "Build an offline/reference render path inside Playback/DSP for later differential measurement.",
-          "subtasks": ["deterministic render plan for stems plus practice settings", "capture expected timeline events and render metadata", "fixture-driven comparison hooks", "long-track performance benchmark", "document exact Apple-runtime checks deferred to HQ integration"],
-          "done_when": "Lane 3 can generate deterministic reference evidence independently of the final app shell"
-        }
-      ]
+      "mission": "Own synchronized multitrack playback and practice DSP semantics, timing safety, control behavior, offline/reference evidence and device-measurement readiness.",
+      "current_major_gaps": ["final Xcode/AVFAudio compile", "physical-iPhone timing and audible artifact evidence", "live Apple gain-ramp execution", "rights-cleared real-track and Moises differential evidence"],
+      "worker_instruction": "Lack of an Apple device is not a reason to stop while portable correctness, deterministic planning, backend safety, offline/reference tooling or measurement preparation can still be improved."
     },
     {
       "lane_id": "LANE-4-IOS-ANALYSIS",
       "worker_id": "Moises-Worker-4",
       "work_branch": "moises/wp4-analysis-platform",
       "owned_scope": ["tech-assets/moises-audio/Analysis/**", "tech-assets/moises-audio/Package.swift", "tech-assets/moises-audio/Tests/**", "tech-assets/moises-audio/iOS/**"],
-      "macro_backlog": [
-        {
-          "bundle_id": "L4-M01",
-          "goal": "Create the standalone canonical iOS host/build target around frozen Shared/App contracts without waiting for other lanes.",
-          "subtasks": ["create reproducible project/scheme/build configuration", "compile Shared/App and Lane 4-owned code", "define injection/module slots for IO/Library/Playback/DSP/Separation without copying those implementations", "add simulator build instructions and platform smoke target", "record physical-device gaps"],
-          "done_when": "the iOS host exists and builds in an Apple/Xcode-capable environment when available; cross-lane compilation is explicitly deferred to HQ late integration"
-        },
-        {
-          "bundle_id": "L4-M02",
-          "goal": "Implement BPM/beat and musical-key analysis behind frozen HQ analysis contracts.",
-          "subtasks": ["BPM/beat pipeline", "key estimation pipeline", "confidence/unknown handling", "fixture and benchmark runner", "timestamp/metadata serialization tests"],
-          "done_when": "BPM/beat/key outputs are implemented with benchmarkable evidence and no synthetic-only PARITY claim"
-        },
-        {
-          "bundle_id": "L4-M03",
-          "goal": "Implement chord timeline analysis and playback-clock-friendly output.",
-          "subtasks": ["timestamped chord events", "confidence and no-chord/unknown states", "segment boundary normalization", "benchmark/evaluator integration", "serialization/order tests for UI consumption"],
-          "done_when": "chord timeline output is deterministic, benchmarkable and conforms to frozen contracts"
-        },
-        {
-          "bundle_id": "L4-M04",
-          "goal": "Implement song-section analysis and complete the Analysis evidence pack.",
-          "subtasks": ["section boundary/label pipeline", "confidence/unknown handling", "benchmark metrics from AN-001", "multi-feature combined analysis snapshot tests", "late-integration handoff document for App/Playback consumption"],
-          "done_when": "Lane 4 analysis surface is complete enough for HQ integration without further Worker-to-Worker dependency"
-        }
-      ]
+      "mission": "Own the standalone iOS host/platform surface and music-analysis implementation/evidence while leaving cross-lane semantic integration to HQ.",
+      "current_major_gaps": ["actual Apple Xcode/simulator/device build evidence", "rights-cleared real-audio MIR accuracy evidence", "current-Moises analysis differential", "physical-device latency/RSS/thermal/battery evidence"],
+      "worker_instruction": "Do not merge other lanes. Continue choosing iOS-host robustness, Analysis correctness, evaluator, vocabulary/unknown semantics, performance preparation and integration-slot work that stays inside owned scope."
     }
   ],
   "late_integration_gate": {
     "owner": "HQ",
-    "starts_after": "lane checkpoint; not after every bundle",
-    "responsibilities": ["merge four lane checkpoints", "resolve semantic contract mismatches centrally", "compile actual integrated iOS target with all lane implementations", "run cross-feature regression", "run real-device and differential Moises evidence", "update PARITY_MATRIX", "create next four independent lane backlogs before workers resume"]
-  }
+    "responsibilities": [
+      "merge coherent lane checkpoints when integration has value",
+      "resolve Shared/App contract and adapter changes centrally",
+      "compile the real integrated iOS target with all lane implementations",
+      "run cross-feature regression",
+      "run real-device and real-audio evidence",
+      "run Differential Moises comparison",
+      "update PARITY_MATRIX"
+    ],
+    "non_responsibility": "HQ does not author or replenish the normal lane-local work backlog."
+  },
+  "historical_note": "Epoch-2 M01-M04 bundles were the bootstrap mechanism for v3 and remain preserved in Git/worker status history. From planning revision 4 onward they are not the Worker task source."
 }
