@@ -104,7 +104,12 @@ public struct BookPackageQualityAuditor: Sendable {
                 issues.append(.init(code: .pdfTextOrderMismatch, detail: "PDF text order accuracy=\(pdfOrderAccuracy ?? 0)"))
             }
         case .failure(let error):
-            let severity: PackageQualitySeverity = error is PDFTextLayerInspectorError ? .warning : .error
+            let severity: PackageQualitySeverity
+            if let inspectorError = error as? PDFTextLayerInspectorError, inspectorError == .unsupported {
+                severity = .warning
+            } else {
+                severity = .error
+            }
             issues.append(.init(code: .pdfTextLayerUnavailable, severity: severity, detail: "PDF text-layerを検査できません: \(error)"))
         }
 
