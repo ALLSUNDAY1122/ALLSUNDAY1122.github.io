@@ -112,6 +112,21 @@ struct PipelineAuditBridgeFixtureTests {
             try require(result.auditResult.reviewRequired.contains { $0.detail.contains("contract_mismatch") })
         }
 
+        test("mismatched page-number evidence is quarantined before audit") {
+            var mismatched = makeRecord(page: 8, time: 8_000)
+            mismatched.auditSignals.pageNumber = number(pageID: "page-99", value: 99)
+            let bridge = PipelineAuditBridge()
+            let input = bridge.makeAuditInput(from: mismatched)
+            try require(input.pageNumber == nil)
+
+            let result = bridge.audit([mismatched])
+            try require(result.auditResult.pageNumberObservations.isEmpty)
+            try require(result.auditResult.orderedPageIDs == ["page-8"])
+            try require(result.auditResult.reviewRequired.contains {
+                $0.detail.contains("page_number.page_id")
+            })
+        }
+
         print("RESULT passed=\(passed) failed=\(failed)")
         if failed > 0 { exit(1) }
     }
