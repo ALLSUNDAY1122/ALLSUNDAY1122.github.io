@@ -18,7 +18,7 @@ public struct DefaultPackagePDFInspector: PackagePDFInspecting {
 }
 #endif
 
-public struct PackageIntegrityVerifier: Sendable {
+public struct PackageIntegrityVerifier {
     public let fileManager: FileManager
     public let pdfInspector: any PackagePDFInspecting
 

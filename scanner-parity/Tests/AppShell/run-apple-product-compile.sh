@@ -20,7 +20,7 @@ path,status,code,target,xcode,swift,sdk,detail=sys.argv[1:]
 Path(path).write_text(json.dumps({
   "schema_version":1,"status":status,"exit_code":int(code),"target":target,
   "xcode_version":xcode,"swift_version":swift,"iphoneos_sdk_version":sdk,
-  "modules":["ProductFlow","AppShell"],"golden_decision":None,
+  "modules":["ScannerRuntime","ReviewCore","Recovery","ProductFlow","AppShell"],"golden_decision":None,
   "failure_detail":detail or None
 }, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
 PY
@@ -33,15 +33,60 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
   echo "$DETAIL" | tee -a "$LOG" >&2
   exit 20
 fi
-for cmd in xcrun xcodebuild python3; do command -v "$cmd" >/dev/null || { DETAIL="missing command: $cmd"; exit 21; }; done
+for cmd in xcrun xcodebuild python3 swift; do command -v "$cmd" >/dev/null || { DETAIL="missing command: $cmd"; exit 21; }; done
 SWIFTC="$(xcrun --find swiftc)"
 SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
 SDK_VERSION="$(xcrun --sdk iphoneos --show-sdk-version)"
 XCODE_VERSION="$(xcodebuild -version | tr '\n' ';')"
 SWIFT_VERSION="$($SWIFTC --version | tr '\n' ';')"
 
+# Final cross-lane gates: verify the product source wiring, re-run privacy/security
+# against the assembled tree, and make SwiftPM parse every package manifest.
+echo "== Final source contract ==" | tee -a "$LOG"
+python3 "$ROOT/Tests/AppShell/source_contract_test.py" 2>&1 | tee -a "$LOG"
+
+echo "== Final privacy/security gate ==" | tee -a "$LOG"
+bash "$ROOT/Tests/SecurityHardening/run-lane2-privacy-gate.sh" 2>&1 | tee -a "$LOG"
+
+echo "== SwiftPM manifest resolution ==" | tee -a "$LOG"
+for package_dir in "$ROOT" "$ROOT/ReviewCore" "$ROOT/Recovery" "$ROOT/ProductFlow" "$ROOT/AppShell"; do
+  swift package --package-path "$package_dir" dump-package >/dev/null
+  echo "PASS dump-package $package_dir" | tee -a "$LOG"
+done
+
+RUNTIME_SOURCES=(
+  "$ROOT"/FrameExtraction/*.swift
+  "$ROOT"/ImageCorrection/*.swift
+  "$ROOT"/PageAudit/*.swift
+  "$ROOT"/PipelineCore/*.swift
+  "$ROOT"/OCRExport/Sources/OCRExport/*.swift
+  "$ROOT"/PipelineOCR/*.swift
+  "$ROOT"/PackageValidation/Sources/PackageValidation/*.swift
+)
+REVIEW_SOURCES=("$ROOT"/ReviewCore/ReviewQueueCore.swift)
+RECOVERY_SOURCES=(
+  "$ROOT"/Recovery/AppShellReviewAdapter.swift
+  "$ROOT"/Recovery/FileCheckpointStore.swift
+  "$ROOT"/Recovery/RecoveryLedger.swift
+  "$ROOT"/Recovery/ReviewRecoveryAdapter.swift
+)
 PRODUCT_SOURCES=("$ROOT"/ProductFlow/Sources/ProductFlow/*.swift)
 APP_SOURCES=("$ROOT"/AppShell/Sources/AppShell/*.swift)
+
+echo "== ScannerRuntime iPhoneOS module ==" | tee -a "$LOG"
+"$SWIFTC" -sdk "$SDK" -target "$TARGET" -parse-as-library -module-name ScannerRuntime \
+  -emit-module -emit-module-path "$BUILD_DIR/ScannerRuntime.swiftmodule" \
+  "${RUNTIME_SOURCES[@]}" 2>&1 | tee -a "$LOG"
+
+echo "== ReviewCore iPhoneOS module ==" | tee -a "$LOG"
+"$SWIFTC" -sdk "$SDK" -target "$TARGET" -parse-as-library -module-name ReviewCore \
+  -emit-module -emit-module-path "$BUILD_DIR/ReviewCore.swiftmodule" \
+  "${REVIEW_SOURCES[@]}" 2>&1 | tee -a "$LOG"
+
+echo "== Recovery iPhoneOS module ==" | tee -a "$LOG"
+"$SWIFTC" -sdk "$SDK" -target "$TARGET" -parse-as-library -module-name Recovery \
+  -I "$BUILD_DIR" -emit-module -emit-module-path "$BUILD_DIR/Recovery.swiftmodule" \
+  "${RECOVERY_SOURCES[@]}" 2>&1 | tee -a "$LOG"
 
 echo "== ProductFlow iPhoneOS module ==" | tee -a "$LOG"
 "$SWIFTC" -sdk "$SDK" -target "$TARGET" -parse-as-library -module-name ProductFlow \

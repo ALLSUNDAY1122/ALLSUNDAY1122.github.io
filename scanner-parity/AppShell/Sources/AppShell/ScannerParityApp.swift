@@ -3,13 +3,19 @@ import PhotosUI
 import SwiftUI
 import ProductFlow
 
+@MainActor
 public struct ScannerParityApp: App {
     private let driver: any ProductPipelineDriving
     private let reviewWorkflowFactory: @Sendable ([ProductReviewItem]) -> any ProductReviewWorkflow
 
+    public init() {
+        self.driver = ProductionScannerRuntime.makeDriver()
+        self.reviewWorkflowFactory = { RecoveryProductReviewWorkflow(items: $0) }
+    }
+
     public init(
-        driver: any ProductPipelineDriving = BoundProductPipelineDriver(bindings: []),
-        reviewWorkflowFactory: @escaping @Sendable ([ProductReviewItem]) -> any ProductReviewWorkflow = { InMemoryProductReviewWorkflow(items: $0) }
+        driver: any ProductPipelineDriving,
+        reviewWorkflowFactory: @escaping @Sendable ([ProductReviewItem]) -> any ProductReviewWorkflow
     ) {
         self.driver = driver
         self.reviewWorkflowFactory = reviewWorkflowFactory

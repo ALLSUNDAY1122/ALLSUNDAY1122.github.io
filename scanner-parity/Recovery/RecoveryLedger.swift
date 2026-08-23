@@ -1,4 +1,5 @@
 import Foundation
+import ReviewCore
 
 public struct RecoveryCheckpoint: Codable, Hashable, Sendable {
     public let bookID: String
