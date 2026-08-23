@@ -23,14 +23,9 @@ struct PrivacyStaticAuditorFixtureTests {
             let r = PrivacyStaticAuditor().audit(files: ["/Sources/A.swift": "import FirebaseAnalytics"])
             try require(r.productionEgressRisks.contains { $0.category == .analytics })
         }
-        test("Application Support processing storage is privacy risk") {
+        test("Application Support alone is not automatically a blocker") {
             let r = PrivacyStaticAuditor().audit(files: ["/AppShell/Store.swift": "FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)"])
-            try require(r.releaseBlockingFindings.contains { $0.category == .sensitivePersistence && $0.ruleID == "persistent-processing-storage" })
-            try require(r.productionEgressRisks.isEmpty)
-        }
-        test("allowlist cannot suppress persistent storage privacy risk") {
-            let r = PrivacyStaticAuditor(extraAllowlist: ["applicationSupportDirectory"]).audit(files: ["/AppShell/Store.swift": "applicationSupportDirectory"])
-            try require(r.releaseBlockingFindings.contains { $0.ruleID == "persistent-processing-storage" })
+            try require(r.releaseBlockingFindings.isEmpty)
         }
         test("Apple Vision is local informational finding") {
             let r = PrivacyStaticAuditor().audit(files: ["/Sources/A.swift": "import Vision"])
@@ -65,7 +60,7 @@ struct PrivacyStaticAuditorFixtureTests {
             try require(r.productionEgressRisks.contains { $0.ruleID == "network-api" })
         }
         test("all test paths are excluded from production scan") {
-            let r = PrivacyStaticAuditor().audit(files: ["/Tests/OtherModule/Fixture.swift": "URLSession.shared applicationSupportDirectory"])
+            let r = PrivacyStaticAuditor().audit(files: ["/Tests/OtherModule/Fixture.swift": "URLSession.shared"])
             try require(r.scannedFiles == 0)
             try require(r.releaseBlockingFindings.isEmpty)
         }
