@@ -9,9 +9,7 @@ private struct StubPDFInspector: PackagePDFInspecting {
 
 final class PackageIntegrityVerifierTests: XCTestCase {
     func testValidSyntheticPackagePasses() throws {
-        let root = try makePackage(pages: [
-            page(1, "p1"), page(2, "p2"), page(3, "p3")
-        ])
+        let root = try makePackage(pages: [page(1, "p1"), page(2, "p2"), page(3, "p3")])
         let report = PackageIntegrityVerifier(pdfInspector: StubPDFInspector(count: 3)).verify(rootURL: root)
         XCTAssertTrue(report.valid)
         XCTAssertEqual(report.summary.manifestPageCount, 3)
@@ -27,6 +25,16 @@ final class PackageIntegrityVerifierTests: XCTestCase {
         XCTAssertFalse(report.valid)
         XCTAssertTrue(report.issues.contains { $0.code == .duplicateSequence })
         XCTAssertTrue(report.issues.contains { $0.code == .duplicatePageID })
+    }
+
+    func testDuplicateImageAndTextReferencesFail() throws {
+        let first = page(1, "p1")
+        let second = PackageManifestSnapshot.Page(sequence: 2, pageID: "p2", imagePath: first.imagePath, textPath: first.textPath, sourceTimeMS: 2000, needsReview: false)
+        let root = try makePackage(pages: [first, second])
+        let report = PackageIntegrityVerifier(pdfInspector: StubPDFInspector(count: 2)).verify(rootURL: root)
+        XCTAssertFalse(report.valid)
+        XCTAssertTrue(report.issues.contains { $0.code == .duplicateImagePath })
+        XCTAssertTrue(report.issues.contains { $0.code == .duplicateTextPath })
     }
 
     func testMissingAndBrokenReferencesAreReviewable() throws {
@@ -59,9 +67,20 @@ final class PackageIntegrityVerifierTests: XCTestCase {
         XCTAssertTrue(report.issues.contains { $0.code == .pdfPageCountMismatch })
     }
 
+    func testMissingFinalArtifactsFail() throws {
+        let root = try makePackage(pages: [page(1, "p1")])
+        try FileManager.default.removeItem(at: root.appendingPathComponent("book_searchable.pdf"))
+        try FileManager.default.removeItem(at: root.appendingPathComponent("book.md"))
+        try FileManager.default.removeItem(at: root.appendingPathComponent("book.txt"))
+        let report = PackageIntegrityVerifier(pdfInspector: StubPDFInspector(count: 1)).verify(rootURL: root)
+        XCTAssertFalse(report.valid)
+        XCTAssertTrue(report.issues.contains { $0.code == .searchablePDFMissing })
+        XCTAssertTrue(report.issues.contains { $0.code == .aggregateMarkdownMissing })
+        XCTAssertTrue(report.issues.contains { $0.code == .aggregateTextMissing })
+    }
+
     func testPathTraversalIsRejected() throws {
-        var bad = page(1, "p1")
-        bad = .init(sequence: bad.sequence, pageID: bad.pageID, imagePath: "../secret.jpg", textPath: bad.textPath, sourceTimeMS: nil, needsReview: false)
+        let bad = PackageManifestSnapshot.Page(sequence: 1, pageID: "p1", imagePath: "../secret.jpg", textPath: "text/0001.txt", sourceTimeMS: nil, needsReview: false)
         let root = try makePackage(pages: [bad], createReferencedFiles: false)
         let report = PackageIntegrityVerifier(pdfInspector: StubPDFInspector(count: 1)).verify(rootURL: root)
         XCTAssertFalse(report.valid)
@@ -91,10 +110,16 @@ final class PackageIntegrityVerifierTests: XCTestCase {
         if createReferencedFiles {
             for item in pages {
                 if !item.imagePath.hasPrefix("../") {
-                    try Data([0xff, 0xd8, 0xff, 0xd9]).write(to: root.appendingPathComponent(item.imagePath))
+                    let url = root.appendingPathComponent(item.imagePath)
+                    if !FileManager.default.fileExists(atPath: url.path) {
+                        try Data([0xff, 0xd8, 0xff, 0xd9]).write(to: url)
+                    }
                 }
                 if !item.textPath.hasPrefix("../") {
-                    try "text \(item.pageID)".data(using: .utf8)!.write(to: root.appendingPathComponent(item.textPath))
+                    let url = root.appendingPathComponent(item.textPath)
+                    if !FileManager.default.fileExists(atPath: url.path) {
+                        try "text \(item.pageID)".data(using: .utf8)!.write(to: url)
+                    }
                 }
             }
         }
