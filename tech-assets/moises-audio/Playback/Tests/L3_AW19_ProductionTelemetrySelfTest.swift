@@ -66,10 +66,12 @@ struct L3AW19ProductionTelemetrySelfTest {
                 tempoQuietPeriodNanoseconds: 20_000_000
             )
         )
+        let correlations = Lane3TelemetryDispatchCorrelationBridge(maxPendingPerKind: 64)
         let rawPlayback = AW19PlaybackBackend()
         let measuredPlayback = Lane3TelemetryPlaybackBackend(
             backend: rawPlayback,
-            telemetry: telemetry
+            telemetry: telemetry,
+            correlations: correlations
         )
         let playback = RescheduleFencedPlaybackBackend(backend: measuredPlayback)
         let controller = try PracticeDSPProductionController(
@@ -94,7 +96,8 @@ struct L3AW19ProductionTelemetrySelfTest {
         let lifecycle = Lane3InterruptionLifecycleGate(authority: authority)
         let instrumented = Lane3InstrumentedInterruptionGate(
             gate: lifecycle,
-            telemetry: telemetry
+            telemetry: telemetry,
+            correlations: correlations
         )
 
         var executedSeek = 0
@@ -193,6 +196,13 @@ struct L3AW19ProductionTelemetrySelfTest {
         precondition(snapshot.interruption.resumeArmedAtEnd == 0)
         precondition(snapshot.interruption.resumeSuppressedWithoutToken == 1)
         precondition(snapshot.interruption.resumedPlayback == 0)
+
+        guard let correlationHealth = await instrumented.telemetryCorrelationHealthSnapshot() else {
+            preconditionFailure("bounded correlation health unavailable")
+        }
+        precondition(correlationHealth.pendingEntries == 0)
+        precondition(correlationHealth.overflowDrops == 0)
+        precondition(correlationHealth.unmatchedBackendOutcomes == 0)
 
         let data = try JSONEncoder().encode(snapshot)
         let json = String(decoding: data, as: UTF8.self)
