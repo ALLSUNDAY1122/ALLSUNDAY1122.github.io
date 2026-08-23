@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W14",
+  "title": "Song Section end-to-end boundary over-segmentation hardening",
+  "evidence_class": "NON_PARITY_PORTABLE_SYNTHETIC",
+  "parity_eligible": false,
+  "environment": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu",
+    "canonical_xcode_available": false
+  },
+  "portable_boundary_harness": {
+    "runs": 5,
+    "assertions_per_run": 7,
+    "all_runs_passed": true,
+    "elapsed_seconds": [0.01, 0.01, 0.04, 0.01, 0.01],
+    "max_rss_kb": [38484, 38404, 38380, 38332, 38320],
+    "cancellation_seconds": [
+      0.000510913,
+      0.000414660,
+      0.000497317,
+      0.000407104,
+      0.000393534
+    ],
+    "worst_cancellation_seconds": 0.000510913,
+    "cancellation_threshold_seconds": 0.25
+  },
+  "varied_structure_boundary_fixture": {
+    "duration_seconds": 62,
+    "input_boundaries_seconds": [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 50, 54, 58],
+    "output_boundaries_seconds": [4, 12, 16, 24, 32, 36, 44, 50, 58],
+    "input_section_count": 15,
+    "output_section_count": 10,
+    "removed_boundary_count": 5,
+    "removed_chord_subphrase_boundaries_seconds": [8, 20, 28, 40, 54],
+    "preferred_structural_spacing_seconds": 8,
+    "input_boundary_density_per_minute": 13.548387096774192,
+    "output_boundary_density_per_minute": 8.709677419354838,
+    "input_median_section_seconds": 4,
+    "output_median_section_seconds": 7
+  },
+  "stable_progression_fixture": {
+    "duration_seconds": 16,
+    "input_section_count": 4,
+    "maximum_output_section_count": 2,
+    "minimum_output_section_seconds": 8,
+    "result": "PASS"
+  },
+  "regression_contract": {
+    "w13_detector_and_complexity_caps_modified": false,
+    "w13_cancellable_hardener_modified": false,
+    "w13_prior_seeded_functional_label_evidence": "intro -> verse -> pre-chorus -> chorus -> verse -> pre-chorus -> chorus -> bridge -> chorus -> outro",
+    "w14_boundary_output_matches_prior_structural_fixture": true,
+    "canonical_xctest_source_typecheck": "PASS",
+    "canonical_xctest_executes_full_detector_plus_boundary_hardener_when HQ integrated checkout is available": true
+  },
+  "limitations": [
+    "Portable harness uses a deterministic W13-shaped over-segmented boundary fixture and does not replace rights-cleared real-audio section evaluation.",
+    "Portable cancellation timing is Linux scheduler evidence, not physical-iPhone responsiveness evidence.",
+    "The local environment cannot execute the canonical Xcode/SwiftPM integrated checkout; committed XCTest source was typechecked against an enable-testing MoisesAudioCore-shaped module.",
+    "Current-iPhone Moises differential, navigation/loop integration, physical-device performance and thermal/battery evidence remain HQ Late Integration gates."
+  ]
+}
