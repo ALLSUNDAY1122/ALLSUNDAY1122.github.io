@@ -61,10 +61,10 @@ PASS:
 
 - modified `IOExportBatchTransaction.swift` + `Lane2ExportRegistrationJournal.swift` strict-concurrency/warnings-as-errors compile against contract-equivalent `IOFileStore` surface;
 - `ExportPublicationGuardTests.swift` 5-case XCTest strict typecheck;
-- executable self-check: `L2_AW17_SELF_TEST_PASS scenarios=8 batches=200 elapsed_seconds=0.762946`;
+- exact committed self-check blob `b1fcb76751974e50b9b3ce446f06385f29b72c22` rerun: `L2_AW17_SELF_TEST_PASS scenarios=8 batches=200 elapsed_seconds=0.834158`;
 - static production wiring audit verifies marker-before-rename, intent-before-marker-clear, process-session guard, previous-session quarantine, current-session retention, and pending-before-intent recovery ordering.
 
-The 0.762946 s value is a Linux filesystem microbenchmark for 200 marker/journal handshakes with 1 KiB fixture files. It is not an iPhone/APFS export-performance measurement.
+The 0.834158 s value is a Linux filesystem microbenchmark for 200 marker/journal handshakes with 1 KiB fixture files. It is not an iPhone/APFS export-performance measurement.
 
 ## Important boundaries
 
