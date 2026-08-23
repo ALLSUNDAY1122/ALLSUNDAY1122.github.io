@@ -17,7 +17,9 @@ Integration branch: `scanner-parity/integration`
 - PR #4570 synchronized HQ evidence; merge commit: `b7b5fd5d6b27b7e356f14bf525184f5f193be053`.
 - PR #4571 fixed macOS searchable-PDF generation for the HQ Golden runner; merge commit: `8a1b4c4accac1a9b23c4a51eeed2cd6ca063cbe1`.
 - PR #4572 synchronized HQ evidence after the searchable-PDF fix; merge commit: `60e725de5e727959844fc93d5581f115ec3dc74b`.
-- PR #4573 added the Formal Golden machine-gate aggregator; product merge commit/current integration HEAD before this evidence-only update: `3bd3a53d4f84fe69ae01cea8d679ea87887a2a42`.
+- PR #4573 added the Formal Golden machine-gate aggregator; merge commit: `3bd3a53d4f84fe69ae01cea8d679ea87887a2a42`.
+- PR #4574 synchronized HQ evidence after machine-gate aggregation; merge commit: `2bded3d2417dfa0f5788ba58671a3b3f4afd001e`.
+- PR #4580 added the local Formal Golden visual/OCR review bundle; product merge commit/current integration HEAD before this evidence-only update: `315c085a72303cdffc0edcf8932f7bb3363320a8`.
 
 ## Non-Golden acceptance
 
@@ -101,7 +103,7 @@ This removes a deterministic HQ-runner failure that was independent of the raw G
 
 PR #4573 exact head `d309b061203f17a18cb29c2b721fa1cda2651429` passed `Scanner Parity Apple Validation` run `32653792426` in full and merged as `3bd3a53d4f84fe69ae01cea8d679ea87887a2a42`.
 
-The runner report schema is now version 3 and aggregates the real E2E artifacts into one machine-readable assessment. It records:
+The runner report schema version 3 aggregates the real E2E artifacts into one machine-readable assessment. It records:
 
 - Golden video/PDF SHA identity and explicit expected-SHA match state;
 - reference-PDF page recall, unmatched outputs, duplicate rate, and ordering accuracy after an explicitly calibrated threshold is supplied;
@@ -123,6 +125,26 @@ Fail-safe verdict policy is fixed:
 The runner and the machine-gate library contain no automatic `FORMAL_GOLDEN_PASS` path. Even with all machine metrics green, the real Golden pages still require HQ review of visual correction quality and OCR semantic accuracy before Formal Golden PASS can be issued. CI explicitly tests this no-auto-PASS contract.
 
 PR #4573 changed only the HQ runner/support/tests/package manifest/workflow. It did not modify `scanner-parity/SHARED_CONTRACT.md`, the product runtime source files, or any Golden SHA value.
+
+## Local Golden visual/OCR review bundle
+
+PR #4580 exact head `fd0d63c67aef5e9ad0cf674cd72b6ca08e640421` passed `Scanner Parity Apple Validation` run `32655389099` in full and merged as `315c085a72303cdffc0edcf8932f7bb3363320a8`.
+
+The runner report is now schema version 4 and points to a local-only review bundle at `06-golden-review/`. For every final output page the bundle provides:
+
+- a rendered image of the nearest reference-PDF page;
+- the final scanner output image;
+- side-by-side HTML comparison;
+- full OCR text;
+- OCR confidence, layout, and `needsReview` state;
+- nearest and second-best reference feature-print distances;
+- a relative-path-only `review-manifest.json`.
+
+The bundle is deliberately local-only because it contains rendered book pages and OCR text derived from the Golden book. It must not be committed to GitHub or uploaded as repository/Actions evidence. The CI upload list remains limited to synthetic validation reports/build logs and does not include `06-golden-review/`.
+
+Synthetic macOS tests verify that the bundle can render a reference PDF, copy an output page, write OCR TXT, generate the side-by-side HTML/manifest, HTML-escape OCR content, reject output/OCR count mismatch, and avoid persisting absolute local paths or `file://` references in the manifest.
+
+This does not weaken the no-auto-PASS policy. Even when machine gates pass, the runner still stops at `PENDING_HUMAN_VISUAL_OCR_REVIEW`; the bundle only makes that review reproducible and fast.
 
 ## Formal HQ Golden Gate
 
@@ -161,16 +183,16 @@ Current Formal Golden metrics remain unissued until the same raw dataset is proc
 
 ## Raw Golden availability and next execution
 
-Raw Golden files are intentionally not committed to GitHub. In the 2026-08-24 HQ session, the raw video/PDF could not be reacquired through the currently accessible ChatGPT File Library, execution sandbox, or connected Google Drive. File Library was checked again during PR #4573 work and still did not return either current Golden source file. No fixture result, compile result, synthetic metric result, searchable-PDF fixture result, machine-gate unit test, or historical measurement is promoted to Golden PASS in place of the real rerun.
+Raw Golden files are intentionally not committed to GitHub. On 2026-08-24 HQ rechecked the current ChatGPT File Library and connected Google Drive after PR #4574; neither current source file was found. No fixture result, compile result, synthetic metric result, searchable-PDF fixture result, machine-gate unit test, review-bundle synthetic test, or historical measurement is promoted to Golden PASS in place of the real rerun.
 
 When the current raw Golden bytes are accessible, HQ execution order is fixed:
 
 1. run the integrated `scanner-hq-golden-runner` without `--match-threshold` on the current video/PDF while supplying the versioned current expected SHA values;
 2. verify observed SHA-256 against the versioned current identity and preserve old migration hashes as history;
-3. capture nearest/second-best reference distance distribution and the schema-v3 E2E/BookPackage evidence;
+3. capture nearest/second-best reference distance distribution and the schema-v4 E2E/BookPackage evidence;
 4. calibrate the page-match threshold from the real distribution rather than guessing it;
 5. rerun with the calibrated threshold; the runner automatically evaluates hard machine gates and emits either machine failure or `PENDING_HUMAN_VISUAL_OCR_REVIEW`;
-6. HQ reviews actual corrected pages and OCR text for visual correction quality and semantic OCR accuracy, including any audit/OCR/textless-PDF review signals;
+6. HQ opens local `06-golden-review/index.html` and reviews all actual page pairs plus OCR text for perspective/skew/crop/color/shadow/spread-split quality and semantic Japanese OCR accuracy;
 7. only after machine gates and the real visual/OCR review both pass may HQ issue Formal Golden PASS and proceed to Release Gate.
 
 This does not reopen Worker work and is not a Worker `BLOCKED_HUMAN` condition. Workers 1-4 remain complete. Queue driving remains stopped. Golden validation remains HQ-owned.
