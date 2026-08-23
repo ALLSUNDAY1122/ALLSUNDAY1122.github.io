@@ -21,15 +21,16 @@ struct ProductPipelineDriverTests {
             let root = temp("order")
             let recorder = Recorder()
             let driver = BoundProductPipelineDriver(bindings: makeBindings(root: root, recorder: recorder))
-            var checkpoints: [ProductPipelineCheckpoint] = []
             let result = try await driver.run(
                 request: request(root: root),
                 resume: nil,
-                progress: { _ in },
-                checkpoint: { value in checkpoints.append(value) }
+                progress: { value in await recorder.record(progress: value) },
+                checkpoint: { value in await recorder.record(checkpoint: value) }
             )
-            try require(await recorder.stages == ProductProcessingStage.allCases)
-            try require(checkpoints.count == 5)
+            let stages = await recorder.stages
+            let checkpoints = await recorder.checkpointCount
+            try require(stages == ProductProcessingStage.allCases)
+            try require(checkpoints == 5)
             try require(result.pageCount == 200)
             try require(result.bookPackageURL.lastPathComponent == "package")
         }
@@ -49,7 +50,8 @@ struct ProductPipelineDriverTests {
             )
             let driver = BoundProductPipelineDriver(bindings: makeBindings(root: root, recorder: recorder))
             _ = try await driver.run(request: request(root: root), resume: checkpoint, progress: { _ in }, checkpoint: { _ in })
-            try require(await recorder.stages == [.ocr, .packageWrite])
+            let stages = await recorder.stages
+            try require(stages == [.ocr, .packageWrite])
         }
 
         await run("mismatched checkpoint fails closed") {
@@ -89,11 +91,10 @@ struct ProductPipelineDriverTests {
         await run("200-page progress remains incremental") {
             let root = temp("long")
             let recorder = Recorder()
-            var observed: [Int] = []
             var bindings = makeBindings(root: root, recorder: recorder)
             bindings = bindings.map { binding in
                 guard binding.stage == .imageCorrection else { return binding }
-                return ProductPipelineStageBinding(stage: .imageCorrection) { request, artifacts, progress in
+                return ProductPipelineStageBinding(stage: .imageCorrection) { request, _, progress in
                     for page in 1...200 {
                         await progress(.init(stage: .imageCorrection, fraction: Double(page) / 200, completedUnits: page, totalUnits: 200))
                     }
@@ -103,12 +104,13 @@ struct ProductPipelineDriverTests {
             _ = try await BoundProductPipelineDriver(bindings: bindings).run(
                 request: request(root: root),
                 resume: nil,
-                progress: { value in if value.stage == .imageCorrection && value.completedUnits > 0 { observed.append(value.completedUnits) } },
+                progress: { value in await recorder.record(progress: value) },
                 checkpoint: { _ in }
             )
-            try require(observed.contains(1))
-            try require(observed.contains(200))
-            try require(observed.count >= 200)
+            let units = await recorder.imageCorrectionProgressUnits
+            try require(units.contains(1))
+            try require(units.contains(200))
+            try require(units.count >= 200)
         }
 
         await run("checkpoint store roundtrip") {
@@ -125,7 +127,8 @@ struct ProductPipelineDriverTests {
             try require(loaded?.runID == "r1")
             try require(loaded?.completedArtifacts.count == 1)
             try await store.clear()
-            try require(try await store.load() == nil)
+            let cleared = try await store.load()
+            try require(cleared == nil)
         }
 
         await run("missing binding is explicit failure") {
@@ -145,8 +148,17 @@ struct ProductPipelineDriverTests {
     }
 
     actor Recorder {
-        var stages: [ProductProcessingStage] = []
+        private(set) var stages: [ProductProcessingStage] = []
+        private(set) var checkpointCount = 0
+        private(set) var imageCorrectionProgressUnits: [Int] = []
+
         func append(_ stage: ProductProcessingStage) { stages.append(stage) }
+        func record(checkpoint: ProductPipelineCheckpoint) { checkpointCount += 1 }
+        func record(progress: ProductProgress) {
+            if progress.stage == .imageCorrection && progress.completedUnits > 0 {
+                imageCorrectionProgressUnits.append(progress.completedUnits)
+            }
+        }
     }
 
     static func makeBindings(root: URL, recorder: Recorder) -> [ProductPipelineStageBinding] {
@@ -175,8 +187,8 @@ struct ProductPipelineDriverTests {
         FileManager.default.temporaryDirectory.appendingPathComponent("scanner-parity-product-\(suffix)-\(UUID().uuidString)")
     }
 
-    static func require(_ condition: @autoclosure () async throws -> Bool) async throws {
-        if try await !condition() { throw TestError.assertionFailed }
+    static func require(_ condition: @autoclosure () -> Bool) throws {
+        if !condition() { throw TestError.assertionFailed }
     }
 
     enum TestError: Error { case assertionFailed, expectedFailure }
