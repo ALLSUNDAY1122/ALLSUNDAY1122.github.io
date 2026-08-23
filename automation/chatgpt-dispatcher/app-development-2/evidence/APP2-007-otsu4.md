@@ -1,78 +1,103 @@
-# APP2-007｜危険物乙4｜分野から解くタップ不具合修正
+# APP2-007｜危険物乙4｜720問・試験回別6回・Internal TestFlight
 
-完了判定: **DONE**
-確認時点: 2026-08-19 15:10 JST
+完了判定: **DONE（機械工程）**
+確認時点: 2026-08-23 21:47 JST
 Worker: OTSU4
 
-## 正本再取得
-- Notion台帳「危険物取扱者 乙種4類｜学びスプリント」: 2026-08-18実機報告「分野から解くが押せない」を最優先未解決として記録。
-- Notion開発正本: Bundle ID `jp.allsunday1122.otsu4` / App Store Connect App ID `6799755566` / Version `1.0.0` / Codemagic workflow `otsu4-ios` / profile `otsu4_appstore` / IAP `jp.allsunday1122.otsu4.premium` / AppIcon SHA-256 `d0cb19b237ca3306413c481e4fbc0fb871705b390a1bc37619d9683fff19ff2d`。
-- GitHub PR #4069: Draft / head `cec69cc72f415367031776d255102fba5261b4c5`。
+## Task要件
+2026-08-19追加要件:
+1. ホームで分野別／試験回別を選択可能にする
+2. 問題銀行を360→720問へ倍増
+3. 試験回別を第1〜6回へ拡張
+4. Content Audit→小型/大型iPhone Unit/UI XCTest→新署名Build 3以降→Internal TestFlight
+5. App Store本審査提出は禁止
 
-## タップ不具合の現行source判定
-現行head `cec69cc72f415367031776d255102fba5261b4c5` には `test(otsu4): cover subject row tap regression` が含まれる。
-`native-ios/Otsu4Sprint/UITests/Otsu4SprintUITests.swift` の `testEachSubjectRowIsFullyTappableAndStartsFreeStudyFlow()` で、以下3分野を実ボタンとして検証する。
-- 法令
-- 物理・化学
-- 性質・消火
+## 実装結果
+- 最終720問
+  - 法令 288
+  - 物理・化学 192
+  - 性質・消火 240
+- 無料72問（法令29 / 物化19 / 性消24）
+- ホーム `分野別 / 試験回別` 切替を実装
+- 試験回別 第1〜6回、各35問
+- 無料: 第1回 / Premium: 第1〜6回
+- 模擬試験 6回 × 35問 / 120分
+- 各回 法令15 / 物化10 / 性消10
+- 合格判定 各科目60%以上
+- 模試210問は全件重複なし
 
-各行について存在、hittable、44pt以上、左側座標タップ、無料版学習画面の「わからない」到達を検証するため、直近実機報告の再発回帰を直接カバーしている。製品sourceへの追加修正は不要と判定。
+## Content / Difficulty Gate
+- exact question duplicate: 0
+- duplicate learning objective: 0
+- duplicate explanation package: 0
+- anti-padding: 0
+- knowledge-free elimination risk: 0
+- answer-length cue risk: 0
+- difficulty 2: 216
+- difficulty 3: 504
 
-## Release Gate
-現行headに紐づくGitHub Actions:
-- Otsu4 Content Audit run `32115827629`: success
-- Otsu4 Native Typecheck run `32115827647`: success
-- Otsu4 Xcode Build run `32115827620`: success
-- Otsu4 Release Foundation Lint run `32115827669`: success
+## 最新製品Gate
+PR #4069: Draft維持
+Product head: `d00abdc7ea7160f2a923e7ac2395594a5dd06cfb`
 
-Xcode Build run `32115827620` の主要step:
-- Release Simulator Build: success
-- release bundle / canonical identifiers: success
-- small / large iPhone simulator selection + boot: success
-- native unit tests: success
-- small / large iPhone UI tests: success
-- canonical App Store icon SHA: success
+GitHub Actions:
+- Otsu4 Content Audit run `32627298558`: **PASS**
+- Otsu4 Native Typecheck run `32627298608`: **PASS**
+- Otsu4 Release Foundation Lint run `32627298571`: **PASS**
+- Otsu4 Xcode Build run `32627298621`, retry job `97194336213`: **PASS**
 
-## 新署名Build
-旧ASC Build 1は2026-08-10アップロードで、2026-08-18実機報告より前のため受入証拠として失効扱い。
+Xcode最終step:
+- Release Simulator Build: PASS
+- 720問bundle / 288-192-240 / canonical identifiers: PASS
+- small / large iPhone simulator boot: PASS
+- Native Unit Test: PASS
+- small / large iPhone UI Test: PASS
+- canonical AppIcon SHA: PASS
 
-修正版sourceを固定した release branch `release/app2-007-otsu4-testflight` から、Codemagic artifact-only Buildを生成。
-- Codemagic Build ID: `6a852847e0a1ce2d5417944d`
-- Codemagic status: `finished`
-- product source head: `cec69cc72f415367031776d255102fba5261b4c5`
-- exact IPA size: 1,960,985 bytes
-- actual Bundle ID: `jp.allsunday1122.otsu4`
-- actual Version: `1.0.0`
-- actual CFBundleVersion: `2`
-- codesign: verified
+初回Xcode attemptはUnit Test工程のGitHub Actions 10分上限timeoutで終了したがassertion failureではない。同一headを再実行して全工程PASS。
 
-途中で判明したBuild番号問題は、Xcode project内のBuild番号定義が複数箇所にあり旧IPAがBuild 1のままになることが原因だった。最終artifactでは実IPAを展開してBuild 2をread-back済み。
+## 署名IPA / App Store Connect
+固定識別情報:
+- Bundle ID `jp.allsunday1122.otsu4`
+- App Store Connect App ID `6799755566`
+- Version `1.0.0`
+- IAP `jp.allsunday1122.otsu4.premium`
+- AppIcon SHA-256 `d0cb19b237ca3306413c481e4fbc0fb871705b390a1bc37619d9683fff19ff2d`
 
-## App Store Connect / Internal TestFlight read-back
-App Store Connect `/v1/apps/6799755566/builds?limit=10` read-back:
-- Build 2 resource ID: `d88cc444-e53c-4a8b-873a-1a0975d87fa3`
-- version: `2`
-- processingState: `VALID`
-- buildAudienceType: `INTERNAL_ONLY`
-- uploadedDate: `2026-08-18T20:54:52-07:00`
-- expired: false
+最終署名Build:
+- Codemagic build ID `6a8aa41c819174d676937dcf`
+- Version / Build: **1.0.0 (93)**
+- signed IPA内720問 / 288-192-240 / Bundle ID / PrivacyInfo / Assets / mobileprovision / CodeSignature: **PASS**
+- Apple Build resource ID `626fdeb4-1712-4e8d-9d01-3394b1144c6d`
 
-Internal TestFlight group `sun` (`9cd34e64-9d08-4203-a27d-cb9d2e661c96`) read-back:
-- Build 2 `d88cc444-e53c-4a8b-873a-1a0975d87fa3` が所属済み
-- processingState `VALID`
-- buildAudienceType `INTERNAL_ONLY`
-- 旧Build 1とBuild 2の2件を確認
+## Internal TestFlight readback
+Internal group `sun`: `9cd34e64-9d08-4203-a27d-cb9d2e661c96`
 
-`altool --validate-app` でBuild 2再送を試した際、Appleは `previousBundleVersion: 2` / duplicate を返した。この結果と上記ASC read-backにより、Build 2が既にAppleへ正常到達済みであることを確認したため追加uploadは行わない。
+Apple/Codemagic readback:
+- Build 93: TestFlight反映済み
+- `internalBuildState = IN_BETA_TESTING`
+- `externalBuildState = NOT_APPLICABLE`
+- `autoNotifyEnabled = true`
+- `sun`からBuild 93へアクセス可能: **PASS**
+
+配布安全設定:
+- `testFlightInternalTestingOnly: true`
+- `submit_to_testflight: false`（外部ベータ審査へ送らない）
+- `submit_to_app_store: false`
+
+## 正本同期
+- Notion台帳: `公開準備` / Build 93 Internal TestFlight・実機受入待ちへ更新
+- Notion開発正本: 720問 / Build 93 / sun readbackを追記
+- PR #4069: `[INTERNAL TESTFLIGHT READY / DEVICE QA PENDING]`へ更新、Draft維持
 
 ## 安全条件
-- App Store本審査への提出: **未実施**
-- `submit_to_app_store: true`: **使用していない**
-- PR #4069: Draft維持
-- Bundle ID / App ID / IAP / profile: 変更なし
-- secret / token / .p8: 証拠へ保存していない
+- App Store本審査: **未提出**
+- 外部TestFlightベータ審査: **未提出**
+- PR merge: **未実施**
+- 実機受入前にアプリ全体を完成扱いしない
+- secret / token / .p8をEvidenceへ保存していない
 
 ## 結論
-直近実機報告「分野から解くが押せない」は、現行sourceの専用UI回帰テストと小型・大型iPhone Release Gateで解消済みと判定。さらに修正版sourceから新署名IPA `1.0.0 (2)` を生成し、App Store Connectで `VALID / INTERNAL_ONLY`、Internal TestFlightグループ `sun` 所属までread-backした。
+APP2-007で要求された人間判断不要な工程は完了。720問化、分野別／試験回別、第1〜6回、全Content/Native/Xcode Gate、新署名Build 93、App Store Connect/Internal TestFlight `sun`配布readbackまで成立した。
 
-APP2-007の人間判断不要な工程は完了。次の実機確認ではTestFlight Build 2を用いて「分野から解く」3分野のタップ、学習遷移、購入/復元等を受入確認できる状態。
+残るのはiPhone実機での最終受入のみ。Build 93で主要UI、分野別3科目、試験回別1〜6、模試6回、購入成功/cancel/pending/restore/再インストール後entitlement、VoiceOver等を確認する。実機PASS後のみApp Store本審査へ進む。
