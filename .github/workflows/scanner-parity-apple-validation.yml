@@ -53,7 +53,9 @@ jobs:
             -configuration Release \
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
-            PRODUCT_BUNDLE_IDENTIFIER=com.invalid.scannerparity.ci \
+            SCANNER_PARITY_BUNDLE_ID=com.invalid.scannerparity.ci \
+            SCANNER_PARITY_MARKETING_VERSION=0.0.0 \
+            SCANNER_PARITY_BUILD_NUMBER=1 \
             CODE_SIGNING_ALLOWED=NO \
             build | tee "$RUNNER_TEMP/scanner-parity-app-xcodebuild.log"
 
@@ -68,6 +70,7 @@ jobs:
           /usr/libexec/PlistBuddy -c 'Print :NSCameraUsageDescription' "$APP_PATH/Info.plist" >/dev/null
           /usr/libexec/PlistBuddy -c 'Print :NSPhotoLibraryUsageDescription' "$APP_PATH/Info.plist" >/dev/null
           /usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$APP_PATH/Info.plist" | grep -qi false
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Info.plist" | grep -qx 'com.invalid.scannerparity.ci'
           echo 'IOS_APPLICATION_BUNDLE_PASS'
 
       - name: Upload validation evidence
