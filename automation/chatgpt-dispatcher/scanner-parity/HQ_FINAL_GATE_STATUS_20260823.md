@@ -15,7 +15,9 @@ Integration branch: `scanner-parity/integration`
 - PR #4567 added the Formal HQ Golden E2E runner; merge commit: `74cfdcd332b4bdbe7c857fdcbfe16fd4ab3d9260`.
 - PR #4569 added reference-PDF page metrics; merge commit: `00eb294d479c93e10d1ce40d0d41d1a953b283e4`.
 - PR #4570 synchronized HQ evidence; merge commit: `b7b5fd5d6b27b7e356f14bf525184f5f193be053`.
-- PR #4571 fixed macOS searchable-PDF generation for the HQ Golden runner; product merge commit/current integration HEAD before this evidence-only update: `8a1b4c4accac1a9b23c4a51eeed2cd6ca063cbe1`.
+- PR #4571 fixed macOS searchable-PDF generation for the HQ Golden runner; merge commit: `8a1b4c4accac1a9b23c4a51eeed2cd6ca063cbe1`.
+- PR #4572 synchronized HQ evidence after the searchable-PDF fix; merge commit: `60e725de5e727959844fc93d5581f115ec3dc74b`.
+- PR #4573 added the Formal Golden machine-gate aggregator; product merge commit/current integration HEAD before this evidence-only update: `3bd3a53d4f84fe69ae01cea8d679ea87887a2a42`.
 
 ## Non-Golden acceptance
 
@@ -95,6 +97,33 @@ The fix:
 
 This removes a deterministic HQ-runner failure that was independent of the raw Golden data. It does not constitute Formal Golden PASS.
 
+## Formal Golden machine-gate aggregation
+
+PR #4573 exact head `d309b061203f17a18cb29c2b721fa1cda2651429` passed `Scanner Parity Apple Validation` run `32653792426` in full and merged as `3bd3a53d4f84fe69ae01cea8d679ea87887a2a42`.
+
+The runner report schema is now version 3 and aggregates the real E2E artifacts into one machine-readable assessment. It records:
+
+- Golden video/PDF SHA identity and explicit expected-SHA match state;
+- reference-PDF page recall, unmatched outputs, duplicate rate, and ordering accuracy after an explicitly calibrated threshold is supplied;
+- image-correction stage failure count and failed page IDs;
+- PageAudit ordered page count, duplicate groups, missing-page suspicions, reversal events, auto-fixes, and review count;
+- OCR engine failures, review count, empty-text pages, mean/minimum confidence, and layout counts;
+- searchable-PDF page count, pages with/without extractable text, and extractable character count;
+- canonical BookPackage `integrity-report.json` and required output presence.
+
+Hard machine failures include SHA mismatch, page recall below 99%, unmatched output, duplicate rate above 0.5%, ordering below 100%, correction-stage failure, OCR engine failure, or invalid BookPackage integrity.
+
+Fail-safe verdict policy is fixed:
+
+- expected SHA absent: `PENDING_GOLDEN_IDENTITY_EXPECTATIONS`;
+- reference threshold not calibrated: `PENDING_REFERENCE_THRESHOLD_CALIBRATION`;
+- hard machine gate failure: `FORMAL_GOLDEN_FAIL_MACHINE_GATE`;
+- all machine gates pass: `PENDING_HUMAN_VISUAL_OCR_REVIEW`.
+
+The runner and the machine-gate library contain no automatic `FORMAL_GOLDEN_PASS` path. Even with all machine metrics green, the real Golden pages still require HQ review of visual correction quality and OCR semantic accuracy before Formal Golden PASS can be issued. CI explicitly tests this no-auto-PASS contract.
+
+PR #4573 changed only the HQ runner/support/tests/package manifest/workflow. It did not modify `scanner-parity/SHARED_CONTRACT.md`, the product runtime source files, or any Golden SHA value.
+
 ## Formal HQ Golden Gate
 
 Status: `PENDING_HQ_GOLDEN_EXECUTION`
@@ -132,17 +161,17 @@ Current Formal Golden metrics remain unissued until the same raw dataset is proc
 
 ## Raw Golden availability and next execution
 
-Raw Golden files are intentionally not committed to GitHub. In the 2026-08-24 HQ session, the raw video/PDF could not be reacquired through the currently accessible ChatGPT File Library, execution sandbox, or connected Google Drive. The File Library and Drive were checked again after PR #4571 work and still did not return either current Golden source file. No fixture result, compile result, synthetic metric result, searchable-PDF fixture result, or historical measurement is promoted to Golden PASS in place of the real rerun.
+Raw Golden files are intentionally not committed to GitHub. In the 2026-08-24 HQ session, the raw video/PDF could not be reacquired through the currently accessible ChatGPT File Library, execution sandbox, or connected Google Drive. File Library was checked again during PR #4573 work and still did not return either current Golden source file. No fixture result, compile result, synthetic metric result, searchable-PDF fixture result, machine-gate unit test, or historical measurement is promoted to Golden PASS in place of the real rerun.
 
 When the current raw Golden bytes are accessible, HQ execution order is fixed:
 
-1. run the integrated `scanner-hq-golden-runner` without `--match-threshold` on the current video/PDF;
+1. run the integrated `scanner-hq-golden-runner` without `--match-threshold` on the current video/PDF while supplying the versioned current expected SHA values;
 2. verify observed SHA-256 against the versioned current identity and preserve old migration hashes as history;
-3. capture nearest/second-best reference distance distribution and full E2E/BookPackage evidence;
+3. capture nearest/second-best reference distance distribution and the schema-v3 E2E/BookPackage evidence;
 4. calibrate the page-match threshold from the real distribution rather than guessing it;
-5. rerun with the calibrated threshold and evaluate page recall, unmatched outputs, duplicate rate, and ordering;
-6. evaluate the remaining correction/OCR/audit/package Golden gates;
-7. only if all Formal Golden gates pass may HQ proceed to Release Gate.
+5. rerun with the calibrated threshold; the runner automatically evaluates hard machine gates and emits either machine failure or `PENDING_HUMAN_VISUAL_OCR_REVIEW`;
+6. HQ reviews actual corrected pages and OCR text for visual correction quality and semantic OCR accuracy, including any audit/OCR/textless-PDF review signals;
+7. only after machine gates and the real visual/OCR review both pass may HQ issue Formal Golden PASS and proceed to Release Gate.
 
 This does not reopen Worker work and is not a Worker `BLOCKED_HUMAN` condition. Workers 1-4 remain complete. Queue driving remains stopped. Golden validation remains HQ-owned.
 
