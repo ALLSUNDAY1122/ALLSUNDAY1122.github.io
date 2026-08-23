@@ -156,10 +156,11 @@ struct L3AW12ProductionGenerationCoordinatorSelfTest {
         snapshot = try await coordinator.snapshot()
         precondition(!snapshot.isPoisoned && snapshot.dspState.scheduleGeneration == 9)
 
+        // Replayed/stale wrong-route tokens are harmless and must not destroy current authority.
         do {
             _ = try await coordinator.applyTempoRatio(
                 1.1,
-                playbackToken: PlaybackTransportRescheduleToken(generation: 6, reason: .seek)
+                playbackToken: PlaybackTransportRescheduleToken(generation: 5, reason: .seek)
             )
             preconditionFailure("tempo mutation requires tempoChange Playback token")
         } catch PracticeDSPGenerationCoordinatorError.expectedTempoChangeToken { }
@@ -167,17 +168,54 @@ struct L3AW12ProductionGenerationCoordinatorSelfTest {
 
         do {
             _ = try await coordinator.bindTransportDiscontinuity(
-                playbackToken: PlaybackTransportRescheduleToken(generation: 6, reason: .tempoChange)
+                playbackToken: PlaybackTransportRescheduleToken(generation: 5, reason: .tempoChange)
             )
             preconditionFailure("generic bind must not bypass transactional tempo mutation")
         } catch PracticeDSPGenerationCoordinatorError.tempoChangeRequiresTempoMutation { }
+        try await coordinator.validateReplacement(binding: recoveryBinding2)
 
         do {
             _ = try await coordinator.bindTransportDiscontinuity(
-                playbackToken: PlaybackTransportRescheduleToken(generation: 6, reason: .recovery)
+                playbackToken: PlaybackTransportRescheduleToken(generation: 5, reason: .recovery)
             )
             preconditionFailure("generic bind must not bypass explicit recovery path")
         } catch PracticeDSPGenerationCoordinatorError.recoveryRequiresRecoveryPath { }
+        try await coordinator.validateReplacement(binding: recoveryBinding2)
+
+        // A genuinely newer Playback token is already externally visible. Wrong routing must revoke
+        // the older binding and raise the recovery floor instead of preserving stale authority.
+        do {
+            _ = try await coordinator.applyTempoRatio(
+                1.1,
+                playbackToken: PlaybackTransportRescheduleToken(generation: 6, reason: .seek)
+            )
+            preconditionFailure("new wrong-route Playback token must fail closed")
+        } catch PracticeDSPGenerationCoordinatorError.expectedTempoChangeToken { }
+        snapshot = try await coordinator.snapshot()
+        precondition(snapshot.isPoisoned && snapshot.activeBinding == nil)
+        precondition(snapshot.dspState.scheduleGeneration == 9)
+
+        // The same generation cannot be recycled as recovery. The attempted recovery itself advances
+        // click generation before the gate rejects it, so that click generation also becomes a floor.
+        do {
+            _ = try await coordinator.recover(
+                playbackToken: PlaybackTransportRescheduleToken(generation: 6, reason: .recovery)
+            )
+            preconditionFailure("wrong-route Playback generation must not be reusable for recovery")
+        } catch PracticeDSPGenerationCoordinatorError.recoveryFailed { }
+        snapshot = try await coordinator.snapshot()
+        precondition(snapshot.isPoisoned && snapshot.dspState.scheduleGeneration == 10)
+
+        let recovery3 = try await coordinator.recover(
+            playbackToken: PlaybackTransportRescheduleToken(generation: 7, reason: .recovery)
+        )
+        precondition(recovery3.playbackGeneration == 7 && recovery3.clickGeneration == 11)
+        let recoveryBinding3 = PracticeDSPTransportGenerationBinding(
+            playbackGeneration: 7,
+            clickGeneration: 11,
+            reason: .recovery
+        )
+        try await coordinator.validateReplacement(binding: recoveryBinding3)
 
         let overflowController = try PracticeDSPProductionController(
             projectID: project,
@@ -196,7 +234,7 @@ struct L3AW12ProductionGenerationCoordinatorSelfTest {
         let overflowSnapshot = try await overflowCoordinator.snapshot()
         precondition(overflowSnapshot.isPoisoned)
 
-        precondition(invalidator.snapshot() == [1, 2, 3, 4, 6, 7, 9])
+        precondition(invalidator.snapshot() == [1, 2, 3, 4, 6, 7, 9, 10, 11])
         print("L3-AW12 production combined-generation coordinator self-test PASS")
     }
 }
