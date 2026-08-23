@@ -11,7 +11,7 @@
   "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "d4fee1d1e3fc0ead0e3644adb0ce3d1cf1a90b24",
+  "head_sha": "598ffef432ad3d72a3845abb2b9bc16538116ebb",
   "existing_unintegrated_commits_at_epoch_start": [],
   "commits": [
     "0bd1887a479dd6098a28d47d3051ea22b7a2a1eb",
@@ -45,7 +45,12 @@
     "a4294591d661279d688432cd54c333777948d90a",
     "48dbe94912bbdfc7f145705ca22a12063141ab28",
     "845a6d4bd786759b5950ecb748d141e08b835df1",
-    "d4fee1d1e3fc0ead0e3644adb0ce3d1cf1a90b24"
+    "d4fee1d1e3fc0ead0e3644adb0ce3d1cf1a90b24",
+    "a352f9be1213e8117800567ce13c982ed540e927",
+    "c6c2323cb9037a1255423a308a9cefdf8a54e479",
+    "d8ff5252afa60bb3f3bcf0df57d6a68f7f67d02d",
+    "dbeb2179ab9251b9ccf0a3f1ca5127ade69e2e37",
+    "598ffef432ad3d72a3845abb2b9bc16538116ebb"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -71,7 +76,11 @@
     "L2-M04 same-second failure-history ambiguity was reproduced during self-check and fixed by durable insertion-order history; rerun => PASS",
     "L2-M04 committed XCTest coverage includes interrupted import ownership reconciliation, canonical delete/export convergence, storage overflow/negative budget, path traversal, metadata corruption and durable failure reopen",
     "L2-AW05 Swift 6.2.1 Linux strict-concurrency/warnings-as-errors typecheck for external acquisition + staging recovery against consumed IOFileStore seam => PASS",
-    "L2-AW05 executable self-check => PASS 11 scenarios: invalid URL, missing/directory/empty/oversize source, complete copy/descriptor, collision avoidance, app-owned-root rejection, stale cleanup, cleanup idempotency, invalid grace"
+    "L2-AW05 executable self-check => PASS 11 scenarios: invalid URL, missing/directory/empty/oversize source, complete copy/descriptor, collision avoidance, app-owned-root rejection, stale cleanup, cleanup idempotency, invalid grace",
+    "L2-AW06 Swift 6.2.1 Linux strict-concurrency/warnings-as-errors typecheck for IOReferenceMediaCompatibility.swift and committed portable XCTest source => PASS",
+    "L2-AW06 IOSAudioIOService.swift non-AVFoundation visible surface typecheck with frozen-contract-equivalent stubs => PASS",
+    "L2-AW06 executable codec compatibility self-check => PASS 9 scenarios; marker L2_AW06_SELF_TEST_PASS scenarios=9",
+    "L2-AW06 Apple-gated IOSAudioIOServiceExternalImportTests committed for real WAV external acquisition/AVFoundation validation and zero-byte rejection; runtime execution pending Apple SDK"
   ],
   "evidence": [
     "Independent Lane Worker contract v3 SHA 2edf4411f69af37f9b57a363096fb2787ecfc713 and Lane plan v3 SHA 32be5c934fcdf8f17c677c4c2d30db0808813fa5 re-read before L2-M04",
@@ -89,16 +98,22 @@
     "IO/Sources/IOExternalFileAcquisition.swift establishes the external picker/File Provider acquisition boundary: local-file-only, ownership separation, regular/non-empty/size checks, storage preflight, byte-count verification and Apple security-scoped coordinated read",
     "IO/Sources/IOStagingRecovery.swift provides grace-based non-recursive stale staging cleanup that is idempotent across relaunch",
     "IO/Tests/IOExternalFileAcquisitionTests.swift and IO/Tests/IOStagingRecoveryTests.swift commit negative, ownership, collision and relaunch recovery coverage",
-    "IO/L2-AW05_EXTERNAL_ACQUISITION_VALIDATION.md records executed Linux evidence and explicitly leaves Apple provider/runtime and PARITY claims open"
+    "IO/L2-AW05_EXTERNAL_ACQUISITION_VALIDATION.md records executed Linux evidence and explicitly leaves Apple provider/runtime and PARITY claims open",
+    "v4 Worker contract SHA c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package SHA aad7983bdaf315a996dce1496ed245008085c712, Lane Plan SHA 10b595b47e5a71278bde32e8656bd284e14e62eb and Resource Lock SHA 6c7c372d4d0200c89fb7ce44d5a4a3110dc522c8 were re-read before L2-AW06",
+    "IOSAudioIOService.importExternalFile(...) now connects external acquisition to the real AVFoundation validation/finalization path without changing the frozen ImportRequest contract",
+    "IO/Sources/IOReferenceMediaCompatibility.swift tracks MP3/WAV/FLAC/M4A/MP4/MOV/WMA and keeps WMA in scope via native-first plus injected compatibility decode to canonical WAV",
+    "Compatibility output must be non-empty regular app-owned staging; cancellation/decoder failure/invalid output cleanup is fail-closed and original WMA staging is preserved until fallback succeeds or fails deterministically",
+    "IO/Tests/IOReferenceMediaCompatibilityTests.swift provides portable matrix/failure/cleanup coverage; IO/Tests/IOSAudioIOServiceExternalImportTests.swift provides Apple runtime integration coverage for external WAV",
+    "IO/L2-AW06_EXTERNAL_IMPORT_CODEC_VALIDATION.md records executed portable evidence, Apple runtime gaps and explicit NON-PARITY status"
   ],
   "known_gaps": [
     "Apple Core Data runtime execution of the L2-M01/L2-M02/L2-M03 suites remains pending an Apple/Xcode environment",
     "The L2-V0 -> current inferred Core Data migration fixture is implemented but cannot be truthfully marked runtime PASS until executed with Core Data",
     "Actual IOSAudioIOService AVFoundation codec/decode/export execution is pending Apple SDK and physical-device evidence",
-    "External picker/File Provider acquisition boundary now exists, but actual iPhone security-scoped URL and NSFileCoordinator provider behavior remains unverified on device",
+    "External picker/File Provider acquisition is now wired into IOSAudioIOService, but actual iPhone security-scoped URL and NSFileCoordinator provider behavior remains unverified on device",
     "Actual iPhone Files/File Provider/camera-roll/direct URL/share flows remain HQ App/iOS late-integration evidence",
     "Physical-device storage-pressure behavior and export/share artifact validity remain unverified",
-    "Reference codec/container matrix still needs Lane-2 hardening and Apple runtime evidence, especially WMA support/fallback strategy",
+    "Reference codec policy now tracks MP3/WAV/FLAC/M4A/MP4/MOV/WMA, but real Apple fixture execution is pending and WMA still needs a production compatibility decoder plus license/package audit if native decoding is unavailable",
     "Lifecycle sidecar corruption fails closed; user-facing recovery/export decisions for that diagnostic metadata belong to HQ App/iOS composition",
     "Library/import/export PARITY rows remain MISSING until Apple runtime, integrated iPhone interruption, real-audio and differential product gates are satisfied"
   ],
@@ -107,21 +122,23 @@
     "At late integration use CrashSafeProjectLibraryStore.openPreservingUserData(...) as the canonical Library startup path and compose Lane2DurableLifecycleCoordinator around IOSAudioIOService + the resulting ProjectLibraryPersisting store",
     "Run the complete Core Data migration/interruption suite plus Lane2DurableLifecycleCoordinatorTests under the supported Apple SDK/iOS host",
     "Exercise IOExternalFileAcquirer securityScoped mode with real Files/iCloud/File Provider URLs and retain provider coordination evidence",
+    "Run IOSAudioIOServiceExternalImportTests plus the real MP3/WAV/FLAC/M4A/MP4/MOV/WMA fixture matrix under the supported Apple deployment target",
+    "If WMA is not natively decodable on the supported Apple runtime, approve/link a commercially compatible audited decoder dependency into the iOS package/target and inject it through IOCompatibilityAudioDecoding; Lane 2 must not silently remove WMA from scope",
     "Run actual iPhone Files/File Provider/camera-roll/direct URL/unsupported-codec/storage-pressure/M4A export/share scenarios and retain real artifacts/evidence",
     "Do not promote MOI-P001/P002/P017/P018/P019/P020 from Lane-2 branch evidence alone; PARITY remains HQ-owned",
-    "No Shared/App contract change was required by L2-AW05"
+    "No Shared/App contract change was required by L2-AW06"
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW05",
-    "goal": "Create a production-safe external picker/File Provider file-acquisition boundary and relaunch staging recovery entirely inside IO/**.",
-    "rationale": "MOI-P001/P002 are still MISSING and the prior IO service handled only already-app-owned files or direct network URLs. The highest-value lane-local gap was safely converting external local URLs into verified app-owned staging without waiting for App/iOS picker integration.",
-    "done_when": "External local file acquisition fails closed for invalid/missing/non-regular/empty/oversize/ownership-conflicting inputs, verifies complete copy under storage preflight, supports Apple security-scoped coordinated access, cleans stale staging after relaunch, and has committed tests plus durable evidence without claiming device PARITY.",
+    "wave_id": "L2-AW06",
+    "goal": "Wire the AW05 external file-acquisition boundary into IOSAudioIOService media validation/finalization and harden the current-reference codec strategy, especially WMA, without changing frozen Shared/App contracts.",
+    "rationale": "MOI-P001/P002 remain MISSING. After AW05 the external URL could be safely staged, but it was not yet connected to the production AVFoundation import path and the reference-visible WMA format had no explicit non-degrading fallback strategy.",
+    "done_when": "External local files can flow through acquisition -> AVFoundation validation -> app-owned Imports, the seven reference extensions have an explicit native/compatibility route, WMA can use an injected canonical-WAV compatibility decoder without partial-file leakage, negative/cancellation/output validation is covered, Apple integration tests are committed, and evidence is durable without claiming device PARITY.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "d4fee1d1e3fc0ead0e3644adb0ce3d1cf1a90b24",
-    "next_priority": "Wire external acquisition through IOSAudioIOService final media validation/finalization and then harden the current-reference codec/container matrix including WMA strategy."
+    "implementation_head_sha": "598ffef432ad3d72a3845abb2b9bc16538116ebb",
+    "next_priority": "Build an executable real-codec fixture/evidence matrix for MP3/WAV/FLAC/M4A/MP4/MOV/WMA and harden production export validity, naming, batch atomicity and cleanup while Apple/device execution remains an explicit HQ gate."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved, but Worker 2 no longer waits for HQ backlog replenishment and now self-selects the highest-value Lane-2 wave on every user '次'.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 and L2-AW06 continue the Lane-2 completion roadmap without waiting for HQ task replenishment.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-23T16:33:00+09:00",
+  "last_updated": "2026-08-23T17:03:00+09:00",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ reads it for lane checkpoint integration and remains sole PARITY authority."
 }
