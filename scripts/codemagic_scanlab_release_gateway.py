@@ -86,7 +86,8 @@ def main() -> int:
         "splat-native-ios:",
         "APP_STORE_CONNECT_APP_ID: 6803778932",
         "BUNDLE_ID: jp.allsunday1122.splatlab",
-        "build='2'",
+        "CURRENT_PROJECT_VERSION: 2",
+        "Using TestFlight build number 2",
         "submit_to_testflight: true",
         "submit_to_app_store: false",
     ]
