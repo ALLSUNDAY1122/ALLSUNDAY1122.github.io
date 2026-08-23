@@ -30,8 +30,8 @@ Swift 6.2.1 Linux, `-swift-version 6 -warnings-as-errors`:
 - `IOStagingOwnershipTests.swift` strict XCTest typecheck: PASS
 - `IOProviderSnapshotAudioImporterOwnershipTests.swift` strict XCTest typecheck: PASS
 - production wiring audit: `L2_AW16_STATIC_WIRING_PASS checks=18`
-- executable core self-check: `L2_AW16_SELF_TEST_PASS scenarios=10 lease_cycles=1000 elapsed_seconds=2.850624`
-- executable wrapper self-check: `L2_AW16_WRAPPER_SELF_TEST_PASS scenarios=2`
+- executable core self-check, rerun from the exact committed source blob `c6cc3f20d1fcc3278d038de355227da63b583844`: `L2_AW16_SELF_TEST_PASS scenarios=10 lease_cycles=1000 elapsed_seconds=2.392056`
+- executable wrapper self-check, committed source blob `7893720f5de5b94dcc6091be8416a99344b48751`: `L2_AW16_WRAPPER_SELF_TEST_PASS scenarios=2`
 
 Core scenarios include:
 
@@ -48,7 +48,7 @@ Core scenarios include:
 
 Wrapper scenarios run success and downstream-failure paths. The downstream importer intentionally waits longer than the initial short test lease, marks the ready snapshot old, invokes staging recovery, and verifies keepalive ownership prevents deletion. Both outcomes then verify Staging cleanup after lease release.
 
-`2.850624s` is a Linux portable filesystem/JSON-ledger microbenchmark for 1,000 synthetic lease cycles. It is not iPhone/File Provider latency evidence.
+`2.392056s` is a Linux portable filesystem/JSON-ledger microbenchmark for 1,000 synthetic lease cycles. It is not iPhone/File Provider latency evidence.
 
 ## Negative / recovery invariants
 
