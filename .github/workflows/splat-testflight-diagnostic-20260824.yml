@@ -1,0 +1,110 @@
+name: Splat TestFlight Diagnostic 20260824
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260824'
+    paths:
+      - '.github/workflows/splat-testflight-diagnostic-20260824.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Capture failed Codemagic action diagnostics
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re, urllib.error, urllib.request
+          from pathlib import Path
+          build_id='6a8b0dfb1ab825267fa0020d'
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token:
+              raise SystemExit('Missing CM_API_TOKEN')
+
+          def fetch(url, accept='application/json,text/plain,*/*'):
+              req=urllib.request.Request(url,headers={'x-auth-token':token,'Accept':accept},method='GET')
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as response:
+                      return response.status,response.read().decode('utf-8',errors='replace')
+              except urllib.error.HTTPError as exc:
+                  return exc.code,exc.read().decode('utf-8',errors='replace')
+
+          def scrub_line(line):
+              line=re.sub(r'/Users/[^/]+','/Users/[USER]',line)
+              line=re.sub(r'(?i)(token|password|private[_ -]?key|api[_ -]?key|issuer[_ -]?id)\s*[:=]\s*[^\s,}\]]+',r'\1=[REDACTED]',line)
+              return line[:1400]
+
+          status,raw=fetch(f'https://codemagic.io/api/v3/builds/{build_id}/actions')
+          if not 200 <= status < 300:
+              raise SystemExit(f'actions query failed HTTP {status}')
+          payload=json.loads(raw)
+          actions=payload.get('actions') or payload.get('data') or payload
+          if isinstance(actions,dict):
+              actions=actions.get('actions') or []
+          safe_actions=[]
+          failed=[]
+          for action in actions if isinstance(actions,list) else []:
+              if not isinstance(action,dict): continue
+              aid=str(action.get('id') or action.get('_id') or '')
+              item={
+                  'id':aid,
+                  'name':action.get('name'),
+                  'type':action.get('type'),
+                  'status':action.get('status'),
+                  'started_at':action.get('started_at') or action.get('startedAt'),
+                  'finished_at':action.get('finished_at') or action.get('finishedAt'),
+              }
+              safe_actions.append(item)
+              if str(item['status']).lower() in {'failed','failure'} and aid:
+                  failed.append(item)
+
+          probes=[]
+          interesting=re.compile(r'(error|fail|certificate|profile|signing|missing|not found|invalid|xcode|metal|build)',re.I)
+          for item in failed:
+              aid=item['id']
+              for path in [
+                  f'/api/v3/builds/{build_id}/actions/{aid}',
+                  f'/api/v3/builds/{build_id}/actions/{aid}/logs',
+                  f'/api/v3/actions/{aid}/logs',
+              ]:
+                  s,text=fetch('https://codemagic.io'+path)
+                  lines=[]
+                  for line in text.splitlines():
+                      if interesting.search(line): lines.append(scrub_line(line))
+                      if len(lines)>=100: break
+                  probes.append({'path':path,'http_status':s,'diagnostic_lines':lines})
+
+          result={
+              'request_id':'scanlab-testflight-diagnostic-20260824',
+              'ok':True,
+              'build_id':build_id,
+              'actions':safe_actions,
+              'failed_actions':failed,
+              'probes':probes,
+          }
+          Path('/tmp/scanlab-testflight-diagnostic.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PASS: captured Codemagic failure diagnostics')
+          PY
+
+      - name: Persist sanitized diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESULT='automation/codemagic-results/scanlab-testflight-diagnostic-20260824.json'
+          mkdir -p "$(dirname "$RESULT")"
+          cp /tmp/scanlab-testflight-diagnostic.json "$RESULT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'release(splat): persist TestFlight failure diagnostic'
+          git push origin HEAD:testflight/splat-native-ios-20260824
