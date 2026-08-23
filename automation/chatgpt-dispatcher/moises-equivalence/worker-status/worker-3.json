@@ -15,38 +15,35 @@
   "base_integration_sha": "1648a275833ad4e8aed3245347e6de231fd0487f",
   "branch_merge_base_sha": "7948195f1d94f28bc212c79b310fdaed00a4f580",
   "preserved_checkpoint_head": "d63cecbfa53007bf9593b628ae291702f496bb17",
-  "previous_autonomous_chain_head": "42f90e8919b5a165c0aaafc7d330c12788ca412d",
-  "historical_commit_coverage": "AW01-AW04 and earlier Lane-3 work remain preserved by checkpoint d63cecbfa53007bf9593b628ae291702f496bb17. AW05-AW13 are preserved by ancestry through previous autonomous chain head 42f90e8919b5a165c0aaafc7d330c12788ca412d. The commits list below records AW14 only.",
-  "head_sha": "05b3b563b20f1c9f308ce49a92a3cd3f1e94633c",
+  "previous_autonomous_chain_head": "05b3b563b20f1c9f308ce49a92a3cd3f1e94633c",
+  "historical_commit_coverage": "AW01-AW14 and earlier Lane-3 work remain preserved by branch ancestry through 05b3b563b20f1c9f308ce49a92a3cd3f1e94633c. The commits list below records AW15 only.",
+  "head_sha": "bb05aed65dc0f3abb98792f8d0c18c552ebb135e",
   "commits": [
-    "94232b19290b50b4e26474b3d397de14a807c4a8",
-    "7d74d76fa28dedb06b0bef4b737a3e09bbb8dd8a",
-    "e3aaf84ef982c389b5c03d86393334b5e25db68e",
-    "71b675e64209cc98e3c9703dab2ada86a76e382e",
-    "5d5c6c8db42f7aad40ad857a9d6a16aa230a0d99",
-    "05b3b563b20f1c9f308ce49a92a3cd3f1e94633c"
+    "346290a4a4f960c9a0737d00c0fc1a220559cc12",
+    "3d57d86219b4b3b3dcfaf306b18af6880074c78e",
+    "30d564a355efb77c336ac67450c26da3ac96ab82",
+    "bb10e02881a92f6e9d04e43abe752a3cea3aa701",
+    "5bfcb87b21cc95f0b6ae72982b7bc5c334ef6ad9",
+    "bb05aed65dc0f3abb98792f8d0c18c552ebb135e"
   ],
   "tests": [
-    "AW01-AW13 prior portable suites/evidence remain preserved by branch ancestry",
-    "L3-AW14 independent AW11-derived generation oracle Swift typecheck against interface-compatible production types PASS",
-    "L3-AW14 repository differential self-test source Swift syntax parse PASS",
-    "L3-AW14 200000 randomized model-vs-production semantic operations plus final recovery PASS",
-    "L3-AW14 compared operation serial, click generation, poison state, exact active binding, tempo, metronome and pending count-in after every operation",
-    "L3-AW14 forced transport click failures 7377 and forced click-only failures 7262 all failed closed",
-    "L3-AW14 new wrong-route Playback tokens 7356 revoked stale authority and poisoned",
-    "L3-AW14 new Playback tokens while already poisoned 29436 were rejected while still becoming recovery floors",
-    "L3-AW14 same-generation recovery reuse attempts 29366 were rejected and their advanced click generations retained as floors",
-    "L3-AW14 stale/replayed tokens 14987 were rejected without destroying valid current authority",
-    "L3-AW14 portable benchmark 20 x 10000 operations: median 432.860ms, p95 530.156ms, max 530.661ms",
+    "AW01-AW14 prior portable suites/evidence remain preserved by branch ancestry",
+    "L3-AW15 production coordinator now checks cancellation before transport/tempo/recovery replacement commit points and records externally advanced Playback/click generations as recovery floors",
+    "L3-AW15 found and fixed a concurrency gap: a newer Playback token arriving during operationInFlight now supersedes/poisons the older in-flight authority instead of being forgotten while the older operation later commits",
+    "L3-AW15 stale/replayed overlapping Playback tokens are compared against both committed and pending Playback generations and do not poison newer authority",
+    "L3-AW15 repository deterministic blocking-backend self-test authored for transport supersession, cancellation, click-only supersession/cancellation, tempo cancellation, recovery supersession/cancellation and final exact binding validation",
+    "L3-AW15 repository full-source concurrency benchmark authored for selected integrated execution",
+    "L3-AW15 independent Swift 6.2.1 actor/generation harness: 10000 suspended transport/newer-token/recovery cycles PASS; cancellation probe PASS; checksum 1333080",
+    "L3-AW15 portable contention benchmark 20 x 2000 overlap/recovery cycles: median 247.364ms, p95 326.057ms, max 350.856ms, per-round checksum 262008",
     "Selected full Lane-3/Xcode/iPhone execution remains HQ Late Integration"
   ],
   "evidence": [
     "DSP/Sources/PracticeDSPGenerationCoordinator.swift",
     "DSP/Sources/PracticeDSPTransportReschedule.swift",
-    "DSP/Sources/Lane3GenerationDifferentialOracle.swift",
-    "DSP/Tests/L3_AW12_ProductionGenerationCoordinatorSelfTest.swift",
-    "DSP/Tests/L3_AW14_ModelProductionDifferentialSelfTest.swift",
-    "DSP/benchmarks/L3-AW14_MODEL_PRODUCTION_DIFFERENTIAL.md",
+    "DSP/Tests/L3_AW15_CoordinatorConcurrencyCancellationSelfTest.swift",
+    "DSP/Tests/L3_AW15_CoordinatorConcurrencyBenchmark.swift",
+    "DSP/benchmarks/L3-AW15_CONCURRENCY_CANCELLATION_HARDENING.md",
+    "DSP/benchmarks/L3-AW15_VALIDATION.json",
     "DSP/benchmarks/L3-AW14_VALIDATION.json",
     "Playback/Sources/Lane3UnifiedEvidenceV2.swift",
     "Playback/benchmarks/L3-AW13_VALIDATION.json"
@@ -54,10 +51,10 @@
   "known_gaps": [
     "Physical-iPhone AVAudioEngine capture and Apple SDK execution remain HQ late-integration work; portable/harness/reference results cannot satisfy PARITY",
     "AppleRampedMultiTrackPlaybackBackend still needs selected Xcode/iOS SDK compile and integrated-host selection; legacy direct AVAudioPlayerNode.volume backend must not be P006 proof",
-    "PracticeDSPProductionController / AppleTimePitchTransactionalBackend, PracticeDSPGenerationCoordinator and AppleSampleAccurateClickExecutor still require final selected-Xcode/iPhone runtime verification and authoritative render-origin/common-host anchor",
-    "AW14 closes the known Lane-local rejected-new-Playback-token recovery-floor gap and adds high-volume model-vs-production ordering coverage; repository full-source execution of the AW14 test still needs the selected integrated build environment",
-    "AW12/AW14 production coordinator still depends on HQ routing every actual RescheduleFencedPlaybackBackend token through the correct coordinator API before replacement scheduling",
-    "Coordinator actor behavior under truly overlapping concurrent user-control Tasks remains to be stress-tested; AW14 is deterministic sequential interleaving",
+    "PracticeDSPProductionController / AppleTimePitchTransactionalBackend, PracticeDSPGenerationCoordinator, AW15 concurrency tests and AppleSampleAccurateClickExecutor still require final selected-Xcode/iPhone runtime verification and authoritative render-origin/common-host anchor",
+    "AW15 closes the known Lane-local operationInFlight/newer-Playback-token and coordinator cancellation authority gaps, but repository full-source AW15 self-test/benchmark still require selected integrated execution",
+    "A cancelled tempo/control task may have completed its transactional controller mutation before cancellation is observed; AW15 guarantees no stale replacement authority is published and forces recovery, but the product integration layer should serialize/coalesce rapid controls rather than assuming caller cancellation means logical state was untouched",
+    "HQ still must route every actual RescheduleFencedPlaybackBackend token through the correct PracticeDSPGenerationCoordinator API before replacement scheduling; a newer token rejected during operationInFlight is a real recovery floor and must not be reused",
     "AW06 AppleOfflineReferenceRenderer still requires selected Xcode/iOS typecheck and actual manual-render runtime with rights-cleared stems",
     "AW07/AW08/AW10/AW13 actual Apple offline/device PCM and current-Moises differential pairs remain unverified",
     "AW10 remains a broad-envelope/formant proxy only and cannot prove standardized perceptual quality or absence of warble/phasiness/formant damage",
@@ -65,32 +62,33 @@
     "MOI-P006/P007/P008/P010/P012/P014/P015 remain MISSING"
   ],
   "hq_requests": [
-    "Preserve checkpoint d63cecb..., previous autonomous chain head 42f90e89..., and AW14 commits during semantic integration",
-    "Compile AppleRampedMultiTrackPlaybackBackend, RescheduleFencedPlaybackBackend, AppleTimePitchTransactionalBackend, PracticeDSPGenerationCoordinator, Lane3GenerationDifferentialOracle, AppleSampleAccurateClickExecutor, AppleOfflineReferenceRenderer and AW09-AW14 evidence sources with selected Xcode/iOS SDK",
-    "Run DSP/Tests/L3_AW12_ProductionGenerationCoordinatorSelfTest.swift and DSP/Tests/L3_AW14_ModelProductionDifferentialSelfTest.swift against the complete Lane-3 source set after integration",
-    "Treat every Playback token as externally advanced before coordinator dispatch: a newer token rejected while poisoned or through a wrong coordinator route must remain a recovery floor and must never preserve an older replacement binding",
-    "Route tempo tokens only through PracticeDSPGenerationCoordinator.applyTempoRatio, recovery tokens only through coordinator.recover, and metronome/count-in through click-only coordinator methods",
-    "Do not schedule replacement audio/click work unless coordinator.validateReplacement succeeds for the exact current binding",
+    "Preserve checkpoint d63cecb..., previous autonomous chain head 05b3b563..., and AW15 commits during semantic integration",
+    "Compile PracticeDSPGenerationCoordinator plus AW15 self-test/benchmark with the complete selected Lane-3/Xcode/iOS source set",
+    "Run DSP/Tests/L3_AW15_CoordinatorConcurrencyCancellationSelfTest.swift and L3_AW15_CoordinatorConcurrencyBenchmark.swift after semantic integration",
+    "When a newer Playback token arrives while coordinator operationInFlight is true, treat it as an externally advanced superseding generation even though that call receives operationInFlight; never allow the older suspended operation to become current afterward",
+    "After cancellation or supersession, recover only with a Playback recovery token newer than every recorded Playback floor; never reuse the cancelled/superseding token generation",
+    "Do not treat caller Task cancellation as proof that tempo/metronome/count-in logical state was untouched; rely on coordinator poison/recovery state and serialize/coalesce UI control dispatch",
+    "Use authoritySnapshot for diagnostics during internal awaits and validateReplacement for the exact current binding before replacement audio/click scheduling",
     "For rights-cleared ours/current-Moises comparisons use AW13 v2 run binding and raw PCM SHA-256 chain-of-custody",
     "Run physical-iPhone capture for mixer transitions, repeated seek/loop/tempo changes, interruption/resume, metronome drift and count-in final-click-to-music-start timing before affected PARITY promotion"
   ],
   "previous_autonomous_wave": {
-    "wave_id": "L3-AW13",
-    "result": "Unified AW09-AW12 evidence into a snapshot-validated, generation-lineage-bound, same-PCM SHA-256 v2 receipt; portable validation passed; PARITY not promoted."
+    "wave_id": "L3-AW14",
+    "result": "Found/fixed rejected-new-Playback-token recovery-floor semantics and passed 200000-operation sequential model-vs-production differential fuzz; PARITY not promoted."
   },
   "latest_autonomous_wave": {
-    "wave_id": "L3-AW14",
-    "goal": "Differentially fuzz the AW11-derived generation oracle against AW12 production coordinator semantics across transport, tempo, metronome/count-in, stale/wrong-route tokens, half failures and recovery, and harden any divergence found.",
-    "rationale": "AW12 implemented combined generation safety and AW13 secured evidence chain-of-custody, but complex ordering remained validated mainly by separately designed tests. A high-volume independent model comparison can expose production transitions that preserve stale authority or accept an unsafe recovery generation.",
-    "done_when": "Independent oracle predicts every operation without reading production output; production and oracle snapshots match after every randomized step; forced transport/click failures, stale tokens, invalid controls, newer wrong-route tokens, poisoned-state new tokens and recovery reuse are covered; any discovered divergence is fixed in production and regression-tested; durable benchmark/evidence/status are saved; PARITY claims remain disabled.",
-    "result": "COMPLETE_NON_PARITY: differential design found and fixed a production safety gap where a newer Playback token rejected while poisoned or routed through the wrong API was not always retained as a recovery floor and could leave older authority intact. Hardened PracticeDSPGenerationCoordinator and AW12 regression. Independent AW11-derived oracle plus interface-compatible production semantic harness completed 200000 randomized operations + final recovery with exact state agreement after every operation. Included 7356 newer wrong-route fail-closed cases, 29436 poisoned-state new-token rejections, 29366 same-generation recovery reuse rejections, 7377 forced transport failures and 7262 forced click-only failures. Portable 10k-op benchmark median 432.860ms, p95 530.156ms. Apple/Xcode/device/current-Moises gates remain open; PARITY unchanged."
+    "wave_id": "L3-AW15",
+    "goal": "Harden PracticeDSPGenerationCoordinator under genuine Swift actor reentrancy, overlapping user-control Tasks and cancellation so no stale Playback/click authority can commit after a newer externally issued token or a cancelled operation.",
+    "rationale": "AW14 validated deterministic sequential interleavings but did not exercise actor re-entry while production-controller awaits were suspended. Playback tokens are generated before coordinator dispatch, so an overlapping token can be externally newer even when the coordinator rejects its call as operationInFlight.",
+    "done_when": "A newer overlapping Playback token supersedes and poisons an older in-flight operation; stale overlaps do not poison; cancellation before commit records every observed generation floor and publishes no replacement authority; click-only and recovery operations detect supersession; authority can be inspected during awaits; deterministic concurrency/cancellation tests, portable stress/benchmark and durable evidence pass; device/audibility/PARITY claims remain disabled.",
+    "result": "COMPLETE_NON_PARITY: added cancellation-aware fail-closed commit boundaries, superseding-token handling for token-bearing operationInFlight calls, operationSuperseded semantics, click-only/recovery supersession checks and a gate-only authoritySnapshot. Independent Swift 6.2.1 harness completed 10000 genuine suspended overlap/recovery cycles plus cancellation probe with no stale binding; 20x2000 portable contention benchmark median 247.364ms, p95 326.057ms, max 350.856ms. Repository blocking-backend self-test and full-source benchmark are authored for selected integrated execution. Apple/Xcode/device/current-Moises gates remain open; PARITY unchanged."
   },
   "next_wave_candidates": [
-    "coordinator actor reentrancy/concurrency hardening under genuinely overlapping user-control Tasks and cancellation",
-    "device-evidence capture/listening runbook hardening around AW13 v2 chain-of-custody and AW14 generation rules",
+    "production transport-token dispatch/coalescing adapter and routing audit for HQ Late Integration, including rapid seek/tempo UI supersession semantics",
+    "device-evidence capture/listening runbook hardening around AW13 v2 chain-of-custody plus AW15 authority snapshots",
     "long-track evidence memory/copy-cost hardening for SHA-256 PCM identity and full AW07/AW08/AW10 analysis",
-    "production transport-token routing audit adapter for HQ Late Integration"
+    "transactional cancellation/coalescing policy hardening so rapid superseded controls minimize unnecessary poison/recovery while preserving fail-closed authority"
   ],
-  "last_updated": "2026-08-24T01:56:00+09:00",
+  "last_updated": "2026-08-24T02:26:00+09:00",
   "writer_policy": "Only Moises-Worker-3 may update this status file; HQ remains semantic integration and PARITY authority."
 }
