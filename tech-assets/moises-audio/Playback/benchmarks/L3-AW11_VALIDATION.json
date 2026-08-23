@@ -1,0 +1,64 @@
+{
+  "wave_id": "L3-AW11",
+  "result": "COMPLETE_NON_PARITY",
+  "environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "apple_sdk_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "implementation": [
+    "combined mixer/transport/tempo/pitch/metronome/count-in/interruption recovery state oracle",
+    "click-only schedule invalidation clears stale combined transport replacement binding",
+    "half-invalidation poison plus dual-generation recovery",
+    "generation-overflow fail-closed semantics",
+    "AW05 token/binding generation-reason-active-click receipt adapter"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "stress_requested_operations": 1000000,
+    "stress_stem_count": 6,
+    "stress_seed": "0xA11A11A11",
+    "stress_applied": 992033,
+    "forced_half_failures": 1003,
+    "recoveries": 1003,
+    "stale_completion_attempts": 4731,
+    "stale_completion_rejected": 4731,
+    "stale_replacement_attempts": 3236,
+    "stale_replacement_rejected": 3236,
+    "final_invariant": "PASS",
+    "checksum_fnv1a64": "4abf951ddb94dac7",
+    "coverage": [
+      "gain pitch tempo seek loop combined flow",
+      "metronome click-only invalidation",
+      "stale completion rejection",
+      "stale replacement rejection",
+      "half-invalidation poison and recovery",
+      "poisoned-state mutation rejection",
+      "invalid control atomicity",
+      "playback generation overflow poison",
+      "click generation overflow after partial playback advance",
+      "unrecoverable exhausted-generation rejection",
+      "Codable report round-trip",
+      "AW05 adapter generation mismatch rejection",
+      "AW05 adapter reason mismatch rejection",
+      "AW05 adapter stale click-generation rejection"
+    ]
+  },
+  "benchmark": {
+    "rounds": 20,
+    "operations_per_round": 100000,
+    "stem_count": 6,
+    "median_ms_per_round": 6.365,
+    "p95_ms_per_round": 6.750,
+    "max_ms_per_round": 7.356,
+    "checksum": 2763516,
+    "scope": "portable combined state/recovery oracle only; excludes AVAudioEngine, PCM render, spectral analysis and device IO"
+  },
+  "evidence_scope": "LANE3_COMBINED_PLAYBACK_DSP_RECOVERY_STRESS_NON_PARITY",
+  "audible_artifact_claimed": false,
+  "device_timing_claimed": false,
+  "parity_claimed": false
+}
