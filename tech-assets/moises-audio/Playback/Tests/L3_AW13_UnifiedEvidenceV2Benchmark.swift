@@ -87,7 +87,7 @@ struct L3AW13UnifiedEvidenceV2Benchmark {
                     expectedEventFrames: [2_048, 4_096, 8_192, 12_288],
                     comparisonIntent: .peerSameControls
                 )
-                checksum &+= UInt64(report.runBindingFNV1A64.prefix(8), radix: 16) ?? 0
+                checksum &+= UInt64(report.runBindingSHA256.prefix(8), radix: 16) ?? 0
             }
             let end = DispatchTime.now().uptimeNanoseconds
             timings.append(Double(end - start) / 1_000_000)
