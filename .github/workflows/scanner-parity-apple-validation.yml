@@ -31,11 +31,17 @@ jobs:
       - name: Validate HQ Golden runner contract
         run: python3 scanner-parity/Tests/HQGoldenRunner/runner_contract_test.py
 
+      - name: Validate HQ Golden failure launcher contract
+        run: python3 scanner-parity/Tests/HQGoldenRunner/failure_launcher_contract_test.py
+
       - name: Build HQ Formal Golden runner on macOS
         run: swift build --package-path scanner-parity --product scanner-hq-golden-runner
 
       - name: Build HQ Formal Golden finalizer on macOS
         run: swift build --package-path scanner-parity --product scanner-hq-golden-finalizer
+
+      - name: Build HQ Formal Golden failure recorder on macOS
+        run: swift build --package-path scanner-parity --product scanner-hq-golden-failure-recorder
 
       - name: Test HQ Golden reference metrics
         run: swift test --package-path scanner-parity --filter ReferenceAlignmentTests
@@ -48,6 +54,35 @@ jobs:
 
       - name: Test HQ Formal Golden review finalizer
         run: swift test --package-path scanner-parity --filter FormalGoldenReviewFinalizerTests
+
+      - name: Test HQ Golden failure evidence
+        run: |
+          set -euo pipefail
+          swift test --package-path scanner-parity --filter GoldenExecutionFailureSanitizerTests
+          TMP="$(mktemp -d)"
+          VIDEO="$TMP/raw/RPReplay_Final1787451151.mp4"
+          PDF="$TMP/raw/本 2026-08-23 0842.pdf"
+          WORKSPACE="$TMP/workspace"
+          STDERR_LOG="$TMP/raw-runner-stderr.log"
+          mkdir -p "$TMP/raw" "$WORKSPACE/01-frame-extraction" "$WORKSPACE/05-book-package/demo"
+          printf 'synthetic-video-bytes' > "$VIDEO"
+          printf 'synthetic-pdf-bytes' > "$PDF"
+          printf '{}' > "$WORKSPACE/01-frame-extraction/candidates.json"
+          printf '{}' > "$WORKSPACE/05-book-package/demo/integrity-report.json"
+          printf 'pipeline failure reading %s with reference %s in workspace %s\n' "$VIDEO" "$PDF" "$WORKSPACE" > "$STDERR_LOG"
+          VIDEO_SHA="$(shasum -a 256 "$VIDEO" | awk '{print $1}')"
+          PDF_SHA="$(shasum -a 256 "$PDF" | awk '{print $1}')"
+          swift run --package-path scanner-parity scanner-hq-golden-failure-recorder \
+            --video "$VIDEO" \
+            --pdf "$PDF" \
+            --workspace "$WORKSPACE" \
+            --book-id golden-v2-current-project-20260823 \
+            --expected-video-sha "$VIDEO_SHA" \
+            --expected-pdf-sha "$PDF_SHA" \
+            --stderr-log "$STDERR_LOG" \
+            --runner-exit-code 17
+          python3 scanner-parity/Tests/HQGoldenRunner/failure_report_fixture_test.py \
+            "$WORKSPACE/hq-golden-execution-failure.json" "$TMP"
 
       - name: Test searchable PDF generation on macOS
         run: swift test --package-path scanner-parity --filter SearchablePDFWriterTests
