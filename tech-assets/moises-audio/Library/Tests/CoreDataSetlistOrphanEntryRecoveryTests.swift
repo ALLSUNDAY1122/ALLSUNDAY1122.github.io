@@ -24,7 +24,8 @@ final class CoreDataSetlistOrphanEntryRecoveryTests: XCTestCase {
         XCTAssertEqual(report.scannedEntries, 3)
         XCTAssertEqual(report.removedOrphanEntries, 0)
 
-        let snapshot = try XCTUnwrap(try await store.listSetlists().first)
+        let snapshots = try await store.listSetlists()
+        let snapshot = try XCTUnwrap(snapshots.first)
         XCTAssertEqual(snapshot.entries.map(\.projectID), [second, first, second])
         XCTAssertEqual(snapshot.entries.map(\.position), [0, 1, 2])
     }
