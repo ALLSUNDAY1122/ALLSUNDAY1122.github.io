@@ -6,7 +6,7 @@
   "integration_epoch": 2,
   "integration_head": "fd9cb2ec7745a927fae80a82f5cfc514ebc40020",
   "assigned_at": "2026-08-23T15:49:00+09:00",
-  "updated_at": "2026-08-23T16:22:00+09:00",
+  "updated_at": "2026-08-23T16:23:00+09:00",
   "owner": "HQ",
   "rule": "active=true の間、各Workerは自分に割り当てられたTaskだけをclaimする。別WorkerのTaskをclaimしてはならない。Task完了後も次の固定割当が発行されるまで勝手に別Taskをclaimしない。",
   "assignments": {
@@ -26,7 +26,11 @@
     "worker3": {
       "task_id": "SCAN-010",
       "title": "BookPackage Integrity Verifier｜PDF/Text/Manifest整合監査",
-      "state": "READY_ASSIGNED",
+      "state": "CLAIMED",
+      "claim_token": "e7bdbfc8-3d7f-4243-9ecf-6e2c3887a87c",
+      "claim_epoch": 1,
+      "attempt_branch": "task/SCAN-010/attempt-1",
+      "claimed_at": "2026-08-23T16:23:00+09:00",
       "reason": "SCAN-003 Page Audit と SCAN-005品質計測・検証の経験を継続利用"
     },
     "worker4": {
