@@ -1,0 +1,61 @@
+{
+  "wave": "L1-A13",
+  "result": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "hard_reject_policy": "Structural corruption, invalid numeric audio, impossible metadata and cross-stem timing/container inconsistencies fail closed before StemArtifact promotion.",
+  "quality_flag_policy": "Digital silence, near-silence and pathological clipping are detected as inspection flags rather than unconditional corruption failures because a legitimate separated role may be absent or extremely sparse in a song.",
+  "scenarios": [
+    {"id":"pcm16-valid","expected":"PASS"},
+    {"id":"pcm8-valid","expected":"PASS"},
+    {"id":"pcm24-valid","expected":"PASS"},
+    {"id":"pcm32-valid","expected":"PASS"},
+    {"id":"float32-valid","expected":"PASS"},
+    {"id":"float64-valid","expected":"PASS"},
+    {"id":"container-magic-invalid","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_WAV_INVALID"},
+    {"id":"riff-declared-size-truncated","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_RIFF_SIZE_MISMATCH"},
+    {"id":"riff-trailing-garbage","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_RIFF_SIZE_MISMATCH"},
+    {"id":"chunk-overrun","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_WAV_CHUNK_OVERRUN"},
+    {"id":"duplicate-fmt","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_WAV_DUPLICATE_FMT"},
+    {"id":"duplicate-data","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_WAV_DUPLICATE_DATA"},
+    {"id":"byte-rate-invalid","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_WAV_BYTE_RATE_INVALID"},
+    {"id":"block-align-invalid","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_WAV_BLOCK_ALIGN_INVALID"},
+    {"id":"digital-silence","expected":"FLAG","flag":"DIGITAL_SILENCE"},
+    {"id":"near-silence","expected":"FLAG","flag":"NEAR_SILENCE"},
+    {"id":"pathological-clipping","expected":"FLAG","flag":"PATHOLOGICAL_CLIPPING"},
+    {"id":"float-nan","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_WAV_NONFINITE_SAMPLE"},
+    {"id":"float-infinite-or-extreme","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_WAV_FLOAT_SAMPLE_RANGE_INVALID"},
+    {"id":"unsupported-codec","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_WAV_CODEC_UNSUPPORTED"},
+    {"id":"unsupported-sample-bits","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_WAV_SAMPLE_FORMAT_UNSUPPORTED"},
+    {"id":"zero-data","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_EMPTY"},
+    {"id":"set-aligned","expected":"PASS"},
+    {"id":"extensionless-signed-url","expected":"PASS"},
+    {"id":"wave-extension","expected":"PASS"},
+    {"id":"mislabeled-mp3-extension","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_EXTENSION_CONTAINER_MISMATCH"},
+    {"id":"set-sample-rate-mismatch","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_SET_SAMPLE_RATE_MISMATCH"},
+    {"id":"set-frame-alignment-mismatch","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_SET_FRAME_ALIGNMENT_MISMATCH"},
+    {"id":"set-duration-mismatch","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_SET_DURATION_MISMATCH"},
+    {"id":"declared-duration-inconsistent","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_DECLARED_DURATION_INCONSISTENT"},
+    {"id":"empty-output-set","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_COUNT_MISMATCH"},
+    {"id":"invalid-duration-tolerance","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_TIMING_TOLERANCE_INVALID"}
+  ],
+  "machine_tests": {
+    "deep_wav_suite": {"tests": 22, "failures": 0},
+    "artifact_set_suite": {"tests": 10, "failures": 0},
+    "total": {"tests": 32, "failures": 0},
+    "swift_version": "6.2.1",
+    "platform": "x86_64-unknown-linux-gnu"
+  },
+  "durable_self_test": "tech-assets/moises-audio/Separation/Tests/L1_A13_ArtifactIntegritySelfTest.swift",
+  "promotion_path": [
+    "AssuredSeparationProvider.result validates declared artifact set before cached/prepared result lookup",
+    "SeparationOutputAssurance.prepare copies the downloaded file to project staging",
+    "WAVInspection performs full streaming structural/sample scan",
+    "declared metadata, file size and SHA-256 are bound to VerifiedSeparationOutput",
+    "only then may commit create project-visible StemArtifact"
+  ],
+  "remaining_external_gaps": [
+    "No source-relative start-time field exists in the frozen output descriptor, so A13 enforces cross-stem duration/frame alignment but does not fabricate source-relative onset metadata.",
+    "Silence/clipping flags need real-audio role-aware thresholds before they can safely become hard quality failures.",
+    "Real provider outputs and current-iPhone differential listening remain required for P003/P004/P005."
+  ]
+}
