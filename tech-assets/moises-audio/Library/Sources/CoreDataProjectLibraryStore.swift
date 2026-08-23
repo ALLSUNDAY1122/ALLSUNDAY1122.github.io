@@ -13,15 +13,22 @@ public final class CoreDataProjectLibraryStore: @unchecked Sendable, ProjectLibr
     public struct Configuration: Sendable {
         public let storeURL: URL?
         public let inMemory: Bool
+        public let enumerationPolicy: LibraryEnumerationPolicy
 
-        public init(storeURL: URL? = nil, inMemory: Bool = false) {
+        public init(
+            storeURL: URL? = nil,
+            inMemory: Bool = false,
+            enumerationBatchSize: Int = LibraryEnumerationPolicy.defaultBatchSize
+        ) {
             self.storeURL = storeURL
             self.inMemory = inMemory
+            self.enumerationPolicy = LibraryEnumerationPolicy(batchSize: enumerationBatchSize)
         }
     }
 
     private let coordinator: NSPersistentStoreCoordinator
     private let writerContext: NSManagedObjectContext
+    private let enumerationPolicy: LibraryEnumerationPolicy
 
     public init(configuration: Configuration) throws {
         let model = LibraryManagedObjectModel.make()
@@ -62,6 +69,7 @@ public final class CoreDataProjectLibraryStore: @unchecked Sendable, ProjectLibr
 
         self.coordinator = coordinator
         self.writerContext = context
+        self.enumerationPolicy = configuration.enumerationPolicy
     }
 
     public static func defaultStoreURL(appSupportDirectory: URL) -> URL {
@@ -142,11 +150,14 @@ public final class CoreDataProjectLibraryStore: @unchecked Sendable, ProjectLibr
     }
 
     public func listProjects() async throws -> [PersistedProjectSnapshot] {
-        try await perform { context in
-            let request = NSFetchRequest<NSManagedObject>(entityName: "ProjectRecord")
-            request.predicate = NSPredicate(format: "tombstoned == NO")
-            request.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
-            return try context.fetch(request).map { try StoreMapper.projectSnapshot(record: $0, context: context) }
+        let policy = enumerationPolicy
+        return try await perform { context in
+            let records = try StoreFetch.liveProjects(context: context, fetchBatchSize: policy.batchSize)
+            return try StoreMapper.projectSnapshots(
+                records: records,
+                context: context,
+                policy: policy
+            )
         }
     }
 
@@ -220,20 +231,10 @@ public final class CoreDataProjectLibraryStore: @unchecked Sendable, ProjectLibr
     }
 
     public func listSetlists() async throws -> [SetlistSnapshot] {
-        try await perform { context in
-            let request = NSFetchRequest<NSManagedObject>(entityName: "SetlistRecord")
-            request.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
-            return try context.fetch(request).map { record in
-                let id = SetlistID(rawValue: try StoreValue.uuid(record, "setlistUUID"))
-                let entries = try StoreFetch.setlistEntries(setlistID: id.rawValue, context: context).map { entry in
-                    SetlistEntry(
-                        id: SetlistEntryID(rawValue: try StoreValue.uuid(entry, "entryUUID")),
-                        projectID: ProjectID(rawValue: try StoreValue.uuid(entry, "projectUUID")),
-                        position: Int(try StoreValue.int64(entry, "position"))
-                    )
-                }
-                return SetlistSnapshot(id: id, name: try StoreValue.string(record, "name"), entries: entries)
-            }
+        let policy = enumerationPolicy
+        return try await perform { context in
+            let records = try StoreFetch.setlists(context: context, fetchBatchSize: policy.batchSize)
+            return try StoreMapper.setlistSnapshots(records: records, context: context, policy: policy)
         }
     }
 
@@ -325,6 +326,41 @@ public final class CoreDataProjectLibraryStore: @unchecked Sendable, ProjectLibr
 }
 
 private enum StoreMapper {
+    private struct ProjectBatchMaterialization {
+        let assetsByID: [UUID: NSManagedObject]
+        let processingByProjectID: [UUID: NSManagedObject]
+        let stemsByProjectID: [UUID: [NSManagedObject]]
+        let editsByProjectID: [UUID: NSManagedObject]
+        let mixByProjectID: [UUID: [NSManagedObject]]
+    }
+
+    static func projectSnapshots(
+        records: [NSManagedObject],
+        context: NSManagedObjectContext,
+        policy: LibraryEnumerationPolicy
+    ) throws -> [PersistedProjectSnapshot] {
+        guard !records.isEmpty else { return [] }
+        var snapshots: [PersistedProjectSnapshot] = []
+        snapshots.reserveCapacity(records.count)
+
+        for range in policy.ranges(forCount: records.count) {
+            let batch = Array(records[range])
+            let projectIDs = try Set(batch.map { try StoreValue.uuid($0, "projectUUID") })
+            let assetIDs = try Set(batch.map { try StoreValue.uuid($0, "sourceAssetUUID") })
+            let materialized = try ProjectBatchMaterialization(
+                assetsByID: uniqueByUUID(StoreFetch.assets(ids: assetIDs, context: context, fetchBatchSize: policy.batchSize), key: "assetUUID"),
+                processingByProjectID: uniqueByUUID(StoreFetch.processing(projectIDs: projectIDs, context: context, fetchBatchSize: policy.batchSize), key: "projectUUID"),
+                stemsByProjectID: groupByUUID(StoreFetch.stems(projectIDs: projectIDs, context: context, fetchBatchSize: policy.batchSize), key: "projectUUID"),
+                editsByProjectID: uniqueByUUID(StoreFetch.edits(projectIDs: projectIDs, context: context, fetchBatchSize: policy.batchSize), key: "projectUUID"),
+                mixByProjectID: groupByUUID(StoreFetch.stemMix(projectIDs: projectIDs, context: context, fetchBatchSize: policy.batchSize), key: "projectUUID")
+            )
+            for record in batch {
+                snapshots.append(try projectSnapshot(record: record, materialized: materialized))
+            }
+        }
+        return snapshots
+    }
+
     static func projectSnapshot(record: NSManagedObject, context: NSManagedObjectContext) throws -> PersistedProjectSnapshot {
         let projectID = ProjectID(rawValue: try StoreValue.uuid(record, "projectUUID"))
         let assetUUID = try StoreValue.uuid(record, "sourceAssetUUID")
@@ -344,21 +380,63 @@ private enum StoreMapper {
         try LibrarySnapshotPolicy.validate(source: source)
 
         let processing = try StoreFetch.processing(projectID: projectID.rawValue, context: context).map { try processing(record: $0) }
-        let stems = try StoreFetch.stems(projectID: projectID.rawValue, context: context).map { stemRecord in
-            StemArtifact(
-                id: StemID(rawValue: try StoreValue.uuid(stemRecord, "stemUUID")),
-                projectID: projectID,
-                role: StemRole(rawValue: try StoreValue.string(stemRecord, "role")),
-                relativePath: try StoreValue.string(stemRecord, "relativePath"),
-                sampleRate: try StoreValue.double(stemRecord, "sampleRate"),
-                channels: Int(try StoreValue.int64(stemRecord, "channels")),
-                frameCount: try StoreValue.int64(stemRecord, "frameCount"),
-                startTimeSeconds: try StoreValue.double(stemRecord, "startTimeSeconds")
-            )
-        }
+        let stems = try StoreFetch.stems(projectID: projectID.rawValue, context: context).map { try stem(record: $0, projectID: projectID) }
         try LibrarySnapshotPolicy.validate(stems: stems, projectID: projectID)
         let edits = try StoreFetch.edit(projectID: projectID.rawValue, context: context).map { try edits(record: $0, projectID: projectID, context: context) }
         return PersistedProjectSnapshot(projectID: projectID, source: source, processing: processing, stems: stems, edits: edits)
+    }
+
+    private static func projectSnapshot(
+        record: NSManagedObject,
+        materialized: ProjectBatchMaterialization
+    ) throws -> PersistedProjectSnapshot {
+        let projectID = ProjectID(rawValue: try StoreValue.uuid(record, "projectUUID"))
+        let assetUUID = try StoreValue.uuid(record, "sourceAssetUUID")
+        guard let asset = materialized.assetsByID[assetUUID] else {
+            throw LibraryPersistenceFailure.corruptRecord("missing source asset")
+        }
+        let kindRaw = try StoreValue.string(asset, "mediaKind")
+        guard let mediaKind = ImportedMediaKind(rawValue: kindRaw) else {
+            throw LibraryPersistenceFailure.corruptRecord("invalid media kind")
+        }
+        let source = LocalAudioAsset(
+            id: AssetID(rawValue: assetUUID),
+            relativePath: try StoreValue.string(asset, "relativePath"),
+            mediaKind: mediaKind,
+            durationSeconds: StoreValue.optionalDouble(asset, "durationSeconds")
+        )
+        try LibrarySnapshotPolicy.validate(source: source)
+
+        let processingSnapshot = try materialized.processingByProjectID[projectID.rawValue].map { try processing(record: $0) }
+        let stems = try (materialized.stemsByProjectID[projectID.rawValue] ?? []).map { try stem(record: $0, projectID: projectID) }
+        try LibrarySnapshotPolicy.validate(stems: stems, projectID: projectID)
+        let editsSnapshot = try materialized.editsByProjectID[projectID.rawValue].map {
+            try edits(record: $0, projectID: projectID, mixRecords: materialized.mixByProjectID[projectID.rawValue] ?? [])
+        }
+        return PersistedProjectSnapshot(projectID: projectID, source: source, processing: processingSnapshot, stems: stems, edits: editsSnapshot)
+    }
+
+    static func setlistSnapshots(
+        records: [NSManagedObject],
+        context: NSManagedObjectContext,
+        policy: LibraryEnumerationPolicy
+    ) throws -> [SetlistSnapshot] {
+        guard !records.isEmpty else { return [] }
+        var snapshots: [SetlistSnapshot] = []
+        snapshots.reserveCapacity(records.count)
+
+        for range in policy.ranges(forCount: records.count) {
+            let batch = Array(records[range])
+            let ids = try Set(batch.map { try StoreValue.uuid($0, "setlistUUID") })
+            let entryRecords = try StoreFetch.setlistEntries(setlistIDs: ids, context: context, fetchBatchSize: policy.batchSize)
+            let grouped = try groupByUUID(entryRecords, key: "setlistUUID")
+            for record in batch {
+                let id = SetlistID(rawValue: try StoreValue.uuid(record, "setlistUUID"))
+                let entries = try (grouped[id.rawValue] ?? []).map { try setlistEntry(record: $0) }
+                snapshots.append(SetlistSnapshot(id: id, name: try StoreValue.string(record, "name"), entries: entries))
+            }
+        }
+        return snapshots
     }
 
     static func processing(record: NSManagedObject) throws -> ProcessingSnapshot {
@@ -375,7 +453,15 @@ private enum StoreMapper {
     }
 
     static func edits(record: NSManagedObject, projectID: ProjectID, context: NSManagedObjectContext) throws -> ProjectUserEdits {
-        let mix = try StoreFetch.stemMix(projectID: projectID.rawValue, context: context).map { mixRecord in
+        try edits(
+            record: record,
+            projectID: projectID,
+            mixRecords: StoreFetch.stemMix(projectID: projectID.rawValue, context: context)
+        )
+    }
+
+    private static func edits(record: NSManagedObject, projectID: ProjectID, mixRecords: [NSManagedObject]) throws -> ProjectUserEdits {
+        let mix = try mixRecords.map { mixRecord in
             StemMixEdit(
                 stemID: StemID(rawValue: try StoreValue.uuid(mixRecord, "stemUUID")),
                 gain: try StoreValue.double(mixRecord, "gain"),
@@ -395,6 +481,48 @@ private enum StoreMapper {
         )
         try LibrarySnapshotPolicy.validate(edits: edits)
         return edits
+    }
+
+    private static func stem(record: NSManagedObject, projectID: ProjectID) throws -> StemArtifact {
+        StemArtifact(
+            id: StemID(rawValue: try StoreValue.uuid(record, "stemUUID")),
+            projectID: projectID,
+            role: StemRole(rawValue: try StoreValue.string(record, "role")),
+            relativePath: try StoreValue.string(record, "relativePath"),
+            sampleRate: try StoreValue.double(record, "sampleRate"),
+            channels: Int(try StoreValue.int64(record, "channels")),
+            frameCount: try StoreValue.int64(record, "frameCount"),
+            startTimeSeconds: try StoreValue.double(record, "startTimeSeconds")
+        )
+    }
+
+    private static func setlistEntry(record: NSManagedObject) throws -> SetlistEntry {
+        SetlistEntry(
+            id: SetlistEntryID(rawValue: try StoreValue.uuid(record, "entryUUID")),
+            projectID: ProjectID(rawValue: try StoreValue.uuid(record, "projectUUID")),
+            position: Int(try StoreValue.int64(record, "position"))
+        )
+    }
+
+    private static func uniqueByUUID(_ records: [NSManagedObject], key: String) throws -> [UUID: NSManagedObject] {
+        var result: [UUID: NSManagedObject] = [:]
+        result.reserveCapacity(records.count)
+        for record in records {
+            let id = try StoreValue.uuid(record, key)
+            guard result[id] == nil else {
+                throw LibraryPersistenceFailure.corruptRecord("duplicate \(key)")
+            }
+            result[id] = record
+        }
+        return result
+    }
+
+    private static func groupByUUID(_ records: [NSManagedObject], key: String) throws -> [UUID: [NSManagedObject]] {
+        var result: [UUID: [NSManagedObject]] = [:]
+        for record in records {
+            result[try StoreValue.uuid(record, key), default: []].append(record)
+        }
+        return result
     }
 }
 
@@ -418,16 +546,45 @@ private enum StoreFetch {
         return project
     }
 
+    static func liveProjects(context: NSManagedObjectContext, fetchBatchSize: Int) throws -> [NSManagedObject] {
+        let request = NSFetchRequest<NSManagedObject>(entityName: "ProjectRecord")
+        request.predicate = NSPredicate(format: "tombstoned == NO")
+        request.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
+        request.fetchBatchSize = fetchBatchSize
+        request.returnsObjectsAsFaults = true
+        return try context.fetch(request)
+    }
+
+    static func setlists(context: NSManagedObjectContext, fetchBatchSize: Int) throws -> [NSManagedObject] {
+        let request = NSFetchRequest<NSManagedObject>(entityName: "SetlistRecord")
+        request.sortDescriptors = [NSSortDescriptor(key: "updatedAt", ascending: false)]
+        request.fetchBatchSize = fetchBatchSize
+        request.returnsObjectsAsFaults = true
+        return try context.fetch(request)
+    }
+
     static func asset(id: UUID, context: NSManagedObjectContext) throws -> NSManagedObject? {
         try one(entity: "AssetRecord", predicate: NSPredicate(format: "assetUUID == %@", id as NSUUID), context: context)
+    }
+
+    static func assets(ids: Set<UUID>, context: NSManagedObjectContext, fetchBatchSize: Int) throws -> [NSManagedObject] {
+        try manyForIDs(entity: "AssetRecord", key: "assetUUID", ids: ids, sort: [], context: context, fetchBatchSize: fetchBatchSize)
     }
 
     static func processing(projectID: UUID, context: NSManagedObjectContext) throws -> NSManagedObject? {
         try one(entity: "ProcessingRecord", predicate: NSPredicate(format: "projectUUID == %@", projectID as NSUUID), context: context)
     }
 
+    static func processing(projectIDs: Set<UUID>, context: NSManagedObjectContext, fetchBatchSize: Int) throws -> [NSManagedObject] {
+        try manyForIDs(entity: "ProcessingRecord", key: "projectUUID", ids: projectIDs, sort: [], context: context, fetchBatchSize: fetchBatchSize)
+    }
+
     static func edit(projectID: UUID, context: NSManagedObjectContext) throws -> NSManagedObject? {
         try one(entity: "ProjectEditRecord", predicate: NSPredicate(format: "projectUUID == %@", projectID as NSUUID), context: context)
+    }
+
+    static func edits(projectIDs: Set<UUID>, context: NSManagedObjectContext, fetchBatchSize: Int) throws -> [NSManagedObject] {
+        try manyForIDs(entity: "ProjectEditRecord", key: "projectUUID", ids: projectIDs, sort: [], context: context, fetchBatchSize: fetchBatchSize)
     }
 
     static func setlist(id: UUID, context: NSManagedObjectContext) throws -> NSManagedObject? {
@@ -438,12 +595,24 @@ private enum StoreFetch {
         try many(entity: "StemRecord", predicate: NSPredicate(format: "projectUUID == %@", projectID as NSUUID), sort: [NSSortDescriptor(key: "role", ascending: true)], context: context)
     }
 
+    static func stems(projectIDs: Set<UUID>, context: NSManagedObjectContext, fetchBatchSize: Int) throws -> [NSManagedObject] {
+        try manyForIDs(entity: "StemRecord", key: "projectUUID", ids: projectIDs, sort: [NSSortDescriptor(key: "role", ascending: true)], context: context, fetchBatchSize: fetchBatchSize)
+    }
+
     static func stemMix(projectID: UUID, context: NSManagedObjectContext) throws -> [NSManagedObject] {
         try many(entity: "StemMixRecord", predicate: NSPredicate(format: "projectUUID == %@", projectID as NSUUID), sort: [NSSortDescriptor(key: "position", ascending: true)], context: context)
     }
 
+    static func stemMix(projectIDs: Set<UUID>, context: NSManagedObjectContext, fetchBatchSize: Int) throws -> [NSManagedObject] {
+        try manyForIDs(entity: "StemMixRecord", key: "projectUUID", ids: projectIDs, sort: [NSSortDescriptor(key: "position", ascending: true)], context: context, fetchBatchSize: fetchBatchSize)
+    }
+
     static func setlistEntries(setlistID: UUID, context: NSManagedObjectContext) throws -> [NSManagedObject] {
         try many(entity: "SetlistEntryRecord", predicate: NSPredicate(format: "setlistUUID == %@", setlistID as NSUUID), sort: [NSSortDescriptor(key: "position", ascending: true)], context: context)
+    }
+
+    static func setlistEntries(setlistIDs: Set<UUID>, context: NSManagedObjectContext, fetchBatchSize: Int) throws -> [NSManagedObject] {
+        try manyForIDs(entity: "SetlistEntryRecord", key: "setlistUUID", ids: setlistIDs, sort: [NSSortDescriptor(key: "position", ascending: true)], context: context, fetchBatchSize: fetchBatchSize)
     }
 
     static func setlistEntries(projectID: UUID, context: NSManagedObjectContext) throws -> [NSManagedObject] {
@@ -461,6 +630,24 @@ private enum StoreFetch {
         let request = NSFetchRequest<NSManagedObject>(entityName: entity)
         request.predicate = predicate
         request.sortDescriptors = sort
+        return try context.fetch(request)
+    }
+
+    private static func manyForIDs(
+        entity: String,
+        key: String,
+        ids: Set<UUID>,
+        sort: [NSSortDescriptor],
+        context: NSManagedObjectContext,
+        fetchBatchSize: Int
+    ) throws -> [NSManagedObject] {
+        guard !ids.isEmpty else { return [] }
+        let bridgedIDs = ids.map { $0 as NSUUID }
+        let request = NSFetchRequest<NSManagedObject>(entityName: entity)
+        request.predicate = NSPredicate(format: "%K IN %@", argumentArray: [key, bridgedIDs])
+        request.sortDescriptors = sort
+        request.fetchBatchSize = fetchBatchSize
+        request.returnsObjectsAsFaults = true
         return try context.fetch(request)
     }
 }
