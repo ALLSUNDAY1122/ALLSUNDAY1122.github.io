@@ -14,17 +14,31 @@ let package = Package(
                 "Tests",
                 "PARITY_MATRIX.json",
                 "Separation",
-                "Analysis",
+                "Analysis/benchmarks",
                 "DSP",
                 "IO",
                 "Library",
-                "reference"
+                "reference",
+                "iOS/App",
+                "iOS/project.yml",
+                "iOS/README.md"
             ],
             sources: [
                 "AudioSeparationCore.swift",
                 "Shared/DomainContracts.swift",
                 "Shared/LibraryContracts.swift",
-                "App/VerticalSliceCoordinator.swift"
+                "App/VerticalSliceCoordinator.swift",
+                "Analysis/AnalysisSignal.swift",
+                "Analysis/TempoBeatAnalyzer.swift",
+                "Analysis/MusicalKeyAnalyzer.swift",
+                "Analysis/ChordTimelineAnalyzer.swift",
+                "Analysis/SongSectionAnalyzer.swift",
+                "Analysis/AnalysisBenchmarkRunner.swift",
+                "Analysis/SectionBenchmarkEvaluator.swift",
+                "Analysis/RealAudioBenchmarkSuite.swift",
+                "Analysis/RealAudioBenchmarkCodec.swift",
+                "iOS/HostCore/HostModuleSlots.swift",
+                "iOS/HostCore/ApplePlatformSmoke.swift"
             ]
         ),
         .testTarget(
