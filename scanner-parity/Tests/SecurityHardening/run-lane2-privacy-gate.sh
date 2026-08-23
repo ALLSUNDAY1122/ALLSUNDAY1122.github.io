@@ -40,7 +40,7 @@ import Foundation
     )
     let report = try auditor.auditDirectory(root)
     print(PrivacyStaticAuditor.markdown(report: report))
-    if !report.productionEgressRisks.isEmpty { exit(2) }
+    if !report.releaseBlockingFindings.isEmpty { exit(2) }
   }
 }
 SWIFT
