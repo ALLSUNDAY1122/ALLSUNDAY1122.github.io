@@ -9,18 +9,18 @@
   "state": "CHECKPOINT_READY",
   "checkpoint": "LANE_ENGINEERING_GATE_A_READY",
   "parity_claim": "NONE",
-  "current_wave": "L1-E06",
-  "external_gate_status": "E01_E02_E03_E04_E05_PREPARED_PENDING_EXTERNAL_INPUT",
+  "current_wave": "L1-E07",
+  "external_gate_status": "E01_E02_E03_E04_E05_E06_PREPARED_PENDING_EXTERNAL_INPUT",
   "completed_bundles": ["L1-M01", "L1-M02", "L1-M03", "L1-M04"],
   "completed_waves": [
     "L1-A05", "L1-A06", "L1-A07", "L1-A08", "L1-A09", "L1-A10",
     "L1-A11", "L1-A12", "L1-A13", "L1-A14", "L1-A15", "L1-A16",
     "L1-A17", "L1-A18", "L1-A19", "L1-A20"
   ],
-  "prepared_external_gates": ["L1-E01", "L1-E02", "L1-E03", "L1-E04", "L1-E05"],
+  "prepared_external_gates": ["L1-E01", "L1-E02", "L1-E03", "L1-E04", "L1-E05", "L1-E06"],
   "base_integration_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
-  "prior_head_sha": "f7c3ec115dd21a0dcd328a11d6cb467320c652e5",
-  "head_sha": "9faa1a0ba7222e4305a28ce0cbd9ee2f300e8be3",
+  "prior_head_sha": "9faa1a0ba7222e4305a28ce0cbd9ee2f300e8be3",
+  "head_sha": "929604fe791b09be98be1147cfc97d0f75a2b947",
   "recent_commits": [
     "650c94da752fbe24f70801d8be4c1fff5ae1ac3c",
     "3d5eed10a29ef7b59ca7a18c5561528698024419",
@@ -42,7 +42,18 @@
     "28c612e28e624c2ba79c595455d1532d3e5ff46b",
     "439a000f67e231040b975791de700024ecb5f862",
     "d82a82f3c528aaa632ec55af7326652cdd96cfa7",
-    "9faa1a0ba7222e4305a28ce0cbd9ee2f300e8be3"
+    "9faa1a0ba7222e4305a28ce0cbd9ee2f300e8be3",
+    "43851be4cff38c0c0465dd60756a904140175dcb",
+    "35d8af88ff3612ee34ad4f235ca742b5eb916be1",
+    "e7985e61dfa8caca3346a74fab204964a0e8f2d9",
+    "ca797743039baec99f909f679832fff45b14b8c8",
+    "9581601cafe6914930bfe2d6b496344e85c42d47",
+    "5261b551bfdc5fdd5cd5c714a75abe50bf6d6a6d",
+    "a1d6c0232f7a06703b53aa0c545e94432b55afd5",
+    "6fccf9dcad3aa7067ae7aff9b716d95436e05334",
+    "efa7439cbcbcb9b92c31ac08287cbb2c2b373fd6",
+    "43cd700e8e6417afbb0d534b12635ecaf15c28cb",
+    "929604fe791b09be98be1147cfc97d0f75a2b947"
   ],
   "tests": [
     "L1-A10 cost/quota production guard suites: PASS",
@@ -63,7 +74,9 @@
     "L1-E04 current-iPhone blind differential local regression/fault scenarios: 21/21 PASS; py_compile PASS",
     "L1-E04 synthetic control verifies WAITING_REVIEW->resume, stable private HMAC blinding, E02/E03/project/reference SHA binding, exact G2 input, review integrity, privacy redaction and practical-inferiority failure; test-only, not live/PARITY evidence",
     "L1-E05 live recovery/provider semantics local regression: 26/26 PASS; py_compile PASS",
-    "L1-E05 control coverage includes all 10 mandatory fault/recovery classes, logical/idempotency identity continuity, duplicate task/billing rejection, truthful cancel, output-expiry safety, external provenance binding and privacy redaction; test-only, not live/PARITY evidence"
+    "L1-E05 control coverage includes all 10 mandatory fault/recovery classes, logical/idempotency identity continuity, duplicate task/billing rejection, truthful cancel, output-expiry safety, external provenance binding and privacy redaction; test-only, not live/PARITY evidence",
+    "L1-E06 provider route decision local regression: 21/21 PASS; provider_route_decision.py and test file py_compile PASS",
+    "L1-E06 synthetic controls cover missing evidence, current-iPhone quality, cost, latency, privacy/region, capability, safe fail-closed degradation, cancellation, quota/credit/rate-limit capacity, provenance mismatch, evidence replacement, multi-route ranking and pending-candidate suppression; test-only, not live/PARITY evidence"
   ],
   "evidence": [
     "tech-assets/moises-audio/Processing/L1-A10_VALIDATION.md",
@@ -94,7 +107,18 @@
     "tech-assets/moises-audio/Separation/Evaluation/schemas/live-processing-recovery-evidence.schema.json",
     "tech-assets/moises-audio/Separation/Evaluation/examples/live-processing-recovery-plan.template.json",
     "tech-assets/moises-audio/Separation/Evaluation/examples/live-processing-recovery-result.private.template.json",
-    "tech-assets/moises-audio/Separation/Evaluation/examples/live-processing-recovery-results-index.private.template.json"
+    "tech-assets/moises-audio/Separation/Evaluation/examples/live-processing-recovery-results-index.private.template.json",
+    "tech-assets/moises-audio/Processing/L1-E06_READINESS.md",
+    "tech-assets/moises-audio/Processing/Tests/L1-E06_PROVIDER_ROUTE_DECISION_MATRIX.json",
+    "tech-assets/moises-audio/Separation/Evaluation/provider_route_decision.py",
+    "tech-assets/moises-audio/Separation/Tests/test_provider_route_decision.py",
+    "tech-assets/moises-audio/Separation/Evaluation/schemas/provider-route-decision-plan.schema.json",
+    "tech-assets/moises-audio/Separation/Evaluation/schemas/provider-route-capacity-evidence.schema.json",
+    "tech-assets/moises-audio/Separation/Evaluation/schemas/provider-route-index.private.schema.json",
+    "tech-assets/moises-audio/Separation/Evaluation/schemas/provider-route-decision-evidence.schema.json",
+    "tech-assets/moises-audio/Separation/Evaluation/examples/provider-route-decision-plan.template.json",
+    "tech-assets/moises-audio/Separation/Evaluation/examples/provider-route-index.private.template.json",
+    "tech-assets/moises-audio/Separation/Evaluation/examples/provider-route-capacity-snapshot.template.json"
   ],
   "known_gaps": [
     "L1-E01 remains PENDING_EXTERNAL_INPUT: no production/evaluation credential or written commercial/privacy/confidentiality/output-use/pricing approval package has been supplied.",
@@ -107,6 +131,8 @@
     "E04 v1 intentionally requires exact input bytes. If capture requires a deterministic transformation, HQ must version and hash the equivalence method rather than asserting comparability.",
     "L1-E05 remains PENDING_EXTERNAL_INPUT: no real production network/cancel/ambiguous-create/relaunch/output-expiry/429/long-track/storage-pressure campaign or provider/account-side provenance has been supplied.",
     "Actual provider retention/delete/cancel semantics, Retry-After behavior, duplicate-billing outcome and real cost evidence remain unverified.",
+    "L1-E06 remains PENDING_EXTERNAL_INPUT: no complete live E01/E03/E04/E05 evidence chain and no provider-account quota/credit/rate-limit capacity attestation have been supplied, so no real provider route has been selected.",
+    "E06 capacity status must remain UNKNOWN until its sanitized attestation binds the same physically verified provider-account provenance SHA as the E05 RATE_LIMIT scenario; synthetic capacity values cannot select a provider.",
     "A local coordinator cannot prove provider/reference reality from self-declared metadata alone; HQ must retain production provider/account-side provenance and current-iPhone capture provenance.",
     "Complete current-iPhone Premium/Pro custom instrument/lock map and authoritative Hi-Fi provider mapping remain unavailable.",
     "No approved production Golden corpus lock exists because real E02 media/rights have not been supplied and HQ has not approved final A19 coverage policy.",
@@ -127,10 +153,12 @@
     "For E05 ambiguous-create and relaunch tests, preserve one logical/idempotency identity and prove distinct/billable provider task count does not exceed one; never convert generic retryability into automatic create repost.",
     "For E05 cancellation tests, provider cancel request count must remain <=1 and upstream cancellation may be claimed only when provider evidence confirms it; logical cancellation/output discard remains authoritative otherwise.",
     "Do not treat E05 safe fail-closed behavior as equivalent to successful recovery. Preserve both facts so E06 can reject an operationally weak provider route even if data integrity remains safe.",
+    "For live E06, bind every candidate to exact E01/E03/E04/E05 physical SHA values and locks plus the E05 RATE_LIMIT provider-account provenance used by the quota/credit/rate-limit capacity attestation. Do not select a primary while any declared candidate is still PENDING_EXTERNAL_EVIDENCE.",
+    "If E06 rejects the initial hosted route, follow the fallback order local licensed SDK -> alternate written-commercial provider -> project-owned model with rights-cleared training data, while preserving A07-A20 safety contracts unchanged.",
     "Golden Dataset absence, SHA not-yet-issued or Golden measurement not-yet-run must remain HQ/live-gate pending conditions, not Worker BLOCKED_HUMAN after non-Golden Lane engineering acceptance.",
-    "Do not promote any Lane 1 PARITY row from E01-E05 readiness or synthetic/fault/schema/checkpoint evidence; live provider, rights-cleared real audio, current-iPhone reference, blind human review and real-device evidence remain mandatory."
+    "Do not promote any Lane 1 PARITY row from E01-E06 readiness or synthetic/fault/schema/checkpoint evidence; live provider, rights-cleared real audio, current-iPhone reference, blind human review and real-device evidence remain mandatory."
   ],
-  "history_note": "A05-A20 Lane Engineering is complete. L1-E01 through L1-E05 readiness infrastructure is prepared, while all live gates remain pending actual external credential/contracts/media/rights/provider/current-iPhone/human-review/fault-provenance inputs. Next preparation target is L1-E06 Provider Route Decision Loop.",
-  "last_updated": "2026-08-24T05:24:00+09:00",
+  "history_note": "A05-A20 Lane Engineering is complete. L1-E01 through L1-E06 readiness infrastructure is prepared, while all live gates remain pending actual external credential/contracts/media/rights/provider/current-iPhone/human-review/fault/capacity provenance inputs. E06 does not select a live provider from synthetic controls. Next autonomous target is L1-E07 Provider Fallback Substitution Conformance unless newer Notion/GitHub authority changes priority.",
+  "last_updated": "2026-08-24T07:41:37+09:00",
   "writer_policy": "Only Moises-Worker-1 updates this status file. HQ owns Shared/App/PARITY/queue/work-package/lane-plan/resource-lock authority and final PARITY judgment."
 }
