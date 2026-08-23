@@ -1,4 +1,5 @@
 import Foundation
+import ReviewCore
 
 public struct RecoveryPageEvent: Codable, Hashable, Sendable {
     public enum Outcome: String, Codable, Sendable { case completed, lowConfidence, failed }
