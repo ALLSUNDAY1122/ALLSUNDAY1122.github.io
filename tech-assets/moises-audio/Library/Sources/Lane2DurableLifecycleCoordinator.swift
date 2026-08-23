@@ -38,7 +38,10 @@ public actor Lane2DurableLifecycleCoordinator {
         self.metadata = metadata ?? Lane2LifecycleMetadataStore(rootURL: rootURL)
         self.artifacts = LibraryArtifactLifecycle(rootURL: rootURL)
         self.fileStore = IOFileStore(rootURL: rootURL)
-        self.registrationJournal = Lane2ExportRegistrationJournal(rootURL: rootURL, fileManager: fileManager)
+        self.registrationJournal = Lane2ExportRegistrationJournal(
+            rootURL: rootURL,
+            fileManager: fileManager
+        )
         self.storageReserveBytes = storageReserveBytes
         self.fileManager = fileManager
     }
@@ -90,7 +93,10 @@ public actor Lane2DurableLifecycleCoordinator {
             let intent = try registrationJournal.prepare(
                 projectUUID: request.projectID.rawValue,
                 artifacts: produced.map {
-                    Lane2ExportRegistrationArtifact(relativePath: $0.relativePath, mediaType: $0.mediaType)
+                    Lane2ExportRegistrationArtifact(
+                        relativePath: $0.relativePath,
+                        mediaType: $0.mediaType
+                    )
                 }
             )
             registrationIntentID = intent.id
@@ -227,7 +233,9 @@ public actor Lane2DurableLifecycleCoordinator {
                             attemptID: UUID(),
                             projectID: ProjectID(rawValue: intent.projectUUID),
                             operation: .exportAudio,
-                            error: DomainFailure.exportFailed(code: "EXPORT_COMPENSATION_INCOMPLETE")
+                            error: DomainFailure.exportFailed(
+                                code: "EXPORT_COMPENSATION_INCOMPLETE"
+                            )
                         )
                     }
                 } catch {
@@ -236,7 +244,9 @@ public actor Lane2DurableLifecycleCoordinator {
                         attemptID: UUID(),
                         projectID: ProjectID(rawValue: intent.projectUUID),
                         operation: .exportAudio,
-                        error: DomainFailure.exportFailed(code: "EXPORT_COMPENSATION_INCOMPLETE")
+                        error: DomainFailure.exportFailed(
+                            code: "EXPORT_COMPENSATION_INCOMPLETE"
+                        )
                     )
                 }
 
@@ -273,12 +283,14 @@ public actor Lane2DurableLifecycleCoordinator {
     }
 
     /// Any sidecar project/export whose canonical Library project is no longer live is cleanup work.
-    /// If Library listing fails (for example corruption), this method throws before deleting anything.
+    /// Projection-aware production stores enumerate only project IDs here; fallback keeps the frozen
+    /// contract compatible for alternative ProjectLibraryPersisting implementations.
     public func reconcileDeletedProjectArtifacts() async throws {
-        let liveProjects = try await library.listProjects()
-        let liveIDs = Set(liveProjects.map { $0.projectID.rawValue })
+        let liveIDs = try await liveProjectUUIDs()
         let lifecycle = try await metadata.snapshot()
-        let trackedIDs = Set(lifecycle.projects.map(\.projectUUID) + lifecycle.exports.map(\.projectUUID))
+        let trackedIDs = Set(
+            lifecycle.projects.map(\.projectUUID) + lifecycle.exports.map(\.projectUUID)
+        )
         for projectUUID in trackedIDs where !liveIDs.contains(projectUUID) {
             let deleting = try await metadata.beginExportCleanup(projectUUID: projectUUID)
             try await finishExportCleanup(deleting)
@@ -286,13 +298,14 @@ public actor Lane2DurableLifecycleCoordinator {
         }
     }
 
-    /// Repairs the lane-local ownership sidecar from canonical Library snapshots after an interrupted handoff.
+    /// Repairs the lane-local ownership sidecar from canonical Library source ownership projection
+    /// after an interrupted handoff. Full processing/edit/mix snapshots are not required.
     public func reconcileProjectOwnership() async throws {
-        for project in try await library.listProjects() {
+        for project in try await maintenanceProjects() {
             try await metadata.upsertProjectOwnership(
                 projectUUID: project.projectID.rawValue,
-                sourceAssetUUID: project.source.id.rawValue,
-                sourceRelativePath: project.source.relativePath
+                sourceAssetUUID: project.sourceAssetID.rawValue,
+                sourceRelativePath: project.sourceRelativePath
             )
         }
     }
@@ -307,23 +320,24 @@ public actor Lane2DurableLifecycleCoordinator {
         return Lane2RelaunchState(
             project: project,
             ownership: lifecycle.projects.first { $0.projectUUID == projectID.rawValue },
-            exports: lifecycle.exports.filter { $0.projectUUID == projectID.rawValue && $0.state == .ready },
+            exports: lifecycle.exports.filter {
+                $0.projectUUID == projectID.rawValue && $0.state == .ready
+            },
             latestFailure: try await metadata.latestFailure(projectUUID: projectID.rawValue)
         )
     }
 
     /// Orphan sweep retains canonical source/stem paths plus export paths recorded ready/deleting.
-    public func sweepOrphans(gracePeriod: TimeInterval = 3600, now: Date = Date()) async throws -> LibraryOrphanSweepResult {
+    public func sweepOrphans(
+        gracePeriod: TimeInterval = 3600,
+        now: Date = Date()
+    ) async throws -> LibraryOrphanSweepResult {
         try await recoverPendingExportRegistrations()
         try await recoverPendingExportCleanup()
         try await reconcileDeletedProjectArtifacts()
-        let projects = try await library.listProjects()
+        let projects = try await maintenanceProjects()
         let lifecycle = try await metadata.snapshot()
-        var referenced = Set<String>()
-        for project in projects {
-            referenced.insert(project.source.relativePath)
-            project.stems.forEach { referenced.insert($0.relativePath) }
-        }
+        var referenced = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(in: projects)
         lifecycle.exports.forEach { referenced.insert($0.relativePath) }
         return try artifacts.sweepOrphans(
             referencedRelativePaths: referenced,
@@ -334,6 +348,31 @@ public actor Lane2DurableLifecycleCoordinator {
 
     public func lifecycleSnapshot() async throws -> Lane2LifecycleSnapshot {
         try await metadata.snapshot()
+    }
+
+    private func liveProjectUUIDs() async throws -> Set<UUID> {
+        if let provider = library as? any LibraryMaintenanceProjectProviding {
+            return Set(try await provider.listLiveProjectIDs().map(\.rawValue))
+        }
+        return Set(try await library.listProjects().map { $0.projectID.rawValue })
+    }
+
+    private func maintenanceProjects() async throws -> [LibraryMaintenanceProject] {
+        if let provider = library as? any LibraryMaintenanceProjectProviding {
+            return try await provider.listMaintenanceProjects()
+        }
+
+        let snapshots = try await library.listProjects()
+        return try LibraryMaintenanceProjectionPolicy.validateUniqueProjects(
+            snapshots.map {
+                try LibraryMaintenanceProject(
+                    projectID: $0.projectID,
+                    sourceAssetID: $0.source.id,
+                    sourceRelativePath: $0.source.relativePath,
+                    stemRelativePaths: $0.stems.map(\.relativePath)
+                )
+            }
+        )
     }
 
     private func finishExportCleanup(_ records: [Lane2ExportRecord]) async throws {
@@ -373,19 +412,32 @@ public actor Lane2DurableLifecycleCoordinator {
             let ns = error as NSError
             return ("LANE2_FAILURE_\(ns.code)", false)
         }
+
         switch failure {
-        case .accessDenied: return ("ACCESS_DENIED", false)
-        case .providerUnavailable: return ("PROVIDER_UNAVAILABLE", true)
-        case .networkUnavailable: return ("NETWORK_UNAVAILABLE", true)
-        case .networkTimeout: return ("NETWORK_TIMEOUT", true)
-        case .unsupportedMedia: return ("UNSUPPORTED_MEDIA", false)
-        case .protectedMedia: return ("PROTECTED_MEDIA", false)
-        case .corruptMedia: return ("CORRUPT_MEDIA", false)
-        case .noAudioTrack: return ("NO_AUDIO_TRACK", false)
-        case .insufficientStorage: return ("INSUFFICIENT_STORAGE", true)
-        case .cancelled: return ("CANCELLED", true)
-        case .processingFailed(let code, let retryable): return (code, retryable)
-        case .exportFailed(let code): return (code, false)
+        case .accessDenied:
+            return ("ACCESS_DENIED", false)
+        case .providerUnavailable:
+            return ("PROVIDER_UNAVAILABLE", true)
+        case .networkUnavailable:
+            return ("NETWORK_UNAVAILABLE", true)
+        case .networkTimeout:
+            return ("NETWORK_TIMEOUT", true)
+        case .unsupportedMedia:
+            return ("UNSUPPORTED_MEDIA", false)
+        case .protectedMedia:
+            return ("PROTECTED_MEDIA", false)
+        case .corruptMedia:
+            return ("CORRUPT_MEDIA", false)
+        case .noAudioTrack:
+            return ("NO_AUDIO_TRACK", false)
+        case .insufficientStorage:
+            return ("INSUFFICIENT_STORAGE", true)
+        case .cancelled:
+            return ("CANCELLED", true)
+        case .processingFailed(let code, let retryable):
+            return (code, retryable)
+        case .exportFailed(let code):
+            return (code, false)
         }
     }
 }
