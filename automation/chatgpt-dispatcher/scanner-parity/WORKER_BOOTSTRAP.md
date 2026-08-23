@@ -1,4 +1,4 @@
-# 書籍スキャナー同等化｜Worker Pool 契約 v0.1
+# 書籍スキャナー同等化｜Worker Pool 契約 v0.2
 
 ## 最終目的
 動画で本を連続撮影・画面録画するだけで、ページ抽出、補正、ページ完全性監査、OCR、検索可能PDF、TXT/Markdownまで自動生成し、人間にも生成AIにも読みやすい書籍データを作る。
@@ -7,6 +7,7 @@
 
 ## 正本
 - Notion「🚀 【標準手順】AIアプリ開発・公開フロー v2.7」
+- Notion「申請手順」 page id `3b009c10-697d-81eb-a325-f86d8af55481`
 - Notion「分割セッション手順 v1.1｜AIアプリ開発のQueue駆動・並列化・統合運用」
 - Notion「書籍スキャナー同等化｜動画式ブックスキャナー＋AIデータ化 正本」 page id `3c509c10-697d-8139-867e-c3f7605665ed`
 - GitHub `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
@@ -17,6 +18,13 @@
 
 ## Golden Dataset
 初期評価はユーザー提供の実書籍動画・28ページ画像PDFを基準にする。成果物をGitHubへ原本転載しない。必要な評価指標・ハッシュ・ページ番号・観測結果だけをEvidenceとして保存する。
+
+- `RPReplay_Final1787451151.mp4`
+  - SHA-256 `37642d44cf881d4e595535e57d13bd4e11a8f93eae4f879e230e5301efecc714`
+- `本 2026-08-23 0842.pdf`
+  - SHA-256 `7c75889931949df96c0c1f9fba6fdef4e670a196675418b184444120a1d50567`
+
+移行先プロジェクトにGolden Datasetが未添付でも実装・fixture testは進めてよいが、実書籍Golden PASSは付けない。
 
 ## Worker原則
 1. Worker 1〜4は固定部署ではない。Queueの `READY` Taskから capability / dependency / resource lock 条件を満たすものを1件だけatomic claimする。
@@ -29,10 +37,12 @@
 8. 人間判断不要なら質問せず、調査→実装→test→監査→Evidence→INTEGRATION_READYまで進める。
 9. 外部OSSはライセンスを確認し、採用・参考・不採用を明示する。ライセンス不明または競合制限があるコードをコピーしない。
 10. secret/token/署名鍵/ユーザー提供書籍そのものをGitHubへ保存しない。
-11. 実装変更は意味のある単位でcommitし、Task完了時にattempt branchへpushしてremote反映を確認する。
+11. 実装変更は意味のある単位でcommitし、標準手順v2.7のcheckpointルールに従う。実装を伴う回答3回ごと、または長時間離脱・人間Gate・Build前には担当branchへpushしremote read-backする。
 12. Task終了時は `evidence_path` に検証結果を保存し、自分のTaskだけを `INTEGRATION_READY` または `BLOCKED_*` へ更新する。MERGED/VERIFIEDはHQ/finalizerが確定する。
 13. **撮る単語帳を必須内部参照資産として監査する。** Notion「撮る単語帳｜正本・関連資料」、GitHub PR #3959/#4064、特に `toru-tango-mobile/modules/toru-tango-ocr/ios/ToruTangoOcrModule.swift`、`app/(tabs)/create.tsx`、Safari OCR比較資産を確認し、使える実装を再利用する。ユーザー所有コードなので直接転用可能だが、書籍Golden Datasetに適合しないロジックを無検査でコピーしない。
 14. 撮る単語帳で発生した第三者AI画像送信とPrivacy申告不一致を再発させない。初期版は端末内OCRを標準とし、外部AIへ書籍画像を送る経路は必須依存にしない。将来導入する場合は送信前の明示同意・Privacy申告・保持/ログ監査を必須Gateとする。
+15. 写真・カメラ・書籍ページを扱うためPrivacy監査を必須とする。外部AI/API/認証を導入するTaskはSecurity監査も起動する。
+16. 課金・広告は未決定。Product ID・価格・広告SDKをWorkerが独自判断で追加しない。
 
 ## 完成品質の方向性
 - ページ再現率 >= 99%
@@ -43,6 +53,14 @@
 - 台形、傾き、クロップ、色、影、必要に応じ湾曲を補正
 - 日本語縦書き/横書きOCRを評価
 - 検索可能PDF + ページ画像 + TXT/Markdown + manifestを生成
+- 200ページ級長尺処理でcrashしない
+
+## Release / Submission原則
+開発完了まではApp Store申請を先行しない。Release Gate通過後にNotion「申請手順」へ移行する。
+
+申請工程ではBuild前preflightを必須とし、Bundle ID / App ID / Version / Build番号、Support URL / Privacy Policy URL、App Privacy、Age Rating、輸出コンプライアンス、Review Detail、Screenshots、IAP有無、TestFlight状態をread-backする。API/CIで安全に処理できる工程はAPI-firstで進める。
+
+`Submit for Review`、公開、2FA、契約・税務・銀行、iPhone実機最終受入は人間Gateとし、Workerは実行しない。
 
 ## 再利用候補
 優先評価対象：Apple Vision/VisionKit/PDFKit/CoreGraphics、OpenCV、swift-document-scanner、page-dewarp、PySceneDetect相当の考え方、Tesseract jpn/jpn_vert、OCRmyPDFの出力設計、OpenScannerのapp shell設計。
