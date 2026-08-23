@@ -1,25 +1,49 @@
 {
-  "request_id": "app2-003-pattern-c-build4-start-20260823-2236",
-  "action": "build",
+  "request_id": "app2-003-pattern-c-build4-inspect-20260823-2236",
+  "action": "inspect_build",
   "repository": "ALLSUNDAY1122/yoru-no-shoka",
   "workflow_id": "yoru-ios",
   "branch": "main",
   "ok": true,
-  "application_candidates": [
-    {
-      "id": "6a8af6e5a5c86907b00c2efd",
-      "name": "yoru-no-shoka",
-      "repositoryUrl": null,
-      "branches": [
-        "main",
-        "release/eas-build4-trigger",
-        "ui/pattern-c-paper-warm"
-      ]
-    }
-  ],
-  "resolved_app_id": "6a8af6e5a5c86907b00c2efd",
-  "app_id": "6a8af6e5a5c86907b00c2efd",
   "build_id": "6a8af75d6e2d937a9bacad51",
-  "status": "started",
-  "build_url": "https://codemagic.io/app/6a8af6e5a5c86907b00c2efd/build/6a8af75d6e2d937a9bacad51"
+  "status": "failed",
+  "build_details": {
+    "id": "6a8af75d6e2d937a9bacad51",
+    "app_id": "6a8af6e5a5c86907b00c2efd",
+    "workflow": {
+      "id": "yoru-ios",
+      "source": "file",
+      "name": "夜の書架 - iOS Internal TestFlight"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "failed",
+    "index": 1,
+    "artifacts": [],
+    "labels": [],
+    "release_notes": [],
+    "created_at": "2026-08-23T13:36:29.768000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "d494f1b956387b7561962f217cb3faade73d4eb2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "Retry EAS Build 4 gateway",
+      "url": "https://github.com/ALLSUNDAY1122/yoru-no-shoka/commit/d494f1b956387b7561962f217cb3faade73d4eb2"
+    },
+    "branch": "main",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-08-23T13:36:39.007000Z",
+    "finished_at": "2026-08-23T13:37:09.519000Z"
+  }
 }
