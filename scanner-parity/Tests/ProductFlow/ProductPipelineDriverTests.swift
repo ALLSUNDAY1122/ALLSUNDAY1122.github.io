@@ -28,9 +28,10 @@ struct ProductPipelineDriverTests {
                 checkpoint: { value in await recorder.record(checkpoint: value) }
             )
             let stages = await recorder.stages
-            let checkpoints = await recorder.checkpointCount
+            let checkpoints = await recorder.checkpoints
             try require(stages == ProductProcessingStage.allCases)
-            try require(checkpoints == 5)
+            try require(checkpoints.count == 5)
+            try require(checkpoints.last?.inputAssets?.map(\.id) == ["input-1"])
             try require(result.pageCount == 200)
             try require(result.bookPackageURL.lastPathComponent == "package")
         }
@@ -38,6 +39,7 @@ struct ProductPipelineDriverTests {
         await run("resume skips completed stages") {
             let root = temp("resume")
             let recorder = Recorder()
+            let inputs = request(root: root).inputs
             let artifacts = ProductProcessingStage.allCases.prefix(3).map {
                 ProductStageArtifact(stage: $0, outputURL: root.appendingPathComponent($0.rawValue), pageCount: 200)
             }
@@ -45,6 +47,7 @@ struct ProductPipelineDriverTests {
                 runID: "run-1",
                 bookID: "book-fixture",
                 inputAssetIDs: ["input-1"],
+                inputAssets: inputs,
                 completedArtifacts: artifacts,
                 lastProgress: .init(stage: .pageAudit, fraction: 1, completedUnits: 200, totalUnits: 200)
             )
@@ -113,12 +116,16 @@ struct ProductPipelineDriverTests {
             try require(units.count >= 200)
         }
 
-        await run("checkpoint store roundtrip") {
+        await run("checkpoint store roundtrip retains durable input") {
             let root = temp("checkpoint")
+            try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+            let inputURL = root.appendingPathComponent("book.mov")
+            try Data([0x00]).write(to: inputURL)
+            let input = ProductInputAsset(id: "input-1", kind: .video, localURL: inputURL, displayName: "book.mov")
             let url = root.appendingPathComponent("state/checkpoint.json")
             let store = FileProductCheckpointStore(fileURL: url)
             let value = ProductPipelineCheckpoint(
-                runID: "r1", bookID: "book-fixture", inputAssetIDs: ["input-1"],
+                runID: "r1", bookID: "book-fixture", inputAssetIDs: ["input-1"], inputAssets: [input],
                 completedArtifacts: [.init(stage: .frameExtraction, outputURL: root, pageCount: 200)],
                 lastProgress: .init(stage: .frameExtraction, fraction: 1, completedUnits: 200, totalUnits: 200)
             )
@@ -126,9 +133,32 @@ struct ProductPipelineDriverTests {
             let loaded = try await store.load()
             try require(loaded?.runID == "r1")
             try require(loaded?.completedArtifacts.count == 1)
+            try require(loaded?.inputAssets == [input])
+            try require(FileManager.default.fileExists(atPath: loaded!.inputAssets!.first!.localURL.path))
             try await store.clear()
             let cleared = try await store.load()
             try require(cleared == nil)
+        }
+
+        await run("schema v1 checkpoint remains decodable") {
+            let root = temp("v1")
+            try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+            let url = root.appendingPathComponent("checkpoint.json")
+            let json = """
+            {
+              "schemaVersion": 1,
+              "runID": "legacy-run",
+              "bookID": "book-fixture",
+              "inputAssetIDs": ["input-1"],
+              "completedArtifacts": [],
+              "lastProgress": null,
+              "updatedAt": "2026-08-23T08:00:00Z"
+            }
+            """
+            try Data(json.utf8).write(to: url)
+            let loaded = try await FileProductCheckpointStore(fileURL: url).load()
+            try require(loaded?.schemaVersion == 1)
+            try require(loaded?.inputAssets == nil)
         }
 
         await run("missing binding is explicit failure") {
@@ -149,11 +179,11 @@ struct ProductPipelineDriverTests {
 
     actor Recorder {
         private(set) var stages: [ProductProcessingStage] = []
-        private(set) var checkpointCount = 0
+        private(set) var checkpoints: [ProductPipelineCheckpoint] = []
         private(set) var imageCorrectionProgressUnits: [Int] = []
 
         func append(_ stage: ProductProcessingStage) { stages.append(stage) }
-        func record(checkpoint: ProductPipelineCheckpoint) { checkpointCount += 1 }
+        func record(checkpoint: ProductPipelineCheckpoint) { checkpoints.append(checkpoint) }
         func record(progress: ProductProgress) {
             if progress.stage == .imageCorrection && progress.completedUnits > 0 {
                 imageCorrectionProgressUnits.append(progress.completedUnits)
