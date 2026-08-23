@@ -35,6 +35,8 @@ let package = Package(
                 "Analysis/BoundedMusicalKeyAnalyzer.swift",
                 "Analysis/ChordVocabularyClassifier.swift",
                 "Analysis/BoundedChordTimelineAnalyzer.swift",
+                "Analysis/SectionAnalysisIndex.swift",
+                "Analysis/CancellableSongSectionPipeline.swift",
                 "Analysis/TempoBeatAnalyzer.swift",
                 "Analysis/MusicalKeyAnalyzer.swift",
                 "Analysis/ChordTimelineAnalyzer.swift",
