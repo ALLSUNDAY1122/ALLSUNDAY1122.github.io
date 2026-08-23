@@ -47,6 +47,7 @@ struct RootView: View {
 struct HomeView: View {
     @EnvironmentObject private var learning: LearningStore
     @EnvironmentObject private var storeKit: StoreKitManager
+    @State private var selectedFieldForBatches: String?
 
     var body: some View {
         ScrollView {
@@ -67,6 +68,16 @@ struct HomeView: View {
             .padding(.bottom, 18)
         }
         .scrollIndicators(.hidden)
+        .sheet(isPresented: Binding(
+            get: { selectedFieldForBatches != nil },
+            set: { if !$0 { selectedFieldForBatches = nil } }
+        )) {
+            if let field = selectedFieldForBatches {
+                FieldBatchPickerView(field: field)
+                    .environmentObject(learning)
+                    .environmentObject(storeKit)
+            }
+        }
     }
 
     private func countdown(days: Int) -> some View {
@@ -234,13 +245,16 @@ struct HomeView: View {
             Text("分野から解く")
                 .font(.system(size: 18, weight: .bold))
                 .foregroundStyle(Color.sprintInk)
+            Text("分野を選んだあと、約20問ずつのセットから開始できます。")
+                .font(.system(size: 12))
+                .foregroundStyle(Color.sprintInk3)
             ForEach(learning.uniqueFields, id: \.self) { field in
                 let all = learning.activeQuestions.filter { $0.field == field }
                 let seen = all.filter { learning.state.seen.contains($0.id) }.count
                 let weak = all.filter { learning.state.weak[$0.id] != nil }.count
                 Button {
                     if storeKit.isPremium {
-                        learning.startField(field, premium: true)
+                        selectedFieldForBatches = field
                     } else {
                         learning.paywallPresented = true
                     }
@@ -252,6 +266,8 @@ struct HomeView: View {
                             Text("\(all.count)問").font(.system(size: 12, weight: .semibold)).foregroundStyle(Color.sprintInk3)
                             if !storeKit.isPremium {
                                 Image(systemName: "lock.fill").font(.system(size: 11)).foregroundStyle(Color.sprintKin)
+                            } else {
+                                Image(systemName: "chevron.right").font(.system(size: 11, weight: .bold)).foregroundStyle(Color.sprintInk3)
                             }
                         }
                         FieldProgressBar(progress: all.isEmpty ? 0 : Double(seen) / Double(all.count), color: .sprintAi)
@@ -303,5 +319,86 @@ struct HomeView: View {
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 6)
+    }
+}
+
+struct FieldBatchPickerView: View {
+    @EnvironmentObject private var learning: LearningStore
+    @EnvironmentObject private var storeKit: StoreKitManager
+    @Environment(\.dismiss) private var dismiss
+    let field: String
+
+    private var batches: [FieldQuestionBatch] {
+        learning.fieldQuestionBatches(field, premium: storeKit.isPremium)
+    }
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                LazyVStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("約20問ずつに分けています")
+                            .font(.system(size: 17, weight: .bold, design: .serif))
+                            .foregroundStyle(Color.sprintInk)
+                        Text("分野別学習は「今日のスプリント」の4／8／16問設定とは別です。選んだセットをまとめて解きます。")
+                            .font(.system(size: 12))
+                            .foregroundStyle(Color.sprintInk3)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 2)
+
+                    ForEach(batches) { batch in
+                        let seen = batch.questions.filter { learning.state.seen.contains($0.id) }.count
+                        let weak = batch.questions.filter { learning.state.weak[$0.id] != nil }.count
+                        Button {
+                            learning.startFieldBatch(field, batchIndex: batch.index, premium: storeKit.isPremium)
+                            dismiss()
+                        } label: {
+                            VStack(spacing: 10) {
+                                HStack(spacing: 10) {
+                                    VStack(alignment: .leading, spacing: 3) {
+                                        Text(batch.title)
+                                            .font(.system(size: 16, weight: .bold))
+                                            .foregroundStyle(Color.sprintInk)
+                                        Text("\(batch.count)問")
+                                            .font(.system(size: 12, weight: .semibold))
+                                            .foregroundStyle(Color.sprintAi)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "arrow.right")
+                                        .foregroundStyle(Color.sprintAi)
+                                }
+                                FieldProgressBar(progress: batch.count == 0 ? 0 : Double(seen) / Double(batch.count), color: .sprintAi)
+                                HStack {
+                                    Text("解いた \(seen)/\(batch.count)問")
+                                    Spacer()
+                                    Text("苦手 \(weak)問")
+                                }
+                                .font(.system(size: 11))
+                                .foregroundStyle(Color.sprintInk3)
+                            }
+                            .padding(15)
+                            .background(Color.sprintCard)
+                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.sprintLine))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("fieldBatch_\(batch.index)")
+                    }
+                }
+                .sprintScreenMargins()
+                .padding(.top, 16)
+                .padding(.bottom, 24)
+            }
+            .background(PaperBackground())
+            .navigationTitle(field)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("閉じる") { dismiss() }
+                }
+            }
+        }
+        .presentationDetents([.medium, .large])
     }
 }

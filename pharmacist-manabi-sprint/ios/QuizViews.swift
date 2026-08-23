@@ -116,6 +116,9 @@ struct QuizView: View {
                         .frame(width: 1, height: 1)
                         .opacity(0.01)
                         .accessibilityHidden(false)
+                    Label("図版はタップで全画面表示・ピンチで拡大できます", systemImage: "magnifyingglass")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Color.sprintAi)
                     VStack(spacing: 10) {
                         ForEach(q.mediaAssets, id: \.self) { path in
                             BundledMediaImage(path: path, accessibilityText: q.question)
@@ -281,18 +284,38 @@ struct BundledMediaImage: View {
     let path: String
     let accessibilityText: String
     @State private var image: UIImage?
+    @State private var zoomPresented = false
 
     var body: some View {
         Group {
             if let image {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.white)
+                Button {
+                    zoomPresented = true
+                } label: {
+                    ZStack(alignment: .bottomTrailing) {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.white)
+                        Label("拡大", systemImage: "arrow.up.left.and.arrow.down.right")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundStyle(Color.white)
+                            .padding(.horizontal, 9)
+                            .padding(.vertical, 6)
+                            .background(Color.black.opacity(0.72))
+                            .clipShape(Capsule())
+                            .padding(8)
+                    }
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.sprintLine))
-                    .accessibilityLabel(accessibilityText)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("問題画像を拡大表示")
+                .accessibilityHint(accessibilityText)
+                .fullScreenCover(isPresented: $zoomPresented) {
+                    MediaZoomView(image: image, accessibilityText: accessibilityText)
+                }
             } else {
                 HStack {
                     ProgressView()
@@ -314,6 +337,125 @@ struct BundledMediaImage: View {
         let subdir = components.dropLast().joined(separator: "/")
         guard let url = Bundle.main.url(forResource: name, withExtension: ext, subdirectory: subdir.isEmpty ? nil : subdir) else { return nil }
         return UIImage(contentsOfFile: url.path)
+    }
+}
+
+struct MediaZoomView: View {
+    let image: UIImage
+    let accessibilityText: String
+    @Environment(\.dismiss) private var dismiss
+    @State private var scale: CGFloat = 1
+    @State private var settledScale: CGFloat = 1
+    @State private var offset: CGSize = .zero
+    @State private var settledOffset: CGSize = .zero
+
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+
+            GeometryReader { geo in
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: geo.size.width, height: geo.size.height)
+                    .scaleEffect(scale)
+                    .offset(offset)
+                    .contentShape(Rectangle())
+                    .gesture(zoomGesture.simultaneously(with: panGesture))
+                    .onTapGesture(count: 2) { toggleDoubleTapZoom() }
+                    .accessibilityLabel(accessibilityText)
+            }
+
+            VStack {
+                HStack(spacing: 10) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 17, weight: .bold))
+                            .frame(width: 44, height: 44)
+                            .foregroundStyle(Color.white)
+                            .background(Color.black.opacity(0.62))
+                            .clipShape(Circle())
+                    }
+                    .accessibilityLabel("拡大表示を閉じる")
+
+                    Spacer()
+
+                    Text("ピンチで拡大・ドラッグで移動")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Color.white)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 7)
+                        .background(Color.black.opacity(0.62))
+                        .clipShape(Capsule())
+
+                    Button("リセット") { resetZoom() }
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(Color.white)
+                        .padding(.horizontal, 10)
+                        .frame(height: 44)
+                        .background(Color.black.opacity(0.62))
+                        .clipShape(Capsule())
+                }
+                .padding(.horizontal, 12)
+                .padding(.top, 8)
+                Spacer()
+            }
+        }
+        .preferredColorScheme(.dark)
+    }
+
+    private var zoomGesture: some Gesture {
+        MagnificationGesture()
+            .onChanged { value in
+                scale = min(6, max(1, settledScale * value))
+                if scale <= 1 {
+                    offset = .zero
+                }
+            }
+            .onEnded { _ in
+                settledScale = scale
+                if scale <= 1 {
+                    resetZoom()
+                }
+            }
+    }
+
+    private var panGesture: some Gesture {
+        DragGesture(minimumDistance: 2)
+            .onChanged { value in
+                guard scale > 1 else { return }
+                offset = CGSize(
+                    width: settledOffset.width + value.translation.width,
+                    height: settledOffset.height + value.translation.height
+                )
+            }
+            .onEnded { _ in
+                guard scale > 1 else {
+                    resetZoom()
+                    return
+                }
+                settledOffset = offset
+            }
+    }
+
+    private func toggleDoubleTapZoom() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            if scale > 1 {
+                resetZoom()
+            } else {
+                scale = 2.5
+                settledScale = 2.5
+            }
+        }
+    }
+
+    private func resetZoom() {
+        scale = 1
+        settledScale = 1
+        offset = .zero
+        settledOffset = .zero
     }
 }
 

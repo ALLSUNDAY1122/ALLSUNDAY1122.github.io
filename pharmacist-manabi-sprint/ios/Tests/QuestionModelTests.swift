@@ -108,6 +108,29 @@ final class QuestionModelTests: XCTestCase {
     }
 
     @MainActor
+    func testFieldStudyUsesApproximatelyTwentyQuestionBatchesInsteadOfDailyGoal() {
+        let store = LearningStore()
+        store.resetLearningData()
+        store.updateShuffleQuestions(false)
+        store.updateGoal(8)
+
+        let field = "実務"
+        let all = store.fieldQuestions(field, premium: true)
+        let batches = store.fieldQuestionBatches(field, premium: true)
+        XCTAssertFalse(batches.isEmpty)
+        XCTAssertEqual(batches.flatMap(\.questions).count, all.count)
+        XCTAssertEqual(Set(batches.flatMap(\.questions).map(\.id)), Set(all.map(\.id)))
+        XCTAssertTrue(batches.allSatisfy { $0.count >= 18 && $0.count <= 20 })
+
+        store.startFieldBatch(field, batchIndex: 0, premium: true)
+        XCTAssertEqual(store.activeSession?.ids.count, batches[0].count)
+        XCTAssertNotEqual(store.activeSession?.ids.count, store.state.goal, "分野別は今日の8問設定で切らない")
+        XCTAssertEqual(store.activeSession?.field, field)
+
+        store.resetLearningData()
+    }
+
+    @MainActor
     func testWrongOrUnknownAnswerStillAdvancesDailyHeatmapAndAchievement() {
         let store = LearningStore()
         XCTAssertEqual(store.questions.count, 1035)
