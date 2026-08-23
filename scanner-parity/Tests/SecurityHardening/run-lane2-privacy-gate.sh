@@ -47,4 +47,21 @@ SWIFT
 swiftc "$ROOT/scanner-parity/PrivacyAudit/PrivacyStaticAuditor.swift" "$TMP/current-audit.swift" -o "$TMP/current-audit"
 "$TMP/current-audit" "$ROOT/scanner-parity"
 
+# Final integrated AppShell must carry its own Apple privacy resources. A baseline
+# elsewhere in the repository is evidence, not an app-target bundle resource.
+APP_SHELL="$ROOT/scanner-parity/AppShell"
+if [[ -d "$APP_SHELL" ]]; then
+  if ! find "$APP_SHELL" -type f -name 'PrivacyInfo.xcprivacy' -print -quit | grep -q .; then
+    echo "PRIVACY_BLOCKER: AppShell has no bundled PrivacyInfo.xcprivacy" >&2
+    exit 3
+  fi
+
+  if grep -R -q --include='*.swift' 'AVCaptureDevice\|AVCaptureSession\|UIImagePickerController.SourceType.camera' "$APP_SHELL"; then
+    if ! find "$APP_SHELL" -type f \( -name 'Info.plist' -o -name '*.plist' \) -print0 | xargs -0 grep -l 'NSCameraUsageDescription' >/dev/null 2>&1; then
+      echo "PRIVACY_BLOCKER: AppShell uses camera APIs without NSCameraUsageDescription" >&2
+      exit 4
+    fi
+  fi
+fi
+
 echo "LANE2_PRIVACY_GATE=PASS"
