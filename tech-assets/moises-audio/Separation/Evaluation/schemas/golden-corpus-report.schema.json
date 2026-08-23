@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project.local/moises/separation/golden-corpus-report.schema.json",
+  "title": "Golden G1/G2 corpus intake report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "tool_version", "evidence_kind", "intake_state", "parity_state",
+    "corpus_id", "corpus_revision", "policy_id", "policy_sha256", "corpus_lock_sha256",
+    "coverage", "fixtures", "privacy", "parity_reason"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "tool_version": {"const": "L1-A19-v1"},
+    "evidence_kind": {"const": "GOLDEN_G1_G2_CORPUS_INTAKE"},
+    "intake_state": {"const": "READY_FOR_HQ_GOLDEN_GATE"},
+    "parity_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "corpus_id": {"type": "string", "minLength": 1},
+    "corpus_revision": {"type": "string", "minLength": 1},
+    "policy_id": {"type": "string", "minLength": 1},
+    "policy_sha256": {"$ref": "#/$defs/sha"},
+    "corpus_lock_sha256": {"$ref": "#/$defs/sha"},
+    "coverage": {"type": "object"},
+    "fixtures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fixture_id", "group", "manifest_sha256", "mixture_sha256", "reference_sha256_by_role",
+          "rights_record_ref_hash", "genre_bucket", "production_bucket", "duration_seconds",
+          "duration_bucket", "sample_rate_hz", "channels", "requested_roles", "hard_cases"
+        ],
+        "properties": {
+          "fixture_id": {"type": "string", "minLength": 1},
+          "group": {"enum": ["G1", "G2"]},
+          "manifest_sha256": {"$ref": "#/$defs/sha"},
+          "mixture_sha256": {"$ref": "#/$defs/sha"},
+          "reference_sha256_by_role": {"type": "object", "additionalProperties": {"$ref": "#/$defs/sha"}},
+          "rights_record_ref_hash": {"$ref": "#/$defs/sha"},
+          "genre_bucket": {"type": "string", "minLength": 1},
+          "production_bucket": {"type": "string", "minLength": 1},
+          "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+          "duration_bucket": {"type": "string", "minLength": 1},
+          "sample_rate_hz": {"type": "integer", "minimum": 8000},
+          "channels": {"type": "integer", "minimum": 1},
+          "requested_roles": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "hard_cases": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_paths_emitted", "media_titles_emitted", "raw_rights_record_ids_emitted", "raw_audio_emitted"],
+      "properties": {
+        "source_paths_emitted": {"const": false},
+        "media_titles_emitted": {"const": false},
+        "raw_rights_record_ids_emitted": {"const": false},
+        "raw_audio_emitted": {"const": false}
+      }
+    },
+    "parity_reason": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
