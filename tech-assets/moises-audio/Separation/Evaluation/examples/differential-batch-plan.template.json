@@ -4,6 +4,7 @@
   "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
   "purpose": "PARITY_CANDIDATE",
   "reference_system": "MOISES_CURRENT_IPHONE",
+  "golden_corpus_lock_sha256": "REPLACE_WITH_A19_APPROVED_GOLDEN_CORPUS_LOCK_SHA256",
   "legal_gate": {
     "commercial_approval_basis_id": "REPLACE_WITH_APPROVED_PROVIDER_TERMS_RECORD",
     "privacy_retention_approval_id": "REPLACE_WITH_PRIVACY_RETENTION_REVIEW_RECORD",
@@ -24,7 +25,7 @@
     "provider_command": ["python3", "REPLACE_WITH_LIVE_PROVIDER_DRIVER.py", "--fixture", "{fixture}", "--output", "{project_run}", "--root", "{root}", "--roles", "{roles_csv}", "--idempotency-key", "{idempotency_key}"]
   },
   "acceptance_policy": {
-    "policy_id": "L1-M04-DIFFERENTIAL-CANDIDATE-V1-HQ-REVIEW-BEFORE-LIVE",
+    "policy_id": "L1-A20-DIFFERENTIAL-CANDIDATE-V1-HQ-REVIEW-BEFORE-LIVE",
     "max_case_failure_rate": 0.0,
     "max_retry_fraction": 0.125,
     "max_mean_wall_time_ratio_vs_reference": 1.25,
