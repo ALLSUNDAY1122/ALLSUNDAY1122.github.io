@@ -20,7 +20,7 @@ permissions:
 jobs:
   apple-sdk-compile:
     runs-on: macos-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,6 +34,42 @@ jobs:
       - name: Compile final product modules and run release gates
         run: bash scanner-parity/Tests/AppShell/run-apple-product-compile.sh "$RUNNER_TEMP/scanner-parity-product-apple"
 
+      - name: Install XcodeGen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+
+      - name: Validate application privacy manifest
+        run: plutil -lint scanner-parity/iOSApp/PrivacyInfo.xcprivacy
+
+      - name: Generate real iOS application project
+        working-directory: scanner-parity/iOSApp
+        run: xcodegen generate
+
+      - name: Build unsigned Release app for iPhoneOS
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project scanner-parity/iOSApp/ScannerParity.xcodeproj \
+            -scheme ScannerParity \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            PRODUCT_BUNDLE_IDENTIFIER=com.invalid.scannerparity.ci \
+            CODE_SIGNING_ALLOWED=NO \
+            build | tee "$RUNNER_TEMP/scanner-parity-app-xcodebuild.log"
+
+      - name: Verify generated application bundle
+        run: |
+          APP_PATH="$(find "$HOME/Library/Developer/Xcode/DerivedData" -type d -name 'ScannerParity.app' | head -n 1)"
+          test -n "$APP_PATH"
+          echo "Built app: $APP_PATH"
+          test -f "$APP_PATH/ScannerParity"
+          test -f "$APP_PATH/Info.plist"
+          test -f "$APP_PATH/PrivacyInfo.xcprivacy"
+          /usr/libexec/PlistBuddy -c 'Print :NSCameraUsageDescription' "$APP_PATH/Info.plist" >/dev/null
+          /usr/libexec/PlistBuddy -c 'Print :NSPhotoLibraryUsageDescription' "$APP_PATH/Info.plist" >/dev/null
+          /usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$APP_PATH/Info.plist" | grep -qi false
+          echo 'IOS_APPLICATION_BUNDLE_PASS'
+
       - name: Upload validation evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -44,4 +80,5 @@ jobs:
             ${{ runner.temp }}/scanner-parity-apple-validation/compile.log
             ${{ runner.temp }}/scanner-parity-product-apple/report.json
             ${{ runner.temp }}/scanner-parity-product-apple/compile.log
+            ${{ runner.temp }}/scanner-parity-app-xcodebuild.log
           if-no-files-found: warn
