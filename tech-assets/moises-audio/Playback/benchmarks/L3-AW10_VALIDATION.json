@@ -1,0 +1,58 @@
+{
+  "wave_id": "L3-AW10",
+  "result": "COMPLETE_NON_PARITY",
+  "environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "apple_sdk_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "portable_validation": {
+    "status": "PASS",
+    "stress_analyses": 120,
+    "coverage": [
+      "identical PCM near-zero normalized envelope RMSE",
+      "gain-only level change does not masquerade as envelope damage",
+      "same broad envelope with F0 200 to 300 Hz produces bounded peak proxy error",
+      "deliberately shifted broad formant bands produce greater than 2x matched-peak error",
+      "137-frame AW07-style global lag application",
+      "non-finite sample counting without FFT propagation",
+      "non-power-of-two FFT rejection",
+      "sample-rate mismatch rejection",
+      "all-silent evidence rejection",
+      "Codable report round-trip"
+    ],
+    "synthetic_probe_metrics": {
+      "same_envelope_f0_change_median_peak_error_cents": 146.389,
+      "shifted_formant_bands_median_peak_error_cents": 438.562
+    }
+  },
+  "metrics": [
+    "normalized cepstral-style envelope RMSE mean/p95 dB",
+    "spectral-envelope correlation",
+    "spectral tilt delta dB per octave",
+    "matched broad envelope peak frequency error cents",
+    "reference and observed non-finite sample counts"
+  ],
+  "benchmark": {
+    "rounds": 20,
+    "operations_per_round": 10,
+    "frames_per_analysis": 16384,
+    "channels": 2,
+    "sample_rate_hz": 48000,
+    "fft_window_frames": 1024,
+    "hop_frames": 512,
+    "maximum_windows": 30,
+    "median_ms_per_round": 22.146,
+    "p95_ms_per_round": 25.599,
+    "max_ms_per_round": 26.078,
+    "checksum": 20245.785794
+  },
+  "evidence_scope": "LANE3_CEPSTRAL_ENVELOPE_FORMANT_PROXY_NON_PARITY",
+  "standardized_perceptual_metric_claimed": false,
+  "formant_preservation_claimed": false,
+  "human_audibility_claimed": false,
+  "parity_claimed": false
+}
