@@ -1,0 +1,66 @@
+name: TedoriLog Input Prototype (Vision)
+
+# 手取りログ iPhone入力試作の検証。
+# macOSランナーで実際のApple Vision（日本語OCR）を動かし、未知形式コーパスで
+# 製品チェック1前ゲートの数値を測る。Linux環境では測れないためCIが唯一の実測手段。
+
+on:
+  push:
+    paths:
+      - 'native-ios/TedoriLogInput/**'
+      - '.github/workflows/tedorilog-input-native.yml'
+  pull_request:
+    paths:
+      - 'native-ios/TedoriLogInput/**'
+      - '.github/workflows/tedorilog-input-native.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  swift-tests:
+    runs-on: macos-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: swift --version && sw_vers
+
+      - name: Build
+        working-directory: native-ios/TedoriLogInput
+        run: swift build -v 2>&1 | tail -40
+
+      - name: Core unit tests (解析ロジック・保存ガード・JS版との一致)
+        working-directory: native-ios/TedoriLogInput
+        run: swift test --filter TedoriLogCoreTests
+
+      - name: Install XcodeGen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+
+      - name: Build iPhone prototype app (simulator)
+        working-directory: native-ios/TedoriLogInput
+        run: |
+          set -euo pipefail
+          xcodegen generate
+          xcodebuild -project TedoriLogInput.xcodeproj \
+            -scheme TedoriLogInput \
+            -destination 'generic/platform=iOS Simulator' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            build 2>&1 | tail -60
+
+      - name: Vision holdout evaluation (実Apple Visionでの未知形式評価)
+        working-directory: native-ios/TedoriLogInput
+        # pipefail が無いと tee の終了コードになり、テスト失敗を見逃す
+        run: |
+          set -o pipefail
+          swift test --filter TedoriLogVisionTests 2>&1 | tee vision-eval.log
+
+      - name: Upload Vision evaluation log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vision-eval-log
+          path: native-ios/TedoriLogInput/vision-eval.log
+          if-no-files-found: ignore

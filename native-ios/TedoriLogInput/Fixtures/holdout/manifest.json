@@ -1,0 +1,463 @@
+{
+  "generated_by": "tools/generate_holdout.py",
+  "note": "全て合成データ。実在の給与明細・個人情報は含まない。PoC fixtureとは別の生成規則。",
+  "split_policy": "eval=調整に使う20形式 / final=最後の1回だけ使う10形式",
+  "cases": [
+    {
+      "id": "hold01",
+      "layout": "column_header",
+      "media": "screenshot",
+      "money_style": {
+        "pay": "yen",
+        "deduction": "comma_none"
+      },
+      "company": "株式会社アカツキ工業",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold01.png",
+      "scale": 2.4
+    },
+    {
+      "id": "hold02",
+      "layout": "attendance_block",
+      "media": "image_pdf",
+      "money_style": {
+        "pay": "yen",
+        "deduction": "plain"
+      },
+      "company": "株式会社ヒノデ商会",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold02.pdf",
+      "ocr_source": "hold02.jpg",
+      "ocr_pages": [
+        "hold02.jpg"
+      ],
+      "scale": 2.4
+    },
+    {
+      "id": "hold03",
+      "layout": "two_column",
+      "media": "image_pdf",
+      "money_style": {
+        "pay": "comma_none",
+        "deduction": "suffix"
+      },
+      "company": "合同会社カワセミ設計",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold03.pdf",
+      "ocr_source": "hold03.jpg",
+      "ocr_pages": [
+        "hold03.jpg"
+      ],
+      "scale": 2.4
+    },
+    {
+      "id": "hold04",
+      "layout": "no_totals",
+      "media": "screenshot",
+      "money_style": {
+        "pay": "yen",
+        "deduction": "triangle"
+      },
+      "company": "株式会社シラユキ物流",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold04.png",
+      "scale": 3.0
+    },
+    {
+      "id": "hold05",
+      "layout": "monospace_plain",
+      "media": "screenshot",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "comma_none"
+      },
+      "company": "有限会社トキワ電機",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold05.png",
+      "scale": 2.4
+    },
+    {
+      "id": "hold06",
+      "layout": "attendance_block",
+      "media": "screenshot",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "plain"
+      },
+      "company": "株式会社ミドリ野フーズ",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold06.png",
+      "scale": 3.0
+    },
+    {
+      "id": "hold07",
+      "layout": "vertical_single",
+      "media": "image_pdf",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "triangle"
+      },
+      "company": "株式会社ソラチ製作所",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold07.pdf",
+      "ocr_source": "hold07.jpg",
+      "ocr_pages": [
+        "hold07.jpg"
+      ],
+      "scale": 2.4
+    },
+    {
+      "id": "hold08",
+      "layout": "vertical_single",
+      "media": "text_pdf",
+      "money_style": {
+        "pay": "suffix",
+        "deduction": "plain"
+      },
+      "company": "株式会社ハマナス建設",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold08.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "hold09",
+      "layout": "no_totals",
+      "media": "photo",
+      "money_style": {
+        "pay": "suffix",
+        "deduction": "paren_minus"
+      },
+      "company": "合同会社クロガネ機工",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold09.jpg",
+      "scale": 3.0,
+      "degrade_level": 0.59
+    },
+    {
+      "id": "hold10",
+      "layout": "no_totals",
+      "media": "screenshot",
+      "money_style": {
+        "pay": "suffix",
+        "deduction": "suffix"
+      },
+      "company": "株式会社アオイ運輸",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold10.png",
+      "scale": 2.4
+    },
+    {
+      "id": "hold11",
+      "layout": "attendance_block",
+      "media": "text_pdf",
+      "money_style": {
+        "pay": "comma_none",
+        "deduction": "paren_minus"
+      },
+      "company": "株式会社ユキヤナギ製菓",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold11.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "hold12",
+      "layout": "monospace_plain",
+      "media": "text_pdf",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "yen"
+      },
+      "company": "有限会社スミレ商店",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold12.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "hold13",
+      "layout": "vertical_single",
+      "media": "photo",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "triangle"
+      },
+      "company": "株式会社カエデ情報",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold13.jpg",
+      "scale": 2.6,
+      "degrade_level": 0.32
+    },
+    {
+      "id": "hold14",
+      "layout": "vertical_single",
+      "media": "photo",
+      "money_style": {
+        "pay": "comma_none",
+        "deduction": "suffix"
+      },
+      "company": "株式会社ナナカマド工房",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold14.jpg",
+      "scale": 3.0,
+      "degrade_level": 0.88
+    },
+    {
+      "id": "hold15",
+      "layout": "column_header",
+      "media": "text_pdf",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "plain"
+      },
+      "company": "株式会社シオカゼ水産",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold15.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "hold16",
+      "layout": "attendance_block",
+      "media": "text_pdf",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "triangle"
+      },
+      "company": "株式会社アカツキ工業",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold16.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "hold17",
+      "layout": "two_column",
+      "media": "photo",
+      "money_style": {
+        "pay": "comma_none",
+        "deduction": "comma_none"
+      },
+      "company": "株式会社ヒノデ商会",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold17.jpg",
+      "scale": 2.6,
+      "degrade_level": 0.94
+    },
+    {
+      "id": "hold18",
+      "layout": "multipage",
+      "media": "image_pdf",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "plain"
+      },
+      "company": "合同会社カワセミ設計",
+      "pages": 2,
+      "split": "eval",
+      "file": "hold18.pdf",
+      "ocr_source": "hold18.jpg",
+      "ocr_pages": [
+        "hold18.jpg",
+        "hold18_p2.jpg"
+      ],
+      "scale": 2.4
+    },
+    {
+      "id": "hold19",
+      "layout": "multipage",
+      "media": "image_pdf",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "suffix"
+      },
+      "company": "株式会社シラユキ物流",
+      "pages": 2,
+      "split": "eval",
+      "file": "hold19.pdf",
+      "ocr_source": "hold19.jpg",
+      "ocr_pages": [
+        "hold19.jpg",
+        "hold19_p2.jpg"
+      ],
+      "scale": 2.4
+    },
+    {
+      "id": "hold20",
+      "layout": "monospace_plain",
+      "media": "screenshot",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "triangle"
+      },
+      "company": "有限会社トキワ電機",
+      "pages": 1,
+      "split": "eval",
+      "file": "hold20.png",
+      "scale": 2.0
+    },
+    {
+      "id": "hold21",
+      "layout": "multipage",
+      "media": "text_pdf",
+      "money_style": {
+        "pay": "suffix",
+        "deduction": "plain"
+      },
+      "company": "株式会社ミドリ野フーズ",
+      "pages": 2,
+      "split": "final",
+      "file": "hold21.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "hold22",
+      "layout": "column_header",
+      "media": "screenshot",
+      "money_style": {
+        "pay": "yen",
+        "deduction": "paren_minus"
+      },
+      "company": "株式会社ソラチ製作所",
+      "pages": 1,
+      "split": "final",
+      "file": "hold22.png",
+      "scale": 3.0
+    },
+    {
+      "id": "hold23",
+      "layout": "multipage",
+      "media": "text_pdf",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "triangle"
+      },
+      "company": "株式会社ハマナス建設",
+      "pages": 2,
+      "split": "final",
+      "file": "hold23.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "hold24",
+      "layout": "monospace_plain",
+      "media": "photo",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "yen"
+      },
+      "company": "合同会社クロガネ機工",
+      "pages": 1,
+      "split": "final",
+      "file": "hold24.jpg",
+      "scale": 2.2,
+      "degrade_level": 0.39
+    },
+    {
+      "id": "hold25",
+      "layout": "two_column",
+      "media": "text_pdf",
+      "money_style": {
+        "pay": "yen",
+        "deduction": "suffix"
+      },
+      "company": "株式会社アオイ運輸",
+      "pages": 1,
+      "split": "final",
+      "file": "hold25.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "hold26",
+      "layout": "vertical_single",
+      "media": "image_pdf",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "paren_minus"
+      },
+      "company": "株式会社ユキヤナギ製菓",
+      "pages": 1,
+      "split": "final",
+      "file": "hold26.pdf",
+      "ocr_source": "hold26.jpg",
+      "ocr_pages": [
+        "hold26.jpg"
+      ],
+      "scale": 2.4
+    },
+    {
+      "id": "hold27",
+      "layout": "two_column",
+      "media": "image_pdf",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "plain"
+      },
+      "company": "有限会社スミレ商店",
+      "pages": 1,
+      "split": "final",
+      "file": "hold27.pdf",
+      "ocr_source": "hold27.jpg",
+      "ocr_pages": [
+        "hold27.jpg"
+      ],
+      "scale": 2.4
+    },
+    {
+      "id": "hold28",
+      "layout": "column_header",
+      "media": "text_pdf",
+      "money_style": {
+        "pay": "yen",
+        "deduction": "plain"
+      },
+      "company": "株式会社カエデ情報",
+      "pages": 1,
+      "split": "final",
+      "file": "hold28.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "hold29",
+      "layout": "two_column",
+      "media": "text_pdf",
+      "money_style": {
+        "pay": "plain",
+        "deduction": "plain"
+      },
+      "company": "株式会社ナナカマド工房",
+      "pages": 1,
+      "split": "final",
+      "file": "hold29.pdf",
+      "scale": 1.0
+    },
+    {
+      "id": "hold30",
+      "layout": "no_totals",
+      "media": "photo",
+      "money_style": {
+        "pay": "comma_none",
+        "deduction": "suffix"
+      },
+      "company": "株式会社シオカゼ水産",
+      "pages": 1,
+      "split": "final",
+      "file": "hold30.jpg",
+      "scale": 3.0,
+      "degrade_level": 0.64
+    }
+  ]
+}

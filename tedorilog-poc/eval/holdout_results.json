@@ -1,0 +1,2461 @@
+{
+  "generatedAt": "2026-08-13T05:23:21.057Z",
+  "includeFinal": false,
+  "summary": {
+    "verdict": "WARN",
+    "conditions": {
+      "formatRate": {
+        "got": 0.5,
+        "need": 0.7,
+        "ok": false,
+        "detail": "10/20形式"
+      },
+      "netPayRate": {
+        "got": 0.85,
+        "need": 0.9,
+        "ok": false,
+        "detail": "17/20形式"
+      },
+      "criticalWrong": {
+        "got": 0,
+        "need": 0,
+        "ok": true,
+        "detail": "誤った値を確定候補として提示した件数"
+      },
+      "crashes": {
+        "got": 0,
+        "need": 0,
+        "ok": true,
+        "detail": "クラッシュ"
+      },
+      "externalCalls": {
+        "got": 0,
+        "need": 0,
+        "ok": true,
+        "detail": "外部送信（端末内処理のみ）"
+      }
+    },
+    "byRoute": {
+      "pdf_text": {
+        "cases": 5,
+        "formatsPassed": 5,
+        "avgCorrect": 9,
+        "criticalWrong": 0
+      },
+      "ocr": {
+        "cases": 15,
+        "formatsPassed": 5,
+        "avgCorrect": 5.33,
+        "criticalWrong": 0
+      }
+    },
+    "byMedia": {
+      "text_pdf": {
+        "cases": 5,
+        "formatsPassed": 5,
+        "avgCorrect": 9,
+        "criticalWrong": 0
+      },
+      "screenshot": {
+        "cases": 6,
+        "formatsPassed": 2,
+        "avgCorrect": 5.67,
+        "criticalWrong": 0
+      },
+      "photo": {
+        "cases": 4,
+        "formatsPassed": 2,
+        "avgCorrect": 5.25,
+        "criticalWrong": 0
+      },
+      "image_pdf": {
+        "cases": 5,
+        "formatsPassed": 1,
+        "avgCorrect": 5,
+        "criticalWrong": 0
+      }
+    },
+    "totals": {
+      "cases": 20,
+      "avgCorrect": 6.25,
+      "avgFixOps": 2.75,
+      "medianEngineMs": 4.3
+    }
+  },
+  "rows": [
+    {
+      "id": "hold01",
+      "layout": "column_header",
+      "media": "screenshot",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "raw",
+      "correct": 5,
+      "wrong": 0,
+      "missing": 4,
+      "criticalWrong": 0,
+      "fixOps": 4,
+      "reviewTaps": 5,
+      "netPayCorrect": true,
+      "itemPass": false,
+      "elapsedMs": 95.8,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "net_pay",
+          "ok": true,
+          "derived": 322277,
+          "delta": 0,
+          "detail": "差引支給額 322277 と 支給合計-控除合計 322277 の差 0"
+        }
+      ],
+      "repairs": [
+        {
+          "block": "net_pay",
+          "target": "支給合計",
+          "from": 416490,
+          "to": 416400,
+          "kind": "sub:9->0@4"
+        }
+      ],
+      "perItem": {
+        "basic_pay": {
+          "truth": 338000,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "overtime": {
+          "truth": 31000,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "other_allowance": {
+          "truth": 47400,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "health_insurance": {
+          "truth": 19330,
+          "value": 19330,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認",
+            "別条件の読み取りでは 19339 と読めたため要確認"
+          ]
+        },
+        "pension": {
+          "truth": 37250,
+          "value": 37250,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 2843,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "income_tax": {
+          "truth": 12800,
+          "value": 12800,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "resident_tax": {
+          "truth": 19800,
+          "value": 19800,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認",
+            "別条件の読み取りでは 19809 と読めたため要確認"
+          ]
+        },
+        "net_pay": {
+          "truth": 322277,
+          "value": 322277,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold02",
+      "layout": "attendance_block",
+      "media": "image_pdf",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "raw",
+      "correct": 5,
+      "wrong": 0,
+      "missing": 4,
+      "criticalWrong": 0,
+      "fixOps": 4,
+      "reviewTaps": 5,
+      "netPayCorrect": true,
+      "itemPass": false,
+      "elapsedMs": 8.5,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "net_pay",
+          "ok": false,
+          "derived": -43358,
+          "delta": 255600,
+          "detail": "差引支給額 212242 と 支給合計-控除合計 -43358 の差 255600"
+        }
+      ],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 232000,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "overtime": {
+          "truth": 33500,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "other_allowance": {
+          "truth": 2400,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "health_insurance": {
+          "truth": 13630,
+          "value": 13630,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "pension": {
+          "truth": 23370,
+          "value": 23370,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 1458,
+          "value": 1458,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "income_tax": {
+          "truth": 4900,
+          "value": 4900,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "resident_tax": {
+          "truth": 12300,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "net_pay": {
+          "truth": 212242,
+          "value": 212242,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "支給合計-控除合計と不一致(差 255600)"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold03",
+      "layout": "two_column",
+      "media": "image_pdf",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "raw",
+      "correct": 4,
+      "wrong": 5,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 5,
+      "reviewTaps": 4,
+      "netPayCorrect": true,
+      "itemPass": false,
+      "elapsedMs": 65.3,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "pay_total",
+          "ok": false,
+          "delta": 6,
+          "detail": "支給合計 299966 と 基本給+残業+その他 299960 の差 6"
+        },
+        {
+          "id": "deduction_total",
+          "ok": false,
+          "delta": -8251,
+          "detail": "控除合計 64649 と 控除項目合計 72900 の差 -8251"
+        },
+        {
+          "id": "net_pay",
+          "ok": false,
+          "derived": 235317,
+          "delta": 534,
+          "detail": "差引支給額 235851 と 支給合計-控除合計 235317 の差 534"
+        }
+      ],
+      "repairs": [
+        {
+          "block": "pay_total",
+          "skipped": true,
+          "reason": "同等の補正候補が複数あるため補正しない"
+        },
+        {
+          "block": "deduction_total",
+          "skipped": true,
+          "reason": "同等の補正候補が複数あるため補正しない"
+        }
+      ],
+      "perItem": {
+        "basic_pay": {
+          "truth": 188000,
+          "value": 188000,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "支給合計と不一致(差 6)"
+          ]
+        },
+        "overtime": {
+          "truth": 23500,
+          "value": 23500,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "支給合計と不一致(差 6)"
+          ]
+        },
+        "other_allowance": {
+          "truth": 88400,
+          "value": 88460,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "支給合計と不一致(差 6)",
+            "別条件の読み取りでは 88400 と読めたため要確認"
+          ]
+        },
+        "health_insurance": {
+          "truth": 13710,
+          "value": 13716,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "控除合計と不一致(差 -8251)",
+            "別条件の読み取りでは 13719 と読めたため要確認"
+          ]
+        },
+        "pension": {
+          "truth": 25700,
+          "value": 25769,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "控除合計と不一致(差 -8251)",
+            "別条件の読み取りでは 2570 と読めたため要確認"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 1619,
+          "value": 1619,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "控除合計と不一致(差 -8251)",
+            "別条件の読み取りでは 16194 と読めたため要確認"
+          ]
+        },
+        "income_tax": {
+          "truth": 8920,
+          "value": 8926,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "控除合計と不一致(差 -8251)",
+            "別条件の読み取りでは 8929 と読めたため要確認"
+          ]
+        },
+        "resident_tax": {
+          "truth": 11000,
+          "value": 11666,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "控除合計と不一致(差 -8251)"
+          ]
+        },
+        "net_pay": {
+          "truth": 235851,
+          "value": 235851,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "支給合計-控除合計と不一致(差 534)",
+            "別条件の読み取りでは 235317 と読めたため要確認"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold04",
+      "layout": "no_totals",
+      "media": "screenshot",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "raw",
+      "correct": 5,
+      "wrong": 0,
+      "missing": 4,
+      "criticalWrong": 0,
+      "fixOps": 4,
+      "reviewTaps": 5,
+      "netPayCorrect": true,
+      "itemPass": false,
+      "elapsedMs": 10.2,
+      "crashed": null,
+      "checks": [],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 347000,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "overtime": {
+          "truth": 49000,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "other_allowance": {
+          "truth": 50000,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "health_insurance": {
+          "truth": 23380,
+          "value": 23380,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "pension": {
+          "truth": 38050,
+          "value": 38050,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 2313,
+          "value": 2313,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "income_tax": {
+          "truth": 14080,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "resident_tax": {
+          "truth": 14600,
+          "value": 14600,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "net_pay": {
+          "truth": 353577,
+          "value": 353577,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": []
+        }
+      }
+    },
+    {
+      "id": "hold05",
+      "layout": "monospace_plain",
+      "media": "screenshot",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "raw",
+      "correct": 9,
+      "wrong": 0,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 0,
+      "reviewTaps": 4,
+      "netPayCorrect": true,
+      "itemPass": true,
+      "elapsedMs": 5,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "pay_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "支給合計 451300 と 基本給+残業+その他 451300 の差 0"
+        },
+        {
+          "id": "deduction_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "控除合計 108381 と 控除項目合計 108381 の差 0"
+        },
+        {
+          "id": "net_pay",
+          "ok": true,
+          "derived": 342919,
+          "delta": 0,
+          "detail": "差引支給額 342919 と 支給合計-控除合計 342919 の差 0"
+        }
+      ],
+      "repairs": [
+        {
+          "block": "pay_total",
+          "target": "その他手当",
+          "from": 133800,
+          "to": 69800,
+          "kind": "del:1@1#3"
+        }
+      ],
+      "perItem": {
+        "basic_pay": {
+          "truth": 375000,
+          "value": 375000,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+          ]
+        },
+        "overtime": {
+          "truth": 6500,
+          "value": 6500,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+          ]
+        },
+        "other_allowance": {
+          "truth": 69800,
+          "value": 69800,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計との整合から桁誤りを補正（133800→69800）。要確認",
+            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+          ]
+        },
+        "health_insurance": {
+          "truth": 22120,
+          "value": 22120,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "pension": {
+          "truth": 41070,
+          "value": 41070,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 2341,
+          "value": 2341,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "income_tax": {
+          "truth": 13350,
+          "value": 13350,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "resident_tax": {
+          "truth": 26300,
+          "value": 26300,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "net_pay": {
+          "truth": 342919,
+          "value": 342919,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計-控除合計と一致"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold06",
+      "layout": "attendance_block",
+      "media": "screenshot",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "raw",
+      "correct": 5,
+      "wrong": 1,
+      "missing": 3,
+      "criticalWrong": 0,
+      "fixOps": 4,
+      "reviewTaps": 5,
+      "netPayCorrect": true,
+      "itemPass": false,
+      "elapsedMs": 8.6,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "pay_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "支給合計 483169 と 基本給+残業+その他 483169 の差 0"
+        },
+        {
+          "id": "net_pay",
+          "ok": false,
+          "derived": 373975,
+          "delta": -69,
+          "detail": "差引支給額 373906 と 支給合計-控除合計 373975 の差 -69"
+        }
+      ],
+      "repairs": [
+        {
+          "block": "net_pay",
+          "skipped": true,
+          "reason": "同等の補正候補が複数あるため補正しない"
+        },
+        {
+          "block": "pay_total",
+          "target": "残業関連",
+          "from": 34099,
+          "to": 34069,
+          "kind": "sub:9->6@2#0"
+        },
+        {
+          "block": "pay_total",
+          "target": "支給合計",
+          "from": 483160,
+          "to": 483169,
+          "kind": "sub:0->9@5"
+        }
+      ],
+      "perItem": {
+        "basic_pay": {
+          "truth": 405000,
+          "value": 405000,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+          ]
+        },
+        "overtime": {
+          "truth": 34000,
+          "value": 34069,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計との整合から桁誤りを補正（34099→34069）。要確認",
+            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+          ]
+        },
+        "other_allowance": {
+          "truth": 44100,
+          "value": 44100,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+          ]
+        },
+        "health_insurance": {
+          "truth": 26010,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "pension": {
+          "truth": 43070,
+          "value": 43070,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "別条件の読み取りでは 430709 と読めたため要確認"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 3204,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "income_tax": {
+          "truth": 11010,
+          "value": 11010,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "resident_tax": {
+          "truth": 25900,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "net_pay": {
+          "truth": 373906,
+          "value": 373906,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "支給合計-控除合計と不一致(差 -69)"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold07",
+      "layout": "vertical_single",
+      "media": "image_pdf",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "flat",
+      "correct": 7,
+      "wrong": 2,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 2,
+      "reviewTaps": 7,
+      "netPayCorrect": false,
+      "itemPass": true,
+      "elapsedMs": 49.9,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "pay_total",
+          "ok": false,
+          "delta": 25366,
+          "detail": "支給合計 444666 と 基本給+残業+その他 419300 の差 25366"
+        },
+        {
+          "id": "deduction_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "控除合計 85761 と 控除項目合計 85761 の差 0"
+        },
+        {
+          "id": "net_pay",
+          "ok": false,
+          "derived": 358905,
+          "delta": null,
+          "detail": "差引支給額は未検出。支給合計-控除合計=358905 を候補にできる"
+        }
+      ],
+      "repairs": [
+        {
+          "block": "deduction_total",
+          "target": "厚生年金",
+          "from": 39179,
+          "to": 39170,
+          "kind": "sub:9->0@4"
+        },
+        {
+          "block": "deduction_total",
+          "target": "雇用保険",
+          "from": 2591,
+          "to": 2501,
+          "kind": "sub:9->0@2"
+        }
+      ],
+      "perItem": {
+        "basic_pay": {
+          "truth": 321000,
+          "value": 321000,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "支給合計と不一致(差 25366)"
+          ]
+        },
+        "overtime": {
+          "truth": 50000,
+          "value": 50000,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "支給合計と不一致(差 25366)"
+          ]
+        },
+        "other_allowance": {
+          "truth": 73600,
+          "value": 48300,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "支給合計と不一致(差 25366)"
+          ]
+        },
+        "health_insurance": {
+          "truth": 22980,
+          "value": 22980,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+          ]
+        },
+        "pension": {
+          "truth": 39170,
+          "value": 39170,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計との整合から桁誤りを補正（39179→39170）。要確認",
+            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 2501,
+          "value": 2501,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計との整合から桁誤りを補正（2591→2501）。要確認",
+            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+          ]
+        },
+        "income_tax": {
+          "truth": 6910,
+          "value": 6910,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+          ]
+        },
+        "resident_tax": {
+          "truth": 14200,
+          "value": 14200,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "同ブロックで桁誤りの補正・判断保留があったため要確認"
+          ]
+        },
+        "net_pay": {
+          "truth": 358839,
+          "value": 358905,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "支給合計-控除合計から算出した候補（要確認）"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold08",
+      "layout": "vertical_single",
+      "media": "text_pdf",
+      "split": "eval",
+      "route": "pdf_text",
+      "variant": "pdf",
+      "correct": 9,
+      "wrong": 0,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 0,
+      "reviewTaps": 0,
+      "netPayCorrect": true,
+      "itemPass": true,
+      "elapsedMs": 1.7,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "pay_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "支給合計 509500 と 基本給+残業+その他 509500 の差 0"
+        },
+        {
+          "id": "deduction_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "控除合計 103980 と 控除項目合計 103980 の差 0"
+        },
+        {
+          "id": "net_pay",
+          "ok": true,
+          "derived": 405520,
+          "delta": 0,
+          "detail": "差引支給額 405520 と 支給合計-控除合計 405520 の差 0"
+        }
+      ],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 448000,
+          "value": 448000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "overtime": {
+          "truth": 16500,
+          "value": 16500,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "other_allowance": {
+          "truth": 45000,
+          "value": 45000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "health_insurance": {
+          "truth": 24680,
+          "value": 24680,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "pension": {
+          "truth": 44590,
+          "value": 44590,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 3330,
+          "value": 3330,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "income_tax": {
+          "truth": 15080,
+          "value": 15080,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "resident_tax": {
+          "truth": 15400,
+          "value": 15400,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "net_pay": {
+          "truth": 405520,
+          "value": 405520,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計-控除合計と一致"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold09",
+      "layout": "no_totals",
+      "media": "photo",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "raw",
+      "correct": 3,
+      "wrong": 5,
+      "missing": 1,
+      "criticalWrong": 0,
+      "fixOps": 6,
+      "reviewTaps": 3,
+      "netPayCorrect": false,
+      "itemPass": false,
+      "elapsedMs": 3.5,
+      "crashed": null,
+      "checks": [],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 187000,
+          "value": 187000,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": []
+        },
+        "overtime": {
+          "truth": 52000,
+          "value": 52969,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "別条件の読み取りでは 26666 と読めたため要確認"
+          ]
+        },
+        "other_allowance": {
+          "truth": 40500,
+          "value": 40575,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": []
+        },
+        "health_insurance": {
+          "truth": 12950,
+          "value": 12950,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認",
+            "別条件の読み取りでは 2950 と読めたため要確認"
+          ]
+        },
+        "pension": {
+          "truth": 25950,
+          "value": 25956,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 1842,
+          "value": 1842,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "income_tax": {
+          "truth": 8690,
+          "value": 8699,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "resident_tax": {
+          "truth": 8500,
+          "value": 8509,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": []
+        },
+        "net_pay": {
+          "truth": 221568,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        }
+      }
+    },
+    {
+      "id": "hold10",
+      "layout": "no_totals",
+      "media": "screenshot",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "raw",
+      "correct": 1,
+      "wrong": 8,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 8,
+      "reviewTaps": 1,
+      "netPayCorrect": true,
+      "itemPass": false,
+      "elapsedMs": 6.5,
+      "crashed": null,
+      "checks": [],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 419000,
+          "value": 419006,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "overtime": {
+          "truth": 27000,
+          "value": 27732,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "別条件の読み取りでは 28572 と読めたため要確認"
+          ]
+        },
+        "other_allowance": {
+          "truth": 80700,
+          "value": 81570,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": []
+        },
+        "health_insurance": {
+          "truth": 27070,
+          "value": 27676,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "pension": {
+          "truth": 45070,
+          "value": 45076,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認",
+            "別条件の読み取りでは 4576 と読めたため要確認"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 3021,
+          "value": 3621,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "income_tax": {
+          "truth": 13310,
+          "value": 1331,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認",
+            "別条件の読み取りでは 13310 と読めたため要確認"
+          ]
+        },
+        "resident_tax": {
+          "truth": 23700,
+          "value": 23706,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": []
+        },
+        "net_pay": {
+          "truth": 411729,
+          "value": 411729,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold11",
+      "layout": "attendance_block",
+      "media": "text_pdf",
+      "split": "eval",
+      "route": "pdf_text",
+      "variant": "pdf",
+      "correct": 9,
+      "wrong": 0,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 0,
+      "reviewTaps": 0,
+      "netPayCorrect": true,
+      "itemPass": true,
+      "elapsedMs": 1.7,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "pay_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "支給合計 420900 と 基本給+残業+その他 420900 の差 0"
+        },
+        {
+          "id": "deduction_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "控除合計 86748 と 控除項目合計 86748 の差 0"
+        },
+        {
+          "id": "net_pay",
+          "ok": true,
+          "derived": 334152,
+          "delta": 0,
+          "detail": "差引支給額 334152 と 支給合計-控除合計 334152 の差 0"
+        }
+      ],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 350000,
+          "value": 350000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "overtime": {
+          "truth": 44000,
+          "value": 44000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "other_allowance": {
+          "truth": 26900,
+          "value": 26900,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "health_insurance": {
+          "truth": 22530,
+          "value": 22530,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "pension": {
+          "truth": 36740,
+          "value": 36740,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 2358,
+          "value": 2358,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "income_tax": {
+          "truth": 7620,
+          "value": 7620,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "resident_tax": {
+          "truth": 16000,
+          "value": 16000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "net_pay": {
+          "truth": 334152,
+          "value": 334152,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計-控除合計と一致"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold12",
+      "layout": "monospace_plain",
+      "media": "text_pdf",
+      "split": "eval",
+      "route": "pdf_text",
+      "variant": "pdf",
+      "correct": 9,
+      "wrong": 0,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 0,
+      "reviewTaps": 0,
+      "netPayCorrect": true,
+      "itemPass": true,
+      "elapsedMs": 1,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "pay_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "支給合計 564700 と 基本給+残業+その他 564700 の差 0"
+        },
+        {
+          "id": "deduction_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "控除合計 120788 と 控除項目合計 120788 の差 0"
+        },
+        {
+          "id": "net_pay",
+          "ok": true,
+          "derived": 443912,
+          "delta": 0,
+          "detail": "差引支給額 443912 と 支給合計-控除合計 443912 の差 0"
+        }
+      ],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 453000,
+          "value": 453000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "overtime": {
+          "truth": 34000,
+          "value": 34000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "other_allowance": {
+          "truth": 77700,
+          "value": 77700,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "health_insurance": {
+          "truth": 26040,
+          "value": 26040,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "pension": {
+          "truth": 51020,
+          "value": 51020,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 3238,
+          "value": 3238,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "income_tax": {
+          "truth": 10290,
+          "value": 10290,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "resident_tax": {
+          "truth": 26300,
+          "value": 26300,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "net_pay": {
+          "truth": 443912,
+          "value": 443912,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計-控除合計と一致"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold13",
+      "layout": "vertical_single",
+      "media": "photo",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "flat",
+      "correct": 8,
+      "wrong": 1,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 1,
+      "reviewTaps": 6,
+      "netPayCorrect": true,
+      "itemPass": true,
+      "elapsedMs": 10.3,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "pay_total",
+          "ok": false,
+          "delta": -90,
+          "detail": "支給合計 499700 と 基本給+残業+その他 499790 の差 -90"
+        },
+        {
+          "id": "deduction_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "控除合計 118949 と 控除項目合計 118949 の差 0"
+        },
+        {
+          "id": "net_pay",
+          "ok": true,
+          "derived": 380751,
+          "delta": 0,
+          "detail": "差引支給額 380751 と 支給合計-控除合計 380751 の差 0"
+        }
+      ],
+      "repairs": [
+        {
+          "block": "net_pay",
+          "target": "差引支給額",
+          "from": 389751,
+          "to": 380751,
+          "kind": "sub:9->0@2"
+        },
+        {
+          "block": "pay_total",
+          "skipped": true,
+          "reason": "同等の補正候補が複数あるため補正しない"
+        }
+      ],
+      "perItem": {
+        "basic_pay": {
+          "truth": 362000,
+          "value": 362000,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "支給合計と不一致(差 -90)"
+          ]
+        },
+        "overtime": {
+          "truth": 47500,
+          "value": 47500,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "支給合計と不一致(差 -90)",
+            "別条件の読み取りでは 23500 と読めたため要確認"
+          ]
+        },
+        "other_allowance": {
+          "truth": 90200,
+          "value": 90290,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "支給合計と不一致(差 -90)",
+            "別条件の読み取りでは 82500 と読めたため要確認"
+          ]
+        },
+        "health_insurance": {
+          "truth": 25690,
+          "value": 25690,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "pension": {
+          "truth": 43050,
+          "value": 43050,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 2629,
+          "value": 2629,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
+          ]
+        },
+        "income_tax": {
+          "truth": 12980,
+          "value": 12980,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
+          ]
+        },
+        "resident_tax": {
+          "truth": 29900,
+          "value": 29900,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
+          ]
+        },
+        "net_pay": {
+          "truth": 380751,
+          "value": 380751,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計との整合から桁誤りを補正（389751→380751）。要確認",
+            "同ブロックで桁誤りの補正・判断保留があったため要確認",
+            "別条件の読み取りでは 389751 と読めたため要確認"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold14",
+      "layout": "vertical_single",
+      "media": "photo",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "flat",
+      "correct": 1,
+      "wrong": 6,
+      "missing": 2,
+      "criticalWrong": 0,
+      "fixOps": 8,
+      "reviewTaps": 1,
+      "netPayCorrect": true,
+      "itemPass": false,
+      "elapsedMs": 5,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "net_pay",
+          "ok": false,
+          "derived": 262365,
+          "delta": -88,
+          "detail": "差引支給額 262277 と 支給合計-控除合計 262365 の差 -88"
+        }
+      ],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 285000,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "overtime": {
+          "truth": 26000,
+          "value": 26868,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認",
+            "別条件の読み取りでは 27067 と読めたため要確認"
+          ]
+        },
+        "other_allowance": {
+          "truth": 30600,
+          "value": 30660,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認",
+            "別条件の読み取りでは 5500 と読めたため要確認"
+          ]
+        },
+        "health_insurance": {
+          "truth": 17750,
+          "value": 1771504,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "pension": {
+          "truth": 31160,
+          "value": 31169,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 2013,
+          "value": 26134,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認",
+            "別条件の読み取りでは 2913 と読めたため要確認"
+          ]
+        },
+        "income_tax": {
+          "truth": 8100,
+          "value": 8199,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "resident_tax": {
+          "truth": 17700,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "net_pay": {
+          "truth": 262277,
+          "value": 262277,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "支給合計-控除合計と不一致(差 -88)"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold15",
+      "layout": "column_header",
+      "media": "text_pdf",
+      "split": "eval",
+      "route": "pdf_text",
+      "variant": "pdf",
+      "correct": 9,
+      "wrong": 0,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 0,
+      "reviewTaps": 0,
+      "netPayCorrect": true,
+      "itemPass": true,
+      "elapsedMs": 1.3,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "pay_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "支給合計 297800 と 基本給+残業+その他 297800 の差 0"
+        },
+        {
+          "id": "deduction_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "控除合計 67990 と 控除項目合計 67990 の差 0"
+        },
+        {
+          "id": "net_pay",
+          "ok": true,
+          "derived": 229810,
+          "delta": 0,
+          "detail": "差引支給額 229810 と 支給合計-控除合計 229810 の差 0"
+        }
+      ],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 210000,
+          "value": 210000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "overtime": {
+          "truth": 20500,
+          "value": 20500,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "other_allowance": {
+          "truth": 67300,
+          "value": 67300,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "health_insurance": {
+          "truth": 13660,
+          "value": 13660,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "pension": {
+          "truth": 25730,
+          "value": 25730,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 1740,
+          "value": 1740,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "income_tax": {
+          "truth": 6360,
+          "value": 6360,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "resident_tax": {
+          "truth": 17700,
+          "value": 17700,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "net_pay": {
+          "truth": 229810,
+          "value": 229810,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計-控除合計と一致"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold16",
+      "layout": "attendance_block",
+      "media": "text_pdf",
+      "split": "eval",
+      "route": "pdf_text",
+      "variant": "pdf",
+      "correct": 9,
+      "wrong": 0,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 0,
+      "reviewTaps": 0,
+      "netPayCorrect": true,
+      "itemPass": true,
+      "elapsedMs": 2.3,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "pay_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "支給合計 585500 と 基本給+残業+その他 585500 の差 0"
+        },
+        {
+          "id": "deduction_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "控除合計 127503 と 控除項目合計 127503 の差 0"
+        },
+        {
+          "id": "net_pay",
+          "ok": true,
+          "derived": 457997,
+          "delta": 0,
+          "detail": "差引支給額 457997 と 支給合計-控除合計 457997 の差 0"
+        }
+      ],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 438000,
+          "value": 438000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "overtime": {
+          "truth": 78500,
+          "value": 78500,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "other_allowance": {
+          "truth": 69000,
+          "value": 69000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "health_insurance": {
+          "truth": 26770,
+          "value": 26770,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "pension": {
+          "truth": 53890,
+          "value": 53890,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 3433,
+          "value": 3433,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "income_tax": {
+          "truth": 18610,
+          "value": 18610,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "resident_tax": {
+          "truth": 23200,
+          "value": 23200,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "net_pay": {
+          "truth": 457997,
+          "value": 457997,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計-控除合計と一致"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold17",
+      "layout": "two_column",
+      "media": "photo",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "raw",
+      "correct": 9,
+      "wrong": 0,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 0,
+      "reviewTaps": 2,
+      "netPayCorrect": true,
+      "itemPass": true,
+      "elapsedMs": 3.7,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "pay_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "支給合計 360400 と 基本給+残業+その他 360400 の差 0"
+        },
+        {
+          "id": "deduction_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "控除合計 76343 と 控除項目合計 76343 の差 0"
+        },
+        {
+          "id": "net_pay",
+          "ok": true,
+          "derived": 284057,
+          "delta": 0,
+          "detail": "差引支給額 284057 と 支給合計-控除合計 284057 の差 0"
+        }
+      ],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 289000,
+          "value": 289000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "overtime": {
+          "truth": 7000,
+          "value": 7000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "other_allowance": {
+          "truth": 64400,
+          "value": 64400,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致",
+            "項目名が完全一致でない手当を含むため要確認（振替の可能性）"
+          ]
+        },
+        "health_insurance": {
+          "truth": 18420,
+          "value": 18420,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "pension": {
+          "truth": 33820,
+          "value": 33820,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 2323,
+          "value": 2323,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "income_tax": {
+          "truth": 6580,
+          "value": 6580,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "resident_tax": {
+          "truth": 12100,
+          "value": 12100,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "net_pay": {
+          "truth": 284057,
+          "value": 284057,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "支給合計-控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold18",
+      "layout": "multipage",
+      "media": "image_pdf",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "raw",
+      "correct": 4,
+      "wrong": 5,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 5,
+      "reviewTaps": 4,
+      "netPayCorrect": false,
+      "itemPass": false,
+      "elapsedMs": 2.7,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "deduction_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "控除合計 116939 と 控除項目合計 116939 の差 0"
+        }
+      ],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 458000,
+          "value": 458900,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": []
+        },
+        "overtime": {
+          "truth": 15500,
+          "value": 8975,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "other_allowance": {
+          "truth": 76600,
+          "value": 77806,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": []
+        },
+        "health_insurance": {
+          "truth": 29260,
+          "value": 29260,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
+          ]
+        },
+        "pension": {
+          "truth": 51050,
+          "value": 51050,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 2850,
+          "value": 2850,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
+          ]
+        },
+        "income_tax": {
+          "truth": 12670,
+          "value": 12679,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
+          ]
+        },
+        "resident_tax": {
+          "truth": 21100,
+          "value": 21100,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
+          ]
+        },
+        "net_pay": {
+          "truth": 433170,
+          "value": 433179,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold19",
+      "layout": "multipage",
+      "media": "image_pdf",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "raw",
+      "correct": 5,
+      "wrong": 2,
+      "missing": 2,
+      "criticalWrong": 0,
+      "fixOps": 4,
+      "reviewTaps": 5,
+      "netPayCorrect": true,
+      "itemPass": false,
+      "elapsedMs": 2.3,
+      "crashed": null,
+      "checks": [],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 253000,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "overtime": {
+          "truth": 24000,
+          "value": 24999,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "other_allowance": {
+          "truth": 13400,
+          "value": 13499,
+          "status": "needs_review",
+          "correct": false,
+          "reasons": []
+        },
+        "health_insurance": {
+          "truth": 15710,
+          "value": null,
+          "status": "not_found",
+          "correct": false,
+          "reasons": []
+        },
+        "pension": {
+          "truth": 25600,
+          "value": 25600,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 1683,
+          "value": 1683,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "income_tax": {
+          "truth": 8930,
+          "value": 8930,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "resident_tax": {
+          "truth": 13300,
+          "value": 13300,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        },
+        "net_pay": {
+          "truth": 221977,
+          "value": 221977,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "合計検算の裏付けが無いため要確認"
+          ]
+        }
+      }
+    },
+    {
+      "id": "hold20",
+      "layout": "monospace_plain",
+      "media": "screenshot",
+      "split": "eval",
+      "route": "ocr",
+      "variant": "raw",
+      "correct": 9,
+      "wrong": 0,
+      "missing": 0,
+      "criticalWrong": 0,
+      "fixOps": 0,
+      "reviewTaps": 1,
+      "netPayCorrect": true,
+      "itemPass": true,
+      "elapsedMs": 3.1,
+      "crashed": null,
+      "checks": [
+        {
+          "id": "pay_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "支給合計 454500 と 基本給+残業+その他 454500 の差 0"
+        },
+        {
+          "id": "deduction_total",
+          "ok": true,
+          "delta": 0,
+          "detail": "控除合計 89643 と 控除項目合計 89643 の差 0"
+        },
+        {
+          "id": "net_pay",
+          "ok": true,
+          "derived": 364857,
+          "delta": 0,
+          "detail": "差引支給額 364857 と 支給合計-控除合計 364857 の差 0"
+        }
+      ],
+      "repairs": [],
+      "perItem": {
+        "basic_pay": {
+          "truth": 382000,
+          "value": 382000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "overtime": {
+          "truth": 23000,
+          "value": 23000,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "other_allowance": {
+          "truth": 49500,
+          "value": 49500,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計と一致"
+          ]
+        },
+        "health_insurance": {
+          "truth": 22550,
+          "value": 22550,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "pension": {
+          "truth": 38920,
+          "value": 38920,
+          "status": "needs_review",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致",
+            "読み取り信頼度が低いため要確認（合計が合っていても確定にしない）"
+          ]
+        },
+        "employment_insurance": {
+          "truth": 2713,
+          "value": 2713,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "income_tax": {
+          "truth": 8760,
+          "value": 8760,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "resident_tax": {
+          "truth": 15200,
+          "value": 15200,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "控除合計と一致"
+          ]
+        },
+        "net_pay": {
+          "truth": 364857,
+          "value": 364857,
+          "status": "confident",
+          "correct": true,
+          "reasons": [
+            "支給合計-控除合計と一致"
+          ]
+        }
+      }
+    }
+  ]
+}
