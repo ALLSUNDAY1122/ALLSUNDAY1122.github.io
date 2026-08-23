@@ -16,6 +16,7 @@ public enum PracticeDSPGenerationCoordinatorError: Error, Equatable, Sendable {
     case operationInFlight
     case operationSerialOverflow
     case operationCancelled
+    case operationSuperseded
     case unsupportedPlaybackReason(String)
     case expectedTempoChangeToken(actual: String)
     case expectedRecoveryToken(actual: String)
@@ -92,7 +93,7 @@ public actor PracticeDSPGenerationCoordinator {
     public func bindTransportDiscontinuity(
         playbackToken: PlaybackTransportRescheduleToken
     ) async throws -> PracticeDSPGenerationCoordinatorReceipt {
-        let serial = try beginOperation()
+        let serial = try beginPlaybackOperation(playbackToken: playbackToken)
         defer { operationInFlight = false }
         try rejectNormalOperationIfPoisoned(playbackToken: playbackToken)
         try rejectCancelledPlaybackOperation(playbackToken: playbackToken)
@@ -114,6 +115,10 @@ public actor PracticeDSPGenerationCoordinator {
         do {
             let clickGeneration = try await controller.invalidateScheduledClicks(projectID: projectID)
             observedClickGeneration = clickGeneration
+            try ensurePendingIntentCurrent(
+                intent: intent,
+                observedClickGeneration: clickGeneration
+            )
             try cancelPendingIntentIfNeeded(
                 intent: intent,
                 observedClickGeneration: clickGeneration
@@ -123,6 +128,10 @@ public actor PracticeDSPGenerationCoordinator {
             } catch {
                 throw PracticeDSPGenerationCoordinatorError.clickInvalidationFailed(String(describing: error))
             }
+            try ensurePendingIntentCurrent(
+                intent: intent,
+                observedClickGeneration: clickGeneration
+            )
             // Commit is the point of no return. Cancellation observed before this line leaves no
             // replacement binding and records every externally advanced generation as a floor.
             try cancelPendingIntentIfNeeded(
@@ -147,7 +156,7 @@ public actor PracticeDSPGenerationCoordinator {
         _ ratio: Double,
         playbackToken: PlaybackTransportRescheduleToken
     ) async throws -> PracticeDSPGenerationCoordinatorReceipt {
-        let serial = try beginOperation()
+        let serial = try beginPlaybackOperation(playbackToken: playbackToken)
         defer { operationInFlight = false }
         try rejectNormalOperationIfPoisoned(playbackToken: playbackToken)
         try rejectCancelledPlaybackOperation(playbackToken: playbackToken)
@@ -167,6 +176,10 @@ public actor PracticeDSPGenerationCoordinator {
             try await controller.setTempoRatio(ratio, projectID: projectID)
             let state = try await controller.snapshot(projectID: projectID)
             observedClickGeneration = state.scheduleGeneration
+            try ensurePendingIntentCurrent(
+                intent: intent,
+                observedClickGeneration: state.scheduleGeneration
+            )
             try cancelPendingIntentIfNeeded(
                 intent: intent,
                 observedClickGeneration: state.scheduleGeneration
@@ -176,6 +189,10 @@ public actor PracticeDSPGenerationCoordinator {
             } catch {
                 throw PracticeDSPGenerationCoordinatorError.clickInvalidationFailed(String(describing: error))
             }
+            try ensurePendingIntentCurrent(
+                intent: intent,
+                observedClickGeneration: state.scheduleGeneration
+            )
             try cancelPendingIntentIfNeeded(
                 intent: intent,
                 observedClickGeneration: state.scheduleGeneration
@@ -222,7 +239,7 @@ public actor PracticeDSPGenerationCoordinator {
     public func recover(
         playbackToken: PlaybackTransportRescheduleToken
     ) async throws -> PracticeDSPGenerationCoordinatorReceipt {
-        let serial = try beginOperation()
+        let serial = try beginPlaybackOperation(playbackToken: playbackToken)
         defer { operationInFlight = false }
         guard playbackToken.reason == .recovery else {
             poisonIfPlaybackTokenAdvanced(playbackToken)
@@ -237,12 +254,20 @@ public actor PracticeDSPGenerationCoordinator {
         var observedClickGeneration: UInt64?
         do {
             try await controller.recoverBackend(projectID: projectID)
+            try ensureRecoveryNotSuperseded(
+                playbackToken: playbackToken,
+                observedClickGeneration: nil
+            )
             try poisonRecoveryIfCancelled(
                 playbackToken: playbackToken,
                 observedClickGeneration: nil
             )
             let clickGeneration = try await controller.invalidateScheduledClicks(projectID: projectID)
             observedClickGeneration = clickGeneration
+            try ensureRecoveryNotSuperseded(
+                playbackToken: playbackToken,
+                observedClickGeneration: clickGeneration
+            )
             try poisonRecoveryIfCancelled(
                 playbackToken: playbackToken,
                 observedClickGeneration: clickGeneration
@@ -252,6 +277,10 @@ public actor PracticeDSPGenerationCoordinator {
             } catch {
                 throw PracticeDSPGenerationCoordinatorError.clickInvalidationFailed(String(describing: error))
             }
+            try ensureRecoveryNotSuperseded(
+                playbackToken: playbackToken,
+                observedClickGeneration: clickGeneration
+            )
             try poisonRecoveryIfCancelled(
                 playbackToken: playbackToken,
                 observedClickGeneration: clickGeneration
@@ -322,6 +351,7 @@ public actor PracticeDSPGenerationCoordinator {
         }
         try rejectClickOnlyIfCancelled()
         let before = try await controller.snapshot(projectID: projectID)
+        try rejectClickOnlyIfSuperseded(observedClickGeneration: nil)
         try rejectClickOnlyIfCancelled()
         do {
             try await mutation()
@@ -335,6 +365,9 @@ public actor PracticeDSPGenerationCoordinator {
                     observed: after.scheduleGeneration
                 )
             }
+            try rejectClickOnlyIfSuperseded(
+                observedClickGeneration: after.scheduleGeneration
+            )
             try poisonClickOnlyIfCancelled(clickGeneration: after.scheduleGeneration)
 
             // Revoke the old transport+click replacement authority before touching the click node.
@@ -383,6 +416,30 @@ public actor PracticeDSPGenerationCoordinator {
         }
     }
 
+    /// Token-bearing entry points cannot simply reject an overlapping call. Playback has already
+    /// advanced before coordinator dispatch, so a genuinely newer overlapping token supersedes the
+    /// in-flight authority and must poison the gate. The first task will observe that poison after
+    /// its await and fail instead of committing a stale replacement binding.
+    private func beginPlaybackOperation(
+        playbackToken: PlaybackTransportRescheduleToken
+    ) throws -> UInt64 {
+        guard !operationInFlight else {
+            poisonIfPlaybackTokenAdvanced(playbackToken)
+            throw PracticeDSPGenerationCoordinatorError.operationInFlight
+        }
+        do {
+            return try beginOperation()
+        } catch {
+            if let coordinatorError = error as? PracticeDSPGenerationCoordinatorError,
+               coordinatorError == .operationSerialOverflow {
+                transportGate.poisonObservedGenerations(
+                    playbackGeneration: playbackToken.generation
+                )
+            }
+            throw error
+        }
+    }
+
     private func beginOperation() throws -> UInt64 {
         guard !operationInFlight else {
             throw PracticeDSPGenerationCoordinatorError.operationInFlight
@@ -411,13 +468,22 @@ public actor PracticeDSPGenerationCoordinator {
     }
 
     /// A token sent through the wrong coordinator entry point still represents an already-advanced
-    /// Playback fence. A genuinely newer token therefore revokes the old combined replacement
-    /// authority and poisons the gate. Stale/replayed tokens do not destroy a valid current binding.
+    /// Playback fence. Compare it with both the committed floor and any pending in-flight token so a
+    /// stale/replayed token cannot poison a newer transaction, while a genuinely newer token always
+    /// revokes the old authority.
     private func poisonIfPlaybackTokenAdvanced(
         _ playbackToken: PlaybackTransportRescheduleToken
     ) {
-        if let previous = transportGate.lastPlaybackGeneration {
-            guard playbackToken.generation > previous else { return }
+        var latestObserved = transportGate.lastPlaybackGeneration
+        if let pending = transportGate.pendingIntent?.playbackGeneration {
+            if let current = latestObserved {
+                latestObserved = max(current, pending)
+            } else {
+                latestObserved = pending
+            }
+        }
+        if let latestObserved {
+            guard playbackToken.generation > latestObserved else { return }
         }
         transportGate.poisonObservedGenerations(
             playbackGeneration: playbackToken.generation
@@ -434,6 +500,20 @@ public actor PracticeDSPGenerationCoordinator {
         guard Task.isCancelled else { return }
         poisonIfPlaybackTokenAdvanced(playbackToken)
         throw PracticeDSPGenerationCoordinatorError.operationCancelled
+    }
+
+    private func ensurePendingIntentCurrent(
+        intent: PracticeDSPTransportInvalidationIntent,
+        observedClickGeneration: UInt64?
+    ) throws {
+        guard !transportGate.isPoisoned,
+              transportGate.pendingIntent == intent else {
+            transportGate.poisonObservedGenerations(
+                playbackGeneration: intent.playbackGeneration,
+                clickGeneration: observedClickGeneration
+            )
+            throw PracticeDSPGenerationCoordinatorError.operationSuperseded
+        }
     }
 
     private func cancelPendingIntentIfNeeded(
@@ -458,6 +538,20 @@ public actor PracticeDSPGenerationCoordinator {
         }
     }
 
+    /// A newer overlapping Playback token may poison this gate while click-only work is suspended in
+    /// its controller actor. The click-only task must then stop and, if its generation already moved,
+    /// retain that click generation as a recovery floor rather than trying to revoke/replace against
+    /// the superseding Playback state.
+    private func rejectClickOnlyIfSuperseded(
+        observedClickGeneration: UInt64?
+    ) throws {
+        guard transportGate.isPoisoned else { return }
+        transportGate.poisonObservedGenerations(
+            clickGeneration: observedClickGeneration
+        )
+        throw PracticeDSPGenerationCoordinatorError.operationSuperseded
+    }
+
     private func poisonClickOnlyIfCancelled(
         clickGeneration: UInt64
     ) throws {
@@ -466,6 +560,20 @@ public actor PracticeDSPGenerationCoordinator {
             clickGeneration: clickGeneration
         )
         throw PracticeDSPGenerationCoordinatorError.operationCancelled
+    }
+
+    private func ensureRecoveryNotSuperseded(
+        playbackToken: PlaybackTransportRescheduleToken,
+        observedClickGeneration: UInt64?
+    ) throws {
+        if let lastPlaybackGeneration = transportGate.lastPlaybackGeneration,
+           lastPlaybackGeneration > playbackToken.generation {
+            transportGate.poisonObservedGenerations(
+                playbackGeneration: playbackToken.generation,
+                clickGeneration: observedClickGeneration
+            )
+            throw PracticeDSPGenerationCoordinatorError.operationSuperseded
+        }
     }
 
     private func poisonRecoveryIfCancelled(
