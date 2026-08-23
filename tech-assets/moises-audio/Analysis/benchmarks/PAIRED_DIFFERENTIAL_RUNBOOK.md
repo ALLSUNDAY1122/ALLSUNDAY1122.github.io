@@ -4,161 +4,100 @@
 
 This runbook defines the W18 machine-enforced pairing gate for future HQ comparison of the Project Analysis implementation against the **current iPhone Moises reference**.
 
-W18 does **not** define product-quality thresholds and does **not** declare PARITY. It prevents a later differential review from silently using different corpora, dropping weak fixtures, reversing metric direction, omitting unfavorable metrics, or self-approving a tolerance profile.
+W18 does not define product-quality thresholds and does not declare PARITY. W19 additionally hardens the Reference side so an unproven/stale/manual one-off Moises report cannot silently become the comparator baseline.
 
-## Inputs
+## Canonical inputs after W19
 
 HQ Late Integration supplies all three inputs:
 
 1. Project `AnalysisAuditedRealAudioBenchmarkReport` produced from the W17 audited path.
-2. Reference `AnalysisAuditedRealAudioBenchmarkReport` representing current-iPhone Moises observations scored with the same fixture annotations and metric semantics.
+2. Reference `AnalysisAuditedRealAudioBenchmarkReport` produced **only after** a W19 `AnalysisReferenceCaptureSet` passes `AnalysisReferenceCaptureValidator` under an HQ-approved `AnalysisReferenceCapturePolicy`, then is compiled with `compileAuditedReferenceReport(...)`.
 3. `AnalysisDifferentialToleranceProfile` approved outside Worker 4.
 
-The tolerance profile contains:
+The W19 capture set, W19 validation report, exact source manifest and all SHA-bound evidence artifacts must be archived beside the compiled Reference report. The compiled median report alone is insufficient provenance.
 
-- `profileID`
-- `authority == HQ_LATE_INTEGRATION`
-- durable `approvalReference`
-- approval timestamp
-- expected Project engine identifier
-- expected Reference engine identifier
-- explicit `(domain, metric, maximumRegression, required)` rules
-
-Worker 4 intentionally ships **no production maximum-regression numbers**.
+The W18 tolerance profile contains a durable HQ approval reference, expected Project/Reference engines, and explicit `(domain, metric, maximumRegression, required)` rules. Worker 4 ships no production maximum-regression numbers.
 
 ## Exact pairing identity
 
-Rows are paired by:
+Rows are paired by `fixture_id + domain` and then checked for compatible genre, duration (identity tolerance <=1 ms), rights class and synthetic provenance.
 
-`fixture_id + domain`
-
-The comparator then verifies paired row metadata:
-
-- genre
-- duration (identity tolerance only, <= 1 ms)
-- rights class
-- synthetic/non-synthetic provenance
-
-Project-only or Reference-only rows fail the comparison. Duplicate `fixture_id + domain` rows also fail because the pairing becomes ambiguous.
-
-This blocks the common cherry-pick failure mode where a difficult Reference fixture is simply absent from the Project report.
+Project-only, Reference-only or duplicate rows fail. This blocks dropping a difficult fixture from one side.
 
 ## Metric pairing
 
-Within each paired row, W18 iterates the explicit W17 quality registry only.
+Within each paired row, W18 uses the W17 quality registry only. Context fields such as counts, limits, raw BPM, confidence, W14/W15 diagnostics, RSS and thermal metadata are not differential quality metrics.
 
-Context/diagnostic values such as counts, limits, raw BPM, confidence, W14/W15 diagnostics, W16 pipeline flags, RSS or thermal metadata are not differential quality metrics.
-
-For every quality metric that exists on either side:
-
-- both Project and Reference must provide a finite value;
-- an externally supplied tolerance rule must exist for that exact `domain + metric`;
-- profile rules marked `required=true` must occur in the paired corpus.
-
-A tolerance profile cannot make an unfavorable observed metric disappear by simply omitting its rule. Observed quality metrics without rules produce `MISSING_TOLERANCE_RULE` and the comparison is incomplete.
+Every observed quality metric must exist on both sides and have an externally supplied tolerance rule for the exact `domain + metric`. Required profile metrics must occur in the corpus. Omitting an unfavorable observed metric from the profile produces `MISSING_TOLERANCE_RULE` rather than hiding it.
 
 ## Direction normalization
 
-W18 uses the W17 quality registry as the sole direction source.
-
-For `HIGHER_IS_BETTER` metrics:
+For `HIGHER_IS_BETTER`:
 
 `signed_quality_delta = project - reference`
 
-For `LOWER_IS_BETTER` metrics:
+For `LOWER_IS_BETTER`:
 
 `signed_quality_delta = reference - project`
 
-Therefore a positive signed delta always means the Project result is better in the metric's intended direction.
+Therefore positive always means Project-favorable.
 
 `regression = max(0, -signed_quality_delta)`
 
-A pair is inside the supplied margin only when:
+A pair is inside the supplied margin only when `regression <= maximum_regression`. W18 never guesses the margin.
 
-`regression <= maximum_regression`
+## W19 Reference provenance prerequisite
 
-The comparator never guesses or derives `maximum_regression` itself.
+Before a Reference report is admitted to W18, W19 requires an HQ policy that binds:
 
-## Evidence provenance
+- current Reference epoch;
+- Moises product/app/build version;
+- exact iPhone model and iOS version;
+- locale and account tier;
+- exact rights-cleared source manifest ID and SHA-256;
+- at least two repeated capture runs;
+- HQ-supplied repeatability spread rules for all captured W17 quality metrics.
 
-A metric pair is only marked `parityCandidateEvidence=true` when both paired rows are:
+Every run also records operator identity, observation method, SHA-bound evidence artifacts and the complete fixture/domain/metric set.
 
-- metadata-compatible;
-- evaluator-accepted;
-- `parityEligible` on their audited reports;
-- non-synthetic.
+W19 fails closed on stale/future capture, mixed build/device/OS/tier/corpus, row or metric cherry-picking, synthetic rows, missing artifact bindings, missing repeatability rules or excessive repeated-observation spread.
 
-Synthetic fixtures may exercise the comparator and may be inside a supplied test margin, but remain `WITHIN_TOLERANCE_NON_PARITY_EVIDENCE`.
+Only `STABLE_REFERENCE_CAPTURE_PENDING_HQ` may be compiled into the Reference audited report. That status is not PARITY.
 
-## Fail-closed issue classes
+See `REFERENCE_CAPTURE_RUNBOOK.md` for the complete capture/provenance procedure.
 
-The report records machine-readable issues for:
+## Evidence eligibility
 
-- invalid or self-approved profile metadata;
-- Project/Reference engine mismatch;
-- manifest mismatch;
-- validation issues in either audited report;
-- duplicate rows;
-- Project-only or Reference-only rows;
-- paired-row metadata mismatch;
-- evaluator rejection on either side;
-- quality metric present on only one side;
-- observed quality metric without a tolerance rule;
-- required profile metric absent from the corpus.
+A W18 metric pair is `parityCandidateEvidence=true` only when both rows are metadata-compatible, evaluator-accepted, audited-report eligible and non-synthetic. W19 provenance validation is an additional prerequisite on the Reference side.
 
-## Output statuses
+Synthetic/unit fixtures may exercise W18/W19 but cannot become PARITY evidence.
 
-`INVALID_PROFILE`
-: supplied profile is not acceptable for this gate or the selected engines do not match it.
+## W18 output statuses
 
-`INCOMPLETE_PAIRING`
-: same-corpus or metric pairing is incomplete. No differential quality conclusion is allowed.
-
-`OUTSIDE_SUPPLIED_TOLERANCE`
-: pairing is complete, but at least one paired quality value exceeds the supplied regression margin.
-
-`WITHIN_TOLERANCE_NON_PARITY_EVIDENCE`
-: pairing is complete and inside the supplied margin, but the inputs are not eligible real-audio PARITY-candidate evidence.
-
-`WITHIN_SUPPLIED_TOLERANCE_PENDING_HQ`
-: pairing is complete, all paired evidence is real/non-synthetic and eligible, and every compared metric is inside the supplied profile. **This still is not PARITY.** `finalParityAuthority` remains `HQ_LATE_INTEGRATION`.
+- `INVALID_PROFILE`: profile/engine metadata invalid.
+- `INCOMPLETE_PAIRING`: same-corpus or metric pairing incomplete.
+- `OUTSIDE_SUPPLIED_TOLERANCE`: at least one paired quality regression exceeds the supplied margin.
+- `WITHIN_TOLERANCE_NON_PARITY_EVIDENCE`: inside margins, but evidence is not eligible real-audio PARITY-candidate evidence.
+- `WITHIN_SUPPLIED_TOLERANCE_PENDING_HQ`: all paired evidence is eligible and inside supplied margins. **Still not PARITY.** Final authority remains `HQ_LATE_INTEGRATION`.
 
 ## Anti-masking output
 
-Every paired metric stores:
+Every paired metric stores fixture/domain/genre, direction, both values, signed delta, regression, supplied maximum regression, within-tolerance result and evidence eligibility. Per domain+metric, the report stores counts and the worst regression fixture so an aggregate mean cannot hide a catastrophic case.
 
-- fixture ID
-- domain
-- genre
-- direction
-- Project value
-- Reference value
-- signed quality delta
-- regression
-- supplied maximum regression
-- within-tolerance result
-- evidence eligibility
+## Required HQ sequence after W19
 
-Per `domain + metric`, W18 also stores pair count, parity-candidate pair count, failed-pair count and the worst regression fixture. An aggregate mean cannot hide one catastrophic fixture.
-
-## Reference capture requirement
-
-The Reference audited report must be traceable to the current iPhone Moises build used by HQ. W18 currently preserves engine/version/timestamp provenance from the report, but it does not itself perform the iPhone capture or verify the authenticity of the external approval reference.
-
-Those remain HQ Late Integration responsibilities.
-
-## Required sequence for future HQ differential evidence
-
-1. Freeze the rights-cleared corpus and manifest.
-2. Produce the Project report with `runProductAlignedAudited`.
-3. Capture current-iPhone Moises outputs against the exact same corpus and annotations.
-4. Score/reference-encode them into the same audited row semantics.
-5. Obtain an HQ-approved tolerance profile with a durable approval reference.
-6. Run `AnalysisPairedDifferentialComparator.compare(...)`.
-7. Preserve the paired report JSON and raw Project/Reference audited reports together.
-8. Investigate every issue and every worst-regression fixture.
-9. HQ performs the final PARITY judgment and updates `PARITY_MATRIX.json` only after all relevant product/device gates are also satisfied.
+1. Freeze the rights-cleared corpus and exact manifest bytes.
+2. Hash those exact bytes and approve the W19 Reference capture policy for the current Moises app/build/device/iOS/tier epoch.
+3. Produce the Project report with `runProductAlignedAudited`.
+4. Perform the required repeated current-iPhone Moises capture runs against the exact same corpus.
+5. Validate the full W19 capture set and archive every SHA-bound evidence artifact.
+6. Compile the W19 capture set into the audited Reference report only if comparison-ready.
+7. Obtain a separate HQ-approved W18 non-inferiority tolerance profile.
+8. Run `AnalysisPairedDifferentialComparator.compare(...)`.
+9. Preserve Project report, W19 policy/capture/validation/artifacts, compiled Reference report, W18 tolerance profile and paired differential report together.
+10. Investigate every issue, repeatability excursion and worst-regression fixture.
+11. HQ performs final PARITY judgment and updates `PARITY_MATRIX.json` only after all relevant product/device gates are also satisfied.
 
 ## NON-PARITY warning
 
-W18 synthetic/unit/portable tests validate comparator integrity only. They do not establish MOI-P009, MOI-P011, MOI-P013, MOI-P016 or MOI-P021 PARITY.
+W18/W19 portable tests validate comparator and Reference-capture integrity only. They do not establish MOI-P009, MOI-P011, MOI-P013, MOI-P016 or MOI-P021 PARITY.
