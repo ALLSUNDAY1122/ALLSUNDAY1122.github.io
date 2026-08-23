@@ -30,6 +30,7 @@ public actor SeparationOutputAssurance {
     @discardableResult
     public func prepare(_ manifest: SeparationProviderRunManifest) async throws -> SeparationRunLedger {
         try validateManifest(manifest)
+        try SeparationArtifactSetIntegrity.validate(manifest, durationToleranceSeconds: durationToleranceSeconds)
         let staging = stagingDirectory(projectID: manifest.projectID, jobID: manifest.jobID)
         do {
             if fileManager.fileExists(atPath: staging.path) { try fileManager.removeItem(at: staging) }
@@ -79,10 +80,15 @@ public actor SeparationOutputAssurance {
         }
     }
 
-    /// Commit only after the entire result set has passed prepare(). Existing final output is backed
-    /// up during the directory swap. `recoverInterruptedCommit` repairs a crash between rename steps.
+    /// Commit only after every required stem has passed prepare(). A durable journal binds the exact
+    /// role->SHA set before any existing project result is touched. Project-visible metadata becomes
+    /// committed only after the complete final directory has been hash-verified and the committed
+    /// ledger is durably saved.
     @discardableResult
     public func commit(projectID: ProjectID, jobID: ProcessingJobID) async throws -> SeparationRunLedger {
+        if let recovered = try await recoverAtomicCommit(projectID: projectID, jobID: jobID), recovered.state == .committed {
+            return recovered
+        }
         guard let prepared = try await ledgerStore.load(projectID: projectID, jobID: jobID) else {
             throw DomainFailure.processingFailed(code: "SEP_LEDGER_MISSING", retryable: false)
         }
@@ -91,16 +97,29 @@ public actor SeparationOutputAssurance {
             throw DomainFailure.processingFailed(code: "SEP_COMMIT_STATE_INVALID", retryable: false)
         }
         try validateManifest(prepared.manifest)
+        try SeparationArtifactSetIntegrity.validate(prepared.manifest, durationToleranceSeconds: durationToleranceSeconds)
         try verifyPreparedFiles(prepared)
 
+        let expected = try expectedCommitFiles(prepared)
         let incoming = incomingDirectory(projectID: projectID, jobID: jobID)
         let final = finalDirectory(projectID: projectID)
         let backup = backupDirectory(projectID: projectID, jobID: jobID)
+        let journalURL = commitJournalURL(projectID: projectID, jobID: jobID)
+
         do {
-            for url in [incoming, backup] where fileManager.fileExists(atPath: url.path) {
-                try fileManager.removeItem(at: url)
+            // Recovery above must resolve any old protected final. Stale non-visible incoming/journal
+            // scratch may be rebuilt from the verified staging set for this prepared ledger.
+            if fileManager.fileExists(atPath: backup.path) {
+                throw DomainFailure.processingFailed(code: "SEP_COMMIT_BACKUP_STILL_PRESENT", retryable: false)
+            }
+            for target in [incoming, journalURL] where fileManager.fileExists(atPath: target.path) {
+                try fileManager.removeItem(at: target)
             }
             try fileManager.createDirectory(at: incoming, withIntermediateDirectories: true)
+
+            var journal = try makeCommitJournal(ledger: prepared, phase: .assemblingIncoming)
+            try saveCommitJournal(journal, projectID: projectID, jobID: jobID)
+
             for item in prepared.verifiedOutputs {
                 let source = try resolveRelativePath(item.stagedRelativePath)
                 let destination = incoming.appendingPathComponent(item.role.rawValue + ".wav")
@@ -109,77 +128,53 @@ public actor SeparationOutputAssurance {
                     throw DomainFailure.processingFailed(code: "SEP_COMMIT_COPY_HASH_MISMATCH", retryable: false)
                 }
             }
+            try requireExpectedCommitSet(incoming, expected: expected, code: "SEP_COMMIT_INCOMING_SET_MISMATCH")
+            journal = journal.advanced(to: .incomingVerified, at: now().timeIntervalSince1970)
+            try saveCommitJournal(journal, projectID: projectID, jobID: jobID)
 
+            // Existing project output remains untouched until the complete incoming set is proven.
             try fileManager.createDirectory(at: final.deletingLastPathComponent(), withIntermediateDirectories: true)
             if fileManager.fileExists(atPath: final.path) {
+                try fileManager.createDirectory(at: backup.deletingLastPathComponent(), withIntermediateDirectories: true)
                 try fileManager.moveItem(at: final, to: backup)
             }
+            journal = journal.advanced(to: .promotionReady, at: now().timeIntervalSince1970)
+            try saveCommitJournal(journal, projectID: projectID, jobID: jobID)
+
             do {
                 try fileManager.moveItem(at: incoming, to: final)
             } catch {
                 if !fileManager.fileExists(atPath: final.path), fileManager.fileExists(atPath: backup.path) {
                     try? fileManager.moveItem(at: backup, to: final)
                 }
-                throw error
+                throw DomainFailure.processingFailed(code: "SEP_COMMIT_PROMOTION_FAILED", retryable: true)
+            }
+            journal = journal.advanced(to: .finalPromoted, at: now().timeIntervalSince1970)
+            try saveCommitJournal(journal, projectID: projectID, jobID: jobID)
+
+            guard try directoryMatchesExpectedCommitSet(final, expected: expected) else {
+                try rollbackUncommittedFinal(projectID: projectID, jobID: jobID)
+                throw DomainFailure.processingFailed(code: "SEP_COMMIT_FINAL_SET_MISMATCH", retryable: false)
             }
 
-            var artifacts: [StemArtifact] = []
-            for item in prepared.verifiedOutputs.sorted(by: { $0.role.rawValue < $1.role.rawValue }) {
-                let finalURL = final.appendingPathComponent(item.role.rawValue + ".wav")
-                guard try SHA256FileHasher.hash(url: finalURL) == item.sha256 else {
-                    throw DomainFailure.processingFailed(code: "SEP_COMMIT_FINAL_HASH_MISMATCH", retryable: false)
-                }
-                artifacts.append(
-                    StemArtifact(
-                        id: item.stemID,
-                        projectID: projectID,
-                        role: item.role,
-                        relativePath: try relativePath(finalURL),
-                        sampleRate: item.sampleRate,
-                        channels: item.channels,
-                        frameCount: item.frameCount
-                    )
-                )
-            }
-
-            let committed = SeparationRunLedger(
-                state: .committed,
-                manifest: prepared.manifest,
-                verifiedOutputs: prepared.verifiedOutputs,
-                finalArtifacts: artifacts,
-                preparedAt: prepared.preparedAt,
-                committedAt: now()
-            )
+            let committed = try makeCommittedLedger(from: prepared, finalDirectory: final)
             try await ledgerStore.save(committed)
-            if fileManager.fileExists(atPath: backup.path) { try fileManager.removeItem(at: backup) }
-            let staging = stagingDirectory(projectID: projectID, jobID: jobID)
-            if fileManager.fileExists(atPath: staging.path) { try? fileManager.removeItem(at: staging) }
+            try cleanupTransactionScratch(projectID: projectID, jobID: jobID, includeStaging: true)
             return committed
         } catch let failure as DomainFailure {
             throw failure
         } catch {
+            // Preserve journal/incoming/backup on ambiguous failure so relaunch recovery can either
+            // finish the exact verified set or restore the previous final without provider re-download.
             throw DomainFailure.processingFailed(code: "SEP_COMMIT_FAILED", retryable: true)
         }
     }
 
-    /// Crash repair for directory swap. If a backup exists and no final directory exists, restore it.
-    /// If both exist, final is retained only when it matches the committed ledger; otherwise backup wins.
-    public func recoverInterruptedCommit(projectID: ProjectID, jobID: ProcessingJobID) async throws {
-        let final = finalDirectory(projectID: projectID)
-        let backup = backupDirectory(projectID: projectID, jobID: jobID)
-        guard fileManager.fileExists(atPath: backup.path) else { return }
-        let ledger = try await ledgerStore.load(projectID: projectID, jobID: jobID)
-        if !fileManager.fileExists(atPath: final.path) {
-            try fileManager.createDirectory(at: final.deletingLastPathComponent(), withIntermediateDirectories: true)
-            try fileManager.moveItem(at: backup, to: final)
-            return
-        }
-        if let ledger, ledger.state == .committed, (try? finalDirectoryMatches(ledger)) == true {
-            try fileManager.removeItem(at: backup)
-            return
-        }
-        try fileManager.removeItem(at: final)
-        try fileManager.moveItem(at: backup, to: final)
+    /// Durable relaunch repair. A complete new final/incoming set can finish from local verified
+    /// hashes even after provider URLs expire; an incomplete set never wins over a protected prior final.
+    @discardableResult
+    public func recoverInterruptedCommit(projectID: ProjectID, jobID: ProcessingJobID) async throws -> SeparationRunLedger? {
+        try await recoverAtomicCommit(projectID: projectID, jobID: jobID)
     }
 
     /// Delete only files proven to belong to this committed run. If paths now contain a newer run,
@@ -221,5 +216,4 @@ public actor SeparationOutputAssurance {
         }
         return ledger.finalArtifacts
     }
-
 }
