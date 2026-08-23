@@ -1,3 +1,4 @@
+import CoreVideo
 import Foundation
 import simd
 
@@ -23,6 +24,110 @@ enum CaptureFrameDecision: Equatable {
     case relocalizationJump
     case tooFast
     case insufficientParallax
+}
+
+enum CaptureImageQualityRejection: String, Equatable, Sendable {
+    case tooDark
+    case tooBright
+    case tooSoft
+
+    var userMessage: String {
+        switch self {
+        case .tooDark:
+            return "暗すぎるためこのフレームは保存しません。照明を増やすか、明るい方向から撮ってください"
+        case .tooBright:
+            return "白飛びが強いためこのフレームは保存しません。強い光を避けて撮ってください"
+        case .tooSoft:
+            return "手ブレまたはピンぼけが強いためこのフレームは保存しません。iPhoneをゆっくり動かしてください"
+        }
+    }
+}
+
+struct CaptureImageQualityStats: Equatable, Sendable {
+    let meanLuma: Double
+    let darkFraction: Double
+    let highlightFraction: Double
+    let lumaStandardDeviation: Double
+    let laplacianScore: Double
+    let sampleCount: Int
+}
+
+enum CaptureImageQualityPolicy {
+    static func rejection(for stats: CaptureImageQualityStats) -> CaptureImageQualityRejection? {
+        guard stats.sampleCount >= 64 else { return nil }
+
+        if stats.meanLuma < 32, stats.darkFraction >= 0.60 {
+            return .tooDark
+        }
+        if stats.meanLuma > 220, stats.highlightFraction >= 0.60 {
+            return .tooBright
+        }
+        if stats.laplacianScore < 2.0, stats.lumaStandardDeviation < 14 {
+            return .tooSoft
+        }
+        return nil
+    }
+}
+
+enum CaptureImageQualityEvaluator {
+    static func evaluate(pixelBuffer: CVPixelBuffer) -> CaptureImageQualityStats? {
+        guard CVPixelBufferGetPlaneCount(pixelBuffer) > 0 else { return nil }
+        CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
+        defer { CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly) }
+
+        guard let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0) else { return nil }
+        let width = CVPixelBufferGetWidthOfPlane(pixelBuffer, 0)
+        let height = CVPixelBufferGetHeightOfPlane(pixelBuffer, 0)
+        let bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
+        guard width >= 8, height >= 8, bytesPerRow >= width else { return nil }
+
+        let bytes = baseAddress.assumingMemoryBound(to: UInt8.self)
+        let stepX = max(4, width / 48)
+        let stepY = max(4, height / 36)
+
+        var count = 0
+        var sum = 0.0
+        var sumSquares = 0.0
+        var dark = 0
+        var highlight = 0
+        var laplacianSum = 0.0
+        var laplacianCount = 0
+
+        var y = stepY
+        while y < height - stepY {
+            var x = stepX
+            while x < width - stepX {
+                let offset = y * bytesPerRow + x
+                let center = Int(bytes[offset])
+                count += 1
+                sum += Double(center)
+                sumSquares += Double(center * center)
+                if center <= 22 { dark += 1 }
+                if center >= 232 { highlight += 1 }
+
+                let left = Int(bytes[y * bytesPerRow + x - 1])
+                let right = Int(bytes[y * bytesPerRow + x + 1])
+                let up = Int(bytes[(y - 1) * bytesPerRow + x])
+                let down = Int(bytes[(y + 1) * bytesPerRow + x])
+                laplacianSum += Double(abs(left + right + up + down - 4 * center))
+                laplacianCount += 1
+                x += stepX
+            }
+            y += stepY
+        }
+
+        guard count >= 1 else { return nil }
+        let mean = sum / Double(count)
+        let variance = max(0, sumSquares / Double(count) - mean * mean)
+        return CaptureImageQualityStats(
+            meanLuma: mean,
+            darkFraction: Double(dark) / Double(count),
+            highlightFraction: Double(highlight) / Double(count),
+            lumaStandardDeviation: variance.squareRoot(),
+            laplacianScore: laplacianCount > 0 ? laplacianSum / Double(laplacianCount) : 0,
+            sampleCount: count
+        )
+    }
 }
 
 enum CapturePolicy {
