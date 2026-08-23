@@ -42,15 +42,48 @@ public final class ProductFlowStore: ObservableObject {
         ProductFlowReducer.reduce(state: &state, action: action)
     }
 
+    /// Replaces the selected input and invalidates any checkpoint belonging to
+    /// a previous selection so a stale run can never resume against new media.
+    public func replaceInput(_ assets: [ProductInputAsset]) {
+        guard !isRunning else { return }
+        savedCheckpoint = nil
+        resumeAvailable = false
+        reviewItems = []
+        reviewWorkflow = nil
+        send(.replaceInput(assets))
+        let checkpointStore = checkpointStore
+        Task { try? await checkpointStore.clear() }
+    }
+
+    /// Restores both the processing checkpoint and its durable imported media.
+    /// A schema-v1 checkpoint without input descriptors remains readable, but
+    /// cannot claim relaunch-resume unless matching input is already present.
     public func restoreCheckpoint() {
         let checkpointStore = checkpointStore
         Task { [weak self] in
             guard let self else { return }
             do {
-                let checkpoint = try await checkpointStore.load()
-                self.savedCheckpoint = checkpoint
-                self.resumeAvailable = checkpoint != nil
+                guard let checkpoint = try await checkpointStore.load() else {
+                    self.savedCheckpoint = nil
+                    self.resumeAvailable = false
+                    return
+                }
+
+                if self.state.inputAssets.isEmpty, let checkpointInputs = checkpoint.inputAssets {
+                    let existing = checkpointInputs.filter {
+                        FileManager.default.fileExists(atPath: $0.localURL.path)
+                    }
+                    if existing.count == checkpointInputs.count, !existing.isEmpty {
+                        self.send(.replaceInput(existing))
+                    }
+                }
+
+                let matches = !self.state.inputAssets.isEmpty
+                    && checkpoint.inputAssetIDs == self.state.inputAssets.map(\.id)
+                self.savedCheckpoint = matches ? checkpoint : nil
+                self.resumeAvailable = matches
             } catch {
+                self.savedCheckpoint = nil
                 self.resumeAvailable = false
             }
         }
