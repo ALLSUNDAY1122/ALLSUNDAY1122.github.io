@@ -42,8 +42,6 @@ public final class ProductFlowStore: ObservableObject {
         ProductFlowReducer.reduce(state: &state, action: action)
     }
 
-    /// Replaces the selected input and invalidates any checkpoint belonging to
-    /// a previous selection so a stale run can never resume against new media.
     public func replaceInput(_ assets: [ProductInputAsset]) {
         guard !isRunning else { return }
         savedCheckpoint = nil
@@ -55,17 +53,30 @@ public final class ProductFlowStore: ObservableObject {
         Task { try? await checkpointStore.clear() }
     }
 
-    /// Restores both the processing checkpoint and its durable imported media.
-    /// A schema-v1 checkpoint without input descriptors remains readable, but
-    /// cannot claim relaunch-resume unless matching input is already present.
     public func restoreCheckpoint() {
         let checkpointStore = checkpointStore
+        let reviewFactory = reviewWorkflowFactory
         Task { [weak self] in
             guard let self else { return }
             do {
                 guard let checkpoint = try await checkpointStore.load() else {
                     self.savedCheckpoint = nil
                     self.resumeAvailable = false
+                    return
+                }
+
+                if let package = checkpoint.completedArtifacts.last(where: { $0.stage == .packageWrite }),
+                   FileManager.default.fileExists(atPath: package.outputURL.path) {
+                    let reviews = Self.deduplicatedReviews(checkpoint.completedArtifacts.flatMap(\.reviewItems))
+                    self.purgeManagedInputs(checkpoint.inputAssets ?? [])
+                    self.savedCheckpoint = checkpoint
+                    self.resumeAvailable = false
+                    self.reviewItems = reviews
+                    self.reviewWorkflow = reviewFactory(reviews)
+                    self.send(.restoreCompleted(
+                        bookPackageURL: package.outputURL,
+                        reviewRequiredCount: reviews.count
+                    ))
                     return
                 }
 
@@ -126,7 +137,13 @@ public final class ProductFlowStore: ObservableObject {
         }
     }
 
-    public func markExportFinished() { send(.exportFinished) }
+    public func markExportFinished() {
+        send(.exportFinished)
+        savedCheckpoint = nil
+        resumeAvailable = false
+        let checkpointStore = checkpointStore
+        Task { try? await checkpointStore.clear() }
+    }
 
     private func launch(resume: ProductPipelineCheckpoint?) {
         isRunning = true
@@ -148,13 +165,16 @@ public final class ProductFlowStore: ObservableObject {
                         await self?.apply(progress: progress)
                     },
                     checkpoint: { [weak self] checkpoint in
-                        try? await checkpointStore.save(checkpoint)
-                        await self?.apply(checkpoint: checkpoint)
+                        do {
+                            try await checkpointStore.save(checkpoint)
+                            await self?.apply(checkpoint: checkpoint)
+                        } catch {
+                            await self?.applyCheckpointPersistenceFailure(error)
+                        }
                     }
                 )
-                try? await checkpointStore.clear()
                 let workflow = reviewFactory(completion.reviewItems)
-                self.savedCheckpoint = nil
+                self.purgeManagedInputs(inputs)
                 self.resumeAvailable = false
                 self.reviewItems = completion.reviewItems
                 self.reviewWorkflow = workflow
@@ -162,6 +182,7 @@ public final class ProductFlowStore: ObservableObject {
                     bookPackageURL: completion.bookPackageURL,
                     reviewRequiredCount: completion.reviewItems.count
                 ))
+                self.state.inputAssets = []
                 self.isRunning = false
             } catch {
                 let failure: ProductFlowFailure
@@ -183,6 +204,25 @@ public final class ProductFlowStore: ObservableObject {
     private func apply(checkpoint: ProductPipelineCheckpoint) {
         savedCheckpoint = checkpoint
         resumeAvailable = true
+    }
+
+    private func applyCheckpointPersistenceFailure(_ error: Error) {
+        savedCheckpoint = nil
+        resumeAvailable = false
+    }
+
+    private func purgeManagedInputs(_ inputs: [ProductInputAsset]) {
+        let importRoot = workspaceRoot.appendingPathComponent("Imports", isDirectory: true).standardizedFileURL.path
+        for input in inputs {
+            let path = input.localURL.standardizedFileURL.path
+            guard path.hasPrefix(importRoot + "/") else { continue }
+            try? FileManager.default.removeItem(at: input.localURL)
+        }
+    }
+
+    private static func deduplicatedReviews(_ items: [ProductReviewItem]) -> [ProductReviewItem] {
+        var seen = Set<String>()
+        return items.filter { seen.insert($0.id).inserted }
     }
 }
 #endif
