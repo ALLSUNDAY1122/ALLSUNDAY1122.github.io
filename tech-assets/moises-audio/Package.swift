@@ -54,6 +54,7 @@ let package = Package(
                 "Analysis/AnalysisReferenceReviewConsensus.swift",
                 "Analysis/AnalysisBenchmarkCorpusCoverage.swift",
                 "Analysis/AnalysisDevicePerformanceEvidence.swift",
+                "Analysis/AnalysisDevicePerformanceAcceptance.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
