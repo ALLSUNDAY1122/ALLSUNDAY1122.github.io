@@ -105,7 +105,7 @@ public enum AnalysisSnapshotRobustness {
         ) { ($0.startSeconds, $0.endSeconds) }
 
         let beats = snapshot.tempo?.beatTimesSeconds ?? []
-        let beatMonotonic = zip(beats, beats.dropFirst()).allSatisfy { $0 < $1 }
+        let beatMonotonic = zip(beats, beats.dropFirst()).allSatisfy { pair in pair.0 < pair.1 }
         let chordGapOverlap = gapAndOverlap(
             snapshot.chords.map { ($0.startSeconds, $0.endSeconds) },
             duration: duration
@@ -160,7 +160,9 @@ public enum AnalysisSnapshotRobustness {
         }
         guard beats.count >= 2 else { return nil }
 
-        let intervals = zip(beats, beats.dropFirst()).map { $1 - $0 }.filter { $0 > epsilon }
+        let intervals = zip(beats, beats.dropFirst())
+            .map { pair in pair.1 - pair.0 }
+            .filter { $0 > epsilon }
         guard !intervals.isEmpty else { return nil }
         let ordered = intervals.sorted()
         let medianInterval: Double
