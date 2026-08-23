@@ -79,8 +79,12 @@ public enum Lane2TombstonedMetadataCompactionFailure: Error, Equatable, Sendable
     case liveProjectCannotCompact(UUID)
     case missingSourceAsset(UUID)
     case unsafeArtifactPath(String)
+    case journalArtifactNotOwnedByProject(String)
+    case journalTargetsLiveArtifact(String)
 }
 
+/// Portable authorization policy shared by current deletes, interrupted deletes and historical
+/// tombstone backfill. It never authorizes deletion outside app-owned Imports/Stems roots.
 public enum Lane2TombstonedMetadataCompactionPolicy {
     /// Computes the destructive artifact subset for a tombstone. Only app-owned source/stem roots
     /// are accepted here: historical tombstone metadata is not trusted to authorize deletion from
@@ -96,6 +100,27 @@ public enum Lane2TombstonedMetadataCompactionPolicy {
             artifactRelativePathsToDelete: Array(unique.subtracting(retained)),
             retainedLiveArtifactPaths: Array(retained)
         )
+    }
+
+    /// Existing journals are durable intent, but they are not blindly trusted on relaunch. A journal
+    /// may delete only paths still attributable to the tombstoned project and not referenced by a
+    /// currently live project. A subset is accepted because older deletes may have conservatively
+    /// retained a path that later became otherwise unreferenced.
+    public static func requireAuthorizedJournal(
+        relativePaths: [String],
+        candidate: Lane2TombstonedProjectCompactionCandidate,
+        liveReferencedArtifactPaths: Set<String>
+    ) throws {
+        let candidatePaths = Set(try candidate.artifactRelativePaths.map(validateOwnedDeletionPath))
+        let normalizedJournal = try relativePaths.map(validateOwnedDeletionPath)
+        for path in normalizedJournal {
+            if liveReferencedArtifactPaths.contains(path) {
+                throw Lane2TombstonedMetadataCompactionFailure.journalTargetsLiveArtifact(path)
+            }
+            guard candidatePaths.contains(path) else {
+                throw Lane2TombstonedMetadataCompactionFailure.journalArtifactNotOwnedByProject(path)
+            }
+        }
     }
 
     public static func requireUniqueProjects(
