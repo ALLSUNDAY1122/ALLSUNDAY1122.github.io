@@ -51,7 +51,7 @@ public struct ScannerParityRootView: View {
             allowsMultipleSelection: true
         ) { result in
             do {
-                store.send(.replaceInput(try importer.importFiles(try result.get())))
+                replaceImportedInput(try importer.importFiles(try result.get()))
             } catch {
                 store.send(.fail(.init(code: .importFailed, message: error.localizedDescription, recoveryStep: .selectingInput)))
             }
@@ -82,7 +82,7 @@ public struct ScannerParityRootView: View {
                     guard count > 0 else { return }
                     Task {
                         let assets = await importer.importPhotoPickerSelection()
-                        if !assets.isEmpty { store.send(.replaceInput(assets)) }
+                        if !assets.isEmpty { replaceImportedInput(assets) }
                     }
                 }
 
@@ -106,7 +106,7 @@ public struct ScannerParityRootView: View {
                     }
                     Button("Start processing") { store.startProcessing() }
                         .buttonStyle(.borderedProminent)
-                    Button("Clear selection", role: .destructive) { store.send(.replaceInput([])) }
+                    Button("Clear selection", role: .destructive) { clearImportedInput() }
                 }
             }
 
@@ -204,7 +204,11 @@ public struct ScannerParityRootView: View {
             if let url = store.state.bookPackageURL {
                 ShareLink(item: url) { Label("Share again", systemImage: "square.and.arrow.up") }
             }
-            Button("Scan another book") { store.send(.reset) }
+            Button("Scan another book") {
+                importer.discardImportedAssets(store.state.inputAssets)
+                store.replaceInput([])
+                store.send(.reset)
+            }
         }
         .padding()
     }
@@ -220,9 +224,19 @@ public struct ScannerParityRootView: View {
                 Button("Retry") { store.send(.retry) }
                     .buttonStyle(.borderedProminent)
             }
-            Button("Choose different input") { store.send(.replaceInput([])) }
+            Button("Choose different input") { clearImportedInput() }
         }
         .padding()
+    }
+
+    private func replaceImportedInput(_ assets: [ProductInputAsset]) {
+        importer.discardImportedAssets(store.state.inputAssets)
+        store.replaceInput(assets)
+    }
+
+    private func clearImportedInput() {
+        importer.discardImportedAssets(store.state.inputAssets)
+        store.replaceInput([])
     }
 
     private func handleScenePhase(_ phase: ScenePhase) {
