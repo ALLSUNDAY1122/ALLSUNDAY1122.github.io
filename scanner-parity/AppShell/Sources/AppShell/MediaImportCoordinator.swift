@@ -6,6 +6,28 @@ import SwiftUI
 import UniformTypeIdentifiers
 import ProductFlow
 
+private enum ProductImportStorage {
+    static func rootURL() throws -> URL {
+        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            ?? FileManager.default.temporaryDirectory
+        let root = base
+            .appendingPathComponent("ScannerParity", isDirectory: true)
+            .appendingPathComponent("Imports", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        return root
+    }
+
+    static func destination(prefix: String, extension ext: String) throws -> URL {
+        try rootURL().appendingPathComponent("\(prefix)-\(UUID().uuidString).\(ext)")
+    }
+
+    static func owns(_ url: URL) -> Bool {
+        guard let root = try? rootURL().standardizedFileURL.path else { return false }
+        let path = url.standardizedFileURL.path
+        return path == root || path.hasPrefix(root + "/")
+    }
+}
+
 private struct ImportedMovie: Transferable {
     let url: URL
 
@@ -14,11 +36,7 @@ private struct ImportedMovie: Transferable {
             SentTransferredFile(movie.url)
         } importing: { received in
             let ext = received.file.pathExtension.isEmpty ? "mov" : received.file.pathExtension
-            let destination = FileManager.default.temporaryDirectory
-                .appendingPathComponent("scanner-video-\(UUID().uuidString).\(ext)")
-            if FileManager.default.fileExists(atPath: destination.path) {
-                try FileManager.default.removeItem(at: destination)
-            }
+            let destination = try ProductImportStorage.destination(prefix: "scanner-video", extension: ext)
             try FileManager.default.copyItem(at: received.file, to: destination)
             return ImportedMovie(url: destination)
         }
@@ -51,8 +69,7 @@ public final class MediaImportCoordinator: ObservableObject {
                         throw ImportError.transferFailed
                     }
                     let ext = imageType.preferredFilenameExtension ?? "img"
-                    let url = FileManager.default.temporaryDirectory
-                        .appendingPathComponent("scanner-image-\(UUID().uuidString).\(ext)")
+                    let url = try ProductImportStorage.destination(prefix: "scanner-image", extension: ext)
                     try data.write(to: url, options: .atomic)
                     assets.append(ProductInputAsset(kind: .image, localURL: url, displayName: url.lastPathComponent))
                 }
@@ -80,10 +97,15 @@ public final class MediaImportCoordinator: ObservableObject {
             }
 
             let ext = source.pathExtension.isEmpty ? (kind == .video ? "mov" : "img") : source.pathExtension
-            let destination = FileManager.default.temporaryDirectory
-                .appendingPathComponent("scanner-import-\(UUID().uuidString).\(ext)")
+            let destination = try ProductImportStorage.destination(prefix: "scanner-import", extension: ext)
             try FileManager.default.copyItem(at: source, to: destination)
             return ProductInputAsset(kind: kind, localURL: destination, displayName: source.lastPathComponent)
+        }
+    }
+
+    public func discardImportedAssets(_ assets: [ProductInputAsset]) {
+        for asset in assets where ProductImportStorage.owns(asset.localURL) {
+            try? FileManager.default.removeItem(at: asset.localURL)
         }
     }
 
