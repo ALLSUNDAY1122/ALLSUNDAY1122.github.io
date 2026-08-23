@@ -50,7 +50,19 @@ public struct ProductFlowState: Codable, Sendable, Equatable {
 }
 
 public enum ProductFlowAction: Sendable, Equatable {
-    case replaceInput([ProductInputAsset]); case cameraPermissionChanged(ProductPermissionState); case startProcessing; case updateProgress(ProductProgress); case processingFinished(bookPackageURL: URL, reviewRequiredCount: Int); case reviewResolved(remaining: Int); case beginExport; case exportFinished; case fail(ProductFlowFailure); case retry; case cancel; case reset
+    case replaceInput([ProductInputAsset])
+    case cameraPermissionChanged(ProductPermissionState)
+    case startProcessing
+    case updateProgress(ProductProgress)
+    case processingFinished(bookPackageURL: URL, reviewRequiredCount: Int)
+    case restoreCompleted(bookPackageURL: URL, reviewRequiredCount: Int)
+    case reviewResolved(remaining: Int)
+    case beginExport
+    case exportFinished
+    case fail(ProductFlowFailure)
+    case retry
+    case cancel
+    case reset
 }
 
 public enum ProductFlowReducer {
@@ -70,6 +82,13 @@ public enum ProductFlowReducer {
             guard state.step == .processing else { return }; state.progress = progress
         case .processingFinished(let packageURL, let reviewCount):
             guard state.step == .processing else { return }; state.progress = ProductProgress(stage: .packageWrite, fraction: 1); state.bookPackageURL = packageURL; state.reviewRequiredCount = max(0, reviewCount); state.failure = nil; state.step = reviewCount > 0 ? .review : .exporting
+        case .restoreCompleted(let packageURL, let reviewCount):
+            state.inputAssets = []
+            state.progress = ProductProgress(stage: .packageWrite, fraction: 1)
+            state.bookPackageURL = packageURL
+            state.reviewRequiredCount = max(0, reviewCount)
+            state.failure = nil
+            state.step = reviewCount > 0 ? .review : .exporting
         case .reviewResolved(let remaining):
             guard state.step == .review else { return }; state.reviewRequiredCount = max(0, remaining); if remaining <= 0 { state.step = .exporting }
         case .beginExport:
