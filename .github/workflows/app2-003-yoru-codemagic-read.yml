@@ -25,9 +25,22 @@ jobs:
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
-          python scripts/app2_003_codemagic_gateway.py \
-            --command automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-codemagic-command.json \
-            --output app2-003-codemagic-result.json
+          ACTION="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          command = json.loads(Path('automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-codemagic-command.json').read_text(encoding='utf-8'))
+          print(command.get('action', ''))
+          PY
+          )"
+          if [ "$ACTION" = "fetch_diagnostic" ]; then
+            python scripts/app2_003_codemagic_diag_fetch.py \
+              --command automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-codemagic-command.json \
+              --output app2-003-codemagic-result.json
+          else
+            python scripts/app2_003_codemagic_gateway.py \
+              --command automation/chatgpt-dispatcher/app-development-2/runtime/APP2-003-codemagic-command.json \
+              --output app2-003-codemagic-result.json
+          fi
       - name: Persist sanitized result
         if: always()
         run: |
@@ -41,7 +54,8 @@ jobs:
               src = {'ok': False, 'error': 'Codemagic gateway produced no result file'}
           allowed = {
             'request_id','action','repository','workflow_id','branch','ok','resolved_app_id',
-            'application_candidates','changed','app_id','app_details','build_id','status','build_url','build_details','error'
+            'application_candidates','changed','app_id','app_details','build_id','status','build_url','build_details',
+            'diagnostic_log','error'
           }
           out = {k: v for k, v in src.items() if k in allowed}
           p = Path('automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-codemagic.json')
