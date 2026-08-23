@@ -10,7 +10,7 @@ public enum ReviewDecision: String, Codable, Sendable {
     case retry
     case reOCR
     case recapture
-    case defer
+    case deferred = "defer"
     case exclude
     case accept
 }
