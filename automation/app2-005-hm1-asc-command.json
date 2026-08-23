@@ -1,6 +1,7 @@
 {
-  "request_id": "app2-005-hm1-monthly-metadata-probe-20260823-1649",
+  "request_id": "app2-005-hm1-metadata-probe-20260823-1654",
   "requests": [
-    {"label": "monthly-detail", "path": "/v1/subscriptions/6804373671?include=subscriptionLocalizations,appStoreReviewScreenshot,planAvailabilities,introductoryOffers&limit[subscriptionLocalizations]=50&limit[planAvailabilities]=50&limit[introductoryOffers]=50"}
+    {"label": "monthly-detail", "path": "/v1/subscriptions/6804373671?include=subscriptionLocalizations,subscriptionAvailability,appStoreReviewScreenshot&limit[subscriptionLocalizations]=50"},
+    {"label": "lifetime-detail", "path": "/v2/inAppPurchases/6799583540?include=inAppPurchaseLocalizations,inAppPurchaseAvailability,appStoreReviewScreenshot&limit[inAppPurchaseLocalizations]=50"}
   ]
 }
