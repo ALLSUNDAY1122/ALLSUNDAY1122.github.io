@@ -2,6 +2,8 @@ name: Kangoshi App Store Screenshots
 
 on:
   workflow_dispatch:
+  issues:
+    types: [opened]
   push:
     paths:
       - 'kangoshi-sprint/ios/Sources/**'
@@ -17,9 +19,11 @@ concurrency:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   screenshots:
+    if: github.event_name != 'issues' || (github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP2-009] Prepare App Store submission assets')
     runs-on: macos-15
     timeout-minutes: 45
     steps:
@@ -111,3 +115,9 @@ jobs:
           name: kangoshi-appstore-screenshots
           path: /tmp/kangoshi-screens
           if-no-files-found: error
+      - name: Report issue result
+        if: always() && github.event_name == 'issues'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`APP2-009 App Store asset preparation finished. status=${{ job.status }}; run_id=${context.runId}`});
