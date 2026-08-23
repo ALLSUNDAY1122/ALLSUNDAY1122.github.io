@@ -179,7 +179,8 @@ struct ProductPipelineDriverTests {
             try require(loaded?.completion == nil)
             try require(loaded?.hasCanonicalExistingArtifacts == true)
             try await store.clear()
-            try require(try await store.load() == nil)
+            let cleared = try await store.load()
+            try require(cleared == nil)
         }
 
         await run("schema v3 terminal checkpoint retains only completion snapshot") {
