@@ -9,7 +9,7 @@ public struct ScannerParityApp: App {
     private let reviewWorkflowFactory: @Sendable ([ProductReviewItem]) -> any ProductReviewWorkflow
 
     public init() {
-        self.driver = ProductionScannerRuntime.makeDriver()
+        self.driver = GoldenHardenedScannerRuntime.makeDriver()
         self.reviewWorkflowFactory = { RecoveryProductReviewWorkflow(items: $0) }
     }
 
