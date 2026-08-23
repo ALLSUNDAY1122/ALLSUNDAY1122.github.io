@@ -20,7 +20,7 @@ jobs:
           ISSUE_BODY: ${{ github.event.issue.body }}
         run: |
           python - <<'PY'
-          import json, os, re, urllib.error, urllib.request
+          import io,json,os,re,urllib.error,urllib.request,zipfile
           from pathlib import Path
           token=os.environ.get('CM_API_TOKEN','').strip()
           if not token: raise SystemExit('CM_API_TOKEN missing')
@@ -38,11 +38,25 @@ jobs:
               if isinstance(v,dict): return {k:('[REDACTED]' if any(p in str(k).lower() for p in sensitive) else clean(x)) for k,x in v.items()}
               if isinstance(v,list): return [clean(x) for x in v]
               return v
-          payload={
-              'build_id':build_id,
-              'build':clean(get(f'https://codemagic.io/api/v3/builds/{build_id}')),
-              'actions':clean(get(f'https://codemagic.io/api/v3/builds/{build_id}/actions'))
-          }
+          build=get(f'https://codemagic.io/api/v3/builds/{build_id}')
+          actions=get(f'https://codemagic.io/api/v3/builds/{build_id}/actions')
+          data=build.get('data') if isinstance(build,dict) else None
+          safe_bundle_files={}
+          wanted={'group-add-error.txt','group-add.json','internal-group-assignment.json','build93-id.txt','build93-beta-details.json','asc-readback.json'}
+          for art in (data or {}).get('artifacts',[]) or []:
+              url=art.get('short_lived_download_url')
+              if not url or art.get('type')!='bundle': continue
+              try:
+                  with urllib.request.urlopen(url,timeout=30) as r: raw=r.read()
+                  with zipfile.ZipFile(io.BytesIO(raw)) as z:
+                      for name in z.namelist():
+                          base=name.rsplit('/',1)[-1]
+                          if base not in wanted: continue
+                          text=z.read(name).decode('utf-8',errors='replace')[:12000]
+                          safe_bundle_files[base]=text
+              except Exception as e:
+                  safe_bundle_files['_bundle_error']=str(e)[:1000]
+          payload={'build_id':build_id,'build':clean(build),'actions':clean(actions),'safe_bundle_files':clean(safe_bundle_files)}
           Path('otsu4-codemagic-inspect.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
           print('PASS: diagnostics fetched for',build_id)
           PY
