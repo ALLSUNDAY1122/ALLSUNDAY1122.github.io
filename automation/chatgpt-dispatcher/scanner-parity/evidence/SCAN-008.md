@@ -1,16 +1,16 @@
-# SCAN-008 Evidence｜Frame→Correction→PageAudit E2E Fixture・Contract Bridge
+# SCAN-008 Evidence｜STALE ATTEMPT（worker2）
 
-更新: 2026-08-23 14:39 JST
+更新: 2026-08-23 14:47 JST
 Worker: worker2
-Claim epoch: 1
+Former claim epoch: 1
 Attempt branch: `task/SCAN-008/attempt-1`
 Baseline: `1bb35c1070477fdc34d0082291e64e48a84abf91`
+Canonical owner at final read-back: `worker1`
 
-## 結果
+> **NON-CANONICAL / STALE ATTEMPT**
+> Queue read-backでSCAN-008のcanonical ownerがworker1へ変更されたため、worker2はfencing契約に従いINTEGRATION_READY確定を行わない。このEvidenceはworker2がclaim保持中に作成した成果の記録であり、worker1/HQが再検証して採用するまでcanonical PASSではない。
 
-`INTEGRATION_READY` 推奨。Golden原本を必要としないTaskであり `golden_status=NOT_APPLICABLE_WORKER`。
-
-## 実装
+## worker2実装成果
 
 - `scanner-parity/PipelineCore/PipelineAuditBridge.swift`
   - `PageCandidate` を保持したまま `PageAuditInput` へ接続。
@@ -20,59 +20,26 @@ Baseline: `1bb35c1070477fdc34d0082291e64e48a84abf91`
   - `lowBoundaryConfidence` または boundary confidence < 0.72 をreviewへ伝播。
   - Shared Contractおよび既存FrameExtraction/ImageCorrection/PageAudit型は変更していない。
 - `scanner-parity/Tests/PipelineCore/PipelineAuditBridgeTests.swift`
-  - lineage保持
-  - 正常順
-  - 重複
-  - 欠落
-  - 隣接逆転＋高信頼auto-fix
-  - stage failure伝播
-  - low confidence伝播
-  - ID mismatch検出
+  - lineage保持 / 正常順 / 重複 / 欠落 / 隣接逆転 / stage failure / low confidence / ID mismatch のfixtureを実装。
 - `scanner-parity/Tests/PipelineCore/run-fixtures.sh`
-  - integration済み4 source file + bridge + fixtureを同一swiftc invocationで再現実行するrunner。
+  - integration済みsourceとbridge/fixtureを同一swiftc invocationで実行する再現runner。
 
-## 検証
+## 検証済み範囲
 
-### Remote scope read-back
-`scanner-parity/integration` baselineとのcompare:
+- attempt branchはbaselineより4 commits ahead / 0 behind。
+- 変更は `scanner-parity/PipelineCore/**` と `scanner-parity/Tests/PipelineCore/**` のみ。
+- 現行public signatureと同一の最小Swift fixtureで `PASS typecheck+lineage+review propagation`。
+- production auditor条件の独立検算で duplicate / missing / reversal / low-confidence 条件成立。
+- containerから `raw.githubusercontent.com` のDNS解決ができず、repository checkout相当の全sourceをその場で取得して `run-fixtures.sh` を完走する経路は未実行。
 
-- attempt branch: 4 commits ahead / 0 behind
-- changed paths:
-  - `scanner-parity/PipelineCore/PipelineAuditBridge.swift`
-  - `scanner-parity/PipelineCore/README.md`
-  - `scanner-parity/Tests/PipelineCore/PipelineAuditBridgeTests.swift`
-  - `scanner-parity/Tests/PipelineCore/run-fixtures.sh`
-- write_scope外の実装変更なし。
+## Fencing判断
 
-### Swift型整合
-GitHub connectorで取得した現行public signature（PageCandidate / CorrectedPageMetadata / PageAuditInput / PageAuditResult / PageIntegrityAuditor）と同一の最小fixtureをSwiftでcompile/run。
+worker2の最終Queue確定試行前にQueueが更新され、最新read-backではSCAN-008が次の状態になった。
 
-結果:
-`PASS typecheck+lineage+review propagation`
+- status: `CLAIMED`
+- claimed_by: `worker1`
+- claim_token: `883a50de-f68a-4f89-ad44-dc546bbbd0a9`
+- claim_epoch: `1`
+- attempt_branch: `task/SCAN-008/attempt-1`
 
-### Fixture条件の独立検算
-production `PageIntegrityAuditor` の閾値・分岐に対し以下を検算:
-
-- identical perceptual hash => duplicate similarity 1.0
-- page number 1 -> 3 => missing [2]
-- timeline 1,3,2,4 => adjacent reversal条件成立
-- confidence 0.999 / score 99.9 => swap confidence 0.999 >= 0.985
-- correction boundary confidence 0.40 < bridge threshold 0.72
-
-結果:
-`PASS semantic-fixture-cases: duplicate/missing/reversal/failure/low-confidence/lineage-contract`
-
-### 実行環境制約
-現在のcontainerは `raw.githubusercontent.com` のDNS解決ができず、attempt branchから全production Swift sourceをcontainerへ直接downloadして `run-fixtures.sh` をその場で実行する経路は失敗した。これはコードcompile failureではなく取得経路の制約。再現runner自体をrepositoryへ保存し、HQ/CIで同一repo checkout上から実行可能にしている。
-
-## Acceptance対応
-
-1. PageCandidate→補正→監査でID/source_time/flagsを保持: 実装済み。
-2. synthetic正常順/重複/欠落/逆転: fixture実装済み、条件検算済み。
-3. stage failure/low-confidenceをreview_requiredへ伝播: 実装済み、Swift実行確認済み。
-4. Shared Contractを変更しない: compareで確認済み。
-5. Goldenなしで再現可能なE2E fixture/Evidence: runner + fixture + 本Evidenceを保存済み。
-
-## 残余リスク
-
-HQ統合前に、repo checkout環境で `scanner-parity/Tests/PipelineCore/run-fixtures.sh` を1回実行することを推奨する。Apple SDK依存ではなくSwift/Foundation中心のためGolden Dataset待ちは不要。
+したがってworker2はQueue、canonical branch、INTEGRATION_READYを確定しない。worker1/HQは既存attempt branch上の成果を内容確認したうえで利用・修正・破棄を判断すること。
