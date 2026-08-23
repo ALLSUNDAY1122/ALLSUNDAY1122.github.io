@@ -1,17 +1,20 @@
-# Worker 3 Completion Roadmap
+# Worker 3 Completion Roadmap — LANE-3-PACKAGE
 
-Scope: Page integrity, quality measurement, and BookPackage output validation.
+Scope: BookPackage, OCR quality, output integrity, and AI-ingestion usability.
 
 ## Final completion definition
-Worker 3's lane is complete only when integrated output preserves page identity/order end-to-end and HQ Golden Gate reports no unresolved integrity defect attributable to PageAudit or PackageValidation.
+Worker 3's lane is non-Golden complete when BookPackage output can be deterministically validated for identity/order/completeness/text-layer/OCR-review/lineage using synthetic fixtures, and the final lane PR is open to integration. Formal real-book Golden acceptance remains HQ-owned.
 
 Target outcomes:
 - ordering accuracy: 100% target
 - duplicate rate: <= 0.5%
-- page recall contribution: >= 99% project target
+- project page recall: >= 99% target
 - BookPackage manifest/image/text/PDF correspondence: 100%
-- no unsafe/broken package references
-- all low-confidence or failed pages remain observable as review items instead of being silently dropped
+- searchable PDF text-layer coverage/order: 100% on accepted package
+- Markdown/TXT page-boundary order: 100%
+- AI-ingestion lineage coverage: 100%
+- no unsafe/broken/duplicate package references
+- low-confidence/failed OCR pages are observable as review items, never silently accepted
 
 ## Phase 1 — PageAudit core — DONE
 - page-number OCR candidate scoring and position prior
@@ -30,42 +33,56 @@ Target outcomes:
 - JSON/Markdown parity report
 - HQ owns formal Golden PASS/FAIL
 
-## Phase 3 — BookPackage Integrity Verifier — ACTIVE (SCAN-010)
-Acceptance closure:
-1. decode manifest.json deterministically
-2. verify manifest order, contiguous sequences, unique page_id and sequence
-3. verify every image_path and text_path is safe and exists
-4. reject path traversal / absolute paths
-5. verify TXT can be read as UTF-8
-6. compare searchable PDF page count to manifest page count
-7. keep aggregate book.md/book.txt absence visible
-8. emit structured issue codes and review page IDs
-9. serialize report as JSON and Markdown
-10. reproduce PASS/FAIL with synthetic fixture tests
+## Phase 3 — SCAN-010 BookPackage Integrity Verifier — DONE
+- deterministic manifest decode
+- manifest order / contiguous sequence / unique sequence / unique page_id
+- duplicate image_path / text_path detection
+- safe image/text relative references and path traversal rejection
+- referenced image/TXT existence
+- UTF-8 TXT readability
+- searchable PDF page count vs manifest count
+- required searchable PDF / book.md / book.txt existence
+- structured issue codes and review page IDs
+- JSON/Markdown integrity report
+- synthetic PASS/FAIL fixtures
 
-## Phase 4 — HQ Golden calibration — POST-INTEGRATION
-HQ provides canonical Golden input and runs integrated pipeline. Worker 3 fixes PageAudit/PackageValidation defects if metrics miss thresholds. Golden dataset absence or SHA mismatch is not a Worker BLOCKED_HUMAN condition.
+## Phase 4 — PackageQuality deep validation — DONE
+- searchable PDF text-layer coverage
+- searchable PDF page-text order against per-page TXT
+- Japanese vertical / horizontal / mixed OCR fixtures
+- low-quality/unknown-layout OCR must be review-marked or fail closed
+- Markdown `## Page N` boundary/order verification
+- TXT `=== PAGE N ===` boundary/order verification
+- manifest schema-version check
+- `source_time_ms` lineage coverage
+- flattened, sequence-stable AIIngestionRecord generation
+- JSON/Markdown quality-report interface consumable by HQ Golden Gate
 
-Required calibration checks:
+## Phase 5 — Cross-lane Review/Recovery compatibility — READY FOR FINAL INTEGRATION
+Worker 3 emits stable issue codes, page IDs, sequence values, needs-review state and source lineage. ReviewCore may map those values during final integration. Worker 3 does not redefine Shared Contract and does not wait for another lane.
+
+## Phase 6 — Long-run regression compatibility — READY FOR FINAL INTEGRATION
+PackageValidation is stateless over a completed package and can be run after 200-page LongRun output. Required final-integration checks are no silent page loss, no duplicate output after resume, stable sequence ordering, and zero package-integrity errors.
+
+## Phase 7 — HQ Golden calibration — POST-INTEGRATION / HQ OWNED
+HQ supplies canonical real-book inputs and runs the integrated pipeline. Worker 3 owns targeted fixes if Golden results expose PageAudit/PackageValidation/PackageQuality defects. Golden dataset absence or SHA mismatch is never a Worker BLOCKED_HUMAN condition.
+
+Required Golden checks:
 - known duplicate detection precision/recall
 - known reversal detection precision/recall
 - false missing-page rate
 - ordering accuracy after auto-fix
-- package page count/order/id correspondence
-- PDF vs manifest page-count equality
+- package count/order/page_id/image/text correspondence
+- searchable PDF page count and text-layer order
+- OCR-review correctness on vertical/horizontal/mixed pages
+- AI-ingestion lineage completeness
 
-## Phase 5 — Review Queue integration — CROSS-LANE
-Confirm PageAudit and PackageValidation issue IDs survive into ReviewCore without losing source page ID, original order, image reference, or reason code. Do not redefine shared contract from Worker 3.
+## Exit state for this lane
+Non-Golden lane exit requires:
+- PackageValidation fixtures PASS
+- PackageQuality fixtures PASS
+- no Shared Contract modification
+- final LANE-3 Evidence saved
+- final PR open toward `scanner-parity/integration`
 
-## Phase 6 — 200-page integrated regression
-Re-run page integrity and package validation on long-run output after LongRun and PipelineOCR are merged. Confirm no duplicate generation after resume, no silent page loss, and stable package ordering.
-
-## Phase 7 — Final closure loop
-Repeat: HQ Golden Gate -> defect attribution -> targeted Worker 3 fix -> fixture regression -> integration -> HQ Golden rerun.
-
-Exit only when:
-- no unresolved Worker 3 defect remains
-- BookPackage integrity report has zero errors on accepted Golden output
-- ordering target is satisfied
-- duplicate target is satisfied
-- HQ Golden Gate owns and records final acceptance
+Project-wide final acceptance additionally requires HQ Golden Gate to record the real-book result and any Worker 3-attributed defect to be fixed and rerun.
