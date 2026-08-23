@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "provider-route-index.private.schema.json",
+  "title": "Lane 1 E06 Private Provider Route Evidence Index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "private", "routes"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "private": {"const": true},
+    "routes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["evidence"],
+        "properties": {
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["e01", "e03", "e04", "e05", "capacity"],
+            "properties": {
+              "e01": {"type": ["string", "null"]},
+              "e03": {"type": ["string", "null"]},
+              "e04": {"type": ["string", "null"]},
+              "e05": {"type": ["string", "null"]},
+              "capacity": {"type": ["string", "null"]}
+            }
+          }
+        }
+      }
+    }
+  }
+}
