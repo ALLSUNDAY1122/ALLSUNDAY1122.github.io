@@ -100,7 +100,7 @@ public protocol PDFTextLayerInspecting: Sendable {
     func pageTexts(at url: URL) throws -> [String]
 }
 
-public enum PDFTextLayerInspectorError: Error {
+public enum PDFTextLayerInspectorError: Error, Equatable {
     case unsupported
     case unreadable
 }
