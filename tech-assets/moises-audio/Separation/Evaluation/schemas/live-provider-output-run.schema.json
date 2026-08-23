@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project.invalid/moises/separation/live-provider-output-run.schema.json",
+  "title": "Separation live provider output run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "evidence_state", "project_id", "job_id", "provider", "quality_profile", "requested_roles", "timing_ms", "cost", "retention", "outputs", "generated_at"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "project_id": {"type": "string", "format": "uuid"},
+    "job_id": {"type": "string", "format": "uuid"},
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "model_name", "model_version"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "model_name": {"type": "string", "minLength": 1},
+        "model_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "quality_profile": {"type": "string", "minLength": 1},
+    "requested_roles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "timing_ms": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "upload": {"type": ["integer", "null"], "minimum": 0},
+        "queue": {"type": ["integer", "null"], "minimum": 0},
+        "inference": {"type": ["integer", "null"], "minimum": 0},
+        "download": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["currency", "total", "basis", "is_actual"],
+      "properties": {
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"},
+        "total": {"type": "number", "minimum": 0},
+        "units": {"type": ["number", "null"], "minimum": 0},
+        "unit_name": {"type": ["string", "null"], "minLength": 1},
+        "basis": {"type": "string", "minLength": 1},
+        "is_actual": {"type": "boolean"}
+      },
+      "allOf": [
+        {
+          "if": {"required": ["units"], "properties": {"units": {"type": "number"}}},
+          "then": {"required": ["unit_name"], "properties": {"unit_name": {"type": "string"}}}
+        }
+      ]
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["local_policy"],
+      "properties": {
+        "vendor_asset_expires_at": {"type": ["string", "null"], "format": "date-time"},
+        "vendor_output_expires_at": {"type": ["string", "null"], "format": "date-time"},
+        "vendor_delete_requested_at": {"type": ["string", "null"], "format": "date-time"},
+        "vendor_delete_confirmed_at": {"type": ["string", "null"], "format": "date-time"},
+        "local_policy": {"enum": ["untilProjectDelete", "explicitExpiry", "manualDelete"]},
+        "local_expires_at": {"type": ["string", "null"], "format": "date-time"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"local_policy": {"const": "explicitExpiry"}}},
+          "then": {"required": ["local_expires_at"], "properties": {"local_expires_at": {"type": "string"}}}
+        }
+      ]
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["stem_id", "role", "download_url", "expires_at", "container", "sample_rate_hz", "channels", "frame_count", "duration_seconds"],
+        "properties": {
+          "stem_id": {"type": "string", "format": "uuid"},
+          "role": {"type": "string", "minLength": 1},
+          "download_url": {"type": "string", "format": "uri", "pattern": "^https://"},
+          "expires_at": {"type": "string", "format": "date-time"},
+          "container": {"const": "wav"},
+          "sample_rate_hz": {"type": "number", "minimum": 8000, "maximum": 384000},
+          "channels": {"type": "integer", "minimum": 1, "maximum": 64},
+          "frame_count": {"type": "integer", "minimum": 1},
+          "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+          "expected_byte_count": {"type": ["integer", "null"], "minimum": 1},
+          "expected_sha256": {"type": ["string", "null"], "pattern": "^(sha256:)?[0-9a-fA-F]{64}$"}
+        }
+      }
+    },
+    "generated_at": {"type": "string", "format": "date-time"}
+  }
+}
