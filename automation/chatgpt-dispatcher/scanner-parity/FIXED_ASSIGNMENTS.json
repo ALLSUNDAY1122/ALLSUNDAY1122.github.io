@@ -1,0 +1,33 @@
+{
+  "project": "書籍スキャナー同等化｜動画式ブックスキャナー＋AIデータ化",
+  "mode": "FIXED_WAVE",
+  "active": true,
+  "wave": 3,
+  "integration_epoch": 2,
+  "integration_head": "45e420e9befb52ccb1b26837f3c7fd41078701c3",
+  "assigned_at": "2026-08-23T15:49:00+09:00",
+  "owner": "HQ",
+  "rule": "active=true の間、各Workerは自分に割り当てられたTaskだけをclaimする。別WorkerのTaskをclaimしてはならない。Task完了後も次の固定割当が発行されるまで勝手に別Taskをclaimしない。",
+  "assignments": {
+    "worker1": {
+      "task_id": "SCAN-009",
+      "title": "PageAudit→OCRExport→BookPackage E2E Bridge",
+      "reason": "SCAN-004 OCR/Export と SCAN-007 Apple SDK の実装経験を継続利用"
+    },
+    "worker2": {
+      "task_id": "SCAN-011",
+      "title": "Privacy Static Audit｜書籍画像・OCRデータフロー監査",
+      "reason": "独立した静的監査レーンとして他3実装レーンとResource Lock競合なし"
+    },
+    "worker3": {
+      "task_id": "SCAN-010",
+      "title": "BookPackage Integrity Verifier｜PDF/Text/Manifest整合監査",
+      "reason": "SCAN-003 Page Audit と SCAN-005品質計測・検証の経験を継続利用"
+    },
+    "worker4": {
+      "task_id": "SCAN-012",
+      "title": "Review Queue Core｜低信頼・失敗ページの修復Decision Model",
+      "reason": "SCAN-006 Long-run/Recovery の失敗隔離・再開設計を継続利用"
+    }
+  }
+}
