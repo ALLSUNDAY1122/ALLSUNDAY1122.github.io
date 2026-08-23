@@ -63,7 +63,7 @@ Semantic overlap guards reject aggregate/sub-stem combinations that would create
 
 ### `Separation/Server/advanced_capabilities.py`
 
-Adds:
+Adds the low-level account capability layer:
 
 - strict parser for AudioShake `GET /models` response;
 - account access gating (`enabled` only);
@@ -72,20 +72,37 @@ Adds:
 - provider capability construction compatible with the A11 `ProviderCapabilities` contract;
 - optional max-target policy and semantic incompatible-role sets;
 - exact provider-output-set normalization back to canonical roles;
-- `AdvancedAudioShakeAdapter`, compatible with A06 provider orchestration;
 - control-plane model discovery before source upload;
 - disabled/gated model rejection before any billed `POST /tasks`;
 - public NON-PARITY capability snapshot;
 - AudioShake quality capability remains `standard` only; Hi-Fi is explicitly `UNVERIFIED_FAIL_CLOSED`.
 
-This adapter deliberately bypasses the old core-only target allowlist only after live account model discovery proves the requested advanced models are enabled. The A06/A07 logical-job and duplicate-billing controls remain upstream and unchanged.
+### `Separation/Server/canonical_advanced_provider.py`
+
+Final A06/A07-facing advanced-provider boundary.
+
+A final connection audit found that a raw provider-model adapter could otherwise expose AudioShake IDs such as `keys` or `wind` to the provider-neutral A06 orchestrator. That would weaken the A11 contract even if the vendor call itself were correct.
+
+The canonical wrapper closes that gap:
+
+- A06 submits canonical roles such as `guitar` and `piano_keys`.
+- Translation to AudioShake `guitar` / `keys` happens only at the provider POST boundary.
+- A gated or unavailable role fails before `POST /tasks`.
+- Provider task-state targets are translated back from provider model IDs to canonical roles before A06 observes them.
+- An unknown provider output model fails closed instead of leaking a vendor identifier into project-visible state.
+- Reconciliation metadata remains canonical/provider-neutral.
+- model discovery occurs before media upload so an unusable account fails before user content transfer.
+
+The older low-level adapter remains an internal provider-model helper only; Lane integration must use `CanonicalAdvancedAudioShakeAdapter`.
+
+A06/A07 logical-job identity and duplicate-billing controls remain upstream and unchanged.
 
 ## Machine verification
 
-Local reconstruction against the exact A12 files written to the Worker branch:
+Local reconstruction against the exact A12 implementation/evidence set:
 
 - Python compile/import path: PASS.
-- `test_advanced_capabilities.py`: 28 tests, 0 failures.
+- `test_advanced_capabilities.py` + `test_canonical_advanced_provider.py`: **37 tests, 0 failures**.
 
 Coverage includes:
 
@@ -106,9 +123,14 @@ Coverage includes:
 15. missing/extra/duplicate provider output rejection;
 16. discovery-before-upload ordering;
 17. unenabled model never reaching task POST;
-18. enabled guitar/keys advanced task creation;
-19. discovery/network failure fail-close;
-20. corrupt catalog fail-close.
+18. enabled advanced task creation;
+19. canonical-role ingress at the A06 boundary;
+20. provider-model translation only at POST;
+21. provider output normalization back to canonical roles;
+22. unknown provider output model fail-close;
+23. canonical metadata preservation;
+24. discovery/network failure fail-close;
+25. corrupt catalog fail-close.
 
 Machine-readable scenario ledger:
 `Processing/Tests/L1-A12_ADVANCED_CAPABILITY_MATRIX.json`.
@@ -128,4 +150,4 @@ A12 does not prove:
 
 `parity_state = NON_PARITY_EVIDENCE_ONLY`.
 
-P004/P005 remain `MISSING`. A12 closes the Lane 1 architecture/capability-discovery gap so newly verified current-iPhone roles or a future Hi-Fi-capable provider can be added inside Lane 1 without a Shared/App contract redesign, but live provider, real-audio and current-iPhone differential evidence remain mandatory.
+P004/P005 remain `MISSING`. A12 closes the Lane 1 architecture/capability-discovery and vendor-boundary gaps so newly verified current-iPhone roles or a future Hi-Fi-capable provider can be added inside Lane 1 without a Shared/App contract redesign, but live provider, real-audio and current-iPhone differential evidence remain mandatory.
