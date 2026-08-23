@@ -222,22 +222,20 @@ extension SeparationOutputAssurance {
         let incoming = incomingDirectory(projectID: projectID, jobID: jobID)
         let final = finalDirectory(projectID: projectID)
         let backup = backupDirectory(projectID: projectID, jobID: jobID)
-        let journal = try loadCommitJournal(projectID: projectID, jobID: jobID)
         let ledger = try await ledgerStore.load(projectID: projectID, jobID: jobID)
 
+        // With no authoritative ledger, no new transaction can be published. Preserve an orphan
+        // backup because it may be the only previous user result; otherwise remove all job-local
+        // scratch, including stale staging that may contain downloaded audio from a crash before save.
         guard let ledger else {
             if fileManager.fileExists(atPath: backup.path) {
                 throw failure("SEP_COMMIT_RECOVERY_LEDGER_MISSING", false)
             }
-            do {
-                for target in [incoming, commitJournalURL(projectID: projectID, jobID: jobID)] where fileManager.fileExists(atPath: target.path) {
-                    try fileManager.removeItem(at: target)
-                }
-            } catch {
-                throw failure("SEP_COMMIT_SCRATCH_CLEANUP_FAILED", true)
-            }
+            try cleanupTransactionScratch(projectID: projectID, jobID: jobID, includeStaging: true)
             return nil
         }
+
+        let journal = try loadCommitJournal(projectID: projectID, jobID: jobID)
 
         if ledger.state == .deleted {
             if fileManager.fileExists(atPath: backup.path) {
