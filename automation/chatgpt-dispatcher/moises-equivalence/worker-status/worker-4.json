@@ -7,10 +7,15 @@
   "work_branch": "moises/wp4-analysis-platform",
   "state": "IN_PROGRESS",
   "current_bundle": null,
-  "completed_bundles": ["L4-M01", "L4-M02", "L4-M03", "L4-M04"],
+  "completed_bundles": [
+    "L4-M01",
+    "L4-M02",
+    "L4-M03",
+    "L4-M04"
+  ],
   "epoch_contract_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
   "base_integration_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
-  "head_sha": "0da56b8a31608dda55158708d6e886dd6fe23c7f",
+  "head_sha": "a1c90c681837ba018410c0247b78952641f09ddc",
   "existing_unintegrated_commits": [
     "1811f335e121783daf00a5850b3b3bccdf75ca91",
     "1e55469c088b9724905b9df64989db2310f329ba",
@@ -63,7 +68,12 @@
     "056f1c5a3e815932fb044ae7f736b6c8dead37e7",
     "9b5c68fbfc4dafc038d28a0c38f45b25998d3c79",
     "38dc9b436cc8023a4183385f546e907a45b503df",
-    "0da56b8a31608dda55158708d6e886dd6fe23c7f"
+    "0da56b8a31608dda55158708d6e886dd6fe23c7f",
+    "6dec9c8197748000e3cedfb8a00378b62ec5a963",
+    "a1db437f822d362d55840ec9ca0e97ae46a779b9",
+    "f62bf97820777dd5898973ceeae11ed31f1ec992",
+    "f6dd4082027a1602e025bf316bcba395be405c78",
+    "a1c90c681837ba018410c0247b78952641f09ddc"
   ],
   "commits": [
     "1811f335e121783daf00a5850b3b3bccdf75ca91",
@@ -117,15 +127,20 @@
     "056f1c5a3e815932fb044ae7f736b6c8dead37e7",
     "9b5c68fbfc4dafc038d28a0c38f45b25998d3c79",
     "38dc9b436cc8023a4183385f546e907a45b503df",
-    "0da56b8a31608dda55158708d6e886dd6fe23c7f"
+    "0da56b8a31608dda55158708d6e886dd6fe23c7f",
+    "6dec9c8197748000e3cedfb8a00378b62ec5a963",
+    "a1db437f822d362d55840ec9ca0e97ae46a779b9",
+    "f62bf97820777dd5898973ceeae11ed31f1ec992",
+    "f6dd4082027a1602e025bf316bcba395be405c78",
+    "a1c90c681837ba018410c0247b78952641f09ddc"
   ],
   "autonomous_wave": {
-    "wave_id": "L4-W06",
-    "goal": "Harden tempo and beat analysis for half/double tempo, gradual tempo drift, weak percussion, syncopated onset energy and common meter ambiguity.",
-    "rationale": "MOI-P009 remains MISSING and W05 removed the evaluation-infrastructure blocker. The highest-value lane-local next step was reducing known tempo correctness failures that can be exercised without rights-cleared external audio.",
-    "done_when": "Production tempo candidate selection and beat tracking are materially hardened; octave/meter ambiguity fails closed; weak percussion does not reintroduce sustained-tone false positives; deterministic adversarial tests, benchmark evidence and validation are committed.",
-    "result": "COMPLETE_NON_PARITY: replaced fixed-period beat alignment with adaptive tracking and robust median tracked BPM, added joint autocorrelation+grid/onset-coverage scoring, subharmonic suppression, common-ratio ambiguity confidence gating and sustained-tone transient-contrast rejection. Seven adversarial cases pass in the targeted executable harness. Real-audio, Apple-device and current-Moises evidence remain external/HQ gates.",
-    "completed_at": "2026-08-23T17:01:00+09:00"
+    "wave_id": "L4-W07",
+    "goal": "Harden musical-key analysis for relative major/minor ambiguity, rooted modal material, strong modulation and confidence calibration without changing the frozen MusicalKey contract.",
+    "rationale": "MOI-P011 remains MISSING. W05 provides the real-audio gate and W06 addressed tempo; the highest-value Lane 4 correctness gap that can be reduced without external audio is preventing confident but wrong single-key labels on ambiguous/modal/modulating material.",
+    "done_when": "Clear major/minor/transposed keys remain decided; relative ambiguity, strong modal signatures and strong modulation fail closed; a short foreign-key intro does not override the body key; confidence thresholding, deterministic adversarial XCTest, machine-readable evidence and validation are committed.",
+    "result": "COMPLETE_NON_PARITY: added profile+triad ranking, explicit relative-key ambiguity gating, rooted Dorian/Phrygian/Lydian/Mixolydian/Locrian diagnostics, temporal half-track modulation rejection and recalibrated confidence. Portable production harness passes 8/8 W07 fixtures; six XCTest methods are committed. Real Golden MIR/current-Moises/device evidence remains external/HQ-gated.",
+    "completed_at": "2026-08-23T17:32:00+09:00"
   },
   "tests": [
     "L4-M01 portable HostCore build PASS; reconstructed baseline regression 21/21 PASS",
@@ -143,7 +158,11 @@
     "L4-W06 150 BPM alternating accents -> 150.0 BPM, confidence 0.8423, Beat F@70ms 1.0",
     "L4-W06 100->130 BPM drift -> tracked median 115.3846 BPM, confidence 0.3720, Beat F@70ms 0.9828",
     "L4-W06 96 BPM weak percussion -> 96.7742 BPM, confidence 0.6938, Beat F@70ms 0.9744; equal-subdivision meter ambiguity and sustained tone -> nil",
-    "L4-W06 committed XCTest file adds 7 deterministic cases; complete canonical swift test remains HQ/integrated-checkout gate"
+    "L4-W06 committed XCTest file adds 7 deterministic cases; complete canonical swift test remains HQ/integrated-checkout gate",
+    "L4-W07 production MusicalKeyAnalyzer compiled and executed against frozen-contract-shaped stubs on Swift 6.2.1 Linux",
+    "L4-W07 portable adversarial harness PASS 8/8: clear C major/A minor/D major retained; relative ambiguity, rooted D Dorian, rooted G Mixolydian and C->E modulation -> nil; 2s G intro + 10s C body -> C major",
+    "L4-W07 clear C major/A minor/D major confidence ~0.999996; short G intro/C body confidence 0.782104; portable RTF ~0.0050-0.0068",
+    "L4-W07 committed XCTest adds 6 deterministic methods including confidence-threshold fail-closed; XCTest source parse PASS; complete canonical swift test remains HQ/integrated-checkout gate"
   ],
   "evidence": [
     "L4-M01 through L4-M04 remain complete against frozen contract SHA be1c84314db182d6eee5097de34e017af1a4a7de",
@@ -154,14 +173,19 @@
     "L4-W06 failure-driven transientContrast guard prevents sustained tonal frame-RMS beating from becoming a fake tempo while preserving the weak-percussion fixture",
     "L4-W06 machine-readable NON_PARITY evidence saved at Analysis/benchmarks/L4-W06_TEMPO_BEAT_ADVERSARIAL.json",
     "L4-W06 durable validation saved at Tests/L4-W06_VALIDATION.md",
-    "Epoch-base compare after L4-W06: branch ahead 52, behind 0; every changed path remains inside Analysis/**, Package.swift, Tests/** or iOS/**",
-    "MOI-P009 remains MISSING because all W06 accuracy evidence is synthetic/adversarial rather than rights-cleared real-audio and no current-Moises differential exists"
+    "L4-W07 adds explicit relative-key ambiguity and temporal modulation gates while preserving dominant-body-key behavior",
+    "L4-W07 rooted modal diagnostics fail closed for Dorian/Mixolydian-style signatures instead of forcing major/minor until current-iPhone reference vocabulary is verified",
+    "L4-W07 confidence now combines normalized candidate separation, tonic-triad evidence and temporal agreement",
+    "L4-W07 machine-readable NON_PARITY evidence saved at Analysis/benchmarks/L4-W07_KEY_ADVERSARIAL.json",
+    "L4-W07 durable validation saved at Tests/L4-W07_VALIDATION.md",
+    "Epoch-base compare after L4-W07: branch ahead 57, behind 0; every changed path remains inside Analysis/**, Package.swift, Tests/** or iOS/**",
+    "MOI-P009/P011/P013/P016 remain MISSING because no rights-cleared real-audio/current-Moises differential has been accepted by HQ"
   ],
   "known_gaps": [
     "Rights-safe Golden MIR infrastructure exists, but no rights-cleared multi-genre real-audio corpus with trustworthy ground truth has been supplied/run; P009/P011/P013/P016 cannot be promoted",
-    "Tempo synthetic hardening now covers half/double, gradual drift, weak percussion, syncopated rate and common meter ambiguity, but live drummer/rubato/swing/varied-meter behavior and authoritative beat phase remain unverified on real audio",
-    "Modal/modulating key behavior remains unverified and is the next highest-value Lane 4 algorithm-hardening target",
-    "Complex chord vocabulary/inversions and varied real-world song structures remain unverified",
+    "Tempo synthetic hardening covers half/double, gradual drift, weak percussion, syncopated rate and common meter ambiguity, but live drummer/rubato/swing/varied-meter behavior and authoritative beat phase remain unverified on real audio",
+    "Key synthetic hardening covers clear major/minor, relative-key ambiguity, rooted Dorian/Mixolydian signatures, obvious modulation and short-intro dominance; real modal vocabulary, subtler modulation and current-Moises behavior remain unverified",
+    "Complex chord vocabulary/inversions and current-iPhone chord label semantics are now the next highest-value Lane 4 algorithm-hardening target",
     "Current section functional labels remain conservative; exact current-iPhone Moises section vocabulary and unknown semantics require reference verification",
     "A fresh full canonical checkout regression cannot run in the Worker Linux container because github.com DNS is unavailable",
     "Actual XcodeGen/Xcode Simulator build, four-Lane compile, physical-iPhone latency/RSS/thermal/battery/long-track behavior and playback-clock synchronization remain HQ Late Integration gates",
@@ -172,9 +196,9 @@
     "Bind the final app-owned file/decode path to AnalysisBenchmarkSignalLoading and return SHA-256 for the exact source file so the Golden MIR gate can execute real evidence without weakening checksum verification.",
     "Run a fresh canonical SwiftPM regression, XcodeGen/Xcode Simulator gate and physical-iPhone tests before treating Lane 4 evidence as product evidence.",
     "Supply/approve a rights-cleared multi-genre Golden MIR corpus and trustworthy BPM/beat/key/chord/section ground truth, then run P009/P011/P013/P016 and current-Moises differential.",
-    "Verify current iPhone Moises chord vocabulary and section functional-label/unknown behavior before expanding or narrowing the product-required vocabulary."
+    "Verify current iPhone Moises key/modal vocabulary, chord vocabulary and section functional-label/unknown behavior before expanding or narrowing product-required labels."
   ],
-  "next_priority": "Autonomous Wave L4-W07: musical-key hardening for modal ambiguity, relative major/minor, modulation and confidence calibration using deterministic adversarial fixtures, while preserving current frozen MusicalKey contract and leaving real Golden MIR/current-Moises judgment external-gated.",
-  "last_updated": "2026-08-23T17:01:00+09:00",
+  "next_priority": "Autonomous Wave L4-W08: chord-vocabulary and inversion hardening for seventh/sus/diminished/augmented/inversion ambiguity, label normalization and unknown/coverage behavior, while keeping current-iPhone vocabulary expansion fail-closed until HQ reference verification.",
+  "last_updated": "2026-08-23T17:32:00+09:00",
   "writer_policy": "Only Moises-Worker-4 may update this status file. Global Queue is not used for Worker dispatch in v4."
 }
