@@ -84,6 +84,7 @@ struct L2AW13SelfCheck {
         try expect(benchBarrier?.affectedProjectUUIDs.contains(badProject) == true, "benchmark corrupt shard not found")
         scenarios += 1
 
-        print("L2_AW13_SELF_TEST_PASS scenarios=\(scenarios) shards=\(benchmarkCount + 1) elapsed_seconds=\(String(format: \"%.6f\", elapsed))")
+        let elapsedText = String(format: "%.6f", elapsed)
+        print("L2_AW13_SELF_TEST_PASS scenarios=\(scenarios) shards=\(benchmarkCount + 1) elapsed_seconds=\(elapsedText)")
     }
 }
