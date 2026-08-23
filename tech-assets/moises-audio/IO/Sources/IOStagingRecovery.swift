@@ -3,6 +3,7 @@ import Foundation
 public enum IOStagingRecoveryError: Error, Equatable, Sendable {
     case invalidGraceInterval
     case enumerationFailed
+    case ownershipInspectionFailed
     case cleanupFailed
 }
 
@@ -14,7 +15,8 @@ public struct IOStagingRecovery: Sendable {
     }
 
     /// Removes only stale direct children of the app-owned Staging directory.
-    /// A grace interval prevents a concurrent/just-interrupted import from being mistaken for an orphan.
+    /// Active ownership leases always win over mtime so a long-running import cannot be swept.
+    /// Expired/crash-abandoned leases are converged before the corresponding stale file is removed.
     /// The method never traverses into a staged directory or follows a symlink target.
     @discardableResult
     public func sweep(
@@ -26,6 +28,11 @@ public struct IOStagingRecovery: Sendable {
             throw IOStagingRecoveryError.invalidGraceInterval
         }
         try fileStore.prepareDirectories(fileManager: fileManager)
+        let ownership = IOStagingOwnershipRegistry(
+            fileStore: fileStore,
+            storageReserveBytes: 0,
+            fileManager: fileManager
+        )
 
         let candidates: [URL]
         do {
@@ -53,11 +60,19 @@ public struct IOStagingRecovery: Sendable {
                 continue
             }
 
-            guard values.isRegularFile == true || values.isSymbolicLink == true else {
-                continue
-            }
-            guard let modified = values.contentModificationDate, modified <= cutoff else {
-                continue
+            guard values.isRegularFile == true || values.isSymbolicLink == true else { continue }
+            guard let modified = values.contentModificationDate, modified <= cutoff else { continue }
+
+            do {
+                if try ownership.isProtected(
+                    stagingFilename: candidate.lastPathComponent,
+                    now: now,
+                    corruptRecordGrace: graceInterval
+                ) {
+                    continue
+                }
+            } catch {
+                throw IOStagingRecoveryError.ownershipInspectionFailed
             }
 
             do {
