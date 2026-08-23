@@ -3,123 +3,48 @@
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_pr": 4431,
-  "integration_epoch": 11,
+  "integration_epoch": 12,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "EPOCH11_L1_A17_A18_L2_AW14_AW15_CANONICAL_PORTABLE_126_PASS_FINAL_APPLE_REAL_AUDIO_GATES_PENDING",
+  "baseline_state": "EPOCH12_L3_AW14_AW15_L4_W17_W18_CANONICAL_PORTABLE_144_PASS_FINAL_APPLE_REAL_AUDIO_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
   "worker_claiming": "DISABLED",
   "hq_release_required_between_waves": false,
   "hq_task_replenishment": "DISABLED",
-  "migration": {
-    "from_schema_version": 3,
-    "migrated_at": "2026-08-23T16:28:00+09:00",
-    "reason": "Finite HQ-authored Macro Bundle supply caused workers to stop after consuming the list. Planning now belongs to each Worker inside its exclusive lane; HQ only owns boundaries, shared contracts, integration and PARITY.",
-    "historical_bundles": "Epoch-2 M01-M04 remain preserved in worker status and Git history as completed bootstrap work, not as the continuing task source."
+  "history": {
+    "bootstrap": {"L1":"48cc74e9e192813fa6fafc0c83c8ed882cf83578","L3":"b586c3386af0183881741998d3691bb2a282fbcf","L4":"f218be65facd8e3f32342daf5e77545dd8924f6a","L2":"a6fe8e97b3ec7aede2ecd826e67de99714e88c98"},
+    "epoch4": {"L1":"A06-A10","L3":"AW01-AW05","L4":"W05-W09","commit":"d5ee0546efa0d99ded546c2c8a0f1583d5b6c867","L2_commit":"e2af663bc7fa4e6dd59cd9e5c6093351a9a93e41"},
+    "epoch5": {"L3":"AW06-AW07","commit":"14084e4342b41542ab2a06865d81cd5545488963"},
+    "epoch6": {"L1":"A11-A12","L2":"AW08-AW09","L4":"W10-W11","commit":"d8c0df3a97da57bfbce57f5e848f88024818a3dd","hq_fix":"e1cd2444a291d5d3a9aed338ad2a525c29a16e1f"},
+    "epoch7": {"L3":"AW08-AW09","commit":"0fedd47642f7c436edef2aec8c6e58b193b8c68a"},
+    "epoch8": {"L1":"A13-A14","L2":"AW10-AW11","commit":"daf7fba65ea5802489a4b56ced9697eab65148f2"},
+    "epoch9": {"L3":"AW10-AW11","L4":"W12-W14","commit":"5c3c26f7515d231fe84e0f3e910613818d4fe5ca","run":32650343719,"tests":112},
+    "epoch10": {"L1":"A15-A16","L2":"AW12-AW13","L4":"W15-W16","commit":"634573a147f48226462d5fd29063dfa760ccdca1","L3":"AW12-AW13","L3_commit":"368527e51408e47d2efe7d535e91f3f98176925c","run":32652340100,"tests":126},
+    "epoch11": {"L1":"A17-A18","L2":"AW14-AW15","commit":"55d636e54b99fd0bd70cb370a72191829ab5f896","run":32654418110,"tests":126,"locks":"dc4e32a0367311fc77f0cfd120441b5491b414b8"},
+    "epoch12": {"L3":"AW14-AW15","L4":"W17-W18","commit":"1ca2ec9fbca17ce94d5f3b2fff85c93004b9fd8a","run":32656141958,"run_number":78,"tests":144,"unhandled":126,"locks":"11683699f618a5db20fb1e68ff8803700754b59b"}
   },
-  "verified_history": [
-    {"task_id":"MOI-HQ-001","status":"VERIFIED"},
-    {"task_id":"MOI-REF-001","status":"VERIFIED","integration_pr":4439},
-    {"task_id":"MOI-SEP-LIC-001","status":"VERIFIED","integration_pr":4440},
-    {"task_id":"MOI-SEP-001","status":"VERIFIED","integration_pr":4444},
-    {"task_id":"MOI-BLD-001","status":"VERIFIED","integration_pr":4436},
-    {"task_id":"MOI-QA-001","status":"VERIFIED","integration_pr":4438},
-    {"task_id":"MOI-DSP-R001","status":"VERIFIED","integration_pr":4441},
-    {"task_id":"MOI-AN-001","status":"VERIFIED","integration_pr":4437},
-    {"task_id":"MOI-IO-R001","status":"VERIFIED","integration_pr":4442},
-    {"task_id":"MOI-REF-002","status":"VERIFIED","integration_pr":4448},
-    {"task_id":"MOI-ARCH-001","status":"VERIFIED","integration_pr":4443},
-    {"task_id":"MOI-BLD-002","status":"VERIFIED","integration_pr":4445},
-    {"task_id":"MOI-LIB-R001","status":"VERIFIED","integration_pr":4446},
-    {"task_id":"MOI-HQ-ARCH-002","status":"VERIFIED","integration_pr":4447},
-    {"task_id":"MOI-IO-001","status":"VERIFIED","integration_pr":4449},
-    {"task_id":"MOI-PROC-001","status":"VERIFIED","integration_pr":4454},
-    {"task_id":"MOI-BLD-003","status":"VERIFIED","integration_pr":4455}
-  ],
-  "checkpoint_integrations": [
-    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"epoch2 M01-M04","semantic_pr":4508,"merge_sha":"48cc74e9e192813fa6fafc0c83c8ed882cf83578","scope":["Separation/**","Processing/**"],"parity_promoted":false},
-    {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"epoch2 M01-M04","semantic_pr":4509,"merge_sha":"b586c3386af0183881741998d3691bb2a282fbcf","scope":["Playback/**","DSP/**"],"parity_promoted":false},
-    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"epoch2 M01-M04","semantic_pr":4510,"merge_sha":"f218be65facd8e3f32342daf5e77545dd8924f6a","scope":["Analysis/**","Tests/**","iOS/**","Package.swift"],"parity_promoted":false},
-    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"epoch2 M01-M04 + L2-AW05","semantic_pr":4520,"merge_sha":"a6fe8e97b3ec7aede2ecd826e67de99714e88c98","scope":["IO/**","Library/**"],"parity_promoted":false},
-    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A06 through L1-A10","semantic_commit":"d5ee0546efa0d99ded546c2c8a0f1583d5b6c867","scope":["Separation/**","Processing/**"],"parity_promoted":false},
-    {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW01 through L3-AW05","semantic_commit":"d5ee0546efa0d99ded546c2c8a0f1583d5b6c867","scope":["Playback/**","DSP/**"],"parity_promoted":false},
-    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"L4-W05 through L4-W09","semantic_commit":"d5ee0546efa0d99ded546c2c8a0f1583d5b6c867","scope":["Analysis/**","Tests/**","iOS/**","Package.swift"],"integration_resolution":"preserved HQ chord-section regression fix from 4b56de63e2c69285828b99f535d72632d7671d5c","parity_promoted":false},
-    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"L2-AW06 through L2-AW07","semantic_commit":"e2af663bc7fa4e6dd59cd9e5c6093351a9a93e41","scope":["IO/**"],"parity_promoted":false},
-    {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW06 through L3-AW07","semantic_commit":"14084e4342b41542ab2a06865d81cd5545488963","scope":["Playback/**"],"parity_promoted":false},
-    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A11 through L1-A12","semantic_commit":"d8c0df3a97da57bfbce57f5e848f88024818a3dd","scope":["Separation/**","Processing/**"],"parity_promoted":false},
-    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"L2-AW08 through L2-AW09","semantic_commit":"d8c0df3a97da57bfbce57f5e848f88024818a3dd","scope":["Library/**"],"parity_promoted":false},
-    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"L4-W10 through L4-W11","semantic_commit":"d8c0df3a97da57bfbce57f5e848f88024818a3dd","integration_fix_commit":"e1cd2444a291d5d3a9aed338ad2a525c29a16e1f","scope":["Analysis/**","Tests/**","Package.swift"],"parity_promoted":false},
-    {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW08 through L3-AW09","semantic_commit":"0fedd47642f7c436edef2aec8c6e58b193b8c68a","scope":["Playback/**"],"integration_note":"Integrated exactly 14 AW08/AW09 Playback source/test/evidence files; no Worker branch merge.","parity_promoted":false},
-    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A13 through L1-A14","semantic_commit":"daf7fba65ea5802489a4b56ced9697eab65148f2","scope":["Separation/**","Processing/**"],"integration_note":"Deep WAV/artifact integrity plus atomic commit/relaunch hardening.","parity_promoted":false},
-    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"L2-AW10 through L2-AW11","semantic_commit":"daf7fba65ea5802489a4b56ced9697eab65148f2","scope":["Library/**"],"integration_note":"Durable export-registration relaunch recovery and bounded large-library enumeration preparation.","parity_promoted":false},
-    {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW10 through L3-AW11","semantic_commit":"5c3c26f7515d231fe84e0f3e910613818d4fe5ca","scope":["Playback/**"],"integration_note":"Cepstral/spectral-envelope proxy plus combined Playback/DSP recovery-generation stress.","parity_promoted":false},
-    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"L4-W12 through L4-W14","semantic_commit":"5c3c26f7515d231fe84e0f3e910613818d4fe5ca","scope":["Analysis/**","Tests/**","Package.swift"],"integration_note":"Cooperative cancellation, bounded Song Section complexity and over-segmentation correction; preserved Epoch6 sustained-tone fail-closed fix.","parity_promoted":false},
-    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A15 through L1-A16","semantic_commit":"634573a147f48226462d5fd29063dfa760ccdca1","scope":["Separation/**","Processing/**"],"integration_note":"Long-track streaming/storage hardening and authoritative reconnect/relaunch recovery.","parity_promoted":false},
-    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"L2-AW12 through L2-AW13","semantic_commit":"634573a147f48226462d5fd29063dfa760ccdca1","scope":["Library/**"],"integration_note":"Maintenance projection scalability and lifecycle metadata quarantine/reconciliation barrier.","parity_promoted":false},
-    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"L4-W15 through L4-W16","semantic_commit":"634573a147f48226462d5fd29063dfa760ccdca1","scope":["Analysis/**","Tests/**","Package.swift"],"integration_note":"Snapshot cardinality/cancellation hardening and scalable product-aligned differential evaluator.","parity_promoted":false},
-    {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW12 through L3-AW13","semantic_commit":"368527e51408e47d2efe7d535e91f3f98176925c","scope":["Playback/**","DSP/**"],"integration_note":"Production generation coordinator plus unified same-PCM SHA-256 evidence receipt v2.","parity_promoted":false},
-    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A17 through L1-A18","semantic_commit":"55d636e54b99fd0bd70cb370a72191829ab5f896","scope":["Separation/**","Processing/**"],"integration_note":"Provider fault normalization/recovery policy plus privacy-safe allowlisted observability and redaction evidence.","parity_promoted":false},
-    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"L2-AW14 through L2-AW15","semantic_commit":"55d636e54b99fd0bd70cb370a72191829ab5f896","scope":["IO/**"],"integration_note":"Bounded public-URL download acquisition plus mutation-safe File Provider snapshot publication and handoff.","parity_promoted":false}
-  ],
-  "partial_canonical": [
-    {"family":"SEPARATION_PROCESSING","parity_rows":["MOI-P003","MOI-P004","MOI-P005","MOI-P020","MOI-P021","MOI-P024"],"state":"MISSING","canonical_through":"L1-A18","remaining":"A19+ autonomous work continues. Production credentials/terms/pricing/usage, authenticated provider behavior, rights-cleared real audio, current-Moises differential, integrated iPhone recovery/privacy and physical-device performance remain."},
-    {"family":"IO_LIBRARY","parity_rows":["MOI-P001","MOI-P002","MOI-P017","MOI-P018","MOI-P019","MOI-P020"],"state":"MISSING","canonical_through":"L2-AW15","remaining":"Apple Core Data/APFS/File Provider/security-scoped runtime, real codec/container matrix including WMA fallback, storage pressure/interruption/export/share and differential device evidence remain."},
-    {"family":"DSP_PLAYBACK","parity_rows":["MOI-P006","MOI-P007","MOI-P008","MOI-P010","MOI-P012","MOI-P014","MOI-P015"],"state":"MISSING","canonical_through":"L3-AW13","remaining":"L3-AW14 is a single post-checkpoint Wave and remains unintegrated. Selected Xcode/AVFAudio, physical iPhone timing/audio, rights-cleared current-Moises PCM differential, perceptual/formant evidence and listening remain."},
-    {"family":"IOS_ANALYSIS","parity_rows":["MOI-P009","MOI-P011","MOI-P013","MOI-P016","MOI-P021","MOI-P022"],"state":"MISSING","canonical_through":"L4-W16","remaining":"L4-W17 is a single post-checkpoint Wave and W18 is current. Rights-cleared real-audio MIR, paired current-Moises differential, selected Xcode/device build and physical-device cancellation/RSS/thermal/battery remain."}
-  ],
-  "lane_execution": [
-    {"lane_id":"LANE-1-SEPARATION-PROCESSING","worker_id":"Moises-Worker-1","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":true,"worker_may_advance_without_hq":true},
-    {"lane_id":"LANE-2-IO-LIBRARY","worker_id":"Moises-Worker-2","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":true,"worker_may_advance_without_hq":true},
-    {"lane_id":"LANE-3-PLAYBACK-DSP","worker_id":"Moises-Worker-3","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":true,"worker_may_advance_without_hq":true},
-    {"lane_id":"LANE-4-IOS-ANALYSIS","worker_id":"Moises-Worker-4","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":true,"worker_may_advance_without_hq":true}
-  ],
-  "autonomous_wave_policy": {
-    "merge_rule": "Do not merge every Wave. Workers accumulate meaningful lane-local waves; HQ semantic-integrates only coherent checkpoints with no known correctness regression.",
-    "current_unintegrated_snapshot": {
-      "lane1": "L1-A06 through L1-A18 canonical; L1-A19 current at latest status read.",
-      "lane2": "L2-AW06 through L2-AW15 canonical at Epoch11.",
-      "lane3": "L3-AW01 through L3-AW13 canonical; L3-AW14 complete single post-checkpoint Wave remains unintegrated.",
-      "lane4": "L4-W05 through L4-W16 canonical; L4-W17 complete single post-checkpoint Wave remains unintegrated; L4-W18 current."
-    }
+  "canonical_through": {"L1":"L1-A18","L2":"L2-AW15","L3":"L3-AW15","L4":"L4-W18"},
+  "current_unintegrated_snapshot": {
+    "L1":"L1-A19 complete single post-checkpoint Wave; L1-A20 current.",
+    "L2":"L2-AW16 complete single post-checkpoint Wave.",
+    "L3":"No post-Epoch12 completed Wave observed beyond AW15 at this read.",
+    "L4":"L4-W19 current."
   },
-  "hq_requests_status": {
-    "lane1": {"a15_a18_checkpoint_consumed_semantically":true,"production_provider_credentials_terms_pricing_usage":"PENDING_EXTERNAL","authenticated_advanced_model_access":"PENDING_EXTERNAL","current_iphone_custom_instrument_lock_map":"PENDING_REFERENCE_EVIDENCE","hifi_provider_mapping":"PENDING_AUTHORITATIVE_PROVIDER_EVIDENCE","integrated_observability_sink_retention_deletion":"PENDING_HQ_APP_INTEGRATION","parity_promotion":"NONE"},
-    "lane2": {"aw12_aw15_checkpoint_consumed_semantically":true,"apple_core_data_file_provider_device_suite":"PENDING_APPLE_RUNTIME","real_codec_fixture_matrix":"PENDING_APPLE_RUNTIME","wma_decoder_policy":"NATIVE_FIRST; IF_UNAVAILABLE REQUIRE COMMERCIALLY COMPATIBLE LICENSE-AUDITED DECODER; DO_NOT DROP WMA","storage_pressure_export_share_device_validation":"PENDING_APPLE_RUNTIME","parity_promotion":"NONE"},
-    "lane3": {"aw12_aw13_checkpoint_consumed_semantically":true,"aw14":"COMPLETE_POST_CHECKPOINT_SINGLE_WAVE_UNINTEGRATED","selected_xcode_avfaudio_compile":"PENDING_APPLE_RUNTIME","offline_real_pcm_execution":"PENDING_RIGHTS_CLEARED_APPLE_RUNTIME","physical_device_capture_and_listening":"PENDING_APPLE_RUNTIME_HUMAN_GATE","current_moises_pcm_differential":"PENDING_REFERENCE_EVIDENCE","parity_promotion":"NONE"},
-    "lane4": {"w15_w16_checkpoint_consumed_semantically":true,"w17":"COMPLETE_POST_CHECKPOINT_SINGLE_WAVE_UNINTEGRATED","w18":"IN_PROGRESS_AT_LATEST_STATUS_READ","selected_xcode_device_build":"PENDING_APPLE_RUNTIME","rights_cleared_mir_real_audio":"PENDING_RIGHTS_CLEARED_DATA","current_moises_analysis_differential":"PENDING_REFERENCE_EVIDENCE","physical_device_rss_thermal_battery":"PENDING_APPLE_RUNTIME","parity_promotion":"NONE"}
+  "epoch12_integration": {
+    "L3": {"scope":["DSP/**"],"source_head":"bb05aed65dc0f3abb98792f8d0c18c552ebb135e","note":"AW14 model-production generation differential + AW15 actor concurrency/cancellation hardening. Portable SwiftPM excludes DSP; lane-local evidence remains authoritative until Xcode/Apple runtime."},
+    "L4": {"scope":["Analysis/**","Tests/**","Package.swift"],"source_head":"665644f5e9f9f15c15fefd739f0fc664cbb33478","note":"W17 audited anti-masking aggregation + W18 paired non-inferiority comparator. No production tolerance invented; fail-closed until HQ-approved profile and real reference evidence."}
   },
-  "branch_hygiene": {
-    "worker3_status":"WORKER_BRANCH_STATUS_STALE",
-    "worker3_branch_status_schema":1,
-    "latest_observed_integration_status_commit":"e4462ce3c9ce08ba8d104e95c4c11fe3325a18de",
-    "worker3_actual_lane_head_recorded_by_integration_status":"05b3b563b20f1c9f308ce49a92a3cd3f1e94633c",
-    "assessment":"Worker-branch worker-3.json remains schema-1 stale. HQ trusts branch/code reality and direct integration status commits, integrates only owned scope at coherent checkpoints, and does not reset/discard Worker code or rewrite Worker3 branch status."
-  },
-  "hq_integration_validation": {
+  "branch_hygiene": {"worker3_branch_status":"STALE_SCHEMA1","latest_integration_status_commit":"804d3f9120e44929d0da5cae0e9041360378479f","worker3_lane_head":"bb05aed65dc0f3abb98792f8d0c18c552ebb135e"},
+  "validation": {
     "workflow":".github/workflows/moises-hq-integration.yml",
-    "workflow_commit":"3007de9ed70f1ad5d8f0fc321560e1259dc8a437",
-    "state":"PORTABLE_SWIFTPM_126_PASS_EPOCH11_L1_L2_OUTSIDE_PACKAGE_FINAL_APPLE_REAL_AUDIO_GATES_PENDING",
-    "epoch10": {"semantic_commits":["634573a147f48226462d5fd29063dfa760ccdca1","368527e51408e47d2efe7d535e91f3f98176925c"],"run_id":32652340100,"run_number":69,"result":"SUCCESS","test_count":126,"unhandled_file_count":122},
-    "epoch11": {"semantic_commit":"55d636e54b99fd0bd70cb370a72191829ab5f896","run_id":32654418110,"run_number":73,"result":"SUCCESS","test_count":126,"unhandled_file_count":126,"resource_locks_commit":"dc4e32a0367311fc77f0cfd120441b5491b414b8"},
-    "parity_effect":"NONE",
-    "portable_scope_note":"Run73 revalidates the selected portable SwiftPM core/Analysis suite and sustained-tone regression. Newly integrated Lane1 Python/provider and Lane2 IO acquisition sources/tests are outside Package.swift and therefore rely on their lane-local Python/Swift typecheck/self-check evidence until Apple/integrated runtime gates.",
-    "rule":"Portable SwiftPM PASS does not promote PARITY and does not replace Apple runtime, real-device, real-audio, provider, Core Data/File Provider, human listening or current-Moises differential gates."
+    "epoch12_code_run":{"id":32656141958,"number":78,"result":"SUCCESS","test_count":144,"unhandled_file_count":126},
+    "portable_scope_note":"W17/W18 Analysis comparator compiled/executed; L3 DSP, full Playback/Processing/Library/CoreData, AVFAudio, Xcode, physical iPhone and real/current-Moises audio are not proven.",
+    "parity_effect":"NONE"
   },
-  "worker_stop_policy": {
-    "valid":["all meaningful lane-local work and preparation exhausted pending an external/human input","required frozen Shared/App contract change","ownership boundary","unsafe or technically impossible operation"],
-    "invalid":["no task supplied","old bundle list exhausted","HQ did not replenish","queue has no READY task","another worker unfinished"]
-  },
-  "late_integration_gate": {
-    "owner":"HQ",
-    "merge_frequency":"coherent checkpoint with no known correctness regression, not every Worker wave",
-    "required_actions":["semantic merge of lane checkpoints","cross-lane contract/adapters","integrated iOS compile","cross-feature regression","real-device and real-audio evidence","differential Moises comparison","PARITY_MATRIX finalization"],
-    "next_work_rule":"Workers independently inspect lane state/PARITY/known gaps and self-plan their next Macro Wave. HQ does not create the normal backlog."
-  },
-  "current_external_blockers": [
-    "commercially approved production separator route/credentials and terms",
-    "rights-cleared G1/G2 real-audio corpus",
-    "actual Apple/iPhone runtime environment for final integrated device validation"
-  ]
+  "parity": {"promotion_count":0,"state":"ALL_CURRENT_IPHONE_IN_SCOPE_ROWS_REMAIN_MISSING","rule":"Portable/synthetic/harness/compile evidence alone never promotes PARITY."},
+  "external_blockers": ["production separator credentials/terms/pricing/usage","rights-cleared G1/G2 real-audio corpus","Apple/iPhone runtime for integrated validation","current-Moises differential/reference evidence","human listening/perceptual evidence"],
+  "worker_stop_policy": {"invalid":["no task supplied","old bundle list exhausted","HQ did not replenish","queue has no READY task","another worker unfinished"],"valid":["external/human input exhausted lane-local work","required frozen Shared/App contract change","ownership boundary","unsafe/impossible"]},
+  "late_integration_gate": {"owner":"HQ","required":["semantic lane integration","Shared/App adapters","integrated iOS compile","cross-feature regression","real-device/real-audio evidence","current-Moises differential","PARITY finalization"]}
 }
