@@ -109,7 +109,6 @@ struct L3AW21SerializedCountInAuthoritySelfTest {
         let initialPlay = await instrumented.submitPlay()
         precondition(aw21Executed(initialPlay))
 
-        // Executor-accepted consume: raw pending becomes nil but accepted generation is preserved.
         let first = try await gate.scheduleCountIn(clicks: 4)
         _ = try await gate.makeCountInPlan(
             authorization: first,
@@ -134,7 +133,6 @@ struct L3AW21SerializedCountInAuthoritySelfTest {
             )
         }
 
-        // Any newer click-generation mutation makes the old count-in authorization stale.
         let stale = try await gate.scheduleCountIn(clicks: 2)
         _ = try await gate.setMetronomeEnabled(true)
         await aw21ExpectThrow {
@@ -147,7 +145,6 @@ struct L3AW21SerializedCountInAuthoritySelfTest {
             )
         }
 
-        // Interruption discards the quarantined raw pending value before the transport boundary.
         let begin = await gate.submitInterruptionBegan()
         precondition(begin.rawPendingCountInDiscarded)
         precondition(!begin.discardRequiredRecovery)
@@ -158,7 +155,6 @@ struct L3AW21SerializedCountInAuthoritySelfTest {
         let end = await gate.submitInterruptionEnded(shouldResume: true)
         precondition(!end.countInAutoRestoreAllowed)
 
-        // Exact-authority discard never erases a newer count-in arm.
         let old = try await coordinator.scheduleCountIn(clicks: 2)
         let newer = try await coordinator.scheduleCountIn(clicks: 3)
         await aw21ExpectThrow {
@@ -175,9 +171,9 @@ struct L3AW21SerializedCountInAuthoritySelfTest {
             expectedClicks: 3
         )
         precondition(exactDiscard.disposition == .discardedAndInvalidated)
-        precondition((try await coordinator.snapshot()).dspState.pendingCountInClicks == nil)
+        let afterExactDiscard = try await coordinator.snapshot()
+        precondition(afterExactDiscard.dspState.pendingCountInClicks == nil)
 
-        // Click-node failure after raw clear is fail-closed: pending remains nil and coordinator poisons.
         let failureProject = ProjectID()
         let failureInvalidator = AW21ClickInvalidator()
         let failureController = try PracticeDSPProductionController(
