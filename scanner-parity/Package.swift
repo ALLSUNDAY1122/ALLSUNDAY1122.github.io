@@ -32,7 +32,17 @@ let package = Package(
                 "ReviewCore",
                 "SecurityHardening",
                 "Tests",
-                "iOSApp"
+                "iOSApp",
+                "FrameExtraction/README.md",
+                "ImageCorrection/README.md",
+                "PipelineCore/README.md",
+                "PipelineOCR/README.md",
+                "OCRExport/Package.swift",
+                "OCRExport/Tests",
+                "PackageValidation/Package.swift",
+                "PackageValidation/ROADMAP.md",
+                "PackageValidation/Tests",
+                "SHARED_CONTRACT.md"
             ],
             sources: [
                 "FrameExtraction",
@@ -51,6 +61,18 @@ let package = Package(
                 .product(name: "ProductFlow", package: "ProductFlow")
             ],
             path: "AppShell/Sources/AppShell",
+            exclude: [
+                "AppShellContract.swift",
+                "BookPackageExportView.swift",
+                "MediaImportCoordinator.swift",
+                "ProductBackgroundTaskController.swift",
+                "ProductFlowStore.swift",
+                "RecoveryProductReviewWorkflow.swift",
+                "Resources",
+                "ScannerParityApp.swift",
+                "ScannerParityRootView.swift",
+                "ScannerPipelineBindings.swift"
+            ],
             sources: [
                 "ProductionScannerRuntime.swift",
                 "GoldenHardenedScannerRuntime.swift"
