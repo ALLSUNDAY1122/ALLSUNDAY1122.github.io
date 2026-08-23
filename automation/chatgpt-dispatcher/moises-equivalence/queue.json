@@ -3,10 +3,10 @@
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_pr": 4431,
-  "integration_epoch": 3,
+  "integration_epoch": 4,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "ALL_FOUR_BOOTSTRAP_CHECKPOINTS_CANONICAL_AUTONOMOUS_WAVES_CONTINUING_FINAL_DEVICE_REAL_AUDIO_GATES_PENDING",
+  "baseline_state": "EPOCH4_LANES_1_3_4_AUTONOMOUS_CHECKPOINTS_CANONICAL_LANE2_AW06_ACCUMULATING_FINAL_DEVICE_REAL_AUDIO_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
@@ -42,7 +42,10 @@
     {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"epoch2 M01-M04","semantic_pr":4508,"merge_sha":"48cc74e9e192813fa6fafc0c83c8ed882cf83578","scope":["Separation/**","Processing/**"],"parity_promoted":false},
     {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"epoch2 M01-M04","semantic_pr":4509,"merge_sha":"b586c3386af0183881741998d3691bb2a282fbcf","scope":["Playback/**","DSP/**"],"parity_promoted":false},
     {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"epoch2 M01-M04","semantic_pr":4510,"merge_sha":"f218be65facd8e3f32342daf5e77545dd8924f6a","scope":["Analysis/**","Tests/**","iOS/**","Package.swift"],"parity_promoted":false},
-    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"epoch2 M01-M04 + L2-AW05","semantic_pr":4520,"merge_sha":"a6fe8e97b3ec7aede2ecd826e67de99714e88c98","scope":["IO/**","Library/**"],"parity_promoted":false}
+    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"epoch2 M01-M04 + L2-AW05","semantic_pr":4520,"merge_sha":"a6fe8e97b3ec7aede2ecd826e67de99714e88c98","scope":["IO/**","Library/**"],"parity_promoted":false},
+    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A06 through L1-A09","semantic_commit":"d5ee0546efa0d99ded546c2c8a0f1583d5b6c867","scope":["Separation/**","Processing/**"],"parity_promoted":false},
+    {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW01 through L3-AW05","semantic_commit":"d5ee0546efa0d99ded546c2c8a0f1583d5b6c867","scope":["Playback/**","DSP/**"],"parity_promoted":false},
+    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"L4-W05 through L4-W09","semantic_commit":"d5ee0546efa0d99ded546c2c8a0f1583d5b6c867","scope":["Analysis/**","Tests/**","iOS/**","Package.swift"],"integration_resolution":"preserved HQ chord-section regression fix from 4b56de63e2c69285828b99f535d72632d7671d5c","parity_promoted":false}
   ],
   "partial_canonical": [
     {"family":"SEPARATION_PROCESSING","prs":[4451,4452,4508],"parity_rows":["MOI-P003","MOI-P004","MOI-P020","MOI-P021","MOI-P024"],"state":"MISSING","remaining":"commercial credentials/terms, rights-cleared real audio, live quality/latency/cost/cancel/retention and current-iPhone recovery/device evidence"},
@@ -59,20 +62,27 @@
   "autonomous_wave_policy": {
     "merge_rule": "Do not merge every Wave. Workers accumulate meaningful lane-local waves; HQ semantic-integrates only coherent checkpoints.",
     "current_unintegrated_snapshot": {
-      "lane1": "L1-A06 complete; continue accumulating",
-      "lane2": "L2-AW05 included in PR #4520; subsequent waves continue accumulating",
-      "lane3": "L3-AW01/AW02 family in progress/accumulating after prior checkpoint",
-      "lane4": "L4-W05 complete; continue accumulating"
+      "lane1": "L1-A06 through L1-A09 canonical at epoch 4; later waves continue accumulating autonomously",
+      "lane2": "L2-AW06 is a single post-checkpoint wave and remains unintegrated pending a coherent checkpoint",
+      "lane3": "L3-AW01 through L3-AW05 canonical at epoch 4; later waves continue accumulating autonomously",
+      "lane4": "L4-W05 through L4-W09 canonical at epoch 4; L4-W10 was in progress at the last branch-status read"
     }
   },
   "hq_integration_validation": {
     "workflow": ".github/workflows/moises-hq-integration.yml",
     "workflow_commit": "3007de9ed70f1ad5d8f0fc321560e1259dc8a437",
     "validation_pr": 4517,
-    "state": "CI_RUN_NOT_OBSERVED",
+    "state": "CI_RUN_OBSERVED_FAIL_FIX_COMMITTED_RERUN_PENDING",
+    "observed_run_id": 32640524078,
+    "observed_run_number": 18,
+    "observed_result": "FAIL",
+    "observed_failure": "ChordTimelineAnalysisTests.testProjectOwnedAnalyzerPopulatesChordTimelineThroughFrozenMusicAnalyzingContract stale expectation at line 117",
+    "fix_commit": "4b56de63e2c69285828b99f535d72632d7671d5c",
+    "current_canonical_checkpoint_commit": "d5ee0546efa0d99ded546c2c8a0f1583d5b6c867",
+    "latest_run_for_current_checkpoint": "NOT_OBSERVED_YET",
     "local_runner_attempt": "BLOCKED_ENVIRONMENT_DNS_GITHUB_COM",
     "parity_effect": "NONE",
-    "rule": "Do not claim integrated regression PASS until an actual test run is observed."
+    "rule": "Do not claim integrated regression PASS until an actual successful test run is observed on the current canonical checkpoint."
   },
   "worker_stop_policy": {
     "valid": ["all meaningful lane-local work and preparation exhausted pending an external/human input", "required frozen Shared/App contract change", "ownership boundary", "unsafe or technically impossible operation"],
