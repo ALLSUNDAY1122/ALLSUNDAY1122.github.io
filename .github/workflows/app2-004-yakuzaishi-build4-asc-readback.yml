@@ -1,0 +1,80 @@
+name: APP2-004 Pharmacist Build 4 ASC Readback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-004-yakuzaishi-build4-asc-command.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-004-yakuzaishi-build4-asc-readback
+  cancel-in-progress: false
+
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read Build 4 from App Store Connect
+        id: readback
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          set +e
+          python scripts/app2_004_yakuzaishi_build4_asc_readback.py > /tmp/app2-004-build4-asc.log 2>&1
+          code=$?
+          python - "$code" <<'PY'
+          import json, re, sys
+          from pathlib import Path
+          code = int(sys.argv[1])
+          raw = Path('/tmp/app2-004-build4-asc.log').read_text(encoding='utf-8', errors='replace') if Path('/tmp/app2-004-build4-asc.log').exists() else ''
+          raw = re.sub(r'Bearer\s+[A-Za-z0-9._-]+', 'Bearer [REDACTED]', raw)
+          raw = re.sub(r'eyJ[A-Za-z0-9._-]{40,}', '[REDACTED JWT]', raw)
+          Path('/tmp/app2-004-build4-diagnostic.json').write_text(
+              json.dumps({'task_id':'APP2-004','target_build':'4','exit_code':code,'ok':code == 0,'log_tail':raw[-12000:]}, ensure_ascii=False, indent=2) + '\n',
+              encoding='utf-8')
+          PY
+          exit 0
+      - name: Persist Build 4 ASC readback
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/app2-004-build4-state
+          cp /tmp/app2-004-build4-diagnostic.json /tmp/app2-004-build4-state/diagnostic.json
+          if test -f automation/app2-004-yakuzaishi-build4-asc.json; then
+            cp automation/app2-004-yakuzaishi-build4-asc.json /tmp/app2-004-build4-state/result.json
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/app2-004-build4-state/diagnostic.json automation/app2-004-yakuzaishi-build4-asc-diagnostic.json
+          if test -f /tmp/app2-004-build4-state/result.json; then
+            cp /tmp/app2-004-build4-state/result.json automation/app2-004-yakuzaishi-build4-asc.json
+          fi
+          git add automation/app2-004-yakuzaishi-build4-asc-diagnostic.json
+          if test -f automation/app2-004-yakuzaishi-build4-asc.json; then git add automation/app2-004-yakuzaishi-build4-asc.json; fi
+          if ! git diff --cached --quiet; then
+            git commit -m "Persist APP2-004 Build 4 ASC readback"
+            git push origin HEAD:main
+          fi
+      - name: Assert readback success
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('automation/app2-004-yakuzaishi-build4-asc-diagnostic.json')
+          d=json.loads(p.read_text())
+          if not d.get('ok'):
+              raise SystemExit(f"APP2-004 Build 4 ASC readback failed exit_code={d.get('exit_code')}")
+          PY
