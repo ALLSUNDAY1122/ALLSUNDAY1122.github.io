@@ -31,6 +31,26 @@ public enum AnalysisRealAudioBenchmarkCodec {
         return try decoder.decode(AnalysisAuditedRealAudioBenchmarkReport.self, from: data)
     }
 
+    public static func encodeDifferentialToleranceProfile(_ profile: AnalysisDifferentialToleranceProfile) throws -> Data {
+        let encoder = makeEncoder()
+        return try encoder.encode(profile)
+    }
+
+    public static func decodeDifferentialToleranceProfile(_ data: Data) throws -> AnalysisDifferentialToleranceProfile {
+        let decoder = makeDecoder()
+        return try decoder.decode(AnalysisDifferentialToleranceProfile.self, from: data)
+    }
+
+    public static func encodePairedDifferentialReport(_ report: AnalysisPairedDifferentialReport) throws -> Data {
+        let encoder = makeEncoder()
+        return try encoder.encode(report)
+    }
+
+    public static func decodePairedDifferentialReport(_ data: Data) throws -> AnalysisPairedDifferentialReport {
+        let decoder = makeDecoder()
+        return try decoder.decode(AnalysisPairedDifferentialReport.self, from: data)
+    }
+
     private static func makeEncoder() -> JSONEncoder {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
