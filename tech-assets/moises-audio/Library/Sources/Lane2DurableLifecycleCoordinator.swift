@@ -18,8 +18,10 @@ public actor Lane2DurableLifecycleCoordinator {
     private let metadata: Lane2LifecycleMetadataStore
     private let artifacts: LibraryArtifactLifecycle
     private let fileStore: IOFileStore
+    private let registrationJournal: Lane2ExportRegistrationJournal
     private let storageReserveBytes: Int64
     private let fileManager: FileManager
+    private var activeExportRegistrationIntents: Set<UUID> = []
 
     public init(
         rootURL: URL,
@@ -36,6 +38,7 @@ public actor Lane2DurableLifecycleCoordinator {
         self.metadata = metadata ?? Lane2LifecycleMetadataStore(rootURL: rootURL)
         self.artifacts = LibraryArtifactLifecycle(rootURL: rootURL)
         self.fileStore = IOFileStore(rootURL: rootURL)
+        self.registrationJournal = Lane2ExportRegistrationJournal(rootURL: rootURL, fileManager: fileManager)
         self.storageReserveBytes = storageReserveBytes
         self.fileManager = fileManager
     }
@@ -73,6 +76,7 @@ public actor Lane2DurableLifecycleCoordinator {
         let attemptID = UUID()
         var produced: [ExportArtifact] = []
         var metadataCommitted = false
+        var registrationIntentID: UUID?
 
         do {
             produced = try await exporter.export(request)
@@ -82,13 +86,30 @@ public actor Lane2DurableLifecycleCoordinator {
             for artifact in produced {
                 try artifacts.requireReady(relativePath: artifact.relativePath)
             }
+
+            let intent = try registrationJournal.prepare(
+                projectUUID: request.projectID.rawValue,
+                artifacts: produced.map {
+                    Lane2ExportRegistrationArtifact(relativePath: $0.relativePath, mediaType: $0.mediaType)
+                }
+            )
+            registrationIntentID = intent.id
+            activeExportRegistrationIntents.insert(intent.id)
+
             _ = try await metadata.recordExports(
                 projectUUID: request.projectID.rawValue,
                 artifacts: produced.map { ($0.relativePath, $0.mediaType) }
             )
             metadataCommitted = true
+
+            activeExportRegistrationIntents.remove(intent.id)
+            try? registrationJournal.complete(intentID: intent.id)
             return produced
         } catch {
+            if let registrationIntentID {
+                activeExportRegistrationIntents.remove(registrationIntentID)
+            }
+
             var compensationIncomplete = false
             if !metadataCommitted && !produced.isEmpty {
                 do {
@@ -97,6 +118,13 @@ public actor Lane2DurableLifecycleCoordinator {
                         fileManager: fileManager
                     )
                     compensationIncomplete = !report.isComplete
+                    if report.isComplete, let registrationIntentID {
+                        do {
+                            try registrationJournal.complete(intentID: registrationIntentID)
+                        } catch {
+                            compensationIncomplete = true
+                        }
+                    }
                 } catch {
                     compensationIncomplete = true
                 }
@@ -137,6 +165,93 @@ public actor Lane2DurableLifecycleCoordinator {
             )
             throw error
         }
+    }
+
+    /// Relaunch convergence for a process death after export publication but before registration,
+    /// or after metadata registration but before the durable handoff intent was removed.
+    @discardableResult
+    public func recoverPendingExportRegistrations() async throws -> Lane2ExportRegistrationRecoveryReport {
+        let pending = try registrationJournal.pending()
+        if pending.isEmpty {
+            return Lane2ExportRegistrationRecoveryReport(
+                preservedRegistered: 0,
+                discardedUnregistered: 0,
+                retainedIncomplete: 0
+            )
+        }
+
+        // Read canonical lifecycle metadata before any destructive recovery. Corruption here fails
+        // closed and leaves every intent/artifact untouched for explicit recovery.
+        let lifecycle = try await metadata.snapshot()
+        var preservedRegistered = 0
+        var discardedUnregistered = 0
+        var retainedIncomplete = 0
+
+        for intent in pending {
+            // Actor methods are reentrant across awaits. Never recover an intent still owned by an
+            // active export call in this process. After relaunch this set is empty by construction.
+            if activeExportRegistrationIntents.contains(intent.id) {
+                retainedIncomplete += 1
+                continue
+            }
+
+            let registered = Set(
+                lifecycle.exports
+                    .filter { $0.projectUUID == intent.projectUUID }
+                    .map(\.relativePath)
+            )
+            switch Lane2ExportRegistrationJournal.disposition(
+                intent: intent,
+                registeredRelativePaths: registered
+            ) {
+            case .alreadyRegistered:
+                // Metadata won the race before termination. Do not delete audio; only retire intent.
+                for artifact in intent.artifacts {
+                    try artifacts.requireReady(relativePath: artifact.relativePath)
+                }
+                try registrationJournal.complete(intentID: intent.id)
+                preservedRegistered += 1
+
+            case .unregistered:
+                do {
+                    let report = try artifacts.discardUncommittedExportArtifacts(
+                        relativePaths: intent.artifacts.map(\.relativePath),
+                        fileManager: fileManager
+                    )
+                    if report.isComplete {
+                        try registrationJournal.complete(intentID: intent.id)
+                        discardedUnregistered += 1
+                    } else {
+                        retainedIncomplete += 1
+                        try? await persistFailure(
+                            attemptID: UUID(),
+                            projectID: ProjectID(rawValue: intent.projectUUID),
+                            operation: .exportAudio,
+                            error: DomainFailure.exportFailed(code: "EXPORT_COMPENSATION_INCOMPLETE")
+                        )
+                    }
+                } catch {
+                    retainedIncomplete += 1
+                    try? await persistFailure(
+                        attemptID: UUID(),
+                        projectID: ProjectID(rawValue: intent.projectUUID),
+                        operation: .exportAudio,
+                        error: DomainFailure.exportFailed(code: "EXPORT_COMPENSATION_INCOMPLETE")
+                    )
+                }
+
+            case .partial:
+                // recordExports writes one project shard atomically. A partial path match is not a
+                // safe deletion state; retain everything for explicit diagnosis.
+                throw Lane2ExportRegistrationJournalFailure.partialRegistration(intent.id)
+            }
+        }
+
+        return Lane2ExportRegistrationRecoveryReport(
+            preservedRegistered: preservedRegistered,
+            discardedUnregistered: discardedUnregistered,
+            retainedIncomplete: retainedIncomplete
+        )
     }
 
     /// ready -> deleting metadata transition happens before file removal.
@@ -183,6 +298,7 @@ public actor Lane2DurableLifecycleCoordinator {
     }
 
     public func relaunchState(projectID: ProjectID) async throws -> Lane2RelaunchState {
+        try await recoverPendingExportRegistrations()
         try await recoverPendingExportCleanup()
         try await reconcileDeletedProjectArtifacts()
         try await reconcileProjectOwnership()
@@ -198,6 +314,7 @@ public actor Lane2DurableLifecycleCoordinator {
 
     /// Orphan sweep retains canonical source/stem paths plus export paths recorded ready/deleting.
     public func sweepOrphans(gracePeriod: TimeInterval = 3600, now: Date = Date()) async throws -> LibraryOrphanSweepResult {
+        try await recoverPendingExportRegistrations()
         try await recoverPendingExportCleanup()
         try await reconcileDeletedProjectArtifacts()
         let projects = try await library.listProjects()
