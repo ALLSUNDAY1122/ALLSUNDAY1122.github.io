@@ -167,9 +167,11 @@ enum BenchmarkTimelineMatcher {
         tolerance: Double,
         cancellationEnabled: Bool
     ) throws -> BenchmarkTimestampMatchResult {
+        if cancellationEnabled { try AnalysisCancellationPolicy.check() }
         guard tolerance >= 0 else { return .init(matches: 0, matchedAbsoluteErrors: []) }
         let reference = reference.filter(\.isFinite).sorted()
         let estimated = estimated.filter(\.isFinite).sorted()
+        if cancellationEnabled { try AnalysisCancellationPolicy.check() }
         guard !reference.isEmpty, !estimated.isEmpty else {
             return .init(matches: 0, matchedAbsoluteErrors: [])
         }
@@ -216,8 +218,10 @@ enum BenchmarkTimelineMatcher {
         target: [Double],
         cancellationEnabled: Bool
     ) throws -> [Double]? {
+        if cancellationEnabled { try AnalysisCancellationPolicy.check() }
         let source = source.filter(\.isFinite)
         let target = target.filter(\.isFinite).sorted()
+        if cancellationEnabled { try AnalysisCancellationPolicy.check() }
         if source.isEmpty { return [] }
         guard !target.isEmpty else { return nil }
 
