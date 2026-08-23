@@ -1,21 +1,35 @@
 {
-  "request_id": "app2-005-hm1-iap-readback-20260823-1637",
-  "completed_at": "2026-08-23T07:37:09.796803+00:00",
+  "request_id": "app2-005-hm1-lifetime-price-readback-20260823-1644",
+  "completed_at": "2026-08-23T07:44:03.016557+00:00",
   "query_exit_code": 0,
   "query_status": "success",
   "results": [
     {
-      "label": "in-app-purchases",
+      "label": "lifetime-manual-prices",
       "http_status": 200,
       "data": [
         {
-          "id": "6799583540",
-          "type": "inAppPurchases",
+          "id": "eyJzIjoiNjc5OTU4MzU0MCIsInQiOiJKUE4iLCJwIjoiMTAwOTQiLCJzZCI6MC4wLCJlZCI6MC4wfQ",
+          "type": "inAppPurchasePrices",
           "attributes": {
-            "name": "第一種衛生管理者 買い切りプレミアム",
-            "productId": "jp.allsunday1122.healthmanager1.lifetime",
-            "state": "MISSING_METADATA",
-            "inAppPurchaseType": "NON_CONSUMABLE"
+            "startDate": null,
+            "endDate": null,
+            "manual": true
+          },
+          "relationships": {
+            "inAppPurchasePricePoint": {
+              "type": "inAppPurchasePricePoints",
+              "id": "eyJzIjoiNjc5OTU4MzU0MCIsInQiOiJKUE4iLCJwIjoiMTAwOTQifQ"
+            }
+          }
+        }
+      ],
+      "included": [
+        {
+          "id": "eyJzIjoiNjc5OTU4MzU0MCIsInQiOiJKUE4iLCJwIjoiMTAwOTQifQ",
+          "type": "inAppPurchasePricePoints",
+          "attributes": {
+            "customerPrice": "980"
           }
         }
       ]
