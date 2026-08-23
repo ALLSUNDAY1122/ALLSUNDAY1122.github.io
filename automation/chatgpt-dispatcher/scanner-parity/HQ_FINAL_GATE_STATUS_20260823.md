@@ -23,7 +23,9 @@ Integration branch: `scanner-parity/integration`
 - PR #4581 synchronized HQ evidence after the review-bundle integration; merge commit: `050c3a02e36eee049838bc63bd13e4084061bf91`.
 - PR #4584 added the SHA-bound Formal Golden human-review finalizer; merge commit: `4e92833193b835bbf09158551847febb3bbfc8c1`.
 - PR #4585 synchronized HQ evidence after the finalizer integration; merge commit: `25216b4f12b5bb06bad188bea8b5033ab9d24028`.
-- PR #4588 added fail-safe Formal Golden pipeline-failure evidence; product merge commit/current integration HEAD before this evidence-only update: `705e7608e038f5e6566a26c0a61ffe3dae9a0c85`.
+- PR #4588 added fail-safe Formal Golden pipeline-failure evidence; merge commit: `705e7608e038f5e6566a26c0a61ffe3dae9a0c85`.
+- PR #4590 synchronized HQ evidence after failure-evidence integration; merge commit: `dd168258de934568146d00f82803a4d58ef22139`.
+- PR #4591 added a 240-page production-runtime long-run gate; validated head: `a2a2b4d0b0367239434430e4fb8509ba9ea5fd7f`; merge commit/current product-code integration HEAD before this evidence-only update: `b49cdb1004190933117f65f9effa3c230625e74d`.
 
 ## Non-Golden acceptance
 
@@ -219,6 +221,39 @@ CI builds the recorder, unit-tests path sanitization, and creates a synthetic fa
 
 PR #4588 did not modify product runtime, `scanner-parity/SHARED_CONTRACT.md`, the successful schema-v4 execution report, the finalizer PASS contract, or any Golden identity SHA.
 
+## 240-page production-runtime long-run stability gate
+
+PR #4591 exact head `a2a2b4d0b0367239434430e4fb8509ba9ea5fd7f` passed `Scanner Parity Apple Validation` run `32660140183` in full and merged as `b49cdb1004190933117f65f9effa3c230625e74d`.
+
+HQ audited the pre-existing 240-page `LongRunHarness` fixture and determined that it directly validated checkpoint/resume behavior around an arbitrary per-page closure, but did not by itself prove that the actual scanner production composition could survive a 200-page-class book. The old harness remains useful for checkpoint/resume testing, but it is no longer treated as the sole long-run acceptance evidence.
+
+PR #4591 adds `scanner-production-longrun`. Its CI run creates 240 real JPEG page inputs and executes them through the same `ProductionScannerRuntime.makeDriver()` production composition used by the app, covering:
+
+- production image correction;
+- PageAudit and ordering pipeline;
+- Apple Vision OCR;
+- searchable-PDF generation;
+- BookPackage creation;
+- `PackageIntegrityVerifier`.
+
+The retained Actions artifact `scanner-parity-production-longrun/production-longrun-report.json` records:
+
+- `inputPageCount = 240`;
+- `completedPageCount = 240`;
+- `searchablePDFPageCount = 240`;
+- `checkpointStageCount = 5`;
+- `packageIntegrityValid = true`;
+- `requiredBookPackageFilesPresent = true`;
+- `elapsedMilliseconds = 1587579` (about 26 minutes 28 seconds);
+- `reviewCount = 1985`;
+- verdict `PRODUCTION_LONG_RUN_PASS`.
+
+The high synthetic `reviewCount` is intentionally not hidden or reclassified. These generated pages are a stability/load fixture, not a reference-quality corpus. Therefore `PRODUCTION_LONG_RUN_PASS` means the 240-page production composition completed and produced a structurally valid 240-page package without crashing; it does **not** mean visual correction quality, page-recall quality, ordering quality, or OCR semantic quality passed. Those quality claims remain exclusively under the real Formal Golden Gate.
+
+The same exact-head CI also passed the existing Formal Golden runner/finalizer/failure-recorder builds, Golden support tests, searchable-PDF test, Apple adapters, final product modules, Privacy manifest, XcodeGen generation, unsigned iPhoneOS Release app build, and application-bundle verification.
+
+PR #4591 did not modify product runtime source, `scanner-parity/SHARED_CONTRACT.md`, Golden identity SHA values, Worker/Queue policy, or Formal Golden PASS logic.
+
 ## Formal HQ Golden Gate
 
 Status: `PENDING_HQ_GOLDEN_EXECUTION`
@@ -256,7 +291,7 @@ Current Formal Golden metrics remain unissued until the same raw dataset is proc
 
 ## Raw Golden availability and next execution
 
-Raw Golden files are intentionally not committed to GitHub. On 2026-08-24 HQ rechecked both the current ChatGPT File Library and connected Google Drive again before PR #4588; neither current source file was found. File Library returned unrelated files only and Drive returned zero exact-name matches for both Golden files. No fixture result, compile result, synthetic metric result, searchable-PDF fixture result, machine-gate unit test, review-bundle synthetic test, finalizer unit test, failure-report synthetic test, or historical measurement is promoted to Golden PASS in place of the real rerun.
+Raw Golden files are intentionally not committed to GitHub. On 2026-08-24 HQ rechecked both the current ChatGPT File Library and connected Google Drive again before PR #4591; neither current source file was found. File Library returned unrelated files only and Drive returned zero exact-name matches for both Golden files. No fixture result, compile result, synthetic metric result, searchable-PDF fixture result, machine-gate unit test, review-bundle synthetic test, finalizer unit test, failure-report synthetic test, production long-run stability result, or historical measurement is promoted to Golden PASS in place of the real rerun.
 
 When the current raw Golden bytes are accessible, HQ execution order is fixed:
 
