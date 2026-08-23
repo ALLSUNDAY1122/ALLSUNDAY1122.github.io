@@ -32,6 +32,7 @@ struct ProductPipelineDriverTests {
             try require(stages == ProductProcessingStage.allCases)
             try require(checkpoints.count == 5)
             try require(checkpoints.last?.inputAssets?.map(\.id) == ["input-1"])
+            try require(checkpoints.last?.completion == nil)
             try require(result.pageCount == 200)
             try require(result.bookPackageURL.lastPathComponent == "package")
         }
@@ -156,17 +157,18 @@ struct ProductPipelineDriverTests {
             try require(units.count >= 200)
         }
 
-        await run("checkpoint store roundtrip retains durable input") {
+        await run("checkpoint store roundtrip retains durable active input") {
             let root = temp("checkpoint")
             try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
             let inputURL = root.appendingPathComponent("book.mov")
             try Data([0x00]).write(to: inputURL)
             let input = ProductInputAsset(id: "input-1", kind: .video, localURL: inputURL, displayName: "book.mov")
+            let stageURL = try stageOutput(root: root, stage: .frameExtraction)
             let url = root.appendingPathComponent("state/checkpoint.json")
             let store = FileProductCheckpointStore(fileURL: url)
             let value = ProductPipelineCheckpoint(
                 runID: "r1", bookID: "book-fixture", inputAssetIDs: ["input-1"], inputAssets: [input],
-                completedArtifacts: [.init(stage: .frameExtraction, outputURL: root, pageCount: 200)],
+                completedArtifacts: [.init(stage: .frameExtraction, outputURL: stageURL, pageCount: 200)],
                 lastProgress: .init(stage: .frameExtraction, fraction: 1, completedUnits: 200, totalUnits: 200)
             )
             try await store.save(value)
@@ -174,10 +176,78 @@ struct ProductPipelineDriverTests {
             try require(loaded?.runID == "r1")
             try require(loaded?.completedArtifacts.count == 1)
             try require(loaded?.inputAssets == [input])
-            try require(FileManager.default.fileExists(atPath: loaded!.inputAssets!.first!.localURL.path))
+            try require(loaded?.completion == nil)
+            try require(loaded?.hasCanonicalExistingArtifacts == true)
             try await store.clear()
-            let cleared = try await store.load()
-            try require(cleared == nil)
+            try require(try await store.load() == nil)
+        }
+
+        await run("schema v3 terminal checkpoint retains only completion snapshot") {
+            let root = temp("terminal")
+            try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+            let package = root.appendingPathComponent("completed-package", isDirectory: true)
+            try FileManager.default.createDirectory(at: package, withIntermediateDirectories: true)
+            let review = ProductReviewItem(id: "r-1", pageIDs: ["p-1"], reason: "ocr_low_confidence", detail: "fixture")
+            let checkpoint = ProductPipelineCheckpoint(
+                schemaVersion: 3,
+                runID: "terminal-run",
+                bookID: "book-terminal",
+                inputAssetIDs: ["old-input"],
+                inputAssets: nil,
+                completedArtifacts: [],
+                lastProgress: .init(stage: .packageWrite, fraction: 1, completedUnits: 200, totalUnits: 200),
+                completion: .init(bookPackageURL: package, reviewItems: [review], pageCount: 200)
+            )
+            let store = FileProductCheckpointStore(fileURL: root.appendingPathComponent("checkpoint.json"))
+            try await store.save(checkpoint)
+            let loaded = try await store.load()
+            try require(loaded?.schemaVersion == 3)
+            try require(loaded?.inputAssets == nil)
+            try require(loaded?.completedArtifacts.isEmpty == true)
+            try require(loaded?.terminalCompletion?.bookPackageURL == package)
+            try require(loaded?.terminalCompletion?.reviewItems == [review])
+            try require(loaded?.hasCanonicalExistingArtifacts == false)
+        }
+
+        await run("legacy full checkpoint derives terminal completion") {
+            let root = temp("legacy-completed")
+            let review = ProductReviewItem(id: "legacy-r", pageIDs: ["p-9"], reason: "audit", detail: "fixture")
+            let artifacts = try ProductProcessingStage.allCases.map { stage -> ProductStageArtifact in
+                ProductStageArtifact(
+                    stage: stage,
+                    outputURL: try stageOutput(root: root, stage: stage),
+                    pageCount: 9,
+                    reviewItems: stage == .ocr ? [review] : []
+                )
+            }
+            let checkpoint = ProductPipelineCheckpoint(
+                schemaVersion: 2,
+                runID: "legacy-complete",
+                bookID: "book-legacy",
+                inputAssetIDs: ["input-1"],
+                inputAssets: request(root: root).inputs,
+                completedArtifacts: artifacts,
+                lastProgress: .init(stage: .packageWrite, fraction: 1, completedUnits: 9, totalUnits: 9)
+            )
+            try require(checkpoint.terminalCompletion?.pageCount == 9)
+            try require(checkpoint.terminalCompletion?.reviewItems == [review])
+            try require(checkpoint.isCompletedPackageCheckpoint)
+        }
+
+        await run("terminal checkpoint with missing package fails closed") {
+            let root = temp("terminal-missing")
+            let missing = root.appendingPathComponent("missing-package")
+            let checkpoint = ProductPipelineCheckpoint(
+                schemaVersion: 3,
+                runID: "terminal-missing",
+                bookID: "book-terminal-missing",
+                inputAssetIDs: [],
+                completedArtifacts: [],
+                lastProgress: .init(stage: .packageWrite, fraction: 1),
+                completion: .init(bookPackageURL: missing, reviewItems: [], pageCount: 1)
+            )
+            try require(checkpoint.terminalCompletion == nil)
+            try require(!checkpoint.isCompletedPackageCheckpoint)
         }
 
         await run("schema v1 checkpoint remains decodable") {
@@ -199,6 +269,7 @@ struct ProductPipelineDriverTests {
             let loaded = try await FileProductCheckpointStore(fileURL: url).load()
             try require(loaded?.schemaVersion == 1)
             try require(loaded?.inputAssets == nil)
+            try require(loaded?.completion == nil)
         }
 
         await run("missing binding is explicit failure") {
