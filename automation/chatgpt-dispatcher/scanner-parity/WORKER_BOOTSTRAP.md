@@ -31,6 +31,8 @@
 10. secret/token/署名鍵/ユーザー提供書籍そのものをGitHubへ保存しない。
 11. 実装変更は意味のある単位でcommitし、Task完了時にattempt branchへpushしてremote反映を確認する。
 12. Task終了時は `evidence_path` に検証結果を保存し、自分のTaskだけを `INTEGRATION_READY` または `BLOCKED_*` へ更新する。MERGED/VERIFIEDはHQ/finalizerが確定する。
+13. **撮る単語帳を必須内部参照資産として監査する。** Notion「撮る単語帳｜正本・関連資料」、GitHub PR #3959/#4064、特に `toru-tango-mobile/modules/toru-tango-ocr/ios/ToruTangoOcrModule.swift`、`app/(tabs)/create.tsx`、Safari OCR比較資産を確認し、使える実装を再利用する。ユーザー所有コードなので直接転用可能だが、書籍Golden Datasetに適合しないロジックを無検査でコピーしない。
+14. 撮る単語帳で発生した第三者AI画像送信とPrivacy申告不一致を再発させない。初期版は端末内OCRを標準とし、外部AIへ書籍画像を送る経路は必須依存にしない。将来導入する場合は送信前の明示同意・Privacy申告・保持/ログ監査を必須Gateとする。
 
 ## 完成品質の方向性
 - ページ再現率 >= 99%
@@ -45,4 +47,6 @@
 ## 再利用候補
 優先評価対象：Apple Vision/VisionKit/PDFKit/CoreGraphics、OpenCV、swift-document-scanner、page-dewarp、PySceneDetect相当の考え方、Tesseract jpn/jpn_vert、OCRmyPDFの出力設計、OpenScannerのapp shell設計。
 
-内部既存資産：Notion「いっしょに一冊（仮）｜10冊版iOS実装・PDFスキャナー v0.7」。当時のSwiftUI/輪郭検出/台形補正/PDFKit設計を再利用候補として評価する。OCR除外という旧要件は引き継がない。
+内部既存資産：
+- Notion「いっしょに一冊（仮）｜10冊版iOS実装・PDFスキャナー v0.7」。当時のSwiftUI/輪郭検出/台形補正/PDFKit設計を再利用候補として評価する。OCR除外という旧要件は引き継がない。
+- Notion「撮る単語帳｜正本・関連資料」およびGitHub PR #3959/#4064。Apple Vision OCR、4方向比較、OCR品質スコア、複数画像順序保持、OCR編集/再撮影、教材向け補正比較、後方互換保存の実装を再利用候補として評価する。
