@@ -4,6 +4,7 @@ import HQGoldenSupport
 import PDFKit
 import ProductFlow
 import RuntimeComposition
+import ScannerRuntime
 
 struct CLIOptions {
     let videoURL: URL
@@ -20,6 +21,49 @@ struct StageEvidence: Codable {
     let outputRelativePath: String
     let pageCount: Int
     let reviewCount: Int
+}
+
+struct CorrectionPageEvidence: Decodable {
+    let pageID: String
+    let stageFailure: String?
+}
+
+struct OCRSnapshotEvidence: Decodable {
+    let pages: [OCRPage]
+    let failures: [String: String]
+}
+
+struct CorrectionSummary: Codable {
+    let pageCount: Int
+    let failureCount: Int
+    let failedPageIDs: [String]
+}
+
+struct PageAuditSummary: Codable {
+    let orderedPageCount: Int
+    let duplicateGroupCount: Int
+    let missingPageSuspicionCount: Int
+    let reversalEventCount: Int
+    let autoFixCount: Int
+    let reviewCount: Int
+}
+
+struct OCRSummary: Codable {
+    let pageCount: Int
+    let failureCount: Int
+    let failedPageIDs: [String]
+    let needsReviewCount: Int
+    let emptyTextPageCount: Int
+    let meanConfidence: Double
+    let minimumConfidence: Double?
+    let layoutCounts: [String: Int]
+}
+
+struct SearchablePDFTextSummary: Codable {
+    let pageCount: Int
+    let pagesWithExtractableText: Int
+    let pagesWithoutExtractableText: Int
+    let extractableCharacterCount: Int
 }
 
 struct HQGoldenExecutionReport: Codable {
@@ -40,8 +84,14 @@ struct HQGoldenExecutionReport: Codable {
     let bookPackageRelativePath: String
     let requiredBookPackageFilesPresent: Bool
     let stageEvidence: [StageEvidence]
+    let correctionSummary: CorrectionSummary
+    let pageAuditSummary: PageAuditSummary
+    let ocrSummary: OCRSummary
+    let searchablePDFTextSummary: SearchablePDFTextSummary
+    let packageIntegrity: PackageIntegrityReport
     let referenceMatches: [ReferenceNearestMatch]
     let referenceMetrics: ReferenceAlignmentMetrics?
+    let machineGateAssessment: FormalGoldenMachineAssessment
     let formalGoldenVerdict: String
 }
 
@@ -100,10 +150,60 @@ enum HQGoldenRunner {
             )
         }
 
-        let requiredFiles = ["pages", "text", "book_searchable.pdf", "book.md", "book.txt", "manifest.json"]
+        let requiredFiles = ["pages", "text", "book_searchable.pdf", "book.md", "book.txt", "manifest.json", "integrity-report.json"]
         let packageComplete = requiredFiles.allSatisfy {
             FileManager.default.fileExists(atPath: completion.bookPackageURL.appendingPathComponent($0).path)
         }
+
+        let corrected: [CorrectionPageEvidence] = try readJSON(
+            options.workspaceURL.appendingPathComponent("02-image-correction/corrected-pages.json")
+        )
+        let correctionFailures = corrected.filter { $0.stageFailure != nil }
+        let correctionSummary = CorrectionSummary(
+            pageCount: corrected.count,
+            failureCount: correctionFailures.count,
+            failedPageIDs: correctionFailures.map(\.pageID).sorted()
+        )
+
+        let audit: PageAuditResult = try readJSON(
+            options.workspaceURL.appendingPathComponent("03-page-audit/page-audit-result.json")
+        )
+        let pageAuditSummary = PageAuditSummary(
+            orderedPageCount: audit.orderedPageIDs.count,
+            duplicateGroupCount: audit.duplicateGroups.count,
+            missingPageSuspicionCount: audit.missingPageSuspicions.count,
+            reversalEventCount: audit.reversalEvents.count,
+            autoFixCount: audit.autoFixes.count,
+            reviewCount: audit.reviewRequired.count
+        )
+
+        let ocr: OCRSnapshotEvidence = try readJSON(
+            options.workspaceURL.appendingPathComponent("04-ocr/ocr.json")
+        )
+        let nonWhitespaceTexts = ocr.pages.map {
+            $0.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        let confidenceTotal = ocr.pages.reduce(0.0) { $0 + $1.ocrConfidence }
+        var layoutCounts: [String: Int] = [:]
+        ocr.pages.forEach { layoutCounts[$0.layout.rawValue, default: 0] += 1 }
+        let ocrSummary = OCRSummary(
+            pageCount: ocr.pages.count,
+            failureCount: ocr.failures.count,
+            failedPageIDs: ocr.failures.keys.sorted(),
+            needsReviewCount: ocr.pages.filter(\.needsReview).count,
+            emptyTextPageCount: nonWhitespaceTexts.filter(\.isEmpty).count,
+            meanConfidence: ocr.pages.isEmpty ? 0 : confidenceTotal / Double(ocr.pages.count),
+            minimumConfidence: ocr.pages.map(\.ocrConfidence).min(),
+            layoutCounts: layoutCounts
+        )
+
+        let integrity: PackageIntegrityReport = try readJSON(
+            completion.bookPackageURL.appendingPathComponent("integrity-report.json")
+        )
+        let searchablePDFText = try searchablePDFTextSummary(
+            completion.bookPackageURL.appendingPathComponent("book_searchable.pdf")
+        )
+
         let pagesURL = completion.bookPackageURL.appendingPathComponent("pages", isDirectory: true)
         let outputImageURLs = try FileManager.default.contentsOfDirectory(at: pagesURL, includingPropertiesForKeys: nil)
             .filter { ["jpg", "jpeg", "png"].contains($0.pathExtension.lowercased()) }
@@ -120,22 +220,38 @@ enum HQGoldenRunner {
             )
         }
 
-        let verdict: String
-        if let metrics = referenceMetrics {
-            let referencePass = metrics.pageRecall >= 0.99
-                && metrics.unmatchedOutputCount == 0
-                && metrics.duplicateRate <= 0.005
-                && metrics.orderingAccuracy >= 1.0
-                && packageComplete
-            verdict = referencePass
-                ? "REFERENCE_METRICS_PASS_OTHER_GOLDEN_GATES_PENDING"
-                : "REFERENCE_METRICS_FAIL"
-        } else {
-            verdict = "PENDING_REFERENCE_THRESHOLD_CALIBRATION"
+        let videoSHAMatch = match(expected: options.expectedVideoSHA256, observed: videoSHA)
+        let pdfSHAMatch = match(expected: options.expectedPDFSHA256, observed: pdfSHA)
+        let machineAssessment = FormalGoldenMachineGate.evaluate(.init(
+            videoSHAMatchesExpected: videoSHAMatch,
+            pdfSHAMatchesExpected: pdfSHAMatch,
+            referenceMetrics: referenceMetrics,
+            correctionFailureCount: correctionSummary.failureCount,
+            ocrFailureCount: ocrSummary.failureCount,
+            packageIntegrityValid: integrity.valid && packageComplete,
+            auditMissingSuspicionCount: pageAuditSummary.missingPageSuspicionCount,
+            auditReversalCount: pageAuditSummary.reversalEventCount,
+            auditDuplicateGroupCount: pageAuditSummary.duplicateGroupCount,
+            auditReviewCount: pageAuditSummary.reviewCount,
+            ocrNeedsReviewCount: ocrSummary.needsReviewCount,
+            ocrEmptyTextPageCount: ocrSummary.emptyTextPageCount,
+            searchablePDFTextlessPageCount: searchablePDFText.pagesWithoutExtractableText
+        ))
+
+        let formalVerdict: String
+        switch machineAssessment.verdict {
+        case FormalGoldenMachineGate.pendingIdentity:
+            formalVerdict = "PENDING_GOLDEN_IDENTITY_EXPECTATIONS"
+        case FormalGoldenMachineGate.pendingReferenceThreshold:
+            formalVerdict = "PENDING_REFERENCE_THRESHOLD_CALIBRATION"
+        case FormalGoldenMachineGate.machineFail:
+            formalVerdict = "FORMAL_GOLDEN_FAIL_MACHINE_GATE"
+        default:
+            formalVerdict = "PENDING_HUMAN_VISUAL_OCR_REVIEW"
         }
 
         let report = HQGoldenExecutionReport(
-            schemaVersion: 2,
+            schemaVersion: 3,
             bookID: options.bookID,
             generatedAt: ISO8601DateFormatter().string(from: Date()),
             videoFileName: options.videoURL.lastPathComponent,
@@ -144,17 +260,23 @@ enum HQGoldenRunner {
             observedPDFSHA256: pdfSHA,
             expectedVideoSHA256: options.expectedVideoSHA256,
             expectedPDFSHA256: options.expectedPDFSHA256,
-            videoSHAMatchesExpected: match(expected: options.expectedVideoSHA256, observed: videoSHA),
-            pdfSHAMatchesExpected: match(expected: options.expectedPDFSHA256, observed: pdfSHA),
+            videoSHAMatchesExpected: videoSHAMatch,
+            pdfSHAMatchesExpected: pdfSHAMatch,
             referencePDFPageCount: referencePageCount,
             outputPageCount: completion.pageCount,
             reviewCount: completion.reviewItems.count,
             bookPackageRelativePath: relativePath(completion.bookPackageURL, under: options.workspaceURL),
             requiredBookPackageFilesPresent: packageComplete,
             stageEvidence: stageEvidence,
+            correctionSummary: correctionSummary,
+            pageAuditSummary: pageAuditSummary,
+            ocrSummary: ocrSummary,
+            searchablePDFTextSummary: searchablePDFText,
+            packageIntegrity: integrity,
             referenceMatches: referenceMatches,
             referenceMetrics: referenceMetrics,
-            formalGoldenVerdict: verdict
+            machineGateAssessment: machineAssessment,
+            formalGoldenVerdict: formalVerdict
         )
 
         let encoder = JSONEncoder()
@@ -218,6 +340,25 @@ enum HQGoldenRunner {
         return document.pageCount
     }
 
+    static func searchablePDFTextSummary(_ url: URL) throws -> SearchablePDFTextSummary {
+        guard let document = PDFDocument(url: url), document.pageCount > 0 else {
+            throw NSError(domain: "HQGoldenRunner", code: 5, userInfo: [NSLocalizedDescriptionKey: "Unreadable or empty searchable PDF: \(url.lastPathComponent)"])
+        }
+        var withText = 0
+        var characters = 0
+        for index in 0..<document.pageCount {
+            let text = document.page(at: index)?.string?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            if !text.isEmpty { withText += 1 }
+            characters += text.count
+        }
+        return .init(
+            pageCount: document.pageCount,
+            pagesWithExtractableText: withText,
+            pagesWithoutExtractableText: document.pageCount - withText,
+            extractableCharacterCount: characters
+        )
+    }
+
     static func sha256(_ url: URL) throws -> String {
         let handle = try FileHandle(forReadingFrom: url)
         defer { try? handle.close() }
@@ -232,6 +373,10 @@ enum HQGoldenRunner {
 
     static func match(expected: String?, observed: String) -> Bool? {
         expected.map { $0.caseInsensitiveCompare(observed) == .orderedSame }
+    }
+
+    static func readJSON<T: Decodable>(_ url: URL) throws -> T {
+        try JSONDecoder().decode(T.self, from: Data(contentsOf: url))
     }
 
     static func relativePath(_ url: URL, under root: URL) -> String {
