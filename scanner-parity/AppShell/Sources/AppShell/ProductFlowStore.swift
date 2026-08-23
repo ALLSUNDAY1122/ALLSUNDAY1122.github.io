@@ -45,7 +45,7 @@ public final class ProductFlowStore: ObservableObject {
     public func replaceInput(_ assets: [ProductInputAsset]) {
         guard !isRunning else { return }
         if let packageURL = state.bookPackageURL { purgeCompletedPackageIfManaged(packageURL) }
-        if let bookID = savedCheckpoint?.bookID { purgeWorkspace(bookID: bookID) }
+        if let bookID = savedCheckpoint?.bookID { purgeProcessingWorkspace(bookID: bookID) }
         savedCheckpoint = nil
         resumeAvailable = false
         reviewItems = []
@@ -67,14 +67,13 @@ public final class ProductFlowStore: ObservableObject {
                     return
                 }
 
-                // Schema-v3 terminal state contains only the staged final package and review metadata.
                 if let completion = checkpoint.completion {
                     guard FileManager.default.fileExists(atPath: completion.bookPackageURL.path) else {
                         self.invalidateCheckpoint(checkpoint)
                         return
                     }
                     self.purgeManagedInputs(checkpoint.inputAssets ?? [])
-                    self.purgeWorkspace(bookID: checkpoint.bookID)
+                    self.purgeProcessingWorkspace(bookID: checkpoint.bookID)
                     self.savedCheckpoint = checkpoint
                     self.resumeAvailable = false
                     self.reviewItems = completion.reviewItems
@@ -86,16 +85,12 @@ public final class ProductFlowStore: ObservableObject {
                     return
                 }
 
-                // Migrate a legacy completed five-stage checkpoint before deleting intermediates.
                 if let legacyCompletion = checkpoint.terminalCompletion {
                     let staged = try self.stageCompletedPackage(legacyCompletion, bookID: checkpoint.bookID)
-                    let terminal = self.makeTerminalCheckpoint(
-                        from: checkpoint,
-                        completion: staged
-                    )
+                    let terminal = self.makeTerminalCheckpoint(from: checkpoint, completion: staged)
                     try await checkpointStore.save(terminal)
                     self.purgeManagedInputs(checkpoint.inputAssets ?? [])
-                    self.purgeWorkspace(bookID: checkpoint.bookID)
+                    self.purgeProcessingWorkspace(bookID: checkpoint.bookID)
                     self.savedCheckpoint = terminal
                     self.resumeAvailable = false
                     self.reviewItems = staged.reviewItems
@@ -247,10 +242,8 @@ public final class ProductFlowStore: ObservableObject {
                     try? await checkpointStore.clear()
                 }
 
-                // Privacy boundary: after final package promotion, raw inputs and all
-                // frame/correction/audit/OCR intermediates are no longer retained.
                 self.purgeManagedInputs(inputs)
-                self.purgeWorkspace(bookID: bookID)
+                self.purgeProcessingWorkspace(bookID: bookID)
 
                 let workflow = reviewFactory(staged.reviewItems)
                 self.resumeAvailable = false
@@ -359,14 +352,14 @@ public final class ProductFlowStore: ObservableObject {
 
     private func invalidateCheckpoint(_ checkpoint: ProductPipelineCheckpoint) {
         purgeManagedInputs(checkpoint.inputAssets ?? [])
-        purgeWorkspace(bookID: checkpoint.bookID)
+        purgeProcessingWorkspace(bookID: checkpoint.bookID)
         savedCheckpoint = nil
         resumeAvailable = false
         let checkpointStore = checkpointStore
         Task { try? await checkpointStore.clear() }
     }
 
-    private func purgeWorkspace(bookID: String) {
+    private func purgeProcessingWorkspace(bookID: String) {
         guard bookID.hasPrefix("book-") else { return }
         let target = workspaceRoot.appendingPathComponent(bookID, isDirectory: true).standardizedFileURL
         let root = workspaceRoot.standardizedFileURL.path
