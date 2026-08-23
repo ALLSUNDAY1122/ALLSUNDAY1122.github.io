@@ -27,7 +27,7 @@
   ],
   "base_integration_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
   "prior_head_sha": "5cf52614abbf9bb8275ad99bf8863ed2c9836059",
-  "head_sha": "d312ce9bf3989452e40dcbcf7c4df0f1c17c26f5",
+  "head_sha": "d80358a2480d341bf2c6fbe32f87f8da0f0efb44",
   "commits": [
     "98fef0d8f377c0cb40c979b72183e0522e16e26e",
     "6e6fee7efdb51255d2a6a186857cc0aece26cebb",
@@ -40,7 +40,11 @@
     "b442a38ca973e5a064b4738e296a48a36110da4a",
     "b8f75d3e5267c3c7958d92dd1b4a8b1941ed6e3e",
     "ecccd7073393e636f2a3d9a1d1363851b831c7e9",
-    "d312ce9bf3989452e40dcbcf7c4df0f1c17c26f5"
+    "d312ce9bf3989452e40dcbcf7c4df0f1c17c26f5",
+    "f1b3d05f1108926a6bd9def84c72523c9eb3c370",
+    "2614e34bb0228b6309a9bb4af85d7586b1e9ecee",
+    "429f7d1eb70dd8f7c69514c339f19baac7073047",
+    "d80358a2480d341bf2c6fbe32f87f8da0f0efb44"
   ],
   "tests": [
     "L1-A10 cost_quota_guard: 28/28 PASS",
@@ -50,9 +54,9 @@
     "L1-A11 reference profile registry: 24/24 PASS",
     "L1-A11 py_compile reference_profiles.py + test_reference_profiles.py: PASS",
     "A11 negative/recovery coverage includes fixed-profile override rejection, custom entitlement/empty/duplicate/unverified-role rejection, Hi-Fi tier and provider capability guards, role-map collision, target limits, incompatible combinations, exact output-set completeness, corrupt/duplicate registry fail-close and vendor-neutral snapshot",
-    "L1-A12 advanced capability discovery/normalization: 28/28 PASS",
-    "L1-A12 compile/import path for advanced_capabilities.py: PASS",
-    "A12 negative/recovery coverage includes gated/request_access model rejection, WAV eligibility, duplicate/invalid model response, semantic aggregate/sub-stem overlap, target limits, exact output normalization, discovery-before-upload, disabled model never POSTed, discovery failure and corrupt catalog fail-close"
+    "L1-A12 advanced capability + canonical boundary suites: 37/37 PASS",
+    "L1-A12 compile/import path for advanced_capabilities.py and canonical_advanced_provider.py: PASS",
+    "A12 negative/recovery coverage includes gated/request_access model rejection, WAV eligibility, duplicate/invalid model response, semantic aggregate/sub-stem overlap, target limits, exact output normalization, discovery-before-upload, disabled model never POSTed, canonical role ingress/egress, unknown provider output rejection, discovery failure and corrupt catalog fail-close"
   ],
   "evidence": [
     "tech-assets/moises-audio/Separation/Server/cost_quota_guard.py",
@@ -68,7 +72,9 @@
     "tech-assets/moises-audio/Processing/Tests/L1-A11_PROFILE_MATRIX.json",
     "tech-assets/moises-audio/Separation/Profiles/advanced_role_catalog.v1.json",
     "tech-assets/moises-audio/Separation/Server/advanced_capabilities.py",
+    "tech-assets/moises-audio/Separation/Server/canonical_advanced_provider.py",
     "tech-assets/moises-audio/Separation/Tests/test_advanced_capabilities.py",
+    "tech-assets/moises-audio/Separation/Tests/test_canonical_advanced_provider.py",
     "tech-assets/moises-audio/Processing/L1-A12_VALIDATION.md",
     "tech-assets/moises-audio/Processing/Tests/L1-A12_ADVANCED_CAPABILITY_MATRIX.json"
   ],
@@ -89,6 +95,7 @@
     "For horizontally scaled production, provide a transactional shared cost-ledger deployment seam or constrain the service to a coherently locked durable single-writer store; local file locking alone is not a global multi-instance budget guarantee.",
     "Capture/approve the complete current-iPhone Premium/Pro custom-instrument and lock map. A12 has ontology/provider mappings ready, but does not activate unverified roles in current product profiles.",
     "If Moises Pro Hi-Fi must be backed by AudioShake or another provider, require authoritative provider quality-mode documentation plus real-audio differential evidence before enabling the hifi mapping.",
+    "At Late Integration, wire A06/A07 to CanonicalAdvancedAudioShakeAdapter rather than the low-level provider-model helper so vendor IDs remain outside project-visible state.",
     "Do not promote any Lane 1 PARITY row from A10-A12 synthetic/contract/provider-documentation evidence; live real-audio/provider/device differential evidence remains mandatory."
   ],
   "last_updated": "2026-08-23T22:39:00+09:00",
