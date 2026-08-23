@@ -8,15 +8,10 @@
   "work_branch": "moises/wp2-io-library",
   "state": "IN_PROGRESS",
   "current_bundle": null,
-  "completed_bundles": [
-    "L2-M01",
-    "L2-M02",
-    "L2-M03",
-    "L2-M04"
-  ],
+  "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "6ab7d81e861a993b04966d1756c0760de1da1667",
+  "head_sha": "7aa0f384b8716841402115f512302b7405909983",
   "existing_unintegrated_commits_at_epoch_start": [],
   "commits": [
     "0bd1887a479dd6098a28d47d3051ea22b7a2a1eb",
@@ -60,7 +55,12 @@
     "d0d4ec3bcf029152cdb8859fd07bcd52b48294cd",
     "b6136e935fd99871b9b8ae4ae2077fd24189b175",
     "e8b43a1205fde83035124ce918aa22a164130fdb",
-    "6ab7d81e861a993b04966d1756c0760de1da1667"
+    "6ab7d81e861a993b04966d1756c0760de1da1667",
+    "434809ef84c16b9e34e4212216d69002ee4f05e6",
+    "a758a1d4df434de85864a98976b0b7dd198da613",
+    "72788498b9fa3f4b682a2f6a9e42317198b720cd",
+    "3f98caca03f3bc5a7324b97376be07d9ab4cebaf",
+    "7aa0f384b8716841402115f512302b7405909983"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -97,7 +97,11 @@
     "L2-AW07 IOExportBatchTransactionTests.swift strict-concurrency typecheck with XCTest => PASS; IOSAtomicM4AExporter.swift syntax parse => PASS; Apple AVFoundation runtime remains pending",
     "L2-AW08 Swift 6.2.1 Linux strict-concurrency/warnings-as-errors typecheck for sharded Lane2LifecycleMetadataStore + committed XCTest source => PASS",
     "L2-AW08 executable metadata self-check => PASS 8 scenario groups: v1 migration, shard-local mutation, corrupt-shard quarantine, corrupt-legacy preservation, cleanup reopen, bounded failure history, 2000-project benchmark, traversal rejection",
-    "L2-AW08 2000-project metadata benchmark => PASS on this runner: write 2.250490 s, single project update 0.001623 s, full snapshot 0.110948 s; Linux filesystem metadata only, not an iPhone claim"
+    "L2-AW08 2000-project metadata benchmark => PASS on this runner: write 2.250490 s, single project update 0.001623 s, full snapshot 0.110948 s; Linux filesystem metadata only, not an iPhone claim",
+    "L2-AW09 LibraryArtifactLifecycle+UncommittedExport.swift Swift 6.2.1 Linux strict-concurrency/warnings-as-errors compile against contract-equivalent lifecycle surface => PASS",
+    "L2-AW09 executable filesystem self-check => PASS 6 scenario groups; marker L2_AW09_SELF_TEST_PASS scenarios=6",
+    "L2-AW09 compensation benchmark => PASS 500 files removed in 0.688726 s on this runner; Linux filesystem timing only, not an iPhone claim",
+    "L2-AW09 updated Lane2DurableLifecycleCoordinator.swift strict-concurrency/warnings-as-errors typecheck against frozen-contract-equivalent stubs => PASS; committed compensation XCTest source syntax parse => PASS"
   ],
   "evidence": [
     "Independent Lane Worker contract v3 SHA 2edf4411f69af37f9b57a363096fb2787ecfc713 and Lane plan v3 SHA 32be5c934fcdf8f17c677c4c2d30db0808813fa5 re-read before L2-M04",
@@ -131,7 +135,12 @@
     "Library/Sources/Lane2LifecycleMetadataStore.swift now uses marker-last crash-safe v1->v2 migration with project ownership shards, per-project export shards and bounded failure history while preserving the public API and legacy source document",
     "Normal corrupted shard reads fail closed; explicit quarantine preserves raw sidecar bytes without deleting user audio/project content; unsupported future schema is not silently downgraded",
     "Library/Tests/Lane2LifecycleMetadataStoreV2Tests.swift plus Library/benchmarks/L2AW08MetadataShardingSelfCheck.swift cover migration, shard locality, corruption isolation/recovery, cleanup relaunch and 2000-project scale",
-    "Library/L2-AW08_LIBRARY_METADATA_SHARDING_VALIDATION.md records executed portable evidence and explicit NON-PARITY status"
+    "Library/L2-AW08_LIBRARY_METADATA_SHARDING_VALIDATION.md records executed portable evidence and explicit NON-PARITY status",
+    "L2-AW09 re-read current Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock f545604df1025d5556d70170c25346afb36566e0, worker status and PARITY ledger before selection",
+    "Library/Sources/LibraryArtifactLifecycle+UncommittedExport.swift prevalidates the full compensation candidate set and can delete only regular files strictly below Exports/**; Imports/Stems/traversal/directories fail closed before destructive work",
+    "Lane2DurableLifecycleCoordinator.exportAndRecord now compensates artifacts returned before lifecycle metadata commit failure, preserving original failure semantics and recording EXPORT_COMPENSATION_INCOMPLETE when safe cleanup cannot finish",
+    "Library/Tests/Lane2ExportCompensationTests.swift and Library/benchmarks/L2AW09ExportCompensationSelfCheck.swift provide corrupt-shard/unsafe-path regression coverage and executable filesystem evidence",
+    "Library/L2-AW09_STORAGE_PRESSURE_EXPORT_COMPENSATION_VALIDATION.md records executed portable evidence and explicit NON-PARITY status"
   ],
   "known_gaps": [
     "Apple Core Data runtime execution of the L2-M01/L2-M02/L2-M03 suites remains pending an Apple/Xcode environment",
@@ -139,7 +148,7 @@
     "Actual IOSAudioIOService/IOSAtomicM4AExporter AVFoundation codec/decode/export execution is pending Apple SDK and physical-device evidence",
     "External picker/File Provider acquisition is now wired into IOSAudioIOService, but actual iPhone security-scoped URL and NSFileCoordinator provider behavior remains unverified on device",
     "Actual iPhone Files/File Provider/camera-roll/direct URL/share flows remain HQ App/iOS late-integration evidence",
-    "Atomic export batch publication, clean naming, incomplete-output rejection and abandoned-staging recovery have portable evidence, but APFS interruption timing, physical storage pressure and real iPhone share/playback artifact validity remain unverified",
+    "Export publication followed by lifecycle-metadata failure now has safe immediate compensation for uncommitted Exports/** plus durable incomplete-compensation signaling, but real ENOSPC/APFS interruption timing, physical storage pressure and iPhone share/playback retry remain unverified",
     "Reference codec policy now tracks MP3/WAV/FLAC/M4A/MP4/MOV/WMA, but real Apple fixture execution is pending and WMA still needs a production compatibility decoder plus license/package audit if native decoding is unavailable",
     "Lifecycle metadata now isolates corruption to v2 shards and provides explicit byte-preserving quarantine/rebuild seams, but user-facing recovery choice, canonical ownership re-reconciliation after quarantine and actual iPhone interruption/write-failure execution remain HQ App/iOS integration gates",
     "Lifecycle metadata write amplification is reduced by project sharding and a 2000-project portable benchmark passes, but Core Data large-library runtime/RSS/latency and physical-device scale remain unverified",
@@ -156,19 +165,20 @@
     "Run actual iPhone Files/File Provider/camera-roll/direct URL/unsupported-codec/storage-pressure/M4A export/share scenarios and retain real artifacts/evidence",
     "Do not promote MOI-P001/P002/P017/P018/P019/P020 from Lane-2 branch evidence alone; PARITY remains HQ-owned",
     "At late integration expose the explicit lifecycle-metadata quarantine/rebuild decision through App recovery UX, then call canonical Library ownership reconciliation before any orphan sweep after a metadata recovery",
-    "No Shared/App/PARITY contract change was required by L2-AW08"
+    "Run Lane2ExportCompensationTests on the supported Apple/package target and force ENOSPC/process termination after export publication but before/within lifecycle metadata registration; verify produced uncommitted exports are reclaimed while committed exports and source/stem content survive",
+    "No Shared/App/PARITY contract change was required by L2-AW09"
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW08",
-    "goal": "Remove monolithic lifecycle-sidecar write amplification and harden large-library metadata migration/corruption recovery inside Lane-2 Library scope without changing frozen Shared/App contracts.",
-    "rationale": "Real codec/device execution remains Apple-gated. The highest-value lane-local gap was large-library and corruption hardening: routine lifecycle edits rewrote one complete JSON document and one malformed byte could block the entire sidecar.",
-    "done_when": "Existing Lane2LifecycleMetadataStore API transparently migrates v1 into crash-safe project/export shards, ordinary project writes stay shard-local, corruption fails closed but can be explicitly quarantined with raw bytes preserved, cleanup/failure semantics survive reopen, and large-library portable evidence is durable without claiming Apple/device PARITY.",
+    "wave_id": "L2-AW09",
+    "goal": "Harden storage-pressure/interruption behavior when export bytes have been published but lifecycle metadata cannot commit, without broad orphan deletion or frozen-contract changes.",
+    "rationale": "AW07 made export publication atomic and AW08 made metadata sharded/corruption-isolated, but a post-export metadata failure could still leave large untracked files consuming scarce storage. This was the highest-value lane-local interruption/storage-pressure gap that could be solved without an Apple device.",
+    "done_when": "Failed pre-metadata export attempts safely compensate only returned Exports/** regular files, unsafe paths/directories fail closed before deletion, missing cleanup is idempotent, incomplete compensation is durably signalled, portable executable evidence passes, and Apple ENOSPC/device/PARITY gates remain explicit.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "6ab7d81e861a993b04966d1756c0760de1da1667",
-    "next_priority": "Harden storage-pressure/interruption behavior around lifecycle metadata and artifact cleanup, then continue large-library Core Data/query scalability preparation that can be proven lane-locally; real codec/device execution remains HQ-gated."
+    "implementation_head_sha": "7aa0f384b8716841402115f512302b7405909983",
+    "next_priority": "Continue Lane-2 storage/interruption hardening around metadata atomic-write failure/relaunch and Core Data large-library query/runtime preparation; real codec/device execution remains HQ-gated."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW08 continue the Lane-2 completion roadmap without waiting for HQ task replenishment.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW09 continue the Lane-2 completion roadmap without waiting for HQ task replenishment.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-23T22:28:00+09:00",
+  "last_updated": "2026-08-23T22:49:00+09:00",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ reads it for lane checkpoint integration and remains sole PARITY authority."
 }
