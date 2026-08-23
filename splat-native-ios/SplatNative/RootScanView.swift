@@ -31,13 +31,14 @@ struct PersistentScanCameraView: UIViewRepresentable {
         )
     }
 
+    @MainActor
     final class Coordinator: NSObject {
         private weak var sceneView: ARSCNView?
         private let heatmap = CaptureCoverageHeatmapView()
         private var acceptedFeatureIDs = Set<UInt64>()
         private var lastAcceptedFrameCount = 0
         private var isActive = false
-        private var timer: Timer?
+        private var updateTask: Task<Void, Never>?
 
         func install(on sceneView: ARSCNView) {
             self.sceneView = sceneView
@@ -52,11 +53,14 @@ struct PersistentScanCameraView: UIViewRepresentable {
                 heatmap.bottomAnchor.constraint(equalTo: sceneView.bottomAnchor),
             ])
 
-            let timer = Timer(timeInterval: 0.22, repeats: true) { [weak self] _ in
-                self?.updateHeatmap()
+            updateTask?.cancel()
+            updateTask = Task { @MainActor [weak self] in
+                while !Task.isCancelled {
+                    try? await Task.sleep(nanoseconds: 220_000_000)
+                    guard !Task.isCancelled else { break }
+                    self?.updateHeatmap()
+                }
             }
-            RunLoop.main.add(timer, forMode: .common)
-            self.timer = timer
         }
 
         func refresh(in sceneView: ARSCNView, acceptedFrameCount: Int, isActive: Bool) {
@@ -108,7 +112,7 @@ struct PersistentScanCameraView: UIViewRepresentable {
         }
 
         deinit {
-            timer?.invalidate()
+            updateTask?.cancel()
         }
     }
 }
