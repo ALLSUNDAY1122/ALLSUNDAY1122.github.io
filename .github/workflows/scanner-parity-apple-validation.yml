@@ -28,6 +28,12 @@ jobs:
       - name: Validate harness contract
         run: python3 scanner-parity/Tests/AppleValidation/harness_contract_test.py
 
+      - name: Validate HQ Golden runner contract
+        run: python3 scanner-parity/Tests/HQGoldenRunner/runner_contract_test.py
+
+      - name: Build HQ Formal Golden runner on macOS
+        run: swift build --package-path scanner-parity --product scanner-hq-golden-runner
+
       - name: Compile Apple adapters with iPhoneOS SDK
         run: bash scanner-parity/AppleValidation/run-apple-sdk-compile.sh "$RUNNER_TEMP/scanner-parity-apple-validation"
 
