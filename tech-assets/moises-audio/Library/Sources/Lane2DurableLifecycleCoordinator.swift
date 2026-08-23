@@ -71,26 +71,51 @@ public actor Lane2DurableLifecycleCoordinator {
     @discardableResult
     public func exportAndRecord(_ request: ExportRequest) async throws -> [ExportArtifact] {
         let attemptID = UUID()
+        var produced: [ExportArtifact] = []
+        var metadataCommitted = false
+
         do {
-            let result = try await exporter.export(request)
-            guard !result.isEmpty else {
+            produced = try await exporter.export(request)
+            guard !produced.isEmpty else {
                 throw DomainFailure.exportFailed(code: "EXPORT_EMPTY_RESULT")
             }
-            for artifact in result {
+            for artifact in produced {
                 try artifacts.requireReady(relativePath: artifact.relativePath)
             }
             _ = try await metadata.recordExports(
                 projectUUID: request.projectID.rawValue,
-                artifacts: result.map { ($0.relativePath, $0.mediaType) }
+                artifacts: produced.map { ($0.relativePath, $0.mediaType) }
             )
-            return result
+            metadataCommitted = true
+            return produced
         } catch {
+            var compensationIncomplete = false
+            if !metadataCommitted && !produced.isEmpty {
+                do {
+                    let report = try artifacts.discardUncommittedExportArtifacts(
+                        relativePaths: produced.map(\.relativePath),
+                        fileManager: fileManager
+                    )
+                    compensationIncomplete = !report.isComplete
+                } catch {
+                    compensationIncomplete = true
+                }
+            }
+
             try? await persistFailure(
                 attemptID: attemptID,
                 projectID: request.projectID,
                 operation: .exportAudio,
                 error: error
             )
+            if compensationIncomplete {
+                try? await persistFailure(
+                    attemptID: UUID(),
+                    projectID: request.projectID,
+                    operation: .exportAudio,
+                    error: DomainFailure.exportFailed(code: "EXPORT_COMPENSATION_INCOMPLETE")
+                )
+            }
             throw error
         }
     }
