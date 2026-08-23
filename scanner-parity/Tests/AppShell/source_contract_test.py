@@ -8,6 +8,8 @@ importer = (root / "AppShell/Sources/AppShell/MediaImportCoordinator.swift").rea
 store = (root / "AppShell/Sources/AppShell/ProductFlowStore.swift").read_text()
 bindings = (root / "AppShell/Sources/AppShell/ScannerPipelineBindings.swift").read_text()
 production = (root / "AppShell/Sources/AppShell/ProductionScannerRuntime.swift").read_text()
+hardened = (root / "AppShell/Sources/AppShell/GoldenHardenedScannerRuntime.swift").read_text()
+segmentation = (root / "ImageCorrection/BookPageSegmentation.swift").read_text()
 app = (root / "AppShell/Sources/AppShell/ScannerParityApp.swift").read_text()
 recovery = (root / "AppShell/Sources/AppShell/RecoveryProductReviewWorkflow.swift").read_text()
 background = (root / "AppShell/Sources/AppShell/ProductBackgroundTaskController.swift").read_text()
@@ -42,7 +44,10 @@ checks = {
     "review adapter": "ProductReviewWorkflow" in store and "resolveReviewItem" in root_view,
     "canonical five-stage bindings": all(name in bindings for name in ["frameExtraction", "imageCorrection", "pageAudit", "ocr", "packageWrite"]),
     "production five-stage runtime": all(token in production for token in ["frameExtractionBinding()", "imageCorrectionBinding()", "pageAuditBinding()", "ocrBinding()", "packageBinding()"]),
-    "production app default": "ProductionScannerRuntime.makeDriver()" in app and "BoundProductPipelineDriver(bindings: [])" not in app,
+    "Golden hardened app default": "GoldenHardenedScannerRuntime.makeDriver()" in app and "BoundProductPipelineDriver(bindings: [])" not in app,
+    "non-page rejection boundary": "non_page_or_unresolved_frame" in hardened and "segments.isEmpty" in hardened,
+    "open-book spread split": "BookPageSegmentationEngine" in hardened and "BookPageSegmentationPolicy" in segmentation and "role: .left" in segmentation and "role: .right" in segmentation,
+    "base pipeline reused": "ProductionScannerRuntime.makeBindings()" in hardened and "binding.stage == .imageCorrection" in hardened,
     "recovery core product adapter": "RecoveryProductReviewWorkflow" in app and "AppShellReviewAdapter" in recovery,
     "package integrity gate": "PackageIntegrityVerifier().verify" in production and "packageIntegrityFailed" in production,
     "privacy manifest embedded": privacy.exists() and "PrivacyInfo.xcprivacy" in package,
