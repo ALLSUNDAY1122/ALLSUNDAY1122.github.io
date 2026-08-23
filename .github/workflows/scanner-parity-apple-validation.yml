@@ -34,6 +34,9 @@ jobs:
       - name: Build HQ Formal Golden runner on macOS
         run: swift build --package-path scanner-parity --product scanner-hq-golden-runner
 
+      - name: Build HQ Formal Golden finalizer on macOS
+        run: swift build --package-path scanner-parity --product scanner-hq-golden-finalizer
+
       - name: Test HQ Golden reference metrics
         run: swift test --package-path scanner-parity --filter ReferenceAlignmentTests
 
@@ -42,6 +45,9 @@ jobs:
 
       - name: Test HQ Golden visual/OCR review bundle
         run: swift test --package-path scanner-parity --filter GoldenReviewBundleBuilderTests
+
+      - name: Test HQ Formal Golden review finalizer
+        run: swift test --package-path scanner-parity --filter FormalGoldenReviewFinalizerTests
 
       - name: Test searchable PDF generation on macOS
         run: swift test --package-path scanner-parity --filter SearchablePDFWriterTests
