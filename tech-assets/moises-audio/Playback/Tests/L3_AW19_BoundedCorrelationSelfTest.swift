@@ -1,5 +1,22 @@
 import Foundation
 
+private func aw19CorrelationReceipt(
+    serial: UInt64,
+    generation: UInt64
+) -> PracticeDSPGenerationCoordinatorReceipt {
+    PracticeDSPGenerationCoordinatorReceipt(
+        schemaVersion: 1,
+        evidenceScope: "AW19_CORRELATION_TEST_NON_PARITY",
+        operationSerial: serial,
+        mutationKind: .transportDiscontinuity,
+        playbackGeneration: generation,
+        clickGeneration: generation,
+        reason: PlaybackTransportDiscontinuityReason.play.rawValue,
+        replacementBindingActive: true,
+        parityPromotionAllowed: false
+    )
+}
+
 @main
 struct L3AW19BoundedCorrelationSelfTest {
     static func main() async {
@@ -23,15 +40,9 @@ struct L3AW19BoundedCorrelationSelfTest {
                 kind: .play,
                 coalescedPredecessorCount: 0,
                 playbackGeneration: UInt64(ticket + 1),
-                coordinatorReceipt: PracticeDSPGenerationCoordinatorReceipt(
-                    scope: "AW19_CORRELATION_TEST_NON_PARITY",
-                    operationSerial: UInt64(ticket + 1),
-                    mutationKind: .transportDiscontinuity,
-                    playbackGeneration: UInt64(ticket + 1),
-                    clickGeneration: UInt64(ticket + 1),
-                    reason: PlaybackTransportDiscontinuityReason.play.rawValue,
-                    poisoned: false,
-                    parityClaimAllowed: false
+                coordinatorReceipt: aw19CorrelationReceipt(
+                    serial: UInt64(ticket + 1),
+                    generation: UInt64(ticket + 1)
                 ),
                 callerCancellationObservedAfterDispatch: false
             )
@@ -67,16 +78,7 @@ struct L3AW19BoundedCorrelationSelfTest {
                 kind: .play,
                 coalescedPredecessorCount: 0,
                 playbackGeneration: 3,
-                coordinatorReceipt: PracticeDSPGenerationCoordinatorReceipt(
-                    scope: "AW19_CORRELATION_TEST_NON_PARITY",
-                    operationSerial: 3,
-                    mutationKind: .transportDiscontinuity,
-                    playbackGeneration: 3,
-                    clickGeneration: 3,
-                    reason: PlaybackTransportDiscontinuityReason.play.rawValue,
-                    poisoned: false,
-                    parityClaimAllowed: false
-                ),
+                coordinatorReceipt: aw19CorrelationReceipt(serial: 3, generation: 3),
                 callerCancellationObservedAfterDispatch: false
             )
         ))
