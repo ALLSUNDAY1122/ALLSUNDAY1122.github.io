@@ -1,3 +1,4 @@
+# Triggered after initial workflow registration so the push event can execute this existing workflow.
 name: Scaniverse HQ A2 gap fix
 
 on:
@@ -58,18 +59,12 @@ enum CaptureImageQualityPolicy {
     static func rejection(for stats: CaptureImageQualityStats) -> CaptureImageQualityRejection? {
         guard stats.sampleCount >= 64 else { return nil }
 
-        // Conservative clipping thresholds: reject only frames where most sampled pixels are
-        // genuinely near the video-range extremes. This avoids throwing away intentionally dark
-        // or bright objects that still contain usable texture.
         if stats.meanLuma < 32, stats.darkFraction >= 0.60 {
             return .tooDark
         }
         if stats.meanLuma > 220, stats.highlightFraction >= 0.60 {
             return .tooBright
         }
-
-        // A blurred frame loses both local second-derivative energy and useful luma spread.
-        // Requiring both keeps smooth but correctly exposed surfaces from being rejected too often.
         if stats.laplacianScore < 2.0, stats.lumaStandardDeviation < 14 {
             return .tooSoft
         }
@@ -144,62 +139,27 @@ enum CaptureImageQualityEvaluator {
 
 final class CaptureImageQualityTests: XCTestCase {
     func testRejectsSeverelyDarkFrame() {
-        let stats = CaptureImageQualityStats(
-            meanLuma: 24,
-            darkFraction: 0.82,
-            highlightFraction: 0,
-            lumaStandardDeviation: 10,
-            laplacianScore: 4,
-            sampleCount: 512
-        )
+        let stats = CaptureImageQualityStats(meanLuma: 24, darkFraction: 0.82, highlightFraction: 0, lumaStandardDeviation: 10, laplacianScore: 4, sampleCount: 512)
         XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooDark)
     }
 
     func testRejectsSeverelyClippedHighlights() {
-        let stats = CaptureImageQualityStats(
-            meanLuma: 228,
-            darkFraction: 0,
-            highlightFraction: 0.76,
-            lumaStandardDeviation: 12,
-            laplacianScore: 5,
-            sampleCount: 512
-        )
+        let stats = CaptureImageQualityStats(meanLuma: 228, darkFraction: 0, highlightFraction: 0.76, lumaStandardDeviation: 12, laplacianScore: 5, sampleCount: 512)
         XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooBright)
     }
 
     func testRejectsOnlyClearlySoftLowDetailFrame() {
-        let stats = CaptureImageQualityStats(
-            meanLuma: 112,
-            darkFraction: 0.02,
-            highlightFraction: 0.02,
-            lumaStandardDeviation: 9,
-            laplacianScore: 1.2,
-            sampleCount: 512
-        )
+        let stats = CaptureImageQualityStats(meanLuma: 112, darkFraction: 0.02, highlightFraction: 0.02, lumaStandardDeviation: 9, laplacianScore: 1.2, sampleCount: 512)
         XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooSoft)
     }
 
     func testAcceptsNormallyExposedDetailedFrame() {
-        let stats = CaptureImageQualityStats(
-            meanLuma: 116,
-            darkFraction: 0.08,
-            highlightFraction: 0.04,
-            lumaStandardDeviation: 34,
-            laplacianScore: 8,
-            sampleCount: 512
-        )
+        let stats = CaptureImageQualityStats(meanLuma: 116, darkFraction: 0.08, highlightFraction: 0.04, lumaStandardDeviation: 34, laplacianScore: 8, sampleCount: 512)
         XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
     }
 
     func testSmallSampleFailsOpen() {
-        let stats = CaptureImageQualityStats(
-            meanLuma: 10,
-            darkFraction: 1,
-            highlightFraction: 0,
-            lumaStandardDeviation: 0,
-            laplacianScore: 0,
-            sampleCount: 12
-        )
+        let stats = CaptureImageQualityStats(meanLuma: 10, darkFraction: 1, highlightFraction: 0, lumaStandardDeviation: 0, laplacianScore: 0, sampleCount: 12)
         XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
     }
 }
@@ -214,7 +174,7 @@ final class CaptureImageQualityTests: XCTestCase {
           s = s.replace(jpeg_anchor, quality_gate, 1)
 
           dataset_anchor = '''                let dataset = GaussianDataset(\n                    path: path,\n                    downscaleFactor: SplatReconstructionPolicy.datasetDownscale,\n                    evalMode: false\n                )\n'''
-          preflight = '''                // Fail before GaussianDataset/GaussianTrainer allocation when the device is already\n                // under memory or thermal pressure. The previous guard ran only after trainer construction,\n                // which was too late to protect against the largest allocation spike.\n                let preflightEvaluation = passResourceGuard.evaluate(splatCount: 0)\n                if let reason = preflightEvaluation.reason {\n                    let report = passResourceGuard.makeReport(\n                        startedAt: runStartedAt,\n                        startUptime: runStartUptime,\n                        passStartIteration: 0,\n                        targetIteration: requestedTarget,\n                        finalIteration: 0,\n                        finalSplatCount: 0,\n                        initialThermalState: initialThermalState,\n                        finalThermalState: splatThermalStateName(ProcessInfo.processInfo.thermalState),\n                        outcome: "preflight-\\(reason.rawValue)"\n                    )\n                    SplatReconstructionRunReport.write(report, projectURL: projectURL)\n                    Task { @MainActor [weak self] in\n                        self?.failTraining(reason.userMessage)\n                    }\n                    return\n                }\n\n''' + dataset_anchor
+          preflight = '''                let preflightEvaluation = passResourceGuard.evaluate(splatCount: 0)\n                if let reason = preflightEvaluation.reason {\n                    let report = passResourceGuard.makeReport(\n                        startedAt: runStartedAt,\n                        startUptime: runStartUptime,\n                        passStartIteration: 0,\n                        targetIteration: requestedTarget,\n                        finalIteration: 0,\n                        finalSplatCount: 0,\n                        initialThermalState: initialThermalState,\n                        finalThermalState: splatThermalStateName(ProcessInfo.processInfo.thermalState),\n                        outcome: "preflight-\\(reason.rawValue)"\n                    )\n                    SplatReconstructionRunReport.write(report, projectURL: projectURL)\n                    Task { @MainActor [weak self] in\n                        self?.failTraining(reason.userMessage)\n                    }\n                    return\n                }\n\n''' + dataset_anchor
           if s.count(dataset_anchor) != 1:
               raise SystemExit(f'Unexpected dataset anchor count: {s.count(dataset_anchor)}')
           s = s.replace(dataset_anchor, preflight, 1)
@@ -240,7 +200,6 @@ final class CaptureImageQualityTests: XCTestCase {
           PY
           git diff --check
           git diff --stat
-          git diff -- splat-native-ios/SplatNative/CaptureImageQuality.swift splat-native-ios/SplatNative/ScanModel.swift splat-native-ios/SplatNativeTests/CaptureImageQualityTests.swift splat-native-ios/project.yml .github/workflows/splat-native-ios.yml
       - name: Commit patch
         run: |
           set -euo pipefail
