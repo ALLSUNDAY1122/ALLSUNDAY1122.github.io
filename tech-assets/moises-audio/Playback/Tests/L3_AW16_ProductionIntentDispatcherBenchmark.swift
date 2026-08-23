@@ -1,19 +1,15 @@
 import Foundation
 
-private final class AW16BenchmarkPlaybackBackend: PlaybackBackendDriving, @unchecked Sendable {
-    private let lock = NSLock()
+private actor AW16BenchmarkPlaybackBackend: PlaybackBackendDriving {
     private var seekCount = 0
 
-    func count() -> Int {
-        lock.lock(); defer { lock.unlock() }
-        return seekCount
-    }
+    func count() -> Int { seekCount }
 
     func loadSource(projectID: ProjectID, asset: LocalAudioAsset) async throws {}
     func loadStems(projectID: ProjectID, stems: [StemArtifact], positionSeconds: Double, resume: Bool, loop: PlaybackLoopRange?) async throws {}
     func setEffectiveGains(projectID: ProjectID, gains: [StemID: Double]) async throws {}
     func seek(projectID: ProjectID, to positionSeconds: Double, resume: Bool, loop: PlaybackLoopRange?) async throws {
-        lock.lock(); seekCount += 1; lock.unlock()
+        seekCount += 1
     }
     func setLoop(projectID: ProjectID, loop: PlaybackLoopRange?) async throws {}
     func play(projectID: ProjectID) async throws {}
@@ -105,8 +101,9 @@ struct L3AW16ProductionIntentDispatcherBenchmark {
 
             precondition(executed == 1)
             precondition(superseded == intentsPerRound - 1)
-            precondition(rawPlayback.count() == 1)
-            checksum += executed * 31 + superseded + rawPlayback.count() + round
+            let backendCount = await rawPlayback.count()
+            precondition(backendCount == 1)
+            checksum += executed * 31 + superseded + backendCount + round
         }
 
         milliseconds.sort()
