@@ -34,6 +34,9 @@ jobs:
       - name: Build HQ Formal Golden runner on macOS
         run: swift build --package-path scanner-parity --product scanner-hq-golden-runner
 
+      - name: Test HQ Golden reference metrics
+        run: swift test --package-path scanner-parity --filter ReferenceAlignmentTests
+
       - name: Compile Apple adapters with iPhoneOS SDK
         run: bash scanner-parity/AppleValidation/run-apple-sdk-compile.sh "$RUNNER_TEMP/scanner-parity-apple-validation"
 
