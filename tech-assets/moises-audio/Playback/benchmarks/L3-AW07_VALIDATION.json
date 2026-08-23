@@ -1,0 +1,52 @@
+{
+  "wave_id": "L3-AW07",
+  "result": "COMPLETE_NON_PARITY",
+  "environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "apple_sdk_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "portable_validation": {
+    "status": "PASS",
+    "stress_analyses": 200,
+    "coverage": [
+      "137-frame global lag recovery",
+      "reference-onset to observed-onset matching after global alignment",
+      "zero residual onset error for a pure shifted signal",
+      "unexpected pop detection outside expected-event masks",
+      "local drift span detection",
+      "sample-rate mismatch rejection",
+      "malformed interleaved PCM rejection",
+      "out-of-range event rejection",
+      "non-finite sample counting without correlation-loop hang",
+      "Codable JSON report round-trip"
+    ]
+  },
+  "benchmark": {
+    "rounds": 20,
+    "operations_per_round": 100,
+    "reference_frames": 24000,
+    "channels": 2,
+    "sample_rate_hz": 48000,
+    "maximum_alignment_lag_frames": 64,
+    "drift_anchors": 3,
+    "median_ms": 142.359,
+    "p95_ms": 154.270,
+    "max_ms": 157.017,
+    "checksum": 29650
+  },
+  "metrics": [
+    "global normalized correlation and lag",
+    "local drift lag and span",
+    "raw and residual onset timing error",
+    "aligned residual RMS / reference dB",
+    "derivative RMS ratio / dB proxy",
+    "unexpected discontinuity count and peak derivative",
+    "clip and non-finite sample counts"
+  ],
+  "evidence_scope": "LANE3_PCM_DIFFERENTIAL_NON_PARITY",
+  "parity_claimed": false
+}
