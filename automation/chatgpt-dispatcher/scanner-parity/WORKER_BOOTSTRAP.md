@@ -1,4 +1,4 @@
-# 書籍スキャナー同等化｜Worker Pool 契約 v0.3
+# 書籍スキャナー同等化｜Worker Pool 契約 v0.4
 
 ## 最終目的
 動画で本を連続撮影・画面録画するだけで、ページ抽出、補正、ページ完全性監査、OCR、検索可能PDF、TXT/Markdownまで自動生成し、人間にも生成AIにも読みやすい書籍データを作る。
@@ -14,7 +14,18 @@
 - Integration branch `scanner-parity/integration`
 - Dispatcher branch `automation/scanner-parity-dispatcher`
 - Queue `automation/chatgpt-dispatcher/scanner-parity/queue.json`
+- Fixed assignment manifest `automation/chatgpt-dispatcher/scanner-parity/FIXED_ASSIGNMENTS.json`
 - Shared contract `scanner-parity/SHARED_CONTRACT.md`
+
+## Fixed Wave Assignment
+Worker 1〜4は固定部署ではないが、HQが `FIXED_ASSIGNMENTS.json` を `active=true` で発行したWaveでは固定割当をQueueの自由claimより優先する。
+
+- 各Workerは開始時・各Macro Wave開始時に `FIXED_ASSIGNMENTS.json` を必ず再取得する。
+- `active=true` かつ自分の `workerN` に `task_id` が指定されている場合、そのTaskだけをatomic claimする。他WorkerのTaskをclaimしてはならない。
+- 割当Taskが完了しても、次の固定割当が発行されるまで別のREADY Taskを勝手にclaimしない。
+- `active=false` または自分への割当がない場合のみ、通常の汎用Worker Pool規則へ戻る。
+- 固定割当でも claim/read-back/claim_epoch/resource_locks/write_scope/attempt branch の安全規則は省略しない。
+- 固定割当は担当セッションを恒久部署化するものではなく、HQがWave単位で変更できる。
 
 ## Golden Dataset
 初期評価はユーザー提供の実書籍動画・28ページ画像PDFを基準にする。成果物をGitHubへ原本転載しない。必要な評価指標・ハッシュ・ページ番号・観測結果だけをEvidenceとして保存する。
@@ -36,12 +47,12 @@ Golden Datasetの取得可否、canonical SHAの確定・SHA mismatch解消、�
 - Golden正式検証はWorker単位では行わず、HQが対象Taskをintegrationへ統合した後、専用 `HQ_GOLDEN_GATE` で一気通貫に実施する。
 
 ## Worker原則
-1. Worker 1〜4は固定部署ではない。Queueの `READY` Taskから capability / dependency / resource lock 条件を満たすものを1件だけatomic claimする。
+1. Worker 1〜4は固定部署ではない。固定割当ManifestがactiveなWaveでは割当Taskのみをclaimし、それ以外ではQueueの `READY` Taskから capability / dependency / resource lock 条件を満たすものを1件だけatomic claimする。
 2. Queueを読んだだけで作業開始しない。claim成功後、read-backで `claimed_by / claim_token / claim_epoch` が自分であることを確認する。
 3. 1 Wave = 1 Task Attempt。Taskごとに `task/<task-id>/attempt-<claim_epoch>` の短命branchを使う。
 4. 旧epochはcanonical branch、Queue確定、production promotionを行わない。
 5. `resource_locks` はファイルではなく意味領域で排他する。
-6. 会話履歴を正本にしない。開始時・各Macro Wave開始時にNotion / GitHub / Queue / integration HEADを再取得する。
+6. 会話履歴を正本にしない。開始時・各Macro Wave開始時にNotion / GitHub / Queue / FIXED_ASSIGNMENTS / integration HEADを再取得する。
 7. shared contract、integration、共通data model、app shellの変更はHQ所有。Workerが独自に契約を再定義しない。
 8. 人間判断不要なら質問せず、調査→実装→test→監査→Evidence→INTEGRATION_READYまで進める。
 9. 外部OSSはライセンスを確認し、採用・参考・不採用を明示する。ライセンス不明または競合制限があるコードをコピーしない。
