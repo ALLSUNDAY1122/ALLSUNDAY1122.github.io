@@ -1,0 +1,110 @@
+name: Otsu4 ASC TestFlight Readback
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  readback:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTS4-ASC]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Start Codemagic ASC readback and wait
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json,os,time,urllib.request,urllib.error
+          from pathlib import Path
+
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token:
+              raise SystemExit('CM_API_TOKEN missing')
+          app_id='6a769d81a1add9d06020b524'
+          branch='release/otsu4-720-internal-testflight'
+          workflow='otsu4-asc-readback'
+          expected=93
+          out=Path('otsu4-asc-gateway.json')
+          result={'ok':False,'expectedBuild':expected,'workflow':workflow,'branch':branch,'status':'starting'}
+          out.write_text(json.dumps(result,indent=2),encoding='utf-8')
+
+          def api(url,method='GET',payload=None):
+              req=urllib.request.Request(url,data=None if payload is None else json.dumps(payload).encode(),method=method,headers={'Content-Type':'application/json','x-auth-token':token})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode() or '{}'
+                      return r.status,json.loads(raw)
+              except urllib.error.HTTPError as e:
+                  return e.code,{'error':e.read().decode(errors='replace')[:2000]}
+
+          s,d=api('https://api.codemagic.io/builds','POST',{'appId':app_id,'workflowId':workflow,'branch':branch})
+          if not 200 <= s < 300:
+              result.update(status='start_failed',error=f'HTTP {s}: {d}')
+              out.write_text(json.dumps(result,indent=2),encoding='utf-8')
+              raise SystemExit(result['error'])
+          bid=d.get('buildId') or d.get('id')
+          result.update(build_id=bid,status='started')
+          out.write_text(json.dumps(result,indent=2),encoding='utf-8')
+          print('Codemagic readback build:',bid)
+
+          details={}
+          for _ in range(60):
+              time.sleep(15)
+              s,d=api(f'https://codemagic.io/api/v3/builds/{bid}')
+              if not 200 <= s < 300:
+                  raise SystemExit(f'GET build HTTP {s}: {d}')
+              details=d.get('data') or d
+              state=details.get('status')
+              print('status=',state)
+              result['status']=state
+              out.write_text(json.dumps(result,indent=2),encoding='utf-8')
+              if state in {'finished','failed','canceled','timeout','skipped'}:
+                  break
+          else:
+              raise SystemExit('readback timed out')
+
+          if details.get('status') != 'finished':
+              result['error']='Codemagic ASC readback ended '+str(details.get('status'))
+              out.write_text(json.dumps(result,indent=2),encoding='utf-8')
+              raise SystemExit(result['error'])
+
+          artifact=next((a for a in details.get('artifacts',[]) if a.get('name')=='asc-readback.json'),None)
+          if not artifact or not artifact.get('short_lived_download_url'):
+              raise SystemExit('asc-readback.json artifact missing')
+          with urllib.request.urlopen(artifact['short_lived_download_url'],timeout=30) as r:
+              payload=r.read()
+          Path('asc-readback.json').write_bytes(payload)
+          asc=json.loads(payload.decode())
+          latest=asc.get('latestTestFlightBuild')
+          if not isinstance(latest,int) or latest < expected or not asc.get('build93Visible'):
+              raise SystemExit(f'Build 93 not confirmed: {asc}')
+          result.update(ok=True,status='confirmed',latestTestFlightBuild=latest)
+          out.write_text(json.dumps(result,indent=2),encoding='utf-8')
+          print('PASS: App Store Connect/TestFlight readback confirmed build',latest)
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: otsu4-asc-readback-${{ github.run_id }}
+          path: |
+            otsu4-asc-gateway.json
+            asc-readback.json
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Otsu4 ASC readback finished. status=${{ job.status }}; run_id=${context.runId}`
+            });
