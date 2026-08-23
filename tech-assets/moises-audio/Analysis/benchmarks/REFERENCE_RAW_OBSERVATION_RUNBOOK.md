@@ -4,12 +4,20 @@ Purpose: remove trust in manually calculated or transcribed current-iPhone Moise
 
 W20 does not perform the HQ-owned Moises capture, does not invent missing observations, does not select quality tolerances, and does not declare PARITY.
 
+## W21 prerequisite for future human-transcribed Reference evidence
+
+W20 predates the W21 independent-review layer. For future HQ current-iPhone evidence, a human-transcribed raw set must not be admitted directly to W20.
+
+Use `AnalysisReferenceReviewConsensusEngine.validateAndCompileReference(...)` as the admission facade. W21 binds every raw claim to artifact-local anchors, requires independent reviewers and resolves only externally toleranced/exact agreement. Only its deterministic consensus raw set is passed into W20.
+
+Direct W20 APIs remain valid for unit, compatibility and non-human/instrumented paths, but bypassing W21 is not acceptable for future human-transcribed current-iPhone Moises Reference evidence. See `REFERENCE_REVIEW_CONSENSUS_RUNBOOK.md`.
+
 ## Required inputs
 
 1. The exact rights-cleared `AnalysisRealAudioBenchmarkManifest` used for Project scoring.
 2. SHA-256 of the exact manifest bytes, already bound by the W19 HQ capture policy.
 3. The W19 capture set containing run/build/device/artifact provenance and declared metric rows.
-4. `AnalysisReferenceRawObservationSet`, bound to the same capture-set ID and exact manifest ID/SHA.
+4. `AnalysisReferenceRawObservationSet`, bound to the same capture-set ID and exact manifest ID/SHA. For human transcription this must be the W21 consensus output.
 5. The W19 HQ capture policy.
 
 Start raw capture JSON from `REFERENCE_RAW_OBSERVATION_SET_TEMPLATE.json`. The empty template is intentionally invalid until real observations are added.
@@ -53,7 +61,7 @@ Beat:
 
 Key:
 - raw tonic pitch class and mode.
-- exact tonic/mode and W4-style weighted-key score are recomputed.
+- exact tonic/mode and weighted-key score are recomputed.
 
 Chord:
 - raw timestamped normalized chord labels.
@@ -81,7 +89,7 @@ A missing `decision_emitted`, an added favorable metric, or any changed value pr
 
 ## W19 handoff
 
-Call:
+For direct non-human/instrumented use, call:
 
 ```swift
 let derivation = AnalysisReferenceRawObservationDeriver.derive(
@@ -97,27 +105,17 @@ Only `DERIVED_REFERENCE_PENDING_W19` produces a `derivedCaptureSet`.
 
 The derived capture set keeps W19 run/environment/artifact/row metadata but replaces operator-entered quality metrics with deterministic raw-derived values.
 
-For the complete W20 -> W19 -> W18 chain use:
+For human-reviewed current-iPhone evidence, the complete chain is:
 
-```swift
-let compilation = try AnalysisReferenceRawObservationDeriver.validateAndCompileReference(
-    rawSet: rawSet,
-    captureSet: captureSet,
-    policy: approvedCapturePolicy,
-    manifest: goldenManifest,
-    manifestSHA256: exactManifestSHA256
-)
-```
+1. W21 independent artifact-anchored review consensus.
+2. W20 raw/declared derivation integrity gate.
+3. W19 repeated-capture provenance/repeatability gate on the **derived** metrics.
+4. W19 audited current-iPhone Moises Reference compilation.
+5. W18 paired Project-vs-Reference comparison.
+6. HQ final PARITY judgment.
 
-This executes:
-
-1. W20 raw/declared derivation integrity gate.
-2. W19 repeated-capture provenance/repeatability gate on the **derived** metrics.
-3. W19 audited current-iPhone Moises Reference compilation.
-4. The resulting audited report is then eligible to enter W18 paired Project-vs-Reference comparison.
-
-Archive the raw set, original W19 capture set, W20 derivation report, W19 derived validation report, audited Reference report, exact Golden manifest bytes/hash, HQ policies, and all evidence artifacts together.
+Archive the W21 review set/report, consensus raw set, original W19 capture set, W20 derivation report, W19 derived validation report, audited Reference report, exact Golden manifest bytes/hash, HQ policies, and all evidence artifacts together.
 
 ## NON-PARITY notice
 
-W20 templates/unit/portable tests contain no real current-iPhone Moises observations. Passing W20 proves only that raw Reference observations can be deterministically and audibly traceably converted into canonical metrics without trusting operator math. MOI-P009/P011/P013/P016 and all final PARITY gates still require actual rights-cleared current-iPhone evidence and HQ judgment.
+W20 templates/unit/portable tests contain no real current-iPhone Moises observations. Passing W20 proves only that raw Reference observations can be deterministically and audibly traceably converted into canonical metrics without trusting operator math. Passing W21 adds transcription-consensus integrity, but neither establishes MOI-P009/P011/P013/P016 or final PARITY without actual rights-cleared current-iPhone evidence and HQ judgment.
