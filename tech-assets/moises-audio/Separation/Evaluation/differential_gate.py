@@ -112,7 +112,13 @@ def _review_stage(config: Mapping[str, Any], root: Path, output_dir: Path, resum
     assignments_path = output_dir / "reviewer-assignments.json"
     dump_json(assignments_path, assignments_doc)
 
-    normalized_reviews = parse_reviews(config, output_dir)
+    try:
+        normalized_reviews = parse_reviews(config, output_dir)
+    except GateError as exc:
+        if exc.code != "L1M04_BLIND_REVIEW_REQUIRED":
+            raise
+        normalized_reviews = []
+
     filtered_reviews, missing, review_audit = filter_reviews_for_active_assignments(
         normalized_reviews, base_assignments, active_assignments, replacement_history
     )
@@ -209,9 +215,11 @@ def run(plan_path: Path, root: Path, output_dir: Path, evaluator: Path) -> dict[
     write_preflight(config, output_dir, resume=resume)
     execution = execute_project_cases(config, evaluator, root, output_dir, resume=resume)
     failed_cases = [item["case_id"] for item in execution["cases"] if not item["success"]]
-    _, missing_reference = build_comparison_inputs(config, root, output_dir, resume=resume)
     if failed_cases:
         raise GateError("L1M04_PROJECT_BATCH_FAILED", "project runs failed: " + ",".join(sorted(failed_cases)), exit_code=EXIT_CANDIDATE_FAIL)
+    resume.bind_global_artifact("batch_execution", output_dir / "batch-execution.json")
+
+    _, missing_reference = build_comparison_inputs(config, root, output_dir, resume=resume)
     if missing_reference:
         resume.set_state("WAITING_REFERENCE")
         raise GateError(
