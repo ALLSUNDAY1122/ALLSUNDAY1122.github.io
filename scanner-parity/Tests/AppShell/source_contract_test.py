@@ -1,5 +1,7 @@
 from pathlib import Path
 
+# Storage-lifecycle assertions intentionally mirror Worker2 post-integration
+# privacy invariants so the final ProductShell gate catches retention regressions.
 root = Path(__file__).resolve().parents[2]
 root_view = (root / "AppShell/Sources/AppShell/ScannerParityRootView.swift").read_text()
 importer = (root / "AppShell/Sources/AppShell/MediaImportCoordinator.swift").read_text()
