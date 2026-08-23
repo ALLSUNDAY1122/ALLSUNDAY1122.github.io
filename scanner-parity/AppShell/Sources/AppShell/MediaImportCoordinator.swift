@@ -10,10 +10,13 @@ private enum ProductImportStorage {
     static func rootURL() throws -> URL {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
             ?? FileManager.default.temporaryDirectory
-        let root = base
+        var root = base
             .appendingPathComponent("ScannerParity", isDirectory: true)
             .appendingPathComponent("Imports", isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        try root.setResourceValues(values)
         return root
     }
 
@@ -60,14 +63,10 @@ public final class MediaImportCoordinator: ObservableObject {
         for item in photoPickerItems {
             do {
                 if item.supportedContentTypes.contains(where: { $0.conforms(to: .movie) }) {
-                    guard let movie = try await item.loadTransferable(type: ImportedMovie.self) else {
-                        throw ImportError.transferFailed
-                    }
+                    guard let movie = try await item.loadTransferable(type: ImportedMovie.self) else { throw ImportError.transferFailed }
                     assets.append(ProductInputAsset(kind: .video, localURL: movie.url, displayName: movie.url.lastPathComponent))
                 } else if let imageType = item.supportedContentTypes.first(where: { $0.conforms(to: .image) }) {
-                    guard let data = try await item.loadTransferable(type: Data.self) else {
-                        throw ImportError.transferFailed
-                    }
+                    guard let data = try await item.loadTransferable(type: Data.self) else { throw ImportError.transferFailed }
                     let ext = imageType.preferredFilenameExtension ?? "img"
                     let url = try ProductImportStorage.destination(prefix: "scanner-image", extension: ext)
                     try data.write(to: url, options: .atomic)
@@ -88,13 +87,9 @@ public final class MediaImportCoordinator: ObservableObject {
             let type = try source.resourceValues(forKeys: [.contentTypeKey]).contentType
                 ?? UTType(filenameExtension: source.pathExtension)
             let kind: ProductInputKind
-            if type?.conforms(to: .movie) == true {
-                kind = .video
-            } else if type?.conforms(to: .image) == true {
-                kind = .image
-            } else {
-                throw ImportError.unsupportedType
-            }
+            if type?.conforms(to: .movie) == true { kind = .video }
+            else if type?.conforms(to: .image) == true { kind = .image }
+            else { throw ImportError.unsupportedType }
 
             let ext = source.pathExtension.isEmpty ? (kind == .video ? "mov" : "img") : source.pathExtension
             let destination = try ProductImportStorage.destination(prefix: "scanner-import", extension: ext)
@@ -120,16 +115,13 @@ public final class MediaImportCoordinator: ObservableObject {
     }
 
     public func requestCameraPermission() async -> ProductPermissionState {
-        if AVCaptureDevice.authorizationStatus(for: .video) == .notDetermined {
-            _ = await AVCaptureDevice.requestAccess(for: .video)
-        }
+        if AVCaptureDevice.authorizationStatus(for: .video) == .notDetermined { _ = await AVCaptureDevice.requestAccess(for: .video) }
         return currentCameraPermission()
     }
 
     enum ImportError: LocalizedError {
         case transferFailed
         case unsupportedType
-
         var errorDescription: String? {
             switch self {
             case .transferFailed: return "The selected item could not be imported."
