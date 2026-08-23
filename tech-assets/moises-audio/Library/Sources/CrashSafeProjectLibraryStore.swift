@@ -37,7 +37,7 @@ public final class CrashSafeProjectLibraryStore:
         try artifacts.ensureLayout()
     }
 
-    /// Preferred construction path: open metadata then reconcile any delete journal left by interruption.
+    /// Preferred construction path: open metadata then reconcile any delete journal/tombstone left by interruption.
     public static func open(
         metadataConfiguration: CoreDataProjectLibraryStore.Configuration,
         artifactRootURL: URL
@@ -121,12 +121,15 @@ public final class CrashSafeProjectLibraryStore:
     /// 2) durable PREPARED journal (non-destructive),
     /// 3) metadata tombstone transaction,
     /// 4) mark journal COMMITTED,
-    /// 5) idempotent file deletion.
+    /// 5) validate journal ownership/live references,
+    /// 6) idempotent file deletion and durable ARTIFACTS_DELETED marker,
+    /// 7) physical Core Data project/child compaction,
+    /// 8) retire the journal only after metadata compaction commits.
     /// A crash in every gap converges safely during recoverInterruptedOperations().
     public func deleteProject(projectID: ProjectID) async throws {
         let projects = try await metadata.listMaintenanceProjects()
         guard let target = projects.first(where: { $0.projectID == projectID }) else {
-            try await reconcileDeletion(projectID: projectID)
+            _ = try await recoverInterruptedOperations()
             return
         }
 
@@ -144,21 +147,23 @@ public final class CrashSafeProjectLibraryStore:
         )
         try await metadata.deleteProject(projectID: projectID)
         try artifacts.markDeletionCommitted(projectUUID: projectID.rawValue)
-        try artifacts.executeCommittedDeletion(projectUUID: projectID.rawValue)
+        _ = try await recoverInterruptedOperations()
     }
 
     public func recoveryPlan(projectID: ProjectID) async throws -> ProcessingRecoveryPlan {
         try await metadata.recoveryPlan(projectID: projectID)
     }
 
-    /// Reconciles every journal against live metadata after relaunch.
-    /// PREPARED + live project => deletion never committed; discard intent and retain files.
-    /// PREPARED + hidden project => crash occurred after tombstone; promote to COMMITTED and finish cleanup.
-    /// COMMITTED => finish idempotent cleanup.
+    /// Reconciles durable delete journals and also backfills older physically retained tombstones.
+    /// Destructive journal paths are re-authorized against current tombstone ownership and live
+    /// references before any file is removed. Metadata is compacted only after artifact deletion is
+    /// durably recorded as ARTIFACTS_DELETED.
     @discardableResult
     public func recoverInterruptedOperations() async throws -> LibraryRecoveryReport {
         let journals = try artifacts.pendingDeletionJournals()
-        guard !journals.isEmpty else {
+        let candidates = try await metadata.listTombstonedProjectCompactionCandidates()
+
+        guard !journals.isEmpty || !candidates.isEmpty else {
             return LibraryRecoveryReport(
                 discardedPrepared: [],
                 completedCommitted: [],
@@ -166,34 +171,102 @@ public final class CrashSafeProjectLibraryStore:
             )
         }
 
-        let liveIDs = try await metadata.listLiveProjectIDs()
+        let liveProjects = try await metadata.listMaintenanceProjects()
+        let liveIDs = Set(liveProjects.map(\.projectID))
+        let liveReferences = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(in: liveProjects)
+        let candidateByID = Dictionary(
+            uniqueKeysWithValues: candidates.map { ($0.projectUUID, $0) }
+        )
+        let journalProjectIDs = Set(journals.map(\.projectUUID))
+
         var discarded: [ProjectID] = []
         var completed: [ProjectID] = []
         var promoted: [ProjectID] = []
 
         for journal in journals {
             let projectID = ProjectID(rawValue: journal.projectUUID)
+
             switch journal.phase {
             case .prepared:
                 if liveIDs.contains(projectID) {
                     try artifacts.discardPreparedDeletion(projectUUID: journal.projectUUID)
                     discarded.append(projectID)
-                } else {
-                    try artifacts.markDeletionCommitted(projectUUID: journal.projectUUID)
-                    try artifacts.executeCommittedDeletion(projectUUID: journal.projectUUID)
-                    promoted.append(projectID)
+                    continue
                 }
+                guard let candidate = candidateByID[journal.projectUUID] else {
+                    throw Lane2TombstonedMetadataCompactionFailure.missingTombstoneCandidate(
+                        journal.projectUUID
+                    )
+                }
+                try Lane2TombstonedMetadataCompactionPolicy.requireAuthorizedJournal(
+                    relativePaths: journal.relativePaths,
+                    candidate: candidate,
+                    liveReferencedArtifactPaths: liveReferences
+                )
+                try artifacts.markDeletionCommitted(projectUUID: journal.projectUUID)
+                try artifacts.executeCommittedDeletion(projectUUID: journal.projectUUID)
+                _ = try await metadata.compactTombstonedProject(projectID: projectID)
+                try artifacts.completeMetadataCompaction(projectUUID: journal.projectUUID)
+                promoted.append(projectID)
 
             case .committed:
+                guard !liveIDs.contains(projectID) else {
+                    throw Lane2TombstonedMetadataCompactionFailure.liveProjectCannotCompact(
+                        journal.projectUUID
+                    )
+                }
+                guard let candidate = candidateByID[journal.projectUUID] else {
+                    throw Lane2TombstonedMetadataCompactionFailure.missingTombstoneCandidate(
+                        journal.projectUUID
+                    )
+                }
+                try Lane2TombstonedMetadataCompactionPolicy.requireAuthorizedJournal(
+                    relativePaths: journal.relativePaths,
+                    candidate: candidate,
+                    liveReferencedArtifactPaths: liveReferences
+                )
                 try artifacts.executeCommittedDeletion(projectUUID: journal.projectUUID)
+                _ = try await metadata.compactTombstonedProject(projectID: projectID)
+                try artifacts.completeMetadataCompaction(projectUUID: journal.projectUUID)
+                completed.append(projectID)
+
+            case .artifactsDeleted:
+                guard !liveIDs.contains(projectID) else {
+                    throw Lane2TombstonedMetadataCompactionFailure.liveProjectCannotCompact(
+                        journal.projectUUID
+                    )
+                }
+                if candidateByID[journal.projectUUID] != nil {
+                    _ = try await metadata.compactTombstonedProject(projectID: projectID)
+                }
+                try artifacts.completeMetadataCompaction(projectUUID: journal.projectUUID)
                 completed.append(projectID)
             }
         }
 
+        // Older builds could leave tombstones after deleting artifacts and removing their journal.
+        // Recreate a COMMITTED intent from the still-durable tombstone, but only for validated
+        // source/stem paths not referenced by any live project.
+        for candidate in candidates where !journalProjectIDs.contains(candidate.projectUUID) {
+            let plan = try Lane2TombstonedMetadataCompactionPolicy.plan(
+                candidate: candidate,
+                liveReferencedArtifactPaths: liveReferences
+            )
+            try artifacts.persistCommittedDeletion(
+                projectUUID: candidate.projectUUID,
+                relativePaths: plan.artifactRelativePathsToDelete
+            )
+            try artifacts.executeCommittedDeletion(projectUUID: candidate.projectUUID)
+            let projectID = ProjectID(rawValue: candidate.projectUUID)
+            _ = try await metadata.compactTombstonedProject(projectID: projectID)
+            try artifacts.completeMetadataCompaction(projectUUID: candidate.projectUUID)
+            completed.append(projectID)
+        }
+
         return LibraryRecoveryReport(
-            discardedPrepared: discarded,
-            completedCommitted: completed,
-            promotedInterruptedTombstones: promoted
+            discardedPrepared: discarded.sorted(by: projectIDLessThan),
+            completedCommitted: completed.sorted(by: projectIDLessThan),
+            promotedInterruptedTombstones: promoted.sorted(by: projectIDLessThan)
         )
     }
 
@@ -213,24 +286,8 @@ public final class CrashSafeProjectLibraryStore:
         )
     }
 
-    private func reconcileDeletion(projectID: ProjectID) async throws {
-        guard let journal = try artifacts.pendingDeletionJournals()
-            .first(where: { $0.projectUUID == projectID.rawValue }) else {
-            return
-        }
-
-        switch journal.phase {
-        case .prepared:
-            if try await metadata.containsLiveProject(projectID: projectID) {
-                try artifacts.discardPreparedDeletion(projectUUID: projectID.rawValue)
-            } else {
-                try artifacts.markDeletionCommitted(projectUUID: projectID.rawValue)
-                try artifacts.executeCommittedDeletion(projectUUID: projectID.rawValue)
-            }
-
-        case .committed:
-            try artifacts.executeCommittedDeletion(projectUUID: projectID.rawValue)
-        }
+    private func projectIDLessThan(_ lhs: ProjectID, _ rhs: ProjectID) -> Bool {
+        lhs.rawValue.uuidString < rhs.rawValue.uuidString
     }
 }
 #endif
