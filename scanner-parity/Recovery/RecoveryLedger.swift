@@ -35,7 +35,7 @@ public struct RecoveryLedger: Sendable {
     }
 
     public func shouldProcess(pageID: String) -> Bool {
-        !completedPageIDs.contains(pageID)
+        !completedPageIDs.contains(pageID) && !reviewQueue.containsPending(pageID: pageID)
     }
 
     public mutating func markCompleted(pageID: String, sourceTimeMS: Int?) {
