@@ -31,6 +31,11 @@ struct ProductFlowStateTests {
         ProductFlowReducer.reduce(state: &review, action: .reviewResolved(remaining: 0))
         try check("resolved review advances to export", review.step == .exporting)
 
+        var restored = ProductFlowState(inputAssets: [video])
+        ProductFlowReducer.reduce(state: &restored, action: .restoreCompleted(bookPackageURL: URL(fileURLWithPath: "/tmp/restored-package"), reviewRequiredCount: 1))
+        try check("completed session restore drops raw input", restored.step == .review && restored.inputAssets.isEmpty)
+        try check("completed session restore preserves package", restored.bookPackageURL?.path == "/tmp/restored-package" && restored.reviewRequiredCount == 1)
+
         var permission = ProductFlowState()
         ProductFlowReducer.reduce(state: &permission, action: .replaceInput([image]))
         ProductFlowReducer.reduce(state: &permission, action: .cameraPermissionChanged(.denied))
