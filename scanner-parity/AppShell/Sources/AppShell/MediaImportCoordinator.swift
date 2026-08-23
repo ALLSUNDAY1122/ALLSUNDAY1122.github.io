@@ -1,5 +1,4 @@
-#if canImport(SwiftUI) && canImport(PhotosUI) && canImport(AVFoundation) && canImport(UniformTypeIdentifiers)
-import AVFoundation
+#if canImport(SwiftUI) && canImport(PhotosUI) && canImport(UniformTypeIdentifiers)
 import Foundation
 import PhotosUI
 import SwiftUI
@@ -102,21 +101,6 @@ public final class MediaImportCoordinator: ObservableObject {
         for asset in assets where ProductImportStorage.owns(asset.localURL) {
             try? FileManager.default.removeItem(at: asset.localURL)
         }
-    }
-
-    public func currentCameraPermission() -> ProductPermissionState {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized: return .authorized
-        case .denied: return .denied
-        case .restricted: return .restricted
-        case .notDetermined: return .notDetermined
-        @unknown default: return .restricted
-        }
-    }
-
-    public func requestCameraPermission() async -> ProductPermissionState {
-        if AVCaptureDevice.authorizationStatus(for: .video) == .notDetermined { _ = await AVCaptureDevice.requestAccess(for: .video) }
-        return currentCameraPermission()
     }
 
     enum ImportError: LocalizedError {
