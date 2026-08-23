@@ -1,12 +1,12 @@
 {
-  "request_id": "app2-003-pattern-c-build4-production-loginspect-20260823-2255",
+  "request_id": "app2-003-pattern-c-build4-production-loginspect2-20260823-2256",
   "action": "inspect_build",
   "repository": "ALLSUNDAY1122/yoru-no-shoka",
   "workflow_id": "yoru-ios",
   "branch": "main",
   "ok": true,
   "build_id": "6a8afb237787725ef828f194",
-  "status": "building",
+  "status": "failed",
   "build_details": {
     "id": "6a8afb237787725ef828f194",
     "app_id": "6a8af6e5a5c86907b00c2efd",
@@ -16,9 +16,18 @@
       "name": "夜の書架 - iOS Internal TestFlight"
     },
     "instance_type": "mac_mini_m2",
-    "status": "building",
+    "status": "failed",
     "index": 7,
-    "artifacts": [],
+    "artifacts": [
+      {
+        "name": "yoru-no-shoka_7_artifacts.zip",
+        "size_in_bytes": 1765,
+        "type": "bundle",
+        "short_lived_download_url": "https://api.codemagic.io//artifacts/.eJwVwcmOgjAAANB_8U5CWQQPc0CFgqRSRja9NJQisrgULFS_fjLvrRrn35a3s0hE2UsYC6Cor11ANNYL6M5Yl5vrhVbPJMy_6e9oZPQQAw5fcd603bfbS-GeCDuT6W6OGZu6kiJF2GK63NCCBvvhLOHRm5s1rrUNQ4KG7TNpxjwCi98GKM090DsWTgv1iHEUkO24K-EgLZrxeLlGOE9CQHw_CU1WfWPrEauXwisNSZB1XtuOsjZb4qRc65a4FVU2FhC8hb5TNCMN8HFZMn0zOp472GoqmTLp2jvD2MZzyE4P7ht0GJy-V6paK4xJhWJCxbaNgju91jdwqDmC5CPN-oU-J8hNLl2yR_fk-bP6A3GbaZM.IHTmgTFAIeJJgcz4FF1wgp0f8jM",
+        "version_code": null,
+        "version_name": null
+      }
+    ],
     "labels": [],
     "release_notes": [],
     "created_at": "2026-08-23T13:52:35.421000Z",
@@ -44,6 +53,6 @@
     "app_store_connect_status": null,
     "build_inputs": {},
     "started_at": "2026-08-23T13:52:42.511000Z",
-    "finished_at": null
+    "finished_at": "2026-08-23T13:53:31.990000Z"
   }
 }
