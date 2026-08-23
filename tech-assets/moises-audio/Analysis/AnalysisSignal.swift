@@ -23,6 +23,8 @@ public struct MusicAnalysisConfiguration: Equatable, Sendable {
     public var minimumDurationSeconds: Double
     public var minimumTempoConfidence: Double
     public var minimumKeyConfidence: Double
+    public var keyRelativeAmbiguityMargin: Double
+    public var keyModulationMargin: Double
     public var minimumChordConfidence: Double
     public var minimumChordTemplateScore: Double
     public var noChordRMS: Double
@@ -49,6 +51,8 @@ public struct MusicAnalysisConfiguration: Equatable, Sendable {
         minimumDurationSeconds: Double = 1.5,
         minimumTempoConfidence: Double = 0.18,
         minimumKeyConfidence: Double = 0.015,
+        keyRelativeAmbiguityMargin: Double = 0.020,
+        keyModulationMargin: Double = 0.014,
         minimumChordConfidence: Double = 0.12,
         minimumChordTemplateScore: Double = 0.58,
         noChordRMS: Double = 0.0015,
@@ -74,6 +78,8 @@ public struct MusicAnalysisConfiguration: Equatable, Sendable {
         precondition(minimumDurationSeconds >= 0)
         precondition((0...1).contains(minimumTempoConfidence))
         precondition((0...1).contains(minimumKeyConfidence))
+        precondition((0...1).contains(keyRelativeAmbiguityMargin))
+        precondition((0...1).contains(keyModulationMargin))
         precondition((0...1).contains(minimumChordConfidence))
         precondition((0...1).contains(minimumChordTemplateScore))
         precondition(noChordRMS >= 0 && noChordRMS.isFinite)
@@ -100,6 +106,8 @@ public struct MusicAnalysisConfiguration: Equatable, Sendable {
         self.minimumDurationSeconds = minimumDurationSeconds
         self.minimumTempoConfidence = minimumTempoConfidence
         self.minimumKeyConfidence = minimumKeyConfidence
+        self.keyRelativeAmbiguityMargin = keyRelativeAmbiguityMargin
+        self.keyModulationMargin = keyModulationMargin
         self.minimumChordConfidence = minimumChordConfidence
         self.minimumChordTemplateScore = minimumChordTemplateScore
         self.noChordRMS = noChordRMS
@@ -144,7 +152,7 @@ public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
         let tempo = TempoBeatAnalyzer.analyze(signal: signal, configuration: configuration)
         let key = MusicalKeyAnalyzer.analyze(signal: signal, configuration: configuration)
         let chords = ChordTimelineAnalyzer.analyze(signal: signal, configuration: configuration)
-        let sections = SongSectionAnalyzer.analyze(signal: signal, chords: chords, configuration: configuration)
+        let sections = SongSectionHardener.analyze(signal: signal, chords: chords, configuration: configuration)
         return AnalysisSnapshot(tempo: tempo, key: key, chords: chords, sections: sections)
     }
 }

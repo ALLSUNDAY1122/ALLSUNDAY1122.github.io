@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "wave": "L3-AW03",
+  "area": "PracticeDSP transactional production path",
+  "status": "PASS_PORTABLE_NON_PARITY",
+  "validation_environment": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu",
+    "apple_sdk_compile": false,
+    "physical_device": false,
+    "actual_audio_capture": false
+  },
+  "implementation": {
+    "transaction_gate": "DSP/Sources/PracticeDSPTransactionalApplication.swift",
+    "apple_readback_adapter": "DSP/Sources/AppleTimePitchTransactionalBackend.swift",
+    "semantics": [
+      "validate candidate before backend mutation",
+      "read back backend before transaction and reject external divergence",
+      "rollback partial backend rejection to observed pre-transaction state",
+      "read back after successful apply and reject silent mismatch",
+      "poison normal apply when rollback/resynchronization fails",
+      "explicit recovery forces last committed state and requires read-back match",
+      "logical state and click generation commit only after backend transaction succeeds",
+      "metronome/count-in control-only changes do not rewrite time/pitch but still detect backend divergence"
+    ]
+  },
+  "tests": {
+    "self_test": "PASS",
+    "coverage": [
+      "successful tempo+pitch transaction",
+      "partial write rejection with verified rollback",
+      "silent backend mismatch with verified rollback",
+      "rollback failure poisons gate",
+      "normal apply rejected while desynchronized",
+      "explicit recovery clears poison only after read-back match",
+      "external backend divergence detection",
+      "tempo generation increment versus pitch generation stability",
+      "metronome/count-in control-only state update without backend rewrite",
+      "rejected tempo leaves logical state unchanged",
+      "foreign project rejection",
+      "schedule generation overflow fails before backend write"
+    ]
+  },
+  "benchmark": {
+    "rounds": 20,
+    "transactions_per_round": 10000,
+    "median_ms": 163.189,
+    "p95_ms": 194.047,
+    "p99_ms": 196.366,
+    "max_ms": 196.366,
+    "checksum": 219358.800,
+    "scope": "portable actor transaction/read-back control path using in-memory backend; not AudioUnit render performance"
+  },
+  "parity_promotion_allowed": false,
+  "affected_parity_rows": ["MOI-P010", "MOI-P012"],
+  "remaining_gates": [
+    "compile AppleTimePitchTransactionalBackend and existing AppleTimePitchBackend with selected Xcode/iOS SDK",
+    "wire PracticeDSPProductionController into the integrated active-project host",
+    "verify AVAudioUnitTimePitch rate/pitch read-back tolerance on target iPhones",
+    "run real-audio tempo/pitch capture and artifact measurement",
+    "human listening review across multiple genres and extreme supported settings",
+    "current-Moises differential quality and latency comparison"
+  ]
+}
