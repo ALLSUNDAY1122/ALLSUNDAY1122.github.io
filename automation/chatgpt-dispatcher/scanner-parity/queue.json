@@ -81,7 +81,7 @@
     {
       "task_id": "SCAN-004",
       "title": "日本語OCR・検索可能PDF・AIデータ書き出し",
-      "status": "CLAIMED",
+      "status": "BLOCKED_HUMAN",
       "priority": 90,
       "dependencies": [],
       "baseline_sha": "99a8d30f2a09c85119869feabae9b411a3431133",
@@ -92,12 +92,12 @@
       "claimed_by": "worker1",
       "claim_token": "c219bcba-aa08-44ac-9961-471e077afa53",
       "claim_epoch": 1,
-      "lease_expires_at": "2026-08-23T14:43:06+09:00",
-      "heartbeat_at": "2026-08-23T13:43:06+09:00",
+      "lease_expires_at": null,
+      "heartbeat_at": "2026-08-23T13:52:41+09:00",
       "attempt_branch": "task/SCAN-004/attempt-1",
       "acceptance": ["日本語横書き/縦書きOCRを実書籍で比較する", "Apple Visionを第一候補にTesseract jpn/jpn_vertを比較評価する", "撮る単語帳PR #3959のToruTangoOcrModule.swiftを内部baselineとして再利用評価し、accurate/ja-JP+en-US/language correction/4方向比較/品質スコアをGolden Datasetで再検証する", "撮る単語帳の複数画像順序保持・OCR結果編集/削除/再撮影の復旧UXをBookPackage作成前の要確認ページ導線へ転用評価する", "元ページ画像を保持した検索可能PDFを生成する", "ページ別TXTと本全体Markdown/TXTを生成する", "ページ画像・OCR・元動画時刻をmanifestで対応付ける", "OCR信頼度が低いページを要確認として出せる", "外部AI画像送信を初期必須経路にせず端末内OCRで完結する。将来外部AIを追加する場合は明示同意とPrivacy整合をGate化する"],
       "parity_rows": ["P12-ocr", "P13-searchable-pdf", "P14-markdown-text", "P15-manifest"],
-      "evidence": [],
+      "evidence": ["task/SCAN-004/attempt-1@d8e30181553c4d951190c2a350df9daa034f3ee7", "automation/chatgpt-dispatcher/scanner-parity/evidence/SCAN-004.md"],
       "evidence_path": "automation/chatgpt-dispatcher/scanner-parity/evidence/SCAN-004.md"
     }
   ]
