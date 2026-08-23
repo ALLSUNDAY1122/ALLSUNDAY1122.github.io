@@ -160,9 +160,9 @@ struct L3AW17UnifiedTransportAuthoritySelfTest {
         }
         precondition(executed == 1)
         precondition(superseded == 499)
-        precondition((await rawPlayback.snapshot()).seekCount == 1)
+        let firstBackendSnapshot = await rawPlayback.snapshot()
+        precondition(firstBackendSnapshot.seekCount == 1)
 
-        // Play is an ordering barrier: older seek is flushed and commits first.
         let orderedSeek = Task {
             await authority.submitSeek(to: 42, resume: true, loop: nil)
         }
@@ -174,7 +174,6 @@ struct L3AW17UnifiedTransportAuthoritySelfTest {
         }
         precondition(seekReceipt.playbackGeneration + 1 == playReceipt.playbackGeneration)
 
-        // Media replacement is a lifecycle barrier: pending old-media seek is discarded pre-token.
         let staleSeek = Task {
             await authority.submitSeek(to: 99, resume: true, loop: nil)
         }
@@ -203,7 +202,6 @@ struct L3AW17UnifiedTransportAuthoritySelfTest {
             precondition(replacementReceipt.playbackGeneration == beforeReplacement.generation + 1)
         }
 
-        // Interruption invalidates pending tempo before a tempo token exists.
         let pendingTempo = Task { await authority.submitTempoRatio(1.25) }
         await aw17WaitPending(authority, kind: .tempo)
         let beforeInterruption = await playback.rescheduleTokenSnapshot(projectID: project)
@@ -216,7 +214,6 @@ struct L3AW17UnifiedTransportAuthoritySelfTest {
             precondition(interruptionReceipt.playbackGeneration == beforeInterruption.generation + 1)
         }
 
-        // Backend failure occurs after Playback generation issuance and must auto-recover newer.
         await rawPlayback.failNextPlay()
         let beforeFailure = await playback.rescheduleTokenSnapshot(projectID: project)!
         let failedPlay = await authority.submitPlay()
@@ -226,9 +223,9 @@ struct L3AW17UnifiedTransportAuthoritySelfTest {
         precondition(failure.playbackGeneration == beforeFailure.generation + 1)
         precondition(failure.automaticRecovery.succeeded)
         precondition(failure.automaticRecovery.playbackGeneration == beforeFailure.generation + 2)
-        precondition(!(await authority.snapshot()).recoveryBlocked)
+        let postFailureSnapshot = await authority.snapshot()
+        precondition(!postFailureSnapshot.recoveryBlocked)
 
-        // Forced automatic recovery failure blocks every normal token until explicit recovery.
         await rawPlayback.failNextSeek()
         invalidator.failNext(1)
         let blockedCause = await authority.submitSeek(to: 123, resume: true, loop: nil)
@@ -237,21 +234,23 @@ struct L3AW17UnifiedTransportAuthoritySelfTest {
         }
         precondition(blockedFailure.automaticRecovery.attempted)
         precondition(!blockedFailure.automaticRecovery.succeeded)
-        precondition((await authority.snapshot()).recoveryBlocked)
+        let blockedAuthoritySnapshot = await authority.snapshot()
+        precondition(blockedAuthoritySnapshot.recoveryBlocked)
         let blockedToken = await playback.rescheduleTokenSnapshot(projectID: project)
         guard case .rejectedBeforeToken = await authority.submitPlay(),
               case .rejectedBeforeToken = await authority.submitTempoRatio(1.1) else {
             preconditionFailure("normal path bypassed recovery block")
         }
-        precondition(await playback.rescheduleTokenSnapshot(projectID: project) == blockedToken)
+        let tokenAfterBlockedAttempts = await playback.rescheduleTokenSnapshot(projectID: project)
+        precondition(tokenAfterBlockedAttempts == blockedToken)
 
         guard case let .executed(recoveryReceipt) = await authority.submitRecovery() else {
             preconditionFailure("explicit recovery failed")
         }
         precondition(recoveryReceipt.kind == .recovery)
-        precondition(!(await authority.snapshot()).recoveryBlocked)
+        let recoveredAuthoritySnapshot = await authority.snapshot()
+        precondition(!recoveredAuthoritySnapshot.recoveryBlocked)
 
-        // Pending cancellation is pre-token.
         let tokenBeforeCancellation = await playback.rescheduleTokenSnapshot(projectID: project)
         let cancelled = Task {
             await authority.submitLoop(PlaybackLoopRange(startSeconds: 0, endSeconds: 4))
@@ -260,7 +259,8 @@ struct L3AW17UnifiedTransportAuthoritySelfTest {
         guard case .cancelledBeforeDispatch = await cancelled.value else {
             preconditionFailure("pending cancellation must not dispatch")
         }
-        precondition(await playback.rescheduleTokenSnapshot(projectID: project) == tokenBeforeCancellation)
+        let tokenAfterCancellation = await playback.rescheduleTokenSnapshot(projectID: project)
+        precondition(tokenAfterCancellation == tokenBeforeCancellation)
 
         print("L3-AW17 unified transport authority self-test PASS")
     }
