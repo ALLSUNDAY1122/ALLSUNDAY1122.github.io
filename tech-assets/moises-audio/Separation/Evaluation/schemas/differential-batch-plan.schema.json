@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.invalid/moises/differential-batch-plan.schema.json",
-  "title": "L1-M04 differential separation batch plan",
+  "title": "L1-A20 resumable differential separation batch plan",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version","batch_id","evidence_state","purpose","reference_system","legal_gate","coverage_requirements","execution","acceptance_policy","cases"],
@@ -11,6 +11,7 @@
     "evidence_state": {"const":"NON_PARITY_EVIDENCE_ONLY"},
     "purpose": {"enum":["REGRESSION","PARITY_CANDIDATE"]},
     "reference_system": {"const":"MOISES_CURRENT_IPHONE"},
+    "golden_corpus_lock_sha256": {"type":"string","pattern":"^(sha256:)?[0-9a-fA-F]{64}$"},
     "legal_gate": {
       "type":"object","additionalProperties":false,
       "required":["commercial_approval_basis_id","privacy_retention_approval_id","reference_comparison_rights_id","provider_idempotency_contract_id","production_credentials_env"],
@@ -75,5 +76,11 @@
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"purpose": {"const": "PARITY_CANDIDATE"}}, "required": ["purpose"]},
+      "then": {"required": ["golden_corpus_lock_sha256"]}
+    }
+  ]
 }

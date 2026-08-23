@@ -20,47 +20,71 @@ public enum IOProviderSnapshotAcquisitionError: Error, Equatable, Sendable {
     case sourceNotRegularFile
     case sourceEmpty
     case sourceTooLarge(limitBytes: Int64, actualBytes: Int64)
+    case insufficientStorage
     case securityScopeDenied
     case providerCoordinationFailed
     case sourceChangedDuringAcquisition
     case partialPublishFailed
 }
 
-/// Snapshot-safe File Provider / picker acquisition boundary.
+public struct IOProviderStagedSnapshot: Sendable {
+    public let stagedFile: IOStagedExternalFile
+    public let ownership: IOStagingOwnershipLease
+
+    public init(stagedFile: IOStagedExternalFile, ownership: IOStagingOwnershipLease) {
+        self.stagedFile = stagedFile
+        self.ownership = ownership
+    }
+}
+
+/// Snapshot-safe File Provider / picker acquisition boundary with durable staging ownership.
 ///
-/// Bytes are copied into a non-authoritative `.provider-partial` staging file first. The copied
-/// content fingerprint must match a fresh post-copy fingerprint of the coordinated source before
-/// the partial file is atomically renamed into a ready staging file. This is a consistency check,
-/// not a cryptographic authenticity primitive.
+/// Each import obtains a durable reservation/ownership lease before writing. Bytes are copied into a
+/// token-owned `.provider-partial` file, fingerprinted, verified against a fresh coordinated-source
+/// fingerprint, then atomically renamed to ready Staging while the same lease remains active.
 public struct IOProviderSnapshotAcquirer: Sendable {
     private let fileStore: IOFileStore
     private let maximumFileBytes: Int64
-    private let storageReserveBytes: Int64
     private let chunkBytes: Int
+    private let ownershipHeartbeatBytes: Int64
+    private let ownershipRegistry: IOStagingOwnershipRegistry
 
     public init(
         fileStore: IOFileStore,
         maximumFileBytes: Int64,
         storageReserveBytes: Int64,
-        chunkBytes: Int = 1024 * 1024
+        chunkBytes: Int = 1024 * 1024,
+        ownershipHeartbeatBytes: Int64 = 8 * 1024 * 1024,
+        ownershipLeaseDuration: TimeInterval = 2 * 60 * 60,
+        fileManager: FileManager = .default
     ) {
         self.fileStore = fileStore
         self.maximumFileBytes = maximumFileBytes
-        self.storageReserveBytes = storageReserveBytes
         self.chunkBytes = chunkBytes
+        self.ownershipHeartbeatBytes = ownershipHeartbeatBytes
+        self.ownershipRegistry = IOStagingOwnershipRegistry(
+            fileStore: fileStore,
+            storageReserveBytes: storageReserveBytes,
+            leaseDuration: ownershipLeaseDuration,
+            fileManager: fileManager
+        )
     }
 
-    public func stageProviderFile(
+    /// Production seam: caller retains the ownership lease until downstream validation/import ends.
+    public func stageProviderSnapshot(
         at sourceURL: URL,
         accessMode: IOExternalFileAccessMode,
         fileManager: FileManager = .default
-    ) throws -> IOStagedExternalFile {
-        guard maximumFileBytes > 0, storageReserveBytes >= 0, chunkBytes > 0 else {
+    ) throws -> IOProviderStagedSnapshot {
+        guard maximumFileBytes > 0,
+              chunkBytes > 0,
+              ownershipHeartbeatBytes > 0 else {
             throw IOProviderSnapshotAcquisitionError.invalidConfiguration
         }
         guard sourceURL.isFileURL else {
             throw IOProviderSnapshotAcquisitionError.invalidSourceURL
         }
+        if Task<Never, Never>.isCancelled { throw CancellationError() }
 
         switch accessMode {
         case .direct:
@@ -73,7 +97,7 @@ public struct IOProviderSnapshotAcquirer: Sendable {
             defer { sourceURL.stopAccessingSecurityScopedResource() }
 
             var coordinationError: NSError?
-            var result: Result<IOStagedExternalFile, Error>?
+            var result: Result<IOProviderStagedSnapshot, Error>?
             NSFileCoordinator(filePresenter: nil).coordinate(
                 readingItemAt: sourceURL,
                 options: [],
@@ -96,36 +120,59 @@ public struct IOProviderSnapshotAcquirer: Sendable {
         }
     }
 
+    /// Compatibility seam for older lane-local tests/callers. Production composition should use
+    /// `stageProviderSnapshot` through IOProviderSnapshotAudioImporter so ownership survives handoff.
+    public func stageProviderFile(
+        at sourceURL: URL,
+        accessMode: IOExternalFileAccessMode,
+        fileManager: FileManager = .default
+    ) throws -> IOStagedExternalFile {
+        let snapshot = try stageProviderSnapshot(
+            at: sourceURL,
+            accessMode: accessMode,
+            fileManager: fileManager
+        )
+        snapshot.ownership.release()
+        return snapshot.stagedFile
+    }
+
     private func inspectCopyVerifyAndPublish(
         _ sourceURL: URL,
         fileManager: FileManager
-    ) throws -> IOStagedExternalFile {
+    ) throws -> IOProviderStagedSnapshot {
         let source = sourceURL.standardizedFileURL
         guard !isDescendant(source, of: fileStore.rootURL) else {
             throw IOProviderSnapshotAcquisitionError.sourceInsideAppRoot
         }
 
         let initialBytes = try inspectSource(source, fileManager: fileManager)
-        try fileStore.preflight(
-            requiredBytes: initialBytes,
-            reserveBytes: storageReserveBytes,
-            fileManager: fileManager
-        )
         try fileStore.prepareDirectories(fileManager: fileManager)
 
         let token = UUID().uuidString.lowercased()
-        let partial = fileStore.stagingURL.appendingPathComponent(token + ".provider-partial")
+        let partialName = token + ".provider-partial"
+        let partial = fileStore.stagingURL.appendingPathComponent(partialName)
         let ext = safeExtension(source.pathExtension)
-        let ready = fileStore.stagingURL.appendingPathComponent(
-            token + (ext.isEmpty ? ".provider-ready" : "." + ext)
+        let readyName = token + (ext.isEmpty ? ".provider-ready" : "." + ext)
+        let ready = fileStore.stagingURL.appendingPathComponent(readyName)
+
+        let lease = try ownershipRegistry.acquire(
+            token: token,
+            stagingFilename: partialName,
+            reservedBytes: initialBytes
         )
+        var published = false
+        defer {
+            if !published { lease.release() }
+        }
 
         do {
             let copied = try copyAndFingerprint(
                 from: source,
                 to: partial,
+                lease: lease,
                 fileManager: fileManager
             )
+            try lease.heartbeat(writtenBytes: copied.byteCount)
             let sourceAfter = try fingerprint(
                 source,
                 maximumBytes: maximumFileBytes,
@@ -136,19 +183,29 @@ public struct IOProviderSnapshotAcquirer: Sendable {
                 copied: copied,
                 sourceAfter: sourceAfter
             )
+            if Task<Never, Never>.isCancelled { throw CancellationError() }
 
             do {
                 try fileManager.moveItem(at: partial, to: ready)
             } catch {
                 throw IOProviderSnapshotAcquisitionError.partialPublishFailed
             }
+            try lease.retarget(
+                stagingFilename: readyName,
+                writtenBytes: copied.byteCount
+            )
+            if Task<Never, Never>.isCancelled { throw CancellationError() }
 
             let descriptor = IOExternalFileDescriptor(
                 byteCount: copied.byteCount,
                 preferredName: source.deletingPathExtension().lastPathComponent,
                 pathExtension: ext
             )
-            return IOStagedExternalFile(stagingURL: ready, descriptor: descriptor)
+            published = true
+            return IOProviderStagedSnapshot(
+                stagedFile: IOStagedExternalFile(stagingURL: ready, descriptor: descriptor),
+                ownership: lease
+            )
         } catch {
             fileStore.removeIfExists(partial, fileManager: fileManager)
             fileStore.removeIfExists(ready, fileManager: fileManager)
@@ -203,6 +260,7 @@ public struct IOProviderSnapshotAcquirer: Sendable {
     private func copyAndFingerprint(
         from source: URL,
         to destination: URL,
+        lease: IOStagingOwnershipLease,
         fileManager: FileManager
     ) throws -> IOProviderContentFingerprint {
         guard fileManager.createFile(atPath: destination.path, contents: nil) else {
@@ -216,6 +274,7 @@ public struct IOProviderSnapshotAcquirer: Sendable {
         }
 
         var builder = FingerprintBuilder()
+        var nextHeartbeat = ownershipHeartbeatBytes
         while true {
             if Task<Never, Never>.isCancelled { throw CancellationError() }
             guard let data = try input.read(upToCount: chunkBytes), !data.isEmpty else { break }
@@ -226,9 +285,28 @@ public struct IOProviderSnapshotAcquirer: Sendable {
                     actualBytes: builder.byteCount
                 )
             }
-            try output.write(contentsOf: data)
+            do {
+                try output.write(contentsOf: data)
+            } catch {
+                if Self.isOutOfSpace(error) {
+                    throw IOProviderSnapshotAcquisitionError.insufficientStorage
+                }
+                throw error
+            }
+            if builder.byteCount >= nextHeartbeat {
+                try lease.heartbeat(writtenBytes: builder.byteCount)
+                let next = nextHeartbeat.addingReportingOverflow(ownershipHeartbeatBytes)
+                nextHeartbeat = next.overflow ? Int64.max : next.partialValue
+            }
         }
-        try output.synchronize()
+        do {
+            try output.synchronize()
+        } catch {
+            if Self.isOutOfSpace(error) {
+                throw IOProviderSnapshotAcquisitionError.insufficientStorage
+            }
+            throw error
+        }
         guard builder.byteCount > 0 else { throw IOProviderSnapshotAcquisitionError.sourceEmpty }
         return builder.finalize()
     }
@@ -254,6 +332,11 @@ public struct IOProviderSnapshotAcquirer: Sendable {
         }
         guard builder.byteCount > 0 else { throw IOProviderSnapshotAcquisitionError.sourceEmpty }
         return builder.finalize()
+    }
+
+    private static func isOutOfSpace(_ error: Error) -> Bool {
+        let ns = error as NSError
+        return ns.domain == NSCocoaErrorDomain && ns.code == NSFileWriteOutOfSpaceError
     }
 
     private func safeExtension(_ raw: String) -> String {

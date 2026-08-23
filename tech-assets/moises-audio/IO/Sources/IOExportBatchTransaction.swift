@@ -4,8 +4,8 @@ import Foundation
 ///
 /// All encoded outputs are written into one staging directory. Commit is a
 /// same-volume directory rename into Exports/Batches, so readers never observe
-/// a partially published batch. UUIDs remain internal directory names and are
-/// not exposed in the user-facing audio filename.
+/// a partially published batch. A hidden pre-registration marker crosses the
+/// rename with the batch so a crash before Library registration is detectable.
 public struct IOExportBatchTransaction: Sendable {
     public enum BatchError: Error, Equatable, Sendable {
         case emptyBatch
@@ -39,6 +39,9 @@ public struct IOExportBatchTransaction: Sendable {
             self.items = items
         }
     }
+
+    public static let preRegistrationMarkerFilename = ".lane2-registration-pending"
+    public static let publicationSessionID = UUID().uuidString.lowercased()
 
     private let fileStore: IOFileStore
     private let stagingBatchDirectoryName = "ExportBatches"
@@ -104,6 +107,9 @@ public struct IOExportBatchTransaction: Sendable {
 
     /// Atomically publishes the entire batch using one directory move.
     /// Every output must exist, be a regular file, and contain at least one byte.
+    /// The hidden marker is persisted inside staging before the rename, so every
+    /// successfully published canonical batch is recoverable until Library registration
+    /// durably adopts it.
     public func commit(
         _ plan: Plan,
         fileManager: FileManager = .default
@@ -142,6 +148,20 @@ public struct IOExportBatchTransaction: Sendable {
             throw BatchError.destinationConflict
         }
 
+        let markerURL = plan.stagingDirectoryURL.appendingPathComponent(Self.preRegistrationMarkerFilename)
+        do {
+            guard fileManager.createFile(atPath: markerURL.path, contents: Data((Self.publicationSessionID + "\n").utf8)) else {
+                throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_MARKER_CREATE_FAILED")
+            }
+            let markerHandle = try FileHandle(forWritingTo: markerURL)
+            try markerHandle.synchronize()
+            try markerHandle.close()
+        } catch let error as BatchError {
+            throw error
+        } catch {
+            throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_MARKER_CREATE_FAILED")
+        }
+
         do {
             try fileManager.moveItem(at: plan.stagingDirectoryURL, to: finalDirectoryURL)
         } catch {
@@ -157,7 +177,6 @@ public struct IOExportBatchTransaction: Sendable {
                 )
             }
         } catch {
-            // Publication succeeded but path materialization failed; fail closed.
             try? fileManager.removeItem(at: finalDirectoryURL)
             throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_RELATIVE_PATH_FAILED")
         }
@@ -168,7 +187,8 @@ public struct IOExportBatchTransaction: Sendable {
         try? fileManager.removeItem(at: plan.stagingDirectoryURL)
     }
 
-    /// Removes only unpublished batch directories. Finalized batches are never touched.
+    /// Removes only unpublished batch directories. Finalized batches are never touched here;
+    /// their pre-registration markers are consumed/recovered by Lane2ExportRegistrationJournal.
     @discardableResult
     public func recoverAbandonedBatches(fileManager: FileManager = .default) throws -> Int {
         guard fileManager.fileExists(atPath: stagingBatchesURL.path) else { return 0 }
