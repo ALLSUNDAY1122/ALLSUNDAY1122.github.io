@@ -1,4 +1,4 @@
-# 書籍スキャナー同等化｜Worker Pool 契約 v0.2
+# 書籍スキャナー同等化｜Worker Pool 契約 v0.3
 
 ## 最終目的
 動画で本を連続撮影・画面録画するだけで、ページ抽出、補正、ページ完全性監査、OCR、検索可能PDF、TXT/Markdownまで自動生成し、人間にも生成AIにも読みやすい書籍データを作る。
@@ -24,7 +24,16 @@
 - `本 2026-08-23 0842.pdf`
   - SHA-256 `7c75889931949df96c0c1f9fba6fdef4e670a196675418b184444120a1d50567`
 
-移行先プロジェクトにGolden Datasetが未添付でも実装・fixture testは進めてよいが、実書籍Golden PASSは付けない。
+移行先プロジェクトにGolden Datasetが未添付でも実装・fixture test・Evidence作成を進める。実書籍Golden PASSはWorkerが付けず、`PENDING_HQ_GOLDEN` としてHQ統合後の専用Golden Gateへ送る。
+Golden Datasetの取得可否、canonical SHAの確定・SHA mismatch解消、実書籍Golden実測、Golden PASS/FAIL判定はHQ所有とする。
+
+## Golden停止条件の恒久ルール
+**「Golden Dataset未取得、SHA mismatch、Golden実測未完了だけを理由にBLOCKED_HUMANへ遷移してはならない。非Golden acceptanceが完了したTaskはINTEGRATION_READYへ送り、Golden検証はHQ統合Gateで行う。」**
+
+- WorkerはGolden関連だけが未完了の場合、TaskのGolden状態を `PENDING_HQ_GOLDEN` と記録し、Task本体は `INTEGRATION_READY` にする。
+- `BLOCKED_HUMAN` は、仕様選択・権限・契約・2FA・実機最終受入など、実際に人間判断または人間操作がなければ安全に前進できない場合だけ使用する。
+- Golden SHA mismatchをWorkerの人間判断Gateへ変換してはならない。Evidenceへ観測SHAを残してHQへエスカレーションし、Workerは非Golden acceptanceを継続する。
+- Golden正式検証はWorker単位では行わず、HQが対象Taskをintegrationへ統合した後、専用 `HQ_GOLDEN_GATE` で一気通貫に実施する。
 
 ## Worker原則
 1. Worker 1〜4は固定部署ではない。Queueの `READY` Taskから capability / dependency / resource lock 条件を満たすものを1件だけatomic claimする。
@@ -38,7 +47,7 @@
 9. 外部OSSはライセンスを確認し、採用・参考・不採用を明示する。ライセンス不明または競合制限があるコードをコピーしない。
 10. secret/token/署名鍵/ユーザー提供書籍そのものをGitHubへ保存しない。
 11. 実装変更は意味のある単位でcommitし、標準手順v2.7のcheckpointルールに従う。実装を伴う回答3回ごと、または長時間離脱・人間Gate・Build前には担当branchへpushしremote read-backする。
-12. Task終了時は `evidence_path` に検証結果を保存し、自分のTaskだけを `INTEGRATION_READY` または `BLOCKED_*` へ更新する。MERGED/VERIFIEDはHQ/finalizerが確定する。
+12. Task終了時は `evidence_path` に検証結果を保存し、自分のTaskだけを `INTEGRATION_READY` または真正な `BLOCKED_*` へ更新する。MERGED/VERIFIEDはHQ/finalizerが確定する。Goldenだけが未完了なら `golden_status=PENDING_HQ_GOLDEN` を残して `INTEGRATION_READY` にする。
 13. **撮る単語帳を必須内部参照資産として監査する。** Notion「撮る単語帳｜正本・関連資料」、GitHub PR #3959/#4064、特に `toru-tango-mobile/modules/toru-tango-ocr/ios/ToruTangoOcrModule.swift`、`app/(tabs)/create.tsx`、Safari OCR比較資産を確認し、使える実装を再利用する。ユーザー所有コードなので直接転用可能だが、書籍Golden Datasetに適合しないロジックを無検査でコピーしない。
 14. 撮る単語帳で発生した第三者AI画像送信とPrivacy申告不一致を再発させない。初期版は端末内OCRを標準とし、外部AIへ書籍画像を送る経路は必須依存にしない。将来導入する場合は送信前の明示同意・Privacy申告・保持/ログ監査を必須Gateとする。
 15. 写真・カメラ・書籍ページを扱うためPrivacy監査を必須とする。外部AI/API/認証を導入するTaskはSecurity監査も起動する。
