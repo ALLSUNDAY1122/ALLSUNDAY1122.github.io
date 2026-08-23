@@ -144,10 +144,6 @@ public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
     }
 
     public func analyze(projectID: ProjectID, asset: LocalAudioAsset) async throws -> AnalysisSnapshot {
-        // Cancellation is propagated as CancellationError through the existing
-        // frozen async-throws MusicAnalyzing contract. No partial snapshot is
-        // observable because publication occurs only after every stage and the
-        // final hardening pass have completed.
         try AnalysisCancellationPolicy.check()
         let loadedSignal = try await loader.loadSignal(projectID: projectID, asset: asset)
         try AnalysisCancellationPolicy.check()
@@ -175,10 +171,7 @@ public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
         )
         try AnalysisCancellationPolicy.check()
 
-        // Song-section inference already runs on the W11 downsampled working
-        // set. It remains synchronous, so stage-boundary checks guarantee that
-        // cancellation never publishes a partially completed combined result.
-        let sections = SongSectionHardener.analyze(
+        let sections = try CancellableSongSectionPipeline.analyze(
             signal: signal,
             chords: chords,
             configuration: configuration
