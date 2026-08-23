@@ -21,6 +21,7 @@ jobs:
       TARGET_BRANCH: release/otsu4-720-internal-testflight
       TARGET_WORKFLOW: otsu4-ios
       CONFIRMED_CM_APP_ID: 6a769d81a1add9d06020b524
+      CONFIRMED_ASC_INTEGRATION: Codemagic Shiwake Swipe
     steps:
       - uses: actions/checkout@v6
         with:
@@ -38,19 +39,23 @@ jobs:
       - name: Verify Internal TestFlight-only target
         run: |
           python - <<'PY'
-          import subprocess, yaml
+          import os, subprocess, yaml
           cfg=yaml.safe_load(open('codemagic.yaml',encoding='utf-8'))
           wf=(cfg.get('workflows') or {}).get('otsu4-ios')
           assert wf, 'otsu4-ios workflow missing'
+          integrations=wf.get('integrations') or {}
+          assert integrations.get('app_store_connect') == os.environ['CONFIRMED_ASC_INTEGRATION'], integrations
           signing=((wf.get('environment') or {}).get('ios_signing') or {})
           assert signing.get('distribution_type') == 'app_store'
           assert signing.get('bundle_identifier') == 'jp.allsunday1122.otsu4'
           assert not signing.get('certificates') and not signing.get('provisioning_profiles')
           pub=((wf.get('publishing') or {}).get('app_store_connect') or {})
+          assert pub.get('auth') == 'integration'
           assert pub.get('submit_to_testflight') is True, 'TestFlight upload must be explicitly enabled'
           assert pub.get('submit_to_app_store') is False, 'App Store submission must remain disabled'
           joined=str(wf)
           assert 'testFlightInternalTestingOnly' in joined, 'internal-only export option missing'
+          assert 'len(data[\'questions\'])==720' in joined or 'len(data["questions"])==720' in joined, 'signed bundle 720 validation missing'
           sha=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
           print('PASS: isolated Internal TestFlight workflow; target head='+sha)
           PY
@@ -123,6 +128,8 @@ jobs:
               result['status']=state
               result['commit']=(details.get('commit') or {}).get('hash')
               result['app_store_connect_status']=details.get('app_store_connect_status')
+              result['started_at']=details.get('started_at')
+              result['finished_at']=details.get('finished_at')
               result['ok']=state=='finished'
               out.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
               if state in terminal:
