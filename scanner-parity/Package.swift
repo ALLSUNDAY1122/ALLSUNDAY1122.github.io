@@ -12,6 +12,7 @@ let package = Package(
         .library(name: "RuntimeComposition", targets: ["RuntimeComposition"]),
         .library(name: "HQGoldenSupport", targets: ["HQGoldenSupport"]),
         .executable(name: "scanner-hq-golden-runner", targets: ["HQGoldenRunner"]),
+        .executable(name: "scanner-hq-golden-calibrator", targets: ["HQGoldenCalibrator"]),
         .executable(name: "scanner-hq-golden-finalizer", targets: ["HQGoldenFinalizer"]),
         .executable(name: "scanner-hq-golden-failure-recorder", targets: ["HQGoldenFailureRecorder"]),
         .executable(name: "scanner-production-longrun", targets: ["HQProductionLongRun"])
@@ -27,6 +28,7 @@ let package = Package(
                 "AppShell",
                 "AppleValidation",
                 "GoldenEvaluation",
+                "HQGoldenCalibrator",
                 "HQGoldenFailureRecorder",
                 "HQGoldenFinalizer",
                 "HQGoldenRunner",
@@ -99,6 +101,11 @@ let package = Package(
                 .product(name: "ProductFlow", package: "ProductFlow")
             ],
             path: "HQGoldenRunner"
+        ),
+        .executableTarget(
+            name: "HQGoldenCalibrator",
+            dependencies: ["HQGoldenSupport"],
+            path: "HQGoldenCalibrator"
         ),
         .executableTarget(
             name: "HQGoldenFinalizer",

@@ -37,6 +37,9 @@ jobs:
       - name: Build HQ Formal Golden runner on macOS
         run: swift build --package-path scanner-parity --product scanner-hq-golden-runner
 
+      - name: Build HQ Golden threshold calibrator on macOS
+        run: swift build --package-path scanner-parity --product scanner-hq-golden-calibrator
+
       - name: Build HQ Formal Golden finalizer on macOS
         run: swift build --package-path scanner-parity --product scanner-hq-golden-finalizer
 
@@ -45,6 +48,83 @@ jobs:
 
       - name: Test HQ Golden reference metrics
         run: swift test --package-path scanner-parity --filter ReferenceAlignmentTests
+
+      - name: Test HQ Golden threshold calibration model
+        run: swift test --package-path scanner-parity --filter GoldenThresholdCalibrationTests
+
+      - name: Test HQ Golden threshold calibration CLI binding
+        run: |
+          set -euo pipefail
+          TMP="$(mktemp -d)"
+          EXEC="$TMP/hq-golden-execution.json"
+          EVIDENCE="$TMP/reference-threshold-calibration.json"
+          DECISION="$TMP/reference-threshold-decision.json"
+          ASSESSMENT="$TMP/reference-threshold-decision-assessment.json"
+          cat > "$EXEC" <<'JSON'
+          {
+            "schemaVersion": 4,
+            "bookID": "golden-v2-current-project-20260823",
+            "observedVideoSHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "observedPDFSHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "referencePDFPageCount": 3,
+            "outputPageCount": 4,
+            "referenceMatches": [
+              {"outputIndex":0,"referenceIndex":0,"distance":0.10,"secondBestDistance":0.42},
+              {"outputIndex":1,"referenceIndex":1,"distance":0.12,"secondBestDistance":0.40},
+              {"outputIndex":2,"referenceIndex":2,"distance":0.14,"secondBestDistance":0.39},
+              {"outputIndex":3,"referenceIndex":2,"distance":0.80,"secondBestDistance":0.92}
+            ],
+            "referenceMetrics": null,
+            "formalGoldenVerdict": "PENDING_REFERENCE_THRESHOLD_CALIBRATION"
+          }
+          JSON
+          swift run --package-path scanner-parity scanner-hq-golden-calibrator \
+            --execution-report "$EXEC" --analyze "$EVIDENCE"
+          swift run --package-path scanner-parity scanner-hq-golden-calibrator \
+            --execution-report "$EXEC" \
+            --calibration-evidence "$EVIDENCE" \
+            --create-decision-template "$DECISION"
+          python3 - "$EVIDENCE" "$DECISION" <<'PY'
+          import json, sys
+          evidence_path, decision_path = sys.argv[1:]
+          with open(evidence_path, encoding='utf-8') as f:
+              evidence = json.load(f)
+          assert evidence.get('recommendedThreshold') is None
+          assert evidence['verdict'] == 'CALIBRATION_EVIDENCE_READY_OPERATOR_DECISION_REQUIRED'
+          assert len(evidence['largestNearestDistanceGaps']) > 0
+          with open(decision_path, encoding='utf-8') as f:
+              decision = json.load(f)
+          decision['threshold'] = 0.14
+          decision['rationale'] = 'Synthetic CI operator decision after inspecting the retained distance distribution.'
+          decision['reviewer'] = 'CI-HQ'
+          decision['decidedAt'] = '2026-08-24T05:00:00+09:00'
+          with open(decision_path, 'w', encoding='utf-8') as f:
+              json.dump(decision, f, ensure_ascii=False, indent=2, sort_keys=True)
+          PY
+          swift run --package-path scanner-parity scanner-hq-golden-calibrator \
+            --execution-report "$EXEC" \
+            --calibration-evidence "$EVIDENCE" \
+            --decision "$DECISION" \
+            --validate-decision "$ASSESSMENT"
+          python3 - "$ASSESSMENT" <<'PY'
+          import json, sys
+          with open(sys.argv[1], encoding='utf-8') as f:
+              assessment = json.load(f)
+          assert assessment['verdict'] == 'THRESHOLD_DECISION_VALID_FOR_RERUN'
+          assert assessment['blockingReasons'] == []
+          assert 'FORMAL_GOLDEN_PASS' not in assessment['verdict']
+          assert abs(assessment['threshold'] - 0.14) < 1e-6
+          PY
+          THRESHOLD="$(swift run --package-path scanner-parity scanner-hq-golden-calibrator \
+            --execution-report "$EXEC" \
+            --calibration-evidence "$EVIDENCE" \
+            --decision "$DECISION" \
+            --emit-threshold)"
+          python3 - "$THRESHOLD" <<'PY'
+          import sys
+          assert abs(float(sys.argv[1]) - 0.14) < 1e-6
+          print('GOLDEN_THRESHOLD_CALIBRATION_BINDING_PASS')
+          PY
 
       - name: Test HQ Golden machine gate semantics
         run: swift test --package-path scanner-parity --filter FormalGoldenMachineGateTests
