@@ -41,10 +41,12 @@ public actor AssuredSeparationProvider: SourceSeparationProviding {
             throw DomainFailure.processingFailed(code: "SEP_ASSURANCE_JOB_ID_MISMATCH", retryable: false)
         }
         // Validate the declared artifact set before consulting any previously prepared/committed result.
-        // This prevents a new malformed/mislabeled provider manifest from inheriting a trusted ledger.
+        // This prevents malformed/mislabeled provider metadata from inheriting a trusted ledger.
         try SeparationArtifactSetIntegrity.validate(manifest)
+        try await assurance.validateManifest(manifest)
 
         if let existing = try await ledgerStore.load(projectID: manifest.projectID, jobID: jobID) {
+            try SeparationArtifactSetIntegrity.validateCachedManifestIdentity(manifest, trusted: existing.manifest)
             switch existing.state {
             case .committed:
                 return try await assurance.committedArtifacts(projectID: manifest.projectID, jobID: jobID)
