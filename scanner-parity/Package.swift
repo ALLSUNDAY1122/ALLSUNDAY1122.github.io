@@ -13,7 +13,8 @@ let package = Package(
         .library(name: "HQGoldenSupport", targets: ["HQGoldenSupport"]),
         .executable(name: "scanner-hq-golden-runner", targets: ["HQGoldenRunner"]),
         .executable(name: "scanner-hq-golden-finalizer", targets: ["HQGoldenFinalizer"]),
-        .executable(name: "scanner-hq-golden-failure-recorder", targets: ["HQGoldenFailureRecorder"])
+        .executable(name: "scanner-hq-golden-failure-recorder", targets: ["HQGoldenFailureRecorder"]),
+        .executable(name: "scanner-production-longrun", targets: ["HQProductionLongRun"])
     ],
     dependencies: [
         .package(name: "ProductFlow", path: "ProductFlow")
@@ -30,6 +31,7 @@ let package = Package(
                 "HQGoldenFinalizer",
                 "HQGoldenRunner",
                 "HQGoldenSupport",
+                "HQProductionLongRun",
                 "LongRun",
                 "PackageQuality",
                 "PrivacyAudit",
@@ -107,6 +109,15 @@ let package = Package(
             name: "HQGoldenFailureRecorder",
             dependencies: ["HQGoldenSupport"],
             path: "HQGoldenFailureRecorder"
+        ),
+        .executableTarget(
+            name: "HQProductionLongRun",
+            dependencies: [
+                "ScannerRuntime",
+                "RuntimeComposition",
+                .product(name: "ProductFlow", package: "ProductFlow")
+            ],
+            path: "HQProductionLongRun"
         ),
         .testTarget(
             name: "HQGoldenSupportTests",
