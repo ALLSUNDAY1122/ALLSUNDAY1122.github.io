@@ -6,7 +6,7 @@ public protocol SeparationRunManifestProviding: Sendable {
     func outputManifest(jobID: ProcessingJobID) async throws -> SeparationProviderRunManifest
 }
 
-/// Keeps the frozen Shared provider contract while inserting the L1-M03 assurance gate on result().
+/// Keeps the frozen Shared provider contract while inserting the Lane 1 assurance gates on result().
 /// start/snapshot/cancel remain delegated to the selected provider controller. result() is produced
 /// only from a complete, verified, project-controlled output set.
 public actor AssuredSeparationProvider: SourceSeparationProviding {
@@ -40,6 +40,9 @@ public actor AssuredSeparationProvider: SourceSeparationProviding {
         guard manifest.jobID == jobID else {
             throw DomainFailure.processingFailed(code: "SEP_ASSURANCE_JOB_ID_MISMATCH", retryable: false)
         }
+        // Validate the declared artifact set before consulting any previously prepared/committed result.
+        // This prevents a new malformed/mislabeled provider manifest from inheriting a trusted ledger.
+        try SeparationArtifactSetIntegrity.validate(manifest)
 
         if let existing = try await ledgerStore.load(projectID: manifest.projectID, jobID: jobID) {
             switch existing.state {
