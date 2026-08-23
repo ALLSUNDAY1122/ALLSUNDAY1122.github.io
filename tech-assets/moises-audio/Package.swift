@@ -48,6 +48,7 @@ let package = Package(
                 "Analysis/AnalysisBenchmarkScalability.swift",
                 "Analysis/AnalysisBenchmarkRunner.swift",
                 "Analysis/AnalysisBenchmarkAggregation.swift",
+                "Analysis/AnalysisBenchmarkDifferential.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
