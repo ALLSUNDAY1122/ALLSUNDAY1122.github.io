@@ -70,7 +70,8 @@ struct L3AW21SerializedCountInAuthorityBenchmark {
             let milliseconds = Double(duration.components.seconds) * 1_000.0
                 + Double(duration.components.attoseconds) / 1_000_000_000_000_000.0
             samplesMs.append(milliseconds)
-            precondition((try await coordinator.snapshot()).dspState.pendingCountInClicks == nil)
+            let final = try await coordinator.snapshot()
+            precondition(final.dspState.pendingCountInClicks == nil)
         }
 
         samplesMs.sort()
