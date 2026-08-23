@@ -19,13 +19,20 @@
     {"id":"preflight-discovery-before-upload","expected":"PASS"},
     {"id":"disabled-model-never-posted","expected":"PASS"},
     {"id":"enabled-advanced-model-post","expected":"PASS"},
+    {"id":"canonical-role-ingress","expected":"PASS","rule":"A06-facing adapter accepts canonical roles; vendor model IDs exist only at provider POST boundary"},
+    {"id":"canonical-role-egress","expected":"PASS","rule":"provider task output model IDs normalize back to canonical roles before A06 observes them"},
+    {"id":"unknown-provider-output-model","expected":"FAIL_CLOSED"},
+    {"id":"canonical-metadata-preserved","expected":"PASS"},
     {"id":"hifi-not-inferred","expected":"PASS","provider_quality_modes":["standard"]},
     {"id":"discovery-error","expected":"FAIL_CLOSED"},
     {"id":"corrupt-capability-catalog","expected":"FAIL_CLOSED"}
   ],
   "machine_tests": {
-    "test_file": "tech-assets/moises-audio/Separation/Tests/test_advanced_capabilities.py",
-    "tests": 28,
+    "test_files": [
+      "tech-assets/moises-audio/Separation/Tests/test_advanced_capabilities.py",
+      "tech-assets/moises-audio/Separation/Tests/test_canonical_advanced_provider.py"
+    ],
+    "tests": 37,
     "failures": 0
   },
   "external_gaps": [
