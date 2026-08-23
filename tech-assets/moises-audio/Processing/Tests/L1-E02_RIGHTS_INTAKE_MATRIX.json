@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "wave": "L1-E02",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "result": "READY_PENDING_EXTERNAL_INPUT",
+  "executed_assertions": 37,
+  "passed_assertions": 37,
+  "failed_assertions": 0,
+  "py_compile": "PASS",
+  "real_audio_used": false,
+  "real_rights_documents_used": false,
+  "parity_claim": "NONE",
+  "coverage": [
+    "A19 intake state and NON_PARITY state required",
+    "A19 corpus identity and corpus lock bound",
+    "exact fixture coverage between A19 report and E02 rights index",
+    "G1/G2 group binding",
+    "fixture manifest SHA bound to A19 report and physical file",
+    "private grant-record physical SHA",
+    "private source-rights-document physical SHA",
+    "grant VERIFIED / authority reviewed / not revoked",
+    "effective-date and expiry enforcement",
+    "real-recording provenance attestation required",
+    "synthetic-or-generated provenance forbidden",
+    "commercial engineering permission required",
+    "project processing/provider submission permission required",
+    "G1 isolated-source and internal-stem evaluation permissions required",
+    "G2 current reference-service submission permission required",
+    "fixture manifest rights_record_id equals private grant rights_record_id",
+    "A19 domain-separated rights-record hash equals E02 grant-derived hash",
+    "fixture manifest cannot overclaim reference-service rights",
+    "manifest VERIFIED/real/non-synthetic/commercial flags required",
+    "missing/duplicate/unknown records fail closed",
+    "missing fixture/grant/source-document fails closed",
+    "sanitized evidence omits raw rights/origin IDs and private paths/text",
+    "record ordering does not change E02 rights intake lock"
+  ],
+  "limitations": [
+    "synthetic test fixtures validate control semantics only and are not Golden or PARITY evidence",
+    "waveform content alone cannot prove legal rights or human-recorded provenance",
+    "live E02 remains pending actual rights-cleared G1/G2 media and private grants"
+  ]
+}
