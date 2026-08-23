@@ -13,6 +13,7 @@ struct PrivacyStaticAuditorFixtureTests {
         test("URLSession is egress risk") {
             let r = PrivacyStaticAuditor().audit(files: ["/Sources/A.swift": "let s = URLSession.shared"])
             try require(r.productionEgressRisks.contains { $0.category == .network })
+            try require(!r.releaseBlockingFindings.isEmpty)
         }
         test("OpenAI endpoint is external AI egress risk") {
             let r = PrivacyStaticAuditor().audit(files: ["/Sources/A.swift": #"let u = "https://api.openai.com/v1/chat/completions""#])
@@ -22,18 +23,27 @@ struct PrivacyStaticAuditorFixtureTests {
             let r = PrivacyStaticAuditor().audit(files: ["/Sources/A.swift": "import FirebaseAnalytics"])
             try require(r.productionEgressRisks.contains { $0.category == .analytics })
         }
+        test("Application Support processing storage is privacy risk") {
+            let r = PrivacyStaticAuditor().audit(files: ["/AppShell/Store.swift": "FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)"])
+            try require(r.releaseBlockingFindings.contains { $0.category == .sensitivePersistence && $0.ruleID == "persistent-processing-storage" })
+            try require(r.productionEgressRisks.isEmpty)
+        }
+        test("allowlist cannot suppress persistent storage privacy risk") {
+            let r = PrivacyStaticAuditor(extraAllowlist: ["applicationSupportDirectory"]).audit(files: ["/AppShell/Store.swift": "applicationSupportDirectory"])
+            try require(r.releaseBlockingFindings.contains { $0.ruleID == "persistent-processing-storage" })
+        }
         test("Apple Vision is local informational finding") {
             let r = PrivacyStaticAuditor().audit(files: ["/Sources/A.swift": "import Vision"])
             try require(r.findings.contains { $0.category == .appleLocalFramework && $0.risk == .info })
-            try require(r.productionEgressRisks.isEmpty)
+            try require(r.releaseBlockingFindings.isEmpty)
         }
-        test("Tesseract Process is local CLI review not egress") {
+        test("Tesseract Process is local CLI review not blocker") {
             let r = PrivacyStaticAuditor().audit(files: ["/Sources/A.swift": """
                 let p = Process()
                 p.executableURL = URL(fileURLWithPath: "/usr/bin/tesseract")
                 """])
             try require(r.findings.contains { $0.category == .localCLI })
-            try require(r.productionEgressRisks.isEmpty)
+            try require(r.releaseBlockingFindings.isEmpty)
         }
         test("network CLI inside Process is egress risk") {
             let r = PrivacyStaticAuditor().audit(files: ["/Sources/A.swift": """
@@ -55,14 +65,14 @@ struct PrivacyStaticAuditorFixtureTests {
             try require(r.productionEgressRisks.contains { $0.ruleID == "network-api" })
         }
         test("all test paths are excluded from production scan") {
-            let r = PrivacyStaticAuditor().audit(files: ["/Tests/OtherModule/Fixture.swift": "URLSession.shared"])
+            let r = PrivacyStaticAuditor().audit(files: ["/Tests/OtherModule/Fixture.swift": "URLSession.shared applicationSupportDirectory"])
             try require(r.scannedFiles == 0)
-            try require(r.productionEgressRisks.isEmpty)
+            try require(r.releaseBlockingFindings.isEmpty)
         }
-        test("remote package is review not book-data egress by itself") {
+        test("remote package is review not blocker by itself") {
             let r = PrivacyStaticAuditor().audit(files: ["/Package.swift": #".package(url: "https://github.com/example/lib", from: "1.0.0")"#])
             try require(r.findings.contains { $0.category == .remotePackageDependency && $0.risk == .review })
-            try require(r.productionEgressRisks.isEmpty)
+            try require(r.releaseBlockingFindings.isEmpty)
         }
         test("final result always remains HQ gated") {
             let r = PrivacyStaticAuditor().audit(files: [:])
