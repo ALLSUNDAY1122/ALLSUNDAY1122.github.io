@@ -189,15 +189,15 @@ enum SplatPersistedEditMaterializer {
         guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { return false }
         guard let bounds else { return true }
 
-        if settings.cropXMin > 0.0001 || settings.cropXMax < 0.9999 {
-            if p.x < bounds.x.value(at: settings.cropXMin) || p.x > bounds.x.value(at: settings.cropXMax) { return false }
-        }
-        if settings.cropYMin > 0.0001 || settings.cropYMax < 0.9999 {
-            if p.y < bounds.y.value(at: settings.cropYMin) || p.y > bounds.y.value(at: settings.cropYMax) { return false }
-        }
-        if settings.cropZMin > 0.0001 || settings.cropZMax < 0.9999 {
-            if p.z < bounds.z.value(at: settings.cropZMin) || p.z > bounds.z.value(at: settings.cropZMax) { return false }
-        }
+        // Robust percentile bounds stabilize slider travel, but an untouched endpoint must
+        // remain open-ended. Otherwise moving only the lower handle would silently drop the
+        // upper 1% tail (and vice versa), so Viewer/export/video would not represent the UI.
+        if settings.cropXMin > 0.0001, p.x < bounds.x.value(at: settings.cropXMin) { return false }
+        if settings.cropXMax < 0.9999, p.x > bounds.x.value(at: settings.cropXMax) { return false }
+        if settings.cropYMin > 0.0001, p.y < bounds.y.value(at: settings.cropYMin) { return false }
+        if settings.cropYMax < 0.9999, p.y > bounds.y.value(at: settings.cropYMax) { return false }
+        if settings.cropZMin > 0.0001, p.z < bounds.z.value(at: settings.cropZMin) { return false }
+        if settings.cropZMax < 0.9999, p.z > bounds.z.value(at: settings.cropZMax) { return false }
         return true
     }
 

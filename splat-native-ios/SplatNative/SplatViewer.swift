@@ -577,18 +577,24 @@ final class SplatViewerRenderer: NSObject, MTKViewDelegate, UIGestureRecognizerD
         let yHigh = bounds.y.value(at: settings.cropYMax)
         let zLow = bounds.z.value(at: settings.cropZMin)
         let zHigh = bounds.z.value(at: settings.cropZMax)
-        let cropX = settings.cropXMin > 0.0001 || settings.cropXMax < 0.9999
-        let cropY = settings.cropYMin > 0.0001 || settings.cropYMax < 0.9999
-        let cropZ = settings.cropZMin > 0.0001 || settings.cropZMax < 0.9999
+        let cropXLow = settings.cropXMin > 0.0001
+        let cropXHigh = settings.cropXMax < 0.9999
+        let cropYLow = settings.cropYMin > 0.0001
+        let cropYHigh = settings.cropYMax < 0.9999
+        let cropZLow = settings.cropZMin > 0.0001
+        let cropZHigh = settings.cropZMax < 0.9999
 
         var result: [SplatPoint] = []
         result.reserveCapacity(points.count)
         for point in points {
             let p = point.position
             guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
-            if cropX && (p.x < xLow || p.x > xHigh) { continue }
-            if cropY && (p.y < yLow || p.y > yHigh) { continue }
-            if cropZ && (p.z < zLow || p.z > zHigh) { continue }
+            if cropXLow && p.x < xLow { continue }
+            if cropXHigh && p.x > xHigh { continue }
+            if cropYLow && p.y < yLow { continue }
+            if cropYHigh && p.y > yHigh { continue }
+            if cropZLow && p.z < zLow { continue }
+            if cropZHigh && p.z > zHigh { continue }
 
             guard needsColorAdjustment else {
                 result.append(point)
