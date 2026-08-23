@@ -2,7 +2,7 @@ import hashlib
 import json
 import tempfile
 import unittest
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from pathlib import Path
 import sys
 
@@ -63,14 +63,10 @@ class FakeBackend:
         self.start_calls += 1
         logical_job_id, key_hash = _logical_identity(idempotency_key)
         source_sha = hashlib.sha256(Path(source_path).read_bytes()).hexdigest()
+        canonical_models = sorted(set(models))
         request_fp = hashlib.sha256(
             json.dumps(
-                {
-                    "project": project_id,
-                    "asset": asset_id,
-                    "source": source_sha,
-                    "models": list(models),
-                },
+                {"project": project_id, "asset": asset_id, "source": source_sha, "models": sorted(canonical_models)},
                 sort_keys=True,
             ).encode()
         ).hexdigest()
@@ -83,7 +79,7 @@ class FakeBackend:
                 project_id=project_id,
                 asset_id=asset_id,
                 source_sha256=source_sha,
-                requested_models=list(models),
+                requested_models=list(canonical_models),
             )
             self.jobs[logical_job_id] = existing
         if self.start_error_after_persist is not None:
@@ -135,6 +131,7 @@ class FakeBackend:
         if self.reconcile_mode == "duplicate":
             job.state = "duplicate_provider_tasks_detected"
             job.stable_error_code = "SEP_PROVIDER_DUPLICATE_TASKS_DETECTED"
+            job.retryable = False
             raise BackendError(job.stable_error_code, retryable=False)
         return job
 
@@ -206,10 +203,8 @@ class DurableReconnectTests(unittest.TestCase):
 
     def test_begin_intent_is_durable_before_backend_start_and_redacts_secret(self):
         record = self.service.begin_intent(
-            project_id="project-1",
-            asset_id="asset-1",
-            requested_profile_id="sep.basic.v1",
-            models=["vocals", "drums"],
+            project_id="project-1", asset_id="asset-1",
+            requested_profile_id="sep.basic.v1", models=["vocals", "drums"],
             idempotency_key="raw-secret-key",
         )
         self.assertEqual(record.state, "intent")
@@ -220,6 +215,28 @@ class DurableReconnectTests(unittest.TestCase):
         self.assertNotIn(self.source.name, text)
         self.assertIn("idempotency_key_hash", text)
 
+    def test_intent_survives_crash_before_backend_start(self):
+        record = self.service.begin_intent(
+            project_id="project-1", asset_id="asset-1",
+            requested_profile_id="sep.basic.v1", models=["vocals"],
+            idempotency_key="before-start",
+        )
+        restarted = DurableReconnectService(
+            backend=self.backend, registry_path=self.registry_path, now_epoch_ms=self.clock
+        )
+        snap = restarted.recover(record.logical_job_id)
+        self.assertEqual(snap.logical_phase, "unknown")
+        self.assertEqual(snap.stable_error_code, "SEP_RECOVERY_BACKEND_NOT_STARTED")
+        self.assertTrue(snap.retryable)
+        self.assertEqual(self.backend.start_calls, 0)
+        job = restarted.start(
+            source_path=self.source, project_id="project-1", asset_id="asset-1",
+            requested_profile_id="sep.basic.v1", models=["vocals"],
+            idempotency_key="before-start",
+        )
+        self.assertEqual(job.logical_job_id, record.logical_job_id)
+        self.assertEqual(self.backend.start_calls, 1)
+
     def test_start_binds_profile_backend_identity_and_survives_service_restart(self):
         job = self.start()
         record = self.service.get_record(job.logical_job_id)
@@ -228,10 +245,8 @@ class DurableReconnectTests(unittest.TestCase):
         self.assertEqual(record.request_fingerprint, job.request_fingerprint)
         self.assertEqual(record.source_sha256, job.source_sha256)
         restarted = DurableReconnectService(
-            backend=self.backend,
-            registry_path=self.registry_path,
-            cancellation_service=self.cancel,
-            now_epoch_ms=self.clock,
+            backend=self.backend, registry_path=self.registry_path,
+            cancellation_service=self.cancel, now_epoch_ms=self.clock,
         )
         snapshot = restarted.recover(job.logical_job_id)
         self.assertEqual(snapshot.logical_phase, "separating")
@@ -240,7 +255,6 @@ class DurableReconnectTests(unittest.TestCase):
 
     def test_provider_snapshot_overrides_stale_nonterminal_cache(self):
         job = self.start()
-        self.backend.observed_phase = "separating"
         self.backend.observed_fraction = 0.8
         first = self.service.recover(job.logical_job_id)
         self.assertEqual(first.fraction_complete, 0.8)
@@ -340,6 +354,20 @@ class DurableReconnectTests(unittest.TestCase):
         self.assertFalse(snapshot.retryable)
         self.assertEqual(self.backend.start_calls, starts_before)
 
+    def test_duplicate_provider_tasks_persist_nonretryable_unknown_snapshot(self):
+        job = self.start()
+        job.state = "start_ambiguous"
+        job.provider_phase = None
+        job.provider_task_id = None
+        self.backend.reconcile_mode = "duplicate"
+        starts_before = self.backend.start_calls
+        snapshot = self.service.recover(job.logical_job_id)
+        self.assertEqual(snapshot.logical_phase, "unknown")
+        self.assertEqual(snapshot.stable_error_code, "SEP_PROVIDER_DUPLICATE_TASKS_DETECTED")
+        self.assertFalse(snapshot.retryable)
+        self.assertEqual(snapshot.source, "server_reconciliation")
+        self.assertEqual(self.backend.start_calls, starts_before)
+
     def test_logical_cancel_wins_ready_race_and_never_collects_outputs(self):
         job = self.start()
         self.cancel.cancelled.add(job.logical_job_id)
@@ -363,20 +391,15 @@ class DurableReconnectTests(unittest.TestCase):
         self.assertEqual(self.backend.observe_calls, observe_before)
         with self.assertRaisesRegex(DurableRecoveryError, "SEP_RECOVERY_JOB_TOMBSTONED"):
             self.service.begin_intent(
-                project_id="project-1",
-                asset_id="asset-1",
-                requested_profile_id="sep.basic.v1",
-                models=["vocals", "drums"],
+                project_id="project-1", asset_id="asset-1",
+                requested_profile_id="sep.basic.v1", models=["vocals", "drums"],
                 idempotency_key="idem-secret",
             )
 
     def test_unregistered_backend_job_is_not_silently_adopted(self):
         job = self.backend.start(
-            source_path=self.source,
-            project_id="project-1",
-            asset_id="asset-1",
-            models=["vocals"],
-            idempotency_key="legacy-key",
+            source_path=self.source, project_id="project-1", asset_id="asset-1",
+            models=["vocals"], idempotency_key="legacy-key",
         )
         with self.assertRaisesRegex(DurableRecoveryError, "SEP_RECOVERY_JOB_NOT_REGISTERED"):
             self.service.recover(job.logical_job_id)
@@ -398,40 +421,45 @@ class DurableReconnectTests(unittest.TestCase):
 
     def test_same_idempotency_key_different_profile_conflicts(self):
         self.service.begin_intent(
-            project_id="project-1",
-            asset_id="asset-1",
-            requested_profile_id="sep.basic.v1",
-            models=["vocals"],
+            project_id="project-1", asset_id="asset-1",
+            requested_profile_id="sep.basic.v1", models=["vocals"],
             idempotency_key="same-key",
         )
         with self.assertRaisesRegex(DurableRecoveryError, "SEP_RECOVERY_INTENT_CONFLICT"):
             self.service.begin_intent(
-                project_id="project-1",
-                asset_id="asset-1",
-                requested_profile_id="sep.custom.v1",
-                models=["vocals"],
+                project_id="project-1", asset_id="asset-1",
+                requested_profile_id="sep.custom.v1", models=["vocals"],
                 idempotency_key="same-key",
             )
+
+    def test_same_models_different_order_is_same_canonical_intent(self):
+        first = self.service.begin_intent(
+            project_id="project-1", asset_id="asset-1",
+            requested_profile_id="sep.basic.v1", models=["vocals", "drums"],
+            idempotency_key="order-key",
+        )
+        second = self.service.begin_intent(
+            project_id="project-1", asset_id="asset-1",
+            requested_profile_id="sep.basic.v1", models=["drums", "vocals"],
+            idempotency_key="order-key",
+        )
+        self.assertEqual(first.logical_job_id, second.logical_job_id)
+        self.assertEqual(second.requested_models, ("drums", "vocals"))
 
     def test_corrupt_registry_fails_closed(self):
         self.registry_path.parent.mkdir(parents=True, exist_ok=True)
         self.registry_path.write_text("{not-json", encoding="utf-8")
         with self.assertRaisesRegex(DurableRecoveryError, "SEP_RECOVERY_REGISTRY_CORRUPT"):
             self.service.begin_intent(
-                project_id="p1",
-                asset_id="a1",
-                requested_profile_id="sep.basic.v1",
-                models=["vocals"],
-                idempotency_key="key",
+                project_id="p1", asset_id="a1", requested_profile_id="sep.basic.v1",
+                models=["vocals"], idempotency_key="key",
             )
 
     def test_recovery_attempt_count_is_durable_across_restarts(self):
         job = self.start()
         self.service.recover(job.logical_job_id)
         restarted = DurableReconnectService(
-            backend=self.backend,
-            registry_path=self.registry_path,
-            now_epoch_ms=self.clock,
+            backend=self.backend, registry_path=self.registry_path, now_epoch_ms=self.clock
         )
         restarted.recover(job.logical_job_id)
         self.assertEqual(restarted.get_record(job.logical_job_id).recovery_attempts, 2)
@@ -443,6 +471,25 @@ class DurableReconnectTests(unittest.TestCase):
         snapshots = self.service.recover_all()
         self.assertEqual(snapshots[first.logical_job_id].logical_phase, "separating")
         self.assertEqual(snapshots[second.logical_job_id].logical_phase, "deleted")
+
+    def test_bound_registry_remains_privacy_safe(self):
+        self.start(key="top-secret-idempotency")
+        text = self.registry_path.read_text(encoding="utf-8")
+        self.assertNotIn("top-secret-idempotency", text)
+        self.assertNotIn(self.source.name, text)
+        self.assertNotIn(str(self.source), text)
+        self.assertNotIn("https://", text)
+
+    def test_unknown_snapshot_retains_previous_phase_only_as_diagnostic(self):
+        job = self.start()
+        self.backend.observed_fraction = 0.7
+        good = self.service.recover(job.logical_job_id)
+        self.assertEqual(good.logical_phase, "separating")
+        self.backend.observe_error = BackendError("TLS_DOWN", retryable=True)
+        bad = self.service.recover(job.logical_job_id)
+        self.assertEqual(bad.logical_phase, "unknown")
+        self.assertEqual(bad.previous_phase, "separating")
+        self.assertNotEqual(bad.logical_phase, bad.previous_phase)
 
 
 if __name__ == "__main__":
