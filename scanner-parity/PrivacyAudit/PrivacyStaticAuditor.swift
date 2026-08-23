@@ -62,7 +62,7 @@ public struct PrivacyStaticAuditor: Sendable {
     public init(
         extraDenylist: [String] = [],
         extraAllowlist: [String] = [],
-        excludedPathFragments: [String] = ["/Tests/PrivacyAudit/", "/PrivacyAudit/PrivacyStaticAuditor.swift"]
+        excludedPathFragments: [String] = ["/Tests/", "/PrivacyAudit/PrivacyStaticAuditor.swift"]
     ) {
         var builtins: [PrivacyAuditRule] = [
             .init(id: "network-api", category: .network, risk: .egressRisk,
@@ -85,9 +85,13 @@ public struct PrivacyStaticAuditor: Sendable {
         }
         let allow = Set(extraAllowlist.map { $0.lowercased() })
         self.rules = builtins.map { rule in
-            PrivacyAuditRule(id: rule.id, category: rule.category, risk: rule.risk,
-                             tokens: rule.tokens.filter { !allow.contains($0.lowercased()) },
-                             caseSensitive: rule.caseSensitive)
+            // Egress-risk rules are deliberately non-bypassable. Allowlisting is
+            // limited to informational/review findings such as a known local CLI.
+            let effectiveTokens = rule.risk == .egressRisk
+                ? rule.tokens
+                : rule.tokens.filter { !allow.contains($0.lowercased()) }
+            return PrivacyAuditRule(id: rule.id, category: rule.category, risk: rule.risk,
+                                    tokens: effectiveTokens, caseSensitive: rule.caseSensitive)
         }
         self.excludedPathFragments = excludedPathFragments
     }
@@ -116,7 +120,7 @@ public struct PrivacyStaticAuditor: Sendable {
             let values = try? url.resourceValues(forKeys: [.isRegularFileKey])
             guard values?.isRegularFile == true else { continue }
             let ext = url.pathExtension.lowercased()
-            guard ["swift", "m", "mm", "h", "json", "yml", "yaml", "plist"].contains(ext) || url.lastPathComponent == "Package.swift" else { continue }
+            guard ["swift", "m", "mm", "h", "json", "yml", "yaml", "plist", "sh"].contains(ext) || url.lastPathComponent == "Package.swift" else { continue }
             guard let text = try? String(contentsOf: url, encoding: .utf8) else { continue }
             files[url.path.replacingOccurrences(of: root.path, with: "")] = text
         }
