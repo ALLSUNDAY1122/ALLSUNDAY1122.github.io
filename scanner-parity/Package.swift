@@ -87,6 +87,7 @@ let package = Package(
         .executableTarget(
             name: "HQGoldenRunner",
             dependencies: [
+                "ScannerRuntime",
                 "RuntimeComposition",
                 "HQGoldenSupport",
                 .product(name: "ProductFlow", package: "ProductFlow")
