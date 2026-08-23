@@ -1,13 +1,24 @@
 {
-  "request_id": "app2-005-hm1-subscription-groups-20260823-1636",
-  "completed_at": "2026-08-23T07:36:12.294243+00:00",
+  "request_id": "app2-005-hm1-iap-readback-20260823-1637",
+  "completed_at": "2026-08-23T07:37:09.796803+00:00",
   "query_exit_code": 0,
   "query_status": "success",
   "results": [
     {
-      "label": "subscription-groups",
+      "label": "in-app-purchases",
       "http_status": 200,
-      "data": []
+      "data": [
+        {
+          "id": "6799583540",
+          "type": "inAppPurchases",
+          "attributes": {
+            "name": "第一種衛生管理者 買い切りプレミアム",
+            "productId": "jp.allsunday1122.healthmanager1.lifetime",
+            "state": "MISSING_METADATA",
+            "inAppPurchaseType": "NON_CONSUMABLE"
+          }
+        }
+      ]
     }
   ]
 }
