@@ -150,7 +150,8 @@ public enum FormalGoldenReviewFinalizer {
         execution: FormalGoldenExecutionSnapshot,
         executionReportSHA256: String
     ) -> FormalGoldenHumanReview {
-        FormalGoldenHumanReview(
+        let sequences = expectedSequences(execution.outputPageCount)
+        return FormalGoldenHumanReview(
             bookID: execution.bookID,
             executionReportSHA256: executionReportSHA256.lowercased(),
             videoSHA256: execution.observedVideoSHA256.lowercased(),
@@ -158,7 +159,7 @@ public enum FormalGoldenReviewFinalizer {
             reviewer: "",
             reviewedAt: "",
             reviewComplete: false,
-            pages: (1...max(0, execution.outputPageCount)).map {
+            pages: sequences.map {
                 FormalGoldenReviewPageDecision(
                     sequence: $0,
                     visualCorrection: .pending,
@@ -176,7 +177,7 @@ public enum FormalGoldenReviewFinalizer {
         var bindingReasons: [String] = []
         var preconditionReasons: [String] = []
 
-        if execution.schemaVersion < 5 { preconditionReasons.append("execution_report_schema_before_review_binding_v5") }
+        if execution.schemaVersion < 4 { preconditionReasons.append("execution_report_schema_before_local_review_bundle_v4") }
         if execution.formalGoldenVerdict != humanReviewPending {
             preconditionReasons.append("execution_report_not_waiting_for_human_review")
         }
@@ -198,9 +199,10 @@ public enum FormalGoldenReviewFinalizer {
         if review.pdfSHA256.lowercased() != execution.observedPDFSHA256.lowercased() { bindingReasons.append("review_pdf_sha_mismatch") }
 
         let sequences = review.pages.map(\.sequence)
+        let expected = expectedSequences(execution.outputPageCount)
         if Set(sequences).count != sequences.count { bindingReasons.append("duplicate_review_page_sequence") }
         if review.pages.count != execution.outputPageCount { bindingReasons.append("review_page_count_mismatch") }
-        if sequences.sorted() != Array(1...max(0, execution.outputPageCount)) { bindingReasons.append("review_page_sequence_not_contiguous") }
+        if sequences.sorted() != expected { bindingReasons.append("review_page_sequence_not_contiguous") }
 
         let visualPass = review.pages.filter { $0.visualCorrection == .pass }.count
         let ocrPass = review.pages.filter { $0.ocrSemantic == .pass }.count
@@ -251,6 +253,11 @@ public enum FormalGoldenReviewFinalizer {
             blockingReasons: blockers,
             verdict: verdict
         )
+    }
+
+    private static func expectedSequences(_ count: Int) -> [Int] {
+        guard count > 0 else { return [] }
+        return Array(1...count)
     }
 
     private static func isSHA256(_ value: String) -> Bool {
