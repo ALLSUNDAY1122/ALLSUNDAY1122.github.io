@@ -33,12 +33,26 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
   echo "$DETAIL" | tee -a "$LOG" >&2
   exit 20
 fi
-for cmd in xcrun xcodebuild python3; do command -v "$cmd" >/dev/null || { DETAIL="missing command: $cmd"; exit 21; }; done
+for cmd in xcrun xcodebuild python3 swift; do command -v "$cmd" >/dev/null || { DETAIL="missing command: $cmd"; exit 21; }; done
 SWIFTC="$(xcrun --find swiftc)"
 SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
 SDK_VERSION="$(xcrun --sdk iphoneos --show-sdk-version)"
 XCODE_VERSION="$(xcodebuild -version | tr '\n' ';')"
 SWIFT_VERSION="$($SWIFTC --version | tr '\n' ';')"
+
+# Final cross-lane gates: verify the product source wiring, re-run privacy/security
+# against the assembled tree, and make SwiftPM parse every package manifest.
+echo "== Final source contract ==" | tee -a "$LOG"
+python3 "$ROOT/Tests/AppShell/source_contract_test.py" 2>&1 | tee -a "$LOG"
+
+echo "== Final privacy/security gate ==" | tee -a "$LOG"
+bash "$ROOT/Tests/SecurityHardening/run-lane2-privacy-gate.sh" 2>&1 | tee -a "$LOG"
+
+echo "== SwiftPM manifest resolution ==" | tee -a "$LOG"
+for package_dir in "$ROOT" "$ROOT/ReviewCore" "$ROOT/Recovery" "$ROOT/ProductFlow" "$ROOT/AppShell"; do
+  swift package --package-path "$package_dir" dump-package >/dev/null
+  echo "PASS dump-package $package_dir" | tee -a "$LOG"
+done
 
 RUNTIME_SOURCES=(
   "$ROOT"/FrameExtraction/*.swift
