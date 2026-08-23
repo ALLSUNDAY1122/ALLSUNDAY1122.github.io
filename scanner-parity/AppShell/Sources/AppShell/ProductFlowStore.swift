@@ -323,6 +323,20 @@ public final class ProductFlowStore: ObservableObject {
     }
 
     private func stageCompletedPackage(
+        _ completion: ProductCompletionSnapshot,
+        bookID: String
+    ) throws -> ProductPipelineCompletion {
+        try stageCompletedPackage(
+            ProductPipelineCompletion(
+                bookPackageURL: completion.bookPackageURL,
+                reviewItems: completion.reviewItems,
+                pageCount: completion.pageCount
+            ),
+            bookID: bookID
+        )
+    }
+
+    private func stageCompletedPackage(
         _ completion: ProductPipelineCompletion,
         bookID: String
     ) throws -> ProductPipelineCompletion {
