@@ -1,0 +1,8 @@
+{
+  "request_id": "app2-005-hm1-build-readback-20260823-1627",
+  "completed_at": "2026-08-23T07:31:20.814022+00:00",
+  "query_exit_code": 1,
+  "query_status": "failed",
+  "results": [],
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 482, in <module>\n    main()\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 457, in main\n    status, response = api_get(token, req[\"path\"])\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_api.py\", line 158, in api_get\n    return api_request(token, path, method=\"GET\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_api.py\", line 152, in api_request\n    raise RuntimeError(\nRuntimeError: App Store Connect API GET /v1/apps/6799581662/builds?sort=-uploadedDate&limit=10 returned HTTP 400: {'errors': [{'id': '3fd041aa-e122-4ff7-a9c6-90ce404405ca', 'status': '400', 'code': 'PARAMETER_ERROR.ILLEGAL', 'title': 'A given parameter is not allowed for this request', 'detail': \"The parameter 'sort' can not be used with this request\", 'source': {'parameter': 'sort'}}]}\n"
+}
