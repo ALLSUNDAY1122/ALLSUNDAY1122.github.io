@@ -4,108 +4,127 @@
 - worker: `worker1`
 - lane: `LANE-1-PRODUCT`
 - branch: `scanner-parity/worker1-product-lane`
-- baseline integration: `fd9cb2ec7745a927fae80a82f5cfc514ebc40020`
+- original lane baseline: `fd9cb2ec7745a927fae80a82f5cfc514ebc40020`
+- original final PR: `#4523`, merged by HQ as `df0f56ad68e8db184538d9c968380eb47d20c61e`
 - policy: `AUTONOMOUS_LANES`
 
-## Mission result
-The product lane now provides an iOS-oriented application shell and a stable orchestration boundary from media input through processing, review entry and BookPackage export. Shared scanner-domain types were not redefined.
+## Current disposition
+`LANE_INTEGRATION_READY_POST_MERGE_HARDENING`
 
-## Milestones
-### 1. SwiftUI shell / navigation / state machine
-- `ProductFlowState` reducer owns selecting/ready/processing/review/export/completed/failed transitions.
-- SwiftUI `NavigationStack` renders each state explicitly.
-- stage failure routes to recoverable UI rather than an app crash.
+The original Product Lane was integrated by HQ. A subsequent large-loop audit found recovery/privacy defects that were not acceptable to leave behind. The lane branch therefore contains a focused post-merge hardening delta for a second HQ integration PR.
 
-### 2. Video/photo input and permission recovery
-- PhotosPicker supports images and videos.
-- Files importer supports image/movie selection.
-- camera permission is isolated from Photos/Files import; camera denial does not block imported input.
-- movie import uses `Transferable.FileRepresentation`, avoiding whole-long-video `Data` loading.
+## Product capability
+- SwiftUI reducer-backed app shell and navigation.
+- Photos/video/Files import with camera-denial fallback.
+- Canonical `frameExtraction -> imageCorrection -> pageAudit -> ocr -> packageWrite` orchestration boundary.
+- incremental progress, cancellation and checkpoint resume.
+- replaceable ReviewCore workflow boundary.
+- BookPackage Share + Save to Files UX.
+- bounded iOS background grace; no false claim of unlimited background processing.
 
-### 3. Integrated pipeline orchestration adapter
-- canonical stage order: `frameExtraction -> imageCorrection -> pageAudit -> ocr -> packageWrite`.
-- `BoundProductPipelineDriver` sequences five injected real-engine bindings.
-- `ScannerPipelineBindings` is the concrete app composition point; closures may retain native integrated stage types internally.
-- output artifacts cross into AppShell only as stage/output/page-count/review metadata, avoiding a shadow shared contract.
-- missing bindings and wrong-stage results fail closed.
+## Hardening defects found after original integration
+### H1 — relaunch Resume was not actually restorable
+The original checkpoint stored input IDs but not durable input descriptors. After process relaunch, `ProductFlowState.inputAssets` was empty, so the UI could not satisfy its Resume precondition.
 
-### 4. Progress / cancel / resume
-- per-stage and per-unit progress is propagated into UI.
-- checkpoint is written atomically after each completed stage.
-- checkpoint records run/book/input IDs and completed stage artifacts.
-- resume validates the same book/input identity and skips completed stages.
-- cancellation preserves imported input and completed checkpoint.
-- app relaunch loads saved checkpoint and exposes Resume.
+Fix:
+- checkpoint schema defaults to v2 and stores optional `inputAssets` alongside IDs.
+- optional field preserves decode compatibility with schema-v1 checkpoints.
+- relaunch restores input descriptors only when every managed file still exists and IDs match.
+- stale checkpoint is invalidated when the user selects different input.
 
-### 5. Review entry / replaceable ReviewCore adapter
-- `ProductReviewWorkflow` is a replaceable boundary for worker4 ReviewCore.
-- stable review IDs are deduplicated across stages.
-- shell presents page/reason/detail rather than silently exporting unresolved issues.
-- recovery-specific decisions remain unresolved in the reference adapter until a real ReviewCore adapter performs them.
+### H2 — source media lived in OS temporary storage
+Photo/video/Files imports were copied to `temporaryDirectory`, which cannot support reliable long-book relaunch recovery.
 
-### 6. BookPackage Files/share UX
-- `ShareLink` exposes final package to the system share sheet.
-- `UIDocumentPickerViewController(forExporting:asCopy:)` provides explicit Save to Files UX.
-- export UI receives the actual package URL produced by the pipeline driver.
+Fix:
+- active-run media is copied into app-managed `Application Support/ScannerParity/Imports`.
+- movie import still uses `Transferable.FileRepresentation`, avoiding whole-long-video `Data` loading.
+- only app-managed import paths are eligible for automatic deletion; arbitrary external URLs are never deleted.
 
-### 7. 200-page / background design
-- progress API is incremental and does not require page objects to be retained by UI state.
-- 200-page fixture emits incremental unit progress.
-- iOS background execution uses bounded `beginBackgroundTask`; expiry cancels processing so completed-stage checkpoint can be resumed.
-- this lane intentionally does not claim unlimited iOS background execution.
+### H3 — durable recovery could conflict with Privacy retention
+Worker2 Privacy/Security lane defines raw book source/page data as processing-only data that must be purged after use; only final BookPackage may persist normally.
 
-### 8. Apple SDK compile fixture
-- `scanner-parity/Tests/AppShell/run-apple-product-compile.sh`
-- compiles `ProductFlow` then `AppShell` against iPhoneOS target `arm64-apple-ios17.0` and records Xcode/Swift/SDK/report JSON.
-- the lane write scope does not permit adding/modifying `.github/workflows/**`, so the product-specific harness cannot attach itself to a new GitHub macOS workflow from Worker 1.
-- final integration must execute this retained harness on an allowed macOS/Xcode runner before claiming Apple Product Shell compile PASS.
-- this is a technical final-integration assumption, not a Golden or human decision block.
+Fix:
+- managed raw imported media is retained only while needed for active-run/relaunch recovery.
+- after pipeline completion, raw managed inputs are purged and removed from live UI state.
+- the completed `packageWrite` checkpoint remains until export completion so a relaunch can reopen the final review/export session without retaining the raw source media.
+- `markExportFinished` clears that completed checkpoint.
+
+### H4 — resume trusted broken checkpoint artifacts
+The original resume path skipped any stage named in checkpoint metadata even if the output had disappeared or stages were out of canonical order.
+
+Fix:
+- completed artifacts must be exactly a canonical stage prefix.
+- every checkpoint artifact output URL must exist.
+- every newly returned stage artifact must match its expected stage and exist on disk.
+- final package artifact must exist.
+- malformed/missing resume state fails closed as `invalidResumeCheckpoint` rather than silently generating an incomplete BookPackage.
+
+### H5 — checkpoint date decode mismatch
+Earlier runtime verification found ISO-8601 encoding paired with default date decoding. `JSONDecoder.dateDecodingStrategy = .iso8601` was added and the roundtrip re-run passed.
+
+## Cross-lane compatibility read-back
+### Worker2 Privacy/Security
+Read back `BookDataLifecyclePolicy` from `scanner-parity/worker2-privacy-lane`:
+- raw/intermediate book data must not become ordinary persistent app documents,
+- temporary processing data must be purged,
+- network/log paths are denied in the standard flow.
+
+LANE-1 now keeps raw imports only as recoverable active-run state and purges them at pipeline completion, while the BookPackage remains exportable.
+
+### Worker3 Package Quality
+Worker3 final evidence reports PackageValidation/PackageQuality non-Golden completion with 16/16 fixtures PASS. LANE-1 keeps `packageWrite` as the final composition boundary; PackageValidation/Quality can be inserted there or immediately after it without changing the shared scanner contract.
+
+### Worker4 Review/Recovery
+Worker4 provides `AppShellReviewAdapter`, stable ReviewQueue IDs and retry/reOCR/recapture/defer/exclude/accept decisions. LANE-1 keeps a type-erased `ProductReviewWorkflow` factory so HQ can bind the concrete Worker4 adapter without changing AppShell navigation or Shared Contract.
 
 ## Verification
-### ProductFlow core runtime
-- toolchain: Swift 6.2.x / Linux x86_64.
-- production `ProductPipelineContracts`, `BoundProductPipelineDriver`, `FileProductCheckpointStore`, review boundary were compiled with Swift and executed in an isolated harness.
-- result after fix: `PASS`.
-- verified five-stage run, package completion and checkpoint save/load/clear.
+Environment used for executable ProductFlow verification:
+- Swift 6.2.1
+- Linux x86_64
+- strict concurrency enabled for the reconstructed production core checks.
 
-### Defect discovered and fixed during Macro Loop
-Initial runtime verification found that checkpoint save used `JSONEncoder.dateEncodingStrategy = .iso8601` while load used default `JSONDecoder`, causing resume decode failure after persistence. Fixed by setting `decoder.dateDecodingStrategy = .iso8601`; rerun passed.
+Observed executable checks after recovery hardening:
+- canonical five-stage run/checkpoints: PASS
+- checkpoint contains durable input descriptor: PASS
+- package completion: PASS
+- schema-v2 encode/decode roundtrip: PASS
+- durable input descriptor survives roundtrip and points to an existing file: PASS
+- resume skips already-completed canonical prefix: PASS
+- schema-v1 checkpoint remains decodable: PASS
+- schema-v1 missing `inputAssets` resolves to nil: PASS
+- completed-session `restoreCompleted` state restores package/review while dropping raw input: PASS
 
-### Repository fixtures
-- reducer fixture: `scanner-parity/Tests/ProductFlow/ProductFlowStateTests.swift`
-- orchestration/resume/200-page fixture: `scanner-parity/Tests/ProductFlow/ProductPipelineDriverTests.swift`
-- AppShell static contract: `scanner-parity/Tests/AppShell/source_contract_test.py`
-- iPhoneOS compile harness: `scanner-parity/Tests/AppShell/run-apple-product-compile.sh`
+Repository fixtures additionally define fail-close cases for:
+- mismatched checkpoint identity,
+- missing resume artifact,
+- non-prefix stage order,
+- missing stage binding,
+- 200-page incremental progress,
+- stable review dedupe.
 
-Orchestration fixture covers:
-1. canonical five-stage order
-2. five stage checkpoints
-3. resume skips already completed stages
-4. mismatched checkpoint fails closed
-5. review stable-ID dedupe
-6. 200-page incremental progress
-7. checkpoint persistence roundtrip
-8. missing binding explicit failure
+AppShell static contract now covers durable import storage, managed cleanup, relaunch input restoration, completed-session restore, raw input purge after completion, stale checkpoint invalidation, share/Files export and bounded background grace.
 
-AppShell contract covers navigation, video/photo/Files input, permission fallback, start/cancel/resume, progress, review adapter, canonical five-stage bindings, share, Files export and bounded background grace.
+## Apple SDK boundary
+`scanner-parity/Tests/AppShell/run-apple-product-compile.sh` remains the ProductShell iPhoneOS compile harness.
 
-## Final-integration assumptions
-These are intentionally recorded rather than blocking the lane, per `AUTONOMOUS_LANES.json`:
-1. The final native iOS target must inject the already-integrated FrameExtraction/ImageCorrection/PageAudit/OCRExport/PipelineOCR implementations into `ScannerPipelineBindings`.
-2. Worker4's final ReviewCore should replace the reference `InMemoryProductReviewWorkflow` through the existing adapter boundary.
-3. HQ/final integration must execute `run-apple-product-compile.sh` on macOS/Xcode and retain its report before Apple compile is marked PASS.
+The existing `.github/workflows/scanner-parity-apple-validation.yml` runs the older Apple adapter harness only; it does not execute the AppShell-specific harness. Worker1 write scope does not permit editing `.github/workflows/**`, so no ProductShell Apple SDK PASS is claimed here. HQ/final integration must run the retained AppShell harness on an allowed macOS/Xcode runner before marking ProductShell Apple compile PASS.
 
 ## Scope audit
-All lane changes are confined to:
+The hardening delta is limited to:
 - `scanner-parity/AppShell/**`
 - `scanner-parity/ProductFlow/**`
 - `scanner-parity/Tests/AppShell/**`
 - `scanner-parity/Tests/ProductFlow/**`
 - `automation/chatgpt-dispatcher/scanner-parity/evidence/LANE-1-*.md`
 
-No `scanner-parity/SHARED_CONTRACT.md` change. No Golden Dataset PASS/FAIL or SHA decision.
+No `scanner-parity/SHARED_CONTRACT.md` change. No Golden Dataset PASS/FAIL or canonical SHA decision.
 
-## Lane disposition
-`LANE_INTEGRATION_READY`
+## Remaining HQ final-integration gates
+1. Merge this post-merge hardening delta.
+2. Bind real integrated FrameExtraction/ImageCorrection/PageAudit/OCRExport/PipelineOCR implementations at `ScannerPipelineBindings`.
+3. Bind Worker4 Review/Recovery adapter through `ProductReviewWorkflow`.
+4. Run Worker3 package validation/quality in final `packageWrite` path.
+5. Execute the AppShell-specific iPhoneOS compile harness on macOS/Xcode.
+6. Run HQ Golden Gate with the user-provided Golden Dataset.
 
-Worker 1 must not merge its own final PR. HQ owns final integration and Golden Gate.
+Worker1 does not merge its own integration PR and does not issue formal Golden or Release PASS.
