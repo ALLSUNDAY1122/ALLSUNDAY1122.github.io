@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/moises/lane3-device-measurement-result.schema.json",
+  "title": "Lane 3 Playback/DSP device measurement result",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "runID",
+    "capturedAtISO8601",
+    "thresholdProfile",
+    "captureSurface",
+    "fixture",
+    "actualAudioCaptured",
+    "referenceDifferentialCompleted",
+    "metrics",
+    "automatedGatePassed",
+    "humanArtifactReviewComplete",
+    "humanArtifactGatePassed",
+    "parityEvidenceEligible",
+    "blockerCodes"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "runID": { "type": "string", "minLength": 1 },
+    "capturedAtISO8601": { "type": "string", "minLength": 1 },
+    "thresholdProfile": { "const": "LANE3_PROVISIONAL_ENGINEERING_NOT_REFERENCE" },
+    "captureSurface": {
+      "enum": ["harnessOnly", "simulator", "macOS", "physicalIPhone"]
+    },
+    "fixture": {
+      "type": "object",
+      "required": ["fixtureID", "provenance", "rights", "genre", "durationSeconds", "sampleRate", "stemRoles", "containsRealAudio"],
+      "properties": {
+        "fixtureID": { "type": "string", "minLength": 1 },
+        "provenance": { "type": "string", "minLength": 1 },
+        "rights": { "enum": ["rightsCleared", "unknown", "syntheticOnly"] },
+        "genre": { "type": "string" },
+        "durationSeconds": { "type": "number", "exclusiveMinimum": 0 },
+        "sampleRate": { "type": "number", "exclusiveMinimum": 0 },
+        "stemRoles": { "type": "array", "items": { "type": "string" } },
+        "containsRealAudio": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "actualAudioCaptured": { "type": "boolean" },
+    "referenceDifferentialCompleted": { "type": "boolean" },
+    "metrics": {
+      "type": "array",
+      "minItems": 14,
+      "items": {
+        "type": "object",
+        "required": ["metricID", "value", "unit", "threshold", "comparator", "passed", "evidenceNote"],
+        "properties": {
+          "metricID": { "type": "string", "minLength": 1 },
+          "value": { "type": "number" },
+          "unit": { "type": "string", "minLength": 1 },
+          "threshold": { "type": "number" },
+          "comparator": { "const": "lessThanOrEqual" },
+          "passed": { "type": "boolean" },
+          "evidenceNote": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "automatedGatePassed": { "type": "boolean" },
+    "humanArtifactReviewComplete": { "type": "boolean" },
+    "humanArtifactGatePassed": { "type": "boolean" },
+    "parityEvidenceEligible": { "type": "boolean" },
+    "blockerCodes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "FIXTURE_RIGHTS_NOT_CLEARED",
+          "REAL_AUDIO_REQUIRED",
+          "PHYSICAL_IPHONE_CAPTURE_REQUIRED",
+          "ACTUAL_AUDIO_CAPTURE_REQUIRED",
+          "REFERENCE_DIFFERENTIAL_REQUIRED_FOR_PARITY",
+          "AUTOMATED_MEASUREMENT_GATE_FAILED",
+          "HUMAN_ARTIFACT_REVIEW_REQUIRED",
+          "HUMAN_ARTIFACT_GATE_FAILED"
+        ]
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false,
+  "description": "Harness output only. A schema-valid or automated-passing record does not establish product PARITY unless parityEvidenceEligible is true and HQ independently validates the underlying physical-device, rights, listening and Reference evidence."
+}
