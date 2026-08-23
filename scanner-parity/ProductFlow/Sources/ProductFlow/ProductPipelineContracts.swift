@@ -45,15 +45,20 @@ public struct ProductPipelineCheckpoint: Codable, Sendable, Equatable {
     public let runID: String
     public let bookID: String
     public let inputAssetIDs: [String]
+    /// Durable imported input descriptors used to restore a processing run after app relaunch.
+    /// Optional preserves decode compatibility with schema-v1 checkpoints created before
+    /// relaunch input restoration was added.
+    public let inputAssets: [ProductInputAsset]?
     public let completedArtifacts: [ProductStageArtifact]
     public let lastProgress: ProductProgress?
     public let updatedAt: Date
 
     public init(
-        schemaVersion: Int = 1,
+        schemaVersion: Int = 2,
         runID: String,
         bookID: String,
         inputAssetIDs: [String],
+        inputAssets: [ProductInputAsset]? = nil,
         completedArtifacts: [ProductStageArtifact],
         lastProgress: ProductProgress?,
         updatedAt: Date = Date()
@@ -62,6 +67,7 @@ public struct ProductPipelineCheckpoint: Codable, Sendable, Equatable {
         self.runID = runID
         self.bookID = bookID
         self.inputAssetIDs = inputAssetIDs
+        self.inputAssets = inputAssets
         self.completedArtifacts = completedArtifacts
         self.lastProgress = lastProgress
         self.updatedAt = updatedAt
