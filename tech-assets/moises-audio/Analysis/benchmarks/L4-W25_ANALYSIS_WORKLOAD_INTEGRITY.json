@@ -1,0 +1,58 @@
+{
+  "wave": "L4-W25",
+  "title": "Physical-iPhone Analysis workload integrity / no-op benchmark prevention hardening",
+  "evidence_class": "NON_PARITY_PORTABLE_VALIDATION",
+  "highest_worker_status": "FULL_WORKLOAD_INTEGRITY_STRUCTURALLY_COMPLETE_PENDING_HQ",
+  "production_components": [
+    "Analysis/AnalysisDeviceWorkloadReceipt.swift",
+    "Analysis/AnalysisDeviceWorkloadValidation.swift",
+    "Analysis/AnalysisDeviceWorkloadRunner.swift",
+    "Analysis/AnalysisDevicePerformanceWorkloadGate.swift",
+    "Analysis/AnalysisDeviceWorkloadSHA256.swift"
+  ],
+  "fail_closed_bindings": [
+    "run_id_and_run_kind_to_W23",
+    "manifest_id_and_sha256",
+    "fixture_id_and_source_audio_sha256",
+    "source_duration_sample_rate_channel_count",
+    "analyzer_version_configuration_build_identity",
+    "canonical_stage_order_and_stage_timing",
+    "canonical_snapshot_bytes_sha256_and_output_summary",
+    "run_specific_execution_id_and_binding"
+  ],
+  "portable_validation": {
+    "swift": "6.2.1 Linux source-shaped typecheck",
+    "adversarial_assertions": "16/16 PASS x5",
+    "sha256_known_vector": "PASS",
+    "stress": "10,000 receipts x5 = 50,000 validated receipts PASS",
+    "internal_seconds": [12.933978, 12.646778, 12.749567, 12.775439, 12.623320],
+    "process_wall_seconds": [12.96, 12.69, 12.78, 12.80, 12.65],
+    "max_rss_kb": [27100, 27152, 27072, 27128, 27064]
+  },
+  "adversarial_matrix": [
+    "valid_full_workload",
+    "missing_tempo",
+    "missing_section",
+    "stage_order_violation",
+    "fixture_sha_swap",
+    "run_id_mismatch",
+    "manifest_mismatch",
+    "snapshot_sha_mismatch",
+    "reused_execution_across_run",
+    "cancellation_before_work",
+    "cancellation_after_real_work",
+    "complete_cancel_semantic_mismatch",
+    "duplicate_stage",
+    "deterministic_codec",
+    "same_snapshot_across_independent_runs_allowed",
+    "sha256_known_vector"
+  ],
+  "limitations": [
+    "Portable stress numbers measure receipt-validator overhead only; they are not physical-iPhone Analysis performance.",
+    "Worker 4 does not load source files or independently verify the source-file SHA; HQ/Lane-2 integration supplies approved loader/manifest provenance.",
+    "No physical iPhone was run in W25.",
+    "No production performance threshold was chosen or applied in W25.",
+    "A structurally valid receipt is not cryptographic device attestation; integrated build/device archive authenticity remains pending HQ/next wave.",
+    "MOI-P009, MOI-P011, MOI-P013, MOI-P016 and MOI-P021 remain MISSING until their HQ Late Integration gates are met."
+  ]
+}
