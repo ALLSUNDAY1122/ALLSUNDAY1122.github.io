@@ -4,14 +4,14 @@
   "lane_id": "LANE-2-IO-LIBRARY",
   "work_package_id": "MOI-WP2-IO-LIBRARY",
   "assignment_epoch": 2,
-  "operating_model": "FOUR_INDEPENDENT_LANES_LATE_INTEGRATION",
+  "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "work_branch": "moises/wp2-io-library",
-  "state": "CHECKPOINT_READY",
+  "state": "IN_PROGRESS",
   "current_bundle": null,
   "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "3d24a3c0725a60dfd800bd5e9b19f8db0b31d9e6",
+  "head_sha": "d4fee1d1e3fc0ead0e3644adb0ce3d1cf1a90b24",
   "existing_unintegrated_commits_at_epoch_start": [],
   "commits": [
     "0bd1887a479dd6098a28d47d3051ea22b7a2a1eb",
@@ -40,7 +40,12 @@
     "a33edea6cab3bc3495b6cad7efcb6877111f85c7",
     "770c89f1b97810da64fe6b8f3f7bef2d67f47d28",
     "be49d445614e271f6f1e8db3cc8ce5939a88a552",
-    "3d24a3c0725a60dfd800bd5e9b19f8db0b31d9e6"
+    "3d24a3c0725a60dfd800bd5e9b19f8db0b31d9e6",
+    "807a3f1ffd3e1cb9fbb0b4f87d880c6828e74d62",
+    "a4294591d661279d688432cd54c333777948d90a",
+    "48dbe94912bbdfc7f145705ca22a12063141ab28",
+    "845a6d4bd786759b5950ecb748d141e08b835df1",
+    "d4fee1d1e3fc0ead0e3644adb0ce3d1cf1a90b24"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -64,7 +69,9 @@
     "L2-M04 Swift 6.2.1 Linux: IO storage policy + lifecycle metadata + coordinator + XCTest sources typecheck with frozen-contract-equivalent stubs => PASS",
     "L2-M04 executable self-check => PASS exact/insufficient storage, import->persist->edit->export metadata, interrupted export cleanup relaunch, unsupported media persistence, corrupt lifecycle metadata fail-closed",
     "L2-M04 same-second failure-history ambiguity was reproduced during self-check and fixed by durable insertion-order history; rerun => PASS",
-    "L2-M04 committed XCTest coverage includes interrupted import ownership reconciliation, canonical delete/export convergence, storage overflow/negative budget, path traversal, metadata corruption and durable failure reopen"
+    "L2-M04 committed XCTest coverage includes interrupted import ownership reconciliation, canonical delete/export convergence, storage overflow/negative budget, path traversal, metadata corruption and durable failure reopen",
+    "L2-AW05 Swift 6.2.1 Linux strict-concurrency/warnings-as-errors typecheck for external acquisition + staging recovery against consumed IOFileStore seam => PASS",
+    "L2-AW05 executable self-check => PASS 11 scenarios: invalid URL, missing/directory/empty/oversize source, complete copy/descriptor, collision avoidance, app-owned-root rejection, stale cleanup, cleanup idempotency, invalid grace"
   ],
   "evidence": [
     "Independent Lane Worker contract v3 SHA 2edf4411f69af37f9b57a363096fb2787ecfc713 and Lane plan v3 SHA 32be5c934fcdf8f17c677c4c2d30db0808813fa5 re-read before L2-M04",
@@ -77,28 +84,44 @@
     "canonical project deletion converges export/ownership sidecar cleanup; Library enumeration failure stops cleanup before deletion",
     "unsupported/protected/corrupt/no-audio/storage/network/provider/cancel/export failures map to stable durable codes; import failures can persist before project creation",
     "Library/L2-M04_VALIDATION.md records executable evidence, remaining Apple/runtime gates and explicit NON-PARITY status",
-    "L2-M03 status commit 62f6f7c67aa65a44b48756a41b28676abd32c818 -> L2-M04 implementation/evidence head 3d24a3c0725a60dfd800bd5e9b19f8db0b31d9e6 = ahead 8 / behind 0; all changed implementation/evidence files are IO/** or Library/**"
+    "L2-M03 status commit 62f6f7c67aa65a44b48756a41b28676abd32c818 -> L2-M04 implementation/evidence head 3d24a3c0725a60dfd800bd5e9b19f8db0b31d9e6 = ahead 8 / behind 0; all changed implementation/evidence files are IO/** or Library/**",
+    "v4 Worker contract SHA c9e8ec5d191108db6eb20fbd40db0dab3c46b725 and autonomous Lane plan SHA 10b595b47e5a71278bde32e8656bd284e14e62eb were read before L2-AW05; HQ task replenishment is no longer a stop condition",
+    "IO/Sources/IOExternalFileAcquisition.swift establishes the external picker/File Provider acquisition boundary: local-file-only, ownership separation, regular/non-empty/size checks, storage preflight, byte-count verification and Apple security-scoped coordinated read",
+    "IO/Sources/IOStagingRecovery.swift provides grace-based non-recursive stale staging cleanup that is idempotent across relaunch",
+    "IO/Tests/IOExternalFileAcquisitionTests.swift and IO/Tests/IOStagingRecoveryTests.swift commit negative, ownership, collision and relaunch recovery coverage",
+    "IO/L2-AW05_EXTERNAL_ACQUISITION_VALIDATION.md records executed Linux evidence and explicitly leaves Apple provider/runtime and PARITY claims open"
   ],
   "known_gaps": [
     "Apple Core Data runtime execution of the L2-M01/L2-M02/L2-M03 suites remains pending an Apple/Xcode environment",
     "The L2-V0 -> current inferred Core Data migration fixture is implemented but cannot be truthfully marked runtime PASS until executed with Core Data",
     "Actual IOSAudioIOService AVFoundation codec/decode/export execution is pending Apple SDK and physical-device evidence",
+    "External picker/File Provider acquisition boundary now exists, but actual iPhone security-scoped URL and NSFileCoordinator provider behavior remains unverified on device",
     "Actual iPhone Files/File Provider/camera-roll/direct URL/share flows remain HQ App/iOS late-integration evidence",
     "Physical-device storage-pressure behavior and export/share artifact validity remain unverified",
+    "Reference codec/container matrix still needs Lane-2 hardening and Apple runtime evidence, especially WMA support/fallback strategy",
     "Lifecycle sidecar corruption fails closed; user-facing recovery/export decisions for that diagnostic metadata belong to HQ App/iOS composition",
     "Library/import/export PARITY rows remain MISSING until Apple runtime, integrated iPhone interruption, real-audio and differential product gates are satisfied"
   ],
   "hq_requests": [
-    "Consume this Lane-2 checkpoint semantically without rebasing Worker 2 onto unrelated lane churn before checkpoint integration",
+    "Consume the accumulated Lane-2 checkpoint semantically without rebasing Worker 2 onto unrelated lane churn before checkpoint integration",
     "At late integration use CrashSafeProjectLibraryStore.openPreservingUserData(...) as the canonical Library startup path and compose Lane2DurableLifecycleCoordinator around IOSAudioIOService + the resulting ProjectLibraryPersisting store",
     "Run the complete Core Data migration/interruption suite plus Lane2DurableLifecycleCoordinatorTests under the supported Apple SDK/iOS host",
+    "Exercise IOExternalFileAcquirer securityScoped mode with real Files/iCloud/File Provider URLs and retain provider coordination evidence",
     "Run actual iPhone Files/File Provider/camera-roll/direct URL/unsupported-codec/storage-pressure/M4A export/share scenarios and retain real artifacts/evidence",
-    "Do not promote MOI-P001/P002/P017/P018/P019/P020 from this checkpoint alone; PARITY remains HQ-owned",
-    "Preload at least four new LANE-2-IO-LIBRARY Macro Bundles before Worker 2 resumes after checkpoint",
-    "No Shared/App contract change was required across L2-M01..L2-M04"
+    "Do not promote MOI-P001/P002/P017/P018/P019/P020 from Lane-2 branch evidence alone; PARITY remains HQ-owned",
+    "No Shared/App contract change was required by L2-AW05"
   ],
-  "migration_note": "Lane 2 completed all four epoch-2 preloaded Macro Bundles on one preserved long-lived branch. The checkpoint covers persistence, crash-safe destructive operations, migration/corruption preservation, and IO/Library durable lifecycle integration without reducing the final iPhone PARITY gate.",
+  "autonomous_wave": {
+    "wave_id": "L2-AW05",
+    "goal": "Create a production-safe external picker/File Provider file-acquisition boundary and relaunch staging recovery entirely inside IO/**.",
+    "rationale": "MOI-P001/P002 are still MISSING and the prior IO service handled only already-app-owned files or direct network URLs. The highest-value lane-local gap was safely converting external local URLs into verified app-owned staging without waiting for App/iOS picker integration.",
+    "done_when": "External local file acquisition fails closed for invalid/missing/non-regular/empty/oversize/ownership-conflicting inputs, verifies complete copy under storage preflight, supports Apple security-scoped coordinated access, cleans stale staging after relaunch, and has committed tests plus durable evidence without claiming device PARITY.",
+    "result": "COMPLETED_NON_PARITY",
+    "implementation_head_sha": "d4fee1d1e3fc0ead0e3644adb0ce3d1cf1a90b24",
+    "next_priority": "Wire external acquisition through IOSAudioIOService final media validation/finalization and then harden the current-reference codec/container matrix including WMA strategy."
+  },
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved, but Worker 2 no longer waits for HQ backlog replenishment and now self-selects the highest-value Lane-2 wave on every user '次'.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-22T19:06:35+09:00",
+  "last_updated": "2026-08-23T16:33:00+09:00",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ reads it for lane checkpoint integration and remains sole PARITY authority."
 }
