@@ -42,7 +42,7 @@ final class AnalysisBenchmarkScalabilityTests: XCTestCase {
         XCTAssertEqual(score, 0.5, accuracy: 1e-12)
     }
 
-    func testLargeBeatAndBoundaryArraysRemainExact() {
+    func testLargeBeatAndBoundaryArraysRemainExact() throws {
         let beatCount = 20_000
         let reference = (0..<beatCount).map { Double($0) * 0.5 }
         let estimated = (0..<beatCount).map {
@@ -57,7 +57,7 @@ final class AnalysisBenchmarkScalabilityTests: XCTestCase {
         let sections = makeSections(boundaries: [0, 4, 7, 14], labels: ["A", "B", "C"])
         let shifted = makeSections(boundaries: [0, 7, 10, 14], labels: ["A", "B", "C"])
         let metrics = SectionBenchmarkEvaluator.metrics(reference: sections, estimated: shifted, duration: 14)
-        XCTAssertEqual(metrics["boundary_f_3_0s"], 0.5, accuracy: 1e-12)
+        XCTAssertEqual(try XCTUnwrap(metrics["boundary_f_3_0s"]), 0.5, accuracy: 1e-12)
     }
 
     func testSectionEvaluatorCardinalityOverflowFailsClosed() {
