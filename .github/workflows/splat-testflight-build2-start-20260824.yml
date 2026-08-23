@@ -1,0 +1,75 @@
+name: Splat Internal TestFlight Build 2 Start
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260824'
+    paths:
+      - '.github/workflows/splat-testflight-build2-start-20260824.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate release candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin feature/splat-native-ios-poc
+          HQ_HEAD="$(git rev-parse FETCH_HEAD)"
+          test "$HQ_HEAD" = "091840c13c50c0a1fbf62b63f508e978dca3bf5f"
+          git diff --quiet "$HQ_HEAD" HEAD -- splat-native-ios
+          grep -q "CURRENT_PROJECT_VERSION: 2" <(python3 - <<'PY'
+          from pathlib import Path
+          text=Path('codemagic.yaml').read_text()
+          marker="text=text.replace(old, 'CURRENT_PROJECT_VERSION: 2', 1)"
+          print('CURRENT_PROJECT_VERSION: 2' if marker in text else 'missing')
+          PY
+          )
+          grep -q 'submit_to_testflight: true' codemagic.yaml
+          grep -q 'submit_to_app_store: false' codemagic.yaml
+          ! grep -q 'submit_to_app_store: true' codemagic.yaml
+          echo "PASS: Build 2 candidate matches validated HQ $HQ_HEAD"
+      - name: Start Codemagic build
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, urllib.error, urllib.request
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token: raise SystemExit('Missing CM_API_TOKEN')
+          app_id='6a769d81a1add9d06020b524'; workflow_id='splat-native-ios'; branch='testflight/splat-native-ios-20260824'
+          req=urllib.request.Request('https://api.codemagic.io/builds',data=json.dumps({'appId':app_id,'workflowId':workflow_id,'branch':branch}).encode(),method='POST',headers={'x-auth-token':token,'Content-Type':'application/json','Accept':'application/json'})
+          try:
+              with urllib.request.urlopen(req,timeout=30) as r: data=json.loads(r.read().decode())
+          except urllib.error.HTTPError as exc:
+              raise SystemExit(f'Codemagic start failed HTTP {exc.code}: '+exc.read().decode(errors='replace')[:1000])
+          build_id=data.get('buildId') or data.get('id')
+          if not build_id: raise SystemExit('No build id returned')
+          out={'request_id':'scanlab-testflight-build2-corrected-20260824','ok':True,'status':'started','build_id':build_id,'branch':branch,'workflow_id':workflow_id,'validated_hq_head':'091840c13c50c0a1fbf62b63f508e978dca3bf5f','app_store_build_number':'2','bundle_id':'jp.allsunday1122.splatlab','app_store_connect_app_id':'6803778932','submit_to_testflight':True,'submit_to_app_store':False}
+          pathlib.Path('/tmp/build.json').write_text(json.dumps(out,indent=2)+'\n')
+          print('PASS: started corrected Build 2 candidate',build_id)
+          PY
+      - name: Persist build locator
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin testflight/splat-native-ios-20260824
+          git reset --hard FETCH_HEAD
+          RESULT='automation/codemagic-results/scanlab-testflight-build2-corrected-20260824.json'
+          mkdir -p "$(dirname "$RESULT")"
+          cp /tmp/build.json "$RESULT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'release(splat): persist corrected Build 2 locator'
+          git push origin HEAD:testflight/splat-native-ios-20260824
