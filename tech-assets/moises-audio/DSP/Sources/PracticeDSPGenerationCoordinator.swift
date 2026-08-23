@@ -79,13 +79,13 @@ public actor PracticeDSPGenerationCoordinator {
     ) async throws -> PracticeDSPGenerationCoordinatorReceipt {
         let serial = try beginOperation()
         defer { operationInFlight = false }
-        guard !transportGate.isPoisoned else {
-            throw PracticeDSPGenerationCoordinatorError.coordinatorPoisoned
-        }
+        try rejectNormalOperationIfPoisoned(playbackToken: playbackToken)
         guard playbackToken.reason != .tempoChange else {
+            poisonIfPlaybackTokenAdvanced(playbackToken)
             throw PracticeDSPGenerationCoordinatorError.tempoChangeRequiresTempoMutation
         }
         guard playbackToken.reason != .recovery else {
+            poisonIfPlaybackTokenAdvanced(playbackToken)
             throw PracticeDSPGenerationCoordinatorError.recoveryRequiresRecoveryPath
         }
         let reason = try dspReason(for: playbackToken.reason)
@@ -122,10 +122,9 @@ public actor PracticeDSPGenerationCoordinator {
     ) async throws -> PracticeDSPGenerationCoordinatorReceipt {
         let serial = try beginOperation()
         defer { operationInFlight = false }
-        guard !transportGate.isPoisoned else {
-            throw PracticeDSPGenerationCoordinatorError.coordinatorPoisoned
-        }
+        try rejectNormalOperationIfPoisoned(playbackToken: playbackToken)
         guard playbackToken.reason == .tempoChange else {
+            poisonIfPlaybackTokenAdvanced(playbackToken)
             throw PracticeDSPGenerationCoordinatorError.expectedTempoChangeToken(
                 actual: playbackToken.reason.rawValue
             )
@@ -185,6 +184,7 @@ public actor PracticeDSPGenerationCoordinator {
         let serial = try beginOperation()
         defer { operationInFlight = false }
         guard playbackToken.reason == .recovery else {
+            poisonIfPlaybackTokenAdvanced(playbackToken)
             throw PracticeDSPGenerationCoordinatorError.expectedRecoveryToken(
                 actual: playbackToken.reason.rawValue
             )
@@ -309,6 +309,33 @@ public actor PracticeDSPGenerationCoordinator {
         operationSerial = next
         operationInFlight = true
         return next
+    }
+
+    /// Playback advances its fence before calling this coordinator. If a newer token reaches a
+    /// poisoned coordinator, that generation has already become externally observable and must be
+    /// retained as a recovery floor even though the requested normal operation cannot proceed.
+    private func rejectNormalOperationIfPoisoned(
+        playbackToken: PlaybackTransportRescheduleToken
+    ) throws {
+        guard transportGate.isPoisoned else { return }
+        transportGate.poisonObservedGenerations(
+            playbackGeneration: playbackToken.generation
+        )
+        throw PracticeDSPGenerationCoordinatorError.coordinatorPoisoned
+    }
+
+    /// A token sent through the wrong coordinator entry point still represents an already-advanced
+    /// Playback fence. A genuinely newer token therefore revokes the old combined replacement
+    /// authority and poisons the gate. Stale/replayed tokens do not destroy a valid current binding.
+    private func poisonIfPlaybackTokenAdvanced(
+        _ playbackToken: PlaybackTransportRescheduleToken
+    ) {
+        if let previous = transportGate.lastPlaybackGeneration {
+            guard playbackToken.generation > previous else { return }
+        }
+        transportGate.poisonObservedGenerations(
+            playbackGeneration: playbackToken.generation
+        )
     }
 
     private func dspReason(
