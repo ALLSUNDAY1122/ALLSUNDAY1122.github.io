@@ -1,0 +1,98 @@
+name: Scan Lab TestFlight Build 2 Retry
+
+on:
+  push:
+    branches:
+      - 'testflight/splat-native-ios-20260824'
+    paths:
+      - '.github/workflows/scanlab-testflight-build2-retry.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate exact HQ application source and release config
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin feature/splat-native-ios-poc
+          HQ_HEAD="$(git rev-parse FETCH_HEAD)"
+          test "$HQ_HEAD" = "17b52b79f032e7abe225bc216cc2d0ac2b71fadf"
+          git diff --quiet "$HQ_HEAD" HEAD -- splat-native-ios
+          grep -q 'APP_STORE_CONNECT_APP_ID: 6803778932' codemagic.yaml
+          grep -q 'BUNDLE_ID: jp.allsunday1122.splatlab' codemagic.yaml
+          grep -q "build='2'" codemagic.yaml
+          grep -q 'submit_to_testflight: true' codemagic.yaml
+          grep -q 'submit_to_app_store: false' codemagic.yaml
+          ! grep -q 'submit_to_app_store: true' codemagic.yaml
+          echo "PASS: release source matches HQ $HQ_HEAD and Build 2 is TestFlight-only"
+
+      - name: Start corrected Codemagic Build 2
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, urllib.error, urllib.request
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token:
+              raise SystemExit('Missing CM_API_TOKEN')
+          payload={
+              'appId':'6a769d81a1add9d06020b524',
+              'workflowId':'splat-native-ios',
+              'branch':'testflight/splat-native-ios-20260824',
+          }
+          req=urllib.request.Request(
+              'https://api.codemagic.io/builds',
+              data=json.dumps(payload).encode('utf-8'),
+              headers={'x-auth-token':token,'Content-Type':'application/json','Accept':'application/json'},
+              method='POST',
+          )
+          try:
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  status=response.status
+                  body=json.loads(response.read().decode('utf-8'))
+          except urllib.error.HTTPError as exc:
+              raise SystemExit(f'Codemagic build start failed: HTTP {exc.code}')
+          build_id=body.get('buildId') or body.get('id')
+          if not build_id:
+              raise SystemExit('Codemagic did not return build id')
+          result={
+              'request_id':'scanlab-testflight-build2-retry-20260824',
+              'ok':True,
+              'status':'started',
+              'build_id':build_id,
+              'branch':'testflight/splat-native-ios-20260824',
+              'workflow_id':'splat-native-ios',
+              'validated_hq_head':'17b52b79f032e7abe225bc216cc2d0ac2b71fadf',
+              'app_store_build_number':'2',
+              'bundle_id':'jp.allsunday1122.splatlab',
+              'app_store_connect_app_id':'6803778932',
+              'submit_to_testflight':True,
+              'submit_to_app_store':False,
+          }
+          pathlib.Path('/tmp/scanlab-build2-retry.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
+          print(f'PASS: started Codemagic Build 2 retry {build_id}')
+          PY
+
+      - name: Persist sanitized build locator
+        run: |
+          set -euo pipefail
+          RESULT_PATH='automation/codemagic-results/scanlab-testflight-build2-retry-20260824.json'
+          cp /tmp/scanlab-build2-retry.json /tmp/scanlab-build2-retry.saved.json
+          git fetch origin testflight/splat-native-ios-20260824
+          git reset --hard FETCH_HEAD
+          mkdir -p "$(dirname "$RESULT_PATH")"
+          cp /tmp/scanlab-build2-retry.saved.json "$RESULT_PATH"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RESULT_PATH"
+          git commit -m 'release(scanlab): persist corrected Build 2 retry locator'
+          git push origin HEAD:testflight/splat-native-ios-20260824
