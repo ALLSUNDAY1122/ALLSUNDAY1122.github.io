@@ -12,11 +12,11 @@ final class BookPackageQualityAuditorTests: XCTestCase {
     func testValidVerticalHorizontalMixedPackagePasses() throws {
         let root = try makePackage(sequences: [1, 2, 3])
         let ocr = [
-            qualityPage(1, "p1", .vertical, "縦書きの日本語本文です。十分な文字数があります。"),
-            qualityPage(2, "p2", .horizontal, "横書きの日本語本文です。十分な文字数があります。"),
-            qualityPage(3, "p3", .mixed, "縦横混在の日本語本文です。図表説明も含みます。")
+            qualityPage(1, "p1", .vertical, fixtureText(1)),
+            qualityPage(2, "p2", .horizontal, fixtureText(2)),
+            qualityPage(3, "p3", .mixed, fixtureText(3))
         ]
-        let report = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: ocr.map(\.text))).audit(rootURL: root, ocrPages: ocr)
+        let report = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: [fixtureText(1), fixtureText(2), fixtureText(3)])).audit(rootURL: root, ocrPages: ocr)
         XCTAssertTrue(report.valid)
         XCTAssertEqual(report.metrics.pdfTextLayerCoverage, 1)
         XCTAssertEqual(report.metrics.pdfTextOrderAccuracy, 1)
@@ -28,7 +28,7 @@ final class BookPackageQualityAuditorTests: XCTestCase {
 
     func testEmptyPDFTextLayerFails() throws {
         let root = try makePackage(sequences: [1, 2])
-        let ocr = [qualityPage(1, "p1", .vertical, "日本語本文がここにあります。"), qualityPage(2, "p2", .horizontal, "別の日本語本文があります。")]
+        let ocr = [qualityPage(1, "p1", .vertical, fixtureText(1)), qualityPage(2, "p2", .horizontal, fixtureText(2))]
         let report = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: ["", ""])).audit(rootURL: root, ocrPages: ocr)
         XCTAssertFalse(report.valid)
         XCTAssertTrue(report.issues.contains { $0.code == .pdfTextLayerMissing })
@@ -36,9 +36,9 @@ final class BookPackageQualityAuditorTests: XCTestCase {
 
     func testSwappedPDFTextOrderFails() throws {
         let root = try makePackage(sequences: [1, 2])
-        let one = qualityPage(1, "p1", .horizontal, "第一ページ固有の日本語本文をここに記録します。")
-        let two = qualityPage(2, "p2", .horizontal, "第二ページだけに存在する異なる日本語本文です。")
-        let report = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: [two.text, one.text])).audit(rootURL: root, ocrPages: [one, two])
+        let one = qualityPage(1, "p1", .horizontal, fixtureText(1))
+        let two = qualityPage(2, "p2", .horizontal, fixtureText(2))
+        let report = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: [fixtureText(2), fixtureText(1)])).audit(rootURL: root, ocrPages: [one, two])
         XCTAssertFalse(report.valid)
         XCTAssertTrue(report.issues.contains { $0.code == .pdfTextOrderMismatch })
     }
@@ -47,9 +47,8 @@ final class BookPackageQualityAuditorTests: XCTestCase {
         let root = try makePackage(sequences: [1, 2, 3])
         try "# Book\n## Page 1\na\n## Page 3\nc".data(using: .utf8)!.write(to: root.appendingPathComponent("book.md"))
         try "=== PAGE 1 ===\na\n=== PAGE 3 ===\nc".data(using: .utf8)!.write(to: root.appendingPathComponent("book.txt"))
-        let texts = ["一ページ本文です。十分な長さです。", "二ページ本文です。十分な長さです。", "三ページ本文です。十分な長さです。"]
-        let ocr = zip(1...3, texts).map { qualityPage($0.0, "p\($0.0)", .horizontal, $0.1) }
-        let report = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: texts)).audit(rootURL: root, ocrPages: ocr)
+        let ocr = [1, 2, 3].map { qualityPage($0, "p\($0)", .horizontal, fixtureText($0)) }
+        let report = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: [fixtureText(1), fixtureText(2), fixtureText(3)])).audit(rootURL: root, ocrPages: ocr)
         XCTAssertFalse(report.valid)
         XCTAssertTrue(report.issues.contains { $0.code == .markdownBoundaryMismatch })
         XCTAssertTrue(report.issues.contains { $0.code == .textBoundaryMismatch })
@@ -57,8 +56,8 @@ final class BookPackageQualityAuditorTests: XCTestCase {
 
     func testMissingSourceTimeFailsAIIngestionLineage() throws {
         let root = try makePackage(sequences: [1, 2], missingSourceTimeSequence: 2)
-        let ocr = [qualityPage(1, "p1", .horizontal, "一ページ本文です。十分な長さです。"), qualityPage(2, "p2", .horizontal, "二ページ本文です。十分な長さです。")]
-        let report = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: ocr.map(\.text))).audit(rootURL: root, ocrPages: ocr)
+        let ocr = [qualityPage(1, "p1", .horizontal, fixtureText(1)), qualityPage(2, "p2", .horizontal, fixtureText(2))]
+        let report = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: [fixtureText(1), fixtureText(2)])).audit(rootURL: root, ocrPages: ocr)
         XCTAssertFalse(report.valid)
         XCTAssertEqual(report.metrics.lineageCoverage, 0.5)
         XCTAssertTrue(report.issues.contains { $0.code == .manifestLineageMissing && $0.pageID == "p2" })
@@ -68,13 +67,13 @@ final class BookPackageQualityAuditorTests: XCTestCase {
     func testLowQualityOCRMustBeMarkedForReview() throws {
         let root = try makePackage(sequences: [1])
         let bad = PackageOCRQualityPage(pageID: "p1", sequence: 1, layout: .unknown, text: "短", confidence: 0.2, needsReview: false, sourceTimeMS: 1000)
-        let failed = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: ["短"])).audit(rootURL: root, ocrPages: [bad])
+        let failed = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: [fixtureText(1)])).audit(rootURL: root, ocrPages: [bad])
         XCTAssertFalse(failed.valid)
         XCTAssertTrue(failed.issues.contains { $0.code == .ocrLowQualityUnreviewed })
         XCTAssertTrue(failed.issues.contains { $0.code == .ocrUnknownLayoutUnreviewed })
 
         let reviewed = PackageOCRQualityPage(pageID: "p1", sequence: 1, layout: .unknown, text: "短", confidence: 0.2, needsReview: true, sourceTimeMS: 1000)
-        let accepted = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: ["短"])).audit(rootURL: root, ocrPages: [reviewed])
+        let accepted = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: [fixtureText(1)])).audit(rootURL: root, ocrPages: [reviewed])
         XCTAssertTrue(accepted.valid)
         XCTAssertTrue(accepted.issues.contains { $0.code == .ocrReviewRequired && $0.severity == .warning })
         XCTAssertEqual(accepted.metrics.ocrReviewedOrAcceptedRatio, 1)
@@ -82,8 +81,8 @@ final class BookPackageQualityAuditorTests: XCTestCase {
 
     func testJSONAndMarkdownQualityReportRoundTrip() throws {
         let root = try makePackage(sequences: [1])
-        let page = qualityPage(1, "p1", .horizontal, "日本語本文が十分な長さで存在します。")
-        let report = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: [page.text])).audit(rootURL: root, ocrPages: [page])
+        let page = qualityPage(1, "p1", .horizontal, fixtureText(1))
+        let report = BookPackageQualityAuditor(pdfTextInspector: StubPDFTextInspector(texts: [fixtureText(1)])).audit(rootURL: root, ocrPages: [page])
         let data = try BookPackageQualityAuditor.jsonData(report)
         XCTAssertEqual(try JSONDecoder().decode(PackageQualityReport.self, from: data), report)
         XCTAssertTrue(BookPackageQualityAuditor.markdown(report).contains("Package Quality Report"))
@@ -91,6 +90,14 @@ final class BookPackageQualityAuditorTests: XCTestCase {
 
     private func qualityPage(_ sequence: Int, _ pageID: String, _ layout: PackageTextLayout, _ text: String) -> PackageOCRQualityPage {
         .init(pageID: pageID, sequence: sequence, layout: layout, text: text, confidence: 0.95, needsReview: false, sourceTimeMS: Int64(sequence * 1000))
+    }
+
+    private func fixtureText(_ sequence: Int) -> String {
+        switch sequence {
+        case 1: return "第一ページ固有の日本語本文をここに記録します。"
+        case 2: return "第二ページだけに存在する異なる日本語本文です。"
+        default: return "第三ページの日本語本文で他と識別できます。"
+        }
     }
 
     private func makePackage(sequences: [Int], missingSourceTimeSequence: Int? = nil) throws -> URL {
@@ -102,7 +109,7 @@ final class BookPackageQualityAuditorTests: XCTestCase {
         var bookText: [String] = []
         for sequence in sequences {
             let stem = String(format: "%04d", sequence)
-            let text = sequence == 1 ? "第一ページ固有の日本語本文をここに記録します。" : sequence == 2 ? "第二ページだけに存在する異なる日本語本文です。" : "第三ページの日本語本文で他と識別できます。"
+            let text = fixtureText(sequence)
             try Data([0xff, 0xd8, 0xff, 0xd9]).write(to: root.appendingPathComponent("pages/\(stem).jpg"))
             try text.data(using: .utf8)!.write(to: root.appendingPathComponent("text/\(stem).txt"))
             markdown.append("## Page \(sequence)\n\(text)")
