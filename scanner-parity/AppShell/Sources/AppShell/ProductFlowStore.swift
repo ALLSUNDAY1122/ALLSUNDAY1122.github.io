@@ -44,6 +44,8 @@ public final class ProductFlowStore: ObservableObject {
 
     public func replaceInput(_ assets: [ProductInputAsset]) {
         guard !isRunning else { return }
+        if let packageURL = state.bookPackageURL { purgeCompletedPackageIfManaged(packageURL) }
+        if let bookID = savedCheckpoint?.bookID { purgeWorkspace(bookID: bookID) }
         savedCheckpoint = nil
         resumeAvailable = false
         reviewItems = []
@@ -65,24 +67,48 @@ public final class ProductFlowStore: ObservableObject {
                     return
                 }
 
-                if checkpoint.isCompletedPackageCheckpoint,
-                   let package = checkpoint.completedArtifacts.last {
-                    let reviews = Self.deduplicatedReviews(checkpoint.completedArtifacts.flatMap(\.reviewItems))
+                // Schema-v3 terminal state contains only the staged final package and review metadata.
+                if let completion = checkpoint.completion {
+                    guard FileManager.default.fileExists(atPath: completion.bookPackageURL.path) else {
+                        self.invalidateCheckpoint(checkpoint)
+                        return
+                    }
                     self.purgeManagedInputs(checkpoint.inputAssets ?? [])
+                    self.purgeWorkspace(bookID: checkpoint.bookID)
                     self.savedCheckpoint = checkpoint
                     self.resumeAvailable = false
-                    self.reviewItems = reviews
-                    self.reviewWorkflow = reviewFactory(reviews)
+                    self.reviewItems = completion.reviewItems
+                    self.reviewWorkflow = reviewFactory(completion.reviewItems)
                     self.send(.restoreCompleted(
-                        bookPackageURL: package.outputURL,
-                        reviewRequiredCount: reviews.count
+                        bookPackageURL: completion.bookPackageURL,
+                        reviewRequiredCount: completion.reviewItems.count
+                    ))
+                    return
+                }
+
+                // Migrate a legacy completed five-stage checkpoint before deleting intermediates.
+                if let legacyCompletion = checkpoint.terminalCompletion {
+                    let staged = try self.stageCompletedPackage(legacyCompletion, bookID: checkpoint.bookID)
+                    let terminal = self.makeTerminalCheckpoint(
+                        from: checkpoint,
+                        completion: staged
+                    )
+                    try await checkpointStore.save(terminal)
+                    self.purgeManagedInputs(checkpoint.inputAssets ?? [])
+                    self.purgeWorkspace(bookID: checkpoint.bookID)
+                    self.savedCheckpoint = terminal
+                    self.resumeAvailable = false
+                    self.reviewItems = staged.reviewItems
+                    self.reviewWorkflow = reviewFactory(staged.reviewItems)
+                    self.send(.restoreCompleted(
+                        bookPackageURL: staged.bookPackageURL,
+                        reviewRequiredCount: staged.reviewItems.count
                     ))
                     return
                 }
 
                 guard checkpoint.hasCanonicalExistingArtifacts else {
-                    self.savedCheckpoint = nil
-                    self.resumeAvailable = false
+                    self.invalidateCheckpoint(checkpoint)
                     return
                 }
 
@@ -99,6 +125,7 @@ public final class ProductFlowStore: ObservableObject {
                     && checkpoint.inputAssetIDs == self.state.inputAssets.map(\.id)
                 self.savedCheckpoint = matches ? checkpoint : nil
                 self.resumeAvailable = matches
+                if !matches { self.invalidateCheckpoint(checkpoint) }
             } catch {
                 self.savedCheckpoint = nil
                 self.resumeAvailable = false
@@ -137,6 +164,7 @@ public final class ProductFlowStore: ObservableObject {
                 let remaining = await workflow.unresolvedItems()
                 self.reviewItems = remaining
                 self.send(.reviewResolved(remaining: remaining.count))
+                self.persistTerminalReviewState()
             } catch {
                 self.send(.fail(.init(code: .processingFailed, message: error.localizedDescription, recoveryStep: .review)))
             }
@@ -144,7 +172,11 @@ public final class ProductFlowStore: ObservableObject {
     }
 
     public func markExportFinished() {
+        guard state.step == .exporting else { return }
+        let packageURL = state.bookPackageURL
         send(.exportFinished)
+        if let packageURL { purgeCompletedPackageIfManaged(packageURL) }
+        state.bookPackageURL = nil
         savedCheckpoint = nil
         resumeAvailable = false
         let checkpointStore = checkpointStore
@@ -156,6 +188,14 @@ public final class ProductFlowStore: ObservableObject {
         let inputs = state.inputAssets
         let bookID = resume?.bookID ?? "book-\(UUID().uuidString.lowercased())"
         let workspace = workspaceRoot.appendingPathComponent(bookID, isDirectory: true)
+        do {
+            try prepareRecoverableDirectory(workspace)
+        } catch {
+            send(.fail(.init(code: .processingFailed, message: error.localizedDescription, recoveryStep: .ready)))
+            isRunning = false
+            return
+        }
+
         let request = ProductPipelineRequest(bookID: bookID, inputs: inputs, workspaceURL: workspace)
         let driver = driver
         let checkpointStore = checkpointStore
@@ -177,14 +217,48 @@ public final class ProductFlowStore: ObservableObject {
                         }
                     }
                 )
-                let workflow = reviewFactory(completion.reviewItems)
+
+                let staged = try self.stageCompletedPackage(completion, bookID: bookID)
+                let activeCheckpoint = self.savedCheckpoint
+                let terminal = ProductPipelineCheckpoint(
+                    schemaVersion: 3,
+                    runID: activeCheckpoint?.runID ?? resume?.runID ?? UUID().uuidString,
+                    bookID: bookID,
+                    inputAssetIDs: inputs.map(\.id),
+                    inputAssets: nil,
+                    completedArtifacts: [],
+                    lastProgress: ProductProgress(
+                        stage: .packageWrite,
+                        fraction: 1,
+                        completedUnits: staged.pageCount,
+                        totalUnits: staged.pageCount
+                    ),
+                    completion: ProductCompletionSnapshot(
+                        bookPackageURL: staged.bookPackageURL,
+                        reviewItems: staged.reviewItems,
+                        pageCount: staged.pageCount
+                    )
+                )
+                do {
+                    try await checkpointStore.save(terminal)
+                    self.savedCheckpoint = terminal
+                } catch {
+                    self.savedCheckpoint = nil
+                    try? await checkpointStore.clear()
+                }
+
+                // Privacy boundary: after final package promotion, raw inputs and all
+                // frame/correction/audit/OCR intermediates are no longer retained.
                 self.purgeManagedInputs(inputs)
+                self.purgeWorkspace(bookID: bookID)
+
+                let workflow = reviewFactory(staged.reviewItems)
                 self.resumeAvailable = false
-                self.reviewItems = completion.reviewItems
+                self.reviewItems = staged.reviewItems
                 self.reviewWorkflow = workflow
                 self.send(.processingFinished(
-                    bookPackageURL: completion.bookPackageURL,
-                    reviewRequiredCount: completion.reviewItems.count
+                    bookPackageURL: staged.bookPackageURL,
+                    reviewRequiredCount: staged.reviewItems.count
                 ))
                 self.state.inputAssets = []
                 self.isRunning = false
@@ -205,6 +279,101 @@ public final class ProductFlowStore: ObservableObject {
     private func apply(checkpoint: ProductPipelineCheckpoint) { savedCheckpoint = checkpoint; resumeAvailable = true }
     private func applyCheckpointPersistenceFailure(_ error: Error) { savedCheckpoint = nil; resumeAvailable = false }
 
+    private func persistTerminalReviewState() {
+        guard let checkpoint = savedCheckpoint,
+              let completion = checkpoint.completion,
+              FileManager.default.fileExists(atPath: completion.bookPackageURL.path) else { return }
+        let updatedCompletion = ProductCompletionSnapshot(
+            bookPackageURL: completion.bookPackageURL,
+            reviewItems: reviewItems,
+            pageCount: completion.pageCount,
+            completedAt: completion.completedAt
+        )
+        let updated = ProductPipelineCheckpoint(
+            schemaVersion: 3,
+            runID: checkpoint.runID,
+            bookID: checkpoint.bookID,
+            inputAssetIDs: checkpoint.inputAssetIDs,
+            inputAssets: nil,
+            completedArtifacts: [],
+            lastProgress: checkpoint.lastProgress,
+            completion: updatedCompletion
+        )
+        savedCheckpoint = updated
+        let checkpointStore = checkpointStore
+        Task { try? await checkpointStore.save(updated) }
+    }
+
+    private func makeTerminalCheckpoint(
+        from checkpoint: ProductPipelineCheckpoint,
+        completion: ProductPipelineCompletion
+    ) -> ProductPipelineCheckpoint {
+        ProductPipelineCheckpoint(
+            schemaVersion: 3,
+            runID: checkpoint.runID,
+            bookID: checkpoint.bookID,
+            inputAssetIDs: checkpoint.inputAssetIDs,
+            inputAssets: nil,
+            completedArtifacts: [],
+            lastProgress: ProductProgress(
+                stage: .packageWrite,
+                fraction: 1,
+                completedUnits: completion.pageCount,
+                totalUnits: completion.pageCount
+            ),
+            completion: ProductCompletionSnapshot(
+                bookPackageURL: completion.bookPackageURL,
+                reviewItems: completion.reviewItems,
+                pageCount: completion.pageCount
+            )
+        )
+    }
+
+    private func stageCompletedPackage(
+        _ completion: ProductPipelineCompletion,
+        bookID: String
+    ) throws -> ProductPipelineCompletion {
+        let root = workspaceRoot.appendingPathComponent("Completed", isDirectory: true)
+        try prepareRecoverableDirectory(root)
+        let destination = root.appendingPathComponent(bookID, isDirectory: true)
+        if destination.standardizedFileURL != completion.bookPackageURL.standardizedFileURL {
+            if FileManager.default.fileExists(atPath: destination.path) {
+                try FileManager.default.removeItem(at: destination)
+            }
+            try FileManager.default.moveItem(at: completion.bookPackageURL, to: destination)
+        }
+        return ProductPipelineCompletion(
+            bookPackageURL: destination,
+            reviewItems: completion.reviewItems,
+            pageCount: completion.pageCount
+        )
+    }
+
+    private func prepareRecoverableDirectory(_ url: URL) throws {
+        try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        var mutable = url
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        try mutable.setResourceValues(values)
+    }
+
+    private func invalidateCheckpoint(_ checkpoint: ProductPipelineCheckpoint) {
+        purgeManagedInputs(checkpoint.inputAssets ?? [])
+        purgeWorkspace(bookID: checkpoint.bookID)
+        savedCheckpoint = nil
+        resumeAvailable = false
+        let checkpointStore = checkpointStore
+        Task { try? await checkpointStore.clear() }
+    }
+
+    private func purgeWorkspace(bookID: String) {
+        guard bookID.hasPrefix("book-") else { return }
+        let target = workspaceRoot.appendingPathComponent(bookID, isDirectory: true).standardizedFileURL
+        let root = workspaceRoot.standardizedFileURL.path
+        guard target.path.hasPrefix(root + "/") else { return }
+        try? FileManager.default.removeItem(at: target)
+    }
+
     private func purgeManagedInputs(_ inputs: [ProductInputAsset]) {
         let importRoot = workspaceRoot.appendingPathComponent("Imports", isDirectory: true).standardizedFileURL.path
         for input in inputs {
@@ -214,9 +383,11 @@ public final class ProductFlowStore: ObservableObject {
         }
     }
 
-    private static func deduplicatedReviews(_ items: [ProductReviewItem]) -> [ProductReviewItem] {
-        var seen = Set<String>()
-        return items.filter { seen.insert($0.id).inserted }
+    private func purgeCompletedPackageIfManaged(_ url: URL) {
+        let completedRoot = workspaceRoot.appendingPathComponent("Completed", isDirectory: true).standardizedFileURL.path
+        let path = url.standardizedFileURL.path
+        guard path.hasPrefix(completedRoot + "/") else { return }
+        try? FileManager.default.removeItem(at: url)
     }
 }
 #endif
