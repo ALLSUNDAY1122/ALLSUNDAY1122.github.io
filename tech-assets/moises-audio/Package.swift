@@ -29,6 +29,7 @@ let package = Package(
                 "Shared/LibraryContracts.swift",
                 "App/VerticalSliceCoordinator.swift",
                 "Analysis/AnalysisSignal.swift",
+                "Analysis/AnalysisCancellation.swift",
                 "Analysis/AnalysisWorkingSetPolicy.swift",
                 "Analysis/BoundedTempoBeatAnalyzer.swift",
                 "Analysis/BoundedMusicalKeyAnalyzer.swift",
