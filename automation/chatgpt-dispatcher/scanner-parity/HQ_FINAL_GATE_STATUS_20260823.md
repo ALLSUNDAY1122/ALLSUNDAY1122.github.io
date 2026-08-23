@@ -310,3 +310,34 @@ This does not reopen Worker work and is not a Worker `BLOCKED_HUMAN` condition. 
 ## Release Gate
 
 `NOT_STARTED` — Release Gate must not begin until Formal HQ Golden PASS is issued.
+
+## 2026-08-24 addendum — SHA-bound reference-threshold calibration
+
+PR #4595 `scanner-parity: add bound Golden threshold calibration evidence` was validated on exact head `2b5a77e9c7da22e78f25d402dc9af0922dc2a050` by `Scanner Parity Apple Validation` run `32663653550`, which completed successfully. The same exact-head run also re-passed the 240-page production-runtime long-run gate, Apple-adapter compile, final product module/release gates, Privacy manifest, XcodeGen project generation, unsigned iPhoneOS Release build, and application-bundle verification. PR #4595 merged to integration as `42daba8d72650c6226c646ec269914b0e74b7e3b`.
+
+A new HQ-only executable `scanner-hq-golden-calibrator` now makes reference-distance threshold calibration auditable without inventing a threshold. It consumes a thresholdless schema-v4 `hq-golden-execution.json` only when the runner is at `PENDING_REFERENCE_THRESHOLD_CALIBRATION`, then emits local calibration evidence containing nearest-distance, second-best-distance, nearest-vs-second-best margin distributions, largest nearest-distance gaps, per-output samples, and a complete threshold sweep. It deliberately emits no automatic threshold recommendation and cannot emit Formal Golden PASS.
+
+Threshold selection is separated from analysis. The calibrator creates an incomplete decision template bound to the exact SHA-256 of both the source execution report and calibration-evidence file, plus book ID and observed Golden video/PDF SHA. A selected threshold is valid for rerun only if threshold, rationale, reviewer, and ISO-8601 decision time are explicitly supplied and every binding still matches. A valid decision produces `THRESHOLD_DECISION_VALID_FOR_RERUN`; it is not a quality PASS and is not a Formal Golden PASS. Stale execution/evidence SHA, mismatched Golden identities/book ID, missing rationale/reviewer/time, or invalid threshold fail closed as `THRESHOLD_DECISION_INVALID`.
+
+The first CI attempt for this PR exposed only a fixture expectation issue: Swift `JSONEncoder` omits an Optional-nil key, while the fixture expected `recommendedThreshold: null`. The model/build/unit tests were already green. HQ corrected the fixture to treat both omitted and null as “no automatic recommendation,” then validated final exact head `2b5a77e...` in run `32663653550`. No product runtime, `SHARED_CONTRACT.md`, Golden identity SHA, Worker/Queue policy, machine-gate thresholds, or finalizer PASS logic changed.
+
+Current raw Golden recheck after #4595 merge still found no source bytes: ChatGPT current attachments/File Library returned no matching Golden source file, and connected Google Drive exact-name searches returned zero results for both `RPReplay_Final1787451151.mp4` and `本 2026-08-23 0842.pdf`. This remains HQ-owned `PENDING_HQ_GOLDEN_EXECUTION`, not Worker `BLOCKED_HUMAN`.
+
+The superseding Formal Golden execution sequence is now:
+
+1. run the fail-safe launcher against the current raw Golden with explicit workspace/current expected SHA and **without** `--match-threshold`;
+2. verify observed current Golden identities while preserving migration-era hashes as immutable audit history;
+3. require the thresholdless run to persist schema-v4 E2E evidence and the complete nearest/second-best match distribution;
+4. run `scanner-hq-golden-calibrator --analyze` to write SHA-bound empirical calibration evidence; do not infer a threshold from synthetic tests or defaults;
+5. create the calibrator decision template, inspect the real distance distribution/gaps/sweep, then explicitly record the chosen threshold, rationale, reviewer, and decision time;
+6. validate the decision against the same execution-report SHA, calibration-evidence SHA, book ID, and Golden SHA identities; only `THRESHOLD_DECISION_VALID_FOR_RERUN` may supply `--match-threshold` to the next run;
+7. rerun the same raw Golden through `run-formal-golden.sh` with that bound threshold; any pipeline/machine failure remains HQ root-cause/fix/retest work and never reopens Workers;
+8. if machine gates pass, review every actual page visually and semantically through the local `06-golden-review/index.html` bundle;
+9. create and complete the separate SHA-bound finalizer review record; only the finalizer's emitted `FORMAL_GOLDEN_PASS` may advance to Release Gate.
+
+Current gate states remain:
+
+- Formal Golden: `PENDING_HQ_GOLDEN_EXECUTION`
+- Release Gate: `NOT_STARTED`
+- Workers 1-4: complete
+- Queue driving: stopped
