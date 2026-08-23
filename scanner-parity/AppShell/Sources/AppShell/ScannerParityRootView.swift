@@ -5,11 +5,24 @@ import UniformTypeIdentifiers
 import ProductFlow
 
 public struct ScannerParityRootView: View {
-    @StateObject private var store = ProductFlowStore()
+    @StateObject private var store: ProductFlowStore
     @StateObject private var importer = MediaImportCoordinator()
+    @Environment(\.scenePhase) private var scenePhase
     @State private var showFileImporter = false
+    @State private var showPackageExporter = false
+    #if canImport(UIKit)
+    @State private var backgroundTaskController: ProductBackgroundTaskController?
+    #endif
 
-    public init() {}
+    public init(
+        driver: any ProductPipelineDriving = BoundProductPipelineDriver(bindings: []),
+        reviewWorkflowFactory: @escaping @Sendable ([ProductReviewItem]) -> any ProductReviewWorkflow = { InMemoryProductReviewWorkflow(items: $0) }
+    ) {
+        _store = StateObject(wrappedValue: ProductFlowStore(
+            driver: driver,
+            reviewWorkflowFactory: reviewWorkflowFactory
+        ))
+    }
 
     public var body: some View {
         NavigationStack {
@@ -27,6 +40,10 @@ public struct ScannerParityRootView: View {
         }
         .task {
             store.send(.cameraPermissionChanged(importer.currentCameraPermission()))
+            store.restoreCheckpoint()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            handleScenePhase(phase)
         }
         .fileImporter(
             isPresented: $showFileImporter,
@@ -39,6 +56,16 @@ public struct ScannerParityRootView: View {
                 store.send(.fail(.init(code: .importFailed, message: error.localizedDescription, recoveryStep: .selectingInput)))
             }
         }
+        #if canImport(UIKit)
+        .sheet(isPresented: $showPackageExporter) {
+            if let url = store.state.bookPackageURL {
+                BookPackageDocumentExporter(packageURL: url) { succeeded in
+                    showPackageExporter = false
+                    if succeeded { store.markExportFinished() }
+                }
+            }
+        }
+        #endif
     }
 
     private var inputView: some View {
@@ -77,9 +104,18 @@ public struct ScannerParityRootView: View {
                     ForEach(store.state.inputAssets) { asset in
                         Label(asset.displayName, systemImage: asset.kind == .video ? "video" : "photo")
                     }
-                    Button("Start processing") { store.send(.startProcessing) }
+                    Button("Start processing") { store.startProcessing() }
                         .buttonStyle(.borderedProminent)
                     Button("Clear selection", role: .destructive) { store.send(.replaceInput([])) }
+                }
+            }
+
+            if store.resumeAvailable && !store.state.inputAssets.isEmpty {
+                Section("Saved progress") {
+                    Button("Resume processing") { store.resumeProcessing() }
+                        .buttonStyle(.borderedProminent)
+                    Text("Completed stages are reused; the current unfinished stage is rerun safely.")
+                        .font(.footnote)
                 }
             }
 
@@ -103,36 +139,71 @@ public struct ScannerParityRootView: View {
         VStack(spacing: 20) {
             ProgressView(value: store.state.progress?.fraction ?? 0)
             Text(store.state.progress?.stage.rawValue ?? "processing")
-            Button("Cancel", role: .destructive) { store.send(.cancel) }
+                .font(.headline)
+            if let progress = store.state.progress {
+                if let total = progress.totalUnits, total > 0 {
+                    Text("\(progress.completedUnits) / \(total)")
+                        .font(.caption.monospacedDigit())
+                } else if progress.completedUnits > 0 {
+                    Text("Processed \(progress.completedUnits)")
+                        .font(.caption.monospacedDigit())
+                }
+            }
+            Text("Long books are processed stage-by-stage and checkpointed. Leaving the app may pause work; saved progress can be resumed.")
+                .font(.footnote)
+                .multilineTextAlignment(.center)
+            Button("Cancel", role: .destructive) { store.cancelProcessing() }
         }
         .padding()
     }
 
     private var reviewView: some View {
-        VStack(spacing: 16) {
-            Text("\(store.state.reviewRequiredCount) page(s) require review")
-            Text("ReviewCore will be connected through an adapter without changing the shared contract.")
-                .font(.footnote)
-            Button("Continue after review") { store.send(.reviewResolved(remaining: 0)) }
+        List {
+            Section("Needs review") {
+                Text("\(store.reviewItems.count) page issue(s) remain. Recovery actions are routed through a replaceable ReviewCore adapter.")
+                    .font(.footnote)
+            }
+            ForEach(store.reviewItems) { item in
+                Section(item.pageIDs.isEmpty ? "Book" : item.pageIDs.joined(separator: ", ")) {
+                    Text(item.reason).font(.headline)
+                    Text(item.detail).font(.footnote)
+                    HStack {
+                        Button("Accept") { store.resolveReviewItem(item.id, decision: .accept) }
+                        Button("Exclude", role: .destructive) { store.resolveReviewItem(item.id, decision: .exclude) }
+                    }
+                }
+            }
         }
-        .padding()
     }
 
     private var exportView: some View {
         VStack(spacing: 16) {
-            Text("BookPackage ready")
+            Text("BookPackage ready").font(.headline)
             if let url = store.state.bookPackageURL {
                 Text(url.lastPathComponent).font(.caption)
+                ShareLink(item: url) {
+                    Label("Share BookPackage", systemImage: "square.and.arrow.up")
+                }
+                .buttonStyle(.borderedProminent)
+                #if canImport(UIKit)
+                Button {
+                    showPackageExporter = true
+                } label: {
+                    Label("Save to Files", systemImage: "folder.badge.plus")
+                }
+                #endif
+                Button("Finish") { store.markExportFinished() }
             }
-            Text("Files/share export is connected in a later lane milestone.")
-                .font(.footnote)
         }
         .padding()
     }
 
     private var completedView: some View {
         VStack(spacing: 16) {
-            Text("Completed")
+            Text("Completed").font(.headline)
+            if let url = store.state.bookPackageURL {
+                ShareLink(item: url) { Label("Share again", systemImage: "square.and.arrow.up") }
+            }
             Button("Scan another book") { store.send(.reset) }
         }
         .padding()
@@ -142,11 +213,27 @@ public struct ScannerParityRootView: View {
         VStack(spacing: 16) {
             Text("Processing stopped").font(.headline)
             Text(store.state.failure?.message ?? "Unknown error")
-            Button("Retry") { store.send(.retry) }
-                .buttonStyle(.borderedProminent)
+            if store.resumeAvailable && !store.state.inputAssets.isEmpty {
+                Button("Resume saved progress") { store.resumeProcessing() }
+                    .buttonStyle(.borderedProminent)
+            } else {
+                Button("Retry") { store.send(.retry) }
+                    .buttonStyle(.borderedProminent)
+            }
             Button("Choose different input") { store.send(.replaceInput([])) }
         }
         .padding()
+    }
+
+    private func handleScenePhase(_ phase: ScenePhase) {
+        #if canImport(UIKit)
+        if phase == .background && store.isRunning {
+            if backgroundTaskController == nil { backgroundTaskController = ProductBackgroundTaskController() }
+            backgroundTaskController?.begin { store.cancelProcessing() }
+        } else if phase == .active {
+            backgroundTaskController?.end()
+        }
+        #endif
     }
 }
 #endif
