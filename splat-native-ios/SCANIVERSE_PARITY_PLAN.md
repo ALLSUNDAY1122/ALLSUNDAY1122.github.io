@@ -17,7 +17,65 @@ This does **not** mean copying Scaniverse proprietary source code, trademark, lo
 - Current internal brand while parity work is incomplete: `Scan Lab`
 - `omochabako` branding and memory-specific UX are forbidden in this root until the parity gate passes.
 
-## Current integration evidence — 2026-08-24
+## Current integration evidence — 2026-08-24 03:56 JST｜Build 3
+
+This section supersedes the Build 2 integration section below. Build 2 predates the final A2 residual closure and is historical device evidence only.
+
+Current HQ branch: `feature/splat-native-ios-poc`
+
+Current HQ docs HEAD at this refresh follows validated app-source `164f5b3d2e1002c1e69423049ba73d2bf01a268a`; subsequent HQ changes are documentation/evidence only.
+
+A2 residuals closed on the validated app source:
+
+- capture image-quality rejection runs before JPEG persistence and rejects severe dark clipping, blown highlights, and clearly soft/low-detail frames
+- memory/thermal resource preflight runs before `GaussianDataset` / `GaussianTrainer` allocation
+
+Current automated evidence:
+
+- Privacy Preflight: PASS
+- Splat Smoke Diagnostic: PASS
+- Main Splat Native iOS Build: PASS
+- production auth/session/profile E2E: PASS
+- S2 reconstruction contracts: PASS
+- D2 browser/live viewer contracts: PASS
+- Simulator msplat smoke: PASS
+- integrated A2/C2 XCTest: PASS
+- reader compatibility OBJ / FBX / GLB / STL / PLY / USDZ: PASS
+- unsigned iPhone Release compile: PASS
+- signed Xcode 26 archive: PASS
+
+Latest Internal TestFlight candidate:
+
+- version `1.0.0`, build `3`
+- release branch `testflight/splat-native-ios-20260824-build3` differs from HQ only by release `codemagic.yaml`
+- Codemagic build `6a8b36335c95c17422424e4d`: `finished`, signed IPA generated
+- App Store Connect build resource `65e6164a-8ea8-4844-8259-c6d6a8507286`: `VALID`
+- audience: `INTERNAL_ONLY`
+- expired: `false`
+- internal beta group `sun` build list includes Build 3
+
+Codemagic reported `app_store_connect_status=failed`, but Apple direct read-back proves Build 3 is VALID and distributed to the internal group; Apple is authoritative for this gate.
+
+Current parity ledger:
+
+| Area | State | Remaining proof | Owner |
+|---|---|---|---|
+| ARKit capture / tracking / live coverage guidance | PARTIAL | Build 3 real-device continuity, responsiveness, image-quality rejection behavior and Golden comparison | A/HQ |
+| On-device Gaussian Splat reconstruction | PARTIAL | representative-object physical output quality, processing time, thermal/memory recovery | A |
+| Splat viewer / edit / measure | PARTIAL | newly generated real scan device usability and persistence | B/HQ |
+| Mesh reconstruction / texture / edit / measure / AR | PARTIAL | physical result quality and device workflow proof | B |
+| Local library / raw retention / process later / reopen / reprocess | NEAR_PARITY | Build 3 cold-reopen and process-later physical proof | C/HQ |
+| Export / video interoperability | NEAR_PARITY | device-generated asset/video and memory proof remain | C/B |
+| Auth / session / profile | NEAR_PARITY | production live E2E passes; device UX proof remains | D/HQ |
+| Publish / durable browser URL / visibility / Map / Discover | PARTIAL | real generated scan production publish/share/discover lifecycle E2E | D/HQ |
+| Integrated release candidate | NEAR_PARITY | Build 3 is VALID and internally distributed; physical end-to-end parity gate remains | HQ |
+| Integrated full app flow | PARTIAL | `capture → coverage → finish → processing → 3D result → save → library reopen` on Build 3 | HQ/A-D |
+
+No row may be promoted to `PARITY` solely from compile, simulator, fixture, CI, or TestFlight upload success. Physical quality rows require representative real-device evidence against the Golden Reference.
+
+Supabase production remains `auth.users=1 / scanlab_profiles=1 / scanlab_scans=0 / scanlab_reports=0 / scanlab_blocks=0`; a real generated scan is still required before publish/share lifecycle E2E.
+
+## Historical integration evidence — 2026-08-24｜Build 2
 
 This section supersedes the 2026-08-15 consolidation ledger below for current status. The older ledger is retained only as historical baseline evidence.
 
