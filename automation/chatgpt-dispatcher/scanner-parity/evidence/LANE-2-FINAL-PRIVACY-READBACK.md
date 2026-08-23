@@ -27,14 +27,32 @@ The lifecycle gate was already present on latest integration. This final Worker2
 - processing-workspace safety requires an explicit named cleanup boundary (`purgeProcessingWorkspace` or equivalent), rather than accepting any incidental `removeItem` token;
 - fixtures explicitly cover a camera-free product, camera-with-purpose-string, missing purpose string, missing backup exclusion, missing import purge, missing workspace purge, and a false-positive generic `removeItem` case.
 
-## Expected final acceptance
+## Validation read-back before this Evidence-only commit
 
-The branch must pass the repository `Scanner Parity Apple Validation` workflow. In particular the same checked-out tree must show:
+PR #4543 head `06a7459311acb7eed4762d1420ad147c0e491907` ran GitHub Actions `Scanner Parity Apple Validation` run `32640014484` (#68) with overall conclusion `success`.
 
-- privacy static fixtures PASS;
-- lifecycle fixtures PASS;
-- integrated `run-lane2-privacy-gate.sh` marker `LANE2_PRIVACY_GATE=PASS`;
-- final product/iPhoneOS compile PASS;
-- real iOS app bundle validation PASS when the release workflow includes it.
+Observed PASS evidence on that exact tree:
 
-Only after that same-head read-back may HQ mark final Privacy PASS. Golden Dataset SHA or real-book Golden metrics remain a separate HQ Gate.
+- Apple adapter harness: 5 / 5 PASS;
+- `APPLE_SDK_COMPILE_PASS`;
+- final AppShell/Product source contract: 29 / 29 PASS;
+- Privacy static fixture: 13 / 13 PASS;
+- Data Lifecycle fixture: 9 / 9 PASS;
+- Apple Privacy Compliance fixture: 10 / 10 PASS;
+- Sensitive Data fixture: 5 / 5 PASS;
+- Processing Storage Lifecycle fixture: 8 / 8 PASS;
+- production static audit: `egress_risk_findings=0`;
+- production static audit: `release_blocking_findings=0`;
+- `LANE2_PRIVACY_GATE=PASS`;
+- SwiftPM manifest resolution PASS for root / ReviewCore / Recovery / ProductFlow / AppShell;
+- ScannerRuntime / ReviewCore / Recovery / ProductFlow / AppShell iPhoneOS module compile PASS;
+- `PRODUCT_APPLE_SDK_COMPILE_PASS`;
+- real `ScannerParity.app` unsigned Release build + bundle validation step PASS.
+
+This Evidence update changes the PR head only by documentation. The repository workflow must still pass once more on the new exact head before Worker2 marks its acceptance complete.
+
+## Final acceptance rule
+
+Worker2 acceptance becomes `COMPLETE` when the post-Evidence exact PR head again passes `Scanner Parity Apple Validation`, including the strengthened Privacy lifecycle gate and real app bundle build.
+
+Formal project-wide Privacy PASS remains HQ Release Gate-owned after merge/read-back on canonical integration. Golden Dataset SHA or real-book Golden metrics remain a separate HQ Gate.
