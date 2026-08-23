@@ -46,8 +46,16 @@ struct PrivacyStaticAuditorFixtureTests {
             let r = PrivacyStaticAuditor(extraDenylist: ["FutureCloudOCR"]).audit(files: ["/Sources/A.swift": "FutureCloudOCR.upload(page)"])
             try require(r.productionEgressRisks.contains { $0.ruleID == "custom-denylist" })
         }
-        test("privacy test fixture path is excluded from production scan") {
-            let r = PrivacyStaticAuditor().audit(files: ["/Tests/PrivacyAudit/Fixture.swift": "URLSession.shared"])
+        test("allowlist may suppress approved local CLI review") {
+            let r = PrivacyStaticAuditor(extraAllowlist: ["xcrun"]).audit(files: ["/Scripts/build.sh": "xcrun swiftc main.swift"])
+            try require(!r.findings.contains { $0.token.lowercased() == "xcrun" })
+        }
+        test("allowlist cannot suppress egress deny rules") {
+            let r = PrivacyStaticAuditor(extraAllowlist: ["URLSession"]).audit(files: ["/Sources/A.swift": "URLSession.shared"])
+            try require(r.productionEgressRisks.contains { $0.ruleID == "network-api" })
+        }
+        test("all test paths are excluded from production scan") {
+            let r = PrivacyStaticAuditor().audit(files: ["/Tests/OtherModule/Fixture.swift": "URLSession.shared"])
             try require(r.scannedFiles == 0)
             try require(r.productionEgressRisks.isEmpty)
         }
