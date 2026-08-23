@@ -37,6 +37,9 @@ jobs:
       - name: Test HQ Golden reference metrics
         run: swift test --package-path scanner-parity --filter ReferenceAlignmentTests
 
+      - name: Test searchable PDF generation on macOS
+        run: swift test --package-path scanner-parity --filter SearchablePDFWriterTests
+
       - name: Compile Apple adapters with iPhoneOS SDK
         run: bash scanner-parity/AppleValidation/run-apple-sdk-compile.sh "$RUNNER_TEMP/scanner-parity-apple-validation"
 
