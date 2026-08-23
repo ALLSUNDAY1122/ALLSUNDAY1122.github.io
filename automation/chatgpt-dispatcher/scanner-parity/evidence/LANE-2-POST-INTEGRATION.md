@@ -2,44 +2,60 @@
 
 - worker: `worker2`
 - branch: `scanner-parity/worker2-privacy-postintegration`
-- audit target: merged `scanner-parity/integration` after LANE-1/2/3/4 final PR integration
+- audit target: merged `scanner-parity/integration` after autonomous lanes and HQ final composition
 - final Privacy PASS owner: HQ Release Gate
 
 ## Result
 
-**NOT READY FOR FINAL PRIVACY PASS.** Two integration-level blockers were identified after all autonomous lanes merged.
+**NOT READY FOR FINAL PRIVACY PASS.** The original integration-level findings were re-evaluated after Worker1 PR #4531 and HQ PR #4532.
 
-### Blocker P2-INT-001 — persistent processing workspace
+### P2-INT-001 — managed recovery input storage: partially resolved
 
-`scanner-parity/AppShell/Sources/AppShell/ProductFlowStore.swift` chooses `FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)` as the default workspace root, then creates a per-book processing workspace beneath it. The merged input coordinator separately copies imported source images/videos into `temporaryDirectory`.
+Worker1 PR #4531 moves active-run imported source media under app-managed `Application Support/ScannerParity/Imports`, excludes that directory from device backup, persists descriptors required for relaunch resume, and purges managed raw inputs after successful processing. This is a reasonable privacy/reliability tradeoff and should not be blocked merely because Application Support is used.
 
-LANE-2's lifecycle contract allows temporary processing only with deterministic cleanup and does not allow raw/intermediate book content to silently persist in an app-managed persistent location. The merged AppShell does not show deterministic cleanup of imported temporary source files or the per-book processing workspace after successful export/cancel/failure.
+The Worker2 gate was therefore corrected: Application Support usage alone is no longer a privacy failure. Managed persistence is judged by lifecycle invariants instead.
 
-Remediation owner at final integration: AppShell/ProductFlow. Preferred design is temporary processing workspace + explicit checkpoint metadata stored separately, with deterministic cleanup after success and privacy-safe cleanup policy on cancel/failure. If recovery requires persistence, persist only the minimum recovery metadata and explicitly bounded artifacts required for resume, not unrestricted raw/intermediate copies.
+### P2-INT-002 — intermediate processing workspace: still release-blocking
 
-### Blocker P2-INT-002 — host AppShell privacy resources not integrated
+`ProductFlowStore` still uses `Application Support/ScannerParity/<bookID>` as the processing workspace. HQ `ProductionScannerRuntime` writes:
 
-The merged AppShell uses `AVCaptureDevice` camera authorization APIs. `scanner-parity/AppShell/Package.swift` currently defines a SwiftPM library target with no resources. No `PrivacyInfo.xcprivacy` is present under AppShell and no host-app Info.plist containing `NSCameraUsageDescription` is represented in the merged AppShell tree.
+- `01-frame-extraction`
+- `02-image-correction` including reading/OCR page images
+- `03-page-audit`
+- `04-ocr`
+- `05-book-package`
 
-LANE-2's final PR explicitly required integration to bundle/adapt the privacy manifest into the final app target and provide purpose strings when camera/photo APIs are used. That integration requirement is not yet satisfied by the merged source tree.
+Worker1 added a lightweight terminal `ProductCompletionSnapshot`, explicitly intended for the state after raw/intermediate cleanup, but the current `ProductFlowStore` source still does not deterministically remove the per-book intermediate workspace on successful completion/export/session end. Managed source inputs are purged; intermediate stage artifacts are not yet shown as purged.
 
-Remediation owner at final integration: native Product/App target. Add the privacy manifest to the shipping app bundle (or correctly bundled target resource), add camera purpose text when camera access remains enabled, and rerun the privacy gate on the final app checkout.
+Required remediation: keep resumable artifacts only while resume is valid, purge intermediate frame/correction/audit/OCR stage material once terminal completion is safely represented, retain only the BookPackage/review metadata needed for review/export, and delete remaining app-managed staging when the export/session retention period ends unless the user explicitly chose persistent storage. Cover success, cancel/resume, failure, completed-review and export-finished paths.
 
-## Gate hardening added by this follow-up
+### P2-INT-003 — Camera purpose string in shipping host target: still release-blocking
 
-1. `PrivacyStaticAuditor` now distinguishes local sensitive-persistence risk from network egress risk.
-2. `applicationSupportDirectory` processing persistence is non-bypassable by allowlist and is included in `releaseBlockingFindings`.
-3. Lane fixture coverage verifies persistent-storage detection and prevents allowlist suppression.
-4. `run-lane2-privacy-gate.sh` now fails on all release-blocking privacy findings, not only network egress.
-5. The integrated AppShell gate requires a bundled `PrivacyInfo.xcprivacy` and camera usage description when camera APIs are present.
+HQ PR #4532 correctly adds `AppShell/Sources/AppShell/Resources/PrivacyInfo.xcprivacy` and copies it as an AppShell SwiftPM target resource. This resolves the missing privacy-manifest resource finding.
 
-## Evidence from merged source
+However, AppShell still uses `AVCaptureDevice`. The represented AppShell is a SwiftPM library target and no shipping executable/native host target with `NSCameraUsageDescription` is present in the audited tree. A Privacy Manifest does not replace the host app purpose string required for camera authorization.
 
-- `MediaImportCoordinator.swift`: imported images/videos are copied to `FileManager.default.temporaryDirectory`; camera authorization uses `AVCaptureDevice`.
-- `ProductFlowStore.swift`: default workspace root is Application Support and per-book processing workspace is created below it.
-- `AppShell/Package.swift`: library target only; no target resources are declared.
-- All lane PRs #4514, #4515, #4522 and #4523 were merged before this audit.
+Required remediation: add `NSCameraUsageDescription` to the actual shipping app target, or remove camera access. The final release gate must inspect the real host target representation, not only the Swift package resource.
+
+## Gate hardening in PR #4530
+
+1. Network / analytics / external-AI egress remains non-bypassable and fail-closed.
+2. Blanket `applicationSupportDirectory` blocking was removed to avoid rejecting legitimate crash-recovery storage.
+3. `ProcessingStorageLifecycleAuditor` checks managed import backup exclusion, purgeability, intermediate workspace cleanup and camera purpose-string representation.
+4. Fixture coverage includes accepted managed recovery storage and failure cases for missing purge / backup exclusion / camera purpose string.
+5. `run-lane2-privacy-gate.sh` compiles the lifecycle fixtures and audits the final AppShell sources/resources.
+
+## HQ CI read-back
+
+HQ PR #4532 ran `Scanner Parity Apple Validation` run `32629630372` and concluded `success`. Its log shows `LANE2_PRIVACY_GATE=PASS`, but that run used the earlier LANE-2 gate: the executed fixture list had the original 12 static tests and did not include `ProcessingStorageLifecycleAuditor` or host-target camera-purpose verification. Therefore this successful run is valid for Apple SDK compile and the older egress checks, but **must not be treated as final Privacy PASS**.
 
 ## Final-gate rule
 
-Do not mark final Privacy PASS until both blockers are resolved in the final shipping target and `scanner-parity/Tests/SecurityHardening/run-lane2-privacy-gate.sh` passes against that integrated checkout. Golden Dataset availability or SHA status is unrelated to these blockers.
+Do not mark final Privacy PASS until:
+
+1. Product/HQ resolves intermediate workspace lifecycle cleanup.
+2. The shipping native host target represents `NSCameraUsageDescription` while camera access is enabled.
+3. PR #4530 (or equivalent strengthened gate) is integrated.
+4. The strengthened `scanner-parity/Tests/SecurityHardening/run-lane2-privacy-gate.sh` passes on the final assembled shipping checkout.
+
+Golden Dataset availability and SHA status are unrelated to these blockers.
