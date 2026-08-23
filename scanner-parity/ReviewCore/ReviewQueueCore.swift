@@ -103,6 +103,10 @@ public struct ReviewQueue: Sendable {
         return true
     }
 
+    public func containsPending(pageID: String) -> Bool {
+        snapshot.pending.contains(where: { $0.pageID == pageID })
+    }
+
     public func unresolvedPageIDs() -> [String] {
         Array(Set(snapshot.pending.map(\.pageID))).sorted()
     }
