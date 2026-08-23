@@ -1,0 +1,255 @@
+name: Scaniverse HQ A2 gap fix
+
+on:
+  push:
+    branches:
+      - feature/splat-native-ios-poc
+    paths:
+      - '.github/workflows/scaniverse-hq-a2-gap-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-native-ios-poc
+          fetch-depth: 0
+      - name: Apply capture image quality gate and reconstruction preflight
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          quality = Path('splat-native-ios/SplatNative/CaptureImageQuality.swift')
+          quality.write_text(r'''import CoreVideo
+import Foundation
+
+enum CaptureImageQualityRejection: String, Equatable, Sendable {
+    case tooDark
+    case tooBright
+    case tooSoft
+
+    var userMessage: String {
+        switch self {
+        case .tooDark:
+            return "暗すぎるためこのフレームは保存しません。照明を増やすか、明るい方向から撮ってください"
+        case .tooBright:
+            return "白飛びが強いためこのフレームは保存しません。強い光を避けて撮ってください"
+        case .tooSoft:
+            return "手ブレまたはピンぼけが強いためこのフレームは保存しません。iPhoneをゆっくり動かしてください"
+        }
+    }
+}
+
+struct CaptureImageQualityStats: Equatable, Sendable {
+    let meanLuma: Double
+    let darkFraction: Double
+    let highlightFraction: Double
+    let lumaStandardDeviation: Double
+    let laplacianScore: Double
+    let sampleCount: Int
+}
+
+enum CaptureImageQualityPolicy {
+    static func rejection(for stats: CaptureImageQualityStats) -> CaptureImageQualityRejection? {
+        guard stats.sampleCount >= 64 else { return nil }
+
+        // Conservative clipping thresholds: reject only frames where most sampled pixels are
+        // genuinely near the video-range extremes. This avoids throwing away intentionally dark
+        // or bright objects that still contain usable texture.
+        if stats.meanLuma < 32, stats.darkFraction >= 0.60 {
+            return .tooDark
+        }
+        if stats.meanLuma > 220, stats.highlightFraction >= 0.60 {
+            return .tooBright
+        }
+
+        // A blurred frame loses both local second-derivative energy and useful luma spread.
+        // Requiring both keeps smooth but correctly exposed surfaces from being rejected too often.
+        if stats.laplacianScore < 2.0, stats.lumaStandardDeviation < 14 {
+            return .tooSoft
+        }
+        return nil
+    }
+}
+
+enum CaptureImageQualityEvaluator {
+    static func evaluate(pixelBuffer: CVPixelBuffer) -> CaptureImageQualityStats? {
+        guard CVPixelBufferGetPlaneCount(pixelBuffer) > 0 else { return nil }
+        CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
+        defer { CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly) }
+
+        guard let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0) else { return nil }
+        let width = CVPixelBufferGetWidthOfPlane(pixelBuffer, 0)
+        let height = CVPixelBufferGetHeightOfPlane(pixelBuffer, 0)
+        let bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
+        guard width >= 8, height >= 8, bytesPerRow >= width else { return nil }
+
+        let bytes = baseAddress.assumingMemoryBound(to: UInt8.self)
+        let stepX = max(4, width / 48)
+        let stepY = max(4, height / 36)
+
+        var count = 0
+        var sum = 0.0
+        var sumSquares = 0.0
+        var dark = 0
+        var highlight = 0
+        var laplacianSum = 0.0
+        var laplacianCount = 0
+
+        var y = stepY
+        while y < height - stepY {
+            var x = stepX
+            while x < width - stepX {
+                let offset = y * bytesPerRow + x
+                let center = Int(bytes[offset])
+                count += 1
+                sum += Double(center)
+                sumSquares += Double(center * center)
+                if center <= 22 { dark += 1 }
+                if center >= 232 { highlight += 1 }
+
+                let left = Int(bytes[y * bytesPerRow + x - 1])
+                let right = Int(bytes[y * bytesPerRow + x + 1])
+                let up = Int(bytes[(y - 1) * bytesPerRow + x])
+                let down = Int(bytes[(y + 1) * bytesPerRow + x])
+                laplacianSum += Double(abs(left + right + up + down - 4 * center))
+                laplacianCount += 1
+                x += stepX
+            }
+            y += stepY
+        }
+
+        guard count >= 1 else { return nil }
+        let mean = sum / Double(count)
+        let variance = max(0, sumSquares / Double(count) - mean * mean)
+        return CaptureImageQualityStats(
+            meanLuma: mean,
+            darkFraction: Double(dark) / Double(count),
+            highlightFraction: Double(highlight) / Double(count),
+            lumaStandardDeviation: variance.squareRoot(),
+            laplacianScore: laplacianCount > 0 ? laplacianSum / Double(laplacianCount) : 0,
+            sampleCount: count
+        )
+    }
+}
+''', encoding='utf-8')
+
+          tests = Path('splat-native-ios/SplatNativeTests/CaptureImageQualityTests.swift')
+          tests.write_text(r'''import XCTest
+
+final class CaptureImageQualityTests: XCTestCase {
+    func testRejectsSeverelyDarkFrame() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 24,
+            darkFraction: 0.82,
+            highlightFraction: 0,
+            lumaStandardDeviation: 10,
+            laplacianScore: 4,
+            sampleCount: 512
+        )
+        XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooDark)
+    }
+
+    func testRejectsSeverelyClippedHighlights() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 228,
+            darkFraction: 0,
+            highlightFraction: 0.76,
+            lumaStandardDeviation: 12,
+            laplacianScore: 5,
+            sampleCount: 512
+        )
+        XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooBright)
+    }
+
+    func testRejectsOnlyClearlySoftLowDetailFrame() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 112,
+            darkFraction: 0.02,
+            highlightFraction: 0.02,
+            lumaStandardDeviation: 9,
+            laplacianScore: 1.2,
+            sampleCount: 512
+        )
+        XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooSoft)
+    }
+
+    func testAcceptsNormallyExposedDetailedFrame() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 116,
+            darkFraction: 0.08,
+            highlightFraction: 0.04,
+            lumaStandardDeviation: 34,
+            laplacianScore: 8,
+            sampleCount: 512
+        )
+        XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
+    }
+
+    func testSmallSampleFailsOpen() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 10,
+            darkFraction: 1,
+            highlightFraction: 0,
+            lumaStandardDeviation: 0,
+            laplacianScore: 0,
+            sampleCount: 12
+        )
+        XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
+    }
+}
+''', encoding='utf-8')
+
+          model = Path('splat-native-ios/SplatNative/ScanModel.swift')
+          s = model.read_text(encoding='utf-8')
+          jpeg_anchor = '''        guard let jpegData = makeJPEGData(pixelBuffer: frame.capturedImage) else {\n            trackingMessage = "画像を保存できません。もう一度ゆっくり動かしてください"\n            return\n        }\n'''
+          quality_gate = '''        if let stats = CaptureImageQualityEvaluator.evaluate(pixelBuffer: frame.capturedImage),\n           let rejection = CaptureImageQualityPolicy.rejection(for: stats) {\n            trackingMessage = rejection.userMessage\n            return\n        }\n\n''' + jpeg_anchor
+          if s.count(jpeg_anchor) != 1:
+              raise SystemExit(f'Unexpected JPEG anchor count: {s.count(jpeg_anchor)}')
+          s = s.replace(jpeg_anchor, quality_gate, 1)
+
+          dataset_anchor = '''                let dataset = GaussianDataset(\n                    path: path,\n                    downscaleFactor: SplatReconstructionPolicy.datasetDownscale,\n                    evalMode: false\n                )\n'''
+          preflight = '''                // Fail before GaussianDataset/GaussianTrainer allocation when the device is already\n                // under memory or thermal pressure. The previous guard ran only after trainer construction,\n                // which was too late to protect against the largest allocation spike.\n                let preflightEvaluation = passResourceGuard.evaluate(splatCount: 0)\n                if let reason = preflightEvaluation.reason {\n                    let report = passResourceGuard.makeReport(\n                        startedAt: runStartedAt,\n                        startUptime: runStartUptime,\n                        passStartIteration: 0,\n                        targetIteration: requestedTarget,\n                        finalIteration: 0,\n                        finalSplatCount: 0,\n                        initialThermalState: initialThermalState,\n                        finalThermalState: splatThermalStateName(ProcessInfo.processInfo.thermalState),\n                        outcome: "preflight-\\(reason.rawValue)"\n                    )\n                    SplatReconstructionRunReport.write(report, projectURL: projectURL)\n                    Task { @MainActor [weak self] in\n                        self?.failTraining(reason.userMessage)\n                    }\n                    return\n                }\n\n''' + dataset_anchor
+          if s.count(dataset_anchor) != 1:
+              raise SystemExit(f'Unexpected dataset anchor count: {s.count(dataset_anchor)}')
+          s = s.replace(dataset_anchor, preflight, 1)
+          model.write_text(s, encoding='utf-8')
+
+          project = Path('splat-native-ios/project.yml')
+          p = project.read_text(encoding='utf-8')
+          project_anchor = '      - path: SplatNative/CapturePolicy.swift\n'
+          project_replacement = project_anchor + '      - path: SplatNative/CaptureImageQuality.swift\n'
+          if p.count(project_anchor) != 1:
+              raise SystemExit(f'Unexpected project anchor count: {p.count(project_anchor)}')
+          p = p.replace(project_anchor, project_replacement, 1)
+          project.write_text(p, encoding='utf-8')
+
+          workflow = Path('.github/workflows/splat-native-ios.yml')
+          w = workflow.read_text(encoding='utf-8')
+          test_anchor = '            -only-testing:SplatNativeTests/CaptureMotionQualityTests \\\n'
+          test_replacement = test_anchor + '            -only-testing:SplatNativeTests/CaptureImageQualityTests \\\n'
+          if w.count(test_anchor) != 1:
+              raise SystemExit(f'Unexpected workflow test anchor count: {w.count(test_anchor)}')
+          w = w.replace(test_anchor, test_replacement, 1)
+          workflow.write_text(w, encoding='utf-8')
+          PY
+          git diff --check
+          git diff --stat
+          git diff -- splat-native-ios/SplatNative/CaptureImageQuality.swift splat-native-ios/SplatNative/ScanModel.swift splat-native-ios/SplatNativeTests/CaptureImageQualityTests.swift splat-native-ios/project.yml .github/workflows/splat-native-ios.yml
+      - name: Commit patch
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/CaptureImageQuality.swift \
+                  splat-native-ios/SplatNative/ScanModel.swift \
+                  splat-native-ios/SplatNativeTests/CaptureImageQualityTests.swift \
+                  splat-native-ios/project.yml \
+                  .github/workflows/splat-native-ios.yml
+          git commit -m 'fix(scaniverse): gate capture quality before save and preflight reconstruction'
+          git push origin HEAD:feature/splat-native-ios-poc
