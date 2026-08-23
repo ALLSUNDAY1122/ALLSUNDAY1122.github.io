@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, Callable, Iterable
 
 from cost_quota_guard import CostGuardError, CostQuotaGuard, classify_provider_limit
-from long_track_io import LongTrackIOGuard
+from long_track_io import LongTrackIOError, LongTrackIOGuard
 from long_track_production_orchestrator import LongTrackProductionSeparationOrchestrator
 from production_orchestrator import (
     OrchestratorError,
@@ -96,6 +96,12 @@ class BudgetedProductionSeparationOrchestrator:
     ) -> Any:
         selected_models = _normalize_models(models)
         source = _contained_file(source_path, self.source_root)
+        # Reject the deployment/provider source-size boundary before hashing a multi-gigabyte file,
+        # duration analysis or cost reservation. The inner layer repeats this check defensively.
+        try:
+            self.inner.long_track_guard.validate_source_size(source.stat().st_size)
+        except LongTrackIOError as exc:
+            raise OrchestratorError(exc.code, retryable=exc.retryable) from exc
         source_sha, _ = _sha256_file(source)
         fingerprint = _request_fingerprint(project_id, asset_id, source_sha, selected_models)
         if not isinstance(idempotency_key, str) or not idempotency_key or "\r" in idempotency_key or "\n" in idempotency_key:
