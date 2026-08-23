@@ -1,8 +1,12 @@
 import json
 import tempfile
 import unittest
+import sys
 from dataclasses import dataclass
 from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent / "Server"))
 
 from privacy_safe_observability import (
     ObservabilityError,
