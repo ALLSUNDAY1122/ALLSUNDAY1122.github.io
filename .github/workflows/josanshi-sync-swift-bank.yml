@@ -1,0 +1,61 @@
+name: Josanshi Sync Swift Bank
+
+on:
+  push:
+    branches:
+      - agent/josanshi-sprint-14-native
+    paths:
+      - 'josanshi-sprint/data/authored-batches/**'
+      - 'josanshi-sprint/data/audit-approvals*.json'
+      - 'josanshi-sprint/data/similarity-review.json'
+      - 'josanshi-sprint/data/source-registry*.json'
+      - 'josanshi-sprint/data/content-stage.json'
+      - 'josanshi-sprint/docs/audits/**'
+      - 'josanshi-sprint/scripts/**'
+      - '.github/workflows/josanshi-sync-swift-bank.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: josanshi-swift-bank-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync-swift-bank:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/josanshi-sprint-14-native
+
+      - name: Rebuild and audit complete content
+        run: |
+          python3 josanshi-sprint/scripts/validate_sources.py
+          python3 josanshi-sprint/scripts/validate_topic_sources.py
+          python3 josanshi-sprint/scripts/build_intent_seeds.py --check
+          python3 josanshi-sprint/scripts/build_generation_plan.py --check
+          python3 josanshi-sprint/scripts/build_scenario_authoring_plan.py --check
+          python3 josanshi-sprint/scripts/validate_similarity_reviews.py
+          python3 josanshi-sprint/scripts/materialize_source_registry.py
+          python3 josanshi-sprint/scripts/materialize_question_bank.py --output josanshi-sprint/data/questions.json
+          python3 josanshi-sprint/scripts/apply_all_audit_approvals.py
+          python3 josanshi-sprint/scripts/audit_question_bank.py --require-complete
+          python3 josanshi-sprint/scripts/validate_content_stage.py
+
+      - name: Export Swift package resource
+        run: python3 josanshi-sprint/scripts/export_swift_question_bank.py
+
+      - name: Commit generated resource when changed
+        run: |
+          RESOURCE='josanshi-sprint/ios/JosanshiSprintFeature/Sources/JosanshiSprintFeature/Resources/questions.json'
+          if [ -z "$(git status --porcelain -- "$RESOURCE")" ]; then
+            echo 'Swift question bank already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RESOURCE"
+          git commit -m 'Sync audited #14 Swift question bank [skip ci]'
+          git push origin HEAD:agent/josanshi-sprint-14-native

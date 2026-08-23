@@ -1,0 +1,134 @@
+{
+  "schemaVersion":"1.0",
+  "batchId":"021-scenarios-pregnancy-r1-r2a",
+  "checkedAt":"2026-08-13",
+  "questions":[
+    {
+      "intentId":"DIAGNOSIS-09-I1",
+      "answerType":"singleChoice",
+      "prompt":"この妊婦への初回対応として、最も適切なのはどれか。",
+      "choices":["健診開始が遅れた理由を責め、今後の受診継続を本人だけの責任とする","母体・胎児の状態を評価し、受診が遅れた背景、生活・家族・経済・安全面を非難せず確認して必要な支援へつなぐ","若年であることだけを理由に家族へ本人の情報を全て伝える","症状がないため次回まで医学的評価を行わない"],
+      "correctIndices":[1],
+      "explanation":"若年妊婦や健診開始が遅れた妊婦では、まず母体・胎児の健康評価を行い、受診が遅れた背景や生活・経済・家族関係、安全、支援者の有無を確認する。非難は受診中断につながり得るため避け、本人の意思とプライバシーを尊重しながら医療・保健・福祉の継続支援へつなぐ。",
+      "memoryPoint":"若年・未受診/受診遅延では『責めない＋母児評価＋背景把握＋継続支援』。",
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JSOG-OB-GUIDELINE-2026","MHLW-PERINATAL-SYSTEM"],
+      "sourceCheckedAt":"2026-08-13","lawBaselineDate":"2026-08-13","rightsBasis":"original clinical scenario and wording from verified current high-risk pregnancy support principles; no direct reproduction","originType":"original_from_primary_source","contentVersion":"josanshi-content-v1","auditStatus":"content-reviewed"
+    },
+    {
+      "intentId":"DIAGNOSIS-05-I2",
+      "answerType":"singleChoice",
+      "prompt":"最終月経日がはっきりせず、本人は『2週間くらいずれているかもしれない』と話した。分娩予定日を決める考え方として、最も適切なのはどれか。",
+      "choices":["本人が最初に思い出した日付だけで必ず予定日を確定する","月経歴の信頼性と超音波による胎児計測などを妊娠時期に応じて評価し、産科医療者と妊娠週数・予定日を決定する","現在の体重だけから予定日を算出する","妊娠週数は分娩管理に影響しないため予定日は決めない"],
+      "correctIndices":[1],
+      "explanation":"分娩予定日は最終月経から算出できるが、周期不整や日付が不確かな場合には誤差が生じる。妊娠初期の超音波計測など客観的情報と月経歴を合わせ、妊娠週数・予定日を適切に決定する。予定日は胎児発育、早産・過期妊娠などの評価にも重要である。",
+      "memoryPoint":"予定日は月経歴の信頼性＋妊娠初期超音波などで決める。曖昧なLMPだけに固定しない。",
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JSOG-OB-GUIDELINE-2026","JAM-MIDWIFERY-GUIDELINE-2024"],
+      "sourceCheckedAt":"2026-08-13","lawBaselineDate":"2026-08-13","rightsBasis":"original clinical scenario and wording from verified gestational-dating principles; no direct reproduction","originType":"original_from_primary_source","contentVersion":"josanshi-content-v1","auditStatus":"content-reviewed"
+    },
+    {
+      "intentId":"DIAGNOSIS-06-I2",
+      "answerType":"singleChoice",
+      "prompt":"その後、妊娠経過に異常はない。便秘と軽い腰痛について相談された。セルフケア支援として最も適切なのはどれか。",
+      "choices":["妊娠中の便秘と腰痛は全て病的なので直ちに入院する","水分・食事・無理のない活動、姿勢や休息を確認し、症状に合わせて調整しつつ、強い痛み・出血などがあれば受診するよう説明する","妊娠中は市販薬を種類に関係なく自由に使用できると説明する","腰痛がある間は妊娠終了まで終日臥床する"],
+      "correctIndices":[1],
+      "explanation":"便秘や腰背部不快感などは妊娠に伴うマイナートラブルとしてみられることがある。水分、食物繊維を含む食生活、適度な活動、姿勢、休息などを個別に調整する。症状が強い、持続する、出血・発熱・規則的な腹緊などを伴う場合は正常範囲と決めつけず医療評価へつなぐ。",
+      "memoryPoint":"マイナートラブルは生活調整＋危険徴候の切り分け。『よくあるから放置』にしない。",
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JSOG-OB-GUIDELINE-2026","JAM-MIDWIFERY-GUIDELINE-2024"],
+      "sourceCheckedAt":"2026-08-13","lawBaselineDate":"2026-08-13","rightsBasis":"original clinical scenario and wording from verified pregnancy self-care principles; no direct reproduction","originType":"original_from_primary_source","contentVersion":"josanshi-content-v1","auditStatus":"content-reviewed"
+    },
+
+    {
+      "intentId":"DIAGNOSIS-07-I1",
+      "answerType":"singleChoice",
+      "prompt":"初診時の優先対応として、最も適切なのはどれか。",
+      "choices":["妊娠検査薬が陽性なので、片側性下腹部痛と出血があっても自宅安静だけでよいと伝える","異所性妊娠や流産などを含めて緊急度を評価できるよう、速やかに産科の診察・超音波等へつなぐ","腹痛は妊娠初期には必ず正常なので評価しない","妊娠継続の意思がまだ決まっていないため身体評価を行わない"],
+      "correctIndices":[1],
+      "explanation":"妊娠初期の性器出血や下腹部痛は流産などでもみられるが、異所性妊娠では重篤な出血に至る可能性がある。妊娠反応陽性だけで妊娠部位は分からないため、バイタル、疼痛、出血量を確認し、必要な産科診察・超音波・検査へ速やかにつなぐ。",
+      "memoryPoint":"妊娠初期の痛み＋出血＝異所性妊娠を含めて早期評価。妊娠反応陽性だけで安心しない。",
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JSOG-OB-GUIDELINE-2026","JAM-MIDWIFERY-GUIDELINE-2024"],
+      "sourceCheckedAt":"2026-08-13","lawBaselineDate":"2026-08-13","rightsBasis":"original clinical scenario and wording from verified early-pregnancy emergency assessment principles; no direct reproduction","originType":"original_from_primary_source","contentVersion":"josanshi-content-v1","auditStatus":"content-reviewed"
+    },
+    {
+      "intentId":"DIAGNOSIS-08-I2",
+      "answerType":"singleChoice",
+      "prompt":"超音波で子宮内妊娠が確認された。その後の検査でクラミジア感染が判明した。支援として最も適切なのはどれか。",
+      "choices":["妊娠中は治療できないため出産まで放置する","妊娠中であることを踏まえた適切な治療へつなぎ、必要に応じてパートナーの検査・治療と再感染予防も説明する","無症状なら母児への影響はないため結果を伝えない","治療後は再感染しないので予防教育は不要である"],
+      "correctIndices":[1],
+      "explanation":"妊娠中のクラミジア感染は適切な診断・治療が必要である。無症状例もあり、治療後の再感染を防ぐためパートナーへの検査・治療の必要性を検討し、コンドーム使用など感染予防も支援する。薬剤選択は妊娠を考慮して医師が行う。",
+      "memoryPoint":"妊娠中クラミジア＝放置しない。妊娠に適した治療＋パートナー対応＋再感染予防。",
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JSOG-OB-GUIDELINE-2026","CFA-MATERNAL-CHILD-HEALTH","JSSTI-GUIDELINE-2026"],
+      "sourceCheckedAt":"2026-08-13","lawBaselineDate":"2026-08-13","rightsBasis":"original clinical scenario and wording from verified current maternal STI guidance; no direct reproduction","originType":"original_from_primary_source","contentVersion":"josanshi-content-v1","auditStatus":"content-reviewed"
+    },
+    {
+      "intentId":"DIAGNOSIS-09-I2",
+      "answerType":"singleChoice",
+      "prompt":"妊娠10週。本人は『予想していなかった妊娠で、どうしたいかまだ決められない。家族からは産むよう強く言われている』と話した。助産師の対応として最も適切なのはどれか。",
+      "choices":["家族の希望を本人の意思より優先して妊娠継続を決める","本人が安心して話せる環境で気持ちと安全、周囲からの強制の有無を確認し、選択肢と利用できる医療・相談支援を時機を逸しないよう提示する","本人が迷っている間は身体的な妊娠管理も中止する","助産師が本人に代わって最終決定する"],
+      "correctIndices":[1],
+      "explanation":"予期しない妊娠では、本人の自己決定を尊重し、妊娠継続・養育を含む今後について考えるための正確な情報と相談先を提供する。家族やパートナーによる強制・暴力、安全上の懸念も確認する。時間的制約のある医療選択肢もあるため、判断を急がせず、同時に相談機会を遅らせない支援が重要である。",
+      "memoryPoint":"予期しない妊娠＝本人の意思＋安全確認＋非指示的情報提供。迷いを責めず、相談を遅らせない。",
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JSOG-OB-GUIDELINE-2026","MHLW-PERINATAL-SYSTEM"],
+      "sourceCheckedAt":"2026-08-13","lawBaselineDate":"2026-08-13","rightsBasis":"original clinical scenario and wording from verified pregnancy decision-support principles; no direct reproduction","originType":"original_from_primary_source","contentVersion":"josanshi-content-v1","auditStatus":"content-reviewed"
+    },
+
+    {
+      "intentId":"DIAGNOSIS-05-I3",
+      "answerType":"singleChoice",
+      "prompt":"妊娠24週の健診で妊娠経過を評価する際、最も適切なのはどれか。",
+      "choices":["今回の体重だけで正常・異常を確定する","妊娠前BMI、これまでの体重推移、血圧、浮腫や尿所見、胎児発育などを経時的に評価する","血圧が1回正常なら妊娠終了まで再測定しない","母体評価と胎児発育は関連しないため別々に考える"],
+      "correctIndices":[1],
+      "explanation":"母体の妊娠経過は妊娠前の体格、体重増加の推移、血圧、尿所見、浮腫、症状、検査結果などを経時的にみる。胎児発育や羊水量など胎児・胎盤の情報も合わせ、単一の体重や血圧だけで判断しない。",
+      "memoryPoint":"妊娠経過は一点評価ではなく、BMI・体重推移・血圧・尿・症状・胎児発育を経時的にみる。",
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JSOG-OB-GUIDELINE-2026","JAM-MIDWIFERY-GUIDELINE-2024"],
+      "sourceCheckedAt":"2026-08-13","lawBaselineDate":"2026-08-13","rightsBasis":"original clinical scenario and wording from verified antenatal course assessment principles; no direct reproduction","originType":"original_from_primary_source","contentVersion":"josanshi-content-v1","auditStatus":"content-reviewed"
+    },
+    {
+      "intentId":"DIAGNOSIS-07-I2",
+      "answerType":"singleChoice",
+      "prompt":"その後の検査で妊娠糖尿病と診断された。助産師の支援として最も適切なのはどれか。",
+      "choices":["胎児への影響を避けるため自己判断で食事を極端に減らすよう勧める","医師・栄養職等と連携し、指示された血糖管理、適切な食事と活動、母体状態と胎児発育の観察を継続する","診断後は胎児発育の観察は不要である","血糖が一度改善すれば出産後のフォローは不要である"],
+      "correctIndices":[1],
+      "explanation":"妊娠糖尿病では母体の血糖管理と胎児発育・羊水量などの評価が重要で、治療は食事・活動、血糖測定、必要な薬物療法を医療チームで調整する。極端な食事制限を行わず、産後も将来の糖代謝リスクを踏まえたフォローが重要となる。",
+      "memoryPoint":"妊娠糖尿病＝母体血糖＋適切な栄養/活動＋胎児発育をチームで管理。極端な食事制限はしない。",
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JSOG-OB-GUIDELINE-2026","JAM-MIDWIFERY-GUIDELINE-2024"],
+      "sourceCheckedAt":"2026-08-13","lawBaselineDate":"2026-08-13","rightsBasis":"original clinical scenario and wording from verified current gestational-diabetes management principles; no direct reproduction","originType":"original_from_primary_source","contentVersion":"josanshi-content-v1","auditStatus":"content-reviewed"
+    },
+    {
+      "intentId":"DIAGNOSIS-08-I3",
+      "answerType":"singleChoice",
+      "prompt":"同じ妊婦は風しん抗体価が低く、『今からMRワクチンを受けた方がよいですか』と質問した。最も適切な説明はどれか。",
+      "choices":["妊娠中にMRワクチンを直ちに接種する","妊娠中は風しん/MR生ワクチンを接種せず、感染回避と同居家族の免疫確認を支援し、出産後早期の接種を検討する","抗体価が低くても妊娠中の風しん感染は胎児へ影響しない","妊娠中に接種できないため今後の予防は一切できない"],
+      "correctIndices":[1],
+      "explanation":"風しん・MRワクチンは生ワクチンであり妊娠中は接種しない。抗体価が低い妊婦は流行時の人混み回避等の感染予防を行い、同居者で免疫が不十分な人には抗体検査・接種を検討する。本人は出産後早期に予防接種を検討する。",
+      "memoryPoint":"妊娠中MR/風しんワクチンは接種しない。感染回避＋家族の免疫＋産後接種へ。",
+      "sourceIds":["MHLW-EXAM-R5-STANDARD","JSOG-OB-GUIDELINE-2026","JPS-VACCINE-INFECTION-2026","MHLW-RUBELLA-PREGNANCY-2026"],
+      "sourceCheckedAt":"2026-08-13","lawBaselineDate":"2026-08-13","rightsBasis":"original clinical scenario and wording from verified current rubella vaccination policy; no direct reproduction","originType":"original_from_primary_source","contentVersion":"josanshi-content-v1","auditStatus":"content-reviewed"
+    }
+  ],
+  "scenarios":[
+    {
+      "scenarioId":"JOS-R1-AM-SC05","session":"AM",
+      "scenarioText":"19歳の初妊婦。パート勤務。妊娠検査薬の陽性後も受診のきっかけをつかめず、今回が初めての産科受診である。月経周期は不規則で最終月経日は曖昧である。パートナーとは連絡を取っているが、家族にはまだ妊娠を伝えていない。現在、強い腹痛や性器出血はない。",
+      "clinicalFrame":{"person":"19歳、初妊婦、健診開始遅延","timeline":"初回受診から妊娠週数・予定日確定、その後のマイナートラブル相談","coreTask":"若年/受診遅延支援、妊娠週数評価、セルフケア","safetyEscalation":"母児異常、生活困難、安全上の問題は医療・保健・福祉へ連携"},
+      "questionIds":["JOS-R1-AM-Q51","JOS-R1-AM-Q52","JOS-R1-AM-Q53"],
+      "sourceIds":["JSOG-OB-GUIDELINE-2026","JAM-MIDWIFERY-GUIDELINE-2024","MHLW-PERINATAL-SYSTEM"],
+      "sourceCheckedAt":"2026-08-13","rightsBasis":"original patient timeline and wording from verified pregnancy-support sources; no direct reproduction","auditStatus":"content-reviewed"
+    },
+    {
+      "scenarioId":"JOS-R1-PM-SC03","session":"PM",
+      "scenarioText":"25歳、初妊婦。妊娠検査薬は陽性で、最終月経から妊娠8週頃と考えられる。妊娠は予定していなかった。少量の性器出血と右下腹部の痛みがあり受診した。パートナーとは同居している。本人は妊娠について『まだどうしたいか決められない』と話している。",
+      "clinicalFrame":{"person":"25歳、予期しない初妊娠","timeline":"妊娠8週の出血・腹痛評価から感染症結果説明、妊娠継続に関する相談まで","coreTask":"異常妊娠の早期評価、細菌性STI対応、自己決定支援","safetyEscalation":"循環不安定・出血増加・強い腹痛、強制/暴力リスクは即時連携"},
+      "questionIds":["JOS-R1-PM-Q44","JOS-R1-PM-Q45","JOS-R1-PM-Q46"],
+      "sourceIds":["JSOG-OB-GUIDELINE-2026","JAM-MIDWIFERY-GUIDELINE-2024","CFA-MATERNAL-CHILD-HEALTH","JSSTI-GUIDELINE-2026","MHLW-PERINATAL-SYSTEM"],
+      "sourceCheckedAt":"2026-08-13","rightsBasis":"original patient timeline and wording from verified early-pregnancy, STI and decision-support sources; no direct reproduction","auditStatus":"content-reviewed"
+    },
+    {
+      "scenarioId":"JOS-R2-AM-SC01","session":"AM",
+      "scenarioText":"31歳、初妊婦。妊娠24週。妊娠前BMIは29。定期健診を受けており、現在の血圧は132/78mmHg、強い自覚症状はない。最近の体重増加が気になっている。これまでの妊娠経過を確認しながら、追加検査の結果説明を受ける予定である。",
+      "clinicalFrame":{"person":"31歳、妊娠24週の初妊婦","timeline":"妊娠経過評価から妊娠糖尿病診断、風しん抗体低値への予防相談","coreTask":"母体経過の経時評価、糖代謝合併症支援、妊娠中ワクチン情報","safetyEscalation":"高血糖悪化、母体異常、胎児発育異常、感染曝露時は産科チームへ連携"},
+      "questionIds":["JOS-R2-AM-Q38","JOS-R2-AM-Q39","JOS-R2-AM-Q40"],
+      "sourceIds":["JSOG-OB-GUIDELINE-2026","JAM-MIDWIFERY-GUIDELINE-2024","JPS-VACCINE-INFECTION-2026","MHLW-RUBELLA-PREGNANCY-2026"],
+      "sourceCheckedAt":"2026-08-13","rightsBasis":"original patient timeline and wording from verified antenatal, diabetes and vaccination sources; no direct reproduction","auditStatus":"content-reviewed"
+    }
+  ]
+}

@@ -1,0 +1,292 @@
+{
+  "schemaVersion": "1.1",
+  "qualification": "助産師国家試験",
+  "checkedAt": "2026-08-13",
+  "policy": {
+    "purpose": "Primary and authoritative source anchors for original question generation, currentness audits and rights audits.",
+    "default": "Use verified facts to create original wording. Do not reproduce third-party CQ/Answer, figures, algorithms, tables, question text or images unless an explicit reusable-rights basis is recorded.",
+    "medicalRule": "Clinical assertions require a current authoritative source and sourceCheckedAt. If a source is superseded, affected production questions lose PASS status until revalidated.",
+    "rightsRule": "Clinical guidance can be used as a verification anchor without copying protected expression. A source marked directReproduction=no must never be copied into production content without separately recorded permission."
+  },
+  "sources": [
+    {
+      "id": "MHLW-EXAM-R5-STANDARD",
+      "title": "保健師助産師看護師国家試験出題基準 令和5年版",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/stf/shingi2/0000159020_00001.html",
+      "domains": ["all"],
+      "role": "canonical_exam_scope",
+      "currentness": "Current scope baseline retained in the 2026 national-exam review.",
+      "reuse": "MHLW website content is generally under PDL1.0 unless separately noted; third-party rights still require element-level checking.",
+      "directReproduction": "not needed; original wording only"
+    },
+    {
+      "id": "MHLW-EXAM-109",
+      "title": "第109回助産師国家試験 問題・正答",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp260424-03_04_05.html",
+      "domains": ["all"],
+      "role": "exam_structure_reference",
+      "currentness": "Latest confirmed examination on 2026-08-13.",
+      "reuse": "Per-item rights audit required before direct reuse; figures, photos and other third-party elements are not assumed reusable.",
+      "directReproduction": "prohibited by product policy unless separately rights-audited"
+    },
+    {
+      "id": "EGOV-MCH-ACT",
+      "title": "母子保健法",
+      "publisher": "e-Gov法令検索",
+      "url": "https://laws.e-gov.go.jp/law/340AC0000000141",
+      "domains": ["地域母子保健", "助産管理", "助産診断・技術学"],
+      "role": "current_law",
+      "currentness": "Resolve the currently effective text and effective date at question generation and every release audit.",
+      "reuse": "Statutory source; record law and effective-date baseline.",
+      "directReproduction": "short statutory wording only when necessary; otherwise original explanatory wording"
+    },
+    {
+      "id": "EGOV-PHN-MIDWIFE-NURSE-ACT",
+      "title": "保健師助産師看護師法",
+      "publisher": "e-Gov法令検索",
+      "url": "https://laws.e-gov.go.jp/law/323AC0000000203",
+      "domains": ["助産管理", "基礎助産学", "助産診断・技術学"],
+      "role": "current_law",
+      "currentness": "Resolve the currently effective text and effective date at question generation and every release audit.",
+      "reuse": "Statutory source; record law and effective-date baseline.",
+      "directReproduction": "short statutory wording only when necessary; otherwise original explanatory wording"
+    },
+    {
+      "id": "EGOV-MEDICAL-CARE-ACT",
+      "title": "医療法",
+      "publisher": "e-Gov法令検索",
+      "url": "https://laws.e-gov.go.jp/law/323AC0000000205",
+      "domains": ["助産管理"],
+      "role": "current_law",
+      "currentness": "Resolve the currently effective text and effective date at question generation and every release audit, including provisions relevant to 助産所.",
+      "reuse": "Statutory source; record law and effective-date baseline.",
+      "directReproduction": "short statutory wording only when necessary; otherwise original explanatory wording"
+    },
+    {
+      "id": "EGOV-MATERNAL-PROTECTION-ACT",
+      "title": "母体保護法",
+      "publisher": "e-Gov法令検索",
+      "url": "https://laws.e-gov.go.jp/law/323AC0100000156",
+      "domains": ["基礎助産学", "助産管理"],
+      "role": "current_law",
+      "currentness": "Resolve the currently effective text and effective date at question generation and every release audit.",
+      "reuse": "Statutory source; record law and effective-date baseline.",
+      "directReproduction": "short statutory wording only when necessary; otherwise original explanatory wording"
+    },
+    {
+      "id": "JSOG-OB-GUIDELINE-2026",
+      "title": "産婦人科診療ガイドライン産科編2026",
+      "publisher": "日本産科婦人科学会・日本産婦人科医会",
+      "url": "https://www.jsog.or.jp/news_m/11722/",
+      "domains": ["基礎助産学", "助産診断・技術学"],
+      "role": "current_clinical_guideline",
+      "currentness": "Published in 2026; use the 2026 edition for current obstetric verification.",
+      "reuse": "JSOG requires a reproduction application for guideline CQ/Answer, figures and related protected content.",
+      "directReproduction": "no; verification only unless separate permission is recorded"
+    },
+    {
+      "id": "JSOG-GYN-GUIDELINE-2026",
+      "title": "産婦人科診療ガイドライン婦人科外来編2026",
+      "publisher": "日本産科婦人科学会・日本産婦人科医会",
+      "url": "https://www.jsog.or.jp/news_m/11722/",
+      "domains": ["基礎助産学", "助産診断・技術学"],
+      "role": "current_clinical_guideline",
+      "currentness": "Published in 2026; use the 2026 edition for current gynecologic verification.",
+      "reuse": "JSOG guideline protected content is reproduction-restricted and requires application where applicable.",
+      "directReproduction": "no; verification only unless separate permission is recorded"
+    },
+    {
+      "id": "JSSTI-GUIDELINE-2026",
+      "title": "性感染症 診断・治療 ガイドライン 2026",
+      "publisher": "日本性感染症学会",
+      "url": "https://jssti.jp/guideline_c.html",
+      "domains": ["基礎助産学", "助産診断・技術学"],
+      "role": "current_clinical_guideline",
+      "currentness": "Published 2025-12-18 as the 2026 edition; current STI verification anchor.",
+      "reuse": "The society instructs users seeking reproduction from the 2026 guideline to contact the publisher.",
+      "directReproduction": "no; verification only unless separate permission is recorded"
+    },
+    {
+      "id": "NCPR-GUIDELINE-2025",
+      "title": "新生児蘇生法ガイドライン2025 / NCPR 2025",
+      "publisher": "日本周産期・新生児医学会 新生児蘇生法普及事業",
+      "url": "https://www.ncpr.jp/guideline_update/",
+      "domains": ["助産診断・技術学"],
+      "role": "current_neonatal_resuscitation_guideline",
+      "currentness": "NCPR materials were updated to the 2025 guideline in 2026.",
+      "reuse": "Permission is required to reproduce the 2025 algorithm figure.",
+      "directReproduction": "no algorithm or figure reproduction without permission; original wording only"
+    },
+    {
+      "id": "JAM-MIDWIFERY-GUIDELINE-2024",
+      "title": "エビデンスに基づく助産ガイドライン－妊娠期・分娩期・産褥期 2024",
+      "publisher": "日本助産学会",
+      "url": "https://www.jyosan.jp/modules/journal/index.php?content_id=2",
+      "domains": ["基礎助産学", "助産診断・技術学"],
+      "role": "midwifery_care_guideline",
+      "currentness": "2024 guideline remains the current edition displayed by the Japan Academy of Midwifery as of 2026-08-13; cross-check clinical conflicts against newer 2026 specialty guidance.",
+      "reuse": "Professional society guideline; treat protected expression, tables and figures as copyrighted and use only as a verification source.",
+      "directReproduction": "no; original questions and explanations only"
+    },
+    {
+      "id": "MHLW-MIDWIFE-POLICY",
+      "title": "助産師関連施策について",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000187231.html",
+      "domains": ["助産管理", "助産診断・技術学"],
+      "role": "midwifery_policy",
+      "currentness": "Current MHLW policy hub linking 助産業務ガイドライン2024 and midwife utilization measures.",
+      "reuse": "Use policy facts with source attribution; separately linked third-party guideline content requires its own rights check.",
+      "directReproduction": "not needed; original wording only"
+    },
+    {
+      "id": "JMA-MIDWIFE-OPERATIONS-2024",
+      "title": "助産業務ガイドライン2024",
+      "publisher": "日本助産師会",
+      "url": "https://www.midwifepc.co.jp/c/shoseki/S-0046",
+      "domains": ["助産管理", "助産診断・技術学"],
+      "role": "midwifery_operations_guideline",
+      "currentness": "2024 edition, published 2025-01-15; operational content can be used as an authoritative practice anchor, but recommendations based on 2023 obstetric guidance must be cross-checked against JSOG 2026.",
+      "reuse": "Commercial copyrighted publication; use only to verify concepts and create original wording.",
+      "directReproduction": "no"
+    },
+    {
+      "id": "MHLW-DIETARY-2025",
+      "title": "日本人の食事摂取基準（2025年版）",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/eiyou/syokuji_kijyun.html",
+      "domains": ["基礎助産学", "助産診断・技術学"],
+      "role": "current_nutrition_reference",
+      "currentness": "Official use period is FY2025-FY2029 and includes pregnant/lactating women and infants/children.",
+      "reuse": "MHLW general terms apply unless separately noted; create original question wording and record source date.",
+      "directReproduction": "not needed; original wording only"
+    },
+    {
+      "id": "NCCHD-PREG-LACT-MEDS",
+      "title": "妊娠と薬情報センター",
+      "publisher": "国立成育医療研究センター",
+      "url": "https://www.ncchd.go.jp/kusuri/",
+      "domains": ["基礎助産学", "助産診断・技術学"],
+      "role": "current_medication_reference",
+      "currentness": "Current national consultation/evidence center; medication pages continue to receive updates through 2026.",
+      "reuse": "The center explicitly prohibits unauthorized reproduction/duplication of its drug data, text, illustrations and tables and prohibits commercial use without permission.",
+      "directReproduction": "no; verification only and original wording required"
+    },
+    {
+      "id": "CFA-MATERNAL-CHILD-HEALTH",
+      "title": "母子保健・不妊症・不育症など",
+      "publisher": "こども家庭庁",
+      "url": "https://www.cfa.go.jp/policies/boshihoken/",
+      "domains": ["地域母子保健", "基礎助産学", "助産診断・技術学"],
+      "role": "current_public_health_hub",
+      "currentness": "Current maternal-child health policy hub with 2026 notices and guidance.",
+      "reuse": "Use public-policy facts with source attribution and check separately linked third-party materials before reuse.",
+      "directReproduction": "not needed; original wording only"
+    },
+    {
+      "id": "CFA-POSTPARTUM-CARE-2026",
+      "title": "産前・産後サポート事業ガイドライン及び産後ケア事業ガイドライン（令和8年3月）",
+      "publisher": "こども家庭庁",
+      "url": "https://www.cfa.go.jp/policies/boshihoken/",
+      "domains": ["地域母子保健", "助産診断・技術学", "助産管理"],
+      "role": "current_postpartum_policy_guidance",
+      "currentness": "March 2026 revision listed on the current CFA maternal-child health hub.",
+      "reuse": "Use policy and care-system facts in original wording; inspect embedded/third-party elements before reuse.",
+      "directReproduction": "not needed; original wording only"
+    },
+    {
+      "id": "CFA-PRECON-5YEAR",
+      "title": "プレコンセプションケア推進5か年計画",
+      "publisher": "こども家庭庁",
+      "url": "https://www.cfa.go.jp/councils/preconception-care",
+      "domains": ["基礎助産学", "地域母子保健", "助産診断・技術学"],
+      "role": "current_preconception_policy",
+      "currentness": "Final five-year plan published in 2025; national indicator materials updated 2026-07-09.",
+      "reuse": "Use policy facts with source attribution; create original wording.",
+      "directReproduction": "not needed; original wording only"
+    },
+    {
+      "id": "CFA-PRENATAL-INFO",
+      "title": "妊娠中の検査に関する情報サイト",
+      "publisher": "こども家庭庁 出生前検査認証制度等啓発事業",
+      "url": "https://prenatal.cfa.go.jp/",
+      "domains": ["基礎助産学", "助産診断・技術学"],
+      "role": "current_prenatal_testing_information",
+      "currentness": "Current CFA-commissioned information service covering NIPT, other prenatal testing and support.",
+      "reuse": "Use verified concepts in original wording; do not copy site figures or media without a separate rights basis.",
+      "directReproduction": "no media/figures; original wording only"
+    },
+    {
+      "id": "CFA-INFANT-CHECKUPS",
+      "title": "乳幼児健診に関する取組み",
+      "publisher": "こども家庭庁",
+      "url": "https://www.cfa.go.jp/policies/boshihoken/nyuyojikenshin",
+      "domains": ["地域母子保健", "基礎助産学", "助産診断・技術学"],
+      "role": "current_infant_checkup_policy",
+      "currentness": "Current page updated through 2026-07-23 and includes support for one-month and five-year examinations.",
+      "reuse": "Use public-policy facts with source attribution; create original wording.",
+      "directReproduction": "not needed; original wording only"
+    },
+    {
+      "id": "CFA-INFANT-GROWTH-2023",
+      "title": "令和5年乳幼児身体発育調査",
+      "publisher": "こども家庭庁",
+      "url": "https://www.cfa.go.jp/policies/boshihoken/r5-nyuuyoujityousa/",
+      "domains": ["基礎助産学", "助産診断・技術学", "地域母子保健"],
+      "role": "official_infant_growth_statistics",
+      "currentness": "Latest national infant physical development survey currently published by CFA; results were released in 2024.",
+      "reuse": "Use official statistics with source/check date; tables and charts should be recreated only when rights and transformation requirements are satisfied.",
+      "directReproduction": "not needed; original wording and original visualizations only"
+    },
+    {
+      "id": "MHLW-PERINATAL-SYSTEM",
+      "title": "小児・周産期医療について / 周産期医療の体制構築に係る指針",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000186912.html",
+      "domains": ["助産管理", "助産診断・技術学"],
+      "role": "current_perinatal_system_policy",
+      "currentness": "Current MHLW hub links the 2023/06 revised perinatal-care system guideline; 2025-2026 working-group conclusions must also be checked for system-currentness.",
+      "reuse": "Use policy/system facts with source attribution and original wording.",
+      "directReproduction": "not needed; original wording only"
+    },
+    {
+      "id": "JPS-NEONATAL",
+      "title": "新生児",
+      "publisher": "日本小児科学会",
+      "url": "https://www.jpeds.or.jp/society-activities/pediatric-medical-care/post-151312.html",
+      "domains": ["助産診断・技術学", "基礎助産学"],
+      "role": "neonatal_professional_reference_hub",
+      "currentness": "Current neonatal committee reference hub; includes neonatal standards, vitamin-K prevention materials and high-risk newborn resources. Individual linked materials require date-specific verification.",
+      "reuse": "Professional society material; use for verification and create original wording. Linked figures/tables require separate rights review.",
+      "directReproduction": "no unless separately permitted"
+    },
+    {
+      "id": "JPS-VACCINE-INFECTION-2026",
+      "title": "予防接種・感染症情報 / 日本小児科学会推奨予防接種スケジュール2026",
+      "publisher": "日本小児科学会",
+      "url": "https://www.jpeds.or.jp/society-activities/pediatric-medical-care/vaccination/20093.html",
+      "domains": ["助産診断・技術学", "基礎助産学"],
+      "role": "current_pediatric_infection_vaccine_reference",
+      "currentness": "Current 2026 information hub; the recommended vaccination schedule was revised in April 2026 and includes current maternal RS vaccination information.",
+      "reuse": "Professional society material; use for verification. Published schedules/figures must not be copied or modified without checking the society's permission requirements.",
+      "directReproduction": "no schedules/figures; original wording only"
+    },
+    {
+      "id": "MHLW-BREASTFEEDING-WEANING-GUIDE",
+      "title": "授乳・離乳の支援ガイド",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/web/t_doc?dataId=00tb6885&dataType=1",
+      "domains": ["助産診断・技術学", "地域母子保健"],
+      "role": "supporting_guidance",
+      "currentness": "Historical MHLW guidance; every 2026 production assertion must be checked against later current guidance before use.",
+      "reuse": "MHLW general terms apply unless separately noted; third-party embedded material still requires rights check.",
+      "directReproduction": "not needed; original wording only"
+    }
+  ],
+  "openCoverage": {
+    "status": "ready_for_topic_mapping",
+    "note": "Anchor registry expanded on 2026-08-13. A separate topic-source map must cover all 66 R5 topics and pass CI before production question generation."
+  }
+}

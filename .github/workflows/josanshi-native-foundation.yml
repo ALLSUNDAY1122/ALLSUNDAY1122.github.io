@@ -1,0 +1,101 @@
+name: Josanshi Native Foundation
+
+on:
+  push:
+    branches:
+      - agent/josanshi-sprint-14-native
+    paths:
+      - 'josanshi-sprint/**'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/josanshi-native-foundation.yml'
+  pull_request:
+    paths:
+      - 'josanshi-sprint/**'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/josanshi-native-foundation.yml'
+
+concurrency:
+  group: josanshi-native-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-foundation:
+    runs-on: macos-15
+    timeout-minutes: 20
+    env:
+      TZ: Asia/Tokyo
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate official-structure question blueprint
+        run: python3 josanshi-sprint/scripts/validate_blueprint.py
+
+      - name: Validate anti-padding generation slots
+        run: python3 josanshi-sprint/scripts/generate_slots.py --check
+
+      - name: Validate modular current-source and rights registries
+        run: python3 josanshi-sprint/scripts/validate_sources.py
+
+      - name: Validate all 66 topics have current evidence anchors
+        run: python3 josanshi-sprint/scripts/validate_topic_sources.py
+
+      - name: Validate 330 distinct R5 semantic intents
+        run: python3 josanshi-sprint/scripts/build_intent_seeds.py --check
+
+      - name: Validate 330-topic generation plan and 36 linked scenarios
+        run: |
+          python3 josanshi-sprint/scripts/build_generation_plan.py --check
+          python3 josanshi-sprint/scripts/build_scenario_authoring_plan.py --check
+
+      - name: Require independent review of same-topic similarity warnings
+        run: python3 josanshi-sprint/scripts/validate_similarity_reviews.py
+
+      - name: Materialize modular source registry for bank audit
+        run: python3 josanshi-sprint/scripts/materialize_source_registry.py
+
+      - name: Materialize authored question batches onto audited slots
+        run: python3 josanshi-sprint/scripts/materialize_question_bank.py --output josanshi-sprint/data/questions.json
+
+      - name: Apply all independent content audit approvals
+        run: python3 josanshi-sprint/scripts/apply_all_audit_approvals.py
+
+      - name: Audit complete production question bank
+        run: python3 josanshi-sprint/scripts/audit_question_bank.py --require-complete
+
+      - name: Validate current monotonic content stage
+        run: python3 josanshi-sprint/scripts/validate_content_stage.py
+
+      - name: Assert bundled Swift bank matches audited source exactly
+        shell: bash
+        run: |
+          python3 josanshi-sprint/scripts/export_swift_question_bank.py --output /tmp/josanshi-questions.json
+          cmp /tmp/josanshi-questions.json josanshi-sprint/ios/JosanshiSprintFeature/Sources/JosanshiSprintFeature/Resources/questions.json
+
+      - name: Validate privacy manifest source
+        shell: bash
+        run: |
+          plutil -lint josanshi-sprint/ios/PrivacyInfo.xcprivacy
+          if grep -R -n -E 'UserDefaults|creationDateKey|contentModificationDateKey|fileModificationDate|attributesOfItem' josanshi-sprint/ios/JosanshiSprintFeature/Sources native-ios/LearningSprintCore/Sources; then
+            echo 'Required Reason API candidate detected; re-audit PrivacyInfo.xcprivacy before release.' >&2
+            exit 1
+          fi
+
+      - name: Assert no WebView primary implementation
+        shell: bash
+        run: |
+          if grep -R -n -E 'WKWebView|import WebKit|SFSafariViewController' josanshi-sprint/ios/JosanshiSprintFeature/Sources; then
+            echo 'Web-based primary UI is prohibited for #14.' >&2
+            exit 1
+          fi
+
+      - name: Validate Golden Master v2.1 native structure
+        run: python3 josanshi-sprint/scripts/validate_native_golden_master.py
+
+      - name: Validate approved monetization and canonical identifiers
+        run: python3 josanshi-sprint/scripts/validate_monetization.py
+
+      - name: Validate release configuration safety contract
+        run: python3 josanshi-sprint/scripts/validate_release_configuration.py
+
+      - name: Run Swift package tests
+        run: swift test --package-path josanshi-sprint/ios/JosanshiSprintFeature

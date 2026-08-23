@@ -1,0 +1,18 @@
+name: Josanshi Basic 70 Checkpoint (Historical)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  historical-70-checkpoint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TZ: Asia/Tokyo
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Historical checkpoint note
+        run: |
+          echo 'Historical 70-question checkpoint retained for manual audit only.'
+          echo 'Active development is validated by Josanshi Content Checkpoint using the monotonic content-stage gate.'

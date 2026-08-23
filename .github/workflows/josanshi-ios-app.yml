@@ -1,0 +1,68 @@
+name: Josanshi iOS App Simulator
+
+on:
+  push:
+    branches:
+      - agent/josanshi-sprint-14-native
+    paths:
+      - 'josanshi-sprint/ios/**'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/josanshi-ios-app.yml'
+  pull_request:
+    paths:
+      - 'josanshi-sprint/ios/**'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/josanshi-ios-app.yml'
+
+concurrency:
+  group: josanshi-ios-app-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  simulator-build:
+    runs-on: macos-15
+    timeout-minutes: 25
+    env:
+      TZ: Asia/Tokyo
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Generate Xcode project and normalize IAP capability
+        run: |
+          cd josanshi-sprint/ios
+          xcodegen generate --spec xcodegen.yml
+          python3 apply-xcode-capabilities.py JosanshiSprint.xcodeproj/project.pbxproj
+      - name: Verify canonical release identity and IAP capability
+        run: |
+          PBX=josanshi-sprint/ios/JosanshiSprint.xcodeproj/project.pbxproj
+          grep -E 'PRODUCT_BUNDLE_IDENTIFIER|DEVELOPMENT_TEAM|com\.apple\.InAppPurchase|enabled = 1' "$PBX" || true
+          grep -Eq 'PRODUCT_BUNDLE_IDENTIFIER = "?jp\.allsunday1122\.josanshi"?;' "$PBX"
+          grep -Eq 'DEVELOPMENT_TEAM = "?MN3D2ZM44N"?;' "$PBX"
+          grep -q 'com.apple.InAppPurchase' "$PBX"
+          grep -q 'enabled = 1;' "$PBX"
+          cd josanshi-sprint/ios
+          xcodebuild -project JosanshiSprint.xcodeproj -scheme JosanshiSprint -configuration Release -showBuildSettings > /tmp/josanshi-release-settings.txt
+          grep -Eq '^ *PRODUCT_BUNDLE_IDENTIFIER = jp\.allsunday1122\.josanshi$' /tmp/josanshi-release-settings.txt
+          grep -Eq '^ *DEVELOPMENT_TEAM = MN3D2ZM44N$' /tmp/josanshi-release-settings.txt
+      - name: Build native iOS app for Simulator
+        run: |
+          cd josanshi-sprint/ios
+          xcodebuild build \
+            -project JosanshiSprint.xcodeproj \
+            -scheme JosanshiSprint \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath /tmp/josanshi-derived \
+            CODE_SIGNING_ALLOWED=NO \
+            PRODUCT_BUNDLE_IDENTIFIER=local.ci.josanshi
+      - name: Verify built app privacy manifest
+        run: |
+          APP=/tmp/josanshi-derived/Build/Products/Debug-iphonesimulator/JosanshiSprint.app
+          test -d "$APP"
+          test -f "$APP/PrivacyInfo.xcprivacy"
+          plutil -lint "$APP/PrivacyInfo.xcprivacy"
+      - name: Assert native-only app sources
+        run: |
+          ! grep -R -n -E 'WKWebView|import WebKit|SFSafariViewController' josanshi-sprint/ios/App josanshi-sprint/ios/JosanshiSprintFeature/Sources

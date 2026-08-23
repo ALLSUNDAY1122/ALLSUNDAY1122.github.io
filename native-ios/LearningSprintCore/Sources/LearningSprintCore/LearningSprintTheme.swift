@@ -21,7 +21,7 @@ public enum LearningSprintTheme {
     }
 
     public static func sans(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        .system(size: size, weight: weight, design: .default)
+        .system(textStyle(for: size), design: .default, weight: weight)
     }
 
     private static func textStyle(for size: CGFloat) -> Font.TextStyle {
