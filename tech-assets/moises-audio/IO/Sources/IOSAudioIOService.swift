@@ -42,15 +42,18 @@ public actor IOSAudioIOService: AudioImporting, AudioExporting {
     public struct Configuration: Sendable {
         public let rootURL: URL
         public let maximumDownloadBytes: Int64
+        public let maximumImportedFileBytes: Int64
         public let storageReserveBytes: Int64
 
         public init(
             rootURL: URL,
             maximumDownloadBytes: Int64 = 2 * 1024 * 1024 * 1024,
+            maximumImportedFileBytes: Int64 = Int64.max,
             storageReserveBytes: Int64 = 64 * 1024 * 1024
         ) {
             self.rootURL = rootURL
             self.maximumDownloadBytes = maximumDownloadBytes
+            self.maximumImportedFileBytes = maximumImportedFileBytes
             self.storageReserveBytes = storageReserveBytes
         }
     }
@@ -63,18 +66,24 @@ public actor IOSAudioIOService: AudioImporting, AudioExporting {
     private let configuration: Configuration
     private let fileStore: IOFileStore
     private let exportSourceProvider: any IOExportSourceProviding
+    private let compatibilityDecoder: (any IOCompatibilityAudioDecoding)?
+    private let referenceMediaPolicy = IOReferenceMediaCompatibilityPolicy()
+    private let compatibilityStaging: IOCompatibilityDecodeStaging
     private let session: URLSession
     private let fileManager: FileManager
 
     public init(
         configuration: Configuration,
         exportSourceProvider: any IOExportSourceProviding,
+        compatibilityDecoder: (any IOCompatibilityAudioDecoding)? = nil,
         session: URLSession = .shared,
         fileManager: FileManager = .default
     ) throws {
         self.configuration = configuration
         self.fileStore = IOFileStore(rootURL: configuration.rootURL)
         self.exportSourceProvider = exportSourceProvider
+        self.compatibilityDecoder = compatibilityDecoder
+        self.compatibilityStaging = IOCompatibilityDecodeStaging(fileStore: self.fileStore)
         self.session = session
         self.fileManager = fileManager
         try self.fileStore.prepareDirectories(fileManager: fileManager)
@@ -102,6 +111,41 @@ public actor IOSAudioIOService: AudioImporting, AudioExporting {
             }
         } catch let failure as DomainFailure {
             throw failure
+        } catch let storeError as IOFileStore.StoreError {
+            throw mapStoreError(storeError)
+        } catch is CancellationError {
+            throw DomainFailure.cancelled
+        } catch {
+            throw mapFoundationError(error)
+        }
+    }
+
+    /// Lane-local bridge for Files / File Provider / camera-roll-exported URLs.
+    /// App owns picker presentation; IO owns converting the leased external URL into a verified app-owned asset.
+    public func importExternalFile(
+        at sourceURL: URL,
+        accessMode: IOExternalFileAccessMode = .securityScoped
+    ) async throws -> LocalAudioAsset {
+        do {
+            let acquirer = IOExternalFileAcquirer(
+                fileStore: fileStore,
+                maximumFileBytes: configuration.maximumImportedFileBytes,
+                storageReserveBytes: configuration.storageReserveBytes
+            )
+            let staged = try acquirer.stageExternalFile(
+                at: sourceURL,
+                accessMode: accessMode,
+                fileManager: fileManager
+            )
+            try Task.checkCancellation()
+            return try await finalizeValidatedImport(
+                stagingURL: staged.stagingURL,
+                preferredName: staged.descriptor.preferredName
+            )
+        } catch let failure as DomainFailure {
+            throw failure
+        } catch let acquisitionError as IOExternalFileAcquisitionError {
+            throw mapExternalFileAcquisitionError(acquisitionError)
         } catch let storeError as IOFileStore.StoreError {
             throw mapStoreError(storeError)
         } catch is CancellationError {
@@ -232,24 +276,73 @@ public actor IOSAudioIOService: AudioImporting, AudioExporting {
     }
 
     private func finalizeValidatedImport(stagingURL: URL, preferredName: String) async throws -> LocalAudioAsset {
+        let route = referenceMediaPolicy.route(forPathExtension: stagingURL.pathExtension)
         do {
             let probe = try await probeMedia(at: stagingURL, requireDecodeSample: true)
-            try Task.checkCancellation()
-            let finalized = try fileStore.finalizeImport(
-                stagingFile: stagingURL,
-                preferredName: preferredName,
-                fileManager: fileManager
-            )
-            return LocalAudioAsset(
-                id: AssetID(),
-                relativePath: finalized.relativePath,
-                mediaKind: probe.kind,
-                durationSeconds: probe.durationSeconds
+            return try finalizeProbedImport(stagingURL: stagingURL, preferredName: preferredName, probe: probe)
+        } catch let failure as DomainFailure {
+            guard route == .nativeThenCompatibility, failure == .unsupportedMedia else {
+                fileStore.removeIfExists(stagingURL, fileManager: fileManager)
+                throw failure
+            }
+            return try await finalizeCompatibilityImport(
+                originalStagingURL: stagingURL,
+                preferredName: preferredName
             )
         } catch {
             fileStore.removeIfExists(stagingURL, fileManager: fileManager)
             throw error
         }
+    }
+
+    private func finalizeCompatibilityImport(
+        originalStagingURL: URL,
+        preferredName: String
+    ) async throws -> LocalAudioAsset {
+        let converted: URL
+        do {
+            converted = try await compatibilityStaging.decodeToCanonicalWAV(
+                stagedSourceURL: originalStagingURL,
+                decoder: compatibilityDecoder,
+                fileManager: fileManager
+            )
+        } catch is CancellationError {
+            fileStore.removeIfExists(originalStagingURL, fileManager: fileManager)
+            throw DomainFailure.cancelled
+        } catch let compatibilityError as IOCompatibilityDecodeStagingError {
+            fileStore.removeIfExists(originalStagingURL, fileManager: fileManager)
+            throw mapCompatibilityDecodeError(compatibilityError)
+        } catch {
+            fileStore.removeIfExists(originalStagingURL, fileManager: fileManager)
+            throw DomainFailure.processingFailed(code: "COMPATIBILITY_DECODE_FAILED", retryable: false)
+        }
+
+        fileStore.removeIfExists(originalStagingURL, fileManager: fileManager)
+        do {
+            let probe = try await probeMedia(at: converted, requireDecodeSample: true)
+            return try finalizeProbedImport(stagingURL: converted, preferredName: preferredName, probe: probe)
+        } catch {
+            fileStore.removeIfExists(converted, fileManager: fileManager)
+            throw error
+        }
+    }
+
+    private func finalizeProbedImport(
+        stagingURL: URL,
+        preferredName: String,
+        probe: MediaProbe
+    ) throws -> LocalAudioAsset {
+        let finalized = try fileStore.finalizeImport(
+            stagingFile: stagingURL,
+            preferredName: preferredName,
+            fileManager: fileManager
+        )
+        return LocalAudioAsset(
+            id: AssetID(),
+            relativePath: finalized.relativePath,
+            mediaKind: probe.kind,
+            durationSeconds: probe.durationSeconds
+        )
     }
 
     private func probeMedia(at url: URL, requireDecodeSample: Bool) async throws -> MediaProbe {
@@ -381,6 +474,40 @@ public actor IOSAudioIOService: AudioImporting, AudioExporting {
             return .insufficientStorage
         case .fileOperationFailed(let code):
             return .processingFailed(code: code, retryable: true)
+        }
+    }
+
+    private func mapExternalFileAcquisitionError(_ error: IOExternalFileAcquisitionError) -> DomainFailure {
+        switch error {
+        case .invalidSourceURL:
+            return .processingFailed(code: "EXTERNAL_SOURCE_URL_INVALID", retryable: false)
+        case .sourceInsideAppRoot:
+            return .processingFailed(code: "EXTERNAL_SOURCE_OWNERSHIP_CONFLICT", retryable: false)
+        case .sourceMissing:
+            return .corruptMedia
+        case .sourceNotRegularFile:
+            return .unsupportedMedia
+        case .sourceEmpty:
+            return .corruptMedia
+        case .sourceTooLarge:
+            return .processingFailed(code: "IMPORT_FILE_TOO_LARGE", retryable: false)
+        case .securityScopeDenied:
+            return .accessDenied
+        case .providerCoordinationFailed:
+            return .providerUnavailable
+        case .stagedSizeMismatch:
+            return .processingFailed(code: "EXTERNAL_STAGE_SIZE_MISMATCH", retryable: true)
+        }
+    }
+
+    private func mapCompatibilityDecodeError(_ error: IOCompatibilityDecodeStagingError) -> DomainFailure {
+        switch error {
+        case .decoderUnavailable:
+            return .processingFailed(code: "WMA_COMPATIBILITY_DECODER_UNAVAILABLE", retryable: false)
+        case .decoderFailed:
+            return .processingFailed(code: "WMA_COMPATIBILITY_DECODE_FAILED", retryable: false)
+        case .outputMissing, .outputNotRegularFile, .outputEmpty:
+            return .processingFailed(code: "WMA_COMPATIBILITY_OUTPUT_INVALID", retryable: false)
         }
     }
 
