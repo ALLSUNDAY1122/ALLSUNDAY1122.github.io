@@ -9,6 +9,7 @@ required_package_tokens = [
     'name: "RuntimeComposition"',
     '"ProductionScannerRuntime.swift"',
     '"GoldenHardenedScannerRuntime.swift"',
+    'name: "HQGoldenSupport"',
     'name: "scanner-hq-golden-runner"',
 ]
 for token in required_package_tokens:
@@ -16,10 +17,15 @@ for token in required_package_tokens:
 
 assert '.macOS(.v14)' in product_flow, "ProductFlow must support the macOS HQ runner"
 assert 'GoldenHardenedScannerRuntime.makeDriver()' in runner, "HQ runner must execute the same Golden-hardened product driver"
-assert 'formalGoldenVerdict: "PENDING_REFERENCE_METRIC_EVALUATION"' in runner, "runner must not issue Formal Golden PASS before reference metrics"
+assert 'ReferenceFeatureMatcher.compare' in runner, "runner must compare output pages with the reference PDF"
+assert 'ReferenceAlignment.evaluate' in runner, "runner must compute reference metrics when a calibrated threshold is supplied"
+assert 'PENDING_REFERENCE_THRESHOLD_CALIBRATION' in runner, "runner must not invent an uncalibrated match threshold"
+assert 'REFERENCE_METRICS_PASS_OTHER_GOLDEN_GATES_PENDING' in runner, "reference metrics alone must not issue Formal Golden PASS"
+assert 'REFERENCE_METRICS_FAIL' in runner, "reference metric failure must remain explicit"
 for output in ["pages", "text", "book_searchable.pdf", "book.md", "book.txt", "manifest.json"]:
     assert f'"{output}"' in runner, f"BookPackage evidence missing required output: {output}"
-for field in ["observedVideoSHA256", "observedPDFSHA256", "referencePDFPageCount", "stageEvidence"]:
+for field in ["observedVideoSHA256", "observedPDFSHA256", "referencePDFPageCount", "stageEvidence", "referenceMatches", "referenceMetrics"]:
     assert field in runner, f"runner evidence missing: {field}"
+assert 'videoURL.path' not in runner.split('HQGoldenExecutionReport(', 1)[0], "report schema should not persist a raw local video path"
 
 print("HQ_GOLDEN_RUNNER_CONTRACT_PASS")
