@@ -17,23 +17,31 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Configure monthly 200 and lifetime 800
+      - name: Fix lifetime JPN price to 800
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/app2_005_hm1_lifetime_price_fix.py
+      - name: Configure monthly 200 and lifetime 800 metadata
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: python scripts/app2_005_hm1_iap_v2_runner.py
-      - name: Persist IAP result
-        if: always() && hashFiles('automation/app2-005-hm1-iap-result.json') != ''
+      - name: Persist IAP results
+        if: always()
         run: |
-          cp automation/app2-005-hm1-iap-result.json /tmp/app2-005-hm1-iap-result.json
+          test -f automation/app2-005-hm1-price-fix-result.json && cp automation/app2-005-hm1-price-fix-result.json /tmp/app2-005-hm1-price-fix-result.json || true
+          test -f automation/app2-005-hm1-iap-result.json && cp automation/app2-005-hm1-iap-result.json /tmp/app2-005-hm1-iap-result.json || true
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for attempt in 1 2 3; do
             git fetch origin main
             git reset --hard origin/main
-            cp /tmp/app2-005-hm1-iap-result.json automation/app2-005-hm1-iap-result.json
-            git add automation/app2-005-hm1-iap-result.json
+            test -f /tmp/app2-005-hm1-price-fix-result.json && cp /tmp/app2-005-hm1-price-fix-result.json automation/app2-005-hm1-price-fix-result.json || true
+            test -f /tmp/app2-005-hm1-iap-result.json && cp /tmp/app2-005-hm1-iap-result.json automation/app2-005-hm1-iap-result.json || true
+            git add automation/app2-005-hm1-price-fix-result.json automation/app2-005-hm1-iap-result.json 2>/dev/null || true
             git diff --cached --quiet || git commit -m "Persist APP2-005 HM1 IAP configuration result"
             if git push origin HEAD:main; then exit 0; fi
             sleep 2
