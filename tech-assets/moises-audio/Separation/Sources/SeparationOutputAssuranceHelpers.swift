@@ -1,7 +1,7 @@
 import Foundation
 
 extension SeparationOutputAssurance {
-    func validateManifest(_ manifest: SeparationProviderRunManifest) throws {
+    func validateManifest(_ manifest: SeparationProviderRunManifest, requireFreshOutputURLs: Bool = true) throws {
         guard manifest.schemaVersion == 1 else { throw failure("SEP_RUN_SCHEMA_UNSUPPORTED", false) }
         for value in [manifest.providerID, manifest.providerKind, manifest.modelName, manifest.modelVersion, manifest.qualityProfile] {
             guard !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw failure("SEP_RUN_METADATA_MISSING", false) }
@@ -27,7 +27,7 @@ extension SeparationOutputAssurance {
             guard abs(declaredDuration - output.durationSeconds) <= durationToleranceSeconds else { throw failure("SEP_OUTPUT_DECLARED_DURATION_INCONSISTENT", false) }
             if let count = output.expectedByteCount { guard count > 0 else { throw failure("SEP_OUTPUT_BYTE_COUNT_INVALID", false) } }
             if let hash = output.expectedSHA256 { guard isSHA256(hash) else { throw failure("SEP_OUTPUT_HASH_INVALID", false) } }
-            try ensureNotExpired(output)
+            if requireFreshOutputURLs { try ensureNotExpired(output) }
         }
     }
 
