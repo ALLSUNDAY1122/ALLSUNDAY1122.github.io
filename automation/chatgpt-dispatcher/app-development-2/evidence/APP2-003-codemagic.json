@@ -1,58 +1,11 @@
 {
-  "request_id": "app2-003-build4-diagnostic2-inspect-20260823-2246",
-  "action": "inspect_build",
+  "request_id": "app2-003-build4-diagnostic2-log-20260823-2247",
+  "action": "fetch_diagnostic",
   "repository": "ALLSUNDAY1122/yoru-no-shoka",
   "workflow_id": "yoru-ios",
   "branch": "main",
-  "ok": true,
   "build_id": "6a8af95fa6e7f745ad32542d",
+  "ok": true,
   "status": "failed",
-  "build_details": {
-    "id": "6a8af95fa6e7f745ad32542d",
-    "app_id": "6a8af6e5a5c86907b00c2efd",
-    "workflow": {
-      "id": "yoru-ios",
-      "source": "file",
-      "name": "夜の書架 - Build 4 Diagnostic"
-    },
-    "instance_type": "mac_mini_m2",
-    "status": "failed",
-    "index": 4,
-    "artifacts": [
-      {
-        "name": "yoru-no-shoka_4_artifacts.zip",
-        "size_in_bytes": 1134,
-        "type": "bundle",
-        "short_lived_download_url": "https://api.codemagic.io//artifacts/.eJwVwduSQzAAANB_6bsZiUt42AcJVXGbVVL1YlY7hEVUS8vX7-w5h8b6hx_tOtS4uOCFmcvby_ZYIxOql8o4PtVBAe5pzcNbt4qyLjuYWZohAocagWx3UWzD1OkEUWbUnNLXgrOFwUs4c5mrZlq2z2pMWpXqWzY38xlRkZ23AQxRNUgP95GzZffOb8nf6SQh-r5Dpac8Q5Yl8z0tbMJLYNLV6uaezd9R94KVip4fIkItj00QlJHvJg4gdxfn46tted433tYDnW1BXBSG7n8SsmoAp30tL7BjtGYTnHyfc-SU3FXwMY97MSpsIqerAzGkhTeJKpySDZW5U_-a2yfkmhivu3e78R8m2U34dfgD-EJoGQ.TUFaXIhxpHTir3IkVbSWyAQvO4g",
-        "version_code": null,
-        "version_name": null
-      }
-    ],
-    "labels": [],
-    "release_notes": [],
-    "created_at": "2026-08-23T13:45:03.804000Z",
-    "config": {
-      "flutter_mode": null,
-      "shorebird_mode": null,
-      "flutter_version": null,
-      "xcode_version": "latest",
-      "platforms": []
-    },
-    "remote_access_enabled": false,
-    "commit": {
-      "hash": "29cf649ea4e80a5ba451f4b2daa703c4e757250a",
-      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
-      "author_name": "ALLSUNDAY1122",
-      "author_email": "kohei3615@gmail.com",
-      "message": "Route APP2-003 gateway to post-Corepack diagnostic",
-      "url": "https://github.com/ALLSUNDAY1122/yoru-no-shoka/commit/29cf649ea4e80a5ba451f4b2daa703c4e757250a"
-    },
-    "branch": "main",
-    "tag": null,
-    "pull_request": null,
-    "app_store_connect_status": null,
-    "build_inputs": {},
-    "started_at": "2026-08-23T13:45:14.898000Z",
-    "finished_at": "2026-08-23T13:45:51.619000Z"
-  }
+  "diagnostic_log": "=== environment ===\n/Users/builder/clone\nCM_BUILD_DIR=/Users/builder/clone\nv22.13.0\n10.9.2\n=== install pnpm without corepack ===\nnpm error code EEXIST\nnpm error path /usr/local/bin/pnpm\nnpm error EEXIST: file already exists\nnpm error File exists: /usr/local/bin/pnpm\nnpm error Remove the existing file and try again, or run npm\nnpm error with --force to overwrite files recklessly.\nnpm error A complete log of this run can be found in: /Users/builder/.npm/_logs/2026-08-23T13_45_48_262Z-debug-0.log\n/usr/local/lib/node_modules/corepack/dist/lib/corepack.cjs:21535\n  if (key == null || signature == null) throw new Error(`Cannot find matching keyid: ${JSON.stringify({ signatures, keys })}`);\n                                              ^\n\nError: Cannot find matching keyid: {\"signatures\":[{\"sig\":\"MEUCIAi3dSkrg4btOGMlTBrKFPJrnYaRLym1ylWVkKd/qndJAiEAwYA4HkbkWuBrpdEKkLr8a6zLSeG1WSR5aedGSnyLQ/E=\",\"keyid\":\"SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U\"}],\"keys\":[{\"expires\":null,\"keyid\":\"SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA\",\"keytype\":\"ecdsa-sha2-nistp256\",\"scheme\":\"ecdsa-sha2-nistp256\",\"key\":\"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE1Olb3zMAFFxXKHiIkQO5cJ3Yhl5i6UPp+IhuteBJbuHcA5UogKo0EWtlWwW6KSaKoTNEYL7JlCQiVnkhBktUgg==\"}]}\n    at verifySignature (/usr/local/lib/node_modules/corepack/dist/lib/corepack.cjs:21535:47)\n    at fetchLatestStableVersion (/usr/local/lib/node_modules/corepack/dist/lib/corepack.cjs:21553:5)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async fetchLatestStableVersion2 (/usr/local/lib/node_modules/corepack/dist/lib/corepack.cjs:21672:14)\n    at async Engine.getDefaultVersion (/usr/local/lib/node_modules/corepack/dist/lib/corepack.cjs:22298:23)\n    at async Engine.executePackageManagerRequest (/usr/local/lib/node_modules/corepack/dist/lib/corepack.cjs:22396:47)\n    at async Object.runMain (/usr/local/lib/node_modules/corepack/dist/lib/corepack.cjs:23102:5)\n\nNode.js v22.13.0\nactivate_status=1\n"
 }
