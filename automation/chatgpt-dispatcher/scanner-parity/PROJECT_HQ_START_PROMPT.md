@@ -59,7 +59,11 @@ Workerを固定部署にしない。各WorkerはQueueのREADY Taskを1件だけa
 - `本 2026-08-23 0842.pdf`
   - SHA-256 `7c75889931949df96c0c1f9fba6fdef4e670a196675418b184444120a1d50567`
 
-原本はGitHubへ転載しない。未添付ならfixture実装は進めるがGolden PASSは付けない。
+原本はGitHubへ転載しない。未添付でもWorkerの実装・fixture test・Evidence作成は継続する。Golden Dataset未取得、SHA mismatch、Golden実測未完了だけを理由にWorker Taskを `BLOCKED_HUMAN` にしてはならない。
+
+非Golden acceptanceが完了したTaskは `golden_status=PENDING_HQ_GOLDEN` を残して `INTEGRATION_READY` へ送る。正式なGolden Dataset検証はWorkerごとではなく、対象Taskをintegrationへ統合した後の専用 `HQ_GOLDEN_GATE` で一気通貫に実施する。
+
+Golden SHA mismatchの調査、canonical hash採否、再添付要求、正式PASS/FAIL判定はHQ所有とする。Workerはcanonical hashを変更しない。
 
 【品質目標】
 - page recall >= 99%
@@ -92,9 +96,11 @@ API/CIで可能な工程はread→canonical照合→write→read-back。
 2. integration HEADを再取得。
 3. Queueのintegration_head / baseline_shaと一致確認。
 4. Worker contract / Shared contract / migration handoffを読む。
-5. Golden Datasetの添付とSHAを確認。
+5. Golden Datasetの添付とSHAを確認する。ただし未取得/SHA mismatchはWorker停止条件にしない。
 6. Queue claim状況を確認。
-7. 問題なければWorker 1〜4の起動を許可し、HQ自身も統合・Parity・Release Gate管理を開始する。
+7. `INTEGRATION_READY` を統合し、Queueへ次の安全なREADY Taskを補充してWorker PoolのMacro Loopを継続する。
+8. Golden正式検証は統合後の `HQ_GOLDEN_GATE` へ集約する。
+9. 問題なければWorker 1〜4の起動を許可し、HQ自身も統合・Parity・Privacy・Release Gate管理を開始する。
 
 真正な人間判断が不要な範囲は質問せずMacro Loopで進めてください。
 
