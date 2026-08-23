@@ -8,8 +8,8 @@ public struct ScannerParityApp: App {
     private let reviewWorkflowFactory: @Sendable ([ProductReviewItem]) -> any ProductReviewWorkflow
 
     public init(
-        driver: any ProductPipelineDriving = BoundProductPipelineDriver(bindings: []),
-        reviewWorkflowFactory: @escaping @Sendable ([ProductReviewItem]) -> any ProductReviewWorkflow = { InMemoryProductReviewWorkflow(items: $0) }
+        driver: any ProductPipelineDriving = ProductionScannerRuntime.makeDriver(),
+        reviewWorkflowFactory: @escaping @Sendable ([ProductReviewItem]) -> any ProductReviewWorkflow = { RecoveryProductReviewWorkflow(items: $0) }
     ) {
         self.driver = driver
         self.reviewWorkflowFactory = reviewWorkflowFactory
