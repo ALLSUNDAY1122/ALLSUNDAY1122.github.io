@@ -1,0 +1,83 @@
+{
+  "wave_id": "L3-AW18",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_INTERRUPTION_LIFECYCLE_STATE_GATE_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "selected_xcode_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "moises_differential": false
+  },
+  "implementation": [
+    "outer product lifecycle gate around AW17 while preserving AW17 as the only Playback-token authority",
+    "idle/beginning/active/ending/endedRecoveryRequired/resuming/poisoned interruption phases",
+    "ordinary product commands blocked before AW17 and before Playback generation while interruption lifecycle is non-idle",
+    "pause during interruption consumes no token and suppresses automatic resume",
+    "automatic resume requires both resolved pre-interruption playing intent and OS shouldResume=true",
+    "monotonic playing-intent order serial waits for older already-started play-state mutations before resume eligibility is captured",
+    "lifecycle revision makes older interruption-end/resume completion stale after a newer interruption event",
+    "pause while automatic-resume play is already in flight triggers compensating AW17 pause after that play completes",
+    "AW17 recoveryBlocked is recovered before accepting interruption boundaries when possible",
+    "failed interruption-end generation authority enters endedRecoveryRequired and blocks normal commands until explicit retry",
+    "episode/lifecycle/intent-order overflow paths fail closed"
+  ],
+  "portable_validation": {
+    "status": "PASS",
+    "deterministic_probe": "AW18 PASS generations=33 routes=33 phase=idle",
+    "active_interruption_seek_tempo_pre_token_block": true,
+    "pause_during_interruption_suppresses_resume_without_token": true,
+    "os_should_resume_false_never_auto_resumes": true,
+    "os_should_resume_true_requires_armed_playing_intent": true,
+    "begin_waits_for_older_in_flight_play_before_resume_capture": true,
+    "pause_during_in_flight_resume_causes_compensating_pause": true,
+    "newer_interruption_stales_older_end_resume_continuation": true,
+    "failed_end_boundary_enters_ended_recovery_required": true,
+    "ended_recovery_required_blocks_normal_commands_pre_token": true,
+    "explicit_end_recovery_retry_reopens_lifecycle": true,
+    "preexisting_aw17_recovery_block_is_recovered_before_boundary": true
+  },
+  "stress": {
+    "cycles": 50000,
+    "blocked_seek_tempo_attempts": 100000,
+    "blocked_attempts_consumed_playback_token": 0,
+    "pause_resume_suppressions": 10000,
+    "automatic_resumes": 6667,
+    "final_playback_generation": 123334,
+    "final_phase": "idle",
+    "state_leaks": 0,
+    "status": "PASS"
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "cycles_per_round": 2000,
+    "median_ms": 38.587,
+    "p95_ms": 57.592,
+    "max_ms": 60.295,
+    "checksum": 150210,
+    "scope": "exact AW18 lifecycle/order source atop interface-compatible lightweight AW17/Playback/coordinator types; excludes AVAudioEngine, AudioUnit, actual AVAudioSession delivery, real Playback/DSP backend cost, device/file IO, real audio and current-Moises execution"
+  },
+  "repository_validation": {
+    "production_lifecycle_gate_authored": true,
+    "full_source_self_test_authored": true,
+    "full_source_benchmark_authored": true,
+    "swift6_async_autoclosure_assertions_hardened": true,
+    "selected_integrated_execution_pending": true
+  },
+  "hq_integration_requirements": [
+    "instantiate one project-scoped Lane3InterruptionLifecycleGate around the selected project-scoped AW17 authority",
+    "route all product token-producing Playback/DSP controls through the interruption gate once selected; do not bypass with direct AW17 or RescheduleFencedPlaybackBackend token calls",
+    "map iOS AVAudioSession interruption began to submitInterruptionBegan",
+    "pass the actual AVAudioSession interruption-ended shouldResume bit to submitInterruptionEnded(shouldResume:)",
+    "allow user pause during interruption through the gate to suppress auto-resume without creating a token",
+    "when phase is endedRecoveryRequired use retryEndedInterruptionRecovery before ordinary commands",
+    "validate real phone/Siri/route interruption timing and audible restart behavior on physical iPhone"
+  ],
+  "device_timing_claimed": false,
+  "av_audio_session_runtime_claimed": false,
+  "audible_artifact_claimed": false,
+  "real_audio_claimed": false,
+  "standardized_perceptual_metric_claimed": false,
+  "parity_claimed": false
+}
