@@ -1,25 +1,58 @@
 {
-  "request_id": "app2-003-build4-diagnostic-start-20260823-2238",
-  "action": "build",
+  "request_id": "app2-003-build4-diagnostic-inspect-20260823-2239",
+  "action": "inspect_build",
   "repository": "ALLSUNDAY1122/yoru-no-shoka",
   "workflow_id": "yoru-ios",
   "branch": "main",
   "ok": true,
-  "application_candidates": [
-    {
-      "id": "6a8af6e5a5c86907b00c2efd",
-      "name": "yoru-no-shoka",
-      "repositoryUrl": null,
-      "branches": [
-        "main",
-        "release/eas-build4-trigger",
-        "ui/pattern-c-paper-warm"
-      ]
-    }
-  ],
-  "resolved_app_id": "6a8af6e5a5c86907b00c2efd",
-  "app_id": "6a8af6e5a5c86907b00c2efd",
   "build_id": "6a8af82917854a18b19d8185",
-  "status": "started",
-  "build_url": "https://codemagic.io/app/6a8af6e5a5c86907b00c2efd/build/6a8af82917854a18b19d8185"
+  "status": "failed",
+  "build_details": {
+    "id": "6a8af82917854a18b19d8185",
+    "app_id": "6a8af6e5a5c86907b00c2efd",
+    "workflow": {
+      "id": "yoru-ios",
+      "source": "file",
+      "name": "夜の書架 - Build 4 Diagnostic"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "failed",
+    "index": 2,
+    "artifacts": [
+      {
+        "name": "yoru-no-shoka_2_artifacts.zip",
+        "size_in_bytes": 1168,
+        "type": "bundle",
+        "short_lived_download_url": "https://api.codemagic.io//artifacts/.eJwVwclygjAAANB_8Z4ZGpbCoQckKCFsUkXkwrAImrAZZJGv7_S9Xa3_27-e8-O8bV1_CZ3W31KXXB7IAqbXKlYeOiOkDtpcfxgzNROWAXUZPiY87YpTnosjvSI-yQeqBsdy69iLRzXm4lYPS0EOgyIl2X0JBX9ybAc-G9CsstVp148IkzMZXLudtdzyIwSkVjNt3-UGuBiqL1ImFTFLy69BnVnqPJECzGJhjH7fgK0CF_N93wYqKaOtSqHeeIVfx16Z56_MSzsD9G4lrfEUS9Xa6Ilw_vRyBMF4td9vrhCdvAvO6yibsIGnhlMIVyx-8nZWe7NlphitlQROVjDFGN0EdKdE-5VDHgVyyH52f4DGaaQ.TQvzJ1r6lTrRNZ_Ckbw2RdRLwAg",
+        "version_code": null,
+        "version_name": null
+      }
+    ],
+    "labels": [],
+    "release_notes": [],
+    "created_at": "2026-08-23T13:39:53.678000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "dd9abb8ea94ffc8e16a1013fd8bc718238c3c710",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "Temporarily route APP2-003 gateway to diagnostic workflow",
+      "url": "https://github.com/ALLSUNDAY1122/yoru-no-shoka/commit/dd9abb8ea94ffc8e16a1013fd8bc718238c3c710"
+    },
+    "branch": "main",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-08-23T13:40:03.048000Z",
+    "finished_at": "2026-08-23T13:40:30.885000Z"
+  }
 }
