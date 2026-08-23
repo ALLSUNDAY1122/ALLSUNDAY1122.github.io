@@ -26,9 +26,10 @@
 3. `READY` Taskをpriority順に確認し、dependency / baseline / integration_epoch / resource_locks / capability_tagsを満たすTaskを1件だけatomic claimする。
 4. claim成功後にQueueをread-backし、自分の `claimed_by / claim_token / claim_epoch` が現行winnerであることを確認する。
 5. `task/<task-id>/attempt-<claim_epoch>` の短命branchで、そのTaskのMacro Waveだけを進める。
-6. 調査→再利用候補のライセンス監査→実装→test→Golden Dataset評価→Evidenceまで、人間判断不要な範囲は質問せず進める。
-7. Task終了時はEvidenceを保存し、自分のTaskだけを `INTEGRATION_READY` または適切な `BLOCKED_*` に更新してread-backする。
-8. `MERGED / VERIFIED`、shared contract変更、integration promotionはHQの責任なので勝手に確定しない。
+6. 調査→再利用候補のライセンス監査→実装→test→監査→Evidenceまで、人間判断不要な範囲は質問せず進める。Golden Datasetが利用可能なら探索的評価を行ってよいが、正式Golden PASS/FAILは付けない。
+7. Golden Dataset未取得・SHA mismatch・Golden実測未完了だけを理由に `BLOCKED_HUMAN` へ遷移してはならない。非Golden acceptanceが完了したTaskは `golden_status=PENDING_HQ_GOLDEN` を残して `INTEGRATION_READY` へ送る。Golden正式検証とSHA mismatch解決はHQ所有である。
+8. Task終了時はEvidenceを保存し、自分のTaskだけを `INTEGRATION_READY` または真正な理由がある場合のみ適切な `BLOCKED_*` に更新してread-backする。
+9. `MERGED / VERIFIED`、shared contract変更、integration promotion、`HQ_GOLDEN_GATE` はHQの責任なので勝手に確定しない。
 
 【最終目的】
 動画で本を連続撮影・画面録画するだけで、完成ページ抽出、書籍向け画像補正、ページ完全性監査、日本語OCR、検索可能PDF、TXT/Markdownまで自動生成する。人間にも生成AIにも読みやすい実用品質を達成する。
