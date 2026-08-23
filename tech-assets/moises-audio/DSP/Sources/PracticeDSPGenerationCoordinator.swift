@@ -638,3 +638,272 @@ public actor PracticeDSPGenerationCoordinator {
 import AVFAudio
 extension AppleSampleAccurateClickExecutor: PracticeDSPClickScheduleInvalidating {}
 #endif
+
+public enum PracticeDSPSerializedCountInDisposition: String, Codable, Sendable {
+    case consumedAcceptedSchedule
+    case discardedAndInvalidated
+}
+
+public enum PracticeDSPSerializedCountInError: Error, Equatable, Sendable {
+    case noPendingCountIn
+    case staleAuthorization(
+        expectedGeneration: UInt64,
+        observedGeneration: UInt64,
+        expectedClicks: Int,
+        observedClicks: Int?
+    )
+    case consumeGenerationChanged(expected: UInt64, observed: UInt64)
+    case consumeDidNotClearPending(observedClicks: Int?)
+    case discardGenerationDidNotAdvance(previous: UInt64, observed: UInt64)
+    case discardDidNotClearPending(observedClicks: Int?)
+}
+
+public struct PracticeDSPSerializedCountInReceipt: Equatable, Codable, Sendable {
+    public let schemaVersion: Int
+    public let evidenceScope: String
+    public let operationSerial: UInt64
+    public let disposition: PracticeDSPSerializedCountInDisposition
+    public let previousClickGeneration: UInt64
+    public let committedClickGeneration: UInt64
+    public let acceptedSchedulePreserved: Bool
+    public let parityPromotionAllowed: Bool
+}
+
+public extension PracticeDSPGenerationCoordinator {
+    /// Consumes only the raw one-shot pending state after the click executor has already accepted the
+    /// replacement count-in schedule. The click generation deliberately does NOT advance here: an
+    /// advance plus node invalidation would erase the accepted count-in that this commit confirms.
+    /// Exact generation + click-count matching makes duplicate and stale authorization fail closed.
+    @discardableResult
+    func consumeScheduledCountIn(
+        expectedClickGeneration: UInt64,
+        expectedClicks: Int
+    ) async throws -> PracticeDSPSerializedCountInReceipt {
+        let serial = try beginOperation()
+        defer { operationInFlight = false }
+        guard !transportGate.isPoisoned else {
+            throw PracticeDSPGenerationCoordinatorError.coordinatorPoisoned
+        }
+        try rejectClickOnlyIfCancelled()
+
+        let before = try await controller.snapshot(projectID: projectID)
+        try rejectClickOnlyIfSuperseded(observedClickGeneration: nil)
+        try rejectClickOnlyIfCancelled()
+        guard let pending = before.pendingCountInClicks else {
+            throw PracticeDSPSerializedCountInError.noPendingCountIn
+        }
+        guard before.scheduleGeneration == expectedClickGeneration,
+              pending == expectedClicks else {
+            throw PracticeDSPSerializedCountInError.staleAuthorization(
+                expectedGeneration: expectedClickGeneration,
+                observedGeneration: before.scheduleGeneration,
+                expectedClicks: expectedClicks,
+                observedClicks: before.pendingCountInClicks
+            )
+        }
+
+        do {
+            // Point of no return for a schedule that the executor already accepted. Once this clear
+            // commits, Task cancellation must not re-arm the one-shot count-in.
+            try await controller.clearPendingCountIn(projectID: projectID)
+            let after = try await controller.snapshot(projectID: projectID)
+
+            if transportGate.isPoisoned {
+                try flushAcceptedCountInFailClosed(observedClickGeneration: after.scheduleGeneration)
+                throw PracticeDSPGenerationCoordinatorError.operationSuperseded
+            }
+            guard after.scheduleGeneration == expectedClickGeneration else {
+                let observed = after.scheduleGeneration
+                try flushAcceptedCountInFailClosed(observedClickGeneration: observed)
+                throw PracticeDSPSerializedCountInError.consumeGenerationChanged(
+                    expected: expectedClickGeneration,
+                    observed: observed
+                )
+            }
+            guard after.pendingCountInClicks == nil else {
+                try flushAcceptedCountInFailClosed(observedClickGeneration: after.scheduleGeneration)
+                throw PracticeDSPSerializedCountInError.consumeDidNotClearPending(
+                    observedClicks: after.pendingCountInClicks
+                )
+            }
+
+            return PracticeDSPSerializedCountInReceipt(
+                schemaVersion: 1,
+                evidenceScope: "LANE3_SERIALIZED_COUNTIN_CONSUME_DISCARD_NON_PARITY",
+                operationSerial: serial,
+                disposition: .consumedAcceptedSchedule,
+                previousClickGeneration: before.scheduleGeneration,
+                committedClickGeneration: after.scheduleGeneration,
+                acceptedSchedulePreserved: true,
+                parityPromotionAllowed: false
+            )
+        } catch {
+            if let serialized = error as? PracticeDSPSerializedCountInError {
+                throw serialized
+            }
+            if let coordinatorError = error as? PracticeDSPGenerationCoordinatorError {
+                throw coordinatorError
+            }
+            if error is CancellationError {
+                throw PracticeDSPGenerationCoordinatorError.operationCancelled
+            }
+            if (try? await controller.requiresBackendResynchronization(projectID: projectID)) == true {
+                transportGate.poisonObservedGenerations()
+            }
+            throw PracticeDSPGenerationCoordinatorError.dspMutationFailed(String(describing: error))
+        }
+    }
+
+    /// Interruption/cancellation boundary API. It snapshots the current pending count-in under the
+    /// coordinator's operation fence, then clears the raw pending state, advances click generation,
+    /// revokes combined replacement authority and invalidates the Apple/portable click queue.
+    /// Returns nil when there is no raw pending count-in to discard.
+    @discardableResult
+    func discardCurrentCountIn() async throws -> PracticeDSPSerializedCountInReceipt? {
+        let serial = try beginOperation()
+        defer { operationInFlight = false }
+        guard !transportGate.isPoisoned else {
+            throw PracticeDSPGenerationCoordinatorError.coordinatorPoisoned
+        }
+        try rejectClickOnlyIfCancelled()
+
+        let before = try await controller.snapshot(projectID: projectID)
+        try rejectClickOnlyIfSuperseded(observedClickGeneration: nil)
+        try rejectClickOnlyIfCancelled()
+        guard before.pendingCountInClicks != nil else { return nil }
+        return try await discardCountInAfterSnapshot(before: before, serial: serial)
+    }
+
+    /// Exact-authority variant used by race tests and callers that must prove they are discarding the
+    /// same one-shot arm rather than a newer replacement arm.
+    @discardableResult
+    func discardCountIn(
+        expectedClickGeneration: UInt64,
+        expectedClicks: Int
+    ) async throws -> PracticeDSPSerializedCountInReceipt {
+        let serial = try beginOperation()
+        defer { operationInFlight = false }
+        guard !transportGate.isPoisoned else {
+            throw PracticeDSPGenerationCoordinatorError.coordinatorPoisoned
+        }
+        try rejectClickOnlyIfCancelled()
+
+        let before = try await controller.snapshot(projectID: projectID)
+        try rejectClickOnlyIfSuperseded(observedClickGeneration: nil)
+        try rejectClickOnlyIfCancelled()
+        guard let pending = before.pendingCountInClicks else {
+            throw PracticeDSPSerializedCountInError.noPendingCountIn
+        }
+        guard before.scheduleGeneration == expectedClickGeneration,
+              pending == expectedClicks else {
+            throw PracticeDSPSerializedCountInError.staleAuthorization(
+                expectedGeneration: expectedClickGeneration,
+                observedGeneration: before.scheduleGeneration,
+                expectedClicks: expectedClicks,
+                observedClicks: before.pendingCountInClicks
+            )
+        }
+        return try await discardCountInAfterSnapshot(before: before, serial: serial)
+    }
+
+    private func discardCountInAfterSnapshot(
+        before: PracticeDSPState,
+        serial: UInt64
+    ) async throws -> PracticeDSPSerializedCountInReceipt {
+        var mutationStarted = false
+        var observedGeneration = before.scheduleGeneration
+        do {
+            mutationStarted = true
+            try await controller.clearPendingCountIn(projectID: projectID)
+            observedGeneration = try await controller.invalidateScheduledClicks(projectID: projectID)
+            let after = try await controller.snapshot(projectID: projectID)
+            observedGeneration = after.scheduleGeneration
+
+            guard after.pendingCountInClicks == nil else {
+                throw PracticeDSPSerializedCountInError.discardDidNotClearPending(
+                    observedClicks: after.pendingCountInClicks
+                )
+            }
+            guard after.scheduleGeneration > before.scheduleGeneration else {
+                throw PracticeDSPSerializedCountInError.discardGenerationDidNotAdvance(
+                    previous: before.scheduleGeneration,
+                    observed: after.scheduleGeneration
+                )
+            }
+
+            if transportGate.isPoisoned {
+                transportGate.poisonObservedGenerations(clickGeneration: after.scheduleGeneration)
+                try invalidateClickQueueFailClosed(to: after.scheduleGeneration)
+                throw PracticeDSPGenerationCoordinatorError.operationSuperseded
+            }
+
+            do {
+                try transportGate.revokeReplacementAuthorityAfterClickOnlyInvalidation(
+                    clickGeneration: after.scheduleGeneration
+                )
+            } catch {
+                transportGate.poisonObservedGenerations(clickGeneration: after.scheduleGeneration)
+                try invalidateClickQueueFailClosed(to: after.scheduleGeneration)
+                throw error
+            }
+
+            // Node invalidation is the discard commit point. Cancellation after mutation began does
+            // not skip this flush; leaving an old accepted count-in queued would be less safe.
+            try invalidateClickQueueFailClosed(to: after.scheduleGeneration)
+            return PracticeDSPSerializedCountInReceipt(
+                schemaVersion: 1,
+                evidenceScope: "LANE3_SERIALIZED_COUNTIN_CONSUME_DISCARD_NON_PARITY",
+                operationSerial: serial,
+                disposition: .discardedAndInvalidated,
+                previousClickGeneration: before.scheduleGeneration,
+                committedClickGeneration: after.scheduleGeneration,
+                acceptedSchedulePreserved: false,
+                parityPromotionAllowed: false
+            )
+        } catch {
+            if mutationStarted {
+                if let snapshot = try? await controller.snapshot(projectID: projectID) {
+                    observedGeneration = snapshot.scheduleGeneration
+                }
+                transportGate.poisonObservedGenerations(clickGeneration: observedGeneration)
+                do {
+                    // Equal-generation invalidation is intentionally allowed by the click execution
+                    // state, so generation-overflow can still flush the stale queue fail closed.
+                    try invalidateClickQueueFailClosed(to: observedGeneration)
+                } catch {
+                    throw PracticeDSPGenerationCoordinatorError.clickInvalidationFailed(
+                        String(describing: error)
+                    )
+                }
+            }
+            if let serialized = error as? PracticeDSPSerializedCountInError {
+                throw serialized
+            }
+            if let coordinatorError = error as? PracticeDSPGenerationCoordinatorError {
+                throw coordinatorError
+            }
+            if error is CancellationError {
+                throw PracticeDSPGenerationCoordinatorError.operationCancelled
+            }
+            throw PracticeDSPGenerationCoordinatorError.dspMutationFailed(String(describing: error))
+        }
+    }
+
+    private func flushAcceptedCountInFailClosed(
+        observedClickGeneration: UInt64
+    ) throws {
+        transportGate.poisonObservedGenerations(clickGeneration: observedClickGeneration)
+        try invalidateClickQueueFailClosed(to: observedClickGeneration)
+    }
+
+    private func invalidateClickQueueFailClosed(to generation: UInt64) throws {
+        do {
+            try clickInvalidator.invalidateSchedule(to: generation)
+        } catch {
+            transportGate.poisonObservedGenerations(clickGeneration: generation)
+            throw PracticeDSPGenerationCoordinatorError.clickInvalidationFailed(
+                String(describing: error)
+            )
+        }
+    }
+}

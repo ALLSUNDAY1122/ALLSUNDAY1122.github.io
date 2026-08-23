@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "provider-route-decision-evidence.schema.json",
+  "title": "Lane 1 E06 Provider Route Decision Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "tool_version", "evidence_kind", "evidence_state", "decision_state", "parity_claim", "decision_id", "policy", "routes", "decision_identity_sha256", "decision_lock_sha256", "fallback_order", "privacy", "parity_reason"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "tool_version": {"const": "L1-E06-v1"},
+    "evidence_kind": {"const": "PROVIDER_ROUTE_DECISION"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "decision_state": {"enum": ["PRIMARY_SELECTED", "MULTIPLE_ACCEPTABLE_ROUTES", "NO_ACCEPTABLE_ROUTE", "PENDING_EXTERNAL_EVIDENCE"]},
+    "parity_claim": {"const": "NONE"},
+    "decision_id": {"type": "string", "minLength": 1},
+    "policy": {"type": "object"},
+    "routes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["route_id", "decision", "eligible", "reasons", "metrics", "provider", "source_sha256", "source_locks", "score"],
+        "properties": {
+          "route_id": {"type": "string", "minLength": 1},
+          "decision": {"enum": ["ACCEPT_PRIMARY", "ACCEPT_WITH_LIMITS", "REJECT_QUALITY", "REJECT_COST", "REJECT_PRIVACY", "REJECT_CANCELLATION", "REJECT_LATENCY", "REJECT_RELIABILITY", "REJECT_CAPABILITY", "PENDING_EXTERNAL_EVIDENCE"]},
+          "eligible": {"type": "boolean"},
+          "reasons": {"type": "array", "items": {"type": "string"}},
+          "metrics": {"type": ["object", "null"]},
+          "provider": {"type": ["object", "null"]},
+          "source_sha256": {"type": "object"},
+          "source_locks": {"type": ["object", "null"]},
+          "score": {"type": ["number", "null"]}
+        }
+      }
+    },
+    "decision_identity_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "decision_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fallback_order": {"type": "array", "minItems": 3, "items": {"type": "string"}},
+    "privacy": {"type": "object"},
+    "parity_reason": {"type": "string", "minLength": 1}
+  }
+}

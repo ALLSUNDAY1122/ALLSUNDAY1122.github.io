@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "live-processing-recovery-plan.schema.json",
+  "title": "Lane 1 E05 Live Processing Recovery Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "evidence_state", "recovery_campaign_id", "scenarios"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "recovery_campaign_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+    "scenarios": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scenario_id", "scenario_kind"],
+        "properties": {
+          "scenario_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+          "scenario_kind": {
+            "enum": [
+              "NETWORK_INTERRUPTION",
+              "CANCEL_UPLOAD",
+              "CANCEL_SEPARATING",
+              "CANCEL_FINALIZING",
+              "AMBIGUOUS_CREATE_RETRY",
+              "RELAUNCH",
+              "OUTPUT_EXPIRY",
+              "RATE_LIMIT",
+              "LONG_TRACK",
+              "STORAGE_PRESSURE"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
