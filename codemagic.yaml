@@ -110,3 +110,52 @@ workflows:
         auth: integration
         submit_to_testflight: false
         submit_to_app_store: false
+
+  otsu4-asc-readback:
+    name: 危険物乙4 - TestFlight Build 93 readback
+    max_build_duration: 15
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      vars:
+        APP_STORE_APPLE_ID: '6799755566'
+        EXPECTED_BUILD: '93'
+      xcode: latest
+    scripts:
+      - name: Wait for Build 93 to appear in TestFlight
+        script: |
+          set -euo pipefail
+          latest=""
+          for attempt in $(seq 1 20); do
+            latest="$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/tmp/otsu4-asc-error.log || true)"
+            echo "attempt=$attempt latest=$latest expected=$EXPECTED_BUILD"
+            if [[ "$latest" =~ ^[0-9]+$ ]] && (( latest >= EXPECTED_BUILD )); then
+              python3 - "$latest" "$EXPECTED_BUILD" <<'PY'
+          import json,sys
+          latest=int(sys.argv[1]); expected=int(sys.argv[2])
+          payload={
+            'appAppleId':'6799755566',
+            'version':'1.0.0',
+            'expectedBuild':expected,
+            'latestTestFlightBuild':latest,
+            'build93Visible':latest >= expected
+          }
+          open('asc-readback.json','w',encoding='utf-8').write(json.dumps(payload,ensure_ascii=False,indent=2))
+          print('PASS: TestFlight latest build', latest)
+          PY
+              exit 0
+            fi
+            if [ -s /tmp/otsu4-asc-error.log ]; then cat /tmp/otsu4-asc-error.log; fi
+            sleep 30
+          done
+          python3 - "$latest" "$EXPECTED_BUILD" <<'PY'
+          import json,sys
+          latest=sys.argv[1]; expected=int(sys.argv[2])
+          payload={'appAppleId':'6799755566','version':'1.0.0','expectedBuild':expected,'latestTestFlightBuild':latest or None,'build93Visible':False}
+          open('asc-readback.json','w',encoding='utf-8').write(json.dumps(payload,ensure_ascii=False,indent=2))
+          PY
+          echo "Build 93 did not appear within the polling window" >&2
+          exit 1
+    artifacts:
+      - asc-readback.json
