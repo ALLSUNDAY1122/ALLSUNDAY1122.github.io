@@ -1,17 +1,20 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "project": "moises-equivalence",
   "assignment_epoch": 2,
-  "operating_model": "FOUR_INDEPENDENT_LANES_LATE_INTEGRATION",
+  "planning_revision": 4,
+  "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "lane_plan": "automation/chatgpt-dispatcher/moises-equivalence/lane-plan-v3.json",
-  "allocation_rule": "Four exclusive lanes run independently against one frozen Shared/App contract snapshot. Workers do not wait for other lanes or HQ release between macro bundles. HQ integrates at checkpoints later.",
+  "allocation_rule": "Four exclusive lanes run independently against one frozen Shared/App contract snapshot. HQ fixes ownership boundaries; each Worker creates its own next lane-local Macro Wave from current gaps and PARITY needs.",
   "macro_rule": {
-    "one_next_equals": "one macro bundle",
+    "one_next_equals": "one worker-self-planned macro wave",
     "target_work_size": "approximately 25-40 minutes equivalent meaningful work",
-    "minimum_preloaded_bundles": 4,
+    "hq_preloads_or_replenishes_tasks": false,
+    "worker_replans_every_next": true,
     "worker_auto_advance": true,
-    "hq_release_between_bundles": false,
-    "integration_after_each_bundle": false
+    "hq_release_between_waves": false,
+    "integration_after_each_wave": false,
+    "finite_backlog_exhaustion_is_not_a_stop_condition": true
   },
   "global_hq_owned": [
     "automation/chatgpt-dispatcher/moises-equivalence/queue.json",
@@ -31,7 +34,7 @@
       "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-1.json",
       "owned_resources": ["source-separation-model", "processing-lifecycle"],
       "write_scope": ["tech-assets/moises-audio/Separation/**", "tech-assets/moises-audio/Processing/**"],
-      "macro_sequence": ["L1-M01", "L1-M02", "L1-M03", "L1-M04"]
+      "planning_mode": "WORKER_AUTONOMOUS"
     },
     {
       "lane_id": "LANE-2-IO-LIBRARY",
@@ -41,7 +44,7 @@
       "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-2.json",
       "owned_resources": ["import-export", "library-persistence"],
       "write_scope": ["tech-assets/moises-audio/IO/**", "tech-assets/moises-audio/Library/**"],
-      "macro_sequence": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"]
+      "planning_mode": "WORKER_AUTONOMOUS"
     },
     {
       "lane_id": "LANE-3-PLAYBACK-DSP",
@@ -51,7 +54,7 @@
       "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-3.json",
       "owned_resources": ["audio-playback-engine", "time-pitch-dsp"],
       "write_scope": ["tech-assets/moises-audio/Playback/**", "tech-assets/moises-audio/DSP/**"],
-      "macro_sequence": ["L3-M01", "L3-M02", "L3-M03", "L3-M04"]
+      "planning_mode": "WORKER_AUTONOMOUS"
     },
     {
       "lane_id": "LANE-4-IOS-ANALYSIS",
@@ -61,23 +64,22 @@
       "status_file": "automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-4.json",
       "owned_resources": ["music-analysis-engine", "build-harness", "ios-platform"],
       "write_scope": ["tech-assets/moises-audio/Analysis/**", "tech-assets/moises-audio/Package.swift", "tech-assets/moises-audio/Tests/**", "tech-assets/moises-audio/iOS/**"],
-      "macro_sequence": ["L4-M01", "L4-M02", "L4-M03", "L4-M04"]
+      "planning_mode": "WORKER_AUTONOMOUS"
     }
   ],
   "lane_execution_rules": [
-    "At epoch-2 start each Worker reads the latest integration Shared/App contracts and records the contract SHA.",
-    "If the existing work branch has no unintegrated owned-scope commits, it may safely sync to latest integration. If unintegrated owned-scope commits exist, they must be preserved; destructive reset/force update is forbidden and the existing work is carried into the first applicable Macro Bundle.",
-    "After epoch contract capture, normal integration-branch movement in other lanes is ignored until lane checkpoint; do not rebase on unrelated changes.",
-    "On each user '次', execute exactly the next incomplete macro bundle in lane-plan-v3.json through implementation, tests and durable evidence.",
-    "Do not stop because an internal subtask finished. Stop only when the macro bundle done_when is met or a hard blocker/ownership conflict exists.",
-    "When a bundle finishes, record it in the Worker status file and immediately nominate the next bundle; HQ approval is not required.",
-    "If one bundle is externally blocked, continue the next preloaded bundle that does not require that external input while staying inside the same lane.",
-    "Worker-to-Worker code dependencies are deferred to HQ late integration. A Worker must not modify another lane to make its own bundle pass."
+    "At each user '次', the Worker reads its current branch/status/PARITY and chooses the highest-value lane-local work itself.",
+    "The Worker defines a 25-40 minute-equivalent goal/rationale/done_when and executes it in the same response; planning alone is not a completed wave.",
+    "Old M01-M04 bundle IDs are historical bootstrap records only and are not a finite task source.",
+    "No preloaded task, no HQ replenishment, no READY queue item and another Worker being unfinished are all invalid stop reasons.",
+    "If one area is externally blocked, the Worker must continue another meaningful lane-local implementation, hardening or evidence-preparation area when one exists.",
+    "Worker-to-Worker code dependencies are deferred to HQ late integration. A Worker must not modify another lane to make its own work pass.",
+    "The Worker may stop only for a genuine external/human gate after all meaningful lane-local preparation is exhausted, a required frozen Shared/App contract change, an ownership boundary, or unsafe/impossible operation."
   ],
   "integration_rules": [
-    "HQ does not merge after every macro bundle.",
-    "Default checkpoint is after multiple completed bundles or when a lane reaches a coherent integration milestone.",
-    "HQ performs semantic merge, cross-lane compile, device validation and PARITY judgment later.",
-    "Before the next checkpoint is consumed, HQ preloads the next set of at least four macro bundles per active lane so task starvation cannot recur."
+    "HQ does not merge after every self-planned Macro Wave.",
+    "HQ integrates when a coherent checkpoint has integration value or a cross-lane/contract gate requires it.",
+    "HQ performs semantic merge, cross-lane compile, device/real-audio validation and PARITY judgment.",
+    "After integration HQ updates canonical contracts/status/PARITY; HQ does not author the next normal lane-local backlog."
   ]
 }
