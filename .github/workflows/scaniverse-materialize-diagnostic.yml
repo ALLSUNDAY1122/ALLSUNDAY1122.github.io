@@ -1,0 +1,57 @@
+name: Scaniverse materialize diagnostic
+
+on:
+  push:
+    branches:
+      - feature/splat-native-ios-poc
+    paths:
+      - '.github/scaniverse-materialize-diagnostic-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-native-ios-poc
+          fetch-depth: 0
+      - name: Run patch and always persist result
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import traceback
+
+          evidence = Path('splat-native-ios/evidence/viewer-edit-output-materialization-run.txt')
+          workflow = Path('.github/workflows/scaniverse-materialize-viewer-edits.yml').read_text(encoding='utf-8')
+          start = "          python3 - <<'PY'\n"
+          end = "\n          PY\n\n          git diff --check"
+          try:
+              if start not in workflow or end not in workflow:
+                  raise RuntimeError('canonical patch body markers not found')
+              body = workflow.split(start, 1)[1].split(end, 1)[0]
+              script_lines = [line[10:] if line.startswith('          ') else line for line in body.splitlines()]
+              script = '\n'.join(script_lines) + '\n'
+              compile(script, 'scaniverse-materialize-viewer-edits', 'exec')
+              exec(compile(script, 'scaniverse-materialize-viewer-edits', 'exec'), {})
+              evidence.write_text('SUCCESS\ncanonical patch executed\n', encoding='utf-8')
+          except Exception:
+              evidence.write_text('FAILURE\n' + traceback.format_exc(), encoding='utf-8')
+          PY
+          git diff --check || true
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if grep -q 'enum SplatPersistedEditMaterializer' splat-native-ios/SplatNative/SplatExportService.swift; then
+            git add splat-native-ios/SplatNative/SplatExportService.swift \
+                    splat-native-ios/SplatNative/SplatVideoExporter.swift \
+                    splat-native-ios/SplatNativeTests/SplatExportServiceTests.swift \
+                    splat-native-ios/evidence/viewer-edit-output-materialization-run.txt
+            git commit -m 'fix(scaniverse): materialize viewer edits in shared outputs'
+          else
+            git add splat-native-ios/evidence/viewer-edit-output-materialization-run.txt
+            git commit -m 'evidence(scaniverse): capture edit parity patch failure'
+          fi
+          git push origin HEAD:feature/splat-native-ios-poc
