@@ -20,7 +20,7 @@ permissions:
 jobs:
   apple-sdk-compile:
     runs-on: macos-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,6 +31,9 @@ jobs:
       - name: Compile Apple adapters with iPhoneOS SDK
         run: bash scanner-parity/AppleValidation/run-apple-sdk-compile.sh "$RUNNER_TEMP/scanner-parity-apple-validation"
 
+      - name: Compile final product modules and run release gates
+        run: bash scanner-parity/Tests/AppShell/run-apple-product-compile.sh "$RUNNER_TEMP/scanner-parity-product-apple"
+
       - name: Upload validation evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -39,4 +42,6 @@ jobs:
           path: |
             ${{ runner.temp }}/scanner-parity-apple-validation/report.json
             ${{ runner.temp }}/scanner-parity-apple-validation/compile.log
+            ${{ runner.temp }}/scanner-parity-product-apple/report.json
+            ${{ runner.temp }}/scanner-parity-product-apple/compile.log
           if-no-files-found: warn
