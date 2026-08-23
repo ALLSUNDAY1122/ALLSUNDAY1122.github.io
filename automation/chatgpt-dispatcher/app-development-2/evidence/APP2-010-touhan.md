@@ -1,9 +1,9 @@
-# APP2-010｜登録販売者｜App record反映とTestFlight準備
+# APP2-010｜登録販売者｜360問品質改稿後 Internal TestFlight 受入
 
 - Worker: `TOUHAN`
-- Session: `登録販売者③`
-- Result: `READY`
-- Date: `2026-08-20 JST`
+- Session: `登録販売者④`
+- Result: `HUMAN_REQUIRED`
+- Date: `2026-08-23 JST`
 - Repository: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
 - App Store review submission: **NOT PERFORMED / PROHIBITED**
 - External TestFlight Beta Review: **NOT PERFORMED / PROHIBITED**
@@ -15,105 +15,94 @@
 - Apple Team ID: `MN3D2ZM44N`
 - Version: `1.0.0`
 - Codemagic app id: `6a769d81a1add9d06020b524`
-- workflow: `touhan-ios`
-- Apple Distribution certificate: `K2A3VCP583`
-- App Store provisioning profile: `7B328C2DU4` / ACTIVE
+- Codemagic workflow: `touhan-ios`
+- iOS wrapper source: `touroku-hanbaisha-ios/native-ios/Sources/TouhanSprintApp.swift`
+- Runtime web source: `https://allsunday1122.github.io/touroku-hanbaisha-sprint/`
+- Question JSON fetch: `cache: no-store`
 
-## 2. Build #10 / Internal TestFlight
+## 2. 360問品質改稿と最終Gate
 
-Build #10 (`1.0.0 (10)`, Codemagic `6a861f2e68c24c24844d3f66`) は署名IPA生成・App Store Connect uploadを完了。
+旧360問の手動監査では C+D が 251/360 (69.7%) あり、知識なしでも消去可能な誤答、極端語、無関係肢、単純一問一答が多かったため、問題銀行を全面的に再設計した。
 
-- Apple build id: `d59a0d3d-5aeb-455d-ba9a-cfb193b9a84c`
+2026-08-23 最終監査:
+- 全360問 = 3回 × 120問
+- 難易度: `B=252`, `B-=108`, `C/D=0`
+- 完全重複: `0`
+- 高類似重複: `0`
+- 第1回 正答位置: `24/24/24/24/24`
+- 第2回 正答位置: `24/24/24/24/24`
+- 第3回 正答位置: `22/25/26/23/24`
+- 出典: MHLW 354問 / PMDA 6問
+- Final Gate: **PASS**
+
+Evidence:
+- `automation/audits/app2-010-360-final-audit.json`
+- `automation/audits/app2-010-360-final-audit.md`
+- final audit commit: `7a7640bf7fa7ea950036f9c99e664781c3129f9f`
+- Exam 3 finalize commit: `a6c18698acab9fe19966b7d58eb1bac7cc0bd7ac`
+- Exam 1 answer rebalance commit: `6c0d5d288f090cf989cd62229e9eadfd2bf7e1d8`
+
+第4章の法規は2026年5月1日施行内容を含め現行制度へ合わせて再確認済み。
+
+## 3. Build #10 の扱い
+
+Build #10 (`1.0.0 (10)`) は署名・ASC upload・Internal TestFlight経路の技術確認には有効だったが、問題品質Gate前のため**品質受入Buildとして失効**。
+
+## 4. 品質Gate後 Build #11
+
+360問Gate PASS後、mainから新しい署名Buildを作成した。
+
+Codemagic:
+- request: `APP2-010-TFLIGHT-360-GATEPASS-20260823-1724`
+- build id: `6a8aae11008962a6f19d1bf7`
+- build index: `11`
+- version: `1.0.0`
+- status: `finished`
+- signed IPA: `TouhanSprint.ipa`
+- Build signed IPA: success
+- Publishing: success
+
+Evidence:
+- `automation/codemagic-results/APP2-010-TFLIGHT-360-GATEPASS-20260823-1724.json`
+
+App Store Connect read-back / Internal TestFlight:
+- Apple Build ID: `47c9a0eb-f0e1-45ec-a4f3-3c4fd963ce74`
+- Build number: `11`
 - `processingState = VALID`
+- `expired = false`
 - `buildAudienceType = INTERNAL_ONLY`
-- export compliance: `usesNonExemptEncryption=false`
+- `usesNonExemptEncryption = false`
 - `internalBuildState = IN_BETA_TESTING`
 - internal group: `sum`
-- tester state read-back: `INVITED`
-- userのiPhone TestFlightで実際に起動し、問題画面表示まで到達したことを2026-08-20に確認。
+- `hasAccessToAllBuilds = true`
+- Build assigned: `true`
+- tester count: `1`
+- tester state read-back: `INSTALLED`
+- App Store review submitted: `false`
+- External Beta Review submitted: `false`
 
 Evidence:
-- `automation/asc-results/app2-010-compliance-route-20260820-2010.json`
-- `automation/asc-results/app2-010-invite2-20260820-2016.json`
-- `automation/codemagic-results/app2-010-upload-log-build10-20260820-0637.txt`
+- `automation/asc-results/app2-010-build11-route-20260823-1802.json`
+- route trigger commit: `5532c98372230f8ffa6c0c2e333a5a23cc7a4196`
 
-Build #9以前は有効な登録販売者TestFlight Buildではない。
+## 5. 残る真正なHuman Gate
 
-## 3. 360問 難易度・選択肢品質監査
+機械側の実装・品質監査・署名・ASC upload・Internal TestFlight配布までは完了。
 
-TestFlight実機で `RS26-001` が「知識なしでも極端な誤答を消去して正解できる」問題であることをユーザーが指摘。これを単発修正せず、第1回・第2回・第3回を各120問単位で全360問目視監査した。
+残件は**ユーザー実機でBuild 11を受入確認することのみ**。
 
-判定基準:
-- A: 本試験相当。知識・識別が必要。
-- B: 使用可能だが易しめ。
-- C: 易しすぎ。改稿対象。
-- D: 常識・文体・極端語・無関係肢で解ける。全面改稿対象。
+受入条件:
+1. TestFlightで `1.0.0 (11)` を開ける。
+2. ホームで全360問 / 3試験回が表示される。
+3. 第1〜3回から代表問題を開き、旧版の知識不要な極端誤答ではなく改稿後問題が表示される。
+4. 回答・解説・次問題への遷移が正常。
+5. 学習履歴カレンダーが学習後に更新される。
+6. 白画面・読込エラー・操作不能がない。
 
-### 第1回 120問
-- A 14
-- B 18
-- C 46
-- D 42
-- C+D: **88 / 120 (73.3%)**
-
-Evidence:
-`automation/audits/app2-010-touhan-exam1-manual-difficulty-audit.md`
-
-### 第2回 120問
-- A 19
-- B 23
-- C 38
-- D 40
-- C+D: **78 / 120 (65.0%)**
-
-Evidence:
-`automation/audits/app2-010-touhan-exam2-manual-difficulty-audit.md`
-
-### 第3回 120問
-- A 14
-- B 21
-- C 50
-- D 35
-- C+D: **85 / 120 (70.8%)**
-
-Evidence:
-`automation/audits/app2-010-touhan-exam3-manual-difficulty-audit.md`
-
-### 360問総合
-- A: **47**
-- B: **62**
-- C: **134**
-- D: **117**
-- C+D: **251 / 360 = 69.7% 改稿対象**
-- A+B: 109 / 360 = 30.3%
-
-Overall evidence:
-`automation/audits/app2-010-touhan-360-manual-difficulty-summary.md`
-
-## 4. 横断的に確認した欠陥
-
-1. 誤答へ `必ず / すべて / 一切 / 不要 / 起こらない / 無制限` を多用し、常識で落とせる。
-2. 正答だけが長く自然な条件付き文で、文体から正解推測できる。
-3. 肝臓の問題に「音を感じる」、唾液の問題に「尿・酸素・血液凝固」など同一論点で競合しない誤答がある。
-4. 成分重複問題に「箱の色・価格」、副作用報告情報に「好きな色・商品棚」等、専門知識と無関係な選択肢がある。
-5. 受診勧奨問題が「受診」対「倍量・無視・長期継続」になり、専門知識を要求しない。
-6. 単純な `成分名→用途` / `器官→機能` 一問一答が多く、複数知識の同時判定が不足。
-
-## 5. 次工程
-
-現時点に真正な人間gateはない。問題品質は機械的に改修可能なため `READY` とする。
-
-次の実装単位:
-1. D 117問を全面再作問。
-2. C 134問は正答テーマを再利用可能でも、誤答肢を全面再設計。
-3. B 62問を近接概念で難化。
-4. A 47問も法令・正答・表現を再確認。
-5. 各120問の40〜60問を a〜d 複数記述正誤組合せ型へ移行。
-6. 改稿後、各120問ごとに再監査し C+D 20%以下をRelease Gateとする。
-7. 360問の新品質Gate PASS後のみ新しい署名Buildを作成しInternal TestFlight再受入する。
+ユーザーが実機で `問題なし` を確認した時点で APP2-010 を `DONE` に移行可能。
 
 ## 6. 現在判定
 
-**Build #10はInternal TestFlight経路の技術検証用として有効だが、問題品質の受入Buildとしては失効。**
+**HUMAN_REQUIRED — Build #11 Internal TestFlight実機受入のみ残存。**
 
 App Store本審査submit/releaseは実行しない。
