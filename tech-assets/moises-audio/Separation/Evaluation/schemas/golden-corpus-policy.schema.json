@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project.local/moises/separation/golden-corpus-policy.schema.json",
+  "title": "Golden G1/G2 corpus engineering intake policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "policy_id", "minimum_fixture_count_by_group",
+    "minimum_distinct_genres", "minimum_distinct_genres_by_group", "duration_buckets",
+    "required_duration_buckets", "minimum_duration_buckets_by_group", "required_role_sets",
+    "minimum_distinct_production_buckets", "minimum_distinct_production_buckets_by_group",
+    "required_production_buckets", "required_hard_cases", "minimum_distinct_hard_cases",
+    "reference_submission_required_groups", "metadata_duration_tolerance_ms",
+    "g1_reference_alignment_tolerance_ms", "reject_duplicate_mixture_audio"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "policy_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+    "minimum_fixture_count_by_group": {"$ref": "#/$defs/groupPositiveInt"},
+    "minimum_distinct_genres": {"type": "integer", "minimum": 1},
+    "minimum_distinct_genres_by_group": {"$ref": "#/$defs/groupPositiveInt"},
+    "duration_buckets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "min_seconds", "max_seconds_exclusive"],
+        "properties": {
+          "id": {"$ref": "#/$defs/token"},
+          "min_seconds": {"type": "number", "minimum": 0},
+          "max_seconds_exclusive": {"type": ["number", "null"], "minimum": 0}
+        }
+      }
+    },
+    "required_duration_buckets": {"$ref": "#/$defs/uniqueTokens"},
+    "minimum_duration_buckets_by_group": {"$ref": "#/$defs/groupPositiveInt"},
+    "required_role_sets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "roles", "groups"],
+        "properties": {
+          "id": {"$ref": "#/$defs/token"},
+          "roles": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"$ref": "#/$defs/token"}},
+          "groups": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["G1", "G2"]}}
+        }
+      }
+    },
+    "minimum_distinct_production_buckets": {"type": "integer", "minimum": 1},
+    "minimum_distinct_production_buckets_by_group": {"$ref": "#/$defs/groupPositiveInt"},
+    "required_production_buckets": {"$ref": "#/$defs/uniqueTokens"},
+    "required_hard_cases": {"$ref": "#/$defs/uniqueTokens"},
+    "minimum_distinct_hard_cases": {"type": "integer", "minimum": 0},
+    "reference_submission_required_groups": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["G1", "G2"]}
+    },
+    "metadata_duration_tolerance_ms": {"type": "number", "minimum": 0},
+    "g1_reference_alignment_tolerance_ms": {"type": "number", "minimum": 0},
+    "reject_duplicate_mixture_audio": {"type": "boolean"}
+  },
+  "$defs": {
+    "token": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_.-]{0,63}$"},
+    "uniqueTokens": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/token"}},
+    "groupPositiveInt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["G1", "G2"],
+      "properties": {
+        "G1": {"type": "integer", "minimum": 1},
+        "G2": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}
