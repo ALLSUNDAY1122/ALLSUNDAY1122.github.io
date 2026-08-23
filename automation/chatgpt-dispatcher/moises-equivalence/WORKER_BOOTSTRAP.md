@@ -1,6 +1,6 @@
-# Moises同等化｜Independent Lane Worker契約 v3
+# Moises同等化｜Autonomous Independent Lane Worker契約 v4
 
-このセッションはMoises同等化の4独立Laneのうち1本を専属担当する。HQからTaskを都度取得する方式、他Worker待ち、各小Taskごとの統合待ちは廃止した。
+このセッションはMoises同等化の4独立Laneのうち1本を専属担当する。HQがTask/Macro Bundleを作って配布する方式は廃止する。Worker自身が、自Laneの現状・PARITY差分・既知Gap・テスト不足・品質不足を読み、次に必要な作業を自分で設計して実行する。
 
 ## 正本
 各「次」受信時に最新取得する。
@@ -10,39 +10,60 @@
 - 自分専用 `automation/chatgpt-dispatcher/moises-equivalence/worker-status/worker-N.json`
 - `resource-locks.json`
 - `tech-assets/moises-audio/PARITY_MATRIX.json`
-- integration branch `tech/moises-separation` はepoch開始時またはHQ checkpoint指示時のみ契約参照対象。通常の各「次」で他Lane由来のintegration更新へ追従しない。
+- 自分のlong-lived work branch
 
-会話履歴を正本にしない。
-
-## v2 -> v3 移行保全
-1. epoch 2の最初の「次」で、現work branchとlatest integrationを比較する。
-2. work branchに未統合のowned-scope commitが無い場合だけ、安全にlatest integrationへ同期してよい。
-3. 未統合のowned-scope commitがある場合は **reset / force update / discard禁止**。既存成果を保持したままv3契約とLane Planを読み、内容が次Macro Bundleに重なる場合はその成果をbundleへ引き継ぐ。
-4. statusへ `epoch_contract_sha` と、その時点の `base_integration_sha` / existing unintegrated commits を記録する。
-5. v3移行そのものを理由に既存の正しい実装をやり直さない。
+integration branch `tech/moises-separation` はepoch開始時またはHQ checkpoint指示時のみ契約参照対象。通常の各「次」で他Lane由来のintegration更新へ追従しない。会話履歴を正本にしない。
 
 ## 最重要ルール
 1. Workerは自分のLaneだけを実装する。他Laneのコードを変更しない。
 2. Workerは `queue.json`, `work-packages.json`, `lane-plan-v3.json`, `Shared/**`, `App/**`, `PARITY_MATRIX.json`, `resource-locks.json` を編集しない。
 3. 自分のlong-lived branchと自分専用status fileを使う。
-4. epoch開始時に最新integrationのShared/App契約を一度読み、そのSHAをstatusへ固定する。その後はLane checkpointまで他Laneのintegration更新を理由にrebase/停止しない。
-5. Shared/App契約はepoch内freezeとして扱う。契約変更が必要ならstatusの `hq_requests` に具体的に記録し、自分で変更しない。
+4. Shared/App契約はepoch内freeze。変更が必要なら `hq_requests` に具体的に記録し、自分で変更しない。
+5. HQが次Taskを作る・READYにする・補充することを待たない。
+6. 既存のpreloaded Bundle IDは完了履歴として保持してよいが、使い切ったことを停止理由にしてはならない。
 
-## 1回の「次」
-- **1回の「次」 = lane-plan-v3.json の次の未完了Macro Bundleを1件完遂する。**
-- Macro Bundleは従来の小Task約4件分をまとめた作業量として設計する。目標粒度は約25〜40分相当の意味ある作業。
-- bundle内の1 subtaskや1 commitが終わっただけでは回答を終了しない。
-- 実装 → negative/edge cases → tests/benchmark → evidence保存 → status更新まで進め、`done_when` を満たして初めて1回分を完了とする。
-- 早期停止を許すのは hard external blocker / ownership conflict / unsafe or impossible operation のみ。
-- 外部入力が必要なbundleがblockedなら、自分のLane内で外部入力不要の次のpreloaded bundleへ進んでよい。HQのtask解放は不要。
+## 1回の「次」= 自律Macro Wave 1件
+各「次」の冒頭で、自Laneについて以下を短く監査し、**最も価値の高い次の作業をWorker自身が選ぶ**。
 
-## Task取得禁止・Lane自動継続
-- Global QueueからTaskをclaim/取得しない。
-- `READY_ASSIGNED` を待たない。
-- `lane-plan-v3.json` の自分の `macro_sequence` が実行列である。
-- bundle完了時はstatusへ `completed_bundles` と次の `current_bundle` を記録する。
-- 次回「次」ではその `current_bundle` を続行する。
-- 4件を使い切る前にHQが次checkpoint分を補充する。Workerは他Laneへ仕事を探しに行かない。
+優先順位:
+1. current-iPhone PARITYに直結する未実装・不完全実装
+2. status `known_gaps` のうち自Laneだけで解消可能なもの
+3. failure/recovery/edge case不足
+4. correctness / durability / performance / security / privacy不足
+5. tests / benchmark / evidence不足
+6. Late Integrationで必要になるadapter・measurement・runbook等の事前準備
+7. 外部入力待ちの項目は、その入力が無くても進められる準備部分だけ行い、実入力が必須の部分は明示的に残す
+
+選んだ作業を25〜40分相当の **Autonomous Macro Wave** にまとめる。単なるTODO作成ではなく、その同じ「次」の中で実作業まで行う。
+
+原則の終了条件:
+- meaningful implementation / hardening
+- edge / negative / recovery case
+- tests / benchmark / typecheck等の適切な検証
+- durable evidence
+- commit
+- status更新
+
+1修正、1ファイル、1commit、1testだけ終えて回答を終了しない。
+
+## 自律バックログ生成
+- WorkerはGlobal QueueからTaskをclaim/取得しない。
+- HQがMacro Bundleを補充することを待たない。
+- `lane-plan-v3.json` は担当境界・Lane目的の正本であり、有限Taskリストではない。
+- 既存M01〜M04等を完了した後は、自Laneの現状からM05相当以降のWaveをWorker自身が設計する。
+- Wave名は任意だが、statusへ `autonomous_wave` または同等のgoal/rationale/done_whenを記録し、何を選んだか追跡可能にする。
+- 1つのWave完了後も、次回「次」で再監査して次Waveを自分で決める。
+
+## 停止条件
+`CHECKPOINT_READY` や `BLOCKED` にしてよいのは次のいずれかだけ。
+- 自Laneで人間入力・外部credential・権利クリア実データが無ければ、意味ある実装/検証準備が本当にもう残っていない
+- frozen Shared/App契約変更なしには正しく先へ進めない
+- ownership境界を越えなければ解決不能
+- unsafe / technically impossible operation
+
+「配布Taskが無い」「Bundleを全部消化した」「HQが補充していない」「他Workerがまだ終わっていない」は停止理由ではない。
+
+停止する場合は `hq_requests` に、何が必要か・なぜ自Laneだけでは解決不能か・それまでに何を完了したかを具体的に記録する。
 
 ## 実装品質
 - owned scope外を変更しない。
@@ -51,15 +72,13 @@
 - synthetic-only、compile-only、harness-onlyでPARITYを主張しない。
 - 実音源・実機が必要な最終Gateは明示的に未完了として残す。
 - 困難だから機能を削らない。
+- Workerを動かすためだけのfiller workを作らない。必ず製品品質・PARITY・安全性・検証能力のいずれかを前進させる。
 
 ## Worker status
 最低限以下を維持する。
 - `state`: IN_PROGRESS / CHECKPOINT_READY / BLOCKED / NEEDS_HQ_CONTRACT
 - `lane_id`
-- `current_bundle`
-- `completed_bundles`
 - `work_branch`
-- `epoch_contract_sha`
 - `base_integration_sha`
 - `head_sha`
 - `commits`
@@ -67,13 +86,14 @@
 - `evidence`
 - `known_gaps`
 - `hq_requests`
+- 直近の自律Waveの goal / rationale / done_when / result
 
-小Bundleごとに `INTEGRATION_READY` を出してHQを待つ必要はない。複数Bundleを同じLane branchへ積み、coherent checkpointになったら `CHECKPOINT_READY` にする。
+旧 `current_bundle` / `completed_bundles` は履歴互換のため残してよいが、新規作業の配車源には使わない。
 
-## Checkpoint
-- 原則として複数Macro Bundleをまとめて後でHQ統合する。
-- HQは4 Laneをsemantic integrationし、cross-lane compile、iOS実機、差分A/B、PARITY判定を担当する。
-- HQ統合中に他Lane実装を自分のbranchへ取り込まない。
+## Checkpoint / HQ
+Workerは小WaveごとにHQ mergeを待たない。自Lane branchへ成果を積み上げる。HQは必要なcheckpointで4 Laneをsemantic integrationし、cross-lane compile、Shared/App adapter、iOS実機、実音源、Differential Moises、PARITY判定を担当する。
+
+HQ統合中も、Workerは自Laneで独立して安全に進められる有意義な作業がある限り、それを自律選択してよい。integrationへの追従が必要な作業だけを保留する。
 
 ## 完全同等化ルール
 - 本家current-iPhone in-scope機能を勝手に対象外化しない。
