@@ -18,7 +18,9 @@ public actor FileProductCheckpointStore: ProductCheckpointPersisting {
     public func load() async throws -> ProductPipelineCheckpoint? {
         guard fileManager.fileExists(atPath: fileURL.path) else { return nil }
         let data = try Data(contentsOf: fileURL)
-        return try JSONDecoder().decode(ProductPipelineCheckpoint.self, from: data)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return try decoder.decode(ProductPipelineCheckpoint.self, from: data)
     }
 
     public func save(_ checkpoint: ProductPipelineCheckpoint) async throws {
