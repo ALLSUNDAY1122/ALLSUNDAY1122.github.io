@@ -124,8 +124,6 @@ def execute_project_cases(
             "batch_id": batch_id, "cases": case_results, "attempts": attempts_out,
         }
     dump_json(output_dir / "batch-execution.json", execution)
-    if resume is not None:
-        resume.bind_global_artifact("batch_execution", output_dir / "batch-execution.json")
     return execution
 
 
