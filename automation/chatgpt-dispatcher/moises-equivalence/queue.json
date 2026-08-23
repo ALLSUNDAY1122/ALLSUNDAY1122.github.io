@@ -3,10 +3,10 @@
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_pr": 4431,
-  "integration_epoch": 9,
+  "integration_epoch": 11,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "EPOCH9_L3_AW10_AW11_L4_W12_W14_CANONICAL_PORTABLE_112_PASS_FINAL_APPLE_REAL_AUDIO_GATES_PENDING",
+  "baseline_state": "EPOCH11_L1_A17_A18_L2_AW14_AW15_CANONICAL_PORTABLE_126_PASS_FINAL_APPLE_REAL_AUDIO_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
@@ -52,16 +52,22 @@
     {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"L2-AW08 through L2-AW09","semantic_commit":"d8c0df3a97da57bfbce57f5e848f88024818a3dd","scope":["Library/**"],"parity_promoted":false},
     {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"L4-W10 through L4-W11","semantic_commit":"d8c0df3a97da57bfbce57f5e848f88024818a3dd","integration_fix_commit":"e1cd2444a291d5d3a9aed338ad2a525c29a16e1f","scope":["Analysis/**","Tests/**","Package.swift"],"parity_promoted":false},
     {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW08 through L3-AW09","semantic_commit":"0fedd47642f7c436edef2aec8c6e58b193b8c68a","scope":["Playback/**"],"integration_note":"Integrated exactly 14 AW08/AW09 Playback source/test/evidence files; no Worker branch merge.","parity_promoted":false},
-    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A13 through L1-A14","semantic_commit":"daf7fba65ea5802489a4b56ced9697eab65148f2","scope":["Separation/**","Processing/**"],"integration_note":"Integrated exactly 13 owned files covering deep WAV/artifact integrity and atomic separation commit/relaunch transaction hardening. No Shared/App/PARITY or Worker-status overlay.","parity_promoted":false},
-    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"L2-AW10 through L2-AW11","semantic_commit":"daf7fba65ea5802489a4b56ced9697eab65148f2","scope":["Library/**"],"integration_note":"Integrated exactly 11 owned files covering durable export-registration relaunch recovery and large-library enumeration/batched Core Data access preparation. Apple Core Data runtime/device evidence remains external-gated.","parity_promoted":false},
-    {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW10 through L3-AW11","semantic_commit":"5c3c26f7515d231fe84e0f3e910613818d4fe5ca","scope":["Playback/**"],"integration_note":"Integrated exactly 14 final-head AW10/AW11 Playback files: cepstral/spectral-envelope formant proxy plus combined Playback/DSP recovery generation fencing and million-operation stress evidence. Playback remains outside the portable SwiftPM target and is validated primarily by lane-local suites until Xcode/AVFAudio/device execution.","parity_promoted":false},
-    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"L4-W12 through L4-W14","semantic_commit":"5c3c26f7515d231fe84e0f3e910613818d4fe5ca","scope":["Analysis/**","Tests/**","Package.swift"],"integration_note":"Integrated W12 cooperative cancellation, W13 section cancellation/complexity bounds, and W14 corrective boundary over-segmentation hardening. BoundedTempoBeatAnalyzer was semantically merged rather than copied: W12 cancellation checkpoints were combined with the canonical Epoch6 sustained-tone transient fail-closed gates from e1cd2444a291d5d3a9aed338ad2a525c29a16e1f. W14 final head no longer contains standalone SongSectionCancellationPolicy.swift, so HQ did not reintroduce the deleted intermediate file.","parity_promoted":false}
+    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A13 through L1-A14","semantic_commit":"daf7fba65ea5802489a4b56ced9697eab65148f2","scope":["Separation/**","Processing/**"],"integration_note":"Deep WAV/artifact integrity plus atomic commit/relaunch hardening.","parity_promoted":false},
+    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"L2-AW10 through L2-AW11","semantic_commit":"daf7fba65ea5802489a4b56ced9697eab65148f2","scope":["Library/**"],"integration_note":"Durable export-registration relaunch recovery and bounded large-library enumeration preparation.","parity_promoted":false},
+    {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW10 through L3-AW11","semantic_commit":"5c3c26f7515d231fe84e0f3e910613818d4fe5ca","scope":["Playback/**"],"integration_note":"Cepstral/spectral-envelope proxy plus combined Playback/DSP recovery-generation stress.","parity_promoted":false},
+    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"L4-W12 through L4-W14","semantic_commit":"5c3c26f7515d231fe84e0f3e910613818d4fe5ca","scope":["Analysis/**","Tests/**","Package.swift"],"integration_note":"Cooperative cancellation, bounded Song Section complexity and over-segmentation correction; preserved Epoch6 sustained-tone fail-closed fix.","parity_promoted":false},
+    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A15 through L1-A16","semantic_commit":"634573a147f48226462d5fd29063dfa760ccdca1","scope":["Separation/**","Processing/**"],"integration_note":"Long-track streaming/storage hardening and authoritative reconnect/relaunch recovery.","parity_promoted":false},
+    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"L2-AW12 through L2-AW13","semantic_commit":"634573a147f48226462d5fd29063dfa760ccdca1","scope":["Library/**"],"integration_note":"Maintenance projection scalability and lifecycle metadata quarantine/reconciliation barrier.","parity_promoted":false},
+    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"L4-W15 through L4-W16","semantic_commit":"634573a147f48226462d5fd29063dfa760ccdca1","scope":["Analysis/**","Tests/**","Package.swift"],"integration_note":"Snapshot cardinality/cancellation hardening and scalable product-aligned differential evaluator.","parity_promoted":false},
+    {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW12 through L3-AW13","semantic_commit":"368527e51408e47d2efe7d535e91f3f98176925c","scope":["Playback/**","DSP/**"],"integration_note":"Production generation coordinator plus unified same-PCM SHA-256 evidence receipt v2.","parity_promoted":false},
+    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A17 through L1-A18","semantic_commit":"55d636e54b99fd0bd70cb370a72191829ab5f896","scope":["Separation/**","Processing/**"],"integration_note":"Provider fault normalization/recovery policy plus privacy-safe allowlisted observability and redaction evidence.","parity_promoted":false},
+    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"L2-AW14 through L2-AW15","semantic_commit":"55d636e54b99fd0bd70cb370a72191829ab5f896","scope":["IO/**"],"integration_note":"Bounded public-URL download acquisition plus mutation-safe File Provider snapshot publication and handoff.","parity_promoted":false}
   ],
   "partial_canonical": [
-    {"family":"SEPARATION_PROCESSING","prs":[4451,4452,4508],"parity_rows":["MOI-P003","MOI-P004","MOI-P005","MOI-P020","MOI-P021","MOI-P024"],"state":"MISSING","remaining":"A13/A14 are canonical; A15 long-track IO/storage stress is a single post-checkpoint Wave. Commercial credentials/terms, authenticated live provider capability, rights-cleared real audio, live quality/latency/cost/cancel/retention and current-iPhone recovery/device evidence remain"},
-    {"family":"DSP_PLAYBACK","prs":[4450,4453,4456,4509],"parity_rows":["MOI-P006","MOI-P007","MOI-P008","MOI-P010","MOI-P012","MOI-P014","MOI-P015"],"state":"MISSING","remaining":"AW08-AW11 evidence/recovery tooling is canonical. Selected Xcode/AVFAudio, Apple PCM, device timing/audio, rights-cleared real-track/current-Moises differential, standardized perceptual/formant evaluation and human listening remain"},
-    {"family":"IOS_ANALYSIS","prs":[4510],"parity_rows":["MOI-P009","MOI-P011","MOI-P013","MOI-P016","MOI-P021","MOI-P022"],"state":"MISSING","remaining":"W10-W14 are canonical. W14 corrected the W13 synthetic end-to-end over-segmentation regression and the integrated 112-test gate passes, but rights-cleared real-audio accuracy, current-Moises differential, Xcode/device build and physical-device cancellation/RSS/thermal/battery evidence remain"},
-    {"family":"IO_LIBRARY","prs":[4449,4520],"parity_rows":["MOI-P001","MOI-P002","MOI-P017","MOI-P018","MOI-P019","MOI-P020"],"state":"MISSING","remaining":"AW08-AW11 are canonical; AW12 maintenance projection is a single post-checkpoint Wave. Apple Core Data runtime, iPhone Files/File Provider/security-scoped behavior, real codec/container including WMA fallback, storage-pressure and export/share device evidence remain"}
+    {"family":"SEPARATION_PROCESSING","parity_rows":["MOI-P003","MOI-P004","MOI-P005","MOI-P020","MOI-P021","MOI-P024"],"state":"MISSING","canonical_through":"L1-A18","remaining":"A19+ autonomous work continues. Production credentials/terms/pricing/usage, authenticated provider behavior, rights-cleared real audio, current-Moises differential, integrated iPhone recovery/privacy and physical-device performance remain."},
+    {"family":"IO_LIBRARY","parity_rows":["MOI-P001","MOI-P002","MOI-P017","MOI-P018","MOI-P019","MOI-P020"],"state":"MISSING","canonical_through":"L2-AW15","remaining":"Apple Core Data/APFS/File Provider/security-scoped runtime, real codec/container matrix including WMA fallback, storage pressure/interruption/export/share and differential device evidence remain."},
+    {"family":"DSP_PLAYBACK","parity_rows":["MOI-P006","MOI-P007","MOI-P008","MOI-P010","MOI-P012","MOI-P014","MOI-P015"],"state":"MISSING","canonical_through":"L3-AW13","remaining":"L3-AW14 is a single post-checkpoint Wave and remains unintegrated. Selected Xcode/AVFAudio, physical iPhone timing/audio, rights-cleared current-Moises PCM differential, perceptual/formant evidence and listening remain."},
+    {"family":"IOS_ANALYSIS","parity_rows":["MOI-P009","MOI-P011","MOI-P013","MOI-P016","MOI-P021","MOI-P022"],"state":"MISSING","canonical_through":"L4-W16","remaining":"L4-W17 is a single post-checkpoint Wave and W18 is current. Rights-cleared real-audio MIR, paired current-Moises differential, selected Xcode/device build and physical-device cancellation/RSS/thermal/battery remain."}
   ],
   "lane_execution": [
     {"lane_id":"LANE-1-SEPARATION-PROCESSING","worker_id":"Moises-Worker-1","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":true,"worker_may_advance_without_hq":true},
@@ -72,88 +78,38 @@
   "autonomous_wave_policy": {
     "merge_rule": "Do not merge every Wave. Workers accumulate meaningful lane-local waves; HQ semantic-integrates only coherent checkpoints with no known correctness regression.",
     "current_unintegrated_snapshot": {
-      "lane1": "L1-A06 through L1-A14 canonical; L1-A15 is complete post-checkpoint and L1-A16 is current. A15 remains unintegrated as a single Wave.",
-      "lane2": "L2-AW06 through L2-AW11 canonical; L2-AW12 is complete post-checkpoint and remains unintegrated as a single Wave.",
-      "lane3": "L3-AW01 through L3-AW11 canonical at epoch 9.",
-      "lane4": "L4-W05 through L4-W14 canonical at epoch 9; L4-W15 is current."
+      "lane1": "L1-A06 through L1-A18 canonical; L1-A19 current at latest status read.",
+      "lane2": "L2-AW06 through L2-AW15 canonical at Epoch11.",
+      "lane3": "L3-AW01 through L3-AW13 canonical; L3-AW14 complete single post-checkpoint Wave remains unintegrated.",
+      "lane4": "L4-W05 through L4-W16 canonical; L4-W17 complete single post-checkpoint Wave remains unintegrated; L4-W18 current."
     }
   },
   "hq_requests_status": {
-    "lane1": {
-      "a13_a14_checkpoint_consumed_semantically": true,
-      "a15_long_track_storage_stress": "COMPLETE_POST_CHECKPOINT_SINGLE_WAVE_UNINTEGRATED",
-      "production_provider_credentials_terms_pricing_usage": "PENDING_EXTERNAL",
-      "authenticated_advanced_model_access": "PENDING_EXTERNAL",
-      "complete_current_iphone_custom_instrument_lock_map": "PENDING_REFERENCE_EVIDENCE",
-      "hifi_provider_mapping": "PENDING_AUTHORITATIVE_PROVIDER_EVIDENCE",
-      "parity_promotion": "NONE"
-    },
-    "lane2": {
-      "aw10_aw11_checkpoint_consumed_semantically": true,
-      "aw12_maintenance_projection": "COMPLETE_POST_CHECKPOINT_SINGLE_WAVE_UNINTEGRATED",
-      "startup_composition_request": "PENDING_HQ_APP_INTEGRATION",
-      "apple_core_data_and_file_provider_device_suite": "PENDING_APPLE_RUNTIME",
-      "real_codec_fixture_matrix": "PENDING_APPLE_RUNTIME",
-      "wma_decoder_policy": "NATIVE_FIRST; IF_UNAVAILABLE REQUIRE COMMERCIALLY COMPATIBLE LICENSE-AUDITED DECODER VIA IOCompatibilityAudioDecoding; DO_NOT DROP WMA SCOPE",
-      "atomic_m4a_export_device_validation": "PENDING_APPLE_RUNTIME",
-      "storage_pressure_export_compensation_device_validation": "PENDING_APPLE_RUNTIME",
-      "large_library_core_data_runtime_validation": "PENDING_APPLE_RUNTIME",
-      "parity_promotion": "NONE"
-    },
-    "lane3": {
-      "aw10_aw11_checkpoint_consumed_semantically": true,
-      "selected_xcode_avfaudio_compile": "PENDING_APPLE_RUNTIME",
-      "offline_real_pcm_execution": "PENDING_RIGHTS_CLEARED_APPLE_RUNTIME",
-      "physical_device_capture_and_listening": "PENDING_APPLE_RUNTIME_HUMAN_GATE",
-      "current_moises_pcm_differential": "PENDING_REFERENCE_EVIDENCE",
-      "standardized_perceptual_formant_evidence": "PENDING_REAL_AUDIO_HUMAN_REVIEW",
-      "parity_promotion": "NONE"
-    },
-    "lane4": {
-      "w12_w14_checkpoint_consumed_semantically": true,
-      "w13_detected_regression": "CORRECTED_BY_W14_SYNTHETIC_REGRESSION_GATE",
-      "w15_snapshot_cardinality_cancellation": "IN_PROGRESS_AT_LATEST_STATUS_READ",
-      "selected_xcode_device_build": "PENDING_APPLE_RUNTIME",
-      "rights_cleared_mir_real_audio": "PENDING_RIGHTS_CLEARED_DATA",
-      "current_moises_analysis_differential": "PENDING_REFERENCE_EVIDENCE",
-      "physical_device_rss_thermal_battery": "PENDING_APPLE_RUNTIME",
-      "parity_promotion": "NONE"
-    }
+    "lane1": {"a15_a18_checkpoint_consumed_semantically":true,"production_provider_credentials_terms_pricing_usage":"PENDING_EXTERNAL","authenticated_advanced_model_access":"PENDING_EXTERNAL","current_iphone_custom_instrument_lock_map":"PENDING_REFERENCE_EVIDENCE","hifi_provider_mapping":"PENDING_AUTHORITATIVE_PROVIDER_EVIDENCE","integrated_observability_sink_retention_deletion":"PENDING_HQ_APP_INTEGRATION","parity_promotion":"NONE"},
+    "lane2": {"aw12_aw15_checkpoint_consumed_semantically":true,"apple_core_data_file_provider_device_suite":"PENDING_APPLE_RUNTIME","real_codec_fixture_matrix":"PENDING_APPLE_RUNTIME","wma_decoder_policy":"NATIVE_FIRST; IF_UNAVAILABLE REQUIRE COMMERCIALLY COMPATIBLE LICENSE-AUDITED DECODER; DO_NOT DROP WMA","storage_pressure_export_share_device_validation":"PENDING_APPLE_RUNTIME","parity_promotion":"NONE"},
+    "lane3": {"aw12_aw13_checkpoint_consumed_semantically":true,"aw14":"COMPLETE_POST_CHECKPOINT_SINGLE_WAVE_UNINTEGRATED","selected_xcode_avfaudio_compile":"PENDING_APPLE_RUNTIME","offline_real_pcm_execution":"PENDING_RIGHTS_CLEARED_APPLE_RUNTIME","physical_device_capture_and_listening":"PENDING_APPLE_RUNTIME_HUMAN_GATE","current_moises_pcm_differential":"PENDING_REFERENCE_EVIDENCE","parity_promotion":"NONE"},
+    "lane4": {"w15_w16_checkpoint_consumed_semantically":true,"w17":"COMPLETE_POST_CHECKPOINT_SINGLE_WAVE_UNINTEGRATED","w18":"IN_PROGRESS_AT_LATEST_STATUS_READ","selected_xcode_device_build":"PENDING_APPLE_RUNTIME","rights_cleared_mir_real_audio":"PENDING_RIGHTS_CLEARED_DATA","current_moises_analysis_differential":"PENDING_REFERENCE_EVIDENCE","physical_device_rss_thermal_battery":"PENDING_APPLE_RUNTIME","parity_promotion":"NONE"}
   },
   "branch_hygiene": {
-    "worker3_status": "WORKER_BRANCH_STATUS_STALE",
-    "worker3_branch_status_schema": 1,
-    "latest_observed_integration_status_commit": "9ede2091285f141cf38c0471f6019251999d52c2",
-    "worker3_actual_lane_head_recorded_by_integration_status": "f9aedbc33fba13dac2952945121f105237a817e8",
-    "assessment": "Worker-branch worker-3.json remains schema-1 stale while AW11 status was written directly to integration before Epoch9. HQ trusted branch/code reality, integrated only final-head owned Playback files, and did not reset/discard Worker code or edit the Worker-branch status."
+    "worker3_status":"WORKER_BRANCH_STATUS_STALE",
+    "worker3_branch_status_schema":1,
+    "latest_observed_integration_status_commit":"e4462ce3c9ce08ba8d104e95c4c11fe3325a18de",
+    "worker3_actual_lane_head_recorded_by_integration_status":"05b3b563b20f1c9f308ce49a92a3cd3f1e94633c",
+    "assessment":"Worker-branch worker-3.json remains schema-1 stale. HQ trusts branch/code reality and direct integration status commits, integrates only owned scope at coherent checkpoints, and does not reset/discard Worker code or rewrite Worker3 branch status."
   },
   "hq_integration_validation": {
-    "workflow": ".github/workflows/moises-hq-integration.yml",
-    "workflow_commit": "3007de9ed70f1ad5d8f0fc321560e1259dc8a437",
-    "validation_pr": 4517,
-    "state": "PORTABLE_SWIFTPM_112_PASS_EPOCH9_ANALYSIS_COMPILED_PLAYBACK_UNHANDLED_FINAL_APPLE_GATES_PENDING",
-    "epoch9_semantic_commit": "5c3c26f7515d231fe84e0f3e910613818d4fe5ca",
-    "code_run": {
-      "run_id": 32650343719,
-      "run_number": 61,
-      "result": "SUCCESS",
-      "test_count": 112,
-      "unhandled_file_count": 113,
-      "note": "Analysis cancellation/section W12-W14 sources and tests are listed in Package.swift and compiled/executed. New Lane3 AW10/AW11 Playback files are explicitly among unhandled files and are not compiled by this portable package gate."
-    },
-    "tempo_semantic_merge": {
-      "worker_w12_source": "cooperative cancellation throughout bounded tempo loops",
-      "preserved_hq_fix_commit": "e1cd2444a291d5d3a9aed338ad2a525c29a16e1f",
-      "resolution": "Combined W12 cancellation APIs/checkpoints with canonical transientness/transient-contrast fail-closed gates; Run61 passed both cancellation tests and sustained-tone rejection."
-    },
-    "resource_locks_epoch9_commit": "445c3213f49e4f896a4cbb3d6ce3307cabca5970",
-    "parity_effect": "NONE",
-    "portable_scope_note": "Run61 proves 112 selected portable SwiftPM tests including the new Lane4 cancellation/section hardening. It reports 113 unhandled files and does not compile full Playback/Processing/Library/CoreData, AVFAudio, Xcode or physical-iPhone runtime. Lane3 AW10/AW11 remain supported by lane-local evidence pending Apple/runtime gates.",
-    "rule": "Portable SwiftPM PASS does not promote PARITY and does not replace Apple runtime, real-device, real-audio, provider, Core Data/File Provider, human listening or current-Moises differential gates."
+    "workflow":".github/workflows/moises-hq-integration.yml",
+    "workflow_commit":"3007de9ed70f1ad5d8f0fc321560e1259dc8a437",
+    "state":"PORTABLE_SWIFTPM_126_PASS_EPOCH11_L1_L2_OUTSIDE_PACKAGE_FINAL_APPLE_REAL_AUDIO_GATES_PENDING",
+    "epoch10": {"semantic_commits":["634573a147f48226462d5fd29063dfa760ccdca1","368527e51408e47d2efe7d535e91f3f98176925c"],"run_id":32652340100,"run_number":69,"result":"SUCCESS","test_count":126,"unhandled_file_count":122},
+    "epoch11": {"semantic_commit":"55d636e54b99fd0bd70cb370a72191829ab5f896","run_id":32654418110,"run_number":73,"result":"SUCCESS","test_count":126,"unhandled_file_count":126,"resource_locks_commit":"dc4e32a0367311fc77f0cfd120441b5491b414b8"},
+    "parity_effect":"NONE",
+    "portable_scope_note":"Run73 revalidates the selected portable SwiftPM core/Analysis suite and sustained-tone regression. Newly integrated Lane1 Python/provider and Lane2 IO acquisition sources/tests are outside Package.swift and therefore rely on their lane-local Python/Swift typecheck/self-check evidence until Apple/integrated runtime gates.",
+    "rule":"Portable SwiftPM PASS does not promote PARITY and does not replace Apple runtime, real-device, real-audio, provider, Core Data/File Provider, human listening or current-Moises differential gates."
   },
   "worker_stop_policy": {
-    "valid": ["all meaningful lane-local work and preparation exhausted pending an external/human input", "required frozen Shared/App contract change", "ownership boundary", "unsafe or technically impossible operation"],
-    "invalid": ["no task supplied", "old bundle list exhausted", "HQ did not replenish", "queue has no READY task", "another worker unfinished"]
+    "valid":["all meaningful lane-local work and preparation exhausted pending an external/human input","required frozen Shared/App contract change","ownership boundary","unsafe or technically impossible operation"],
+    "invalid":["no task supplied","old bundle list exhausted","HQ did not replenish","queue has no READY task","another worker unfinished"]
   },
   "late_integration_gate": {
     "owner":"HQ",
