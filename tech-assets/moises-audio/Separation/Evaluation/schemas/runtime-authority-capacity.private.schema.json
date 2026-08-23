@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "runtime-authority-capacity.private.schema.json",
+  "title": "Lane 1 E08 Private Runtime-Authority Capacity Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "evidence_kind", "evidence_state", "parity_claim", "route_id", "captured_at", "authority", "measurement", "capacity", "privacy"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_kind": {"const": "RUNTIME_AUTHORITY_CAPACITY_SNAPSHOT"},
+    "evidence_state": {"const": "NON_PARITY_EVIDENCE_ONLY"},
+    "parity_claim": {"const": "NONE"},
+    "route_id": {"type": "string", "minLength": 1},
+    "captured_at": {"type": "string", "minLength": 1},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "provenance_sha256"],
+      "properties": {
+        "kind": {"enum": ["HOSTED_PROVIDER_ACCOUNT", "LOCAL_RUNTIME", "PROJECT_OWNED_RUNTIME"]},
+        "provenance_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "capacity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["execution_capacity_status", "cost_headroom_status", "throughput_headroom_status"],
+      "properties": {
+        "execution_capacity_status": {"enum": ["ADEQUATE", "INSUFFICIENT", "UNKNOWN"]},
+        "cost_headroom_status": {"enum": ["ADEQUATE", "INSUFFICIENT", "UNKNOWN"]},
+        "throughput_headroom_status": {"enum": ["ADEQUATE", "INSUFFICIENT", "UNKNOWN"]}
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority_ids_emitted", "raw_capacity_values_emitted", "raw_billing_records_emitted", "private_paths_emitted"],
+      "properties": {
+        "authority_ids_emitted": {"const": false},
+        "raw_capacity_values_emitted": {"const": false},
+        "raw_billing_records_emitted": {"const": false},
+        "private_paths_emitted": {"const": false}
+      }
+    }
+  }
+}
