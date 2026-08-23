@@ -1,35 +1,43 @@
 {
-  "request_id": "app2-005-hm1-lifetime-price-readback-20260823-1644",
-  "completed_at": "2026-08-23T07:44:03.016557+00:00",
+  "request_id": "app2-005-hm1-monthly-metadata-probe-20260823-1649",
+  "completed_at": "2026-08-23T07:50:20.270847+00:00",
   "query_exit_code": 0,
   "query_status": "success",
   "results": [
     {
-      "label": "lifetime-manual-prices",
+      "label": "monthly-detail",
       "http_status": 200,
       "data": [
         {
-          "id": "eyJzIjoiNjc5OTU4MzU0MCIsInQiOiJKUE4iLCJwIjoiMTAwOTQiLCJzZCI6MC4wLCJlZCI6MC4wfQ",
-          "type": "inAppPurchasePrices",
+          "id": "6804373671",
+          "type": "subscriptions",
           "attributes": {
-            "startDate": null,
-            "endDate": null,
-            "manual": true
+            "name": "第一種衛生管理者 プレミアム月額",
+            "productId": "jp.allsunday1122.healthmanager1.monthly",
+            "state": "MISSING_METADATA",
+            "subscriptionPeriod": "ONE_MONTH"
           },
           "relationships": {
-            "inAppPurchasePricePoint": {
-              "type": "inAppPurchasePricePoints",
-              "id": "eyJzIjoiNjc5OTU4MzU0MCIsInQiOiJKUE4iLCJwIjoiMTAwOTQifQ"
-            }
+            "subscriptionLocalizations": [
+              {
+                "type": "subscriptionLocalizations",
+                "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488"
+              }
+            ],
+            "introductoryOffers": [],
+            "planAvailabilities": []
           }
         }
       ],
       "included": [
         {
-          "id": "eyJzIjoiNjc5OTU4MzU0MCIsInQiOiJKUE4iLCJwIjoiMTAwOTQifQ",
-          "type": "inAppPurchasePricePoints",
+          "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488",
+          "type": "subscriptionLocalizations",
           "attributes": {
-            "customerPrice": "980"
+            "name": "第一種衛生管理者 プレミアム月額",
+            "state": "PREPARE_FOR_SUBMISSION",
+            "locale": "ja",
+            "description": "追加問題・弱点学習などプレミアム機能を月額で利用できます。"
           }
         }
       ]
