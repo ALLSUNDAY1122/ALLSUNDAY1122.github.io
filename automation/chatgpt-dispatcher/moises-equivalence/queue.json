@@ -3,10 +3,10 @@
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_pr": 4431,
-  "integration_epoch": 2,
+  "integration_epoch": 3,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "LANE1_LANE3_LANE4_CHECKPOINTS_CANONICAL_LANE2_IN_PROGRESS_FINAL_DEVICE_GATES_PENDING",
+  "baseline_state": "ALL_FOUR_BOOTSTRAP_CHECKPOINTS_CANONICAL_AUTONOMOUS_WAVES_CONTINUING_FINAL_DEVICE_REAL_AUDIO_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
@@ -41,20 +41,39 @@
   "checkpoint_integrations": [
     {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"epoch2 M01-M04","semantic_pr":4508,"merge_sha":"48cc74e9e192813fa6fafc0c83c8ed882cf83578","scope":["Separation/**","Processing/**"],"parity_promoted":false},
     {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"epoch2 M01-M04","semantic_pr":4509,"merge_sha":"b586c3386af0183881741998d3691bb2a282fbcf","scope":["Playback/**","DSP/**"],"parity_promoted":false},
-    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"epoch2 M01-M04","semantic_pr":4510,"merge_sha":"f218be65facd8e3f32342daf5e77545dd8924f6a","scope":["Analysis/**","Tests/**","iOS/**","Package.swift"],"parity_promoted":false}
+    {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"epoch2 M01-M04","semantic_pr":4510,"merge_sha":"f218be65facd8e3f32342daf5e77545dd8924f6a","scope":["Analysis/**","Tests/**","iOS/**","Package.swift"],"parity_promoted":false},
+    {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"epoch2 M01-M04 + L2-AW05","semantic_pr":4520,"merge_sha":"a6fe8e97b3ec7aede2ecd826e67de99714e88c98","scope":["IO/**","Library/**"],"parity_promoted":false}
   ],
   "partial_canonical": [
     {"family":"SEPARATION_PROCESSING","prs":[4451,4452,4508],"parity_rows":["MOI-P003","MOI-P004","MOI-P020","MOI-P021","MOI-P024"],"state":"MISSING","remaining":"commercial credentials/terms, rights-cleared real audio, live quality/latency/cost/cancel/retention and current-iPhone recovery/device evidence"},
     {"family":"DSP_PLAYBACK","prs":[4450,4453,4456,4509],"parity_rows":["MOI-P006","MOI-P007","MOI-P008","MOI-P010","MOI-P012","MOI-P014","MOI-P015"],"state":"MISSING","remaining":"final Xcode/AVFAudio compile, physical-iPhone timing/audio artifact evidence, live gain-ramp and real-track differential evidence"},
     {"family":"IOS_ANALYSIS","prs":[4510],"parity_rows":["MOI-P009","MOI-P011","MOI-P013","MOI-P016","MOI-P022"],"state":"MISSING","remaining":"actual Xcode/simulator/device build, rights-cleared MIR real-audio accuracy, current-Moises differential and physical-device performance evidence"},
-    {"family":"IO_LIBRARY","state":"IN_PROGRESS","worker":"Moises-Worker-2","remaining":"Worker 2 checkpoint not yet complete; keep autonomous lane work running and integrate only when coherent"}
+    {"family":"IO_LIBRARY","prs":[4449,4520],"parity_rows":["MOI-P001","MOI-P002","MOI-P017","MOI-P018","MOI-P019","MOI-P020"],"state":"MISSING","remaining":"Apple Core Data runtime, actual iPhone Files/File Provider/security-scoped behavior, codec/container execution, storage-pressure and export/share evidence"}
   ],
   "lane_execution": [
     {"lane_id":"LANE-1-SEPARATION-PROCESSING","worker_id":"Moises-Worker-1","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":true,"worker_may_advance_without_hq":true},
-    {"lane_id":"LANE-2-IO-LIBRARY","worker_id":"Moises-Worker-2","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":false,"worker_may_advance_without_hq":true},
+    {"lane_id":"LANE-2-IO-LIBRARY","worker_id":"Moises-Worker-2","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":true,"worker_may_advance_without_hq":true},
     {"lane_id":"LANE-3-PLAYBACK-DSP","worker_id":"Moises-Worker-3","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":true,"worker_may_advance_without_hq":true},
     {"lane_id":"LANE-4-IOS-ANALYSIS","worker_id":"Moises-Worker-4","planning":"WORKER_AUTONOMOUS","checkpoint_canonical":true,"worker_may_advance_without_hq":true}
   ],
+  "autonomous_wave_policy": {
+    "merge_rule": "Do not merge every Wave. Workers accumulate meaningful lane-local waves; HQ semantic-integrates only coherent checkpoints.",
+    "current_unintegrated_snapshot": {
+      "lane1": "L1-A06 complete; continue accumulating",
+      "lane2": "L2-AW05 included in PR #4520; subsequent waves continue accumulating",
+      "lane3": "L3-AW01/AW02 family in progress/accumulating after prior checkpoint",
+      "lane4": "L4-W05 complete; continue accumulating"
+    }
+  },
+  "hq_integration_validation": {
+    "workflow": ".github/workflows/moises-hq-integration.yml",
+    "workflow_commit": "3007de9ed70f1ad5d8f0fc321560e1259dc8a437",
+    "validation_pr": 4517,
+    "state": "CI_RUN_NOT_OBSERVED",
+    "local_runner_attempt": "BLOCKED_ENVIRONMENT_DNS_GITHUB_COM",
+    "parity_effect": "NONE",
+    "rule": "Do not claim integrated regression PASS until an actual test run is observed."
+  },
   "worker_stop_policy": {
     "valid": ["all meaningful lane-local work and preparation exhausted pending an external/human input", "required frozen Shared/App contract change", "ownership boundary", "unsafe or technically impossible operation"],
     "invalid": ["no task supplied", "old bundle list exhausted", "HQ did not replenish", "queue has no READY task", "another worker unfinished"]
