@@ -321,6 +321,71 @@ public final class CoreDataProjectLibraryStore: @unchecked Sendable, ProjectLibr
         }
     }
 
+    /// Low-level startup repair for rows hidden from the public setlist snapshot because their
+    /// `setlistUUID` no longer has a SetlistRecord. This intentionally does not repair ordering or
+    /// project membership; AW18 runs those higher-level semantics after this pass.
+    @discardableResult
+    public func reconcileOrphanSetlistEntries() async throws -> Lane2SetlistOrphanEntryRecoveryReport {
+        let policy = enumerationPolicy
+        return try await perform { context in
+            let setlistRecords = try StoreFetch.setlists(
+                context: context,
+                fetchBatchSize: policy.batchSize
+            )
+            let liveSetlistUUIDs = try Set(
+                setlistRecords.map { try StoreValue.uuid($0, "setlistUUID") }
+            )
+            guard liveSetlistUUIDs.count == setlistRecords.count else {
+                throw LibraryPersistenceFailure.corruptRecord("duplicate setlist identity")
+            }
+
+            func fetchEntryRecords() throws -> [NSManagedObject] {
+                let request = NSFetchRequest<NSManagedObject>(entityName: "SetlistEntryRecord")
+                request.fetchBatchSize = policy.batchSize
+                request.returnsObjectsAsFaults = true
+                return try context.fetch(request)
+            }
+
+            let entryRecords = try fetchEntryRecords()
+            let ownership = try entryRecords.map {
+                Lane2SetlistEntryOwnership(
+                    entryUUID: try StoreValue.uuid($0, "entryUUID"),
+                    setlistUUID: try StoreValue.uuid($0, "setlistUUID")
+                )
+            }
+            let plan = try Lane2SetlistOrphanEntryPolicy.plan(
+                entries: ownership,
+                liveSetlistUUIDs: liveSetlistUUIDs
+            )
+
+            if plan.requiresRepair {
+                let orphanIDs = Set(plan.orphanEntryUUIDs)
+                for (record, identity) in zip(entryRecords, ownership)
+                where orphanIDs.contains(identity.entryUUID) {
+                    context.delete(record)
+                }
+                try StoreFetch.save(context)
+            }
+
+            let remaining = try fetchEntryRecords().map {
+                Lane2SetlistEntryOwnership(
+                    entryUUID: try StoreValue.uuid($0, "entryUUID"),
+                    setlistUUID: try StoreValue.uuid($0, "setlistUUID")
+                )
+            }
+            try Lane2SetlistOrphanEntryPolicy.requireConverged(
+                entries: remaining,
+                liveSetlistUUIDs: liveSetlistUUIDs
+            )
+
+            return Lane2SetlistOrphanEntryRecoveryReport(
+                scannedEntries: plan.scannedEntries,
+                liveSetlists: plan.liveSetlists,
+                removedOrphanEntries: plan.orphanEntryUUIDs.count
+            )
+        }
+    }
+
     public func recoveryPlan(projectID: ProjectID) async throws -> ProcessingRecoveryPlan {
         try await perform { context in
             _ = try StoreFetch.requireLiveProject(id: projectID.rawValue, context: context)
