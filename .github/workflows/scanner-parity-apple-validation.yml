@@ -89,7 +89,7 @@ jobs:
           evidence_path, decision_path = sys.argv[1:]
           with open(evidence_path, encoding='utf-8') as f:
               evidence = json.load(f)
-          assert evidence['recommendedThreshold'] is None
+          assert evidence.get('recommendedThreshold') is None
           assert evidence['verdict'] == 'CALIBRATION_EVIDENCE_READY_OPERATOR_DECISION_REQUIRED'
           assert len(evidence['largestNearestDistanceGaps']) > 0
           with open(decision_path, encoding='utf-8') as f:
