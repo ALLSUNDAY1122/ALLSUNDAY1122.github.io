@@ -65,8 +65,8 @@ public final class ProductFlowStore: ObservableObject {
                     return
                 }
 
-                if let package = checkpoint.completedArtifacts.last(where: { $0.stage == .packageWrite }),
-                   FileManager.default.fileExists(atPath: package.outputURL.path) {
+                if checkpoint.isCompletedPackageCheckpoint,
+                   let package = checkpoint.completedArtifacts.last {
                     let reviews = Self.deduplicatedReviews(checkpoint.completedArtifacts.flatMap(\.reviewItems))
                     self.purgeManagedInputs(checkpoint.inputAssets ?? [])
                     self.savedCheckpoint = checkpoint
@@ -77,6 +77,12 @@ public final class ProductFlowStore: ObservableObject {
                         bookPackageURL: package.outputURL,
                         reviewRequiredCount: reviews.count
                     ))
+                    return
+                }
+
+                guard checkpoint.hasCanonicalExistingArtifacts else {
+                    self.savedCheckpoint = nil
+                    self.resumeAvailable = false
                     return
                 }
 
@@ -161,9 +167,7 @@ public final class ProductFlowStore: ObservableObject {
                 let completion = try await driver.run(
                     request: request,
                     resume: resume,
-                    progress: { [weak self] progress in
-                        await self?.apply(progress: progress)
-                    },
+                    progress: { [weak self] progress in await self?.apply(progress: progress) },
                     checkpoint: { [weak self] checkpoint in
                         do {
                             try await checkpointStore.save(checkpoint)
@@ -197,19 +201,9 @@ public final class ProductFlowStore: ObservableObject {
         }
     }
 
-    private func apply(progress: ProductProgress) {
-        send(.updateProgress(progress))
-    }
-
-    private func apply(checkpoint: ProductPipelineCheckpoint) {
-        savedCheckpoint = checkpoint
-        resumeAvailable = true
-    }
-
-    private func applyCheckpointPersistenceFailure(_ error: Error) {
-        savedCheckpoint = nil
-        resumeAvailable = false
-    }
+    private func apply(progress: ProductProgress) { send(.updateProgress(progress)) }
+    private func apply(checkpoint: ProductPipelineCheckpoint) { savedCheckpoint = checkpoint; resumeAvailable = true }
+    private func applyCheckpointPersistenceFailure(_ error: Error) { savedCheckpoint = nil; resumeAvailable = false }
 
     private func purgeManagedInputs(_ inputs: [ProductInputAsset]) {
         let importRoot = workspaceRoot.appendingPathComponent("Imports", isDirectory: true).standardizedFileURL.path
