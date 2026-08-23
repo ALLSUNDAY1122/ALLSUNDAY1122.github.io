@@ -1,0 +1,201 @@
+{
+  "request_id": "scanlab-testflight-diagnostic-20260824",
+  "ok": true,
+  "build_id": "6a8b0dfb1ab825267fa0020d",
+  "actions": [
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a7c",
+      "name": "Preparing build machine",
+      "type": "preparing",
+      "status": "success",
+      "started_at": "2026-08-23T15:13:06.497000Z",
+      "finished_at": "2026-08-23T15:13:26.410000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a7d",
+      "name": "Fetching app sources",
+      "type": "fetching",
+      "status": "success",
+      "started_at": "2026-08-23T15:13:26.410000Z",
+      "finished_at": "2026-08-23T15:13:33.065000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a7e",
+      "name": "Stop if App Store Connect app record is not registered",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:13:33.065000Z",
+      "finished_at": "2026-08-23T15:13:33.396000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a7f",
+      "name": "Verify Apple upload toolchain",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:13:33.396000Z",
+      "finished_at": "2026-08-23T15:13:35.270000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a80",
+      "name": "Install required Metal Toolchain",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:13:35.270000Z",
+      "finished_at": "2026-08-23T15:13:48.892000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a81",
+      "name": "Disable unrelated msplat LFS datasets",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:13:48.892000Z",
+      "finished_at": "2026-08-23T15:13:49.415000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a82",
+      "name": "Install XcodeGen",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:13:49.415000Z",
+      "finished_at": "2026-08-23T15:13:58.733000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a83",
+      "name": "Generate deterministic PoC AppIcon",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:13:58.733000Z",
+      "finished_at": "2026-08-23T15:14:00.262000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a84",
+      "name": "Set build number and generate project",
+      "type": "script",
+      "status": "failed",
+      "started_at": "2026-08-23T15:14:00.262000Z",
+      "finished_at": "2026-08-23T15:14:00.767000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a85",
+      "name": "Static release checks",
+      "type": "script",
+      "status": "skipped",
+      "started_at": "2026-08-23T15:14:00.767000Z",
+      "finished_at": "2026-08-23T15:14:00.768000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a86",
+      "name": "Initialize signing keychain",
+      "type": "script",
+      "status": "skipped",
+      "started_at": "2026-08-23T15:14:00.768000Z",
+      "finished_at": "2026-08-23T15:14:00.768000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a87",
+      "name": "Verify managed certificate private key is available",
+      "type": "script",
+      "status": "skipped",
+      "started_at": "2026-08-23T15:14:00.768000Z",
+      "finished_at": "2026-08-23T15:14:00.769000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a88",
+      "name": "Verify Apple Developer Bundle ID exists",
+      "type": "script",
+      "status": "skipped",
+      "started_at": "2026-08-23T15:14:00.769000Z",
+      "finished_at": "2026-08-23T15:14:00.769000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a89",
+      "name": "Fetch existing App Store signing files",
+      "type": "script",
+      "status": "skipped",
+      "started_at": "2026-08-23T15:14:00.769000Z",
+      "finished_at": "2026-08-23T15:14:00.769000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a8a",
+      "name": "Add signing certificate",
+      "type": "script",
+      "status": "skipped",
+      "started_at": "2026-08-23T15:14:00.769000Z",
+      "finished_at": "2026-08-23T15:14:00.769000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a8b",
+      "name": "Apply App Store profile for Internal TestFlight",
+      "type": "script",
+      "status": "skipped",
+      "started_at": "2026-08-23T15:14:00.769000Z",
+      "finished_at": "2026-08-23T15:14:00.770000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a8c",
+      "name": "Build signed IPA",
+      "type": "script",
+      "status": "skipped",
+      "started_at": "2026-08-23T15:14:00.770000Z",
+      "finished_at": "2026-08-23T15:14:00.770000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a8d",
+      "name": "Publishing",
+      "type": "publishing",
+      "status": "success",
+      "started_at": "2026-08-23T15:14:00.770000Z",
+      "finished_at": "2026-08-23T15:14:00.931000Z"
+    },
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a8e",
+      "name": "Cleaning up",
+      "type": "finishing",
+      "status": "success",
+      "started_at": "2026-08-23T15:14:00.931000Z",
+      "finished_at": "2026-08-23T15:14:01.018000Z"
+    }
+  ],
+  "failed_actions": [
+    {
+      "id": "6a8b0dfcbe3cf7d583ba9a84",
+      "name": "Set build number and generate project",
+      "type": "script",
+      "status": "failed",
+      "started_at": "2026-08-23T15:14:00.262000Z",
+      "finished_at": "2026-08-23T15:14:00.767000Z"
+    }
+  ],
+  "probes": [
+    {
+      "path": "/api/v3/builds/6a8b0dfb1ab825267fa0020d/actions/6a8b0dfcbe3cf7d583ba9a84",
+      "http_status": 200,
+      "diagnostic_lines": [
+        "            content=\"Boost your mobile app development with continuous integration and delivery. Replace manual intervention and build, test and deliver mobile apps 20% faster with CI/CD for mobile\"",
+        "            content=\"Boost your mobile app development with continuous integration and delivery. Replace manual intervention and build, test and deliver mobile apps 20% faster with CI/CD for mobile\"",
+        "            content=\"Boost your mobile app development with continuous integration and delivery. Replace manual intervention and build, test and deliver mobile apps 20% faster with CI/CD for mobile\"",
+        "        <script src=\"/js/on-error.js\"></script>"
+      ]
+    },
+    {
+      "path": "/api/v3/builds/6a8b0dfb1ab825267fa0020d/actions/6a8b0dfcbe3cf7d583ba9a84/logs",
+      "http_status": 200,
+      "diagnostic_lines": [
+        "            content=\"Boost your mobile app development with continuous integration and delivery. Replace manual intervention and build, test and deliver mobile apps 20% faster with CI/CD for mobile\"",
+        "            content=\"Boost your mobile app development with continuous integration and delivery. Replace manual intervention and build, test and deliver mobile apps 20% faster with CI/CD for mobile\"",
+        "            content=\"Boost your mobile app development with continuous integration and delivery. Replace manual intervention and build, test and deliver mobile apps 20% faster with CI/CD for mobile\"",
+        "        <script src=\"/js/on-error.js\"></script>"
+      ]
+    },
+    {
+      "path": "/api/v3/actions/6a8b0dfcbe3cf7d583ba9a84/logs",
+      "http_status": 200,
+      "diagnostic_lines": [
+        "            content=\"Boost your mobile app development with continuous integration and delivery. Replace manual intervention and build, test and deliver mobile apps 20% faster with CI/CD for mobile\"",
+        "            content=\"Boost your mobile app development with continuous integration and delivery. Replace manual intervention and build, test and deliver mobile apps 20% faster with CI/CD for mobile\"",
+        "            content=\"Boost your mobile app development with continuous integration and delivery. Replace manual intervention and build, test and deliver mobile apps 20% faster with CI/CD for mobile\"",
+        "        <script src=\"/js/on-error.js\"></script>"
+      ]
+    }
+  ]
+}
