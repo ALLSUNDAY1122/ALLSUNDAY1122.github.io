@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "bundle": "L4-W12",
+  "title": "Analysis cooperative cancellation / responsiveness hardening",
+  "captured_at": "2026-08-23T23:08:00+09:00",
+  "runtime": "Swift 6.2.1 x86_64-unknown-linux-gnu portable harness",
+  "synthetic_only": true,
+  "parity_eligible": false,
+  "parity_rows": ["MOI-P009", "MOI-P011", "MOI-P013", "MOI-P016", "MOI-P021"],
+  "cancellation_threshold_seconds": 0.25,
+  "runs": [
+    {
+      "run": 1,
+      "assertions": "5/5 PASS",
+      "prepare_cancel_latency_seconds": 0.0007234880,
+      "tempo_cancel_latency_seconds": 0.0000501890,
+      "chord_cancel_latency_seconds": 0.0001138090
+    },
+    {
+      "run": 2,
+      "assertions": "5/5 PASS",
+      "prepare_cancel_latency_seconds": 0.0006811960,
+      "tempo_cancel_latency_seconds": 0.0006126290,
+      "chord_cancel_latency_seconds": 0.0001618200
+    },
+    {
+      "run": 3,
+      "assertions": "5/5 PASS",
+      "prepare_cancel_latency_seconds": 0.0003902440,
+      "tempo_cancel_latency_seconds": 0.0001250310,
+      "chord_cancel_latency_seconds": 0.0001780900
+    },
+    {
+      "run": 4,
+      "assertions": "5/5 PASS",
+      "prepare_cancel_latency_seconds": 0.0006642260,
+      "tempo_cancel_latency_seconds": 0.0001990950,
+      "chord_cancel_latency_seconds": 0.0004770680
+    },
+    {
+      "run": 5,
+      "assertions": "5/5 PASS",
+      "prepare_cancel_latency_seconds": 0.0006486530,
+      "tempo_cancel_latency_seconds": 0.0006424290,
+      "chord_cancel_latency_seconds": 0.0013540940
+    }
+  ],
+  "max_observed_cancel_latency_seconds": {
+    "preparation": 0.0007234880,
+    "tempo": 0.0006424290,
+    "chord": 0.0013540940
+  },
+  "checks": [
+    "cancellable preparation throws CancellationError instead of returning a partially prepared signal",
+    "tempo long-loop cancellation throws CancellationError",
+    "chord long-loop cancellation throws CancellationError",
+    "pre-cancelled key analysis throws CancellationError",
+    "non-cancelled compatibility tempo API matches cancellable API output"
+  ],
+  "durable_test_source": "Tests/MoisesAudioCoreTests/AnalysisCancellationTests.swift",
+  "limitations": [
+    "portable Linux scheduling and latency are not physical-iPhone responsiveness evidence",
+    "song-section inference remains synchronous internally; W12 checks cancellation immediately before and after that stage so no partial combined snapshot is published",
+    "no rights-cleared real-audio or current-iPhone Moises differential was executed",
+    "synthetic/portable evidence cannot promote PARITY_MATRIX"
+  ]
+}
