@@ -25,7 +25,7 @@ checks = {
     "legacy completion migration": "checkpoint.terminalCompletion" in store and "makeTerminalCheckpoint" in store,
     "active corrupt checkpoint rejected": "checkpoint.hasCanonicalExistingArtifacts" in store,
     "raw input purge after processing": "purgeManagedInputs(inputs)" in store and "self.state.inputAssets = []" in store,
-    "intermediate workspace purge after processing": "purgeWorkspace(bookID: bookID)" in store,
+    "intermediate workspace purge after processing": "purgeProcessingWorkspace(bookID: bookID)" in store,
     "processing workspace excluded from backup": "prepareRecoverableDirectory(workspace)" in store,
     "completed package staging excluded from backup": "appendingPathComponent(\"Completed\"" in store and "prepareRecoverableDirectory(root)" in store,
     "terminal checkpoint omits raw and intermediate state": "inputAssets: nil" in store and "completedArtifacts: []" in store,
