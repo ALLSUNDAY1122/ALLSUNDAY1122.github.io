@@ -6,7 +6,7 @@ enum Otsu4Theme {
     static let card = Color(hex: 0xFFFDF9)
     static let ink = Color(hex: 0x1C2331)
     static let ink2 = Color(hex: 0x4A5468)
-    static let ink3 = Color(hex: 0x8B8577)
+    static let ink3 = Color(hex: 0x665F54)
     static let ai = Color(hex: 0x2F4A6D)
     static let aiSoft = Color(hex: 0xEAEFF6)
     static let shu = Color(hex: 0xD8452C)
