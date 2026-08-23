@@ -3,7 +3,10 @@ import PackageDescription
 
 let package = Package(
     name: "ProductFlow",
-    platforms: [.iOS(.v17)],
+    platforms: [
+        .iOS(.v17),
+        .macOS(.v14)
+    ],
     products: [.library(name: "ProductFlow", targets: ["ProductFlow"])],
     targets: [.target(name: "ProductFlow")]
 )
