@@ -11,6 +11,8 @@ public enum PackageIntegrityIssueCode: String, Codable, Sendable {
     case emptyManifest
     case duplicateSequence
     case duplicatePageID
+    case duplicateImagePath
+    case duplicateTextPath
     case nonContiguousSequence
     case manifestOrderMismatch
     case unsafeRelativePath
@@ -49,6 +51,15 @@ public struct PackageManifestSnapshot: Codable, Equatable, Sendable {
         public let sourceTimeMS: Int64?
         public let needsReview: Bool
 
+        public init(sequence: Int, pageID: String, imagePath: String, textPath: String, sourceTimeMS: Int64?, needsReview: Bool) {
+            self.sequence = sequence
+            self.pageID = pageID
+            self.imagePath = imagePath
+            self.textPath = textPath
+            self.sourceTimeMS = sourceTimeMS
+            self.needsReview = needsReview
+        }
+
         enum CodingKeys: String, CodingKey {
             case sequence
             case pageID = "page_id"
@@ -62,6 +73,12 @@ public struct PackageManifestSnapshot: Codable, Equatable, Sendable {
     public let schemaVersion: Int
     public let bookID: String
     public let pages: [Page]
+
+    public init(schemaVersion: Int, bookID: String, pages: [Page]) {
+        self.schemaVersion = schemaVersion
+        self.bookID = bookID
+        self.pages = pages
+    }
 
     enum CodingKeys: String, CodingKey {
         case schemaVersion = "schema_version"
@@ -78,6 +95,16 @@ public struct PackageIntegritySummary: Codable, Equatable, Sendable {
     public let errorCount: Int
     public let warningCount: Int
     public let reviewPageIDs: [String]
+
+    public init(manifestPageCount: Int, imageReferenceCount: Int, textReferenceCount: Int, pdfPageCount: Int?, errorCount: Int, warningCount: Int, reviewPageIDs: [String]) {
+        self.manifestPageCount = manifestPageCount
+        self.imageReferenceCount = imageReferenceCount
+        self.textReferenceCount = textReferenceCount
+        self.pdfPageCount = pdfPageCount
+        self.errorCount = errorCount
+        self.warningCount = warningCount
+        self.reviewPageIDs = reviewPageIDs
+    }
 }
 
 public struct PackageIntegrityReport: Codable, Equatable, Sendable {
