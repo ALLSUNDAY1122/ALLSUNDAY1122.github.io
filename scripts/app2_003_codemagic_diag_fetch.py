@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch only the sanitized APP2-003 Codemagic diagnostic artifact log."""
+"""Fetch only sanitized APP2-003 Codemagic diagnostic/production logs."""
 from __future__ import annotations
 
 import argparse
@@ -7,7 +7,6 @@ import io
 import json
 import os
 import re
-import urllib.error
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -15,6 +14,7 @@ from pathlib import Path
 REPOSITORY = "ALLSUNDAY1122/yoru-no-shoka"
 WORKFLOW_ID = "yoru-ios"
 BRANCH = "main"
+ALLOWED_LOGS = ("yoru-production.log", "yoru-diagnostic.log")
 
 
 def api_json(token: str, url: str):
@@ -26,7 +26,7 @@ def api_json(token: str, url: str):
 
 
 def sanitize_log(text: str) -> str:
-    text = text[:20000]
+    text = text[:30000]
     patterns = [
         r"(?i)(token|secret|password|api[_-]?key)\s*[=:]\s*\S+",
         r"(?i)(authorization:)\s*\S+",
@@ -69,14 +69,18 @@ def main() -> int:
         artifacts = details.get("artifacts") or []
         artifact = next((a for a in artifacts if a.get("short_lived_download_url")), None)
         if not artifact:
-            raise RuntimeError("No diagnostic artifact download URL")
+            raise RuntimeError("No APP2-003 log artifact download URL")
         with urllib.request.urlopen(artifact["short_lived_download_url"], timeout=30) as response_obj:
             payload = response_obj.read()
         with zipfile.ZipFile(io.BytesIO(payload)) as archive:
             names = archive.namelist()
-            log_name = next((name for name in names if name.endswith("yoru-diagnostic.log")), None)
+            log_name = None
+            for preferred in ALLOWED_LOGS:
+                log_name = next((name for name in names if name.endswith(preferred)), None)
+                if log_name:
+                    break
             if not log_name:
-                raise RuntimeError(f"Diagnostic log missing from artifact: {names[:20]}")
+                raise RuntimeError(f"APP2-003 log missing from artifact: {names[:20]}")
             text = archive.read(log_name).decode("utf-8", errors="replace")
         result["diagnostic_log"] = sanitize_log(text)
         result["ok"] = True
