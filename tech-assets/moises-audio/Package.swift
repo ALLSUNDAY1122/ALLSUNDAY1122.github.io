@@ -44,6 +44,7 @@ let package = Package(
                 "Analysis/SongSectionAnalyzer.swift",
                 "Analysis/SongSectionHardener.swift",
                 "Analysis/AnalysisSnapshotRobustness.swift",
+                "Analysis/AnalysisSnapshotCancellable.swift",
                 "Analysis/AnalysisBenchmarkRunner.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
