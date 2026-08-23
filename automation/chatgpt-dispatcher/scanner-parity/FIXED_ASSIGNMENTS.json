@@ -1,43 +1,19 @@
 {
   "project": "書籍スキャナー同等化｜動画式ブックスキャナー＋AIデータ化",
   "mode": "FIXED_WAVE",
-  "active": true,
+  "active": false,
   "wave": 3,
   "integration_epoch": 2,
   "integration_head": "fd9cb2ec7745a927fae80a82f5cfc514ebc40020",
   "assigned_at": "2026-08-23T15:49:00+09:00",
-  "updated_at": "2026-08-23T16:23:00+09:00",
+  "superseded_at": "2026-08-23T16:35:00+09:00",
+  "superseded_by": "automation/chatgpt-dispatcher/scanner-parity/AUTONOMOUS_LANES.json",
   "owner": "HQ",
-  "rule": "active=true の間、各Workerは自分に割り当てられたTaskだけをclaimする。別WorkerのTaskをclaimしてはならない。Task完了後も次の固定割当が発行されるまで勝手に別Taskをclaimしない。",
-  "assignments": {
-    "worker1": {
-      "task_id": "SCAN-009",
-      "title": "PageAudit→OCRExport→BookPackage E2E Bridge",
-      "state": "MERGED",
-      "merge_commit_sha": "fd9cb2ec7745a927fae80a82f5cfc514ebc40020",
-      "reason": "SCAN-004 OCR/Export と SCAN-007 Apple SDK の実装経験を継続利用"
-    },
-    "worker2": {
-      "task_id": "SCAN-011",
-      "title": "Privacy Static Audit｜書籍画像・OCRデータフロー監査",
-      "state": "CLAIMED",
-      "reason": "独立した静的監査レーンとして他3実装レーンとResource Lock競合なし"
-    },
-    "worker3": {
-      "task_id": "SCAN-010",
-      "title": "BookPackage Integrity Verifier｜PDF/Text/Manifest整合監査",
-      "state": "CLAIMED",
-      "claim_token": "e7bdbfc8-3d7f-4243-9ecf-6e2c3887a87c",
-      "claim_epoch": 1,
-      "attempt_branch": "task/SCAN-010/attempt-1",
-      "claimed_at": "2026-08-23T16:23:00+09:00",
-      "reason": "SCAN-003 Page Audit と SCAN-005品質計測・検証の経験を継続利用"
-    },
-    "worker4": {
-      "task_id": "SCAN-012",
-      "title": "Review Queue Core｜低信頼・失敗ページの修復Decision Model",
-      "state": "READY_ASSIGNED",
-      "reason": "SCAN-006 Long-run/Recovery の失敗隔離・再開設計を継続利用"
-    }
+  "rule": "このFixed Waveは終了。以後はAUTONOMOUS_LANES.jsonを優先し、HQの中間配車・中間mergeを待たない。既にclaim済みのSCAN-010/011/012作業は対応laneへ吸収してよい。",
+  "legacy_assignments": {
+    "worker1": {"task_id":"SCAN-009","state":"MERGED","merge_commit_sha":"fd9cb2ec7745a927fae80a82f5cfc514ebc40020"},
+    "worker2": {"task_id":"SCAN-011","state":"ABSORB_INTO_LANE_2"},
+    "worker3": {"task_id":"SCAN-010","state":"ABSORB_INTO_LANE_3"},
+    "worker4": {"task_id":"SCAN-012","state":"ABSORB_INTO_LANE_4"}
   }
 }
