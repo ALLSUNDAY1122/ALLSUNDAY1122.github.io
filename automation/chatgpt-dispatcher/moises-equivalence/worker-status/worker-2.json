@@ -11,7 +11,7 @@
   "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "7aa0f384b8716841402115f512302b7405909983",
+  "head_sha": "1449cf6d5d1a7c9e9c2faff7afacfb105bd6600a",
   "existing_unintegrated_commits_at_epoch_start": [],
   "commits": [
     "0bd1887a479dd6098a28d47d3051ea22b7a2a1eb",
@@ -28,7 +28,7 @@
     "d23eac193ba6067b9d562294b76e410b685e474d",
     "037ebaf1e0ebdbcf6bb453beb425233e3d00ede3",
     "8c78fb8f3157cdbdf559b40352f9130623b82f93",
-    "bd2485b35634f78e83eeb3dab8a1d107a112f351",
+    "bd2485b35634f78e83eab8a1d107a112f351",
     "f220e6fcebbb3df8b419c36cabed248ad8503a0d",
     "edceaf3f0e1612c843dffecd2266124e375bfc49",
     "cd5e64f2e3c3f1c7b531aadc2567a75dbff41c3b",
@@ -60,7 +60,12 @@
     "a758a1d4df434de85864a98976b0b7dd198da613",
     "72788498b9fa3f4b682a2f6a9e42317198b720cd",
     "3f98caca03f3bc5a7324b97376be07d9ab4cebaf",
-    "7aa0f384b8716841402115f512302b7405909983"
+    "7aa0f384b8716841402115f512302b7405909983",
+    "af6afb3fd3ef0d91b97171604dca0efcc9a6bf18",
+    "116c9677a1ebe30e22114991b794a40e30482d56",
+    "eb0acd1d5f7dfb66972ecfa6f6fb8038e702f23e",
+    "9cbcce62957b5a364a4f4765ec0eb155373b65b2",
+    "1449cf6d5d1a7c9e9c2faff7afacfb105bd6600a"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -101,7 +106,11 @@
     "L2-AW09 LibraryArtifactLifecycle+UncommittedExport.swift Swift 6.2.1 Linux strict-concurrency/warnings-as-errors compile against contract-equivalent lifecycle surface => PASS",
     "L2-AW09 executable filesystem self-check => PASS 6 scenario groups; marker L2_AW09_SELF_TEST_PASS scenarios=6",
     "L2-AW09 compensation benchmark => PASS 500 files removed in 0.688726 s on this runner; Linux filesystem timing only, not an iPhone claim",
-    "L2-AW09 updated Lane2DurableLifecycleCoordinator.swift strict-concurrency/warnings-as-errors typecheck against frozen-contract-equivalent stubs => PASS; committed compensation XCTest source syntax parse => PASS"
+    "L2-AW09 updated Lane2DurableLifecycleCoordinator.swift strict-concurrency/warnings-as-errors typecheck against frozen-contract-equivalent stubs => PASS; committed compensation XCTest source syntax parse => PASS",
+    "L2-AW10 Lane2ExportRegistrationJournal.swift Swift 6.2.1 Linux strict-concurrency/warnings-as-errors compile => PASS",
+    "L2-AW10 Lane2ExportRegistrationJournalTests.swift strict-concurrency/warnings-as-errors XCTest typecheck => PASS",
+    "L2-AW10 executable journal self-check => PASS 6 scenario groups; marker L2_AW10_SELF_TEST_PASS scenarios=6; 500 intent create/list/complete benchmark 0.565492 s on this runner",
+    "L2-AW10 updated Lane2DurableLifecycleCoordinator.swift strict-concurrency/warnings-as-errors typecheck against frozen-contract-equivalent stubs => PASS; executable coordinator recovery harness => PASS 3 scenarios with marker L2_AW10_COORDINATOR_RECOVERY_PASS scenarios=3"
   ],
   "evidence": [
     "Independent Lane Worker contract v3 SHA 2edf4411f69af37f9b57a363096fb2787ecfc713 and Lane plan v3 SHA 32be5c934fcdf8f17c677c4c2d30db0808813fa5 re-read before L2-M04",
@@ -140,7 +149,12 @@
     "Library/Sources/LibraryArtifactLifecycle+UncommittedExport.swift prevalidates the full compensation candidate set and can delete only regular files strictly below Exports/**; Imports/Stems/traversal/directories fail closed before destructive work",
     "Lane2DurableLifecycleCoordinator.exportAndRecord now compensates artifacts returned before lifecycle metadata commit failure, preserving original failure semantics and recording EXPORT_COMPENSATION_INCOMPLETE when safe cleanup cannot finish",
     "Library/Tests/Lane2ExportCompensationTests.swift and Library/benchmarks/L2AW09ExportCompensationSelfCheck.swift provide corrupt-shard/unsafe-path regression coverage and executable filesystem evidence",
-    "Library/L2-AW09_STORAGE_PRESSURE_EXPORT_COMPENSATION_VALIDATION.md records executed portable evidence and explicit NON-PARITY status"
+    "Library/L2-AW09_STORAGE_PRESSURE_EXPORT_COMPENSATION_VALIDATION.md records executed portable evidence and explicit NON-PARITY status",
+    "L2-AW10 re-read current Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock 17eb0fadf7849972fe52250a256da667b0a79df9 at integration epoch 6, worker status and PARITY ledger before selection",
+    "Library/Sources/Lane2ExportRegistrationJournal.swift durably records validated Exports/** handoff intents between audio publication and lifecycle metadata registration; corrupt/unsafe/duplicate intents fail closed",
+    "Lane2DurableLifecycleCoordinator now marks active intents across reentrant awaits, retires intents after metadata commit, and recovers relaunch intents before export cleanup/orphan sweep without broad deletion",
+    "Relaunch recovery distinguishes all-registered -> preserve audio, none-registered -> AW09 exact-path compensation, and partial registration -> retain all data and fail closed",
+    "Library/L2-AW10_EXPORT_REGISTRATION_RELAUNCH_VALIDATION.md records executed portable journal/coordinator evidence and explicit NON-PARITY status"
   ],
   "known_gaps": [
     "Apple Core Data runtime execution of the L2-M01/L2-M02/L2-M03 suites remains pending an Apple/Xcode environment",
@@ -148,7 +162,7 @@
     "Actual IOSAudioIOService/IOSAtomicM4AExporter AVFoundation codec/decode/export execution is pending Apple SDK and physical-device evidence",
     "External picker/File Provider acquisition is now wired into IOSAudioIOService, but actual iPhone security-scoped URL and NSFileCoordinator provider behavior remains unverified on device",
     "Actual iPhone Files/File Provider/camera-roll/direct URL/share flows remain HQ App/iOS late-integration evidence",
-    "Export publication followed by lifecycle-metadata failure now has safe immediate compensation for uncommitted Exports/** plus durable incomplete-compensation signaling, but real ENOSPC/APFS interruption timing, physical storage pressure and iPhone share/playback retry remain unverified",
+    "Export publication -> metadata registration now has immediate compensation plus durable relaunch intents and deterministic registered/unregistered/partial convergence, but actual APFS forced-termination durability, ENOSPC timing, physical storage pressure and iPhone share/playback retry remain unverified",
     "Reference codec policy now tracks MP3/WAV/FLAC/M4A/MP4/MOV/WMA, but real Apple fixture execution is pending and WMA still needs a production compatibility decoder plus license/package audit if native decoding is unavailable",
     "Lifecycle metadata now isolates corruption to v2 shards and provides explicit byte-preserving quarantine/rebuild seams, but user-facing recovery choice, canonical ownership re-reconciliation after quarantine and actual iPhone interruption/write-failure execution remain HQ App/iOS integration gates",
     "Lifecycle metadata write amplification is reduced by project sharding and a 2000-project portable benchmark passes, but Core Data large-library runtime/RSS/latency and physical-device scale remain unverified",
@@ -166,19 +180,20 @@
     "Do not promote MOI-P001/P002/P017/P018/P019/P020 from Lane-2 branch evidence alone; PARITY remains HQ-owned",
     "At late integration expose the explicit lifecycle-metadata quarantine/rebuild decision through App recovery UX, then call canonical Library ownership reconciliation before any orphan sweep after a metadata recovery",
     "Run Lane2ExportCompensationTests on the supported Apple/package target and force ENOSPC/process termination after export publication but before/within lifecycle metadata registration; verify produced uncommitted exports are reclaimed while committed exports and source/stem content survive",
-    "No Shared/App/PARITY contract change was required by L2-AW09"
+    "Force terminate the supported iPhone process at AW10 boundaries: after intent persistence/before metadata commit and after metadata commit/before intent retirement; verify first case reclaims only unregistered Exports/** and second case preserves registered audio while retiring only the recovery intent",
+    "No Shared/App/PARITY contract change was required by L2-AW10"
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW09",
-    "goal": "Harden storage-pressure/interruption behavior when export bytes have been published but lifecycle metadata cannot commit, without broad orphan deletion or frozen-contract changes.",
-    "rationale": "AW07 made export publication atomic and AW08 made metadata sharded/corruption-isolated, but a post-export metadata failure could still leave large untracked files consuming scarce storage. This was the highest-value lane-local interruption/storage-pressure gap that could be solved without an Apple device.",
-    "done_when": "Failed pre-metadata export attempts safely compensate only returned Exports/** regular files, unsafe paths/directories fail closed before deletion, missing cleanup is idempotent, incomplete compensation is durably signalled, portable executable evidence passes, and Apple ENOSPC/device/PARITY gates remain explicit.",
+    "wave_id": "L2-AW10",
+    "goal": "Close the process-termination gap between export publication and lifecycle metadata registration with a durable lane-local handoff journal and deterministic relaunch convergence.",
+    "rationale": "AW09 could compensate only when the same process reached its catch block. A process death after export publication could still leave unregistered bytes. Core Data query tuning was lower-value without Apple runtime evidence, so relaunch durability was selected first.",
+    "done_when": "Validated Exports/** are journaled before metadata registration, active same-process intents are protected from actor-reentrant recovery, relaunch preserves fully registered audio, safely compensates wholly unregistered audio, fails closed for partial/corrupt states, portable recovery tests/benchmark/evidence pass, and Apple/device/PARITY gates remain explicit.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "7aa0f384b8716841402115f512302b7405909983",
-    "next_priority": "Continue Lane-2 storage/interruption hardening around metadata atomic-write failure/relaunch and Core Data large-library query/runtime preparation; real codec/device execution remains HQ-gated."
+    "implementation_head_sha": "1449cf6d5d1a7c9e9c2faff7afacfb105bd6600a",
+    "next_priority": "Move to Core Data large-library query/runtime hardening and bounded enumeration preparation that can be implemented lane-locally; Apple Core Data runtime, real codec/device and Differential Moises evidence remain HQ gates."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW09 continue the Lane-2 completion roadmap without waiting for HQ task replenishment.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW10 continue the Lane-2 completion roadmap without waiting for HQ task replenishment.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-23T22:49:00+09:00",
+  "last_updated": "2026-08-23T23:27:00+09:00",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ reads it for lane checkpoint integration and remains sole PARITY authority."
 }
