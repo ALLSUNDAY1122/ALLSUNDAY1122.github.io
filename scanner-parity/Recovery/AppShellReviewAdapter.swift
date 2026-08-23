@@ -1,4 +1,5 @@
 import Foundation
+import ReviewCore
 
 public enum ReviewRecoveryAction: Codable, Hashable, Sendable {
     case retryStage(pageID: String)
