@@ -51,6 +51,7 @@ let package = Package(
                 "Analysis/AnalysisBenchmarkDifferential.swift",
                 "Analysis/AnalysisReferenceCapture.swift",
                 "Analysis/AnalysisReferenceRawObservation.swift",
+                "Analysis/AnalysisReferenceReviewConsensus.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
