@@ -2,61 +2,63 @@ import Foundation
 
 @main
 enum RecoveryStressFixture {
+    static func makeEvent(_ i: Int, bookID: String) -> RecoveryPageEvent {
+        let pageID = String(format: "p-%03d", i)
+        if i % 79 == 0 {
+            return .init(bookID: bookID, pageID: pageID, sourceTimeMS: i * 1000, originalImageRef: "images/\(pageID).jpg", source: .stageFailure, outcome: .failed, reason: "decode-failure")
+        }
+        if i % 37 == 0 {
+            return .init(bookID: bookID, pageID: pageID, sourceTimeMS: i * 1000, originalImageRef: "images/\(pageID).jpg", source: .ocr, outcome: .lowConfidence, reason: "low-ocr-confidence", confidence: 0.42)
+        }
+        return .init(bookID: bookID, pageID: pageID, sourceTimeMS: i * 1000, originalImageRef: "images/\(pageID).jpg", source: .pageAudit, outcome: .completed, confidence: 0.98)
+    }
+
     static func main() throws {
-        var adapter = ReviewRecoveryAdapter()
         let bookID = "stress-book"
-        var acceptedEvents = 0
-
-        for i in 1...240 {
-            let pageID = String(format: "p-%03d", i)
-            let outcome: RecoveryPageEvent.Outcome
-            let source: ReviewSource
-            let reason: String?
-            let confidence: Double?
-            if i % 79 == 0 {
-                outcome = .failed; source = .stageFailure; reason = "decode-failure"; confidence = nil
-            } else if i % 37 == 0 {
-                outcome = .lowConfidence; source = .ocr; reason = "low-ocr-confidence"; confidence = 0.42
-            } else {
-                outcome = .completed; source = .pageAudit; reason = nil; confidence = 0.98
-            }
-            if adapter.consume(.init(bookID: bookID, pageID: pageID, sourceTimeMS: i * 1000, originalImageRef: "images/\(pageID).jpg", source: source, outcome: outcome, reason: reason, confidence: confidence)) { acceptedEvents += 1 }
-        }
-
-        precondition(acceptedEvents == 240)
-        let checkpoint = adapter.checkpoint(bookID: bookID)
-        let pendingBefore = adapter.pendingReviewItems().count
-        precondition(pendingBefore == (240 / 79) + (240 / 37))
-
         let store = RecoveryCheckpointStore()
-        let data = try store.encode(checkpoint)
-        let restored = try store.decode(data)
-        var resumed = ReviewRecoveryAdapter(checkpoint: restored)
+        let tempRoot = FileManager.default.temporaryDirectory.appendingPathComponent("scanner-parity-recovery-fixture-\(UUID().uuidString)")
+        let checkpointURL = tempRoot.appendingPathComponent("checkpoint.json")
+        defer { try? FileManager.default.removeItem(at: tempRoot) }
 
-        var duplicateAccepted = 0
-        for i in 1...240 {
-            let pageID = String(format: "p-%03d", i)
-            if resumed.consume(.init(bookID: bookID, pageID: pageID, sourceTimeMS: i * 1000, source: .pageAudit, outcome: .completed)) { duplicateAccepted += 1 }
+        var app = AppShellReviewAdapter()
+        for i in 1...123 {
+            precondition(app.ingest(makeEvent(i, bookID: bookID)))
         }
 
-        // Completed pages must not replay; unresolved review pages may be presented again but stable IDs dedupe them.
-        precondition(duplicateAccepted == pendingBefore)
-        precondition(resumed.pendingReviewItems().count == pendingBefore)
+        try store.write(app.checkpoint(bookID: bookID), to: checkpointURL)
+        let restoredCheckpoint = try store.read(from: checkpointURL)
+        var resumed = AppShellReviewAdapter(checkpoint: restoredCheckpoint)
 
-        let originalOrder = resumed.pendingReviewItems().map(\.sourceTimeMS)
-        precondition(originalOrder == originalOrder.sorted { ($0 ?? Int.max) < ($1 ?? Int.max) })
+        var replayAccepted = 0
+        for i in 1...123 {
+            if resumed.ingest(makeEvent(i, bookID: bookID)) { replayAccepted += 1 }
+        }
+        precondition(replayAccepted == 0, "completed/review-pending pages must not replay after checkpoint")
 
-        let first = resumed.pendingReviewItems().first!
-        precondition(resumed.apply(reviewID: first.reviewID, decision: .retry, note: "fixture retry"))
-        precondition(!resumed.apply(reviewID: first.reviewID, decision: .retry))
-        precondition(resumed.pendingReviewItems().count == pendingBefore - 1)
+        for i in 124...240 {
+            precondition(resumed.ingest(makeEvent(i, bookID: bookID)))
+        }
 
-        let secondCheckpoint = resumed.checkpoint(bookID: bookID)
-        let secondData = try store.encode(secondCheckpoint)
-        let secondRestored = try store.decode(secondData)
-        precondition(secondRestored.reviewSnapshot.pending.count == pendingBefore - 1)
-        precondition(secondRestored.reviewSnapshot.resolutions.count == 1)
+        let expectedPending = (240 / 79) + (240 / 37)
+        precondition(resumed.viewState.pendingCount == expectedPending)
+        precondition(resumed.viewState.completedPageCount == 240 - expectedPending)
+        precondition(resumed.viewState.lastSourceTimeMS == 240_000)
 
-        print("RecoveryStressFixture PASS pages=240 pending=\(pendingBefore) duplicateAccepted=\(duplicateAccepted) resolved=1")
+        let orderedTimes = resumed.core.pendingReviewItems().map(\.sourceTimeMS)
+        precondition(orderedTimes == orderedTimes.sorted { ($0 ?? Int.max) < ($1 ?? Int.max) })
+
+        let first = resumed.core.pendingReviewItems().first!
+        let action = resumed.decide(reviewID: first.reviewID, decision: .retry, note: "retry fixture")
+        precondition(action == .retryStage(pageID: first.pageID))
+        precondition(resumed.ingest(.init(bookID: bookID, pageID: first.pageID, sourceTimeMS: first.sourceTimeMS, originalImageRef: first.originalImageRef, source: .pageAudit, outcome: .completed)))
+        precondition(resumed.viewState.pendingCount == expectedPending - 1)
+        precondition(resumed.viewState.completedPageCount == 240 - expectedPending + 1)
+
+        try store.write(resumed.checkpoint(bookID: bookID), to: checkpointURL)
+        let secondRestore = AppShellReviewAdapter(checkpoint: try store.read(from: checkpointURL))
+        precondition(secondRestore.viewState.pendingCount == expectedPending - 1)
+        precondition(secondRestore.viewState.completedPageCount == 240 - expectedPending + 1)
+
+        print("RecoveryStressFixture PASS pages=240 interruptedAt=123 pending=\(secondRestore.viewState.pendingCount) completed=\(secondRestore.viewState.completedPageCount) replayAccepted=\(replayAccepted)")
     }
 }
