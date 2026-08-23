@@ -1,25 +1,58 @@
 {
-  "request_id": "app2-003-build4-diagnostic2-start-20260823-2245",
-  "action": "build",
+  "request_id": "app2-003-build4-diagnostic2-inspect-20260823-2246",
+  "action": "inspect_build",
   "repository": "ALLSUNDAY1122/yoru-no-shoka",
   "workflow_id": "yoru-ios",
   "branch": "main",
   "ok": true,
-  "application_candidates": [
-    {
-      "id": "6a8af6e5a5c86907b00c2efd",
-      "name": "yoru-no-shoka",
-      "repositoryUrl": null,
-      "branches": [
-        "main",
-        "release/eas-build4-trigger",
-        "ui/pattern-c-paper-warm"
-      ]
-    }
-  ],
-  "resolved_app_id": "6a8af6e5a5c86907b00c2efd",
-  "app_id": "6a8af6e5a5c86907b00c2efd",
   "build_id": "6a8af95fa6e7f745ad32542d",
-  "status": "started",
-  "build_url": "https://codemagic.io/app/6a8af6e5a5c86907b00c2efd/build/6a8af95fa6e7f745ad32542d"
+  "status": "failed",
+  "build_details": {
+    "id": "6a8af95fa6e7f745ad32542d",
+    "app_id": "6a8af6e5a5c86907b00c2efd",
+    "workflow": {
+      "id": "yoru-ios",
+      "source": "file",
+      "name": "夜の書架 - Build 4 Diagnostic"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "failed",
+    "index": 4,
+    "artifacts": [
+      {
+        "name": "yoru-no-shoka_4_artifacts.zip",
+        "size_in_bytes": 1134,
+        "type": "bundle",
+        "short_lived_download_url": "https://api.codemagic.io//artifacts/.eJwVwduSQzAAANB_6bsZiUt42AcJVXGbVVL1YlY7hEVUS8vX7-w5h8b6hx_tOtS4uOCFmcvby_ZYIxOql8o4PtVBAe5pzcNbt4qyLjuYWZohAocagWx3UWzD1OkEUWbUnNLXgrOFwUs4c5mrZlq2z2pMWpXqWzY38xlRkZ23AQxRNUgP95GzZffOb8nf6SQh-r5Dpac8Q5Yl8z0tbMJLYNLV6uaezd9R94KVip4fIkItj00QlJHvJg4gdxfn46tted433tYDnW1BXBSG7n8SsmoAp30tL7BjtGYTnHyfc-SU3FXwMY97MSpsIqerAzGkhTeJKpySDZW5U_-a2yfkmhivu3e78R8m2U34dfgD-EJoGQ.TUFaXIhxpHTir3IkVbSWyAQvO4g",
+        "version_code": null,
+        "version_name": null
+      }
+    ],
+    "labels": [],
+    "release_notes": [],
+    "created_at": "2026-08-23T13:45:03.804000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "29cf649ea4e80a5ba451f4b2daa703c4e757250a",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "Route APP2-003 gateway to post-Corepack diagnostic",
+      "url": "https://github.com/ALLSUNDAY1122/yoru-no-shoka/commit/29cf649ea4e80a5ba451f4b2daa703c4e757250a"
+    },
+    "branch": "main",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-08-23T13:45:14.898000Z",
+    "finished_at": "2026-08-23T13:45:51.619000Z"
+  }
 }
