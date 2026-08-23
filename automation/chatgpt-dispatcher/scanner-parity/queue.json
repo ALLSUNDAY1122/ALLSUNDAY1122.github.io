@@ -11,11 +11,22 @@
   "integration_epoch": 1,
   "integration_head": "99a8d30f2a09c85119869feabae9b411a3431133",
   "paused": false,
+  "golden_validation_policy": {
+    "worker_blocking": false,
+    "worker_pending_status": "PENDING_HQ_GOLDEN",
+    "formal_gate": "HQ_GOLDEN_GATE",
+    "formal_gate_timing": "POST_INTEGRATION",
+    "owner": "HQ",
+    "sha_mismatch_owner": "HQ",
+    "blocked_human_for_golden_only": false
+  },
   "tasks": [
     {
       "task_id": "SCAN-001",
       "title": "動画から完成ページだけを抽出するStable Frame Engine",
-      "status": "BLOCKED_HUMAN",
+      "status": "INTEGRATION_READY",
+      "golden_status": "PENDING_HQ_GOLDEN",
+      "non_golden_acceptance": "COMPLETE",
       "priority": 100,
       "dependencies": [],
       "baseline_sha": "99a8d30f2a09c85119869feabae9b411a3431133",
@@ -37,7 +48,9 @@
     {
       "task_id": "SCAN-002",
       "title": "書籍ページ補正Engine｜輪郭・台形・傾き・色・影・湾曲",
-      "status": "BLOCKED_HUMAN",
+      "status": "INTEGRATION_READY",
+      "golden_status": "PENDING_HQ_GOLDEN",
+      "non_golden_acceptance": "COMPLETE",
       "priority": 95,
       "dependencies": [],
       "baseline_sha": "99a8d30f2a09c85119869feabae9b411a3431133",
@@ -59,7 +72,9 @@
     {
       "task_id": "SCAN-003",
       "title": "ページ完全性監査｜番号・抜け・逆転・重複・順序修復",
-      "status": "BLOCKED_HUMAN",
+      "status": "INTEGRATION_READY",
+      "golden_status": "PENDING_HQ_GOLDEN",
+      "non_golden_acceptance": "COMPLETE",
       "priority": 98,
       "dependencies": [],
       "baseline_sha": "99a8d30f2a09c85119869feabae9b411a3431133",
@@ -81,7 +96,9 @@
     {
       "task_id": "SCAN-004",
       "title": "日本語OCR・検索可能PDF・AIデータ書き出し",
-      "status": "BLOCKED_HUMAN",
+      "status": "INTEGRATION_READY",
+      "golden_status": "PENDING_HQ_GOLDEN",
+      "non_golden_acceptance": "COMPLETE",
       "priority": 90,
       "dependencies": [],
       "baseline_sha": "99a8d30f2a09c85119869feabae9b411a3431133",
