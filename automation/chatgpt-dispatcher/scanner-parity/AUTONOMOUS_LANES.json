@@ -1,0 +1,154 @@
+{
+  "project": "書籍スキャナー同等化｜動画式ブックスキャナー＋AIデータ化",
+  "mode": "AUTONOMOUS_LANES",
+  "active": true,
+  "effective_at": "2026-08-23T16:35:00+09:00",
+  "baseline_integration_head": "fd9cb2ec7745a927fae80a82f5cfc514ebc40020",
+  "integration_epoch": 2,
+  "hq_policy": {
+    "intermediate_merge": false,
+    "intermediate_task_dispatch": false,
+    "intermediate_review_required": false,
+    "final_integration_only": true,
+    "golden_gate_owner": "HQ",
+    "shared_contract_owner": "HQ"
+  },
+  "worker_policy": {
+    "self_plan_within_lane": true,
+    "continue_until_lane_done": true,
+    "create_internal_subtasks_without_hq": true,
+    "commit_and_push_checkpoints": true,
+    "open_only_final_lane_pr": true,
+    "do_not_merge_own_final_pr": true,
+    "do_not_modify_shared_contract": true,
+    "do_not_wait_for_other_lanes": true,
+    "cross_lane_dependency_strategy": "use stable shared contract, adapters, fixtures, stubs and evidence; record unresolved final-integration assumptions instead of blocking",
+    "human_gate_strategy": "only true human-only actions may stop a lane; Golden availability/SHA mismatch alone never blocks"
+  },
+  "lanes": {
+    "worker1": {
+      "lane_id": "LANE-1-PRODUCT",
+      "name": "iOS Product Shell・Orchestration・実利用フロー",
+      "branch": "scanner-parity/worker1-product-lane",
+      "mission": "既に統合済みのFrameExtraction/ImageCorrection/PageAudit/OCRExport/PipelineOCRを、iPhoneで実際に使える1本のアプリ体験へまとめる。入力→進捗→レビュー入口→BookPackage書き出しまでを完成させる。",
+      "write_scope": [
+        "scanner-parity/AppShell/**",
+        "scanner-parity/ProductFlow/**",
+        "scanner-parity/Tests/AppShell/**",
+        "scanner-parity/Tests/ProductFlow/**",
+        "automation/chatgpt-dispatcher/scanner-parity/evidence/LANE-1-*.md"
+      ],
+      "milestones": [
+        "SwiftUI app shellとnavigation/state machine",
+        "動画/写真入力と権限・失敗復旧",
+        "統合済みpipelineのorchestration adapter",
+        "処理進捗・キャンセル・再開UI",
+        "review_requiredへの入口と後続ReviewCoreを差し替え可能なadapter",
+        "BookPackage保存/共有/Files書き出しUX",
+        "200ページ級を想定したUI非ブロック/バックグラウンド状態設計",
+        "Apple SDK compile fixtureと主要product-flow test",
+        "LANE-1最終Evidenceとfinal PR"
+      ],
+      "done_when": [
+        "ユーザーがiPhone上で入力を選び処理を開始できる",
+        "主要stage失敗がcrashではなく表示/再試行へ流れる",
+        "最終成果物をFiles/共有導線へ渡せる",
+        "未統合laneへの依存はadapter境界で明示されている",
+        "shared contractを変更していない",
+        "final PRがintegration向けにopenである"
+      ]
+    },
+    "worker2": {
+      "lane_id": "LANE-2-PRIVACY",
+      "name": "Privacy・Security・Apple Compliance Hardening",
+      "branch": "scanner-parity/worker2-privacy-lane",
+      "mission": "書籍画像/OCR本文が意図せず外部送信されないことをコード・設定・テストで担保し、Apple申請前のPrivacy/Security技術面を完成させる。現在のSCAN-011をこのlaneへ吸収する。",
+      "write_scope": [
+        "scanner-parity/PrivacyAudit/**",
+        "scanner-parity/SecurityHardening/**",
+        "scanner-parity/Tests/PrivacyAudit/**",
+        "scanner-parity/Tests/SecurityHardening/**",
+        "automation/chatgpt-dispatcher/scanner-parity/evidence/LANE-2-*.md"
+      ],
+      "milestones": [
+        "SCAN-011 Privacy Static Audit完遂",
+        "network/analytics/external-AI dependency inventory",
+        "画像/OCR本文の端末外送信denylist/allowlist regression test",
+        "権限・一時ファイル・ログ・キャッシュのデータライフサイクル監査",
+        "Privacy Manifest/Info.plist要求事項の技術棚卸し",
+        "外部AI未使用の標準経路をEvidence化",
+        "将来外部送信追加時にCIで検知するfixture",
+        "LANE-2最終Evidenceとfinal PR"
+      ],
+      "done_when": [
+        "標準経路で書籍画像/OCR本文の第三者送信がないことを静的/fixtureで示せる",
+        "Apple標準framework利用と外部通信を区別できる",
+        "ログ/キャッシュ/一時ファイルの保持境界が明示されている",
+        "最終Privacy PASS自体はHQ Release Gateに残している",
+        "final PRがintegration向けにopenである"
+      ]
+    },
+    "worker3": {
+      "lane_id": "LANE-3-PACKAGE",
+      "name": "BookPackage・OCR品質・出力完全性",
+      "branch": "scanner-parity/worker3-package-quality-lane",
+      "mission": "検索可能PDF、ページ画像、TXT/Markdown、manifestをAI投入可能な一貫したBookPackageとして完成させ、破損・欠落・順序不一致・OCR品質劣化を自動検出できるようにする。SCAN-010を最初のmilestoneとする。",
+      "write_scope": [
+        "scanner-parity/PackageValidation/**",
+        "scanner-parity/PackageQuality/**",
+        "scanner-parity/Tests/PackageValidation/**",
+        "scanner-parity/Tests/PackageQuality/**",
+        "automation/chatgpt-dispatcher/scanner-parity/evidence/LANE-3-*.md"
+      ],
+      "milestones": [
+        "SCAN-010 BookPackage Integrity Verifier完遂",
+        "pages/text/manifest/PDFの件数・ID・順序整合",
+        "searchable PDF text-layer検証",
+        "日本語縦書き/横書き/mixed OCR品質fixture",
+        "Markdown/TXTのページ境界と順序の検証",
+        "AI ingestion向けmanifest schema usability test",
+        "破損/欠落/重複/壊れた参照のfail-close report",
+        "Golden Gateが後から実データを差し込めるquality report interface",
+        "LANE-3最終Evidenceとfinal PR"
+      ],
+      "done_when": [
+        "synthetic BookPackageの正常/異常を再現可能に判定できる",
+        "PDFページ順とmanifest/page image/textが一致する",
+        "OCR品質の低信頼ページをreview対象として出せる",
+        "Golden原本なしで非Golden acceptanceが完了する",
+        "final PRがintegration向けにopenである"
+      ]
+    },
+    "worker4": {
+      "lane_id": "LANE-4-RECOVERY",
+      "name": "Review・Recovery・Long-run Reliability",
+      "branch": "scanner-parity/worker4-review-recovery-lane",
+      "mission": "低信頼ページ、OCR失敗、ページ抜け、処理中断をユーザーが安全に修復でき、200ページ級でも途中状態から復旧できるReview/Recovery基盤を完成させる。SCAN-012を最初のmilestoneとする。",
+      "write_scope": [
+        "scanner-parity/ReviewCore/**",
+        "scanner-parity/Recovery/**",
+        "scanner-parity/Tests/ReviewCore/**",
+        "scanner-parity/Tests/Recovery/**",
+        "automation/chatgpt-dispatcher/scanner-parity/evidence/LANE-4-*.md"
+      ],
+      "milestones": [
+        "SCAN-012 Review Queue Core完遂",
+        "PageAudit/OCR/stage failureの統一review item model",
+        "修復/再OCR/再撮影/保留/除外decision",
+        "安定IDによるreview item重複排除",
+        "checkpoint/resumeとreview queueの整合",
+        "中断・再開・部分失敗のrecovery fixture",
+        "200ページ級stressで重複生成・全体crashを防止",
+        "AppShellから呼べるreview/recovery adapter",
+        "LANE-4最終Evidenceとfinal PR"
+      ],
+      "done_when": [
+        "低信頼/失敗ページを冊子全体失敗にせず隔離できる",
+        "再処理後も元順序・原画像参照を維持できる",
+        "checkpoint resumeで二重生成しない",
+        "review/recovery APIがAppShellから利用可能である",
+        "final PRがintegration向けにopenである"
+      ]
+    }
+  }
+}
