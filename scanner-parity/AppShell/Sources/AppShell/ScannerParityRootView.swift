@@ -38,13 +38,8 @@ public struct ScannerParityRootView: View {
             }
             .navigationTitle("Book Scanner")
         }
-        .task {
-            store.send(.cameraPermissionChanged(importer.currentCameraPermission()))
-            store.restoreCheckpoint()
-        }
-        .onChange(of: scenePhase) { _, phase in
-            handleScenePhase(phase)
-        }
+        .task { store.restoreCheckpoint() }
+        .onChange(of: scenePhase) { _, phase in handleScenePhase(phase) }
         .fileImporter(
             isPresented: $showFileImporter,
             allowedContentTypes: [.image, .movie],
@@ -89,14 +84,6 @@ public struct ScannerParityRootView: View {
                 Button { showFileImporter = true } label: {
                     Label("Choose from Files", systemImage: "folder")
                 }
-
-                Button {
-                    Task {
-                        store.send(.cameraPermissionChanged(await importer.requestCameraPermission()))
-                    }
-                } label: {
-                    Label("Check camera permission", systemImage: "camera")
-                }
             }
 
             if !store.state.inputAssets.isEmpty {
@@ -126,12 +113,6 @@ public struct ScannerParityRootView: View {
             if let error = importer.lastError {
                 Section("Import warning") { Text(error) }
             }
-
-            if store.state.cameraPermission == .denied || store.state.cameraPermission == .restricted {
-                Section("Camera unavailable") {
-                    Text("Camera access is unavailable. Photos and Files import still work, so scanning is not blocked.")
-                }
-            }
         }
     }
 
@@ -160,7 +141,7 @@ public struct ScannerParityRootView: View {
     private var reviewView: some View {
         List {
             Section("Needs review") {
-                Text("\(store.reviewItems.count) page issue(s) remain. Recovery actions are routed through a replaceable ReviewCore adapter.")
+                Text("\(store.reviewItems.count) page issue(s) remain. Recovery actions are routed through the Review/Recovery adapter.")
                     .font(.footnote)
             }
             ForEach(store.reviewItems) { item in
@@ -192,7 +173,9 @@ public struct ScannerParityRootView: View {
                     Label("Save to Files", systemImage: "folder.badge.plus")
                 }
                 #endif
-                Button("Finish") { store.markExportFinished() }
+                Button("Finish and remove local staging", role: .destructive) {
+                    store.markExportFinished()
+                }
             }
         }
         .padding()
@@ -201,9 +184,9 @@ public struct ScannerParityRootView: View {
     private var completedView: some View {
         VStack(spacing: 16) {
             Text("Completed").font(.headline)
-            if let url = store.state.bookPackageURL {
-                ShareLink(item: url) { Label("Share again", systemImage: "square.and.arrow.up") }
-            }
+            Text("Local processing and export staging has been cleaned up.")
+                .font(.footnote)
+                .multilineTextAlignment(.center)
             Button("Scan another book") {
                 importer.discardImportedAssets(store.state.inputAssets)
                 store.replaceInput([])
