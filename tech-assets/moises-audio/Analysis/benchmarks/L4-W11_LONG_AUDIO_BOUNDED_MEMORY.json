@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W11",
+  "domain": "analysis-long-audio-performance",
+  "evidence_class": "NON_PARITY_PORTABLE_SYNTHETIC",
+  "parity_eligible": false,
+  "environment": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu"
+  },
+  "portable_harness": {
+    "assertions_passed": 13,
+    "assertions_total": 13,
+    "runs": 5,
+    "run_results": ["13/13", "13/13", "13/13", "13/13", "13/13"],
+    "elapsed_seconds": [0.02, 0.02, 0.02, 0.02, 0.02],
+    "max_rss_kb": [20596, 20628, 20696, 20600, 20584],
+    "coverage": [
+      "44.1kHz_to_8kHz_preparation",
+      "duration_preservation",
+      "NaN_infinity_pathological_amplitude_sanitization",
+      "sample_count_reduction",
+      "one_hour_budget_estimate",
+      "synthetic_120_bpm",
+      "synthetic_C_major_key",
+      "bounded_chord_timeline_end",
+      "budget_codable"
+    ]
+  },
+  "preparation_stress": {
+    "fixture": "project-generated 120-second 44.1kHz mono sine",
+    "source_samples": 5292000,
+    "prepared_samples": 960000,
+    "prepared_sample_rate": 8000,
+    "duration_seconds": 120.0,
+    "preparation_wall_seconds": [0.014450, 0.010794, 0.011514],
+    "process_max_rss_kb": [39920, 39996, 40024]
+  },
+  "one_hour_44_1khz_budget_estimate": {
+    "source_pcm_bytes": 635040000,
+    "prepared_pcm_bytes": 115200000,
+    "legacy_whole_track_double_bytes": 1270080000,
+    "estimated_new_peak_additional_bytes": 118080000,
+    "estimated_peak_reduction_ratio_vs_legacy_double_region": 10.75609756097561
+  },
+  "important_limits": [
+    "Peak-memory value is a deterministic working-set model, not physical-iPhone RSS evidence.",
+    "Portable max RSS includes the synthetic fixture and process runtime and is not an iPhone memory claim.",
+    "No real audio or current-iPhone Moises differential was executed.",
+    "This evidence cannot promote MOI-P009, MOI-P011, MOI-P013, MOI-P016, or MOI-P021."
+  ]
+}
