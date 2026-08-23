@@ -1,0 +1,79 @@
+name: Scaniverse RootScanView MainActor hotfix
+
+on:
+  push:
+    branches:
+      - feature/splat-native-ios-poc
+    paths:
+      - '.github/workflows/scaniverse-root-mainactor-hotfix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-root-scan-view:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-native-ios-poc
+          fetch-depth: 0
+
+      - name: Apply exact actor-isolation patch
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('splat-native-ios/SplatNative/RootScanView.swift')
+          source = path.read_text()
+
+          replacements = [
+              (
+                  '    final class Coordinator: NSObject {\n',
+                  '    @MainActor\n    final class Coordinator: NSObject {\n',
+              ),
+              (
+                  '        private var timer: Timer?\n',
+                  '        private var updateTask: Task<Void, Never>?\n',
+              ),
+              (
+                  '''            let timer = Timer(timeInterval: 0.22, repeats: true) { [weak self] _ in\n                self?.updateHeatmap()\n            }\n            RunLoop.main.add(timer, forMode: .common)\n            self.timer = timer\n''',
+                  '''            updateTask?.cancel()\n            updateTask = Task { @MainActor [weak self] in\n                while !Task.isCancelled {\n                    try? await Task.sleep(nanoseconds: 220_000_000)\n                    guard !Task.isCancelled else { break }\n                    self?.updateHeatmap()\n                }\n            }\n''',
+              ),
+              (
+                  '''        deinit {\n            timer?.invalidate()\n        }\n''',
+                  '''        deinit {\n            updateTask?.cancel()\n        }\n''',
+              ),
+          ]
+
+          for old, new in replacements:
+              count = source.count(old)
+              if count != 1:
+                  raise SystemExit(f'expected exactly one match, got {count}: {old!r}')
+              source = source.replace(old, new, 1)
+
+          required = [
+              '    @MainActor\n    final class Coordinator: NSObject {',
+              'private var updateTask: Task<Void, Never>?',
+              'Task { @MainActor [weak self] in',
+              'updateTask?.cancel()',
+          ]
+          for needle in required:
+              if needle not in source:
+                  raise SystemExit(f'missing expected patched content: {needle}')
+
+          path.write_text(source)
+          PY
+          git diff --check
+          git diff -- splat-native-ios/SplatNative/RootScanView.swift
+
+      - name: Commit scoped source fix
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add splat-native-ios/SplatNative/RootScanView.swift
+          git diff --cached --quiet && { echo 'No source change produced'; exit 1; }
+          git commit -m 'fix(splat): isolate capture heatmap on main actor'
+          git push origin HEAD:feature/splat-native-ios-poc
