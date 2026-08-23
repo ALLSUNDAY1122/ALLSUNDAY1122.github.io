@@ -6,15 +6,20 @@ let package = Package(
     platforms: [.iOS(.v17)],
     products: [.library(name: "AppShell", targets: ["AppShell"])],
     dependencies: [
-        .package(path: "../ProductFlow"),
-        .package(path: ".."),
-        .package(path: "../Recovery"),
-        .package(path: "../ReviewCore")
+        .package(name: "ProductFlow", path: "../ProductFlow"),
+        .package(name: "ScannerParityRuntime", path: ".."),
+        .package(name: "Recovery", path: "../Recovery"),
+        .package(name: "ReviewCore", path: "../ReviewCore")
     ],
     targets: [
         .target(
             name: "AppShell",
-            dependencies: ["ProductFlow", "ScannerRuntime", "Recovery", "ReviewCore"],
+            dependencies: [
+                .product(name: "ProductFlow", package: "ProductFlow"),
+                .product(name: "ScannerRuntime", package: "ScannerParityRuntime"),
+                .product(name: "Recovery", package: "Recovery"),
+                .product(name: "ReviewCore", package: "ReviewCore")
+            ],
             resources: [.copy("Resources/PrivacyInfo.xcprivacy")]
         )
     ]
