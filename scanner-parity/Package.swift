@@ -10,6 +10,7 @@ let package = Package(
     products: [
         .library(name: "ScannerRuntime", targets: ["ScannerRuntime"]),
         .library(name: "RuntimeComposition", targets: ["RuntimeComposition"]),
+        .library(name: "HQGoldenSupport", targets: ["HQGoldenSupport"]),
         .executable(name: "scanner-hq-golden-runner", targets: ["HQGoldenRunner"])
     ],
     dependencies: [
@@ -24,6 +25,7 @@ let package = Package(
                 "AppleValidation",
                 "GoldenEvaluation",
                 "HQGoldenRunner",
+                "HQGoldenSupport",
                 "LongRun",
                 "PackageQuality",
                 "PrivacyAudit",
@@ -78,13 +80,23 @@ let package = Package(
                 "GoldenHardenedScannerRuntime.swift"
             ]
         ),
+        .target(
+            name: "HQGoldenSupport",
+            path: "HQGoldenSupport"
+        ),
         .executableTarget(
             name: "HQGoldenRunner",
             dependencies: [
                 "RuntimeComposition",
+                "HQGoldenSupport",
                 .product(name: "ProductFlow", package: "ProductFlow")
             ],
             path: "HQGoldenRunner"
+        ),
+        .testTarget(
+            name: "HQGoldenSupportTests",
+            dependencies: ["HQGoldenSupport"],
+            path: "Tests/HQGoldenSupport"
         )
     ]
 )
