@@ -6,6 +6,7 @@
 
 - `PageCandidate.candidateID / bookID / sourceTimeMS / sourceRangeMS / flags` を補正・監査境界で消失させない。
 - `CorrectedPageMetadata.pageID / candidateID` と上流IDの不一致を黙って通さない。
+- `PageNumberObservation.pageID` がpipeline pageと不一致なら、その番号証拠を自動修復へ使わずreviewへ隔離する。
 - 補正失敗・低境界信頼度をページごと破棄せず `PageAuditResult.reviewRequired` へ伝播する。
 - PageAuditへ渡す `sourceTimeMs` は必ず元 `PageCandidate.sourceTimeMS` を使用し、動画時系列を正本として保持する。
 
@@ -19,7 +20,9 @@ Shared Contractおよび既存FrameExtraction/ImageCorrection/PageAudit型は変
 
 ## Failure policy
 
-補正処理が失敗しても、そのページを監査入力から除外しない。`PageCandidate` の時刻とpage IDを残した `PageAuditInput` を生成し、`PageReviewReason.conflictingEvidence` と `stage_failure:` 詳細を付与する。低境界信頼度、ID lineage mismatchも同じくreviewへ送る。
+補正処理が失敗しても、そのページを監査入力から除外しない。`PageCandidate` の時刻とpage IDを残した `PageAuditInput` を生成し、`PageReviewReason.conflictingEvidence` と `stage_failure:` 詳細を付与する。低境界信頼度、補正ID lineage mismatchも同じくreviewへ送る。
+
+ページ番号OCRの `PageNumberObservation.pageID` がpipelineの `pageID` と一致しない場合、そのObservationを `PageAuditInput` へ渡さない。誤った番号証拠が重複判定・順序自動修復を駆動することを防ぎ、`contract_mismatch` としてreviewへ残す。
 
 ## Fixture coverage
 
@@ -33,5 +36,6 @@ Shared Contractおよび既存FrameExtraction/ImageCorrection/PageAudit型は変
 6. stage failure伝播
 7. low-confidence伝播
 8. page/candidate ID mismatch検出
+9. page-number observation ID mismatchの隔離
 
 Golden原本は使用しない。SCAN-008は `golden_status=NOT_APPLICABLE_WORKER` であり、正式Golden判定は行わない。
