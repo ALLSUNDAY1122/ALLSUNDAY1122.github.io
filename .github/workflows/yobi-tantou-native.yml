@@ -1,0 +1,118 @@
+name: Yobi Tantou Source Contract
+
+on:
+  push:
+    branches:
+      - feature/yobi-tantou-native-swiftui
+    paths:
+      - 'learning-sprint/yobi-tantou/**'
+      - '.github/workflows/yobi-tantou-native.yml'
+      - '.github/workflows/yobi-tantou-swift.yml'
+  pull_request:
+    paths:
+      - 'learning-sprint/yobi-tantou/**'
+      - '.github/workflows/yobi-tantou-native.yml'
+      - '.github/workflows/yobi-tantou-swift.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: yobi-tantou-source-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  source-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF parser
+        run: python -m pip install --disable-pip-version-check pypdf==6.1.1
+      - name: Native source contract
+        run: python learning-sprint/yobi-tantou/audit_native.py
+      - name: Candidate question preflight self-test
+        run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py --self-test
+      - name: Foundation candidate question bank preflight
+        run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py learning-sprint/yobi-tantou/content-loop/questions.candidates.v1.json
+      - name: Foundation exact-date statutory source audit
+        run: python learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
+      - name: Foundation answer and explanation audit
+        run: python learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
+      - name: Standard candidate bank preflight
+        run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py learning-sprint/yobi-tantou/content-loop/questions.standard.candidates.v1.json
+      - name: Standard exact-date statutory source audit
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
+          --bank learning-sprint/yobi-tantou/content-loop/questions.standard.candidates.v1.json
+          --locks learning-sprint/yobi-tantou/content-loop/standard-source-locks.v1.json
+      - name: Standard answer and explanation audit
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
+          --bank learning-sprint/yobi-tantou/content-loop/questions.standard.candidates.v1.json
+          --audit learning-sprint/yobi-tantou/content-loop/standard-answer-audit.v1.json
+          --locks learning-sprint/yobi-tantou/content-loop/standard-source-locks.v1.json
+      - name: Applied candidate bank preflight
+        run: python learning-sprint/yobi-tantou/content-loop/validate_candidates.py learning-sprint/yobi-tantou/content-loop/questions.applied.candidates.v1.json
+      - name: Applied exact-date statutory source audit
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
+          --bank learning-sprint/yobi-tantou/content-loop/questions.applied.candidates.v1.json
+          --locks learning-sprint/yobi-tantou/content-loop/applied-source-locks.v1.json
+      - name: Applied answer and explanation audit
+        run: >-
+          python learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
+          --bank learning-sprint/yobi-tantou/content-loop/questions.applied.candidates.v1.json
+          --audit learning-sprint/yobi-tantou/content-loop/applied-answer-audit.v1.json
+          --locks learning-sprint/yobi-tantou/content-loop/applied-source-locks.v1.json
+      - name: Practice staging self-test
+        run: python learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py --self-test
+      - name: Practice promotion self-test
+        run: python learning-sprint/yobi-tantou/content-loop/promote_practice_release.py --self-test
+      - name: Practice quality release audit
+        run: python learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py --require-pass
+      - name: Practice tier combiner self-test
+        run: python learning-sprint/yobi-tantou/content-loop/combine_practice_release.py --self-test
+      - name: Three-mock readiness audit
+        run: |
+          python learning-sprint/yobi-tantou/content-loop/audit_practice_mock_readiness.py
+          cat learning-sprint/yobi-tantou/content-loop/practice-mock-readiness.v1.json
+      - name: Probe MOJ official PDF links from runner
+        run: python learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
+      - name: Official R6-R8 PDF structure audit
+        run: python learning-sprint/yobi-tantou/content-loop/audit_official_pdf_structure.py
+      - name: Inspect official R6-R7 scoring table layout
+        run: python learning-sprint/yobi-tantou/content-loop/inspect_official_scoring_layout.py
+      - name: Inspect official question shapes and result scores
+        run: python learning-sprint/yobi-tantou/content-loop/inspect_official_exam_shapes.py
+      - name: Inspect R7 missing response-slot blocks
+        run: python learning-sprint/yobi-tantou/content-loop/inspect_missing_r7_slots.py
+      - name: Audited release builder self-test
+        run: python learning-sprint/yobi-tantou/content-loop/build_native_release.py --self-test
+      - name: Production release preflight self-test
+        run: python learning-sprint/yobi-tantou/ios/release-preflight.py --self-test
+      - name: App Store draft consistency
+        run: python learning-sprint/yobi-tantou/validate-app-store-draft.py
+      - name: Source and release script syntax
+        run: |
+          bash -n learning-sprint/yobi-tantou/ios/prepare-ios.sh
+          python -m py_compile learning-sprint/yobi-tantou/ios/verify_app_icon.py
+          python -m py_compile learning-sprint/yobi-tantou/ios/release-preflight.py
+          python -m py_compile learning-sprint/yobi-tantou/validate-app-store-draft.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_candidate_sources.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_candidate_answers.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/stage_practice_release_candidates.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_practice_release_quality.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/promote_practice_release.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/combine_practice_release.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/build_native_release.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_practice_mock_readiness.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/probe_moj_pdfs.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/audit_official_pdf_structure.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/inspect_official_scoring_layout.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/inspect_official_exam_shapes.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/inspect_missing_r7_slots.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/summarize_official_answer_tables.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/summarize_official_question_shapes.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/build_official_scoring_canonical_fixed.py
+          python -m py_compile learning-sprint/yobi-tantou/content-loop/triage_general_education_rights.py

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-14",
+  "purpose": "独自模試の一般教養44題を、公式問題本文や第三者著作物を再利用せずに構成するための内部カバレッジ正本。カテゴリ名は法務省の公式分類ではない。",
+  "subject": "一般教養",
+  "offeredPerMock": 44,
+  "selectedPerMock": 20,
+  "internalCategories": {
+    "quantitative_logic": 11,
+    "natural_science_reasoning": 11,
+    "social_data_reasoning": 11,
+    "language_reading": 11
+  },
+  "rightsRules": {
+    "defaultOriginType": "self_authored_original",
+    "thirdPartyText": "forbidden",
+    "thirdPartyImage": "forbidden",
+    "thirdPartyChart": "forbidden",
+    "officialExamTextReuse": "forbidden",
+    "namedLiteraryWorkExcerpt": "forbidden",
+    "selfAuthoredPassage": "allowed",
+    "selfGeneratedNumbersAndTables": "allowed",
+    "externalFactQuestion": "allowed_only_with_separate_primary_source_audit"
+  },
+  "qualityRules": {
+    "choicesPerQuestion": 4,
+    "duplicateIds": 0,
+    "exactDuplicateQuestions": 0,
+    "highSimilarityInflation": 0,
+    "missingExplanation": 0,
+    "missingDistractorRationale": 0,
+    "missingVerification": 0,
+    "deterministicQuestionsMustRecompute": true
+  },
+  "releaseRule": "一般教養candidateは、権利監査・正答監査・誤答理由・横断重複・教材品質の全ゲートPASS後のみmock-bankへrelease_passedで固定する。"
+}

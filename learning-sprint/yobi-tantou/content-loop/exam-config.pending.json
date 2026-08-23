@@ -1,0 +1,63 @@
+{
+  "qualification": "司法試験予備試験・短答式",
+  "series": "学びスプリント",
+  "status": "official_structure_verified_scoring_audit_in_progress",
+  "targetYears": [2026, 2025, 2024],
+  "subjects": [
+    "憲法",
+    "行政法",
+    "民法",
+    "商法",
+    "民事訴訟法",
+    "刑法",
+    "刑事訴訟法",
+    "一般教養"
+  ],
+  "officialQuestionCounts": {
+    "2026": {"憲法":12,"行政法":12,"民法":15,"商法":15,"民事訴訟法":15,"刑法":13,"刑事訴訟法":13,"一般教養出題":44,"一般教養選択":20},
+    "2025": {"憲法":12,"行政法":12,"民法":15,"商法":15,"民事訴訟法":15,"刑法":13,"刑事訴訟法":13,"一般教養出題":44,"一般教養選択":20},
+    "2024": {"憲法":12,"行政法":12,"民法":15,"商法":15,"民事訴訟法":15,"刑法":13,"刑事訴訟法":13,"一般教養出題":42,"一般教養選択":20}
+  },
+  "officialAnswerStatus": {
+    "2026": "official_question_pdfs_verified_answer_and_points_not_linked_on_results_parent_as_of_2026-08-13",
+    "2025": "official_answer_and_points_pdfs_verified_scoring_layout_audit_in_progress",
+    "2024": "official_answer_and_points_pdfs_verified_scoring_layout_audit_in_progress"
+  },
+  "yearSpecificGates": {
+    "2026": ["official_answer_source", "question_level_rights", "scoring_status"],
+    "2025": ["answer_and_points_structure", "misprint_correction_effect", "question_level_rights", "scoring_status"],
+    "2024": ["answer_and_points_structure", "question_level_rights", "scoring_status"]
+  },
+  "lawBasisDates": {
+    "2026": "2026-01-01",
+    "2025": "2025-01-01",
+    "2024": "2024-01-01"
+  },
+  "lawBasisRule": "From the 2024 preliminary examination onward, questions are in principle based on laws in force on January 1 of the year in which the short-answer and essay examinations are held.",
+  "officialRepeatPolicy": false,
+  "releaseRule": "Official structure is now fixed from official PDFs. Do not release official/adapted questions until answer/scoring structure, correction notice when applicable, PDL1.0 applicability, third-party rights, and law-basis date are audited per item.",
+  "primarySources": {
+    "2026Problems": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00317.html",
+    "2026ResultsParent": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00315.html",
+    "2026QA": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00210.html",
+    "2026CommitteeDecisions": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00296.html",
+    "2025Problems": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00287.html",
+    "2025ShortAnswerResultsAndAnswers": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00289.html",
+    "2025ResultsHubWithCorrectionNotice": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00285.html",
+    "2025Implementation": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00244.html",
+    "2024Problems": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00228.html",
+    "2024ShortAnswerResultsAndAnswers": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00258.html",
+    "2024ImplementationAndLawRule": "https://www.moj.go.jp/jinji/shihoushiken/jinji07_00162.html",
+    "mojContentTerms": "https://www.moj.go.jp/hisho06_00280.html"
+  },
+  "contentFiles": {
+    "sourceAudit": "source-audit-2026-08-13.md",
+    "officialExamStructure": "official-exam-structure.v1.json",
+    "officialPDFStructureAudit": "audit_official_pdf_structure.py",
+    "officialScoringLayoutInspection": "inspect_official_scoring_layout.py",
+    "topicMap": "topic-map.v1.json",
+    "candidateBank": "questions.candidates.v1.json",
+    "candidateValidator": "validate_candidates.py",
+    "nativeReleaseBuilder": "build_native_release.py"
+  }
+}

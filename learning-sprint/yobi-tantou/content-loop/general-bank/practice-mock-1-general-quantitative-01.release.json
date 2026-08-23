@@ -1,0 +1,665 @@
+[
+  {
+    "id": "YOBI-M1GEN-QNT-001",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "割合",
+    "question": "ある学習会で40人中30人が午前の部に参加した。午前の部の参加率は何％か。",
+    "choices": [
+      "65%",
+      "70%",
+      "75%",
+      "80%"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "参加率は参加者30人を全体40人で割り、100を掛けて求める。30÷40×100＝75なので75％が正しい。人数30をそのまま30％とせず、必ず全体人数40を分母にする。65％・70％・80％では参加人数に戻したとき30人と一致しない。",
+    "memory": "割合＝部分÷全体×100。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "設問文・人数・選択肢・解説を本アプリ用に独自作成し、第三者著作物や公式過去問本文を利用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "ratio_percent",
+      "part": 30,
+      "whole": 40,
+      "correct_value": 75
+    },
+    "distractor_notes": [
+      "65％なら26人相当となり30人と一致しない。",
+      "70％なら28人相当となり30人と一致しない。",
+      null,
+      "80％なら32人相当となり30人と一致しない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "ratio_percent"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-QNT-002",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "平均",
+    "question": "4回の小テスト得点が62点、74点、80点、84点だった。4回の平均点は何点か。",
+    "choices": [
+      "72点",
+      "74点",
+      "75点",
+      "76点"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "4回の得点を合計すると62＋74＋80＋84＝300点である。算術平均は合計を個数4で割るので300÷4＝75点となる。74点や80点など個別の得点を平均と取り違えず、全データを一度合計してから回数で割る。",
+    "memory": "平均＝合計÷個数。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "得点データを含む設問全体を独自作成した決定論fixtureであり、外部教材・第三者統計を引用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "mean",
+      "values": [
+        62,
+        74,
+        80,
+        84
+      ],
+      "correct_value": 75
+    },
+    "distractor_notes": [
+      "72点なら4倍して288点となり合計300点と一致しない。",
+      "74点は個別得点の一つで平均値ではない。",
+      null,
+      "76点なら4倍して304点となり合計300点を超える。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "mean"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-QNT-003",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "増加率",
+    "question": "ある件数が120件から150件に増えた。増加前を基準とする増加率は何％か。",
+    "choices": [
+      "20%",
+      "25%",
+      "30%",
+      "35%"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 1,
+    "explanation": "増加数は150－120＝30件である。増加率は増加前の120件を基準にするため、30÷120×100＝25％となる。150を分母にすると20％になるが、それは増加後に対する増加分の割合であり、通常の増加率の基準とは異なる。",
+    "memory": "増加率は増加前を分母にする。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "件数と計算条件を独自設定した自作問題であり、実在統計・第三者文章・公式試験問題を使用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "increase_percent",
+      "before": 120,
+      "after": 150,
+      "correct_value": 25
+    },
+    "distractor_notes": [
+      "20％は増加後150件を分母にした場合の値で基準が違う。",
+      null,
+      "30％なら増加数36件が必要で実際の30件と合わない。",
+      "35％なら増加数42件が必要で実際の30件と合わない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "increase_percent"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-QNT-004",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "比",
+    "question": "赤いカードと青いカードの枚数比が3：5で、合計32枚ある。青いカードは何枚か。",
+    "choices": [
+      "12枚",
+      "18枚",
+      "20枚",
+      "24枚"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "比の単位数は3＋5＝8である。合計32枚を8等分すると1単位は4枚となり、青いカードは5単位なので5×4＝20枚である。赤は3×4＝12枚となり、12＋20＝32かつ3：5になることでも検算できる。",
+    "memory": "比は合計単位で割って各単位へ戻す。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "カード枚数と比を独自に設定し、文章・数値・解説の全てを自作したため第三者権利物を含まない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "ratio_share",
+      "total": 32,
+      "parts": [
+        3,
+        5
+      ],
+      "target_index": 1,
+      "correct_value": 20
+    },
+    "distractor_notes": [
+      "12枚は赤3単位の枚数であり青の枚数ではない。",
+      "18枚では残り14枚との比が3：5にならない。",
+      null,
+      "24枚では赤8枚となり比が1：3になってしまう。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "ratio_share"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-QNT-005",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "速さ",
+    "question": "一定の速さで180kmを3時間で移動した。平均時速は何kmか。",
+    "choices": [
+      "50km/h",
+      "55km/h",
+      "60km/h",
+      "65km/h"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "平均時速は移動距離を所要時間で割って求める。180km÷3時間＝60km/hなので正答は60km/hである。60km/hを3時間続けると180kmになるため検算もできる。ほかの速度では3時間後の距離が180kmに一致しない。",
+    "memory": "速さ＝距離÷時間。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "距離・時間を独自設定した算術問題であり、外部地図・交通データ・第三者教材を使用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "divide",
+      "numerator": 180,
+      "denominator": 3,
+      "correct_value": 60
+    },
+    "distractor_notes": [
+      "50km/hなら3時間で150kmにしかならない。",
+      "55km/hなら3時間で165kmにしかならない。",
+      null,
+      "65km/hなら3時間で195kmとなり距離を超える。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "divide"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-QNT-006",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "差による未知数",
+    "question": "ノート2冊とペン1本で500円、ノート1冊とペン1本で320円だった。ノート1冊の価格はいくらか。",
+    "choices": [
+      "160円",
+      "180円",
+      "200円",
+      "220円"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 1,
+    "explanation": "二つの購入条件にはペン1本が共通している。500円から320円を引けば共通するペン代とノート1冊分が相殺され、余るのはノート1冊分だけである。したがって500－320＝180円。差を利用すればペンの価格を先に求める必要はない。",
+    "memory": "共通部分を差し引くと未知数を一つ消せる。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "商品名と価格条件を架空に設定した独自問題であり、実在価格や第三者教材の設問を参照していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "difference",
+      "a": 500,
+      "b": 320,
+      "correct_value": 180
+    },
+    "distractor_notes": [
+      "160円は二つの合計金額の差180円と一致しない。",
+      null,
+      "200円なら二式の差が200円になるはずで不一致。",
+      "220円なら二式の差が220円になるはずで不一致。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "difference"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-QNT-007",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "確率",
+    "question": "箱に同じ大きさの白球3個、黒球2個が入っている。1個だけ無作為に取り出すとき、黒球を引く確率はどれか。",
+    "choices": [
+      "1/5",
+      "2/5",
+      "1/2",
+      "3/5"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 1,
+    "explanation": "球は全部で3＋2＝5個あり、そのうち黒球は2個である。各球が同じ確率で選ばれる条件なので、黒球を引く確率は有利な場合2を全場合5で割った2/5となる。白球を引く確率は3/5であり、黒球とは区別する。",
+    "memory": "同確率なら有利事象数÷全事象数。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "球の個数と抽選条件を本アプリ用に独自設定した問題で、外部資料・既存問題本文を利用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "fraction",
+      "correct_text": "2/5"
+    },
+    "distractor_notes": [
+      "黒球は2個あるため1/5では一個分しか数えていない。",
+      null,
+      "黒球2個と白球3個は同数ではないので1/2ではない。",
+      "3/5は白球3個を引く確率であり黒球の確率ではない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "fraction"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-QNT-008",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "中央値",
+    "question": "5つの値が4、9、11、15、30である。この5つの値の中央値はどれか。",
+    "choices": [
+      "9",
+      "11",
+      "13",
+      "15"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 1,
+    "explanation": "値は既に小さい順に並んでいる。5個のように個数が奇数の場合、中央値は中央に位置する3番目の値である。3番目は11なので中央値は11となる。13のように中央二値を平均するのは個数が偶数の場合の方法であり、本問には当てはまらない。",
+    "memory": "奇数個の中央値は並べた中央の値。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "数列を独自作成した統計基礎問題であり、第三者統計や既存教材の数値列を転用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "median",
+      "values": [
+        4,
+        9,
+        11,
+        15,
+        30
+      ],
+      "correct_value": 11
+    },
+    "distractor_notes": [
+      "9は小さい順で2番目に位置し中央ではない。",
+      null,
+      "13は11と15の平均だが奇数個ではその計算をしない。",
+      "15は4番目の値で中央の3番目ではない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "median"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-QNT-009",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "割引",
+    "question": "定価2,400円の商品を25％引きで購入する。支払額はいくらか。",
+    "choices": [
+      "1,600円",
+      "1,700円",
+      "1,800円",
+      "2,000円"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "25％引きでは定価の100－25＝75％を支払う。2,400×0.75＝1,800円である。別の計算では割引額2,400×0.25＝600円を求め、2,400－600＝1,800円としても同じ結果になる。二通りで検算できる。",
+    "memory": "25％引き＝定価の75％を支払う。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "価格と割引率を架空設定した自作算術問題であり、実在商品の価格情報や広告文章を利用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "standard",
+    "verification": {
+      "kind": "discount",
+      "price": 2400,
+      "discount_percent": 25,
+      "correct_value": 1800
+    },
+    "distractor_notes": [
+      "1,600円では800円引きとなり25％の600円引きと一致しない。",
+      "1,700円では700円引きとなり割引額600円と一致しない。",
+      null,
+      "2,000円では400円引きで25％に達しない。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "discount"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-QNT-010",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "単位換算",
+    "question": "2.5リットルをミリリットルに換算した値として正しいものはどれか。",
+    "choices": [
+      "250mL",
+      "1,250mL",
+      "2,500mL",
+      "25,000mL"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "1リットルは1,000ミリリットルなので、2.5リットルは2.5×1,000＝2,500ミリリットルである。リットルからミリリットルへ換算するときは1,000倍する。逆方向の換算と混同して100分の1や10,000倍にしない。",
+    "memory": "1L＝1000mL。LからmLは1000倍。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "単位換算用の数値と選択肢を独自作成した問題で、外部文章・第三者図表・公式問題を使用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "foundation",
+    "verification": {
+      "kind": "multiply",
+      "a": 2.5,
+      "b": 1000,
+      "correct_value": 2500
+    },
+    "distractor_notes": [
+      "250mLは0.25Lに相当し2.5Lの10分の1である。",
+      "1,250mLは1.25Lに相当し2.5Lの半分である。",
+      null,
+      "25,000mLは25Lに相当し10倍大きい。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "multiply"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  },
+  {
+    "id": "YOBI-M1GEN-QNT-011",
+    "practice_mock_id": "practice-mock-1",
+    "subject": "一般教養",
+    "general_category": "quantitative_logic",
+    "topic": "複合割合",
+    "question": "80人のうち60％がAを選び、そのA選択者の25％が追加講座にも参加した。追加講座参加者は何人か。",
+    "choices": [
+      "8人",
+      "10人",
+      "12人",
+      "15人"
+    ],
+    "answer_type": "singleChoice",
+    "answer": 2,
+    "explanation": "まずAを選んだ人数は80×0.60＝48人である。追加講座参加者はその48人の25％なので48×0.25＝12人となる。60％と25％を単純に足さず、母集団が80人から48人へ変わることを意識して段階ごとに割合を掛ける。",
+    "memory": "複合割合は母集団を更新しながら順に掛ける。",
+    "source_title": "Self-authored deterministic fixture",
+    "source_url": "internal://self-authored-general-education",
+    "evidence_checked_date": "2026-08-14",
+    "reference_date": "2026-08-14",
+    "exam_year": null,
+    "origin_type": "self_authored_original",
+    "rights_basis": "人数・割合・講座設定を全て独自作成した決定論問題であり、第三者統計・教育資料・過去問を使用していない。",
+    "audit_status": "release_passed",
+    "release_eligible": true,
+    "content_use": "practice",
+    "difficulty": "applied",
+    "verification": {
+      "kind": "compound_percent",
+      "base": 80,
+      "percents": [
+        60,
+        25
+      ],
+      "correct_value": 12
+    },
+    "distractor_notes": [
+      "8人は全体80人の10％で、二段階の割合計算と一致しない。",
+      "10人は48人の25％ではなく計算結果が不足する。",
+      null,
+      "15人はA選択者を60人と誤認した場合に生じる値である。"
+    ],
+    "staging_evidence": {
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14",
+      "answer_audit_verdict": "PASS",
+      "answer_audit_risk": "low",
+      "verification_kind": "compound_percent"
+    },
+    "release_evidence": {
+      "quality_audit_schema_version": 1,
+      "quality_checked_at": "2026-08-14",
+      "quality_verdict": "PASS",
+      "source_lock_version": "self-authored-deterministic-v1",
+      "source_lock_as_of": "2026-08-14",
+      "answer_audit_version": 3,
+      "answer_audit_checked_at": "2026-08-14"
+    }
+  }
+]

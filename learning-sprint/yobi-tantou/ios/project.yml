@@ -1,0 +1,90 @@
+name: YobiTantouSprint
+options:
+  minimumXcodeGenVersion: 2.38.0
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+    MARKETING_VERSION: 1.0.0
+    CURRENT_PROJECT_VERSION: 1
+    GENERATE_INFOPLIST_FILE: NO
+    TARGETED_DEVICE_FAMILY: "1"
+    SUPPORTS_MACCATALYST: NO
+    CODE_SIGN_STYLE: Automatic
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    YOBI_BUNDLE_ID: jp.allsunday1122.yobishikentantou
+    YOBI_TEST_BUNDLE_ID: jp.allsunday1122.yobishikentantou.tests
+    YOBI_UI_TEST_BUNDLE_ID: jp.allsunday1122.yobishikentantou.uitests
+    YOBI_IAP_PRODUCT_ID: ""
+
+targets:
+  YobiTantouSprint:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: App.swift
+      - path: Domain.swift
+      - path: QuestionRepository.swift
+      - path: MockSelectionPolicy.swift
+      - path: OfficialMockScoring.swift
+      - path: OfficialScoringRepository.swift
+      - path: StoreKitManager.swift
+      - path: AppModel.swift
+      - path: Theme.swift
+      - path: Views.swift
+      - path: Assets.xcassets
+        buildPhase: resources
+      - path: Resources
+        buildPhase: resources
+      - path: PrivacyInfo.xcprivacy
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(YOBI_BUNDLE_ID)
+        PRODUCT_NAME: YobiTantouSprint
+        INFOPLIST_FILE: Info.plist
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: 予備試験 短答｜学びスプリント
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        PremiumProductID: $(YOBI_IAP_PRODUCT_ID)
+        ITSAppUsesNonExemptEncryption: false
+        LSRequiresIPhoneOS: true
+        UIApplicationSupportsIndirectInputEvents: true
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIViewControllerBasedStatusBarAppearance: true
+    scheme:
+      testTargets:
+        - YobiTantouSprintTests
+        - YobiTantouSprintUITests
+
+  YobiTantouSprintTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Tests
+    dependencies:
+      - target: YobiTantouSprint
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(YOBI_TEST_BUNDLE_ID)
+
+  YobiTantouSprintUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: UITests
+    dependencies:
+      - target: YobiTantouSprint
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(YOBI_UI_TEST_BUNDLE_ID)
+        TEST_TARGET_NAME: YobiTantouSprint
