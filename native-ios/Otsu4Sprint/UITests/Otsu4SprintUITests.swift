@@ -17,16 +17,31 @@ final class Otsu4SprintUITests: XCTestCase {
         XCTAssertTrue(app.buttons["次の問題へ"].waitForExistence(timeout: 3) || app.buttons["結果を見る"].exists)
     }
 
-    func testEachSubjectRowIsFullyTappableAndStartsFreeStudyFlow() throws {
+    func testEachSubjectRowOpensFullQuestionIndexAndStartsContinuousFreeRange() throws {
         let app = makeApp()
-        for subject in ["法令", "物理・化学", "性質・消火"] {
+        let expected = [
+            (subject: "法令", total: 288, free: 29),
+            (subject: "物理・化学", total: 192, free: 19),
+            (subject: "性質・消火", total: 240, free: 24)
+        ]
+
+        for item in expected {
             app.launch(); XCTAssertTrue(app.staticTexts["危険物 乙4"].waitForExistence(timeout: 20))
-            let button = app.buttons["subject-\(subject)"]
-            XCTAssertTrue(button.waitForExistence(timeout: 5), "\(subject)の分野別ボタンが存在する")
+            let button = app.buttons["subject-\(item.subject)"]
+            XCTAssertTrue(button.waitForExistence(timeout: 5), "\(item.subject)の分野別ボタンが存在する")
             if !button.isHittable { app.scrollViews.firstMatch.swipeUp() }
             XCTAssertTrue(button.isHittable); XCTAssertGreaterThanOrEqual(button.frame.height, 44)
             button.coordinate(withNormalizedOffset: CGVector(dx: 0.08, dy: 0.5)).tap()
-            XCTAssertTrue(app.buttons["わからない"].waitForExistence(timeout: 10), "\(subject)をタップすると無料版でも学習画面へ遷移する")
+
+            XCTAssertTrue(app.staticTexts["全\(item.total)問"].waitForExistence(timeout: 10), "分野内の全問題数を表示する")
+            XCTAssertTrue(app.staticTexts["正解 / 解答"].exists, "正解回数/解答回数の列を表示する")
+            assertVisibleContentFitsHorizontally(in: app)
+
+            let startAll = app.buttons["無料範囲\(item.free)問を通して解く"]
+            XCTAssertTrue(startAll.waitForExistence(timeout: 5))
+            startAll.tap()
+            XCTAssertTrue(app.buttons["わからない"].waitForExistence(timeout: 10), "分野別演習を開始できる")
+            XCTAssertTrue(app.staticTexts["1 / \(item.free)"].exists, "8問固定ではなく無料範囲全問を通して開始する")
             app.terminate()
         }
     }
