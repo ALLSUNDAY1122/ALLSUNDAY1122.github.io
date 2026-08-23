@@ -40,8 +40,8 @@ struct ProductPipelineDriverTests {
             let root = temp("resume")
             let recorder = Recorder()
             let inputs = request(root: root).inputs
-            let artifacts = ProductProcessingStage.allCases.prefix(3).map {
-                ProductStageArtifact(stage: $0, outputURL: root.appendingPathComponent($0.rawValue), pageCount: 200)
+            let artifacts = try ProductProcessingStage.allCases.prefix(3).map { stage in
+                ProductStageArtifact(stage: stage, outputURL: try stageOutput(root: root, stage: stage), pageCount: 200)
             }
             let checkpoint = ProductPipelineCheckpoint(
                 runID: "run-1",
@@ -73,6 +73,42 @@ struct ProductPipelineDriverTests {
             } catch ProductPipelineDriverError.invalidResumeCheckpoint {}
         }
 
+        await run("missing resume artifact fails closed") {
+            let root = temp("missing-artifact")
+            let missing = root.appendingPathComponent("does-not-exist")
+            let checkpoint = ProductPipelineCheckpoint(
+                runID: "run-missing",
+                bookID: "book-fixture",
+                inputAssetIDs: ["input-1"],
+                inputAssets: request(root: root).inputs,
+                completedArtifacts: [.init(stage: .frameExtraction, outputURL: missing, pageCount: 200)],
+                lastProgress: .init(stage: .frameExtraction, fraction: 1, completedUnits: 200, totalUnits: 200)
+            )
+            do {
+                _ = try await BoundProductPipelineDriver(bindings: makeBindings(root: root, recorder: Recorder()))
+                    .run(request: request(root: root), resume: checkpoint, progress: { _ in }, checkpoint: { _ in })
+                throw TestError.expectedFailure
+            } catch ProductPipelineDriverError.invalidResumeCheckpoint {}
+        }
+
+        await run("non-prefix resume artifact order fails closed") {
+            let root = temp("order-invalid")
+            let ocrURL = try stageOutput(root: root, stage: .ocr)
+            let checkpoint = ProductPipelineCheckpoint(
+                runID: "run-order",
+                bookID: "book-fixture",
+                inputAssetIDs: ["input-1"],
+                inputAssets: request(root: root).inputs,
+                completedArtifacts: [.init(stage: .ocr, outputURL: ocrURL, pageCount: 200)],
+                lastProgress: .init(stage: .ocr, fraction: 1, completedUnits: 200, totalUnits: 200)
+            )
+            do {
+                _ = try await BoundProductPipelineDriver(bindings: makeBindings(root: root, recorder: Recorder()))
+                    .run(request: request(root: root), resume: checkpoint, progress: { _ in }, checkpoint: { _ in })
+                throw TestError.expectedFailure
+            } catch ProductPipelineDriverError.invalidResumeCheckpoint {}
+        }
+
         await run("review items are stable-id deduplicated") {
             let root = temp("review")
             let review = ProductReviewItem(id: "review-1", pageIDs: ["page-7"], reason: "low-confidence", detail: "fixture")
@@ -80,7 +116,7 @@ struct ProductPipelineDriverTests {
                 ProductPipelineStageBinding(stage: stage) { _, _, _ in
                     ProductStageArtifact(
                         stage: stage,
-                        outputURL: root.appendingPathComponent(stage == .packageWrite ? "package" : stage.rawValue),
+                        outputURL: try stageOutput(root: root, stage: stage),
                         pageCount: 8,
                         reviewItems: stage == .pageAudit || stage == .ocr ? [review] : []
                     )
@@ -101,7 +137,11 @@ struct ProductPipelineDriverTests {
                     for page in 1...200 {
                         await progress(.init(stage: .imageCorrection, fraction: Double(page) / 200, completedUnits: page, totalUnits: 200))
                     }
-                    return ProductStageArtifact(stage: .imageCorrection, outputURL: request.workspaceURL.appendingPathComponent("imageCorrection"), pageCount: 200)
+                    return ProductStageArtifact(
+                        stage: .imageCorrection,
+                        outputURL: try stageOutput(root: request.workspaceURL, stage: .imageCorrection),
+                        pageCount: 200
+                    )
                 }
             }
             _ = try await BoundProductPipelineDriver(bindings: bindings).run(
@@ -193,16 +233,23 @@ struct ProductPipelineDriverTests {
 
     static func makeBindings(root: URL, recorder: Recorder) -> [ProductPipelineStageBinding] {
         ProductProcessingStage.allCases.map { stage in
-            ProductPipelineStageBinding(stage: stage) { _, _, progress in
+            ProductPipelineStageBinding(stage: stage) { request, _, progress in
                 await recorder.append(stage)
                 await progress(.init(stage: stage, fraction: 0.5, completedUnits: 100, totalUnits: 200))
                 return ProductStageArtifact(
                     stage: stage,
-                    outputURL: root.appendingPathComponent(stage == .packageWrite ? "package" : stage.rawValue),
+                    outputURL: try stageOutput(root: request.workspaceURL, stage: stage),
                     pageCount: 200
                 )
             }
         }
+    }
+
+    static func stageOutput(root: URL, stage: ProductProcessingStage) throws -> URL {
+        let name = stage == .packageWrite ? "package" : stage.rawValue
+        let url = root.appendingPathComponent(name, isDirectory: true)
+        try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        return url
     }
 
     static func request(root: URL) -> ProductPipelineRequest {
