@@ -1,15 +1,16 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "worker_id": "Moises-Worker-4",
   "lane_id": "LANE-4-IOS-ANALYSIS",
   "assignment_epoch": 2,
+  "planning_revision": 4,
   "work_branch": "moises/wp4-analysis-platform",
-  "state": "CHECKPOINT_READY",
+  "state": "IN_PROGRESS",
   "current_bundle": null,
   "completed_bundles": ["L4-M01", "L4-M02", "L4-M03", "L4-M04"],
   "epoch_contract_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
   "base_integration_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
-  "head_sha": "ed71af63fbbfe2c4116dd684b32b71057d45e612",
+  "head_sha": "26585adb718cb007c20e6db2c16c317f5eaa9182",
   "existing_unintegrated_commits": [
     "1811f335e121783daf00a5850b3b3bccdf75ca91",
     "1e55469c088b9724905b9df64989db2310f329ba",
@@ -49,7 +50,16 @@
     "541d53a423f97eb1664544b17329263ea3bf5a84",
     "e9bac54a4a176b13ebf0f0d0b3463c0d81679ee9",
     "05386dd720338e34325a6725d721b164725a9cbe",
-    "ed71af63fbbfe2c4116dd684b32b71057d45e612"
+    "ed71af63fbbfe2c4116dd684b32b71057d45e612",
+    "00a8734a11c060eb95198b92279fbe7747fa9875",
+    "17aa3e3bf67a2ace1c9f1f9bbdbe929bd802b142",
+    "d4c4b2dedec0360ba95e905e470d185d38339554",
+    "6eebd6237b77ed76405083a52ed3408845106ccc",
+    "dd5a50a21a33a987863dc34de757fa48c4ee257f",
+    "0233419d1e837856f1ec19a9249dc0b78bcd8123",
+    "f2352c95055b908fbf7465769ef4aaa374b466ea",
+    "747a4bc9f933e470ed42ccfb98aa988feaaf23e1",
+    "26585adb718cb007c20e6db2c16c317f5eaa9182"
   ],
   "commits": [
     "1811f335e121783daf00a5850b3b3bccdf75ca91",
@@ -90,49 +100,65 @@
     "541d53a423f97eb1664544b17329263ea3bf5a84",
     "e9bac54a4a176b13ebf0f0d0b3463c0d81679ee9",
     "05386dd720338e34325a6725d721b164725a9cbe",
-    "ed71af63fbbfe2c4116dd684b32b71057d45e612"
+    "ed71af63fbbfe2c4116dd684b32b71057d45e612",
+    "00a8734a11c060eb95198b92279fbe7747fa9875",
+    "17aa3e3bf67a2ace1c9f1f9bbdbe929bd802b142",
+    "d4c4b2dedec0360ba95e905e470d185d38339554",
+    "6eebd6237b77ed76405083a52ed3408845106ccc",
+    "dd5a50a21a33a987863dc34de757fa48c4ee257f",
+    "0233419d1e837856f1ec19a9249dc0b78bcd8123",
+    "f2352c95055b908fbf7465769ef4aaa374b466ea",
+    "747a4bc9f933e470ed42ccfb98aa988feaaf23e1",
+    "26585adb718cb007c20e6db2c16c317f5eaa9182"
   ],
+  "autonomous_wave": {
+    "wave_id": "L4-W05",
+    "goal": "Create a rights-safe multi-domain real-audio MIR benchmark gate for BPM/beat/key/chord/song-section evidence.",
+    "rationale": "P009/P011/P013/P016 remain MISSING mainly because Lane 4 had only synthetic evidence and no fail-closed real-audio corpus runner. This is the highest-value lane-local preparation that can be completed without waiting for rights-cleared files or an Apple device.",
+    "done_when": "A manifest, rights/checksum validation layer, batch runner, JSON codec, negative tests, Golden MIR template, runbook and durable evidence exist; synthetic or invalid-rights inputs cannot become PARITY evidence.",
+    "result": "COMPLETE_NON_PARITY: implemented RealAudioBenchmarkSuite and codec, 7 committed XCTest cases across suite/codec, fail-closed rights/path/hash/timeline/checksum/duration/non-finite guards, five-domain batch reporting, Golden MIR template/runbook and validation evidence. Actual rights-cleared corpus/device/Moises differential remains HQ/external gate.",
+    "completed_at": "2026-08-23T16:31:00+09:00"
+  },
   "tests": [
     "L4-M01 portable HostCore build PASS; reconstructed baseline regression 21/21 PASS",
     "L4-M02 TempoKeyAnalysisTests targeted 6/6 PASS; 120/90/180 BPM, key, unknown and serialization cases recorded",
     "L4-M03 ChordTests targeted 8/8 PASS; C->A:min->N->G timeline exact and negative/resample cases PASS",
     "L4-M04 targeted branch-equivalent section harness: 8/8 PASS after semantic-label correction",
-    "L4-M04 section fixture: exact 0-4/4-12/12-20/20-28/28-32 boundaries with repeated B structural family and conservative intro/outro only",
-    "L4-M04 negative cases: silence -> whole-track X; all-X chord evidence -> X structure; one repeated interior family does not force verse/chorus",
-    "L4-M04 AN-001 metric sanity: exact fixture boundary F@0.5/F@3=1; +1s shift gives F@0.5=0, F@3=1 and bidirectional median error=1s; unknown estimate exposes zero structural coverage",
-    "L4-M04 combined synthetic input independently confirms existing TempoBeatAnalyzer ~120 BPM/confidence ~0.978 and MusicalKeyAnalyzer C major/confidence ~0.023; committed combined XCTest asserts tempo+key+chords+sections through frozen MusicAnalyzing path",
-    "L4-M04 optimized synthetic section runtime median 7 runs 0.016908321s, RTF 0.000528385; device RSS/thermal/battery unmeasured"
+    "L4-M04 AN-001 exact/+1s/unknown metric sanity PASS",
+    "L4-W05 swiftc parse/typecheck against frozen-contract-shaped stubs PASS on Swift 6.2.1 Linux",
+    "L4-W05 executable validator/batch harness PASS: real eligibility, synthetic non-eligibility, rights/path/hash defects, five-domain report, checksum failure",
+    "L4-W05 ISO-8601 codec executable round-trip PASS",
+    "L4-W05 committed XCTest: 6 RealAudioBenchmarkSuiteTests + 1 codec test; fresh canonical swift test remains pending because Worker container cannot resolve github.com"
   ],
   "evidence": [
-    "All four epoch-2 Lane 4 bundles are complete against frozen contract SHA be1c84314db182d6eee5097de34e017af1a4a7de without rebasing unrelated integration movement",
-    "L4-M01 provides standalone iOS/XcodeGen host, cross-Lane fail-closed DI/module slots and documented Apple-runner gate",
-    "L4-M02 provides project-owned BPM/beat/key analysis with confidence/unknown and machine-readable NON_PARITY benchmark evidence",
-    "L4-M03 provides deterministic playback-clock chord timeline major/minor/N/X plus duration-weighted chord metrics and coverage",
-    "L4-M04 provides SongSectionAnalyzer, SectionBenchmarkEvaluator, combined AnalysisSnapshot path and conservative functional-label semantics",
-    "Failure-driven L4-M04 fix prevents intro/outro edge cluster repetition from being misused as evidence to force interior verse/chorus labels",
-    "Machine-readable L4-M04 synthetic evidence saved at tech-assets/moises-audio/Analysis/benchmarks/L4-M04_SYNTHETIC_SECTION_BENCHMARK.json with parity_eligible=false and device fields null",
-    "L4-M04 validation saved at tech-assets/moises-audio/Tests/L4-M04_VALIDATION.md",
-    "Late Integration handoff saved at tech-assets/moises-audio/Analysis/LANE4_LATE_INTEGRATION_HANDOFF.md with AnalysisSignalLoading seam, source-time clock rules and HQ gates",
-    "Epoch-base compare at checkpoint: work branch ahead 39, behind 0; every changed path is inside Analysis/**, Package.swift, Tests/** or iOS/**",
-    "No Shared/**, App/**, IO/**, Library/**, Playback/**, DSP/**, Separation/**, PARITY_MATRIX.json, Queue, lane-plan, work-packages or resource-lock file was edited by Worker 4",
-    "MOI-P009, MOI-P011, MOI-P013 and MOI-P016 remain MISSING; all current Lane 4 performance/accuracy benchmark artifacts are synthetic/test evidence only"
+    "L4-M01 through L4-M04 remain complete against frozen contract SHA be1c84314db182d6eee5097de34e017af1a4a7de",
+    "L4-W05 adds Analysis/RealAudioBenchmarkSuite.swift and Analysis/RealAudioBenchmarkCodec.swift",
+    "L4-W05 manifest validation fails closed for missing/expired rights, absent ANALYSIS_BENCHMARK permission, invalid SHA, unsafe path, invalid annotations and duplicate fixtures",
+    "L4-W05 batch execution verifies loaded source checksum, decoded duration and finite PCM before evaluating tempo/beat/key/chord/structure",
+    "L4-W05 SYNTHETIC_TEST can never be parity eligible even with perfect metrics",
+    "L4-W05 Golden MIR template and operator runbook stored under Analysis/benchmarks",
+    "L4-W05 durable validation stored at Tests/L4-W05_VALIDATION.md",
+    "Epoch-base compare after L4-W05: branch ahead 48, behind 0; every changed path remains inside Analysis/**, Package.swift, Tests/** or iOS/**",
+    "MOI-P009, MOI-P011, MOI-P013 and MOI-P016 remain MISSING pending actual rights-cleared real-audio and HQ judgment"
   ],
   "known_gaps": [
-    "No rights-cleared multi-genre Project Golden MIR real-audio corpus has been run; P009/P011/P013/P016 cannot be promoted",
-    "Tempo live drift/syncopation/weak percussion/meter ambiguity, modal/modulating key, complex chord vocabulary and varied real-world song structures remain unverified",
-    "Current section functional labels are deliberately conservative; exact current-iPhone Moises section vocabulary and unknown semantics still require reference verification",
-    "A fresh full canonical checkout regression could not run because the Worker Linux container cannot resolve github.com; HQ must execute the complete SwiftPM suite from the integrated checkout",
-    "Actual XcodeGen/Xcode Simulator build, four-Lane compile, physical-iPhone analysis latency/RSS/thermal/battery/long-track behavior and playback-clock synchronization remain HQ Late Integration gates",
+    "Rights-safe Golden MIR benchmark infrastructure now exists, but no rights-cleared multi-genre real-audio corpus with trustworthy ground truth has been supplied/run; P009/P011/P013/P016 cannot be promoted",
+    "Tempo live drift/syncopation/weak percussion/meter ambiguity remains unverified on real audio and is the next lane-local algorithm-hardening priority",
+    "Modal/modulating key, complex chord vocabulary and varied real-world song structures remain unverified",
+    "Current section functional labels remain conservative; exact current-iPhone Moises section vocabulary and unknown semantics require reference verification",
+    "A fresh full canonical checkout regression cannot run in the Worker Linux container because github.com DNS is unavailable",
+    "Actual XcodeGen/Xcode Simulator build, four-Lane compile, physical-iPhone latency/RSS/thermal/battery/long-track behavior and playback-clock synchronization remain HQ Late Integration gates",
     "Current Moises differential comparison for BPM/key/chords/sections has not been performed"
   ],
   "hq_requests": [
-    "Consume Lane 4 as one semantic checkpoint at Late Integration; do not replay or separately merge old small tasks. Preserve all owned-scope commits and resolve cross-Lane adapters centrally.",
-    "Inject a rights-safe app-owned PCM adapter through AnalysisSignalLoading from the final IO/decode path, then compile the actual four-Lane iOS host.",
-    "Run a fresh canonical SwiftPM regression, XcodeGen/Xcode Simulator gate and physical-iPhone tests before treating the Lane checkpoint as product evidence.",
-    "Run the rights-cleared Golden MIR multi-genre P009/P011/P013/P016 benchmark and current-Moises differential, including device timing/RSS/thermal/battery and playback-clock chord/section synchronization.",
+    "Consume Lane 4 as a semantic checkpoint when useful; preserve all owned-scope commits and resolve cross-Lane adapters centrally.",
+    "Bind the final app-owned file/decode path to AnalysisBenchmarkSignalLoading and return SHA-256 for the exact source file so L4-W05 can execute real Golden MIR runs without weakening checksum verification.",
+    "Run a fresh canonical SwiftPM regression, XcodeGen/Xcode Simulator gate and physical-iPhone tests before treating Lane 4 evidence as product evidence.",
+    "Supply/approve a rights-cleared multi-genre Golden MIR corpus and trustworthy BPM/beat/key/chord/section ground truth, then run P009/P011/P013/P016 and current-Moises differential.",
     "Verify current iPhone Moises chord vocabulary and section functional-label/unknown behavior before expanding or narrowing the product-required vocabulary.",
-    "resource-locks.json still reports assignment_epoch 1/v2 labels while lane-plan/work-packages are epoch 2; ownership scope is unchanged, so align this metadata during the checkpoint update."
+    "resource-locks.json still carries assignment_epoch 1 metadata while planning files are epoch 2/revision 4; ownership scope is unchanged, so align metadata during HQ maintenance."
   ],
-  "last_updated": "2026-08-22T19:14:00+09:00",
-  "writer_policy": "Only Moises-Worker-4 may update this status file. Global Queue is not used for Worker dispatch in v3."
+  "next_priority": "Autonomous Wave L4-W06: tempo/beat real-world hardening for half/double tempo, tempo drift, weak percussion, syncopation and meter ambiguity using deterministic adversarial fixtures plus the new benchmark metrics, while leaving actual Golden MIR execution external-gated.",
+  "last_updated": "2026-08-23T16:31:00+09:00",
+  "writer_policy": "Only Moises-Worker-4 may update this status file. Global Queue is not used for Worker dispatch in v4."
 }
