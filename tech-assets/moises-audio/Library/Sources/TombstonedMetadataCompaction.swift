@@ -78,6 +78,7 @@ public enum Lane2TombstonedMetadataCompactionFailure: Error, Equatable, Sendable
     case duplicateProjectIdentity(UUID)
     case liveProjectCannotCompact(UUID)
     case missingSourceAsset(UUID)
+    case missingTombstoneCandidate(UUID)
     case unsafeArtifactPath(String)
     case journalArtifactNotOwnedByProject(String)
     case journalTargetsLiveArtifact(String)
