@@ -85,7 +85,7 @@ Executed in this Worker session:
 - updated coordinator Linux syntax parse: PASS.
 - production wiring static audit: PASS 13/13 checks.
 - executable filesystem self-check: PASS, marker:
-  `L2_AW13_SELF_TEST_PASS scenarios=7 shards=1001 elapsed_seconds=1.029226`
+  `L2_AW13_SELF_TEST_PASS scenarios=7 shards=1001 elapsed_seconds=0.881204`
 
 The self-check covers:
 
@@ -97,7 +97,7 @@ The self-check covers:
 6. incomplete attributed resolution is rejected while complete explicit resolution is accepted;
 7. 1,000 valid export shards plus one corrupt shard are scanned and the corrupt project is found.
 
-The `1.029226 s` number includes portable filesystem fixture creation and JSON scanning on this Linux runner. It is not an iPhone/APFS/Core Data performance claim.
+The `0.881204 s` number includes portable filesystem fixture creation and JSON scanning on this Linux runner. It is not an iPhone/APFS/Core Data performance claim.
 
 ## Negative / recovery invariants
 
