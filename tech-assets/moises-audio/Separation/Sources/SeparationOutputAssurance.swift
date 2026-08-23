@@ -107,8 +107,6 @@ public actor SeparationOutputAssurance {
         let journalURL = commitJournalURL(projectID: projectID, jobID: jobID)
 
         do {
-            // Recovery above must resolve any old protected final. Stale non-visible incoming/journal
-            // scratch may be rebuilt from the verified staging set for this prepared ledger.
             if fileManager.fileExists(atPath: backup.path) {
                 throw DomainFailure.processingFailed(code: "SEP_COMMIT_BACKUP_STILL_PRESENT", retryable: false)
             }
@@ -132,7 +130,6 @@ public actor SeparationOutputAssurance {
             journal = journal.advanced(to: .incomingVerified, at: now().timeIntervalSince1970)
             try saveCommitJournal(journal, projectID: projectID, jobID: jobID)
 
-            // Existing project output remains untouched until the complete incoming set is proven.
             try fileManager.createDirectory(at: final.deletingLastPathComponent(), withIntermediateDirectories: true)
             if fileManager.fileExists(atPath: final.path) {
                 try fileManager.createDirectory(at: backup.deletingLastPathComponent(), withIntermediateDirectories: true)
@@ -164,36 +161,39 @@ public actor SeparationOutputAssurance {
         } catch let failure as DomainFailure {
             throw failure
         } catch {
-            // Preserve journal/incoming/backup on ambiguous failure so relaunch recovery can either
-            // finish the exact verified set or restore the previous final without provider re-download.
             throw DomainFailure.processingFailed(code: "SEP_COMMIT_FAILED", retryable: true)
         }
     }
 
-    /// Durable relaunch repair. A complete new final/incoming set can finish from local verified
-    /// hashes even after provider URLs expire; an incomplete set never wins over a protected prior final.
     @discardableResult
     public func recoverInterruptedCommit(projectID: ProjectID, jobID: ProcessingJobID) async throws -> SeparationRunLedger? {
         try await recoverAtomicCommit(projectID: projectID, jobID: jobID)
     }
 
-    /// Delete only files proven to belong to this committed run. If paths now contain a newer run,
-    /// deletion fails closed instead of removing user data written after this ledger.
+    /// Delete only files proven to belong to this run. A prepared transaction never deletes a
+    /// previously committed project result: if this job displaced one into its backup, that prior
+    /// final is restored before all job-local staging/incoming/journal content is removed.
     @discardableResult
     public func deleteLocalRun(projectID: ProjectID, jobID: ProcessingJobID) async throws -> SeparationRunLedger {
         guard let ledger = try await ledgerStore.load(projectID: projectID, jobID: jobID) else {
             throw DomainFailure.processingFailed(code: "SEP_LEDGER_MISSING", retryable: false)
         }
         if ledger.state == .deleted { return ledger }
-        if ledger.state == .committed {
+
+        switch ledger.state {
+        case .committed:
             guard try finalDirectoryMatches(ledger) else {
                 throw DomainFailure.processingFailed(code: "SEP_DELETE_NEWER_RUN_PROTECTED", retryable: false)
             }
             let final = finalDirectory(projectID: projectID)
             if fileManager.fileExists(atPath: final.path) { try fileManager.removeItem(at: final) }
+            try cleanupTransactionScratch(projectID: projectID, jobID: jobID, includeStaging: true)
+        case .prepared:
+            try discardPreparedTransactionForDeletion(ledger)
+        case .deleted:
+            return ledger
         }
-        let staging = stagingDirectory(projectID: projectID, jobID: jobID)
-        if fileManager.fileExists(atPath: staging.path) { try fileManager.removeItem(at: staging) }
+
         let deleted = SeparationRunLedger(
             state: .deleted,
             manifest: ledger.manifest,
