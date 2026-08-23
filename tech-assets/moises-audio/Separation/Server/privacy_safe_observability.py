@@ -197,7 +197,7 @@ class PrivacySafeObservability:
         if stable_error_code is not None: stable_error_code=_code(stable_error_code)
         with self.store.locked() as rs:
             r=self._require(rs,logical_job_id)
-            if r.terminal_state not in {"active",terminal_state}: raise ObservabilityError("SEP_OBS_TERMINAL_STATE_CONFLICT")
+            if r.terminal_state=="deleted" and terminal_state!="deleted": raise ObservabilityError("SEP_OBS_TERMINAL_STATE_CONFLICT")
             r.terminal_state=terminal_state; r.stable_error_code=stable_error_code; r.updated_at_epoch=self._now(r.updated_at_epoch); self.store.save(rs); return r
     def evidence(self,logical_job_id):
         with self.store.locked() as rs:
