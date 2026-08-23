@@ -1,0 +1,169 @@
+{
+  "request_id": "scanlab-testflight-build2-actions-20260824",
+  "ok": true,
+  "build_id": "6a8b0f7ebd7eece7954737e9",
+  "actions": [
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d2b",
+      "name": "Preparing build machine",
+      "type": "preparing",
+      "status": "success",
+      "started_at": "2026-08-23T15:19:35.186000Z",
+      "finished_at": "2026-08-23T15:19:56.523000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d2c",
+      "name": "Fetching app sources",
+      "type": "fetching",
+      "status": "success",
+      "started_at": "2026-08-23T15:19:56.523000Z",
+      "finished_at": "2026-08-23T15:20:04.412000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d2d",
+      "name": "Stop if App Store Connect app record is not registered",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:04.412000Z",
+      "finished_at": "2026-08-23T15:20:04.777000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d2e",
+      "name": "Verify Apple upload toolchain",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:04.777000Z",
+      "finished_at": "2026-08-23T15:20:06.695000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d2f",
+      "name": "Install required Metal Toolchain",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:06.695000Z",
+      "finished_at": "2026-08-23T15:20:21.976000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d30",
+      "name": "Disable unrelated msplat LFS datasets",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:21.976000Z",
+      "finished_at": "2026-08-23T15:20:22.405000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d31",
+      "name": "Install XcodeGen",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:22.405000Z",
+      "finished_at": "2026-08-23T15:20:30.782000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d32",
+      "name": "Generate deterministic PoC AppIcon",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:30.782000Z",
+      "finished_at": "2026-08-23T15:20:32.203000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d33",
+      "name": "Set build number and generate project",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:32.203000Z",
+      "finished_at": "2026-08-23T15:20:32.664000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d34",
+      "name": "Static release checks",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:32.664000Z",
+      "finished_at": "2026-08-23T15:20:37.962000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d35",
+      "name": "Initialize signing keychain",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:37.962000Z",
+      "finished_at": "2026-08-23T15:20:38.975000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d36",
+      "name": "Verify managed certificate private key is available",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:38.975000Z",
+      "finished_at": "2026-08-23T15:20:39.337000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d37",
+      "name": "Verify Apple Developer Bundle ID exists",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:39.337000Z",
+      "finished_at": "2026-08-23T15:20:40.326000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d38",
+      "name": "Fetch existing App Store signing files",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:40.326000Z",
+      "finished_at": "2026-08-23T15:20:41.932000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d39",
+      "name": "Add signing certificate",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:41.932000Z",
+      "finished_at": "2026-08-23T15:20:42.743000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d3a",
+      "name": "Apply App Store profile for Internal TestFlight",
+      "type": "script",
+      "status": "success",
+      "started_at": "2026-08-23T15:20:42.743000Z",
+      "finished_at": "2026-08-23T15:20:43.864000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d3b",
+      "name": "Build signed IPA",
+      "type": "script",
+      "status": "failed",
+      "started_at": "2026-08-23T15:20:43.864000Z",
+      "finished_at": "2026-08-23T15:21:50.494000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d3c",
+      "name": "Publishing",
+      "type": "publishing",
+      "status": "success",
+      "started_at": "2026-08-23T15:21:50.494000Z",
+      "finished_at": "2026-08-23T15:21:52.799000Z"
+    },
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d3d",
+      "name": "Cleaning up",
+      "type": "finishing",
+      "status": "success",
+      "started_at": "2026-08-23T15:21:52.799000Z",
+      "finished_at": "2026-08-23T15:21:52.928000Z"
+    }
+  ],
+  "failed_actions": [
+    {
+      "id": "6a8b0f7fbe3cf7d583ba9d3b",
+      "name": "Build signed IPA",
+      "type": "script",
+      "status": "failed",
+      "started_at": "2026-08-23T15:20:43.864000Z",
+      "finished_at": "2026-08-23T15:21:50.494000Z"
+    }
+  ]
+}
