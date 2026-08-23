@@ -4,6 +4,7 @@
 - worker: `worker2`
 - branch: `scanner-parity/worker2-privacy-lane`
 - integration base: `fd9cb2ec7745a927fae80a82f5cfc514ebc40020`
+- final PR: `#4522`
 - final Privacy PASS owner: HQ Release Gate
 
 ## Implemented controls
@@ -24,6 +25,7 @@
 - DataLifecyclePolicy: Swift 6.2.1 compile + smoke execution PASS for network denial, log denial, temporary purge, cache denial and unsafe-ID redaction.
 - GitHub code search on scanner-parity returned no production match for `URLSession` or `api.openai.com` at evidence time.
 - Full checkout runner could not be executed in the worker container because that runtime could not resolve `github.com`; the deterministic runner is committed for PR/HQ checkout execution. This is an environment transport limitation, not a Golden/Human gate.
+- PR #4522 is open against `scanner-parity/integration` and is mergeable. No commit status checks were attached at the time of final read-back.
 
 ## Current dataflow conclusion
 
