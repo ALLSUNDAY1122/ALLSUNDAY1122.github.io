@@ -79,9 +79,11 @@ final class GoldenThresholdCalibrationTests: XCTestCase {
         )
         XCTAssertEqual(assessment.verdict, GoldenThresholdCalibration.decisionValid)
         XCTAssertTrue(assessment.blockingReasons.isEmpty)
-        XCTAssertEqual(assessment.threshold, 0.14)
-        XCTAssertEqual(assessment.selectedMetrics?.pageRecall, 1, accuracy: 0.000001)
-        XCTAssertEqual(assessment.selectedMetrics?.unmatchedOutputCount, 1)
+        let threshold = try XCTUnwrap(assessment.threshold)
+        XCTAssertEqual(threshold, 0.14, accuracy: 0.000001)
+        let metrics = try XCTUnwrap(assessment.selectedMetrics)
+        XCTAssertEqual(metrics.pageRecall, 1, accuracy: 0.000001)
+        XCTAssertEqual(metrics.unmatchedOutputCount, 1)
         XCTAssertFalse(assessment.verdict.contains("FORMAL_GOLDEN_PASS"))
     }
 
