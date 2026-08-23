@@ -55,8 +55,10 @@ public final class BookPackageWriter: @unchecked Sendable {
             if fileManager.fileExists(atPath: imageDestination.path) {
                 try fileManager.removeItem(at: imageDestination)
             }
-            try fileManager.copyItem(at: artifact.imageURL, to: imageDestination)
-            try artifact.ocrPage.text.data(using: .utf8)?.write(to: textDestination, options: .atomic)
+            try PageImageWriter.writeJPEG(sourceURL: artifact.imageURL, destinationURL: imageDestination)
+            if let textData = artifact.ocrPage.text.data(using: .utf8) {
+                try textData.write(to: textDestination, options: .atomic)
+            }
 
             markdown.append("\n## Page \(artifact.sequence)\n\n\(artifact.ocrPage.text)")
             plainText.append("=== PAGE \(artifact.sequence) ===\n\(artifact.ocrPage.text)")
@@ -73,8 +75,12 @@ public final class BookPackageWriter: @unchecked Sendable {
             ))
         }
 
-        try markdown.joined(separator: "\n").data(using: .utf8)?.write(to: root.appendingPathComponent("book.md"), options: .atomic)
-        try plainText.joined(separator: "\n\n").data(using: .utf8)?.write(to: root.appendingPathComponent("book.txt"), options: .atomic)
+        if let markdownData = markdown.joined(separator: "\n").data(using: .utf8) {
+            try markdownData.write(to: root.appendingPathComponent("book.md"), options: .atomic)
+        }
+        if let textData = plainText.joined(separator: "\n\n").data(using: .utf8) {
+            try textData.write(to: root.appendingPathComponent("book.txt"), options: .atomic)
+        }
 
         let formatter = ISO8601DateFormatter()
         let manifest = BookManifest(schemaVersion: 1, bookID: bookID, createdAt: formatter.string(from: Date()), pages: manifestPages)
