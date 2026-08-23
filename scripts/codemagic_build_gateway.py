@@ -21,18 +21,12 @@ import yaml
 
 REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,100}$")
 WORKFLOW_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,120}$")
+REPOSITORY_RE = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 BUILD_ID_RE = re.compile(r"^[A-Za-z0-9_-]{8,120}$")
 TERMINAL = {"finished", "failed", "canceled", "timeout", "skipped"}
 SENSITIVE_KEY_PARTS = (
-    "secret",
-    "token",
-    "password",
-    "credential",
-    "private",
-    "apikey",
-    "api_key",
-    "environment",
-    "variable",
+    "secret", "token", "password", "credential", "private",
+    "apikey", "api_key", "environment", "variable",
 )
 
 
@@ -55,15 +49,11 @@ def api_json(url: str, token: str, method: str = "GET", payload: dict | None = N
 
 
 def sanitize(value):
-    """Remove fields that may contain credentials before writing API data to artifacts."""
     if isinstance(value, dict):
         clean = {}
         for key, child in value.items():
             lowered = str(key).lower()
-            if any(part in lowered for part in SENSITIVE_KEY_PARTS):
-                clean[key] = "[REDACTED]"
-            else:
-                clean[key] = sanitize(child)
+            clean[key] = "[REDACTED]" if any(part in lowered for part in SENSITIVE_KEY_PARTS) else sanitize(child)
         return clean
     if isinstance(value, list):
         return [sanitize(item) for item in value]
@@ -106,13 +96,30 @@ def find_app(apps: list[dict], repository: str) -> tuple[str | None, list[dict]]
     return (ids[0] if len(set(ids)) == 1 else None), candidates
 
 
-def validate_workflow(workflow_id: str, yaml_path: Path) -> None:
+def workflow_config(repository: str, branch: str) -> dict:
+    if repository == "ALLSUNDAY1122/ALLSUNDAY1122.github.io":
+        return yaml.safe_load(Path("codemagic.yaml").read_text(encoding="utf-8")) or {}
+    if not REPOSITORY_RE.fullmatch(repository):
+        raise ValueError("Invalid repository.")
+    if branch != "main":
+        raise ValueError("Only main branch workflow validation is allowed.")
+    url = f"https://raw.githubusercontent.com/{repository}/{branch}/codemagic.yaml"
+    req = urllib.request.Request(url, headers={"Accept": "text/plain", "User-Agent": "codemagic-gateway"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as response:
+            raw = response.read().decode("utf-8")
+    except urllib.error.HTTPError as exc:
+        raise RuntimeError(f"Could not fetch external codemagic.yaml: HTTP {exc.code}") from exc
+    return yaml.safe_load(raw) or {}
+
+
+def validate_workflow(repository: str, branch: str, workflow_id: str) -> None:
     if not WORKFLOW_ID_RE.fullmatch(workflow_id):
         raise ValueError("Invalid workflow_id.")
-    config = yaml.safe_load(yaml_path.read_text(encoding="utf-8")) or {}
+    config = workflow_config(repository, branch)
     workflows = config.get("workflows") or {}
     if workflow_id not in workflows:
-        raise ValueError(f"Workflow not found in codemagic.yaml: {workflow_id}")
+        raise ValueError(f"Workflow not found in {repository}/codemagic.yaml: {workflow_id}")
     workflow = workflows[workflow_id] or {}
     publishing = workflow.get("publishing") or {}
     asc = publishing.get("app_store_connect") or {}
@@ -147,12 +154,7 @@ def main() -> int:
         if command["action"] == "inspect_build":
             build_id = command["build_id"]
             details = get_build(token, build_id)
-            result.update({
-                "ok": True,
-                "build_id": build_id,
-                "status": details.get("status"),
-                "build_details": sanitize(details),
-            })
+            result.update({"ok": True, "build_id": build_id, "status": details.get("status"), "build_details": sanitize(details)})
             output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
             print(f"PASS: inspected Codemagic build {build_id}; status={details.get('status')}")
             return 0
@@ -182,9 +184,9 @@ def main() -> int:
             raise ValueError("workflow_id is required for build action.")
         if branch != "main":
             raise ValueError("Only main branch builds are allowed by the gateway.")
-        validate_workflow(workflow_id, Path("codemagic.yaml"))
+        validate_workflow(repository, branch, workflow_id)
 
-        requested_app_id = command.get("app_id") or os.environ.get("CM_APP_ID") or app_id
+        requested_app_id = command.get("app_id") or app_id or os.environ.get("CM_APP_ID")
         if not requested_app_id:
             raise RuntimeError("Codemagic appId could not be resolved uniquely.")
 
@@ -196,21 +198,14 @@ def main() -> int:
         if not build_id:
             raise RuntimeError(f"Codemagic did not return a buildId: {sanitize(start_response)}")
 
-        result.update({
-            "app_id": requested_app_id,
-            "workflow_id": workflow_id,
-            "branch": branch,
-            "build_id": build_id,
-            "build_url": f"https://codemagic.io/app/{requested_app_id}/build/{build_id}",
-            "status": "started",
-        })
+        result.update({"app_id": requested_app_id, "workflow_id": workflow_id, "branch": branch, "build_id": build_id,
+                       "build_url": f"https://codemagic.io/app/{requested_app_id}/build/{build_id}", "status": "started"})
         output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"Codemagic build started: workflow={workflow_id} build_id={build_id}")
 
         wait = command.get("wait", True)
         if wait:
-            timeout_seconds = int(command.get("timeout_seconds", 3600))
-            timeout_seconds = max(60, min(timeout_seconds, 4200))
+            timeout_seconds = max(60, min(int(command.get("timeout_seconds", 3600)), 4200))
             deadline = time.time() + timeout_seconds
             last_status = ""
             while time.time() < deadline:
