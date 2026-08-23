@@ -64,4 +64,64 @@ final class CaptureMotionQualityTests: XCTestCase {
         )
         XCTAssertEqual(decision, .relocalizationJump)
     }
+
+    func testRejectsSeverelyDarkFrame() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 24,
+            darkFraction: 0.82,
+            highlightFraction: 0,
+            lumaStandardDeviation: 10,
+            laplacianScore: 4,
+            sampleCount: 512
+        )
+        XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooDark)
+    }
+
+    func testRejectsSeverelyClippedHighlights() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 228,
+            darkFraction: 0,
+            highlightFraction: 0.76,
+            lumaStandardDeviation: 12,
+            laplacianScore: 5,
+            sampleCount: 512
+        )
+        XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooBright)
+    }
+
+    func testRejectsOnlyClearlySoftLowDetailFrame() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 112,
+            darkFraction: 0.02,
+            highlightFraction: 0.02,
+            lumaStandardDeviation: 9,
+            laplacianScore: 1.2,
+            sampleCount: 512
+        )
+        XCTAssertEqual(CaptureImageQualityPolicy.rejection(for: stats), .tooSoft)
+    }
+
+    func testAcceptsNormallyExposedDetailedFrame() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 116,
+            darkFraction: 0.08,
+            highlightFraction: 0.04,
+            lumaStandardDeviation: 34,
+            laplacianScore: 8,
+            sampleCount: 512
+        )
+        XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
+    }
+
+    func testSmallQualitySampleFailsOpen() {
+        let stats = CaptureImageQualityStats(
+            meanLuma: 10,
+            darkFraction: 1,
+            highlightFraction: 0,
+            lumaStandardDeviation: 0,
+            laplacianScore: 0,
+            sampleCount: 12
+        )
+        XCTAssertNil(CaptureImageQualityPolicy.rejection(for: stats))
+    }
 }
