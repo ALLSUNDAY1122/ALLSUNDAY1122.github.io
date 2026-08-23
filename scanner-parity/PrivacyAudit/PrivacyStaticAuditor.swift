@@ -89,7 +89,8 @@ public struct PrivacyStaticAuditor: Sendable {
         }
         let allow = Set(extraAllowlist.map { $0.lowercased() })
         self.rules = builtins.map { rule in
-            let effectiveTokens = rule.risk == .egressRisk
+            let nonBypassable = rule.risk == .egressRisk || rule.risk == .privacyRisk
+            let effectiveTokens = nonBypassable
                 ? rule.tokens
                 : rule.tokens.filter { !allow.contains($0.lowercased()) }
             return PrivacyAuditRule(id: rule.id, category: rule.category, risk: rule.risk,
