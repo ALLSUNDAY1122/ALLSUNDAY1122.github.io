@@ -145,14 +145,15 @@ public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
 
     public func analyze(projectID: ProjectID, asset: LocalAudioAsset) async throws -> AnalysisSnapshot {
         let loadedSignal = try await loader.loadSignal(projectID: projectID, asset: asset)
-        let signal = AnalysisSnapshotRobustness.sanitize(signal: loadedSignal)
+        let prepared = AnalysisWorkingSetPolicy.prepare(signal: loadedSignal)
+        let signal = prepared.signal
         guard signal.durationSeconds >= configuration.minimumDurationSeconds else {
             return AnalysisSnapshot(tempo: nil, key: nil, chords: [], sections: [])
         }
 
-        let tempo = TempoBeatAnalyzer.analyze(signal: signal, configuration: configuration)
-        let key = MusicalKeyAnalyzer.analyze(signal: signal, configuration: configuration)
-        let chords = ChordTimelineAnalyzer.analyze(signal: signal, configuration: configuration)
+        let tempo = BoundedTempoBeatAnalyzer.analyze(signal: signal, configuration: configuration)
+        let key = BoundedMusicalKeyAnalyzer.analyze(signal: signal, configuration: configuration)
+        let chords = BoundedChordTimelineAnalyzer.analyze(signal: signal, configuration: configuration)
         let sections = SongSectionHardener.analyze(signal: signal, chords: chords, configuration: configuration)
         let rawSnapshot = AnalysisSnapshot(tempo: tempo, key: key, chords: chords, sections: sections)
         return AnalysisSnapshotRobustness.harden(
