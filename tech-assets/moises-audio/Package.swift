@@ -36,6 +36,7 @@ let package = Package(
                 "Analysis/AnalysisBenchmarkRunner.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
                 "Analysis/RealAudioBenchmarkSuite.swift",
+                "Analysis/RealAudioBenchmarkCodec.swift",
                 "iOS/HostCore/HostModuleSlots.swift",
                 "iOS/HostCore/ApplePlatformSmoke.swift"
             ]
