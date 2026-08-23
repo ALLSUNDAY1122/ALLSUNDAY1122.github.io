@@ -1,16 +1,15 @@
 name: APP2-009 Submission Build
 
 on:
-  issues:
-    types: [opened]
+  push:
+    branches: [main]
+    paths: ['automation/app2-009-submit-build-command.json']
 
 permissions:
   contents: write
-  issues: write
 
 jobs:
   build:
-    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP2-009] Build App Store submission'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -62,12 +61,6 @@ jobs:
           git commit -m 'APP2-009: persist submission build result' || true
           git pull --rebase origin main || true
           git push origin HEAD:main || true
-      - name: Report
-        if: always()
-        uses: actions/github-script@v8
-        with:
-          script: |
-            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`APP2-009 submission build finished. status=${{ job.status }}; codemagic=${{ steps.codemagic.outcome }}; run_id=${context.runId}`});
       - name: Enforce success
         if: steps.codemagic.outcome != 'success'
         run: exit 1
