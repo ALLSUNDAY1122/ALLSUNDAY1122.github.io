@@ -6,6 +6,9 @@ on:
     paths:
       - 'kangoshi-sprint/ios/Sources/**'
       - 'kangoshi-sprint/ios/UITests/KangoshiScreenshotUITests.swift'
+      - 'kangoshi-sprint/ios/Review.storekit'
+      - 'kangoshi-sprint/ios/project.yml'
+      - 'scripts/app2_009_kangoshi_store_prepare.py'
       - '.github/workflows/kangoshi-appstore-screenshots.yml'
 
 concurrency:
@@ -13,23 +16,27 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   screenshots:
     runs-on: macos-15
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Install tools and prepare canonical native payload
         run: |
           HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen cairo pango
           python3 -m pip install --break-system-packages 'CairoSVG>=2.7,<3'
           python3 kangoshi-sprint/ios/tools/normalize_swift_numeric_literals.py
           python3 kangoshi-sprint/ios/tools/prepare_native_content.py
-      - name: Generate Xcode project
+      - name: Generate Xcode project with StoreKit review configuration
         working-directory: kangoshi-sprint/ios
-        run: xcodegen generate
+        run: |
+          xcodegen generate
+          grep -q 'Review.storekit' KangoshiSprint.xcodeproj/xcshareddata/xcschemes/KangoshiSprint.xcscheme
       - name: Pick current large iPhone simulator
         run: |
           python3 - <<'PY'
@@ -48,7 +55,7 @@ jobs:
           open('/tmp/kangoshi-shot-device','w').write(hit['name'])
           print(hit['name'],hit['udid'])
           PY
-      - name: Capture four product screens
+      - name: Capture five review screens including priced paywall
         shell: bash
         run: |
           set -euo pipefail
@@ -71,11 +78,34 @@ jobs:
             --output-path /tmp/kangoshi-screens
           find /tmp/kangoshi-screens -type f -maxdepth 2 -print
           count=$(find /tmp/kangoshi-screens -type f \( -name '*.png' -o -name '*.jpeg' \) | wc -l | tr -d ' ')
-          test "$count" -ge 4
+          test "$count" -ge 5
+          grep -q '04-premium' /tmp/kangoshi-screens/manifest.json
       - name: Write screenshot manifest
         run: |
           device=$(cat /tmp/kangoshi-shot-device)
-          printf 'device=%s\ncreated=2026-08-15\nflow=home,question,mock,premium\n' "$device" > /tmp/kangoshi-screens/manifest.txt
+          printf 'device=%s\ncreated=2026-08-23\nflow=home,question,mock,premium,settings\n' "$device" > /tmp/kangoshi-screens/manifest.txt
+      - name: Prepare App Store metadata and review assets
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 scripts/app2_009_kangoshi_store_prepare.py \
+            --screens /tmp/kangoshi-screens \
+            --output /tmp/app2-009-store-prepare-result.json
+      - name: Persist sanitized App Store preparation result
+        run: |
+          cp /tmp/app2-009-store-prepare-result.json /tmp/store-result.json
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/chatgpt-dispatcher/app-development-2/evidence
+          cp /tmp/store-result.json automation/chatgpt-dispatcher/app-development-2/evidence/APP2-009-store-prepare-result.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/chatgpt-dispatcher/app-development-2/evidence/APP2-009-store-prepare-result.json
+          git commit -m 'APP2-009: persist App Store preparation result' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
       - uses: actions/upload-artifact@v4
         with:
           name: kangoshi-appstore-screenshots
