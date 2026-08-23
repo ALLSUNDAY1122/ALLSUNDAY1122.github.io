@@ -23,15 +23,17 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import textwrap
           workflow = Path('.github/workflows/scaniverse-materialize-viewer-edits.yml').read_text(encoding='utf-8')
           start = "          python3 - <<'PY'\n"
           end = "\n          PY\n\n          git diff --check"
           if start not in workflow or end not in workflow:
               raise SystemExit('canonical patch body markers not found')
           body = workflow.split(start, 1)[1].split(end, 1)[0]
-          body = textwrap.dedent(body)
-          exec(compile(body, 'scaniverse-materialize-viewer-edits', 'exec'), {})
+          script_lines = []
+          for line in body.splitlines():
+              script_lines.append(line[10:] if line.startswith('          ') else line)
+          script = '\n'.join(script_lines) + '\n'
+          exec(compile(script, 'scaniverse-materialize-viewer-edits', 'exec'), {})
           PY
           git diff --check
           grep -q 'enum SplatPersistedEditMaterializer' splat-native-ios/SplatNative/SplatExportService.swift
