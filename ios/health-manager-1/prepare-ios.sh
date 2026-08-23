@@ -54,13 +54,24 @@ if n==0:
     updated=updated.replace(marker,marker+'\n'+round_js,1)
 else:
     assert n==1, f'ROUNDS replacement count={n}'
+
+# Release UI must match the final 264-question product and current Japan-only
+# StoreKit price points. TestFlight previously surfaced stale USD metadata even
+# though the Apple purchase sheet showed the canonical JPY 800 price.
 updated=updated.replace('3回分・科目別に9セット','公表回3＋追加演習3・合計264問')
 updated=updated.replace('3回分を科目ごとに。1科目ずつでも通しでも解けます。','公表回3回分＋追加演習3セット。1科目ずつでも44問通しでも解けます。')
+updated=updated.replace("monthlyPrice:'月額200円',lifetimePrice:'980円'", "monthlyPrice:'¥200',lifetimePrice:'¥800'")
+updated=updated.replace('全132問','全264問')
+updated=updated.replace('独自問題132問を収録しています。','公表回対応132問＋追加演習132問、合計264問を収録しています。')
+
 assert 'const ROUNDS=' in updated
 assert 'practice-C-Q44' in updated
 assert '合計264問' in updated
+assert '全132問' not in updated
+assert '980円' not in updated
+assert "monthlyPrice:'¥200',lifetimePrice:'¥800'" in updated
 index.write_text(updated,encoding='utf-8')
-print(f'PASS: bundled audited HM1 questions={len(questions)} rounds={dict(rounds)}')
+print(f'PASS: bundled audited HM1 questions={len(questions)} rounds={dict(rounds)} JPY paywall=200/800')
 PY
 
 # The approved unified Learning Sprint AppIcon PNGs are versioned assets.
