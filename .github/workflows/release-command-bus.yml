@@ -16,7 +16,7 @@ jobs:
   route:
     if: >-
       github.actor == 'ALLSUNDAY1122' &&
-      (startsWith(github.event.issue.title, '[ASC-CMD]') || startsWith(github.event.issue.title, '[CM-CMD]'))
+      (startsWith(github.event.issue.title, '[ASC-CMD]') || startsWith(github.event.issue.title, '[CM-CMD]') || startsWith(github.event.issue.title, '[CM-SCANLAB]'))
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
@@ -68,6 +68,15 @@ jobs:
           CM_APP_ID: ${{ vars.CM_APP_ID }}
         run: |
           python scripts/codemagic_build_gateway.py \
+            --command /tmp/release-command.json \
+            --output release-result.json
+
+      - name: Execute scoped Scan Lab Codemagic command
+        if: startsWith(github.event.issue.title, '[CM-SCANLAB]')
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python scripts/codemagic_scanlab_release_gateway.py \
             --command /tmp/release-command.json \
             --output release-result.json
 
