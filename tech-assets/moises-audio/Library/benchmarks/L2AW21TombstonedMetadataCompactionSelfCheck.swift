@@ -1,8 +1,24 @@
 import Foundation
 
+private actor GateProbe {
+    private var active = 0
+    private var peak = 0
+
+    func enter() {
+        active += 1
+        peak = max(peak, active)
+    }
+
+    func leave() {
+        active -= 1
+    }
+
+    func peakValue() -> Int { peak }
+}
+
 @main
 struct L2AW21TombstonedMetadataCompactionSelfCheck {
-    static func main() throws {
+    static func main() async throws {
         var scenarios = 0
 
         let project = UUID()
@@ -110,11 +126,29 @@ struct L2AW21TombstonedMetadataCompactionSelfCheck {
         let elapsed = Date().timeIntervalSince(start)
         scenarios += 1
 
+        let gate = Lane2LibraryMutationGate()
+        let probe = GateProbe()
+        await withTaskGroup(of: Void.self) { group in
+            for _ in 0..<200 {
+                group.addTask {
+                    await gate.lock()
+                    await probe.enter()
+                    try? await Task.sleep(for: .milliseconds(1))
+                    await probe.leave()
+                    await gate.unlock()
+                }
+            }
+        }
+        let peak = await probe.peakValue()
+        precondition(peak == 1)
+        scenarios += 1
+
         print(String(
-            format: "L2_AW21_SELF_TEST_PASS scenarios=%d projects=%d artifact_paths=%d elapsed_seconds=%.6f",
+            format: "L2_AW21_SELF_TEST_PASS scenarios=%d projects=%d artifact_paths=%d gate_tasks=200 gate_peak=%d elapsed_seconds=%.6f",
             scenarios,
             count,
             totalPaths,
+            peak,
             elapsed
         ))
     }
