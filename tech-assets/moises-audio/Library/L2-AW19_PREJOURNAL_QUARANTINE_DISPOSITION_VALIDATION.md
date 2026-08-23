@@ -93,9 +93,9 @@ PASS:
 - `PrejournalExportQuarantineTests.swift` strict XCTest typecheck;
 - `Lane2PrejournalExportRecoveryService.swift` strict typecheck against the exact AW17 journal method shape via a contract-equivalent stub;
 - static production audit: `L2_AW19_STATIC_AUDIT_PASS checks=15/15`;
-- self-check: `L2_AW19_SELF_TEST_PASS scenarios=9 batches=1000 artifacts=2000 elapsed_seconds=0.343279`.
+- exact committed self-check blob `2ed7451c5a047cb586957e23afb628765d4e0112` rerun: `L2_AW19_SELF_TEST_PASS scenarios=9 batches=1000 artifacts=2000 elapsed_seconds=0.324857`.
 
-The 0.343279 s value is a Linux filesystem inventory microbenchmark for 1,000 recovery directories with two 1 KiB fixture artifacts each. It is not an iPhone/APFS performance result.
+The 0.324857 s value is a Linux filesystem inventory microbenchmark for 1,000 recovery directories with two 1 KiB fixture artifacts each. It is not an iPhone/APFS performance result.
 
 ## Important boundaries
 
