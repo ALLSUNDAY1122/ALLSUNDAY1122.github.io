@@ -1,0 +1,41 @@
+name: APP2-005 HealthManager1 IAP Bootstrap
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-005-hm1-iap-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  configure-iap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Configure monthly 200 and lifetime 800
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/app2_005_hm1_iap_v2_runner.py
+      - name: Persist IAP result
+        if: always() && hashFiles('automation/app2-005-hm1-iap-result.json') != ''
+        run: |
+          cp automation/app2-005-hm1-iap-result.json /tmp/app2-005-hm1-iap-result.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/app2-005-hm1-iap-result.json automation/app2-005-hm1-iap-result.json
+            git add automation/app2-005-hm1-iap-result.json
+            git diff --cached --quiet || git commit -m "Persist APP2-005 HM1 IAP configuration result"
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
