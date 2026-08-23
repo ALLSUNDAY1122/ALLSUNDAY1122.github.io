@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A17",
+  "result": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "invariant": "operation_retryable never implies automatic provider task create retry; ambiguous create outcomes reconcile through A07 without blind repost",
+  "classifier_checks": {"assertions": 44, "failures": 0},
+  "fault_rows": 21,
+  "process_crash_rows": 10,
+  "faults": [
+    {"id":"http-401","category":"credential_invalid","stable_error_code":"SEP_PROVIDER_AUTH_INVALID","operation_retryable":false,"automatic_provider_create_retry_allowed":false,"action":"fix_credentials","preserve_existing_result":true},
+    {"id":"http-403","category":"credential_or_entitlement_forbidden","stable_error_code":"SEP_PROVIDER_FORBIDDEN","operation_retryable":false,"automatic_provider_create_retry_allowed":false,"action":"fix_credentials_or_entitlement","preserve_existing_result":true},
+    {"id":"http-404","category":"provider_job_missing","stable_error_code":"SEP_PROVIDER_JOB_NOT_FOUND","operation_retryable":false,"automatic_provider_create_retry_allowed":false,"action":"reconcile_not_recreate","preserve_existing_result":true},
+    {"id":"http-409","category":"provider_conflict","stable_error_code":"SEP_PROVIDER_CONFLICT","operation_retryable":false,"automatic_provider_create_retry_allowed":false,"action":"reconcile_conflict_not_recreate","preserve_existing_result":true},
+    {"id":"http-413","category":"source_too_large","stable_error_code":"SEP_PROVIDER_SOURCE_TOO_LARGE","operation_retryable":false,"automatic_provider_create_retry_allowed":false,"action":"reduce_or_transcode_source","preserve_existing_result":true},
+    {"id":"http-429","category":"rate_limited","stable_error_code":"SEP_PROVIDER_RATE_LIMITED","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"reconcile_create_not_repost","preserve_existing_result":true},
+    {"id":"http-500","category":"provider_5xx","stable_error_code":"SEP_PROVIDER_5XX","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"reconcile_create_not_repost","preserve_existing_result":true},
+    {"id":"http-503","category":"provider_5xx","stable_error_code":"SEP_PROVIDER_5XX","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"reconcile_create_not_repost","preserve_existing_result":true},
+    {"id":"credential-missing","category":"credential_invalid","stable_error_code":"SEP_PROVIDER_AUTH_MISSING","operation_retryable":false,"automatic_provider_create_retry_allowed":false,"action":"fix_credentials","preserve_existing_result":true},
+    {"id":"dns","category":"dns_failure","stable_error_code":"SEP_PROVIDER_DNS_FAILED","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"backoff_then_retry_safe_operation","preserve_existing_result":true},
+    {"id":"tls","category":"tls_failure","stable_error_code":"SEP_PROVIDER_TLS_FAILED","operation_retryable":false,"automatic_provider_create_retry_allowed":false,"action":"fix_tls_or_endpoint","preserve_existing_result":true},
+    {"id":"upload-timeout","category":"upload_timeout","stable_error_code":"SEP_PROVIDER_UPLOAD_TIMEOUT","operation_retryable":true,"automatic_provider_create_retry_allowed":true,"action":"retry_upload_without_task_create","preserve_existing_result":true},
+    {"id":"poll-timeout","category":"poll_timeout","stable_error_code":"SEP_PROVIDER_POLL_TIMEOUT","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"retry_poll","preserve_existing_result":true},
+    {"id":"malformed-json","category":"malformed_provider_response","stable_error_code":"SEP_PROVIDER_RESPONSE_INVALID_JSON","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"retry_safe_read_operation","preserve_existing_result":true},
+    {"id":"vendor-task-error","category":"vendor_task_error","stable_error_code":"SEP_PROVIDER_TASK_FAILED","operation_retryable":false,"automatic_provider_create_retry_allowed":false,"action":"surface_failure_allow_explicit_new_job","preserve_existing_result":true},
+    {"id":"missing-target","category":"missing_or_duplicate_target","stable_error_code":"SEP_PROVIDER_OUTPUT_SET_INVALID","operation_retryable":false,"automatic_provider_create_retry_allowed":false,"action":"discard_provider_result","preserve_existing_result":true},
+    {"id":"duplicate-target","category":"duplicate_or_invalid_target","stable_error_code":"SEP_PROVIDER_OUTPUT_SET_INVALID","operation_retryable":false,"automatic_provider_create_retry_allowed":false,"action":"discard_provider_result","preserve_existing_result":true},
+    {"id":"expired-output-url","category":"expired_output_url","stable_error_code":"SEP_PROVIDER_OUTPUT_URL_EXPIRED","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"refresh_output_url_or_use_verified_local_copy","preserve_existing_result":true},
+    {"id":"corrupt-wav","category":"corrupt_audio","stable_error_code":"SEP_PROVIDER_OUTPUT_CORRUPT","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"redownload_output_then_fail_closed","preserve_existing_result":true},
+    {"id":"disk-full","category":"disk_full","stable_error_code":"SEP_LOCAL_STORAGE_EXHAUSTED","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"free_space_then_resume","preserve_existing_result":true},
+    {"id":"local-deletion-failure","category":"local_delete_failure","stable_error_code":"SEP_LOCAL_DELETE_FAILED","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"retry_local_delete","preserve_existing_result":true}
+  ],
+  "process_crashes": [
+    {"phase":"intent_persisted","stable_error_code":"SEP_CRASH_AFTER_INTENT","operation_retryable":true,"automatic_provider_create_retry_allowed":true,"action":"resume_same_logical_start"},
+    {"phase":"uploading","stable_error_code":"SEP_CRASH_DURING_UPLOAD","operation_retryable":true,"automatic_provider_create_retry_allowed":true,"action":"resume_or_retry_upload_before_task_create"},
+    {"phase":"provider_create_in_flight","stable_error_code":"SEP_CRASH_DURING_PROVIDER_CREATE","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"reconcile_create_not_repost"},
+    {"phase":"provider_task_bound","stable_error_code":"SEP_CRASH_AFTER_PROVIDER_BIND","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"recover_registry_then_poll"},
+    {"phase":"polling","stable_error_code":"SEP_CRASH_DURING_POLL","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"recover_registry_then_poll"},
+    {"phase":"downloading","stable_error_code":"SEP_CRASH_DURING_DOWNLOAD","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"recover_then_redownload_missing_output"},
+    {"phase":"staging_verified","stable_error_code":"SEP_CRASH_AFTER_STAGING_VERIFIED","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"commit_verified_local_set"},
+    {"phase":"promotion_in_flight","stable_error_code":"SEP_CRASH_DURING_PROMOTION","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"run_atomic_commit_recovery"},
+    {"phase":"ledger_commit_in_flight","stable_error_code":"SEP_CRASH_DURING_LEDGER_COMMIT","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"verify_final_then_finish_ledger_commit"},
+    {"phase":"committed","stable_error_code":"SEP_CRASH_AFTER_COMMIT","operation_retryable":true,"automatic_provider_create_retry_allowed":false,"action":"verify_committed_result_then_resume"}
+  ],
+  "external_gaps": [
+    "live AudioShake credential/auth/error payloads remain unverified",
+    "real provider 429 Retry-After/quota/credit semantics remain unverified",
+    "actual DNS/TLS/provider outage timing and reconnect behavior remain unverified",
+    "real iPhone process termination/power-loss faults remain HQ device-gate evidence",
+    "machine matrix and synthetic faults do not establish PARITY"
+  ]
+}
