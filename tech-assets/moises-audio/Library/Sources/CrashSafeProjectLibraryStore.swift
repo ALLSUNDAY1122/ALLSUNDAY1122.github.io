@@ -30,6 +30,7 @@ public final class CrashSafeProjectLibraryStore:
 {
     private let metadata: CoreDataProjectLibraryStore
     private let artifacts: LibraryArtifactLifecycle
+    private let mutationGate = Lane2LibraryMutationGate()
 
     public init(metadata: CoreDataProjectLibraryStore, artifactRootURL: URL) throws {
         self.metadata = metadata
@@ -51,8 +52,10 @@ public final class CrashSafeProjectLibraryStore:
     }
 
     public func createProject(source: LocalAudioAsset) async throws -> ProjectID {
-        try artifacts.requireReady(relativePath: source.relativePath)
-        return try await metadata.createProject(source: source)
+        try await withMutationGate {
+            try artifacts.requireReady(relativePath: source.relativePath)
+            return try await metadata.createProject(source: source)
+        }
     }
 
     public func recordProcessing(projectID: ProjectID, snapshot: ProcessingSnapshot) async throws {
@@ -60,10 +63,12 @@ public final class CrashSafeProjectLibraryStore:
     }
 
     public func recordStems(projectID: ProjectID, stems: [StemArtifact]) async throws {
-        for stem in stems {
-            try artifacts.requireReady(relativePath: stem.relativePath)
+        try await withMutationGate {
+            for stem in stems {
+                try artifacts.requireReady(relativePath: stem.relativePath)
+            }
+            try await metadata.recordStems(projectID: projectID, stems: stems)
         }
-        try await metadata.recordStems(projectID: projectID, stems: stems)
     }
 
     public func listProjects() async throws -> [PersistedProjectSnapshot] {
@@ -127,27 +132,29 @@ public final class CrashSafeProjectLibraryStore:
     /// 8) retire the journal only after metadata compaction commits.
     /// A crash in every gap converges safely during recoverInterruptedOperations().
     public func deleteProject(projectID: ProjectID) async throws {
-        let projects = try await metadata.listMaintenanceProjects()
-        guard let target = projects.first(where: { $0.projectID == projectID }) else {
-            _ = try await recoverInterruptedOperations()
-            return
-        }
+        try await withMutationGate {
+            let projects = try await metadata.listMaintenanceProjects()
+            guard let target = projects.first(where: { $0.projectID == projectID }) else {
+                _ = try await recoverInterruptedOperationsUnlocked()
+                return
+            }
 
-        let otherReferences = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(
-            in: projects,
-            excluding: projectID
-        )
-        let relativePaths = target.artifactRelativePaths.filter {
-            !otherReferences.contains($0)
-        }
+            let otherReferences = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(
+                in: projects,
+                excluding: projectID
+            )
+            let relativePaths = target.artifactRelativePaths.filter {
+                !otherReferences.contains($0)
+            }
 
-        try artifacts.persistPreparedDeletion(
-            projectUUID: projectID.rawValue,
-            relativePaths: relativePaths
-        )
-        try await metadata.deleteProject(projectID: projectID)
-        try artifacts.markDeletionCommitted(projectUUID: projectID.rawValue)
-        _ = try await recoverInterruptedOperations()
+            try artifacts.persistPreparedDeletion(
+                projectUUID: projectID.rawValue,
+                relativePaths: relativePaths
+            )
+            try await metadata.deleteProject(projectID: projectID)
+            try artifacts.markDeletionCommitted(projectUUID: projectID.rawValue)
+            _ = try await recoverInterruptedOperationsUnlocked()
+        }
     }
 
     public func recoveryPlan(projectID: ProjectID) async throws -> ProcessingRecoveryPlan {
@@ -160,6 +167,12 @@ public final class CrashSafeProjectLibraryStore:
     /// durably recorded as ARTIFACTS_DELETED.
     @discardableResult
     public func recoverInterruptedOperations() async throws -> LibraryRecoveryReport {
+        try await withMutationGate {
+            try await recoverInterruptedOperationsUnlocked()
+        }
+    }
+
+    private func recoverInterruptedOperationsUnlocked() async throws -> LibraryRecoveryReport {
         let journals = try artifacts.pendingDeletionJournals()
         let candidates = try await metadata.listTombstonedProjectCompactionCandidates()
 
@@ -276,14 +289,30 @@ public final class CrashSafeProjectLibraryStore:
         gracePeriod: TimeInterval = 3600,
         now: Date = Date()
     ) async throws -> LibraryOrphanSweepResult {
-        _ = try await recoverInterruptedOperations()
-        let projects = try await metadata.listMaintenanceProjects()
-        let referenced = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(in: projects)
-        return try artifacts.sweepOrphans(
-            referencedRelativePaths: referenced,
-            gracePeriod: gracePeriod,
-            now: now
-        )
+        try await withMutationGate {
+            _ = try await recoverInterruptedOperationsUnlocked()
+            let projects = try await metadata.listMaintenanceProjects()
+            let referenced = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(in: projects)
+            return try artifacts.sweepOrphans(
+                referencedRelativePaths: referenced,
+                gracePeriod: gracePeriod,
+                now: now
+            )
+        }
+    }
+
+    private func withMutationGate<T: Sendable>(
+        _ operation: () async throws -> T
+    ) async throws -> T {
+        await mutationGate.lock()
+        do {
+            let result = try await operation()
+            await mutationGate.unlock()
+            return result
+        } catch {
+            await mutationGate.unlock()
+            throw error
+        }
     }
 
     private func projectIDLessThan(_ lhs: ProjectID, _ rhs: ProjectID) -> Bool {
