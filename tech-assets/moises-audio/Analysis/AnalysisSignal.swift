@@ -186,7 +186,7 @@ public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
         try AnalysisCancellationPolicy.check()
 
         let rawSnapshot = AnalysisSnapshot(tempo: tempo, key: key, chords: chords, sections: sections)
-        let hardened = AnalysisSnapshotRobustness.harden(
+        let hardened = try AnalysisSnapshotRobustness.hardenCancellable(
             snapshot: rawSnapshot,
             duration: signal.durationSeconds,
             configuration: configuration

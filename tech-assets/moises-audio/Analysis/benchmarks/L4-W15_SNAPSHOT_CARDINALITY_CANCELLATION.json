@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "wave_id": "L4-W15",
+  "title": "Final AnalysisSnapshot cardinality / cancellation hardening",
+  "evidence_class": "NON_PARITY",
+  "synthetic_only": true,
+  "parity_eligible": false,
+  "portable_environment": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu",
+    "note": "Portable scheduler/cardinality evidence only; not an iPhone CPU, memory, thermal, battery or MIR-accuracy claim."
+  },
+  "policy": {
+    "overflow_behavior": {
+      "tempo_beats": "tempo=nil",
+      "chords": "single full-duration X chord",
+      "sections": "single full-duration X section"
+    },
+    "normal_data_is_not_truncated": true,
+    "limits_are_duration_aware": true,
+    "section_absolute_limit": 16385
+  },
+  "duration_10_seconds": {
+    "beat_input_limit": 2048,
+    "chord_input_limit": 4096,
+    "section_input_limit": 512
+  },
+  "duration_1_hour": {
+    "beat_input_limit": 25264,
+    "chord_input_limit": 28864,
+    "section_input_limit": 3664,
+    "reference_normal_max_beats_at_210_bpm": 12600,
+    "reference_normal_chord_frames_at_0_25_second_hop": 14400,
+    "reference_minimum_4_second_sections": 900
+  },
+  "midflight_cancellation_stress": {
+    "duration_seconds": 86400,
+    "input_chords": 300000,
+    "duration_aware_chord_limit": 691264,
+    "input_is_within_limit": true,
+    "input_order": "reverse chronological to force cancellable sort",
+    "cancellation_request_delay_seconds": 0.001,
+    "acceptance_latency_seconds_lt": 0.25
+  },
+  "portable_runs": [
+    {
+      "run": 1,
+      "assertions_passed": 9,
+      "assertions_total": 9,
+      "wall_seconds": 0.06,
+      "max_rss_kb": 33580,
+      "cancellation_latency_seconds": 0.000084175
+    },
+    {
+      "run": 2,
+      "assertions_passed": 9,
+      "assertions_total": 9,
+      "wall_seconds": 0.06,
+      "max_rss_kb": 33776,
+      "cancellation_latency_seconds": 0.000079037
+    },
+    {
+      "run": 3,
+      "assertions_passed": 9,
+      "assertions_total": 9,
+      "wall_seconds": 0.06,
+      "max_rss_kb": 33524,
+      "cancellation_latency_seconds": 0.000768591
+    },
+    {
+      "run": 4,
+      "assertions_passed": 9,
+      "assertions_total": 9,
+      "wall_seconds": 0.06,
+      "max_rss_kb": 33528,
+      "cancellation_latency_seconds": 0.000181820
+    },
+    {
+      "run": 5,
+      "assertions_passed": 9,
+      "assertions_total": 9,
+      "wall_seconds": 0.06,
+      "max_rss_kb": 33492,
+      "cancellation_latency_seconds": 0.000389318
+    }
+  ],
+  "worst_observed_cancellation_latency_seconds": 0.000768591,
+  "portable_assertions": [
+    "normal unsorted beat normalization",
+    "normal chord full-duration coverage",
+    "unsupported chord vocabulary fails closed without losing supported minor chord",
+    "functional-label vocabulary/confidence semantics preserved",
+    "beat overflow fails closed to nil tempo",
+    "chord overflow fails closed to full-duration X",
+    "section overflow fails closed to full-duration X",
+    "one-hour duration-aware limits equal policy values",
+    "mid-flight large accepted-cardinality chord normalization throws CancellationError under threshold"
+  ],
+  "parity_status": "NO_CHANGE"
+}

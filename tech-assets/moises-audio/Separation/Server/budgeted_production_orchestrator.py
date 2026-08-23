@@ -1,9 +1,8 @@
 """Cost-guarded production separation entrypoint.
 
-This adapter composes the existing A06/A07 ProductionSeparationOrchestrator without changing the
-frozen Shared/App contracts. The provider proxy places the durable budget authorization directly
-in front of provider task creation, so an ambiguous POST cannot be blindly repeated after crash or
-relaunch.
+This adapter composes A10 cost safety with the A15 long-track production wrapper without changing
+the frozen Shared/App contracts. Provider create remains guarded against duplicate billing, while
+source/output storage pressure and transfer backpressure are enforced by the inner long-track layer.
 """
 from __future__ import annotations
 
@@ -12,9 +11,10 @@ from pathlib import Path
 from typing import Any, Callable, Iterable
 
 from cost_quota_guard import CostGuardError, CostQuotaGuard, classify_provider_limit
+from long_track_io import LongTrackIOError, LongTrackIOGuard
+from long_track_production_orchestrator import LongTrackProductionSeparationOrchestrator
 from production_orchestrator import (
     OrchestratorError,
-    ProductionSeparationOrchestrator,
     _contained_file,
     _normalize_models,
     _request_fingerprint,
@@ -67,18 +67,22 @@ class BudgetedProductionSeparationOrchestrator:
         registry_path: str | Path,
         duration_resolver: Callable[[Path], float],
         downloader: Any | None = None,
+        long_track_guard: LongTrackIOGuard | None = None,
+        long_track_telemetry_path: str | Path | None = None,
     ):
         if not callable(duration_resolver):
             raise CostGuardError("SEP_COST_DURATION_RESOLVER_REQUIRED")
         self.cost_guard = cost_guard
         self.duration_resolver = duration_resolver
         self.source_root = Path(source_root).resolve()
-        self.inner = ProductionSeparationOrchestrator(
+        self.inner = LongTrackProductionSeparationOrchestrator(
             provider=BudgetedProviderProxy(provider, cost_guard),
             source_root=source_root,
             artifact_root=artifact_root,
             registry_path=registry_path,
             downloader=downloader,
+            long_track_guard=long_track_guard,
+            long_track_telemetry_path=long_track_telemetry_path,
         )
 
     def start(
@@ -92,6 +96,12 @@ class BudgetedProductionSeparationOrchestrator:
     ) -> Any:
         selected_models = _normalize_models(models)
         source = _contained_file(source_path, self.source_root)
+        # Reject the deployment/provider source-size boundary before hashing a multi-gigabyte file,
+        # duration analysis or cost reservation. The inner layer repeats this check defensively.
+        try:
+            self.inner.long_track_guard.validate_source_size(source.stat().st_size)
+        except LongTrackIOError as exc:
+            raise OrchestratorError(exc.code, retryable=exc.retryable) from exc
         source_sha, _ = _sha256_file(source)
         fingerprint = _request_fingerprint(project_id, asset_id, source_sha, selected_models)
         if not isinstance(idempotency_key, str) or not idempotency_key or "\r" in idempotency_key or "\n" in idempotency_key:
@@ -118,8 +128,8 @@ class BudgetedProductionSeparationOrchestrator:
                 idempotency_key=idempotency_key,
             )
         except Exception:
-            # Upload/local validation failures happen before the provider proxy authorizes create.
-            # Only that provably pre-create state may release the reservation automatically.
+            # Upload/local validation/storage-preflight failures happen before the provider proxy
+            # authorizes create. Only that provably pre-create state may release the reservation.
             record = self.cost_guard.get(logical_job_id)
             if record.provider_create_state == "not_attempted" and record.accounting_state == "reserved":
                 self.cost_guard.release_before_provider_create(logical_job_id, reason_code="pre_create_failure")
@@ -145,12 +155,14 @@ class BudgetedProductionSeparationOrchestrator:
         except Exception as exc:
             semantics = classify_provider_limit(exc)
             if semantics is not None:
-                # Durable classification only; observe failures never authorize a new provider create.
                 self.cost_guard.record_limit_signal(logical_job_id, exc)
             raise
 
     def collect_ready_outputs(self, logical_job_id: str) -> Any:
         return self.inner.collect_ready_outputs(logical_job_id)
+
+    def long_track_status(self, logical_job_id: str) -> Any:
+        return self.inner.long_track_status(logical_job_id)
 
     def get(self, logical_job_id: str) -> Any:
         return self.inner.get(logical_job_id)

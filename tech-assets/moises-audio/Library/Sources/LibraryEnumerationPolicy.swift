@@ -38,6 +38,12 @@ public struct LibraryEnumerationPolicy: Equatable, Sendable {
         return 1 + batchCount(forCount: projectCount) * relatedRecordGroups
     }
 
+    /// Informational upper bound for maintenance projections: root projects plus source assets/stems.
+    public func estimatedMaintenanceFetchOperations(projectCount: Int, relatedRecordGroups: Int = 2) -> Int {
+        guard projectCount >= 0, relatedRecordGroups >= 0 else { return 0 }
+        return 1 + batchCount(forCount: projectCount) * relatedRecordGroups
+    }
+
     /// Informational upper bound for listSetlists(): one primary SetlistRecord fetch plus one
     /// batched SetlistEntryRecord fetch per setlist batch.
     public func estimatedSetlistFetchOperations(setlistCount: Int) -> Int {

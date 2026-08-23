@@ -19,6 +19,7 @@ public actor Lane2DurableLifecycleCoordinator {
     private let artifacts: LibraryArtifactLifecycle
     private let fileStore: IOFileStore
     private let registrationJournal: Lane2ExportRegistrationJournal
+    private let quarantineRecovery: Lane2LifecycleQuarantineRecovery
     private let storageReserveBytes: Int64
     private let fileManager: FileManager
     private var activeExportRegistrationIntents: Set<UUID> = []
@@ -38,7 +39,14 @@ public actor Lane2DurableLifecycleCoordinator {
         self.metadata = metadata ?? Lane2LifecycleMetadataStore(rootURL: rootURL)
         self.artifacts = LibraryArtifactLifecycle(rootURL: rootURL)
         self.fileStore = IOFileStore(rootURL: rootURL)
-        self.registrationJournal = Lane2ExportRegistrationJournal(rootURL: rootURL, fileManager: fileManager)
+        self.registrationJournal = Lane2ExportRegistrationJournal(
+            rootURL: rootURL,
+            fileManager: fileManager
+        )
+        self.quarantineRecovery = Lane2LifecycleQuarantineRecovery(
+            rootURL: rootURL,
+            fileManager: fileManager
+        )
         self.storageReserveBytes = storageReserveBytes
         self.fileManager = fileManager
     }
@@ -73,6 +81,7 @@ public actor Lane2DurableLifecycleCoordinator {
 
     @discardableResult
     public func exportAndRecord(_ request: ExportRequest) async throws -> [ExportArtifact] {
+        try await quarantineRecovery.requireExportMetadataConsistent()
         let attemptID = UUID()
         var produced: [ExportArtifact] = []
         var metadataCommitted = false
@@ -90,7 +99,10 @@ public actor Lane2DurableLifecycleCoordinator {
             let intent = try registrationJournal.prepare(
                 projectUUID: request.projectID.rawValue,
                 artifacts: produced.map {
-                    Lane2ExportRegistrationArtifact(relativePath: $0.relativePath, mediaType: $0.mediaType)
+                    Lane2ExportRegistrationArtifact(
+                        relativePath: $0.relativePath,
+                        mediaType: $0.mediaType
+                    )
                 }
             )
             registrationIntentID = intent.id
@@ -167,10 +179,112 @@ public actor Lane2DurableLifecycleCoordinator {
         }
     }
 
+    /// Explicit metadata-recovery entrypoint. A durable export barrier is prepared before any
+    /// corrupt export shard is moved, then canonical Project Library ownership is reconstructed.
+    /// Corrupt export metadata itself is never guessed from canonical Library state.
+    @discardableResult
+    public func quarantineAndReconcileLifecycleMetadata() async throws -> Lane2LifecycleCanonicalRecoveryReport {
+        var quarantined: [String] = []
+
+        do {
+            _ = try await quarantineRecovery.prepareBarrierForCurrentCorruptExportShards()
+            quarantined = try await metadata.quarantineCorruptShards().quarantinedRelativePaths
+        } catch Lane2LifecycleMetadataFailure.corruptDocument {
+            _ = try await quarantineRecovery.prepareBarrierForLegacyCorruption()
+            guard let preserved = try await metadata.quarantineCorruptLegacyDocument() else {
+                throw Lane2LifecycleQuarantineRecoveryFailure.corruptBarrier
+            }
+            quarantined = [preserved]
+        } catch Lane2LifecycleMetadataFailure.invalidRelativePath {
+            _ = try await quarantineRecovery.prepareBarrierForLegacyCorruption()
+            guard let preserved = try await metadata.quarantineCorruptLegacyDocument() else {
+                throw Lane2LifecycleQuarantineRecoveryFailure.corruptBarrier
+            }
+            quarantined = [preserved]
+        }
+
+        // This is safe even while export recovery is blocked: ownership comes from canonical Library
+        // and writes only per-project ownership shards, never export sidecars or user audio.
+        try await reconcileProjectOwnership()
+        return Lane2LifecycleCanonicalRecoveryReport(
+            quarantinedRelativePaths: quarantined,
+            exportRecoveryBarrier: try await quarantineRecovery.barrier(),
+            ownershipReconciled: true
+        )
+    }
+
+    public func exportMetadataRecoveryBarrier() async throws -> Lane2ExportMetadataQuarantineBarrier? {
+        try await quarantineRecovery.barrier()
+    }
+
+    /// Resolves an export-quarantine barrier only from explicit caller decisions. Restored paths
+    /// must still exist as non-empty Exports/** files. Attributed corrupt projects require either a
+    /// complete restored set or an explicit empty acknowledgement. Unattributed legacy/corrupt
+    /// filenames require a separate metadata-loss acknowledgement before destructive sweeps resume.
+    @discardableResult
+    public func resolveQuarantinedExportMetadata(
+        _ resolution: Lane2ExportMetadataRecoveryResolution
+    ) async throws -> Lane2ExportMetadataRecoveryCompletionReport {
+        guard let barrier = try await quarantineRecovery.barrier() else {
+            return Lane2ExportMetadataRecoveryCompletionReport(
+                restoredProjectUUIDs: [],
+                acknowledgedEmptyProjectUUIDs: [],
+                acknowledgedUnattributedMetadataLoss: false
+            )
+        }
+
+        try await quarantineRecovery.validate(resolution: resolution, against: barrier)
+        try await quarantineRecovery.requireRecoveredArtifactsReady(resolution.restoredArtifacts)
+
+        let grouped = Dictionary(grouping: resolution.restoredArtifacts, by: \.projectUUID)
+        let before = try await metadata.snapshot()
+        for (projectUUID, restored) in grouped {
+            let existing = before.exports.filter { $0.projectUUID == projectUUID }
+            let existingKeys = Set(existing.map { "\($0.relativePath)|\($0.mediaType)" })
+            let desiredKeys = Set(restored.map { "\($0.relativePath)|\($0.mediaType)" })
+            if !existing.isEmpty {
+                guard existing.allSatisfy({ $0.state == .ready }), existingKeys == desiredKeys else {
+                    throw Lane2LifecycleQuarantineRecoveryFailure.conflictingExistingExportMetadata(projectUUID)
+                }
+                continue
+            }
+            _ = try await metadata.recordExports(
+                projectUUID: projectUUID,
+                artifacts: restored.map { ($0.relativePath, $0.mediaType) }
+            )
+        }
+
+        for projectUUID in resolution.acknowledgedEmptyProjectUUIDs {
+            let existing = before.exports.filter { $0.projectUUID == projectUUID }
+            guard existing.isEmpty else {
+                throw Lane2LifecycleQuarantineRecoveryFailure.conflictingExistingExportMetadata(projectUUID)
+            }
+        }
+
+        // Verify the post-recovery sidecar can be fully decoded and contains the requested restores.
+        let after = try await metadata.snapshot()
+        for (projectUUID, restored) in grouped {
+            let existing = after.exports.filter { $0.projectUUID == projectUUID }
+            let existingKeys = Set(existing.map { "\($0.relativePath)|\($0.mediaType)" })
+            let desiredKeys = Set(restored.map { "\($0.relativePath)|\($0.mediaType)" })
+            guard existing.allSatisfy({ $0.state == .ready }), existingKeys == desiredKeys else {
+                throw Lane2LifecycleQuarantineRecoveryFailure.conflictingExistingExportMetadata(projectUUID)
+            }
+        }
+
+        try await quarantineRecovery.clearBarrier()
+        return Lane2ExportMetadataRecoveryCompletionReport(
+            restoredProjectUUIDs: Array(grouped.keys),
+            acknowledgedEmptyProjectUUIDs: Array(resolution.acknowledgedEmptyProjectUUIDs),
+            acknowledgedUnattributedMetadataLoss: resolution.acknowledgeUnattributedMetadataLoss
+        )
+    }
+
     /// Relaunch convergence for a process death after export publication but before registration,
     /// or after metadata registration but before the durable handoff intent was removed.
     @discardableResult
     public func recoverPendingExportRegistrations() async throws -> Lane2ExportRegistrationRecoveryReport {
+        try await quarantineRecovery.requireExportMetadataConsistent()
         let pending = try registrationJournal.pending()
         if pending.isEmpty {
             return Lane2ExportRegistrationRecoveryReport(
@@ -227,7 +341,9 @@ public actor Lane2DurableLifecycleCoordinator {
                             attemptID: UUID(),
                             projectID: ProjectID(rawValue: intent.projectUUID),
                             operation: .exportAudio,
-                            error: DomainFailure.exportFailed(code: "EXPORT_COMPENSATION_INCOMPLETE")
+                            error: DomainFailure.exportFailed(
+                                code: "EXPORT_COMPENSATION_INCOMPLETE"
+                            )
                         )
                     }
                 } catch {
@@ -236,7 +352,9 @@ public actor Lane2DurableLifecycleCoordinator {
                         attemptID: UUID(),
                         projectID: ProjectID(rawValue: intent.projectUUID),
                         operation: .exportAudio,
-                        error: DomainFailure.exportFailed(code: "EXPORT_COMPENSATION_INCOMPLETE")
+                        error: DomainFailure.exportFailed(
+                            code: "EXPORT_COMPENSATION_INCOMPLETE"
+                        )
                     )
                 }
 
@@ -256,29 +374,37 @@ public actor Lane2DurableLifecycleCoordinator {
 
     /// ready -> deleting metadata transition happens before file removal.
     public func cleanupExports(projectID: ProjectID) async throws {
+        try await quarantineRecovery.requireExportMetadataConsistent()
         let records = try await metadata.beginExportCleanup(projectUUID: projectID.rawValue)
         try await finishExportCleanup(records)
     }
 
     /// Relaunch convergence for a crash after deleting-state metadata commit.
     public func recoverPendingExportCleanup() async throws {
+        try await quarantineRecovery.requireExportMetadataConsistent()
         try await finishExportCleanup(try await metadata.pendingExportCleanup())
     }
 
     /// Deletes through canonical Library first, then converges Lane-2 export/ownership metadata.
     /// A crash after the Library tombstone is repaired by reconcileDeletedProjectArtifacts().
     public func deleteProjectAndOwnedArtifacts(projectID: ProjectID) async throws {
+        // Do not tombstone canonical user work when export-sidecar uncertainty would prevent the
+        // second half of this compound cleanup from safely completing.
+        try await quarantineRecovery.requireExportMetadataConsistent()
         try await library.deleteProject(projectID: projectID)
         try await reconcileDeletedProjectArtifacts()
     }
 
     /// Any sidecar project/export whose canonical Library project is no longer live is cleanup work.
-    /// If Library listing fails (for example corruption), this method throws before deleting anything.
+    /// Projection-aware production stores enumerate only project IDs here; fallback keeps the frozen
+    /// contract compatible for alternative ProjectLibraryPersisting implementations.
     public func reconcileDeletedProjectArtifacts() async throws {
-        let liveProjects = try await library.listProjects()
-        let liveIDs = Set(liveProjects.map { $0.projectID.rawValue })
+        try await quarantineRecovery.requireExportMetadataConsistent()
+        let liveIDs = try await liveProjectUUIDs()
         let lifecycle = try await metadata.snapshot()
-        let trackedIDs = Set(lifecycle.projects.map(\.projectUUID) + lifecycle.exports.map(\.projectUUID))
+        let trackedIDs = Set(
+            lifecycle.projects.map(\.projectUUID) + lifecycle.exports.map(\.projectUUID)
+        )
         for projectUUID in trackedIDs where !liveIDs.contains(projectUUID) {
             let deleting = try await metadata.beginExportCleanup(projectUUID: projectUUID)
             try await finishExportCleanup(deleting)
@@ -286,13 +412,14 @@ public actor Lane2DurableLifecycleCoordinator {
         }
     }
 
-    /// Repairs the lane-local ownership sidecar from canonical Library snapshots after an interrupted handoff.
+    /// Repairs the lane-local ownership sidecar from canonical Library source ownership projection
+    /// after an interrupted handoff. Full processing/edit/mix snapshots are not required.
     public func reconcileProjectOwnership() async throws {
-        for project in try await library.listProjects() {
+        for project in try await maintenanceProjects() {
             try await metadata.upsertProjectOwnership(
                 projectUUID: project.projectID.rawValue,
-                sourceAssetUUID: project.source.id.rawValue,
-                sourceRelativePath: project.source.relativePath
+                sourceAssetUUID: project.sourceAssetID.rawValue,
+                sourceRelativePath: project.sourceRelativePath
             )
         }
     }
@@ -307,23 +434,25 @@ public actor Lane2DurableLifecycleCoordinator {
         return Lane2RelaunchState(
             project: project,
             ownership: lifecycle.projects.first { $0.projectUUID == projectID.rawValue },
-            exports: lifecycle.exports.filter { $0.projectUUID == projectID.rawValue && $0.state == .ready },
+            exports: lifecycle.exports.filter {
+                $0.projectUUID == projectID.rawValue && $0.state == .ready
+            },
             latestFailure: try await metadata.latestFailure(projectUUID: projectID.rawValue)
         )
     }
 
     /// Orphan sweep retains canonical source/stem paths plus export paths recorded ready/deleting.
-    public func sweepOrphans(gracePeriod: TimeInterval = 3600, now: Date = Date()) async throws -> LibraryOrphanSweepResult {
+    public func sweepOrphans(
+        gracePeriod: TimeInterval = 3600,
+        now: Date = Date()
+    ) async throws -> LibraryOrphanSweepResult {
+        try await quarantineRecovery.requireExportMetadataConsistent()
         try await recoverPendingExportRegistrations()
         try await recoverPendingExportCleanup()
         try await reconcileDeletedProjectArtifacts()
-        let projects = try await library.listProjects()
+        let projects = try await maintenanceProjects()
         let lifecycle = try await metadata.snapshot()
-        var referenced = Set<String>()
-        for project in projects {
-            referenced.insert(project.source.relativePath)
-            project.stems.forEach { referenced.insert($0.relativePath) }
-        }
+        var referenced = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(in: projects)
         lifecycle.exports.forEach { referenced.insert($0.relativePath) }
         return try artifacts.sweepOrphans(
             referencedRelativePaths: referenced,
@@ -333,7 +462,33 @@ public actor Lane2DurableLifecycleCoordinator {
     }
 
     public func lifecycleSnapshot() async throws -> Lane2LifecycleSnapshot {
-        try await metadata.snapshot()
+        try await quarantineRecovery.requireExportMetadataConsistent()
+        return try await metadata.snapshot()
+    }
+
+    private func liveProjectUUIDs() async throws -> Set<UUID> {
+        if let provider = library as? any LibraryMaintenanceProjectProviding {
+            return Set(try await provider.listLiveProjectIDs().map(\.rawValue))
+        }
+        return Set(try await library.listProjects().map { $0.projectID.rawValue })
+    }
+
+    private func maintenanceProjects() async throws -> [LibraryMaintenanceProject] {
+        if let provider = library as? any LibraryMaintenanceProjectProviding {
+            return try await provider.listMaintenanceProjects()
+        }
+
+        let snapshots = try await library.listProjects()
+        return try LibraryMaintenanceProjectionPolicy.validateUniqueProjects(
+            snapshots.map {
+                try LibraryMaintenanceProject(
+                    projectID: $0.projectID,
+                    sourceAssetID: $0.source.id,
+                    sourceRelativePath: $0.source.relativePath,
+                    stemRelativePaths: $0.stems.map(\.relativePath)
+                )
+            }
+        )
     }
 
     private func finishExportCleanup(_ records: [Lane2ExportRecord]) async throws {
@@ -373,19 +528,32 @@ public actor Lane2DurableLifecycleCoordinator {
             let ns = error as NSError
             return ("LANE2_FAILURE_\(ns.code)", false)
         }
+
         switch failure {
-        case .accessDenied: return ("ACCESS_DENIED", false)
-        case .providerUnavailable: return ("PROVIDER_UNAVAILABLE", true)
-        case .networkUnavailable: return ("NETWORK_UNAVAILABLE", true)
-        case .networkTimeout: return ("NETWORK_TIMEOUT", true)
-        case .unsupportedMedia: return ("UNSUPPORTED_MEDIA", false)
-        case .protectedMedia: return ("PROTECTED_MEDIA", false)
-        case .corruptMedia: return ("CORRUPT_MEDIA", false)
-        case .noAudioTrack: return ("NO_AUDIO_TRACK", false)
-        case .insufficientStorage: return ("INSUFFICIENT_STORAGE", true)
-        case .cancelled: return ("CANCELLED", true)
-        case .processingFailed(let code, let retryable): return (code, retryable)
-        case .exportFailed(let code): return (code, false)
+        case .accessDenied:
+            return ("ACCESS_DENIED", false)
+        case .providerUnavailable:
+            return ("PROVIDER_UNAVAILABLE", true)
+        case .networkUnavailable:
+            return ("NETWORK_UNAVAILABLE", true)
+        case .networkTimeout:
+            return ("NETWORK_TIMEOUT", true)
+        case .unsupportedMedia:
+            return ("UNSUPPORTED_MEDIA", false)
+        case .protectedMedia:
+            return ("PROTECTED_MEDIA", false)
+        case .corruptMedia:
+            return ("CORRUPT_MEDIA", false)
+        case .noAudioTrack:
+            return ("NO_AUDIO_TRACK", false)
+        case .insufficientStorage:
+            return ("INSUFFICIENT_STORAGE", true)
+        case .cancelled:
+            return ("CANCELLED", true)
+        case .processingFailed(let code, let retryable):
+            return (code, retryable)
+        case .exportFailed(let code):
+            return (code, false)
         }
     }
 }

@@ -10,7 +10,11 @@ public struct LibraryRecoveryReport: Hashable, Sendable {
     public let completedCommitted: [ProjectID]
     public let promotedInterruptedTombstones: [ProjectID]
 
-    public init(discardedPrepared: [ProjectID], completedCommitted: [ProjectID], promotedInterruptedTombstones: [ProjectID]) {
+    public init(
+        discardedPrepared: [ProjectID],
+        completedCommitted: [ProjectID],
+        promotedInterruptedTombstones: [ProjectID]
+    ) {
         self.discardedPrepared = discardedPrepared
         self.completedCommitted = completedCommitted
         self.promotedInterruptedTombstones = promotedInterruptedTombstones
@@ -19,7 +23,11 @@ public struct LibraryRecoveryReport: Hashable, Sendable {
 
 /// Production facade for the L2-M01 Core Data adapter.
 /// It adds file/database ordering guarantees without changing frozen Shared contracts.
-public final class CrashSafeProjectLibraryStore: @unchecked Sendable, ProjectLibraryPersisting {
+public final class CrashSafeProjectLibraryStore:
+    @unchecked Sendable,
+    ProjectLibraryPersisting,
+    LibraryMaintenanceProjectProviding
+{
     private let metadata: CoreDataProjectLibraryStore
     private let artifacts: LibraryArtifactLifecycle
 
@@ -62,6 +70,18 @@ public final class CrashSafeProjectLibraryStore: @unchecked Sendable, ProjectLib
         try await metadata.listProjects()
     }
 
+    public func listMaintenanceProjects() async throws -> [LibraryMaintenanceProject] {
+        try await metadata.listMaintenanceProjects()
+    }
+
+    public func listLiveProjectIDs() async throws -> Set<ProjectID> {
+        try await metadata.listLiveProjectIDs()
+    }
+
+    public func containsLiveProject(projectID: ProjectID) async throws -> Bool {
+        try await metadata.containsLiveProject(projectID: projectID)
+    }
+
     public func loadProject(projectID: ProjectID) async throws -> PersistedProjectSnapshot? {
         try await metadata.loadProject(projectID: projectID)
     }
@@ -82,8 +102,14 @@ public final class CrashSafeProjectLibraryStore: @unchecked Sendable, ProjectLib
         try await metadata.listSetlists()
     }
 
-    public func replaceSetlistEntries(setlistID: SetlistID, orderedProjectIDs: [ProjectID]) async throws {
-        try await metadata.replaceSetlistEntries(setlistID: setlistID, orderedProjectIDs: orderedProjectIDs)
+    public func replaceSetlistEntries(
+        setlistID: SetlistID,
+        orderedProjectIDs: [ProjectID]
+    ) async throws {
+        try await metadata.replaceSetlistEntries(
+            setlistID: setlistID,
+            orderedProjectIDs: orderedProjectIDs
+        )
     }
 
     public func deleteSetlist(setlistID: SetlistID) async throws {
@@ -91,27 +117,31 @@ public final class CrashSafeProjectLibraryStore: @unchecked Sendable, ProjectLib
     }
 
     /// Sequence:
-    /// 1) durable PREPARED journal (non-destructive),
-    /// 2) metadata tombstone transaction,
-    /// 3) mark journal COMMITTED,
-    /// 4) idempotent file deletion.
+    /// 1) read a lightweight live-project artifact projection,
+    /// 2) durable PREPARED journal (non-destructive),
+    /// 3) metadata tombstone transaction,
+    /// 4) mark journal COMMITTED,
+    /// 5) idempotent file deletion.
     /// A crash in every gap converges safely during recoverInterruptedOperations().
     public func deleteProject(projectID: ProjectID) async throws {
-        guard let snapshot = try await metadata.loadProject(projectID: projectID) else {
+        let projects = try await metadata.listMaintenanceProjects()
+        guard let target = projects.first(where: { $0.projectID == projectID }) else {
             try await reconcileDeletion(projectID: projectID)
             return
         }
 
-        let otherProjects = try await metadata.listProjects().filter { $0.projectID != projectID }
-        var otherReferences = Set<String>()
-        for other in otherProjects {
-            otherReferences.insert(other.source.relativePath)
-            for stem in other.stems { otherReferences.insert(stem.relativePath) }
+        let otherReferences = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(
+            in: projects,
+            excluding: projectID
+        )
+        let relativePaths = target.artifactRelativePaths.filter {
+            !otherReferences.contains($0)
         }
-        let ownedReferences = [snapshot.source.relativePath] + snapshot.stems.map(\.relativePath)
-        let relativePaths = ownedReferences.filter { !otherReferences.contains($0) }
 
-        try artifacts.persistPreparedDeletion(projectUUID: projectID.rawValue, relativePaths: relativePaths)
+        try artifacts.persistPreparedDeletion(
+            projectUUID: projectID.rawValue,
+            relativePaths: relativePaths
+        )
         try await metadata.deleteProject(projectID: projectID)
         try artifacts.markDeletionCommitted(projectUUID: projectID.rawValue)
         try artifacts.executeCommittedDeletion(projectUUID: projectID.rawValue)
@@ -127,15 +157,25 @@ public final class CrashSafeProjectLibraryStore: @unchecked Sendable, ProjectLib
     /// COMMITTED => finish idempotent cleanup.
     @discardableResult
     public func recoverInterruptedOperations() async throws -> LibraryRecoveryReport {
+        let journals = try artifacts.pendingDeletionJournals()
+        guard !journals.isEmpty else {
+            return LibraryRecoveryReport(
+                discardedPrepared: [],
+                completedCommitted: [],
+                promotedInterruptedTombstones: []
+            )
+        }
+
+        let liveIDs = try await metadata.listLiveProjectIDs()
         var discarded: [ProjectID] = []
         var completed: [ProjectID] = []
         var promoted: [ProjectID] = []
 
-        for journal in try artifacts.pendingDeletionJournals() {
+        for journal in journals {
             let projectID = ProjectID(rawValue: journal.projectUUID)
             switch journal.phase {
             case .prepared:
-                if try await metadata.loadProject(projectID: projectID) != nil {
+                if liveIDs.contains(projectID) {
                     try artifacts.discardPreparedDeletion(projectUUID: journal.projectUUID)
                     discarded.append(projectID)
                 } else {
@@ -143,6 +183,7 @@ public final class CrashSafeProjectLibraryStore: @unchecked Sendable, ProjectLib
                     try artifacts.executeCommittedDeletion(projectUUID: journal.projectUUID)
                     promoted.append(projectID)
                 }
+
             case .committed:
                 try artifacts.executeCommittedDeletion(projectUUID: journal.projectUUID)
                 completed.append(projectID)
@@ -163,12 +204,8 @@ public final class CrashSafeProjectLibraryStore: @unchecked Sendable, ProjectLib
         now: Date = Date()
     ) async throws -> LibraryOrphanSweepResult {
         _ = try await recoverInterruptedOperations()
-        let snapshots = try await metadata.listProjects()
-        var referenced = Set<String>()
-        for snapshot in snapshots {
-            referenced.insert(snapshot.source.relativePath)
-            for stem in snapshot.stems { referenced.insert(stem.relativePath) }
-        }
+        let projects = try await metadata.listMaintenanceProjects()
+        let referenced = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(in: projects)
         return try artifacts.sweepOrphans(
             referencedRelativePaths: referenced,
             gracePeriod: gracePeriod,
@@ -177,17 +214,20 @@ public final class CrashSafeProjectLibraryStore: @unchecked Sendable, ProjectLib
     }
 
     private func reconcileDeletion(projectID: ProjectID) async throws {
-        guard let journal = try artifacts.pendingDeletionJournals().first(where: { $0.projectUUID == projectID.rawValue }) else {
+        guard let journal = try artifacts.pendingDeletionJournals()
+            .first(where: { $0.projectUUID == projectID.rawValue }) else {
             return
         }
+
         switch journal.phase {
         case .prepared:
-            if try await metadata.loadProject(projectID: projectID) != nil {
+            if try await metadata.containsLiveProject(projectID: projectID) {
                 try artifacts.discardPreparedDeletion(projectUUID: projectID.rawValue)
             } else {
                 try artifacts.markDeletionCommitted(projectUUID: projectID.rawValue)
                 try artifacts.executeCommittedDeletion(projectUUID: projectID.rawValue)
             }
+
         case .committed:
             try artifacts.executeCommittedDeletion(projectUUID: projectID.rawValue)
         }

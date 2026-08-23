@@ -36,7 +36,14 @@ public struct AnalysisBenchmarkFixture: Equatable, Sendable {
     public let signal: AnalysisSignal
     public let reference: TempoBeatKeyReference
 
-    public init(fixtureID: String, rightsClass: AnalysisRightsClass, genre: String, syntheticOnly: Bool, signal: AnalysisSignal, reference: TempoBeatKeyReference) {
+    public init(
+        fixtureID: String,
+        rightsClass: AnalysisRightsClass,
+        genre: String,
+        syntheticOnly: Bool,
+        signal: AnalysisSignal,
+        reference: TempoBeatKeyReference
+    ) {
         self.fixtureID = fixtureID
         self.rightsClass = rightsClass
         self.genre = genre
@@ -107,95 +114,71 @@ public enum AnalysisBenchmarkRunner {
         snapshot: AnalysisSnapshot,
         wallSeconds: Double,
         engine: String = "project-owned-dsp",
-        engineVersion: String = "l4-m03-v1"
+        engineVersion: String = "l4-m03-v1",
+        configuration: MusicAnalysisConfiguration = .productBaseline,
+        supplementalMetrics: [String: Double] = [:]
     ) -> [AnalysisBenchmarkRow] {
-        var rows: [AnalysisBenchmarkRow] = []
-        let duration = fixture.signal.durationSeconds
-        let rtf = duration > 0 ? wallSeconds / duration : nil
-        let parityEligible = !fixture.syntheticOnly
-        let limitations = fixture.syntheticOnly ? ["SYNTHETIC_UNIT_ONLY_NOT_PARITY_EVIDENCE"] : []
-
-        if let referenceBPM = fixture.reference.bpm {
-            var metrics: [String: Double] = [:]
-            if let predicted = snapshot.tempo?.bpm {
-                let relativeError = abs(predicted - referenceBPM) / referenceBPM
-                metrics["tempo_rel_error"] = relativeError
-                metrics["exact_within_4pct"] = relativeError <= 0.04 ? 1 : 0
-                let ratios = [predicted / referenceBPM, predicted / (referenceBPM * 0.5), predicted / (referenceBPM * 2)]
-                let octaveAware = ratios.contains { abs($0 - 1) <= 0.04 }
-                metrics["octave_aware_within_4pct"] = octaveAware ? 1 : 0
-                metrics["predicted_bpm"] = predicted
-                if let confidence = snapshot.tempo?.confidence { metrics["confidence"] = confidence }
-            } else {
-                metrics["decision_emitted"] = 0
-            }
-            rows.append(row(fixture, parityEligible, engine, engineVersion, "tempo", metrics, wallSeconds, rtf, limitations))
-        }
-
-        if !fixture.reference.beatTimesSeconds.isEmpty {
-            var metrics: [String: Double] = [:]
-            let estimated = snapshot.tempo?.beatTimesSeconds ?? []
-            metrics["beat_f_70ms"] = beatFMeasure(reference: fixture.reference.beatTimesSeconds, estimated: estimated, tolerance: 0.070)
-            metrics["reference_beats"] = Double(fixture.reference.beatTimesSeconds.count)
-            metrics["estimated_beats"] = Double(estimated.count)
-            if let medianError = medianAbsoluteBeatError(reference: fixture.reference.beatTimesSeconds, estimated: estimated) {
-                metrics["median_abs_error_seconds"] = medianError
-            }
-            rows.append(row(fixture, parityEligible, engine, engineVersion, "beat", metrics, wallSeconds, rtf, limitations))
-        }
-
-        if let referenceKey = fixture.reference.key {
-            var metrics: [String: Double] = [:]
-            if let predicted = snapshot.key {
-                metrics["exact_key_accuracy"] = (predicted.tonicPitchClass == referenceKey.tonicPitchClass && predicted.mode == referenceKey.mode) ? 1 : 0
-                metrics["tonic_accuracy"] = predicted.tonicPitchClass == referenceKey.tonicPitchClass ? 1 : 0
-                metrics["mode_accuracy"] = predicted.mode == referenceKey.mode ? 1 : 0
-                metrics["weighted_key_score"] = weightedKeyScore(reference: referenceKey, estimated: predicted)
-                if let confidence = predicted.confidence { metrics["confidence"] = confidence }
-            } else {
-                metrics["decision_emitted"] = 0
-            }
-            rows.append(row(fixture, parityEligible, engine, engineVersion, "key", metrics, wallSeconds, rtf, limitations))
-        }
-
-        if !fixture.reference.chords.isEmpty {
-            let metrics = chordMetrics(
-                reference: fixture.reference.chords,
-                estimated: snapshot.chords,
-                duration: duration
-            )
-            rows.append(row(fixture, parityEligible, engine, engineVersion, "chord", metrics, wallSeconds, rtf, limitations))
-        }
-
-        return rows
+        try! evaluateInternal(
+            fixture: fixture,
+            snapshot: snapshot,
+            wallSeconds: wallSeconds,
+            engine: engine,
+            engineVersion: engineVersion,
+            configuration: configuration,
+            supplementalMetrics: supplementalMetrics,
+            cancellationEnabled: false
+        )
     }
 
-    public static func beatFMeasure(reference: [Double], estimated: [Double], tolerance: Double = 0.070) -> Double {
+    public static func evaluateCancellable(
+        fixture: AnalysisBenchmarkFixture,
+        snapshot: AnalysisSnapshot,
+        wallSeconds: Double,
+        engine: String = "project-owned-dsp",
+        engineVersion: String = "lane4-autonomous-w16",
+        configuration: MusicAnalysisConfiguration = .productBaseline,
+        supplementalMetrics: [String: Double] = [:]
+    ) throws -> [AnalysisBenchmarkRow] {
+        try evaluateInternal(
+            fixture: fixture,
+            snapshot: snapshot,
+            wallSeconds: wallSeconds,
+            engine: engine,
+            engineVersion: engineVersion,
+            configuration: configuration,
+            supplementalMetrics: supplementalMetrics,
+            cancellationEnabled: true
+        )
+    }
+
+    public static func beatFMeasure(
+        reference: [Double],
+        estimated: [Double],
+        tolerance: Double = 0.070
+    ) -> Double {
         guard tolerance >= 0 else { return 0 }
-        let reference = reference.sorted()
-        let estimated = estimated.sorted()
-        guard !reference.isEmpty || !estimated.isEmpty else { return 1 }
-        var used = Array(repeating: false, count: reference.count)
-        var matches = 0
-        for estimate in estimated {
-            var bestIndex: Int?
-            var bestError = Double.greatestFiniteMagnitude
-            for index in reference.indices where !used[index] {
-                let error = abs(reference[index] - estimate)
-                if error <= tolerance, error < bestError {
-                    bestError = error
-                    bestIndex = index
-                }
-            }
-            if let bestIndex {
-                used[bestIndex] = true
-                matches += 1
-            }
-        }
-        let precision = estimated.isEmpty ? 0 : Double(matches) / Double(estimated.count)
-        let recall = reference.isEmpty ? 0 : Double(matches) / Double(reference.count)
-        guard precision + recall > 0 else { return 0 }
-        return 2 * precision * recall / (precision + recall)
+        if reference.isEmpty, estimated.isEmpty { return 1 }
+        let matching = BenchmarkTimelineMatcher.greedyNearestOneToOne(
+            reference: reference,
+            estimated: estimated,
+            tolerance: tolerance
+        )
+        return fMeasure(matches: matching.matches, referenceCount: reference.count, estimatedCount: estimated.count)
+    }
+
+    public static func beatFMeasureCancellable(
+        reference: [Double],
+        estimated: [Double],
+        tolerance: Double = 0.070
+    ) throws -> Double {
+        guard tolerance >= 0 else { return 0 }
+        if reference.isEmpty, estimated.isEmpty { return 1 }
+        let matching = try BenchmarkTimelineMatcher.greedyNearestOneToOneCancellable(
+            reference: reference,
+            estimated: estimated,
+            tolerance: tolerance
+        )
+        return fMeasure(matches: matching.matches, referenceCount: reference.count, estimatedCount: estimated.count)
     }
 
     public static func weightedKeyScore(reference: MusicalKey, estimated: MusicalKey) -> Double {
@@ -211,7 +194,155 @@ public enum AnalysisBenchmarkRunner {
         return 0
     }
 
-    public static func chordMetrics(reference: [ChordEvent], estimated: [ChordEvent], duration: Double) -> [String: Double] {
+    public static func chordMetrics(
+        reference: [ChordEvent],
+        estimated: [ChordEvent],
+        duration: Double
+    ) -> [String: Double] {
+        try! chordMetricsInternal(
+            reference: reference,
+            estimated: estimated,
+            duration: duration,
+            cancellationEnabled: false
+        )
+    }
+
+    public static func chordMetricsCancellable(
+        reference: [ChordEvent],
+        estimated: [ChordEvent],
+        duration: Double
+    ) throws -> [String: Double] {
+        try chordMetricsInternal(
+            reference: reference,
+            estimated: estimated,
+            duration: duration,
+            cancellationEnabled: true
+        )
+    }
+
+    private static func evaluateInternal(
+        fixture: AnalysisBenchmarkFixture,
+        snapshot: AnalysisSnapshot,
+        wallSeconds: Double,
+        engine: String,
+        engineVersion: String,
+        configuration: MusicAnalysisConfiguration,
+        supplementalMetrics: [String: Double],
+        cancellationEnabled: Bool
+    ) throws -> [AnalysisBenchmarkRow] {
+        if cancellationEnabled { try AnalysisCancellationPolicy.check() }
+        var rows: [AnalysisBenchmarkRow] = []
+        let duration = fixture.signal.durationSeconds
+        let rtf = duration > 0 ? wallSeconds / duration : nil
+        let baseParityEligible = !fixture.syntheticOnly
+        let baseLimitations = fixture.syntheticOnly ? ["SYNTHETIC_UNIT_ONLY_NOT_PARITY_EVIDENCE"] : []
+        let estimatedBeats = snapshot.tempo?.beatTimesSeconds ?? []
+        let evaluator = AnalysisBenchmarkEvaluatorPolicy.diagnostics(
+            referenceBeatCount: fixture.reference.beatTimesSeconds.count,
+            estimatedBeatCount: estimatedBeats.count,
+            referenceChordCount: fixture.reference.chords.count,
+            estimatedChordCount: snapshot.chords.count,
+            referenceSectionCount: 0,
+            estimatedSectionCount: snapshot.sections.count,
+            duration: duration,
+            configuration: configuration
+        )
+
+        if let referenceBPM = fixture.reference.bpm {
+            var metrics = supplementalMetrics
+            if let predicted = snapshot.tempo?.bpm {
+                let relativeError = abs(predicted - referenceBPM) / referenceBPM
+                metrics["tempo_rel_error"] = relativeError
+                metrics["exact_within_4pct"] = relativeError <= 0.04 ? 1 : 0
+                let ratios = [predicted / referenceBPM, predicted / (referenceBPM * 0.5), predicted / (referenceBPM * 2)]
+                metrics["octave_aware_within_4pct"] = ratios.contains { abs($0 - 1) <= 0.04 } ? 1 : 0
+                metrics["predicted_bpm"] = predicted
+                if let confidence = snapshot.tempo?.confidence { metrics["confidence"] = confidence }
+            } else {
+                metrics["decision_emitted"] = 0
+            }
+            rows.append(row(
+                fixture, baseParityEligible, engine, engineVersion, "tempo", metrics,
+                wallSeconds, rtf, baseLimitations
+            ))
+        }
+
+        if !fixture.reference.beatTimesSeconds.isEmpty {
+            var metrics = supplementalMetrics
+            metrics["reference_beats"] = Double(fixture.reference.beatTimesSeconds.count)
+            metrics["estimated_beats"] = Double(estimatedBeats.count)
+            metrics["evaluator_beat_input_limit"] = Double(evaluator.beatInputLimit)
+            metrics["evaluator_input_accepted"] = evaluator.beatInputsAccepted ? 1 : 0
+            var limitations = baseLimitations
+            var parityEligible = baseParityEligible
+            if evaluator.beatInputsAccepted {
+                metrics["beat_f_70ms"] = cancellationEnabled
+                    ? try beatFMeasureCancellable(reference: fixture.reference.beatTimesSeconds, estimated: estimatedBeats, tolerance: 0.070)
+                    : beatFMeasure(reference: fixture.reference.beatTimesSeconds, estimated: estimatedBeats, tolerance: 0.070)
+                let errors = cancellationEnabled
+                    ? try BenchmarkTimelineMatcher.nearestAbsoluteErrorsCancellable(source: fixture.reference.beatTimesSeconds, target: estimatedBeats)
+                    : BenchmarkTimelineMatcher.nearestAbsoluteErrors(source: fixture.reference.beatTimesSeconds, target: estimatedBeats)
+                if let errors, let value = median(errors.sorted()) { metrics["median_abs_error_seconds"] = value }
+            } else {
+                parityEligible = false
+                limitations.append("EVALUATOR_BEAT_CARDINALITY_REJECTED_NOT_PARITY_EVIDENCE")
+            }
+            rows.append(row(
+                fixture, parityEligible, engine, engineVersion, "beat", metrics,
+                wallSeconds, rtf, limitations
+            ))
+        }
+
+        if let referenceKey = fixture.reference.key {
+            var metrics = supplementalMetrics
+            if let predicted = snapshot.key {
+                metrics["exact_key_accuracy"] = (predicted.tonicPitchClass == referenceKey.tonicPitchClass && predicted.mode == referenceKey.mode) ? 1 : 0
+                metrics["tonic_accuracy"] = predicted.tonicPitchClass == referenceKey.tonicPitchClass ? 1 : 0
+                metrics["mode_accuracy"] = predicted.mode == referenceKey.mode ? 1 : 0
+                metrics["weighted_key_score"] = weightedKeyScore(reference: referenceKey, estimated: predicted)
+                if let confidence = predicted.confidence { metrics["confidence"] = confidence }
+            } else {
+                metrics["decision_emitted"] = 0
+            }
+            rows.append(row(
+                fixture, baseParityEligible, engine, engineVersion, "key", metrics,
+                wallSeconds, rtf, baseLimitations
+            ))
+        }
+
+        if !fixture.reference.chords.isEmpty {
+            var metrics = supplementalMetrics
+            metrics["evaluator_chord_input_limit"] = Double(evaluator.chordInputLimit)
+            metrics["evaluator_input_accepted"] = evaluator.chordInputsAccepted ? 1 : 0
+            var limitations = baseLimitations
+            var parityEligible = baseParityEligible
+            if evaluator.chordInputsAccepted {
+                let chord = cancellationEnabled
+                    ? try chordMetricsCancellable(reference: fixture.reference.chords, estimated: snapshot.chords, duration: duration)
+                    : chordMetrics(reference: fixture.reference.chords, estimated: snapshot.chords, duration: duration)
+                metrics.merge(chord) { _, new in new }
+            } else {
+                parityEligible = false
+                limitations.append("EVALUATOR_CHORD_CARDINALITY_REJECTED_NOT_PARITY_EVIDENCE")
+                metrics["reference_events"] = Double(fixture.reference.chords.count)
+                metrics["estimated_events"] = Double(snapshot.chords.count)
+            }
+            rows.append(row(
+                fixture, parityEligible, engine, engineVersion, "chord", metrics,
+                wallSeconds, rtf, limitations
+            ))
+        }
+
+        if cancellationEnabled { try AnalysisCancellationPolicy.check() }
+        return rows
+    }
+
+    private static func chordMetricsInternal(
+        reference: [ChordEvent],
+        estimated: [ChordEvent],
+        duration: Double,
+        cancellationEnabled: Bool
+    ) throws -> [String: Double] {
         guard duration > 0 else {
             return [
                 "root_weighted_accuracy": 0,
@@ -224,10 +355,10 @@ public enum AnalysisBenchmarkRunner {
 
         let clippedReference = normalizeChordEvents(reference, duration: duration)
         let clippedEstimated = normalizeChordEvents(estimated, duration: duration)
-        var boundaries: [Double] = [0, duration]
-        boundaries.append(contentsOf: clippedReference.flatMap { [$0.startSeconds, $0.endSeconds] })
-        boundaries.append(contentsOf: clippedEstimated.flatMap { [$0.startSeconds, $0.endSeconds] })
-        boundaries = Array(Set(boundaries.map { min(duration, max(0, $0)) })).sorted()
+        var boundarySet: Set<Double> = [0, duration]
+        for event in clippedReference { boundarySet.insert(event.startSeconds); boundarySet.insert(event.endSeconds) }
+        for event in clippedEstimated { boundarySet.insert(event.startSeconds); boundarySet.insert(event.endSeconds) }
+        let boundaries = boundarySet.map { min(duration, max(0, $0)) }.sorted()
 
         var comparableDuration = 0.0
         var rootCorrect = 0.0
@@ -236,25 +367,30 @@ public enum AnalysisBenchmarkRunner {
         var referenceNoChord = 0.0
         var noChordIntersection = 0.0
         var decidedDuration = 0.0
+        var referenceCursor = 0
+        var estimatedCursor = 0
 
-        for index in 0..<(max(0, boundaries.count - 1)) {
-            let start = boundaries[index]
-            let end = boundaries[index + 1]
-            let span = end - start
-            guard span > 0 else { continue }
-            let midpoint = (start + end) / 2
-            let refLabel = chordLabel(at: midpoint, events: clippedReference) ?? "X"
-            let estLabel = chordLabel(at: midpoint, events: clippedEstimated) ?? "X"
+        if boundaries.count >= 2 {
+            for index in 0..<(boundaries.count - 1) {
+                if cancellationEnabled && index.isMultiple(of: 256) { try AnalysisCancellationPolicy.check() }
+                let start = boundaries[index]
+                let end = boundaries[index + 1]
+                let span = end - start
+                guard span > 0 else { continue }
+                let midpoint = (start + end) / 2
+                let refLabel = advancingChordLabel(at: midpoint, events: clippedReference, cursor: &referenceCursor) ?? "X"
+                let estLabel = advancingChordLabel(at: midpoint, events: clippedEstimated, cursor: &estimatedCursor) ?? "X"
 
-            if estLabel != "X" { decidedDuration += span }
-            if refLabel == "N" { referenceNoChord += span }
-            if estLabel == "N" { estimatedNoChord += span }
-            if refLabel == "N", estLabel == "N" { noChordIntersection += span }
+                if estLabel != "X" { decidedDuration += span }
+                if refLabel == "N" { referenceNoChord += span }
+                if estLabel == "N" { estimatedNoChord += span }
+                if refLabel == "N", estLabel == "N" { noChordIntersection += span }
 
-            guard refLabel != "N", refLabel != "X", estLabel != "N", estLabel != "X" else { continue }
-            comparableDuration += span
-            if chordRoot(refLabel) == chordRoot(estLabel) { rootCorrect += span }
-            if normalizeMajMinLabel(refLabel) == normalizeMajMinLabel(estLabel) { majMinCorrect += span }
+                guard refLabel != "N", refLabel != "X", estLabel != "N", estLabel != "X" else { continue }
+                comparableDuration += span
+                if chordRoot(refLabel) == chordRoot(estLabel) { rootCorrect += span }
+                if normalizeMajMinLabel(refLabel) == normalizeMajMinLabel(estLabel) { majMinCorrect += span }
+            }
         }
 
         var metrics: [String: Double] = [:]
@@ -265,44 +401,56 @@ public enum AnalysisBenchmarkRunner {
         metrics["coverage"] = decidedDuration / duration
         metrics["reference_events"] = Double(clippedReference.count)
         metrics["estimated_events"] = Double(clippedEstimated.count)
-        if let error = medianChordBoundaryError(reference: clippedReference, estimated: clippedEstimated, duration: duration) {
-            metrics["boundary_median_abs_error_seconds"] = error
+
+        let referenceBoundaries = clippedReference.map(\.endSeconds).filter { $0 > 1e-9 && $0 < duration - 1e-9 }
+        let estimatedBoundaries = clippedEstimated.map(\.endSeconds).filter { $0 > 1e-9 && $0 < duration - 1e-9 }
+        let errors = cancellationEnabled
+            ? try BenchmarkTimelineMatcher.nearestAbsoluteErrorsCancellable(source: referenceBoundaries, target: estimatedBoundaries)
+            : BenchmarkTimelineMatcher.nearestAbsoluteErrors(source: referenceBoundaries, target: estimatedBoundaries)
+        if referenceBoundaries.isEmpty, estimatedBoundaries.isEmpty {
+            metrics["boundary_median_abs_error_seconds"] = 0
+        } else if let errors, let value = median(errors.sorted()) {
+            metrics["boundary_median_abs_error_seconds"] = value
         }
+        if cancellationEnabled { try AnalysisCancellationPolicy.check() }
         return metrics
     }
 
-    private static func medianAbsoluteBeatError(reference: [Double], estimated: [Double]) -> Double? {
-        guard !reference.isEmpty, !estimated.isEmpty else { return nil }
-        let errors = reference.map { ref in estimated.map { abs($0 - ref) }.min() ?? Double.greatestFiniteMagnitude }.sorted()
-        return median(errors)
-    }
-
-    private static func medianChordBoundaryError(reference: [ChordEvent], estimated: [ChordEvent], duration: Double) -> Double? {
-        let referenceBoundaries = reference.map(\.endSeconds).filter { $0 > 1e-9 && $0 < duration - 1e-9 }
-        let estimatedBoundaries = estimated.map(\.endSeconds).filter { $0 > 1e-9 && $0 < duration - 1e-9 }
-        guard !referenceBoundaries.isEmpty, !estimatedBoundaries.isEmpty else {
-            return referenceBoundaries.isEmpty && estimatedBoundaries.isEmpty ? 0 : nil
-        }
-        let errors = referenceBoundaries.map { ref in
-            estimatedBoundaries.map { abs($0 - ref) }.min() ?? duration
-        }.sorted()
-        return median(errors)
+    private static func fMeasure(matches: Int, referenceCount: Int, estimatedCount: Int) -> Double {
+        let precision = estimatedCount == 0 ? 0 : Double(matches) / Double(estimatedCount)
+        let recall = referenceCount == 0 ? 0 : Double(matches) / Double(referenceCount)
+        guard precision + recall > 0 else { return 0 }
+        return 2 * precision * recall / (precision + recall)
     }
 
     private static func normalizeChordEvents(_ events: [ChordEvent], duration: Double) -> [ChordEvent] {
         events.compactMap { event in
+            guard event.startSeconds.isFinite, event.endSeconds.isFinite else { return nil }
             let start = min(duration, max(0, event.startSeconds))
             let end = min(duration, max(start, event.endSeconds))
             guard end > start else { return nil }
-            return ChordEvent(startSeconds: start, endSeconds: end, normalizedLabel: event.normalizedLabel, confidence: event.confidence)
+            return ChordEvent(
+                startSeconds: start,
+                endSeconds: end,
+                normalizedLabel: event.normalizedLabel,
+                confidence: event.confidence
+            )
         }.sorted {
             if $0.startSeconds == $1.startSeconds { return $0.endSeconds < $1.endSeconds }
             return $0.startSeconds < $1.startSeconds
         }
     }
 
-    private static func chordLabel(at time: Double, events: [ChordEvent]) -> String? {
-        events.first { time >= $0.startSeconds && time < $0.endSeconds }?.normalizedLabel
+    private static func advancingChordLabel(
+        at time: Double,
+        events: [ChordEvent],
+        cursor: inout Int
+    ) -> String? {
+        while cursor < events.count, events[cursor].endSeconds <= time { cursor += 1 }
+        guard cursor < events.count,
+              time >= events[cursor].startSeconds,
+              time < events[cursor].endSeconds else { return nil }
+        return events[cursor].normalizedLabel
     }
 
     private static func chordRoot(_ label: String) -> String? {
@@ -318,12 +466,22 @@ public enum AnalysisBenchmarkRunner {
 
     private static func median(_ values: [Double]) -> Double? {
         guard !values.isEmpty else { return nil }
-        let mid = values.count / 2
-        if values.count % 2 == 0 { return (values[mid - 1] + values[mid]) / 2 }
-        return values[mid]
+        let middle = values.count / 2
+        if values.count.isMultiple(of: 2) { return (values[middle - 1] + values[middle]) / 2 }
+        return values[middle]
     }
 
-    private static func row(_ fixture: AnalysisBenchmarkFixture, _ parityEligible: Bool, _ engine: String, _ engineVersion: String, _ domain: String, _ metrics: [String: Double], _ wallSeconds: Double, _ rtf: Double?, _ limitations: [String]) -> AnalysisBenchmarkRow {
+    private static func row(
+        _ fixture: AnalysisBenchmarkFixture,
+        _ parityEligible: Bool,
+        _ engine: String,
+        _ engineVersion: String,
+        _ domain: String,
+        _ metrics: [String: Double],
+        _ wallSeconds: Double,
+        _ rtf: Double?,
+        _ limitations: [String]
+    ) -> AnalysisBenchmarkRow {
         AnalysisBenchmarkRow(
             fixtureID: fixture.fixtureID,
             rightsClass: fixture.rightsClass,

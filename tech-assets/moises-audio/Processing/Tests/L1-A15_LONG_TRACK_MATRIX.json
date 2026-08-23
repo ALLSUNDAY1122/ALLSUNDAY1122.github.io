@@ -1,0 +1,74 @@
+{
+  "wave": "L1-A15",
+  "result": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "policy": {
+    "status": "CONFIGURABLE_DEPLOYMENT_GUARD_NOT_REFERENCE_TRUTH",
+    "source_max_bytes": 2147483648,
+    "stream_chunk_bytes": 1048576,
+    "estimated_output_ratio_per_target": 8.0,
+    "single_stem_hard_ratio": 16.0,
+    "safety_reserve_bytes": 268435456,
+    "max_parallel_download_transfers_per_orchestrator": 1
+  },
+  "invariants": [
+    "source size boundary is checked before multi-gigabyte SHA/duration/cost work in the budgeted production entrypoint",
+    "provider upload uses file chunks rather than whole-file Data/bytes materialization",
+    "output download streams directly to staging and enforces a per-stem byte cap",
+    "disk capacity is checked before provider work and rechecked immediately before output download",
+    "Swift assurance reclaims stale staging then preflights all staging plus one temporary download and reserve",
+    "Swift A14 commit preflights one additional complete incoming copy plus reserve before touching an existing final",
+    "storage exhaustion or stream oversize removes partial staging and cannot mark outputs committed",
+    "download backpressure is bounded to one active transfer per orchestrator instance under the current evidence policy",
+    "transfer telemetry contains byte/time/count/capacity scalars but no source filename, signed output URL, API secret or audio content"
+  ],
+  "scenarios": [
+    {"id":"large-sparse-stream-128mib","expected":"PASS_BOUNDED_MEMORY","detail":"128 MiB + 123 byte sparse fixture, 1 MiB chunks, Python tracemalloc peak < 8 MiB"},
+    {"id":"source-at-boundary","expected":"PASS"},
+    {"id":"source-above-boundary","expected":"FAIL_CLOSED_BEFORE_PROVIDER","code":"SEP_SOURCE_TOO_LARGE"},
+    {"id":"budgeted-oversize-source-before-sha","expected":"FAIL_BEFORE_SHA_DURATION_COST_PROVIDER","code":"SEP_SOURCE_TOO_LARGE"},
+    {"id":"insufficient-storage-before-provider","expected":"FAIL_RETRYABLE","code":"SEP_STORAGE_PREFLIGHT_INSUFFICIENT"},
+    {"id":"budget-reservation-on-storage-preflight-failure","expected":"RELEASE_IF_PROVIDER_CREATE_NOT_ATTEMPTED"},
+    {"id":"storage-drops-before-download","expected":"FAIL_BEFORE_DOWNLOAD","code":"SEP_STORAGE_PREFLIGHT_INSUFFICIENT"},
+    {"id":"declared-http-content-length-over-cap","expected":"FAIL_BEFORE_BODY_READ","code":"SEP_OUTPUT_STREAM_TOO_LARGE"},
+    {"id":"undeclared-stream-crosses-cap","expected":"FAIL_AND_REMOVE_PARTIAL","code":"SEP_OUTPUT_STREAM_TOO_LARGE"},
+    {"id":"invalid-content-length","expected":"FAIL_CLOSED","code":"SEP_OUTPUT_CONTENT_LENGTH_INVALID"},
+    {"id":"disk-full-during-stream","expected":"FAIL_RETRYABLE_AND_REMOVE_PARTIAL","code":"SEP_STORAGE_EXHAUSTED"},
+    {"id":"custom-downloader-over-cap","expected":"FAIL_AND_NO_FINAL","code":"SEP_OUTPUT_STREAM_TOO_LARGE"},
+    {"id":"empty-output","expected":"FAIL_AND_REMOVE_PARTIAL","code":"SEP_OUTPUT_COPY_EMPTY"},
+    {"id":"parallel-download-backpressure","expected":"PEAK_ACTIVE_DOWNLOADS_1"},
+    {"id":"durable-transfer-telemetry","expected":"BYTES_TIME_COUNT_CAPACITY_ONLY"},
+    {"id":"telemetry-reentrant-read","expected":"NO_SELF_DEADLOCK"},
+    {"id":"audioshake-large-upload","expected":"FILE_BODY_SENDS_AT_MOST_1_MIB"},
+    {"id":"swift-prepare-exact-byte-estimate","expected":"ALL_STAGING_PLUS_LARGEST_TEMP_PLUS_RESERVE"},
+    {"id":"swift-prepare-fallback-estimate","expected":"FRAME_CHANNEL_X_8_PLUS_HEADER_ALLOWANCE"},
+    {"id":"swift-commit-space-estimate","expected":"ALL_VERIFIED_STEMS_PLUS_RESERVE"},
+    {"id":"swift-storage-insufficient","expected":"FAIL_RETRYABLE","code":"SEP_STORAGE_PREFLIGHT_INSUFFICIENT"},
+    {"id":"swift-estimate-overflow","expected":"FAIL_CLOSED","code":"SEP_STORAGE_ESTIMATE_OVERFLOW"}
+  ],
+  "machine_verification": {
+    "python_long_track_io_stress": {"tests": 7, "failures": 0},
+    "python_production_contract_harness": {"tests": 6, "failures": 0},
+    "python_bounded_http_download": {"tests": 4, "failures": 0},
+    "python_audioshake_upload_chunk_regression": {"tests": 1, "failures": 0},
+    "python_telemetry_lock_regression": {"tests": 1, "failures": 0},
+    "swift_6_storage_preflight_compile_runtime": "PASS",
+    "durable_python_test_files": [
+      "tech-assets/moises-audio/Separation/Tests/test_long_track_io.py",
+      "tech-assets/moises-audio/Separation/Tests/test_long_track_production_orchestrator.py",
+      "tech-assets/moises-audio/Separation/Tests/test_long_track_http_streaming.py",
+      "tech-assets/moises-audio/Separation/Tests/test_audioshake_streaming.py",
+      "tech-assets/moises-audio/Separation/Tests/test_budgeted_long_track_integration.py",
+      "tech-assets/moises-audio/Separation/Tests/test_budgeted_long_track_source_boundary.py"
+    ],
+    "durable_swift_selftest": "tech-assets/moises-audio/Separation/Tests/L1_A15_StoragePreflightSelfTest.swift"
+  },
+  "known_external_gaps": [
+    "Python heap stress is not iPhone RSS/thermal/battery evidence",
+    "storage estimate ratios are configurable conservative heuristics and require real codec/provider calibration",
+    "filesystem free space can change after preflight; runtime ENOSPC/EDQUOT remains the authoritative safety net",
+    "download semaphore is process/orchestrator-local; horizontal multi-instance deployment requires a shared concurrency/resource coordinator",
+    "current 2 GiB source cap follows the checked-in AudioShake adapter/deployment boundary and is not a Moises parity claim",
+    "real long-track provider, iPhone interruption, thermal and battery evidence is still required for P021"
+  ]
+}

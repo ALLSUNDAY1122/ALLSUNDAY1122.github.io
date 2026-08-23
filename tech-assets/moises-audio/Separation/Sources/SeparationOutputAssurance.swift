@@ -33,7 +33,10 @@ public actor SeparationOutputAssurance {
         try SeparationArtifactSetIntegrity.validate(manifest, durationToleranceSeconds: durationToleranceSeconds)
         let staging = stagingDirectory(projectID: manifest.projectID, jobID: manifest.jobID)
         do {
+            // Stale job-owned staging is reclaimed before capacity is measured. This avoids false
+            // insufficiency while still ensuring all new staging + one download temp + reserve fit.
             if fileManager.fileExists(atPath: staging.path) { try fileManager.removeItem(at: staging) }
+            try requirePrepareStorage(manifest)
             try fileManager.createDirectory(at: staging, withIntermediateDirectories: true)
 
             var verified: [VerifiedSeparationOutput] = []
@@ -99,6 +102,9 @@ public actor SeparationOutputAssurance {
         try validateManifest(prepared.manifest, requireFreshOutputURLs: false)
         try SeparationArtifactSetIntegrity.validate(prepared.manifest, durationToleranceSeconds: durationToleranceSeconds)
         try verifyPreparedFiles(prepared)
+        // A14 duplicates the complete staging set into incoming before rename promotion. Refuse to
+        // touch an existing final unless that additional full-set copy plus reserve fits first.
+        try requireCommitStorage(prepared)
 
         let expected = try expectedCommitFiles(prepared)
         let incoming = incomingDirectory(projectID: projectID, jobID: jobID)
