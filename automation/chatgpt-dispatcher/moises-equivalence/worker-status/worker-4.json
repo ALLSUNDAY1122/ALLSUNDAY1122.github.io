@@ -1,42 +1,58 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "worker_id": "Moises-Worker-4",
+  "lane_id": "LANE-4-IOS-ANALYSIS",
   "work_package_id": "MOI-WP4-ANALYSIS-PLATFORM",
-  "assignment_epoch": 1,
+  "assignment_epoch": 2,
+  "operating_model": "v4｜4 Autonomous Independent Lanes / Late Integration",
   "work_branch": "moises/wp4-analysis-platform",
-  "state": "INTEGRATION_READY",
-  "current_task": "MOI-BLD-003",
-  "base_integration_sha": "a9167adbb3a983ba7ab4f276c971b00af1fde53c",
-  "head_sha": "ddbfcf1ec73f8329cb3ae3e74843d47511c2d9ed",
+  "state": "IN_PROGRESS",
+  "current_bundle": "L4-W10｜Combined Analysis confidence / cross-feature robustness hardening",
+  "completed_bundles": [
+    "L4-M01",
+    "L4-M02",
+    "L4-M03",
+    "L4-M04",
+    "L4-W05",
+    "L4-W06",
+    "L4-W07",
+    "L4-W08",
+    "L4-W09"
+  ],
+  "epoch_contract_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
+  "base_integration_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
+  "head_sha": "79e937ad8a9f63504e2fa03ae63c65a6f233db29",
   "commits": [
-    "9dd5e560720070ec85551fd62d4b3b953cdc0808",
-    "81d1fae9f5f2223db9a631ccce030d9cad45c45c",
-    "ddbfcf1ec73f8329cb3ae3e74843d47511c2d9ed"
+    "d4dbea158040d6b2760547fbe7cbbd61f86fcd44",
+    "753a9f760896840ce3d5c303169316c668af064c",
+    "8aa9bf8ce3040c1c000ca37caed3b6540cd53bbd",
+    "df6f288cc468813b1de83d7dd0acceafcc2f7e4f",
+    "3cd015512d9cb3fc15d0127d2bc51738ee0d98f2",
+    "79e937ad8a9f63504e2fa03ae63c65a6f233db29"
   ],
   "tests": [
-    "Swift 6.2.1 x86_64-unknown-linux-gnu: swift test --disable-sandbox => 17 tests, 0 failures, 0 unexpected",
-    "Existing SeparationQualityTests: 8/8 PASS",
-    "Existing DomainContractCoordinatorTests: 5/5 PASS",
-    "New LibraryContractTests: 4/4 PASS",
-    "HQ Hashable blocker regression: PersistedProjectSnapshot now compiles and Codable/equality round-trip passes with ProcessingSnapshot Hashable"
+    "W09 exact production SongSectionHardener.swift compiled with Swift 6.2.1 x86_64-unknown-linux-gnu against frozen-contract-shaped stubs",
+    "W09 portable executable adversarial harness: 6/6 groups PASS; 18/18 assertions PASS",
+    "W09 five portable harness runs wall seconds: 0.01, 0.00, 0.01, 0.01, 0.00",
+    "Committed SongSectionHardeningTests.swift covers varied functional structure, A/B/A reuse, false-boundary suppression, local X fail-closed behavior, ambiguous functional semantics, and diagnostics",
+    "W08 classifier portable harness: 10/10 PASS; timeline regression C -> A:min -> N -> G PASS"
   ],
   "evidence": [
-    "Canonical Queue re-read 2026-08-22 15:53 JST: MOI-BLD-003 still READY_ASSIGNED; MOI-BLD-IOS-001 still PLANNED",
-    "HQ Shared fix facd51a2724a68a5e1cdedbf2ace5e88a28711fc remains present in canonical DomainContracts",
-    "commit 9dd5e560720070ec85551fd62d4b3b953cdc0808 adds Shared/LibraryContracts.swift to the explicit SwiftPM target source list",
-    "commit 81d1fae9f5f2223db9a631ccce030d9cad45c45c adds four Library contract regression tests",
-    "commit ddbfcf1ec73f8329cb3ae3e74843d47511c2d9ed records durable MOI-BLD-003 validation evidence under Tests/**",
-    "2026-08-22 15:53 JST compare: work branch is 3 commits ahead and 18 commits behind integration; incoming changes touch worker status, DSP, and Separation only, with no Package.swift / Tests/** / iOS/** conflict",
-    "Worker 4 changed no Shared/**, App/**, PARITY_MATRIX.json, Queue, work-package manifest or resource-lock files"
+    "tech-assets/moises-audio/Tests/L4-W09_VALIDATION.md",
+    "tech-assets/moises-audio/Analysis/benchmarks/L4-W09_SECTION_STRUCTURE_ADVERSARIAL.json",
+    "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/SongSectionHardeningTests.swift",
+    "tech-assets/moises-audio/Tests/L4-W08_VALIDATION.md",
+    "tech-assets/moises-audio/Analysis/benchmarks/L4-W08_CHORD_VOCABULARY_ADVERSARIAL.json"
   ],
   "known_gaps": [
-    "MOI-BLD-003 is not yet HQ-integrated/VERIFIED, therefore MOI-BLD-IOS-001 is not yet released and Worker 4 must not start it",
-    "This is SwiftPM/Linux build-contract validation only; canonical iOS host target and AVFoundation/AVFAudio simulator/device validation remain for MOI-BLD-IOS-001",
-    "No PARITY row is promoted by BLD-003"
+    "MOI-P009 BPM remains MISSING until rights-cleared multi-genre real-audio, current-iPhone Moises differential, and physical-iPhone evidence are completed by HQ Late Integration.",
+    "MOI-P011 Key remains MISSING until rights-cleared major/minor/modal real-audio differential and physical-iPhone evidence are completed by HQ Late Integration.",
+    "MOI-P013 Chord remains MISSING until current-iPhone complex-chord vocabulary is reference-verified and rights-cleared real-audio timestamp/inversion differential is completed.",
+    "MOI-P016 Song Section remains MISSING. W09 is synthetic NON_PARITY hardening evidence only; varied-structure real audio, current-iPhone boundary/functional-label differential, section navigation/loop integration, and physical-iPhone evidence remain.",
+    "Full canonical swift test / Xcode build is not executable in this Worker runtime because the canonical repository checkout is unavailable locally; portable production-source harness evidence is durable but does not replace HQ integrated build/device gates."
   ],
-  "hq_requests": [
-    "Semantically integrate the three BLD-003 commits, rerun canonical regression, mark MOI-BLD-003 VERIFIED if accepted, then release MOI-BLD-IOS-001 per the fixed Worker 4 critical path"
-  ],
-  "last_updated": "2026-08-22T15:53:00+09:00",
-  "writer_policy": "Only Moises-Worker-4 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
+  "hq_requests": [],
+  "next_priority": "Audit combined AnalysisSnapshot robustness across tempo/key/chord/section confidence interactions, short/noisy/non-finite/long inputs, deterministic serialization, and benchmark diagnostics without changing frozen Shared/App contracts.",
+  "last_updated": "2026-08-23T21:42:00+09:00",
+  "writer_policy": "Only Moises-Worker-4 may update this status file. Worker 4 never declares PARITY; HQ Late Integration owns final PARITY_MATRIX judgment."
 }
