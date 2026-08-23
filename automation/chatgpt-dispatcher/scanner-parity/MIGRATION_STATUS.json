@@ -1,0 +1,50 @@
+{
+  "project": "書籍スキャナー同等化｜動画式ブックスキャナー＋AIデータ化",
+  "status": "MIGRATION_READY",
+  "updated_at_jst": "2026-08-23T12:02:00+09:00",
+  "recommended_chatgpt_project_name": "書籍スキャナー同等化",
+  "notion": {
+    "project_page_id": "3c509c10-697d-8139-867e-c3f7605665ed",
+    "standard_procedure_page_id": "3a909c10-697d-81e0-961b-d0fd27a77d39",
+    "submission_procedure_page_id": "3b009c10-697d-81eb-a325-f86d8af55481",
+    "split_session_procedure_page_id": "3bd09c10-697d-81ca-b637-c02d1f00d22d"
+  },
+  "github": {
+    "repository": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+    "integration_branch": "scanner-parity/integration",
+    "integration_head": "99a8d30f2a09c85119869feabae9b411a3431133",
+    "dispatcher_branch": "automation/scanner-parity-dispatcher",
+    "queue_path": "automation/chatgpt-dispatcher/scanner-parity/queue.json",
+    "worker_bootstrap": "automation/chatgpt-dispatcher/scanner-parity/WORKER_BOOTSTRAP.md",
+    "worker_start_prompt": "automation/chatgpt-dispatcher/scanner-parity/START_PROMPT.md",
+    "hq_start_prompt": "automation/chatgpt-dispatcher/scanner-parity/PROJECT_HQ_START_PROMPT.md",
+    "migration_handoff": "automation/chatgpt-dispatcher/scanner-parity/PROJECT_MIGRATION_HANDOFF.md",
+    "shared_contract": "scanner-parity/SHARED_CONTRACT.md"
+  },
+  "session_topology": {
+    "hq": 1,
+    "worker_pool": 4,
+    "fixed_departments": false
+  },
+  "golden_dataset": [
+    {
+      "filename": "RPReplay_Final1787451151.mp4",
+      "sha256": "37642d44cf881d4e595535e57d13bd4e11a8f93eae4f879e230e5301efecc714",
+      "must_reupload_to_project": true
+    },
+    {
+      "filename": "本 2026-08-23 0842.pdf",
+      "sha256": "7c75889931949df96c0c1f9fba6fdef4e670a196675418b184444120a1d50567",
+      "must_reupload_to_project": true
+    }
+  ],
+  "initial_tasks": ["SCAN-001", "SCAN-002", "SCAN-003", "SCAN-004"],
+  "human_gates": [
+    "Apple login / 2FA / identity verification",
+    "contracts / tax / banking",
+    "iPhone final device acceptance",
+    "Add for Review / Submit for Review final approval",
+    "release final decision"
+  ],
+  "migration_rule": "New HQ must re-fetch canonical Notion/GitHub/Queue/integration state and must not treat this snapshot or conversation history as source of truth."
+}
