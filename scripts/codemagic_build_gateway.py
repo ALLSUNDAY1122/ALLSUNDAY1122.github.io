@@ -28,6 +28,7 @@ SENSITIVE_KEY_PARTS = (
     "secret", "token", "password", "credential", "private",
     "apikey", "api_key", "environment", "variable",
 )
+SCANLAB_BUILD3_BRANCH = "testflight/splat-native-ios-20260824-build3"
 
 
 def api_json(url: str, token: str, method: str = "GET", payload: dict | None = None) -> tuple[int, dict]:
@@ -96,21 +97,29 @@ def find_app(apps: list[dict], repository: str) -> tuple[str | None, list[dict]]
     return (ids[0] if len(set(ids)) == 1 else None), candidates
 
 
-def workflow_config(repository: str, branch: str) -> dict:
-    if repository == "ALLSUNDAY1122/ALLSUNDAY1122.github.io":
-        return yaml.safe_load(Path("codemagic.yaml").read_text(encoding="utf-8")) or {}
-    if not REPOSITORY_RE.fullmatch(repository):
-        raise ValueError("Invalid repository.")
-    if branch != "main":
-        raise ValueError("Only main branch workflow validation is allowed.")
+def _load_remote_workflow_config(repository: str, branch: str) -> dict:
     url = f"https://raw.githubusercontent.com/{repository}/{branch}/codemagic.yaml"
     req = urllib.request.Request(url, headers={"Accept": "text/plain", "User-Agent": "codemagic-gateway"})
     try:
         with urllib.request.urlopen(req, timeout=30) as response:
             raw = response.read().decode("utf-8")
     except urllib.error.HTTPError as exc:
-        raise RuntimeError(f"Could not fetch external codemagic.yaml: HTTP {exc.code}") from exc
+        raise RuntimeError(f"Could not fetch codemagic.yaml: HTTP {exc.code}") from exc
     return yaml.safe_load(raw) or {}
+
+
+def workflow_config(repository: str, branch: str) -> dict:
+    if repository == "ALLSUNDAY1122/ALLSUNDAY1122.github.io":
+        if branch == "main":
+            return yaml.safe_load(Path("codemagic.yaml").read_text(encoding="utf-8")) or {}
+        if branch == SCANLAB_BUILD3_BRANCH:
+            return _load_remote_workflow_config(repository, branch)
+        raise ValueError("Only main or the pinned Scan Lab Build 3 release branch is allowed for this repository.")
+    if not REPOSITORY_RE.fullmatch(repository):
+        raise ValueError("Invalid repository.")
+    if branch != "main":
+        raise ValueError("Only main branch workflow validation is allowed.")
+    return _load_remote_workflow_config(repository, branch)
 
 
 def validate_workflow(repository: str, branch: str, workflow_id: str) -> None:
@@ -182,8 +191,11 @@ def main() -> int:
         branch = command.get("branch", "main")
         if not isinstance(workflow_id, str):
             raise ValueError("workflow_id is required for build action.")
-        if branch != "main":
-            raise ValueError("Only main branch builds are allowed by the gateway.")
+        allowed_branch = branch == "main" or (
+            repository == "ALLSUNDAY1122/ALLSUNDAY1122.github.io" and branch == SCANLAB_BUILD3_BRANCH
+        )
+        if not allowed_branch:
+            raise ValueError("Branch is not allowed by the Codemagic gateway.")
         validate_workflow(repository, branch, workflow_id)
 
         requested_app_id = command.get("app_id") or app_id or os.environ.get("CM_APP_ID")
