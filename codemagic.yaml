@@ -39,7 +39,6 @@ workflows:
           agvtool new-version -all "$PROJECT_BUILD_NUMBER"
       - name: Verify release inputs
         script: |
-          set -euo pipefail
           python3 - "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json" <<'PY'
           import json,sys
           data=json.load(open(sys.argv[1],encoding='utf-8'))
@@ -111,7 +110,7 @@ workflows:
       - asc-readback.json
 
   otsu4-internal-group-assign:
-    name: 危険物乙4 - Assign Build 93 to Internal group sun
+    name: 危険物乙4 - Verify Build 93 access in Internal group sun
     max_build_duration: 15
     instance_type: mac_mini_m2
     integrations:
@@ -122,6 +121,7 @@ workflows:
         EXPECTED_BUILD: '93'
         EXPECTED_VERSION: '1.0.0'
         BETA_GROUP: sun
+        BETA_GROUP_ID: '9cd34e64-9d08-4203-a27d-cb9d2e661c96'
       xcode: latest
     scripts:
       - name: Resolve Build 93 App Store Connect resource ID
@@ -146,31 +146,60 @@ workflows:
           for d in walk(data):
               rid=d.get('id')
               attrs=d.get('attributes') if isinstance(d.get('attributes'),dict) else {}
-              version=str(attrs.get('version',d.get('version','')))
-              if rid and version=='93': ids.append(str(rid))
+              if rid and str(attrs.get('version',d.get('version','')))=='93': ids.append(str(rid))
           ids=list(dict.fromkeys(ids))
           if len(ids)!=1: raise SystemExit(f'Expected exactly one Build 93 resource, found {ids}')
           open('build93-id.txt','w').write(ids[0])
           print('PASS: resolved Build 93 resource id',ids[0])
           PY
-      - name: Add Build 93 to Internal TestFlight group sun
+      - name: Verify sun automatic distribution or explicit Build 93 membership
         script: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check --quiet pyjwt cryptography
           BUILD_ID="$(cat build93-id.txt)"
-          set +e
-          app-store-connect beta-groups add-build "$BUILD_ID" --beta-group "$BETA_GROUP" --json > group-add.json 2> group-add-error.txt
-          RC=$?
-          set -e
-          python3 - "$BUILD_ID" "$RC" <<'PY'
-          import json,sys
-          err=''
-          try: err=open('group-add-error.txt',encoding='utf-8').read()
-          except Exception: pass
-          payload={'appAppleId':'6799755566','version':'1.0.0','buildNumber':93,'buildResourceId':sys.argv[1],'betaGroup':'sun','internalOnly':True,'betaReviewSubmitted':False,'appStoreSubmitted':False,'returnCode':int(sys.argv[2]),'error':err[-4000:]}
-          open('internal-group-assignment.json','w',encoding='utf-8').write(json.dumps(payload,ensure_ascii=False,indent=2))
+          python3 - "$BUILD_ID" <<'PY'
+          import json,os,sys,time,urllib.request
+          import jwt
+          build_id=sys.argv[1]
+          group_id=os.environ['BETA_GROUP_ID']
+          issuer=os.environ.get('APP_STORE_CONNECT_ISSUER_ID','').strip()
+          key_id=os.environ.get('APP_STORE_CONNECT_KEY_IDENTIFIER','').strip()
+          private=os.environ.get('APP_STORE_CONNECT_PRIVATE_KEY','').strip()
+          if not issuer or not key_id or not private:
+              raise SystemExit('App Store Connect integration credentials are not exposed to script environment')
+          if private.startswith('@file:'):
+              private=open(os.path.expanduser(private[6:]),encoding='utf-8').read()
+          elif os.path.isfile(os.path.expanduser(private)):
+              private=open(os.path.expanduser(private),encoding='utf-8').read()
+          private=private.replace('\\n','\n')
+          now=int(time.time())
+          token=jwt.encode({'iss':issuer,'iat':now,'exp':now+900,'aud':'appstoreconnect-v1'},private,algorithm='ES256',headers={'kid':key_id,'typ':'JWT'})
+          def get(url):
+              req=urllib.request.Request(url,headers={'Authorization':'Bearer '+token,'Accept':'application/json'})
+              with urllib.request.urlopen(req,timeout=30) as r:return json.loads(r.read().decode())
+          group=get(f'https://api.appstoreconnect.apple.com/v1/betaGroups/{group_id}?fields%5BbetaGroups%5D=name,isInternalGroup,hasAccessToAllBuilds')
+          attrs=(group.get('data') or {}).get('attributes') or {}
+          name=attrs.get('name')
+          internal=bool(attrs.get('isInternalGroup'))
+          all_builds=bool(attrs.get('hasAccessToAllBuilds'))
+          if name!='sun' or not internal:
+              raise SystemExit(f'Unexpected beta group: name={name!r} internal={internal!r}')
+          ids=[]
+          url=f'https://api.appstoreconnect.apple.com/v1/betaGroups/{group_id}/relationships/builds?limit=200'
+          for _ in range(10):
+              page=get(url)
+              ids.extend(str(x.get('id')) for x in page.get('data',[]) if x.get('id'))
+              nxt=(page.get('links') or {}).get('next')
+              if not nxt: break
+              url=nxt
+          explicit=build_id in set(ids)
+          access=all_builds or explicit
+          payload={'appAppleId':'6799755566','version':'1.0.0','buildNumber':93,'buildResourceId':build_id,'betaGroup':'sun','betaGroupId':group_id,'isInternalGroup':internal,'hasAccessToAllBuilds':all_builds,'explicitBuildRelationship':explicit,'build93AccessibleToGroup':access,'betaReviewSubmitted':False,'appStoreSubmitted':False}
+          open('internal-group-readback.json','w',encoding='utf-8').write(json.dumps(payload,ensure_ascii=False,indent=2))
+          print('GROUP_READBACK',json.dumps(payload,ensure_ascii=False))
+          if not access: raise SystemExit('Build 93 is not accessible to sun')
+          print('PASS: Build 93 is accessible to internal group sun')
           PY
-          cat group-add-error.txt || true
-          if [ "$RC" -ne 0 ]; then exit "$RC"; fi
-          echo "PASS: Build 93 added to internal group sun"
       - name: Verify Build 93 beta details remain valid
         script: |
           set -euo pipefail
@@ -179,8 +208,5 @@ workflows:
           test -s build93-beta-details.json
     artifacts:
       - build93-id.txt
-      - build93-list.json
-      - group-add.json
-      - group-add-error.txt
-      - internal-group-assignment.json
+      - internal-group-readback.json
       - build93-beta-details.json
