@@ -40,27 +40,51 @@ public struct ProductStageArtifact: Codable, Sendable, Equatable {
     }
 }
 
+/// Minimal durable state retained after the processing workspace is purged.
+/// It contains only the final local BookPackage staging URL and review metadata;
+/// raw source media and intermediate page/OCR artifacts are intentionally absent.
+public struct ProductCompletionSnapshot: Codable, Sendable, Equatable {
+    public let bookPackageURL: URL
+    public let reviewItems: [ProductReviewItem]
+    public let pageCount: Int
+    public let completedAt: Date
+
+    public init(
+        bookPackageURL: URL,
+        reviewItems: [ProductReviewItem],
+        pageCount: Int,
+        completedAt: Date = Date()
+    ) {
+        self.bookPackageURL = bookPackageURL
+        self.reviewItems = reviewItems
+        self.pageCount = max(0, pageCount)
+        self.completedAt = completedAt
+    }
+}
+
 public struct ProductPipelineCheckpoint: Codable, Sendable, Equatable {
     public let schemaVersion: Int
     public let runID: String
     public let bookID: String
     public let inputAssetIDs: [String]
-    /// Durable imported input descriptors used to restore a processing run after app relaunch.
-    /// Optional preserves decode compatibility with schema-v1 checkpoints created before
-    /// relaunch input restoration was added.
+    /// Durable imported input descriptors used only while an interrupted run may resume.
+    /// Optional preserves decode compatibility with schema-v1 checkpoints.
     public let inputAssets: [ProductInputAsset]?
     public let completedArtifacts: [ProductStageArtifact]
     public let lastProgress: ProductProgress?
+    /// Present for terminal schema-v3 checkpoints after raw/intermediate cleanup.
+    public let completion: ProductCompletionSnapshot?
     public let updatedAt: Date
 
     public init(
-        schemaVersion: Int = 2,
+        schemaVersion: Int = 3,
         runID: String,
         bookID: String,
         inputAssetIDs: [String],
         inputAssets: [ProductInputAsset]? = nil,
         completedArtifacts: [ProductStageArtifact],
         lastProgress: ProductProgress?,
+        completion: ProductCompletionSnapshot? = nil,
         updatedAt: Date = Date()
     ) {
         self.schemaVersion = schemaVersion
@@ -70,21 +94,47 @@ public struct ProductPipelineCheckpoint: Codable, Sendable, Equatable {
         self.inputAssets = inputAssets
         self.completedArtifacts = completedArtifacts
         self.lastProgress = lastProgress
+        self.completion = completion
         self.updatedAt = updatedAt
     }
 
+    /// Active-run resume state must be an exact canonical prefix with every output still present.
     public var hasCanonicalExistingArtifacts: Bool {
+        guard completion == nil else { return false }
         guard completedArtifacts.count <= ProductProcessingStage.allCases.count else { return false }
         let expected = Array(ProductProcessingStage.allCases.prefix(completedArtifacts.count))
         guard completedArtifacts.map(\.stage) == expected else { return false }
         return completedArtifacts.allSatisfy { FileManager.default.fileExists(atPath: $0.outputURL.path) }
     }
 
-    public var isCompletedPackageCheckpoint: Bool {
-        hasCanonicalExistingArtifacts
-            && completedArtifacts.count == ProductProcessingStage.allCases.count
-            && completedArtifacts.last?.stage == .packageWrite
+    /// Terminal completion may be schema-v3 lightweight state, or a legacy v2 five-stage checkpoint.
+    public var terminalCompletion: ProductCompletionSnapshot? {
+        if let completion,
+           FileManager.default.fileExists(atPath: completion.bookPackageURL.path) {
+            return completion
+        }
+
+        guard completion == nil,
+              completedArtifacts.count == ProductProcessingStage.allCases.count else { return nil }
+        let expected = ProductProcessingStage.allCases
+        guard completedArtifacts.map(\.stage) == expected,
+              completedArtifacts.allSatisfy({ FileManager.default.fileExists(atPath: $0.outputURL.path) }),
+              let package = completedArtifacts.last,
+              package.stage == .packageWrite else { return nil }
+
+        var seen = Set<String>()
+        let reviews = completedArtifacts
+            .flatMap(\.reviewItems)
+            .filter { seen.insert($0.id).inserted }
+        return ProductCompletionSnapshot(
+            bookPackageURL: package.outputURL,
+            reviewItems: reviews,
+            pageCount: package.pageCount,
+            completedAt: updatedAt
+        )
     }
+
+    public var isCompletedPackageCheckpoint: Bool { terminalCompletion != nil }
 }
 
 public struct ProductPipelineCompletion: Sendable, Equatable {
