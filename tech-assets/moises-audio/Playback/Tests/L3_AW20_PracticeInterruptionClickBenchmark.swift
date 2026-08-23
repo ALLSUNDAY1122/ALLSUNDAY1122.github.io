@@ -108,11 +108,12 @@ struct L3AW20PracticeInterruptionClickBenchmark {
         let p95Index = min(sorted.count - 1, Int(ceil(Double(sorted.count) * 0.95)) - 1)
         let p95 = sorted[p95Index]
         let maximum = sorted.last ?? 0
+        let medianText = String(format: "%.3f", median)
+        let p95Text = String(format: "%.3f", p95)
+        let maximumText = String(format: "%.3f", maximum)
         print(
             "L3-AW20 benchmark rounds=\(rounds) cycles=\(cyclesPerRound) " +
-            "median_ms=\(String(format: \"%.3f\", median)) " +
-            "p95_ms=\(String(format: \"%.3f\", p95)) " +
-            "max_ms=\(String(format: \"%.3f\", maximum)) checksum=\(checksum)"
+            "median_ms=\(medianText) p95_ms=\(p95Text) max_ms=\(maximumText) checksum=\(checksum)"
         )
     }
 }
