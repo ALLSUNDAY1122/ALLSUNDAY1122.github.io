@@ -40,6 +40,9 @@ jobs:
       - name: Test HQ Golden machine gate semantics
         run: swift test --package-path scanner-parity --filter FormalGoldenMachineGateTests
 
+      - name: Test HQ Golden visual/OCR review bundle
+        run: swift test --package-path scanner-parity --filter GoldenReviewBundleBuilderTests
+
       - name: Test searchable PDF generation on macOS
         run: swift test --package-path scanner-parity --filter SearchablePDFWriterTests
 
