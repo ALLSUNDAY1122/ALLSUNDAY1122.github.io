@@ -58,7 +58,9 @@ class AtomicLongTrackTelemetryStore:
     def __init__(self, path: str | Path):
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self._lock = threading.Lock()
+        # get() delegates to _load(); use a re-entrant lock so one store instance cannot deadlock
+        # itself while still serializing read/modify/write operations across worker threads.
+        self._lock = threading.RLock()
 
     def get(self, logical_job_id: str) -> LongTrackRunTelemetry | None:
         return self._load().get(logical_job_id)
