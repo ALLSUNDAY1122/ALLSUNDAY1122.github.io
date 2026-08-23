@@ -1,13 +1,26 @@
 #if canImport(SwiftUI) && canImport(PhotosUI)
 import PhotosUI
 import SwiftUI
+import ProductFlow
 
 public struct ScannerParityApp: App {
-    public init() {}
+    private let driver: any ProductPipelineDriving
+    private let reviewWorkflowFactory: @Sendable ([ProductReviewItem]) -> any ProductReviewWorkflow
+
+    public init(
+        driver: any ProductPipelineDriving = BoundProductPipelineDriver(bindings: []),
+        reviewWorkflowFactory: @escaping @Sendable ([ProductReviewItem]) -> any ProductReviewWorkflow = { InMemoryProductReviewWorkflow(items: $0) }
+    ) {
+        self.driver = driver
+        self.reviewWorkflowFactory = reviewWorkflowFactory
+    }
 
     public var body: some Scene {
         WindowGroup {
-            ScannerParityRootView()
+            ScannerParityRootView(
+                driver: driver,
+                reviewWorkflowFactory: reviewWorkflowFactory
+            )
         }
     }
 }
