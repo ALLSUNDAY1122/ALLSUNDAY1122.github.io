@@ -8,12 +8,7 @@
   "work_branch": "moises/wp1-separation-processing",
   "state": "IN_PROGRESS",
   "current_bundle": null,
-  "completed_bundles": [
-    "L1-M01",
-    "L1-M02",
-    "L1-M03",
-    "L1-M04"
-  ],
+  "completed_bundles": ["L1-M01", "L1-M02", "L1-M03", "L1-M04"],
   "epoch_contract_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
   "frozen_contracts": {
     "Shared/DomainContracts.swift": "666068b7fb8fc5964138eca96062c059beec4bdd",
@@ -21,7 +16,7 @@
     "App/APP_SHELL_BOUNDARY.md": "d570517220972ab4567ee19e499972f40a42ceb9"
   },
   "base_integration_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
-  "head_sha": "53c5831dd64c70530786599d67223f82a2f60d34",
+  "head_sha": "04357c78e6ab45f60e445993d3da93ac3e4f6d52",
   "epoch_start_existing_unintegrated_commits": [],
   "commits": [
     "1f5ffda14c8d0d9ae7f697920ba3a9014b22f610",
@@ -66,7 +61,11 @@
     "17512dd53adfb69669974700b339bfda0f9e6268",
     "4990034a125003bbf7b1e687b0304bcc97006e9a",
     "047982e6c4a4704df56820cc0436cb56d9f6f2be",
-    "53c5831dd64c70530786599d67223f82a2f60d34"
+    "53c5831dd64c70530786599d67223f82a2f60d34",
+    "68a79a36b4b7f8885c1c4d3d557d2e515e6b5d7b",
+    "f8be25c073d370895f155adecc894bb5acd9876c",
+    "beee896f36e65ddba95cfb1abb76c03e5511e1b2",
+    "04357c78e6ab45f60e445993d3da93ac3e4f6d52"
   ],
   "tests": [
     "L1-M01 Python py_compile PASS; unittest 16/16 PASS; CLI smoke emitted NON_PARITY_EVIDENCE_ONLY",
@@ -83,7 +82,11 @@
     "L1-A07 Python py_compile production_orchestrator.py + audioshake_api.py + both updated test modules => PASS",
     "L1-A07 unittest test_production_orchestrator.py => 23/23 PASS",
     "L1-A07 unittest test_audioshake_api.py => 18/18 PASS",
-    "L1-A07 frozen-base scope compare => ahead 43 / behind 0; all changed files remain under Separation/** or Processing/**"
+    "L1-A07 frozen-base scope compare => ahead 43 / behind 0; all changed files remain under Separation/** or Processing/**",
+    "L1-A08 Python py_compile truthful_cancellation.py + test_truthful_cancellation.py => PASS",
+    "L1-A08 unittest test_truthful_cancellation.py => 18/18 PASS",
+    "L1-A08 remote read-back confirmed exact module/test files and validation/matrix artifacts",
+    "L1-A08 frozen-base scope compare => ahead 47 / behind 0; all changed files remain under Separation/** or Processing/**"
   ],
   "evidence": [
     "L1-M01 rights-aware G1/G2 fixture/evaluation package with objective SI-SDR/reconstruction metrics and blind-listening schema",
@@ -107,47 +110,50 @@
     "L1-A07 production orchestrator persists reconciliation attempts/match counts/billing-safety state and recovers only a unique provider task match",
     "tech-assets/moises-audio/Separation/benchmarks/L1-A07_VALIDATION.md",
     "L1-A07 zero-match, lookup-error and unsupported-provider paths never authorize blind provider create retry; multiple matches fail closed as billing_incident",
-    "All new A07 machine evidence remains NON_PARITY_EVIDENCE_ONLY"
+    "All new A07 machine evidence remains NON_PARITY_EVIDENCE_ONLY",
+    "tech-assets/moises-audio/Separation/Server/truthful_cancellation.py",
+    "tech-assets/moises-audio/Separation/Tests/test_truthful_cancellation.py",
+    "tech-assets/moises-audio/Processing/Tests/L1-A08_CANCELLATION_MATRIX.json",
+    "tech-assets/moises-audio/Processing/L1-A08_VALIDATION.md",
+    "L1-A08 persists logical cancel before provider contact, separates requested/confirmed/unsupported/error upstream states, blocks cancelled output collection and preserves cancelled public phase through ready-vs-cancel races",
+    "All new A08 machine evidence remains NON_PARITY_EVIDENCE_ONLY"
   ],
   "known_gaps": [
     "Production separator credentials and signed commercial/privacy/retention/deletion/cancellation terms are still absent.",
     "No executable rights-cleared G1/G2 real-audio corpus has been supplied.",
     "No live project separator batch, actual vendor cost/retention/delete/cancel evidence, provider-side billing behavior or authoritative upstream idempotency/Task-list consistency guarantee exists.",
+    "No live provider evidence proves that logical cancellation stops upstream compute or billing; current AudioShake adapter truthfully exposes no cancel_task capability.",
     "No current-iPhone Moises reference run manifests/local comparison artifacts or completed blind human review scores exist.",
     "No integrated current-iPhone long-track/background/relaunch/storage/thermal evidence exists.",
-    "Lane-local completion roadmap A08-A20 remains to harden cancellation truthfulness, privacy/retention, cost/quota, separation profiles, advanced modes, artifact integrity/atomicity, long-track/relaunch, fault telemetry and real-corpus/differential readiness.",
+    "Lane-local completion roadmap A09-A20 remains to harden privacy/retention, cost/quota, separation profiles, advanced modes, artifact integrity/atomicity, long-track/relaunch, fault telemetry and real-corpus/differential readiness.",
     "P003/P004/P005/P020/P021/P024 and dependent current-iPhone rows remain MISSING; Worker 1 does not update PARITY_MATRIX."
   ],
   "hq_requests": [
     "At a useful checkpoint, semantically integrate Lane 1 with the other lanes and resolve any frozen Shared/App adapter changes centrally.",
     "Choose final composition for StableIdempotentSeparationStarting/AssuredSeparationProvider when wiring the integrated app; do not permit raw vendor URLs to cross the Shared StemArtifact boundary.",
+    "Wire production backend DELETE/snapshot/result handling through TruthfulCancellationService or semantically equivalent logic so logical cancel cannot be bypassed by direct result collection.",
     "Obtain/approve commercial, privacy, retention/deletion and reference-comparison rights records plus production credentials and rights-cleared G1/G2 fixtures.",
-    "When production credentials exist, verify actual provider billing/idempotency and Task-list consistency behavior under ambiguous starts; A07 intentionally does not infer a safe repost from zero list matches.",
+    "When production credentials exist, verify actual provider billing/idempotency, Task-list consistency and cancellation behavior; do not equate logical cancel with upstream compute/billing stop without evidence.",
     "When external inputs exist, run the real differential command with live project separator and current-iPhone Moises reference capture, collect blind reviews and perform HQ product/device PARITY judgment."
   ],
   "last_autonomous_wave": {
-    "id": "L1-A07",
-    "goal": "Complete provider-capability-aware ambiguous-start reconciliation and duplicate-billing safety without blind provider create retries.",
-    "rationale": "A06 safely stopped after an ambiguous provider create; current AudioShake developer documentation exposes Task listing and persisted client metadata, allowing lane-local exact-match reconciliation without issuing a second create.",
-    "done_when": "The persisted logical job can recover exactly one matching provider Task; zero/multiple/lookup-error/unsupported cases fail closed without another create; migration, edge tests, durable evidence and scope audit are committed.",
+    "id": "L1-A08",
+    "goal": "Make cancellation semantics truthful across logical user cancel, output discard, ready-vs-cancel races and provider-confirmed upstream compute cancellation capability.",
+    "rationale": "P020 requires reliable cancellation, while the existing client/backend seam could not distinguish a successful logical cancel request from authoritative upstream compute cancellation. Current AudioShake evidence does not establish an upstream cancel API.",
+    "done_when": "Cancel intent is durable before provider contact; accepted/confirmed/unsupported/error states remain distinct; repeated cancel is locally idempotent; ready-after-cancel cannot promote output; existing client phase compatibility, edge tests, evidence and scope audit are committed.",
     "result": "COMPLETE_NON_PARITY",
-    "head_sha": "53c5831dd64c70530786599d67223f82a2f60d34"
+    "head_sha": "04357c78e6ab45f60e445993d3da93ac3e4f6d52"
   },
   "next_candidate_wave": {
-    "id": "L1-A08",
-    "goal": "Make cancellation semantics truthful across client cancellation, polling stop, output discard, ready-vs-cancel races and any provider-confirmed upstream compute cancellation capability.",
-    "why_next": "P020 requires reliable cancel/retry/resume. The current public AudioShake Task surface used by this lane does not provide evidence that a logical client cancel stops upstream compute, so the implementation must distinguish those states before live validation."
+    "id": "L1-A09",
+    "goal": "Enforce privacy-safe retention/deletion lifecycle for uploaded source audio, vendor assets/outputs, project-controlled copies and diagnostics.",
+    "why_next": "P024 is Lane 1's next direct quality gap. A08 now makes logical cancel/output discard truthful, but actual source/vendor/project retention and deletion confirmation still lack enforceable machine state and evidence hooks."
   },
   "checkpoint": {
     "id": "LANE-1-EPOCH-2-AUTONOMOUS-CONTINUATION",
-    "historical_completed_bundles": [
-      "L1-M01",
-      "L1-M02",
-      "L1-M03",
-      "L1-M04"
-    ],
-    "head_sha": "53c5831dd64c70530786599d67223f82a2f60d34",
-    "scope_audit": "ahead 43 / behind 0 versus frozen base; Separation/** and Processing/** only",
+    "historical_completed_bundles": ["L1-M01", "L1-M02", "L1-M03", "L1-M04"],
+    "head_sha": "04357c78e6ab45f60e445993d3da93ac3e4f6d52",
+    "scope_audit": "ahead 47 / behind 0 versus frozen base; Separation/** and Processing/** only",
     "parity_claim": "NONE"
   },
   "legacy_v2": {
@@ -155,6 +161,6 @@
     "last_state": "INTEGRATION_READY",
     "note": "All prior owned-scope commits were already integrated before v3 epoch start."
   },
-  "last_updated": "2026-08-23T17:03:00+09:00",
+  "last_updated": "2026-08-23T17:34:00+09:00",
   "writer_policy": "Only Moises-Worker-1 may update this status file. Queue/lane plan/work packages/Shared/App/PARITY/resource locks are read-only to this Worker."
 }
