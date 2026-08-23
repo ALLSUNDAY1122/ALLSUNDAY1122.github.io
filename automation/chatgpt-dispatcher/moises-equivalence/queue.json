@@ -3,10 +3,10 @@
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_pr": 4431,
-  "integration_epoch": 13,
+  "integration_epoch": 14,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "EPOCH13_L1_A19_A20_L2_AW16_AW17_L3_AW16_AW17_L4_W19_W20_CANONICAL_PORTABLE_165_PASS_FINAL_APPLE_REAL_AUDIO_GATES_PENDING",
+  "baseline_state": "EPOCH14_L1_E01_E02_READINESS_CANONICAL_PORTABLE_165_PASS_LIVE_EXTERNAL_APPLE_REAL_AUDIO_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
@@ -43,14 +43,15 @@
     "epoch10": {"L1":"A15-A16","L2":"AW12-AW13","L4":"W15-W16","commit":"634573a147f48226462d5fd29063dfa760ccdca1","L3":"AW12-AW13","L3_commit":"368527e51408e47d2efe7d535e91f3f98176925c","run":32652340100,"tests":126},
     "epoch11": {"L1":"A17-A18","L2":"AW14-AW15","commit":"55d636e54b99fd0bd70cb370a72191829ab5f896","run":32654418110,"tests":126,"locks":"dc4e32a0367311fc77f0cfd120441b5491b414b8"},
     "epoch12": {"L3":"AW14-AW15","L4":"W17-W18","commit":"1ca2ec9fbca17ce94d5f3b2fff85c93004b9fd8a","run":32656141958,"run_number":78,"tests":144,"unhandled":126,"locks":"11683699f618a5db20fb1e68ff8803700754b59b"},
-    "epoch13": {"L1":"A19-A20","L2":"AW16-AW17","L3":"AW16-AW17","L4":"W19-W20","commit":"d4323ec520eaa4a343e98692a943015675437b01","run":32658738702,"run_number":85,"tests":165,"unhandled":140,"locks":"5aa691509e3da2abed756d05424306adf453772f"}
+    "epoch13": {"L1":"A19-A20","L2":"AW16-AW17","L3":"AW16-AW17","L4":"W19-W20","commit":"d4323ec520eaa4a343e98692a943015675437b01","run":32658738702,"run_number":85,"tests":165,"unhandled":140,"locks":"5aa691509e3da2abed756d05424306adf453772f"},
+    "epoch14": {"L1":"E01-E02 readiness","commit":"49b50dbf3670f678ff1f953aa3c2a1f33559744a","run":32659696431,"run_number":89,"tests":165,"unhandled":144,"locks":"768e05d56e291287759b78cdba95452f44bc1a25"}
   },
-  "canonical_through": {"L1":"L1-A20","L2":"L2-AW17","L3":"L3-AW17","L4":"L4-W20"},
+  "canonical_through": {"L1":"L1-E02_READINESS","L2":"L2-AW17","L3":"L3-AW17","L4":"L4-W20"},
   "current_unintegrated_snapshot": {
-    "L1":"L1-E01 and L1-E02 external-gate readiness are complete and form the next coherent checkpoint; L1-E03 is current. No live external acceptance is claimed.",
+    "L1":"L1-E03 Live Separation Benchmark preparation is current. E01/E02 are canonical readiness infrastructure only; actual credentials/contracts/capability snapshot/media/rights inputs remain pending external input.",
     "L2":"L2-AW18 setlist integrity recovery is complete as one post-Epoch13 Wave; hold until another coherent Wave/cross-lane need.",
-    "L3":"No post-Epoch13 implementation beyond AW17 observed at this read; Worker branch status file remains stale schema1, while direct integration status records AW17.",
-    "L4":"L4-W21 reference-review-consensus hardening is in progress; source/Package changes exist but the Wave is not complete."
+    "L3":"No post-Epoch13 implementation beyond AW17 observed at latest read; Worker branch status file remains stale schema1 and branch code head remains ebc07ffd688151ca056512a43b28b7880fab7406.",
+    "L4":"L4-W21 reference review consensus/transcription integrity hardening is complete as one post-Epoch13 Wave; L4-W22 corpus coverage/sufficiency hardening is current, so hold W21 until coherent checkpoint."
   },
   "epoch13_integration": {
     "L1": {"scope":["Separation/**","Processing/**"],"source_head":"e32f030ad19f8a8f1febd4d7666c88fdc7d2af9d","note":"A19 Golden corpus intake engineering + A20 durable resumable differential gate. No real Golden corpus or current-Moises evidence supplied."},
@@ -58,15 +59,20 @@
     "L3": {"scope":["Playback/**"],"source_head":"ebc07ffd688151ca056512a43b28b7880fab7406","note":"AW16 coalescing dispatcher + AW17 unified production transport authority. Playback remains excluded from canonical SwiftPM target; lane-local validation remains authoritative until selected Xcode/Apple runtime."},
     "L4": {"scope":["Analysis/**","Tests/**","Package.swift"],"source_head":"6d85d467eacabe232f31a433dc7c5a5150d7c3d2","note":"W19 current-iPhone reference capture provenance/repeatability + W20 raw observation derivation. Both compiled/executed by canonical SwiftPM Run #85."}
   },
+  "epoch14_integration": {
+    "L1": {"scope":["Separation/**","Processing/**"],"source_head":"36741bb7fa47358d4783e3db8162c6b9faaaef97","files":16,"note":"E01 commercial-route approval intake/validation readiness + E02 rights-cleared real-audio/private-grant intake readiness. These validate future external inputs and intentionally remain PENDING_EXTERNAL_INPUT; they do not prove live provider access, commercial approval, legal provenance, real Golden corpus, or current-Moises parity."}
+  },
   "branch_hygiene": {"worker3_branch_status":"STALE_SCHEMA1","latest_integration_status_commit":"7333e7acc02fc50b33ece7b4a258d272ba59e9ed","worker3_lane_head":"ebc07ffd688151ca056512a43b28b7880fab7406"},
   "validation": {
     "workflow":".github/workflows/moises-hq-integration.yml",
     "epoch13_code_run":{"id":32658738702,"number":85,"result":"SUCCESS","test_count":165,"unhandled_file_count":140},
-    "portable_scope_note":"W19/W20 Analysis source/tests compiled and executed. New Lane1 Python/Processing, Lane2 IO/Library and Lane3 Playback/DSP are not proven by this SwiftPM run; AVFAudio/Xcode/physical-iPhone/real-current-Moises evidence remains outside portable coverage.",
+    "epoch14_code_run":{"id":32659696431,"number":89,"result":"SUCCESS","test_count":165,"unhandled_file_count":144},
+    "epoch14_lane1_worker_validation":{"E01":"30/30 PASS + py_compile PASS","E02":"37/37 PASS + py_compile PASS"},
+    "portable_scope_note":"Run #89 proves no regression in the canonical SwiftPM-selected sources/tests. E01/E02 Python implementation/tests are outside SwiftPM and are supported by Lane-1 validation; AVFAudio/Xcode/physical-iPhone/live-provider/real-rights-cleared-audio/current-Moises evidence remains outside portable coverage.",
     "parity_effect":"NONE"
   },
-  "parity": {"promotion_count":0,"state":"ALL_CURRENT_IPHONE_IN_SCOPE_ROWS_REMAIN_MISSING","rule":"Portable/synthetic/harness/compile evidence alone never promotes PARITY."},
-  "external_blockers": ["production separator credentials/terms/pricing/usage","rights-cleared G1/G2 real-audio corpus and private rights grants","Apple/iPhone runtime for integrated validation","current-Moises differential/reference evidence","human listening/perceptual evidence"],
+  "parity": {"promotion_count":0,"state":"ALL_CURRENT_IPHONE_IN_SCOPE_ROWS_REMAIN_MISSING","rule":"Portable/synthetic/harness/readiness/compile evidence alone never promotes PARITY."},
+  "external_blockers": ["production separator credentials and authenticated capability snapshot","written commercial/privacy/confidentiality/output-use/pricing approvals","rights-cleared G1/G2 real-audio corpus and private rights/provenance grants","Apple/iPhone runtime for integrated validation","current-Moises differential/reference evidence","human listening/perceptual evidence"],
   "worker_stop_policy": {"invalid":["no task supplied","old bundle list exhausted","HQ did not replenish","queue has no READY task","another worker unfinished"],"valid":["external/human input exhausted lane-local work","required frozen Shared/App contract change","ownership boundary","unsafe/impossible"]},
   "late_integration_gate": {"owner":"HQ","required":["semantic lane integration","Shared/App adapters","integrated iOS compile","cross-feature regression","real-device/real-audio evidence","current-Moises differential","PARITY finalization"]}
 }
