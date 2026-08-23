@@ -63,6 +63,36 @@ enum SeparationArtifactSetIntegrity {
         }
     }
 
+    /// A cached prepared/committed ledger is trusted only for the same logical artifact identity.
+    /// Signed URLs/expiry/cost telemetry may legitimately rotate, but provider/model/profile,
+    /// requested roles and each role-to-stem identity must remain stable for the same job.
+    static func validateCachedManifestIdentity(
+        _ current: SeparationProviderRunManifest,
+        trusted: SeparationProviderRunManifest
+    ) throws {
+        guard current.projectID == trusted.projectID, current.jobID == trusted.jobID else {
+            throw failure("SEP_OUTPUT_CACHED_MANIFEST_JOB_IDENTITY_MISMATCH", false)
+        }
+        guard current.providerID == trusted.providerID,
+              current.providerKind == trusted.providerKind,
+              current.modelName == trusted.modelName,
+              current.modelVersion == trusted.modelVersion,
+              current.qualityProfile == trusted.qualityProfile else {
+            throw failure("SEP_OUTPUT_CACHED_MANIFEST_PROVIDER_IDENTITY_MISMATCH", false)
+        }
+        guard current.requestedRoles == trusted.requestedRoles else {
+            throw failure("SEP_OUTPUT_CACHED_MANIFEST_ROLE_SET_MISMATCH", false)
+        }
+        guard current.outputs.count == trusted.outputs.count else {
+            throw failure("SEP_OUTPUT_CACHED_MANIFEST_STEM_IDENTITY_MISMATCH", false)
+        }
+        for output in current.outputs {
+            guard trusted.outputs.contains(where: { $0.role == output.role && $0.stemID == output.stemID }) else {
+                throw failure("SEP_OUTPUT_CACHED_MANIFEST_STEM_IDENTITY_MISMATCH", false)
+            }
+        }
+    }
+
     private static func failure(_ code: String, _ retryable: Bool) -> DomainFailure {
         .processingFailed(code: code, retryable: retryable)
     }
