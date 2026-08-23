@@ -1,21 +1,23 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_pr": 4431,
   "integration_epoch": 1,
   "assignment_epoch": 2,
+  "planning_revision": 4,
   "baseline_state": "SWIFTPM_SHARED_APP_LIBRARY_GREEN_IOS_HOST_PENDING_LATE_INTEGRATION",
-  "operating_model": "FOUR_INDEPENDENT_LANES_LATE_INTEGRATION",
+  "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
-  "worker_task_source": "automation/chatgpt-dispatcher/moises-equivalence/lane-plan-v3.json",
+  "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
   "worker_claiming": "DISABLED",
-  "hq_release_required_between_macro_bundles": false,
+  "hq_release_required_between_waves": false,
+  "hq_task_replenishment": "DISABLED",
   "migration": {
-    "from_schema_version": 2,
-    "migrated_at": "2026-08-22T16:41:00+09:00",
-    "reason": "Per-task HQ release produced short ~7-minute work units and task starvation windows. v3 preloads independent macro bundles and performs late checkpoint integration.",
-    "prior_history": "Detailed v1/v2 task states, claims, evidence and integration decisions remain preserved in Git history, worker status files and merged PRs."
+    "from_schema_version": 3,
+    "migrated_at": "2026-08-23T16:28:00+09:00",
+    "reason": "Finite HQ-authored Macro Bundle supply caused workers to stop after consuming the list. Planning now belongs to each Worker inside its exclusive lane; HQ only owns boundaries, shared contracts, integration and PARITY.",
+    "historical_bundles": "Epoch-2 M01-M04 remain preserved in worker status and Git history as completed bootstrap work, not as the continuing task source."
   },
   "verified_history": [
     {"task_id":"MOI-HQ-001","status":"VERIFIED"},
@@ -42,39 +44,20 @@
     {"family":"PLAYBACK","prs":[4456],"parity_rows":["MOI-P006","MOI-P007","MOI-P008"],"state":"MISSING","remaining":"integrated Apple runtime/device audio evidence"}
   ],
   "lane_execution": [
-    {
-      "lane_id":"LANE-1-SEPARATION-PROCESSING",
-      "worker_id":"Moises-Worker-1",
-      "macro_sequence":["L1-M01","L1-M02","L1-M03","L1-M04"],
-      "worker_may_advance_without_hq":true,
-      "external_gate":"SEP production commercial terms/credentials and rights-cleared G1/G2 fixtures remain external; blocked bundles must not block other preloaded Lane-1 bundles"
-    },
-    {
-      "lane_id":"LANE-2-IO-LIBRARY",
-      "worker_id":"Moises-Worker-2",
-      "macro_sequence":["L2-M01","L2-M02","L2-M03","L2-M04"],
-      "worker_may_advance_without_hq":true
-    },
-    {
-      "lane_id":"LANE-3-PLAYBACK-DSP",
-      "worker_id":"Moises-Worker-3",
-      "macro_sequence":["L3-M01","L3-M02","L3-M03","L3-M04"],
-      "worker_may_advance_without_hq":true,
-      "device_gate":"real Apple/iPhone execution is deferred to HQ late integration; Lane 3 must prepare all core/harness work without waiting"
-    },
-    {
-      "lane_id":"LANE-4-IOS-ANALYSIS",
-      "worker_id":"Moises-Worker-4",
-      "macro_sequence":["L4-M01","L4-M02","L4-M03","L4-M04"],
-      "worker_may_advance_without_hq":true,
-      "cross_lane_gate":"Lane 4 builds standalone host/injection slots only; compiling other lanes is HQ late-integration work"
-    }
+    {"lane_id":"LANE-1-SEPARATION-PROCESSING","worker_id":"Moises-Worker-1","planning":"WORKER_AUTONOMOUS","worker_may_advance_without_hq":true,"external_gate":"Production commercial terms/credentials and rights-cleared G1/G2 fixtures remain external, but they do not block independent lane-local hardening/evidence preparation."},
+    {"lane_id":"LANE-2-IO-LIBRARY","worker_id":"Moises-Worker-2","planning":"WORKER_AUTONOMOUS","worker_may_advance_without_hq":true},
+    {"lane_id":"LANE-3-PLAYBACK-DSP","worker_id":"Moises-Worker-3","planning":"WORKER_AUTONOMOUS","worker_may_advance_without_hq":true,"device_gate":"Real Apple/iPhone execution is deferred to HQ late integration, but portable/backend/evidence preparation continues autonomously."},
+    {"lane_id":"LANE-4-IOS-ANALYSIS","worker_id":"Moises-Worker-4","planning":"WORKER_AUTONOMOUS","worker_may_advance_without_hq":true,"cross_lane_gate":"Worker 4 must not merge other lanes; cross-lane compile remains HQ late-integration work."}
   ],
+  "worker_stop_policy": {
+    "valid": ["all meaningful lane-local work and preparation exhausted pending an external/human input", "required frozen Shared/App contract change", "ownership boundary", "unsafe or technically impossible operation"],
+    "invalid": ["no task supplied", "old bundle list exhausted", "HQ did not replenish", "queue has no READY task", "another worker unfinished"]
+  },
   "late_integration_gate": {
     "owner":"HQ",
-    "merge_frequency":"checkpoint, not every macro bundle",
-    "required_actions":["semantic merge of all lane checkpoints","cross-lane contract/adapters","integrated iOS compile","cross-feature regression","real-device and real-audio evidence","differential Moises comparison","PARITY_MATRIX finalization"],
-    "next_lane_supply_rule":"Before active lanes consume their last preloaded bundle, HQ must preload at least four additional macro bundles per continuing lane."
+    "merge_frequency":"coherent checkpoint, not every Worker wave",
+    "required_actions":["semantic merge of lane checkpoints","cross-lane contract/adapters","integrated iOS compile","cross-feature regression","real-device and real-audio evidence","differential Moises comparison","PARITY_MATRIX finalization"],
+    "next_work_rule":"After integration, Workers inspect the updated canonical state and choose their own next lane-local Macro Wave. HQ does not create the normal backlog."
   },
   "current_external_blockers": [
     "commercially approved production separator route/credentials or project-owned rights-cleared checkpoint",
