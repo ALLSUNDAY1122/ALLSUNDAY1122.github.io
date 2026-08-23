@@ -6,7 +6,7 @@
   "integration_epoch": 4,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "EPOCH4_ALL_FOUR_AUTONOMOUS_CHECKPOINTS_CANONICAL_FINAL_DEVICE_REAL_AUDIO_GATES_PENDING",
+  "baseline_state": "EPOCH4_ALL_FOUR_AUTONOMOUS_CHECKPOINTS_CANONICAL_PORTABLE_SWIFTPM_PASS_FINAL_DEVICE_REAL_AUDIO_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
@@ -43,7 +43,7 @@
     {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"epoch2 M01-M04","semantic_pr":4509,"merge_sha":"b586c3386af0183881741998d3691bb2a282fbcf","scope":["Playback/**","DSP/**"],"parity_promoted":false},
     {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"epoch2 M01-M04","semantic_pr":4510,"merge_sha":"f218be65facd8e3f32342daf5e77545dd8924f6a","scope":["Analysis/**","Tests/**","iOS/**","Package.swift"],"parity_promoted":false},
     {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"epoch2 M01-M04 + L2-AW05","semantic_pr":4520,"merge_sha":"a6fe8e97b3ec7aede2ecd826e67de99714e88c98","scope":["IO/**","Library/**"],"parity_promoted":false},
-    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A06 through L1-A09","semantic_commit":"d5ee0546efa0d99ded546c2c8a0f1583d5b6c867","scope":["Separation/**","Processing/**"],"parity_promoted":false},
+    {"lane_id":"LANE-1-SEPARATION-PROCESSING","source_checkpoint":"L1-A06 through L1-A10","semantic_commit":"d5ee0546efa0d99ded546c2c8a0f1583d5b6c867","scope":["Separation/**","Processing/**"],"integration_note":"A10 completed concurrently during the HQ cycle; canonical tree was re-audited and already contains its implementation, validation and evidence.","parity_promoted":false},
     {"lane_id":"LANE-3-PLAYBACK-DSP","source_checkpoint":"L3-AW01 through L3-AW05","semantic_commit":"d5ee0546efa0d99ded546c2c8a0f1583d5b6c867","scope":["Playback/**","DSP/**"],"parity_promoted":false},
     {"lane_id":"LANE-4-IOS-ANALYSIS","source_checkpoint":"L4-W05 through L4-W09","semantic_commit":"d5ee0546efa0d99ded546c2c8a0f1583d5b6c867","scope":["Analysis/**","Tests/**","iOS/**","Package.swift"],"integration_resolution":"preserved HQ chord-section regression fix from 4b56de63e2c69285828b99f535d72632d7671d5c","parity_promoted":false},
     {"lane_id":"LANE-2-IO-LIBRARY","source_checkpoint":"L2-AW06 through L2-AW07","semantic_commit":"e2af663bc7fa4e6dd59cd9e5c6093351a9a93e41","scope":["IO/**"],"parity_promoted":false}
@@ -63,9 +63,9 @@
   "autonomous_wave_policy": {
     "merge_rule": "Do not merge every Wave. Workers accumulate meaningful lane-local waves; HQ semantic-integrates only coherent checkpoints.",
     "current_unintegrated_snapshot": {
-      "lane1": "L1-A06 through L1-A09 canonical at epoch 4; later waves continue accumulating autonomously",
+      "lane1": "L1-A06 through L1-A10 canonical at epoch 4; L1-A11 is the current post-checkpoint autonomous wave",
       "lane2": "L2-AW06 through L2-AW07 canonical at epoch 4; later waves continue accumulating autonomously",
-      "lane3": "L3-AW01 through L3-AW05 canonical at epoch 4; later waves continue accumulating autonomously",
+      "lane3": "L3-AW01 through L3-AW05 canonical at epoch 4; L3-AW06 is a post-checkpoint autonomous wave and remains unintegrated",
       "lane4": "L4-W05 through L4-W09 canonical at epoch 4; L4-W10 was in progress at the last branch-status read"
     }
   },
@@ -84,17 +84,21 @@
     "workflow": ".github/workflows/moises-hq-integration.yml",
     "workflow_commit": "3007de9ed70f1ad5d8f0fc321560e1259dc8a437",
     "validation_pr": 4517,
-    "state": "CI_RUN_OBSERVED_FAIL_FIX_COMMITTED_RERUN_PENDING",
-    "observed_run_id": 32640524078,
-    "observed_run_number": 18,
-    "observed_result": "FAIL",
-    "observed_failure": "ChordTimelineAnalysisTests.testProjectOwnedAnalyzerPopulatesChordTimelineThroughFrozenMusicAnalyzingContract stale expectation at line 117",
-    "fix_commit": "4b56de63e2c69285828b99f535d72632d7671d5c",
-    "current_canonical_checkpoint_commit": "e2af663bc7fa4e6dd59cd9e5c6093351a9a93e41",
-    "latest_run_for_current_checkpoint": "NOT_OBSERVED_YET",
+    "state": "PORTABLE_SWIFTPM_PASS_FINAL_XCODE_DEVICE_GATES_PENDING",
+    "validated_code_commit": "4059424833265857f79a7ed080ee0720fadac41a",
+    "successful_run_id": 32641556449,
+    "successful_run_number": 32,
+    "successful_result": "SUCCESS",
+    "successful_test_count": 77,
+    "prior_failures": [
+      {"run_id":32640524078,"run_number":18,"failure":"stale ChordTimeline section-empty expectation","fix_commit":"4b56de63e2c69285828b99f535d72632d7671d5c"},
+      {"run_id":32641186318,"run_number":28,"failure":"ChordVocabularyHardeningTests Optional Double accuracy compile error","fix_commit":"aa8e614dbdcaf8300b85ecf8de051e51b31d24b2"},
+      {"run_id":32641325804,"run_number":30,"failure":"tempo 180 BPM false ambiguity rejection plus sustained-chord false tempo","fix_commit":"4059424833265857f79a7ed080ee0720fadac41a"}
+    ],
+    "portable_scope_note": "Package.swift currently compiles selected MoisesAudioCore/Analysis/HostCore sources; 66 Playback/Processing/docs/test files are reported as unhandled. This PASS is not a full Playback/Processing/AVFAudio/Xcode/device compile claim.",
     "local_runner_attempt": "BLOCKED_ENVIRONMENT_DNS_GITHUB_COM",
     "parity_effect": "NONE",
-    "rule": "Do not claim integrated regression PASS until an actual successful test run is observed on the current canonical checkpoint."
+    "rule": "Portable SwiftPM PASS does not promote PARITY and does not replace final Xcode, Apple runtime, real-device, real-audio or current-Moises differential gates."
   },
   "worker_stop_policy": {
     "valid": ["all meaningful lane-local work and preparation exhausted pending an external/human input", "required frozen Shared/App contract change", "ownership boundary", "unsafe or technically impossible operation"],
