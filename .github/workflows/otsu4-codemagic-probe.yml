@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   probe:
-    if: github.actor == 'ALLSUNDAY1122' && (startsWith(github.event.issue.title, '[OTS4-CM-PROBE]') || startsWith(github.event.issue.title, '[OTS4-ASC]'))
+    if: github.actor == 'ALLSUNDAY1122' && (startsWith(github.event.issue.title, '[OTS4-CM-PROBE]') || startsWith(github.event.issue.title, '[OTS4-ASC]') || startsWith(github.event.issue.title, '[OTS4-GROUP]'))
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -23,7 +23,12 @@ jobs:
           token=os.environ['CM_API_TOKEN']
           title=os.environ.get('ISSUE_TITLE','')
           app_id='6a769d81a1add9d06020b524'
-          workflow='otsu4-asc-readback' if title.startswith('[OTS4-ASC]') else 'otsu4-ios'
+          if title.startswith('[OTS4-ASC]'):
+              workflow='otsu4-asc-readback'
+          elif title.startswith('[OTS4-GROUP]'):
+              workflow='otsu4-internal-group-assign'
+          else:
+              workflow='otsu4-ios'
           branch='release/otsu4-720-internal-testflight'
           build={}
           def api(url,method='GET',payload=None):
