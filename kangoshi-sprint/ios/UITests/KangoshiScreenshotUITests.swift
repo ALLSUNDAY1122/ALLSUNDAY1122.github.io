@@ -25,7 +25,8 @@ final class KangoshiScreenshotUITests: XCTestCase {
 
         app.buttons["プレミアムを見る"].tap()
         XCTAssertTrue(app.staticTexts["学びスプリント プレミアム"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.buttons["月額プラン"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["月額プラン"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["買い切りプラン"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "200")).firstMatch.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "800")).firstMatch.waitForExistence(timeout: 8))
         capture("04-premium")
