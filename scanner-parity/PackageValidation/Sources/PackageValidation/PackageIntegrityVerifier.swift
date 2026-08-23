@@ -45,14 +45,17 @@ public struct PackageIntegrityVerifier: Sendable {
             issues.append(.init(code: .emptyManifest, detail: "manifestにページがありません"))
         }
 
-        let sequenceGroups = Dictionary(grouping: manifest.pages, by: \.sequence)
-        for (sequence, pages) in sequenceGroups where pages.count > 1 {
+        for (sequence, pages) in Dictionary(grouping: manifest.pages, by: \.sequence) where pages.count > 1 {
             issues.append(.init(code: .duplicateSequence, sequence: sequence, detail: "sequence \(sequence) が \(pages.count) 件あります"))
         }
-
-        let pageIDGroups = Dictionary(grouping: manifest.pages, by: \.pageID)
-        for (pageID, pages) in pageIDGroups where pages.count > 1 {
+        for (pageID, pages) in Dictionary(grouping: manifest.pages, by: \.pageID) where pages.count > 1 {
             issues.append(.init(code: .duplicatePageID, pageID: pageID, detail: "page_id \(pageID) が \(pages.count) 件あります"))
+        }
+        for (path, pages) in Dictionary(grouping: manifest.pages, by: \.imagePath) where pages.count > 1 {
+            issues.append(.init(code: .duplicateImagePath, detail: "image_path \(path) が複数ページから参照されています: \(pages.map(\.pageID))"))
+        }
+        for (path, pages) in Dictionary(grouping: manifest.pages, by: \.textPath) where pages.count > 1 {
+            issues.append(.init(code: .duplicateTextPath, detail: "text_path \(path) が複数ページから参照されています: \(pages.map(\.pageID))"))
         }
 
         let sequences = manifest.pages.map(\.sequence)
@@ -97,10 +100,10 @@ public struct PackageIntegrityVerifier: Sendable {
         }
 
         if !fileManager.fileExists(atPath: rootURL.appendingPathComponent("book.md").path) {
-            issues.append(.init(code: .aggregateMarkdownMissing, severity: .warning, detail: "book.md が存在しません"))
+            issues.append(.init(code: .aggregateMarkdownMissing, detail: "book.md が存在しません"))
         }
         if !fileManager.fileExists(atPath: rootURL.appendingPathComponent("book.txt").path) {
-            issues.append(.init(code: .aggregateTextMissing, severity: .warning, detail: "book.txt が存在しません"))
+            issues.append(.init(code: .aggregateTextMissing, detail: "book.txt が存在しません"))
         }
 
         let pdfURL = rootURL.appendingPathComponent("book_searchable.pdf")
@@ -118,12 +121,12 @@ public struct PackageIntegrityVerifier: Sendable {
                 issues.append(.init(code: .searchablePDFUnreadable, detail: "PDFを検査できません: \(error)"))
             }
         } else {
-            issues.append(.init(code: .searchablePDFMissing, severity: .warning, detail: "book_searchable.pdf が存在しません"))
+            issues.append(.init(code: .searchablePDFMissing, detail: "book_searchable.pdf が存在しません"))
         }
 
         let errorCount = issues.filter { $0.severity == .error }.count
         let warningCount = issues.filter { $0.severity == .warning }.count
-        let reviewIDs = Set(manifest.pages.filter(\.needsReview).map(\.pageID))
+        let reviewIDs = Set(manifest.pages.filter { $0.needsReview }.map(\.pageID))
             .union(issues.compactMap(\.pageID))
             .sorted()
 
