@@ -8,7 +8,12 @@ let package = Package(
         .macOS(.v14)
     ],
     products: [
-        .library(name: "ScannerRuntime", targets: ["ScannerRuntime"])
+        .library(name: "ScannerRuntime", targets: ["ScannerRuntime"]),
+        .library(name: "RuntimeComposition", targets: ["RuntimeComposition"]),
+        .executable(name: "scanner-hq-golden-runner", targets: ["HQGoldenRunner"])
+    ],
+    dependencies: [
+        .package(name: "ProductFlow", path: "ProductFlow")
     ],
     targets: [
         .target(
@@ -18,6 +23,7 @@ let package = Package(
                 "AppShell",
                 "AppleValidation",
                 "GoldenEvaluation",
+                "HQGoldenRunner",
                 "LongRun",
                 "PackageQuality",
                 "PrivacyAudit",
@@ -26,7 +32,17 @@ let package = Package(
                 "ReviewCore",
                 "SecurityHardening",
                 "Tests",
-                "iOSApp"
+                "iOSApp",
+                "FrameExtraction/README.md",
+                "ImageCorrection/README.md",
+                "PipelineCore/README.md",
+                "PipelineOCR/README.md",
+                "OCRExport/Package.swift",
+                "OCRExport/Tests",
+                "PackageValidation/Package.swift",
+                "PackageValidation/ROADMAP.md",
+                "PackageValidation/Tests",
+                "SHARED_CONTRACT.md"
             ],
             sources: [
                 "FrameExtraction",
@@ -37,6 +53,38 @@ let package = Package(
                 "PipelineOCR",
                 "PackageValidation/Sources/PackageValidation"
             ]
+        ),
+        .target(
+            name: "RuntimeComposition",
+            dependencies: [
+                "ScannerRuntime",
+                .product(name: "ProductFlow", package: "ProductFlow")
+            ],
+            path: "AppShell/Sources/AppShell",
+            exclude: [
+                "AppShellContract.swift",
+                "BookPackageExportView.swift",
+                "MediaImportCoordinator.swift",
+                "ProductBackgroundTaskController.swift",
+                "ProductFlowStore.swift",
+                "RecoveryProductReviewWorkflow.swift",
+                "Resources",
+                "ScannerParityApp.swift",
+                "ScannerParityRootView.swift",
+                "ScannerPipelineBindings.swift"
+            ],
+            sources: [
+                "ProductionScannerRuntime.swift",
+                "GoldenHardenedScannerRuntime.swift"
+            ]
+        ),
+        .executableTarget(
+            name: "HQGoldenRunner",
+            dependencies: [
+                "RuntimeComposition",
+                .product(name: "ProductFlow", package: "ProductFlow")
+            ],
+            path: "HQGoldenRunner"
         )
     ]
 )
