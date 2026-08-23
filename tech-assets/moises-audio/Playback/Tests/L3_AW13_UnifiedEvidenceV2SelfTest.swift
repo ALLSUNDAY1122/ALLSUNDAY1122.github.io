@@ -95,9 +95,10 @@ struct L3AW13UnifiedEvidenceV2SelfTest {
         precondition(report.schemaVersion == 2)
         precondition(report.evidenceScope == "LANE3_UNIFIED_PLAYBACK_DSP_EVIDENCE_V2_NON_PARITY")
         precondition(report.coreEvidence.timeDomain.globalLagFrames == report.envelope.globalLagFramesApplied)
-        precondition(report.pcmIdentity.referenceDigestFNV1A64 == report.pcmIdentity.observedDigestFNV1A64)
+        precondition(report.pcmIdentity.referenceDigestSHA256 == report.pcmIdentity.observedDigestSHA256)
         precondition(report.productionGeneration.activePlaybackGeneration == report.recoveryLineage.playbackGeneration)
         precondition(report.productionGeneration.activeClickGeneration == report.recoveryLineage.clickGeneration)
+        precondition(report.runBindingSHA256.count == 64)
         precondition(!report.humanAudibilityClaimed)
         precondition(!report.standardizedPerceptualMetricClaimed)
         precondition(!report.formantPreservationClaimed)
@@ -118,7 +119,7 @@ struct L3AW13UnifiedEvidenceV2SelfTest {
             reference: reference,
             observed: changedObserved
         )
-        precondition(changedIdentity.observedDigestFNV1A64 != report.pcmIdentity.observedDigestFNV1A64)
+        precondition(changedIdentity.observedDigestSHA256 != report.pcmIdentity.observedDigestSHA256)
 
         do {
             let malformed = try malformedRecoveryLineage(from: recoveryLineage)
@@ -154,7 +155,7 @@ struct L3AW13UnifiedEvidenceV2SelfTest {
         }
 
         print("L3-AW13 unified evidence v2 self-test PASS")
-        print("run_binding=\(report.runBindingFNV1A64) pcm=\(report.pcmIdentity.referenceDigestFNV1A64)")
+        print("run_binding=\(report.runBindingSHA256) pcm=\(report.pcmIdentity.referenceDigestSHA256)")
     }
 
     private static func makePCM(frameCount: Int, gain: Double) -> Lane3PCMBufferDescriptor {
