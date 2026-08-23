@@ -72,6 +72,19 @@ public struct ProductPipelineCheckpoint: Codable, Sendable, Equatable {
         self.lastProgress = lastProgress
         self.updatedAt = updatedAt
     }
+
+    public var hasCanonicalExistingArtifacts: Bool {
+        guard completedArtifacts.count <= ProductProcessingStage.allCases.count else { return false }
+        let expected = Array(ProductProcessingStage.allCases.prefix(completedArtifacts.count))
+        guard completedArtifacts.map(\.stage) == expected else { return false }
+        return completedArtifacts.allSatisfy { FileManager.default.fileExists(atPath: $0.outputURL.path) }
+    }
+
+    public var isCompletedPackageCheckpoint: Bool {
+        hasCanonicalExistingArtifacts
+            && completedArtifacts.count == ProductProcessingStage.allCases.count
+            && completedArtifacts.last?.stage == .packageWrite
+    }
 }
 
 public struct ProductPipelineCompletion: Sendable, Equatable {
