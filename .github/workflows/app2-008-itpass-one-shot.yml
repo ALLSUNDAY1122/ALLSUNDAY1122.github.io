@@ -88,10 +88,16 @@ jobs:
       - name: Persist result
         if: always()
         run: |
+          REQUEST_ID="$(python - <<'PY'
+          import json
+          print(json.load(open('automation/app2-008-itpass-build-command.json'))['request_id'])
+          PY
+          )"
+          RESULT_PATH="automation/codemagic-results/${REQUEST_ID}.json"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add automation/codemagic-results/app2-008-itpass-final-20260822-1903.json || true
+          git add "$RESULT_PATH" || true
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Persist APP2-008 Codemagic result"
+          git commit -m "Persist APP2-008 Codemagic result ${REQUEST_ID}"
           git pull --rebase origin main
           git push origin HEAD:main
