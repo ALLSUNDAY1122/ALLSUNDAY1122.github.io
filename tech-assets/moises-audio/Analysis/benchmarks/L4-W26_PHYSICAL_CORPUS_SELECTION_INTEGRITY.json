@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W26",
+  "evidence_class": "NON_PARITY",
+  "portable_validation_only": true,
+  "parity_eligible": false,
+  "physical_device_executed": false,
+  "current_moises_observed": false,
+  "production_selection_policy_supplied": false,
+  "goal": "Bind W24/W25 physical Analysis fixtures to the HQ-approved W22 corpus and prevent unrepresentatively easy physical subsets.",
+  "implementation": {
+    "modes": ["FULL_W22_ELIGIBLE_CORPUS", "HQ_APPROVED_EXACT_SUBSET"],
+    "full_mode": "selects every W22 eligible fixture and derives global/domain/stratum minima from W22",
+    "subset_mode": "requires an exact HQ-approved fixture set and explicit minima for all five Analysis domains and every W22 stratum; minima cannot weaken W22",
+    "downstream_binding": [
+      "W24 required fixture IDs and durations exactly match W26 selection",
+      "W25 fixture inventory exactly matches W26 selection",
+      "W25 source SHA-256 and duration match the canonical W22 manifest",
+      "downstream W25/W24 evaluation is suppressed unless W26 selection is ready"
+    ]
+  },
+  "adversarial_validation": {
+    "runs": 5,
+    "assertions_per_run": 20,
+    "all_passed": true,
+    "coverage": [
+      "full W22 eligible corpus",
+      "valid exact subset preserving W22 floors",
+      "easy-subset stratum deficit",
+      "weakened global/domain/stratum minima",
+      "missing/duplicate domain and stratum requirements",
+      "unknown/duplicate selected fixture IDs",
+      "W24/W25 inventory mismatch",
+      "source SHA/duration mismatch",
+      "manifest SHA swap",
+      "W22 not-ready prerequisite",
+      "ambiguous full-mode subset fields",
+      "deterministic codec and downstream suppression"
+    ]
+  },
+  "stress": {
+    "fixture_count": 50000,
+    "domain_count_per_fixture": 5,
+    "stratum_count": 10,
+    "runs": 5,
+    "statuses": [
+      "PHYSICAL_SELECTION_READY_PENDING_HQ",
+      "PHYSICAL_SELECTION_READY_PENDING_HQ",
+      "PHYSICAL_SELECTION_READY_PENDING_HQ",
+      "PHYSICAL_SELECTION_READY_PENDING_HQ",
+      "PHYSICAL_SELECTION_READY_PENDING_HQ"
+    ],
+    "internal_seconds": [0.597201, 0.700763, 0.718445, 0.609265, 0.618009],
+    "process_wall_seconds": [0.75, 0.87, 0.87, 0.77, 0.76],
+    "max_rss_kb": [108740, 108696, 108740, 108836, 108756],
+    "meaning": "selection-evaluator overhead only; not physical-iPhone Analysis performance"
+  },
+  "remaining_gates": [
+    "HQ must supply an approved production W26 selection policy or choose full W22 corpus mode",
+    "HQ must execute W23/W25/W24 on a physical iPhone",
+    "source-loader provenance and actual source bytes remain Lane 2/HQ responsibilities",
+    "archived JSON authenticity and physical-device origin are not cryptographically established by W26",
+    "HQ owns final MOI-P021 and PARITY_MATRIX judgment"
+  ]
+}
