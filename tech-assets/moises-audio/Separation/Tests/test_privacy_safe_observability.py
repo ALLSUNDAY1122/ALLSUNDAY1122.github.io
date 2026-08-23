@@ -171,11 +171,17 @@ class ObservabilityTests(unittest.TestCase):
             self.obs.finalize(JOB, terminal_state="failed")
         self.assertEqual(code_of(cm), "SEP_OBS_TERMINAL_ERROR_REQUIRED")
 
-    def test_terminal_conflict_rejected(self):
+    def test_ready_can_transition_to_deleted(self):
         self.register()
         self.obs.finalize(JOB, terminal_state="ready")
+        self.obs.finalize(JOB, terminal_state="deleted")
+        self.assertEqual(self.obs.evidence(JOB)["terminal_state"], "deleted")
+
+    def test_deleted_cannot_resurrect(self):
+        self.register()
+        self.obs.finalize(JOB, terminal_state="deleted")
         with self.assertRaises(ObservabilityError) as cm:
-            self.obs.finalize(JOB, terminal_state="deleted")
+            self.obs.finalize(JOB, terminal_state="ready")
         self.assertEqual(code_of(cm), "SEP_OBS_TERMINAL_STATE_CONFLICT")
 
     def test_ready_evidence_has_non_parity_marker(self):
