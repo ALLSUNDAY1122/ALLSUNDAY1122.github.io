@@ -1,0 +1,36 @@
+name: Moises HQ Integration
+
+on:
+  push:
+    branches:
+      - tech/moises-separation
+    paths:
+      - 'tech-assets/moises-audio/**'
+      - '.github/workflows/moises-hq-integration.yml'
+  pull_request:
+    paths:
+      - 'tech-assets/moises-audio/**'
+      - '.github/workflows/moises-hq-integration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: moises-hq-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  portable-swiftpm-regression:
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.0
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
+      - name: Integrated SwiftPM tests
+        working-directory: tech-assets/moises-audio
+        run: swift test --parallel
