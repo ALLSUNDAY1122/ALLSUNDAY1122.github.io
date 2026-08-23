@@ -50,6 +50,7 @@ public struct PageIntegrityAuditor: Sendable {
                   number.score >= configuration.trustedPageNumberScore else { return nil }
             return (page.pageID, number)
         })
+        let trustedValues = Set(trusted.values.map(\.value))
 
         var duplicateGroups: [DuplicateGroup] = []
         var missing: [MissingPageSuspicion] = []
@@ -122,21 +123,24 @@ public struct PageIntegrityAuditor: Sendable {
             guard let lnum = trusted[lhs.pageID], let rnum = trusted[rhs.pageID] else { continue }
 
             if rnum.value > lnum.value + 1 {
-                let expected = Array((lnum.value + 1)..<rnum.value)
-                let confidence = min(0.995, 0.72 + min(0.25, Double(expected.count) * 0.035) + (lnum.confidence + rnum.confidence) * 0.02)
-                missing.append(MissingPageSuspicion(
-                    afterPageID: lhs.pageID,
-                    beforePageID: rhs.pageID,
-                    expectedPageNumbers: expected,
-                    confidence: confidence,
-                    evidence: [.pageNumberOCR, .sourceTimeline]
-                ))
-                review.append(PageReviewItem(
-                    pageIDs: [lhs.pageID, rhs.pageID],
-                    reason: .missingPage,
-                    confidence: confidence,
-                    detail: "ページ番号 \(lnum.value) と \(rnum.value) の間に \(expected.map(String.init).joined(separator: ",")) が不足する可能性"
-                ))
+                let gap = Array((lnum.value + 1)..<rnum.value)
+                let actuallyAbsent = gap.filter { !trustedValues.contains($0) }
+                if !actuallyAbsent.isEmpty {
+                    let confidence = min(0.995, 0.72 + min(0.25, Double(actuallyAbsent.count) * 0.035) + (lnum.confidence + rnum.confidence) * 0.02)
+                    missing.append(MissingPageSuspicion(
+                        afterPageID: lhs.pageID,
+                        beforePageID: rhs.pageID,
+                        expectedPageNumbers: actuallyAbsent,
+                        confidence: confidence,
+                        evidence: [.pageNumberOCR, .sourceTimeline]
+                    ))
+                    review.append(PageReviewItem(
+                        pageIDs: [lhs.pageID, rhs.pageID],
+                        reason: .missingPage,
+                        confidence: confidence,
+                        detail: "ページ番号 \(lnum.value) と \(rnum.value) の間に \(actuallyAbsent.map(String.init).joined(separator: ",")) が不足する可能性"
+                    ))
+                }
             }
 
             if rnum.value < lnum.value {
@@ -188,6 +192,10 @@ public struct PageIntegrityAuditor: Sendable {
                     confidence: confidence,
                     rationale: "高信頼ページ番号が隣接1ページだけ反転し、前後連続性も一致"
                 ))
+                let fixedIDs = Set([first.pageID, second.pageID])
+                review.removeAll { item in
+                    item.reason == .possibleReversal && Set(item.pageIDs) == fixedIDs
+                }
                 index += 2
             } else {
                 index += 1
