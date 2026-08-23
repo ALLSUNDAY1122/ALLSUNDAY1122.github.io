@@ -1,6 +1,15 @@
 import Foundation
 import SwiftUI
 
+struct FieldQuestionBatch: Identifiable {
+    let index: Int
+    let questions: [Question]
+
+    var id: Int { index }
+    var count: Int { questions.count }
+    var title: String { "セット\(index + 1)" }
+}
+
 @MainActor
 final class LearningStore: ObservableObject {
     @Published private(set) var questions: [Question] = []
@@ -76,6 +85,31 @@ final class LearningStore: ObservableObject {
         activeQuestions.filter { $0.field == field && (premium || $0.isFree) }
     }
 
+    func fieldQuestionBatches(_ field: String, premium: Bool, targetSize: Int = 20) -> [FieldQuestionBatch] {
+        let sorted = fieldQuestions(field, premium: premium).sorted {
+            if $0.exam != $1.exam { return $0.exam > $1.exam }
+            return $0.questionNo < $1.questionNo
+        }
+        var canonical = Set<String>()
+        let ordered = sorted.filter { canonical.insert($0.canonicalId).inserted }
+        guard !ordered.isEmpty else { return [] }
+
+        let preferred = max(1, targetSize)
+        let batchCount = max(1, Int(ceil(Double(ordered.count) / Double(preferred))))
+        let baseSize = ordered.count / batchCount
+        let largerBatchCount = ordered.count % batchCount
+        var cursor = 0
+        var result: [FieldQuestionBatch] = []
+
+        for index in 0..<batchCount {
+            let size = baseSize + (index < largerBatchCount ? 1 : 0)
+            let end = min(cursor + size, ordered.count)
+            result.append(FieldQuestionBatch(index: index, questions: Array(ordered[cursor..<end])))
+            cursor = end
+        }
+        return result
+    }
+
     func sectionQuestions(exam: Int, section: String, premium: Bool) -> [Question] {
         activeQuestions.filter { $0.exam == exam && $0.section == section && (premium || $0.isFree) }
     }
@@ -86,7 +120,16 @@ final class LearningStore: ObservableObject {
     }
 
     func startField(_ field: String, premium: Bool) {
-        startSession(title: "\(field)スプリント", field: field, pool: fieldQuestions(field, premium: premium), count: state.goal, mockKey: nil)
+        let batches = fieldQuestionBatches(field, premium: premium)
+        guard let first = batches.first else { return }
+        startSession(title: "\(field)・\(first.title)", field: field, pool: first.questions, count: first.count, mockKey: nil)
+    }
+
+    func startFieldBatch(_ field: String, batchIndex: Int, premium: Bool) {
+        let batches = fieldQuestionBatches(field, premium: premium)
+        guard batches.indices.contains(batchIndex) else { return }
+        let batch = batches[batchIndex]
+        startSession(title: "\(field)・\(batch.title)", field: field, pool: batch.questions, count: batch.count, mockKey: nil)
     }
 
     func startWeak(premium: Bool) {
