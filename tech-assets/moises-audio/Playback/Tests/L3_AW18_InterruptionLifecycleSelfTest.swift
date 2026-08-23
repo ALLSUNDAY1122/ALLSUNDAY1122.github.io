@@ -218,7 +218,8 @@ struct L3AW18InterruptionLifecycleSelfTest {
         guard case .rejectedBeforeTransport(_, .recoveryRequiredAfterInterruptionEnd) = await gate.submitPlay() else {
             preconditionFailure("normal command bypassed endedRecoveryRequired")
         }
-        precondition(await playback.rescheduleTokenSnapshot(projectID: project) == blockedToken)
+        let tokenWhileBlocked = await playback.rescheduleTokenSnapshot(projectID: project)
+        precondition(tokenWhileBlocked == blockedToken)
         guard case let .ended(recoveredEnd) = await gate.retryEndedInterruptionRecovery() else {
             preconditionFailure("ended interruption recovery retry failed")
         }
