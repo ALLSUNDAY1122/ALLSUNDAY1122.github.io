@@ -1,6 +1,6 @@
 # Scaniverse Functional Parity Program
 
-Updated: 2026-08-15
+Updated: 2026-08-24
 
 ## Goal
 
@@ -17,6 +17,54 @@ This does **not** mean copying Scaniverse proprietary source code, trademark, lo
 - Current internal brand while parity work is incomplete: `Scan Lab`
 - `omochabako` branding and memory-specific UX are forbidden in this root until the parity gate passes.
 
+## Current integration evidence — 2026-08-24
+
+This section supersedes the 2026-08-15 consolidation ledger below for current status. The older ledger is retained only as historical baseline evidence.
+
+Current integration branch: `feature/splat-native-ios-poc`
+
+Current validated app-source HEAD: `17b52b79f032e7abe225bc216cc2d0ac2b71fadf`
+
+Internal TestFlight candidate:
+
+- version `1.0.0`, build `2`
+- Codemagic build `6a8b1591c8729cb286ce7247`: `finished`
+- App Store Connect build resource `53f5f4ae-2212-47d2-8860-af4805eb60de`: `VALID`
+- audience: `INTERNAL_ONLY`
+- internal beta group `sun` contains Build 2
+
+Current automated evidence on the same app source:
+
+- Privacy Preflight: PASS
+- Splat Smoke Diagnostic: PASS
+- production auth/session/profile E2E: PASS
+- S2 reconstruction contracts: PASS
+- D2 browser/live viewer contracts: PASS
+- Simulator msplat smoke: PASS
+- integrated A2/C2 XCTest: PASS
+- reader compatibility OBJ / FBX / GLB / STL / PLY / USDZ: PASS
+- unsigned iPhone Release compile: PASS
+- signed Xcode 26 archive + TestFlight upload: PASS
+
+Current parity ledger:
+
+| Area | State | Remaining proof | Owner |
+|---|---|---|---|
+| ARKit capture / tracking / live coverage guidance | PARTIAL | Build 2 real-device continuity, responsiveness and Golden comparison | A/HQ |
+| On-device Gaussian Splat reconstruction | PARTIAL | representative-object physical output quality, processing time, thermal/memory recovery | A |
+| Splat viewer / edit / measure | PARTIAL | newly generated real scan device usability and persistence | B/HQ |
+| Mesh reconstruction / texture / edit / measure / AR | PARTIAL | physical result quality and device workflow proof | B |
+| Local library / raw retention / process later / reopen / reprocess | NEAR_PARITY | Build 2 cold-reopen and process-later physical proof | C/HQ |
+| Export / video interoperability | NEAR_PARITY | CI independent-reader gates pass; device-generated asset/video and memory proof remain | C/B |
+| Auth / session / profile | NEAR_PARITY | production live E2E passes; device UX proof remains | D/HQ |
+| Publish / durable browser URL / visibility / Map / Discover | PARTIAL | real generated scan production publish/share/discover lifecycle E2E | D/HQ |
+| Integrated release candidate | NEAR_PARITY | Build 2 is VALID and internally distributed; physical end-to-end parity gate remains | HQ |
+| Integrated full app flow | PARTIAL | `capture → coverage → finish → processing → 3D result → save → library reopen` on Build 2 | HQ/A-D |
+
+No row may be promoted to `PARITY` solely from compile, simulator, fixture, CI, or TestFlight upload success. Physical quality rows require representative real-device evidence against the Golden Reference.
+
+The next blocking gate is therefore real-device Build 2 evidence, not additional branch integration work. In particular verify bottom tabs are hidden during capture and the real ARKit red/green coverage heatmap updates continuously. After a trusted real scan exists, run production `scan → publish → durable browser URL → visibility/Discover → owner lifecycle` E2E.
+
 ## Why the program was reorganized
 
 The initial S0-S8 decomposition produced substantial code in separate branches but too little integration. Capture, reconstruction, viewer, lifecycle and export lanes repeatedly modified the same shared app files, while QA/integration became separate administrative roles. That structure is retired.
@@ -26,28 +74,28 @@ The active program now has **four product-building lanes plus one integration he
 ## Active build lanes
 
 ### A — Capture → On-device Gaussian Splat
-Branch: `scaniverse/a-capture-reconstruction`
+Branch: `scaniverse/a2-capture-reconstruction`
 
 Owns the complete Splat creation experience: ARKit capture/tracking/coverage, frame/depth/point ingestion, pause/resume/relocalization, quality gates, on-device 3DGS initialization/training, sky/background handling, Enhance, checkpointing, output validation, processing time, memory and thermal behavior.
 
 Legacy sources: old S1 + S2.
 
 ### B — Splat View/Edit/Measure + Mesh
-Branch: `scaniverse/b-view-edit-mesh`
+Branch: `scaniverse/b2-view-edit-mesh`
 
 Owns everything after a 3D asset is created that changes how it is viewed or geometrically represented: Splat framing/orbit/pan/zoom/crop/exposure/contrast/measurement and the complete Mesh path including LiDAR/non-LiDAR reconstruction, texture, trim/edit, metric measurement and AR/object viewing.
 
 Legacy sources: old S3 + S4.
 
 ### C — Library / Resume / Reprocess / Export / Video
-Branch: `scaniverse/c-library-export`
+Branch: `scaniverse/c2-library-export`
 
 Owns durable local projects and all output from them: scan library, raw retention, process later, resume/reprocess, crash recovery, storage lifecycle, safe completion contracts, PLY/SPZ/model exports, video, interoperability, memory-safe large exports, iOS share sheet and the trusted browser-share package.
 
 Legacy sources: old S5 + S6.
 
 ### D — Account / Publish / Browser / Map / Discover
-Branch: `scaniverse/d-share-discover`
+Branch: `scaniverse/d2-share-discover`
 
 Owns the intentional network layer only: auth/account, explicit upload, public/unlisted/private semantics, durable browser viewer URLs, opt-in geotagging, Map/Discover/feed, opening others’ scans, unpublish/delete, rate limits, moderation, abuse/privacy controls and network-related App Store declarations.
 
@@ -148,7 +196,10 @@ Every row is one of:
 
 No build lane may mark itself complete while an owned row remains below `PARITY` unless the immediate blocker is explicitly human-only.
 
-## Consolidation ledger — 2026-08-15
+## Historical consolidation ledger — 2026-08-15
+
+> Historical baseline only. Do not use the row states below as current status; use the 2026-08-24 current integration ledger above.
+
 
 These states deliberately do not award parity merely because a legacy branch contains substantial code. The first job of A-C is to combine the paired legacy implementations and then re-run software/runtime gates as one coherent lane.
 

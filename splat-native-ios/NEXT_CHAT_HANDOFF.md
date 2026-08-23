@@ -1,177 +1,77 @@
 # Scaniverse同等化｜次チャット引継ぎ
 
-Updated: 2026-08-15 17:53 JST
+Updated: 2026-08-24 01:10 JST
 
-## 最重要｜分割開始済み
+## 最重要
 
-ユーザー承認により、旧「まだA〜Dへ分割しない」方針は終了した。
+会話履歴を正本にしない。開始時と各「次」受信時に必ず Notion / GitHub / Supabase production / App Store Connect・TestFlight の必要な最新実状態を再取得する。
 
-以後は **統合本部② + A2/B2/C2/D2** の5セッション構成で進める。
+現在は **統合本部 + A2/B2/C2/D2** の成果がHQへ統合済み。旧「分割開始前」「A2-D2同期待ち」の記述は失効している。管理作業へ戻らず、真正なPARITY差分か実機Gateを進める。
 
-ただし起動順にはゲートがある。
+## 正本
 
-1. 最初に `Scaniverse同等化 統合本部②開始` を起動する。
-2. 統合本部②が共有ホットスポットの責任境界整理を実装する。
-3. CI PASS後、その統合HEADへA2-D2を同期する。
-4. その後A2/B2/C2/D2を本格並走させる。
-
-分割しただけで古いbranch状態から勝手に開発を始めない。
-
-## 共通基準点
-
-分割決定時のコード基準点:
-
-- integration branch: `feature/splat-native-ios-poc`
-- baseline commit: `78c543ea794796a6f968bf8ffa7da9ec4f229c33`
-- `Splat Native iOS Build` run `31871549531`: **success**
-- Integration PR: #4145 `Scan Lab｜Scaniverse同等化 統合本部（4開発班）`
-
-この後に分割用ドキュメントcommitが入るため、各セッションは固定SHAではなく開始時の最新HEADを再取得すること。
-
-## Active branches
-
-- Integration HQ 2: `feature/splat-native-ios-poc`
+- Notion: `Scaniverse同等化｜4開発班＋統合本部 v2.0`
+- GitHub: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
+- HQ: `feature/splat-native-ios-poc`
+- Integration PR: `#4145`
 - A2: `scaniverse/a2-capture-reconstruction`
 - B2: `scaniverse/b2-view-edit-mesh`
 - C2: `scaniverse/c2-library-export`
 - D2: `scaniverse/d2-share-discover`
+- Supabase production: `gybchnyqlqwmajwkhsly`
+- parity ledger: `splat-native-ios/SCANIVERSE_PARITY_PLAN.md`
 
-A2-D2は分割決定時のgreen integration baselineから新規作成した。
+固定SHAを正本にしてはならないが、2026-08-24 01:10 JST時点の確認基準は HQ `17b52b79f032e7abe225bc216cc2d0ac2b71fadf`。
 
-旧branch:
+## 2026-08-24の成立済みGate
 
-- `scaniverse/a-capture-reconstruction`
-- `scaniverse/b-view-edit-mesh`
-- `scaniverse/c-library-export`
-- `scaniverse/d-share-discover`
+同app sourceで GitHub Privacy / Smoke / main iOS Build が全SUCCESS。production auth/session/profile E2E、S2/D2 contracts、Simulator msplat smoke、A2/C2 XCTest、OBJ/FBX/GLB/STL/PLY/USDZ reader compatibility、unsigned iPhone Release compileもPASS。
 
-は今後の新規開発先ではない。削除せず移植元・比較元として凍結する。
+Xcode世代差のMetal completion blockerは `SplatVideoExporter.swift` の `addCompletedHandler` + continuation方式で解消し、GitHub側とXcode 26 signed archive側の双方で成立。
 
-比較確認済み:
+Internal TestFlight candidateは version `1.0.0` / build `2`。Codemagic build `6a8b1591c8729cb286ce7247` はfinished、App Store Connect build resource `53f5f4ae-2212-47d2-8860-af4805eb60de` は `VALID / INTERNAL_ONLY`。内部group `sun` のbuild一覧にもBuild 2を確認済み。
 
-- 旧A → integration: integration側が58 commits ahead、旧A独自behind 0。A成果はintegration ancestryに入っている。
-- 旧B ↔ integration: diverged。旧B側にintegration ancestry外のcommitが残る。
-- 旧C ↔ integration: diverged。旧C側にintegration ancestry外のcommitが残る。
-- 旧D ↔ integration: diverged。旧D側にintegration ancestry外のcommitが残る。
+PR #4145は意図的にdraft / unmergedを維持する。TestFlight upload成功はPARITY完了ではない。
 
-したがってB2/C2/D2は旧branchを丸ごと戻してはならない。担当領域の旧差分を確認し、現在の統合実装にまだ存在しない有効な改善だけを意味的に移植する。
+## 旧HQ未完了事項の再監査結果
 
-## 統合本部②の最初の仕事
+以下は現HEADですでに解消済みなので再実装しない。
 
-コード機能追加より先に、共有編集競合を減らす境界整理を行う。
+- 完成済みscanから「新規」: `SplatResultView` が確認ダイアログを出し `returnHomePreservingProject()` を使用。完成物をTrashへ移さない。
+- 「あとで生成」: captured画面に明示入口あり。保存済み一覧の「生成待ち」から再開可能。
+- WorldMap durability race: pause/transitionは `isWorldMapPersistencePending` で遷移を閉じ、`persistWorldMapForTransition` の完了結果をawaitしてからsession pause。失敗時は撮影を継続し、暗黙離脱しない。
+- relaunch後の `points3D.ply`: checkpointからfeature pointsを復元し、生成時に `points3D.ply` が欠落していれば再生成する。captured projectはprocessability contractで生成へ戻せる。
+- ScanModel責任境界: Capture / Persistence / Reconstruction / SessionLifecycle boundary filesは既に導入済み。
 
-特に巨大化した `ScanModel.swift` 周辺を、少なくとも次の責任へ整理する。
+## 現在の最大Gate
 
-- Capture / AR session input
-- Reconstruction / training
-- Persistence / resume / reprocess lifecycle
-- Session interruption / app lifecycle
+Build 2を実機で Golden Reference と比較する。必須flow:
 
-目的は責任境界を明確にすることであり、中心挙動の意図しない変更ではない。
+`capture → coverage → finish → processing → 3D result → save → library reopen`
 
-境界整理後は relevant tests / typecheck / iPhone build / existing contract checks を通し、green HEADを作る。そのHEADをA2-D2へ同期してから専門実装を開始する。
+同時に確認する。
 
-## 現在までに統合済みの重要成果
+- active capture中のbottom tabs非表示
+- real ARKit feature points由来の赤/緑coverage heatmapが移動に応じて更新
+- camera responsiveness / tracking / pause-resume / interruption recovery
+- finish gateが冗長viewだけで誤成立しない
+- processing進捗が実処理に対応
+- resultが粗い偽3Dではなく実Gaussian Splat
+- 保存後reopenして同じ完成物を表示
+- Scaniverse Golden Referenceに対する欠損、二重化、色、立体感、手数、速度の明白な劣位
 
-- real on-device Splat capture/training path
-- viewer orbit/pan/zoom/crop/exposure/contrast/measurement foundations
-- extensive real Mesh path foundations
-- persistent `ScanProjectStore`
-- capture → generate → trusted atomic result commit
-- saved Scan library and reopen after relaunch
-- checkpoint schema v2 with depth/coverage state
-- ARWorldMap cold-resume foundation
-- legacy checkpoint backward decode tests
-- PLY/SPZ/model/video export foundations
-- latest baseline iPhone CI PASS
+この物理Gateを通るまでは capture/reconstruction/viewer/library の `PARITY` 昇格禁止。
 
-これらを「旧laneで未統合」と誤認して作り直さない。
+## 物理Gate後の次段
 
-## 現在の重要未完了
+実生成したtrusted scanを使ってproduction E2Eを行う。synthetic/hardcoded scanで代替しない。
 
-統合本部②/HQ横断:
+`explicit publish → durable asset URL → 別browser viewer → public/unlisted/private → Discover/Map（geotag opt-in時のみ） → unpublish/republish → owner delete`
 
-- 完成済み保存projectで `新規` が `discardAndReset()` を使い破棄扱いになる。保存物を残す非破壊ホーム復帰が必要。
-- captured stateに明確な `あとで生成` / 保存して離脱するUXがない。
-- `persistWorldMapIfPossible()` は非同期callbackで、pause/finish直後の離脱・終了とのdurability raceがある。保存完了契約が必要。
-- relaunch後、初回generation前の `points3D.ply` readinessとprocessability contractを再確認する必要がある。
-- Parity ledgerは最近のlibrary/cold-resume統合をまだ反映していない。
+production scan rowが実際に作られるまでは publish/share parity完了としない。
 
-A2:
+## 継続ループ
 
-- 実機で代表対象を繰り返したSplat品質比較
-- tracking/relocalization continuity
-- outdoor/sky quality
-- memory/splat budget/thermal behavior
-- real processing time and failure recovery
+`最新実状態取得 → 未完了最大差分 → 実装/実測 → test/build/runtime → 辛口比較 → 修正 → 回帰gate → 正本更新`
 
-B2:
-
-- actual integrated edit usability on newly generated scans
-- real Mesh physical quality/texture/metric behavior
-- large-scene rendering safety
-- Mesh lifecycle and AR usability
-
-C2:
-
-- cold resume real-device proof
-- process later / reprocess end-to-end
-- export formats independent-reader interoperability
-- large export/video memory and partial cleanup
-- low-storage lifecycle proof
-
-D2:
-
-- live auth/service runtime
-- explicit real upload → durable browser URL
-- public/unlisted/private
-- real Map/Discover content
-- owner unpublish/delete/account deletion
-- moderation/rate-limit/privacy/App Review consistency
-
-## 正本
-
-開始時に必ず再取得する。
-
-1. Notion `Scaniverse同等化｜4開発班＋統合本部 v2.0`
-2. `splat-native-ios/NEXT_CHAT_HANDOFF.md`
-3. `splat-native-ios/ACTIVE_SESSION_PROMPTS.md`
-4. `splat-native-ios/SCANIVERSE_PARITY_PLAN.md`
-5. 対象branch latest HEAD
-6. PR #4145 latest state/CI（HQ2）または担当branchのCI
-
-過去チャットの進捗数字は正本にしない。
-
-## セッション名
-
-最初:
-
-`Scaniverse同等化 統合本部②開始`
-
-HQ2境界整理・同期完了後:
-
-- `Scaniverse同等化 A2開始`
-- `Scaniverse同等化 B2開始`
-- `Scaniverse同等化 C2開始`
-- `Scaniverse同等化 D2開始`
-
-各チャットの詳細責任と開始promptは `ACTIVE_SESSION_PROMPTS.md` を正とする。
-
-## 共通ループ
-
-`実状態確認 → Scaniverseとの差分特定 → 最大差分を実装 → test/build/runtime → 辛口レビュー → 修正 → 回帰gate → 次の差分`
-
-真正な人間判断ゲートまでは自動継続する。
-
-## 完成条件
-
-compile PASSやcommit数ではなく、Notion/`SCANIVERSE_PARITY_PLAN.md` の全rowがPARITYになり、代表実機比較・interoperability・network E2E・performance/privacy/accessibility/release regressionが成立し、Sev-1/Sev-2が0であること。
-
-## 禁止
-
-- 旧A-D branchで新規開発を続ける
-- old branchのshared fileをwhole-file上書きして最新統合成果を消す
-- 管理・差分表だけで停止する
-- compile PASSをconsumer parityと扱う
-- fake 3D / fake export / fake progress / hardcoded Map/Discoverを合格扱いする
-- branch commit数を統合済み進捗として数える
+禁止: compileだけで完了、古いhandoffの再実装、fake 3D/export/progress/Map、管理文書だけで停止、実機が必要でない作業まで人間待ちにすること。
