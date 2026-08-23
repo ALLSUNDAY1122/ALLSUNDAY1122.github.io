@@ -55,16 +55,14 @@ workflows:
           cd "$CM_BUILD_DIR/splat-native-ios"
           python3 - <<'PY'
           from pathlib import Path
-          import os
           p=Path('project.yml')
           text=p.read_text(encoding='utf-8')
-          build=os.environ['CM_BUILD_NUMBER']
           old='CURRENT_PROJECT_VERSION: 1'
           if old not in text:
               raise SystemExit('Expected CURRENT_PROJECT_VERSION: 1 not found')
-          text=text.replace(old, 'CURRENT_PROJECT_VERSION: '+build, 1)
+          text=text.replace(old, 'CURRENT_PROJECT_VERSION: 2', 1)
           p.write_text(text,encoding='utf-8')
-          print('Using TestFlight build number', build)
+          print('Using TestFlight build number 2')
           PY
           xcodegen generate
       - name: Static release checks
