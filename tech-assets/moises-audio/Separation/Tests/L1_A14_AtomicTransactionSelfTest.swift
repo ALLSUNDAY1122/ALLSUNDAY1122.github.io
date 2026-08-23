@@ -19,10 +19,12 @@ actor A14FlakyLedgerStore: SeparationRunLedgerStoring {
     func armCommittedSaveFailure() { failNextCommittedSave = true }
 }
 
+@MainActor
 func a14Require(_ condition: @autoclosure () -> Bool, _ message: String) {
     if !condition() { fatalError("A14 assertion failed: \(message)") }
 }
 
+@MainActor
 func a14Expect(_ expected: String, _ operation: () async throws -> Void) async {
     do {
         try await operation()
