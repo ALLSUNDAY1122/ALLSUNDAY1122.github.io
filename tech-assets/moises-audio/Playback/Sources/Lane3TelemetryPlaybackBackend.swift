@@ -6,15 +6,18 @@ import Foundation
 public final class Lane3TelemetryPlaybackBackend: PlaybackBackendDriving, @unchecked Sendable {
     private let backend: any PlaybackBackendDriving
     private let telemetry: Lane3ProductionTelemetryCollector
+    private let correlations: Lane3TelemetryDispatchCorrelationBridge?
     private let timeSource: any Lane3TelemetryTimeSource
 
     public init(
         backend: any PlaybackBackendDriving,
         telemetry: Lane3ProductionTelemetryCollector,
+        correlations: Lane3TelemetryDispatchCorrelationBridge? = nil,
         timeSource: any Lane3TelemetryTimeSource = Lane3SystemTelemetryTimeSource()
     ) {
         self.backend = backend
         self.telemetry = telemetry
+        self.correlations = correlations
         self.timeSource = timeSource
     }
 
@@ -76,7 +79,7 @@ public final class Lane3TelemetryPlaybackBackend: PlaybackBackendDriving, @unche
 
     public func pause(projectID: ProjectID) async {
         let start = timeSource.nowNanoseconds()
-        await telemetry.recordBackendDispatchEntry(kind: .pause, atNanoseconds: start)
+        await recordDispatchEntry(kind: .pause, atNanoseconds: start)
         await backend.pause(projectID: projectID)
         let end = timeSource.nowNanoseconds()
         await telemetry.recordBackendCompletion(
@@ -94,7 +97,7 @@ public final class Lane3TelemetryPlaybackBackend: PlaybackBackendDriving, @unche
         operation: () async throws -> Void
     ) async throws {
         let start = timeSource.nowNanoseconds()
-        await telemetry.recordBackendDispatchEntry(kind: kind, atNanoseconds: start)
+        await recordDispatchEntry(kind: kind, atNanoseconds: start)
         do {
             try await operation()
             let end = timeSource.nowNanoseconds()
@@ -109,6 +112,19 @@ public final class Lane3TelemetryPlaybackBackend: PlaybackBackendDriving, @unche
                 durationNanoseconds: Self.elapsed(from: start, to: end)
             )
             throw error
+        }
+    }
+
+    private func recordDispatchEntry(
+        kind: Lane3UnifiedTransportKind,
+        atNanoseconds: UInt64
+    ) async {
+        if let correlations {
+            await correlations.recordBackendEntry(kind: kind, atNanoseconds: atNanoseconds)
+        } else {
+            // Compatibility fallback for isolated tests. Production integration should provide the
+            // shared bounded correlation bridge used by Lane3InstrumentedInterruptionGate.
+            await telemetry.recordBackendDispatchEntry(kind: kind, atNanoseconds: atNanoseconds)
         }
     }
 
