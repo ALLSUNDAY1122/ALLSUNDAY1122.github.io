@@ -34,6 +34,7 @@ let package = Package(
                 "Analysis/ChordVocabularyClassifier.swift",
                 "Analysis/ChordTimelineAnalyzer.swift",
                 "Analysis/SongSectionAnalyzer.swift",
+                "Analysis/SongSectionHardener.swift",
                 "Analysis/AnalysisBenchmarkRunner.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
                 "Analysis/RealAudioBenchmarkSuite.swift",
