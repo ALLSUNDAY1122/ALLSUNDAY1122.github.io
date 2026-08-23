@@ -59,7 +59,7 @@
     {
       "task_id": "SCAN-003",
       "title": "ページ完全性監査｜番号・抜け・逆転・重複・順序修復",
-      "status": "WORKING",
+      "status": "BLOCKED_HUMAN",
       "priority": 98,
       "dependencies": [],
       "baseline_sha": "99a8d30f2a09c85119869feabae9b411a3431133",
@@ -70,12 +70,12 @@
       "claimed_by": "worker3",
       "claim_token": "d0e380f4-002d-4624-b2a9-728099600e5e",
       "claim_epoch": 1,
-      "lease_expires_at": "2026-08-23T14:44:56+09:00",
-      "heartbeat_at": "2026-08-23T13:44:56+09:00",
+      "lease_expires_at": null,
+      "heartbeat_at": "2026-08-23T13:49:27+09:00",
       "attempt_branch": "task/SCAN-003/attempt-1",
       "acceptance": ["ページ番号候補をOCRし位置規則も推定する", "番号だけに依存せず画像類似度/本文類似度/動画時刻を併用する", "抜け・逆転・重複を検出する", "高信頼の逆転/重複だけ自動修復し低信頼は要確認にする", "1冊ごとのページ監査レポートを生成する", "Golden PDFで既知の逆転/重複候補を検出できるか評価する", "撮る単語帳の4方向OCR比較と日本語量/有意味行/ノイズ減点スコアをページ番号OCRのbaselineとして評価し、ページ番号専用スコアへ拡張する"],
       "parity_rows": ["P08-page-number", "P09-missing-page", "P10-order", "P11-duplicate"],
-      "evidence": [],
+      "evidence": ["task/SCAN-003/attempt-1@321562b9789d31ed552a340f4faa0a12ffc9ed71", "automation/chatgpt-dispatcher/scanner-parity/evidence/SCAN-003.md"],
       "evidence_path": "automation/chatgpt-dispatcher/scanner-parity/evidence/SCAN-003.md"
     },
     {
