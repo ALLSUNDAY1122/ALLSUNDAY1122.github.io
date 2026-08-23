@@ -14,6 +14,20 @@ let package = Package(
         .target(
             name: "ScannerRuntime",
             path: ".",
+            exclude: [
+                "AppShell",
+                "AppleValidation",
+                "GoldenEvaluation",
+                "LongRun",
+                "PackageQuality",
+                "PrivacyAudit",
+                "ProductFlow",
+                "Recovery",
+                "ReviewCore",
+                "SecurityHardening",
+                "Tests",
+                "iOSApp"
+            ],
             sources: [
                 "FrameExtraction",
                 "ImageCorrection",
