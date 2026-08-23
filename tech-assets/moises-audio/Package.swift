@@ -47,6 +47,7 @@ let package = Package(
                 "Analysis/AnalysisSnapshotCancellable.swift",
                 "Analysis/AnalysisBenchmarkScalability.swift",
                 "Analysis/AnalysisBenchmarkRunner.swift",
+                "Analysis/AnalysisBenchmarkAggregation.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
