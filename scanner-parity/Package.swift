@@ -97,6 +97,11 @@ let package = Package(
             name: "HQGoldenSupportTests",
             dependencies: ["HQGoldenSupport"],
             path: "Tests/HQGoldenSupport"
+        ),
+        .testTarget(
+            name: "ScannerRuntimeTests",
+            dependencies: ["ScannerRuntime"],
+            path: "Tests/ScannerRuntime"
         )
     ]
 )
