@@ -1,6 +1,210 @@
 import CryptoKit
 import Foundation
 import SplatIO
+import simd
+
+enum SplatPersistedEditMaterializer {
+    struct AxisRange: Sendable {
+        let low: Float
+        let high: Float
+
+        var extent: Float { max(0.0001, high - low) }
+        func value(at fraction: Double) -> Float {
+            low + extent * Float(min(1, max(0, fraction)))
+        }
+    }
+
+    struct CropBounds: Sendable {
+        let x: AxisRange
+        let y: AxisRange
+        let z: AxisRange
+    }
+
+    struct Plan: Sendable {
+        let settings: SplatEditSettings
+        let bounds: CropBounds?
+        let outputPointCount: Int
+
+        var isIdentity: Bool { settings == .default }
+    }
+
+    enum MaterializeError: LocalizedError {
+        case emptyEditedScene
+
+        var errorDescription: String? {
+            switch self {
+            case .emptyEditedScene:
+                return "現在の切り抜き範囲には書き出せるGaussianがありません。切り抜きを調整してください。"
+            }
+        }
+    }
+
+    static func makePlan(sourceURL: URL, sourcePointCount: Int) async throws -> Plan {
+        let settings = loadSettings(sourceURL: sourceURL)
+        guard settings != .default else {
+            return Plan(settings: settings, bounds: nil, outputPointCount: sourcePointCount)
+        }
+
+        let bounds = settings.hasCrop
+            ? try await sampledCropBounds(sourceURL: sourceURL, sourcePointCount: sourcePointCount)
+            : nil
+        let reader = try DotSplatSceneReader(sourceURL)
+        let stream = try reader.read()
+        var outputPointCount = 0
+        for try await points in stream {
+            try Task.checkCancellation()
+            outputPointCount += eligiblePointCount(points, settings: settings, bounds: bounds)
+        }
+        guard outputPointCount > 0 else { throw MaterializeError.emptyEditedScene }
+        return Plan(settings: settings, bounds: bounds, outputPointCount: outputPointCount)
+    }
+
+    static func materializeInMemory(sourceURL: URL, points: [SplatPoint]) throws -> [SplatPoint] {
+        let settings = loadSettings(sourceURL: sourceURL)
+        guard settings != .default else { return points }
+        let bounds = settings.hasCrop ? robustCropBounds(for: points) : nil
+        let plan = Plan(settings: settings, bounds: bounds, outputPointCount: points.count)
+        let edited = apply(points, plan: plan)
+        guard !edited.isEmpty else { throw MaterializeError.emptyEditedScene }
+        return edited
+    }
+
+    static func apply(_ points: [SplatPoint], plan: Plan) -> [SplatPoint] {
+        guard !plan.isIdentity else { return points }
+        let settings = plan.settings
+        let exposureGain = Float(pow(2.0, settings.exposureEV))
+        let contrast = Float(settings.contrast)
+        let needsColorAdjustment = abs(settings.exposureEV) > 0.0001 || abs(settings.contrast - 1) > 0.0001
+
+        var result: [SplatPoint] = []
+        result.reserveCapacity(points.count)
+        for point in points {
+            guard isEligible(point, settings: settings, bounds: plan.bounds) else { continue }
+            guard needsColorAdjustment else {
+                result.append(point)
+                continue
+            }
+
+            var edited = point
+            let base = point.color.asSRGBFloat
+            let exposed = base * exposureGain
+            let midpoint = SIMD3<Float>(repeating: 0.5)
+            let adjusted = simd_clamp((exposed - midpoint) * contrast + midpoint, .zero, .one)
+            switch point.color {
+            case .sphericalHarmonicFloat(var coefficients):
+                if !coefficients.isEmpty {
+                    coefficients[0] = (adjusted - midpoint) * SplatPoint.Color.INV_SH_C0
+                    edited.color = .sphericalHarmonicFloat(coefficients)
+                }
+            case .sRGBUInt8:
+                edited.color = .sRGBUInt8(SIMD3<UInt8>(
+                    byte(adjusted.x), byte(adjusted.y), byte(adjusted.z)
+                ))
+            }
+            result.append(edited)
+        }
+        return result
+    }
+
+    static func loadSettings(sourceURL: URL) -> SplatEditSettings {
+        let sidecar = sourceURL.deletingPathExtension().appendingPathExtension("viewer.json")
+        guard let data = try? Data(contentsOf: sidecar),
+              let decoded = try? JSONDecoder().decode(SplatEditSettings.self, from: data) else {
+            return .default
+        }
+        return decoded.normalized()
+    }
+
+    private static func sampledCropBounds(sourceURL: URL, sourcePointCount: Int) async throws -> CropBounds {
+        let sampleStride = max(1, sourcePointCount / 8_000)
+        let reader = try DotSplatSceneReader(sourceURL)
+        let stream = try reader.read()
+        var xs: [Float] = []
+        var ys: [Float] = []
+        var zs: [Float] = []
+        xs.reserveCapacity(min(sourcePointCount, 8_001))
+        ys.reserveCapacity(min(sourcePointCount, 8_001))
+        zs.reserveCapacity(min(sourcePointCount, 8_001))
+        var globalIndex = 0
+
+        for try await points in stream {
+            try Task.checkCancellation()
+            for point in points {
+                if globalIndex % sampleStride == 0 {
+                    let p = point.position
+                    if p.x.isFinite, p.y.isFinite, p.z.isFinite {
+                        xs.append(p.x); ys.append(p.y); zs.append(p.z)
+                    }
+                }
+                globalIndex += 1
+            }
+        }
+        return CropBounds(x: percentileRange(xs), y: percentileRange(ys), z: percentileRange(zs))
+    }
+
+    private static func robustCropBounds(for points: [SplatPoint]) -> CropBounds {
+        let strideSize = max(1, points.count / 8_000)
+        var xs: [Float] = []
+        var ys: [Float] = []
+        var zs: [Float] = []
+        for index in stride(from: 0, to: points.count, by: strideSize) {
+            let p = points[index].position
+            guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { continue }
+            xs.append(p.x); ys.append(p.y); zs.append(p.z)
+        }
+        return CropBounds(x: percentileRange(xs), y: percentileRange(ys), z: percentileRange(zs))
+    }
+
+    private static func percentileRange(_ values: [Float]) -> AxisRange {
+        guard !values.isEmpty else { return AxisRange(low: -1, high: 1) }
+        let sorted = values.sorted()
+        let lowIndex = min(sorted.count - 1, Int(Double(sorted.count - 1) * 0.01))
+        let highIndex = min(sorted.count - 1, Int(Double(sorted.count - 1) * 0.99))
+        var low = sorted[lowIndex]
+        var high = sorted[highIndex]
+        if !low.isFinite || !high.isFinite || high - low < 0.0001 {
+            low = sorted.first ?? -1
+            high = sorted.last ?? 1
+        }
+        if high - low < 0.0001 { high = low + 0.0001 }
+        return AxisRange(low: low, high: high)
+    }
+
+    private static func eligiblePointCount(
+        _ points: [SplatPoint],
+        settings: SplatEditSettings,
+        bounds: CropBounds?
+    ) -> Int {
+        points.reduce(into: 0) { count, point in
+            if isEligible(point, settings: settings, bounds: bounds) { count += 1 }
+        }
+    }
+
+    private static func isEligible(
+        _ point: SplatPoint,
+        settings: SplatEditSettings,
+        bounds: CropBounds?
+    ) -> Bool {
+        let p = point.position
+        guard p.x.isFinite, p.y.isFinite, p.z.isFinite else { return false }
+        guard let bounds else { return true }
+
+        if settings.cropXMin > 0.0001 || settings.cropXMax < 0.9999 {
+            if p.x < bounds.x.value(at: settings.cropXMin) || p.x > bounds.x.value(at: settings.cropXMax) { return false }
+        }
+        if settings.cropYMin > 0.0001 || settings.cropYMax < 0.9999 {
+            if p.y < bounds.y.value(at: settings.cropYMin) || p.y > bounds.y.value(at: settings.cropYMax) { return false }
+        }
+        if settings.cropZMin > 0.0001 || settings.cropZMax < 0.9999 {
+            if p.z < bounds.z.value(at: settings.cropZMin) || p.z > bounds.z.value(at: settings.cropZMax) { return false }
+        }
+        return true
+    }
+
+    private static func byte(_ value: Float) -> UInt8 {
+        UInt8(clamping: Int((max(0, min(1, value)) * 255).rounded()))
+    }
+}
 
 /// C2 export pipeline for Gaussian Splat assets.
 ///
@@ -71,7 +275,6 @@ enum SplatExportService {
             self.primaryAsset = primaryAsset
             self.previewFileName = previewFileName
             self.createdAt = createdAt
-            // D may add an explicitly approved geotag later. C never infers or embeds location.
             self.containsLocation = false
         }
     }
@@ -86,16 +289,18 @@ enum SplatExportService {
     private static let dotSplatRecordByteWidth = 32
     private static let hashChunkBytes = 1_024 * 1_024
 
-    /// Convert Msplat's `.splat` result into a standards-oriented export file.
-    /// The destination is written through a temporary file and only replaces the final output
-    /// after the writer has closed and the output has been validated.
     static func export(
         sourceURL: URL,
         format: Format,
         destinationDirectory: URL? = nil,
         outputBaseName: String? = nil
     ) async throws -> URL {
-        let pointCount = try sourcePointCount(sourceURL)
+        let sourcePointCount = try sourcePointCount(sourceURL)
+        let editPlan = try await SplatPersistedEditMaterializer.makePlan(
+            sourceURL: sourceURL,
+            sourcePointCount: sourcePointCount
+        )
+        let pointCount = editPlan.outputPointCount
         let directory = destinationDirectory ?? sourceURL.deletingLastPathComponent()
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
 
@@ -117,12 +322,14 @@ enum SplatExportService {
             switch format {
             case .ply:
                 let writer = try SplatPLYSceneWriter(toFileAtPath: temporaryURL.path)
-                // `.splat` stores only direct color, so SH0 is the lossless degree for this source.
                 try await writer.start(sphericalHarmonicDegree: 0, binary: true, pointCount: pointCount)
                 for try await points in stream {
                     try Task.checkCancellation()
-                    try await writer.write(points)
-                    pointsWritten += points.count
+                    let outputPoints = SplatPersistedEditMaterializer.apply(points, plan: editPlan)
+                    if !outputPoints.isEmpty {
+                        try await writer.write(outputPoints)
+                        pointsWritten += outputPoints.count
+                    }
                 }
                 try await writer.close()
 
@@ -131,8 +338,11 @@ enum SplatExportService {
                 try await writer.start(numPoints: pointCount)
                 for try await points in stream {
                     try Task.checkCancellation()
-                    try await writer.write(points)
-                    pointsWritten += points.count
+                    let outputPoints = SplatPersistedEditMaterializer.apply(points, plan: editPlan)
+                    if !outputPoints.isEmpty {
+                        try await writer.write(outputPoints)
+                        pointsWritten += outputPoints.count
+                    }
                 }
                 try await writer.close()
             }
@@ -153,10 +363,6 @@ enum SplatExportService {
         }
     }
 
-    /// Creates the local asset contract D should consume for explicit browser/cloud sharing.
-    /// It accepts only an atomically committed completed Splat, applies the same low-storage gate as
-    /// local SPZ export, writes exactly one SPZ directly inside the temporary package, and never
-    /// performs networking or embeds location on C's behalf.
     static func makeBrowserSharePackage(
         sourceURL: URL,
         previewJPEG: Data? = nil,
@@ -241,8 +447,6 @@ enum SplatExportService {
         SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
     }
 
-    /// Hashes large export assets with a bounded working set instead of materializing the entire
-    /// file as `Data`. This matters for browser-share packages near the upload-size ceiling.
     static func sha256Hex(fileURL: URL) throws -> String {
         let handle = try FileHandle(forReadingFrom: fileURL)
         defer { try? handle.close() }

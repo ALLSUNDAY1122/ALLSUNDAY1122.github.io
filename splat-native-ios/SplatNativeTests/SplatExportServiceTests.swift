@@ -160,6 +160,109 @@ final class SplatExportServiceTests: XCTestCase {
         }
     }
 
+    func testPersistedViewerCropAndColorEditsAreMaterializedIntoExports() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("splat-edited-export-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        let sourcePoints = (0..<101).map { index in
+            SplatPoint(
+                position: SIMD3<Float>(Float(index) / 100, 0, 0),
+                color: .sRGBUInt8(SIMD3<UInt8>(40, 60, 80)),
+                opacity: .linearFloat(0.75),
+                scale: .linearFloat(SIMD3<Float>(repeating: 0.02)),
+                rotation: simd_quatf(angle: 0.1, axis: SIMD3<Float>(0, 1, 0))
+            )
+        }
+        let writer = try DotSplatSceneWriter(toFileAtPath: source.path)
+        try await writer.write(sourcePoints)
+        try await writer.close()
+
+        let edits = SplatEditSettings(
+            exposureEV: 1,
+            contrast: 1,
+            cropXMin: 0.50,
+            cropXMax: 1,
+            cropYMin: 0,
+            cropYMax: 1,
+            cropZMin: 0,
+            cropZMax: 1
+        )
+        let sidecar = source.deletingPathExtension().appendingPathExtension("viewer.json")
+        try JSONEncoder().encode(edits).write(to: sidecar, options: .atomic)
+
+        let output = try await SplatExportService.export(sourceURL: source, format: .ply)
+        let decoded = try await AutodetectSceneReader(output).readAll()
+        XCTAssertGreaterThan(decoded.count, 0)
+        XCTAssertLessThan(decoded.count, sourcePoints.count)
+        XCTAssertTrue(decoded.allSatisfy { $0.position.x >= 0.48 })
+        XCTAssertTrue(decoded.allSatisfy { $0.color.asSRGBFloat.x > 0.20 })
+        XCTAssertTrue(decoded.allSatisfy { abs($0.opacity.asLinearFloat - 0.75) < 0.03 })
+    }
+
+    func testBrowserSharePackageUsesPersistedViewerCrop() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("splat-edited-browser-share-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = try await makeCommittedProjectResult(in: root)
+        let edits = SplatEditSettings(
+            exposureEV: 0,
+            contrast: 1,
+            cropXMin: 0.50,
+            cropXMax: 1,
+            cropYMin: 0,
+            cropYMax: 1,
+            cropZMin: 0,
+            cropZMax: 1
+        )
+        let sidecar = source.deletingPathExtension().appendingPathExtension("viewer.json")
+        try JSONEncoder().encode(edits).write(to: sidecar, options: .atomic)
+
+        let package = try await SplatExportService.makeBrowserSharePackage(
+            sourceURL: source,
+            rootDirectory: root
+        )
+        let decoded = try await AutodetectSceneReader(package.assetURL).readAll()
+        XCTAssertEqual(decoded.count, 2)
+        XCTAssertTrue(decoded.allSatisfy { $0.position.x >= -0.05 })
+    }
+
+    func testInMemoryMaterializerMatchesVideoEditBoundary() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("splat-edited-video-boundary-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let source = root.appendingPathComponent("result.splat")
+        let sourcePoints = makePoints()
+        let writer = try DotSplatSceneWriter(toFileAtPath: source.path)
+        try await writer.write(sourcePoints)
+        try await writer.close()
+        let edits = SplatEditSettings(
+            exposureEV: 0.5,
+            contrast: 1.1,
+            cropXMin: 0.50,
+            cropXMax: 1,
+            cropYMin: 0,
+            cropYMax: 1,
+            cropZMin: 0,
+            cropZMax: 1
+        )
+        let sidecar = source.deletingPathExtension().appendingPathExtension("viewer.json")
+        try JSONEncoder().encode(edits).write(to: sidecar, options: .atomic)
+
+        let edited = try SplatPersistedEditMaterializer.materializeInMemory(
+            sourceURL: source,
+            points: sourcePoints
+        )
+        XCTAssertEqual(edited.count, 2)
+        XCTAssertTrue(edited.allSatisfy { $0.position.x >= -0.05 })
+    }
+
     private func makeCommittedProjectResult(in root: URL) async throws -> URL {
         let store = ScanProjectStore(rootURL: root)
         let (projectURL, _) = try store.createProject(title: "Committed share")

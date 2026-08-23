@@ -52,8 +52,6 @@ enum SplatVideoExporter {
     ) async throws -> URL {
         try Task.checkCancellation()
 
-        // Reject scenes that cannot fit inside the bounded video working set before
-        // readAll(), Metal buffers, pixel buffers, or VideoToolbox state are allocated.
         try SplatVideoMemoryPolicy.preflight(
             sourceURL: sourceURL,
             configuration: configuration
@@ -68,7 +66,13 @@ enum SplatVideoExporter {
         }
 
         let reader = try AutodetectSceneReader(sourceURL)
-        let points = try await reader.readAll()
+        let sourcePoints = try await reader.readAll()
+        guard !sourcePoints.isEmpty else { throw ExportError.emptyScene }
+        try Task.checkCancellation()
+        let points = try SplatPersistedEditMaterializer.materializeInMemory(
+            sourceURL: sourceURL,
+            points: sourcePoints
+        )
         guard !points.isEmpty else { throw ExportError.emptyScene }
         try Task.checkCancellation()
 
