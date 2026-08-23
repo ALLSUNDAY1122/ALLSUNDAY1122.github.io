@@ -13,7 +13,9 @@ Integration branch: `scanner-parity/integration`
 - PR #4544 did not modify `scanner-parity/SHARED_CONTRACT.md`.
 - PR #4555 restored this canonical HQ evidence path; merge commit: `190ec7b21b2107a08aa0fd4d04c72a5b28e6b9a4`.
 - PR #4567 added the Formal HQ Golden E2E runner; merge commit: `74cfdcd332b4bdbe7c857fdcbfe16fd4ab3d9260`.
-- PR #4569 added reference-PDF page metrics; merge commit/current product integration HEAD before this evidence-only update: `00eb294d479c93e10d1ce40d0d41d1a953b283e4`.
+- PR #4569 added reference-PDF page metrics; merge commit: `00eb294d479c93e10d1ce40d0d41d1a953b283e4`.
+- PR #4570 synchronized HQ evidence; merge commit: `b7b5fd5d6b27b7e356f14bf525184f5f193be053`.
+- PR #4571 fixed macOS searchable-PDF generation for the HQ Golden runner; product merge commit/current integration HEAD before this evidence-only update: `8a1b4c4accac1a9b23c4a51eeed2cd6ca063cbe1`.
 
 ## Non-Golden acceptance
 
@@ -78,6 +80,21 @@ Threshold policy is intentionally fail-safe:
 
 None of these strings is a Formal Golden PASS. The real dataset must first produce an observed distance distribution; HQ then calibrates the threshold from that evidence and reruns the same dataset.
 
+## macOS searchable-PDF prerequisite fix
+
+PR #4571 exact head `f9d950868fbb80533c887074958cadfc703a4d57` passed `Scanner Parity Apple Validation` run `32652036917` in full and merged as `8a1b4c4accac1a9b23c4a51eeed2cd6ca063cbe1`.
+
+HQ found that the existing `SearchablePDFWriter` only generated `book_searchable.pdf` when UIKit was importable. Because the Formal Golden runner executes on macOS, the previous runner would reach package creation without producing the required searchable PDF and would then fail BookPackage integrity even if every prior stage succeeded.
+
+The fix:
+
+- replaces the UIKit-only writer with CoreGraphics/CoreText/ImageIO PDF generation shared by macOS and iOS;
+- keeps OCR text as an invisible PDF text layer;
+- adds a macOS regression test that generates a PDF and verifies PDFKit can extract the embedded text;
+- keeps existing reference-metric, iPhoneOS module, Privacy, XcodeGen, unsigned Release app, and bundle-verification gates green.
+
+This removes a deterministic HQ-runner failure that was independent of the raw Golden data. It does not constitute Formal Golden PASS.
+
 ## Formal HQ Golden Gate
 
 Status: `PENDING_HQ_GOLDEN_EXECUTION`
@@ -115,7 +132,7 @@ Current Formal Golden metrics remain unissued until the same raw dataset is proc
 
 ## Raw Golden availability and next execution
 
-Raw Golden files are intentionally not committed to GitHub. In the 2026-08-24 HQ session, the raw video/PDF could not be reacquired through the currently accessible ChatGPT File Library, execution sandbox, or connected Google Drive. No fixture result, compile result, synthetic metric result, or historical measurement is promoted to Golden PASS in place of the real rerun.
+Raw Golden files are intentionally not committed to GitHub. In the 2026-08-24 HQ session, the raw video/PDF could not be reacquired through the currently accessible ChatGPT File Library, execution sandbox, or connected Google Drive. The File Library and Drive were checked again after PR #4571 work and still did not return either current Golden source file. No fixture result, compile result, synthetic metric result, searchable-PDF fixture result, or historical measurement is promoted to Golden PASS in place of the real rerun.
 
 When the current raw Golden bytes are accessible, HQ execution order is fixed:
 
