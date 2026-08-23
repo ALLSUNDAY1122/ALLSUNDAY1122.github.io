@@ -1,4 +1,4 @@
-# 書籍スキャナー同等化｜Shared Contract v0.1
+# 書籍スキャナー同等化｜Shared Contract v0.2
 
 HQ所有。Workerはこの契約を独自に変更しない。変更が必要な場合はEvidenceと提案を出し、HQがintegration_epochを進める。
 
@@ -100,12 +100,21 @@ BOOK_ID/
 - 200ページ級の連続処理でcrashしない
 - OCR低信頼ページを検知可能
 
+### HQ_GOLDEN_GATE
+Golden Datasetの正式検証はWorker単位ではなく、対象実装をintegrationへ統合した後にHQが一気通貫で実施する。
+
+- Golden Dataset未取得、canonical SHA mismatch、Golden実測未完了はWorkerの `BLOCKED_HUMAN` 条件ではない。
+- 非Golden acceptanceが完了したTaskは `INTEGRATION_READY` とし、Golden部分のみ `PENDING_HQ_GOLDEN` として保持する。
+- Golden SHA mismatchの解決、canonical hash更新判断、Golden実測、PASS/FAIL確定はHQ所有。
+- HQ_GOLDEN_GATEでは統合済みpipelineを対象に、ページ抽出・補正・完全性監査・OCR・検索可能PDF・BookPackageまで同一Golden Datasetで検証する。
+- Golden PASS前に `VERIFIED` / Release Gate通過を確定してはならない。
+
 ## Resource Ownership
 - `frame-extraction`, `video-timeline`: Worker Task SCAN-001系
 - `image-processing`, `page-geometry`: SCAN-002系
 - `page-audit`, `sequence-model`: SCAN-003系
 - `ocr-export`, `document-output`: SCAN-004系
-- `shared-contract`, `app-shell`, `integration`: HQ
+- `shared-contract`, `app-shell`, `integration`, `golden-gate`: HQ
 
 ## Reuse Policy
 直接採用候補はライセンス確認必須。MIT/BSD/Apache等でもNOTICE/attribution/変更点を記録する。競合製品制限、用途制限、ライセンス不明のコードはコピーしない。
