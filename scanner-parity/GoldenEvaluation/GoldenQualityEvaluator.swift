@@ -1,4 +1,7 @@
 import Foundation
+import FrameExtraction
+import ImageCorrection
+import PageAudit
 
 public enum GoldenQualityEvaluator {
     public static func evaluate(
