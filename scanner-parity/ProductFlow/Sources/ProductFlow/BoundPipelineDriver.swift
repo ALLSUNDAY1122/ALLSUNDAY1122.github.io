@@ -96,6 +96,7 @@ public actor BoundProductPipelineDriver: ProductPipelineDriving {
                 runID: runID,
                 bookID: request.bookID,
                 inputAssetIDs: request.inputs.map(\.id),
+                inputAssets: request.inputs,
                 completedArtifacts: artifacts,
                 lastProgress: stageProgress
             ))
