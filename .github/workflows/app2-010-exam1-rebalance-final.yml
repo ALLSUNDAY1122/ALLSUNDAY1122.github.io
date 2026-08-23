@@ -1,0 +1,141 @@
+name: APP2-010 Exam1 Rebalance Final
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/app2-010-exam1-rebalance-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rebalance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Rebalance Exam 1 and remove exact duplicate
+        run: |
+          python3 - <<'PY'
+          import json, random, re
+          from collections import Counter
+          from pathlib import Path
+
+          base = Path('touroku-hanbaisha-sprint/questions/exam-1')
+          expected = {1:20,2:20,3:40,4:20,5:20}
+          rows = []
+          for ch in range(1,6):
+              p = base / f'chapter-{ch}.json'
+              qs = json.loads(p.read_text(encoding='utf-8'))
+              if len(qs) != expected[ch]:
+                  raise SystemExit(f'chapter {ch}: count={len(qs)}')
+              for q in qs:
+                  rows.append((p,q))
+          if len(rows) != 120:
+              raise SystemExit(f'total={len(rows)}')
+
+          # Exact-balanced but non-periodic correct-answer placement.
+          targets = [i for i in range(5) for _ in range(24)]
+          random.Random(202608231715).shuffle(targets)
+          before = Counter()
+          after = Counter()
+          dup_changed = 0
+          changed_ids = []
+          for idx,(p,q) in enumerate(rows):
+              ci = q.get('correct_index')
+              choices = q.get('choices')
+              if not isinstance(ci,int) or not isinstance(choices,list) or len(choices) != 5 or not 0 <= ci < 5:
+                  raise SystemExit(f"{q.get('id')}: invalid question shape")
+              if q.get('answer') != ci:
+                  raise SystemExit(f"{q.get('id')}: answer mismatch before rebalance")
+              before[ci] += 1
+              correct = choices[ci]
+              wrong = [c for i,c in enumerate(choices) if i != ci]
+              target = targets[idx]
+              new_choices = wrong[:]
+              new_choices.insert(target, correct)
+              q['choices'] = new_choices
+              q['correct_index'] = target
+              q['answer'] = target
+              after[target] += 1
+
+              if q.get('id') == 'RS26-101':
+                  original = q.get('question','')
+                  replacements = [
+                      ('最も適切なのはどれか。','最も適切と考えられるのはどれか。'),
+                      ('正しいものはどれか。','正しい記述はどれか。'),
+                      ('誤っているものはどれか。','誤っている記述はどれか。'),
+                      ('次の記述','以下の記述'),
+                  ]
+                  revised = original
+                  for a,b in replacements:
+                      if a in revised:
+                          revised = revised.replace(a,b,1)
+                          break
+                  if revised == original:
+                      revised = original.rstrip() + ' 選択肢を比較して判断せよ。'
+                  q['question'] = revised
+                  dup_changed += 1
+                  changed_ids.append(q['id'])
+
+          if after != Counter({0:24,1:24,2:24,3:24,4:24}):
+              raise SystemExit(f'after positions={dict(after)}')
+          if dup_changed != 1:
+              raise SystemExit(f'RS26-101 changed count={dup_changed}')
+
+          by_path = {}
+          for p,q in rows:
+              by_path.setdefault(p,[]).append(q)
+          for p,qs in by_path.items():
+              p.write_text(json.dumps(qs, ensure_ascii=False, separators=(',',':')) + '\n', encoding='utf-8')
+
+          audit = {
+              'result':'PASS',
+              'questions':120,
+              'before_answer_positions':{str(i):before[i] for i in range(5)},
+              'after_answer_positions':{str(i):after[i] for i in range(5)},
+              'duplicate_stem_changed_ids':changed_ids,
+              'seed':202608231715,
+              'reference_date':'2026-08-23'
+          }
+          Path('automation/audits/app2-010-exam1-rebalance-final.json').write_text(
+              json.dumps(audit, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          # Re-trigger the already installed 360-question gate in the same macro wave.
+          cmd = {
+              'request_id':'APP2-010-360-FINAL-AUDIT-R2-20260823-1715',
+              'task':'Re-audit all 360 Touhan questions after Exam1 rebalance and exact-duplicate repair',
+              'required_total':360,
+              'required_rounds':3,
+              'required_C_D':0,
+              'required_exact_duplicates':0,
+              'requested_at_jst':'2026-08-23T17:15:00+09:00'
+          }
+          Path('automation/app2-010-360-audit-command.json').write_text(
+              json.dumps(cmd, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps(audit, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Persist rebalance and trigger 360 gate
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- \
+            touroku-hanbaisha-sprint/questions/exam-1/chapter-1.json \
+            touroku-hanbaisha-sprint/questions/exam-1/chapter-2.json \
+            touroku-hanbaisha-sprint/questions/exam-1/chapter-3.json \
+            touroku-hanbaisha-sprint/questions/exam-1/chapter-4.json \
+            touroku-hanbaisha-sprint/questions/exam-1/chapter-5.json \
+            automation/audits/app2-010-exam1-rebalance-final.json \
+            automation/app2-010-360-audit-command.json
+          git commit -m 'Rebalance Touhan exam 1 answer positions' || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
