@@ -65,3 +65,35 @@ import Testing
     #expect(FileManager.default.fileExists(atPath: result.rootURL.appendingPathComponent("book.md").path))
     #expect(FileManager.default.fileExists(atPath: result.rootURL.appendingPathComponent("manifest.json").path))
 }
+
+@Test func twoHundredPagePackageWritesSequentially() throws {
+    let temp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    try FileManager.default.createDirectory(at: temp, withIntermediateDirectories: true)
+    let source = temp.appendingPathComponent("fixture.jpg")
+    try Data([0xff, 0xd8, 0xff, 0xd9]).write(to: source)
+
+    let artifacts = (1...200).map { sequence in
+        OCRPageArtifact(
+            sequence: sequence,
+            imageURL: source,
+            ocrPage: OCRPage(
+                pageID: "p\(sequence)",
+                layout: .horizontal,
+                text: "第\(sequence)ページの本文です。",
+                blocks: [],
+                ocrConfidence: 0.9,
+                engine: "fixture",
+                engineVersion: "1",
+                needsReview: false,
+                sourceTimeMS: Int64(sequence * 1000)
+            )
+        )
+    }
+
+    let result = try BookPackageWriter().write(bookID: "book-200", pages: artifacts, destination: temp)
+    #expect(result.manifest.pages.count == 200)
+    #expect(result.manifest.pages.first?.pageID == "p1")
+    #expect(result.manifest.pages.last?.pageID == "p200")
+    #expect(FileManager.default.fileExists(atPath: result.rootURL.appendingPathComponent("pages/0200.jpg").path))
+    #expect(FileManager.default.fileExists(atPath: result.rootURL.appendingPathComponent("text/0200.txt").path))
+}
