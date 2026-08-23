@@ -1,25 +1,58 @@
 {
-  "request_id": "app2-003-build4-diagnostic3-start-20260823-2249",
-  "action": "build",
+  "request_id": "app2-003-build4-diagnostic3-inspect-20260823-2250",
+  "action": "inspect_build",
   "repository": "ALLSUNDAY1122/yoru-no-shoka",
   "workflow_id": "yoru-ios",
   "branch": "main",
   "ok": true,
-  "application_candidates": [
-    {
-      "id": "6a8af6e5a5c86907b00c2efd",
-      "name": "yoru-no-shoka",
-      "repositoryUrl": null,
-      "branches": [
-        "main",
-        "release/eas-build4-trigger",
-        "ui/pattern-c-paper-warm"
-      ]
-    }
-  ],
-  "resolved_app_id": "6a8af6e5a5c86907b00c2efd",
-  "app_id": "6a8af6e5a5c86907b00c2efd",
   "build_id": "6a8afa087787725ef828f116",
-  "status": "started",
-  "build_url": "https://codemagic.io/app/6a8af6e5a5c86907b00c2efd/build/6a8afa087787725ef828f116"
+  "status": "finished",
+  "build_details": {
+    "id": "6a8afa087787725ef828f116",
+    "app_id": "6a8af6e5a5c86907b00c2efd",
+    "workflow": {
+      "id": "yoru-ios",
+      "source": "file",
+      "name": "夜の書架 - Build 4 Diagnostic"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "finished",
+    "index": 5,
+    "artifacts": [
+      {
+        "name": "yoru-no-shoka_5_artifacts.zip",
+        "size_in_bytes": 3176482,
+        "type": "bundle",
+        "short_lived_download_url": "https://api.codemagic.io//artifacts/.eJwVwclygjAAANB_8c5MAxLg0AMpOwEVwqIXhkVIyqZsol_f6XuHRv2Hnmx7TKuFpcjuJtI95cZNDDXTP1K9nNgxo56_KG-_uvQVveu0KMoXvLQ8zoKc6OY4mMKVLxe-mp2g04DNIUDp74r4TnCTR60WUIIzajjHFkMk5ARoJyaPvmxsGMTVbgyyjtxJ1Kg_GQLohrNmrRBnqzpbDW3bzMamEzBr8Bw8PL5GTmZ2vTHvDInCknquqMWncUgWTy03mDp1TyzsZ00RXcR7ZGiJKtwYSHOJ63ra0hEcX0i-OdVnhO5JSglnMiWI3Y7uS_iOx71oClSGAbwpgiE2vfu-DpJxD_JoZT8SEYA2fh_-AMUHZ0w.R0L52GhnzmbS6FiwGEwEbPpIjzA",
+        "version_code": null,
+        "version_name": null
+      }
+    ],
+    "labels": [],
+    "release_notes": [],
+    "created_at": "2026-08-23T13:47:52.598000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "4a8b742b77f6ff1778a6e0e129728858794dc618",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "Force-install pnpm over broken Corepack shim",
+      "url": "https://github.com/ALLSUNDAY1122/yoru-no-shoka/commit/4a8b742b77f6ff1778a6e0e129728858794dc618"
+    },
+    "branch": "main",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-08-23T13:48:01.420000Z",
+    "finished_at": "2026-08-23T13:48:59.938000Z"
+  }
 }
