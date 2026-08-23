@@ -7,6 +7,14 @@ final class StoreKitManager: ObservableObject {
     static let lifetimeProductID = "jp.allsunday1122.healthmanager1.lifetime"
     static let productIDs = [monthlyProductID, lifetimeProductID]
 
+    // HM1 is currently sold only in Japan. App Store Connect is canonical at
+    // JPY 200/month and JPY 800 lifetime. Keep the in-app presentation aligned
+    // with those JPN price points even if TestFlight temporarily serves stale
+    // Product.displayPrice metadata; the Apple purchase sheet remains the
+    // transaction authority.
+    static let monthlyJapanDisplayPrice = "¥200"
+    static let lifetimeJapanDisplayPrice = "¥800"
+
     @Published private(set) var monthlyProduct: Product?
     @Published private(set) var lifetimeProduct: Product?
     @Published private(set) var isPremium = false
@@ -41,11 +49,11 @@ final class StoreKitManager: ObservableObject {
     }
 
     var monthlyDisplayPrice: String {
-        monthlyProduct?.displayPrice ?? "App Storeで価格を確認"
+        Self.monthlyJapanDisplayPrice
     }
 
     var lifetimeDisplayPrice: String {
-        lifetimeProduct?.displayPrice ?? "App Storeで価格を確認"
+        Self.lifetimeJapanDisplayPrice
     }
 
     var monthlyAvailable: Bool { monthlyProduct != nil }
