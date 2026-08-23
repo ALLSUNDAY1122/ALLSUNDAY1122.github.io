@@ -87,6 +87,30 @@ jobs:
       - name: Test searchable PDF generation on macOS
         run: swift test --package-path scanner-parity --filter SearchablePDFWriterTests
 
+      - name: Build 240-page production long-run gate
+        run: swift build --package-path scanner-parity --product scanner-production-longrun
+
+      - name: Run 240-page production long-run gate
+        run: |
+          set -euo pipefail
+          swift run --package-path scanner-parity scanner-production-longrun \
+            --workspace "$RUNNER_TEMP/scanner-parity-production-longrun" \
+            --pages 240
+          python3 - <<'PY'
+          import json, os
+          path = os.path.join(os.environ['RUNNER_TEMP'], 'scanner-parity-production-longrun', 'production-longrun-report.json')
+          with open(path, encoding='utf-8') as f:
+              report = json.load(f)
+          assert report['inputPageCount'] == 240
+          assert report['completedPageCount'] == 240
+          assert report['searchablePDFPageCount'] == 240
+          assert report['requiredBookPackageFilesPresent'] is True
+          assert report['packageIntegrityValid'] is True
+          assert report['checkpointStageCount'] >= 5
+          assert report['verdict'] == 'PRODUCTION_LONG_RUN_PASS'
+          print('PRODUCTION_LONG_RUN_240_PASS')
+          PY
+
       - name: Compile Apple adapters with iPhoneOS SDK
         run: bash scanner-parity/AppleValidation/run-apple-sdk-compile.sh "$RUNNER_TEMP/scanner-parity-apple-validation"
 
@@ -142,5 +166,6 @@ jobs:
             ${{ runner.temp }}/scanner-parity-apple-validation/compile.log
             ${{ runner.temp }}/scanner-parity-product-apple/report.json
             ${{ runner.temp }}/scanner-parity-product-apple/compile.log
+            ${{ runner.temp }}/scanner-parity-production-longrun/production-longrun-report.json
             ${{ runner.temp }}/scanner-parity-app-xcodebuild.log
           if-no-files-found: warn
