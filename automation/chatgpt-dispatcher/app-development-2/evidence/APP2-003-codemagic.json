@@ -1,49 +1,25 @@
 {
-  "request_id": "app2-003-pattern-c-build4-production-inspect-20260823-2252",
-  "action": "inspect_build",
+  "request_id": "app2-003-pattern-c-build4-production-logrun-20260823-2254",
+  "action": "build",
   "repository": "ALLSUNDAY1122/yoru-no-shoka",
   "workflow_id": "yoru-ios",
   "branch": "main",
   "ok": true,
-  "build_id": "6a8afaa8a5c86907b00c308a",
-  "status": "failed",
-  "build_details": {
-    "id": "6a8afaa8a5c86907b00c308a",
-    "app_id": "6a8af6e5a5c86907b00c2efd",
-    "workflow": {
-      "id": "yoru-ios",
-      "source": "file",
-      "name": "夜の書架 - iOS Internal TestFlight"
-    },
-    "instance_type": "mac_mini_m2",
-    "status": "failed",
-    "index": 6,
-    "artifacts": [],
-    "labels": [],
-    "release_notes": [],
-    "created_at": "2026-08-23T13:50:32.050000Z",
-    "config": {
-      "flutter_mode": null,
-      "shorebird_mode": null,
-      "flutter_version": null,
-      "xcode_version": "latest",
-      "platforms": []
-    },
-    "remote_access_enabled": false,
-    "commit": {
-      "hash": "e03ceb19cc79b2047d5ed55144c027c90868ea47",
-      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
-      "author_name": "ALLSUNDAY1122",
-      "author_email": "kohei3615@gmail.com",
-      "message": "Restore production workflow after diagnostic pass",
-      "url": "https://github.com/ALLSUNDAY1122/yoru-no-shoka/commit/e03ceb19cc79b2047d5ed55144c027c90868ea47"
-    },
-    "branch": "main",
-    "tag": null,
-    "pull_request": null,
-    "app_store_connect_status": null,
-    "build_inputs": {},
-    "started_at": "2026-08-23T13:50:39.612000Z",
-    "finished_at": "2026-08-23T13:51:23.057000Z"
-  }
+  "application_candidates": [
+    {
+      "id": "6a8af6e5a5c86907b00c2efd",
+      "name": "yoru-no-shoka",
+      "repositoryUrl": null,
+      "branches": [
+        "main",
+        "release/eas-build4-trigger",
+        "ui/pattern-c-paper-warm"
+      ]
+    }
+  ],
+  "resolved_app_id": "6a8af6e5a5c86907b00c2efd",
+  "app_id": "6a8af6e5a5c86907b00c2efd",
+  "build_id": "6a8afb237787725ef828f194",
+  "status": "started",
+  "build_url": "https://codemagic.io/app/6a8af6e5a5c86907b00c2efd/build/6a8afb237787725ef828f194"
 }
