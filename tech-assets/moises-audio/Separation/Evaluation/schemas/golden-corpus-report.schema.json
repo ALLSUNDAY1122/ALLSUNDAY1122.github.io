@@ -20,7 +20,39 @@
     "policy_id": {"type": "string", "minLength": 1},
     "policy_sha256": {"$ref": "#/$defs/sha"},
     "corpus_lock_sha256": {"$ref": "#/$defs/sha"},
-    "coverage": {"type": "object"},
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_count", "fixture_count_by_group", "genres", "genres_by_group",
+        "duration_buckets", "duration_buckets_by_group", "production_buckets",
+        "production_buckets_by_group", "hard_cases", "role_set_status"
+      ],
+      "properties": {
+        "fixture_count": {"type": "integer", "minimum": 1},
+        "fixture_count_by_group": {"$ref": "#/$defs/groupCounts"},
+        "genres": {"$ref": "#/$defs/stringList"},
+        "genres_by_group": {"$ref": "#/$defs/groupStringLists"},
+        "duration_buckets": {"$ref": "#/$defs/stringList"},
+        "duration_buckets_by_group": {"$ref": "#/$defs/groupStringLists"},
+        "production_buckets": {"$ref": "#/$defs/stringList"},
+        "production_buckets_by_group": {"$ref": "#/$defs/groupStringLists"},
+        "hard_cases": {"$ref": "#/$defs/stringList"},
+        "role_set_status": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "roles", "groups_satisfied"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "roles": {"$ref": "#/$defs/stringList"},
+              "groups_satisfied": {"type": "array", "uniqueItems": true, "items": {"enum": ["G1", "G2"]}}
+            }
+          }
+        }
+      }
+    },
     "fixtures": {
       "type": "array",
       "minItems": 1,
@@ -45,8 +77,8 @@
           "duration_bucket": {"type": "string", "minLength": 1},
           "sample_rate_hz": {"type": "integer", "minimum": 8000},
           "channels": {"type": "integer", "minimum": 1},
-          "requested_roles": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
-          "hard_cases": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+          "requested_roles": {"$ref": "#/$defs/nonEmptyStringList"},
+          "hard_cases": {"$ref": "#/$defs/stringList"}
         }
       }
     },
@@ -64,6 +96,16 @@
     "parity_reason": {"type": "string", "minLength": 1}
   },
   "$defs": {
-    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stringList": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "nonEmptyStringList": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "groupCounts": {
+      "type": "object", "additionalProperties": false, "required": ["G1", "G2"],
+      "properties": {"G1": {"type": "integer", "minimum": 0}, "G2": {"type": "integer", "minimum": 0}}
+    },
+    "groupStringLists": {
+      "type": "object", "additionalProperties": false, "required": ["G1", "G2"],
+      "properties": {"G1": {"$ref": "#/$defs/stringList"}, "G2": {"$ref": "#/$defs/stringList"}}
+    }
   }
 }
