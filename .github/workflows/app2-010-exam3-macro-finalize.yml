@@ -1,0 +1,167 @@
+name: APP2-010 Exam3 Macro Finalize
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/app2-010-exam3-macro-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply 80-question macro rewrite and audit all 120
+        run: |
+          python3 - <<'PY'
+          import json, statistics
+          from collections import Counter
+          from pathlib import Path
+
+          patch_dir = Path('automation/app2-010-exam3-patches')
+          patch_names = ['c3-1.json','c3-2.json','c3-3.json','c3-4.json','c4-1.json','c4-2.json','c5-1.json','c5-2.json']
+          patches = []
+          for name in patch_names:
+              p = patch_dir / name
+              if not p.exists():
+                  raise SystemExit(f'missing patch: {name}')
+              rows = json.loads(p.read_text(encoding='utf-8'))
+              if not isinstance(rows, list):
+                  raise SystemExit(f'{name}: patch is not list')
+              patches.extend(rows)
+          if len(patches) != 80:
+              raise SystemExit(f'patch count={len(patches)}, expected 80')
+          patch_map = {p['id']: p for p in patches}
+          if len(patch_map) != 80:
+              raise SystemExit('duplicate patch ids')
+
+          base = Path('touroku-hanbaisha-sprint/questions/exam-3')
+          expected_counts = {1:20, 2:20, 3:40, 4:20, 5:20}
+          seen_patches = set()
+          chapters = {}
+          for ch in range(1, 6):
+              path = base / f'chapter-{ch}.json'
+              qs = json.loads(path.read_text(encoding='utf-8'))
+              if len(qs) != expected_counts[ch]:
+                  raise SystemExit(f'chapter {ch}: count={len(qs)}')
+              for q in qs:
+                  if q['id'] in patch_map:
+                      q.update(patch_map[q['id']])
+                      seen_patches.add(q['id'])
+              chapters[ch] = qs
+              path.write_text(json.dumps(qs, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          if seen_patches != set(patch_map):
+              missing = sorted(set(patch_map) - seen_patches)
+              raise SystemExit(f'patch ids not found: {missing}')
+
+          all_qs = [q for ch in range(1,6) for q in chapters[ch]]
+          errors = []
+          if len(all_qs) != 120:
+              errors.append(f'total={len(all_qs)}')
+          ids = [q.get('id') for q in all_qs]
+          if len(ids) != len(set(ids)):
+              errors.append('duplicate ids')
+          required = ('id','chapter','subject','topic','question','explanation','source_url','reference_date','origin_type','rights_basis')
+          for ch, qs in chapters.items():
+              for q in qs:
+                  if q.get('round') != 3:
+                      errors.append(f"{q.get('id')}: round")
+                  if not isinstance(q.get('choices'), list) or len(q['choices']) != 5 or len(set(q['choices'])) != 5:
+                      errors.append(f"{q.get('id')}: choices")
+                  if not isinstance(q.get('correct_index'), int) or not 0 <= q['correct_index'] < 5:
+                      errors.append(f"{q.get('id')}: correct_index")
+                  if q.get('answer') != q.get('correct_index'):
+                      errors.append(f"{q.get('id')}: answer mismatch")
+                  for k in required:
+                      if not str(q.get(k, '')).strip():
+                          errors.append(f"{q.get('id')}: missing {k}")
+
+          answer_positions = {}
+          for ch, qs in chapters.items():
+              c = Counter(q['correct_index'] for q in qs)
+              answer_positions[str(ch)] = {str(i): c[i] for i in range(5)}
+          for ch, each in ((3,8),(4,4),(5,4)):
+              c = Counter(q['correct_index'] for q in chapters[ch])
+              if any(c[i] != each for i in range(5)):
+                  errors.append(f'chapter {ch}: answer positions {dict(c)}')
+
+          absolute_terms = ('必ず','すべて','一切','絶対','常に','例外なく','ことはない','必要はない','不要','のみで','だけで','全く','いかなる','どのような場合でも','自己判断で直ちに')
+          hedge_terms = ('場合がある','ことがある','必要に応じ','基本的に','適切','おそれ','可能性','原則','確認する','相談','受診')
+          grades = []
+          flagged = []
+          for q in all_qs:
+              ans = q['correct_index']
+              choices = q['choices']
+              correct = choices[ans]
+              wrong = [c for i,c in enumerate(choices) if i != ans]
+              wrong_abs = sum(any(t in c for t in absolute_terms) for c in wrong)
+              correct_abs = any(t in correct for t in absolute_terms)
+              correct_hedge = sum(t in correct for t in hedge_terms)
+              med = statistics.median(map(len, choices))
+              ratio = len(correct) / med if med else 1
+              score = 0
+              if wrong_abs >= 3 and not correct_abs: score += 3
+              elif wrong_abs >= 2 and not correct_abs: score += 2
+              elif wrong_abs >= 1 and not correct_abs: score += 1
+              if ratio >= 1.35: score += 2
+              elif ratio >= 1.20: score += 1
+              if correct_hedge >= 1 and wrong_abs >= 2: score += 2
+              if all(len(c) < 28 for c in wrong) and len(correct) >= 45: score += 2
+              grade = 'D' if score >= 6 else 'C' if score >= 4 else 'B-' if score >= 2 else 'B'
+              grades.append(grade)
+              if grade in ('C','D'):
+                  flagged.append({'id':q['id'],'grade':grade,'score':score})
+          if flagged:
+              errors.append(f'C/D remain: {flagged}')
+
+          cmd = json.loads(Path('automation/app2-010-exam3-macro-command.json').read_text(encoding='utf-8'))
+          audit = {
+              'request_id': cmd.get('request_id'),
+              'result': 'FAIL' if errors else 'PASS',
+              'questions': len(all_qs),
+              'chapter_counts': {str(ch):len(qs) for ch,qs in chapters.items()},
+              'patch_count': len(patches),
+              'answer_positions': answer_positions,
+              'grade_counts': dict(Counter(grades)),
+              'C_D': len(flagged),
+              'errors': errors,
+              'reference_date': '2026-08-23'
+          }
+          Path('automation/audits/app2-010-exam3-macro-final.json').write_text(json.dumps(audit, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          if errors:
+              print(json.dumps(audit, ensure_ascii=False, indent=2))
+              raise SystemExit(1)
+
+          evidence = f'''# APP2-010 登録販売者｜第3回問題難易度改稿 FINAL\n\n日時: 2026-08-23 JST\n\n## 完了\n- 第3回 全120問の全面難易度改稿を完了。\n- 第1章20問、第2章20問、第3章40問、第4章20問、第5章20問。\n- 第3〜5章の残り80問をMacro Waveで一括適用。\n- 正答先頭偏重、荒唐無稽な誤答、知識不要の消去問題を除去。\n- 正誤組合せ・複数記述・近接誤答を中心に本試験形式へ寄せた。\n- 第3〜5章の正答位置は各選択肢へ完全均等分散。\n- 120問構造監査 PASS。\n- 難易度ヒューリスティック C/D 0件。\n- 2026-05-01施行の指定濫用防止医薬品等の制度改正を第4章へ反映。\n\n## Final audit\n- questions: {audit['questions']}\n- patches: {audit['patch_count']}\n- grades: {audit['grade_counts']}\n- C/D: {audit['C_D']}\n- result: {audit['result']}\n\n## 次工程\n- 第1〜3回 全360問の横断監査\n- TestFlight向け最終問題バンク反映確認\n'''
+          Path('automation/audits/app2-010-exam3-rewrite-progress-2026-08-23.md').write_text(evidence, encoding='utf-8')
+          print(json.dumps(audit, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Persist finalized Exam 3
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- \
+            touroku-hanbaisha-sprint/questions/exam-3/chapter-1.json \
+            touroku-hanbaisha-sprint/questions/exam-3/chapter-2.json \
+            touroku-hanbaisha-sprint/questions/exam-3/chapter-3.json \
+            touroku-hanbaisha-sprint/questions/exam-3/chapter-4.json \
+            touroku-hanbaisha-sprint/questions/exam-3/chapter-5.json \
+            automation/audits/app2-010-exam3-macro-final.json \
+            automation/audits/app2-010-exam3-rewrite-progress-2026-08-23.md
+          git commit -m 'Finalize Touhan exam 3 at prefectural exam difficulty' || exit 0
+          if git push origin HEAD:main; then
+            exit 0
+          fi
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
