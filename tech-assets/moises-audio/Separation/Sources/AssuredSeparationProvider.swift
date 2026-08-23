@@ -40,10 +40,17 @@ public actor AssuredSeparationProvider: SourceSeparationProviding {
         guard manifest.jobID == jobID else {
             throw DomainFailure.processingFailed(code: "SEP_ASSURANCE_JOB_ID_MISMATCH", retryable: false)
         }
-        // Validate the declared artifact set before consulting any previously prepared/committed result.
-        // This prevents malformed/mislabeled provider metadata from inheriting a trusted ledger.
+
+        // Structural role/container/timing declarations must be sane even when a trusted local result
+        // already exists. URL freshness/cost/retention are intentionally handled later because a fully
+        // verified local transaction must remain recoverable after signed vendor URLs expire.
         try SeparationArtifactSetIntegrity.validate(manifest)
-        try await assurance.validateManifest(manifest)
+
+        if let trusted = try await ledgerStore.load(projectID: manifest.projectID, jobID: jobID) {
+            try SeparationArtifactSetIntegrity.validateCachedManifestIdentity(manifest, trusted: trusted.manifest)
+        }
+
+        _ = try await assurance.recoverInterruptedCommit(projectID: manifest.projectID, jobID: jobID)
 
         if let existing = try await ledgerStore.load(projectID: manifest.projectID, jobID: jobID) {
             try SeparationArtifactSetIntegrity.validateCachedManifestIdentity(manifest, trusted: existing.manifest)
@@ -57,6 +64,9 @@ public actor AssuredSeparationProvider: SourceSeparationProviding {
             }
         }
 
+        // No trusted local result exists. Remote output URLs must therefore still be fresh and the
+        // full provider manifest (including cost/retention metadata) must pass before any download.
+        try await assurance.validateManifest(manifest)
         _ = try await assurance.prepare(manifest)
         return try await assurance.commit(projectID: manifest.projectID, jobID: jobID).finalArtifacts
     }
