@@ -96,7 +96,7 @@ public actor SeparationOutputAssurance {
         guard prepared.state == .prepared else {
             throw DomainFailure.processingFailed(code: "SEP_COMMIT_STATE_INVALID", retryable: false)
         }
-        try validateManifest(prepared.manifest)
+        try validateManifest(prepared.manifest, requireFreshOutputURLs: false)
         try SeparationArtifactSetIntegrity.validate(prepared.manifest, durationToleranceSeconds: durationToleranceSeconds)
         try verifyPreparedFiles(prepared)
 
