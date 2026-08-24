@@ -96,6 +96,7 @@ require(
 # Abrupt process termination cannot execute a Swift failure branch. Persist a phase breadcrumb
 # before expensive/uninterruptible reconstruction work, and refresh training progress only at the existing
 # checkpoint cadence so Build 5 evidence identifies the last durable phase without excessive I/O.
+# Keep these assertions source-semantic so formatting-only Swift changes cannot silently drop this evidence.
 for outcome, phase in (
     ("running-preflight", ".preflight"),
     ("running-dataset-init", ".datasetInit"),
