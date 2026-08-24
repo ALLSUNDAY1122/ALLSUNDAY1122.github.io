@@ -29,6 +29,7 @@ public struct Lane2OrphanSweepCandidateSlice: Hashable, Sendable {
     public let limit: Int
     public let priorCursorRelativePath: String?
     public let nextCursorRelativePath: String?
+    public let inventorySlice: Lane2ManagedArtifactInventorySlice?
 
     public init(
         candidates: [Lane2OrphanSweepCandidate],
@@ -39,7 +40,8 @@ public struct Lane2OrphanSweepCandidateSlice: Hashable, Sendable {
         hasMoreEligibleCandidates: Bool,
         limit: Int,
         priorCursorRelativePath: String?,
-        nextCursorRelativePath: String?
+        nextCursorRelativePath: String?,
+        inventorySlice: Lane2ManagedArtifactInventorySlice? = nil
     ) {
         self.candidates = candidates
         self.managedRootNames = managedRootNames
@@ -50,11 +52,14 @@ public struct Lane2OrphanSweepCandidateSlice: Hashable, Sendable {
         self.limit = max(limit, 1)
         self.priorCursorRelativePath = priorCursorRelativePath
         self.nextCursorRelativePath = nextCursorRelativePath
+        self.inventorySlice = inventorySlice
     }
 
     public var candidateRelativePaths: Set<String> {
         Set(candidates.map(\.relativePath))
     }
+
+    public var usesManagedArtifactInventory: Bool { inventorySlice != nil }
 }
 
 public enum Lane2BoundedOrphanSweepFailure: Error, Equatable, Sendable {
@@ -70,9 +75,9 @@ private struct Lane2OrphanSweepCursorRecord: Codable, Sendable {
 }
 
 public extension LibraryArtifactLifecycle {
-    /// Scans managed roots but retains only a bounded eligible candidate window in memory. The
-    /// durable lexicographic cursor advances after a successful pass so live-referenced files at
-    /// the beginning of a root cannot permanently starve later orphan candidates.
+    /// Authoritative fresh-install inventories use deterministic shard snapshots and therefore do
+    /// not enumerate managed roots at all. Upgrade installs remain on the AW28 filesystem-compatibility
+    /// path until an explicit compatibility census marks the inventory authoritative.
     func prepareBoundedOrphanCandidateSlice(
         managedRootNames: [String] = ["Imports", "Stems", "Exports"],
         gracePeriod: TimeInterval = 3600,
@@ -81,6 +86,94 @@ public extension LibraryArtifactLifecycle {
     ) throws -> Lane2OrphanSweepCandidateSlice {
         let effectiveLimit = max(limit, 1)
         let normalizedRoots = try normalizedManagedRoots(managedRootNames)
+        let inventory = Lane2ManagedArtifactInventory(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName
+        )
+        if inventory.isAuthoritative, inventory.canServe(managedRootNames: normalizedRoots) {
+            let inventorySlice = try inventory.prepareOrphanCandidateSlice(
+                gracePeriod: gracePeriod,
+                now: now,
+                candidateLimit: effectiveLimit
+            )
+            let wrapped = inventorySlice.nextTraversal.shardIndex < inventorySlice.priorTraversal.shardIndex
+                || (inventorySlice.nextTraversal.shardIndex == 0
+                    && inventorySlice.priorTraversal.shardIndex == Lane2ManagedArtifactInventory.shardCount - 1)
+            return Lane2OrphanSweepCandidateSlice(
+                candidates: inventorySlice.candidates.map {
+                    Lane2OrphanSweepCandidate(
+                        relativePath: $0.relativePath,
+                        contentModificationDate: Date(timeIntervalSince1970: $0.recordedModificationTime)
+                    )
+                },
+                managedRootNames: normalizedRoots,
+                scannedRegularFiles: inventorySlice.scannedInventoryEntries,
+                retainedYoungDuringScan: 0,
+                wrappedToStart: wrapped,
+                hasMoreEligibleCandidates: inventorySlice.candidates.count >= effectiveLimit,
+                limit: effectiveLimit,
+                priorCursorRelativePath: nil,
+                nextCursorRelativePath: nil,
+                inventorySlice: inventorySlice
+            )
+        }
+
+        return try prepareFilesystemCompatibilitySlice(
+            managedRootNames: normalizedRoots,
+            gracePeriod: gracePeriod,
+            now: now,
+            limit: effectiveLimit
+        )
+    }
+
+    /// Revalidates every candidate immediately before deletion. Inventory-backed passes also retire
+    /// stale inventory entries only after filesystem decisions, so an inventory write failure can at
+    /// worst leave an already-missing record to be retried; it cannot authorize deletion by itself.
+    func applyBoundedOrphanCandidateSlice(
+        _ slice: Lane2OrphanSweepCandidateSlice,
+        referencedRelativePaths: Set<String>,
+        gracePeriod: TimeInterval = 3600,
+        now: Date = Date()
+    ) throws -> LibraryOrphanSweepResult {
+        if let inventorySlice = slice.inventorySlice {
+            let inventory = Lane2ManagedArtifactInventory(
+                rootURL: rootURL,
+                recoveryDirectoryName: recoveryDirectoryName
+            )
+            return try inventory.applyOrphanCandidateSlice(
+                inventorySlice,
+                referencedRelativePaths: referencedRelativePaths,
+                gracePeriod: gracePeriod,
+                now: now
+            )
+        }
+        return try applyFilesystemCompatibilitySlice(
+            slice,
+            referencedRelativePaths: referencedRelativePaths,
+            gracePeriod: gracePeriod,
+            now: now
+        )
+    }
+
+    /// Cursor persistence is deliberately after candidate application. A crash before this point
+    /// repeats the same bounded inventory/filesystem window instead of skipping destructive work.
+    func persistBoundedOrphanSweepCursor(after slice: Lane2OrphanSweepCandidateSlice) throws {
+        if let inventorySlice = slice.inventorySlice {
+            try Lane2ManagedArtifactInventory(
+                rootURL: rootURL,
+                recoveryDirectoryName: recoveryDirectoryName
+            ).persistTraversal(after: inventorySlice)
+            return
+        }
+        try persistFilesystemCompatibilityCursor(after: slice)
+    }
+
+    private func prepareFilesystemCompatibilitySlice(
+        managedRootNames normalizedRoots: [String],
+        gracePeriod: TimeInterval,
+        now: Date,
+        limit effectiveLimit: Int
+    ) throws -> Lane2OrphanSweepCandidateSlice {
         let cursor = try loadOrphanSweepCursor()
         let cursorPath = cursor?.lastRelativePath
         let keys: Set<URLResourceKey> = [
@@ -140,12 +233,9 @@ public extension LibraryArtifactLifecycle {
         let wrapped = cursorPath != nil && afterCursor.isEmpty && !overall.isEmpty
         let pool = wrapped ? overall : afterCursor
         let selected = Array(pool.prefix(effectiveLimit))
-        let hasMore: Bool
-        if wrapped {
-            hasMore = pool.count > effectiveLimit
-        } else {
-            hasMore = pool.count > effectiveLimit || hasEligibleAtOrBeforeCursor
-        }
+        let hasMore = wrapped
+            ? pool.count > effectiveLimit
+            : pool.count > effectiveLimit || hasEligibleAtOrBeforeCursor
         return Lane2OrphanSweepCandidateSlice(
             candidates: selected,
             managedRootNames: normalizedRoots,
@@ -159,13 +249,11 @@ public extension LibraryArtifactLifecycle {
         )
     }
 
-    /// Revalidates every candidate immediately before deletion. Referenced, rejuvenated, symlinked,
-    /// missing or non-regular paths are never removed. Missing paths are idempotently already clean.
-    func applyBoundedOrphanCandidateSlice(
+    private func applyFilesystemCompatibilitySlice(
         _ slice: Lane2OrphanSweepCandidateSlice,
         referencedRelativePaths: Set<String>,
-        gracePeriod: TimeInterval = 3600,
-        now: Date = Date()
+        gracePeriod: TimeInterval,
+        now: Date
     ) throws -> LibraryOrphanSweepResult {
         let normalizedRoots = try normalizedManagedRoots(slice.managedRootNames)
         let referenced = Set(try referencedRelativePaths.map(boundedOrphanNormalize))
@@ -212,9 +300,9 @@ public extension LibraryArtifactLifecycle {
         )
     }
 
-    /// Persist only after the candidate application finishes. A crash before this write repeats the
-    /// same window idempotently; it never skips a candidate that may not have been removed yet.
-    func persistBoundedOrphanSweepCursor(after slice: Lane2OrphanSweepCandidateSlice) throws {
+    private func persistFilesystemCompatibilityCursor(
+        after slice: Lane2OrphanSweepCandidateSlice
+    ) throws {
         try FileManager.default.createDirectory(
             at: boundedOrphanSweepStateDirectoryURL,
             withIntermediateDirectories: true
@@ -272,9 +360,8 @@ public extension LibraryArtifactLifecycle {
         var seen = Set<String>()
         var result: [String] = []
         for root in roots {
-            let normalized = try boundedOrphanNormalize(root)
-            let parts = normalized.split(separator: "/", omittingEmptySubsequences: false)
-            guard parts.count == 1, normalized != recoveryDirectoryName else {
+            let normalized = try boundedOrphanNormalizeRoot(root)
+            guard normalized != recoveryDirectoryName else {
                 throw Lane2BoundedOrphanSweepFailure.invalidManagedRoot(root)
             }
             if seen.insert(normalized).inserted { result.append(normalized) }
@@ -306,6 +393,18 @@ private func boundedOrphanNormalize(_ relativePath: String) throws -> String {
         throw LibraryArtifactFailure.invalidRelativePath(relativePath)
     }
     return parts.joined(separator: "/")
+}
+
+private func boundedOrphanNormalizeRoot(_ root: String) throws -> String {
+    let normalized = root.replacingOccurrences(of: "\\", with: "/")
+    guard !normalized.isEmpty,
+          !normalized.contains("/"),
+          !normalized.contains("\0"),
+          normalized != ".",
+          normalized != ".." else {
+        throw Lane2BoundedOrphanSweepFailure.invalidManagedRoot(root)
+    }
+    return normalized
 }
 
 private func firstPathComponent(_ relativePath: String) -> String {
