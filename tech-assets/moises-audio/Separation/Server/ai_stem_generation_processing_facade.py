@@ -393,7 +393,16 @@ class GeneratedStemProcessingFacade:
                 )
                 if any(getattr(old, f) != getattr(candidate, f) for f in immutable):
                     fail("GEN_FACADE_IDEMPOTENCY_CONFLICT")
-                existing = True
+                safe_restart = False
+                if old.phase in {"INTENT_DURABLE", "START_CALL_IN_FLIGHT"}:
+                    try:
+                        self.contract.get(gid)
+                    except Exception as e:
+                        if getattr(e, "code", None) == "GEN_RECORD_NOT_FOUND":
+                            safe_restart = True
+                        else:
+                            raise
+                existing = not safe_restart
             else:
                 records[gid] = candidate
                 self.journal.save(records)
