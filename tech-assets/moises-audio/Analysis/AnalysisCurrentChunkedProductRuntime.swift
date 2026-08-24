@@ -29,9 +29,13 @@ public enum AnalysisCurrentChunkedProductRuntime {
         signal: AnalysisChunkedSignal,
         configuration: MusicAnalysisConfiguration = .productBaseline
     ) async throws -> Extracted {
-        try await AnalysisChunkedPreparedFeatureExtractor.extract(
+        let extracted = try await AnalysisChunkedPreparedFeatureExtractor.extract(
             signal: signal,
             configuration: configuration
+        )
+        return (
+            features: extracted.features,
+            inputDiagnostics: extracted.diagnostics
         )
     }
 
