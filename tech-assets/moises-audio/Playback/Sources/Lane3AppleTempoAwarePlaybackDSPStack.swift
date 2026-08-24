@@ -38,6 +38,7 @@ public struct Lane3AppleSelectedStackRecoveryCompositionReceipt: Equatable, Coda
     public let selectedReplacementSlotAvailable: Bool
     public let replacementGenerationFenced: Bool
     public let staleRecoveryTicketRejected: Bool
+    public let rawFacadeFactoryPubliclyExposed: Bool
     public let inPlacePoisonResetAvailable: Bool
     public let physicalDeviceRecoveryValidated: Bool
     public let parityPromotionAllowed: Bool
@@ -142,6 +143,7 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
             selectedReplacementSlotAvailable: true,
             replacementGenerationFenced: true,
             staleRecoveryTicketRejected: true,
+            rawFacadeFactoryPubliclyExposed: false,
             inPlacePoisonResetAvailable: false,
             physicalDeviceRecoveryValidated: false,
             parityPromotionAllowed: false
@@ -180,10 +182,10 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
         )
     }
 
-    /// Low-level selected facade constructor used by the recovery builder and regression tests.
-    /// Product/HQ integration should normally call `makeSelectedTransportRecoverySlot` so the
-    /// current facade cannot be retained as an unfenced stale reference after reconstruction.
-    public func makeSelectedTransportFacade(
+    /// Internal constructor used only to seed the public recovery slot. Keeping this non-public is
+    /// important: callers outside the Lane-3 module should not be able to retain an unfenced facade
+    /// reference and keep using it after AW33 replaces the selected stack.
+    func makeSelectedTransportFacade(
         transportGate: Lane3InterruptionLifecycleGate,
         serializedClickGate: Lane3SerializedPracticeClickGate,
         tempoQuietPeriod: Duration = .milliseconds(16)
