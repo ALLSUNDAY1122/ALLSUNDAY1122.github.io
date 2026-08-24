@@ -165,6 +165,10 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
 
     public func play(projectID: ProjectID) async throws {
         try requireHealthy()
+        if playing {
+            try await backend.play(projectID: projectID)
+            return
+        }
         try invalidateEnvelopeAuthority()
         restartFadeInTask?.cancel()
         restartFadeInTask = nil
