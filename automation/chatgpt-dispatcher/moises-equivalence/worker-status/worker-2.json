@@ -11,16 +11,15 @@
   "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "bfdc3e3bd9e87e246c62cdc4e32577a3104a4ef0",
-  "prior_status_blob_sha": "6fe5db781a0c9d96397717a01ed8e367c2fce027",
-  "historical_commit_ledger_through": "8da84c0bfc891f519a12576b281a3f7ba1341677",
+  "head_sha": "4cbb15cf155ed856f5d354c717a27207ae24cc69",
+  "prior_status_blob_sha": "80ff6253bf7ff792bf85fe6d52981002ef98bfd4",
+  "historical_commit_ledger_through": "bfdc3e3bd9e87e246c62cdc4e32577a3104a4ef0",
   "commits": [
-    "8f4180e6072db3a7f80e2e384745db198de8a1e4",
-    "472c122f3687c1b3363ec48f3d095b0ea48bbc37",
-    "4d5c8e8ede7b0b4af71ab5aee203ff6cf8bd58d4",
-    "5be5ab5aacd5fbfbb1d73a7225f3429c8398c870",
-    "b97d45e32ad823ad63d2d684382c63606316ff53",
-    "bfdc3e3bd9e87e246c62cdc4e32577a3104a4ef0"
+    "18f75a16876b6acf1cec5d883152543af9eb75ea",
+    "d71a98b59ec42dd1cbafa4d4188891e8b8579d96",
+    "e5b8d669d0cac7dec3a8bc6d98f66652915e4d26",
+    "fee281c239dabea344fe056e9797714f628bdaa9",
+    "4cbb15cf155ed856f5d354c717a27207ae24cc69"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -29,56 +28,48 @@
     "bf4b7a552cfbe025608079f7fe11093af7526b0b"
   ],
   "tests": [
-    "L2-M01..L2-AW31 validation remains durable in Git history and prior status blob 6fe5db781a0c9d96397717a01ed8e367c2fce027.",
-    "L2-AW32 exact production DeletionOwnershipIndex.swift blob 235faf2b8ae9e04de1fc14facb556e6ee76a983d compiled with Swift 6.2.1 strict concurrency/warnings-as-errors against minimal existing Library contracts => PASS.",
-    "L2-AW32 DeletionOwnershipShardingTests.swift blob 73bc2fba8bac7697917c1ddee6fad4b8ea05afb7 strict XCTest typecheck => PASS.",
-    "L2-AW32 exact committed self-check blob 7e01ee6d99992db5cb28ff72272a457372a86987 rerun => L2_AW32_SELF_TEST_PASS scenarios=6 legacy_records=257 migration_passes=5 slice_limit=64 shard_count=256 shard_visit_limit=4 conflict_fail_closed=true manifest_fail_closed=true empty_signal_recovery=true.",
-    "L2-AW32 production/static audit => L2_AW32_STATIC_AUDIT_PASS checks=24/24."
+    "L2-M01..L2-AW32 validation remains durable in Git history and prior status blob 80ff6253bf7ff792bf85fe6d52981002ef98bfd4.",
+    "L2-AW33 exact production compatibility boundary reproduced from committed source and typechecked with Swift 6.2.1 strict concurrency/warnings-as-errors => PASS.",
+    "L2-AW33 portable execution => L2_AW33_SELF_TEST_PASS scenarios=4 valid_pcm=true invalid_container_rejected=true source_mutation_rejected=true compressed_wav_rejected=true.",
+    "L2-AW33 production/static audit => L2_AW33_STATIC_AUDIT_PASS checks=18/18.",
+    "L2-AW33 regression XCTest prepared for valid PCM, invalid container, source mutation and compressed WAV rejection."
   ],
   "evidence": [
-    "L2-AW32 fresh-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock 55b0056b5563c64515ddc74abd448c545c7c0bb4 at integration epoch 22 / assignment epoch 2, Worker status blob 6fe5db781a0c9d96397717a01ed8e367c2fce027 and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d.",
-    "Current deletion ownership now writes deterministic 256-way shards plus .active-shards-v2.json. Ownership-only recovery reads at most four active shards per pass rather than enumerating all pending ownership filenames.",
-    "Pre-AW32 flat ownership remains directly readable and migrates at most the AW25 ownership-only budget per pass; the flat copy is retired only after the sharded record is durable.",
-    "Journal-backed project IDs remain direct UUID lookups and are excluded from ownership-only scheduling, preserving destructive recovery priority.",
-    "Crash order persists active-shard signal before record; manifest-only empty shards are retired in bounded passes so a kill cannot permanently starve later real ownership records.",
-    "Final Evidence is tech-assets/moises-audio/Library/L2-AW32_SHARDED_DELETION_OWNERSHIP_INDEX_VALIDATION.md blob ff86575b5dcccd55482642c6c3940c5199085e93."
+    "L2-AW33 fresh-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock 55b0056b5563c64515ddc74abd448c545c7c0bb4 at integration epoch 22 / assignment epoch 2, Worker status blob 80ff6253bf7ff792bf85fe6d52981002ef98bfd4 and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d.",
+    "WMA remains native-first with injectable compatibility fallback. The compatibility source is now fingerprinted before/after decode so decoder source mutation/delete/replace fails closed and temporary output is removed.",
+    "Decoder output must now be a bounded-parse valid RIFF/WAVE with PCM or IEEE-float fmt and non-empty data; non-WAV and compressed WAV output are rejected before downstream AVFoundation probe.",
+    "Committed blobs: IOReferenceMediaCompatibility.swift 01d353f19e0d407752f5905b2a7edae9afe4458e; IOCompatibilityDecodeBoundaryTests.swift f7aa480cb2f95fd82314457eb6a3d2af00c53dd7; L2AW33CompatibilityDecodeBoundarySelfCheck.swift 2643a6ae87af9f901bfc22bf0cae48cbdb42ede2.",
+    "Final Evidence is tech-assets/moises-audio/IO/L2-AW33_COMPATIBILITY_DECODE_BOUNDARY_VALIDATION.md."
   ],
   "known_gaps": [
-    "A single deletion-ownership shard is deterministic but not hard entry-count capped; pathological hash concentration and actual 1k/10k/100k shard distribution, decode RSS and wall time require iPhone evidence and may justify second-level bucket splitting.",
-    "Pre-AW32 flat compatibility migration is bounded by limit+1 candidate enumeration and converges as migrated files are removed, but it is not globally sorted.",
+    "A production WMA compatibility decoder is still not selected/licensed; if native Apple decoding remains unavailable, audited implementation/license plus real iPhone WMA fixtures are required.",
+    "Real MP3/WAV/FLAC/M4A/MP4/MOV/WMA import fixtures, Files/File Provider routes, AVFoundation probe behavior and current-iPhone user-flow evidence remain pending.",
+    "AW32 deletion-ownership and AW29 managed-artifact/publication shards are deterministic but not hard entry-count capped; pathological concentration and real iPhone distribution/RSS/latency remain unmeasured.",
     "Deletion-journal enumeration remains intentionally priority/unbounded for correctness; extreme journal backlog needs device/policy evidence.",
-    "Publication-journal .atomic writes and AW32 ownership manifest/record ordering require real APFS/process-kill/power-loss validation; no synthetic result is PARITY evidence.",
-    "Publication journal and managed-artifact inventory shards are deterministic but not hard entry-count capped; extreme distribution/decode RSS/latency needs iPhone evidence.",
-    "Direct/out-of-band writers that bypass Lane-2 IOFileStore or Library managed promotion remain unapproved because they can bypass publication/inventory recovery seams.",
-    "Cross-lane Lane-1 stem publication cannot be changed by Worker 2; HQ integration must route final Stems/** publication through the Lane-2 publication-intent/readiness seam.",
+    "Cross-lane Lane-1 stem publication must be routed by HQ through the Lane-2 publication-intent/readiness seam during late integration.",
     "Apple Core Data runtime, fresh read-only WAL visibility, force termination, APFS/ENOSPC behavior and physical-device performance evidence remain pending.",
-    "AW21 physical metadata compaction/shared Asset retention and AW20/AW18 setlist recovery still require Apple SQLite reopen/forced-termination evidence.",
-    "AW19 prejournal recovery UX/share destination and AW14/AW16 real import/File Provider/codec/storage-pressure gates remain pending.",
-    "Reference codec policy remains MP3/WAV/FLAC/M4A/MP4/MOV/WMA; real Apple fixtures and an audited production WMA compatibility decoder/license remain required if native WMA is unavailable.",
     "MOI-P001/P002/P017/P018/P019/P020/P024 remain MISSING until Apple runtime, integrated iPhone, real-audio/reference and differential gates are satisfied."
   ],
   "hq_requests": [
-    "Use openPreservingUserData(...) or file-backed openBulkPrepared(...) plus canonical Lane-2 IOFileStore/Library readiness routes; direct/raw lifecycle routes remain unapproved.",
-    "On iPhone/APFS, force terminate before/after AW32 active-shard manifest write, sharded ownership write, flat retirement, ownership removal and empty-shard manifest retirement; verify journal priority and idempotent convergence.",
-    "Measure 1k/10k/100k pending ownership records: active-shard count, records per shard, selected filenames, RSS/wall time and passes under the default 64-record / 4-shard budget.",
-    "Exercise ENOSPC/IO failure around ownership manifest/record writes and verify no hidden destructive ownership state is created.",
-    "Continue AW31 publication-intent and AW30 census process-kill/APFS validation, including cross-lane Stems/** final publication through a Lane-2-owned durable seam.",
-    "Do not treat Linux self-checks as iPhone/APFS/SQLite performance or power-loss evidence.",
-    "Do not promote MOI-P001/P002/P017/P018/P019/P020/P024 or any other Lane-2 PARITY row from AW32 portable evidence alone; final PARITY remains HQ-owned.",
-    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW32."
+    "Use the native-first WMA route; if native target-iOS support fails, approve only an audited commercially compatible decoder/license and run rights-cleared WMA fixtures through the AW33 boundary.",
+    "Do not permit a compatibility decoder that mutates sourceURL or returns compressed/noncanonical WAV; AW33 intentionally treats these as contract failures.",
+    "Continue using canonical Lane-2 IOFileStore/Library readiness and publication routes; direct/out-of-band writers remain unapproved.",
+    "Run real iPhone codec/import/File Provider/storage-pressure/cancellation evidence before promoting MOI-P001/P002.",
+    "Do not treat Linux self-checks as iPhone/APFS/AVFoundation performance or codec evidence.",
+    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW33."
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW32",
-    "goal": "Remove AW25's remaining global deletion-ownership filename walk by sharding current ownership records and migrating flat legacy records in bounded slices while preserving direct journal priority and crash-safe ownership evidence.",
-    "rationale": "AW25 bounded decode/compaction count but selection still walked every DeleteOwnership filename each pass, making startup/recovery cost scale with the entire pending ownership namespace.",
-    "done_when": "Current ownership persists to deterministic shards with durable active-shard signaling, ownership-only recovery visits bounded active shards, pre-AW32 flat records migrate incrementally, journal-backed ownership remains directly addressable, empty crash signals cannot starve real records, corruption/identity/symlink checks fail closed, strict tests/self-check/static audit pass, and durable Evidence is recorded without claiming device PARITY.",
+    "wave_id": "L2-AW33",
+    "goal": "Harden the WMA compatibility decode seam so an external decoder cannot silently mutate the staged source or return a noncanonical WAV artifact.",
+    "rationale": "MOI-P001/P002 import parity remains blocked on real Apple/codec evidence, but Lane 2 can independently make the compatibility boundary safe and deterministic before a production decoder is selected.",
+    "done_when": "Compatibility input immutability is verified before/after decode, output is bounded-parse canonical PCM/IEEE-float RIFF/WAVE, invalid/mutating decoders fail closed with cleanup, portable strict tests/self-check/static audit pass, and durable Evidence is recorded without claiming import PARITY.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "bfdc3e3bd9e87e246c62cdc4e32577a3104a4ef0",
-    "next_priority": "Re-read current Lane-2 gaps and prioritize hard-capping oversized ownership/artifact/publication shards or bounding the intentionally priority deletion-journal namespace, whichever offers the highest correctness/performance value without weakening crash recovery."
+    "implementation_head_sha": "4cbb15cf155ed856f5d354c717a27207ae24cc69",
+    "next_priority": "Re-read Lane-2 gaps and choose between hard-capping oversized deterministic recovery/inventory shards and bounding the priority deletion-journal namespace without weakening crash-recovery correctness."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW32 continue the Lane-2 completion roadmap without waiting for HQ task replenishment.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW33 continue the Lane-2 completion roadmap without waiting for HQ task replenishment.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-24T14:28:11+09:00",
-  "status_compaction_note": "To keep worker status bounded, the full pre-AW32 ledger remains addressable through prior_status_blob_sha 6fe5db781a0c9d96397717a01ed8e367c2fce027 and Git history; the commits array contains AW32 only. No implementation/evidence history was deleted from Git.",
+  "last_updated": "2026-08-24T15:15:00+09:00",
+  "status_compaction_note": "To keep worker status bounded, the full pre-AW33 ledger remains addressable through prior_status_blob_sha 80ff6253bf7ff792bf85fe6d52981002ef98bfd4 and Git history; the commits array contains AW33 only.",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ reads it for lane checkpoint integration and remains sole PARITY authority."
 }
