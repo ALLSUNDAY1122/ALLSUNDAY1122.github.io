@@ -31,9 +31,9 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
                 result.features.diagnostics.preparedSampleComputations,
                 result.features.diagnostics.preparedSampleCount
             )
-            XCTAssertLessThanOrEqual(result.diagnostics.maximumSourceChunkSamples, chunkSize)
-            XCTAssertFalse(result.diagnostics.wholeSourcePCMMaterializedByChunkedPath)
-            XCTAssertTrue(result.diagnostics.contiguousCompleteSource)
+            XCTAssertLessThanOrEqual(result.inputDiagnostics.maximumSourceChunkSamples, chunkSize)
+            XCTAssertFalse(result.inputDiagnostics.wholeSourcePCMMaterializedByChunkedPath)
+            XCTAssertTrue(result.inputDiagnostics.contiguousCompleteSource)
         }
     }
 
@@ -53,7 +53,7 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
         XCTAssertEqual(chunked.features.keyWindows, whole.keyWindows)
         XCTAssertEqual(chunked.features.chordFrameDecisions, whole.chordFrameDecisions)
         XCTAssertEqual(chunked.features.sectionEnergySignal, whole.sectionEnergySignal)
-        XCTAssertEqual(chunked.diagnostics.sanitizedSourceSampleCount, 2)
+        XCTAssertEqual(chunked.inputDiagnostics.sanitizedSourceSampleCount, 2)
     }
 
     func testGapOverlapAndOutOfOrderChunksFailClosed() async {
@@ -134,7 +134,7 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
         )
         XCTAssertEqual(oneHour.declaredWholeSourcePCMBytes, 635_040_000)
         XCTAssertEqual(oneHour.maximumChunkPCMBytes, 131_072)
-        XCTAssertEqual(oneHour.estimatedChunkedAnalysisWorkingSetBytes, 10_766_976)
+        XCTAssertEqual(oneHour.estimatedChunkedAnalysisWorkingSetBytes, 10_375_552)
         XCTAssertGreaterThan(oneHour.sourceToMaximumChunkReductionRatio, 4_800)
         XCTAssertFalse(oneHour.wholeSourcePCMMaterializedByChunkedPath)
 
@@ -145,7 +145,7 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
         )
         XCTAssertEqual(day.declaredWholeSourcePCMBytes, 15_240_960_000)
         XCTAssertEqual(day.maximumChunkPCMBytes, 131_072)
-        XCTAssertEqual(day.estimatedChunkedAnalysisWorkingSetBytes, 197_563_776)
+        XCTAssertEqual(day.estimatedChunkedAnalysisWorkingSetBytes, 41_172_416)
         XCTAssertGreaterThan(day.sourceToMaximumChunkReductionRatio, 116_000)
     }
 

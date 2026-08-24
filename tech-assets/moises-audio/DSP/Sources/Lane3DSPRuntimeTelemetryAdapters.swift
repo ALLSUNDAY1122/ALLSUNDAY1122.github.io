@@ -3,7 +3,7 @@ import Foundation
 /// Measures actual synchronous time/pitch backend entry and execution under the TaskLocal trace
 /// established by `Lane3DSPRuntimeTelemetryProbe`. Snapshot reads are intentionally not timed as DSP
 /// mutations because transaction gates can perform several of them around one apply.
-public final class Lane3DSPTelemetryTransactionalBackend: PracticeDSPTransactionalBackendApplying, PracticeDSPPitchTransitionBackendApplying, @unchecked Sendable {
+public final class Lane3DSPTelemetryTransactionalBackend: PracticeDSPTransactionalBackendApplying, PracticeDSPTempoTransitionBackendApplying, PracticeDSPPitchTransitionBackendApplying, @unchecked Sendable {
     private let backend: any PracticeDSPTransactionalBackendApplying
     private let collector: Lane3DSPRuntimeTelemetryCollector
     private let timeSource: any Lane3DSPRuntimeTelemetryTimeSource
@@ -33,6 +33,59 @@ public final class Lane3DSPTelemetryTransactionalBackend: PracticeDSPTransaction
 
     public func snapshotAppliedDSP() throws -> PracticeDSPBackendSnapshot {
         try backend.snapshotAppliedDSP()
+    }
+
+    public func beginTempoTransition(
+        fromTempoRatio: Double,
+        toTempoRatio: Double,
+        pitchSemitones: Double,
+        policy: PracticeDSPTempoTransitionPolicy
+    ) throws -> PracticeDSPTempoTransitionBackendReceipt {
+        let entry = timeSource.nowNanoseconds()
+        let trace = Lane3DSPRuntimeTelemetryTaskContext.trace
+        collector.recordBackendEntry(trace: trace, at: entry)
+        defer {
+            collector.recordBackendCompletion(
+                trace: trace,
+                durationNanoseconds: Self.elapsed(from: entry, to: timeSource.nowNanoseconds())
+            )
+        }
+        if let transitioning = backend as? any PracticeDSPTempoTransitionBackendApplying {
+            return try transitioning.beginTempoTransition(
+                fromTempoRatio: fromTempoRatio,
+                toTempoRatio: toTempoRatio,
+                pitchSemitones: pitchSemitones,
+                policy: policy
+            )
+        }
+        try backend.apply(tempoRatio: toTempoRatio, pitchSemitones: pitchSemitones)
+        return .immediateFallback(
+            reason: .backendTransitionUnsupported,
+            fromRatio: fromTempoRatio,
+            toRatio: toTempoRatio,
+            sampleRate: 0
+        )
+    }
+
+    public func finalizeTempoTransition(tempoRatio: Double, pitchSemitones: Double) throws {
+        guard let transitioning = backend as? any PracticeDSPTempoTransitionBackendApplying else {
+            return
+        }
+        try transitioning.finalizeTempoTransition(
+            tempoRatio: tempoRatio,
+            pitchSemitones: pitchSemitones
+        )
+    }
+
+    public func cancelTempoTransition(tempoRatio: Double, pitchSemitones: Double) throws {
+        if let transitioning = backend as? any PracticeDSPTempoTransitionBackendApplying {
+            try transitioning.cancelTempoTransition(
+                tempoRatio: tempoRatio,
+                pitchSemitones: pitchSemitones
+            )
+        } else {
+            try backend.apply(tempoRatio: tempoRatio, pitchSemitones: pitchSemitones)
+        }
     }
 
     public func beginPitchTransition(

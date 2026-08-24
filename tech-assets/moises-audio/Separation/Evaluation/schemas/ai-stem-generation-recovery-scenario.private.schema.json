@@ -1,0 +1,6 @@
+{
+  "$id":"ai-stem-generation-recovery-scenario.private.schema.json","$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
+  "required":["schema_version","evidence_kind","runtime_descriptor_sha256","scenario_kind","passed","duplicate_execution_detected","project_corruption_detected","credit_accounting_consistent","cancel_truthful","fault_provenance_sha256","authority_evidence_sha256"],
+  "properties":{"schema_version":{"const":1},"evidence_kind":{"const":"AI_STEM_GENERATION_RECOVERY_SCENARIO"},"runtime_descriptor_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"scenario_kind":{"enum":["AMBIGUOUS_START_RECONCILIATION","RELAUNCH_BOUND_EXECUTION","CANCEL_DURING_GENERATION","CREDIT_EXHAUSTION"]},"passed":{"const":true},"duplicate_execution_detected":{"const":false},"project_corruption_detected":{"const":false},"credit_accounting_consistent":{"const":true},"cancel_truthful":{"const":true},"fault_provenance_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"authority_evidence_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}},
+  "title":"Lane 1 A22 Private Generation Recovery Scenario"
+}
