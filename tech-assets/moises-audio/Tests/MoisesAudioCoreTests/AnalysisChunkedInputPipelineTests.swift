@@ -58,14 +58,12 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
 
     func testGapOverlapAndOutOfOrderChunksFailClosed() async {
         for badStart in [101, 99, 500] {
-            let stream = AsyncThrowingStream<AnalysisPCMChunk, Error> { continuation in
-                continuation.yield(.init(startSampleIndex: 0, monoSamples: Array(repeating: 0, count: 100)))
-                continuation.yield(.init(startSampleIndex: Int64(badStart), monoSamples: Array(repeating: 0, count: 100)))
-                continuation.finish()
-            }
             let source = AnalysisChunkedSignal(
                 descriptor: .init(sampleRate: 44_100, sampleCount: 200),
-                chunks: stream
+                source: W30ScriptedChunkPuller(chunks: [
+                    .init(startSampleIndex: 0, monoSamples: Array(repeating: 0, count: 100)),
+                    .init(startSampleIndex: Int64(badStart), monoSamples: Array(repeating: 0, count: 100))
+                ])
             )
             do {
                 _ = try await AnalysisChunkedPreparedFeatureExtractor.extract(signal: source)
@@ -83,13 +81,12 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
             _ = try await AnalysisChunkedPreparedFeatureExtractor.extract(
                 signal: AnalysisChunkedSignal(
                     descriptor: .init(sampleRate: 44_100, sampleCount: 200),
-                    chunks: AsyncThrowingStream { continuation in
-                        continuation.yield(.init(startSampleIndex: 0, monoSamples: Array(repeating: 0, count: 100)))
-                        continuation.finish()
-                    }
+                    source: W30ScriptedChunkPuller(chunks: [
+                        .init(startSampleIndex: 0, monoSamples: Array(repeating: 0, count: 100))
+                    ])
                 )
             )
-            XCTFail("Truncated stream must fail")
+            XCTFail("Truncated source must fail")
         } catch let error as AnalysisChunkedInputError {
             XCTAssertEqual(error, .sourceSampleCountMismatch(expected: 200, actual: 100))
         } catch {
@@ -100,13 +97,12 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
             _ = try await AnalysisChunkedPreparedFeatureExtractor.extract(
                 signal: AnalysisChunkedSignal(
                     descriptor: .init(sampleRate: 44_100, sampleCount: 100),
-                    chunks: AsyncThrowingStream { continuation in
-                        continuation.yield(.init(startSampleIndex: 0, monoSamples: Array(repeating: 0, count: 101)))
-                        continuation.finish()
-                    }
+                    source: W30ScriptedChunkPuller(chunks: [
+                        .init(startSampleIndex: 0, monoSamples: Array(repeating: 0, count: 101))
+                    ])
                 )
             )
-            XCTFail("Overrun stream must fail")
+            XCTFail("Overrun source must fail")
         } catch let error as AnalysisChunkedInputError {
             XCTAssertEqual(error, .chunkExceedsDeclaredSampleCount(declared: 100, actualEnd: 101))
         } catch {
@@ -117,10 +113,9 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
             _ = try await AnalysisChunkedPreparedFeatureExtractor.extract(
                 signal: AnalysisChunkedSignal(
                     descriptor: .init(sampleRate: 44_100, sampleCount: 1),
-                    chunks: AsyncThrowingStream { continuation in
-                        continuation.yield(.init(startSampleIndex: 0, monoSamples: []))
-                        continuation.finish()
-                    }
+                    source: W30ScriptedChunkPuller(chunks: [
+                        .init(startSampleIndex: 0, monoSamples: [])
+                    ])
                 )
             )
             XCTFail("Empty chunk must fail")
@@ -154,12 +149,13 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
         XCTAssertGreaterThan(day.sourceToMaximumChunkReductionRatio, 116_000)
     }
 
-    func testChunkedPipelineCanBeCancelledBeforePublication() async {
-        let samples = w30Fixture(seconds: 20, sampleRate: 44_100)
+    func testChunkedPipelineCanBeCancelledWhileWaitingForNextChunk() async {
+        let source = AnalysisChunkedSignal(
+            descriptor: .init(sampleRate: 44_100, sampleCount: 44_100),
+            source: W30SlowChunkPuller()
+        )
         let task = Task {
-            try await AnalysisChunkedSinglePassPreparedPipeline.analyze(
-                signal: w30ChunkedSignal(samples: samples, sampleRate: 44_100, chunkSize: 64)
-            )
+            try await AnalysisChunkedSinglePassPreparedPipeline.analyze(signal: source)
         }
         task.cancel()
         do {
@@ -173,30 +169,65 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
     }
 }
 
+private actor W30ArrayChunkPuller: AnalysisPCMChunkPulling {
+    private let samples: [Float]
+    private let chunkSize: Int
+    private var nextStart = 0
+
+    init(samples: [Float], chunkSize: Int) {
+        self.samples = samples
+        self.chunkSize = chunkSize
+    }
+
+    func nextChunk() async throws -> AnalysisPCMChunk? {
+        try Task.checkCancellation()
+        guard nextStart < samples.count else { return nil }
+        let start = nextStart
+        let end = min(samples.count, start + chunkSize)
+        nextStart = end
+        return .init(
+            startSampleIndex: Int64(start),
+            monoSamples: Array(samples[start..<end])
+        )
+    }
+}
+
+private actor W30ScriptedChunkPuller: AnalysisPCMChunkPulling {
+    private let chunks: [AnalysisPCMChunk]
+    private var index = 0
+
+    init(chunks: [AnalysisPCMChunk]) {
+        self.chunks = chunks
+    }
+
+    func nextChunk() async throws -> AnalysisPCMChunk? {
+        try Task.checkCancellation()
+        guard index < chunks.count else { return nil }
+        defer { index += 1 }
+        return chunks[index]
+    }
+}
+
+private actor W30SlowChunkPuller: AnalysisPCMChunkPulling {
+    func nextChunk() async throws -> AnalysisPCMChunk? {
+        try await Task.sleep(nanoseconds: 50_000_000)
+        try Task.checkCancellation()
+        return .init(startSampleIndex: 0, monoSamples: Array(repeating: 0, count: 1_024))
+    }
+}
+
 private func w30ChunkedSignal(
     samples: [Float],
     sampleRate: Double,
     chunkSize: Int
 ) -> AnalysisChunkedSignal {
-    let descriptor = AnalysisChunkedSignalDescriptor(
-        sampleRate: sampleRate,
-        sampleCount: Int64(samples.count)
+    .init(
+        descriptor: .init(
+            sampleRate: sampleRate,
+            sampleCount: Int64(samples.count)
+        ),
+        source: W30ArrayChunkPuller(samples: samples, chunkSize: chunkSize)
     )
-    let stream = AsyncThrowingStream<AnalysisPCMChunk, Error> { continuation in
-        var start = 0
-        while start < samples.count {
-            let end = min(samples.count, start + chunkSize)
-            continuation.yield(
-                .init(
-                    startSampleIndex: Int64(start),
-                    monoSamples: Array(samples[start..<end])
-                )
-            )
-            start = end
-        }
-        continuation.finish()
-    }
-    return .init(descriptor: descriptor, chunks: stream)
 }
 
 private func w30Fixture(seconds: Double, sampleRate: Double) -> [Float] {
