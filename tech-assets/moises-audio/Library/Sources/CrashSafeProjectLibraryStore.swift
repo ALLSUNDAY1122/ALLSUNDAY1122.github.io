@@ -475,21 +475,56 @@ public final class CrashSafeProjectLibraryStore:
         )
     }
 
-    /// Grace-based orphan collection is restricted to app-owned managed roots.
-    /// Live source/stem paths are always retained.
+    /// Grace-based orphan collection is restricted to app-owned managed roots. Approved file-backed
+    /// construction paths use a durable bounded filesystem window and query Core Data only for the
+    /// selected Imports/Stems paths. Exports preserve the pre-AW28 semantics: they are not Library
+    /// project references and become removable only after the same grace period. Direct/in-memory
+    /// compatibility construction retains the legacy full-maintenance fallback.
     public func sweepOrphanArtifacts(
         gracePeriod: TimeInterval = 3600,
-        now: Date = Date()
+        now: Date = Date(),
+        candidateLimit: Int = Lane2OrphanSweepBudget.defaultCandidatesPerPass
     ) async throws -> LibraryOrphanSweepResult {
         try await withMutationGate {
             _ = try await recoverInterruptedOperationsUnlocked()
-            let projects = try await metadata.listMaintenanceProjects()
-            let referenced = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(in: projects)
-            return try artifacts.sweepOrphans(
+
+            guard liveReferenceResolver != nil else {
+                let projects = try await metadata.listMaintenanceProjects()
+                let referenced = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(in: projects)
+                return try artifacts.sweepOrphans(
+                    referencedRelativePaths: referenced,
+                    gracePeriod: gracePeriod,
+                    now: now
+                )
+            }
+
+            let slice = try artifacts.prepareBoundedOrphanCandidateSlice(
+                gracePeriod: gracePeriod,
+                now: now,
+                limit: candidateLimit
+            )
+            let coreDataCandidatePaths = Set(
+                slice.candidates.lazy
+                    .map(\.relativePath)
+                    .filter { $0.hasPrefix("Imports/") || $0.hasPrefix("Stems/") }
+            )
+            let referenced: Set<String>
+            if coreDataCandidatePaths.isEmpty {
+                referenced = []
+            } else {
+                referenced = try await resolveLiveReferences(
+                    targetProjectUUIDs: [],
+                    candidateArtifactPaths: coreDataCandidatePaths
+                ).liveReferencedArtifactPaths
+            }
+            let result = try artifacts.applyBoundedOrphanCandidateSlice(
+                slice,
                 referencedRelativePaths: referenced,
                 gracePeriod: gracePeriod,
                 now: now
             )
+            try artifacts.persistBoundedOrphanSweepCursor(after: slice)
+            return result
         }
     }
 
