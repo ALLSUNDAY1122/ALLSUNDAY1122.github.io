@@ -31,8 +31,16 @@ struct L3AW31TempoBoundaryClockSelfTest {
         )
         precondition(abs(wrapped - 11) < 1e-12)
 
-        precondition(abs(try PlaybackTempoClockMath.hostDuration(forProjectDuration: 8, tempoRatio: 2) - 4) < 1e-12)
-        precondition(abs(try PlaybackTempoClockMath.hostDuration(forProjectDuration: 8, tempoRatio: 0.5) - 16) < 1e-12)
+        let twiceHost = try PlaybackTempoClockMath.hostDuration(
+            forProjectDuration: 8,
+            tempoRatio: 2
+        )
+        let halfHost = try PlaybackTempoClockMath.hostDuration(
+            forProjectDuration: 8,
+            tempoRatio: 0.5
+        )
+        precondition(abs(twiceHost - 4) < 1e-12)
+        precondition(abs(halfHost - 16) < 1e-12)
 
         let receipt = PlaybackTempoBoundaryReceipt(
             serial: 7,
@@ -49,7 +57,10 @@ struct L3AW31TempoBoundaryClockSelfTest {
 
         for invalid in [0.0, -1.0, Double.nan, Double.infinity] {
             do {
-                _ = try PlaybackTempoClockMath.hostDuration(forProjectDuration: 1, tempoRatio: invalid)
+                _ = try PlaybackTempoClockMath.hostDuration(
+                    forProjectDuration: 1,
+                    tempoRatio: invalid
+                )
                 preconditionFailure("invalid tempo accepted")
             } catch PlaybackTempoBoundaryError.invalidClockInput {
                 // expected
