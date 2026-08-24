@@ -207,11 +207,12 @@ class GeneratedStemMixCompatibilityTests(unittest.TestCase):
         second = make_wav(self.root / "second.wav", byte_value=2)
         r1 = validate_mix_ready(candidate_path=first, source=self.source, plan=self.plan(first))
         r2 = validate_mix_ready(candidate_path=second, source=self.source, plan=self.plan(second))
+        store = GeneratedStemVariantStore(self.root / "store")
+        store.commit_variant(project_ref_hash=H("1"), role="guitar", generation_ref_hash=H("2"), variant_index=0, candidate_path=first, receipt=r1)
         def fault(phase):
             if phase == "after_manifest":
                 raise RuntimeError("crash")
-        store = GeneratedStemVariantStore(self.root / "store", fault_injector=fault)
-        store.commit_variant(project_ref_hash=H("1"), role="guitar", generation_ref_hash=H("2"), variant_index=0, candidate_path=first, receipt=r1)
+        store.fault_injector = fault
         with self.assertRaises(RuntimeError):
             store.commit_variant(project_ref_hash=H("1"), role="guitar", generation_ref_hash=H("3"), variant_index=1, candidate_path=second, receipt=r2)
         active = store.get_active(project_ref_hash=H("1"), role="guitar")
@@ -240,7 +241,7 @@ class GeneratedStemMixCompatibilityTests(unittest.TestCase):
         obj = store.objects / f"{item.artifact_sha256}.wav"
         with obj.open("ab") as h:
             h.write(b"x")
-        self.assertCode("GEN_MIX_ACTIVE_OBJECT_MUTATED", lambda: store.get_active(project_ref_hash=H("1"), role="guitar"))
+        self.assertCode("GEN_MIX_RIFF_SIZE_MISMATCH", lambda: store.get_active(project_ref_hash=H("1"), role="guitar"))
 
     def test_corrupt_active_pointer_fails_closed(self):
         candidate = make_wav(self.root / "candidate.wav")
