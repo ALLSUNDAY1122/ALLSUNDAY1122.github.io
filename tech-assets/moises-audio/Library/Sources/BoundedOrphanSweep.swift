@@ -90,7 +90,7 @@ public extension LibraryArtifactLifecycle {
             rootURL: rootURL,
             recoveryDirectoryName: recoveryDirectoryName
         )
-        if inventory.isAuthoritative, inventory.canServe(managedRootNames: normalizedRoots) {
+        if inventory.hasValidAuthoritativeMarker, inventory.canServe(managedRootNames: normalizedRoots) {
             let inventorySlice = try inventory.prepareOrphanCandidateSlice(
                 gracePeriod: gracePeriod,
                 now: now,
