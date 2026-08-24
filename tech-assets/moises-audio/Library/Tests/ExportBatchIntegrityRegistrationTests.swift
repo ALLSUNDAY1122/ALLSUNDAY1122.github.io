@@ -44,7 +44,8 @@ final class Lane2ExportBatchIntegrityRegistrationTests: XCTestCase {
             )
             let journal = Lane2ExportRegistrationJournal(rootURL: root)
             XCTAssertThrowsError(try journal.prepare(projectUUID: UUID(), artifacts: [artifact])) { error in
-                guard case .publicationIntegrityFailed = error as? Lane2ExportRegistrationJournalFailure else {
+                guard let failure = error as? Lane2ExportRegistrationJournalFailure,
+                      case .publicationIntegrityFailed = failure else {
                     return XCTFail("unexpected error: \(error)")
                 }
             }
