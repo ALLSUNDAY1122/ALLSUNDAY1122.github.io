@@ -36,6 +36,14 @@ public struct AnalysisSinglePassPreparedFeatureDiagnostics: Codable, Equatable, 
     public let tempoResolutionSafe: Bool
     public let chordWindowRetentionSafe: Bool
     public let sectionResolutionSafe: Bool
+    public let chordBackendGuardState: String
+    public let chordBackendVerificationFrameLimit: Int
+    public let chordBackendVerificationComparisons: Int
+    public let chordBackendVerificationMatches: Int
+    public let chordBackendFallbackTriggered: Bool
+    public let chordBackendFallbackComparisonIndex: Int?
+    public let chordBackendReferencePublicationCount: Int
+    public let chordBackendVectorizedPublicationCount: Int
 
     public init(
         preparedSampleCount: Int,
@@ -58,7 +66,15 @@ public struct AnalysisSinglePassPreparedFeatureDiagnostics: Codable, Equatable, 
         sectionEnergyFrameStrideEquivalent: Int = 1,
         tempoResolutionSafe: Bool = true,
         chordWindowRetentionSafe: Bool = true,
-        sectionResolutionSafe: Bool = true
+        sectionResolutionSafe: Bool = true,
+        chordBackendGuardState: String = "verifying",
+        chordBackendVerificationFrameLimit: Int = 8,
+        chordBackendVerificationComparisons: Int = 0,
+        chordBackendVerificationMatches: Int = 0,
+        chordBackendFallbackTriggered: Bool = false,
+        chordBackendFallbackComparisonIndex: Int? = nil,
+        chordBackendReferencePublicationCount: Int = 0,
+        chordBackendVectorizedPublicationCount: Int = 0
     ) {
         self.preparedSampleCount = preparedSampleCount
         self.preparedSampleRequests = preparedSampleRequests
@@ -81,6 +97,14 @@ public struct AnalysisSinglePassPreparedFeatureDiagnostics: Codable, Equatable, 
         self.tempoResolutionSafe = tempoResolutionSafe
         self.chordWindowRetentionSafe = chordWindowRetentionSafe
         self.sectionResolutionSafe = sectionResolutionSafe
+        self.chordBackendGuardState = chordBackendGuardState
+        self.chordBackendVerificationFrameLimit = max(1, chordBackendVerificationFrameLimit)
+        self.chordBackendVerificationComparisons = max(0, chordBackendVerificationComparisons)
+        self.chordBackendVerificationMatches = max(0, chordBackendVerificationMatches)
+        self.chordBackendFallbackTriggered = chordBackendFallbackTriggered
+        self.chordBackendFallbackComparisonIndex = chordBackendFallbackComparisonIndex.map { max(1, $0) }
+        self.chordBackendReferencePublicationCount = max(0, chordBackendReferencePublicationCount)
+        self.chordBackendVectorizedPublicationCount = max(0, chordBackendVectorizedPublicationCount)
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -105,6 +129,14 @@ public struct AnalysisSinglePassPreparedFeatureDiagnostics: Codable, Equatable, 
         case tempoResolutionSafe
         case chordWindowRetentionSafe
         case sectionResolutionSafe
+        case chordBackendGuardState
+        case chordBackendVerificationFrameLimit
+        case chordBackendVerificationComparisons
+        case chordBackendVerificationMatches
+        case chordBackendFallbackTriggered
+        case chordBackendFallbackComparisonIndex
+        case chordBackendReferencePublicationCount
+        case chordBackendVectorizedPublicationCount
     }
 
     public init(from decoder: Decoder) throws {
@@ -130,7 +162,15 @@ public struct AnalysisSinglePassPreparedFeatureDiagnostics: Codable, Equatable, 
             sectionEnergyFrameStrideEquivalent: try values.decodeIfPresent(Int.self, forKey: .sectionEnergyFrameStrideEquivalent) ?? 1,
             tempoResolutionSafe: try values.decodeIfPresent(Bool.self, forKey: .tempoResolutionSafe) ?? true,
             chordWindowRetentionSafe: try values.decodeIfPresent(Bool.self, forKey: .chordWindowRetentionSafe) ?? true,
-            sectionResolutionSafe: try values.decodeIfPresent(Bool.self, forKey: .sectionResolutionSafe) ?? true
+            sectionResolutionSafe: try values.decodeIfPresent(Bool.self, forKey: .sectionResolutionSafe) ?? true,
+            chordBackendGuardState: try values.decodeIfPresent(String.self, forKey: .chordBackendGuardState) ?? "verifying",
+            chordBackendVerificationFrameLimit: try values.decodeIfPresent(Int.self, forKey: .chordBackendVerificationFrameLimit) ?? 8,
+            chordBackendVerificationComparisons: try values.decodeIfPresent(Int.self, forKey: .chordBackendVerificationComparisons) ?? 0,
+            chordBackendVerificationMatches: try values.decodeIfPresent(Int.self, forKey: .chordBackendVerificationMatches) ?? 0,
+            chordBackendFallbackTriggered: try values.decodeIfPresent(Bool.self, forKey: .chordBackendFallbackTriggered) ?? false,
+            chordBackendFallbackComparisonIndex: try values.decodeIfPresent(Int.self, forKey: .chordBackendFallbackComparisonIndex),
+            chordBackendReferencePublicationCount: try values.decodeIfPresent(Int.self, forKey: .chordBackendReferencePublicationCount) ?? 0,
+            chordBackendVectorizedPublicationCount: try values.decodeIfPresent(Int.self, forKey: .chordBackendVectorizedPublicationCount) ?? 0
         )
     }
 
@@ -157,6 +197,14 @@ public struct AnalysisSinglePassPreparedFeatureDiagnostics: Codable, Equatable, 
         try values.encode(tempoResolutionSafe, forKey: .tempoResolutionSafe)
         try values.encode(chordWindowRetentionSafe, forKey: .chordWindowRetentionSafe)
         try values.encode(sectionResolutionSafe, forKey: .sectionResolutionSafe)
+        try values.encode(chordBackendGuardState, forKey: .chordBackendGuardState)
+        try values.encode(chordBackendVerificationFrameLimit, forKey: .chordBackendVerificationFrameLimit)
+        try values.encode(chordBackendVerificationComparisons, forKey: .chordBackendVerificationComparisons)
+        try values.encode(chordBackendVerificationMatches, forKey: .chordBackendVerificationMatches)
+        try values.encode(chordBackendFallbackTriggered, forKey: .chordBackendFallbackTriggered)
+        try values.encodeIfPresent(chordBackendFallbackComparisonIndex, forKey: .chordBackendFallbackComparisonIndex)
+        try values.encode(chordBackendReferencePublicationCount, forKey: .chordBackendReferencePublicationCount)
+        try values.encode(chordBackendVectorizedPublicationCount, forKey: .chordBackendVectorizedPublicationCount)
     }
 }
 

@@ -99,6 +99,12 @@ public struct LibraryArtifactLifecycle: Sendable {
         guard inspection.isRegularFile, inspection.byteCount > 0 else {
             throw LibraryArtifactFailure.emptyArtifact(relativePath)
         }
+        let inventory = Lane2ManagedArtifactInventory(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName
+        )
+        _ = try inventory.activateForFirstManagedArtifactIfSafe(relativePath: relativePath)
+        _ = try inventory.registerIfManaged(relativePath: relativePath)
     }
 
     /// Metadata may expose finalRelativePath only after this succeeds.
