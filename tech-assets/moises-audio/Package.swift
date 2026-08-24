@@ -39,6 +39,7 @@ let package = Package(
                 "Analysis/AnalysisExtremeDurationRetentionBudget.swift",
                 "Analysis/AnalysisLongAudioCPUDutyBudget.swift",
                 "Analysis/AnalysisChordSpectralVectorizationBudget.swift",
+                "Analysis/AnalysisChordBackendGuardBudget.swift",
                 "Analysis/AnalysisSequentialPreparedFeatureAccumulator.swift",
                 "Analysis/AnalysisChunkedSinglePassPreparedPipeline.swift",
                 "Analysis/AnalysisSinglePassPreparedFeatures.swift",
