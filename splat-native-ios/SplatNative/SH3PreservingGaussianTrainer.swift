@@ -5,8 +5,8 @@ import Msplat
 ///
 /// Msplat's legacy `.splat` export stores only DC color. We keep that file for existing viewer/project
 /// compatibility, then immediately persist the trainer's full SH3 PLY as a content-addressed canonical asset.
-/// If canonical persistence fails, the pending `.splat` is removed so ScanModel's existing completion gate
-/// fails instead of silently committing an SH0-only result.
+/// If canonical persistence or durable project registration fails, the pending `.splat` is removed so
+/// ScanModel's existing completion gate fails instead of silently committing an SH0-only result.
 final class SH3PreservingGaussianTrainer {
     private let base: Msplat.GaussianTrainer
 
@@ -67,16 +67,24 @@ final class SH3PreservingGaussianTrainer {
             return
         }
 
+        var canonicalURL: URL?
         do {
-            _ = try SplatCanonicalSHAsset.persist(
+            let asset = try SplatCanonicalSHAsset.persist(
                 from: base,
                 legacySplatURL: legacyURL,
                 expectedPointCount: size.intValue / 32
             )
+            canonicalURL = asset.url
+            _ = try SplatCanonicalSHAsset.registerDurableProjectOutput(
+                asset,
+                legacySplatURL: legacyURL
+            )
         } catch {
             // ScanModel already treats a missing/invalid pending `.splat` as reconstruction failure.
-            // Removing it here prevents a lossy SH0-only project from being marked finished.
+            // Removing both artifacts here prevents a lossy SH0-only project or an unregistered SH3
+            // sidecar from being marked finished.
             try? FileManager.default.removeItem(at: legacyURL)
+            if let canonicalURL { try? FileManager.default.removeItem(at: canonicalURL) }
         }
     }
 
