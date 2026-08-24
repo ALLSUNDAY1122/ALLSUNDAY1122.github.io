@@ -50,6 +50,7 @@ let package = Package(
                 "Analysis/BoundedTempoBeatAnalyzer.swift",
                 "Analysis/BoundedMusicalKeyAnalyzer.swift",
                 "Analysis/AnalysisChordDecisionScoring.swift",
+                "Analysis/AnalysisChordBackendEquivalenceGuard.swift",
                 "Analysis/ChordVocabularyClassifier.swift",
                 "Analysis/AnalysisReusableChordFrameClassifier.swift",
                 "Analysis/BoundedChordTimelineAnalyzer.swift",
