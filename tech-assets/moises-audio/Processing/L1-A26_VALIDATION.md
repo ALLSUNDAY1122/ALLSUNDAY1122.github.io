@@ -1,104 +1,111 @@
 # L1-A26｜Lane 1 Full Regression / Dependency Closure Audit
 
-Status: `IN_PROGRESS_RUNNER_PENDING`  
+Status: `IN_PROGRESS_EXACT_CHECKOUT_AUDIT_PENDING`  
 PARITY claim: `NONE`
 
-## Why A26 did not immediately close
+## Dependency repair already closed
 
-The Worker branch is canonical for Worker 1 progress. A24-A25 are already in `completed_waves`; A26 remains current. During A26 source readback, a real cross-wave incompatibility was found before HQ Late Integration:
+A26 previously found a real A24→A25 interface drift. `A24RetentionGateway` preserves final A24 delete/refund/runtime-erasure semantics while satisfying the A25 facade seam. The focused gateway regression is observed `12/12 PASS`.
 
-- A25 composes a retention seam with `register_variant`, `request_delete`, `snapshot` and `retention_policy_sha256`.
-- The finalized A24 coordinator uses stricter lower-level primitives (`begin_delete`, `execute_local_delete`, tombstone/refund/runtime-erasure APIs) and no longer exposes the earlier prototype service-shaped API.
+Final A24 source readback also confirms physical generated-artifact reachability uses **both all manifests and all active pointers** and fails closed on corrupt/symlink references before GC/delete. This prevents an active shared content-addressed object from being removed merely because a historical manifest is damaged or absent.
 
-Passing each wave independently was therefore insufficient: final A24 could not be wired directly to A25 without a compatibility layer.
+## Why the full audit is still not marked PASS
 
-## Repair
+The mandatory full runner is `Separation/Evaluation/lane1_dependency_audit.py`.
 
-A26 adds `Separation/Server/ai_stem_generation_retention_gateway.py`.
+The current execution container still has no exact Worker-branch checkout and cannot resolve `github.com`, so a full checkout cannot be cloned into the executable environment. No CI run exists that can substitute for the missing full execution. Therefore the following remain `NOT_OBSERVED`:
 
-`A24RetentionGateway` preserves final A24 semantics while restoring the A25 seam:
+- full Lane 1 unittest discovery;
+- full Lane 1 Python py_compile;
+- full owned JSON syntax audit;
+- full Draft 2020-12 schema self-validation;
+- one-command `overall_state=PASS` on the exact Worker branch.
 
-- registration verifies an exact A23 manifest and exact active pointer;
-- A24 tombstones block re-registration;
-- delete reason is mapped deterministically and conflicting replay fails closed;
-- all physical deletion/reference decisions remain delegated to A24;
-- runtime delete `accepted` maps only to `PENDING`;
-- missing binding / runtime exception maps to `UNKNOWN`;
-- only authority-returned `confirmed` / `not_found` can become authoritative runtime-erasure state;
-- local association deletion never implies credit refund;
-- the gateway policy hash describes the semantic bridge only and does not invent provider/current-iPhone retention TTLs.
+A26 is intentionally not placed in `completed_waves` until that execution exists.
 
-A focused 12-case regression is checked in at `Separation/Tests/test_ai_stem_generation_retention_gateway.py`.
+## A26 v2 provenance hardening
 
-## A24 evidence reconciliation / reference safety
+The previous runner could report test results without strongly proving which complete Lane 1 byte snapshot produced them. That is now hardened.
 
-Latest Worker-branch source readback confirms that final A24 object reachability is computed from **both**:
+### Exact git HEAD binding
 
-- every immutable generated-stem manifest; and
-- every active generated-stem pointer.
+The closure command now requires:
 
-`_collect_referenced_artifacts()` fails closed if either reference set contains a corrupt or symlinked record before physical-object GC/delete proceeds. This specifically prevents the unsafe case where a damaged/missing historical manifest could otherwise allow an object that is still active in another project/role to be deleted.
+`--expected-git-head <exact 40-hex final Worker branch tip>`
 
-Final A24 also keeps deletion, refund and runtime erasure as separate state machines; tombstones prevent silent generation resurrection. The stale prototype retention-policy schema was removed and A24 evidence was normalized to the final coordinator semantics.
+The runner executes `git rev-parse HEAD` from the repository root. `overall_state=PASS` is impossible when:
 
-## Focused gateway execution now observed
+- the expected head is absent;
+- the expected head is malformed;
+- `.git` / git HEAD is unavailable;
+- the actual checkout HEAD differs from the supplied Worker-branch tip.
 
-The exact checked-in A26 gateway source and exact checked-in 12-case gateway test source were reconstructed through GitHub connector readback and executed against a locally available A24 coordinator whose gateway-invoked behavior was separately matched to the latest final A24 source readback.
+This blocks reuse of a PASS report from an older checkout or another branch.
 
-Observed result:
+### Deterministic owned-source snapshot
 
-- A24↔A25 gateway focused regression: `12/12 PASS`;
-- failures: `0`;
-- errors: `0`.
+`Separation/Evaluation/lane1_source_snapshot.py` hashes every durable regular file beneath:
 
-Observed cases include:
+- `Separation/**`
+- `Processing/**`
 
-1. registration exposes the A25 retention surface;
-2. exact active pointer is required;
-3. delete maps to A24 and confirms only local association deletion;
-4. same-reason delete replay is idempotent;
-5. conflicting delete reason fails closed;
-6. tombstone blocks re-registration/resurrection;
-7. runtime `confirmed` is authoritative erasure but not refund;
-8. runtime `accepted` remains pending;
-9. runtime exception remains unknown;
-10. missing runtime binding cannot claim erasure;
-11. binding identity mismatch fails closed;
-12. public snapshot is privacy safe.
+For every file the report records relative repository path, byte count and SHA-256, then derives one deterministic `source_snapshot_sha256` over the ordered manifest.
 
-This focused execution is valid dependency-repair evidence, but it is **not** represented as the full exact Worker-branch regression run.
+Fail-closed rules:
 
-## One-command audit
+- a symlink anywhere in the owned source snapshot is rejected;
+- a missing owned scope is rejected;
+- an unreadable/stat-failing source file is rejected;
+- only runtime-generated cache/temp/lock artifacts are excluded automatically;
+- an audit output file may be explicitly excluded only when it is inside the Lane root, preventing a report from hashing itself;
+- files outside Separation/Processing do not influence the Lane-owned snapshot.
 
-`Separation/Evaluation/lane1_dependency_audit.py` remains the mandatory final A26 closure runner. On a full Worker-branch checkout it performs:
+The snapshot is evidence of exact owned bytes. It does not make a PARITY claim.
 
-1. `py_compile` over Lane 1 Server/Evaluation/tests;
-2. full `unittest discover` for `Separation/Tests/test_*.py`;
-3. JSON syntax validation for Lane-owned evaluation/evidence JSON;
-4. Draft 2020-12 schema self-validation;
-5. critical A21-A26 dependency-surface checks, including final A24 coordinator and A26 gateway;
-6. stable error-code inventory for review.
+### Report schema
 
-It exits non-zero unless every mandatory check passes.
+`Separation/Evaluation/schemas/lane1-dependency-audit-report-v2.schema.json` requires both:
 
-## Remaining execution boundary
+- `git_head_binding.state=PASS`; and
+- `owned_source_snapshot.state=PASS`
 
-A full Worker-branch checkout is still unavailable in the current execution container because `github.com` DNS resolution fails. GitHub reports no workflow runs for the inspected latest A26 commit, so there is also no CI result that can substitute for the missing checkout run.
+whenever `overall_state=PASS`.
 
-Therefore A26 still does **not** claim:
+A PASS-shaped report that lacks either exact checkout binding or source-snapshot evidence is therefore schema-invalid or cannot be emitted by the v2 runner as PASS.
 
-- full Lane 1 unittest discovery PASS;
-- full Lane 1 py_compile PASS;
-- full owned JSON syntax audit PASS;
-- full schema self-validation PASS;
-- `lane1_dependency_audit.py overall_state=PASS`.
+## Focused provenance validation
 
-Those remain `NOT_OBSERVED`. Only the focused A24↔A25 gateway regression is now observed PASS.
+Because the full Worker checkout remains unavailable, only the new provenance logic was executed in an isolated local fixture. This is explicitly not a substitute for the full audit.
 
-The missing full runner is not a human/Golden blocker and does not justify `BLOCKED_HUMAN`. A24-A25 remain a coherent checkpoint candidate; A26 stays current until the full one-command audit is observed `PASS` on an executable exact Worker-branch checkout/CI runner.
+Observed focused results:
+
+- deterministic source-snapshot behavior: `7/7 PASS`;
+- git-head/source-binding behavior: `5/5 PASS`;
+- v2 report JSON Schema self-check: `PASS`.
+
+Cases cover deterministic repeatability, mutation sensitivity, non-owned/cache exclusion, explicit report exclusion, outside-root exclusion rejection, symlink rejection, missing-scope rejection, exact git HEAD success, mismatched/missing/malformed expected HEAD rejection, and source-snapshot emission.
+
+## Full one-command audit contract
+
+On an executable exact Worker checkout, run the final A26 runner with the final branch tip supplied explicitly. The runner then performs:
+
+1. exact git HEAD verification;
+2. complete owned `Separation/**` + `Processing/**` source snapshot;
+3. Python `py_compile` for Lane 1 Server/Evaluation/tests;
+4. full `unittest discover` for `Separation/Tests/test_*.py`;
+5. owned JSON syntax validation;
+6. Draft 2020-12 schema self-validation;
+7. A21-A26 critical dependency-surface checks;
+8. stable error-code inventory.
+
+Completion requires archived v2 evidence with `overall_state=PASS`, `git_head_binding.state=PASS`, and `owned_source_snapshot.state=PASS` at the exact final Worker-branch tip.
 
 ## PARITY boundary
 
 No PARITY row is promoted. P003/P004/P005/P020/P021/P024/P025 remain canonical `MISSING` pending real runtime/current-iPhone/real-audio/device/HQ gates.
 
-A26 dependency repair, focused regression and any eventual portable full regression are engineering evidence only. They cannot substitute for real generated/separated audio quality, current-iPhone differential evidence or HQ PARITY judgment.
+A26 dependency repair, source provenance, focused regression, static audit and any eventual portable full regression are engineering evidence only. They cannot substitute for real separated/generated audio quality, current-iPhone differential evidence or HQ PARITY judgment.
+
+## Current conclusion
+
+A05-A25 remain a coherent engineering checkpoint. A26 is materially safer than before because a future full PASS can now be tied to both the exact git commit and exact Lane-owned file bytes. The only remaining A26 closure condition is execution of that hardened one-command audit on an executable exact Worker-branch checkout/CI runner.
