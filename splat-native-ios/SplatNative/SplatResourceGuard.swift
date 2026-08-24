@@ -114,9 +114,12 @@ enum SplatCheckpointResumeOutcome: String, Codable, Equatable, Sendable {
     case loaded
     case loadFailed
 
-    static func classify(checkpointExists: Bool, resumedIteration: Int) -> SplatCheckpointResumeOutcome {
+    /// `GaussianTrainer.loadCheckpoint` returns the stored iteration as `Int?`. Iteration zero is
+    /// still a successful load, so success must be classified from the optional return rather than
+    /// inferred from `trainer.iteration > 0`.
+    static func classify(checkpointExists: Bool, loadedIteration: Int?) -> SplatCheckpointResumeOutcome {
         guard checkpointExists else { return .noCheckpoint }
-        return resumedIteration > 0 ? .loaded : .loadFailed
+        return loadedIteration != nil ? .loaded : .loadFailed
     }
 }
 
