@@ -83,9 +83,10 @@ public enum AnalysisExtremeDurationRetentionPolicy {
             : 0
         let tempoStride = max(1, ceilDiv(naturalTempo, maximumTempoFrames))
         let tempoHop = saturatingMultiply(baseTempoHop, tempoStride)
-        let candidateTempo = sampleCount >= tempoFrameSize
-            ? 1 + (sampleCount - tempoFrameSize) / max(1, tempoHop)
-            : 0
+        // W31 computes the original natural-cadence onset first, then max-pools
+        // each contiguous stride group. This keeps transient coverage while
+        // bounding retained cardinality.
+        let candidateTempo = ceilDiv(naturalTempo, tempoStride)
         let envelopeRate = sampleRate / Double(max(1, tempoHop))
         let maximumBeatFrequency = configuration.tempoRange.upperBound / 60.0
         let tempoSafe = envelopeRate + 1e-12 >= maximumBeatFrequency * 2.0
@@ -101,8 +102,6 @@ public enum AnalysisExtremeDurationRetentionPolicy {
         )
         let chordSafe = chordHop <= chordWindow
         let candidateChord = ceilDiv(sampleCount, max(1, chordHop))
-        // One X marker is retained when the requested cadence can no longer be
-        // reconstructed correctly from the bounded ring.
         let retainedChord = chordSafe ? candidateChord : 1
 
         let naturalSection = max(
