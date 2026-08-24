@@ -93,6 +93,30 @@ require(
     "checkpoint persistence failure must not claim a checkpoint iteration",
 )
 
+# Abrupt process termination cannot execute a Swift failure branch. Persist a phase breadcrumb
+# before expensive/uninterruptible reconstruction work, and refresh training progress only at the existing
+# checkpoint cadence so Build 5 evidence identifies the last durable phase without excessive I/O.
+for outcome, phase in (
+    ("running-preflight", ".preflight"),
+    ("running-dataset-init", ".datasetInit"),
+    ("running-trainer-init", ".trainerInit"),
+    ("running-checkpoint-load", ".checkpointLoad"),
+    ("running-checkpoint-save", ".checkpointSave"),
+    ("running-export", ".export"),
+    ("running-preview", ".preview"),
+):
+    require(
+        rf'{re.escape(outcome)}"[\s\S]{{0,500}}{re.escape(phase)}',
+        MODEL,
+        f"missing durable reconstruction phase breadcrumb: {outcome} / {phase}",
+    )
+assert MODEL.count('"running-training-step"') >= 2, "training must persist start + checkpoint-cadence heartbeats"
+require(
+    r'if checkpointDue \{[\s\S]{0,500}running-training-step',
+    MODEL,
+    "training heartbeat must reuse checkpoint cadence rather than per-step disk writes",
+)
+
 # Expensive point-color projection and sky seeding must run after Task.detached begins, not while
 # finishCapture is transitioning the UI from capture to the processing screen.
 finish = MODEL.index("func finishCapture()")

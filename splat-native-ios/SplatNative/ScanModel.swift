@@ -626,6 +626,9 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     SplatReconstructionRunReport.write(report, projectURL: projectURL)
                 }
 
+                // Persist the phase before entering work that can terminate the process before Swift can report an error.
+                writeEarlyReport("running-preflight", .preflight, nil, nil)
+
                 do {
                     let plyURL = projectURL.appendingPathComponent("points3D.ply")
                     if !FileManager.default.fileExists(atPath: plyURL.path) {
@@ -672,6 +675,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     return
                 }
 
+                writeEarlyReport("running-dataset-init", .datasetInit, nil, nil)
                 let dataset = GaussianDataset(
                     path: path,
                     downscaleFactor: SplatReconstructionPolicy.datasetDownscale,
@@ -687,11 +691,13 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 }
 
                 let config = SplatReconstructionPolicy.makeConfig()
+                writeEarlyReport("running-trainer-init", .trainerInit, nil, nil)
                 let trainer = GaussianTrainer(dataset: dataset, config: config)
 
                 let checkpointExists = FileManager.default.fileExists(atPath: checkpoint.path)
                 let loadedCheckpointIteration: Int?
                 if checkpointExists {
+                    writeEarlyReport("running-checkpoint-load", .checkpointLoad, nil, nil)
                     loadedCheckpointIteration = trainer.loadCheckpoint(from: checkpoint.path)
                 } else {
                     loadedCheckpointIteration = nil
@@ -806,6 +812,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 }
 
                 if resumedIteration < effectiveTarget {
+                    writeRunReport(
+                        "running-training-step",
+                        .trainingStep,
+                        nil,
+                        resumedIteration,
+                        trainer.splatCount,
+                        checkpointExists ? resumedIteration : nil,
+                        nil
+                    )
                     for _ in resumedIteration..<effectiveTarget {
                         if Task.isCancelled {
                             msplatSync()
@@ -904,12 +919,34 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                             }
                             return
                         }
+
+                        // Reuse the existing durable checkpoint cadence as a low-I/O progress heartbeat.
+                        if checkpointDue {
+                            writeRunReport(
+                                "running-training-step",
+                                .trainingStep,
+                                nil,
+                                iteration,
+                                stats.splatCount,
+                                iteration,
+                                nil
+                            )
+                        }
                     }
                 }
 
                 msplatSync()
                 let finalCheckpointIteration = trainer.iteration
                 let finalCheckpointCount = trainer.splatCount
+                writeRunReport(
+                    "running-checkpoint-save",
+                    .checkpointSave,
+                    nil,
+                    finalCheckpointIteration,
+                    finalCheckpointCount,
+                    nil,
+                    nil
+                )
                 guard trainer.saveCheckpoint(to: checkpoint.path) else {
                     failCheckpointSave(
                         "failed-checkpoint-save-final",
@@ -919,6 +956,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     return
                 }
                 let pendingOutput = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+                writeRunReport(
+                    "running-export",
+                    .export,
+                    nil,
+                    trainer.iteration,
+                    trainer.splatCount,
+                    finalCheckpointIteration,
+                    nil
+                )
                 trainer.exportSplat(to: pendingOutput.path)
                 msplatSync()
 
@@ -968,6 +1014,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     return
                 }
 
+                writeRunReport(
+                    "running-preview",
+                    .preview,
+                    nil,
+                    trainer.iteration,
+                    trainer.splatCount,
+                    finalCheckpointIteration,
+                    nil
+                )
                 let rendered = trainer.render(cameraIndex: 0)
                 let preview = Self.makeImage(from: rendered)
                 let finalCount = trainer.splatCount
