@@ -5,18 +5,18 @@ PARITY claim: `NONE`
 
 ## Why A26 did not immediately close
 
-The current Worker branch is canonical for Worker 1 progress, and the latest status already placed A24-A25 in `completed_waves` with A26 current. During the A26 readback, a real cross-wave incompatibility was found before HQ Late Integration:
+The Worker branch is canonical for Worker 1 progress. A24-A25 are already in `completed_waves`; A26 remains current. During A26 source readback, a real cross-wave incompatibility was found before HQ Late Integration:
 
 - A25 composes a retention seam with `register_variant`, `request_delete`, `snapshot` and `retention_policy_sha256`.
-- The finalized A24 coordinator uses stricter lower-level primitives (`begin_delete`, `execute_local_delete`, tombstone/refund/runtime-erasure APIs) and no longer exposes the prototype service-shaped API.
+- The finalized A24 coordinator uses stricter lower-level primitives (`begin_delete`, `execute_local_delete`, tombstone/refund/runtime-erasure APIs) and no longer exposes the earlier prototype service-shaped API.
 
-Passing each wave independently was therefore not enough: an integration caller could not directly connect final A24 to A25.
+Passing each wave independently was therefore insufficient: final A24 could not be wired directly to A25 without a compatibility layer.
 
 ## Repair
 
 A26 adds `Separation/Server/ai_stem_generation_retention_gateway.py`.
 
-`A24RetentionGateway` preserves the final A24 semantics while restoring the A25 seam:
+`A24RetentionGateway` preserves final A24 semantics while restoring the A25 seam:
 
 - registration verifies an exact A23 manifest and exact active pointer;
 - A24 tombstones block re-registration;
@@ -24,27 +24,53 @@ A26 adds `Separation/Server/ai_stem_generation_retention_gateway.py`.
 - all physical deletion/reference decisions remain delegated to A24;
 - runtime delete `accepted` maps only to `PENDING`;
 - missing binding / runtime exception maps to `UNKNOWN`;
-- only authority-returned `confirmed` / `not_found` maps to authoritative erasure state;
+- only authority-returned `confirmed` / `not_found` can become authoritative runtime-erasure state;
 - local association deletion never implies credit refund;
-- the gateway policy hash describes the semantic bridge only and does not invent provider retention TTLs.
+- the gateway policy hash describes the semantic bridge only and does not invent provider/current-iPhone retention TTLs.
 
-A focused 12-case regression was added at `Separation/Tests/test_ai_stem_generation_retention_gateway.py`. The checked-in cases cover registration, active-pointer requirement, delete mapping/replay, reason conflict, tombstone resurrection prevention, runtime confirmed/accepted/error/missing-binding semantics, binding identity mismatch and privacy-safe snapshot shape.
+A focused 12-case regression is checked in at `Separation/Tests/test_ai_stem_generation_retention_gateway.py`.
 
-## A24 evidence reconciliation
+## A24 evidence reconciliation / reference safety
 
-A24 had an earlier prototype evidence/schema set on the branch. The A26 readback normalized it to the final A24 implementation:
+Latest Worker-branch source readback confirms that final A24 object reachability is computed from **both**:
 
-- final object reachability uses both manifests and active pointers;
-- deletion, refund and runtime erasure are separate state machines;
-- stale prototype `generated-stem-retention-policy.schema.json` was removed;
-- final A24 request/evidence schemas remain;
-- A24 validation/matrix now describe the final coordinator rather than the superseded prototype.
+- every immutable generated-stem manifest; and
+- every active generated-stem pointer.
 
-This matters because A25's durable identity still needs a retention semantic hash, but that hash must not be mistaken for a vendor/current-iPhone TTL claim. The A26 gateway supplies a deterministic semantic hash for A25 without reintroducing the deleted TTL schema.
+`_collect_referenced_artifacts()` fails closed if either reference set contains a corrupt or symlinked record before physical-object GC/delete proceeds. This specifically prevents the unsafe case where a damaged/missing historical manifest could otherwise allow an object that is still active in another project/role to be deleted.
+
+Final A24 also keeps deletion, refund and runtime erasure as separate state machines; tombstones prevent silent generation resurrection. The stale prototype retention-policy schema was removed and A24 evidence was normalized to the final coordinator semantics.
+
+## Focused gateway execution now observed
+
+The exact checked-in A26 gateway source and exact checked-in 12-case gateway test source were reconstructed through GitHub connector readback and executed against a locally available A24 coordinator whose gateway-invoked behavior was separately matched to the latest final A24 source readback.
+
+Observed result:
+
+- A24↔A25 gateway focused regression: `12/12 PASS`;
+- failures: `0`;
+- errors: `0`.
+
+Observed cases include:
+
+1. registration exposes the A25 retention surface;
+2. exact active pointer is required;
+3. delete maps to A24 and confirms only local association deletion;
+4. same-reason delete replay is idempotent;
+5. conflicting delete reason fails closed;
+6. tombstone blocks re-registration/resurrection;
+7. runtime `confirmed` is authoritative erasure but not refund;
+8. runtime `accepted` remains pending;
+9. runtime exception remains unknown;
+10. missing runtime binding cannot claim erasure;
+11. binding identity mismatch fails closed;
+12. public snapshot is privacy safe.
+
+This focused execution is valid dependency-repair evidence, but it is **not** represented as the full exact Worker-branch regression run.
 
 ## One-command audit
 
-`Separation/Evaluation/lane1_dependency_audit.py` was added for the final A26 closure run. On a real checkout it performs:
+`Separation/Evaluation/lane1_dependency_audit.py` remains the mandatory final A26 closure runner. On a full Worker-branch checkout it performs:
 
 1. `py_compile` over Lane 1 Server/Evaluation/tests;
 2. full `unittest discover` for `Separation/Tests/test_*.py`;
@@ -53,25 +79,26 @@ This matters because A25's durable identity still needs a retention semantic has
 5. critical A21-A26 dependency-surface checks, including final A24 coordinator and A26 gateway;
 6. stable error-code inventory for review.
 
-The runner exits non-zero unless all mandatory checks pass.
+It exits non-zero unless every mandatory check passes.
 
-## Execution boundary in this session
+## Remaining execution boundary
 
-The available execution container cannot resolve `github.com`, so the attempted Worker-branch checkout failed before any code was executed. GitHub combined status on the latest A26 branch commit also returned no CI status records.
+A full Worker-branch checkout is still unavailable in the current execution container because `github.com` DNS resolution fails. GitHub reports no workflow runs for the inspected latest A26 commit, so there is also no CI result that can substitute for the missing checkout run.
 
-Therefore this document does **not** claim:
+Therefore A26 still does **not** claim:
 
-- the 12 new gateway tests passed;
-- full Lane 1 unittest discovery passed;
-- full Lane 1 py_compile passed;
-- full schema audit passed.
+- full Lane 1 unittest discovery PASS;
+- full Lane 1 py_compile PASS;
+- full owned JSON syntax audit PASS;
+- full schema self-validation PASS;
+- `lane1_dependency_audit.py overall_state=PASS`.
 
-Those are deliberately recorded as `NOT_OBSERVED`, not inferred from file creation or earlier A21-A25 tests.
+Those remain `NOT_OBSERVED`. Only the focused A24↔A25 gateway regression is now observed PASS.
 
-The missing runner is not a human/Golden blocker and does not justify `BLOCKED_HUMAN`. The coherent A24-A25 checkpoint remains ready for HQ semantic integration, while A26 itself stays current until its one-command audit is observed `PASS` on an executable checkout/CI environment.
+The missing full runner is not a human/Golden blocker and does not justify `BLOCKED_HUMAN`. A24-A25 remain a coherent checkpoint candidate; A26 stays current until the full one-command audit is observed `PASS` on an executable exact Worker-branch checkout/CI runner.
 
 ## PARITY boundary
 
-No PARITY row is promoted. P003/P004/P005/P020/P021/P024/P025 remain canonical `MISSING` pending their real runtime/current-iPhone/real-audio/device/HQ gates.
+No PARITY row is promoted. P003/P004/P005/P020/P021/P024/P025 remain canonical `MISSING` pending real runtime/current-iPhone/real-audio/device/HQ gates.
 
-A26 dependency repair and any eventual full portable regression are engineering evidence only. They cannot substitute for real generated/separated audio quality, current-iPhone differential evidence or HQ PARITY judgment.
+A26 dependency repair, focused regression and any eventual portable full regression are engineering evidence only. They cannot substitute for real generated/separated audio quality, current-iPhone differential evidence or HQ PARITY judgment.
