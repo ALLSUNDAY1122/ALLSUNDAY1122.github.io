@@ -194,3 +194,231 @@ public enum AnalysisDeviceCapturePlanValidator {
         }
     }
 }
+
+public enum AnalysisDeviceCaptureCancellationCoordination: String, Codable, Equatable, Sendable {
+    case notApplicable = "NOT_APPLICABLE"
+    case requestedAfterObservedSourceWork = "REQUESTED_AFTER_OBSERVED_SOURCE_WORK"
+    case workloadFinishedBeforeRequest = "WORKLOAD_FINISHED_BEFORE_REQUEST"
+    case sourceWorkWaitExpired = "SOURCE_WORK_WAIT_EXPIRED"
+}
+
+public struct AnalysisDeviceCaptureTelemetrySamplingSummary: Codable, Equatable, Sendable {
+    public let samplingAttempts: Int
+    public let periodicSamplesCaptured: Int
+    public let sampleCapReached: Bool
+    public let samplerTerminated: Bool
+
+    public init(samplingAttempts: Int, periodicSamplesCaptured: Int, sampleCapReached: Bool, samplerTerminated: Bool) {
+        self.samplingAttempts = samplingAttempts
+        self.periodicSamplesCaptured = periodicSamplesCaptured
+        self.sampleCapReached = sampleCapReached
+        self.samplerTerminated = samplerTerminated
+    }
+}
+
+public struct AnalysisDeviceCaptureExecutionIntegrityEvidence: Codable, Equatable, Sendable {
+    public let schemaVersion: Int
+    public let runID: String
+    public let runKind: AnalysisDevicePerformanceRunKind
+    public let performanceRunID: String
+    public let workloadRunID: String
+    public let workloadExecutionID: String
+    public let algorithmRunID: String?
+    public let algorithmWorkloadExecutionID: String?
+    public let sourceMemoryContract: AnalysisChunkedSourceMemoryContract
+    public let workloadOutcome: AnalysisDeviceWorkloadExecutionOutcome
+    public let observedSourceSampleCount: Int64
+    public let cancellationCoordination: AnalysisDeviceCaptureCancellationCoordination
+    public let cancellationRequestedOffsetSeconds: Double?
+    public let cancellationObservedOffsetSeconds: Double?
+    public let requestedSampleIntervalSeconds: Double
+    public let captureWallSeconds: Double
+    public let telemetrySampling: AnalysisDeviceCaptureTelemetrySamplingSummary
+    public let cancellationTaskTerminated: Bool
+    public let performanceLimitations: [String]
+
+    public init(
+        schemaVersion: Int = 1,
+        runID: String,
+        runKind: AnalysisDevicePerformanceRunKind,
+        performanceRunID: String,
+        workloadRunID: String,
+        workloadExecutionID: String,
+        algorithmRunID: String?,
+        algorithmWorkloadExecutionID: String?,
+        sourceMemoryContract: AnalysisChunkedSourceMemoryContract,
+        workloadOutcome: AnalysisDeviceWorkloadExecutionOutcome,
+        observedSourceSampleCount: Int64,
+        cancellationCoordination: AnalysisDeviceCaptureCancellationCoordination,
+        cancellationRequestedOffsetSeconds: Double?,
+        cancellationObservedOffsetSeconds: Double?,
+        requestedSampleIntervalSeconds: Double,
+        captureWallSeconds: Double,
+        telemetrySampling: AnalysisDeviceCaptureTelemetrySamplingSummary,
+        cancellationTaskTerminated: Bool,
+        performanceLimitations: [String]
+    ) {
+        self.schemaVersion = schemaVersion
+        self.runID = runID
+        self.runKind = runKind
+        self.performanceRunID = performanceRunID
+        self.workloadRunID = workloadRunID
+        self.workloadExecutionID = workloadExecutionID
+        self.algorithmRunID = algorithmRunID
+        self.algorithmWorkloadExecutionID = algorithmWorkloadExecutionID
+        self.sourceMemoryContract = sourceMemoryContract
+        self.workloadOutcome = workloadOutcome
+        self.observedSourceSampleCount = observedSourceSampleCount
+        self.cancellationCoordination = cancellationCoordination
+        self.cancellationRequestedOffsetSeconds = cancellationRequestedOffsetSeconds
+        self.cancellationObservedOffsetSeconds = cancellationObservedOffsetSeconds
+        self.requestedSampleIntervalSeconds = requestedSampleIntervalSeconds
+        self.captureWallSeconds = captureWallSeconds
+        self.telemetrySampling = telemetrySampling
+        self.cancellationTaskTerminated = cancellationTaskTerminated
+        self.performanceLimitations = performanceLimitations.sorted()
+    }
+}
+
+public enum AnalysisDeviceCaptureExecutionIntegrityIssueCode: String, Codable, Hashable, Sendable {
+    case invalidSchema = "INVALID_W37_EXECUTION_SCHEMA"
+    case runBindingMismatch = "W37_RUN_BINDING_MISMATCH"
+    case reusedExecution = "W37_REUSED_EXECUTION"
+    case nonBoundedSource = "W37_NON_BOUNDED_SOURCE"
+    case invalidTelemetryLifecycle = "W37_INVALID_TELEMETRY_LIFECYCLE"
+    case telemetrySampleCapReached = "W37_TELEMETRY_SAMPLE_CAP_REACHED"
+    case missingPeriodicTelemetry = "W37_MISSING_PERIODIC_TELEMETRY"
+    case cancellationTaskNotTerminated = "W37_CANCELLATION_TASK_NOT_TERMINATED"
+    case invalidCancellationSemantics = "W37_INVALID_CANCELLATION_SEMANTICS"
+    case invalidCancellationTiming = "W37_INVALID_CANCELLATION_TIMING"
+    case duplicateRunID = "W37_DUPLICATE_RUN_ID"
+}
+
+public struct AnalysisDeviceCaptureExecutionIntegrityIssue: Codable, Equatable, Sendable {
+    public let code: AnalysisDeviceCaptureExecutionIntegrityIssueCode
+    public let detail: String
+
+    public init(code: AnalysisDeviceCaptureExecutionIntegrityIssueCode, detail: String) {
+        self.code = code
+        self.detail = detail
+    }
+}
+
+public struct AnalysisDeviceCaptureExecutionIntegrityReport: Codable, Equatable, Sendable {
+    public let schemaVersion: Int
+    public let runID: String
+    public let valid: Bool
+    public let issues: [AnalysisDeviceCaptureExecutionIntegrityIssue]
+
+    public init(schemaVersion: Int = 1, runID: String, valid: Bool, issues: [AnalysisDeviceCaptureExecutionIntegrityIssue]) {
+        self.schemaVersion = schemaVersion
+        self.runID = runID
+        self.valid = valid
+        self.issues = issues
+    }
+}
+
+public enum AnalysisDeviceCaptureExecutionIntegrityValidator {
+    public static func validate(_ evidence: AnalysisDeviceCaptureExecutionIntegrityEvidence) -> AnalysisDeviceCaptureExecutionIntegrityReport {
+        var issues: [AnalysisDeviceCaptureExecutionIntegrityIssue] = []
+        let trimmedRunID = evidence.runID.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if evidence.schemaVersion != 1 || trimmedRunID.isEmpty || evidence.workloadExecutionID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            issues.append(.init(code: .invalidSchema, detail: "W37 execution evidence requires schema 1 plus nonempty run and workload execution IDs"))
+        }
+
+        if evidence.performanceRunID != evidence.runID
+            || evidence.workloadRunID != evidence.runID
+            || evidence.algorithmRunID != evidence.runID
+            || evidence.algorithmWorkloadExecutionID != evidence.workloadExecutionID {
+            issues.append(.init(code: .runBindingMismatch, detail: "W23/W25/W35/W36 must bind to one run ID and one W36 execution ID"))
+        }
+
+        if evidence.sourceMemoryContract != .boundedPull {
+            issues.append(.init(code: .nonBoundedSource, detail: "W37 physical P021 capture requires BOUNDED_PULL_CONTRACT"))
+        }
+
+        let telemetry = evidence.telemetrySampling
+        if telemetry.samplingAttempts < 0
+            || telemetry.periodicSamplesCaptured < 0
+            || telemetry.periodicSamplesCaptured > telemetry.samplingAttempts
+            || !telemetry.samplerTerminated
+            || !evidence.requestedSampleIntervalSeconds.isFinite
+            || evidence.requestedSampleIntervalSeconds <= 0
+            || !evidence.captureWallSeconds.isFinite
+            || evidence.captureWallSeconds < 0 {
+            issues.append(.init(code: .invalidTelemetryLifecycle, detail: "telemetry sampling counters/timing must be valid and the sampler must terminate before capture finalization"))
+        }
+        if telemetry.sampleCapReached || evidence.performanceLimitations.contains("TELEMETRY_SAMPLE_CAP_REACHED") {
+            issues.append(.init(code: .telemetrySampleCapReached, detail: "telemetry sample cap cannot be a silent W37 success"))
+        }
+        if evidence.captureWallSeconds >= evidence.requestedSampleIntervalSeconds
+            && telemetry.periodicSamplesCaptured == 0 {
+            issues.append(.init(code: .missingPeriodicTelemetry, detail: "a capture lasting at least one requested interval must contain a periodic sample beyond start/final snapshots"))
+        }
+        if !evidence.cancellationTaskTerminated {
+            issues.append(.init(code: .cancellationTaskNotTerminated, detail: "cancellation coordination task must be terminated and joined before finalization"))
+        }
+
+        switch evidence.runKind {
+        case .completeAnalysis:
+            if evidence.workloadOutcome != .completed
+                || evidence.cancellationCoordination != .notApplicable
+                || evidence.cancellationRequestedOffsetSeconds != nil
+                || evidence.cancellationObservedOffsetSeconds != nil {
+                issues.append(.init(code: .invalidCancellationSemantics, detail: "complete run must complete normally without cancellation coordination timestamps"))
+            }
+        case .cancellationProbe:
+            if evidence.cancellationCoordination != .requestedAfterObservedSourceWork
+                || evidence.workloadOutcome != .cancelled
+                || evidence.observedSourceSampleCount <= 0 {
+                issues.append(.init(code: .invalidCancellationSemantics, detail: "planned cancellation requires observed source work, an actual request, and W36 CANCELLED outcome"))
+            }
+            guard let requested = evidence.cancellationRequestedOffsetSeconds,
+                  let observed = evidence.cancellationObservedOffsetSeconds,
+                  requested.isFinite, observed.isFinite,
+                  requested >= 0, observed >= requested,
+                  observed <= evidence.captureWallSeconds + 1e-6 else {
+                issues.append(.init(code: .invalidCancellationTiming, detail: "cancellationRequested must precede cancellationObserved inside the same capture"))
+                break
+            }
+        }
+
+        issues.sort { ($0.code.rawValue, $0.detail) < ($1.code.rawValue, $1.detail) }
+        return .init(runID: evidence.runID, valid: issues.isEmpty, issues: issues)
+    }
+
+    public static func validateBatch(_ values: [AnalysisDeviceCaptureExecutionIntegrityEvidence]) -> [AnalysisDeviceCaptureExecutionIntegrityIssue] {
+        var issues: [AnalysisDeviceCaptureExecutionIntegrityIssue] = []
+        let runGroups = Dictionary(grouping: values, by: \.runID)
+        for runID in runGroups.keys.sorted() where (runGroups[runID]?.count ?? 0) > 1 {
+            issues.append(.init(code: .duplicateRunID, detail: "run ID \(runID) appears more than once in one W37 capture batch"))
+        }
+
+        let executionGroups = Dictionary(grouping: values, by: \.workloadExecutionID)
+        for executionID in executionGroups.keys.sorted() {
+            let grouped = executionGroups[executionID] ?? []
+            let distinctRuns = Set(grouped.map(\.runID))
+            if distinctRuns.count > 1 {
+                issues.append(.init(code: .reusedExecution, detail: "W36 execution ID \(executionID) is reused across distinct W37 run IDs"))
+            }
+        }
+        issues.sort { ($0.code.rawValue, $0.detail) < ($1.code.rawValue, $1.detail) }
+        return issues
+    }
+}
+
+public enum AnalysisDeviceCaptureExecutionIntegrityCodec {
+    public static func encodeEvidence(_ value: AnalysisDeviceCaptureExecutionIntegrityEvidence) throws -> Data { try encoder().encode(value) }
+    public static func decodeEvidence(_ data: Data) throws -> AnalysisDeviceCaptureExecutionIntegrityEvidence { try decoder().decode(AnalysisDeviceCaptureExecutionIntegrityEvidence.self, from: data) }
+    public static func encodeReport(_ value: AnalysisDeviceCaptureExecutionIntegrityReport) throws -> Data { try encoder().encode(value) }
+    public static func decodeReport(_ data: Data) throws -> AnalysisDeviceCaptureExecutionIntegrityReport { try decoder().decode(AnalysisDeviceCaptureExecutionIntegrityReport.self, from: data) }
+
+    private static func encoder() -> JSONEncoder {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
+        return encoder
+    }
+
+    private static func decoder() -> JSONDecoder { JSONDecoder() }
+}
