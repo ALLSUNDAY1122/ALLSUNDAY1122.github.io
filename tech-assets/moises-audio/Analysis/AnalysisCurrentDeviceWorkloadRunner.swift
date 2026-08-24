@@ -8,6 +8,8 @@ public struct AnalysisCurrentDeviceWorkloadExecution: Sendable {
     public let inputDiagnostics: AnalysisChunkedInputDiagnostics?
     public let featureDiagnostics: AnalysisSinglePassPreparedFeatureDiagnostics?
     public let boundedSourceContractAccepted: Bool
+    public let observedSourceChunkCount: Int
+    public let observedSourceSampleCount: Int64
     public let failureDescription: String?
 
     public init(
@@ -18,6 +20,8 @@ public struct AnalysisCurrentDeviceWorkloadExecution: Sendable {
         inputDiagnostics: AnalysisChunkedInputDiagnostics?,
         featureDiagnostics: AnalysisSinglePassPreparedFeatureDiagnostics?,
         boundedSourceContractAccepted: Bool,
+        observedSourceChunkCount: Int,
+        observedSourceSampleCount: Int64,
         failureDescription: String?
     ) {
         self.outcome = outcome
@@ -27,6 +31,8 @@ public struct AnalysisCurrentDeviceWorkloadExecution: Sendable {
         self.inputDiagnostics = inputDiagnostics
         self.featureDiagnostics = featureDiagnostics
         self.boundedSourceContractAccepted = boundedSourceContractAccepted
+        self.observedSourceChunkCount = observedSourceChunkCount
+        self.observedSourceSampleCount = observedSourceSampleCount
         self.failureDescription = failureDescription
     }
 }
@@ -36,6 +42,7 @@ public enum AnalysisCurrentDeviceWorkloadRunnerError: Error, Equatable, Sendable
     case invalidSourceDescriptor
     case sourceMetadataMismatch
     case cancellationProbeCompletedWithoutCancellation
+    case cancellationBeforeAnySourceSamples
 }
 
 /// W36 physical workload runner.
@@ -44,7 +51,7 @@ public enum AnalysisCurrentDeviceWorkloadRunnerError: Error, Equatable, Sendable
 /// runtime used by `ProjectOwnedMusicAnalyzer` when a chunked loader is present.
 /// One execution ID binds the W25 receipt and W35 algorithm companion.
 ///
-/// `SIGNAL_PREPARATION` now honestly includes pull/decode-side PCM consumption,
+/// `SIGNAL_PREPARATION` honestly includes pull/decode-side PCM consumption,
 /// W30 resampling, W29-W32 shared feature extraction and W33/W34 Chord spectral
 /// preclassification. The later CHORD stage finalizes the preclassified timeline;
 /// W36 does not pretend that the heavy spectral work happened there.
@@ -57,6 +64,12 @@ public enum AnalysisCurrentDeviceWorkloadRunner {
         let executionID = UUID().uuidString.lowercased()
         let workloadStartedAt = Date()
         let recorder = AnalysisCurrentDeviceWorkloadStageRecorder()
+        let sourceObserver = AnalysisObservedPCMChunkPuller(base: signal.source)
+        let instrumentedSignal = AnalysisChunkedSignal(
+            descriptor: signal.descriptor,
+            source: sourceObserver,
+            sourceMemoryContract: signal.sourceMemoryContract
+        )
         let boundedSourceContractAccepted = signal.sourceMemoryContract == .boundedPull
 
         var outcome: AnalysisDeviceWorkloadExecutionOutcome = .failed
@@ -88,7 +101,7 @@ public enum AnalysisCurrentDeviceWorkloadRunner {
             do {
                 let extracted = try await recorder.runAsync(stage: .signalPreparation) {
                     try await AnalysisCurrentChunkedProductRuntime.extract(
-                        signal: signal,
+                        signal: instrumentedSignal,
                         configuration: configuration
                     )
                 }
@@ -155,6 +168,13 @@ public enum AnalysisCurrentDeviceWorkloadRunner {
             }
         }
 
+        let sourceObservation = await sourceObserver.observation()
+        if context.runKind == .cancellationProbe,
+           outcome == .cancelled,
+           sourceObservation.sampleCount == 0 {
+            failureDescription = String(describing: AnalysisCurrentDeviceWorkloadRunnerError.cancellationBeforeAnySourceSamples)
+        }
+
         let binding = AnalysisDeviceWorkloadReceiptValidator.executionBindingSHA256(
             runID: context.runID,
             performanceEvidenceRunID: context.runID,
@@ -197,7 +217,8 @@ public enum AnalysisCurrentDeviceWorkloadRunner {
             )
         } else if context.runKind == .cancellationProbe,
                   outcome == .cancelled,
-                  boundedSourceContractAccepted {
+                  boundedSourceContractAccepted,
+                  sourceObservation.sampleCount > 0 {
             algorithmEvidence = AnalysisDeviceAlgorithmExecutionEvidenceBuilder.cancelledBeforeFinalization(
                 receipt: receipt,
                 sourceInputContract: signal.sourceMemoryContract
@@ -214,8 +235,39 @@ public enum AnalysisCurrentDeviceWorkloadRunner {
             inputDiagnostics: inputDiagnostics,
             featureDiagnostics: featureDiagnostics,
             boundedSourceContractAccepted: boundedSourceContractAccepted,
+            observedSourceChunkCount: sourceObservation.chunkCount,
+            observedSourceSampleCount: sourceObservation.sampleCount,
             failureDescription: failureDescription
         )
+    }
+}
+
+private struct AnalysisObservedPCMChunkProgress: Sendable {
+    let chunkCount: Int
+    let sampleCount: Int64
+}
+
+private actor AnalysisObservedPCMChunkPuller: AnalysisPCMChunkPulling {
+    private let base: any AnalysisPCMChunkPulling
+    private var observedChunkCount = 0
+    private var observedSampleCount: Int64 = 0
+
+    init(base: any AnalysisPCMChunkPulling) {
+        self.base = base
+    }
+
+    func nextChunk() async throws -> AnalysisPCMChunk? {
+        let chunk = try await base.nextChunk()
+        if let chunk {
+            observedChunkCount += 1
+            let addition = observedSampleCount.addingReportingOverflow(Int64(chunk.monoSamples.count))
+            observedSampleCount = addition.overflow ? Int64.max : addition.partialValue
+        }
+        return chunk
+    }
+
+    func observation() -> AnalysisObservedPCMChunkProgress {
+        .init(chunkCount: observedChunkCount, sampleCount: observedSampleCount)
     }
 }
 
