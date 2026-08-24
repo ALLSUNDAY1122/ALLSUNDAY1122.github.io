@@ -12,11 +12,13 @@ SERVER = HERE.parent / "Server"
 sys.path.insert(0, str(SERVER))
 
 from ai_stem_generation_processing_facade import (
+    FacadeRecord,
     GeneratedStemProcessingFacade,
     GenerationFacadeError,
     a22_output_path,
     generation_ref_hash,
 )
+from generated_stem_mix_compatibility import SourceMixSpec
 
 H = lambda c: c * 64
 
@@ -39,6 +41,10 @@ def sha(path):
     return h.hexdigest()
 
 
+class FakeNotFound(RuntimeError):
+    code = "GEN_RECORD_NOT_FOUND"
+
+
 class FakeContract:
     def __init__(self):
         self.records = {}
@@ -59,6 +65,8 @@ class FakeContract:
         )
 
     def get(self, gid):
+        if gid not in self.records:
+            raise FakeNotFound()
         return self.records[gid]
 
     def request_cancel(self, gid, *, upstream_cancel_supported):
@@ -91,6 +99,8 @@ class FakeRuntime:
 
     def start(self, *, intent, entitlement, source_path, prompt=None, reference_audio_path=None):
         self.start_calls += 1
+        if intent.logical_generation_id not in self.contract.records:
+            self.contract.seed(intent)
         r = self.contract.get(intent.logical_generation_id)
         if self.start_mode == "RAISE":
             r.execution_state = "ambiguous"
@@ -212,7 +222,6 @@ class GenerationFacadeTests(unittest.TestCase):
         )
         self.entitlement = SimpleNamespace()
         self.contract = FakeContract()
-        self.contract.seed(self.intent)
         self.runtime = FakeRuntime(self.contract, self.root / "out")
         self.mix = FakeMix()
         self.retention = FakeRetention()
@@ -253,6 +262,34 @@ class GenerationFacadeTests(unittest.TestCase):
         self.begin()
         self.begin()
         self.assertEqual(self.runtime.start_calls, 1)
+
+    def test_crash_before_a21_record_allows_only_safe_start_retry(self):
+        spec = SourceMixSpec.from_wav(self.source)
+        rec = FacadeRecord(
+            self.gid,
+            self.intent.request_fingerprint,
+            self.intent.project_ref_hash,
+            self.intent.source_sha256,
+            spec.sample_rate,
+            spec.channels,
+            spec.audio_format,
+            spec.bits_per_sample,
+            spec.frame_count,
+            self.intent.target_role,
+            self.intent.variant_index,
+            generation_ref_hash(self.gid),
+            H("d"),
+            H("e"),
+            H("f"),
+            phase="START_CALL_IN_FLIGHT",
+        )
+        with self.facade.journal.locked() as records:
+            records[self.gid] = rec
+            self.facade.journal.save(records)
+        self.assertNotIn(self.gid, self.contract.records)
+        s = self.begin()
+        self.assertEqual(self.runtime.start_calls, 1)
+        self.assertEqual(s["directive"], "OBSERVE_RUNTIME")
 
     def test_start_ambiguous_requires_reconcile(self):
         self.runtime.start_mode = "AMBIGUOUS"
