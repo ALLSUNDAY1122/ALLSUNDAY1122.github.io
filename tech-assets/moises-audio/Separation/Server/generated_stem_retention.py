@@ -115,7 +115,7 @@ class OrphanObservation:
         if self.delete_intent_at_epoch is not None:_int(self.delete_intent_at_epoch,'delete_intent_at_epoch',1)
 
 class AtomicRetentionRegistry:
-    def __init__(self,path):self.path=Path(path);self.path.parent.mkdir(parents=True,exist_ok=True);self.lock_path=self.path.with_suffix(self.path.suffix+'.lock')
+    def __init__(self,path,policy_sha256):self.path=Path(path);self.path.parent.mkdir(parents=True,exist_ok=True);self.lock_path=self.path.with_suffix(self.path.suffix+'.lock');self.policy_sha256=_sha(policy_sha256,'policy_sha256')
     @contextmanager
     def locked(self):
         with self.lock_path.open('a+b') as h:
@@ -128,6 +128,7 @@ class AtomicRetentionRegistry:
         if not self.path.exists():return {'records':{},'orphans':{}}
         raw=_load_json(self.path,'GEN_RET_REGISTRY_CORRUPT')
         if raw.get('schema_version')!=1 or not isinstance(raw.get('records'),dict) or not isinstance(raw.get('orphans'),dict):fail('GEN_RET_REGISTRY_SCHEMA_INVALID')
+        if raw.get('policy_sha256')!=self.policy_sha256:fail('GEN_RET_POLICY_MISMATCH')
         recs={};orph={}
         try:
             for k,v in raw['records'].items():
@@ -145,14 +146,16 @@ class AtomicRetentionRegistry:
     def save(self,state):
         for r in state['records'].values():r.validate()
         for o in state['orphans'].values():o.validate()
-        _atomic_json(self.path,{'schema_version':1,'records':{k:asdict(v) for k,v in sorted(state['records'].items())},'orphans':{k:asdict(v) for k,v in sorted(state['orphans'].items())}})
+        _atomic_json(self.path,{'schema_version':1,'policy_sha256':self.policy_sha256,'records':{k:asdict(v) for k,v in sorted(state['records'].items())},'orphans':{k:asdict(v) for k,v in sorted(state['orphans'].items())}})
 
 class GeneratedStemRetentionService:
     def __init__(self,*,store_root,registry_path=None,now_epoch:Callable[[],int]|None=None,orphan_grace_seconds=3600,superseded_grace_seconds=86400):
         self.root=Path(store_root);self.objects=self.root/'objects';self.manifests=self.root/'manifests';self.active=self.root/'active';self.store_lock=self.root/'.lock'
         for p in (self.objects,self.manifests,self.active):p.mkdir(parents=True,exist_ok=True)
-        self.registry=AtomicRetentionRegistry(registry_path or self.root/'retention'/'registry.json')
-        self.now=now_epoch or (lambda:int(time.time()));self.orphan_grace_seconds=_int(orphan_grace_seconds,'orphan_grace_seconds',1);self.superseded_grace_seconds=_int(superseded_grace_seconds,'superseded_grace_seconds',1)
+        self.orphan_grace_seconds=_int(orphan_grace_seconds,'orphan_grace_seconds',1);self.superseded_grace_seconds=_int(superseded_grace_seconds,'superseded_grace_seconds',1)
+        self.retention_policy_sha256=canonical_sha({'domain':'l1-a24-retention-policy-v1','orphan_grace_seconds':self.orphan_grace_seconds,'superseded_grace_seconds':self.superseded_grace_seconds})
+        self.registry=AtomicRetentionRegistry(registry_path or self.root/'retention'/'registry.json',self.retention_policy_sha256)
+        self.now=now_epoch or (lambda:int(time.time()))
     @contextmanager
     def _store_locked(self):
         self.root.mkdir(parents=True,exist_ok=True)
@@ -303,6 +306,20 @@ class GeneratedStemRetentionService:
                 with self.registry.locked() as st:
                     st['records'][key].runtime_delete_state=state;self.registry.save(st)
         return self.snapshot(generation_ref_hash_value=gh,variant_index=vi)
+    def request_project_delete(self,*,project_ref_hash_value):
+        project=_sha(project_ref_hash_value,'project_ref_hash')
+        with self._store_locked():
+            with self.registry.locked() as st:
+                registered={(r.generation_ref_hash,r.variant_index) for r in st['records'].values() if r.project_ref_hash==project}
+            discovered=set()
+            for mp in self.manifests.glob('*.json'):
+                raw=self._load_manifest(mp)
+                if raw['project_ref_hash']==project:discovered.add((raw['generation_ref_hash'],raw['variant_index']))
+            missing=discovered-registered
+            if missing:fail('GEN_RET_PROJECT_DELETE_UNREGISTERED_VARIANT')
+            targets=sorted(registered)
+        return tuple(self.request_delete(generation_ref_hash_value=gh,variant_index=vi,reason='PROJECT_DELETE') for gh,vi in targets)
+
     def reconcile_runtime_erasure(self,*,generation_ref_hash_value,variant_index,receipt,authority_evidence_sha256):
         key=f'{_sha(generation_ref_hash_value,"generation_ref_hash")}.v{_int(variant_index,"variant_index")}'
         ev=_sha(authority_evidence_sha256,'authority_evidence_sha256')
@@ -404,7 +421,7 @@ class GeneratedStemRetentionService:
             r.validate();runtime_erasure=(r.runtime_delete_state in {'confirmed','not_found','not_applicable'} and r.runtime_erasure_evidence_sha256 is not None)
             physical_erasure=r.physical_artifact_state in {'confirmed_erased','missing_before_delete'}
             return {
-                'schema_version':1,'tool_version':TOOL_VERSION,'evidence_state':EVIDENCE_STATE,
+                'schema_version':1,'tool_version':TOOL_VERSION,'evidence_state':EVIDENCE_STATE,'retention_policy_sha256':self.retention_policy_sha256,
                 'project_ref_hash':r.project_ref_hash,'role':r.role,'generation_ref_hash':r.generation_ref_hash,'variant_index':r.variant_index,
                 'artifact_sha256':r.artifact_sha256,'mix_ready_receipt_sha256':r.mix_ready_receipt_sha256,
                 'delete_requested':r.delete_requested,'delete_reason':r.delete_reason,'association_delete_confirmed':r.association_delete_confirmed,
