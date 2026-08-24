@@ -19,11 +19,11 @@ public enum Lane3TempoBoundarySelectedOutcome: Equatable, Sendable {
 
 /// App-facing AW31 transport facade, hardened by AW33 with a one-way stack-reconstruction latch.
 /// Existing AW17/AW18 remain the generation/lifecycle authority; this layer only brackets tempo with
-/// a Playback source-clock boundary transaction. If commit/cancel restart fails, the selected Apple
-/// backend may already be poisoned. AW33 therefore permanently rejects every later operation on this
-/// facade instance before touching Playback/DSP. Recovery means constructing a fresh selected stack
-/// and replacing the facade through `Lane3SelectedTransportReconstructionSlot`; this facade has no
-/// in-place reset API.
+/// a Playback source-clock boundary transaction. If the selected Playback boundary backend reports
+/// permanent poison, or tempo commit/cancel restart fails, AW33 permanently rejects every later
+/// operation on this facade instance before touching Playback/DSP. Recovery means constructing a
+/// fresh selected stack and replacing the facade through `Lane3SelectedTransportReconstructionSlot`;
+/// this facade has no in-place reset API.
 public actor Lane3TempoBoundarySelectedTransportFacade {
     private let projectID: ProjectID
     private let transportGate: Lane3InterruptionLifecycleGate
@@ -65,22 +65,19 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
     ) async throws -> Lane3InterruptionGuardedOutcome {
         try await enterShared()
         let result = await transportGate.submitSeek(to: positionSeconds, resume: resume, loop: loop)
-        leaveShared()
-        return result
+        return try await finishShared(result)
     }
 
     public func submitLoop(_ loop: PlaybackLoopRange?) async throws -> Lane3InterruptionGuardedOutcome {
         try await enterShared()
         let result = await transportGate.submitLoop(loop)
-        leaveShared()
-        return result
+        return try await finishShared(result)
     }
 
     public func submitMediaLoad(_ asset: LocalAudioAsset) async throws -> Lane3InterruptionGuardedOutcome {
         try await enterShared()
         let result = await transportGate.submitMediaLoad(asset)
-        leaveShared()
-        return result
+        return try await finishShared(result)
     }
 
     public func submitMediaReplacement(
@@ -96,36 +93,31 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
             resume: resume,
             loop: loop
         )
-        leaveShared()
-        return result
+        return try await finishShared(result)
     }
 
     public func submitPlay() async throws -> Lane3InterruptionGuardedOutcome {
         try await enterShared()
         let result = await transportGate.submitPlay()
-        leaveShared()
-        return result
+        return try await finishShared(result)
     }
 
     public func submitPause() async throws -> Lane3InterruptionGuardedOutcome {
         try await enterShared()
         let result = await transportGate.submitPause()
-        leaveShared()
-        return result
+        return try await finishShared(result)
     }
 
     public func submitRecovery() async throws -> Lane3InterruptionGuardedOutcome {
         try await enterShared()
         let result = await transportGate.submitRecovery()
-        leaveShared()
-        return result
+        return try await finishShared(result)
     }
 
     public func submitInterruptionBegan() async throws -> Lane3SerializedInterruptionBeginEnvelope {
         try await enterShared()
         let result = await serializedClickGate.submitInterruptionBegan()
-        leaveShared()
-        return result
+        return try await finishShared(result)
     }
 
     public func submitInterruptionEnded(
@@ -133,15 +125,13 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
     ) async throws -> Lane3PracticeInterruptionEndEnvelope {
         try await enterShared()
         let result = await serializedClickGate.submitInterruptionEnded(shouldResume: shouldResume)
-        leaveShared()
-        return result
+        return try await finishShared(result)
     }
 
     public func retryEndedInterruptionRecovery() async throws -> Lane3PracticeInterruptionEndEnvelope {
         try await enterShared()
         let result = await serializedClickGate.retryEndedInterruptionRecovery()
-        leaveShared()
-        return result
+        return try await finishShared(result)
     }
 
     public func submitTempoRatio(_ ratio: Double) async throws -> Lane3TempoBoundarySelectedOutcome {
@@ -167,10 +157,10 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
 
         let lifecycle = await transportGate.snapshot()
         guard lifecycle.phase == .idle else {
-            return .transport(
-                guarded: await transportGate.submitTempoRatio(ratio),
-                boundary: nil
-            )
+            let guarded = await transportGate.submitTempoRatio(ratio)
+            await latchBackendRecoveryIfRequired(failedBoundarySerial: nil)
+            try requireUsable()
+            return .transport(guarded: guarded, boundary: nil)
         }
 
         let boundary: PlaybackTempoBoundaryReceipt
@@ -180,6 +170,10 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
                 toTempoRatio: ratio
             )
         } catch {
+            await latchBackendRecoveryIfRequired(failedBoundarySerial: nil)
+            if let ticket = recoveryState.ticket {
+                throw Lane3TempoBoundarySelectedTransportError.stackReconstructionRequired(ticket)
+            }
             throw Lane3TempoBoundarySelectedTransportError.tempoBoundaryPrepareFailed(
                 String(describing: error)
             )
@@ -219,6 +213,8 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
                 )
             }
         }
+        await latchBackendRecoveryIfRequired(failedBoundarySerial: boundary.serial)
+        try requireUsable()
         return .transport(guarded: guarded, boundary: boundary)
     }
 
@@ -237,6 +233,18 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
             throw Lane3TempoBoundarySelectedTransportError.admissionCounterOverflow
         }
         sharedInFlight = next.partialValue
+    }
+
+    private func finishShared<T: Sendable>(_ result: T) async throws -> T {
+        await latchBackendRecoveryIfRequired(failedBoundarySerial: nil)
+        do {
+            try requireUsable()
+        } catch {
+            leaveShared()
+            throw error
+        }
+        leaveShared()
+        return result
     }
 
     private func leaveShared() {
@@ -280,6 +288,21 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
         }
         tempoSerial = next.partialValue
         return tempoSerial
+    }
+
+    private func latchBackendRecoveryIfRequired(
+        failedBoundarySerial: UInt64?
+    ) async {
+        guard !recoveryState.requiresReconstruction,
+              let reporter = tempoBackend as? any Lane3SelectedStackRecoveryReporting,
+              await reporter.selectedStackRequiresReconstruction() else {
+            return
+        }
+        recoveryState.latch(
+            reason: .playbackBoundaryBackendPoisoned,
+            failedTempoSerial: tempoSerial,
+            failedBoundarySerial: failedBoundarySerial
+        )
     }
 
     private func requireUsable() throws {
