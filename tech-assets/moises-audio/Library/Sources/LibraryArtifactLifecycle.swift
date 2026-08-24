@@ -104,7 +104,16 @@ public struct LibraryArtifactLifecycle: Sendable {
             recoveryDirectoryName: recoveryDirectoryName
         )
         _ = try inventory.activateForFirstManagedArtifactIfSafe(relativePath: relativePath)
-        _ = try inventory.registerIfManaged(relativePath: relativePath)
+        let registeredManaged = try inventory.registerIfManaged(relativePath: relativePath)
+        if registeredManaged {
+            // Publication intent is retired only after the final path is durably represented by the
+            // managed-artifact inventory. Cleanup is best-effort because a stale durable intent is
+            // safe: next-process AW31 recovery replays the same registration idempotently.
+            try? Lane2ManagedArtifactPublicationJournal(
+                rootURL: rootURL,
+                recoveryDirectoryName: recoveryDirectoryName
+            ).completeIfPresent(relativePath: relativePath)
+        }
     }
 
     /// Metadata may expose finalRelativePath only after this succeeds.
@@ -117,7 +126,19 @@ public struct LibraryArtifactLifecycle: Sendable {
             throw LibraryArtifactFailure.destinationAlreadyExists(finalRelativePath)
         }
         try FileManager.default.createDirectory(at: final.deletingLastPathComponent(), withIntermediateDirectories: true)
-        try FileManager.default.moveItem(at: staging, to: final)
+        let publicationJournal = Lane2ManagedArtifactPublicationJournal(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName
+        )
+        _ = try publicationJournal.begin(relativePath: finalRelativePath)
+        do {
+            try FileManager.default.moveItem(at: staging, to: final)
+        } catch {
+            try? publicationJournal.cancelCurrentSessionIfPresent(relativePath: finalRelativePath)
+            throw error
+        }
+        // If readiness/inventory persistence fails after the move, the durable publication intent is
+        // deliberately left behind so next-process recovery can reconcile the published file.
         try requireReady(relativePath: finalRelativePath)
     }
 
