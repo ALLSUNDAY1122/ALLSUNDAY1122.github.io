@@ -67,24 +67,22 @@ final class SH3PreservingGaussianTrainer {
             return
         }
 
-        var canonicalURL: URL?
         do {
-            let asset = try SplatCanonicalSHAsset.persist(
+            let asset = try SplatCanonicalSHAsset.persistCollisionSafe(
                 from: base,
                 legacySplatURL: legacyURL,
                 expectedPointCount: size.intValue / 32
             )
-            canonicalURL = asset.url
             _ = try SplatCanonicalSHAsset.registerDurableProjectOutput(
                 asset,
                 legacySplatURL: legacyURL
             )
         } catch {
             // ScanModel already treats a missing/invalid pending `.splat` as reconstruction failure.
-            // Removing both artifacts here prevents a lossy SH0-only project or an unregistered SH3
-            // sidecar from being marked finished.
+            // Never delete the canonical target here: collision-safe persistence may have reused an
+            // asset that belongs to the previously committed result. A registration failure can leave
+            // an orphan candidate, but that is safer than deleting recovery-critical SH3 data.
             try? FileManager.default.removeItem(at: legacyURL)
-            if let canonicalURL { try? FileManager.default.removeItem(at: canonicalURL) }
         }
     }
 
