@@ -1,9 +1,10 @@
 import Foundation
 
-/// Incremental W29 feature accumulator. The caller must feed exactly one
+/// Incremental W29/W30 feature accumulator. The caller feeds exactly one
 /// prepared mono sample for every logical prepared sample index, in strictly
-/// increasing order starting at zero. It intentionally owns only bounded
-/// rings plus retained feature vectors; it never owns whole-track PCM.
+/// increasing order starting at zero. W31 preserves the exact W29 cadence while
+/// natural feature cardinality is below the retention caps, and increases only
+/// the retained feature cadence for extreme durations that exceed those caps.
 final class AnalysisSequentialPreparedFeatureAccumulator {
     private struct PendingChordFrame {
         let startSeconds: Double
@@ -17,6 +18,7 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
     private let sampleCount: Int
     private let duration: Double
     private let configuration: MusicAnalysisConfiguration
+    private let retentionPlan: AnalysisExtremeDurationRetentionPlan
 
     private let tempoFrameSize: Int
     private let tempoHopSize: Int
@@ -68,19 +70,21 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
         self.duration = durationSeconds
         self.configuration = configuration
 
+        let plan = AnalysisExtremeDurationRetentionPolicy.plan(
+            sampleRate: sampleRate,
+            sampleCount: sampleCount,
+            durationSeconds: durationSeconds,
+            configuration: configuration
+        )
+        retentionPlan = plan
+
         tempoFrameSize = min(
             configuration.analysisWindowSize,
             max(256, Int((sampleRate * 0.046).rounded()))
         )
-        tempoHopSize = min(
-            configuration.analysisHopSize,
-            max(32, Int((sampleRate * 0.010).rounded()))
-        )
+        tempoHopSize = max(1, plan.tempoHopSamples)
         tempoRing = Array(repeating: 0, count: max(1, tempoFrameSize))
-        let expectedTempoFrames = sampleCount >= tempoFrameSize
-            ? 1 + (sampleCount - tempoFrameSize) / max(1, tempoHopSize)
-            : 0
-        tempoFlux.reserveCapacity(expectedTempoFrames)
+        tempoFlux.reserveCapacity(plan.retainedTempoFrameUpperBound)
 
         keyWindowSize = configuration.analysisWindowSize
         let availableKeyWindows = sampleCount >= keyWindowSize
@@ -104,14 +108,14 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
             256,
             min(max(1, sampleCount), Int((configuration.chordWindowSeconds * sampleRate).rounded()))
         )
-        chordHopSamples = max(1, Int((configuration.chordHopSeconds * sampleRate).rounded()))
+        chordHopSamples = max(1, plan.chordHopSamples)
         chordRing = Array(repeating: 0, count: max(1, chordWindowSamples))
-        chordFrameDecisions.reserveCapacity(max(1, Int(ceil(Double(max(1, sampleCount)) / Double(chordHopSamples)))))
+        chordFrameDecisions.reserveCapacity(plan.retainedChordFrameUpperBound)
         pendingChordFrames.reserveCapacity(4)
         currentChordSegmentEnd = min(sampleCount, chordHopSamples)
 
         sectionFrameCount = sampleCount > 0 && durationSeconds > 0
-            ? max(1, Int((durationSeconds * AnalysisSectionEnergyFeatureExtractor.targetFramesPerSecond).rounded()))
+            ? plan.retainedSectionEnergyFrameCount
             : 0
         sectionEffectiveRate = sectionFrameCount > 0 && durationSeconds > 0
             ? Double(sectionFrameCount) / durationSeconds
@@ -328,7 +332,12 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
                 maximumChordRingSamples: chordRing.count,
                 estimatedRetainedFeatureBytes: retainedBytes,
                 exactSinglePreparedTraversal: consumedSampleCount == sampleCount
-                    && preparedSampleComputations == sampleCount
+                    && preparedSampleComputations == sampleCount,
+                extremeDurationCompressionApplied: retentionPlan.compressionApplied,
+                tempoFrameStride: retentionPlan.tempoFrameStride,
+                chordFrameStride: retentionPlan.chordFrameStride,
+                naturalSectionEnergyFrameCount: retentionPlan.naturalSectionEnergyFrameCount,
+                sectionEnergyFrameStrideEquivalent: retentionPlan.sectionFrameStrideEquivalent
             )
         )
     }
