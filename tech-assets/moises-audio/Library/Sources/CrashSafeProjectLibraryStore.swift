@@ -10,6 +10,7 @@ public struct LibraryRecoveryReport: Hashable, Sendable {
     public let completedCommitted: [ProjectID]
     public let promotedInterruptedTombstones: [ProjectID]
     public let indexedRecoveryDiagnostics: Lane2IndexedRecoveryDiagnostics
+    public let liveReferenceDiagnostics: Lane2TargetedLiveReferenceDiagnostics
 
     public init(
         discardedPrepared: [ProjectID],
@@ -17,12 +18,14 @@ public struct LibraryRecoveryReport: Hashable, Sendable {
         promotedInterruptedTombstones: [ProjectID],
         indexedRecoveryDiagnostics: Lane2IndexedRecoveryDiagnostics = .empty(
             limit: Lane2IndexedRecoveryBudget.defaultOwnershipOnlyPerPass
-        )
+        ),
+        liveReferenceDiagnostics: Lane2TargetedLiveReferenceDiagnostics = .empty
     ) {
         self.discardedPrepared = discardedPrepared
         self.completedCommitted = completedCommitted
         self.promotedInterruptedTombstones = promotedInterruptedTombstones
         self.indexedRecoveryDiagnostics = indexedRecoveryDiagnostics
+        self.liveReferenceDiagnostics = liveReferenceDiagnostics
     }
 }
 
@@ -37,12 +40,14 @@ public final class CrashSafeProjectLibraryStore:
     private let artifacts: LibraryArtifactLifecycle
     private let deletionOwnership: Lane2DeletionOwnershipIndex
     private let indexedRecoveryBudget: Lane2IndexedRecoveryBudget
+    private let liveReferenceResolver: (any Lane2LiveArtifactReferenceResolving)?
     private let mutationGate = Lane2LibraryMutationGate()
 
     public init(
         metadata: CoreDataProjectLibraryStore,
         artifactRootURL: URL,
-        ownershipOnlyRecoveryLimit: Int = Lane2IndexedRecoveryBudget.defaultOwnershipOnlyPerPass
+        ownershipOnlyRecoveryLimit: Int = Lane2IndexedRecoveryBudget.defaultOwnershipOnlyPerPass,
+        liveReferenceResolver: (any Lane2LiveArtifactReferenceResolving)? = nil
     ) throws {
         self.metadata = metadata
         self.artifacts = LibraryArtifactLifecycle(rootURL: artifactRootURL)
@@ -50,6 +55,7 @@ public final class CrashSafeProjectLibraryStore:
         self.indexedRecoveryBudget = Lane2IndexedRecoveryBudget(
             ownershipOnlyPerPass: ownershipOnlyRecoveryLimit
         )
+        self.liveReferenceResolver = liveReferenceResolver
         try artifacts.ensureLayout()
         try deletionOwnership.ensureLayout()
     }
@@ -59,9 +65,17 @@ public final class CrashSafeProjectLibraryStore:
         metadataConfiguration: CoreDataProjectLibraryStore.Configuration,
         artifactRootURL: URL
     ) async throws -> CrashSafeProjectLibraryStore {
+        let metadata = try CoreDataProjectLibraryStore(configuration: metadataConfiguration)
+        let resolver: (any Lane2LiveArtifactReferenceResolving)?
+        if !metadataConfiguration.inMemory, let storeURL = metadataConfiguration.storeURL {
+            resolver = Lane2CoreDataLiveArtifactReferenceResolver(storeURL: storeURL)
+        } else {
+            resolver = nil
+        }
         let store = try CrashSafeProjectLibraryStore(
-            metadata: CoreDataProjectLibraryStore(configuration: metadataConfiguration),
-            artifactRootURL: artifactRootURL
+            metadata: metadata,
+            artifactRootURL: artifactRootURL,
+            liveReferenceResolver: resolver
         )
         _ = try await store.recoverInterruptedOperations()
         return store
@@ -225,13 +239,19 @@ public final class CrashSafeProjectLibraryStore:
                 discardedPrepared: [],
                 completedCommitted: [],
                 promotedInterruptedTombstones: [],
-                indexedRecoveryDiagnostics: diagnostics
+                indexedRecoveryDiagnostics: diagnostics,
+                liveReferenceDiagnostics: .empty
             )
         }
 
-        let liveProjects = try await metadata.listMaintenanceProjects()
-        let liveIDs = Set(liveProjects.map(\.projectID))
-        let liveReferences = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(in: liveProjects)
+        let targetProjectUUIDs = journalProjectIDs.union(indexedRecords.map(\.projectUUID))
+        let indexedCandidatePaths = Set(indexedRecords.flatMap(\.artifactRelativePaths))
+        var liveSnapshot = try await resolveLiveReferences(
+            targetProjectUUIDs: targetProjectUUIDs,
+            candidateArtifactPaths: indexedCandidatePaths
+        )
+        let liveIDs = Set(liveSnapshot.liveProjectUUIDs.map { ProjectID(rawValue: $0) })
+        var liveReferences = liveSnapshot.liveReferencedArtifactPaths
         let indexedByID = Dictionary(
             uniqueKeysWithValues: indexedRecords.map { ($0.projectUUID, $0) }
         )
@@ -255,6 +275,20 @@ public final class CrashSafeProjectLibraryStore:
             uniqueKeysWithValues: legacyCandidates.map { ($0.projectUUID, $0) }
         )
         let indexedProjectIDs = Set(indexedRecords.map(\.projectUUID))
+
+        if !legacyCandidates.isEmpty {
+            let legacyCandidatePaths = Set(legacyCandidates.flatMap(\.artifactRelativePaths))
+            let legacySnapshot = try await resolveLiveReferences(
+                targetProjectUUIDs: [],
+                candidateArtifactPaths: legacyCandidatePaths
+            )
+            liveReferences.formUnion(legacySnapshot.liveReferencedArtifactPaths)
+            liveSnapshot = Lane2TargetedLiveReferenceSnapshot(
+                liveProjectUUIDs: liveSnapshot.liveProjectUUIDs,
+                liveReferencedArtifactPaths: liveReferences,
+                diagnostics: liveSnapshot.diagnostics.merged(with: legacySnapshot.diagnostics)
+            )
+        }
 
         func candidate(projectUUID: UUID) -> Lane2TombstonedProjectCompactionCandidate? {
             indexedByID[projectUUID]?.compactionCandidate ?? legacyByID[projectUUID]
@@ -377,7 +411,46 @@ public final class CrashSafeProjectLibraryStore:
             discardedPrepared: discarded.sorted(by: projectIDLessThan),
             completedCommitted: completed.sorted(by: projectIDLessThan),
             promotedInterruptedTombstones: promoted.sorted(by: projectIDLessThan),
-            indexedRecoveryDiagnostics: diagnostics
+            indexedRecoveryDiagnostics: diagnostics,
+            liveReferenceDiagnostics: liveSnapshot.diagnostics
+        )
+    }
+
+    private func resolveLiveReferences(
+        targetProjectUUIDs: Set<UUID>,
+        candidateArtifactPaths: Set<String>
+    ) async throws -> Lane2TargetedLiveReferenceSnapshot {
+        if let liveReferenceResolver {
+            return try await liveReferenceResolver.resolve(
+                targetProjectUUIDs: targetProjectUUIDs,
+                candidateArtifactPaths: candidateArtifactPaths
+            )
+        }
+
+        let projects = try await metadata.listMaintenanceProjects()
+        let liveProjectUUIDs = Set(
+            projects.lazy
+                .filter { targetProjectUUIDs.contains($0.projectID.rawValue) }
+                .map { $0.projectID.rawValue }
+        )
+        let allLiveReferences = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(in: projects)
+        let liveReferences = allLiveReferences.intersection(candidateArtifactPaths)
+        let plan = try Lane2TargetedLiveReferenceQueryPolicy.plan(
+            candidateArtifactPaths: candidateArtifactPaths
+        )
+        return Lane2TargetedLiveReferenceSnapshot(
+            liveProjectUUIDs: liveProjectUUIDs,
+            liveReferencedArtifactPaths: liveReferences,
+            diagnostics: Lane2TargetedLiveReferenceDiagnostics(
+                usedTargetedStoreQuery: false,
+                requestedProjectIDs: targetProjectUUIDs.count,
+                requestedArtifactPaths: plan.requestedArtifactPathCount,
+                sourceArtifactPaths: plan.sourceArtifactPaths.count,
+                stemArtifactPaths: plan.stemArtifactPaths.count,
+                liveProjectIDsMatched: liveProjectUUIDs.count,
+                liveArtifactPathsMatched: liveReferences.count,
+                logicalFetchCalls: 0
+            )
         )
     }
 
