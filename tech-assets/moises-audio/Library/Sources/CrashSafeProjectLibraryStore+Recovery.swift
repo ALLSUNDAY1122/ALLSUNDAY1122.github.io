@@ -17,8 +17,8 @@ public struct RecoverableLibraryOpenResult: Sendable {
 
 public extension CrashSafeProjectLibraryStore {
     /// Production-safe preserving open path. AW24 prepares only one bounded legacy tombstone slice
-    /// per launch before crash-safe delete recovery; remaining historical tombstones resume on a
-    /// later launch without re-entering the old unbounded compatibility scanner.
+    /// per launch before crash-safe delete recovery; AW26 injects a targeted read-only resolver so
+    /// destructive authorization does not materialize the full live Library.
     static func openPreservingUserData(
         metadataStoreURL: URL,
         artifactRootURL: URL,
@@ -34,7 +34,10 @@ public extension CrashSafeProjectLibraryStore {
         )
         let library = try CrashSafeProjectLibraryStore(
             metadata: metadataOpen.store,
-            artifactRootURL: artifactRootURL
+            artifactRootURL: artifactRootURL,
+            liveReferenceResolver: Lane2CoreDataLiveArtifactReferenceResolver(
+                storeURL: metadataStoreURL
+            )
         )
         _ = try await library.recoverInterruptedOperations()
         _ = try await metadataOpen.store.reconcileOrphanSetlistEntries()
