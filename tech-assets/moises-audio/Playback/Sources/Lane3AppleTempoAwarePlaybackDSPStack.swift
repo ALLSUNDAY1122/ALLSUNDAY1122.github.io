@@ -16,15 +16,29 @@ public struct Lane3AppleTempoAwareGraphReceipt: Equatable, Codable, Sendable {
     public let parityPromotionAllowed: Bool
 }
 
-/// AW31 selected low-level Apple graph. The raw Playback backend stays private; HQ receives the
-/// fenced Playback surface plus AW29 DSP stack, then constructs AW17 through the factory below so
-/// tempo coalescing occurs only before Playback is stopped. AW18/AW21 are then assembled around that
-/// exact authority before the App-facing AW31 facade is created.
+public struct Lane3AppleBoundaryEnvelopeCompositionReceipt: Equatable, Codable, Sendable {
+    public let schemaVersion: Int
+    public let evidenceScope: String
+    public let masterGainAfterSharedTimePitch: Bool
+    public let seekRestartEnvelopeAvailable: Bool
+    public let loopMutationRestartEnvelopeAvailable: Bool
+    public let tempoRestartEnvelopeAvailable: Bool
+    public let playRestartEnvelopeAvailable: Bool
+    public let automaticRepeatedLoopSeamEnvelopeAvailable: Bool
+    public let staleFadeInGenerationGuarded: Bool
+    public let audibleArtifactEliminationClaimed: Bool
+    public let parityPromotionAllowed: Bool
+}
+
+/// AW31 shared Apple graph with AW32's selected restart-envelope decorator. The underlying Playback
+/// backend remains private. HQ receives only the fenced Playback surface plus the exact AW29 DSP
+/// stack, so source/transport clock authority cannot be bypassed accidentally.
 public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
     public let playback: RescheduleFencedPlaybackBackend
     public let dsp: Lane3AppleDSPProductionStack
     public let compositionReceipt: Lane3AppleTempoAwareGraphReceipt
-    private let tempoBackend: AppleTempoAwareRampedMultiTrackPlaybackBackend
+    public let boundaryEnvelopeCompositionReceipt: Lane3AppleBoundaryEnvelopeCompositionReceipt
+    private let tempoBackend: AppleBoundaryEnvelopedPlaybackBackend
     private let projectID: ProjectID
     private let tempoRatioRange: ClosedRange<Double>
 
@@ -39,7 +53,10 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
         tempoTransitionSleeper: any PracticeDSPTempoTransitionSleeping = PracticeDSPSystemTempoTransitionSleeper(),
         pitchTransitionPolicy: PracticeDSPPitchTransitionPolicy = .provisionalAppleInteractive,
         pitchTransitionSleeper: any PracticeDSPPitchTransitionSleeping = PracticeDSPSystemPitchTransitionSleeper(),
-        telemetryTimeSource: any Lane3DSPRuntimeTelemetryTimeSource = Lane3DSPSystemTelemetryTimeSource()
+        telemetryTimeSource: any Lane3DSPRuntimeTelemetryTimeSource = Lane3DSPSystemTelemetryTimeSource(),
+        boundaryEnvelopePolicy: PlaybackBoundaryEnvelopePolicy = .provisionalAppleInteractive,
+        boundaryEnvelopeSleeper: any PlaybackBoundaryEnvelopeSleeping = PlaybackBoundaryEnvelopeSystemSleeper(),
+        startLeadSeconds: Double = 0.075
     ) throws -> Lane3AppleTempoAwarePlaybackDSPStack {
         let engine = AVAudioEngine()
         let node = AVAudioUnitTimePitch()
@@ -63,9 +80,18 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
             sharedTimePitchNode: node,
             gainRampPolicy: gainRampPolicy,
             tempoRatioRange: capabilities.tempoRatioRange,
-            initialTempoRatio: initialState.tempoRatio
+            initialTempoRatio: initialState.tempoRatio,
+            startLeadSeconds: startLeadSeconds
         )
-        let playback = RescheduleFencedPlaybackBackend(backend: rawPlayback)
+        let envelopedPlayback = try AppleBoundaryEnvelopedPlaybackBackend(
+            backend: rawPlayback,
+            engine: engine,
+            sharedTimePitchNode: node,
+            policy: boundaryEnvelopePolicy,
+            sleeper: boundaryEnvelopeSleeper,
+            startLeadSeconds: startLeadSeconds
+        )
+        let playback = RescheduleFencedPlaybackBackend(backend: envelopedPlayback)
         let receipt = Lane3AppleTempoAwareGraphReceipt(
             schemaVersion: 1,
             evidenceScope: "LANE3_AW31_APPLE_SHARED_PLAYBACK_DSP_GRAPH_NON_PARITY",
@@ -79,20 +105,34 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
             rawPlaybackBackendExposed: false,
             parityPromotionAllowed: false
         )
+        let boundaryReceipt = Lane3AppleBoundaryEnvelopeCompositionReceipt(
+            schemaVersion: 1,
+            evidenceScope: "LANE3_AW32_APPLE_RESTART_ENVELOPE_NON_PARITY",
+            masterGainAfterSharedTimePitch: true,
+            seekRestartEnvelopeAvailable: true,
+            loopMutationRestartEnvelopeAvailable: true,
+            tempoRestartEnvelopeAvailable: true,
+            playRestartEnvelopeAvailable: true,
+            automaticRepeatedLoopSeamEnvelopeAvailable: false,
+            staleFadeInGenerationGuarded: true,
+            audibleArtifactEliminationClaimed: false,
+            parityPromotionAllowed: false
+        )
         return .init(
             playback: playback,
             dsp: dsp,
             compositionReceipt: receipt,
-            tempoBackend: rawPlayback,
+            boundaryEnvelopeCompositionReceipt: boundaryReceipt,
+            tempoBackend: envelopedPlayback,
             projectID: projectID,
             tempoRatioRange: capabilities.tempoRatioRange
         )
     }
 
-    /// Selected AW17 construction for AW31. Tempo's upstream quiet period is deliberately zero:
-    /// the AW31 facade already performs latest-wins coalescing before it freezes Playback. Keeping
-    /// the historical AW17 16ms tempo delay here would create a second debounce while audio is
-    /// stopped and can surface as an avoidable audible gap.
+    /// Selected AW17 construction for AW31/AW32. Tempo's upstream quiet period is deliberately zero:
+    /// the selected facade already performs latest-wins coalescing before it fades/stops Playback.
+    /// Keeping the historical AW17 16ms tempo delay here would create a second debounce while audio
+    /// is muted and can surface as an avoidable restart gap.
     public func makeTempoBoundaryCompatibleTransportAuthority(
         coordinator: PracticeDSPGenerationCoordinator,
         seekQuietPeriod: Duration = .milliseconds(16),
@@ -123,6 +163,10 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
             tempoBackend: tempoBackend,
             tempoQuietPeriod: tempoQuietPeriod
         )
+    }
+
+    public func boundaryEnvelopeRuntimeSnapshot() async -> PlaybackBoundaryEnvelopeRuntimeSnapshot {
+        await tempoBackend.boundaryEnvelopeRuntimeSnapshot()
     }
 }
 #endif
