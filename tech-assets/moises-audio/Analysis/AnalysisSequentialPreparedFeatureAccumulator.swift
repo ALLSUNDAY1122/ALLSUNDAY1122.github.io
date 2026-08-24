@@ -3,9 +3,10 @@ import Foundation
 /// Incremental W29/W30 feature accumulator. The caller feeds exactly one
 /// prepared mono sample for every logical prepared sample index, in strictly
 /// increasing order starting at zero. W31 preserves the exact W29 cadence while
-/// natural feature cardinality is below the retention caps, and increases only
-/// retained feature cadence for extreme durations. If a bounded cadence can no
-/// longer represent the original feature safely, that feature fails closed.
+/// natural feature cardinality is below the retention caps. For extreme Tempo
+/// cardinality it computes every natural-cadence onset and max-pools contiguous
+/// groups before retention, avoiding gaps between observed windows. If a bounded
+/// cadence can no longer represent a feature safely, that feature fails closed.
 final class AnalysisSequentialPreparedFeatureAccumulator {
     private struct PendingChordFrame {
         let startSeconds: Double
@@ -22,10 +23,13 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
     private let retentionPlan: AnalysisExtremeDurationRetentionPlan
 
     private let tempoFrameSize: Int
+    private let baseTempoHopSize: Int
     private let tempoHopSize: Int
     private var tempoRing: [Float]
     private var tempoFlux: [Double] = []
     private var previousTempoEnergy: Double?
+    private var tempoPoolMaximum = 0.0
+    private var tempoPoolCount = 0
 
     private let keyWindowSize: Int
     private let keyStarts: [Int]
@@ -82,6 +86,10 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
         tempoFrameSize = min(
             configuration.analysisWindowSize,
             max(256, Int((sampleRate * 0.046).rounded()))
+        )
+        baseTempoHopSize = min(
+            configuration.analysisHopSize,
+            max(32, Int((sampleRate * 0.010).rounded()))
         )
         tempoHopSize = max(1, plan.tempoHopSamples)
         tempoRing = Array(repeating: 0, count: max(1, tempoFrameSize))
@@ -155,7 +163,7 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
         if retentionPlan.tempoResolutionSafe {
             tempoRing[sampleIndex % tempoRing.count] = value
             if sampleIndex + 1 >= tempoFrameSize,
-               (sampleIndex + 1 - tempoFrameSize) % tempoHopSize == 0 {
+               (sampleIndex + 1 - tempoFrameSize) % baseTempoHopSize == 0 {
                 let frameStart = sampleIndex + 1 - tempoFrameSize
                 var sumSquares = 0.0
                 for absoluteIndex in frameStart...sampleIndex {
@@ -163,8 +171,15 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
                     sumSquares += frameValue * frameValue
                 }
                 let energy = log1p(sqrt(sumSquares / Double(tempoFrameSize)))
-                tempoFlux.append(previousTempoEnergy.map { max(0, energy - $0) } ?? 0)
+                let onset = previousTempoEnergy.map { max(0, energy - $0) } ?? 0
                 previousTempoEnergy = energy
+                tempoPoolMaximum = max(tempoPoolMaximum, onset)
+                tempoPoolCount += 1
+                if tempoPoolCount >= retentionPlan.tempoFrameStride {
+                    tempoFlux.append(tempoPoolMaximum)
+                    tempoPoolMaximum = 0
+                    tempoPoolCount = 0
+                }
             }
         }
 
@@ -303,6 +318,11 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
             )
         }
         if retentionPlan.tempoResolutionSafe {
+            if tempoPoolCount > 0 {
+                tempoFlux.append(tempoPoolMaximum)
+                tempoPoolMaximum = 0
+                tempoPoolCount = 0
+            }
             try Self.normalizeTempoFlux(&tempoFlux)
         } else {
             tempoFlux.removeAll(keepingCapacity: false)
