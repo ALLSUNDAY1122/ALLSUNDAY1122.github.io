@@ -32,6 +32,7 @@ let package = Package(
                 "Analysis/AnalysisCancellation.swift",
                 "Analysis/AnalysisWorkingSetPolicy.swift",
                 "Analysis/AnalysisPreparedSampleReader.swift",
+                "Analysis/AnalysisBoundedMemoryBudget.swift",
                 "Analysis/StreamingBoundedTempoBeatAnalyzer.swift",
                 "Analysis/StreamingBoundedMusicalKeyAnalyzer.swift",
                 "Analysis/StreamingBoundedChordTimelineAnalyzer.swift",
