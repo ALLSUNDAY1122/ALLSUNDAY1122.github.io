@@ -134,10 +134,13 @@ public struct Lane3UnifiedTransportAuthoritySnapshot: Equatable, Sendable {
 }
 
 /// Single product-side token authority for Lane 3.
-/// Continuous seek/loop/tempo requests retain pre-token latest-wins coalescing. Discrete play/pause
-/// form an ordering barrier that flushes older continuous controls, while media/interruption/recovery
-/// boundaries supersede older pending controls before they can consume a Playback generation. Every
-/// actual token-producing call is executed by this actor's one drain.
+/// Continuous seek/loop/tempo requests retain pre-token latest-wins coalescing inside one fixed
+/// quiet-period window opened by the first pending intent. A replacement changes only the value that
+/// will execute at that already-open deadline; it does not restart the deadline and therefore cannot
+/// starve token dispatch under a continuous scrub/drag stream. Discrete play/pause form an ordering
+/// barrier that flushes older continuous controls, while media/interruption/recovery boundaries
+/// supersede older pending controls before they can consume a Playback generation. Every actual
+/// token-producing call is executed by this actor's one drain.
 public actor Lane3UnifiedProductionTransportAuthority {
     private enum ContinuousCommand: Sendable {
         case seek(positionSeconds: Double, resume: Bool, loop: PlaybackLoopRange?)
@@ -369,7 +372,6 @@ public actor Lane3UnifiedProductionTransportAuthority {
         var predecessorCount = 0
         if let previous = continuous[family] {
             predecessorCount = previous.coalescedPredecessorCount + 1
-            wakeTasks[family]?.cancel()
             previous.continuation.resume(returning: .supersededBeforeToken(
                 ticket: previous.ticket,
                 byTicket: ticket,
@@ -385,11 +387,16 @@ public actor Lane3UnifiedProductionTransportAuthority {
             ready: false,
             continuation: continuation
         )
+
+        // Fixed-window coalescing: the first intent opens one deadline. Replacements update the
+        // latest value but deliberately keep that deadline, so an uninterrupted scrub cannot defer
+        // token creation forever. Discrete barriers still cancel/flush this task exactly as before.
+        guard wakeTasks[family] == nil else { return }
         let delay = policy.quietPeriod(for: family)
         wakeTasks[family] = Task { [weak self] in
             try? await Task.sleep(for: delay)
             guard !Task.isCancelled else { return }
-            await self?.markReady(family: family, ticket: ticket)
+            await self?.markReadyAtWindowDeadline(family: family)
         }
     }
 
@@ -497,11 +504,11 @@ public actor Lane3UnifiedProductionTransportAuthority {
         cancellationBeforeEnqueue.insert(ticket)
     }
 
-    private func markReady(family: Lane3UnifiedContinuousFamily, ticket: UInt64) async {
-        guard var current = continuous[family], current.ticket == ticket else { return }
+    private func markReadyAtWindowDeadline(family: Lane3UnifiedContinuousFamily) async {
+        wakeTasks[family] = nil
+        guard var current = continuous[family] else { return }
         current.ready = true
         continuous[family] = current
-        wakeTasks[family] = nil
         await drainReady()
     }
 
