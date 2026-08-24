@@ -66,6 +66,29 @@ assert "requiresThermalPause" in MODEL
 assert "func enhanceResult()" in MODEL
 assert "enhancementTarget(from: trainingIteration)" in MODEL
 
+# Checkpoint durability is part of the retry/resume contract. Msplat's pinned public API returns Bool
+# from saveCheckpoint(to:), so callers must not discard that result and then claim a recoverable
+# checkpoint in telemetry. Every save site must fail closed when persistence fails.
+checkpoint_save_guards = re.findall(
+    r"guard\s+trainer\.saveCheckpoint\(to:\s*checkpoint\.path\)\s+else",
+    MODEL,
+)
+assert len(checkpoint_save_guards) >= 4, "all checkpoint save sites must validate the Bool result"
+assert "_ = trainer.saveCheckpoint" not in MODEL, "checkpoint save success must never be ignored"
+assert ".checkpointSave" in MODEL and ".trainerError" in MODEL
+for outcome in (
+    "failed-checkpoint-save-resource-pause",
+    "cancelled-checkpoint-save-failed",
+    "failed-checkpoint-save-training",
+    "failed-checkpoint-save-final",
+):
+    assert outcome in MODEL, f"missing fail-closed checkpoint outcome: {outcome}"
+require(
+    r"failCheckpointSave\([\s\S]*?\.checkpointSave[\s\S]*?\.trainerError[\s\S]*?nil",
+    MODEL,
+    "checkpoint persistence failure must report checkpointSave/trainerError without a fake checkpoint iteration",
+)
+
 # Expensive point-color projection and sky seeding must run after Task.detached begins, not while
 # finishCapture is transitioning the UI from capture to the processing screen.
 finish = MODEL.index("func finishCapture()")
