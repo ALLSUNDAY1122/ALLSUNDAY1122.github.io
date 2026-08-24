@@ -1,71 +1,64 @@
-# Analysis Device Workload Receipt Runbook — L4-W25
+# Analysis Device Workload Receipt Runbook — L4-W25 + W35 clarification
 
 ## Purpose
 
-W23 measures physical-device telemetry and W24 evaluates repeated predeclared runs against HQ-approved limits. Neither layer alone proves that a fast/low-memory record actually executed the full Project Analysis workload. W25 adds a fail-closed workload receipt that must validate before a W24 run is eligible for acceptance evaluation.
+W23 measures physical-device telemetry and W24 evaluates repeated predeclared runs. W25 adds a fail-closed workload receipt so a fast/low-memory record cannot pass without proving real Analysis work occurred.
 
-This is integrity infrastructure, not PARITY evidence. Physical-iPhone execution, source-file loading, corpus approval, production thresholds, evidence archive authenticity and final PARITY remain HQ Late Integration responsibilities.
+W25 remains valid as a receipt/integrity schema. W35 adds a separate runtime-algorithm companion rather than mutating W25 receipt semantics.
 
 ## Predeclare before the run
 
-HQ must fill `ANALYSIS_DEVICE_WORKLOAD_POLICY_TEMPLATE.json` with:
+HQ must fill `ANALYSIS_DEVICE_WORKLOAD_POLICY_TEMPLATE.json` with exact manifest ID/SHA, fixture/source SHA and metadata, analyzer/version, Analysis configuration ID, integrated build identity and approval reference. Placeholder values fail validation.
 
-- exact manifest ID and SHA-256;
-- exact fixture IDs and source-audio SHA-256 values;
-- canonical source duration, sample rate and channel count from the approved loader/manifest path;
-- exact `ProjectOwnedMusicAnalyzer` / analyzer version;
-- exact Analysis configuration ID;
-- exact integrated build identity;
-- an HQ approval reference.
+## Historical runner boundary
 
-Placeholder values deliberately fail validation. Worker 4 defines no production performance threshold in W25.
+The W25 `AnalysisDeviceWorkloadRunner` and its internal `AnalysisCanonicalProductPipeline` were created before W28-W34. They materialize a prepared signal and invoke the older separate Tempo/Key/Chord path.
 
-## Required execution path
+They remain useful for historical W25 receipt regression and do not need to be deleted, but they MUST NOT be presented as the current W30-W34 product runtime for new MOI-P021 evidence.
 
-Use `AnalysisDeviceWorkloadRunner` with an `AnalysisSignal` injected by the integration-owned loading path. The runner is not an arbitrary timing closure: it executes `AnalysisCanonicalProductPipeline`, which uses the same bounded/cancellable Worker-4 stages as the product analyzer:
+A current physical workload runner must exercise the same single-pass/chunk-capable W30-W34 runtime used by `ProjectOwnedMusicAnalyzer` and must emit W35 companion runtime-algorithm evidence from that same execution. W35 rejects complete records with `exactSinglePreparedTraversal=false` or a non-current algorithm schema.
 
-1. signal preparation;
-2. tempo;
-3. beat output observation;
-4. key;
-5. chord;
-6. song section + boundary hardening;
-7. final `AnalysisSnapshot` hardening/publication.
+## Complete-analysis receipt semantics
 
-The runner validates original decoded-signal duration/sample-rate against the predeclared source binding before preprocessing. Source-file SHA and original channel metadata are supplied by the approved loader/manifest path; Worker 4 does not duplicate Lane-2 decoding or file lifecycle.
+A W25 complete receipt remains valid only when:
 
-## Complete-analysis run
+- run ID/kind exactly match W23;
+- manifest, source and analyzer/config/build identity match policy;
+- required canonical stages occur once in order with valid timing;
+- complete run terminates normally;
+- final snapshot canonical JSON, SHA-256 and output summary agree;
+- run-specific execution binding SHA recomputes exactly.
 
-A complete run is valid only when:
+Identical snapshot SHA across independent repeats is allowed; execution reuse is detected by run/execution binding rather than by requiring nondeterministic outputs.
 
-- receipt run ID and kind exactly match W23 evidence;
-- manifest, fixture/source binding and analyzer/config/build identity match the HQ policy;
-- every required stage appears once, in canonical order, with finite monotonic offsets and `COMPLETED` status;
-- W23 says `completedNormally=true`;
-- final snapshot bytes are already in deterministic canonical JSON form;
-- SHA-256 recomputed from those bytes matches the receipt;
-- output decision/cardinality summary matches the decoded snapshot;
-- the run-specific execution binding SHA recomputes exactly.
+For post-W35 physical acceptance, additionally supply one finalized W35 runtime identity bound to the exact W25 `executionID` and snapshot SHA.
 
-Identical snapshot SHA values across two independent repeats are allowed. Deterministic analysis should often produce identical output. Reuse is detected through run-specific `executionID` / execution-binding reuse, not by incorrectly requiring different snapshot content.
+## Cancellation receipt semantics
 
-## Cancellation probe
+A W25 cancellation receipt has no final snapshot. It must show a completed canonical prefix followed by one terminal cancelled stage and prove real work began before cancellation.
 
-A cancellation receipt has no final snapshot. It must contain a completed canonical prefix followed by one terminal `CANCELLED` stage, while W23 reports `completedNormally=false` and supplies cancellation request/observed offsets. Stage timing must prove canonical work started before the cancellation request and termination is consistent with the W23 observation window. A no-stage/no-op cancellation cannot pass.
+W35 cancellation evidence binds the same run/execution/source/build but uses `CANCELLED_BEFORE_RUNTIME_IDENTITY_FINALIZATION`; it must not fabricate a final runtime identity when cancellation happens before feature finalization.
 
-## W24 integration
+## Canonical post-W35 gate
 
-Call `AnalysisDevicePerformanceAcceptanceWithWorkloadEvaluator.evaluate`. It first requires an exact one-to-one receipt inventory for the W23/W24 batch and validates every receipt. If any workload receipt is invalid, `performanceAcceptance` is `nil`; W24 performance limits are not evaluated on that batch.
+For new physical Analysis evidence use `AnalysisDeviceCorpusAlgorithmPerformanceGate`, not the historical W25-only acceptance entry point.
+
+Canonical order:
+
+1. W22 rights-cleared corpus coverage;
+2. W26 physical fixture selection;
+3. W23 telemetry and W25 workload receipt on the CURRENT W30-W34 runtime;
+4. W35 runtime-algorithm companion evidence;
+5. W35 exact inventory/binding validation;
+6. W25 receipt validation;
+7. W24 repeated worst-case acceptance.
+
+If W35 is invalid, W25/W24 downstream evaluation is suppressed.
 
 ## Archive requirements
 
-Archive together, without hand editing:
+Archive HQ workload policy, W23 performance evidence, W25 receipts/reports, W35 companion records/runtime hashes, W24 profile/report, source manifest/SHA, integrated build corroboration and device evidence. W27 predates W35, so HQ must extend/freeze the final archive inventory before claiming the new W35 role is covered by W27.
 
-- HQ workload policy;
-- W23 performance evidence batch;
-- W25 workload receipts;
-- W24 performance profile and gate report;
-- source manifest + SHA record;
-- integrated app build identifier and device-run corroboration.
+## Evidence boundary
 
-W25 does not cryptographically attest that a JSON record originated on the declared phone. Evidence archive signing/attestation is a separate remaining integrity gap for HQ/next Worker wave.
+W25/W35 integrity infrastructure is not PARITY. Genuine Lane-2 bounded decoding, selected Xcode/Apple execution, real iPhone RSS/thermal/battery, current-Moises differential, archive anchoring and final PARITY remain HQ Late Integration responsibilities.
