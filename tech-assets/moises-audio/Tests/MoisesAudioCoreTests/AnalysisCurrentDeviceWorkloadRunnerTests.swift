@@ -104,7 +104,7 @@ final class AnalysisCurrentDeviceWorkloadRunnerTests: XCTestCase {
         let task = Task {
             await AnalysisCurrentDeviceWorkloadRunner.run(signal: signal, context: context)
         }
-        try await Task.sleep(for: .milliseconds(20))
+        try await Task.sleep(nanoseconds: 20_000_000)
         task.cancel()
         let execution = await task.value
 
@@ -205,7 +205,7 @@ private actor SlowAfterFirstChunkPuller: AnalysisPCMChunkPulling {
         try AnalysisCancellationPolicy.check()
         guard offset < samples.count else { return nil }
         if emittedFirst {
-            try await Task.sleep(for: .seconds(10))
+            try await Task.sleep(nanoseconds: 10_000_000_000)
         }
         let start = offset
         let end = min(samples.count, start + chunkSize)
