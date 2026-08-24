@@ -11,7 +11,7 @@ final class Lane2ManagedArtifactInventoryWiringTests: XCTestCase {
 
         try write("Imports/first.m4a", root: root, modified: old)
         try lifecycle.requireReady(relativePath: "Imports/first.m4a")
-        XCTAssertTrue(Lane2ManagedArtifactInventory(rootURL: root).isAuthoritative)
+        XCTAssertTrue(Lane2ManagedArtifactInventory(rootURL: root).hasValidAuthoritativeMarker)
 
         for index in 0..<32 {
             let path = "Stems/stem-\(index).m4a"
@@ -44,7 +44,7 @@ final class Lane2ManagedArtifactInventoryWiringTests: XCTestCase {
         try lifecycle.requireReady(relativePath: "Imports/existing-a.m4a")
 
         let inventory = Lane2ManagedArtifactInventory(rootURL: root)
-        XCTAssertFalse(inventory.isAuthoritative)
+        XCTAssertFalse(inventory.hasValidAuthoritativeMarker)
         let slice = try lifecycle.prepareBoundedOrphanCandidateSlice(
             gracePeriod: 3600,
             now: now,
@@ -54,6 +54,32 @@ final class Lane2ManagedArtifactInventoryWiringTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(slice.scannedRegularFiles, 2)
     }
 
+    func testMalformedAuthoritativeMarkerFailsBackToFilesystemCompatibility() throws {
+        let root = try makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let lifecycle = LibraryArtifactLifecycle(rootURL: root)
+        let old = Date(timeIntervalSince1970: 1_000_000)
+        let now = Date(timeIntervalSince1970: 2_000_000)
+        try write("Imports/existing.m4a", root: root, modified: old)
+        let marker = root.appendingPathComponent(
+            ".LibraryRecovery/ArtifactInventory/v1/authoritative"
+        )
+        try FileManager.default.createDirectory(
+            at: marker.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try Data("corrupt".utf8).write(to: marker)
+
+        XCTAssertFalse(Lane2ManagedArtifactInventory(rootURL: root).hasValidAuthoritativeMarker)
+        let slice = try lifecycle.prepareBoundedOrphanCandidateSlice(
+            gracePeriod: 3600,
+            now: now,
+            limit: 1
+        )
+        XCTAssertFalse(slice.usesManagedArtifactInventory)
+        XCTAssertEqual(slice.candidates.first?.relativePath, "Imports/existing.m4a")
+    }
+
     func testReadyStagingOutsideManagedRootsDoesNotEnterInventory() throws {
         let root = try makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -61,7 +87,7 @@ final class Lane2ManagedArtifactInventoryWiringTests: XCTestCase {
         let path = "Staging/temp.m4a"
         try write(path, root: root, modified: Date())
         try lifecycle.requireReady(relativePath: path)
-        XCTAssertFalse(Lane2ManagedArtifactInventory(rootURL: root).isAuthoritative)
+        XCTAssertFalse(Lane2ManagedArtifactInventory(rootURL: root).hasValidAuthoritativeMarker)
     }
 
     private func makeRoot() throws -> URL {
