@@ -3,6 +3,7 @@ options:
   bundleIdPrefix: jp.allsunday1122
   deploymentTarget:
     iOS: '18.0'
+  preGenCommand: bash scripts/materialize_msplat_memory.sh
 packages:
   Msplat:
     path: Packages/MsplatMemory
