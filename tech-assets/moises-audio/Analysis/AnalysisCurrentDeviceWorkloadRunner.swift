@@ -45,7 +45,7 @@ public enum AnalysisCurrentDeviceWorkloadRunnerError: Error, Equatable, Sendable
     case cancellationBeforeAnySourceSamples
 }
 
-/// W36 physical workload runner.
+/// W36 physical workload runner with the W37 low-overhead lifecycle seam.
 ///
 /// Unlike the historical W25 runner, this executes the same W30-W34 chunked
 /// runtime used by `ProjectOwnedMusicAnalyzer` when a chunked loader is present.
@@ -59,12 +59,16 @@ public enum AnalysisCurrentDeviceWorkloadRunner {
     public static func run(
         signal: AnalysisChunkedSignal,
         context: AnalysisDeviceWorkloadRunContext,
-        configuration: MusicAnalysisConfiguration = .productBaseline
+        configuration: MusicAnalysisConfiguration = .productBaseline,
+        lifecycleReporter: (any AnalysisCurrentDeviceWorkloadLifecycleReporting)? = nil
     ) async -> AnalysisCurrentDeviceWorkloadExecution {
         let executionID = UUID().uuidString.lowercased()
         let workloadStartedAt = Date()
         let recorder = AnalysisCurrentDeviceWorkloadStageRecorder()
-        let sourceObserver = AnalysisObservedPCMChunkPuller(base: signal.source)
+        let sourceObserver = AnalysisObservedPCMChunkPuller(
+            base: signal.source,
+            lifecycleReporter: lifecycleReporter
+        )
         let instrumentedSignal = AnalysisChunkedSignal(
             descriptor: signal.descriptor,
             source: sourceObserver,
@@ -227,7 +231,7 @@ public enum AnalysisCurrentDeviceWorkloadRunner {
             algorithmEvidence = nil
         }
 
-        return .init(
+        let execution = AnalysisCurrentDeviceWorkloadExecution(
             outcome: outcome,
             snapshot: finalSnapshot,
             receipt: receipt,
@@ -239,6 +243,8 @@ public enum AnalysisCurrentDeviceWorkloadRunner {
             observedSourceSampleCount: sourceObservation.sampleCount,
             failureDescription: failureDescription
         )
+        await lifecycleReporter?.workloadDidFinish(outcome: outcome)
+        return execution
     }
 }
 
@@ -249,11 +255,17 @@ private struct AnalysisObservedPCMChunkProgress: Sendable {
 
 private actor AnalysisObservedPCMChunkPuller: AnalysisPCMChunkPulling {
     private let base: any AnalysisPCMChunkPulling
+    private let lifecycleReporter: (any AnalysisCurrentDeviceWorkloadLifecycleReporting)?
     private var observedChunkCount = 0
     private var observedSampleCount: Int64 = 0
+    private var reportedSourceStart = false
 
-    init(base: any AnalysisPCMChunkPulling) {
+    init(
+        base: any AnalysisPCMChunkPulling,
+        lifecycleReporter: (any AnalysisCurrentDeviceWorkloadLifecycleReporting)?
+    ) {
         self.base = base
+        self.lifecycleReporter = lifecycleReporter
     }
 
     func nextChunk() async throws -> AnalysisPCMChunk? {
@@ -262,6 +274,10 @@ private actor AnalysisObservedPCMChunkPuller: AnalysisPCMChunkPulling {
             observedChunkCount += 1
             let addition = observedSampleCount.addingReportingOverflow(Int64(chunk.monoSamples.count))
             observedSampleCount = addition.overflow ? Int64.max : addition.partialValue
+            if !reportedSourceStart, !chunk.monoSamples.isEmpty {
+                reportedSourceStart = true
+                await lifecycleReporter?.sourceWorkDidBegin(firstChunkSampleCount: chunk.monoSamples.count)
+            }
         }
         return chunk
     }
