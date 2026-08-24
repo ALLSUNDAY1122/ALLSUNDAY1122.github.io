@@ -3,7 +3,7 @@ import Foundation
 /// Measures actual synchronous time/pitch backend entry and execution under the TaskLocal trace
 /// established by `Lane3DSPRuntimeTelemetryProbe`. Snapshot reads are intentionally not timed as DSP
 /// mutations because transaction gates can perform several of them around one apply.
-public final class Lane3DSPTelemetryTransactionalBackend: PracticeDSPTransactionalBackendApplying, @unchecked Sendable {
+public final class Lane3DSPTelemetryTransactionalBackend: PracticeDSPTransactionalBackendApplying, PracticeDSPPitchTransitionBackendApplying, @unchecked Sendable {
     private let backend: any PracticeDSPTransactionalBackendApplying
     private let collector: Lane3DSPRuntimeTelemetryCollector
     private let timeSource: any Lane3DSPRuntimeTelemetryTimeSource
@@ -33,6 +33,59 @@ public final class Lane3DSPTelemetryTransactionalBackend: PracticeDSPTransaction
 
     public func snapshotAppliedDSP() throws -> PracticeDSPBackendSnapshot {
         try backend.snapshotAppliedDSP()
+    }
+
+    public func beginPitchTransition(
+        tempoRatio: Double,
+        fromPitchSemitones: Double,
+        toPitchSemitones: Double,
+        policy: PracticeDSPPitchTransitionPolicy
+    ) throws -> PracticeDSPPitchTransitionBackendReceipt {
+        let entry = timeSource.nowNanoseconds()
+        let trace = Lane3DSPRuntimeTelemetryTaskContext.trace
+        collector.recordBackendEntry(trace: trace, at: entry)
+        defer {
+            collector.recordBackendCompletion(
+                trace: trace,
+                durationNanoseconds: Self.elapsed(from: entry, to: timeSource.nowNanoseconds())
+            )
+        }
+        if let transitioning = backend as? any PracticeDSPPitchTransitionBackendApplying {
+            return try transitioning.beginPitchTransition(
+                tempoRatio: tempoRatio,
+                fromPitchSemitones: fromPitchSemitones,
+                toPitchSemitones: toPitchSemitones,
+                policy: policy
+            )
+        }
+        try backend.apply(tempoRatio: tempoRatio, pitchSemitones: toPitchSemitones)
+        return .immediateFallback(
+            reason: .backendTransitionUnsupported,
+            fromSemitones: fromPitchSemitones,
+            toSemitones: toPitchSemitones,
+            sampleRate: 0
+        )
+    }
+
+    public func finalizePitchTransition(tempoRatio: Double, pitchSemitones: Double) throws {
+        guard let transitioning = backend as? any PracticeDSPPitchTransitionBackendApplying else {
+            return
+        }
+        try transitioning.finalizePitchTransition(
+            tempoRatio: tempoRatio,
+            pitchSemitones: pitchSemitones
+        )
+    }
+
+    public func cancelPitchTransition(tempoRatio: Double, pitchSemitones: Double) throws {
+        if let transitioning = backend as? any PracticeDSPPitchTransitionBackendApplying {
+            try transitioning.cancelPitchTransition(
+                tempoRatio: tempoRatio,
+                pitchSemitones: pitchSemitones
+            )
+        } else {
+            try backend.apply(tempoRatio: tempoRatio, pitchSemitones: pitchSemitones)
+        }
     }
 
     private static func elapsed(from start: UInt64, to end: UInt64) -> UInt64 {
