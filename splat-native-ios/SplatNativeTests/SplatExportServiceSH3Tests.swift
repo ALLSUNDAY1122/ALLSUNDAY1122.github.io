@@ -71,16 +71,16 @@ extension SplatExportServiceTests {
                 for index in 1..<16 {
                     if format == .spz {
                         // SPZ v3 intentionally quantizes SH1 to 5 bits and SH2/SH3 to 4 bits.
-                        // Compare against the format-defined quantized value rather than weakening
-                        // the gate with a broad absolute tolerance that can hide coefficient loss.
+                        // Compare against the complete format-defined round-trip, including the
+                        // RDF <-> RUB SH sign conversion performed by the pinned SPZ writer/reader.
                         let expectedQuantized = SIMD3<Float>(
-                            spzQuantizedSH(expectedSH[index].x, coefficientIndex: index),
-                            spzQuantizedSH(expectedSH[index].y, coefficientIndex: index),
-                            spzQuantizedSH(expectedSH[index].z, coefficientIndex: index)
+                            spzRoundTrippedSH(expectedSH[index].x, coefficientIndex: index),
+                            spzRoundTrippedSH(expectedSH[index].y, coefficientIndex: index),
+                            spzRoundTrippedSH(expectedSH[index].z, coefficientIndex: index)
                         )
-                        XCTAssertEqual(actualSH[index].x, expectedQuantized.x, accuracy: 0.000001)
-                        XCTAssertEqual(actualSH[index].y, expectedQuantized.y, accuracy: 0.000001)
-                        XCTAssertEqual(actualSH[index].z, expectedQuantized.z, accuracy: 0.000001)
+                        XCTAssertEqual(actualSH[index].x, expectedQuantized.x, accuracy: 0.000001, "SPZ SH\(index) x")
+                        XCTAssertEqual(actualSH[index].y, expectedQuantized.y, accuracy: 0.000001, "SPZ SH\(index) y")
+                        XCTAssertEqual(actualSH[index].z, expectedQuantized.z, accuracy: 0.000001, "SPZ SH\(index) z")
                     } else {
                         XCTAssertEqual(actualSH[index].x, expectedSH[index].x, accuracy: 0.00001)
                         XCTAssertEqual(actualSH[index].y, expectedSH[index].y, accuracy: 0.00001)
@@ -94,16 +94,26 @@ extension SplatExportServiceTests {
         }
     }
 
-    /// Mirrors the SPZ v3 SH packing rule used by the pinned spz-swift dependency:
-    /// SH1 uses 5 effective bits (bucket 8), while SH2/SH3 use 4 (bucket 16).
-    /// The helper is deliberately local to the acceptance test so production export code
-    /// remains independent from a test-only representation of the codec.
-    private func spzQuantizedSH(_ value: Float, coefficientIndex: Int) -> Float {
+    /// Mirrors the complete SPZ v3 higher-order SH round-trip used by the pinned stack.
+    /// SplatIO writes from RDF to SPZ's RUB convention, then reads back to RDF. SH1 uses
+    /// 5 effective bits (bucket 8); SH2/SH3 use 4 (bucket 16). Quantization is intentionally
+    /// applied after the per-coefficient coordinate flip because bucket rounding is not perfectly
+    /// sign-symmetric at every boundary.
+    private func spzRoundTrippedSH(_ value: Float, coefficientIndex: Int) -> Float {
+        // coordinateConverter(from: .rdf, to: .rub).flipSh for SH coefficients 1...15.
+        let rdfToRubSHFlips: [Float] = [
+            -1, -1, 1, -1, 1,
+            1, -1, 1, -1, 1,
+            -1, -1, 1, -1, 1
+        ]
+        let coordinateFlip = rdfToRubSHFlips[coefficientIndex - 1]
         let bucketSize = coefficientIndex <= 3 ? 8 : 16
-        var quantized = Int((value * 128.0).rounded() + 128.0)
+        let packedValue = coordinateFlip * value
+        var quantized = Int((packedValue * 128.0).rounded() + 128.0)
         quantized = ((quantized + bucketSize / 2) / bucketSize) * bucketSize
         quantized = min(max(quantized, 0), 255)
-        return (Float(quantized) - 128.0) / 128.0
+        let unpacked = (Float(quantized) - 128.0) / 128.0
+        return coordinateFlip * unpacked
     }
 
     private func assertSH3BoundingBox(
