@@ -446,7 +446,7 @@ public enum Lane3DeviceEvidenceValidator {
             issues.append(.invalidCaseEnvelope(scenario))
         }
         if receipt.fixtureID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            || receipt.controlSignatureFNV1A64.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            || !isHex(receipt.controlSignatureFNV1A64, length: 16)
             || !isHex(receipt.aw13RunBindingSHA256, length: 64)
             || receipt.caseBindingSHA256 != receipt.recomputedBindingSHA256() {
             issues.append(.invalidFixtureBinding(scenario))
