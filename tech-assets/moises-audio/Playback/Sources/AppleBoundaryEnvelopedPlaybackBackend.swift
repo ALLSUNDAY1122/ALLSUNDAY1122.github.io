@@ -7,14 +7,14 @@ public enum AppleBoundaryEnvelopedPlaybackBackendError: Error, Equatable, Sendab
     case envelopePoisoned
 }
 
-/// AW32 discontinuity envelope decorator for the AW31 tempo-aware shared Apple graph.
-///
-/// The underlying AW31 backend remains the source/transport clock authority. This decorator owns a
-/// single master gain stage after the shared `AVAudioUnitTimePitch`, so a seek, loop mutation, tempo
-/// boundary or restart can cross silence instead of cutting arbitrary non-zero PCM samples directly.
-/// The provisional fade durations are engineering guardrails only: physical-device PCM/listening is
-/// still required before any click/pop or PARITY claim.
-public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, PlaybackTempoBoundaryRescheduling {
+/// AW32 discontinuity envelope decorator for the AW31 tempo-aware shared Apple graph, extended by
+/// AW33 with explicit selected-stack poison reporting. The underlying AW31 backend remains the
+/// source/transport clock authority. This decorator owns a single master gain stage after the shared
+/// `AVAudioUnitTimePitch`, so a seek, loop mutation, tempo boundary or restart can cross silence
+/// instead of cutting arbitrary non-zero PCM samples directly. The provisional fade durations are
+/// engineering guardrails only: physical-device PCM/listening is still required before any click/pop
+/// or PARITY claim.
+public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, PlaybackTempoBoundaryRescheduling, Lane3SelectedStackRecoveryReporting {
     private let backend: AppleTempoAwareRampedMultiTrackPlaybackBackend
     private let masterGainStage: AppleTransactionalStemGainRampStage
     private let policy: PlaybackBoundaryEnvelopePolicy
@@ -61,13 +61,22 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
         self.startLeadSeconds = startLeadSeconds
     }
 
+    public func selectedStackRequiresReconstruction() async -> Bool {
+        envelopePoisoned
+    }
+
     public func loadSource(projectID: ProjectID, asset: LocalAudioAsset) async throws {
         try requireHealthy()
         try invalidateEnvelopeAuthority()
         restartFadeInTask?.cancel()
         restartFadeInTask = nil
         masterGainStage.setImmediateValidated(1)
-        try await backend.loadSource(projectID: projectID, asset: asset)
+        do {
+            try await backend.loadSource(projectID: projectID, asset: asset)
+        } catch {
+            markPoisonIfRequired(error)
+            throw error
+        }
         playing = false
         pendingTempoEnvelope = nil
     }
@@ -97,7 +106,8 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
                 loop: loop
             )
         } catch {
-            masterGainStage.setImmediateValidated(1)
+            markPoisonIfRequired(error)
+            masterGainStage.setImmediateValidated(envelopePoisoned ? 0 : 1)
             playing = false
             throw error
         }
@@ -111,7 +121,12 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
 
     public func setEffectiveGains(projectID: ProjectID, gains: [StemID: Double]) async throws {
         try requireHealthy()
-        try await backend.setEffectiveGains(projectID: projectID, gains: gains)
+        do {
+            try await backend.setEffectiveGains(projectID: projectID, gains: gains)
+        } catch {
+            markPoisonIfRequired(error)
+            throw error
+        }
     }
 
     public func seek(
@@ -130,7 +145,8 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
                 loop: loop
             )
         } catch {
-            masterGainStage.setImmediateValidated(1)
+            markPoisonIfRequired(error)
+            masterGainStage.setImmediateValidated(envelopePoisoned ? 0 : 1)
             playing = false
             throw error
         }
@@ -150,7 +166,8 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
         do {
             try await backend.setLoop(projectID: projectID, loop: loop)
         } catch {
-            masterGainStage.setImmediateValidated(1)
+            markPoisonIfRequired(error)
+            masterGainStage.setImmediateValidated(envelopePoisoned ? 0 : 1)
             playing = false
             throw error
         }
@@ -166,7 +183,12 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
     public func play(projectID: ProjectID) async throws {
         try requireHealthy()
         if playing {
-            try await backend.play(projectID: projectID)
+            do {
+                try await backend.play(projectID: projectID)
+            } catch {
+                markPoisonIfRequired(error)
+                throw error
+            }
             return
         }
         try invalidateEnvelopeAuthority()
@@ -176,7 +198,8 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
         do {
             try await backend.play(projectID: projectID)
         } catch {
-            masterGainStage.setImmediateValidated(1)
+            markPoisonIfRequired(error)
+            masterGainStage.setImmediateValidated(envelopePoisoned ? 0 : 1)
             playing = false
             throw error
         }
@@ -194,7 +217,7 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
         await backend.pause(projectID: projectID)
         playing = false
         pendingTempoEnvelope = nil
-        masterGainStage.setImmediateValidated(1)
+        masterGainStage.setImmediateValidated(envelopePoisoned ? 0 : 1)
     }
 
     public func currentPositionSeconds(projectID: ProjectID) async -> Double? {
@@ -216,8 +239,11 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
             playing = false
             return receipt
         } catch {
+            markPoisonIfRequired(error)
             pendingTempoEnvelope = nil
-            if plan != nil {
+            if envelopePoisoned {
+                masterGainStage.setImmediateValidated(0)
+            } else if plan != nil {
                 try? scheduleImmediateFadeIn(plan: plan ?? currentPlan())
             } else {
                 masterGainStage.setImmediateValidated(1)
@@ -238,7 +264,7 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
             envelopePoisoned = true
             playing = false
             pendingTempoEnvelope = nil
-            masterGainStage.setImmediateValidated(1)
+            masterGainStage.setImmediateValidated(0)
             throw error
         }
         pendingTempoEnvelope = nil
@@ -262,7 +288,7 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
             envelopePoisoned = true
             playing = false
             pendingTempoEnvelope = nil
-            masterGainStage.setImmediateValidated(1)
+            masterGainStage.setImmediateValidated(0)
             throw error
         }
         pendingTempoEnvelope = nil
@@ -292,36 +318,52 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
     }
 
     private func fadeOutForBoundaryIfNeeded() async throws -> PlaybackBoundaryEnvelopePlan? {
-        try invalidateEnvelopeAuthority()
-        restartFadeInTask?.cancel()
-        restartFadeInTask = nil
-        guard playing else {
-            masterGainStage.setImmediateValidated(1)
-            return nil
+        do {
+            try invalidateEnvelopeAuthority()
+            restartFadeInTask?.cancel()
+            restartFadeInTask = nil
+            guard playing else {
+                masterGainStage.setImmediateValidated(1)
+                return nil
+            }
+            let plan = try currentPlan()
+            try masterGainStage.validateRamp(to: 0, frameCount: plan.fadeOutFrames)
+            masterGainStage.scheduleValidatedRamp(to: 0, frameCount: plan.fadeOutFrames)
+            increment(&fadeOutScheduled)
+            await sleeper.sleep(seconds: plan.fadeOutSeconds)
+            masterGainStage.setImmediateValidated(0)
+            return plan
+        } catch {
+            envelopePoisoned = true
+            restartFadeInTask?.cancel()
+            restartFadeInTask = nil
+            masterGainStage.setImmediateValidated(0)
+            throw error
         }
-        let plan = try currentPlan()
-        try masterGainStage.validateRamp(to: 0, frameCount: plan.fadeOutFrames)
-        masterGainStage.scheduleValidatedRamp(to: 0, frameCount: plan.fadeOutFrames)
-        increment(&fadeOutScheduled)
-        await sleeper.sleep(seconds: plan.fadeOutSeconds)
-        masterGainStage.setImmediateValidated(0)
-        return plan
     }
 
     private func armRestartFadeIn(plan: PlaybackBoundaryEnvelopePlan) throws {
-        try requireHealthy()
-        restartFadeInTask?.cancel()
-        restartFadeInTask = nil
-        try masterGainStage.validateImmediate(0)
-        try masterGainStage.validateRamp(to: 1, frameCount: plan.fadeInFrames)
-        masterGainStage.setImmediateValidated(0)
-        let generation = envelopeGeneration
-        increment(&restartFadeInArmed)
-        restartFadeInTask = Task { [weak self] in
-            await self?.sleepAndApplyRestartFadeIn(
-                expectedGeneration: generation,
-                plan: plan
-            )
+        do {
+            try requireHealthy()
+            restartFadeInTask?.cancel()
+            restartFadeInTask = nil
+            try masterGainStage.validateImmediate(0)
+            try masterGainStage.validateRamp(to: 1, frameCount: plan.fadeInFrames)
+            masterGainStage.setImmediateValidated(0)
+            let generation = envelopeGeneration
+            increment(&restartFadeInArmed)
+            restartFadeInTask = Task { [weak self] in
+                await self?.sleepAndApplyRestartFadeIn(
+                    expectedGeneration: generation,
+                    plan: plan
+                )
+            }
+        } catch {
+            envelopePoisoned = true
+            restartFadeInTask?.cancel()
+            restartFadeInTask = nil
+            masterGainStage.setImmediateValidated(0)
+            throw error
         }
     }
 
@@ -375,6 +417,31 @@ public actor AppleBoundaryEnvelopedPlaybackBackend: PlaybackBackendDriving, Play
         guard !envelopePoisoned else {
             throw AppleBoundaryEnvelopedPlaybackBackendError.envelopePoisoned
         }
+    }
+
+    private func markPoisonIfRequired(_ error: Error) {
+        if Self.underlyingRequiresReconstruction(error) {
+            envelopePoisoned = true
+            restartFadeInTask?.cancel()
+            restartFadeInTask = nil
+            masterGainStage.setImmediateValidated(0)
+        }
+    }
+
+    private static func underlyingRequiresReconstruction(_ error: Error) -> Bool {
+        if let appleError = error as? AppleTempoAwarePlaybackBackendError,
+           case .tempoBoundaryPoisoned = appleError {
+            return true
+        }
+        if let boundaryError = error as? PlaybackTempoBoundaryError {
+            switch boundaryError {
+            case .transactionSerialOverflow, .scheduleGenerationOverflow:
+                return true
+            default:
+                return false
+            }
+        }
+        return false
     }
 
     private func increment(_ value: inout UInt64) {
