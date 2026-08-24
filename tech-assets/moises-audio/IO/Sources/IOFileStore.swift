@@ -104,8 +104,15 @@ public struct IOFileStore: Sendable {
     }
 
     public func removeIfExists(_ url: URL, fileManager: FileManager = .default) {
-        guard fileManager.fileExists(atPath: url.path) else { return }
-        try? fileManager.removeItem(at: url)
+        let relativePath = try? relativePath(for: url)
+        if fileManager.fileExists(atPath: url.path) {
+            try? fileManager.removeItem(at: url)
+        }
+        guard !fileManager.fileExists(atPath: url.path), let relativePath else { return }
+        try? Lane2ManagedArtifactPublicationJournal(
+            rootURL: rootURL,
+            fileManager: fileManager
+        ).cancelCurrentSessionIfPresent(relativePath: relativePath)
     }
 
     public func preflight(requiredBytes: Int64, reserveBytes: Int64 = 32 * 1024 * 1024, fileManager: FileManager = .default) throws {
