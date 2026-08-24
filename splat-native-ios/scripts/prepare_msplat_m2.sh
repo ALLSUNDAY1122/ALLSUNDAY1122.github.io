@@ -9,9 +9,10 @@ REVISION="d620d9c58d270e7de9e34a9d8a85dcf938a5070d"
 BASE_PATCHER="$SCRIPT_DIR/apply_msplat_m2_patch.py"
 PATCHER="$SCRIPT_DIR/apply_msplat_m2_patch_v3.py"
 ADAPTER="$SCRIPT_DIR/apply_msplat_m2_to_existing.sh"
+COMPOSITION_TEST="$SCRIPT_DIR/test_m2_composition_adapter.sh"
 TESTER="$SCRIPT_DIR/test_m2_msplat_memory_patch.py"
 
-patch_hash="$(cat "$BASE_PATCHER" "$PATCHER" "$ADAPTER" | shasum -a 256 | awk '{print $1}')"
+patch_hash="$(cat "$BASE_PATCHER" "$PATCHER" "$ADAPTER" "$COMPOSITION_TEST" | shasum -a 256 | awk '{print $1}')"
 marker="$OUT/.m2-prepared"
 expected_marker="$REVISION:$patch_hash"
 
@@ -27,6 +28,11 @@ git init -q "$OUT"
 git -C "$OUT" remote add origin "$REMOTE"
 GIT_LFS_SKIP_SMUDGE=1 git -C "$OUT" fetch -q --depth 1 origin "$REVISION"
 git -C "$OUT" checkout -q --detach FETCH_HEAD
+
+# Prove composition behavior against the exact pinned source before generating
+# the package used by XcodeGen: staged/unstaged M1-shaped edits must survive and
+# staged-only conflicts in M2-owned files must be rejected.
+bash "$COMPOSITION_TEST" "$OUT"
 
 # Use the same non-destructive adapter that HQ can invoke after a disjoint M1
 # patch. On this standalone clean tree it also verifies the exact M2 file set.

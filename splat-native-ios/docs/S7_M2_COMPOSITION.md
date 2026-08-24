@@ -18,17 +18,33 @@ M1 owns `input_data.hpp`, `input_data.cpp`, and `msplat_api.mm`. M2 owns `metal_
 It fails closed unless:
 
 1. the target is a Git checkout at the exact pinned revision;
-2. none of M2's three owned source files were already modified;
+2. none of M2's three owned source files were already modified in either the working tree or index;
 3. all pre-existing dirty files remain dirty after M2 application;
 4. the only newly changed files are M2's three owned files;
-5. `git diff --check` passes;
+5. both unstaged and staged diffs pass `git diff --check`;
 6. the existing M2 memory contract test passes.
+
+The dirty-file inventory is the sorted union of unstaged tracked changes, staged tracked changes, and untracked files. This prevents a staged-only edit from bypassing the M2-owned-file conflict gate.
 
 Pre-existing dirty changes in disjoint files are intentionally preserved. This is the required property for composing M1 first and M2 second on one local Msplat tree.
 
+## Composition contract test
+
+`scripts/test_m2_composition_adapter.sh` runs against the exact pinned checkout using temporary Git worktrees.
+
+The positive case creates the real M1-shaped dirty set:
+
+- `input_data.hpp` as staged-only;
+- `input_data.cpp` as unstaged;
+- `msplat_api.mm` as staged-only.
+
+It then applies the M2 adapter and requires the combined dirty set to be exactly those three M1 files plus M2's three owned files, while preserving the staged state and marker content of the simulated M1 changes.
+
+The negative case stages a change to M2-owned `model.hpp` and requires the adapter to reject it before patching. This directly covers the staged-only conflict caveat found in the M1 post-acceptance audit.
+
 ## Standalone verification
 
-`prepare_msplat_m2.sh` now delegates its normal clean-tree preparation to the same adapter. Therefore the repository's existing project generation, Smoke Diagnostic, Native iOS Build, Simulator build, and unsigned iPhone compile exercise the composition adapter on every M2 CI run rather than leaving it as an untested HQ-only helper.
+`prepare_msplat_m2.sh` delegates its normal clean-tree preparation to the same adapter and runs the composition contract test first. Therefore repository project generation, Smoke Diagnostic, Native iOS Build, Simulator build, and unsigned iPhone compile exercise both the adapter and its M1-shaped composition test on every non-cached M2 preparation.
 
 ## HQ composition contract
 
@@ -38,8 +54,11 @@ Recommended order:
 2. apply and test M1;
 3. invoke `apply_msplat_m2_to_existing.sh` on that same tree;
 4. verify the combined dirty set is exactly the three M1 files plus the three M2 files;
-5. point `project.yml` to that single combined tree;
-6. preserve SH's independent `project.yml` test-source addition;
-7. run full integration CI before Build 5.
+5. rerun both M1 and M2 contract tests on the combined tree;
+6. point `project.yml` to that single combined tree;
+7. preserve SH's independent `project.yml` test-source addition;
+8. run full integration CI before Build 5.
+
+The adapter now handles staged and unstaged composition states. HQ no longer needs a special "keep the generated tree unstaged" assumption for the M2 dirty-file gate.
 
 This adapter does not merge M1 code into the M2 branch and does not change M1-owned files. HQ remains the only integration owner.

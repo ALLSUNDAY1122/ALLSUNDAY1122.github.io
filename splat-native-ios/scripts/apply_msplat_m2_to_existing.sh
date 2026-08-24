@@ -7,18 +7,27 @@ REVISION="d620d9c58d270e7de9e34a9d8a85dcf938a5070d"
 PATCHER="$SCRIPT_DIR/apply_msplat_m2_patch_v3.py"
 TESTER="$SCRIPT_DIR/test_m2_msplat_memory_patch.py"
 
-[[ -d "$ROOT/.git" ]] || { echo "M2 compose target is not a git checkout: $ROOT" >&2; exit 1; }
+[[ -d "$ROOT/.git" || -f "$ROOT/.git" ]] || { echo "M2 compose target is not a git checkout: $ROOT" >&2; exit 1; }
 actual_revision="$(git -C "$ROOT" rev-parse HEAD)"
 [[ "$actual_revision" == "$REVISION" ]] || {
   echo "M2 compose revision mismatch: expected $REVISION, got $actual_revision" >&2
   exit 1
 }
 
-expected=$'Sources/MsplatCore/internal/include/metal_tensor.hpp\nSources/MsplatCore/internal/include/model.hpp\nSources/MsplatCore/src/model.cpp'
-before="$(git -C "$ROOT" diff --name-only | LC_ALL=C sort)"
+dirty_files() {
+  {
+    git -C "$ROOT" diff --name-only
+    git -C "$ROOT" diff --cached --name-only
+    git -C "$ROOT" ls-files --others --exclude-standard
+  } | sed '/^$/d' | LC_ALL=C sort -u
+}
 
-# Fail closed if another lane already touched M2-owned trainer files. Prior dirty
-# changes in disjoint files (for example M1 Camera/Dataset files) are allowed.
+expected=$'Sources/MsplatCore/internal/include/metal_tensor.hpp\nSources/MsplatCore/internal/include/model.hpp\nSources/MsplatCore/src/model.cpp'
+before="$(dirty_files)"
+
+# Fail closed if another lane already touched M2-owned trainer files in either
+# the working tree or index. Prior dirty changes in disjoint files (for example
+# M1 Camera/Dataset files) are allowed and must survive byte-for-byte.
 while IFS= read -r path; do
   [[ -z "$path" ]] && continue
   if printf '%s\n' "$before" | grep -Fxq "$path"; then
@@ -29,8 +38,9 @@ done <<< "$expected"
 
 python3 "$PATCHER" "$ROOT"
 git -C "$ROOT" diff --check
+git -C "$ROOT" diff --cached --check
 
-after="$(git -C "$ROOT" diff --name-only | LC_ALL=C sort)"
+after="$(dirty_files)"
 missing_prior="$(comm -23 <(printf '%s\n' "$before" | sed '/^$/d') <(printf '%s\n' "$after" | sed '/^$/d'))"
 if [[ -n "$missing_prior" ]]; then
   echo "M2 compose unexpectedly removed pre-existing changes:" >&2
