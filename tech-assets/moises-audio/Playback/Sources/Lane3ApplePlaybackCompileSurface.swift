@@ -3,15 +3,21 @@ import AVFAudio
 import Foundation
 
 /// Compile-time guard for the selected Playback-side Apple evidence/production surface.
-/// AW31 promotes the tempo-aware shared Playback/DSP graph as the selected transport path while
-/// retaining the older ramped backend as a baseline implementation. Omission of the new backend,
-/// two-phase boundary conformance, stack factory, or bounded evidence source becomes an Apple-target
-/// compile failure instead of a late runtime discovery.
+/// AW31 provides the tempo-aware shared Playback/DSP graph and AW32 places a generation-guarded
+/// master restart envelope after the exact shared time/pitch node. Omission of either selected
+/// backend, the two-phase boundary contract, the envelope contract/decorator, stack factory or
+/// bounded evidence source becomes an Apple-target compile failure instead of a runtime discovery.
 public enum Lane3ApplePlaybackCompileSurface {
     public static func requireSelectedSurface() {
         requirePCMSourceConformance(Lane3AppleFilePCMChunkSource.self)
         requirePlaybackBackendConformance(AppleTempoAwareRampedMultiTrackPlaybackBackend.self)
         requireTempoBoundaryConformance(AppleTempoAwareRampedMultiTrackPlaybackBackend.self)
+        requirePlaybackBackendConformance(AppleBoundaryEnvelopedPlaybackBackend.self)
+        requireTempoBoundaryConformance(AppleBoundaryEnvelopedPlaybackBackend.self)
+        _ = PlaybackBoundaryEnvelopePlanner.self
+        _ = PlaybackBoundaryEnvelopePolicy.self
+        _ = PlaybackBoundaryEnvelopeRuntimeSnapshot.self
+        _ = Lane3AppleBoundaryEnvelopeCompositionReceipt.self
         _ = Lane3AppleLongTrackEvidenceInputFactory.self
         _ = Lane3AppleTempoAwarePlaybackDSPStack.self
         _ = Lane3TempoBoundarySelectedTransportFacade.self
