@@ -1,12 +1,99 @@
 import Foundation
 
+enum AnalysisLongAudioCPUDutyPolicy {
+    /// CPU-resource switch only; not a quality or PARITY threshold. Ordinary
+    /// songs remain on the exact historical frame-rescan summation order.
+    static let rollingTempoMinimumDurationSeconds = 1_800.0
+    static let rollingTempoRebaseFrameInterval = 2_048
+}
+
+enum AnalysisTempoFrameEnergyMode: Sendable {
+    case referenceRescan
+    case rollingReuse
+}
+
+struct AnalysisTempoFrameEnergyTracker {
+    let frameSize: Int
+    let hopSize: Int
+    let mode: AnalysisTempoFrameEnergyMode
+
+    private var ring: [Float]
+    private var rollingSumSquares = 0.0
+    private var emittedFrameCount = 0
+    private(set) var referenceSquareTerms = 0
+    private(set) var rollingSquareUpdates = 0
+
+    init(frameSize: Int, hopSize: Int, mode: AnalysisTempoFrameEnergyMode) {
+        precondition(frameSize > 0)
+        precondition(hopSize > 0)
+        self.frameSize = frameSize
+        self.hopSize = hopSize
+        self.mode = mode
+        ring = Array(repeating: 0, count: frameSize)
+    }
+
+    var ringSampleCount: Int { ring.count }
+
+    mutating func consume(
+        _ value: Float,
+        precomputedSquare square: Double,
+        at sampleIndex: Int
+    ) -> Double? {
+        precondition(sampleIndex >= 0)
+        let slot = sampleIndex % ring.count
+
+        switch mode {
+        case .referenceRescan:
+            ring[slot] = value
+        case .rollingReuse:
+            if sampleIndex >= frameSize {
+                let outgoing = Double(ring[slot])
+                rollingSumSquares -= outgoing * outgoing
+                rollingSquareUpdates += 1
+            }
+            ring[slot] = value
+            rollingSumSquares += square
+            rollingSquareUpdates += 1
+        }
+
+        guard sampleIndex + 1 >= frameSize,
+              (sampleIndex + 1 - frameSize) % hopSize == 0 else {
+            return nil
+        }
+
+        let frameStart = sampleIndex + 1 - frameSize
+        let sumSquares: Double
+        switch mode {
+        case .referenceRescan:
+            sumSquares = exactWindowSum(frameStart: frameStart, frameEnd: sampleIndex)
+            referenceSquareTerms += frameSize
+        case .rollingReuse:
+            if emittedFrameCount % AnalysisLongAudioCPUDutyPolicy.rollingTempoRebaseFrameInterval == 0 {
+                rollingSumSquares = exactWindowSum(frameStart: frameStart, frameEnd: sampleIndex)
+                referenceSquareTerms += frameSize
+            }
+            sumSquares = max(0, rollingSumSquares)
+        }
+        emittedFrameCount += 1
+        return log1p(sqrt(sumSquares / Double(frameSize)))
+    }
+
+    private func exactWindowSum(frameStart: Int, frameEnd: Int) -> Double {
+        var sumSquares = 0.0
+        for absoluteIndex in frameStart...frameEnd {
+            let frameValue = Double(ring[absoluteIndex % ring.count])
+            sumSquares += frameValue * frameValue
+        }
+        return sumSquares
+    }
+}
+
 /// Incremental W29/W30 feature accumulator. The caller feeds exactly one
 /// prepared mono sample for every logical prepared sample index, in strictly
-/// increasing order starting at zero. W31 preserves the exact W29 cadence while
-/// natural feature cardinality is below the retention caps. For extreme Tempo
-/// cardinality it computes every natural-cadence onset and max-pools contiguous
-/// groups before retention, avoiding gaps between observed windows. If a bounded
-/// cadence can no longer represent a feature safely, that feature fails closed.
+/// increasing order starting at zero. W31 bounds extreme retained cardinality.
+/// W32 preserves ordinary-song Tempo summation exactly, uses rolling Tempo
+/// energy only for long audio, and reuses Chord spectral setup/scratch without
+/// changing Chord cadence, vocabulary, candidate scoring or Goertzel recurrence.
 final class AnalysisSequentialPreparedFeatureAccumulator {
     private struct PendingChordFrame {
         let startSeconds: Double
@@ -23,9 +110,8 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
     private let retentionPlan: AnalysisExtremeDurationRetentionPlan
 
     private let tempoFrameSize: Int
-    private let baseTempoHopSize: Int
     private let tempoHopSize: Int
-    private var tempoRing: [Float]
+    private var tempoEnergyTracker: AnalysisTempoFrameEnergyTracker
     private var tempoFlux: [Double] = []
     private var previousTempoEnergy: Double?
     private var tempoPoolMaximum = 0.0
@@ -43,6 +129,7 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
     private let chordWindowSamples: Int
     private let chordHopSamples: Int
     private var chordRing: [Float]
+    private var chordSpectralWorkspace: AnalysisReusableChordSpectralWorkspace
     private var chordFrameDecisions: [AnalysisPreparedChordFrameDecision] = []
     private var pendingChordFrames: [PendingChordFrame] = []
     private var currentChordSegmentStart = 0
@@ -83,16 +170,24 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
         )
         retentionPlan = plan
 
-        tempoFrameSize = min(
+        let computedTempoFrameSize = min(
             configuration.analysisWindowSize,
             max(256, Int((sampleRate * 0.046).rounded()))
         )
-        baseTempoHopSize = min(
+        let baseTempoHopSize = min(
             configuration.analysisHopSize,
             max(32, Int((sampleRate * 0.010).rounded()))
         )
+        tempoFrameSize = computedTempoFrameSize
         tempoHopSize = max(1, plan.tempoHopSamples)
-        tempoRing = Array(repeating: 0, count: max(1, tempoFrameSize))
+        let tempoMode: AnalysisTempoFrameEnergyMode = durationSeconds >= AnalysisLongAudioCPUDutyPolicy.rollingTempoMinimumDurationSeconds
+            ? .rollingReuse
+            : .referenceRescan
+        tempoEnergyTracker = .init(
+            frameSize: computedTempoFrameSize,
+            hopSize: baseTempoHopSize,
+            mode: tempoMode
+        )
         tempoFlux.reserveCapacity(plan.retainedTempoFrameUpperBound)
 
         keyWindowSize = configuration.analysisWindowSize
@@ -113,12 +208,17 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
             Int(ceil(Double(max(1, sampleCount)) / Double(AnalysisWorkingSetPolicy.maximumRMSProbeSamples)))
         )
 
-        chordWindowSamples = max(
+        let computedChordWindowSamples = max(
             256,
             min(max(1, sampleCount), Int((configuration.chordWindowSeconds * sampleRate).rounded()))
         )
+        chordWindowSamples = computedChordWindowSamples
         chordHopSamples = max(1, plan.chordHopSamples)
-        chordRing = Array(repeating: 0, count: max(1, chordWindowSamples))
+        chordRing = Array(repeating: 0, count: computedChordWindowSamples)
+        chordSpectralWorkspace = .init(
+            sampleRate: sampleRate,
+            windowSampleCount: computedChordWindowSamples
+        )
         chordFrameDecisions.reserveCapacity(plan.retainedChordFrameUpperBound)
         pendingChordFrames.reserveCapacity(4)
         currentChordSegmentEnd = min(sampleCount, chordHopSamples)
@@ -160,26 +260,20 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
             keyProbeCount += 1
         }
 
-        if retentionPlan.tempoResolutionSafe {
-            tempoRing[sampleIndex % tempoRing.count] = value
-            if sampleIndex + 1 >= tempoFrameSize,
-               (sampleIndex + 1 - tempoFrameSize) % baseTempoHopSize == 0 {
-                let frameStart = sampleIndex + 1 - tempoFrameSize
-                var sumSquares = 0.0
-                for absoluteIndex in frameStart...sampleIndex {
-                    let frameValue = Double(tempoRing[absoluteIndex % tempoRing.count])
-                    sumSquares += frameValue * frameValue
-                }
-                let energy = log1p(sqrt(sumSquares / Double(tempoFrameSize)))
-                let onset = previousTempoEnergy.map { max(0, energy - $0) } ?? 0
-                previousTempoEnergy = energy
-                tempoPoolMaximum = max(tempoPoolMaximum, onset)
-                tempoPoolCount += 1
-                if tempoPoolCount >= retentionPlan.tempoFrameStride {
-                    tempoFlux.append(tempoPoolMaximum)
-                    tempoPoolMaximum = 0
-                    tempoPoolCount = 0
-                }
+        if retentionPlan.tempoResolutionSafe,
+           let energy = tempoEnergyTracker.consume(
+               value,
+               precomputedSquare: square,
+               at: sampleIndex
+           ) {
+            let onset = previousTempoEnergy.map { max(0, energy - $0) } ?? 0
+            previousTempoEnergy = energy
+            tempoPoolMaximum = max(tempoPoolMaximum, onset)
+            tempoPoolCount += 1
+            if tempoPoolCount >= retentionPlan.tempoFrameStride {
+                tempoFlux.append(tempoPoolMaximum)
+                tempoPoolMaximum = 0
+                tempoPoolCount = 0
             }
         }
 
@@ -251,8 +345,9 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
                     for absoluteIndex in pending.analysisStart..<pending.analysisEnd {
                         window.append(Double(chordRing[absoluteIndex % chordRing.count]))
                     }
-                    decision = ChordFrameClassifier.classify(
+                    decision = AnalysisReusableChordFrameClassifier.classify(
                         samples: window,
+                        workspace: &chordSpectralWorkspace,
                         sampleRate: sampleRate,
                         configuration: configuration,
                         vocabulary: .conservativeMajorMinor
@@ -344,7 +439,8 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
             + Int64(keySampleCount) * Int64(MemoryLayout<Double>.stride)
             + Int64(chordFrameDecisions.count) * 64
             + Int64(sectionEnergy.count) * Int64(MemoryLayout<Float>.stride)
-            + Int64(tempoRing.count + chordRing.count) * Int64(MemoryLayout<Float>.stride)
+            + Int64(tempoEnergyTracker.ringSampleCount + chordRing.count) * Int64(MemoryLayout<Float>.stride)
+            + Int64(chordSpectralWorkspace.windowedScratch.count) * Int64(MemoryLayout<Double>.stride)
 
         return .init(
             tempoOnset: tempoFlux,
@@ -366,7 +462,7 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
                 keyWindowSampleCount: keySampleCount,
                 chordFrameDecisionCount: chordFrameDecisions.count,
                 sectionEnergyFrameCount: sectionEnergy.count,
-                maximumTempoRingSamples: tempoRing.count,
+                maximumTempoRingSamples: tempoEnergyTracker.ringSampleCount,
                 maximumChordRingSamples: chordRing.count,
                 estimatedRetainedFeatureBytes: retainedBytes,
                 exactSinglePreparedTraversal: consumedSampleCount == sampleCount
