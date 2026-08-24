@@ -10,19 +10,23 @@ public struct Lane3AppleTempoAwareGraphReceipt: Equatable, Codable, Sendable {
     public let tempoAwareProjectClock: Bool
     public let tempoScaledLoopHostScheduling: Bool
     public let twoPhaseTempoBoundaryAvailable: Bool
+    public let facadeOwnsTempoCoalescing: Bool
+    public let upstreamTempoQuietPeriodDisabled: Bool
     public let rawPlaybackBackendExposed: Bool
     public let parityPromotionAllowed: Bool
 }
 
 /// AW31 selected low-level Apple graph. The raw Playback backend stays private; HQ receives the
-/// fenced Playback surface plus AW29 DSP stack, then asks this object to build the App-facing AW31
-/// facade after AW18/AW21 are assembled around those exact components.
+/// fenced Playback surface plus AW29 DSP stack, then constructs AW17 through the factory below so
+/// tempo coalescing occurs only before Playback is stopped. AW18/AW21 are then assembled around that
+/// exact authority before the App-facing AW31 facade is created.
 public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
     public let playback: RescheduleFencedPlaybackBackend
     public let dsp: Lane3AppleDSPProductionStack
     public let compositionReceipt: Lane3AppleTempoAwareGraphReceipt
     private let tempoBackend: AppleTempoAwareRampedMultiTrackPlaybackBackend
     private let projectID: ProjectID
+    private let tempoRatioRange: ClosedRange<Double>
 
     public static func make(
         projectID: ProjectID,
@@ -70,6 +74,8 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
             tempoAwareProjectClock: true,
             tempoScaledLoopHostScheduling: true,
             twoPhaseTempoBoundaryAvailable: true,
+            facadeOwnsTempoCoalescing: true,
+            upstreamTempoQuietPeriodDisabled: true,
             rawPlaybackBackendExposed: false,
             parityPromotionAllowed: false
         )
@@ -78,7 +84,30 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
             dsp: dsp,
             compositionReceipt: receipt,
             tempoBackend: rawPlayback,
-            projectID: projectID
+            projectID: projectID,
+            tempoRatioRange: capabilities.tempoRatioRange
+        )
+    }
+
+    /// Selected AW17 construction for AW31. Tempo's upstream quiet period is deliberately zero:
+    /// the AW31 facade already performs latest-wins coalescing before it freezes Playback. Keeping
+    /// the historical AW17 16ms tempo delay here would create a second debounce while audio is
+    /// stopped and can surface as an avoidable audible gap.
+    public func makeTempoBoundaryCompatibleTransportAuthority(
+        coordinator: PracticeDSPGenerationCoordinator,
+        seekQuietPeriod: Duration = .milliseconds(16),
+        loopQuietPeriod: Duration = .milliseconds(16)
+    ) -> Lane3UnifiedProductionTransportAuthority {
+        Lane3UnifiedProductionTransportAuthority(
+            projectID: projectID,
+            playback: playback,
+            coordinator: coordinator,
+            policy: Lane3UnifiedTransportPolicy(
+                seekQuietPeriod: seekQuietPeriod,
+                loopQuietPeriod: loopQuietPeriod,
+                tempoQuietPeriod: .zero,
+                tempoRatioRange: tempoRatioRange
+            )
         )
     }
 
