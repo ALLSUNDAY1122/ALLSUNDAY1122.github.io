@@ -35,7 +35,11 @@ def main() -> int:
     ):
         require(model_h, declaration, "Model memory lifecycle declaration")
 
-    require(model, "buf_capacity = std::max(num_active * 3, 1);", "3N initial capacity")
+    if model.count("buf_capacity = std::max(num_active * 3, 1);") != 2:
+        raise AssertionError("expected both setup and checkpoint restore to use 3N capacity")
+    if "buf_capacity = num_active * 4;" in model:
+        raise AssertionError("legacy 4N trainer capacity remains")
+
     require(model, "param.reset();", "initial active parameter early release")
     require(model, "MTensor *param_bufs[]", "Adam shape source from capacity buffers")
 
@@ -63,6 +67,18 @@ def main() -> int:
         if needle in setup:
             raise AssertionError(f"densification scratch still persistent in setupOptimizers: {needle}")
 
+    checkpoint_start = model.index("int Model::loadCheckpoint")
+    checkpoint_end = model.index("Model::CamSetup Model::prepareCam")
+    checkpoint = model[checkpoint_start:checkpoint_end]
+    require(checkpoint, "msplat_gpu_sync();\n    detachCapacityViews();\n    releaseOptimizers();", "checkpoint old trainer release")
+    require(checkpoint, "buf_capacity = std::max(num_active * 3, 1);", "checkpoint 3N capacity")
+    require(checkpoint, "adam_exp_avg[g].reset();", "checkpoint loaded Adam temporary release")
+    require(checkpoint, "adam_exp_avg_sq[g].reset();", "checkpoint loaded Adam square temporary release")
+    require(checkpoint, "releaseDensifyScratch();", "checkpoint lazy densify scratch")
+    for needle in forbidden_persistent:
+        if needle in checkpoint:
+            raise AssertionError(f"densification scratch still persistent after checkpoint restore: {needle}")
+
     # Source-grounded SH3 memory arithmetic. These are trainer capacity/scratch
     # bytes only; renderer/image caches and process overhead are intentionally excluded.
     sh_bases = 16
@@ -89,8 +105,8 @@ def main() -> int:
     print(
         "PASS: S7-M2 memory contract; "
         f"SH3 parameter={parameter_bytes} B/G, persistent-capacity={persistent_per_capacity} B/G, "
-        f"capacity-backed steady subtotal {before_steady_per_active}->{after_steady_per_active} B/active-G "
-        f"({steady_reduction:.1%} reduction), densify subtotal={after_densify_per_active} B/active-G "
+        f"capacity-backed initial/checkpoint steady subtotal {before_steady_per_active}->{after_steady_per_active} B/active-G "
+        f"({steady_reduction:.1%} reduction), 3N densify subtotal={after_densify_per_active} B/active-G "
         f"({densify_reduction:.1%} below old steady subtotal)"
     )
     return 0

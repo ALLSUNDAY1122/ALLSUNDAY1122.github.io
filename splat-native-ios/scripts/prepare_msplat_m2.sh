@@ -6,10 +6,11 @@ APP_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 OUT="${1:-$APP_ROOT/.generated/msplat-m2}"
 REMOTE="https://github.com/Voxelio-app/msplat.git"
 REVISION="d620d9c58d270e7de9e34a9d8a85dcf938a5070d"
-PATCHER="$SCRIPT_DIR/apply_msplat_m2_patch.py"
+BASE_PATCHER="$SCRIPT_DIR/apply_msplat_m2_patch.py"
+PATCHER="$SCRIPT_DIR/apply_msplat_m2_patch_v2.py"
 TESTER="$SCRIPT_DIR/test_m2_msplat_memory_patch.py"
 
-patch_hash="$(shasum -a 256 "$PATCHER" | awk '{print $1}')"
+patch_hash="$(cat "$BASE_PATCHER" "$PATCHER" | shasum -a 256 | awk '{print $1}')"
 marker="$OUT/.m2-prepared"
 expected_marker="$REVISION:$patch_hash"
 
