@@ -27,6 +27,8 @@ public struct AnalysisIOSPhysicalCaptureResult: Sendable {
     public let workloadExecution: AnalysisCurrentDeviceWorkloadExecution?
     public let workloadValidation: AnalysisDeviceWorkloadValidationReport?
     public let algorithmEvidence: AnalysisDeviceAlgorithmExecutionEvidence?
+    public let executionIntegrityEvidence: AnalysisDeviceCaptureExecutionIntegrityEvidence?
+    public let executionIntegrityValidation: AnalysisDeviceCaptureExecutionIntegrityReport?
     public let issues: [String]
 
     public init(
@@ -38,6 +40,8 @@ public struct AnalysisIOSPhysicalCaptureResult: Sendable {
         workloadExecution: AnalysisCurrentDeviceWorkloadExecution?,
         workloadValidation: AnalysisDeviceWorkloadValidationReport?,
         algorithmEvidence: AnalysisDeviceAlgorithmExecutionEvidence?,
+        executionIntegrityEvidence: AnalysisDeviceCaptureExecutionIntegrityEvidence?,
+        executionIntegrityValidation: AnalysisDeviceCaptureExecutionIntegrityReport?,
         issues: [String]
     ) {
         self.status = status
@@ -48,6 +52,8 @@ public struct AnalysisIOSPhysicalCaptureResult: Sendable {
         self.workloadExecution = workloadExecution
         self.workloadValidation = workloadValidation
         self.algorithmEvidence = algorithmEvidence
+        self.executionIntegrityEvidence = executionIntegrityEvidence
+        self.executionIntegrityValidation = executionIntegrityValidation
         self.issues = issues
     }
 }
@@ -77,6 +83,8 @@ public enum AnalysisIOSPhysicalCaptureCoordinator {
                 workloadExecution: nil,
                 workloadValidation: nil,
                 algorithmEvidence: nil,
+                executionIntegrityEvidence: nil,
+                executionIntegrityValidation: nil,
                 issues: preflightIssues.sorted()
             )
         }
@@ -91,6 +99,8 @@ public enum AnalysisIOSPhysicalCaptureCoordinator {
                 workloadExecution: nil,
                 workloadValidation: nil,
                 algorithmEvidence: nil,
+                executionIntegrityEvidence: nil,
+                executionIntegrityValidation: nil,
                 issues: preflightIssues.sorted()
             )
         }
@@ -124,15 +134,57 @@ public enum AnalysisIOSPhysicalCaptureCoordinator {
         }
 
         let telemetryTask = Task { @MainActor in
+            var attempts = 0
+            var captured = 0
+            var capReached = false
             while !Task.isCancelled {
                 do {
                     try await Task.sleep(nanoseconds: telemetrySleep)
                 } catch {
-                    return
+                    return AnalysisDeviceCaptureTelemetrySamplingSummary(
+                        samplingAttempts: attempts,
+                        periodicSamplesCaptured: captured,
+                        sampleCapReached: capReached,
+                        samplerTerminated: true
+                    )
                 }
-                guard !Task.isCancelled else { return }
-                session.sample()
+                guard !Task.isCancelled else {
+                    return AnalysisDeviceCaptureTelemetrySamplingSummary(
+                        samplingAttempts: attempts,
+                        periodicSamplesCaptured: captured,
+                        sampleCapReached: capReached,
+                        samplerTerminated: true
+                    )
+                }
+                attempts += 1
+                switch session.sample() {
+                case .captured:
+                    captured += 1
+                case .capReached:
+                    capReached = true
+                    return AnalysisDeviceCaptureTelemetrySamplingSummary(
+                        samplingAttempts: attempts,
+                        periodicSamplesCaptured: captured,
+                        sampleCapReached: true,
+                        samplerTerminated: true
+                    )
+                case .throttled:
+                    break
+                case .finished:
+                    return AnalysisDeviceCaptureTelemetrySamplingSummary(
+                        samplingAttempts: attempts,
+                        periodicSamplesCaptured: captured,
+                        sampleCapReached: capReached,
+                        samplerTerminated: true
+                    )
+                }
             }
+            return AnalysisDeviceCaptureTelemetrySamplingSummary(
+                samplingAttempts: attempts,
+                periodicSamplesCaptured: captured,
+                sampleCapReached: capReached,
+                samplerTerminated: true
+            )
         }
 
         let cancellationTask: Task<AnalysisIOSCancellationCoordinationResult, Never>?
@@ -185,8 +237,13 @@ public enum AnalysisIOSPhysicalCaptureCoordinator {
         }
 
         let workload = await workloadTask.value
+
+        // Once W36 has returned, no W37 helper task is allowed to outlive the
+        // workload and extend a telemetry-free tail. A cancellation request that
+        // already fired has already returned from its task, so this is harmless.
+        cancellationTask?.cancel()
         telemetryTask.cancel()
-        await telemetryTask.value
+        let telemetrySampling = await telemetryTask.value
 
         let cancellationCoordination: AnalysisIOSCancellationCoordinationResult
         if let cancellationTask {
@@ -194,6 +251,7 @@ public enum AnalysisIOSPhysicalCaptureCoordinator {
         } else {
             cancellationCoordination = .notApplicable
         }
+        let cancellationTaskTerminated = true
 
         if plan.runKind == .cancellationProbe,
            cancellationCoordination == .requestedAfterObservedSourceWork,
@@ -275,8 +333,32 @@ public enum AnalysisIOSPhysicalCaptureCoordinator {
             }
         }
 
+        let portableCancellation = AnalysisDeviceCaptureCancellationCoordination(rawValue: cancellationCoordination.rawValue) ?? .workloadFinishedBeforeRequest
+        let integrityEvidence = AnalysisDeviceCaptureExecutionIntegrityEvidence(
+            runID: plan.runID,
+            runKind: plan.runKind,
+            performanceRunID: performance.provenance.runID,
+            workloadRunID: workload.receipt.runID,
+            workloadExecutionID: workload.receipt.executionID,
+            algorithmRunID: algorithm?.runID,
+            algorithmWorkloadExecutionID: algorithm?.workloadExecutionID,
+            sourceMemoryContract: algorithm?.sourceInputContract ?? signal.sourceMemoryContract,
+            workloadOutcome: workload.outcome,
+            observedSourceSampleCount: workload.observedSourceSampleCount,
+            cancellationCoordination: portableCancellation,
+            cancellationRequestedOffsetSeconds: performance.cancellation.requestedOffsetSeconds,
+            cancellationObservedOffsetSeconds: performance.cancellation.observedTerminationOffsetSeconds,
+            requestedSampleIntervalSeconds: performance.requestedSampleIntervalSeconds,
+            captureWallSeconds: performance.wallSeconds,
+            telemetrySampling: telemetrySampling,
+            cancellationTaskTerminated: cancellationTaskTerminated,
+            performanceLimitations: performance.limitations
+        )
+        let integrityValidation = AnalysisDeviceCaptureExecutionIntegrityValidator.validate(integrityEvidence)
+        issues.append(contentsOf: integrityValidation.issues.map { $0.code.rawValue + ":" + $0.detail })
+
         let status: AnalysisIOSPhysicalCaptureStatus
-        if !issues.isEmpty || performanceValidation.status == .invalid {
+        if !issues.isEmpty || performanceValidation.status == .invalid || !integrityValidation.valid {
             status = .invalidExecution
         } else if performanceValidation.status == .nonPhysicalRuntime {
             status = .nonPhysicalRuntime
@@ -297,6 +379,8 @@ public enum AnalysisIOSPhysicalCaptureCoordinator {
             workloadExecution: workload,
             workloadValidation: workloadValidation,
             algorithmEvidence: algorithm,
+            executionIntegrityEvidence: integrityEvidence,
+            executionIntegrityValidation: integrityValidation,
             issues: issues.sorted()
         )
     }
@@ -314,6 +398,8 @@ public enum AnalysisIOSPhysicalCaptureCoordinator {
             workloadExecution: nil,
             workloadValidation: nil,
             algorithmEvidence: nil,
+            executionIntegrityEvidence: nil,
+            executionIntegrityValidation: nil,
             issues: issues.sorted()
         )
     }
