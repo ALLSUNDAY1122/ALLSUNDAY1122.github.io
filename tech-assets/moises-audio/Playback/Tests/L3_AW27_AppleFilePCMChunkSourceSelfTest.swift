@@ -37,7 +37,9 @@ struct L3AW27AppleFilePCMChunkSourceSelfTest {
         precondition(source.frameCount == 8_192)
         precondition(source.metadata.processingFormat == "FLOAT32_DEINTERLEAVED")
         precondition(!source.metadata.sourcePathIncluded)
-        precondition(!source.metadata.fullTrackPCMRetainedBySource)
+        precondition(!source.metadata.fullTrackPCMArrayRetainedByAdapter)
+        precondition(!source.metadata.frameworkDecoderBufferingMeasured)
+        precondition(!source.metadata.actualProcessRSSMeasured)
         precondition(!source.metadata.parityPromotionAllowed)
 
         let first = try source.readInterleavedFrames(startFrame: 0, frameCount: 257)
