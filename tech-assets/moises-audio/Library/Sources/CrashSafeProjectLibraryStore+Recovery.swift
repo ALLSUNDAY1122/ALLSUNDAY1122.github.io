@@ -18,8 +18,9 @@ public struct RecoverableLibraryOpenResult: Sendable {
 public extension CrashSafeProjectLibraryStore {
     /// Production-safe open path for L2-M03.
     /// Existing metadata is preserved before migration; corruption never triggers a silent empty-store reset.
-    /// Delete recovery converges first, raw orphan setlist-entry rows are removed second, then AW18
-    /// reconciles visible setlists against the resulting live-project set and canonical ordering.
+    /// AW23 bulk-indexes pre-AW22 tombstones before destructive recovery, delete recovery converges next,
+    /// raw orphan setlist-entry rows are removed after that, then AW18 reconciles visible setlists against
+    /// the resulting live-project set and canonical ordering.
     static func openPreservingUserData(
         metadataStoreURL: URL,
         artifactRootURL: URL,
@@ -28,6 +29,11 @@ public extension CrashSafeProjectLibraryStore {
         let metadataOpen = try await PreservingCoreDataStoreOpener.open(
             storeURL: metadataStoreURL,
             recoveryRootURL: recoveryRootURL
+        )
+        _ = try await Lane2LegacyTombstoneBulkMigrator.prepareIfNeeded(
+            metadataStoreURL: metadataStoreURL,
+            artifactRootURL: artifactRootURL,
+            enumerationBatchSize: metadataOpen.store.enumerationBatchSizeForMaintenance
         )
         let library = try CrashSafeProjectLibraryStore(
             metadata: metadataOpen.store,
