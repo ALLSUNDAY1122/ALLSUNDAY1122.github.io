@@ -16,8 +16,8 @@ public struct AnalysisChunkedInputMemoryBudget: Codable, Equatable, Sendable {
 public enum AnalysisChunkedInputBudget {
     /// Analytical handoff budget. It assumes the upstream decoder honors the
     /// W30 chunk contract and does not separately retain the entire decoded
-    /// source. Decoder-internal buffers, Swift allocator overhead and VM
-    /// behavior are intentionally excluded and must be measured by W23/W24.
+    /// source. W31 retained-feature caps are included. Decoder-internal buffers,
+    /// Swift allocator overhead and VM behavior remain W23/W24 device evidence.
     public static func estimate(
         sourceSampleRate: Double,
         durationSeconds: Double,
@@ -31,17 +31,17 @@ public enum AnalysisChunkedInputBudget {
         let sourceSamples = max(0, Int64((sourceSampleRate * durationSeconds).rounded()))
         let sourceBytes = sourceSamples * Int64(MemoryLayout<Float>.stride)
         let chunkBytes = Int64(maximumChunkSamples) * Int64(MemoryLayout<Float>.stride)
-        let w29 = AnalysisSinglePassPreparedBudget.estimate(
+        let w31 = AnalysisExtremeDurationRetentionBudgetEstimator.estimate(
             sourceSampleRate: sourceSampleRate,
             durationSeconds: durationSeconds,
             configuration: configuration
         )
-        // W30 feeds the sequential accumulator directly and therefore does not
-        // need W29's two-block prepared-reader cache. Replace that allowance by
-        // the one upstream source chunk retained by the chunked source.
+        // The W31 whole-signal analytical estimate includes the W28/W29
+        // prepared-reader cache. The W30 pull path replaces that allowance by
+        // exactly one bounded upstream source chunk.
         let featureBytes = max(
             0,
-            w29.estimatedMajorAdditionalWorkingSetBytes - w29.readerCacheUpperBoundBytes
+            w31.estimatedMajorWorker4WorkingSetBytes - w31.readerCacheUpperBoundBytes
         )
         let chunkedBytes = featureBytes + chunkBytes
         return .init(
