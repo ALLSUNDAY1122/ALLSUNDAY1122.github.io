@@ -31,9 +31,9 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
                 result.features.diagnostics.preparedSampleComputations,
                 result.features.diagnostics.preparedSampleCount
             )
-            XCTAssertLessThanOrEqual(result.inputDiagnostics.maximumSourceChunkSamples, chunkSize)
-            XCTAssertFalse(result.inputDiagnostics.wholeSourcePCMMaterializedByChunkedPath)
-            XCTAssertTrue(result.inputDiagnostics.contiguousCompleteSource)
+            XCTAssertLessThanOrEqual(result.diagnostics.maximumSourceChunkSamples, chunkSize)
+            XCTAssertFalse(result.diagnostics.wholeSourcePCMMaterializedByChunkedPath)
+            XCTAssertTrue(result.diagnostics.contiguousCompleteSource)
         }
     }
 
@@ -53,7 +53,7 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
         XCTAssertEqual(chunked.features.keyWindows, whole.keyWindows)
         XCTAssertEqual(chunked.features.chordFrameDecisions, whole.chordFrameDecisions)
         XCTAssertEqual(chunked.features.sectionEnergySignal, whole.sectionEnergySignal)
-        XCTAssertEqual(chunked.inputDiagnostics.sanitizedSourceSampleCount, 2)
+        XCTAssertEqual(chunked.diagnostics.sanitizedSourceSampleCount, 2)
     }
 
     func testGapOverlapAndOutOfOrderChunksFailClosed() async {
