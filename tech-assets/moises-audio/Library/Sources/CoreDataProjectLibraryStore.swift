@@ -321,6 +321,201 @@ public final class CoreDataProjectLibraryStore: @unchecked Sendable, ProjectLibr
         }
     }
 
+    /// Low-level startup repair for rows hidden from the public setlist snapshot because their
+    /// `setlistUUID` no longer has a SetlistRecord. This intentionally does not repair ordering or
+    /// project membership; AW18 runs those higher-level semantics after this pass.
+    @discardableResult
+    public func reconcileOrphanSetlistEntries() async throws -> Lane2SetlistOrphanEntryRecoveryReport {
+        let policy = enumerationPolicy
+        return try await perform { context in
+            let setlistRecords = try StoreFetch.setlists(
+                context: context,
+                fetchBatchSize: policy.batchSize
+            )
+            let liveSetlistUUIDs = try Set(
+                setlistRecords.map { try StoreValue.uuid($0, "setlistUUID") }
+            )
+            guard liveSetlistUUIDs.count == setlistRecords.count else {
+                throw LibraryPersistenceFailure.corruptRecord("duplicate setlist identity")
+            }
+
+            func fetchEntryRecords() throws -> [NSManagedObject] {
+                let request = NSFetchRequest<NSManagedObject>(entityName: "SetlistEntryRecord")
+                request.fetchBatchSize = policy.batchSize
+                request.returnsObjectsAsFaults = true
+                return try context.fetch(request)
+            }
+
+            let entryRecords = try fetchEntryRecords()
+            let ownership = try entryRecords.map {
+                Lane2SetlistEntryOwnership(
+                    entryUUID: try StoreValue.uuid($0, "entryUUID"),
+                    setlistUUID: try StoreValue.uuid($0, "setlistUUID")
+                )
+            }
+            let plan = try Lane2SetlistOrphanEntryPolicy.plan(
+                entries: ownership,
+                liveSetlistUUIDs: liveSetlistUUIDs
+            )
+
+            if plan.requiresRepair {
+                let orphanIDs = Set(plan.orphanEntryUUIDs)
+                for (record, identity) in zip(entryRecords, ownership)
+                where orphanIDs.contains(identity.entryUUID) {
+                    context.delete(record)
+                }
+                try StoreFetch.save(context)
+            }
+
+            let remaining = try fetchEntryRecords().map {
+                Lane2SetlistEntryOwnership(
+                    entryUUID: try StoreValue.uuid($0, "entryUUID"),
+                    setlistUUID: try StoreValue.uuid($0, "setlistUUID")
+                )
+            }
+            try Lane2SetlistOrphanEntryPolicy.requireConverged(
+                entries: remaining,
+                liveSetlistUUIDs: liveSetlistUUIDs
+            )
+
+            return Lane2SetlistOrphanEntryRecoveryReport(
+                scannedEntries: plan.scannedEntries,
+                liveSetlists: plan.liveSetlists,
+                removedOrphanEntries: plan.orphanEntryUUIDs.count
+            )
+        }
+    }
+
+    /// Returns only physically retained tombstones. Live projects are intentionally excluded.
+    /// The projection includes source/stem paths so crash recovery can authorize artifact deletion
+    /// without materializing processing/edit/mix payloads.
+    public func listTombstonedProjectCompactionCandidates() async throws
+        -> [Lane2TombstonedProjectCompactionCandidate]
+    {
+        let policy = enumerationPolicy
+        return try await perform { context in
+            let records = try StoreFetch.tombstonedProjects(
+                context: context,
+                fetchBatchSize: policy.batchSize
+            )
+            var candidates: [Lane2TombstonedProjectCompactionCandidate] = []
+            candidates.reserveCapacity(records.count)
+
+            for record in records {
+                let projectUUID = try StoreValue.uuid(record, "projectUUID")
+                let sourceAssetUUID = try StoreValue.uuid(record, "sourceAssetUUID")
+                guard let asset = try StoreFetch.asset(id: sourceAssetUUID, context: context) else {
+                    throw Lane2TombstonedMetadataCompactionFailure.missingSourceAsset(sourceAssetUUID)
+                }
+                let sourcePath = try StoreValue.string(asset, "relativePath")
+                let stemPaths = try StoreFetch.stems(projectID: projectUUID, context: context).map {
+                    try StoreValue.string($0, "relativePath")
+                }
+                candidates.append(
+                    Lane2TombstonedProjectCompactionCandidate(
+                        projectUUID: projectUUID,
+                        sourceAssetUUID: sourceAssetUUID,
+                        artifactRelativePaths: [sourcePath] + stemPaths
+                    )
+                )
+            }
+
+            try Lane2TombstonedMetadataCompactionPolicy.requireUniqueProjects(candidates)
+            return candidates.sorted { $0.projectUUID.uuidString < $1.projectUUID.uuidString }
+        }
+    }
+
+    /// Physically removes one tombstoned project and project-owned child metadata in one Core Data
+    /// save. AssetRecord is removed only when no other ProjectRecord — live or tombstoned — still
+    /// references the same source asset. A live project is never compacted.
+    @discardableResult
+    public func compactTombstonedProject(
+        projectID: ProjectID
+    ) async throws -> Lane2TombstonedMetadataCompactionResult {
+        try await perform { context in
+            guard let project = try StoreFetch.project(id: projectID.rawValue, context: context) else {
+                return .alreadyAbsent(projectUUID: projectID.rawValue)
+            }
+            guard StoreValue.bool(project, "tombstoned") else {
+                throw Lane2TombstonedMetadataCompactionFailure.liveProjectCannotCompact(projectID.rawValue)
+            }
+
+            let sourceAssetUUID = try StoreValue.uuid(project, "sourceAssetUUID")
+            guard let sourceAsset = try StoreFetch.asset(id: sourceAssetUUID, context: context) else {
+                throw Lane2TombstonedMetadataCompactionFailure.missingSourceAsset(sourceAssetUUID)
+            }
+
+            let processing = try StoreFetch.processingRecords(
+                projectID: projectID.rawValue,
+                context: context
+            )
+            let stems = try StoreFetch.stems(projectID: projectID.rawValue, context: context)
+            let edits = try StoreFetch.editRecords(
+                projectID: projectID.rawValue,
+                context: context
+            )
+            let stemMix = try StoreFetch.stemMix(projectID: projectID.rawValue, context: context)
+            let setlistEntries = try StoreFetch.setlistEntries(
+                projectID: projectID.rawValue,
+                context: context
+            )
+
+            let remainingProjectAssetRefs = try Set(
+                StoreFetch.projectsReferencingAsset(
+                    sourceAssetUUID,
+                    excludingProjectID: projectID.rawValue,
+                    context: context
+                ).map { try StoreValue.uuid($0, "sourceAssetUUID") }
+            )
+            let removeSourceAsset = Lane2TombstonedMetadataCompactionPolicy.shouldRemoveSourceAsset(
+                sourceAssetUUID: sourceAssetUUID,
+                remainingProjectSourceAssetUUIDs: remainingProjectAssetRefs
+            )
+
+            processing.forEach(context.delete)
+            stems.forEach(context.delete)
+            edits.forEach(context.delete)
+            stemMix.forEach(context.delete)
+            setlistEntries.forEach(context.delete)
+            context.delete(project)
+            if removeSourceAsset {
+                context.delete(sourceAsset)
+            }
+            try StoreFetch.save(context)
+
+            guard try StoreFetch.project(id: projectID.rawValue, context: context) == nil,
+                  try StoreFetch.processingRecords(projectID: projectID.rawValue, context: context).isEmpty,
+                  try StoreFetch.stems(projectID: projectID.rawValue, context: context).isEmpty,
+                  try StoreFetch.editRecords(projectID: projectID.rawValue, context: context).isEmpty,
+                  try StoreFetch.stemMix(projectID: projectID.rawValue, context: context).isEmpty,
+                  try StoreFetch.setlistEntries(projectID: projectID.rawValue, context: context).isEmpty else {
+                throw LibraryPersistenceFailure.corruptRecord("tombstoned metadata compaction did not converge")
+            }
+
+            if removeSourceAsset {
+                guard try StoreFetch.asset(id: sourceAssetUUID, context: context) == nil else {
+                    throw LibraryPersistenceFailure.corruptRecord("source asset survived final reference compaction")
+                }
+            } else {
+                guard try StoreFetch.asset(id: sourceAssetUUID, context: context) != nil else {
+                    throw LibraryPersistenceFailure.corruptRecord("shared source asset was removed")
+                }
+            }
+
+            return Lane2TombstonedMetadataCompactionResult(
+                projectUUID: projectID.rawValue,
+                projectRecordRemoved: true,
+                processingRecordsRemoved: processing.count,
+                stemRecordsRemoved: stems.count,
+                editRecordsRemoved: edits.count,
+                stemMixRecordsRemoved: stemMix.count,
+                setlistEntryRecordsRemoved: setlistEntries.count,
+                sourceAssetRecordRemoved: removeSourceAsset,
+                sourceAssetRecordRetained: !removeSourceAsset
+            )
+        }
+    }
+
     public func recoveryPlan(projectID: ProjectID) async throws -> ProcessingRecoveryPlan {
         try await perform { context in
             _ = try StoreFetch.requireLiveProject(id: projectID.rawValue, context: context)
@@ -678,6 +873,38 @@ private enum StoreFetch {
         return project
     }
 
+    static func tombstonedProjects(
+        context: NSManagedObjectContext,
+        fetchBatchSize: Int
+    ) throws -> [NSManagedObject] {
+        let request = NSFetchRequest<NSManagedObject>(entityName: "ProjectRecord")
+        request.predicate = NSPredicate(format: "tombstoned == YES")
+        request.sortDescriptors = [
+            NSSortDescriptor(key: "updatedAt", ascending: true),
+            NSSortDescriptor(key: "projectUUID", ascending: true)
+        ]
+        request.fetchBatchSize = fetchBatchSize
+        request.returnsObjectsAsFaults = true
+        return try context.fetch(request)
+    }
+
+    static func projectsReferencingAsset(
+        _ assetUUID: UUID,
+        excludingProjectID projectUUID: UUID,
+        context: NSManagedObjectContext
+    ) throws -> [NSManagedObject] {
+        try many(
+            entity: "ProjectRecord",
+            predicate: NSPredicate(
+                format: "sourceAssetUUID == %@ AND projectUUID != %@",
+                assetUUID as NSUUID,
+                projectUUID as NSUUID
+            ),
+            sort: [],
+            context: context
+        )
+    }
+
     static func liveProjects(
         context: NSManagedObjectContext,
         fetchBatchSize: Int
@@ -732,6 +959,18 @@ private enum StoreFetch {
         )
     }
 
+    static func processingRecords(
+        projectID: UUID,
+        context: NSManagedObjectContext
+    ) throws -> [NSManagedObject] {
+        try many(
+            entity: "ProcessingRecord",
+            predicate: NSPredicate(format: "projectUUID == %@", projectID as NSUUID),
+            sort: [],
+            context: context
+        )
+    }
+
     static func processing(
         projectIDs: Set<UUID>,
         context: NSManagedObjectContext,
@@ -751,6 +990,18 @@ private enum StoreFetch {
         try one(
             entity: "ProjectEditRecord",
             predicate: NSPredicate(format: "projectUUID == %@", projectID as NSUUID),
+            context: context
+        )
+    }
+
+    static func editRecords(
+        projectID: UUID,
+        context: NSManagedObjectContext
+    ) throws -> [NSManagedObject] {
+        try many(
+            entity: "ProjectEditRecord",
+            predicate: NSPredicate(format: "projectUUID == %@", projectID as NSUUID),
+            sort: [],
             context: context
         )
     }

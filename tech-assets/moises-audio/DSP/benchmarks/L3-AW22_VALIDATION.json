@@ -1,0 +1,99 @@
+{
+  "wave_id": "L3-AW22",
+  "result": "COMPLETE_NON_PARITY",
+  "evidence_scope": "LANE3_DSP_RUNTIME_TASKLOCAL_TELEMETRY_NON_PARITY",
+  "environment": {
+    "portable_swift": "6.2.1",
+    "portable_platform": "linux-x86_64",
+    "selected_xcode_compile": false,
+    "physical_device": false,
+    "real_audio": false,
+    "av_audio_session_runtime": false,
+    "apple_time_pitch_runtime": false,
+    "apple_click_executor_runtime": false,
+    "moises_differential": false
+  },
+  "implementation": [
+    "aggregate fixed-bucket DSP runtime latency histograms and saturating counters",
+    "ephemeral TaskLocal operation trace carrying only operation kind plus monotonic start time",
+    "actual transactional DSP backend apply entry/execution decorator",
+    "actual click invalidator entry/execution decorator",
+    "first-entry-only submission latency with additional rollback/recovery apply counters",
+    "AVFAudio Apple click executor wrapper for metronome replace/append and count-in replace execution timing",
+    "unscoped backend/click counters that detect instrumentation bypass without mis-attribution"
+  ],
+  "privacy": {
+    "aggregation_only": true,
+    "raw_event_log_retained": false,
+    "absolute_wall_clock_exported": false,
+    "project_identifier_exported": false,
+    "media_name_or_path_exported": false,
+    "pcm_or_audio_content_exported": false,
+    "click_buffer_or_event_content_exported": false,
+    "ticket_or_generation_value_exported": false,
+    "tasklocal_trace_persisted": false,
+    "tasklocal_trace_fields": ["operation_kind", "monotonic_start_nanoseconds"]
+  },
+  "portable_validation": {
+    "status": "PASS",
+    "core_declaration_parse": true,
+    "core_and_adapters_parse_against_interface_compatible_contracts": true,
+    "deterministic_tasklocal_probe": {
+      "status": "PASS",
+      "tempo_primary_backend_entries": 1,
+      "tempo_primary_click_invalidations": 1,
+      "pitch_backend_apply_calls_inside_one_operation": 2,
+      "pitch_primary_backend_entries": 1,
+      "pitch_additional_backend_applies": 1,
+      "failed_countin_discard_attributed": true,
+      "deliberate_unscoped_backend_detected": true,
+      "deliberate_unscoped_click_detected": true,
+      "privacy_assertions": "PASS"
+    },
+    "concurrent_attribution_stress": {
+      "status": "PASS",
+      "operations": 20000,
+      "tempo_operations": 10000,
+      "pitch_operations": 10000,
+      "tempo_primary_backend_entries": 10000,
+      "pitch_primary_backend_entries": 10000,
+      "tempo_primary_click_invalidations": 10000,
+      "unscoped_backend": 0,
+      "unscoped_click": 0
+    }
+  },
+  "portable_benchmark": {
+    "rounds": 20,
+    "operations_per_round": 5000,
+    "median_ms": 166.224,
+    "p95_ms": 201.937,
+    "max_ms": 224.576,
+    "checksum": 250190,
+    "scope": "telemetry probe/collector/decorators with lightweight protocol-compatible backend objects; excludes AVAudioEngine, AVAudioUnitTimePitch, Apple click-node runtime, AVAudioSession, file/device IO, real audio and current-Moises execution"
+  },
+  "repository_validation": {
+    "actual_controller_coordinator_self_test_authored": true,
+    "actual_controller_coordinator_benchmark_authored": true,
+    "selected_integrated_execution_pending": true
+  },
+  "integration_acceptance": {
+    "shared_collector_probe_required": true,
+    "real_dsp_backend_must_be_decorated": true,
+    "real_click_invalidator_must_be_decorated": true,
+    "product_submission_scope_must_use_probe": true,
+    "unscoped_backend_required": 0,
+    "unscoped_click_required": 0,
+    "persistent_raw_timing_log_forbidden": true
+  },
+  "limitations": [
+    "AW22 measures existing selected operation routes and does not itself create or replace product control authority",
+    "physical-iPhone runtime overhead and actual DSP/click scheduling latency are unmeasured",
+    "Apple click executor wrapper is authored but cannot execute on Linux",
+    "portable latency values are telemetry-overhead evidence only, not device or audible latency claims"
+  ],
+  "device_timing_claimed": false,
+  "audible_artifact_claimed": false,
+  "real_audio_claimed": false,
+  "standardized_perceptual_metric_claimed": false,
+  "parity_claimed": false
+}

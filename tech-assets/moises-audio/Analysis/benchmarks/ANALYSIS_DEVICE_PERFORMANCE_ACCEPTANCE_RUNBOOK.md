@@ -4,6 +4,12 @@ Purpose: prevent a single favorable W23 physical-iPhone run, a favorable mean, o
 
 W24 does not execute the device benchmark, does not choose production thresholds, and does not declare PARITY. HQ Late Integration owns the physical-iPhone run, threshold approval, archive and final PARITY decision.
 
+## 0. Pass W22 and W26 before approving W24
+
+Before creating the W24 run plan, freeze the exact rights-cleared manifest and run W22 corpus coverage. Then run W26 physical corpus selection against the same manifest and W22 policy.
+
+W24 `requiredFixtureIDs` and `expectedFixtureDurationsSeconds` must exactly equal the W26 selected fixture inventory. Do not approve W24 from an easier fixture subset that was not accepted by W26. If W22 or W26 changes, issue a new W24 profile/batch rather than reusing the previous plan.
+
 ## 1. Approve the profile before running
 
 Start from `ANALYSIS_DEVICE_PERFORMANCE_ACCEPTANCE_PROFILE_TEMPLATE.json`.
@@ -13,8 +19,8 @@ The template is intentionally invalid. HQ must fill and approve all binding and 
 - `profileID` and `approvalReference`
 - exact `expectedBatchID`
 - exact iPhone model, iOS version, bundle ID, app version and build version
-- exact W22/W23 manifest ID and SHA-256
-- exact required fixture IDs and expected durations
+- exact W22/W26/W23 manifest ID and SHA-256
+- exact W26-approved required fixture IDs and expected durations
 - minimum complete-analysis repetitions per fixture
 - minimum cancellation-probe repetitions per fixture
 - exact `plannedRuns` with predeclared run IDs, fixture IDs and run kinds
@@ -59,7 +65,7 @@ Create one `AnalysisDevicePerformanceEvidenceBatch` using the exact approved `ba
 
 The submitted run-ID set must exactly equal the predeclared run-ID set. No planned run may be absent and no post-hoc replacement run may be inserted unless HQ approves a new profile/batch before rerunning the gate.
 
-If the build, device, iOS version, corpus, manifest, run plan or approved thresholds change, create a new profile and new batch ID. Do not combine epochs.
+If the build, device, iOS version, W22/W26 corpus selection, manifest, run plan or approved thresholds change, create a new profile and new batch ID. Do not combine epochs.
 
 ## 4. Worst-case acceptance semantics
 
@@ -97,13 +103,15 @@ A low mean cannot offset a single approved-limit breach.
 
 Archive together:
 
+- approved W22 corpus-coverage policy/report
+- approved W26 physical corpus-selection policy/report
 - approved W24 profile
 - exact W24 evidence batch
 - every W23 raw run JSON
 - every W23 validation report
+- W25 workload policy/receipts/reports
 - W24 acceptance report
 - exact manifest bytes and SHA-256
-- W22 corpus-coverage approval/report
 - integrated app build identifier and build artifact evidence
 - physical-device/iOS evidence sufficient for HQ to corroborate the declared environment
 - operator notes for any interrupted or replaced capture attempt
@@ -112,13 +120,12 @@ Do not silently delete failed or aborted planned attempts. If the predeclared ru
 
 ## 7. MOI-P021 boundary
 
-W24 closes the software-side repeatability and anti-cherry-picking gap around W23. It does not itself supply:
+W24 closes the software-side repeatability and anti-cherry-picking gap around W23. W26 additionally prevents choosing an unrepresentatively easy physical fixture subset relative to the HQ-approved W22 corpus. These gates do not themselves supply:
 
 - a real iPhone execution
 - production thresholds
-- representative long-track selection approval
 - battery/thermal laboratory controls
-- evidence that a declared physical-device JSON was honestly captured
+- evidence that declared physical-device JSON was honestly captured
 - final MOI-P021 PARITY
 
 Those remain HQ Late Integration responsibilities.
