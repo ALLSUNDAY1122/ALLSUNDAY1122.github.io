@@ -1,439 +1,463 @@
 """L1-A24 generated-stem retention/delete/refund/orphan recovery (NON-PARITY)."""
 from __future__ import annotations
-import hashlib, json, os, re, time
+
+import hashlib
+import json
+import os
+import re
 from contextlib import contextmanager
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Mapping
 
-SCHEMA_VERSION=1
-TOOL_VERSION='L1-A24-v1'
-EVIDENCE_STATE='NON_PARITY_EVIDENCE_ONLY'
-HEX64=re.compile(r'^[0-9a-f]{64}$')
-ID32=re.compile(r'^[0-9a-f]{32}$')
-SAFE=re.compile(r'^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$')
-DELETE_REASONS={'USER_DELETE','PROJECT_DELETE','CANCEL_CLEANUP','SUPERSEDED_RETENTION','ORPHAN_ABANDONED'}
-RUNTIME_RECEIPTS={'accepted','confirmed','not_found'}
+SCHEMA_VERSION = 1
+TOOL_VERSION = "L1-A24-v1"
+EVIDENCE_STATE = "NON_PARITY_EVIDENCE_ONLY"
+HEX64 = re.compile(r"^[0-9a-f]{64}$")
+SAFE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$")
+REFUND_STATES = {"NOT_APPLICABLE", "NOT_REQUESTED", "PENDING", "CONFIRMED", "DENIED", "UNKNOWN"}
+RUNTIME_DELETE_STATES = {"NOT_APPLICABLE", "NOT_REQUESTED", "PENDING", "CONFIRMED", "NOT_FOUND", "UNSUPPORTED", "UNKNOWN"}
 
-class GeneratedRetentionError(RuntimeError):
-    def __init__(self,code,message='generated stem retention failure',retryable=False):
-        self.code=code;self.message=message;self.retryable=retryable;super().__init__(f'{code}: {message}')
-def fail(code,msg='generated stem retention failure',retryable=False): raise GeneratedRetentionError(code,msg,retryable)
-def _sha(v,f):
-    if not isinstance(v,str): fail('GEN_RET_SHA_INVALID',f)
-    x=v.strip().lower().removeprefix('sha256:')
-    if not HEX64.fullmatch(x): fail('GEN_RET_SHA_INVALID',f)
+class GeneratedStemRetentionError(RuntimeError):
+    def __init__(self, code: str, message: str = "generated stem retention failure", *, retryable: bool = False):
+        self.code = code
+        self.message = message
+        self.retryable = retryable
+        super().__init__(f"{code}: {message}")
+
+def fail(code: str, message: str = "generated stem retention failure", *, retryable: bool = False):
+    raise GeneratedStemRetentionError(code, message, retryable=retryable)
+
+def _sha(v: Any, field: str) -> str:
+    if not isinstance(v, str):
+        fail("GENRET_SHA_INVALID", field)
+    x = v.strip().lower().removeprefix("sha256:")
+    if not HEX64.fullmatch(x):
+        fail("GENRET_SHA_INVALID", field)
     return x
-def _safe(v,f):
-    if not isinstance(v,str) or not SAFE.fullmatch(v.strip()): fail('GEN_RET_SAFE_ID_INVALID',f)
+
+def _safe(v: Any, field: str) -> str:
+    if not isinstance(v, str) or not SAFE.fullmatch(v.strip()):
+        fail("GENRET_SAFE_ID_INVALID", field)
     return v.strip()
-def _int(v,f,lo=0):
-    if isinstance(v,bool) or not isinstance(v,int) or v<lo: fail('GEN_RET_INTEGER_INVALID',f)
+
+def _int(v: Any, field: str, lo: int = 0) -> int:
+    if isinstance(v, bool) or not isinstance(v, int) or v < lo:
+        fail("GENRET_INTEGER_INVALID", field)
     return v
-def canonical_sha(v): return hashlib.sha256(json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode()).hexdigest()
-def generation_ref_hash(logical_generation_id):
-    if not isinstance(logical_generation_id,str) or not ID32.fullmatch(logical_generation_id): fail('GEN_RET_LOGICAL_ID_INVALID')
-    return hashlib.sha256(('l1-a21-generation-ref-v1:'+logical_generation_id).encode()).hexdigest()
-def execution_ref_hash(execution_id):
-    if not isinstance(execution_id,str) or not execution_id: fail('GEN_RET_EXECUTION_ID_INVALID')
-    return hashlib.sha256(('l1-a21-execution-v1:'+execution_id).encode()).hexdigest()
-def file_sha256(p,chunk=1024*1024):
-    h=hashlib.sha256()
-    with Path(p).open('rb') as f:
-        while True:
-            b=f.read(chunk)
-            if not b: break
-            h.update(b)
-    return h.hexdigest()
-def _fsync_dir(p):
-    fd=os.open(str(p),os.O_RDONLY)
-    try: os.fsync(fd)
-    finally: os.close(fd)
-def _atomic_json(path,payload):
-    path=Path(path);path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix(path.suffix+'.tmp')
+
+def canonical_sha(value: Any) -> str:
     try:
-        with tmp.open('w',encoding='utf-8') as f:
-            json.dump(payload,f,sort_keys=True,separators=(',',':'));f.write('\n');f.flush();os.fsync(f.fileno())
-        os.replace(tmp,path);_fsync_dir(path.parent)
+        raw = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode()
+    except (TypeError, ValueError) as e:
+        raise GeneratedStemRetentionError("GENRET_CANONICAL_JSON_INVALID") from e
+    return hashlib.sha256(raw).hexdigest()
+
+def file_sha256(path: Path, chunk_size: int = 1024 * 1024) -> str:
+    h = hashlib.sha256()
+    try:
+        with path.open("rb") as f:
+            while True:
+                b = f.read(chunk_size)
+                if not b:
+                    break
+                h.update(b)
     except OSError as e:
-        tmp.unlink(missing_ok=True);raise GeneratedRetentionError('GEN_RET_ATOMIC_WRITE_FAILED',retryable=True) from e
+        raise GeneratedStemRetentionError("GENRET_FILE_UNREADABLE") from e
+    return h.hexdigest()
 
-def _load_json(path,code):
-    try:return json.loads(Path(path).read_text(encoding='utf-8'))
-    except Exception as e: raise GeneratedRetentionError(code) from e
+def _fsync_dir(path: Path):
+    try:
+        fd = os.open(str(path), os.O_RDONLY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+    except OSError as e:
+        raise GeneratedStemRetentionError("GENRET_DIRECTORY_FSYNC_FAILED", retryable=True) from e
 
-@dataclass
-class VariantRetentionRecord:
-    record_key:str
-    project_ref_hash:str
-    role:str
-    generation_ref_hash:str
-    variant_index:int
-    artifact_sha256:str
-    mix_ready_receipt_sha256:str
-    manifest_sha256:str
-    registered_at_epoch:int
-    last_active_at_epoch:int|None=None
-    superseded_at_epoch:int|None=None
-    delete_requested:bool=False
-    delete_reason:str|None=None
-    delete_requested_at_epoch:int|None=None
-    active_pointer_removed:bool=False
-    manifest_removed:bool=False
-    association_delete_confirmed:bool=False
-    physical_artifact_state:str='not_attempted'
-    runtime_delete_state:str='not_requested'
-    refund_state:str='not_checked'
-    refund_evidence_sha256:str|None=None
-    runtime_erasure_evidence_sha256:str|None=None
-    abandonment_evidence_sha256:str|None=None
+def _read_json_strict(path: Path, code: str) -> Mapping[str, Any]:
+    if path.is_symlink():
+        fail("GENRET_SYMLINK_FORBIDDEN")
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as e:
+        raise GeneratedStemRetentionError(code) from e
+    if not isinstance(raw, dict):
+        fail(code)
+    return raw
 
-    def validate(self):
-        if self.record_key!=f'{self.generation_ref_hash}.v{self.variant_index}': fail('GEN_RET_RECORD_KEY_INVALID')
-        for f in ('project_ref_hash','generation_ref_hash','artifact_sha256','mix_ready_receipt_sha256','manifest_sha256'):_sha(getattr(self,f),f)
-        _safe(self.role,'role');_int(self.variant_index,'variant_index');_int(self.registered_at_epoch,'registered_at_epoch',1)
-        if self.last_active_at_epoch is not None:_int(self.last_active_at_epoch,'last_active_at_epoch',1)
-        if self.superseded_at_epoch is not None:_int(self.superseded_at_epoch,'superseded_at_epoch',1)
-        if self.delete_requested_at_epoch is not None:_int(self.delete_requested_at_epoch,'delete_requested_at_epoch',1)
-        if self.delete_reason is not None and self.delete_reason not in DELETE_REASONS:fail('GEN_RET_DELETE_REASON_INVALID')
-        if self.physical_artifact_state not in {'not_attempted','confirmed_erased','retained_shared_reference','missing_before_delete','unknown_after_error'}:fail('GEN_RET_PHYSICAL_STATE_INVALID')
-        if self.runtime_delete_state not in {'not_requested','requesting','not_applicable','unsupported','identifier_unavailable','accepted','confirmed','not_found','unknown_after_error','unknown_invalid_receipt'}:fail('GEN_RET_RUNTIME_DELETE_STATE_INVALID')
-        if self.refund_state not in {'not_checked','released_no_charge','reserved_unsettled','not_eligible','eligible_not_requested','pending_authority','confirmed','state_unknown'}:fail('GEN_RET_REFUND_STATE_INVALID')
-        if self.refund_evidence_sha256 is not None:_sha(self.refund_evidence_sha256,'refund_evidence_sha256')
-        if self.runtime_erasure_evidence_sha256 is not None:_sha(self.runtime_erasure_evidence_sha256,'runtime_erasure_evidence_sha256')
-        if self.abandonment_evidence_sha256 is not None:_sha(self.abandonment_evidence_sha256,'abandonment_evidence_sha256')
+def _unlink_durable(path: Path):
+    if path.is_symlink():
+        fail("GENRET_SYMLINK_FORBIDDEN")
+    try:
+        path.unlink()
+        _fsync_dir(path.parent)
+    except FileNotFoundError:
+        return
+    except OSError as e:
+        raise GeneratedStemRetentionError("GENRET_LOCAL_DELETE_FAILED", retryable=True) from e
 
 @dataclass
-class OrphanObservation:
-    artifact_sha256:str
-    first_seen_epoch:int
-    last_seen_epoch:int
-    observations:int=1
-    delete_intent_at_epoch:int|None=None
-    def validate(self):
-        _sha(self.artifact_sha256,'artifact_sha256');_int(self.first_seen_epoch,'first_seen_epoch',1);_int(self.last_seen_epoch,'last_seen_epoch',1);_int(self.observations,'observations',1)
-        if self.delete_intent_at_epoch is not None:_int(self.delete_intent_at_epoch,'delete_intent_at_epoch',1)
+class DeleteRecord:
+    deletion_id: str
+    project_ref_hash: str
+    role: str
+    generation_ref_hash: str
+    variant_index: int
+    artifact_sha256: str
+    manifest_sha256: str
+    request_reason: str
+    delete_intent_evidence_sha256: str
+    local_state: str = "DELETE_INTENT_DURABLE"
+    active_pointer_removed: bool = False
+    manifest_removed: bool = False
+    object_removed: bool = False
+    object_retained_due_to_reference: bool = False
+    refund_state: str = "NOT_REQUESTED"
+    refund_request_evidence_sha256: str | None = None
+    refund_authority_evidence_sha256: str | None = None
+    runtime_delete_state: str = "NOT_REQUESTED"
+    runtime_delete_evidence_sha256: str | None = None
+    local_delete_completed: bool = False
 
-class AtomicRetentionRegistry:
-    def __init__(self,path,policy_sha256):self.path=Path(path);self.path.parent.mkdir(parents=True,exist_ok=True);self.lock_path=self.path.with_suffix(self.path.suffix+'.lock');self.policy_sha256=_sha(policy_sha256,'policy_sha256')
+    def validate(self):
+        _safe(self.deletion_id, "deletion_id")
+        for f in ("project_ref_hash", "generation_ref_hash", "artifact_sha256", "manifest_sha256", "delete_intent_evidence_sha256"):
+            _sha(getattr(self, f), f)
+        _safe(self.role, "role")
+        _int(self.variant_index, "variant_index", 0)
+        if self.request_reason not in {"USER_DELETE", "PROJECT_DELETE", "ACCOUNT_DELETE", "CANCEL_CLEANUP", "RETENTION_EXPIRED", "REGENERATION_CLEANUP"}:
+            fail("GENRET_DELETE_REASON_INVALID")
+        if self.local_state not in {"DELETE_INTENT_DURABLE", "ACTIVE_DETACHED", "MANIFEST_REMOVED", "LOCAL_DELETED"}:
+            fail("GENRET_LOCAL_STATE_INVALID")
+        if self.refund_state not in REFUND_STATES:
+            fail("GENRET_REFUND_STATE_INVALID")
+        if self.runtime_delete_state not in RUNTIME_DELETE_STATES:
+            fail("GENRET_RUNTIME_DELETE_STATE_INVALID")
+        for f in ("refund_request_evidence_sha256", "refund_authority_evidence_sha256", "runtime_delete_evidence_sha256"):
+            v = getattr(self, f)
+            if v is not None:
+                _sha(v, f)
+        if self.refund_state == "PENDING" and self.refund_request_evidence_sha256 is None:
+            fail("GENRET_REFUND_REQUEST_EVIDENCE_REQUIRED")
+        if self.refund_state in {"CONFIRMED", "DENIED"} and self.refund_authority_evidence_sha256 is None:
+            fail("GENRET_REFUND_AUTHORITY_EVIDENCE_REQUIRED")
+        if self.runtime_delete_state in {"NOT_APPLICABLE", "PENDING", "CONFIRMED", "NOT_FOUND", "UNSUPPORTED", "UNKNOWN"} and self.runtime_delete_evidence_sha256 is None:
+            fail("GENRET_RUNTIME_DELETE_EVIDENCE_REQUIRED")
+        if self.local_delete_completed and self.local_state != "LOCAL_DELETED":
+            fail("GENRET_COMPLETION_STATE_INVALID")
+
+class DurableDeleteLedger:
+    def __init__(self, path: str | Path):
+        self.path = Path(path)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.lock_path = self.path.with_suffix(self.path.suffix + ".lock")
+
     @contextmanager
     def locked(self):
-        with self.lock_path.open('a+b') as h:
+        with self.lock_path.open("a+b") as h:
             try:
-                import fcntl;fcntl.flock(h.fileno(),fcntl.LOCK_EX)
-            except ImportError as e:raise GeneratedRetentionError('GEN_RET_REGISTRY_LOCK_UNAVAILABLE') from e
-            try:yield self.load()
-            finally:fcntl.flock(h.fileno(),fcntl.LOCK_UN)
-    def load(self):
-        if not self.path.exists():return {'records':{},'orphans':{}}
-        raw=_load_json(self.path,'GEN_RET_REGISTRY_CORRUPT')
-        if raw.get('schema_version')!=1 or not isinstance(raw.get('records'),dict) or not isinstance(raw.get('orphans'),dict):fail('GEN_RET_REGISTRY_SCHEMA_INVALID')
-        if raw.get('policy_sha256')!=self.policy_sha256:fail('GEN_RET_POLICY_MISMATCH')
-        recs={};orph={}
+                import fcntl
+                fcntl.flock(h.fileno(), fcntl.LOCK_EX)
+            except ImportError as e:
+                raise GeneratedStemRetentionError("GENRET_LOCK_UNAVAILABLE") from e
+            try:
+                yield self._load()
+            finally:
+                fcntl.flock(h.fileno(), fcntl.LOCK_UN)
+
+    def _load(self) -> dict[str, DeleteRecord]:
+        if not self.path.exists():
+            return {}
         try:
-            for k,v in raw['records'].items():
-                r=VariantRetentionRecord(**v);r.validate()
-                if k!=r.record_key:raise ValueError('key')
-                recs[k]=r
-            for k,v in raw['orphans'].items():
-                o=OrphanObservation(**v);o.validate()
-                if k!=o.artifact_sha256:raise ValueError('orphan key')
-                orph[k]=o
+            raw = json.loads(self.path.read_text(encoding="utf-8"))
         except Exception as e:
-            if isinstance(e,GeneratedRetentionError):raise
-            raise GeneratedRetentionError('GEN_RET_REGISTRY_RECORD_INVALID') from e
-        return {'records':recs,'orphans':orph}
-    def save(self,state):
-        for r in state['records'].values():r.validate()
-        for o in state['orphans'].values():o.validate()
-        _atomic_json(self.path,{'schema_version':1,'policy_sha256':self.policy_sha256,'records':{k:asdict(v) for k,v in sorted(state['records'].items())},'orphans':{k:asdict(v) for k,v in sorted(state['orphans'].items())}})
+            raise GeneratedStemRetentionError("GENRET_LEDGER_CORRUPT") from e
+        if not isinstance(raw, dict) or raw.get("schema_version") != 1 or not isinstance(raw.get("records"), dict):
+            fail("GENRET_LEDGER_SCHEMA_INVALID")
+        out = {}
+        try:
+            for k, v in raw["records"].items():
+                r = DeleteRecord(**v)
+                r.validate()
+                if k != r.deletion_id:
+                    raise ValueError("id")
+                out[k] = r
+        except GeneratedStemRetentionError:
+            raise
+        except Exception as e:
+            raise GeneratedStemRetentionError("GENRET_LEDGER_RECORD_INVALID") from e
+        return out
 
-class GeneratedStemRetentionService:
-    def __init__(self,*,store_root,registry_path=None,now_epoch:Callable[[],int]|None=None,orphan_grace_seconds=3600,superseded_grace_seconds=86400):
-        self.root=Path(store_root);self.objects=self.root/'objects';self.manifests=self.root/'manifests';self.active=self.root/'active';self.store_lock=self.root/'.lock'
-        for p in (self.objects,self.manifests,self.active):p.mkdir(parents=True,exist_ok=True)
-        self.orphan_grace_seconds=_int(orphan_grace_seconds,'orphan_grace_seconds',1);self.superseded_grace_seconds=_int(superseded_grace_seconds,'superseded_grace_seconds',1)
-        self.retention_policy_sha256=canonical_sha({'domain':'l1-a24-retention-policy-v1','orphan_grace_seconds':self.orphan_grace_seconds,'superseded_grace_seconds':self.superseded_grace_seconds})
-        self.registry=AtomicRetentionRegistry(registry_path or self.root/'retention'/'registry.json',self.retention_policy_sha256)
-        self.now=now_epoch or (lambda:int(time.time()))
+    def save(self, records: Mapping[str, DeleteRecord]):
+        for r in records.values():
+            r.validate()
+        tmp = self.path.with_suffix(self.path.suffix + ".tmp")
+        payload = {"schema_version": 1, "records": {k: asdict(records[k]) for k in sorted(records)}}
+        try:
+            with tmp.open("w", encoding="utf-8") as f:
+                json.dump(payload, f, sort_keys=True, separators=(",", ":"))
+                f.write("\n")
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(tmp, self.path)
+            _fsync_dir(self.path.parent)
+        except OSError as e:
+            tmp.unlink(missing_ok=True)
+            raise GeneratedStemRetentionError("GENRET_LEDGER_WRITE_FAILED", retryable=True) from e
+
+class GeneratedStemRetentionCoordinator:
+    """Coordinates A23 local variants with A21 credit/refund truth.
+
+    Local delete completion and credit refund are intentionally independent.
+    """
+
+    def __init__(self, store_root: str | Path, ledger_path: str | Path):
+        self.root = Path(store_root)
+        self.objects = self.root / "objects"
+        self.manifests = self.root / "manifests"
+        self.active = self.root / "active"
+        self.store_lock_path = self.root / ".lock"
+        for p in (self.objects, self.manifests, self.active):
+            p.mkdir(parents=True, exist_ok=True)
+        self.ledger = DurableDeleteLedger(ledger_path)
+
     @contextmanager
-    def _store_locked(self):
-        self.root.mkdir(parents=True,exist_ok=True)
-        with self.store_lock.open('a+b') as h:
+    def store_locked(self):
+        self.root.mkdir(parents=True, exist_ok=True)
+        with self.store_lock_path.open("a+b") as h:
             try:
-                import fcntl;fcntl.flock(h.fileno(),fcntl.LOCK_EX)
-            except ImportError as e:raise GeneratedRetentionError('GEN_RET_STORE_LOCK_UNAVAILABLE') from e
-            try:yield
-            finally:fcntl.flock(h.fileno(),fcntl.LOCK_UN)
-    def _manifest_path(self,generation_hash,variant):return self.manifests/f'{_sha(generation_hash,"generation_ref_hash")}.v{_int(variant,"variant_index")}.json'
-    def _active_path(self,project_hash,role):return self.active/f'{_sha(project_hash,"project_ref_hash")}.{_safe(role,"role").lower()}.json'
-    def _load_manifest(self,path):
-        raw=_load_json(path,'GEN_RET_MANIFEST_CORRUPT')
-        req=('project_ref_hash','role','generation_ref_hash','variant_index','artifact_sha256','mix_ready_receipt_sha256')
-        if any(k not in raw for k in req):fail('GEN_RET_MANIFEST_SCHEMA_INVALID')
-        for f in ('project_ref_hash','generation_ref_hash','artifact_sha256','mix_ready_receipt_sha256'):_sha(raw[f],f)
-        _safe(raw['role'],'role');_int(raw['variant_index'],'variant_index')
-        return raw
-    def register_variant(self,*,generation_ref_hash_value,variant_index):
-        gh=_sha(generation_ref_hash_value,'generation_ref_hash');vi=_int(variant_index,'variant_index');mp=self._manifest_path(gh,vi)
-        with self._store_locked():
-            if not mp.is_file() or mp.is_symlink():fail('GEN_RET_MANIFEST_MISSING')
-            raw=self._load_manifest(mp)
-            if raw['generation_ref_hash']!=gh or raw['variant_index']!=vi:fail('GEN_RET_MANIFEST_IDENTITY_MISMATCH')
-            msha=file_sha256(mp);now=self.now();key=f'{gh}.v{vi}'
-            with self.registry.locked() as st:
-                old=st['records'].get(key)
-                rec=VariantRetentionRecord(key,raw['project_ref_hash'],raw['role'].lower(),gh,vi,raw['artifact_sha256'],raw['mix_ready_receipt_sha256'],msha,now)
-                ap=self._active_path(rec.project_ref_hash,rec.role)
-                if ap.exists():
-                    if ap.is_symlink():fail('GEN_RET_ACTIVE_SYMLINK_FORBIDDEN')
-                    a=_load_json(ap,'GEN_RET_ACTIVE_POINTER_CORRUPT')
-                    if a.get('generation_ref_hash')==gh and a.get('variant_index')==vi:
-                        rec.last_active_at_epoch=now
-                        for other in st['records'].values():
-                            if other.record_key!=key and other.project_ref_hash==rec.project_ref_hash and other.role==rec.role and other.superseded_at_epoch is None and not other.delete_requested:
-                                other.superseded_at_epoch=now
+                import fcntl
+                fcntl.flock(h.fileno(), fcntl.LOCK_EX)
+            except ImportError as e:
+                raise GeneratedStemRetentionError("GENRET_STORE_LOCK_UNAVAILABLE") from e
+            try:
+                yield
+            finally:
+                fcntl.flock(h.fileno(), fcntl.LOCK_UN)
+
+    @staticmethod
+    def deletion_id(project_ref_hash: str, role: str, generation_ref_hash: str, variant_index: int) -> str:
+        return canonical_sha({
+            "domain": "l1-a24-delete-v1",
+            "project_ref_hash": _sha(project_ref_hash, "project_ref_hash"),
+            "role": _safe(role, "role").lower(),
+            "generation_ref_hash": _sha(generation_ref_hash, "generation_ref_hash"),
+            "variant_index": _int(variant_index, "variant_index", 0),
+        })[:32]
+
+    def _manifest_path(self, generation_ref_hash: str, variant_index: int) -> Path:
+        return self.manifests / f"{_sha(generation_ref_hash, 'generation_ref_hash')}.v{_int(variant_index, 'variant_index', 0)}.json"
+
+    def _active_path(self, project_ref_hash: str, role: str) -> Path:
+        return self.active / f"{_sha(project_ref_hash, 'project_ref_hash')}.{_safe(role, 'role').lower()}.json"
+
+    @staticmethod
+    def _validate_variant_mapping(raw: Mapping[str, Any]) -> dict[str, Any]:
+        required = {
+            "schema_version", "project_ref_hash", "role", "generation_ref_hash", "variant_index",
+            "artifact_sha256", "artifact_bytes", "sample_rate", "channels", "audio_format",
+            "bits_per_sample", "frame_count", "mix_ready_receipt_sha256",
+        }
+        if set(raw) != required or raw.get("schema_version") != 1:
+            fail("GENRET_VARIANT_MANIFEST_INVALID")
+        out = dict(raw)
+        out["project_ref_hash"] = _sha(out["project_ref_hash"], "project_ref_hash")
+        out["role"] = _safe(out["role"], "role").lower()
+        out["generation_ref_hash"] = _sha(out["generation_ref_hash"], "generation_ref_hash")
+        out["variant_index"] = _int(out["variant_index"], "variant_index", 0)
+        out["artifact_sha256"] = _sha(out["artifact_sha256"], "artifact_sha256")
+        out["mix_ready_receipt_sha256"] = _sha(out["mix_ready_receipt_sha256"], "mix_ready_receipt_sha256")
+        for f in ("artifact_bytes", "sample_rate", "channels", "audio_format", "bits_per_sample", "frame_count"):
+            _int(out[f], f, 1)
+        return out
+
+    def begin_delete(
+        self, *, project_ref_hash: str, role: str, generation_ref_hash: str, variant_index: int,
+        request_reason: str, delete_intent_evidence_sha256: str,
+    ) -> DeleteRecord:
+        project = _sha(project_ref_hash, "project_ref_hash")
+        role_n = _safe(role, "role").lower()
+        gen = _sha(generation_ref_hash, "generation_ref_hash")
+        vi = _int(variant_index, "variant_index", 0)
+        evidence = _sha(delete_intent_evidence_sha256, "delete_intent_evidence_sha256")
+        did = self.deletion_id(project, role_n, gen, vi)
+        mpath = self._manifest_path(gen, vi)
+
+        with self.store_locked():
+            if not mpath.is_file() or mpath.is_symlink():
+                fail("GENRET_MANIFEST_REQUIRED_FOR_DELETE")
+            raw = self._validate_variant_mapping(_read_json_strict(mpath, "GENRET_VARIANT_MANIFEST_INVALID"))
+            if raw["project_ref_hash"] != project or raw["role"] != role_n or raw["generation_ref_hash"] != gen or raw["variant_index"] != vi:
+                fail("GENRET_DELETE_IDENTITY_MISMATCH")
+            manifest_sha = file_sha256(mpath)
+            artifact_sha = raw["artifact_sha256"]
+            with self.ledger.locked() as records:
+                old = records.get(did)
                 if old:
-                    immutable=('project_ref_hash','role','generation_ref_hash','variant_index','artifact_sha256','mix_ready_receipt_sha256','manifest_sha256')
-                    if any(getattr(old,f)!=getattr(rec,f) for f in immutable):fail('GEN_RET_REGISTRATION_CONFLICT')
-                    if rec.last_active_at_epoch is not None:old.last_active_at_epoch=rec.last_active_at_epoch
-                    self.registry.save(st);return old
-                st['records'][key]=rec;self.registry.save(st);return rec
-    def _find_a21_record(self,ledger_path,generation_hash):
-        raw=_load_json(ledger_path,'GEN_RET_A21_LEDGER_CORRUPT')
-        if raw.get('schema_version')!=1 or not isinstance(raw.get('records'),dict):fail('GEN_RET_A21_LEDGER_SCHEMA_INVALID')
-        matches=[]
-        for logical,v in raw['records'].items():
-            if generation_ref_hash(logical)==generation_hash:matches.append(v)
-        if len(matches)>1:fail('GEN_RET_A21_DUPLICATE_GENERATION')
-        return matches[0] if matches else None
-    def sync_refund_from_a21(self,*,generation_ref_hash_value,variant_index,a21_ledger_path):
-        key=f'{_sha(generation_ref_hash_value,"generation_ref_hash")}.v{_int(variant_index,"variant_index")}'
-        with self.registry.locked() as st:
-            rec=st['records'].get(key)
-            if not rec:fail('GEN_RET_RECORD_NOT_FOUND')
-            a=self._find_a21_record(a21_ledger_path,rec.generation_ref_hash)
-            if a is None:rec.refund_state='state_unknown';rec.refund_evidence_sha256=None
-            else:
-                cs=a.get('credit_state');cancel=bool(a.get('logical_cancelled'))
-                if cs=='released':rec.refund_state='released_no_charge';rec.refund_evidence_sha256=None
-                elif cs=='reserved':rec.refund_state='reserved_unsettled';rec.refund_evidence_sha256=None
-                elif cs=='refunded':
-                    ev=a.get('refund_evidence_sha256');_sha(ev,'refund_evidence_sha256');rec.refund_state='confirmed';rec.refund_evidence_sha256=ev
-                elif cs=='refund_pending':rec.refund_state='pending_authority';rec.refund_evidence_sha256=None
-                elif cs=='committed' and cancel:rec.refund_state='eligible_not_requested';rec.refund_evidence_sha256=None
-                elif cs=='committed':rec.refund_state='not_eligible';rec.refund_evidence_sha256=None
-                else:rec.refund_state='state_unknown';rec.refund_evidence_sha256=None
-            self.registry.save(st);return rec
-    def _find_execution(self,binding_path,generation_hash):
-        raw=_load_json(binding_path,'GEN_RET_BINDING_STORE_CORRUPT')
-        if raw.get('schema_version')!=1 or not isinstance(raw.get('records'),dict):fail('GEN_RET_BINDING_STORE_SCHEMA_INVALID')
-        matches=[]
-        for logical,v in raw['records'].items():
-            if generation_ref_hash(logical)==generation_hash:matches.append(v)
-        if len(matches)>1:fail('GEN_RET_BINDING_DUPLICATE_GENERATION')
-        return matches[0] if matches else None
-    def _remove_active_if_target(self,rec,reason):
-        ap=self._active_path(rec.project_ref_hash,rec.role)
-        if not ap.exists():return False
-        if ap.is_symlink():fail('GEN_RET_ACTIVE_SYMLINK_FORBIDDEN')
-        a=_load_json(ap,'GEN_RET_ACTIVE_POINTER_CORRUPT')
-        is_target=a.get('generation_ref_hash')==rec.generation_ref_hash and a.get('variant_index')==rec.variant_index
-        if not is_target:return False
-        if reason in {'SUPERSEDED_RETENTION','ORPHAN_ABANDONED'}:fail('GEN_RET_ACTIVE_DELETE_FORBIDDEN')
-        ap.unlink();_fsync_dir(self.active);return True
-    def _artifact_references(self,artifact_sha):
-        refs=[]
-        for mp in self.manifests.glob('*.json'):
-            if mp.is_symlink():fail('GEN_RET_MANIFEST_SYMLINK_FORBIDDEN')
-            raw=self._load_manifest(mp)
-            if raw['artifact_sha256']==artifact_sha:refs.append('manifest:'+mp.name)
-        for ap in self.active.glob('*.json'):
-            if ap.is_symlink():fail('GEN_RET_ACTIVE_SYMLINK_FORBIDDEN')
-            a=_load_json(ap,'GEN_RET_ACTIVE_POINTER_CORRUPT')
-            if a.get('artifact_sha256')==artifact_sha:refs.append('active:'+ap.name)
+                    expected = (project, role_n, gen, vi, artifact_sha, manifest_sha)
+                    actual = (old.project_ref_hash, old.role, old.generation_ref_hash, old.variant_index, old.artifact_sha256, old.manifest_sha256)
+                    if actual != expected or old.request_reason != request_reason or old.delete_intent_evidence_sha256 != evidence:
+                        fail("GENRET_DELETE_INTENT_CONFLICT")
+                    return old
+                rec = DeleteRecord(did, project, role_n, gen, vi, artifact_sha, manifest_sha, request_reason, evidence)
+                rec.validate()
+                records[did] = rec
+                self.ledger.save(records)
+                return rec
+
+    def get(self, deletion_id: str) -> DeleteRecord:
+        did = _safe(deletion_id, "deletion_id")
+        with self.ledger.locked() as records:
+            if did not in records:
+                fail("GENRET_DELETE_RECORD_NOT_FOUND")
+            return records[did]
+
+    def assert_generation_not_deleted(self, generation_ref_hash: str):
+        gen = _sha(generation_ref_hash, "generation_ref_hash")
+        with self.ledger.locked() as records:
+            for r in records.values():
+                if r.generation_ref_hash == gen:
+                    fail("GENRET_GENERATION_TOMBSTONED")
+
+    def _same_variant(self, raw: Mapping[str, Any], r: DeleteRecord) -> bool:
+        v = self._validate_variant_mapping(raw)
+        return v["project_ref_hash"] == r.project_ref_hash and v["role"] == r.role and v["generation_ref_hash"] == r.generation_ref_hash and v["variant_index"] == r.variant_index and v["artifact_sha256"] == r.artifact_sha256
+
+    def execute_local_delete(self, deletion_id: str) -> DeleteRecord:
+        did = _safe(deletion_id, "deletion_id")
+        with self.store_locked():
+            with self.ledger.locked() as records:
+                if did not in records:
+                    fail("GENRET_DELETE_RECORD_NOT_FOUND")
+                r = records[did]
+                if r.local_state == "LOCAL_DELETED":
+                    return r
+                apath = self._active_path(r.project_ref_hash, r.role)
+                if apath.exists():
+                    if apath.is_symlink(): fail("GENRET_SYMLINK_FORBIDDEN")
+                    araw = _read_json_strict(apath, "GENRET_ACTIVE_POINTER_CORRUPT")
+                    if self._same_variant(araw, r):
+                        _unlink_durable(apath); r.active_pointer_removed = True
+                    else:
+                        v = self._validate_variant_mapping(araw)
+                        if v["project_ref_hash"] != r.project_ref_hash or v["role"] != r.role:
+                            fail("GENRET_ACTIVE_POINTER_IDENTITY_INVALID")
+                r.local_state = "ACTIVE_DETACHED"; self.ledger.save(records)
+                mpath = self._manifest_path(r.generation_ref_hash, r.variant_index)
+                if mpath.exists():
+                    if mpath.is_symlink(): fail("GENRET_SYMLINK_FORBIDDEN")
+                    if file_sha256(mpath) != r.manifest_sha256: fail("GENRET_MANIFEST_MUTATED")
+                    if not self._same_variant(_read_json_strict(mpath, "GENRET_VARIANT_MANIFEST_INVALID"), r): fail("GENRET_MANIFEST_IDENTITY_MISMATCH")
+                    _unlink_durable(mpath)
+                r.manifest_removed = True; r.local_state = "MANIFEST_REMOVED"; self.ledger.save(records)
+                refs = self._collect_referenced_artifacts()
+                opath = self.objects / f"{r.artifact_sha256}.wav"
+                if r.artifact_sha256 in refs:
+                    r.object_retained_due_to_reference = True; r.object_removed = False
+                elif opath.exists():
+                    if opath.is_symlink(): fail("GENRET_SYMLINK_FORBIDDEN")
+                    _unlink_durable(opath); r.object_removed = True; r.object_retained_due_to_reference = False
+                else:
+                    r.object_removed = True; r.object_retained_due_to_reference = False
+                r.local_state = "LOCAL_DELETED"; r.local_delete_completed = True; self.ledger.save(records); return r
+
+    def _collect_referenced_artifacts(self) -> set[str]:
+        refs: set[str] = set()
+        for directory, code in ((self.manifests, "GENRET_REFERENCE_MANIFEST_CORRUPT"), (self.active, "GENRET_REFERENCE_ACTIVE_CORRUPT")):
+            for p in sorted(directory.glob("*.json")):
+                if p.name.endswith(".tmp"): continue
+                if p.is_symlink(): fail("GENRET_SYMLINK_FORBIDDEN")
+                try: v = self._validate_variant_mapping(_read_json_strict(p, code))
+                except GeneratedStemRetentionError as e: raise GeneratedStemRetentionError(code) from e
+                refs.add(v["artifact_sha256"])
         return refs
-    def request_delete(self,*,generation_ref_hash_value,variant_index,reason,runtime_delete:Callable[[str],str]|None=None,binding_store_path=None):
-        gh=_sha(generation_ref_hash_value,'generation_ref_hash');vi=_int(variant_index,'variant_index');reason=_safe(reason,'reason').upper()
-        if reason not in DELETE_REASONS:fail('GEN_RET_DELETE_REASON_INVALID')
-        key=f'{gh}.v{vi}';now=self.now()
-        # intent first
-        with self.registry.locked() as st:
-            rec=st['records'].get(key)
-            if not rec:fail('GEN_RET_RECORD_NOT_FOUND')
-            if not rec.delete_requested:
-                rec.delete_requested=True;rec.delete_reason=reason;rec.delete_requested_at_epoch=now;self.registry.save(st)
-            elif rec.delete_reason!=reason:fail('GEN_RET_DELETE_REASON_CONFLICT')
-        with self._store_locked():
-            with self.registry.locked() as st:
-                rec=st['records'][key]
-                if self._remove_active_if_target(rec,reason):rec.active_pointer_removed=True;self.registry.save(st)
-                mp=self._manifest_path(rec.generation_ref_hash,rec.variant_index)
-                if mp.exists():
-                    if mp.is_symlink():fail('GEN_RET_MANIFEST_SYMLINK_FORBIDDEN')
-                    raw=self._load_manifest(mp)
-                    if raw.get('artifact_sha256')!=rec.artifact_sha256 or file_sha256(mp)!=rec.manifest_sha256:fail('GEN_RET_MANIFEST_MUTATED')
-                    mp.unlink();_fsync_dir(self.manifests);rec.manifest_removed=True;self.registry.save(st)
-                else:rec.manifest_removed=True
-                refs=self._artifact_references(rec.artifact_sha256)
-                obj=self.objects/f'{rec.artifact_sha256}.wav'
-                if refs:
-                    rec.physical_artifact_state='retained_shared_reference'
-                elif not obj.exists():rec.physical_artifact_state='missing_before_delete'
-                else:
-                    if obj.is_symlink():fail('GEN_RET_OBJECT_SYMLINK_FORBIDDEN')
-                    if file_sha256(obj)!=rec.artifact_sha256:fail('GEN_RET_OBJECT_MUTATED')
-                    obj.unlink();_fsync_dir(self.objects);rec.physical_artifact_state='confirmed_erased'
-                ap=self._active_path(rec.project_ref_hash,rec.role)
-                target_active=False
-                if ap.exists():
-                    a=_load_json(ap,'GEN_RET_ACTIVE_POINTER_CORRUPT');target_active=a.get('generation_ref_hash')==rec.generation_ref_hash and a.get('variant_index')==rec.variant_index
-                rec.association_delete_confirmed=(not target_active and not mp.exists())
-                self.registry.save(st)
-        if runtime_delete is not None:
-            with self.registry.locked() as st:
-                runtime_rec=st['records'][key]
-                should_send=runtime_rec.runtime_delete_state=='not_requested'
-                if should_send:
-                    runtime_rec.runtime_delete_state='requesting'
-                    self.registry.save(st)
-            if should_send:
-                if binding_store_path is None:state='identifier_unavailable'
-                else:
-                    b=self._find_execution(binding_store_path,gh)
-                    if b is None:state='identifier_unavailable'
-                    else:
-                        execution_id=b.get('execution_id');expected=b.get('execution_ref_hash')
-                        if execution_ref_hash(execution_id)!=expected:fail('GEN_RET_BINDING_IDENTITY_MISMATCH')
-                        try:receipt=runtime_delete(execution_id)
-                        except Exception:state='unknown_after_error'
-                        else:state=receipt if receipt in RUNTIME_RECEIPTS else 'unknown_invalid_receipt'
-                with self.registry.locked() as st:
-                    if st['records'][key].runtime_delete_state=='requesting':
-                        st['records'][key].runtime_delete_state=state
-                        self.registry.save(st)
-        return self.snapshot(generation_ref_hash_value=gh,variant_index=vi)
-    def request_project_delete(self,*,project_ref_hash_value):
-        project=_sha(project_ref_hash_value,'project_ref_hash')
-        with self._store_locked():
-            with self.registry.locked() as st:
-                registered={(r.generation_ref_hash,r.variant_index) for r in st['records'].values() if r.project_ref_hash==project}
-            discovered=set()
-            for mp in self.manifests.glob('*.json'):
-                raw=self._load_manifest(mp)
-                if raw['project_ref_hash']==project:discovered.add((raw['generation_ref_hash'],raw['variant_index']))
-            missing=discovered-registered
-            if missing:fail('GEN_RET_PROJECT_DELETE_UNREGISTERED_VARIANT')
-            targets=sorted(registered)
-        return tuple(self.request_delete(generation_ref_hash_value=gh,variant_index=vi,reason='PROJECT_DELETE') for gh,vi in targets)
 
-    def reconcile_runtime_erasure(self,*,generation_ref_hash_value,variant_index,receipt,authority_evidence_sha256):
-        key=f'{_sha(generation_ref_hash_value,"generation_ref_hash")}.v{_int(variant_index,"variant_index")}'
-        ev=_sha(authority_evidence_sha256,'authority_evidence_sha256')
-        if receipt not in {'confirmed','not_found'}:fail('GEN_RET_RUNTIME_RECONCILE_RECEIPT_INVALID')
-        with self.registry.locked() as st:
-            r=st['records'].get(key)
-            if not r:fail('GEN_RET_RECORD_NOT_FOUND')
-            if r.runtime_delete_state not in {'requesting','accepted','unknown_after_error','identifier_unavailable','unknown_invalid_receipt',receipt}:fail('GEN_RET_RUNTIME_RECONCILE_STATE_INVALID')
-            r.runtime_delete_state=receipt;r.runtime_erasure_evidence_sha256=ev;self.registry.save(st);return r
+    def sweep_orphan_objects(self, *, minimum_age_seconds: int, now_epoch: int | None = None) -> tuple[str, ...]:
+        age = _int(minimum_age_seconds, "minimum_age_seconds", 0)
+        now = int(__import__("time").time()) if now_epoch is None else _int(now_epoch, "now_epoch", 0)
+        removed = []
+        with self.store_locked():
+            refs = self._collect_referenced_artifacts()
+            for p in sorted(self.objects.glob("*.wav")):
+                if p.is_symlink(): fail("GENRET_SYMLINK_FORBIDDEN")
+                if not p.is_file(): continue
+                stem = p.stem.lower()
+                if not HEX64.fullmatch(stem): fail("GENRET_OBJECT_NAME_INVALID")
+                try: st = p.stat()
+                except OSError as e: raise GeneratedStemRetentionError("GENRET_OBJECT_STAT_FAILED", retryable=True) from e
+                if stem in refs or now - int(st.st_mtime) < age: continue
+                _unlink_durable(p); removed.append(stem)
+        return tuple(removed)
 
-    def mark_runtime_storage_not_applicable(self,*,generation_ref_hash_value,variant_index,authority_evidence_sha256):
-        key=f'{_sha(generation_ref_hash_value,"generation_ref_hash")}.v{_int(variant_index,"variant_index")}'
-        ev=_sha(authority_evidence_sha256,'authority_evidence_sha256')
-        with self.registry.locked() as st:
-            r=st['records'].get(key)
-            if not r:fail('GEN_RET_RECORD_NOT_FOUND')
-            if r.runtime_delete_state not in {'not_requested','not_applicable'}:fail('GEN_RET_RUNTIME_NOT_APPLICABLE_CONFLICT')
-            r.runtime_delete_state='not_applicable';r.runtime_erasure_evidence_sha256=ev;self.registry.save(st);return r
+    def sweep_stale_temp_files(self, *, minimum_age_seconds: int, now_epoch: int | None = None) -> tuple[str, ...]:
+        age = _int(minimum_age_seconds, "minimum_age_seconds", 0)
+        now = int(__import__("time").time()) if now_epoch is None else _int(now_epoch, "now_epoch", 0)
+        removed = []
+        with self.store_locked():
+            self._collect_referenced_artifacts()
+            for directory in (self.objects, self.manifests, self.active):
+                for p in sorted(directory.glob("*.tmp")):
+                    if p.is_symlink(): fail("GENRET_SYMLINK_FORBIDDEN")
+                    if not p.is_file(): continue
+                    try: st = p.stat()
+                    except OSError as e: raise GeneratedStemRetentionError("GENRET_TEMP_STAT_FAILED", retryable=True) from e
+                    if now - int(st.st_mtime) < age: continue
+                    _unlink_durable(p); removed.append(f"{directory.name}/{p.name}")
+        return tuple(removed)
 
-    def observe_runtime_unsupported(self,*,generation_ref_hash_value,variant_index):
-        key=f'{_sha(generation_ref_hash_value,"generation_ref_hash")}.v{_int(variant_index,"variant_index")}'
-        with self.registry.locked() as st:
-            r=st['records'].get(key)
-            if not r:fail('GEN_RET_RECORD_NOT_FOUND')
-            if r.runtime_delete_state=='not_requested':r.runtime_delete_state='unsupported'
-            self.registry.save(st);return r
-    def sweep_orphan_objects(self):
-        now=self.now();deleted=[];observed=[]
-        with self._store_locked():
-            refs=set()
-            for mp in self.manifests.glob('*.json'):
-                if mp.is_symlink():fail('GEN_RET_MANIFEST_SYMLINK_FORBIDDEN')
-                refs.add(self._load_manifest(mp)['artifact_sha256'])
-            for ap in self.active.glob('*.json'):
-                if ap.is_symlink():fail('GEN_RET_ACTIVE_SYMLINK_FORBIDDEN')
-                a=_load_json(ap,'GEN_RET_ACTIVE_POINTER_CORRUPT')
-                ash=a.get('artifact_sha256')
-                if isinstance(ash,str) and HEX64.fullmatch(ash):refs.add(ash)
-                else:fail('GEN_RET_ACTIVE_POINTER_SCHEMA_INVALID')
-            with self.registry.locked() as st:
-                present=set()
-                for obj in self.objects.glob('*.wav'):
-                    if obj.is_symlink():fail('GEN_RET_OBJECT_SYMLINK_FORBIDDEN')
-                    sha=obj.stem
-                    if not HEX64.fullmatch(sha):continue
-                    if sha in refs:
-                        st['orphans'].pop(sha,None);continue
-                    if file_sha256(obj)!=sha:fail('GEN_RET_OBJECT_MUTATED')
-                    present.add(sha);observed.append(sha)
-                    old=st['orphans'].get(sha)
-                    if old is None:st['orphans'][sha]=OrphanObservation(sha,now,now,1,None)
-                    else:
-                        old.last_seen_epoch=now;old.observations+=1
-                        if old.observations>=2 and now-old.first_seen_epoch>=self.orphan_grace_seconds:
-                            if old.delete_intent_at_epoch is None:
-                                old.delete_intent_at_epoch=now;self.registry.save(st)
-                            obj.unlink();_fsync_dir(self.objects);deleted.append(sha);st['orphans'].pop(sha,None)
-                for sha in list(st['orphans']):
-                    if sha not in present and not (self.objects/f'{sha}.wav').exists():st['orphans'].pop(sha,None)
-                self.registry.save(st)
-        return {'observed':tuple(sorted(observed)),'deleted':tuple(sorted(deleted))}
-    def sweep_superseded(self):
-        now=self.now()
-        with self.registry.locked() as st:
-            candidates=[(r.generation_ref_hash,r.variant_index) for r in st['records'].values() if r.superseded_at_epoch is not None and not r.delete_requested and now-r.superseded_at_epoch>=self.superseded_grace_seconds]
-        deleted=[]
-        for gh,vi in candidates:
-            self.request_delete(generation_ref_hash_value=gh,variant_index=vi,reason='SUPERSEDED_RETENTION')
-            deleted.append(f'{gh}.v{vi}')
-        return tuple(sorted(deleted))
+    def begin_abandoned_cleanup(self, *, generation_ref_hash: str, variant_index: int, a21_lifecycle_state: str, abandonment_evidence_sha256: str) -> DeleteRecord:
+        gen = _sha(generation_ref_hash, "generation_ref_hash"); vi = _int(variant_index, "variant_index", 0)
+        state = _safe(a21_lifecycle_state, "a21_lifecycle_state").lower()
+        if state not in {"cancelled", "failed"}: fail("GENRET_ABANDONMENT_STATE_INVALID")
+        ev = _sha(abandonment_evidence_sha256, "abandonment_evidence_sha256"); mpath = self._manifest_path(gen, vi)
+        with self.store_locked():
+            if not mpath.is_file() or mpath.is_symlink(): fail("GENRET_MANIFEST_REQUIRED_FOR_DELETE")
+            raw = self._validate_variant_mapping(_read_json_strict(mpath, "GENRET_VARIANT_MANIFEST_INVALID")); apath = self._active_path(raw["project_ref_hash"], raw["role"])
+            if apath.exists():
+                if apath.is_symlink(): fail("GENRET_SYMLINK_FORBIDDEN")
+                active = self._validate_variant_mapping(_read_json_strict(apath, "GENRET_ACTIVE_POINTER_CORRUPT"))
+                if active["generation_ref_hash"] == gen and active["variant_index"] == vi and active["artifact_sha256"] == raw["artifact_sha256"]: fail("GENRET_ACTIVE_VARIANT_NOT_ABANDONED")
+        return self.begin_delete(project_ref_hash=raw["project_ref_hash"], role=raw["role"], generation_ref_hash=gen, variant_index=vi, request_reason="CANCEL_CLEANUP", delete_intent_evidence_sha256=ev)
 
-    def inactive_unregistered_manifests(self):
-        with self._store_locked():
-            active_keys=set()
-            for ap in self.active.glob('*.json'):
-                if ap.is_symlink():fail('GEN_RET_ACTIVE_SYMLINK_FORBIDDEN')
-                a=_load_json(ap,'GEN_RET_ACTIVE_POINTER_CORRUPT');active_keys.add(f"{a.get('generation_ref_hash')}.v{a.get('variant_index')}")
-            with self.registry.locked() as st:registered=set(st['records'])
-            out=[]
-            for mp in self.manifests.glob('*.json'):
-                raw=self._load_manifest(mp);key=f"{raw['generation_ref_hash']}.v{raw['variant_index']}"
-                if key not in active_keys and key not in registered:out.append((key,file_sha256(mp)))
-            return tuple(sorted(out))
-    def adopt_abandoned_manifest(self,*,generation_ref_hash_value,variant_index,abandonment_evidence_sha256):
-        ev=_sha(abandonment_evidence_sha256,'abandonment_evidence_sha256')
-        rec=self.register_variant(generation_ref_hash_value=generation_ref_hash_value,variant_index=variant_index)
-        ap=self._active_path(rec.project_ref_hash,rec.role)
-        if ap.exists():
-            a=_load_json(ap,'GEN_RET_ACTIVE_POINTER_CORRUPT')
-            if a.get('generation_ref_hash')==rec.generation_ref_hash and a.get('variant_index')==rec.variant_index:fail('GEN_RET_ACTIVE_ABANDON_FORBIDDEN')
-        with self.registry.locked() as st:
-            st['records'][rec.record_key].abandonment_evidence_sha256=ev;self.registry.save(st)
-        return self.request_delete(generation_ref_hash_value=rec.generation_ref_hash,variant_index=rec.variant_index,reason='ORPHAN_ABANDONED')
-    def snapshot(self,*,generation_ref_hash_value,variant_index):
-        key=f'{_sha(generation_ref_hash_value,"generation_ref_hash")}.v{_int(variant_index,"variant_index")}'
-        with self.registry.locked() as st:
-            r=st['records'].get(key)
-            if not r:fail('GEN_RET_RECORD_NOT_FOUND')
-            r.validate();runtime_erasure=(r.runtime_delete_state in {'confirmed','not_found','not_applicable'} and r.runtime_erasure_evidence_sha256 is not None)
-            physical_erasure=r.physical_artifact_state in {'confirmed_erased','missing_before_delete'}
-            return {
-                'schema_version':1,'tool_version':TOOL_VERSION,'evidence_state':EVIDENCE_STATE,'retention_policy_sha256':self.retention_policy_sha256,
-                'project_ref_hash':r.project_ref_hash,'role':r.role,'generation_ref_hash':r.generation_ref_hash,'variant_index':r.variant_index,
-                'artifact_sha256':r.artifact_sha256,'mix_ready_receipt_sha256':r.mix_ready_receipt_sha256,
-                'delete_requested':r.delete_requested,'delete_reason':r.delete_reason,'association_delete_confirmed':r.association_delete_confirmed,
-                'physical_artifact_state':r.physical_artifact_state,'runtime_delete_state':r.runtime_delete_state,'runtime_erasure_confirmed':runtime_erasure,
-                'refund_state':r.refund_state,'refund_evidence_sha256':r.refund_evidence_sha256,'runtime_erasure_evidence_sha256':r.runtime_erasure_evidence_sha256,
-                'privacy_erasure_complete':bool(r.association_delete_confirmed and physical_erasure and runtime_erasure),
-                'raw_logical_generation_id_emitted':False,'raw_execution_id_emitted':False,'path_emitted':False,'raw_audio_emitted':False,'parity_claim':'NONE'
-            }
+    def record_refund_requested(self, deletion_id: str, *, a21_credit_state: str, request_evidence_sha256: str) -> DeleteRecord:
+        did = _safe(deletion_id, "deletion_id"); ev = _sha(request_evidence_sha256, "request_evidence_sha256")
+        if a21_credit_state != "refund_pending": fail("GENRET_A21_REFUND_PENDING_REQUIRED")
+        with self.ledger.locked() as records:
+            r = records.get(did)
+            if not r: fail("GENRET_DELETE_RECORD_NOT_FOUND")
+            if r.refund_state == "CONFIRMED": return r
+            if r.refund_state not in {"NOT_REQUESTED", "PENDING"}: fail("GENRET_REFUND_TRANSITION_INVALID")
+            if r.refund_request_evidence_sha256 not in {None, ev}: fail("GENRET_REFUND_REQUEST_CONFLICT")
+            r.refund_state = "PENDING"; r.refund_request_evidence_sha256 = ev; self.ledger.save(records); return r
+
+    def record_refund_authority(self, deletion_id: str, *, a21_credit_state: str, outcome: str, authority_evidence_sha256: str) -> DeleteRecord:
+        did = _safe(deletion_id, "deletion_id"); ev = _sha(authority_evidence_sha256, "authority_evidence_sha256"); out = _safe(outcome, "outcome").upper()
+        if out not in {"CONFIRMED", "DENIED", "UNKNOWN"}: fail("GENRET_REFUND_OUTCOME_INVALID")
+        if out == "CONFIRMED" and a21_credit_state != "refunded": fail("GENRET_A21_REFUNDED_REQUIRED")
+        if out in {"DENIED", "UNKNOWN"} and a21_credit_state not in {"committed", "refund_pending"}: fail("GENRET_A21_CREDIT_STATE_INCONSISTENT")
+        with self.ledger.locked() as records:
+            r = records.get(did)
+            if not r: fail("GENRET_DELETE_RECORD_NOT_FOUND")
+            if out in {"CONFIRMED", "DENIED", "UNKNOWN"} and r.refund_state != "PENDING": fail("GENRET_REFUND_AUTHORITY_WITHOUT_REQUEST")
+            if r.refund_state == "CONFIRMED":
+                if out == "CONFIRMED" and r.refund_authority_evidence_sha256 == ev: return r
+                fail("GENRET_REFUND_TERMINAL_CONFLICT")
+            r.refund_state = out; r.refund_authority_evidence_sha256 = ev; self.ledger.save(records); return r
+
+    def record_runtime_delete(self, deletion_id: str, *, outcome: str, authority_evidence_sha256: str) -> DeleteRecord:
+        did = _safe(deletion_id, "deletion_id"); out = _safe(outcome, "outcome").upper()
+        if out not in RUNTIME_DELETE_STATES - {"NOT_REQUESTED"}: fail("GENRET_RUNTIME_DELETE_OUTCOME_INVALID")
+        ev = _sha(authority_evidence_sha256, "authority_evidence_sha256")
+        with self.ledger.locked() as records:
+            r = records.get(did)
+            if not r: fail("GENRET_DELETE_RECORD_NOT_FOUND")
+            if r.runtime_delete_state in {"CONFIRMED", "NOT_FOUND"}:
+                if r.runtime_delete_state == out and r.runtime_delete_evidence_sha256 == ev: return r
+                fail("GENRET_RUNTIME_DELETE_TERMINAL_CONFLICT")
+            r.runtime_delete_state = out; r.runtime_delete_evidence_sha256 = ev; self.ledger.save(records); return r
+
+    def privacy_safe_evidence(self, deletion_id: str) -> dict[str, Any]:
+        r = self.get(deletion_id); r.validate(); provider_erasure = r.runtime_delete_state in {"CONFIRMED", "NOT_FOUND", "NOT_APPLICABLE"}
+        return {"schema_version":1,"tool_version":TOOL_VERSION,"evidence_state":EVIDENCE_STATE,"deletion_id":r.deletion_id,"project_ref_hash":r.project_ref_hash,"role":r.role,"generation_ref_hash":r.generation_ref_hash,"variant_index":r.variant_index,"artifact_sha256":r.artifact_sha256,"delete_intent_evidence_sha256":r.delete_intent_evidence_sha256,"local_state":r.local_state,"active_pointer_removed":r.active_pointer_removed,"manifest_removed":r.manifest_removed,"object_removed":r.object_removed,"object_retained_due_to_reference":r.object_retained_due_to_reference,"refund_state":r.refund_state,"runtime_delete_state":r.runtime_delete_state,"local_deletion_complete":r.local_state=="LOCAL_DELETED","runtime_erasure_authoritatively_complete":provider_erasure,"overall_erasure_complete":r.local_state=="LOCAL_DELETED" and provider_erasure,"refund_confirmed":r.refund_state=="CONFIRMED","deletion_does_not_imply_refund":True,"path_emitted":False,"raw_audio_emitted":False,"raw_runtime_id_emitted":False,"raw_credit_or_billing_record_emitted":False,"parity_claim":"NONE"}
