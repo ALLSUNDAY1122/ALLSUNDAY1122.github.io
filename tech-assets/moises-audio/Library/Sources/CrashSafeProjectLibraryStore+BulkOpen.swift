@@ -5,9 +5,8 @@ public extension CrashSafeProjectLibraryStore {
     /// Production open for callers that do not need PreservingCoreDataStoreOpener.
     /// AW24 bounds legacy preparation; AW26 injects targeted live-reference authorization; AW31
     /// reconciles bounded previous-session managed publication intents before AW30 compatibility
-    /// census. Recovery/census failures do not block user data: inventory authority is invalidated
-    /// or remains absent and AW28 compatibility behavior stays active. In-memory tests retain the
-    /// full-projection fallback.
+    /// census. Census runs only after publication recovery is safe; corrupt/unsafe publication state
+    /// leaves inventory authority absent for this open. In-memory tests retain the full-projection fallback.
     static func openBulkPrepared(
         metadataConfiguration: CoreDataProjectLibraryStore.Configuration,
         artifactRootURL: URL
@@ -21,14 +20,19 @@ public extension CrashSafeProjectLibraryStore {
                 artifactRootURL: artifactRootURL
             )
             let publicationRecovery = Lane2ManagedArtifactPublicationRecovery(rootURL: artifactRootURL)
+            let publicationRecoverySafe: Bool
             do {
-                _ = try publicationRecovery.recoverPreviousSessionPublications()
+                let report = try publicationRecovery.recoverPreviousSessionPublications()
+                publicationRecoverySafe = report.retainedUnsafe.isEmpty && !report.authorityInvalidated
             } catch {
                 publicationRecovery.invalidateAuthorityAfterRecoveryFailure()
+                publicationRecoverySafe = false
             }
-            _ = try? Lane2ManagedArtifactCompatibilityCensus(
-                rootURL: artifactRootURL
-            ).advance()
+            if publicationRecoverySafe {
+                _ = try? Lane2ManagedArtifactCompatibilityCensus(
+                    rootURL: artifactRootURL
+                ).advance()
+            }
             resolver = Lane2CoreDataLiveArtifactReferenceResolver(storeURL: metadataStoreURL)
         } else {
             resolver = nil
