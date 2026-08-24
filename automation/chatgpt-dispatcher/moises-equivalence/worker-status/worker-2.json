@@ -11,16 +11,17 @@
   "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "f702f7e94a7fea43e64ca9e0ad6e9ae76e435509",
-  "prior_status_blob_sha": "f66454261ef04a003040e7da14ed4018d18739f2",
-  "historical_commit_ledger_through": "4cbb15cf155ed856f5d354c717a27207ae24cc69",
+  "head_sha": "57a5433979a32fbae2700b5f7240f0c00bc7ff0f",
+  "prior_status_blob_sha": "e4fba1e9c01bde9177bb6cda89c8e060be4e2d70",
+  "historical_commit_ledger_through": "f702f7e94a7fea43e64ca9e0ad6e9ae76e435509",
   "commits": [
-    "e261e907564c9ef1d93b3d0ce352bbc1a3977759",
-    "6229f4c1743c152759f342347d7ea646d8fb1a17",
-    "66d6f11a65eb26e3d422b1a5d001e418d42867f9",
-    "5da213d27c91e66a515978eb6cb92c10e010f83e",
-    "23fba73eccb25f8045d076112387514b8c9f3d4c",
-    "f702f7e94a7fea43e64ca9e0ad6e9ae76e435509"
+    "d467d420d962557353f9d61ef77d59c1d66468b1",
+    "1cb6c5cbb0213b715003152f3b05a19aa8063149",
+    "ed5cf8e759e5166e09b90041f78716a03b06fe93",
+    "b6a66337d094308fa042167231a3c3790925541d",
+    "c16a7f56f48e58b6fa38fd518c5a381e47229043",
+    "3f5d5ed9a9561a5a6c56ed4564b1fad95f09a84f",
+    "57a5433979a32fbae2700b5f7240f0c00bc7ff0f"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -29,21 +30,26 @@
     "bf4b7a552cfbe025608079f7fe11093af7526b0b"
   ],
   "tests": [
-    "L2-M01..L2-AW33 validation remains durable in Git history and prior status blob f66454261ef04a003040e7da14ed4018d18739f2.",
-    "L2-AW34 portable resolver/policy core compiled with Swift 6.2.1 strict concurrency/warnings-as-errors after Linux portability fixes => PASS.",
-    "L2-AW34 executable self-check => L2_AW34_SELF_TEST_PASS public=3 blocked=17 mixed_dns_rejected=true hostname_private_resolution_rejected=true.",
-    "L2-AW34 production/static audit => L2_AW34_STATIC_AUDIT_PASS checks=20/20.",
-    "L2-AW34 AW33-status->Evidence compare => six commits, five changed files, all under tech-assets/moises-audio/IO/**."
+    "L2-M01..L2-AW34 validation remains durable in Git history and prior status blob e4fba1e9c01bde9177bb6cda89c8e060be4e2d70.",
+    "L2-AW35 IOExportBatchIntegrityTests.swift prepares regressions for normal manifest verification, byte mutation, unexpected published file and symlink replacement.",
+    "L2-AW35 ExportBatchIntegrityRegistrationTests.swift prepares registration-gate regressions for valid AW35 batches, tampered marker retention/no intent, and pre-AW35 no-manifest compatibility.",
+    "L2-AW35 exact committed algorithm self-check compiled with Swift 6.2.1 -parse-as-library -warnings-as-errors -strict-concurrency=complete => PASS.",
+    "L2-AW35 self-check => L2_AW35_SELF_TEST_PASS scenarios=4 size_change_rejected=true same_size_mutation_rejected=true symlink_rejected=true chunk_bytes=1048576.",
+    "L2-AW35 production/source static audit => L2_AW35_STATIC_AUDIT_PASS checks=18/18.",
+    "L2-AW35 AW34-status->pre-Evidence compare => six commits, five changed files, all under tech-assets/moises-audio/IO/** or Library/**; no scope-external path changed."
   ],
   "evidence": [
-    "L2-AW34 fresh-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock 55b0056b5563c64515ddc74abd448c545c7c0bb4 at integration epoch 22 / assignment epoch 2, prior Worker status blob f66454261ef04a003040e7da14ed4018d18739f2 and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d.",
-    "Canonical standard IOBoundedRemoteAudioImporter now composes IOResolutionGuardedDirectDownloadTransport rather than the older bounded transport.",
-    "Initial and redirect hostnames are resolved before request/redirect approval; any private/loopback/link-local/multicast/reserved or mixed public/private answer fails closed as REMOTE_URL_LOCAL_NETWORK_BLOCKED.",
-    "Existing AW14 byte limits, redirect limits, HTTPS downgrade rejection, response/media checks, storage preflight, cancellation and staging-size verification are retained.",
-    "Committed blobs: resolution transport f10e1c5ca6108b169c1abcd3228e0509f2876d1d; importer c737bf91d6fe5e926a6dd9b5042693dfaa0a948d; tests 40468c2bdf58302225eeedcc3425eeca9baa3791; self-check da23a2938a3a54de93c389fefc5bce81ddafb24f.",
-    "Final Evidence is tech-assets/moises-audio/IO/L2-AW34_DNS_RESOLUTION_GUARD_VALIDATION.md."
+    "L2-AW35 final fresh-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock 08b53b6a36b8e36b547f09ad02d45bdbdc5dfdc4 at integration epoch 23 / assignment epoch 2, prior Worker status blob e4fba1e9c01bde9177bb6cda89c8e060be4e2d70 and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d.",
+    "IOExportBatchTransaction now writes a durable .lane2-batch-integrity-v1.json before publication and read-back verifies schema/batch identity, exact filenames, byte count, streamed digest, regular non-symlink type and absence of unexpected files.",
+    "A failed post-rename verification during commit removes the newly published batch rather than returning unverified artifacts.",
+    "Lane2ExportRegistrationJournal.prepare verifies AW35+ batch integrity before persisting the Library registration intent and before clearing .lane2-registration-pending; tampered batches fail closed and retain the marker.",
+    "Pre-AW35 batches without a manifest keep the compatibility registration path instead of being stranded by upgrade.",
+    "Exact committed production/test blobs: IOExportBatchTransaction dcd98d66f36a0076711b33e0d72b231375a7880b; Lane2ExportRegistrationJournal 5dea18088eb42725a26130dc71fc0d7c1377fead; IO tests 29c8b27b6df5b67d268973a01e9e861e8cdacc10; Library tests edf4dea9bc71934aa5d91632e3320c78406e38db; self-check 0c8a69a4bee597d29db5aaa605c1eaf4d7fb1e3d.",
+    "Final Evidence is tech-assets/moises-audio/IO/L2-AW35_EXPORT_BATCH_CONTENT_INTEGRITY_VALIDATION.md blob b3d3e1a7ab54430fe291253e21dc1be09c993dfd."
   ],
   "known_gaps": [
+    "AW35 has a remaining narrow TOCTOU after Lane2ExportRegistrationJournal.prepare returns: bytes can change before metadata.recordExports or after metadata commit before intent retirement; relaunch alreadyRegistered recovery currently checks regular/non-empty readiness rather than the AW35 manifest again.",
+    "The AW35 deterministic streamed digest is corruption/mutation evidence, not a cryptographic authenticity guarantee against an actor able to rewrite both media and manifest.",
     "DNS rebinding between AW34 pre-connect resolution and URLSession's own subsequent resolution remains a TOCTOU risk; endpoint verification/pinning requires Apple networking evidence.",
     "Real Apple URLSession redirect, proxy/captive-network, IPv6 and endpoint behavior remain pending.",
     "A production WMA compatibility decoder is still not selected/licensed; real MP3/WAV/FLAC/M4A/MP4/MOV/WMA fixtures remain pending.",
@@ -53,25 +59,25 @@
     "MOI-P001/P002/P017/P018/P019/P020/P024 remain MISSING until HQ real-device/reference/differential gates are satisfied."
   ],
   "hq_requests": [
-    "Use the standard IOBoundedRemoteAudioImporter initializer for App public URL import; the custom downloader-injection initializer is test/admin composition and can bypass AW34 resolution protection.",
-    "On Apple, verify actual connected remote endpoint or pin to the AW34 validated address set to close the remaining DNS-rebinding TOCTOU before treating public URL SSRF protection as complete.",
-    "Run real redirect chains including public->private-resolving host, mixed DNS answers, IPv6, proxy/captive network and cancellation/storage-pressure cases.",
-    "Continue AW33 real codec/WMA validation and canonical Lane-2 readiness/publication routes.",
-    "Do not promote MOI-P002 or any other Lane-2 PARITY row from AW34 portable evidence alone.",
-    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW34."
+    "For App export/share integration, preserve canonical IOExportBatchTransaction -> Lane2ExportRegistrationJournal -> lifecycle metadata ordering; do not bypass the AW35 integrity manifest/registration gate.",
+    "On Apple, execute the AW35 IO/Library regressions with real AVFoundation exports and force termination around manifest write, marker sync, batch rename, registration-intent persistence and metadata registration.",
+    "Verify exported byte integrity plus actual audio validity/synchronization/naming/shareability; AW35 portable digest evidence alone is not MOI-P019 PARITY.",
+    "Continue AW34 endpoint/DNS-rebinding validation and AW33 real codec/WMA validation.",
+    "Do not promote MOI-P019 or any other Lane-2 PARITY row from AW35 portable evidence alone.",
+    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW35."
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW34",
-    "goal": "Reduce public URL SSRF exposure by resolving initial and redirect hostnames before request approval and rejecting any non-public numeric address result.",
-    "rationale": "AW14 blocked literal local/private hosts but hostname-to-private resolution remained an unresolved Lane-2 import security gap directly relevant to MOI-P002.",
-    "done_when": "Canonical public URL composition uses the resolution-guarded transport, initial and redirect DNS answers fail closed on private/reserved/mixed results, existing bounded download safety remains intact, strict portable validation and durable Evidence pass, and DNS rebinding TOCTOU is explicitly left unclaimed.",
+    "wave_id": "L2-AW35",
+    "goal": "Bind canonical export batch publication to durable content fingerprints and require AW35+ published bytes to verify before Library registration intent adoption.",
+    "rationale": "Crash-safe publication/registration existed, but regular non-empty export bytes could drift after encoding/publication without a durable content-integrity signal.",
+    "done_when": "Canonical batch commit writes and synchronizes an integrity manifest before publication, post-rename read-back rejects mutation/symlink/unexpected files, Library registration validates AW35+ manifests before intent/marker transition, legacy batches remain recoverable, portable negative evidence and durable Evidence are recorded, and post-intent TOCTOU is explicitly left unclaimed.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "f702f7e94a7fea43e64ca9e0ad6e9ae76e435509",
-    "next_priority": "Re-read Lane-2 gaps and implement another lane-local correctness/performance hardening wave; likely cap recovery namespace concentration or add durable import/export integrity evidence without weakening crash semantics."
+    "implementation_head_sha": "57a5433979a32fbae2700b5f7240f0c00bc7ff0f",
+    "next_priority": "Close AW35 post-intent integrity TOCTOU by revalidating AW35+ batch manifests immediately around metadata registration/intent retirement and during relaunch alreadyRegistered recovery, retaining the durable intent and failing closed on drift."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW34 continue Lane-2 work autonomously.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW35 continue Lane-2 work autonomously.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-24T15:34:00+09:00",
-  "status_compaction_note": "Full pre-AW34 history remains addressable through prior_status_blob_sha f66454261ef04a003040e7da14ed4018d18739f2 and Git history; commits contains AW34 only.",
+  "last_updated": "2026-08-24T15:40:00+09:00",
+  "status_compaction_note": "Full pre-AW35 history remains addressable through prior_status_blob_sha e4fba1e9c01bde9177bb6cda89c8e060be4e2d70 and Git history; commits contains AW35 only.",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ remains sole PARITY authority."
 }
