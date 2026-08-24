@@ -20,7 +20,7 @@ public struct IOSystemHostResolver: IOHostResolving, Sendable {
         hints.ai_flags = AI_ADDRCONFIG
         hints.ai_family = AF_UNSPEC
         hints.ai_socktype = Int32(SOCK_STREAM.rawValue)
-        hints.ai_protocol = IPPROTO_TCP
+        hints.ai_protocol = Int32(IPPROTO_TCP)
 
         var result: UnsafeMutablePointer<addrinfo>?
         let status = getaddrinfo(host, nil, &hints, &result)
@@ -47,7 +47,9 @@ public struct IOSystemHostResolver: IOHostResolving, Sendable {
                 NI_NUMERICHOST
             )
             if rc == 0 {
-                addresses.insert(String(cString: hostBuffer))
+                let end = hostBuffer.firstIndex(of: 0) ?? hostBuffer.endIndex
+                let bytes = hostBuffer[..<end].map { UInt8(bitPattern: $0) }
+                addresses.insert(String(decoding: bytes, as: UTF8.self))
             }
             cursor = node.pointee.ai_next
         }
@@ -82,7 +84,6 @@ public enum IOPublicHostResolutionPolicy {
             if a == 192 && b == 0 { return false }
             if a == 192 && b == 168 { return false }
             if a == 198 && (b == 18 || b == 19) { return false }
-            if a == 192 && b == 0 && Int(bytes[2]) == 2 { return false }
             if a == 198 && b == 51 && Int(bytes[2]) == 100 { return false }
             if a == 203 && b == 0 && Int(bytes[2]) == 113 { return false }
             if a >= 224 { return false }
@@ -99,7 +100,9 @@ public enum IOPublicHostResolutionPolicy {
             if bytes[0] == 0xfe && (bytes[1] & 0xc0) == 0x80 { return false }
             if (bytes[0] & 0xfe) == 0xfc { return false }
             if bytes[0] == 0x20 && bytes[1] == 0x01 && bytes[2] == 0x0d && bytes[3] == 0xb8 { return false }
-            let mappedPrefix = bytes[0..<10].allSatisfy { $0 == 0 } && bytes[10] == 0xff && bytes[11] == 0xff
+            let mappedPrefix = bytes[0..<10].allSatisfy { $0 == 0 }
+                && bytes[10] == 0xff
+                && bytes[11] == 0xff
             if mappedPrefix {
                 return isPublicNumericAddress("\(bytes[12]).\(bytes[13]).\(bytes[14]).\(bytes[15])")
             }
@@ -358,7 +361,10 @@ private final class IOResolutionGuardedDownloadDelegate: NSObject, URLSessionDow
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         var cleanupURL: URL?
-        let completion: (CheckedContinuation<IODirectDownloadAcquiredFile, Error>?, Result<IODirectDownloadAcquiredFile, Error>) = lock.withLockAW34 {
+        let completion: (
+            CheckedContinuation<IODirectDownloadAcquiredFile, Error>?,
+            Result<IODirectDownloadAcquiredFile, Error>
+        ) = lock.withLockAW34 {
             guard !completed else { return (nil, .failure(CancellationError())) }
             completed = true
             let continuation = self.continuation
