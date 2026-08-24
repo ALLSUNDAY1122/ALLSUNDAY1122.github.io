@@ -20,6 +20,7 @@
     "machine-checkable 8-scenario physical-device evidence bundle",
     "per-case SHA-256 binding over AW13 fixture/control/run binding, candidate/reference capture digests, repetition/timing/runtime-health fields",
     "AW13 adapter that copies exact fixture/control/run-binding from a review-ready Lane3UnifiedEvidenceReportV2",
+    "AW13 controlSignatureFNV1A64 format guard requiring the canonical 16-character lowercase hexadecimal form emitted by Lane3OfflineReferencePlanner",
     "listening review bound to immutable case binding so post-review evidence mutation is rejected",
     "privacy guard excluding raw audio, raw PCM, paths, ProjectID, device unique identifiers and individual generation/ticket values",
     "timing-route guard that rejects Bluetooth A2DP as the selected latency evidence route",
@@ -37,8 +38,8 @@
     "longTrackStability": {"minimum_repetitions": 1, "minimum_duration_seconds": 1800}
   },
   "portable_validation": {
-    "status": "PASS",
-    "core_strict_compile": true,
+    "status": "PASS_WITH_FINAL_FORMAT_GUARD_PROBE",
+    "core_strict_compile_before_final_format_guard": true,
     "aw13_adapter_interface_compatible_compile": true,
     "valid_8_scenario_bundle": "PASS",
     "bluetooth_timing_rejection": "PASS",
@@ -49,7 +50,15 @@
     "device_identifier_privacy_rejection": "PASS",
     "listening_case_binding_mismatch_rejection": "PASS",
     "json_tamper_invalidates_case_binding": "PASS",
-    "codable_round_trip": "PASS"
+    "codable_round_trip": "PASS",
+    "final_control_signature_format_probe": {
+      "status": "PASS",
+      "required_length": 16,
+      "required_case": "lowercase",
+      "invalid_short_rejected": true,
+      "uppercase_rejected": true,
+      "non_hex_rejected": true
+    }
   },
   "portable_benchmark": {
     "rounds": 20,
@@ -59,7 +68,8 @@
     "p95_ms": 313.603,
     "max_ms": 326.969,
     "checksum": 160000,
-    "scope": "full AW24 manifest validation including SHA-256 case rebinding; excludes Xcode, AVFAudio, AVAudioUnitTimePitch, click scheduling, audio IO, device capture, listening and current-Moises execution"
+    "captured_before_final_control_signature_format_guard": true,
+    "scope": "full AW24 manifest validation including SHA-256 case rebinding; final one-line 16-hex control-signature format guard was added after this timing sample; excludes Xcode, AVFAudio, AVAudioUnitTimePitch, click scheduling, audio IO, device capture, listening and current-Moises execution"
   },
   "privacy": {
     "raw_audio_in_manifest": false,
