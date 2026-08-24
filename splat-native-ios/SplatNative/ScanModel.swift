@@ -690,14 +690,17 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 let trainer = GaussianTrainer(dataset: dataset, config: config)
 
                 let checkpointExists = FileManager.default.fileExists(atPath: checkpoint.path)
+                let loadedCheckpointIteration: Int?
                 if checkpointExists {
-                    _ = trainer.loadCheckpoint(from: checkpoint.path)
+                    loadedCheckpointIteration = trainer.loadCheckpoint(from: checkpoint.path)
+                } else {
+                    loadedCheckpointIteration = nil
                 }
 
                 let resumedIteration = trainer.iteration
                 let resumeOutcome = SplatCheckpointResumeOutcome.classify(
                     checkpointExists: checkpointExists,
-                    resumedIteration: resumedIteration
+                    loadedIteration: loadedCheckpointIteration
                 )
                 let effectiveTarget = SplatReconstructionPolicy.boundedTarget(
                     requestedTarget,
@@ -734,7 +737,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     SplatReconstructionRunReport.write(report, projectURL: projectURL)
                 }
 
-                if checkpointExists && resumedIteration == 0 {
+                if checkpointExists && loadedCheckpointIteration == nil {
                     let message = "保存済みチェックポイントを再開できませんでした。元の撮影データは保持しています"
                     writeRunReport(
                         "failed-checkpoint-load",
@@ -786,6 +789,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                             msplatSync()
                             _ = trainer.saveCheckpoint(to: checkpoint.path)
                             let iteration = trainer.iteration
+                            let message = "生成タスクがキャンセルされました"
                             writeRunReport(
                                 "cancelled",
                                 .trainingStep,
@@ -793,8 +797,11 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                                 iteration,
                                 trainer.splatCount,
                                 iteration,
-                                "生成タスクがキャンセルされました"
+                                message
                             )
+                            Task { @MainActor [weak self] in
+                                self?.failTraining(message)
+                            }
                             return
                         }
                         let stats = trainer.step()
