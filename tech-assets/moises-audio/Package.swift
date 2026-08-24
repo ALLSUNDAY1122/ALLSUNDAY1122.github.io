@@ -34,6 +34,7 @@ let package = Package(
                 "Analysis/AnalysisPreparedSampleReader.swift",
                 "Analysis/AnalysisBoundedMemoryBudget.swift",
                 "Analysis/AnalysisChunkedInput.swift",
+                "Analysis/AnalysisChunkedInputBudget.swift",
                 "Analysis/AnalysisSequentialPreparedFeatureAccumulator.swift",
                 "Analysis/AnalysisChunkedSinglePassPreparedPipeline.swift",
                 "Analysis/AnalysisSinglePassPreparedFeatures.swift",
