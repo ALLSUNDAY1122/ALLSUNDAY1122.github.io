@@ -157,17 +157,11 @@ public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
                 projectID: projectID,
                 asset: asset
             )
-            let chunked = try await AnalysisChunkedSinglePassPreparedPipeline.analyze(
+            let current = try await AnalysisCurrentChunkedProductRuntime.analyze(
                 signal: source,
                 configuration: configuration
             )
-            let duration = chunked.inputDiagnostics.analysisSampleRate > 0
-                ? Double(chunked.inputDiagnostics.preparedSampleCount) / chunked.inputDiagnostics.analysisSampleRate
-                : 0
-            return try publish(
-                preparedAnalysis: chunked.analysis,
-                duration: duration
-            )
+            return current.snapshot
         }
 
         let loadedSignal = try await loader.loadSignal(projectID: projectID, asset: asset)
