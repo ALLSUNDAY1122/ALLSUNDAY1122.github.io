@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "generated-stem-retention-policy.schema.json",
+  "title": "L1-A24 Generated Stem Retention Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "orphan_grace_seconds", "superseded_grace_seconds", "policy_sha256"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "orphan_grace_seconds": {"type": "integer", "minimum": 1},
+    "superseded_grace_seconds": {"type": "integer", "minimum": 1},
+    "policy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
