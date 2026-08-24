@@ -736,6 +736,21 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     )
                     SplatReconstructionRunReport.write(report, projectURL: projectURL)
                 }
+                let checkpointSaveFailureMessage = "再開用チェックポイントを保存できなかったため、安全のため生成を停止しました。撮影データは保持しています。空き容量を確認してから生成をもう一度試してください"
+                let failCheckpointSave: (String, Int, Int) -> Void = { outcome, iteration, count in
+                    writeRunReport(
+                        outcome,
+                        .checkpointSave,
+                        .trainerError,
+                        iteration,
+                        count,
+                        nil,
+                        checkpointSaveFailureMessage
+                    )
+                    Task { @MainActor [weak self] in
+                        self?.failTraining(checkpointSaveFailureMessage)
+                    }
+                }
 
                 if checkpointExists && loadedCheckpointIteration == nil {
                     let message = "保存済みチェックポイントを再開できませんでした。元の撮影データは保持しています"
@@ -757,7 +772,14 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 let initialResourceEvaluation = passResourceGuard.evaluate(splatCount: trainer.splatCount)
                 if let reason = initialResourceEvaluation.reason {
                     msplatSync()
-                    _ = trainer.saveCheckpoint(to: checkpoint.path)
+                    guard trainer.saveCheckpoint(to: checkpoint.path) else {
+                        failCheckpointSave(
+                            "failed-checkpoint-save-resource-pause",
+                            resumedIteration,
+                            trainer.splatCount
+                        )
+                        return
+                    }
                     writeRunReport(
                         "paused-\(reason.rawValue)",
                         checkpointExists ? .checkpointLoad : .trainerInit,
@@ -787,15 +809,23 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     for _ in resumedIteration..<effectiveTarget {
                         if Task.isCancelled {
                             msplatSync()
-                            _ = trainer.saveCheckpoint(to: checkpoint.path)
                             let iteration = trainer.iteration
+                            let count = trainer.splatCount
+                            guard trainer.saveCheckpoint(to: checkpoint.path) else {
+                                failCheckpointSave(
+                                    "cancelled-checkpoint-save-failed",
+                                    iteration,
+                                    count
+                                )
+                                return
+                            }
                             let message = "生成タスクがキャンセルされました"
                             writeRunReport(
                                 "cancelled",
                                 .trainingStep,
                                 .cancellation,
                                 iteration,
-                                trainer.splatCount,
+                                count,
                                 iteration,
                                 message
                             )
@@ -821,7 +851,14 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
                         if checkpointDue || thermalPause || resourcePauseReason != nil {
                             msplatSync()
-                            _ = trainer.saveCheckpoint(to: checkpoint.path)
+                            guard trainer.saveCheckpoint(to: checkpoint.path) else {
+                                failCheckpointSave(
+                                    "failed-checkpoint-save-training",
+                                    iteration,
+                                    stats.splatCount
+                                )
+                                return
+                            }
                         }
 
                         if shouldReport {
@@ -871,7 +908,16 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 }
 
                 msplatSync()
-                _ = trainer.saveCheckpoint(to: checkpoint.path)
+                let finalCheckpointIteration = trainer.iteration
+                let finalCheckpointCount = trainer.splatCount
+                guard trainer.saveCheckpoint(to: checkpoint.path) else {
+                    failCheckpointSave(
+                        "failed-checkpoint-save-final",
+                        finalCheckpointIteration,
+                        finalCheckpointCount
+                    )
+                    return
+                }
                 let pendingOutput = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
                 trainer.exportSplat(to: pendingOutput.path)
                 msplatSync()
