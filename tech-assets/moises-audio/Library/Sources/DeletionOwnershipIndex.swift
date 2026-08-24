@@ -101,6 +101,7 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
         if FileManager.default.fileExists(atPath: shardedURL.path) {
             let existing = try loadRecord(at: shardedURL, expectedProjectUUID: record.projectUUID)
             try requireSameIdentity(existing, record)
+            try activateShard(Self.shardIndex(for: record.projectUUID))
             if FileManager.default.fileExists(atPath: legacyURL.path) {
                 try FileManager.default.removeItem(at: legacyURL)
             }
@@ -275,6 +276,10 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
             }
             visitedShards += 1
             let urls = try shardRecordURLs(shardIndex: shardIndex)
+            if urls.isEmpty {
+                try retireShardIfEmpty(shardIndex)
+                continue
+            }
             let eligible = try urls.compactMap { url -> (UUID, URL)? in
                 let projectUUID = try projectUUID(fromRecordURL: url)
                 guard !excludingProjectUUIDs.contains(projectUUID) else { return nil }
