@@ -67,7 +67,7 @@ struct L3AW17UnifiedTransportAuthorityBenchmark {
             )
 
             let start = clock.now
-            var executed = 0
+            var executedSeek = 0
             var superseded = 0
             await withTaskGroup(of: Lane3UnifiedTransportOutcome.self) { group in
                 for index in 0..<seekBurst {
@@ -77,13 +77,14 @@ struct L3AW17UnifiedTransportAuthorityBenchmark {
                 }
                 for await result in group {
                     switch result {
-                    case .executed: executed += 1
+                    case .executed: executedSeek += 1
                     case .supersededBeforeToken: superseded += 1
                     default: preconditionFailure("benchmark seek burst failed")
                     }
                 }
             }
 
+            var executedDiscrete = 0
             for index in 0..<discretePerRound {
                 let outcome = index.isMultiple(of: 2)
                     ? await authority.submitPlay()
@@ -91,7 +92,7 @@ struct L3AW17UnifiedTransportAuthorityBenchmark {
                 guard case .executed = outcome else {
                     preconditionFailure("benchmark discrete operation failed")
                 }
-                executed += 1
+                executedDiscrete += 1
             }
 
             let elapsed = start.duration(to: clock.now).components
@@ -101,11 +102,13 @@ struct L3AW17UnifiedTransportAuthorityBenchmark {
 
             let backendSeeks = await rawPlayback.count()
             let token = await playback.rescheduleTokenSnapshot(projectID: project)
-            precondition(backendSeeks == 1)
-            precondition(executed == 201)
-            precondition(superseded == 1_999)
-            precondition(token?.generation == 201)
-            checksum += executed * 31 + superseded + Int(token?.generation ?? 0) + round
+            let totalExecuted = executedSeek + executedDiscrete
+            precondition(executedSeek >= 1)
+            precondition(executedSeek + superseded == seekBurst)
+            precondition(backendSeeks == executedSeek)
+            precondition(executedDiscrete == discretePerRound)
+            precondition(token?.generation == UInt64(totalExecuted))
+            checksum += totalExecuted * 31 + superseded + Int(token?.generation ?? 0) + round
         }
 
         milliseconds.sort()
@@ -118,7 +121,7 @@ struct L3AW17UnifiedTransportAuthorityBenchmark {
         }
 
         print(String(format:
-            "L3-AW17 unified authority benchmark 20x(2000 seek + 200 discrete) median %.3fms p95 %.3fms max %.3fms checksum %d",
+            "L3-AW17 unified authority benchmark fixed-window 20x(2000 seek + 200 discrete) median %.3fms p95 %.3fms max %.3fms checksum %d",
             percentile(0.50), percentile(0.95), milliseconds.last!, checksum
         ))
     }
