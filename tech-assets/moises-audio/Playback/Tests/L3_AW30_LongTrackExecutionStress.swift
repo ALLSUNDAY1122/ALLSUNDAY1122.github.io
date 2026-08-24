@@ -4,7 +4,6 @@ private struct AW30StressSource: Lane3PCMChunkReadable {
     let channels = 2
     let sampleRate = 48_000.0
     let frameCount: Int64 = 4_096
-
     func readInterleavedFrames(startFrame: Int64, frameCount: Int) throws -> [Float] {
         [Float](repeating: 0, count: frameCount * channels)
     }
@@ -18,38 +17,23 @@ struct L3AW30LongTrackExecutionStress {
         var completed = 0
         var completionRejected = 0
         var checksum: UInt64 = 0
-        let phases: [Lane3LongTrackEvidenceExecutionPhase] = [
-            .timeDomain,
-            .spectral,
-            .envelope,
-            .assemblingCore,
-            .pcmIdentity,
-            .finalizing
-        ]
+        let phases: [Lane3LongTrackEvidenceExecutionPhase] = [.timeDomain, .spectral, .envelope, .assemblingCore, .pcmIdentity, .finalizing]
 
-        for index in 0..<cycles {
+        for i in 0..<cycles {
             let controller = Lane3LongTrackEvidenceExecutionController()
-            let source = Lane3CancellationAwarePCMChunkSource(
-                base: AW30StressSource(),
-                role: .reference,
-                controller: controller
-            )
-            let cancelAt = index % 8
+            let source = Lane3CancellationAwarePCMChunkSource(base: AW30StressSource(), role: .reference, controller: controller)
+            let cancelAt = i % 8
             var didCancel = false
-
-            for (phaseIndex, phase) in phases.enumerated() {
+            for (index, phase) in phases.enumerated() {
                 try controller.begin(phase)
-                if phaseIndex < 5 {
-                    _ = try source.readInterleavedFrames(
-                        startFrame: Int64(phaseIndex * 8),
-                        frameCount: 8
-                    )
+                if index < 5 {
+                    _ = try source.readInterleavedFrames(startFrame: Int64(index * 8), frameCount: 8)
                 }
-                if phaseIndex == cancelAt {
+                if index == cancelAt {
                     controller.requestCancellation()
                     do {
                         try controller.throwIfCancellationRequested()
-                        preconditionFailure("cancelled execution continued")
+                        preconditionFailure()
                     } catch Lane3LongTrackEvidenceExecutionError.cancelled {
                         didCancel = true
                         cancelled += 1
@@ -57,32 +41,19 @@ struct L3AW30LongTrackExecutionStress {
                     break
                 }
             }
-
             if didCancel {
-                do {
-                    _ = try controller.completionReceipt()
-                    preconditionFailure("cancelled execution produced completion")
-                } catch Lane3LongTrackEvidenceExecutionError.completionUnavailable {
-                    completionRejected += 1
-                }
+                do { _ = try controller.completionReceipt(); preconditionFailure() }
+                catch Lane3LongTrackEvidenceExecutionError.completionUnavailable { completionRejected += 1 }
             } else {
-                try controller.markCompleted(
-                    runBindingSHA256: String(repeating: "b", count: 64)
-                )
+                try controller.markCompleted(runBindingSHA256: String(repeating: "b", count: 64))
                 let receipt = try controller.completionReceipt()
                 completed += 1
                 checksum &+= receipt.referenceReadCalls
             }
-
-            let checkpoint = controller.checkpoint()
-            precondition(!checkpoint.authoritativeEvidenceAllowed)
-            checksum &+= checkpoint.checkpointSerial
+            let cp = controller.checkpoint()
+            precondition(!cp.authoritativeEvidenceAllowed)
+            checksum &+= cp.checkpointSerial
         }
-
-        print(
-            "L3-AW30 stress PASS cycles=\(cycles) "
-                + "cancelled=\(cancelled) completed=\(completed) "
-                + "completionRejected=\(completionRejected) checksum=\(checksum)"
-        )
+        print("L3-AW30 stress PASS cycles=\(cycles) cancelled=\(cancelled) completed=\(completed) completionRejected=\(completionRejected) checksum=\(checksum)")
     }
 }
