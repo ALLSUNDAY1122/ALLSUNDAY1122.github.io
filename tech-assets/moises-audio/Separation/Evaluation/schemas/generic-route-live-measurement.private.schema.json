@@ -13,6 +13,8 @@
     "route_id": {"type":"string"},
     "route_kind": {"type":"string"},
     "runtime_artifact_sha256": {"type":"string","pattern":"^[0-9a-f]{64}$"},
-    "measurement": {"type":"object"}
+    "measurement": {"type":"object"},
+    "producer_provenance": {"type":"object","additionalProperties":false,"required":["tool_version","source_sha256","source_lock_sha256","decision_plan_sha256"],"properties":{"tool_version":{"const":"L1-E10-v1"},"source_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"source_lock_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"decision_plan_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}},
+    "measurement_lock_sha256": {"type":"string","pattern":"^[0-9a-f]{64}$"}
   }
 }
