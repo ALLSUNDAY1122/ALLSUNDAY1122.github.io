@@ -5,6 +5,7 @@ public enum Lane3TempoBoundarySelectedTransportError: Error, Sendable {
     case tempoBoundaryCommitFailed(String)
     case tempoBoundaryCancelFailed(String)
     case admissionCounterOverflow
+    case stackReconstructionRequired(Lane3SelectedTransportRecoveryTicket)
 }
 
 public enum Lane3TempoBoundarySelectedOutcome: Equatable, Sendable {
@@ -16,11 +17,13 @@ public enum Lane3TempoBoundarySelectedOutcome: Equatable, Sendable {
     case cancelledBeforeBoundary(serial: UInt64)
 }
 
-/// App-facing AW31 transport facade. Existing AW17/AW18 remain the generation/lifecycle authority;
-/// this layer only brackets tempo with a Playback source-clock boundary transaction. Non-tempo
-/// transport and interruption calls share an admission lane. Tempo closes admission, waits existing
-/// calls out, freezes Playback at the old source position, executes the existing AW18->AW17 tempo
-/// route (therefore exactly one external Playback token), then resumes at the committed new ratio.
+/// App-facing AW31 transport facade, hardened by AW33 with a one-way stack-reconstruction latch.
+/// Existing AW17/AW18 remain the generation/lifecycle authority; this layer only brackets tempo with
+/// a Playback source-clock boundary transaction. If commit/cancel restart fails, the selected Apple
+/// backend may already be poisoned. AW33 therefore permanently rejects every later operation on this
+/// facade instance before touching Playback/DSP. Recovery means constructing a fresh selected stack
+/// and replacing the facade through `Lane3SelectedTransportReconstructionSlot`; this facade has no
+/// in-place reset API.
 public actor Lane3TempoBoundarySelectedTransportFacade {
     private let projectID: ProjectID
     private let transportGate: Lane3InterruptionLifecycleGate
@@ -35,6 +38,7 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
     private var drainWaiters: [CheckedContinuation<Void, Never>] = []
     private var tempoSerial: UInt64 = 0
     private var latestTempoSerial: UInt64 = 0
+    private var recoveryState = Lane3SelectedTransportRecoveryState()
 
     public init(
         projectID: ProjectID,
@@ -48,6 +52,10 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
         self.serializedClickGate = serializedClickGate
         self.tempoBackend = tempoBackend
         self.tempoQuietPeriod = tempoQuietPeriod
+    }
+
+    public func recoverySnapshot() -> Lane3SelectedTransportRecoverySnapshot {
+        Lane3SelectedTransportRecoverySnapshot(state: recoveryState)
     }
 
     public func submitSeek(
@@ -137,6 +145,7 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
     }
 
     public func submitTempoRatio(_ ratio: Double) async throws -> Lane3TempoBoundarySelectedOutcome {
+        try requireUsable()
         let serial = try allocateTempoSerial()
         latestTempoSerial = serial
         do {
@@ -144,12 +153,14 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
         } catch {
             return .cancelledBeforeBoundary(serial: serial)
         }
+        try requireUsable()
         guard serial == latestTempoSerial else {
             return .supersededBeforeBoundary(serial: serial, bySerial: latestTempoSerial)
         }
 
         await enterExclusive()
         defer { leaveExclusive() }
+        try requireUsable()
         guard serial == latestTempoSerial else {
             return .supersededBeforeBoundary(serial: serial, bySerial: latestTempoSerial)
         }
@@ -182,6 +193,11 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
                     receipt: boundary
                 )
             } catch {
+                recoveryState.latch(
+                    reason: .tempoBoundaryCommitFailure,
+                    failedTempoSerial: serial,
+                    failedBoundarySerial: boundary.serial
+                )
                 throw Lane3TempoBoundarySelectedTransportError.tempoBoundaryCommitFailed(
                     String(describing: error)
                 )
@@ -193,6 +209,11 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
                     receipt: boundary
                 )
             } catch {
+                recoveryState.latch(
+                    reason: .tempoBoundaryCancelFailure,
+                    failedTempoSerial: serial,
+                    failedBoundarySerial: boundary.serial
+                )
                 throw Lane3TempoBoundarySelectedTransportError.tempoBoundaryCancelFailed(
                     String(describing: error)
                 )
@@ -205,8 +226,14 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
         while exclusiveRequested || exclusiveActive {
             await withCheckedContinuation { sharedWaiters.append($0) }
         }
+        try requireUsable()
         let next = sharedInFlight.addingReportingOverflow(1)
         guard !next.overflow else {
+            recoveryState.latch(
+                reason: .admissionCounterOverflow,
+                failedTempoSerial: tempoSerial,
+                failedBoundarySerial: nil
+            )
             throw Lane3TempoBoundarySelectedTransportError.admissionCounterOverflow
         }
         sharedInFlight = next.partialValue
@@ -244,10 +271,21 @@ public actor Lane3TempoBoundarySelectedTransportFacade {
     private func allocateTempoSerial() throws -> UInt64 {
         let next = tempoSerial.addingReportingOverflow(1)
         guard !next.overflow else {
+            recoveryState.latch(
+                reason: .admissionCounterOverflow,
+                failedTempoSerial: tempoSerial,
+                failedBoundarySerial: nil
+            )
             throw Lane3TempoBoundarySelectedTransportError.admissionCounterOverflow
         }
         tempoSerial = next.partialValue
         return tempoSerial
+    }
+
+    private func requireUsable() throws {
+        if let ticket = recoveryState.ticket {
+            throw Lane3TempoBoundarySelectedTransportError.stackReconstructionRequired(ticket)
+        }
     }
 
     private static func executed(_ guarded: Lane3InterruptionGuardedOutcome) -> Bool {
