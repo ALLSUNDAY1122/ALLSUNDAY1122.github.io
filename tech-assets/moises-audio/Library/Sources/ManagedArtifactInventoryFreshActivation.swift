@@ -6,7 +6,7 @@ public extension Lane2ManagedArtifactInventory {
     /// second file, symlink or enumeration error leaves the installation in AW28 compatibility mode.
     @discardableResult
     func activateForFirstManagedArtifactIfSafe(relativePath: String) throws -> Bool {
-        if isAuthoritative { return true }
+        if hasValidAuthoritativeMarker { return true }
         let normalized = try lane2InventoryActivationNormalize(relativePath)
         guard Lane2ManagedArtifactInventory.managedRootNames.contains(
             String(normalized.split(separator: "/", omittingEmptySubsequences: false)[0])
