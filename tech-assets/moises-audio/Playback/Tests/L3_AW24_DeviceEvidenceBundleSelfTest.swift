@@ -14,7 +14,7 @@ private func aw24Case(
     return Lane3DeviceEvidenceCaseReceipt(
         scenario: scenario,
         fixtureID: "fixture-\(scenario.rawValue)",
-        controlSignatureFNV1A64: "1234abcd",
+        controlSignatureFNV1A64: "1234abcd1234abcd",
         aw13RunBindingSHA256: aw24HashA,
         candidateCaptureSHA256: aw24HashA,
         currentMoisesCaptureSHA256: aw24HashB,
