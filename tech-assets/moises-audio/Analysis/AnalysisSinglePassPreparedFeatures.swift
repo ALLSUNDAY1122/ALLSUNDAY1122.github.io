@@ -33,6 +33,9 @@ public struct AnalysisSinglePassPreparedFeatureDiagnostics: Codable, Equatable, 
     public private(set) var chordFrameStride: Int = 1
     public private(set) var naturalSectionEnergyFrameCount: Int = 0
     public private(set) var sectionEnergyFrameStrideEquivalent: Int = 1
+    public private(set) var tempoResolutionSafe: Bool = true
+    public private(set) var chordWindowRetentionSafe: Bool = true
+    public private(set) var sectionResolutionSafe: Bool = true
 }
 
 public struct AnalysisSinglePassPreparedFeatures: Equatable, Sendable {
