@@ -3,10 +3,10 @@
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_pr": 4431,
-  "integration_epoch": 20,
+  "integration_epoch": 21,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "EPOCH20_L1_A21_L2_AW25_L3_AW26_L4_W30_CANONICAL_PORTABLE_248_PASS_EXTERNAL_DEVICE_GATES_PENDING",
+  "baseline_state": "EPOCH21_L1_A22_A23_L2_AW26_AW28_L3_AW27_AW29_L4_W31_W32_CANONICAL_PORTABLE_264_PASS_EXTERNAL_DEVICE_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
@@ -50,20 +50,21 @@
     "epoch17": {"L1":"E03-E04 readiness","commit":"79ee0f83c8c3cab1523a4f55618269109ee51206","run":32664170177,"run_number":104,"tests":186,"unhandled":165,"locks":"bd3888dcc981febc3a1df8ce4ed46b9526f9c410"},
     "epoch18": {"L1":"E05-E06 readiness","L3":"AW20-AW21","L4":"W23-W25","commit":"200337eb4222b04b9473706b0521619edbc0b814","hq_test_fix":"7c37e01123cb16b2ff1ff5469b466e34446e824f","run":32674042694,"run_number":113,"tests":208,"unhandled":179,"locks":"31920139bf2d76a9a6bec327d2b42451a711e0f8"},
     "epoch19": {"L1":"E07-E10 readiness","L2":"AW20-AW24","L3":"AW22-AW25","L4":"W26-W29","commit":"ce35433f01340aed396a32e8925e8c9175793ba7","run":32679443121,"run_number":124,"tests":242,"unhandled":198,"locks":"6113b7abb6d4e59a9faaefd9c8aed2222470b888"},
-    "epoch20": {"L1":"A21","L2":"AW25","L3":"AW26","L4":"W30","commit":"8f68a57c1ef41b6ac1c4bd350e0c4a3936053d0e","hq_test_fix":"ecf7336d8d68f1099a3d8b2413dfe70f41465ad6","run":32681329183,"run_number":134,"tests":248,"unhandled":212,"locks":"2709c6f68ba9e18f182c98109b846fd2383ab4ea"}
+    "epoch20": {"L1":"A21","L2":"AW25","L3":"AW26","L4":"W30","commit":"8f68a57c1ef41b6ac1c4bd350e0c4a3936053d0e","hq_test_fix":"ecf7336d8d68f1099a3d8b2413dfe70f41465ad6","run":32681329183,"run_number":134,"tests":248,"unhandled":212,"locks":"2709c6f68ba9e18f182c98109b846fd2383ab4ea"},
+    "epoch21": {"L1":"A22-A23","L2":"AW26-AW28","L3":"AW27-AW29","L4":"W31-W32","commit":"2598c95490be2ce9fa4827dd86c89f566200db79","hq_test_fix":"414671afdeccde88759c0d65f770d15579e696f0","initial_run":32686182386,"initial_run_number":142,"run":32686352837,"run_number":144,"tests":264,"unhandled":226,"locks":"0f433e59b3dc7f85b1a9b2b5adad1bea6e365894"}
   },
-  "canonical_through": {"L1":"L1-A21","L2":"L2-AW25","L3":"L3-AW26","L4":"L4-W30"},
+  "canonical_through": {"L1":"L1-A23","L2":"L2-AW28","L3":"L3-AW29","L4":"L4-W32"},
   "current_unintegrated_snapshot": {
-    "L1":"A21 is canonical. A22 is complete NON_PARITY and A23 is current. A22 provider-neutral AI stem generation runtime/live gate remains synthetic/control evidence until a commercially approved real runtime, exact current-iPhone capture, rights-cleared generated audio, live recovery and blind differential exist.",
-    "L2":"AW25 is canonical. AW26 targeted live-reference authorization is complete but remains a single post-Epoch20 Wave. Apple Core Data/WAL/SQLite query-plan/wall-time/RSS/APFS evidence remains pending.",
-    "L3":"AW26 is canonical. Integration-side direct status commit 41b74e01ebe8096d7f0b411ee2fdd822142cd6b8 records AW27 complete at lane head 74dc54f4e2dc90d2dd434c0e871d8ef1527fddd9; AW27 is not semantically integrated and remains next-checkpoint work. Apple AVFAudio/iPhone execution remains pending.",
-    "L4":"W30 is canonical and Package-selected in Run134. W31 extreme-duration retained-feature hardening is current. W30 eliminates whole-source PCM retention only at the Worker-4 pull seam; a real bounded Lane-2 decoder and physical-device memory/thermal/battery evidence remain required."
+    "L1":"A23 is canonical. A24 generated-stem retention/deletion/refund/orphan hardening is complete NON_PARITY and A25 is current. No real commercially approved generation runtime, rights-cleared generated corpus or current-iPhone differential exists.",
+    "L2":"AW28 is canonical. AW29 sharded managed-artifact inventory is complete as a single post-Epoch21 Wave; Apple Core Data/WAL/SQLite/APFS/device evidence remains pending.",
+    "L3":"AW29 is canonical. Integration-side direct status records AW30 long-track execution/cancellation complete at lane head 0ae7158a1964ca72ecd2beb986f562bd15521baf; AW30 is a single post-Epoch21 Wave and selected Xcode/AVFAudio/iPhone execution remains pending.",
+    "L4":"W32 is canonical. W33 chord scoring centralization/vectorization is complete and W34 is current; W33 remains a single post-Epoch21 Wave. Physical-iPhone RSS/thermal/battery and current-Moises differential remain pending."
   },
   "epoch13_integration": {
-    "L1": {"scope":["Separation/**","Processing/**"],"source_head":"e32f030ad19f8a8f1febd4d7666c88fdc7d2af9d","note":"A19 Golden corpus intake engineering + A20 durable resumable differential gate. No real Golden corpus or current-Moises evidence supplied."},
-    "L2": {"scope":["IO/**","Library/**"],"source_head":"b40b06eacca15b60063558f71e6f69c4eff43ca6","note":"AW16 concurrent import staging lease + AW17 export pre-journal publication guard. Apple/APFS runtime remains pending."},
-    "L3": {"scope":["Playback/**"],"source_head":"ebc07ffd688151ca056512a43b28b7880fab7406","note":"AW16 coalescing dispatcher + AW17 unified production transport authority. Playback remains excluded from canonical SwiftPM target; lane-local validation remains authoritative until selected Xcode/Apple runtime."},
-    "L4": {"scope":["Analysis/**","Tests/**","Package.swift"],"source_head":"6d85d467eacabe232f31a433dc7c5a5150d7c3d2","note":"W19 current-iPhone reference capture provenance/repeatability + W20 raw observation derivation. Both compiled/executed by canonical SwiftPM Run #85."}
+    "L1":{"scope":["Separation/**","Processing/**"],"source_head":"e32f030ad19f8a8f1febd4d7666c88fdc7d2af9d","note":"A19 Golden corpus intake engineering + A20 durable resumable differential gate. No real Golden corpus or current-Moises evidence supplied."},
+    "L2":{"scope":["IO/**","Library/**"],"source_head":"b40b06eacca15b60063558f71e6f69c4eff43ca6","note":"AW16 concurrent import staging lease + AW17 export pre-journal publication guard. Apple/APFS runtime remains pending."},
+    "L3":{"scope":["Playback/**"],"source_head":"ebc07ffd688151ca056512a43b28b7880fab7406","note":"AW16 coalescing dispatcher + AW17 unified production transport authority. Playback remains excluded from canonical SwiftPM target; lane-local validation remains authoritative until selected Xcode/Apple runtime."},
+    "L4":{"scope":["Analysis/**","Tests/**","Package.swift"],"source_head":"6d85d467eacabe232f31a433dc7c5a5150d7c3d2","note":"W19 current-iPhone reference capture provenance/repeatability + W20 raw observation derivation. Both compiled/executed by canonical SwiftPM Run #85."}
   },
   "epoch14_integration": {"L1":{"scope":["Separation/**","Processing/**"],"source_head":"36741bb7fa47358d4783e3db8162c6b9faaaef97","files":16,"note":"E01 commercial-route + E02 rights-cleared-audio intake readiness only; external live inputs still missing."}},
   "epoch15_integration": {
@@ -95,7 +96,17 @@
     "hq_test_fix":"ecf7336d8d68f1099a3d8b2413dfe70f41465ad6",
     "note":"A pre-semantic 1-line noop-like W30 validation commit 77f6c75936fc0a267e9b8aee136afee30c9ae78f exists in ancestry; semantic integration subsequently replaced the evidence file with the intended Worker content."
   },
-  "branch_hygiene": {"worker3_branch_status":"NONSTANDARD_DIRECT_STATUS_ON_INTEGRATION","latest_integration_status_commit":"41b74e01ebe8096d7f0b411ee2fdd822142cd6b8","worker3_lane_head":"74dc54f4e2dc90d2dd434c0e871d8ef1527fddd9","note":"Integration-side direct status now records AW27. Epoch20 semantic integration is canonical only through AW26; HQ does not infer semantic integration from status ancestry."},
+  "epoch21_integration": {
+    "L1":{"scope":["Separation/**","Processing/**"],"canonical":"A22-A23","note":"A22 provider-neutral AI stem-generation runtime/live-gate engineering + A23 generated-stem mix/variant compatibility. Synthetic/control/readiness only; A24 intentionally excluded from this frozen checkpoint."},
+    "L2":{"scope":["Library/**"],"source_head":"50039b6fbe117547ba8427b8ffc32bf578306fe2","canonical":"AW26-AW28","note":"Targeted live-reference authorization, targeted foreground deletion and bounded orphan sweep. AW29 intentionally excluded; Apple Core Data/SQLite/APFS device execution remains pending."},
+    "L3":{"scope":["Playback/**","DSP/**"],"source_head":"e149bef8efa064fab2ebba2d0a5d9f6410780684","canonical":"AW27-AW29","note":"Bounded Apple PCM source policy, tempo-transition hardening and Apple production composition/compile-surface audit. AW30 intentionally excluded; Playback/DSP remains outside canonical SwiftPM compile surface."},
+    "L4":{"scope":["Analysis/**","Tests/**","Package.swift"],"source_head":"0a8eb854164050c602e909a7e0228f088524cdb5","canonical":"W31-W32","note":"Extreme-duration retention plus long-audio CPU duty-cycle hardening. W33 intentionally excluded. HQ preserved W30 chunked diagnostics API and all prior Tempo fail-closed behavior."},
+    "semantic_commit":"2598c95490be2ce9fa4827dd86c89f566200db79",
+    "hq_test_fix":"414671afdeccde88759c0d65f770d15579e696f0",
+    "initial_run":{"id":32686182386,"number":142,"result":"FAIL","reason":"W31/W32 overlay carried stale W30 test tuple member inputDiagnostics while canonical production exposes diagnostics"},
+    "code_run":{"id":32686352837,"number":144,"result":"SUCCESS","tests":264,"unhandled":226}
+  },
+  "branch_hygiene": {"worker3_branch_status":"NONSTANDARD_DIRECT_STATUS_ON_INTEGRATION","latest_integration_status_commit":"d51b41656761d545d5e0f749df96182b8f6cd464","worker3_lane_head":"0ae7158a1964ca72ecd2beb986f562bd15521baf","note":"Integration-side direct status records AW30. Epoch21 semantic integration is canonical only through AW29; HQ does not infer semantic integration from status ancestry."},
   "validation": {
     "workflow":".github/workflows/moises-hq-integration.yml",
     "epoch13_code_run":{"id":32658738702,"number":85,"result":"SUCCESS","test_count":165,"unhandled_file_count":140},
@@ -108,7 +119,9 @@
     "epoch19_code_run":{"id":32679443121,"number":124,"result":"SUCCESS","test_count":242,"unhandled_file_count":198},
     "epoch20_initial_run":{"id":32681079165,"number":131,"result":"FAIL","reason":"W30 XCTest referenced stale tuple member inputDiagnostics; production tuple exposes diagnostics"},
     "epoch20_code_run":{"id":32681329183,"number":134,"result":"SUCCESS","test_count":248,"unhandled_file_count":212},
-    "epoch20_scope_note":"Run134 compiled/tested Package-selected L4 W30 sources/tests after HQ diagnostic-label fix and preserved canonical regressions including sustained-tone tempo fail-closed. L1 Python, L2 Library/Core Data and L3 Playback are outside this SwiftPM compile surface; selected Xcode/Apple/device evidence is still required.",
+    "epoch21_initial_run":{"id":32686182386,"number":142,"result":"FAIL","reason":"W31/W32 integration reintroduced stale W30 inputDiagnostics test label; canonical production tuple exposes diagnostics"},
+    "epoch21_code_run":{"id":32686352837,"number":144,"result":"SUCCESS","test_count":264,"unhandled_file_count":226},
+    "epoch21_scope_note":"Run144 compiled/tested Package-selected L4 W31-W32 after HQ preservation of the W30 diagnostics API and preserved sustained-tone Tempo fail-closed regression. L1 Python, L2 Library/Core Data and L3 Playback/DSP remain outside this SwiftPM compile surface; selected Xcode/Apple/device evidence is still required.",
     "parity_effect":"NONE"
   },
   "parity": {"promotion_count":0,"state":"ALL_CURRENT_IPHONE_IN_SCOPE_ROWS_REMAIN_MISSING","rule":"Portable/synthetic/harness/readiness/compile evidence alone never promotes PARITY."},
