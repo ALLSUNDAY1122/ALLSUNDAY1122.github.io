@@ -5,13 +5,16 @@ public struct AnalysisExtremeDurationRetentionPlan: Codable, Equatable, Sendable
     public let retainedTempoFrameUpperBound: Int
     public let tempoFrameStride: Int
     public let tempoHopSamples: Int
+    public let tempoResolutionSafe: Bool
     public let naturalChordFrameCount: Int
     public let retainedChordFrameUpperBound: Int
     public let chordFrameStride: Int
     public let chordHopSamples: Int
+    public let chordWindowRetentionSafe: Bool
     public let naturalSectionEnergyFrameCount: Int
     public let retainedSectionEnergyFrameCount: Int
     public let sectionFrameStrideEquivalent: Int
+    public let sectionResolutionSafe: Bool
     public let compressionApplied: Bool
 
     public var compressedDomains: [String] {
@@ -19,6 +22,14 @@ public struct AnalysisExtremeDurationRetentionPlan: Codable, Equatable, Sendable
         if tempoFrameStride > 1 { result.append("TEMPO_ONSET") }
         if chordFrameStride > 1 { result.append("CHORD_PREDECISION") }
         if retainedSectionEnergyFrameCount < naturalSectionEnergyFrameCount { result.append("SECTION_ENERGY") }
+        return result
+    }
+
+    public var suppressedDomains: [String] {
+        var result: [String] = []
+        if !tempoResolutionSafe { result.append("TEMPO_ONSET") }
+        if !chordWindowRetentionSafe { result.append("CHORD_PREDECISION") }
+        if !sectionResolutionSafe { result.append("SECTION_ENERGY") }
         return result
     }
 }
@@ -45,13 +56,16 @@ public enum AnalysisExtremeDurationRetentionPolicy {
                 retainedTempoFrameUpperBound: 0,
                 tempoFrameStride: 1,
                 tempoHopSamples: 1,
+                tempoResolutionSafe: true,
                 naturalChordFrameCount: 0,
                 retainedChordFrameUpperBound: 0,
                 chordFrameStride: 1,
                 chordHopSamples: 1,
+                chordWindowRetentionSafe: true,
                 naturalSectionEnergyFrameCount: 0,
                 retainedSectionEnergyFrameCount: 0,
                 sectionFrameStrideEquivalent: 1,
+                sectionResolutionSafe: true,
                 compressionApplied: false
             )
         }
@@ -69,36 +83,55 @@ public enum AnalysisExtremeDurationRetentionPolicy {
             : 0
         let tempoStride = max(1, ceilDiv(naturalTempo, maximumTempoFrames))
         let tempoHop = saturatingMultiply(baseTempoHop, tempoStride)
-        let retainedTempo = sampleCount >= tempoFrameSize
+        let candidateTempo = sampleCount >= tempoFrameSize
             ? 1 + (sampleCount - tempoFrameSize) / max(1, tempoHop)
             : 0
+        let envelopeRate = sampleRate / Double(max(1, tempoHop))
+        let maximumBeatFrequency = configuration.tempoRange.upperBound / 60.0
+        let tempoSafe = envelopeRate + 1e-12 >= maximumBeatFrequency * 2.0
+        let retainedTempo = tempoSafe ? candidateTempo : 0
 
         let baseChordHop = max(1, Int((configuration.chordHopSeconds * sampleRate).rounded()))
         let naturalChord = ceilDiv(sampleCount, baseChordHop)
         let chordStride = max(1, ceilDiv(naturalChord, maximumChordFrameDecisions))
         let chordHop = saturatingMultiply(baseChordHop, chordStride)
-        let retainedChord = ceilDiv(sampleCount, max(1, chordHop))
+        let chordWindow = max(
+            256,
+            min(sampleCount, Int((configuration.chordWindowSeconds * sampleRate).rounded()))
+        )
+        let chordSafe = chordHop <= chordWindow
+        let candidateChord = ceilDiv(sampleCount, max(1, chordHop))
+        // One X marker is retained when the requested cadence can no longer be
+        // reconstructed correctly from the bounded ring.
+        let retainedChord = chordSafe ? candidateChord : 1
 
         let naturalSection = max(
             1,
             safeRoundedCount(durationSeconds * AnalysisSectionEnergyFeatureExtractor.targetFramesPerSecond)
         )
-        let retainedSection = min(naturalSection, maximumSectionEnergyFrames)
-        let sectionStride = max(1, ceilDiv(naturalSection, max(1, retainedSection)))
+        let candidateSection = min(naturalSection, maximumSectionEnergyFrames)
+        let sectionStride = max(1, ceilDiv(naturalSection, max(1, candidateSection)))
+        let effectiveSectionRate = Double(candidateSection) / durationSeconds
+        let sectionSafe = effectiveSectionRate * configuration.minimumSectionSeconds >= 1.0
+        let retainedSection = sectionSafe ? candidateSection : 0
 
         return .init(
             naturalTempoFrameCount: naturalTempo,
             retainedTempoFrameUpperBound: retainedTempo,
             tempoFrameStride: tempoStride,
             tempoHopSamples: tempoHop,
+            tempoResolutionSafe: tempoSafe,
             naturalChordFrameCount: naturalChord,
             retainedChordFrameUpperBound: retainedChord,
             chordFrameStride: chordStride,
             chordHopSamples: chordHop,
+            chordWindowRetentionSafe: chordSafe,
             naturalSectionEnergyFrameCount: naturalSection,
             retainedSectionEnergyFrameCount: retainedSection,
             sectionFrameStrideEquivalent: sectionStride,
-            compressionApplied: tempoStride > 1 || chordStride > 1 || retainedSection < naturalSection
+            sectionResolutionSafe: sectionSafe,
+            compressionApplied: tempoStride > 1 || chordStride > 1 || candidateSection < naturalSection
+                || !tempoSafe || !chordSafe || !sectionSafe
         )
     }
 
