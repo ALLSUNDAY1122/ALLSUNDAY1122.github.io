@@ -4,7 +4,8 @@ import Foundation
 /// prepared mono sample for every logical prepared sample index, in strictly
 /// increasing order starting at zero. W31 preserves the exact W29 cadence while
 /// natural feature cardinality is below the retention caps, and increases only
-/// the retained feature cadence for extreme durations that exceed those caps.
+/// retained feature cadence for extreme durations. If a bounded cadence can no
+/// longer represent the original feature safely, that feature fails closed.
 final class AnalysisSequentialPreparedFeatureAccumulator {
     private struct PendingChordFrame {
         let startSeconds: Double
@@ -151,18 +152,20 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
             keyProbeCount += 1
         }
 
-        tempoRing[sampleIndex % tempoRing.count] = value
-        if sampleIndex + 1 >= tempoFrameSize,
-           (sampleIndex + 1 - tempoFrameSize) % tempoHopSize == 0 {
-            let frameStart = sampleIndex + 1 - tempoFrameSize
-            var sumSquares = 0.0
-            for absoluteIndex in frameStart...sampleIndex {
-                let frameValue = Double(tempoRing[absoluteIndex % tempoRing.count])
-                sumSquares += frameValue * frameValue
+        if retentionPlan.tempoResolutionSafe {
+            tempoRing[sampleIndex % tempoRing.count] = value
+            if sampleIndex + 1 >= tempoFrameSize,
+               (sampleIndex + 1 - tempoFrameSize) % tempoHopSize == 0 {
+                let frameStart = sampleIndex + 1 - tempoFrameSize
+                var sumSquares = 0.0
+                for absoluteIndex in frameStart...sampleIndex {
+                    let frameValue = Double(tempoRing[absoluteIndex % tempoRing.count])
+                    sumSquares += frameValue * frameValue
+                }
+                let energy = log1p(sqrt(sumSquares / Double(tempoFrameSize)))
+                tempoFlux.append(previousTempoEnergy.map { max(0, energy - $0) } ?? 0)
+                previousTempoEnergy = energy
             }
-            let energy = log1p(sqrt(sumSquares / Double(tempoFrameSize)))
-            tempoFlux.append(previousTempoEnergy.map { max(0, energy - $0) } ?? 0)
-            previousTempoEnergy = energy
         }
 
         while nextKeyWindowIndex < keyStarts.count,
@@ -186,65 +189,70 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
             }
         }
 
-        chordRing[sampleIndex % chordRing.count] = value
-        if sampleIndex >= currentChordSegmentStart, sampleIndex < currentChordSegmentEnd {
-            currentChordSegmentSquares += square
-            currentChordSegmentCount += 1
-        }
-        if sampleIndex + 1 == currentChordSegmentEnd {
-            let center = currentChordSegmentStart + (currentChordSegmentEnd - currentChordSegmentStart) / 2
-            let halfWindow = chordWindowSamples / 2
-            var analysisStart = max(0, center - halfWindow)
-            var analysisEnd = min(sampleCount, analysisStart + chordWindowSamples)
-            if analysisEnd - analysisStart < chordWindowSamples {
-                analysisStart = max(0, analysisEnd - chordWindowSamples)
-                analysisEnd = min(sampleCount, analysisStart + chordWindowSamples)
+        if retentionPlan.chordWindowRetentionSafe {
+            chordRing[sampleIndex % chordRing.count] = value
+            if sampleIndex >= currentChordSegmentStart, sampleIndex < currentChordSegmentEnd {
+                currentChordSegmentSquares += square
+                currentChordSegmentCount += 1
             }
-            let segmentRMS = currentChordSegmentCount > 0
-                ? sqrt(currentChordSegmentSquares / Double(currentChordSegmentCount))
-                : 0
-            pendingChordFrames.append(
-                .init(
-                    startSeconds: Double(currentChordSegmentStart) / sampleRate,
-                    endSeconds: min(duration, Double(currentChordSegmentEnd) / sampleRate),
-                    analysisStart: analysisStart,
-                    analysisEnd: analysisEnd,
-                    segmentRMS: segmentRMS
-                )
-            )
-            currentChordSegmentStart = currentChordSegmentEnd
-            currentChordSegmentEnd = min(sampleCount, currentChordSegmentStart + chordHopSamples)
-            currentChordSegmentSquares = 0
-            currentChordSegmentCount = 0
-        }
-
-        while let pending = pendingChordFrames.first,
-              pending.analysisEnd <= sampleIndex + 1 {
-            let decision: (label: String, confidence: Double?)
-            if pending.segmentRMS < configuration.noChordRMS {
-                decision = ("N", 1)
-            } else {
-                var window: [Double] = []
-                window.reserveCapacity(pending.analysisEnd - pending.analysisStart)
-                for absoluteIndex in pending.analysisStart..<pending.analysisEnd {
-                    window.append(Double(chordRing[absoluteIndex % chordRing.count]))
+            if sampleIndex + 1 == currentChordSegmentEnd {
+                let center = currentChordSegmentStart + (currentChordSegmentEnd - currentChordSegmentStart) / 2
+                let halfWindow = chordWindowSamples / 2
+                var analysisStart = max(0, center - halfWindow)
+                var analysisEnd = min(sampleCount, analysisStart + chordWindowSamples)
+                if analysisEnd - analysisStart < chordWindowSamples {
+                    analysisStart = max(0, analysisEnd - chordWindowSamples)
+                    analysisEnd = min(sampleCount, analysisStart + chordWindowSamples)
                 }
-                decision = ChordFrameClassifier.classify(
-                    samples: window,
-                    sampleRate: sampleRate,
-                    configuration: configuration,
-                    vocabulary: .conservativeMajorMinor
+                let segmentRMS = currentChordSegmentCount > 0
+                    ? sqrt(currentChordSegmentSquares / Double(currentChordSegmentCount))
+                    : 0
+                pendingChordFrames.append(
+                    .init(
+                        startSeconds: Double(currentChordSegmentStart) / sampleRate,
+                        endSeconds: min(duration, Double(currentChordSegmentEnd) / sampleRate),
+                        analysisStart: analysisStart,
+                        analysisEnd: analysisEnd,
+                        segmentRMS: segmentRMS
+                    )
                 )
+                currentChordSegmentStart = currentChordSegmentEnd
+                let nextEnd = currentChordSegmentStart.addingReportingOverflow(chordHopSamples)
+                currentChordSegmentEnd = nextEnd.overflow
+                    ? sampleCount
+                    : min(sampleCount, nextEnd.partialValue)
+                currentChordSegmentSquares = 0
+                currentChordSegmentCount = 0
             }
-            chordFrameDecisions.append(
-                .init(
-                    startSeconds: pending.startSeconds,
-                    endSeconds: pending.endSeconds,
-                    label: decision.label,
-                    confidence: decision.confidence
+
+            while let pending = pendingChordFrames.first,
+                  pending.analysisEnd <= sampleIndex + 1 {
+                let decision: (label: String, confidence: Double?)
+                if pending.segmentRMS < configuration.noChordRMS {
+                    decision = ("N", 1)
+                } else {
+                    var window: [Double] = []
+                    window.reserveCapacity(pending.analysisEnd - pending.analysisStart)
+                    for absoluteIndex in pending.analysisStart..<pending.analysisEnd {
+                        window.append(Double(chordRing[absoluteIndex % chordRing.count]))
+                    }
+                    decision = ChordFrameClassifier.classify(
+                        samples: window,
+                        sampleRate: sampleRate,
+                        configuration: configuration,
+                        vocabulary: .conservativeMajorMinor
+                    )
+                }
+                chordFrameDecisions.append(
+                    .init(
+                        startSeconds: pending.startSeconds,
+                        endSeconds: pending.endSeconds,
+                        label: decision.label,
+                        confidence: decision.confidence
+                    )
                 )
-            )
-            pendingChordFrames.removeFirst()
+                pendingChordFrames.removeFirst()
+            }
         }
 
         while currentSectionFrame < sectionFrameCount,
@@ -294,7 +302,17 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
                 sqrt(currentSectionSquares / Double(currentSectionCount))
             )
         }
-        try Self.normalizeTempoFlux(&tempoFlux)
+        if retentionPlan.tempoResolutionSafe {
+            try Self.normalizeTempoFlux(&tempoFlux)
+        } else {
+            tempoFlux.removeAll(keepingCapacity: false)
+        }
+        if !retentionPlan.chordWindowRetentionSafe, duration > 0 {
+            chordFrameDecisions = [
+                .init(startSeconds: 0, endSeconds: duration, label: "X", confidence: nil)
+            ]
+        }
+
         let keyGlobalRMS = keyProbeCount > 0
             ? sqrt(keyProbeSquares / Double(keyProbeCount))
             : 0
@@ -337,7 +355,10 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
                 tempoFrameStride: retentionPlan.tempoFrameStride,
                 chordFrameStride: retentionPlan.chordFrameStride,
                 naturalSectionEnergyFrameCount: retentionPlan.naturalSectionEnergyFrameCount,
-                sectionEnergyFrameStrideEquivalent: retentionPlan.sectionFrameStrideEquivalent
+                sectionEnergyFrameStrideEquivalent: retentionPlan.sectionFrameStrideEquivalent,
+                tempoResolutionSafe: retentionPlan.tempoResolutionSafe,
+                chordWindowRetentionSafe: retentionPlan.chordWindowRetentionSafe,
+                sectionResolutionSafe: retentionPlan.sectionResolutionSafe
             )
         )
     }
