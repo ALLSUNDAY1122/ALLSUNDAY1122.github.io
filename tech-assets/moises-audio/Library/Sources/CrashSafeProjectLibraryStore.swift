@@ -165,14 +165,23 @@ public final class CrashSafeProjectLibraryStore:
     /// A crash in every gap converges safely during recoverInterruptedOperations().
     public func deleteProject(projectID: ProjectID) async throws {
         try await withMutationGate {
-            guard let target = try await metadata.foregroundDeletionCandidate(projectID: projectID) else {
+            let targetedResolver = liveReferenceResolver as? Lane2CoreDataLiveArtifactReferenceResolver
+            let target: Lane2TombstonedProjectCompactionCandidate?
+            if let targetedResolver {
+                target = try await targetedResolver.resolveForegroundDeletionCandidate(
+                    projectUUID: projectID.rawValue
+                )
+            } else {
+                target = try await metadata.foregroundDeletionCandidate(projectID: projectID)
+            }
+            guard let target else {
                 _ = try await recoverInterruptedOperationsUnlocked()
                 return
             }
 
             let candidatePaths = Set(target.artifactRelativePaths)
             let otherReferences: Set<String>
-            if let targetedResolver = liveReferenceResolver as? Lane2CoreDataLiveArtifactReferenceResolver {
+            if let targetedResolver {
                 let referenceSnapshot = try await targetedResolver.resolveReferencesExcludingTarget(
                     targetProjectUUID: projectID.rawValue,
                     candidateArtifactPaths: candidatePaths
