@@ -3,7 +3,15 @@ import Foundation
 public enum Lane3SelectedTransportRecoveryReason: String, Codable, Sendable {
     case tempoBoundaryCommitFailure
     case tempoBoundaryCancelFailure
+    case playbackBoundaryBackendPoisoned
     case admissionCounterOverflow
+}
+
+/// Selected Playback implementations that can enter a permanent poison state expose only this
+/// boolean recovery boundary. The facade does not inspect Apple-specific error types and never tries
+/// to reset the backend in place.
+public protocol Lane3SelectedStackRecoveryReporting: Sendable {
+    func selectedStackRequiresReconstruction() async -> Bool
 }
 
 public struct Lane3SelectedTransportRecoveryTicket: Equatable, Codable, Sendable {
