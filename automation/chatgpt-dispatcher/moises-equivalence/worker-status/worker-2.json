@@ -11,18 +11,17 @@
   "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "339ebb4cfdf2ed70d1bb79338cf18caa993df44a",
-  "prior_status_blob_sha": "ea7641413b540e21b6a3e87cdf68733b8385b164",
-  "historical_commit_ledger_through": "de23118e204a622a838a233ea6bedbe6ee19d254",
+  "head_sha": "0c8d017c6e606da7972b33f56cdf7f0b9be390c0",
+  "prior_status_blob_sha": "19e58a26158904aecd731cc2dff3f10633d7f5c7",
+  "historical_commit_ledger_through": "339ebb4cfdf2ed70d1bb79338cf18caa993df44a",
   "commits": [
-    "fa8f51db22d4ea39e1744e4e7061364248799c9f",
-    "0485ec56f7dbe4db5e9355587ba7d03646d4152b",
-    "96009ee4c6905b419dd9b1a393b46219517eec40",
-    "887e9122880bd5ee9b78636c91b7db8dd5e857c1",
-    "a329088e225ea83ca5dad7e23cd437b0c0d2098b",
-    "701cabaedfc2182ad00bc443eb61f561e362318a",
-    "9cfc42dcc9a7429f9823849334782ea6fc693b99",
-    "339ebb4cfdf2ed70d1bb79338cf18caa993df44a"
+    "7a1dd1e3c79cc6698b7d7ac9c1993b2dea2bf93a",
+    "5aef6c54022f1cb37848de2cd18fd712f21b9ca1",
+    "b37fb156c02b64e5ea1838b300d78b3130b94159",
+    "a78cafa4d7cc3746c995be7ac36fa36c79456bc3",
+    "d5301a198d61f3b0de70ff05a1c9977c7be8a22f",
+    "d590ac5b990de2e66bbdb1763140c3a69bc52198",
+    "0c8d017c6e606da7972b33f56cdf7f0b9be390c0"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -31,54 +30,55 @@
     "bf4b7a552cfbe025608079f7fe11093af7526b0b"
   ],
   "tests": [
-    "L2-M01..L2-AW23 validation remains durable in Git history and prior status blob ea7641413b540e21b6a3e87cdf68733b8385b164.",
-    "L2-AW24 LegacyRecoverySliceState.swift Swift 6.2.1 strict-concurrency/warnings-as-errors module compile => PASS; LegacyRecoverySliceStateTests.swift strict XCTest typecheck => PASS.",
-    "L2-AW24 Core Data bounded migrator, Apple-gated bounded migrator tests, preserving-open and bulk-open sources syntax parse => PASS on locally validated source; actual Apple Core Data execution is pending and not counted PASS.",
-    "L2-AW24 production static audit => L2_AW24_STATIC_AUDIT_PASS checks=16/16.",
-    "L2-AW24 exact committed portable state blob 7a229f9cd1d7a3a0d99b09199055bbc6ee855351 and self-check blob 75afd8f5db045d75d042feb4462bc22ce87b8a07 => PASS; marker L2_AW24_SELF_TEST_PASS scenarios=6 projects=100000 budget=64 launches=1563 root_rows_per_launch=65 logical_fetch_upper_bound_per_launch=3 old_root_rows=100000 elapsed_seconds=0.000021.",
-    "L2-AW24 AW23->Evidence compare showed eight commits and only eight tech-assets/moises-audio/Library/** files changed; no scope-external implementation path was modified."
+    "L2-M01..L2-AW24 validation remains durable in Git history and prior status blob 19e58a26158904aecd731cc2dff3f10633d7f5c7.",
+    "L2-AW25 IndexedRecoveryScheduler.swift + hardened DeletionOwnershipIndex.swift Swift 6.2.1 strict-concurrency/warnings-as-errors compile => PASS; IndexedRecoverySchedulerTests.swift strict XCTest typecheck => PASS.",
+    "L2-AW25 CrashSafeProjectLibraryStore.swift and Apple-gated IndexedRecoveryCrashSafeTests.swift syntax parse => PASS; actual Apple Core Data execution is pending and not counted PASS.",
+    "L2-AW25 production/static audit => L2_AW25_STATIC_AUDIT_PASS checks=20/20.",
+    "L2-AW25 exact committed scheduler/index/self-check blobs c1c8bef7625a923053ab7cb38042a76a9c16ba6c / 7d435ae209a4a6cf891e3a7e1e6a7f0ec2c14e49 / b6013b460e682deb0c014abe1588e6bce4a77092 => PASS; marker L2_AW25_SELF_TEST_PASS scenarios=6 records=2048 budget=64 passes=32 prioritized_journal_ids=16 write_seconds=3.737340 drain_seconds=4.910212.",
+    "L2-AW25 AW24->Evidence compare showed seven commits and only seven tech-assets/moises-audio/Library/** files changed; no scope-external implementation path was modified."
   ],
   "evidence": [
-    "L2-AW24 fresh-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock c7ce95cb0a0f1eb245010acbbff3cacdf3f4cbec at integration epoch 18, Worker status blob ea7641413b540e21b6a3e87cdf68733b8385b164 and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d; branch matched AW23 status commit cd5f11d71612abd1a4052d119e981ea9756a86b0.",
-    "AW24 adds .legacy-bounded-v2-active before intentionally setting the older legacy-complete marker; canonical routes continue bounded preparation while active, while the older marker suppresses the unbounded AW22 fallback.",
-    "Default journal-less compatibility budget is 64 projects/launch with root fetchLimit 65; ownership persistence remains AW22 atomic/idempotent and existing AW21 deletion authorization/compaction remains unchanged.",
-    "Pre-AW22 PREPARED/COMMITTED deletion journals lacking ownership are prioritized outside the normal journal-less budget so correctness-critical recovery cannot fall back to the old global N+1 scan.",
-    "Canonical openPreservingUserData(...) and openBulkPrepared(...) now call Lane2LegacyTombstoneBoundedMigrator before CrashSafe recovery.",
-    "Remote blobs include state 7a229f9cd1d7a3a0d99b09199055bbc6ee855351, bounded migrator 02d4d7d7f46f1e4539defaa0dbdff6e0979f6358, Apple-gated tests 62e44b54cdf8bd29866dc5f9fd01e834145a2c85, preserving open 0db3595bdd37da55cf1ab5b98009384aba79cdc4, bulk open 2d8b1ea64ec1065157a52236d647a5c16a37c0a4 and Evidence 0a6d4cdbc7e547b25e2a02bcc503acc8b2de8125."
+    "L2-AW25 fresh-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock c7ce95cb0a0f1eb245010acbbff3cacdf3f4cbec at integration epoch 18, Worker status blob 19e58a26158904aecd731cc2dff3f10633d7f5c7 and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d; branch matched AW24 status commit 814fb430a14d3c56f10f78b072259e100f1332c8.",
+    "CrashSafe recovery now prioritizes every durable deletion journal and then processes at most 64 ownership-only records by default, leaving deferred ownership evidence durable for later invocations.",
+    "Production CrashSafe recovery no longer calls pendingRecords(); pendingRecordSlice retains at most limit+1 URLs and decodes at most limit ownership payloads while excluding journal-backed project IDs.",
+    "Deletion ownership records now reject symlink/non-regular JSON files, noncanonical UUID filenames and filename/payload project UUID mismatch fail-closed.",
+    "LibraryRecoveryReport exposes indexed-recovery diagnostics for prioritized journal count, selected ownership-only count, deferred state and effective limit.",
+    "Remote validated blobs include scheduler c1c8bef7625a923053ab7cb38042a76a9c16ba6c, index 7d435ae209a4a6cf891e3a7e1e6a7f0ec2c14e49, portable tests e4473b617726789a6eb05c3ff1b3ae6697d1048d, self-check b6013b460e682deb0c014abe1588e6bce4a77092, CrashSafe 064310eb7832a37d5b2fcea59e1752dbcc9c4641, Apple-gated tests 049bf4bd522cb34f58926efe85e4562cc8acf78e and Evidence 3d16ef63924de725d7b0876b605ca6dd710edd63."
   ],
   "known_gaps": [
     "Apple Core Data runtime execution and real SQLite wall-time/query-plan/RSS/index evidence remain pending.",
-    "AW24 bounded migrator requires actual Apple compile/run and real L2-V1 model-hash verification; Linux cannot execute its Core Data branch.",
-    "AW24 structural bound of 65 journal-less root rows/launch and three ordinary logical fetch calls is not observed SQLite query/RSS evidence.",
-    "Correctness-critical old destructive journals are intentionally not constrained by the 64-project journal-less budget.",
-    "A pre-existing AW23 crash state where a very large legacy backlog was already fully ownership-indexed can still cause current CrashSafe recovery to process many indexed records in one launch; arbitrary already-indexed recovery needs a separate bounded scheduler.",
-    "Force termination/APFS/ENOSPC around active-marker, old-marker and ownership-index writes remain unverified on iPhone.",
+    "AW25 bounds ownership JSON decode/retention and ownership-only compaction work, but selecting the deterministic slice still walks all ownership filenames each pass; very large directories may need sharding/durable cursoring after device measurement.",
+    "Deletion-journal enumeration is intentionally priority/unbounded for correctness; extreme journal backlogs require separate policy/device evidence.",
+    "CrashSafe destructive authorization still calls listMaintenanceProjects() and materializes the full live maintenance projection even when only a bounded set of deletion candidates is being processed; this is the next lane-local scalability target.",
+    "Direct foreground deleteProject currently processes its journal first and may additionally drain one historical ownership-only slice before returning; actual iPhone foreground latency is unmeasured.",
+    "AW24 bounded migrator retains a pendingRecords() compatibility read only on its active bounded path; the pre-existing AW23 all-indexed state early-returns before that read, so it is not the canonical unbounded path closed by AW25.",
+    "Force termination/APFS/ENOSPC around ownership selection, journal reconstruction, artifact deletion and physical Core Data compaction remain unverified on iPhone.",
     "AW21 physical metadata compaction/shared Asset retention and AW20/AW18 setlist recovery still require Apple SQLite reopen/forced-termination evidence.",
     "AW19 prejournal recovery UX/share destination and AW14/AW16 real import/File Provider/codec/storage-pressure gates remain pending.",
     "Reference codec policy remains MP3/WAV/FLAC/M4A/MP4/MOV/WMA; real Apple fixtures and an audited production WMA compatibility decoder/license remain required if native WMA is unavailable.",
     "MOI-P001/P002/P017/P018/P019/P020/P024 remain MISSING until Apple runtime, integrated iPhone, real-audio/reference and differential gates are satisfied."
   ],
   "hq_requests": [
-    "Use openPreservingUserData(...) or openBulkPrepared(...) as the only App-facing Library construction routes. Legacy CrashSafeProjectLibraryStore.open(...) and raw CoreDataProjectLibraryStore lifecycle routes remain unapproved.",
-    "On Apple, execute LegacyTombstoneBoundedMigratorTests.swift with 130+ tombstones and measure per-launch SQLite query count, RSS and latency; verify ordinary root materialization remains bounded.",
-    "Force terminate after bounded activation, after old compatibility marker, after ownership writes, before recovery and on the final-slice transition; verify the same slice retries idempotently and live files are never deleted.",
-    "Measure the exceptional pre-existing all-indexed AW23 crash state separately; do not treat AW24 direct-migration budget as proof that arbitrary pending ownership recovery is bounded.",
-    "Keep AW21 metadata compaction, AW20 orphan setlist repair and AW18 visible setlist integrity repair in canonical startup order after AW24/AW22 delete preparation/recovery.",
-    "Do not promote MOI-P017, MOI-P024 or any other Lane-2 PARITY row from AW24 portable evidence alone; final PARITY remains HQ-owned.",
-    "No Shared/App/PARITY contract or Core Data model schema change was required by L2-AW24."
+    "Use openPreservingUserData(...) or openBulkPrepared(...) as the only App-facing Library construction routes; legacy raw CrashSafeProjectLibraryStore.open(...) and raw CoreDataProjectLibraryStore lifecycle remain unapproved.",
+    "On Apple, execute IndexedRecoveryCrashSafeTests.swift and measure already-indexed backlogs at 1k/10k/large scale: per-pass wall time, RSS, Core Data query count and ownership-directory traversal cost.",
+    "Verify a current journal-backed delete is always recovered before historical ownership-only backlog under process termination and large-backlog conditions.",
+    "Force terminate during ownership slice selection, after COMMITTED journal reconstruction, after artifact deletion and before/after metadata compaction; verify deferred ownership remains durable and live content is retained.",
+    "Do not treat the Linux 2,048-file self-check timing as iPhone/APFS performance evidence.",
+    "Do not promote MOI-P017, MOI-P024 or any other Lane-2 PARITY row from AW25 portable evidence alone; final PARITY remains HQ-owned.",
+    "No Shared/App/PARITY contract or Core Data model schema change was required by L2-AW25."
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW24",
-    "goal": "Bound pre-AW22 journal-less tombstone discovery and resulting crash-safe compaction to a resumable per-launch slice so a large historical deletion backlog cannot monopolize one canonical Library startup.",
-    "rationale": "AW23 removed candidate N+1 amplification but still materialized and ownership-indexed the entire legacy root set before recovery, allowing very large one-time migrations to consume excessive startup memory/time.",
-    "done_when": "Canonical preserving/bulk opens activate durable bounded mode, materialize at most N+1 ordinary roots, index at most N journal-less tombstones, retry the same slice after pre-recovery crash, prioritize correctness-critical old journals, preserve AW21/AW22 safety, and record strict portable/Apple-gated evidence without claiming device PARITY.",
+    "wave_id": "L2-AW25",
+    "goal": "Bound arbitrary pre-existing deletion-ownership backlogs in CrashSafe recovery so an AW23 all-indexed crash state cannot monopolize one launch, while always prioritizing current durable delete journals.",
+    "rationale": "AW24 bounded new legacy discovery but could not bound ownership records that were already durable before AW24. The existing recovery loaded and compacted every indexed record in one invocation.",
+    "done_when": "CrashSafe recovery processes all journal-backed deletes first, processes at most a configurable bounded ownership-only slice, leaves remaining records durable, avoids full ownership-payload materialization, rejects index identity/symlink hazards, exposes diagnostics, and passes strict portable/Apple-gated validation without claiming device PARITY.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "339ebb4cfdf2ed70d1bb79338cf18caa993df44a",
-    "next_priority": "Bound arbitrary pre-existing ownership-index backlogs in CrashSafe recovery (including an AW23 crash after full indexing) without starving current delete journals, then add Apple query/RSS measurement hooks for the bounded recovery scheduler."
+    "implementation_head_sha": "0c8d017c6e606da7972b33f56cdf7f0b9be390c0",
+    "next_priority": "Remove full-live-library materialization from destructive recovery authorization by querying only whether the bounded deletion candidate paths are referenced by live projects, while preserving the mutation gate, shared-asset retention and fail-closed deletion policy."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW24 continue the Lane-2 completion roadmap without waiting for HQ task replenishment.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW25 continue the Lane-2 completion roadmap without waiting for HQ task replenishment.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-24T09:40:00+09:00",
-  "status_compaction_note": "To keep worker status bounded, the full pre-AW24 ledger remains addressable through prior_status_blob_sha ea7641413b540e21b6a3e87cdf68733b8385b164 and Git history; the commits array contains AW24 only. No implementation/evidence history was deleted from Git.",
+  "last_updated": "2026-08-24T10:16:00+09:00",
+  "status_compaction_note": "To keep worker status bounded, the full pre-AW25 ledger remains addressable through prior_status_blob_sha 19e58a26158904aecd731cc2dff3f10633d7f5c7 and Git history; the commits array contains AW25 only. No implementation/evidence history was deleted from Git.",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ reads it for lane checkpoint integration and remains sole PARITY authority."
 }
