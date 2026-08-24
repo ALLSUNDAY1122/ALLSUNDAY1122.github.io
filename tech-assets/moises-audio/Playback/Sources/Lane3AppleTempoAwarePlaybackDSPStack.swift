@@ -24,6 +24,7 @@ public struct Lane3AppleBoundaryEnvelopeCompositionReceipt: Equatable, Codable, 
     public let loopMutationRestartEnvelopeAvailable: Bool
     public let tempoRestartEnvelopeAvailable: Bool
     public let playRestartEnvelopeAvailable: Bool
+    public let boundaryMutedTempoUsesImmediateDSPApply: Bool
     public let automaticRepeatedLoopSeamEnvelopeAvailable: Bool
     public let staleFadeInGenerationGuarded: Bool
     public let audibleArtifactEliminationClaimed: Bool
@@ -49,7 +50,7 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
         capabilities: PracticeDSPCapabilities = .appleTimePitchBaseline,
         initialState: PracticeDSPState = PracticeDSPState(),
         gainRampPolicy: PlaybackGainRampPolicy = PlaybackGainRampPolicy(),
-        tempoTransitionPolicy: PracticeDSPTempoTransitionPolicy = .provisionalAppleInteractive,
+        tempoTransitionPolicy: PracticeDSPTempoTransitionPolicy = .boundaryMutedImmediate,
         tempoTransitionSleeper: any PracticeDSPTempoTransitionSleeping = PracticeDSPSystemTempoTransitionSleeper(),
         pitchTransitionPolicy: PracticeDSPPitchTransitionPolicy = .provisionalAppleInteractive,
         pitchTransitionSleeper: any PracticeDSPPitchTransitionSleeping = PracticeDSPSystemPitchTransitionSleeper(),
@@ -113,6 +114,7 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
             loopMutationRestartEnvelopeAvailable: true,
             tempoRestartEnvelopeAvailable: true,
             playRestartEnvelopeAvailable: true,
+            boundaryMutedTempoUsesImmediateDSPApply: tempoTransitionPolicy == .boundaryMutedImmediate,
             automaticRepeatedLoopSeamEnvelopeAvailable: false,
             staleFadeInGenerationGuarded: true,
             audibleArtifactEliminationClaimed: false,
