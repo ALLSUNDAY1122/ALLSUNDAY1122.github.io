@@ -1,12 +1,12 @@
 # Scaniverse Functional Parity Program
 
-Updated: 2026-08-24
+Updated: 2026-08-24 14:48 JST
 
 ## Goal
 
-Build an independently implemented iOS app that reaches functional and practical-quality parity with the current consumer Scaniverse experience before any product-specific `omochabako` adaptation begins.
+Independently implement an iOS app that reaches functional and practical-quality parity with the current consumer Scaniverse experience. Do not copy Scaniverse proprietary source code, trademark, logo, artwork, models, training data, or other protected assets.
 
-This does **not** mean copying Scaniverse proprietary source code, trademark, logo, artwork, or copyrighted assets. It means independently reproducing the same user outcomes, core workflows, real data types, failure recovery, and comparable practical quality.
+Parity means comparable user outcomes, real data/output, usability, speed, stability, recovery, and practical result quality. Requirements, compile success, simulator/fixture success, CI success, signed archive, or TestFlight distribution alone are not parity.
 
 ## Source of truth
 
@@ -14,351 +14,217 @@ This does **not** mean copying Scaniverse proprietary source code, trademark, lo
 - Repository: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
 - Working root: `splat-native-ios/`
 - Integration branch: `feature/splat-native-ios-poc`
-- Current internal brand while parity work is incomplete: `Scan Lab`
-- `omochabako` branding and memory-specific UX are forbidden in this root until the parity gate passes.
+- Integration PR: `#4145`
+- A2: `scaniverse/a2-capture-reconstruction`
+- B2: `scaniverse/b2-view-edit-mesh`
+- C2: `scaniverse/c2-library-export`
+- D2: `scaniverse/d2-share-discover`
+- Supabase production: `gybchnyqlqwmajwkhsly`
 
-## Current integration evidence — 2026-08-24 03:56 JST｜Build 3
+Fixed SHAs are evidence, not permanent source of truth. Every work session must re-read live state first.
 
-This section supersedes the Build 2 integration section below. Build 2 predates the final A2 residual closure and is historical device evidence only.
+## Current validated app-source
 
-Current HQ branch: `feature/splat-native-ios-poc`
+`595c1d1d3468dd85594a958d8750264d9db91f50`
 
-Current HQ docs HEAD at this refresh follows validated app-source `164f5b3d2e1002c1e69423049ba73d2bf01a268a`; subsequent HQ changes are documentation/evidence only.
+Build 3以降に反映された重要な実source差分:
 
-A2 residuals closed on the validated app source:
+- persisted viewer editをexport / video / publishの実outputへmaterialize
+- 外部actionが古いviewer stateを読むraceを避けるためedit persistenceを即時化
+- crop片側handleだけを動かした場合、未操作側tailを暗黙に切らないopen-ended endpoint semantics
 
-- capture image-quality rejection runs before JPEG persistence and rejects severe dark clipping, blown highlights, and clearly soft/low-detail frames
-- memory/thermal resource preflight runs before `GaussianDataset` / `GaussianTrainer` allocation
+Validated app-source automated gates:
 
-Current automated evidence:
-
-- Privacy Preflight: PASS
+- Splat Native Privacy Preflight: PASS
 - Splat Smoke Diagnostic: PASS
-- Main Splat Native iOS Build: PASS
-- production auth/session/profile E2E: PASS
-- S2 reconstruction contracts: PASS
-- D2 browser/live viewer contracts: PASS
-- Simulator msplat smoke: PASS
-- integrated A2/C2 XCTest: PASS
-- reader compatibility OBJ / FBX / GLB / STL / PLY / USDZ: PASS
-- unsigned iPhone Release compile: PASS
-- signed Xcode 26 archive: PASS
+- Splat Native iOS Build: PASS
 
-Latest Internal TestFlight candidate:
+最新HQに対するA2/B2/C2/D2 fresh compareは4 branchすべて `ahead_by=0`。未統合Worker成果なし。
 
-- version `1.0.0`, build `3`
-- release branch `testflight/splat-native-ios-20260824-build3` differs from HQ only by release `codemagic.yaml`
-- Codemagic build `6a8b36335c95c17422424e4d`: `finished`, signed IPA generated
-- App Store Connect build resource `65e6164a-8ea8-4844-8259-c6d6a8507286`: `VALID`
-- audience: `INTERNAL_ONLY`
-- expired: `false`
-- internal beta group `sun` build list includes Build 3
+## Current Internal TestFlight candidate — Build 4
 
-Codemagic reported `app_store_connect_status=failed`, but Apple direct read-back proves Build 3 is VALID and distributed to the internal group; Apple is authoritative for this gate.
+Build 3は現行app-sourceより古いためhistorical candidateへ降格。現在の物理比較対象は **Build 4**。
 
-Current parity ledger:
+- release branch: `testflight/splat-native-ios-20260824-build4`
+- release commit: `bdb1488b101c3855edc52687b5dd230748297a62`
+- release差分: TestFlight用 `codemagic.yaml` のみ
+- Codemagic build: `6a8bd803c391bffc3d7617ce`
+- Codemagic status: `finished`
+- App Store Connect app: `6803778932`
+- bundle: `jp.allsunday1122.splatlab`
+- build resource: `219264e6-587a-49f2-96b1-0850d5a8ad4c`
+- build number: `4`
+- `processingState=VALID`
+- `buildAudienceType=INTERNAL_ONLY`
+- `expired=false`
+- `usesNonExemptEncryption=false`
+- `internalBuildState=IN_BETA_TESTING`
+- internal beta group `sun`: assigned
+- tester count: `1`
+- App Store Review submission: false
+- external beta review submission: false
+
+Evidence:
+
+- `splat-native-ios/evidence/scaniverse-build4-release.json`
+- `splat-native-ios/evidence/scaniverse-build4-actions-probe.json`
+- release gate Actions run `32694020324`: SUCCESS
+
+## Supabase production
+
+2026-08-24 14:43 JST fresh read-only state:
+
+- project: `ACTIVE_HEALTHY`
+- `auth.users=1`
+- `scanlab_profiles=1`
+- `scanlab_scans=0`
+- `scanlab_reports=0`
+- `scanlab_blocks=0`
+
+Active Edge Functions:
+
+- `scanlab-public` v12
+- `scanlab-publish` v12
+- `scanlab-delete-account` v4
+- `scanlab-visibility` v5
+- `scanlab-delete-scan` v7
+- `scanlab-unpublish` v2
+- `scanlab-upload` v1
+
+A real generated trusted scan does not yet exist in production, so publish/share lifecycle parity remains unproven.
+
+## Current parity ledger
 
 | Area | State | Remaining proof | Owner |
 |---|---|---|---|
-| ARKit capture / tracking / live coverage guidance | PARTIAL | Build 3 real-device continuity, responsiveness, image-quality rejection behavior and Golden comparison | A/HQ |
-| On-device Gaussian Splat reconstruction | PARTIAL | representative-object physical output quality, processing time, thermal/memory recovery | A |
-| Splat viewer / edit / measure | PARTIAL | newly generated real scan device usability and persistence | B/HQ |
-| Mesh reconstruction / texture / edit / measure / AR | PARTIAL | physical result quality and device workflow proof | B |
-| Local library / raw retention / process later / reopen / reprocess | NEAR_PARITY | Build 3 cold-reopen and process-later physical proof | C/HQ |
-| Export / video interoperability | NEAR_PARITY | device-generated asset/video and memory proof remain | C/B |
-| Auth / session / profile | NEAR_PARITY | production live E2E passes; device UX proof remains | D/HQ |
-| Publish / durable browser URL / visibility / Map / Discover | PARTIAL | real generated scan production publish/share/discover lifecycle E2E | D/HQ |
-| Integrated release candidate | NEAR_PARITY | Build 3 is VALID and internally distributed; physical end-to-end parity gate remains | HQ |
-| Integrated full app flow | PARTIAL | `capture → coverage → finish → processing → 3D result → save → library reopen` on Build 3 | HQ/A-D |
-
-No row may be promoted to `PARITY` solely from compile, simulator, fixture, CI, or TestFlight upload success. Physical quality rows require representative real-device evidence against the Golden Reference.
-
-Supabase production remains `auth.users=1 / scanlab_profiles=1 / scanlab_scans=0 / scanlab_reports=0 / scanlab_blocks=0`; a real generated scan is still required before publish/share lifecycle E2E.
-
-## Historical integration evidence — 2026-08-24｜Build 2
-
-This section supersedes the 2026-08-15 consolidation ledger below for current status. The older ledger is retained only as historical baseline evidence.
-
-Current integration branch: `feature/splat-native-ios-poc`
-
-Current validated app-source HEAD: `17b52b79f032e7abe225bc216cc2d0ac2b71fadf`
-
-Internal TestFlight candidate:
-
-- version `1.0.0`, build `2`
-- Codemagic build `6a8b1591c8729cb286ce7247`: `finished`
-- App Store Connect build resource `53f5f4ae-2212-47d2-8860-af4805eb60de`: `VALID`
-- audience: `INTERNAL_ONLY`
-- internal beta group `sun` contains Build 2
-
-Current automated evidence on the same app source:
-
-- Privacy Preflight: PASS
-- Splat Smoke Diagnostic: PASS
-- production auth/session/profile E2E: PASS
-- S2 reconstruction contracts: PASS
-- D2 browser/live viewer contracts: PASS
-- Simulator msplat smoke: PASS
-- integrated A2/C2 XCTest: PASS
-- reader compatibility OBJ / FBX / GLB / STL / PLY / USDZ: PASS
-- unsigned iPhone Release compile: PASS
-- signed Xcode 26 archive + TestFlight upload: PASS
-
-Current parity ledger:
-
-| Area | State | Remaining proof | Owner |
-|---|---|---|---|
-| ARKit capture / tracking / live coverage guidance | PARTIAL | Build 2 real-device continuity, responsiveness and Golden comparison | A/HQ |
-| On-device Gaussian Splat reconstruction | PARTIAL | representative-object physical output quality, processing time, thermal/memory recovery | A |
-| Splat viewer / edit / measure | PARTIAL | newly generated real scan device usability and persistence | B/HQ |
-| Mesh reconstruction / texture / edit / measure / AR | PARTIAL | physical result quality and device workflow proof | B |
-| Local library / raw retention / process later / reopen / reprocess | NEAR_PARITY | Build 2 cold-reopen and process-later physical proof | C/HQ |
-| Export / video interoperability | NEAR_PARITY | CI independent-reader gates pass; device-generated asset/video and memory proof remain | C/B |
-| Auth / session / profile | NEAR_PARITY | production live E2E passes; device UX proof remains | D/HQ |
-| Publish / durable browser URL / visibility / Map / Discover | PARTIAL | real generated scan production publish/share/discover lifecycle E2E | D/HQ |
-| Integrated release candidate | NEAR_PARITY | Build 2 is VALID and internally distributed; physical end-to-end parity gate remains | HQ |
-| Integrated full app flow | PARTIAL | `capture → coverage → finish → processing → 3D result → save → library reopen` on Build 2 | HQ/A-D |
-
-No row may be promoted to `PARITY` solely from compile, simulator, fixture, CI, or TestFlight upload success. Physical quality rows require representative real-device evidence against the Golden Reference.
-
-The next blocking gate is therefore real-device Build 2 evidence, not additional branch integration work. In particular verify bottom tabs are hidden during capture and the real ARKit red/green coverage heatmap updates continuously. After a trusted real scan exists, run production `scan → publish → durable browser URL → visibility/Discover → owner lifecycle` E2E.
-
-## Why the program was reorganized
-
-The initial S0-S8 decomposition produced substantial code in separate branches but too little integration. Capture, reconstruction, viewer, lifecycle and export lanes repeatedly modified the same shared app files, while QA/integration became separate administrative roles. That structure is retired.
-
-The active program now has **four product-building lanes plus one integration headquarters**. QA is embedded into every lane. Integration HQ also writes code and continuously produces one integrated app.
-
-## Active build lanes
-
-### A — Capture → On-device Gaussian Splat
-Branch: `scaniverse/a2-capture-reconstruction`
-
-Owns the complete Splat creation experience: ARKit capture/tracking/coverage, frame/depth/point ingestion, pause/resume/relocalization, quality gates, on-device 3DGS initialization/training, sky/background handling, Enhance, checkpointing, output validation, processing time, memory and thermal behavior.
-
-Legacy sources: old S1 + S2.
-
-### B — Splat View/Edit/Measure + Mesh
-Branch: `scaniverse/b2-view-edit-mesh`
-
-Owns everything after a 3D asset is created that changes how it is viewed or geometrically represented: Splat framing/orbit/pan/zoom/crop/exposure/contrast/measurement and the complete Mesh path including LiDAR/non-LiDAR reconstruction, texture, trim/edit, metric measurement and AR/object viewing.
-
-Legacy sources: old S3 + S4.
-
-### C — Library / Resume / Reprocess / Export / Video
-Branch: `scaniverse/c2-library-export`
-
-Owns durable local projects and all output from them: scan library, raw retention, process later, resume/reprocess, crash recovery, storage lifecycle, safe completion contracts, PLY/SPZ/model exports, video, interoperability, memory-safe large exports, iOS share sheet and the trusted browser-share package.
-
-Legacy sources: old S5 + S6.
-
-### D — Account / Publish / Browser / Map / Discover
-Branch: `scaniverse/d2-share-discover`
-
-Owns the intentional network layer only: auth/account, explicit upload, public/unlisted/private semantics, durable browser viewer URLs, opt-in geotagging, Map/Discover/feed, opening others’ scans, unpublish/delete, rate limits, moderation, abuse/privacy controls and network-related App Store declarations.
-
-Legacy source: old S7.
-
-### Integration HQ
-Branch: `feature/splat-native-ios-poc`
-
-Owns shared app shell/navigation, A-D contracts, semantic merges, cross-lane bugs, integrated CI/runtime flows, removal of duplicate implementations, privacy/security/accessibility/performance integration, TestFlight candidates and the final harsh-review loop. HQ is not a passive manager.
-
-Old S8 is retired. Its findings are acceptance requirements in A-D/HQ rather than a separate QA product lane.
-
-## Frozen legacy migration sources
-
-Do not continue development on these branches. They are evidence/migration sources only:
-
-- `scaniverse/s1-capture` → A
-- `scaniverse/s2-splat-reconstruction` → A
-- `scaniverse/s3-splat-viewer-edit` → B
-- `scaniverse/s4-mesh-photogrammetry` → B
-- `scaniverse/s5-library-lifecycle` → C
-- `scaniverse/s6-export-video-share` → C
-- `scaniverse/s7-map-discover-backend` → D
-- `scaniverse/s8-adversarial-qa` → findings redistributed to A-D/HQ
-
-## Baseline: current Scaniverse consumer feature surface
-
-### Capture / Splat generation — A
-
-- Splat capture on supported non-LiDAR and LiDAR iPhones.
-- Continuous guided capture.
-- Robust camera pose tracking and recovery.
-- Object, room and outdoor capture behavior that does not falsely complete on redundant views.
-- Resume capture after stopping/interruption.
-- Long-scan guidance / failure-risk warning.
-- LiDAR depth use/ignore architecture where supported.
-- Fully on-device personal Splat processing without requiring Internet.
-- Photorealistic Gaussian Splat output.
-- Useful color/detail/reflection behavior rather than rough textured geometry.
-- Outdoor sky/background artifact handling.
-- Reprocess/enhance a retained raw capture.
-- Bounded memory/thermal behavior and recoverable failure states.
-
-### Viewing/editing + Mesh — B
-
-- Useful initial Splat view.
-- Orbit / true pan / zoom / reset.
-- Crop.
-- Exposure / contrast.
-- Measurement.
-- Edit persistence where practical.
-- Mesh capture/reconstruction.
-- LiDAR and non-LiDAR paths where appropriate.
-- Geometry cleanup/refinement.
-- Texturing.
-- Mesh crop/edit/measurement.
-- Metric scale contract where supported.
-- Mesh reprocess from retained raw data.
-
-### Library / lifecycle / export — C
-
-- Persistent local scan library and thumbnails.
-- Open saved scan after app relaunch.
-- Raw capture retention.
-- Save before processing / process later.
-- Resume.
-- Reprocess to Splat or Mesh where supported.
-- Crash/interrupted-write recovery.
-- Safe delete/storage lifecycle.
-- Splat PLY and SPZ export.
-- Mesh/model formats supported by parity scope including OBJ / FBX / GLB / USDZ and relevant point-cloud outputs.
-- Real interoperability rather than extension-only files.
-- Video export with comparable camera controls/aspect choices.
-- iOS share sheet.
-- Trusted package for browser sharing.
-
-### Discovery / public sharing — D
-
-- Account/authentication for publishing.
-- Public/unlisted/private semantics.
-- Explicit upload only; local scan/process remains offline-capable.
-- Durable interactive browser-view link.
-- Opt-in geotagging.
-- Map browsing.
-- Discover/feed.
-- Open another user-published scan.
-- Owner unpublish/delete and account deletion.
-- Rate limits/moderation/abuse/privacy safeguards.
-
-## Parity state model
-
-Every row is one of:
-
-- `MISSING`: no working implementation.
-- `PARTIAL`: real implementation exists but major user outcome/quality/recovery is missing.
-- `NEAR_PARITY`: workflow is substantially present but measurable or obvious user-facing gaps remain.
-- `PARITY`: comparable workflow, real output, recovery path, and practical quality demonstrated.
-
-No build lane may mark itself complete while an owned row remains below `PARITY` unless the immediate blocker is explicitly human-only.
-
-## Historical consolidation ledger — 2026-08-15
-
-> Historical baseline only. Do not use the row states below as current status; use the 2026-08-24 current integration ledger above.
-
-
-These states deliberately do not award parity merely because a legacy branch contains substantial code. The first job of A-C is to combine the paired legacy implementations and then re-run software/runtime gates as one coherent lane.
-
-| Area | State | Evidence / next proof | Owner |
-|---|---|---|---|
-| ARKit Splat capture/tracking | PARTIAL | old S1 has substantial adaptive/recovery implementation; must be absorbed with A reconstruction and retested | A |
-| Spatial coverage / guidance | PARTIAL | old S1 object/scene coverage exists; integrated real-device proof pending | A |
-| Capture pause/resume/relocalization | PARTIAL | old S1 implementation exists; integrated device continuity proof pending | A |
-| Long-scan/storage failure handling | PARTIAL | old S1/S8 fixes exist; consolidation with durable C contract required | A/HQ |
-| On-device Gaussian Splat training | PARTIAL | old S2 has real msplat reconstruction/resource work; real-device side-by-side quality not proven | A |
-| Sky/background handling | PARTIAL | old S2 conservative sky seeding exists; outdoor quality proof pending | A |
-| Enhance/retrain | PARTIAL | old S2 training path exists; integrated user entry + real-device result pending | A/B |
-| Initial Splat view/orbit/zoom/reset | PARTIAL | old S3 implementation exists but not yet consolidated into B + real-device validated | B |
-| True pan/crop/exposure/contrast/measure | PARTIAL | old S3 branch contains implementation work; integrated acceptance pending | B |
-| Mesh capture/reconstruction | PARTIAL | old S4 contains extensive real algorithms; physical result still not parity proven | B |
-| Mesh texturing/edit/measurement/AR | PARTIAL | old S4 implementations exist; real output parity gate remains | B |
-| Local library / raw lifecycle | PARTIAL | old S5 persistent store/recovery implementation exists; must be consolidated with C exports | C |
-| Process later/resume/reprocess | PARTIAL | old S5 implementation exists; integrated asset contracts pending | C |
-| Splat PLY/SPZ export | PARTIAL | old S6 real conversion/read-back tests exist; trusted C lifecycle integration pending | C |
-| Model/point-cloud export | PARTIAL | old S6 real exporters exist; B Mesh contract integration and physical interop proof pending | C/B |
-| Video export | PARTIAL | old S6 Metal/AVFoundation implementation exists; integrated device/memory proof pending | C |
-| Browser-share package | PARTIAL | old S6 package contract exists; D service upload/link integration pending | C/D |
-| Account/auth/publish backend | PARTIAL | old S7 implementation exists; durable live-service runtime proof pending | D |
-| Public/unlisted/private + owner controls | PARTIAL | backend/UI foundations exist; end-to-end live proof pending | D |
-| Browser viewer/shareable URL | PARTIAL | old S7 browser viewer exists; real uploaded asset integration pending | D |
-| Map/Discover | PARTIAL | old S7 backend/UI work exists; real-content end-to-end proof pending | D |
-| Integrated full app flow | MISSING | legacy branches are not yet one coherent build | HQ |
-| Integrated performance/privacy/accessibility/release regression | PARTIAL | old S8 findings/CI exist but must be redistributed and run against integrated candidate | HQ/A-D |
-
-## Harsh-review ownership
-
-There is no separate QA lane. Each owner must attack its own work after every substantial change.
-
-### A must absorb these old adversarial findings
-- capture storage failure must terminate visibly and recoverably
-- interruption/background/tracking recovery must not corrupt coverage/pose continuity
-- 3DGS densification must have an explicit memory/splat budget
-- processing under thermal/memory pressure must pause/recover instead of drifting toward jetsam
-
-### B must absorb
-- viewer state must be connected to the real app, not only tests
-- huge Splat scenes need memory-safe rendering policy/LOD or a fail-safe
-- Mesh project lifecycle must not leave unreachable data after cancel/reset
-
-### C must absorb
-- partial/aligned `.splat` must never be mistaken for a completed asset
-- export must consume only trusted completed assets
-- huge export/video paths must preflight memory and clean partial outputs
-- lifecycle low-storage/write failures must be recoverable and visible
-
-### D must absorb
-- privacy declarations must match actual network use
-- publish is explicit opt-in, not automatic
-- delete/unpublish/account deletion must actually remove or retire user content
-- moderation/rate-limit/abuse contracts are required before public release
-
-### HQ must absorb
-- TestFlight candidate must contain current integration HEAD and fail closed if stale
-- integrated VoiceOver/basic accessibility and UI consistency
-- dependency licenses/privacy manifest/release declarations
-- no unresolved Sev-1/Sev-2 before a release candidate
-
-## Hard anti-cheating rules
-
-1. A screenshot, fake progress, prebundled scan, textured polygon, or static model does not count as reconstruction.
-2. A format name in UI does not count as export unless an independent reader opens the produced file correctly.
-3. A viewer feature does not count until it works on newly generated real scans, not only fixtures.
-4. A capture gate does not count if a user can satisfy it with useless redundant views.
-5. A quality claim does not count without representative-object evidence against Scaniverse when device evidence is applicable.
-6. A compile-only test does not count as runtime validation.
-7. A human-only gate must be precisely named; it cannot be a generic stopping excuse.
-8. A regression discovered once must become an automated or repeatable gate.
-9. Branch commit count is not progress unless the code is integrated into a coherent user flow.
-
-## Representative test set
-
-Use repeatedly:
-
-- textured small toy
-- plush / cloth
-- shoe
-- ceramic object
-- flower bouquet
-- complex paper craft
-- glossy mixed-material object
-- transparent-adjacent hard case
-- room corner / medium scene
-- outdoor scene including sky
-
-For physical quality parity, retain Scaniverse reference captures and Scan Lab captures from comparable paths where possible.
-
-## Global acceptance
-
-Consumer parity is not complete until:
-
-1. A: capture → on-device Splat works repeatedly at comparable practical effort and quality.
-2. B: Splat view/edit/measure and Mesh workflows are present and usable.
-3. C: scans survive lifecycle events, can resume/reprocess, and real exports/video interoperate.
-4. D: explicit publishing produces durable real sharing and real Map/Discover content with ownership/privacy controls.
-5. HQ: all four are integrated into one app and cross-feature scenarios pass.
-6. On-device processing time, memory and thermal behavior are usable on target device classes.
-7. No unresolved Sev-1/Sev-2 remains.
-8. The ledger contains no `MISSING`, `PARTIAL`, or `NEAR_PARITY` rows.
-9. Only after all above does work branch into `omochabako` product adaptation.
+| ARKit capture / tracking / live coverage guidance | PARTIAL | Build 4 real-device continuity, responsiveness, image-quality rejection, recovery and Golden comparison | A/HQ |
+| On-device Gaussian Splat reconstruction | PARTIAL | representative-object physical output quality, processing time, thermal/memory behavior and recovery | A |
+| Splat viewer / edit / measure | PARTIAL | Build 4 device usability, edit persistence/output materialization, crop behavior and practical measurement | B/HQ |
+| Mesh reconstruction / texture / edit / measure / AR | PARTIAL | physical result quality and complete device workflow proof | B |
+| Local library / raw retention / process later / reopen / reprocess | NEAR_PARITY | Build 4 cold-reopen/process-later/reprocess physical proof | C/HQ |
+| Export / video interoperability | NEAR_PARITY | Build 4 generated edited assets/video, external-read usability and memory proof | C/B |
+| Auth / session / profile | NEAR_PARITY | production live E2E passes; Build 4 device UX proof remains | D/HQ |
+| Publish / durable browser URL / visibility / Map / Discover | PARTIAL | real Build 4 generated trusted scan production lifecycle E2E | D/HQ |
+| Integrated release candidate | NEAR_PARITY | Build 4 VALID/internal distribution established; physical end-to-end parity gate remains | HQ |
+| Integrated full app flow | PARTIAL | Build 4 `capture → coverage → finish → processing → 3D result → save → library reopen` | HQ/A-D |
+
+No row may become `PARITY` solely from compile, simulator, fixture, CI, signed build, TestFlight upload/distribution, screen transition, placeholder output, fake 3D, or synthetic backend data.
+
+## Current blocking gate — Build 4 physical device
+
+Use the actual TestFlight Build 4 on a representative iPhone and compare with the Scaniverse Golden Reference.
+
+Required flow:
+
+`capture → coverage → finish → processing → 3D result → save → library reopen`
+
+Minimum physical acceptance:
+
+1. Active capture hides bottom tabs.
+2. Real ARKit feature-point-derived red/green coverage heatmap updates continuously with camera movement.
+3. Camera remains responsive; tracking loss, pause/resume and interruption recovery are usable.
+4. Clearly dark-clipped, blown-highlight or strongly blurred/low-detail frames are rejected rather than silently degrading the dataset.
+5. Finish does not falsely succeed from redundant views alone.
+6. Processing progress corresponds to real reconstruction work; no fake progress, crash, permanent hang or unusable thermal/memory failure.
+7. Result is a real Gaussian Splat, not rough/fake 3D or disconnected placeholder geometry.
+8. Golden comparison shows no obvious unacceptable deficit in missing regions, duplication, color, detail, volume/3D impression, stability, time, or required user effort.
+9. Orbit / pan / zoom / reset are practically usable.
+10. Viewer edits persist and the same meaning is reflected in saved/exported/video/publish output.
+11. Moving only one crop endpoint does not silently cut the untouched opposite tail.
+12. Save succeeds and Library cold reopen shows the same completed asset.
+13. Process-later/reprocess paths remain recoverable where applicable.
+
+Capture/reconstruction/viewer/library must not be promoted to `PARITY` before this physical gate passes.
+
+## Production trusted-scan gate after physical quality passes
+
+Use the real trusted scan generated by Build 4. Do not substitute synthetic or hardcoded data.
+
+Required lifecycle:
+
+`explicit publish → durable asset URL → separate browser viewer → public/unlisted/private → Discover → Map only with explicit geotag opt-in → unpublish → republish → owner delete`
+
+Acceptance also includes:
+
+- local scan/process remains offline-capable until explicit network action
+- private/unlisted/public semantics are enforced
+- unlisted access token is not leaked into ordinary server-visible URL components
+- public scans can appear in Discover without forced geotag
+- Map requires explicit location opt-in
+- owner lifecycle and deletion clean up metadata/assets safely
+- block/report/moderation/rate-limit contracts do not regress
+- account deletion remains recoverable/safe until intentionally executed
+
+## Functional parity scope
+
+### A — Capture / Splat generation
+
+- guided Splat capture on supported iPhones
+- ARKit tracking, coverage and recovery
+- object/room/outdoor capture behavior
+- pause/resume and interruption recovery
+- quality rejection and finish-quality gates
+- on-device Gaussian Splat reconstruction
+- retained raw capture, checkpoint/retry, Enhance/reprocess
+- sky/background handling where applicable
+- bounded thermal/memory behavior
+
+### B — View / edit / measure / Mesh
+
+- useful initial Splat framing
+- orbit, true pan, zoom, reset
+- crop, exposure, contrast
+- measurement with meaningful scale contract where supported
+- edit persistence and output materialization
+- Mesh capture/reconstruction including applicable LiDAR/non-LiDAR paths
+- Mesh cleanup/texture/edit/measurement/AR viewing
+- Mesh reprocess from retained raw data
+
+### C — Library / lifecycle / export / video
+
+- persistent local library and thumbnails
+- save before processing / process later
+- reopen after relaunch
+- resume/reprocess/recovery
+- safe project delete/storage lifecycle
+- PLY/SPZ and relevant model/point-cloud exports
+- OBJ/FBX/GLB/USDZ interoperability within parity scope
+- video export and share sheet
+- trusted browser-share package
+
+### D — Account / publish / browser / discover
+
+- auth/session/profile
+- explicit trusted upload/publish
+- public/unlisted/private
+- durable browser-view URL
+- opt-in geotag
+- Map/Discover/public profile browsing
+- opening other users' public scans
+- unpublish/republish/delete/account deletion
+- report/block/moderation/rate limit/privacy safeguards
+
+## Frozen legacy branches
+
+The old S1-S8 branches are evidence/migration sources only. Do not resume development there.
+
+- `scaniverse/s1-capture`
+- `scaniverse/s2-splat-reconstruction`
+- `scaniverse/s3-splat-viewer-edit`
+- `scaniverse/s4-mesh-photogrammetry`
+- `scaniverse/s5-library-lifecycle`
+- `scaniverse/s6-export-video-share`
+- `scaniverse/s7-map-discover-backend`
+- `scaniverse/s8-adversarial-qa`
+
+## Completion rule
+
+The program is complete only when:
+
+1. Build 4 (or a later source-identical/fix successor) passes real-device capture/reconstruction/viewer/library quality against Golden Reference.
+2. A real trusted scan passes production publish/share/visibility/Discover/Map/owner lifecycle E2E.
+3. Any defects found in those gates are fixed and re-run without creating new unverified source drift.
+4. Current parity ledger rows required for the public Scaniverse-equivalent experience are promoted based on runtime evidence, not assumptions.
+5. PR #4145 remains draft/unmerged until those gates are satisfied and final integration review is complete.
+
+Older detailed Build 2/Build 3 and legacy-lane evidence remains available in Git history and Notion history; it is not repeated here to avoid stale state being mistaken for the current gate.
