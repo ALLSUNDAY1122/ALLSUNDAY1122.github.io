@@ -26,9 +26,10 @@ public struct AnalysisExtremeDurationRetentionPlan: Codable, Equatable, Sendable
 public enum AnalysisExtremeDurationRetentionPolicy {
     /// Resource-cardinality limits only. These are not quality/PARITY thresholds.
     /// Normal songs remain on the exact W29/W30 cadence whenever their natural
-    /// feature counts fit below these limits.
+    /// feature counts fit below these limits. The Chord cap intentionally keeps
+    /// the default 0.25 s cadence exact through 24-hour 8 kHz Analysis input.
     public static let maximumTempoFrames = 1_048_576
-    public static let maximumChordFrameDecisions = 131_072
+    public static let maximumChordFrameDecisions = 524_288
     public static let maximumSectionEnergyFrames = 262_144
 
     public static func plan(
