@@ -8,6 +8,7 @@ public enum PlaybackBoundaryEnvelopeError: Error, Equatable, Sendable {
     case invalidBoundaryDelay(Double)
     case frameCountOverflow
     case durationOverflow
+    case generationOverflow
 }
 
 public struct PlaybackBoundaryEnvelopePolicy: Equatable, Sendable {
@@ -166,6 +167,55 @@ public enum PlaybackBoundaryEnvelopePlanner {
             throw PlaybackBoundaryEnvelopeError.frameCountOverflow
         }
         return Int64(value)
+    }
+}
+
+public struct PlaybackBoundaryEnvelopeGenerationFence: Equatable, Sendable {
+    public private(set) var generation: UInt64
+    public private(set) var pendingRestartFadeInGeneration: UInt64?
+    public private(set) var overflowed: Bool
+
+    public init(
+        generation: UInt64 = 0,
+        pendingRestartFadeInGeneration: UInt64? = nil,
+        overflowed: Bool = false
+    ) {
+        self.generation = generation
+        self.pendingRestartFadeInGeneration = pendingRestartFadeInGeneration
+        self.overflowed = overflowed
+    }
+
+    @discardableResult
+    public mutating func invalidate() throws -> UInt64 {
+        let next = generation.addingReportingOverflow(1)
+        guard !next.overflow else {
+            overflowed = true
+            pendingRestartFadeInGeneration = nil
+            throw PlaybackBoundaryEnvelopeError.generationOverflow
+        }
+        generation = next.partialValue
+        pendingRestartFadeInGeneration = nil
+        return generation
+    }
+
+    @discardableResult
+    public mutating func armRestartFadeIn() -> UInt64 {
+        pendingRestartFadeInGeneration = generation
+        return generation
+    }
+
+    public mutating func consumeRestartFadeIn(expectedGeneration: UInt64) -> Bool {
+        guard !overflowed,
+              expectedGeneration == generation,
+              pendingRestartFadeInGeneration == expectedGeneration else {
+            return false
+        }
+        pendingRestartFadeInGeneration = nil
+        return true
+    }
+
+    public mutating func cancelRestartFadeIn() {
+        pendingRestartFadeInGeneration = nil
     }
 }
 
