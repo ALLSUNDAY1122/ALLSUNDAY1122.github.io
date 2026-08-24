@@ -11,20 +11,22 @@ private struct AW34FixedWindowBenchmarkModel {
         self.windowNanoseconds = windowNanoseconds
     }
 
+    @inline(never)
     mutating func submit(ticket: UInt64, at now: UInt64) {
         if let deadline, deadline <= now, latestTicket != nil {
-            executed += 1
+            executed &+= 1
             self.deadline = nil
             latestTicket = nil
         }
-        if latestTicket != nil { superseded += 1 }
+        if latestTicket != nil { superseded &+= 1 }
         latestTicket = ticket
-        if deadline == nil { deadline = now + windowNanoseconds }
+        if deadline == nil { deadline = now &+ windowNanoseconds }
     }
 
+    @inline(never)
     mutating func finish(at now: UInt64) {
         if let deadline, deadline <= now, latestTicket != nil {
-            executed += 1
+            executed &+= 1
             self.deadline = nil
             latestTicket = nil
         }
@@ -36,7 +38,6 @@ struct L3AW34FixedWindowCoalescingBenchmark {
     static func main() {
         let rounds = 20
         let operations = 1_000_000
-        let spacing: UInt64 = 125_000
         let window: UInt64 = 16_000_000
         let clock = ContinuousClock()
         var samples: [Double] = []
@@ -44,20 +45,25 @@ struct L3AW34FixedWindowCoalescingBenchmark {
 
         for round in 0..<rounds {
             var model = AW34FixedWindowBenchmarkModel(windowNanoseconds: window)
+            var now: UInt64 = 0
+            var jitter = UInt64(round + 1) &* 0x9E3779B97F4A7C15
             let start = clock.now
             for index in 1...operations {
-                model.submit(
-                    ticket: UInt64(index),
-                    at: UInt64(index - 1) * spacing
-                )
+                // Runtime-dependent monotonic spacing plus no-inline state mutation prevents the
+                // optimizer from folding the benchmark into a closed-form counter calculation.
+                jitter ^= jitter << 13
+                jitter ^= jitter >> 7
+                jitter ^= jitter << 17
+                now &+= 100_000 &+ (jitter % 50_001)
+                model.submit(ticket: UInt64(index) ^ jitter, at: now)
             }
-            model.finish(at: UInt64(operations) * spacing + window)
+            model.finish(at: now &+ window)
             let elapsed = start.duration(to: clock.now).components
             let ms = Double(elapsed.seconds) * 1_000
                 + Double(elapsed.attoseconds) / 1_000_000_000_000_000
             samples.append(ms)
             precondition(model.executed + model.superseded == UInt64(operations))
-            checksum &+= model.executed &+ model.superseded &+ UInt64(round)
+            checksum &+= model.executed &* 31 &+ model.superseded &+ jitter
         }
 
         samples.sort()
