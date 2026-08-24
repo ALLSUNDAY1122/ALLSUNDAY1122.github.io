@@ -264,7 +264,8 @@ struct L3AW31TempoBoundarySelectedFacadeSelfTest {
         }
         precondition(seekEnd < finalPrepare)
 
-        let beforeActiveBoundary = await rawPlayback.snapshot().prepares
+        let beforeActiveSnapshot = await rawPlayback.snapshot()
+        let beforeActiveBoundary = beforeActiveSnapshot.prepares
         let began = await stack.lifecycle.submitInterruptionBegan()
         guard case .began = began else { preconditionFailure("interruption begin failed") }
         let blocked = try await stack.facade.submitTempoRatio(0.9)
@@ -273,7 +274,8 @@ struct L3AW31TempoBoundarySelectedFacadeSelfTest {
               case .rejectedBeforeTransport(kind: .tempo, reason: .interruptionActive) = guarded else {
             preconditionFailure("active interruption must reject before Playback tempo boundary")
         }
-        precondition(await rawPlayback.snapshot().prepares == beforeActiveBoundary)
+        let afterActiveSnapshot = await rawPlayback.snapshot()
+        precondition(afterActiveSnapshot.prepares == beforeActiveBoundary)
 
         print(
             "L3-AW31 facade PASS executed=\(executed) superseded=\(superseded) "
