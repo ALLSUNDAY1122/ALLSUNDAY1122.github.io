@@ -3,10 +3,10 @@
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_pr": 4431,
-  "integration_epoch": 23,
+  "integration_epoch": 24,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "EPOCH23_L2_AW31_AW32_L3_AW30_AW32_L4_W35_W36_CANONICAL_PORTABLE_292_PASS_EXTERNAL_DEVICE_GATES_PENDING",
+  "baseline_state": "EPOCH24_L2_AW33_AW35_L3_AW33_AW34_CANONICAL_PORTABLE_292_PASS_EXTERNAL_DEVICE_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
@@ -37,14 +37,15 @@
     "epoch20":{"L1":"A21","L2":"AW25","L3":"AW26","L4":"W30","commit":"8f68a57c1ef41b6ac1c4bd350e0c4a3936053d0e","hq_test_fix":"ecf7336d8d68f1099a3d8b2413dfe70f41465ad6","run":32681329183,"tests":248,"unhandled":212},
     "epoch21":{"L1":"A22-A23","L2":"AW26-AW28","L3":"AW27-AW29","L4":"W31-W32","commit":"2598c95490be2ce9fa4827dd86c89f566200db79","hq_test_fix":"414671afdeccde88759c0d65f770d15579e696f0","initial_run":32686182386,"initial_run_number":142,"run":32686352837,"run_number":144,"tests":264,"unhandled":226,"locks":"fdea9ba7e6074be622214ab49a979ed8d961db72"},
     "epoch22":{"L2":"AW29-AW30","L4":"W33-W34","commit":"b702f71d2ec57de5c035d462fb60c39c2d6f5c62","run":32689995129,"run_number":161,"tests":279,"unhandled":226,"locks":"e97e2a9c103688598f63a4f76ac783300c03ad52"},
-    "epoch23":{"L2":"AW31-AW32","L3":"AW30-AW32","L4":"W35-W36","commit":"e424cd22f11ed05d631d83a488f00f281ab40328","hq_test_fix":"9071043a9c64879a88f82fd6657e0a1b2b8f832f","initial_run":32695378498,"initial_run_number":167,"initial_result":"FAIL","initial_reason":"W36 cancellation integrity XCTest captured XCTestCase self across Task sending boundary under Swift 6 strict concurrency","run":32696596373,"run_number":169,"tests":292,"unhandled":251,"locks":"7a71ce8b91ba48a38676e5801bdde74f05151803"}
+    "epoch23":{"L2":"AW31-AW32","L3":"AW30-AW32","L4":"W35-W36","commit":"e424cd22f11ed05d631d83a488f00f281ab40328","hq_test_fix":"9071043a9c64879a88f82fd6657e0a1b2b8f832f","initial_run":32695378498,"initial_run_number":167,"initial_result":"FAIL","initial_reason":"W36 cancellation integrity XCTest captured XCTestCase self across Task sending boundary under Swift 6 strict concurrency","run":32696596373,"run_number":169,"tests":292,"unhandled":251,"locks":"7a71ce8b91ba48a38676e5801bdde74f05151803"},
+    "epoch24":{"L2":"AW33-AW35","L3":"AW33-AW34","commit":"c12ce8dfb27c4a9958e502611a6e34f592d081e3","run":32723458025,"run_number":174,"tests":292,"unhandled":261,"locks":"19c52a1203047cc734119295f61c64b486c125c7"}
   },
-  "canonical_through": {"L1":"L1-A23","L2":"L2-AW32","L3":"L3-AW32","L4":"L4-W36"},
+  "canonical_through": {"L1":"L1-A23","L2":"L2-AW35","L3":"L3-AW34","L4":"L4-W36"},
   "current_unintegrated_snapshot": {
-    "L1":"A24-A25 complete NON_PARITY, but A26 discovered and repaired an A24-to-A25 retention/facade compatibility seam. A26 exact full Worker-branch audit remains NOT_OBSERVED, so HQ deliberately keeps L1 canonical at A23 rather than canonicalizing a known-regressed intermediate checkpoint.",
-    "L2":"AW31-AW32 canonical. Apple Core Data/SQLite/WAL/APFS/device execution remains pending; portable evidence does not prove device persistence/performance.",
-    "L3":"AW30-AW32 canonical. AW33 is complete NON_PARITY as one post-Epoch23 Wave and is deferred until the next coherent checkpoint unless cross-lane urgency arises. Selected Xcode/AVFAudio/iPhone execution remains pending.",
-    "L4":"W35-W36 canonical. W37 is current/post-Epoch23 and remains outside this checkpoint. Physical-iPhone/current-Moises evidence remains pending."
+    "L1":"A24-A25 complete NON_PARITY, but A26 discovered and repaired an A24-to-A25 retention/facade compatibility seam. A26 exact full Worker-branch dependency/provenance audit remains NOT_OBSERVED, so HQ keeps L1 canonical at A23.",
+    "L2":"AW33-AW35 canonical NON_PARITY. A narrow TOCTOU window remains after export prepare before metadata registration/intent retirement, and Apple Core Data/SQLite/WAL/APFS/device execution remains pending. Later Waves, if any, are post-Epoch24 until re-read.",
+    "L3":"AW33-AW34 canonical NON_PARITY. Selected Xcode/AVFAudio/physical-iPhone timing/audio and current-Moises differential remain pending. Later Waves, if any, are post-Epoch24 until re-read.",
+    "L4":"W35-W36 canonical. W37 is post-Epoch24/current and remains outside this checkpoint. Physical-iPhone/current-Moises evidence remains pending."
   },
   "epoch23_integration": {
     "L1":{"canonical":"A23","deferred":"A24-A26","note":"A26 repaired a discovered A24/A25 compatibility seam, but full exact branch audit is still unobserved; do not canonicalize known-regressed A24/A25 intermediate state."},
@@ -55,11 +56,20 @@
     "hq_test_fix":"9071043a9c64879a88f82fd6657e0a1b2b8f832f",
     "code_run":{"id":32696596373,"number":169,"result":"SUCCESS","tests":292,"unhandled":251}
   },
+  "epoch24_integration": {
+    "L1":{"canonical":"A23","deferred":"A24-A26","note":"A26 exact full-branch audit remains unobserved, so no L1 overlay in Epoch24."},
+    "L2":{"canonical":"AW33-AW35","source_head":"57a5433979a32fbae2700b5f7240f0c00bc7ff0f","scope":["IO/**","Library/**"],"note":"Compatibility decode boundary, DNS resolution guard, and export-batch content-integrity hardening. Portable/local evidence does not prove Apple Core Data/APFS/device runtime."},
+    "L3":{"canonical":"AW33-AW34","source_head":"faabf9df730eb52e8ec6e1becc62aa4a68601f12","scope":["Playback/**","DSP/**"],"note":"Selected-stack reconstruction/poison recovery plus fixed-window continuous coalescing starvation hardening. Playback/DSP remains outside SwiftPM target and still needs selected Xcode/AVFAudio/iPhone proof."},
+    "L4":{"canonical":"W36","deferred":"W37+","note":"No L4 overlay in Epoch24; W37 was in progress at freeze."},
+    "semantic_commit":"c12ce8dfb27c4a9958e502611a6e34f592d081e3",
+    "exact_overlay_files":32,
+    "code_run":{"id":32723458025,"number":174,"result":"SUCCESS","tests":292,"unhandled":261}
+  },
   "branch_hygiene": {
     "worker3_branch_status":"NONSTANDARD_DIRECT_STATUS_ON_INTEGRATION",
-    "worker3_lane_head":"8546a2e3594f8950b7bd7e20ed76f871b5bff957",
-    "worker3_canonical_source_head":"7c6573f4437355f1ddffaaa15d4ca4e34133154b",
-    "note":"Integration-side status records AW33 complete, but Epoch23 code freeze canonicalizes only through AW32; AW33 is deferred."
+    "worker3_lane_head":"faabf9df730eb52e8ec6e1becc62aa4a68601f12",
+    "worker3_canonical_source_head":"faabf9df730eb52e8ec6e1becc62aa4a68601f12",
+    "note":"Epoch24 froze L3 through AW34 from the exact lane branch commit. Integration-side worker3 status remains nonstandard and must not be trusted without branch/evidence read-back."
   },
   "validation": {
     "workflow":".github/workflows/moises-hq-integration.yml",
@@ -69,6 +79,8 @@
     "epoch23_initial_run":{"id":32695378498,"number":167,"result":"FAIL","reason":"W36 XCTest strict-concurrency self capture; production sources compiled"},
     "epoch23_code_run":{"id":32696596373,"number":169,"result":"SUCCESS","test_count":292,"unhandled_file_count":251},
     "epoch23_scope_note":"Run169 compiles/tests Package-selected L4 W35-W36 and preserves sustained-tone Tempo fail-closed. L2 Library and L3 Playback/DSP remain outside SwiftPM compile coverage; their Worker evidence plus selected Apple/Core Data/AVFAudio/device gates remain separate.",
+    "epoch24_code_run":{"id":32723458025,"number":174,"result":"SUCCESS","test_count":292,"unhandled_file_count":261},
+    "epoch24_scope_note":"Run174 preserves the Package-selected portable suite at 292/292. The unhandled count rose from 251 to 261 because newly canonical L2/L3 files are outside the SwiftPM target; therefore Run174 does not prove L2 Apple persistence/runtime or L3 AVFAudio/physical-iPhone behavior.",
     "parity_effect":"NONE"
   },
   "parity":{"promotion_count":0,"state":"ALL_CURRENT_IPHONE_IN_SCOPE_ROWS_REMAIN_MISSING","rule":"Portable/synthetic/harness/readiness/compile evidence alone never promotes PARITY."},
