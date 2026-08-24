@@ -86,9 +86,10 @@ struct L2AW29ManagedArtifactInventorySelfCheck {
         try Data("a".utf8).write(to: a)
         try Data("b".utf8).write(to: b)
         let upgradeInventory = Lane2ManagedArtifactInventory(rootURL: upgradeRoot)
-        precondition(
-            try !upgradeInventory.activateForFirstManagedArtifactIfSafe(relativePath: "Imports/a.m4a")
+        let upgradeActivated = try upgradeInventory.activateForFirstManagedArtifactIfSafe(
+            relativePath: "Imports/a.m4a"
         )
+        precondition(!upgradeActivated)
         precondition(!upgradeInventory.isAuthoritative)
 
         print(
