@@ -5,7 +5,8 @@ public extension CrashSafeProjectLibraryStore {
     /// Production open for callers that do not need PreservingCoreDataStoreOpener.
     /// AW24 bounds legacy preparation; AW26 injects targeted live-reference authorization; AW30
     /// advances one durable managed-artifact compatibility census chunk per launch for upgrades.
-    /// In-memory tests retain the compatibility full-projection fallback.
+    /// Census failure never blocks user-data access: authority simply remains absent and AW28
+    /// compatibility behavior stays active. In-memory tests retain the full-projection fallback.
     static func openBulkPrepared(
         metadataConfiguration: CoreDataProjectLibraryStore.Configuration,
         artifactRootURL: URL
@@ -18,7 +19,7 @@ public extension CrashSafeProjectLibraryStore {
                 metadataStoreURL: metadataStoreURL,
                 artifactRootURL: artifactRootURL
             )
-            _ = try Lane2ManagedArtifactCompatibilityCensus(
+            _ = try? Lane2ManagedArtifactCompatibilityCensus(
                 rootURL: artifactRootURL
             ).advance()
             resolver = Lane2CoreDataLiveArtifactReferenceResolver(storeURL: metadataStoreURL)
