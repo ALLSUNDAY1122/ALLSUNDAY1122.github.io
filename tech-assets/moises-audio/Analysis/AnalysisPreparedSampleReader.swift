@@ -21,6 +21,8 @@ public final class AnalysisPreparedSampleReader {
     public let sampleCount: Int
     public let durationSeconds: Double
     public let diagnostics: AnalysisPreparedReaderDiagnostics
+    public private(set) var preparedSampleComputationCount = 0
+    public private(set) var preparedBlockLoadCount = 0
 
     private let sourceSamples: [Float]
     private let ratio: Double
@@ -144,11 +146,13 @@ public final class AnalysisPreparedSampleReader {
     }
 
     private func loadBlock(start: Int) throws -> (start: Int, values: [Float]) {
+        preparedBlockLoadCount += 1
         let end = min(sampleCount, start + blockSampleCount)
         var values = Array(repeating: Float(0), count: max(0, end - start))
         for outputIndex in start..<end {
             try AnalysisCancellationPolicy.checkIfNeeded(enabled: true, iteration: outputIndex - start, stride: 2_048)
             values[outputIndex - start] = computePreparedSample(outputIndex)
+            preparedSampleComputationCount += 1
         }
         return (start, values)
     }
