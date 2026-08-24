@@ -105,7 +105,11 @@ resource_pause = MODEL.index("if let reason = resourcePauseReason")
 checkpoint_before_pause = MODEL.rfind("trainer.saveCheckpoint", 0, resource_pause)
 assert checkpoint_before_pause >= 0, "resource pause must be preceded by a recoverable checkpoint"
 assert "paused-\\(reason.rawValue)" in MODEL
-assert 'writeRunReport("completed"' in MODEL
+require(
+    r'writeRunReport\(\s*"completed"\s*,\s*\.preview',
+    MODEL,
+    "completed reconstruction must persist a preview-phase run report",
+)
 assert "peakResidentMemoryBytes" in RESOURCE
 assert "peakSplatCount" in RESOURCE
 assert "reconstruction-run-%05d.json" in RESOURCE
