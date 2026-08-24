@@ -52,6 +52,7 @@ struct AnalysisReusableChordSpectralWorkspace {
     var windowedScratch: [Double]
     var recurrenceS1: [Double]
     var recurrenceS2: [Double]
+    var backendGuard = AnalysisChordBackendEquivalenceGuard()
     private(set) var classificationCount = 0
 
     init(sampleRate: Double, windowSampleCount: Int) {
@@ -62,6 +63,10 @@ struct AnalysisReusableChordSpectralWorkspace {
     }
 
     mutating func markClassification() { classificationCount += 1 }
+
+    var backendGuardDiagnostics: AnalysisChordBackendGuardDiagnostics {
+        backendGuard.diagnostics
+    }
 }
 
 enum AnalysisChordSpectralEvidenceComputer {
@@ -200,16 +205,63 @@ enum AnalysisReusableChordFrameClassifier {
         guard rms(samples) >= configuration.noChordRMS else { return ("N", 1) }
 
         workspace.markClassification()
-        let evidence = AnalysisChordSpectralEvidenceComputer.compute(
-            samples: samples,
-            workspace: &workspace,
-            backend: .interleavedMultiBin
-        )
-        return AnalysisChordDecisionScorer.classify(
-            evidence: evidence,
-            configuration: configuration,
-            vocabulary: vocabulary
-        )
+        switch workspace.backendGuard.state {
+        case .verifying:
+            let referenceEvidence = AnalysisChordSpectralEvidenceComputer.compute(
+                samples: samples,
+                workspace: &workspace,
+                backend: .referencePerBin
+            )
+            let vectorizedEvidence = AnalysisChordSpectralEvidenceComputer.compute(
+                samples: samples,
+                workspace: &workspace,
+                backend: .interleavedMultiBin
+            )
+            let referenceDecision = AnalysisChordDecisionScorer.classify(
+                evidence: referenceEvidence,
+                configuration: configuration,
+                vocabulary: vocabulary
+            )
+            let vectorizedDecision = AnalysisChordDecisionScorer.classify(
+                evidence: vectorizedEvidence,
+                configuration: configuration,
+                vocabulary: vocabulary
+            )
+            return workspace.backendGuard.resolveVerification(
+                referenceEvidence: referenceEvidence,
+                vectorizedEvidence: vectorizedEvidence,
+                referenceDecision: referenceDecision,
+                vectorizedDecision: vectorizedDecision
+            )
+
+        case .vectorizedVerified:
+            let evidence = AnalysisChordSpectralEvidenceComputer.compute(
+                samples: samples,
+                workspace: &workspace,
+                backend: .interleavedMultiBin
+            )
+            let decision = AnalysisChordDecisionScorer.classify(
+                evidence: evidence,
+                configuration: configuration,
+                vocabulary: vocabulary
+            )
+            workspace.backendGuard.recordVectorizedPublication()
+            return decision
+
+        case .scalarFallback:
+            let evidence = AnalysisChordSpectralEvidenceComputer.compute(
+                samples: samples,
+                workspace: &workspace,
+                backend: .referencePerBin
+            )
+            let decision = AnalysisChordDecisionScorer.classify(
+                evidence: evidence,
+                configuration: configuration,
+                vocabulary: vocabulary
+            )
+            workspace.backendGuard.recordReferencePublication()
+            return decision
+        }
     }
 
     private static func rms(_ samples: [Double]) -> Double {
