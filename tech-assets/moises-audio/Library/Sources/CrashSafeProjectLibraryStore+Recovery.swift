@@ -20,6 +20,8 @@ public extension CrashSafeProjectLibraryStore {
     /// per launch before crash-safe delete recovery; AW26 injects a targeted read-only resolver;
     /// AW30 advances one durable managed-artifact compatibility census chunk per launch so upgraded
     /// stores converge to AW29's sharded steady-state without granting premature inventory authority.
+    /// Census failure is nonblocking for user data: authority remains absent and compatibility mode
+    /// continues until a later safe census succeeds.
     static func openPreservingUserData(
         metadataStoreURL: URL,
         artifactRootURL: URL,
@@ -33,7 +35,7 @@ public extension CrashSafeProjectLibraryStore {
             metadataStoreURL: metadataStoreURL,
             artifactRootURL: artifactRootURL
         )
-        _ = try Lane2ManagedArtifactCompatibilityCensus(
+        _ = try? Lane2ManagedArtifactCompatibilityCensus(
             rootURL: artifactRootURL
         ).advance()
         let library = try CrashSafeProjectLibraryStore(
