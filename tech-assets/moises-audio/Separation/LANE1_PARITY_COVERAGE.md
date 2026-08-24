@@ -14,7 +14,7 @@ This inventory is a Worker planning/evidence map only. It does not modify or pro
 | MOI-P020 processing | progress/cancel/retry/resume | durable registry; truthful cancellation; provider fault matrix; reconnect/relaunch; atomic publication | no material non-external lifecycle gap known | integrated iPhone interruption/background/relaunch + real runtime semantics |
 | MOI-P021 performance | Lane 1 upload/separation/download contribution | bounded streaming; storage preflight; long-track instrumentation | server/runtime evidence producer is ready | physical-iPhone memory/thermal/battery and integrated device gate |
 | MOI-P024 privacy | server upload/output/retention/deletion contribution | retention/delete enforcement; redaction; privacy-safe telemetry/evidence | written/live route terms still required | written provider/runtime terms + integrated deletion/account behavior |
-| MOI-P025 AI stem generation | generated-stem runtime, entitlement/credit, recovery, publication and live quality gate | **A21** durable credit/lifecycle contract + **A22** provider-neutral runtime adapter, private execution binding, current-iPhone role/mode surface, real-run/differential/recovery live gate | generated-stem timing/mix compatibility and variant transaction hardening | exact current-iPhone role/mode/credit/entitlement UX; commercial live runtime; real generated quality/latency; current-iPhone A/B; HQ PARITY |
+| MOI-P025 AI stem generation | generated-stem runtime, entitlement/credit, recovery, publication, mix compatibility and live quality gate | **A21** durable credit/lifecycle + **A22** provider-neutral runtime/live gate + **A23** exact source-format/timeline compatibility, normalization provenance and atomic active-variant transaction | generated-stem retention/delete/refund/orphan cleanup coupling | exact current-iPhone role/mode/credit/entitlement UX; commercial live runtime; real generated quality/latency; current-iPhone A/B; integrated iPhone mixer; HQ PARITY |
 
 ## Existing implementation groups
 
@@ -25,6 +25,7 @@ This inventory is a Worker planning/evidence map only. It does not modify or pro
 - `Separation/Server/ai_stem_generation_models.py`
 - `Separation/Server/ai_stem_generation_contract.py`
 - `Separation/Server/ai_stem_generation_runtime.py`
+- `Separation/Server/generated_stem_mix_compatibility.py`
 
 ### Output assurance
 - `Separation/Sources/AssuredSeparationProvider.swift`
@@ -53,34 +54,28 @@ This inventory is a Worker planning/evidence map only. It does not modify or pro
 
 P025 is not ordinary source separation. It creates new audio, so the processing contract must protect both execution and user credits.
 
-A21 adds these invariants:
-
-1. exact generation tier/role/mode/credit behavior comes from a hash-bound capability snapshot, not hard-coded monthly plan assumptions;
-2. account entitlement is a separate hash-bound snapshot and raw account IDs are not persisted;
-3. concurrent reservations against the same entitlement snapshot cannot double-spend the same observed credits;
-4. ambiguous start holds reserved credit until authoritative reconciliation proves whether execution existed;
-5. logical cancellation wins publication, but upstream cancellation is claimed only when confirmed;
-6. committed credit is never automatically refunded; any refund state requires explicit authority evidence;
-7. generated output is publishable only after execution binding, credit commitment, project-controlled copy and integrity verification;
-8. regeneration is a new variant/new request identity rather than a free replay of a previous execution;
-9. raw prompts, account/project/execution IDs, signed URLs and raw audio are excluded from durable public evidence.
+A21 invariants include hash-bound capability/entitlement snapshots, concurrent credit reservation, ambiguous-start reconciliation, truthful cancel/refund semantics, project-controlled output publication, regeneration identity and privacy-safe evidence.
 
 ## A22 runtime / live gate boundary
 
-A22 connects A21 to a real future generation engine without assuming a specific unapproved vendor.
+A22 connects A21 to a future real generation engine without assuming a specific unapproved vendor. Runtime descriptors support hosted/local/project-owned authority kinds, private execution binding, fail-closed ambiguous start, rights-cleared real-source live campaigns, explicit current-iPhone role/mode pairs, differential evidence and mandatory recovery scenarios.
 
-1. runtime descriptors bind hosted/local/project-owned authority kind, exact runtime identity, driver artifact SHA, A21 capability snapshot and credential environment-variable names only;
-2. raw execution IDs are held only in a private durable binding store so relaunch/observe/cancel can recover without exposing them in public evidence;
-3. ambiguous start never causes blind regeneration or speculative credit release;
-4. READY output is hash/size/WAV verified and atomically copied under project control before publication;
-5. current-iPhone coverage is represented as explicit observed role/mode pairs, not a fabricated Cartesian product;
-6. live runs must use rights-cleared real sources and every successful run must have blind current-iPhone differential evidence;
-7. ambiguous-start, relaunch, cancel-during-generation and credit-exhaustion recovery scenarios are mandatory;
-8. all private campaign inputs are physical SHA-bound and kept outside the repository;
-9. engineering thresholds are experiment policy, not Moises performance facts.
+## A23 mix compatibility / variant boundary
+
+A23 prevents a generated runtime artifact from being treated as mixer-ready merely because generation completed.
+
+1. sample rate, channels, PCM/float format, bit depth, frame count and zero timeline origin must match the source project mix spec before activation;
+2. resample/channel-remix/sample-format conversion/edge trim-pad are fail-closed unless explicitly permitted by a hash-bound policy;
+3. when conversion is needed, the evidence chain binds raw artifact SHA -> normalization plan SHA -> normalizer artifact SHA -> execution evidence SHA -> normalized output SHA;
+4. normalized output still must exactly match the source mix format/frame count;
+5. generated variants use immutable content-addressed objects/manifests plus an atomic active pointer;
+6. same variant identity is idempotent, conflicting same-index replacement and index regression are rejected;
+7. crash after object or manifest persistence preserves the previously active variant;
+8. active pointer corruption, artifact mutation and symlink audio fail closed;
+9. public evidence exposes hashes/format metadata only, not paths or raw audio.
 
 ## Current non-negotiable gaps
 
-No Lane 1 row can be promoted from synthetic/control/schema evidence. P003/P004/P005/P020/P021/P024 remain live/HQ-gated. P025 now has the A21 processing/credit contract and A22 runtime/live-evaluation infrastructure, but remains `MISSING` until a real commercially acceptable generation runtime, rights-cleared source audio, exact current-iPhone role/mode/credit/entitlement workflow, generated-audio quality/latency, differential listening and integrated device evidence exist.
+No Lane 1 row can be promoted from synthetic/control/schema evidence. P003/P004/P005/P020/P021/P024 remain live/HQ-gated. P025 now has A21 processing/credit, A22 runtime/live-evaluation and A23 mix-compatible atomic variant infrastructure, but remains `MISSING` until a real commercially acceptable generation runtime, rights-cleared source audio, exact current-iPhone role/mode/credit/entitlement workflow, generated-audio quality/latency, differential listening, integrated iPhone mixer and deletion/retention behavior exist.
 
 Synthetic, mock, compile-only or harness-only results remain `NON_PARITY_EVIDENCE_ONLY`.
