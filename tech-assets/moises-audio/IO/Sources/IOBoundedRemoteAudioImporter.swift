@@ -32,7 +32,7 @@ public actor IOBoundedRemoteAudioImporter: AudioImporting {
         self.baseImporter = baseImporter
         self.fileStore = store
         self.fileManager = fileManager
-        self.downloader = IOBoundedDirectDownloadTransport(
+        self.downloader = IOResolutionGuardedDirectDownloadTransport(
             fileStore: store,
             maximumBytes: maximumDownloadBytes,
             maximumRedirects: maximumRedirects,

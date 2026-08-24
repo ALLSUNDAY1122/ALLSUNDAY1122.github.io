@@ -15,6 +15,8 @@ public struct IOExportBatchTransaction: Sendable {
         case outputNotRegularFile(filename: String)
         case outputEmpty(filename: String)
         case destinationConflict
+        case integrityManifestInvalid
+        case integrityMismatch(filename: String)
         case fileOperationFailed(code: String)
     }
 
@@ -40,7 +42,21 @@ public struct IOExportBatchTransaction: Sendable {
         }
     }
 
+    private struct IntegrityItem: Codable, Equatable, Sendable {
+        let filename: String
+        let byteCount: UInt64
+        let contentDigest: UInt64
+    }
+
+    private struct IntegrityManifest: Codable, Equatable, Sendable {
+        static let schemaVersion = 1
+        let schemaVersion: Int
+        let batchID: String
+        let items: [IntegrityItem]
+    }
+
     public static let preRegistrationMarkerFilename = ".lane2-registration-pending"
+    public static let integrityManifestFilename = ".lane2-batch-integrity-v1.json"
     public static let publicationSessionID = UUID().uuidString.lowercased()
 
     private let fileStore: IOFileStore
@@ -94,7 +110,10 @@ public struct IOExportBatchTransaction: Sendable {
         var occurrences: [String: Int] = [:]
         let items = suggestedFilenameStems.map { rawStem -> PlannedItem in
             let stem = IOFileStore.sanitizedFilenameStem(rawStem)
-            let normalizedKey = stem.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "en_US_POSIX"))
+            let normalizedKey = stem.folding(
+                options: [.caseInsensitive, .diacriticInsensitive],
+                locale: Locale(identifier: "en_US_POSIX")
+            )
             let occurrence = (occurrences[normalizedKey] ?? 0) + 1
             occurrences[normalizedKey] = occurrence
             let suffix = occurrence == 1 ? "" : " (\(occurrence))"
@@ -105,11 +124,8 @@ public struct IOExportBatchTransaction: Sendable {
         return Plan(id: id, stagingDirectoryURL: batchURL, items: items)
     }
 
-    /// Atomically publishes the entire batch using one directory move.
-    /// Every output must exist, be a regular file, and contain at least one byte.
-    /// The hidden marker is persisted inside staging before the rename, so every
-    /// successfully published canonical batch is recoverable until Library registration
-    /// durably adopts it.
+    /// Atomically publishes the entire batch using one directory move. A durable integrity manifest
+    /// is written before the rename and read back against the published files after the rename.
     public func commit(
         _ plan: Plan,
         fileManager: FileManager = .default
@@ -121,27 +137,17 @@ public struct IOExportBatchTransaction: Sendable {
             throw BatchError.invalidPlan
         }
 
+        var fingerprints: [IntegrityItem] = []
+        fingerprints.reserveCapacity(plan.items.count)
         for item in plan.items {
-            var isDirectory: ObjCBool = false
-            guard fileManager.fileExists(atPath: item.stagingURL.path, isDirectory: &isDirectory) else {
-                throw BatchError.outputMissing(filename: item.filename)
-            }
-            guard !isDirectory.boolValue else {
-                throw BatchError.outputNotRegularFile(filename: item.filename)
-            }
-            do {
-                let attributes = try fileManager.attributesOfItem(atPath: item.stagingURL.path)
-                guard attributes[.type] as? FileAttributeType == .typeRegular else {
-                    throw BatchError.outputNotRegularFile(filename: item.filename)
-                }
-                let size = (attributes[.size] as? NSNumber)?.int64Value ?? 0
-                guard size > 0 else { throw BatchError.outputEmpty(filename: item.filename) }
-            } catch let error as BatchError {
-                throw error
-            } catch {
-                throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_OUTPUT_STAT_FAILED")
-            }
+            fingerprints.append(try fingerprint(itemURL: item.stagingURL, filename: item.filename, fileManager: fileManager))
         }
+        let manifest = IntegrityManifest(
+            schemaVersion: IntegrityManifest.schemaVersion,
+            batchID: plan.id,
+            items: fingerprints.sorted { $0.filename < $1.filename }
+        )
+        try persistManifest(manifest, directory: plan.stagingDirectoryURL, fileManager: fileManager)
 
         let finalDirectoryURL = finalizedBatchesURL.appendingPathComponent(plan.id, isDirectory: true)
         guard !fileManager.fileExists(atPath: finalDirectoryURL.path) else {
@@ -150,7 +156,10 @@ public struct IOExportBatchTransaction: Sendable {
 
         let markerURL = plan.stagingDirectoryURL.appendingPathComponent(Self.preRegistrationMarkerFilename)
         do {
-            guard fileManager.createFile(atPath: markerURL.path, contents: Data((Self.publicationSessionID + "\n").utf8)) else {
+            guard fileManager.createFile(
+                atPath: markerURL.path,
+                contents: Data((Self.publicationSessionID + "\n").utf8)
+            ) else {
                 throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_MARKER_CREATE_FAILED")
             }
             let markerHandle = try FileHandle(forWritingTo: markerURL)
@@ -169,17 +178,73 @@ public struct IOExportBatchTransaction: Sendable {
         }
 
         do {
-            return try plan.items.map { item in
-                let finalURL = finalDirectoryURL.appendingPathComponent(item.filename)
-                return IOFileStore.FinalizedFile(
-                    relativePath: try fileStore.relativePath(for: finalURL),
-                    url: finalURL
-                )
-            }
+            return try verifyPublishedBatch(batchID: plan.id, fileManager: fileManager)
         } catch {
             try? fileManager.removeItem(at: finalDirectoryURL)
-            throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_RELATIVE_PATH_FAILED")
+            throw error
         }
+    }
+
+    /// Verifies a previously published batch against its durable manifest. This can be used by
+    /// registration/share recovery before exposing files after a relaunch.
+    public func verifyPublishedBatch(
+        batchID: String,
+        fileManager: FileManager = .default
+    ) throws -> [IOFileStore.FinalizedFile] {
+        guard !batchID.isEmpty,
+              !batchID.contains("/"),
+              !batchID.contains("\\") else {
+            throw BatchError.integrityManifestInvalid
+        }
+        let directory = finalizedBatchesURL.appendingPathComponent(batchID, isDirectory: true)
+        guard isDirectChild(directory, of: finalizedBatchesURL) else {
+            throw BatchError.integrityManifestInvalid
+        }
+        let manifest = try loadManifest(directory: directory, fileManager: fileManager)
+        guard manifest.schemaVersion == IntegrityManifest.schemaVersion,
+              manifest.batchID == batchID,
+              !manifest.items.isEmpty else {
+            throw BatchError.integrityManifestInvalid
+        }
+
+        var seen = Set<String>()
+        var expectedNames = Set<String>()
+        var finalized: [IOFileStore.FinalizedFile] = []
+        for expected in manifest.items.sorted(by: { $0.filename < $1.filename }) {
+            guard isSafeLeafFilename(expected.filename), seen.insert(expected.filename).inserted else {
+                throw BatchError.integrityManifestInvalid
+            }
+            expectedNames.insert(expected.filename)
+            let url = directory.appendingPathComponent(expected.filename, isDirectory: false)
+            let actual = try fingerprint(itemURL: url, filename: expected.filename, fileManager: fileManager)
+            guard actual == expected else {
+                throw BatchError.integrityMismatch(filename: expected.filename)
+            }
+            finalized.append(
+                IOFileStore.FinalizedFile(
+                    relativePath: try fileStore.relativePath(for: url),
+                    url: url
+                )
+            )
+        }
+
+        let children = try fileManager.contentsOfDirectory(
+            at: directory,
+            includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey],
+            options: []
+        )
+        let allowedHidden = Set([Self.preRegistrationMarkerFilename, Self.integrityManifestFilename])
+        for child in children {
+            let name = child.lastPathComponent
+            guard expectedNames.contains(name) || allowedHidden.contains(name) else {
+                throw BatchError.integrityMismatch(filename: name)
+            }
+            let values = try child.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
+            guard values.isRegularFile == true, values.isSymbolicLink != true else {
+                throw BatchError.integrityMismatch(filename: name)
+            }
+        }
+        return finalized
     }
 
     public func abort(_ plan: Plan, fileManager: FileManager = .default) {
@@ -213,6 +278,91 @@ public struct IOExportBatchTransaction: Sendable {
             }
         }
         return removed
+    }
+
+    private func fingerprint(
+        itemURL: URL,
+        filename: String,
+        fileManager: FileManager
+    ) throws -> IntegrityItem {
+        var isDirectory: ObjCBool = false
+        guard fileManager.fileExists(atPath: itemURL.path, isDirectory: &isDirectory) else {
+            throw BatchError.outputMissing(filename: filename)
+        }
+        guard !isDirectory.boolValue else {
+            throw BatchError.outputNotRegularFile(filename: filename)
+        }
+        let values = try itemURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
+        guard values.isRegularFile == true, values.isSymbolicLink != true else {
+            throw BatchError.outputNotRegularFile(filename: filename)
+        }
+        let size = UInt64(max(values.fileSize ?? 0, 0))
+        guard size > 0 else { throw BatchError.outputEmpty(filename: filename) }
+
+        do {
+            let handle = try FileHandle(forReadingFrom: itemURL)
+            defer { try? handle.close() }
+            var digest: UInt64 = 14_695_981_039_346_656_037
+            while true {
+                let chunk = try handle.read(upToCount: 1024 * 1024) ?? Data()
+                if chunk.isEmpty { break }
+                for byte in chunk {
+                    digest ^= UInt64(byte)
+                    digest &*= 1_099_511_628_211
+                }
+            }
+            return IntegrityItem(filename: filename, byteCount: size, contentDigest: digest)
+        } catch let error as BatchError {
+            throw error
+        } catch {
+            throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_FINGERPRINT_FAILED")
+        }
+    }
+
+    private func persistManifest(
+        _ manifest: IntegrityManifest,
+        directory: URL,
+        fileManager: FileManager
+    ) throws {
+        let url = directory.appendingPathComponent(Self.integrityManifestFilename, isDirectory: false)
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.sortedKeys]
+            let data = try encoder.encode(manifest)
+            try data.write(to: url, options: [.atomic])
+            let handle = try FileHandle(forWritingTo: url)
+            try handle.synchronize()
+            try handle.close()
+        } catch {
+            throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_MANIFEST_WRITE_FAILED")
+        }
+    }
+
+    private func loadManifest(
+        directory: URL,
+        fileManager: FileManager
+    ) throws -> IntegrityManifest {
+        let url = directory.appendingPathComponent(Self.integrityManifestFilename, isDirectory: false)
+        do {
+            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
+            guard values.isRegularFile == true, values.isSymbolicLink != true else {
+                throw BatchError.integrityManifestInvalid
+            }
+            return try JSONDecoder().decode(IntegrityManifest.self, from: Data(contentsOf: url))
+        } catch let error as BatchError {
+            throw error
+        } catch {
+            throw BatchError.integrityManifestInvalid
+        }
+    }
+
+    private func isSafeLeafFilename(_ filename: String) -> Bool {
+        !filename.isEmpty
+            && !filename.hasPrefix(".")
+            && !filename.contains("/")
+            && !filename.contains("\\")
+            && filename != "."
+            && filename != ".."
     }
 
     private func isDirectChild(_ candidate: URL, of ancestor: URL) -> Bool {

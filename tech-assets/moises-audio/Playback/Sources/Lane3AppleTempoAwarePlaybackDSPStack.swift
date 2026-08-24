@@ -31,14 +31,30 @@ public struct Lane3AppleBoundaryEnvelopeCompositionReceipt: Equatable, Codable, 
     public let parityPromotionAllowed: Bool
 }
 
-/// AW31 shared Apple graph with AW32's selected restart-envelope decorator. The underlying Playback
-/// backend remains private. HQ receives only the fenced Playback surface plus the exact AW29 DSP
-/// stack, so source/transport clock authority cannot be bypassed accidentally.
+public struct Lane3AppleSelectedStackRecoveryCompositionReceipt: Equatable, Codable, Sendable {
+    public let schemaVersion: Int
+    public let evidenceScope: String
+    public let oneWayFacadeRecoveryLatch: Bool
+    public let selectedReplacementSlotAvailable: Bool
+    public let replacementGenerationFenced: Bool
+    public let staleRecoveryTicketRejected: Bool
+    public let rawFacadeFactoryPubliclyExposed: Bool
+    public let inPlacePoisonResetAvailable: Bool
+    public let physicalDeviceRecoveryValidated: Bool
+    public let parityPromotionAllowed: Bool
+}
+
+/// AW31 shared Apple graph with AW32's selected restart-envelope decorator and AW33's explicit
+/// reconstruction contract. The underlying Playback backend remains private. HQ receives the fenced
+/// Playback surface plus the exact AW29 DSP stack, then builds AW17/AW18/AW21 and wraps the selected
+/// facade in `Lane3SelectedTransportReconstructionSlot`. A facade that latches AW33 recovery is never
+/// reset in place; the whole selected composition is rebuilt and swapped by ticket/generation.
 public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
     public let playback: RescheduleFencedPlaybackBackend
     public let dsp: Lane3AppleDSPProductionStack
     public let compositionReceipt: Lane3AppleTempoAwareGraphReceipt
     public let boundaryEnvelopeCompositionReceipt: Lane3AppleBoundaryEnvelopeCompositionReceipt
+    public let recoveryCompositionReceipt: Lane3AppleSelectedStackRecoveryCompositionReceipt
     private let tempoBackend: AppleBoundaryEnvelopedPlaybackBackend
     private let projectID: ProjectID
     private let tempoRatioRange: ClosedRange<Double>
@@ -120,18 +136,31 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
             audibleArtifactEliminationClaimed: false,
             parityPromotionAllowed: false
         )
+        let recoveryReceipt = Lane3AppleSelectedStackRecoveryCompositionReceipt(
+            schemaVersion: 1,
+            evidenceScope: "LANE3_AW33_APPLE_SELECTED_STACK_RECOVERY_NON_PARITY",
+            oneWayFacadeRecoveryLatch: true,
+            selectedReplacementSlotAvailable: true,
+            replacementGenerationFenced: true,
+            staleRecoveryTicketRejected: true,
+            rawFacadeFactoryPubliclyExposed: false,
+            inPlacePoisonResetAvailable: false,
+            physicalDeviceRecoveryValidated: false,
+            parityPromotionAllowed: false
+        )
         return .init(
             playback: playback,
             dsp: dsp,
             compositionReceipt: receipt,
             boundaryEnvelopeCompositionReceipt: boundaryReceipt,
+            recoveryCompositionReceipt: recoveryReceipt,
             tempoBackend: envelopedPlayback,
             projectID: projectID,
             tempoRatioRange: capabilities.tempoRatioRange
         )
     }
 
-    /// Selected AW17 construction for AW31/AW32. Tempo's upstream quiet period is deliberately zero:
+    /// Selected AW17 construction for AW31-AW33. Tempo's upstream quiet period is deliberately zero:
     /// the selected facade already performs latest-wins coalescing before it fades/stops Playback.
     /// Keeping the historical AW17 16ms tempo delay here would create a second debounce while audio
     /// is muted and can surface as an avoidable restart gap.
@@ -153,7 +182,10 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
         )
     }
 
-    public func makeSelectedTransportFacade(
+    /// Internal constructor used only to seed the public recovery slot. Keeping this non-public is
+    /// important: callers outside the Lane-3 module should not be able to retain an unfenced facade
+    /// reference and keep using it after AW33 replaces the selected stack.
+    func makeSelectedTransportFacade(
         transportGate: Lane3InterruptionLifecycleGate,
         serializedClickGate: Lane3SerializedPracticeClickGate,
         tempoQuietPeriod: Duration = .milliseconds(16)
@@ -164,6 +196,20 @@ public struct Lane3AppleTempoAwarePlaybackDSPStack: @unchecked Sendable {
             serializedClickGate: serializedClickGate,
             tempoBackend: tempoBackend,
             tempoQuietPeriod: tempoQuietPeriod
+        )
+    }
+
+    public func makeSelectedTransportRecoverySlot(
+        transportGate: Lane3InterruptionLifecycleGate,
+        serializedClickGate: Lane3SerializedPracticeClickGate,
+        tempoQuietPeriod: Duration = .milliseconds(16)
+    ) -> Lane3SelectedTransportReconstructionSlot {
+        Lane3SelectedTransportReconstructionSlot(
+            initialFacade: makeSelectedTransportFacade(
+                transportGate: transportGate,
+                serializedClickGate: serializedClickGate,
+                tempoQuietPeriod: tempoQuietPeriod
+            )
         )
     }
 
