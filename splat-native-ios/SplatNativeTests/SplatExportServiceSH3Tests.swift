@@ -64,21 +64,46 @@ extension SplatExportServiceTests {
                 $0.color.higherOrderSHCoefficients.contains { abs($0) > 0.0001 }
             })
 
-            let coefficientAccuracy: Float = format == .spz ? 0.025 : 0.00001
             for (expected, actual) in zip(points, decoded) {
                 let expectedSH = expected.color.asSphericalHarmonicFloat
                 let actualSH = actual.color.asSphericalHarmonicFloat
                 XCTAssertEqual(actualSH.count, 16)
                 for index in 1..<16 {
-                    XCTAssertEqual(actualSH[index].x, expectedSH[index].x, accuracy: coefficientAccuracy)
-                    XCTAssertEqual(actualSH[index].y, expectedSH[index].y, accuracy: coefficientAccuracy)
-                    XCTAssertEqual(actualSH[index].z, expectedSH[index].z, accuracy: coefficientAccuracy)
+                    if format == .spz {
+                        // SPZ v3 intentionally quantizes SH1 to 5 bits and SH2/SH3 to 4 bits.
+                        // Compare against the format-defined quantized value rather than weakening
+                        // the gate with a broad absolute tolerance that can hide coefficient loss.
+                        let expectedQuantized = SIMD3<Float>(
+                            spzQuantizedSH(expectedSH[index].x, coefficientIndex: index),
+                            spzQuantizedSH(expectedSH[index].y, coefficientIndex: index),
+                            spzQuantizedSH(expectedSH[index].z, coefficientIndex: index)
+                        )
+                        XCTAssertEqual(actualSH[index].x, expectedQuantized.x, accuracy: 0.000001)
+                        XCTAssertEqual(actualSH[index].y, expectedQuantized.y, accuracy: 0.000001)
+                        XCTAssertEqual(actualSH[index].z, expectedQuantized.z, accuracy: 0.000001)
+                    } else {
+                        XCTAssertEqual(actualSH[index].x, expectedSH[index].x, accuracy: 0.00001)
+                        XCTAssertEqual(actualSH[index].y, expectedSH[index].y, accuracy: 0.00001)
+                        XCTAssertEqual(actualSH[index].z, expectedSH[index].z, accuracy: 0.00001)
+                    }
                 }
             }
 
             let bboxAccuracy: Float = format == .spz ? 0.01 : 0.00001
             assertSH3BoundingBox(points, decoded, accuracy: bboxAccuracy)
         }
+    }
+
+    /// Mirrors the SPZ v3 SH packing rule used by the pinned spz-swift dependency:
+    /// SH1 uses 5 effective bits (bucket 8), while SH2/SH3 use 4 (bucket 16).
+    /// The helper is deliberately local to the acceptance test so production export code
+    /// remains independent from a test-only representation of the codec.
+    private func spzQuantizedSH(_ value: Float, coefficientIndex: Int) -> Float {
+        let bucketSize = coefficientIndex <= 3 ? 8 : 16
+        var quantized = Int((value * 128.0).rounded() + 128.0)
+        quantized = ((quantized + bucketSize / 2) / bucketSize) * bucketSize
+        quantized = min(max(quantized, 0), 255)
+        return (Float(quantized) - 128.0) / 128.0
     }
 
     private func assertSH3BoundingBox(
