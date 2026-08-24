@@ -142,6 +142,9 @@ struct L3AW17UnifiedTransportAuthoritySelfTest {
             )
         )
 
+        // AW34 keeps latest-wins semantics but changes the quiet period from resettable debounce to
+        // a fixed first-intent window. A sufficiently large concurrent burst can therefore span more
+        // than one window on a slow runner; require complete accounting rather than exactly one token.
         var executed = 0
         var superseded = 0
         await withTaskGroup(of: Lane3UnifiedTransportOutcome.self) { group in
@@ -154,14 +157,14 @@ struct L3AW17UnifiedTransportAuthoritySelfTest {
                 switch result {
                 case .executed: executed += 1
                 case .supersededBeforeToken: superseded += 1
-                default: preconditionFailure("rapid seek must execute latest or supersede")
+                default: preconditionFailure("rapid seek must execute a window winner or supersede")
                 }
             }
         }
-        precondition(executed == 1)
-        precondition(superseded == 499)
+        precondition(executed >= 1)
+        precondition(executed + superseded == 500)
         let firstBackendSnapshot = await rawPlayback.snapshot()
-        precondition(firstBackendSnapshot.seekCount == 1)
+        precondition(firstBackendSnapshot.seekCount == executed)
 
         let orderedSeek = Task {
             await authority.submitSeek(to: 42, resume: true, loop: nil)
