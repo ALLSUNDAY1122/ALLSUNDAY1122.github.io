@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A24",
+  "title": "Generated Stem Retention / Delete / Refund / Orphan Recovery",
+  "target": "MOI-P025",
+  "state": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "tests": {
+    "focused_regression": {"passed": 38, "failed": 0},
+    "json_schema_validation": {"passed": 3, "failed": 0},
+    "python_compile": "PASS",
+    "github_core_blob_matches_tested_bytes": true,
+    "github_test_blob_matches_tested_bytes": true
+  },
+  "contracts": [
+    "generated variant delete intent is durably persisted before destructive local work",
+    "project delete fails closed if a project-owned generated manifest is not registered",
+    "active generated variants cannot be removed by superseded/orphan cleanup policies",
+    "content-addressed artifacts are erased only when no remaining manifest or active pointer references the bytes",
+    "active pointers protect shared bytes even if the corresponding manifest is missing",
+    "orphan objects require repeated observation, policy-bound grace time and durable delete intent before unlink",
+    "orphan/superseded grace values are bound to the registry by retention_policy_sha256 and cannot silently change on relaunch",
+    "inactive unregistered manifests are reported, never auto-deleted without abandonment evidence",
+    "runtime delete has a durable requesting intent before external contact so concurrent/relaunch paths cannot blindly resend deletion",
+    "runtime delete accepted is not erasure confirmation; requesting/accepted/ambiguous outcomes require authority reconciliation",
+    "runtime storage not-applicable requires physical authority evidence rather than inference from a missing binding",
+    "A21 reserved credits remain reserved_unsettled; local deletion never fabricates a release or refund",
+    "refund confirmation is imported only from A21 authority evidence",
+    "privacy_erasure_complete requires local association deletion, local physical erasure and authority-confirmed runtime erasure",
+    "public evidence contains only hashed generation/project/artifact identities and excludes raw IDs, paths and audio"
+  ],
+  "external_remaining": [
+    "commercial production generation runtime and written retention/deletion terms",
+    "live runtime deletion/retention evidence for the selected runtime",
+    "actual current-iPhone AI Stem Generation delete/cancel/refund behavior",
+    "rights-cleared real generated-audio campaign and blind current-iPhone comparison",
+    "integrated iPhone project/account deletion behavior across Lane 2/HQ storage",
+    "HQ final MOI-P024/MOI-P025 parity judgment"
+  ],
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY"
+}
