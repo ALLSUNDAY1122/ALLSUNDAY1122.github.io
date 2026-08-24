@@ -164,4 +164,13 @@ class T(unittest.TestCase):
     def test_snapshot_binds_retention_policy(self):
         self.reg(gen=H('a'),variant=28,data=b'policy2');snap=self.s.snapshot(generation_ref_hash_value=H('a'),variant_index=28);self.assertEqual(snap['retention_policy_sha256'],self.s.retention_policy_sha256)
 
+    def test_runtime_requesting_intent_blocks_blind_resend_after_crash_window(self):
+        logical=L('6');gh=generation_ref_hash(logical);self.reg(gen=gh,variant=29,data=b'rt-crash');bp=Path(self.t.name)/'bind.json';make_binding(bp,logical);calls=[]
+        with self.s.registry.locked() as st:
+            st['records'][f'{gh}.v29'].runtime_delete_state='requesting';self.s.registry.save(st)
+        self.s.request_delete(generation_ref_hash_value=gh,variant_index=29,reason='USER_DELETE',runtime_delete=lambda x:calls.append(x) or 'confirmed',binding_store_path=bp)
+        self.assertEqual(calls,[]);snap=self.s.snapshot(generation_ref_hash_value=gh,variant_index=29);self.assertEqual(snap['runtime_delete_state'],'requesting');self.assertFalse(snap['runtime_erasure_confirmed'])
+        self.s.reconcile_runtime_erasure(generation_ref_hash_value=gh,variant_index=29,receipt='not_found',authority_evidence_sha256=H('6'))
+        self.assertTrue(self.s.snapshot(generation_ref_hash_value=gh,variant_index=29)['runtime_erasure_confirmed'])
+
 if __name__=='__main__':unittest.main()
