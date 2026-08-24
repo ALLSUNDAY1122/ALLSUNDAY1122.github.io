@@ -14,7 +14,7 @@ This inventory is a Worker planning/evidence map only. It does not modify or pro
 | MOI-P020 processing | progress/cancel/retry/resume | durable registry; truthful cancellation; provider fault matrix; reconnect/relaunch; atomic publication | no material non-external lifecycle gap known | integrated iPhone interruption/background/relaunch + real runtime semantics |
 | MOI-P021 performance | Lane 1 upload/separation/download contribution | bounded streaming; storage preflight; long-track instrumentation | server/runtime evidence producer is ready | physical-iPhone memory/thermal/battery and integrated device gate |
 | MOI-P024 privacy | server upload/output/retention/deletion contribution | retention/delete enforcement; redaction; privacy-safe telemetry/evidence | written/live route terms still required | written provider/runtime terms + integrated deletion/account behavior |
-| MOI-P025 AI stem generation | generated-stem processing/runtime, entitlement/credit and publication safety | **A21** capability + entitlement snapshots; durable credit reservation; idempotent start; ambiguous-start reconciliation; truthful cancel/refund; project-controlled output publication; privacy-safe evidence | concrete generation runtime/provider adapter and generated-stem live evaluation/differential harness | exact current-iPhone role/mode/credit/entitlement UX; real generated quality/latency; current-iPhone A/B; HQ PARITY |
+| MOI-P025 AI stem generation | generated-stem runtime, entitlement/credit, recovery, publication and live quality gate | **A21** durable credit/lifecycle contract + **A22** provider-neutral runtime adapter, private execution binding, current-iPhone role/mode surface, real-run/differential/recovery live gate | generated-stem timing/mix compatibility and variant transaction hardening | exact current-iPhone role/mode/credit/entitlement UX; commercial live runtime; real generated quality/latency; current-iPhone A/B; HQ PARITY |
 
 ## Existing implementation groups
 
@@ -24,6 +24,7 @@ This inventory is a Worker planning/evidence map only. It does not modify or pro
 - `Separation/Server/rights_gate.py`
 - `Separation/Server/ai_stem_generation_models.py`
 - `Separation/Server/ai_stem_generation_contract.py`
+- `Separation/Server/ai_stem_generation_runtime.py`
 
 ### Output assurance
 - `Separation/Sources/AssuredSeparationProvider.swift`
@@ -44,6 +45,7 @@ This inventory is a Worker planning/evidence map only. It does not modify or pro
 - `Separation/Evaluation/differential_gate.py`
 - `Separation/Evaluation/differential_execute.py`
 - `Separation/Evaluation/differential_review.py`
+- `Separation/Evaluation/ai_stem_generation_live_gate.py`
 - A19/A20 Golden/differential reproducibility stack
 - E01-E10 route/live-evidence readiness stack
 
@@ -63,8 +65,22 @@ A21 adds these invariants:
 8. regeneration is a new variant/new request identity rather than a free replay of a previous execution;
 9. raw prompts, account/project/execution IDs, signed URLs and raw audio are excluded from durable public evidence.
 
+## A22 runtime / live gate boundary
+
+A22 connects A21 to a real future generation engine without assuming a specific unapproved vendor.
+
+1. runtime descriptors bind hosted/local/project-owned authority kind, exact runtime identity, driver artifact SHA, A21 capability snapshot and credential environment-variable names only;
+2. raw execution IDs are held only in a private durable binding store so relaunch/observe/cancel can recover without exposing them in public evidence;
+3. ambiguous start never causes blind regeneration or speculative credit release;
+4. READY output is hash/size/WAV verified and atomically copied under project control before publication;
+5. current-iPhone coverage is represented as explicit observed role/mode pairs, not a fabricated Cartesian product;
+6. live runs must use rights-cleared real sources and every successful run must have blind current-iPhone differential evidence;
+7. ambiguous-start, relaunch, cancel-during-generation and credit-exhaustion recovery scenarios are mandatory;
+8. all private campaign inputs are physical SHA-bound and kept outside the repository;
+9. engineering thresholds are experiment policy, not Moises performance facts.
+
 ## Current non-negotiable gaps
 
-No Lane 1 row can be promoted from synthetic/control/schema evidence. P003/P004/P005/P020/P021/P024 remain live/HQ-gated. P025 now has a Lane 1 processing/credit safety surface, but remains `MISSING` until a real generation runtime, rights/commercial basis, actual current-iPhone capability/credit/entitlement workflow, generated-audio quality/latency and differential evidence exist.
+No Lane 1 row can be promoted from synthetic/control/schema evidence. P003/P004/P005/P020/P021/P024 remain live/HQ-gated. P025 now has the A21 processing/credit contract and A22 runtime/live-evaluation infrastructure, but remains `MISSING` until a real commercially acceptable generation runtime, rights-cleared source audio, exact current-iPhone role/mode/credit/entitlement workflow, generated-audio quality/latency, differential listening and integrated device evidence exist.
 
 Synthetic, mock, compile-only or harness-only results remain `NON_PARITY_EVIDENCE_ONLY`.
