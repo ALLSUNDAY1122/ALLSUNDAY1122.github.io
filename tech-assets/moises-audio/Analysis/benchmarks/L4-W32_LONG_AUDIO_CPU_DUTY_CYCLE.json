@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W32",
+  "title": "Long-audio Analysis CPU duty-cycle / overlapping spectral-work thermal-risk hardening",
+  "evidence_class": "NON_PARITY_SYNTHETIC_ANALYTICAL",
+  "toolchain": {
+    "swift": "6.2.1",
+    "platform": "x86_64 Linux",
+    "strict_concurrency": "complete",
+    "warnings_as_errors": true
+  },
+  "production_changes": {
+    "tempo": "Ordinary audio below 1800 seconds keeps historical per-frame rescan summation order. Long audio uses rolling sum-of-squares with an exact ring-window rebase every 2048 natural Tempo frames.",
+    "chord": "Hann weights, MIDI frequencies, Goertzel coefficients and windowed scratch are created once per Analysis accumulator and reused. Chord cadence, Goertzel recurrence, candidate scoring, vocabulary and confidence logic remain unchanged.",
+    "mismatch_behavior": "Reusable Chord workspace falls back to legacy ChordFrameClassifier if sample count or sample rate does not match the precomputed kernel."
+  },
+  "tempo_equivalence": {
+    "prepared_samples": 2000000,
+    "natural_frames": 24996,
+    "maximum_absolute_energy_delta": 5.259681579161679e-15,
+    "maximum_relative_energy_delta": 4.86737580558946e-14,
+    "reference_window_square_terms": 9198528,
+    "rolling_square_updates": 3999632,
+    "rolling_periodic_rebase_terms": 4784,
+    "result": "PASS"
+  },
+  "tempo_microbenchmark": {
+    "prepared_samples_per_run": 4000000,
+    "runs": 5,
+    "reference_seconds": [0.055386317, 0.055557615, 0.05588309, 0.057483409, 0.054973207],
+    "rolling_seconds": [0.02766879, 0.027901065, 0.02746057, 0.027778122, 0.027187745],
+    "reference_median_seconds": 0.055557615,
+    "rolling_median_seconds": 0.02766879,
+    "rolling_to_reference_median_ratio": 0.4980197584075558,
+    "checksum_delta": 2.3646862246096134e-11,
+    "note": "Portable Tempo energy-path microbenchmark only; not physical-iPhone thermal or battery evidence."
+  },
+  "chord_equivalence": {
+    "sample_rate_hz": 8000,
+    "window_samples": 5600,
+    "spectral_bins": 48,
+    "windows_compared": 64,
+    "chroma_and_bass_values_compared": 1536,
+    "bit_pattern_mismatches": 0,
+    "maximum_absolute_delta": 0,
+    "result": "PASS"
+  },
+  "chord_microbenchmark": {
+    "windows_per_run": 160,
+    "runs": 5,
+    "legacy_seconds": [0.118455576, 0.115859155, 0.115655543, 0.115591508, 0.118714571],
+    "reused_seconds": [0.10965426, 0.108155742, 0.111033701, 0.108285269, 0.117474066],
+    "legacy_median_seconds": 0.115859155,
+    "reused_median_seconds": 0.10965426,
+    "reused_to_legacy_median_ratio": 0.946444499789421,
+    "checksum_bit_pattern_equal_each_run": true,
+    "note": "The modest wall reduction is expected because the 48 x window Goertzel recurrence remains unchanged."
+  },
+  "one_hour_analytical_budget": {
+    "analysis_sample_rate_hz": 8000,
+    "tempo_frame_size": 368,
+    "tempo_natural_frames": 359996,
+    "baseline_tempo_window_square_terms": 132478528,
+    "rolling_tempo_square_updates_upper_bound": 57599632,
+    "rolling_tempo_periodic_rebase_square_terms_upper_bound": 64768,
+    "tempo_square_term_reduction_ratio": 2.297405817107262,
+    "chord_window_samples": 5600,
+    "chord_frames": 14400,
+    "chord_spectral_bins": 48,
+    "baseline_chord_setup_transcendental_evaluations": 82022400,
+    "reused_chord_setup_transcendental_evaluations": 5696,
+    "chord_setup_reduction_ratio": 14400,
+    "goertzel_sample_iterations_unchanged": 3870720000
+  },
+  "budget_stress": {
+    "cases_per_run": 250000,
+    "runs": 5,
+    "failures": 0,
+    "checksum_each": 16375889024,
+    "internal_seconds": [0.050834363, 0.05060344, 0.049839365, 0.048414935, 0.051530939],
+    "max_rss_kb": 17064
+  },
+  "limitations": [
+    "The 1800-second Tempo switch is a CPU-resource implementation boundary, not a quality/PARITY threshold.",
+    "Rolling Tempo energy is mathematically equivalent but not bit-identical to repeated floating-point rescan between periodic exact rebases; ordinary-song paths remain on the old summation order.",
+    "Chord reuse removes repeated setup transcendental work and scratch allocation but deliberately does not alter the dominant Goertzel recurrence, chord cadence or classification semantics.",
+    "Portable Linux timings do not establish physical-iPhone thermal, battery or wall-time acceptance.",
+    "MOI-P021 remains MISSING until genuine Lane-2 bounded decode and HQ W23/W24 physical-iPhone acceptance are completed.",
+    "P009/P011/P013/P016 remain subject to rights-cleared W22 differential and current-iPhone Moises evidence."
+  ],
+  "parity_claim": false
+}
