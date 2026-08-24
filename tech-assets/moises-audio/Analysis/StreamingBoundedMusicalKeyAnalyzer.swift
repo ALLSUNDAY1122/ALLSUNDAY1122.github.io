@@ -10,50 +10,94 @@ public enum StreamingBoundedMusicalKeyAnalyzer {
         ("dorian",[0,2,3,5,7,9,10],9,8,3),("phrygian",[0,1,3,5,7,8,10],1,2,3),("lydian",[0,2,4,6,7,9,11],6,5,4),("mixolydian",[0,2,4,5,7,9,10],10,11,4),("locrian",[0,1,3,5,6,8,10],6,7,3)
     ]
 
-    public static func analyzeCancellable(reader: AnalysisPreparedSampleReader, configuration: MusicAnalysisConfiguration = .productBaseline) throws -> MusicalKey? {
+    public static func analyzeCancellable(
+        reader: AnalysisPreparedSampleReader,
+        configuration: MusicAnalysisConfiguration = .productBaseline
+    ) throws -> MusicalKey? {
         try AnalysisCancellationPolicy.check()
-        guard reader.sampleCount >= configuration.analysisWindowSize,
-              try reader.rms(maximumSamples: AnalysisWorkingSetPolicy.maximumRMSProbeSamples) > 1e-5 else { return nil }
-        let windowSize=configuration.analysisWindowSize
-        let available=max(1,(reader.sampleCount-windowSize)/max(1,configuration.analysisHopSize)+1)
-        let selected=min(configuration.maximumKeyWindows,available)
-        let starts=uniformlySpacedWindowStarts(sampleCount:reader.sampleCount,windowSize:windowSize,count:selected)
-        var localChromas:[[Double]]=[]; localChromas.reserveCapacity(starts.count)
-        for (i,start) in starts.enumerated() {
-            try AnalysisCancellationPolicy.checkIfNeeded(enabled:true,iteration:i,stride:AnalysisCancellationPolicy.keyWindowCheckStride)
-            let local=try chromaForWindow(reader,start:start,count:windowSize,cancellationChecksEnabled:true)
-            let total=local.reduce(0,+); guard total>1e-10 else { continue }
-            localChromas.append(local.map{$0/total})
+        guard reader.sampleCount >= configuration.analysisWindowSize else { return nil }
+        let globalRMS = try reader.rms(maximumSamples: AnalysisWorkingSetPolicy.maximumRMSProbeSamples)
+        let windowSize = configuration.analysisWindowSize
+        let available = max(1, (reader.sampleCount - windowSize) / max(1, configuration.analysisHopSize) + 1)
+        let selected = min(configuration.maximumKeyWindows, available)
+        let starts = uniformlySpacedWindowStarts(sampleCount: reader.sampleCount, windowSize: windowSize, count: selected)
+        var windows: [[Double]] = []
+        windows.reserveCapacity(starts.count)
+        for (index, start) in starts.enumerated() {
+            try AnalysisCancellationPolicy.checkIfNeeded(enabled: true, iteration: index, stride: AnalysisCancellationPolicy.keyWindowCheckStride)
+            windows.append(try reader.finiteWindow(range: start..<(start + windowSize)))
         }
-        guard localChromas.count>=2 else{return nil}
-        let chroma=normalizedSum(localChromas)
-        guard let global=keyEvidence(chroma),global.activePitchClasses>=3 else{return nil}
-        let ranked=rankedCandidates(chroma)
-        if let relative=relativeCounterpart(of:global.best,in:ranked) {
-            let gap=max(0,global.best.score-relative.score)/max(abs(global.best.score),1e-9)
-            let tonicGap=abs(chroma[global.best.tonic]-chroma[relative.tonic])
-            if gap<configuration.keyRelativeAmbiguityMargin,tonicGap<0.035{return nil}
-        }
-        if global.activePitchClasses>=5,let modal=bestModalCandidate(chroma),modal.tonic==global.best.tonic,modal.tonicSupport>=0.55,modal.alteredSupport>=0.20,modal.alteredSupport>modal.conventionalSupport*1.20,modal.score>=0.72{return nil}
-        let halves=temporalHalves(localChromas); var agreement=1.0
-        if let first=keyEvidence(halves.first),let second=keyEvidence(halves.second),first.activePitchClasses>=5,second.activePitchClasses>=5,first.normalizedMargin>=configuration.keyModulationMargin,second.normalizedMargin>=configuration.keyModulationMargin,(first.best.tonic != second.best.tonic || first.best.mode != second.best.mode){return nil}
-        else if let first=keyEvidence(halves.first),let second=keyEvidence(halves.second){agreement=Double([first.best,second.best].filter{$0.tonic==global.best.tonic && $0.mode==global.best.mode}.count)/2}
-        let confidence=clamp01(min(1,global.normalizedMargin/0.08)*0.68+global.best.triadSupport*0.20+agreement*0.12)
-        guard confidence>=configuration.minimumKeyConfidence else{return nil}
-        try AnalysisCancellationPolicy.check()
-        return MusicalKey(tonicPitchClass:global.best.tonic,mode:global.best.mode,confidence:confidence)
+        return try analyzePreparedWindowsCancellable(
+            windows: windows,
+            sampleRate: reader.sampleRate,
+            globalRMS: globalRMS,
+            configuration: configuration
+        )
     }
 
-    private static func chromaForWindow(_ reader:AnalysisPreparedSampleReader,start:Int,count:Int,cancellationChecksEnabled:Bool)throws->[Double]{
-        let lower=max(0,min(reader.sampleCount,start)),upper=max(lower,min(reader.sampleCount,start+count)),n=upper-lower
-        guard n>1 else{return Array(repeating:0,count:12)}
+    public static func analyzePreparedWindowsCancellable(
+        windows: [[Double]],
+        sampleRate: Double,
+        globalRMS: Double,
+        configuration: MusicAnalysisConfiguration = .productBaseline
+    ) throws -> MusicalKey? {
+        try AnalysisCancellationPolicy.check()
+        guard sampleRate.isFinite, sampleRate > 0,
+              globalRMS.isFinite, globalRMS > 1e-5,
+              windows.count >= 2 else { return nil }
+        var localChromas: [[Double]] = []
+        localChromas.reserveCapacity(windows.count)
+        for (index, window) in windows.enumerated() {
+            try AnalysisCancellationPolicy.checkIfNeeded(enabled: true, iteration: index, stride: AnalysisCancellationPolicy.keyWindowCheckStride)
+            guard window.count >= 2 else { continue }
+            let local = try chromaForPreparedWindow(window, sampleRate: sampleRate)
+            let total = local.reduce(0,+)
+            guard total > 1e-10 else { continue }
+            localChromas.append(local.map { $0 / total })
+        }
+        guard localChromas.count >= 2 else { return nil }
+        let chroma = normalizedSum(localChromas)
+        guard let global = keyEvidence(chroma), global.activePitchClasses >= 3 else { return nil }
+        let ranked = rankedCandidates(chroma)
+        if let relative = relativeCounterpart(of: global.best, in: ranked) {
+            let gap = max(0, global.best.score - relative.score) / max(abs(global.best.score), 1e-9)
+            let tonicGap = abs(chroma[global.best.tonic] - chroma[relative.tonic])
+            if gap < configuration.keyRelativeAmbiguityMargin, tonicGap < 0.035 { return nil }
+        }
+        if global.activePitchClasses >= 5,
+           let modal = bestModalCandidate(chroma),
+           modal.tonic == global.best.tonic,
+           modal.tonicSupport >= 0.55,
+           modal.alteredSupport >= 0.20,
+           modal.alteredSupport > modal.conventionalSupport * 1.20,
+           modal.score >= 0.72 { return nil }
+        let halves = temporalHalves(localChromas)
+        var agreement = 1.0
+        if let first = keyEvidence(halves.first),
+           let second = keyEvidence(halves.second),
+           first.activePitchClasses >= 5,
+           second.activePitchClasses >= 5,
+           first.normalizedMargin >= configuration.keyModulationMargin,
+           second.normalizedMargin >= configuration.keyModulationMargin,
+           (first.best.tonic != second.best.tonic || first.best.mode != second.best.mode) { return nil }
+        else if let first = keyEvidence(halves.first), let second = keyEvidence(halves.second) {
+            agreement = Double([first.best, second.best].filter { $0.tonic == global.best.tonic && $0.mode == global.best.mode }.count) / 2
+        }
+        let confidence = clamp01(min(1, global.normalizedMargin / 0.08) * 0.68 + global.best.triadSupport * 0.20 + agreement * 0.12)
+        guard confidence >= configuration.minimumKeyConfidence else { return nil }
+        try AnalysisCancellationPolicy.check()
+        return MusicalKey(tonicPitchClass: global.best.tonic, mode: global.best.mode, confidence: confidence)
+    }
+
+    private static func chromaForPreparedWindow(_ samples:[Double],sampleRate:Double)throws->[Double]{
+        let n=samples.count; guard n>1 else{return Array(repeating:0,count:12)}
         var windowed=Array(repeating:0.0,count:n)
-        for local in 0..<n { let hann=0.5-0.5*cos((2*Double.pi*Double(local))/Double(n-1)); windowed[local]=Double(try reader.sample(at:lower+local))*hann }
+        for local in 0..<n { let hann=0.5-0.5*cos((2*Double.pi*Double(local))/Double(n-1)); windowed[local]=samples[local]*hann }
         var chroma=Array(repeating:0.0,count:12)
         for (offset,midi) in (36...83).enumerated(){
-            try AnalysisCancellationPolicy.checkIfNeeded(enabled:cancellationChecksEnabled,iteration:offset,stride:8)
-            let f=440*pow(2,Double(midi-69)/12); guard f<reader.sampleRate*0.45 else{continue}
-            chroma[(midi%12+12)%12]+=sqrt(max(0,goertzelPower(windowed,sampleRate:reader.sampleRate,frequency:f)))
+            try AnalysisCancellationPolicy.checkIfNeeded(enabled:true,iteration:offset,stride:8)
+            let f=440*pow(2,Double(midi-69)/12); guard f<sampleRate*0.45 else{continue}
+            chroma[(midi%12+12)%12]+=sqrt(max(0,goertzelPower(windowed,sampleRate:sampleRate,frequency:f)))
         }
         return chroma
     }
