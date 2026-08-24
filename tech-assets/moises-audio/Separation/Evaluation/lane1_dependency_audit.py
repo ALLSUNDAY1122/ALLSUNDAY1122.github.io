@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """L1-A26 one-command Lane 1 regression/dependency closure audit.
 
-This is engineering evidence only. It cannot promote PARITY.
+Engineering evidence only. It cannot promote PARITY.
 """
 from __future__ import annotations
 
@@ -16,9 +16,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
-TOOL_VERSION = "L1-A26-v1"
+from lane1_source_snapshot import SourceSnapshotError, build_source_snapshot
+
+TOOL_VERSION = "L1-A26-v2"
 EVIDENCE_STATE = "NON_PARITY_EVIDENCE_ONLY"
 ERROR_CODE = re.compile(r"\b(?:SEP|GEN|GENRT|GENRET|GEN_FACADE|L1A\d+|L1M\d+)_[A-Z0-9_]+\b")
+GIT_SHA = re.compile(r"^[0-9a-f]{40}$")
 
 
 def _rel(path: Path, root: Path) -> str:
@@ -96,7 +99,7 @@ def _run_unittest(audio_root: Path, timeout_seconds: int) -> dict[str, Any]:
     try:
         proc = subprocess.run(cmd, cwd=str(audio_root), env=env, capture_output=True, text=True, timeout=timeout_seconds)
     except subprocess.TimeoutExpired:
-        return {"state": "FAIL_TIMEOUT", "returncode": None, "tests_run": None, "failures": None, "errors": None}
+        return {"state": "FAIL_TIMEOUT", "returncode": None, "tests_run": None, "failures": None, "errors": None, "skipped": None}
     combined = (proc.stdout or "") + "\n" + (proc.stderr or "")
     match = re.search(r"Ran\s+(\d+)\s+tests?", combined)
     failures = re.search(r"failures=(\d+)", combined)
@@ -183,8 +186,50 @@ def _stable_code_inventory(files: list[Path], root: Path) -> dict[str, Any]:
     }
 
 
-def run(audio_root: Path, *, timeout_seconds: int = 300) -> dict[str, Any]:
+def _git_head_check(audio_root: Path, expected_git_head: str | None) -> dict[str, Any]:
+    if expected_git_head is None:
+        return {"state": "FAIL_EXPECTED_HEAD_REQUIRED", "expected_git_head": None, "actual_git_head": None}
+    expected = expected_git_head.strip().lower()
+    if not GIT_SHA.fullmatch(expected):
+        return {"state": "FAIL_EXPECTED_HEAD_INVALID", "expected_git_head": expected_git_head, "actual_git_head": None}
+    repo_root = audio_root.resolve().parents[1]
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(repo_root), "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return {"state": "FAIL_GIT_HEAD_UNAVAILABLE", "expected_git_head": expected, "actual_git_head": None}
+    actual = (proc.stdout or "").strip().lower()
+    if proc.returncode != 0 or not GIT_SHA.fullmatch(actual):
+        return {"state": "FAIL_GIT_HEAD_UNAVAILABLE", "expected_git_head": expected, "actual_git_head": None}
+    return {
+        "state": "PASS" if actual == expected else "FAIL_GIT_HEAD_MISMATCH",
+        "expected_git_head": expected,
+        "actual_git_head": actual,
+    }
+
+
+def _source_snapshot(audio_root: Path, excludes: list[Path]) -> dict[str, Any]:
+    try:
+        snapshot = build_source_snapshot(audio_root, excludes=excludes)
+    except SourceSnapshotError as exc:
+        return {"state": "FAIL", "stable_error_code": exc.code, "snapshot": None}
+    return {"state": "PASS", "stable_error_code": None, "snapshot": snapshot}
+
+
+def run(
+    audio_root: Path,
+    *,
+    timeout_seconds: int = 300,
+    expected_git_head: str | None = None,
+    snapshot_excludes: list[Path] | None = None,
+) -> dict[str, Any]:
     audio_root = audio_root.resolve()
+    snapshot_result = _source_snapshot(audio_root, snapshot_excludes or [])
+    git_result = _git_head_check(audio_root, expected_git_head)
     python_files = _python_files(audio_root)
     json_files = _json_files(audio_root)
     compile_result = _compile_python(python_files, audio_root)
@@ -192,14 +237,24 @@ def run(audio_root: Path, *, timeout_seconds: int = 300) -> dict[str, Any]:
     schema_result = _check_schemas(json_result.pop("parsed"), audio_root)
     dependency_result = _dependency_checks(audio_root)
     unittest_result = _run_unittest(audio_root, timeout_seconds)
-    states = [compile_result["state"], json_result["state"], schema_result["state"], dependency_result["state"], unittest_result["state"]]
+    states = [
+        snapshot_result["state"],
+        git_result["state"],
+        compile_result["state"],
+        json_result["state"],
+        schema_result["state"],
+        dependency_result["state"],
+        unittest_result["state"],
+    ]
     overall = "PASS" if all(s == "PASS" for s in states) else "FAIL"
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "tool_version": TOOL_VERSION,
         "evidence_state": EVIDENCE_STATE,
         "parity_claim": "NONE",
         "overall_state": overall,
+        "git_head_binding": git_result,
+        "owned_source_snapshot": snapshot_result,
         "python_compile": compile_result,
         "json_syntax": json_result,
         "json_schema_self_validation": schema_result,
@@ -213,9 +268,23 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--audio-root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--timeout-seconds", type=int, default=300)
+    parser.add_argument("--expected-git-head", required=True, help="Exact 40-hex Worker branch commit expected in this checkout")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    report = run(args.audio_root, timeout_seconds=args.timeout_seconds)
+    excludes: list[Path] = []
+    if args.output:
+        try:
+            args.output.resolve().relative_to(args.audio_root.resolve())
+        except ValueError:
+            pass
+        else:
+            excludes.append(args.output)
+    report = run(
+        args.audio_root,
+        timeout_seconds=args.timeout_seconds,
+        expected_git_head=args.expected_git_head,
+        snapshot_excludes=excludes,
+    )
     rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
