@@ -28,11 +28,11 @@ public struct AnalysisSinglePassPreparedFeatureDiagnostics: Codable, Equatable, 
     public let maximumChordRingSamples: Int
     public let estimatedRetainedFeatureBytes: Int64
     public let exactSinglePreparedTraversal: Bool
-    public let extremeDurationCompressionApplied: Bool = false
-    public let tempoFrameStride: Int = 1
-    public let chordFrameStride: Int = 1
-    public let naturalSectionEnergyFrameCount: Int = 0
-    public let sectionEnergyFrameStrideEquivalent: Int = 1
+    public private(set) var extremeDurationCompressionApplied: Bool = false
+    public private(set) var tempoFrameStride: Int = 1
+    public private(set) var chordFrameStride: Int = 1
+    public private(set) var naturalSectionEnergyFrameCount: Int = 0
+    public private(set) var sectionEnergyFrameStrideEquivalent: Int = 1
 }
 
 public struct AnalysisSinglePassPreparedFeatures: Equatable, Sendable {
