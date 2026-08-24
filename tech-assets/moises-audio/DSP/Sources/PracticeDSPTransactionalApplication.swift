@@ -1,15 +1,19 @@
 import Foundation
+
 public struct PracticeDSPBackendSnapshot: Equatable, Sendable {
     public let tempoRatio: Double
     public let pitchSemitones: Double
+
     public init(tempoRatio: Double, pitchSemitones: Double) {
         self.tempoRatio = tempoRatio
         self.pitchSemitones = pitchSemitones
     }
 }
+
 public protocol PracticeDSPTransactionalBackendApplying: PracticeDSPBackendApplying {
     func snapshotAppliedDSP() throws -> PracticeDSPBackendSnapshot
 }
+
 public enum PracticeDSPTransactionError: Error, Equatable, Sendable {
     case backendUnavailable
     case backendSnapshotFailed(String)
@@ -23,9 +27,11 @@ public enum PracticeDSPTransactionError: Error, Equatable, Sendable {
     case controlOnlyMutationChangedBackendState
     case transactionInFlight
 }
+
 public struct PracticeDSPBackendAlignmentTolerance: Equatable, Sendable {
     public let tempoRatio: Double
     public let pitchSemitones: Double
+
     public init(
         tempoRatio: Double = 0.000_1,
         pitchSemitones: Double = 0.001
@@ -34,21 +40,28 @@ public struct PracticeDSPBackendAlignmentTolerance: Equatable, Sendable {
         self.pitchSemitones = pitchSemitones
     }
 }
+
 public actor PracticeDSPTransactionalApplicationGate {
     private let capabilities: PracticeDSPCapabilities
     private let backend: (any PracticeDSPTransactionalBackendApplying)?
     private let alignmentTolerance: PracticeDSPBackendAlignmentTolerance
+    private let tempoTransitionPolicy: PracticeDSPTempoTransitionPolicy
+    private let tempoTransitionSleeper: any PracticeDSPTempoTransitionSleeping
     private let pitchTransitionPolicy: PracticeDSPPitchTransitionPolicy
     private let pitchTransitionSleeper: any PracticeDSPPitchTransitionSleeping
     private var committed: PracticeDSPState
     private var desynchronized = false
     private var transactionInFlight = false
+    private var lastTempoTransition: PracticeDSPTempoTransitionBackendReceipt?
     private var lastPitchTransition: PracticeDSPPitchTransitionBackendReceipt?
+
     public init(
         capabilities: PracticeDSPCapabilities = .appleTimePitchBaseline,
         backend: (any PracticeDSPTransactionalBackendApplying)?,
         initialState: PracticeDSPState = PracticeDSPState(),
         alignmentTolerance: PracticeDSPBackendAlignmentTolerance = PracticeDSPBackendAlignmentTolerance(),
+        tempoTransitionPolicy: PracticeDSPTempoTransitionPolicy = .provisionalAppleInteractive,
+        tempoTransitionSleeper: any PracticeDSPTempoTransitionSleeping = PracticeDSPSystemTempoTransitionSleeper(),
         pitchTransitionPolicy: PracticeDSPPitchTransitionPolicy = .provisionalAppleInteractive,
         pitchTransitionSleeper: any PracticeDSPPitchTransitionSleeping = PracticeDSPSystemPitchTransitionSleeper()
     ) throws {
@@ -57,17 +70,36 @@ public actor PracticeDSPTransactionalApplicationGate {
         self.backend = backend
         self.committed = initialState
         self.alignmentTolerance = alignmentTolerance
+        self.tempoTransitionPolicy = tempoTransitionPolicy
+        self.tempoTransitionSleeper = tempoTransitionSleeper
         self.pitchTransitionPolicy = pitchTransitionPolicy
         self.pitchTransitionSleeper = pitchTransitionSleeper
     }
+
     @discardableResult
     public func apply(_ candidate: PracticeDSPState) async throws -> PracticeDSPState {
         try PracticeDSPStateValidator.validate(candidate, capabilities: capabilities)
         guard !transactionInFlight else { throw PracticeDSPTransactionError.transactionInFlight }
         guard !desynchronized else { throw PracticeDSPTransactionError.backendDesynchronized }
         guard let backend else { throw PracticeDSPTransactionError.backendUnavailable }
-        let pitchChanged = candidate.pitchSemitones != committed.pitchSemitones
-        let tempoPreserved = abs(candidate.tempoRatio - committed.tempoRatio) <= alignmentTolerance.tempoRatio
+
+        let tempoChanged = abs(candidate.tempoRatio - committed.tempoRatio) > alignmentTolerance.tempoRatio
+        let pitchChanged = abs(candidate.pitchSemitones - committed.pitchSemitones) > alignmentTolerance.pitchSemitones
+        let pitchPreserved = !pitchChanged
+        let tempoPreserved = !tempoChanged
+
+        if tempoChanged,
+           pitchPreserved,
+           let transitionBackend = backend as? any PracticeDSPTempoTransitionBackendApplying {
+            transactionInFlight = true
+            defer { transactionInFlight = false }
+            return try await applyTempoTransition(
+                candidate,
+                backend: backend,
+                transitionBackend: transitionBackend
+            )
+        }
+
         if pitchChanged,
            tempoPreserved,
            let transitionBackend = backend as? any PracticeDSPPitchTransitionBackendApplying {
@@ -79,9 +111,12 @@ public actor PracticeDSPTransactionalApplicationGate {
                 transitionBackend: transitionBackend
             )
         }
+
+        lastTempoTransition = nil
         lastPitchTransition = nil
         return try applyImmediate(candidate, backend: backend)
     }
+
     @discardableResult
     public func commitControlOnly(_ candidate: PracticeDSPState) throws -> PracticeDSPState {
         try PracticeDSPStateValidator.validate(candidate, capabilities: capabilities)
@@ -107,6 +142,7 @@ public actor PracticeDSPTransactionalApplicationGate {
         committed = candidate
         return candidate
     }
+
     @discardableResult
     public func recoverCommittedState() throws -> PracticeDSPState {
         guard !transactionInFlight else { throw PracticeDSPTransactionError.transactionInFlight }
@@ -136,12 +172,16 @@ public actor PracticeDSPTransactionalApplicationGate {
             )
         }
         desynchronized = false
+        lastTempoTransition = nil
         lastPitchTransition = nil
         return committed
     }
+
     public func committedState() -> PracticeDSPState { committed }
     public func requiresResynchronization() -> Bool { desynchronized }
+    public func lastTempoTransitionReceipt() -> PracticeDSPTempoTransitionBackendReceipt? { lastTempoTransition }
     public func lastPitchTransitionReceipt() -> PracticeDSPPitchTransitionBackendReceipt? { lastPitchTransition }
+
     private func applyImmediate(
         _ candidate: PracticeDSPState,
         backend: any PracticeDSPTransactionalBackendApplying
@@ -188,6 +228,128 @@ public actor PracticeDSPTransactionalApplicationGate {
         committed = candidate
         return candidate
     }
+
+    private func applyTempoTransition(
+        _ candidate: PracticeDSPState,
+        backend: any PracticeDSPTransactionalBackendApplying,
+        transitionBackend: any PracticeDSPTempoTransitionBackendApplying
+    ) async throws -> PracticeDSPState {
+        let observedBefore = try snapshot(backend)
+        let expectedBefore = backendSnapshot(for: committed)
+        guard aligned(observedBefore, expectedBefore) else {
+            desynchronized = true
+            throw PracticeDSPTransactionError.backendStateDiverged(
+                expected: expectedBefore,
+                observed: observedBefore
+            )
+        }
+
+        let receipt: PracticeDSPTempoTransitionBackendReceipt
+        do {
+            receipt = try transitionBackend.beginTempoTransition(
+                fromTempoRatio: committed.tempoRatio,
+                toTempoRatio: candidate.tempoRatio,
+                pitchSemitones: candidate.pitchSemitones,
+                policy: tempoTransitionPolicy
+            )
+        } catch {
+            let applyError = "tempo transition begin: \(String(describing: error))"
+            try rollbackTempoTransition(
+                transitionBackend,
+                to: observedBefore,
+                applyError: applyError
+            )
+            throw PracticeDSPTransactionError.backendRejectedRolledBack(applyError)
+        }
+
+        guard validTempoTransitionReceipt(receipt, candidate: candidate) else {
+            let applyError = "invalid tempo transition receipt"
+            try rollbackTempoTransition(transitionBackend, to: observedBefore, applyError: applyError)
+            throw PracticeDSPTransactionError.backendRejectedRolledBack(applyError)
+        }
+
+        if receipt.mode == .scheduledRamp {
+            await tempoTransitionSleeper.sleepIgnoringCancellation(
+                nanoseconds: receipt.recommendedBarrierNanoseconds
+            )
+            do {
+                try transitionBackend.finalizeTempoTransition(
+                    tempoRatio: candidate.tempoRatio,
+                    pitchSemitones: candidate.pitchSemitones
+                )
+            } catch {
+                let applyError = "tempo transition finalize: \(String(describing: error))"
+                try rollbackTempoTransition(transitionBackend, to: observedBefore, applyError: applyError)
+                throw PracticeDSPTransactionError.backendRejectedRolledBack(applyError)
+            }
+        }
+
+        let observedAfter: PracticeDSPBackendSnapshot
+        do {
+            observedAfter = try backend.snapshotAppliedDSP()
+        } catch {
+            let snapshotError = String(describing: error)
+            try rollbackTempoTransition(
+                transitionBackend,
+                to: observedBefore,
+                applyError: "tempo transition post-apply snapshot failed: \(snapshotError)"
+            )
+            throw PracticeDSPTransactionError.backendPostApplySnapshotFailedRolledBack(snapshotError)
+        }
+        let expectedAfter = backendSnapshot(for: candidate)
+        guard aligned(observedAfter, expectedAfter) else {
+            try rollbackTempoTransition(
+                transitionBackend,
+                to: observedBefore,
+                applyError: "tempo transition post-apply state mismatch"
+            )
+            throw PracticeDSPTransactionError.backendPostApplyMismatchRolledBack(
+                expected: expectedAfter,
+                observed: observedAfter
+            )
+        }
+
+        committed = candidate
+        lastTempoTransition = receipt
+        lastPitchTransition = nil
+        return candidate
+    }
+
+    private func validTempoTransitionReceipt(
+        _ receipt: PracticeDSPTempoTransitionBackendReceipt,
+        candidate: PracticeDSPState
+    ) -> Bool {
+        guard receipt.schemaVersion == 1,
+              receipt.evidenceScope == "LANE3_AW28_TEMPO_TRANSITION_NON_PARITY",
+              !receipt.parityPromotionAllowed,
+              receipt.fromRatio.isFinite,
+              receipt.toRatio.isFinite,
+              abs(receipt.fromRatio - committed.tempoRatio) <= alignmentTolerance.tempoRatio,
+              abs(receipt.toRatio - candidate.tempoRatio) <= alignmentTolerance.tempoRatio else {
+            return false
+        }
+        switch receipt.mode {
+        case .scheduledRamp:
+            return receipt.fallbackReason == nil
+                && receipt.sampleRate.isFinite
+                && receipt.sampleRate > 0
+                && receipt.rampDurationFrames > 0
+                && receipt.recommendedBarrierNanoseconds > 0
+        case .immediate:
+            return receipt.fallbackReason == nil
+                && receipt.sampleRate.isFinite
+                && receipt.sampleRate > 0
+                && receipt.rampDurationFrames == 0
+                && receipt.recommendedBarrierNanoseconds == 0
+        case .immediateFallback:
+            return receipt.fallbackReason != nil
+                && receipt.sampleRate.isFinite
+                && receipt.sampleRate >= 0
+                && receipt.rampDurationFrames == 0
+                && receipt.recommendedBarrierNanoseconds == 0
+        }
+    }
+
     private func applyPitchTransition(
         _ candidate: PracticeDSPState,
         backend: any PracticeDSPTransactionalBackendApplying,
@@ -268,9 +430,11 @@ public actor PracticeDSPTransactionalApplicationGate {
             )
         }
         committed = candidate
+        lastTempoTransition = nil
         lastPitchTransition = receipt
         return candidate
     }
+
     private func snapshot(
         _ backend: any PracticeDSPTransactionalBackendApplying
     ) throws -> PracticeDSPBackendSnapshot {
@@ -279,6 +443,7 @@ public actor PracticeDSPTransactionalApplicationGate {
             throw PracticeDSPTransactionError.backendSnapshotFailed(String(describing: error))
         }
     }
+
     private func rollback(
         _ backend: any PracticeDSPTransactionalBackendApplying,
         to target: PracticeDSPBackendSnapshot,
@@ -308,6 +473,37 @@ public actor PracticeDSPTransactionalApplicationGate {
             )
         }
     }
+
+    private func rollbackTempoTransition(
+        _ backend: any PracticeDSPTempoTransitionBackendApplying,
+        to target: PracticeDSPBackendSnapshot,
+        applyError: String
+    ) throws {
+        do {
+            try backend.cancelTempoTransition(
+                tempoRatio: target.tempoRatio,
+                pitchSemitones: target.pitchSemitones
+            )
+            let observed = try backend.snapshotAppliedDSP()
+            guard aligned(observed, target) else {
+                desynchronized = true
+                throw PracticeDSPTransactionError.backendStateDiverged(expected: target, observed: observed)
+            }
+        } catch let error as PracticeDSPTransactionError {
+            desynchronized = true
+            throw PracticeDSPTransactionError.backendRollbackFailed(
+                applyError: applyError,
+                rollbackError: String(describing: error)
+            )
+        } catch {
+            desynchronized = true
+            throw PracticeDSPTransactionError.backendRollbackFailed(
+                applyError: applyError,
+                rollbackError: String(describing: error)
+            )
+        }
+    }
+
     private func rollbackPitchTransition(
         _ backend: any PracticeDSPPitchTransitionBackendApplying,
         to target: PracticeDSPBackendSnapshot,
@@ -337,12 +533,14 @@ public actor PracticeDSPTransactionalApplicationGate {
             )
         }
     }
+
     private func backendSnapshot(for state: PracticeDSPState) -> PracticeDSPBackendSnapshot {
         PracticeDSPBackendSnapshot(
             tempoRatio: state.tempoRatio,
             pitchSemitones: state.pitchSemitones
         )
     }
+
     private func aligned(_ lhs: PracticeDSPBackendSnapshot, _ rhs: PracticeDSPBackendSnapshot) -> Bool {
         lhs.tempoRatio.isFinite
             && lhs.pitchSemitones.isFinite
@@ -350,17 +548,22 @@ public actor PracticeDSPTransactionalApplicationGate {
             && abs(lhs.pitchSemitones - rhs.pitchSemitones) <= alignmentTolerance.pitchSemitones
     }
 }
+
 public actor PracticeDSPProductionController: PracticeDSPConfiguring {
     private let projectID: ProjectID
     private let capabilities: PracticeDSPCapabilities
     private let gate: PracticeDSPTransactionalApplicationGate
     private var state: PracticeDSPState
+    private var lastTempoTransition: PracticeDSPTempoTransitionBackendReceipt?
     private var lastPitchTransition: PracticeDSPPitchTransitionBackendReceipt?
+
     public init(
         projectID: ProjectID,
         backend: (any PracticeDSPTransactionalBackendApplying)?,
         capabilities: PracticeDSPCapabilities = .appleTimePitchBaseline,
         initialState: PracticeDSPState = PracticeDSPState(),
+        tempoTransitionPolicy: PracticeDSPTempoTransitionPolicy = .provisionalAppleInteractive,
+        tempoTransitionSleeper: any PracticeDSPTempoTransitionSleeping = PracticeDSPSystemTempoTransitionSleeper(),
         pitchTransitionPolicy: PracticeDSPPitchTransitionPolicy = .provisionalAppleInteractive,
         pitchTransitionSleeper: any PracticeDSPPitchTransitionSleeping = PracticeDSPSystemPitchTransitionSleeper()
     ) throws {
@@ -372,10 +575,13 @@ public actor PracticeDSPProductionController: PracticeDSPConfiguring {
             capabilities: capabilities,
             backend: backend,
             initialState: initialState,
+            tempoTransitionPolicy: tempoTransitionPolicy,
+            tempoTransitionSleeper: tempoTransitionSleeper,
             pitchTransitionPolicy: pitchTransitionPolicy,
             pitchTransitionSleeper: pitchTransitionSleeper
         )
     }
+
     public func setTempoRatio(_ ratio: Double, projectID: ProjectID) async throws {
         try requireProject(projectID)
         var candidate = state
@@ -384,8 +590,10 @@ public actor PracticeDSPProductionController: PracticeDSPConfiguring {
         try PracticeDSPStateValidator.validate(candidate, capabilities: capabilities)
         _ = try await gate.apply(candidate)
         state = candidate
+        lastTempoTransition = await gate.lastTempoTransitionReceipt()
         lastPitchTransition = nil
     }
+
     public func setPitchSemitones(_ semitones: Double, projectID: ProjectID) async throws {
         try requireProject(projectID)
         var candidate = state
@@ -393,8 +601,10 @@ public actor PracticeDSPProductionController: PracticeDSPConfiguring {
         try PracticeDSPStateValidator.validate(candidate, capabilities: capabilities)
         _ = try await gate.apply(candidate)
         state = candidate
+        lastTempoTransition = nil
         lastPitchTransition = await gate.lastPitchTransitionReceipt()
     }
+
     public func setMetronomeEnabled(_ enabled: Bool, projectID: ProjectID) async throws {
         try requireProject(projectID)
         var candidate = state
@@ -402,8 +612,9 @@ public actor PracticeDSPProductionController: PracticeDSPConfiguring {
         candidate.scheduleGeneration = try PracticeDSPStateValidator.nextGeneration(after: candidate.scheduleGeneration)
         _ = try await gate.commitControlOnly(candidate)
         state = candidate
-        lastPitchTransition = nil
+        clearTransitionReceipts()
     }
+
     public func scheduleCountIn(clicks: Int, projectID: ProjectID) async throws {
         try requireProject(projectID)
         var candidate = state
@@ -412,23 +623,26 @@ public actor PracticeDSPProductionController: PracticeDSPConfiguring {
         try PracticeDSPStateValidator.validate(candidate, capabilities: capabilities)
         _ = try await gate.commitControlOnly(candidate)
         state = candidate
-        lastPitchTransition = nil
+        clearTransitionReceipts()
     }
+
     public func restoreState(_ restored: PracticeDSPState, projectID: ProjectID) async throws {
         try requireProject(projectID)
         let candidate = try PracticeDSPStateValidator.restored(restored, capabilities: capabilities)
         _ = try await gate.apply(candidate)
         state = candidate
-        lastPitchTransition = nil
+        clearTransitionReceipts()
     }
+
     public func clearPendingCountIn(projectID: ProjectID) async throws {
         try requireProject(projectID)
         var candidate = state
         candidate.pendingCountInClicks = nil
         _ = try await gate.commitControlOnly(candidate)
         state = candidate
-        lastPitchTransition = nil
+        clearTransitionReceipts()
     }
+
     @discardableResult
     public func invalidateScheduledClicks(projectID: ProjectID) async throws -> UInt64 {
         try requireProject(projectID)
@@ -436,26 +650,41 @@ public actor PracticeDSPProductionController: PracticeDSPConfiguring {
         candidate.scheduleGeneration = try PracticeDSPStateValidator.nextGeneration(after: candidate.scheduleGeneration)
         _ = try await gate.commitControlOnly(candidate)
         state = candidate
-        lastPitchTransition = nil
+        clearTransitionReceipts()
         return candidate.scheduleGeneration
     }
+
     public func snapshot(projectID: ProjectID) throws -> PracticeDSPState {
         try requireProject(projectID)
         return state
     }
+
+    public func tempoTransitionReceipt(projectID: ProjectID) throws -> PracticeDSPTempoTransitionBackendReceipt? {
+        try requireProject(projectID)
+        return lastTempoTransition
+    }
+
     public func pitchTransitionReceipt(projectID: ProjectID) throws -> PracticeDSPPitchTransitionBackendReceipt? {
         try requireProject(projectID)
         return lastPitchTransition
     }
+
     public func recoverBackend(projectID: ProjectID) async throws {
         try requireProject(projectID)
         _ = try await gate.recoverCommittedState()
-        lastPitchTransition = nil
+        clearTransitionReceipts()
     }
+
     public func requiresBackendResynchronization(projectID: ProjectID) async throws -> Bool {
         try requireProject(projectID)
         return await gate.requiresResynchronization()
     }
+
+    private func clearTransitionReceipts() {
+        lastTempoTransition = nil
+        lastPitchTransition = nil
+    }
+
     private func requireProject(_ actual: ProjectID) throws {
         guard actual == projectID else {
             throw PracticeDSPTransactionError.projectMismatch(expected: projectID, actual: actual)
