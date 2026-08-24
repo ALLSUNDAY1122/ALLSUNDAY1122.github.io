@@ -1,6 +1,6 @@
 # Scaniverse同等化｜次チャット引継ぎ
 
-Updated: 2026-08-24 03:56 JST
+Updated: 2026-08-24 14:01 JST
 
 ## 最重要
 
@@ -21,26 +21,53 @@ Updated: 2026-08-24 03:56 JST
 - Supabase production: `gybchnyqlqwmajwkhsly`
 - parity ledger: `splat-native-ios/SCANIVERSE_PARITY_PLAN.md`
 
-固定SHAを正本にしてはならないが、2026-08-24 03:56 JST時点のHQは `d23abd84d5fff6cfd3711311f8ba5110918d7714`。A2 residualを閉じたvalidated app-sourceは `164f5b3d2e1002c1e69423049ba73d2bf01a268a` で、そこからHQ current HEADまでの差分は一時workflow削除とEvidenceのみ。
+固定SHAを正本にしてはならない。2026-08-24 14:01 JSTのfresh auditで、現行validated app-sourceは `595c1d1d3468dd85594a958d8750264d9db91f50`。
 
-## 2026-08-24の成立済みGate
+## Build 3以降の重要source差分
 
-HQ current HEADの GitHub Privacy / Smoke / Main iOS Build は全SUCCESS。production auth/session/profile E2E、S2/D2 contracts、Simulator msplat smoke、A2/C2 XCTest、OBJ/FBX/GLB/STL/PLY/USDZ reader compatibility、unsigned iPhone Release compileもPASS。
+Build 3が検証したapp-source以降に実app source変更が入っているため、Build 3は現在の最終実機candidateではない。
 
-Xcode世代差のMetal completion blockerは `SplatVideoExporter.swift` の `addCompletedHandler` + continuation方式で解消済み。
+- viewer editをexport / video / publishで共有するため、persisted editを実outputへmaterialize。
+- 外部publishが古いviewer stateを読むraceを避けるため、edit変更時の永続化を即時化。
+- cropの片側handleだけを動かした場合、未操作側の端を勝手に1%切り落とさないopen-ended endpoint semanticsへ修正。
 
-A2 PR #4175からHQへ明示的に残っていた2件も解消済み。
+現validated app-source `595c1d1d...` の GitHub Actions:
 
-- JPEG保存前に `CaptureImageQualityEvaluator` / `CaptureImageQualityPolicy` を通し、強い暗部潰れ・白飛び・明確なボケ/低ディテールframeを保存対象から除外。
-- `GaussianDataset` / `GaussianTrainer` allocation前に `SplatResourceGuard.evaluate(splatCount: 0)` を実行し、memory/thermal pressure時はtrainer構築前に停止。
+- Splat Native Privacy Preflight: SUCCESS
+- Splat Smoke Diagnostic: SUCCESS
+- Splat Native iOS Build: SUCCESS
 
-Build 2は上記A2 residual修正前なので履歴候補へ降格。
+A2/B2/C2/D2を同app-sourceに対してGitHub compareし、4 branchすべて `ahead_by=0`。未統合Worker成果なし。
 
-最新Internal TestFlight candidateは version `1.0.0` / build `3`。release branch `testflight/splat-native-ios-20260824-build3` はHQとの差分がrelease用 `codemagic.yaml` のみで、build numberを3へ設定。Codemagic build `6a8b36335c95c17422424e4d` はsigned IPA `Splat_Lab_Native.ipa`を生成してfinished。
+## TestFlight candidate
 
-Codemagic metadata上は `app_store_connect_status=failed` だがApple直接read-backを正とする。App Store Connect Build 3 resource `65e6164a-8ea8-4844-8259-c6d6a8507286` は `VALID / INTERNAL_ONLY / expired=false / usesNonExemptEncryption=false`。internal beta group `sun` のbuild一覧にもBuild 3を確認済み。
+Build 3は履歴candidateへ降格。
 
-PR #4145は意図的にdraft / unmergedを維持する。TestFlight upload成功はPARITY完了ではない。
+現行app-source `595c1d1d...` から release branch `testflight/splat-native-ios-20260824-build4` を作成済み。release branchは `codemagic.yaml` だけをInternal TestFlight専用workflowへ置換し、`CURRENT_PROJECT_VERSION: 4` をbuild時に設定する。
+
+release branch commit: `bdb1488b101c3855edc52687b5dd230748297a62`
+
+この時点ではCodemagic build result / App Store Connect Build 4 read-backを未確認。Build 4を `VALID` と先取りしてはならない。次回は最初にCodemagic / App Store Connect / TestFlightの最新実状態を取得し、Build 4が存在しなければ実行経路を進める。
+
+## Supabase production
+
+2026-08-24 14:01 JST fresh read-only:
+
+- project status: `ACTIVE_HEALTHY`
+- `auth.users=1`
+- `scanlab_profiles=1`
+- `scanlab_scans=0`
+- `scanlab_reports=0`
+- `scanlab_blocks=0`
+- `scanlab-public` v12 ACTIVE
+- `scanlab-publish` v12 ACTIVE
+- `scanlab-delete-account` v4 ACTIVE
+- `scanlab-visibility` v5 ACTIVE
+- `scanlab-delete-scan` v7 ACTIVE
+- `scanlab-unpublish` v2 ACTIVE
+- `scanlab-upload` v1 ACTIVE
+
+実生成scanが0件なのでproduction publish/share parityはまだ未成立。
 
 ## 再実装禁止の解消済み事項
 
@@ -49,12 +76,16 @@ PR #4145は意図的にdraft / unmergedを維持する。TestFlight upload成功
 - WorldMap durability race: 保存結果をawaitし、失敗時は撮影継続。
 - relaunch後の `points3D.ply`: checkpointからfeature pointsを復元し、欠落時は生成開始時に再生成。
 - ScanModel責任境界: Capture / Persistence / Reconstruction / SessionLifecycle boundary導入済み。
+- capture image-quality rejectionはJPEG保存前。
+- Gaussian resource guardはdataset/trainer大規模allocation前。
 - B2 Mesh起動: `MeshScanContainerView()` 経由。
-- D2 publish: `PublishScanView` は `publishTrustedPackage(...)` を使用し、直接未検証asset uploadへ戻さない。
+- D2 publish: `PublishScanView` は `publishTrustedPackage(...)` を使用。
 
-## 現在の最大Gate
+## 次の真正なGate
 
-**Build 3** を実機で Golden Reference と比較する。必須flow:
+まずBuild 4がApp Store Connectで `VALID / INTERNAL_ONLY` かつinternal beta groupへ配布されたことをread-backする。
+
+成立後に **Build 4** を実機で Golden Reference と比較する。必須flow:
 
 `capture → coverage → finish → processing → 3D result → save → library reopen`
 
@@ -68,6 +99,8 @@ PR #4145は意図的にdraft / unmergedを維持する。TestFlight upload成功
 - processing進捗が実処理に対応
 - resultが粗い偽3Dではなく実Gaussian Splat
 - 保存後reopenして同じ完成物を表示
+- viewer editが保存・export・video・publishへ同じ意味で反映
+- crop片側操作時に未操作側tailを勝手に欠損しない
 - Scaniverse Golden Referenceに対する欠損、二重化、色、立体感、手数、速度の明白な劣位
 
 この物理Gateを通るまでは capture/reconstruction/viewer/library の `PARITY` 昇格禁止。
@@ -77,8 +110,6 @@ PR #4145は意図的にdraft / unmergedを維持する。TestFlight upload成功
 実生成したtrusted scanを使ってproduction E2Eを行う。synthetic/hardcoded scanで代替しない。
 
 `explicit publish → durable asset URL → 別browser viewer → public/unlisted/private → Discover/Map（geotag opt-in時のみ） → unpublish/republish → owner delete`
-
-Supabase productionは2026-08-24 03:56 JST時点で `auth.users=1 / scanlab_profiles=1 / scanlab_scans=0 / scanlab_reports=0 / scanlab_blocks=0`。production scan rowが実際に作られるまでは publish/share parity完了としない。
 
 ## 継続ループ
 
