@@ -62,16 +62,16 @@ public enum Lane2ExportRegistrationJournalFailure: Error, Equatable, Sendable {
     case partialRegistration(UUID)
     case publicationMarkerClearFailed(String)
     case publicationMarkerRecoveryFailed(String)
+    case publicationIntegrityFailed(String)
 }
 
 /// Durable handoff between export publication and lifecycle metadata registration.
 ///
 /// Canonical IO batches cross their atomic publication rename with a hidden pre-registration
-/// marker. `prepare` first persists this journal intent and only then clears that marker. A crash
-/// therefore always leaves either the IO marker, this Library intent, or both. On relaunch, marker
-/// batches from a previous process session are moved out of Exports into recovery quarantine before
-/// normal intent recovery runs, preserving bytes while preventing an untracked export from remaining
-/// published.
+/// marker. `prepare` first validates any AW35+ batch integrity manifest, then persists this journal
+/// intent and only then clears that marker. A crash therefore always leaves either the IO marker,
+/// this Library intent, or both. Pre-AW35 batches have no integrity manifest and retain the historical
+/// compatibility path rather than being made unrecoverable by an upgrade.
 public struct Lane2ExportRegistrationJournal: Sendable {
     public let rootURL: URL
     private let fileManager: FileManager
@@ -97,6 +97,9 @@ public struct Lane2ExportRegistrationJournal: Sendable {
             }
             return Lane2ExportRegistrationArtifact(relativePath: path, mediaType: artifact.mediaType)
         }
+
+        try validatePublishedBatchIntegrityIfPresent(for: normalized)
+
         let intent = Lane2ExportRegistrationIntent(id: id, projectUUID: projectUUID, artifacts: normalized, createdAt: now)
         try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
         try encode(intent).write(to: intentURL(id: id), options: [.atomic])
@@ -111,7 +114,11 @@ public struct Lane2ExportRegistrationJournal: Sendable {
     public func pending() throws -> [Lane2ExportRegistrationIntent] {
         _ = try recoverPrejournalPublishedBatches()
         guard fileManager.fileExists(atPath: directoryURL.path) else { return [] }
-        let urls = try fileManager.contentsOfDirectory(at: directoryURL, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles])
+        let urls = try fileManager.contentsOfDirectory(
+            at: directoryURL,
+            includingPropertiesForKeys: [.isRegularFileKey],
+            options: [.skipsHiddenFiles]
+        )
         let intents: [Lane2ExportRegistrationIntent] = try urls
             .filter { $0.pathExtension.lowercased() == "json" }
             .map { try loadIntent(at: $0) }
@@ -132,7 +139,11 @@ public struct Lane2ExportRegistrationJournal: Sendable {
         }
         let batches: [URL]
         do {
-            batches = try fileManager.contentsOfDirectory(at: finalizedBatchesURL, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles])
+            batches = try fileManager.contentsOfDirectory(
+                at: finalizedBatchesURL,
+                includingPropertiesForKeys: [.isDirectoryKey],
+                options: [.skipsHiddenFiles]
+            )
         } catch {
             throw Lane2ExportRegistrationJournalFailure.publicationMarkerRecoveryFailed("ENUMERATE")
         }
@@ -194,6 +205,37 @@ public struct Lane2ExportRegistrationJournal: Sendable {
         if matched.isEmpty { return .unregistered }
         if matched.count == intended.count { return .alreadyRegistered }
         return .partial
+    }
+
+    private func validatePublishedBatchIntegrityIfPresent(
+        for artifacts: [Lane2ExportRegistrationArtifact]
+    ) throws {
+        let grouped = Dictionary(grouping: artifacts.compactMap { artifact -> (String, Lane2ExportRegistrationArtifact)? in
+            guard let directory = batchDirectoryURL(for: artifact.relativePath) else { return nil }
+            return (directory.lastPathComponent, artifact)
+        }, by: { $0.0 })
+
+        let transaction = IOExportBatchTransaction(fileStore: IOFileStore(rootURL: rootURL))
+        for (batchID, members) in grouped {
+            let directory = finalizedBatchesURL.appendingPathComponent(batchID, isDirectory: true)
+            let manifest = directory.appendingPathComponent(IOExportBatchTransaction.integrityManifestFilename)
+            guard fileManager.fileExists(atPath: manifest.path) else {
+                // Compatibility for batches published before AW35.
+                continue
+            }
+            do {
+                let verified = try transaction.verifyPublishedBatch(batchID: batchID, fileManager: fileManager)
+                let verifiedPaths = Set(verified.map(\.relativePath))
+                let intendedPaths = Set(members.map { $0.1.relativePath })
+                guard verifiedPaths == intendedPaths else {
+                    throw Lane2ExportRegistrationJournalFailure.publicationIntegrityFailed(batchID)
+                }
+            } catch let failure as Lane2ExportRegistrationJournalFailure {
+                throw failure
+            } catch {
+                throw Lane2ExportRegistrationJournalFailure.publicationIntegrityFailed(batchID)
+            }
+        }
     }
 
     private func clearPreRegistrationPublicationMarkers(for artifacts: [Lane2ExportRegistrationArtifact]) throws {
@@ -258,15 +300,21 @@ public struct Lane2ExportRegistrationJournal: Sendable {
     }
 
     private var directoryURL: URL {
-        rootURL.appendingPathComponent(".LibraryRecovery", isDirectory: true).appendingPathComponent("ExportRegistration", isDirectory: true)
+        rootURL
+            .appendingPathComponent(".LibraryRecovery", isDirectory: true)
+            .appendingPathComponent("ExportRegistration", isDirectory: true)
     }
 
     private var prejournalQuarantineURL: URL {
-        rootURL.appendingPathComponent(".LibraryRecovery", isDirectory: true).appendingPathComponent("PrejournalExport", isDirectory: true)
+        rootURL
+            .appendingPathComponent(".LibraryRecovery", isDirectory: true)
+            .appendingPathComponent("PrejournalExport", isDirectory: true)
     }
 
     private var finalizedBatchesURL: URL {
-        rootURL.appendingPathComponent("Exports", isDirectory: true).appendingPathComponent("Batches", isDirectory: true)
+        rootURL
+            .appendingPathComponent("Exports", isDirectory: true)
+            .appendingPathComponent("Batches", isDirectory: true)
     }
 
     private func pruneDirectoryIfEmpty() throws {
