@@ -134,7 +134,7 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
         )
         XCTAssertEqual(oneHour.declaredWholeSourcePCMBytes, 635_040_000)
         XCTAssertEqual(oneHour.maximumChunkPCMBytes, 131_072)
-        XCTAssertEqual(oneHour.estimatedChunkedAnalysisWorkingSetBytes, 10_766_976)
+        XCTAssertEqual(oneHour.estimatedChunkedAnalysisWorkingSetBytes, 10_375_552)
         XCTAssertGreaterThan(oneHour.sourceToMaximumChunkReductionRatio, 4_800)
         XCTAssertFalse(oneHour.wholeSourcePCMMaterializedByChunkedPath)
 
@@ -145,7 +145,7 @@ final class AnalysisChunkedInputPipelineTests: XCTestCase {
         )
         XCTAssertEqual(day.declaredWholeSourcePCMBytes, 15_240_960_000)
         XCTAssertEqual(day.maximumChunkPCMBytes, 131_072)
-        XCTAssertEqual(day.estimatedChunkedAnalysisWorkingSetBytes, 197_563_776)
+        XCTAssertEqual(day.estimatedChunkedAnalysisWorkingSetBytes, 41_172_416)
         XCTAssertGreaterThan(day.sourceToMaximumChunkReductionRatio, 116_000)
     }
 
