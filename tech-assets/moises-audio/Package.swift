@@ -86,6 +86,7 @@ let package = Package(
                 "Analysis/AnalysisDeviceCorpusSelectionModels.swift",
                 "Analysis/AnalysisDeviceCorpusSelection.swift",
                 "Analysis/AnalysisDeviceCorpusSelectionGate.swift",
+                "Analysis/AnalysisDeviceCorpusAlgorithmPerformanceGate.swift",
                 "Analysis/AnalysisPhysicalEvidenceArchiveModels.swift",
                 "Analysis/AnalysisPhysicalEvidenceArchiveValidation.swift",
                 "Analysis/AnalysisPhysicalEvidenceArchiveContentValidation.swift",
