@@ -1,36 +1,36 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "wave": "L1-A26",
   "title": "Lane 1 Full Regression / Dependency Closure Audit",
-  "state": "IN_PROGRESS_RUNNER_PENDING",
+  "state": "IN_PROGRESS_EXACT_CHECKOUT_AUDIT_PENDING",
   "parity_claim": "NONE",
   "dependency_findings": [
     {
       "id": "A24_A25_RETENTION_SURFACE_DRIFT",
       "state": "FOUND_REPAIRED_AND_FOCUSED_REGRESSION_OBSERVED",
-      "detail": "A25 expected register_variant/request_delete/snapshot/retention_policy_sha256 while final A24 coordinator exposes lower-level strict primitives; A26 adds A24RetentionGateway. Focused gateway regression is now observed 12/12 PASS."
+      "detail": "A25 expected register_variant/request_delete/snapshot/retention_policy_sha256 while final A24 coordinator exposes lower-level strict primitives; A26 adds A24RetentionGateway. Focused gateway regression is observed 12/12 PASS."
     },
     {
       "id": "A24_REFERENCE_GRAPH",
       "state": "CLOSED_SOURCE_READBACK_CONFIRMED",
-      "detail": "Latest Worker-branch A24 source readback confirms object reachability scans both all manifests and all active pointers and fails closed on corrupt/symlink references before object GC/delete."
+      "detail": "Final A24 object reachability scans both all manifests and all active pointers and fails closed on corrupt/symlink references before object GC/delete."
     },
     {
-      "id": "A24_STALE_POLICY_SCHEMA",
-      "state": "REMOVED",
-      "detail": "Prototype retention-policy schema removed because final A24 does not invent provider/current-iPhone TTL values."
-    },
-    {
-      "id": "A24_PROTOTYPE_EVIDENCE_DRIFT",
-      "state": "REPLACED",
-      "detail": "A24 validation/matrix updated to the final coordinator semantics."
+      "id": "A26_AUDIT_PROVENANCE_AMBIGUITY",
+      "state": "HARDENED",
+      "detail": "A26 v2 requires exact git HEAD binding and emits a deterministic SHA-256 manifest of all durable Separation/** and Processing/** regular files, excluding only runtime cache/temp/lock artifacts and an explicitly declared in-lane report output path."
     }
   ],
   "added_checks": {
     "a24_a25_gateway_checked_in_cases": 12,
     "a24_a25_gateway_observed_pass": 12,
+    "source_snapshot_focused_logic_pass": 7,
+    "git_head_and_snapshot_provenance_focused_logic_pass": 5,
+    "audit_report_v2_schema_self_check": "PASS",
     "one_command_audit": "Separation/Evaluation/lane1_dependency_audit.py",
     "audit_covers": [
+      "exact git HEAD equals operator-supplied Worker branch tip",
+      "deterministic per-file SHA-256 snapshot across Separation/** and Processing/**",
       "Lane 1 Python py_compile",
       "Separation/Tests unittest discovery",
       "owned JSON syntax",
@@ -42,12 +42,17 @@
   "execution": {
     "repository_checkout_available_in_current_runtime": false,
     "local_clone_attempt": "FAILED_BEFORE_CODE_EXECUTION_DNS_GITHUB_UNRESOLVED",
-    "worker_branch_ci_statuses_on_latest_a26_commit": [],
-    "gateway_regression_execution": "OBSERVED_12_12_PASS_WITH_CHECKED_IN_GATEWAY_TEST_SOURCE_AND_A24_FINAL_SURFACE_SOURCE_READBACK; NOT_A_SUBSTITUTE_FOR_FULL_EXACT_BRANCH_AUDIT",
+    "full_exact_worker_branch_audit": "NOT_OBSERVED",
     "full_unittest_discovery": "NOT_OBSERVED",
     "full_pycompile": "NOT_OBSERVED",
-    "full_schema_self_validation": "NOT_OBSERVED"
+    "full_schema_self_validation": "NOT_OBSERVED",
+    "focused_provenance_logic": "OBSERVED_7_7_SOURCE_SNAPSHOT_PLUS_5_5_GIT_HEAD_SNAPSHOT_BINDING_PASS; NOT_A_SUBSTITUTE_FOR_FULL_BRANCH_AUDIT"
   },
-  "completion_condition": "Run lane1_dependency_audit.py on an executable full Worker-branch checkout/CI environment and require overall_state=PASS before moving L1-A26 to completed_waves.",
+  "closure_command_contract": {
+    "required_argument": "--expected-git-head <exact 40-hex final Worker branch tip>",
+    "required_result": "overall_state=PASS",
+    "required_report_bindings": ["git_head_binding.state=PASS", "owned_source_snapshot.state=PASS", "owned_source_snapshot.snapshot.source_snapshot_sha256"]
+  },
+  "completion_condition": "Run lane1_dependency_audit.py on an executable full Worker-branch checkout/CI environment at the exact final Worker branch tip, pass that tip through --expected-git-head, archive the v2 report, and require overall_state=PASS before moving L1-A26 to completed_waves.",
   "evidence_state": "NON_PARITY_EVIDENCE_ONLY"
 }
