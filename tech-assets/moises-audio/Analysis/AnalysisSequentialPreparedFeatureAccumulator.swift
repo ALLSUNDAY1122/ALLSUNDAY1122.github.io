@@ -91,9 +91,9 @@ struct AnalysisTempoFrameEnergyTracker {
 /// Incremental W29/W30 feature accumulator. The caller feeds exactly one
 /// prepared mono sample for every logical prepared sample index, in strictly
 /// increasing order starting at zero. W31 bounds extreme retained cardinality.
-/// W32 preserves ordinary-song Tempo summation exactly, uses rolling Tempo
-/// energy only for long audio, and reuses Chord spectral setup/scratch without
-/// changing Chord cadence, vocabulary, candidate scoring or Goertzel recurrence.
+/// W32 preserves ordinary-song Tempo summation exactly and reduces rescanning.
+/// W33 vectorizes Chord spectral traversal; W34 guards that backend at runtime
+/// and records deterministic fallback/publication diagnostics.
 final class AnalysisSequentialPreparedFeatureAccumulator {
     private struct PendingChordFrame {
         let startSeconds: Double
@@ -435,12 +435,15 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
             ? AnalysisSignal(sampleRate: sectionEffectiveRate, monoSamples: sectionEnergy)
             : AnalysisSignal(sampleRate: 1, monoSamples: [])
         let keySampleCount = keyWindows.reduce(0) { $0 + $1.count }
+        let chordGuard = chordSpectralWorkspace.backendGuardDiagnostics
         let retainedBytes = Int64(tempoFlux.count) * Int64(MemoryLayout<Double>.stride)
             + Int64(keySampleCount) * Int64(MemoryLayout<Double>.stride)
             + Int64(chordFrameDecisions.count) * 64
             + Int64(sectionEnergy.count) * Int64(MemoryLayout<Float>.stride)
             + Int64(tempoEnergyTracker.ringSampleCount + chordRing.count) * Int64(MemoryLayout<Float>.stride)
             + Int64(chordSpectralWorkspace.windowedScratch.count) * Int64(MemoryLayout<Double>.stride)
+            + Int64(chordSpectralWorkspace.recurrenceS1.count + chordSpectralWorkspace.recurrenceS2.count)
+                * Int64(MemoryLayout<Double>.stride)
 
         return .init(
             tempoOnset: tempoFlux,
@@ -474,7 +477,15 @@ final class AnalysisSequentialPreparedFeatureAccumulator {
                 sectionEnergyFrameStrideEquivalent: retentionPlan.sectionFrameStrideEquivalent,
                 tempoResolutionSafe: retentionPlan.tempoResolutionSafe,
                 chordWindowRetentionSafe: retentionPlan.chordWindowRetentionSafe,
-                sectionResolutionSafe: retentionPlan.sectionResolutionSafe
+                sectionResolutionSafe: retentionPlan.sectionResolutionSafe,
+                chordBackendGuardState: chordGuard.state.rawValue,
+                chordBackendVerificationFrameLimit: chordGuard.verificationFrameLimit,
+                chordBackendVerificationComparisons: chordGuard.verificationComparisons,
+                chordBackendVerificationMatches: chordGuard.verificationMatches,
+                chordBackendFallbackTriggered: chordGuard.fallbackTriggered,
+                chordBackendFallbackComparisonIndex: chordGuard.fallbackComparisonIndex,
+                chordBackendReferencePublicationCount: chordGuard.referencePublicationCount,
+                chordBackendVectorizedPublicationCount: chordGuard.vectorizedPublicationCount
             )
         )
     }
