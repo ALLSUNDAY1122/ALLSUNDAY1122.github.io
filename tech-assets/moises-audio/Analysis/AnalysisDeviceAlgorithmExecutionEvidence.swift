@@ -68,6 +68,9 @@ public struct AnalysisDeviceAlgorithmExecutionEvidence: Codable, Equatable, Send
     public let manifestSHA256: String
     public let source: AnalysisDeviceWorkloadSourceBinding
     public let identity: AnalysisDeviceWorkloadIdentity
+    /// W36 binding. Optional for historical W35 JSON decode only; current
+    /// physical acceptance requires `.boundedPull` for every planned run.
+    public let sourceInputContract: AnalysisChunkedSourceMemoryContract?
     public let snapshotSHA256: String?
     public let captureState: AnalysisRuntimeAlgorithmCaptureState
     public let runtimeIdentity: AnalysisRuntimeAlgorithmIdentity?
@@ -83,6 +86,7 @@ public struct AnalysisDeviceAlgorithmExecutionEvidence: Codable, Equatable, Send
         manifestSHA256: String,
         source: AnalysisDeviceWorkloadSourceBinding,
         identity: AnalysisDeviceWorkloadIdentity,
+        sourceInputContract: AnalysisChunkedSourceMemoryContract? = nil,
         snapshotSHA256: String?,
         captureState: AnalysisRuntimeAlgorithmCaptureState,
         runtimeIdentity: AnalysisRuntimeAlgorithmIdentity?,
@@ -97,6 +101,7 @@ public struct AnalysisDeviceAlgorithmExecutionEvidence: Codable, Equatable, Send
         self.manifestSHA256 = manifestSHA256.lowercased()
         self.source = source
         self.identity = identity
+        self.sourceInputContract = sourceInputContract
         self.snapshotSHA256 = snapshotSHA256?.lowercased()
         self.captureState = captureState
         self.runtimeIdentity = runtimeIdentity
@@ -140,7 +145,61 @@ public enum AnalysisDeviceAlgorithmExecutionEvidenceBuilder {
     public static func finalized(
         receipt: AnalysisDeviceWorkloadReceipt,
         performanceRun: AnalysisDevicePerformanceEvidence,
-        diagnostics: AnalysisSinglePassPreparedFeatureDiagnostics
+        diagnostics: AnalysisSinglePassPreparedFeatureDiagnostics,
+        sourceInputContract: AnalysisChunkedSourceMemoryContract? = nil
+    ) throws -> AnalysisDeviceAlgorithmExecutionEvidence {
+        try finalized(
+            receipt: receipt,
+            performanceEvidenceRunID: performanceRun.provenance.runID,
+            diagnostics: diagnostics,
+            sourceInputContract: sourceInputContract
+        )
+    }
+
+    /// W36 runner overload. W23 performance evidence is captured around the
+    /// same predeclared run ID and is joined later by the W35 batch validator.
+    public static func finalized(
+        receipt: AnalysisDeviceWorkloadReceipt,
+        diagnostics: AnalysisSinglePassPreparedFeatureDiagnostics,
+        sourceInputContract: AnalysisChunkedSourceMemoryContract
+    ) throws -> AnalysisDeviceAlgorithmExecutionEvidence {
+        try finalized(
+            receipt: receipt,
+            performanceEvidenceRunID: receipt.performanceEvidenceRunID,
+            diagnostics: diagnostics,
+            sourceInputContract: sourceInputContract
+        )
+    }
+
+    public static func cancelledBeforeFinalization(
+        receipt: AnalysisDeviceWorkloadReceipt,
+        performanceRun: AnalysisDevicePerformanceEvidence,
+        sourceInputContract: AnalysisChunkedSourceMemoryContract? = nil
+    ) -> AnalysisDeviceAlgorithmExecutionEvidence {
+        cancelledBeforeFinalization(
+            receipt: receipt,
+            performanceEvidenceRunID: performanceRun.provenance.runID,
+            sourceInputContract: sourceInputContract
+        )
+    }
+
+    /// W36 runner overload paired to the same execution ID before W23/W35 join.
+    public static func cancelledBeforeFinalization(
+        receipt: AnalysisDeviceWorkloadReceipt,
+        sourceInputContract: AnalysisChunkedSourceMemoryContract
+    ) -> AnalysisDeviceAlgorithmExecutionEvidence {
+        cancelledBeforeFinalization(
+            receipt: receipt,
+            performanceEvidenceRunID: receipt.performanceEvidenceRunID,
+            sourceInputContract: sourceInputContract
+        )
+    }
+
+    private static func finalized(
+        receipt: AnalysisDeviceWorkloadReceipt,
+        performanceEvidenceRunID: String,
+        diagnostics: AnalysisSinglePassPreparedFeatureDiagnostics,
+        sourceInputContract: AnalysisChunkedSourceMemoryContract?
     ) throws -> AnalysisDeviceAlgorithmExecutionEvidence {
         let runtime = AnalysisRuntimeAlgorithmIdentity(
             diagnostics: diagnostics,
@@ -148,13 +207,14 @@ public enum AnalysisDeviceAlgorithmExecutionEvidenceBuilder {
         )
         return .init(
             runID: receipt.runID,
-            performanceEvidenceRunID: performanceRun.provenance.runID,
+            performanceEvidenceRunID: performanceEvidenceRunID,
             runKind: receipt.runKind,
             workloadExecutionID: receipt.executionID,
             manifestID: receipt.manifestID,
             manifestSHA256: receipt.manifestSHA256,
             source: receipt.source,
             identity: receipt.identity,
+            sourceInputContract: sourceInputContract,
             snapshotSHA256: receipt.snapshotSHA256,
             captureState: .finalized,
             runtimeIdentity: runtime,
@@ -162,19 +222,21 @@ public enum AnalysisDeviceAlgorithmExecutionEvidenceBuilder {
         )
     }
 
-    public static func cancelledBeforeFinalization(
+    private static func cancelledBeforeFinalization(
         receipt: AnalysisDeviceWorkloadReceipt,
-        performanceRun: AnalysisDevicePerformanceEvidence
+        performanceEvidenceRunID: String,
+        sourceInputContract: AnalysisChunkedSourceMemoryContract?
     ) -> AnalysisDeviceAlgorithmExecutionEvidence {
         .init(
             runID: receipt.runID,
-            performanceEvidenceRunID: performanceRun.provenance.runID,
+            performanceEvidenceRunID: performanceEvidenceRunID,
             runKind: receipt.runKind,
             workloadExecutionID: receipt.executionID,
             manifestID: receipt.manifestID,
             manifestSHA256: receipt.manifestSHA256,
             source: receipt.source,
             identity: receipt.identity,
+            sourceInputContract: sourceInputContract,
             snapshotSHA256: receipt.snapshotSHA256,
             captureState: .cancelledBeforeFinalization,
             runtimeIdentity: nil,
