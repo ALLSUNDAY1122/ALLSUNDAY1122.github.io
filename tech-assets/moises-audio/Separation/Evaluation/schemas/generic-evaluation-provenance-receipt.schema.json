@@ -1,0 +1,12 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"generic-evaluation-provenance-receipt.schema.json",
+  "title":"Lane 1 E10 Provenance Receipt",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","tool_version","evidence_kind","evidence_state","parity_claim","route_id","route_kind","runtime_artifact_sha256","decision_plan_sha256","source_sha256","source_locks","output_sha256","privacy","parity_reason","e10_provenance_lock_sha256"],
+  "properties":{
+    "schema_version":{"const":1},"tool_version":{"const":"L1-E10-v1"},"evidence_kind":{"const":"GENERIC_EVALUATION_PROVENANCE_RECEIPT"},"evidence_state":{"const":"NON_PARITY_EVIDENCE_ONLY"},"parity_claim":{"const":"NONE"},
+    "route_id":{"type":"string"},"route_kind":{"enum":["LICENSED_LOCAL_INFERENCE_SDK","ALTERNATE_WRITTEN_COMMERCIAL_PROVIDER","PROJECT_OWNED_MODEL_IF_RIGHTS_CLEARED_TRAINING_DATA_AVAILABLE"]},"runtime_artifact_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"decision_plan_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "source_sha256":{"type":"object"},"source_locks":{"type":"object"},"output_sha256":{"type":"object"},"privacy":{"type":"object"},"parity_reason":{"type":"string"},"e10_provenance_lock_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}
+  }
+}

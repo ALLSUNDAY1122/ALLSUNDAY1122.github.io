@@ -148,47 +148,40 @@ public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
         let loadedSignal = try await loader.loadSignal(projectID: projectID, asset: asset)
         try AnalysisCancellationPolicy.check()
 
-        let prepared = try AnalysisWorkingSetPolicy.prepareCancellable(signal: loadedSignal)
-        let signal = prepared.signal
-        try AnalysisCancellationPolicy.check()
-        guard signal.durationSeconds >= configuration.minimumDurationSeconds else {
+        let reader = AnalysisPreparedSampleReader(signal: loadedSignal)
+        guard reader.durationSeconds >= configuration.minimumDurationSeconds else {
             return AnalysisSnapshot(tempo: nil, key: nil, chords: [], sections: [])
         }
 
-        let tempo = try BoundedTempoBeatAnalyzer.analyzeCancellable(
-            signal: signal,
+        let preparedAnalysis = try AnalysisSinglePassPreparedPipeline.analyze(
+            reader: reader,
             configuration: configuration
         )
         try AnalysisCancellationPolicy.check()
-        let key = try BoundedMusicalKeyAnalyzer.analyzeCancellable(
-            signal: signal,
-            configuration: configuration
-        )
-        try AnalysisCancellationPolicy.check()
-        let chords = try BoundedChordTimelineAnalyzer.analyzeCancellable(
-            signal: signal,
-            configuration: configuration
-        )
-        try AnalysisCancellationPolicy.check()
-
+        let sectionSignal = preparedAnalysis.sectionEnergySignal
         let detectedSections = try CancellableSongSectionPipeline.analyze(
-            signal: signal,
-            chords: chords,
+            signal: sectionSignal,
+            chords: preparedAnalysis.chords,
             configuration: configuration
         )
         try AnalysisCancellationPolicy.check()
         let sections = try SongSectionBoundaryHardener.harden(
             sections: detectedSections,
-            signal: signal,
-            chords: chords,
+            signal: sectionSignal,
+            chords: preparedAnalysis.chords,
             configuration: configuration
         )
         try AnalysisCancellationPolicy.check()
 
-        let rawSnapshot = AnalysisSnapshot(tempo: tempo, key: key, chords: chords, sections: sections)
+        let rawSnapshot = AnalysisSnapshot(
+            tempo: preparedAnalysis.tempo,
+            key: preparedAnalysis.key,
+            chords: preparedAnalysis.chords,
+            sections: sections
+        )
         let hardened = try AnalysisSnapshotRobustness.hardenCancellable(
             snapshot: rawSnapshot,
-            duration: signal.durationSeconds,
+            duration: reader.durationSeconds,
             configuration: configuration
         )
         try AnalysisCancellationPolicy.check()
