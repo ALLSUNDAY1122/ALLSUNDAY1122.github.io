@@ -92,7 +92,7 @@ public enum AnalysisChunkedPreparedFeatureExtractor {
             rangeEnd = initial.end
         }
 
-        for try await chunk in signal.chunks {
+        while let chunk = try await signal.source.nextChunk() {
             try AnalysisCancellationPolicy.check()
             guard !chunk.monoSamples.isEmpty else {
                 throw AnalysisChunkedInputError.emptyChunk(startSampleIndex: chunk.startSampleIndex)
@@ -103,13 +103,16 @@ public enum AnalysisChunkedPreparedFeatureExtractor {
                     actual: chunk.startSampleIndex
                 )
             }
-            let chunkEnd = chunk.startSampleIndex + Int64(chunk.monoSamples.count)
-            guard chunkEnd <= descriptor.sampleCount else {
+            let chunkCount = Int64(chunk.monoSamples.count)
+            let remaining = descriptor.sampleCount - chunk.startSampleIndex
+            guard remaining >= 0, chunkCount <= remaining else {
+                let addition = chunk.startSampleIndex.addingReportingOverflow(chunkCount)
                 throw AnalysisChunkedInputError.chunkExceedsDeclaredSampleCount(
                     declared: descriptor.sampleCount,
-                    actualEnd: chunkEnd
+                    actualEnd: addition.overflow ? Int64.max : addition.partialValue
                 )
             }
+            let chunkEnd = chunk.startSampleIndex + chunkCount
 
             sourceChunkCount += 1
             maximumSourceChunkSamples = max(maximumSourceChunkSamples, chunk.monoSamples.count)
@@ -168,9 +171,6 @@ public enum AnalysisChunkedPreparedFeatureExtractor {
                 preparedComputations += 1
                 preparedIndex += 1
             }
-            // W11 leaves a zero in any theoretical output whose computed source
-            // range starts after the declared source. Preserve that fail-safe
-            // behavior rather than reading beyond the stream.
             while preparedIndex < preparedSampleCount {
                 try accumulator.consume(0, at: preparedIndex)
                 preparedComputations += 1
@@ -252,6 +252,7 @@ public enum AnalysisChunkedSinglePassPreparedPipeline {
             duration: features.durationSeconds,
             configuration: configuration
         )
+        try AnalysisCancellationPolicy.check()
         return .init(
             analysis: .init(
                 tempo: tempo,
