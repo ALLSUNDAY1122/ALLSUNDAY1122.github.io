@@ -153,38 +153,32 @@ public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
             return AnalysisSnapshot(tempo: nil, key: nil, chords: [], sections: [])
         }
 
-        let tempo = try StreamingBoundedTempoBeatAnalyzer.analyzeCancellable(
+        let preparedAnalysis = try AnalysisSinglePassPreparedPipeline.analyze(
             reader: reader,
             configuration: configuration
         )
         try AnalysisCancellationPolicy.check()
-        let key = try StreamingBoundedMusicalKeyAnalyzer.analyzeCancellable(
-            reader: reader,
-            configuration: configuration
-        )
-        try AnalysisCancellationPolicy.check()
-        let chords = try StreamingBoundedChordTimelineAnalyzer.analyzeCancellable(
-            reader: reader,
-            configuration: configuration
-        )
-        try AnalysisCancellationPolicy.check()
-
-        let sectionSignal = try AnalysisSectionEnergyFeatureExtractor.makeSignal(from: reader)
+        let sectionSignal = preparedAnalysis.sectionEnergySignal
         let detectedSections = try CancellableSongSectionPipeline.analyze(
             signal: sectionSignal,
-            chords: chords,
+            chords: preparedAnalysis.chords,
             configuration: configuration
         )
         try AnalysisCancellationPolicy.check()
         let sections = try SongSectionBoundaryHardener.harden(
             sections: detectedSections,
             signal: sectionSignal,
-            chords: chords,
+            chords: preparedAnalysis.chords,
             configuration: configuration
         )
         try AnalysisCancellationPolicy.check()
 
-        let rawSnapshot = AnalysisSnapshot(tempo: tempo, key: key, chords: chords, sections: sections)
+        let rawSnapshot = AnalysisSnapshot(
+            tempo: preparedAnalysis.tempo,
+            key: preparedAnalysis.key,
+            chords: preparedAnalysis.chords,
+            sections: sections
+        )
         let hardened = try AnalysisSnapshotRobustness.hardenCancellable(
             snapshot: rawSnapshot,
             duration: reader.durationSeconds,
