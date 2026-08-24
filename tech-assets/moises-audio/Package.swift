@@ -37,6 +37,7 @@ let package = Package(
                 "Analysis/AnalysisChunkedInputBudget.swift",
                 "Analysis/AnalysisExtremeDurationRetentionPolicy.swift",
                 "Analysis/AnalysisExtremeDurationRetentionBudget.swift",
+                "Analysis/AnalysisLongAudioCPUDutyBudget.swift",
                 "Analysis/AnalysisSequentialPreparedFeatureAccumulator.swift",
                 "Analysis/AnalysisChunkedSinglePassPreparedPipeline.swift",
                 "Analysis/AnalysisSinglePassPreparedFeatures.swift",
