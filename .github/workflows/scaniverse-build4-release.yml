@@ -1,0 +1,246 @@
+name: Scaniverse Build 4 Internal TestFlight Gate
+
+on:
+  push:
+    branches:
+      - feature/splat-native-ios-poc
+    paths:
+      - .github/workflows/scaniverse-build4-release.yml
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      REPOSITORY: ALLSUNDAY1122/ALLSUNDAY1122.github.io
+      RELEASE_BRANCH: testflight/splat-native-ios-20260824-build4
+      RELEASE_COMMIT: bdb1488b101c3855edc52687b5dd230748297a62
+      WORKFLOW_ID: splat-native-ios
+      ASC_APP_ID: "6803778932"
+      BUNDLE_ID: jp.allsunday1122.splatlab
+      BUILD_NUMBER: "4"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/splat-native-ios-poc
+          fetch-depth: 0
+
+      - name: Verify pinned release branch and workflow
+        run: |
+          set -euo pipefail
+          ACTUAL="$(git ls-remote origin "refs/heads/${RELEASE_BRANCH}" | awk '{print $1}')"
+          test "$ACTUAL" = "$RELEASE_COMMIT"
+          git show "${RELEASE_COMMIT}:codemagic.yaml" >/tmp/scanlab-codemagic.yaml
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('/tmp/scanlab-codemagic.yaml').read_text(encoding='utf-8')
+          required=[
+              'splat-native-ios:',
+              'jp.allsunday1122.splatlab',
+              'APP_STORE_CONNECT_APP_ID: 6803778932',
+              "text.replace(old, 'CURRENT_PROJECT_VERSION: 4', 1)",
+              'submit_to_testflight: true',
+              'submit_to_app_store: false',
+          ]
+          missing=[x for x in required if x not in s]
+          if missing: raise SystemExit('release workflow verification failed: '+repr(missing))
+          print('PASS: Build 4 release branch is pinned and TestFlight-only')
+          PY
+
+      - name: Start Codemagic Build 4 and wait
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, time, urllib.error, urllib.request
+          from pathlib import Path
+
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token: raise SystemExit('missing CM_API_TOKEN')
+          repo=os.environ['REPOSITORY']; branch=os.environ['RELEASE_BRANCH']; workflow=os.environ['WORKFLOW_ID']
+          def call(url, method='GET', payload=None):
+              body=None if payload is None else json.dumps(payload,separators=(',',':')).encode()
+              req=urllib.request.Request(url,data=body,method=method,headers={'x-auth-token':token,'Content-Type':'application/json','Accept':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode(); return r.status,json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode(errors='replace'); raise RuntimeError(f'Codemagic HTTP {e.code}: {raw[:1200]}')
+
+          _,apps_payload=call('https://api.codemagic.io/apps')
+          apps=apps_payload.get('applications') or apps_payload.get('data') or []
+          if isinstance(apps,dict): apps=apps.get('applications') or []
+          needle=repo.lower().replace('https://github.com/','').replace('.git','')
+          candidates=[]
+          for app in apps:
+              ser=json.dumps(app,ensure_ascii=False).lower().replace('.git','')
+              if needle in ser or needle.split('/')[-1] in ser:
+                  aid=app.get('_id') or app.get('id')
+                  if aid: candidates.append(str(aid))
+          ids=sorted(set(candidates))
+          if len(ids)!=1: raise RuntimeError(f'expected one Codemagic app id, got {len(ids)}')
+          app_id=ids[0]
+          _,started=call('https://api.codemagic.io/builds','POST',{'appId':app_id,'workflowId':workflow,'branch':branch})
+          build_id=started.get('buildId') or started.get('id')
+          if not build_id: raise RuntimeError('Codemagic did not return buildId')
+          print(f'Codemagic Build 4 started: {build_id}')
+
+          deadline=time.time()+4200
+          last=None; details={}
+          while time.time()<deadline:
+              _,payload=call(f'https://codemagic.io/api/v3/builds/{build_id}')
+              details=payload.get('data') or payload
+              status=details.get('status')
+              if status!=last:
+                  print('Codemagic status:',status); last=status
+              if status in {'finished','failed','canceled','timeout','skipped'}: break
+              time.sleep(30)
+          status=details.get('status')
+          safe={
+              'build_id':build_id,'app_id':app_id,'workflow_id':workflow,'branch':branch,'status':status,
+              'startedAt':details.get('startedAt'),'finishedAt':details.get('finishedAt'),
+              'version':details.get('version'),'buildVersion':details.get('buildVersion'),
+          }
+          Path('/tmp/scaniverse-build4-codemagic.json').write_text(json.dumps(safe,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          if status!='finished': raise RuntimeError(f'Codemagic Build 4 ended with {status!r}')
+          PY
+
+      - name: Read back Build 4 from App Store Connect and ensure internal distribution
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git show origin/main:scripts/app_store_connect_api.py >/tmp/app_store_connect_api.py
+          python3 - <<'PY'
+          import json, os, sys, time
+          from pathlib import Path
+          sys.path.insert(0,'/tmp')
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          app_id=os.environ['ASC_APP_ID']; bundle=os.environ['BUNDLE_ID']; build_no=os.environ['BUILD_NUMBER']
+          issuer=os.environ.get('ASC_ISSUER_ID','').strip(); kid=os.environ.get('ASC_KEY_ID','').strip()
+          if not issuer or not kid: raise RuntimeError('missing App Store Connect credentials')
+          key_path,cleanup=load_private_key(); token=make_token(issuer,kid,key_path)
+          summary={'ok':False,'app_id':app_id,'bundle_id':bundle,'build_number':build_no,'errors':[],
+                   'build':None,'internal_build_state':None,'group':None,'assigned':False,'tester_count':None,
+                   'compliance_changed':False,'app_store_review_submitted':False,'external_beta_review_submitted':False}
+          try:
+              _,app=api_get(token,f'/v1/apps/{app_id}')
+              actual=((((app or {}).get('data') or {}).get('attributes') or {}).get('bundleId'))
+              if actual!=bundle: raise RuntimeError(f'app bundle mismatch: {actual!r}')
+
+              target=None
+              deadline=time.time()+1200
+              while time.time()<deadline:
+                  _,r=api_get(token,f'/v1/builds?filter[app]={app_id}&sort=-uploadedDate&limit=200&fields[builds]=version,uploadedDate,processingState,expired,buildAudienceType,usesNonExemptEncryption')
+                  builds=[x for x in ((r or {}).get('data') or []) if isinstance(x,dict)]
+                  candidates=[b for b in builds if str((b.get('attributes') or {}).get('version'))==build_no]
+                  if len(candidates)>1: raise RuntimeError(f'multiple Build {build_no} resources found')
+                  if candidates:
+                      target=candidates[0]; a=target.get('attributes') or {}
+                      print('ASC Build 4 state:',a.get('processingState'))
+                      if a.get('processingState')=='VALID': break
+                      if a.get('processingState') in ('FAILED','INVALID'): raise RuntimeError(f'Build {build_no} processing failed')
+                  time.sleep(30)
+              if target is None: raise RuntimeError('Build 4 did not appear in App Store Connect')
+              tid=str(target['id']); a=target.get('attributes') or {}
+              if a.get('processingState')!='VALID': raise RuntimeError(f'Build 4 processingState={a.get("processingState")!r}')
+              if a.get('buildAudienceType')!='INTERNAL_ONLY': raise RuntimeError(f'Build 4 audience={a.get("buildAudienceType")!r}')
+              if a.get('expired') is True: raise RuntimeError('Build 4 is expired')
+
+              _,d0=api_get(token,f'/v1/builds/{tid}/buildBetaDetail')
+              state=((((d0 or {}).get('data') or {}).get('attributes') or {}).get('internalBuildState'))
+              if state=='MISSING_EXPORT_COMPLIANCE' or a.get('usesNonExemptEncryption') is None:
+                  payload={'data':{'type':'builds','id':tid,'attributes':{'usesNonExemptEncryption':False}}}
+                  hs,_=api_request(token,f'/v1/builds/{tid}',method='PATCH',payload=payload)
+                  if hs not in (200,201): raise RuntimeError(f'compliance patch HTTP {hs}')
+                  summary['compliance_changed']=True
+                  time.sleep(2)
+
+              _,b1=api_get(token,f'/v1/builds/{tid}?fields[builds]=version,uploadedDate,processingState,expired,buildAudienceType,usesNonExemptEncryption')
+              ba=((((b1 or {}).get('data') or {}).get('attributes') or {}))
+              _,d1=api_get(token,f'/v1/builds/{tid}/buildBetaDetail')
+              state=((((d1 or {}).get('data') or {}).get('attributes') or {}).get('internalBuildState'))
+              summary['build']={'id':tid,**{k:ba.get(k) for k in ('version','uploadedDate','processingState','expired','buildAudienceType','usesNonExemptEncryption')}}
+              summary['internal_build_state']=state
+
+              _,gr=api_get(token,f'/v1/betaGroups?filter[app]={app_id}&limit=200')
+              groups=[x for x in ((gr or {}).get('data') or []) if isinstance(x,dict)]
+              internal=[]
+              for g in groups:
+                  ga=g.get('attributes') or {}
+                  if ga.get('isInternalGroup') is True:
+                      internal.append({'id':str(g['id']),'name':ga.get('name'),'hasAccessToAllBuilds':ga.get('hasAccessToAllBuilds')})
+              exact=[g for g in internal if str(g.get('name') or '').strip().lower()=='sun']
+              selected=exact[0] if len(exact)==1 else (internal[0] if len(internal)==1 else None)
+              if selected is None: raise RuntimeError(f'unambiguous internal beta group not found; count={len(internal)}')
+              summary['group']=selected
+
+              def group_build_ids():
+                  _,x=api_get(token,f"/v1/betaGroups/{selected['id']}/builds?limit=200")
+                  return [str(i.get('id')) for i in ((x or {}).get('data') or []) if isinstance(i,dict) and i.get('id')]
+              ids=group_build_ids(); eligible=state in ('READY_FOR_BETA_TESTING','IN_BETA_TESTING')
+              if tid not in ids and not selected.get('hasAccessToAllBuilds') and eligible:
+                  payload={'data':[{'type':'builds','id':tid}]}
+                  hs,_=api_request(token,f"/v1/betaGroups/{selected['id']}/relationships/builds",method='POST',payload=payload)
+                  if hs not in (200,201,204): raise RuntimeError(f'beta group assignment HTTP {hs}')
+                  time.sleep(2); ids=group_build_ids()
+              summary['assigned']=(tid in ids) or (bool(selected.get('hasAccessToAllBuilds')) and eligible)
+              _,tr=api_get(token,f"/v1/betaGroups/{selected['id']}/betaTesters?limit=200")
+              testers=[x for x in ((tr or {}).get('data') or []) if isinstance(x,dict)]
+              summary['tester_count']=len(testers)
+              summary['ok']=(ba.get('processingState')=='VALID' and ba.get('buildAudienceType')=='INTERNAL_ONLY' and
+                             ba.get('expired') is not True and ba.get('usesNonExemptEncryption') is False and eligible and
+                             summary['assigned'] and len(testers)>0)
+              if not summary['ok']: raise RuntimeError('Build 4 did not satisfy complete Internal TestFlight gate')
+          except Exception as e:
+              summary['errors'].append(type(e).__name__+': '+str(e)[:1500])
+              raise
+          finally:
+              if cleanup: cleanup.unlink(missing_ok=True)
+              Path('/tmp/scaniverse-build4-asc.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PASS: Build 4 is VALID / INTERNAL_ONLY and assigned to internal beta group')
+          PY
+
+      - name: Persist Build 4 release evidence and remove one-shot workflow
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          cm=Path('/tmp/scaniverse-build4-codemagic.json')
+          asc=Path('/tmp/scaniverse-build4-asc.json')
+          out={'generated_at_utc':'2026-08-24T05:31:00Z','codemagic':None,'app_store_connect':None}
+          if cm.exists(): out['codemagic']=json.loads(cm.read_text(encoding='utf-8'))
+          if asc.exists(): out['app_store_connect']=json.loads(asc.read_text(encoding='utf-8'))
+          out['ok']=bool((out.get('codemagic') or {}).get('status')=='finished' and (out.get('app_store_connect') or {}).get('ok') is True)
+          Path('/tmp/scaniverse-build4-release.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          git fetch origin feature/splat-native-ios-poc
+          git reset --hard origin/feature/splat-native-ios-poc
+          mkdir -p splat-native-ios/evidence
+          cp /tmp/scaniverse-build4-release.json splat-native-ios/evidence/scaniverse-build4-release.json
+          git rm -f .github/workflows/scaniverse-build4-release.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add splat-native-ios/evidence/scaniverse-build4-release.json
+          git commit -m "evidence(scaniverse): record Build 4 release gate"
+          git push origin HEAD:feature/splat-native-ios-poc
+
+      - name: Enforce complete release gate
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/scaniverse-build4-release.json')
+          if not p.exists() or not json.loads(p.read_text()).get('ok'):
+              raise SystemExit('Build 4 release gate failed; inspect persisted evidence')
+          PY
