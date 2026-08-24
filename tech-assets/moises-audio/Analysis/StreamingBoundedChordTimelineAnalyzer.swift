@@ -1,27 +1,200 @@
 import Foundation
 
 public enum StreamingBoundedChordTimelineAnalyzer {
-    private struct FrameDecision { var startSeconds:Double; var endSeconds:Double; var label:String; var confidence:Double? }
-    public static func analyzeCancellable(reader:AnalysisPreparedSampleReader,configuration:MusicAnalysisConfiguration = .productBaseline)throws->[ChordEvent]{
-        try AnalysisCancellationPolicy.check(); guard reader.durationSeconds>0,reader.sampleCount>0 else{return[]}
-        let sampleRate=reader.sampleRate,windowSamples=max(256,min(reader.sampleCount,Int((configuration.chordWindowSeconds*sampleRate).rounded()))),hopSamples=max(1,Int((configuration.chordHopSeconds*sampleRate).rounded())),duration=reader.durationSeconds
-        var decisions:[FrameDecision]=[];decisions.reserveCapacity(max(1,Int(ceil(Double(reader.sampleCount)/Double(hopSamples)))))
-        var segmentStart=0,frameIndex=0
-        while segmentStart<reader.sampleCount {
-            try AnalysisCancellationPolicy.checkIfNeeded(enabled:true,iteration:frameIndex,stride:AnalysisCancellationPolicy.chordFrameCheckStride)
-            let segmentEnd=min(reader.sampleCount,segmentStart+hopSamples),center=segmentStart+(segmentEnd-segmentStart)/2,half=windowSamples/2
-            var analysisStart=max(0,center-half),analysisEnd=min(reader.sampleCount,analysisStart+windowSamples)
-            if analysisEnd-analysisStart<windowSamples{analysisStart=max(0,analysisEnd-windowSamples);analysisEnd=min(reader.sampleCount,analysisStart+windowSamples)}
-            let decision:(label:String,confidence:Double?)
-            if try reader.rms(range:segmentStart..<segmentEnd)<configuration.noChordRMS{decision=("N",1)}else{decision=ChordFrameClassifier.classify(samples:try reader.finiteWindow(range:analysisStart..<analysisEnd),sampleRate:sampleRate,configuration:configuration,vocabulary:.conservativeMajorMinor)}
-            decisions.append(.init(startSeconds:Double(segmentStart)/sampleRate,endSeconds:min(duration,Double(segmentEnd)/sampleRate),label:decision.label,confidence:decision.confidence));segmentStart=segmentEnd;frameIndex+=1
+    public static func analyzeCancellable(
+        reader: AnalysisPreparedSampleReader,
+        configuration: MusicAnalysisConfiguration = .productBaseline
+    ) throws -> [ChordEvent] {
+        try AnalysisCancellationPolicy.check()
+        guard reader.durationSeconds > 0, reader.sampleCount > 0 else { return [] }
+        let sampleRate = reader.sampleRate
+        let windowSamples = max(256, min(reader.sampleCount, Int((configuration.chordWindowSeconds * sampleRate).rounded())))
+        let hopSamples = max(1, Int((configuration.chordHopSeconds * sampleRate).rounded()))
+        let duration = reader.durationSeconds
+        var decisions: [AnalysisPreparedChordFrameDecision] = []
+        decisions.reserveCapacity(max(1, Int(ceil(Double(reader.sampleCount) / Double(hopSamples)))))
+        var segmentStart = 0, frameIndex = 0
+        while segmentStart < reader.sampleCount {
+            try AnalysisCancellationPolicy.checkIfNeeded(enabled: true, iteration: frameIndex, stride: AnalysisCancellationPolicy.chordFrameCheckStride)
+            let segmentEnd = min(reader.sampleCount, segmentStart + hopSamples)
+            let center = segmentStart + (segmentEnd - segmentStart) / 2
+            let half = windowSamples / 2
+            var analysisStart = max(0, center - half)
+            var analysisEnd = min(reader.sampleCount, analysisStart + windowSamples)
+            if analysisEnd - analysisStart < windowSamples {
+                analysisStart = max(0, analysisEnd - windowSamples)
+                analysisEnd = min(reader.sampleCount, analysisStart + windowSamples)
+            }
+            let decision: (label: String, confidence: Double?)
+            if try reader.rms(range: segmentStart..<segmentEnd) < configuration.noChordRMS {
+                decision = ("N", 1)
+            } else {
+                decision = ChordFrameClassifier.classify(
+                    samples: try reader.finiteWindow(range: analysisStart..<analysisEnd),
+                    sampleRate: sampleRate,
+                    configuration: configuration,
+                    vocabulary: .conservativeMajorMinor
+                )
+            }
+            decisions.append(.init(
+                startSeconds: Double(segmentStart) / sampleRate,
+                endSeconds: min(duration, Double(segmentEnd) / sampleRate),
+                label: decision.label,
+                confidence: decision.confidence
+            ))
+            segmentStart = segmentEnd
+            frameIndex += 1
         }
-        try bridgeSingleFrameFlickers(&decisions);var merged=try mergeAdjacent(decisions);try absorbShortUncertainSegments(&merged,minimumDuration:configuration.minimumChordSegmentSeconds);merged=try mergeAdjacent(merged);try normalizeTimeline(&merged,duration:duration);try AnalysisCancellationPolicy.check()
-        return merged.compactMap{$0.endSeconds>$0.startSeconds ? ChordEvent(startSeconds:$0.startSeconds,endSeconds:$0.endSeconds,normalizedLabel:$0.label,confidence:$0.confidence):nil}
+        return try finalizePreclassifiedFramesCancellable(
+            decisions,
+            duration: duration,
+            configuration: configuration
+        )
     }
-    private static func bridgeSingleFrameFlickers(_ d:inout[FrameDecision])throws{guard d.count>=3 else{return};let o=d;for i in 1..<(d.count-1){try AnalysisCancellationPolicy.checkIfNeeded(enabled:true,iteration:i,stride:AnalysisCancellationPolicy.postProcessCheckStride);let p=o[i-1],c=o[i],n=o[i+1];guard p.label==n.label,c.label != p.label,c.label != "N" else{continue};let cc=c.confidence ?? 0,nc=min(p.confidence ?? 1,n.confidence ?? 1);if c.label=="X" || cc<=nc{d[i].label=p.label;d[i].confidence=min(p.confidence ?? nc,n.confidence ?? nc)}}}
-    private static func mergeAdjacent(_ input:[FrameDecision])throws->[FrameDecision]{guard var current=input.first else{return[]};var out:[FrameDecision]=[];out.reserveCapacity(input.count);for (offset,next) in input.dropFirst().enumerated(){try AnalysisCancellationPolicy.checkIfNeeded(enabled:true,iteration:offset,stride:AnalysisCancellationPolicy.postProcessCheckStride);if next.label==current.label,abs(next.startSeconds-current.endSeconds)<=1e-6{current.confidence=mergeConfidence(lhs:current.confidence,lhsDuration:current.endSeconds-current.startSeconds,rhs:next.confidence,rhsDuration:next.endSeconds-next.startSeconds);current.endSeconds=next.endSeconds}else{out.append(current);current=next}};out.append(current);return out}
-    private static func absorbShortUncertainSegments(_ s:inout[FrameDecision],minimumDuration:Double)throws{guard minimumDuration>0,s.count>1 else{return};var changed=true,pass=0;while changed{try AnalysisCancellationPolicy.checkIfNeeded(enabled:true,iteration:pass,stride:1);changed=false;for i in s.indices{try AnalysisCancellationPolicy.checkIfNeeded(enabled:true,iteration:i,stride:AnalysisCancellationPolicy.postProcessCheckStride);let duration=s[i].endSeconds-s[i].startSeconds;guard duration<minimumDuration,s[i].label != "N" else{continue};let pi=i>0 ? i-1:nil,ni=i+1<s.count ? i+1:nil;if let pi,let ni,s[pi].label==s[ni].label{s[i].label=s[pi].label;s[i].confidence=min(s[pi].confidence ?? 1,s[ni].confidence ?? 1);changed=true;break};let pc=pi.map{s[$0].confidence ?? 0} ?? -1,nc=ni.map{s[$0].confidence ?? 0} ?? -1;if pc>=nc,let pi{s[i].label=s[pi].label;s[i].confidence=s[pi].confidence;changed=true;break}else if let ni{s[i].label=s[ni].label;s[i].confidence=s[ni].confidence;changed=true;break}};if changed{s=try mergeAdjacent(s)};pass+=1}}
-    private static func normalizeTimeline(_ s:inout[FrameDecision],duration:Double)throws{guard !s.isEmpty else{return};s[0].startSeconds=0;for i in 1..<s.count{try AnalysisCancellationPolicy.checkIfNeeded(enabled:true,iteration:i,stride:AnalysisCancellationPolicy.postProcessCheckStride);let b=max(s[i-1].startSeconds,min(duration,s[i].startSeconds));s[i-1].endSeconds=b;s[i].startSeconds=b};s[s.count-1].endSeconds=duration}
-    private static func mergeConfidence(lhs:Double?,lhsDuration:Double,rhs:Double?,rhsDuration:Double)->Double?{switch(lhs,rhs){case let(l?,r?):let t=max(1e-9,lhsDuration+rhsDuration);return(l*lhsDuration+r*rhsDuration)/t;case let(l?,nil):return l;case let(nil,r?):return r;default:return nil}}
+
+    public static func finalizePreclassifiedFramesCancellable(
+        _ input: [AnalysisPreparedChordFrameDecision],
+        duration: Double,
+        configuration: MusicAnalysisConfiguration = .productBaseline
+    ) throws -> [ChordEvent] {
+        try AnalysisCancellationPolicy.check()
+        guard duration.isFinite, duration > 0 else { return [] }
+        var decisions = input
+        try bridgeSingleFrameFlickers(&decisions)
+        var merged = try mergeAdjacent(decisions)
+        try absorbShortUncertainSegments(&merged, minimumDuration: configuration.minimumChordSegmentSeconds)
+        merged = try mergeAdjacent(merged)
+        try normalizeTimeline(&merged, duration: duration)
+        try AnalysisCancellationPolicy.check()
+        return merged.compactMap {
+            $0.endSeconds > $0.startSeconds
+                ? ChordEvent(startSeconds: $0.startSeconds, endSeconds: $0.endSeconds, normalizedLabel: $0.label, confidence: $0.confidence)
+                : nil
+        }
+    }
+
+    private static func bridgeSingleFrameFlickers(_ decisions: inout [AnalysisPreparedChordFrameDecision]) throws {
+        guard decisions.count >= 3 else { return }
+        let original = decisions
+        for index in 1..<(decisions.count - 1) {
+            try AnalysisCancellationPolicy.checkIfNeeded(enabled: true, iteration: index, stride: AnalysisCancellationPolicy.postProcessCheckStride)
+            let previous = original[index - 1], current = original[index], next = original[index + 1]
+            guard previous.label == next.label, current.label != previous.label, current.label != "N" else { continue }
+            let currentConfidence = current.confidence ?? 0
+            let neighborConfidence = min(previous.confidence ?? 1, next.confidence ?? 1)
+            if current.label == "X" || currentConfidence <= neighborConfidence {
+                decisions[index] = .init(
+                    startSeconds: current.startSeconds,
+                    endSeconds: current.endSeconds,
+                    label: previous.label,
+                    confidence: min(previous.confidence ?? neighborConfidence, next.confidence ?? neighborConfidence)
+                )
+            }
+        }
+    }
+
+    private static func mergeAdjacent(_ input: [AnalysisPreparedChordFrameDecision]) throws -> [AnalysisPreparedChordFrameDecision] {
+        guard var current = input.first else { return [] }
+        var output: [AnalysisPreparedChordFrameDecision] = []
+        output.reserveCapacity(input.count)
+        for (offset, next) in input.dropFirst().enumerated() {
+            try AnalysisCancellationPolicy.checkIfNeeded(enabled: true, iteration: offset, stride: AnalysisCancellationPolicy.postProcessCheckStride)
+            if next.label == current.label, abs(next.startSeconds - current.endSeconds) <= 1e-6 {
+                current = .init(
+                    startSeconds: current.startSeconds,
+                    endSeconds: next.endSeconds,
+                    label: current.label,
+                    confidence: mergeConfidence(
+                        lhs: current.confidence,
+                        lhsDuration: current.endSeconds - current.startSeconds,
+                        rhs: next.confidence,
+                        rhsDuration: next.endSeconds - next.startSeconds
+                    )
+                )
+            } else {
+                output.append(current)
+                current = next
+            }
+        }
+        output.append(current)
+        return output
+    }
+
+    private static func absorbShortUncertainSegments(
+        _ segments: inout [AnalysisPreparedChordFrameDecision],
+        minimumDuration: Double
+    ) throws {
+        guard minimumDuration > 0, segments.count > 1 else { return }
+        var changed = true, pass = 0
+        while changed {
+            try AnalysisCancellationPolicy.checkIfNeeded(enabled: true, iteration: pass, stride: 1)
+            changed = false
+            for index in segments.indices {
+                try AnalysisCancellationPolicy.checkIfNeeded(enabled: true, iteration: index, stride: AnalysisCancellationPolicy.postProcessCheckStride)
+                let duration = segments[index].endSeconds - segments[index].startSeconds
+                guard duration < minimumDuration, segments[index].label != "N" else { continue }
+                let previousIndex = index > 0 ? index - 1 : nil
+                let nextIndex = index + 1 < segments.count ? index + 1 : nil
+                if let previousIndex, let nextIndex, segments[previousIndex].label == segments[nextIndex].label {
+                    segments[index] = .init(
+                        startSeconds: segments[index].startSeconds,
+                        endSeconds: segments[index].endSeconds,
+                        label: segments[previousIndex].label,
+                        confidence: min(segments[previousIndex].confidence ?? 1, segments[nextIndex].confidence ?? 1)
+                    )
+                    changed = true
+                    break
+                }
+                let previousConfidence = previousIndex.map { segments[$0].confidence ?? 0 } ?? -1
+                let nextConfidence = nextIndex.map { segments[$0].confidence ?? 0 } ?? -1
+                if previousConfidence >= nextConfidence, let previousIndex {
+                    segments[index] = .init(
+                        startSeconds: segments[index].startSeconds,
+                        endSeconds: segments[index].endSeconds,
+                        label: segments[previousIndex].label,
+                        confidence: segments[previousIndex].confidence
+                    )
+                    changed = true
+                    break
+                } else if let nextIndex {
+                    segments[index] = .init(
+                        startSeconds: segments[index].startSeconds,
+                        endSeconds: segments[index].endSeconds,
+                        label: segments[nextIndex].label,
+                        confidence: segments[nextIndex].confidence
+                    )
+                    changed = true
+                    break
+                }
+            }
+            if changed { segments = try mergeAdjacent(segments) }
+            pass += 1
+        }
+    }
+
+    private static func normalizeTimeline(_ segments: inout [AnalysisPreparedChordFrameDecision], duration: Double) throws {
+        guard !segments.isEmpty else { return }
+        segments[0] = .init(startSeconds: 0, endSeconds: segments[0].endSeconds, label: segments[0].label, confidence: segments[0].confidence)
+        for index in 1..<segments.count {
+            try AnalysisCancellationPolicy.checkIfNeeded(enabled: true, iteration: index, stride: AnalysisCancellationPolicy.postProcessCheckStride)
+            let boundary = max(segments[index - 1].startSeconds, min(duration, segments[index].startSeconds))
+            let previous = segments[index - 1]
+            let current = segments[index]
+            segments[index - 1] = .init(startSeconds: previous.startSeconds, endSeconds: boundary, label: previous.label, confidence: previous.confidence)
+            segments[index] = .init(startSeconds: boundary, endSeconds: current.endSeconds, label: current.label, confidence: current.confidence)
+        }
+        let last = segments[segments.count - 1]
+        segments[segments.count - 1] = .init(startSeconds: last.startSeconds, endSeconds: duration, label: last.label, confidence: last.confidence)
+    }
+
+    private static func mergeConfidence(lhs: Double?, lhsDuration: Double, rhs: Double?, rhsDuration: Double) -> Double? {
+        switch (lhs, rhs) {
+        case let (left?, right?):
+            let total = max(1e-9, lhsDuration + rhsDuration)
+            return (left * lhsDuration + right * rhsDuration) / total
+        case let (left?, nil): return left
+        case let (nil, right?): return right
+        default: return nil
+        }
+    }
 }
