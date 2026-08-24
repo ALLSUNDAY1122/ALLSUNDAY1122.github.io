@@ -26,13 +26,16 @@ public struct Lane3AppleFilePCMChunkSourceMetadata: Equatable, Codable, Sendable
     public let maximumFramesPerRead: Int
     public let processingFormat: String
     public let sourcePathIncluded: Bool
-    public let fullTrackPCMRetainedBySource: Bool
+    public let fullTrackPCMArrayRetainedByAdapter: Bool
+    public let frameworkDecoderBufferingMeasured: Bool
+    public let actualProcessRSSMeasured: Bool
     public let parityPromotionAllowed: Bool
 }
 
 /// Read-only AVAudioFile adapter for AW26 long-track evidence. The source opens the file in
 /// deinterleaved Float32 processing format and serializes random-access seek/read operations.
-/// Each call materializes only one bounded AVAudioPCMBuffer plus the returned interleaved array.
+/// Adapter-owned allocations are bounded to one AVAudioPCMBuffer plus the returned interleaved
+/// array per read. AVFAudio internal buffering/RSS remains a physical-device measurement concern.
 /// The local file URL is intentionally never included in public metadata or diagnostic receipts.
 public final class Lane3AppleFilePCMChunkSource: Lane3PCMChunkReadable, @unchecked Sendable {
     public let channels: Int
@@ -101,7 +104,9 @@ public final class Lane3AppleFilePCMChunkSource: Lane3PCMChunkReadable, @uncheck
             maximumFramesPerRead: maximumFramesPerRead,
             processingFormat: "FLOAT32_DEINTERLEAVED",
             sourcePathIncluded: false,
-            fullTrackPCMRetainedBySource: false,
+            fullTrackPCMArrayRetainedByAdapter: false,
+            frameworkDecoderBufferingMeasured: false,
+            actualProcessRSSMeasured: false,
             parityPromotionAllowed: false
         )
     }
@@ -124,7 +129,7 @@ public final class Lane3AppleFilePCMChunkSource: Lane3PCMChunkReadable, @uncheck
             expectedSamples = try policy.expectedInterleavedSampleCount(
                 startFrame: startFrame,
                 frameCount: requestedFrames,
-                totalFrames: frameCount,
+                totalFrames: self.frameCount,
                 channels: channels
             )
         } catch let error as Lane3PCMChunkReadPolicyError {
