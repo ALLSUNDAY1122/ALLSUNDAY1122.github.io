@@ -2,11 +2,11 @@
   "schema_version": 3,
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
-  "integration_epoch": 22,
+  "integration_epoch": 23,
   "assignment_epoch": 2,
   "planning_revision": 4,
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
-  "checkpoint_note": "Epoch22 code canonical through L1 A23 / L2 AW30 / L3 AW29 / L4 W34. Semantic b702f71d2ec57de5c035d462fb60c39c2d6f5c62; Run161 279/279 PASS, 226 unhandled. L2 Library remains outside portable SwiftPM compile coverage. Ownership is unchanged.",
+  "checkpoint_note": "Epoch23 code canonical through L1 A23 / L2 AW32 / L3 AW32 / L4 W36. Semantic e424cd22f11ed05d631d83a488f00f281ab40328; HQ strict-concurrency test fix 9071043a9c64879a88f82fd6657e0a1b2b8f832f; Run169 292/292 PASS, 251 unhandled. L1 A24-A25 remain deferred because A26 discovered/repaired a compatibility seam but its exact full-branch audit remains unobserved. Ownership is unchanged.",
   "locks": [
     {"id":"shared-contract","owner":"HQ","scope":["tech-assets/moises-audio/Shared/**"],"notes":"shared data model / cross-module protocol; epoch-frozen for Workers"},
     {"id":"app-shell","owner":"HQ","scope":["tech-assets/moises-audio/App/**"],"notes":"navigation, global app state, root composition; epoch-frozen for Workers"},
