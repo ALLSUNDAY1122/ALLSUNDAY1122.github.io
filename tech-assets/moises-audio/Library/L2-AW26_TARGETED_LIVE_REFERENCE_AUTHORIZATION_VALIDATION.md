@@ -72,7 +72,7 @@ Swift 6.2.1 Linux:
 - `TargetedLiveReferenceResolver.swift` portable portion strict-concurrency + warnings-as-errors module compile: PASS.
 - `TargetedLiveReferenceQueryPolicyTests.swift` strict XCTest typecheck: PASS.
 - `CrashSafeProjectLibraryStore.swift`, Core Data resolver branch and Apple-gated tests syntax parse: PASS on locally validated source.
-- static canonical wiring/recovery audit: `L2_AW26_STATIC_AUDIT_PASS checks=7/7` before final scope audit.
+- final static canonical wiring/recovery audit: `L2_AW26_STATIC_AUDIT_PASS checks=17/17`.
 
 Remote-validated blobs:
 - targeted resolver: `c68b9290ff728dddf623f1cd7c563363142fd953`
