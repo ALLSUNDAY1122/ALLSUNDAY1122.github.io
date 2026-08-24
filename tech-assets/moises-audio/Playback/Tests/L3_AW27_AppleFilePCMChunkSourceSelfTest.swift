@@ -42,6 +42,30 @@ struct L3AW27AppleFilePCMChunkSourceSelfTest {
         precondition(!source.metadata.actualProcessRSSMeasured)
         precondition(!source.metadata.parityPromotionAllowed)
 
+        do {
+            _ = try Lane3AppleLongTrackEvidenceInputFactory.openPair(
+                referenceFileURL: url,
+                observedFileURL: url,
+                maximumFramesPerRead: 4_096
+            )
+            fatalError("insufficient AW26 read budget must fail during preflight")
+        } catch Lane3AppleLongTrackEvidenceInputError.readBudgetInsufficient(
+            let required,
+            let configured
+        ) {
+            precondition(required == 40_962)
+            precondition(configured == 4_096)
+        }
+
+        let pair = try Lane3AppleLongTrackEvidenceInputFactory.openPair(
+            referenceFileURL: url,
+            observedFileURL: url,
+            maximumFramesPerRead: 65_536
+        )
+        precondition(pair.resourceProfile.maximumSingleReadFrames == 40_962)
+        precondition(!pair.resourceProfile.actualProcessRSSMeasured)
+        precondition(!pair.resourceProfile.fullTrackPCMRetainedByPipeline)
+
         let first = try source.readInterleavedFrames(startFrame: 0, frameCount: 257)
         precondition(first.count == 514)
         precondition(abs(first[0]) < 1e-7)
