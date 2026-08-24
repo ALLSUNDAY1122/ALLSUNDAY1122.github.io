@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "generic-route-live-measurement.private.schema.json",
+  "title": "Lane 1 E09 Private Generic Route Measurement Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","evidence_kind","evidence_state","parity_claim","route_id","route_kind","runtime_artifact_sha256","measurement"],
+  "properties": {
+    "schema_version": {"const":1},
+    "evidence_kind": {"enum":["GENERIC_ROUTE_OPERATIONAL_MEASUREMENT","GENERIC_ROUTE_BENCHMARK_MEASUREMENT","GENERIC_ROUTE_DIFFERENTIAL_MEASUREMENT"]},
+    "evidence_state": {"const":"NON_PARITY_EVIDENCE_ONLY"},
+    "parity_claim": {"const":"NONE"},
+    "route_id": {"type":"string"},
+    "route_kind": {"type":"string"},
+    "runtime_artifact_sha256": {"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "measurement": {"type":"object"}
+  }
+}
