@@ -55,6 +55,117 @@ enum SplatResourcePauseReason: String, Codable, Sendable {
     }
 }
 
+enum SplatReconstructionStopReason: String, Codable, Equatable, Sendable {
+    case memoryWarning
+    case availableMemoryReserve
+    case residentMemoryBudget
+    case splatBudget
+    case thermal
+    case cancellation
+    case trainerError
+    case other
+
+    init(resourcePauseReason: SplatResourcePauseReason) {
+        switch resourcePauseReason {
+        case .memoryWarning: self = .memoryWarning
+        case .availableMemoryReserve: self = .availableMemoryReserve
+        case .residentMemoryBudget: self = .residentMemoryBudget
+        case .splatBudget: self = .splatBudget
+        case .thermalPressure: self = .thermal
+        }
+    }
+
+    static func inferred(from outcome: String) -> SplatReconstructionStopReason? {
+        if outcome.contains(SplatResourcePauseReason.memoryWarning.rawValue) { return .memoryWarning }
+        if outcome.contains(SplatResourcePauseReason.availableMemoryReserve.rawValue) { return .availableMemoryReserve }
+        if outcome.contains(SplatResourcePauseReason.residentMemoryBudget.rawValue) { return .residentMemoryBudget }
+        if outcome.contains(SplatResourcePauseReason.splatBudget.rawValue) { return .splatBudget }
+        if outcome.contains(SplatResourcePauseReason.thermalPressure.rawValue) || outcome.contains("thermal") { return .thermal }
+        if outcome.contains("cancel") { return .cancellation }
+        if outcome.contains("trainer") { return .trainerError }
+        if outcome == "completed" { return nil }
+        return outcome.contains("failed") ? .other : nil
+    }
+}
+
+enum SplatReconstructionPhase: String, Codable, Equatable, Sendable {
+    case preflight
+    case datasetInit
+    case trainerInit
+    case checkpointLoad
+    case trainingStep
+    case densificationOrRefine = "densification-or-refine"
+    case checkpointSave
+    case export
+    case preview
+    case unavailable
+
+    static func inferred(from outcome: String) -> SplatReconstructionPhase {
+        if outcome.hasPrefix("preflight-") { return .preflight }
+        if outcome.hasPrefix("paused-") { return .trainingStep }
+        if outcome == "completed" { return .preview }
+        return .unavailable
+    }
+}
+
+enum SplatCheckpointResumeOutcome: String, Codable, Equatable, Sendable {
+    case notAttempted
+    case noCheckpoint
+    case loaded
+    case loadFailed
+
+    static func classify(checkpointExists: Bool, resumedIteration: Int) -> SplatCheckpointResumeOutcome {
+        guard checkpointExists else { return .noCheckpoint }
+        return resumedIteration > 0 ? .loaded : .loadFailed
+    }
+}
+
+struct SplatReconstructionRunContext: Equatable, Sendable {
+    let runID: UUID
+    let sessionID: String
+    let sourceFrameCount: Int
+    let sourceImageWidth: Int?
+    let sourceImageHeight: Int?
+    let effectiveDownscale: Double?
+    let checkpointPath: String?
+}
+
+/// Serializes reconstruction runs without retaining Dataset/Trainer themselves.
+/// ScanModel keeps the token active until the detached autoreleasepool has returned, which makes
+/// retry admission an explicit post-cleanup operation instead of a best-effort timing assumption.
+final class SplatTrainingRunGate: @unchecked Sendable {
+    struct Token: Hashable, Sendable {
+        fileprivate let id: UUID
+        var runID: UUID { id }
+    }
+
+    private let lock = NSLock()
+    private var activeToken: Token?
+
+    var isIdle: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return activeToken == nil
+    }
+
+    func beginRun(id: UUID = UUID()) -> Token? {
+        lock.lock()
+        defer { lock.unlock() }
+        guard activeToken == nil else { return nil }
+        let token = Token(id: id)
+        activeToken = token
+        return token
+    }
+
+    func finishRun(_ token: Token) {
+        lock.lock()
+        if activeToken == token {
+            activeToken = nil
+        }
+        lock.unlock()
+    }
+}
+
 struct SplatResourceEvaluation: Equatable, Sendable {
     let reason: SplatResourcePauseReason?
     let residentMemoryBytes: UInt64
@@ -64,6 +175,9 @@ struct SplatResourceEvaluation: Equatable, Sendable {
     let peakSplatCount: Int
 }
 
+/// Schema v3 retains all v2 keys and only appends optional diagnostic fields so existing v2 JSON
+/// remains decodable by this type. M1/M2 can add their own optional fields without rewriting the
+/// established reason/phase contract.
 struct SplatReconstructionRunReport: Codable, Sendable {
     let schemaVersion: Int
     let startedAt: Date
@@ -84,13 +198,41 @@ struct SplatReconstructionRunReport: Codable, Sendable {
     let finalThermalState: String
     let outcome: String
 
+    // v3 diagnostics. Optional keeps v2 report migration lossless.
+    let runID: String?
+    let sessionID: String?
+    let phase: SplatReconstructionPhase?
+    let stopReason: SplatReconstructionStopReason?
+    let activeGaussianCount: Int?
+    let gaussianCapacityCount: Int?
+    let sourceFrameCount: Int?
+    let sourceImageWidth: Int?
+    let sourceImageHeight: Int?
+    let effectiveDownscale: Double?
+    let currentResidentMemoryBytes: UInt64?
+    let currentAvailableMemoryBytes: UInt64?
+    let worstThermalState: String?
+    let checkpointPath: String?
+    let checkpointIteration: Int?
+    let resumeOutcome: SplatCheckpointResumeOutcome?
+    let errorMessage: String?
+
     static func write(_ report: SplatReconstructionRunReport, projectURL: URL) {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         encoder.dateEncodingStrategy = .iso8601
         guard let data = try? encoder.encode(report) else { return }
-        let filename = String(format: "reconstruction-run-%05d.json", report.targetIteration)
-        try? data.write(to: projectURL.appendingPathComponent(filename), options: .atomic)
+
+        // Preserve the legacy latest-report location for existing readers.
+        let latestFilename = String(format: "reconstruction-run-%05d.json", report.targetIteration)
+        try? data.write(to: projectURL.appendingPathComponent(latestFilename), options: .atomic)
+
+        // Keep a per-run artifact as well so a retry never destroys the evidence from the run that
+        // triggered it. The run ID is generated locally and contains only filesystem-safe UUID text.
+        if let runID = report.runID, !runID.isEmpty {
+            let uniqueFilename = "reconstruction-run-\(String(format: "%05d", report.targetIteration))-\(runID).json"
+            try? data.write(to: projectURL.appendingPathComponent(uniqueFilename), options: .atomic)
+        }
     }
 }
 
@@ -103,6 +245,10 @@ final class SplatResourceGuard: @unchecked Sendable {
     private var peakResidentMemoryBytes: UInt64 = 0
     private var minimumAvailableMemoryBytes: UInt64 = .max
     private var peakSplatCount = 0
+    private var lastResidentMemoryBytes: UInt64 = 0
+    private var lastAvailableMemoryBytes: UInt64 = 0
+    private var worstThermalStateName = "nominal"
+    private var worstThermalStateRank = 0
 
     init(physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory) {
         self.physicalMemoryBytes = physicalMemoryBytes
@@ -115,6 +261,10 @@ final class SplatResourceGuard: @unchecked Sendable {
         peakResidentMemoryBytes = 0
         minimumAvailableMemoryBytes = .max
         peakSplatCount = 0
+        lastResidentMemoryBytes = 0
+        lastAvailableMemoryBytes = 0
+        worstThermalStateName = "nominal"
+        worstThermalStateRank = 0
         lock.unlock()
     }
 
@@ -136,11 +286,19 @@ final class SplatResourceGuard: @unchecked Sendable {
             ?? (syntheticSnapshot ? 0 : Self.currentAvailableMemoryBytes())
         let thermalState = overrideThermalState
             ?? (syntheticSnapshot ? .nominal : ProcessInfo.processInfo.thermalState)
+        let thermalName = splatThermalStateName(thermalState)
+        let thermalRank = Self.thermalRank(thermalState)
 
         lock.lock()
         peakResidentMemoryBytes = max(peakResidentMemoryBytes, resident)
+        lastResidentMemoryBytes = resident
+        lastAvailableMemoryBytes = available
         if available > 0 {
             minimumAvailableMemoryBytes = min(minimumAvailableMemoryBytes, available)
+        }
+        if thermalRank > worstThermalStateRank {
+            worstThermalStateRank = thermalRank
+            worstThermalStateName = thermalName
         }
         peakSplatCount = max(peakSplatCount, splatCount)
         let warning = receivedMemoryWarning
@@ -182,11 +340,25 @@ final class SplatResourceGuard: @unchecked Sendable {
         finalSplatCount: Int,
         initialThermalState: String,
         finalThermalState: String,
-        outcome: String
+        outcome: String,
+        context: SplatReconstructionRunContext? = nil,
+        phase: SplatReconstructionPhase = .unavailable,
+        stopReason: SplatReconstructionStopReason? = nil,
+        checkpointIteration: Int? = nil,
+        resumeOutcome: SplatCheckpointResumeOutcome? = nil,
+        errorMessage: String? = nil,
+        gaussianCapacityCount: Int? = nil
     ) -> SplatReconstructionRunReport {
         let peaks = snapshotPeaks(finalSplatCount: finalSplatCount)
+        let resolvedPhase = phase == .unavailable ? SplatReconstructionPhase.inferred(from: outcome) : phase
+        let resolvedReason = stopReason ?? SplatReconstructionStopReason.inferred(from: outcome)
+        let worstThermal = Self.worstThermalName(
+            existing: peaks.worstThermalState,
+            initial: initialThermalState,
+            final: finalThermalState
+        )
         return SplatReconstructionRunReport(
-            schemaVersion: 2,
+            schemaVersion: 3,
             startedAt: startedAt,
             finishedAt: Date(),
             elapsedSeconds: max(0, ProcessInfo.processInfo.systemUptime - startUptime),
@@ -203,17 +375,74 @@ final class SplatResourceGuard: @unchecked Sendable {
             physicalMemoryBytes: physicalMemoryBytes,
             initialThermalState: initialThermalState,
             finalThermalState: finalThermalState,
-            outcome: outcome
+            outcome: outcome,
+            runID: context?.runID.uuidString,
+            sessionID: context?.sessionID,
+            phase: resolvedPhase,
+            stopReason: resolvedReason,
+            activeGaussianCount: finalSplatCount,
+            gaussianCapacityCount: gaussianCapacityCount,
+            sourceFrameCount: context?.sourceFrameCount,
+            sourceImageWidth: context?.sourceImageWidth,
+            sourceImageHeight: context?.sourceImageHeight,
+            effectiveDownscale: context?.effectiveDownscale,
+            currentResidentMemoryBytes: peaks.currentResident > 0 ? peaks.currentResident : nil,
+            currentAvailableMemoryBytes: peaks.currentAvailable > 0 ? peaks.currentAvailable : nil,
+            worstThermalState: worstThermal,
+            checkpointPath: context?.checkpointPath,
+            checkpointIteration: checkpointIteration,
+            resumeOutcome: resumeOutcome,
+            errorMessage: errorMessage
         )
     }
 
-    private func snapshotPeaks(finalSplatCount: Int) -> (memory: UInt64, minimumAvailable: UInt64, splats: Int) {
+    private func snapshotPeaks(finalSplatCount: Int) -> (
+        memory: UInt64,
+        minimumAvailable: UInt64,
+        splats: Int,
+        currentResident: UInt64,
+        currentAvailable: UInt64,
+        worstThermalState: String
+    ) {
         lock.lock()
         peakSplatCount = max(peakSplatCount, finalSplatCount)
         let minimumAvailable = minimumAvailableMemoryBytes == .max ? 0 : minimumAvailableMemoryBytes
-        let snapshot = (peakResidentMemoryBytes, minimumAvailable, peakSplatCount)
+        let snapshot = (
+            peakResidentMemoryBytes,
+            minimumAvailable,
+            peakSplatCount,
+            lastResidentMemoryBytes,
+            lastAvailableMemoryBytes,
+            worstThermalStateName
+        )
         lock.unlock()
         return snapshot
+    }
+
+    private static func thermalRank(_ state: ProcessInfo.ThermalState) -> Int {
+        switch state {
+        case .nominal: return 0
+        case .fair: return 1
+        case .serious: return 2
+        case .critical: return 3
+        @unknown default: return 4
+        }
+    }
+
+    private static func thermalRank(name: String) -> Int {
+        switch name {
+        case "nominal": return 0
+        case "fair": return 1
+        case "serious": return 2
+        case "critical": return 3
+        default: return 4
+        }
+    }
+
+    private static func worstThermalName(existing: String, initial: String, final: String) -> String {
+        [existing, initial, final].max { lhs, rhs in
+            thermalRank(name: lhs) < thermalRank(name: rhs)
+        } ?? "unknown"
     }
 
     static func currentResidentMemoryBytes() -> UInt64 {
