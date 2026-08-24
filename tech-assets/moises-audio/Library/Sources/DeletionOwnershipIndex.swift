@@ -41,10 +41,11 @@ public struct Lane2DeletionOwnershipRecord: Codable, Hashable, Sendable {
 public enum Lane2DeletionOwnershipIndexFailure: Error, Equatable, Sendable {
     case recordCorrupt(String)
     case identityConflict(UUID)
+    case recordIdentityMismatch(expected: UUID, actual: UUID)
     case unsupportedSchema(Int)
 }
 
-/// Durable ownership evidence written before project tombstoning. Normal AW22 recovery can therefore
+/// Durable ownership evidence written before project tombstoning. Normal recovery can therefore
 /// authorize journal deletion without globally materializing every tombstoned Core Data project.
 public struct Lane2DeletionOwnershipIndex: Sendable {
     public let rootURL: URL
@@ -67,7 +68,7 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
         try ensureLayout()
         let url = recordURL(projectUUID: record.projectUUID)
         if FileManager.default.fileExists(atPath: url.path) {
-            let existing = try loadRecord(at: url)
+            let existing = try loadRecord(at: url, expectedProjectUUID: record.projectUUID)
             guard existing.projectUUID == record.projectUUID,
                   existing.sourceAssetUUID == record.sourceAssetUUID,
                   existing.artifactRelativePaths == record.artifactRelativePaths else {
@@ -83,24 +84,78 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
     public func record(projectUUID: UUID) throws -> Lane2DeletionOwnershipRecord? {
         let url = recordURL(projectUUID: projectUUID)
         guard FileManager.default.fileExists(atPath: url.path) else { return nil }
-        return try loadRecord(at: url)
+        return try loadRecord(at: url, expectedProjectUUID: projectUUID)
     }
 
+    /// Compatibility API for tests/admin tooling. CrashSafe recovery must use pendingRecordSlice so
+    /// an already-indexed historical backlog cannot materialize every ownership payload in one pass.
     public func pendingRecords() throws -> [Lane2DeletionOwnershipRecord] {
         try ensureLayout()
-        return try FileManager.default.contentsOfDirectory(
-            at: ownershipDirectoryURL,
-            includingPropertiesForKeys: [.isRegularFileKey],
-            options: [.skipsHiddenFiles]
-        )
-        .filter { $0.pathExtension == "json" }
-        .map(loadRecord)
-        .sorted { lhs, rhs in
-            if lhs.createdAt == rhs.createdAt {
-                return lhs.projectUUID.uuidString < rhs.projectUUID.uuidString
+        return try directRecordURLs()
+            .map { url in
+                let expected = try projectUUID(fromRecordURL: url)
+                return try loadRecord(at: url, expectedProjectUUID: expected)
             }
-            return lhs.createdAt < rhs.createdAt
+            .sorted { lhs, rhs in
+                if lhs.createdAt == rhs.createdAt {
+                    return lhs.projectUUID.uuidString < rhs.projectUUID.uuidString
+                }
+                return lhs.createdAt < rhs.createdAt
+            }
+    }
+
+    /// Bounded deterministic selection used by AW25 recovery. It scans directory entries but retains
+    /// at most `limit + 1` URLs and decodes at most `limit` ownership payloads. Journal-backed project
+    /// IDs are excluded because those records are read directly and prioritized separately.
+    public func pendingRecordSlice(
+        limit: Int,
+        excludingProjectUUIDs: Set<UUID> = []
+    ) throws -> Lane2DeletionOwnershipSlice {
+        try ensureLayout()
+        let boundedLimit = Lane2IndexedRecoveryBudget(
+            ownershipOnlyPerPass: limit
+        ).ownershipOnlyPerPass
+        let sentinelLimit = boundedLimit + 1
+        let keys: [URLResourceKey] = [.isRegularFileKey, .isSymbolicLinkKey]
+        guard let enumerator = FileManager.default.enumerator(
+            at: ownershipDirectoryURL,
+            includingPropertiesForKeys: keys,
+            options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants],
+            errorHandler: { _, _ in true }
+        ) else {
+            throw Lane2DeletionOwnershipIndexFailure.recordCorrupt("DeleteOwnership")
         }
+
+        var selected: [(projectUUID: UUID, url: URL)] = []
+        selected.reserveCapacity(sentinelLimit)
+
+        for case let url as URL in enumerator {
+            guard url.pathExtension == "json" else { continue }
+            let values = try url.resourceValues(forKeys: Set(keys))
+            guard values.isSymbolicLink != true, values.isRegularFile == true else {
+                throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
+            }
+            let projectUUID = try projectUUID(fromRecordURL: url)
+            guard !excludingProjectUUIDs.contains(projectUUID) else { continue }
+
+            selected.append((projectUUID, url))
+            selected.sort { lhs, rhs in
+                lhs.projectUUID.uuidString < rhs.projectUUID.uuidString
+            }
+            if selected.count > sentinelLimit {
+                selected.removeLast()
+            }
+        }
+
+        let hasMore = selected.count > boundedLimit
+        let records = try selected.prefix(boundedLimit).map { item in
+            try loadRecord(at: item.url, expectedProjectUUID: item.projectUUID)
+        }
+        return Lane2DeletionOwnershipSlice(
+            records: records,
+            hasMore: hasMore,
+            limit: boundedLimit
+        )
     }
 
     public func remove(projectUUID: UUID) throws {
@@ -133,10 +188,40 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
         ownershipDirectoryURL.appendingPathComponent(projectUUID.uuidString + ".json", isDirectory: false)
     }
 
-    private func loadRecord(at url: URL) throws -> Lane2DeletionOwnershipRecord {
+    private func directRecordURLs() throws -> [URL] {
+        try FileManager.default.contentsOfDirectory(
+            at: ownershipDirectoryURL,
+            includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey],
+            options: [.skipsHiddenFiles]
+        )
+        .filter { $0.pathExtension == "json" }
+        .map { url in
+            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
+            guard values.isSymbolicLink != true, values.isRegularFile == true else {
+                throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
+            }
+            _ = try projectUUID(fromRecordURL: url)
+            return url
+        }
+    }
+
+    private func projectUUID(fromRecordURL url: URL) throws -> UUID {
+        let filename = url.deletingPathExtension().lastPathComponent
+        guard let projectUUID = UUID(uuidString: filename),
+              filename == projectUUID.uuidString,
+              url.lastPathComponent == projectUUID.uuidString + ".json" else {
+            throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
+        }
+        return projectUUID
+    }
+
+    private func loadRecord(
+        at url: URL,
+        expectedProjectUUID: UUID
+    ) throws -> Lane2DeletionOwnershipRecord {
         do {
-            let values = try url.resourceValues(forKeys: [.isRegularFileKey])
-            guard values.isRegularFile == true else {
+            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
+            guard values.isSymbolicLink != true, values.isRegularFile == true else {
                 throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
             }
             let record = try Self.decoder.decode(
@@ -145,6 +230,12 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
             )
             guard record.schemaVersion == 1 else {
                 throw Lane2DeletionOwnershipIndexFailure.unsupportedSchema(record.schemaVersion)
+            }
+            guard record.projectUUID == expectedProjectUUID else {
+                throw Lane2DeletionOwnershipIndexFailure.recordIdentityMismatch(
+                    expected: expectedProjectUUID,
+                    actual: record.projectUUID
+                )
             }
             _ = try Lane2TombstonedMetadataCompactionPolicy.plan(
                 candidate: record.compactionCandidate,
