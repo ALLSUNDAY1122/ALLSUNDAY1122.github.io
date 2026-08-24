@@ -117,8 +117,10 @@ final class SplatResourceGuardAdaptiveTests: XCTestCase {
             outcome: "completed"
         )
 
-        XCTAssertEqual(report.schemaVersion, 2)
+        XCTAssertEqual(report.schemaVersion, 3)
         XCTAssertEqual(report.minimumAvailableMemoryBytes, minimumAvailable)
+        XCTAssertEqual(report.currentAvailableMemoryBytes, minimumAvailable)
+        XCTAssertEqual(report.currentResidentMemoryBytes, 460_000_000)
         XCTAssertEqual(
             report.minimumAvailableMemoryReserveBytes,
             guardrail.limits.minimumAvailableMemoryReserveBytes
