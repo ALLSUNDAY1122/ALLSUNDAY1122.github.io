@@ -18,10 +18,10 @@ public struct RecoverableLibraryOpenResult: Sendable {
 public extension CrashSafeProjectLibraryStore {
     /// Production-safe preserving open path. AW24 prepares only one bounded legacy tombstone slice
     /// per launch before crash-safe delete recovery; AW26 injects a targeted read-only resolver;
-    /// AW30 advances one durable managed-artifact compatibility census chunk per launch so upgraded
-    /// stores converge to AW29's sharded steady-state without granting premature inventory authority.
-    /// Census failure is nonblocking for user data: authority remains absent and compatibility mode
-    /// continues until a later safe census succeeds.
+    /// AW31 first reconciles bounded previous-session publication intents without walking managed
+    /// roots, then AW30 advances one durable compatibility-census chunk when authority is absent.
+    /// Publication/census failures are nonblocking for user data: inventory authority is revoked or
+    /// remains absent and compatibility mode continues until a later safe reconciliation succeeds.
     static func openPreservingUserData(
         metadataStoreURL: URL,
         artifactRootURL: URL,
@@ -35,6 +35,12 @@ public extension CrashSafeProjectLibraryStore {
             metadataStoreURL: metadataStoreURL,
             artifactRootURL: artifactRootURL
         )
+        let publicationRecovery = Lane2ManagedArtifactPublicationRecovery(rootURL: artifactRootURL)
+        do {
+            _ = try publicationRecovery.recoverPreviousSessionPublications()
+        } catch {
+            publicationRecovery.invalidateAuthorityAfterRecoveryFailure()
+        }
         _ = try? Lane2ManagedArtifactCompatibilityCensus(
             rootURL: artifactRootURL
         ).advance()
