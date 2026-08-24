@@ -40,17 +40,22 @@ final class SplatReconstructionTelemetryTests: XCTestCase {
         )
     }
 
-    func testCheckpointResumeOutcomeDistinguishesMissingLoadedAndFailed() {
+    func testCheckpointResumeOutcomeDistinguishesMissingLoadedZeroLoadedProgressAndFailed() {
         XCTAssertEqual(
-            SplatCheckpointResumeOutcome.classify(checkpointExists: false, resumedIteration: 0),
+            SplatCheckpointResumeOutcome.classify(checkpointExists: false, loadedIteration: nil),
             .noCheckpoint
         )
         XCTAssertEqual(
-            SplatCheckpointResumeOutcome.classify(checkpointExists: true, resumedIteration: 240),
+            SplatCheckpointResumeOutcome.classify(checkpointExists: true, loadedIteration: 0),
+            .loaded,
+            "Iteration zero can be a valid checkpoint and must not be rejected"
+        )
+        XCTAssertEqual(
+            SplatCheckpointResumeOutcome.classify(checkpointExists: true, loadedIteration: 240),
             .loaded
         )
         XCTAssertEqual(
-            SplatCheckpointResumeOutcome.classify(checkpointExists: true, resumedIteration: 0),
+            SplatCheckpointResumeOutcome.classify(checkpointExists: true, loadedIteration: nil),
             .loadFailed
         )
     }
