@@ -1,141 +1,117 @@
 # L1-A24｜Generated Stem Retention / Delete / Refund / Orphan Recovery
 
 Status: `COMPLETE_NON_PARITY`  
-Target: `MOI-P025｜AI stem generation` with supporting `MOI-P024｜privacy` semantics  
+Target: `MOI-P025｜AI stem generation`, supporting `MOI-P024｜privacy` semantics  
 PARITY claim: `NONE`
 
 ## Purpose
 
-A21 protects generation execution and credits, A22 binds the real runtime boundary, A23 makes generated output mix-compatible and atomically activates variants, and A09 established the ordinary-separation privacy principle that delete intent must be durable and provider acceptance is not erasure confirmation.
+A21 protects generation execution and credits, A22 binds the runtime boundary, A23 makes generated output mix-compatible and atomically activates variants, and A09 established the rule that durable delete intent and actual erasure confirmation are different facts.
 
-A24 closes the generated-stem-specific lifecycle gap between those systems. It prevents regeneration, cancellation, deletion or crash cleanup from silently deleting a still-referenced generated stem, fabricating a credit refund, or falsely claiming remote erasure.
+A24 closes the generated-stem-specific lifecycle gap across delete, regeneration, cancellation, refund and crash/orphan cleanup. It does not claim live vendor deletion, refund behavior or current-iPhone parity.
 
-## Implementation
+## Final implementation
 
 `Separation/Server/generated_stem_retention.py`
 
-### Retention registry and policy binding
+### Durable delete intent
 
-The retention registry is atomic (`flock`, temporary file, `fsync`, replace) and stores only hashed generation/project/artifact identities. Its policy is itself hash-bound:
+A delete is bound to the exact A23 project/role/generation/variant plus the current manifest SHA and artifact SHA. The delete record is durably persisted before any active pointer, manifest or object is removed.
 
-- orphan grace period;
-- superseded-variant grace period.
+The same intent is idempotent. Conflicting identity/reason/evidence fails closed. A durable delete record also serves as a tombstone through `assert_generation_not_deleted`, so a deleted generation must not silently reappear at a later composition point.
 
-`retention_policy_sha256` is persisted with the registry. Reopening existing state with different grace values fails closed with `GEN_RET_POLICY_MISMATCH`; policy changes cannot silently reinterpret old retention state.
+### Local delete ordering
 
-### Variant registration / supersession
+All local generated-variant mutation shares the same A23 store lock.
 
-A24 registers exact A23 manifests by generation hash + variant index and binds the manifest SHA. When a newly active variant for the same project/role is registered, the previous registered variant becomes superseded but is not immediately destroyed.
+1. If the active pointer names the exact target variant, detach it durably.
+2. If another variant is active for the same project/role, preserve it.
+3. Re-check the target manifest against the SHA captured before deletion and remove it.
+4. Recompute content references from **both all remaining manifests and all active pointers**.
+5. Remove the content-addressed object only when no remaining reference uses it.
+6. Mark `LOCAL_DELETED` durably.
 
-The active variant is never eligible for `SUPERSEDED_RETENTION` or `ORPHAN_ABANDONED` deletion.
+The active-pointer scan is essential. A still-active artifact remains protected even if its corresponding manifest is missing. Any corrupt or symlink manifest/active pointer makes deletion/GC fail closed rather than guessing reachability.
 
-### Delete intent before destruction
+### Refund is not deletion
 
-For user/project/cancel/superseded/abandoned deletion, the delete reason and timestamp are saved before local destructive work. A crash or local integrity failure therefore cannot erase the fact that deletion was requested.
+Local deletion never releases or refunds credits.
 
-Project deletion first inventories all generated manifests for the project. If any project-owned generated manifest is not registered, project deletion fails closed before deleting the registered subset. This avoids a false "project generated content deleted" result while an untracked variant remains.
+- A24 records a refund request only when the authoritative A21 credit state is `refund_pending`.
+- A refund can become `CONFIRMED` only when A21 is already `refunded` and an authority evidence SHA is supplied.
+- `DENIED` / `UNKNOWN` remain visible results.
+- Deleting local bytes without a confirmed A21 refund leaves `refund_confirmed=false`.
 
-### Content-addressed shared artifact safety
+This prevents a cancelled/deleted generated stem from being represented as a returned credit when the runtime/account authority has not actually returned it.
 
-A23 stores audio by content SHA, so two generation records may legitimately reference identical bytes. A24 computes physical references from both:
+### Runtime erasure is separate
 
-- all remaining immutable manifests; and
-- all current active pointers.
+A24 separately records runtime deletion/erasure state. Local deletion or a delete request does not prove remote erasure.
 
-The active-pointer reference is checked even if its manifest is missing. A physical WAV is removed only when neither source references it and its bytes still hash to the expected SHA. Otherwise it is retained as `retained_shared_reference`.
+Authoritative completion is limited to:
 
-Association deletion and physical artifact erasure are separate facts.
+- `CONFIRMED`;
+- `NOT_FOUND`;
+- `NOT_APPLICABLE` only when supported by physical authority evidence.
 
-### Runtime erasure truthfulness
+`PENDING`, `UNSUPPORTED` and `UNKNOWN` do not become an erasure claim. `overall_erasure_complete` requires both local deletion and authoritative runtime-erasure completion.
 
-Raw execution IDs are obtained only from the A22 private binding store and verified against the A21/A22 execution hash domain.
+### Abandoned generation cleanup
 
-Before calling an external runtime delete operation, A24 durably changes the runtime delete state from `not_requested` to `requesting`. This closes the concurrent/relaunch window in which two workers could both send the same destructive request.
+An inactive A23 manifest can enter cancellation cleanup only when physical A21 lifecycle evidence states `cancelled` or `failed`. If that exact variant is active, cleanup is rejected. This prevents an active stem from being classified as an orphan simply because another lifecycle observer is stale.
 
-Consequences:
+### Orphan / temporary-file recovery
 
-- `requesting` after a crash is ambiguous and is not blindly re-sent;
-- `accepted` is not treated as erased;
-- provider/runtime errors remain unknown;
-- missing binding remains `identifier_unavailable`, not inferred `not_applicable`;
-- `confirmed` or `not_found` counts as erasure only after a separate authority evidence SHA is recorded;
-- a genuinely local/project-owned runtime may be marked `not_applicable` only with physical authority evidence describing why no external runtime storage exists.
+Content-addressed object GC:
 
-### Credit/refund separation
+- considers references from manifests **and** active pointers;
+- accepts only 64-hex content-addressed WAV object names;
+- requires an explicit minimum-age grace period;
+- preserves any referenced object;
+- stops on corrupt/symlink reference metadata.
 
-A24 never changes A21 credits itself. It reads the A21 durable credit state and reports:
+Temporary-file cleanup also requires a full reference-integrity scan and an explicit age threshold before deleting `*.tmp` files.
 
-- `released_no_charge` only when A21 says `released`;
-- `reserved_unsettled` while A21 remains `reserved`;
-- `eligible_not_requested` for a cancelled committed generation whose refund has not been requested;
-- `pending_authority` while A21 is `refund_pending`;
-- `confirmed` only when A21 is `refunded` and carries refund authority evidence;
-- `not_eligible` for an ordinary committed non-cancelled generation.
+These paths address object/manifest leftovers from crash windows without weakening A23 atomic active-variant semantics.
 
-Deleting local audio therefore never fabricates a credit return.
+## Privacy-safe evidence
 
-### Orphan recovery
+Public A24 evidence contains only hashed project/generation/artifact identities, role/variant, local delete state, reference-retention booleans, refund state and runtime-erasure state.
 
-A23 crash windows may leave content-addressed objects or inactive manifests that never became active.
-
-Objects with no manifest or active-pointer reference are not immediately erased. They require:
-
-1. first observation;
-2. a second observation after the policy-bound grace interval;
-3. durable `delete_intent_at_epoch` written and fsynced;
-4. exact object SHA verification;
-5. unlink + directory fsync.
-
-Inactive unregistered manifests are only reported. They may be adopted as abandoned and deleted only with an explicit abandonment evidence SHA; an active manifest cannot be abandoned.
-
-### Privacy completion
-
-`privacy_erasure_complete` requires all of the following:
-
-1. generated variant association deletion confirmed;
-2. local physical artifact state is `confirmed_erased` or `missing_before_delete`;
-3. runtime erasure is authority-confirmed (`confirmed`, `not_found`, or evidence-backed `not_applicable`).
-
-A shared physical artifact retained for another valid variant therefore cannot produce a full-erasure claim.
-
-## Public evidence
-
-The public snapshot contains retention policy hash, project/generation/artifact hashes, role, variant index, mix-ready receipt hash, deletion state, runtime erasure state and refund state.
-
-It does not emit raw logical generation IDs, raw runtime execution IDs, paths or audio. `parity_claim` is fixed to `NONE`.
-
-Schemas:
-
-- `Separation/Evaluation/schemas/generated-stem-retention-policy.schema.json`
-- `Separation/Evaluation/schemas/generated-stem-retention-evidence.schema.json`
+It does not contain paths, raw audio, raw runtime/execution IDs, raw billing/credit records, prompts, credentials or signed URLs.
 
 ## Validation
 
-Final local validation against the exact core/test bytes written to GitHub:
+Final validation layers:
 
-- focused regression: `38/38 PASS`;
-- JSON Schema checks: `3/3 PASS` (policy sample, ordinary evidence sample, durable `requesting` evidence sample; negative false-erasure evidence rejected);
-- `py_compile` for implementation/test: `PASS`;
-- GitHub core blob SHA equals the tested local bytes;
-- GitHub test blob SHA equals the tested local bytes.
+- broad pre-persistence fault/design suite: `40/40 PASS`;
+- durable checked-in focused regression: `24/24 PASS`;
+- final JSON Schema representative-document validation: `2/2 PASS`;
+- implementation/test `py_compile`: `PASS`.
 
-Regression coverage includes durable delete intent, project-delete completeness, shared content-addressed references, active-pointer-only references, manifest/object mutation, superseded cleanup, orphan grace and intent, abandonment evidence, A21 refund states, A22 binding identity, runtime accepted/confirmed/error/not-applicable handling, duplicate runtime-delete suppression, crash-window `requesting` recovery, retention-policy mismatch and public evidence redaction.
+The focused suite covers durable intent, active/inactive deletion, shared object references through manifests and active pointers, reference corruption, manifest mutation, idempotency/tombstones, refund-state truth, runtime-erasure truth, orphan/grace cleanup, stale temporary files, abandonment guard and privacy-safe evidence.
 
-Machine ledger: `Processing/Tests/L1-A24_GENERATED_STEM_RETENTION_MATRIX.json`.
+The removed prototype retention-policy schema is intentionally not part of final A24. The final coordinator does not invent provider/current-iPhone retention durations; actual retention terms remain external/live evidence.
 
 ## NON-PARITY boundary
 
-A24 is engineering/safety evidence only. It does not establish:
+No production generation runtime, rights-cleared real generation campaign, actual account refund, current-iPhone delete/regenerate workflow or integrated project/account deletion was exercised here.
 
-- the selected production generation runtime's contractual deletion/retention behavior;
-- real remote deletion on a production account;
-- current-iPhone Moises delete/cancel/refund semantics;
-- rights-cleared real generation quality/latency;
-- integrated iPhone project/account deletion across other Lane-owned storage;
-- P024 or P025 PARITY.
+Therefore:
 
-`MOI-P025` remains canonical `MISSING` and `parity_claim` remains `NONE` until real runtime/current-iPhone/device/HQ evidence exists.
+- `MOI-P025` remains canonical `MISSING`;
+- P024 is not promoted by A24;
+- `parity_claim = NONE`;
+- all A24 synthetic/fault/schema results are `NON_PARITY_EVIDENCE_ONLY`.
+
+## Files
+
+- `Separation/Server/generated_stem_retention.py`
+- `Separation/Tests/test_generated_stem_retention.py`
+- `Separation/Evaluation/schemas/generated-stem-delete-request.schema.json`
+- `Separation/Evaluation/schemas/generated-stem-retention-evidence.schema.json`
+- `Processing/Tests/L1-A24_GENERATED_STEM_RETENTION_MATRIX.json`
 
 ## Next lane-local gap
 
-A21-A24 now form separate but compatible generation lifecycle layers. The remaining meaningful non-external gap is composition: one durable processing facade must enforce the ordering across credit reservation, runtime execution/recovery, A23 mix-ready activation and A24 retention registration so a relaunch cannot skip a layer or publish an unregistered generated variant. This is the next candidate `L1-A25｜AI Stem Generation End-to-End Processing Facade / Crash-Recovery Composition`.
+A21-A24 now expose safe subsystems, but they can still be called independently. The next material Lane 1 gap is a lifecycle facade / cross-ledger composition layer that makes the safe order mandatory: generation contract -> runtime binding -> mix-ready activation -> retention tombstone/delete. Without that facade, an integration caller could bypass an A24 tombstone or activate/publish in the wrong order.
