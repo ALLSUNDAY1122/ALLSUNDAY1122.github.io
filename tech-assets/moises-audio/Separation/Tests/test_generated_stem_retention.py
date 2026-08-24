@@ -26,7 +26,7 @@ def make_binding(path,logical,execution='exec-1'):
 class T(unittest.TestCase):
     def setUp(self):
         self.t=tempfile.TemporaryDirectory();self.root=Path(self.t.name)/'store';self.nowv=1000
-        self.s=GeneratedStemRetentionService(store_root=self.root,now_epoch=lambda:self.nowv,orphan_grace_seconds=10)
+        self.s=GeneratedStemRetentionService(store_root=self.root,now_epoch=lambda:self.nowv,orphan_grace_seconds=10,superseded_grace_seconds=10)
     def tearDown(self):self.t.cleanup()
     def code(self,c,fn):
         with self.assertRaises(GeneratedRetentionError) as cm:fn()
@@ -38,6 +38,7 @@ class T(unittest.TestCase):
         m,_,_,r=self.reg();self.assertEqual(r.last_active_at_epoch,1000);self.assertFalse(r.delete_requested)
     def test_register_new_active_marks_old_superseded(self):
         m1,_,_,r1=self.reg(gen=H('2'),variant=0,data=b'a')
+        # move active to new variant same project/role
         m2,mp2,obj2=make_variant(self.root,gen=H('6'),variant=1,data=b'b',active=True)
         self.nowv=1010;self.s.register_variant(generation_ref_hash_value=H('6'),variant_index=1)
         st=self.s.registry.load();self.assertEqual(st['records'][r1.record_key].superseded_at_epoch,1010)
@@ -61,7 +62,9 @@ class T(unittest.TestCase):
     def test_missing_object_truthful_state(self):
         m,_,obj,_=self.reg();obj.unlink();snap=self.s.request_delete(generation_ref_hash_value=H('2'),variant_index=0,reason='USER_DELETE');self.assertEqual(snap['physical_artifact_state'],'missing_before_delete')
     def test_runtime_accepted_not_erasure_complete(self):
-        m,_,_,_=self.reg();logical=L('a');gh=generation_ref_hash(logical);m,_,_,_=self.reg(gen=gh,variant=1,data=b'x')
+        m,_,_,_=self.reg();logical=L('a');# use matching generation hash in separate variant impossible; create binding by generation matching requires manifest gen
+        # recreate service target with generation ref from logical
+        gh=generation_ref_hash(logical);m,_,_,_=self.reg(gen=gh,variant=1,data=b'x')
         bp=Path(self.t.name)/'bind.json';make_binding(bp,logical)
         snap=self.s.request_delete(generation_ref_hash_value=gh,variant_index=1,reason='USER_DELETE',runtime_delete=lambda _: 'accepted',binding_store_path=bp)
         self.assertEqual(snap['runtime_delete_state'],'accepted');self.assertFalse(snap['runtime_erasure_confirmed'])
@@ -102,6 +105,7 @@ class T(unittest.TestCase):
         m,_,_,_=self.reg(gen=H('d'),variant=12);self.s.observe_runtime_unsupported(generation_ref_hash_value=H('d'),variant_index=12);snap=self.s.snapshot(generation_ref_hash_value=H('d'),variant_index=12);self.assertFalse(snap['runtime_erasure_confirmed']);self.assertEqual(snap['runtime_delete_state'],'unsupported')
     def test_public_snapshot_is_privacy_safe(self):
         m,_,_,_=self.reg(gen=H('e'),variant=13);snap=self.s.snapshot(generation_ref_hash_value=H('e'),variant_index=13);txt=json.dumps(snap);self.assertFalse(snap['raw_logical_generation_id_emitted']);self.assertFalse(snap['raw_execution_id_emitted']);self.assertFalse(snap['path_emitted']);self.assertFalse(snap['raw_audio_emitted']);self.assertNotIn(str(self.root),txt);self.assertEqual(snap['parity_claim'],'NONE')
+
     def test_reserved_credit_is_unsettled_not_released(self):
         logical=L('3');gh=generation_ref_hash(logical);self.reg(gen=gh,variant=14);p=Path(self.t.name)/'a21.json';make_a21(p,logical,credit_state='reserved');r=self.s.sync_refund_from_a21(generation_ref_hash_value=gh,variant_index=14,a21_ledger_path=p);self.assertEqual(r.refund_state,'reserved_unsettled')
     def test_runtime_delete_accepted_is_not_resent(self):
@@ -115,12 +119,12 @@ class T(unittest.TestCase):
     def test_missing_binding_is_identifier_unavailable_not_not_applicable(self):
         logical=L('5');gh=generation_ref_hash(logical);self.reg(gen=gh,variant=17,data=b'm');bp=Path(self.t.name)/'bind.json';atomicish(bp,{'schema_version':1,'records':{}});snap=self.s.request_delete(generation_ref_hash_value=gh,variant_index=17,reason='USER_DELETE',runtime_delete=lambda _:'confirmed',binding_store_path=bp);self.assertEqual(snap['runtime_delete_state'],'identifier_unavailable');self.assertFalse(snap['runtime_erasure_confirmed'])
     def test_superseded_sweep_after_grace(self):
-        self.s.superseded_grace_seconds=10
         m1,_,_,r1=self.reg(gen=H('8'),variant=18,data=b'old')
         self.nowv=1001;make_variant(self.root,gen=H('9'),variant=19,data=b'new',active=True);self.s.register_variant(generation_ref_hash_value=H('9'),variant_index=19)
         self.nowv=1012;out=self.s.sweep_superseded();self.assertIn(f"{H('8')}.v18",out)
     def test_orphan_delete_intent_is_durable_before_unlink(self):
         (self.root/'objects').mkdir(parents=True,exist_ok=True);data=b'orphan2';sha=hashlib.sha256(data).hexdigest();p=self.root/'objects'/f'{sha}.wav';p.write_bytes(data);self.s.sweep_orphan_objects();self.nowv=1011
+        # monkey patch unlink to observe registry intent before destructive call
         orig=Path.unlink;seen=[]
         def unlink(path,*a,**k):
             if path==p: seen.append(self.s.registry.load()['orphans'][sha].delete_intent_at_epoch is not None)
@@ -129,8 +133,10 @@ class T(unittest.TestCase):
         try:self.s.sweep_orphan_objects()
         finally:Path.unlink=orig
         self.assertEqual(seen,[True])
+
     def test_active_pointer_without_manifest_still_protects_shared_object(self):
         m,mp,obj,_=self.reg(gen=H('6'),variant=20,data=b'shared-active')
+        # A second active pointer references the same bytes but its manifest is missing.
         other=dict(m);other['project_ref_hash']=H('7');other['role']='bass';other['generation_ref_hash']=H('8');other['variant_index']=21
         atomicish(self.root/'active'/f"{H('7')}.bass.json",other)
         snap=self.s.request_delete(generation_ref_hash_value=H('6'),variant_index=20,reason='USER_DELETE')
@@ -141,5 +147,21 @@ class T(unittest.TestCase):
         active={'project_ref_hash':H('1'),'role':'guitar','generation_ref_hash':H('2'),'variant_index':22,'artifact_sha256':sha,'mix_ready_receipt_sha256':H('3')}
         atomicish(self.root/'active'/f"{H('1')}.guitar.json",active)
         out=self.s.sweep_orphan_objects();self.assertNotIn(sha,out['observed']);self.assertTrue(obj.exists())
+
+    def test_project_delete_covers_all_registered_variants(self):
+        self.reg(project=H('a'),role='guitar',gen=H('1'),variant=23,data=b'p1')
+        self.reg(project=H('a'),role='bass',gen=H('2'),variant=24,data=b'p2')
+        out=self.s.request_project_delete(project_ref_hash_value=H('a'));self.assertEqual(len(out),2);self.assertTrue(all(x['association_delete_confirmed'] for x in out))
+    def test_project_delete_fails_closed_on_unregistered_manifest(self):
+        self.reg(project=H('b'),role='guitar',gen=H('3'),variant=25,data=b'p1')
+        make_variant(self.root,project=H('b'),role='bass',gen=H('4'),variant=26,data=b'p2',active=False)
+        self.code('GEN_RET_PROJECT_DELETE_UNREGISTERED_VARIANT',lambda:self.s.request_project_delete(project_ref_hash_value=H('b')))
+
+    def test_retention_policy_change_on_existing_registry_fails_closed(self):
+        self.reg(gen=H('f'),variant=27,data=b'policy')
+        other=GeneratedStemRetentionService(store_root=self.root,now_epoch=lambda:self.nowv,orphan_grace_seconds=99,superseded_grace_seconds=10)
+        self.code('GEN_RET_POLICY_MISMATCH',lambda:other.snapshot(generation_ref_hash_value=H('f'),variant_index=27))
+    def test_snapshot_binds_retention_policy(self):
+        self.reg(gen=H('a'),variant=28,data=b'policy2');snap=self.s.snapshot(generation_ref_hash_value=H('a'),variant_index=28);self.assertEqual(snap['retention_policy_sha256'],self.s.retention_policy_sha256)
 
 if __name__=='__main__':unittest.main()
