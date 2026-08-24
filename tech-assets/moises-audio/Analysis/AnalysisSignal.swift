@@ -136,28 +136,64 @@ public struct MusicAnalysisConfiguration: Equatable, Sendable {
 
 public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
     private let loader: any AnalysisSignalLoading
+    private let chunkedLoader: (any AnalysisChunkedSignalLoading)?
     private let configuration: MusicAnalysisConfiguration
 
-    public init(loader: any AnalysisSignalLoading, configuration: MusicAnalysisConfiguration = .productBaseline) {
+    public init(
+        loader: any AnalysisSignalLoading,
+        chunkedLoader: (any AnalysisChunkedSignalLoading)? = nil,
+        configuration: MusicAnalysisConfiguration = .productBaseline
+    ) {
         self.loader = loader
+        self.chunkedLoader = chunkedLoader ?? (loader as? any AnalysisChunkedSignalLoading)
         self.configuration = configuration
     }
 
     public func analyze(projectID: ProjectID, asset: LocalAudioAsset) async throws -> AnalysisSnapshot {
         try AnalysisCancellationPolicy.check()
+
+        if let chunkedLoader {
+            let source = try await chunkedLoader.openChunkedSignal(
+                projectID: projectID,
+                asset: asset
+            )
+            let chunked = try await AnalysisChunkedSinglePassPreparedPipeline.analyze(
+                signal: source,
+                configuration: configuration
+            )
+            let duration = chunked.inputDiagnostics.analysisSampleRate > 0
+                ? Double(chunked.inputDiagnostics.preparedSampleCount) / chunked.inputDiagnostics.analysisSampleRate
+                : 0
+            return try publish(
+                preparedAnalysis: chunked.analysis,
+                duration: duration
+            )
+        }
+
         let loadedSignal = try await loader.loadSignal(projectID: projectID, asset: asset)
         try AnalysisCancellationPolicy.check()
-
         let reader = AnalysisPreparedSampleReader(signal: loadedSignal)
         guard reader.durationSeconds >= configuration.minimumDurationSeconds else {
             return AnalysisSnapshot(tempo: nil, key: nil, chords: [], sections: [])
         }
-
         let preparedAnalysis = try AnalysisSinglePassPreparedPipeline.analyze(
             reader: reader,
             configuration: configuration
         )
+        return try publish(
+            preparedAnalysis: preparedAnalysis,
+            duration: reader.durationSeconds
+        )
+    }
+
+    private func publish(
+        preparedAnalysis: AnalysisSinglePassPreparedAnalysis,
+        duration: Double
+    ) throws -> AnalysisSnapshot {
         try AnalysisCancellationPolicy.check()
+        guard duration >= configuration.minimumDurationSeconds else {
+            return AnalysisSnapshot(tempo: nil, key: nil, chords: [], sections: [])
+        }
         let sectionSignal = preparedAnalysis.sectionEnergySignal
         let detectedSections = try CancellableSongSectionPipeline.analyze(
             signal: sectionSignal,
@@ -181,7 +217,7 @@ public actor ProjectOwnedMusicAnalyzer: MusicAnalyzing {
         )
         let hardened = try AnalysisSnapshotRobustness.hardenCancellable(
             snapshot: rawSnapshot,
-            duration: reader.durationSeconds,
+            duration: duration,
             configuration: configuration
         )
         try AnalysisCancellationPolicy.check()

@@ -9,15 +9,20 @@ public struct LibraryRecoveryReport: Hashable, Sendable {
     public let discardedPrepared: [ProjectID]
     public let completedCommitted: [ProjectID]
     public let promotedInterruptedTombstones: [ProjectID]
+    public let indexedRecoveryDiagnostics: Lane2IndexedRecoveryDiagnostics
 
     public init(
         discardedPrepared: [ProjectID],
         completedCommitted: [ProjectID],
-        promotedInterruptedTombstones: [ProjectID]
+        promotedInterruptedTombstones: [ProjectID],
+        indexedRecoveryDiagnostics: Lane2IndexedRecoveryDiagnostics = .empty(
+            limit: Lane2IndexedRecoveryBudget.defaultOwnershipOnlyPerPass
+        )
     ) {
         self.discardedPrepared = discardedPrepared
         self.completedCommitted = completedCommitted
         self.promotedInterruptedTombstones = promotedInterruptedTombstones
+        self.indexedRecoveryDiagnostics = indexedRecoveryDiagnostics
     }
 }
 
@@ -31,12 +36,20 @@ public final class CrashSafeProjectLibraryStore:
     private let metadata: CoreDataProjectLibraryStore
     private let artifacts: LibraryArtifactLifecycle
     private let deletionOwnership: Lane2DeletionOwnershipIndex
+    private let indexedRecoveryBudget: Lane2IndexedRecoveryBudget
     private let mutationGate = Lane2LibraryMutationGate()
 
-    public init(metadata: CoreDataProjectLibraryStore, artifactRootURL: URL) throws {
+    public init(
+        metadata: CoreDataProjectLibraryStore,
+        artifactRootURL: URL,
+        ownershipOnlyRecoveryLimit: Int = Lane2IndexedRecoveryBudget.defaultOwnershipOnlyPerPass
+    ) throws {
         self.metadata = metadata
         self.artifacts = LibraryArtifactLifecycle(rootURL: artifactRootURL)
         self.deletionOwnership = Lane2DeletionOwnershipIndex(rootURL: artifactRootURL)
+        self.indexedRecoveryBudget = Lane2IndexedRecoveryBudget(
+            ownershipOnlyPerPass: ownershipOnlyRecoveryLimit
+        )
         try artifacts.ensureLayout()
         try deletionOwnership.ensureLayout()
     }
@@ -172,9 +185,8 @@ public final class CrashSafeProjectLibraryStore:
         try await metadata.recoveryPlan(projectID: projectID)
     }
 
-    /// AW22 steady-state recovery uses the durable deletion-ownership index and does not globally
-    /// materialize tombstoned Core Data candidates. The older N+1 candidate scan is restricted to a
-    /// one-time legacy migration or an interrupted AW21 destructive journal that predates the index.
+    /// Journal-backed deletes always run first. Ownership-only backlog is selected through a bounded
+    /// deterministic slice, so a pre-existing AW23 all-indexed crash state cannot monopolize one launch.
     @discardableResult
     public func recoverInterruptedOperations() async throws -> LibraryRecoveryReport {
         try await withMutationGate {
@@ -184,15 +196,36 @@ public final class CrashSafeProjectLibraryStore:
 
     private func recoverInterruptedOperationsUnlocked() async throws -> LibraryRecoveryReport {
         let journals = try artifacts.pendingDeletionJournals()
-        let indexedRecords = try deletionOwnership.pendingRecords()
+        let journalProjectIDs = Set(journals.map(\.projectUUID))
+
+        var journalOwnershipByID: [UUID: Lane2DeletionOwnershipRecord] = [:]
+        journalOwnershipByID.reserveCapacity(journals.count)
+        for journal in journals {
+            if let record = try deletionOwnership.record(projectUUID: journal.projectUUID) {
+                journalOwnershipByID[journal.projectUUID] = record
+            }
+        }
+
+        let ownershipSlice = try deletionOwnership.pendingRecordSlice(
+            limit: indexedRecoveryBudget.ownershipOnlyPerPass,
+            excludingProjectUUIDs: journalProjectIDs
+        )
+        let indexedRecords = Array(journalOwnershipByID.values) + ownershipSlice.records
+        let diagnostics = Lane2IndexedRecoveryDiagnostics(
+            prioritizedDeletionJournals: journals.count,
+            ownershipOnlyRecordsSelected: ownershipSlice.records.count,
+            ownershipOnlyRecordsDeferred: ownershipSlice.hasMore,
+            ownershipOnlyLimit: ownershipSlice.limit
+        )
 
         if journals.isEmpty,
-           indexedRecords.isEmpty,
+           ownershipSlice.records.isEmpty,
            deletionOwnership.isLegacyScanComplete {
             return LibraryRecoveryReport(
                 discardedPrepared: [],
                 completedCommitted: [],
-                promotedInterruptedTombstones: []
+                promotedInterruptedTombstones: [],
+                indexedRecoveryDiagnostics: diagnostics
             )
         }
 
@@ -221,7 +254,6 @@ public final class CrashSafeProjectLibraryStore:
         let legacyByID = Dictionary(
             uniqueKeysWithValues: legacyCandidates.map { ($0.projectUUID, $0) }
         )
-        let journalProjectIDs = Set(journals.map(\.projectUUID))
         let indexedProjectIDs = Set(indexedRecords.map(\.projectUUID))
 
         func candidate(projectUUID: UUID) -> Lane2TombstonedProjectCompactionCandidate? {
@@ -295,10 +327,9 @@ public final class CrashSafeProjectLibraryStore:
             }
         }
 
-        // If ownership was written but the journal was never made durable, a live project means the
-        // delete never committed. A hidden project means the durable ownership record can reconstruct
-        // a conservative COMMITTED journal without a global Core Data tombstone scan.
-        for record in indexedRecords where !journalProjectIDs.contains(record.projectUUID) {
+        // Ownership-only records are bounded by indexedRecoveryBudget. A live project means the
+        // delete never committed; a hidden project reconstructs a conservative COMMITTED journal.
+        for record in ownershipSlice.records {
             let projectID = ProjectID(rawValue: record.projectUUID)
             if liveIDs.contains(projectID) {
                 try deletionOwnership.remove(projectUUID: record.projectUUID)
@@ -320,10 +351,7 @@ public final class CrashSafeProjectLibraryStore:
             completed.append(projectID)
         }
 
-        // One-time compatibility migration for journal-less tombstones created before AW22 ownership
-        // indexing. After successful convergence the durable marker prevents this global N+1 scan on
-        // normal future launches. A missing ownership record on an old PREPARED/COMMITTED journal also
-        // forces this compatibility scan even after the marker exists.
+        // Defensive compatibility fallback for callers that bypass AW24 canonical preparation.
         if needsLegacyScan {
             for legacy in legacyCandidates
             where !journalProjectIDs.contains(legacy.projectUUID)
@@ -348,7 +376,8 @@ public final class CrashSafeProjectLibraryStore:
         return LibraryRecoveryReport(
             discardedPrepared: discarded.sorted(by: projectIDLessThan),
             completedCommitted: completed.sorted(by: projectIDLessThan),
-            promotedInterruptedTombstones: promoted.sorted(by: projectIDLessThan)
+            promotedInterruptedTombstones: promoted.sorted(by: projectIDLessThan),
+            indexedRecoveryDiagnostics: diagnostics
         )
     }
 

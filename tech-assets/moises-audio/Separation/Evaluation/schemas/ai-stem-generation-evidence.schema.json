@@ -1,0 +1,18 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"ai-stem-generation-evidence.schema.json",
+  "title":"Lane 1 A21 Privacy-Safe AI Stem Generation Evidence",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","tool_version","evidence_state","parity_claim","generation_ref_hash","request_fingerprint","project_ref_hash","account_ref_hash","entitlement_snapshot_id","plan_tier","capability_snapshot_sha256","source_sha256","source_duration_seconds","target_role","generation_mode","variant_index","quoted_credits","reserved_included_credits","reserved_purchased_credits","credit_state","lifecycle_state","execution_state","progress_percent","logical_cancelled","upstream_cancel_state","privacy"],
+  "properties":{
+    "schema_version":{"const":1},"tool_version":{"const":"L1-A21-v1"},"evidence_state":{"const":"NON_PARITY_EVIDENCE_ONLY"},"parity_claim":{"const":"NONE"},
+    "generation_ref_hash":{"$ref":"#/$defs/sha"},"request_fingerprint":{"$ref":"#/$defs/sha"},"project_ref_hash":{"$ref":"#/$defs/sha"},"account_ref_hash":{"$ref":"#/$defs/sha"},"entitlement_snapshot_id":{"$ref":"#/$defs/sha"},"capability_snapshot_sha256":{"$ref":"#/$defs/sha"},"source_sha256":{"$ref":"#/$defs/sha"},
+    "plan_tier":{"enum":["FREE","PREMIUM","PRO"]},"source_duration_seconds":{"type":"number","exclusiveMinimum":0},"target_role":{"type":"string"},"generation_mode":{"enum":["AUTO_MATCH","PRESET","CUSTOM_TEXT","REFERENCE_AUDIO"]},
+    "preset_id":{"type":["string","null"]},"prompt_sha256":{"oneOf":[{"$ref":"#/$defs/sha"},{"type":"null"}]},"reference_audio_sha256":{"oneOf":[{"$ref":"#/$defs/sha"},{"type":"null"}]},"variant_index":{"type":"integer","minimum":0},"parent_generation_ref_hash":{"oneOf":[{"$ref":"#/$defs/sha"},{"type":"null"}]},
+    "quoted_credits":{"type":"integer","minimum":1},"reserved_included_credits":{"type":"integer","minimum":0},"reserved_purchased_credits":{"type":"integer","minimum":0},"credit_state":{"enum":["reserved","committed","released","refund_pending","refunded"]},
+    "lifecycle_state":{"enum":["reserved","starting","generating","ready","cancelled","failed","unknown"]},"execution_state":{"enum":["not_attempted","in_flight","ambiguous","bound","confirmed_absent"]},"execution_ref_hash":{"oneOf":[{"$ref":"#/$defs/sha"},{"type":"null"}]},"progress_percent":{"type":"integer","minimum":0,"maximum":100},"logical_cancelled":{"type":"boolean"},"upstream_cancel_state":{"enum":["not_requested","requested","confirmed","unsupported","unknown_after_error"]},
+    "output_role":{"type":["string","null"]},"output_sha256":{"oneOf":[{"$ref":"#/$defs/sha"},{"type":"null"}]},"output_bytes":{"type":["integer","null"],"minimum":1},"stable_error_code":{"type":["string","null"]},"refund_evidence_sha256":{"oneOf":[{"$ref":"#/$defs/sha"},{"type":"null"}]},
+    "privacy":{"type":"object","additionalProperties":false,"required":["raw_prompt_emitted","raw_account_id_emitted","raw_project_id_emitted","raw_execution_id_emitted","signed_output_url_emitted","raw_audio_emitted"],"properties":{"raw_prompt_emitted":{"const":false},"raw_account_id_emitted":{"const":false},"raw_project_id_emitted":{"const":false},"raw_execution_id_emitted":{"const":false},"signed_output_url_emitted":{"const":false},"raw_audio_emitted":{"const":false}}}
+  },
+  "$defs":{"sha":{"type":"string","pattern":"^[0-9a-f]{64}$"}}
+}

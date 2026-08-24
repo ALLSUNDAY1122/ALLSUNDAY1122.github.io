@@ -1,0 +1,13 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"ai-stem-generation-entitlement.schema.json",
+  "title":"Lane 1 A21 AI Stem Generation Entitlement Snapshot",
+  "type":"object","additionalProperties":false,
+  "required":["snapshot_id","account_ref_hash","plan_tier","capability_snapshot_sha256","included_credits_remaining","purchased_credits_remaining","unlimited_included","generation_enabled","source_evidence_sha256"],
+  "properties":{
+    "snapshot_id":{"type":"string","pattern":"^[0-9a-f]{64}$"},"account_ref_hash":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "plan_tier":{"enum":["FREE","PREMIUM","PRO"]},"capability_snapshot_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "included_credits_remaining":{"type":["integer","null"],"minimum":0},"purchased_credits_remaining":{"type":"integer","minimum":0},
+    "unlimited_included":{"type":"boolean"},"generation_enabled":{"type":"boolean"},"source_evidence_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}
+  }
+}
