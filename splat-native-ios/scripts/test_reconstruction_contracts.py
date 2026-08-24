@@ -75,7 +75,6 @@ checkpoint_save_guards = re.findall(
 )
 assert len(checkpoint_save_guards) >= 4, "all checkpoint save sites must validate the Bool result"
 assert "_ = trainer.saveCheckpoint" not in MODEL, "checkpoint save success must never be ignored"
-assert ".checkpointSave" in MODEL and ".trainerError" in MODEL
 for outcome in (
     "failed-checkpoint-save-resource-pause",
     "cancelled-checkpoint-save-failed",
@@ -83,10 +82,15 @@ for outcome in (
     "failed-checkpoint-save-final",
 ):
     assert outcome in MODEL, f"missing fail-closed checkpoint outcome: {outcome}"
+checkpoint_failure_start = MODEL.index("let failCheckpointSave:")
+checkpoint_failure_end = MODEL.index("if checkpointExists", checkpoint_failure_start)
+checkpoint_failure_helper = MODEL[checkpoint_failure_start:checkpoint_failure_end]
+assert ".checkpointSave" in checkpoint_failure_helper
+assert ".trainerError" in checkpoint_failure_helper
 require(
-    r"failCheckpointSave\([\s\S]*?\.checkpointSave[\s\S]*?\.trainerError[\s\S]*?nil",
-    MODEL,
-    "checkpoint persistence failure must report checkpointSave/trainerError without a fake checkpoint iteration",
+    r"iteration\s*,\s*count\s*,\s*nil\s*,\s*checkpointSaveFailureMessage",
+    checkpoint_failure_helper,
+    "checkpoint persistence failure must not claim a checkpoint iteration",
 )
 
 # Expensive point-color projection and sky seeding must run after Task.detached begins, not while
