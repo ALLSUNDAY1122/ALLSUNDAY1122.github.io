@@ -10,6 +10,10 @@ private struct AW34FixedWindowVirtualModel {
     private(set) var maximumOpenToDispatchNanoseconds: UInt64 = 0
     private(set) var lastExecutedTicket: UInt64?
 
+    init(windowNanoseconds: UInt64) {
+        self.windowNanoseconds = windowNanoseconds
+    }
+
     mutating func submit(ticket: UInt64, at now: UInt64) {
         drain(until: now)
         if latestTicket != nil { superseded += 1 }
@@ -63,6 +67,10 @@ private struct AW34ResettableDebounceVirtualModel {
     private(set) var latestTicket: UInt64?
     private(set) var executed: UInt64 = 0
     private(set) var superseded: UInt64 = 0
+
+    init(windowNanoseconds: UInt64) {
+        self.windowNanoseconds = windowNanoseconds
+    }
 
     mutating func submit(ticket: UInt64, at now: UInt64) {
         drain(until: now)
