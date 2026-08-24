@@ -7,6 +7,10 @@ private struct AW34FixedWindowBenchmarkModel {
     private(set) var executed: UInt64 = 0
     private(set) var superseded: UInt64 = 0
 
+    init(windowNanoseconds: UInt64) {
+        self.windowNanoseconds = windowNanoseconds
+    }
+
     mutating func submit(ticket: UInt64, at now: UInt64) {
         if let deadline, deadline <= now, latestTicket != nil {
             executed += 1
