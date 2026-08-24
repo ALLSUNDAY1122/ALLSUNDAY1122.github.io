@@ -11,7 +11,7 @@
   "parity_claim": "NONE",
   "current_wave": "L1-A26",
   "current_wave_title": "Lane 1 Full Regression / Dependency Closure Audit",
-  "current_wave_state": "DEPENDENCY_REPAIR_COMPLETE_AUDIT_RUNNER_PENDING",
+  "current_wave_state": "GATEWAY_REGRESSION_OBSERVED_FULL_AUDIT_PENDING",
   "external_gate_status": "E01_E02_E03_E04_E05_E06_E07_E08_E09_E10_PREPARED_PENDING_EXTERNAL_INPUT",
   "completed_bundles": ["L1-M01", "L1-M02", "L1-M03", "L1-M04"],
   "completed_waves": [
@@ -23,8 +23,8 @@
     "L1-E01", "L1-E02", "L1-E03", "L1-E04", "L1-E05", "L1-E06", "L1-E07", "L1-E08", "L1-E09", "L1-E10"
   ],
   "base_integration_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
-  "prior_head_sha": "2f443c38acf31c7ff732c4682864fcf70f98eb4e",
-  "head_sha": "6aba30a27f8b060235cca2caea72e790aa47b57b",
+  "prior_head_sha": "6aba30a27f8b060235cca2caea72e790aa47b57b",
+  "head_sha": "210e0475df98aaf8bf60bca4da4163d947d7ce61",
   "recent_commits": [
     "bd0ee2557afb207bf4cf1691010a9d3608993601",
     "ecf74a56092e6cb7ea071e06b35813fa3491fdca",
@@ -38,15 +38,18 @@
     "32253783770547b5e6cfb487f403d4b3e61811aa",
     "9d77492cf4b885f6e199c8ef172cb1e2ee28d191",
     "99caf6f1a642ed9ee0a3bb948b49dcb71a59d519",
-    "6aba30a27f8b060235cca2caea72e790aa47b57b"
+    "6aba30a27f8b060235cca2caea72e790aa47b57b",
+    "f5779b24e1f36b1901e57cec672963d0ebda2501",
+    "210e0475df98aaf8bf60bca4da4163d947d7ce61"
   ],
   "tests": [
     "A05-A25 remain completed NON_PARITY; E01-E10 live/readiness infrastructure remains external-input pending.",
     "Final L1-A24 broad pre-persistence fault/design suite: 40/40 PASS; checked-in focused retention regression: 24/24 PASS; final schema samples: 2/2 PASS; implementation/test py_compile PASS.",
     "L1-A26 source readback found A24/A25 retention-surface drift after final A24 coordinator cleanup; repaired with A24RetentionGateway without weakening A24 delete/refund/runtime-erasure semantics.",
-    "L1-A26 A24-to-A25 gateway focused regression contains 12 checked-in cases, but execution is NOT_OBSERVED in the available connector runtime.",
-    "L1-A26 one-command audit runner is checked in for Lane Python py_compile, full unittest discovery, JSON syntax, JSON-Schema self-validation, dependency surfaces and stable error-code inventory.",
-    "Current execution container checkout attempt failed before code execution because github.com DNS resolution is unavailable; latest A26 Worker-branch commit exposes no GitHub CI statuses. Full A26 regression PASS is therefore not claimed."
+    "L1-A26 latest A24 source readback confirms physical artifact reference accounting uses both all manifests and all active pointers and fails closed on corrupt/symlink references before GC/delete.",
+    "L1-A26 A24-to-A25 gateway focused regression: 12/12 PASS observed using exact checked-in gateway/test source plus source-readback-matched final A24 gateway-invoked behavior.",
+    "L1-A26 one-command audit runner remains checked in for Lane Python py_compile, full unittest discovery, JSON syntax, JSON-Schema self-validation, dependency surfaces and stable error-code inventory.",
+    "Full exact Worker-branch checkout audit remains NOT_OBSERVED because github.com DNS is unavailable in the execution container and the inspected A26 commit has no GitHub workflow runs. Full A26 regression PASS is therefore not claimed."
   ],
   "evidence": [
     "tech-assets/moises-audio/Processing/L1-A24_VALIDATION.md",
@@ -65,7 +68,7 @@
     "tech-assets/moises-audio/Separation/LANE1_PARITY_COVERAGE.md"
   ],
   "known_gaps": [
-    "L1-A26 is not in completed_waves. Dependency repair is committed, but the one-command full Lane audit has not been observed on an executable checkout/CI runner.",
+    "L1-A26 is not in completed_waves. Dependency repair and focused A24/A25 gateway regression are observed, but the one-command full exact Worker-branch audit has not been observed on an executable checkout/CI runner.",
     "E01-E10 remain PENDING_EXTERNAL_INPUT because production contracts/credential, real G1/G2 audio, current-iPhone captures/reviews and live runtime campaigns have not been supplied.",
     "MOI-P025 remains MISSING. A21-A26 provide entitlement/credit/lifecycle, provider-neutral runtime/live evaluation, mix compatibility/atomic variant activation, final retention/delete/refund/orphan recovery, durable end-to-end composition and an A24/A25 compatibility gateway, but no commercially approved real generation runtime has been executed.",
     "Exact current-iPhone P025 role/mode/preset catalog, credit consumption rule, plan allowance, entitlement UX, delete/refund behavior and generated-stem timing remain capture-driven and unverified.",
@@ -80,14 +83,14 @@
   "hq_requests": [
     "Canonical metadata cleanup at the next HQ checkpoint: Notion v4 is authority while HQ-owned WORKER_BOOTSTRAP/lane-plan/work-packages/resource-lock metadata still contains v3/finite-bundle or epoch-1 wording.",
     "A24-A25 remain a coherent checkpoint candidate, but use A24RetentionGateway when wiring the final A24 GeneratedStemRetentionCoordinator into A25. Do not reconnect A25 by restoring the superseded prototype retention service or by weakening A24 semantics.",
-    "Before marking A26 complete, execute `Separation/Evaluation/lane1_dependency_audit.py` on an executable checkout/CI runner and require `overall_state=PASS`.",
-    "Preserve final A24 semantics: delete intent first; manifest plus active-pointer reference accounting; deletion != refund; local deletion != runtime erasure; tombstones prevent silent resurrection.",
+    "Before marking A26 complete, execute `Separation/Evaluation/lane1_dependency_audit.py` on an executable full Worker-branch checkout/CI runner and require `overall_state=PASS`.",
+    "Preserve final A24 semantics: delete intent first; all manifests plus all active pointers participate in physical artifact reachability; deletion != refund; local deletion != runtime erasure; tombstones prevent silent resurrection.",
     "Preserve A25 start/cancel/delete ordering: after possible external side effects use reconciliation/observation, never blind replay.",
     "Keep raw prompts, logical generation IDs, account/project/execution IDs, source/generated/reference audio, private contracts/billing/reviewer material, private paths and credential values outside durable public evidence.",
-    "Do not promote P025/P024 or any other Lane 1 PARITY row from A24-A26 synthetic tests, static audit or portable CI. HQ final PARITY requires real current-iPhone workflow/UX/device/runtime evidence.",
+    "Do not promote P025/P024 or any other Lane 1 PARITY row from A24-A26 synthetic tests, focused regression, static audit or portable CI. HQ final PARITY requires real current-iPhone workflow/UX/device/runtime evidence.",
     "Golden Dataset absence, SHA not-yet-issued or Golden measurement not-yet-run remain HQ/live-gate pending conditions, not Worker BLOCKED_HUMAN."
   ],
-  "history_note": "A05-A25 are complete NON_PARITY and E01-E10 external/live readiness is prepared. During A26 dependency closure, final A24 cleanup exposed a source-level drift with A25's retention seam. A26 repaired this through A24RetentionGateway and added a one-command full Lane audit. The full A26 audit is not yet observed because the available execution container cannot resolve github.com and the Worker-branch commit has no CI status; A26 therefore remains current rather than being falsely completed.",
-  "last_updated": "2026-08-24T13:53:00+09:00",
+  "history_note": "A05-A25 are complete NON_PARITY and E01-E10 external/live readiness is prepared. A26 repaired the final A24-to-A25 retention seam through A24RetentionGateway. The focused gateway regression is now observed 12/12 PASS and latest A24 source readback confirms manifest+active-pointer reference safety. The full exact Worker-branch one-command audit is still not observed because the available execution container cannot resolve github.com and no CI workflow run is present, so A26 remains current rather than being falsely completed.",
+  "last_updated": "2026-08-24T14:32:00+09:00",
   "writer_policy": "Only Moises-Worker-1 updates this status file. HQ owns Shared/App/PARITY/queue/work-package/lane-plan/resource-lock authority and final PARITY judgment."
 }
