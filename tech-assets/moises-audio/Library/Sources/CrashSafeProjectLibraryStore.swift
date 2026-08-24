@@ -152,45 +152,57 @@ public final class CrashSafeProjectLibraryStore:
     }
 
     /// Sequence:
-    /// 1) read a lightweight live-project artifact projection,
-    /// 2) persist durable deletion ownership evidence,
-    /// 3) durable PREPARED journal (non-destructive),
-    /// 4) metadata tombstone transaction,
-    /// 5) mark journal COMMITTED,
-    /// 6) validate journal ownership/live references,
-    /// 7) idempotent file deletion and durable ARTIFACTS_DELETED marker,
-    /// 8) physical Core Data project/child compaction,
-    /// 9) retire journal and ownership evidence only after metadata compaction commits.
+    /// 1) read only the target project deletion candidate,
+    /// 2) resolve candidate paths referenced by other live projects,
+    /// 3) persist durable deletion ownership evidence,
+    /// 4) durable PREPARED journal (non-destructive),
+    /// 5) metadata tombstone transaction,
+    /// 6) mark journal COMMITTED,
+    /// 7) validate journal ownership/live references,
+    /// 8) idempotent file deletion and durable ARTIFACTS_DELETED marker,
+    /// 9) physical Core Data project/child compaction,
+    /// 10) retire journal and ownership evidence only after metadata compaction commits.
     /// A crash in every gap converges safely during recoverInterruptedOperations().
     public func deleteProject(projectID: ProjectID) async throws {
         try await withMutationGate {
-            let projects = try await metadata.listMaintenanceProjects()
-            guard let target = projects.first(where: { $0.projectID == projectID }) else {
+            guard let target = try await metadata.foregroundDeletionCandidate(projectID: projectID) else {
                 _ = try await recoverInterruptedOperationsUnlocked()
                 return
             }
 
-            let otherReferences = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(
-                in: projects,
-                excluding: projectID
-            )
-            let relativePaths = target.artifactRelativePaths.filter {
-                !otherReferences.contains($0)
+            let candidatePaths = Set(target.artifactRelativePaths)
+            let otherReferences: Set<String>
+            if let targetedResolver = liveReferenceResolver as? Lane2CoreDataLiveArtifactReferenceResolver {
+                let referenceSnapshot = try await targetedResolver.resolveReferencesExcludingTarget(
+                    targetProjectUUID: projectID.rawValue,
+                    candidateArtifactPaths: candidatePaths
+                )
+                otherReferences = referenceSnapshot.liveReferencedArtifactPathsExcludingTarget
+            } else {
+                let projects = try await metadata.listMaintenanceProjects()
+                otherReferences = LibraryMaintenanceProjectionPolicy.referencedArtifactPaths(
+                    in: projects,
+                    excluding: projectID
+                ).intersection(candidatePaths)
             }
 
+            let preparation = try Lane2ForegroundDeletePreparationPolicy.plan(
+                candidate: target,
+                liveReferencedArtifactPathsExcludingTarget: otherReferences
+            )
             try deletionOwnership.persist(
                 Lane2DeletionOwnershipRecord(
-                    projectUUID: projectID.rawValue,
-                    sourceAssetUUID: target.sourceAssetID.rawValue,
+                    projectUUID: target.projectUUID,
+                    sourceAssetUUID: target.sourceAssetUUID,
                     artifactRelativePaths: target.artifactRelativePaths
                 )
             )
             try artifacts.persistPreparedDeletion(
-                projectUUID: projectID.rawValue,
-                relativePaths: relativePaths
+                projectUUID: target.projectUUID,
+                relativePaths: preparation.artifactRelativePathsToDelete
             )
             try await metadata.deleteProject(projectID: projectID)
-            try artifacts.markDeletionCommitted(projectUUID: projectID.rawValue)
+            try artifacts.markDeletionCommitted(projectUUID: target.projectUUID)
             _ = try await recoverInterruptedOperationsUnlocked()
         }
     }
