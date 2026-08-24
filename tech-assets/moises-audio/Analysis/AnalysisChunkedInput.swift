@@ -35,6 +35,20 @@ public struct AnalysisChunkedSignalDescriptor: Equatable, Sendable {
     }
 }
 
+/// Declared source-side memory contract. This is not device attestation and
+/// does not prove that a concrete decoder has no hidden buffers. W23/W24
+/// process RSS/physical-footprint telemetry remains authoritative.
+public enum AnalysisChunkedSourceMemoryContract: String, Codable, Equatable, Sendable {
+    /// Legacy/default construction did not declare how source PCM is retained.
+    case unspecified = "UNSPECIFIED"
+    /// Consumer-driven pull contract intended to keep only bounded decoder
+    /// chunks resident at the Worker-4 seam.
+    case boundedPull = "BOUNDED_PULL_CONTRACT"
+    /// Compatibility adapter that first materializes the entire source signal.
+    /// It is API-compatible but is never valid MOI-P021 bounded-input evidence.
+    case wholeSignalCompatibilityMaterialized = "WHOLE_SIGNAL_COMPATIBILITY_MATERIALIZED"
+}
+
 /// Pull-based source contract. The Analysis consumer requests the next chunk
 /// only after it has finished consuming the previous one, preventing an
 /// unbounded producer queue from silently recreating whole-track retention.
@@ -47,13 +61,16 @@ public protocol AnalysisPCMChunkPulling: Sendable {
 public struct AnalysisChunkedSignal: Sendable {
     public let descriptor: AnalysisChunkedSignalDescriptor
     public let source: any AnalysisPCMChunkPulling
+    public let sourceMemoryContract: AnalysisChunkedSourceMemoryContract
 
     public init(
         descriptor: AnalysisChunkedSignalDescriptor,
-        source: any AnalysisPCMChunkPulling
+        source: any AnalysisPCMChunkPulling,
+        sourceMemoryContract: AnalysisChunkedSourceMemoryContract = .unspecified
     ) {
         self.descriptor = descriptor
         self.source = source
+        self.sourceMemoryContract = sourceMemoryContract
     }
 }
 
@@ -122,7 +139,8 @@ public struct AnalysisWholeSignalChunkedCompatibilityAdapter: AnalysisChunkedSig
             source: AnalysisWholeSignalChunkPuller(
                 samples: signal.monoSamples,
                 chunkSampleCount: chunkSampleCount
-            )
+            ),
+            sourceMemoryContract: .wholeSignalCompatibilityMaterialized
         )
     }
 }
