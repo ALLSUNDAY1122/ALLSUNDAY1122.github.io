@@ -146,12 +146,28 @@ public struct IOFileStore: Sendable {
         let unique = UUID().uuidString.lowercased()
         let filename = "\(stem)-\(unique)" + (ext.isEmpty ? "" : ".\(ext)")
         let destination = directory.appendingPathComponent(filename)
+        let finalRelativePath = try relativePath(for: destination)
+        let publicationJournal = Lane2ManagedArtifactPublicationJournal(
+            rootURL: rootURL,
+            fileManager: fileManager
+        )
+
+        do {
+            _ = try publicationJournal.begin(relativePath: finalRelativePath)
+        } catch {
+            throw StoreError.fileOperationFailed(code: "PUBLICATION_INTENT_FAILED")
+        }
+
         do {
             try fileManager.moveItem(at: stagingFile, to: destination)
-            return FinalizedFile(relativePath: try relativePath(for: destination), url: destination)
+            // The publication intent deliberately remains durable here. Library's readiness boundary
+            // registers the final path in the managed-artifact inventory and only then retires it.
+            return FinalizedFile(relativePath: finalRelativePath, url: destination)
         } catch let error as StoreError {
+            try? publicationJournal.cancelCurrentSessionIfPresent(relativePath: finalRelativePath)
             throw error
         } catch {
+            try? publicationJournal.cancelCurrentSessionIfPresent(relativePath: finalRelativePath)
             throw StoreError.fileOperationFailed(code: "FINALIZE_MOVE_FAILED")
         }
     }
