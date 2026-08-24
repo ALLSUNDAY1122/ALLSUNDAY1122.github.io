@@ -97,7 +97,7 @@ class VariantRetentionRecord:
         if self.delete_requested_at_epoch is not None:_int(self.delete_requested_at_epoch,'delete_requested_at_epoch',1)
         if self.delete_reason is not None and self.delete_reason not in DELETE_REASONS:fail('GEN_RET_DELETE_REASON_INVALID')
         if self.physical_artifact_state not in {'not_attempted','confirmed_erased','retained_shared_reference','missing_before_delete','unknown_after_error'}:fail('GEN_RET_PHYSICAL_STATE_INVALID')
-        if self.runtime_delete_state not in {'not_requested','not_applicable','unsupported','identifier_unavailable','accepted','confirmed','not_found','unknown_after_error','unknown_invalid_receipt'}:fail('GEN_RET_RUNTIME_DELETE_STATE_INVALID')
+        if self.runtime_delete_state not in {'not_requested','requesting','not_applicable','unsupported','identifier_unavailable','accepted','confirmed','not_found','unknown_after_error','unknown_invalid_receipt'}:fail('GEN_RET_RUNTIME_DELETE_STATE_INVALID')
         if self.refund_state not in {'not_checked','released_no_charge','reserved_unsettled','not_eligible','eligible_not_requested','pending_authority','confirmed','state_unknown'}:fail('GEN_RET_REFUND_STATE_INVALID')
         if self.refund_evidence_sha256 is not None:_sha(self.refund_evidence_sha256,'refund_evidence_sha256')
         if self.runtime_erasure_evidence_sha256 is not None:_sha(self.runtime_erasure_evidence_sha256,'runtime_erasure_evidence_sha256')
@@ -257,6 +257,7 @@ class GeneratedStemRetentionService:
         gh=_sha(generation_ref_hash_value,'generation_ref_hash');vi=_int(variant_index,'variant_index');reason=_safe(reason,'reason').upper()
         if reason not in DELETE_REASONS:fail('GEN_RET_DELETE_REASON_INVALID')
         key=f'{gh}.v{vi}';now=self.now()
+        # intent first
         with self.registry.locked() as st:
             rec=st['records'].get(key)
             if not rec:fail('GEN_RET_RECORD_NOT_FOUND')
@@ -291,8 +292,12 @@ class GeneratedStemRetentionService:
                 self.registry.save(st)
         if runtime_delete is not None:
             with self.registry.locked() as st:
-                prior=st['records'][key].runtime_delete_state
-            if prior=='not_requested':
+                runtime_rec=st['records'][key]
+                should_send=runtime_rec.runtime_delete_state=='not_requested'
+                if should_send:
+                    runtime_rec.runtime_delete_state='requesting'
+                    self.registry.save(st)
+            if should_send:
                 if binding_store_path is None:state='identifier_unavailable'
                 else:
                     b=self._find_execution(binding_store_path,gh)
@@ -304,7 +309,9 @@ class GeneratedStemRetentionService:
                         except Exception:state='unknown_after_error'
                         else:state=receipt if receipt in RUNTIME_RECEIPTS else 'unknown_invalid_receipt'
                 with self.registry.locked() as st:
-                    st['records'][key].runtime_delete_state=state;self.registry.save(st)
+                    if st['records'][key].runtime_delete_state=='requesting':
+                        st['records'][key].runtime_delete_state=state
+                        self.registry.save(st)
         return self.snapshot(generation_ref_hash_value=gh,variant_index=vi)
     def request_project_delete(self,*,project_ref_hash_value):
         project=_sha(project_ref_hash_value,'project_ref_hash')
@@ -327,7 +334,7 @@ class GeneratedStemRetentionService:
         with self.registry.locked() as st:
             r=st['records'].get(key)
             if not r:fail('GEN_RET_RECORD_NOT_FOUND')
-            if r.runtime_delete_state not in {'accepted','unknown_after_error','identifier_unavailable','unknown_invalid_receipt',receipt}:fail('GEN_RET_RUNTIME_RECONCILE_STATE_INVALID')
+            if r.runtime_delete_state not in {'requesting','accepted','unknown_after_error','identifier_unavailable','unknown_invalid_receipt',receipt}:fail('GEN_RET_RUNTIME_RECONCILE_STATE_INVALID')
             r.runtime_delete_state=receipt;r.runtime_erasure_evidence_sha256=ev;self.registry.save(st);return r
 
     def mark_runtime_storage_not_applicable(self,*,generation_ref_hash_value,variant_index,authority_evidence_sha256):
