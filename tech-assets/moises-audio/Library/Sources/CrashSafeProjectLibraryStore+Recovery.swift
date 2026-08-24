@@ -32,8 +32,7 @@ public extension CrashSafeProjectLibraryStore {
         )
         _ = try await Lane2LegacyTombstoneBulkMigrator.prepareIfNeeded(
             metadataStoreURL: metadataStoreURL,
-            artifactRootURL: artifactRootURL,
-            enumerationBatchSize: metadataOpen.store.enumerationBatchSizeForMaintenance
+            artifactRootURL: artifactRootURL
         )
         let library = try CrashSafeProjectLibraryStore(
             metadata: metadataOpen.store,
