@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W35",
+  "title": "Physical Analysis runtime-algorithm identity / backend-state evidence binding hardening",
+  "evidence_class": "NON_PARITY_ENGINEERING_EVIDENCE",
+  "result": "PASS",
+  "purpose": "Prevent W23/W25/W24 physical performance evidence from mixing or accepting a different Analysis runtime than the W30-W34 product path.",
+  "production": {
+    "algorithm_schema_id": "L4-W35-SINGLE_PASS-W34-GUARDED-V1",
+    "complete_run_requires_final_runtime_identity": true,
+    "cancellation_run_allows_unfinalized_runtime_identity": true,
+    "exact_w23_w25_w35_w24_run_inventory_required": true,
+    "w25_execution_id_bound": true,
+    "w25_snapshot_sha_bound_for_complete_runs": true,
+    "source_analyzer_config_build_manifest_device_os_bound": true,
+    "w31_retention_mode_bound": true,
+    "w32_tempo_energy_mode_bound": true,
+    "w34_chord_backend_state_and_counters_bound": true,
+    "same_fixture_complete_run_runtime_identity_must_match": true,
+    "legacy_materialized_w25_runner_is_current_runtime_evidence": false,
+    "canonical_post_w35_gate": "AnalysisDeviceCorpusAlgorithmPerformanceGate"
+  },
+  "adversarial_harness": {
+    "assertions": 19,
+    "status": "PASS",
+    "covered": [
+      "valid 2 complete + 2 cancellation exact batch",
+      "missing W35 run rejected and W24 suppressed",
+      "mixed vectorized/scalar complete runtime identities rejected within one fixture",
+      "legacy/non-single-pass runtime rejected",
+      "W25 execution ID substitution rejected",
+      "valid W35 gate exposes downstream W25/W24 gate",
+      "3600 second source derives W32 rolling reuse mode",
+      "120 second source derives W32 reference rescan mode"
+    ]
+  },
+  "stress": {
+    "planned_runs_per_process": 10000,
+    "complete_runs": 5000,
+    "cancellation_runs": 5000,
+    "processes": 5,
+    "all_passed": true,
+    "internal_elapsed_seconds": [0.122936, 0.119360, 0.128966, 0.124917, 0.127639],
+    "wall_seconds": [0.22, 0.21, 0.22, 0.22, 0.22],
+    "max_rss_kb": [50688, 50828, 50896, 50776, 50752],
+    "note": "Validator/inventory overhead only; not iPhone Analysis performance."
+  },
+  "compile_validation": {
+    "swift_version": "6.2.1",
+    "strict_concurrency": "complete",
+    "warnings_as_errors": true,
+    "w35_model_validator_algorithm_gate": "PASS",
+    "w35_corpus_algorithm_gate": "PASS",
+    "canonical_swiftpm_xcode": "PENDING_HQ_INTEGRATED_CHECKOUT"
+  },
+  "important_discovery": {
+    "historical_w25_runner": "AnalysisDeviceWorkloadRunner / AnalysisCanonicalProductPipeline",
+    "problem": "The historical runner predates W28-W34 and uses materialized preparation plus older separate bounded analyzers. It does not execute W29-W34 single-pass runtime or W34 backend guard.",
+    "mitigation": "W35 rejects complete evidence without current algorithm schema and exactSinglePreparedTraversal=true. New physical P021 evidence must use a current product-equivalent runner and W35 companion evidence."
+  },
+  "parity": {
+    "MOI-P009": "MISSING",
+    "MOI-P011": "MISSING",
+    "MOI-P013": "MISSING",
+    "MOI-P016": "MISSING",
+    "MOI-P021": "MISSING",
+    "reason": "No current-iPhone Moises differential, rights-cleared production Analysis corpus, genuine Lane-2 bounded decoder, or approved physical-iPhone W23/W24 run exists in this wave."
+  },
+  "limitations": [
+    "W35 validates self-consistent evidence; it is not hardware attestation.",
+    "Cancellation probes intentionally do not claim finalized runtime identity before feature finalization.",
+    "W27 archive role inventory predates W35 and does not yet require the new companion artifact.",
+    "Portable/source-shaped validation cannot substitute for selected Apple/Xcode/ARM and physical-iPhone execution."
+  ]
+}

@@ -104,7 +104,16 @@ public struct LibraryArtifactLifecycle: Sendable {
             recoveryDirectoryName: recoveryDirectoryName
         )
         _ = try inventory.activateForFirstManagedArtifactIfSafe(relativePath: relativePath)
-        _ = try inventory.registerIfManaged(relativePath: relativePath)
+        let registeredManaged = try inventory.registerIfManaged(relativePath: relativePath)
+        if registeredManaged {
+            // Publication intent is retired only after the final path is durably represented by the
+            // managed-artifact inventory. Cleanup is best-effort because a stale durable intent is
+            // safe: next-process AW31 recovery replays the same registration idempotently.
+            try? Lane2ManagedArtifactPublicationJournal(
+                rootURL: rootURL,
+                recoveryDirectoryName: recoveryDirectoryName
+            ).completeIfPresent(relativePath: relativePath)
+        }
     }
 
     /// Metadata may expose finalRelativePath only after this succeeds.
@@ -117,7 +126,27 @@ public struct LibraryArtifactLifecycle: Sendable {
             throw LibraryArtifactFailure.destinationAlreadyExists(finalRelativePath)
         }
         try FileManager.default.createDirectory(at: final.deletingLastPathComponent(), withIntermediateDirectories: true)
-        try FileManager.default.moveItem(at: staging, to: final)
+
+        let normalizedFinal = try Self.normalize(finalRelativePath)
+        let finalRoot = normalizedFinal.split(separator: "/", omittingEmptySubsequences: false).first.map(String.init)
+        let isManagedPublication = finalRoot.map { ["Imports", "Stems", "Exports"].contains($0) } ?? false
+        let publicationJournal = Lane2ManagedArtifactPublicationJournal(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName
+        )
+        if isManagedPublication {
+            _ = try publicationJournal.begin(relativePath: normalizedFinal)
+        }
+        do {
+            try FileManager.default.moveItem(at: staging, to: final)
+        } catch {
+            if isManagedPublication {
+                try? publicationJournal.cancelCurrentSessionIfPresent(relativePath: normalizedFinal)
+            }
+            throw error
+        }
+        // If readiness/inventory persistence fails after the move, the durable managed publication
+        // intent is deliberately left behind so next-process recovery can reconcile the final file.
         try requireReady(relativePath: finalRelativePath)
     }
 

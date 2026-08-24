@@ -3,10 +3,10 @@ import Foundation
 #if canImport(CoreData)
 public extension CrashSafeProjectLibraryStore {
     /// Production open for callers that do not need PreservingCoreDataStoreOpener.
-    /// AW24 bounds legacy preparation; AW26 injects targeted live-reference authorization; AW30
-    /// advances one durable managed-artifact compatibility census chunk per launch for upgrades.
-    /// Census failure never blocks user-data access: authority simply remains absent and AW28
-    /// compatibility behavior stays active. In-memory tests retain the full-projection fallback.
+    /// AW24 bounds legacy preparation; AW26 injects targeted live-reference authorization; AW31
+    /// reconciles bounded previous-session managed publication intents before AW30 compatibility
+    /// census. Census runs only after publication recovery is safe; corrupt/unsafe publication state
+    /// leaves inventory authority absent for this open. In-memory tests retain the full-projection fallback.
     static func openBulkPrepared(
         metadataConfiguration: CoreDataProjectLibraryStore.Configuration,
         artifactRootURL: URL
@@ -19,9 +19,20 @@ public extension CrashSafeProjectLibraryStore {
                 metadataStoreURL: metadataStoreURL,
                 artifactRootURL: artifactRootURL
             )
-            _ = try? Lane2ManagedArtifactCompatibilityCensus(
-                rootURL: artifactRootURL
-            ).advance()
+            let publicationRecovery = Lane2ManagedArtifactPublicationRecovery(rootURL: artifactRootURL)
+            let publicationRecoverySafe: Bool
+            do {
+                let report = try publicationRecovery.recoverPreviousSessionPublications()
+                publicationRecoverySafe = report.retainedUnsafe.isEmpty && !report.authorityInvalidated
+            } catch {
+                publicationRecovery.invalidateAuthorityAfterRecoveryFailure()
+                publicationRecoverySafe = false
+            }
+            if publicationRecoverySafe {
+                _ = try? Lane2ManagedArtifactCompatibilityCensus(
+                    rootURL: artifactRootURL
+                ).advance()
+            }
             resolver = Lane2CoreDataLiveArtifactReferenceResolver(storeURL: metadataStoreURL)
         } else {
             resolver = nil

@@ -18,10 +18,10 @@ public struct RecoverableLibraryOpenResult: Sendable {
 public extension CrashSafeProjectLibraryStore {
     /// Production-safe preserving open path. AW24 prepares only one bounded legacy tombstone slice
     /// per launch before crash-safe delete recovery; AW26 injects a targeted read-only resolver;
-    /// AW30 advances one durable managed-artifact compatibility census chunk per launch so upgraded
-    /// stores converge to AW29's sharded steady-state without granting premature inventory authority.
-    /// Census failure is nonblocking for user data: authority remains absent and compatibility mode
-    /// continues until a later safe census succeeds.
+    /// AW31 first reconciles bounded previous-session publication intents without walking managed
+    /// roots, then AW30 advances one durable compatibility-census chunk only after publication
+    /// recovery is proven safe. Corrupt/unsafe publication state leaves authority absent for this
+    /// open so census can never re-authorize an unresolved publication gap.
     static func openPreservingUserData(
         metadataStoreURL: URL,
         artifactRootURL: URL,
@@ -35,9 +35,20 @@ public extension CrashSafeProjectLibraryStore {
             metadataStoreURL: metadataStoreURL,
             artifactRootURL: artifactRootURL
         )
-        _ = try? Lane2ManagedArtifactCompatibilityCensus(
-            rootURL: artifactRootURL
-        ).advance()
+        let publicationRecovery = Lane2ManagedArtifactPublicationRecovery(rootURL: artifactRootURL)
+        let publicationRecoverySafe: Bool
+        do {
+            let report = try publicationRecovery.recoverPreviousSessionPublications()
+            publicationRecoverySafe = report.retainedUnsafe.isEmpty && !report.authorityInvalidated
+        } catch {
+            publicationRecovery.invalidateAuthorityAfterRecoveryFailure()
+            publicationRecoverySafe = false
+        }
+        if publicationRecoverySafe {
+            _ = try? Lane2ManagedArtifactCompatibilityCensus(
+                rootURL: artifactRootURL
+            ).advance()
+        }
         let library = try CrashSafeProjectLibraryStore(
             metadata: metadataOpen.store,
             artifactRootURL: artifactRootURL,
