@@ -35,16 +35,25 @@ public struct AnalysisChunkedSignalDescriptor: Equatable, Sendable {
     }
 }
 
+/// Pull-based source contract. The Analysis consumer requests the next chunk
+/// only after it has finished consuming the previous one, preventing an
+/// unbounded producer queue from silently recreating whole-track retention.
+/// A concrete decoder can still retain data internally, so W23/W24 physical
+/// memory telemetry remains authoritative at Late Integration.
+public protocol AnalysisPCMChunkPulling: Sendable {
+    func nextChunk() async throws -> AnalysisPCMChunk?
+}
+
 public struct AnalysisChunkedSignal: Sendable {
     public let descriptor: AnalysisChunkedSignalDescriptor
-    public let chunks: AsyncThrowingStream<AnalysisPCMChunk, Error>
+    public let source: any AnalysisPCMChunkPulling
 
     public init(
         descriptor: AnalysisChunkedSignalDescriptor,
-        chunks: AsyncThrowingStream<AnalysisPCMChunk, Error>
+        source: any AnalysisPCMChunkPulling
     ) {
         self.descriptor = descriptor
-        self.chunks = chunks
+        self.source = source
     }
 }
 
@@ -58,6 +67,29 @@ public protocol AnalysisChunkedSignalLoading: Sendable {
         projectID: ProjectID,
         asset: LocalAudioAsset
     ) async throws -> AnalysisChunkedSignal
+}
+
+private actor AnalysisWholeSignalChunkPuller: AnalysisPCMChunkPulling {
+    private let samples: [Float]
+    private let chunkSampleCount: Int
+    private var nextStart = 0
+
+    init(samples: [Float], chunkSampleCount: Int) {
+        self.samples = samples
+        self.chunkSampleCount = chunkSampleCount
+    }
+
+    func nextChunk() async throws -> AnalysisPCMChunk? {
+        try AnalysisCancellationPolicy.check()
+        guard nextStart < samples.count else { return nil }
+        let start = nextStart
+        let end = min(samples.count, start + chunkSampleCount)
+        nextStart = end
+        return AnalysisPCMChunk(
+            startSampleIndex: Int64(start),
+            monoSamples: Array(samples[start..<end])
+        )
+    }
 }
 
 /// Compatibility bridge for tests/integration migration. This adapter still
@@ -82,26 +114,15 @@ public struct AnalysisWholeSignalChunkedCompatibilityAdapter: AnalysisChunkedSig
         asset: LocalAudioAsset
     ) async throws -> AnalysisChunkedSignal {
         let signal = try await loader.loadSignal(projectID: projectID, asset: asset)
-        let descriptor = AnalysisChunkedSignalDescriptor(
-            sampleRate: signal.sampleRate,
-            sampleCount: Int64(signal.monoSamples.count)
+        return AnalysisChunkedSignal(
+            descriptor: .init(
+                sampleRate: signal.sampleRate,
+                sampleCount: Int64(signal.monoSamples.count)
+            ),
+            source: AnalysisWholeSignalChunkPuller(
+                samples: signal.monoSamples,
+                chunkSampleCount: chunkSampleCount
+            )
         )
-        let chunkSize = chunkSampleCount
-        let samples = signal.monoSamples
-        let stream = AsyncThrowingStream<AnalysisPCMChunk, Error> { continuation in
-            var start = 0
-            while start < samples.count {
-                let end = min(samples.count, start + chunkSize)
-                continuation.yield(
-                    AnalysisPCMChunk(
-                        startSampleIndex: Int64(start),
-                        monoSamples: Array(samples[start..<end])
-                    )
-                )
-                start = end
-            }
-            continuation.finish()
-        }
-        return AnalysisChunkedSignal(descriptor: descriptor, chunks: stream)
     }
 }
