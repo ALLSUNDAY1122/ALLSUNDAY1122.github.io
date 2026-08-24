@@ -21,6 +21,7 @@ struct AW32SelfCheck {
         precondition(roundTrip == r)
         scenarios += 1
 
+        // Simulate pre-AW32 flat ownership backlog without using persist().
         let flatDir = root.appendingPathComponent(".LibraryRecovery/DeleteOwnership", isDirectory: true)
         let enc = JSONEncoder(); enc.outputFormatting = [.sortedKeys]; enc.dateEncodingStrategy = .iso8601
         var legacyIDs: [UUID] = []
@@ -41,6 +42,7 @@ struct AW32SelfCheck {
         precondition(migrated.count == 257)
         scenarios += 1
 
+        // Excluded journal-backed ownership remains directly addressable and is not selected.
         let excluded = UUID(); let excludedRecord = try record(excluded, 500)
         try index.persist(excludedRecord)
         let selected = try index.pendingRecordSlice(limit: 8, excludingProjectUUIDs: [excluded])
@@ -49,6 +51,7 @@ struct AW32SelfCheck {
         precondition(excludedRoundTrip == excludedRecord)
         scenarios += 1
 
+        // Duplicate flat/sharded disagreement fails closed.
         let conflictProject = UUID(); let sourceA = UUID(); let sourceB = UUID()
         let sharded = try record(conflictProject, 600, source: sourceA)
         try index.persist(sharded)
@@ -66,6 +69,7 @@ struct AW32SelfCheck {
         try? fm.removeItem(at: flatDir.appendingPathComponent(conflictProject.uuidString + ".json"))
         try index.remove(projectUUID: conflictProject)
 
+        // Corrupt active-shard manifest fails closed.
         let marker = flatDir.appendingPathComponent(".active-shards-v2.json")
         try Data("not-json".utf8).write(to: marker, options: [.atomic])
         do {
@@ -76,6 +80,7 @@ struct AW32SelfCheck {
         }
         scenarios += 1
 
+        // Four manifest-only crash signals must not starve a later real shard forever.
         let crashRoot = fm.temporaryDirectory.appendingPathComponent("AW32-empty-signals-" + UUID().uuidString, isDirectory: true)
         defer { try? fm.removeItem(at: crashRoot) }
         let crashIndex = Lane2DeletionOwnershipIndex(rootURL: crashRoot)
