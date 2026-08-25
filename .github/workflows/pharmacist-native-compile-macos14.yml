@@ -20,7 +20,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo 'Installed Xcode apps:'
           find /Applications -maxdepth 1 -type d -name 'Xcode*.app' -print | sort -V
           XCODE_APP=$(find /Applications -maxdepth 1 -type d -name 'Xcode_16*.app' -print | sort -V | tail -1)
           test -n "$XCODE_APP"
@@ -34,13 +33,13 @@ jobs:
         run: |
           python3 pharmacist-manabi-sprint/scripts/validate_release.py
           bash pharmacist-manabi-sprint/ios/prepare-ios.sh
-      - name: Install XcodeGen and generate project
+      - name: Install XcodeGen and generate no-IAP project
         run: |
           HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
           cd pharmacist-manabi-sprint/ios
           xcodegen generate
-          python3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj
-          ! grep -R -q 'WKWebView\|import WebKit' --include='*.swift' .
+          ! grep -q 'com.apple.InAppPurchase' PharmacistSprint.xcodeproj/project.pbxproj
+          ! grep -R -q 'import StoreKit\|StoreKitManager\|PaywallView\|WKWebView\|import WebKit' --include='*.swift' .
       - name: XCTest
         run: |
           UDID=$(python3 - <<'PY'

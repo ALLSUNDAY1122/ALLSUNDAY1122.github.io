@@ -1,0 +1,38 @@
+name: APP2-004 Pharmacist Submission Preflight
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'automation/app2-004-yakuzaishi-submission-command.json'
+      - 'scripts/app2_004_yakuzaishi_submission_preflight.py'
+      - '.github/workflows/app2-004-yakuzaishi-submission-preflight.yml'
+permissions:
+  contents: write
+concurrency:
+  group: app2-004-yakuzaishi-submission-preflight
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read App Store submission state
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/app2_004_yakuzaishi_submission_preflight.py
+      - name: Persist sanitized preflight
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add automation/app2-004-yakuzaishi-submission-preflight.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Persist APP2-004 submission preflight'
+            git push origin HEAD:main
+          fi
