@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A32",
+  "title": "Provider Delete Reconciliation Crash Atomicity Matrix",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "implementation_blob_sha": "bc6a3c202ff20caf527d9a22f68f00214c6fe68d",
+  "focused_result": {
+    "state": "PASS",
+    "tests_run": 8,
+    "failures": 0,
+    "errors": 0,
+    "py_compile": "PASS",
+    "exact_worker_checkout_full_suite": "NOT_OBSERVED"
+  },
+  "cases": [
+    {
+      "id": "A32-C01",
+      "scenario": "process crash after durable registry mutation but before ledger applied commit",
+      "expected": "newer applying watermark blocks older observation; restart resume converges and clears inflight",
+      "state": "PASS"
+    },
+    {
+      "id": "A32-C02",
+      "scenario": "process crash after applying watermark but before registry mutation",
+      "expected": "older observation remains stale; resume performs idempotent local application without provider DELETE replay",
+      "state": "PASS"
+    },
+    {
+      "id": "A32-C03",
+      "scenario": "future/high-epoch observation with wrong provider object hash",
+      "expected": "binding validation fails before applying watermark; malformed evidence cannot become ordering authority",
+      "state": "PASS"
+    },
+    {
+      "id": "A32-C04",
+      "scenario": "attempt to transition a finalized applied receipt back to applying",
+      "expected": "fail closed with SEP_PRIVACY_RECONCILE_APPLICATION_TRANSITION_INVALID",
+      "state": "PASS"
+    },
+    {
+      "id": "A32-C05",
+      "scenario": "equal-epoch equivalent evidence while another receipt is applying",
+      "expected": "idempotent registry application converges; original inflight receipt remains resumable then collapses to applied",
+      "state": "PASS"
+    },
+    {
+      "id": "A32-C06",
+      "scenario": "equal-epoch conflicting evidence while another receipt is applying",
+      "expected": "fail closed; do not choose by arrival order",
+      "state": "PASS"
+    },
+    {
+      "id": "A32-C07",
+      "scenario": "snapshot while applying watermark is durable",
+      "expected": "pending_observation_count and inflight_observation_count expose reconciliation_required=true",
+      "state": "PASS"
+    },
+    {
+      "id": "A32-C08",
+      "scenario": "concurrent reverse/out-of-order observations",
+      "expected": "single-host serialized ordering converges to maximum observed epoch state with no pending work",
+      "state": "PASS"
+    }
+  ],
+  "state_machine": {
+    "observed_not_applied": ["applying", "superseded_stale"],
+    "applying": ["applied", "superseded_stale"],
+    "applied": ["applied"],
+    "superseded_stale": ["superseded_stale"]
+  },
+  "safety_boundaries": [
+    "No provider DELETE replay is introduced.",
+    "The applying watermark is local single-host durability/ordering evidence, not distributed consensus.",
+    "Raw provider identifiers and private authority material remain absent from durable public evidence.",
+    "No PARITY row is promoted from this synthetic/focused safety evidence.",
+    "A26 exact full Worker checkout audit remains pending."
+  ]
+}
