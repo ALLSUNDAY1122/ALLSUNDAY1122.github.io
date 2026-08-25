@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>新ITパスポート｜試作版</title>
 <style>
-:root{--bg:#f4f7fb;--card:#fff;--ink:#152033;--muted:#64748b;--line:#dbe3ee;--accent:#2457d6;--accent2:#143b9f;--good:#127a55;--bad:#b42318;--soft:#eaf0ff;--warn:#9a6700}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",sans-serif;line-height:1.5}.app{max-width:520px;margin:0 auto;min-height:100vh;background:linear-gradient(180deg,#eef3ff 0,#f7f9fc 210px)}header{padding:calc(18px + env(safe-area-inset-top)) 20px 14px}.eyebrow{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em}.title{font-size:25px;font-weight:800;margin:4px 0 0}.subtitle{font-size:13px;color:var(--muted);margin-top:3px}.content{padding:0 16px 96px}.card{background:var(--card);border:1px solid rgba(219,227,238,.9);border-radius:20px;padding:18px;box-shadow:0 8px 28px rgba(25,52,96,.07);margin-bottom:12px}.hero{padding:20px}.hero h2{font-size:18px;margin:0 0 6px}.hero p{margin:0 0 16px;color:var(--muted);font-size:14px}.primary{width:100%;border:0;border-radius:14px;background:var(--accent);color:white;padding:15px 16px;font-size:16px;font-weight:800;cursor:pointer}.primary:active{background:var(--accent2)}.secondary{width:100%;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);padding:13px 16px;font-size:15px;font-weight:700;cursor:pointer}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px}.stat .n{font-size:23px;font-weight:800}.stat .l{font-size:12px;color:var(--muted)}.section-title{font-size:15px;font-weight:800;margin:18px 4px 9px}.domain{margin:14px 0}.domain-row{display:flex;justify-content:space-between;font-size:13px;font-weight:700}.track{height:9px;border-radius:999px;background:#e8edf4;overflow:hidden;margin-top:7px}.fill{height:100%;border-radius:999px;background:var(--accent)}.small{font-size:12px;color:var(--muted)}.pill{display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;background:var(--soft);color:var(--accent2);font-size:12px;font-weight:800}.question-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.qnum{font-size:12px;color:var(--muted);font-weight:700}.qtext{font-size:18px;font-weight:800;margin:6px 0 18px}.choice{width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:14px;margin:7px 0;font-size:15px;color:var(--ink);cursor:pointer}.choice:hover{border-color:#9bb4ef}.choice.selected{border-color:var(--accent);background:var(--soft)}.choice.correct{border-color:var(--good);background:#eaf8f2}.choice.wrong{border-color:var(--bad);background:#fff0ee}.feedback{margin-top:16px;border-radius:16px;padding:15px;background:#f7f9fc;border:1px solid var(--line)}.feedback.good{border-color:#b9e1d1}.feedback.bad{border-color:#f0c5c0}.feedback-title{font-size:16px;font-weight:800}.detail{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:14px}.detail summary{cursor:pointer;font-weight:800;color:var(--accent2)}.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(520px,100%);display:grid;grid-template-columns:repeat(3,1fr);padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--line);backdrop-filter:blur(16px)}.nav button{border:0;background:transparent;color:var(--muted);font-weight:700;padding:9px 4px}.nav button.active{color:var(--accent)}.hidden{display:none!important}.risk{color:var(--warn);font-weight:800}.source{font-size:11px;color:var(--muted);margin-top:12px}.mode-title{font-size:13px;font-weight:800;color:var(--accent)}.empty{text-align:center;padding:32px 12px}.empty h3{margin:0 0 8px}.mock-list{margin:0;padding-left:20px;color:var(--muted);font-size:14px}.review-item{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.review-item:last-child{border-bottom:0}.review-topic{font-weight:800}.review-meta{font-size:12px;color:var(--muted)}
+:root{--bg:#f4f7fb;--card:#fff;--ink:#152033;--muted:#64748b;--line:#dbe3ee;--accent:#2457d6;--accent2:#143b9f;--good:#127a55;--bad:#b42318;--soft:#eaf0ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",sans-serif;line-height:1.5}.app{max-width:520px;margin:auto;min-height:100vh;background:linear-gradient(180deg,#eef3ff,#f7f9fc 220px)}header{padding:calc(18px + env(safe-area-inset-top)) 20px 14px}.eyebrow{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:.08em}.title{font-size:25px;font-weight:850;margin-top:4px}.subtitle,.small{color:var(--muted);font-size:12px}.content{padding:0 16px 96px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:12px;box-shadow:0 8px 28px rgba(25,52,96,.07)}h2{font-size:18px;margin:8px 0}.hero p{font-size:14px;color:var(--muted);margin:0 0 16px}.pill{display:inline-flex;padding:6px 9px;border-radius:999px;background:var(--soft);color:var(--accent2);font-size:12px;font-weight:800}.primary,.secondary,.choice{width:100%;border-radius:14px;padding:14px 16px;font-size:15px;font-weight:750;cursor:pointer}.primary{border:0;background:var(--accent);color:#fff}.secondary{border:1px solid var(--line);background:#fff;color:var(--ink)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px}.stat .n{font-size:23px;font-weight:850}.section-title{font-size:15px;font-weight:850;margin:18px 4px 9px}.domain{margin:14px 0}.domain-row{display:flex;justify-content:space-between;font-size:13px;font-weight:800}.track{height:9px;background:#e8edf4;border-radius:999px;overflow:hidden;margin-top:7px}.fill{height:100%;background:var(--accent);border-radius:999px}.question-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.mode-title{font-size:13px;font-weight:850;color:var(--accent)}.qnum{font-size:12px;color:var(--muted);font-weight:700}.qtext{font-size:18px;font-weight:850;margin:10px 0 16px}.choice{text-align:left;background:#fff;border:1.5px solid var(--line);color:var(--ink);margin:6px 0}.choice.correct{border-color:var(--good);background:#eaf8f2}.choice.wrong{border-color:var(--bad);background:#fff0ee}.feedback{margin-top:15px;border:1px solid var(--line);border-radius:16px;padding:15px;background:#f8fafc}.feedback-title{font-weight:850;font-size:16px}.detail{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:14px}.detail summary{font-weight:800;color:var(--accent2);cursor:pointer}.source{font-size:11px;color:var(--muted);margin-top:10px}.review-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.review-item:last-child{border-bottom:0}.review-topic{font-weight:850}.empty{text-align:center;padding:26px 8px}.mock-list{font-size:14px;color:var(--muted);padding-left:20px}.hidden{display:none!important}.nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(3,1fr);padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--line);backdrop-filter:blur(16px)}.nav button{border:0;background:transparent;color:var(--muted);font-weight:800;padding:9px 4px}.nav button.active{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -14,93 +14,46 @@
 <header><div class="eyebrow">ZERO-BASE PROTOTYPE</div><div class="title">ITパスポート 合格スプリント</div><div class="subtitle">迷わず、今日やるべきことだけ。</div></header>
 <main class="content">
 <section id="homeView">
-  <div class="card hero">
-    <span class="pill" id="todayPill">今日の学習</span>
-    <h2 id="heroTitle">まずは6問で現在地を確認</h2>
-    <p id="heroText">3分野を短く診断して、次に復習する論点を決めます。精密な合否判定ではありません。</p>
-    <button class="primary" id="startBtn">初回診断を始める</button>
-  </div>
-  <div class="grid">
-    <div class="stat"><div class="n" id="streak">0日</div><div class="l">連続学習</div></div>
-    <div class="stat"><div class="n" id="reviewCount">0問</div><div class="l">復習待ち</div></div>
-  </div>
-  <div class="section-title">3分野の習熟度</div>
-  <div class="card">
-    <div class="domain"><div class="domain-row"><span>ストラテジ</span><span id="strategyVal">0%</span></div><div class="track"><div class="fill" id="strategyBar" style="width:0%"></div></div></div>
-    <div class="domain"><div class="domain-row"><span>マネジメント</span><span id="managementVal">0%</span></div><div class="track"><div class="fill" id="managementBar" style="width:0%"></div></div></div>
-    <div class="domain"><div class="domain-row"><span>テクノロジ</span><span id="technologyVal">0%</span></div><div class="track"><div class="fill" id="technologyBar" style="width:0%"></div></div></div>
-    <div class="small">この数値は学習優先度のための独自指標で、IPAのIRT評価点ではありません。</div>
-  </div>
-  <div class="section-title">合格までの見方</div>
-  <div class="card"><div class="small">本試験は総合600/1000以上に加え、3分野すべてで300/1000以上が必要です。アプリでは「得意分野で押し切る」より、足切りリスクを先に潰す学習順を採用します。</div></div>
+ <div class="card hero"><span class="pill" id="todayPill">初回診断</span><h2 id="heroTitle">まずは6問で現在地を確認</h2><p id="heroText">3分野を短く診断して、次に復習する論点を決めます。精密な合否判定ではありません。</p><button class="primary" id="startBtn">初回診断を始める</button></div>
+ <div class="grid"><div class="stat"><div class="n" id="streak">0日</div><div class="small">連続学習</div></div><div class="stat"><div class="n" id="reviewCount">0問</div><div class="small">復習待ち</div></div></div>
+ <div class="section-title">3分野の習熟度</div>
+ <div class="card">
+  <div class="domain"><div class="domain-row"><span>ストラテジ</span><span id="strategyVal">0%</span></div><div class="track"><div class="fill" id="strategyBar"></div></div></div>
+  <div class="domain"><div class="domain-row"><span>マネジメント</span><span id="managementVal">0%</span></div><div class="track"><div class="fill" id="managementBar"></div></div></div>
+  <div class="domain"><div class="domain-row"><span>テクノロジ</span><span id="technologyVal">0%</span></div><div class="track"><div class="fill" id="technologyBar"></div></div></div>
+  <div class="small">独自の学習優先度です。IPAのIRT評価点ではありません。</div>
+ </div>
+ <div class="section-title">足切りを先に防ぐ</div><div class="card"><div class="small">本試験は総合600/1000以上に加え、3分野すべてで300/1000以上が必要です。苦手分野を放置しない学習順にします。</div></div>
 </section>
-
-<section id="practiceView" class="hidden">
-  <div class="card">
-    <div class="question-head"><span class="mode-title" id="modeLabel">初回診断</span><span class="qnum" id="qNum">1 / 6</span></div>
-    <div class="pill" id="domainPill">ストラテジ系</div>
-    <div class="qtext" id="qText"></div>
-    <div id="choices"></div>
-    <div id="feedback" class="feedback hidden"></div>
-    <button id="nextBtn" class="primary hidden" style="margin-top:14px">次の問題</button>
-  </div>
-</section>
-
-<section id="reviewView" class="hidden">
-  <div class="section-title">復習キュー</div>
-  <div class="card" id="reviewList"></div>
-  <button class="secondary" id="reviewStart">復習を始める</button>
-</section>
-
-<section id="mockView" class="hidden">
-  <div class="card">
-    <span class="pill">模擬試験</span>
-    <h2 style="margin-bottom:8px">100問・120分を再現</h2>
-    <ul class="mock-list"><li>ストラテジ：約35問</li><li>マネジメント：約20問</li><li>テクノロジ：約45問</li><li>途中保存・見直しフラグ</li><li>終了後に分野別弱点へ戻す</li></ul>
-    <p class="small">試作版では模試実行は未接続です。公式IRT点数を模倣せず、正答率と独自の学習安全度を分けて表示します。</p>
-    <button class="primary" disabled style="opacity:.45">模試データ接続後に開始</button>
-  </div>
-</section>
+<section id="practiceView" class="hidden"><div class="card"><div class="question-head"><span class="mode-title" id="modeLabel"></span><span class="qnum" id="qNum"></span></div><span class="pill" id="domainPill"></span><div class="qtext" id="qText"></div><div id="choices"></div><div id="feedback" class="feedback hidden"></div><button id="nextBtn" class="primary hidden" style="margin-top:14px">次の問題</button></div></section>
+<section id="reviewView" class="hidden"><div class="section-title">復習キュー</div><div class="card" id="reviewList"></div><button class="secondary" id="reviewStart">復習を始める</button></section>
+<section id="mockView" class="hidden"><div class="card"><span class="pill">模擬試験</span><h2>100問・120分を再現</h2><ul class="mock-list"><li>ストラテジ：約35問</li><li>マネジメント：約20問</li><li>テクノロジ：約45問</li><li>途中保存・見直しフラグ</li></ul><p class="small">試作版では未接続です。公式IRT点数を装わず、正答率と独自の合格安全度を分離表示します。</p><button class="primary" disabled style="opacity:.45">模試データ接続後に開始</button></div></section>
 </main>
-<nav class="nav">
-  <button data-view="home" class="active">ホーム</button>
-  <button data-view="review">復習</button>
-  <button data-view="mock">模試</button>
-</nav>
+<nav class="nav"><button data-view="home" class="active">ホーム</button><button data-view="review">復習</button><button data-view="mock">模試</button></nav>
 </div>
 <script>
 const questions=[
- {id:'ip-p0-str-001',domain:'strategy',domainName:'ストラテジ系',topic:'損益分岐点',q:'固定費が120万円、製品1個あたりの販売価格が5,000円、変動費が3,000円のとき、損益分岐点販売数量として最も適切なものはどれか。',c:['240個','400個','600個','1,000個'],a:2,short:'1個売るごとに固定費回収へ回せる限界利益は2,000円です。120万円 ÷ 2,000円 = 600個。',detail:'損益分岐点販売数量 = 固定費 ÷（販売単価 − 単位当たり変動費）。売上高ではなく数量を問う場合は、この式で求めます。',source:'独自作問｜シラバス Ver.6.5準拠'},
- {id:'ip-p0-mgt-001',domain:'management',domainName:'マネジメント系',topic:'プロジェクト管理',q:'プロジェクトの作業をWBSで分解する主な目的として、最も適切なものはどれか。',c:['組織の人事評価を自動化する','成果物と作業を管理可能な単位へ分ける','ネットワーク通信量を削減する','障害発生時の暗号鍵を生成する'],a:1,short:'WBSは、プロジェクトの成果物や作業を管理しやすい単位まで階層的に分解するために使います。',detail:'WBS（Work Breakdown Structure）はスコープ・工数・担当・進捗の管理基盤になります。人事評価や暗号処理の仕組みではありません。',source:'独自作問｜シラバス Ver.6.5準拠'},
- {id:'ip-p0-tech-001',domain:'technology',domainName:'テクノロジ系',topic:'データベース',q:'関係データベースで、ある表の行を一意に識別するために設定するものはどれか。',c:['主キー','外部キー','ビュー','トランザクション'],a:0,short:'行を一意に識別するのは主キーです。',detail:'外部キーは別表の主キーなどを参照して表同士の関係を表します。ビューは仮想的な表、トランザクションは処理のまとまりです。',source:'独自作問｜シラバス Ver.6.5準拠'},
- {id:'ip-p0-str-002',domain:'strategy',domainName:'ストラテジ系',topic:'知的財産',q:'他社の商品やサービスと区別するために使用する名称やロゴなどを保護する権利として、最も適切なものはどれか。',c:['特許権','商標権','著作権','実用新案権'],a:1,short:'商品・サービスの識別標識である名称やロゴを保護するのは商標権です。',detail:'特許権は発明、実用新案権は物品の形状等に係る考案、著作権は著作物を主に保護します。',source:'独自作問｜シラバス Ver.6.5準拠'},
- {id:'ip-p0-mgt-002',domain:'management',domainName:'マネジメント系',topic:'サービスマネジメント',q:'サービスデスクの役割として最も適切なものはどれか。',c:['利用者からの問合せや障害連絡の窓口を一元化する','経営戦略だけを策定する','全システムのソースコードを自動生成する','会計監査の独立性を保証する'],a:0,short:'サービスデスクは、利用者とサービス提供側の単一の窓口として問合せ・障害などを受け付けます。',detail:'受付だけでなく、記録、一次対応、エスカレーション、状況連絡などを通じて利用者を支援します。',source:'独自作問｜シラバス Ver.6.5準拠'},
- {id:'ip-p0-tech-002',domain:'technology',domainName:'テクノロジ系',topic:'情報セキュリティ',q:'ゼロトラストの考え方として最も適切なものはどれか。',c:['社内ネットワークからの通信は常に信頼する','一度認証した端末は永久に再確認しない','アクセスごとに利用者や端末などを検証して必要最小限の権限を与える','暗号化を行わず物理的隔離だけで安全を確保する'],a:2,short:'ゼロトラストはネットワークの内外だけで無条件に信頼せず、継続的に検証して最小権限でアクセスさせる考え方です。',detail:'「社内だから安全」という境界型の前提に依存せず、ID・端末状態・アクセス先などの条件に基づいて認証・認可します。',source:'独自作問｜シラバス Ver.6.5準拠'}
+{id:'ip-p0-str-001',domain:'strategy',domainName:'ストラテジ系',topic:'損益分岐点',q:'固定費が120万円、製品1個あたりの販売価格が5,000円、変動費が3,000円のとき、損益分岐点販売数量として最も適切なものはどれか。',c:['240個','400個','600個','1,000個'],a:2,short:'1個当たりの限界利益は2,000円。120万円 ÷ 2,000円 = 600個です。',detail:'損益分岐点販売数量 = 固定費 ÷（販売単価 − 単位当たり変動費）で求めます。',source:'独自作問｜シラバス Ver.6.5準拠'},
+{id:'ip-p0-mgt-001',domain:'management',domainName:'マネジメント系',topic:'WBS',q:'プロジェクトの作業をWBSで分解する主な目的として、最も適切なものはどれか。',c:['人事評価を自動化する','成果物と作業を管理可能な単位へ分ける','通信量を削減する','暗号鍵を生成する'],a:1,short:'WBSは成果物や作業を管理しやすい単位へ階層的に分解します。',detail:'スコープ・工数・担当・進捗を管理する基盤として利用します。',source:'独自作問｜シラバス Ver.6.5準拠'},
+{id:'ip-p0-tech-001',domain:'technology',domainName:'テクノロジ系',topic:'データベース',q:'関係データベースで、ある表の行を一意に識別するために設定するものはどれか。',c:['主キー','外部キー','ビュー','トランザクション'],a:0,short:'行を一意に識別するのは主キーです。',detail:'外部キーは別表を参照し、ビューは仮想表、トランザクションは処理のまとまりです。',source:'独自作問｜シラバス Ver.6.5準拠'},
+{id:'ip-p0-str-002',domain:'strategy',domainName:'ストラテジ系',topic:'知的財産',q:'他社の商品やサービスと区別するために使用する名称やロゴなどを保護する権利として、最も適切なものはどれか。',c:['特許権','商標権','著作権','実用新案権'],a:1,short:'名称やロゴなどの識別標識を保護するのは商標権です。',detail:'特許権は発明、実用新案権は考案、著作権は著作物を主に保護します。',source:'独自作問｜シラバス Ver.6.5準拠'},
+{id:'ip-p0-mgt-002',domain:'management',domainName:'マネジメント系',topic:'サービスデスク',q:'サービスデスクの役割として最も適切なものはどれか。',c:['利用者からの問合せや障害連絡の窓口を一元化する','経営戦略だけを策定する','全ソースコードを自動生成する','会計監査の独立性を保証する'],a:0,short:'利用者とサービス提供側の単一窓口として問合せや障害を受け付けます。',detail:'受付、記録、一次対応、エスカレーション、状況連絡などを通じて利用者を支援します。',source:'独自作問｜シラバス Ver.6.5準拠'},
+{id:'ip-p0-tech-002',domain:'technology',domainName:'テクノロジ系',topic:'ゼロトラスト',q:'ゼロトラストの考え方として最も適切なものはどれか。',c:['社内通信は常に信頼する','一度認証した端末は永久に再確認しない','アクセスごとに利用者や端末などを検証し必要最小限の権限を与える','暗号化せず物理隔離だけで安全を確保する'],a:2,short:'内外を問わず継続的に検証し、必要最小限の権限でアクセスさせます。',detail:'「社内だから安全」という前提に依存せず、ID・端末状態・アクセス先などに基づき認証・認可します。',source:'独自作問｜シラバス Ver.6.5準拠'}
 ];
-const storeKey='itpassport-rebuild-prototype-v1';
-let state=JSON.parse(localStorage.getItem(storeKey)||'{"mastery":{"strategy":0,"management":0,"technology":0},"wrong":[],"completed":false,"streak":0,"lastStudy":null}');
-let queue=[...questions],idx=0,answered=false,reviewMode=false;
-const $=id=>document.getElementById(id);
-function save(){localStorage.setItem(storeKey,JSON.stringify(state))}
-function clamp(v){return Math.max(0,Math.min(100,v))}
-function updateHome(){
- ['strategy','management','technology'].forEach(d=>{const v=Math.round(state.mastery[d]||0);$(d+'Val').textContent=v+'%';$(d+'Bar').style.width=v+'%'});
- $('reviewCount').textContent=(state.wrong||[]).length+'問';$('streak').textContent=(state.streak||0)+'日';
- if(state.completed){$('heroTitle').textContent='今日の10問で弱点を1つ減らす';$('heroText').textContent='足切りリスクが高い分野と、忘れやすい論点から優先して出題します。';$('startBtn').textContent='今日の学習を始める';$('todayPill').textContent='次にやること'}
-}
-function setView(name){['home','practice','review','mock'].forEach(v=>$(v+'View').classList.toggle('hidden',v!==name));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));if(name==='review')renderReview();}
-function begin(mode='diagnostic'){
- reviewMode=mode==='review';queue=reviewMode?questions.filter(q=>(state.wrong||[]).includes(q.id)):[...questions];if(!queue.length){queue=[...questions]};idx=0;answered=false;$('modeLabel').textContent=reviewMode?'復習':'初回診断';setView('practice');renderQuestion();
-}
-function renderQuestion(){const q=queue[idx];$('qNum').textContent=(idx+1)+' / '+queue.length;$('domainPill').textContent=q.domainName;$('qText').textContent=q.q;$('feedback').className='feedback hidden';$('nextBtn').classList.add('hidden');answered=false;const box=$('choices');box.innerHTML='';q.c.forEach((t,i)=>{const b=document.createElement('button');b.className='choice';b.textContent=(i+1)+'. '+t;b.onclick=()=>answer(i,b);box.appendChild(b)})}
-function answer(choice,button){if(answered)return;answered=true;const q=queue[idx],correct=choice===q.a;document.querySelectorAll('.choice').forEach((b,i)=>{b.disabled=true;if(i===q.a)b.classList.add('correct')});if(!correct)button.classList.add('wrong');state.mastery[q.domain]=clamp((state.mastery[q.domain]||0)+(correct?12:-8));if(correct){state.wrong=(state.wrong||[]).filter(id=>id!==q.id)}else if(!(state.wrong||[]).includes(q.id)){state.wrong.push(q.id)};const f=$('feedback');f.className='feedback '+(correct?'good':'bad');f.innerHTML='<div class="feedback-title">'+(correct?'正解':'不正解')+'</div><div>'+q.short+'</div><details class="detail"><summary>詳しい解説を見る</summary><div style="margin-top:8px">'+q.detail+'</div><div class="source">'+q.source+'</div></details>';$('nextBtn').classList.remove('hidden');save()}
-function finish(){state.completed=true;const today=new Date().toISOString().slice(0,10);if(state.lastStudy!==today){state.streak=(state.streak||0)+1;state.lastStudy=today}save();updateHome();setView('home')}
-$('nextBtn').onclick=()=>{idx++;if(idx>=queue.length)finish();else renderQuestion()};
-$('startBtn').onclick=()=>begin(state.completed?'daily':'diagnostic');
-$('reviewStart').onclick=()=>begin('review');
-document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>setView(b.dataset.view));
-function renderReview(){const list=$('reviewList'),ids=state.wrong||[];if(!ids.length){list.innerHTML='<div class="empty"><h3>復習待ちはありません</h3><div class="small">診断や今日の学習で間違えた問題がここに入ります。</div></div>';return}list.innerHTML=ids.map(id=>{const q=questions.find(x=>x.id===id);return '<div class="review-item"><div><div class="review-topic">'+q.topic+'</div><div class="review-meta">'+q.domainName+'</div></div><span class="pill">要復習</span></div>'}).join('')}
-updateHome();
+const key='itpassport-rebuild-prototype-v2';
+const defaultState={mastery:{strategy:0,management:0,technology:0},wrong:[],completed:false,streak:0,lastStudy:null};
+let state=JSON.parse(localStorage.getItem(key)||JSON.stringify(defaultState));
+let queue=[],idx=0,answered=false,currentMode='diagnostic';
+const $=id=>document.getElementById(id);const clamp=v=>Math.max(0,Math.min(100,v));const save=()=>localStorage.setItem(key,JSON.stringify(state));
+function updateHome(){['strategy','management','technology'].forEach(d=>{const v=Math.round(state.mastery[d]||0);$(d+'Val').textContent=v+'%';$(d+'Bar').style.width=v+'%'});$('reviewCount').textContent=(state.wrong||[]).length+'問';$('streak').textContent=(state.streak||0)+'日';if(state.completed){$('todayPill').textContent='次にやること';$('heroTitle').textContent='今日の6問で弱点を1つ減らす';$('heroText').textContent='間違えた問題と習熟度の低い分野を優先して並べます。';$('startBtn').textContent='今日の学習を始める'}}
+function setView(name){['home','practice','review','mock'].forEach(v=>$(v+'View').classList.toggle('hidden',v!==name));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));if(name==='review')renderReview()}
+function dailyQueue(){return [...questions].sort((a,b)=>{const aw=state.wrong.includes(a.id)?0:1,bw=state.wrong.includes(b.id)?0:1;if(aw!==bw)return aw-bw;return (state.mastery[a.domain]||0)-(state.mastery[b.domain]||0)})}
+function begin(mode){currentMode=mode;queue=mode==='review'?questions.filter(q=>state.wrong.includes(q.id)):mode==='daily'?dailyQueue():[...questions];if(!queue.length)queue=dailyQueue();idx=0;$('modeLabel').textContent={diagnostic:'初回診断',daily:'今日の学習',review:'復習'}[mode];setView('practice');renderQuestion()}
+function renderQuestion(){answered=false;const q=queue[idx];$('qNum').textContent=(idx+1)+' / '+queue.length;$('domainPill').textContent=q.domainName;$('qText').textContent=q.q;$('feedback').classList.add('hidden');$('nextBtn').classList.add('hidden');const box=$('choices');box.innerHTML='';q.c.forEach((text,i)=>{const b=document.createElement('button');b.className='choice';b.textContent=(i+1)+'. '+text;b.onclick=()=>answer(i,b);box.appendChild(b)})}
+function answer(choice,button){if(answered)return;answered=true;const q=queue[idx],correct=choice===q.a;document.querySelectorAll('.choice').forEach((b,i)=>{b.disabled=true;if(i===q.a)b.classList.add('correct')});if(!correct)button.classList.add('wrong');state.mastery[q.domain]=clamp((state.mastery[q.domain]||0)+(correct?12:-8));if(correct)state.wrong=state.wrong.filter(id=>id!==q.id);else if(!state.wrong.includes(q.id))state.wrong.push(q.id);const f=$('feedback');f.classList.remove('hidden');f.innerHTML='<div class="feedback-title">'+(correct?'正解':'不正解')+'</div><div>'+q.short+'</div><details class="detail"><summary>詳しい解説を見る</summary><div style="margin-top:8px">'+q.detail+'</div><div class="source">'+q.source+'</div></details>';$('nextBtn').classList.remove('hidden');save()}
+function finish(){state.completed=true;const today=new Date().toLocaleDateString('sv-SE');if(state.lastStudy!==today){state.streak=(state.streak||0)+1;state.lastStudy=today}save();updateHome();setView('home')}
+function renderReview(){const list=$('reviewList');if(!state.wrong.length){list.innerHTML='<div class="empty"><h2>復習待ちはありません</h2><div class="small">間違えた問題がここに自動で入ります。</div></div>';return}list.innerHTML=state.wrong.map(id=>{const q=questions.find(x=>x.id===id);return '<div class="review-item"><div><div class="review-topic">'+q.topic+'</div><div class="small">'+q.domainName+'</div></div><span class="pill">要復習</span></div>'}).join('')}
+$('startBtn').onclick=()=>begin(state.completed?'daily':'diagnostic');$('reviewStart').onclick=()=>begin('review');$('nextBtn').onclick=()=>{idx++;idx>=queue.length?finish():renderQuestion()};document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>setView(b.dataset.view));updateHome();
 </script>
 </body>
 </html>
