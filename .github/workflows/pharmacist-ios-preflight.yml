@@ -32,13 +32,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Static native release audit
+      - name: Static no-IAP release audit
         run: python3 pharmacist-manabi-sprint/scripts/validate_release.py
 
       - name: Shell and Python syntax
         run: |
           bash -n pharmacist-manabi-sprint/ios/prepare-ios.sh
-          python3 -m py_compile pharmacist-manabi-sprint/ios/apply-xcode-capabilities.py pharmacist-manabi-sprint/scripts/validate_release.py
+          python3 -m py_compile pharmacist-manabi-sprint/scripts/validate_release.py
 
       - name: Install XcodeGen
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
@@ -55,20 +55,19 @@ jobs:
           p='pharmacist-manabi-sprint/ios/Generated/questions.native.json'
           d=json.load(open(p,encoding='utf-8'))
           q=d['questions']; active=[x for x in q if x['scoringStatus']!='excluded']
-          free=[x for x in active if x['exam']==111 and x['section']=='必須']
           flex=[x for x in q if x['scoringStatus']=='multiple_accepted']
-          assert len(q)==1035 and len(active)==1031 and len(free)==90 and len(flex)==3
+          media=[x for x in q if x['displayMode']=='officialQuestionImage']
+          assert len(q)==1035 and len(active)==1031 and len(flex)==3 and len(media)==154
           assert all(x['memoryPoint'] and x['explanation'] for x in q)
-          print('PASS native resource:',len(q),'active',len(active),'free',len(free),'flex',len(flex))
+          print('PASS native resource:',len(q),'active',len(active),'flex',len(flex),'media',len(media))
           PY
 
-      - name: Generate Xcode project and enable IAP capability
+      - name: Generate Xcode project and enforce no IAP capability
         run: |
           cd pharmacist-manabi-sprint/ios
           xcodegen generate
-          python3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj
-          grep -q 'com.apple.InAppPurchase' PharmacistSprint.xcodeproj/project.pbxproj
-          ! grep -R -q 'WKWebView\|import WebKit' --include='*.swift' .
+          ! grep -q 'com.apple.InAppPurchase' PharmacistSprint.xcodeproj/project.pbxproj
+          ! grep -R -q 'import StoreKit\|StoreKitManager\|PaywallView\|WKWebView\|import WebKit' --include='*.swift' .
 
       - name: Native unit tests
         id: tests
@@ -78,7 +77,7 @@ jobs:
           UDID=$(python3 - <<'PY'
           import json,subprocess
           d=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
-          for runtime,devices in d['devices'].items():
+          for devices in d['devices'].values():
               for x in devices:
                   if x.get('isAvailable') and x.get('name','').startswith('iPhone'):
                       print(x['udid']); raise SystemExit
@@ -144,6 +143,8 @@ jobs:
           out={
             'pass': t==0 and b==0 and r==0,
             'architecture':'SwiftUI-native',
+            'monetization':'none',
+            'allScoredQuestionsUnlocked':True,
             'webViewRuntime':False,
             'unitTestExit':t,
             'releaseBuildExit':b,
@@ -153,8 +154,7 @@ jobs:
             'version':'1.0.0',
             'questionBank':1035,
             'activeQuestions':1031,
-            'freeQuestions':90,
-            'note':'Internal TestFlight only. Signed build still requires Apple/App Store Connect/Codemagic account-side signing and IAP configuration.'
+            'note':'No IAP. All 1,031 scored questions are available without purchase.'
           }
           open('pharmacist-manabi-sprint/content/product/ios-preflight-report.json','w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
           print(json.dumps(out,ensure_ascii=False))
@@ -164,13 +164,13 @@ jobs:
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git add pharmacist-manabi-sprint/content/product/ios-preflight-report.json
             if ! git diff --cached --quiet; then
-              git commit -m 'pharmacist: native iOS preflight result [skip ci]'
+              git commit -m 'pharmacist: no-IAP iOS preflight result [skip ci]'
               git pull --rebase origin main
               git push
             fi
           fi
 
-      - name: Enforce native TestFlight preflight gate
+      - name: Enforce native preflight gate
         run: |
           test "${{ steps.tests.outputs.exit_code }}" = '0'
           test "${{ steps.build.outputs.exit_code }}" = '0'
