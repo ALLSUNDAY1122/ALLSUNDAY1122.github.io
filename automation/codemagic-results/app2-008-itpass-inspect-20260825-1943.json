@@ -1,0 +1,142 @@
+{
+  "request_id": "app2-008-itpass-inspect-20260825-1943",
+  "build_id": "6a8d7153a2097ffb4c113903",
+  "build": {
+    "data": {
+      "id": "6a8d7153a2097ffb4c113903",
+      "app_id": "6a6b41e1bd25e8664f94a9c3",
+      "workflow": {
+        "id": "ios-native",
+        "source": "file",
+        "name": "IT Passport Manabi Sprint iOS TestFlight"
+      },
+      "instance_type": "mac_mini_m2",
+      "status": "failed",
+      "index": 13,
+      "artifacts": [],
+      "labels": [],
+      "release_notes": [],
+      "created_at": "2026-08-25T10:41:23.458000Z",
+      "config": {
+        "flutter_mode": null,
+        "shorebird_mode": null,
+        "flutter_version": null,
+        "xcode_version": "latest",
+        "platforms": []
+      },
+      "remote_access_enabled": false,
+      "commit": {
+        "hash": "218b64d88ca1f14087296f9d53b6d9ac3eb60c5f",
+        "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+        "author_name": "ALLSUNDAY1122",
+        "author_email": "kohei3615@gmail.com",
+        "message": "Store canonical IT Passport AppIcon transport part 00",
+        "url": "https://github.com/ALLSUNDAY1122/it-passport-quiz-ios/commit/218b64d88ca1f14087296f9d53b6d9ac3eb60c5f"
+      },
+      "branch": "main",
+      "tag": null,
+      "pull_request": null,
+      "app_store_connect_status": null,
+      "build_inputs": {},
+      "started_at": "2026-08-25T10:41:32.597000Z",
+      "finished_at": "2026-08-25T10:42:14.322000Z"
+    }
+  },
+  "actions": {
+    "data": [
+      {
+        "id": "6a8d7154f061af3624bb8ceb",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-25T10:41:32.925000Z",
+        "finished_at": "2026-08-25T10:42:07.705000Z"
+      },
+      {
+        "id": "6a8d7154f061af3624bb8cec",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-25T10:42:07.705000Z",
+        "finished_at": "2026-08-25T10:42:10.947000Z"
+      },
+      {
+        "id": "6a8d7154f061af3624bb8cea",
+        "name": "Set up code signing identities",
+        "type": "setup_code_signing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-25T10:42:10.947000Z",
+        "finished_at": "2026-08-25T10:42:13.184000Z"
+      },
+      {
+        "id": "6a8d7154f061af3624bb8ced",
+        "name": "Apply question difficulty and quality audit",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\npython3 scripts/apply-question-quality-audit.py",
+        "status": "success",
+        "started_at": "2026-08-25T10:42:13.184000Z",
+        "finished_at": "2026-08-25T10:42:13.597000Z"
+      },
+      {
+        "id": "6a8d7154f061af3624bb8cee",
+        "name": "Verify approved AppIcon and set unique build number",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nbash scripts/prepare-approved-icon.sh",
+        "status": "failed",
+        "started_at": "2026-08-25T10:42:13.597000Z",
+        "finished_at": "2026-08-25T10:42:14.082000Z"
+      },
+      {
+        "id": "6a8d7154f061af3624bb8cef",
+        "name": "Apply App Store signing profile",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nxcode-project use-profiles",
+        "status": "skipped",
+        "started_at": "2026-08-25T10:42:14.082000Z",
+        "finished_at": "2026-08-25T10:42:14.082000Z"
+      },
+      {
+        "id": "6a8d7154f061af3624bb8cf0",
+        "name": "Build signed IPA",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nxcode-project build-ipa --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" --scheme \"$XCODE_SCHEME\"",
+        "status": "skipped",
+        "started_at": "2026-08-25T10:42:14.082000Z",
+        "finished_at": "2026-08-25T10:42:14.083000Z"
+      },
+      {
+        "id": "6a8d7154f061af3624bb8cf1",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-25T10:42:14.083000Z",
+        "finished_at": "2026-08-25T10:42:14.237000Z"
+      },
+      {
+        "id": "6a8d7154f061af3624bb8cf2",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-25T10:42:14.237000Z",
+        "finished_at": "2026-08-25T10:42:14.322000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
