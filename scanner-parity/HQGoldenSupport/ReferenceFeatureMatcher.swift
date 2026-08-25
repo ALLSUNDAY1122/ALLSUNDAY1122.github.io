@@ -97,10 +97,10 @@ public enum ReferenceFeatureMatcher {
 
             return ReferenceNearestMatch(
                 outputIndex: outputIndex,
-                referenceIndex: nearestGroup.groupIndex,
+                referenceIndex: nearestGroup.sourceReferenceIndex,
                 distance: nearestGroup.distance,
                 secondBestDistance: groupDistances.dropFirst().first?.distance,
-                sourceReferenceIndex: nearestGroup.sourceReferenceIndex,
+                canonicalReferenceIndex: nearestGroup.groupIndex,
                 referenceCorpusPageCount: corpus.manifest.groups.count,
                 referenceCorpusGroupID: nearestGroup.groupID,
                 nearestNegativeReferenceIndex: nearestNegative?.0,
