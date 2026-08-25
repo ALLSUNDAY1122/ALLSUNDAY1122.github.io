@@ -34,3 +34,42 @@ jobs:
       - name: Integrated SwiftPM tests
         working-directory: tech-assets/moises-audio
         run: swift test --parallel
+
+  portable-cross-lane-typecheck:
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.0
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
+      - name: Cross-lane source typecheck
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sources=(
+            Shared/DomainContracts.swift
+            Shared/LibraryContracts.swift
+            App/VerticalSliceCoordinator.swift
+            IO/Sources/*.swift
+            Library/Sources/*.swift
+            Playback/Sources/*.swift
+            DSP/Sources/*.swift
+          )
+          if [ "${#sources[@]}" -lt 8 ]; then
+            echo "Cross-lane source discovery unexpectedly small: ${#sources[@]}" >&2
+            exit 1
+          fi
+          printf 'Cross-lane typecheck source count: %s\n' "${#sources[@]}"
+          printf '%s\n' "${sources[@]}"
+          swiftc \
+            -swift-version 6 \
+            -strict-concurrency=complete \
+            -warnings-as-errors \
+            -parse-as-library \
+            -typecheck \
+            "${sources[@]}"
