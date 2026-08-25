@@ -17,7 +17,21 @@ final class SH3PreservingGaussianTrainer {
     @discardableResult
     func step() -> TrainingStats {
         applyThermalPacingBeforeStep()
-        return base.step()
+
+        // Build 6 physical evidence showed repeated memory-pressure pauses after a long-running
+        // reconstruction pass. Keep each Msplat step inside its own autorelease scope so temporary
+        // Objective-C / Metal wrapper objects do not wait for the outer run-level pool to drain.
+        // Every twentieth iteration is also the app's resource-sampling cadence; synchronize queued
+        // Metal work before returning that sample so the guard measures the settled footprint rather
+        // than an in-flight command-buffer high-water mark. This changes lifetime/wall-clock only —
+        // no frame, resolution, Gaussian, optimizer, SH or iteration quality contract is reduced.
+        return autoreleasepool {
+            let stats = base.step()
+            if stats.iteration % 20 == 0 {
+                msplatSync()
+            }
+            return stats
+        }
     }
 
     private func applyThermalPacingBeforeStep() {
