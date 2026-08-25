@@ -121,12 +121,25 @@ public struct PlaybackTransportRescheduleFence: Equatable, Sendable {
 /// make an older click/audio replacement current again. HQ integration can use the `*AndReturnToken`
 /// methods to bind PracticeDSP invalidation to the exact Playback discontinuity without changing the
 /// frozen Shared/App protocol.
+///
+/// AW38 also records a bounded per-generation uptime ledger at the exact issuance boundary. A
+/// successful seek/loop attaches the target only after the underlying backend returns, so evidence
+/// cannot mistake a requested target for one whose backend call failed.
 public actor RescheduleFencedPlaybackBackend: PlaybackBackendDriving {
     private let backend: any PlaybackBackendDriving
+    private let timingClock: any Lane3UptimeNanosecondClock
+    private let timingCapacity: Int
     private var fences: [ProjectID: PlaybackTransportRescheduleFence] = [:]
+    private var timingLedgers: [ProjectID: Lane3TransportTokenTimingLedger] = [:]
 
-    public init(backend: any PlaybackBackendDriving) {
+    public init(
+        backend: any PlaybackBackendDriving,
+        timingClock: any Lane3UptimeNanosecondClock = Lane3SystemUptimeNanosecondClock(),
+        timingCapacity: Int = 4_096
+    ) {
         self.backend = backend
+        self.timingClock = timingClock
+        self.timingCapacity = timingCapacity
     }
 
     @discardableResult
@@ -136,6 +149,7 @@ public actor RescheduleFencedPlaybackBackend: PlaybackBackendDriving {
     ) async throws -> PlaybackTransportRescheduleToken {
         let token = try begin(projectID: projectID, reason: .mediaLoad)
         try await backend.loadSource(projectID: projectID, asset: asset)
+        markBackendCompleted(projectID: projectID, token: token, appliedTarget: nil)
         return token
     }
 
@@ -159,6 +173,7 @@ public actor RescheduleFencedPlaybackBackend: PlaybackBackendDriving {
             resume: resume,
             loop: loop
         )
+        markBackendCompleted(projectID: projectID, token: token, appliedTarget: nil)
         return token
     }
 
@@ -199,6 +214,11 @@ public actor RescheduleFencedPlaybackBackend: PlaybackBackendDriving {
             resume: resume,
             loop: loop
         )
+        markBackendCompleted(
+            projectID: projectID,
+            token: token,
+            appliedTarget: .seek(positionSeconds: positionSeconds)
+        )
         return token
     }
 
@@ -223,6 +243,13 @@ public actor RescheduleFencedPlaybackBackend: PlaybackBackendDriving {
     ) async throws -> PlaybackTransportRescheduleToken {
         let token = try begin(projectID: projectID, reason: .loopChange)
         try await backend.setLoop(projectID: projectID, loop: loop)
+        let target: Lane3TransportAppliedTarget
+        if let loop {
+            target = .loop(startSeconds: loop.startSeconds, endSeconds: loop.endSeconds)
+        } else {
+            target = .loopDisabled
+        }
+        markBackendCompleted(projectID: projectID, token: token, appliedTarget: target)
         return token
     }
 
@@ -236,6 +263,7 @@ public actor RescheduleFencedPlaybackBackend: PlaybackBackendDriving {
     ) async throws -> PlaybackTransportRescheduleToken {
         let token = try begin(projectID: projectID, reason: .play)
         try await backend.play(projectID: projectID)
+        markBackendCompleted(projectID: projectID, token: token, appliedTarget: nil)
         return token
     }
 
@@ -251,6 +279,9 @@ public actor RescheduleFencedPlaybackBackend: PlaybackBackendDriving {
     ) async -> PlaybackTransportRescheduleToken? {
         let token = beginNonThrowing(projectID: projectID, reason: .pause)
         await backend.pause(projectID: projectID)
+        if let token {
+            markBackendCompleted(projectID: projectID, token: token, appliedTarget: nil)
+        }
         return token
     }
 
@@ -283,6 +314,20 @@ public actor RescheduleFencedPlaybackBackend: PlaybackBackendDriving {
         fences[projectID]?.currentToken
     }
 
+    public func rescheduleTokenTiming(
+        projectID: ProjectID,
+        generation: UInt64
+    ) -> Lane3TransportTokenTimingSample? {
+        timingLedgers[projectID]?.sample(generation: generation)
+    }
+
+    public func rescheduleTokenTimingLedgerSnapshot(
+        projectID: ProjectID
+    ) -> Lane3TransportTokenTimingLedgerSnapshot {
+        timingLedgers[projectID]?.snapshot()
+            ?? Lane3TransportTokenTimingLedger(capacity: timingCapacity).snapshot()
+    }
+
     public func acceptsCompletion(
         projectID: ProjectID,
         token: PlaybackTransportRescheduleToken
@@ -298,6 +343,7 @@ public actor RescheduleFencedPlaybackBackend: PlaybackBackendDriving {
         var fence = fences[projectID] ?? PlaybackTransportRescheduleFence()
         let token = try fence.invalidate(for: reason)
         fences[projectID] = fence
+        recordTokenIssued(projectID: projectID, token: token)
         return token
     }
 
@@ -308,6 +354,36 @@ public actor RescheduleFencedPlaybackBackend: PlaybackBackendDriving {
         var fence = fences[projectID] ?? PlaybackTransportRescheduleFence()
         let token = fence.invalidateNonThrowing(for: reason)
         fences[projectID] = fence
+        if let token {
+            recordTokenIssued(projectID: projectID, token: token)
+        }
         return token
+    }
+
+    private func recordTokenIssued(
+        projectID: ProjectID,
+        token: PlaybackTransportRescheduleToken
+    ) {
+        var ledger = timingLedgers[projectID]
+            ?? Lane3TransportTokenTimingLedger(capacity: timingCapacity)
+        ledger.recordIssued(
+            token: token,
+            uptimeNanoseconds: timingClock.nowUptimeNanoseconds()
+        )
+        timingLedgers[projectID] = ledger
+    }
+
+    private func markBackendCompleted(
+        projectID: ProjectID,
+        token: PlaybackTransportRescheduleToken,
+        appliedTarget: Lane3TransportAppliedTarget?
+    ) {
+        guard var ledger = timingLedgers[projectID] else { return }
+        _ = ledger.markBackendCompleted(
+            generation: token.generation,
+            uptimeNanoseconds: timingClock.nowUptimeNanoseconds(),
+            appliedTarget: appliedTarget
+        )
+        timingLedgers[projectID] = ledger
     }
 }
