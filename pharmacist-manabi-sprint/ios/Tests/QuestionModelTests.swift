@@ -47,12 +47,6 @@ final class QuestionModelTests: XCTestCase {
         XCTAssertEqual(q.selectionCount, 2)
     }
 
-    func testFreeGateIsOnlyExam111Mandatory() {
-        XCTAssertTrue(question(exam: 111, section: "必須").isFree)
-        XCTAssertFalse(question(exam: 110, section: "必須").isFree)
-        XCTAssertFalse(question(exam: 111, section: "理論").isFree)
-    }
-
     func testLearningStateJSONRoundTripPreservesDailyAndWeakData() throws {
         var state = LearningState()
         state.totalAnswered = 8
@@ -77,7 +71,22 @@ final class QuestionModelTests: XCTestCase {
     }
 
     @MainActor
-    func testPremiumDailySprintMatchesOfficialSectionRatio() {
+    func testNoIAPReleaseHasAllScoredQuestionsAvailable() {
+        let store = LearningStore()
+        XCTAssertEqual(store.questions.count, 1035)
+        XCTAssertEqual(store.activeQuestions.count, 1031)
+
+        let allSectionQuestions = [111, 110, 109].flatMap { exam in
+            ["必須", "理論", "実践"].flatMap { section in
+                store.sectionQuestions(exam: exam, section: section, premium: true)
+            }
+        }
+        XCTAssertEqual(allSectionQuestions.count, 1031)
+        XCTAssertEqual(Set(allSectionQuestions.map(\.id)).count, 1031)
+    }
+
+    @MainActor
+    func testDailySprintMatchesOfficialSectionRatio() {
         let store = LearningStore()
         XCTAssertEqual(store.questions.count, 1035)
         XCTAssertEqual(store.activeQuestions.count, 1031)
@@ -103,7 +112,6 @@ final class QuestionModelTests: XCTestCase {
             XCTAssertEqual(sections.filter { $0 == "実践" }.count, expected.practical)
             XCTAssertEqual(sections.count, expected.goal)
         }
-
         store.resetLearningData()
     }
 
@@ -126,7 +134,6 @@ final class QuestionModelTests: XCTestCase {
         XCTAssertEqual(store.activeSession?.ids.count, batches[0].count)
         XCTAssertNotEqual(store.activeSession?.ids.count, store.state.goal, "分野別は今日の8問設定で切らない")
         XCTAssertEqual(store.activeSession?.field, field)
-
         store.resetLearningData()
     }
 
@@ -140,7 +147,7 @@ final class QuestionModelTests: XCTestCase {
         store.updateShuffleQuestions(false)
 
         let before = store.learningProgress
-        store.startDaily(premium: false)
+        store.startDaily(premium: true)
         XCTAssertNotNil(store.currentQuestion)
         store.revealUnknown()
 
@@ -150,7 +157,6 @@ final class QuestionModelTests: XCTestCase {
         XCTAssertEqual(store.todayRecord.correct, 0)
         XCTAssertGreaterThan(store.learningProgress, before, "達成度は正答率ではなくユニーク着手率なので0%のままにしない")
         XCTAssertEqual(store.weakCount, 1)
-
         store.resetLearningData()
     }
 }
