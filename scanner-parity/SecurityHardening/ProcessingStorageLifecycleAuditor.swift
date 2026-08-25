@@ -36,11 +36,9 @@ public struct ProcessingStorageLifecycleAuditor: Sendable {
             productionRuntimeSource.contains($0)
         }
         if usesPersistentWorkspace && writesIntermediateStages {
-            let hasWorkspacePurge = productFlowStoreSource.contains("removeItem(at: workspace") ||
-                productFlowStoreSource.contains("removeItem(at: workspaceRoot") ||
-                productFlowStoreSource.contains("purgeProcessingWorkspace") ||
+            let hasExplicitWorkspacePurge = productFlowStoreSource.contains("purgeProcessingWorkspace") ||
                 productFlowStoreSource.contains("cleanupProcessingWorkspace")
-            if !hasWorkspacePurge {
+            if !hasExplicitWorkspacePurge {
                 issues.append(.processingWorkspaceNotPurged)
             }
         }
