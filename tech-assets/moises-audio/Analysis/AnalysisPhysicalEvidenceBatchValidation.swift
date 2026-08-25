@@ -9,10 +9,23 @@ public enum AnalysisPhysicalEvidenceBatchAssemblyValidator {
               value.w27Report.issues.isEmpty,
               value.w38Report.status == .rootConsistentPendingHQ,
               value.w38Report.issues.isEmpty,
+              value.w27Manifest.archiveID == value.w27Policy.expectedArchiveID,
+              value.w27Manifest.policyID == value.w27Policy.policyID,
+              value.w27Manifest.binding == value.w27Policy.binding,
+              value.w38Manifest.archiveID == value.w38Policy.expectedArchiveID,
+              value.w38Manifest.policyID == value.w38Policy.policyID,
+              value.w38Manifest.binding == value.w38Policy.binding,
+              value.w38Manifest.legacyW27ArchiveID == value.w27Policy.expectedArchiveID,
+              value.w38Policy.legacyW27PolicyID == value.w27Policy.policyID,
+              value.w38Policy.legacyW27ArchiveID == value.w27Policy.expectedArchiveID,
               value.w38Policy.legacyW27RootSHA256 == value.w27Manifest.declaredRootSHA256.lowercased(),
               value.w38Manifest.legacyW27RootSHA256 == value.w27Manifest.declaredRootSHA256.lowercased(),
               value.w27Report.computedRootSHA256 == value.w27Manifest.declaredRootSHA256.lowercased(),
               value.w38Report.computedRootSHA256 == value.w38Manifest.declaredRootSHA256.lowercased(),
+              value.w27Report.archiveID == value.w27Manifest.archiveID,
+              value.w38Report.archiveID == value.w38Manifest.archiveID,
+              value.w27Report.entryCount == value.w27Manifest.entries.count,
+              value.w38Report.entryCount == value.w38Manifest.entries.count,
               (try? AnalysisPhysicalEvidenceArchiveRoot.compute(value.w27Manifest)) == value.w27Manifest.declaredRootSHA256.lowercased(),
               (try? AnalysisPhysicalEvidenceArchiveChainRoot.compute(value.w38Manifest)) == value.w38Manifest.declaredRootSHA256.lowercased() else {
             return false
@@ -25,6 +38,10 @@ public enum AnalysisPhysicalEvidenceBatchAssemblyValidator {
               Set(executionIDs).count == executionIDs.count,
               Set(runIDs) == Set(value.w27Policy.requiredRunIDs),
               Set(runIDs) == Set(value.w38Policy.requiredRunIDs),
+              value.w27Policy.requiredRunIDs.count == runIDs.count,
+              value.w38Policy.requiredRunIDs.count == runIDs.count,
+              value.w27Report.runCount == runIDs.count,
+              value.w38Report.runCount == runIDs.count,
               value.runSummaries.allSatisfy {
                   AnalysisPhysicalEvidenceW39BatchLoader.safeComponent($0.runID)
                       && AnalysisPhysicalEvidenceW39BatchLoader.safeComponent($0.workloadExecutionID)
@@ -59,6 +76,27 @@ public enum AnalysisPhysicalEvidenceBatchAssemblyValidator {
                     && $0.byteLength == singleton.byteLength
                     && $0.runID == nil
             }) else { return false }
+        }
+
+        for runID in runIDs {
+            let w27RunEntries = value.w27Manifest.entries.filter { $0.runID == runID }
+            guard w27RunEntries.count == AnalysisPhysicalEvidenceArtifactRole.requiredPerRunRoles.count,
+                  Set(w27RunEntries.map(\.role)) == AnalysisPhysicalEvidenceArtifactRole.requiredPerRunRoles else {
+                return false
+            }
+            let w38RunEntries = value.w38Manifest.entries.filter { $0.runID == runID }
+            guard w38RunEntries.count == AnalysisPhysicalEvidenceChainArtifactRole.requiredPerRunRoles.count,
+                  Set(w38RunEntries.map(\.role)) == AnalysisPhysicalEvidenceChainArtifactRole.requiredPerRunRoles else {
+                return false
+            }
+        }
+        let expectedW27Count = requiredSingletons.count + runIDs.count * AnalysisPhysicalEvidenceArtifactRole.requiredPerRunRoles.count
+        let expectedW38Count = runIDs.count * AnalysisPhysicalEvidenceChainArtifactRole.requiredPerRunRoles.count
+        guard value.w27Manifest.entries.count == expectedW27Count,
+              value.w38Manifest.entries.count == expectedW38Count,
+              Set(value.w27Manifest.entries.map(\.relativePath)).count == expectedW27Count,
+              Set(value.w38Manifest.entries.map(\.relativePath)).count == expectedW38Count else {
+            return false
         }
 
         let root = try? AnalysisPhysicalEvidenceBatchAssembler.computeBatchRoot(
