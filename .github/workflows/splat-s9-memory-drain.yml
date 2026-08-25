@@ -1,0 +1,24 @@
+name: Splat S9 Memory Drain Contract
+
+on:
+  push:
+    branches:
+      - scaniverse/s9-memory-drain-confirmation
+  pull_request:
+    paths:
+      - 'splat-native-ios/SplatNative/SH3PreservingGaussianTrainer.swift'
+      - 'splat-native-ios/SplatNative/SplatReconstructionPolicy.swift'
+      - 'splat-native-ios/SplatNative/SplatResourceGuard.swift'
+      - 'splat-native-ios/SplatNative/ScanModel.swift'
+      - 'splat-native-ios/scripts/test_s9_memory_drain_contract.py'
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify per-step drain and protected quality limits
+        run: python3 splat-native-ios/scripts/test_s9_memory_drain_contract.py
