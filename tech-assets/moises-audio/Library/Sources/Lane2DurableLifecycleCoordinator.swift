@@ -108,14 +108,22 @@ public actor Lane2DurableLifecycleCoordinator {
             registrationIntentID = intent.id
             activeExportRegistrationIntents.insert(intent.id)
 
+            // AW36: close the post-prepare/pre-metadata TOCTOU. The durable intent remains if
+            // published bytes drift after AW35 prepare verification.
+            try registrationJournal.revalidatePublishedBatchIntegrityIfPresent(intent: intent)
+
             _ = try await metadata.recordExports(
                 projectUUID: request.projectID.rawValue,
                 artifacts: produced.map { ($0.relativePath, $0.mediaType) }
             )
             metadataCommitted = true
 
+            // AW36: metadata may have committed immediately before a process death or content
+            // mutation. Revalidate again before intent retirement. Failure intentionally leaves the
+            // intent durable so relaunch recovery fails closed rather than blessing changed bytes.
+            try registrationJournal.revalidatePublishedBatchIntegrityIfPresent(intent: intent)
             activeExportRegistrationIntents.remove(intent.id)
-            try? registrationJournal.complete(intentID: intent.id)
+            try registrationJournal.complete(intentID: intent.id)
             return produced
         } catch {
             if let registrationIntentID {
@@ -203,8 +211,6 @@ public actor Lane2DurableLifecycleCoordinator {
             quarantined = [preserved]
         }
 
-        // This is safe even while export recovery is blocked: ownership comes from canonical Library
-        // and writes only per-project ownership shards, never export sidecars or user audio.
         try await reconcileProjectOwnership()
         return Lane2LifecycleCanonicalRecoveryReport(
             quarantinedRelativePaths: quarantined,
@@ -217,10 +223,6 @@ public actor Lane2DurableLifecycleCoordinator {
         try await quarantineRecovery.barrier()
     }
 
-    /// Resolves an export-quarantine barrier only from explicit caller decisions. Restored paths
-    /// must still exist as non-empty Exports/** files. Attributed corrupt projects require either a
-    /// complete restored set or an explicit empty acknowledgement. Unattributed legacy/corrupt
-    /// filenames require a separate metadata-loss acknowledgement before destructive sweeps resume.
     @discardableResult
     public func resolveQuarantinedExportMetadata(
         _ resolution: Lane2ExportMetadataRecoveryResolution
@@ -261,7 +263,6 @@ public actor Lane2DurableLifecycleCoordinator {
             }
         }
 
-        // Verify the post-recovery sidecar can be fully decoded and contains the requested restores.
         let after = try await metadata.snapshot()
         for (projectUUID, restored) in grouped {
             let existing = after.exports.filter { $0.projectUUID == projectUUID }
@@ -280,8 +281,6 @@ public actor Lane2DurableLifecycleCoordinator {
         )
     }
 
-    /// Relaunch convergence for a process death after export publication but before registration,
-    /// or after metadata registration but before the durable handoff intent was removed.
     @discardableResult
     public func recoverPendingExportRegistrations() async throws -> Lane2ExportRegistrationRecoveryReport {
         try await quarantineRecovery.requireExportMetadataConsistent()
@@ -294,16 +293,12 @@ public actor Lane2DurableLifecycleCoordinator {
             )
         }
 
-        // Read canonical lifecycle metadata before any destructive recovery. Corruption here fails
-        // closed and leaves every intent/artifact untouched for explicit recovery.
         let lifecycle = try await metadata.snapshot()
         var preservedRegistered = 0
         var discardedUnregistered = 0
         var retainedIncomplete = 0
 
         for intent in pending {
-            // Actor methods are reentrant across awaits. Never recover an intent still owned by an
-            // active export call in this process. After relaunch this set is empty by construction.
             if activeExportRegistrationIntents.contains(intent.id) {
                 retainedIncomplete += 1
                 continue
@@ -319,7 +314,9 @@ public actor Lane2DurableLifecycleCoordinator {
                 registeredRelativePaths: registered
             ) {
             case .alreadyRegistered:
-                // Metadata won the race before termination. Do not delete audio; only retire intent.
+                // AW36: registered metadata does not authorize intent retirement unless the AW35+
+                // manifest still matches the exact published bytes on relaunch.
+                try registrationJournal.revalidatePublishedBatchIntegrityIfPresent(intent: intent)
                 for artifact in intent.artifacts {
                     try artifacts.requireReady(relativePath: artifact.relativePath)
                 }
@@ -359,8 +356,6 @@ public actor Lane2DurableLifecycleCoordinator {
                 }
 
             case .partial:
-                // recordExports writes one project shard atomically. A partial path match is not a
-                // safe deletion state; retain everything for explicit diagnosis.
                 throw Lane2ExportRegistrationJournalFailure.partialRegistration(intent.id)
             }
         }
@@ -372,32 +367,23 @@ public actor Lane2DurableLifecycleCoordinator {
         )
     }
 
-    /// ready -> deleting metadata transition happens before file removal.
     public func cleanupExports(projectID: ProjectID) async throws {
         try await quarantineRecovery.requireExportMetadataConsistent()
         let records = try await metadata.beginExportCleanup(projectUUID: projectID.rawValue)
         try await finishExportCleanup(records)
     }
 
-    /// Relaunch convergence for a crash after deleting-state metadata commit.
     public func recoverPendingExportCleanup() async throws {
         try await quarantineRecovery.requireExportMetadataConsistent()
         try await finishExportCleanup(try await metadata.pendingExportCleanup())
     }
 
-    /// Deletes through canonical Library first, then converges Lane-2 export/ownership metadata.
-    /// A crash after the Library tombstone is repaired by reconcileDeletedProjectArtifacts().
     public func deleteProjectAndOwnedArtifacts(projectID: ProjectID) async throws {
-        // Do not tombstone canonical user work when export-sidecar uncertainty would prevent the
-        // second half of this compound cleanup from safely completing.
         try await quarantineRecovery.requireExportMetadataConsistent()
         try await library.deleteProject(projectID: projectID)
         try await reconcileDeletedProjectArtifacts()
     }
 
-    /// Any sidecar project/export whose canonical Library project is no longer live is cleanup work.
-    /// Projection-aware production stores enumerate only project IDs here; fallback keeps the frozen
-    /// contract compatible for alternative ProjectLibraryPersisting implementations.
     public func reconcileDeletedProjectArtifacts() async throws {
         try await quarantineRecovery.requireExportMetadataConsistent()
         let liveIDs = try await liveProjectUUIDs()
@@ -412,8 +398,6 @@ public actor Lane2DurableLifecycleCoordinator {
         }
     }
 
-    /// Repairs the lane-local ownership sidecar from canonical Library source ownership projection
-    /// after an interrupted handoff. Full processing/edit/mix snapshots are not required.
     public func reconcileProjectOwnership() async throws {
         for project in try await maintenanceProjects() {
             try await metadata.upsertProjectOwnership(
@@ -441,7 +425,6 @@ public actor Lane2DurableLifecycleCoordinator {
         )
     }
 
-    /// Orphan sweep retains canonical source/stem paths plus export paths recorded ready/deleting.
     public func sweepOrphans(
         gracePeriod: TimeInterval = 3600,
         now: Date = Date()

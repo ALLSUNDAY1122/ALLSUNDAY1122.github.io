@@ -54,6 +54,9 @@ public struct LibraryOrphanSweepResult: Hashable, Sendable {
 /// Foundation-only file lifecycle used by Library persistence.
 /// All paths are app-owned relative paths; external provider URLs never cross this boundary.
 public struct LibraryArtifactLifecycle: Sendable {
+    public static let defaultDeletionJournalRecoveryLimit = 64
+    public static let maximumDeletionJournalRecoveryLimit = 256
+
     public let rootURL: URL
     public let recoveryDirectoryName: String
 
@@ -106,9 +109,6 @@ public struct LibraryArtifactLifecycle: Sendable {
         _ = try inventory.activateForFirstManagedArtifactIfSafe(relativePath: relativePath)
         let registeredManaged = try inventory.registerIfManaged(relativePath: relativePath)
         if registeredManaged {
-            // Publication intent is retired only after the final path is durably represented by the
-            // managed-artifact inventory. Cleanup is best-effort because a stale durable intent is
-            // safe: next-process AW31 recovery replays the same registration idempotently.
             try? Lane2ManagedArtifactPublicationJournal(
                 rootURL: rootURL,
                 recoveryDirectoryName: recoveryDirectoryName
@@ -116,8 +116,6 @@ public struct LibraryArtifactLifecycle: Sendable {
         }
     }
 
-    /// Metadata may expose finalRelativePath only after this succeeds.
-    /// An existing final artifact is never silently overwritten.
     public func promoteReadyArtifact(stagingRelativePath: String, finalRelativePath: String) throws {
         let staging = try absoluteURL(for: stagingRelativePath)
         let final = try absoluteURL(for: finalRelativePath)
@@ -145,12 +143,9 @@ public struct LibraryArtifactLifecycle: Sendable {
             }
             throw error
         }
-        // If readiness/inventory persistence fails after the move, the durable managed publication
-        // intent is deliberately left behind so next-process recovery can reconcile the final file.
         try requireReady(relativePath: finalRelativePath)
     }
 
-    /// PREPARED is durable intent only; files cannot be deleted until the metadata tombstone commits.
     @discardableResult
     public func persistPreparedDeletion(projectUUID: UUID, relativePaths: [String]) throws -> URL {
         try ensureLayout()
@@ -159,7 +154,6 @@ public struct LibraryArtifactLifecycle: Sendable {
         return try write(journal: journal)
     }
 
-    /// Called only after the metadata tombstone transaction commits.
     public func markDeletionCommitted(projectUUID: UUID) throws {
         let existing = try requireJournal(projectUUID: projectUUID)
         switch existing.phase {
@@ -176,8 +170,6 @@ public struct LibraryArtifactLifecycle: Sendable {
         }
     }
 
-    /// Backfills a durable COMMITTED journal for a tombstone created by an older build or by an
-    /// interrupted metadata-only delete. The tombstone itself is the already-durable deletion intent.
     @discardableResult
     public func persistCommittedDeletion(projectUUID: UUID, relativePaths: [String]) throws -> URL {
         try ensureLayout()
@@ -202,7 +194,6 @@ public struct LibraryArtifactLifecycle: Sendable {
         )
     }
 
-    /// A PREPARED journal can be discarded only when metadata is proven live after relaunch.
     public func discardPreparedDeletion(projectUUID: UUID) throws {
         let url = deletionJournalURL(projectUUID: projectUUID)
         guard FileManager.default.fileExists(atPath: url.path) else { return }
@@ -211,9 +202,6 @@ public struct LibraryArtifactLifecycle: Sendable {
         try FileManager.default.removeItem(at: url)
     }
 
-    /// Idempotent artifact deletion. Missing files are already-clean. The journal remains durable
-    /// in ARTIFACTS_DELETED until Core Data metadata compaction commits, closing the old crash window
-    /// where file cleanup could finish and erase the only recovery signal before physical metadata cleanup.
     public func executeCommittedDeletion(projectUUID: UUID) throws {
         let journalURL = deletionJournalURL(projectUUID: projectUUID)
         guard FileManager.default.fileExists(atPath: journalURL.path) else { return }
@@ -245,8 +233,6 @@ public struct LibraryArtifactLifecycle: Sendable {
         )
     }
 
-    /// Final journal retirement is legal only after metadata compaction has committed. Missing is
-    /// idempotently treated as already complete for the post-removal crash boundary.
     public func completeMetadataCompaction(projectUUID: UUID) throws {
         let url = deletionJournalURL(projectUUID: projectUUID)
         guard FileManager.default.fileExists(atPath: url.path) else { return }
@@ -260,22 +246,56 @@ public struct LibraryArtifactLifecycle: Sendable {
         try FileManager.default.removeItem(at: url)
     }
 
-    public func pendingDeletionJournals() throws -> [LibraryDeletionJournal] {
+    /// Returns a bounded recovery window. A successful recovery pass retires every selected journal,
+    /// so later passes naturally advance through an extreme backlog without materializing the full
+    /// directory. `limit + 1` is the maximum number of journal URLs inspected/retained by this call.
+    /// Journal bytes outside the current window are not decoded early.
+    public func pendingDeletionJournals(
+        limit: Int = Self.defaultDeletionJournalRecoveryLimit
+    ) throws -> [LibraryDeletionJournal] {
         try ensureLayout()
-        return try FileManager.default.contentsOfDirectory(
+        let effectiveLimit = min(max(limit, 1), Self.maximumDeletionJournalRecoveryLimit)
+        let keys: [URLResourceKey] = [.isRegularFileKey, .isSymbolicLinkKey]
+        var enumerationFailed = false
+        guard let enumerator = FileManager.default.enumerator(
             at: deletionJournalDirectoryURL,
-            includingPropertiesForKeys: nil,
-            options: [.skipsHiddenFiles]
-        )
-        .filter { $0.pathExtension == "json" }
-        .map(loadJournal)
-        .sorted { lhs, rhs in
+            includingPropertiesForKeys: keys,
+            options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants],
+            errorHandler: { _, _ in
+                enumerationFailed = true
+                return false
+            }
+        ) else {
+            throw LibraryArtifactFailure.journalCorrupt("Delete")
+        }
+
+        var urls: [URL] = []
+        urls.reserveCapacity(effectiveLimit)
+        for case let url as URL in enumerator {
+            guard url.pathExtension == "json" else { continue }
+            let values = try url.resourceValues(forKeys: Set(keys))
+            guard values.isRegularFile == true, values.isSymbolicLink != true else {
+                throw LibraryArtifactFailure.journalCorrupt(url.lastPathComponent)
+            }
+            let filename = url.deletingPathExtension().lastPathComponent
+            guard let projectUUID = UUID(uuidString: filename),
+                  filename == projectUUID.uuidString,
+                  url.lastPathComponent == projectUUID.uuidString + ".json" else {
+                throw LibraryArtifactFailure.journalCorrupt(url.lastPathComponent)
+            }
+            urls.append(url)
+            if urls.count >= effectiveLimit { break }
+        }
+        if enumerationFailed {
+            throw LibraryArtifactFailure.journalCorrupt("Delete")
+        }
+
+        return try urls.map(loadJournal).sorted { lhs, rhs in
             if lhs.createdAt == rhs.createdAt { return lhs.projectUUID.uuidString < rhs.projectUUID.uuidString }
             return lhs.createdAt < rhs.createdAt
         }
     }
 
-    /// Removes only unreferenced files in explicitly managed roots and only after a grace period.
     public func sweepOrphans(
         referencedRelativePaths: Set<String>,
         managedRootNames: [String] = ["Imports", "Stems", "Exports"],
@@ -356,7 +376,14 @@ public struct LibraryArtifactLifecycle: Sendable {
         do {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
-            return try decoder.decode(LibraryDeletionJournal.self, from: Data(contentsOf: url))
+            let journal = try decoder.decode(LibraryDeletionJournal.self, from: Data(contentsOf: url))
+            let filename = url.deletingPathExtension().lastPathComponent
+            guard journal.projectUUID.uuidString == filename else {
+                throw LibraryArtifactFailure.journalCorrupt(url.lastPathComponent)
+            }
+            return journal
+        } catch let failure as LibraryArtifactFailure {
+            throw failure
         } catch {
             throw LibraryArtifactFailure.journalCorrupt(url.lastPathComponent)
         }
