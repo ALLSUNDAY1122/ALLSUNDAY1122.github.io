@@ -126,6 +126,31 @@ struct L3AW40InteractiveContinuityV2PhysicalSessionSelfTest {
         precondition(duplicateReport.duplicateSampleIDCount == 1)
         precondition(!duplicateReport.physicalSessionComplete)
 
+        var issueBounded = Lane3InteractiveContinuityV2PhysicalSessionBuffer(capacity: 64)
+        for index in 0..<64 {
+            let shape: Lane3InteractiveContinuityV2OperationShape
+            switch index % 3 {
+            case 0: shape = .seek
+            case 1: shape = .loopEnabled
+            default: shape = .loopDisabled
+            }
+            issueBounded.append(makeAW40Sample(
+                id: UInt64(100 + index),
+                shape: shape,
+                base: UInt64(10_000 + index * 100),
+                audible: false,
+                valid: false
+            ))
+        }
+        let issueBoundedReport = Lane3InteractiveContinuityV2PhysicalSessionAnalyzer.analyze(
+            context: makeAW40Context(),
+            buffer: issueBounded,
+            issueDetailCapacity: 16
+        )
+        precondition(issueBoundedReport.issues.count == 16)
+        precondition(issueBoundedReport.issueDetailDrops > 0)
+        precondition(!issueBoundedReport.physicalSessionComplete)
+
         print(
             "L3-AW40 v2 session PASS retained=\(report.retainedSampleCount) "
                 + "nonExecuted=\(report.nonExecutedObservationCount) drops=\(dropped.capacityDrops)"
