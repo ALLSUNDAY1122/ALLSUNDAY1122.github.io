@@ -1,0 +1,110 @@
+name: APP2-005 HM1 Submit Diagnostic Retry
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-005-hm1-submit-diagnostic-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-005-hm1-submit-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild final release HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash ios/health-manager-1/prepare-ios.sh
+
+      - name: Generate deterministic review screens
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check playwright
+          python -m playwright install --with-deps chromium >/dev/null
+          mkdir -p /tmp/hm1-review-screens
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          index=(Path.cwd()/'ios/health-manager-1/Resources/index.html').resolve().as_uri()
+          out=Path('/tmp/hm1-review-screens')
+          with sync_playwright() as p:
+              b=p.chromium.launch()
+              c=b.new_context(viewport={'width':430,'height':932},device_scale_factor=3,locale='ja-JP')
+              page=c.new_page(); page.goto(index,wait_until='load'); page.wait_for_timeout(500)
+              page.screenshot(path=str(out/'01-home.png'))
+              page.locator('#premiumGo').click(); page.wait_for_timeout(300)
+              text=page.locator('body').inner_text()
+              assert '¥200' in text and '¥800' in text and '264' in text
+              page.screenshot(path=str(out/'02-premium.png'))
+              b.close()
+          PY
+
+      - name: Retry preparation and submission while preserving exact result
+        id: submit
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          set +e
+          python scripts/app2_005_hm1_prepare_submit.py \
+            --screens /tmp/hm1-review-screens \
+            --output /tmp/app2-005-hm1-submit-diagnostic.json \
+            > /tmp/app2-005-hm1-submit-diagnostic.stdout 2>&1
+          rc=$?
+          echo "$rc" >/tmp/app2-005-hm1-submit-diagnostic.rc
+          cat /tmp/app2-005-hm1-submit-diagnostic.stdout
+          exit 0
+
+      - name: Persist exact diagnostic JSON
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          REQUEST_ID="$(python -c "import json; print(json.load(open('automation/app2-005-hm1-submit-diagnostic-command.json'))['request_id'])")"
+          mkdir -p automation/asc-results
+          OUT="automation/asc-results/${REQUEST_ID}.json"
+          if [ -f /tmp/app2-005-hm1-submit-diagnostic.json ]; then
+            cp /tmp/app2-005-hm1-submit-diagnostic.json "$OUT"
+          else
+            python - "$OUT" <<'PY'
+          import json,sys
+          from pathlib import Path
+          stdout=Path('/tmp/app2-005-hm1-submit-diagnostic.stdout').read_text(encoding='utf-8',errors='replace') if Path('/tmp/app2-005-hm1-submit-diagnostic.stdout').exists() else ''
+          rc=Path('/tmp/app2-005-hm1-submit-diagnostic.rc').read_text().strip() if Path('/tmp/app2-005-hm1-submit-diagnostic.rc').exists() else 'unknown'
+          Path(sys.argv[1]).write_text(json.dumps({'task_id':'APP2-005','submitted':False,'exit_code':rc,'error':stdout[-6000:]},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          fi
+          cp "$OUT" /tmp/app2-005-diagnostic-final.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$OUT"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Persist APP2-005 submission diagnostic ${REQUEST_ID}"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            git reset --hard origin/main
+            cp /tmp/app2-005-diagnostic-final.json "$OUT"
+            git add "$OUT"
+            git diff --cached --quiet || git commit -m "Persist APP2-005 submission diagnostic ${REQUEST_ID}"
+            sleep $((attempt*2))
+          done
+          exit 1
