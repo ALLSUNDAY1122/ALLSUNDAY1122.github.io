@@ -11,15 +11,13 @@
   "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "8905839b304cb2cb03ec68034bdae8031e2e97ee",
-  "prior_status_blob_sha": "328ea46cad406abf961c5a802e9ef413b171f1df",
-  "historical_commit_ledger_through": "67e6b976aa80f170316758b50deac95738207fd2",
+  "head_sha": "858ffc9703c1ea2d58d3c4c13cbf497d645ad404",
+  "prior_status_blob_sha": "7b2f5159e1d9a94589d95206200323a23eb0f924",
+  "historical_commit_ledger_through": "8905839b304cb2cb03ec68034bdae8031e2e97ee",
   "commits": [
-    "78ba78b0207620bd3d933c167db7587df84dde49",
-    "d5de17b09d84ec8536accc7bc335e279b0dd3f22",
-    "04f3bb6ca9072254e2e2b111d26865b09ce2d9d8",
-    "c9ea9e54321cb80a90180887983ce5b6bf60ab10",
-    "8905839b304cb2cb03ec68034bdae8031e2e97ee"
+    "9c5f183334b9bd0c69cf473008c1fc51c462fddf",
+    "dc8226a2279682046b5f595b3d2bf7d95249eee3",
+    "858ffc9703c1ea2d58d3c4c13cbf497d645ad404"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -28,22 +26,22 @@
     "bf4b7a552cfbe025608079f7fe11093af7526b0b"
   ],
   "tests": [
-    "L2-M01..L2-AW43 validation remains durable in Git history and prior status blob 328ea46cad406abf961c5a802e9ef413b171f1df.",
-    "L2-AW44 exact bounded mutation helper typechecked with Swift 6.2.1 strict concurrency / warnings-as-errors.",
-    "L2-AW44 portable pathological-concentration self-check => L2_AW44_SELF_TEST_PASS entries=1300 upsert=300 remove=300 segment_bound=512 batch_bound=256 manifest_fail_closed=true.",
-    "L2-AW44 canonical bridge strict typecheck after Worker-branch parse-boundary repair => L2_AW44_BRIDGE_TYPECHECK_PASS.",
-    "ManagedArtifactSegmentedBoundedMutationTests.swift preserves explicit 512-entry segment and 256-path mutation-batch contracts plus corrupt-manifest/segment fail-closed expectations."
+    "L2-M01..L2-AW44 validation remains durable in Git history and prior status blob 7b2f5159e1d9a94589d95206200323a23eb0f924.",
+    "L2-AW45 focused Swift 6.2.1 strict-concurrency / warnings-as-errors stress self-check => L2_AW45_SELF_TEST_PASS concentrated=10000 returned=64 scan_budget=1024 has_more=true malformed=true symlink=true empty=true.",
+    "DeletionOwnershipBoundedShardRecoveryTests.swift covers 1,300 records deliberately concentrated into one deterministic shard, limit=64/hasMore behavior, empty-shard retirement, and symlink fail-closed recovery."
   ],
   "evidence": [
-    "L2-AW44 fresh-read Notion v4 canonical, Resource Lock a5ae8e41b4b03856b58416bf7076fe5dc533e980 at integration epoch 30 / assignment epoch 2 / planning revision 4, prior Worker status blob 328ea46cad406abf961c5a802e9ef413b171f1df and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d.",
-    "HQ Epoch30 canonical includes Lane 2 AW42 and now has permanent Lane2 IO+Library full portable Swift 6 strict-concurrency typecheck gates; PARITY promotion remains 0.",
-    "Wave start Worker branch HEAD was a22dde0f28bc89802040126429ac57e93d7ea44f.",
-    "AW44 committed segmented mutations merge prior authority one <=512-entry segment at a time, process mutation inputs in <=256-path batches, read back all new segments before atomic manifest authority replacement, and retain the previous manifest when source corruption aborts publication.",
-    "Worker branch also repaired the AW41 guard parse boundary already semantically fixed by HQ integration, so the long-lived branch no longer retains that strict Swift parse defect.",
-    "Final Evidence is tech-assets/moises-audio/Library/L2-AW44_BOUNDED_SEGMENTED_MUTATION_VALIDATION.md at implementation/evidence head 8905839b304cb2cb03ec68034bdae8031e2e97ee."
+    "L2-AW45 fresh-read Notion v4 canonical, Resource Lock a5ae8e41b4b03856b58416bf7076fe5dc533e980 at integration epoch 30 / assignment epoch 2 / planning revision 4, prior Worker status blob 7b2f5159e1d9a94589d95206200323a23eb0f924 and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d.",
+    "HQ Epoch30 canonical remains Lane 2 AW42 with permanent Lane2 IO+Library Swift 6 strict-concurrency typecheck gate; PARITY promotion remains 0.",
+    "Wave start Worker branch HEAD was 64217d66baceab58347cb85c00830f125565619c.",
+    "Fresh source inspection corrected the gap model: AW32 is UUID-per-file inside deterministic shard directories, not one giant JSON shard. The hot-path amplification was whole-directory contentsOfDirectory materialization/sort during ownership-only recovery.",
+    "AW45 pendingRecordSlice now streams each visited active shard with a hard 1,024-entry inspection budget plus one deferred-work sentinel, validates UUID/regular/non-symlink/shard ownership before selection, and loads record bytes only for bounded selected candidates.",
+    "AW45 shard retirement now probes only the first validated visible record instead of materializing a directory solely to determine emptiness.",
+    "Compatibility/admin pendingRecords() intentionally keeps an explicit whole-inventory scan and is not used by normal CrashSafe launch recovery.",
+    "Final Evidence is tech-assets/moises-audio/Library/L2-AW45_BOUNDED_DELETION_OWNERSHIP_SHARD_RECOVERY_VALIDATION.md at implementation/evidence head 858ffc9703c1ea2d58d3c4c13cbf497d645ad404."
   ],
   "known_gaps": [
-    "AW32 deletion-ownership shards remain deterministic but are not hard entry-count capped; pathological concentration can still enlarge a single ownership JSON shard and should receive segmented/bounded treatment analogous to AW39-AW44.",
+    "AW45 bounds normal ownership-only recovery under pathological shard-directory concentration, but explicit administrative pendingRecords() remains whole-inventory by design and physical-iPhone/APFS RSS/latency under extreme directory sizes remains unmeasured.",
     "AW35/AW36 deterministic digest detects mutation/corruption but is not cryptographic authenticity against an actor able to rewrite both media and manifest.",
     "Physical force-termination evidence around AW36 revalidation, Core Data/WAL visibility, metadata commit and intent retirement remains pending on Apple runtime.",
     "DNS rebinding between AW34 pre-connect resolution and URLSession's own subsequent resolution remains a TOCTOU risk; endpoint verification/pinning requires Apple networking evidence.",
@@ -54,24 +52,24 @@
   ],
   "hq_requests": [
     "For App export/share integration, preserve canonical IOExportBatchTransaction -> Lane2ExportRegistrationJournal -> Lane2DurableLifecycleCoordinator metadata ordering and AW36 integrity revalidation gates.",
-    "Integrate AW44 bounded mutation writer with AW43 streaming traversal and AW42 canonical facade; do not restore committed shard-wide mutation materialization.",
-    "Preserve prepare -> apply -> persistTraversal ordering and force terminate before/after segmented generation publication and cursor persistence on Apple runtime.",
-    "Exercise pathological same-shard inventory mutation on iPhone/APFS while measuring peak RSS, latency and orphan provisional-generation cleanup behavior.",
-    "Do not promote Lane-2 PARITY rows from portable AW44 evidence alone.",
-    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW44."
+    "Integrate AW45 deletion-ownership bounded directory recovery without replacing the existing UUID-per-file AW32 on-disk schema.",
+    "Exercise extreme same-shard ownership directories on iPhone/APFS while measuring launch recovery RSS/latency and force-terminate around active-shard manifest / ownership-record publication.",
+    "Do not route normal launch recovery through the administrative pendingRecords() full-inventory API; keep pendingRecordSlice as the bounded path.",
+    "Do not promote Lane-2 PARITY rows from portable AW45 evidence alone.",
+    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW45."
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW44",
-    "goal": "Bound committed segmented managed-artifact upsert/remove so a pathologically concentrated touched shard is never fully materialized in memory before generation publication.",
-    "rationale": "AW43 removed shard-wide accumulation from orphan reads, leaving mutation as the symmetric highest-value lane-local scalability gap; HQ's new permanent Lane2 strict typecheck gate also made repairing the stale Worker-branch Swift parse boundary necessary for clean future checkpoints.",
-    "done_when": "Committed mutation decodes <=512 entries at a time, mutation working sets are <=256 paths, output generation is emitted in <=512-entry segments with complete read-back before atomic manifest publication, source corruption leaves prior manifest authority intact, legacy compatibility remains bounded, strict typecheck/pathological self-check/Evidence/status pass, and no PARITY claim is made.",
+    "wave_id": "L2-AW45",
+    "goal": "Bound AW32 deletion-ownership recovery when one deterministic shard directory contains a pathological number of UUID-per-file ownership records.",
+    "rationale": "Fresh source inspection showed AW32 already avoids a single giant JSON shard, but normal recovery still materialized and sorted the entire visited shard directory. This was the actual remaining concentration-driven launch RSS/latency gap.",
+    "done_when": "Normal ownership-only recovery incrementally enumerates each visited shard, inspects at most 1,024 entries plus a deferred-work sentinel, keeps the returned slice bounded, validates malformed/symlink/wrong-shard records fail-closed, determines empty-shard retirement without a whole-directory list, preserves journal exclusion and legacy migration semantics, records stress/regression Evidence/status, and makes no PARITY claim.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "8905839b304cb2cb03ec68034bdae8031e2e97ee",
-    "next_priority": "Apply segmented/bounded concentration protection to AW32 deletion-ownership shards, unless a fresher canonical read elevates a more direct Lane-2 correctness/PARITY gap."
+    "implementation_head_sha": "858ffc9703c1ea2d58d3c4c13cbf497d645ad404",
+    "next_priority": "Re-audit remaining Lane-2 portable recovery/scalability gaps after AW45; prioritize active-shard manifest repair/resumability under stale/corrupt shard signals or a fresher direct correctness/PARITY gap if canonical state changes."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW44 continue Lane-2 work autonomously.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW45 continue Lane-2 work autonomously.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-26T04:39:00+09:00",
-  "status_compaction_note": "Full pre-AW44 history remains addressable through prior_status_blob_sha 328ea46cad406abf961c5a802e9ef413b171f1df and Git history; commits contains AW44 only.",
+  "last_updated": "2026-08-26T05:25:00+09:00",
+  "status_compaction_note": "Full pre-AW45 history remains addressable through prior_status_blob_sha 7b2f5159e1d9a94589d95206200323a23eb0f924 and Git history; commits contains AW45 only.",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ remains sole PARITY authority."
 }
