@@ -48,10 +48,11 @@ public enum AnalysisPhysicalCaptureArtifactBundleValidator {
     ) -> AnalysisPhysicalCaptureArtifactBundleValidationReport {
         var issues: [AnalysisPhysicalCaptureArtifactBundleValidationIssue] = []
         if bundle.schemaVersion != 1
-            || bundle.runID.isEmpty
-            || bundle.workloadExecutionID.isEmpty
+            || !safeRunID(bundle.runID)
+            || bundle.workloadExecutionID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            || bundle.workloadExecutionID != bundle.workloadExecutionID.trimmingCharacters(in: .whitespacesAndNewlines)
             || !isSHA256(bundle.bundleRootSHA256) {
-            issues.append(.init(code: .invalidBundle, detail: "bundle requires schema 1, nonempty run/execution IDs and a SHA-256 root"))
+            issues.append(.init(code: .invalidBundle, detail: "bundle requires schema 1, a filesystem-safe run ID, a normalized nonempty execution ID and a SHA-256 root"))
         }
 
         let roles = bundle.artifacts.map { $0.role.rawValue }
@@ -183,6 +184,22 @@ public enum AnalysisPhysicalCaptureArtifactBundleValidator {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
         return AnalysisDeviceWorkloadSHA256.hexDigest(try encoder.encode(payload))
+    }
+
+    private static func safeRunID(_ value: String) -> Bool {
+        guard !value.isEmpty,
+              value.count <= 128,
+              value == value.trimmingCharacters(in: .whitespacesAndNewlines),
+              value != ".",
+              value != ".." else { return false }
+        return value.unicodeScalars.allSatisfy { scalar in
+            switch scalar.value {
+            case 45, 46, 48...57, 65...90, 95, 97...122:
+                return true
+            default:
+                return false
+            }
+        }
     }
 
     private static func safeRelativePath(_ value: String) -> Bool {
