@@ -17,19 +17,15 @@
   "completed_waves": [
     "L1-A05", "L1-A06", "L1-A07", "L1-A08", "L1-A09", "L1-A10",
     "L1-A11", "L1-A12", "L1-A13", "L1-A14", "L1-A15", "L1-A16",
-    "L1-A17", "L1-A18", "L1-A19", "L1-A20", "L1-A21", "L1-A22", "L1-A23", "L1-A24", "L1-A25", "L1-A27", "L1-A28", "L1-A29"
+    "L1-A17", "L1-A18", "L1-A19", "L1-A20", "L1-A21", "L1-A22", "L1-A23", "L1-A24", "L1-A25", "L1-A27", "L1-A28", "L1-A29", "L1-A30"
   ],
   "prepared_external_gates": [
     "L1-E01", "L1-E02", "L1-E03", "L1-E04", "L1-E05", "L1-E06", "L1-E07", "L1-E08", "L1-E09", "L1-E10"
   ],
   "base_integration_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
-  "prior_head_sha": "332d24a00cafa444abfe00ac587b8f4ff1f3d897",
-  "head_sha": "437a187242d7db9146919c7e215dffa291dc1683",
+  "prior_head_sha": "437a187242d7db9146919c7e215dffa291dc1683",
+  "head_sha": "0611591c636e4a1f4a3aeecbbb315b59f0c2e6e5",
   "recent_commits": [
-    "49d6b1e3ef5903fef0729fe7b322bdf0f8f5acfc",
-    "d988607d273927f2aa6ef156c18812bebf806ed1",
-    "faf855903743f719a1499648079892ed50c1115b",
-    "4ff5d4adbd2aa2cc4504904c7a5995a070942056",
     "322a618f2791961e741290dd1ceb23a5f685897c",
     "39f398f36accf1ed8dd72be4f2c1443fbc3daa0b",
     "ee601f38dc04a5e97fa4056e36d55fb90830f3d6",
@@ -38,17 +34,23 @@
     "6a26d1500893bd7a1263227473e9911e90c08965",
     "4b3a960a9907d9edafb5133f1a4e1437c1b73738",
     "2c287ad59451b629d330c6e817e06758a3af9a8d",
-    "437a187242d7db9146919c7e215dffa291dc1683"
+    "437a187242d7db9146919c7e215dffa291dc1683",
+    "4f20346113747565dae657e057c8bae693355a6d",
+    "cda114a4a06240771b62de8efe44b4621ac19d24",
+    "46f237ffede860504ef73c00de0f2d5978c73369",
+    "0611591c636e4a1f4a3aeecbbb315b59f0c2e6e5"
   ],
   "tests": [
-    "A05-A25 and A27-A29 are completed NON_PARITY; E01-E10 live/readiness infrastructure remains external-input pending. A26 remains open only on the exact-checkout full-audit execution gate.",
+    "A05-A25 and A27-A30 are completed NON_PARITY; E01-E10 live/readiness infrastructure remains external-input pending. A26 remains open only on the exact-checkout full-audit execution gate.",
+    "L1-A26 exact checkout access was retried at the start of A30; container git again failed with `Could not resolve host: github.com`, so A26 was not falsely completed.",
     "L1-A26 A24-to-A25 gateway focused regression remains observed 12/12 PASS.",
     "L1-A26 prior source-snapshot focused logic remains 7/7 PASS; prior exact git-head/source-binding focused logic remains 5/5 PASS; v2 report JSON Schema self-check remains PASS.",
     "L1-A26 HEAD-tree/worktree binding focused regression remains 7/7 PASS.",
     "L1-A27 mutation-topology regression remains 8/8 PASS after A28; current file-backed stores remain single-host-only without shared-authority adapters.",
     "L1-A28 existing privacy-retention regression remains observed 25/25 PASS before final ENOENT micro-hardening; concurrency regression 5/5 PASS; final local-delete branch check 2/2 PASS.",
-    "L1-A29 provider-delete reconciliation focused interface-compatible logic harness: 11/11 PASS; provider_delete_reconciliation.py and test_provider_delete_reconciliation.py py_compile PASS.",
-    "A29 exact current Worker-branch full suite is intentionally NOT_OBSERVED because the A26 executable exact-checkout/CI gate remains unavailable; no unavailable CI execution is claimed."
+    "L1-A29 provider-delete reconciliation focused interface-compatible logic harness remains observed 11/11 PASS; provider_delete_reconciliation.py and test_provider_delete_reconciliation.py py_compile PASS at that checkpoint.",
+    "L1-A30 durable reconciliation-resume focused interface-compatible harness: 8/8 PASS; authored L1-A30-v1 module logic py_compile PASS. Cases cover restart resume, two-object resume, mismatched hash remaining pending, pending snapshot truthfulness, semantic ledger corruption, receipt tamper, already-applied idempotency and terminal downgrade.",
+    "L1-A30 dedicated repository test `test_provider_delete_reconciliation_resume.py` is committed, but exact current Worker-branch unittest discovery remains NOT_OBSERVED because the A26 executable exact-checkout/CI gate is unavailable; no unavailable CI execution is claimed."
   ],
   "evidence": [
     "tech-assets/moises-audio/Processing/L1-A26_VALIDATION.md",
@@ -59,6 +61,8 @@
     "tech-assets/moises-audio/Processing/Tests/L1-A28_PRIVACY_REGISTRY_SERIALIZATION_MATRIX.json",
     "tech-assets/moises-audio/Processing/L1-A29_VALIDATION.md",
     "tech-assets/moises-audio/Processing/Tests/L1-A29_PROVIDER_DELETE_RECONCILIATION_MATRIX.json",
+    "tech-assets/moises-audio/Processing/L1-A30_VALIDATION.md",
+    "tech-assets/moises-audio/Processing/Tests/L1-A30_RECONCILIATION_RESUME_MATRIX.json",
     "tech-assets/moises-audio/Separation/Evaluation/lane1_dependency_audit.py",
     "tech-assets/moises-audio/Separation/Evaluation/lane1_source_snapshot.py",
     "tech-assets/moises-audio/Separation/Evaluation/schemas/lane1-dependency-audit-report-v2.schema.json",
@@ -68,6 +72,7 @@
     "tech-assets/moises-audio/Separation/Tests/test_privacy_retention.py",
     "tech-assets/moises-audio/Separation/Tests/test_privacy_retention_concurrency.py",
     "tech-assets/moises-audio/Separation/Tests/test_provider_delete_reconciliation.py",
+    "tech-assets/moises-audio/Separation/Tests/test_provider_delete_reconciliation_resume.py",
     "tech-assets/moises-audio/Separation/Tests/test_mutation_topology.py",
     "tech-assets/moises-audio/Separation/Tests/test_lane1_source_snapshot_git_binding.py",
     "tech-assets/moises-audio/Separation/LANE1_PARITY_COVERAGE.md"
@@ -75,12 +80,13 @@
   "known_gaps": [
     "L1-A26 is not in completed_waves. Dependency repair and focused provenance/gateway/HEAD-tree checks are observed, but the hardened one-command full exact Worker-branch audit has not been observed on an executable checkout/CI runner.",
     "L1-A27 is complete NON_PARITY as a deployment-safety preflight contract, but App/HQ deployment entrypoints do not yet invoke it because Shared/App are outside Worker 1 ownership.",
-    "A09 privacy registry serializes complete same-host read-modify-write transactions with POSIX flock and durable replace semantics. A09/A16/A23/A24 and the A29 reconciliation ledger nevertheless remain single-host-only because no real shared transactional authority adapters exist.",
+    "A09 privacy registry serializes complete same-host read-modify-write transactions with POSIX flock and durable replace semantics. A09/A16/A23/A24 and the A29/A30 reconciliation ledger nevertheless remain single-host-only because no real shared transactional authority adapters exist.",
     "Multi-host independent writers require a shared transactional backend with atomic CAS, durable commit, monotonic fencing and read-after-write consistency plus a concrete adapter in each store; capability labels or POSIX flock alone are insufficient.",
-    "A29 now provides a durable observation-only recovery path for provider-delete interruption after reservation, without blind replay. Actual authoritative provider/API/console/support observations remain external/private input and are not fabricated.",
-    "Provider-specific deletion reconciliation/observation contracts are not yet supplied; A29 therefore accepts only controlled observation classes and hashed private authority references and does not itself contact a provider status endpoint.",
+    "A29 provides a durable observation-only path for provider-delete interruption after reservation, and A30 can now resume an already-persisted observed_not_applied event after restart without provider DELETE replay. Actual authoritative provider/API/console/support observations remain external/private input and are not fabricated.",
+    "Provider-specific deletion observation contracts are not yet supplied; A29/A30 therefore accept only controlled observation classes and hashed private authority references and do not themselves contact a provider status endpoint.",
+    "HQ/App startup or maintenance composition does not yet invoke A30 `resume_pending` when `reconciliation_required` is true because Shared/App integration is outside Worker 1 ownership.",
     "E01-E10 remain PENDING_EXTERNAL_INPUT because production contracts/credential, real G1/G2 audio, current-iPhone captures/reviews and live runtime campaigns have not been supplied.",
-    "MOI-P025 remains MISSING. A21-A29 provide entitlement/credit/lifecycle, provider-neutral runtime/live evaluation, mix compatibility/atomic variant activation, retention/delete/refund/orphan recovery, end-to-end composition, compatibility gateway, hardened audit provenance and mutation-store/reconciliation safety evidence, but no commercially approved real generation runtime has been executed.",
+    "MOI-P025 remains MISSING. A21-A30 provide entitlement/credit/lifecycle, provider-neutral runtime/live evaluation, mix compatibility/atomic variant activation, retention/delete/refund/orphan recovery, end-to-end composition, compatibility gateway, hardened audit provenance and mutation-store/reconciliation safety evidence, but no commercially approved real generation runtime has been executed.",
     "Exact current-iPhone P025 role/mode/preset catalog, credit consumption rule, plan allowance, entitlement UX, delete/refund behavior and generated-stem timing remain capture-driven and unverified.",
     "No real rights-cleared generated-audio quality/latency/current-iPhone blind differential, integrated iPhone mixer or integrated project/account deletion evidence exists for P025.",
     "Actual retention/delete/cancel semantics, duplicate billing/execution outcomes, live cost, throughput and capacity for ordinary separation remain unverified.",
@@ -91,17 +97,18 @@
   ],
   "hq_requests": [
     "Canonical metadata cleanup at the next HQ checkpoint: Notion v4 is authority while HQ-owned WORKER_BOOTSTRAP/lane-plan/work-packages/resource-lock metadata still contains v3/finite-bundle or epoch-1 wording.",
-    "Before marking A26 complete, execute `Separation/Evaluation/lane1_dependency_audit.py --expected-git-head <exact final Worker branch tip>` on an executable full Worker checkout/CI runner, archive the v2 report, and require overall_state=PASS plus git_head_binding.state=PASS and owned_source_snapshot.state=PASS. Because A29 added owned bytes, use the then-current final tip rather than any older A26-A28 commit.",
-    "At an HQ-owned deployment entrypoint, invoke or equivalently enforce the A27 mutation-topology preflight before enabling multiple Lane 1 writers. Current A09/A16/A23/A24/A29 file-backed state remains single-host-only without distributed shared-authority adapters.",
-    "For any production provider that supports authoritative delete-status observation, wire its private API/console/support evidence into the A29 ProviderDeletionObservation contract rather than blindly replaying an ambiguous delete. Keep authority material private; durable public evidence stores only SHA-256 references.",
+    "Before marking A26 complete, execute `Separation/Evaluation/lane1_dependency_audit.py --expected-git-head <exact final Worker branch tip>` on an executable full Worker checkout/CI runner, archive the v2 report, and require overall_state=PASS plus git_head_binding.state=PASS and owned_source_snapshot.state=PASS. Because A30 added owned bytes, use the then-current final tip rather than any older A26-A29 commit.",
+    "At an HQ-owned deployment entrypoint, invoke or equivalently enforce the A27 mutation-topology preflight before enabling multiple Lane 1 writers. Current A09/A16/A23/A24/A29/A30 file-backed state remains single-host-only without distributed shared-authority adapters.",
+    "At HQ/App relaunch or maintenance composition, inspect A30 `reconciliation_required` and invoke `resume_pending` for durable pending provider-delete observations. This resumes only local application of previously observed evidence and must not be replaced with blind provider DELETE replay.",
+    "For any production provider that supports authoritative delete-status observation, wire its private API/console/support evidence into the A29 ProviderDeletionObservation contract. Keep authority material private; durable public evidence stores only SHA-256 references.",
     "Do not treat POSIX flock/atomic rename as distributed synchronization. Require an actual shared backend and concrete store adapters with atomic CAS, durable commit, monotonic fencing and read-after-write consistency before multi-host enablement.",
-    "Preserve A28/A29 delete ordering: durable intent first; local deletion idempotent; provider external side effect reserved once; ambiguous provider state reconciled only by separately observed hash-bound evidence; never blindly replay or report unknown state as confirmed.",
+    "Preserve A28-A30 delete ordering: durable intent first; local deletion idempotent; provider external side effect reserved once; ambiguous provider state reconciled only by separately observed hash-bound evidence; persisted observations may be locally resumed after crash; never blindly replay or report unknown state as confirmed.",
     "Preserve A24-A25 compatibility through A24RetentionGateway; do not restore superseded prototype retention APIs or weaken delete/refund/runtime-erasure separation.",
     "Keep raw prompts, logical generation IDs, account/project/execution IDs, source/generated/reference audio, private contracts/billing/reviewer material, private paths, raw provider IDs and credential values outside durable public evidence.",
-    "Do not promote P025/P024 or any other Lane 1 PARITY row from A24-A29 synthetic tests, focused regression, static audit, source snapshot, topology/reconciliation preflight or portable CI. HQ final PARITY requires real current-iPhone workflow/UX/device/runtime evidence.",
+    "Do not promote P025/P024 or any other Lane 1 PARITY row from A24-A30 synthetic tests, focused regression, static audit, source snapshot, topology/reconciliation preflight or portable CI. HQ final PARITY requires real current-iPhone workflow/UX/device/runtime evidence.",
     "Golden Dataset absence, SHA not-yet-issued or Golden measurement not-yet-run remain HQ/live-gate pending conditions, not Worker BLOCKED_HUMAN."
   ],
-  "history_note": "A05-A25 and A27-A29 are complete NON_PARITY and E01-E10 external/live readiness is prepared. A26 remains open solely on the unavailable exact-checkout full-audit execution gate and is not falsely completed. This autonomous Wave completed L1-A29 by closing the post-reservation provider-delete recovery gap left after A28: a separate authoritative observation can now be durably hash-bound, recorded as observed_not_applied, applied idempotently to the privacy registry, and marked applied without ever replaying the original provider delete. Terminal erasure states are monotonic, documented expiry cannot impersonate provider confirmation, and public durable evidence excludes raw provider identifiers. Focused interface-compatible reconciliation logic passed 11/11 and py_compile passed; no PARITY claim is made.",
-  "last_updated": "2026-08-26T00:30:46+09:00",
+  "history_note": "A05-A25 and A27-A30 are complete NON_PARITY and E01-E10 external/live readiness is prepared. A26 remains open solely on the unavailable exact-checkout full-audit execution gate and is not falsely completed. This autonomous Wave completed L1-A30 by closing the restart gap left after A29: a durable observed_not_applied provider-delete observation can now be reconstructed from its hash-bound ledger record and locally re-applied after relaunch without replaying the provider DELETE. Failed applications remain pending with stable errors, pending state is visible to integration, ledger event semantics and receipt/content binding are revalidated on load, and directory fsync failure no longer counts as durable success. Focused interface-compatible recovery logic passed 8/8 and py_compile passed; exact branch discovery remains unobserved and no PARITY claim is made.",
+  "last_updated": "2026-08-26T01:08:29+09:00",
   "writer_policy": "Only Moises-Worker-1 updates this status file. HQ owns Shared/App/PARITY/queue/work-package/lane-plan/resource-lock authority and final PARITY judgment."
 }
