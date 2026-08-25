@@ -1,8 +1,11 @@
 import hashlib
 import unittest
+from unittest.mock import patch
 
+import mutation_topology
 from mutation_topology import (
     BUILTIN_STORE_PROFILES,
+    EXPECTED_BUILTIN_STORE_IDS,
     DeploymentTopology,
     MutationTopologyError,
     SharedMutationAuthority,
@@ -32,6 +35,31 @@ class MutationTopologyTests(unittest.TestCase):
         self.assertEqual(d.state, "PASS")
         self.assertIsNone(d.stable_error_code)
         self.assertEqual(BUILTIN_STORE_PROFILES["a09_privacy_registry"].local_serialization, "posix_flock")
+
+    def test_reconciliation_ledger_is_explicitly_in_deployment_inventory(self):
+        store_id = "a29_provider_delete_reconciliation_ledger"
+        self.assertIn(store_id, EXPECTED_BUILTIN_STORE_IDS)
+        self.assertIn(store_id, BUILTIN_STORE_PROFILES)
+        profile = BUILTIN_STORE_PROFILES[store_id]
+        self.assertEqual(profile.local_serialization, "posix_flock")
+        self.assertTrue(profile.single_host_safe)
+        self.assertFalse(profile.shared_authority_adapter)
+        self.assertEqual(profile.risk, "reconciliation_watermark_race")
+
+    def test_reconciliation_ledger_passes_single_host_and_fails_multi_host_without_authority(self):
+        store_id = "a29_provider_delete_reconciliation_ledger"
+        self.assertEqual(assess_store_topology(store_id, "single_host").state, "PASS")
+        d = assess_store_topology(store_id, "multi_host")
+        self.assertEqual(d.state, "FAIL_CLOSED")
+        self.assertEqual(d.stable_error_code, "L1A27_SHARED_AUTHORITY_REQUIRED")
+
+    def test_reconciliation_ledger_still_fails_with_capabilities_but_no_adapter(self):
+        store_id = "a29_provider_delete_reconciliation_ledger"
+        a = authority(*required_shared_capabilities())
+        d = assess_store_topology(store_id, "multi_host", authority=a)
+        self.assertEqual(d.state, "FAIL_CLOSED")
+        self.assertEqual(d.stable_error_code, "L1A27_SHARED_AUTHORITY_ADAPTER_NOT_IMPLEMENTED")
+        self.assertEqual(d.authority_ref_hash, a.authority_ref_hash)
 
     def test_multi_host_without_authority_fails_closed(self):
         for store_id in BUILTIN_STORE_PROFILES:
@@ -72,9 +100,22 @@ class MutationTopologyTests(unittest.TestCase):
         one = lane1_topology_snapshot("single_host")
         self.assertTrue(one["all_safe"])
         self.assertEqual(one["parity_claim"], "NONE")
+        self.assertEqual(set(one["store_inventory"]), EXPECTED_BUILTIN_STORE_IDS)
         many = lane1_topology_snapshot("multi_host")
         self.assertFalse(many["all_safe"])
         self.assertTrue(all(row["state"] == "FAIL_CLOSED" for row in many["stores"]))
+        self.assertIn(
+            "a29_provider_delete_reconciliation_ledger",
+            {row["store_id"] for row in many["stores"]},
+        )
+
+    def test_inventory_mismatch_fails_closed(self):
+        reduced = dict(BUILTIN_STORE_PROFILES)
+        reduced.pop("a29_provider_delete_reconciliation_ledger")
+        with patch.object(mutation_topology, "BUILTIN_STORE_PROFILES", reduced):
+            with self.assertRaises(MutationTopologyError) as cm:
+                mutation_topology.lane1_topology_snapshot("single_host")
+        self.assertEqual(cm.exception.code, "L1A35_BUILTIN_STORE_INVENTORY_MISMATCH")
 
     def test_unknown_store_and_bad_topology_rejected(self):
         with self.assertRaises(MutationTopologyError) as cm:
