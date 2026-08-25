@@ -1,13 +1,6 @@
 workflows:
   splat-native-ios:
     name: Splat Lab Native - Internal TestFlight
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: 'testflight/splat-native-ios-20260825-build5'
-          include: true
-          source: true
     max_build_duration: 120
     instance_type: mac_mini_m2
     integrations:
