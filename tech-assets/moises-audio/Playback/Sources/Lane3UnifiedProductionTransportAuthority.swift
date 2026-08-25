@@ -131,6 +131,7 @@ public struct Lane3UnifiedTransportAuthoritySnapshot: Equatable, Sendable {
     public let executionInFlight: Bool
     public let executingTicket: UInt64?
     public let recoveryBlocked: Bool
+    public let cancellationAdmission: Lane3UnifiedCancellationAdmissionSnapshot
 }
 
 /// Single product-side token authority for Lane 3.
@@ -194,7 +195,7 @@ public actor Lane3UnifiedProductionTransportAuthority {
     private var executionInFlight = false
     private var executingTicket: UInt64?
     private var cancellationAfterDispatch: Set<UInt64> = []
-    private var cancellationBeforeEnqueue: Set<UInt64> = []
+    private var cancellationAdmissionFence = Lane3UnifiedCancellationAdmissionFence()
     private var recoveryBlocked = false
 
     public init(
@@ -318,7 +319,8 @@ public actor Lane3UnifiedProductionTransportAuthority {
             pendingDiscreteKinds: discrete.map(\.kind),
             executionInFlight: executionInFlight,
             executingTicket: executingTicket,
-            recoveryBlocked: recoveryBlocked
+            recoveryBlocked: recoveryBlocked,
+            cancellationAdmission: cancellationAdmissionFence.snapshot()
         )
     }
 
@@ -335,7 +337,9 @@ public actor Lane3UnifiedProductionTransportAuthority {
         kind: Lane3UnifiedTransportKind,
         command: ContinuousCommand
     ) async -> Lane3UnifiedTransportOutcome {
+        cancellationAdmissionFence.beginAdmission(ticket: ticket)
         if Task.isCancelled {
+            cancellationAdmissionFence.abandonAdmission(ticket: ticket)
             return .cancelledBeforeDispatch(ticket: ticket, kind: kind)
         }
         return await withTaskCancellationHandler {
@@ -360,7 +364,7 @@ public actor Lane3UnifiedProductionTransportAuthority {
         command: ContinuousCommand,
         continuation: CheckedContinuation<Lane3UnifiedTransportOutcome, Never>
     ) {
-        if cancellationBeforeEnqueue.remove(ticket) != nil {
+        if cancellationAdmissionFence.consumeAdmission(ticket: ticket) {
             continuation.resume(returning: .cancelledBeforeDispatch(ticket: ticket, kind: kind))
             return
         }
@@ -412,7 +416,9 @@ public actor Lane3UnifiedProductionTransportAuthority {
         if recoveryBlocked && !allowWhileRecoveryBlocked {
             return .rejectedBeforeToken(ticket: ticket, kind: kind, reason: "authorityRecoveryBlocked")
         }
+        cancellationAdmissionFence.beginAdmission(ticket: ticket)
         if Task.isCancelled {
+            cancellationAdmissionFence.abandonAdmission(ticket: ticket)
             return .cancelledBeforeDispatch(ticket: ticket, kind: kind)
         }
         return await withTaskCancellationHandler {
@@ -439,7 +445,7 @@ public actor Lane3UnifiedProductionTransportAuthority {
         allowWhileRecoveryBlocked: Bool,
         continuation: CheckedContinuation<Lane3UnifiedTransportOutcome, Never>
     ) {
-        if cancellationBeforeEnqueue.remove(ticket) != nil {
+        if cancellationAdmissionFence.consumeAdmission(ticket: ticket) {
             continuation.resume(returning: .cancelledBeforeDispatch(ticket: ticket, kind: kind))
             return
         }
@@ -501,7 +507,10 @@ public actor Lane3UnifiedProductionTransportAuthority {
             cancellationAfterDispatch.insert(ticket)
             return
         }
-        cancellationBeforeEnqueue.insert(ticket)
+        if cancellationAdmissionFence.markCancellationIfAdmitting(ticket: ticket) {
+            return
+        }
+        cancellationAdmissionFence.noteLateRetiredCancellationIgnored()
     }
 
     private func markReadyAtWindowDeadline(family: Lane3UnifiedContinuousFamily) async {
