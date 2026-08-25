@@ -51,18 +51,22 @@ public protocol Lane3CancellationRaceProbeDriving: Sendable {
 public struct Lane3CancellationRaceProbePolicy: Equatable, Sendable {
     public let iterations: Int
     public let batchSize: Int
+    public let postOperationSettlementYields: Int
     public let quiescencePollLimit: Int
 
     public init(
         iterations: Int = 10_000,
         batchSize: Int = 64,
+        postOperationSettlementYields: Int = 8,
         quiescencePollLimit: Int = 10_000
     ) {
         precondition(iterations >= 1 && iterations <= 1_000_000)
         precondition(batchSize >= 1 && batchSize <= 4_096)
+        precondition(postOperationSettlementYields >= 0 && postOperationSettlementYields <= 10_000)
         precondition(quiescencePollLimit >= 1 && quiescencePollLimit <= 1_000_000)
         self.iterations = iterations
         self.batchSize = batchSize
+        self.postOperationSettlementYields = postOperationSettlementYields
         self.quiescencePollLimit = quiescencePollLimit
     }
 }
@@ -82,6 +86,7 @@ public struct Lane3CancellationRaceProbeReport: Equatable, Sendable {
     public let maximumAdmittingTicketCount: Int
     public let maximumCancelledBeforeEnqueueTicketCount: Int
     public let finalSnapshot: Lane3CancellationRaceProbeSnapshot
+    public let settlementYieldsPerformed: Int
     public let quiescencePolls: Int
     public let counterRegressionDetected: Bool
     public let accountingComplete: Bool
@@ -101,6 +106,7 @@ public struct Lane3CancellationRaceProbeReport: Equatable, Sendable {
         maximumAdmittingTicketCount: Int,
         maximumCancelledBeforeEnqueueTicketCount: Int,
         finalSnapshot: Lane3CancellationRaceProbeSnapshot,
+        settlementYieldsPerformed: Int,
         quiescencePolls: Int,
         counterRegressionDetected: Bool
     ) {
@@ -118,6 +124,7 @@ public struct Lane3CancellationRaceProbeReport: Equatable, Sendable {
         self.maximumAdmittingTicketCount = maximumAdmittingTicketCount
         self.maximumCancelledBeforeEnqueueTicketCount = maximumCancelledBeforeEnqueueTicketCount
         self.finalSnapshot = finalSnapshot
+        self.settlementYieldsPerformed = settlementYieldsPerformed
         self.quiescencePolls = quiescencePolls
         self.counterRegressionDetected = counterRegressionDetected
         self.accountingComplete = executed + supersededBeforeToken + cancelledBeforeDispatch + rejectedBeforeToken + failedAfterDispatch == iterations
@@ -198,6 +205,14 @@ public enum Lane3CancellationRaceProbe {
             base = upper
         }
 
+        // Cancellation handlers return to Lane3UnifiedProductionTransportAuthority through a child
+        // Task. Give those already-created delivery Tasks deterministic scheduler opportunities before
+        // reading the terminal telemetry counter; otherwise a quiescent transport snapshot could race
+        // a telemetry-only late-retired cancellation that is still queued outside the actor.
+        for _ in 0..<policy.postOperationSettlementYields {
+            await Task.yield()
+        }
+
         var final = await driver.cancellationRaceProbeSnapshot()
         var polls = 0
         while !final.isQuiescent && polls < policy.quiescencePollLimit {
@@ -226,6 +241,7 @@ public enum Lane3CancellationRaceProbe {
             maximumAdmittingTicketCount: maxAdmitting,
             maximumCancelledBeforeEnqueueTicketCount: maxCancelledMarkers,
             finalSnapshot: final,
+            settlementYieldsPerformed: policy.postOperationSettlementYields,
             quiescencePolls: polls,
             counterRegressionDetected: counterRegression
         )
