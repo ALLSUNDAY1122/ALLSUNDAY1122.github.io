@@ -92,7 +92,7 @@ public enum AnalysisIOSPhysicalCaptureArtifactMaterializer {
             workloadPolicy: workloadPolicy,
             performanceProfile: performanceProfile
         )
-        return try AnalysisPhysicalCaptureArtifactStager.publish(
+        return try AnalysisPhysicalCaptureArtifactPublicationGate.publishValidated(
             bundle: bundle,
             archiveRootURL: archiveRootURL,
             fileManager: fileManager
