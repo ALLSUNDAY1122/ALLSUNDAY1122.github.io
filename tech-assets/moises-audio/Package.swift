@@ -96,6 +96,15 @@ let package = Package(
                 "Analysis/AnalysisPhysicalEvidenceArchiveContentValidation.swift",
                 "Analysis/AnalysisPhysicalEvidenceArchiveChainV2.swift",
                 "Analysis/AnalysisPhysicalEvidenceArchiveChainV2Strict.swift",
+                "Analysis/AnalysisPhysicalCaptureArtifactMaterialization.swift",
+                "Analysis/AnalysisPhysicalCaptureArtifactBundleValidation.swift",
+                "Analysis/AnalysisPhysicalCaptureArtifactStaging.swift",
+                "Analysis/AnalysisPhysicalCaptureArtifactPublicationGate.swift",
+                "Analysis/AnalysisPhysicalEvidenceW39BatchLoader.swift",
+                "Analysis/AnalysisPhysicalEvidenceBatchModels.swift",
+                "Analysis/AnalysisPhysicalEvidenceBatchAssembler.swift",
+                "Analysis/AnalysisPhysicalEvidenceBatchValidation.swift",
+                "Analysis/AnalysisPhysicalEvidenceBatchStaging.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
@@ -105,7 +114,8 @@ let package = Package(
                 "iOS/HostCore/HostModuleSlots.swift",
                 "iOS/HostCore/ApplePlatformSmoke.swift",
                 "iOS/HostCore/AnalysisIOSDevicePerformanceSession.swift",
-                "iOS/HostCore/AnalysisIOSPhysicalCaptureCoordinator.swift"
+                "iOS/HostCore/AnalysisIOSPhysicalCaptureCoordinator.swift",
+                "iOS/HostCore/AnalysisIOSPhysicalCaptureArtifactMaterializer.swift"
             ]
         ),
         .testTarget(
