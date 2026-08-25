@@ -98,8 +98,8 @@ class TopologyDecision:
 BUILTIN_STORE_PROFILES = {
     "a09_privacy_registry": StoreSafetyProfile(
         store_id="a09_privacy_registry",
-        local_serialization="none",
-        single_host_safe=False,
+        local_serialization="posix_flock",
+        single_host_safe=True,
         shared_authority_adapter=False,
         risk="lost_update",
     ),
