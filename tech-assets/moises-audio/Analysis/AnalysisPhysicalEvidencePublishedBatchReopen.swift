@@ -24,6 +24,11 @@ public enum AnalysisPhysicalEvidencePublishedBatchReopener {
 
         let runIDs = control.runs.map(\.runID)
         let executionIDs = control.runs.map(\.workloadExecutionID)
+        let runSummariesAreValid = control.runs.allSatisfy {
+            AnalysisPhysicalEvidenceW39BatchLoader.safeComponent($0.runID)
+                && AnalysisPhysicalEvidenceW39BatchLoader.safeComponent($0.workloadExecutionID)
+                && AnalysisPhysicalEvidenceW39BatchLoader.isSHA256($0.w39BundleRootSHA256)
+        }
         guard control.schemaVersion == 1,
               control.state == .readyToPublish,
               control.publicationID == publicationID,
@@ -33,11 +38,7 @@ public enum AnalysisPhysicalEvidencePublishedBatchReopener {
               !runIDs.isEmpty,
               Set(runIDs).count == runIDs.count,
               Set(executionIDs).count == executionIDs.count,
-              control.runs.allSatisfy {
-                  AnalysisPhysicalEvidenceW39BatchLoader.safeComponent($0.runID)
-                      && AnalysisPhysicalEvidenceW39BatchLoader.safeComponent($0.workloadExecutionID)
-                      && AnalysisPhysicalEvidenceW39BatchLoader.isSHA256($0.w39BundleRootSHA256)
-              } else {
+              runSummariesAreValid else {
             throw AnalysisPhysicalEvidencePublishedBatchReopenError.invalidW40Control
         }
 
