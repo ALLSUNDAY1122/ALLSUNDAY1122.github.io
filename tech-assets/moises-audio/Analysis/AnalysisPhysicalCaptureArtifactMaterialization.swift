@@ -130,7 +130,8 @@ public enum AnalysisPhysicalCaptureArtifactMaterializer {
         let recomputedPerformance = AnalysisDevicePerformanceEvidenceValidator.validate(
             input.performanceEvidence,
             expectedManifestID: input.plan.manifestID,
-            expectedManifestSHA256: input.plan.manifestSHA256
+            expectedManifestSHA256: input.plan.manifestSHA256,
+            evaluatedAt: input.performanceValidation.generatedAt
         )
         guard recomputedPerformance == input.performanceValidation,
               input.performanceValidation.status == .structurallyCompletePendingHQ else {
@@ -252,7 +253,7 @@ public enum AnalysisPhysicalCaptureArtifactMaterializer {
             ]
 
             guard artifacts.count == artifactCount,
-                  Set(artifacts.map(\.role)).count == artifactCount,
+                  Set(artifacts.map { $0.role.rawValue }).count == artifactCount,
                   Set(artifacts.map(\.relativePath)).count == artifactCount else {
                 throw AnalysisPhysicalCaptureArtifactMaterializationError.encodingFailure
             }
