@@ -544,7 +544,7 @@ public enum AnalysisPhysicalEvidenceAnchorLedgerStore {
               head.ledgerID == ledgerID,
               AnalysisPhysicalEvidenceW39BatchLoader.safeComponent(head.anchorID),
               !head.records.isEmpty,
-              head.records.count == Int(head.latestSequence),
+              UInt64(head.records.count) == head.latestSequence,
               Set(head.records.map(\.sequence)).count == head.records.count,
               Set(head.records.map(\.relativePath)).count == head.records.count,
               AnalysisPhysicalEvidenceW39BatchLoader.isSHA256(head.latestAnchorReceiptRootSHA256),
