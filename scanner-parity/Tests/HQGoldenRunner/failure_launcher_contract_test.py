@@ -17,12 +17,16 @@ for token in [
     'scanner-hq-golden-runner',
     'scanner-hq-golden-failure-recorder',
     '--workspace',
+    '--reference-corpus-manifest',
+    'SCANNER_GOLDEN_REFERENCE_MANIFEST',
     'runner_status',
     'mktemp',
     'trap cleanup EXIT',
     'exit "$runner_status"',
 ]:
     assert token in launcher, f"Formal Golden launcher fail-safe contract missing: {token}"
+
+assert '[[ ! -f "$reference_corpus_manifest" ]]' in launcher, "configured reference corpus must fail closed when missing"
 
 for token in [
     'FORMAL_GOLDEN_FAIL_PIPELINE_EXECUTION',
