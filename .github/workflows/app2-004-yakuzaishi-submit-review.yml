@@ -1,0 +1,82 @@
+name: APP2-004 Pharmacist Submit App Review
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-004-yakuzaishi-final-submit-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-004-yakuzaishi-submit-review
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Submit prepared Build 5 to App Review
+        id: submit
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          PHARMACIST_SUBMIT_OUTPUT: /tmp/app2-004-yakuzaishi-submit-result.json
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/app2_004_yakuzaishi_submit_review.py 2>&1 | tee /tmp/app2-004-yakuzaishi-submit.log
+
+      - name: Persist submission evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p automation/asc-results
+          if [ -f /tmp/app2-004-yakuzaishi-submit-result.json ]; then
+            cp /tmp/app2-004-yakuzaishi-submit-result.json automation/asc-results/app2-004-yakuzaishi-submit-review-result.json
+          else
+            python3 - <<'PY'
+          import json
+          from pathlib import Path
+          log=Path('/tmp/app2-004-yakuzaishi-submit.log').read_text(encoding='utf-8',errors='replace') if Path('/tmp/app2-004-yakuzaishi-submit.log').exists() else 'submitter did not run'
+          Path('automation/asc-results/app2-004-yakuzaishi-submit-review-result.json').write_text(json.dumps({'task_id':'APP2-004','submitted':False,'error':log[-4000:]},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/asc-results/app2-004-yakuzaishi-submit-review-result.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Persist APP2-004 App Review submission evidence'
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then break; fi
+              sleep $((attempt * 2))
+            done
+          fi
+
+      - name: Enforce submitted state
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('automation/asc-results/app2-004-yakuzaishi-submit-review-result.json')
+          if not p.exists(): raise SystemExit('submission result missing')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          if not data.get('submitted'):
+              raise SystemExit('APP2-004 submission did not complete: '+str(data.get('error')))
+          if data.get('review_submission_state') not in {'WAITING_FOR_REVIEW','IN_REVIEW','COMPLETING'}:
+              raise SystemExit('Unexpected review state: '+str(data.get('review_submission_state')))
+          print('PASS: submitted state='+str(data.get('review_submission_state')))
+          PY
