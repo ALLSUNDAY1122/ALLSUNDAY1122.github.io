@@ -46,43 +46,63 @@ assert sha==expected_sha, f'approved icon SHA mismatch: {sha}'
 print(f'PASS: approved HM1 artwork verified ({len(b)} bytes, {sha})')
 PY
 
-command -v dwebp >/dev/null 2>&1 || { echo "dwebp is required" >&2; exit 1; }
+if ! command -v dwebp >/dev/null 2>&1; then
+  if command -v brew >/dev/null 2>&1; then
+    HOMEBREW_NO_AUTO_UPDATE=1 brew install webp
+  else
+    echo "dwebp is required to materialize the approved HM1 icon" >&2
+    exit 1
+  fi
+fi
 dwebp "$TMP_WEBP" -o "$TMP_PNG" >/dev/null 2>&1
-
 mkdir -p "$ICONSET"
-python3 - "$TMP_PNG" "$ICONSET" <<'PY'
+
+# Codemagic runs on macOS, where sips is deterministic enough for asset-catalog
+# resizing and does not require a Python imaging package. Linux CI falls back to
+# Pillow, which is installed by the icon verification workflow.
+if command -v sips >/dev/null 2>&1; then
+  while read -r name px; do
+    sips -z "$px" "$px" "$TMP_PNG" --out "$ICONSET/$name" >/dev/null
+  done <<'SIZES'
+icon-20@2x.png 40
+icon-20@3x.png 60
+icon-29@2x.png 58
+icon-29@3x.png 87
+icon-40@2x.png 80
+icon-40@3x.png 120
+icon-60@2x.png 120
+icon-60@3x.png 180
+icon-1024.png 1024
+SIZES
+else
+  python3 - "$TMP_PNG" "$ICONSET" <<'PY'
 from pathlib import Path
 from PIL import Image
-import hashlib,json,sys
+import sys
 src=Path(sys.argv[1]); root=Path(sys.argv[2])
 with Image.open(src) as opened:
-    rgba=opened.convert('RGBA')
-background=Image.new('RGBA',rgba.size,(247,243,234,255))
-background.alpha_composite(rgba)
-rgb=background.convert('RGB')
+    rgb=opened.convert('RGB')
 resampling=getattr(Image,'Resampling',Image).LANCZOS
-sizes={
- 'icon-20@2x.png':40,
- 'icon-20@3x.png':60,
- 'icon-29@2x.png':58,
- 'icon-29@3x.png':87,
- 'icon-40@2x.png':80,
- 'icon-40@3x.png':120,
- 'icon-60@2x.png':120,
- 'icon-60@3x.png':180,
- 'icon-1024.png':1024,
-}
+sizes={'icon-20@2x.png':40,'icon-20@3x.png':60,'icon-29@2x.png':58,'icon-29@3x.png':87,'icon-40@2x.png':80,'icon-40@3x.png':120,'icon-60@2x.png':120,'icon-60@3x.png':180,'icon-1024.png':1024}
 for name,px in sizes.items():
     rgb.resize((px,px),resampling).save(root/name,format='PNG',optimize=True)
+PY
+fi
+
+python3 - "$ICONSET" <<'PY'
+from pathlib import Path
+import hashlib,json,struct,sys
+root=Path(sys.argv[1])
+sizes={'icon-20@2x.png':40,'icon-20@3x.png':60,'icon-29@2x.png':58,'icon-29@3x.png':87,'icon-40@2x.png':80,'icon-40@3x.png':120,'icon-60@2x.png':120,'icon-60@3x.png':180,'icon-1024.png':1024}
 manifest=[]
 for name,px in sizes.items():
-    p=root/name
-    with Image.open(p) as check:
-        assert check.size==(px,px), f'{name}: {check.size}/{px}'
-        assert check.mode=='RGB', f'{name}: alpha channel not allowed ({check.mode})'
-    b=p.read_bytes()
+    p=root/name; b=p.read_bytes()
+    assert b[:8]==b'\x89PNG\r\n\x1a\n' and b[12:16]==b'IHDR', name
+    w,h=struct.unpack('>II',b[16:24]); color_type=b[25]
+    assert (w,h)==(px,px), f'{name}: {(w,h)}/{px}'
+    assert color_type not in (4,6), f'{name}: alpha channel is not allowed'
     manifest.append({'filename':name,'pixels':px,'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()})
-print(json.dumps({'count':len(manifest),'files':manifest},ensure_ascii=False,indent=2))
+print(json.dumps({'approvedSourceSha256':'ac8f0c2c050801ed2121bdd50494fdcafcec8af89a1d7811cd044b8977dd2d59','count':len(manifest),'files':manifest},ensure_ascii=False,indent=2))
 PY
 
 echo "Prepared all 9 AppIcon slots from the checksum-verified user-approved HM1 artwork."
