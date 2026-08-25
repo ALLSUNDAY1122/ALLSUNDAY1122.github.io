@@ -42,14 +42,34 @@ enum SplatReconstructionPolicy {
         min(trainingHorizon, max(resumedIteration, max(1, target)))
     }
 
+    /// Serious thermal pressure is a throttling signal, not a terminal reconstruction result.
+    /// Preserve the full training/SH3/quality contract and lower GPU submission duty-cycle instead.
+    /// Critical pressure still checkpoints and pauses because the device needs to cool down.
     static func requiresThermalPause(_ state: ProcessInfo.ThermalState) -> Bool {
         switch state {
-        case .serious, .critical:
+        case .critical:
             return true
-        case .nominal, .fair:
+        case .nominal, .fair, .serious:
             return false
         @unknown default:
             return true
+        }
+    }
+
+    /// Wall-clock pacing only. This never changes frame selection, image resolution, Gaussian caps,
+    /// optimizer settings, SH degree, or target iteration count.
+    static func thermalPacingDelaySeconds(_ state: ProcessInfo.ThermalState) -> TimeInterval {
+        switch state {
+        case .nominal:
+            return 0
+        case .fair:
+            return 0.010
+        case .serious:
+            return 0.060
+        case .critical:
+            return 0
+        @unknown default:
+            return 0.060
         }
     }
 }

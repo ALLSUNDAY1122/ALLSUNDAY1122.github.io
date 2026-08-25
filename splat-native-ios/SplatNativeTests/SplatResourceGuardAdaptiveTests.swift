@@ -38,7 +38,7 @@ final class SplatResourceGuardAdaptiveTests: XCTestCase {
         )
     }
 
-    func testSeriousAndCriticalThermalStatesPauseImmediately() {
+    func testSeriousThermalStateThrottlesWhileCriticalPauses() {
         let guardrail = SplatResourceGuard(physicalMemoryBytes: 8 * 1_073_741_824)
         guardrail.resetForPass()
 
@@ -48,7 +48,8 @@ final class SplatResourceGuardAdaptiveTests: XCTestCase {
             availableMemoryBytes: 1_000_000_000,
             thermalState: .serious
         )
-        XCTAssertEqual(serious.reason, .thermalPressure)
+        XCTAssertNil(serious.reason)
+        XCTAssertFalse(SplatReconstructionPolicy.requiresThermalPause(.serious))
 
         let critical = guardrail.evaluate(
             splatCount: 50_000,
@@ -57,6 +58,20 @@ final class SplatResourceGuardAdaptiveTests: XCTestCase {
             thermalState: .critical
         )
         XCTAssertEqual(critical.reason, .thermalPressure)
+        XCTAssertTrue(SplatReconstructionPolicy.requiresThermalPause(.critical))
+    }
+
+    func testThermalPacingIncreasesWithPressureWithoutChangingQualityContract() {
+        let nominal = SplatReconstructionPolicy.thermalPacingDelaySeconds(.nominal)
+        let fair = SplatReconstructionPolicy.thermalPacingDelaySeconds(.fair)
+        let serious = SplatReconstructionPolicy.thermalPacingDelaySeconds(.serious)
+
+        XCTAssertEqual(nominal, 0)
+        XCTAssertGreaterThan(fair, nominal)
+        XCTAssertGreaterThan(serious, fair)
+        XCTAssertEqual(SplatReconstructionPolicy.standardIterations, 7_000)
+        XCTAssertEqual(SplatReconstructionPolicy.datasetDownscale, 4.0)
+        XCTAssertEqual(SplatReconstructionPolicy.makeConfig().shDegree, 3)
     }
 
     func testFairThermalStateDoesNotPauseByItself() {

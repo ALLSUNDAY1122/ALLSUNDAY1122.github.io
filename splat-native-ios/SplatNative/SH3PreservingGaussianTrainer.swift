@@ -16,7 +16,21 @@ final class SH3PreservingGaussianTrainer {
 
     @discardableResult
     func step() -> TrainingStats {
-        base.step()
+        applyThermalPacingBeforeStep()
+        return base.step()
+    }
+
+    private func applyThermalPacingBeforeStep() {
+        let thermalState = ProcessInfo.processInfo.thermalState
+        let delay = SplatReconstructionPolicy.thermalPacingDelaySeconds(thermalState)
+        guard delay > 0 else { return }
+
+        // At serious pressure, drain queued Metal work before yielding the worker thread so the
+        // cooldown interval actually reduces GPU duty-cycle instead of only delaying CPU submission.
+        if thermalState == .serious {
+            msplatSync()
+        }
+        Thread.sleep(forTimeInterval: delay)
     }
 
     func train() {
