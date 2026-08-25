@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from unittest import mock
 
 from mutation_topology import assess_store_topology
 from privacy_retention import AtomicPrivacyRegistry, PrivacyRetentionService, audioshake_documented_policy
@@ -97,6 +98,15 @@ class PrivacyRetentionConcurrencyTests(unittest.TestCase):
         self.assertEqual(self.provider.task_calls, 1)
         self.assertTrue(snapshot["overallPrivacyDeletionComplete"])
         self.assertFalse(directory.exists())
+
+    def test_local_delete_enoent_race_is_idempotent(self):
+        job = "e" * 32
+        self.register_job(job)
+        service = self.service()
+        with mock.patch("privacy_retention.shutil.rmtree", side_effect=FileNotFoundError):
+            record = service.request_delete(job, delete_provider=False)
+        self.assertTrue(record.local_delete_requested)
+        self.assertTrue(record.local_delete_confirmed)
 
     def test_concurrent_registration_and_diagnostic_do_not_overwrite_each_other(self):
         primary = "c" * 32
