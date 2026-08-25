@@ -82,6 +82,15 @@ jobs:
           print('L1_A26_EXACT_AUDIT_PASS')
           PY
 
+      - name: Diagnose A26 unittest failures verbosely
+        if: failure()
+        shell: bash
+        run: |
+          export PYTHONPATH="$PWD/tech-assets/moises-audio/Separation/Server:$PWD/tech-assets/moises-audio/Separation/Evaluation:$PWD/tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          python3 -m unittest discover -v \
+            -s tech-assets/moises-audio/Separation/Tests \
+            -p 'test_*.py' || true
+
       - name: Upload exact audit report
         if: always()
         uses: actions/upload-artifact@v4
