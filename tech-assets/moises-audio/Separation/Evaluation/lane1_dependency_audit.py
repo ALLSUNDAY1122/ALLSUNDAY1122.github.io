@@ -117,6 +117,7 @@ def _run_unittest(audio_root: Path, timeout_seconds: int) -> dict[str, Any]:
 
 def _dependency_checks(audio_root: Path) -> dict[str, Any]:
     server = audio_root / "Separation" / "Server"
+    tests_dir = audio_root / "Separation" / "Tests"
     required_files = {
         "A21_contract": server / "ai_stem_generation_contract.py",
         "A22_runtime": server / "ai_stem_generation_runtime.py",
@@ -126,10 +127,32 @@ def _dependency_checks(audio_root: Path) -> dict[str, Any]:
         "A25_delete_resume": server / "ai_stem_generation_delete_resume.py",
         "A26_retention_gateway": server / "ai_stem_generation_retention_gateway.py",
     }
+    required_safety_files = {
+        "A27_topology": server / "mutation_topology.py",
+        "A28_privacy": server / "privacy_retention.py",
+        "A29_reconciliation": server / "provider_delete_reconciliation.py",
+    }
+    required_safety_regressions = {
+        "A27_A35_topology_regression": tests_dir / "test_mutation_topology.py",
+        "A28_privacy_regression": tests_dir / "test_privacy_retention.py",
+        "A28_privacy_concurrency_regression": tests_dir / "test_privacy_retention_concurrency.py",
+        "A29_reconciliation_regression": tests_dir / "test_provider_delete_reconciliation.py",
+        "A30_reconciliation_resume_regression": tests_dir / "test_provider_delete_reconciliation_resume.py",
+        "A31_reconciliation_ordering_regression": tests_dir / "test_provider_delete_reconciliation_ordering.py",
+        "A32_reconciliation_crash_atomicity_regression": tests_dir / "test_provider_delete_reconciliation_crash_atomicity.py",
+        "A33_reconciliation_temporal_regression": tests_dir / "test_provider_delete_reconciliation_temporal_causality.py",
+        "A34_reconciliation_expiry_regression": tests_dir / "test_provider_delete_reconciliation_documented_expiry.py",
+    }
     failures = []
     for name, path in required_files.items():
         if not path.is_file():
             failures.append({"check": name, "code": "L1A26_REQUIRED_FILE_MISSING"})
+    for name, path in required_safety_files.items():
+        if not path.is_file():
+            failures.append({"check": name, "code": "L1A36_REQUIRED_SAFETY_FILE_MISSING"})
+    for name, path in required_safety_regressions.items():
+        if not path.is_file():
+            failures.append({"check": name, "code": "L1A36_REQUIRED_REGRESSION_MISSING"})
 
     stale_policy = audio_root / "Separation" / "Evaluation" / "schemas" / "generated-stem-retention-policy.schema.json"
     if stale_policy.exists():
@@ -166,7 +189,11 @@ def _dependency_checks(audio_root: Path) -> dict[str, Any]:
             if token not in text:
                 failures.append({"check": "a25_retention_expectation", "code": "L1A26_A25_RETENTION_EXPECTATION_MISSING", "token": token})
 
-    return {"checked": 4 + len(required_files), "failures": failures, "state": "PASS" if not failures else "FAIL"}
+    return {
+        "checked": 4 + len(required_files) + len(required_safety_files) + len(required_safety_regressions),
+        "failures": failures,
+        "state": "PASS" if not failures else "FAIL",
+    }
 
 
 def _stable_code_inventory(files: list[Path], root: Path) -> dict[str, Any]:
