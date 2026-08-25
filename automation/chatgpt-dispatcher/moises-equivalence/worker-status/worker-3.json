@@ -15,38 +15,42 @@
   "base_integration_sha": "1648a275833ad4e8aed3245347e6de231fd0487f",
   "branch_merge_base_sha": "7948195f1d94f28bc212c79b310fdaed00a4f580",
   "preserved_checkpoint_head": "d63cecbfa53007bf9593b628ae291702f496bb17",
-  "previous_autonomous_chain_head": "b47c6cd08502821d5dace29e74eff9d91cfc090b",
-  "historical_commit_coverage": "AW01-AW35 and earlier Lane-3 work remain preserved by branch ancestry through b47c6cd08502821d5dace29e74eff9d91cfc090b. The commits list below records AW36 only.",
-  "head_sha": "378b2ac7d9ea22f6c065b171e4f81bcc6a16ba3a",
+  "previous_autonomous_chain_head": "378b2ac7d9ea22f6c065b171e4f81bcc6a16ba3a",
+  "historical_commit_coverage": "AW01-AW36 and earlier Lane-3 work remain preserved by branch ancestry through 378b2ac7d9ea22f6c065b171e4f81bcc6a16ba3a. The commits list below records AW37 only.",
+  "head_sha": "b5e2027f14d1013a6ebe479cdafca8fbefd7a330",
   "commits": [
-    "3a12d2b4095bdb9fa3f3f5285d0994d3f7ac4359",
-    "579bcef0641021c9d93f69aa34f7c3a48f785f67",
-    "769e7a3b3ce619e31e54d836ec3742e660ea4e7c",
-    "254661762c311d10c35f1ee2a6f8ccf4c93c6b57",
-    "d39c5bc1ef0cb28cdab671e8f6ac6a05c87ae1e0",
-    "2820eb80d1b61e01faaf04c332dd04fdf016f7de",
-    "378b2ac7d9ea22f6c065b171e4f81bcc6a16ba3a"
+    "e14695ab2315ce0a66a66c8934aaa267b86be5b8",
+    "9a2aa7489804b1e724c2625c976b842981a65942",
+    "9f661364a166e925bf862c571998ed8a324e0b72",
+    "9ae6593ab60d9963cf839c622667c886fa713ba9",
+    "0e8188d50c3adebd2dca14867ffa7dfeeed7c722",
+    "0452a563089e5ec27aa7909a4754827fcddb63e0",
+    "4b5fbd7e0ae10446002163444903750f2bd66c5e",
+    "dd2fda1059a1a111c6502c4ecd0f0c68fca595d1",
+    "b5e2027f14d1013a6ebe479cdafca8fbefd7a330"
   ],
   "tests": [
-    "AW01-AW35 prior suites/evidence remain preserved by branch ancestry",
-    "L3-AW36 Swift 6.2.1 Linux self-test compiled with strict-concurrency=complete and warnings-as-errors: true pre-enqueue cancellation consumed, normal admission consumed without marker, abandoned admission retained nothing, two late-retired cancellations counted without retained marker",
-    "L3-AW36 1000000-event optimized stress PASS: 200000 pre-enqueue cancellations, 400000 late-retired cancellations, retained admission tickets 0, retained cancellation markers 0, invariant violations 0",
-    "L3-AW36 optimized bookkeeping benchmark PASS: 20 x 1000000 operations, median 44.723ms, p95 50.038ms, max 53.359ms, checksum 5000192; excludes actor/Apple/device/audio latency",
-    "Production authority diff audit PASS: AW36 changes only cancellation admission/snapshot handling; AW34 fixed-window coalescing, discrete barrier execution, recovery execution and selected tempo route are unchanged",
-    "Complete selected SwiftPM/Xcode authority compile/runtime remains pending and is not claimed by portable fence tests"
+    "AW01-AW36 prior suites/evidence remain preserved by branch ancestry",
+    "L3-AW37 probe core Swift 6.2.1 Linux strict-concurrency=complete warnings-as-errors self-test PASS: 4096 operations, 3072 cancellation requests, observed 2351 cancelled-before-dispatch plus 1745 executed, zero accounting loss, delayed quiescence required one poll, synthetic retired-counter regression rejected from boundedness PASS",
+    "L3-AW37 optimized 1000000-operation probe stress PASS: 750000 cancellation requests, observed 396304 cancelled-before-dispatch plus 603696 executed, zero accounting loss, boundedness PASS, elapsed 2627.853ms",
+    "L3-AW37 optimized probe benchmark PASS: 20 x 20000 operations, median 52.257ms, p95 81.760ms, max 104.529ms, checksum 412500; measures Task cancellation/probe bookkeeping and driver dispatch only",
+    "L3-AW37 adapter structural compile-surface PASS under Swift 6 strict concurrency and warnings-as-errors against the already-existing authority/outcome/snapshot interface shapes; this is not a selected repository/Xcode compile",
+    "L3-AW37 actual-authority 5000-operation / 3750-cancellation regression authored against Lane3UnifiedProductionTransportAuthority + RescheduleFencedPlaybackBackend + PracticeDSPGenerationCoordinator; complete selected repository/Xcode execution remains pending and is not claimed PASS"
   ],
   "evidence": [
-    "Playback/Sources/Lane3UnifiedCancellationAdmissionFence.swift",
-    "Playback/Sources/Lane3UnifiedProductionTransportAuthority.swift",
-    "Playback/Tests/L3_AW36_CancellationAdmissionFenceSelfTest.swift",
-    "Playback/Tests/L3_AW36_CancellationAdmissionFenceStress.swift",
-    "Playback/Tests/L3_AW36_CancellationAdmissionFenceBenchmark.swift",
-    "Playback/benchmarks/L3-AW36_CANCELLATION_ADMISSION_HARDENING.md",
-    "Playback/benchmarks/L3-AW36_VALIDATION.json",
-    "validation_blob_sha:405f31ddb42b406e04011b5317ec356112ba36a6"
+    "Playback/Sources/Lane3CancellationRaceProbe.swift",
+    "Playback/Sources/Lane3UnifiedTransportCancellationRaceAdapter.swift",
+    "Playback/Tests/L3_AW37_CancellationRaceProbeSelfTest.swift",
+    "Playback/Tests/L3_AW37_CancellationRaceProbeStress.swift",
+    "Playback/Tests/L3_AW37_CancellationRaceProbeBenchmark.swift",
+    "Playback/Tests/L3_AW37_UnifiedAuthorityCancellationRaceSelfTest.swift",
+    "Playback/benchmarks/L3-AW37_CANCELLATION_RACE_PROBE.md",
+    "Playback/benchmarks/L3-AW37_VALIDATION.json",
+    "validation_blob_sha:0c14db187968024fcbaebb6a30fce52b3e3c5b18"
   ],
   "known_gaps": [
-    "AW36 removes historical retention of late cancellation delivery by keeping pre-enqueue markers only behind an explicit live admission ticket, but complete selected SwiftPM/Xcode execution and an actual actor cancel/complete race regression on Apple runtime remain unexecuted",
+    "AW37 now provides a reusable Lane-local Task-cancellation race probe and real unified-authority adapter, but the authored 5000-operation actual-authority regression still requires complete selected SwiftPM/Xcode execution; portable probe/structural compile evidence is not a substitute",
+    "AW36 late-retired cancellation retention is bounded by explicit admission state, but physical Apple runtime must still demonstrate zero retained admission/cancellation markers after real cancellation-vs-completion races",
     "AW35 provides a bounded machine-checkable seek/loop continuity contract across AW33 reconstruction generations and AW34 interaction semantics, but the selected iOS graph still must populate exact first-intent, token-issued, audible-result and applied-target observations on physical iPhone",
     "AW34 fixed-window seek/loop eligibility is retained, but the numerical 16ms value remains provisional until physical-iPhone latency/UX evidence",
     "Automatic repeated-loop seam envelope remains intentionally unimplemented: already-scheduled future AudioUnit gain events cannot yet be safely revoked solely by the Swift generation fence after seek/tempo/lifecycle invalidation, and graph/gain-stage generation replacement must itself be proven not to introduce an audible discontinuity before adoption",
@@ -59,32 +63,33 @@
     "MOI-P006/P007/P008/P010/P012/P014/P015 remain MISSING"
   ],
   "hq_requests": [
-    "Preserve AW01-AW35 chain through b47c6cd08502821d5dace29e74eff9d91cfc090b and all seven AW36 commits during semantic integration",
-    "Compile and execute Lane3UnifiedCancellationAdmissionFence plus the modified Lane3UnifiedProductionTransportAuthority in the complete selected SwiftPM/Xcode/iOS source graph; include a real actor cancellation-vs-completion race regression and assert zero retained admission/cancellation markers after quiescence",
-    "Retain AW36 rule that a cancellation for a ticket no longer in admission, pending, or execution is telemetry-only and must never be inserted into future pre-enqueue state",
+    "Preserve AW01-AW36 chain through 378b2ac7d9ea22f6c065b171e4f81bcc6a16ba3a and all nine AW37 commits during semantic integration",
+    "Compile and execute L3_AW37_UnifiedAuthorityCancellationRaceSelfTest.swift with AW17/AW34/AW36 in the complete selected SwiftPM/Xcode/iOS graph; require complete outcome accounting and terminal admittingTicketCount=0, cancelledBeforeEnqueueTicketCount=0, admission invariant true, no counter overflow/regression",
+    "Use Lane3UnifiedTransportCancellationRaceAdapter for Apple-runtime seek/loop cancellation-vs-completion runs rather than creating a second App/Shared debounce or cancellation state machine",
+    "Retain AW36 rule that cancellation for a ticket no longer in admission, pending, or execution is telemetry-only and is never inserted into future pre-enqueue state",
     "Retain AW34 fixed-window semantics in Lane3UnifiedProductionTransportAuthority and do not add resettable seek/loop debounce in Shared/App",
-    "Use AW35 continuity evidence on physical iPhone for first-intent/token/audible/applied-target and reconstruction generation correlation",
+    "Use AW35 continuity evidence on physical iPhone for exact first-intent/token/audible/applied-target and reconstruction generation correlation",
     "For the selected AW31 tempo route keep inner AW17 tempo quiet period zero; facade-side pre-boundary coalescing remains the only tempo debounce",
     "Tune the existing 16ms seek/loop value only from physical-iPhone first-intent-to-token and first-intent-to-audible p50/p95/p99 evidence",
     "Do not add automatic repeated-loop future gain events until Lane 3 has cancelable or generation-isolated exact-host automation whose isolation mechanism is itself audibly safe",
     "Continue using Lane3SelectedTransportReconstructionSlot for AW33 poison recovery and rights-cleared real audio/current-Moises differential/listening before changing P006/P007/P008/P010/P012/P014/P015"
   ],
   "previous_autonomous_wave": {
-    "wave_id": "L3-AW35",
-    "result": "Added bounded, fail-closed interactive continuity evidence across AW33 reconstruction generations and AW34 seek/loop semantics; physical Apple/device/audio evidence remained open."
+    "wave_id": "L3-AW36",
+    "result": "Replaced unbounded cancellationBeforeEnqueue fallback retention with explicit cancellation admission fencing; one-million-event fence stress ended with zero retained admission/cancellation markers."
   },
   "latest_autonomous_wave": {
-    "wave_id": "L3-AW36",
-    "goal": "Eliminate unbounded historical retention from delayed Task-cancellation delivery in the unified transport authority while preserving true pre-enqueue cancellation and all AW34 transport ordering semantics.",
-    "rationale": "The cancellation handler returns to the actor through a separate Task. The prior fallback inserted any ticket that was no longer pending or executing into cancellationBeforeEnqueue, so a cancellation delivered after completion or supersession created a marker that could never be consumed. Long interactive cancellation/completion races could therefore grow retained state monotonically.",
-    "done_when": "Only tickets explicitly inside a live admission window can create a pre-enqueue cancellation marker; that marker is consumed or abandoned with the same admission; pending and executing cancellation semantics remain unchanged; retired late delivery is counted but not retained; snapshot exposes machine-checkable admission invariants; one-million-event stress ends with zero retained markers; AW34 fixed-window/barrier/recovery semantics remain unchanged; Apple/device/PARITY claims remain disabled.",
-    "result": "COMPLETE_NON_PARITY: added Lane3UnifiedCancellationAdmissionFence and wired continuous/discrete authority admission through it. Late cancellation for retired tickets is telemetry-only instead of future cancellation state. Strict portable self-test passed. One-million-event stress processed 200000 true pre-enqueue cancellations and 400000 late-retired cancellations with zero retained admission tickets/markers and zero invariant violations. Optimized 20 x 1000000 bookkeeping benchmark: median 44.723ms, p95 50.038ms, max 53.359ms, checksum 5000192. Authority diff preserves AW34 fixed-window and transport execution semantics. Complete selected Xcode/Apple actor race, physical iPhone, real audio/current-Moises differential/listening and PARITY remain open."
+    "wave_id": "L3-AW37",
+    "goal": "Turn AW36 cancellation boundedness into a reusable actual-authority race measurement path that can drive Task cancellation at multiple scheduler phases and fail closed unless the unified transport returns to zero retained cancellation state.",
+    "rationale": "AW36 fixed the production retention bug but its large stress suite exercised the extracted admission fence directly. Lane 3 still lacked a reusable mechanism to race cancellation through Lane3UnifiedProductionTransportAuthority itself, correlate production outcome receipts with AW36 snapshot state, settle asynchronously-delivered cancellation Tasks, and carry the exact regression into selected Apple execution without touching Lane-4 build ownership.",
+    "done_when": "A Sendable probe drives immediate/one-yield/two-yield Task cancellation with complete outcome accounting; a Lane-local adapter maps actual unified-authority seek/loop operations and AW36 snapshot state; terminal boundedness requires transport/admission quiescence, invariant validity and non-regressing counters; scheduler-settlement prevents terminal telemetry undercount; strict portable self-test/stress/benchmark and adapter compile-surface pass; an actual-authority regression is authored for selected execution; no Apple/device/audio/PARITY claim is made without real execution.",
+    "result": "COMPLETE_NON_PARITY: added Lane3CancellationRaceProbe and Lane3UnifiedTransportCancellationRaceAdapter plus a 5000-operation actual-authority regression. Strict portable self-test passed 4096 operations with 3072 cancellation requests and zero accounting loss, including delayed-quiescence and counter-regression negative cases. Optimized one-million-operation stress passed with 750000 cancellation requests, 396304 cancelled-before-dispatch plus 603696 executed and zero accounting loss in 2627.853ms. Optimized 20 x 20000 benchmark median 52.257ms, p95 81.760ms, max 104.529ms, checksum 412500. Adapter structural strict-concurrency compile-surface passed. The actual unified-authority regression is authored but not claimed executed in the complete selected repository/Xcode graph; AVFAudio, physical iPhone, real audio/current-Moises differential/listening and PARITY remain open."
   },
   "next_wave_candidates": [
-    "actual authority cancellation/completion race instrumentation adapter for selected Apple runtime if it can remain Lane-local and not duplicate Lane-4 build ownership",
-    "generation-isolated exact-host automatic repeated-loop seam envelope only if future gain automation can be safely cancelled or isolated across seek/tempo/lifecycle generations and the isolation mechanism itself cannot introduce an audible graph discontinuity",
-    "selected Apple/iPhone adapter that feeds AW35 continuity evidence exact token/audible/applied-target fields when the complete selected runtime is available without moving device/PARITY authority out of HQ"
+    "selected Apple/iPhone instrumentation adapter that feeds AW35 exact token-issued, audible-result and applied-target fields while reusing AW37 cancellation correlation and without moving build/PARITY authority out of HQ",
+    "generation-isolated exact-host automatic repeated-loop seam envelope only if future AudioUnit gain automation can be safely cancelled or isolated across seek/tempo/lifecycle generations and the isolation mechanism itself cannot introduce an audible graph discontinuity",
+    "representative-codec and corruption/truncation execution contract extension for AW27/AW30 only where additional Lane-3 measurement fields are still missing rather than duplicating Lane-2 import ownership"
   ],
-  "last_updated": "2026-08-25T23:43:00+09:00",
+  "last_updated": "2026-08-26T00:23:00+09:00",
   "writer_policy": "Only Moises-Worker-3 may update this status file; HQ remains semantic integration and PARITY authority."
 }
