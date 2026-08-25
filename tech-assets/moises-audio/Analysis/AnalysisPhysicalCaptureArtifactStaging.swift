@@ -101,11 +101,8 @@ public enum AnalysisPhysicalCaptureArtifactStager {
         archiveRootURL: URL,
         fileManager: FileManager = .default
     ) throws -> AnalysisPhysicalCaptureArtifactPublicationReceipt {
-        guard bundle.schemaVersion == 1,
-              bundle.artifacts.count == AnalysisPhysicalCaptureArtifactMaterializer.artifactCount,
-              isSHA256(bundle.bundleRootSHA256),
-              !bundle.runID.isEmpty,
-              !bundle.workloadExecutionID.isEmpty else {
+        let validation = AnalysisPhysicalCaptureArtifactBundleValidator.validate(bundle)
+        guard validation.valid else {
             throw AnalysisPhysicalCaptureArtifactStagingError.invalidBundle
         }
 
@@ -210,6 +207,10 @@ public enum AnalysisPhysicalCaptureArtifactStager {
         archiveRootURL: URL,
         fileManager: FileManager = .default
     ) throws {
+        let validation = AnalysisPhysicalCaptureArtifactBundleValidator.validate(bundle)
+        guard validation.valid else {
+            throw AnalysisPhysicalCaptureArtifactStagingError.invalidBundle
+        }
         try ensureArchiveRoot(archiveRootURL, fileManager: fileManager)
         let runsRoot = archiveRootURL.appendingPathComponent("runs", isDirectory: true)
         try ensureDirectory(runsRoot, fileManager: fileManager)
@@ -363,17 +364,6 @@ public enum AnalysisPhysicalCaptureArtifactStager {
               !value.contains("//") else { return false }
         return value.split(separator: "/", omittingEmptySubsequences: false).allSatisfy {
             !$0.isEmpty && $0 != "." && $0 != ".."
-        }
-    }
-
-    private static func isSHA256(_ value: String) -> Bool {
-        value.count == 64 && value.unicodeScalars.allSatisfy { scalar in
-            switch scalar.value {
-            case 48...57, 65...70, 97...102:
-                return true
-            default:
-                return false
-            }
         }
     }
 }
