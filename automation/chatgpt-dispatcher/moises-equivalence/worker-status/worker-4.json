@@ -7,7 +7,7 @@
   "operating_model": "v4｜4 Autonomous Independent Lanes / Late Integration",
   "work_branch": "moises/wp4-analysis-platform",
   "state": "IN_PROGRESS",
-  "current_bundle": "L4-W45｜Anchored P021 physical-evidence adjudication gate / repeated W24 acceptance + genuine-runtime binding",
+  "current_bundle": "L4-W46｜Anchored real-audio Analysis parity adjudication / P009-P011-P013-P016 differential completeness + rights/device binding",
   "completed_bundles": [
     "L4-M01", "L4-M02", "L4-M03", "L4-M04",
     "L4-W05", "L4-W06", "L4-W07", "L4-W08", "L4-W09", "L4-W10",
@@ -16,50 +16,56 @@
     "L4-W23", "L4-W24", "L4-W25", "L4-W26", "L4-W27", "L4-W28",
     "L4-W29", "L4-W30", "L4-W31", "L4-W32", "L4-W33", "L4-W34",
     "L4-W35", "L4-W36", "L4-W37", "L4-W38", "L4-W39", "L4-W40",
-    "L4-W41", "L4-W42", "L4-W43", "L4-W44"
+    "L4-W41", "L4-W42", "L4-W43", "L4-W44", "L4-W45"
   ],
   "epoch_contract_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
   "base_integration_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
-  "head_sha": "56fd6f0e16a9972460bd82bf6d4e42aa32dbd626",
+  "head_sha": "a937a83de80e0758129d931d193a9539a41a103d",
   "commits": [
-    "c7ff33f65b38b6f791e5dd1bd68eaa41d7bc5c9b",
-    "1b2dbefc418cd8c7ce6e81618a8487a2ae63b61e",
-    "bd4563a2f6ffb0240f810c063aa0ea94e7133f25",
-    "2169eff8d945381ef6e42fb946cd3020cc278f0a",
-    "b3269be2aad493ba1e4e5df97d0d93d3503e1ee6",
-    "67084430615055b946073229e72f8b5c8030b168",
-    "56fd6f0e16a9972460bd82bf6d4e42aa32dbd626"
+    "8b078270e0f0a4cbcd2f6e80f7e736074dabc531",
+    "aebc9eca1b79d8159ae54b2ebbd9c16f0317239e",
+    "ed646dece5068d1b6fc6abeb9e5562b1df4a6d50",
+    "e862eb4c4c23fa3e5746c384e60ec505cd54c128",
+    "684692c325b84765b233308c2bbd519a99d59985",
+    "5754dd276cad4165a5e74f5fe902cd4e44f4e293",
+    "9ce0e375edb7b2c19eda32c3f66c00d310a53331",
+    "0176af28bf9532736e24b126d8cf4d020ee05efd",
+    "a734ad14f43e31ca8d5e53adba703a9614886a4c",
+    "a937a83de80e0758129d931d193a9539a41a103d"
   ],
   "tests": [
-    "W44 durable XCTest source covers deterministic current-ledger verification/certificate, coordinated whole-ledger rollback to an older internally valid directory, stale cached snapshot, mixed sequence/old ledger root, mixed latest receipt root, ledger-ID substitution, anchor-ID substitution, checkpoint certificate replay, predecessor checkpoint mismatch, forged certificate root and invalid expectation bounds/chain.",
-    "W44 production verification accepts only an independently supplied expectation and reopens W43 through AnalysisPhysicalEvidenceAnchorLedgerStore.exportSnapshot; cached snapshots are not a public production input.",
-    "W44 Swift 6.2.1 source-shaped filesystem mirror compiled with -warnings-as-errors and passed 960 rollback/substitution/mixed-root checks; compile approximately 0.49 s / 154064 kB RSS, runtime approximately 1.01 s / 19860 kB RSS.",
-    "W44 canonical-JSON SHA-256 mirror passed 30000 checkpoint packages / 450000 mutations across expectation and certificate bindings; approximately 5.453 s / 159496 kB RSS.",
-    "Fresh full Worker-branch SwiftPM/XCTest remains NOT_OBSERVED because git ls-remote failed with Could not resolve host: github.com. HQ Epoch 29 Run #216 SUCCESS 350/350 applies through canonical W42, not W43-W44."
+    "W45 production adjudicator reopens the current W43/W44 checkpoint chain, validates the exact W42 anchor and W41 transfer/published W40 payload, decodes the retained W24/W25/build/device singletons and every per-run W23/W25/W35/W36/W37 artifact, then recomputes repeated W24 acceptance before any readiness result.",
+    "W45 requires the exact unique W24 run inventory, unique W36 execution IDs, PHYSICAL_IOS_DEVICE W23 evidence, resident memory, physical footprint, thermal, battery, memory-pressure observation and cancellation latency where applicable; W35/W36/W37 current bounded-runtime evidence must remain valid.",
+    "W45 independent HQ runtime binding requires GENUINE_LANE2_BOUNDED_DECODER plus iphoneos/arm64, selected Xcode/Swift/source/build/device identities, exact W44/W42/W41 roots and exact run/execution inventory. Compatibility, synthetic, unknown, simulator and substituted bindings cannot produce READY.",
+    "W45 persisted-report validator rejects forged READY reports with recomputed roots when required physical run facts are absent, and rejects root tamper, run/execution duplication and inconsistent NOT_READY reports.",
+    "W45 durable XCTest source is committed but full Worker-branch execution is NOT_OBSERVED because fresh checkout/git ls-remote could not resolve github.com. HQ Epoch 30 Run #221 SUCCESS 375/375 applies through canonical W44 only, not W45.",
+    "W45 Swift 6.2.1 source-shaped runtime-binding mirror compiled with -warnings-as-errors and passed 160000 checks; compile about 0.43 s / 148852 kB RSS and runtime about 6.29 s / 18848 kB RSS.",
+    "W45 canonical-JSON SHA-256 report-root mirror passed 30000 packages / 270000 mutations across checkpoint/anchor/transfer roots, checkpoint sequence, runtime identity, status, run execution, bounded-pull observation and issue code; about 6.270 s / 110388 kB RSS."
   ],
   "evidence": [
-    "tech-assets/moises-audio/Tests/L4-W44_VALIDATION.md",
-    "tech-assets/moises-audio/Analysis/benchmarks/L4-W44_EXTERNAL_LEDGER_CHECKPOINT.json",
-    "tech-assets/moises-audio/Analysis/benchmarks/ANALYSIS_PHYSICAL_EVIDENCE_LEDGER_CHECKPOINT_RUNBOOK.md",
-    "tech-assets/moises-audio/Analysis/AnalysisPhysicalEvidenceAnchorLedgerCheckpoint.swift",
-    "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisPhysicalEvidenceAnchorLedgerCheckpointTests.swift",
+    "tech-assets/moises-audio/Tests/L4-W45_VALIDATION.md",
+    "tech-assets/moises-audio/Analysis/benchmarks/L4-W45_P021_PHYSICAL_EVIDENCE_ADJUDICATION.json",
+    "tech-assets/moises-audio/Analysis/benchmarks/ANALYSIS_P021_PHYSICAL_EVIDENCE_ADJUDICATION_RUNBOOK.md",
+    "tech-assets/moises-audio/Analysis/AnalysisP021PhysicalEvidenceAdjudication.swift",
+    "tech-assets/moises-audio/Analysis/AnalysisP021PhysicalEvidenceAdjudicationValidation.swift",
+    "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift",
+    "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationReportValidatorTests.swift",
     "tech-assets/moises-audio/Package.swift"
   ],
   "known_gaps": [
-    "MOI-P009/P011/P013/P016 remain MISSING until HQ-approved rights-cleared corpus, current-iPhone reviewed differential, Project real-audio observations and physical-iPhone evidence are completed.",
-    "MOI-P021 remains MISSING. W44 closes the local whole-ledger rollback gap only when the current expectation is independently retained; genuine Lane-2 bounded decoding, selected Xcode/Apple ARM compile, physical-iPhone execution, real RSS/physical-footprint/thermal/battery/cancellation and repeated W24 acceptance remain unobserved.",
-    "A coordinated rollback of both the W43 ledger and the externally preserved W44 expectation cannot be rejected by the local verifier. HQ must retain or sign/trusted-timestamp the current expectation/certificate root independently.",
-    "W43/W44 Foundation/Linux filesystem evidence does not prove APFS or physical-device power-loss durability.",
-    "W42-W44 SHA-256 commitments are not signatures, trusted timestamps, Secure Enclave proofs, Apple attestation or device-origin proofs.",
-    "Full canonical Worker-branch SwiftPM/XCTest and selected Apple runtime execution remain HQ/integrated-environment gates."
+    "MOI-P021 remains MISSING. W45 provides a fail-closed readiness/adjudication gate but no selected physical-iPhone W24 run set, genuine Lane-2 bounded decoder session, selected iphoneos/arm64 Xcode runtime binding, or complete real RSS/physical-footprint/thermal/battery/cancellation evidence was supplied during this Wave.",
+    "W45 therefore has no real READY_FOR_HQ_P021_JUDGMENT result. Portable mirrors validate gate behavior only and cannot satisfy P021.",
+    "The W45 runtime binding is HQ metadata unless externally signed, trusted-timestamped or attested; SHA-256 roots alone do not prove decoder/device origin.",
+    "MOI-P009/P011/P013/P016 remain MISSING until an HQ-approved rights-cleared real-audio corpus, current-iPhone Moises reference review, paired Project differential outputs and physical-device provenance satisfy their feature-specific quality gates.",
+    "Full selected-Xcode/Apple runtime execution remains an HQ/integrated-environment gate even though Epoch 30 Run #221 validated W43-W44 on Linux SwiftPM."
   ],
   "hq_requests": [
-    "Epoch 29 canonicalized W41-W42. W43-W44 now form a coherent post-Epoch29 Lane-4 checkpoint: W43 durable monotonic ledger plus W44 externally pinned whole-ledger rollback detection. Re-audit and semantic-integrate these exact owned-scope files at the next Lane-4 checkpoint.",
-    "For real use, preserve each current W44 expectation or resulting W44 certificate root outside the local evidence ledger; preferably sign or trusted-timestamp it using an external authority.",
-    "Execute the exact HQ W24 planned-run inventory on a selected physical iPhone with a genuine bounded Lane-2 decoder, then retain W37-W44 evidence and repeated W24 acceptance for W45/P021 adjudication.",
-    "Keep P009/P011/P013/P016/P021 MISSING until their real current-iPhone/physical/rights-cleared gates pass."
+    "Epoch 30 canonicalized W43-W44. W45 is now the post-Epoch30 P021 readiness gate; semantic-integrate its exact Worker-4 owned files at the next Lane-4 checkpoint before using it for a real P021 decision.",
+    "For real P021 use, execute the exact HQ W24 planned-run inventory on one selected physical iPhone using the genuine Lane-2 bounded decoder and selected iphoneos/arm64 build, then supply the exact W44 checkpoint certificate/expectation, W42 anchor receipt, W41 transfer package and W45 runtime binding to the adjudicator.",
+    "Preserve or externally sign/trusted-timestamp the W45 runtime binding and relevant checkpoint roots; do not infer decoder/device origin from BOUNDED_PULL_CONTRACT alone.",
+    "Keep P021 MISSING unless W45 produces READY_FOR_HQ_P021_JUDGMENT from real evidence and HQ independently reviews that evidence. Keep P009/P011/P013/P016 MISSING until their real-audio differential gates pass."
   ],
-  "next_priority": "Implement L4-W45 as the fail-closed P021 physical-evidence adjudication layer above the anchored W44 chain. Starting from an externally verified W44 checkpoint plus the exact corresponding W41 transfer package/W40 batch, re-open the physical evidence and require the authoritative W24 planned-run inventory, repeated per-run W23/W25 acceptance, unique genuine W36 execution identities, selected-device/runtime identity consistency, bounded-decoder evidence binding and complete RSS/physical-footprint/thermal/battery/cancellation observations. Reject synthetic/compatibility-adapter evidence, missing physical fields, partial run sets, mixed checkpoint/package roots or any run that fails W24 thresholds. Produce a deterministic NON_PARITY readiness/adjudication report that can say READY_FOR_HQ_P021_JUDGMENT only when all real gates are present; it must never edit PARITY itself. Add negative-first XCTest/runbook/evidence so the gate is useful before physical inputs arrive.",
-  "last_updated": "2026-08-26T03:11:00+09:00",
+  "next_priority": "Implement L4-W46 as a fail-closed anchored real-audio Analysis parity adjudication layer for MOI-P009/P011/P013/P016. Consume the existing W18 paired-differential, W19-W21 reference provenance/review and W22 corpus-coverage contracts plus an HQ-supplied rights/device/reference binding; require rights-cleared exact corpus inventory, current-iPhone Moises observations with reviewer consensus, matching Project outputs from the selected physical runtime, complete per-fixture BPM/key/chord/section metrics and anti-masking aggregate thresholds. Reject synthetic-only fixtures, incomplete rights, stale/current-Moises reference mismatch, partial corpus, mixed device/build/reference roots or favorable-run selection. Produce deterministic NON_PARITY readiness reports per PARITY row and a combined READY_FOR_HQ_ANALYSIS_PARITY_JUDGMENT only when all real gates are present; Worker 4 must never edit PARITY_MATRIX itself.",
+  "last_updated": "2026-08-26T04:08:00+09:00",
   "writer_policy": "Only Moises-Worker-4 may update this status file. Worker 4 never declares PARITY; HQ Late Integration owns final PARITY_MATRIX judgment."
 }
