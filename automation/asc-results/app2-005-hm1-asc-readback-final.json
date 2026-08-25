@@ -1,8 +1,163 @@
 {
-  "request_id": "app2-005-hm1-submission-readback-20260825-2100",
-  "completed_at": "2026-08-25T12:01:36.681370+00:00",
-  "query_exit_code": 1,
-  "query_status": "failed",
-  "results": [],
-  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 482, in <module>\n    main()\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 457, in main\n    status, response = api_get(token, req[\"path\"])\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_api.py\", line 158, in api_get\n    return api_request(token, path, method=\"GET\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_api.py\", line 152, in api_request\n    raise RuntimeError(\nRuntimeError: App Store Connect API GET /v1/appStoreVersions/b22c32ea-7b45-43fd-8c8f-326687a3872b returned HTTP 404: {'errors': [{'id': 'a9f96f71-d31f-4647-88d8-bdb67e3f0041', 'status': '404', 'code': 'NOT_FOUND', 'title': 'The specified resource does not exist', 'detail': \"There is no resource of type 'appStoreVersions' with id 'b22c32ea-7b45-43fd-8c8f-326687a3872b'\"}]}\n"
+  "request_id": "app2-005-hm1-submission-readback-20260825-2102",
+  "completed_at": "2026-08-25T12:02:46.393804+00:00",
+  "query_exit_code": 0,
+  "query_status": "success",
+  "results": [
+    {
+      "label": "review-submissions",
+      "http_status": 200,
+      "data": []
+    },
+    {
+      "label": "version",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "b22c4518-3724-42a1-87d3-99c2d9d2b7d2",
+          "type": "appStoreVersions",
+          "attributes": {
+            "platform": "IOS"
+          }
+        }
+      ]
+    },
+    {
+      "label": "version-localizations",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "141bfabe-dffb-4111-9a40-8cec41992234",
+          "type": "appStoreVersionLocalizations",
+          "attributes": {
+            "locale": "ja",
+            "description": "第一種衛生管理者試験の学習用問題演習アプリです。\n\n公表問題の出題論点と現行法令を確認し、独自に作成・監査した264問を収録しています。公表回対応3セットと追加演習3セットを、44問通し・科目別・短時間のスプリントで繰り返し学習できます。\n\n主な機能:\n- 今日のスプリント（4・8・16問）\n- 関係法令・労働衛生・労働生理の科目別学習\n- 公表回対応3セット＋追加演習3セット\n- 44問通し演習\n- 苦手復習と学習記録\n- プレミアムで全264問を利用\n\nプレミアムは月額200円（対象者は7日間無料トライアル）または買い切り800円です。購入・復元はAppleのStoreKit 2を使用します。\n\n本アプリは厚生労働省、公益財団法人安全衛生技術試験協会その他の公的機関が提供・承認する公式アプリではありません。"
+          }
+        }
+      ]
+    },
+    {
+      "label": "monthly",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "6804373671",
+          "type": "subscriptions",
+          "attributes": {
+            "name": "第一種衛生管理者 プレミアム月額",
+            "productId": "jp.allsunday1122.healthmanager1.monthly",
+            "state": "MISSING_METADATA",
+            "subscriptionPeriod": "ONE_MONTH"
+          },
+          "relationships": {
+            "subscriptionLocalizations": [
+              {
+                "type": "subscriptionLocalizations",
+                "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488"
+              }
+            ],
+            "subscriptionAvailability": {
+              "type": "subscriptionAvailabilities",
+              "id": "6804373671"
+            }
+          }
+        }
+      ],
+      "included": [
+        {
+          "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488",
+          "type": "subscriptionLocalizations",
+          "attributes": {
+            "name": "第一種衛生管理者 プレミアム月額",
+            "state": "PREPARE_FOR_SUBMISSION",
+            "locale": "ja",
+            "description": "追加問題・弱点学習などプレミアム機能を月額で利用できます。"
+          }
+        },
+        {
+          "id": "6804373671",
+          "type": "subscriptionAvailabilities",
+          "attributes": {}
+        }
+      ]
+    },
+    {
+      "label": "builds",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "318d4af2-8a97-4cb2-82bf-5943ee968a94",
+          "type": "builds",
+          "attributes": {
+            "version": "2026081801",
+            "uploadedDate": "2026-08-18T05:28:06-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-16T04:28:06-08:00",
+            "minOsVersion": "16.0"
+          }
+        },
+        {
+          "id": "b0e4539e-3323-412b-bcb6-97d0cbfa8558",
+          "type": "builds",
+          "attributes": {
+            "version": "2026081903",
+            "uploadedDate": "2026-08-22T04:09:17-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-20T03:09:17-08:00",
+            "minOsVersion": "16.0"
+          }
+        },
+        {
+          "id": "533b9229-3e4e-41df-b1ae-4e39e3333911",
+          "type": "builds",
+          "attributes": {
+            "version": "2026081901",
+            "uploadedDate": "2026-08-18T20:28:42-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-16T19:28:42-08:00",
+            "minOsVersion": "16.0"
+          }
+        },
+        {
+          "id": "adfe8270-b92a-41bd-9d89-0b42b359a4d1",
+          "type": "builds",
+          "attributes": {
+            "version": "2026082501",
+            "uploadedDate": "2026-08-25T03:50:10-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-23T02:50:10-08:00",
+            "minOsVersion": "16.0"
+          }
+        },
+        {
+          "id": "455ceef3-1116-4913-800c-0f889c925623",
+          "type": "builds",
+          "attributes": {
+            "version": "2026082301",
+            "uploadedDate": "2026-08-23T05:40:43-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-21T04:40:43-08:00",
+            "minOsVersion": "16.0"
+          }
+        },
+        {
+          "id": "1642cafd-1aa9-4038-b7d1-946e60155cf5",
+          "type": "builds",
+          "attributes": {
+            "version": "1",
+            "uploadedDate": "2026-08-17T00:10:25-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-14T23:10:25-08:00",
+            "minOsVersion": "16.0"
+          }
+        }
+      ]
+    }
+  ]
 }
