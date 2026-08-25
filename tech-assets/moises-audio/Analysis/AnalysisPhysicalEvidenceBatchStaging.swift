@@ -107,7 +107,8 @@ public enum AnalysisPhysicalEvidenceBatchStager {
         archiveRootURL: URL,
         fileManager: FileManager = .default
     ) throws -> AnalysisPhysicalEvidenceBatchPublicationReceipt {
-        guard AnalysisPhysicalEvidenceBatchAssemblyValidator.validate(assembly) else {
+        guard AnalysisPhysicalEvidenceBatchAssemblyValidator.validate(assembly),
+              revalidateW39RunInputs(assembly, archiveRootURL: archiveRootURL, fileManager: fileManager) else {
             throw AnalysisPhysicalEvidenceBatchStagingError.invalidAssembly
         }
         try ensureDirectory(archiveRootURL, allowCreate: true, fileManager: fileManager)
@@ -171,7 +172,9 @@ public enum AnalysisPhysicalEvidenceBatchStager {
             let finalControl = try decodeManifest(
                 Data(contentsOf: finalDirectory.appendingPathComponent(publicationManifestFileName))
             )
-            guard finalControl.state == .readyToPublish, identityMatches(finalControl, expected) else {
+            guard finalControl.state == .readyToPublish,
+                  identityMatches(finalControl, expected),
+                  revalidateW39RunInputs(assembly, archiveRootURL: archiveRootURL, fileManager: fileManager) else {
                 throw AnalysisPhysicalEvidenceBatchStagingError.publishedContentMismatch
             }
         } catch let error as AnalysisPhysicalEvidenceBatchStagingError {
@@ -194,7 +197,8 @@ public enum AnalysisPhysicalEvidenceBatchStager {
         archiveRootURL: URL,
         fileManager: FileManager = .default
     ) throws {
-        guard AnalysisPhysicalEvidenceBatchAssemblyValidator.validate(assembly) else {
+        guard AnalysisPhysicalEvidenceBatchAssemblyValidator.validate(assembly),
+              revalidateW39RunInputs(assembly, archiveRootURL: archiveRootURL, fileManager: fileManager) else {
             throw AnalysisPhysicalEvidenceBatchStagingError.invalidAssembly
         }
         try ensureDirectory(archiveRootURL, allowCreate: true, fileManager: fileManager)
@@ -225,6 +229,25 @@ public enum AnalysisPhysicalEvidenceBatchStager {
                 ".w40-staging-\(assembly.publicationID)-\(String(assembly.batchRootSHA256.prefix(16)))",
                 isDirectory: true
             )
+    }
+
+    private static func revalidateW39RunInputs(
+        _ assembly: AnalysisPhysicalEvidenceBatchAssembly,
+        archiveRootURL: URL,
+        fileManager: FileManager
+    ) -> Bool {
+        for summary in assembly.runSummaries {
+            guard let bundle = try? AnalysisPhysicalEvidenceW39BatchLoader.load(
+                runID: summary.runID,
+                archiveRootURL: archiveRootURL,
+                fileManager: fileManager
+            ), bundle.runID == summary.runID,
+               bundle.workloadExecutionID == summary.workloadExecutionID,
+               bundle.bundleRootSHA256 == summary.w39BundleRootSHA256.lowercased() else {
+                return false
+            }
+        }
+        return true
     }
 
     private static func writeSingletons(
