@@ -74,10 +74,11 @@ public enum AnalysisAnalysisParityAdjudicationReportValidator {
                 return false
             }
         case .notReadyForHQJudgment:
-            guard !report.issues.isEmpty,
-                  report.rowAdjudications.contains(where: { $0.status == .notReadyForHQRowJudgment }) else {
-                return false
-            }
+            // Global gates (rights, roots, current-reference provenance, physical
+            // Project binding) can legitimately fail while every feature-level
+            // metric pair remains ready. The overall issue inventory is the
+            // authoritative reason this report is NOT_READY.
+            guard !report.issues.isEmpty else { return false }
         }
 
         guard let computed = try? AnalysisAnalysisParityAdjudicationRoot.reportSHA256(report),
