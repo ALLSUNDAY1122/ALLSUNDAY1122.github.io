@@ -28,7 +28,7 @@ public enum AnalysisPhysicalEvidenceW39BatchLoader {
         do {
             manifest = try JSONDecoder().decode(
                 AnalysisPhysicalCaptureArtifactStagingManifest.self,
-                from: Data(contentsOf: manifestURL)
+                from: try readRegularFile(manifestURL, within: archiveRootURL)
             )
         } catch {
             throw AnalysisPhysicalEvidenceW39BatchLoaderError.invalidControlManifest(runID)
@@ -57,7 +57,7 @@ public enum AnalysisPhysicalEvidenceW39BatchLoader {
                 throw AnalysisPhysicalEvidenceW39BatchLoaderError.invalidArtifact(runID)
             }
             let url = runDirectory.appendingPathComponent(suffix, isDirectory: false)
-            guard let bytes = try? Data(contentsOf: url),
+            guard let bytes = try? readRegularFile(url, within: archiveRootURL),
                   !bytes.isEmpty,
                   UInt64(bytes.count) == record.byteLength,
                   AnalysisDeviceWorkloadSHA256.hexDigest(bytes) == record.sha256.lowercased() else {
@@ -127,6 +127,26 @@ public enum AnalysisPhysicalEvidenceW39BatchLoader {
                 bytes: artifact.bytes
             )
         }
+    }
+
+    private static func readRegularFile(_ url: URL, within root: URL) throws -> Data {
+        let standardizedRoot = root.standardizedFileURL
+        let standardizedURL = url.standardizedFileURL
+        let lexicalPrefix = standardizedRoot.path.hasSuffix("/") ? standardizedRoot.path : standardizedRoot.path + "/"
+        guard standardizedURL.path.hasPrefix(lexicalPrefix) else {
+            throw AnalysisPhysicalEvidenceW39BatchLoaderError.invalidArtifact("path-outside-root")
+        }
+        let values = try standardizedURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
+        guard values.isRegularFile == true, values.isSymbolicLink != true else {
+            throw AnalysisPhysicalEvidenceW39BatchLoaderError.invalidArtifact("non-regular-file")
+        }
+        let resolvedRoot = standardizedRoot.resolvingSymlinksInPath().path
+        let resolvedURL = standardizedURL.resolvingSymlinksInPath().path
+        let resolvedPrefix = resolvedRoot.hasSuffix("/") ? resolvedRoot : resolvedRoot + "/"
+        guard resolvedURL.hasPrefix(resolvedPrefix) else {
+            throw AnalysisPhysicalEvidenceW39BatchLoaderError.invalidArtifact("resolved-path-outside-root")
+        }
+        return try Data(contentsOf: standardizedURL)
     }
 
     static func safeComponent(_ value: String) -> Bool {
