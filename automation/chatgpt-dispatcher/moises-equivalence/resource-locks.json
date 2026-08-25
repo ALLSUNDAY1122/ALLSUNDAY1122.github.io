@@ -2,11 +2,11 @@
   "schema_version": 3,
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
-  "integration_epoch": 24,
+  "integration_epoch": 25,
   "assignment_epoch": 2,
   "planning_revision": 4,
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
-  "checkpoint_note": "Epoch24 portable canonical through L1 A23 / L2 AW35 / L3 AW34 / L4 W36. Semantic c12ce8dfb27c4a9958e502611a6e34f592d081e3; Run174 / 32723458025 SUCCESS 292/292, 261 unhandled. L2 AW33-AW35 and L3 AW33-AW34 were exact frozen owned-scope overlays only. L1 A24-A26 remain deferred until the A26 exact full-branch dependency/provenance audit is observed; L4 W37 remains post-checkpoint/in progress. Ownership is unchanged and PARITY promotion remains 0.",
+  "checkpoint_note": "Epoch25 portable canonical through L1 A23 / L2 AW35 / L3 AW34 / L4 W38. Lane4 W37-W38 were frozen from exact implementation head 708ee3bd756a00f7405710337bc6d7b2f6eaf42c and overlaid as 18 owned-scope files at semantic commit d915eb6ec81d4eb0c150e587e6d050f2ebbfc2cb. HQ corrected one W37 test fixture from an in-tolerance duration delta to an out-of-tolerance delta without changing production semantics; tested integration head 65512c78d3e4ec5296c6fb7c4015fe02204e11b6 passed Run190 / 32862540423 at 310/310 with 261 unhandled. L1 remains deferred because A26 exact full audit is not PASS; L2 AW36 and L3 post-AW34 work remain post-checkpoint; L4 W39 is post-checkpoint. PARITY promotion remains 0.",
   "locks": [
     {"id":"shared-contract","owner":"HQ","scope":["tech-assets/moises-audio/Shared/**"],"notes":"shared data model / cross-module protocol; epoch-frozen for Workers"},
     {"id":"app-shell","owner":"HQ","scope":["tech-assets/moises-audio/App/**"],"notes":"navigation, global app state, root composition; epoch-frozen for Workers"},
