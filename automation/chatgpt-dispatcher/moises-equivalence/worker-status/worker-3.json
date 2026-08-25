@@ -15,45 +15,45 @@
   "base_integration_sha": "1648a275833ad4e8aed3245347e6de231fd0487f",
   "branch_merge_base_sha": "7948195f1d94f28bc212c79b310fdaed00a4f580",
   "preserved_checkpoint_head": "d63cecbfa53007bf9593b628ae291702f496bb17",
-  "previous_autonomous_chain_head": "144af9c07619a28b893b6d92d6a679cc83f601ee",
-  "historical_commit_coverage": "AW01-AW39 and earlier Lane-3 work remain preserved by branch ancestry through 144af9c07619a28b893b6d92d6a679cc83f601ee. The commits list below records AW40 only.",
-  "head_sha": "c1b60ded0ebc47f3ee26da904b7296e3152f30de",
+  "previous_autonomous_chain_head": "c1b60ded0ebc47f3ee26da904b7296e3152f30de",
+  "historical_commit_coverage": "AW01-AW40 and earlier Lane-3 work remain preserved by branch ancestry through c1b60ded0ebc47f3ee26da904b7296e3152f30de. The commits list below records AW41 only.",
+  "head_sha": "9809b128ab9a5d31f5e81c1cbf328e939767f2b4",
   "commits": [
-    "101cae3a080afd648ab4f6905ef1c96b9fe27796",
-    "7b68e8543fc51991c8705804ff8807fbba06015d",
-    "01105e08f842dbf046c2f6f4aef06f609de3730d",
-    "9d657ad7220c74d9f2678702b2e1548c79a369d7",
-    "09c66a15deb86b50ead2544512f857b17a7b7e2b",
-    "76cbfcd4e9c00b61da8aecb18466ebfaf10aab8d",
-    "f4a789bd4cf01d68c8ca6d30cfd843442a146c3d",
-    "f60ebbd149acfcf269dda2dbe1c91bcee3bd2875",
-    "c1b60ded0ebc47f3ee26da904b7296e3152f30de"
+    "0ae64bcd358a08d03b38da80ab6c1f988f091909",
+    "995134f769424e846ea27b09f6e22f404cbf383f",
+    "3ee133201aec0d2a4223f90f013a7259e153d162",
+    "92213179e3b377a0cc1220e9d886022ed1cf9c38",
+    "b24c46ef026046a8658320ebc4dc0e0607f7d1ac",
+    "4c55c348a1359b6a517124ff8289d534741e7531",
+    "9809b128ab9a5d31f5e81c1cbf328e939767f2b4"
   ],
   "tests": [
-    "AW01-AW39 prior suites/evidence remain preserved by branch ancestry",
-    "L3-AW40 portable Swift 6.2.1 Linux language-mode-6 strict-concurrency=complete warnings-as-errors self-test PASS: seek/enabled-loop/loopDisabled v2 coverage, non-executed separate accounting, missing-audible fail-closed, duplicate-ID fail-closed, unusable instrumentation fail-closed, capacity-drop fail-closed, differential gate separation and bounded issue-detail drop accounting",
-    "L3-AW40 optimized 1000000-sample stress PASS: capacity 4096, retained 4096, capacityDrops 995904, duplicate retained IDs 0, fully-valid retained samples 4096; physicalSessionComplete intentionally false because any capacity drop proves truncated session evidence",
-    "L3-AW40 optimized recorder benchmark PASS: 20 x 1000000 appends, median 30.607613ms, p95 34.793808ms, max 57.969762ms, checksum 20000190; bookkeeping only, not device/audio latency",
-    "L3-AW40 AW38/AW39 bridge authored: loopDisabled legacy-AW35 representation warning is v2-nonblocking, every other AW38 instrumentation issue remains blocking, nil observation increments unusableInstrumentationResultCount, AW39 nonExecuted increments a separate counter and never enters executed percentile coverage",
-    "L3-AW40 selected AW38 adapter regression authored for loopDisabled and unusable-result behavior; complete selected SwiftPM/Xcode/AVFAudio execution remains pending and is not claimed PASS"
+    "AW01-AW40 prior suites/evidence remain preserved by branch ancestry",
+    "L3-AW41 portable Swift 6.2.1 Linux language-mode-6 strict-concurrency=complete warnings-as-errors structural state-machine PASS: marker-first, stamped-first, pending/retired exact duplicate idempotence, separate non-executed retirement, audible-plus-nonexecuted contradiction rejection, missing-stamp expiry, missing-audible expiry, pending capacity, bounded issue details and retired identity-window wrap",
+    "L3-AW41 portable actor-reentrancy PASS: a slow correlator held finalization across await with finalizingCount=1; exact marker and stamped callbacks retransmitted during reentrancy were both idempotent, double finalization did not occur, and issueCount remained 0 before an intentional conflicting-marker negative case",
+    "L3-AW41 attempted optimized 1000000-operation actor stress but it exceeded the 45-second execution limit and is explicitly NOT claimed PASS",
+    "L3-AW41 optimized 100000-operation boundedness stress PASS: pending=0, finalizing=0, retained retired identities=4096, retiredIdentityDrops=95904, finalizedNonExecuted=100000, issueCount=1 expected retiredIdentityWindowTruncated, issueDetailDrops=0, elapsed=5083326055ns",
+    "L3-AW41 optimized actor-hop/bookkeeping benchmark PASS: 20 x 10000 staged begin/nonexecuted operations, median 487.962683ms, p95 700.156342ms, max 735.207759ms, checksum 318100; not Apple transport/output latency",
+    "L3-AW41 selected-stack self-test, reentrancy regression, stress and benchmark are authored under Playback/Tests; complete selected SwiftPM/Xcode/AVFAudio execution remains pending and is not claimed PASS"
   ],
   "evidence": [
-    "Playback/Sources/Lane3InteractiveContinuityV2PhysicalSession.swift",
-    "Playback/Sources/Lane3InteractiveContinuityV2PhysicalSessionAW38Adapter.swift",
-    "Playback/Tests/L3_AW40_InteractiveContinuityV2PhysicalSessionSelfTest.swift",
-    "Playback/Tests/L3_AW40_InteractiveContinuityV2PhysicalSessionStress.swift",
-    "Playback/Tests/L3_AW40_InteractiveContinuityV2PhysicalSessionBenchmark.swift",
-    "Playback/Tests/L3_AW40_InteractiveContinuityV2AW38AdapterSelfTest.swift",
-    "Playback/benchmarks/L3-AW40_V2_PHYSICAL_CONTINUITY_SESSION.md",
-    "Playback/benchmarks/L3-AW40_VALIDATION.json",
-    "validation_blob_sha:8868121565d3f1b9dcb36d8fad33cafc3372dd7b"
+    "Playback/Sources/Lane3InteractiveContinuityV2StagedCaptureCoordinator.swift",
+    "Playback/Tests/L3_AW41_StagedPhysicalCaptureSelfTest.swift",
+    "Playback/Tests/L3_AW41_StagedPhysicalCaptureReentrancySelfTest.swift",
+    "Playback/Tests/L3_AW41_StagedPhysicalCaptureStress.swift",
+    "Playback/Tests/L3_AW41_StagedPhysicalCaptureBenchmark.swift",
+    "Playback/benchmarks/L3-AW41_STAGED_PHYSICAL_CAPTURE.md",
+    "Playback/benchmarks/L3-AW41_VALIDATION.json",
+    "validation_blob_sha:cb9a42f6274d7c4c2387257126bfeb424a30d6c1"
   ],
   "known_gaps": [
-    "AW40 now provides a bounded v2-only physical-session recorder/analyzer for seek, enabled-loop and loopDisabled with explicit p50/p95/p99 and fail-closed device/audible/coverage gates, but the selected AW38/AW39 adapter regression and complete SwiftPM/Xcode/AVFAudio execution remain required",
-    "AW39 removes the caller-side selected-slot generation snapshot race for seek/loop evidence by stamping the exact shared-lease generation, but its selected-stack regression still requires complete SwiftPM/Xcode/iOS execution",
-    "AW38 exact playback-generation token timing and backend-applied targets still require selected AVFAudio execution and physical-iPhone population of first-intent and independently observed audible-result timestamps",
-    "AW38-AW40 deliberately do not treat transport return, backend completion, AVAudioPlayerNode scheduling or AW32 fade-in scheduling as physical audible output; HQ/iOS integration must provide a validated audible marker source in the declared uptime clock domain",
-    "AW40 keeps setLoop(nil) entirely in the v2 loopDisabled path and never falls back to the older AW35 target schema; physical loop-disable evidence therefore requires the AW38/AW39/AW40 selected path",
+    "AW41 now safely stages first intent, AW39 stamped outcome, delayed external audible marker, AW38 correlation and AW40 aggregation by sampleID with bounded duplicate identity memory, but the selected SwiftPM/Xcode/AVFAudio path and physical-host wiring remain unexecuted",
+    "AW41 requires HQ/iOS to provide a real monotonic external audible marker and explicit expiry cutoff; backend completion, UI completion, AVAudioPlayerNode scheduling and AW32 fade scheduling remain invalid substitutes for audible output",
+    "AW41 retired callback identity is intentionally bounded; a physical evidence session whose retired identity window wraps is incomplete and must be rerun with a suitably bounded session/capacity rather than waiving duplicate-detection loss",
+    "AW41 1000000-operation portable actor stress exceeded the available execution limit; only the 100000-operation boundedness stress is PASS evidence for this wave",
+    "AW40 v2 physical-session completeness still requires real device metadata, rights-cleared audio, zero capacity drops/unusable results, seek/enabled-loop/loopDisabled coverage and valid external audible markers",
+    "AW39 exact reconstruction-slot generation stamping still requires selected Apple/Xcode execution; portable race evidence is not device evidence",
+    "AW38 exact playback-generation token timing and backend-applied targets still require selected AVFAudio execution and physical-iPhone first-intent/audible population",
     "AW37 actual unified-authority 5000-operation cancellation race remains authored but not executed in the complete selected Apple/Xcode graph",
     "AW34 fixed-window seek/loop eligibility is retained, but the numerical 16ms value remains provisional until physical-iPhone first-intent-to-token/audible latency evidence",
     "Automatic repeated-loop seam envelope remains intentionally unimplemented because already-scheduled future AudioUnit gain events are not yet safely revocable across seek/tempo/lifecycle generations and graph/gain-stage replacement itself lacks audible-safety evidence",
@@ -65,34 +65,34 @@
     "MOI-P006/P007/P008/P010/P012/P014/P015 remain MISSING"
   ],
   "hq_requests": [
-    "Preserve AW01-AW39 chain through 144af9c07619a28b893b6d92d6a679cc83f601ee and all nine AW40 commits during semantic integration",
-    "Compile and execute L3_AW40_InteractiveContinuityV2AW38AdapterSelfTest.swift and the AW40 session suite with AW38-AW39 in the complete selected SwiftPM/Xcode/iOS graph; portable core PASS is not selected-stack compile evidence",
-    "Feed AW39 Lane3LeaseStampedContinuityCorrelation directly into the AW40 v2 session buffer and keep nonExecuted outcomes outside executed latency/coverage statistics",
-    "For physical sessions provide non-empty session/device/build/uptime-clock/audio-fixture identifiers, actual sample rate, physical-iPhone=true and rightsClearedRealAudio=true; do not place raw user file paths into the audio fixture identifier",
-    "Require seek, enabled-loop and loopDisabled coverage with zero capacity drops, zero unusable instrumentation results, stable stamped generation, matched requested/applied targets and independently observed audible timestamps before physicalSessionComplete=true",
-    "Treat legacyAW35CannotRepresentLoopDisabled as a v2-only nonblocking representation warning; do not fabricate an AW35 enabled numeric loop to eliminate it, and fail closed on every other AW38 instrumentation issue",
-    "Keep raw physical timing completeness separate from current-Moises differential and human-listening completion; all remain required before any final PARITY judgment",
+    "Preserve AW01-AW40 chain through c1b60ded0ebc47f3ee26da904b7296e3152f30de and all seven AW41 commits during semantic integration",
+    "Compile and execute the AW41 staged capture self-test and reentrancy regression with AW38-AW40 in the complete selected SwiftPM/Xcode/iOS graph; portable structural PASS is not selected-stack compile evidence",
+    "For each physical seek/loop measurement allocate a unique sampleID at first intent, call AW41 beginSample before submission, deliver the AW39 stamped outcome under that ID, and deliver the independently observed audible marker under the same ID in either order",
+    "Use AW41 explicit monotonic expiry for genuinely missing callbacks; never silently discard a pending sample and never manufacture audible output from backend/scheduling timestamps",
+    "Treat exact callback retransmission as idempotent but any conflicting callback as evidence corruption; do not reuse a sampleID within a staged session",
+    "If AW41 retiredIdentityDrops becomes nonzero, do not use that session as complete physical evidence; rerun a bounded session sized so all relevant callback identities remain retained",
+    "Continue AW40 requirement for seek, enabled-loop and loopDisabled coverage and keep loopDisabled entirely on the v2 path without fabricating an AW35 numeric range",
     "Run AW37 actual-authority cancellation race in the same selected Apple environment and assert AW36 cancellation admission state returns to zero after quiescence",
     "Retain AW34 fixed-window semantics and selected AW31 inner tempo quiet period zero; do not add a second Shared/App debounce",
     "Do not add automatic repeated-loop future gain events until Lane 3 has cancelable or generation-isolated exact-host automation whose isolation mechanism is itself audibly safe",
     "Keep final PARITY authority in HQ"
   ],
   "previous_autonomous_wave": {
-    "wave_id": "L3-AW39",
-    "result": "Stamped selected seek/loop outcomes with the exact reconstruction-slot generation held by their shared lease and bridged that generation into AW38 without fabricating non-executed evidence."
+    "wave_id": "L3-AW40",
+    "result": "Added a bounded v2-only physical continuity session for seek, enabled-loop and loopDisabled with p50/p95/p99 and fail-closed physical/differential gates."
   },
   "latest_autonomous_wave": {
-    "wave_id": "L3-AW40",
-    "goal": "Turn AW38/AW39 v2 seek/loop observations into a bounded physical-device session report that preserves loopDisabled, reports operation-specific p50/p95/p99 latency and fails incomplete device/audible/coverage evidence closed without falling back to AW35.",
-    "rationale": "AW39 removed the selected-slot generation attribution race, but physical runs still lacked a v2-native aggregate evidence container. Reusing AW35 would lose setLoop(nil), while an unbounded device recorder would create memory risk and ambiguous partial evidence. The highest-value Lane-local step was therefore a bounded v2 session contract with explicit physical and differential gates.",
-    "done_when": "A v2-only bounded ring preserves seek/enabled-loop/loopDisabled, non-executed outcomes stay outside executed latency stats, unusable instrumentation and capacity drops are explicit, overall/per-shape p50/p95/p99 are produced, issue detail is bounded, physical completeness requires real device metadata/rights-cleared audio/external audible markers/three-shape coverage with no invalid retained samples, Moises/listening remain separate final gates, portable strict self-test/stress/benchmark pass, selected Xcode/device/PARITY remain explicitly unclaimed.",
-    "result": "COMPLETE_NON_PARITY: added a v2-only physical continuity session schema and bounded 4096-default ring (16...65536), separate nonExecuted/unusable counters, bounded issue details, overall and per-shape latency summaries, and fail-closed physical/differential completeness. Added AW38/AW39 bridge that keeps the expected AW35 loop-disable representation warning nonblocking only in v2 while all other instrumentation issues block. Strict portable self-test passed including negative paths; 1000000-sample stress retained 4096 with 995904 explicit drops and no duplicate retained IDs; 20 x 1000000 recorder benchmark median 30.607613ms, p95 34.793808ms, max 57.969762ms, checksum 20000190. Complete selected SwiftPM/Xcode/AVFAudio, physical iPhone, rights-cleared real audio, current-Moises differential, human listening and PARITY remain open."
+    "wave_id": "L3-AW41",
+    "goal": "Bind first-intent capture, AW39 exact lease-stamped completion, delayed external audible marker, AW38 exact-token/target correlation and AW40 v2 session aggregation to one sampleID without requiring the iOS host to deliver those events synchronously.",
+    "rationale": "AW40 could aggregate complete observations but did not own the asynchronous lifecycle that creates them. Physical audible observation can arrive before or after transport completion, callbacks may be retransmitted, and the coordinator itself re-enters while awaiting AW38 correlation. A Lane-local staged authority was required to avoid sample mis-correlation, double finalization and silent evidence loss during HQ/iOS device wiring.",
+    "done_when": "One bounded actor admits unique sample IDs, accepts stamped outcome/audible marker in either order, protects finalization across actor reentrancy, makes exact duplicates idempotent, fails conflicting callbacks closed, keeps non-executed work out of executed latency, explicitly expires missing stages, bounds pending/issues/retired callback fingerprints, invalidates completeness when duplicate identity retention is truncated, passes portable strict state-machine/reentrancy/boundedness validation, and makes no selected-device/PARITY claim.",
+    "result": "COMPLETE_NON_PARITY: added Lane3InteractiveContinuityV2StagedCaptureCoordinator with bounded pending state, bounded retired callback fingerprints, explicit finalizing reentrancy fence, marker-first/stamped-first support, idempotent exact duplicate handling, conflicting duplicate rejection, separate non-executed retirement, audible-plus-nonexecuted contradiction detection and host-driven monotonic expiry. Portable strict structural and reentrancy tests passed. A 1M actor stress exceeded the execution limit and is not claimed; 100k boundedness stress passed with 4096 retained identities and 95904 explicit drops. 20 x 10000 actor-hop/bookkeeping benchmark median 487.962683ms, p95 700.156342ms. Selected SwiftPM/Xcode/AVFAudio, physical iPhone, audible-detector validation, real audio/current-Moises differential/listening and PARITY remain open."
   },
   "next_wave_candidates": [
-    "add a Lane-local staged physical-session capture coordinator that binds first-intent, AW39 stamped submission, AW38 exact-token correlation and delayed external audible-marker completion by sampleID without moving iOS/device ownership out of HQ/Lane4",
-    "generation-isolated exact-host automatic repeated-loop seam envelope only if future AudioUnit gain automation can be safely cancelled or isolated across seek/tempo/lifecycle generations and the isolation mechanism itself cannot introduce an audible graph discontinuity",
-    "representative-codec and corruption/truncation execution contract extension for AW27/AW30 only where additional Lane-3 measurement fields are still missing rather than duplicating Lane-2 import ownership"
+    "investigate and implement a generation-isolated exact-host repeated-loop seam envelope only if future Apple gain automation can be safely cancelled or isolated across seek/tempo/lifecycle generations; otherwise produce a fail-closed capability gate instead of scheduling irrevocable future events",
+    "extend AW27/AW30 representative-codec corruption/truncation execution evidence only where Lane-3-owned decode/render measurement fields are still missing, without duplicating Lane-2 import ownership",
+    "add a staged-session rotation/closure envelope only if selected HQ/iOS integration demonstrates callbacks can outlive a physical evidence session and collide with a subsequent session identifier"
   ],
-  "last_updated": "2026-08-26T02:23:00+09:00",
+  "last_updated": "2026-08-26T03:04:00+09:00",
   "writer_policy": "Only Moises-Worker-3 may update this status file; HQ remains semantic integration and PARITY authority."
 }
