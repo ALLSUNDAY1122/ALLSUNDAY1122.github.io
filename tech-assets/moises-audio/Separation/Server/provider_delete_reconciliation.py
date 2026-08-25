@@ -1,12 +1,14 @@
 """Provider deletion reconciliation for Lane 1 privacy retention.
 
 NON-PARITY safety layer. It never blindly replays a provider delete after an
-ambiguous/in-flight external side effect. Only a separately observed,
-hash-bound provider state may resolve that ambiguity.
+ambiguous/in-flight external side effect. Only separately observed, hash-bound
+provider state may resolve that ambiguity.
 
-A31 adds single-host serialization and monotonic observation ordering so a
-late/stale observation cannot roll the durable registry back behind a newer
-provider observation. Equal-time conflicting observations fail closed.
+A32 extends A31 monotonic ordering with a durable ``applying`` watermark. The
+watermark is persisted before registry mutation, so a crash after the registry
+write but before the final ledger commit cannot allow an older observation to
+roll state backward. ``applying`` observations are resumable and never count as
+confirmed application until the registry mutation is durably re-observed.
 """
 from __future__ import annotations
 
@@ -21,14 +23,16 @@ from pathlib import Path
 from privacy_retention import AtomicPrivacyRegistry, PrivacyRetentionError
 
 SCHEMA_VERSION = 1
-TOOL_VERSION = "L1-A31-v1"
+TOOL_VERSION = "L1-A32-v1"
 EVIDENCE_STATE = "NON_PARITY_EVIDENCE_ONLY"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 _OBJECT_KINDS = {"asset", "task"}
 _SOURCE_KINDS = {"provider_api", "provider_console", "provider_support", "documented_expiry"}
 _OBSERVED_STATES = {"confirmed", "not_found", "present", "unknown", "expired"}
-_APPLICATION_STATES = {"observed_not_applied", "applied", "superseded_stale"}
+_APPLICATION_STATES = {"observed_not_applied", "applying", "applied", "superseded_stale"}
+_RESUMABLE_STATES = {"observed_not_applied", "applying"}
+_ORDERING_WATERMARK_STATES = {"applying", "applied"}
 _ERASURE_TERMINAL = {"confirmed", "not_found", "expired"}
 _STATE_MAP = {
     "confirmed": "confirmed",
@@ -36,6 +40,12 @@ _STATE_MAP = {
     "present": "reconciled_present",
     "unknown": "reconciled_unknown",
     "expired": "expired",
+}
+_ALLOWED_TRANSITIONS = {
+    "observed_not_applied": {"observed_not_applied", "applying", "superseded_stale"},
+    "applying": {"applying", "applied", "superseded_stale"},
+    "applied": {"applied"},
+    "superseded_stale": {"superseded_stale"},
 }
 
 
@@ -74,9 +84,8 @@ class ProviderDeletionObservation:
     @property
     def receipt_sha256(self) -> str:
         self.validate()
-        return hashlib.sha256(
-            json.dumps(asdict(self), sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
-        ).hexdigest()
+        encoded = json.dumps(asdict(self), sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
 
 
 def _observation_from_event(event: dict) -> ProviderDeletionObservation:
@@ -132,9 +141,8 @@ class AtomicDeletionReconciliationLedger:
         receipt = observation.receipt_sha256
         with self._locked():
             payload = self._load_unlocked()
-            events = payload["events"]
-            if receipt not in events:
-                events[receipt] = {
+            if receipt not in payload["events"]:
+                payload["events"][receipt] = {
                     "logical_job_id": observation.logical_job_id,
                     "object_kind": observation.object_kind,
                     "object_id_hash": observation.object_id_hash,
@@ -147,6 +155,9 @@ class AtomicDeletionReconciliationLedger:
                 self._save_unlocked(payload)
         return receipt
 
+    def mark_applying(self, receipt_sha256: str) -> None:
+        self._mark_application_state(receipt_sha256, "applying")
+
     def mark_applied(self, receipt_sha256: str) -> None:
         self._mark_application_state(receipt_sha256, "applied")
 
@@ -156,14 +167,19 @@ class AtomicDeletionReconciliationLedger:
     def _mark_application_state(self, receipt_sha256: str, state: str) -> None:
         if not _SHA256.fullmatch(receipt_sha256):
             raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_RECEIPT_INVALID")
-        if state not in {"applied", "superseded_stale"}:
+        if state not in _APPLICATION_STATES:
             raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_APPLICATION_STATE_INVALID")
         with self._locked():
             payload = self._load_unlocked()
             event = payload["events"].get(receipt_sha256)
             if event is None:
                 raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_RECEIPT_NOT_FOUND")
-            if event.get("application_state") != state:
+            current = event.get("application_state")
+            if current not in _APPLICATION_STATES:
+                raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_LEDGER_EVENT_INVALID")
+            if state not in _ALLOWED_TRANSITIONS[current]:
+                raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_APPLICATION_TRANSITION_INVALID")
+            if current != state:
                 event["application_state"] = state
                 self._save_unlocked(payload)
 
@@ -181,11 +197,10 @@ class AtomicDeletionReconciliationLedger:
         return tuple(rows)
 
     def pending_observations(self, logical_job_id: str) -> tuple[ProviderDeletionObservation, ...]:
-        rows = self.events_for(logical_job_id)
         return tuple(
             _observation_from_event(row)
-            for row in rows
-            if row["application_state"] == "observed_not_applied"
+            for row in self.events_for(logical_job_id)
+            if row["application_state"] in _RESUMABLE_STATES
         )
 
     def _load_unlocked(self) -> dict:
@@ -268,11 +283,23 @@ class ProviderDeletionReconciler:
             raise PrivacyRetentionError("SEP_PRIVACY_RECORD_NOT_FOUND")
         if not record.provider_delete_requested:
             raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_DELETE_NOT_RESERVED")
-        return (
-            record.provider_asset_delete_state
-            if object_kind == "asset"
-            else record.provider_task_delete_state
-        )
+        return record.provider_asset_delete_state if object_kind == "asset" else record.provider_task_delete_state
+
+    def _validate_registry_binding(self, observation: ProviderDeletionObservation) -> None:
+        record = self.registry.get(observation.logical_job_id)
+        if record is None:
+            raise PrivacyRetentionError("SEP_PRIVACY_RECORD_NOT_FOUND")
+        if not record.provider_delete_requested:
+            raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_DELETE_NOT_RESERVED")
+        expected_hash = record.provider_asset_id_hash if observation.object_kind == "asset" else record.provider_task_id_hash
+        if expected_hash is None:
+            raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_OBJECT_NOT_APPLICABLE")
+        if expected_hash != observation.object_id_hash:
+            raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_OBJECT_HASH_MISMATCH")
+        current = record.provider_asset_delete_state if observation.object_kind == "asset" else record.provider_task_delete_state
+        proposed = _STATE_MAP[observation.observed_state]
+        if current in _ERASURE_TERMINAL and proposed not in _ERASURE_TERMINAL:
+            raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_TERMINAL_DOWNGRADE")
 
     def _result(self, observation: ProviderDeletionObservation, receipt: str, *, applied_state: str, decision: str) -> dict:
         return {
@@ -295,7 +322,6 @@ class ProviderDeletionReconciler:
             own = next((row for row in rows if row["receipt_sha256"] == receipt), None)
             if own is None:
                 raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_RECEIPT_NOT_FOUND")
-
             if own["application_state"] == "applied":
                 return self._result(
                     observation,
@@ -311,16 +337,15 @@ class ProviderDeletionReconciler:
                     decision="STALE_IGNORED",
                 )
 
-            applied_rows = [
-                row
-                for row in rows
+            watermark_rows = [
+                row for row in rows
                 if row["receipt_sha256"] != receipt
                 and row["object_kind"] == observation.object_kind
-                and row["application_state"] == "applied"
+                and row["application_state"] in _ORDERING_WATERMARK_STATES
             ]
-            if applied_rows:
-                newest_epoch = max(row["observed_at_epoch"] for row in applied_rows)
-                newest_rows = [row for row in applied_rows if row["observed_at_epoch"] == newest_epoch]
+            if watermark_rows:
+                newest_epoch = max(row["observed_at_epoch"] for row in watermark_rows)
+                newest_rows = [row for row in watermark_rows if row["observed_at_epoch"] == newest_epoch]
                 if observation.observed_at_epoch < newest_epoch:
                     self.ledger.mark_superseded_stale(receipt)
                     return self._result(
@@ -337,31 +362,35 @@ class ProviderDeletionReconciler:
                     )
                     if not equivalent:
                         raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_EQUAL_EPOCH_CONFLICT")
-                    self.ledger.mark_applied(receipt)
-                    return self._result(
-                        observation,
-                        receipt,
-                        applied_state=self._current_state(observation.logical_job_id, observation.object_kind),
-                        decision="EQUIVALENT_EPOCH_APPLIED",
-                    )
+                    if any(row["application_state"] == "applied" for row in newest_rows):
+                        self.ledger.mark_applying(receipt)
+                        self.ledger.mark_applied(receipt)
+                        return self._result(
+                            observation,
+                            receipt,
+                            applied_state=self._current_state(observation.logical_job_id, observation.object_kind),
+                            decision="EQUIVALENT_EPOCH_APPLIED",
+                        )
+                    # An equivalent observation is only known to be in-flight. Continue with
+                    # this observation's idempotent local registry application. The other
+                    # applying receipt remains resumable and later collapses onto this state.
+
+            # Binding/terminal checks occur before the durable applying watermark so malformed
+            # observations never become ordering authorities merely by carrying a high epoch.
+            self._validate_registry_binding(observation)
+            self.ledger.mark_applying(receipt)
 
             def operation(record):
                 if record is None:
                     raise PrivacyRetentionError("SEP_PRIVACY_RECORD_NOT_FOUND")
                 if not record.provider_delete_requested:
                     raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_DELETE_NOT_RESERVED")
-                expected_hash = (
-                    record.provider_asset_id_hash if observation.object_kind == "asset"
-                    else record.provider_task_id_hash
-                )
+                expected_hash = record.provider_asset_id_hash if observation.object_kind == "asset" else record.provider_task_id_hash
                 if expected_hash is None:
                     raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_OBJECT_NOT_APPLICABLE")
                 if expected_hash != observation.object_id_hash:
                     raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_OBJECT_HASH_MISMATCH")
-                attr = (
-                    "provider_asset_delete_state" if observation.object_kind == "asset"
-                    else "provider_task_delete_state"
-                )
+                attr = "provider_asset_delete_state" if observation.object_kind == "asset" else "provider_task_delete_state"
                 current = getattr(record, attr)
                 proposed = _STATE_MAP[observation.observed_state]
                 if current in _ERASURE_TERMINAL:
@@ -373,17 +402,8 @@ class ProviderDeletionReconciler:
 
             record = self.registry.mutate(observation.logical_job_id, operation)
             self.ledger.mark_applied(receipt)
-            applied_state = (
-                record.provider_asset_delete_state
-                if observation.object_kind == "asset"
-                else record.provider_task_delete_state
-            )
-            return self._result(
-                observation,
-                receipt,
-                applied_state=applied_state,
-                decision="APPLIED",
-            )
+            applied_state = record.provider_asset_delete_state if observation.object_kind == "asset" else record.provider_task_delete_state
+            return self._result(observation, receipt, applied_state=applied_state, decision="APPLIED")
 
     def resume_pending(self, logical_job_id: str) -> dict:
         if not _JOB_ID.fullmatch(logical_job_id):
@@ -400,13 +420,11 @@ class ProviderDeletionReconciler:
                 else:
                     applied.append(result)
             except PrivacyRetentionError as exc:
-                failures.append(
-                    {
-                        "object_kind": observation.object_kind,
-                        "observation_receipt_sha256": observation.receipt_sha256,
-                        "stable_error_code": exc.code,
-                    }
-                )
+                failures.append({
+                    "object_kind": observation.object_kind,
+                    "observation_receipt_sha256": observation.receipt_sha256,
+                    "stable_error_code": exc.code,
+                })
         remaining = self.ledger.pending_observations(logical_job_id)
         return {
             "schema_version": SCHEMA_VERSION,
@@ -425,7 +443,8 @@ class ProviderDeletionReconciler:
 
     def snapshot(self, logical_job_id: str) -> dict:
         rows = self.ledger.events_for(logical_job_id)
-        pending_count = sum(row["application_state"] == "observed_not_applied" for row in rows)
+        pending_count = sum(row["application_state"] in _RESUMABLE_STATES for row in rows)
+        inflight_count = sum(row["application_state"] == "applying" for row in rows)
         superseded_count = sum(row["application_state"] == "superseded_stale" for row in rows)
         return {
             "schema_version": SCHEMA_VERSION,
@@ -434,6 +453,7 @@ class ProviderDeletionReconciler:
             "logical_job_id": logical_job_id,
             "observation_count": len(rows),
             "pending_observation_count": pending_count,
+            "inflight_observation_count": inflight_count,
             "superseded_stale_count": superseded_count,
             "reconciliation_required": pending_count > 0,
             "observations": rows,
