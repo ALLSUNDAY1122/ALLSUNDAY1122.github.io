@@ -1,12 +1,12 @@
 import Foundation
 
-private struct Fingerprint: Codable, Equatable {
+struct Fingerprint: Codable, Equatable {
     let name: String
     let bytes: Int
     let digest: UInt64
 }
 
-private func digest(_ data: Data) -> UInt64 {
+func digest(_ data: Data) -> UInt64 {
     var value: UInt64 = 14_695_981_039_346_656_037
     for byte in data {
         value ^= UInt64(byte)
@@ -15,7 +15,7 @@ private func digest(_ data: Data) -> UInt64 {
     return value
 }
 
-private func fingerprint(_ url: URL) throws -> Fingerprint {
+func fingerprint(_ url: URL) throws -> Fingerprint {
     let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
     guard values.isRegularFile == true, values.isSymbolicLink != true else { throw NSError(domain: "AW36", code: 1) }
     let data = try Data(contentsOf: url)
@@ -23,7 +23,7 @@ private func fingerprint(_ url: URL) throws -> Fingerprint {
     return Fingerprint(name: url.lastPathComponent, bytes: data.count, digest: digest(data))
 }
 
-private func verify(directory: URL, expected: [Fingerprint]) throws {
+func verify(directory: URL, expected: [Fingerprint]) throws {
     let expectedNames = Set(expected.map(\.name))
     for item in expected {
         guard try fingerprint(directory.appendingPathComponent(item.name)) == item else { throw NSError(domain: "AW36", code: 3) }
@@ -32,7 +32,7 @@ private func verify(directory: URL, expected: [Fingerprint]) throws {
     guard Set(children.map(\.lastPathComponent)) == expectedNames else { throw NSError(domain: "AW36", code: 4) }
 }
 
-private func rejected(_ body: () throws -> Void) -> Bool {
+func rejected(_ body: () throws -> Void) -> Bool {
     do { try body(); return false } catch { return true }
 }
 
