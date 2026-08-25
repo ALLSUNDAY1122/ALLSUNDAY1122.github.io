@@ -95,6 +95,7 @@ let package = Package(
                 "Analysis/AnalysisPhysicalEvidenceArchiveValidation.swift",
                 "Analysis/AnalysisPhysicalEvidenceArchiveContentValidation.swift",
                 "Analysis/AnalysisPhysicalEvidenceArchiveChainV2.swift",
+                "Analysis/AnalysisPhysicalEvidenceArchiveChainV2Strict.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
