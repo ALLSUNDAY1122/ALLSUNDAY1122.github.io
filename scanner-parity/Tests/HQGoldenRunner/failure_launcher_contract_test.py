@@ -28,6 +28,7 @@ for token in [
     assert token in launcher, f"Formal Golden launcher fail-safe contract missing: {token}"
 
 assert '[[ ! -f "$reference_corpus_manifest" ]]' in launcher, "configured reference corpus must fail closed when missing"
+assert 'unset SCANNER_GOLDEN_REFERENCE_MANIFEST' in launcher, "generic execution must clear inherited stale corpus binding"
 
 for token in [
     'golden-v3-user-confirmed-20260825',
