@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A36",
+  "title": "Dependency Audit Safety-Surface Closure",
+  "state": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "implementation": {
+    "path": "tech-assets/moises-audio/Separation/Evaluation/lane1_dependency_audit.py",
+    "remote_blob_sha": "6210a1f3d2bfb2f8de1fe9055f89e1fd27a5992a",
+    "report_schema_version": 2,
+    "tool_version_preserved": "L1-A26-v2"
+  },
+  "repository_regression": {
+    "path": "tech-assets/moises-audio/Separation/Tests/test_lane1_dependency_audit_safety_surfaces.py",
+    "remote_blob_sha": "dd4de00e38385abbf242653b985bd75af3b47c67",
+    "case_count": 8,
+    "exact_worker_checkout_execution": "NOT_OBSERVED"
+  },
+  "focused_validation": {
+    "kind": "interface-compatible dependency-check model plus exact repository regression body",
+    "py_compile": "PASS",
+    "tests_run": 8,
+    "passed": 8,
+    "failures": 0,
+    "errors": 0
+  },
+  "required_safety_modules": [
+    "Separation/Server/mutation_topology.py",
+    "Separation/Server/privacy_retention.py",
+    "Separation/Server/provider_delete_reconciliation.py"
+  ],
+  "required_regressions": [
+    "Separation/Tests/test_mutation_topology.py",
+    "Separation/Tests/test_privacy_retention.py",
+    "Separation/Tests/test_privacy_retention_concurrency.py",
+    "Separation/Tests/test_provider_delete_reconciliation.py",
+    "Separation/Tests/test_provider_delete_reconciliation_resume.py",
+    "Separation/Tests/test_provider_delete_reconciliation_ordering.py",
+    "Separation/Tests/test_provider_delete_reconciliation_crash_atomicity.py",
+    "Separation/Tests/test_provider_delete_reconciliation_temporal_causality.py",
+    "Separation/Tests/test_provider_delete_reconciliation_documented_expiry.py"
+  ],
+  "fail_closed_codes": [
+    "L1A36_REQUIRED_SAFETY_FILE_MISSING",
+    "L1A36_REQUIRED_REGRESSION_MISSING"
+  ],
+  "preserved_checks": [
+    "L1A26_REQUIRED_FILE_MISSING",
+    "L1A26_STALE_A24_SCHEMA_PRESENT",
+    "L1A26_A24_SURFACE_MISMATCH",
+    "L1A26_A24_REFERENCE_GRAPH_INCOMPLETE",
+    "L1A26_GATEWAY_SURFACE_MISMATCH",
+    "L1A26_A25_RETENTION_EXPECTATION_MISSING"
+  ],
+  "a26_gate": {
+    "state": "HEAD_TREE_BOUND_EXACT_CHECKOUT_AUDIT_PENDING",
+    "exact_checkout_retry": "FAILED_DNS",
+    "error": "Could not resolve host: github.com",
+    "completion_claim": false
+  },
+  "notes": [
+    "A36 strengthens A26 dependency_contracts without changing the v2 report shape or PARITY semantics.",
+    "Deleting a post-A26 critical module or its required regression now makes dependency_contracts FAIL even if unittest discovery would otherwise shrink and pass.",
+    "This matrix is engineering evidence only and cannot promote any PARITY row."
+  ]
+}
