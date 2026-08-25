@@ -3,8 +3,8 @@ import SceneKit
 import SwiftUI
 import UIKit
 
-/// Keeps one ARSession alive for the whole Splat lifecycle.
-/// The camera is not started until ScanModel.startCapture() explicitly runs the session.
+/// Keeps the capture ARSession available only while capture can start or resume.
+/// Reconstruction does not need the live AR renderer, so S9 dismantles it before trainer allocation.
 struct PersistentScanCameraView: UIViewRepresentable {
     @EnvironmentObject var model: ScanModel
 
@@ -29,6 +29,12 @@ struct PersistentScanCameraView: UIViewRepresentable {
             acceptedFrameCount: model.acceptedFrames,
             isActive: model.phase == .capturing && !model.isCapturePaused
         )
+    }
+
+    static func dismantleUIView(_ uiView: ARSCNView, coordinator: Coordinator) {
+        coordinator.prepareForDismantle()
+        uiView.session.pause()
+        uiView.scene = SCNScene()
     }
 
     @MainActor
@@ -79,6 +85,15 @@ struct PersistentScanCameraView: UIViewRepresentable {
                 }
                 lastAcceptedFrameCount = acceptedFrameCount
             }
+        }
+
+        func prepareForDismantle() {
+            isActive = false
+            updateTask?.cancel()
+            updateTask = nil
+            acceptedFeatureIDs.removeAll(keepingCapacity: false)
+            heatmap.removeFromSuperview()
+            sceneView = nil
         }
 
         private func updateHeatmap() {
@@ -164,7 +179,6 @@ private final class CaptureCoverageHeatmapView: UIView {
         }
 
         renderCells = cells.compactMap { key, cell in
-            // A single drifting AR feature should not paint a large warning block.
             guard cell.total >= 2 else { return nil }
             let row = key / columns
             let column = key % columns
@@ -223,13 +237,24 @@ struct RootScanView: View {
 
     private var isCapturing: Bool { model.phase == .capturing }
 
+    private var needsCaptureRenderer: Bool {
+        switch model.phase {
+        case .ready, .capturing, .captured:
+            return true
+        case .training, .finished, .failed:
+            return false
+        }
+    }
+
     var body: some View {
         ZStack {
-            PersistentScanCameraView()
-                .environmentObject(model)
-                .ignoresSafeArea()
-                .opacity(isCapturing ? 1 : 0)
-                .allowsHitTesting(isCapturing)
+            if needsCaptureRenderer {
+                PersistentScanCameraView()
+                    .environmentObject(model)
+                    .ignoresSafeArea()
+                    .opacity(isCapturing ? 1 : 0)
+                    .allowsHitTesting(isCapturing)
+            }
 
             if !isCapturing {
                 Color.black.ignoresSafeArea()
