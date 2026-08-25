@@ -1,7 +1,172 @@
 import CryptoKit
 import Foundation
+import Msplat
 import SplatIO
 import simd
+
+enum SplatCanonicalSHAsset {
+    struct Descriptor: Equatable, Sendable {
+        let pointCount: Int
+        let shDegree: UInt
+        let higherOrderPropertyCount: Int
+    }
+
+    struct Asset: Equatable, Sendable {
+        let url: URL
+        let descriptor: Descriptor
+    }
+
+    enum CanonicalError: LocalizedError {
+        case sourceMissing
+        case invalidPLYHeader
+        case unsupportedSHLayout(Int)
+        case pointCountMismatch(expected: Int, actual: Int)
+        case shDegreeMismatch(expected: UInt, actual: UInt)
+
+        var errorDescription: String? {
+            switch self {
+            case .sourceMissing:
+                return "SH3 canonical asset の元データが見つかりません。"
+            case .invalidPLYHeader:
+                return "SH3 canonical asset のPLYヘッダーを検証できません。"
+            case .unsupportedSHLayout(let count):
+                return "SH係数レイアウトが不正です（f_rest: \(count)）。"
+            case .pointCountMismatch(let expected, let actual):
+                return "canonical asset のGaussian数が一致しません（期待: \(expected)、実際: \(actual)）。"
+            case .shDegreeMismatch(let expected, let actual):
+                return "canonical asset のSH次数が一致しません（期待: SH\(expected)、実際: SH\(actual)）。"
+            }
+        }
+    }
+
+    static let requiredSHDegree: UInt = 3
+    private static let headerReadLimit = 128 * 1024
+    private static let canonicalPrefix = "result.sh3-"
+
+    static func canonicalURL(forLegacySplat sourceURL: URL) throws -> URL {
+        guard sourceURL.isFileURL,
+              FileManager.default.fileExists(atPath: sourceURL.path) else {
+            throw CanonicalError.sourceMissing
+        }
+        let digest = try SplatExportService.sha256Hex(fileURL: sourceURL)
+        return sourceURL.deletingLastPathComponent()
+            .appendingPathComponent("\(canonicalPrefix)\(digest).ply")
+    }
+
+    static func existingAsset(forLegacySplat sourceURL: URL, expectedPointCount: Int) -> Asset? {
+        guard let url = try? canonicalURL(forLegacySplat: sourceURL),
+              FileManager.default.fileExists(atPath: url.path),
+              let descriptor = try? inspectPLY(url),
+              descriptor.shDegree == requiredSHDegree,
+              descriptor.pointCount == expectedPointCount else {
+            return nil
+        }
+        return Asset(url: url, descriptor: descriptor)
+    }
+
+    /// Persist the lossless trainer output beside the legacy `.splat` using a content-addressed name.
+    /// The SHA-256 key is derived from the legacy `.splat`, so a failed reprocess can never pair an
+    /// older committed `.splat` with a newer SH asset (or vice versa).
+    static func persist(
+        from trainer: Msplat.GaussianTrainer,
+        legacySplatURL: URL,
+        expectedPointCount: Int
+    ) throws -> Asset {
+        let targetURL = try canonicalURL(forLegacySplat: legacySplatURL)
+        let temporaryURL = targetURL.deletingLastPathComponent()
+            .appendingPathComponent(".\(targetURL.lastPathComponent).\(UUID().uuidString).partial.ply")
+        try? FileManager.default.removeItem(at: temporaryURL)
+
+        do {
+            trainer.exportPly(to: temporaryURL.path)
+            let descriptor = try inspectPLY(temporaryURL)
+            guard descriptor.pointCount == expectedPointCount else {
+                throw CanonicalError.pointCountMismatch(
+                    expected: expectedPointCount,
+                    actual: descriptor.pointCount
+                )
+            }
+            guard descriptor.shDegree == requiredSHDegree else {
+                throw CanonicalError.shDegreeMismatch(
+                    expected: requiredSHDegree,
+                    actual: descriptor.shDegree
+                )
+            }
+
+            if FileManager.default.fileExists(atPath: targetURL.path) {
+                _ = try FileManager.default.replaceItemAt(targetURL, withItemAt: temporaryURL)
+            } else {
+                try FileManager.default.moveItem(at: temporaryURL, to: targetURL)
+            }
+            return Asset(url: targetURL, descriptor: descriptor)
+        } catch {
+            try? FileManager.default.removeItem(at: temporaryURL)
+            throw error
+        }
+    }
+
+    static func inspectPLY(_ url: URL) throws -> Descriptor {
+        guard url.isFileURL,
+              FileManager.default.fileExists(atPath: url.path) else {
+            throw CanonicalError.sourceMissing
+        }
+
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        guard let data = try handle.read(upToCount: headerReadLimit), !data.isEmpty else {
+            throw CanonicalError.invalidPLYHeader
+        }
+        let marker = Data("end_header".utf8)
+        guard let markerRange = data.range(of: marker) else {
+            throw CanonicalError.invalidPLYHeader
+        }
+        let headerData = data.prefix(upTo: markerRange.upperBound)
+        guard let header = String(data: headerData, encoding: .utf8),
+              header.hasPrefix("ply") else {
+            throw CanonicalError.invalidPLYHeader
+        }
+
+        var pointCount: Int?
+        var dcIndices = Set<Int>()
+        var restIndices = Set<Int>()
+        for rawLine in header.split(whereSeparator: { $0.isNewline }) {
+            let line = String(rawLine)
+            if line.hasPrefix("element vertex ") {
+                pointCount = Int(line.dropFirst("element vertex ".count))
+            } else if line.hasPrefix("property float f_dc_") {
+                if let index = Int(line.dropFirst("property float f_dc_".count)) {
+                    dcIndices.insert(index)
+                }
+            } else if line.hasPrefix("property float f_rest_") {
+                if let index = Int(line.dropFirst("property float f_rest_".count)) {
+                    restIndices.insert(index)
+                }
+            }
+        }
+
+        guard let pointCount, pointCount > 0, dcIndices == Set([0, 1, 2]) else {
+            throw CanonicalError.invalidPLYHeader
+        }
+        let restCount = restIndices.count
+        if restCount > 0, restIndices != Set(0..<restCount) {
+            throw CanonicalError.invalidPLYHeader
+        }
+
+        let degree: UInt
+        switch restCount {
+        case 0: degree = 0
+        case 9: degree = 1
+        case 24: degree = 2
+        case 45: degree = 3
+        default: throw CanonicalError.unsupportedSHLayout(restCount)
+        }
+        return Descriptor(
+            pointCount: pointCount,
+            shDegree: degree,
+            higherOrderPropertyCount: restCount
+        )
+    }
+}
 
 enum SplatPersistedEditMaterializer {
     struct AxisRange: Sendable {
@@ -39,17 +204,22 @@ enum SplatPersistedEditMaterializer {
         }
     }
 
-    static func makePlan(sourceURL: URL, sourcePointCount: Int) async throws -> Plan {
+    static func makePlan(
+        sourceURL: URL,
+        assetURL: URL? = nil,
+        sourcePointCount: Int
+    ) async throws -> Plan {
         let settings = loadSettings(sourceURL: sourceURL)
         guard settings != .default else {
             return Plan(settings: settings, bounds: nil, outputPointCount: sourcePointCount)
         }
 
+        let resolvedAssetURL = assetURL ?? sourceURL
         let bounds = settings.hasCrop
-            ? try await sampledCropBounds(sourceURL: sourceURL, sourcePointCount: sourcePointCount)
+            ? try await sampledCropBounds(sourceURL: resolvedAssetURL, sourcePointCount: sourcePointCount)
             : nil
-        let reader = try DotSplatSceneReader(sourceURL)
-        let stream = try reader.read()
+        let reader = try AutodetectSceneReader(resolvedAssetURL)
+        let stream = try await reader.read()
         var outputPointCount = 0
         for try await points in stream {
             try Task.checkCancellation()
@@ -117,8 +287,8 @@ enum SplatPersistedEditMaterializer {
 
     private static func sampledCropBounds(sourceURL: URL, sourcePointCount: Int) async throws -> CropBounds {
         let sampleStride = max(1, sourcePointCount / 8_000)
-        let reader = try DotSplatSceneReader(sourceURL)
-        let stream = try reader.read()
+        let reader = try AutodetectSceneReader(sourceURL)
+        let stream = try await reader.read()
         var xs: [Float] = []
         var ys: [Float] = []
         var zs: [Float] = []
@@ -206,11 +376,12 @@ enum SplatPersistedEditMaterializer {
     }
 }
 
-/// C2 export pipeline for Gaussian Splat assets.
+/// Export pipeline for Gaussian Splat assets.
 ///
-/// The reconstruction output is the 32-byte-per-point `.splat` format emitted by Msplat.
-/// We intentionally decode it through SplatIO and re-encode through SplatIO's PLY/SPZ writers
-/// instead of duplicating coordinate, scale, opacity, rotation, or color conversions here.
+/// New SH3 reconstructions retain a content-addressed SH3 PLY beside the legacy 32-byte `.splat`.
+/// Export prefers that canonical asset and falls back to `.splat` only for older scans. The pinned
+/// SPZ writer preserves SH3 coefficients, but currently emits the SPZ antialias flag as `false`;
+/// antialias semantic parity with Scaniverse remains a separately verified Gate.
 enum SplatExportService {
     enum Format: String, CaseIterable, Identifiable, Sendable {
         case ply
@@ -232,6 +403,7 @@ enum SplatExportService {
         case corruptSource
         case emptySource
         case incompleteWrite(expected: Int, actual: Int)
+        case sphericalHarmonicsLost(expectedDegree: UInt)
         case outputMissing
 
         var errorDescription: String? {
@@ -246,6 +418,8 @@ enum SplatExportService {
                 return "3DデータにGaussianが含まれていません。"
             case .incompleteWrite(let expected, let actual):
                 return "書き出し件数が一致しません（期待: \(expected)、実際: \(actual)）。"
+            case .sphericalHarmonicsLost(let expectedDegree):
+                return "SH\(expectedDegree)係数を保持したまま書き出せませんでした。"
             case .outputMissing:
                 return "書き出しファイルを作成できませんでした。"
             }
@@ -296,8 +470,15 @@ enum SplatExportService {
         outputBaseName: String? = nil
     ) async throws -> URL {
         let sourcePointCount = try sourcePointCount(sourceURL)
+        let canonical = SplatCanonicalSHAsset.existingAsset(
+            forLegacySplat: sourceURL,
+            expectedPointCount: sourcePointCount
+        )
+        let retainedAssetURL = canonical?.url ?? sourceURL
+        let retainedSHDegree = canonical?.descriptor.shDegree ?? 0
         let editPlan = try await SplatPersistedEditMaterializer.makePlan(
             sourceURL: sourceURL,
+            assetURL: retainedAssetURL,
             sourcePointCount: sourcePointCount
         )
         let pointCount = editPlan.outputPointCount
@@ -310,19 +491,23 @@ enum SplatExportService {
             .appendingPathComponent(baseName)
             .appendingPathExtension(format.rawValue)
         let temporaryURL = directory
-            .appendingPathComponent(".\(outputURL.lastPathComponent).\(UUID().uuidString).partial")
+            .appendingPathComponent(".\(outputURL.lastPathComponent).\(UUID().uuidString).partial.\(format.rawValue)")
 
         try? FileManager.default.removeItem(at: temporaryURL)
 
         do {
-            let reader = try DotSplatSceneReader(sourceURL)
-            let stream = try reader.read()
+            let reader = try AutodetectSceneReader(retainedAssetURL)
+            let stream = try await reader.read()
             var pointsWritten = 0
 
             switch format {
             case .ply:
                 let writer = try SplatPLYSceneWriter(toFileAtPath: temporaryURL.path)
-                try await writer.start(sphericalHarmonicDegree: 0, binary: true, pointCount: pointCount)
+                try await writer.start(
+                    sphericalHarmonicDegree: retainedSHDegree,
+                    binary: true,
+                    pointCount: pointCount
+                )
                 for try await points in stream {
                     try Task.checkCancellation()
                     let outputPoints = SplatPersistedEditMaterializer.apply(points, plan: editPlan)
@@ -351,11 +536,19 @@ enum SplatExportService {
                 throw ExportError.incompleteWrite(expected: pointCount, actual: pointsWritten)
             }
             try validateNonEmptyFile(temporaryURL)
+            if retainedSHDegree > 0 {
+                try await validateRetainedSphericalHarmonics(
+                    fileURL: temporaryURL,
+                    expectedDegree: retainedSHDegree,
+                    expectedPointCount: pointCount
+                )
+            }
 
             if FileManager.default.fileExists(atPath: outputURL.path) {
-                try FileManager.default.removeItem(at: outputURL)
+                _ = try FileManager.default.replaceItemAt(outputURL, withItemAt: temporaryURL)
+            } else {
+                try FileManager.default.moveItem(at: temporaryURL, to: outputURL)
             }
-            try FileManager.default.moveItem(at: temporaryURL, to: outputURL)
             return outputURL
         } catch {
             try? FileManager.default.removeItem(at: temporaryURL)
@@ -458,6 +651,31 @@ enum SplatExportService {
             hasher.update(data: chunk)
         }
         return hasher.finalize().map { String(format: "%02x", $0) }.joined()
+    }
+
+    private static func validateRetainedSphericalHarmonics(
+        fileURL: URL,
+        expectedDegree: UInt,
+        expectedPointCount: Int
+    ) async throws {
+        let expectedCoefficientCount = (Int(expectedDegree) + 1) * (Int(expectedDegree) + 1)
+        let reader = try AutodetectSceneReader(fileURL)
+        let stream = try await reader.read()
+        var pointsRead = 0
+
+        for try await points in stream {
+            try Task.checkCancellation()
+            for point in points {
+                guard UInt(point.color.shDegree.rawValue) == expectedDegree,
+                      point.color.asSphericalHarmonicFloat.count == expectedCoefficientCount else {
+                    throw ExportError.sphericalHarmonicsLost(expectedDegree: expectedDegree)
+                }
+            }
+            pointsRead += points.count
+        }
+        guard pointsRead == expectedPointCount else {
+            throw ExportError.incompleteWrite(expected: expectedPointCount, actual: pointsRead)
+        }
     }
 
     private static func fileByteLength(_ url: URL) throws -> Int {

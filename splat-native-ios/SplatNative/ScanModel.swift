@@ -168,6 +168,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private var datasetReady = false
     private var pendingTrainingTarget = SplatReconstructionPolicy.standardIterations
     private let resourceGuard = SplatResourceGuard()
+    private let trainingRunGate = SplatTrainingRunGate()
     private let projectStore = ScanProjectStore()
     private var memoryWarningObserver: NSObjectProtocol?
     private let ciContext = CIContext(options: [.cacheIntermediates: false])
@@ -198,7 +199,9 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         !isWorldMapPersistencePending
     }
 
-    var canRetryGeneration: Bool { datasetReady && projectURL != nil }
+    var canRetryGeneration: Bool {
+        datasetReady && projectURL != nil && trainingRunGate.isIdle
+    }
 
     var progressText: String { "撮影カバー \(coverageSectorCount) / \(coverageSectorTotal)" }
 
@@ -537,7 +540,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
     /// Each Enhance pass extends the existing checkpoint instead of starting over.
     func enhanceResult() {
-        guard datasetReady, projectURL != nil, phase == .finished else { return }
+        guard datasetReady,
+              projectURL != nil,
+              phase == .finished,
+              trainingRunGate.isIdle else { return }
         let target = SplatReconstructionPolicy.enhancementTarget(from: trainingIteration)
         guard target > trainingIteration else { return }
         pendingTrainingTarget = target
@@ -547,11 +553,13 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
     private func startTraining(targetIterations: Int) {
         guard phase == .captured, datasetReady, let projectURL else { return }
+        guard let runToken = trainingRunGate.beginRun() else { return }
         let requestedTarget = min(SplatReconstructionPolicy.trainingHorizon, max(1, targetIterations))
         pendingTrainingTarget = requestedTarget
         do {
             try persistProjectSnapshot(stage: .processing)
         } catch {
+            trainingRunGate.finishRun(runToken)
             failTraining("生成状態を保存できませんでした: \(error.localizedDescription)")
             return
         }
@@ -564,14 +572,63 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         let checkpoint = projectURL.appendingPathComponent("training.msplat-checkpoint")
         let geometryPoints = Array(featurePoints.values)
         let seedFrames = captured.map(Self.seedFrame(from:))
+        let firstSourceFrame = captured.first
+        let runContext = SplatReconstructionRunContext(
+            runID: runToken.runID,
+            sessionID: projectURL.lastPathComponent,
+            sourceFrameCount: captured.count,
+            sourceImageWidth: firstSourceFrame?.w,
+            sourceImageHeight: firstSourceFrame?.h,
+            effectiveDownscale: Double(SplatReconstructionPolicy.datasetDownscale),
+            checkpointPath: checkpoint.lastPathComponent
+        )
         let passResourceGuard = resourceGuard
+        let passTrainingRunGate = trainingRunGate
         passResourceGuard.resetForPass()
         let runStartedAt = Date()
         let runStartUptime = ProcessInfo.processInfo.systemUptime
         let initialThermalState = splatThermalStateName(ProcessInfo.processInfo.thermalState)
 
         Task.detached(priority: .userInitiated) { [weak self] in
+            defer {
+                // Dataset/Trainer are scoped to the autoreleasepool below. The gate is released only
+                // after that scope has returned, so a retry cannot overlap their strong-reference lifetime.
+                passTrainingRunGate.finishRun(runToken)
+                Task { @MainActor [weak self] in
+                    self?.objectWillChange.send()
+                }
+            }
+
             autoreleasepool {
+                let writeEarlyReport: (
+                    String,
+                    SplatReconstructionPhase,
+                    SplatReconstructionStopReason?,
+                    String?
+                ) -> Void = { outcome, phase, stopReason, errorMessage in
+                    let report = passResourceGuard.makeReport(
+                        startedAt: runStartedAt,
+                        startUptime: runStartUptime,
+                        passStartIteration: 0,
+                        targetIteration: requestedTarget,
+                        finalIteration: 0,
+                        finalSplatCount: 0,
+                        initialThermalState: initialThermalState,
+                        finalThermalState: splatThermalStateName(ProcessInfo.processInfo.thermalState),
+                        outcome: outcome,
+                        context: runContext,
+                        phase: phase,
+                        stopReason: stopReason,
+                        checkpointIteration: nil,
+                        resumeOutcome: .notAttempted,
+                        errorMessage: errorMessage
+                    )
+                    SplatReconstructionRunReport.write(report, projectURL: projectURL)
+                }
+
+                // Persist the phase before entering work that can terminate the process before Swift can report an error.
+                writeEarlyReport("running-preflight", .preflight, nil, nil)
+
                 do {
                     let plyURL = projectURL.appendingPathComponent("points3D.ply")
                     if !FileManager.default.fileExists(atPath: plyURL.path) {
@@ -582,8 +639,10 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                         )
                     }
                 } catch {
+                    let message = "初期3Dデータを準備できませんでした: \(error.localizedDescription)"
+                    writeEarlyReport("failed-preflight", .preflight, .other, message)
                     Task { @MainActor [weak self] in
-                        self?.failTraining("初期3Dデータを準備できませんでした: \(error.localizedDescription)")
+                        self?.failTraining(message)
                     }
                     return
                 }
@@ -592,6 +651,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 // already under memory or thermal pressure. This protects the largest allocation spike.
                 let preflightEvaluation = passResourceGuard.evaluate(splatCount: 0)
                 if let reason = preflightEvaluation.reason {
+                    let stopReason = SplatReconstructionStopReason(resourcePauseReason: reason)
                     let report = passResourceGuard.makeReport(
                         startedAt: runStartedAt,
                         startUptime: runStartUptime,
@@ -601,7 +661,12 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                         finalSplatCount: 0,
                         initialThermalState: initialThermalState,
                         finalThermalState: splatThermalStateName(ProcessInfo.processInfo.thermalState),
-                        outcome: "preflight-\(reason.rawValue)"
+                        outcome: "preflight-\(reason.rawValue)",
+                        context: runContext,
+                        phase: .preflight,
+                        stopReason: stopReason,
+                        checkpointIteration: nil,
+                        resumeOutcome: .notAttempted
                     )
                     SplatReconstructionRunReport.write(report, projectURL: projectURL)
                     Task { @MainActor [weak self] in
@@ -610,33 +675,54 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     return
                 }
 
+                writeEarlyReport("running-dataset-init", .datasetInit, nil, nil)
                 let dataset = GaussianDataset(
                     path: path,
                     downscaleFactor: SplatReconstructionPolicy.datasetDownscale,
                     evalMode: false
                 )
                 guard dataset.numTrain >= 3 else {
+                    let message = "撮影画像を読み込めませんでした。生成をもう一度試してください"
+                    writeEarlyReport("failed-dataset-init", .datasetInit, .other, message)
                     Task { @MainActor [weak self] in
-                        self?.failTraining("撮影画像を読み込めませんでした。生成をもう一度試してください")
+                        self?.failTraining(message)
                     }
                     return
                 }
 
                 let config = SplatReconstructionPolicy.makeConfig()
+                writeEarlyReport("running-trainer-init", .trainerInit, nil, nil)
                 let trainer = GaussianTrainer(dataset: dataset, config: config)
 
-                if FileManager.default.fileExists(atPath: checkpoint.path) {
-                    _ = trainer.loadCheckpoint(from: checkpoint.path)
+                let checkpointExists = FileManager.default.fileExists(atPath: checkpoint.path)
+                let loadedCheckpointIteration: Int?
+                if checkpointExists {
+                    writeEarlyReport("running-checkpoint-load", .checkpointLoad, nil, nil)
+                    loadedCheckpointIteration = trainer.loadCheckpoint(from: checkpoint.path)
+                } else {
+                    loadedCheckpointIteration = nil
                 }
 
                 let resumedIteration = trainer.iteration
+                let resumeOutcome = SplatCheckpointResumeOutcome.classify(
+                    checkpointExists: checkpointExists,
+                    loadedIteration: loadedCheckpointIteration
+                )
                 let effectiveTarget = SplatReconstructionPolicy.boundedTarget(
                     requestedTarget,
                     resumedIteration: resumedIteration
                 )
                 let passStart = resumedIteration
                 let passSpan = max(1, effectiveTarget - passStart)
-                let writeRunReport: (String, Int, Int) -> Void = { outcome, finalIteration, finalSplatCount in
+                let writeRunReport: (
+                    String,
+                    SplatReconstructionPhase,
+                    SplatReconstructionStopReason?,
+                    Int,
+                    Int,
+                    Int?,
+                    String?
+                ) -> Void = { outcome, phase, stopReason, finalIteration, finalSplatCount, checkpointIteration, errorMessage in
                     let report = passResourceGuard.makeReport(
                         startedAt: runStartedAt,
                         startUptime: runStartUptime,
@@ -646,16 +732,69 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                         finalSplatCount: finalSplatCount,
                         initialThermalState: initialThermalState,
                         finalThermalState: splatThermalStateName(ProcessInfo.processInfo.thermalState),
-                        outcome: outcome
+                        outcome: outcome,
+                        context: runContext,
+                        phase: phase,
+                        stopReason: stopReason,
+                        checkpointIteration: checkpointIteration,
+                        resumeOutcome: resumeOutcome,
+                        errorMessage: errorMessage
                     )
                     SplatReconstructionRunReport.write(report, projectURL: projectURL)
+                }
+                let checkpointSaveFailureMessage = "再開用チェックポイントを保存できなかったため、安全のため生成を停止しました。撮影データは保持しています。空き容量を確認してから生成をもう一度試してください"
+                let failCheckpointSave: (String, Int, Int) -> Void = { outcome, iteration, count in
+                    writeRunReport(
+                        outcome,
+                        .checkpointSave,
+                        .trainerError,
+                        iteration,
+                        count,
+                        nil,
+                        checkpointSaveFailureMessage
+                    )
+                    Task { @MainActor [weak self] in
+                        self?.failTraining(checkpointSaveFailureMessage)
+                    }
+                }
+
+                if checkpointExists && loadedCheckpointIteration == nil {
+                    let message = "保存済みチェックポイントを再開できませんでした。元の撮影データは保持しています"
+                    writeRunReport(
+                        "failed-checkpoint-load",
+                        .checkpointLoad,
+                        .trainerError,
+                        0,
+                        trainer.splatCount,
+                        nil,
+                        message
+                    )
+                    Task { @MainActor [weak self] in
+                        self?.failTraining(message)
+                    }
+                    return
                 }
 
                 let initialResourceEvaluation = passResourceGuard.evaluate(splatCount: trainer.splatCount)
                 if let reason = initialResourceEvaluation.reason {
                     msplatSync()
-                    _ = trainer.saveCheckpoint(to: checkpoint.path)
-                    writeRunReport("paused-\(reason.rawValue)", resumedIteration, trainer.splatCount)
+                    guard trainer.saveCheckpoint(to: checkpoint.path) else {
+                        failCheckpointSave(
+                            "failed-checkpoint-save-resource-pause",
+                            resumedIteration,
+                            trainer.splatCount
+                        )
+                        return
+                    }
+                    writeRunReport(
+                        "paused-\(reason.rawValue)",
+                        checkpointExists ? .checkpointLoad : .trainerInit,
+                        SplatReconstructionStopReason(resourcePauseReason: reason),
+                        resumedIteration,
+                        trainer.splatCount,
+                        resumedIteration,
+                        nil
+                    )
                     Task { @MainActor [weak self] in
                         self?.failTraining(reason.userMessage)
                     }
@@ -673,8 +812,43 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                 }
 
                 if resumedIteration < effectiveTarget {
+                    writeRunReport(
+                        "running-training-step",
+                        .trainingStep,
+                        nil,
+                        resumedIteration,
+                        trainer.splatCount,
+                        checkpointExists ? resumedIteration : nil,
+                        nil
+                    )
                     for _ in resumedIteration..<effectiveTarget {
-                        if Task.isCancelled { return }
+                        if Task.isCancelled {
+                            msplatSync()
+                            let iteration = trainer.iteration
+                            let count = trainer.splatCount
+                            guard trainer.saveCheckpoint(to: checkpoint.path) else {
+                                failCheckpointSave(
+                                    "cancelled-checkpoint-save-failed",
+                                    iteration,
+                                    count
+                                )
+                                return
+                            }
+                            let message = "生成タスクがキャンセルされました"
+                            writeRunReport(
+                                "cancelled",
+                                .trainingStep,
+                                .cancellation,
+                                iteration,
+                                count,
+                                iteration,
+                                message
+                            )
+                            Task { @MainActor [weak self] in
+                                self?.failTraining(message)
+                            }
+                            return
+                        }
                         let stats = trainer.step()
                         let iteration = stats.iteration
                         let shouldReport = iteration % 20 == 0 || iteration >= effectiveTarget
@@ -692,7 +866,14 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
                         if checkpointDue || thermalPause || resourcePauseReason != nil {
                             msplatSync()
-                            _ = trainer.saveCheckpoint(to: checkpoint.path)
+                            guard trainer.saveCheckpoint(to: checkpoint.path) else {
+                                failCheckpointSave(
+                                    "failed-checkpoint-save-training",
+                                    iteration,
+                                    stats.splatCount
+                                )
+                                return
+                            }
                         }
 
                         if shouldReport {
@@ -707,7 +888,15 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                         }
 
                         if let reason = resourcePauseReason {
-                            writeRunReport("paused-\(reason.rawValue)", iteration, stats.splatCount)
+                            writeRunReport(
+                                "paused-\(reason.rawValue)",
+                                .trainingStep,
+                                SplatReconstructionStopReason(resourcePauseReason: reason),
+                                iteration,
+                                stats.splatCount,
+                                iteration,
+                                nil
+                            )
                             Task { @MainActor [weak self] in
                                 self?.failTraining(reason.userMessage)
                             }
@@ -715,18 +904,67 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                         }
 
                         if thermalPause {
-                            writeRunReport("paused-thermal", iteration, stats.splatCount)
+                            let message = "端末温度が高くなったため生成を安全に一時停止しました。端末が冷えてから「生成だけもう一度試す」で続きから再開できます"
+                            writeRunReport(
+                                "paused-thermal",
+                                .trainingStep,
+                                .thermal,
+                                iteration,
+                                stats.splatCount,
+                                iteration,
+                                nil
+                            )
                             Task { @MainActor [weak self] in
-                                self?.failTraining("端末温度が高くなったため生成を安全に一時停止しました。端末が冷えてから「生成だけもう一度試す」で続きから再開できます")
+                                self?.failTraining(message)
                             }
                             return
+                        }
+
+                        // Reuse the existing durable checkpoint cadence as a low-I/O progress heartbeat.
+                        if checkpointDue {
+                            writeRunReport(
+                                "running-training-step",
+                                .trainingStep,
+                                nil,
+                                iteration,
+                                stats.splatCount,
+                                iteration,
+                                nil
+                            )
                         }
                     }
                 }
 
                 msplatSync()
-                _ = trainer.saveCheckpoint(to: checkpoint.path)
+                let finalCheckpointIteration = trainer.iteration
+                let finalCheckpointCount = trainer.splatCount
+                writeRunReport(
+                    "running-checkpoint-save",
+                    .checkpointSave,
+                    nil,
+                    finalCheckpointIteration,
+                    finalCheckpointCount,
+                    nil,
+                    nil
+                )
+                guard trainer.saveCheckpoint(to: checkpoint.path) else {
+                    failCheckpointSave(
+                        "failed-checkpoint-save-final",
+                        finalCheckpointIteration,
+                        finalCheckpointCount
+                    )
+                    return
+                }
                 let pendingOutput = projectURL.appendingPathComponent(ScanProjectStore.pendingSplatFileName)
+                writeRunReport(
+                    "running-export",
+                    .export,
+                    nil,
+                    trainer.iteration,
+                    trainer.splatCount,
+                    finalCheckpointIteration,
+                    nil
+                )
                 trainer.exportSplat(to: pendingOutput.path)
                 msplatSync()
 
@@ -734,8 +972,18 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                       let sizeNumber = attributes[.size] as? NSNumber,
                       sizeNumber.intValue > 0,
                       sizeNumber.intValue % 32 == 0 else {
+                    let message = "生成した3Dデータを保存できませんでした。生成をもう一度試してください"
+                    writeRunReport(
+                        "failed-export",
+                        .export,
+                        .trainerError,
+                        trainer.iteration,
+                        trainer.splatCount,
+                        trainer.iteration,
+                        message
+                    )
                     Task { @MainActor [weak self] in
-                        self?.failTraining("生成した3Dデータを保存できませんでした。生成をもう一度試してください")
+                        self?.failTraining(message)
                     }
                     return
                 }
@@ -750,17 +998,44 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                         manifest.lastError = nil
                     }
                 } catch {
+                    let message = "生成した3Dデータの安全な保存を完了できませんでした: \(error.localizedDescription)"
+                    writeRunReport(
+                        "failed-export-commit",
+                        .export,
+                        .other,
+                        trainer.iteration,
+                        trainer.splatCount,
+                        trainer.iteration,
+                        message
+                    )
                     Task { @MainActor [weak self] in
-                        self?.failTraining("生成した3Dデータの安全な保存を完了できませんでした: \(error.localizedDescription)")
+                        self?.failTraining(message)
                     }
                     return
                 }
 
+                writeRunReport(
+                    "running-preview",
+                    .preview,
+                    nil,
+                    trainer.iteration,
+                    trainer.splatCount,
+                    finalCheckpointIteration,
+                    nil
+                )
                 let rendered = trainer.render(cameraIndex: 0)
                 let preview = Self.makeImage(from: rendered)
                 let finalCount = trainer.splatCount
                 _ = passResourceGuard.evaluate(splatCount: finalCount)
-                writeRunReport("completed", effectiveTarget, finalCount)
+                writeRunReport(
+                    "completed",
+                    .preview,
+                    nil,
+                    effectiveTarget,
+                    finalCount,
+                    effectiveTarget,
+                    nil
+                )
                 Task { @MainActor [weak self] in
                     guard let self else { return }
                     self.resultURL = output

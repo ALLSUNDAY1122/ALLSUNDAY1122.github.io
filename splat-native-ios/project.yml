@@ -3,10 +3,10 @@ options:
   bundleIdPrefix: jp.allsunday1122
   deploymentTarget:
     iOS: '18.0'
+  preGenCommand: bash scripts/materialize_msplat_s7_wave1.sh
 packages:
   Msplat:
-    url: https://github.com/Voxelio-app/msplat.git
-    revision: d620d9c58d270e7de9e34a9d8a85dcf938a5070d
+    path: Packages/MsplatMemory
   MetalSplatter:
     url: https://github.com/scier/MetalSplatter.git
     revision: 2b965de1934de38dda1c71cf90bf798aa948a14c
@@ -90,6 +90,7 @@ targets:
       - path: SplatNative/SplatPreviousResultEvidence.swift
       - path: SplatNative/SplatProjectTrustRecovery.swift
       - path: SplatNative/SplatExportService.swift
+      - path: SplatNative/SplatCanonicalSHAsset+ProjectDurability.swift
       - path: SplatNative/SplatExportAdmission.swift
       - path: SplatNative/SplatTransientExportWorkspace.swift
       - path: SplatNative/SplatVideoConfiguration.swift

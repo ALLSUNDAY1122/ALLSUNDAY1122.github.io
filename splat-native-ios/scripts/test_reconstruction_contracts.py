@@ -66,6 +66,58 @@ assert "requiresThermalPause" in MODEL
 assert "func enhanceResult()" in MODEL
 assert "enhancementTarget(from: trainingIteration)" in MODEL
 
+# Checkpoint durability is part of the retry/resume contract. Msplat's pinned public API returns Bool
+# from saveCheckpoint(to:), so callers must not discard that result and then claim a recoverable
+# checkpoint in telemetry. Every save site must fail closed when persistence fails.
+checkpoint_save_guards = re.findall(
+    r"guard\s+trainer\.saveCheckpoint\(to:\s*checkpoint\.path\)\s+else",
+    MODEL,
+)
+assert len(checkpoint_save_guards) >= 4, "all checkpoint save sites must validate the Bool result"
+assert "_ = trainer.saveCheckpoint" not in MODEL, "checkpoint save success must never be ignored"
+for outcome in (
+    "failed-checkpoint-save-resource-pause",
+    "cancelled-checkpoint-save-failed",
+    "failed-checkpoint-save-training",
+    "failed-checkpoint-save-final",
+):
+    assert outcome in MODEL, f"missing fail-closed checkpoint outcome: {outcome}"
+checkpoint_failure_start = MODEL.index("let failCheckpointSave:")
+checkpoint_failure_end = MODEL.index("if checkpointExists", checkpoint_failure_start)
+checkpoint_failure_helper = MODEL[checkpoint_failure_start:checkpoint_failure_end]
+assert ".checkpointSave" in checkpoint_failure_helper
+assert ".trainerError" in checkpoint_failure_helper
+require(
+    r"iteration\s*,\s*count\s*,\s*nil\s*,\s*checkpointSaveFailureMessage",
+    checkpoint_failure_helper,
+    "checkpoint persistence failure must not claim a checkpoint iteration",
+)
+
+# Abrupt process termination cannot execute a Swift failure branch. Persist a phase breadcrumb
+# before expensive/uninterruptible reconstruction work, and refresh training progress only at the existing
+# checkpoint cadence so Build 5 evidence identifies the last durable phase without excessive I/O.
+# Keep these assertions source-semantic so formatting-only Swift changes cannot silently drop this evidence.
+for outcome, phase in (
+    ("running-preflight", ".preflight"),
+    ("running-dataset-init", ".datasetInit"),
+    ("running-trainer-init", ".trainerInit"),
+    ("running-checkpoint-load", ".checkpointLoad"),
+    ("running-checkpoint-save", ".checkpointSave"),
+    ("running-export", ".export"),
+    ("running-preview", ".preview"),
+):
+    require(
+        rf'{re.escape(outcome)}"[\s\S]{{0,500}}{re.escape(phase)}',
+        MODEL,
+        f"missing durable reconstruction phase breadcrumb: {outcome} / {phase}",
+    )
+assert MODEL.count('"running-training-step"') >= 2, "training must persist start + checkpoint-cadence heartbeats"
+require(
+    r'if checkpointDue \{[\s\S]{0,500}running-training-step',
+    MODEL,
+    "training heartbeat must reuse checkpoint cadence rather than per-step disk writes",
+)
+
 # Expensive point-color projection and sky seeding must run after Task.detached begins, not while
 # finishCapture is transitioning the UI from capture to the processing screen.
 finish = MODEL.index("func finishCapture()")
@@ -105,7 +157,11 @@ resource_pause = MODEL.index("if let reason = resourcePauseReason")
 checkpoint_before_pause = MODEL.rfind("trainer.saveCheckpoint", 0, resource_pause)
 assert checkpoint_before_pause >= 0, "resource pause must be preceded by a recoverable checkpoint"
 assert "paused-\\(reason.rawValue)" in MODEL
-assert 'writeRunReport("completed"' in MODEL
+require(
+    r'writeRunReport\(\s*"completed"\s*,\s*\.preview',
+    MODEL,
+    "completed reconstruction must persist a preview-phase run report",
+)
 assert "peakResidentMemoryBytes" in RESOURCE
 assert "peakSplatCount" in RESOURCE
 assert "reconstruction-run-%05d.json" in RESOURCE
