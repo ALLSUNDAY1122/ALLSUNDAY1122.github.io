@@ -85,7 +85,12 @@ public struct AnalysisPhysicalEvidenceBatchAssembly: Sendable {
     public let w38Manifest: AnalysisPhysicalEvidenceArchiveChainManifest
     public let w38Report: AnalysisPhysicalEvidenceArchiveChainReport
 
-    public init(
+    // Intentionally module-internal. Production callers must obtain an assembly
+    // from `AnalysisPhysicalEvidenceBatchAssembler.assemble`, which executes the
+    // full W27 semantic validator and W38 strict validator before construction.
+    // `@testable` unit tests can still construct adversarial values to harden the
+    // public publication boundary.
+    init(
         schemaVersion: Int = 1,
         publicationID: String,
         batchRootSHA256: String,
