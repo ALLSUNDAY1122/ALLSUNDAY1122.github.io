@@ -74,6 +74,8 @@ index.write_text(updated,encoding='utf-8')
 print(f'PASS: bundled audited HM1 questions={len(questions)} rounds={dict(rounds)} JPY paywall=200/800')
 PY
 
+python3 "$SCRIPT_DIR/apply-premium-visibility-20260825.py" "$INDEX"
+
 # The approved unified Learning Sprint AppIcon PNGs are versioned assets.
 # Do not re-render them during release builds: SVG text rendering depends on
 # host fonts and can change/fail across macOS images. Validate the committed
