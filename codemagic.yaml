@@ -111,3 +111,88 @@ workflows:
         auth: integration
         submit_to_testflight: true
         submit_to_app_store: false
+
+  splat-build5-asc-readback:
+    name: Splat Lab Native - Build 5 ASC Readback
+    max_build_duration: 20
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: Codemagic Shiwake Swipe
+    environment:
+      vars:
+        APP_STORE_APPLE_ID: '6803778932'
+        EXPECTED_BUILD: '5'
+        EXPECTED_VERSION: '1.0.0'
+      xcode: latest
+    scripts:
+      - name: Wait for Build 5 to become VALID in App Store Connect
+        script: |
+          set -euo pipefail
+          found=0
+          for attempt in $(seq 1 60); do
+            if app-store-connect apps builds "$APP_STORE_APPLE_ID" \
+              --build-version-number "$EXPECTED_BUILD" \
+              --version-string "$EXPECTED_VERSION" \
+              --processing-state VALID \
+              --platform IOS \
+              --json > build5-list.json 2>build5-list.err; then
+              if python3 - <<'PY'
+          import json
+          data=json.load(open('build5-list.json',encoding='utf-8'))
+          def walk(x):
+              if isinstance(x,dict):
+                  yield x
+                  for v in x.values(): yield from walk(v)
+              elif isinstance(x,list):
+                  for v in x: yield from walk(v)
+          ids=[]
+          for d in walk(data):
+              rid=d.get('id')
+              attrs=d.get('attributes') if isinstance(d.get('attributes'),dict) else {}
+              version=str(attrs.get('version',d.get('version','')))
+              state=str(attrs.get('processingState',d.get('processingState','')))
+              if rid and version=='5' and (not state or state=='VALID'):
+                  ids.append(str(rid))
+          ids=list(dict.fromkeys(ids))
+          if len(ids)!=1:
+              raise SystemExit(1)
+          open('build5-id.txt','w').write(ids[0])
+          PY
+              then
+                found=1
+                break
+              fi
+            fi
+            sleep 15
+          done
+          test "$found" = 1
+          BUILD_ID="$(cat build5-id.txt)"
+          latest="$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID")"
+          [[ "$latest" =~ ^[0-9]+$ ]]
+          (( latest >= EXPECTED_BUILD ))
+          app-store-connect builds beta-details "$BUILD_ID" --json > build5-beta-details.json
+          python3 - "$BUILD_ID" "$latest" <<'PY'
+          import json,sys
+          rid=sys.argv[1]
+          latest=int(sys.argv[2])
+          payload={
+              'ok':True,
+              'appAppleId':'6803778932',
+              'bundleId':'jp.allsunday1122.splatlab',
+              'version':'1.0.0',
+              'buildNumber':5,
+              'buildResourceId':rid,
+              'processingState':'VALID',
+              'latestTestFlightBuild':latest,
+              'internalOnlyExpected':True,
+              'appStoreSubmitted':False,
+              'externalBetaReviewSubmitted':False
+          }
+          open('asc-readback.json','w',encoding='utf-8').write(json.dumps(payload,ensure_ascii=False,indent=2)+'\n')
+          print('BUILD5_ASC_READBACK',json.dumps(payload,ensure_ascii=False))
+          PY
+    artifacts:
+      - asc-readback.json
+      - build5-id.txt
+      - build5-list.json
+      - build5-beta-details.json
