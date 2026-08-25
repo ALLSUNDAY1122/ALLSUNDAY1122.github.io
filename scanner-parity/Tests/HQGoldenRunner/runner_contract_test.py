@@ -5,6 +5,9 @@ package = (ROOT / "Package.swift").read_text(encoding="utf-8")
 runner = (ROOT / "HQGoldenRunner" / "main.swift").read_text(encoding="utf-8")
 machine_gate = (ROOT / "HQGoldenSupport" / "FormalGoldenMachineGate.swift").read_text(encoding="utf-8")
 review_bundle = (ROOT / "HQGoldenSupport" / "GoldenReviewBundleBuilder.swift").read_text(encoding="utf-8")
+reference_matcher = (ROOT / "HQGoldenSupport" / "ReferenceFeatureMatcher.swift").read_text(encoding="utf-8")
+reference_alignment = (ROOT / "HQGoldenSupport" / "ReferenceAlignment.swift").read_text(encoding="utf-8")
+reference_manifest = (ROOT / "HQGoldenSupport" / "ReferenceCorpusManifest.swift").read_text(encoding="utf-8")
 product_flow = (ROOT / "ProductFlow" / "Package.swift").read_text(encoding="utf-8")
 
 required_package_tokens = [
@@ -71,5 +74,22 @@ for field in [
 ]:
     assert field in runner, f"runner evidence missing: {field}"
 assert 'videoURL.path' not in runner.split('HQGoldenExecutionReport(', 1)[0], "report schema should not persist a raw local video path"
+
+# The real v3 reference PDF contains negative captures, repeated captures of the
+# same physical page, and capture order that is not canonical reading order.
+# A configured, SHA-bound corpus manifest must therefore collapse raw reference
+# pages into canonical groups before recall/duplicate/order metrics are computed.
+for token in [
+    'SCANNER_GOLDEN_REFERENCE_MANIFEST',
+    'ReferenceCorpusManifest',
+    'referenceCorpusManifestSHA256',
+    'canonicalReferenceIndex',
+    'nearestNegativeDistance',
+]:
+    assert token in reference_matcher or token in reference_alignment or token in reference_manifest, f"reference-corpus contract missing: {token}"
+assert 'referencePDFSHA256.caseInsensitiveCompare(actualPDFSHA256)' in reference_manifest
+assert 'unassignedPages' in reference_manifest and 'pageAssignedMoreThanOnce' in reference_manifest
+assert 'canonicalReferenceIndex ?? match.referenceIndex' in reference_alignment
+assert 'negativeDistance <= threshold' in reference_alignment
 
 print("HQ_GOLDEN_RUNNER_CONTRACT_PASS")
