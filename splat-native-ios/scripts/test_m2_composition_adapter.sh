@@ -22,18 +22,20 @@ actual_revision="$(git -C "$SOURCE_ROOT" rev-parse HEAD)"
   exit 1
 }
 
-# Simulate the real M1 dirty-file set using both staged-only and unstaged edits.
+# Simulate the actual M1 materializer output shape: three disjoint source edits
+# plus its untracked revision marker, with both staged-only and unstaged edits.
 git -C "$SOURCE_ROOT" worktree add --quiet --detach "$COMPOSE" "$REVISION"
 printf '\n// M2 composition test: staged foreign input header\n' >> "$COMPOSE/Sources/MsplatCore/internal/include/input_data.hpp"
 printf '\n// M2 composition test: unstaged foreign input implementation\n' >> "$COMPOSE/Sources/MsplatCore/src/input_data.cpp"
 printf '\n// M2 composition test: staged foreign API implementation\n' >> "$COMPOSE/Sources/MsplatCore/src/msplat_api.mm"
+printf '%s\n' "$REVISION" > "$COMPOSE/.scaniverse-m1-revision"
 git -C "$COMPOSE" add \
   Sources/MsplatCore/internal/include/input_data.hpp \
   Sources/MsplatCore/src/msplat_api.mm
 
 bash "$ADAPTER" "$COMPOSE"
 
-expected=$'Sources/MsplatCore/internal/include/input_data.hpp\nSources/MsplatCore/internal/include/metal_tensor.hpp\nSources/MsplatCore/internal/include/model.hpp\nSources/MsplatCore/src/input_data.cpp\nSources/MsplatCore/src/model.cpp\nSources/MsplatCore/src/msplat_api.mm'
+expected=$'.scaniverse-m1-revision\nSources/MsplatCore/internal/include/input_data.hpp\nSources/MsplatCore/internal/include/metal_tensor.hpp\nSources/MsplatCore/internal/include/model.hpp\nSources/MsplatCore/src/input_data.cpp\nSources/MsplatCore/src/model.cpp\nSources/MsplatCore/src/msplat_api.mm'
 actual="$({
   git -C "$COMPOSE" diff --name-only
   git -C "$COMPOSE" diff --cached --name-only
@@ -48,6 +50,7 @@ actual="$({
 grep -Fq 'staged foreign input header' "$COMPOSE/Sources/MsplatCore/internal/include/input_data.hpp"
 grep -Fq 'unstaged foreign input implementation' "$COMPOSE/Sources/MsplatCore/src/input_data.cpp"
 grep -Fq 'staged foreign API implementation' "$COMPOSE/Sources/MsplatCore/src/msplat_api.mm"
+grep -Fxq "$REVISION" "$COMPOSE/.scaniverse-m1-revision"
 staged="$(git -C "$COMPOSE" diff --cached --name-only | LC_ALL=C sort)"
 expected_staged=$'Sources/MsplatCore/internal/include/input_data.hpp\nSources/MsplatCore/src/msplat_api.mm'
 [[ "$staged" == "$expected_staged" ]] || {
@@ -68,4 +71,4 @@ if bash "$ADAPTER" "$CONFLICT" >"$TMP/conflict.log" 2>&1; then
 fi
 grep -Fq 'M2 compose target already modifies M2-owned file: Sources/MsplatCore/internal/include/model.hpp' "$TMP/conflict.log"
 
-echo "PASS: M2 composition adapter preserves real M1-shaped staged/unstaged changes and rejects staged owned-file conflicts"
+echo "PASS: M2 composition adapter preserves actual M1 source/staging/revision-marker shape and rejects staged owned-file conflicts"
