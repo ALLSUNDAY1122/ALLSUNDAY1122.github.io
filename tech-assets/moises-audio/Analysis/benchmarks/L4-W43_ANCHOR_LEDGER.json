@@ -3,7 +3,7 @@
   "bundle_id": "L4-W43",
   "title": "Durable anchor ledger / monotonic receipt journal + relaunch rollback/fork recovery hardening",
   "evidence_class": "NON_PARITY_ENGINEERING_EVIDENCE",
-  "observed_at": "2026-08-26T02:38:00+09:00",
+  "observed_at": "2026-08-26T02:42:00+09:00",
   "environment": {
     "swift": "6.2.1",
     "target": "x86_64-unknown-linux-gnu",
@@ -27,7 +27,8 @@
     "latest_exact_duplicate_idempotent": true,
     "orphan_auto_adoption": false,
     "symlink_acceptance": false,
-    "undeclared_regular_file_acceptance": false
+    "undeclared_regular_file_acceptance": false,
+    "oversized_sequence_fail_closed": true
   },
   "swift_filesystem_mirror": {
     "classification": "SOURCE_SHAPED_NON_PARITY_MIRROR",
@@ -50,6 +51,12 @@
       "unexpected-file corruption rejection"
     ]
   },
+  "scalar_boundary_check": {
+    "result": "PASS",
+    "case": "latestSequence = UInt64.max with records.count = 1",
+    "production_fix": "compare UInt64(records.count) to latestSequence instead of trapping Int(latestSequence)",
+    "durable_test": "AnalysisPhysicalEvidenceAnchorLedgerScalarBoundaryTests.testUInt64MaxHeadSequenceFailsClosedWithoutIntegerTrap"
+  },
   "sha256_chain_mirror": {
     "classification": "NON_PARITY_ROOT_DETERMINISM_MIRROR",
     "result": "PASS",
@@ -68,7 +75,11 @@
     "order_canonicalization": "PASS"
   },
   "durable_xctest_source": {
-    "path": "Tests/MoisesAudioCoreTests/AnalysisPhysicalEvidenceAnchorLedgerTests.swift",
+    "paths": [
+      "Tests/MoisesAudioCoreTests/AnalysisPhysicalEvidenceAnchorLedgerTests.swift",
+      "Tests/MoisesAudioCoreTests/AnalysisPhysicalEvidenceAnchorLedgerRecoveryEdgeTests.swift",
+      "Tests/MoisesAudioCoreTests/AnalysisPhysicalEvidenceAnchorLedgerScalarBoundaryTests.swift"
+    ],
     "full_worker_execution": "NOT_OBSERVED",
     "cases": [
       "append/relaunch deterministic snapshot",
@@ -79,9 +90,14 @@
       "stale or forged certificate",
       "pending marker only recovery",
       "record before HEAD recovery",
+      "HEAD advanced but pending remains recovery",
       "corrupt pending preservation",
       "orphan record fail-close",
-      "extra file fail-close"
+      "extra file fail-close",
+      "truncated HEAD fail-close",
+      "sequence-gap initialization rejection",
+      "anchor identity switch rejection",
+      "UInt64.max HEAD sequence fail-close without integer trap"
     ]
   },
   "limitations": [
