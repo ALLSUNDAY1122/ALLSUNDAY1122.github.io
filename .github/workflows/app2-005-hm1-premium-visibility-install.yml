@@ -1,0 +1,64 @@
+name: APP2-005 HM1 premium visibility install
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-005-hm1-premium-visibility-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-005-hm1-premium-visibility-install
+  cancel-in-progress: false
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Wire premium visibility into HM1 release prepare
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, re
+          cmd=json.loads(Path('automation/app2-005-hm1-premium-visibility-command.json').read_text(encoding='utf-8'))
+          build=str(cmd['build'])
+          p=Path('ios/health-manager-1/prepare-ios.sh')
+          s=p.read_text(encoding='utf-8')
+          line='python3 "$SCRIPT_DIR/apply-premium-visibility-20260825.py" "$INDEX"\n'
+          if line not in s:
+              marker='print(f\'PASS: bundled audited HM1 questions={len(questions)} rounds={dict(rounds)} JPY paywall=200/800\')\nPY\n'
+              if marker not in s:
+                  raise SystemExit('prepare insertion marker missing')
+              s=s.replace(marker, marker+'\n'+line, 1)
+          p.write_text(s,encoding='utf-8')
+          q=Path('ios/health-manager-1/project.yml')
+          t=q.read_text(encoding='utf-8')
+          t,n=re.subn(r'CURRENT_PROJECT_VERSION:\s*\d+',f'CURRENT_PROJECT_VERSION: {build}',t,count=1)
+          if n != 1:
+              raise SystemExit('build number replacement failed')
+          q.write_text(t,encoding='utf-8')
+          PY
+      - name: Commit release wiring
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ios/health-manager-1/prepare-ios.sh ios/health-manager-1/project.yml
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Restore HM1 premium visibility in release build"
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 2))
+          done
+          exit 1
