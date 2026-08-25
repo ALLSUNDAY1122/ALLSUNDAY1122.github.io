@@ -44,6 +44,11 @@ if [[ -n "$reference_corpus_manifest" ]]; then
     exit 2
   fi
   export SCANNER_GOLDEN_REFERENCE_MANIFEST="$reference_corpus_manifest"
+else
+  # Generic/v2 executions must not inherit a stale corpus binding from a
+  # parent shell. Corpus use is explicit per invocation and therefore
+  # fail-safe across repeated HQ runs in the same terminal/session.
+  unset SCANNER_GOLDEN_REFERENCE_MANIFEST || true
 fi
 
 stderr_log="$(mktemp "${TMPDIR:-/tmp}/scanner-hq-golden-stderr.XXXXXX")"
