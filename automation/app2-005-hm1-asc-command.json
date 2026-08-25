@@ -1,7 +1,12 @@
 {
-  "request_id": "app2-005-hm1-build-2026082501-readback-20260825-1951",
+  "request_id": "app2-005-hm1-submission-preflight-20260825-2042",
   "requests": [
+    {"label": "app", "path": "/v1/apps/6799581662"},
+    {"label": "versions", "path": "/v1/apps/6799581662/appStoreVersions?limit=20"},
+    {"label": "app-infos", "path": "/v1/apps/6799581662/appInfos?limit=20"},
     {"label": "builds", "path": "/v1/apps/6799581662/builds?limit=50"},
-    {"label": "internal-sun-builds", "path": "/v1/betaGroups/da16ca74-d4c8-45a1-8735-5c4baad112cf/builds?limit=50"}
+    {"label": "beta-review-detail", "path": "/v1/apps/6799581662/betaAppReviewDetail"},
+    {"label": "monthly", "path": "/v1/subscriptions/6804373671?include=subscriptionLocalizations,subscriptionAvailability,appStoreReviewScreenshot&limit[subscriptionLocalizations]=50"},
+    {"label": "lifetime", "path": "/v2/inAppPurchases/6799583540?include=inAppPurchaseLocalizations,inAppPurchaseAvailability,appStoreReviewScreenshot&limit[inAppPurchaseLocalizations]=50"}
   ]
 }
