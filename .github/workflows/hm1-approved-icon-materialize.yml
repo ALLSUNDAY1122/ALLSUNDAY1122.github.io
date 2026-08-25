@@ -7,6 +7,7 @@ on:
     paths:
       - 'ios/health-manager-1/approved-icon-v1/**'
       - 'ios/health-manager-1/prepare-approved-icon.sh'
+      - 'ios/health-manager-1/prepare-ios.sh'
       - '.github/workflows/hm1-approved-icon-materialize.yml'
   pull_request:
     branches:
@@ -14,11 +15,12 @@ on:
     paths:
       - 'ios/health-manager-1/approved-icon-v1/**'
       - 'ios/health-manager-1/prepare-approved-icon.sh'
+      - 'ios/health-manager-1/prepare-ios.sh'
       - 'ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset/**'
       - '.github/workflows/hm1-approved-icon-materialize.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   materialize:
@@ -26,65 +28,23 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-        with:
-          ref: agent/approved-icons-it-hm1
-          fetch-depth: 0
       - name: Install image tooling
         run: sudo apt-get update -qq && sudo apt-get install -y webp python3-pil
-      - name: Decode approved icon transport parts
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import base64
-          root=Path('ios/health-manager-1/approved-icon-v1')
-          alphabet=set('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/')
-          for n in ('01','02','03','04'):
-              raw=(root/f'part{n}.b64').read_text(encoding='utf-8')
-              payload=''.join(c for c in raw if c in alphabet)
-              payload += '=' * ((-len(payload)) % 4)
-              try:
-                  decoded=base64.b64decode(payload, validate=True)
-              except Exception as exc:
-                  raise SystemExit(f'part{n} base64 repair failed: {exc}')
-              Path(f'/tmp/hm1-p{n}.bin').write_bytes(decoded)
-              print(f'PASS: part{n} decoded bytes={len(decoded)}')
-          PY
-      - name: Reconstruct approved icon transport
-        run: cat /tmp/hm1-p01.bin /tmp/hm1-p02.bin /tmp/hm1-p03.bin /tmp/hm1-p04.bin > /tmp/hm1-approved.webp
-      - name: Verify approved icon byte count
-        run: test "$(wc -c < /tmp/hm1-approved.webp | tr -d ' ')" = "43200"
-      - name: Verify approved icon SHA
-        run: echo 'ac8f0c2c050801ed2121bdd50494fdcafcec8af89a1d7811cd044b8977dd2d59  /tmp/hm1-approved.webp' | sha256sum -c -
-      - name: Verify approved icon WebP container
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import struct
-          b=Path('/tmp/hm1-approved.webp').read_bytes()
-          assert b[:4]==b'RIFF' and b[8:12]==b'WEBP'
-          assert struct.unpack('<I', b[4:8])[0]+8 == len(b)
-          print('PASS: RIFF/WebP container')
-          PY
-      - name: Decode approved WebP
-        run: dwebp /tmp/hm1-approved.webp -o /tmp/hm1-approved.png
-      - name: Verify Pillow can read approved artwork
-        run: |
-          python3 - <<'PY'
-          from PIL import Image
-          with Image.open('/tmp/hm1-approved.png') as im:
-              im.load()
-              print(f'PASS: Pillow image size={im.size} mode={im.mode}')
-          PY
       - name: Materialize exact approved artwork into AppIcon sizes
         run: bash ios/health-manager-1/prepare-approved-icon.sh
-      - name: Commit generated AppIcon assets
+      - name: Verify generated AppIcon slots
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset/*.png
-          if git diff --cached --quiet; then
-            echo 'PASS: approved AppIcon assets already current'
-          else
-            git commit -m 'Materialize approved First-class Health Manager AppIcon'
-            git push origin HEAD:agent/approved-icons-it-hm1
-          fi
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,struct
+          root=Path('ios/health-manager-1/Resources/Assets.xcassets/AppIcon.appiconset')
+          expected={'icon-20@2x.png':40,'icon-20@3x.png':60,'icon-29@2x.png':58,'icon-29@3x.png':87,'icon-40@2x.png':80,'icon-40@3x.png':120,'icon-60@2x.png':120,'icon-60@3x.png':180,'icon-1024.png':1024}
+          contents=json.loads((root/'Contents.json').read_text(encoding='utf-8'))
+          assert {x.get('filename') for x in contents['images'] if x.get('filename')}==set(expected)
+          for name,px in expected.items():
+              b=(root/name).read_bytes()
+              assert b[:8]==b'\x89PNG\r\n\x1a\n' and b[12:16]==b'IHDR'
+              assert struct.unpack('>II',b[16:24])==(px,px)
+              assert b[25] not in (4,6), f'{name}: alpha channel'
+          print('PASS: 9 approved HM1 AppIcon slots generated from checksum-verified source')
+          PY
