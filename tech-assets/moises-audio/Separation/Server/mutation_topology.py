@@ -3,6 +3,11 @@
 This module does not implement a distributed lock. It makes the opposite safety
 property explicit: local file-backed synchronization must never be interpreted
 as cross-host transactional coordination.
+
+A35 extends the deployment inventory to the provider-delete reconciliation
+ledger/application path introduced in A29-A34. The reconciliation ledger uses
+POSIX flock/atomic replace plus a same-host application lock, which is safe for
+one host but is not a distributed transaction or fencing mechanism.
 """
 from __future__ import annotations
 
@@ -13,7 +18,7 @@ from dataclasses import asdict, dataclass
 from enum import Enum
 
 SCHEMA_VERSION = 1
-TOOL_VERSION = "L1-A27-v1"
+TOOL_VERSION = "L1-A35-v1"
 EVIDENCE_STATE = "NON_PARITY_EVIDENCE_ONLY"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$")
@@ -53,7 +58,13 @@ class StoreSafetyProfile:
             raise MutationTopologyError("L1A27_STORE_ID_INVALID")
         if self.local_serialization not in {"none", "posix_flock"}:
             raise MutationTopologyError("L1A27_LOCAL_SERIALIZATION_INVALID")
-        if self.risk not in {"lost_update", "cross_host_race", "delete_refund_state_race", "active_pointer_race"}:
+        if self.risk not in {
+            "lost_update",
+            "cross_host_race",
+            "delete_refund_state_race",
+            "active_pointer_race",
+            "reconciliation_watermark_race",
+        }:
             raise MutationTopologyError("L1A27_STORE_RISK_INVALID")
         if self.local_serialization == "none" and self.single_host_safe:
             raise MutationTopologyError("L1A27_UNSERIALIZED_STORE_CANNOT_BE_SINGLE_HOST_SAFE")
@@ -124,9 +135,37 @@ BUILTIN_STORE_PROFILES = {
         shared_authority_adapter=False,
         risk="delete_refund_state_race",
     ),
+    "a29_provider_delete_reconciliation_ledger": StoreSafetyProfile(
+        store_id="a29_provider_delete_reconciliation_ledger",
+        local_serialization="posix_flock",
+        single_host_safe=True,
+        shared_authority_adapter=False,
+        risk="reconciliation_watermark_race",
+    ),
 }
-for _profile in BUILTIN_STORE_PROFILES.values():
-    _profile.validate()
+
+# This inventory is intentionally explicit. Adding a new durable Lane 1 mutation
+# store requires updating the topology contract rather than silently omitting it
+# from deployment preflight evidence.
+EXPECTED_BUILTIN_STORE_IDS = frozenset(
+    {
+        "a09_privacy_registry",
+        "a16_reconnect_registry",
+        "a23_variant_store",
+        "a24_retention_store",
+        "a29_provider_delete_reconciliation_ledger",
+    }
+)
+
+
+def _validate_builtin_inventory() -> None:
+    if frozenset(BUILTIN_STORE_PROFILES) != EXPECTED_BUILTIN_STORE_IDS:
+        raise MutationTopologyError("L1A35_BUILTIN_STORE_INVENTORY_MISMATCH")
+    for profile in BUILTIN_STORE_PROFILES.values():
+        profile.validate()
+
+
+_validate_builtin_inventory()
 
 
 def required_shared_capabilities() -> tuple[str, ...]:
@@ -192,6 +231,7 @@ def assert_store_topology_safe(
 
 
 def lane1_topology_snapshot(topology: DeploymentTopology | str) -> dict:
+    _validate_builtin_inventory()
     decisions = [
         assess_store_topology(store_id, topology)
         for store_id in sorted(BUILTIN_STORE_PROFILES)
@@ -201,6 +241,7 @@ def lane1_topology_snapshot(topology: DeploymentTopology | str) -> dict:
         "tool_version": TOOL_VERSION,
         "evidence_state": EVIDENCE_STATE,
         "topology": DeploymentTopology(topology).value,
+        "store_inventory": tuple(sorted(BUILTIN_STORE_PROFILES)),
         "stores": [asdict(d) | {"decision_sha256": d.decision_sha256} for d in decisions],
         "all_safe": all(d.state == "PASS" for d in decisions),
         "parity_claim": "NONE",
