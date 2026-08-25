@@ -149,7 +149,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
     private let maxFrames = 240
     private let recoveryFramesRequired = 6
 
-    private(set) var session: ARSession?
+    private(set) weak var session: ARSession?
     private var projectURL: URL?
     private var imagesURL: URL?
     private var depthURL: URL?
@@ -431,7 +431,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         isCapturePaused = true
         userPauseRequested = true
         do {
-            // A captured project must be independently processable before the UI can leave capture.
             try writeTransformsJSON()
             try writeCaptureManifest()
             try persistProjectSnapshot(stage: .captured)
@@ -538,7 +537,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         startTraining(targetIterations: pendingTrainingTarget)
     }
 
-    /// Each Enhance pass extends the existing checkpoint instead of starting over.
     func enhanceResult() {
         guard datasetReady,
               projectURL != nil,
@@ -591,8 +589,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
         Task.detached(priority: .userInitiated) { [weak self] in
             defer {
-                // Dataset/Trainer are scoped to the autoreleasepool below. The gate is released only
-                // after that scope has returned, so a retry cannot overlap their strong-reference lifetime.
                 passTrainingRunGate.finishRun(runToken)
                 Task { @MainActor [weak self] in
                     self?.objectWillChange.send()
@@ -626,7 +622,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     SplatReconstructionRunReport.write(report, projectURL: projectURL)
                 }
 
-                // Persist the phase before entering work that can terminate the process before Swift can report an error.
                 writeEarlyReport("running-preflight", .preflight, nil, nil)
 
                 do {
@@ -647,8 +642,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     return
                 }
 
-                // Reject before GaussianDataset/GaussianTrainer allocation when the device is
-                // already under memory or thermal pressure. This protects the largest allocation spike.
                 let preflightEvaluation = passResourceGuard.evaluate(splatCount: 0)
                 if let reason = preflightEvaluation.reason {
                     let stopReason = SplatReconstructionStopReason(resourcePauseReason: reason)
@@ -713,7 +706,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                     resumedIteration: resumedIteration
                 )
                 let passStart = resumedIteration
-                let passSpan = max(1, effectiveTarget - passStart)
                 let writeRunReport: (
                     String,
                     SplatReconstructionPhase,
@@ -803,11 +795,12 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
                 if resumedIteration > 0 {
                     let resumedCount = trainer.splatCount
+                    let resumedProgress = min(1, Double(resumedIteration) / Double(max(1, effectiveTarget)))
                     Task { @MainActor [weak self] in
                         guard let self else { return }
                         self.trainingIteration = resumedIteration
                         self.splatCount = resumedCount
-                        self.trainingProgress = resumedIteration >= effectiveTarget ? 1 : 0
+                        self.trainingProgress = resumedProgress
                     }
                 }
 
@@ -878,7 +871,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
 
                         if shouldReport {
                             let count = stats.splatCount
-                            let progress = min(1, Double(iteration - passStart) / Double(passSpan))
+                            let progress = min(1, Double(iteration) / Double(max(1, effectiveTarget)))
                             Task { @MainActor [weak self] in
                                 guard let self else { return }
                                 self.trainingIteration = iteration
@@ -920,7 +913,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                             return
                         }
 
-                        // Reuse the existing durable checkpoint cadence as a low-I/O progress heartbeat.
                         if checkpointDue {
                             writeRunReport(
                                 "running-training-step",
