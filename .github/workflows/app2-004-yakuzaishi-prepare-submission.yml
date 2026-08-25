@@ -1,0 +1,142 @@
+name: APP2-004 Pharmacist Prepare App Review
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-004-yakuzaishi-prepare-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-004-yakuzaishi-prepare-submission
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Prepare no-IAP native release resources
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 pharmacist-manabi-sprint/scripts/validate_release.py
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          PREFLIGHT_PLACEHOLDER_ICON=1 bash pharmacist-manabi-sprint/ios/prepare-ios.sh
+          cd pharmacist-manabi-sprint/ios
+          xcodegen generate
+          python3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj
+          ! grep -q 'com.apple.InAppPurchase' PharmacistSprint.xcodeproj/project.pbxproj
+          ! grep -R -q 'import StoreKit\|Product.products\|AppStore.sync\|purchaseMonthly\|purchaseLifetime' --include='*.swift' .
+
+      - name: Build and capture native App Store screenshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/yakuzaishi-review
+          UDID=$(python3 - <<'PY'
+          import json,subprocess
+          d=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          devices=[x for xs in d['devices'].values() for x in xs if x.get('isAvailable') and x.get('name','').startswith('iPhone')]
+          preferred=['iPhone 16 Pro Max','iPhone 17 Pro Max','iPhone 16 Plus','iPhone 15 Pro Max']
+          for name in preferred:
+              for x in devices:
+                  if x.get('name')==name:
+                      print(x['udid']); raise SystemExit
+          if devices:
+              print(devices[-1]['udid']); raise SystemExit
+          raise SystemExit('No available iPhone simulator')
+          PY
+          )
+          test -n "$UDID"
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcodebuild build \
+            -project pharmacist-manabi-sprint/ios/PharmacistSprint.xcodeproj \
+            -scheme PharmacistSprint \
+            -configuration Release \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -derivedDataPath /tmp/yakuzaishi-derived \
+            CODE_SIGNING_ALLOWED=NO
+          APP=/tmp/yakuzaishi-derived/Build/Products/Release-iphonesimulator/PharmacistSprint.app
+          test -d "$APP"
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl launch --terminate-running-process "$UDID" jp.allsunday1122.yakuzaishi
+          sleep 4
+          xcrun simctl io "$UDID" screenshot /tmp/yakuzaishi-review/01-home.png
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+          p=Path('/tmp/yakuzaishi-review/01-home.png'); b=p.read_bytes()
+          assert b[:8]==b'\x89PNG\r\n\x1a\n'
+          size=struct.unpack('>II',b[16:24])
+          assert size in {(1320,2868),(1290,2796),(1284,2778),(1242,2688)}, size
+          print('PASS screenshot',size,len(b))
+          PY
+
+      - name: Complete App Store preparation without final submit
+        id: prepare
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          PHARMACIST_SCREENSHOT: /tmp/yakuzaishi-review/01-home.png
+          PHARMACIST_SUBMISSION_OUTPUT: /tmp/app2-004-yakuzaishi-prepare-result.json
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/app2_004_yakuzaishi_prepare_submission.py 2>&1 | tee /tmp/app2-004-yakuzaishi-prepare.log
+
+      - name: Persist preparation evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p automation/app2-004-yakuzaishi-submission-assets automation/asc-results
+          cp /tmp/yakuzaishi-review/01-home.png automation/app2-004-yakuzaishi-submission-assets/01-home.png 2>/dev/null || true
+          if [ -f /tmp/app2-004-yakuzaishi-prepare-result.json ]; then
+            cp /tmp/app2-004-yakuzaishi-prepare-result.json automation/asc-results/app2-004-yakuzaishi-prepare-submission-result.json
+          else
+            python3 - <<'PY'
+          import json
+          from pathlib import Path
+          log=Path('/tmp/app2-004-yakuzaishi-prepare.log').read_text(encoding='utf-8',errors='replace') if Path('/tmp/app2-004-yakuzaishi-prepare.log').exists() else 'preparation did not run'
+          Path('automation/asc-results/app2-004-yakuzaishi-prepare-submission-result.json').write_text(json.dumps({'task_id':'APP2-004','submitted':False,'submission_ready':False,'error':log[-4000:]},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/asc-results/app2-004-yakuzaishi-prepare-submission-result.json automation/app2-004-yakuzaishi-submission-assets || true
+          if ! git diff --cached --quiet; then
+            git commit -m 'Persist APP2-004 App Review preparation evidence'
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then break; fi
+              sleep $((attempt * 2))
+            done
+          fi
+
+      - name: Enforce submission-ready draft
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('automation/asc-results/app2-004-yakuzaishi-prepare-submission-result.json')
+          if not p.exists(): raise SystemExit('preparation result missing')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          if not data.get('submission_ready'):
+              raise SystemExit('APP2-004 not submission-ready: '+str(data.get('error')))
+          if data.get('submitted'):
+              raise SystemExit('Final submit must not happen in preparation workflow')
+          print('PASS: App Review draft prepared, final submit not performed')
+          PY
