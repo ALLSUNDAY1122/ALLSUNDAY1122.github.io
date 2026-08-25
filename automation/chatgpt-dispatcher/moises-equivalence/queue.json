@@ -6,7 +6,7 @@
   "integration_epoch": 30,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "EPOCH30_L2_AW40_AW42_L3_AW39_AW41_L4_W43_W44_CANONICAL_PORTABLE_375_PASS_EXTERNAL_DEVICE_GATES_PENDING",
+  "baseline_state": "EPOCH30_L2_AW42_L3_AW41_L4_W44_CANONICAL_PORTABLE_375_PLUS_L2_L3_FULL_SOURCE_TYPECHECK_PASS_EXTERNAL_DEVICE_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
@@ -44,24 +44,26 @@
     "epoch27":{"L4":"W39-W40","commit":"2736d230349c9ab45630d27790216e11d268db1a","tested_head":"09880c4e6d523b23e7f4e9feabfa81d0024b37ce","hq_fix":"09880c4e6d523b23e7f4e9feabfa81d0024b37ce","run":32870488465,"run_number":203,"tests":333,"unhandled":273},
     "epoch28":{"L2":"AW38-AW39","L3":"AW37-AW38","commit":"d598607899009b45189742a01ce56abdfb67b3e7","run":32874532155,"run_number":209,"tests":333,"unhandled":291},
     "epoch29":{"L4":"W41-W42","commit":"db7812313cdba967c4e99c6b84d720edea8132f8","hq_fix":"f51eb4293bd10d0be04a97ea7289f653635301eb","run":32878652158,"run_number":216,"tests":350,"unhandled":291,"locks":"2b626e401c9d5906ad85d9ef7759fac758d2f583"},
-    "epoch30":{"L2":"AW40-AW42","L3":"AW39-AW41","L4":"W43-W44","commit":"f2b82b167ce2ddde1039666e29740d9ba52f9027","run":32884713489,"run_number":221,"tests":375,"unhandled":310,"locks":"05a6c0ba4e4ce1c3502657836e32bdb0a18e6c2f"}
+    "epoch30":{"L2":"AW40-AW42","L3":"AW39-AW41","L4":"W43-W44","commit":"f2b82b167ce2ddde1039666e29740d9ba52f9027","initial_run":32884713489,"initial_run_number":221,"hq_l2_fix":"5f44951787e2d4e9c716dd3bc9c8c884295de1ad","hq_l3_fix":"4f754397c1e4f7d8d1775663b7062fa167ffe82e","tested_head":"e0f64c6be8237f625106d40de846d7b9f003e993","run":32887077836,"run_number":238,"tests":375,"unhandled":310,"lane2_typecheck":"PASS","lane3_typecheck":"PASS","locks":"71a4bdce5f6c06cd44ba6fe58bd3f8e3f6ccb7f1"}
   },
   "canonical_through": {"L1":"L1-A23","L2":"L2-AW42","L3":"L3-AW41","L4":"L4-W44"},
   "current_unintegrated_snapshot": {
     "L1":"A24-A33 have progressed NON_PARITY, but A26 exact full current-tip dependency/provenance audit remains not PASS. HQ keeps L1 canonical at A23 until the exact final tip passes the hardened audit.",
-    "L2":"AW40-AW42 are canonical NON_PARITY. AW43+ is post-Epoch30. Apple Core Data/SQLite/WAL/APFS/Files/File Provider/device execution remains pending.",
-    "L3":"AW39-AW41 are canonical NON_PARITY. AW42+ is post-Epoch30. Exact Worker branch/evidence is semantic authority because integration-side Worker3 status writes are nonstandard/stale. Selected Xcode/AVFAudio/physical-iPhone/current-Moises proof remains pending.",
+    "L2":"AW40-AW42 are canonical NON_PARITY. Epoch30 HQ hardening now proves the full current IO+Library portable source graph typechecks under Swift 6 strict concurrency at tested head e0f64c6be8237f625106d40de846d7b9f003e993. AW43+ is post-Epoch30; Apple Core Data/SQLite/WAL/APFS/Files/File Provider/device execution remains pending.",
+    "L3":"AW39-AW41 are canonical NON_PARITY. Epoch30 HQ hardening now proves the full current Playback+DSP portable source graph typechecks under Swift 6 strict concurrency at tested head e0f64c6be8237f625106d40de846d7b9f003e993. AW42+ is post-Epoch30. Selected Xcode/AVFAudio/physical-iPhone/current-Moises proof remains pending.",
     "L4":"W43-W44 are canonical NON_PARITY. W45+ is post-Epoch30. Genuine external destination/root anchoring, selected Apple runtime, physical-iPhone, rights-cleared real-audio and current-Moises differential evidence remain pending."
   },
   "epoch30_integration": {
     "L1":{"canonical":"A23","deferred":"A24-A33","note":"A26 exact full current-tip audit remains not PASS; no Lane1 overlay in Epoch30."},
-    "L2":{"canonical":"AW40-AW42","source_head":"6e62c34465c153a35e9d5b747c9597b382c56dc9","scope":["Library/**"],"files":10,"note":"Segmented managed-artifact runtime/router, canonical bridge and cutover hardening. Portable evidence does not prove Apple persistence/filesystem/device runtime."},
-    "L3":{"canonical":"AW39-AW41","source_head":"9809b128ab9a5d31f5e81c1cbf328e939767f2b4","scope":["Playback/**","DSP/**"],"files":20,"note":"Lease generation stamping, v2 physical continuity session model, and staged physical capture coordination. Playback/DSP remains outside integrated SwiftPM target; selected Apple/physical evidence is pending."},
-    "L4":{"canonical":"W43-W44","source_head":"56fd6f0e16a9972460bd82bf6d4e42aa32dbd626","scope":["Analysis/**","Tests/**","Package.swift","iOS/**"],"files":14,"note":"Persistent anchor ledger plus external expectation checkpoint verification; Package-selected production/tests compiled under Run221. Still NON_PARITY."},
+    "L2":{"canonical":"AW40-AW42","source_head":"6e62c34465c153a35e9d5b747c9597b382c56dc9","scope":["Library/**"],"files":10,"note":"Segmented managed-artifact runtime/router, canonical bridge and cutover hardening. After HQ parse-safe integration fix 5f44951787e2d4e9c716dd3bc9c8c884295de1ad, the full IO+Library portable source graph passes Swift 6 strict-concurrency typecheck under Run238. Apple persistence/filesystem/device runtime remains unproved."},
+    "L3":{"canonical":"AW39-AW41","source_head":"9809b128ab9a5d31f5e81c1cbf328e939767f2b4","scope":["Playback/**","DSP/**"],"files":20,"note":"Lease generation stamping, v2 physical continuity session model, and staged physical capture coordination. After HQ Sendable integration fix 4f754397c1e4f7d8d1775663b7062fa167ffe82e, the full Playback+DSP portable source graph passes Swift 6 strict-concurrency typecheck under Run238. Selected Apple/physical evidence remains pending."},
+    "L4":{"canonical":"W43-W44","source_head":"56fd6f0e16a9972460bd82bf6d4e42aa32dbd626","scope":["Analysis/**","Tests/**","Package.swift","iOS/**"],"files":14,"note":"Persistent anchor ledger plus external expectation checkpoint verification; Package-selected production/tests compile and remain NON_PARITY."},
     "semantic_commit":"f2b82b167ce2ddde1039666e29740d9ba52f9027",
     "exact_overlay_files":44,
     "preintegration_status_only_commit":"ef2a060f402beaa1f10e518d3296abfb6cf0fa27",
-    "code_run":{"id":32884713489,"number":221,"event":"pull_request","result":"SUCCESS","tests":375,"unhandled":310,"checked_merge_ref":"593dc1f0d75cb72a4353c21e00d0006776afcb7e"}
+    "initial_code_run":{"id":32884713489,"number":221,"event":"pull_request","result":"SUCCESS","tests":375,"unhandled":310,"checked_merge_ref":"593dc1f0d75cb72a4353c21e00d0006776afcb7e"},
+    "hq_compile_hardening":{"lane2_parse_fix":"5f44951787e2d4e9c716dd3bc9c8c884295de1ad","lane3_sendable_fix":"4f754397c1e4f7d8d1775663b7062fa167ffe82e","stable_gate_head":"e0f64c6be8237f625106d40de846d7b9f003e993","workflow":".github/workflows/moises-hq-integration.yml","lane2_gate":"Shared+IO+Library Swift 6 strict-concurrency typecheck","lane3_gate":"Shared+Playback+DSP Swift 6 strict-concurrency typecheck"},
+    "code_run":{"id":32887077836,"number":238,"event":"pull_request","result":"SUCCESS","tests":375,"unhandled":310,"lane2_typecheck":"PASS","lane3_typecheck":"PASS","checked_merge_ref":"7ac6abbeebb5723c2c96eed5260433c8219bb0ed"}
   },
   "branch_hygiene": {
     "worker3_branch_status":"NONSTANDARD_DIRECT_STATUS_ON_INTEGRATION_AND_STALE_BRANCH_SCHEMA",
@@ -71,8 +73,9 @@
   },
   "validation": {
     "workflow":".github/workflows/moises-hq-integration.yml",
-    "epoch30_code_run":{"id":32884713489,"number":221,"event":"pull_request","result":"SUCCESS","test_count":375,"unhandled_file_count":310,"merge_ref":"593dc1f0d75cb72a4353c21e00d0006776afcb7e","swift":"6.0.3","target":"x86_64-unknown-linux-gnu"},
-    "epoch30_scope_note":"Run221 compiles/tests Package-selected Lane4 W43-W44 and increases the portable suite from 350 to 375 tests. Unhandled files increase from 291 to 310 because newly canonical Lane2/Lane3 files remain outside the SwiftPM target. Run221 therefore does not prove Apple Core Data/APFS/Files/File Provider runtime, selected AVFAudio/Xcode behavior, physical-iPhone performance/audio, genuine external evidence-root persistence, rights-cleared real-audio, or current-Moises differential behavior.",
+    "epoch30_initial_code_run":{"id":32884713489,"number":221,"event":"pull_request","result":"SUCCESS","test_count":375,"unhandled_file_count":310,"merge_ref":"593dc1f0d75cb72a4353c21e00d0006776afcb7e","swift":"6.0.3","target":"x86_64-unknown-linux-gnu"},
+    "epoch30_code_run":{"id":32887077836,"number":238,"event":"pull_request","result":"SUCCESS","test_count":375,"unhandled_file_count":310,"merge_ref":"7ac6abbeebb5723c2c96eed5260433c8219bb0ed","swift":"6.0.3","target":"x86_64-unknown-linux-gnu","lane2_io_library_typecheck":"PASS","lane3_playback_dsp_typecheck":"PASS"},
+    "epoch30_scope_note":"Run221 first proved the Package-selected 375-test suite but exposed that Package.swift excluded IO/Library/Playback/DSP. HQ added permanent full-lane portable typecheck gates, found and fixed one Swift 6 parse boundary in the Lane2 AW41 bridge and one Swift 6 actor Sendable boundary in Lane3, then Run238 passed all three stable jobs: 375/375 SwiftPM plus full IO+Library typecheck plus full Playback+DSP typecheck. Unhandled remains 310. This still does not prove Apple Core Data/APFS/Files/File Provider runtime, selected Xcode/AVFAudio behavior, physical-iPhone performance/audio, genuine external evidence-root persistence, rights-cleared real-audio, or current-Moises differential behavior.",
     "parity_effect":"NONE"
   },
   "parity":{"promotion_count":0,"state":"ALL_CURRENT_IPHONE_IN_SCOPE_ROWS_REMAIN_MISSING","rule":"Portable/synthetic/harness/readiness/compile evidence alone never promotes PARITY."},
