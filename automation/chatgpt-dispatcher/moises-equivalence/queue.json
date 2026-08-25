@@ -3,10 +3,10 @@
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_pr": 4431,
-  "integration_epoch": 24,
+  "integration_epoch": 25,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "EPOCH24_L2_AW33_AW35_L3_AW33_AW34_CANONICAL_PORTABLE_292_PASS_EXTERNAL_DEVICE_GATES_PENDING",
+  "baseline_state": "EPOCH25_L4_W37_W38_CANONICAL_PORTABLE_310_PASS_EXTERNAL_DEVICE_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
@@ -27,7 +27,7 @@
     "epoch10":{"L1":"A15-A16","L2":"AW12-AW13","L4":"W15-W16","commit":"634573a147f48226462d5fd29063dfa760ccdca1","L3":"AW12-AW13","L3_commit":"368527e51408e47d2efe7d535e91f3f98176925c","run":32652340100,"tests":126},
     "epoch11":{"L1":"A17-A18","L2":"AW14-AW15","commit":"55d636e54b99fd0bd70cb370a72191829ab5f896","run":32654418110,"tests":126},
     "epoch12":{"L3":"AW14-AW15","L4":"W17-W18","commit":"1ca2ec9fbca17ce94d5f3b2fff85c93004b9fd8a","run":32656141958,"tests":144,"unhandled":126},
-    "epoch13":{"L1":"A19-A20","L2":"AW16-AW17","L3":"AW16-AW17","L4":"W19-W20","commit":"d4323ec520eaa4a343e98692a943015675437b01","run":32658738702,"tests":165,"unhandled":140},
+    "epoch13":{"L1":"A19-AW20","L2":"AW16-AW17","L3":"AW16-AW17","L4":"W19-W20","commit":"d4323ec520eaa4a343e98692a943015675437b01","run":32658738702,"tests":165,"unhandled":140},
     "epoch14":{"L1":"E01-E02 readiness","commit":"49b50dbf3670f678ff1f953aa3c2a1f33559744a","run":32659696431,"tests":165,"unhandled":144},
     "epoch15":{"L2":"AW18-AW19","L4":"W21-W22","commit":"43c4d0f3f9cd822ebaca566533eb5ffe4efd1c0b","run":32661259290,"tests":186,"unhandled":144},
     "epoch16":{"L3":"AW18-AW19","commit":"e62a77a2672a0d76fab03b1b88c87dbb23bfeac9","run":32662786752,"tests":186,"unhandled":161},
@@ -38,14 +38,15 @@
     "epoch21":{"L1":"A22-A23","L2":"AW26-AW28","L3":"AW27-AW29","L4":"W31-W32","commit":"2598c95490be2ce9fa4827dd86c89f566200db79","hq_test_fix":"414671afdeccde88759c0d65f770d15579e696f0","initial_run":32686182386,"initial_run_number":142,"run":32686352837,"run_number":144,"tests":264,"unhandled":226,"locks":"fdea9ba7e6074be622214ab49a979ed8d961db72"},
     "epoch22":{"L2":"AW29-AW30","L4":"W33-W34","commit":"b702f71d2ec57de5c035d462fb60c39c2d6f5c62","run":32689995129,"run_number":161,"tests":279,"unhandled":226,"locks":"e97e2a9c103688598f63a4f76ac783300c03ad52"},
     "epoch23":{"L2":"AW31-AW32","L3":"AW30-AW32","L4":"W35-W36","commit":"e424cd22f11ed05d631d83a488f00f281ab40328","hq_test_fix":"9071043a9c64879a88f82fd6657e0a1b2b8f832f","initial_run":32695378498,"initial_run_number":167,"initial_result":"FAIL","initial_reason":"W36 cancellation integrity XCTest captured XCTestCase self across Task sending boundary under Swift 6 strict concurrency","run":32696596373,"run_number":169,"tests":292,"unhandled":251,"locks":"7a71ce8b91ba48a38676e5801bdde74f05151803"},
-    "epoch24":{"L2":"AW33-AW35","L3":"AW33-AW34","commit":"c12ce8dfb27c4a9958e502611a6e34f592d081e3","run":32723458025,"run_number":174,"tests":292,"unhandled":261,"locks":"19c52a1203047cc734119295f61c64b486c125c7"}
+    "epoch24":{"L2":"AW33-AW35","L3":"AW33-AW34","commit":"c12ce8dfb27c4a9958e502611a6e34f592d081e3","run":32723458025,"run_number":174,"tests":292,"unhandled":261,"locks":"19c52a1203047cc734119295f61c64b486c125c7"},
+    "epoch25":{"L4":"W37-W38","commit":"d915eb6ec81d4eb0c150e587e6d050f2ebbfc2cb","tested_head":"65512c78d3e4ec5296c6fb7c4015fe02204e11b6","hq_test_fix":"65512c78d3e4ec5296c6fb7c4015fe02204e11b6","initial_run":32862170267,"initial_run_number":189,"initial_result":"FAIL","initial_reason":"W37 source-metadata mismatch XCTest used a 1-second duration delta that is intentionally inside the W24 0.1% duration tolerance while asserting a profile mismatch","run":32862540423,"run_number":190,"tests":310,"unhandled":261,"locks":"9a6cac84ae4b7857dd443b023d38c1743066b4d4"}
   },
-  "canonical_through": {"L1":"L1-A23","L2":"L2-AW35","L3":"L3-AW34","L4":"L4-W36"},
+  "canonical_through": {"L1":"L1-A23","L2":"L2-AW35","L3":"L3-AW34","L4":"L4-W38"},
   "current_unintegrated_snapshot": {
-    "L1":"A24-A25 complete NON_PARITY, but A26 discovered and repaired an A24-to-A25 retention/facade compatibility seam. A26 exact full Worker-branch dependency/provenance audit remains NOT_OBSERVED, so HQ keeps L1 canonical at A23.",
-    "L2":"AW33-AW35 canonical NON_PARITY. A narrow TOCTOU window remains after export prepare before metadata registration/intent retirement, and Apple Core Data/SQLite/WAL/APFS/device execution remains pending. Later Waves, if any, are post-Epoch24 until re-read.",
-    "L3":"AW33-AW34 canonical NON_PARITY. Selected Xcode/AVFAudio/physical-iPhone timing/audio and current-Moises differential remain pending. Later Waves, if any, are post-Epoch24 until re-read.",
-    "L4":"W35-W36 canonical. W37 is post-Epoch24/current and remains outside this checkpoint. Physical-iPhone/current-Moises evidence remains pending."
+    "L1":"A24-A25 and A27 are completed NON_PARITY, but A26 is not complete/PASS. HQ exact-checkout audit attempts exposed full-regression import/test failures and the Worker tip continued to move afterward, so HQ keeps L1 canonical at A23 until the exact current final tip passes the hardened A26 audit.",
+    "L2":"AW36 is completed NON_PARITY after the Epoch25 freeze. It remains a single post-checkpoint wave and Apple Core Data/SQLite/WAL/APFS/device execution remains pending.",
+    "L3":"AW35 was the only completed post-Epoch24 wave at Epoch25 freeze; an AW36 status update appeared on integration after the freeze. No Playback/DSP bytes were admitted into Epoch25. Re-read exact Worker branch/status before the next checkpoint.",
+    "L4":"W37-W38 are canonical NON_PARITY. W39 is post-Epoch25/current. Physical-iPhone/current-Moises evidence, genuine bounded Lane2 decoder runtime and independent HQ archive-root anchoring remain pending."
   },
   "epoch23_integration": {
     "L1":{"canonical":"A23","deferred":"A24-A26","note":"A26 repaired a discovered A24/A25 compatibility seam, but full exact branch audit is still unobserved; do not canonicalize known-regressed A24/A25 intermediate state."},
@@ -65,11 +66,22 @@
     "exact_overlay_files":32,
     "code_run":{"id":32723458025,"number":174,"result":"SUCCESS","tests":292,"unhandled":261}
   },
+  "epoch25_integration": {
+    "L1":{"canonical":"A23","deferred":"A24-A27","note":"A26 exact full audit is not PASS; no Lane1 overlay in Epoch25."},
+    "L2":{"canonical":"AW35","deferred":"AW36+","note":"AW36 completed after Epoch25 freeze but remains a single post-checkpoint wave; no Lane2 overlay in Epoch25."},
+    "L3":{"canonical":"AW34","deferred":"AW35+","note":"AW35 was a single post-checkpoint wave at freeze. A later AW36 status-only integration write is not a semantic integration and must be re-audited next epoch."},
+    "L4":{"canonical":"W37-W38","source_head":"708ee3bd756a00f7405710337bc6d7b2f6eaf42c","scope":["Analysis/**","Tests/**","Package.swift","iOS/**"],"note":"Physical capture orchestration and W27-anchored W35-W38 archive-chain hardening. This remains NON_PARITY until real selected Apple/physical/current-Moises gates pass."},
+    "semantic_commit":"d915eb6ec81d4eb0c150e587e6d050f2ebbfc2cb",
+    "tested_integration_head":"65512c78d3e4ec5296c6fb7c4015fe02204e11b6",
+    "hq_test_fix":"65512c78d3e4ec5296c6fb7c4015fe02204e11b6",
+    "exact_overlay_files":18,
+    "code_run":{"id":32862540423,"number":190,"result":"SUCCESS","tests":310,"unhandled":261}
+  },
   "branch_hygiene": {
     "worker3_branch_status":"NONSTANDARD_DIRECT_STATUS_ON_INTEGRATION",
-    "worker3_lane_head":"faabf9df730eb52e8ec6e1becc62aa4a68601f12",
     "worker3_canonical_source_head":"faabf9df730eb52e8ec6e1becc62aa4a68601f12",
-    "note":"Epoch24 froze L3 through AW34 from the exact lane branch commit. Integration-side worker3 status remains nonstandard and must not be trusted without branch/evidence read-back."
+    "latest_observed_integration_status_commit":"e0cb196ebde71f3e9fefb9376c60a4bd0a42228b",
+    "note":"During Epoch25 validation, Worker3 wrote a status-only commit directly onto integration. Compare d915eb6e..e0cb196e changed only worker-status/worker-3.json; no Playback/DSP code was admitted. Exact Worker3 branch/evidence must be re-read before its next semantic integration."
   },
   "validation": {
     "workflow":".github/workflows/moises-hq-integration.yml",
@@ -81,6 +93,9 @@
     "epoch23_scope_note":"Run169 compiles/tests Package-selected L4 W35-W36 and preserves sustained-tone Tempo fail-closed. L2 Library and L3 Playback/DSP remain outside SwiftPM compile coverage; their Worker evidence plus selected Apple/Core Data/AVFAudio/device gates remain separate.",
     "epoch24_code_run":{"id":32723458025,"number":174,"result":"SUCCESS","test_count":292,"unhandled_file_count":261},
     "epoch24_scope_note":"Run174 preserves the Package-selected portable suite at 292/292. The unhandled count rose from 251 to 261 because newly canonical L2/L3 files are outside the SwiftPM target; therefore Run174 does not prove L2 Apple persistence/runtime or L3 AVFAudio/physical-iPhone behavior.",
+    "epoch25_initial_run":{"id":32862170267,"number":189,"result":"FAIL","reason":"One W37 test asserted W24 profile mismatch for a duration delta that is intentionally within the production 0.1% tolerance."},
+    "epoch25_code_run":{"id":32862540423,"number":190,"result":"SUCCESS","test_count":310,"unhandled_file_count":261},
+    "epoch25_scope_note":"Run190 compiles/tests the Package-selected W37-W38 integration and passes 310/310 after a one-line test-fixture correction. It is Linux SwiftPM evidence only and does not prove selected Xcode/Apple ARM, genuine Lane2 bounded decoding, physical-iPhone RSS/thermal/battery/cancellation, real audio, or current-Moises differential behavior.",
     "parity_effect":"NONE"
   },
   "parity":{"promotion_count":0,"state":"ALL_CURRENT_IPHONE_IN_SCOPE_ROWS_REMAIN_MISSING","rule":"Portable/synthetic/harness/readiness/compile evidence alone never promotes PARITY."},
