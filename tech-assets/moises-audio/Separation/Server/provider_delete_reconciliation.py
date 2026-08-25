@@ -4,11 +4,12 @@ NON-PARITY safety layer. It never blindly replays a provider delete after an
 ambiguous/in-flight external side effect. Only separately observed, hash-bound
 provider state may resolve that ambiguity.
 
-A32 extends A31 monotonic ordering with a durable ``applying`` watermark. The
-watermark is persisted before registry mutation, so a crash after the registry
-write but before the final ledger commit cannot allow an older observation to
-roll state backward. ``applying`` observations are resumable and never count as
-confirmed application until the registry mutation is durably re-observed.
+A32 provides a durable ``applying`` watermark so a crash between registry
+mutation and the final ledger commit cannot permit stale rollback. A33 adds a
+temporal-causality gate before that watermark: reconciliation evidence must not
+predate the durable delete request and must not be implausibly future-dated.
+This prevents pre-delete evidence from proving post-delete erasure and prevents
+a bad future timestamp from becoming a long-lived ordering authority.
 """
 from __future__ import annotations
 
@@ -19,12 +20,14 @@ import re
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import Callable
 
 from privacy_retention import AtomicPrivacyRegistry, PrivacyRetentionError
 
 SCHEMA_VERSION = 1
-TOOL_VERSION = "L1-A32-v1"
+TOOL_VERSION = "L1-A33-v1"
 EVIDENCE_STATE = "NON_PARITY_EVIDENCE_ONLY"
+DEFAULT_MAX_FUTURE_SKEW_SECONDS = 300
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 _OBJECT_KINDS = {"asset", "task"}
@@ -248,10 +251,25 @@ class AtomicDeletionReconciliationLedger:
 
 
 class ProviderDeletionReconciler:
-    def __init__(self, *, registry_path: str | Path, ledger_path: str | Path):
+    def __init__(
+        self,
+        *,
+        registry_path: str | Path,
+        ledger_path: str | Path,
+        now_epoch: Callable[[], int] | None = None,
+        max_future_skew_seconds: int = DEFAULT_MAX_FUTURE_SKEW_SECONDS,
+    ):
+        if (
+            not isinstance(max_future_skew_seconds, int)
+            or isinstance(max_future_skew_seconds, bool)
+            or max_future_skew_seconds < 0
+        ):
+            raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_FUTURE_SKEW_INVALID")
         self.registry = AtomicPrivacyRegistry(registry_path)
         self.ledger = AtomicDeletionReconciliationLedger(ledger_path)
         self.apply_lock_path = self.ledger.path.with_suffix(self.ledger.path.suffix + ".apply.lock")
+        self.now_epoch = now_epoch or (lambda: int(__import__("time").time()))
+        self.max_future_skew_seconds = max_future_skew_seconds
 
     @contextmanager
     def _application_locked(self):
@@ -277,6 +295,12 @@ class ProviderDeletionReconciler:
                 except OSError:
                     pass
 
+    def _validated_now_epoch(self) -> int:
+        now = self.now_epoch()
+        if not isinstance(now, int) or isinstance(now, bool) or now <= 0:
+            raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_CLOCK_INVALID")
+        return now
+
     def _current_state(self, logical_job_id: str, object_kind: str) -> str:
         record = self.registry.get(logical_job_id)
         if record is None:
@@ -296,6 +320,13 @@ class ProviderDeletionReconciler:
             raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_OBJECT_NOT_APPLICABLE")
         if expected_hash != observation.object_id_hash:
             raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_OBJECT_HASH_MISMATCH")
+        delete_epoch = record.delete_requested_at_epoch
+        if not isinstance(delete_epoch, int) or isinstance(delete_epoch, bool) or delete_epoch <= 0:
+            raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_DELETE_EPOCH_INVALID")
+        if observation.observed_at_epoch < delete_epoch:
+            raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_OBSERVATION_PRECEDES_DELETE")
+        if observation.observed_at_epoch > self._validated_now_epoch() + self.max_future_skew_seconds:
+            raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_OBSERVATION_FROM_FUTURE")
         current = record.provider_asset_delete_state if observation.object_kind == "asset" else record.provider_task_delete_state
         proposed = _STATE_MAP[observation.observed_state]
         if current in _ERASURE_TERMINAL and proposed not in _ERASURE_TERMINAL:
@@ -323,6 +354,7 @@ class ProviderDeletionReconciler:
             if own is None:
                 raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_RECEIPT_NOT_FOUND")
             if own["application_state"] == "applied":
+                self._validate_registry_binding(observation)
                 return self._result(
                     observation,
                     receipt,
@@ -363,6 +395,7 @@ class ProviderDeletionReconciler:
                     if not equivalent:
                         raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_EQUAL_EPOCH_CONFLICT")
                     if any(row["application_state"] == "applied" for row in newest_rows):
+                        self._validate_registry_binding(observation)
                         self.ledger.mark_applying(receipt)
                         self.ledger.mark_applied(receipt)
                         return self._result(
@@ -375,8 +408,9 @@ class ProviderDeletionReconciler:
                     # this observation's idempotent local registry application. The other
                     # applying receipt remains resumable and later collapses onto this state.
 
-            # Binding/terminal checks occur before the durable applying watermark so malformed
-            # observations never become ordering authorities merely by carrying a high epoch.
+            # Binding, temporal-causality and terminal checks occur before the durable applying
+            # watermark so malformed or implausibly timed observations never become ordering
+            # authorities merely by carrying a high epoch.
             self._validate_registry_binding(observation)
             self.ledger.mark_applying(receipt)
 
@@ -390,6 +424,11 @@ class ProviderDeletionReconciler:
                     raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_OBJECT_NOT_APPLICABLE")
                 if expected_hash != observation.object_id_hash:
                     raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_OBJECT_HASH_MISMATCH")
+                delete_epoch = record.delete_requested_at_epoch
+                if not isinstance(delete_epoch, int) or isinstance(delete_epoch, bool) or delete_epoch <= 0:
+                    raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_DELETE_EPOCH_INVALID")
+                if observation.observed_at_epoch < delete_epoch:
+                    raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_OBSERVATION_PRECEDES_DELETE")
                 attr = "provider_asset_delete_state" if observation.object_kind == "asset" else "provider_task_delete_state"
                 current = getattr(record, attr)
                 proposed = _STATE_MAP[observation.observed_state]
