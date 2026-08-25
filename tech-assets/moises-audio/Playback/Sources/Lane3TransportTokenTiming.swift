@@ -116,7 +116,7 @@ public struct Lane3TransportTokenTimingLedger: Sendable {
             order[nextOverwriteIndex] = token.generation
             nextOverwriteIndex += 1
             if nextOverwriteIndex == capacity { nextOverwriteIndex = 0 }
-            increment(&capacityDrops)
+            noteCapacityDrop()
         }
 
         samples[token.generation] = Lane3TransportTokenTimingSample(
@@ -133,7 +133,7 @@ public struct Lane3TransportTokenTimingLedger: Sendable {
         appliedTarget: Lane3TransportAppliedTarget?
     ) -> Bool {
         guard let existing = samples[generation] else {
-            increment(&completionMissesAfterEviction)
+            noteCompletionMissAfterEviction()
             return false
         }
         samples[generation] = Lane3TransportTokenTimingSample(
@@ -160,13 +160,20 @@ public struct Lane3TransportTokenTimingLedger: Sendable {
         )
     }
 
-    private mutating func increment(_ value: inout UInt64) {
+    private mutating func noteCapacityDrop() {
+        let update = Self.saturatingIncrement(capacityDrops)
+        capacityDrops = update.value
+        counterOverflowed = counterOverflowed || update.overflowed
+    }
+
+    private mutating func noteCompletionMissAfterEviction() {
+        let update = Self.saturatingIncrement(completionMissesAfterEviction)
+        completionMissesAfterEviction = update.value
+        counterOverflowed = counterOverflowed || update.overflowed
+    }
+
+    private static func saturatingIncrement(_ value: UInt64) -> (value: UInt64, overflowed: Bool) {
         let next = value.addingReportingOverflow(1)
-        if next.overflow {
-            value = UInt64.max
-            counterOverflowed = true
-        } else {
-            value = next.partialValue
-        }
+        return next.overflow ? (UInt64.max, true) : (next.partialValue, false)
     }
 }
