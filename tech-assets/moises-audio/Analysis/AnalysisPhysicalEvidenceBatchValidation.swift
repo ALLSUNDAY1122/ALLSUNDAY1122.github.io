@@ -61,6 +61,7 @@ public enum AnalysisPhysicalEvidenceBatchAssemblyValidator {
                   !singleton.bytes.isEmpty,
                   singleton.byteLength == UInt64(singleton.bytes.count),
                   AnalysisDeviceWorkloadSHA256.hexDigest(singleton.bytes) == singleton.sha256,
+                  AnalysisPhysicalEvidenceW39BatchLoader.safeRelativePath(singleton.relativePath),
                   singleton.relativePath.hasPrefix("batches/\(value.publicationID)/singletons/") else {
                 return false
             }
@@ -76,6 +77,28 @@ public enum AnalysisPhysicalEvidenceBatchAssemblyValidator {
                     && $0.byteLength == singleton.byteLength
                     && $0.runID == nil
             }) else { return false }
+        }
+
+        let requiredRunSet = Set(runIDs)
+        for entry in value.w27Manifest.entries {
+            guard AnalysisPhysicalEvidenceW39BatchLoader.safeRelativePath(entry.relativePath),
+                  AnalysisPhysicalEvidenceW39BatchLoader.isSHA256(entry.sha256),
+                  entry.byteLength > 0 else { return false }
+            if entry.role.isPerRun {
+                guard let runID = entry.runID,
+                      requiredRunSet.contains(runID),
+                      entry.relativePath.hasPrefix("runs/\(runID)/") else { return false }
+            } else {
+                guard entry.runID == nil,
+                      entry.relativePath.hasPrefix("batches/\(value.publicationID)/singletons/") else { return false }
+            }
+        }
+        for entry in value.w38Manifest.entries {
+            guard AnalysisPhysicalEvidenceW39BatchLoader.safeRelativePath(entry.relativePath),
+                  AnalysisPhysicalEvidenceW39BatchLoader.isSHA256(entry.sha256),
+                  entry.byteLength > 0,
+                  requiredRunSet.contains(entry.runID),
+                  entry.relativePath.hasPrefix("runs/\(entry.runID)/") else { return false }
         }
 
         for runID in runIDs {
