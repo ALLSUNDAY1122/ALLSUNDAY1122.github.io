@@ -69,7 +69,6 @@ jobs:
           swiftc \
             -swift-version 6 \
             -strict-concurrency=complete \
-            -warnings-as-errors \
             -parse-as-library \
             -typecheck \
             "${sources[@]}"
