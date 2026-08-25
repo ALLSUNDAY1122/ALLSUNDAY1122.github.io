@@ -54,6 +54,12 @@ public enum AnalysisPhysicalEvidenceTransferExporter {
             throw AnalysisPhysicalEvidenceTransferError.existingTargetCollision
         }
         let stage = stagingDirectoryURL(snapshot: snapshot, archiveRootURL: archiveRootURL)
+        try guardNoForeignStages(
+            transferID: transferID,
+            expectedStage: stage,
+            transfersRoot: transfersRoot,
+            fileManager: fileManager
+        )
         let marker = stagingMarker(snapshot.manifest)
         var recovered = false
 
@@ -179,6 +185,12 @@ public enum AnalysisPhysicalEvidenceTransferExporter {
             throw AnalysisPhysicalEvidenceTransferError.existingTargetCollision
         }
         let stage = stagingDirectoryURL(snapshot: snapshot, archiveRootURL: archiveRootURL)
+        try guardNoForeignStages(
+            transferID: transferID,
+            expectedStage: stage,
+            transfersRoot: transfersRoot,
+            fileManager: fileManager
+        )
         guard !fileManager.fileExists(atPath: stage.path) else {
             throw AnalysisPhysicalEvidenceTransferError.stagingPathCollision
         }
@@ -217,6 +229,24 @@ public enum AnalysisPhysicalEvidenceTransferExporter {
                 ".w41-staging-\(snapshot.manifest.transferID)-\(String(snapshot.manifest.declaredTransferRootSHA256.prefix(16)))",
                 isDirectory: true
             )
+    }
+
+    private static func guardNoForeignStages(
+        transferID: String,
+        expectedStage: URL,
+        transfersRoot: URL,
+        fileManager: FileManager
+    ) throws {
+        let prefix = ".w41-staging-\(transferID)-"
+        let names: [String]
+        do {
+            names = try fileManager.contentsOfDirectory(atPath: transfersRoot.path)
+        } catch {
+            throw AnalysisPhysicalEvidenceTransferError.ambiguousRecoveryState
+        }
+        for name in names where name.hasPrefix(prefix) && name != expectedStage.lastPathComponent {
+            throw AnalysisPhysicalEvidenceTransferError.ambiguousRecoveryState
+        }
     }
 
     private static func writeSnapshot(
