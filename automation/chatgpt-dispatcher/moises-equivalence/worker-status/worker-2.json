@@ -11,13 +11,13 @@
   "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "aa0faa693ab6526f111787fc4ea3d7e4d7adbf54",
-  "prior_status_blob_sha": "c0be9266513fa83886acce7ab9b7cf143adee536",
-  "historical_commit_ledger_through": "06032f2ff7664b38681cb8e5e46c46ff6613bff3",
+  "head_sha": "6e62c34465c153a35e9d5b747c9597b382c56dc9",
+  "prior_status_blob_sha": "391de28e0e3fede79a74cddca5e07787f0c2248e",
+  "historical_commit_ledger_through": "aa0faa693ab6526f111787fc4ea3d7e4d7adbf54",
   "commits": [
-    "d756a50b55372609331b605deeb39e6a4f01a7fd",
-    "c302fb401ee2be271e96a85b2f010f3dcb4125c2",
-    "aa0faa693ab6526f111787fc4ea3d7e4d7adbf54"
+    "af8a673200ed102c7127f743aaead29e028149e5",
+    "e8227b6e46b018e46e23c9c7214ba4ed8e90be13",
+    "6e62c34465c153a35e9d5b747c9597b382c56dc9"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -26,19 +26,18 @@
     "bf4b7a552cfbe025608079f7fe11093af7526b0b"
   ],
   "tests": [
-    "L2-M01..L2-AW40 validation remains durable in Git history and prior status blob c0be9266513fa83886acce7ab9b7cf143adee536.",
-    "L2-AW41 ManagedArtifactInventorySegmentedBridgeTests.swift covers prepare-without-cursor-advance, explicit cursor commit, stale-slice rejection, corrupt cursor fail-closed and explicit traversal reset recovery.",
-    "Bridge preserves the canonical AW29 cursor.json location and the prepare -> apply -> persistTraversal ordering while delegating registration/removal/candidate preparation to AW40 segmented runtime."
+    "L2-M01..L2-AW41 validation remains durable in Git history and prior status blob 391de28e0e3fede79a74cddca5e07787f0c2248e.",
+    "L2-AW42 ManagedArtifactInventoryCanonicalCutoverTests.swift covers canonical segmented activation, prepare-without-cursor-advance, explicit cursor commit, zero-entry segmented authority after final removal, and symlink fail-closed registration.",
+    "Exact AW42 canonical facade typechecked with Swift 6.2.1 strict concurrency / warnings-as-errors => L2_AW42_TYPECHECK_PASS."
   ],
   "evidence": [
-    "L2-AW41 fresh-read Notion v4 canonical and Resource Lock f3e98b97135c50a3613fcde8104bc8b459813e94 at integration epoch 28 / assignment epoch 2 / planning revision 4; HQ canonical through Lane 2 AW39 and PARITY promotion remains 0.",
-    "Wave start Worker branch HEAD was 84077342b436eae61ebf3012aabd8b1a9e0491e7.",
-    "ManagedArtifactInventorySegmentedBridge creates a low-risk canonical compatibility boundary: AW40 segmented registration/removal/orphan preparation plus AW29-compatible durable cursor semantics and stale-slice protection.",
-    "Final Evidence is tech-assets/moises-audio/Library/L2-AW41_SEGMENTED_CANONICAL_BRIDGE_VALIDATION.md at implementation/evidence head aa0faa693ab6526f111787fc4ea3d7e4d7adbf54."
+    "L2-AW42 fresh-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock c31727d2acfb029ce688c97ba12ea724b672de6d at integration epoch 29 / assignment epoch 2 / planning revision 4, prior Worker status blob 391de28e0e3fede79a74cddca5e07787f0c2248e and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d.",
+    "Wave start Worker branch HEAD was fc94cbe6784a676a3bc45f534c8150d2cfb65a2a.",
+    "ManagedArtifactInventory.swift is now the canonical public facade over AW41 bridge/AW40 segmented runtime; legacy v1 remains compatibility/rollback evidence but the facade no longer contains legacy loadShard/writeShard steady-state mutation.",
+    "Final Evidence is tech-assets/moises-audio/Library/L2-AW42_CANONICAL_SEGMENTED_CUTOVER_VALIDATION.md at implementation/evidence head 6e62c34465c153a35e9d5b747c9597b382c56dc9."
   ],
   "known_gaps": [
-    "AW41 preserves canonical cursor semantics through a segmented bridge, but the legacy Lane2ManagedArtifactInventory implementation itself is still present; the final call-site cutover/deprecation remains lane-local work.",
-    "AW40 committed orphan scanning decodes each segment at <=512 entries but accumulates a current shard before candidate filtering; fully streaming traversal can further reduce pathological per-shard RSS.",
+    "AW42 completes the canonical facade cutover, but AW40 committed orphan scanning still decodes bounded <=512-entry segments and then accumulates the current shard before candidate filtering; fully streaming segment traversal can further reduce pathological per-shard RSS.",
     "AW35/AW36 deterministic digest detects mutation/corruption but is not cryptographic authenticity against an actor able to rewrite both media and manifest.",
     "Physical force-termination evidence around AW36 revalidation, Core Data/WAL visibility, metadata commit and intent retirement remains pending on Apple runtime.",
     "DNS rebinding between AW34 pre-connect resolution and URLSession's own subsequent resolution remains a TOCTOU risk; endpoint verification/pinning requires Apple networking evidence.",
@@ -50,24 +49,24 @@
   ],
   "hq_requests": [
     "For App export/share integration, preserve canonical IOExportBatchTransaction -> Lane2ExportRegistrationJournal -> Lane2DurableLifecycleCoordinator metadata ordering and AW36 integrity revalidation gates.",
-    "When integrating AW41, preserve prepare -> apply -> persistTraversal ordering; do not advance cursor merely because candidate preparation succeeded.",
-    "Force terminate before/after segmented generation publication and before/after cursor persistence on Apple runtime.",
+    "Integrate AW42 as the canonical managed-artifact inventory facade; do not restore legacy loadShard/writeShard mutation paths.",
+    "Preserve prepare -> apply -> persistTraversal ordering and force terminate before/after segmented generation publication and cursor persistence on Apple runtime.",
     "Exercise large segmented inventories on iPhone/APFS while measuring launch/orphan-maintenance latency and RSS.",
-    "Do not promote Lane-2 PARITY rows from portable AW41 evidence alone.",
-    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW41."
+    "Do not promote Lane-2 PARITY rows from portable AW42 evidence alone.",
+    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW42."
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW41",
-    "goal": "Create the canonical compatibility bridge that preserves AW29 two-phase cursor semantics while routing managed-artifact registration/removal/orphan preparation through AW40 segmented runtime.",
-    "rationale": "Directly replacing AW29 call sites before preserving cursor semantics risked advancing durable traversal before a candidate slice was successfully applied, creating skip/replay correctness regressions.",
-    "done_when": "Bridge delegates steady-state artifact operations to segmented runtime, keeps cursor persistence explicit and atomic, rejects stale slice commits, fails closed on corrupt cursor state, provides explicit recovery reset, adds regression tests and durable Evidence/status, and leaves final legacy implementation cutover explicitly unclaimed.",
+    "wave_id": "L2-AW42",
+    "goal": "Complete the canonical managed-artifact inventory cutover so existing callers keep the AW29 public API while all steady-state registration/removal/orphan traversal routes through the AW41 bridge/AW40 segmented runtime.",
+    "rationale": "AW40 and AW41 had validated segmented authority and cursor semantics independently, but leaving the original facade on legacy single-JSON mutation meant production callers could still bypass those protections.",
+    "done_when": "The canonical facade delegates registration/removal/candidate preparation/cursor persistence to the segmented bridge, preserves fresh-install/authoritative/public API semantics and filesystem-first orphan deletion ordering, removes legacy steady-state shard writes, adds regression/negative coverage, passes strict Swift typecheck, and records durable Evidence/status without claiming device PARITY.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "aa0faa693ab6526f111787fc4ea3d7e4d7adbf54",
-    "next_priority": "Perform final canonical call-site cutover/deprecation to Lane2ManagedArtifactInventorySegmentedBridge, then run compatibility regression; if fresher canonical state elevates another Lane-2 gap, choose that instead."
+    "implementation_head_sha": "6e62c34465c153a35e9d5b747c9597b382c56dc9",
+    "next_priority": "Make AW40 committed orphan traversal fully segment-streaming so pathological single-shard candidate scans do not accumulate all segment entries in memory; choose a fresher higher-value Lane-2 gap if canonical state changes."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW41 continue Lane-2 work autonomously.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW42 continue Lane-2 work autonomously.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-26T02:29:00+09:00",
-  "status_compaction_note": "Full pre-AW41 history remains addressable through prior_status_blob_sha c0be9266513fa83886acce7ab9b7cf143adee536 and Git history; commits contains AW41 only.",
+  "last_updated": "2026-08-26T03:10:00+09:00",
+  "status_compaction_note": "Full pre-AW42 history remains addressable through prior_status_blob_sha 391de28e0e3fede79a74cddca5e07787f0c2248e and Git history; commits contains AW42 only.",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ remains sole PARITY authority."
 }
