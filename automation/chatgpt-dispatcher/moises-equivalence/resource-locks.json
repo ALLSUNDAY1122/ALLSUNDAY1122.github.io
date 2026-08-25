@@ -2,11 +2,11 @@
   "schema_version": 3,
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
-  "integration_epoch": 28,
+  "integration_epoch": 29,
   "assignment_epoch": 2,
   "planning_revision": 4,
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
-  "checkpoint_note": "Epoch28 portable canonical through L1 A23 / L2 AW39 / L3 AW38 / L4 W40. Lane2 AW38-AW39 were frozen from exact implementation head 4761ae84ede5fae29766023f9d7dc8c5c4afe9a1 and Lane3 AW37-AW38 from exact implementation head f08b318bf7cb6852d82114c34baa4197f5635d81; HQ overlaid exact 27 owned-scope files at semantic commit d598607899009b45189742a01ce56abdfb67b3e7. Run209 / 32874532155 passed 333/333 with 291 unhandled. L1 remains deferred because A26 exact full current-tip audit is not PASS; L4 W41 is complete but W42 was in progress at freeze. Worker3 status-only commits 01131043dd9bb3dedec6a0cb58d20c02dd657c60 and 6b7e7bccf563a04c2b420e65c4fc525a0331f6e8 were preserved as status only and did not contribute Playback/DSP bytes. PARITY promotion remains 0.",
+  "checkpoint_note": "Epoch29 portable canonical through L1 A23 / L2 AW39 / L3 AW38 / L4 W42. Lane4 W41-W42 were frozen from exact implementation head dc6cc43ee658ffcbed7f575349b16d6f9b5c43ba; HQ selected 17 W4-owned files, of which 16 changed the integration tree because AnalysisPhysicalEvidenceBatchValidation.swift already matched the Epoch27 HQ parse fix. Semantic overlay commit db7812313cdba967c4e99c6b84d720edea8132f8. Initial Run213 / 32878182554 failed on a Swift 6 multiline-guard trailing allSatisfy parse boundary in AnalysisPhysicalEvidencePublishedBatchReopen.swift. HQ parse-only fix f51eb4293bd10d0be04a97ea7289f653635301eb precomputed the same predicate without changing validation semantics. Run215 was cancelled by Worker3 status-only integration write; compare confirmed no tech-assets change. Run216 / 32878652158 then passed 350/350 with 291 unhandled on PR merge ref 628211fee218b5c2ac20c63ea928a33e783170c6. L1 remains deferred because A26 exact full current-tip audit is not PASS; L2 AW40 and L3 AW39+ were not part of the Epoch29 freeze; L4 W43+ is post-checkpoint. PARITY promotion remains 0.",
   "locks": [
     {"id":"shared-contract","owner":"HQ","scope":["tech-assets/moises-audio/Shared/**"],"notes":"shared data model / cross-module protocol; epoch-frozen for Workers"},
     {"id":"app-shell","owner":"HQ","scope":["tech-assets/moises-audio/App/**"],"notes":"navigation, global app state, root composition; epoch-frozen for Workers"},
