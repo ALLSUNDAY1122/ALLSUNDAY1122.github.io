@@ -29,6 +29,17 @@ assert pool < step < sync < return_stats
 assert "iteration % 20 == 0" in scan_model
 assert "passResourceGuard.evaluate(splatCount: stats.splatCount)" in scan_model
 
+# Dismantling the ARSCNView is insufficient if ScanModel itself strongly retains ARSession.
+# Keep the capture session weak so removing the capture view can actually release the ARKit graph.
+assert "private(set) weak var session: ARSession?" in scan_model, "ScanModel still retains ARSession strongly"
+assert "private(set) var session: ARSession?" not in scan_model, "strong ARSession retention regressed"
+
+# Retry progress must represent the absolute training target, not reset to a remaining-pass percentage.
+assert "Double(resumedIteration) / Double(max(1, effectiveTarget))" in scan_model
+assert "Double(iteration) / Double(max(1, effectiveTarget))" in scan_model
+assert "Double(iteration - passStart) / Double(passSpan)" not in scan_model
+assert "resumedIteration >= effectiveTarget ? 1 : 0" not in scan_model
+
 # The live ARKit/SceneKit renderer is useful for ready/capture/resume, but must not stay resident
 # through reconstruction, finished, or failure screens.
 for token in [
@@ -59,4 +70,4 @@ for token in [
     assert token in guard, f"resource safety limit changed: {token}"
 
 assert "jpegData(compressionQuality: 0.90)" in scan_model, "capture JPEG quality changed"
-print("PASS: S9 drains training temporaries, tears down the capture renderer, and preserves quality/safety limits")
+print("PASS: S9 drains training temporaries, releases capture ownership, preserves absolute resume progress, and keeps quality/safety limits")
