@@ -109,6 +109,8 @@ let package = Package(
                 "Analysis/AnalysisPhysicalEvidencePublishedBatchReopen.swift",
                 "Analysis/AnalysisPhysicalEvidenceTransferValidation.swift",
                 "Analysis/AnalysisPhysicalEvidenceTransferStaging.swift",
+                "Analysis/AnalysisPhysicalEvidenceExternalAnchor.swift",
+                "Analysis/AnalysisPhysicalEvidenceDestinationCertificate.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
