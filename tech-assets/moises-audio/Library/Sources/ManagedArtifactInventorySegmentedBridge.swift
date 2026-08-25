@@ -50,7 +50,8 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
     }
 
     public func persistTraversal(after slice: Lane2ManagedArtifactInventorySlice) throws {
-        guard slice.priorTraversal == try loadTraversal() else {
+        let currentTraversal = try loadTraversal()
+        guard slice.priorTraversal == currentTraversal else {
             throw Lane2ManagedArtifactInventoryFailure.corruptTraversalCursor
         }
         try fileManager.createDirectory(
