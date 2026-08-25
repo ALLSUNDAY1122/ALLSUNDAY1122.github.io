@@ -1,0 +1,101 @@
+name: APP2-005 HM1 IPA premium visibility audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-005-hm1-ipa-premium-audit-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-005-hm1-ipa-premium-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Inspect packaged IPA
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import collections, json, pathlib, plistlib, re, urllib.request, zipfile, io
+          cmd=json.loads(pathlib.Path('automation/app2-005-hm1-ipa-premium-audit-command.json').read_text(encoding='utf-8'))
+          src=json.loads(pathlib.Path(cmd['source_result']).read_text(encoding='utf-8'))
+          artifacts=(src.get('build_details') or {}).get('artifacts') or []
+          ipa=next((x for x in artifacts if x.get('type')=='ipa'),None)
+          if not ipa: raise SystemExit('IPA artifact missing')
+          url=ipa.get('short_lived_download_url')
+          if not url: raise SystemExit('IPA download URL missing')
+          payload=urllib.request.urlopen(url,timeout=60).read()
+          z=zipfile.ZipFile(io.BytesIO(payload))
+          app_prefix=next(n.split('/')[0]+'/'+n.split('/')[1]+'/' for n in z.namelist() if n.startswith('Payload/') and n.endswith('.app/'))
+          index=z.read(app_prefix+'index.html').decode('utf-8')
+          info=plistlib.loads(z.read(app_prefix+'Info.plist'))
+          m=re.search(r'const QUESTIONS=(\[.*?\]);\nconst DOMAINS=',index,re.S)
+          if not m: raise SystemExit('embedded QUESTIONS missing')
+          q=json.loads(m.group(1))
+          rounds=dict(collections.Counter(x['round'] for x in q))
+          checks={
+            'questions_264':len(q)==264 and len({x['id'] for x in q})==264,
+            'six_sets_44':rounds=={'2026-04':44,'2025-10':44,'2025-04':44,'practice-A':44,'practice-B':44,'practice-C':44},
+            'premium_home_cta':'id="premiumGo"' in index,
+            'premium_click_handler':"app.querySelector('#premiumGo').onclick" in index,
+            'monthly_jpy':'7日無料 · ¥200/月' in index,
+            'lifetime_jpy':'¥800買い切り' in index,
+            'premium_264_copy':'全264問' in index,
+            'locked_set_label':'🔒 プレミアム' in index,
+            'no_usd_499':'$4.99' not in index,
+            'no_stale_980':'980円' not in index,
+            'no_stale_132':'全132問' not in index,
+            'bundle_id':info.get('CFBundleIdentifier')=='jp.allsunday1122.healthmanager1',
+            'build':str(info.get('CFBundleVersion'))==str(cmd['expected_build']),
+          }
+          out={
+            'request_id':cmd['request_id'],
+            'source_result':cmd['source_result'],
+            'build_id':src.get('build_id'),
+            'expected_build':str(cmd['expected_build']),
+            'actual_build':str(info.get('CFBundleVersion')),
+            'ipa_bytes':len(payload),
+            'rounds':rounds,
+            'checks':checks,
+            'ok':all(checks.values()),
+          }
+          path=pathlib.Path('automation/codemagic-results')/(cmd['request_id']+'.json')
+          path.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          if not out['ok']:
+              raise SystemExit('IPA premium visibility audit failed: '+json.dumps({k:v for k,v in checks.items() if not v},ensure_ascii=False))
+          print('PASS: packaged HM1 IPA has visible JPY premium CTA, locked labels and 264 questions')
+          PY
+      - name: Persist IPA audit
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          REQUEST_ID="$(python3 -c "import json;print(json.load(open('automation/app2-005-hm1-ipa-premium-audit-command.json'))['request_id'])")"
+          RESULT="automation/codemagic-results/${REQUEST_ID}.json"
+          if [ ! -f "$RESULT" ]; then exit 0; fi
+          cp "$RESULT" /tmp/hm1-ipa-audit.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p automation/codemagic-results
+            cp /tmp/hm1-ipa-audit.json "$RESULT"
+            git add "$RESULT"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "Persist HM1 IPA premium visibility audit ${REQUEST_ID}"
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1
