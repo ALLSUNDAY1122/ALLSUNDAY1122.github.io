@@ -11,16 +11,15 @@
   "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "b95aaaa232e2004f782e8eed00126221f95985fe",
-  "prior_status_blob_sha": "84c130a8ce5bc85cebdbc040cf175ceef4f10ef4",
-  "historical_commit_ledger_through": "57a5433979a32fbae2700b5f7240f0c00bc7ff0f",
+  "head_sha": "acc8d112b5cdf9c755ae1ac4f7ead287a14610da",
+  "prior_status_blob_sha": "3cb7bd635b82db1bfd764e687b6cac3e85a0b36d",
+  "historical_commit_ledger_through": "b95aaaa232e2004f782e8eed00126221f95985fe",
   "commits": [
-    "14e90fae46da34fba32b46e383f68d4c66cf2381",
-    "e032441bdec83b77ed40ad8b0becba4cc946bd44",
-    "19e2829a1f3111d223b7632c0b72b5b8a89a5813",
-    "51ae79dc62e79aa5fad1da69e1d486d279248b61",
-    "b1076fca770a81b72bc6cc0dc40d4c320a0a605b",
-    "b95aaaa232e2004f782e8eed00126221f95985fe"
+    "afbab83dfec2f1164805243a48f902147d3dca6a",
+    "2b08a8ad655659c660d502543300951336daa2d7",
+    "c342440242d14f74d3210c90f93de935c27c5cb1",
+    "5bb796c607c4cca6716c2f0d6598f8112dba188a",
+    "acc8d112b5cdf9c755ae1ac4f7ead287a14610da"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -29,20 +28,18 @@
     "bf4b7a552cfbe025608079f7fe11093af7526b0b"
   ],
   "tests": [
-    "L2-M01..L2-AW35 validation remains durable in Git history and prior status blob 84c130a8ce5bc85cebdbc040cf175ceef4f10ef4.",
-    "L2-AW36 ExportRegistrationIntegrityRevalidationTests.swift adds valid AW35, byte-growth, same-size mutation, symlink replacement, unexpected-file, manifest-corruption and pre-AW35 compatibility regressions; drift cases require the durable intent to remain.",
-    "L2-AW36 revalidation helper shape typechecked with Swift 6.2.1 -typecheck -warnings-as-errors -strict-concurrency=complete => L2_AW36_HELPER_TYPECHECK_PASS.",
-    "L2-AW36 portable self-check compiled with Swift 6.2.1 warnings-as-errors/strict concurrency and executed => L2_AW36_SELF_TEST_PASS size_change=true same_size=true unexpected=true symlink=true.",
-    "L2-AW36 e1f165ab..b95aaaa compare contains only Library source/test/benchmark/Evidence paths; no Shared/App/PARITY/HQ-owned source edit."
+    "L2-M01..L2-AW36 validation remains durable in Git history and prior status blob 3cb7bd635b82db1bfd764e687b6cac3e85a0b36d.",
+    "L2-AW37 DeletionJournalBacklogBoundedTests.swift covers default 64-item recovery windows, multi-pass progress, 256 maximum clamp, filename/payload identity mismatch and symlink fail-closed behavior.",
+    "L2-AW37 portable self-check compiled with Swift 6.2.1 -warnings-as-errors -strict-concurrency=complete and executed => L2_AW37_SELF_TEST_PASS backlog=10000 first=64 second=64 max_clamp=true progress=true.",
+    "L2-AW37 start-head compare through implementation changed only Library source/test/benchmark paths; no Shared/App/PARITY/other-Lane source edit."
   ],
   "evidence": [
-    "L2-AW36 fresh-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock 17f38848ddcceb59ad44022a1cc4c058763fe663 at integration epoch 24 / assignment epoch 2 / planning revision 4, prior Worker status blob 84c130a8ce5bc85cebdbc040cf175ceef4f10ef4 and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d.",
-    "Wave start Worker branch HEAD was e1f165abf589146ba0e09dfebec291a99eaf6fa6; canonical HQ checkpoint remained portable through Lane 2 AW35 with PARITY promotion 0.",
-    "Lane2ExportRegistrationIntegrityRevalidation re-runs AW35+ IOExportBatchTransaction manifest verification against the exact intent path set while retaining no-manifest pre-AW35 compatibility.",
-    "Lane2DurableLifecycleCoordinator now revalidates after prepare/before metadata.recordExports, again after metadata commit/before intent retirement, and during relaunch alreadyRegistered recovery.",
-    "A post-metadata integrity failure leaves metadata committed but does not retire the durable intent or delete published bytes, preserving fail-closed recovery evidence rather than silently blessing drifted bytes.",
-    "Exact revalidation source blob after read-back: f6804e43592bef226f2e65b21ecb6b170e382b3e.",
-    "Final Evidence is tech-assets/moises-audio/Library/L2-AW36_EXPORT_REGISTRATION_INTEGRITY_REVALIDATION_VALIDATION.md at implementation/evidence head b95aaaa232e2004f782e8eed00126221f95985fe."
+    "L2-AW37 fresh-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock 17f38848ddcceb59ad44022a1cc4c058763fe663 at integration epoch 24 / assignment epoch 2 / planning revision 4, prior Worker status blob 3cb7bd635b82db1bfd764e687b6cac3e85a0b36d and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d.",
+    "Wave start Worker branch HEAD was 185e9bd5b39e7c1500e3789d1f570cbe6a64b8c8.",
+    "LibraryArtifactLifecycle.pendingDeletionJournals now uses a bounded non-recursive directory enumeration window: default 64, hard maximum 256, selected entries regular/non-symlink/canonical UUID JSON and only selected payloads decoded.",
+    "Successful recovery still uses the existing durable PREPARED/COMMITTED/ARTIFACTS_DELETED -> metadata compaction -> journal retirement sequence; AW37 changes backlog selection size, not deletion authorization ordering.",
+    "10,000-file portable self-check proves bounded first/second windows and progress after retirement.",
+    "Final Evidence is tech-assets/moises-audio/Library/L2-AW37_BOUNDED_DELETION_JOURNAL_RECOVERY_VALIDATION.md at implementation/evidence head acc8d112b5cdf9c755ae1ac4f7ead287a14610da."
   ],
   "known_gaps": [
     "AW35/AW36 deterministic digest detects mutation/corruption but is not cryptographic authenticity against an actor able to rewrite both media and manifest.",
@@ -50,32 +47,32 @@
     "DNS rebinding between AW34 pre-connect resolution and URLSession's own subsequent resolution remains a TOCTOU risk; endpoint verification/pinning requires Apple networking evidence.",
     "Real Apple URLSession redirect, proxy/captive-network, IPv6 and endpoint behavior remain pending.",
     "A production WMA compatibility decoder is still not selected/licensed; real MP3/WAV/FLAC/M4A/MP4/MOV/WMA fixtures remain pending.",
-    "AW32 deletion-ownership and AW29 managed-artifact/publication shards are deterministic but not hard entry-count capped; pathological concentration and iPhone RSS/latency remain unmeasured.",
-    "Deletion-journal enumeration remains intentionally priority/unbounded for correctness; extreme journal backlog needs bounded policy/device evidence.",
+    "AW32 deletion-ownership and AW29 managed-artifact/publication shards remain deterministic but not hard entry-count capped; pathological concentration and physical-iPhone RSS/latency remain unmeasured.",
+    "AW37 bounds deletion-journal selection/decoding to 64 by default and 256 maximum, but physical-device launch latency/RSS and filesystem enumeration behavior remain pending.",
     "Apple Core Data runtime, WAL visibility, force termination, APFS/ENOSPC and physical-device evidence remain pending.",
     "Real import/export/share/File Provider, AVFoundation audio validity/synchronization/naming/shareability and Differential Moises remain pending.",
     "MOI-P001/P002/P017/P018/P019/P020/P024 remain MISSING until HQ real-device/reference/differential gates are satisfied."
   ],
   "hq_requests": [
-    "For App export/share integration, preserve canonical IOExportBatchTransaction -> Lane2ExportRegistrationJournal -> Lane2DurableLifecycleCoordinator metadata ordering and the AW36 pre/post metadata revalidation gates.",
-    "On Apple, force terminate around AW35 manifest write, batch rename, AW36 pre-metadata revalidation, metadata/WAL commit, AW36 post-metadata revalidation and intent retirement; verify relaunch leaves drifted AW35+ intents fail-closed.",
-    "Verify exported byte integrity plus actual audio validity/synchronization/naming/shareability; AW35/AW36 portable evidence alone is not MOI-P019 PARITY.",
+    "For App export/share integration, preserve canonical IOExportBatchTransaction -> Lane2ExportRegistrationJournal -> Lane2DurableLifecycleCoordinator metadata ordering and AW36 integrity revalidation gates.",
+    "On Apple, force terminate around export manifest/metadata/intent boundaries and exercise large deletion-journal recovery backlogs while measuring launch latency/RSS.",
+    "Verify exported byte integrity plus actual audio validity/synchronization/naming/shareability; portable evidence alone is not MOI-P019 PARITY.",
     "Continue AW34 endpoint/DNS-rebinding validation and AW33 real codec/WMA validation.",
-    "Do not promote MOI-P019 or any other Lane-2 PARITY row from AW36 portable evidence alone.",
-    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW36."
+    "Do not promote Lane-2 PARITY rows from portable AW37 evidence alone.",
+    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW37."
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW36",
-    "goal": "Close the AW35 post-intent export-integrity TOCTOU by revalidating AW35+ batch manifests around lifecycle metadata registration, intent retirement and relaunch alreadyRegistered recovery.",
-    "rationale": "AW35 verified content before durable registration intent adoption, but bytes could still drift before metadata registration or before/relaunch intent retirement.",
-    "done_when": "AW35+ batches are revalidated immediately before metadata registration, immediately after metadata commit before intent retirement, and during alreadyRegistered relaunch recovery; drift retains durable recovery evidence and fails closed; legacy no-manifest batches remain compatible; regressions, portable self-check, Evidence, commit and scope audit are durable.",
+    "wave_id": "L2-AW37",
+    "goal": "Bound deletion-journal recovery so an extreme durable delete backlog cannot materialize/decode every journal in a single launch pass.",
+    "rationale": "Ownership-only recovery was already budgeted, but journal-backed recovery remained intentionally prioritized and unbounded, leaving a launch-time scalability risk under pathological interruption backlog.",
+    "done_when": "Deletion journal selection defaults to 64 and hard-caps at 256, uses bounded non-recursive enumeration, decodes only selected regular non-symlink canonical journal files, successful passes advance without weakening crash-safe retirement ordering, negative regressions and 10k portable self-check pass, Evidence/status/scope audit are durable.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "b95aaaa232e2004f782e8eed00126221f95985fe",
-    "next_priority": "Re-read Lane-2 gaps and choose the highest-value lane-local hardening wave; likely bound pathological AW29/AW32 shard concentration or extreme deletion-journal backlog without weakening crash correctness, unless fresher canonical state elevates another gap."
+    "implementation_head_sha": "acc8d112b5cdf9c755ae1ac4f7ead287a14610da",
+    "next_priority": "Re-read Lane-2 gaps and harden pathological AW29 managed-artifact inventory shard concentration/read amplification without breaking authoritative census compatibility; if fresher canonical state elevates another gap, choose that instead."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW36 continue Lane-2 work autonomously.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW37 continue Lane-2 work autonomously.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-25T23:18:00+09:00",
-  "status_compaction_note": "Full pre-AW36 history remains addressable through prior_status_blob_sha 84c130a8ce5bc85cebdbc040cf175ceef4f10ef4 and Git history; commits contains AW36 only.",
+  "last_updated": "2026-08-25T23:53:00+09:00",
+  "status_compaction_note": "Full pre-AW37 history remains addressable through prior_status_blob_sha 3cb7bd635b82db1bfd764e687b6cac3e85a0b36d and Git history; commits contains AW37 only.",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ remains sole PARITY authority."
 }
