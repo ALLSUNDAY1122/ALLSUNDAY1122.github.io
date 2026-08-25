@@ -7,7 +7,7 @@
   "operating_model": "v4｜4 Autonomous Independent Lanes / Late Integration",
   "work_branch": "moises/wp4-analysis-platform",
   "state": "IN_PROGRESS",
-  "current_bundle": "L4-W44｜Externally pinned ledger checkpoint / whole-ledger rollback detection + HQ checkpoint certificate",
+  "current_bundle": "L4-W45｜Anchored P021 physical-evidence adjudication gate / repeated W24 acceptance + genuine-runtime binding",
   "completed_bundles": [
     "L4-M01", "L4-M02", "L4-M03", "L4-M04",
     "L4-W05", "L4-W06", "L4-W07", "L4-W08", "L4-W09", "L4-W10",
@@ -15,59 +15,51 @@
     "L4-W17", "L4-W18", "L4-W19", "L4-W20", "L4-W21", "L4-W22",
     "L4-W23", "L4-W24", "L4-W25", "L4-W26", "L4-W27", "L4-W28",
     "L4-W29", "L4-W30", "L4-W31", "L4-W32", "L4-W33", "L4-W34",
-    "L4-W35", "L4-W36", "L4-W37", "L4-W38", "L4-W39", "L4-W40", "L4-W41", "L4-W42", "L4-W43"
+    "L4-W35", "L4-W36", "L4-W37", "L4-W38", "L4-W39", "L4-W40",
+    "L4-W41", "L4-W42", "L4-W43", "L4-W44"
   ],
   "epoch_contract_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
   "base_integration_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
-  "head_sha": "8250b78378c02619a014afcddf4a84b842d725c5",
+  "head_sha": "56fd6f0e16a9972460bd82bf6d4e42aa32dbd626",
   "commits": [
-    "d02ce5892b243f890b628d1218631e5ff015c79a",
-    "0f40f9c7480adacb29b579be37507cf9f5ffffd7",
-    "2a20509f35a01a79de8d023478866a0e6df135ea",
-    "9198620d0ae7f31e59d8a0f9e9777ecac406ff3c",
-    "4556acaa24a8ad4eb36b9c99d098d0694c45d561",
-    "9cdb1678b248b97f6fc1317beb6973455b8bb505",
-    "521f8a0c4f0224255ab122f6ccf2d75a1395a217",
-    "fd2168a22d699f911269016029d0286ec1de4d4d",
-    "08a1fa2b786571cb2567026766a5854918d5e949",
-    "d06a7e20666daca5c2d92b8220f04dc20a6efc0b",
-    "1e41e5cc8da5405b7d58a5e8408dae93bcf65b2f",
-    "8250b78378c02619a014afcddf4a84b842d725c5"
+    "c7ff33f65b38b6f791e5dd1bd68eaa41d7bc5c9b",
+    "1b2dbefc418cd8c7ce6e81618a8487a2ae63b61e",
+    "bd4563a2f6ffb0240f810c063aa0ea94e7133f25",
+    "2169eff8d945381ef6e42fb946cd3020cc278f0a",
+    "b3269be2aad493ba1e4e5df97d0d93d3503e1ee6",
+    "67084430615055b946073229e72f8b5c8030b168",
+    "56fd6f0e16a9972460bd82bf6d4e42aa32dbd626"
   ],
   "tests": [
-    "W43 durable XCTest source covers append/relaunch deterministic snapshot, exact-latest duplicate idempotency, rollback, same-sequence root reuse, predecessor fork, stale/forged certificate, pending-only recovery, record-before-HEAD recovery, HEAD-already-advanced stale-marker cleanup, corrupt pending preservation, orphan-record rejection, unexpected-file rejection, truncated HEAD, genesis sequence gap, anchor-ID switch and UInt64.max sequence corruption.",
-    "W43 validates the complete W42 receipt/certificate pair before journal mutation and recomputes both W42 roots; every reopen revalidates the W42 receipt chain, W43 record chain, exact committed inventory and W43 ledger root.",
-    "W43 oversized HEAD sequence hardening at d06a7e20666daca5c2d92b8220f04dc20a6efc0b changes only Int(latestSequence) to the nontrapping UInt64(records.count) comparison; a dedicated scalar-boundary XCTest records the fail-closed contract.",
-    "W43 Swift 6.2.1 source-shaped filesystem mirror compiled with warnings-as-errors and passed 732 filesystem/recovery/rollback checks; compile approximately 1.01 s / 172636 kB RSS, runtime approximately 2.14 s / 22272 kB RSS.",
-    "W43 SHA-256 record/ledger-chain mirror passed 30000 ledger packages / 180000 mutations covering receipt root, certificate root, record root, immutable path and predecessor bindings; approximately 10.77 s / 110744 kB RSS.",
-    "Fresh full Worker-branch SwiftPM/XCTest remains NOT_OBSERVED because git ls-remote failed with Could not resolve host: github.com; no commit status checks were present on the W43 Package commit."
+    "W44 durable XCTest source covers deterministic current-ledger verification/certificate, coordinated whole-ledger rollback to an older internally valid directory, stale cached snapshot, mixed sequence/old ledger root, mixed latest receipt root, ledger-ID substitution, anchor-ID substitution, checkpoint certificate replay, predecessor checkpoint mismatch, forged certificate root and invalid expectation bounds/chain.",
+    "W44 production verification accepts only an independently supplied expectation and reopens W43 through AnalysisPhysicalEvidenceAnchorLedgerStore.exportSnapshot; cached snapshots are not a public production input.",
+    "W44 Swift 6.2.1 source-shaped filesystem mirror compiled with -warnings-as-errors and passed 960 rollback/substitution/mixed-root checks; compile approximately 0.49 s / 154064 kB RSS, runtime approximately 1.01 s / 19860 kB RSS.",
+    "W44 canonical-JSON SHA-256 mirror passed 30000 checkpoint packages / 450000 mutations across expectation and certificate bindings; approximately 5.453 s / 159496 kB RSS.",
+    "Fresh full Worker-branch SwiftPM/XCTest remains NOT_OBSERVED because git ls-remote failed with Could not resolve host: github.com. HQ Epoch 29 Run #216 SUCCESS 350/350 applies through canonical W42, not W43-W44."
   ],
   "evidence": [
-    "tech-assets/moises-audio/Tests/L4-W43_VALIDATION.md",
-    "tech-assets/moises-audio/Analysis/benchmarks/L4-W43_ANCHOR_LEDGER.json",
-    "tech-assets/moises-audio/Analysis/benchmarks/ANALYSIS_PHYSICAL_EVIDENCE_ANCHOR_LEDGER_RUNBOOK.md",
-    "tech-assets/moises-audio/Analysis/AnalysisPhysicalEvidenceAnchorLedgerModels.swift",
-    "tech-assets/moises-audio/Analysis/AnalysisPhysicalEvidenceAnchorLedger.swift",
-    "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisPhysicalEvidenceAnchorLedgerTests.swift",
-    "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisPhysicalEvidenceAnchorLedgerRecoveryEdgeTests.swift",
-    "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisPhysicalEvidenceAnchorLedgerScalarBoundaryTests.swift",
+    "tech-assets/moises-audio/Tests/L4-W44_VALIDATION.md",
+    "tech-assets/moises-audio/Analysis/benchmarks/L4-W44_EXTERNAL_LEDGER_CHECKPOINT.json",
+    "tech-assets/moises-audio/Analysis/benchmarks/ANALYSIS_PHYSICAL_EVIDENCE_LEDGER_CHECKPOINT_RUNBOOK.md",
+    "tech-assets/moises-audio/Analysis/AnalysisPhysicalEvidenceAnchorLedgerCheckpoint.swift",
+    "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisPhysicalEvidenceAnchorLedgerCheckpointTests.swift",
     "tech-assets/moises-audio/Package.swift"
   ],
   "known_gaps": [
     "MOI-P009/P011/P013/P016 remain MISSING until HQ-approved rights-cleared corpus, current-iPhone reviewed differential, Project real-audio observations and physical-iPhone evidence are completed.",
-    "MOI-P021 remains MISSING. W43 hardens local continuity above W42, but genuine Lane-2 bounded decoding, selected Xcode/Apple ARM compile, physical-iPhone W37/W39-W43 execution, real RSS/physical-footprint/thermal/battery/cancellation and repeated W24 acceptance remain unobserved.",
-    "W43 detects local rollback/fork/corruption while the current ledger root is known, but coordinated replacement of the entire ledger with an older internally valid copy cannot be rejected unless HQ independently preserves or signs/timestamps the latest W43 ledger root.",
-    "W43 Foundation atomic writes and Linux filesystem mirrors do not prove APFS/power-loss durability on physical iPhone.",
-    "W42/W43 SHA-256 receipts, certificates and ledger roots are metadata commitments, not signatures, trusted timestamps, Secure Enclave proofs, Apple attestation or device-origin proofs.",
+    "MOI-P021 remains MISSING. W44 closes the local whole-ledger rollback gap only when the current expectation is independently retained; genuine Lane-2 bounded decoding, selected Xcode/Apple ARM compile, physical-iPhone execution, real RSS/physical-footprint/thermal/battery/cancellation and repeated W24 acceptance remain unobserved.",
+    "A coordinated rollback of both the W43 ledger and the externally preserved W44 expectation cannot be rejected by the local verifier. HQ must retain or sign/trusted-timestamp the current expectation/certificate root independently.",
+    "W43/W44 Foundation/Linux filesystem evidence does not prove APFS or physical-device power-loss durability.",
+    "W42-W44 SHA-256 commitments are not signatures, trusted timestamps, Secure Enclave proofs, Apple attestation or device-origin proofs.",
     "Full canonical Worker-branch SwiftPM/XCTest and selected Apple runtime execution remain HQ/integrated-environment gates."
   ],
   "hq_requests": [
-    "For each real W42 destination verification, append the exact W42 anchor receipt and destination certificate into one W43 ledger, then preserve the resulting latest W43 ledger root independently from the local ledger directory.",
-    "Use an externally retained W43 ledger root, or preferably a signed/trusted-timestamped root, as the authoritative rollback boundary; do not reconstruct the expected root from the ledger being verified.",
-    "Execute the exact HQ W24 run inventory through W37/W39-W43 on a selected physical iPhone with a genuine bounded Lane-2 decoder, then complete physical RSS/thermal/battery/cancellation and repeated W24 acceptance before any P021 judgment.",
+    "Epoch 29 canonicalized W41-W42. W43-W44 now form a coherent post-Epoch29 Lane-4 checkpoint: W43 durable monotonic ledger plus W44 externally pinned whole-ledger rollback detection. Re-audit and semantic-integrate these exact owned-scope files at the next Lane-4 checkpoint.",
+    "For real use, preserve each current W44 expectation or resulting W44 certificate root outside the local evidence ledger; preferably sign or trusted-timestamp it using an external authority.",
+    "Execute the exact HQ W24 planned-run inventory on a selected physical iPhone with a genuine bounded Lane-2 decoder, then retain W37-W44 evidence and repeated W24 acceptance for W45/P021 adjudication.",
     "Keep P009/P011/P013/P016/P021 MISSING until their real current-iPhone/physical/rights-cleared gates pass."
   ],
-  "next_priority": "Implement L4-W44 as an externally pinned checkpoint above W43. Accept an HQ-supplied expectation that independently pins ledgerID, anchorID, minimum/latest sequence, latest W42 anchor-receipt root and exact W43 ledger root; reopen and recompute the local W43 ledger without deriving expected values from it; reject coordinated whole-ledger rollback to an older internally valid snapshot, ledger-ID or anchor-ID substitution, stale snapshot export, sequence/root mixing and checkpoint replay. Produce a deterministic NON_PARITY checkpoint verification certificate that records the supplied external expectation and locally recomputed ledger state. Add rollback/replay/mixed-root XCTest, runbook and evidence. If HQ provides signing or trusted timestamp authority, bind that externally rather than treating W44 SHA-256 metadata as a signature.",
-  "last_updated": "2026-08-26T02:44:00+09:00",
+  "next_priority": "Implement L4-W45 as the fail-closed P021 physical-evidence adjudication layer above the anchored W44 chain. Starting from an externally verified W44 checkpoint plus the exact corresponding W41 transfer package/W40 batch, re-open the physical evidence and require the authoritative W24 planned-run inventory, repeated per-run W23/W25 acceptance, unique genuine W36 execution identities, selected-device/runtime identity consistency, bounded-decoder evidence binding and complete RSS/physical-footprint/thermal/battery/cancellation observations. Reject synthetic/compatibility-adapter evidence, missing physical fields, partial run sets, mixed checkpoint/package roots or any run that fails W24 thresholds. Produce a deterministic NON_PARITY readiness/adjudication report that can say READY_FOR_HQ_P021_JUDGMENT only when all real gates are present; it must never edit PARITY itself. Add negative-first XCTest/runbook/evidence so the gate is useful before physical inputs arrive.",
+  "last_updated": "2026-08-26T03:11:00+09:00",
   "writer_policy": "Only Moises-Worker-4 may update this status file. Worker 4 never declares PARITY; HQ Late Integration owns final PARITY_MATRIX judgment."
 }
