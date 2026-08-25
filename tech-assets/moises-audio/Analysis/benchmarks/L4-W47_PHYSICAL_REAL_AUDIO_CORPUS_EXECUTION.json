@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W47",
+  "title": "Physical iPhone real-audio corpus execution / W46 Project provenance",
+  "status": "IMPLEMENTED_NON_PARITY_PHYSICAL_EXECUTION_PENDING",
+  "generated_at": "2026-08-26T05:18:00+09:00",
+  "scope": [
+    "MOI-P009",
+    "MOI-P011",
+    "MOI-P013",
+    "MOI-P016"
+  ],
+  "production_contract": {
+    "canonical_manifest_bytes_required": true,
+    "manifest_sha_recomputed_from_canonical_encoding": true,
+    "real_audio_only": true,
+    "physical_runtime": "iphoneos/arm64 only in iOS coordinator",
+    "decoder_kind": "GENUINE_LANE2_BOUNDED_DECODER",
+    "source_memory_contract": "BOUNDED_PULL",
+    "exact_fixture_inventory_required": true,
+    "unique_ids": [
+      "workload_run_id",
+      "workload_execution_id",
+      "decoder_execution_id"
+    ],
+    "per_fixture_bindings": [
+      "source_sha256",
+      "source_sample_rate",
+      "source_sample_count",
+      "source_channel_count",
+      "observed_source_chunk_count",
+      "observed_source_sample_count",
+      "runtime_binding_sha256",
+      "w36_execution_binding_sha256",
+      "canonical_snapshot_sha256"
+    ],
+    "report_rule": "Audited Project report is rebuilt from retained W36 canonical snapshots; no externally supplied Project report is trusted.",
+    "selective_success_export": "forbidden",
+    "parity_authority": "HQ_LATE_INTEGRATION"
+  },
+  "fail_close_cases": [
+    "manifest canonical SHA drift",
+    "synthetic fixture",
+    "simulator/non-arm64 runtime",
+    "compatibility or unknown decoder",
+    "missing or duplicate fixture receipt",
+    "source SHA drift",
+    "decoded/observed sample population drift",
+    "duplicate run ID",
+    "duplicate workload execution ID",
+    "duplicate decoder execution ID",
+    "missing/out-of-order/non-completed Analysis stage",
+    "invalid canonical snapshot bytes/hash/summary",
+    "W36 execution binding mismatch",
+    "audited Project report rebuild mismatch",
+    "audited Project report root mismatch",
+    "W47 package root mismatch"
+  ],
+  "validation": {
+    "environment": {
+      "swift": "6.2.1",
+      "host": "x86_64 Linux"
+    },
+    "fresh_worker_branch_swiftpm": {
+      "status": "NOT_OBSERVED",
+      "reason": "git ls-remote failed: Could not resolve host: github.com",
+      "elapsed_seconds": 0.11,
+      "maximum_rss_kb": 3804
+    },
+    "exact_split_core_dependency_stub_typecheck": {
+      "status": "PASS",
+      "flags": "-swift-version 6 -strict-concurrency=complete -warnings-as-errors -typecheck",
+      "elapsed_seconds": 2.49,
+      "maximum_rss_kb": 135400
+    },
+    "exact_xctest_source_dependency_stub_typecheck": {
+      "status": "PASS",
+      "note": "@testable module import removed only for local single-module typecheck; test body otherwise exact",
+      "elapsed_seconds": 2.97,
+      "maximum_rss_kb": 136260
+    },
+    "ios_coordinator_source_shaped_typecheck": {
+      "status": "PASS",
+      "note": "UIKit/Darwin outer guard was removed and device-model helper replaced with a constant solely for Linux typechecking; coordinator execution logic was otherwise retained.",
+      "elapsed_seconds": 2.15,
+      "maximum_rss_kb": 141644
+    },
+    "swift_fail_close_mirror": {
+      "status": "PASS",
+      "checks": 180000,
+      "rejected": 180000,
+      "mutation_classes": 12,
+      "per_class": 15000,
+      "compile_elapsed_seconds": 1.43,
+      "compile_maximum_rss_kb": 147252,
+      "run_elapsed_seconds": 1.02,
+      "run_maximum_rss_kb": 18060
+    },
+    "canonical_package_root_mirror": {
+      "status": "PASS",
+      "packages": 25000,
+      "mutations": 300000,
+      "mutation_classes": 12,
+      "elapsed_seconds": 19.93,
+      "maximum_rss_kb": 110556
+    }
+  },
+  "observed_external_evidence": {
+    "rights_cleared_real_audio_corpus": false,
+    "genuine_integrated_lane2_decoder": false,
+    "selected_physical_iphone_execution": false,
+    "real_w47_ready_package": false,
+    "current_iphone_moises_reference_package": false
+  },
+  "parity_effect": {
+    "MOI-P009": "MISSING",
+    "MOI-P011": "MISSING",
+    "MOI-P013": "MISSING",
+    "MOI-P016": "MISSING",
+    "MOI-P021": "MISSING",
+    "worker_edits_parity_matrix": false
+  },
+  "limitations": [
+    "Portable mirrors and dependency-stub typechecks validate code/gate behavior only; they are not physical-iPhone evidence.",
+    "Decoder/device/build/session identity is metadata unless independently attested, signed or trusted-timestamped.",
+    "The underlying source files and legal rights grants must be retained and independently reviewed by HQ.",
+    "W47 package readiness does not itself establish Moises differential parity; W46 plus current-iPhone reference evidence and HQ judgment remain required."
+  ]
+}
