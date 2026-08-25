@@ -2,7 +2,6 @@ import SwiftUI
 
 struct RootView: View {
     @EnvironmentObject private var learning: LearningStore
-    @EnvironmentObject private var storeKit: StoreKitManager
 
     var body: some View {
         ZStack {
@@ -17,10 +16,6 @@ struct RootView: View {
             }
         }
         .preferredColorScheme(.light)
-        .sheet(isPresented: $learning.paywallPresented) {
-            PaywallView()
-                .environmentObject(storeKit)
-        }
         .alert("教材データエラー", isPresented: Binding(get: { learning.loadError != nil }, set: { if !$0 { learning.loadError = nil } })) {
             Button("閉じる", role: .cancel) { }
         } message: {
@@ -46,7 +41,6 @@ struct RootView: View {
 
 struct HomeView: View {
     @EnvironmentObject private var learning: LearningStore
-    @EnvironmentObject private var storeKit: StoreKitManager
     @State private var selectedFieldForBatches: String?
 
     var body: some View {
@@ -75,7 +69,6 @@ struct HomeView: View {
             if let field = selectedFieldForBatches {
                 FieldBatchPickerView(field: field)
                     .environmentObject(learning)
-                    .environmentObject(storeKit)
             }
         }
     }
@@ -91,7 +84,7 @@ struct HomeView: View {
                         .font(.system(size: 12, weight: .bold))
                         .foregroundStyle(Color.sprintInk3)
                 }
-                let remaining = learning.unansweredCount(premium: storeKit.isPremium)
+                let remaining = learning.unansweredCount(premium: true)
                 Text(days == 0 ? "試験日です。" : "試験日まで。未着手 \(remaining)問。1日 \(max(1, Int(ceil(Double(remaining) / Double(max(days, 1))))))問ほどで一周できます。")
                     .font(.system(size: 14))
                     .foregroundStyle(Color.sprintInk2)
@@ -141,9 +134,7 @@ struct HomeView: View {
     }
 
     private var resumeButton: some View {
-        Button {
-            learning.resume()
-        } label: {
+        Button { learning.resume() } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
                     Text("続きから再開").font(.system(size: 16, weight: .bold))
@@ -167,9 +158,7 @@ struct HomeView: View {
     }
 
     private var todaySprintButton: some View {
-        Button {
-            learning.startDaily(premium: storeKit.isPremium)
-        } label: {
+        Button { learning.startDaily(premium: true) } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
                     Text("今日のスプリント").font(.system(size: 17, weight: .bold))
@@ -185,9 +174,8 @@ struct HomeView: View {
 
     private var weakButton: some View {
         Button {
-            if learning.weakCount == 0 { return }
-            let accessible = learning.state.weak.keys.compactMap { learning.questionMap[$0] }.contains { storeKit.isPremium || $0.isFree }
-            if accessible { learning.startWeak(premium: storeKit.isPremium) } else { learning.paywallPresented = true }
+            guard learning.weakCount > 0 else { return }
+            learning.startWeak(premium: true)
         } label: {
             HStack(spacing: 12) {
                 ZStack {
@@ -216,9 +204,7 @@ struct HomeView: View {
     }
 
     private var mockButton: some View {
-        Button {
-            learning.selectedTab = .mock
-        } label: {
+        Button { learning.selectedTab = .mock } label: {
             HStack(spacing: 12) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 10).fill(Color.sprintAiSoft).frame(width: 38, height: 38)
@@ -252,23 +238,13 @@ struct HomeView: View {
                 let all = learning.activeQuestions.filter { $0.field == field }
                 let seen = all.filter { learning.state.seen.contains($0.id) }.count
                 let weak = all.filter { learning.state.weak[$0.id] != nil }.count
-                Button {
-                    if storeKit.isPremium {
-                        selectedFieldForBatches = field
-                    } else {
-                        learning.paywallPresented = true
-                    }
-                } label: {
+                Button { selectedFieldForBatches = field } label: {
                     VStack(spacing: 9) {
                         HStack {
                             Text(field).font(.system(size: 15, weight: .bold)).foregroundStyle(Color.sprintInk)
                             Spacer()
                             Text("\(all.count)問").font(.system(size: 12, weight: .semibold)).foregroundStyle(Color.sprintInk3)
-                            if !storeKit.isPremium {
-                                Image(systemName: "lock.fill").font(.system(size: 11)).foregroundStyle(Color.sprintKin)
-                            } else {
-                                Image(systemName: "chevron.right").font(.system(size: 11, weight: .bold)).foregroundStyle(Color.sprintInk3)
-                            }
+                            Image(systemName: "chevron.right").font(.system(size: 11, weight: .bold)).foregroundStyle(Color.sprintInk3)
                         }
                         FieldProgressBar(progress: all.isEmpty ? 0 : Double(seen) / Double(all.count), color: .sprintAi)
                         HStack {
@@ -313,7 +289,7 @@ struct HomeView: View {
     }
 
     private var sourceNote: some View {
-        Text(storeKit.isPremium ? "第111・110・109回｜監査済み問題バンク1,035問" : "無料版｜第111回 必須90問。プレミアムで3回分1,031採点対象問題を解放。")
+        Text("第111・110・109回｜監査済み1,035問・採点対象1,031問｜追加購入なし")
             .font(.system(size: 10))
             .foregroundStyle(Color.sprintInk3)
             .multilineTextAlignment(.center)
@@ -324,12 +300,11 @@ struct HomeView: View {
 
 struct FieldBatchPickerView: View {
     @EnvironmentObject private var learning: LearningStore
-    @EnvironmentObject private var storeKit: StoreKitManager
     @Environment(\.dismiss) private var dismiss
     let field: String
 
     private var batches: [FieldQuestionBatch] {
-        learning.fieldQuestionBatches(field, premium: storeKit.isPremium)
+        learning.fieldQuestionBatches(field, premium: true)
     }
 
     var body: some View {
@@ -351,7 +326,7 @@ struct FieldBatchPickerView: View {
                         let seen = batch.questions.filter { learning.state.seen.contains($0.id) }.count
                         let weak = batch.questions.filter { learning.state.weak[$0.id] != nil }.count
                         Button {
-                            learning.startFieldBatch(field, batchIndex: batch.index, premium: storeKit.isPremium)
+                            learning.startFieldBatch(field, batchIndex: batch.index, premium: true)
                             dismiss()
                         } label: {
                             VStack(spacing: 10) {
@@ -365,8 +340,7 @@ struct FieldBatchPickerView: View {
                                             .foregroundStyle(Color.sprintAi)
                                     }
                                     Spacer()
-                                    Image(systemName: "arrow.right")
-                                        .foregroundStyle(Color.sprintAi)
+                                    Image(systemName: "arrow.right").foregroundStyle(Color.sprintAi)
                                 }
                                 FieldProgressBar(progress: batch.count == 0 ? 0 : Double(seen) / Double(batch.count), color: .sprintAi)
                                 HStack {
