@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW40",
+  "title": "AW38/AW39 v2 Physical Continuity Session",
+  "result": "COMPLETE_NON_PARITY",
+  "canonical_audit": {
+    "integration_epoch_observed": 28,
+    "assignment_epoch": 2,
+    "planning_revision": 4,
+    "epoch_contract_sha": "c9e8ec5d191108db6eb20fbd40db0dab3c46b725",
+    "ownership_changed": false,
+    "rebase_required": false,
+    "worker_branch_base_head": "144af9c07619a28b893b6d92d6a679cc83f601ee",
+    "hq_integrated_lane3_through": "L3-AW38",
+    "parity_promotions_observed": 0
+  },
+  "implementation": {
+    "v2_only_session_schema": true,
+    "aw35_target_fallback_used": false,
+    "seek_shape_preserved": true,
+    "enabled_loop_shape_preserved": true,
+    "loop_disabled_shape_preserved": true,
+    "bounded_ring_default_capacity": 4096,
+    "bounded_ring_min_capacity": 16,
+    "bounded_ring_max_capacity": 65536,
+    "capacity_drop_accounting_saturating": true,
+    "issue_detail_retention_bounded": true,
+    "nonexecuted_excluded_from_executed_latency": true,
+    "unusable_instrumentation_fails_physical_complete": true,
+    "capacity_drop_fails_physical_complete": true,
+    "all_three_v2_shapes_required_for_physical_complete": true,
+    "physical_and_differential_gates_separate": true,
+    "legacy_aw35_loop_disable_warning_nonblocking_only_in_v2": true,
+    "other_aw38_instrumentation_issues_fail_closed": true,
+    "shared_app_modified": false,
+    "parity_matrix_modified": false,
+    "parity_promotion_allowed": false
+  },
+  "portable_environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "swift_language_mode": 6,
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true
+  },
+  "portable_self_test": {
+    "result": "PASS",
+    "retained_valid_samples": 3,
+    "seek_samples": 1,
+    "enabled_loop_samples": 1,
+    "loop_disabled_samples": 1,
+    "nonexecuted_counted_separately": true,
+    "missing_audible_fails_closed": true,
+    "duplicate_sample_id_fails_closed": true,
+    "unusable_instrumentation_fails_closed": true,
+    "capacity_drop_fails_closed": true,
+    "issue_detail_bound_and_drop_accounting_verified": true,
+    "physical_complete_without_moises_listening": true,
+    "differential_complete_without_moises_listening": false
+  },
+  "portable_stress": {
+    "result": "PASS",
+    "total_samples": 1000000,
+    "retained_samples": 4096,
+    "capacity_drops": 995904,
+    "retained_duplicate_sample_ids": 0,
+    "fully_valid_retained_samples": 4096,
+    "physical_session_complete": false,
+    "physical_session_complete_false_reason": "capacity drops prove truncated session evidence"
+  },
+  "portable_benchmark": {
+    "result": "PASS",
+    "runs": 20,
+    "operations_per_run": 1000000,
+    "median_nanoseconds": 30607613,
+    "p95_nanoseconds": 34793808,
+    "max_nanoseconds": 57969762,
+    "checksum": 20000190,
+    "scope": "portable recorder append bookkeeping only"
+  },
+  "selected_repository_tests": {
+    "aw38_adapter_regression_authored": true,
+    "loop_disabled_aw35_warning_nonblocking_case": true,
+    "nil_observation_unusable_case": true,
+    "complete_selected_swiftpm_execution": false,
+    "xcode_execution": false,
+    "avfaudio_runtime_execution": false
+  },
+  "external_gates": {
+    "physical_iphone_executed": false,
+    "validated_external_audible_marker": false,
+    "rights_cleared_real_audio_executed": false,
+    "current_moises_differential_executed": false,
+    "human_listening_executed": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015"
+  ]
+}
