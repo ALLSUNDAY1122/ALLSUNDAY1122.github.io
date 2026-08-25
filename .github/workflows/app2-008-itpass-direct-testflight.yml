@@ -1,0 +1,118 @@
+name: APP2-008 IT Passport Direct TestFlight
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - automation/app2-008-itpass-testflight-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Start and monitor Codemagic IT Passport TestFlight build
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, time, urllib.request, urllib.error
+          from pathlib import Path
+
+          command = json.loads(Path('automation/app2-008-itpass-testflight-command.json').read_text(encoding='utf-8'))
+          request_id = command['request_id']
+          token = os.environ.get('CM_API_TOKEN','').strip()
+          if not token:
+              raise SystemExit('CM_API_TOKEN missing')
+
+          app_id = '6a6b41e1bd25e8664f94a9c3'
+          workflow_id = 'ios-native'
+          branch = 'main'
+
+          def api(url, method='GET', payload=None):
+              data = None if payload is None else json.dumps(payload).encode('utf-8')
+              req = urllib.request.Request(url, data=data, method=method, headers={
+                  'x-auth-token': token,
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+              })
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      raw = r.read().decode('utf-8')
+                      return r.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw = e.read().decode('utf-8', errors='replace')
+                  raise RuntimeError(f'HTTP {e.code}: {raw[:1000]}')
+
+          status, started = api('https://api.codemagic.io/builds', 'POST', {
+              'appId': app_id,
+              'workflowId': workflow_id,
+              'branch': branch,
+          })
+          build_id = started.get('buildId') or started.get('id')
+          if not build_id:
+              raise RuntimeError(f'Codemagic did not return buildId: {started}')
+
+          result = {
+              'request_id': request_id,
+              'app_id': app_id,
+              'workflow_id': workflow_id,
+              'branch': branch,
+              'build_id': build_id,
+              'status': 'started',
+              'ok': False,
+          }
+          out = Path('automation/codemagic-results') / f'{request_id}.json'
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+          print(f'Codemagic build started: {build_id}')
+
+          terminal = {'finished','failed','canceled','timeout','skipped'}
+          deadline = time.time() + 4200
+          while time.time() < deadline:
+              _, details = api(f'https://codemagic.io/api/v3/builds/{build_id}')
+              data = details.get('data') or details
+              current = data.get('status')
+              result['status'] = current
+              if current in terminal:
+                  result['ok'] = current == 'finished'
+                  result['build_details'] = {
+                      'status': current,
+                      'startedAt': data.get('startedAt'),
+                      'finishedAt': data.get('finishedAt'),
+                      'branch': data.get('branch'),
+                      'workflowId': data.get('workflowId'),
+                      'commit': data.get('commit'),
+                      'version': data.get('version'),
+                      'buildNumber': data.get('buildNumber'),
+                  }
+                  out.write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+                  if current != 'finished':
+                      raise RuntimeError(f'Codemagic build ended: {current}')
+                  print(f'Codemagic build finished: {build_id}')
+                  break
+              out.write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+              time.sleep(30)
+          else:
+              raise RuntimeError('Timed out waiting for Codemagic build')
+          PY
+
+      - name: Persist result
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          REQUEST_ID="$(python -c "import json; print(json.load(open('automation/app2-008-itpass-testflight-command.json'))['request_id'])")"
+          RESULT="automation/codemagic-results/${REQUEST_ID}.json"
+          if [ ! -f "$RESULT" ]; then exit 0; fi
+          git add "$RESULT"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Persist IT Passport TestFlight result ${REQUEST_ID}"
+          git pull --rebase origin main || true
+          git push origin HEAD:main
