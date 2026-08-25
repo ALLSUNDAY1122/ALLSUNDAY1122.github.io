@@ -44,6 +44,15 @@ final class AnalysisRealAudioParityAdjudicationReportValidatorTests: XCTestCase 
         ]
     }
 
+    private func readyRows() -> [AnalysisAnalysisParityRowAdjudication] {
+        [
+            row(id: "MOI-P009", domain: "tempo", metric: "tempo_rel_error", status: .readyForHQRowJudgment, observedPairCount: 1, issues: []),
+            row(id: "MOI-P011", domain: "key", metric: "weighted_key_score", status: .readyForHQRowJudgment, observedPairCount: 1, issues: []),
+            row(id: "MOI-P013", domain: "chord", metric: "root_weighted_accuracy", status: .readyForHQRowJudgment, observedPairCount: 1, issues: []),
+            row(id: "MOI-P016", domain: "structure", metric: "pairwise_f", status: .readyForHQRowJudgment, observedPairCount: 1, issues: [])
+        ]
+    }
+
     private func makeReport(
         status: AnalysisAnalysisParityAdjudicationStatus = .notReadyForHQJudgment,
         rows: [AnalysisAnalysisParityRowAdjudication]? = nil,
@@ -108,8 +117,19 @@ final class AnalysisRealAudioParityAdjudicationReportValidatorTests: XCTestCase 
         XCTAssertTrue(AnalysisAnalysisParityAdjudicationReportValidator.validate(decoded))
     }
 
+    func testGlobalGateFailureMayBeNotReadyEvenWhenEveryFeatureRowIsReady() throws {
+        let report = try makeReport(
+            status: .notReadyForHQJudgment,
+            rows: readyRows(),
+            issues: [.init(code: .rightsNotCleared, detail: "HQ rights approval is incomplete")],
+            referenceRoot: sha("4"),
+            differentialRoot: sha("5")
+        )
+        XCTAssertTrue(AnalysisAnalysisParityAdjudicationReportValidator.validate(report))
+    }
+
     func testForgedReadyWithRecomputedRootButIncompleteRowsIsRejected() throws {
-        let readyRows = [
+        let incompleteReadyRows = [
             row(id: "MOI-P009", domain: "tempo", metric: "tempo_rel_error", status: .readyForHQRowJudgment, observedPairCount: 0, issues: []),
             row(id: "MOI-P011", domain: "key", metric: "weighted_key_score", status: .readyForHQRowJudgment, observedPairCount: 0, issues: []),
             row(id: "MOI-P013", domain: "chord", metric: "root_weighted_accuracy", status: .readyForHQRowJudgment, observedPairCount: 0, issues: []),
@@ -117,7 +137,7 @@ final class AnalysisRealAudioParityAdjudicationReportValidatorTests: XCTestCase 
         ]
         let forged = try makeReport(
             status: .readyForHQJudgment,
-            rows: readyRows,
+            rows: incompleteReadyRows,
             issues: [],
             referenceRoot: sha("4"),
             differentialRoot: sha("5")
@@ -126,13 +146,7 @@ final class AnalysisRealAudioParityAdjudicationReportValidatorTests: XCTestCase 
     }
 
     func testReadyWithoutReferenceOrDifferentialRootIsRejected() throws {
-        let readyRows = [
-            row(id: "MOI-P009", domain: "tempo", metric: "tempo_rel_error", status: .readyForHQRowJudgment, observedPairCount: 1, issues: []),
-            row(id: "MOI-P011", domain: "key", metric: "weighted_key_score", status: .readyForHQRowJudgment, observedPairCount: 1, issues: []),
-            row(id: "MOI-P013", domain: "chord", metric: "root_weighted_accuracy", status: .readyForHQRowJudgment, observedPairCount: 1, issues: []),
-            row(id: "MOI-P016", domain: "structure", metric: "pairwise_f", status: .readyForHQRowJudgment, observedPairCount: 1, issues: [])
-        ]
-        let forged = try makeReport(status: .readyForHQJudgment, rows: readyRows, issues: [])
+        let forged = try makeReport(status: .readyForHQJudgment, rows: readyRows(), issues: [])
         XCTAssertFalse(AnalysisAnalysisParityAdjudicationReportValidator.validate(forged))
     }
 
