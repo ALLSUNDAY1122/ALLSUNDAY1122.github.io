@@ -1,15 +1,15 @@
 import Foundation
 
-private struct Journal: Codable {
+struct Journal: Codable {
     let projectUUID: UUID
     let createdAt: Date
 }
 
-private func id(_ value: Int) -> UUID {
+func id(_ value: Int) -> UUID {
     UUID(uuidString: String(format: "00000000-0000-0000-0000-%012X", value))!
 }
 
-private func write(_ journal: Journal, to directory: URL) throws {
+func write(_ journal: Journal, to directory: URL) throws {
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.sortedKeys]
     encoder.dateEncodingStrategy = .iso8601
@@ -19,7 +19,7 @@ private func write(_ journal: Journal, to directory: URL) throws {
     )
 }
 
-private func bounded(_ directory: URL, limit: Int) throws -> [Journal] {
+func bounded(_ directory: URL, limit: Int) throws -> [Journal] {
     let effective = min(max(limit, 1), 256)
     let keys: [URLResourceKey] = [.isRegularFileKey, .isSymbolicLinkKey]
     guard let enumerator = FileManager.default.enumerator(
