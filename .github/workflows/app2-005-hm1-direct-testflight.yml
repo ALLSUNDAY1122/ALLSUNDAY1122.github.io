@@ -1,0 +1,122 @@
+name: APP2-005 HM1 Direct TestFlight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-005-hm1-testflight-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-005-hm1-direct-testflight
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Start and monitor HM1 Codemagic TestFlight build
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, time, urllib.request, urllib.error
+          from pathlib import Path
+
+          command=json.loads(Path('automation/app2-005-hm1-testflight-command.json').read_text(encoding='utf-8'))
+          request_id=command['request_id']
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token:
+              raise SystemExit('CM_API_TOKEN missing')
+
+          app_id='6a769d81a1add9d06020b524'
+          workflow_id='health-manager-1-testflight'
+          branch='main'
+
+          def api(url, method='GET', payload=None):
+              body=None if payload is None else json.dumps(payload).encode('utf-8')
+              req=urllib.request.Request(url,data=body,method=method,headers={
+                  'x-auth-token':token,'Content-Type':'application/json','Accept':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode('utf-8')
+                      return r.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode('utf-8',errors='replace')
+                  raise RuntimeError(f'HTTP {e.code}: {raw[:1500]}')
+
+          _,started=api('https://api.codemagic.io/builds','POST',{
+              'appId':app_id,'workflowId':workflow_id,'branch':branch})
+          build_id=started.get('buildId') or started.get('id')
+          if not build_id:
+              raise RuntimeError(f'Codemagic did not return buildId: {started}')
+
+          result={'request_id':request_id,'app_id':app_id,'workflow_id':workflow_id,
+                  'branch':branch,'build_id':build_id,'status':'started','ok':False}
+          out=Path('automation/codemagic-results')/f'{request_id}.json'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('Codemagic HM1 build started:',build_id)
+
+          terminal={'finished','failed','canceled','timeout','skipped'}
+          deadline=time.time()+4200
+          while time.time()<deadline:
+              _,details=api(f'https://codemagic.io/api/v3/builds/{build_id}')
+              data=details.get('data') or details
+              current=data.get('status')
+              result['status']=current
+              result['build_details']={
+                  'status':current,
+                  'started_at':data.get('started_at') or data.get('startedAt'),
+                  'finished_at':data.get('finished_at') or data.get('finishedAt'),
+                  'branch':data.get('branch'),
+                  'commit':data.get('commit'),
+                  'app_store_connect_status':data.get('app_store_connect_status'),
+                  'artifacts':data.get('artifacts'),
+              }
+              out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+              if current in terminal:
+                  result['ok']=current=='finished'
+                  out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+                  if current!='finished':
+                      raise RuntimeError(f'Codemagic build ended: {current}')
+                  print('Codemagic HM1 build finished:',build_id)
+                  break
+              time.sleep(20)
+          else:
+              raise RuntimeError('Timed out waiting for Codemagic HM1 build')
+          PY
+
+      - name: Persist HM1 TestFlight result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          REQUEST_ID="$(python3 -c "import json; print(json.load(open('automation/app2-005-hm1-testflight-command.json'))['request_id'])")"
+          RESULT="automation/codemagic-results/${REQUEST_ID}.json"
+          if [ ! -f "$RESULT" ]; then exit 0; fi
+          cp "$RESULT" /tmp/hm1-result.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p automation/codemagic-results
+            cp /tmp/hm1-result.json "$RESULT"
+            git add "$RESULT"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "Persist HM1 TestFlight result ${REQUEST_ID}"
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1
