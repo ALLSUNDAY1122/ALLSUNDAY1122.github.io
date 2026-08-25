@@ -22,15 +22,16 @@ def authority(*caps):
 
 
 class MutationTopologyTests(unittest.TestCase):
-    def test_flock_backed_stores_pass_only_single_host(self):
-        for store_id in ("a16_reconnect_registry", "a23_variant_store", "a24_retention_store"):
+    def test_flock_backed_stores_pass_single_host(self):
+        for store_id in BUILTIN_STORE_PROFILES:
             with self.subTest(store_id=store_id):
                 self.assertEqual(assert_store_topology_safe(store_id, DeploymentTopology.SINGLE_HOST).state, "PASS")
 
-    def test_privacy_registry_fails_even_single_host_until_rmw_serialized(self):
+    def test_privacy_registry_is_single_host_safe_after_a28_rmw_serialization(self):
         d = assess_store_topology("a09_privacy_registry", "single_host")
-        self.assertEqual(d.state, "FAIL_CLOSED")
-        self.assertEqual(d.stable_error_code, "L1A27_SINGLE_HOST_SERIALIZATION_INSUFFICIENT")
+        self.assertEqual(d.state, "PASS")
+        self.assertIsNone(d.stable_error_code)
+        self.assertEqual(BUILTIN_STORE_PROFILES["a09_privacy_registry"].local_serialization, "posix_flock")
 
     def test_multi_host_without_authority_fails_closed(self):
         for store_id in BUILTIN_STORE_PROFILES:
@@ -67,9 +68,9 @@ class MutationTopologyTests(unittest.TestCase):
         d = assert_store_topology_safe("future_shared_store", "multi_host", authority=a, profile=profile)
         self.assertEqual(d.state, "PASS")
 
-    def test_snapshot_is_truthful_non_parity_and_exposes_unsafe_topology(self):
+    def test_snapshot_truthfully_passes_single_host_but_rejects_multi_host(self):
         one = lane1_topology_snapshot("single_host")
-        self.assertFalse(one["all_safe"])
+        self.assertTrue(one["all_safe"])
         self.assertEqual(one["parity_claim"], "NONE")
         many = lane1_topology_snapshot("multi_host")
         self.assertFalse(many["all_safe"])
