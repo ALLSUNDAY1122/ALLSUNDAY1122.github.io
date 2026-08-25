@@ -434,11 +434,12 @@ class PrivacyRetentionService:
 
     def _delete_local_artifacts(self, logical_job_id: str) -> None:
         target = self._artifact_directory(logical_job_id)
-        if target.exists():
-            try:
-                shutil.rmtree(target)
-            except OSError as exc:
-                raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True) from exc
+        try:
+            shutil.rmtree(target)
+        except FileNotFoundError:
+            pass
+        except OSError as exc:
+            raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True) from exc
         if target.exists():
             raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_UNCONFIRMED", retryable=True)
 
