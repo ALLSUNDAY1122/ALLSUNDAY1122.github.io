@@ -15,47 +15,39 @@
   "base_integration_sha": "1648a275833ad4e8aed3245347e6de231fd0487f",
   "branch_merge_base_sha": "7948195f1d94f28bc212c79b310fdaed00a4f580",
   "preserved_checkpoint_head": "d63cecbfa53007bf9593b628ae291702f496bb17",
-  "previous_autonomous_chain_head": "8546a2e3594f8950b7bd7e20ed76f871b5bff957",
-  "historical_commit_coverage": "AW01-AW33 and earlier Lane-3 work remain preserved by branch ancestry through 8546a2e3594f8950b7bd7e20ed76f871b5bff957. The commits list below records AW34 only.",
-  "head_sha": "faabf9df730eb52e8ec6e1becc62aa4a68601f12",
+  "previous_autonomous_chain_head": "faabf9df730eb52e8ec6e1becc62aa4a68601f12",
+  "historical_commit_coverage": "AW01-AW34 and earlier Lane-3 work remain preserved by branch ancestry through faabf9df730eb52e8ec6e1becc62aa4a68601f12. The commits list below records AW35 only.",
+  "head_sha": "b47c6cd08502821d5dace29e74eff9d91cfc090b",
   "commits": [
-    "cd4e866f23f7d78ff71bfe10e0e2295262fb88c9",
-    "3bbc278f6c72d0292e13fbd38871aaf5b70782a4",
-    "7fd6c40ec6006c7270fbeb6987ce473fc6eb2d6b",
-    "fd4f8f0076794997172f7e4caa03b525b5299d8c",
-    "3e8a180bfb7cbb7d8fea6bbe3f6dbc0f16ffe77f",
-    "752423ded3dff2c4a39a479c2f0bb3724da1d048",
-    "79a0b8b05c94efec2c59caec4b113bdffc2bb843",
-    "6c4e285e36bc5c38ae2e4a93489aee8e15ebf6c9",
-    "485b2a41387d94c3cccbf557c5bea50431a26d7f",
-    "2e4c74a98e37e5908b709d7fa214894fbacb8ec6",
-    "faabf9df730eb52e8ec6e1becc62aa4a68601f12"
+    "6cb46d38aa083beba40659b894349a0ba1e752be",
+    "ff10c70a16e337e59b78f0908b47a68afcf519cb",
+    "97f374adbfff3479c07caf967f2e19524166535b",
+    "d47d78d02502b1cd5bb2583af0134b1003ecf32d",
+    "b460dbcd9ba7789d4ba5a1ebf918126642640e4c",
+    "b47c6cd08502821d5dace29e74eff9d91cfc090b"
   ],
   "tests": [
-    "AW01-AW33 prior portable suites/evidence remain preserved by branch ancestry",
-    "L3-AW34 Swift 6.2.1 Linux virtual-time stress and optimizer-resistant benchmark compiled with strict-concurrency=complete, warnings-as-errors and -O",
-    "L3-AW34 starvation differential PASS: 1kHz one-second stream with 16ms window -> fixed-window 63 winners versus historical resettable debounce 1 execution only after stream end",
-    "L3-AW34 1000000-event 8kHz virtual stress PASS: 7813 window winners, 992187 pre-token supersessions, accounting loss 0, maximum first-intent-to-eligibility 16000000ns, final ticket preserved",
-    "L3-AW34 barrier model PASS: play/pause-style flush executes latest pending immediately; media/lifecycle-style supersede consumes no continuous token",
-    "L3-AW34 portable state-bookkeeping benchmark PASS: 20 x 1000000 operations, median 2.718ms, p95 3.093ms, max 3.187ms, checksum 7633173834630080814; excludes actor/Apple/device/audio latency",
-    "Repository L3_AW34_FixedWindowCoalescingSelfTest.swift authored against actual Lane3UnifiedProductionTransportAuthority for paced-stream anti-starvation, flush ordering and cancellation/reopen behavior; complete repository execution remains pending",
-    "Historical AW17 self-test/benchmark updated to fixed-window invariants instead of obsolete exactly-one-token burst assumptions"
+    "AW01-AW34 prior portable suites/evidence remain preserved by branch ancestry",
+    "L3-AW35 Swift 6.2.1 Linux self-test compiled with strict-concurrency=complete and warnings-as-errors: 50 executed seek observations plus one cross-generation stale rejection PASS; nearest-rank token p95 1940000ns and p99 1980000ns",
+    "L3-AW35 negative validation PASS: executed work crossing reconstruction generation, token-before-intent, audible-before-intent/token and seek-vs-loop target shape mismatch are all rejected from physical-complete evidence",
+    "L3-AW35 bounded ring PASS: capacity 16 retained IDs 84...99 after 100 appends with capacityDrops=84",
+    "L3-AW35 1000000-observation optimized stress PASS: retained 4096, capacityDrops=995904, retained stale-generation rejections=4, analyzer issues=0, token p99 2000000ns, audible p99 8000000ns",
+    "L3-AW35 optimized bookkeeping benchmark PASS: 20 x 1000000 appends, median 46.832ms, p95 57.979ms, max 72.568ms, checksum 59918060; excludes actor/Apple/device/audio latency"
   ],
   "evidence": [
-    "Playback/Sources/Lane3UnifiedProductionTransportAuthority.swift",
-    "Playback/Tests/L3_AW17_UnifiedTransportAuthoritySelfTest.swift",
-    "Playback/Tests/L3_AW17_UnifiedTransportAuthorityBenchmark.swift",
-    "Playback/Tests/L3_AW34_FixedWindowCoalescingSelfTest.swift",
-    "Playback/Tests/L3_AW34_FixedWindowCoalescingStress.swift",
-    "Playback/Tests/L3_AW34_FixedWindowCoalescingBenchmark.swift",
-    "Playback/benchmarks/L3-AW34_FIXED_WINDOW_COALESCING.md",
-    "Playback/benchmarks/L3-AW34_VALIDATION.json",
-    "validation_blob_sha:2eea152455dfe8bcf7cbe2a308b2b077d102da89"
+    "Playback/Sources/Lane3InteractiveContinuityEvidence.swift",
+    "Playback/Tests/L3_AW35_InteractiveContinuityEvidenceSelfTest.swift",
+    "Playback/Tests/L3_AW35_InteractiveContinuityEvidenceStress.swift",
+    "Playback/Tests/L3_AW35_InteractiveContinuityEvidenceBenchmark.swift",
+    "Playback/benchmarks/L3-AW35_INTERACTIVE_CONTINUITY_EVIDENCE.md",
+    "Playback/benchmarks/L3-AW35_VALIDATION.json",
+    "validation_blob_sha:12664dfeb4d1c8517812882d6c1658f5ef6a4c65"
   ],
   "known_gaps": [
+    "AW35 now provides a bounded machine-checkable seek/loop continuity contract across AW33 reconstruction generations and AW34 interaction semantics, but the selected iOS graph still must populate exact first-intent, token-issued, audible-result and applied-target observations on physical iPhone",
     "AW34 removes resettable-debounce starvation by bounding seek/loop continuous eligibility to the existing first-intent quiet-period window, but the numerical 16ms seek/loop value remains provisional until physical-iPhone latency/UX evidence",
     "AW34 actual paced actor regression is authored but complete selected SwiftPM/Xcode execution and physical-iPhone first-intent-to-token p50/p95/p99 remain unexecuted",
-    "Automatic repeated-loop seam envelope remains intentionally unimplemented: already-scheduled future AudioUnit gain events cannot yet be safely revoked solely by the Swift generation fence after seek/tempo/lifecycle invalidation, and timer-only arming would weaken AW31 exact-host scheduling",
+    "Automatic repeated-loop seam envelope remains intentionally unimplemented: already-scheduled future AudioUnit gain events cannot yet be safely revoked solely by the Swift generation fence after seek/tempo/lifecycle invalidation, and timer-only arming would weaken AW31 exact-host scheduling; graph/gain-stage generation replacement must itself be proven not to introduce an audible discontinuity before adoption",
     "AW33 selected-stack reconstruction still requires restoration from HQ/Shared/Lane-2 durable project/media state plus complete selected Xcode/iPhone graph rebuild evidence",
     "The provisional 75ms common-host restart lead and AW32 8ms fade-out/fade-in remain device-tunable only from physical-iPhone evidence",
     "AW27 AVAudioFile bounded source and AW26/AW30 long-track pipeline still require selected Apple runtime execution with representative codecs, corruption/truncation, rights-cleared >=30-minute source pairs and measured RSS/thermal/battery",
@@ -65,31 +57,32 @@
     "MOI-P006/P007/P008/P010/P012/P014/P015 remain MISSING"
   ],
   "hq_requests": [
-    "Preserve previous autonomous chain head 8546a2e3594f8950b7bd7e20ed76f871b5bff957 and all AW34 commits during semantic integration",
-    "Retain AW34 fixed-window semantics in Lane3UnifiedProductionTransportAuthority: first pending seek/loop opens the existing quiet-period deadline, replacements are latest-wins but must not extend that deadline",
-    "Do not add another resettable seek/loop debounce in Shared/App around the selected Lane-3 authority; doing so can reintroduce gesture-long starvation outside the lane and invalidate AW34 responsiveness evidence",
+    "Preserve AW01-AW34 chain through faabf9df730eb52e8ec6e1becc62aa4a68601f12 and all six AW35 commits during semantic integration",
+    "Use the AW35 continuity evidence contract for physical-iPhone continuous seek/loop runs: record first-intent, exact token-issued, audible-result, requested/applied target and reconstruction slot generation at intent/completion; do not substitute UI completion time when exact token time is unavailable",
+    "During at least one interactive physical-device run trigger AW33 selected-stack reconstruction and require retired-generation work to be explicitly rejected; an executed observation crossing slot generation is an evidence failure",
+    "Retain AW34 fixed-window semantics in Lane3UnifiedProductionTransportAuthority and do not add resettable seek/loop debounce in Shared/App",
     "For the selected AW31 tempo route keep the inner AW17 tempo quiet period zero; AW31 facade-side pre-boundary coalescing remains the only tempo debounce",
-    "Compile and execute the updated AW17/AW34 regressions in the complete selected Xcode/iOS source graph",
-    "On physical iPhone measure first-intent-to-token and first-intent-to-audible-result p50/p95/p99 for seek/loop under continuous dragging, verify latest-window target correctness, and tune the existing 16ms value only from that evidence",
-    "Do not add automatic repeated-loop future gain events until Lane 3 has a cancelable or generation-isolated exact-host automation strategy; stale AudioUnit automation after seek/tempo/lifecycle invalidation is unacceptable",
+    "Compile and execute updated AW17/AW34 plus AW35 evidence sources in the complete selected Xcode/iOS source graph",
+    "Tune the existing 16ms seek/loop value only from physical-iPhone first-intent-to-token and first-intent-to-audible p50/p95/p99 evidence",
+    "Do not add automatic repeated-loop future gain events until Lane 3 has cancelable or generation-isolated exact-host automation whose graph/gain-stage replacement is itself shown not to introduce an audible discontinuity",
     "Continue using Lane3SelectedTransportReconstructionSlot for AW33 poison recovery and rights-cleared real audio/current-Moises differential/listening before changing P006/P007/P008/P010/P012/P014/P015"
   ],
   "previous_autonomous_wave": {
-    "wave_id": "L3-AW33",
-    "result": "Added one-way selected-stack reconstruction recovery with exact ticket/generation-fenced replacement; physical Apple graph rebuild and durable cross-lane state restoration remained open."
+    "wave_id": "L3-AW34",
+    "result": "Changed continuous seek/loop coalescing to a fixed first-intent window, eliminating resettable-debounce starvation while preserving latest-wins and discrete/recovery ordering; physical Apple/device/audio evidence remained open."
   },
   "latest_autonomous_wave": {
-    "wave_id": "L3-AW34",
-    "goal": "Bound continuous seek/loop/tempo coalescing eligibility to the original configured quiet-period window so continuous interaction cannot postpone token dispatch indefinitely.",
-    "rationale": "Source audit found AW17 cancelled and restarted the family wake task for every replacement. Under a scrub/drag stream faster than the quiet period this resettable debounce could starve Playback generation creation until the user stopped, directly harming P007 seek responsiveness and P008 interactive loop editing. A fixed first-intent window removes starvation without inventing a new device-tuning threshold.",
-    "done_when": "The first pending continuous intent opens one deadline; replacements update the latest value without extending that deadline; predecessors remain superseded-before-token; play/pause flush and media/interruption/recovery supersede ordering remain intact; cancellation/recovery-block semantics remain intact; selected AW31 inner tempo quiet period remains zero; strict portable starvation differential/stress/benchmark and durable evidence pass; device/audio/Moises/PARITY claims remain disabled.",
-    "result": "COMPLETE_NON_PARITY: changed AW17 continuous coalescing from resettable debounce to a fixed first-intent window while preserving latest-wins and existing discrete/recovery ordering. Strict portable differential showed a 1kHz one-second stream produced 63 fixed-window winners versus one historical debounce execution after stream end. One-million-event stress produced 7813 winners plus 992187 pre-token supersessions with zero accounting loss and a 16ms maximum eligibility window. Optimizer-resistant bookkeeping benchmark 20 x 1000000: median 2.718ms, p95 3.093ms, max 3.187ms. Actual selected Xcode/iPhone actor latency, audible behavior, real audio/current-Moises differential and PARITY remain open."
+    "wave_id": "L3-AW35",
+    "goal": "Create a bounded, machine-checkable selected-stack continuity evidence contract that correlates AW34 interactive seek/loop responsiveness with AW33 reconstruction generations without duplicating Shared/Lane-2 persistence or claiming portable evidence as PARITY.",
+    "rationale": "The automatic repeated-loop seam candidate remains unsafe because already-scheduled future AudioUnit gain events cannot be revoked by the existing Swift generation fence and gain-stage graph replacement itself lacks audible-safety evidence. The next highest-value Lane-local gap was the absence of a rigorous physical-device continuity contract for first-intent-to-token/audible latency, requested-vs-applied target correctness and stale-generation rejection across selected-stack reconstruction.",
+    "done_when": "A bounded recorder retains seek/loop observations with reconstruction slot generation, transport ticket, Playback generation, first-intent/token/audible timestamps and requested/applied targets; invalid timing, target mismatch and executed cross-generation contamination fail closed; long runs remain memory bounded with explicit drop accounting; p50/p95/p99 are machine-computable; strict portable self-test/stress/benchmark and durable evidence pass; physical-iPhone/current-Moises/listening and PARITY remain disabled until real evidence is supplied.",
+    "result": "COMPLETE_NON_PARITY: added Lane3InteractiveContinuityEvidence with a bounded 4096-default ring and fail-closed analyzer. Strict portable self-test validated 50 executed seeks plus an AW33-style stale-generation rejection; negative cases reject cross-generation execution, reversed timestamps and target-shape mismatch. One-million-observation stress retained 4096 with 995904 explicitly counted drops and zero analyzer issues. Optimized 20 x 1000000 bookkeeping benchmark: median 46.832ms, p95 57.979ms, max 72.568ms, checksum 59918060. No selected Xcode/AVFAudio, physical iPhone, real audio, current-Moises differential, human listening or PARITY claim was made."
   },
   "next_wave_candidates": [
-    "generation-isolated exact-host automatic repeated-loop seam envelope only if future gain automation can be safely cancelled or isolated across seek/tempo/lifecycle generations without timer drift",
-    "selected-stack reconstruction plus fixed-window continuity evidence/runbook hardening that remains Lane-local and does not duplicate Shared/Lane-2 persistence contracts",
-    "device-evidence contract extension only if the first selected Apple compile/runtime run reveals a missing Lane-3 field for seek/loop eligibility, restart or seam artifact evidence"
+    "audit and harden late Task-cancellation retention in Lane3UnifiedProductionTransportAuthority if the cancellationBeforeEnqueue state can retain already-retired tickets under completion/cancellation races",
+    "generation-isolated exact-host automatic repeated-loop seam envelope only if future gain automation can be safely cancelled or isolated across seek/tempo/lifecycle generations and the isolation mechanism itself cannot introduce an audible graph discontinuity",
+    "selected Apple/iPhone instrumentation adapter for AW35 exact token/audible/applied-target fields when the complete selected Xcode runtime is available, without moving device/PARITY authority out of HQ"
   ],
-  "last_updated": "2026-08-24T15:17:56+09:00",
+  "last_updated": "2026-08-25T23:03:00+09:00",
   "writer_policy": "Only Moises-Worker-3 may update this status file; HQ remains semantic integration and PARITY authority."
 }
