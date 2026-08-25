@@ -17,13 +17,14 @@ from pathlib import Path
 from privacy_retention import AtomicPrivacyRegistry, PrivacyRetentionError
 
 SCHEMA_VERSION = 1
-TOOL_VERSION = "L1-A29-v1"
+TOOL_VERSION = "L1-A30-v1"
 EVIDENCE_STATE = "NON_PARITY_EVIDENCE_ONLY"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 _OBJECT_KINDS = {"asset", "task"}
 _SOURCE_KINDS = {"provider_api", "provider_console", "provider_support", "documented_expiry"}
 _OBSERVED_STATES = {"confirmed", "not_found", "present", "unknown", "expired"}
+_APPLICATION_STATES = {"observed_not_applied", "applied"}
 _ERASURE_TERMINAL = {"confirmed", "not_found", "expired"}
 _STATE_MAP = {
     "confirmed": "confirmed",
@@ -72,6 +73,23 @@ class ProviderDeletionObservation:
         return hashlib.sha256(
             json.dumps(asdict(self), sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
         ).hexdigest()
+
+
+def _observation_from_event(event: dict) -> ProviderDeletionObservation:
+    try:
+        observation = ProviderDeletionObservation(
+            logical_job_id=event["logical_job_id"],
+            object_kind=event["object_kind"],
+            object_id_hash=event["object_id_hash"],
+            observed_state=event["observed_state"],
+            source_kind=event["source_kind"],
+            authority_ref_sha256=event["authority_ref_sha256"],
+            observed_at_epoch=event["observed_at_epoch"],
+        )
+    except (KeyError, TypeError) as exc:
+        raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_LEDGER_EVENT_INVALID") from exc
+    observation.validate()
+    return observation
 
 
 class AtomicDeletionReconciliationLedger:
@@ -150,6 +168,14 @@ class AtomicDeletionReconciliationLedger:
         rows.sort(key=lambda row: (row["observed_at_epoch"], row["receipt_sha256"]))
         return tuple(rows)
 
+    def pending_observations(self, logical_job_id: str) -> tuple[ProviderDeletionObservation, ...]:
+        rows = self.events_for(logical_job_id)
+        return tuple(
+            _observation_from_event(row)
+            for row in rows
+            if row["application_state"] == "observed_not_applied"
+        )
+
     def _load_unlocked(self) -> dict:
         if not self.path.exists():
             return {"schema_version": SCHEMA_VERSION, "events": {}}
@@ -165,6 +191,11 @@ class AtomicDeletionReconciliationLedger:
         for receipt, event in events.items():
             if not isinstance(receipt, str) or not _SHA256.fullmatch(receipt) or not isinstance(event, dict):
                 raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_LEDGER_EVENT_INVALID")
+            if event.get("application_state") not in _APPLICATION_STATES:
+                raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_LEDGER_EVENT_INVALID")
+            observation = _observation_from_event(event)
+            if observation.receipt_sha256 != receipt:
+                raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_LEDGER_RECEIPT_MISMATCH")
         return payload
 
     def _save_unlocked(self, payload: dict) -> None:
@@ -176,10 +207,7 @@ class AtomicDeletionReconciliationLedger:
                 handle.flush()
                 os.fsync(handle.fileno())
             os.replace(tmp, self.path)
-            try:
-                fd = os.open(self.path.parent, os.O_RDONLY)
-            except OSError:
-                return
+            fd = os.open(self.path.parent, os.O_RDONLY)
             try:
                 os.fsync(fd)
             finally:
@@ -244,14 +272,49 @@ class ProviderDeletionReconciler:
             "parity_claim": "NONE",
         }
 
+    def resume_pending(self, logical_job_id: str) -> dict:
+        if not _JOB_ID.fullmatch(logical_job_id):
+            raise PrivacyRetentionError("SEP_PRIVACY_RECONCILE_JOB_ID_INVALID")
+        pending = self.ledger.pending_observations(logical_job_id)
+        applied: list[dict] = []
+        failures: list[dict] = []
+        for observation in pending:
+            try:
+                applied.append(self.apply(observation))
+            except PrivacyRetentionError as exc:
+                failures.append(
+                    {
+                        "object_kind": observation.object_kind,
+                        "observation_receipt_sha256": observation.receipt_sha256,
+                        "stable_error_code": exc.code,
+                    }
+                )
+        remaining = self.ledger.pending_observations(logical_job_id)
+        return {
+            "schema_version": SCHEMA_VERSION,
+            "tool_version": TOOL_VERSION,
+            "evidence_state": EVIDENCE_STATE,
+            "logical_job_id": logical_job_id,
+            "state": "PASS" if not failures and not remaining else "INCOMPLETE",
+            "attempted_count": len(pending),
+            "applied_count": len(applied),
+            "failure_count": len(failures),
+            "remaining_pending_count": len(remaining),
+            "failures": failures,
+            "parity_claim": "NONE",
+        }
+
     def snapshot(self, logical_job_id: str) -> dict:
         rows = self.ledger.events_for(logical_job_id)
+        pending_count = sum(row["application_state"] == "observed_not_applied" for row in rows)
         return {
             "schema_version": SCHEMA_VERSION,
             "tool_version": TOOL_VERSION,
             "evidence_state": EVIDENCE_STATE,
             "logical_job_id": logical_job_id,
             "observation_count": len(rows),
+            "pending_observation_count": pending_count,
+            "reconciliation_required": pending_count > 0,
             "observations": rows,
             "parity_claim": "NONE",
         }
