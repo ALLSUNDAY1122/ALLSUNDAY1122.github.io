@@ -33,6 +33,11 @@ public enum AnalysisPhysicalEvidenceBatchAssemblyValidator {
 
         let runIDs = value.runSummaries.map(\.runID)
         let executionIDs = value.runSummaries.map(\.workloadExecutionID)
+        let summariesAreValid = value.runSummaries.allSatisfy { summary in
+            AnalysisPhysicalEvidenceW39BatchLoader.safeComponent(summary.runID)
+                && AnalysisPhysicalEvidenceW39BatchLoader.safeComponent(summary.workloadExecutionID)
+                && AnalysisPhysicalEvidenceW39BatchLoader.isSHA256(summary.w39BundleRootSHA256)
+        }
         guard !runIDs.isEmpty,
               Set(runIDs).count == runIDs.count,
               Set(executionIDs).count == executionIDs.count,
@@ -42,11 +47,7 @@ public enum AnalysisPhysicalEvidenceBatchAssemblyValidator {
               value.w38Policy.requiredRunIDs.count == runIDs.count,
               value.w27Report.runCount == runIDs.count,
               value.w38Report.runCount == runIDs.count,
-              value.runSummaries.allSatisfy {
-                  AnalysisPhysicalEvidenceW39BatchLoader.safeComponent($0.runID)
-                      && AnalysisPhysicalEvidenceW39BatchLoader.safeComponent($0.workloadExecutionID)
-                      && AnalysisPhysicalEvidenceW39BatchLoader.isSHA256($0.w39BundleRootSHA256)
-              } else {
+              summariesAreValid else {
             return false
         }
 
