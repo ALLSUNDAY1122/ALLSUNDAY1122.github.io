@@ -1,0 +1,70 @@
+name: Moises HQ Lane1 Exact Audit
+
+on:
+  push:
+    branches:
+      - tech/moises-separation
+    paths:
+      - '.github/workflows/moises-hq-lane1-exact-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  LANE1_EXPECTED_HEAD: e407d1819da1cff3862db1f666b7b1ebb3489612
+
+jobs:
+  lane1-a26-exact-checkout-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact Worker 1 commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.LANE1_EXPECTED_HEAD }}
+          fetch-depth: 1
+          clean: true
+
+      - name: Verify checkout identity and cleanliness
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$LANE1_EXPECTED_HEAD"
+          test -z "$(git status --porcelain=v1)"
+          echo "Exact Worker 1 HEAD: $actual"
+
+      - name: Install audit dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check jsonschema
+
+      - name: Run A26 exact dependency/provenance audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tech-assets/moises-audio/Separation/Evaluation/lane1_dependency_audit.py \
+            --audio-root tech-assets/moises-audio \
+            --expected-git-head "$LANE1_EXPECTED_HEAD" \
+            --output /tmp/l1-a26-exact-audit.json
+          cat /tmp/l1-a26-exact-audit.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('/tmp/l1-a26-exact-audit.json').read_text())
+          assert report['overall_state'] == 'PASS', report
+          assert report['git_head_binding']['state'] == 'PASS', report['git_head_binding']
+          assert report['owned_source_snapshot']['state'] == 'PASS', report['owned_source_snapshot']
+          print('L1_A26_EXACT_AUDIT_PASS')
+          PY
+
+      - name: Upload exact audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: l1-a26-exact-audit-${{ env.LANE1_EXPECTED_HEAD }}
+          path: /tmp/l1-a26-exact-audit.json
+          if-no-files-found: error
+          retention-days: 30
