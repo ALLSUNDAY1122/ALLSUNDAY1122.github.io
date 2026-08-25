@@ -116,6 +116,8 @@ let package = Package(
                 "Analysis/AnalysisPhysicalEvidenceAnchorLedgerCheckpoint.swift",
                 "Analysis/AnalysisP021PhysicalEvidenceAdjudication.swift",
                 "Analysis/AnalysisP021PhysicalEvidenceAdjudicationValidation.swift",
+                "Analysis/AnalysisRealAudioParityAdjudication.swift",
+                "Analysis/AnalysisRealAudioParityAdjudicationValidation.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
