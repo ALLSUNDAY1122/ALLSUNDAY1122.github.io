@@ -158,4 +158,43 @@ final class GoldenThresholdCalibrationTests: XCTestCase {
         XCTAssertEqual(assessment.verdict, GoldenThresholdCalibration.decisionInvalid)
         XCTAssertGreaterThanOrEqual(assessment.blockingReasons.count, 3)
     }
+
+    func testCalibrationAcceptedCountsRespectNegativeCorpusRejection() throws {
+        let corpusMatches = [
+            ReferenceNearestMatch(
+                outputIndex: 0,
+                referenceIndex: 7,
+                distance: 0.10,
+                secondBestDistance: 0.40,
+                canonicalReferenceIndex: 0,
+                referenceCorpusPageCount: 2,
+                referenceCorpusGroupID: "g1",
+                nearestNegativeReferenceIndex: 1,
+                nearestNegativeDistance: 0.08
+            ),
+            ReferenceNearestMatch(
+                outputIndex: 1,
+                referenceIndex: 6,
+                distance: 0.12,
+                secondBestDistance: 0.41,
+                canonicalReferenceIndex: 1,
+                referenceCorpusPageCount: 2,
+                referenceCorpusGroupID: "g2",
+                nearestNegativeReferenceIndex: 2,
+                nearestNegativeDistance: 0.50
+            )
+        ]
+        let result = try GoldenThresholdCalibration.analyze(
+            executionReportSHA256: executionSHA,
+            bookID: "golden-v3",
+            observedVideoSHA256: String(repeating: "c", count: 64),
+            observedPDFSHA256: String(repeating: "d", count: 64),
+            referencePageCount: 28,
+            nearestMatches: corpusMatches
+        )
+        let sweepAt012 = try XCTUnwrap(result.thresholdSweep.first { abs($0.threshold - 0.12) < 0.000001 })
+        XCTAssertEqual(sweepAt012.acceptedOutputCount, 1)
+        XCTAssertEqual(sweepAt012.metrics.unmatchedOutputCount, 1)
+        XCTAssertEqual(sweepAt012.metrics.matchedReferencePageCount, 1)
+    }
 }

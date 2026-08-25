@@ -104,12 +104,17 @@ public enum GoldenThresholdCalibration {
         let uniqueDistances = Array(Set(nearestValues)).sorted()
         let gaps = zip(uniqueDistances, uniqueDistances.dropFirst()).map { lower, upper in
             let gap = upper - lower
+            let metricsAtLower = ReferenceAlignment.evaluate(
+                referencePageCount: referencePageCount,
+                nearestMatches: nearestMatches,
+                threshold: lower
+            )
             return ReferenceDistanceGap(
                 lowerDistance: lower,
                 upperDistance: upper,
                 gap: gap,
                 midpoint: lower + gap / 2,
-                acceptedOutputCountBelowGap: nearestValues.filter { $0 <= lower }.count
+                acceptedOutputCountBelowGap: max(0, metricsAtLower.outputPageCount - metricsAtLower.unmatchedOutputCount)
             )
         }
         .sorted {
@@ -129,7 +134,7 @@ public enum GoldenThresholdCalibration {
             )
             return ReferenceThresholdSweepPoint(
                 threshold: threshold,
-                acceptedOutputCount: nearestMatches.filter { $0.distance <= threshold }.count,
+                acceptedOutputCount: max(0, metrics.outputPageCount - metrics.unmatchedOutputCount),
                 metrics: metrics
             )
         }

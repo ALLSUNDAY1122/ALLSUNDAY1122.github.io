@@ -2,15 +2,40 @@ import Foundation
 
 public struct ReferenceNearestMatch: Codable, Sendable, Equatable {
     public let outputIndex: Int
+    /// Raw zero-based reference-PDF page index used by the local review bundle.
     public let referenceIndex: Int
     public let distance: Float
     public let secondBestDistance: Float?
+    /// Canonical zero-based corpus group index when a reference-corpus manifest is active.
+    public let canonicalReferenceIndex: Int?
+    public let referenceCorpusPageCount: Int?
+    public let referenceCorpusGroupID: String?
+    public let nearestNegativeReferenceIndex: Int?
+    public let nearestNegativeDistance: Float?
+    public let referenceCorpusManifestSHA256: String?
 
-    public init(outputIndex: Int, referenceIndex: Int, distance: Float, secondBestDistance: Float? = nil) {
+    public init(
+        outputIndex: Int,
+        referenceIndex: Int,
+        distance: Float,
+        secondBestDistance: Float? = nil,
+        canonicalReferenceIndex: Int? = nil,
+        referenceCorpusPageCount: Int? = nil,
+        referenceCorpusGroupID: String? = nil,
+        nearestNegativeReferenceIndex: Int? = nil,
+        nearestNegativeDistance: Float? = nil,
+        referenceCorpusManifestSHA256: String? = nil
+    ) {
         self.outputIndex = outputIndex
         self.referenceIndex = referenceIndex
         self.distance = distance
         self.secondBestDistance = secondBestDistance
+        self.canonicalReferenceIndex = canonicalReferenceIndex
+        self.referenceCorpusPageCount = referenceCorpusPageCount
+        self.referenceCorpusGroupID = referenceCorpusGroupID
+        self.nearestNegativeReferenceIndex = nearestNegativeReferenceIndex
+        self.nearestNegativeDistance = nearestNegativeDistance
+        self.referenceCorpusManifestSHA256 = referenceCorpusManifestSHA256
     }
 }
 
@@ -54,24 +79,45 @@ public enum ReferenceAlignment {
         nearestMatches: [ReferenceNearestMatch],
         threshold: Float
     ) -> ReferenceAlignmentMetrics {
-        let referenceCount = max(0, referencePageCount)
+        let declaredCorpusCounts = Set(nearestMatches.compactMap(\.referenceCorpusPageCount))
+        let referenceCount: Int
+        if declaredCorpusCounts.count == 1, let corpusCount = declaredCorpusCounts.first {
+            referenceCount = max(0, corpusCount)
+        } else {
+            // Inconsistent corpus metadata fails closed by retaining the raw
+            // reference count rather than silently shrinking the denominator.
+            referenceCount = max(0, referencePageCount)
+        }
+
         let valid = nearestMatches
-            .filter { $0.referenceIndex >= 0 && $0.referenceIndex < referenceCount && $0.distance <= threshold }
+            .filter { match in
+                let canonicalIndex = match.canonicalReferenceIndex ?? match.referenceIndex
+                guard canonicalIndex >= 0,
+                      canonicalIndex < referenceCount,
+                      match.distance <= threshold else { return false }
+                if let negativeDistance = match.nearestNegativeDistance,
+                   negativeDistance <= threshold,
+                   negativeDistance <= match.distance {
+                    return false
+                }
+                return true
+            }
             .sorted { $0.outputIndex < $1.outputIndex }
 
-        let uniqueReferences = Set(valid.map(\.referenceIndex))
+        let canonicalIndices = valid.map { $0.canonicalReferenceIndex ?? $0.referenceIndex }
+        let uniqueReferences = Set(canonicalIndices)
         let pageRecall = referenceCount == 0 ? 1 : Double(uniqueReferences.count) / Double(referenceCount)
         let unmatched = max(0, nearestMatches.count - valid.count)
 
         var counts: [Int: Int] = [:]
-        valid.forEach { counts[$0.referenceIndex, default: 0] += 1 }
+        canonicalIndices.forEach { counts[$0, default: 0] += 1 }
         let duplicateExtra = counts.values.reduce(0) { $0 + max(0, $1 - 1) }
         let duplicateRate = nearestMatches.isEmpty ? 0 : Double(duplicateExtra) / Double(nearestMatches.count)
 
         var seen = Set<Int>()
-        let uniqueSequence = valid.compactMap { match -> Int? in
-            guard seen.insert(match.referenceIndex).inserted else { return nil }
-            return match.referenceIndex
+        let uniqueSequence = canonicalIndices.compactMap { canonicalIndex -> Int? in
+            guard seen.insert(canonicalIndex).inserted else { return nil }
+            return canonicalIndex
         }
         let orderingAccuracy: Double
         if uniqueSequence.isEmpty {

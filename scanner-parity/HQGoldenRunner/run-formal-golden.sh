@@ -11,6 +11,7 @@ workspace=""
 book_id="golden-v2-current-project-20260823"
 expected_video_sha=""
 expected_pdf_sha=""
+reference_corpus_manifest=""
 
 index=0
 while (( index < ${#ARGS[@]} )); do
@@ -27,6 +28,7 @@ while (( index < ${#ARGS[@]} )); do
     --book-id) book_id="$value" ;;
     --expected-video-sha) expected_video_sha="$value" ;;
     --expected-pdf-sha) expected_pdf_sha="$value" ;;
+    --reference-corpus-manifest) reference_corpus_manifest="$value" ;;
   esac
   index=$((index + 2))
 done
@@ -34,6 +36,19 @@ done
 if [[ -z "$video" || -z "$pdf" || -z "$workspace" ]]; then
   echo "Formal Golden launcher requires --video, --pdf, and explicit --workspace." >&2
   exit 2
+fi
+
+if [[ -n "$reference_corpus_manifest" ]]; then
+  if [[ ! -f "$reference_corpus_manifest" ]]; then
+    echo "Configured reference-corpus manifest is missing: $reference_corpus_manifest" >&2
+    exit 2
+  fi
+  export SCANNER_GOLDEN_REFERENCE_MANIFEST="$reference_corpus_manifest"
+else
+  # Generic/v2 executions must not inherit a stale corpus binding from a
+  # parent shell. Corpus use is explicit per invocation and therefore
+  # fail-safe across repeated HQ runs in the same terminal/session.
+  unset SCANNER_GOLDEN_REFERENCE_MANIFEST || true
 fi
 
 stderr_log="$(mktemp "${TMPDIR:-/tmp}/scanner-hq-golden-stderr.XXXXXX")"
