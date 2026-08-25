@@ -1,8 +1,184 @@
 {
-  "request_id": "app2-005-hm1-submission-preflight-20260825-2042",
-  "completed_at": "2026-08-25T11:44:16.061140+00:00",
-  "query_exit_code": 1,
-  "query_status": "failed",
-  "results": [],
-  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 482, in <module>\n    main()\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 443, in main\n    command = load_command(Path(args.command))\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 181, in load_command\n    \"requests\": [validate_request(item, i) for i, item in enumerate(requests)],\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 77, in validate_request\n    return {\"label\": label, \"method\": \"GET\", \"path\": validate_path(item.get(\"path\"))}\n                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 41, in validate_path\n    raise ValueError(\"Only /v1/ App Store Connect API paths are allowed.\")\nValueError: Only /v1/ App Store Connect API paths are allowed.\n"
+  "request_id": "app2-005-hm1-submission-preflight-v1-20260825-2044",
+  "completed_at": "2026-08-25T11:45:26.272270+00:00",
+  "query_exit_code": 0,
+  "query_status": "success",
+  "results": [
+    {
+      "label": "app",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "6799581662",
+          "type": "apps",
+          "attributes": {
+            "name": "第一種衛生管理者｜学びスプリント",
+            "bundleId": "jp.allsunday1122.healthmanager1",
+            "sku": "health_manager_1",
+            "primaryLocale": "ja"
+          }
+        }
+      ]
+    },
+    {
+      "label": "versions",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "b22c4518-3724-42a1-87d3-99c2d9d2b7d2",
+          "type": "appStoreVersions",
+          "attributes": {
+            "platform": "IOS"
+          }
+        }
+      ]
+    },
+    {
+      "label": "app-infos",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "06148bca-02d6-40d1-beaf-9f990c698999",
+          "type": "appInfos",
+          "attributes": {
+            "state": "PREPARE_FOR_SUBMISSION"
+          }
+        }
+      ]
+    },
+    {
+      "label": "builds",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "318d4af2-8a97-4cb2-82bf-5943ee968a94",
+          "type": "builds",
+          "attributes": {
+            "version": "2026081801",
+            "uploadedDate": "2026-08-18T05:28:06-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-16T04:28:06-08:00",
+            "minOsVersion": "16.0"
+          }
+        },
+        {
+          "id": "b0e4539e-3323-412b-bcb6-97d0cbfa8558",
+          "type": "builds",
+          "attributes": {
+            "version": "2026081903",
+            "uploadedDate": "2026-08-22T04:09:17-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-20T03:09:17-08:00",
+            "minOsVersion": "16.0"
+          }
+        },
+        {
+          "id": "533b9229-3e4e-41df-b1ae-4e39e3333911",
+          "type": "builds",
+          "attributes": {
+            "version": "2026081901",
+            "uploadedDate": "2026-08-18T20:28:42-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-16T19:28:42-08:00",
+            "minOsVersion": "16.0"
+          }
+        },
+        {
+          "id": "adfe8270-b92a-41bd-9d89-0b42b359a4d1",
+          "type": "builds",
+          "attributes": {
+            "version": "2026082501",
+            "uploadedDate": "2026-08-25T03:50:10-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-23T02:50:10-08:00",
+            "minOsVersion": "16.0"
+          }
+        },
+        {
+          "id": "455ceef3-1116-4913-800c-0f889c925623",
+          "type": "builds",
+          "attributes": {
+            "version": "2026082301",
+            "uploadedDate": "2026-08-23T05:40:43-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-21T04:40:43-08:00",
+            "minOsVersion": "16.0"
+          }
+        },
+        {
+          "id": "1642cafd-1aa9-4038-b7d1-946e60155cf5",
+          "type": "builds",
+          "attributes": {
+            "version": "1",
+            "uploadedDate": "2026-08-17T00:10:25-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-14T23:10:25-08:00",
+            "minOsVersion": "16.0"
+          }
+        }
+      ]
+    },
+    {
+      "label": "beta-review-detail",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "6799581662",
+          "type": "betaAppReviewDetails",
+          "attributes": {}
+        }
+      ]
+    },
+    {
+      "label": "monthly",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "6804373671",
+          "type": "subscriptions",
+          "attributes": {
+            "name": "第一種衛生管理者 プレミアム月額",
+            "productId": "jp.allsunday1122.healthmanager1.monthly",
+            "state": "MISSING_METADATA",
+            "subscriptionPeriod": "ONE_MONTH"
+          },
+          "relationships": {
+            "subscriptionLocalizations": [
+              {
+                "type": "subscriptionLocalizations",
+                "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488"
+              }
+            ],
+            "subscriptionAvailability": {
+              "type": "subscriptionAvailabilities",
+              "id": "6804373671"
+            }
+          }
+        }
+      ],
+      "included": [
+        {
+          "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488",
+          "type": "subscriptionLocalizations",
+          "attributes": {
+            "name": "第一種衛生管理者 プレミアム月額",
+            "state": "PREPARE_FOR_SUBMISSION",
+            "locale": "ja",
+            "description": "追加問題・弱点学習などプレミアム機能を月額で利用できます。"
+          }
+        },
+        {
+          "id": "6804373671",
+          "type": "subscriptionAvailabilities",
+          "attributes": {}
+        }
+      ]
+    }
+  ]
 }
