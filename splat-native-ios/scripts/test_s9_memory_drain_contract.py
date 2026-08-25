@@ -6,6 +6,7 @@ trainer = (root / "SplatNative" / "SH3PreservingGaussianTrainer.swift").read_tex
 policy = (root / "SplatNative" / "SplatReconstructionPolicy.swift").read_text(encoding="utf-8")
 guard = (root / "SplatNative" / "SplatResourceGuard.swift").read_text(encoding="utf-8")
 scan_model = (root / "SplatNative" / "ScanModel.swift").read_text(encoding="utf-8")
+root_view = (root / "SplatNative" / "RootScanView.swift").read_text(encoding="utf-8")
 
 required_trainer = [
     "applyThermalPacingBeforeStep()",
@@ -28,6 +29,20 @@ assert pool < step < sync < return_stats
 assert "iteration % 20 == 0" in scan_model
 assert "passResourceGuard.evaluate(splatCount: stats.splatCount)" in scan_model
 
+# The live ARKit/SceneKit renderer is useful for ready/capture/resume, but must not stay resident
+# through reconstruction, finished, or failure screens.
+for token in [
+    "private var needsCaptureRenderer: Bool",
+    "case .ready, .capturing, .captured:",
+    "case .training, .finished, .failed:",
+    "if needsCaptureRenderer {",
+    "static func dismantleUIView",
+    "uiView.session.pause()",
+    "uiView.scene = SCNScene()",
+    "coordinator.prepareForDismantle()",
+]:
+    assert token in root_view, f"missing S9 capture-renderer teardown invariant: {token}"
+
 # Build 6 quality and safety contracts must not be weakened to get past memory pressure.
 for token in [
     "static let standardIterations = 7_000",
@@ -44,4 +59,4 @@ for token in [
     assert token in guard, f"resource safety limit changed: {token}"
 
 assert "jpegData(compressionQuality: 0.90)" in scan_model, "capture JPEG quality changed"
-print("PASS: S9 per-step drain aligns with resource sampling and preserves quality/safety limits")
+print("PASS: S9 drains training temporaries, tears down the capture renderer, and preserves quality/safety limits")
