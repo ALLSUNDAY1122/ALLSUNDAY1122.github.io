@@ -1,9 +1,9 @@
 import Foundation
 
-/// AW41 compatibility bridge between the canonical AW29 inventory contract and the AW40
-/// segmented runtime. It deliberately preserves the existing two-phase cursor contract:
-/// prepare does not mutate traversal state, and persistTraversal commits it only after the
-/// caller has applied the returned slice successfully.
+/// AW41 compatibility bridge between the canonical AW29 inventory contract and the segmented
+/// runtime. AW43 routes candidate preparation through the fully streaming traversal reader while
+/// preserving the existing two-phase cursor contract. AW44 routes steady-state mutation through
+/// the bounded segmented mutation writer so committed shards are never materialized as one array.
 public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
     private struct CursorRecord: Codable, Sendable {
         static let schemaVersion = 1
@@ -26,11 +26,11 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
     }
 
     public func registerManaged(relativePaths: [String]) throws {
-        try runtime.upsertManaged(relativePaths: relativePaths)
+        try boundedMutation.upsertManaged(relativePaths: relativePaths)
     }
 
     public func remove(relativePaths: [String]) throws {
-        try runtime.removeManaged(relativePaths: relativePaths)
+        try boundedMutation.removeManaged(relativePaths: relativePaths)
     }
 
     public func prepareOrphanCandidateSlice(
@@ -40,7 +40,7 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
         shardVisitLimit: Int = Lane2ManagedArtifactInventory.defaultShardVisitLimit
     ) throws -> Lane2ManagedArtifactInventorySlice {
         let prior = try loadTraversal()
-        return try runtime.prepareOrphanCandidateSlice(
+        return try streamingTraversal.prepareOrphanCandidateSlice(
             priorTraversal: prior,
             gracePeriod: gracePeriod,
             now: now,
@@ -50,8 +50,7 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
     }
 
     public func persistTraversal(after slice: Lane2ManagedArtifactInventorySlice) throws {
-        let currentTraversal = try loadTraversal()
-        guard slice.priorTraversal == currentTraversal else {
+        guard slice.priorTraversal == (try loadTraversal()) else {
             throw Lane2ManagedArtifactInventoryFailure.corruptTraversalCursor
         }
         try fileManager.createDirectory(
@@ -100,8 +99,16 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
         }
     }
 
-    private var runtime: Lane2ManagedArtifactSegmentedRuntime {
-        Lane2ManagedArtifactSegmentedRuntime(
+    private var boundedMutation: Lane2ManagedArtifactSegmentedBoundedMutation {
+        Lane2ManagedArtifactSegmentedBoundedMutation(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName,
+            fileManager: fileManager
+        )
+    }
+
+    private var streamingTraversal: Lane2ManagedArtifactSegmentedStreamingTraversal {
+        Lane2ManagedArtifactSegmentedStreamingTraversal(
             rootURL: rootURL,
             recoveryDirectoryName: recoveryDirectoryName,
             fileManager: fileManager

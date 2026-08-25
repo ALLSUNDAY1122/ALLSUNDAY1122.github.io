@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW42",
+  "title": "Repeated Loop Seam Future-Automation Safety Gate",
+  "result": "COMPLETE_NON_PARITY",
+  "canonical_audit": {
+    "integration_epoch_observed": 30,
+    "assignment_epoch": 2,
+    "planning_revision": 4,
+    "epoch_contract_sha": "c9e8ec5d191108db6eb20fbd40db0dab3c46b725",
+    "ownership_changed": false,
+    "rebase_required": false,
+    "worker_branch_base_head": "9809b128ab9a5d31f5e81c1cbf328e939767f2b4",
+    "hq_integrated_lane3_through": "L3-AW41",
+    "parity_promotions_observed": 0
+  },
+  "selected_apple_audit": {
+    "boundary_backend_blob_sha": "9782caae4e4b7fc67bba7e9e94009ac5bf1c038b",
+    "transactional_gain_stage_blob_sha": "d0cf6f8d6e5dc8f15b5591ca56b55167c0d44bbc",
+    "stem_gain_stage_blob_sha": "58d0bb44fcd35475970a5335fba4df1ba3993eff",
+    "boundary_planner_blob_sha": "3e9aa2bd43201814124ac8e603dfe343a4a41cca",
+    "selected_future_sample_time_scheduling_implemented": false,
+    "selected_per_event_cancellation_exposed": false,
+    "selected_generation_isolated_future_queue_exposed": false,
+    "automatic_repeated_loop_future_events_added": false,
+    "existing_aw32_interactive_envelope_changed": false
+  },
+  "implementation": {
+    "fail_closed_capability_evaluator": true,
+    "generation_stamped_authorization_gate": true,
+    "current_selected_apple_descriptor_blocked": true,
+    "requires_exact_future_scheduling": true,
+    "requires_revocation_or_generation_isolation": true,
+    "requires_stale_event_proof": true,
+    "requires_seek_invalidation": true,
+    "requires_tempo_invalidation": true,
+    "requires_lifecycle_invalidation": true,
+    "requires_revocation_path_audibility": true,
+    "requires_selected_integration_execution": true,
+    "requires_physical_device_audibility": true,
+    "stale_authorization_rejected_after_invalidation": true,
+    "generation_overflow_poisoned": true,
+    "counter_saturation": true,
+    "pending_automation_queue_added": false,
+    "shared_app_modified": false,
+    "parity_matrix_modified": false,
+    "parity_promotion_allowed": false
+  },
+  "portable_environment": {
+    "swift": "6.2.1",
+    "platform": "linux-x86_64",
+    "swift_language_mode": 6,
+    "strict_concurrency_complete": true,
+    "warnings_as_errors": true
+  },
+  "portable_self_test": {
+    "result": "PASS",
+    "selected_descriptor_future_automation_allowed": false,
+    "selected_descriptor_authorizations_issued": 0,
+    "fully_proven_synthetic_descriptor_authorization_tested": true,
+    "stale_generation_authorization_rejected": true,
+    "render_reset_without_stale_event_proof_rejected": true,
+    "render_reset_without_audibility_proof_rejected": true,
+    "generation_overflow_poison_verified": true,
+    "initial_compile_exclusivity_issue_found_and_fixed": true
+  },
+  "portable_stress": {
+    "result": "PASS",
+    "authorization_attempts": 1000000,
+    "blocked_attempts": 1000000,
+    "authorizations_issued": 0,
+    "final_generation": 0,
+    "counter_overflowed": false,
+    "gate_poisoned": false,
+    "approximate_wall_seconds": 0.06,
+    "approximate_process_rss_kb": 16412,
+    "scope": "portable process observation only"
+  },
+  "portable_benchmark": {
+    "result": "PASS",
+    "runs": 20,
+    "operations_per_run": 1000000,
+    "median_nanoseconds": 55238232,
+    "p95_nanoseconds": 59777014,
+    "max_nanoseconds": 62127755,
+    "checksum": 20000000,
+    "scope": "portable fail-closed authorization bookkeeping only"
+  },
+  "selected_repository_tests": {
+    "portable_selected_descriptor_contract_executed": true,
+    "avfaudio_extension_authored": true,
+    "complete_selected_swiftpm_execution": false,
+    "xcode_execution": false,
+    "avfaudio_runtime_execution": false
+  },
+  "external_gates": {
+    "physical_iphone_executed": false,
+    "future_parameter_event_revocation_validated": false,
+    "gain_stage_reset_or_replacement_audibly_validated": false,
+    "rights_cleared_real_audio_executed": false,
+    "current_moises_differential_executed": false,
+    "human_listening_executed": false,
+    "parity_promotion_allowed": false
+  },
+  "parity_rows_unchanged": [
+    "MOI-P006",
+    "MOI-P007",
+    "MOI-P008",
+    "MOI-P010",
+    "MOI-P012",
+    "MOI-P014",
+    "MOI-P015"
+  ]
+}
