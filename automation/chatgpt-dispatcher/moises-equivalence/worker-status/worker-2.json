@@ -11,15 +11,14 @@
   "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "4761ae84ede5fae29766023f9d7dc8c5c4afe9a1",
-  "prior_status_blob_sha": "08dc3c049330f7f5fb72ff9a80a24901690c12bc",
-  "historical_commit_ledger_through": "488df67efb8f49c59e11814e706c912deb30e560",
+  "head_sha": "06032f2ff7664b38681cb8e5e46c46ff6613bff3",
+  "prior_status_blob_sha": "471e84001f619f77e5bdc4ec8863571070d5491a",
+  "historical_commit_ledger_through": "4761ae84ede5fae29766023f9d7dc8c5c4afe9a1",
   "commits": [
-    "7514a01d07c90f1318d910869e9df58fce6399c6",
-    "50170f8f7cce650c206981ca321e60b3577e8efa",
-    "23f0e46ed2cb90880037c2699c92fc20bc9ad719",
-    "82c8049330b35cdcd4246979119b19aece76a2b4",
-    "4761ae84ede5fae29766023f9d7dc8c5c4afe9a1"
+    "5e7840541a052b623cb2253bd963b261932ba068",
+    "887b470d6c1f0c56f27e9b2a9379ea9b9bbf6f15",
+    "2c5a75448c22b8dd7dc9aa20f29b2812a2e4b100",
+    "06032f2ff7664b38681cb8e5e46c46ff6613bff3"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -28,51 +27,50 @@
     "bf4b7a552cfbe025608079f7fe11093af7526b0b"
   ],
   "tests": [
-    "L2-M01..L2-AW38 validation remains durable in Git history and prior status blob 08dc3c049330f7f5fb72ff9a80a24901690c12bc.",
-    "L2-AW39 ManagedArtifactSegmentedMigrationTests.swift covers 1300-entry segmentation, retained legacy rollback bytes, idempotent committed migration, corrupt-legacy fail-closed behavior and stale-generation cleanup that preserves the committed generation.",
-    "L2-AW39 portable interruption self-check compiled with Swift strict-concurrency / warnings-as-errors and executed => L2_AW39_SELF_TEST_PASS entries=1300 segments=3 legacy_preserved=true precommit_manifest_absent=true bounded=true."
+    "L2-M01..L2-AW39 validation remains durable in Git history and prior status blob 471e84001f619f77e5bdc4ec8863571070d5491a.",
+    "L2-AW40 ManagedArtifactSegmentedRuntimeTests.swift covers legacy-to-segmented authority activation, retained legacy rollback bytes, zero-entry committed authority after final removal, and corrupt-manifest fail-closed behavior.",
+    "L2-AW40 exact runtime source typechecked with Swift 6.2.1 warnings-as-errors / strict concurrency => L2_AW40_RUNTIME_TYPECHECK_PASS.",
+    "L2-AW40 portable mutation/recovery executable => L2_AW40_SELF_TEST_PASS legacy_to_segmented=true legacy_preserved=true zero_manifest=true corrupt_manifest=true."
   ],
   "evidence": [
-    "L2-AW39 fresh-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock 76347984b77099057d94b7c12555d5956c78f5e8 at integration epoch 26 / assignment epoch 2 / planning revision 4, prior Worker status blob 08dc3c049330f7f5fb72ff9a80a24901690c12bc and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d.",
-    "Wave start Worker branch HEAD was 54cbfd5cd931ea65367a444957245bed8935268f.",
-    "ManagedArtifactSegmentedShardStore implements legacy-preserving generation migration: bounded 512-entry segments -> pending manifest -> complete segment read-back -> committed manifest publication last.",
-    "A pre-commit crash leaves legacy v1 authority intact; a post-commit state has a verified committed generation while legacy bytes remain as rollback evidence. Migration is idempotent and stale uncommitted generations can be cleaned without deleting the committed generation.",
-    "Final Evidence is tech-assets/moises-audio/Library/L2-AW39_CRASH_SAFE_SEGMENTED_INVENTORY_MIGRATION_VALIDATION.md at implementation/evidence head 4761ae84ede5fae29766023f9d7dc8c5c4afe9a1."
+    "L2-AW40 fresh-read Notion v4 canonical, Worker contract c9e8ec5d191108db6eb20fbd40db0dab3c46b725, Work Package aad7983bdaf315a996dce1496ed245008085c712, Lane Plan 10b595b47e5a71278bde32e8656bd284e14e62eb, Resource Lock d64607a13d1381d73e47d1d218b4f869336cb0bc at integration epoch 27 / assignment epoch 2 / planning revision 4, prior Worker status blob 471e84001f619f77e5bdc4ec8863571070d5491a and PARITY db98892a379180c25ffeb3586a7c3353620a2d5d.",
+    "Wave start Worker branch HEAD was e1dcf91b7e3182eacab92a2105bc445474052472.",
+    "ManagedArtifactSegmentedRuntime provides committed-segmented-first reads, legacy fallback under AW38's 8 MiB guard, first-mutation segmented activation, verified max-512-entry segment publication, atomic manifest replacement, zero-entry authority and bounded-segment orphan traversal surface.",
+    "Final Evidence is tech-assets/moises-audio/Library/L2-AW40_SEGMENTED_RUNTIME_ROUTER_VALIDATION.md at implementation/evidence head 06032f2ff7664b38681cb8e5e46c46ff6613bff3."
   ],
   "known_gaps": [
-    "AW39 implements the crash-safe segmented migration substrate, but AW29 steady-state inventory read/write routing still uses the legacy v1 path; activation of committed segmented authority and future write routing remains required before write-time concentration is fully removed.",
+    "AW40 adds and validates the steady-state segmented runtime router, but canonical Lane2ManagedArtifactInventory register/remove/orphan call sites are not yet switched to it; full AW29 runtime activation remains the next lane-local step.",
+    "AW40 committed orphan scanning decodes each segment at <=512 entries but currently accumulates the current shard's segment entries before candidate filtering; a fully streaming traversal can further reduce pathological per-shard RSS.",
     "AW35/AW36 deterministic digest detects mutation/corruption but is not cryptographic authenticity against an actor able to rewrite both media and manifest.",
     "Physical force-termination evidence around AW36 revalidation, Core Data/WAL visibility, metadata commit and intent retirement remains pending on Apple runtime.",
     "DNS rebinding between AW34 pre-connect resolution and URLSession's own subsequent resolution remains a TOCTOU risk; endpoint verification/pinning requires Apple networking evidence.",
-    "Real Apple URLSession redirect, proxy/captive-network, IPv6 and endpoint behavior remain pending.",
     "A production WMA compatibility decoder is still not selected/licensed; real MP3/WAV/FLAC/M4A/MP4/MOV/WMA fixtures remain pending.",
     "AW32 deletion-ownership shards remain deterministic but not hard entry-count capped; pathological concentration and physical-iPhone RSS/latency remain unmeasured.",
-    "AW37 bounds deletion-journal selection/decoding to 64 by default and 256 maximum, but physical-device launch latency/RSS and filesystem enumeration behavior remain pending.",
     "Apple Core Data runtime, WAL visibility, force termination, APFS/ENOSPC and physical-device evidence remain pending.",
     "Real import/export/share/File Provider, AVFoundation audio validity/synchronization/naming/shareability and Differential Moises remain pending.",
     "MOI-P001/P002/P017/P018/P019/P020/P024 remain MISSING until HQ real-device/reference/differential gates are satisfied."
   ],
   "hq_requests": [
     "For App export/share integration, preserve canonical IOExportBatchTransaction -> Lane2ExportRegistrationJournal -> Lane2DurableLifecycleCoordinator metadata ordering and AW36 integrity revalidation gates.",
-    "On Apple, force terminate around export manifest/metadata/intent boundaries and exercise large deletion-journal/inventory conditions while measuring launch latency/RSS.",
-    "After AW39 runtime activation is integrated, force terminate before segment completion, after pending-manifest write and immediately before/after committed-manifest publication; legacy authority must remain recoverable before commit and committed generation must read back after commit.",
+    "After canonical AW40 router wiring, force terminate before/after segmented generation publication and verify old committed manifest or legacy authority remains readable until new manifest replacement succeeds.",
+    "Exercise large segmented inventories on iPhone/APFS while measuring launch/orphan-maintenance latency and RSS.",
     "Verify exported byte integrity plus actual audio validity/synchronization/naming/shareability; portable evidence alone is not MOI-P019 PARITY.",
     "Continue AW34 endpoint/DNS-rebinding validation and AW33 real codec/WMA validation.",
-    "Do not promote Lane-2 PARITY rows from portable AW39 evidence alone.",
-    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW39."
+    "Do not promote Lane-2 PARITY rows from portable AW40 evidence alone.",
+    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW40."
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW39",
-    "goal": "Create a durable crash-safe v1-to-segmented managed-artifact inventory migration substrate so pathological AW29 shard concentration can be moved away from one unbounded JSON authority without risking loss of the legacy inventory.",
-    "rationale": "AW38 prevents oversized authoritative decode, but legacy v1 write-time concentration remains. Directly deleting/replacing a legacy shard before a new representation is proven would create an interruption data-loss window.",
-    "done_when": "Migration writes bounded segments first, read-back verifies the complete generation, publishes authority manifest last, retains legacy rollback bytes, is idempotent, cleans stale uncommitted generations safely, negative/recovery tests and portable self-check pass, and Evidence/status/scope audit are durable while runtime activation remains explicitly unclaimed.",
+    "wave_id": "L2-AW40",
+    "goal": "Provide a validated steady-state runtime router that makes committed AW39 segmented generations usable for reads, future registration/removal mutations and bounded orphan traversal without rewriting unbounded legacy JSON shards.",
+    "rationale": "AW39 supplied a safe migration substrate, but no reusable steady-state authority router existed. Wiring canonical call sites before independently validating authority selection and mutation recovery would create an unnecessarily large migration blast radius.",
+    "done_when": "Committed segmented authority wins over legacy bytes, first mutation safely promotes a legacy shard, subsequent upsert/remove publish verified <=512-entry segments with atomic manifest replacement, zero-entry authority prevents stale legacy resurrection, corrupt state fails closed, orphan traversal exposes the existing slice contract, portable typecheck/self-check/regression tests pass, and canonical call-site switch remains explicitly unclaimed.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "4761ae84ede5fae29766023f9d7dc8c5c4afe9a1",
-    "next_priority": "Activate AW39 committed segmented authority in AW29 steady-state read/write/remove/orphan traversal while preserving legacy fallback and bounded traversal; if fresher canonical state elevates another Lane-2 gap, choose that instead."
+    "implementation_head_sha": "06032f2ff7664b38681cb8e5e46c46ff6613bff3",
+    "next_priority": "Wire canonical Lane2ManagedArtifactInventory registration/removal/orphan traversal to the AW40 segmented runtime router with legacy compatibility and cursor semantics preserved, then run compatibility regression; choose a fresher higher-value Lane-2 gap if canonical state changes."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW39 continue Lane-2 work autonomously.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW40 continue Lane-2 work autonomously.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-26T01:13:00+09:00",
-  "status_compaction_note": "Full pre-AW39 history remains addressable through prior_status_blob_sha 08dc3c049330f7f5fb72ff9a80a24901690c12bc and Git history; commits contains AW39 only.",
+  "last_updated": "2026-08-26T01:43:00+09:00",
+  "status_compaction_note": "Full pre-AW40 history remains addressable through prior_status_blob_sha 471e84001f619f77e5bdc4ec8863571070d5491a and Git history; commits contains AW40 only.",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ remains sole PARITY authority."
 }
