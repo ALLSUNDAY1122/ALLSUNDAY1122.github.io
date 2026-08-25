@@ -2,8 +2,9 @@ import Foundation
 
 public extension AnalysisPhysicalEvidenceArchiveChainValidator {
     /// Canonical W38 entrypoint. In addition to the chain checks performed by
-    /// `validate`, this recomputes the parent W27 manifest root locally so a
-    /// forged/root-consistent-looking W27 report cannot be accepted by itself.
+    /// `validate`, this recomputes the parent W27 manifest root locally and
+    /// rejects malformed W24 run inventories before the inner validator builds
+    /// its exact-run lookup table.
     static func validateStrict(
         manifest: AnalysisPhysicalEvidenceArchiveChainManifest,
         policy: AnalysisPhysicalEvidenceArchiveChainPolicy,
@@ -14,6 +15,31 @@ public extension AnalysisPhysicalEvidenceArchiveChainValidator {
         performanceProfile: AnalysisDevicePerformanceAcceptanceProfile,
         workloadPolicy: AnalysisDeviceWorkloadPolicy
     ) -> AnalysisPhysicalEvidenceArchiveChainReport {
+        let plannedIDs = performanceProfile.plannedRuns.map(\.runID)
+        let uniquePlannedIDs = Set(plannedIDs)
+        let requiredIDs = Set(policy.requiredRunIDs)
+        let runInventoryValid = !plannedIDs.isEmpty
+            && plannedIDs.count == uniquePlannedIDs.count
+            && policy.requiredRunIDs.count == requiredIDs.count
+            && !policy.requiredRunIDs.contains { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+            && uniquePlannedIDs == requiredIDs
+
+        guard runInventoryValid else {
+            let issue = AnalysisPhysicalEvidenceArchiveChainIssue(
+                code: .invalidRunInventory,
+                detail: "W38 strict validation requires one unique W24 planned record for every and only every required archive run ID"
+            )
+            return .init(
+                archiveID: manifest.archiveID,
+                status: .invalidPolicy,
+                computedRootSHA256: nil,
+                entryCount: manifest.entries.count,
+                runCount: requiredIDs.count,
+                issues: [issue],
+                limitations: limitations
+            )
+        }
+
         let recomputedLegacyRoot = try? AnalysisPhysicalEvidenceArchiveRoot.compute(legacyManifest)
         let expected = policy.legacyW27RootSHA256.lowercased()
         let reportRoot = legacyReport.computedRootSHA256?.lowercased()
@@ -37,7 +63,7 @@ public extension AnalysisPhysicalEvidenceArchiveChainValidator {
                 status: .legacyArchiveNotReady,
                 computedRootSHA256: nil,
                 entryCount: manifest.entries.count,
-                runCount: Set(policy.requiredRunIDs).count,
+                runCount: requiredIDs.count,
                 issues: [issue],
                 limitations: limitations
             )
