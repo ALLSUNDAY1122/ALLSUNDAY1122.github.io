@@ -2,11 +2,11 @@
   "schema_version": 3,
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
-  "integration_epoch": 26,
+  "integration_epoch": 27,
   "assignment_epoch": 2,
   "planning_revision": 4,
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
-  "checkpoint_note": "Epoch26 portable canonical through L1 A23 / L2 AW37 / L3 AW36 / L4 W38. Lane2 AW36-AW37 were frozen from exact implementation head acc8d112b5cdf9c755ae1ac4f7ead287a14610da and Lane3 AW35-AW36 from exact implementation head 378b2ac7d9ea22f6c065b171e4f81bcc6a16ba3a; HQ overlaid exact 22 owned-scope files at semantic commit 5187e8fb7957421dd61197fdfb84514390201a3b. PR-triggered Run196 / 32866523181 passed 310/310 with 273 unhandled. L1 remains deferred because A26 exact full current-tip audit is not PASS; L4 W39 is complete but remained a single post-checkpoint wave while W40 was in progress. Worker3 later wrote status-only commit 404de27323c7e288bfc10bf690448457e5d85487 to integration; no Playback/DSP bytes were added. PARITY promotion remains 0.",
+  "checkpoint_note": "Epoch27 portable canonical through L1 A23 / L2 AW37 / L3 AW36 / L4 W40. Lane4 W39-W40 were frozen from exact implementation head 6656937a693f17a4357016af9e4a60f28267ba8b and overlaid as exact 22 owned-scope files at semantic commit 2736d230349c9ab45630d27790216e11d268db1a. Initial Run201 / 32870165297 failed on a Swift 6 parser ambiguity caused by a trailing allSatisfy closure in the final guard condition of AnalysisPhysicalEvidenceBatchValidation.swift. HQ applied parse-only validation fix 09880c4e6d523b23e7f4e9feabfa81d0024b37ce without changing validation semantics; Run203 / 32870488465 then passed 333/333 with 273 unhandled. L1 remains deferred because A26 exact full current-tip audit is not PASS; L2 AW38 and L3 AW37 are single post-checkpoint Waves and remain deferred. PARITY promotion remains 0.",
   "locks": [
     {"id":"shared-contract","owner":"HQ","scope":["tech-assets/moises-audio/Shared/**"],"notes":"shared data model / cross-module protocol; epoch-frozen for Workers"},
     {"id":"app-shell","owner":"HQ","scope":["tech-assets/moises-audio/App/**"],"notes":"navigation, global app state, root composition; epoch-frozen for Workers"},
