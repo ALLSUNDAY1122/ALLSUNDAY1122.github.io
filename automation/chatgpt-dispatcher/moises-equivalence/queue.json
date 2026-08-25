@@ -3,10 +3,10 @@
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
   "integration_pr": 4431,
-  "integration_epoch": 25,
+  "integration_epoch": 26,
   "assignment_epoch": 2,
   "planning_revision": 4,
-  "baseline_state": "EPOCH25_L4_W37_W38_CANONICAL_PORTABLE_310_PASS_EXTERNAL_DEVICE_GATES_PENDING",
+  "baseline_state": "EPOCH26_L2_AW36_AW37_L3_AW35_AW36_CANONICAL_PORTABLE_310_PASS_EXTERNAL_DEVICE_GATES_PENDING",
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
   "queue_role": "HQ_INTEGRATION_LEDGER_ONLY",
   "worker_task_source": "SELF_PLANNED_FROM_LANE_STATE_PARITY_AND_GAPS",
@@ -39,14 +39,15 @@
     "epoch22":{"L2":"AW29-AW30","L4":"W33-W34","commit":"b702f71d2ec57de5c035d462fb60c39c2d6f5c62","run":32689995129,"run_number":161,"tests":279,"unhandled":226,"locks":"e97e2a9c103688598f63a4f76ac783300c03ad52"},
     "epoch23":{"L2":"AW31-AW32","L3":"AW30-AW32","L4":"W35-W36","commit":"e424cd22f11ed05d631d83a488f00f281ab40328","hq_test_fix":"9071043a9c64879a88f82fd6657e0a1b2b8f832f","initial_run":32695378498,"initial_run_number":167,"initial_result":"FAIL","initial_reason":"W36 cancellation integrity XCTest captured XCTestCase self across Task sending boundary under Swift 6 strict concurrency","run":32696596373,"run_number":169,"tests":292,"unhandled":251,"locks":"7a71ce8b91ba48a38676e5801bdde74f05151803"},
     "epoch24":{"L2":"AW33-AW35","L3":"AW33-AW34","commit":"c12ce8dfb27c4a9958e502611a6e34f592d081e3","run":32723458025,"run_number":174,"tests":292,"unhandled":261,"locks":"19c52a1203047cc734119295f61c64b486c125c7"},
-    "epoch25":{"L4":"W37-W38","commit":"d915eb6ec81d4eb0c150e587e6d050f2ebbfc2cb","tested_head":"65512c78d3e4ec5296c6fb7c4015fe02204e11b6","hq_test_fix":"65512c78d3e4ec5296c6fb7c4015fe02204e11b6","initial_run":32862170267,"initial_run_number":189,"initial_result":"FAIL","initial_reason":"W37 source-metadata mismatch XCTest used a 1-second duration delta that is intentionally inside the W24 0.1% duration tolerance while asserting a profile mismatch","run":32862540423,"run_number":190,"tests":310,"unhandled":261,"locks":"9a6cac84ae4b7857dd443b023d38c1743066b4d4"}
+    "epoch25":{"L4":"W37-W38","commit":"d915eb6ec81d4eb0c150e587e6d050f2ebbfc2cb","tested_head":"65512c78d3e4ec5296c6fb7c4015fe02204e11b6","hq_test_fix":"65512c78d3e4ec5296c6fb7c4015fe02204e11b6","initial_run":32862170267,"initial_run_number":189,"initial_result":"FAIL","initial_reason":"W37 source-metadata mismatch XCTest used a 1-second duration delta that is intentionally inside the W24 0.1% duration tolerance while asserting a profile mismatch","run":32862540423,"run_number":190,"tests":310,"unhandled":261,"locks":"9a6cac84ae4b7857dd443b023d38c1743066b4d4"},
+    "epoch26":{"L2":"AW36-AW37","L3":"AW35-AW36","commit":"5187e8fb7957421dd61197fdfb84514390201a3b","run":32866523181,"run_number":196,"tests":310,"unhandled":273,"locks":"5c6bd4bd2396d873556225c4bcb6469ce8cc6ec7"}
   },
-  "canonical_through": {"L1":"L1-A23","L2":"L2-AW35","L3":"L3-AW34","L4":"L4-W38"},
+  "canonical_through": {"L1":"L1-A23","L2":"L2-AW37","L3":"L3-AW36","L4":"L4-W38"},
   "current_unintegrated_snapshot": {
-    "L1":"A24-A25 and A27 are completed NON_PARITY, but A26 is not complete/PASS. HQ exact-checkout audit attempts exposed full-regression import/test failures and the Worker tip continued to move afterward, so HQ keeps L1 canonical at A23 until the exact current final tip passes the hardened A26 audit.",
-    "L2":"AW36 is completed NON_PARITY after the Epoch25 freeze. It remains a single post-checkpoint wave and Apple Core Data/SQLite/WAL/APFS/device execution remains pending.",
-    "L3":"AW35 was the only completed post-Epoch24 wave at Epoch25 freeze; an AW36 status update appeared on integration after the freeze. No Playback/DSP bytes were admitted into Epoch25. Re-read exact Worker branch/status before the next checkpoint.",
-    "L4":"W37-W38 are canonical NON_PARITY. W39 is post-Epoch25/current. Physical-iPhone/current-Moises evidence, genuine bounded Lane2 decoder runtime and independent HQ archive-root anchoring remain pending."
+    "L1":"A24-A25, A27 and A28 have progressed NON_PARITY, but A26 exact full current-tip dependency/provenance audit remains not PASS. HQ keeps L1 canonical at A23 until the exact final tip passes the hardened audit.",
+    "L2":"AW36-AW37 are canonical NON_PARITY. Later Waves are post-Epoch26. Apple Core Data/SQLite/WAL/APFS/Files/File Provider/device execution remains pending.",
+    "L3":"AW35-AW36 are canonical NON_PARITY. Worker3 wrote status-only integration commit 404de27323c7e288bfc10bf690448457e5d85487 after Run196 while recording an AW37 cancellation-race probe; no Playback/DSP bytes were admitted. AW37+ is post-Epoch26 and must be re-read from the exact Worker branch next checkpoint.",
+    "L4":"W37-W38 remain canonical. W39 is complete NON_PARITY but was a single Wave while W40 was in progress at Epoch26 freeze, so W39+ remains post-Epoch26. Physical-iPhone/current-Moises evidence remains pending."
   },
   "epoch23_integration": {
     "L1":{"canonical":"A23","deferred":"A24-A26","note":"A26 repaired a discovered A24/A25 compatibility seam, but full exact branch audit is still unobserved; do not canonicalize known-regressed A24/A25 intermediate state."},
@@ -77,11 +78,21 @@
     "exact_overlay_files":18,
     "code_run":{"id":32862540423,"number":190,"result":"SUCCESS","tests":310,"unhandled":261}
   },
+  "epoch26_integration": {
+    "L1":{"canonical":"A23","deferred":"A24-A28","note":"A26 exact full current-tip audit remains not PASS; no Lane1 overlay in Epoch26."},
+    "L2":{"canonical":"AW36-AW37","source_head":"acc8d112b5cdf9c755ae1ac4f7ead287a14610da","scope":["Library/**"],"note":"Post-intent export registration integrity revalidation plus bounded deletion-journal recovery. Portable evidence does not prove Apple Core Data/APFS/device runtime."},
+    "L3":{"canonical":"AW35-AW36","source_head":"378b2ac7d9ea22f6c065b171e4f81bcc6a16ba3a","scope":["Playback/**","DSP/**"],"note":"Bounded interactive continuity evidence plus unified cancellation-admission fence. Portable lane evidence does not prove AVFAudio/physical-iPhone/current-Moises behavior."},
+    "L4":{"canonical":"W38","deferred":"W39+","note":"W39 was complete but remained a single post-checkpoint Wave while W40 was in progress; no Lane4 overlay in Epoch26."},
+    "semantic_commit":"5187e8fb7957421dd61197fdfb84514390201a3b",
+    "exact_overlay_files":22,
+    "post_validation_status_only_commit":"404de27323c7e288bfc10bf690448457e5d85487",
+    "code_run":{"id":32866523181,"number":196,"event":"pull_request","result":"SUCCESS","tests":310,"unhandled":273,"checked_merge_ref":"e917ca8cdf927cabeb4e74ced45060b1a0851cee"}
+  },
   "branch_hygiene": {
     "worker3_branch_status":"NONSTANDARD_DIRECT_STATUS_ON_INTEGRATION",
-    "worker3_canonical_source_head":"faabf9df730eb52e8ec6e1becc62aa4a68601f12",
-    "latest_observed_integration_status_commit":"e0cb196ebde71f3e9fefb9376c60a4bd0a42228b",
-    "note":"During Epoch25 validation, Worker3 wrote a status-only commit directly onto integration. Compare d915eb6e..e0cb196e changed only worker-status/worker-3.json; no Playback/DSP code was admitted. Exact Worker3 branch/evidence must be re-read before its next semantic integration."
+    "worker3_canonical_source_head":"378b2ac7d9ea22f6c065b171e4f81bcc6a16ba3a",
+    "latest_observed_integration_status_commit":"404de27323c7e288bfc10bf690448457e5d85487",
+    "note":"During Epoch26 validation, Worker3 again wrote only worker-status/worker-3.json directly onto integration. Compare 5187e8fb..404de273 changed no Playback/DSP source. Exact Worker3 branch/evidence must be re-read before the next semantic integration."
   },
   "validation": {
     "workflow":".github/workflows/moises-hq-integration.yml",
@@ -96,6 +107,8 @@
     "epoch25_initial_run":{"id":32862170267,"number":189,"result":"FAIL","reason":"One W37 test asserted W24 profile mismatch for a duration delta that is intentionally within the production 0.1% tolerance."},
     "epoch25_code_run":{"id":32862540423,"number":190,"result":"SUCCESS","test_count":310,"unhandled_file_count":261},
     "epoch25_scope_note":"Run190 compiles/tests the Package-selected W37-W38 integration and passes 310/310 after a one-line test-fixture correction. It is Linux SwiftPM evidence only and does not prove selected Xcode/Apple ARM, genuine Lane2 bounded decoding, physical-iPhone RSS/thermal/battery/cancellation, real audio, or current-Moises differential behavior.",
+    "epoch26_code_run":{"id":32866523181,"number":196,"event":"pull_request","result":"SUCCESS","test_count":310,"unhandled_file_count":273,"merge_ref":"e917ca8cdf927cabeb4e74ced45060b1a0851cee"},
+    "epoch26_scope_note":"Run196 checks the PR merge ref and preserves the Package-selected portable suite at 310/310. The unhandled count rose from 261 to 273 because the newly canonical L2/L3 files remain outside the SwiftPM target. Run196 therefore does not prove L2 Apple Core Data/APFS/Files runtime or L3 AVFAudio/physical-iPhone/current-Moises behavior.",
     "parity_effect":"NONE"
   },
   "parity":{"promotion_count":0,"state":"ALL_CURRENT_IPHONE_IN_SCOPE_ROWS_REMAIN_MISSING","rule":"Portable/synthetic/harness/readiness/compile evidence alone never promotes PARITY."},
