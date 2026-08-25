@@ -1,0 +1,134 @@
+name: APP2-005 HM1 App Review Submission
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-005-hm1-submit-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-005-hm1-submit-review
+  cancel-in-progress: false
+
+jobs:
+  prepare-and-submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Prepare final 264-question HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash ios/health-manager-1/prepare-ios.sh
+
+      - name: Install browser for deterministic review screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Capture approved HM1 home and premium screens
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/hm1-review-screens
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          import struct
+
+          index = (Path.cwd() / 'ios/health-manager-1/Resources/index.html').resolve().as_uri()
+          out = Path('/tmp/hm1-review-screens')
+          with sync_playwright() as p:
+              browser = p.chromium.launch()
+              context = browser.new_context(viewport={'width':430,'height':932}, device_scale_factor=3, locale='ja-JP')
+              page = context.new_page()
+              page.goto(index, wait_until='load')
+              page.wait_for_timeout(800)
+              assert page.locator('#premiumGo').count() == 1, 'premiumGo missing'
+              assert '全264問' in page.locator('body').inner_text()
+              page.screenshot(path=str(out/'01-home.png'))
+              page.locator('#premiumGo').click()
+              page.wait_for_timeout(400)
+              text = page.locator('body').inner_text()
+              assert '¥200' in text and '¥800' in text and '264' in text, text[:2000]
+              page.screenshot(path=str(out/'02-premium.png'))
+              browser.close()
+
+          for path in (out/'01-home.png', out/'02-premium.png'):
+              raw = path.read_bytes()
+              assert raw[:8] == b'\x89PNG\r\n\x1a\n'
+              w,h = struct.unpack('>II', raw[16:24])
+              assert (w,h) == (1290,2796), (path,w,h)
+              print(f'PASS {path.name}: {w}x{h} bytes={len(raw)}')
+          PY
+
+      - name: Prepare metadata, review screenshots, and submit
+        id: submit
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          set -o pipefail
+          python scripts/app2_005_hm1_prepare_submit.py \
+            --screens /tmp/hm1-review-screens \
+            --output /tmp/app2-005-hm1-submit-result.json \
+            2>&1 | tee /tmp/app2-005-hm1-submit.log
+
+      - name: Persist submission evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p automation/app2-005-hm1-submission-assets automation/asc-results
+          cp /tmp/hm1-review-screens/01-home.png automation/app2-005-hm1-submission-assets/01-home.png 2>/dev/null || true
+          cp /tmp/hm1-review-screens/02-premium.png automation/app2-005-hm1-submission-assets/02-premium.png 2>/dev/null || true
+          if [ -f /tmp/app2-005-hm1-submit-result.json ]; then
+            cp /tmp/app2-005-hm1-submit-result.json automation/asc-results/app2-005-hm1-submit-result.json
+          else
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          log = Path('/tmp/app2-005-hm1-submit.log').read_text(encoding='utf-8',errors='replace') if Path('/tmp/app2-005-hm1-submit.log').exists() else 'submission script did not run'
+          Path('automation/asc-results/app2-005-hm1-submit-result.json').write_text(json.dumps({'task_id':'APP2-005','submitted':False,'error':log[-4000:]},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/asc-results/app2-005-hm1-submit-result.json automation/app2-005-hm1-submission-assets || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Persist APP2-005 App Review submission evidence"
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then break; fi
+              sleep $((attempt * 2))
+            done
+          fi
+
+      - name: Enforce successful submission
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('automation/asc-results/app2-005-hm1-submit-result.json')
+          if not p.exists():
+              raise SystemExit('submission result missing')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          if not data.get('submitted'):
+              raise SystemExit('APP2-005 submission did not complete: '+str(data.get('error')))
+          print('PASS: submitted state='+str(data.get('review_submission_state')))
+          PY
