@@ -1,9 +1,9 @@
 import Foundation
 
-/// AW41 compatibility bridge between the canonical AW29 inventory contract and the AW40
-/// segmented runtime. It deliberately preserves the existing two-phase cursor contract:
-/// prepare does not mutate traversal state, and persistTraversal commits it only after the
-/// caller has applied the returned slice successfully.
+/// AW41 compatibility bridge between the canonical AW29 inventory contract and the segmented
+/// runtime. AW43 routes candidate preparation through the fully streaming traversal reader while
+/// preserving the existing two-phase cursor contract: prepare is side-effect free and
+/// persistTraversal commits only after the caller has applied the slice successfully.
 public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
     private struct CursorRecord: Codable, Sendable {
         static let schemaVersion = 1
@@ -40,7 +40,7 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
         shardVisitLimit: Int = Lane2ManagedArtifactInventory.defaultShardVisitLimit
     ) throws -> Lane2ManagedArtifactInventorySlice {
         let prior = try loadTraversal()
-        return try runtime.prepareOrphanCandidateSlice(
+        return try streamingTraversal.prepareOrphanCandidateSlice(
             priorTraversal: prior,
             gracePeriod: gracePeriod,
             now: now,
@@ -101,6 +101,14 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
 
     private var runtime: Lane2ManagedArtifactSegmentedRuntime {
         Lane2ManagedArtifactSegmentedRuntime(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName,
+            fileManager: fileManager
+        )
+    }
+
+    private var streamingTraversal: Lane2ManagedArtifactSegmentedStreamingTraversal {
+        Lane2ManagedArtifactSegmentedStreamingTraversal(
             rootURL: rootURL,
             recoveryDirectoryName: recoveryDirectoryName,
             fileManager: fileManager
