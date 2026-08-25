@@ -108,6 +108,29 @@ public struct Lane3SelectedTransportReplacementReceipt: Equatable, Codable, Send
     }
 }
 
+/// AW39 stamps the exact selected-stack generation that was held by a shared operation lease.
+/// Reconstruction cannot advance `slotGeneration` until every shared lease drains, so this value is
+/// stable for the complete seek/loop operation even when replacement begins immediately after the
+/// operation returns. It is evidence metadata only and cannot promote PARITY by itself.
+public struct Lane3SelectedTransportGenerationStampedOutcome: Equatable, Sendable {
+    public let schemaVersion: Int
+    public let evidenceScope: String
+    public let slotGeneration: UInt64
+    public let outcome: Lane3InterruptionGuardedOutcome
+    public let parityPromotionAllowed: Bool
+
+    public init(
+        slotGeneration: UInt64,
+        outcome: Lane3InterruptionGuardedOutcome
+    ) {
+        self.schemaVersion = 1
+        self.evidenceScope = "LANE3_AW39_SELECTED_SLOT_LEASE_GENERATION_NON_PARITY"
+        self.slotGeneration = slotGeneration
+        self.outcome = outcome
+        self.parityPromotionAllowed = false
+    }
+}
+
 public struct Lane3SelectedTransportReconstructionSlotSnapshot: Equatable, Sendable {
     public let slotGeneration: UInt64
     public let inFlightOperations: UInt64
@@ -125,6 +148,11 @@ public struct Lane3SelectedTransportReconstructionSlotSnapshot: Equatable, Senda
 /// and only then reopens admission. A stale replacement therefore cannot revive or swap around a
 /// newer selected stack.
 public actor Lane3SelectedTransportReconstructionSlot {
+    private struct SharedLease: Sendable {
+        let facade: Lane3TempoBoundarySelectedTransportFacade
+        let slotGeneration: UInt64
+    }
+
     private var facade: Lane3TempoBoundarySelectedTransportFacade
     private var slotGeneration: UInt64
     private var inFlightOperations: UInt64 = 0
@@ -200,13 +228,31 @@ public actor Lane3SelectedTransportReconstructionSlot {
         resume: Bool,
         loop: PlaybackLoopRange?
     ) async throws -> Lane3InterruptionGuardedOutcome {
-        try await withFacade { facade in
+        try await submitSeekStamped(
+            to: positionSeconds,
+            resume: resume,
+            loop: loop
+        ).outcome
+    }
+
+    public func submitSeekStamped(
+        to positionSeconds: Double,
+        resume: Bool,
+        loop: PlaybackLoopRange?
+    ) async throws -> Lane3SelectedTransportGenerationStampedOutcome {
+        try await withGuardedFacadeStamped { facade in
             try await facade.submitSeek(to: positionSeconds, resume: resume, loop: loop)
         }
     }
 
     public func submitLoop(_ loop: PlaybackLoopRange?) async throws -> Lane3InterruptionGuardedOutcome {
-        try await withFacade { facade in
+        try await submitLoopStamped(loop).outcome
+    }
+
+    public func submitLoopStamped(
+        _ loop: PlaybackLoopRange?
+    ) async throws -> Lane3SelectedTransportGenerationStampedOutcome {
+        try await withGuardedFacadeStamped { facade in
             try await facade.submitLoop(loop)
         }
     }
@@ -265,23 +311,42 @@ public actor Lane3SelectedTransportReconstructionSlot {
         try await withFacade { facade in try await facade.submitTempoRatio(ratio) }
     }
 
-    private func withFacade<T: Sendable>(
-        _ operation: @Sendable (Lane3TempoBoundarySelectedTransportFacade) async throws -> T
-    ) async throws -> T {
-        let leasedFacade = try await acquireSharedLease()
+    private func withGuardedFacadeStamped(
+        _ operation: @Sendable (Lane3TempoBoundarySelectedTransportFacade) async throws -> Lane3InterruptionGuardedOutcome
+    ) async throws -> Lane3SelectedTransportGenerationStampedOutcome {
+        let lease = try await acquireSharedLease()
         do {
-            let result = try await operation(leasedFacade)
-            await refreshRecoveryTicket(from: leasedFacade)
+            let result = try await operation(lease.facade)
+            await refreshRecoveryTicket(from: lease.facade)
             releaseSharedLease()
-            return result
+            return Lane3SelectedTransportGenerationStampedOutcome(
+                slotGeneration: lease.slotGeneration,
+                outcome: result
+            )
         } catch {
-            await refreshRecoveryTicket(from: leasedFacade)
+            await refreshRecoveryTicket(from: lease.facade)
             releaseSharedLease()
             throw error
         }
     }
 
-    private func acquireSharedLease() async throws -> Lane3TempoBoundarySelectedTransportFacade {
+    private func withFacade<T: Sendable>(
+        _ operation: @Sendable (Lane3TempoBoundarySelectedTransportFacade) async throws -> T
+    ) async throws -> T {
+        let lease = try await acquireSharedLease()
+        do {
+            let result = try await operation(lease.facade)
+            await refreshRecoveryTicket(from: lease.facade)
+            releaseSharedLease()
+            return result
+        } catch {
+            await refreshRecoveryTicket(from: lease.facade)
+            releaseSharedLease()
+            throw error
+        }
+    }
+
+    private func acquireSharedLease() async throws -> SharedLease {
         while replacementRequested || replacementActive {
             await withCheckedContinuation { sharedWaiters.append($0) }
         }
@@ -294,7 +359,7 @@ public actor Lane3SelectedTransportReconstructionSlot {
             throw Lane3SelectedTransportReconstructionSlotError.leaseCounterOverflow
         }
         inFlightOperations = next.partialValue
-        return facade
+        return SharedLease(facade: facade, slotGeneration: slotGeneration)
     }
 
     private func releaseSharedLease() {
