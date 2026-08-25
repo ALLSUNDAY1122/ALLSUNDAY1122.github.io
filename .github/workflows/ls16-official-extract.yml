@@ -1,0 +1,89 @@
+name: LS16 Official Extract
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/ls16-official-extract.yml'
+      - 'sagyo-ryohoshi-sprint/tools/extract_official.py'
+      - 'sagyo-ryohoshi-sprint/tools/extract_official_ci.py'
+permissions:
+  contents: write
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Install PDF parser
+        run: python -m pip install --quiet 'pypdf>=5,<6' 'pymupdf>=1.26,<2'
+      - name: Extract official OT exams
+        id: extract
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python sagyo-ryohoshi-sprint/tools/extract_official_ci.py 2>&1 | tee sagyo-ryohoshi-sprint/audit/official-extract-ci.log
+      - name: Show extraction diagnostic
+        if: always() && steps.extract.outcome != 'success'
+        run: cat sagyo-ryohoshi-sprint/audit/official-extract-ci.log
+      - name: Stop on extraction failure
+        if: always() && steps.extract.outcome != 'success'
+        run: exit 1
+      - name: Verify raw frame
+        if: steps.extract.outcome == 'success'
+        run: |
+          python - <<'PY'
+          import json
+          raw_path='sagyo-ryohoshi-sprint/audit/raw-official.json'
+          media_path='sagyo-ryohoshi-sprint/audit/media-audit-queue.json'
+          q=json.load(open(raw_path))
+          media=json.load(open(media_path))
+          assert len(q)==600, len(q)
+          assert {x['reference_exam_round'] for x in q} == {59,60,61}
+          for r in (1,2,3):
+            for s in ('am','pm'):
+              z=[x for x in q if x['round']==r and x['session']==s]
+              assert len(z)==100,(r,s,len(z))
+              assert sorted(x['slot'] for x in z)==list(range(1,101)),(r,s)
+          assert len({x['id'] for x in q})==600
+          expected={x['id'] for x in q if x['requires_media']}
+          actual={x['id'] for x in media}
+          assert expected, 'media audit queue must not be empty'
+          assert actual==expected,(len(actual),len(expected))
+          assert len(media)+sum(not x['requires_media'] for x in q)==600
+          print('RAW_FRAME_600_OK')
+          print('exam_rounds',sorted({x['reference_exam_round'] for x in q}))
+          print('MEDIA_QUEUE_OK',len(media))
+          print('excluded',sum(x['scoring_status']=='excluded' for x in q))
+          print('bad_choices',sum(len(x['choices'])!=5 for x in q))
+          print('answer_missing_nonexcluded',sum((x['answer'] is None and x['scoring_status']!='excluded') for x in q))
+          PY
+      - name: Commit extraction result
+        if: steps.extract.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch='${{ github.head_ref }}'
+          cp sagyo-ryohoshi-sprint/audit/raw-official.json /tmp/ls16-raw-official.json
+          cp sagyo-ryohoshi-sprint/audit/media-audit-queue.json /tmp/ls16-media-audit-queue.json
+          git config user.name 'LS16 Dispatcher'
+          git config user.email 'actions@users.noreply.github.com'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin "$branch"
+            git reset --hard "origin/$branch"
+            cp /tmp/ls16-raw-official.json sagyo-ryohoshi-sprint/audit/raw-official.json
+            cp /tmp/ls16-media-audit-queue.json sagyo-ryohoshi-sprint/audit/media-audit-queue.json
+            git add sagyo-ryohoshi-sprint/audit/raw-official.json sagyo-ryohoshi-sprint/audit/media-audit-queue.json
+            if git diff --cached --quiet; then
+              echo 'Generated audit outputs already current.'
+              exit 0
+            fi
+            git commit -m 'chore: extract LS16 official 59-61 frames [skip ci]'
+            if git push origin HEAD:"$branch"; then
+              exit 0
+            fi
+            echo "Push race on attempt $attempt; rebasing generated outputs on newest branch."
+          done
+          echo 'Could not persist deterministic LS16 audit outputs after 5 attempts.' >&2
+          exit 1
