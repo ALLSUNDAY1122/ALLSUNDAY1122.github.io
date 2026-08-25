@@ -5,12 +5,35 @@ public struct ReferenceNearestMatch: Codable, Sendable, Equatable {
     public let referenceIndex: Int
     public let distance: Float
     public let secondBestDistance: Float?
+    public let sourceReferenceIndex: Int?
+    public let referenceCorpusPageCount: Int?
+    public let referenceCorpusGroupID: String?
+    public let nearestNegativeReferenceIndex: Int?
+    public let nearestNegativeDistance: Float?
+    public let referenceCorpusManifestSHA256: String?
 
-    public init(outputIndex: Int, referenceIndex: Int, distance: Float, secondBestDistance: Float? = nil) {
+    public init(
+        outputIndex: Int,
+        referenceIndex: Int,
+        distance: Float,
+        secondBestDistance: Float? = nil,
+        sourceReferenceIndex: Int? = nil,
+        referenceCorpusPageCount: Int? = nil,
+        referenceCorpusGroupID: String? = nil,
+        nearestNegativeReferenceIndex: Int? = nil,
+        nearestNegativeDistance: Float? = nil,
+        referenceCorpusManifestSHA256: String? = nil
+    ) {
         self.outputIndex = outputIndex
         self.referenceIndex = referenceIndex
         self.distance = distance
         self.secondBestDistance = secondBestDistance
+        self.sourceReferenceIndex = sourceReferenceIndex
+        self.referenceCorpusPageCount = referenceCorpusPageCount
+        self.referenceCorpusGroupID = referenceCorpusGroupID
+        self.nearestNegativeReferenceIndex = nearestNegativeReferenceIndex
+        self.nearestNegativeDistance = nearestNegativeDistance
+        self.referenceCorpusManifestSHA256 = referenceCorpusManifestSHA256
     }
 }
 
@@ -54,9 +77,28 @@ public enum ReferenceAlignment {
         nearestMatches: [ReferenceNearestMatch],
         threshold: Float
     ) -> ReferenceAlignmentMetrics {
-        let referenceCount = max(0, referencePageCount)
+        let declaredCorpusCounts = Set(nearestMatches.compactMap(\.referenceCorpusPageCount))
+        let referenceCount: Int
+        if declaredCorpusCounts.count == 1, let corpusCount = declaredCorpusCounts.first {
+            referenceCount = max(0, corpusCount)
+        } else {
+            // Inconsistent corpus metadata fails closed by retaining the raw
+            // reference count rather than silently shrinking the denominator.
+            referenceCount = max(0, referencePageCount)
+        }
+
         let valid = nearestMatches
-            .filter { $0.referenceIndex >= 0 && $0.referenceIndex < referenceCount && $0.distance <= threshold }
+            .filter { match in
+                guard match.referenceIndex >= 0,
+                      match.referenceIndex < referenceCount,
+                      match.distance <= threshold else { return false }
+                if let negativeDistance = match.nearestNegativeDistance,
+                   negativeDistance <= threshold,
+                   negativeDistance <= match.distance {
+                    return false
+                }
+                return true
+            }
             .sorted { $0.outputIndex < $1.outputIndex }
 
         let uniqueReferences = Set(valid.map(\.referenceIndex))
