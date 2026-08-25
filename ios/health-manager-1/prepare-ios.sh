@@ -6,6 +6,11 @@ INDEX="$SCRIPT_DIR/Resources/index.html"
 QUESTIONS="$SCRIPT_DIR/Resources/questions.json"
 ICON_DIR="$SCRIPT_DIR/Resources/Assets.xcassets/AppIcon.appiconset"
 
+# Release invariant: never ship the historical/generated SVG icon. Rebuild all
+# AppIcon slots from the checksum-verified user-approved artwork before Xcode
+# compiles the asset catalog.
+bash "$SCRIPT_DIR/prepare-approved-icon.sh"
+
 # Expand the canonical 132 HM1 bank with 132 already-audited common-scope
 # questions from the HealthManager2 five-year expansion. The augmentation script
 # rejects unpublished/unaudited items and near-duplicate stems.
@@ -55,9 +60,6 @@ if n==0:
 else:
     assert n==1, f'ROUNDS replacement count={n}'
 
-# Release UI must match the final 264-question product and current Japan-only
-# StoreKit price points. TestFlight previously surfaced stale USD metadata even
-# though the Apple purchase sheet showed the canonical JPY 800 price.
 updated=updated.replace('3回分・科目別に9セット','公表回3＋追加演習3・合計264問')
 updated=updated.replace('3回分を科目ごとに。1科目ずつでも通しでも解けます。','公表回3回分＋追加演習3セット。1科目ずつでも44問通しでも解けます。')
 updated=updated.replace("monthlyPrice:'月額200円',lifetimePrice:'980円'", "monthlyPrice:'¥200',lifetimePrice:'¥800'")
@@ -76,10 +78,8 @@ PY
 
 python3 "$SCRIPT_DIR/apply-premium-visibility-20260825.py" "$INDEX"
 
-# The approved unified Learning Sprint AppIcon PNGs are versioned assets.
-# Do not re-render them during release builds: SVG text rendering depends on
-# host fonts and can change/fail across macOS images. Validate the committed
-# approved files and dimensions instead.
+# Validate the AppIcon slots produced above. The materializer itself verifies
+# the approved source byte count and SHA before writing these files.
 python3 - "$ICON_DIR" <<'PY'
 from pathlib import Path
 import json, struct, sys, hashlib
@@ -99,5 +99,7 @@ for name,px in expected.items():
     assert b[:8]==b'\x89PNG\r\n\x1a\n' and b[12:16]==b'IHDR', name
     w,h=struct.unpack('>II',b[16:24])
     assert (w,h)==(px,px),(name,w,h,px)
-print('PASS: approved unified Learning Sprint HM1 AppIcon assets verified; canonical sha256='+hashlib.sha256((root/'icon-1024.png').read_bytes()).hexdigest())
+    color_type=b[25]
+    assert color_type not in (4,6), f'{name}: alpha channel is not allowed'
+print('PASS: approved HM1 AppIcon assets verified; generated 1024 sha256='+hashlib.sha256((root/'icon-1024.png').read_bytes()).hexdigest())
 PY
