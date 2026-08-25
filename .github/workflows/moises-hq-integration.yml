@@ -35,7 +35,7 @@ jobs:
         working-directory: tech-assets/moises-audio
         run: swift test --parallel
 
-  portable-lane2-source-typecheck:
+  portable-lane2-io-source-typecheck:
     runs-on: ubuntu-latest
     container:
       image: swift:6.0
@@ -43,33 +43,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Swift version
-        run: swift --version
-      - name: Lane 2 source typecheck
+      - name: Lane 2 IO source typecheck
         working-directory: tech-assets/moises-audio
         shell: bash
         run: |
           set -euo pipefail
           shopt -s nullglob
-          sources=(
-            Shared/DomainContracts.swift
-            Shared/LibraryContracts.swift
-            IO/Sources/*.swift
-            Library/Sources/*.swift
-          )
-          if [ "${#sources[@]}" -lt 6 ]; then
-            echo "Lane 2 source discovery unexpectedly small: ${#sources[@]}" >&2
-            exit 1
-          fi
-          printf 'Lane 2 typecheck source count: %s\n' "${#sources[@]}"
-          swiftc \
-            -swift-version 6 \
-            -strict-concurrency=complete \
-            -parse-as-library \
-            -typecheck \
-            "${sources[@]}"
+          sources=(Shared/DomainContracts.swift Shared/LibraryContracts.swift IO/Sources/*.swift)
+          swiftc -swift-version 6 -strict-concurrency=complete -parse-as-library -typecheck "${sources[@]}"
 
-  portable-lane3-source-typecheck:
+  portable-lane2-io-library-source-typecheck:
     runs-on: ubuntu-latest
     container:
       image: swift:6.0
@@ -77,27 +60,45 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Swift version
-        run: swift --version
-      - name: Lane 3 source typecheck
+      - name: Lane 2 IO plus Library source typecheck
         working-directory: tech-assets/moises-audio
         shell: bash
         run: |
           set -euo pipefail
           shopt -s nullglob
-          sources=(
-            Shared/DomainContracts.swift
-            Playback/Sources/*.swift
-            DSP/Sources/*.swift
-          )
-          if [ "${#sources[@]}" -lt 4 ]; then
-            echo "Lane 3 source discovery unexpectedly small: ${#sources[@]}" >&2
-            exit 1
-          fi
-          printf 'Lane 3 typecheck source count: %s\n' "${#sources[@]}"
-          swiftc \
-            -swift-version 6 \
-            -strict-concurrency=complete \
-            -parse-as-library \
-            -typecheck \
-            "${sources[@]}"
+          sources=(Shared/DomainContracts.swift Shared/LibraryContracts.swift IO/Sources/*.swift Library/Sources/*.swift)
+          swiftc -swift-version 6 -strict-concurrency=complete -parse-as-library -typecheck "${sources[@]}"
+
+  portable-lane3-dsp-source-typecheck:
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.0
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Lane 3 DSP source typecheck
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sources=(Shared/DomainContracts.swift DSP/Sources/*.swift)
+          swiftc -swift-version 6 -strict-concurrency=complete -parse-as-library -typecheck "${sources[@]}"
+
+  portable-lane3-playback-dsp-source-typecheck:
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.0
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Lane 3 Playback plus DSP source typecheck
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sources=(Shared/DomainContracts.swift DSP/Sources/*.swift Playback/Sources/*.swift)
+          swiftc -swift-version 6 -strict-concurrency=complete -parse-as-library -typecheck "${sources[@]}"
