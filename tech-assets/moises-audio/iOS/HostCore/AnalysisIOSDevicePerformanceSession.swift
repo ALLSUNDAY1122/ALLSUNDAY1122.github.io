@@ -3,6 +3,13 @@ import Foundation
 import UIKit
 import Darwin
 
+public enum AnalysisIOSDeviceTelemetrySampleResult: String, Sendable {
+    case captured = "CAPTURED"
+    case throttled = "THROTTLED"
+    case capReached = "CAP_REACHED"
+    case finished = "FINISHED"
+}
+
 @MainActor
 public final class AnalysisIOSDevicePerformanceSession {
     public struct Configuration: Sendable {
@@ -77,27 +84,29 @@ public final class AnalysisIOSDevicePerformanceSession {
             Task { @MainActor in self.recordMemoryWarning() }
         }
 
-        sample(force: true)
+        _ = sample(force: true)
     }
 
     deinit {
         if let memoryWarningToken { NotificationCenter.default.removeObserver(memoryWarningToken) }
     }
 
-    public func sample(force: Bool = false) {
-        guard !finished else { return }
+    @discardableResult
+    public func sample(force: Bool = false) -> AnalysisIOSDeviceTelemetrySampleResult {
+        guard !finished else { return .finished }
         let offset = elapsed()
         if !force {
             if memorySamples.count >= configuration.maximumSampleCount {
                 limitations.insert("TELEMETRY_SAMPLE_CAP_REACHED")
-                return
+                return .capReached
             }
-            if let lastSampleOffset, offset - lastSampleOffset < configuration.sampleIntervalSeconds { return }
+            if let lastSampleOffset, offset - lastSampleOffset < configuration.sampleIntervalSeconds { return .throttled }
         }
         lastSampleOffset = offset
         memorySamples.append(Self.memorySample(offsetSeconds: offset))
         thermalSamples.append(Self.thermalSample(offsetSeconds: offset))
         batterySamples.append(Self.batterySample(offsetSeconds: offset))
+        return .captured
     }
 
     public func recordCancellationRequested() {
@@ -111,7 +120,7 @@ public final class AnalysisIOSDevicePerformanceSession {
     }
 
     public func finish(completedNormally: Bool, failureDescription: String? = nil) -> AnalysisDevicePerformanceEvidence {
-        if !finished { sample(force: true); finished = true }
+        if !finished { _ = sample(force: true); finished = true }
         if let memoryWarningToken {
             NotificationCenter.default.removeObserver(memoryWarningToken)
             self.memoryWarningToken = nil

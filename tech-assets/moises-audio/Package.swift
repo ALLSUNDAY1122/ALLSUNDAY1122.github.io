@@ -79,7 +79,9 @@ let package = Package(
                 "Analysis/AnalysisDeviceWorkloadReceipt.swift",
                 "Analysis/AnalysisDeviceWorkloadValidation.swift",
                 "Analysis/AnalysisDeviceWorkloadRunner.swift",
+                "Analysis/AnalysisCurrentDeviceWorkloadLifecycle.swift",
                 "Analysis/AnalysisCurrentDeviceWorkloadRunner.swift",
+                "Analysis/AnalysisDeviceCapturePlan.swift",
                 "Analysis/AnalysisDevicePerformanceWorkloadGate.swift",
                 "Analysis/AnalysisDeviceAlgorithmExecutionEvidence.swift",
                 "Analysis/AnalysisDeviceAlgorithmExecutionValidation.swift",
@@ -92,6 +94,8 @@ let package = Package(
                 "Analysis/AnalysisPhysicalEvidenceArchiveModels.swift",
                 "Analysis/AnalysisPhysicalEvidenceArchiveValidation.swift",
                 "Analysis/AnalysisPhysicalEvidenceArchiveContentValidation.swift",
+                "Analysis/AnalysisPhysicalEvidenceArchiveChainV2.swift",
+                "Analysis/AnalysisPhysicalEvidenceArchiveChainV2Strict.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
@@ -100,7 +104,8 @@ let package = Package(
                 "Analysis/RealAudioBenchmarkCodec.swift",
                 "iOS/HostCore/HostModuleSlots.swift",
                 "iOS/HostCore/ApplePlatformSmoke.swift",
-                "iOS/HostCore/AnalysisIOSDevicePerformanceSession.swift"
+                "iOS/HostCore/AnalysisIOSDevicePerformanceSession.swift",
+                "iOS/HostCore/AnalysisIOSPhysicalCaptureCoordinator.swift"
             ]
         ),
         .testTarget(
