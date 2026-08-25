@@ -2,11 +2,11 @@
   "schema_version": 3,
   "project": "moises-equivalence",
   "integration_branch": "tech/moises-separation",
-  "integration_epoch": 29,
+  "integration_epoch": 30,
   "assignment_epoch": 2,
   "planning_revision": 4,
   "operating_model": "FOUR_AUTONOMOUS_INDEPENDENT_LANES_LATE_INTEGRATION",
-  "checkpoint_note": "Epoch29 portable canonical through L1 A23 / L2 AW39 / L3 AW38 / L4 W42. Lane4 W41-W42 were frozen from exact implementation head dc6cc43ee658ffcbed7f575349b16d6f9b5c43ba; HQ selected 17 W4-owned files, of which 16 changed the integration tree because AnalysisPhysicalEvidenceBatchValidation.swift already matched the Epoch27 HQ parse fix. Semantic overlay commit db7812313cdba967c4e99c6b84d720edea8132f8. Initial Run213 / 32878182554 failed on a Swift 6 multiline-guard trailing allSatisfy parse boundary in AnalysisPhysicalEvidencePublishedBatchReopen.swift. HQ parse-only fix f51eb4293bd10d0be04a97ea7289f653635301eb precomputed the same predicate without changing validation semantics. Run215 was cancelled by Worker3 status-only integration write; compare confirmed no tech-assets change. Run216 / 32878652158 then passed 350/350 with 291 unhandled on PR merge ref 628211fee218b5c2ac20c63ea928a33e783170c6. L1 remains deferred because A26 exact full current-tip audit is not PASS; L2 AW40 and L3 AW39+ were not part of the Epoch29 freeze; L4 W43+ is post-checkpoint. PARITY promotion remains 0.",
+  "checkpoint_note": "Epoch30 portable canonical through L1 A23 / L2 AW42 / L3 AW41 / L4 W44. Lane2 AW40-AW42 were frozen from exact implementation head 6e62c34465c153a35e9d5b747c9597b382c56dc9, Lane3 AW39-AW41 from exact branch/evidence head 9809b128ab9a5d31f5e81c1cbf328e939767f2b4, and Lane4 W43-W44 from exact implementation head 56fd6f0e16a9972460bd82bf6d4e42aa32dbd626. HQ overlaid exact 44 owned-scope files at semantic commit f2b82b167ce2ddde1039666e29740d9ba52f9027. Run221 / 32884713489 passed 375/375 with 310 unhandled on PR merge ref 593dc1f0d75cb72a4353c21e00d0006776afcb7e. L1 remains deferred because A26 exact full current-tip audit is not PASS; A24-A33 remain unintegrated. L2 AW43+, L3 AW42+, and L4 W45+ are post-Epoch30. Worker3 integration-side status write ef2a060f402beaa1f10e518d3296abfb6cf0fa27 was preserved as status-only and exact Worker branch/evidence remained semantic authority. PARITY promotion remains 0.",
   "locks": [
     {"id":"shared-contract","owner":"HQ","scope":["tech-assets/moises-audio/Shared/**"],"notes":"shared data model / cross-module protocol; epoch-frozen for Workers"},
     {"id":"app-shell","owner":"HQ","scope":["tech-assets/moises-audio/App/**"],"notes":"navigation, global app state, root composition; epoch-frozen for Workers"},
