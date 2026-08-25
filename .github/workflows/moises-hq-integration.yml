@@ -39,13 +39,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      LANE1_EXPECTED_HEAD: e407d1819da1cff3862db1f666b7b1ebb3489612
+      LANE1_EXPECTED_HEAD: 49d6b1e3ef5903fef0729fe7b322bdf0f8f5acfc
     steps:
       - name: Checkout exact Worker 1 commit
         uses: actions/checkout@v4
         with:
           ref: ${{ env.LANE1_EXPECTED_HEAD }}
-          fetch-depth: 1
+          fetch-depth: 0
           clean: true
 
       - name: Verify checkout identity and cleanliness
@@ -87,6 +87,10 @@ jobs:
         shell: bash
         run: |
           export PYTHONPATH="$PWD/tech-assets/moises-audio/Separation/Server:$PWD/tech-assets/moises-audio/Separation/Evaluation:$PWD/tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          echo '=== failing modules in clean subprocesses ==='
+          python3 tech-assets/moises-audio/Separation/Tests/test_differential_gate.py || true
+          python3 tech-assets/moises-audio/Separation/Tests/test_rights_gate.py || true
+          echo '=== full discover ==='
           python3 -m unittest discover -v \
             -s tech-assets/moises-audio/Separation/Tests \
             -p 'test_*.py' || true
