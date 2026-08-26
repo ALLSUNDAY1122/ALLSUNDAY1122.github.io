@@ -25,13 +25,16 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
+
           p = Path('codemagic.yaml')
           s = p.read_text(encoding='utf-8')
-          start = s.index('\n  clipboard-widget-phase0:\n')
-          tail = s[start:]
-          end_rel = tail.find('\n  ', len('\n  clipboard-widget-phase0:\n'))
-          end = len(s) if end_rel < 0 else start + end_rel
-          block = s[start:end]
+          marker = '\n  clipboard-widget-phase0:\n'
+          start = s.index(marker)
+
+          # clipboard-widget-phase0 is intentionally the final workflow in
+          # codemagic.yaml. Keeping the complete tail avoids confusing nested
+          # four-space YAML keys with the next two-space workflow key.
+          block = s[start:]
 
           if 'Set unique TestFlight build number' not in block:
               needle = '''      - name: Initialize signing keychain\n'''
@@ -47,7 +50,7 @@ jobs:
                   raise SystemExit('artifact insertion point missing')
               block = block.replace(needle, insert + needle, 1)
 
-          s = s[:start] + block + s[end:]
+          s = s[:start] + block
           p.write_text(s, encoding='utf-8')
           print('PASS: clipboard Phase 0 workflow patched for TestFlight')
           PY
@@ -65,7 +68,7 @@ jobs:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           set -euo pipefail
-          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260826","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
+          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260826-r2","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
           python scripts/codemagic_build_gateway.py \
             --command /tmp/clipboard-widget-cm-command.json \
             --output /tmp/clipboard-widget-cm-result.json
