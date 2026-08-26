@@ -170,7 +170,13 @@ RECONCILIATION_STORE_IDS = (
     "a29_provider_delete_reconciliation_ledger",
     "a37_conflict_decision_store",
 )
-EXPECTED_RECONCILIATION_STORE_IDS = frozenset(RECONCILIATION_STORE_IDS)
+EXPECTED_RECONCILIATION_STORE_IDS = frozenset(
+    {
+        "a09_privacy_registry",
+        "a29_provider_delete_reconciliation_ledger",
+        "a37_conflict_decision_store",
+    }
+)
 
 
 def _validate_builtin_inventory() -> None:
