@@ -930,21 +930,27 @@ public enum AnalysisRealAudioParityAdjudicator {
         _ lhs: AnalysisAnalysisParityAdjudicationIssue,
         _ rhs: AnalysisAnalysisParityAdjudicationIssue
     ) -> Bool {
-        (
-            lhs.code.rawValue,
-            lhs.parityRowID ?? "",
-            lhs.fixtureID ?? "",
-            lhs.domain ?? "",
-            lhs.metric ?? "",
-            lhs.detail
-        ) < (
-            rhs.code.rawValue,
-            rhs.parityRowID ?? "",
-            rhs.fixtureID ?? "",
-            rhs.domain ?? "",
-            rhs.metric ?? "",
-            rhs.detail
-        )
+        let lhsCode = lhs.code.rawValue
+        let rhsCode = rhs.code.rawValue
+        if lhsCode != rhsCode { return lhsCode < rhsCode }
+
+        let lhsParityRowID = lhs.parityRowID ?? ""
+        let rhsParityRowID = rhs.parityRowID ?? ""
+        if lhsParityRowID != rhsParityRowID { return lhsParityRowID < rhsParityRowID }
+
+        let lhsFixtureID = lhs.fixtureID ?? ""
+        let rhsFixtureID = rhs.fixtureID ?? ""
+        if lhsFixtureID != rhsFixtureID { return lhsFixtureID < rhsFixtureID }
+
+        let lhsDomain = lhs.domain ?? ""
+        let rhsDomain = rhs.domain ?? ""
+        if lhsDomain != rhsDomain { return lhsDomain < rhsDomain }
+
+        let lhsMetric = lhs.metric ?? ""
+        let rhsMetric = rhs.metric ?? ""
+        if lhsMetric != rhsMetric { return lhsMetric < rhsMetric }
+
+        return lhs.detail < rhs.detail
     }
 }
 
