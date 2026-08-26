@@ -1,0 +1,164 @@
+name: Clipboard Widget Codemagic Signed Build
+
+on:
+  push:
+    branches:
+      - feature/clipboard-widget-poc
+    paths:
+      - '.github/workflows/clipboard-widget-codemagic-build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      CM_APP_ID: 6a769d81a1add9d06020b524
+      WORKFLOW_ID: clipboard-widget-phase0
+      TARGET_BRANCH: feature/clipboard-widget-poc
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dedicated Codemagic workflow on branch
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('codemagic.yaml')
+          s=p.read_text(encoding='utf-8')
+          marker='\n  clipboard-widget-phase0:\n'
+          if marker not in s:
+              block=r'''
+  clipboard-widget-phase0:
+    name: クリップボードWidget - Phase 0 Signed IPA
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      groups:
+        - app2_010_touhan_signing
+      vars:
+        APP_BUNDLE_ID: jp.allsunday1122.clipboardwidget
+        WIDGET_BUNDLE_ID: jp.allsunday1122.clipboardwidget.widget
+        XCODE_PROJECT: clipboard-widget/ClipboardWidget.xcodeproj
+        XCODE_SCHEME: ClipboardWidget
+      xcode: latest
+    scripts:
+      - name: Install tools and audit Phase 0
+        script: |
+          set -euo pipefail
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd "$CM_BUILD_DIR"
+          python3 clipboard-widget/Tests/static_audit.py
+          cd clipboard-widget
+          xcodegen generate
+      - name: Initialize signing keychain
+        script: |
+          set -euo pipefail
+          keychain initialize
+      - name: Fetch App Store signing files for app and widget
+        script: |
+          set -euo pipefail
+          app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE
+          app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE
+      - name: Add signing certificate to keychain
+        script: |
+          set -euo pipefail
+          keychain add-certificates
+      - name: Apply profiles to both targets
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/clipboard-widget"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed Phase 0 IPA
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+      - name: Verify signed app and widget are packaged
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          WIDGET_DIR="$(find "$APP_DIR/PlugIns" -maxdepth 1 -type d -name '*.appex' -print -quit)"
+          test -n "$APP_DIR"
+          test -n "$WIDGET_DIR"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Info.plist" | grep -Fx "$APP_BUNDLE_ID"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$WIDGET_DIR/Info.plist" | grep -Fx "$WIDGET_BUNDLE_ID"
+          test -f "$APP_DIR/embedded.mobileprovision"
+          test -f "$WIDGET_DIR/embedded.mobileprovision"
+          test -d "$APP_DIR/_CodeSignature"
+          test -d "$WIDGET_DIR/_CodeSignature"
+          echo 'PASS: signed IPA contains independently signed app + widget extension'
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+'''
+              if not s.endswith('\n'):
+                  s += '\n'
+              p.write_text(s + block, encoding='utf-8')
+          check=p.read_text(encoding='utf-8')
+          for token in ['clipboard-widget-phase0:', 'jp.allsunday1122.clipboardwidget.widget', 'fetch-signing-files "$WIDGET_BUNDLE_ID"', 'Verify signed app and widget are packaged']:
+              if token not in check:
+                  raise SystemExit('missing Codemagic token: '+token)
+          print('PASS: Codemagic Phase 0 workflow installed')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          git commit -m 'ci: install clipboard widget signed Codemagic build' || true
+          if ! git diff origin/feature/clipboard-widget-poc --quiet; then
+            git pull --rebase origin feature/clipboard-widget-poc
+            git push origin HEAD:feature/clipboard-widget-poc
+          fi
+
+      - name: Trigger Codemagic signed build and wait
+        id: build
+        continue-on-error: true
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          cat >/tmp/clipboard-widget-cm-command.json <<JSON
+          {"request_id":"clipboard-widget-phase0-signed-20260826","action":"build","workflow_id":"${WORKFLOW_ID}","branch":"${TARGET_BRANCH}","wait":true,"timeout_seconds":4200,"app_id":"${CM_APP_ID}"}
+          JSON
+          python scripts/codemagic_build_gateway.py \
+            --command /tmp/clipboard-widget-cm-command.json \
+            --output /tmp/clipboard-widget-cm-result.json
+
+      - name: Persist safe Codemagic result
+        if: always() && hashFiles('/tmp/clipboard-widget-cm-result.json') != ''
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('/tmp/clipboard-widget-cm-result.json').read_text())
+          keep={k:r.get(k) for k in ('request_id','ok','workflow_id','branch','resolved_app_id','build_id','status','app_id','error','build_details')}
+          out=Path('/tmp/clipboard-widget-cm-safe.json')
+          out.write_text(json.dumps(keep,ensure_ascii=False,indent=2)+'\n')
+          PY
+          git fetch origin feature/clipboard-widget-poc
+          git reset --hard origin/feature/clipboard-widget-poc
+          mkdir -p automation/clipboard-widget/evidence
+          cp /tmp/clipboard-widget-cm-safe.json automation/clipboard-widget/evidence/codemagic-phase0-signed-build.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/clipboard-widget/evidence/codemagic-phase0-signed-build.json
+          git commit -m 'chore: record clipboard widget Codemagic build evidence' || true
+          if ! git diff HEAD^ --quiet 2>/dev/null; then
+            git pull --rebase origin feature/clipboard-widget-poc
+            git push origin HEAD:feature/clipboard-widget-poc
+          fi
+
+      - name: Enforce signed build success
+        if: steps.build.outcome != 'success'
+        run: exit 1
