@@ -9,12 +9,15 @@
 - 原因2: `IntentExecutionTargets` / `allowedExecutionTargets` はXcode 26.6安定版SDKに未収録だった。
 - 対応: title/descriptionをimmutable化し、Beta API依存のBを安定版PoCから分離。AはApple公式の既定Widget Extension実行に戻して再compileする。
 
-## Static / CI Run 2
-- [ ] XcodeGen generate
-- [ ] iPhone Simulator compile
-- [ ] App target + Widget Extension link
-- [ ] Widget Extension内の `UIPasteboard.general` 書き込みコードcompile
-- [ ] Privacy manifest / entitlements static audit
+## Static / CI Run 2｜2026-08-26
+- [x] XcodeGen generate
+- [x] iPhone Simulator compile
+- [x] App target + Widget Extension link
+- [x] Widget Extension内の `UIPasteboard.general` 書き込みコードcompile
+- [x] Privacy manifest / entitlements static audit
+- GitHub Actions run: `32957705038` / job `98142958589`
+- Xcode: 26.6 / iOS Simulator SDK 26.5
+- 判定: **MACHINE_COMPILE_PASS**
 
 ## Device A
 - [ ] Large Widget配置
