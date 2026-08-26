@@ -5,6 +5,7 @@ package = (ROOT / "Package.swift").read_text(encoding="utf-8")
 runner = (ROOT / "HQGoldenRunner" / "main.swift").read_text(encoding="utf-8")
 v3_launcher = (ROOT / "HQGoldenRunner" / "run-formal-golden-v3.sh").read_text(encoding="utf-8")
 thresholdless_preflight = (ROOT / "HQGoldenRunner" / "run-formal-golden-v3-thresholdless-and-calibrate.sh").read_text(encoding="utf-8")
+decision_rerun = (ROOT / "HQGoldenRunner" / "run-formal-golden-v3-from-threshold-decision.sh").read_text(encoding="utf-8")
 machine_gate = (ROOT / "HQGoldenSupport" / "FormalGoldenMachineGate.swift").read_text(encoding="utf-8")
 review_bundle = (ROOT / "HQGoldenSupport" / "GoldenReviewBundleBuilder.swift").read_text(encoding="utf-8")
 reference_matcher = (ROOT / "HQGoldenSupport" / "ReferenceFeatureMatcher.swift").read_text(encoding="utf-8")
@@ -119,5 +120,30 @@ assert 'recommendedThreshold") is None' in thresholdless_preflight, "preflight m
 assert 'This launcher is thresholdless by contract' in thresholdless_preflight, "preflight must reject --match-threshold"
 assert 'next=HQ must inspect the real distributions/sweep/gaps and explicitly select a threshold' in thresholdless_preflight
 assert '--emit-threshold' not in thresholdless_preflight, "thresholdless preflight must not emit/select a threshold"
+
+# The second one-command helper may use a threshold only after the calibrator
+# validates a human/HQ-authored SHA-bound decision. It must never accept a raw
+# threshold argument and must stop at human review rather than Formal Golden PASS.
+for token in [
+    '--thresholdless-workspace',
+    '--decision',
+    '--validate-decision',
+    'THRESHOLD_DECISION_VALID_FOR_RERUN',
+    '--emit-threshold',
+    'run-formal-golden-v3.sh',
+    '--match-threshold "$threshold"',
+    'MACHINE_GATES_PASS_HUMAN_VISUAL_OCR_REVIEW_PENDING',
+    'PENDING_HUMAN_VISUAL_OCR_REVIEW',
+    'GOLDEN_V3_MACHINE_GATE_PASS_HUMAN_REVIEW_REQUIRED',
+    'FORMAL_GOLDEN_FAIL_MACHINE_GATE',
+    '06-golden-review',
+]:
+    assert token in decision_rerun, f"decision-bound rerun helper missing token: {token}"
+assert 'Do not supply --match-threshold directly' in decision_rerun, "decision-bound rerun must reject a raw threshold"
+assert 'pageRecall", 0) >= 0.99' in decision_rerun
+assert 'unmatchedOutputCount") == 0' in decision_rerun
+assert 'duplicateRate", 1) <= 0.005' in decision_rerun
+assert 'orderingAccuracy", 0) >= 1.0' in decision_rerun
+assert 'FORMAL_GOLDEN_PASS' not in decision_rerun, "decision-bound rerun helper must never issue Formal Golden PASS"
 
 print("HQ_GOLDEN_RUNNER_CONTRACT_PASS")
