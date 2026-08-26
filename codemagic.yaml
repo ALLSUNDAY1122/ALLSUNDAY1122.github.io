@@ -1104,6 +1104,8 @@ workflows:
           p.write_text(s.replace(old, 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1), encoding='utf-8')
           print('PASS: build number='+os.environ['CM_BUILD_NUMBER'])
           PY2
+          xcodegen generate
+          echo 'PASS: regenerated Xcode project with TestFlight build number'
 
       - name: Initialize signing keychain
         script: |
