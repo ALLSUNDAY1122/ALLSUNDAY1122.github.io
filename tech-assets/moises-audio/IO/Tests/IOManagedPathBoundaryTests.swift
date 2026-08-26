@@ -16,7 +16,10 @@ final class IOManagedPathBoundaryTests: XCTestCase {
 
         let store = IOFileStore(rootURL: root)
         XCTAssertThrowsError(try store.prepareDirectories(fileManager: fm)) { error in
-            XCTAssertEqual(error as? IOFileStore.StoreError, .unsafeManagedPath)
+            XCTAssertEqual(
+                error as? IOFileStore.StoreError,
+                .fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            )
         }
         XCTAssertTrue(try fm.contentsOfDirectory(atPath: external.path).isEmpty)
     }
@@ -38,7 +41,10 @@ final class IOManagedPathBoundaryTests: XCTestCase {
         try fm.createSymbolicLink(at: store.stagingURL, withDestinationURL: external)
 
         XCTAssertThrowsError(try store.stageCopy(from: source, fileManager: fm)) { error in
-            XCTAssertEqual(error as? IOFileStore.StoreError, .unsafeManagedPath)
+            XCTAssertEqual(
+                error as? IOFileStore.StoreError,
+                .fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            )
         }
         XCTAssertTrue(try fm.contentsOfDirectory(atPath: external.path).isEmpty)
     }
@@ -62,7 +68,10 @@ final class IOManagedPathBoundaryTests: XCTestCase {
         XCTAssertThrowsError(
             try store.finalizeImport(stagingFile: staged, preferredName: "song", fileManager: fm)
         ) { error in
-            XCTAssertEqual(error as? IOFileStore.StoreError, .unsafeManagedPath)
+            XCTAssertEqual(
+                error as? IOFileStore.StoreError,
+                .fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            )
         }
         XCTAssertTrue(fm.fileExists(atPath: staged.path))
         XCTAssertTrue(try fm.contentsOfDirectory(atPath: external.path).isEmpty)
@@ -87,7 +96,10 @@ final class IOManagedPathBoundaryTests: XCTestCase {
         XCTAssertThrowsError(
             try store.finalizeExport(stagingFile: staged, preferredName: "mix", fileManager: fm)
         ) { error in
-            XCTAssertEqual(error as? IOFileStore.StoreError, .unsafeManagedPath)
+            XCTAssertEqual(
+                error as? IOFileStore.StoreError,
+                .fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            )
         }
         XCTAssertTrue(fm.fileExists(atPath: staged.path))
         XCTAssertTrue(try fm.contentsOfDirectory(atPath: external.path).isEmpty)
@@ -110,7 +122,10 @@ final class IOManagedPathBoundaryTests: XCTestCase {
         XCTAssertThrowsError(
             try store.finalizeImport(stagingFile: stagedLink, preferredName: "forged", fileManager: fm)
         ) { error in
-            XCTAssertEqual(error as? IOFileStore.StoreError, .unsafeManagedPath)
+            XCTAssertEqual(
+                error as? IOFileStore.StoreError,
+                .fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            )
         }
         XCTAssertEqual(try Data(contentsOf: external), Data([9, 8, 7]))
     }
