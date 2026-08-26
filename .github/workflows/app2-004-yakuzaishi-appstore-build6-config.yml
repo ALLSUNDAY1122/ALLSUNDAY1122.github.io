@@ -1,0 +1,86 @@
+name: APP2-004 Pharmacist App Store Build 6 Config
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-004-yakuzaishi-appstore-build6-config-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-004-yakuzaishi-appstore-build6-config
+  cancel-in-progress: false
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Configure production-eligible pharmacist Build 6
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          cm = Path('codemagic.yaml')
+          text = cm.read_text(encoding='utf-8')
+          start = text.index('  pharmacist-ios:\n')
+          end = text.index('\n  shoshi-ios:', start)
+          section = text[start:end]
+
+          old_name = 'name: 薬剤師国家試験 - iOS Internal TestFlight'
+          new_name = 'name: 薬剤師国家試験 - iOS App Store Candidate'
+          old_step = '- name: Apply App Store signing profiles for internal TestFlight only'
+          new_step = '- name: Apply App Store signing profiles for App Store review'
+          old_cmd = "xcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'"
+          new_cmd = 'xcode-project use-profiles'
+
+          for needle in (old_name, old_step, old_cmd):
+              if section.count(needle) != 1:
+                  raise RuntimeError(f'Expected exactly one pharmacist release marker: {needle}')
+          section = section.replace(old_name, new_name, 1)
+          section = section.replace(old_step, new_step, 1)
+          section = section.replace(old_cmd, new_cmd, 1)
+          if 'testFlightInternalTestingOnly' in section:
+              raise RuntimeError('Internal-only export option still present in pharmacist workflow')
+          cm.write_text(text[:start] + section + text[end:], encoding='utf-8')
+
+          project = Path('pharmacist-manabi-sprint/ios/project.yml')
+          ptext = project.read_text(encoding='utf-8')
+          ptext, count = re.subn(r'CURRENT_PROJECT_VERSION:\s*5\b', 'CURRENT_PROJECT_VERSION: 6', ptext, count=1)
+          if count != 1:
+              raise RuntimeError('Expected pharmacist CURRENT_PROJECT_VERSION 5 before Build 6')
+          project.write_text(ptext, encoding='utf-8')
+          PY
+
+          ruby -e "require 'yaml'; YAML.load_file('codemagic.yaml'); puts 'PASS: codemagic.yaml parses'"
+          grep -A90 '^  pharmacist-ios:' codemagic.yaml | grep -q 'iOS App Store Candidate'
+          ! grep -A90 '^  pharmacist-ios:' codemagic.yaml | grep -q 'testFlightInternalTestingOnly'
+          grep -q 'CURRENT_PROJECT_VERSION: 6' pharmacist-manabi-sprint/ios/project.yml
+
+      - name: Commit Build 6 release configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml pharmacist-manabi-sprint/ios/project.yml
+          if ! git diff --cached --quiet; then
+            git commit -m 'Configure pharmacist production-eligible Build 6'
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then
+                exit 0
+              fi
+              sleep $((attempt * 2))
+            done
+            exit 1
+          fi
