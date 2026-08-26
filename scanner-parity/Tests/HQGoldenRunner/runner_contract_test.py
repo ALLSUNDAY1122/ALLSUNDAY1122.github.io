@@ -1,4 +1,5 @@
 from pathlib import Path
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
 package = (ROOT / "Package.swift").read_text(encoding="utf-8")
@@ -6,6 +7,8 @@ runner = (ROOT / "HQGoldenRunner" / "main.swift").read_text(encoding="utf-8")
 v3_launcher = (ROOT / "HQGoldenRunner" / "run-formal-golden-v3.sh").read_text(encoding="utf-8")
 thresholdless_preflight = (ROOT / "HQGoldenRunner" / "run-formal-golden-v3-thresholdless-and-calibrate.sh").read_text(encoding="utf-8")
 decision_rerun = (ROOT / "HQGoldenRunner" / "run-formal-golden-v3-from-threshold-decision.sh").read_text(encoding="utf-8")
+human_review_helper_path = ROOT / "HQGoldenRunner" / "run-formal-golden-v3-human-review.sh"
+human_review_helper = human_review_helper_path.read_text(encoding="utf-8")
 machine_gate = (ROOT / "HQGoldenSupport" / "FormalGoldenMachineGate.swift").read_text(encoding="utf-8")
 review_bundle = (ROOT / "HQGoldenSupport" / "GoldenReviewBundleBuilder.swift").read_text(encoding="utf-8")
 reference_matcher = (ROOT / "HQGoldenSupport" / "ReferenceFeatureMatcher.swift").read_text(encoding="utf-8")
@@ -145,5 +148,31 @@ assert 'unmatchedOutputCount") == 0' in decision_rerun
 assert 'duplicateRate", 1) <= 0.005' in decision_rerun
 assert 'orderingAccuracy", 0) >= 1.0' in decision_rerun
 assert 'FORMAL_GOLDEN_PASS' not in decision_rerun, "decision-bound rerun helper must never issue Formal Golden PASS"
+
+# Human review remains an explicit local action. The helper may prepare an
+# interactive local-only portal and may invoke the SHA-bound finalizer only on a
+# separately exported completed review file. It must not contain a bulk-pass or
+# automatic-review operation.
+subprocess.run(["bash", "-n", str(human_review_helper_path)], check=True)
+for token in [
+    'PENDING_HUMAN_VISUAL_OCR_REVIEW',
+    'MACHINE_GATES_PASS_HUMAN_VISUAL_OCR_REVIEW_PENDING',
+    '--create-template',
+    '--review-decisions',
+    'review-and-finalize.html',
+    'visualCorrection',
+    'ocrSemantic',
+    'Reviewer',
+    'reviewComplete',
+    'reviewedAt',
+    'Export signed review JSON',
+    'FORMAL_GOLDEN_PASS',
+    'FORMAL_GOLDEN_FINALIZATION_CONFIRMED',
+]:
+    assert token in human_review_helper, f"human-review helper missing token: {token}"
+assert 'mark all' not in human_review_helper.lower(), "human-review helper must not offer bulk-pass shortcuts"
+assert 'reviewer=document.getElementById' in human_review_helper
+assert "if(!reviewer)" in human_review_helper and "if(!complete)" in human_review_helper and "if(pending.length)" in human_review_helper
+assert 'if verdict != "FORMAL_GOLDEN_PASS"' in human_review_helper, "helper must fail closed unless the canonical finalizer passes"
 
 print("HQ_GOLDEN_RUNNER_CONTRACT_PASS")
