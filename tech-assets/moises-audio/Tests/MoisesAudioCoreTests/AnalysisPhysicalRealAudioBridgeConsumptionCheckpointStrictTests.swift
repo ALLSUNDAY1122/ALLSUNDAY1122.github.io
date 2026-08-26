@@ -142,7 +142,7 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionCheckpointStrictTests: XCT
         XCTAssertEqual(handoff2.predecessorHandoffRootSHA256, handoff1.declaredHandoffRootSHA256)
         XCTAssertTrue(AnalysisPhysicalRealAudioBridgeConsumptionCheckpointManager.validateHandoff(handoff2, checkpoint: checkpoint2))
 
-        let unrelated = try AnalysisPhysicalRealAudioBridgeExternalAnchorHandoff(
+        let unrelated = AnalysisPhysicalRealAudioBridgeExternalAnchorHandoff(
             handoffID: "unrelated",
             authority: handoff1.authority,
             approvalReference: handoff1.approvalReference,
