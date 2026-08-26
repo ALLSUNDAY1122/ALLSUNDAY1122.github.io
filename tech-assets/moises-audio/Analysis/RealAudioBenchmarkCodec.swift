@@ -8,7 +8,7 @@ public enum AnalysisRealAudioBenchmarkCodec {
 
     public static func encodeManifest(_ manifest: AnalysisRealAudioBenchmarkManifest) throws -> Data {
         let encoder = makeEncoder()
-        return try encoder.encode(manifest)
+        return try encoder.encode(CanonicalManifest(manifest))
     }
 
     public static func encodeReport(_ report: AnalysisRealAudioBenchmarkReport) throws -> Data {
@@ -49,6 +49,67 @@ public enum AnalysisRealAudioBenchmarkCodec {
     public static func decodePairedDifferentialReport(_ data: Data) throws -> AnalysisPairedDifferentialReport {
         let decoder = makeDecoder()
         return try decoder.decode(AnalysisPairedDifferentialReport.self, from: data)
+    }
+
+    // A manifest hash is used as provenance throughout W22/W36/W46/W47. Swift Set
+    // iteration order is deliberately unspecified, so directly synthesizing Codable for
+    // AnalysisRightsEvidence.permittedUses makes otherwise-identical manifests capable of
+    // producing different bytes and therefore different provenance roots. Encode through a
+    // wire-compatible surrogate that sorts the set while preserving the existing JSON shape.
+    private struct CanonicalManifest: Encodable {
+        let schemaVersion: Int
+        let manifestID: String
+        let createdAt: Date
+        let cases: [CanonicalCase]
+
+        init(_ manifest: AnalysisRealAudioBenchmarkManifest) {
+            schemaVersion = manifest.schemaVersion
+            manifestID = manifest.manifestID
+            createdAt = manifest.createdAt
+            cases = manifest.cases.map(CanonicalCase.init)
+        }
+    }
+
+    private struct CanonicalCase: Encodable {
+        let fixtureID: String
+        let projectID: UUID
+        let assetID: UUID
+        let relativePath: String
+        let genre: String
+        let sourceKind: AnalysisBenchmarkSourceKind
+        let expectedDurationSeconds: Double
+        let rights: CanonicalRights
+        let reference: AnalysisReferenceAnnotation
+
+        init(_ item: AnalysisRealAudioBenchmarkCase) {
+            fixtureID = item.fixtureID
+            projectID = item.projectID
+            assetID = item.assetID
+            relativePath = item.relativePath
+            genre = item.genre
+            sourceKind = item.sourceKind
+            expectedDurationSeconds = item.expectedDurationSeconds
+            rights = CanonicalRights(item.rights)
+            reference = item.reference
+        }
+    }
+
+    private struct CanonicalRights: Encodable {
+        let grantID: String
+        let rightsClass: AnalysisRightsClass
+        let permittedUses: [AnalysisBenchmarkPermittedUse]
+        let expiresAt: Date?
+        let sourceSHA256: String
+        let notes: String?
+
+        init(_ rights: AnalysisRightsEvidence) {
+            grantID = rights.grantID
+            rightsClass = rights.rightsClass
+            permittedUses = rights.permittedUses.sorted { $0.rawValue < $1.rawValue }
+            expiresAt = rights.expiresAt
+            sourceSHA256 = rights.sourceSHA256
+            notes = rights.notes
+        }
     }
 
     private static func makeEncoder() -> JSONEncoder {
