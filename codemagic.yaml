@@ -1089,6 +1089,22 @@ workflows:
           python3 clipboard-widget/Tests/static_audit.py
           cd clipboard-widget
           xcodegen generate
+      - name: Set unique TestFlight build number
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/clipboard-widget"
+          python3 - <<'PY2'
+          import os
+          from pathlib import Path
+          p=Path('project.yml')
+          s=p.read_text(encoding='utf-8')
+          old='CURRENT_PROJECT_VERSION: 1'
+          if old not in s:
+              raise SystemExit('CURRENT_PROJECT_VERSION baseline not found')
+          p.write_text(s.replace(old, 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1), encoding='utf-8')
+          print('PASS: build number='+os.environ['CM_BUILD_NUMBER'])
+          PY2
+
       - name: Initialize signing keychain
         script: |
           set -euo pipefail
@@ -1131,6 +1147,13 @@ workflows:
           test -d "$APP_DIR/_CodeSignature"
           test -d "$WIDGET_DIR/_CodeSignature"
           echo 'PASS: signed IPA contains independently signed app + widget extension'
+      - name: Upload signed IPA to TestFlight
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          app-store-connect publish --path "$IPA_PATH"
+          echo 'PASS: TestFlight upload command completed'
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
