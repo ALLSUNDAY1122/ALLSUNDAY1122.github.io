@@ -145,14 +145,15 @@ jobs:
           assert report['dependency_contracts']['state'] == 'PASS', report['dependency_contracts']
           assert report['unittest_discovery']['state'] == 'PASS', report['unittest_discovery']
           print('L1_A26_EXACT_AUDIT_PASS')
-          print(json.dumps({
-            'overall_state': report['overall_state'],
-            'git_head_binding': report['git_head_binding']['state'],
-            'owned_source_snapshot': report['owned_source_snapshot']['state'],
-            'dependency_contracts': report['dependency_contracts']['state'],
-            'unittest_discovery': report['unittest_discovery']['state'],
-          }, sort_keys=True))
           PY
+      - name: Diagnose full unittest errors
+        if: failure()
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -o pipefail
+          export PYTHONPATH="$PWD/Separation/Server:$PWD/Separation/Evaluation:$PWD/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          python3 -m unittest discover -v -s Separation/Tests -p 'test_*.py'
       - name: Upload exact audit report
         if: always()
         uses: actions/upload-artifact@v4
