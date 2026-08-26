@@ -123,6 +123,8 @@ let package = Package(
                 "Analysis/AnalysisPhysicalRealAudioCorpusValidation.swift",
                 "Analysis/AnalysisPhysicalRealAudioCorpusReport.swift",
                 "Analysis/AnalysisPhysicalRealAudioCorpusHelpers.swift",
+                "Analysis/AnalysisPhysicalRealAudioParityBridge.swift",
+                "Analysis/AnalysisPhysicalRealAudioParityBridgeCertificateValidation.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
