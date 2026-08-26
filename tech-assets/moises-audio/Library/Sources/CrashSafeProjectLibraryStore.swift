@@ -57,6 +57,7 @@ public final class CrashSafeProjectLibraryStore:
         )
         self.liveReferenceResolver = liveReferenceResolver
         try artifacts.ensureLayout()
+        _ = try Lane2DeletionOwnershipManifestRecovery(rootURL: artifactRootURL).reconcile()
         try deletionOwnership.ensureLayout()
     }
 
