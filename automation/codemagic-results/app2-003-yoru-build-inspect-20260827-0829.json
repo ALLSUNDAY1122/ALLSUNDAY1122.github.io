@@ -1,0 +1,159 @@
+{
+  "request_id": "app2-003-yoru-build-inspect-20260827-0829",
+  "ok": true,
+  "action": "inspect_build",
+  "workflow_id": null,
+  "branch": null,
+  "resolved_app_id": null,
+  "application_candidates": null,
+  "note": null,
+  "build_id": "6a8afb237787725ef828f194",
+  "status": "failed",
+  "app_id": null,
+  "error": null,
+  "build_details": {
+    "id": "6a8afb237787725ef828f194",
+    "app_id": "6a8af6e5a5c86907b00c2efd",
+    "workflow": {
+      "id": "yoru-ios",
+      "source": "file",
+      "name": "夜の書架 - iOS Internal TestFlight"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "failed",
+    "index": 7,
+    "artifacts": [
+      {
+        "name": "yoru-no-shoka_7_artifacts.zip",
+        "size_in_bytes": 1765,
+        "type": "bundle",
+        "short_lived_download_url": "https://api.codemagic.io//artifacts/.eJwVwceSgjAAANB_8Z4ZlKI57AEIUqSs0nNhFAQNoQWU8vU7-96ukv8pA-ETusldzwcJisJvR4MnhJTdV0vRw6-WT2VxwxVY-5nYxsg5LxSe8CtKSwSPZMLKVxLVN-lEX_GvJ2oSIUmPzRFnAKATZHaASn0eAnVoIJj6CymdeutSsGwsKn4FXak5rsbg8n4ygp-e_JZKU0Yx47r7VHSWG1aaL4htguzhvjS1zmqPH801ynLzoiNnvdleGZlxyx1Cw3fcufDnEaZU20T3fOMzLrcBkjKrzSvjSiUDeTCe61jvhIWyYMEMHmKJ7ZXl0X401QI5hR-SUqsC9QN5cdu4kuorezXmzj3EfKuOP7s_wVtocQ.D23W_8yoXcPtoY1SX1955rGJpQ0",
+        "version_code": null,
+        "version_name": null
+      }
+    ],
+    "labels": [],
+    "release_notes": [],
+    "created_at": "2026-08-23T13:52:35.421000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "bcffa99f60a052c20d0821e98759af239bc7508b",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "Capture production signing and IPA diagnostics",
+      "url": "https://github.com/ALLSUNDAY1122/yoru-no-shoka/commit/bcffa99f60a052c20d0821e98759af239bc7508b"
+    },
+    "branch": "main",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-08-23T13:52:42.511000Z",
+    "finished_at": "2026-08-23T13:53:31.990000Z"
+  },
+  "actions": {
+    "data": [
+      {
+        "id": "6a8afb24be3cf7d583ba7c28",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-23T13:52:42.771000Z",
+        "finished_at": "2026-08-23T13:53:10.231000Z"
+      },
+      {
+        "id": "6a8afb24be3cf7d583ba7c29",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-23T13:53:10.231000Z",
+        "finished_at": "2026-08-23T13:53:13.976000Z"
+      },
+      {
+        "id": "6a8afb24be3cf7d583ba7c2a",
+        "name": "Install pnpm and project dependencies",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nexec > >(tee -a \"$CM_BUILD_DIR/yoru-production.log\") 2>&1\necho \"=== stage: dependencies ===\"\nnpm install --global --force pnpm@11.9.0\npnpm --version\npnpm install --frozen-lockfile",
+        "status": "success",
+        "started_at": "2026-08-23T13:53:13.976000Z",
+        "finished_at": "2026-08-23T13:53:26.940000Z"
+      },
+      {
+        "id": "6a8afb24be3cf7d583ba7c2b",
+        "name": "Build Pattern C web bundle and sync Capacitor iOS",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nexec > >(tee -a \"$CM_BUILD_DIR/yoru-production.log\") 2>&1\necho \"=== stage: ios-prepare ===\"\npnpm ios:prepare",
+        "status": "success",
+        "started_at": "2026-08-23T13:53:26.940000Z",
+        "finished_at": "2026-08-23T13:53:29.011000Z"
+      },
+      {
+        "id": "6a8afb24be3cf7d583ba7c2c",
+        "name": "Synchronize and audit release version",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nexec > >(tee -a \"$CM_BUILD_DIR/yoru-production.log\") 2>&1\necho \"=== stage: version-audit ===\"\nnode scripts/sync-ios-release-version.mjs\ngrep -q 'MARKETING_VERSION = 1.2.0;' \"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\"\ngrep -q 'CURRENT_PROJECT_VERSION = 4;' \"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\"\ngrep -q 'PRODUCT_BUNDLE_IDENTIFIER = io.github.allsunday1122.yorunoshoka;' \"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\"\ntest \"$APP_VERSION\" = \"1.2.0\"\ntest \"$APP_BUILD_NUMBER\" = \"4\"\ntest \"$APP_STORE_CONNECT_APP_ID\" = \"6794137637\"",
+        "status": "success",
+        "started_at": "2026-08-23T13:53:29.011000Z",
+        "finished_at": "2026-08-23T13:53:29.429000Z"
+      },
+      {
+        "id": "6a8afb24be3cf7d583ba7c2d",
+        "name": "Prepare App Store signing files",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nexec > >(tee -a \"$CM_BUILD_DIR/yoru-production.log\") 2>&1\necho \"=== stage: signing ===\"\nkeychain initialize\napp-store-connect fetch-signing-files \"$BUNDLE_ID\" \\\n  --type IOS_APP_STORE \\\n  --create\nkeychain add-certificates\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
+        "status": "failed",
+        "started_at": "2026-08-23T13:53:29.429000Z",
+        "finished_at": "2026-08-23T13:53:30.609000Z"
+      },
+      {
+        "id": "6a8afb24be3cf7d583ba7c2e",
+        "name": "Build signed IPA",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nexec > >(tee -a \"$CM_BUILD_DIR/yoru-production.log\") 2>&1\necho \"=== stage: build-ipa ===\"\nxcode-project build-ipa \\\n  --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  --scheme \"$XCODE_SCHEME\"",
+        "status": "skipped",
+        "started_at": "2026-08-23T13:53:30.609000Z",
+        "finished_at": "2026-08-23T13:53:30.610000Z"
+      },
+      {
+        "id": "6a8afb24be3cf7d583ba7c2f",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-23T13:53:30.610000Z",
+        "finished_at": "2026-08-23T13:53:31.906000Z"
+      },
+      {
+        "id": "6a8afb24be3cf7d583ba7c30",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-23T13:53:31.906000Z",
+        "finished_at": "2026-08-23T13:53:31.990000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
