@@ -5,10 +5,10 @@ public extension CrashSafeProjectLibraryStore {
     /// Production open for callers that do not need PreservingCoreDataStoreOpener.
     /// AW24 bounds legacy preparation; AW26 injects targeted live-reference authorization; AW31
     /// reconciles bounded previous-session managed publication intents before AW30 compatibility
-    /// census. Census runs only after publication recovery is safe; AW46 repairs missing/corrupt/stale
-    /// deletion-ownership active-shard manifests from the fixed 256-shard namespace before CrashSafe
-    /// deletion recovery. Corrupt/unsafe publication state leaves inventory authority absent for this
-    /// open. In-memory tests retain the full-projection fallback.
+    /// census. Census runs only after publication recovery is safe; AW46 deletion-ownership manifest
+    /// reconciliation is centralized in CrashSafeProjectLibraryStore initialization so every
+    /// construction path receives it exactly once. Corrupt/unsafe publication state leaves inventory
+    /// authority absent for this open. In-memory tests retain the full-projection fallback.
     static func openBulkPrepared(
         metadataConfiguration: CoreDataProjectLibraryStore.Configuration,
         artifactRootURL: URL
@@ -39,9 +39,6 @@ public extension CrashSafeProjectLibraryStore {
         } else {
             resolver = nil
         }
-        _ = try Lane2DeletionOwnershipManifestRecovery(
-            rootURL: artifactRootURL
-        ).reconcile()
         let store = try CrashSafeProjectLibraryStore(
             metadata: metadata,
             artifactRootURL: artifactRootURL,
