@@ -36,7 +36,7 @@ struct L3AW45SinglePassCodecIdentityBenchmarkMain {
         var checksum: UInt64 = 0
 
         for _ in 0..<iterations {
-            let oldStart = ContinuousClock.now
+            let oldStart = Date().timeIntervalSinceReferenceDate
             let report = try Lane3RepresentativeCodecExecutionProbe.sweep(
                 source: source,
                 descriptor: descriptor,
@@ -48,12 +48,12 @@ struct L3AW45SinglePassCodecIdentityBenchmarkMain {
                 observed: source,
                 chunkFrames: 4_096
             )
-            oldElapsed += Double(oldStart.duration(to: .now).components.attoseconds) / 1e18
+            oldElapsed += Date().timeIntervalSinceReferenceDate - oldStart
             checksum ^= report.rollingPCMChecksumFNV1A64 ?? 0
             checksum ^= UInt64(identity.referenceDigestSHA256.prefix(16), radix: 16) ?? 0
 
             var fnv: UInt64 = 0xcbf29ce484222325
-            let newStart = ContinuousClock.now
+            let newStart = Date().timeIntervalSinceReferenceDate
             let digest = try Lane3LongTrackPCMIdentityHasher.digestWithChunkVisitor(
                 source,
                 chunkFrames: 4_096
@@ -63,7 +63,7 @@ struct L3AW45SinglePassCodecIdentityBenchmarkMain {
                     fnv = fnv &* 0x100000001b3
                 }
             }
-            newElapsed += Double(newStart.duration(to: .now).components.attoseconds) / 1e18
+            newElapsed += Date().timeIntervalSinceReferenceDate - newStart
             precondition(digest == identity.referenceDigestSHA256)
             precondition(fnv == report.rollingPCMChecksumFNV1A64)
             checksum ^= fnv
