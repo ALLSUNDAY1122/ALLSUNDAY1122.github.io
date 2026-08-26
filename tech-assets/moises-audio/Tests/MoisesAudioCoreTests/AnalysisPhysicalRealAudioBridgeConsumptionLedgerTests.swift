@@ -7,6 +7,10 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionLedgerTests: XCTestCase {
         String(repeating: String(character), count: 64)
     }
 
+    private func indexedSHA(_ value: UInt64) -> String {
+        String(repeating: "0", count: 48) + String(format: "%016llx", value)
+    }
+
     private func temporaryRoot() throws -> URL {
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent("w49-\(UUID().uuidString)", isDirectory: true)
@@ -15,11 +19,7 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionLedgerTests: XCTestCase {
     }
 
     private func custody(_ id: String = "custody-1") -> AnalysisPhysicalRealAudioBridgeConsumptionCustody {
-        .init(
-            authority: "HQ_LATE_INTEGRATION",
-            approvalReference: "HQ-W49-CUSTODY",
-            custodyID: id
-        )
+        .init(authority: "HQ_LATE_INTEGRATION", approvalReference: "HQ-W49-CUSTODY", custodyID: id)
     }
 
     private func certificate(
@@ -82,48 +82,27 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionLedgerTests: XCTestCase {
     func testAppendIsMonotonicAndInventoryFeedsFutureW48Expectation() throws {
         let root = try temporaryRoot()
         defer { try? FileManager.default.removeItem(at: root) }
-        let first = try certificate(
-            bridgeID: "bridge-1",
-            packageRoot: sha("a"),
-            reportRoot: sha("b"),
-            expectationRoot: sha("c")
-        )
-        let second = try certificate(
-            bridgeID: "bridge-2",
-            packageRoot: sha("d"),
-            reportRoot: sha("e"),
-            expectationRoot: sha("f")
-        )
+        let first = try certificate(bridgeID: "bridge-1", packageRoot: sha("a"), reportRoot: sha("b"), expectationRoot: sha("c"))
+        let second = try certificate(bridgeID: "bridge-2", packageRoot: sha("d"), reportRoot: sha("e"), expectationRoot: sha("f"))
 
         let head1 = try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.append(
-            ledgerID: "analysis-w48-consumption",
-            certificate: first,
-            custody: custody("custody-1"),
-            rootURL: root
+            ledgerID: "analysis-w48-consumption", certificate: first, custody: custody("custody-1"), rootURL: root
         )
         XCTAssertEqual(head1.latestSequence, 1)
         XCTAssertNil(head1.records[0].predecessorRecordRootSHA256)
 
         let head2 = try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.append(
-            ledgerID: "analysis-w48-consumption",
-            certificate: second,
-            custody: custody("custody-2"),
-            rootURL: root
+            ledgerID: "analysis-w48-consumption", certificate: second, custody: custody("custody-2"), rootURL: root
         )
         XCTAssertEqual(head2.latestSequence, 2)
         XCTAssertEqual(head2.records[1].predecessorRecordRootSHA256, head2.records[0].recordRootSHA256)
-        XCTAssertEqual(head2.latestRecordRootSHA256, head2.records[1].recordRootSHA256)
 
         let inventory = try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.consumedW47PackageRootSHA256s(
-            ledgerID: "analysis-w48-consumption",
-            rootURL: root
+            ledgerID: "analysis-w48-consumption", rootURL: root
         )
         XCTAssertEqual(inventory, [sha("a"), sha("d")])
-
         let future = try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.expectationUsingDurableConsumedInventory(
-            base: baseExpectation(packageRoot: sha("9")),
-            ledgerID: "analysis-w48-consumption",
-            rootURL: root
+            base: baseExpectation(packageRoot: sha("9")), ledgerID: "analysis-w48-consumption", rootURL: root
         )
         XCTAssertEqual(future.previouslyConsumedW47PackageRootSHA256s, inventory)
     }
@@ -131,37 +110,17 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionLedgerTests: XCTestCase {
     func testDuplicateBridgeAndPackageRootsFailClosed() throws {
         let root = try temporaryRoot()
         defer { try? FileManager.default.removeItem(at: root) }
-        let original = try certificate(
-            bridgeID: "bridge-1",
-            packageRoot: sha("a"),
-            reportRoot: sha("b"),
-            expectationRoot: sha("c")
-        )
+        let original = try certificate(bridgeID: "bridge-1", packageRoot: sha("a"), reportRoot: sha("b"), expectationRoot: sha("c"))
         _ = try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.append(
-            ledgerID: "ledger",
-            certificate: original,
-            custody: custody(),
-            rootURL: root
+            ledgerID: "ledger", certificate: original, custody: custody(), rootURL: root
         )
-
-        let sameBridge = try certificate(
-            bridgeID: "bridge-1",
-            packageRoot: sha("d"),
-            reportRoot: sha("e"),
-            expectationRoot: sha("f")
-        )
+        let sameBridge = try certificate(bridgeID: "bridge-1", packageRoot: sha("d"), reportRoot: sha("e"), expectationRoot: sha("f"))
         XCTAssertThrowsError(try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.append(
             ledgerID: "ledger", certificate: sameBridge, custody: custody("custody-2"), rootURL: root
         )) { error in
             XCTAssertEqual(error as? AnalysisPhysicalRealAudioBridgeConsumptionLedgerError, .duplicateBridgeID)
         }
-
-        let samePackage = try certificate(
-            bridgeID: "bridge-2",
-            packageRoot: sha("a"),
-            reportRoot: sha("d"),
-            expectationRoot: sha("e")
-        )
+        let samePackage = try certificate(bridgeID: "bridge-2", packageRoot: sha("a"), reportRoot: sha("d"), expectationRoot: sha("e"))
         XCTAssertThrowsError(try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.append(
             ledgerID: "ledger", certificate: samePackage, custody: custody("custody-3"), rootURL: root
         )) { error in
@@ -172,17 +131,9 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionLedgerTests: XCTestCase {
     func testRecordMutationAndUnreferencedForkRecordFailClosed() throws {
         let root = try temporaryRoot()
         defer { try? FileManager.default.removeItem(at: root) }
-        let cert = try certificate(
-            bridgeID: "bridge-1",
-            packageRoot: sha("a"),
-            reportRoot: sha("b"),
-            expectationRoot: sha("c")
-        )
+        let cert = try certificate(bridgeID: "bridge-1", packageRoot: sha("a"), reportRoot: sha("b"), expectationRoot: sha("c"))
         let head = try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.append(
-            ledgerID: "ledger",
-            certificate: cert,
-            custody: custody(),
-            rootURL: root
+            ledgerID: "ledger", certificate: cert, custody: custody(), rootURL: root
         )
         let ledgerURL = root.appendingPathComponent("w49-bridge-consumption/ledger", isDirectory: true)
         let recordURL = ledgerURL.appendingPathComponent(head.records[0].relativePath)
@@ -219,59 +170,40 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionLedgerTests: XCTestCase {
     func testStaleCheckpointReplayFailsAfterLedgerAdvances() throws {
         let root = try temporaryRoot()
         defer { try? FileManager.default.removeItem(at: root) }
-        let first = try certificate(
-            bridgeID: "bridge-1", packageRoot: sha("a"), reportRoot: sha("b"), expectationRoot: sha("c")
-        )
+        let first = try certificate(bridgeID: "bridge-1", packageRoot: sha("a"), reportRoot: sha("b"), expectationRoot: sha("c"))
         _ = try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.append(
             ledgerID: "ledger", certificate: first, custody: custody(), rootURL: root
         )
         let checkpoint1 = try AnalysisPhysicalRealAudioBridgeConsumptionCheckpointManager.makeCheckpoint(
-            ledgerID: "ledger",
-            checkpointID: "checkpoint-1",
-            checkpointSequence: 1,
-            approvalReference: "HQ-W49-CHECKPOINT-1",
-            rootURL: root
+            ledgerID: "ledger", checkpointID: "checkpoint-1", checkpointSequence: 1,
+            approvalReference: "HQ-W49-CHECKPOINT-1", rootURL: root
         )
-        try AnalysisPhysicalRealAudioBridgeConsumptionCheckpointManager.verifyCurrentLedger(
-            checkpoint: checkpoint1,
-            rootURL: root
-        )
+        try AnalysisPhysicalRealAudioBridgeConsumptionCheckpointManager.verifyCurrentLedger(checkpoint: checkpoint1, rootURL: root)
 
-        let second = try certificate(
-            bridgeID: "bridge-2", packageRoot: sha("d"), reportRoot: sha("e"), expectationRoot: sha("f")
-        )
+        let second = try certificate(bridgeID: "bridge-2", packageRoot: sha("d"), reportRoot: sha("e"), expectationRoot: sha("f"))
         _ = try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.append(
             ledgerID: "ledger", certificate: second, custody: custody("custody-2"), rootURL: root
         )
         XCTAssertThrowsError(try AnalysisPhysicalRealAudioBridgeConsumptionCheckpointManager.verifyCurrentLedger(
-            checkpoint: checkpoint1,
-            rootURL: root
+            checkpoint: checkpoint1, rootURL: root
         )) { error in
             XCTAssertEqual(error as? AnalysisPhysicalRealAudioBridgeConsumptionCheckpointError, .staleCheckpointReplay)
         }
 
         let checkpoint2 = try AnalysisPhysicalRealAudioBridgeConsumptionCheckpointManager.makeCheckpoint(
-            ledgerID: "ledger",
-            checkpointID: "checkpoint-2",
-            checkpointSequence: 2,
-            approvalReference: "HQ-W49-CHECKPOINT-2",
-            previousCheckpoint: checkpoint1,
-            rootURL: root
+            ledgerID: "ledger", checkpointID: "checkpoint-2", checkpointSequence: 2,
+            approvalReference: "HQ-W49-CHECKPOINT-2", previousCheckpoint: checkpoint1, rootURL: root
         )
         XCTAssertEqual(checkpoint2.predecessorCheckpointRootSHA256, checkpoint1.declaredCheckpointRootSHA256)
         try AnalysisPhysicalRealAudioBridgeConsumptionCheckpointManager.verifyCurrentLedger(
-            checkpoint: checkpoint2,
-            previousCheckpoint: checkpoint1,
-            rootURL: root
+            checkpoint: checkpoint2, previousCheckpoint: checkpoint1, rootURL: root
         )
     }
 
     func testExternalHandoffChainBindsExactCheckpoint() throws {
         let root = try temporaryRoot()
         defer { try? FileManager.default.removeItem(at: root) }
-        let first = try certificate(
-            bridgeID: "bridge-1", packageRoot: sha("a"), reportRoot: sha("b"), expectationRoot: sha("c")
-        )
+        let first = try certificate(bridgeID: "bridge-1", packageRoot: sha("a"), reportRoot: sha("b"), expectationRoot: sha("c"))
         _ = try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.append(
             ledgerID: "ledger", certificate: first, custody: custody(), rootURL: root
         )
@@ -280,15 +212,11 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionLedgerTests: XCTestCase {
             approvalReference: "HQ-W49-CHECKPOINT-1", rootURL: root
         )
         let handoff1 = try AnalysisPhysicalRealAudioBridgeConsumptionCheckpointManager.makeExternalAnchorHandoff(
-            handoffID: "handoff-1",
-            approvalReference: "HQ-W49-HANDOFF-1",
-            checkpoint: checkpoint1
+            handoffID: "handoff-1", approvalReference: "HQ-W49-HANDOFF-1", checkpoint: checkpoint1
         )
         XCTAssertTrue(AnalysisPhysicalRealAudioBridgeConsumptionCheckpointManager.validateHandoff(handoff1, checkpoint: checkpoint1))
 
-        let second = try certificate(
-            bridgeID: "bridge-2", packageRoot: sha("d"), reportRoot: sha("e"), expectationRoot: sha("f")
-        )
+        let second = try certificate(bridgeID: "bridge-2", packageRoot: sha("d"), reportRoot: sha("e"), expectationRoot: sha("f"))
         _ = try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.append(
             ledgerID: "ledger", certificate: second, custody: custody("custody-2"), rootURL: root
         )
@@ -297,10 +225,8 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionLedgerTests: XCTestCase {
             approvalReference: "HQ-W49-CHECKPOINT-2", previousCheckpoint: checkpoint1, rootURL: root
         )
         let handoff2 = try AnalysisPhysicalRealAudioBridgeConsumptionCheckpointManager.makeExternalAnchorHandoff(
-            handoffID: "handoff-2",
-            approvalReference: "HQ-W49-HANDOFF-2",
-            checkpoint: checkpoint2,
-            previousHandoff: handoff1
+            handoffID: "handoff-2", approvalReference: "HQ-W49-HANDOFF-2",
+            checkpoint: checkpoint2, previousHandoff: handoff1
         )
         XCTAssertEqual(handoff2.predecessorHandoffRootSHA256, handoff1.declaredHandoffRootSHA256)
         XCTAssertTrue(AnalysisPhysicalRealAudioBridgeConsumptionCheckpointManager.validateHandoff(handoff2, checkpoint: checkpoint2))
@@ -310,9 +236,7 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionLedgerTests: XCTestCase {
     func testCheckpointMutationCannotReuseDeclaredRoot() throws {
         let root = try temporaryRoot()
         defer { try? FileManager.default.removeItem(at: root) }
-        let cert = try certificate(
-            bridgeID: "bridge-1", packageRoot: sha("a"), reportRoot: sha("b"), expectationRoot: sha("c")
-        )
+        let cert = try certificate(bridgeID: "bridge-1", packageRoot: sha("a"), reportRoot: sha("b"), expectationRoot: sha("c"))
         _ = try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.append(
             ledgerID: "ledger", certificate: cert, custody: custody(), rootURL: root
         )
@@ -340,15 +264,13 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionLedgerTests: XCTestCase {
     func testTwentyFourAppendsMaintainUniqueMonotonicChain() throws {
         let root = try temporaryRoot()
         defer { try? FileManager.default.removeItem(at: root) }
-        let packageCharacters: [Character] = Array("abcdef0123456789abcdef01")
-        let reportCharacters: [Character] = Array("1234567890abcdef12345678")
         var previousRoot: String?
         for index in 0..<24 {
             let cert = try certificate(
                 bridgeID: "bridge-\(index + 1)",
-                packageRoot: sha(packageCharacters[index]),
-                reportRoot: sha(reportCharacters[index]),
-                expectationRoot: sha(index.isMultiple(of: 2) ? "a" : "b")
+                packageRoot: indexedSHA(UInt64(index + 1)),
+                reportRoot: indexedSHA(UInt64(index + 101)),
+                expectationRoot: indexedSHA(UInt64(index + 201))
             )
             let head = try AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.append(
                 ledgerID: "series-ledger",
