@@ -100,7 +100,14 @@ final class AnalysisP021PhysicalEvidenceAdjudicationTests: XCTestCase {
         transferRoot: String? = nil,
         runExecutions: [AnalysisP021RunExecutionBinding]? = nil
     ) throws -> AnalysisP021RuntimeBinding {
-        .init(
+        let resolvedAnchorReceiptRoot: String
+        if let anchorRoot {
+            resolvedAnchorReceiptRoot = anchorRoot
+        } else {
+            resolvedAnchorReceiptRoot = try anchorReceipt.declaredAnchorReceiptRootSHA256
+        }
+
+        return .init(
             authority: "HQ_LATE_INTEGRATION",
             approvalReference: "HQ-W45-RUNTIME",
             runtimeBindingID: "runtime-w45",
@@ -120,7 +127,7 @@ final class AnalysisP021PhysicalEvidenceAdjudicationTests: XCTestCase {
             osVersion: "iOS-selected",
             physicalCaptureSessionID: "capture-session-a",
             w44CheckpointCertificateRootSHA256: checkpointRoot ?? checkpointCertificate.declaredCertificateRootSHA256,
-            w42AnchorReceiptRootSHA256: anchorRoot ?? anchorReceipt.declaredAnchorReceiptRootSHA256,
+            w42AnchorReceiptRootSHA256: resolvedAnchorReceiptRoot,
             w41TransferRootSHA256: transferRoot ?? transfer.declaredTransferRootSHA256,
             runExecutions: runExecutions ?? [
                 .init(runID: runSummary.runID, workloadExecutionID: runSummary.workloadExecutionID)
