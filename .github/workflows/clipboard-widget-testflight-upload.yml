@@ -38,10 +38,19 @@ jobs:
 
           if 'Set unique TestFlight build number' not in block:
               needle = '''      - name: Initialize signing keychain\n'''
-              insert = '''      - name: Set unique TestFlight build number\n        script: |\n          set -euo pipefail\n          cd "$CM_BUILD_DIR/clipboard-widget"\n          python3 - <<'PY2'\n          import os\n          from pathlib import Path\n          p=Path('project.yml')\n          s=p.read_text(encoding='utf-8')\n          old='CURRENT_PROJECT_VERSION: 1'\n          if old not in s:\n              raise SystemExit('CURRENT_PROJECT_VERSION baseline not found')\n          p.write_text(s.replace(old, 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1), encoding='utf-8')\n          print('PASS: build number='+os.environ['CM_BUILD_NUMBER'])\n          PY2\n\n'''
+              insert = '''      - name: Set unique TestFlight build number\n        script: |\n          set -euo pipefail\n          cd "$CM_BUILD_DIR/clipboard-widget"\n          python3 - <<'PY2'\n          import os\n          from pathlib import Path\n          p=Path('project.yml')\n          s=p.read_text(encoding='utf-8')\n          old='CURRENT_PROJECT_VERSION: 1'\n          if old not in s:\n              raise SystemExit('CURRENT_PROJECT_VERSION baseline not found')\n          p.write_text(s.replace(old, 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1), encoding='utf-8')\n          print('PASS: build number='+os.environ['CM_BUILD_NUMBER'])\n          PY2\n          xcodegen generate\n          echo 'PASS: regenerated Xcode project with TestFlight build number'\n\n'''
               if needle not in block:
                   raise SystemExit('signing insertion point missing')
               block = block.replace(needle, insert + needle, 1)
+
+          # Repair an earlier injected step that changed project.yml after the
+          # first xcodegen run without regenerating the actual Xcode project.
+          if 'PASS: regenerated Xcode project with TestFlight build number' not in block:
+              needle = '''          PY2\n\n      - name: Initialize signing keychain\n'''
+              replacement = '''          PY2\n          xcodegen generate\n          echo 'PASS: regenerated Xcode project with TestFlight build number'\n\n      - name: Initialize signing keychain\n'''
+              if needle not in block:
+                  raise SystemExit('existing build-number step repair point missing')
+              block = block.replace(needle, replacement, 1)
 
           if 'Upload signed IPA to TestFlight' not in block:
               needle = '''    artifacts:\n'''
@@ -68,7 +77,7 @@ jobs:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           set -euo pipefail
-          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260826-r2","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
+          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260826-r3","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
           python scripts/codemagic_build_gateway.py \
             --command /tmp/clipboard-widget-cm-command.json \
             --output /tmp/clipboard-widget-cm-result.json
