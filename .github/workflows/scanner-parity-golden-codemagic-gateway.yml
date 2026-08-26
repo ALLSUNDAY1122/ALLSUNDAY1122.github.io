@@ -1,0 +1,93 @@
+name: Scanner Parity Golden Codemagic Gateway
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - automation/scanner-parity-golden-codemagic-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  gateway:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - name: Checkout main gateway source
+        uses: actions/checkout@v6
+
+      - name: Validate command and prepare integration Codemagic workflow
+        run: |
+          set -euo pipefail
+          python3 scripts/prepare_scanner_parity_golden_codemagic.py \
+            automation/scanner-parity-golden-codemagic-command.json
+
+      - name: Start and monitor non-publishing Formal Golden macOS build
+        id: golden
+        continue-on-error: true
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 scripts/run_scanner_parity_golden_codemagic_gateway.py \
+            automation/scanner-parity-golden-codemagic-command.json \
+            /tmp/scanner-golden-codemagic-result.json
+
+      - name: Persist sanitized Golden gateway result
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f /tmp/scanner-golden-codemagic-result.json || exit 0
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          src=Path('/tmp/scanner-golden-codemagic-result.json')
+          data=json.loads(src.read_text(encoding='utf-8'))
+          run_id=str(data.get('run_id') or '')
+          mode=str(data.get('mode') or '')
+          if not re.fullmatch(r'[0-9a-fA-F-]{36}',run_id): raise SystemExit('invalid run id')
+          if mode not in {'thresholdless','thresholded'}: raise SystemExit('invalid mode')
+          allowed={k:data.get(k) for k in ('ok','run_id','mode','workflow_id','branch','source_sha','build_id','status','error')}
+          out=Path('automation/codemagic-results')/f'scanner-golden-{run_id}-{mode}.json'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps(allowed,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          Path('/tmp/scanner-golden-result-path.txt').write_text(str(out),encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          RESULT_PATH="$(cat /tmp/scanner-golden-result-path.txt)"
+          git add "$RESULT_PATH"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "scanner-parity: persist sanitized Golden Codemagic result"
+          if git push; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p "$(dirname "$RESULT_PATH")"
+          cp /tmp/scanner-golden-codemagic-result.json /tmp/_scanner-result-full.json
+          python3 - "$RESULT_PATH" <<'PY'
+          import json,sys
+          from pathlib import Path
+          d=json.loads(Path('/tmp/_scanner-result-full.json').read_text(encoding='utf-8'))
+          allowed={k:d.get(k) for k in ('ok','run_id','mode','workflow_id','branch','source_sha','build_id','status','error')}
+          Path(sys.argv[1]).write_text(json.dumps(allowed,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          git add "$RESULT_PATH"
+          git commit -m "scanner-parity: persist sanitized Golden Codemagic result"
+          git push origin HEAD:main
+
+      - name: Fail if Golden gateway/build failed
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/scanner-golden-codemagic-result.json')
+          if not p.exists(): raise SystemExit('Golden gateway did not produce a result')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          if d.get('ok') is not True: raise SystemExit(f"Golden gateway/build failed: {d.get('status')} / {d.get('error')}")
+          print('SCANNER_GOLDEN_CODEMAGIC_GATEWAY_PASS')
+          PY
