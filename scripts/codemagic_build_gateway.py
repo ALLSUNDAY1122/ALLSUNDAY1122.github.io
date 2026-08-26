@@ -29,6 +29,7 @@ SENSITIVE_KEY_PARTS = (
     "apikey", "api_key", "environment", "variable",
 )
 SCANLAB_BUILD3_BRANCH = "testflight/splat-native-ios-20260824-build3"
+CLIPBOARD_WIDGET_BRANCH = "feature/clipboard-widget-poc"
 
 
 def api_json(url: str, token: str, method: str = "GET", payload: dict | None = None) -> tuple[int, dict]:
@@ -112,9 +113,9 @@ def workflow_config(repository: str, branch: str) -> dict:
     if repository == "ALLSUNDAY1122/ALLSUNDAY1122.github.io":
         if branch == "main":
             return yaml.safe_load(Path("codemagic.yaml").read_text(encoding="utf-8")) or {}
-        if branch == SCANLAB_BUILD3_BRANCH:
+        if branch in {SCANLAB_BUILD3_BRANCH, CLIPBOARD_WIDGET_BRANCH}:
             return _load_remote_workflow_config(repository, branch)
-        raise ValueError("Only main or the pinned Scan Lab Build 3 release branch is allowed for this repository.")
+        raise ValueError("Only main or explicitly pinned release/PoC branches are allowed for this repository.")
     if not REPOSITORY_RE.fullmatch(repository):
         raise ValueError("Invalid repository.")
     if branch != "main":
@@ -192,7 +193,8 @@ def main() -> int:
         if not isinstance(workflow_id, str):
             raise ValueError("workflow_id is required for build action.")
         allowed_branch = branch == "main" or (
-            repository == "ALLSUNDAY1122/ALLSUNDAY1122.github.io" and branch == SCANLAB_BUILD3_BRANCH
+            repository == "ALLSUNDAY1122/ALLSUNDAY1122.github.io" and
+            branch in {SCANLAB_BUILD3_BRANCH, CLIPBOARD_WIDGET_BRANCH}
         )
         if not allowed_branch:
             raise ValueError("Branch is not allowed by the Codemagic gateway.")
