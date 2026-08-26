@@ -7,16 +7,22 @@ on:
       - main
     paths:
       - .github/workflows/expo-token-check.yml
+      - automation/app2-003-eas-signing-command.json
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   expo-auth:
-    name: Verify Expo authentication
+    name: Verify Expo authentication and APP2-003 signing bridge
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
       - name: Verify EXPO_TOKEN is configured
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
@@ -33,9 +39,30 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Verify Expo robot authentication
-        run: |
-          echo "Authenticated Expo account:"
-          eas whoami
+        run: eas whoami
 
-# This workflow is intentionally isolated from application build and release jobs.
-# APP2-003 fresh auth check: 2026-08-27 08:55 JST.
+      - name: Probe or install exact APP2-003 signing key
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: python3 scripts/app2_003_eas_signing_bridge_nodeua.py
+
+      - name: Persist sanitized APP2-003 bridge result
+        if: always()
+        run: |
+          test -f /tmp/app2-003-eas-signing-result-path.txt || exit 0
+          P="$(cat /tmp/app2-003-eas-signing-result-path.txt)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$P"
+          git commit -m "Persist APP2-003 EAS signing bridge result" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p "$(dirname "$P")"
+          cp /tmp/app2-003-eas-signing-result-copy.json "$P"
+          git add "$P"
+          git commit -m "Persist APP2-003 EAS signing bridge result" || exit 0
+          git push origin HEAD:main
+
+# APP2-003 bridge is temporary; restore this workflow after signing migration completes.
