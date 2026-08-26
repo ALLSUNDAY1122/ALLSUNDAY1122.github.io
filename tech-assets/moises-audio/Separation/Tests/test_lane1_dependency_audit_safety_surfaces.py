@@ -19,12 +19,19 @@ class Lane1DependencyAuditSafetySurfaceTests(unittest.TestCase):
             "ai_stem_generation_runtime.py",
             "generated_stem_mix_compatibility.py",
             "ai_stem_generation_delete_resume.py",
-            "mutation_topology.py",
             "privacy_retention.py",
             "provider_delete_reconciliation.py",
             "provider_delete_conflict_resolution.py",
         ):
             (self.server / name).write_text("x = 1\n", encoding="utf-8")
+
+        (self.server / "mutation_topology.py").write_text(
+            'a37_conflict_decision_store = "a37_conflict_decision_store"\n'
+            'RECONCILIATION_STORE_IDS = ("a37_conflict_decision_store",)\n'
+            'def reconciliation_topology_snapshot(): pass\n'
+            'def assert_reconciliation_topology_safe(): pass\n',
+            encoding="utf-8",
+        )
 
         (self.server / "generated_stem_retention.py").write_text(
             "class GeneratedStemRetentionCoordinator:\n"
@@ -49,7 +56,6 @@ class Lane1DependencyAuditSafetySurfaceTests(unittest.TestCase):
         )
 
         for name in (
-            "test_mutation_topology.py",
             "test_privacy_retention.py",
             "test_privacy_retention_concurrency.py",
             "test_provider_delete_reconciliation.py",
@@ -61,6 +67,13 @@ class Lane1DependencyAuditSafetySurfaceTests(unittest.TestCase):
             "test_provider_delete_reconciliation_conflict_resolution.py",
         ):
             (self.tests / name).write_text("pass\n", encoding="utf-8")
+        (self.tests / "test_mutation_topology.py").write_text(
+            '# a37_conflict_decision_store\n'
+            '# reconciliation_topology_snapshot\n'
+            '# assert_reconciliation_topology_safe\n'
+            'pass\n',
+            encoding="utf-8",
+        )
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -68,7 +81,7 @@ class Lane1DependencyAuditSafetySurfaceTests(unittest.TestCase):
     def test_complete_safety_surface_inventory_passes(self):
         result = _dependency_checks(self.audio)
         self.assertEqual(result["state"], "PASS")
-        self.assertEqual(result["checked"], 25)
+        self.assertEqual(result["checked"], 27)
 
     def test_missing_topology_module_fails_closed(self):
         (self.server / "mutation_topology.py").unlink()
@@ -127,6 +140,31 @@ class Lane1DependencyAuditSafetySurfaceTests(unittest.TestCase):
             {"check": "A27_A35_topology_regression", "code": "L1A36_REQUIRED_REGRESSION_MISSING"},
             result["failures"],
         )
+
+    def test_a38_topology_contract_semantic_removal_fails_closed(self):
+        (self.server / "mutation_topology.py").write_text("x = 1\n", encoding="utf-8")
+        result = _dependency_checks(self.audio)
+        self.assertIn(
+            "L1A38_RECONCILIATION_TOPOLOGY_CONTRACT_MISSING",
+            [row["code"] for row in result["failures"]],
+        )
+
+    def test_a38_topology_regression_semantic_removal_fails_closed(self):
+        (self.tests / "test_mutation_topology.py").write_text("pass\n", encoding="utf-8")
+        result = _dependency_checks(self.audio)
+        self.assertIn(
+            "L1A38_RECONCILIATION_TOPOLOGY_REGRESSION_MISSING",
+            [row["code"] for row in result["failures"]],
+        )
+
+    def test_paired_a38_semantic_removal_cannot_false_green(self):
+        (self.server / "mutation_topology.py").write_text("x = 1\n", encoding="utf-8")
+        (self.tests / "test_mutation_topology.py").write_text("pass\n", encoding="utf-8")
+        result = _dependency_checks(self.audio)
+        self.assertEqual(result["state"], "FAIL")
+        codes = [row["code"] for row in result["failures"]]
+        self.assertIn("L1A38_RECONCILIATION_TOPOLOGY_CONTRACT_MISSING", codes)
+        self.assertIn("L1A38_RECONCILIATION_TOPOLOGY_REGRESSION_MISSING", codes)
 
     def test_legacy_a24_surface_check_is_preserved(self):
         (self.server / "generated_stem_retention.py").write_text(
