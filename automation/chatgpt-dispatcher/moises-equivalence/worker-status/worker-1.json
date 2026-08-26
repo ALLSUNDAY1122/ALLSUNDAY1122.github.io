@@ -17,9 +17,9 @@
     "title": "Reconciliation Composite Topology Preflight",
     "state": "COMPLETED_NON_PARITY",
     "goal": "Make the A37 conflict-decision sidecar an explicit deployment-topology authority and provide one fail-closed composite preflight for the privacy registry, reconciliation ledger and decision store.",
-    "rationale": "A37 added a new durable POSIX-flock-backed mutation surface. A35 could preflight the reconciliation ledger while omitting that sidecar, creating a false sense of multi-host safety. A38 closes that lane-local gap and binds the composite contract into the A26 dependency audit.",
-    "done_when": "The A37 decision store is mandatory topology inventory; single-host remains safe; multi-host fails without concrete shared adapters even when capability labels exist; the three reconciliation stores can be preflighted together; inventory shrinkage/unknown authority maps fail closed; A38 contract/regression semantic removal cannot false-green dependency audit; evidence/status are durable.",
-    "result": "Upgraded mutation_topology to L1-A38-v1, added a37_conflict_decision_store plus reconciliation_topology_snapshot/assert_reconciliation_topology_safe, expanded topology regression to 20 tests, upgraded lane1_dependency_audit to L1-A26-v4 with A38 semantic binding, expanded dependency focused regression to 14 tests, and observed combined isolated 34/34 PASS. Exact repository-native final-tip audit remains unobserved, so no PARITY claim is made."
+    "rationale": "A37 added a new durable POSIX-flock-backed mutation surface. A35 could preflight the reconciliation ledger while omitting that sidecar, creating a false sense of multi-host safety. A38 closes that lane-local gap, makes the reconciliation membership independently authoritative, and binds the exact composite membership into the A26 dependency audit.",
+    "done_when": "The A37 decision store is mandatory topology inventory; single-host remains safe; multi-host fails without concrete shared adapters even when capability labels exist; the three reconciliation stores can be preflighted together; runtime and expected inventories are independently checked; unknown authority maps and membership shrinkage fail closed; A38 contract/regression/membership removal cannot false-green dependency audit; evidence/status are durable.",
+    "result": "Upgraded mutation_topology to L1-A38-v1 with a37_conflict_decision_store, an independent EXPECTED_RECONCILIATION_STORE_IDS contract, and reconciliation_topology_snapshot/assert_reconciliation_topology_safe. Topology focused regression passed 21/21. Upgraded lane1_dependency_audit to L1-A26-v5 with semantic plus AST exact-membership binding; dependency focused regression passed 15/15 with checked=28. Clean combined focused execution passed 36/36. Exact repository-native final-tip audit remains unobserved, so no PARITY claim is made."
   },
   "external_gate_status": "E01_E02_E03_E04_E05_E06_E07_E08_E09_E10_PREPARED_PENDING_EXTERNAL_INPUT",
   "completed_bundles": ["L1-M01", "L1-M02", "L1-M03", "L1-M04"],
@@ -36,29 +36,29 @@
     "L1-E06", "L1-E07", "L1-E08", "L1-E09", "L1-E10"
   ],
   "base_integration_sha": "17d129c9f0faaf7f24a96439cf3aa3cd0e7c02e8",
-  "prior_head_sha": "37c468e3ef9d80d6afd57ceb7d7475b16fbe67d3",
-  "head_sha": "500aa077ef4b6962b83a2011f2d6669636d5b29b",
+  "prior_head_sha": "423782f5d44c395f28dcd00205b2f5d95ef1b404",
+  "head_sha": "ccdee22042a79593f31fd0a34dcd75ce9724208e",
   "recent_commits": [
-    "05d46c152182e6601af05d7655d9f7799d9214d8",
-    "b783b32371e4b75e2fd6b65793b63f2aafd78a85",
-    "37c468e3ef9d80d6afd57ceb7d7475b16fbe67d3",
-    "9e35b1e86920172ded68b0bb143ffdabb0c484da",
-    "678801b21d5f67d11931e1b4c26f9ecb21661aee",
-    "112ec9918acfd52e1b22fd0084c0dad683d1dcb4",
-    "38ce33bd3c4907e9e0cc764cc01fe70bf19ea89b",
     "3023dafe3c445a71d2086dd73bb3c27885951e94",
-    "500aa077ef4b6962b83a2011f2d6669636d5b29b"
+    "500aa077ef4b6962b83a2011f2d6669636d5b29b",
+    "423782f5d44c395f28dcd00205b2f5d95ef1b404",
+    "10cdabf038ebc3fd68c960425e97f2e100fbdab8",
+    "e12407e53dd150bf9afb23be85d21ab9ae82a256",
+    "23be1674f6e9ca948c62231bb4df1cf4308b86a0",
+    "763edd41e66ead7105fc4f9516ddaafa1aeee5c6",
+    "964e7cd91e44a90964ad3043bfa1028f829f65a9",
+    "ccdee22042a79593f31fd0a34dcd75ce9724208e"
   ],
   "tests": [
     "A05-A25 and A27-A38 are completed NON_PARITY; E01-E10 live/readiness infrastructure remains external-input pending. A26 remains open only on the exact-checkout full-audit execution gate.",
     "L1-A26 exact checkout remains NOT_OBSERVED; focused/local evidence is not used to falsely complete the git-head/source-snapshot/full-unittest gate.",
     "L1-A26 prior focused regression evidence remains: A24-to-A25 gateway 12/12 PASS; source-snapshot 7/7 PASS; git-head/source-binding 5/5 PASS; HEAD-tree/worktree binding 7/7 PASS; report JSON Schema self-check PASS.",
     "L1-A37 isolated conflict execution harness remains observed 14/14 PASS and A37 implementation/regression paired deletion remains dependency-bound.",
-    "L1-A38 mutation_topology candidate and expanded test_mutation_topology candidate passed py_compile before remote write.",
-    "L1-A38 topology focused regression passed 20/20 with zero failures/errors: A37 sidecar inventory, single-host PASS, multi-host fail without authority, capability-label/no-adapter fail, composite three-store preflight, authority-map validation, builtin inventory removal and composite inventory shrinkage.",
-    "L1-A38 upgraded lane1_dependency_audit from L1-A26-v3 to L1-A26-v4. Dependency contracts now require A38 topology contract/regression semantic tokens in addition to the existing A27/A28/A29-A37 file/regression surfaces.",
-    "L1-A38 dependency-safety focused regression passed 14/14 with zero failures/errors; dependency checked count is 27. A38 contract-only removal, regression-only semantic removal, and paired semantic removal all fail closed while legacy A24/A27-A37 checks remain preserved.",
-    "L1-A38 combined isolated focused run passed 34/34 with zero failures/errors.",
+    "L1-A38 mutation_topology and test_mutation_topology candidates passed py_compile before remote write.",
+    "L1-A38 topology focused regression passed 21/21 with zero failures/errors: A37 sidecar inventory, independent expected membership, single-host PASS, multi-host fail without authority, capability-label/no-adapter fail, composite three-store preflight, authority-map validation, builtin inventory removal and runtime composite shrinkage.",
+    "L1-A38 upgraded lane1_dependency_audit to L1-A26-v5. Dependency contracts require A38 topology contract/regression semantic tokens and AST-parse exact RECONCILIATION_STORE_IDS membership in addition to existing A27/A28/A29-A37 file/regression surfaces.",
+    "L1-A38 dependency-safety focused regression passed 15/15 with zero failures/errors; dependency checked count is 28. Contract-only removal, regression-only semantic removal, paired semantic removal, and source-level composite membership shrink while the A37 token remains elsewhere all fail closed.",
+    "L1-A38 clean combined focused run passed 36/36 with zero failures/errors.",
     "Exact current Worker-branch full unittest discovery and exact final-tip one-command A26 audit remain NOT_OBSERVED because no executable exact Worker checkout/CI result has been archived."
   ],
   "evidence": [
@@ -121,21 +121,21 @@
     "P003/P004/P005/P020/P021/P024/P025 remain MISSING pending live/runtime/current-iPhone/real-device/HQ evidence."
   ],
   "hq_requests": [
-    "Before marking A26 complete, execute `Separation/Evaluation/lane1_dependency_audit.py --expected-git-head <exact final Worker branch tip>` on an executable full Worker checkout/CI runner and archive the v2 report. Require overall_state=PASS, git_head_binding.state=PASS, owned_source_snapshot.state=PASS, dependency_contracts.state=PASS and unittest_discovery.state=PASS. The audit tool is now L1-A26-v4 and dependency_contracts must include A37 implementation/regression plus A38 composite-topology semantic bindings.",
-    "Preserve A36 dependency audit strengthening, A37 conflict adjudication binding and A38 composite topology binding during integration. Do not remove the A38 sidecar inventory or reconciliation composite preflight from mutation_topology.",
+    "Before marking A26 complete, execute `Separation/Evaluation/lane1_dependency_audit.py --expected-git-head <exact final Worker branch tip>` on an executable full Worker checkout/CI runner and archive the v2 report. Require overall_state=PASS, git_head_binding.state=PASS, owned_source_snapshot.state=PASS, dependency_contracts.state=PASS and unittest_discovery.state=PASS. The audit tool is now L1-A26-v5 and dependency_contracts must include A37 implementation/regression plus A38 semantic and exact-membership bindings.",
+    "Preserve A36 dependency audit strengthening, A37 conflict adjudication binding and A38 composite topology binding during integration. Preserve both the runtime RECONCILIATION_STORE_IDS and the independent EXPECTED_RECONCILIATION_STORE_IDS three-store contract.",
     "At an HQ/App-owned reconciliation composition point, use or equivalently integrate ConflictResolvingProviderDeletionReconciler only when an explicit operator decision authority exists. No decision must preserve the original fail-closed equal-epoch conflict behavior.",
     "At the HQ/App deployment boundary, invoke `assert_reconciliation_topology_safe(...)` or an equivalent composite check covering the privacy registry, reconciliation ledger and conflict-decision store before enabling reconciliation writers.",
     "Do not allow reconciliation or A37 decision state to pass multi-host preflight from capability declarations alone. Concrete shared-authority adapters are required for every mutable store in the reconciliation composite.",
     "Keep A37 decision_authority_ref_sha256 and rationale_ref_sha256 hash-only in public durable state; private ticket/reviewer/provider material must remain outside the repository evidence path.",
     "At HQ/App relaunch or maintenance composition, inspect reconciliation_required and invoke resume_pending for durable pending/inflight provider-delete observations. Never replace this with blind provider DELETE replay.",
-    "Preserve A31-A38 semantics: provider-object binding plus temporal/TTL authority checks before applying; applying/applied are watermarks; older observations are superseded; equal-time conflicts fail closed unless an immutable explicit A37 decision selects an existing receipt; terminal erasure cannot be downgraded; all reconciliation mutable stores must pass deployment topology preflight.",
+    "Preserve A31-A38 semantics: provider-object binding plus temporal/TTL authority checks before applying; applying/applied are watermarks; older observations are superseded; equal-time conflicts fail closed unless an immutable explicit A37 decision selects an existing receipt; terminal erasure cannot be downgraded; all three reconciliation mutable stores must remain in deployment topology preflight.",
     "For a production provider with authoritative delete-status observation, wire private API/console/support evidence into ProviderDeletionObservation and keep only SHA-256 authority references in durable public evidence.",
     "Do not treat POSIX flock, atomic rename, application locks, ordering watermarks, temporal/TTL gates, A37 decision sidecars, capability labels, A38 composite preflight or audit inventory as distributed synchronization.",
     "Preserve A24-A25 compatibility through A24RetentionGateway and do not weaken delete/refund/runtime-erasure separation.",
     "Keep raw prompts, logical generation IDs, account/project/execution IDs, source/generated/reference audio, private contracts/billing/reviewer material, private paths, raw provider IDs and credential values outside durable public evidence.",
     "Do not promote P025/P024 or any Lane 1 PARITY row from A24-A38 synthetic/focused/static/topology/audit evidence. HQ final PARITY requires real current-iPhone workflow/UX/device/runtime evidence."
   ],
-  "history_note": "A05-A25 and A27-A38 are complete NON_PARITY; E01-E10 external/live readiness remains prepared. A26 remains open solely on the exact-checkout full-audit execution gate. L1-A38 adds the A37 decision sidecar to mutation topology, provides a three-store reconciliation composite preflight, and binds that contract into L1-A26-v4 so semantic removal of A38 topology coverage cannot false-green the dependency audit. Isolated topology validation passed 20/20, dependency validation 14/14 and combined focused validation 34/34; exact branch full audit remains unobserved and no PARITY claim is made.",
-  "last_updated": "2026-08-27T08:35:00+09:00",
+  "history_note": "A05-A25 and A27-A38 are complete NON_PARITY; E01-E10 external/live readiness remains prepared. A26 remains open solely on the exact-checkout full-audit execution gate. L1-A38 adds the A37 decision sidecar to mutation topology, provides a fixed three-store reconciliation composite preflight, independently fixes its expected membership, and binds both semantics and exact AST membership into L1-A26-v5 so A37 can neither be deleted nor merely removed from the real composite while leaving decoy tokens. Clean focused validation passed topology 21/21 plus dependency 15/15 = 36/36; exact branch full audit remains unobserved and no PARITY claim is made.",
+  "last_updated": "2026-08-27T08:48:00+09:00",
   "writer_policy": "Only Moises-Worker-1 updates this status file. HQ owns Shared/App/PARITY/queue/work-package/lane-plan/resource-lock authority and final PARITY judgment."
 }
