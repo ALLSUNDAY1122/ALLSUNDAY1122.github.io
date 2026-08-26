@@ -7,6 +7,11 @@ struct SplatResourceLimits: Codable, Equatable, Sendable {
     let minimumAvailableMemoryReserveBytes: UInt64
     let maxSplatCount: Int
 
+    /// S12 semantic alias. The persisted `maxSplatCount` name remains stable for
+    /// run-report compatibility, while the count itself is now consumed by the
+    /// densifier as an admission ceiling rather than a terminal pause trigger.
+    var densificationBudgetCount: Int { maxSplatCount }
+
     static func conservative(physicalMemoryBytes: UInt64) -> SplatResourceLimits {
         let mib: UInt64 = 1_048_576
         let minimumBudget = 700 * mib
@@ -310,6 +315,10 @@ final class SplatResourceGuard: @unchecked Sendable {
         let peakSplats = peakSplatCount
         lock.unlock()
 
+        // S12: Gaussian population is bounded inside densification. Count alone
+        // must not terminate the whole training pass, including a checkpoint
+        // created by Build 7 at the old hard cap. Dynamic memory and critical
+        // thermal evidence remain terminal safety gates.
         let reason: SplatResourcePauseReason?
         if warning {
             reason = .memoryWarning
@@ -319,8 +328,6 @@ final class SplatResourceGuard: @unchecked Sendable {
             reason = .availableMemoryReserve
         } else if resident > 0 && resident >= limits.residentMemoryBudgetBytes {
             reason = .residentMemoryBudget
-        } else if splatCount >= limits.maxSplatCount {
-            reason = .splatBudget
         } else {
             reason = nil
         }
