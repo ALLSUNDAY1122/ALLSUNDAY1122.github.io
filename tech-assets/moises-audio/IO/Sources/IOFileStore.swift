@@ -5,6 +5,7 @@ public struct IOFileStore: Sendable {
         case invalidRelativePath
         case sourceMissing
         case insufficientStorage(requiredBytes: Int64, availableBytes: Int64)
+        case unsafeManagedPath
         case fileOperationFailed(code: String)
     }
 
@@ -28,8 +29,14 @@ public struct IOFileStore: Sendable {
     }
 
     public func prepareDirectories(fileManager: FileManager = .default) throws {
-        for url in [importsURL, exportsURL, stagingURL] {
-            try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+        let boundary = IOManagedPathBoundary(rootURL: rootURL)
+        do {
+            try boundary.ensureRootDirectory(fileManager: fileManager)
+            for url in [importsURL, exportsURL, stagingURL] {
+                try boundary.ensureDirectory(url, fileManager: fileManager)
+            }
+        } catch {
+            throw StoreError.unsafeManagedPath
         }
     }
 
@@ -65,15 +72,38 @@ public struct IOFileStore: Sendable {
         let ext = sourceURL.pathExtension
         let stagedName = UUID().uuidString + (ext.isEmpty ? "" : ".\(ext)")
         let destination = stagingURL.appendingPathComponent(stagedName)
+        let boundary = IOManagedPathBoundary(rootURL: rootURL)
+        do {
+            try boundary.requireSafeDestination(
+                destination,
+                within: stagingURL,
+                fileManager: fileManager
+            )
+        } catch {
+            throw StoreError.unsafeManagedPath
+        }
         do {
             try fileManager.copyItem(at: sourceURL, to: destination)
-            return destination
         } catch {
             throw StoreError.fileOperationFailed(code: "STAGE_COPY_FAILED")
         }
+        do {
+            try boundary.requireExistingRegularFile(
+                destination,
+                within: stagingURL,
+                fileManager: fileManager
+            )
+        } catch {
+            throw StoreError.unsafeManagedPath
+        }
+        return destination
     }
 
-    public func moveDownloadedTemporaryFile(_ temporaryURL: URL, preferredExtension: String? = nil, fileManager: FileManager = .default) throws -> URL {
+    public func moveDownloadedTemporaryFile(
+        _ temporaryURL: URL,
+        preferredExtension: String? = nil,
+        fileManager: FileManager = .default
+    ) throws -> URL {
         guard fileManager.fileExists(atPath: temporaryURL.path) else {
             throw StoreError.sourceMissing
         }
@@ -81,42 +111,90 @@ public struct IOFileStore: Sendable {
         let ext = (preferredExtension ?? "").trimmingCharacters(in: CharacterSet(charactersIn: "."))
         let stagedName = UUID().uuidString + (ext.isEmpty ? ".download" : ".\(ext)")
         let staged = stagingURL.appendingPathComponent(stagedName)
+        let boundary = IOManagedPathBoundary(rootURL: rootURL)
+        do {
+            try boundary.requireSafeDestination(staged, within: stagingURL, fileManager: fileManager)
+        } catch {
+            throw StoreError.unsafeManagedPath
+        }
+
         do {
             try fileManager.moveItem(at: temporaryURL, to: staged)
-            return staged
         } catch {
             // Some URLSession/file-provider temporary locations cannot be renamed across volumes.
             do {
                 try fileManager.copyItem(at: temporaryURL, to: staged)
-                return staged
             } catch {
                 throw StoreError.fileOperationFailed(code: "DOWNLOAD_STAGE_FAILED")
             }
         }
+
+        do {
+            try boundary.requireExistingRegularFile(staged, within: stagingURL, fileManager: fileManager)
+        } catch {
+            throw StoreError.unsafeManagedPath
+        }
+        return staged
     }
 
-    public func finalizeImport(stagingFile: URL, preferredName: String?, fileManager: FileManager = .default) throws -> FinalizedFile {
-        try finalize(stagingFile: stagingFile, directory: importsURL, preferredName: preferredName, fileManager: fileManager)
+    public func finalizeImport(
+        stagingFile: URL,
+        preferredName: String?,
+        fileManager: FileManager = .default
+    ) throws -> FinalizedFile {
+        try finalize(
+            stagingFile: stagingFile,
+            directory: importsURL,
+            preferredName: preferredName,
+            fileManager: fileManager
+        )
     }
 
-    public func finalizeExport(stagingFile: URL, preferredName: String?, fileManager: FileManager = .default) throws -> FinalizedFile {
-        try finalize(stagingFile: stagingFile, directory: exportsURL, preferredName: preferredName, fileManager: fileManager)
+    public func finalizeExport(
+        stagingFile: URL,
+        preferredName: String?,
+        fileManager: FileManager = .default
+    ) throws -> FinalizedFile {
+        try finalize(
+            stagingFile: stagingFile,
+            directory: exportsURL,
+            preferredName: preferredName,
+            fileManager: fileManager
+        )
     }
 
     public func removeIfExists(_ url: URL, fileManager: FileManager = .default) {
-        let relativePath = try? relativePath(for: url)
-        if fileManager.fileExists(atPath: url.path) {
-            try? fileManager.removeItem(at: url)
+        guard let relativePath = try? relativePath(for: url),
+              fileManager.fileExists(atPath: url.path) else {
+            return
         }
-        guard !fileManager.fileExists(atPath: url.path), let relativePath else { return }
+        let boundary = IOManagedPathBoundary(rootURL: rootURL)
+        guard (try? boundary.requireExistingRegularFile(
+            url,
+            within: rootURL,
+            fileManager: fileManager
+        )) != nil else {
+            return
+        }
+        try? fileManager.removeItem(at: url)
+        guard !fileManager.fileExists(atPath: url.path) else { return }
         try? Lane2ManagedArtifactPublicationJournal(
             rootURL: rootURL,
             fileManager: fileManager
         ).cancelCurrentSessionIfPresent(relativePath: relativePath)
     }
 
-    public func preflight(requiredBytes: Int64, reserveBytes: Int64 = 32 * 1024 * 1024, fileManager: FileManager = .default) throws {
+    public func preflight(
+        requiredBytes: Int64,
+        reserveBytes: Int64 = 32 * 1024 * 1024,
+        fileManager: FileManager = .default
+    ) throws {
         guard requiredBytes >= 0, reserveBytes >= 0 else { return }
+        do {
+            try IOManagedPathBoundary(rootURL: rootURL).ensureRootDirectory(fileManager: fileManager)
+        } catch {
+            throw StoreError.unsafeManagedPath
+        }
         let attributes = try fileManager.attributesOfFileSystem(forPath: rootURL.path)
         guard let free = (attributes[.systemFreeSize] as? NSNumber)?.int64Value else { return }
         let totalRequired = requiredBytes.addingReportingOverflow(reserveBytes)
@@ -144,15 +222,41 @@ public struct IOFileStore: Sendable {
         preferredName: String?,
         fileManager: FileManager
     ) throws -> FinalizedFile {
-        guard fileManager.fileExists(atPath: stagingFile.path), isDescendant(stagingFile, of: stagingURL) else {
+        guard fileManager.fileExists(atPath: stagingFile.path),
+              isDescendant(stagingFile, of: stagingURL) else {
             throw StoreError.sourceMissing
         }
-        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+
+        try prepareDirectories(fileManager: fileManager)
+        let boundary = IOManagedPathBoundary(rootURL: rootURL)
+        do {
+            try boundary.requireExistingRegularFile(
+                stagingFile,
+                within: stagingURL,
+                fileManager: fileManager
+            )
+            try boundary.requireDirectory(directory, fileManager: fileManager)
+        } catch {
+            throw StoreError.unsafeManagedPath
+        }
+
         let ext = stagingFile.pathExtension
-        let stem = Self.sanitizedFilenameStem(preferredName ?? stagingFile.deletingPathExtension().lastPathComponent)
+        let stem = Self.sanitizedFilenameStem(
+            preferredName ?? stagingFile.deletingPathExtension().lastPathComponent
+        )
         let unique = UUID().uuidString.lowercased()
         let filename = "\(stem)-\(unique)" + (ext.isEmpty ? "" : ".\(ext)")
         let destination = directory.appendingPathComponent(filename)
+        do {
+            try boundary.requireSafeDestination(
+                destination,
+                within: directory,
+                fileManager: fileManager
+            )
+        } catch {
+            throw StoreError.unsafeManagedPath
+        }
+
         let finalRelativePath = try relativePath(for: destination)
         let publicationJournal = Lane2ManagedArtifactPublicationJournal(
             rootURL: rootURL,
@@ -166,17 +270,43 @@ public struct IOFileStore: Sendable {
         }
 
         do {
+            // Revalidate immediately before the destructive rename. This narrows the race between
+            // validation and publication while keeping the intent durable before file visibility.
+            try boundary.requireExistingRegularFile(
+                stagingFile,
+                within: stagingURL,
+                fileManager: fileManager
+            )
+            try boundary.requireSafeDestination(
+                destination,
+                within: directory,
+                fileManager: fileManager
+            )
             try fileManager.moveItem(at: stagingFile, to: destination)
-            // The publication intent deliberately remains durable here. Library's readiness boundary
-            // registers the final path in the managed-artifact inventory and only then retires it.
-            return FinalizedFile(relativePath: finalRelativePath, url: destination)
         } catch let error as StoreError {
             try? publicationJournal.cancelCurrentSessionIfPresent(relativePath: finalRelativePath)
             throw error
+        } catch let error as IOManagedPathBoundaryFailure {
+            try? publicationJournal.cancelCurrentSessionIfPresent(relativePath: finalRelativePath)
+            _ = error
+            throw StoreError.unsafeManagedPath
         } catch {
             try? publicationJournal.cancelCurrentSessionIfPresent(relativePath: finalRelativePath)
             throw StoreError.fileOperationFailed(code: "FINALIZE_MOVE_FAILED")
         }
+
+        // Do not retire/cancel the publication intent if post-move boundary validation fails. At that
+        // point a file may already be visible, so durable recovery evidence must remain authoritative.
+        do {
+            try boundary.requireExistingRegularFile(
+                destination,
+                within: directory,
+                fileManager: fileManager
+            )
+        } catch {
+            throw StoreError.unsafeManagedPath
+        }
+        return FinalizedFile(relativePath: finalRelativePath, url: destination)
     }
 
     private func isDescendant(_ candidate: URL, of ancestor: URL) -> Bool {
