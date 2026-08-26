@@ -131,6 +131,9 @@ let package = Package(
                 "iOS/HostCore/AnalysisIOSDevicePerformanceSession.swift",
                 "iOS/HostCore/AnalysisIOSPhysicalCaptureCoordinator.swift",
                 "iOS/HostCore/AnalysisIOSPhysicalCaptureArtifactMaterializer.swift"
+            ],
+            swiftSettings: [
+                .unsafeFlags(["-Xfrontend", "-solver-expression-time-threshold=10000"])
             ]
         ),
         .testTarget(
