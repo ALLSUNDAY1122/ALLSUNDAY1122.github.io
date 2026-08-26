@@ -4,6 +4,7 @@ enum IOManagedPathBoundaryFailure: Error, Equatable, Sendable {
     case pathEscapesRoot(String)
     case unsafePath(String)
     case destinationExists(String)
+    case fileOperation(String)
 }
 
 /// Filesystem boundary guard for app-owned IO paths.
@@ -28,7 +29,7 @@ struct IOManagedPathBoundary: Sendable {
         do {
             try fileManager.createDirectory(at: rootURL, withIntermediateDirectories: true)
         } catch {
-            throw IOManagedPathBoundaryFailure.unsafePath(rootURL.path)
+            throw IOManagedPathBoundaryFailure.fileOperation(rootURL.path)
         }
         try requireDirectoryNode(rootURL, fileManager: fileManager)
     }
@@ -50,7 +51,7 @@ struct IOManagedPathBoundary: Sendable {
                     withIntermediateDirectories: false
                 )
             } catch {
-                throw IOManagedPathBoundaryFailure.unsafePath(cursor.path)
+                throw IOManagedPathBoundaryFailure.fileOperation(cursor.path)
             }
             try requireDirectoryNode(cursor, fileManager: fileManager)
         }
