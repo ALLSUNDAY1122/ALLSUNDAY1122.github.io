@@ -1,0 +1,61 @@
+name: APP2-003 Yoru EAS Signing Gateway
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - automation/app2-003-yoru-eas-signing-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  yoru-signing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Inspect or transfer exact Yoru signing identity
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: python3 scripts/app2_003_yoru_eas_signing.py
+
+      - name: Persist sanitized request-scoped evidence
+        if: always() && hashFiles('app2-003-yoru-eas-signing-result.json') != ''
+        run: |
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          src=Path('app2-003-yoru-eas-signing-result.json')
+          data=json.loads(src.read_text(encoding='utf-8'))
+          request_id=str(data.get('request_id','unknown'))
+          if not re.fullmatch(r'app2-003-yoru-eas-signing-[A-Za-z0-9._-]{1,80}',request_id):
+              raise SystemExit('invalid request id')
+          # The producer is allowlisted and intentionally never serializes secret values.
+          out=Path('automation/eas-results')/f'{request_id}.json'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          payload=json.dumps(data,ensure_ascii=False,indent=2)+'\n'
+          out.write_text(payload,encoding='utf-8')
+          Path('/tmp/yoru-eas-result.json').write_text(payload,encoding='utf-8')
+          Path('/tmp/yoru-eas-request-id.txt').write_text(request_id,encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          REQUEST_ID="$(cat /tmp/yoru-eas-request-id.txt)"
+          RESULT="automation/eas-results/${REQUEST_ID}.json"
+          git add "$RESULT"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Persist APP2-003 EAS signing evidence"
+          if git push; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/eas-results
+          cp /tmp/yoru-eas-result.json "$RESULT"
+          git add "$RESULT"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Persist APP2-003 EAS signing evidence"
+          git push origin HEAD:main
