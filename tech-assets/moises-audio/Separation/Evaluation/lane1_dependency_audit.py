@@ -18,7 +18,7 @@ from typing import Any
 
 from lane1_source_snapshot import SourceSnapshotError, build_source_snapshot
 
-TOOL_VERSION = "L1-A26-v4"
+TOOL_VERSION = "L1-A26-v5"
 EVIDENCE_STATE = "NON_PARITY_EVIDENCE_ONLY"
 ERROR_CODE = re.compile(r"\b(?:SEP|GEN|GENRT|GENRET|GEN_FACADE|L1A\d+|L1M\d+)_[A-Z0-9_]+\b")
 GIT_SHA = re.compile(r"^[0-9a-f]{40}$")
@@ -170,6 +170,26 @@ def _dependency_checks(audio_root: Path) -> dict[str, Any]:
                 return {n.name for n in node.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))}
         return set()
 
+    def string_collection_assignment(path: Path, name: str) -> set[str] | None:
+        try:
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+        for node in tree.body:
+            if not isinstance(node, ast.Assign):
+                continue
+            if not any(isinstance(target, ast.Name) and target.id == name for target in node.targets):
+                continue
+            if not isinstance(node.value, (ast.Tuple, ast.List, ast.Set)):
+                return None
+            values: set[str] = set()
+            for element in node.value.elts:
+                if not isinstance(element, ast.Constant) or not isinstance(element.value, str):
+                    return None
+                values.add(element.value)
+            return values
+        return None
+
     if required_files["A24_retention"].is_file():
         a24 = methods(required_files["A24_retention"], "GeneratedStemRetentionCoordinator")
         expected = {"begin_delete", "execute_local_delete", "assert_generation_not_deleted", "privacy_safe_evidence", "record_runtime_delete"}
@@ -221,8 +241,26 @@ def _dependency_checks(audio_root: Path) -> dict[str, Any]:
             if missing:
                 failures.append({"check": check, "code": code, "missing": missing})
 
+    if required_safety_files["A27_topology"].is_file():
+        expected_reconciliation_stores = {
+            "a09_privacy_registry",
+            "a29_provider_delete_reconciliation_ledger",
+            "a37_conflict_decision_store",
+        }
+        observed_reconciliation_stores = string_collection_assignment(
+            required_safety_files["A27_topology"],
+            "RECONCILIATION_STORE_IDS",
+        )
+        if observed_reconciliation_stores != expected_reconciliation_stores:
+            failures.append({
+                "check": "A38_reconciliation_topology_membership",
+                "code": "L1A38_RECONCILIATION_TOPOLOGY_MEMBERSHIP_MISMATCH",
+                "observed": sorted(observed_reconciliation_stores) if observed_reconciliation_stores is not None else None,
+                "expected": sorted(expected_reconciliation_stores),
+            })
+
     return {
-        "checked": 6 + len(required_files) + len(required_safety_files) + len(required_safety_regressions),
+        "checked": 7 + len(required_files) + len(required_safety_files) + len(required_safety_regressions),
         "failures": failures,
         "state": "PASS" if not failures else "FAIL",
     }
