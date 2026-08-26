@@ -15,41 +15,46 @@
   "base_integration_sha": "1648a275833ad4e8aed3245347e6de231fd0487f",
   "branch_merge_base_sha": "7948195f1d94f28bc212c79b310fdaed00a4f580",
   "preserved_checkpoint_head": "d63cecbfa53007bf9593b628ae291702f496bb17",
-  "previous_autonomous_chain_head": "4b8f9f71e5a3cfea2b06a6fe04e41810f1044c34",
-  "historical_commit_coverage": "AW01-AW44 and earlier Lane-3 work remain preserved by branch ancestry through 4b8f9f71e5a3cfea2b06a6fe04e41810f1044c34. HQ Epoch30 semantically integrated Lane3 through AW41. The commits list below records AW45 only.",
-  "head_sha": "165f89a1e96c2846daabf1c21fa9141f9eaa2147",
+  "previous_autonomous_chain_head": "165f89a1e96c2846daabf1c21fa9141f9eaa2147",
+  "historical_commit_coverage": "AW01-AW45 and earlier Lane-3 work remain preserved by branch ancestry through 165f89a1e96c2846daabf1c21fa9141f9eaa2147. HQ Epoch33 semantically integrated Lane3 through AW45. The commits list below records AW46 only.",
+  "head_sha": "7b6967b7aeb6414a3c2bfcf6d5a3884f8f58229a",
   "commits": [
-    "ea81f74dbbd2a232f2c4b1e9caa85b72cd528607",
-    "f6f437f74d30a5f36d8056e40901ff617cd69abb",
-    "52db83bd852e1e1b5f6bf3ab65e4645c15131bb9",
-    "4202c503b04c1369dc213c0e335edc55c034b205",
-    "ba1239b60761eaa6259f3a28e99ad662ac222824",
-    "bc3d00fb5f9bb2ecc25da616d147dd991454f78a",
-    "5c6053d86a53fbe76c2cef158892ea34b7ea2a81",
-    "165f89a1e96c2846daabf1c21fa9141f9eaa2147"
+    "8124f25b4141e2255ad505c73061e18151594254",
+    "69402384dce005f90fad36e60d259e36d684b933",
+    "57873dace4b374a4b5b8dd1a0453a4435994219c",
+    "525648a266ad7d99d14eeba8ccb381bd9a05aed6",
+    "8b170019dc08257482a55bfa0d9a6e884058caf4",
+    "ed64c3ab4784c7e35db7c3dd7195b6513c3bf20f",
+    "cac598d20823e292f5ea7671889d6721c9ed1cd2",
+    "a14d9992b17b6a5a8fdbe0b57926de3211221527",
+    "7b6967b7aeb6414a3c2bfcf6d5a3884f8f58229a"
   ],
   "tests": [
-    "AW01-AW44 prior suites/evidence remain preserved by branch ancestry",
-    "L3-AW45 focused Swift 6.2.1 Linux language-mode-6 strict-concurrency=complete warnings-as-errors exact-algorithm verification PASS: SHA256_FLOAT32_LE_V1=fed6505b0fcb3b01a65fccc8e3b913772cb50e90e2835f9a0e51e74f6719bab2 matched independent Python hashlib, FNV1A64=7262699423100747709, 180000-frame AW44-equivalent clean verification required 132 source reads versus 44 single-pass reads",
-    "L3-AW45 focused optimized synthetic benchmark PASS over 5 x 360000 frames: old-equivalent 0.20767319202423096s, single-pass 0.10029256343841553s, observed ratio approximately 2.07067; structural CPU evidence only, not a production/physical-iPhone speed claim",
-    "L3-AW45 repository-native self-test, 20 x 8 chunk-boundary stress and production-primitive benchmark are authored under Playback/Tests but not executed in this Worker environment",
-    "L3-AW45 complete Worker-branch typecheck was not executed because the container could not resolve github.com for a branch clone; HQ permanent full Lane3 portable strict typecheck gate must compile AW44/AW45 at semantic integration",
+    "AW01-AW45 prior suites/evidence remain preserved by branch ancestry; HQ Epoch33 integrated AW45",
+    "L3-AW46 focused Swift 6.2.1 Linux language-mode-6 strict-concurrency=complete warnings-as-errors metadata-fence reproduction PASS: stable 180000-frame source remained 44 reads with FNV1A64=7262699423100747709; channels/sampleRate/frameCount mutation at every one of 44 read positions was rejected, 132/132 negative cells",
+    "L3-AW46 independent Python hashlib confirmed unchanged stable SHA256_FLOAT32_LE_V1=fed6505b0fcb3b01a65fccc8e3b913772cb50e90e2835f9a0e51e74f6719bab2",
+    "L3-AW46 focused timing proxy was intentionally not promoted because repeated optimized Linux measurements were noisy; stable PCM read passes remain unchanged and repository benchmark records elapsed time plus metadata getter volume",
+    "L3-AW46 repository-native metadata self-test, mutation-position stress, frozen-fingerprint self-test and stable benchmark are authored under Playback/Tests but not executed in this Worker environment",
+    "L3-AW46 complete Worker-branch typecheck was not executed because the container could not resolve github.com for a branch clone; HQ permanent full Lane3 portable strict typecheck plus AW44/AW45 regression must run at semantic integration",
     "No Xcode/AVFAudio/physical-iPhone/current-Moises execution is claimed"
   ],
   "evidence": [
     "Playback/Sources/Lane3LongTrackPCMIdentity.swift",
+    "Playback/Sources/Lane3StablePCMIdentityFingerprint.swift",
     "Playback/Sources/Lane3CodecLongTrackEvidenceBinding.swift",
-    "Playback/Tests/L3_AW45_SinglePassCodecIdentitySelfTest.swift",
-    "Playback/Tests/L3_AW45_SinglePassCodecIdentityStress.swift",
-    "Playback/Tests/L3_AW45_SinglePassCodecIdentityBenchmark.swift",
-    "Playback/benchmarks/L3-AW45_SINGLE_PASS_CODEC_IDENTITY.md",
-    "Playback/benchmarks/L3-AW45_VALIDATION.json",
-    "validation_blob_sha:8c6b1ada0d08fbac3c80ca4abc35b1ca01259f11"
+    "Playback/Tests/L3_AW46_PCMIdentityMetadataStabilitySelfTest.swift",
+    "Playback/Tests/L3_AW46_PCMIdentityMetadataStabilityStress.swift",
+    "Playback/Tests/L3_AW46_PCMIdentityMetadataStabilityBenchmark.swift",
+    "Playback/Tests/L3_AW46_FrozenFingerprintBridgeSelfTest.swift",
+    "Playback/benchmarks/L3-AW46_PCM_IDENTITY_METADATA_STABILITY.md",
+    "Playback/benchmarks/L3-AW46_VALIDATION.json",
+    "validation_blob_sha:70f1a5990c35cd91a0102667e1e3a3fa293176f6"
   ],
   "known_gaps": [
-    "AW45 reduces AW44 clean-source verification from three full bounded passes to one pass while preserving the AW43 report chunk boundary, FNV/counters, SHA256_FLOAT32_LE_V1 identity, selected AW30 role binding, AW30 run-binding recomputation and AW44 receipt format; repository-native full Lane3 typecheck and selected execution remain pending",
-    "AW44/AW45 remain content addressing, not an authenticity signature. AW43 descriptors do not carry the unmodified compressed-file digest plus deterministic derivative recipe/digests, so truncated/corrupted derivative parentage remains intentionally derivativeLineageCryptographicallyProven=false",
-    "AW45 digestWithChunkVisitor uses the source metadata/header observed at traversal start while generic Lane3PCMChunkReadable properties can theoretically be dynamic; selected Apple readers are expected to fail closed on source mutation, but an explicit generic metadata-stability fence is not yet durable in this primitive",
+    "AW46 now fail-closes observable channels/sampleRate/frameCount changes before/after every identity chunk read and carries the exact frozen hash metadata into AW43 clean-report/AW44 receipt construction; full repository typecheck and selected execution remain pending",
+    "AW44-AW46 remain content addressing, not an authenticity signature. AW43 descriptors do not carry the unmodified compressed-file digest plus deterministic derivative recipe/digests, so truncated/corrupted derivative parentage remains intentionally derivativeLineageCryptographicallyProven=false",
+    "Incremental SHA identity still materializes a temporary 4-byte-per-Float UInt8 array for every bounded chunk. The full track is not retained, but allocation/copy CPU and peak transient bytes can be reduced without changing SHA256_FLOAT32_LE_V1 semantics",
+    "The generic metadata fence can prove only protocol-visible metadata stability; an adapter that mutates hidden decoder state while keeping channels/sampleRate/frameCount unchanged must still fail closed in its selected runtime-specific read implementation",
     "AW43 still requires the required codec-label set from current-reference/Lane-2 import evidence and rights-cleared >=30-minute clean/truncated/corrupted real files on physical iPhone; silently accepted corrupted fixtures remain incomplete",
     "AW42 repeated-loop seam future automation remains fail-closed because the selected Apple wrapper has no per-event cancellation or generation-isolated future-event queue",
     "AW41/AW40 staged physical continuity still requires selected Xcode/AVFAudio host wiring, real monotonic external audible markers, physical iPhone metadata and rights-cleared real audio",
@@ -60,33 +65,33 @@
     "MOI-P006/P007/P008/P010/P012/P014/P015 remain MISSING; MOI-P021 physical long-track RSS/thermal/battery evidence remains MISSING"
   ],
   "hq_requests": [
-    "Preserve AW01-AW44 chain through 4b8f9f71e5a3cfea2b06a6fe04e41810f1044c34 and all AW45 commits through 165f89a1e96c2846daabf1c21fa9141f9eaa2147 during semantic integration",
-    "Run the permanent full Lane3 Swift 6 strict typecheck gate on AW44/AW45 and execute the repository-native AW45 self-test/stress/benchmark before treating the new single-pass primitive as selected repository evidence",
-    "At semantic integration verify that identical AW43/AW30 fixtures rebuild the same AW44 receipt/combined binding before and after AW45; AW45 intentionally changes traversal count, not durable binding semantics",
-    "For each required codec family, run AW43 clean/truncated/corrupted on rights-cleared >=30-minute fixtures, then run AW30 with the exact clean decoded PCM in an explicitly declared reference or observed role and validate the AW44/AW45 receipt",
-    "Do not substitute an independently transcoded or separately decoded file for the clean binding unless SHA256_FLOAT32_LE_V1 identity is exactly equal to the AW30 target role",
-    "Do not describe AW44/AW45 as a signature or proof that the corrupted/truncated compressed files are derivatives of the clean compressed file; add a higher-level baseline-compressed-digest plus deterministic derivative-generation manifest if that provenance property becomes required",
-    "Record physical RSS/thermal/battery and current-Moises/listening evidence separately; AW45 cannot promote P021 or any Lane3 feature row by itself",
+    "Preserve AW01-AW45 chain through 165f89a1e96c2846daabf1c21fa9141f9eaa2147 and all nine AW46 commits through 7b6967b7aeb6414a3c2bfcf6d5a3884f8f58229a during semantic integration",
+    "Run the permanent full Lane3 Swift 6 strict typecheck gate on AW46 and execute all four repository-native AW46 test/benchmark programs",
+    "Rerun AW44/AW45 content-binding and single-pass regression on stable fixtures and verify the durable receipt/combined binding is unchanged; AW46 changes fail-closed metadata handling, not stable SHA/report/receipt semantics",
+    "At selected runtime verify Apple file/decoder adapters fail closed on hidden source mutation in addition to the generic protocol-visible metadata fence",
+    "For each required codec family, run AW43 clean/truncated/corrupted on rights-cleared >=30-minute fixtures, then run AW30 with the exact clean decoded PCM in an explicitly declared reference or observed role and validate the AW44-AW46 receipt",
+    "Do not describe AW44-AW46 as a signature or proof that corrupted/truncated compressed files are derivatives of the clean compressed file; add a higher-level baseline-compressed-digest plus deterministic derivative-generation manifest if that provenance property becomes required",
+    "Record physical RSS/thermal/battery and current-Moises/listening evidence separately; AW46 cannot promote P021 or any Lane3 feature row by itself",
     "Keep the AW42 repeated-loop future-automation gate authoritative and continue AW41/AW40/AW37 selected-device validation",
     "Keep final PARITY authority in HQ"
   ],
   "previous_autonomous_wave": {
-    "wave_id": "L3-AW44",
-    "result": "Bound AW43 clean/truncated/corrupted codec execution evidence to the exact selected AW30 long-track PCM role/run with a recomputed content-addressed receipt while explicitly avoiding signature, derivative-parentage, device or PARITY claims."
+    "wave_id": "L3-AW45",
+    "result": "Reduced AW44 clean-source verification from three bounded full passes to one while preserving AW43 counters/FNV, canonical SHA256_FLOAT32_LE_V1 and AW44 receipt semantics; HQ Epoch33 semantically integrated the Wave."
   },
   "latest_autonomous_wave": {
-    "wave_id": "L3-AW45",
-    "goal": "Reduce AW44 long-file clean verification from multiple full evidence passes to one bounded traversal that simultaneously reproduces the AW43 clean execution report counters/FNV and computes the exact AW30 SHA256_FLOAT32_LE_V1 PCM identity.",
-    "rationale": "AW44 re-read the same long clean source once for AW43 report reproduction and twice more through reference==observed identity hashing. Those reads strengthened no evidence property and amplify decoder/IO work on representative long files.",
-    "done_when": "One bounded traversal preserves the AW43 report chunk contract and exact report equality, computes canonical SHA256_FLOAT32_LE_V1 from the same samples, matches the selected AW30 role, preserves run/completion/receipt semantics, fails closed on invalid reads/nonfinite/chunk configuration, and leaves portable plus repository-native tests/benchmark/evidence without device/PARITY overclaim.",
-    "result": "COMPLETE_NON_PARITY: added digestWithChunkVisitor and changed Lane3CodecLongTrackEvidenceBinder to reproduce AW43 FNV/read/frame counters and canonical SHA-256 from the same bounded clean PCM chunks. Focused strict verification matched independent hashlib/FNV expectations and reduced 180000-frame read calls from 132 AW44-equivalent to 44; focused synthetic benchmark observed about 2.07x CPU improvement. Durable self-test/stress/benchmark/evidence are committed. Full repository typecheck, selected AVFAudio execution, real codecs, physical iPhone and Differential Moises remain pending; no PARITY promotion is claimed."
+    "wave_id": "L3-AW46",
+    "goal": "Make long PCM identity and AW43/AW44 codec evidence fail closed when a generic Lane3PCMChunkReadable changes visible channels/sampleRate/frameCount during the optimized AW45 traversal or between hashing and durable report construction.",
+    "rationale": "AW45 removed redundant reads but initially treated generic source metadata getters as effectively immutable. A future dynamic adapter could otherwise mix one SHA header metadata state with PCM/body or post-hash report metadata from another state.",
+    "done_when": "The hasher freezes visible metadata, checks it before/after every read and at completion, makeReceipt persists captured metadata, the codec binder receives frozen hash metadata rather than rereading source getters, all mutation positions fail closed, stable digest/read semantics remain unchanged, and durable tests/evidence are committed without device/PARITY overclaim.",
+    "result": "COMPLETE_NON_PARITY: added generic metadata stability fencing, a frozen fingerprint bridge and binder propagation. Focused strict verification rejected channels/sampleRate/frameCount mutation at all 44 chunk positions (132/132) while preserving stable 44-read FNV and independent SHA256_FLOAT32_LE_V1. Repository-native tests/benchmark/evidence are committed. Full branch typecheck, selected AVFAudio, real codecs, physical iPhone and Differential Moises remain pending; no PARITY promotion is claimed."
   },
   "next_wave_candidates": [
-    "add an explicit generic metadata-stability fence around long PCM fingerprint traversal so dynamic Lane3PCMChunkReadable metadata changes during hashing cannot produce an internally mixed header/body identity even if a future adapter fails to throw sourceMetadataChanged",
     "remove per-chunk Float32-to-UInt8 materialization inside incremental SHA identity hashing while preserving byte-for-byte SHA256_FLOAT32_LE_V1 output, with allocation/CPU stress evidence",
+    "add selected-runtime hidden-source-mutation generation/token fencing only if Apple adapter inspection shows metadata-stable decoder replacement can occur without an existing read failure",
     "add a staged-session rotation/closure envelope only if selected HQ/iOS integration demonstrates callbacks can outlive a physical evidence session and collide with a subsequent session identifier",
     "prototype repeated-loop seam automation only if a new selected Apple mechanism supplies real stale-event revocation or generation-isolated rendering; the AW42 gate must remain authoritative"
   ],
-  "last_updated": "2026-08-27T07:39:00+09:00",
+  "last_updated": "2026-08-27T08:19:00+09:00",
   "writer_policy": "Only Moises-Worker-3 may update this status file; HQ remains semantic integration and PARITY authority."
 }
