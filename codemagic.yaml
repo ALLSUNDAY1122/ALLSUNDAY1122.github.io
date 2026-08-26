@@ -1110,27 +1110,33 @@ workflows:
       - name: Initialize signing keychain
         script: |
           set -euo pipefail
-          keychain initialize
+          echo 'STAGE initialize-keychain' >> "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
+          keychain initialize 2>&1 | tee -a "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
       - name: Fetch App Store signing files for app and widget
         script: |
           set -euo pipefail
-          app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE
-          app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE
+          echo 'STAGE fetch-signing-files-app' >> "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
+          app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE 2>&1 | tee -a "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
+          echo 'STAGE fetch-signing-files-widget' >> "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
+          app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE 2>&1 | tee -a "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
       - name: Add signing certificate to keychain
         script: |
           set -euo pipefail
-          keychain add-certificates
+          echo 'STAGE add-certificates' >> "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
+          keychain add-certificates 2>&1 | tee -a "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
       - name: Apply profiles to both targets
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR/clipboard-widget"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          echo 'STAGE use-profiles' >> "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}' 2>&1 | tee -a "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
       - name: Build signed Phase 0 IPA
         script: |
           set -euo pipefail
+          echo 'STAGE build-ipa' >> "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
           xcode-project build-ipa \
             --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
+            --scheme "$XCODE_SCHEME" 2>&1 | tee -a "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
       - name: Verify signed app and widget are packaged
         script: |
           set -euo pipefail
@@ -1154,8 +1160,10 @@ workflows:
           set -euo pipefail
           IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
           test -n "$IPA_PATH"
-          app-store-connect publish --path "$IPA_PATH"
+          echo 'STAGE testflight-upload' >> "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
+          app-store-connect publish --path "$IPA_PATH" 2>&1 | tee -a "$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
           echo 'PASS: TestFlight upload command completed'
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
+      - clipboard-widget-phase0-diagnostics.log
