@@ -30,7 +30,7 @@ jobs:
         run: |
           python3 --version
           python3 -m pip install --disable-pip-version-check jsonschema
-      - name: Run L1-A26 v3 exact final-tip audit
+      - name: Run L1-A26 v3 exact final-tip audit and expose discovery errors
         shell: bash
         working-directory: tech-assets/moises-audio
         run: |
@@ -43,4 +43,11 @@ jobs:
           audit_code=$?
           echo "audit_exit_code=$audit_code"
           cat /tmp/l1-a37-exact-audit.json
+          if [ "$audit_code" -ne 0 ]; then
+            echo "===== FULL UNITTEST DISCOVERY DIAGNOSTIC ====="
+            export PYTHONPATH="$PWD/Separation/Server:$PWD/Separation/Evaluation:$PWD/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+            python3 -m unittest discover -s Separation/Tests -p 'test_*.py' -v
+            discovery_code=$?
+            echo "discovery_exit_code=$discovery_code"
+          fi
           exit "$audit_code"
