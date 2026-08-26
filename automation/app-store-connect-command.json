@@ -1,18 +1,14 @@
 {
-  "request_id": "app2-004-yakuzaishi-metadata-20260825-2258",
-  "action": "write",
-  "expected_app_id": "6799753724",
-  "expected_bundle_id": "jp.allsunday1122.yakuzaishi",
-  "operations": [
-    {
-      "type": "update_version_localization",
-      "id": "932e6afa-1c42-471c-98d2-81964b581842",
-      "app_store_version_id": "430ba445-fae0-4d1d-9301-95d1ea342ac7",
-      "attributes": {
-        "description": "薬剤師国家試験の直近3回分を収録した学習アプリです。第111回・第110回・第109回の採点対象1,031問を追加購入なしで利用できます。今日のスプリントは4・8・16問から選択でき、分野別は約20問ずつのセットで学習できます。間違えた問題は苦手として記録し、3回連続で正解すると苦手から卒業します。公式問題画像は全画面表示・ピンチズーム・ドラッグに対応。模擬試験、学習履歴、5週間ヒートマップ、試験日カウントダウン、JSONバックアップ、オフライン学習にも対応しています。厚生労働省が公開する薬剤師国家試験資料を出典として利用しています。本アプリは厚生労働省の公式アプリではなく、試験学習用です。診断・治療・調剤・服薬指導等の医療上の判断を提供するものではありません。",
-        "keywords": "薬剤師,薬剤師国家試験,国試,薬学,過去問,必須,理論,実践,資格,学習",
-        "supportUrl": "https://allsunday1122.github.io/pharmacist-manabi-sprint/support.html"
-      }
-    }
+  "request_id": "app2-003-yoru-fresh-read-20260827-0833",
+  "requests": [
+    {"label": "app", "method": "GET", "path": "/v1/apps/6794137637"},
+    {"label": "versions", "method": "GET", "path": "/v1/apps/6794137637/appStoreVersions?limit=200"},
+    {"label": "builds", "method": "GET", "path": "/v1/apps/6794137637/builds?limit=200"},
+    {"label": "review-submissions", "method": "GET", "path": "/v1/reviewSubmissions?filter[app]=6794137637&limit=200"},
+    {"label": "beta-groups", "method": "GET", "path": "/v1/apps/6794137637/betaGroups?limit=200"},
+    {"label": "certificate", "method": "GET", "path": "/v1/certificates/B4WRC3G6V4"},
+    {"label": "profile", "method": "GET", "path": "/v1/profiles/6598LFYDY3"},
+    {"label": "profile-certificates", "method": "GET", "path": "/v1/profiles/6598LFYDY3/certificates"},
+    {"label": "profile-bundle", "method": "GET", "path": "/v1/profiles/6598LFYDY3/bundleId"}
   ]
 }
