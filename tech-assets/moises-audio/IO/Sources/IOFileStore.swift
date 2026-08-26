@@ -5,7 +5,6 @@ public struct IOFileStore: Sendable {
         case invalidRelativePath
         case sourceMissing
         case insufficientStorage(requiredBytes: Int64, availableBytes: Int64)
-        case unsafeManagedPath
         case fileOperationFailed(code: String)
     }
 
@@ -36,7 +35,7 @@ public struct IOFileStore: Sendable {
                 try boundary.ensureDirectory(url, fileManager: fileManager)
             }
         } catch {
-            throw StoreError.unsafeManagedPath
+            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
         }
     }
 
@@ -80,7 +79,7 @@ public struct IOFileStore: Sendable {
                 fileManager: fileManager
             )
         } catch {
-            throw StoreError.unsafeManagedPath
+            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
         }
         do {
             try fileManager.copyItem(at: sourceURL, to: destination)
@@ -94,7 +93,7 @@ public struct IOFileStore: Sendable {
                 fileManager: fileManager
             )
         } catch {
-            throw StoreError.unsafeManagedPath
+            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
         }
         return destination
     }
@@ -115,7 +114,7 @@ public struct IOFileStore: Sendable {
         do {
             try boundary.requireSafeDestination(staged, within: stagingURL, fileManager: fileManager)
         } catch {
-            throw StoreError.unsafeManagedPath
+            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
         }
 
         do {
@@ -132,7 +131,7 @@ public struct IOFileStore: Sendable {
         do {
             try boundary.requireExistingRegularFile(staged, within: stagingURL, fileManager: fileManager)
         } catch {
-            throw StoreError.unsafeManagedPath
+            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
         }
         return staged
     }
@@ -193,7 +192,7 @@ public struct IOFileStore: Sendable {
         do {
             try IOManagedPathBoundary(rootURL: rootURL).ensureRootDirectory(fileManager: fileManager)
         } catch {
-            throw StoreError.unsafeManagedPath
+            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
         }
         let attributes = try fileManager.attributesOfFileSystem(forPath: rootURL.path)
         guard let free = (attributes[.systemFreeSize] as? NSNumber)?.int64Value else { return }
@@ -237,7 +236,7 @@ public struct IOFileStore: Sendable {
             )
             try boundary.requireDirectory(directory, fileManager: fileManager)
         } catch {
-            throw StoreError.unsafeManagedPath
+            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
         }
 
         let ext = stagingFile.pathExtension
@@ -254,7 +253,7 @@ public struct IOFileStore: Sendable {
                 fileManager: fileManager
             )
         } catch {
-            throw StoreError.unsafeManagedPath
+            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
         }
 
         let finalRelativePath = try relativePath(for: destination)
@@ -289,7 +288,7 @@ public struct IOFileStore: Sendable {
         } catch let error as IOManagedPathBoundaryFailure {
             try? publicationJournal.cancelCurrentSessionIfPresent(relativePath: finalRelativePath)
             _ = error
-            throw StoreError.unsafeManagedPath
+            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
         } catch {
             try? publicationJournal.cancelCurrentSessionIfPresent(relativePath: finalRelativePath)
             throw StoreError.fileOperationFailed(code: "FINALIZE_MOVE_FAILED")
@@ -304,7 +303,7 @@ public struct IOFileStore: Sendable {
                 fileManager: fileManager
             )
         } catch {
-            throw StoreError.unsafeManagedPath
+            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
         }
         return FinalizedFile(relativePath: finalRelativePath, url: destination)
     }
