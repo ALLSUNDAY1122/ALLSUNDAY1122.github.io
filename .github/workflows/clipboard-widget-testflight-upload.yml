@@ -1,0 +1,101 @@
+name: Clipboard Widget Phase 0 TestFlight
+
+on:
+  push:
+    branches:
+      - feature/clipboard-widget-poc
+    paths:
+      - '.github/workflows/clipboard-widget-testflight-upload.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add unique build number and TestFlight upload to Codemagic workflow
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('codemagic.yaml')
+          s = p.read_text(encoding='utf-8')
+          start = s.index('\n  clipboard-widget-phase0:\n')
+          tail = s[start:]
+          end_rel = tail.find('\n  ', len('\n  clipboard-widget-phase0:\n'))
+          end = len(s) if end_rel < 0 else start + end_rel
+          block = s[start:end]
+
+          if 'Set unique TestFlight build number' not in block:
+              needle = '''      - name: Initialize signing keychain\n'''
+              insert = '''      - name: Set unique TestFlight build number\n        script: |\n          set -euo pipefail\n          cd "$CM_BUILD_DIR/clipboard-widget"\n          python3 - <<'PY2'\n          import os\n          from pathlib import Path\n          p=Path('project.yml')\n          s=p.read_text(encoding='utf-8')\n          old='CURRENT_PROJECT_VERSION: 1'\n          if old not in s:\n              raise SystemExit('CURRENT_PROJECT_VERSION baseline not found')\n          p.write_text(s.replace(old, 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1), encoding='utf-8')\n          print('PASS: build number='+os.environ['CM_BUILD_NUMBER'])\n          PY2\n\n'''
+              if needle not in block:
+                  raise SystemExit('signing insertion point missing')
+              block = block.replace(needle, insert + needle, 1)
+
+          if 'Upload signed IPA to TestFlight' not in block:
+              needle = '''    artifacts:\n'''
+              insert = '''      - name: Upload signed IPA to TestFlight\n        script: |\n          set -euo pipefail\n          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"\n          test -n "$IPA_PATH"\n          app-store-connect publish --path "$IPA_PATH"\n          echo 'PASS: TestFlight upload command completed'\n'''
+              if needle not in block:
+                  raise SystemExit('artifact insertion point missing')
+              block = block.replace(needle, insert + needle, 1)
+
+          s = s[:start] + block + s[end:]
+          p.write_text(s, encoding='utf-8')
+          print('PASS: clipboard Phase 0 workflow patched for TestFlight')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          git commit -m 'ci: enable clipboard widget Phase 0 TestFlight upload' || true
+          git pull --rebase origin feature/clipboard-widget-poc
+          git push origin HEAD:feature/clipboard-widget-poc
+
+      - name: Trigger Codemagic TestFlight build and wait
+        id: build
+        continue-on-error: true
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260826","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
+          python scripts/codemagic_build_gateway.py \
+            --command /tmp/clipboard-widget-cm-command.json \
+            --output /tmp/clipboard-widget-cm-result.json
+
+      - name: Persist safe Codemagic result
+        if: always()
+        run: |
+          set -euo pipefail
+          if [ ! -f /tmp/clipboard-widget-cm-result.json ]; then
+            echo 'No Codemagic result file to persist.'
+            exit 0
+          fi
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('/tmp/clipboard-widget-cm-result.json').read_text())
+          keep={k:r.get(k) for k in ('request_id','ok','workflow_id','branch','resolved_app_id','build_id','status','app_id','error','build_details')}
+          Path('/tmp/clipboard-widget-cm-safe.json').write_text(json.dumps(keep,ensure_ascii=False,indent=2)+'\n')
+          PY
+          git fetch origin feature/clipboard-widget-poc
+          git reset --hard origin/feature/clipboard-widget-poc
+          mkdir -p automation/clipboard-widget/evidence
+          cp /tmp/clipboard-widget-cm-safe.json automation/clipboard-widget/evidence/codemagic-phase0-testflight.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/clipboard-widget/evidence/codemagic-phase0-testflight.json
+          git commit -m 'chore: record clipboard widget TestFlight evidence' || true
+          git pull --rebase origin feature/clipboard-widget-poc
+          git push origin HEAD:feature/clipboard-widget-poc
+
+      - name: Enforce TestFlight build success
+        if: steps.build.outcome != 'success'
+        run: exit 1
