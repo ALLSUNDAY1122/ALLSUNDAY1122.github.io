@@ -1,0 +1,207 @@
+name: APP2-004 Pharmacist Build 6 Finalize and Submit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-004-yakuzaishi-build6-finalize-submit-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-004-yakuzaishi-build6-finalize-submit
+  cancel-in-progress: false
+
+jobs:
+  finalize-submit:
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Verify explicit Build 6 submission authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('automation/app2-004-yakuzaishi-build6-finalize-submit-command.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          assert d['task_id']=='APP2-004'
+          assert d['target_build']=='6'
+          assert d['monetization']=='none'
+          assert d['human_device_acceptance']['status']=='PASS'
+          assert d['authorization']['status']=='APPROVED'
+          print('PASS: explicit Build 6 finalization/submission authorization')
+          PY
+
+      - name: Pin existing submission helpers to Build 6 for this run
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          for name in ('scripts/app2_004_yakuzaishi_prepare_submission.py','scripts/app2_004_yakuzaishi_submit_review.py'):
+              p=Path(name)
+              s=p.read_text(encoding='utf-8')
+              old='TARGET_BUILD = "5"'
+              if s.count(old)!=1:
+                  raise RuntimeError(f'Expected one Build 5 target in {name}')
+              p.write_text(s.replace(old,'TARGET_BUILD = "6"',1),encoding='utf-8')
+          PY
+          grep -q 'TARGET_BUILD = "6"' scripts/app2_004_yakuzaishi_prepare_submission.py
+          grep -q 'TARGET_BUILD = "6"' scripts/app2_004_yakuzaishi_submit_review.py
+
+      - name: Verify no-IAP native release candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 pharmacist-manabi-sprint/scripts/validate_release.py
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          PREFLIGHT_PLACEHOLDER_ICON=1 bash pharmacist-manabi-sprint/ios/prepare-ios.sh
+          cd pharmacist-manabi-sprint/ios
+          xcodegen generate
+          python3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj
+          ! grep -q 'SystemCapabilities = "' PharmacistSprint.xcodeproj/project.pbxproj
+          ! grep -R -q 'import StoreKit\|Product.products\|AppStore.sync\|purchaseMonthly\|purchaseLifetime' --include='*.swift' .
+          grep -q 'CURRENT_PROJECT_VERSION = 6' PharmacistSprint.xcodeproj/project.pbxproj || grep -q 'CURRENT_PROJECT_VERSION = 6;' PharmacistSprint.xcodeproj/project.pbxproj
+
+      - name: Capture current native App Store screenshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/yakuzaishi-review
+          UDID=$(python3 - <<'PY'
+          import json,subprocess
+          d=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          devices=[x for xs in d['devices'].values() for x in xs if x.get('isAvailable') and x.get('name','').startswith('iPhone')]
+          preferred=['iPhone 16 Pro Max','iPhone 17 Pro Max','iPhone 16 Plus','iPhone 15 Pro Max']
+          for name in preferred:
+              for x in devices:
+                  if x.get('name')==name:
+                      print(x['udid']); raise SystemExit
+          if devices:
+              print(devices[-1]['udid']); raise SystemExit
+          raise SystemExit('No available iPhone simulator')
+          PY
+          )
+          test -n "$UDID"
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcodebuild build \
+            -project pharmacist-manabi-sprint/ios/PharmacistSprint.xcodeproj \
+            -scheme PharmacistSprint \
+            -configuration Release \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -derivedDataPath /tmp/yakuzaishi-derived \
+            CODE_SIGNING_ALLOWED=NO
+          APP=/tmp/yakuzaishi-derived/Build/Products/Release-iphonesimulator/PharmacistSprint.app
+          test -d "$APP"
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl launch --terminate-running-process "$UDID" jp.allsunday1122.yakuzaishi
+          sleep 4
+          xcrun simctl io "$UDID" screenshot /tmp/yakuzaishi-review/01-home.png
+
+      - name: Wait for VALID Build 6 and prepare App Review
+        id: prepare
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          PHARMACIST_SCREENSHOT: /tmp/yakuzaishi-review/01-home.png
+          PHARMACIST_SUBMISSION_OUTPUT: /tmp/app2-004-yakuzaishi-build6-prepare-result.json
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/app2_004_yakuzaishi_prepare_submission.py 2>&1 | tee /tmp/app2-004-yakuzaishi-build6-prepare.log
+
+      - name: Enforce Build 6 submission-ready state
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/app2-004-yakuzaishi-build6-prepare-result.json')
+          if not p.exists(): raise SystemExit('Build 6 preparation result missing')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          if d.get('build')!='6': raise SystemExit('Wrong prepared build: '+str(d.get('build')))
+          if d.get('build_processing_state')!='VALID': raise SystemExit('Build 6 is not VALID')
+          if not d.get('submission_ready'): raise SystemExit('Build 6 is not submission-ready: '+str(d.get('error')))
+          if d.get('submitted'): raise SystemExit('Preparation must not submit')
+          print('PASS: Build 6 attached and submission-ready')
+          PY
+
+      - name: Submit Build 6 to App Review
+        id: submit
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          PHARMACIST_SUBMIT_OUTPUT: /tmp/app2-004-yakuzaishi-build6-submit-result.json
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/app2_004_yakuzaishi_submit_review.py 2>&1 | tee /tmp/app2-004-yakuzaishi-build6-submit.log
+
+      - name: Persist authenticated App Store submission evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p automation/asc-results
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          prepare=Path('/tmp/app2-004-yakuzaishi-build6-prepare-result.json')
+          submit=Path('/tmp/app2-004-yakuzaishi-build6-submit-result.json')
+          out=Path('automation/asc-results/app2-004-yakuzaishi-build6-final-submit-result.json')
+          data={'task_id':'APP2-004','target_build':'6'}
+          if prepare.exists():
+              data['prepare']=json.loads(prepare.read_text(encoding='utf-8'))
+          else:
+              data['prepare']={'error':'prepare result missing'}
+          if submit.exists():
+              data['submit']=json.loads(submit.read_text(encoding='utf-8'))
+          else:
+              log=Path('/tmp/app2-004-yakuzaishi-build6-submit.log')
+              data['submit']={'submitted':False,'error':log.read_text(encoding='utf-8',errors='replace')[-4000:] if log.exists() else 'submit did not run'}
+          out.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/asc-results/app2-004-yakuzaishi-build6-final-submit-result.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Persist APP2-004 Build 6 App Review submission evidence'
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then break; fi
+              sleep $((attempt * 2))
+            done
+          fi
+
+      - name: Enforce submitted state
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('automation/asc-results/app2-004-yakuzaishi-build6-final-submit-result.json')
+          if not p.exists(): raise SystemExit('final evidence missing')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          s=d.get('submit') or {}
+          if not s.get('submitted'):
+              raise SystemExit('APP2-004 Build 6 submission failed: '+str(s.get('error')))
+          if s.get('review_submission_state') not in {'WAITING_FOR_REVIEW','IN_REVIEW','COMPLETING'}:
+              raise SystemExit('Unexpected review state: '+str(s.get('review_submission_state')))
+          print('PASS: Build 6 submitted to App Review; state='+s['review_submission_state'])
+          PY
