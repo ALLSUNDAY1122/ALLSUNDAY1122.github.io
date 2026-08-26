@@ -35,7 +35,10 @@ public struct IOFileStore: Sendable {
                 try boundary.ensureDirectory(url, fileManager: fileManager)
             }
         } catch {
-            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            throw storeError(
+                forBoundaryFailure: error,
+                operationCode: "MANAGED_DIRECTORY_PREPARE_FAILED"
+            )
         }
     }
 
@@ -79,7 +82,7 @@ public struct IOFileStore: Sendable {
                 fileManager: fileManager
             )
         } catch {
-            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            throw storeError(forBoundaryFailure: error, operationCode: "MANAGED_PATH_OPERATION_FAILED")
         }
         do {
             try fileManager.copyItem(at: sourceURL, to: destination)
@@ -93,7 +96,7 @@ public struct IOFileStore: Sendable {
                 fileManager: fileManager
             )
         } catch {
-            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            throw storeError(forBoundaryFailure: error, operationCode: "MANAGED_PATH_OPERATION_FAILED")
         }
         return destination
     }
@@ -114,7 +117,7 @@ public struct IOFileStore: Sendable {
         do {
             try boundary.requireSafeDestination(staged, within: stagingURL, fileManager: fileManager)
         } catch {
-            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            throw storeError(forBoundaryFailure: error, operationCode: "MANAGED_PATH_OPERATION_FAILED")
         }
 
         do {
@@ -131,7 +134,7 @@ public struct IOFileStore: Sendable {
         do {
             try boundary.requireExistingRegularFile(staged, within: stagingURL, fileManager: fileManager)
         } catch {
-            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            throw storeError(forBoundaryFailure: error, operationCode: "MANAGED_PATH_OPERATION_FAILED")
         }
         return staged
     }
@@ -192,7 +195,10 @@ public struct IOFileStore: Sendable {
         do {
             try IOManagedPathBoundary(rootURL: rootURL).ensureRootDirectory(fileManager: fileManager)
         } catch {
-            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            throw storeError(
+                forBoundaryFailure: error,
+                operationCode: "MANAGED_ROOT_PREPARE_FAILED"
+            )
         }
         let attributes = try fileManager.attributesOfFileSystem(forPath: rootURL.path)
         guard let free = (attributes[.systemFreeSize] as? NSNumber)?.int64Value else { return }
@@ -236,7 +242,7 @@ public struct IOFileStore: Sendable {
             )
             try boundary.requireDirectory(directory, fileManager: fileManager)
         } catch {
-            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            throw storeError(forBoundaryFailure: error, operationCode: "MANAGED_PATH_OPERATION_FAILED")
         }
 
         let ext = stagingFile.pathExtension
@@ -253,7 +259,7 @@ public struct IOFileStore: Sendable {
                 fileManager: fileManager
             )
         } catch {
-            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            throw storeError(forBoundaryFailure: error, operationCode: "MANAGED_PATH_OPERATION_FAILED")
         }
 
         let finalRelativePath = try relativePath(for: destination)
@@ -287,8 +293,7 @@ public struct IOFileStore: Sendable {
             throw error
         } catch let error as IOManagedPathBoundaryFailure {
             try? publicationJournal.cancelCurrentSessionIfPresent(relativePath: finalRelativePath)
-            _ = error
-            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            throw storeError(forBoundaryFailure: error, operationCode: "MANAGED_PATH_OPERATION_FAILED")
         } catch {
             try? publicationJournal.cancelCurrentSessionIfPresent(relativePath: finalRelativePath)
             throw StoreError.fileOperationFailed(code: "FINALIZE_MOVE_FAILED")
@@ -303,9 +308,19 @@ public struct IOFileStore: Sendable {
                 fileManager: fileManager
             )
         } catch {
-            throw StoreError.fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
+            throw storeError(forBoundaryFailure: error, operationCode: "MANAGED_PATH_OPERATION_FAILED")
         }
         return FinalizedFile(relativePath: finalRelativePath, url: destination)
+    }
+
+    private func storeError(
+        forBoundaryFailure error: Error,
+        operationCode: String
+    ) -> StoreError {
+        if case IOManagedPathBoundaryFailure.fileOperation = error {
+            return .fileOperationFailed(code: operationCode)
+        }
+        return .invalidRelativePath
     }
 
     private func isDescendant(_ candidate: URL, of ancestor: URL) -> Bool {
