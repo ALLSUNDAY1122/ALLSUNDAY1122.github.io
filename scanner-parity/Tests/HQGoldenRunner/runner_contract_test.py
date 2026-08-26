@@ -3,6 +3,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 package = (ROOT / "Package.swift").read_text(encoding="utf-8")
 runner = (ROOT / "HQGoldenRunner" / "main.swift").read_text(encoding="utf-8")
+v3_launcher = (ROOT / "HQGoldenRunner" / "run-formal-golden-v3.sh").read_text(encoding="utf-8")
+thresholdless_preflight = (ROOT / "HQGoldenRunner" / "run-formal-golden-v3-thresholdless-and-calibrate.sh").read_text(encoding="utf-8")
 machine_gate = (ROOT / "HQGoldenSupport" / "FormalGoldenMachineGate.swift").read_text(encoding="utf-8")
 review_bundle = (ROOT / "HQGoldenSupport" / "GoldenReviewBundleBuilder.swift").read_text(encoding="utf-8")
 reference_matcher = (ROOT / "HQGoldenSupport" / "ReferenceFeatureMatcher.swift").read_text(encoding="utf-8")
@@ -75,10 +77,9 @@ for field in [
     assert field in runner, f"runner evidence missing: {field}"
 assert 'videoURL.path' not in runner.split('HQGoldenExecutionReport(', 1)[0], "report schema should not persist a raw local video path"
 
-# The real v3 reference PDF contains negative captures, repeated captures of the
-# same physical page, and capture order that is not canonical reading order.
-# A configured, SHA-bound corpus manifest must therefore collapse raw reference
-# pages into canonical groups before recall/duplicate/order metrics are computed.
+# The real v3 reference PDF contains negative captures and capture order that is
+# not canonical reading order. A configured, SHA-bound corpus manifest must
+# normalize raw reference pages before recall/duplicate/order metrics are computed.
 for token in [
     'SCANNER_GOLDEN_REFERENCE_MANIFEST',
     'ReferenceCorpusManifest',
@@ -91,5 +92,32 @@ assert 'referencePDFSHA256.caseInsensitiveCompare(actualPDFSHA256)' in reference
 assert 'unassignedPages' in reference_manifest and 'pageAssignedMoreThanOnce' in reference_manifest
 assert 'canonicalReferenceIndex ?? match.referenceIndex' in reference_alignment
 assert 'negativeDistance <= threshold' in reference_alignment
+
+# Golden v3 must remain identity locked. The one-command preflight is allowed to
+# run the thresholdless production path and produce calibration evidence, but it
+# must never accept or auto-select a threshold.
+for token in [
+    '8334cc4b3116b92f25541fe8144bff850b15808846ada4ce7dc7a998576c1677',
+    '4fae66be8ba95549859bbc5f9f1fc433ebe1a3a8b6c078cbd3317cf0e78e7b32',
+    'golden-v3-user-confirmed-20260825',
+    '--reference-corpus-manifest',
+]:
+    assert token in v3_launcher, f"Golden v3 identity launcher missing token: {token}"
+for token in [
+    'run-formal-golden-v3.sh',
+    'hq-golden-execution.json',
+    'hq-golden-calibration-evidence.json',
+    'PENDING_REFERENCE_THRESHOLD_CALIBRATION',
+    'CALIBRATION_EVIDENCE_READY_OPERATOR_DECISION_REQUIRED',
+    'recommendedThreshold',
+    'scanner-hq-golden-calibrator',
+    '--analyze',
+    'THRESHOLDLESS_CALIBRATION_READY',
+]:
+    assert token in thresholdless_preflight, f"thresholdless one-command preflight missing token: {token}"
+assert 'recommendedThreshold") is None' in thresholdless_preflight, "preflight must reject an automatic threshold recommendation"
+assert 'This launcher is thresholdless by contract' in thresholdless_preflight, "preflight must reject --match-threshold"
+assert 'next=HQ must inspect the real distributions/sweep/gaps and explicitly select a threshold' in thresholdless_preflight
+assert '--emit-threshold' not in thresholdless_preflight, "thresholdless preflight must not emit/select a threshold"
 
 print("HQ_GOLDEN_RUNNER_CONTRACT_PASS")
