@@ -29,16 +29,20 @@ Added `Library/Sources/DeletionOwnershipManifestRecovery.swift`.
 
 Unsafe shard structure remains fail-closed. A shard directory symlink or malformed visible entry is not converted into authority by repair.
 
-## Production wiring
+## Construction-path centralization
 
-The repair is invoked immediately before CrashSafe deletion recovery in both production helper opens:
+The first implementation wired reconciliation into the two dedicated production helper opens. A same-Wave re-audit found that this could still be bypassed by the older `CrashSafeProjectLibraryStore.open(...)` entry point or by direct construction.
 
-- `CrashSafeProjectLibraryStore.openPreservingUserData(...)`
-- `CrashSafeProjectLibraryStore.openBulkPrepared(...)`
+AW46 therefore centralizes reconciliation in `CrashSafeProjectLibraryStore.init(...)`, immediately after managed artifact layout preparation and before deletion-ownership recovery can run. All current construction paths now receive the repair exactly once:
 
-This keeps the existing publication-recovery / compatibility-census sequencing intact and changes no Shared/App/PARITY/Core Data schema.
+- direct `CrashSafeProjectLibraryStore(...)` initialization;
+- `CrashSafeProjectLibraryStore.open(...)`;
+- `CrashSafeProjectLibraryStore.openPreservingUserData(...)`;
+- `CrashSafeProjectLibraryStore.openBulkPrepared(...)`.
 
-The older base `CrashSafeProjectLibraryStore.open(...)` entry point was not rewritten in AW46 because it lives in the larger core facade and was not needed to establish the new repair primitive or the two dedicated production helper paths. Unifying that entry point is retained as a follow-up correctness cleanup rather than risking a broad unrelated core-file rewrite in this Wave.
+The temporary helper-level duplicate calls were removed after centralization. GitHub commit inspection confirms the core facade change is a one-line semantic insertion rather than a broad rewrite of the large file.
+
+This keeps existing publication-recovery / compatibility-census sequencing intact and changes no Shared/App/PARITY/Core Data schema.
 
 ## Portable Swift 6.2.1 self-check
 
@@ -71,16 +75,18 @@ Added `Library/Tests/DeletionOwnershipManifestRecoveryTests.swift` covering:
 - symlink shard directory rejection;
 - malformed visible shard entry rejection.
 
-## Commits before evidence
+## Implementation commits before final evidence refresh
 
 - `35c7e2ce8bc9149b3c49a6d645e40f194ce209c4` — recovery primitive
 - `b720239b5bcd03933bb938c720c3301be7b37f28` — regression coverage
-- `aa8abfa10c9ce437d8c08eec888165f7377e9781` — preserving-open wiring
-- `6619f52fd3f251f58b18ee0fb66e0d216ff5ef7b` — bulk-open wiring
+- `aa8abfa10c9ce437d8c08eec888165f7377e9781` — initial preserving-open wiring
+- `6619f52fd3f251f58b18ee0fb66e0d216ff5ef7b` — initial bulk-open wiring
+- `402271766898cc1e04e3759584c27c4fc04a0b84` — centralize repair in common store initializer
+- `f8e833f0883204464b146b616da5b73a752525b9` — remove preserving-open duplicate after centralization
+- `9658266a6921f24314e8eaa7c57104b51035f491` — remove bulk-open duplicate after centralization
 
 ## Remaining gates / non-claims
 
-- The base `CrashSafeProjectLibraryStore.open(...)` path still needs the same pre-recovery reconciliation call or a future centralization inside `Lane2DeletionOwnershipIndex`.
 - Physical iPhone/APFS force-termination around manifest replacement and record publication remains unmeasured.
 - APFS latency/RSS of the 256 fixed-path probes remains an Apple-device benchmark item, although work is bounded independently of record count.
 - AW45's administrative `pendingRecords()` whole-inventory API remains intentionally outside normal launch recovery.
