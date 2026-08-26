@@ -7,7 +7,7 @@
   "operating_model": "v4｜4 Autonomous Independent Lanes / Late Integration",
   "work_branch": "moises/wp4-analysis-platform",
   "state": "IN_PROGRESS",
-  "current_bundle": "L4-W48｜Externally pinned W47→W46 physical Project provenance bridge / package-root expectation + single-entry Analysis judgment handoff",
+  "current_bundle": "L4-W49｜Durable W48 bridge-certificate consumption ledger / monotonic checkpoint chain + fork/replay resistance",
   "completed_bundles": [
     "L4-M01", "L4-M02", "L4-M03", "L4-M04",
     "L4-W05", "L4-W06", "L4-W07", "L4-W08", "L4-W09", "L4-W10",
@@ -16,11 +16,11 @@
     "L4-W23", "L4-W24", "L4-W25", "L4-W26", "L4-W27", "L4-W28",
     "L4-W29", "L4-W30", "L4-W31", "L4-W32", "L4-W33", "L4-W34",
     "L4-W35", "L4-W36", "L4-W37", "L4-W38", "L4-W39", "L4-W40",
-    "L4-W41", "L4-W42", "L4-W43", "L4-W44", "L4-W45", "L4-W46", "L4-W47"
+    "L4-W41", "L4-W42", "L4-W43", "L4-W44", "L4-W45", "L4-W46", "L4-W47", "L4-W48"
   ],
   "epoch_contract_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
   "base_integration_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
-  "head_sha": "c89cd900e168cc0f57f5c672084c1f819400dc5e",
+  "head_sha": "1fa45f4c6646405002894195ac16f5e27a8ecb94",
   "commits": [
     "03b9e99fcb6519a9c13bca72031cd8c66ffbb973",
     "981022932657dfd6e093157d5b93b8aa23eda02a",
@@ -31,7 +31,16 @@
     "d67c6d989eb728e43d7108dbcb1bb10a94b5d051",
     "c0291d32f4f0edecf28e7c0fafc0a870ea5bfda7",
     "16004d53f5e7f0a067f50936d146adef2cf1188d",
-    "c89cd900e168cc0f57f5c672084c1f819400dc5e"
+    "c89cd900e168cc0f57f5c672084c1f819400dc5e",
+    "3f12bbd1405610e5102356c1cf6b408da5504f36",
+    "32b7033cfbe8e73f1c8ff5e2119ba7d753ff19d4",
+    "37e7c4c73ef7aa8be2cb07ec0d943a1c0505e785",
+    "5c3058b13ca55515af5ddf007142714a5cc9b0a2",
+    "1b8f105a00c79678a4a2fcc04ca5b230a2c68c3c",
+    "2b3fc43c35933e71d7e2473a1fa964eb02fe43fd",
+    "861c11b84a555a59b4649ce380f692362222f44a",
+    "a27ebffce747241056c75c121f9969155d59db4a",
+    "1fa45f4c6646405002894195ac16f5e27a8ecb94"
   ],
   "tests": [
     "W47 iOS coordinator accepts canonical manifest bytes only, requires a physical iphoneos/arm64 non-Simulator/non-Catalyst runtime and a GENUINE_LANE2_BOUNDED_DECODER that returns BOUNDED_PULL chunked sources.",
@@ -39,9 +48,11 @@
     "W47 portable assembler re-encodes the manifest and recomputes its SHA, rejects synthetic fixtures, compatibility decoder/runtime substitutions, selective subsets, duplicate IDs, source/sample drift, stage/snapshot tamper and malformed package roots without duplicate-key traps.",
     "W47 rebuilds the full audited Project report only from retained W36 canonical snapshots and exact manifest references. Reopen recomputes the report and requires exact model equality plus exact Project report root and W47 package root. The Project report root is compatible with the W46 canonical stableSHA256 function.",
     "W47 durable XCTest source covers complete reopen, W46 report-root equality, subset/simulator/compatibility/synthetic rejection, source/sample drift, run/workload/decoder ID reuse, missing stages, snapshot/report substitution, package-root tamper, codec roundtrip and manifest-SHA drift.",
-    "Fresh full Worker-branch SwiftPM/XCTest is NOT_OBSERVED because git ls-remote failed with Could not resolve host: github.com. HQ Run #238 remains canonical only through W44, not W45-W47.",
-    "W47 exact split portable production core passed Swift 6.2.1 strict-concurrency warnings-as-errors dependency-stub typecheck in about 2.49 s / 135400 kB RSS; source-shaped XCTest typecheck passed in about 2.97 s / 136260 kB RSS; iOS coordinator source-shaped typecheck passed in about 2.15 s / 141644 kB RSS.",
-    "W47 Swift fail-close mirror passed 180000/180000 adversarial checks across 12 classes; compile about 1.43 s / 147252 kB RSS, run about 1.02 s / 18060 kB RSS. Canonical package-root mirror passed 25000 packages / 300000 mutations in about 19.93 s / 110556 kB RSS."
+    "W48 single-entry bridge decodes and canonically re-encodes exact W47 package bytes and manifest bytes, recomputes package/byte/manifest/runtime/report/binding roots, reopens W47 and maps every W46 Project runtime/report field from the reopened package before canonical W46 adjudication.",
+    "W48 durable XCTest source covers deterministic NON_PARITY certificate generation plus package-byte substitution, package-root replay, manifest-root substitution, runtime/session substitution, W46 Project session/report substitution and mixed review-policy/root rejection.",
+    "W48 durable certificate validator recomputes the certificate root after persistence and can bind the retained certificate back to the exact HQ expectation and W46 adjudication report; certificate mutation cannot reuse an old declared root.",
+    "W48 adversarial protocol mirror passed 240000/240000 mutation checks with 0 undetected across 12 classes: package root, package bytes, manifest ID/root, runtime root, physical session, Project report, W46 binding, Project engine/build/device and consumed-root replay.",
+    "Fresh canonical Worker-branch SwiftPM/XCTest for W48 is NOT_OBSERVED: git clone failed before Swift execution with Could not resolve host: github.com. A repository push-triggered unrelated workflow also produced no usable Moises Swift job evidence, so it is not counted as validation."
   ],
   "evidence": [
     "tech-assets/moises-audio/Tests/L4-W47_VALIDATION.md",
@@ -53,23 +64,31 @@
     "tech-assets/moises-audio/Analysis/AnalysisPhysicalRealAudioCorpusHelpers.swift",
     "tech-assets/moises-audio/iOS/HostCore/AnalysisIOSPhysicalRealAudioCorpusCoordinator.swift",
     "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisPhysicalRealAudioCorpusExecutionTests.swift",
+    "tech-assets/moises-audio/Tests/L4-W48_VALIDATION.md",
+    "tech-assets/moises-audio/Analysis/benchmarks/L4-W48_W47_W46_PROVENANCE_BRIDGE.json",
+    "tech-assets/moises-audio/Analysis/benchmarks/ANALYSIS_W47_W46_PROVENANCE_BRIDGE_RUNBOOK.md",
+    "tech-assets/moises-audio/Analysis/AnalysisPhysicalRealAudioParityBridge.swift",
+    "tech-assets/moises-audio/Analysis/AnalysisPhysicalRealAudioParityBridgeCertificateValidation.swift",
+    "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisPhysicalRealAudioParityBridgeTests.swift",
+    "tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisPhysicalRealAudioParityBridgeCertificateTests.swift",
     "tech-assets/moises-audio/Package.swift"
   ],
   "known_gaps": [
-    "MOI-P009/P011/P013/P016 remain MISSING. W47 supplies the physical Project provenance execution path but no HQ-approved rights-cleared corpus, genuine integrated Lane-2 decoder session or selected physical-iPhone full-corpus execution was available, so no real W47 READY package exists yet.",
-    "Current-iPhone Moises W19-W21 reviewed Reference evidence and the complete W46 differential package remain external gates; W47 only closes the Project execution/provenance side.",
-    "W47 device/decoder/source-revision/build/session identities are SHA-bound metadata rather than Apple attestation, signatures or trusted timestamps. HQ must independently retain the exact source files, legal grants and selected runtime provenance.",
-    "W46 pins the W47 audited Project report root and runtime metadata when HQ maps them correctly, but the W47 package root itself is not yet a first-class external W46 input; HQ should retain it independently until W48 adds a pinned bridge.",
+    "MOI-P009/P011/P013/P016 remain MISSING. W47/W48 now provide a physical Project execution package and an externally pinned handoff into W46, but no HQ-approved rights-cleared corpus, genuine integrated Lane-2 decoder session or selected physical-iPhone full-corpus W47 package was available in this Worker runtime.",
+    "Current-iPhone Moises W19-W21 reviewed Reference evidence and the complete W46 paired differential package remain external gates; W48 deliberately cannot manufacture or replace them.",
+    "W48 closes the previous first-class W47 package-root/report/runtime handoff gap, but replay detection depends on a prior-consumed W47 package-root inventory durably retained outside the individual bridge call. W49 will make that consumption history append-only, chain-validated and checkpointable inside Lane 4 while preserving the need for HQ external custody.",
+    "W47/W48 device/decoder/source-revision/build/session identities are SHA-bound metadata rather than Apple attestation, signatures or trusted timestamps. HQ must independently retain exact source files, legal grants and selected runtime provenance.",
     "MOI-P021 remains MISSING for the W45 reasons: genuine Lane-2 bounded decoder, selected physical-iPhone W24 run inventory and complete RSS/physical-footprint/thermal/battery/cancellation evidence remain unobserved.",
-    "Full canonical Worker-branch SwiftPM/XCTest and selected Xcode/iphoneos compilation/execution remain HQ/integrated-environment gates."
+    "Full canonical Worker-branch SwiftPM/XCTest for W48 and selected Xcode/iphoneos compilation/execution remain HQ/integrated-environment gates."
   ],
   "hq_requests": [
-    "Lane 4 is canonical through W44. W45-W47 are post-Epoch30 and should be semantic-integrated from the exact Worker-4 owned files before real P021 or P009/P011/P013/P016 decisions use them.",
-    "For a real W47 run, supply the exact canonical W22/W46 rights-cleared manifest bytes and a genuine Lane-2 AnalysisPhysicalRealAudioChunkedDecoding adapter in the selected physical iphoneos/arm64 target. Preserve the resulting W47 package bytes/root externally.",
-    "Map W47 auditedProjectReportSHA256 to W46 expectedProjectReportSHA256 and map the exact W47 engine/source/build/device/OS/session runtime fields into the W46 HQ binding; do not substitute a separately generated Project report.",
-    "Keep P009/P011/P013/P016 MISSING until real W47 Project evidence, current-iPhone W19-W21 Reference evidence, W18/W46 paired differential and independent HQ review all pass. Keep P021 MISSING until W45 real physical evidence passes."
+    "Lane 4 is canonical through W46 in Epoch 31. W47-W48 are post-Epoch31 and should be semantic-integrated from the exact Worker-4 owned files before any real P009/P011/P013/P016 judgment uses them.",
+    "For a real W47 run, supply the exact canonical rights-cleared manifest bytes and a genuine Lane-2 AnalysisPhysicalRealAudioChunkedDecoding adapter in the selected physical iphoneos/arm64 target, and preserve the exact resulting W47 package bytes/root.",
+    "For W48, construct one independent HQ expectation from the exact retained W47 package/root/byte-SHA/manifest/runtime/session/report and the exact W46 binding root. Do not regenerate the Project report or manually substitute runtime fields. Supply the durable prior-consumed W47 package-root inventory and persist the new consumed root after a successful bridge.",
+    "Run canonical SwiftPM/XCTest on the exact W48 Worker files during semantic integration because this Worker runtime could not clone github.com. Preserve the W48 bridge certificate together with its expectation and W46 report.",
+    "Keep P009/P011/P013/P016 MISSING until real W47 Project evidence, current-iPhone W19-W21 Reference evidence, W46 paired differential and independent HQ review all pass. Keep P021 MISSING until W45 real physical evidence passes."
   ],
-  "next_priority": "Implement L4-W48 as an externally pinned W47→W46 physical Project provenance bridge. Add an HQ-supplied expectation that pins the exact W47 package root, canonical manifest root, runtime-binding root, physical session identity and audited Project report root; reopen the W47 package from retained bytes, require every W46 Project binding field/report root to equal the reopened W47 package, then invoke the W46 canonical adjudication entry through one fail-closed API. Reject stale/different W47 packages, report substitution, runtime/session substitution, mixed manifest/reference roots and package-root replay. Emit a deterministic NON_PARITY bridge certificate for HQ. This closes operator/custody ambiguity between W47 and W46 but still cannot replace current-iPhone Reference evidence, legal rights review or final HQ PARITY judgment.",
-  "last_updated": "2026-08-26T05:39:00+09:00",
+  "next_priority": "Implement L4-W49 as a durable append-only W48 bridge-certificate consumption ledger. Each accepted entry must pin a monotonic sequence, predecessor ledger root, W48 bridge certificate root, W47 package root, W46 adjudication report root, bridge ID and HQ custody metadata. Reopen the full chain and reject duplicate bridge IDs/package roots/certificate roots, sequence gaps or rollback, predecessor mismatch, forked histories, certificate mutation and stale checkpoint replay. Emit a deterministic checkpoint root plus an HQ external-anchor handoff and expose the consumed W47 package-root inventory directly for future W48 expectations so operators do not transcribe it manually. Add negative/property tests and machine evidence. This reduces the remaining stateful replay/custody gap but remains NON_PARITY and does not replace external HQ persistence/attestation or current-iPhone Reference/differential evidence.",
+  "last_updated": "2026-08-27T07:49:00+09:00",
   "writer_policy": "Only Moises-Worker-4 may update this status file. Worker 4 never declares PARITY; HQ Late Integration owns final PARITY_MATRIX judgment."
 }
