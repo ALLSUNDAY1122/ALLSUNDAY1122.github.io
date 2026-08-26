@@ -89,21 +89,20 @@ public enum Lane3CodecLongTrackEvidenceBinder {
             throw Lane3CodecLongTrackEvidenceBindingError.completionRunBindingMismatch
         }
 
-        let cleanReexecution = try Lane3RepresentativeCodecExecutionProbe.sweep(
-            source: cleanSource,
-            descriptor: cleanReport.fixture,
-            environment: cleanReport.environment,
-            chunkFrames: cleanReport.maximumChunkFrames
+        // AW45: reproduce the AW43 clean report and compute SHA256_FLOAT32_LE_V1 from the exact same
+        // bounded PCM chunks. AW44 previously swept once for FNV/counters and then hashed the same long
+        // source twice as reference+observed. The identity digest is chunk-boundary invariant, while the
+        // AW43 report is not (readCalls / maximumChunkFrames), so the report's original chunk size is the
+        // authoritative traversal size. identityChunkFrames remains validated for API compatibility.
+        let singlePass = try singlePassCleanReportAndIdentity(
+            cleanSource: cleanSource,
+            cleanReport: cleanReport,
+            identityChunkFrames: identityChunkFrames
         )
-        guard cleanReexecution == cleanReport else {
+        guard singlePass.report == cleanReport else {
             throw Lane3CodecLongTrackEvidenceBindingError.cleanReportReexecutionMismatch
         }
-
-        let selfIdentity = try Lane3LongTrackPCMIdentityHasher.makeReceipt(
-            reference: cleanSource,
-            observed: cleanSource,
-            chunkFrames: identityChunkFrames
-        )
+        let selfIdentity = singlePass.identity
         guard selfIdentity.algorithm == "SHA256_FLOAT32_LE_V1",
               selfIdentity.referenceDigestSHA256 == selfIdentity.observedDigestSHA256,
               selfIdentity.referenceFrameCount == selfIdentity.observedFrameCount,
@@ -308,6 +307,102 @@ public enum Lane3CodecLongTrackEvidenceBinder {
         ])
     }
 
+    private static func singlePassCleanReportAndIdentity(
+        cleanSource: any Lane3PCMChunkReadable,
+        cleanReport: Lane3RepresentativeCodecExecutionReport,
+        identityChunkFrames: Int
+    ) throws -> (report: Lane3RepresentativeCodecExecutionReport, identity: Lane3PCMIdentityReceipt) {
+        guard identityChunkFrames > 0 else {
+            throw Lane3LongTrackEvidenceError.invalidChunkFrames(identityChunkFrames)
+        }
+        guard cleanReport.maximumChunkFrames > 0, cleanReport.maximumChunkFrames <= 1_048_576 else {
+            throw Lane3RepresentativeCodecExecutionError.invalidChunkFrames(cleanReport.maximumChunkFrames)
+        }
+
+        let metadataMatches = cleanSource.channels == cleanReport.fixture.expectedChannels
+            && abs(cleanSource.sampleRate - cleanReport.fixture.expectedSampleRate) <= 0.5
+        guard metadataMatches, cleanSource.frameCount > 0 else {
+            throw Lane3CodecLongTrackEvidenceBindingError.cleanReportReexecutionMismatch
+        }
+
+        var readCalls: UInt64 = 0
+        var framesRead: UInt64 = 0
+        var nonFinite: UInt64 = 0
+        var checksum: UInt64 = 0xcbf29ce484222325
+
+        let digest: String
+        do {
+            digest = try Lane3LongTrackPCMIdentityHasher.digestWithChunkVisitor(
+                cleanSource,
+                chunkFrames: cleanReport.maximumChunkFrames
+            ) { _, count, samples in
+                readCalls = saturatingAdd(readCalls, 1)
+                framesRead = saturatingAdd(framesRead, UInt64(count))
+                for sample in samples {
+                    if !sample.isFinite {
+                        nonFinite = saturatingAdd(nonFinite, 1)
+                    }
+                    checksum ^= UInt64(sample.bitPattern)
+                    checksum = checksum &* 0x100000001b3
+                }
+                if nonFinite > 0 {
+                    throw Lane3CodecLongTrackEvidenceBindingError.cleanReportReexecutionMismatch
+                }
+            }
+        } catch let error as Lane3CodecLongTrackEvidenceBindingError {
+            throw error
+        } catch {
+            // A valid AW43 clean report cannot contain a read failure. Any failure encountered while
+            // reproducing it therefore means the supplied source is not the same successful clean run.
+            throw Lane3CodecLongTrackEvidenceBindingError.cleanReportReexecutionMismatch
+        }
+
+        let metadataTruncation = cleanSource.frameCount >= 0
+            && cleanSource.frameCount < cleanReport.fixture.baselineFrameCount
+        let cleanSatisfied = !metadataTruncation
+            && cleanSource.frameCount == cleanReport.fixture.baselineFrameCount
+            && nonFinite == 0
+        let reproduced = Lane3RepresentativeCodecExecutionReport(
+            schemaVersion: 1,
+            evidenceScope: "LANE3_AW43_REPRESENTATIVE_CODEC_EXECUTION_NON_PARITY",
+            fixture: cleanReport.fixture,
+            environment: cleanReport.environment,
+            decoderOpened: true,
+            actualChannels: cleanSource.channels,
+            actualSampleRate: cleanSource.sampleRate,
+            actualFrameCount: cleanSource.frameCount,
+            readCalls: readCalls,
+            framesRead: framesRead,
+            maximumChunkFrames: cleanReport.maximumChunkFrames,
+            completeSequentialSweep: true,
+            nonFiniteSampleCount: nonFinite,
+            rollingPCMChecksumFNV1A64: readCalls > 0 ? checksum : nil,
+            failureCode: nil,
+            metadataTruncationObserved: metadataTruncation,
+            expectedFaultObserved: false,
+            cleanDecodeContractSatisfied: cleanSatisfied,
+            rightsCleared: cleanReport.fixture.rightsCleared,
+            representativeLongTrack: cleanReport.fixture.representsAtLeastThirtyMinutes,
+            boundedChunkedRead: true,
+            rawPCMRetained: false,
+            sourcePathIncluded: false,
+            authoritativePhysicalEvidenceAllowed: cleanReport.environment == .physicalIPhoneAVFAudio
+                && cleanReport.fixture.rightsCleared,
+            parityPromotionAllowed: false
+        )
+
+        let identity = Lane3PCMIdentityReceipt(
+            algorithm: "SHA256_FLOAT32_LE_V1",
+            referenceDigestSHA256: digest,
+            observedDigestSHA256: digest,
+            channels: cleanSource.channels,
+            sampleRate: cleanSource.sampleRate,
+            referenceFrameCount: cleanSource.frameCount,
+            observedFrameCount: cleanSource.frameCount
+        )
+        return (reproduced, identity)
+    }
+
     private static func longTrackRunBindingSHA256(_ report: Lane3UnifiedEvidenceReportV2) -> String {
         Lane3LongTrackPCMIdentityHasher.digestFields([
             report.fixtureID,
@@ -395,6 +490,10 @@ public enum Lane3CodecLongTrackEvidenceBinder {
         }
     }
 
+    private static func saturatingAdd(_ value: UInt64, _ delta: UInt64) -> UInt64 {
+        let result = value.addingReportingOverflow(delta)
+        return result.overflow ? UInt64.max : result.partialValue
+    }
     private static func bool(_ value: Bool) -> String { value ? "1" : "0" }
     private static func optionalInt(_ value: Int?) -> String { value.map { "some:\($0)" } ?? "nil" }
     private static func optionalInt64(_ value: Int64?) -> String { value.map { "some:\($0)" } ?? "nil" }
