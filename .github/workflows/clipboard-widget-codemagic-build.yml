@@ -11,6 +11,8 @@ on:
 permissions:
   contents: write
 
+# Phase 0 signed-build retry after clipboard-widget-phase0 was installed into codemagic.yaml.
+
 jobs:
   install-and-build:
     runs-on: ubuntu-latest
@@ -63,7 +65,7 @@ jobs:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           set -euo pipefail
-          printf '%s\n' '{"request_id":"clipboard-widget-phase0-signed-20260826","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
+          printf '%s\n' '{"request_id":"clipboard-widget-phase0-signed-20260826-retry1","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
           python scripts/codemagic_build_gateway.py \
             --command /tmp/clipboard-widget-cm-command.json \
             --output /tmp/clipboard-widget-cm-result.json
