@@ -18,7 +18,7 @@ from typing import Any
 
 from lane1_source_snapshot import SourceSnapshotError, build_source_snapshot
 
-TOOL_VERSION = "L1-A26-v3"
+TOOL_VERSION = "L1-A26-v4"
 EVIDENCE_STATE = "NON_PARITY_EVIDENCE_ONLY"
 ERROR_CODE = re.compile(r"\b(?:SEP|GEN|GENRT|GENRET|GEN_FACADE|L1A\d+|L1M\d+)_[A-Z0-9_]+\b")
 GIT_SHA = re.compile(r"^[0-9a-f]{40}$")
@@ -191,8 +191,38 @@ def _dependency_checks(audio_root: Path) -> dict[str, Any]:
             if token not in text:
                 failures.append({"check": "a25_retention_expectation", "code": "L1A26_A25_RETENTION_EXPECTATION_MISSING", "token": token})
 
+    semantic_contracts = (
+        (
+            "A38_reconciliation_topology_contract",
+            required_safety_files["A27_topology"],
+            (
+                "a37_conflict_decision_store",
+                "RECONCILIATION_STORE_IDS",
+                "reconciliation_topology_snapshot",
+                "assert_reconciliation_topology_safe",
+            ),
+            "L1A38_RECONCILIATION_TOPOLOGY_CONTRACT_MISSING",
+        ),
+        (
+            "A38_reconciliation_topology_regression",
+            required_safety_regressions["A27_A35_topology_regression"],
+            (
+                "a37_conflict_decision_store",
+                "reconciliation_topology_snapshot",
+                "assert_reconciliation_topology_safe",
+            ),
+            "L1A38_RECONCILIATION_TOPOLOGY_REGRESSION_MISSING",
+        ),
+    )
+    for check, path, tokens, code in semantic_contracts:
+        if path.is_file():
+            text = path.read_text(encoding="utf-8")
+            missing = [token for token in tokens if token not in text]
+            if missing:
+                failures.append({"check": check, "code": code, "missing": missing})
+
     return {
-        "checked": 4 + len(required_files) + len(required_safety_files) + len(required_safety_regressions),
+        "checked": 6 + len(required_files) + len(required_safety_files) + len(required_safety_regressions),
         "failures": failures,
         "state": "PASS" if not failures else "FAIL",
     }
