@@ -1066,3 +1066,71 @@ workflows:
         submit_to_testflight: false
         submit_to_app_store: false
 
+
+  clipboard-widget-phase0:
+    name: クリップボードWidget - Phase 0 Signed IPA
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      groups:
+        - app2_010_touhan_signing
+      vars:
+        APP_BUNDLE_ID: jp.allsunday1122.clipboardwidget
+        WIDGET_BUNDLE_ID: jp.allsunday1122.clipboardwidget.widget
+        XCODE_PROJECT: clipboard-widget/ClipboardWidget.xcodeproj
+        XCODE_SCHEME: ClipboardWidget
+      xcode: latest
+    scripts:
+      - name: Install tools and audit Phase 0
+        script: |
+          set -euo pipefail
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd "$CM_BUILD_DIR"
+          python3 clipboard-widget/Tests/static_audit.py
+          cd clipboard-widget
+          xcodegen generate
+      - name: Initialize signing keychain
+        script: |
+          set -euo pipefail
+          keychain initialize
+      - name: Fetch App Store signing files for app and widget
+        script: |
+          set -euo pipefail
+          app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE
+          app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE
+      - name: Add signing certificate to keychain
+        script: |
+          set -euo pipefail
+          keychain add-certificates
+      - name: Apply profiles to both targets
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/clipboard-widget"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed Phase 0 IPA
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+      - name: Verify signed app and widget are packaged
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          WIDGET_DIR="$(find "$APP_DIR/PlugIns" -maxdepth 1 -type d -name '*.appex' -print -quit)"
+          test -n "$APP_DIR"
+          test -n "$WIDGET_DIR"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Info.plist" | grep -Fx "$APP_BUNDLE_ID"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$WIDGET_DIR/Info.plist" | grep -Fx "$WIDGET_BUNDLE_ID"
+          test -f "$APP_DIR/embedded.mobileprovision"
+          test -f "$WIDGET_DIR/embedded.mobileprovision"
+          test -d "$APP_DIR/_CodeSignature"
+          test -d "$WIDGET_DIR/_CodeSignature"
+          echo 'PASS: signed IPA contains independently signed app + widget extension'
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
