@@ -64,6 +64,16 @@ Validated:
 - shard-directory symlink fails closed;
 - malformed visible shard entry fails closed.
 
+## Portable fixed-namespace benchmark
+
+An optimized Swift 6.2.1 run created all 256 canonical shard directories, each with one canonical ownership filename. The manifest was first absent, then reconciliation was repeated ten times against the valid steady state.
+
+Observed on the current Linux runner:
+
+`L2_AW46_PORTABLE_BENCH_PASS shards=256 rebuild_ms=33.568 steady_median_ms=39.785 probes=256 record_inventory_per_shard=1`
+
+These numbers are not iPhone/APFS performance evidence and are not PARITY evidence. Their purpose is to verify the complexity boundary: manifest reconciliation performs a fixed 256-path probe and one-entry activity check per existing shard rather than scaling with the number of ownership records inside each shard.
+
 ## Durable regression coverage
 
 Added `Library/Tests/DeletionOwnershipManifestRecoveryTests.swift` covering:
@@ -88,7 +98,7 @@ Added `Library/Tests/DeletionOwnershipManifestRecoveryTests.swift` covering:
 ## Remaining gates / non-claims
 
 - Physical iPhone/APFS force-termination around manifest replacement and record publication remains unmeasured.
-- APFS latency/RSS of the 256 fixed-path probes remains an Apple-device benchmark item, although work is bounded independently of record count.
+- APFS latency/RSS of the 256 fixed-path probes remains an Apple-device benchmark item; the portable Linux benchmark above only establishes bounded work and a non-authoritative reference timing.
 - AW45's administrative `pendingRecords()` whole-inventory API remains intentionally outside normal launch recovery.
 - Apple Core Data/WAL, ENOSPC, production codecs, real import/export/share, AVFoundation validity/synchronization and Differential Moises remain external/HQ gates.
 - `MOI-P001/P002/P017/P018/P019/P020/P024` remain `MISSING`.
