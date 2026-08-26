@@ -40,12 +40,6 @@ model = replace_once(
 )
 model = replace_once(
     model,
-    "        resultURL = nil\n        previewImage = nil\n        trainingProgress = 0\n        trainingIteration = 0\n        splatCount = 0\n        datasetReady = false\n",
-    "        resultURL = nil\n        previewImage = nil\n        trainingProgress = 0\n        trainingIteration = 0\n        splatCount = 0\n        reconstructionDiagnosticText = nil\n        datasetReady = false\n",
-    "discard diagnostic reset",
-)
-model = replace_once(
-    model,
     "        phase = .training\n        trainingProgress = 0\n        splatCount = 0\n",
     "        phase = .training\n        trainingProgress = 0\n        splatCount = 0\n        reconstructionDiagnosticText = nil\n",
     "training diagnostic reset",
