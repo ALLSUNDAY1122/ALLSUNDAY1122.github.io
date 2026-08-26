@@ -20,7 +20,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Add unique build number and TestFlight upload to Codemagic workflow
+      - name: Patch Codemagic workflow for TestFlight and diagnostics
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -30,10 +30,6 @@ jobs:
           s = p.read_text(encoding='utf-8')
           marker = '\n  clipboard-widget-phase0:\n'
           start = s.index(marker)
-
-          # clipboard-widget-phase0 is intentionally the final workflow in
-          # codemagic.yaml. Keeping the complete tail avoids confusing nested
-          # four-space YAML keys with the next two-space workflow key.
           block = s[start:]
 
           if 'Set unique TestFlight build number' not in block:
@@ -43,8 +39,6 @@ jobs:
                   raise SystemExit('signing insertion point missing')
               block = block.replace(needle, insert + needle, 1)
 
-          # Repair an earlier injected step that changed project.yml after the
-          # first xcodegen run without regenerating the actual Xcode project.
           if 'PASS: regenerated Xcode project with TestFlight build number' not in block:
               needle = '''          PY2\n\n      - name: Initialize signing keychain\n'''
               replacement = '''          PY2\n          xcodegen generate\n          echo 'PASS: regenerated Xcode project with TestFlight build number'\n\n      - name: Initialize signing keychain\n'''
@@ -59,14 +53,42 @@ jobs:
                   raise SystemExit('artifact insertion point missing')
               block = block.replace(needle, insert + needle, 1)
 
+          # Persist the output of every stage that can fail after xcodegen.
+          # The log is a Codemagic artifact so the next GitHub-side inspection
+          # can identify the first failing command without guessing.
+          diag = '$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log'
+          if 'clipboard-widget-phase0-diagnostics.log' not in block:
+              replacements = [
+                  ('          keychain initialize\n',
+                   f'''          echo 'STAGE initialize-keychain' >> "{diag}"\n          keychain initialize 2>&1 | tee -a "{diag}"\n'''),
+                  ('          app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE\n          app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE\n',
+                   f'''          echo 'STAGE fetch-signing-files-app' >> "{diag}"\n          app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE 2>&1 | tee -a "{diag}"\n          echo 'STAGE fetch-signing-files-widget' >> "{diag}"\n          app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE 2>&1 | tee -a "{diag}"\n'''),
+                  ('          keychain add-certificates\n',
+                   f'''          echo 'STAGE add-certificates' >> "{diag}"\n          keychain add-certificates 2>&1 | tee -a "{diag}"\n'''),
+                  ('          xcode-project use-profiles --custom-export-options=\'{"testFlightInternalTestingOnly": true}\'\n',
+                   f'''          echo 'STAGE use-profiles' >> "{diag}"\n          xcode-project use-profiles --custom-export-options=\'{{"testFlightInternalTestingOnly": true}}\' 2>&1 | tee -a "{diag}"\n'''),
+                  ('          xcode-project build-ipa \\\n            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \\\n            --scheme "$XCODE_SCHEME"\n',
+                   f'''          echo 'STAGE build-ipa' >> "{diag}"\n          xcode-project build-ipa \\\n            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \\\n            --scheme "$XCODE_SCHEME" 2>&1 | tee -a "{diag}"\n'''),
+                  ('          app-store-connect publish --path "$IPA_PATH"\n',
+                   f'''          echo 'STAGE testflight-upload' >> "{diag}"\n          app-store-connect publish --path "$IPA_PATH" 2>&1 | tee -a "{diag}"\n'''),
+              ]
+              for old, new in replacements:
+                  if old not in block:
+                      raise SystemExit('diagnostic patch point missing: ' + old.splitlines()[0].strip())
+                  block = block.replace(old, new, 1)
+              artifact_needle = '''      - /tmp/xcodebuild_logs/*.log\n'''
+              if artifact_needle not in block:
+                  raise SystemExit('diagnostic artifact insertion point missing')
+              block = block.replace(artifact_needle, artifact_needle + '      - clipboard-widget-phase0-diagnostics.log\n', 1)
+
           s = s[:start] + block
           p.write_text(s, encoding='utf-8')
-          print('PASS: clipboard Phase 0 workflow patched for TestFlight')
+          print('PASS: clipboard Phase 0 workflow patched for TestFlight diagnostics')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add codemagic.yaml
-          git commit -m 'ci: enable clipboard widget Phase 0 TestFlight upload' || true
+          git commit -m 'ci: diagnose clipboard widget Phase 0 TestFlight build' || true
           git pull --rebase origin feature/clipboard-widget-poc
           git push origin HEAD:feature/clipboard-widget-poc
 
@@ -77,7 +99,7 @@ jobs:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           set -euo pipefail
-          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260826-r3","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
+          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260826-r4","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
           python scripts/codemagic_build_gateway.py \
             --command /tmp/clipboard-widget-cm-command.json \
             --output /tmp/clipboard-widget-cm-result.json
