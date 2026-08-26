@@ -38,9 +38,10 @@ jobs:
             /tmp/scanner-golden-codemagic-result.json
 
       - name: Persist sanitized Golden gateway result
-        if: always() && hashFiles('/tmp/scanner-golden-codemagic-result.json') != ''
+        if: always()
         run: |
           set -euo pipefail
+          test -f /tmp/scanner-golden-codemagic-result.json || exit 0
           python3 - <<'PY'
           import json,re
           from pathlib import Path
