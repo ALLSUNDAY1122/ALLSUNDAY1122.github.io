@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 env:
-  LANE1_EXPECTED_HEAD: e407d1819da1cff3862db1f666b7b1ebb3489612
+  LANE1_EXPECTED_HEAD: 2e815c72288265501ef5cd697b9c178d6a4ca977
 
 jobs:
   lane1-a26-exact-checkout-audit:
@@ -57,6 +57,8 @@ jobs:
           assert report['overall_state'] == 'PASS', report
           assert report['git_head_binding']['state'] == 'PASS', report['git_head_binding']
           assert report['owned_source_snapshot']['state'] == 'PASS', report['owned_source_snapshot']
+          assert report['dependency_contracts']['state'] == 'PASS', report['dependency_contracts']
+          assert report['unittest_discovery']['state'] == 'PASS', report['unittest_discovery']
           print('L1_A26_EXACT_AUDIT_PASS')
           PY
 
