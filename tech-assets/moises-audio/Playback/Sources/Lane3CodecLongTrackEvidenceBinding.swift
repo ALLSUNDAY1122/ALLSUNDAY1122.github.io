@@ -89,11 +89,11 @@ public enum Lane3CodecLongTrackEvidenceBinder {
             throw Lane3CodecLongTrackEvidenceBindingError.completionRunBindingMismatch
         }
 
-        // AW45: reproduce the AW43 clean report and compute SHA256_FLOAT32_LE_V1 from the exact same
-        // bounded PCM chunks. AW44 previously swept once for FNV/counters and then hashed the same long
-        // source twice as reference+observed. The identity digest is chunk-boundary invariant, while the
-        // AW43 report is not (readCalls / maximumChunkFrames), so the report's original chunk size is the
-        // authoritative traversal size. identityChunkFrames remains validated for API compatibility.
+        // AW45/AW46: reproduce AW43 clean counters/FNV and SHA256_FLOAT32_LE_V1 from the same bounded
+        // chunks. AW46 additionally carries the exact metadata snapshot used by hashing into the report
+        // and identity construction so no post-hash mutable source getter can create a mixed header/body
+        // identity. identityChunkFrames remains validated for API compatibility; AW43's original chunk
+        // size remains authoritative because its readCalls/maximumChunkFrames are report semantics.
         let singlePass = try singlePassCleanReportAndIdentity(
             cleanSource: cleanSource,
             cleanReport: cleanReport,
@@ -319,20 +319,14 @@ public enum Lane3CodecLongTrackEvidenceBinder {
             throw Lane3RepresentativeCodecExecutionError.invalidChunkFrames(cleanReport.maximumChunkFrames)
         }
 
-        let metadataMatches = cleanSource.channels == cleanReport.fixture.expectedChannels
-            && abs(cleanSource.sampleRate - cleanReport.fixture.expectedSampleRate) <= 0.5
-        guard metadataMatches, cleanSource.frameCount > 0 else {
-            throw Lane3CodecLongTrackEvidenceBindingError.cleanReportReexecutionMismatch
-        }
-
         var readCalls: UInt64 = 0
         var framesRead: UInt64 = 0
         var nonFinite: UInt64 = 0
         var checksum: UInt64 = 0xcbf29ce484222325
 
-        let digest: String
+        let fingerprint: Lane3PCMIdentityFingerprint
         do {
-            digest = try Lane3LongTrackPCMIdentityHasher.digestWithChunkVisitor(
+            fingerprint = try Lane3LongTrackPCMIdentityHasher.fingerprintWithChunkVisitor(
                 cleanSource,
                 chunkFrames: cleanReport.maximumChunkFrames
             ) { _, count, samples in
@@ -351,16 +345,23 @@ public enum Lane3CodecLongTrackEvidenceBinder {
             }
         } catch let error as Lane3CodecLongTrackEvidenceBindingError {
             throw error
+        } catch let error as Lane3PCMIdentityStabilityError {
+            throw error
         } catch {
             // A valid AW43 clean report cannot contain a read failure. Any failure encountered while
             // reproducing it therefore means the supplied source is not the same successful clean run.
             throw Lane3CodecLongTrackEvidenceBindingError.cleanReportReexecutionMismatch
         }
 
-        let metadataTruncation = cleanSource.frameCount >= 0
-            && cleanSource.frameCount < cleanReport.fixture.baselineFrameCount
+        guard fingerprint.channels == cleanReport.fixture.expectedChannels,
+              fingerprint.sampleRate.bitPattern == cleanReport.fixture.expectedSampleRate.bitPattern,
+              fingerprint.frameCount > 0 else {
+            throw Lane3CodecLongTrackEvidenceBindingError.cleanReportReexecutionMismatch
+        }
+
+        let metadataTruncation = fingerprint.frameCount < cleanReport.fixture.baselineFrameCount
         let cleanSatisfied = !metadataTruncation
-            && cleanSource.frameCount == cleanReport.fixture.baselineFrameCount
+            && fingerprint.frameCount == cleanReport.fixture.baselineFrameCount
             && nonFinite == 0
         let reproduced = Lane3RepresentativeCodecExecutionReport(
             schemaVersion: 1,
@@ -368,9 +369,9 @@ public enum Lane3CodecLongTrackEvidenceBinder {
             fixture: cleanReport.fixture,
             environment: cleanReport.environment,
             decoderOpened: true,
-            actualChannels: cleanSource.channels,
-            actualSampleRate: cleanSource.sampleRate,
-            actualFrameCount: cleanSource.frameCount,
+            actualChannels: fingerprint.channels,
+            actualSampleRate: fingerprint.sampleRate,
+            actualFrameCount: fingerprint.frameCount,
             readCalls: readCalls,
             framesRead: framesRead,
             maximumChunkFrames: cleanReport.maximumChunkFrames,
@@ -392,13 +393,13 @@ public enum Lane3CodecLongTrackEvidenceBinder {
         )
 
         let identity = Lane3PCMIdentityReceipt(
-            algorithm: "SHA256_FLOAT32_LE_V1",
-            referenceDigestSHA256: digest,
-            observedDigestSHA256: digest,
-            channels: cleanSource.channels,
-            sampleRate: cleanSource.sampleRate,
-            referenceFrameCount: cleanSource.frameCount,
-            observedFrameCount: cleanSource.frameCount
+            algorithm: fingerprint.algorithm,
+            referenceDigestSHA256: fingerprint.digestSHA256,
+            observedDigestSHA256: fingerprint.digestSHA256,
+            channels: fingerprint.channels,
+            sampleRate: fingerprint.sampleRate,
+            referenceFrameCount: fingerprint.frameCount,
+            observedFrameCount: fingerprint.frameCount
         )
         return (reproduced, identity)
     }

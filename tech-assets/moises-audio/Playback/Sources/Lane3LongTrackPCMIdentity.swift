@@ -119,21 +119,67 @@ private struct Lane3IncrementalSHA256 {
     }
 }
 
+public enum Lane3PCMIdentityStabilityError: Error, Equatable, Sendable {
+    case sourceMetadataChanged
+}
+
+private struct Lane3PCMIdentityMetadataSnapshot: Sendable {
+    let channels: Int
+    let sampleRate: Double
+    let frameCount: Int64
+
+    func exactlyMatches(_ other: Lane3PCMIdentityMetadataSnapshot) -> Bool {
+        channels == other.channels
+            && sampleRate.bitPattern == other.sampleRate.bitPattern
+            && frameCount == other.frameCount
+    }
+}
+
 public enum Lane3LongTrackPCMIdentityHasher {
     public static func makeReceipt(
         reference: any Lane3PCMChunkReadable,
         observed: any Lane3PCMChunkReadable,
         chunkFrames: Int = 16_384
     ) throws -> Lane3PCMIdentityReceipt {
-        _ = try Lane3LongTrackPCMAccess.validatePair(reference: reference, observed: observed, chunkFrames: chunkFrames)
+        guard chunkFrames > 0 else {
+            throw Lane3LongTrackEvidenceError.invalidChunkFrames(chunkFrames)
+        }
+        let referenceMetadata = try captureStableMetadata(reference)
+        let observedMetadata = try captureStableMetadata(observed)
+        guard referenceMetadata.channels == observedMetadata.channels else {
+            throw Lane3LongTrackEvidenceError.channelMismatch(
+                expected: referenceMetadata.channels,
+                actual: observedMetadata.channels
+            )
+        }
+        guard abs(referenceMetadata.sampleRate - observedMetadata.sampleRate) <= 0.5 else {
+            throw Lane3LongTrackEvidenceError.sampleRateMismatch(
+                expected: referenceMetadata.sampleRate,
+                actual: observedMetadata.sampleRate
+            )
+        }
+
+        let referenceDigest = try digest(
+            reference,
+            chunkFrames: chunkFrames,
+            expectedMetadata: referenceMetadata
+        )
+        let observedDigest = try digest(
+            observed,
+            chunkFrames: chunkFrames,
+            expectedMetadata: observedMetadata
+        )
+        try requireMetadataStable(reference, expected: referenceMetadata)
+        try requireMetadataStable(observed, expected: observedMetadata)
+
         return Lane3PCMIdentityReceipt(
             algorithm: "SHA256_FLOAT32_LE_V1",
-            referenceDigestSHA256: try digest(reference, chunkFrames: chunkFrames),
-            observedDigestSHA256: try digest(observed, chunkFrames: chunkFrames),
-            channels: reference.channels,
-            sampleRate: reference.sampleRate,
-            referenceFrameCount: reference.frameCount,
-            observedFrameCount: observed.frameCount
+            referenceDigestSHA256: referenceDigest,
+            observedDigestSHA256: observedDigest,
+            channels: referenceMetadata.channels,
+            sampleRate: referenceMetadata.sampleRate,
+            referenceFrameCount: referenceMetadata.frameCount,
+            observedFrameCount: observedMetadata.frameCount
         )
     }
 
@@ -144,9 +190,10 @@ public enum Lane3LongTrackPCMIdentityHasher {
         return sha.finalizeHex()
     }
 
-    /// AW45 single-pass primitive. The caller observes each exact bounded PCM chunk while the
-    /// canonical SHA256_FLOAT32_LE_V1 digest is updated from the same samples. This lets evidence
-    /// consumers reproduce independent counters/checksums without rereading the long source.
+    /// AW45/AW46 single-pass primitive. The caller observes each exact bounded PCM chunk while the
+    /// canonical SHA256_FLOAT32_LE_V1 digest is updated from the same samples. AW46 snapshots source
+    /// metadata and verifies it before and after every read plus at completion, so a dynamic adapter
+    /// cannot silently combine one header identity with PCM read under a different visible format.
     static func digestWithChunkVisitor(
         _ source: any Lane3PCMChunkReadable,
         chunkFrames: Int,
@@ -155,28 +202,97 @@ public enum Lane3LongTrackPCMIdentityHasher {
         guard chunkFrames > 0 else {
             throw Lane3LongTrackEvidenceError.invalidChunkFrames(chunkFrames)
         }
-        guard source.channels > 0, source.sampleRate.isFinite, source.sampleRate > 0, source.frameCount > 0 else {
+        let metadata = try captureStableMetadata(source)
+        return try digestWithChunkVisitor(
+            source,
+            chunkFrames: chunkFrames,
+            expectedMetadata: metadata,
+            visit: visit
+        )
+    }
+
+    private static func digest(
+        _ source: any Lane3PCMChunkReadable,
+        chunkFrames: Int,
+        expectedMetadata: Lane3PCMIdentityMetadataSnapshot
+    ) throws -> String {
+        try digestWithChunkVisitor(
+            source,
+            chunkFrames: chunkFrames,
+            expectedMetadata: expectedMetadata
+        ) { _, _, _ in }
+    }
+
+    private static func digestWithChunkVisitor(
+        _ source: any Lane3PCMChunkReadable,
+        chunkFrames: Int,
+        expectedMetadata: Lane3PCMIdentityMetadataSnapshot,
+        visit: (_ startFrame: Int64, _ frameCount: Int, _ samples: [Float]) throws -> Void
+    ) throws -> String {
+        guard chunkFrames > 0 else {
+            throw Lane3LongTrackEvidenceError.invalidChunkFrames(chunkFrames)
+        }
+        guard expectedMetadata.channels > 0,
+              expectedMetadata.sampleRate.isFinite,
+              expectedMetadata.sampleRate > 0,
+              expectedMetadata.frameCount > 0 else {
             throw Lane3LongTrackEvidenceError.invalidFormat
         }
+        try requireMetadataStable(source, expected: expectedMetadata)
 
         var sha = Lane3IncrementalSHA256()
         sha.updateStringField("LANE3_PCM_IDENTITY_V1")
-        sha.updateLittleEndian(UInt64(source.channels), byteCount: 8)
-        sha.updateLittleEndian(source.sampleRate.bitPattern, byteCount: 8)
-        sha.updateLittleEndian(UInt64(source.frameCount), byteCount: 8)
-        let totalSamples = source.frameCount.multipliedReportingOverflow(by: Int64(source.channels))
+        sha.updateLittleEndian(UInt64(expectedMetadata.channels), byteCount: 8)
+        sha.updateLittleEndian(expectedMetadata.sampleRate.bitPattern, byteCount: 8)
+        sha.updateLittleEndian(UInt64(expectedMetadata.frameCount), byteCount: 8)
+        let totalSamples = expectedMetadata.frameCount.multipliedReportingOverflow(
+            by: Int64(expectedMetadata.channels)
+        )
         guard !totalSamples.overflow, totalSamples.partialValue >= 0 else {
             throw Lane3LongTrackEvidenceError.integerOverflow
         }
         sha.updateLittleEndian(UInt64(totalSamples.partialValue), byteCount: 8)
 
         var frame: Int64 = 0
-        while frame < source.frameCount {
-            let count = min(chunkFrames, Int(source.frameCount - frame))
-            let samples = try Lane3LongTrackPCMAccess.readInterleaved(source, start: frame, count: count)
+        while frame < expectedMetadata.frameCount {
+            try requireMetadataStable(source, expected: expectedMetadata)
+            let count = min(chunkFrames, Int(expectedMetadata.frameCount - frame))
+            let expectedSamples64 = Int64(count).multipliedReportingOverflow(
+                by: Int64(expectedMetadata.channels)
+            )
+            guard !expectedSamples64.overflow,
+                  expectedSamples64.partialValue >= 0,
+                  expectedSamples64.partialValue <= Int64(Int.max) else {
+                throw Lane3LongTrackEvidenceError.integerOverflow
+            }
+
+            let samples: [Float]
+            do {
+                samples = try source.readInterleavedFrames(startFrame: frame, frameCount: count)
+            } catch let error as Lane3LongTrackEvidenceError {
+                throw error
+            } catch let error as Lane3PCMIdentityStabilityError {
+                throw error
+            } catch {
+                throw Lane3LongTrackEvidenceError.sourceReadFailed(String(describing: error))
+            }
+            try requireMetadataStable(source, expected: expectedMetadata)
+
+            let expectedSamples = Int(expectedSamples64.partialValue)
+            guard samples.count == expectedSamples else {
+                throw Lane3LongTrackEvidenceError.shortRead(
+                    expectedSamples: expectedSamples,
+                    actualSamples: samples.count
+                )
+            }
             try visit(frame, count, samples)
+
             var bytes: [UInt8] = []
-            bytes.reserveCapacity(samples.count * 4)
+            let byteCapacity = expectedSamples.multipliedReportingOverflow(by: 4)
+            guard !byteCapacity.overflow else {
+                throw Lane3LongTrackEvidenceError.integerOverflow
+            }
+            bytes.reserveCapacity(byteCapacity.partialValue)
             for sample in samples {
                 let bits = sample.bitPattern
                 bytes.append(UInt8(truncatingIfNeeded: bits))
@@ -187,10 +303,43 @@ public enum Lane3LongTrackPCMIdentityHasher {
             sha.update(bytes)
             frame += Int64(count)
         }
+        try requireMetadataStable(source, expected: expectedMetadata)
         return sha.finalizeHex()
     }
 
-    private static func digest(_ source: any Lane3PCMChunkReadable, chunkFrames: Int) throws -> String {
-        try digestWithChunkVisitor(source, chunkFrames: chunkFrames) { _, _, _ in }
+    private static func captureStableMetadata(
+        _ source: any Lane3PCMChunkReadable
+    ) throws -> Lane3PCMIdentityMetadataSnapshot {
+        let first = currentMetadata(source)
+        guard first.channels > 0,
+              first.sampleRate.isFinite,
+              first.sampleRate > 0,
+              first.frameCount > 0 else {
+            throw Lane3LongTrackEvidenceError.invalidFormat
+        }
+        let second = currentMetadata(source)
+        guard first.exactlyMatches(second) else {
+            throw Lane3PCMIdentityStabilityError.sourceMetadataChanged
+        }
+        return first
+    }
+
+    private static func requireMetadataStable(
+        _ source: any Lane3PCMChunkReadable,
+        expected: Lane3PCMIdentityMetadataSnapshot
+    ) throws {
+        guard expected.exactlyMatches(currentMetadata(source)) else {
+            throw Lane3PCMIdentityStabilityError.sourceMetadataChanged
+        }
+    }
+
+    private static func currentMetadata(
+        _ source: any Lane3PCMChunkReadable
+    ) -> Lane3PCMIdentityMetadataSnapshot {
+        Lane3PCMIdentityMetadataSnapshot(
+            channels: source.channels,
+            sampleRate: source.sampleRate,
+            frameCount: source.frameCount
+        )
     }
 }
