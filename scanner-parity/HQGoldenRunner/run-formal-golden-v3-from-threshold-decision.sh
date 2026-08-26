@@ -155,4 +155,4 @@ printf '%s\n' \
   "decision_assessment=$validation" \
   "execution_report=$report" \
   "review_bundle=$workspace/06-golden-review" \
-  "next=Review every output page visually and for Japanese OCR. Machine pass is not FORMAL_GOLDEN_PASS."
+  "next=Review every output page visually and for Japanese OCR. Machine pass remains pending human review and finalization."
