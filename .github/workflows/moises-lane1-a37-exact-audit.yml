@@ -1,0 +1,43 @@
+name: Moises Lane1 A37 Exact Audit
+
+on:
+  push:
+    branches:
+      - hq/moises-lane1-a37-audit-20260827
+
+permissions:
+  contents: read
+
+jobs:
+  lane1-a37-exact-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Worker 1 A37 tip
+        uses: actions/checkout@v4
+        with:
+          ref: 37c468e3ef9d80d6afd57ceb7d7475b16fbe67d3
+          fetch-depth: 1
+      - name: Verify exact checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          echo "actual_head=$actual"
+          test "$actual" = "37c468e3ef9d80d6afd57ceb7d7475b16fbe67d3"
+      - name: Python environment
+        shell: bash
+        run: |
+          python3 --version
+          python3 -m pip install --disable-pip-version-check jsonschema
+      - name: Run L1-A26 v3 exact final-tip audit
+        shell: bash
+        working-directory: tech-assets/moises-audio
+        run: |
+          set -euo pipefail
+          python3 Separation/Evaluation/lane1_dependency_audit.py \
+            --audio-root . \
+            --timeout-seconds 600 \
+            --expected-git-head 37c468e3ef9d80d6afd57ceb7d7475b16fbe67d3 \
+            --output /tmp/l1-a37-exact-audit.json
+          cat /tmp/l1-a37-exact-audit.json
