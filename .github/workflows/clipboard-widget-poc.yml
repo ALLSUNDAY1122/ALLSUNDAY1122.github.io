@@ -1,0 +1,51 @@
+name: Clipboard Widget Phase 0 Compile
+
+on:
+  push:
+    branches:
+      - feature/clipboard-widget-poc
+    paths:
+      - 'clipboard-widget/**'
+      - '.github/workflows/clipboard-widget-poc.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-and-compile:
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: |
+          sw_vers
+          xcodebuild -version
+          swift --version
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Static audit
+        run: python3 clipboard-widget/Tests/static_audit.py
+      - name: Generate project
+        working-directory: clipboard-widget
+        run: xcodegen generate
+      - name: Compile app and widget
+        working-directory: clipboard-widget
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project ClipboardWidget.xcodeproj \
+            -scheme ClipboardWidget \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build | tee xcodebuild.log
+      - name: Upload compile log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clipboard-widget-xcodebuild-log
+          path: clipboard-widget/xcodebuild.log
+          if-no-files-found: ignore
