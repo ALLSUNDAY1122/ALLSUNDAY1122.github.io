@@ -25,83 +25,19 @@ jobs:
           fetch-depth: 0
 
       - name: Install dedicated Codemagic workflow on branch
+        env:
+          CODEMAGIC_BLOCK_B64: CiAgY2xpcGJvYXJkLXdpZGdldC1waGFzZTA6CiAgICBuYW1lOiDjgq/jg6rjg4Pjg5fjg5zjg7zjg4lXaWRnZXQgLSBQaGFzZSAwIFNpZ25lZCBJUEEKICAgIG1heF9idWlsZF9kdXJhdGlvbjogNjAKICAgIGluc3RhbmNlX3R5cGU6IG1hY19taW5pX20yCiAgICBlbnZpcm9ubWVudDoKICAgICAgZ3JvdXBzOgogICAgICAgIC0gYXBwMl8wMTBfdG91aGFuX3NpZ25pbmcKICAgICAgdmFyczoKICAgICAgICBBUFBfQlVORExFX0lEOiBqcC5hbGxzdW5kYXkxMTIyLmNsaXBib2FyZHdpZGdldAogICAgICAgIFdJREdFVF9CVU5ETEVfSUQ6IGpwLmFsbHN1bmRheTExMjIuY2xpcGJvYXJkd2lkZ2V0LndpZGdldAogICAgICAgIFhDT0RFX1BST0pFQ1Q6IGNsaXBib2FyZC13aWRnZXQvQ2xpcGJvYXJkV2lkZ2V0Lnhjb2RlcHJvagogICAgICAgIFhDT0RFX1NDSEVNRTogQ2xpcGJvYXJkV2lkZ2V0CiAgICAgIHhjb2RlOiBsYXRlc3QKICAgIHNjcmlwdHM6CiAgICAgIC0gbmFtZTogSW5zdGFsbCB0b29scyBhbmQgYXVkaXQgUGhhc2UgMAogICAgICAgIHNjcmlwdDogfAogICAgICAgICAgc2V0IC1ldW8gcGlwZWZhaWwKICAgICAgICAgIEhPTUVCUkVXX05PX0FVVE9fVVBEQVRFPTEgYnJldyBpbnN0YWxsIHhjb2RlZ2VuCiAgICAgICAgICBjZCAiJENNX0JVSUxEX0RJUiIKICAgICAgICAgIHB5dGhvbjMgY2xpcGJvYXJkLXdpZGdldC9UZXN0cy9zdGF0aWNfYXVkaXQucHkKICAgICAgICAgIGNkIGNsaXBib2FyZC13aWRnZXQKICAgICAgICAgIHhjb2RlZ2VuIGdlbmVyYXRlCiAgICAgIC0gbmFtZTogSW5pdGlhbGl6ZSBzaWduaW5nIGtleWNoYWluCiAgICAgICAgc2NyaXB0OiB8CiAgICAgICAgICBzZXQgLWV1byBwaXBlZmFpbAogICAgICAgICAga2V5Y2hhaW4gaW5pdGlhbGl6ZQogICAgICAtIG5hbWU6IEZldGNoIEFwcCBTdG9yZSBzaWduaW5nIGZpbGVzIGZvciBhcHAgYW5kIHdpZGdldAogICAgICAgIHNjcmlwdDogfAogICAgICAgICAgc2V0IC1ldW8gcGlwZWZhaWwKICAgICAgICAgIGFwcC1zdG9yZS1jb25uZWN0IGZldGNoLXNpZ25pbmctZmlsZXMgIiRBUFBfQlVORExFX0lEIiAtLXR5cGUgSU9TX0FQUF9TVE9SRQogICAgICAgICAgYXBwLXN0b3JlLWNvbm5lY3QgZmV0Y2gtc2lnbmluZy1maWxlcyAiJFdJREdFVF9CVU5ETEVfSUQiIC0tdHlwZSBJT1NfQVBQX1NUT1JFCiAgICAgIC0gbmFtZTogQWRkIHNpZ25pbmcgY2VydGlmaWNhdGUgdG8ga2V5Y2hhaW4KICAgICAgICBzY3JpcHQ6IHwKICAgICAgICAgIHNldCAtZXVvIHBpcGVmYWlsCiAgICAgICAgICBrZXljaGFpbiBhZGQtY2VydGlmaWNhdGVzCiAgICAgIC0gbmFtZTogQXBwbHkgcHJvZmlsZXMgdG8gYm90aCB0YXJnZXRzCiAgICAgICAgc2NyaXB0OiB8CiAgICAgICAgICBzZXQgLWV1byBwaXBlZmFpbAogICAgICAgICAgY2QgIiRDTV9CVUlMRF9ESVIvY2xpcGJvYXJkLXdpZGdldCIKICAgICAgICAgIHhjb2RlLXByb2plY3QgdXNlLXByb2ZpbGVzIC0tY3VzdG9tLWV4cG9ydC1vcHRpb25zPSd7InRlc3RGbGlnaHRJbnRlcm5hbFRlc3RpbmdPbmx5IjogdHJ1ZX0nCiAgICAgIC0gbmFtZTogQnVpbGQgc2lnbmVkIFBoYXNlIDAgSVBBCiAgICAgICAgc2NyaXB0OiB8CiAgICAgICAgICBzZXQgLWV1byBwaXBlZmFpbAogICAgICAgICAgeGNvZGUtcHJvamVjdCBidWlsZC1pcGEgXAogICAgICAgICAgICAtLXByb2plY3QgIiRDTV9CVUlMRF9ESVIvJFhDT0RFX1BST0pFQ1QiIFwKICAgICAgICAgICAgLS1zY2hlbWUgIiRYQ09ERV9TQ0hFTUUiCiAgICAgIC0gbmFtZTogVmVyaWZ5IHNpZ25lZCBhcHAgYW5kIHdpZGdldCBhcmUgcGFja2FnZWQKICAgICAgICBzY3JpcHQ6IHwKICAgICAgICAgIHNldCAtZXVvIHBpcGVmYWlsCiAgICAgICAgICBJUEFfUEFUSD0iJChmaW5kICIkQ01fQlVJTERfRElSL2J1aWxkL2lvcy9pcGEiIC1tYXhkZXB0aCAxIC10eXBlIGYgLW5hbWUgJyouaXBhJyAtcHJpbnQgLXF1aXQpIgogICAgICAgICAgdGVzdCAtbiAiJElQQV9QQVRIIgogICAgICAgICAgVkVSSUZZX0RJUj0iJChta3RlbXAgLWQpIgogICAgICAgICAgdW56aXAgLXEgIiRJUEFfUEFUSCIgLWQgIiRWRVJJRllfRElSIgogICAgICAgICAgQVBQX0RJUj0iJChmaW5kICIkVkVSSUZZX0RJUi9QYXlsb2FkIiAtbWF4ZGVwdGggMSAtdHlwZSBkIC1uYW1lICcqLmFwcCcgLXByaW50IC1xdWl0KSIKICAgICAgICAgIFdJREdFVF9ESVI9IiQoZmluZCAiJEFQUF9ESVIvUGx1Z0lucyIgLW1heGRlcHRoIDEgLXR5cGUgZCAtbmFtZSAnKi5hcHBleCcgLXByaW50IC1xdWl0KSIKICAgICAgICAgIHRlc3QgLW4gIiRBUFBfRElSIgogICAgICAgICAgdGVzdCAtbiAiJFdJREdFVF9ESVIiCiAgICAgICAgICAvdXNyL2xpYmV4ZWMvUGxpc3RCdWRkeSAtYyAnUHJpbnQgOkNGQnVuZGxlSWRlbnRpZmllcicgIiRBUFBfRElSL0luZm8ucGxpc3QiIHwgZ3JlcCAtRnggIiRBUFBfQlVORExFX0lEIgogICAgICAgICAgL3Vzci9saWJleGVjL1BsaXN0QnVkZHkgLWMgJ1ByaW50IDpDRkJ1bmRsZUlkZW50aWZpZXInICIkV0lER0VUX0RJUi9JbmZvLnBsaXN0IiB8IGdyZXAgLUZ4ICIkV0lER0VUX0JVTkRMRV9JRCIKICAgICAgICAgIHRlc3QgLWYgIiRBUFBfRElSL2VtYmVkZGVkLm1vYmlsZXByb3Zpc2lvbiIKICAgICAgICAgIHRlc3QgLWYgIiRXSURHRVRfRElSL2VtYmVkZGVkLm1vYmlsZXByb3Zpc2lvbiIKICAgICAgICAgIHRlc3QgLWQgIiRBUFBfRElSL19Db2RlU2lnbmF0dXJlIgogICAgICAgICAgdGVzdCAtZCAiJFdJREdFVF9ESVIvX0NvZGVTaWduYXR1cmUiCiAgICAgICAgICBlY2hvICdQQVNTOiBzaWduZWQgSVBBIGNvbnRhaW5zIGluZGVwZW5kZW50bHkgc2lnbmVkIGFwcCArIHdpZGdldCBleHRlbnNpb24nCiAgICBhcnRpZmFjdHM6CiAgICAgIC0gYnVpbGQvaW9zL2lwYS8qLmlwYQogICAgICAtIC90bXAveGNvZGVidWlsZF9sb2dzLyoubG9nCg==
         run: |
           set -euo pipefail
           python3 - <<'PY'
+          import base64
+          import os
           from pathlib import Path
           p=Path('codemagic.yaml')
           s=p.read_text(encoding='utf-8')
+          block=base64.b64decode(os.environ['CODEMAGIC_BLOCK_B64']).decode('utf-8')
           marker='\n  clipboard-widget-phase0:\n'
           if marker not in s:
-              block=r'''
-  clipboard-widget-phase0:
-    name: クリップボードWidget - Phase 0 Signed IPA
-    max_build_duration: 60
-    instance_type: mac_mini_m2
-    environment:
-      groups:
-        - app2_010_touhan_signing
-      vars:
-        APP_BUNDLE_ID: jp.allsunday1122.clipboardwidget
-        WIDGET_BUNDLE_ID: jp.allsunday1122.clipboardwidget.widget
-        XCODE_PROJECT: clipboard-widget/ClipboardWidget.xcodeproj
-        XCODE_SCHEME: ClipboardWidget
-      xcode: latest
-    scripts:
-      - name: Install tools and audit Phase 0
-        script: |
-          set -euo pipefail
-          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-          cd "$CM_BUILD_DIR"
-          python3 clipboard-widget/Tests/static_audit.py
-          cd clipboard-widget
-          xcodegen generate
-      - name: Initialize signing keychain
-        script: |
-          set -euo pipefail
-          keychain initialize
-      - name: Fetch App Store signing files for app and widget
-        script: |
-          set -euo pipefail
-          app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE
-          app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE
-      - name: Add signing certificate to keychain
-        script: |
-          set -euo pipefail
-          keychain add-certificates
-      - name: Apply profiles to both targets
-        script: |
-          set -euo pipefail
-          cd "$CM_BUILD_DIR/clipboard-widget"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
-      - name: Build signed Phase 0 IPA
-        script: |
-          set -euo pipefail
-          xcode-project build-ipa \
-            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
-      - name: Verify signed app and widget are packaged
-        script: |
-          set -euo pipefail
-          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
-          test -n "$IPA_PATH"
-          VERIFY_DIR="$(mktemp -d)"
-          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
-          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
-          WIDGET_DIR="$(find "$APP_DIR/PlugIns" -maxdepth 1 -type d -name '*.appex' -print -quit)"
-          test -n "$APP_DIR"
-          test -n "$WIDGET_DIR"
-          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DIR/Info.plist" | grep -Fx "$APP_BUNDLE_ID"
-          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$WIDGET_DIR/Info.plist" | grep -Fx "$WIDGET_BUNDLE_ID"
-          test -f "$APP_DIR/embedded.mobileprovision"
-          test -f "$WIDGET_DIR/embedded.mobileprovision"
-          test -d "$APP_DIR/_CodeSignature"
-          test -d "$WIDGET_DIR/_CodeSignature"
-          echo 'PASS: signed IPA contains independently signed app + widget extension'
-    artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-'''
               if not s.endswith('\n'):
                   s += '\n'
               p.write_text(s + block, encoding='utf-8')
@@ -127,9 +63,7 @@ jobs:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           set -euo pipefail
-          cat >/tmp/clipboard-widget-cm-command.json <<JSON
-          {"request_id":"clipboard-widget-phase0-signed-20260826","action":"build","workflow_id":"${WORKFLOW_ID}","branch":"${TARGET_BRANCH}","wait":true,"timeout_seconds":4200,"app_id":"${CM_APP_ID}"}
-          JSON
+          printf '%s\n' '{"request_id":"clipboard-widget-phase0-signed-20260826","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
           python scripts/codemagic_build_gateway.py \
             --command /tmp/clipboard-widget-cm-command.json \
             --output /tmp/clipboard-widget-cm-result.json
@@ -143,8 +77,7 @@ jobs:
           from pathlib import Path
           r=json.loads(Path('/tmp/clipboard-widget-cm-result.json').read_text())
           keep={k:r.get(k) for k in ('request_id','ok','workflow_id','branch','resolved_app_id','build_id','status','app_id','error','build_details')}
-          out=Path('/tmp/clipboard-widget-cm-safe.json')
-          out.write_text(json.dumps(keep,ensure_ascii=False,indent=2)+'\n')
+          Path('/tmp/clipboard-widget-cm-safe.json').write_text(json.dumps(keep,ensure_ascii=False,indent=2)+'\n')
           PY
           git fetch origin feature/clipboard-widget-poc
           git reset --hard origin/feature/clipboard-widget-poc
