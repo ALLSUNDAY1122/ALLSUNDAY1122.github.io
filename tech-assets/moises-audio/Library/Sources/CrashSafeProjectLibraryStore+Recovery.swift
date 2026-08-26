@@ -20,8 +20,10 @@ public extension CrashSafeProjectLibraryStore {
     /// per launch before crash-safe delete recovery; AW26 injects a targeted read-only resolver;
     /// AW31 first reconciles bounded previous-session publication intents without walking managed
     /// roots, then AW30 advances one durable compatibility-census chunk only after publication
-    /// recovery is proven safe. Corrupt/unsafe publication state leaves authority absent for this
-    /// open so census can never re-authorize an unresolved publication gap.
+    /// recovery is proven safe. AW46 repairs missing/corrupt/stale deletion-ownership active-shard
+    /// manifests from the fixed 256-shard namespace before CrashSafe deletion recovery starts.
+    /// Corrupt/unsafe publication state leaves authority absent for this open so census can never
+    /// re-authorize an unresolved publication gap.
     static func openPreservingUserData(
         metadataStoreURL: URL,
         artifactRootURL: URL,
@@ -49,6 +51,9 @@ public extension CrashSafeProjectLibraryStore {
                 rootURL: artifactRootURL
             ).advance()
         }
+        _ = try Lane2DeletionOwnershipManifestRecovery(
+            rootURL: artifactRootURL
+        ).reconcile()
         let library = try CrashSafeProjectLibraryStore(
             metadata: metadataOpen.store,
             artifactRootURL: artifactRootURL,
