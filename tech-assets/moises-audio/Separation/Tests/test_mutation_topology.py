@@ -6,13 +6,16 @@ import mutation_topology
 from mutation_topology import (
     BUILTIN_STORE_PROFILES,
     EXPECTED_BUILTIN_STORE_IDS,
+    RECONCILIATION_STORE_IDS,
     DeploymentTopology,
     MutationTopologyError,
     SharedMutationAuthority,
     StoreSafetyProfile,
     assess_store_topology,
+    assert_reconciliation_topology_safe,
     assert_store_topology_safe,
     lane1_topology_snapshot,
+    reconciliation_topology_snapshot,
     required_shared_capabilities,
 )
 
@@ -46,12 +49,34 @@ class MutationTopologyTests(unittest.TestCase):
         self.assertFalse(profile.shared_authority_adapter)
         self.assertEqual(profile.risk, "reconciliation_watermark_race")
 
+    def test_conflict_decision_store_is_explicitly_in_deployment_inventory(self):
+        store_id = "a37_conflict_decision_store"
+        self.assertIn(store_id, EXPECTED_BUILTIN_STORE_IDS)
+        self.assertIn(store_id, BUILTIN_STORE_PROFILES)
+        self.assertIn(store_id, RECONCILIATION_STORE_IDS)
+        profile = BUILTIN_STORE_PROFILES[store_id]
+        self.assertEqual(profile.local_serialization, "posix_flock")
+        self.assertTrue(profile.single_host_safe)
+        self.assertFalse(profile.shared_authority_adapter)
+        self.assertEqual(profile.risk, "adjudication_decision_race")
+
     def test_reconciliation_ledger_passes_single_host_and_fails_multi_host_without_authority(self):
         store_id = "a29_provider_delete_reconciliation_ledger"
         self.assertEqual(assess_store_topology(store_id, "single_host").state, "PASS")
         d = assess_store_topology(store_id, "multi_host")
         self.assertEqual(d.state, "FAIL_CLOSED")
         self.assertEqual(d.stable_error_code, "L1A27_SHARED_AUTHORITY_REQUIRED")
+
+    def test_conflict_decision_store_fails_multi_host_without_authority_or_adapter(self):
+        store_id = "a37_conflict_decision_store"
+        self.assertEqual(assess_store_topology(store_id, "single_host").state, "PASS")
+        d = assess_store_topology(store_id, "multi_host")
+        self.assertEqual(d.state, "FAIL_CLOSED")
+        self.assertEqual(d.stable_error_code, "L1A27_SHARED_AUTHORITY_REQUIRED")
+        a = authority(*required_shared_capabilities())
+        d = assess_store_topology(store_id, "multi_host", authority=a)
+        self.assertEqual(d.state, "FAIL_CLOSED")
+        self.assertEqual(d.stable_error_code, "L1A27_SHARED_AUTHORITY_ADAPTER_NOT_IMPLEMENTED")
 
     def test_reconciliation_ledger_still_fails_with_capabilities_but_no_adapter(self):
         store_id = "a29_provider_delete_reconciliation_ledger"
@@ -96,6 +121,48 @@ class MutationTopologyTests(unittest.TestCase):
         d = assert_store_topology_safe("future_shared_store", "multi_host", authority=a, profile=profile)
         self.assertEqual(d.state, "PASS")
 
+    def test_reconciliation_composite_preflight_passes_single_host(self):
+        snapshot = assert_reconciliation_topology_safe("single_host")
+        self.assertTrue(snapshot["all_safe"])
+        self.assertEqual(tuple(snapshot["store_inventory"]), RECONCILIATION_STORE_IDS)
+        self.assertEqual(
+            {row["store_id"] for row in snapshot["stores"]},
+            set(RECONCILIATION_STORE_IDS),
+        )
+        self.assertEqual(snapshot["parity_claim"], "NONE")
+
+    def test_reconciliation_composite_preflight_fails_multi_host_without_authority(self):
+        snapshot = reconciliation_topology_snapshot("multi_host")
+        self.assertFalse(snapshot["all_safe"])
+        self.assertTrue(all(row["state"] == "FAIL_CLOSED" for row in snapshot["stores"]))
+        self.assertTrue(
+            all(row["stable_error_code"] == "L1A27_SHARED_AUTHORITY_REQUIRED" for row in snapshot["stores"])
+        )
+        with self.assertRaises(MutationTopologyError) as cm:
+            assert_reconciliation_topology_safe("multi_host")
+        self.assertEqual(cm.exception.code, "L1A27_SHARED_AUTHORITY_REQUIRED")
+
+    def test_reconciliation_composite_preflight_rejects_capability_labels_without_adapters(self):
+        shared = authority(*required_shared_capabilities())
+        authorities = {store_id: shared for store_id in RECONCILIATION_STORE_IDS}
+        snapshot = reconciliation_topology_snapshot("multi_host", authorities=authorities)
+        self.assertFalse(snapshot["all_safe"])
+        self.assertTrue(
+            all(
+                row["stable_error_code"] == "L1A27_SHARED_AUTHORITY_ADAPTER_NOT_IMPLEMENTED"
+                for row in snapshot["stores"]
+            )
+        )
+
+    def test_reconciliation_composite_preflight_rejects_unknown_authority_store(self):
+        shared = authority(*required_shared_capabilities())
+        with self.assertRaises(MutationTopologyError) as cm:
+            reconciliation_topology_snapshot(
+                "multi_host",
+                authorities={"not-a-reconciliation-store": shared},
+            )
+        self.assertEqual(cm.exception.code, "L1A38_RECONCILIATION_AUTHORITY_STORE_UNKNOWN")
+
     def test_snapshot_truthfully_passes_single_host_but_rejects_multi_host(self):
         one = lane1_topology_snapshot("single_host")
         self.assertTrue(one["all_safe"])
@@ -108,6 +175,10 @@ class MutationTopologyTests(unittest.TestCase):
             "a29_provider_delete_reconciliation_ledger",
             {row["store_id"] for row in many["stores"]},
         )
+        self.assertIn(
+            "a37_conflict_decision_store",
+            {row["store_id"] for row in many["stores"]},
+        )
 
     def test_inventory_mismatch_fails_closed(self):
         reduced = dict(BUILTIN_STORE_PROFILES)
@@ -116,6 +187,20 @@ class MutationTopologyTests(unittest.TestCase):
             with self.assertRaises(MutationTopologyError) as cm:
                 mutation_topology.lane1_topology_snapshot("single_host")
         self.assertEqual(cm.exception.code, "L1A35_BUILTIN_STORE_INVENTORY_MISMATCH")
+
+    def test_conflict_decision_store_inventory_removal_fails_closed(self):
+        reduced = dict(BUILTIN_STORE_PROFILES)
+        reduced.pop("a37_conflict_decision_store")
+        with patch.object(mutation_topology, "BUILTIN_STORE_PROFILES", reduced):
+            with self.assertRaises(MutationTopologyError) as cm:
+                mutation_topology.reconciliation_topology_snapshot("single_host")
+        self.assertEqual(cm.exception.code, "L1A35_BUILTIN_STORE_INVENTORY_MISMATCH")
+
+    def test_reconciliation_store_contract_mismatch_fails_closed(self):
+        with patch.object(mutation_topology, "RECONCILIATION_STORE_IDS", ("a09_privacy_registry",)):
+            with self.assertRaises(MutationTopologyError) as cm:
+                mutation_topology.reconciliation_topology_snapshot("single_host")
+        self.assertEqual(cm.exception.code, "L1A38_RECONCILIATION_STORE_INVENTORY_INVALID")
 
     def test_unknown_store_and_bad_topology_rejected(self):
         with self.assertRaises(MutationTopologyError) as cm:
