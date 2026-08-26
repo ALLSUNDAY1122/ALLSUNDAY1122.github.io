@@ -6,6 +6,7 @@ import mutation_topology
 from mutation_topology import (
     BUILTIN_STORE_PROFILES,
     EXPECTED_BUILTIN_STORE_IDS,
+    EXPECTED_RECONCILIATION_STORE_IDS,
     RECONCILIATION_STORE_IDS,
     DeploymentTopology,
     MutationTopologyError,
@@ -59,6 +60,17 @@ class MutationTopologyTests(unittest.TestCase):
         self.assertTrue(profile.single_host_safe)
         self.assertFalse(profile.shared_authority_adapter)
         self.assertEqual(profile.risk, "adjudication_decision_race")
+
+    def test_reconciliation_expected_inventory_is_independent_exact_contract(self):
+        self.assertEqual(
+            EXPECTED_RECONCILIATION_STORE_IDS,
+            {
+                "a09_privacy_registry",
+                "a29_provider_delete_reconciliation_ledger",
+                "a37_conflict_decision_store",
+            },
+        )
+        self.assertEqual(set(RECONCILIATION_STORE_IDS), EXPECTED_RECONCILIATION_STORE_IDS)
 
     def test_reconciliation_ledger_passes_single_host_and_fails_multi_host_without_authority(self):
         store_id = "a29_provider_delete_reconciliation_ledger"
