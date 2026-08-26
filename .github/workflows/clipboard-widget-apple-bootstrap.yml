@@ -1,0 +1,152 @@
+name: Clipboard Widget Apple Bootstrap
+
+on:
+  push:
+    branches:
+      - feature/clipboard-widget-poc
+    paths:
+      - '.github/workflows/clipboard-widget-apple-bootstrap.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bootstrap-identifiers-and-profiles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APP_BUNDLE_ID: jp.allsunday1122.clipboardwidget
+      WIDGET_BUNDLE_ID: jp.allsunday1122.clipboardwidget.widget
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Register bundle IDs and prepare App Store profiles
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, sys
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from urllib.parse import quote
+
+          sys.path.insert(0, 'scripts')
+          from app_store_connect_api import load_private_key, make_token, api_request
+
+          issuer = os.environ['ASC_ISSUER_ID'].strip()
+          key_id = os.environ['ASC_KEY_ID'].strip()
+          app_identifier = os.environ['APP_BUNDLE_ID'].strip()
+          widget_identifier = os.environ['WIDGET_BUNDLE_ID'].strip()
+          key_path, cleanup = load_private_key()
+
+          def call(method, path, payload=None):
+              status, body = api_request(token, path, method=method, payload=payload)
+              return status, body or {}
+
+          def ensure_bundle(identifier, name):
+              _, body = call('GET', f'/v1/bundleIds?filter[identifier]={quote(identifier, safe="")}&limit=10')
+              matches = [x for x in body.get('data', []) if (x.get('attributes') or {}).get('identifier') == identifier]
+              created = False
+              if not matches:
+                  payload = {'data': {'type': 'bundleIds', 'attributes': {'identifier': identifier, 'name': name, 'platform': 'IOS'}}}
+                  status, created_body = call('POST', '/v1/bundleIds', payload)
+                  if status != 201:
+                      raise RuntimeError(f'Bundle ID create returned {status} for {identifier}')
+                  resource = created_body['data']
+                  created = True
+              else:
+                  resource = matches[0]
+              resource_id = resource['id']
+              _, readback = call('GET', f'/v1/bundleIds/{resource_id}')
+              attrs = readback['data']['attributes']
+              if attrs.get('identifier') != identifier:
+                  raise RuntimeError(f'Bundle ID read-back mismatch for {identifier}')
+              return {'identifier': identifier, 'resource_id': resource_id, 'name': attrs.get('name'), 'platform': attrs.get('platform'), 'created': created}
+
+          def pick_distribution_certificate():
+              _, body = call('GET', '/v1/certificates?limit=200')
+              now = datetime.now(timezone.utc)
+              candidates = []
+              for item in body.get('data', []):
+                  attrs = item.get('attributes') or {}
+                  ctype = str(attrs.get('certificateType') or '')
+                  if 'DISTRIBUTION' not in ctype or attrs.get('activated') is False:
+                      continue
+                  exp_text = attrs.get('expirationDate')
+                  if not exp_text:
+                      continue
+                  try:
+                      exp = datetime.fromisoformat(exp_text.replace('Z', '+00:00'))
+                  except ValueError:
+                      continue
+                  if exp > now:
+                      candidates.append((exp, item))
+              if not candidates:
+                  raise RuntimeError('No active distribution certificate available')
+              _, chosen = max(candidates, key=lambda pair: pair[0])
+              attrs = chosen.get('attributes') or {}
+              return {'id': chosen['id'], 'certificate_type': attrs.get('certificateType'), 'expiration_date': attrs.get('expirationDate'), 'name': attrs.get('name')}
+
+          def ensure_profile(bundle_resource_id, bundle_identifier, profile_name, certificate_id):
+              _, body = call('GET', '/v1/profiles?limit=200')
+              chosen = None
+              for item in body.get('data', []):
+                  attrs = item.get('attributes') or {}
+                  if attrs.get('profileType') != 'IOS_APP_STORE' or attrs.get('profileState') != 'ACTIVE':
+                      continue
+                  pid = item['id']
+                  _, bundle_rel = call('GET', f'/v1/profiles/{pid}/bundleId')
+                  if (bundle_rel.get('data') or {}).get('id') != bundle_resource_id:
+                      continue
+                  _, cert_rel = call('GET', f'/v1/profiles/{pid}/relationships/certificates?limit=50')
+                  cert_ids = {x.get('id') for x in cert_rel.get('data', [])}
+                  if certificate_id in cert_ids:
+                      chosen = item
+                      break
+              created = False
+              if chosen is None:
+                  payload = {'data': {'type': 'profiles', 'attributes': {'name': profile_name, 'profileType': 'IOS_APP_STORE'}, 'relationships': {'bundleId': {'data': {'type': 'bundleIds', 'id': bundle_resource_id}}, 'certificates': {'data': [{'type': 'certificates', 'id': certificate_id}]}}}}
+                  status, created_body = call('POST', '/v1/profiles', payload)
+                  if status != 201:
+                      raise RuntimeError(f'Profile create returned {status} for {bundle_identifier}')
+                  chosen = created_body['data']
+                  created = True
+              pid = chosen['id']
+              _, readback = call('GET', f'/v1/profiles/{pid}')
+              attrs = readback['data']['attributes']
+              if attrs.get('profileState') != 'ACTIVE':
+                  raise RuntimeError(f'Profile is not ACTIVE for {bundle_identifier}')
+              return {'bundle_identifier': bundle_identifier, 'profile_id': pid, 'profile_name': attrs.get('name'), 'profile_type': attrs.get('profileType'), 'profile_state': attrs.get('profileState'), 'expiration_date': attrs.get('expirationDate'), 'created': created}
+
+          try:
+              token = make_token(issuer, key_id, key_path)
+              app = ensure_bundle(app_identifier, 'Clipboard Widget Phase0 App')
+              widget = ensure_bundle(widget_identifier, 'Clipboard Widget Phase0 Extension')
+              cert = pick_distribution_certificate()
+              app_profile = ensure_profile(app['resource_id'], app_identifier, 'clipboardwidget_appstore_20260826_app', cert['id'])
+              widget_profile = ensure_profile(widget['resource_id'], widget_identifier, 'clipboardwidget_appstore_20260826_widget', cert['id'])
+              evidence = {'task': 'clipboard-widget-phase0-apple-bootstrap', 'generated_at': datetime.now(timezone.utc).isoformat(), 'ok': True, 'app_bundle': app, 'widget_bundle': widget, 'distribution_certificate': cert, 'profiles': [app_profile, widget_profile], 'app_store_connect_app_record': 'NOT_CREATED_API_UNSUPPORTED', 'app_group_phase0': 'NOT_USED'}
+              out = Path('automation/clipboard-widget/evidence/apple-bootstrap.json')
+              out.parent.mkdir(parents=True, exist_ok=True)
+              out.write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+              print('PASS: bundle IDs and App Store profiles ready; no secrets written')
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+          PY
+
+      - name: Persist read-back evidence to branch
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/clipboard-widget/evidence/apple-bootstrap.json
+          git commit -m 'chore: record clipboard widget Apple bootstrap evidence' || exit 0
+          git pull --rebase origin feature/clipboard-widget-poc
+          git push origin HEAD:feature/clipboard-widget-poc
