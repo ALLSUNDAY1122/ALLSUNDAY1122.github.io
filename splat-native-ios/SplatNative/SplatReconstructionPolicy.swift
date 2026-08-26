@@ -11,7 +11,9 @@ enum SplatReconstructionPolicy {
     static let thermalCheckInterval = 100
     static let datasetDownscale: Float = 4.0
 
-    static func makeConfig() -> TrainingConfig {
+    static func makeConfig(
+        physicalMemoryBytes: UInt64 = ProcessInfo.processInfo.physicalMemory
+    ) -> TrainingConfig {
         var config = TrainingConfig()
         // Keep one optimizer schedule across the initial pass and every Enhance pass. Each pass
         // stops early, while the scheduler retains the same 30k horizon as upstream msplat.
@@ -30,6 +32,14 @@ enum SplatReconstructionPolicy {
         config.splitScreenSize = 0.05
         config.keepCrs = false
         config.bgColor = (0.02, 0.02, 0.025)
+
+        // S12 moves the Gaussian safety line into densification admission. Use
+        // the exact same device policy as ResourceGuard instead of duplicating
+        // a memory-to-Gaussian formula in Msplat/C++.
+        let limits = SplatResourceLimits.conservative(
+            physicalMemoryBytes: physicalMemoryBytes
+        )
+        config.maxGaussianCount = Int32(clamping: limits.densificationBudgetCount)
         return config
     }
 
