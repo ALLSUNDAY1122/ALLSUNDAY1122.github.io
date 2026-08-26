@@ -1,21 +1,23 @@
 # 書籍スキャナー同等化｜HQ Final Gate Status
 
-Updated: 2026-08-26 17:34 JST
+Updated: 2026-08-26 22:29 JST
 Owner: HQ
 Integration branch: `scanner-parity/integration`
 
 ## Current canonical state
 
-- Current integration application/runtime + HQ tooling HEAD before this Evidence-only update: `a264a8485e8193f0b935d95920b70bfe960e2b7b`.
+- Current overall integration HEAD before this Evidence-only correction: `6b9195281f6f1918eadd7157bf0f951871ffd39a`.
+- Current application/runtime + HQ Golden tooling milestone: `a264a8485e8193f0b935d95920b70bfe960e2b7b`.
 - Last core scanner product-code milestone remains `f90f4db18e1a8bd2106afaea293f1db3bb85b856`; later integration commits add HQ Golden execution/review tooling and Evidence, not a replacement Golden PASS.
 - Post-merge product-code validation run `32911215915` / #103 completed `success` on `f90f4db18e1a8bd2106afaea293f1db3bb85b856`.
 - PR #4618 thresholdless+calibration one-command helper merged after exact-head run #104 success.
 - PR #4619 SHA-bound threshold-decision rerun helper merged after corrected exact-head run #107 success.
 - PR #4620 interactive local visual/OCR review + finalization helper merged after exact-head run #109 success.
-- PR #4621 private macOS Golden bootstrap merged after exact-head `Scanner Parity Apple Validation` run `32945106648` / #111 completed `success` on exact head `02c0f159f3760dd90bf03e7eb2dd0e569e55616d`.
-- Run #111 completed every validation step successfully, including HQ Golden contracts/builds/tests, searchable PDF, 240-page production long-run, iPhoneOS compile, Privacy, XcodeGen, unsigned Release app build and bundle verification.
-- Merge commit for PR #4621: `a264a8485e8193f0b935d95920b70bfe960e2b7b`.
-- Post-merge integration validation run `32948251475` / #112 started on exact merge head `a264a8485e8193f0b935d95920b70bfe960e2b7b` and is currently `IN_PROGRESS`; running CI is not PASS.
+- PR #4621 private-local macOS Golden bootstrap merged after exact-head `Scanner Parity Apple Validation` run `32945106648` / #111 completed `success` on exact head `02c0f159f3760dd90bf03e7eb2dd0e569e55616d`.
+- PR #4621 merge commit: `a264a8485e8193f0b935d95920b70bfe960e2b7b`.
+- Post-merge `Scanner Parity Apple Validation` run `32948251475` / #112 on exact merge head `a264a8485e8193f0b935d95920b70bfe960e2b7b` completed `success`.
+- Every run #112 step completed successfully, including HQ Golden contracts/builds/tests, searchable PDF generation, 240-page production long-run, iPhoneOS adapter/product compile, Privacy manifest validation, XcodeGen, unsigned Release app build, bundle verification and evidence upload.
+- Scanner-parity open PR count was rechecked and is zero before this Evidence-only correction PR.
 - Workers 1-4 remain complete. Queue driving remains stopped by design. Golden validation is HQ-owned.
 
 ## Formal Golden v3 identity
@@ -40,7 +42,7 @@ Formal Golden: `PENDING_HQ_GOLDEN_EXECUTION`
 
 Release Gate: `NOT_STARTED`
 
-Formal Golden has **not** passed. Synthetic fixtures, compile success and 240-page synthetic long-run are not substitutes for the real Golden pair.
+Formal Golden has **not** passed. Synthetic fixtures, compile success and the 240-page synthetic long-run are not substitutes for the real Golden pair.
 
 Required sequence remains:
 
@@ -56,9 +58,9 @@ Required sequence remains:
 
 Hard machine gates remain: video/PDF SHA match, page recall >=99%, unmatched output = 0, duplicate rate <=0.5%, ordering accuracy 100%, image-correction failures = 0, OCR engine failures = 0, valid BookPackage integrity.
 
-## Integrated local-only execution path
+## Integrated contract-preserving local execution path
 
-Private macOS bootstrap:
+Private/local macOS bootstrap:
 
 `scanner-parity/HQGoldenRunner/bootstrap-formal-golden-v3-macos.sh`
 
@@ -87,20 +89,36 @@ After machine pass, use:
 
 The human-review helper presents the local reference/output/OCR material, requires explicit visual and OCR judgment for every page, has no bulk-pass shortcut, and invokes the canonical finalizer only on the separately exported completed review JSON.
 
-## Current external-resource classification
+## Execution-route correction after re-reading the standard/application procedures
 
-HQ re-read `AIアプリ開発・公開フロー v2.7` and `申請手順` on 2026-08-26 before classifying this state.
+HQ re-read `AIアプリ開発・公開フロー v2.7`, `申請手順`, and the BookScanner canonical page on 2026-08-26.
 
-- The real production Golden path requires macOS / Apple frameworks; Linux execution is not an acceptance substitute.
-- This ChatGPT session still has no connected private macOS host / SSH / remote-shell execution endpoint that can access the raw Golden bytes.
-- The project contract intentionally keeps raw copyrighted Golden video/PDF and derived pages/OCR local and out of GitHub/Actions. HQ will not silently widen that contract just to use an external CI runner.
-- Therefore the only pre-execution external-resource blocker is access to a private macOS host that can hold the exact raw pair locally.
-- Under the standard procedure, provisioning/payment/login/2FA for a new host is a genuine human gate only if no already-authorized private macOS host is available. Once such a host exists, the bootstrap reduces the technical start operation to one local command and HQ resumes from the sanitized execution/calibration evidence.
+- Standard v2.7's current **application/submission** baseline is Macless: GitHub → GitHub Actions validation → Codemagic signed Archive/IPA → Validate → App Store Connect. Mac/MacinCloud is not the normal submission dependency.
+- The BookScanner canonical page separately states that signed external Build / TestFlight must **not** start before Formal Golden and the development Release Gate are complete. Therefore TestFlight cannot be pulled forward merely to bypass the Golden execution problem.
+- The current Formal Golden production runner still requires Apple frameworks. Linux surrogate execution is not an acceptance substitute.
+- Existing Codemagic infrastructure is real and already API-connected through `CM_API_TOKEN`. The Codemagic REST API can start macOS builds and pass runtime environment variables.
+- However, the current BookScanner data-handling contract says the copyrighted raw Golden video/PDF are used locally/conversation-attached and are not copied to GitHub/Actions. It does not authorize HQ to silently upload the raw book material to Codemagic, object storage, Drive, Supabase, or another third-party transfer path.
+- A Codemagic-only Golden run is technically designable without committing raw content: a non-publishing macOS QA workflow could download the exact pair from short-lived authenticated URLs, verify byte count/SHA before use, run the integrated Golden helpers, return only sanitized JSON evidence, and delete the raw/derived working data at job end. **That path is not activated without explicit user authorization to transmit the copyrighted Golden pair to the named external services.**
+- Consequently, the prior statement that a new private Mac is the *only* route was too narrow. There are two viable classes:
+  1. `LOCAL_PRIVATE_APPLE_EXECUTION`: keep the current local-only contract and run on a private/local Mac that can access the exact raw pair.
+  2. `EXPLICITLY_AUTHORIZED_EPHEMERAL_CI_EXECUTION`: user explicitly approves temporary secure transfer of the exact Golden pair to a controlled external storage/Codemagic path; HQ then automates transport, SHA verification, non-publishing execution, sanitized evidence return, and deletion.
 
-## Human gates intentionally retained
+## Current human gate classification
 
-- provisioning/payment/login/2FA only if a new private macOS host must be created;
-- per-page visual/OCR judgment after machine pass;
+The current stop is **not** “macOS setup is human work.” It is a genuine data-handling/execution-path decision because the two executable paths have different confidentiality boundaries.
+
+`HUMAN_REQUIRED_GOLDEN_EXECUTION_PATH_AUTHORIZATION`
+
+Human input is required only to choose/authorize one of the following when no already-agent-accessible local/private Mac exists:
+
+- preserve local-only handling and provide access to a private/local Mac; or
+- explicitly authorize temporary secure external transfer to a named Codemagic-based Golden execution path.
+
+No raw content will be sent externally until that decision is explicit. Once the route is authorized and technically reachable, HQ resumes automatically through thresholdless execution, calibration analysis, threshold decision, thresholded rerun and machine evaluation.
+
+## Human gates intentionally retained after execution starts
+
+- explicit per-page visual/OCR judgment after machine pass;
 - later TestFlight/iPhone final device acceptance;
 - later App Store `Add for Review` / `Submit for Review` final approval, publish, contracts/tax/bank/payment/2FA.
 
