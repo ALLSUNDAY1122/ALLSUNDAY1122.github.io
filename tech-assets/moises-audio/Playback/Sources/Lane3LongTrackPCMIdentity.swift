@@ -144,10 +144,21 @@ public enum Lane3LongTrackPCMIdentityHasher {
         return sha.finalizeHex()
     }
 
-    private static func digest(_ source: any Lane3PCMChunkReadable, chunkFrames: Int) throws -> String {
+    /// AW45 single-pass primitive. The caller observes each exact bounded PCM chunk while the
+    /// canonical SHA256_FLOAT32_LE_V1 digest is updated from the same samples. This lets evidence
+    /// consumers reproduce independent counters/checksums without rereading the long source.
+    static func digestWithChunkVisitor(
+        _ source: any Lane3PCMChunkReadable,
+        chunkFrames: Int,
+        visit: (_ startFrame: Int64, _ frameCount: Int, _ samples: [Float]) throws -> Void
+    ) throws -> String {
+        guard chunkFrames > 0 else {
+            throw Lane3LongTrackEvidenceError.invalidChunkFrames(chunkFrames)
+        }
         guard source.channels > 0, source.sampleRate.isFinite, source.sampleRate > 0, source.frameCount > 0 else {
             throw Lane3LongTrackEvidenceError.invalidFormat
         }
+
         var sha = Lane3IncrementalSHA256()
         sha.updateStringField("LANE3_PCM_IDENTITY_V1")
         sha.updateLittleEndian(UInt64(source.channels), byteCount: 8)
@@ -163,6 +174,7 @@ public enum Lane3LongTrackPCMIdentityHasher {
         while frame < source.frameCount {
             let count = min(chunkFrames, Int(source.frameCount - frame))
             let samples = try Lane3LongTrackPCMAccess.readInterleaved(source, start: frame, count: count)
+            try visit(frame, count, samples)
             var bytes: [UInt8] = []
             bytes.reserveCapacity(samples.count * 4)
             for sample in samples {
@@ -176,5 +188,9 @@ public enum Lane3LongTrackPCMIdentityHasher {
             frame += Int64(count)
         }
         return sha.finalizeHex()
+    }
+
+    private static func digest(_ source: any Lane3PCMChunkReadable, chunkFrames: Int) throws -> String {
+        try digestWithChunkVisitor(source, chunkFrames: chunkFrames) { _, _, _ in }
     }
 }
