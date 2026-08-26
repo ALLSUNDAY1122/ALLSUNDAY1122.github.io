@@ -27,7 +27,7 @@ class Lane1DependencyAuditSafetySurfaceTests(unittest.TestCase):
 
         (self.server / "mutation_topology.py").write_text(
             'a37_conflict_decision_store = "a37_conflict_decision_store"\n'
-            'RECONCILIATION_STORE_IDS = ("a37_conflict_decision_store",)\n'
+            'RECONCILIATION_STORE_IDS = ("a09_privacy_registry", "a29_provider_delete_reconciliation_ledger", "a37_conflict_decision_store")\n'
             'def reconciliation_topology_snapshot(): pass\n'
             'def assert_reconciliation_topology_safe(): pass\n',
             encoding="utf-8",
@@ -81,7 +81,7 @@ class Lane1DependencyAuditSafetySurfaceTests(unittest.TestCase):
     def test_complete_safety_surface_inventory_passes(self):
         result = _dependency_checks(self.audio)
         self.assertEqual(result["state"], "PASS")
-        self.assertEqual(result["checked"], 27)
+        self.assertEqual(result["checked"], 28)
 
     def test_missing_topology_module_fails_closed(self):
         (self.server / "mutation_topology.py").unlink()
@@ -146,6 +146,20 @@ class Lane1DependencyAuditSafetySurfaceTests(unittest.TestCase):
         result = _dependency_checks(self.audio)
         self.assertIn(
             "L1A38_RECONCILIATION_TOPOLOGY_CONTRACT_MISSING",
+            [row["code"] for row in result["failures"]],
+        )
+
+    def test_a38_composite_membership_shrink_fails_even_if_a37_token_remains_elsewhere(self):
+        (self.server / "mutation_topology.py").write_text(
+            'a37_conflict_decision_store = "a37_conflict_decision_store"\n'
+            'RECONCILIATION_STORE_IDS = ("a09_privacy_registry", "a29_provider_delete_reconciliation_ledger")\n'
+            'def reconciliation_topology_snapshot(): pass\n'
+            'def assert_reconciliation_topology_safe(): pass\n',
+            encoding="utf-8",
+        )
+        result = _dependency_checks(self.audio)
+        self.assertIn(
+            "L1A38_RECONCILIATION_TOPOLOGY_MEMBERSHIP_MISMATCH",
             [row["code"] for row in result["failures"]],
         )
 
