@@ -380,7 +380,7 @@ workflows:
         submit_to_app_store: false
 
   pharmacist-ios:
-    name: 薬剤師国家試験 - iOS Internal TestFlight
+    name: 薬剤師国家試験 - iOS App Store Candidate
     max_build_duration: 60
     instance_type: mac_mini_m2
     integrations:
@@ -442,10 +442,10 @@ workflows:
           assert (len(q),len(active),len(free),len(media))==(1035,1031,90,154)
           print('PASS: native pharmacist release inputs and canonical AppIcon')
           PY
-      - name: Apply App Store signing profiles for internal TestFlight only
+      - name: Apply App Store signing profiles for App Store review
         script: |
           cd "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+          xcode-project use-profiles
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \
