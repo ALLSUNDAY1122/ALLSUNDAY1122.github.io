@@ -42,7 +42,7 @@ struct ClipboardProbeWidgetView: View {
                 Image(systemName: "doc.on.clipboard").font(.title2.weight(.semibold))
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Phase 0 / 実機PoC").font(.headline)
-                    Text("Aを先に試し、失敗時だけB").font(.caption).foregroundStyle(.secondary)
+                    Text("現行安定版はまずAを検証").font(.caption).foregroundStyle(.secondary)
                 }
             }
             Button(intent: WidgetExtensionCopyProbeIntent()) {
@@ -51,16 +51,11 @@ struct ClipboardProbeWidgetView: View {
                     Text("TESTをコピー").fontWeight(.semibold)
                     Spacer()
                     Text("Widget Extension").font(.caption).foregroundStyle(.secondary)
-                }.frame(maxWidth: .infinity, minHeight: 48).contentShape(Rectangle())
+                }.frame(maxWidth: .infinity, minHeight: 52).contentShape(Rectangle())
             }.buttonStyle(.borderedProminent)
-            Button(intent: MainBackgroundCopyProbeIntent()) {
-                HStack {
-                    Image(systemName: "b.square.fill")
-                    Text("B：Main background").fontWeight(.semibold)
-                    Spacer()
-                    Text("A失敗時のみ").font(.caption).foregroundStyle(.secondary)
-                }.frame(maxWidth: .infinity, minHeight: 48).contentShape(Rectangle())
-            }.buttonStyle(.bordered)
+            Text("Bの main-process実行指定APIはXcode 26.6安定版SDKに未収録のため、このビルドには入れていません。")
+                .font(.caption)
+                .foregroundStyle(.secondary)
             Divider()
             if let receipt = entry.receipt {
                 Text("Intent実行：\(receipt.method.rawValue) / \(receipt.executedAt.formatted(date: .omitted, time: .standard))")
@@ -68,7 +63,7 @@ struct ClipboardProbeWidgetView: View {
             } else {
                 Text("まだIntentは実行されていません").font(.caption).foregroundStyle(.secondary)
             }
-            Text("※ これはIntent実行証拠です。コピー成功はメモへPasteして判定します。")
+            Text("※ Intent実行表示はコピー成功の証拠ではありません。メモへPasteして判定します。")
                 .font(.caption2).foregroundStyle(.secondary)
         }.padding(4)
     }

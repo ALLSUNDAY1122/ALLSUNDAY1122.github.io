@@ -29,8 +29,8 @@ for p in [ROOT / "App/PrivacyInfo.xcprivacy", ROOT / "Widget/PrivacyInfo.xcpriva
 
 intent_text = (ROOT / "Shared/Phase0.swift").read_text()
 assert 'PasteboardProbePayload.widgetExtension' in intent_text
-assert '[.widgetKitExtension]' in intent_text
-assert '[.main]' in intent_text
+assert 'WidgetExtensionCopyProbeIntent' in intent_text
+assert 'allowedExecutionTargets' not in intent_text
 assert 'supportedModes' in intent_text and '[.background]' in intent_text
 
 all_swift = "\n".join(p.read_text() for p in ROOT.rglob("*.swift"))
