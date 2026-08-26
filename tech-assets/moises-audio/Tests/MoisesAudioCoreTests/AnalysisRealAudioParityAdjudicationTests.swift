@@ -186,7 +186,14 @@ final class AnalysisRealAudioParityAdjudicationTests: XCTestCase {
         projectArchitecture: String = "arm64",
         overrideCaptureRoot: String? = nil
     ) throws -> AnalysisAnalysisParityEvidenceBinding {
-        .init(
+        let resolvedCaptureRoot: String
+        if let overrideCaptureRoot {
+            resolvedCaptureRoot = overrideCaptureRoot
+        } else {
+            resolvedCaptureRoot = try AnalysisAnalysisParityAdjudicationRoot.stableSHA256(captureSet)
+        }
+
+        return .init(
             authority: "HQ_LATE_INTEGRATION",
             approvalReference: "HQ-W46-BINDING",
             bindingID: "binding-w46",
@@ -196,7 +203,7 @@ final class AnalysisRealAudioParityAdjudicationTests: XCTestCase {
             expectedCoveragePolicyID: coveragePolicy.policyID,
             expectedCoveragePolicySHA256: try AnalysisAnalysisParityAdjudicationRoot.stableSHA256(coveragePolicy),
             expectedCaptureSetID: captureSet.captureSetID,
-            expectedCaptureSetSHA256: overrideCaptureRoot ?? (try AnalysisAnalysisParityAdjudicationRoot.stableSHA256(captureSet)),
+            expectedCaptureSetSHA256: resolvedCaptureRoot,
             expectedCapturePolicyID: capturePolicy.policyID,
             expectedCapturePolicySHA256: try AnalysisAnalysisParityAdjudicationRoot.stableSHA256(capturePolicy),
             expectedReviewSetID: reviewSet.reviewSetID,
