@@ -5,9 +5,10 @@ property explicit: local file-backed synchronization must never be interpreted
 as cross-host transactional coordination.
 
 A35 extends the deployment inventory to the provider-delete reconciliation
-ledger/application path introduced in A29-A34. The reconciliation ledger uses
-POSIX flock/atomic replace plus a same-host application lock, which is safe for
-one host but is not a distributed transaction or fencing mechanism.
+ledger/application path introduced in A29-A34. A38 extends that contract to the
+A37 equal-epoch conflict-decision sidecar and adds a composite reconciliation
+preflight spanning the privacy registry, reconciliation ledger and decision
+store.
 """
 from __future__ import annotations
 
@@ -16,9 +17,10 @@ import json
 import re
 from dataclasses import asdict, dataclass
 from enum import Enum
+from typing import Mapping
 
 SCHEMA_VERSION = 1
-TOOL_VERSION = "L1-A35-v1"
+TOOL_VERSION = "L1-A38-v1"
 EVIDENCE_STATE = "NON_PARITY_EVIDENCE_ONLY"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$")
@@ -64,6 +66,7 @@ class StoreSafetyProfile:
             "delete_refund_state_race",
             "active_pointer_race",
             "reconciliation_watermark_race",
+            "adjudication_decision_race",
         }:
             raise MutationTopologyError("L1A27_STORE_RISK_INVALID")
         if self.local_serialization == "none" and self.single_host_safe:
@@ -142,11 +145,15 @@ BUILTIN_STORE_PROFILES = {
         shared_authority_adapter=False,
         risk="reconciliation_watermark_race",
     ),
+    "a37_conflict_decision_store": StoreSafetyProfile(
+        store_id="a37_conflict_decision_store",
+        local_serialization="posix_flock",
+        single_host_safe=True,
+        shared_authority_adapter=False,
+        risk="adjudication_decision_race",
+    ),
 }
 
-# This inventory is intentionally explicit. Adding a new durable Lane 1 mutation
-# store requires updating the topology contract rather than silently omitting it
-# from deployment preflight evidence.
 EXPECTED_BUILTIN_STORE_IDS = frozenset(
     {
         "a09_privacy_registry",
@@ -154,13 +161,27 @@ EXPECTED_BUILTIN_STORE_IDS = frozenset(
         "a23_variant_store",
         "a24_retention_store",
         "a29_provider_delete_reconciliation_ledger",
+        "a37_conflict_decision_store",
     }
 )
+
+RECONCILIATION_STORE_IDS = (
+    "a09_privacy_registry",
+    "a29_provider_delete_reconciliation_ledger",
+    "a37_conflict_decision_store",
+)
+EXPECTED_RECONCILIATION_STORE_IDS = frozenset(RECONCILIATION_STORE_IDS)
 
 
 def _validate_builtin_inventory() -> None:
     if frozenset(BUILTIN_STORE_PROFILES) != EXPECTED_BUILTIN_STORE_IDS:
         raise MutationTopologyError("L1A35_BUILTIN_STORE_INVENTORY_MISMATCH")
+    if len(set(RECONCILIATION_STORE_IDS)) != len(RECONCILIATION_STORE_IDS):
+        raise MutationTopologyError("L1A38_RECONCILIATION_STORE_INVENTORY_INVALID")
+    if frozenset(RECONCILIATION_STORE_IDS) != EXPECTED_RECONCILIATION_STORE_IDS:
+        raise MutationTopologyError("L1A38_RECONCILIATION_STORE_INVENTORY_INVALID")
+    if not EXPECTED_RECONCILIATION_STORE_IDS <= EXPECTED_BUILTIN_STORE_IDS:
+        raise MutationTopologyError("L1A38_RECONCILIATION_STORE_INVENTORY_INVALID")
     for profile in BUILTIN_STORE_PROFILES.values():
         profile.validate()
 
@@ -228,6 +249,46 @@ def assert_store_topology_safe(
     if decision.state != "PASS":
         raise MutationTopologyError(decision.stable_error_code or "L1A27_TOPOLOGY_UNSAFE")
     return decision
+
+
+def reconciliation_topology_snapshot(
+    topology: DeploymentTopology | str,
+    *,
+    authorities: Mapping[str, SharedMutationAuthority] | None = None,
+) -> dict:
+    _validate_builtin_inventory()
+    authority_map = dict(authorities or {})
+    unknown = set(authority_map) - set(RECONCILIATION_STORE_IDS)
+    if unknown:
+        raise MutationTopologyError("L1A38_RECONCILIATION_AUTHORITY_STORE_UNKNOWN")
+    decisions = [
+        assess_store_topology(store_id, topology, authority=authority_map.get(store_id))
+        for store_id in RECONCILIATION_STORE_IDS
+    ]
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "tool_version": TOOL_VERSION,
+        "evidence_state": EVIDENCE_STATE,
+        "topology": DeploymentTopology(topology).value,
+        "store_inventory": RECONCILIATION_STORE_IDS,
+        "stores": [asdict(d) | {"decision_sha256": d.decision_sha256} for d in decisions],
+        "all_safe": all(d.state == "PASS" for d in decisions),
+        "parity_claim": "NONE",
+    }
+
+
+def assert_reconciliation_topology_safe(
+    topology: DeploymentTopology | str,
+    *,
+    authorities: Mapping[str, SharedMutationAuthority] | None = None,
+) -> dict:
+    snapshot = reconciliation_topology_snapshot(topology, authorities=authorities)
+    if not snapshot["all_safe"]:
+        first_failure = next(row for row in snapshot["stores"] if row["state"] != "PASS")
+        raise MutationTopologyError(
+            first_failure["stable_error_code"] or "L1A38_RECONCILIATION_TOPOLOGY_UNSAFE"
+        )
+    return snapshot
 
 
 def lane1_topology_snapshot(topology: DeploymentTopology | str) -> dict:
