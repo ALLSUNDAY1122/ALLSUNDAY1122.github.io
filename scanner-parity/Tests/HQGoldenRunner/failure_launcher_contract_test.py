@@ -1,9 +1,12 @@
 from pathlib import Path
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
 package = (ROOT / "Package.swift").read_text(encoding="utf-8")
 launcher = (ROOT / "HQGoldenRunner" / "run-formal-golden.sh").read_text(encoding="utf-8")
 v3_launcher = (ROOT / "HQGoldenRunner" / "run-formal-golden-v3.sh").read_text(encoding="utf-8")
+bootstrap_path = ROOT / "HQGoldenRunner" / "bootstrap-formal-golden-v3-macos.sh"
+bootstrap = bootstrap_path.read_text(encoding="utf-8")
 recorder = (ROOT / "HQGoldenFailureRecorder" / "main.swift").read_text(encoding="utf-8")
 sanitizer = (ROOT / "HQGoldenSupport" / "GoldenExecutionFailureSanitizer.swift").read_text(encoding="utf-8")
 
@@ -53,6 +56,36 @@ for token in [
     'runner_nonzero_exit',
 ]:
     assert token in recorder, f"failure recorder evidence contract missing: {token}"
+
+# The user-facing macOS bootstrap may download/update only project code. It must
+# bind the exact local raw Golden bytes by size+SHA, run the thresholdless real
+# production path locally, and stop for HQ calibration review. Raw/derived book
+# content must never be added or pushed to GitHub by the bootstrap.
+subprocess.run(["bash", "-n", str(bootstrap_path)], check=True)
+for token in [
+    'Darwin',
+    'scanner-parity/integration',
+    '8334cc4b3116b92f25541fe8144bff850b15808846ada4ce7dc7a998576c1677',
+    '4fae66be8ba95549859bbc5f9f1fc433ebe1a3a8b6c078cbd3317cf0e78e7b32',
+    'VIDEO_SIZE=191911175',
+    'PDF_SIZE=25751801',
+    'golden-v3-user-confirmed-20260825',
+    '--input-dir',
+    'LOCAL_ONLY_DO_NOT_UPLOAD_RAW_OR_DERIVED_BOOK_CONTENT',
+    'run-formal-golden-v3-thresholdless-and-calibrate.sh',
+    'hq-golden-execution.json',
+    'hq-golden-calibration-evidence.json',
+    'THRESHOLDLESS_CALIBRATION_READY',
+    'HQ_INSPECT_REAL_CALIBRATION_AND_AUTHOR_SHA_BOUND_THRESHOLD_DECISION',
+    'GOLDEN_V3_MACOS_BOOTSTRAP_THRESHOLDLESS_COMPLETE',
+]:
+    assert token in bootstrap, f"macOS Golden bootstrap contract missing: {token}"
+assert 'git clone --single-branch --branch "$INTEGRATION_REF"' in bootstrap
+assert 'git -C "$repo_dir" fetch --prune origin "$INTEGRATION_REF"' in bootstrap
+assert 'git push' not in bootstrap, "bootstrap must never push raw/derived local state"
+assert 'git add' not in bootstrap, "bootstrap must never stage raw/derived local state"
+assert '--match-threshold' not in bootstrap, "bootstrap initial phase must remain thresholdless"
+assert 'len(candidates) != 1' in bootstrap, "raw identity discovery must fail closed on zero/duplicate exact matches"
 
 assert 'FORMAL_GOLDEN_PASS' not in launcher
 assert 'FORMAL_GOLDEN_PASS' not in v3_launcher
