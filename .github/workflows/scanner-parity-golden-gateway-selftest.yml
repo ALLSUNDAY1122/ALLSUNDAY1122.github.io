@@ -1,0 +1,63 @@
+name: Scanner Parity Golden Gateway Self-Test
+
+on:
+  push:
+    branches:
+      - 'scanner-parity/golden-codemagic-gateway-main-*'
+    paths:
+      - scripts/prepare_scanner_parity_golden_codemagic.py
+      - scripts/run_scanner_parity_golden_codemagic_gateway.py
+      - .github/workflows/scanner-parity-golden-codemagic-gateway.yml
+      - .github/workflows/scanner-parity-golden-gateway-selftest.yml
+  pull_request:
+    paths:
+      - scripts/prepare_scanner_parity_golden_codemagic.py
+      - scripts/run_scanner_parity_golden_codemagic_gateway.py
+      - .github/workflows/scanner-parity-golden-codemagic-gateway.yml
+      - .github/workflows/scanner-parity-golden-gateway-selftest.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Compile gateway Python
+        run: |
+          python3 -m py_compile \
+            scripts/prepare_scanner_parity_golden_codemagic.py \
+            scripts/run_scanner_parity_golden_codemagic_gateway.py
+      - name: Parse workflow YAML
+        run: |
+          python3 -m pip install --disable-pip-version-check PyYAML
+          python3 - <<'PY'
+          import yaml
+          from pathlib import Path
+          for p in [
+              Path('.github/workflows/scanner-parity-golden-codemagic-gateway.yml'),
+              Path('.github/workflows/scanner-parity-golden-gateway-selftest.yml'),
+          ]:
+              data=yaml.safe_load(p.read_text(encoding='utf-8'))
+              assert isinstance(data,dict) and 'jobs' in data, p
+          print('SCANNER_GOLDEN_GATEWAY_YAML_PASS')
+          PY
+      - name: Validate security contract
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          gateway=Path('scripts/run_scanner_parity_golden_codemagic_gateway.py').read_text(encoding='utf-8')
+          workflow=Path('.github/workflows/scanner-parity-golden-codemagic-gateway.yml').read_text(encoding='utf-8')
+          prepare=Path('scripts/prepare_scanner_parity_golden_codemagic.py').read_text(encoding='utf-8')
+          assert 'secrets.token_urlsafe(48)' in gateway
+          assert 'GOLDEN_DOWNLOAD_TOKEN' in gateway
+          assert 'id-token: write' in workflow
+          assert 'CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}' in workflow
+          assert 'scanner-parity-golden-v3-qa' in prepare
+          assert 'submit_to_testflight' not in prepare
+          assert 'submit_to_app_store' not in prepare
+          assert 'artifact' not in prepare.lower()
+          print('SCANNER_GOLDEN_GATEWAY_SECURITY_CONTRACT_PASS')
+          PY
