@@ -18,7 +18,7 @@ from typing import Any
 
 from lane1_source_snapshot import SourceSnapshotError, build_source_snapshot
 
-TOOL_VERSION = "L1-A26-v2"
+TOOL_VERSION = "L1-A26-v3"
 EVIDENCE_STATE = "NON_PARITY_EVIDENCE_ONLY"
 ERROR_CODE = re.compile(r"\b(?:SEP|GEN|GENRT|GENRET|GEN_FACADE|L1A\d+|L1M\d+)_[A-Z0-9_]+\b")
 GIT_SHA = re.compile(r"^[0-9a-f]{40}$")
@@ -131,6 +131,7 @@ def _dependency_checks(audio_root: Path) -> dict[str, Any]:
         "A27_topology": server / "mutation_topology.py",
         "A28_privacy": server / "privacy_retention.py",
         "A29_reconciliation": server / "provider_delete_reconciliation.py",
+        "A37_conflict_adjudication": server / "provider_delete_conflict_resolution.py",
     }
     required_safety_regressions = {
         "A27_A35_topology_regression": tests_dir / "test_mutation_topology.py",
@@ -142,6 +143,7 @@ def _dependency_checks(audio_root: Path) -> dict[str, Any]:
         "A32_reconciliation_crash_atomicity_regression": tests_dir / "test_provider_delete_reconciliation_crash_atomicity.py",
         "A33_reconciliation_temporal_regression": tests_dir / "test_provider_delete_reconciliation_temporal_causality.py",
         "A34_reconciliation_expiry_regression": tests_dir / "test_provider_delete_reconciliation_documented_expiry.py",
+        "A37_conflict_adjudication_regression": tests_dir / "test_provider_delete_reconciliation_conflict_resolution.py",
     }
     failures = []
     for name, path in required_files.items():
