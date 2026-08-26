@@ -22,6 +22,7 @@ class Lane1DependencyAuditSafetySurfaceTests(unittest.TestCase):
             "mutation_topology.py",
             "privacy_retention.py",
             "provider_delete_reconciliation.py",
+            "provider_delete_conflict_resolution.py",
         ):
             (self.server / name).write_text("x = 1\n", encoding="utf-8")
 
@@ -57,6 +58,7 @@ class Lane1DependencyAuditSafetySurfaceTests(unittest.TestCase):
             "test_provider_delete_reconciliation_crash_atomicity.py",
             "test_provider_delete_reconciliation_temporal_causality.py",
             "test_provider_delete_reconciliation_documented_expiry.py",
+            "test_provider_delete_reconciliation_conflict_resolution.py",
         ):
             (self.tests / name).write_text("pass\n", encoding="utf-8")
 
@@ -66,7 +68,7 @@ class Lane1DependencyAuditSafetySurfaceTests(unittest.TestCase):
     def test_complete_safety_surface_inventory_passes(self):
         result = _dependency_checks(self.audio)
         self.assertEqual(result["state"], "PASS")
-        self.assertEqual(result["checked"], 23)
+        self.assertEqual(result["checked"], 25)
 
     def test_missing_topology_module_fails_closed(self):
         (self.server / "mutation_topology.py").unlink()
@@ -83,10 +85,40 @@ class Lane1DependencyAuditSafetySurfaceTests(unittest.TestCase):
         result = _dependency_checks(self.audio)
         self.assertIn({"check": "A29_reconciliation", "code": "L1A36_REQUIRED_SAFETY_FILE_MISSING"}, result["failures"])
 
+    def test_missing_a37_conflict_adjudication_module_fails_closed(self):
+        (self.server / "provider_delete_conflict_resolution.py").unlink()
+        result = _dependency_checks(self.audio)
+        self.assertIn(
+            {"check": "A37_conflict_adjudication", "code": "L1A36_REQUIRED_SAFETY_FILE_MISSING"},
+            result["failures"],
+        )
+
     def test_missing_reconciliation_regression_fails_closed(self):
         (self.tests / "test_provider_delete_reconciliation_crash_atomicity.py").unlink()
         result = _dependency_checks(self.audio)
         self.assertIn("L1A36_REQUIRED_REGRESSION_MISSING", [row["code"] for row in result["failures"]])
+
+    def test_missing_a37_conflict_adjudication_regression_fails_closed(self):
+        (self.tests / "test_provider_delete_reconciliation_conflict_resolution.py").unlink()
+        result = _dependency_checks(self.audio)
+        self.assertIn(
+            {"check": "A37_conflict_adjudication_regression", "code": "L1A36_REQUIRED_REGRESSION_MISSING"},
+            result["failures"],
+        )
+
+    def test_paired_a37_module_and_regression_removal_cannot_false_green(self):
+        (self.server / "provider_delete_conflict_resolution.py").unlink()
+        (self.tests / "test_provider_delete_reconciliation_conflict_resolution.py").unlink()
+        result = _dependency_checks(self.audio)
+        self.assertEqual(result["state"], "FAIL")
+        self.assertIn(
+            {"check": "A37_conflict_adjudication", "code": "L1A36_REQUIRED_SAFETY_FILE_MISSING"},
+            result["failures"],
+        )
+        self.assertIn(
+            {"check": "A37_conflict_adjudication_regression", "code": "L1A36_REQUIRED_REGRESSION_MISSING"},
+            result["failures"],
+        )
 
     def test_missing_topology_regression_fails_closed(self):
         (self.tests / "test_mutation_topology.py").unlink()
