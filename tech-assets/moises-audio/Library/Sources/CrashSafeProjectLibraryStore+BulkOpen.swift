@@ -5,8 +5,10 @@ public extension CrashSafeProjectLibraryStore {
     /// Production open for callers that do not need PreservingCoreDataStoreOpener.
     /// AW24 bounds legacy preparation; AW26 injects targeted live-reference authorization; AW31
     /// reconciles bounded previous-session managed publication intents before AW30 compatibility
-    /// census. Census runs only after publication recovery is safe; corrupt/unsafe publication state
-    /// leaves inventory authority absent for this open. In-memory tests retain the full-projection fallback.
+    /// census. Census runs only after publication recovery is safe; AW46 deletion-ownership manifest
+    /// reconciliation is centralized in CrashSafeProjectLibraryStore initialization so every
+    /// construction path receives it exactly once. Corrupt/unsafe publication state leaves inventory
+    /// authority absent for this open. In-memory tests retain the full-projection fallback.
     static func openBulkPrepared(
         metadataConfiguration: CoreDataProjectLibraryStore.Configuration,
         artifactRootURL: URL
