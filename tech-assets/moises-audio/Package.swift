@@ -119,6 +119,10 @@ let package = Package(
                 "Analysis/AnalysisRealAudioParityAdjudication.swift",
                 "Analysis/AnalysisRealAudioParityAdjudicationValidation.swift",
                 "Analysis/AnalysisRealAudioParityAdjudicationCanonicalGate.swift",
+                "Analysis/AnalysisPhysicalRealAudioCorpusModels.swift",
+                "Analysis/AnalysisPhysicalRealAudioCorpusValidation.swift",
+                "Analysis/AnalysisPhysicalRealAudioCorpusReport.swift",
+                "Analysis/AnalysisPhysicalRealAudioCorpusHelpers.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
@@ -129,7 +133,8 @@ let package = Package(
                 "iOS/HostCore/ApplePlatformSmoke.swift",
                 "iOS/HostCore/AnalysisIOSDevicePerformanceSession.swift",
                 "iOS/HostCore/AnalysisIOSPhysicalCaptureCoordinator.swift",
-                "iOS/HostCore/AnalysisIOSPhysicalCaptureArtifactMaterializer.swift"
+                "iOS/HostCore/AnalysisIOSPhysicalCaptureArtifactMaterializer.swift",
+                "iOS/HostCore/AnalysisIOSPhysicalRealAudioCorpusCoordinator.swift"
             ]
         ),
         .testTarget(
