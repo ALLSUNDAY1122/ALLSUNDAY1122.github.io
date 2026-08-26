@@ -1,124 +1,180 @@
-# APP2-003｜夜の書架｜Pattern C / 申請前preflight
+# APP2-003｜夜の書架｜次セッション引き継ぎ
 
-更新: 2026-08-22 19:44 JST
-セッション: 夜の書架②
+更新: 2026-08-27 08:17 JST
+セッション: 夜の書架② → 次セッションへ引き継ぎ
 Worker: YORU
 対象App: 夜の書架
 App Store Connect App ID: `6794137637`
 Bundle ID: `io.github.allsunday1122.yorunoshoka`
+対象repo: `ALLSUNDAY1122/yoru-no-shoka`
+対象branch: `main`
 
-## 現在結論
+> このファイル・会話履歴・過去のASC/Codemagic結果は開始点であり正本ではない。次セッション開始時および各「次」で、Notion / GitHub / App Store Connect / Codemagicの実状態を必ず再取得すること。
 
-Pattern C「紙面・温かみ」は `ALLSUNDAY1122/yoru-no-shoka` mainへ統合済み。現行ソースは `1.2.0 / Build 4`。
+## 最終確認済みの製品状態
 
-App Store Connect fresh preflightでは App Store Version `1.2.0 / PREPARE_FOR_SUBMISSION`、attached Buildなし、Review Submission 0件。Build 4はまだAppleへ未到着。最終 `Add for Review / Submit for Review` は実施していない。
+- Pattern C「紙面・温かみ」は `ALLSUNDAY1122/yoru-no-shoka` mainへ統合済み。
+- 現行release targetは `1.2.0 / Build 4`。
+- Pattern C実装内容:
+  - 紙面 / 深いセピア / 漆黒テーマ
+  - 明るさ70–120%
+  - 本文文字サイズ・行間
+  - 明朝 / ゴシック
+  - 設定値端末保存
+  - 主CTA「今夜の一話を読む」
+  - おまかせ / シリーズ / 書架の副導線
+  - シリーズ/話者ガイド
+  - 各作品カードに「この話を読む」
+  - 検索 / 怖さ / 長さ / シリーズ絞り込み
+  - 保存済み / 読了状態
+  - 読書画面の戻る / タイトル / Aa / その他整理
+  - 読書進捗バー
 
-申請手順はNotion正本「AIアプリ開発・公開フロー v2.7」および「申請手順」を再取得して確認した。標準順序は `API preflight → AUTO-FIX → Build → Apple processing → Internal TestFlight → 実機受入 → submission audit → 最終承認 → Add for Review / Submit for Review`。ログイン/2FA、契約・税務・銀行、実機受入、DSA自己判定/本人確認、最終Submit承認以外は原則AI/API/CI側で処理する。
+## App Store Connect｜最終確認 2026-08-22
 
-## Pattern C 実装済み
+- App Store Version `1.2.0`
+- state `PREPARE_FOR_SUBMISSION`
+- attached Buildなし
+- Review Submission 0件
+- Apple上の既存Buildは1/2/3のみ
+- Build 4は当時未到着
+- 日本語description / keywords / Support URL / Marketing URLあり
+- App Review contact必須4項目あり
+- Beta Review contact必須4項目あり
+- Internal/Beta groups既存3グループ
+- App Info subtitle / Privacy Policy URLあり
+- iPhone screenshot 4枚あり。ただしPattern C刷新前の可能性があるため、Build 4実機受入後に現UIへ差し替えること。
+- Age Rating現行監査: horror/fear `FREQUENT_OR_INTENSE`、territory表示は13+。legacy 12+を根拠にしない。
 
-- 紙面 / 深いセピア / 漆黒の3テーマ
-- 明るさ 70–120%
-- 本文文字サイズ・行間
-- 明朝 / ゴシック
-- 設定値端末保存
-- ホーム主CTA「今夜の一話を読む」
-- おまかせ / シリーズから選ぶ / 書架を見るを副導線化
-- シリーズ/話者の役割・読み味ガイド
-- 各作品カードの明示的「この話を読む」
-- 検索 / 怖さ / 長さ / シリーズ絞り込み
-- 保存済み / 読了状態
-- 読書画面を 戻る / タイトル / Aa / その他 に整理
-- 保存 / 共有 / 読了 / ホームをその他メニューへ集約
-- 読書進捗バー
+次セッションでは上記を必ずfresh readして差分判定すること。
 
-## App Store Connect fresh preflight｜2026-08-22
+## Codemagic｜GitHub接続問題は解消済み
 
-- App: 夜の書架
-- App ID: `6794137637`
-- Bundle ID: `io.github.allsunday1122.yorunoshoka`
-- App Store Version: `1.2.0`
-- State: `PREPARE_FOR_SUBMISSION`
-- attached Build: なし
-- Review Submission: 0件
-- Apple上に存在するBuild: 1 / 2 / 3のみ
-- Build 4: 未到着
-- 日本語description: あり
-- keywords: あり
-- Support URL: あり
-- Marketing URL: あり
-- App Review contact: 必須4項目あり
-- demo account: 不要
-- Beta Review contact: 必須4項目あり
-- Internal/Beta groups: 既存3グループ
-- App Info subtitle / Privacy Policy URL: あり
-- iPhone screenshot set: 4枚あり
+GitHub Appへprivate repo `ALLSUNDAY1122/yoru-no-shoka` を許可済み。
 
-ただし既存4枚はPattern C刷新前の画像である可能性を排除できないため、Build 4の実機受入後にPattern C現UIのホーム・書架・読書画面を含む画像へ差し替える。旧4枚の存在だけではScreenshot gateをPASSにしない。
+壊れていた旧Codemagic Application 2件:
+- `6a856ad0cfa731a85617d8fb`
+- `6a89709c57ba683ac5fcdbe8`
 
-## Age Rating fresh audit｜2026-08-22
+はユーザー明示許可後に削除済み。
 
-App Store Connect APIのAge Rating Declarationを直接read-back。
+GitHub App経由で新規作成した正常Application:
+- Codemagic App ID: `6a8af6e5a5c86907b00c2efd`
+- `branches` read-backで `main`, `release/eas-build4-trigger`, `ui/pattern-c-paper-warm` を確認
+- `main` と `codemagic.yaml` をCodemagic UI/APIの双方で認識済み
 
-- `horrorOrFearThemes = FREQUENT_OR_INTENSE`
-- `matureOrSuggestiveThemes = NONE`
-- `profanityOrCrudeHumor = NONE`
-- cartoon/fantasy violence = INFREQUENT_OR_MILD
-- realistic violence = INFREQUENT_OR_MILD
-- prolonged graphic/sadistic violence = NONE
-- sexual content = NONE
-- simulated gambling = NONE
-- drugs/alcohol/tobacco references = NONE
-- guns/other weapons = INFREQUENT_OR_MILD
-- unrestricted web access = false
-- UGC / messaging / social media = false
-- advertising = false
-- override = NONE
+したがって「Branchが空」「repositoryが取れない」「GitHub App未接続」は解決済み。再度GitHub App再設定やApplication削除をしないこと。
 
-AppInfoのlegacy `appStoreAgeRating` は `TWELVE_PLUS` が残っているが、territory age ratingは `THIRTEEN_PLUS`。提出時は新体系の13+を現行判定として扱い、legacy 12+を根拠にしない。ASCが質問移行を要求した場合のみ現行UIで再回答する。
+## Codemagic Build診断
 
-証拠: `automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-age-rating.json`
+現行 `yoru-no-shoka/main/codemagic.yaml` workflow:
+- `yoru-ios-diagnostic`
+- `yoru-ios`
 
-## Codemagic｜2026-08-22
+最初のBuild失敗原因:
+- Codemagic標準Corepack 0.30.0が `pnpm@11.9.0` の新しい署名keyidを検証できず停止。
 
-GitHub側では Codemagic CI/CD GitHub App に `ALLSUNDAY1122/yoru-no-shoka` のprivate repository accessを許可済み。
+修正:
+- Corepackを使わず `npm install --global --force pnpm@11.9.0` に変更。
 
-以前API/URL方式で作成したCodemagic ApplicationはGitHub provider integrationに結合されず `branches=null` の空Applicationとなっていた。ユーザーの明示許可後、以下を削除した。
+診断Build `6a8afa087787725ef828f116` は `finished`。
+以下までPASS済み:
+1. pnpm 11.9.0導入
+2. lockfile / dependency install
+3. `pnpm ios:prepare`
+4. Vite Pattern C web bundle生成
+5. Capacitor iOS sync
+6. Xcode release version同期
+7. `1.2.0 / Build 4 / io.github.allsunday1122.yorunoshoka` audit
 
-- 元の空Application `6a856ad0cfa731a85617d8fb`
-- 検証用重複Application `6a89709c57ba683ac5fcdbe8`
+本番Build `6a8afb237787725ef828f194` の失敗点:
 
-削除後、Codemagic Applications API read-backで対象候補0件を確認済み。GitHub repositoryやApp Store Connectレコードは削除していない。
+`=== stage: signing ===`
+`Cannot save Signing Certificates without certificate private key`
 
-Codemagic公開REST Applications APIでは、GitHub App integrationで認可済みprivate repositoryをprovider-bound Applicationとして作成する方法は確認できない。`POST /apps` はURL追加、private repoのAPI追加はSSH key方式であり、GitHub App UI選択を代替しない。
+つまりアプリコード / pnpm / Capacitor / versioningではなく、iOS署名private key不足のみが現時点の主要blocker。
 
-したがって現在の唯一のBuild前UIゲートは、Codemagic上で新規ApplicationをGitHub App経由で作成する操作:
+証拠:
+- `automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-codemagic.json`
+- 現行 `ALLSUNDAY1122/yoru-no-shoka/main/codemagic.yaml`
 
-`Add application → GitHub → ALLSUNDAY1122/yoru-no-shoka → Other → Finish`
+## Apple署名preflight｜2026-08-23
 
-この1回が成立した後は、ChatGPT側のCodemagic Gatewayで新App IDを再取得し、mainの `codemagic.yaml` workflow `yoru-ios` を使用して以下を自動実行する。
+read-only監査で以下を確認:
 
-1. 1.2.0 / Build 4署名Build
-2. App Store Connect upload
-3. Apple processing監視 / validation error解析
-4. Internal TestFlight割当
-5. App Store Version 1.2.0へBuild 4紐付け
-6. submission audit再実行
-7. Pattern C実機受入後、現UI screenshotsへ更新
-8. Review Notes / Privacy / Age Rating / export compliance最終監査
-9. `WAITING_FINAL_APPROVAL` まで進行
+- Bundle resource ID: `K459HXU63D`
+- Apple Distribution証明書はactive 3/3
+- 夜の書架には既に有効なApp Store provisioning profileあり:
+  - Profile ID `6598LFYDY3`
+  - Name `*[expo] io.github.allsunday1122.yorunoshoka AppStore 2026-07-26T05:57:33.985Z`
+  - state `ACTIVE`
+  - certificate `B4WRC3G6V4`
+  - expiration `2027-07-24T14:20:41Z`
 
-`submit_to_app_store` は禁止し、本審査Submitはユーザー最終承認後のみ実行する。
+重要:
+- 新しいApple Distribution証明書を発行しない。
+- 既存3証明書を安易にrevokeしない。他アプリで広く使用中。
+- `B4WRC3G6V4` はExpo/EAS管理で、夜の書架profileと紐付いている。
 
-## 現在の人間ゲート
+証拠:
+`automation/chatgpt-dispatcher/app-development-2/evidence/APP2-003-signing-preflight.json`
 
-1. CodemagicでGitHub App経由の `yoru-no-shoka` Application新規作成（公開REST APIでは代替不能）
-2. Build 4到着後のiPhone TestFlight実機受入
-3. DSAトレーダー自己判定・該当時の本人確認
-4. 最終 `Add for Review / Submit for Review` 承認
+## 次セッションの最優先Macro Loop
 
-## Task判定
+開始時に必ずfresh read:
+1. Notion アプリ開発台帳 / 夜の書架正本 / 標準公開フロー / 申請手順
+2. `ALLSUNDAY1122/yoru-no-shoka` main / recent commits / `codemagic.yaml`
+3. Dispatcher Queue / 本evidence / signing-preflight evidence
+4. Codemagic App `6a8af6e5a5c86907b00c2efd` の現在状態と最新Build
+5. ASC App `6794137637` のApp version / Builds / TestFlight / submissions
+6. Apple certificates/profilesのfresh read
 
-`HUMAN_REQUIRED`
+fresh read後、状態が変わっていなければ次を実行:
 
-理由: 申請前preflightと自動補完可能部分は実行済み。現在の停止点はCodemagicのGitHub App provider-bound Application新規作成という認証済みWeb UI操作であり、利用可能な公式API/接続ツールでは代替不能。その操作後はBuild 4→TestFlight→submission auditをAI側で継続できる。
+### Lane A｜既存EAS署名private keyの安全な再利用
+- 中央repoに `EXPO_TOKEN` を使う既存EAS認証workflowがある。
+- EAS側で `B4WRC3G6V4` に対応する夜の書架のDistribution Certificate/private keyを取得できるか確認。
+- secret/private keyはGitHub/Notion/evidence/logへ一切出力しない。
+- 可能ならephemeral runner内で取得し、Codemagic App `6a8af6e5a5c86907b00c2efd` のsecure variable groupへ直接保存。
+- 既存成功例 `app2_010_touhan_signing` / `CERTIFICATE_PRIVATE_KEY` の設計を参考にするが、他アプリのprivate keyを夜の書架へ流用しない。
+- `B4WRC3G6V4` とprivate keyが対応していることを安全に検証してから使用する。
+
+### Lane B｜Codemagic署名workflowを確定
+- secure groupを `yoru-ios` environment groupsへ追加。
+- `keychain initialize`
+- `app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE`（既存profile利用を優先。無条件`--create`は避ける）
+- `keychain add-certificates`
+- `xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'`
+- signed IPA build
+- IPA artifact/read-back
+
+### Lane C｜Apple到着後
+- App Store Connect upload/processing監視
+- Internal TestFlightへ到達確認
+- App Store Version 1.2.0へBuild 4をattach
+- iPhone実機でPattern C受入確認
+- Pattern C現UIのスクリーンショットへ更新
+- Review Notes / Privacy / Age Rating / export compliance / DSA / Review contactをfresh audit
+- 最終提出直前 `WAITING_FINAL_APPROVAL` まで自動で進める
+
+## 禁止事項
+
+- Codexは使わない。
+- GitHub/Codemagic接続問題を再調査して壊れていないApplicationを削除しない。
+- Apple Distribution証明書を推測でrevoke/createしない。
+- secret/token/.p8/private keyをGitHub/Notion/log/evidenceへ保存しない。
+- 旧Pattern C前スクリーンショットを新UI証拠としてPASSしない。
+- `submit_to_app_store` / Add for Review / Submit for Reviewをユーザー最終承認なしで実行しない。
+
+## 真正な人間Gate
+
+自動工程が完了した後にのみ残す:
+1. Build 4のiPhone TestFlight実機受入
+2. DSAトレーダー自己判定・必要時本人確認
+3. 最終 `Add for Review / Submit for Review` 承認
+
+現時点の署名private key安全移送は、利用可能なEAS/Codemagic/GitHub secret経路で自動化可能性を先に追うこと。安易にHUMAN_REQUIREDとして止めない。
+
+## Queueについて
+
+Queue上のAPP2-003は現時点で `HUMAN_REQUIRED` の旧判定が残っている。次セッションはこれを正本扱いせずfresh read後に再判定すること。Task完了時または真正な人間Gate到達時のみ、自分のTaskだけをDONE/HUMAN_REQUIREDへ更新しremote read-backする。
