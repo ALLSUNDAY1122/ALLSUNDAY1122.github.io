@@ -4,6 +4,8 @@
 実機iPhoneのLarge Widgetから、アプリ画面を開かず `UIPasteboard.general` に文字列を書き込めるかを検証する。Simulatorの結果だけではPASSにしない。
 
 ## A｜現行安定版
+Phase 0ではApp Groupを意図的に使わない。共有保存は核心Pasteboard検証に不要であり、Apple側capability設定を技術ゲートから分離する。PASS-A後のMVPでApp Groupを追加する。
+
 - Button: `TESTをコピー`
 - Intent: 通常の `AppIntent`
 - supported mode: `.background`

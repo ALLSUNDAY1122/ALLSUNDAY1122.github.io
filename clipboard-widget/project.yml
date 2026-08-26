@@ -33,7 +33,6 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: "クリップボードWidget"
         INFOPLIST_KEY_LSRequiresIPhoneOS: YES
         INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
-        CODE_SIGN_ENTITLEMENTS: App/ClipboardWidget.entitlements
     scheme:
       testTargets: []
 
@@ -52,6 +51,5 @@ targets:
         PRODUCT_NAME: ClipboardWidgetExtension
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: Widget/Info.plist
-        CODE_SIGN_ENTITLEMENTS: Widget/ClipboardWidgetExtension.entitlements
         APPLICATION_EXTENSION_API_ONLY: YES
         SKIP_INSTALL: YES

@@ -9,16 +9,15 @@ struct ClipboardWidgetBundle: WidgetBundle {
 
 struct ProbeEntry: TimelineEntry {
     let date: Date
-    let receipt: ProbeReceipt?
 }
 
 struct ProbeProvider: TimelineProvider {
-    func placeholder(in context: Context) -> ProbeEntry { ProbeEntry(date: .now, receipt: nil) }
+    func placeholder(in context: Context) -> ProbeEntry { ProbeEntry(date: .now) }
     func getSnapshot(in context: Context, completion: @escaping (ProbeEntry) -> Void) {
-        completion(ProbeEntry(date: .now, receipt: SharedProbeStore.loadReceipt()))
+        completion(ProbeEntry(date: .now))
     }
     func getTimeline(in context: Context, completion: @escaping (Timeline<ProbeEntry>) -> Void) {
-        completion(Timeline(entries: [ProbeEntry(date: .now, receipt: SharedProbeStore.loadReceipt())], policy: .never))
+        completion(Timeline(entries: [ProbeEntry(date: .now)], policy: .never))
     }
 }
 
@@ -53,17 +52,14 @@ struct ClipboardProbeWidgetView: View {
                     Text("Widget Extension").font(.caption).foregroundStyle(.secondary)
                 }.frame(maxWidth: .infinity, minHeight: 52).contentShape(Rectangle())
             }.buttonStyle(.borderedProminent)
-            Text("Bの main-process実行指定APIはXcode 26.6安定版SDKに未収録のため、このビルドには入れていません。")
+            Text("押したあとメモへPasteし、“Widget Copy Test” と完全一致するか確認します。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            Text("Bの main-process実行指定APIはXcode 26.6安定版SDKに未収録のため、このビルドには入れていません。")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
             Divider()
-            if let receipt = entry.receipt {
-                Text("Intent実行：\(receipt.method.rawValue) / \(receipt.executedAt.formatted(date: .omitted, time: .standard))")
-                    .font(.caption.weight(.semibold))
-            } else {
-                Text("まだIntentは実行されていません").font(.caption).foregroundStyle(.secondary)
-            }
-            Text("※ Intent実行表示はコピー成功の証拠ではありません。メモへPasteして判定します。")
+            Text("Phase 0では核心検証を署名要件から分離するためApp Groupを使いません。共有保存はPASS-A後のMVPで追加します。")
                 .font(.caption2).foregroundStyle(.secondary)
         }.padding(4)
     }
