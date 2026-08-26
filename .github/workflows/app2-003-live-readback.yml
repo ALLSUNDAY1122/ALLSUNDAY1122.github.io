@@ -1,0 +1,95 @@
+name: APP2-003 Live Release Readback
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - automation/app2-003-live-readback-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Execute APP2-003 App Store Connect readback
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 scripts/app_store_connect_gateway.py \
+            --command automation/app2-003-live-readback-command.json \
+            --output /tmp/app2-003-asc-result.json
+
+      - name: Persist sanitized APP2-003 readback
+        run: |
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+
+          source=json.loads(Path('/tmp/app2-003-asc-result.json').read_text(encoding='utf-8'))
+          request_id=str(source.get('request_id') or '')
+          if not re.fullmatch(r'app2-003-[A-Za-z0-9._-]{1,90}',request_id):
+              raise SystemExit('invalid request id')
+
+          keep_attrs={
+              'name','bundleId','sku','primaryLocale','versionString','platform','appStoreState',
+              'uploadedDate','processingState','expired','minOsVersion','buildAudienceType',
+              'profileState','profileType','expirationDate','uuid','identifier','certificateType',
+              'displayName','serialNumber','activated','createdDate','state','usesNonExemptEncryption'
+          }
+          summary={'request_id':request_id,'completed_at':source.get('completed_at'),'results':[]}
+          for result in source.get('results',[]):
+              item={'label':result.get('label'),'http_status':result.get('http_status'),'data':[]}
+              response=result.get('response') or {}
+              data=response.get('data') or []
+              if isinstance(data,dict): data=[data]
+              for resource in data:
+                  if not isinstance(resource,dict): continue
+                  attrs=resource.get('attributes') or {}
+                  relationships={}
+                  for rname,rvalue in (resource.get('relationships') or {}).items():
+                      if not isinstance(rvalue,dict): continue
+                      rdata=rvalue.get('data')
+                      if isinstance(rdata,dict):
+                          relationships[rname]={'id':rdata.get('id'),'type':rdata.get('type')}
+                      elif isinstance(rdata,list):
+                          relationships[rname]=[{'id':x.get('id'),'type':x.get('type')} for x in rdata if isinstance(x,dict)]
+                  item['data'].append({
+                      'id':resource.get('id'),
+                      'type':resource.get('type'),
+                      'attributes':{k:attrs.get(k) for k in keep_attrs if k in attrs},
+                      'relationships':relationships,
+                  })
+              summary['results'].append(item)
+
+          out=Path('automation/asc-results')/f'{request_id}.json'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          payload=json.dumps(summary,ensure_ascii=False,indent=2)+'\n'
+          out.write_text(payload,encoding='utf-8')
+          Path('/tmp/app2-003-asc-summary.json').write_text(payload,encoding='utf-8')
+          Path('/tmp/app2-003-asc-result-path.txt').write_text(str(out),encoding='utf-8')
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          P="$(cat /tmp/app2-003-asc-result-path.txt)"
+          git add "$P"
+          git commit -m "Persist APP2-003 live ASC readback" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p "$(dirname "$P")"
+          cp /tmp/app2-003-asc-summary.json "$P"
+          git add "$P"
+          git commit -m "Persist APP2-003 live ASC readback" || exit 0
+          git push origin HEAD:main
