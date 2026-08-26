@@ -34,10 +34,13 @@ jobs:
         shell: bash
         working-directory: tech-assets/moises-audio
         run: |
-          set -euo pipefail
+          set +e
           python3 Separation/Evaluation/lane1_dependency_audit.py \
             --audio-root . \
             --timeout-seconds 600 \
             --expected-git-head 37c468e3ef9d80d6afd57ceb7d7475b16fbe67d3 \
             --output /tmp/l1-a37-exact-audit.json
+          audit_code=$?
+          echo "audit_exit_code=$audit_code"
           cat /tmp/l1-a37-exact-audit.json
+          exit "$audit_code"
