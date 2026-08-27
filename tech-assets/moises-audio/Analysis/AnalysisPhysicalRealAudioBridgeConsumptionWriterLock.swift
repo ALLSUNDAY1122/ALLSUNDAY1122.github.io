@@ -46,6 +46,11 @@ private final class AnalysisPhysicalRealAudioBridgeConsumptionInProcessWriterReg
 
 enum AnalysisPhysicalRealAudioBridgeConsumptionWriterLock {
     static let lockDirectoryName = ".writer-locks"
+    private static let threadLeaseDepthKey = "MoisesAudioCore.AnalysisBridgeConsumptionWriterLeaseDepth"
+
+    static var currentThreadHoldsWriterLease: Bool {
+        (Thread.current.threadDictionary[threadLeaseDepthKey] as? Int ?? 0) > 0
+    }
 
     static func withExclusiveLock<T>(
         ledgerID: String,
@@ -108,7 +113,9 @@ enum AnalysisPhysicalRealAudioBridgeConsumptionWriterLock {
             )
             try validateLease(lease)
             do {
-                let result = try body(lease)
+                let result = try withThreadLeaseMarker {
+                    try body(lease)
+                }
                 try validateLease(lease)
                 return result
             } catch {
@@ -149,6 +156,20 @@ enum AnalysisPhysicalRealAudioBridgeConsumptionWriterLock {
             .appendingPathComponent("\(ledgerID).lock", isDirectory: false)
     }
 
+    private static func withThreadLeaseMarker<T>(body: () throws -> T) rethrows -> T {
+        let dictionary = Thread.current.threadDictionary
+        let previous = dictionary[threadLeaseDepthKey] as? Int ?? 0
+        dictionary[threadLeaseDepthKey] = previous + 1
+        defer {
+            if previous == 0 {
+                dictionary.removeObject(forKey: threadLeaseDepthKey)
+            } else {
+                dictionary[threadLeaseDepthKey] = previous
+            }
+        }
+        return try body()
+    }
+
     private static func prepareLockURL(ledgerID: String, rootURL: URL) throws -> URL {
         let fm = FileManager.default
         try ensureDirectory(rootURL, within: rootURL, withIntermediateDirectories: true, fileManager: fm)
@@ -169,10 +190,7 @@ enum AnalysisPhysicalRealAudioBridgeConsumptionWriterLock {
     ) throws {
         if !fileManager.fileExists(atPath: url.path) {
             do {
-                try fileManager.createDirectory(
-                    at: url,
-                    withIntermediateDirectories: withIntermediateDirectories
-                )
+                try fileManager.createDirectory(at: url, withIntermediateDirectories: withIntermediateDirectories)
             } catch {
                 guard fileManager.fileExists(atPath: url.path) else { throw error }
             }
