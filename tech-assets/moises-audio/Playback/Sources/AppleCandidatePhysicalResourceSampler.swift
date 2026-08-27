@@ -41,8 +41,9 @@ public final class Lane3AppleCandidatePhysicalResourceRecorder {
     private var accumulator = Lane3CandidatePhysicalResourceTraceAccumulator()
     private var finished = false
 
-    public init(sessionIdentifier: String, device: UIDevice = .current) {
-        self.sessionIdentifier = sessionIdentifier
+    public init(sessionIdentifier: String, device: UIDevice = .current) throws {
+        self.sessionIdentifier = try Lane3CandidatePhysicalResourceTraceAccumulator
+            .validatedSessionIdentifier(sessionIdentifier)
         self.device = device
         self.batteryMonitoringWasInitiallyEnabled = device.isBatteryMonitoringEnabled
         if !device.isBatteryMonitoringEnabled {
