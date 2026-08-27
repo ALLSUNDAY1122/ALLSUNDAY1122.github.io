@@ -191,11 +191,12 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionNormalizedAccessTests: XCT
             checkpoint: bundle.custodyBundle.checkpoint,
             handoff: bundle.custodyBundle.handoff
         ))
+        let reopened = try AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.loadValidatedHead(
+            ledgerID: "ledger", rootURL: root
+        )
         XCTAssertTrue(AnalysisPhysicalRealAudioBridgeConsumptionNormalizedAccess.validateReceipt(
             bundle.normalizationReceipt,
-            head: try AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.loadValidatedHead(
-                ledgerID: "ledger", rootURL: root
-            )
+            head: reopened
         ))
     }
 }
