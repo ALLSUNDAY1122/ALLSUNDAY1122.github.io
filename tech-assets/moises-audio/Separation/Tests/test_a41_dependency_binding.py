@@ -21,10 +21,21 @@ class A41DependencyBindingTests(unittest.TestCase):
             (self.tests / "test_resumable_long_track_production_orchestrator.py").is_file()
         )
 
-    def test_budgeted_production_entrypoint_is_wired_to_a41(self):
-        text = (self.server / "budgeted_production_orchestrator.py").read_text(encoding="utf-8")
-        self.assertIn("CrashResumableLongTrackProductionSeparationOrchestrator", text)
-        self.assertIn("self.inner = CrashResumableLongTrackProductionSeparationOrchestrator(", text)
+    def test_budgeted_production_entrypoint_preserves_a41_through_a43_wrapper(self):
+        budgeted = (self.server / "budgeted_production_orchestrator.py").read_text(encoding="utf-8")
+        bounded = (
+            self.server / "bounded_resumable_long_track_production_orchestrator.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn("BoundedCrashResumableLongTrackProductionSeparationOrchestrator", budgeted)
+        self.assertIn(
+            "self.inner = BoundedCrashResumableLongTrackProductionSeparationOrchestrator(",
+            budgeted,
+        )
+        self.assertIn("CrashResumableLongTrackProductionSeparationOrchestrator", bounded)
+        self.assertIn(
+            "class BoundedCrashResumableLongTrackProductionSeparationOrchestrator(\n    CrashResumableLongTrackProductionSeparationOrchestrator\n):",
+            bounded,
+        )
 
 
 if __name__ == "__main__":
