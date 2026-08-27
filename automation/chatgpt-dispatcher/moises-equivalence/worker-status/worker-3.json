@@ -1,18 +1,79 @@
 {
-  "schema_version": 1,
+  "schema_version": 6,
   "worker_id": "Moises-Worker-3",
   "work_package_id": "MOI-WP3-PLAYBACK-DSP",
-  "assignment_epoch": 1,
+  "lane_id": "LANE-3-PLAYBACK-DSP",
+  "assignment_epoch": 2,
+  "planning_revision": 4,
+  "planning_mode": "WORKER_AUTONOMOUS",
   "work_branch": "moises/wp3-playback-dsp",
-  "state": "ASSIGNED",
-  "current_task": "MOI-DSP-001",
-  "base_integration_sha": null,
-  "head_sha": null,
-  "commits": [],
-  "tests": [],
-  "evidence": [],
-  "known_gaps": [],
-  "hq_requests": [],
-  "last_updated": "2026-08-22T14:13:00+09:00",
-  "writer_policy": "Only Moises-Worker-3 may update this status file; HQ reads but does not use it as PARITY/VERIFIED authority."
+  "state": "IN_PROGRESS",
+  "current_bundle": null,
+  "completed_bundles": ["L3-M01", "L3-M02", "L3-M03", "L3-M04"],
+  "previous_autonomous_chain_head": "3df91be785116917814773a777f0a15da5b81568",
+  "historical_commit_coverage": "AW01-AW49 and earlier Lane3 work remain preserved by branch ancestry through 3df91be785116917814773a777f0a15da5b81568. HQ Canonical Epoch44 integrates Lane3 through AW49 and records full portable Playback+DSP source typecheck PASS. The commits list below records AW50 only.",
+  "head_sha": "c0453ff7f8bafd459a6cad96aba75c1dc61c5332",
+  "commits": [
+    "b5fd5ffc1048895a1f625bc7b8dceb4b44b159fe",
+    "c52d1cf6932fb3ae6a32852d41a4e14990f4e7f3",
+    "0e80a8abf54ef80cd54241c3ebd844da33b23f29",
+    "0e8cfab4fbbd729738c7212948eceb8c82fe3b7b",
+    "75d3e37316d6ecaaa55cf949f05406685128491c",
+    "8fbb87798c51e1ca41c89f570950216b59e787d0",
+    "c0453ff7f8bafd459a6cad96aba75c1dc61c5332"
+  ],
+  "tests": [
+    "HQ Canonical Epoch44 integrated AW49 and recorded Lane3 full portable source typecheck PASS before AW50",
+    "L3-AW50 focused Swift 6.2.1 Linux language-mode-6 strict-concurrency=complete warnings-as-errors optimized verification PASS: stable 3084-frame sweep retained 12 reads and FNV1A64 8284563594282402565",
+    "L3-AW50 focused mutation verification PASS: channels/sampleRate/frameCount across all 12 read positions = 36/36 rejected as sourceMetadataChanged; preflight flapping metadata rejected before PCM read",
+    "L3-AW50 focused 5000-sweep timing comparison legacy/fenced ratio=0.9869; no deterministic performance claim",
+    "L3-AW50 repository-native self-test, 20 stable + 720 mutation-cell stress, and 2000-sweep benchmark authored but not executed from a full Worker branch checkout",
+    "No selected AVFAudio, physical iPhone, rights-cleared real codec, current-Moises or listening execution is claimed"
+  ],
+  "evidence": [
+    "Playback/Sources/Lane3RepresentativeCodecExecutionEvidence.swift",
+    "Playback/Tests/L3_AW50_RepresentativeCodecMetadataStabilitySelfTest.swift",
+    "Playback/Tests/L3_AW50_RepresentativeCodecMetadataStabilityStress.swift",
+    "Playback/Tests/L3_AW50_RepresentativeCodecMetadataStabilityBenchmark.swift",
+    "Playback/benchmarks/L3-AW50_GENERIC_CODEC_METADATA_STABILITY.md",
+    "Playback/benchmarks/L3-AW50_VALIDATION.json",
+    "validation_blob_sha:f5441a4f5cae0b4966a6e3d09c6d9313fc31714a"
+  ],
+  "known_gaps": [
+    "AW50 freezes and fences channels/sampleRate/frameCount in the generic AW43 representative codec sweep, preventing future non-Apple adapters from mixing metadata generations across chunks; post-AW50 full repository typecheck and repository-native execution remain pending",
+    "AW49 Apple file identity fence remains operational generation detection rather than cryptographic provenance; AW44-AW48 decoded PCM binding remains required",
+    "AW43-AW50 still require current-reference/Lane2 codec labels plus rights-cleared >=30-minute clean/truncated/corrupted real files on selected AVFAudio and physical iPhone",
+    "P006/P007/P008/P010/P012/P014/P015 require physical timing/audio/current-Moises evidence; P021 requires physical RSS/thermal/battery evidence",
+    "P012 chord-display transpose consistency remains cross-lane/HQ",
+    "AW42 repeated-loop seam automation remains fail-closed until selected Apple runtime exposes stale-event revocation or generation-isolated rendering"
+  ],
+  "hq_requests": [
+    "Preserve AW01-AW49 chain through 3df91be785116917814773a777f0a15da5b81568 and all seven AW50 commits through c0453ff7f8bafd459a6cad96aba75c1dc61c5332 during semantic integration",
+    "Run post-AW50 full Lane3 Swift 6 strict typecheck and execute AW50 self-test/stress/benchmark",
+    "Rerun AW43 clean/truncated/corrupted stable regressions plus AW44-AW49 content/source binding regressions against AW50",
+    "Confirm selected Apple AW49 sourceIdentityChanged folding remains sourceMetadataChanged through the generic AW50 sweep",
+    "Run required rights-cleared >=30-minute codec families on selected AVFAudio and physical iPhone; record RSS/thermal/battery/current-Moises/listening separately",
+    "Do not publish Worker status directly to integration outside HQ Late Integration; this AW50 status is written on the Worker branch for HQ ingestion",
+    "Keep final PARITY authority in HQ"
+  ],
+  "previous_autonomous_wave": {
+    "wave_id": "L3-AW49",
+    "result": "Added selected-Apple file source identity fencing against same-metadata file replacement/mutation; HQ Epoch44 semantically integrated the Wave."
+  },
+  "latest_autonomous_wave": {
+    "wave_id": "L3-AW50",
+    "goal": "Freeze and fence generic representative-codec protocol metadata so non-Apple Lane3PCMChunkReadable implementations cannot mutate channels/sampleRate/frameCount between chunks and produce mixed-state evidence.",
+    "rationale": "AW49 protected the selected Apple file adapter, but AW43 generic sweep still used live metadata getters for loop bounds, sample validation and report fields.",
+    "done_when": "A bit-exact preflight snapshot drives the entire sweep, pre/post-read and final fences reject mutation with existing sourceMetadataChanged semantics, stable report/FNV behavior is preserved, mutation-position stress and benchmark evidence are durable, and no PARITY overclaim is made.",
+    "result": "COMPLETE_NON_PARITY: generic AW43 sweep now uses a confirmed frozen metadata snapshot for loop bounds, sample expectations and final report fields, with pre/post-read and final stability checks. Focused stable regression preserved the known FNV, 36/36 mutation cells and preflight flapping were rejected. Repository-native 720-cell stress and benchmark are committed. Post-AW50 full typecheck, selected AVFAudio, physical iPhone and current-Moises evidence remain pending."
+  },
+  "next_wave_candidates": [
+    "build a single physical-device evidence-session preflight/orchestration layer that can exercise P006/P007/P008/P010/P012/P014/P015 plus P021 measurements without changing parity until real iPhone evidence is attached",
+    "add compressed-source cryptographic digest/provenance manifests only if HQ makes derivative lineage a required evidence property; do not conflate this with AW49 operational identity fencing",
+    "prototype repeated-loop seam automation only if selected Apple runtime supplies real stale-event revocation or generation-isolated rendering; AW42 remains authoritative",
+    "avoid further SHA micro-optimization unless selected-runtime measurement demonstrates meaningful RSS/CPU benefit"
+  ],
+  "status_publication": "WORKER_BRANCH_ONLY_PENDING_HQ_LATE_INTEGRATION",
+  "last_updated": "2026-08-27T11:00:00+09:00",
+  "writer_policy": "Only Moises-Worker-3 updates its Worker-branch status; HQ remains integration and PARITY authority."
 }
