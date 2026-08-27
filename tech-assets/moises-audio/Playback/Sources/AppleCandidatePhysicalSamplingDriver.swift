@@ -144,7 +144,7 @@ public final class Lane3AppleCandidatePhysicalSamplingDriver: NSObject {
     /// session before leaving the scope; a successfully finished driver is already terminal.
     public static func withDriver<T>(
         sessionIdentifier: String,
-        operation: (Lane3AppleCandidatePhysicalSamplingDriver) async throws -> T
+        operation: @MainActor (Lane3AppleCandidatePhysicalSamplingDriver) async throws -> T
     ) async throws -> T {
         let driver = try Lane3AppleCandidatePhysicalSamplingDriver(sessionIdentifier: sessionIdentifier)
         try driver.start()
