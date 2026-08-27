@@ -120,8 +120,8 @@ def patch_model_cpp(root: Path) -> None:
     text = replace_exact(
         text,
         "#include <limits>\n",
-        "#include <limits>\n#include <vector>\n",
-        "model vector include",
+        "#include <limits>\n#include <cmath>\n#include <vector>\n",
+        "model vector/finite includes",
     )
     text = replace_exact(
         text,
@@ -167,9 +167,8 @@ def patch_model_cpp(root: Path) -> None:
 
             // S12: the legacy device Gaussian limit becomes a transient
             // pre-cull densification admission budget, not a terminal training
-            // result. Preserve one-count headroom on fresh runs so the Swift
-            // ResourceGuard keeps its normal 20-iteration sampling cadence
-            // instead of being forced into an every-step >= maxSplatCount path.
+            // result. Dynamic memory and critical thermal checks remain the
+            // terminal device-safety gates outside this growth controller.
             prepareDensifyClassificationScratch();
             int numSplits = 0;
             int numDups = 0;
@@ -199,8 +198,11 @@ def patch_model_cpp(root: Path) -> None:
             const int unrestrictedSplits = numSplits;
             const int unrestrictedDups = numDups;
             const int configuredCeiling = maxGaussianCount > 0
-                ? std::max(maxGaussianCount - 1, 0)
+                ? maxGaussianCount
                 : std::numeric_limits<int>::max();
+            // A checkpoint from an older build may already be above today's
+            // budget. Never delete live Gaussians merely to satisfy admission;
+            // block new growth and let the existing cull stage reduce population.
             const int admissionCeiling = std::max(configuredCeiling, num_active);
             const int growthHeadroom = std::max(admissionCeiling - num_active, 0);
             bool budgetLimited = population > admissionCeiling;
@@ -223,12 +225,17 @@ def patch_model_cpp(root: Path) -> None:
                     const float *visible = visCounts.data<float>();
                     const int32_t *split = densify_split_flag.data<int32_t>();
                     const int32_t *dup = densify_dup_flag.data<int32_t>();
+                    bool invalidScore = false;
 
                     for (int i = 0; i < num_active; ++i) {
                         if (split[i] == 0 && dup[i] == 0) continue;
                         float vc = visible[i];
                         if (vc <= 0.0f) continue;
                         float score = (grad[i] / vc) * half_max_dim;
+                        if (!std::isfinite(score)) {
+                            invalidScore = true;
+                            break;
+                        }
                         if (split[i] != 0) {
                             weightedScores.push_back(score);
                             weightedScores.push_back(score);
@@ -237,10 +244,10 @@ def patch_model_cpp(root: Path) -> None:
                         }
                     }
 
-                    if (weightedScores.size() <= static_cast<size_t>(growthHeadroom)) {
+                    if (invalidScore || weightedScores.size() <= static_cast<size_t>(growthHeadroom)) {
                         // Unrestricted population said there was too much
-                        // growth, so a smaller weighted set means malformed or
-                        // non-finite readback. Fail closed on growth.
+                        // growth, so malformed/non-finite or incomplete CPU
+                        // readback must fail closed on growth.
                         effectiveGradThresh = std::numeric_limits<float>::infinity();
                     } else {
                         auto cutoff = weightedScores.begin() + growthHeadroom;
