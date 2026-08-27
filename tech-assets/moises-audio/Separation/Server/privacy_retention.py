@@ -24,6 +24,9 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Callable
 
+from production_orchestrator import OrchestratorError
+from resumable_transfer_cache import ResumableTransferCacheManager
+
 SCHEMA_VERSION = 1
 AUDIOSHAKE_ASSET_TTL_SECONDS = 72 * 60 * 60
 AUDIOSHAKE_OUTPUT_LINK_TTL_SECONDS = 60 * 60
@@ -222,12 +225,16 @@ class PrivacyRetentionService:
         registry_path: str | Path,
         provider: Any,
         now_epoch: Callable[[], int] | None = None,
+        resume_cache_manager: ResumableTransferCacheManager | None = None,
     ):
         self.artifact_root = Path(artifact_root).resolve()
         self.artifact_root.mkdir(parents=True, exist_ok=True)
         self.registry = AtomicPrivacyRegistry(registry_path)
         self.provider = provider
         self.now_epoch = now_epoch or (lambda: int(__import__("time").time()))
+        self.resume_cache_manager = resume_cache_manager or ResumableTransferCacheManager(
+            self.artifact_root
+        )
 
     def register(
         self,
@@ -433,23 +440,43 @@ class PrivacyRetentionService:
         }
 
     def _delete_local_artifacts(self, logical_job_id: str) -> None:
-        target = self._artifact_directory(logical_job_id)
+        # Persist the delete tombstone before removing any local bytes. A43 start/collect checks the
+        # same external lock-root tombstone, so a late retry cannot recreate cache/staging after we
+        # record local deletion as complete. tombstone_and_purge waits for an in-flight A43 output
+        # collection lease to finish before deleting retry-only stem bytes.
         try:
-            shutil.rmtree(target)
-        except FileNotFoundError:
-            pass
-        except OSError as exc:
+            self.resume_cache_manager.tombstone_and_purge(logical_job_id)
+        except OrchestratorError as exc:
             raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True) from exc
-        if target.exists():
+
+        targets = (
+            self._artifact_directory(logical_job_id),
+            self._artifact_directory(logical_job_id, suffix=".staging"),
+        )
+        for target in targets:
+            try:
+                shutil.rmtree(target)
+            except FileNotFoundError:
+                pass
+            except OSError as exc:
+                raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True) from exc
+
+        cache_root = self.resume_cache_manager.cache_root(logical_job_id)
+        if any(target.exists() for target in targets) or cache_root.exists():
+            raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_UNCONFIRMED", retryable=True)
+        if not self.resume_cache_manager.is_deleted(logical_job_id):
             raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_UNCONFIRMED", retryable=True)
 
-    def _artifact_directory(self, logical_job_id: str) -> Path:
-        target = (self.artifact_root / logical_job_id).resolve()
+    def _artifact_directory(self, logical_job_id: str, *, suffix: str = "") -> Path:
+        if suffix not in {"", ".staging"}:
+            raise PrivacyRetentionError("SEP_PRIVACY_ARTIFACT_PATH_UNSAFE")
+        expected_name = logical_job_id + suffix
+        target = (self.artifact_root / expected_name).resolve()
         try:
             relative = target.relative_to(self.artifact_root)
         except ValueError as exc:
             raise PrivacyRetentionError("SEP_PRIVACY_ARTIFACT_PATH_UNSAFE") from exc
-        if len(relative.parts) != 1 or relative.name != logical_job_id:
+        if len(relative.parts) != 1 or relative.name != expected_name:
             raise PrivacyRetentionError("SEP_PRIVACY_ARTIFACT_PATH_UNSAFE")
         return target
 

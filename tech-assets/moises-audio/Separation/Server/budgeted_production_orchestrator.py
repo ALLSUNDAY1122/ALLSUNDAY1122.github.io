@@ -1,21 +1,23 @@
 """Cost-guarded production separation entrypoint.
 
-This adapter composes A10 cost safety with the A15/A41 long-track production wrapper without changing
-the frozen Shared/App contracts. Provider create remains guarded against duplicate billing, while
-source/output storage pressure, transfer backpressure and validator-bound crash resumption are
-enforced by the inner long-track layer.
+This adapter composes A10 cost safety with the A15/A41/A43 long-track production wrapper without
+changing the frozen Shared/App contracts. Provider create remains guarded against duplicate billing,
+while source/output storage pressure, transfer backpressure, validator-bound crash resumption and
+bounded retry-cache retention are enforced by the inner long-track layer.
 """
 from __future__ import annotations
 
 import hashlib
+import time
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
+from bounded_resumable_long_track_production_orchestrator import (
+    BoundedCrashResumableLongTrackProductionSeparationOrchestrator,
+)
 from cost_quota_guard import CostGuardError, CostQuotaGuard, classify_provider_limit
 from long_track_io import LongTrackIOError, LongTrackIOGuard
-from resumable_long_track_production_orchestrator import (
-    CrashResumableLongTrackProductionSeparationOrchestrator,
-)
+from resumable_transfer_cache import ResumeCachePolicy
 from production_orchestrator import (
     OrchestratorError,
     _contained_file,
@@ -72,13 +74,15 @@ class BudgetedProductionSeparationOrchestrator:
         downloader: Any | None = None,
         long_track_guard: LongTrackIOGuard | None = None,
         long_track_telemetry_path: str | Path | None = None,
+        resume_cache_policy: ResumeCachePolicy | None = None,
+        resume_cache_now: Callable[[], float] = time.time,
     ):
         if not callable(duration_resolver):
             raise CostGuardError("SEP_COST_DURATION_RESOLVER_REQUIRED")
         self.cost_guard = cost_guard
         self.duration_resolver = duration_resolver
         self.source_root = Path(source_root).resolve()
-        self.inner = CrashResumableLongTrackProductionSeparationOrchestrator(
+        self.inner = BoundedCrashResumableLongTrackProductionSeparationOrchestrator(
             provider=BudgetedProviderProxy(provider, cost_guard),
             source_root=source_root,
             artifact_root=artifact_root,
@@ -86,6 +90,8 @@ class BudgetedProductionSeparationOrchestrator:
             downloader=downloader,
             long_track_guard=long_track_guard,
             long_track_telemetry_path=long_track_telemetry_path,
+            resume_cache_policy=resume_cache_policy,
+            resume_cache_now=resume_cache_now,
         )
 
     def start(
@@ -98,6 +104,14 @@ class BudgetedProductionSeparationOrchestrator:
         idempotency_key: str,
     ) -> Any:
         selected_models = _normalize_models(models)
+        if not isinstance(idempotency_key, str) or not idempotency_key or "\r" in idempotency_key or "\n" in idempotency_key:
+            raise OrchestratorError("SEP_IDEMPOTENCY_KEY_INVALID")
+        logical_job_id = hashlib.sha256(("lane1:" + idempotency_key).encode("utf-8")).hexdigest()[:32]
+        # Privacy deletion wins before a multi-gigabyte source read, duration analysis, cost reserve,
+        # upload or provider call. A43 inner.start repeats this tombstone check defensively.
+        if self.inner.resume_cache.is_deleted(logical_job_id):
+            raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_JOB_DELETED")
+
         source = _contained_file(source_path, self.source_root)
         # Reject the deployment/provider source-size boundary before hashing a multi-gigabyte file,
         # duration analysis or cost reservation. The inner layer repeats this check defensively.
@@ -107,9 +121,6 @@ class BudgetedProductionSeparationOrchestrator:
             raise OrchestratorError(exc.code, retryable=exc.retryable) from exc
         source_sha, _ = _sha256_file(source)
         fingerprint = _request_fingerprint(project_id, asset_id, source_sha, selected_models)
-        if not isinstance(idempotency_key, str) or not idempotency_key or "\r" in idempotency_key or "\n" in idempotency_key:
-            raise OrchestratorError("SEP_IDEMPOTENCY_KEY_INVALID")
-        logical_job_id = hashlib.sha256(("lane1:" + idempotency_key).encode("utf-8")).hexdigest()[:32]
         try:
             duration_seconds = self.duration_resolver(source)
         except CostGuardError:
@@ -163,6 +174,15 @@ class BudgetedProductionSeparationOrchestrator:
 
     def collect_ready_outputs(self, logical_job_id: str) -> Any:
         return self.inner.collect_ready_outputs(logical_job_id)
+
+    def reclaim_resume_caches(self) -> Any:
+        return self.inner.reclaim_resume_caches()
+
+    def purge_resume_cache(self, logical_job_id: str) -> None:
+        self.inner.purge_resume_cache(logical_job_id)
+
+    def tombstone_and_purge_resume_cache(self, logical_job_id: str) -> None:
+        self.inner.tombstone_and_purge_resume_cache(logical_job_id)
 
     def long_track_status(self, logical_job_id: str) -> Any:
         return self.inner.long_track_status(logical_job_id)
