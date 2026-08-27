@@ -135,7 +135,7 @@ public enum AnalysisIOSBridgeDurabilityProbeCoordinator {
         fileManager: FileManager = .default
     ) -> AnalysisIOSBridgeDurabilityProbePreparation {
         guard isSelectedPhysicalIOSRuntime else {
-            return .init(status: .nonPhysicalRuntime, ticket: nil, observedSyncMode: nil, issues: ["W53_REQUIRES_SELECTED_PHYSICAL_IPHONE"])
+            return .init(status: .nonPhysicalRuntime, ticket: nil, observedSyncMode: nil, issues: ["W53_REQUIRES_SELECTED_PHYSICAL_IPHONEOS_ARM64"])
         }
         guard AnalysisPhysicalRealAudioBridgeDurabilityProbeContract.validate(ticket),
               ticket.deviceModel == deviceModelIdentifier(),
@@ -372,10 +372,10 @@ public enum AnalysisIOSBridgeDurabilityProbeCoordinator {
     }
 
     private static var isSelectedPhysicalIOSRuntime: Bool {
-        #if targetEnvironment(simulator)
-        return false
-        #else
+        #if os(iOS) && arch(arm64) && !targetEnvironment(simulator) && !targetEnvironment(macCatalyst)
         return UIDevice.current.userInterfaceIdiom == .phone
+        #else
+        return false
         #endif
     }
 
