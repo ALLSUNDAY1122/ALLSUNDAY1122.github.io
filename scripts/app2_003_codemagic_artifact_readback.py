@@ -9,7 +9,7 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
-EXPECTED_BUILD_ID = "6a90341bd1e2d6f6c5af8a4d"
+EXPECTED_BUILD_ID = "6a903f4e0b744f0115921f39"
 
 
 def main() -> int:
@@ -33,11 +33,14 @@ def main() -> int:
     artifacts = build.get('artifacts') or []
     if not artifacts:
         raise SystemExit('no build artifacts')
-    url = artifacts[0].get('short_lived_download_url')
+    ipa = next((a for a in artifacts if a.get('type') == 'ipa'), None)
+    if not ipa:
+        raise SystemExit('ipa artifact unavailable')
+    url = ipa.get('short_lived_download_url')
     if not url:
         raise SystemExit('artifact download URL unavailable')
 
-    with urllib.request.urlopen(url, timeout=30) as response:
+    with urllib.request.urlopen(url, timeout=60) as response:
         blob = response.read()
     zf = zipfile.ZipFile(io.BytesIO(blob))
     chunks = []
