@@ -151,23 +151,33 @@ enum AnalysisPhysicalRealAudioBridgeConsumptionWriterLock {
 
     private static func prepareLockURL(ledgerID: String, rootURL: URL) throws -> URL {
         let fm = FileManager.default
-        if !fm.fileExists(atPath: rootURL.path) {
-            try fm.createDirectory(at: rootURL, withIntermediateDirectories: true)
-        }
-        try validateDirectory(rootURL, within: rootURL)
+        try ensureDirectory(rootURL, within: rootURL, withIntermediateDirectories: true, fileManager: fm)
 
         let bridgeRoot = rootURL.appendingPathComponent("w49-bridge-consumption", isDirectory: true)
-        if !fm.fileExists(atPath: bridgeRoot.path) {
-            try fm.createDirectory(at: bridgeRoot, withIntermediateDirectories: false)
-        }
-        try validateDirectory(bridgeRoot, within: rootURL)
+        try ensureDirectory(bridgeRoot, within: rootURL, withIntermediateDirectories: false, fileManager: fm)
 
         let lockDirectory = bridgeRoot.appendingPathComponent(lockDirectoryName, isDirectory: true)
-        if !fm.fileExists(atPath: lockDirectory.path) {
-            try fm.createDirectory(at: lockDirectory, withIntermediateDirectories: false)
-        }
-        try validateDirectory(lockDirectory, within: bridgeRoot)
+        try ensureDirectory(lockDirectory, within: bridgeRoot, withIntermediateDirectories: false, fileManager: fm)
         return lockDirectory.appendingPathComponent("\(ledgerID).lock", isDirectory: false)
+    }
+
+    private static func ensureDirectory(
+        _ url: URL,
+        within root: URL,
+        withIntermediateDirectories: Bool,
+        fileManager: FileManager
+    ) throws {
+        if !fileManager.fileExists(atPath: url.path) {
+            do {
+                try fileManager.createDirectory(
+                    at: url,
+                    withIntermediateDirectories: withIntermediateDirectories
+                )
+            } catch {
+                guard fileManager.fileExists(atPath: url.path) else { throw error }
+            }
+        }
+        try validateDirectory(url, within: root)
     }
 
     private static func validateDirectory(_ url: URL, within root: URL) throws {
