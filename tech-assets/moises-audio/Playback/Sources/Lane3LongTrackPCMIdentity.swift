@@ -119,31 +119,43 @@ private struct Lane3IncrementalSHA256 {
 
     private mutating func compressRaw(_ block: UnsafeRawBufferPointer, offset: Int) {
         precondition(offset >= 0 && offset + 64 <= block.count)
-        var w = [UInt32](repeating: 0, count: 64)
-        for index in 0..<16 {
-            let blockOffset = offset + index * 4
-            w[index] = (UInt32(block[blockOffset]) << 24)
-                | (UInt32(block[blockOffset + 1]) << 16)
-                | (UInt32(block[blockOffset + 2]) << 8)
-                | UInt32(block[blockOffset + 3])
-        }
-        for index in 16..<64 {
-            let s0 = rotateRight(w[index - 15], 7) ^ rotateRight(w[index - 15], 18) ^ (w[index - 15] >> 3)
-            let s1 = rotateRight(w[index - 2], 17) ^ rotateRight(w[index - 2], 19) ^ (w[index - 2] >> 10)
-            w[index] = w[index - 16] &+ s0 &+ w[index - 7] &+ s1
-        }
+
         var a = state[0], b = state[1], c = state[2], d = state[3]
         var e = state[4], f = state[5], g = state[6], h = state[7]
-        for index in 0..<64 {
-            let s1 = rotateRight(e, 6) ^ rotateRight(e, 11) ^ rotateRight(e, 25)
-            let ch = (e & f) ^ ((~e) & g)
-            let temp1 = h &+ s1 &+ ch &+ Self.constants[index] &+ w[index]
-            let s0 = rotateRight(a, 2) ^ rotateRight(a, 13) ^ rotateRight(a, 22)
-            let maj = (a & b) ^ (a & c) ^ (b & c)
-            let temp2 = s0 &+ maj
-            h = g; g = f; f = e; e = d &+ temp1
-            d = c; c = b; b = a; a = temp1 &+ temp2
+
+        // AW48: SHA-256 only needs W[t-16], W[t-15], W[t-7] and W[t-2] to derive W[t].
+        // Keep the last 16 words in a bounded temporary ring instead of constructing a 64-word Array
+        // for every 64-byte block. Source-level schedule storage drops from 256 bytes to 64 bytes.
+        withUnsafeTemporaryAllocation(of: UInt32.self, capacity: 16) { schedule in
+            for index in 0..<16 {
+                let blockOffset = offset + index * 4
+                schedule[index] = (UInt32(block[blockOffset]) << 24)
+                    | (UInt32(block[blockOffset + 1]) << 16)
+                    | (UInt32(block[blockOffset + 2]) << 8)
+                    | UInt32(block[blockOffset + 3])
+            }
+
+            for index in 0..<64 {
+                let slot = index & 15
+                if index >= 16 {
+                    let w15 = schedule[(index - 15) & 15]
+                    let w2 = schedule[(index - 2) & 15]
+                    let s0 = rotateRight(w15, 7) ^ rotateRight(w15, 18) ^ (w15 >> 3)
+                    let s1 = rotateRight(w2, 17) ^ rotateRight(w2, 19) ^ (w2 >> 10)
+                    schedule[slot] = schedule[slot] &+ s0 &+ schedule[(index - 7) & 15] &+ s1
+                }
+
+                let s1 = rotateRight(e, 6) ^ rotateRight(e, 11) ^ rotateRight(e, 25)
+                let ch = (e & f) ^ ((~e) & g)
+                let temp1 = h &+ s1 &+ ch &+ Self.constants[index] &+ schedule[slot]
+                let s0 = rotateRight(a, 2) ^ rotateRight(a, 13) ^ rotateRight(a, 22)
+                let maj = (a & b) ^ (a & c) ^ (b & c)
+                let temp2 = s0 &+ maj
+                h = g; g = f; f = e; e = d &+ temp1
+                d = c; c = b; b = a; a = temp1 &+ temp2
+            }
         }
+
         state[0] &+= a; state[1] &+= b; state[2] &+= c; state[3] &+= d
         state[4] &+= e; state[5] &+= f; state[6] &+= g; state[7] &+= h
     }
@@ -224,9 +236,9 @@ public enum Lane3LongTrackPCMIdentityHasher {
         return sha.finalizeHex()
     }
 
-    /// AW45-AW47 single-pass primitive. The caller observes each exact bounded PCM chunk while the
-    /// canonical SHA256_FLOAT32_LE_V1 digest is updated from the same samples. AW46 freezes metadata;
-    /// AW47 removes the additional PCM-to-byte chunk materialization on selected little-endian targets.
+    /// AW45-AW48 single-pass primitive. The caller observes each exact bounded PCM chunk while the
+    /// canonical SHA256_FLOAT32_LE_V1 digest is updated from the same samples. AW46 freezes metadata,
+    /// AW47 removes chunk-sized PCM byte materialization, and AW48 bounds SHA schedule storage to 16 words.
     static func digestWithChunkVisitor(
         _ source: any Lane3PCMChunkReadable,
         chunkFrames: Int,
