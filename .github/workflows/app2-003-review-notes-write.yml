@@ -1,0 +1,72 @@
+name: APP2-003 Review Notes Write
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  update:
+    if: startsWith(github.event.issue.title, '[APP2-003-REVIEW-NOTES]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Update scoped review notes
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python - <<'PY'
+          import os
+          from scripts.app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          APP_ID='6794137637'
+          BUNDLE_ID='io.github.allsunday1122.yorunoshoka'
+          VERSION_ID='812cd84c-3efb-407b-a04c-f9fb1b5554e6'
+          REVIEW_ID='630be79a-3c94-4c4b-8882-6644d165152e'
+          NOTES='''本アプリは日本語のオリジナル怪談を読むためのオフライン読書アプリです。サインイン、広告、アプリ内課金、外部コンテンツの取得はありません。
+
+1.2.0では読書UIを「紙面・温かみ」テーマへ刷新しました。紙面／深いセピア／漆黒の3テーマ、明るさ、文字サイズ、行間、明朝／ゴシック切替、シリーズ／話者ガイド、読書進捗表示、ホーム・書架からの読書導線を追加・整理しています。
+
+全148話はアプリ本体に収録されています。「書架」で検索・怖さ・長さ・シリーズによる絞り込み、「保存」でお気に入りと読了履歴を確認できます。読書設定と履歴は端末内にのみ保存され、利用者データは収集しません。読書画面ではiOS共有シートを利用できます。'''
+
+          key_path, cleanup = load_private_key()
+          try:
+              token=make_token(os.environ['ASC_ISSUER_ID'], os.environ['ASC_KEY_ID'], key_path)
+              _, app=api_get(token, f'/v1/apps/{APP_ID}')
+              actual=((app.get('data') or {}).get('attributes') or {}).get('bundleId')
+              if actual != BUNDLE_ID:
+                  raise SystemExit('bundle preflight failed')
+              _, versions=api_get(token, f'/v1/apps/{APP_ID}/appStoreVersions?limit=200')
+              if VERSION_ID not in {x.get('id') for x in versions.get('data', [])}:
+                  raise SystemExit('version preflight failed')
+              _, rel=api_get(token, f'/v1/appStoreVersions/{VERSION_ID}/appStoreReviewDetail')
+              if (rel.get('data') or {}).get('id') != REVIEW_ID:
+                  raise SystemExit('review detail preflight failed')
+              _, before=api_get(token, f'/v1/appStoreReviewDetails/{REVIEW_ID}')
+              current=((before.get('data') or {}).get('attributes') or {}).get('notes')
+              if current != NOTES:
+                  payload={'data':{'type':'appStoreReviewDetails','id':REVIEW_ID,'attributes':{'notes':NOTES}}}
+                  status,_=api_request(token, f'/v1/appStoreReviewDetails/{REVIEW_ID}', method='PATCH', payload=payload)
+                  if status not in (200,204): raise SystemExit(f'patch failed {status}')
+              _, after=api_get(token, f'/v1/appStoreReviewDetails/{REVIEW_ID}')
+              if ((after.get('data') or {}).get('attributes') or {}).get('notes') != NOTES:
+                  raise SystemExit('notes readback mismatch')
+              print('PASS: APP2-003 review notes synchronized')
+          finally:
+              if cleanup: cleanup.unlink(missing_ok=True)
+          PY
+      - name: Report result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const result='${{ job.status }}';
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`APP2-003 review notes write result: ${result}`});
