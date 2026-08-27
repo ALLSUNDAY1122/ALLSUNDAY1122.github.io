@@ -1,0 +1,63 @@
+name: APP2-002 Codemagic Diagnose
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  diagnose:
+    if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[APP2-002] Diagnose Codemagic build'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Fetch and sanitize Codemagic actions
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+          build_id='6a86dcf4bacdc2d432501a6d'
+          token=os.environ['CM_API_TOKEN'].strip()
+          req=urllib.request.Request(f'https://codemagic.io/api/v3/builds/{build_id}/actions',headers={'x-auth-token':token,'Accept':'application/json'},method='GET')
+          try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  payload=json.loads(r.read().decode('utf-8'))
+          except urllib.error.HTTPError as e:
+              payload={'http_status':e.code,'error':e.read().decode('utf-8',errors='replace')[:4000]}
+          sensitive=('secret','token','password','credential','private','apikey','api_key','environment','variable')
+          def clean(v):
+              if isinstance(v,dict):
+                  return {k:('[REDACTED]' if any(p in str(k).lower() for p in sensitive) else clean(x)) for k,x in v.items()}
+              if isinstance(v,list): return [clean(x) for x in v]
+              return v
+          out=Path('automation/codemagic-results/app2-002-build7-actions.json')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps(clean(payload),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Persist diagnostic
+        run: |
+          cp automation/codemagic-results/app2-002-build7-actions.json /tmp/app2-002-actions.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/codemagic-results
+          cp /tmp/app2-002-actions.json automation/codemagic-results/app2-002-build7-actions.json
+          git add automation/codemagic-results/app2-002-build7-actions.json
+          git commit -m 'APP2-002: persist Codemagic build 7 diagnostics'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Report
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`APP2-002 Codemagic diagnostic finished. status=${{ job.status }}; run_id=${context.runId}`});
