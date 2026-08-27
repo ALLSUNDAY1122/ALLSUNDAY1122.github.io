@@ -1,15 +1,15 @@
 {
-  "request_id": "clipboard-widget-phase0-testflight-20260827-r6",
+  "request_id": "clipboard-widget-phase0-testflight-20260827-r7",
   "ok": false,
   "workflow_id": "clipboard-widget-phase0",
   "branch": "feature/clipboard-widget-poc",
   "resolved_app_id": null,
-  "build_id": "6a8ffbd0b8f5e5f42fcb4eb7",
+  "build_id": "6a8ffcdde65be36b7d199513",
   "status": "failed",
   "app_id": "6a769d81a1add9d06020b524",
   "error": "Codemagic build ended with status: failed",
   "build_details": {
-    "id": "6a8ffbd0b8f5e5f42fcb4eb7",
+    "id": "6a8ffcdde65be36b7d199513",
     "app_id": "6a769d81a1add9d06020b524",
     "workflow": {
       "id": "clipboard-widget-phase0",
@@ -18,20 +18,28 @@
     },
     "instance_type": "mac_mini_m2",
     "status": "failed",
-    "index": 6,
+    "index": 7,
     "artifacts": [
       {
-        "name": "ALLSUNDAY1122.github.io_6_artifacts.zip",
-        "size_in_bytes": 2990,
+        "name": "ClipboardWidget.ipa",
+        "size_in_bytes": 81621,
+        "type": "ipa",
+        "short_lived_download_url": "https://api.codemagic.io//artifacts/.eJwVzUtygjAAANC7uM9MwifAogtAvhKhICJsHERBoY5JADGcvu27wNt05j-L9WcEuSphjVN6dPNAMuK4MFZVmqvmlLVbPgo3DXLFAOfr7TiR6pxhhQGl3yHB9x2mc_h8kafZGHiiMJNFHZa4X1BE9p6eyN1PIoTcarZT8Bq0GYRlRWKcDbfTMGozcAo7fxdVnNDSoYMYc8tjsGcmHa9h8SZ-PZUkD5C5Mi-0WfF3NwTNyB3TkHv6BaCHKD_uhZJdYzIyd8TRoFWPcmgYhYikRvdZc6nh7E0-eKx-ScIISw89jSRpuR-sU9zjQLm_qdLxY199J1revD7p0HIL3dT9YUEeWD921s3rAsG6Nb82v7YUZqA.CStuvZN79gJ3Lq0hOXmfdIUSu9g",
+        "version_code": "1787821351",
+        "version_name": "1.0.0"
+      },
+      {
+        "name": "ALLSUNDAY1122.github.io_7_artifacts.zip",
+        "size_in_bytes": 28884,
         "type": "bundle",
-        "short_lived_download_url": "https://api.codemagic.io//artifacts/.eJwVwUeygjAAANC7uGdGSihLkSYlVEXYMEEEkQ6SAKf_8987VZd_8vTNCJwdwwShrhj3PTU8Pa4larGvPSbFSvN1f9cWoarXnBgbjGUwurtN8aVYqoXuEF51GeTxCu0YFnw8ycONLU4TCx9-tiNCjUFuQ5pik76UjUg9A-4pKH6agGZsqASj0X8tYLmCqZcHzN90v-1XTXpUGfTLN5OLIGfAGXmbR7NZkmj9uTh7hLGCmFLkAYG5_YSTwLo8zb4E7Wqy7uDjAOZVq5B2lVDTIaf6euQlkS5wJpweobmulvtr_XLyoh_q8887nrEdStHEq_U6cxyD1d-7W6Bd86jgQORGHL13AdSUbDxqeD0ud2kblJ3RVTf5ZlFmnv4AElJvcw.h-TC9wI8WYmC8xp9QrY5UG6K4_o",
+        "short_lived_download_url": "https://api.codemagic.io//artifacts/.eJwVwdu2QkAAANB_6d1aLlEeMeNglGQY9dJiXCc1hZCvb529N7Xxz3yzmyQy4K40D880ORp5d0luDtKaUOhY2ax1BgucLhY_zy7vPfoHo2EJOmSX5gjGUh2YImClKKdtT4y395Ky70NENfDfZvGAqFKMloetvcdpfIewX9rMD0wslRcSfQAXltmxPkrMSKqLsiT2eb-TwXeb9jgyNGDIdhZwc301yPTq6uVdjfsiJegOkADORTI9HFf6KFdONa2IFBvSS9351ELrYV_HovBMW0rWIa8impPW5VdnvmWYTUnQqkOYnMTlWJ6KiY2R7i7WzvfS6qBOfg1CrjEbCqqMD7Z-aucYPHUnJhrOu5VMR8rkYRRVLJMcNLvt5gcuf28r.HY64ER8sy7ieyEPTtGUhm4oxWLI",
         "version_code": null,
         "version_name": null
       }
     ],
     "labels": [],
     "release_notes": [],
-    "created_at": "2026-08-27T08:56:48.626000Z",
+    "created_at": "2026-08-27T09:01:17.393000Z",
     "config": {
       "flutter_mode": null,
       "shorebird_mode": null,
@@ -41,19 +49,19 @@
     },
     "remote_access_enabled": false,
     "commit": {
-      "hash": "95a51191f564a92ab629d0668fdba4e953568006",
+      "hash": "797d7d358625f3b803e359ce3267364ff1c3e5c2",
       "avatar_url": "https://avatars.githubusercontent.com/in/15368?v=4",
       "author_name": "github-actions[bot]",
       "author_email": "41898282+github-actions[bot]@users.noreply.github.com",
-      "message": "ci: capture clipboard pre-signing diagnostics",
-      "url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/95a51191f564a92ab629d0668fdba4e953568006"
+      "message": "ci: use self-contained clipboard TestFlight build number",
+      "url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/797d7d358625f3b803e359ce3267364ff1c3e5c2"
     },
     "branch": "feature/clipboard-widget-poc",
     "tag": null,
     "pull_request": null,
     "app_store_connect_status": null,
     "build_inputs": {},
-    "started_at": "2026-08-27T08:56:57.739000Z",
-    "finished_at": "2026-08-27T08:57:40.214000Z"
+    "started_at": "2026-08-27T09:01:25.286000Z",
+    "finished_at": "2026-08-27T09:03:27.088000Z"
   }
 }
