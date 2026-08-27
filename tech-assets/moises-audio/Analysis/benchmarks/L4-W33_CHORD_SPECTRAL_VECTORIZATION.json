@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W33",
+  "title": "Chord spectral recurrence vectorization / shared-scoring de-duplication hardening",
+  "evidence_class": "NON_PARITY_ENGINEERING",
+  "production_changes": {
+    "shared_decision_scorer": true,
+    "reference_backend": "REFERENCE_PER_BIN_GOERTZEL",
+    "production_backend": "INTERLEAVED_MULTI_BIN_GOERTZEL",
+    "fft_or_approximation_used": false,
+    "default_chord_hop_seconds_changed": false,
+    "default_chord_window_seconds_changed": false,
+    "candidate_scoring_changed": false
+  },
+  "equivalence": {
+    "independent_processes": 5,
+    "assertions_per_process": 134,
+    "spectral_bit_mismatches": 0,
+    "label_confidence_mismatches": 0,
+    "fixtures_per_process": 128
+  },
+  "portable_microbenchmark": {
+    "sample_rate_hz": 8000,
+    "window_samples": 5600,
+    "windows_per_timing_run": 160,
+    "timing_runs_total": 25,
+    "reference_median_seconds": 0.108393495,
+    "interleaved_median_seconds": 0.016527544,
+    "interleaved_reference_ratio": 0.15247726812388512,
+    "approximate_speedup": 6.558354,
+    "maximum_rss_kb": 24328,
+    "physical_iphone_evidence": false
+  },
+  "one_hour_budget": {
+    "chord_frames": 14400,
+    "active_spectral_bins": 48,
+    "chord_window_samples": 5600,
+    "chord_hop_samples": 2000,
+    "recurrence_updates": 3870720000,
+    "reference_window_element_visits": 3870720000,
+    "interleaved_window_element_visits": 80640000,
+    "window_traversal_reduction_ratio": 48
+  },
+  "parity_claim": false,
+  "remaining_gate": "HQ must run selected integrated build on physical iPhone with W26-selected rights-cleared corpus and W23/W24 wall-time, RSS/physical-footprint, thermal and unplugged-battery evidence. MOI-P013 also requires current-iPhone Moises reviewed real-audio differential."
+}

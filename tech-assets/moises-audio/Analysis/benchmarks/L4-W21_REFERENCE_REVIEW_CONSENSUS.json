@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W21",
+  "title": "Reference raw observation review consensus / transcription integrity hardening",
+  "generated_at": "2026-08-24T03:40:00+09:00",
+  "evidence_class": "NON_PARITY",
+  "synthetic_only": true,
+  "parity_eligible": false,
+  "runtime": {
+    "swift": "6.2.1",
+    "platform": "x86_64 Linux portable source-shaped harness"
+  },
+  "validation": {
+    "production_source_typecheck": "PASS",
+    "committed_xctest_source_parse": "PASS",
+    "portable_assertions_per_run": "15/15",
+    "complete_runs": 5,
+    "stress_fixture_rows_per_run": 50000,
+    "reviewers_per_fixture": 2,
+    "review_submissions_per_run": 100000,
+    "consensus_diagnostics_per_run": 50000,
+    "consensus_raw_observations_per_run": 50000,
+    "runs": [
+      {"internal_seconds": 1.456956, "wall_seconds": 1.65, "max_rss_kb": 168788},
+      {"internal_seconds": 1.492181, "wall_seconds": 1.69, "max_rss_kb": 168792},
+      {"internal_seconds": 1.617197, "wall_seconds": 1.82, "max_rss_kb": 168800},
+      {"internal_seconds": 1.556700, "wall_seconds": 1.74, "max_rss_kb": 168628},
+      {"internal_seconds": 1.489525, "wall_seconds": 1.68, "max_rss_kb": 168724}
+    ]
+  },
+  "adversarial_invariants": [
+    "stable independent tempo reviews inside an externally supplied spread resolve by deterministic median",
+    "one unique reviewer cannot become Reference consensus",
+    "the same reviewer cannot count twice",
+    "shared review_session_id across distinct reviewers is a suspected copied-submission signal",
+    "byte-identical review_record_sha256 across distinct reviewers is a suspected copied-submission signal",
+    "every raw status/scalar/timestamp/label requires an artifact-local anchor",
+    "anchor location disagreement outside HQ tolerance fails closed",
+    "numeric raw disagreement outside HQ tolerance becomes UNSCORABLE instead of being averaged",
+    "key labels require exact categorical agreement",
+    "chord labels require exact agreement while boundaries may use externally supplied spread tolerance",
+    "unanimous NO_DECISION is preserved without fabricating a value",
+    "duplicate policy rules return INVALID_POLICY without a Dictionary trap",
+    "frame/page-region anchors use externally supplied anchor spread rules",
+    "review/capture source-manifest binding is exact",
+    "review set/policy/report codec is deterministic"
+  ],
+  "limitations": [
+    "No real current-iPhone Moises observation was captured in W21.",
+    "No rights-cleared production audio was used in W21 portable evidence.",
+    "No physical-iPhone Project performance measurement was performed.",
+    "Structural copied-submission signals cannot prove or eliminate covert reviewer collusion.",
+    "Worker 4 supplies no production reviewer spread thresholds; HQ approval is required.",
+    "Canonical SwiftPM/Xcode XCTest execution remains an HQ integrated-checkout gate.",
+    "Final PARITY authority remains HQ_LATE_INTEGRATION."
+  ]
+}

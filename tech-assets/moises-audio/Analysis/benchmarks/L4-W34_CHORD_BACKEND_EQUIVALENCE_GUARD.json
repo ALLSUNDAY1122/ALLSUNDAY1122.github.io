@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "bundle": "L4-W34",
+  "title": "Chord vectorized backend runtime equivalence guard / automatic scalar fallback hardening",
+  "status": "NON_PARITY_ENGINEERING_GUARD_COMPLETE",
+  "parity_claim": false,
+  "runtime_contract": {
+    "verification_non_no_chord_frames": 8,
+    "comparison": "bit-exact spectral evidence plus final label/confidence",
+    "verification_publication_backend": "REFERENCE_PER_BIN",
+    "optimized_publication_begins": "first eligible frame after eight exact verification matches",
+    "mismatch_behavior": "publish reference for mismatch frame and permanently use reference backend for remaining eligible frames",
+    "no_chord_consumes_verification_budget": false,
+    "short_run_behavior": "if fewer than eight eligible frames occur, run remains reference-published"
+  },
+  "portable_validation": {
+    "swift_version": "6.2.1",
+    "guard_strict_concurrency_warnings_as_errors": "PASS",
+    "diagnostics_codable_compile": "PASS",
+    "classifier_strict_concurrency_warnings_as_errors": "PASS",
+    "actual_classifier_integration": {
+      "classification_calls": 10,
+      "verification_comparisons": 8,
+      "verification_matches": 8,
+      "reference_publications": 8,
+      "vectorized_publications": 2,
+      "final_state": "vectorizedVerified",
+      "legacy_label_confidence_mismatches": 0
+    },
+    "forced_mismatch": {
+      "mismatch_comparison_index": 2,
+      "current_frame_published_backend": "REFERENCE_PER_BIN",
+      "remaining_backend": "REFERENCE_PER_BIN",
+      "fallback_persisted": true
+    },
+    "state_transition_stress": {
+      "runs_per_process": 100000,
+      "processes": 5,
+      "forced_mismatch_every_nth_run": 10,
+      "forced_mismatch_comparison_index": 4,
+      "checksum_each_process": 860000,
+      "internal_seconds_min": 0.003995881,
+      "internal_seconds_max": 0.004308556,
+      "maximum_rss_kb_min": 16708,
+      "maximum_rss_kb_max": 16900
+    }
+  },
+  "one_hour_default_budget": {
+    "analysis_sample_rate_hz": 8000,
+    "chord_frame_count": 14400,
+    "chord_window_samples": 5600,
+    "chord_spectral_bins": 48,
+    "verification_frames_upper_bound": 8,
+    "baseline_vectorized_window_element_visits": 80640000,
+    "maximum_extra_reference_window_element_visits": 2150400,
+    "total_goertzel_recurrence_updates": 3870720000,
+    "maximum_extra_verification_recurrence_updates": 2150400,
+    "verification_recurrence_overhead_fraction": 0.0005555555555555556
+  },
+  "boundaries": [
+    "Portable/Linux validation does not prove selected Apple ARM/compiler numerical equivalence.",
+    "The runtime guard is an engineering safety mechanism, not a Chord-quality or PARITY threshold.",
+    "A benign numerical difference may intentionally force scalar fallback and reduce speed.",
+    "No current-iPhone Moises rights-cleared differential was executed in W34.",
+    "No physical-iPhone RSS, phys-footprint, thermal or battery acceptance was executed in W34.",
+    "MOI-P013 and MOI-P021 remain MISSING; HQ Late Integration owns final PARITY judgment."
+  ]
+}

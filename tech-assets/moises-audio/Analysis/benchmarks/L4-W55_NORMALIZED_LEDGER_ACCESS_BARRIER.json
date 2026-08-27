@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "bundle": "L4-W55",
+  "title": "Unified normalized ledger access barrier across W51/W52/W53",
+  "classification": "NON_PARITY",
+  "canonical_predecessor": {
+    "epoch": 44,
+    "lane4": "W52",
+    "integration_run_id": 33030546532,
+    "swiftpm_tests_passed": 462,
+    "swiftpm_tests_total": 462
+  },
+  "implementation": {
+    "normalized_order": [
+      "W51_WRITER_LEASE",
+      "SECURE_DIRECTORY_BOOTSTRAP",
+      "LEDGER_AND_RECORDS_TEMP_PREFLIGHT",
+      "PREFLIGHT_IDENTITY_RECHECK",
+      "W54_IDENTITY_CHECKED_TEMP_GC",
+      "W50_W53_INTERRUPTED_APPEND_RECOVERY",
+      "SECURE_FULL_REOPEN",
+      "FINAL_WRITER_LEASE_REVALIDATION"
+    ],
+    "two_directory_preflight_before_any_gc": true,
+    "normalization_receipt_sha256": true,
+    "normalized_concurrent_store": true,
+    "normalized_custody_checkpoint_handoff": true,
+    "normalization_to_w52_bundle_certificate": true,
+    "normalized_physical_probe_coordinator": true,
+    "w49_w54_existing_root_payloads_changed": false,
+    "legacy_entrypoints_retained_for_compatibility": true,
+    "production_w55_requires_normalized_entrypoints": true
+  },
+  "portable_validation": {
+    "swift_version": "6.2.1",
+    "warnings_as_errors_two_directory_harness": "PASS",
+    "filesystem_harness": {
+      "valid_two_directory_cleanup": {"cases": 1000, "passed": 1000},
+      "invalid_records_preflight_preserves_ledger_temp": {"cases": 500, "passed": 500},
+      "preflight_entry_replacement_detected": {"cases": 500, "detected": 500}
+    },
+    "cross_process_normalized_writer_stress": {
+      "waves": 300,
+      "contenders_per_wave": 8,
+      "attempts": 2400,
+      "commits": 300,
+      "stale": 2100,
+      "other_errors": 0,
+      "waves_with_temp_leftover": 0
+    },
+    "normalization_receipt_mutation_mirror": {
+      "classes": 10,
+      "mutations": 200000,
+      "detected": 200000,
+      "undetected": 0
+    },
+    "normalized_custody_certificate_mutation_mirror": {
+      "classes": 10,
+      "mutations": 200000,
+      "detected": 200000,
+      "undetected": 0
+    }
+  },
+  "xctest_source_coverage": [
+    "brand-new sequence-0 normalization receipt",
+    "two-directory valid temp cleanup",
+    "invalid records temp leaves ledger temp untouched",
+    "interrupted record write recovers before receipt",
+    "normalization receipt old-root mutation rejection",
+    "normalized W52 custody root compatibility",
+    "normalized CAS plus append predecessor receipt",
+    "stale second writer rejection",
+    "CAS observation garbage-collects both directories",
+    "normalization/W52 bundle certificate validation",
+    "normalization receipt swap rejection"
+  ],
+  "canonical_worker_validation": {
+    "exact_worker_swiftpm_xctest": "NOT_OBSERVED",
+    "reason": "git ls-remote failed: Could not resolve host: github.com",
+    "w55_compile_pass_claimed": false
+  },
+  "external_gates": [
+    "HQ semantic integration of W53-W55 and canonical SwiftPM/XCTest",
+    "selected iphoneos/arm64 Xcode compilation of normalized physical probe",
+    "physical iPhone/APFS F_FULLFSYNC process-kill suspend relaunch reboot/power-loss evidence",
+    "HQ-approved rights-cleared real-audio corpus and genuine integrated Lane2 bounded decoder",
+    "current-iPhone Moises reference and paired differential evidence",
+    "final HQ PARITY judgment"
+  ],
+  "parity_promotions": 0
+}

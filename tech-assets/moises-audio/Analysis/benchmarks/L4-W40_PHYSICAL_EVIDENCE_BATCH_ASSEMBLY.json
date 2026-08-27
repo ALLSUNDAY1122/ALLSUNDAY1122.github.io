@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W40",
+  "status": "NON_PARITY_ENGINEERING_COMPLETE",
+  "scope": "physical evidence multi-run batch assembly / W39 publication inventory + W27-W38 archive synthesis hardening",
+  "canonical_refresh": {
+    "operating_model": "v4|4 Autonomous Independent Lanes / Late Integration",
+    "lane4_canonical_through": "L4-W38",
+    "integration_epoch": 25,
+    "integration_run": {
+      "run_id": 32862540423,
+      "result": "SUCCESS_310_OF_310"
+    },
+    "w40_start_frozen_base_compare": {
+      "base": "be1c84314db182d6eee5097de34e017af1a4a7de",
+      "ahead": 405,
+      "behind": 0
+    },
+    "parity_promotions": 0
+  },
+  "implementation": {
+    "w39_loader": {
+      "directory_enumeration": false,
+      "control_manifest": "W39_BUNDLE_MANIFEST.json",
+      "declared_artifact_count": 9,
+      "revalidates_bundle_root": true,
+      "ignores_undeclared_files": true
+    },
+    "run_inventory": {
+      "authority": "W24 plannedRuns",
+      "requires_unique_exact_inventory": true,
+      "rejects_missing_or_unexpected_runs": true,
+      "rejects_reused_w36_execution_ids": true
+    },
+    "w27": {
+      "singleton_role_count": 11,
+      "per_run_role_count": 4,
+      "full_semantic_validator_required": true,
+      "root_required": true
+    },
+    "w38": {
+      "per_run_role_count": 5,
+      "legacy_w27_root_injected_after_w27_validation": true,
+      "strict_validator_required": true,
+      "root_required": true
+    },
+    "w40_root_binds": [
+      "publication_id",
+      "sorted_run_id_execution_id_w39_root_tuples",
+      "singleton_role_path_sha_length_metadata",
+      "w27_root",
+      "w38_root"
+    ],
+    "publication": {
+      "hidden_same_parent_stage": true,
+      "one_directory_move": true,
+      "existing_final_overwrite": false,
+      "matching_interrupted_stage_can_restart": true,
+      "ambiguous_or_corrupt_stage_preserved": true,
+      "w39_revalidation_before_publish": true,
+      "w39_revalidation_after_publish": true
+    },
+    "api_hardening": {
+      "assembly_initializer_public": false,
+      "production_assembly_path": "AnalysisPhysicalEvidenceBatchAssembler.assemble",
+      "prepared_batch_rechecks_exact_w27_w38_role_inventory": true,
+      "prepared_batch_rechecks_entry_paths_sha_and_lengths": true
+    }
+  },
+  "observed_validation": {
+    "worker_environment": {
+      "swift": "6.2.1",
+      "target": "x86_64-unknown-linux-gnu"
+    },
+    "fresh_full_worker_branch_swiftpm_xctest": {
+      "result": "NOT_OBSERVED",
+      "reason": "git ls-remote failed: Could not resolve host: github.com"
+    },
+    "swift_source_shaped_transaction_mirror": {
+      "compile": "PASS_WARNINGS_AS_ERRORS",
+      "valid_inventory_tamper_iterations": 20000,
+      "filesystem_publication_recovery_transactions": 120,
+      "reused_execution_rejected": true,
+      "missing_role_rejected": true,
+      "existing_target_collision_rejected": true,
+      "ambiguous_marker_preserved": true,
+      "elapsed_seconds": 7.06,
+      "max_rss_kb": 20748,
+      "classification": "NON_PARITY_ENGINEERING_MIRROR"
+    },
+    "sha256_batch_root_mirror": {
+      "completed_cases": 50000,
+      "execution_id_mutation_changes_root": true,
+      "w39_root_mutation_changes_root": true,
+      "w27_root_mutation_changes_root": true,
+      "w38_root_mutation_changes_root": true,
+      "elapsed_seconds": 12.113,
+      "max_rss_kb": 110084,
+      "classification": "NON_PARITY_ENGINEERING_MIRROR"
+    },
+    "oversized_sha256_root_attempt": {
+      "requested_cases": 200000,
+      "result": "TIMEOUT_NOT_COUNTED_AS_PASS"
+    }
+  },
+  "remaining_gates": [
+    "genuine Lane-2 bounded decoder runtime",
+    "selected Xcode / Apple ARM compile",
+    "physical-iPhone W37/W39/W40 execution",
+    "real RSS / physical-footprint / thermal / battery / cancellation evidence",
+    "W24 repeated worst-case acceptance",
+    "independent HQ anchoring of W27/W38/W40 roots",
+    "rights-cleared current-iPhone differential for P009/P011/P013/P016",
+    "final HQ PARITY_MATRIX judgment"
+  ],
+  "limitations": [
+    "W40 roots are tamper-evident metadata roots, not signatures or Apple/hardware attestation.",
+    "W39 run directories and the W40 batch directory are separate filesystem objects; W40 checks W39 before and after publication but cannot provide a cross-directory atomic lock.",
+    "A mutation after W40's final W39 recheck remains detectable by a later independent audit but is not prevented by W40 itself.",
+    "Portable mirrors and source-shaped tests do not prove APFS/iPhone durability or physical performance."
+  ],
+  "parity_impact": {
+    "MOI-P009": "MISSING",
+    "MOI-P011": "MISSING",
+    "MOI-P013": "MISSING",
+    "MOI-P016": "MISSING",
+    "MOI-P021": "MISSING"
+  }
+}

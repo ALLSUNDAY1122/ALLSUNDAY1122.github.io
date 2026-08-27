@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W22",
+  "title": "Analysis differential corpus coverage / sufficiency gate hardening",
+  "evidence_class": "NON_PARITY",
+  "synthetic_only": true,
+  "parity_eligible": false,
+  "implementation": {
+    "source": "Analysis/AnalysisBenchmarkCorpusCoverage.swift",
+    "test": "Tests/MoisesAudioCoreTests/AnalysisBenchmarkCorpusCoverageTests.swift",
+    "policy_template": "Analysis/benchmarks/ANALYSIS_CORPUS_COVERAGE_POLICY_TEMPLATE.json",
+    "runbook": "Analysis/benchmarks/ANALYSIS_CORPUS_COVERAGE_RUNBOOK.md",
+    "required_domains": ["tempo", "beat", "key", "chord", "structure"],
+    "semantic_dimensions": [
+      "genre",
+      "tempo_band",
+      "key_mode",
+      "chord_quality",
+      "chord_inversion",
+      "no_chord",
+      "chord_label_diversity",
+      "section_count",
+      "structural_label_diversity",
+      "functional_labels",
+      "repeated_structural_label"
+    ],
+    "production_threshold_owner": "HQ_LATE_INTEGRATION"
+  },
+  "portable_validation": {
+    "swift": "Swift 6.2.1 x86_64 Linux",
+    "source_shaped_typecheck": "PASS",
+    "adversarial_harness_runs": 5,
+    "assertions_per_run": 16,
+    "assertions_passed_each_run": 16,
+    "stress_fixture_count": 50000,
+    "stress_stratum_count": 9,
+    "stress_runs": 5,
+    "stress_internal_seconds": [0.985302, 1.021424, 0.987189, 0.991817, 0.998183],
+    "stress_wall_seconds": [1.00, 1.04, 1.00, 1.01, 1.02],
+    "stress_max_rss_kb": [98040, 98040, 98016, 98016, 98028]
+  },
+  "adversarial_coverage": [
+    "balanced corpus satisfies supplied policy",
+    "trivial single-track corpus rejected",
+    "global fixture deficit detected",
+    "domain fixture deficit detected",
+    "semantic stratum deficit detected",
+    "exact manifest SHA binding enforced",
+    "all five Analysis domain minimums required",
+    "duplicate domain minimum rejected",
+    "duplicate stratum ID rejected",
+    "synthetic padding rejected",
+    "missing DIFFERENTIAL_REFERENCE rights rejected",
+    "empty semantic predicate rejected",
+    "unknown chord quality rejected",
+    "Golden-derived inversion/key-mode/repeated-section membership verified",
+    "deterministic policy codec round-trip",
+    "all passing diagnostics remain deterministic"
+  ],
+  "non_parity_reasons": [
+    "no actual rights-cleared production corpus was evaluated",
+    "no current-iPhone Moises observation was captured",
+    "no production HQ coverage thresholds were supplied",
+    "no physical-iPhone Project measurement was performed",
+    "final PARITY remains HQ Late Integration owned"
+  ]
+}

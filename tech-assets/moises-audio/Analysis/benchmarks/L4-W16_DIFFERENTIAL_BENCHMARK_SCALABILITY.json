@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W16",
+  "title": "Analysis differential benchmark scalability / integrity hardening",
+  "evidence_class": "NON_PARITY_SYNTHETIC_PORTABLE",
+  "parity_claim": false,
+  "portable_runtime": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu",
+    "note": "Portable evaluator-only harness. Not an iPhone, real-audio, or current-Moises differential measurement."
+  },
+  "semantic_regression": {
+    "legacy_greedy_oracle_cases": 2000,
+    "legacy_greedy_exact_matches": 2000,
+    "duplicate_and_tie_cases_included": true,
+    "adversarial_reference_seconds": [0.0, 1.0],
+    "adversarial_estimated_seconds": [1.0, 2.0],
+    "adversarial_tolerance_seconds": 1.0,
+    "legacy_expected_matches": 1,
+    "legacy_expected_f_measure": 0.5,
+    "w16_matches": 1,
+    "w16_f_measure": 0.5,
+    "note": "W16 intentionally preserves prior greedy-nearest metric semantics instead of silently switching to maximum-cardinality matching."
+  },
+  "optimized_portable_runs": [
+    {
+      "run": 1,
+      "beat_count": 100000,
+      "beat_match_elapsed_seconds": 0.011650789,
+      "section_boundary_count": 16384,
+      "section_match_elapsed_seconds": 0.001765069,
+      "pre_cancel_completion_seconds": 0.000413193,
+      "wall_seconds": 0.02,
+      "max_rss_kb": 22100,
+      "assertions_passed": 6,
+      "assertions_total": 6
+    },
+    {
+      "run": 2,
+      "beat_count": 100000,
+      "beat_match_elapsed_seconds": 0.013153228,
+      "section_boundary_count": 16384,
+      "section_match_elapsed_seconds": 0.002304910,
+      "pre_cancel_completion_seconds": 0.000459561,
+      "wall_seconds": 0.03,
+      "max_rss_kb": 21920,
+      "assertions_passed": 6,
+      "assertions_total": 6
+    },
+    {
+      "run": 3,
+      "beat_count": 100000,
+      "beat_match_elapsed_seconds": 0.012040687,
+      "section_boundary_count": 16384,
+      "section_match_elapsed_seconds": 0.001984175,
+      "pre_cancel_completion_seconds": 0.000999809,
+      "wall_seconds": 0.03,
+      "max_rss_kb": 22028,
+      "assertions_passed": 6,
+      "assertions_total": 6
+    },
+    {
+      "run": 4,
+      "beat_count": 100000,
+      "beat_match_elapsed_seconds": 0.012339611,
+      "section_boundary_count": 16384,
+      "section_match_elapsed_seconds": 0.003679420,
+      "pre_cancel_completion_seconds": 0.000489742,
+      "wall_seconds": 0.03,
+      "max_rss_kb": 22080,
+      "assertions_passed": 6,
+      "assertions_total": 6
+    },
+    {
+      "run": 5,
+      "beat_count": 100000,
+      "beat_match_elapsed_seconds": 0.011958285,
+      "section_boundary_count": 16384,
+      "section_match_elapsed_seconds": 0.001846660,
+      "pre_cancel_completion_seconds": 0.000374966,
+      "wall_seconds": 0.03,
+      "max_rss_kb": 22028,
+      "assertions_passed": 6,
+      "assertions_total": 6
+    }
+  ],
+  "stress_summary": {
+    "complete_runs": 5,
+    "all_runs_passed": true,
+    "beat_count_per_run": 100000,
+    "beat_tolerance_seconds": 0.07,
+    "section_boundary_count_per_run": 16384,
+    "section_tolerance_seconds": 0.5,
+    "worst_optimized_beat_elapsed_seconds": 0.013153228,
+    "worst_optimized_section_elapsed_seconds": 0.003679420,
+    "worst_pre_cancel_completion_seconds": 0.000999809,
+    "maximum_observed_rss_kb": 22100
+  },
+  "complexity_model": {
+    "legacy_beat_pair_upper_bound_at_100k_by_100k": 10000000000,
+    "legacy_section_pair_upper_bound_at_16384_by_16384": 268435456,
+    "w16_one_to_one_matcher": "sort timestamps + binary-search predecessor/successor + union-find deletion",
+    "w16_nearest_error": "sort target + binary-search nearest per source timestamp",
+    "w16_chord_interval_lookup": "sorted boundaries + monotonic reference/estimate cursors",
+    "w16_section_sampling_lookup": "monotonic reference/estimate cursors",
+    "claim_boundary": "Operation-count model only; not a device CPU speedup ratio."
+  },
+  "evaluator_cardinality_policy": {
+    "source": "AnalysisSnapshotCardinalityPolicy from W15",
+    "behavior": "Reference or estimate cardinality beyond the duration-aware limit fails the affected evidence row closed and parity_eligible becomes false. No silent truncation is used to manufacture an accuracy score.",
+    "stress_note": "The 100,000-beat and 16,384-boundary portable helper stresses intentionally exercise matcher scalability beyond many normal-duration evaluator limits; active product evidence evaluates the cardinality gate before metric matching."
+  },
+  "product_aligned_evidence_path": [
+    "AnalysisWorkingSetPolicy.prepareCancellable",
+    "BoundedTempoBeatAnalyzer.analyzeCancellable",
+    "BoundedMusicalKeyAnalyzer.analyzeCancellable",
+    "BoundedChordTimelineAnalyzer.analyzeCancellable",
+    "CancellableSongSectionPipeline.analyze",
+    "SongSectionBoundaryHardener.harden",
+    "AnalysisSnapshotRobustness.hardenCancellable",
+    "AnalysisBenchmarkRunner.evaluateCancellable",
+    "SectionBenchmarkEvaluator.evaluateCancellable"
+  ],
+  "diagnostics_attached_to_product_aligned_rows": {
+    "all_rows": [
+      "W15 snapshot beat/chord/section input counts and limits",
+      "W15 snapshot cardinality accepted flags",
+      "W16 product pipeline flag",
+      "W16 scalable evaluator flag"
+    ],
+    "structure_row_additional": [
+      "W14 section count before/after boundary hardening",
+      "W14 removed boundary count",
+      "W14 short-fragment counts",
+      "W14 boundary density before/after",
+      "W14 median section duration before/after"
+    ]
+  },
+  "compile_variance_note": "A separate unoptimized Swift 6.2.1 recompile of the matcher also passed 2000/2000 semantic Oracle cases and the adversarial case; its 100,000-beat elapsed time was approximately 0.1306 seconds. Timing is therefore recorded only with build-context labels and is not treated as a device guarantee.",
+  "limitations": [
+    "SYNTHETIC_PORTABLE_NOT_PARITY_EVIDENCE",
+    "No rights-cleared multi-genre real audio was available in this Worker wave.",
+    "No current-iPhone Moises differential was executed.",
+    "No physical-iPhone CPU, memory, thermal, battery, or cancellation measurement was executed.",
+    "Full canonical SwiftPM/Xcode execution remains an HQ integrated-checkout gate.",
+    "Legacy AnalysisRealAudioBenchmarkRunner.run remains for compatibility only; new differential evidence must use runProductAligned."
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W18",
+  "title": "Paired Moises differential comparator / non-inferiority gate hardening",
+  "evidence_class": "NON_PARITY",
+  "synthetic_only": true,
+  "parity_eligible": false,
+  "environment": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu",
+    "build": "swiftc -O portable source-shaped comparator harness"
+  },
+  "production_contract": {
+    "pair_identity": ["fixture_id", "domain"],
+    "metric_direction_source": "AnalysisBenchmarkAggregation.metricDirections",
+    "higher_is_better_delta": "project - reference",
+    "lower_is_better_delta": "reference - project",
+    "regression": "max(0, -signed_quality_delta)",
+    "threshold_source": "externally supplied AnalysisDifferentialToleranceProfile only",
+    "required_authority": "HQ_LATE_INTEGRATION",
+    "worker_defined_production_thresholds": false,
+    "final_parity_authority": "HQ_LATE_INTEGRATION"
+  },
+  "fail_closed_cases": [
+    "manifest mismatch",
+    "project/reference engine mismatch",
+    "duplicate fixture+domain rows",
+    "project-only row",
+    "reference-only row",
+    "row metadata mismatch",
+    "project/reference evaluator rejection",
+    "project-only quality metric",
+    "reference-only quality metric",
+    "observed quality metric missing tolerance rule",
+    "required profile metric absent",
+    "self-approved / wrong authority profile",
+    "missing approval reference",
+    "negative or non-finite regression margin",
+    "unknown quality metric",
+    "duplicate tolerance rule",
+    "empty tolerance rule set"
+  ],
+  "portable_pairing_runs": [
+    {"assertions_passed": 11, "assertions_total": 11, "pairs": 50000, "internal_elapsed_seconds": 0.133332, "process_wall_seconds": 0.17, "max_rss_kb": 72596},
+    {"assertions_passed": 11, "assertions_total": 11, "pairs": 50000, "internal_elapsed_seconds": 0.239420, "process_wall_seconds": 0.29, "max_rss_kb": 72556},
+    {"assertions_passed": 11, "assertions_total": 11, "pairs": 50000, "internal_elapsed_seconds": 0.169821, "process_wall_seconds": 0.19, "max_rss_kb": 72596},
+    {"assertions_passed": 11, "assertions_total": 11, "pairs": 50000, "internal_elapsed_seconds": 0.151693, "process_wall_seconds": 0.17, "max_rss_kb": 72600},
+    {"assertions_passed": 11, "assertions_total": 11, "pairs": 50000, "internal_elapsed_seconds": 0.178003, "process_wall_seconds": 0.20, "max_rss_kb": 72620}
+  ],
+  "portable_profile_validation_runs": [
+    {"assertions_passed": 8, "assertions_total": 8, "process_wall_seconds": 0.00, "max_rss_kb": 18068},
+    {"assertions_passed": 8, "assertions_total": 8, "process_wall_seconds": 0.00, "max_rss_kb": 18092},
+    {"assertions_passed": 8, "assertions_total": 8, "process_wall_seconds": 0.00, "max_rss_kb": 18044},
+    {"assertions_passed": 8, "assertions_total": 8, "process_wall_seconds": 0.00, "max_rss_kb": 18116},
+    {"assertions_passed": 8, "assertions_total": 8, "process_wall_seconds": 0.00, "max_rss_kb": 18060}
+  ],
+  "canonical_test_source": "Tests/MoisesAudioCoreTests/AnalysisBenchmarkDifferentialTests.swift",
+  "canonical_xctest_execution": "PENDING_HQ_INTEGRATED_CHECKOUT",
+  "limitations": [
+    "No rights-cleared real audio was used in this W18 evidence.",
+    "No current-iPhone Moises output was captured or scored in this W18 evidence.",
+    "No production maximum-regression tolerance values were chosen by Worker 4.",
+    "Portable Linux timing/RSS is not physical-iPhone performance evidence.",
+    "WITHIN_SUPPLIED_TOLERANCE_PENDING_HQ is explicitly not a PARITY state."
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "wave_id": "L4-W09",
+  "domain": "song-section-hardening",
+  "generated_at": "2026-08-23T21:42:00+09:00",
+  "synthetic_only": true,
+  "parity_eligible": false,
+  "parity_row": "MOI-P016",
+  "limitations": [
+    "SYNTHETIC_UNIT_ONLY_NOT_PARITY_EVIDENCE",
+    "NO_RIGHTS_CLEARED_REAL_AUDIO",
+    "NO_CURRENT_IPHONE_MOISES_DIFFERENTIAL",
+    "NO_PHYSICAL_IPHONE_EVIDENCE"
+  ],
+  "portable_environment": {
+    "swift": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu"
+  },
+  "cases": [
+    {
+      "id": "varied-functional-structure",
+      "structure": ["intro", "verse", "pre-chorus", "chorus", "verse", "pre-chorus", "chorus", "bridge", "chorus", "outro"],
+      "expected": "functional labels assigned with repeated verse/pre-chorus/chorus families and unique bridge",
+      "result": "PASS"
+    },
+    {
+      "id": "aba-family-reuse",
+      "structure": ["A", "B", "A"],
+      "expected": "first and third section reuse one structural family while B remains distinct",
+      "result": "PASS"
+    },
+    {
+      "id": "false-boundary-suppression",
+      "structure": ["A-fragment", "A-fragment", "B"],
+      "expected": "near-duplicate adjacent A fragments merge into one section",
+      "result": "PASS"
+    },
+    {
+      "id": "localized-low-coverage",
+      "structure": ["known", "undecided", "known"],
+      "expected": "undecided region fails closed to structural X with nil functional label/confidence",
+      "result": "PASS"
+    },
+    {
+      "id": "ambiguous-functional-semantics",
+      "structure": ["A", "B", "A", "B"],
+      "expected": "near-equal repeated-family energy does not invent verse/chorus labels",
+      "result": "PASS"
+    },
+    {
+      "id": "diagnostic-coverage",
+      "expected": "unknown duration ratio and functional decision coverage are machine-readable",
+      "result": "PASS"
+    }
+  ],
+  "summary": {
+    "groups_passed": 6,
+    "groups_total": 6,
+    "portable_runs": 5,
+    "wall_seconds": [0.01, 0.00, 0.01, 0.01, 0.00]
+  },
+  "hq_late_integration_gate": [
+    "rights-cleared varied-structure real-audio corpus",
+    "current-iPhone Moises section labels/boundaries differential",
+    "navigation and looping behavior using estimated boundaries",
+    "physical-iPhone timing/performance evidence",
+    "HQ final PARITY_MATRIX judgment"
+  ]
+}

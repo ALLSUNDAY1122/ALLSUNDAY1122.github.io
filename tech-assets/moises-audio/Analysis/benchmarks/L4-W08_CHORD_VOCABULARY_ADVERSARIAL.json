@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "wave_id": "L4-W08",
+  "generated_at": "2026-08-23T18:02:00+09:00",
+  "engine": "project-owned-chord-vocabulary-classifier",
+  "engine_version": "lane4-w08-v1",
+  "parity_eligible": false,
+  "rights_class": "PROJECT_OWNED_SYNTHETIC",
+  "product_vocabulary_policy": "CONSERVATIVE_MAJOR_MINOR_FAIL_CLOSED",
+  "diagnostic_vocabulary": [
+    "major",
+    "minor",
+    "dominant7",
+    "major7",
+    "minor7",
+    "sus2",
+    "sus4",
+    "diminished",
+    "augmented",
+    "slash_inversion"
+  ],
+  "portable_runtime": {
+    "platform": "Swift 6.2.1 x86_64 Linux",
+    "ten_case_harness_wall_seconds_runs": [0.33, 0.33, 0.34, 0.37, 0.32],
+    "median_wall_seconds": 0.33,
+    "device_claim": false
+  },
+  "cases": [
+    {"id":"clear-c-major","mode":"product","expected":"C","actual":"C","confidence":0.537798,"pass":true},
+    {"id":"clear-a-minor","mode":"product","expected":"A:min","actual":"A:min","confidence":0.537565,"pass":true},
+    {"id":"c-dominant7-product","mode":"product","expected":"X","actual":"X","confidence":0.298136,"pass":true},
+    {"id":"c-dominant7-diagnostic","mode":"extended_diagnostic","expected":"C:7","actual":"C:7","confidence":0.298136,"pass":true},
+    {"id":"c-major7-diagnostic","mode":"extended_diagnostic","expected":"C:maj7","actual":"C:maj7","confidence":0.298197,"pass":true},
+    {"id":"a-minor7-diagnostic","mode":"extended_diagnostic","expected":"A:min7","actual":"A:min7","confidence":0.297936,"pass":true},
+    {"id":"c-sus4-diagnostic","mode":"extended_diagnostic","expected":"C:sus4","actual":"C:sus4","confidence":0.322608,"pass":true},
+    {"id":"b-diminished-diagnostic","mode":"extended_diagnostic","expected":"B:dim","actual":"B:dim","confidence":0.309558,"pass":true},
+    {"id":"c-augmented-root-anchored","mode":"extended_diagnostic","expected":"C:aug","actual":"C:aug","confidence":0.260478,"pass":true},
+    {"id":"c-major-first-inversion","mode":"extended_diagnostic","expected":"C/E","actual":"C/E","confidence":0.459615,"pass":true}
+  ],
+  "timeline_regression": {
+    "duration_seconds": 7.0,
+    "expected_labels": ["C", "A:min", "N", "G"],
+    "actual_labels": ["C", "A:min", "N", "G"],
+    "gap_free": true,
+    "complex_product_case": {"input":"C7","actual_labels":["X"],"pass":true}
+  },
+  "label_normalization": {
+    "Bb:maj7/D": "A#:maj7/D",
+    "A:m7/C": "A:min7/C",
+    "Db:sus": "C#:sus4"
+  },
+  "known_limitations": [
+    "SYNTHETIC_ADVERSARIAL_ONLY_NOT_PARITY_EVIDENCE",
+    "CURRENT_IPHONE_MOISES_COMPLEX_CHORD_VOCABULARY_NOT_REFERENCE_VERIFIED",
+    "PRODUCT_MODE_INTENTIONALLY_WITHHOLDS_COMPLEX_AND_SLASH_LABELS",
+    "AUGMENTED_ROOT_IS_SYMMETRIC_AND_REQUIRES_STRONG_LOW_REGISTER_ANCHOR_OR_UNKNOWN",
+    "REAL_AUDIO_INVERSIONS_VOICINGS_TRANSIENTS_AND_NOISE_NOT_YET_MEASURED",
+    "PHYSICAL_IPHONE_LATENCY_RSS_THERMAL_BATTERY_UNMEASURED"
+  ]
+}

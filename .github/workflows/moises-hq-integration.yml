@@ -32,8 +32,20 @@ jobs:
       - name: Swift version
         run: swift --version
       - name: Integrated SwiftPM tests
+        id: swiftpm
         working-directory: tech-assets/moises-audio
-        run: swift test --parallel
+        shell: bash
+        run: |
+          set -o pipefail
+          swift test --parallel 2>&1 | tee "$GITHUB_WORKSPACE/swift-test.log"
+      - name: Upload SwiftPM diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: moises-hq-swift-test-${{ github.run_id }}
+          path: swift-test.log
+          if-no-files-found: ignore
+          retention-days: 3
 
   portable-lane2-io-library-source-typecheck:
     runs-on: ubuntu-latest
