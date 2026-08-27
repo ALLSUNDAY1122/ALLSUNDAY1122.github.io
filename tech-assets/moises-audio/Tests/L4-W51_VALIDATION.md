@@ -21,6 +21,7 @@ Notion and integration PR #4431 show HQ Canonical Epoch 41 as `L1 A23 / L2 AW47 
 - blocking cross-process `flock`;
 - `O_NOFOLLOW | O_CLOEXEC` lock open;
 - persistent lock file so process crash does not require a stale-file deletion protocol;
+- idempotent cross-process first-use creation of root / bridge root / `.writer-locks`;
 - per-acquisition UUID token;
 - descriptor/path device + inode continuity checks;
 - token validation before/after the critical section and again while propagating body errors;
@@ -53,6 +54,11 @@ W51 does not change W49/W50 ledger record/root formats. The lock file lives outs
 - W51 serialized append produces the exact same W49/W50 on-disk head/root as direct W50 append;
 - malformed CAS is rejected before ledger publication.
 
+`AnalysisPhysicalRealAudioBridgeConsumptionWriterLockTests.swift` additionally covers:
+
+- symlinked `.writer-locks` directory rejection;
+- a preexisting symlink lock file cannot be followed because the lock is opened with `O_NOFOLLOW`.
+
 ## Executed validation
 
 ### Canonical Worker SwiftPM/XCTest
@@ -67,7 +73,7 @@ Swift 6.2.1:
 
 - full W51 writer-lock source compiled with `-warnings-as-errors`: PASS;
 - W51 writer-lock + concurrent-store production source typechecked against contract-shaped W49/W50 stubs with `-warnings-as-errors`: PASS;
-- W51 XCTest source parsed successfully.
+- W51 XCTest sources parsed successfully.
 
 ### Same-process live concurrency stress
 
@@ -93,6 +99,18 @@ Then 80 waves × 12 processes raced with one expected predecessor per wave:
 - final sequence: 81 including the abandoned-file seed commit
 
 A process that unlinked/replaced the lock pathname while holding the original descriptor failed closed with `TOKEN_MISMATCH`.
+
+### First-use cross-process bootstrap stress
+
+The selected root did not exist before launch. 24 processes simultaneously attempted the first lock acquisition, including creation of the bridge/lock directories:
+
+- processes: 24
+- commits: 1
+- stale: 23
+- other errors: 0
+- final sequence: 1
+
+This found and then closed a pre-lock directory-creation race. Directory creation is now idempotent: if another process creates the exact path first, the loser revalidates the resulting real non-symlink directory instead of treating `already exists` as a fatal writer error.
 
 ### Adversarial CAS/post-commit mirror
 
