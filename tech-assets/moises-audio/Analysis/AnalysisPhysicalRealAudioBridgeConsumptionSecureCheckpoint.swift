@@ -11,6 +11,17 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpointManager {
         rootURL: URL,
         fileManager: FileManager = .default
     ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionCheckpoint {
+        if AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.currentThreadHoldsWriterLease {
+            return try makeStrictCheckpointCore(
+                ledgerID: ledgerID,
+                checkpointID: checkpointID,
+                checkpointSequence: checkpointSequence,
+                approvalReference: approvalReference,
+                previousCheckpoint: previousCheckpoint,
+                rootURL: rootURL,
+                fileManager: fileManager
+            )
+        }
         try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.secureCheckpointCreate)
         let observed = try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.observeSnapshot(
             ledgerID: ledgerID,
@@ -35,6 +46,14 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpointManager {
         rootURL: URL,
         fileManager: FileManager = .default
     ) throws {
+        if AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.currentThreadHoldsWriterLease {
+            return try verifyCurrentLedgerStrictCore(
+                checkpoint: checkpoint,
+                previousCheckpoint: previousCheckpoint,
+                rootURL: rootURL,
+                fileManager: fileManager
+            )
+        }
         try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.secureCheckpointVerify)
         let observed = try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.observeSnapshot(
             ledgerID: checkpoint.ledgerID,
