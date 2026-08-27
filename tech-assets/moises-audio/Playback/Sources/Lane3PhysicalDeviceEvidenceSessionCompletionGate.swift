@@ -6,6 +6,7 @@ public enum Lane3PhysicalEvidenceSessionCompletionGateIssueKind: String, Codable
     case duplicateCandidateResourceTrace
     case duplicateCurrentMoisesResourceTrace
     case negativeThermalCounter
+    case thermalSampleCoverageMismatch
 }
 
 public struct Lane3PhysicalEvidenceSessionCompletionGateIssue: Equatable, Codable, Sendable {
@@ -49,7 +50,7 @@ public struct Lane3PhysicalEvidenceSessionCompletionGateReport: Equatable, Codab
 ///
 /// `Lane3PhysicalEvidenceSessionOrchestrator.evaluateCompletion` remains the low-level AW24/AW51
 /// aggregation primitive. HQ-facing evidence must pass this stricter gate so a valid-looking bundle
-/// cannot escape fixture/session binding, duplicate resource-trace, or signed-counter checks.
+/// cannot escape fixture/session binding, duplicate resource-trace, or signed-counter/coverage checks.
 public enum Lane3PhysicalEvidenceSessionCompletionGate {
     public static func evaluate(
         plan: Lane3PhysicalEvidenceSessionPlan,
@@ -103,12 +104,26 @@ public enum Lane3PhysicalEvidenceSessionCompletionGate {
             ))
         }
 
-        for trace in candidateMatches + referenceMatches where hasNegativeThermalCounter(trace) {
-            issues.append(.init(
-                kind: .negativeThermalCounter,
-                subject: trace.subject,
-                detail: "thermal sample counters must be non-negative"
-            ))
+        for trace in candidateMatches + referenceMatches {
+            if hasNegativeThermalCounter(trace) {
+                issues.append(.init(
+                    kind: .negativeThermalCounter,
+                    subject: trace.subject,
+                    detail: "thermal sample counters must be non-negative"
+                ))
+                continue
+            }
+            let thermalSamples = trace.thermalNominalSamples
+                + trace.thermalFairSamples
+                + trace.thermalSeriousSamples
+                + trace.thermalCriticalSamples
+            if thermalSamples != trace.sampleCount {
+                issues.append(.init(
+                    kind: .thermalSampleCoverageMismatch,
+                    subject: trace.subject,
+                    detail: "every resource sample must carry exactly one thermal-state observation"
+                ))
+            }
         }
 
         return Lane3PhysicalEvidenceSessionCompletionGateReport(
