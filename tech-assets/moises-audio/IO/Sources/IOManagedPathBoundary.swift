@@ -155,7 +155,8 @@ struct IOManagedPathBoundary: Sendable {
             return try fileManager.attributesOfItem(atPath: url.path)
         } catch {
             let nsError = error as NSError
-            if nsError.domain == NSCocoaErrorDomain, nsError.code == NSFileNoSuchFileError {
+            if nsError.domain == NSCocoaErrorDomain,
+               nsError.code == NSFileReadNoSuchFileError || nsError.code == NSFileNoSuchFileError {
                 return nil
             }
             throw IOManagedPathBoundaryFailure.unsafePath(url.path)
