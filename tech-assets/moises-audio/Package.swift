@@ -132,6 +132,8 @@ let package = Package(
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpoint.swift",
+                "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.swift",
+                "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
