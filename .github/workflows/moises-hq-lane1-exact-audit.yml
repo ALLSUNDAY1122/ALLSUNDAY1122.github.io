@@ -67,6 +67,27 @@ jobs:
           print('L1_A26_EXACT_AUDIT_PASS')
           PY
 
+      - name: Repeat full discovery stability probe
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          export PYTHONPATH="$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Server:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Evaluation:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          cd "$GITHUB_WORKSPACE/tech-assets/moises-audio"
+          rc=0
+          for i in 1 2 3 4 5; do
+            echo "===== L1 full discovery stability pass ${i}/5 ====="
+            python3 -m unittest discover -s Separation/Tests -p 'test_*.py'
+            pass_rc=$?
+            if [ "$pass_rc" -ne 0 ]; then
+              echo "L1_STABILITY_PASS_${i}_FAILED rc=${pass_rc}"
+              rc=1
+            else
+              echo "L1_STABILITY_PASS_${i}_OK"
+            fi
+          done
+          exit "$rc"
+
       - name: Diagnose unittest failure verbosely
         if: failure()
         shell: bash
