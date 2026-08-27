@@ -1,14 +1,9 @@
 {
-  "request_id": "app2-005-hm1-approved-icon-readback-20260827-2148",
+  "request_id": "app2-005-hm1-build-iap-inspect-20260827-2152",
   "requests": [
-    {"label": "app", "path": "/v1/apps/6799581662"},
-    {"label": "review-submissions", "path": "/v1/apps/6799581662/reviewSubmissions?limit=50"},
-    {"label": "version", "path": "/v1/appStoreVersions/b22c4518-3724-42a1-87d3-99c2d9d2b7d2"},
-    {"label": "version-localizations", "path": "/v1/appStoreVersions/b22c4518-3724-42a1-87d3-99c2d9d2b7d2/appStoreVersionLocalizations?limit=50"},
-    {"label": "builds", "path": "/v1/apps/6799581662/builds?limit=50"},
-    {"label": "beta-groups", "path": "/v1/betaGroups?filter[app]=6799581662&limit=50"},
-    {"label": "iap", "path": "/v1/apps/6799581662/inAppPurchasesV2?limit=50"},
-    {"label": "subscription-groups", "path": "/v1/apps/6799581662/subscriptionGroups?limit=50"},
-    {"label": "monthly", "path": "/v1/subscriptions/6804373671?include=appStoreReviewScreenshot,subscriptionLocalizations,subscriptionAvailability&limit[subscriptionLocalizations]=50"}
+    {"label": "version-build", "path": "/v1/appStoreVersions/b22c4518-3724-42a1-87d3-99c2d9d2b7d2/build"},
+    {"label": "new-build-beta-groups", "path": "/v1/builds/c22f7aba-b777-4a09-8d3c-96ee08e89dab/betaGroups?limit=50"},
+    {"label": "lifetime", "path": "/v2/inAppPurchases/6799583540?include=inAppPurchaseLocalizations,appStoreReviewScreenshot,iapPriceSchedule,inAppPurchaseAvailability&limit[inAppPurchaseLocalizations]=50"},
+    {"label": "monthly", "path": "/v1/subscriptions/6804373671?include=appStoreReviewScreenshot,subscriptionLocalizations,prices,subscriptionAvailability&limit[subscriptionLocalizations]=50&limit[prices]=50"}
   ]
 }
