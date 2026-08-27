@@ -1,0 +1,74 @@
+name: APP2-003 Codemagic Artifact Inspect
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  inspect:
+    if: startsWith(github.event.issue.title, '[YORU-CM-LOG]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download and sanitize failed Build 4 artifacts
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          BUILD_ID='6a90341bd1e2d6f6c5af8a4d'
+          curl --fail-with-body --silent --show-error -H "x-auth-token: $CM_API_TOKEN" \
+            "https://codemagic.io/api/v3/builds/$BUILD_ID" > /tmp/build.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/build.json',encoding='utf-8'))
+          data=d.get('data') or d
+          arts=data.get('artifacts') or []
+          if not arts: raise SystemExit('no artifacts')
+          url=arts[0].get('short_lived_download_url')
+          if not url: raise SystemExit('no artifact url')
+          open('/tmp/url','w').write(url)
+          PY
+          curl --fail-with-body --silent --show-error "$(cat /tmp/url)" -o /tmp/artifacts.zip
+          rm -rf /tmp/artifacts && mkdir /tmp/artifacts
+          unzip -o /tmp/artifacts.zip -d /tmp/artifacts >/dev/null
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          root=Path('/tmp/artifacts')
+          texts=[]
+          for p in root.rglob('*'):
+              if p.is_file() and p.stat().st_size < 5_000_000:
+                  try: s=p.read_text(encoding='utf-8',errors='replace')
+                  except Exception: continue
+                  texts.append(f'===== {p.relative_to(root)} =====\n{s}')
+          raw='\n'.join(texts)
+          raw=re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----','[REDACTED PEM]',raw,flags=re.S)
+          raw=re.sub(r'eyJ[A-Za-z0-9._-]{20,}','[REDACTED JWT]',raw)
+          raw=re.sub(r'(?i)(token|password|secret|private[_ -]?key)\s*[=:]\s*\S+',r'\1=[REDACTED]',raw)
+          out={
+            'task_id':'APP2-003','build_id':'6a90341bd1e2d6f6c5af8a4d',
+            'artifact_files':[str(p.relative_to(root)) for p in root.rglob('*') if p.is_file()],
+            'sanitized_text':raw[-50000:],
+            'secret_values_persisted':False
+          }
+          dest=Path('automation/app-development-2/evidence/APP2-003-codemagic-build4-failure-log.json')
+          dest.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Persist sanitized failure evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/app-development-2/evidence/APP2-003-codemagic-build4-failure-log.json
+          git commit -m 'APP2-003 persist Build 4 failure log' || exit 0
+          git push origin HEAD:main
+      - name: Report completion
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body 'APP2-003 sanitized Codemagic failure artifact captured.'
