@@ -23,25 +23,37 @@ private struct Lane3IncrementalSHA256 {
     private var totalBytes: UInt64 = 0
 
     mutating func update(_ bytes: [UInt8]) {
+        bytes.withUnsafeBytes { raw in
+            updateRaw(raw)
+        }
+    }
+
+    private mutating func updateRaw(_ bytes: UnsafeRawBufferPointer) {
         guard !bytes.isEmpty else { return }
         totalBytes &+= UInt64(bytes.count)
         var index = 0
         if !partial.isEmpty {
             let needed = 64 - partial.count
             let take = min(needed, bytes.count)
-            partial.append(contentsOf: bytes[0..<take])
-            index += take
+            if take > 0 {
+                for offset in 0..<take {
+                    partial.append(bytes[offset])
+                }
+                index += take
+            }
             if partial.count == 64 {
                 compress(partial)
                 partial.removeAll(keepingCapacity: true)
             }
         }
         while index + 64 <= bytes.count {
-            compress(Array(bytes[index..<(index + 64)]))
+            compressRaw(bytes, offset: index)
             index += 64
         }
         if index < bytes.count {
-            partial.append(contentsOf: bytes[index..<bytes.count])
+            for offset in index..<bytes.count {
+                partial.append(bytes[offset])
+            }
         }
     }
 
@@ -57,6 +69,21 @@ private struct Lane3IncrementalSHA256 {
             bytes.append(UInt8(truncatingIfNeeded: value >> UInt64(offset * 8)))
         }
         update(bytes)
+    }
+
+    /// AW47: on all selected Apple/Linux little-endian targets, consume the existing Float array
+    /// storage directly as canonical Float32 little-endian bytes. This removes the former per-PCM-chunk
+    /// 4-bytes-per-Float conversion array while preserving SHA256_FLOAT32_LE_V1 byte-for-byte.
+    mutating func updateFloat32LittleEndian(_ samples: [Float]) {
+        #if _endian(little)
+        samples.withUnsafeBufferPointer { buffer in
+            updateRaw(UnsafeRawBufferPointer(buffer))
+        }
+        #else
+        for sample in samples {
+            updateLittleEndian(UInt64(sample.bitPattern), byteCount: 4)
+        }
+        #endif
     }
 
     mutating func finalizeHex() -> String {
@@ -85,13 +112,20 @@ private struct Lane3IncrementalSHA256 {
 
     private mutating func compress(_ block: [UInt8]) {
         precondition(block.count == 64)
+        block.withUnsafeBytes { raw in
+            compressRaw(raw, offset: 0)
+        }
+    }
+
+    private mutating func compressRaw(_ block: UnsafeRawBufferPointer, offset: Int) {
+        precondition(offset >= 0 && offset + 64 <= block.count)
         var w = [UInt32](repeating: 0, count: 64)
         for index in 0..<16 {
-            let offset = index * 4
-            w[index] = (UInt32(block[offset]) << 24)
-                | (UInt32(block[offset + 1]) << 16)
-                | (UInt32(block[offset + 2]) << 8)
-                | UInt32(block[offset + 3])
+            let blockOffset = offset + index * 4
+            w[index] = (UInt32(block[blockOffset]) << 24)
+                | (UInt32(block[blockOffset + 1]) << 16)
+                | (UInt32(block[blockOffset + 2]) << 8)
+                | UInt32(block[blockOffset + 3])
         }
         for index in 16..<64 {
             let s0 = rotateRight(w[index - 15], 7) ^ rotateRight(w[index - 15], 18) ^ (w[index - 15] >> 3)
@@ -190,10 +224,9 @@ public enum Lane3LongTrackPCMIdentityHasher {
         return sha.finalizeHex()
     }
 
-    /// AW45/AW46 single-pass primitive. The caller observes each exact bounded PCM chunk while the
-    /// canonical SHA256_FLOAT32_LE_V1 digest is updated from the same samples. AW46 snapshots source
-    /// metadata and verifies it before and after every read plus at completion, so a dynamic adapter
-    /// cannot silently combine one header identity with PCM read under a different visible format.
+    /// AW45-AW47 single-pass primitive. The caller observes each exact bounded PCM chunk while the
+    /// canonical SHA256_FLOAT32_LE_V1 digest is updated from the same samples. AW46 freezes metadata;
+    /// AW47 removes the additional PCM-to-byte chunk materialization on selected little-endian targets.
     static func digestWithChunkVisitor(
         _ source: any Lane3PCMChunkReadable,
         chunkFrames: Int,
@@ -287,20 +320,11 @@ public enum Lane3LongTrackPCMIdentityHasher {
             }
             try visit(frame, count, samples)
 
-            var bytes: [UInt8] = []
-            let byteCapacity = expectedSamples.multipliedReportingOverflow(by: 4)
-            guard !byteCapacity.overflow else {
+            let byteCapacity = expectedSamples.multipliedReportingOverflow(by: MemoryLayout<Float>.stride)
+            guard !byteCapacity.overflow, MemoryLayout<Float>.stride == 4 else {
                 throw Lane3LongTrackEvidenceError.integerOverflow
             }
-            bytes.reserveCapacity(byteCapacity.partialValue)
-            for sample in samples {
-                let bits = sample.bitPattern
-                bytes.append(UInt8(truncatingIfNeeded: bits))
-                bytes.append(UInt8(truncatingIfNeeded: bits >> 8))
-                bytes.append(UInt8(truncatingIfNeeded: bits >> 16))
-                bytes.append(UInt8(truncatingIfNeeded: bits >> 24))
-            }
-            sha.update(bytes)
+            sha.updateFloat32LittleEndian(samples)
             frame += Int64(count)
         }
         try requireMetadataStable(source, expected: expectedMetadata)
