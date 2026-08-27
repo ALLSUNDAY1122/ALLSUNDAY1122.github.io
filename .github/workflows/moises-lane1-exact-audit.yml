@@ -32,6 +32,42 @@ jobs:
           rc=$?
           cat /tmp/l1-a40-audit.json
           exit $rc
+      - name: Identify differential_common contaminator
+        if: always()
+        run: |
+          python - <<'PY'
+          import importlib
+          import pathlib
+          import sys
+          import traceback
+
+          root = pathlib.Path.cwd() / 'tech-assets/moises-audio/Separation'
+          tests = root / 'Tests'
+          for path in (root / 'Server', root / 'Evaluation', tests):
+              sys.path.insert(0, str(path))
+
+          missing = object()
+          previous = sys.modules.get('differential_common', missing)
+          print('INITIAL', previous is missing)
+          for file in sorted(tests.glob('test_*.py')):
+              name = file.stem
+              try:
+                  importlib.import_module(name)
+              except Exception:
+                  print('IMPORT_ERROR', name)
+                  traceback.print_exc()
+                  break
+              current = sys.modules.get('differential_common', missing)
+              if current is not previous:
+                  print(
+                      'MODULE_CHANGE', name,
+                      'id=', id(current) if current is not missing else None,
+                      'file=', getattr(current, '__file__', None) if current is not missing else None,
+                      'validate_plan=', hasattr(current, 'validate_plan') if current is not missing else None,
+                      'validate_run=', hasattr(current, 'validate_run') if current is not missing else None,
+                  )
+                  previous = current
+          PY
       - name: Direct unittest traceback diagnostic
         if: always()
         run: |
