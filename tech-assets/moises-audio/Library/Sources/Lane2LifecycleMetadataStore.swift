@@ -175,13 +175,23 @@ public actor Lane2LifecycleMetadataStore {
 
     public func finishExportCleanup(exportID: UUID) throws {
         try ensureV2Ready()
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
         for fileURL in try jsonFiles(in: exportsDirectoryURL) {
             let projectUUID = try shardUUID(from: fileURL)
             let existing = try loadExports(projectUUID: projectUUID)
             guard existing.contains(where: { $0.id == exportID }) else { continue }
             let updated = existing.filter { $0.id != exportID }
             if updated.isEmpty {
-                try fileManager.removeItem(at: fileURL)
+                do {
+                    try boundary.requireExistingRegularFile(
+                        fileURL,
+                        within: exportsDirectoryURL,
+                        fileManager: fileManager
+                    )
+                    try fileManager.removeItem(at: fileURL)
+                } catch {
+                    throw Lane2LifecycleMetadataFailure.corruptShard(relativeName(fileURL))
+                }
             } else {
                 try writeExports(updated, projectUUID: projectUUID)
             }
@@ -204,8 +214,17 @@ public actor Lane2LifecycleMetadataStore {
     public func removeProjectMetadata(projectUUID: UUID) throws {
         try ensureV2Ready()
         let url = projectShardURL(projectUUID: projectUUID)
-        if fileManager.fileExists(atPath: url.path) {
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+        do {
+            guard try boundary.nodeExists(url, fileManager: fileManager) else { return }
+            try boundary.requireExistingRegularFile(
+                url,
+                within: projectsDirectoryURL,
+                fileManager: fileManager
+            )
             try fileManager.removeItem(at: url)
+        } catch {
+            throw Lane2LifecycleMetadataFailure.corruptShard(relativeName(url))
         }
     }
 
@@ -230,7 +249,8 @@ public actor Lane2LifecycleMetadataStore {
                 moved.append(try quarantine(url))
             }
         }
-        if fileManager.fileExists(atPath: failureHistoryURL.path) {
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+        if (try? boundary.nodeExists(failureHistoryURL, fileManager: fileManager)) == true {
             do {
                 _ = try loadFailures()
             } catch Lane2LifecycleMetadataFailure.corruptShard {
@@ -245,8 +265,26 @@ public actor Lane2LifecycleMetadataStore {
     /// coordinator. Unsupported future schema is not treated as corruption and remains untouched.
     @discardableResult
     public func quarantineCorruptLegacyDocument() throws -> String? {
-        guard !fileManager.fileExists(atPath: markerURL.path),
-              fileManager.fileExists(atPath: documentURL.path) else { return nil }
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+        do {
+            guard try boundary.nodeExists(lifecycleDirectoryURL, fileManager: fileManager) else { return nil }
+            try boundary.requireDirectory(lifecycleDirectoryURL, fileManager: fileManager)
+            if try boundary.nodeExists(markerURL, fileManager: fileManager) {
+                try boundary.requireExistingRegularFile(
+                    markerURL,
+                    within: v2DirectoryURL,
+                    fileManager: fileManager
+                )
+                return nil
+            }
+            guard try boundary.requireRegularFileOrMissing(
+                documentURL,
+                within: lifecycleDirectoryURL,
+                fileManager: fileManager
+            ) else { return nil }
+        } catch {
+            throw Lane2LifecycleMetadataFailure.corruptDocument
+        }
         do {
             _ = try loadLegacyV1()
             return nil
@@ -264,31 +302,59 @@ public actor Lane2LifecycleMetadataStore {
     }
 
     private func ensureV2Ready() throws {
-        if fileManager.fileExists(atPath: markerURL.path) {
-            let marker: V2Marker
-            do {
-                marker = try decode(V2Marker.self, from: markerURL)
-            } catch {
-                throw Lane2LifecycleMetadataFailure.corruptShard(relativeName(markerURL))
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+        do {
+            try boundary.ensureRootDirectory(fileManager: fileManager)
+            if try boundary.nodeExists(lifecycleDirectoryURL, fileManager: fileManager) {
+                try boundary.requireDirectory(lifecycleDirectoryURL, fileManager: fileManager)
             }
-            guard marker.schemaVersion == storageSchemaVersion else {
-                throw Lane2LifecycleMetadataFailure.unsupportedSchema(marker.schemaVersion)
-            }
-            return
-        }
 
-        if fileManager.fileExists(atPath: documentURL.path) {
-            let legacy = try loadLegacyV1()
-            try migrateLegacy(legacy)
-        } else {
-            try initializeEmptyV2()
+            if try boundary.nodeExists(markerURL, fileManager: fileManager) {
+                try boundary.requireExistingRegularFile(
+                    markerURL,
+                    within: v2DirectoryURL,
+                    fileManager: fileManager
+                )
+                let marker: V2Marker
+                do {
+                    marker = try decode(V2Marker.self, from: markerURL)
+                } catch {
+                    throw Lane2LifecycleMetadataFailure.corruptShard(relativeName(markerURL))
+                }
+                guard marker.schemaVersion == storageSchemaVersion else {
+                    throw Lane2LifecycleMetadataFailure.unsupportedSchema(marker.schemaVersion)
+                }
+                return
+            }
+
+            if try boundary.nodeExists(documentURL, fileManager: fileManager) {
+                try boundary.requireExistingRegularFile(
+                    documentURL,
+                    within: lifecycleDirectoryURL,
+                    fileManager: fileManager
+                )
+                let legacy = try loadLegacyV1()
+                try migrateLegacy(legacy)
+            } else {
+                try initializeEmptyV2()
+            }
+        } catch let failure as Lane2LifecycleMetadataFailure {
+            throw failure
+        } catch {
+            throw Lane2LifecycleMetadataFailure.corruptShard(relativeName(lifecycleDirectoryURL))
         }
     }
 
     private func migrateLegacy(_ legacy: Lane2LifecycleSnapshot) throws {
         // An unmarked v2 tree is never authoritative; discard only that metadata staging area.
-        if fileManager.fileExists(atPath: v2DirectoryURL.path) {
-            try fileManager.removeItem(at: v2DirectoryURL)
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+        if try boundary.nodeExists(v2DirectoryURL, fileManager: fileManager) {
+            do {
+                try boundary.requireDirectory(v2DirectoryURL, fileManager: fileManager)
+                try fileManager.removeItem(at: v2DirectoryURL)
+            } catch {
+                throw Lane2LifecycleMetadataFailure.corruptShard(relativeName(v2DirectoryURL))
+            }
         }
         try createV2Directories()
         for project in legacy.projects {
@@ -305,9 +371,15 @@ public actor Lane2LifecycleMetadataStore {
     }
 
     private func initializeEmptyV2() throws {
-        if fileManager.fileExists(atPath: v2DirectoryURL.path),
-           !fileManager.fileExists(atPath: markerURL.path) {
-            try fileManager.removeItem(at: v2DirectoryURL)
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+        if try boundary.nodeExists(v2DirectoryURL, fileManager: fileManager),
+           !(try boundary.nodeExists(markerURL, fileManager: fileManager)) {
+            do {
+                try boundary.requireDirectory(v2DirectoryURL, fileManager: fileManager)
+                try fileManager.removeItem(at: v2DirectoryURL)
+            } catch {
+                throw Lane2LifecycleMetadataFailure.corruptShard(relativeName(v2DirectoryURL))
+            }
         }
         try createV2Directories()
         try writeCodable(V2Marker(schemaVersion: storageSchemaVersion), to: markerURL)
@@ -366,7 +438,17 @@ public actor Lane2LifecycleMetadataStore {
 
     private func loadExports(projectUUID: UUID) throws -> [Lane2ExportRecord] {
         let url = exportShardURL(projectUUID: projectUUID)
-        guard fileManager.fileExists(atPath: url.path) else { return [] }
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+        do {
+            guard try boundary.nodeExists(url, fileManager: fileManager) else { return [] }
+            try boundary.requireExistingRegularFile(
+                url,
+                within: exportsDirectoryURL,
+                fileManager: fileManager
+            )
+        } catch {
+            throw Lane2LifecycleMetadataFailure.corruptShard(relativeName(url))
+        }
         return try loadExportShard(at: url)
     }
 
@@ -404,7 +486,17 @@ public actor Lane2LifecycleMetadataStore {
     }
 
     private func loadFailures() throws -> [Lane2FailureRecord] {
-        guard fileManager.fileExists(atPath: failureHistoryURL.path) else { return [] }
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+        do {
+            guard try boundary.nodeExists(failureHistoryURL, fileManager: fileManager) else { return [] }
+            try boundary.requireExistingRegularFile(
+                failureHistoryURL,
+                within: v2DirectoryURL,
+                fileManager: fileManager
+            )
+        } catch {
+            throw Lane2LifecycleMetadataFailure.corruptShard(relativeName(failureHistoryURL))
+        }
         do {
             return try decode([Lane2FailureRecord].self, from: failureHistoryURL)
         } catch {
@@ -414,12 +506,28 @@ public actor Lane2LifecycleMetadataStore {
 
     private func quarantine(_ sourceURL: URL) throws -> String {
         do {
-            try fileManager.createDirectory(at: quarantineDirectoryURL, withIntermediateDirectories: true)
+            let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+            try boundary.requireExistingRegularFile(
+                sourceURL,
+                within: lifecycleDirectoryURL,
+                fileManager: fileManager
+            )
+            try boundary.ensureDirectory(quarantineDirectoryURL, fileManager: fileManager)
             let destination = quarantineDirectoryURL.appendingPathComponent(
                 UUID().uuidString.lowercased() + "-" + sourceURL.lastPathComponent,
                 isDirectory: false
             )
+            try boundary.requireSafeDestination(
+                destination,
+                within: quarantineDirectoryURL,
+                fileManager: fileManager
+            )
             try fileManager.moveItem(at: sourceURL, to: destination)
+            try boundary.requireExistingRegularFile(
+                destination,
+                within: quarantineDirectoryURL,
+                fileManager: fileManager
+            )
             return relativeName(destination)
         } catch {
             throw Lane2LifecycleMetadataFailure.quarantineFailed(relativeName(sourceURL))
@@ -427,15 +535,25 @@ public actor Lane2LifecycleMetadataStore {
     }
 
     private func jsonFiles(in directory: URL) throws -> [URL] {
-        guard fileManager.fileExists(atPath: directory.path) else { return [] }
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
         do {
-            return try fileManager.contentsOfDirectory(
+            guard try boundary.nodeExists(directory, fileManager: fileManager) else { return [] }
+            try boundary.requireDirectory(directory, fileManager: fileManager)
+            let candidates = try fileManager.contentsOfDirectory(
                 at: directory,
-                includingPropertiesForKeys: [.isRegularFileKey],
+                includingPropertiesForKeys: [],
                 options: [.skipsHiddenFiles]
             )
             .filter { $0.pathExtension.lowercased() == "json" }
             .sorted { $0.lastPathComponent < $1.lastPathComponent }
+            for candidate in candidates {
+                try boundary.requireExistingRegularFile(
+                    candidate,
+                    within: directory,
+                    fileManager: fileManager
+                )
+            }
+            return candidates
         } catch {
             throw Lane2LifecycleMetadataFailure.corruptShard(relativeName(directory))
         }
@@ -449,22 +567,55 @@ public actor Lane2LifecycleMetadataStore {
     }
 
     private func createV2Directories() throws {
-        try fileManager.createDirectory(at: projectsDirectoryURL, withIntermediateDirectories: true)
-        try fileManager.createDirectory(at: exportsDirectoryURL, withIntermediateDirectories: true)
+        do {
+            let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+            try boundary.ensureDirectory(projectsDirectoryURL, fileManager: fileManager)
+            try boundary.ensureDirectory(exportsDirectoryURL, fileManager: fileManager)
+        } catch {
+            throw Lane2LifecycleMetadataFailure.corruptShard(relativeName(v2DirectoryURL))
+        }
     }
 
     private func writeCodable<T: Encodable>(_ value: T, to url: URL) throws {
-        try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys]
-        encoder.dateEncodingStrategy = .iso8601
-        try encoder.encode(value).write(to: url, options: [.atomic])
+        do {
+            let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+            try boundary.ensureDirectory(url.deletingLastPathComponent(), fileManager: fileManager)
+            _ = try boundary.requireRegularFileOrMissing(
+                url,
+                within: url.deletingLastPathComponent(),
+                fileManager: fileManager
+            )
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.sortedKeys]
+            encoder.dateEncodingStrategy = .iso8601
+            try encoder.encode(value).write(to: url, options: [.atomic])
+            try boundary.requireExistingRegularFile(
+                url,
+                within: url.deletingLastPathComponent(),
+                fileManager: fileManager
+            )
+        } catch let failure as Lane2LifecycleMetadataFailure {
+            throw failure
+        } catch {
+            throw Lane2LifecycleMetadataFailure.corruptShard(relativeName(url))
+        }
     }
 
     private func decode<T: Decodable>(_ type: T.Type, from url: URL) throws -> T {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return try decoder.decode(type, from: Data(contentsOf: url))
+        do {
+            try LibraryManagedPathBoundary(rootURL: rootURL).requireExistingRegularFile(
+                url,
+                within: rootURL,
+                fileManager: fileManager
+            )
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            return try decoder.decode(type, from: Data(contentsOf: url))
+        } catch let failure as Lane2LifecycleMetadataFailure {
+            throw failure
+        } catch {
+            throw error
+        }
     }
 
     private var lifecycleDirectoryURL: URL { documentURL.deletingLastPathComponent() }

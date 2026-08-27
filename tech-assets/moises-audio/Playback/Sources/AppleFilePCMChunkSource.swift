@@ -8,6 +8,8 @@ public enum Lane3AppleFilePCMChunkSourceError: Error, Equatable, Sendable {
     case emptySource
     case sourceClosed
     case sourceMetadataChanged
+    case sourceIdentityUnavailable
+    case sourceIdentityChanged
     case policyRejected(Lane3PCMChunkReadPolicyError)
     case bufferAllocationFailed
     case seekFailed
@@ -44,6 +46,8 @@ public final class Lane3AppleFilePCMChunkSource: Lane3PCMChunkReadable, @uncheck
     public let maximumFramesPerRead: Int
 
     private let file: AVAudioFile
+    private let sourceURL: URL
+    private let expectedSourceIdentity: Lane3FileSourceIdentitySnapshot
     private let policy: Lane3PCMChunkReadPolicy
     private let lock = NSLock()
     private let expectedSampleRateBitPattern: UInt64
@@ -61,6 +65,13 @@ public final class Lane3AppleFilePCMChunkSource: Lane3PCMChunkReadable, @uncheck
             throw Lane3AppleFilePCMChunkSourceError.policyRejected(error)
         }
 
+        let identityBeforeOpen: Lane3FileSourceIdentitySnapshot
+        do {
+            identityBeforeOpen = try Lane3FileSourceIdentityFence.capture(fileURL: fileURL)
+        } catch {
+            throw Lane3AppleFilePCMChunkSourceError.sourceIdentityUnavailable
+        }
+
         let opened: AVAudioFile
         do {
             opened = try AVAudioFile(
@@ -70,6 +81,16 @@ public final class Lane3AppleFilePCMChunkSource: Lane3PCMChunkReadable, @uncheck
             )
         } catch {
             throw Lane3AppleFilePCMChunkSourceError.openFailed
+        }
+
+        let identityAfterOpen: Lane3FileSourceIdentitySnapshot
+        do {
+            identityAfterOpen = try Lane3FileSourceIdentityFence.capture(fileURL: fileURL)
+        } catch {
+            throw Lane3AppleFilePCMChunkSourceError.sourceIdentityUnavailable
+        }
+        guard identityAfterOpen == identityBeforeOpen else {
+            throw Lane3AppleFilePCMChunkSourceError.sourceIdentityChanged
         }
 
         let format = opened.processingFormat
@@ -85,6 +106,8 @@ public final class Lane3AppleFilePCMChunkSource: Lane3PCMChunkReadable, @uncheck
         }
 
         self.file = opened
+        self.sourceURL = fileURL
+        self.expectedSourceIdentity = identityAfterOpen
         self.policy = policy
         self.channels = Int(format.channelCount)
         self.sampleRate = format.sampleRate
@@ -153,14 +176,23 @@ public final class Lane3AppleFilePCMChunkSource: Lane3PCMChunkReadable, @uncheck
 
         file.framePosition = AVAudioFramePosition(startFrame)
         guard Int64(file.framePosition) == startFrame else {
+            try validateStableSource()
             throw Lane3AppleFilePCMChunkSourceError.seekFailed
         }
 
         do {
             try file.read(into: buffer, frameCount: appleFrameCount)
         } catch {
+            // Prefer a deterministic source-identity/metadata failure over a generic decoder failure
+            // when the backing file changed while AVFAudio was reading it.
+            try validateStableSource()
             throw Lane3AppleFilePCMChunkSourceError.readFailed
         }
+
+        // AW49: the AVAudioFile instance itself is immutable in this adapter, but the filesystem
+        // object at its URL can still be atomically replaced or modified in place. Revalidate after
+        // every decoder read so one long evidence traversal cannot silently mix file generations.
+        try validateStableSource()
 
         let actualFrames = Int(buffer.frameLength)
         guard actualFrames == requestedFrames else {
@@ -201,6 +233,22 @@ public final class Lane3AppleFilePCMChunkSource: Lane3PCMChunkReadable, @uncheck
         guard file.isOpen else {
             throw Lane3AppleFilePCMChunkSourceError.sourceClosed
         }
+        do {
+            try Lane3FileSourceIdentityFence.requireUnchanged(
+                fileURL: sourceURL,
+                expected: expectedSourceIdentity
+            )
+        } catch let error as Lane3FileSourceIdentityFenceError {
+            switch error {
+            case .changed:
+                throw Lane3AppleFilePCMChunkSourceError.sourceIdentityChanged
+            case .unavailable, .notRegularFile:
+                throw Lane3AppleFilePCMChunkSourceError.sourceIdentityUnavailable
+            }
+        } catch {
+            throw Lane3AppleFilePCMChunkSourceError.sourceIdentityUnavailable
+        }
+
         let format = file.processingFormat
         guard Int64(file.length) == frameCount,
               format.commonFormat == .pcmFormatFloat32,

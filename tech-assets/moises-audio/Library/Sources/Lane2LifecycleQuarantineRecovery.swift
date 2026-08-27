@@ -112,8 +112,16 @@ public actor Lane2LifecycleQuarantineRecovery {
     }
 
     public func barrier() throws -> Lane2ExportMetadataQuarantineBarrier? {
-        guard fileManager.fileExists(atPath: barrierURL.path) else { return nil }
         do {
+            let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+            guard try boundary.nodeExists(recoveryDirectoryURL, fileManager: fileManager) else { return nil }
+            try boundary.requireDirectory(recoveryDirectoryURL, fileManager: fileManager)
+            guard try boundary.requireRegularFileOrMissing(
+                barrierURL,
+                within: recoveryDirectoryURL,
+                fileManager: fileManager
+            ) else { return nil }
+
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
             let value = try decoder.decode(
@@ -224,6 +232,7 @@ public actor Lane2LifecycleQuarantineRecovery {
     public func requireRecoveredArtifactsReady(
         _ artifacts: [Lane2RecoveredExportArtifact]
     ) throws {
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
         for artifact in artifacts {
             try Self.validateExport(relativePath: artifact.relativePath)
             let url = rootURL.appendingPathComponent(artifact.relativePath).standardizedFileURL
@@ -231,20 +240,38 @@ public actor Lane2LifecycleQuarantineRecovery {
             guard url.path.hasPrefix(rootPath) else {
                 throw Lane2LifecycleQuarantineRecoveryFailure.invalidExportRelativePath(artifact.relativePath)
             }
-            var isDirectory: ObjCBool = false
-            guard fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) else {
+            do {
+                try boundary.requireExistingRegularFile(
+                    url,
+                    within: rootURL,
+                    fileManager: fileManager
+                )
+            } catch {
                 throw Lane2LifecycleQuarantineRecoveryFailure.missingRecoveredArtifact(artifact.relativePath)
             }
-            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey])
-            guard !isDirectory.boolValue, values.isRegularFile == true, (values.fileSize ?? 0) > 0 else {
+            let values = try url.resourceValues(forKeys: [.fileSizeKey])
+            guard (values.fileSize ?? 0) > 0 else {
                 throw Lane2LifecycleQuarantineRecoveryFailure.emptyRecoveredArtifact(artifact.relativePath)
             }
         }
     }
 
     public func clearBarrier() throws {
-        guard fileManager.fileExists(atPath: barrierURL.path) else { return }
-        try fileManager.removeItem(at: barrierURL)
+        do {
+            let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+            guard try boundary.nodeExists(recoveryDirectoryURL, fileManager: fileManager) else { return }
+            try boundary.requireDirectory(recoveryDirectoryURL, fileManager: fileManager)
+            guard try boundary.requireRegularFileOrMissing(
+                barrierURL,
+                within: recoveryDirectoryURL,
+                fileManager: fileManager
+            ) else { return }
+            try fileManager.removeItem(at: barrierURL)
+        } catch let failure as Lane2LifecycleQuarantineRecoveryFailure {
+            throw failure
+        } catch {
+            throw Lane2LifecycleQuarantineRecoveryFailure.corruptBarrier
+        }
     }
 
     private struct CorruptExportDescriptor {
@@ -253,19 +280,36 @@ public actor Lane2LifecycleQuarantineRecovery {
     }
 
     private func corruptExportShardDescriptors() throws -> [CorruptExportDescriptor] {
-        guard fileManager.fileExists(atPath: exportsDirectoryURL.path) else { return [] }
-        let urls = try fileManager.contentsOfDirectory(
-            at: exportsDirectoryURL,
-            includingPropertiesForKeys: [.isRegularFileKey],
-            options: [.skipsHiddenFiles]
-        )
-        .filter { $0.pathExtension.lowercased() == "json" }
-        .sorted { $0.lastPathComponent < $1.lastPathComponent }
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+        do {
+            guard try boundary.nodeExists(exportsDirectoryURL, fileManager: fileManager) else { return [] }
+            try boundary.requireDirectory(exportsDirectoryURL, fileManager: fileManager)
+        } catch {
+            throw Lane2LifecycleQuarantineRecoveryFailure.corruptBarrier
+        }
+
+        let urls: [URL]
+        do {
+            urls = try fileManager.contentsOfDirectory(
+                at: exportsDirectoryURL,
+                includingPropertiesForKeys: [],
+                options: [.skipsHiddenFiles]
+            )
+            .filter { $0.pathExtension.lowercased() == "json" }
+            .sorted { $0.lastPathComponent < $1.lastPathComponent }
+        } catch {
+            throw Lane2LifecycleQuarantineRecoveryFailure.corruptBarrier
+        }
 
         var result: [CorruptExportDescriptor] = []
         for url in urls {
             let projectUUID = UUID(uuidString: url.deletingPathExtension().lastPathComponent)
             do {
+                try boundary.requireExistingRegularFile(
+                    url,
+                    within: exportsDirectoryURL,
+                    fileManager: fileManager
+                )
                 try validateExportShard(at: url, expectedProjectUUID: projectUUID)
             } catch {
                 result.append(
@@ -283,6 +327,15 @@ public actor Lane2LifecycleQuarantineRecovery {
         guard let expectedProjectUUID else {
             throw Lane2LifecycleQuarantineRecoveryFailure.invalidExportRelativePath(relativeName(url))
         }
+        do {
+            try LibraryManagedPathBoundary(rootURL: rootURL).requireExistingRegularFile(
+                url,
+                within: exportsDirectoryURL,
+                fileManager: fileManager
+            )
+        } catch {
+            throw Lane2LifecycleQuarantineRecoveryFailure.invalidExportRelativePath(relativeName(url))
+        }
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         let records = try decoder.decode([Lane2ExportRecord].self, from: Data(contentsOf: url))
@@ -296,11 +349,28 @@ public actor Lane2LifecycleQuarantineRecovery {
     }
 
     private func writeBarrier(_ value: Lane2ExportMetadataQuarantineBarrier) throws {
-        try fileManager.createDirectory(at: recoveryDirectoryURL, withIntermediateDirectories: true)
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys]
-        encoder.dateEncodingStrategy = .iso8601
-        try encoder.encode(value).write(to: barrierURL, options: [.atomic])
+        do {
+            let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+            try boundary.ensureDirectory(recoveryDirectoryURL, fileManager: fileManager)
+            _ = try boundary.requireRegularFileOrMissing(
+                barrierURL,
+                within: recoveryDirectoryURL,
+                fileManager: fileManager
+            )
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.sortedKeys]
+            encoder.dateEncodingStrategy = .iso8601
+            try encoder.encode(value).write(to: barrierURL, options: [.atomic])
+            try boundary.requireExistingRegularFile(
+                barrierURL,
+                within: recoveryDirectoryURL,
+                fileManager: fileManager
+            )
+        } catch let failure as Lane2LifecycleQuarantineRecoveryFailure {
+            throw failure
+        } catch {
+            throw Lane2LifecycleQuarantineRecoveryFailure.corruptBarrier
+        }
     }
 
     private var lifecycleDirectoryURL: URL {
