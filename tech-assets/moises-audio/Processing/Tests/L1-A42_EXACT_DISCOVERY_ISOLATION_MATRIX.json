@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "wave_id": "L1-A42",
+  "title": "Exact Discovery Module Isolation Closure",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "triggering_exact_audit": {
+    "workflow_run_id": 33028113833,
+    "job_id": 98374115217,
+    "audited_worker_tip": "6514ab8eea1570c18e75f012254db48c3a0418e6",
+    "python": "3.12",
+    "unittest_tests_run": 767,
+    "failures": 0,
+    "errors": 1,
+    "skipped": 0,
+    "overall_state": "FAIL",
+    "remaining_error": "test_differential_execute_resume left a fake bare-name differential_common in sys.modules, causing later test_differential_gate import failure"
+  },
+  "focused_validation": {
+    "kind": "interface-compatible isolated import-state harness",
+    "checks_run": 9,
+    "passed": 9,
+    "failed": 0,
+    "exact_worker_checkout": false,
+    "repository_native_full_discovery": false
+  },
+  "cases": [
+    {
+      "id": "A42-01",
+      "name": "dynamic execute probe is registered before exec_module",
+      "state": "PASS_ISOLATED"
+    },
+    {
+      "id": "A42-02",
+      "name": "initially absent differential_common remains absent after probe",
+      "state": "PASS_ISOLATED"
+    },
+    {
+      "id": "A42-03",
+      "name": "initially absent differential_resume remains absent after probe",
+      "state": "PASS_ISOLATED"
+    },
+    {
+      "id": "A42-04",
+      "name": "initially absent unique probe module remains absent after probe",
+      "state": "PASS_ISOLATED"
+    },
+    {
+      "id": "A42-05",
+      "name": "sys.path is exactly restored from initially absent-module scenario",
+      "state": "PASS_ISOLATED"
+    },
+    {
+      "id": "A42-06",
+      "name": "preexisting differential_common object identity is restored",
+      "state": "PASS_ISOLATED"
+    },
+    {
+      "id": "A42-07",
+      "name": "preexisting differential_resume object identity is restored",
+      "state": "PASS_ISOLATED"
+    },
+    {
+      "id": "A42-08",
+      "name": "preexisting unique probe module object identity is restored",
+      "state": "PASS_ISOLATED"
+    },
+    {
+      "id": "A42-09",
+      "name": "sys.path is exactly restored from preexisting-module scenario",
+      "state": "PASS_ISOLATED"
+    },
+    {
+      "id": "A42-10",
+      "name": "repository regression imports execute-resume with both absent and sentinel module states",
+      "state": "IMPLEMENTED_NOT_EXACTLY_EXECUTED"
+    },
+    {
+      "id": "A42-11",
+      "name": "AST policy rejects future top-level writes to sys.modules differential_* in test_differential files",
+      "state": "IMPLEMENTED_NOT_EXACTLY_EXECUTED"
+    },
+    {
+      "id": "A42-12",
+      "name": "A42 source/regression dependency binding is part of unittest discovery",
+      "state": "IMPLEMENTED_NOT_EXACTLY_EXECUTED"
+    }
+  ],
+  "remaining_gates": [
+    "Run lane1_dependency_audit.py on an executable full checkout at the exact final A42 Worker branch tip.",
+    "Require overall_state, git_head_binding, owned_source_snapshot, dependency_contracts and unittest_discovery all PASS with zero unittest failures/errors.",
+    "Do not promote any PARITY row from A42 import-isolation evidence."
+  ]
+}
