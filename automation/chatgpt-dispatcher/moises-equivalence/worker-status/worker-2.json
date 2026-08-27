@@ -11,18 +11,20 @@
   "completed_bundles": ["L2-M01", "L2-M02", "L2-M03", "L2-M04"],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "76a002b6eb98024b0f7c538be419c8ad041f9810",
-  "prior_status_blob_sha": "181909310ad067f146508c386ca6a636882e301c",
-  "historical_commit_ledger_through": "858ffc9703c1ea2d58d3c4c13cbf497d645ad404",
+  "head_sha": "2110e9180daf00c7e03e3476c3dc12e32979e1c1",
+  "prior_status_blob_sha": "2578c6a110dbf75e4811ad6efc37efc6d5d15f52",
+  "historical_commit_ledger_through": "c74631f21bbb110b3738f2efb7ad240ab5c5025e",
   "commits": [
-    "35c7e2ce8bc9149b3c49a6d645e40f194ce209c4",
-    "b720239b5bcd03933bb938c720c3301be7b37f28",
-    "aa8abfa10c9ce437d8c08eec888165f7377e9781",
-    "6619f52fd3f251f58b18ee0fb66e0d216ff5ef7b",
-    "402271766898cc1e04e3759584c27c4fc04a0b84",
-    "f8e833f0883204464b146b616da5b73a752525b9",
-    "9658266a6921f24314e8eaa7c57104b51035f491",
-    "76a002b6eb98024b0f7c538be419c8ad041f9810"
+    "958224165f111ac36b03394b916d067bf91ed601",
+    "368a74f1de43b7c5ac7f9f78e3ada5d6c452cd74",
+    "ee75e628f2f902beff811f8901b855761bfdad83",
+    "06a807760a941270ea71aac5b67d57a77b529600",
+    "3feebac09951ba570268143ff7913d3b50ee7057",
+    "91de3e6a4b1795e7b6b8f432d32d9dc35d2b3a9c",
+    "b60d29905c398fa1946e8b1a7bdc49391ef84cf3",
+    "0b2acb837bf8e1a90796148dd5c907508165ab77",
+    "6e15e7bf44b8685f0189ddc47607f0ac4e9cad23",
+    "2110e9180daf00c7e03e3476c3dc12e32979e1c1"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -31,21 +33,27 @@
     "bf4b7a552cfbe025608079f7fe11093af7526b0b"
   ],
   "tests": [
-    "L2-M01..L2-AW45 validation remains durable in Git history and prior status blob 181909310ad067f146508c386ca6a636882e301c.",
-    "L2-AW46 focused Swift 6.2.1 strict-concurrency / warnings-as-errors self-check => L2_AW46_SELF_TEST_PASS discovered=2 missing=true corrupt=true stale_missing=true stale_empty=true symlink=true malformed=true fixed_namespace=256.",
-    "L2-AW46 optimized portable fixed-namespace benchmark => L2_AW46_PORTABLE_BENCH_PASS shards=256 rebuild_ms=33.568 steady_median_ms=39.785 probes=256 record_inventory_per_shard=1; timing is non-iPhone/non-PARITY evidence.",
-    "DeletionOwnershipManifestRecoveryTests.swift covers missing/corrupt/stale manifests, empty stale shards, symlink shard directories and malformed visible shard entries while preserving directly addressable ownership records.",
-    "Commit 402271766898cc1e04e3759584c27c4fc04a0b84 was diff-inspected: CrashSafeProjectLibraryStore.swift centralization is exactly one initializer insertion, avoiding an accidental broad facade rewrite."
+    "L2-M01..L2-AW46 validation remains durable in Git history and prior status blob 2578c6a110dbf75e4811ad6efc37efc6d5d15f52.",
+    "L2-AW47 focused Swift 6.2.1 strict-concurrency / warnings-as-errors portable self-check => L2_AW47_SELF_TEST_PASS checks=10 root_symlink=true managed_dir_symlink=true leaf_symlink=true managed_read=true normal_stage_finalize=true missing_future_compat=true.",
+    "L2-AW47 optimized portable existing-safe-file resolve benchmark => L2_AW47_PORTABLE_BENCH_PASS iterations=10000 rounds=7 median_ms=1613.064 per_resolve_us=161.306; Linux/non-iPhone/non-PARITY timing only.",
+    "IOManagedPathBoundaryTests.swift covers 9 focused cases: root/Staging/Imports/Exports symlink redirection, symlink staging leaf, safe removal, managed read through directory symlink, managed symlink leaf, and missing-future-path compatibility.",
+    "Same-Wave compatibility audit corrected stale test expectations after unsafe boundary failures were intentionally mapped through the existing StoreError.invalidRelativePath contract.",
+    "AW46->AW47 evidence-head diff is limited to IO-owned IOFileStore.swift, IOManagedPathBoundary.swift, IOManagedPathBoundaryTests.swift and the AW47 evidence document before this Worker-owned status update."
   ],
   "evidence": [
-    "L2-AW46 fresh canonical read preserved v4 autonomous Lane-2 IO/Library ownership and HQ-only PARITY authority; branch had no post-AW45 implementation Wave before this run.",
-    "Fresh source audit confirmed AW45 persistence ordering is active-shard signal before ownership record publication, so ordinary write-gap crashes cannot publish a record hidden by a successfully persisted manifest; the remaining portable gap was loss/corruption/staleness of the manifest itself.",
-    "AW46 Lane2DeletionOwnershipManifestRecovery probes exactly 256 deterministic shard paths, validates only the first visible record needed per existing shard, rejects symlink/non-directory/malformed shard evidence, and atomically rebuilds missing/corrupt/stale control metadata without editing ownership record bytes.",
-    "A same-Wave re-audit found helper-open-only wiring was bypassable, so AW46 was centralized in CrashSafeProjectLibraryStore.init(...); direct construction plus open/openPreservingUserData/openBulkPrepared now receive reconciliation exactly once, and duplicate helper calls were removed.",
-    "Portable Swift 6.2.1 strict-concurrency self-check and fixed-namespace benchmark passed; the benchmark establishes bounded complexity only, not Apple-device performance.",
-    "Final Evidence is tech-assets/moises-audio/Library/L2-AW46_DELETION_OWNERSHIP_MANIFEST_RECOVERY_VALIDATION.md at implementation/evidence head 76a002b6eb98024b0f7c538be419c8ad041f9810."
+    "L2-AW47 fresh canonical Notion/GitHub read preserved v4 autonomous Lane-2 IO/Library ownership, HQ-only Shared/App/PARITY control, and portable evidence non-PARITY limits.",
+    "Re-audit found that lexical root containment alone did not stop existing root/Imports/Exports/Staging or leaf symlinks from redirecting managed filesystem operations; an additional gap existed in app-owned reads through IOFileStore.resolve(relativePath:).",
+    "IOManagedPathBoundary now validates real root/directories/regular leaves and creates managed directories component-by-component after parent validation; IOFileStore applies it to primary prepare/stage/download/finalize/remove/preflight paths and existing managed reads.",
+    "resolve(relativePath:fileManager:) remains source-compatible with a default FileManager and preserves lexical resolution for a safe missing future path, while existing managed artifacts must be non-symlink regular files under a non-symlink directory chain.",
+    "finalize revalidates immediately before rename and deliberately preserves the durable publication intent when post-move validation fails, so a possibly visible artifact remains recoverable instead of losing its recovery signal.",
+    "Portable Swift 6.2.1 strict-concurrency self-check passed against real temporary directories/symlinks; fixed-depth resolver microbenchmark is bounded portable evidence only and not an iPhone threshold.",
+    "Final AW47 Evidence is tech-assets/moises-audio/IO/L2-AW47_MANAGED_PATH_BOUNDARY_VALIDATION.md at evidence head 2110e9180daf00c7e03e3476c3dc12e32979e1c1."
   ],
   "known_gaps": [
+    "AW47 protects the primary IOFileStore managed root/Imports/Exports/Staging boundary, but auxiliary nested IO paths remain to audit: .IORecovery/StagingOwnership, .LibraryRecovery/.../Publications, Staging/ExportBatches and Exports/Batches.",
+    "AW47 validation and the following Foundation copy/move/remove/read are separate syscalls, leaving a same-process/path-swap TOCTOU class; full elimination may require descriptor-relative/no-follow filesystem primitives or an equivalent Apple-runtime design.",
+    "A broken symlink leaf whose target is absent can appear as a safe missing future path to FileManager.fileExists; target appearance before later use is part of the residual TOCTOU class.",
+    "Physical-iPhone/APFS overhead and behavior for AW47 root/directory/leaf validation, File Provider paths, protection classes and force-termination remain unmeasured.",
     "AW45/AW46 launch recovery and manifest reconstruction are bounded portably, but physical-iPhone/APFS RSS/latency for extreme shard directories plus the fixed 256-path probe remains unmeasured.",
     "AW35/AW36 deterministic digest detects mutation/corruption but is not cryptographic authenticity against an actor able to rewrite both media and manifest.",
     "Physical force-termination evidence around AW36 revalidation, Core Data/WAL visibility, metadata commit, active-shard manifest replacement and intent retirement remains pending on Apple runtime.",
@@ -56,25 +64,27 @@
     "MOI-P001/P002/P017/P018/P019/P020/P024 remain MISSING until HQ real-device/reference/differential gates are satisfied."
   ],
   "hq_requests": [
+    "When integrating AW47, preserve the existing StoreError contract: unsafe/path-escape/symlink boundary violations map to invalidRelativePath/accessDenied semantics; actual directory/filesystem creation failures remain fileOperationFailed.",
+    "Preserve AW47 post-move publication-intent retention if final boundary validation fails; do not erase recovery evidence after file visibility may already have changed.",
+    "Exercise AW47 on iPhone/APFS/File Provider for root, managed-directory and leaf symlink behavior, safe existing reads, resolver overhead, force-termination and protection-class interactions.",
     "For App export/share integration, preserve canonical IOExportBatchTransaction -> Lane2ExportRegistrationJournal -> Lane2DurableLifecycleCoordinator metadata ordering and AW36 integrity revalidation gates.",
     "Preserve AW45 UUID-per-file sharded ownership schema and bounded pendingRecordSlice launch path; administrative pendingRecords() remains outside normal recovery.",
-    "When integrating AW46, preserve common-initializer manifest reconciliation before CrashSafe delete recovery and do not treat malformed/symlink shard structure as recoverable authority.",
-    "Exercise AW45/AW46 on iPhone/APFS with extreme same-shard concentration and force-termination around active-shard manifest replacement / ownership-record publication while measuring launch RSS/latency.",
-    "Do not promote Lane-2 PARITY rows from portable AW46 evidence alone.",
-    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW46."
+    "Do not promote Lane-2 PARITY rows from portable AW47 evidence alone.",
+    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW47."
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW46",
-    "goal": "Make deletion-ownership recovery resumable when the active-shard control manifest is missing, malformed or stale without weakening fail-closed ownership validation.",
-    "rationale": "AW45 bounded the active-shard hot path but loadActiveShards intentionally stopped when shard evidence existed without a trustworthy manifest. Because record publication is ordered after the active-shard signal, validated shard directories can safely reconstruct this acceleration index while record bytes remain untouched.",
-    "done_when": "A fixed-namespace repair primitive reconstructs missing/corrupt/stale manifests atomically, rejects symlink/malformed shard evidence, every current CrashSafe construction path receives reconciliation exactly once, portable strict-concurrency self-check/regressions/bounded benchmark cover recovery and failure cases, Evidence/status are committed, and no PARITY claim is made.",
+    "wave_id": "L2-AW47",
+    "goal": "Fail closed when the primary IOFileStore-managed root, managed directories or existing managed leaves are redirected by symlinks while preserving safe resolver/API behavior.",
+    "rationale": "Lexical standardized-path containment was insufficient for real filesystem authority: an existing symlink could remain lexically under root while redirecting reads/writes/removals outside it. This is a direct portable data-safety invariant and higher priority than optional performance or UX work.",
+    "done_when": "Root/Imports/Exports/Staging and existing managed leaves cannot redirect normal prepare/read/stage/finalize/remove behavior; negative and compatibility XCTest cases exist; strict-concurrency portable self-check and bounded benchmark pass; Evidence/status are committed; auxiliary nested ledgers/batch directories and syscall-level TOCTOU remain explicitly tracked; no PARITY claim is made.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "76a002b6eb98024b0f7c538be419c8ad041f9810",
-    "next_priority": "Re-audit remaining Lane-2 portable correctness/durability gaps after AW46; prioritize a direct data-safety or recovery invariant that can be completed without Apple-only evidence, while leaving physical iPhone/APFS gates to HQ/device validation."
+    "implementation_head_sha": "6e15e7bf44b8685f0189ddc47607f0ac4e9cad23",
+    "evidence_head_sha": "2110e9180daf00c7e03e3476c3dc12e32979e1c1",
+    "next_priority": "Extend fail-closed managed-path validation to IOStagingOwnershipRegistry, Lane2ManagedArtifactPublicationJournal and IOExportBatchTransaction nested directories, with symlink/corrupt recovery tests, without touching HQ-owned contracts."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW46 continue Lane-2 work autonomously.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW47 continue Lane-2 work autonomously.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-27T07:54:00+09:00",
-  "status_compaction_note": "Full pre-AW46 history remains addressable through prior_status_blob_sha 181909310ad067f146508c386ca6a636882e301c and Git history; commits contains AW46 only.",
+  "last_updated": "2026-08-27T09:33:00+09:00",
+  "status_compaction_note": "Full pre-AW47 history remains addressable through prior_status_blob_sha 2578c6a110dbf75e4811ad6efc37efc6d5d15f52 and Git history; commits contains AW47 implementation/evidence only.",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ remains sole PARITY authority."
 }
