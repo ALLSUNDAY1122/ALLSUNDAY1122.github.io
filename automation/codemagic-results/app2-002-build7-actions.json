@@ -1,0 +1,127 @@
+{
+  "data": [
+    {
+      "id": "6a86dcf41fff8a7eabb68640",
+      "name": "Preparing build machine",
+      "type": "preparing",
+      "has_test_results": false,
+      "script": null,
+      "status": "success",
+      "started_at": "2026-08-20T10:54:53.974000Z",
+      "finished_at": "2026-08-20T10:55:21.014000Z"
+    },
+    {
+      "id": "6a86dcf41fff8a7eabb68641",
+      "name": "Fetching app sources",
+      "type": "fetching",
+      "has_test_results": false,
+      "script": null,
+      "status": "success",
+      "started_at": "2026-08-20T10:55:21.014000Z",
+      "finished_at": "2026-08-20T10:55:24.920000Z"
+    },
+    {
+      "id": "6a86dcf41fff8a7eabb6863f",
+      "name": "Set up code signing identities",
+      "type": "setup_code_signing",
+      "has_test_results": false,
+      "script": null,
+      "status": "success",
+      "started_at": "2026-08-20T10:55:24.920000Z",
+      "finished_at": "2026-08-20T10:55:27.061000Z"
+    },
+    {
+      "id": "6a86dcf41fff8a7eabb68642",
+      "name": "Verify release UI and ad contract",
+      "type": "script",
+      "has_test_results": false,
+      "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR\"\ngrep -q '<title>呑み処アーケード</title>' nomikai-arcade.html\ngrep -q '<h1 class=\"site-title\">呑み処アーケード</h1>' nomikai-arcade.html\ngrep -q '<div class=\"lantern-row\">' nomikai-arcade.html\nif grep -q '〆にどうぞ' nomikai-arcade.html; then\n  echo 'FAIL: removed closing copy is still present in source HTML'\n  exit 1\nfi\ngrep -q 'import GoogleMobileAds' NomikaiArcadeApp.swift\ngrep -q 'ca-app-pub-3940256099942544/3986624511' NomikaiArcadeApp.swift\ngrep -q \"document.querySelector('.site-title')\" NomikaiArcadeApp.swift\ngrep -q '今夜のおすすめ  ・  PR' NomikaiArcadeApp.swift\necho 'PASS: home-only izakaya native-ad contract is present.'",
+      "status": "success",
+      "started_at": "2026-08-20T10:55:27.061000Z",
+      "finished_at": "2026-08-20T10:55:27.453000Z"
+    },
+    {
+      "id": "6a86dcf41fff8a7eabb68643",
+      "name": "Install Google Mobile Ads SDK",
+      "type": "script",
+      "has_test_results": false,
+      "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR\"\npod install --repo-update",
+      "status": "success",
+      "started_at": "2026-08-20T10:55:27.453000Z",
+      "finished_at": "2026-08-20T10:55:35.428000Z"
+    },
+    {
+      "id": "6a86dcf41fff8a7eabb68644",
+      "name": "Set Build 7 and generated Info.plist ad keys",
+      "type": "script",
+      "has_test_results": false,
+      "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR\"\npython3 - <<'PY'\nfrom pathlib import Path\np = Path('NomikaiArcade.xcodeproj/project.pbxproj')\ntext = p.read_text(encoding='utf-8')\nold = 'CURRENT_PROJECT_VERSION = 1;'\ncount = text.count(old)\nif count != 2:\n    raise SystemExit(f'Expected two project build-number entries, found {count}')\ntext = text.replace(old, 'CURRENT_PROJECT_VERSION = 7;')\nanchor = 'INFOPLIST_KEY_CFBundleDisplayName = \"呑み処アーケード\";'\nif text.count(anchor) != 2:\n    raise SystemExit('Expected two CFBundleDisplayName anchors')\nreplacement = anchor + '\\n\\t\\t\\t\\tINFOPLIST_KEY_GADApplicationIdentifier = \"ca-app-pub-3940256099942544~1458002511\";\\n\\t\\t\\t\\tINFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;'\ntext = text.replace(anchor, replacement)\np.write_text(text, encoding='utf-8')\nprint('PASS: Build 7 + test AdMob app id + export compliance keys set')\nPY",
+      "status": "success",
+      "started_at": "2026-08-20T10:55:35.428000Z",
+      "finished_at": "2026-08-20T10:55:35.833000Z"
+    },
+    {
+      "id": "6a86dcf41fff8a7eabb68645",
+      "name": "Verify Xcode workspace",
+      "type": "script",
+      "has_test_results": false,
+      "script": "#!/usr/bin/env bash\n\nxcodebuild -list \\\n  -workspace \"$CM_BUILD_DIR/$XCODE_WORKSPACE\"",
+      "status": "success",
+      "started_at": "2026-08-20T10:55:35.833000Z",
+      "finished_at": "2026-08-20T10:55:37.820000Z"
+    },
+    {
+      "id": "6a86dcf41fff8a7eabb68646",
+      "name": "Apply App Store signing profile",
+      "type": "script",
+      "has_test_results": false,
+      "script": "#!/usr/bin/env bash\n\nxcode-project use-profiles",
+      "status": "success",
+      "started_at": "2026-08-20T10:55:37.820000Z",
+      "finished_at": "2026-08-20T10:55:38.968000Z"
+    },
+    {
+      "id": "6a86dcf41fff8a7eabb68647",
+      "name": "Build signed IPA",
+      "type": "script",
+      "has_test_results": false,
+      "script": "#!/usr/bin/env bash\n\nxcode-project build-ipa \\\n  --workspace \"$CM_BUILD_DIR/$XCODE_WORKSPACE\" \\\n  --scheme \"$XCODE_SCHEME\"",
+      "status": "failed",
+      "started_at": "2026-08-20T10:55:38.968000Z",
+      "finished_at": "2026-08-20T10:56:27.902000Z"
+    },
+    {
+      "id": "6a86dcf41fff8a7eabb68648",
+      "name": "Verify signed IPA contract",
+      "type": "script",
+      "has_test_results": false,
+      "script": "#!/usr/bin/env bash\n\ncd \"$CM_BUILD_DIR\"\nIPA=\"$(find build/ios/ipa -name '*.ipa' -type f | head -1)\"\ntest -n \"$IPA\" -a -f \"$IPA\"\nrm -rf /tmp/nomikai-ipa-check\nmkdir -p /tmp/nomikai-ipa-check\nunzip -q \"$IPA\" -d /tmp/nomikai-ipa-check\nAPP=\"$(find /tmp/nomikai-ipa-check/Payload -maxdepth 1 -name '*.app' -type d | head -1)\"\ntest -n \"$APP\" -a -d \"$APP\"\nHTML=\"$APP/nomikai-arcade.html\"\ntest -f \"$HTML\"\ngrep -q '<h1 class=\"site-title\">呑み処アーケード</h1>' \"$HTML\"\ngrep -q '<div class=\"lantern-row\">' \"$HTML\"\nif grep -q '〆にどうぞ' \"$HTML\"; then\n  echo 'FAIL: removed closing copy is still present in signed IPA'\n  exit 1\nfi\nPLIST=\"$APP/Info.plist\"\n/usr/libexec/PlistBuddy -c 'Print :GADApplicationIdentifier' \"$PLIST\" | grep -q 'ca-app-pub-3940256099942544~1458002511'\n/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' \"$PLIST\" | grep -q 'false'\necho 'PASS: signed IPA contains corrected UI and AdMob/TestFlight metadata.'",
+      "status": "skipped",
+      "started_at": "2026-08-20T10:56:27.902000Z",
+      "finished_at": "2026-08-20T10:56:27.903000Z"
+    },
+    {
+      "id": "6a86dcf41fff8a7eabb68649",
+      "name": "Publishing",
+      "type": "publishing",
+      "has_test_results": false,
+      "script": null,
+      "status": "success",
+      "started_at": "2026-08-20T10:56:27.903000Z",
+      "finished_at": "2026-08-20T10:56:29.178000Z"
+    },
+    {
+      "id": "6a86dcf41fff8a7eabb6864a",
+      "name": "Cleaning up",
+      "type": "finishing",
+      "has_test_results": false,
+      "script": null,
+      "status": "success",
+      "started_at": "2026-08-20T10:56:29.178000Z",
+      "finished_at": "2026-08-20T10:56:29.255000Z"
+    }
+  ],
+  "page_size": 30,
+  "current_page": 1,
+  "total_pages": 1
+}
