@@ -5,20 +5,37 @@ on:
     branches: [main]
     paths:
       - automation/app-development-2/evidence/APP2-003-build4-trigger-request.json
-  issues:
-    types: [opened]
 
 permissions:
-  contents: read
-  issues: write
+  contents: write
 
 jobs:
-  start:
-    if: github.event_name == 'push' || startsWith(github.event.issue.title, '[YORU-CM-BUILD]')
+  route:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Read command
+        id: cmd
+        run: |
+          python3 - <<'PY'
+          import json
+          p='automation/app-development-2/evidence/APP2-003-build4-trigger-request.json'
+          d=json.load(open(p,encoding='utf-8'))
+          action=d.get('action','build')
+          if action not in {'build','inspect'}:
+              raise SystemExit('invalid action')
+          if d.get('app_id')!='6a8af6e5a5c86907b00c2efd': raise SystemExit('app mismatch')
+          if d.get('workflow_id')!='yoru-ios': raise SystemExit('workflow mismatch')
+          if d.get('branch')!='main': raise SystemExit('branch mismatch')
+          with open('/tmp/cmd.env','w',encoding='utf-8') as f:
+              f.write('ACTION='+action+'\n')
+              f.write('BUILD_ID='+str(d.get('build_id',''))+'\n')
+          PY
+          cat /tmp/cmd.env >> "$GITHUB_ENV"
       - name: Start pinned Yoru signed Build 4
-        id: cm
+        if: env.ACTION == 'build'
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
@@ -32,13 +49,46 @@ jobs:
             https://api.codemagic.io/builds)
           build_id=$(printf '%s' "$response" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("buildId") or d.get("id") or "")')
           test -n "$build_id"
-          echo "build_id=$build_id" >> "$GITHUB_OUTPUT"
           echo "Started Codemagic build_id=$build_id"
-      - name: Report locator to issue when issue-triggered
-        if: github.event_name == 'issues'
+      - name: Inspect pinned Yoru Build 4
+        if: env.ACTION == 'inspect'
         env:
-          GH_TOKEN: ${{ github.token }}
-          ISSUE: ${{ github.event.issue.number }}
-          BUILD_ID: ${{ steps.cm.outputs.build_id }}
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
-          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body "APP2-003 Codemagic signed Build 4 started. build_id=$BUILD_ID"
+          set -euo pipefail
+          test -n "$CM_API_TOKEN"
+          test -n "$BUILD_ID"
+          curl --fail-with-body --silent --show-error \
+            -H "x-auth-token: $CM_API_TOKEN" \
+            "https://codemagic.io/api/v3/builds/$BUILD_ID" > /tmp/cm-build.json
+          python3 - <<'PY'
+          import json, os
+          d=json.load(open('/tmp/cm-build.json',encoding='utf-8'))
+          data=d.get('data') or d
+          sensitive=('secret','token','password','credential','private','environment','variable')
+          def clean(v):
+              if isinstance(v,dict):
+                  return {k:('[REDACTED]' if any(s in k.lower() for s in sensitive) else clean(x)) for k,x in v.items()}
+              if isinstance(v,list): return [clean(x) for x in v]
+              return v
+          out={
+            'task_id':'APP2-003',
+            'build_id':os.environ['BUILD_ID'],
+            'status':data.get('status'),
+            'build':clean(data),
+            'secret_values_persisted':False
+          }
+          p='automation/app-development-2/evidence/APP2-003-codemagic-build4-current.json'
+          open(p,'w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Persist sanitized inspect result
+        if: env.ACTION == 'inspect'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/app-development-2/evidence/APP2-003-codemagic-build4-current.json
+          git commit -m 'APP2-003 persist Codemagic Build 4 current status' || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
