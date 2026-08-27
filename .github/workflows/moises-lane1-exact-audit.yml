@@ -1,0 +1,33 @@
+name: Moises Lane1 Exact A40 Audit
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  exact-lane1-a40:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Worker 1 A40 tip
+        uses: actions/checkout@v4
+        with:
+          ref: 6514ab8eea1570c18e75f012254db48c3a0418e6
+          fetch-depth: 1
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install audit dependency
+        run: python -m pip install --disable-pip-version-check jsonschema
+      - name: Run exact A40 dependency closure audit
+        run: |
+          set +e
+          python tech-assets/moises-audio/Separation/Evaluation/lane1_dependency_audit.py \
+            --expected-git-head 6514ab8eea1570c18e75f012254db48c3a0418e6 \
+            --timeout-seconds 300 \
+            --output /tmp/l1-a40-audit.json
+          rc=$?
+          cat /tmp/l1-a40-audit.json
+          exit $rc
