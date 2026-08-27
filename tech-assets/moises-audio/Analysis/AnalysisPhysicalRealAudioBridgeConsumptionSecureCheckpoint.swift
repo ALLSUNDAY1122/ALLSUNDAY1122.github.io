@@ -1,7 +1,56 @@
 import Foundation
 
 public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpointManager {
+    @available(*, deprecated, message: "Migration-only checkpoint API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.makeStrictCheckpoint so W55 normalization evidence is retained.")
     public static func makeStrictCheckpoint(
+        ledgerID: String,
+        checkpointID: String,
+        checkpointSequence: UInt64,
+        approvalReference: String,
+        previousCheckpoint: AnalysisPhysicalRealAudioBridgeConsumptionCheckpoint? = nil,
+        rootURL: URL,
+        fileManager: FileManager = .default
+    ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionCheckpoint {
+        try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.secureCheckpointCreate)
+        let observed = try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.observeSnapshot(
+            ledgerID: ledgerID,
+            rootURL: rootURL,
+            fileManager: fileManager
+        )
+        return try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.makeStrictCheckpoint(
+            expectedSnapshot: observed.snapshot,
+            checkpointID: checkpointID,
+            checkpointSequence: checkpointSequence,
+            approvalReference: approvalReference,
+            previousCheckpoint: previousCheckpoint,
+            rootURL: rootURL,
+            fileManager: fileManager
+        ).checkpoint
+    }
+
+    @available(*, deprecated, message: "Migration-only checkpoint API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.verifyCurrentLedgerStrict so W55 normalization evidence is retained.")
+    public static func verifyCurrentLedgerStrict(
+        checkpoint: AnalysisPhysicalRealAudioBridgeConsumptionCheckpoint,
+        previousCheckpoint: AnalysisPhysicalRealAudioBridgeConsumptionCheckpoint? = nil,
+        rootURL: URL,
+        fileManager: FileManager = .default
+    ) throws {
+        try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.secureCheckpointVerify)
+        let observed = try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.observeSnapshot(
+            ledgerID: checkpoint.ledgerID,
+            rootURL: rootURL,
+            fileManager: fileManager
+        )
+        _ = try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.verifyCurrentLedgerStrict(
+            checkpoint: checkpoint,
+            expectedSnapshot: observed.snapshot,
+            previousCheckpoint: previousCheckpoint,
+            rootURL: rootURL,
+            fileManager: fileManager
+        )
+    }
+
+    static func makeStrictCheckpointCore(
         ledgerID: String,
         checkpointID: String,
         checkpointSequence: UInt64,
@@ -79,7 +128,7 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpointManager {
         )
     }
 
-    public static func verifyCurrentLedgerStrict(
+    static func verifyCurrentLedgerStrictCore(
         checkpoint: AnalysisPhysicalRealAudioBridgeConsumptionCheckpoint,
         previousCheckpoint: AnalysisPhysicalRealAudioBridgeConsumptionCheckpoint? = nil,
         rootURL: URL,
