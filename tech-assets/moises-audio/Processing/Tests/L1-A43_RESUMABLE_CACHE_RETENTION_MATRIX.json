@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "wave_id": "L1-A43",
+  "title": "Bounded Resumable Cache Retention and Delete Tombstones",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "targets": ["MOI-P021", "MOI-P024"],
+  "observed_problem": {
+    "a41_cache_path": "artifact_root/<logical_job_id>.download-cache",
+    "prior_privacy_delete_path": "artifact_root/<logical_job_id>",
+    "prior_staging_path": "artifact_root/<logical_job_id>.staging",
+    "risk": "A local delete could be recorded confirmed while retry-only partial stems or staging bytes survived; interrupted caches also had no TTL/count/total-byte reclamation."
+  },
+  "implemented_contracts": [
+    "A43 resumable cache policy bounds inactive retry caches by TTL, entry count, and total bytes.",
+    "Per-job external lock files live outside deletable cache directories and protect active output collection from reclamation.",
+    "Future access timestamps and unsafe symlink/special-file cache surfaces are removed fail-closed.",
+    "A durable per-job delete tombstone survives cache deletion and process restart.",
+    "A43 production start and output collection reject a tombstoned logical job.",
+    "Budgeted production rejects a tombstoned job before source containment/hash, duration analysis, cost reservation, upload, or provider work.",
+    "PrivacyRetentionService tombstones and purges retry cache before local confirmation and also removes committed plus .staging job directories.",
+    "Explicit retention expiry uses the same tombstone/cache/staging-aware local deletion path.",
+    "Maintenance purge remains distinct from privacy deletion and does not create a permanent tombstone."
+  ],
+  "formal_repository_tests_added": {
+    "test_resumable_transfer_cache.py": 11,
+    "test_a43_privacy_cache_deletion.py": 5,
+    "test_a43_deleted_job_runtime.py": 3,
+    "test_a43_budgeted_deleted_job.py": 1,
+    "test_a43_dependency_binding.py": 4,
+    "total_a43_tests": 24,
+    "execution_state": "NOT_OBSERVED_ON_EXACT_REPOSITORY_CHECKOUT"
+  },
+  "isolated_interface_harness": {
+    "assertions": 9,
+    "passed": 9,
+    "failed": 0,
+    "scope": [
+      "inactive quota eviction",
+      "active lease exclusion",
+      "post-lease TTL reclamation",
+      "durable tombstone plus purge",
+      "deleted-job cache recreation rejection",
+      "committed/staging/cache absence before modeled local confirmation"
+    ],
+    "claim_limit": "Interface-compatible model validation only; not repository-native unittest discovery."
+  },
+  "hq_exact_audit_state": {
+    "workflow": ".github/workflows/moises-hq-lane1-exact-audit.yml",
+    "observed_expected_head": "bde14cc9dd63c5c250e4c9580aa79042b4dc5a95",
+    "a43_final_tip_tested": false,
+    "a26_state": "OPEN"
+  },
+  "non_claims": [
+    "No physical-iPhone long-track memory, thermal, battery, or storage-pressure campaign was executed.",
+    "No live provider strong-ETag/Range/If-Range campaign was executed.",
+    "No exact repository-native A43 full unittest discovery was observed.",
+    "No multi-host distributed cache authority is claimed; external lease protects same shared filesystem host/processes only.",
+    "P021 and P024 remain MISSING until HQ-required live/integrated evidence is satisfied."
+  ]
+}
