@@ -2,6 +2,24 @@ import Foundation
 import XCTest
 @testable import MoisesAudioCore
 
+private final class W52RaceResultBox: @unchecked Sendable {
+    private let lock = NSLock()
+    private var _writerSucceeded = false
+    private var _writerError: Error?
+    private var _bundle: AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyBundle?
+    private var _bundleError: Error?
+
+    func setWriterSuccess() { lock.lock(); _writerSucceeded = true; lock.unlock() }
+    func setWriterError(_ error: Error) { lock.lock(); _writerError = error; lock.unlock() }
+    func setBundle(_ value: AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyBundle) { lock.lock(); _bundle = value; lock.unlock() }
+    func setBundleError(_ error: Error) { lock.lock(); _bundleError = error; lock.unlock() }
+
+    var writerSucceeded: Bool { lock.lock(); defer { lock.unlock() }; return _writerSucceeded }
+    var writerError: Error? { lock.lock(); defer { lock.unlock() }; return _writerError }
+    var bundle: AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyBundle? { lock.lock(); defer { lock.unlock() }; return _bundle }
+    var bundleError: Error? { lock.lock(); defer { lock.unlock() }; return _bundleError }
+}
+
 final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCTestCase {
     private func sha(_ character: Character) -> String {
         String(repeating: String(character), count: 64)
@@ -15,11 +33,7 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
     }
 
     private func custody(_ id: String) -> AnalysisPhysicalRealAudioBridgeConsumptionCustody {
-        .init(
-            authority: "HQ_LATE_INTEGRATION",
-            approvalReference: "HQ-W52-CUSTODY",
-            custodyID: id
-        )
+        .init(authority: "HQ_LATE_INTEGRATION", approvalReference: "HQ-W52-CUSTODY", custodyID: id)
     }
 
     private func certificate(
@@ -64,9 +78,7 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
     }
 
     private func seed(_ root: URL) throws -> AnalysisPhysicalRealAudioBridgeConsumptionLedgerHead {
-        let cas = try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.observeAppendCAS(
-            ledgerID: "ledger", rootURL: root
-        )
+        let cas = try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.observeAppendCAS(ledgerID: "ledger", rootURL: root)
         return try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.append(
             ledgerID: "ledger",
             certificate: certificate(bridgeID: "bridge-1", package: "a", report: "b", expectation: "c"),
@@ -77,16 +89,10 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
     }
 
     func testSnapshotIsDeterministicAndPinsOneSecureHead() throws {
-        let root = try root()
-        defer { try? FileManager.default.removeItem(at: root) }
+        let root = try root(); defer { try? FileManager.default.removeItem(at: root) }
         let head = try seed(root)
-
-        let first = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(
-            ledgerID: "ledger", rootURL: root
-        )
-        let second = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(
-            ledgerID: "ledger", rootURL: root
-        )
+        let first = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(ledgerID: "ledger", rootURL: root)
+        let second = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(ledgerID: "ledger", rootURL: root)
         XCTAssertEqual(first, second)
         XCTAssertEqual(first.latestSequence, head.latestSequence)
         XCTAssertEqual(first.ledgerRootSHA256, head.declaredLedgerRootSHA256)
@@ -96,15 +102,10 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
     }
 
     func testStaleSnapshotCannotCreateCheckpointAfterAppend() throws {
-        let root = try root()
-        defer { try? FileManager.default.removeItem(at: root) }
+        let root = try root(); defer { try? FileManager.default.removeItem(at: root) }
         _ = try seed(root)
-        let stale = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(
-            ledgerID: "ledger", rootURL: root
-        )
-        let cas = try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.observeAppendCAS(
-            ledgerID: "ledger", rootURL: root
-        )
+        let stale = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(ledgerID: "ledger", rootURL: root)
+        let cas = try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.observeAppendCAS(ledgerID: "ledger", rootURL: root)
         _ = try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.append(
             ledgerID: "ledger",
             certificate: certificate(bridgeID: "bridge-2", package: "d", report: "e", expectation: "f"),
@@ -112,7 +113,6 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
             expectedCAS: cas,
             rootURL: root
         )
-
         XCTAssertThrowsError(try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.makeStrictCheckpoint(
             expectedSnapshot: stale,
             checkpointID: "cp-1",
@@ -120,20 +120,14 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
             approvalReference: "HQ-W52-CP-1",
             rootURL: root
         )) { error in
-            XCTAssertEqual(
-                error as? AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError,
-                .staleSnapshotCAS
-            )
+            XCTAssertEqual(error as? AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError, .staleSnapshotCAS)
         }
     }
 
     func testCustodyBundleBindsSnapshotCheckpointHandoffAndReceipt() throws {
-        let root = try root()
-        defer { try? FileManager.default.removeItem(at: root) }
+        let root = try root(); defer { try? FileManager.default.removeItem(at: root) }
         _ = try seed(root)
-        let snapshot = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(
-            ledgerID: "ledger", rootURL: root
-        )
+        let snapshot = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(ledgerID: "ledger", rootURL: root)
         let bundle = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.makeCustodyBundle(
             ledgerID: "ledger",
             expectedSnapshot: snapshot,
@@ -145,7 +139,6 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
             handoffApprovalReference: "HQ-W52-HO-1",
             rootURL: root
         )
-
         XCTAssertEqual(bundle.snapshot, snapshot)
         XCTAssertEqual(bundle.checkpoint.latestLedgerSequence, snapshot.latestSequence)
         XCTAssertEqual(bundle.checkpoint.ledgerRootSHA256, snapshot.ledgerRootSHA256)
@@ -155,23 +148,15 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
         XCTAssertEqual(bundle.receipt.checkpointRootSHA256, bundle.checkpoint.declaredCheckpointRootSHA256)
         XCTAssertEqual(bundle.receipt.handoffRootSHA256, bundle.handoff.declaredHandoffRootSHA256)
         XCTAssertTrue(AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.validateReceipt(
-            bundle.receipt,
-            snapshot: bundle.snapshot,
-            checkpoint: bundle.checkpoint,
-            handoff: bundle.handoff
+            bundle.receipt, snapshot: bundle.snapshot, checkpoint: bundle.checkpoint, handoff: bundle.handoff
         ))
     }
 
     func testRecordWrittenInterruptionRecoversBeforeSnapshotCASAndPendingOnlyRollsBack() throws {
-        let rootA = try root()
-        defer { try? FileManager.default.removeItem(at: rootA) }
+        let rootA = try root(); defer { try? FileManager.default.removeItem(at: rootA) }
         _ = try seed(rootA)
-        let preA = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(
-            ledgerID: "ledger", rootURL: rootA
-        )
-        let casA = try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.observeAppendCAS(
-            ledgerID: "ledger", rootURL: rootA
-        )
+        let preA = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(ledgerID: "ledger", rootURL: rootA)
+        let casA = try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.observeAppendCAS(ledgerID: "ledger", rootURL: rootA)
         XCTAssertThrowsError(try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.appendForTesting(
             ledgerID: "ledger",
             certificate: certificate(bridgeID: "bridge-2", package: "d", report: "e", expectation: "f"),
@@ -189,20 +174,13 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
         )) { error in
             XCTAssertEqual(error as? AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError, .staleSnapshotCAS)
         }
-        let postA = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(
-            ledgerID: "ledger", rootURL: rootA
-        )
+        let postA = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(ledgerID: "ledger", rootURL: rootA)
         XCTAssertEqual(postA.latestSequence, preA.latestSequence + 1)
 
-        let rootB = try root()
-        defer { try? FileManager.default.removeItem(at: rootB) }
+        let rootB = try root(); defer { try? FileManager.default.removeItem(at: rootB) }
         _ = try seed(rootB)
-        let preB = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(
-            ledgerID: "ledger", rootURL: rootB
-        )
-        let casB = try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.observeAppendCAS(
-            ledgerID: "ledger", rootURL: rootB
-        )
+        let preB = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(ledgerID: "ledger", rootURL: rootB)
+        let casB = try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.observeAppendCAS(ledgerID: "ledger", rootURL: rootB)
         XCTAssertThrowsError(try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.appendForTesting(
             ledgerID: "ledger",
             certificate: certificate(bridgeID: "bridge-2", package: "d", report: "e", expectation: "f"),
@@ -230,19 +208,13 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
             let root = try root()
             defer { try? FileManager.default.removeItem(at: root) }
             _ = try seed(root)
-            let pre = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(
-                ledgerID: "ledger", rootURL: root
-            )
-            let writerCAS = try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.observeAppendCAS(
-                ledgerID: "ledger", rootURL: root
-            )
-
+            let pre = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(ledgerID: "ledger", rootURL: root)
+            let writerCAS = try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.observeAppendCAS(ledgerID: "ledger", rootURL: root)
+            let secondCertificate = try certificate(bridgeID: "bridge-2", package: "d", report: "e", expectation: "f")
+            let secondCustody = custody("custody-2")
+            let result = W52RaceResultBox()
             let queue = DispatchQueue(label: "w52-race-\(wave)", attributes: .concurrent)
             let group = DispatchGroup()
-            let resultLock = NSLock()
-            var writerSucceeded = false
-            var bundle: AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyBundle?
-            var bundleError: Error?
 
             group.enter()
             queue.async {
@@ -250,14 +222,14 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
                 do {
                     _ = try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.append(
                         ledgerID: "ledger",
-                        certificate: self.certificate(bridgeID: "bridge-2", package: "d", report: "e", expectation: "f"),
-                        custody: self.custody("custody-2"),
+                        certificate: secondCertificate,
+                        custody: secondCustody,
                         expectedCAS: writerCAS,
                         rootURL: root
                     )
-                    resultLock.lock(); writerSucceeded = true; resultLock.unlock()
+                    result.setWriterSuccess()
                 } catch {
-                    XCTFail("writer failed: \(error)")
+                    result.setWriterError(error)
                 }
             }
 
@@ -265,7 +237,7 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
             queue.async {
                 defer { group.leave() }
                 do {
-                    let made = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.makeCustodyBundle(
+                    result.setBundle(try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.makeCustodyBundle(
                         ledgerID: "ledger",
                         expectedSnapshot: pre,
                         transactionID: "tx-race-\(wave)",
@@ -275,31 +247,23 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
                         handoffID: "handoff-race-\(wave)",
                         handoffApprovalReference: "HQ-W52-HO-RACE",
                         rootURL: root
-                    )
-                    resultLock.lock(); bundle = made; resultLock.unlock()
+                    ))
                 } catch {
-                    resultLock.lock(); bundleError = error; resultLock.unlock()
+                    result.setBundleError(error)
                 }
             }
             group.wait()
-            XCTAssertTrue(writerSucceeded)
+            XCTAssertTrue(result.writerSucceeded)
+            XCTAssertNil(result.writerError)
 
-            if let bundle {
+            if let bundle = result.bundle {
                 XCTAssertEqual(bundle.snapshot, pre)
                 XCTAssertTrue(AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.validateReceipt(
-                    bundle.receipt,
-                    snapshot: bundle.snapshot,
-                    checkpoint: bundle.checkpoint,
-                    handoff: bundle.handoff
+                    bundle.receipt, snapshot: bundle.snapshot, checkpoint: bundle.checkpoint, handoff: bundle.handoff
                 ))
             } else {
-                XCTAssertEqual(
-                    bundleError as? AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError,
-                    .staleSnapshotCAS
-                )
-                let post = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(
-                    ledgerID: "ledger", rootURL: root
-                )
+                XCTAssertEqual(result.bundleError as? AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError, .staleSnapshotCAS)
+                let post = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(ledgerID: "ledger", rootURL: root)
                 XCTAssertEqual(post.latestSequence, pre.latestSequence + 1)
                 let postBundle = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.makeCustodyBundle(
                     ledgerID: "ledger",
@@ -318,8 +282,7 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
     }
 
     func testReceiptMutationIsRejected() throws {
-        let root = try root()
-        defer { try? FileManager.default.removeItem(at: root) }
+        let root = try root(); defer { try? FileManager.default.removeItem(at: root) }
         _ = try seed(root)
         let bundle = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.makeCustodyBundle(
             ledgerID: "ledger",
@@ -349,10 +312,7 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
             declaredReceiptRootSHA256: bundle.receipt.declaredReceiptRootSHA256
         )
         XCTAssertFalse(AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.validateReceipt(
-            bad,
-            snapshot: bundle.snapshot,
-            checkpoint: bundle.checkpoint,
-            handoff: bundle.handoff
+            bad, snapshot: bundle.snapshot, checkpoint: bundle.checkpoint, handoff: bundle.handoff
         ))
     }
 }
