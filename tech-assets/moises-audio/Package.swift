@@ -129,12 +129,14 @@ let package = Package(
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionCheckpoint.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionCheckpointBinding.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionCheckpointStrict.swift",
+                "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpoint.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustody.swift",
+                "Analysis/AnalysisPhysicalRealAudioBridgeDurabilityProbeModels.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
                 "Analysis/SectionBenchmarkEvaluator.swift",
@@ -146,7 +148,8 @@ let package = Package(
                 "iOS/HostCore/AnalysisIOSDevicePerformanceSession.swift",
                 "iOS/HostCore/AnalysisIOSPhysicalCaptureCoordinator.swift",
                 "iOS/HostCore/AnalysisIOSPhysicalCaptureArtifactMaterializer.swift",
-                "iOS/HostCore/AnalysisIOSPhysicalRealAudioCorpusCoordinator.swift"
+                "iOS/HostCore/AnalysisIOSPhysicalRealAudioCorpusCoordinator.swift",
+                "iOS/HostCore/AnalysisIOSBridgeDurabilityProbeCoordinator.swift"
             ]
         ),
         .testTarget(
