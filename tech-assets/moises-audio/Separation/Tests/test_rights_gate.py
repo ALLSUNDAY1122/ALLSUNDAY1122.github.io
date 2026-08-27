@@ -1,16 +1,33 @@
 import hashlib
+import importlib.util
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
-import importlib.util
 
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "Server" / "rights_gate.py"
-spec = importlib.util.spec_from_file_location("rights_gate", MODULE_PATH)
+MODULE_NAME = "_l1_rights_gate_test_target"
+spec = importlib.util.spec_from_file_location(MODULE_NAME, MODULE_PATH)
+assert spec is not None and spec.loader is not None
 rights_gate = importlib.util.module_from_spec(spec)
-assert spec.loader is not None
-spec.loader.exec_module(rights_gate)
+# Python 3.12 dataclasses consult sys.modules[cls.__module__] while the class decorator runs.
+# Register the dynamic module before exec_module rather than after it. The old test did the inverse
+# and failed during unittest discovery before any rights-gate assertion could run.
+assert MODULE_NAME not in sys.modules, f"unexpected dynamic test module collision: {MODULE_NAME}"
+sys.modules[MODULE_NAME] = rights_gate
+try:
+    spec.loader.exec_module(rights_gate)
+except BaseException:
+    sys.modules.pop(MODULE_NAME, None)
+    raise
+
+
+def tearDownModule():
+    # Keep the unique module registered while tests execute, then leave no process-global residue.
+    if sys.modules.get(MODULE_NAME) is rights_gate:
+        sys.modules.pop(MODULE_NAME, None)
 
 
 class RightsGateTests(unittest.TestCase):
@@ -38,6 +55,10 @@ class RightsGateTests(unittest.TestCase):
         path = root / "manifest.json"
         path.write_text(json.dumps(manifest), encoding="utf-8")
         return path
+
+    def test_dynamic_module_is_registered_for_python312_dataclass_introspection(self):
+        self.assertIs(sys.modules.get(MODULE_NAME), rights_gate)
+        self.assertEqual(rights_gate.ApprovedCheckpoint.__module__, MODULE_NAME)
 
     def test_accepts_project_owned_checkpoint_with_matching_hash(self):
         with tempfile.TemporaryDirectory() as directory:
