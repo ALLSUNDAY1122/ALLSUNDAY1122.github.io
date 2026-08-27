@@ -12,77 +12,50 @@ permissions:
   contents: write
 
 jobs:
-  patch-and-upload:
+  recover-diagnostics:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Fix unique build number source
+      - name: Recover and sanitize latest Codemagic diagnostic bundle
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('codemagic.yaml')
-          s=p.read_text(encoding='utf-8')
-          marker='\n  clipboard-widget-phase0:\n'
-          start=s.index(marker)
-          block=s[start:]
-          old="p.write_text(s.replace(old, 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1), encoding='utf-8')"
-          new="build_number=str(int(__import__('time').time()))\n          p.write_text(s.replace(old, 'CURRENT_PROJECT_VERSION: '+build_number, 1), encoding='utf-8')"
-          if old in block:
-              block=block.replace(old,new,1)
-          elif "build_number=str(int(__import__('time').time()))" not in block:
-              raise SystemExit('build-number assignment patch point missing')
-          old_print="print('PASS: build number='+os.environ['CM_BUILD_NUMBER'])"
-          new_print="print('PASS: build number='+build_number)"
-          if old_print in block:
-              block=block.replace(old_print,new_print,1)
-          p.write_text(s[:start]+block,encoding='utf-8')
-          print('PASS: build number now uses monotonic epoch seconds and no CM_BUILD_NUMBER dependency')
-          PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add codemagic.yaml
-          git commit -m 'ci: use self-contained clipboard TestFlight build number' || true
-          git pull --rebase origin feature/clipboard-widget-poc
-          git push origin HEAD:feature/clipboard-widget-poc
-
-      - name: Trigger Codemagic TestFlight build and wait
-        id: build
-        continue-on-error: true
-        env:
-          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
-        run: |
-          set -euo pipefail
-          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260827-r7","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
-          python scripts/codemagic_build_gateway.py --command /tmp/clipboard-widget-cm-command.json --output /tmp/clipboard-widget-cm-result.json
-
-      - name: Persist safe Codemagic result
-        if: always()
-        run: |
-          set -euo pipefail
-          test -f /tmp/clipboard-widget-cm-result.json || exit 0
           python3 - <<'PY'
           import json
           from pathlib import Path
-          r=json.loads(Path('/tmp/clipboard-widget-cm-result.json').read_text())
-          keep={k:r.get(k) for k in ('request_id','ok','workflow_id','branch','resolved_app_id','build_id','status','app_id','error','build_details')}
-          Path('/tmp/clipboard-widget-cm-safe.json').write_text(json.dumps(keep,ensure_ascii=False,indent=2)+'\n')
+          r=json.loads(Path('automation/clipboard-widget/evidence/codemagic-phase0-testflight.json').read_text(encoding='utf-8'))
+          arts=(r.get('build_details') or {}).get('artifacts') or []
+          bundles=[a for a in arts if a.get('type')=='bundle']
+          if not bundles:
+              raise SystemExit('No Codemagic bundle artifact in latest evidence')
+          url=bundles[0].get('short_lived_download_url')
+          if not url:
+              raise SystemExit('No short-lived bundle URL')
+          Path('/tmp/artifact-url.txt').write_text(url,encoding='utf-8')
           PY
-          git fetch origin feature/clipboard-widget-poc
-          git reset --hard origin/feature/clipboard-widget-poc
-          mkdir -p automation/clipboard-widget/evidence
-          cp /tmp/clipboard-widget-cm-safe.json automation/clipboard-widget/evidence/codemagic-phase0-testflight.json
+          curl --fail --location --retry 2 "$(cat /tmp/artifact-url.txt)" -o /tmp/cm-artifacts.zip
+          rm -f /tmp/artifact-url.txt
+          unzip -q /tmp/cm-artifacts.zip -d /tmp/cm-artifacts
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          files=list(Path('/tmp/cm-artifacts').rglob('clipboard-widget-phase0-diagnostics.log'))
+          if not files:
+              raise SystemExit('Diagnostic log not found in artifact bundle')
+          raw=files[0].read_text(encoding='utf-8',errors='replace')
+          raw=re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----','[REDACTED PEM]',raw,flags=re.S)
+          raw=re.sub(r'eyJ[A-Za-z0-9._-]{20,}','[REDACTED JWT]',raw)
+          raw=re.sub(r'(?i)(token|secret|password|private[_ -]?key)\s*[:=]\s*\S+',r'\1=[REDACTED]',raw)
+          out=Path('automation/clipboard-widget/evidence/codemagic-phase0-diagnostic.log')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(raw[-30000:],encoding='utf-8')
+          PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add automation/clipboard-widget/evidence/codemagic-phase0-testflight.json
-          git commit -m 'chore: record clipboard widget TestFlight evidence r7' || true
+          git add automation/clipboard-widget/evidence/codemagic-phase0-diagnostic.log
+          git commit -m 'chore: persist sanitized clipboard r7 diagnostic log'
           git pull --rebase origin feature/clipboard-widget-poc
           git push origin HEAD:feature/clipboard-widget-poc
-
-      - name: Enforce TestFlight build success
-        if: steps.build.outcome != 'success'
-        run: exit 1
