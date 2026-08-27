@@ -1,9 +1,10 @@
-"""Canonical-role boundary for the A12/A44 AudioShake advanced provider path.
+"""Canonical-role boundary for the A12/A44/A45 AudioShake advanced provider path.
 
 A06/A07 orchestration must remain provider-neutral. This wrapper accepts canonical role IDs,
 translates them to account-enabled AudioShake model IDs only at POST /tasks, and maps provider
-output model IDs back to canonical roles before returning task state. A44 also exposes a media-free
-request preflight so the production entrypoint can reject impossible advanced requests before upload.
+output model IDs back to canonical roles before returning task state. A44 exposes a media-free
+request preflight; A45 binds every observed response to the exact requested provider Task and rejects
+ambiguous duplicate target models before any canonical output can be accepted.
 """
 from __future__ import annotations
 
@@ -110,17 +111,30 @@ class CanonicalAdvancedAudioShakeAdapter:
         return payload["id"]
 
     def get_task_state(self, task_id: str) -> CanonicalTaskState:
+        if not isinstance(task_id, str) or not task_id:
+            raise AdvancedCapabilityError("SEP_ADV_TASK_ID_INVALID")
         if self._snapshot is None:
             self._refresh_maps()
         raw = self.client.get_task_state(task_id)
+        raw_task_id = getattr(raw, "task_id", None)
+        if not isinstance(raw_task_id, str) or not raw_task_id:
+            raise AdvancedCapabilityError("SEP_ADV_TASK_STATE_INVALID")
+        if raw_task_id != task_id:
+            raise AdvancedCapabilityError("SEP_ADV_TASK_ID_MISMATCH")
         raw_targets = getattr(raw, "targets", None)
         try:
             raw_targets = tuple(raw_targets)
         except (TypeError, ValueError) as exc:
             raise AdvancedCapabilityError("SEP_ADV_TASK_STATE_INVALID") from exc
         targets: list[CanonicalTargetState] = []
+        seen_provider_models: set[str] = set()
         for target in raw_targets:
             provider_model = getattr(target, "model", None)
+            if not isinstance(provider_model, str) or not provider_model:
+                raise AdvancedCapabilityError("SEP_ADV_TASK_STATE_INVALID")
+            if provider_model in seen_provider_models:
+                raise AdvancedCapabilityError("SEP_ADV_OUTPUT_MODEL_DUPLICATE")
+            seen_provider_models.add(provider_model)
             canonical_role = self._model_to_role.get(provider_model)
             if canonical_role is None:
                 raise AdvancedCapabilityError("SEP_ADV_OUTPUT_MODEL_UNKNOWN")
@@ -130,13 +144,11 @@ class CanonicalAdvancedAudioShakeAdapter:
                 output_url=getattr(target, "output_url", None),
                 error_code=getattr(target, "error_code", None),
             ))
-        raw_task_id = getattr(raw, "task_id", None)
         phase = getattr(raw, "phase", None)
         fraction = getattr(raw, "fraction_complete", None)
         retryable = getattr(raw, "retryable", None)
         if (
-            not isinstance(raw_task_id, str) or not raw_task_id
-            or phase not in {"separating", "ready", "failed"}
+            phase not in {"separating", "ready", "failed"}
             or isinstance(fraction, bool) or not isinstance(fraction, (int, float))
             or not 0.0 <= float(fraction) <= 1.0
             or not isinstance(retryable, bool)
