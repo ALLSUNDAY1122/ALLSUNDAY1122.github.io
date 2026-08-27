@@ -67,6 +67,27 @@ struct LibraryManagedPathBoundary: Sendable {
         guard candidate == rootURL || isDescendant(candidate, of: rootURL) else {
             throw LibraryManagedPathBoundaryFailure.pathEscapesRoot(candidate.path)
         }
+        if candidate == rootURL {
+            return try attributesIfPresent(candidate, fileManager: fileManager) != nil
+        }
+
+        // A missing leaf is safe only when every existing ancestor from the configured root is a
+        // real directory. This prevents a symlinked parent from turning a missing external target
+        // into an apparent "missing managed node" compatibility path.
+        guard let rootAttributes = try attributesIfPresent(rootURL, fileManager: fileManager) else {
+            return false
+        }
+        try requireDirectoryNode(rootURL, attributes: rootAttributes)
+
+        let components = try relativeComponents(for: candidate)
+        var cursor = rootURL
+        for component in components.dropLast() {
+            cursor.appendPathComponent(component, isDirectory: true)
+            guard let attributes = try attributesIfPresent(cursor, fileManager: fileManager) else {
+                return false
+            }
+            try requireDirectoryNode(cursor, attributes: attributes)
+        }
         return try attributesIfPresent(candidate, fileManager: fileManager) != nil
     }
 
