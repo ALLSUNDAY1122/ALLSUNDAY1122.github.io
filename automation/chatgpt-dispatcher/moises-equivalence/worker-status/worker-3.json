@@ -11,8 +11,8 @@
   "current_bundle": null,
   "completed_bundles": ["L3-M01", "L3-M02", "L3-M03", "L3-M04"],
   "previous_autonomous_chain_head": "fdfc82c251ce4486f38a1fb7e266fe5a4614b0da",
-  "historical_commit_coverage": "AW01-AW51 and earlier Lane3 work remain preserved by Worker-branch ancestry through AW51 status publication fdfc82c251ce4486f38a1fb7e266fe5a4614b0da. HQ Canonical Epoch44 integrates Lane3 through AW49 and records full portable Playback+DSP source typecheck PASS through AW49. AW50-AW52 remain pending HQ Late Integration. The commits list below records AW52 source/evidence only.",
-  "head_sha": "79d912c4f291690edb72ca5115063ec00e61e91d",
+  "historical_commit_coverage": "AW01-AW51 and earlier Lane3 work remain preserved by Worker-branch ancestry through AW51 status publication fdfc82c251ce4486f38a1fb7e266fe5a4614b0da. During AW52 final audit GitHub integration advanced to HQ Epoch45 commit 0fea2b5f2db390cb1dc45ea9a9899d47ac549719, integrating Lane3 through AW50. Notion still reported Epoch44/Lane3 AW49 at the same final audit, so the status records this temporary canonical publication skew. AW51-AW52 remain pending HQ Late Integration. The commits list below records AW52 source/evidence only.",
+  "head_sha": "95f6042823d390853f045e371492eba0f20ad09b",
   "commits": [
     "8925d7f892fa40084ae8c06d4b0c80de2677173d",
     "8bc0d9db06ec30d875cc274a6e06c92aa9e0e273",
@@ -26,10 +26,11 @@
     "fac716be1e6652306d7baacb6760267314dd8167",
     "23e287bdf61eaa478a3fba7fd7630a71cfd4a40c",
     "e79bbfce0024d5559a9db86305e89e17be3ea10c",
-    "79d912c4f291690edb72ca5115063ec00e61e91d"
+    "79d912c4f291690edb72ca5115063ec00e61e91d",
+    "95f6042823d390853f045e371492eba0f20ad09b"
   ],
   "tests": [
-    "HQ Canonical Epoch44 remains current and integrates Lane3 through AW49; AW50-AW52 are Worker-branch-only pending HQ Late Integration",
+    "Notion canonical fetch still reported Epoch44/Lane3 AW49, while final GitHub integration audit observed HQ Epoch45/Lane3 AW50 at 0fea2b5f2db390cb1dc45ea9a9899d47ac549719; AW51-AW52 remain Worker-branch only",
     "L3-AW52 focused Swift 6.2.1 Linux language-mode-6 strict-concurrency=complete warnings-as-errors optimized core reproduction PASS: 121 samples at 15-second cadence produced a 1800-second AW51 candidate receipt, max gap 15 seconds, peak RSS fixture 200491520 bytes, and complete 31/30/30/30 thermal coverage",
     "L3-AW52 canonical artifact fixture is 3214 bytes with FNV1A64 14041105997891895343; independent Python hashlib and Swift-produced artifact sha256sum matched 1fab95e460f8f53a2130d2be6a082d36d172b6cd8b5e1eef68b084419ba75cca",
     "L3-AW52 focused stress-equivalent execution PASS: 300 valid traces across 10/12/15/20/25/30-second cadences and 482 fail-closed cells covering external power, non-monotonic uptime, >30-second sampling gaps, and invalid battery levels",
@@ -47,7 +48,7 @@
     "Playback/Tests/L3_AW52_SessionBindingSelfTest.swift",
     "Playback/benchmarks/L3-AW52_CANDIDATE_PHYSICAL_RESOURCE_TRACE.md",
     "Playback/benchmarks/L3-AW52_VALIDATION.json",
-    "validation_blob_sha:2d6d3d4c6565736e6eb6c2f692cd1c3ef7a36fdf"
+    "validation_blob_sha:488461f2658272382bf57d4e28aed5856e963415"
   ],
   "known_gaps": [
     "AW52 creates a candidate-side physical resource recorder but does not supply physical evidence. P021 remains MISSING until a rights-cleared >=30-minute physical-iPhone run is attached and HQ reviews it",
@@ -55,14 +56,14 @@
     "Current-Moises process RSS is intentionally not collected or fabricated; HQ must establish a technically/legal defensible stock-iPhone or external measurement surface, or explicitly revise reference-side P021 evidence",
     "UIDevice batteryLevel is a public coarse device estimate rather than high-resolution energy instrumentation; physical benchmark context must be standardized before battery comparisons are interpreted",
     "Battery monitoring state is restored on successful finish or explicit cancel; an aborting host must call cancel, so lifecycle-safe host orchestration remains a useful hardening candidate",
-    "AW50-AW52 have not received post-wave full Lane3 strict typecheck/repository-native execution in HQ CI yet",
+    "AW51-AW52 have not received post-wave full Lane3 strict typecheck/repository-native execution in HQ CI yet",
     "P012 chord-display transpose consistency remains cross-lane/HQ",
     "AW43-AW50 still require rights-cleared >=30-minute clean/truncated/corrupted real codec execution on selected AVFAudio/physical iPhone",
     "AW42 repeated-loop seam automation remains fail-closed until selected Apple runtime exposes stale-event revocation or generation-isolated rendering"
   ],
   "hq_requests": [
-    "Preserve AW01-AW51 history through fdfc82c251ce4486f38a1fb7e266fe5a4614b0da and all thirteen AW52 source/evidence commits through 79d912c4f291690edb72ca5115063ec00e61e91d during semantic Late Integration",
-    "Integrate AW50-AW52 semantically, then run full Lane3 Swift 6 strict typecheck plus repository-native AW50/AW51/AW52 self-test/stress/benchmark sets",
+    "Preserve AW01-AW51 history through fdfc82c251ce4486f38a1fb7e266fe5a4614b0da and all fourteen AW52 source/evidence commits through 95f6042823d390853f045e371492eba0f20ad09b during semantic Late Integration",
+    "Preserve HQ Epoch45's Lane3 AW50 integration, then integrate AW51-AW52 semantically and run full Lane3 Swift 6 strict typecheck plus repository-native AW51/AW52 self-test/stress/benchmark sets",
     "On Apple-capable infrastructure compile AppleCandidatePhysicalResourceSampler.swift against the selected iOS SDK and confirm task_info(MACH_TASK_BASIC_INFO).resident_size works for the app's own process without private API",
     "Run a rights-cleared >=30-minute physical candidate trace at the AW52 recommended 15-second cadence, persist the returned canonical artifact bytes, verify its CryptoKit SHA-256, and feed the receipt into the AW51 strict completion gate",
     "Standardize physical benchmark context including battery window unplugged state and current-Moises comparison conditions before interpreting P021",
@@ -88,6 +89,6 @@
     "prototype repeated-loop seam automation only if selected Apple runtime supplies real stale-event revocation or generation-isolated rendering; AW42 remains authoritative"
   ],
   "status_publication": "WORKER_BRANCH_ONLY_PENDING_HQ_LATE_INTEGRATION",
-  "last_updated": "2026-08-27T12:32:00+09:00",
+  "last_updated": "2026-08-27T12:34:00+09:00",
   "writer_policy": "Only Moises-Worker-3 updates its Worker-branch status; HQ remains integration and PARITY authority."
 }
