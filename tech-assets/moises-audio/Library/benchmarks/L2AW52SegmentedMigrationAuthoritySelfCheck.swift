@@ -41,8 +41,8 @@ struct L2AW52SegmentedMigrationAuthoritySelfCheck {
             let s = Lane2ManagedArtifactSegmentedShardStore(rootURL: r)
             let result = try s.migrateLegacyShardIfNeeded(7)
             precondition(result.migrated && result.entryCount == 1300 && result.segmentCount == 3)
-            let loaded = try s.loadCommittedEntries(7)
-            precondition(loaded == entries)
+            let loaded7 = try s.loadCommittedEntries(7)
+            precondition(loaded7 == entries)
             precondition(!fm.fileExists(atPath: segmented(r).appendingPathComponent("07.pending.json").path))
             checks += 1
         }
@@ -57,7 +57,8 @@ struct L2AW52SegmentedMigrationAuthoritySelfCheck {
             try fm.createSymbolicLink(at: segmented(r), withDestinationURL: ext)
             let s = Lane2ManagedArtifactSegmentedShardStore(rootURL: r)
             precondition(expectThrow { _ = try s.removeUncommittedGenerations(shardIndex: 1) })
-            precondition(try Data(contentsOf: outside) == Data("keep".utf8))
+            let outsideData = try Data(contentsOf: outside)
+            precondition(outsideData == Data("keep".utf8))
             checks += 1
         }
 
@@ -65,7 +66,8 @@ struct L2AW52SegmentedMigrationAuthoritySelfCheck {
             let r = try root("dangling-manifest"); defer { try? fm.removeItem(at: r) }
             _ = try writeLegacy(r, shard: 2, count: 1)
             let seg = segmented(r); try fm.createDirectory(at: seg, withIntermediateDirectories: true)
-            try fm.createSymbolicLink(at: seg.appendingPathComponent("02.manifest.json"), withDestinationURL: r.appendingPathComponent("missing-manifest-target"))
+            let missing = r.appendingPathComponent("missing-manifest-target")
+            try fm.createSymbolicLink(at: seg.appendingPathComponent("02.manifest.json"), withDestinationURL: missing)
             let s = Lane2ManagedArtifactSegmentedShardStore(rootURL: r)
             precondition(expectThrow { _ = try s.migrateLegacyShardIfNeeded(2) })
             checks += 1
@@ -82,7 +84,8 @@ struct L2AW52SegmentedMigrationAuthoritySelfCheck {
             try fm.createSymbolicLink(at: v1.appendingPathComponent("Shards", isDirectory: true), withDestinationURL: ext)
             let s = Lane2ManagedArtifactSegmentedShardStore(rootURL: r)
             precondition(expectThrow { _ = try s.migrateLegacyShardIfNeeded(3) })
-            precondition(try Data(contentsOf: externalLegacy) == Data(payload.utf8))
+            let externalLegacyData = try Data(contentsOf: externalLegacy)
+            precondition(externalLegacyData == Data(payload.utf8))
             checks += 1
         }
 
@@ -92,14 +95,16 @@ struct L2AW52SegmentedMigrationAuthoritySelfCheck {
             let seg = segmented(r); try fm.createDirectory(at: seg, withIntermediateDirectories: true)
             let generation = UUID()
             let manifest: [String: Any] = ["schemaVersion": 1, "shardIndex": 4, "generation": generation.uuidString, "segmentCount": 1, "entryCount": 1]
-            try JSONSerialization.data(withJSONObject: manifest, options: [.sortedKeys]).write(to: seg.appendingPathComponent("04.manifest.json"))
+            let md = try JSONSerialization.data(withJSONObject: manifest, options: [.sortedKeys])
+            try md.write(to: seg.appendingPathComponent("04.manifest.json"))
             let target = ext.appendingPathComponent("segment.json")
             try Data("{}".utf8).write(to: target)
             let name = String(format: "04.%@.%04d.json", generation.uuidString, 0)
             try fm.createSymbolicLink(at: seg.appendingPathComponent(name), withDestinationURL: target)
             let s = Lane2ManagedArtifactSegmentedShardStore(rootURL: r)
             precondition(expectThrow { _ = try s.loadCommittedEntries(4) })
-            precondition(try Data(contentsOf: target) == Data("{}".utf8))
+            let segmentTargetData = try Data(contentsOf: target)
+            precondition(segmentTargetData == Data("{}".utf8))
             checks += 1
         }
 
@@ -112,7 +117,8 @@ struct L2AW52SegmentedMigrationAuthoritySelfCheck {
             try fm.createSymbolicLink(at: seg.appendingPathComponent("01.pending.json"), withDestinationURL: target)
             let s = Lane2ManagedArtifactSegmentedShardStore(rootURL: r)
             precondition(expectThrow { _ = try s.removeUncommittedGenerations(shardIndex: 1) })
-            precondition(try Data(contentsOf: target) == Data("keep".utf8))
+            let pendingTargetData = try Data(contentsOf: target)
+            precondition(pendingTargetData == Data("keep".utf8))
             checks += 1
         }
 
@@ -124,8 +130,10 @@ struct L2AW52SegmentedMigrationAuthoritySelfCheck {
             let seg = segmented(r)
             try Data("junk".utf8).write(to: seg.appendingPathComponent("01.pending.json"))
             try Data("junk".utf8).write(to: seg.appendingPathComponent("01.00000000-0000-0000-0000-000000000000.0000.json"))
-            precondition(try s.removeUncommittedGenerations(shardIndex: 1) == 2)
-            precondition(try s.loadCommittedEntries(1) == entries)
+            let removedCleanup = try s.removeUncommittedGenerations(shardIndex: 1)
+            let loadedCleanup = try s.loadCommittedEntries(1)
+            precondition(removedCleanup == 2)
+            precondition(loadedCleanup == entries)
             checks += 1
         }
 
