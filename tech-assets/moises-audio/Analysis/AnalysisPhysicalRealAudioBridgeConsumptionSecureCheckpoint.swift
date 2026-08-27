@@ -1,7 +1,6 @@
 import Foundation
 
 public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpointManager {
-    @available(*, deprecated, message: "Migration-only checkpoint API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.makeStrictCheckpoint so W55 normalization evidence is retained.")
     public static func makeStrictCheckpoint(
         ledgerID: String,
         checkpointID: String,
@@ -39,7 +38,6 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpointManager {
         ).checkpoint
     }
 
-    @available(*, deprecated, message: "Migration-only checkpoint API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.verifyCurrentLedgerStrict so W55 normalization evidence is retained.")
     public static func verifyCurrentLedgerStrict(
         checkpoint: AnalysisPhysicalRealAudioBridgeConsumptionCheckpoint,
         previousCheckpoint: AnalysisPhysicalRealAudioBridgeConsumptionCheckpoint? = nil,
@@ -47,12 +45,13 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpointManager {
         fileManager: FileManager = .default
     ) throws {
         if AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.currentThreadHoldsWriterLease {
-            return try verifyCurrentLedgerStrictCore(
+            try verifyCurrentLedgerStrictCore(
                 checkpoint: checkpoint,
                 previousCheckpoint: previousCheckpoint,
                 rootURL: rootURL,
                 fileManager: fileManager
             )
+            return
         }
         try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.secureCheckpointVerify)
         let observed = try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.observeSnapshot(
