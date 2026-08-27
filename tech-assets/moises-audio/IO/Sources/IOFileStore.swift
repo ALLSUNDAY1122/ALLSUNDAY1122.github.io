@@ -58,23 +58,23 @@ public struct IOFileStore: Sendable {
             throw StoreError.invalidRelativePath
         }
 
-        // Lexical containment is sufficient for a not-yet-created destination, but an existing
-        // app-owned artifact must also prove that its directory chain and leaf are not symlinks.
-        // This keeps the source-compatible resolver usable for future paths while preventing
-        // existing managed reads from escaping the configured root through filesystem aliases.
-        if fileManager.fileExists(atPath: candidate.path) {
-            do {
-                try IOManagedPathBoundary(rootURL: rootURL).requireExistingRegularFile(
+        // Lexical containment remains sufficient for a genuinely missing future destination. Any
+        // filesystem node that already occupies the path, including a dangling symlink that
+        // FileManager.fileExists would miss, must prove a non-symlink directory chain and regular leaf.
+        let boundary = IOManagedPathBoundary(rootURL: rootURL)
+        do {
+            if try boundary.nodeExists(candidate, fileManager: fileManager) {
+                try boundary.requireExistingRegularFile(
                     candidate,
                     within: rootURL,
                     fileManager: fileManager
                 )
-            } catch {
-                throw storeError(
-                    forBoundaryFailure: error,
-                    operationCode: "MANAGED_PATH_OPERATION_FAILED"
-                )
             }
+        } catch {
+            throw storeError(
+                forBoundaryFailure: error,
+                operationCode: "MANAGED_PATH_OPERATION_FAILED"
+            )
         }
         return candidate
     }
@@ -188,20 +188,18 @@ public struct IOFileStore: Sendable {
     }
 
     public func removeIfExists(_ url: URL, fileManager: FileManager = .default) {
-        guard let relativePath = try? relativePath(for: url),
-              fileManager.fileExists(atPath: url.path) else {
-            return
-        }
+        guard let relativePath = try? relativePath(for: url) else { return }
         let boundary = IOManagedPathBoundary(rootURL: rootURL)
-        guard (try? boundary.requireExistingRegularFile(
-            url,
-            within: rootURL,
-            fileManager: fileManager
-        )) != nil else {
+        guard (try? boundary.nodeExists(url, fileManager: fileManager)) == true,
+              (try? boundary.requireExistingRegularFile(
+                url,
+                within: rootURL,
+                fileManager: fileManager
+              )) != nil else {
             return
         }
         try? fileManager.removeItem(at: url)
-        guard !fileManager.fileExists(atPath: url.path) else { return }
+        guard (try? boundary.nodeExists(url, fileManager: fileManager)) == false else { return }
         try? Lane2ManagedArtifactPublicationJournal(
             rootURL: rootURL,
             fileManager: fileManager
