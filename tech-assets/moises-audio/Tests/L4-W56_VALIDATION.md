@@ -4,7 +4,9 @@ Status: **NON_PARITY**
 
 ## Canonical predecessor
 
-At W56 execution time HQ canonical remained Epoch 44, Lane4 W52. Integration Run `33030546532` recorded SwiftPM `462/462 PASS`. W53-W56 were not yet canonicalized.
+The latest HQ integration branch observed during final W56 audit was Epoch46 commit `5f258a04b37e759340d52a72d69fa1d8257a4037`; Integration Run `33038712540` succeeded. However that commit explicitly restored an L4 green baseline whose `Package.swift` excludes the entire `Analysis` directory. It therefore provides **no compile evidence for W53-W56 or any current Analysis source**.
+
+The latest observed integration run that actually compiled the Analysis package surface through Lane4 W52 remains Epoch44 Run `33030546532`, SwiftPM `462/462 PASS`. This W56 validation uses Epoch44/W52 only as the tested predecessor and does not reinterpret the Epoch46 green-baseline SUCCESS as a Lane4 test result.
 
 ## Implementation
 
@@ -46,11 +48,12 @@ Fresh exact Worker-branch SwiftPM/XCTest: **NOT_OBSERVED**.
 
 - Local `git ls-remote` continued to fail with `Could not resolve host: github.com`.
 - GitHub reported no workflow runs attached to the inspected W56 Worker commit.
+- Latest HQ Run `33038712540` is not usable as W56 compile evidence because current integration `Package.swift` excludes `Analysis`.
 - Therefore no W56 project compile/test PASS is claimed by Worker.
 
 ## Remaining gates
 
-- HQ semantic integration of W53 -> W54 -> W55 -> W56 and canonical SwiftPM/XCTest.
+- HQ semantic integration of W53 -> W54 -> W55 -> W56 with `Analysis` re-enabled, followed by canonical SwiftPM/XCTest.
 - Selected Xcode/iphoneos compilation and physical-iPhone execution.
 - Real APFS/fullfsync/terminate/suspend/relaunch/power-loss evidence.
 - HQ-approved rights-cleared corpus + genuine integrated Lane2 decoder.
