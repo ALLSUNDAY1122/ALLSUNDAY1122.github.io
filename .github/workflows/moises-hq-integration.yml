@@ -35,6 +35,84 @@ jobs:
         working-directory: tech-assets/moises-audio
         run: swift test --parallel
 
+  portable-lane1-integrated-a26-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout integration candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          clean: true
+
+      - name: Verify integration checkout identity and cleanliness
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain=v1)"
+          echo "Integrated Lane1 audit HEAD: $actual"
+
+      - name: Install Lane1 audit dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check jsonschema
+
+      - name: Run Lane1 A26 audit on integrated tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tech-assets/moises-audio/Separation/Evaluation/lane1_dependency_audit.py \
+            --audio-root tech-assets/moises-audio \
+            --expected-git-head "$GITHUB_SHA" \
+            --output /tmp/l1-integrated-a26-audit.json
+          cat /tmp/l1-integrated-a26-audit.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('/tmp/l1-integrated-a26-audit.json').read_text())
+          assert report['overall_state'] == 'PASS', report
+          assert report['git_head_binding']['state'] == 'PASS', report['git_head_binding']
+          assert report['owned_source_snapshot']['state'] == 'PASS', report['owned_source_snapshot']
+          assert report['dependency_contracts']['state'] == 'PASS', report['dependency_contracts']
+          assert report['unittest_discovery']['state'] == 'PASS', report['unittest_discovery']
+          print('L1_INTEGRATED_A26_AUDIT_PASS')
+          PY
+
+      - name: Repeat integrated Lane1 full discovery stability probe
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Server:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Evaluation:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          cd "$GITHUB_WORKSPACE/tech-assets/moises-audio"
+          for i in 1 2 3; do
+            echo "===== integrated L1 full discovery stability pass ${i}/3 ====="
+            python3 -m unittest discover -s Separation/Tests -p 'test_*.py'
+            echo "L1_INTEGRATED_STABILITY_PASS_${i}_OK"
+          done
+
+      - name: Diagnose integrated Lane1 unittest failure verbosely
+        if: failure()
+        shell: bash
+        run: |
+          set +e
+          export PYTHONPATH="$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Server:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Evaluation:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          cd "$GITHUB_WORKSPACE/tech-assets/moises-audio"
+          python3 -m unittest discover -v -s Separation/Tests -p 'test_*.py'
+          exit 0
+
+      - name: Upload integrated Lane1 audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: l1-integrated-a26-audit-${{ github.sha }}
+          path: /tmp/l1-integrated-a26-audit.json
+          if-no-files-found: error
+          retention-days: 30
+
   portable-lane2-io-library-source-typecheck:
     runs-on: ubuntu-latest
     container:
