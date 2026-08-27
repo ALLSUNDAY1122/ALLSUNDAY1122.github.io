@@ -11,7 +11,7 @@
   "parity_claim": "NONE",
   "current_wave": "L1-A26",
   "current_wave_title": "Lane 1 Full Regression / Dependency Closure Audit",
-  "current_wave_state": "A45_EXACT_TIP_AUDIT_PENDING",
+  "current_wave_state": "A45_EXACT_TIP_AUDIT_PENDING_AFTER_A44_ONE_FAILURE",
   "latest_autonomous_wave": {
     "id": "L1-A45",
     "title": "Provider Task Identity and Restart-Safe Advanced Observation",
@@ -19,7 +19,7 @@
     "goal": "Bind every observed AudioShake result to the exact requested provider Task, reject ambiguous target/output identity, and keep observation of an already-created advanced Task recoverable after relaunch without depending on live model discovery.",
     "rationale": "A44 moved invalid advanced requests before media upload, but result-side inspection found that AudioShakeClient did not compare GET /tasks/{id} response id with the requested id, duplicate model targets and multiple WAV outputs were not fail-closed, and a fresh canonical adapter required GET /models before observing an existing Task. That could admit wrong-job output or make valid in-flight Tasks unrecoverable when model discovery/access changed.",
     "done_when": "Low-level and canonical Task id bindings fail closed; duplicate provider targets and ambiguous WAV outputs are rejected; output URL has HTTPS+hostname; existing Task observation maps known provider model identity from the checked-in catalog without GET /models; new Task creation still requires live enabled-model discovery; formal regressions/evidence/status are durable without PARITY claims.",
-    "result": "AudioShakeClient.get_task_state now rejects response-id mismatch; task parsing rejects duplicate models, multiple WAVs and hostless HTTPS. Canonical advanced observation independently rechecks task id and duplicate targets, maps existing Task outputs from the stable catalog, and no longer calls live model discovery during observation/recovery. Creation preflight still requires live account discovery. Added/updated 19 formal A45 repository checks; an interface-compatible focused boundary harness passed 12/12. Exact final-A45 repository audit is NOT_OBSERVED."
+    "result": "AudioShakeClient.get_task_state now rejects response-id mismatch; task parsing rejects duplicate models, multiple WAVs and hostless HTTPS. Canonical advanced observation independently rechecks task id and duplicate targets, maps existing Task outputs from the stable catalog, and no longer calls live model discovery during observation/recovery. Creation preflight still requires live account discovery. Added/updated 19 formal A45 repository checks; an interface-compatible focused boundary harness passed 12/12. HQ exact A44 audit later exposed one unittest failure in 845 tests, while compile/snapshot/dependency gates passed; exact final-A45 audit is NOT_OBSERVED."
   },
   "external_gate_status": "E01_E02_E03_E04_E05_E06_E07_E08_E09_E10_PREPARED_PENDING_EXTERNAL_INPUT",
   "completed_bundles": ["L1-M01", "L1-M02", "L1-M03", "L1-M04"],
@@ -36,9 +36,9 @@
     "L1-E01", "L1-E02", "L1-E03", "L1-E04", "L1-E05",
     "L1-E06", "L1-E07", "L1-E08", "L1-E09", "L1-E10"
   ],
-  "base_integration_sha": "0fea2b5f2db390cb1dc45ea9a9899d47ac549719",
+  "base_integration_sha": "5f258a04b37e759340d52a72d69fa1d8257a4037",
   "prior_head_sha": "05b7fd15efadcde624efcd0acc7157a5d19cb418",
-  "head_sha": "376ceaeb7abd104fdd5261c69a4f9757d6179e34",
+  "head_sha": "2ac9b2d4f51edd978ba8b3cfa18e4de7f52d53b2",
   "recent_commits": [
     "879cf2b2279137caa9523453f3ffe1052599c537",
     "27d85097cfde44d8973218ad4b868fb20ce8464e",
@@ -48,19 +48,20 @@
     "6029d276ba9d04f4d4ac94ecac55e0a5425f3fba",
     "1e7c4f37f94dc78f27b0c4a71a674deb07972d46",
     "231fe90ce3e7dbbd242febdeed4ab179e8663c20",
-    "376ceaeb7abd104fdd5261c69a4f9757d6179e34"
+    "376ceaeb7abd104fdd5261c69a4f9757d6179e34",
+    "2ac9b2d4f51edd978ba8b3cfa18e4de7f52d53b2"
   ],
   "tests": [
     "A05-A25 and A27-A45 are completed NON_PARITY; E01-E10 live/readiness infrastructure remains external-input pending. A26 remains open on exact current-tip full-audit PASS.",
-    "HQ Epoch45 integration HEAD 0fea2b5f2db390cb1dc45ea9a9899d47ac549719 integrated Lane1 through A42. HQ exact A42 audit Run 33036684021 / Job 98400764989 succeeded on Worker tip 6acb782a35187ad8765060f89ceb791ef0304e1f; this is historical A42 proof only.",
-    "At A45 start the exact workflow remained pinned to A42, not A43/A44/current A45; therefore no exact current-tip A26 closure is claimed.",
+    "HQ exact A42 audit Run 33036684021 / Job 98400764989 succeeded on Worker tip 6acb782a35187ad8765060f89ceb791ef0304e1f; historical A42 proof only.",
+    "HQ later retargeted to A44 evidence tip 05b7fd15efadcde624efcd0acc7157a5d19cb418. Exact Run 33038424062 / Job 98406309543 failed only at unittest discovery: 845 tests, 1 failure, 0 errors, 0 skipped. Exact checkout identity/cleanliness, Python compile 120, owned source snapshot and dependency contracts 28/28 passed.",
+    "A26-v5 report artifact 9632905364 records the one failure count but not its test name or traceback; no speculative repair was made from count-only evidence.",
     "Current AudioShake Get Task documentation defines the path id and response id as the unique Task identifier and returns target/output data for that Task.",
     "A45 low-level response parsing binds requested and returned Task ids, rejects duplicate model targets, rejects multiple WAV outputs, and requires HTTPS output hostname.",
     "A45 canonical observation separately binds Task id and duplicate provider targets, uses checked-in catalog model identity for existing Task output interpretation, and does not call GET /models during observation/recovery.",
     "A45 new-Task preflight/create still requires live GET /models account-enabled access; restart-safe observation does not weaken creation authorization.",
     "A45 formal repository checks total 19: provider/task identity and recovery 13 plus dependency/AST binding 6. Exact final-A45 repository execution is NOT_OBSERVED.",
-    "A45 interface-compatible focused boundary harness passed 12/12 assertions; it is not repository-native exact evidence.",
-    "Local exact checkout remains unavailable because github.com DNS resolution fails; this is not represented as PASS."
+    "A45 interface-compatible focused boundary harness passed 12/12 assertions; it is not repository-native exact evidence."
   ],
   "evidence": [
     "tech-assets/moises-audio/Processing/L1-A44_VALIDATION.md",
@@ -75,7 +76,8 @@
     "tech-assets/moises-audio/Separation/Evaluation/lane1_dependency_audit.py"
   ],
   "known_gaps": [
-    "L1-A26 is not in completed_waves. Exact A42 checkout audit passed, but A43/A44/A45 were added afterward; exact full audit of the current final A45 branch tip is not observed.",
+    "L1-A26 is not in completed_waves. Exact A44 audit reached 845 tests with exactly one assertion failure; A45 was added afterward and exact final-A45 audit is not observed.",
+    "The A44 A26-v5 audit report stores failure count but not test identity/traceback, so the one exact failure cannot be responsibly patched from that artifact alone.",
     "A45 formal 19-check repository suite is committed but has not run on an exact final-A45 checkout.",
     "A45 has no live credentialed AudioShake production Task evidence; account-specific GET /models, live GET /tasks output identity and real output links require E01 commercial/credential approval and rights-cleared media.",
     "Production output collection still relies on persisted requested canonical roles for final target-set equality; HQ must preserve that comparison when integrating A45.",
@@ -89,15 +91,16 @@
     "P003/P004/P005/P020/P021/P024/P025 remain MISSING pending applicable live/runtime/current-iPhone/current-Moises evidence."
   ],
   "hq_requests": [
-    "Retarget the exact A26 workflow from historical A42 to the exact final Worker 1 A45 branch HEAD after this status checkpoint. Require overall_state=PASS, git_head_binding=PASS, owned_source_snapshot=PASS, dependency_contracts=PASS, unittest_discovery=PASS and zero failures/errors before current-tip A26 completion.",
+    "Retarget the exact A26 workflow from A44 to the exact final Worker 1 A45 branch HEAD after this status checkpoint. Require overall_state=PASS, git_head_binding=PASS, owned_source_snapshot=PASS, dependency_contracts=PASS, unittest_discovery=PASS and zero failures/errors before current-tip A26 completion.",
+    "If exact A45 still fails, preserve failing unittest name and traceback in durable diagnostics before requesting a code change; the A44 count-only report is insufficient for justified repair.",
     "Preserve A45 Task identity binding at both AudioShakeClient and canonical advanced boundary; never accept a response whose Task id differs from the persisted provider_task_id.",
     "Preserve A45 restart-safe split: live GET /models authorizes new Task creation, while checked-in catalog identity interprets known outputs from an already-created Task. Do not reintroduce GET /models as a prerequisite for existing Task poll/recovery.",
     "Preserve final production target-set equality against persisted requested canonical roles before committing output artifacts.",
-    "With approved credentials and rights-cleared media, run live cases for exact Task id, account access change/relaunch, GET /models transient failure during an existing Task, duplicate/invalid provider response handling if reproducible, and normal output mapping.",
+    "With approved credentials and rights-cleared media, run live cases for exact Task id, account access change/relaunch, GET /models transient failure during an existing Task, and normal output mapping.",
     "Capture current-iPhone Premium/Pro custom role and Hi-Fi semantics before P005 activation; keep unverified capabilities fail-closed.",
     "Do not promote P003/P004/P005/P020/P021/P024/P025 from A45 correctness/recovery evidence alone."
   ],
-  "history_note": "A05-A25 and A27-A45 are complete NON_PARITY. A45 followed A44 request preflight by hardening provider result identity and restart observation: AudioShake response Task id is bound to the requested id, duplicate targets and ambiguous WAV outputs fail closed, and advanced existing-Task observation no longer depends on live account model discovery. New Task creation still requires live enabled-model discovery. Formal A45 checks total 19 and an interface-compatible focused harness passed 12/12, but exact final-A45 audit is not observed. A26 remains open for the current tip and no PARITY claim is made.",
-  "last_updated": "2026-08-27T13:09:00+09:00",
+  "history_note": "A05-A25 and A27-A45 are complete NON_PARITY. A45 hardened provider result identity and restart observation. During A45, HQ exact-audited A44 tip 05b7fd15...: compile/snapshot/dependency gates passed but full discovery had 845 tests with one failure and no errors. Because A26-v5 stores only the failure count, no speculative patch was made. A45 formal checks total 19 and focused harness passed 12/12; exact final-A45 audit is pending. A26 remains open and no PARITY claim is made.",
+  "last_updated": "2026-08-27T13:20:00+09:00",
   "writer_policy": "Only Moises-Worker-1 updates this status file. HQ owns Shared/App/PARITY/queue/work-package/lane-plan/resource-lock authority and final PARITY judgment."
 }
