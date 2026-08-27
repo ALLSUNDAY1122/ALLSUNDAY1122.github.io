@@ -25,11 +25,11 @@ def completed_target(model: str, link: str | None = None):
     }
 
 
-def model(model_id: str):
+def model(model_id: str, *, access: str = "enabled"):
     return {
         "id": model_id,
         "category": "instrumentStemSeparation",
-        "access": "enabled",
+        "access": access,
         "outputFormats": ["wav"],
         "creditsPerMinute": 1,
     }
@@ -65,14 +65,18 @@ class RawState:
 
 
 class CanonicalClient:
-    def __init__(self, state: RawState):
+    def __init__(self, state, *, models=None, fail_models: bool = False):
         self.state = state
+        self.models = models or [model("guitar"), model("keys")]
+        self.fail_models = fail_models
         self.requests = []
 
     def _json_request(self, method, path, body=None):
         self.requests.append((method, path, body))
         if path == "/models":
-            return {"models": [model("guitar"), model("keys")]}
+            if self.fail_models:
+                raise RuntimeError("models unavailable")
+            return {"models": self.models}
         if path == "/tasks":
             return {"id": "task-1"}
         raise RuntimeError(path)
@@ -137,6 +141,7 @@ class A45ProviderTaskIdentityTests(unittest.TestCase):
         adapter = CanonicalAdvancedAudioShakeAdapter(client, catalog=self.catalog)
         with self.assertRaisesRegex(AdvancedCapabilityError, "SEP_ADV_TASK_ID_MISMATCH"):
             adapter.get_task_state("task-expected")
+        self.assertEqual(client.requests, [])
 
     def test_canonical_boundary_rejects_missing_task_identity(self):
         class MissingIdentity:
@@ -150,6 +155,7 @@ class A45ProviderTaskIdentityTests(unittest.TestCase):
         adapter = CanonicalAdvancedAudioShakeAdapter(client, catalog=self.catalog)
         with self.assertRaisesRegex(AdvancedCapabilityError, "SEP_ADV_TASK_STATE_INVALID"):
             adapter.get_task_state("task-1")
+        self.assertEqual(client.requests, [])
 
     def test_canonical_duplicate_provider_target_fails_before_mapping(self):
         state = RawState(
@@ -160,19 +166,44 @@ class A45ProviderTaskIdentityTests(unittest.TestCase):
         adapter = CanonicalAdvancedAudioShakeAdapter(client, catalog=self.catalog)
         with self.assertRaisesRegex(AdvancedCapabilityError, "SEP_ADV_OUTPUT_MODEL_DUPLICATE"):
             adapter.get_task_state("task-1")
+        self.assertEqual(client.requests, [])
 
-    def test_canonical_exact_identity_maps_provider_models_to_roles(self):
+    def test_existing_task_observation_does_not_require_models_discovery(self):
         state = RawState(
             task_id="task-1",
             targets=(RawTarget("guitar"), RawTarget("keys")),
         )
-        client = CanonicalClient(state)
+        client = CanonicalClient(state, fail_models=True)
         adapter = CanonicalAdvancedAudioShakeAdapter(client, catalog=self.catalog)
         observed = adapter.get_task_state("task-1")
-        self.assertEqual(observed.task_id, "task-1")
         self.assertEqual(tuple(target.model for target in observed.targets), ("guitar", "piano_keys"))
+        self.assertEqual(client.requests, [])
 
-    def test_invalid_canonical_task_id_fails_before_model_discovery(self):
+    def test_existing_task_maps_catalog_model_even_if_current_access_would_be_gated(self):
+        state = RawState(task_id="task-1", targets=(RawTarget("keys"),))
+        client = CanonicalClient(state, models=[model("keys", access="request_access")])
+        adapter = CanonicalAdvancedAudioShakeAdapter(client, catalog=self.catalog)
+        observed = adapter.get_task_state("task-1")
+        self.assertEqual(observed.targets[0].model, "piano_keys")
+        self.assertEqual(client.requests, [])
+
+    def test_new_task_preflight_still_requires_live_model_discovery(self):
+        state = RawState(task_id="task-1", targets=(RawTarget("guitar"),))
+        client = CanonicalClient(state, fail_models=True)
+        adapter = CanonicalAdvancedAudioShakeAdapter(client, catalog=self.catalog)
+        with self.assertRaisesRegex(AdvancedCapabilityError, "SEP_ADV_MODEL_DISCOVERY_FAILED"):
+            adapter.preflight_separation(("guitar",))
+        self.assertEqual(client.requests[0][:2], ("GET", "/models"))
+
+    def test_unknown_provider_output_model_still_fails_closed_without_discovery(self):
+        state = RawState(task_id="task-1", targets=(RawTarget("future_magic"),))
+        client = CanonicalClient(state, fail_models=True)
+        adapter = CanonicalAdvancedAudioShakeAdapter(client, catalog=self.catalog)
+        with self.assertRaisesRegex(AdvancedCapabilityError, "SEP_ADV_OUTPUT_MODEL_UNKNOWN"):
+            adapter.get_task_state("task-1")
+        self.assertEqual(client.requests, [])
+
+    def test_invalid_canonical_task_id_fails_before_any_provider_call(self):
         client = CanonicalClient(RawState(task_id="task-1", targets=(RawTarget("guitar"),)))
         adapter = CanonicalAdvancedAudioShakeAdapter(client, catalog=self.catalog)
         with self.assertRaisesRegex(AdvancedCapabilityError, "SEP_ADV_TASK_ID_INVALID"):
