@@ -31,49 +31,27 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionConcurrentWriterError: Err
 public enum AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore {
     public static let limitations = [
         "NON_PARITY: W51 serializes W50 bridge-consumption writers and rejects stale predecessor views; it does not promote any Analysis PARITY row.",
+        "W56 marks the W51 public entrypoints as migration-only. Debug compatibility calls route through W55 normalized access; Release production calls fail closed because their legacy return shapes cannot carry W55 normalization evidence.",
         "Same-process NSLock plus OS advisory flock serialize cooperating writers. The lock file is persistent by design so process termination releases the kernel lock without requiring stale-file deletion.",
-        "The append CAS binds the exact predecessor sequence, ledger root and latest record root observed before publication. A writer whose view became stale fails closed before publishing a second candidate for that sequence.",
-        "W54 bootstraps the canonical W50 directory topology and garbage-collects interrupted W53 publication temporaries only while the W51 writer lease is held, using pinned-directory no-follow identity checks before recovery/CAS observation.",
-        "Lock inode/token checks and W54 pinned-directory entry identity checks detect cooperating-path replacement during critical sections, but these are local custody controls rather than signatures, trusted timestamps, Secure Enclave proofs or Apple attestation."
+        "The append CAS binds the exact predecessor sequence, ledger root and latest record root observed before publication. A writer whose view became stale fails closed before publishing a second candidate for that sequence."
     ]
 
+    @available(*, deprecated, message: "Migration-only W51 API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedConcurrentStore.observeAppendCAS so W55 normalization evidence is retained.")
     public static func observeAppendCAS(
         ledgerID: String,
         rootURL: URL,
         fileManager: FileManager = .default
     ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionAppendCAS {
-        try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.withExclusiveLock(
+        try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.concurrentObserveAppendCAS)
+        return try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedConcurrentStore.observeAppendCAS(
             ledgerID: ledgerID,
-            rootURL: rootURL
-        ) { lease in
-            try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-            try AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.ensureDirectories(
-                ledgerID: ledgerID,
-                rootURL: rootURL,
-                fileManager: fileManager
-            )
-            _ = try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.garbageCollectInterruptedPublicationTemps(
-                ledgerID: ledgerID,
-                rootURL: rootURL,
-                lease: lease,
-                fileManager: fileManager
-            )
-            _ = try AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.recoverIfNeeded(
-                ledgerID: ledgerID,
-                rootURL: rootURL,
-                fileManager: fileManager
-            )
-            try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-            let head = try AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.loadValidatedHead(
-                ledgerID: ledgerID,
-                rootURL: rootURL,
-                fileManager: fileManager
-            )
-            return makeCAS(ledgerID: ledgerID, head: head)
-        }
+            rootURL: rootURL,
+            fileManager: fileManager
+        ).cas
     }
 
     @discardableResult
+    @available(*, deprecated, message: "Migration-only W51 API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedConcurrentStore.append so the predecessor normalization receipt is retained.")
     public static func append(
         ledgerID: String,
         certificate: AnalysisPhysicalRealAudioParityBridgeCertificate,
@@ -82,15 +60,15 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore {
         rootURL: URL,
         fileManager: FileManager = .default
     ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionLedgerHead {
-        try appendInternal(
+        try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.concurrentAppend)
+        return try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedConcurrentStore.append(
             ledgerID: ledgerID,
             certificate: certificate,
             custody: custody,
             expectedCAS: expectedCAS,
             rootURL: rootURL,
-            fileManager: fileManager,
-            injectedFault: nil
-        )
+            fileManager: fileManager
+        ).head
     }
 
     @discardableResult
@@ -114,61 +92,34 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore {
         )
     }
 
+    @available(*, deprecated, message: "Migration-only W51 API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedConcurrentStore.consumedW47PackageRootSHA256s so W55 normalization evidence is retained.")
     public static func consumedW47PackageRootSHA256s(
         ledgerID: String,
         rootURL: URL,
         fileManager: FileManager = .default
     ) throws -> [String] {
-        try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.withExclusiveLock(
+        try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.concurrentConsumedInventory)
+        return try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedConcurrentStore.consumedW47PackageRootSHA256s(
             ledgerID: ledgerID,
-            rootURL: rootURL
-        ) { lease in
-            try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-            try AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.ensureDirectories(
-                ledgerID: ledgerID,
-                rootURL: rootURL,
-                fileManager: fileManager
-            )
-            _ = try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.garbageCollectInterruptedPublicationTemps(
-                ledgerID: ledgerID,
-                rootURL: rootURL,
-                lease: lease,
-                fileManager: fileManager
-            )
-            return try AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.consumedW47PackageRootSHA256s(
-                ledgerID: ledgerID,
-                rootURL: rootURL,
-                fileManager: fileManager
-            )
-        }
+            rootURL: rootURL,
+            fileManager: fileManager
+        ).roots
     }
 
+    @available(*, deprecated, message: "Migration-only W51 API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedConcurrentStore.expectationUsingNormalizedConsumedInventory so W55 normalization evidence is retained.")
     public static func expectationUsingSerializedConsumedInventory(
         base: AnalysisPhysicalRealAudioParityBridgeExpectation,
         ledgerID: String,
         rootURL: URL,
         fileManager: FileManager = .default
     ) throws -> AnalysisPhysicalRealAudioParityBridgeExpectation {
-        let consumed = try consumedW47PackageRootSHA256s(
+        try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.concurrentExpectation)
+        return try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedConcurrentStore.expectationUsingNormalizedConsumedInventory(
+            base: base,
             ledgerID: ledgerID,
             rootURL: rootURL,
             fileManager: fileManager
-        )
-        return .init(
-            schemaVersion: base.schemaVersion,
-            authority: base.authority,
-            approvalReference: base.approvalReference,
-            bridgeID: base.bridgeID,
-            expectedW47PackageRootSHA256: base.expectedW47PackageRootSHA256,
-            expectedW47PackageBytesSHA256: base.expectedW47PackageBytesSHA256,
-            expectedManifestID: base.expectedManifestID,
-            expectedManifestSHA256: base.expectedManifestSHA256,
-            expectedRuntimeBindingSHA256: base.expectedRuntimeBindingSHA256,
-            expectedPhysicalSessionID: base.expectedPhysicalSessionID,
-            expectedAuditedProjectReportSHA256: base.expectedAuditedProjectReportSHA256,
-            expectedW46BindingSHA256: base.expectedW46BindingSHA256,
-            previouslyConsumedW47PackageRootSHA256s: consumed
-        )
+        ).expectation
     }
 
     static func validateCAS(_ value: AnalysisPhysicalRealAudioBridgeConsumptionAppendCAS) -> Bool {
@@ -245,11 +196,7 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore {
                 )
             }
             try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-            guard verifiesCommit(
-                predecessorCAS: expectedCAS,
-                head: newHead,
-                certificate: certificate
-            ) else {
+            guard verifiesCommit(predecessorCAS: expectedCAS, head: newHead, certificate: certificate) else {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionConcurrentWriterError.postCommitVerificationFailed
             }
             guard let reopened = try AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.loadValidatedHead(
@@ -299,7 +246,6 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore {
               last.w46AdjudicationReportRootSHA256 == certificate.w46AdjudicationReportRootSHA256 else {
             return false
         }
-
         let prefix = Array(head.records.dropLast())
         if predecessorCAS.expectedLatestSequence == 0 {
             return prefix.isEmpty && last.predecessorRecordRootSHA256 == nil
