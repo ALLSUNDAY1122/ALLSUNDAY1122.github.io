@@ -1,8 +1,9 @@
 """Cost-guarded production separation entrypoint.
 
-This adapter composes A10 cost safety with the A15 long-track production wrapper without changing
+This adapter composes A10 cost safety with the A15/A41 long-track production wrapper without changing
 the frozen Shared/App contracts. Provider create remains guarded against duplicate billing, while
-source/output storage pressure and transfer backpressure are enforced by the inner long-track layer.
+source/output storage pressure, transfer backpressure and validator-bound crash resumption are
+enforced by the inner long-track layer.
 """
 from __future__ import annotations
 
@@ -12,7 +13,9 @@ from typing import Any, Callable, Iterable
 
 from cost_quota_guard import CostGuardError, CostQuotaGuard, classify_provider_limit
 from long_track_io import LongTrackIOError, LongTrackIOGuard
-from long_track_production_orchestrator import LongTrackProductionSeparationOrchestrator
+from resumable_long_track_production_orchestrator import (
+    CrashResumableLongTrackProductionSeparationOrchestrator,
+)
 from production_orchestrator import (
     OrchestratorError,
     _contained_file,
@@ -75,7 +78,7 @@ class BudgetedProductionSeparationOrchestrator:
         self.cost_guard = cost_guard
         self.duration_resolver = duration_resolver
         self.source_root = Path(source_root).resolve()
-        self.inner = LongTrackProductionSeparationOrchestrator(
+        self.inner = CrashResumableLongTrackProductionSeparationOrchestrator(
             provider=BudgetedProviderProxy(provider, cost_guard),
             source_root=source_root,
             artifact_root=artifact_root,
