@@ -13,6 +13,10 @@ enum IOManagedPathBoundaryFailure: Error, Equatable, Sendable {
 /// symbolic link. This guard validates the configured root and every existing descendant component
 /// before managed IO reads, writes, moves, or removals. Missing managed directories are created one
 /// component at a time only after their parent has been proven to be a real directory.
+///
+/// `attributesOfItem(atPath:)` is intentionally used as the existence primitive instead of only
+/// `fileExists(atPath:)`: the latter reports false for a dangling symlink, which would otherwise let a
+/// hostile broken link masquerade as a safe missing future destination.
 struct IOManagedPathBoundary: Sendable {
     let rootURL: URL
 
@@ -21,9 +25,8 @@ struct IOManagedPathBoundary: Sendable {
     }
 
     func ensureRootDirectory(fileManager: FileManager = .default) throws {
-        var isDirectory: ObjCBool = false
-        if fileManager.fileExists(atPath: rootURL.path, isDirectory: &isDirectory) {
-            try requireDirectoryNode(rootURL, fileManager: fileManager)
+        if let attributes = try attributesIfPresent(rootURL, fileManager: fileManager) {
+            try requireDirectoryNode(rootURL, attributes: attributes)
             return
         }
         do {
@@ -40,16 +43,12 @@ struct IOManagedPathBoundary: Sendable {
         var cursor = rootURL
         for component in components {
             cursor.appendPathComponent(component, isDirectory: true)
-            var isDirectory: ObjCBool = false
-            if fileManager.fileExists(atPath: cursor.path, isDirectory: &isDirectory) {
-                try requireDirectoryNode(cursor, fileManager: fileManager)
+            if let attributes = try attributesIfPresent(cursor, fileManager: fileManager) {
+                try requireDirectoryNode(cursor, attributes: attributes)
                 continue
             }
             do {
-                try fileManager.createDirectory(
-                    at: cursor,
-                    withIntermediateDirectories: false
-                )
+                try fileManager.createDirectory(at: cursor, withIntermediateDirectories: false)
             } catch {
                 throw IOManagedPathBoundaryFailure.fileOperation(cursor.path)
             }
@@ -67,6 +66,35 @@ struct IOManagedPathBoundary: Sendable {
         }
     }
 
+    func nodeExists(_ url: URL, fileManager: FileManager = .default) throws -> Bool {
+        let candidate = url.standardizedFileURL
+        guard candidate == rootURL || isDescendant(candidate, of: rootURL) else {
+            throw IOManagedPathBoundaryFailure.pathEscapesRoot(candidate.path)
+        }
+        return try attributesIfPresent(candidate, fileManager: fileManager) != nil
+    }
+
+    /// Validates the parent chain and accepts either a missing leaf or an existing real regular file.
+    /// Returns true when a regular file already exists and false when the leaf is genuinely absent.
+    @discardableResult
+    func requireRegularFileOrMissing(
+        _ fileURL: URL,
+        within ancestorURL: URL,
+        fileManager: FileManager = .default
+    ) throws -> Bool {
+        let file = fileURL.standardizedFileURL
+        let ancestor = ancestorURL.standardizedFileURL
+        try requireContained(file, within: ancestor)
+        try requireDirectory(file.deletingLastPathComponent(), fileManager: fileManager)
+        guard let attributes = try attributesIfPresent(file, fileManager: fileManager) else {
+            return false
+        }
+        guard attributes[.type] as? FileAttributeType == .typeRegular else {
+            throw IOManagedPathBoundaryFailure.unsafePath(file.path)
+        }
+        return true
+    }
+
     func requireExistingRegularFile(
         _ fileURL: URL,
         within ancestorURL: URL,
@@ -74,18 +102,10 @@ struct IOManagedPathBoundary: Sendable {
     ) throws {
         let file = fileURL.standardizedFileURL
         let ancestor = ancestorURL.standardizedFileURL
-        guard isDescendant(file, of: ancestor),
-              isDescendant(ancestor, of: rootURL) || ancestor == rootURL else {
-            throw IOManagedPathBoundaryFailure.pathEscapesRoot(file.path)
-        }
+        try requireContained(file, within: ancestor)
         try requireDirectory(file.deletingLastPathComponent(), fileManager: fileManager)
-        let values: URLResourceValues
-        do {
-            values = try file.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-        } catch {
-            throw IOManagedPathBoundaryFailure.unsafePath(file.path)
-        }
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
+        guard let attributes = try attributesIfPresent(file, fileManager: fileManager),
+              attributes[.type] as? FileAttributeType == .typeRegular else {
             throw IOManagedPathBoundaryFailure.unsafePath(file.path)
         }
     }
@@ -97,29 +117,48 @@ struct IOManagedPathBoundary: Sendable {
     ) throws {
         let file = fileURL.standardizedFileURL
         let ancestor = ancestorURL.standardizedFileURL
-        guard isDescendant(file, of: ancestor),
-              isDescendant(ancestor, of: rootURL) || ancestor == rootURL else {
-            throw IOManagedPathBoundaryFailure.pathEscapesRoot(file.path)
-        }
+        try requireContained(file, within: ancestor)
         try requireDirectory(file.deletingLastPathComponent(), fileManager: fileManager)
-        if fileManager.fileExists(atPath: file.path) {
+        if try attributesIfPresent(file, fileManager: fileManager) != nil {
             throw IOManagedPathBoundaryFailure.destinationExists(file.path)
         }
     }
 
+    private func requireContained(_ file: URL, within ancestor: URL) throws {
+        guard isDescendant(file, of: ancestor),
+              isDescendant(ancestor, of: rootURL) || ancestor == rootURL else {
+            throw IOManagedPathBoundaryFailure.pathEscapesRoot(file.path)
+        }
+    }
+
     private func requireDirectoryNode(_ url: URL, fileManager: FileManager) throws {
-        var isDirectory: ObjCBool = false
-        guard fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory),
-              isDirectory.boolValue else {
+        guard let attributes = try attributesIfPresent(url, fileManager: fileManager) else {
             throw IOManagedPathBoundaryFailure.unsafePath(url.path)
         }
-        let values: URLResourceValues
+        try requireDirectoryNode(url, attributes: attributes)
+    }
+
+    private func requireDirectoryNode(
+        _ url: URL,
+        attributes: [FileAttributeKey: Any]
+    ) throws {
+        guard attributes[.type] as? FileAttributeType == .typeDirectory else {
+            throw IOManagedPathBoundaryFailure.unsafePath(url.path)
+        }
+    }
+
+    private func attributesIfPresent(
+        _ url: URL,
+        fileManager: FileManager
+    ) throws -> [FileAttributeKey: Any]? {
         do {
-            values = try url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
+            return try fileManager.attributesOfItem(atPath: url.path)
         } catch {
-            throw IOManagedPathBoundaryFailure.unsafePath(url.path)
-        }
-        guard values.isDirectory == true, values.isSymbolicLink != true else {
+            let nsError = error as NSError
+            if nsError.domain == NSCocoaErrorDomain,
+               nsError.code == NSFileReadNoSuchFileError || nsError.code == NSFileNoSuchFileError {
+                return nil
+            }
             throw IOManagedPathBoundaryFailure.unsafePath(url.path)
         }
     }

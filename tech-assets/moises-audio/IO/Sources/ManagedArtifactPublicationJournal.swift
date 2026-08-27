@@ -103,6 +103,10 @@ public struct Lane2ManagedArtifactPublicationJournal: Sendable {
         self.fileManager = fileManager
     }
 
+    private var pathBoundary: IOManagedPathBoundary {
+        IOManagedPathBoundary(rootURL: rootURL)
+    }
+
     @discardableResult
     public func begin(relativePath: String, now: Date = Date()) throws -> Lane2ManagedArtifactPublicationRecord {
         let normalized = try Self.normalize(relativePath)
@@ -128,11 +132,18 @@ public struct Lane2ManagedArtifactPublicationJournal: Sendable {
     public func completeIfPresent(relativePath: String) throws {
         let normalized = try Self.normalize(relativePath)
         let url = try absoluteURL(normalized)
-        guard fileManager.fileExists(atPath: url.path) else {
-            throw Lane2ManagedArtifactPublicationJournalFailure.publishedArtifactMissing(normalized)
-        }
-        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
+        do {
+            let exists = try pathBoundary.requireRegularFileOrMissing(
+                url,
+                within: rootURL,
+                fileManager: fileManager
+            )
+            guard exists else {
+                throw Lane2ManagedArtifactPublicationJournalFailure.publishedArtifactMissing(normalized)
+            }
+        } catch let failure as Lane2ManagedArtifactPublicationJournalFailure {
+            throw failure
+        } catch {
             throw Lane2ManagedArtifactPublicationJournalFailure.publishedArtifactUnsafe(normalized)
         }
         try remove(relativePath: normalized, expectedSessionID: nil)
@@ -217,7 +228,21 @@ public struct Lane2ManagedArtifactPublicationJournal: Sendable {
             cursor: slice.nextCursor
         )
         let data = try stableEncoder.encode(envelope)
-        try data.write(to: recoveryCursorURL, options: [.atomic])
+        do {
+            _ = try pathBoundary.requireRegularFileOrMissing(
+                recoveryCursorURL,
+                within: journalDirectoryURL,
+                fileManager: fileManager
+            )
+            try data.write(to: recoveryCursorURL, options: [.atomic])
+            try pathBoundary.requireExistingRegularFile(
+                recoveryCursorURL,
+                within: journalDirectoryURL,
+                fileManager: fileManager
+            )
+        } catch {
+            throw Lane2ManagedArtifactPublicationJournalFailure.corruptCursor
+        }
     }
 
     public func contains(relativePath: String) throws -> Bool {
@@ -241,15 +266,30 @@ public struct Lane2ManagedArtifactPublicationJournal: Sendable {
     }
 
     private func ensureLayout() throws {
-        try fileManager.createDirectory(at: shardDirectoryURL, withIntermediateDirectories: true)
+        do {
+            try pathBoundary.ensureDirectory(shardDirectoryURL, fileManager: fileManager)
+        } catch {
+            throw Lane2ManagedArtifactPublicationJournalFailure.corruptShard("layout")
+        }
     }
 
     private func loadShard(_ index: Int) throws -> Lane2ManagedArtifactPublicationShard {
         guard (0..<Self.shardCount).contains(index) else {
             throw Lane2ManagedArtifactPublicationJournalFailure.corruptShard(String(index))
         }
+        try ensureLayout()
         let url = shardURL(index)
-        guard fileManager.fileExists(atPath: url.path) else {
+        let exists: Bool
+        do {
+            exists = try pathBoundary.requireRegularFileOrMissing(
+                url,
+                within: shardDirectoryURL,
+                fileManager: fileManager
+            )
+        } catch {
+            throw Lane2ManagedArtifactPublicationJournalFailure.corruptShard(url.lastPathComponent)
+        }
+        guard exists else {
             return Lane2ManagedArtifactPublicationShard(
                 schemaVersion: Lane2ManagedArtifactPublicationShard.schemaVersion,
                 shardIndex: index,
@@ -257,10 +297,6 @@ public struct Lane2ManagedArtifactPublicationJournal: Sendable {
             )
         }
         do {
-            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-            guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                throw Lane2ManagedArtifactPublicationJournalFailure.corruptShard(url.lastPathComponent)
-            }
             let shard = try JSONDecoder().decode(
                 Lane2ManagedArtifactPublicationShard.self,
                 from: Data(contentsOf: url)
@@ -297,23 +333,49 @@ public struct Lane2ManagedArtifactPublicationJournal: Sendable {
     private func writeShard(_ shard: Lane2ManagedArtifactPublicationShard) throws {
         try ensureLayout()
         let url = shardURL(shard.shardIndex)
+        let exists: Bool
+        do {
+            exists = try pathBoundary.requireRegularFileOrMissing(
+                url,
+                within: shardDirectoryURL,
+                fileManager: fileManager
+            )
+        } catch {
+            throw Lane2ManagedArtifactPublicationJournalFailure.corruptShard(url.lastPathComponent)
+        }
         if shard.records.isEmpty {
-            if fileManager.fileExists(atPath: url.path) { try fileManager.removeItem(at: url) }
+            if exists { try fileManager.removeItem(at: url) }
             return
         }
-        let data = try stableEncoder.encode(shard)
-        try data.write(to: url, options: [.atomic])
+        do {
+            let data = try stableEncoder.encode(shard)
+            try data.write(to: url, options: [.atomic])
+            try pathBoundary.requireExistingRegularFile(
+                url,
+                within: shardDirectoryURL,
+                fileManager: fileManager
+            )
+        } catch {
+            throw Lane2ManagedArtifactPublicationJournalFailure.corruptShard(url.lastPathComponent)
+        }
     }
 
     private func loadRecoveryCursor() throws -> Lane2ManagedArtifactPublicationRecoveryCursor {
-        guard fileManager.fileExists(atPath: recoveryCursorURL.path) else {
+        try ensureLayout()
+        let exists: Bool
+        do {
+            exists = try pathBoundary.requireRegularFileOrMissing(
+                recoveryCursorURL,
+                within: journalDirectoryURL,
+                fileManager: fileManager
+            )
+        } catch {
+            throw Lane2ManagedArtifactPublicationJournalFailure.corruptCursor
+        }
+        guard exists else {
             return Lane2ManagedArtifactPublicationRecoveryCursor(shardIndex: 0)
         }
         do {
-            let values = try recoveryCursorURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-            guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                throw Lane2ManagedArtifactPublicationJournalFailure.corruptCursor
-            }
             let envelope = try JSONDecoder().decode(
                 Lane2ManagedArtifactPublicationCursorEnvelope.self,
                 from: Data(contentsOf: recoveryCursorURL)

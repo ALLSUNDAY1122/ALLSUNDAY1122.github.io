@@ -67,6 +67,10 @@ public struct IOExportBatchTransaction: Sendable {
         self.fileStore = fileStore
     }
 
+    private var pathBoundary: IOManagedPathBoundary {
+        IOManagedPathBoundary(rootURL: fileStore.rootURL)
+    }
+
     public var stagingBatchesURL: URL {
         fileStore.stagingURL.appendingPathComponent(stagingBatchDirectoryName, isDirectory: true)
     }
@@ -93,8 +97,8 @@ public struct IOExportBatchTransaction: Sendable {
 
         do {
             try fileStore.prepareDirectories(fileManager: fileManager)
-            try fileManager.createDirectory(at: stagingBatchesURL, withIntermediateDirectories: true)
-            try fileManager.createDirectory(at: finalizedBatchesURL, withIntermediateDirectories: true)
+            try pathBoundary.ensureDirectory(stagingBatchesURL, fileManager: fileManager)
+            try pathBoundary.ensureDirectory(finalizedBatchesURL, fileManager: fileManager)
         } catch {
             throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_DIRECTORY_CREATE_FAILED")
         }
@@ -102,7 +106,13 @@ public struct IOExportBatchTransaction: Sendable {
         let id = UUID().uuidString.lowercased()
         let batchURL = stagingBatchesURL.appendingPathComponent(id, isDirectory: true)
         do {
+            try pathBoundary.requireSafeDestination(
+                batchURL,
+                within: stagingBatchesURL,
+                fileManager: fileManager
+            )
             try fileManager.createDirectory(at: batchURL, withIntermediateDirectories: false)
+            try pathBoundary.requireDirectory(batchURL, fileManager: fileManager)
         } catch {
             throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_STAGE_CREATE_FAILED")
         }
@@ -137,10 +147,24 @@ public struct IOExportBatchTransaction: Sendable {
             throw BatchError.invalidPlan
         }
 
+        do {
+            try pathBoundary.requireDirectory(stagingBatchesURL, fileManager: fileManager)
+            try pathBoundary.requireDirectory(finalizedBatchesURL, fileManager: fileManager)
+            try pathBoundary.requireDirectory(plan.stagingDirectoryURL, fileManager: fileManager)
+        } catch {
+            throw BatchError.invalidPlan
+        }
+
         var fingerprints: [IntegrityItem] = []
         fingerprints.reserveCapacity(plan.items.count)
         for item in plan.items {
-            fingerprints.append(try fingerprint(itemURL: item.stagingURL, filename: item.filename, fileManager: fileManager))
+            fingerprints.append(
+                try fingerprint(
+                    itemURL: item.stagingURL,
+                    filename: item.filename,
+                    fileManager: fileManager
+                )
+            )
         }
         let manifest = IntegrityManifest(
             schemaVersion: IntegrityManifest.schemaVersion,
@@ -150,18 +174,36 @@ public struct IOExportBatchTransaction: Sendable {
         try persistManifest(manifest, directory: plan.stagingDirectoryURL, fileManager: fileManager)
 
         let finalDirectoryURL = finalizedBatchesURL.appendingPathComponent(plan.id, isDirectory: true)
-        guard !fileManager.fileExists(atPath: finalDirectoryURL.path) else {
+        do {
+            try pathBoundary.requireSafeDestination(
+                finalDirectoryURL,
+                within: finalizedBatchesURL,
+                fileManager: fileManager
+            )
+        } catch IOManagedPathBoundaryFailure.destinationExists {
             throw BatchError.destinationConflict
+        } catch {
+            throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_FINAL_DESTINATION_UNSAFE")
         }
 
         let markerURL = plan.stagingDirectoryURL.appendingPathComponent(Self.preRegistrationMarkerFilename)
         do {
+            try pathBoundary.requireSafeDestination(
+                markerURL,
+                within: plan.stagingDirectoryURL,
+                fileManager: fileManager
+            )
             guard fileManager.createFile(
                 atPath: markerURL.path,
                 contents: Data((Self.publicationSessionID + "\n").utf8)
             ) else {
                 throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_MARKER_CREATE_FAILED")
             }
+            try pathBoundary.requireExistingRegularFile(
+                markerURL,
+                within: plan.stagingDirectoryURL,
+                fileManager: fileManager
+            )
             let markerHandle = try FileHandle(forWritingTo: markerURL)
             try markerHandle.synchronize()
             try markerHandle.close()
@@ -172,7 +214,16 @@ public struct IOExportBatchTransaction: Sendable {
         }
 
         do {
+            // Narrow the validation-to-rename race: both source and destination parents are checked
+            // immediately before the same-volume publication rename.
+            try pathBoundary.requireDirectory(plan.stagingDirectoryURL, fileManager: fileManager)
+            try pathBoundary.requireSafeDestination(
+                finalDirectoryURL,
+                within: finalizedBatchesURL,
+                fileManager: fileManager
+            )
             try fileManager.moveItem(at: plan.stagingDirectoryURL, to: finalDirectoryURL)
+            try pathBoundary.requireDirectory(finalDirectoryURL, fileManager: fileManager)
         } catch {
             throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_COMMIT_MOVE_FAILED")
         }
@@ -180,7 +231,10 @@ public struct IOExportBatchTransaction: Sendable {
         do {
             return try verifyPublishedBatch(batchID: plan.id, fileManager: fileManager)
         } catch {
-            try? fileManager.removeItem(at: finalDirectoryURL)
+            // Never traverse a replacement symlink while compensating a failed verification.
+            if (try? pathBoundary.requireDirectory(finalDirectoryURL, fileManager: fileManager)) != nil {
+                try? fileManager.removeItem(at: finalDirectoryURL)
+            }
             throw error
         }
     }
@@ -200,6 +254,13 @@ public struct IOExportBatchTransaction: Sendable {
         guard isDirectChild(directory, of: finalizedBatchesURL) else {
             throw BatchError.integrityManifestInvalid
         }
+        do {
+            try pathBoundary.requireDirectory(finalizedBatchesURL, fileManager: fileManager)
+            try pathBoundary.requireDirectory(directory, fileManager: fileManager)
+        } catch {
+            throw BatchError.integrityManifestInvalid
+        }
+
         let manifest = try loadManifest(directory: directory, fileManager: fileManager)
         guard manifest.schemaVersion == IntegrityManifest.schemaVersion,
               manifest.batchID == batchID,
@@ -239,8 +300,13 @@ public struct IOExportBatchTransaction: Sendable {
             guard expectedNames.contains(name) || allowedHidden.contains(name) else {
                 throw BatchError.integrityMismatch(filename: name)
             }
-            let values = try child.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-            guard values.isRegularFile == true, values.isSymbolicLink != true else {
+            do {
+                try pathBoundary.requireExistingRegularFile(
+                    child,
+                    within: directory,
+                    fileManager: fileManager
+                )
+            } catch {
                 throw BatchError.integrityMismatch(filename: name)
             }
         }
@@ -249,6 +315,12 @@ public struct IOExportBatchTransaction: Sendable {
 
     public func abort(_ plan: Plan, fileManager: FileManager = .default) {
         guard isDirectChild(plan.stagingDirectoryURL, of: stagingBatchesURL) else { return }
+        guard (try? pathBoundary.requireDirectory(
+            plan.stagingDirectoryURL,
+            fileManager: fileManager
+        )) != nil else {
+            return
+        }
         try? fileManager.removeItem(at: plan.stagingDirectoryURL)
     }
 
@@ -256,12 +328,22 @@ public struct IOExportBatchTransaction: Sendable {
     /// their pre-registration markers are consumed/recovered by Lane2ExportRegistrationJournal.
     @discardableResult
     public func recoverAbandonedBatches(fileManager: FileManager = .default) throws -> Int {
-        guard fileManager.fileExists(atPath: stagingBatchesURL.path) else { return 0 }
+        let exists: Bool
+        do {
+            exists = try pathBoundary.nodeExists(stagingBatchesURL, fileManager: fileManager)
+            if exists {
+                try pathBoundary.requireDirectory(stagingBatchesURL, fileManager: fileManager)
+            }
+        } catch {
+            throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_RECOVERY_ROOT_UNSAFE")
+        }
+        guard exists else { return 0 }
+
         let children: [URL]
         do {
             children = try fileManager.contentsOfDirectory(
                 at: stagingBatchesURL,
-                includingPropertiesForKeys: [.isDirectoryKey],
+                includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey],
                 options: [.skipsHiddenFiles]
             )
         } catch {
@@ -271,10 +353,11 @@ public struct IOExportBatchTransaction: Sendable {
         var removed = 0
         for child in children where isDirectChild(child, of: stagingBatchesURL) {
             do {
+                try pathBoundary.requireDirectory(child, fileManager: fileManager)
                 try fileManager.removeItem(at: child)
                 removed += 1
             } catch {
-                throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_RECOVERY_REMOVE_FAILED")
+                throw BatchError.fileOperationFailed(code: "EXPORT_BATCH_RECOVERY_UNSAFE_ENTRY")
             }
         }
         return removed
@@ -285,17 +368,19 @@ public struct IOExportBatchTransaction: Sendable {
         filename: String,
         fileManager: FileManager
     ) throws -> IntegrityItem {
-        var isDirectory: ObjCBool = false
-        guard fileManager.fileExists(atPath: itemURL.path, isDirectory: &isDirectory) else {
-            throw BatchError.outputMissing(filename: filename)
-        }
-        guard !isDirectory.boolValue else {
+        do {
+            try pathBoundary.requireExistingRegularFile(
+                itemURL,
+                within: fileStore.rootURL,
+                fileManager: fileManager
+            )
+        } catch {
+            let exists = (try? pathBoundary.nodeExists(itemURL, fileManager: fileManager)) == true
+            if !exists { throw BatchError.outputMissing(filename: filename) }
             throw BatchError.outputNotRegularFile(filename: filename)
         }
-        let values = try itemURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
-            throw BatchError.outputNotRegularFile(filename: filename)
-        }
+
+        let values = try itemURL.resourceValues(forKeys: [.fileSizeKey])
         let size = UInt64(max(values.fileSize ?? 0, 0))
         guard size > 0 else { throw BatchError.outputEmpty(filename: filename) }
 
@@ -326,10 +411,17 @@ public struct IOExportBatchTransaction: Sendable {
     ) throws {
         let url = directory.appendingPathComponent(Self.integrityManifestFilename, isDirectory: false)
         do {
+            try pathBoundary.requireDirectory(directory, fileManager: fileManager)
+            _ = try pathBoundary.requireRegularFileOrMissing(
+                url,
+                within: directory,
+                fileManager: fileManager
+            )
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.sortedKeys]
             let data = try encoder.encode(manifest)
             try data.write(to: url, options: [.atomic])
+            try pathBoundary.requireExistingRegularFile(url, within: directory, fileManager: fileManager)
             let handle = try FileHandle(forWritingTo: url)
             try handle.synchronize()
             try handle.close()
@@ -344,10 +436,7 @@ public struct IOExportBatchTransaction: Sendable {
     ) throws -> IntegrityManifest {
         let url = directory.appendingPathComponent(Self.integrityManifestFilename, isDirectory: false)
         do {
-            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-            guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                throw BatchError.integrityManifestInvalid
-            }
+            try pathBoundary.requireExistingRegularFile(url, within: directory, fileManager: fileManager)
             return try JSONDecoder().decode(IntegrityManifest.self, from: Data(contentsOf: url))
         } catch let error as BatchError {
             throw error
