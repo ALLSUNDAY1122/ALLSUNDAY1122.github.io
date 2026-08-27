@@ -211,7 +211,142 @@ STAGE initial-xcodegen
 ⚙️  Writing project...
 Created project at /Users/builder/clone/clipboard-widget/ClipboardWidget.xcodeproj
 STAGE build-number
-Traceback (most recent call last):
-  File "<stdin>", line 8, in <module>
-  File "<frozen os>", line 714, in __getitem__
-KeyError: 'CM_BUILD_NUMBER'
+PASS: build number=1787821351
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/builder/clone/clipboard-widget/ClipboardWidget.xcodeproj
+PASS: regenerated Xcode project with TestFlight build number
+STAGE initialize-keychain
+[32mInitialize new keychain to store code signing certificates at /Users/builder/Library/codemagic-cli-tools/keychains/27-08-26_6dbrnky7.keychain-db[0m
+Create keychain /Users/builder/Library/codemagic-cli-tools/keychains/27-08-26_6dbrnky7.keychain-db
+Set keychain /Users/builder/Library/codemagic-cli-tools/keychains/27-08-26_6dbrnky7.keychain-db timeout to "no timeout"
+Set keychain /Users/builder/Library/codemagic-cli-tools/keychains/27-08-26_6dbrnky7.keychain-db to system default keychain
+Unlock keychain /Users/builder/Library/codemagic-cli-tools/keychains/27-08-26_6dbrnky7.keychain-db
+STAGE fetch-signing-files-app
+[32mFound 2 Bundle IDs matching specified filters: identifier=jp.allsunday1122.clipboardwidget, platform=IOS.[0m
+- Clipboard Widget Phase0 App jp.allsunday1122.clipboardwidget (XT2Z829YA9)
+- Clipboard Widget Phase0 Extension jp.allsunday1122.clipboardwidget.widget (F8278SR76Q)
+
+[32mFound 3 Signing Certificates matching specified filters: certificateType=DISTRIBUTION,IOS_DISTRIBUTION.[0m
+[32mFiltered out 1 Signing Certificate for given private key[0m
+- Apple Distribution: KOHEI MORITA (K2A3VCP583)
+
+Get Profiles for Bundle ID F8278SR76Q
+[32mFound 1 Profile for Bundle ID F8278SR76Q matching specified filters: profileState=ACTIVE, profileType=IOS_APP_STORE.[0m
+Get Profiles for Bundle ID XT2Z829YA9
+[32mFound 1 Profile for Bundle ID XT2Z829YA9 matching specified filters: profileState=ACTIVE, profileType=IOS_APP_STORE.[0m
+
+[32mFiltered out 2 Profiles that contain Signing Certificate Apple Distribution: KOHEI MORITA (K2A3VCP583)[0m
+- IOS_APP_STORE clipboardwidget_appstore_20260826_widget (3T7F4N6YF8)
+- IOS_APP_STORE clipboardwidget_appstore_20260826_app (9NK62UTV76)
+
+[32mSaved Signing Certificate Apple Distribution: KOHEI MORITA (K2A3VCP583) to /Users/builder/Library/Developer/Xcode/UserData/Certificates/DISTRIBUTION_K2A3VCP583_cc9oj8_p.p12[0m
+[32mSaved Profile IOS_APP_STORE clipboardwidget_appstore_20260826_widget (3T7F4N6YF8) to '/Users/builder/Library/Developer/Xcode/UserData/Provisioning Profiles/IOS_APP_STORE_3T7F4N6YF8_mgk1cxy7.mobileprovision'[0m
+[32mSaved Profile IOS_APP_STORE clipboardwidget_appstore_20260826_app (9NK62UTV76) to '/Users/builder/Library/Developer/Xcode/UserData/Provisioning Profiles/IOS_APP_STORE_9NK62UTV76_l7n94ro4.mobileprovision'[0m
+STAGE fetch-signing-files-widget
+[32mFound 1 Bundle ID matching specified filters: identifier=jp.allsunday1122.clipboardwidget.widget, platform=IOS.[0m
+- Clipboard Widget Phase0 Extension jp.allsunday1122.clipboardwidget.widget (F8278SR76Q)
+
+[32mFound 3 Signing Certificates matching specified filters: certificateType=DISTRIBUTION,IOS_DISTRIBUTION.[0m
+[32mFiltered out 1 Signing Certificate for given private key[0m
+- Apple Distribution: KOHEI MORITA (K2A3VCP583)
+
+Get Profiles for Bundle ID F8278SR76Q
+[32mFound 1 Profile for Bundle ID F8278SR76Q matching specified filters: profileState=ACTIVE, profileType=IOS_APP_STORE.[0m
+
+[32mFiltered out 1 Profile that contain Signing Certificate Apple Distribution: KOHEI MORITA (K2A3VCP583)[0m
+- IOS_APP_STORE clipboardwidget_appstore_20260826_widget (3T7F4N6YF8)
+
+[32mSaved Signing Certificate Apple Distribution: KOHEI MORITA (K2A3VCP583) to /Users/builder/Library/Developer/Xcode/UserData/Certificates/DISTRIBUTION_K2A3VCP583_b_1psuqb.p12[0m
+[32mSaved Profile IOS_APP_STORE clipboardwidget_appstore_20260826_widget (3T7F4N6YF8) to '/Users/builder/Library/Developer/Xcode/UserData/Provisioning Profiles/IOS_APP_STORE_3T7F4N6YF8_9adc4aqa.mobileprovision'[0m
+STAGE add-certificates
+Add certificates to keychain /Users/builder/Library/codemagic-cli-tools/keychains/27-08-26_6dbrnky7.keychain-db
+Searching for files matching /Users/builder/Library/Developer/Xcode/UserData/Certificates/*.p12
+Searching for files matching /Users/builder/Library/MobileDevice/Certificates/*.p12
+Add certificate /Users/builder/Library/Developer/Xcode/UserData/Certificates/DISTRIBUTION_K2A3VCP583_cc9oj8_p.p12 to keychain /Users/builder/Library/codemagic-cli-tools/keychains/27-08-26_6dbrnky7.keychain-db
+security: SecKeychainItemImport: Unable to decode the provided data.
+Add certificate /Users/builder/Library/Developer/Xcode/UserData/Certificates/DISTRIBUTION_K2A3VCP583_b_1psuqb.p12 to keychain /Users/builder/Library/codemagic-cli-tools/keychains/27-08-26_6dbrnky7.keychain-db
+security: SecKeychainItemImport: Unable to decode the provided data.
+security: SecKeychainItemImport: The specified item already exists in the keychain.
+1 key imported.
+1 certificate imported.
+STAGE use-profiles
+[34mConfigure code signing settings[0m
+Searching for files matching /Users/builder/Library/Developer/Xcode/UserData/Provisioning Profiles/*.mobileprovision
+Searching for files matching /Users/builder/Library/Developer/Xcode/UserData/Provisioning Profiles/*.provisionprofile
+Searching for files matching /Users/builder/Library/MobileDevice/Provisioning Profiles/*.mobileprovision
+Searching for files matching /Users/builder/Library/MobileDevice/Provisioning Profiles/*.provisionprofile
+List available code signing certificates in keychain /Users/builder/Library/codemagic-cli-tools/keychains/27-08-26_6dbrnky7.keychain-db
+Searching for files matching /Users/builder/clone/clipboard-widget/**/*.xcodeproj
+[32mCompleted configuring code signing settings[0m
+ [34m- Using profile "clipboardwidget_appstore_20260826_app" [cf3b9712-a41e-428c-86a9-66089e4ec7b1] for target "ClipboardWidget" [Debug] from project "ClipboardWidget"[0m
+ [34m- Using profile "clipboardwidget_appstore_20260826_app" [cf3b9712-a41e-428c-86a9-66089e4ec7b1] for target "ClipboardWidget" [Release] from project "ClipboardWidget"[0m
+ [34m- Using profile "clipboardwidget_appstore_20260826_widget" [4dd0c669-9fe1-48e5-b86d-2cce57780a2c] for target "ClipboardWidgetExtension" [Debug] from project "ClipboardWidget"[0m
+ [34m- Using profile "clipboardwidget_appstore_20260826_widget" [4dd0c669-9fe1-48e5-b86d-2cce57780a2c] for target "ClipboardWidgetExtension" [Release] from project "ClipboardWidget"[0m
+[32mGenerated options for exporting the project[0m
+ [34m- Method: app-store[0m
+ [34m- Provisioning Profiles:[0m
+     [34m- jp.allsunday1122.clipboardwidget: clipboardwidget_appstore_20260826_app[0m
+     [34m- jp.allsunday1122.clipboardwidget.widget: clipboardwidget_appstore_20260826_widget[0m
+ [34m- Signing Certificate: Apple Distribution[0m
+ [34m- Signing Style: manual[0m
+ [34m- Team Id: MN3D2ZM44N[0m
+ [34m- Test Flight Internal Testing Only: True[0m
+[32mSaved export options to /Users/builder/export_options.plist[0m
+STAGE build-ipa
+[34mUsing Xcode 26.4.1 (17E202)[0m
+[34m[0m
+[34mCheck ClipboardWidget.xcodeproj build settings[0m
+Execute "xcodebuild -project /Users/builder/clone/clipboard-widget/ClipboardWidget.xcodeproj -scheme ClipboardWidget -showBuildSettings"
+
+[34mArchive ClipboardWidget.xcodeproj[0m
+Execute "xcodebuild -project /Users/builder/clone/clipboard-widget/ClipboardWidget.xcodeproj -scheme ClipboardWidget -archivePath /Users/builder/clone/build/ios/xcarchive/ClipboardWidget_xhqq23x7.xcarchive archive COMPILER_INDEX_STORE_ENABLE=NO DEVELOPMENT_TEAM=MN3D2ZM44N 'CODE_SIGN_IDENTITY=Apple Distribution' CODE_SIGN_STYLE=Manual"
+
+[33m▸[0m [39;1mCopying[0m /Users/builder/Library/Developer/Xcode/DerivedData/ClipboardWidget-abyemrazenevsgehnunqqbcefdal/Build/Intermediates.noindex/ArchiveIntermediates/ClipboardWidget/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/ClipboardWidgetExtension.appex/PrivacyInfo.xcprivacy
+[33m▸[0m [39;1mProcessing[0m Info.plist
+[33m▸[0m [39;1mLinking[0m ClipboardWidgetExtension
+[33m▸[0m [39;1mGenerating 'ClipboardWidgetExtension.appex.dSYM'[0m
+[33m▸[0m [39;1mTouching[0m ClipboardWidgetExtension.appex (in target 'ClipboardWidgetExtension' from project 'ClipboardWidget')
+[33m▸[0m [39;1mCopying[0m /Users/builder/Library/Developer/Xcode/DerivedData/ClipboardWidget-abyemrazenevsgehnunqqbcefdal/Build/Intermediates.noindex/ArchiveIntermediates/ClipboardWidget/InstallationBuildProductsLocation/Applications/ClipboardWidget.app/PrivacyInfo.xcprivacy
+[33m▸[0m [39;1mLinking[0m ClipboardWidget
+[33m▸[0m [39;1mProcessing[0m empty-ClipboardWidget.plist
+[33m▸[0m [39;1mGenerating 'ClipboardWidget.app.dSYM'[0m
+    [33mAll interface orientations must be supported unless the app requires full screen. (in target 'ClipboardWidget' from project 'ClipboardWidget')[0m
+    [33mA launch configuration or launch storyboard or xib must be provided unless the app requires full screen. (in target 'ClipboardWidget' from project 'ClipboardWidget')[0m
+[33m▸[0m [39;1mTouching[0m ClipboardWidget.app (in target 'ClipboardWidget' from project 'ClipboardWidget')
+[33m▸[0m [39;1mArchive[0m Succeeded
+[32mSuccessfully created archive at /Users/builder/clone/build/ios/xcarchive/ClipboardWidget_xhqq23x7.xcarchive[0m
+[32m[0m
+[34mExport /Users/builder/clone/build/ios/xcarchive/ClipboardWidget_xhqq23x7.xcarchive to build/ios/ipa[0m
+Execute "xcodebuild -exportArchive -archivePath /Users/builder/clone/build/ios/xcarchive/ClipboardWidget_xhqq23x7.xcarchive -exportPath build/ios/ipa -exportOptionsPlist /Users/builder/export_options.plist COMPILER_INDEX_STORE_ENABLE=NO"
+
+[33m▸[0m [39;1mExport[0m Succeeded
+[32mSuccessfully exported ipa to build/ios/ipa/ClipboardWidget.ipa[0m
+[32m[0m
+Raw xcodebuild logs stored in /tmp/xcodebuild_logs/ClipboardWidget.log
+STAGE testflight-upload
+
+[34mPublish "/Users/builder/clone/build/ios/ipa/ClipboardWidget.ipa" to App Store Connect[0m
+App name: クリップボードWidget
+Bundle identifier: jp.allsunday1122.clipboardwidget
+Certificate expires: 2027-08-19T10:50:12.000+0000
+Distribution type: App Store
+Min OS version: 26.0
+Provisioned devices: N/A
+Provisions all devices: No
+Supported platforms: iPhoneOS
+Version code: 1787821351
+Version: 1.0.0
+
+[34mUpload "/Users/builder/clone/build/ios/ipa/ClipboardWidget.ipa" to App Store Connect[0m
+Running altool at path '/Applications/Xcode-26.4.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
+
+26.30.4 (173004)
+Running altool at path '/Applications/Xcode-26.4.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
+
+2026-08-27 09:03:24.277 ERROR: [altool.705044380] Cannot determine the Apple ID from Bundle ID 'jp.allsunday1122.clipboardwidget' and platform 'IOS'. (19)
+2026-08-27 09:03:24.278 ERROR: [altool.1018C2C40] ExitFailure (31)
+
+[31mFailed to upload archive at "/Users/builder/clone/build/ios/ipa/ClipboardWidget.ipa"[0m
+[31mFailed to publish /Users/builder/clone/build/ios/ipa/ClipboardWidget.ipa[0m
