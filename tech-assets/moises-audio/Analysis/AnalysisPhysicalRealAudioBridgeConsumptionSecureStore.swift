@@ -2,10 +2,10 @@ import Foundation
 
 public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
     public static let limitations = [
-        "NON_PARITY: W50 hardens W49 bridge-consumption custody against filesystem substitution and ambiguous local crash states; it does not promote any Analysis PARITY row.",
-        "W50 rejects symlinked or non-regular ledger/control/record paths, confines reads to the caller-selected canonical ledger root and bounds control/record file sizes before decoding.",
-        "Injected fault recovery establishes deterministic local state-machine behavior, not APFS power-loss durability, fsync guarantees, Apple attestation or a trusted timestamp.",
-        "Whole-ledger rollback remains externally authoritative only when HQ independently retains the latest W49 checkpoint/handoff root outside the mutable ledger directory."
+        "NON_PARITY: W50-W53 harden bridge-consumption custody, filesystem safety and crash-durable publication; they do not promote any Analysis PARITY row.",
+        "W53 publishes pending/head through synced same-directory temporary files and atomic rename, publishes immutable records with collision-safe exclusive linking, and syncs the parent directory before durability is claimed.",
+        "Darwin attempts F_FULLFSYNC and falls back to fsync if unavailable; the exact sync mode must be captured on the selected physical iPhone before APFS/power-loss durability is claimed.",
+        "Whole-ledger rollback remains externally authoritative only when HQ independently retains the latest checkpoint/handoff/receipt root outside the mutable ledger directory."
     ]
 
     @discardableResult
@@ -22,7 +22,8 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
             custody: custody,
             rootURL: rootURL,
             fileManager: fileManager,
-            injectedFault: nil
+            injectedFault: nil,
+            durablePublicationFault: nil
         )
     }
 
@@ -41,7 +42,28 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
             custody: custody,
             rootURL: rootURL,
             fileManager: fileManager,
-            injectedFault: injectedFault
+            injectedFault: injectedFault,
+            durablePublicationFault: nil
+        )
+    }
+
+    @discardableResult
+    static func appendDurabilityForTesting(
+        ledgerID: String,
+        certificate: AnalysisPhysicalRealAudioParityBridgeCertificate,
+        custody: AnalysisPhysicalRealAudioBridgeConsumptionCustody,
+        rootURL: URL,
+        fileManager: FileManager = .default,
+        durablePublicationFault: AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationInjectedFault
+    ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionLedgerHead {
+        try appendInternal(
+            ledgerID: ledgerID,
+            certificate: certificate,
+            custody: custody,
+            rootURL: rootURL,
+            fileManager: fileManager,
+            injectedFault: nil,
+            durablePublicationFault: durablePublicationFault
         )
     }
 
@@ -167,7 +189,10 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
                   ) == pending.candidateRecord else {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.ambiguousRecoveryState
             }
-            try fileManager.removeItem(at: pendingURL)
+            try AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.removeDurably(
+                pendingURL,
+                within: ledgerURL
+            )
             _ = try loadValidatedHead(ledgerID: ledgerID, rootURL: rootURL, fileManager: fileManager)
             return true
         }
@@ -181,7 +206,10 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
         }
 
         if !recordExists {
-            try fileManager.removeItem(at: pendingURL)
+            try AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.removeDurably(
+                pendingURL,
+                within: ledgerURL
+            )
             _ = try loadValidatedHead(ledgerID: ledgerID, rootURL: rootURL, fileManager: fileManager)
             return true
         }
@@ -197,7 +225,10 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
             maximumBytes: FS.maxHeadBytes,
             fileManager: fileManager
         )
-        try fileManager.removeItem(at: pendingURL)
+        try AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.removeDurably(
+            pendingURL,
+            within: ledgerURL
+        )
         guard try loadValidatedHead(ledgerID: ledgerID, rootURL: rootURL, fileManager: fileManager) == repaired else {
             throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.readBackFailed
         }
@@ -210,7 +241,8 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
         custody: AnalysisPhysicalRealAudioBridgeConsumptionCustody,
         rootURL: URL,
         fileManager: FileManager,
-        injectedFault: AnalysisPhysicalRealAudioBridgeConsumptionInjectedFault?
+        injectedFault: AnalysisPhysicalRealAudioBridgeConsumptionInjectedFault?,
+        durablePublicationFault: AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationInjectedFault?
     ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionLedgerHead {
         guard safeComponent(ledgerID) else {
             throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeLedgerID
@@ -275,12 +307,14 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
         )
 
         do {
-            try FS.writeControlFile(
+            _ = try FS.writeControlFileDurably(
                 try AnalysisPhysicalRealAudioBridgeConsumptionLedgerCodec.encodePending(pending),
                 to: pendingURL,
                 ledgerURL: ledgerURL,
                 maximumBytes: FS.maxPendingBytes,
-                fileManager: fileManager
+                target: .pendingMarker,
+                fileManager: fileManager,
+                injectedFault: fault(for: .pendingMarker, from: durablePublicationFault)
             )
             if injectedFault == .corruptPendingMarker {
                 try Data("{".utf8).write(to: pendingURL, options: .atomic)
@@ -295,24 +329,35 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.injectedFault(.recordCollision)
             }
 
-            try writeRecord(record, relativePath: relativePath, ledgerURL: ledgerURL, fileManager: fileManager)
+            try writeRecord(
+                record,
+                relativePath: relativePath,
+                ledgerURL: ledgerURL,
+                fileManager: fileManager,
+                durablePublicationFault: fault(for: .immutableRecord, from: durablePublicationFault)
+            )
             if injectedFault == .afterRecordWrite {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.injectedFault(.afterRecordWrite)
             }
 
             let newHead = try makeHead(previous: oldHead, record: record, relativePath: relativePath)
-            try FS.writeControlFile(
+            _ = try FS.writeControlFileDurably(
                 try AnalysisPhysicalRealAudioBridgeConsumptionLedgerCodec.encodeHead(newHead),
                 to: ledgerURL.appendingPathComponent(AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.headFileName),
                 ledgerURL: ledgerURL,
                 maximumBytes: FS.maxHeadBytes,
-                fileManager: fileManager
+                target: .ledgerHead,
+                fileManager: fileManager,
+                injectedFault: fault(for: .ledgerHead, from: durablePublicationFault)
             )
             if injectedFault == .afterHeadWriteBeforePendingRemoval {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.injectedFault(.afterHeadWriteBeforePendingRemoval)
             }
 
-            try fileManager.removeItem(at: pendingURL)
+            try AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.removeDurably(
+                pendingURL,
+                within: ledgerURL
+            )
             if injectedFault == .readBackFailure {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.injectedFault(.readBackFailure)
             }
@@ -322,6 +367,8 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
             }
             return verified
         } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError {
+            throw error
+        } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError {
             throw error
         } catch {
             throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.writeFailed
@@ -429,7 +476,8 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
         _ record: AnalysisPhysicalRealAudioBridgeConsumptionRecord,
         relativePath: String,
         ledgerURL: URL,
-        fileManager: FileManager
+        fileManager: FileManager,
+        durablePublicationFault: AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationInjectedFault?
     ) throws {
         guard AnalysisPhysicalEvidenceW39BatchLoader.safeRelativePath(relativePath),
               relativePath.hasPrefix("records/"),
@@ -447,7 +495,14 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
         guard bytes.count <= FS.maxRecordBytes else {
             throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.oversizedFile
         }
-        try bytes.write(to: url, options: .atomic)
+        _ = try AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.createExclusive(
+            bytes,
+            at: url,
+            within: ledgerURL,
+            maximumBytes: FS.maxRecordBytes,
+            target: .immutableRecord,
+            injectedFault: durablePublicationFault
+        )
         guard try readRecord(relativePath: relativePath, ledgerURL: ledgerURL) == record else {
             throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.readBackFailed
         }
@@ -502,6 +557,14 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureStore {
                 records: records
             )
         )
+    }
+
+    private static func fault(
+        for target: AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationTarget,
+        from injection: AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationInjectedFault?
+    ) -> AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationInjectedFault? {
+        guard let injection, injection.target == target else { return nil }
+        return injection
     }
 
     private static func validateRecord(_ value: AnalysisPhysicalRealAudioBridgeConsumptionRecord) -> Bool {
