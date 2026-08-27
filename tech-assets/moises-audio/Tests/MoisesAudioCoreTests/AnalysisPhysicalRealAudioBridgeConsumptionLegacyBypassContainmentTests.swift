@@ -68,6 +68,20 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassContainmentTes
         XCTAssertEqual(AnalysisPhysicalRealAudioBridgeConsumptionLegacyAPI.allCasesForW56.count, 13)
     }
 
+    func testWriterLeaseMarkerIsScopedToCriticalSection() throws {
+        let root = try root()
+        defer { try? FileManager.default.removeItem(at: root) }
+        XCTAssertFalse(AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.currentThreadHoldsWriterLease)
+        try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.withExclusiveLock(
+            ledgerID: "ledger",
+            rootURL: root
+        ) { lease in
+            XCTAssertTrue(AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.currentThreadHoldsWriterLease)
+            try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
+        }
+        XCTAssertFalse(AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.currentThreadHoldsWriterLease)
+    }
+
     #if DEBUG
     func testLegacyConcurrentDebugRouteMatchesNormalizedCASAndAppend() throws {
         let root = try root()
