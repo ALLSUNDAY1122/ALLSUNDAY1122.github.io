@@ -176,9 +176,9 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
     public static let requiredAuthority = "HQ_LATE_INTEGRATION"
     public static let limitations = [
         "NON_PARITY: W52 serializes ledger snapshots, checkpoints and external-anchor handoffs with W51 writers; it does not promote any Analysis PARITY row.",
-        "W56 makes W52 I/O entrypoints migration-only. Debug compatibility calls route through W55 normalization; Release production calls fail closed before returning custody evidence that omits the W55 receipt/certificate.",
-        "Snapshot/CAS/root validators remain pure compatibility primitives because W55 normalized APIs depend on the unchanged W52 evidence formats.",
-        "Whole-ledger rollback remains externally authoritative only when HQ stores the latest normalized checkpoint/handoff/receipt/certificate roots independently from the mutable ledger directory."
+        "A quiescent snapshot is a deterministic SHA-256 commitment to one recovered W50/W51 ledger state. It is not a signature, trusted timestamp, Secure Enclave proof or Apple attestation.",
+        "The W52 custody receipt binds one snapshot, checkpoint and handoff generated while the authoritative W51 writer lease is held. It does not itself persist the handoff outside the mutable ledger root.",
+        "Whole-ledger rollback remains externally authoritative only when HQ stores the latest checkpoint/handoff/receipt root independently from the mutable ledger directory."
     ]
 
     @available(*, deprecated, message: "Migration-only W52 API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.observeSnapshot.")
