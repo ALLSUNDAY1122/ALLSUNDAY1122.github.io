@@ -109,8 +109,10 @@ private func testStillAmbiguousDoesNotDelegateToGenericLifecycle() async throws 
 
     let action = try await recovery.recover(projectID: project)
     check(action == .ambiguousStart, "network ambiguity remains fail-closed")
-    check(await resolver.calls() == 1, "resolver called exactly once")
-    check((await lifecycle.counts()).recover == 0, "no generic reconnect without durable binding")
+    let resolverCalls = await resolver.calls()
+    let lifecycleCalls = await lifecycle.counts()
+    check(resolverCalls == 1, "resolver called exactly once")
+    check(lifecycleCalls.recover == 0, "no generic reconnect without durable binding")
 }
 
 private func testSuccessfulRebindReturnsCanonicalLifecycleDecision() async throws {
@@ -127,7 +129,8 @@ private func testSuccessfulRebindReturnsCanonicalLifecycleDecision() async throw
 
     let action = try await recovery.recover(projectID: project)
     check(action == .reconnect(jobID: job), "rebound must hand control back to canonical lifecycle")
-    check((await lifecycle.counts()).recover == 1, "canonical lifecycle called after successful rebind")
+    let lifecycleCalls = await lifecycle.counts()
+    check(lifecycleCalls.recover == 1, "canonical lifecycle called after successful rebind")
 }
 
 private func testRecoveredCancellationDelegatesTerminalState() async throws {
@@ -163,7 +166,8 @@ private func testBoundCancellationBypassesAmbiguousResolver() async throws {
 
     let action = try await recovery.recover(projectID: project)
     check(action == .reconnect(jobID: job), "bound cancellation uses normal reconnect path")
-    check(await resolver.calls() == 0, "resolver must not replay a known job binding")
+    let resolverCalls = await resolver.calls()
+    check(resolverCalls == 0, "resolver must not replay a known job binding")
 }
 
 private func testPreviewIsNonMutatingAndSurfacesAmbiguity() async throws {
@@ -180,8 +184,10 @@ private func testPreviewIsNonMutatingAndSurfacesAmbiguity() async throws {
 
     let action = try await recovery.recoveryAction(projectID: project)
     check(action == .ambiguousStart, "preview exposes ambiguity before a missing-binding failure")
-    check(await resolver.calls() == 0, "preview must never invoke remote start resolution")
-    check((await lifecycle.counts()).preview == 0, "preview must not enter generic missing-binding path")
+    let resolverCalls = await resolver.calls()
+    let lifecycleCalls = await lifecycle.counts()
+    check(resolverCalls == 0, "preview must never invoke remote start resolution")
+    check(lifecycleCalls.preview == 0, "preview must not enter generic missing-binding path")
 }
 
 private func testMissingStateIsNoop() async throws {
@@ -189,7 +195,8 @@ private func testMissingStateIsNoop() async throws {
     let store = A39MemoryStore()
     let lifecycle = A39Lifecycle(recoveryResult: .reconnect(jobID: ProcessingJobID()))
     let recovery = ProcessingCrashSafeRelaunchRecovery(lifecycle: lifecycle, stateStore: store)
-    check(try await recovery.recover(projectID: project) == .none, "missing durable state is a no-op")
+    let action = try await recovery.recover(projectID: project)
+    check(action == .none, "missing durable state is a no-op")
 }
 
 @main
