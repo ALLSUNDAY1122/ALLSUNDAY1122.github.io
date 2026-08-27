@@ -1,14 +1,17 @@
 {
-  "request_id": "app2-003-yoru-fresh-read-20260827-0833",
+  "request_id": "toru-tango-submission-audit-20260827-2209",
   "requests": [
-    {"label": "app", "method": "GET", "path": "/v1/apps/6794137637"},
-    {"label": "versions", "method": "GET", "path": "/v1/apps/6794137637/appStoreVersions?limit=200"},
-    {"label": "builds", "method": "GET", "path": "/v1/apps/6794137637/builds?limit=200"},
-    {"label": "review-submissions", "method": "GET", "path": "/v1/reviewSubmissions?filter[app]=6794137637&limit=200"},
-    {"label": "beta-groups", "method": "GET", "path": "/v1/apps/6794137637/betaGroups?limit=200"},
-    {"label": "certificate", "method": "GET", "path": "/v1/certificates/B4WRC3G6V4"},
-    {"label": "profile", "method": "GET", "path": "/v1/profiles/6598LFYDY3"},
-    {"label": "profile-certificates", "method": "GET", "path": "/v1/profiles/6598LFYDY3/certificates"},
-    {"label": "profile-bundle", "method": "GET", "path": "/v1/profiles/6598LFYDY3/bundleId"}
+    {"label": "app", "method": "GET", "path": "/v1/apps/6795968222"},
+    {"label": "versions", "method": "GET", "path": "/v1/apps/6795968222/appStoreVersions?limit=200"},
+    {"label": "version", "method": "GET", "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df"},
+    {"label": "build", "method": "GET", "path": "/v1/builds/76d69e5f-e484-41a1-a7e6-df3c0a9c3488"},
+    {"label": "selected-build", "method": "GET", "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/build"},
+    {"label": "version-localizations", "method": "GET", "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/appStoreVersionLocalizations?limit=200"},
+    {"label": "app-info", "method": "GET", "path": "/v1/appInfos/02b9fefd-04a8-40ba-8fed-c93a2ac2472d"},
+    {"label": "app-info-localizations", "method": "GET", "path": "/v1/appInfos/02b9fefd-04a8-40ba-8fed-c93a2ac2472d/appInfoLocalizations?limit=200"},
+    {"label": "review-detail", "method": "GET", "path": "/v1/appStoreVersions/c19fe956-165f-474c-af0b-bbfa86a138df/appStoreReviewDetail"},
+    {"label": "age-rating", "method": "GET", "path": "/v1/appInfos/02b9fefd-04a8-40ba-8fed-c93a2ac2472d/ageRatingDeclaration"},
+    {"label": "review-submissions", "method": "GET", "path": "/v1/apps/6795968222/reviewSubmissions?limit=200"},
+    {"label": "availability", "method": "GET", "path": "/v1/apps/6795968222/appAvailabilityV2"}
   ]
 }
