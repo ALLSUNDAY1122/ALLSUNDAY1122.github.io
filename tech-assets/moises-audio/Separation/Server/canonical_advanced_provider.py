@@ -3,8 +3,9 @@
 A06/A07 orchestration must remain provider-neutral. This wrapper accepts canonical role IDs,
 translates them to account-enabled AudioShake model IDs only at POST /tasks, and maps provider
 output model IDs back to canonical roles before returning task state. A44 exposes a media-free
-request preflight; A45 binds every observed response to the exact requested provider Task and rejects
-ambiguous duplicate target models before any canonical output can be accepted.
+request preflight. A45 binds every observed response to the exact requested provider Task, rejects
+ambiguous duplicate target models, and keeps observation/recovery of an already-created Task
+independent from live account model discovery.
 """
 from __future__ import annotations
 
@@ -49,7 +50,15 @@ class CanonicalAdvancedAudioShakeAdapter:
         self.catalog = catalog or load_advanced_role_catalog()
         self._snapshot = None
         self._role_to_model: dict[str, str] = {}
-        self._model_to_role: dict[str, str] = {}
+        self._enabled_model_to_role: dict[str, str] = {}
+        self._catalog_model_to_role: dict[str, str] = {}
+        for role in self.catalog.roles.values():
+            model = role.audioshake_model
+            if model is None:
+                continue
+            if model in self._catalog_model_to_role:
+                raise AdvancedCapabilityError("SEP_ADV_PROVIDER_MODEL_COLLISION")
+            self._catalog_model_to_role[model] = role.canonical_role
 
     def _refresh_maps(self) -> None:
         self._snapshot = discover_audioshake_models(self.client)
@@ -63,7 +72,7 @@ class CanonicalAdvancedAudioShakeAdapter:
             if model in inverse:
                 raise AdvancedCapabilityError("SEP_ADV_PROVIDER_MODEL_COLLISION")
             inverse[model] = role
-        self._model_to_role = inverse
+        self._enabled_model_to_role = inverse
 
     def preflight_separation(self, models: Iterable[str]) -> tuple[str, ...]:
         """Validate task shape and account access without reading or uploading user media."""
@@ -113,8 +122,10 @@ class CanonicalAdvancedAudioShakeAdapter:
     def get_task_state(self, task_id: str) -> CanonicalTaskState:
         if not isinstance(task_id, str) or not task_id:
             raise AdvancedCapabilityError("SEP_ADV_TASK_ID_INVALID")
-        if self._snapshot is None:
-            self._refresh_maps()
+        # Observation of an existing provider Task must not depend on the account still exposing
+        # the model as enabled, nor on GET /models being healthy after relaunch. The checked-in
+        # catalog supplies the stable provider-model -> canonical-role identity; production output
+        # collection separately verifies that the returned role set equals the persisted request.
         raw = self.client.get_task_state(task_id)
         raw_task_id = getattr(raw, "task_id", None)
         if not isinstance(raw_task_id, str) or not raw_task_id:
@@ -135,7 +146,7 @@ class CanonicalAdvancedAudioShakeAdapter:
             if provider_model in seen_provider_models:
                 raise AdvancedCapabilityError("SEP_ADV_OUTPUT_MODEL_DUPLICATE")
             seen_provider_models.add(provider_model)
-            canonical_role = self._model_to_role.get(provider_model)
+            canonical_role = self._catalog_model_to_role.get(provider_model)
             if canonical_role is None:
                 raise AdvancedCapabilityError("SEP_ADV_OUTPUT_MODEL_UNKNOWN")
             targets.append(CanonicalTargetState(
