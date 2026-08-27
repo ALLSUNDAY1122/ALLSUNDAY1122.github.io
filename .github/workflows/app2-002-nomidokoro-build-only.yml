@@ -39,7 +39,7 @@ jobs:
           status,resp=call('https://api.codemagic.io/builds','POST',{'appId':APP_ID,'workflowId':WORKFLOW,'branch':BRANCH})
           build_id=resp.get('buildId') or resp.get('id')
           if not build_id: raise SystemExit(f'No build id: {resp}')
-          result={'task_id':'APP2-002','app_id':APP_ID,'workflow_id':WORKFLOW,'branch':BRANCH,'codemagic_build_id':build_id,'start_http_status':status,'requested_apple_build_number':6,'submit_to_app_store':False}
+          result={'task_id':'APP2-002','app_id':APP_ID,'workflow_id':WORKFLOW,'branch':BRANCH,'codemagic_build_id':build_id,'start_http_status':status,'requested_apple_build_number':7,'submit_to_app_store':False}
           out=Path('automation/app2-002-build-result.json')
           deadline=time.time()+2400
           while time.time()<deadline:
