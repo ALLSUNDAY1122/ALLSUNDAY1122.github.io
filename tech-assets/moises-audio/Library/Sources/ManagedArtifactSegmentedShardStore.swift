@@ -73,8 +73,7 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
 
     public func hasCommittedShard(_ shardIndex: Int) -> Bool {
         guard Self.validShard(shardIndex) else { return false }
-        guard let manifest = try? loadManifest(shardIndex) else { return false }
-        return manifest != nil
+        return (try? loadManifest(shardIndex)) != nil
     }
 
     public func loadCommittedEntries(_ shardIndex: Int) throws -> [Lane2ManagedArtifactSegmentEntry]? {
@@ -83,17 +82,13 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
         }
         guard let manifest = try loadManifest(shardIndex) else { return nil }
         var entries: [Lane2ManagedArtifactSegmentEntry] = []
-        entries.reserveCapacity(manifest.entryCount)
         for segmentIndex in 0..<manifest.segmentCount {
             let url = segmentURL(
                 shardIndex: shardIndex,
                 generation: manifest.generation,
                 segmentIndex: segmentIndex
             )
-            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-            guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
-            }
+            try requireSegmentFile(url)
             let segment: Segment
             do {
                 segment = try JSONDecoder().decode(Segment.self, from: Data(contentsOf: url))
@@ -128,19 +123,26 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
                 migrated: false
             )
         }
+
         let legacyURL = legacyShardURL(shardIndex)
-        guard fileManager.fileExists(atPath: legacyURL.path) else {
-            return Lane2ManagedArtifactSegmentedMigrationResult(
-                shardIndex: shardIndex,
-                entryCount: 0,
-                segmentCount: 0,
-                migrated: false
+        do {
+            guard try boundary.nodeExists(legacyURL, fileManager: fileManager) else {
+                return Lane2ManagedArtifactSegmentedMigrationResult(
+                    shardIndex: shardIndex,
+                    entryCount: 0,
+                    segmentCount: 0,
+                    migrated: false
+                )
+            }
+            try boundary.requireExistingRegularFile(
+                legacyURL,
+                within: shardsDirectoryURL,
+                fileManager: fileManager
             )
-        }
-        let values = try legacyURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
+        } catch {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptLegacyShard(legacyURL.lastPathComponent)
         }
+
         let legacy: LegacyShard
         do {
             legacy = try JSONDecoder().decode(LegacyShard.self, from: Data(contentsOf: legacyURL))
@@ -150,6 +152,7 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
         guard legacy.schemaVersion == 1, legacy.shardIndex == shardIndex else {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptLegacyShard(legacyURL.lastPathComponent)
         }
+
         try publishGeneration(shardIndex: shardIndex, entries: legacy.entries)
         let verified = try loadCommittedEntries(shardIndex) ?? []
         guard verified == legacy.entries.sorted(by: Self.entryOrder) else {
@@ -167,31 +170,77 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
         guard Self.validShard(shardIndex) else {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.invalidShard(shardIndex)
         }
-        guard fileManager.fileExists(atPath: segmentedDirectoryURL.path) else { return 0 }
-        let committedGeneration = try loadManifest(shardIndex)?.generation.uuidString
-        let prefix = String(format: "%02x.", shardIndex)
-        var removed = 0
-        for url in try fileManager.contentsOfDirectory(at: segmentedDirectoryURL, includingPropertiesForKeys: nil) {
-            let name = url.lastPathComponent
-            guard name.hasPrefix(prefix), name.hasSuffix(".json") else { continue }
-            if name == String(format: "%02x.manifest.json", shardIndex) { continue }
-            if name == String(format: "%02x.pending.json", shardIndex) {
-                try fileManager.removeItem(at: url)
-                removed += 1
-                continue
+
+        do {
+            guard try boundary.nodeExists(segmentedDirectoryURL, fileManager: fileManager) else { return 0 }
+            try boundary.requireDirectory(segmentedDirectoryURL, fileManager: fileManager)
+        } catch {
+            throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(segmentedDirectoryURL.lastPathComponent)
+        }
+
+        let committed = try loadManifest(shardIndex)
+        var committedNames = Set<String>()
+        if let committed {
+            for segmentIndex in 0..<committed.segmentCount {
+                committedNames.insert(
+                    segmentURL(
+                        shardIndex: shardIndex,
+                        generation: committed.generation,
+                        segmentIndex: segmentIndex
+                    ).lastPathComponent
+                )
             }
-            if let committedGeneration, name.contains(committedGeneration) { continue }
-            try fileManager.removeItem(at: url)
+        }
+
+        let prefix = String(format: "%02x.", shardIndex)
+        let manifestName = String(format: "%02x.manifest.json", shardIndex)
+        var removed = 0
+        let children: [URL]
+        do {
+            children = try fileManager.contentsOfDirectory(
+                at: segmentedDirectoryURL,
+                includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey],
+                options: []
+            )
+        } catch {
+            throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(segmentedDirectoryURL.lastPathComponent)
+        }
+
+        for url in children {
+            let candidate = url.standardizedFileURL
+            guard candidate.deletingLastPathComponent() == segmentedDirectoryURL.standardizedFileURL else {
+                throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
+            }
+            let name = candidate.lastPathComponent
+            guard name.hasPrefix(prefix), name.hasSuffix(".json") else { continue }
+            if name == manifestName || committedNames.contains(name) { continue }
+
+            do {
+                try boundary.requireExistingRegularFile(
+                    candidate,
+                    within: segmentedDirectoryURL,
+                    fileManager: fileManager
+                )
+                try fileManager.removeItem(at: candidate)
+            } catch {
+                throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(name)
+            }
             removed += 1
         }
         return removed
     }
 
     private func publishGeneration(shardIndex: Int, entries: [Lane2ManagedArtifactSegmentEntry]) throws {
-        try fileManager.createDirectory(at: segmentedDirectoryURL, withIntermediateDirectories: true)
+        do {
+            try boundary.ensureDirectory(segmentedDirectoryURL, fileManager: fileManager)
+        } catch {
+            throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(segmentedDirectoryURL.lastPathComponent)
+        }
+
         let generation = UUID()
         let ordered = entries.sorted(by: Self.entryOrder)
         let segmentCount = Self.segmentCount(for: ordered.count)
+
         for segmentIndex in 0..<segmentCount {
             let start = segmentIndex * Self.entriesPerSegment
             let end = min(start + Self.entriesPerSegment, ordered.count)
@@ -202,12 +251,20 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
                 segmentIndex: segmentIndex,
                 entries: Array(ordered[start..<end])
             )
-            try stableEncoder.encode(segment).write(
-                to: segmentURL(shardIndex: shardIndex, generation: generation, segmentIndex: segmentIndex),
-                options: [.atomic]
+            let url = segmentURL(
+                shardIndex: shardIndex,
+                generation: generation,
+                segmentIndex: segmentIndex
             )
+            do {
+                try boundary.requireSafeDestination(url, within: segmentedDirectoryURL, fileManager: fileManager)
+                try stableEncoder.encode(segment).write(to: url, options: [.atomic])
+                try boundary.requireExistingRegularFile(url, within: segmentedDirectoryURL, fileManager: fileManager)
+            } catch {
+                throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
+            }
         }
-        let pendingURL = pendingManifestURL(shardIndex)
+
         let manifest = Manifest(
             schemaVersion: Self.schemaVersion,
             shardIndex: shardIndex,
@@ -215,12 +272,44 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
             segmentCount: segmentCount,
             entryCount: ordered.count
         )
-        try stableEncoder.encode(manifest).write(to: pendingURL, options: [.atomic])
+        let encodedManifest = try stableEncoder.encode(manifest)
+        let pendingURL = pendingManifestURL(shardIndex)
+        do {
+            _ = try boundary.requireRegularFileOrMissing(
+                pendingURL,
+                within: segmentedDirectoryURL,
+                fileManager: fileManager
+            )
+            try encodedManifest.write(to: pendingURL, options: [.atomic])
+            try boundary.requireExistingRegularFile(
+                pendingURL,
+                within: segmentedDirectoryURL,
+                fileManager: fileManager
+            )
+            let pending = try JSONDecoder().decode(Manifest.self, from: Data(contentsOf: pendingURL))
+            guard pending.schemaVersion == manifest.schemaVersion,
+                  pending.shardIndex == manifest.shardIndex,
+                  pending.generation == manifest.generation,
+                  pending.segmentCount == manifest.segmentCount,
+                  pending.entryCount == manifest.entryCount else {
+                throw Lane2ManagedArtifactSegmentedMigrationFailure.verificationFailed(shardIndex)
+            }
+        } catch let failure as Lane2ManagedArtifactSegmentedMigrationFailure {
+            throw failure
+        } catch {
+            throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(pendingURL.lastPathComponent)
+        }
 
         var verifiedCount = 0
         for segmentIndex in 0..<segmentCount {
             let url = segmentURL(shardIndex: shardIndex, generation: generation, segmentIndex: segmentIndex)
-            let decoded = try JSONDecoder().decode(Segment.self, from: Data(contentsOf: url))
+            try requireSegmentFile(url)
+            let decoded: Segment
+            do {
+                decoded = try JSONDecoder().decode(Segment.self, from: Data(contentsOf: url))
+            } catch {
+                throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
+            }
             guard decoded.schemaVersion == Self.schemaVersion,
                   decoded.shardIndex == shardIndex,
                   decoded.generation == generation,
@@ -234,20 +323,43 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.verificationFailed(shardIndex)
         }
 
+        // Migration reaches authority only via an atomic write to a previously absent final manifest.
+        // The fixed pending file is evidence/staging only and can be cleaned after publication.
         let finalURL = manifestURL(shardIndex)
-        if fileManager.fileExists(atPath: finalURL.path) {
-            try fileManager.removeItem(at: finalURL)
+        do {
+            try boundary.requireSafeDestination(finalURL, within: segmentedDirectoryURL, fileManager: fileManager)
+            try encodedManifest.write(to: finalURL, options: [.atomic])
+            try boundary.requireExistingRegularFile(finalURL, within: segmentedDirectoryURL, fileManager: fileManager)
+        } catch {
+            throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(finalURL.lastPathComponent)
         }
-        try fileManager.moveItem(at: pendingURL, to: finalURL)
+
+        // Once final authority is visible, failure to retire a still-regular pending file is not a
+        // reason to roll authority back. Unsafe replacement is never removed and remains visible to
+        // the next bounded cleanup pass.
+        if (try? boundary.nodeExists(pendingURL, fileManager: fileManager)) == true,
+           (try? boundary.requireExistingRegularFile(
+               pendingURL,
+               within: segmentedDirectoryURL,
+               fileManager: fileManager
+           )) != nil {
+            try? fileManager.removeItem(at: pendingURL)
+        }
     }
 
     private func loadManifest(_ shardIndex: Int) throws -> Manifest? {
         let url = manifestURL(shardIndex)
-        guard fileManager.fileExists(atPath: url.path) else { return nil }
-        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
+        do {
+            guard try boundary.nodeExists(url, fileManager: fileManager) else { return nil }
+            try boundary.requireExistingRegularFile(
+                url,
+                within: segmentedDirectoryURL,
+                fileManager: fileManager
+            )
+        } catch {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(url.lastPathComponent)
         }
+
         let manifest: Manifest
         do {
             manifest = try JSONDecoder().decode(Manifest.self, from: Data(contentsOf: url))
@@ -256,11 +368,27 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
         }
         guard manifest.schemaVersion == Self.schemaVersion,
               manifest.shardIndex == shardIndex,
-              manifest.segmentCount == Self.segmentCount(for: manifest.entryCount),
-              manifest.entryCount >= 0 else {
+              manifest.entryCount >= 0,
+              manifest.segmentCount == Self.segmentCount(for: manifest.entryCount) else {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(url.lastPathComponent)
         }
         return manifest
+    }
+
+    private func requireSegmentFile(_ url: URL) throws {
+        do {
+            try boundary.requireExistingRegularFile(
+                url,
+                within: segmentedDirectoryURL,
+                fileManager: fileManager
+            )
+        } catch {
+            throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
+        }
+    }
+
+    private var boundary: LibraryManagedPathBoundary {
+        LibraryManagedPathBoundary(rootURL: rootURL)
     }
 
     private var v1DirectoryURL: URL {
@@ -270,14 +398,16 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
             .appendingPathComponent("v1", isDirectory: true)
     }
 
+    private var shardsDirectoryURL: URL {
+        v1DirectoryURL.appendingPathComponent("Shards", isDirectory: true)
+    }
+
     private var segmentedDirectoryURL: URL {
         v1DirectoryURL.appendingPathComponent("Segmented", isDirectory: true)
     }
 
     private func legacyShardURL(_ shardIndex: Int) -> URL {
-        v1DirectoryURL
-            .appendingPathComponent("Shards", isDirectory: true)
-            .appendingPathComponent(String(format: "%02x.json", shardIndex), isDirectory: false)
+        shardsDirectoryURL.appendingPathComponent(String(format: "%02x.json", shardIndex), isDirectory: false)
     }
 
     private func manifestURL(_ shardIndex: Int) -> URL {
@@ -306,10 +436,14 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
 
     private static func segmentCount(for entryCount: Int) -> Int {
         guard entryCount > 0 else { return 0 }
-        return (entryCount + entriesPerSegment - 1) / entriesPerSegment
+        let quotient = entryCount / entriesPerSegment
+        return quotient + (entryCount % entriesPerSegment == 0 ? 0 : 1)
     }
 
-    private static func entryOrder(_ lhs: Lane2ManagedArtifactSegmentEntry, _ rhs: Lane2ManagedArtifactSegmentEntry) -> Bool {
+    private static func entryOrder(
+        _ lhs: Lane2ManagedArtifactSegmentEntry,
+        _ rhs: Lane2ManagedArtifactSegmentEntry
+    ) -> Bool {
         lhs.relativePath < rhs.relativePath
     }
 }
