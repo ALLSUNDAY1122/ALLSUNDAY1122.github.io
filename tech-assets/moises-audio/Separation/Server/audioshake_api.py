@@ -150,7 +150,12 @@ class AudioShakeClient:
         payload = self._json_request("GET", f"/tasks/{task_id}")
         if not isinstance(payload, dict):
             raise AudioShakeAPIError("AUDIOSHAKE_TASK_STATE_INVALID")
-        return parse_task_state(payload)
+        state = parse_task_state(payload)
+        # The API path and response both identify one Task. Never accept another Task's payload
+        # from a stale proxy/cache or malformed upstream response.
+        if state.task_id != task_id:
+            raise AudioShakeAPIError("AUDIOSHAKE_TASK_ID_MISMATCH")
+        return state
 
     def list_tasks(self, *, skip: int = 0, take: int = AUDIOSHAKE_LIST_TAKE_MAX) -> tuple[dict[str, Any], ...]:
         if not isinstance(skip, int) or skip < 0:
@@ -256,6 +261,7 @@ def parse_task_state(payload: dict[str, Any]) -> AudioShakeTaskState:
     parsed_targets: list[AudioShakeTargetState] = []
     completed = 0
     first_error: str | None = None
+    seen_models: set[str] = set()
 
     for target in targets:
         if not isinstance(target, dict):
@@ -264,6 +270,9 @@ def parse_task_state(payload: dict[str, Any]) -> AudioShakeTaskState:
         status = target.get("status")
         if not isinstance(model, str) or not model or status not in {"processing", "completed", "error"}:
             raise AudioShakeAPIError("AUDIOSHAKE_TARGET_STATE_INVALID")
+        if model in seen_models:
+            raise AudioShakeAPIError("AUDIOSHAKE_TARGET_MODEL_DUPLICATE")
+        seen_models.add(model)
 
         output_url: str | None = None
         error_code: str | None = None
@@ -273,10 +282,15 @@ def parse_task_state(payload: dict[str, Any]) -> AudioShakeTaskState:
             if not isinstance(outputs, list) or not outputs:
                 raise AudioShakeAPIError("AUDIOSHAKE_COMPLETED_WITHOUT_OUTPUT")
             wav_outputs = [item for item in outputs if isinstance(item, dict) and item.get("format") == "wav"]
-            if not wav_outputs or not isinstance(wav_outputs[0].get("link"), str):
+            if not wav_outputs:
                 raise AudioShakeAPIError("AUDIOSHAKE_WAV_OUTPUT_MISSING")
-            candidate = wav_outputs[0]["link"]
-            if urlparse(candidate).scheme != "https":
+            if len(wav_outputs) != 1:
+                raise AudioShakeAPIError("AUDIOSHAKE_WAV_OUTPUT_AMBIGUOUS")
+            candidate = wav_outputs[0].get("link")
+            if not isinstance(candidate, str) or not candidate:
+                raise AudioShakeAPIError("AUDIOSHAKE_WAV_OUTPUT_MISSING")
+            parsed_output = urlparse(candidate)
+            if parsed_output.scheme != "https" or not parsed_output.hostname:
                 raise AudioShakeAPIError("AUDIOSHAKE_OUTPUT_URL_INSECURE")
             output_url = candidate
         elif status == "error":
