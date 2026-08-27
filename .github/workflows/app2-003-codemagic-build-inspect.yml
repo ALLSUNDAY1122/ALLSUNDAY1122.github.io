@@ -1,0 +1,47 @@
+name: APP2-003 Codemagic Build Inspect
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app-development-2/evidence/APP2-003-codemagic-inspect-command-*.json
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Inspect pinned Codemagic Build 4
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          build_id='6a90341bd1e2d6f6c5af8a4d'
+          req=urllib.request.Request(f'https://codemagic.io/api/v3/builds/{build_id}',headers={'x-auth-token':os.environ['CM_API_TOKEN'],'Accept':'application/json'})
+          with urllib.request.urlopen(req,timeout=30) as r:
+              d=json.load(r)
+          data=d.get('data') or d
+          sensitive=('secret','token','password','credential','private','environment','variable')
+          def clean(v):
+              if isinstance(v,dict):
+                  return {k:('[REDACTED]' if any(s in k.lower() for s in sensitive) else clean(x)) for k,x in v.items()}
+              if isinstance(v,list): return [clean(x) for x in v]
+              return v
+          out={'task_id':'APP2-003','build_id':build_id,'status':data.get('status'),'build':clean(data)}
+          path='automation/app-development-2/evidence/APP2-003-codemagic-build4-current.json'
+          open(path,'w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Persist sanitized read-back
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/app-development-2/evidence/APP2-003-codemagic-build4-current.json
+          git commit -m 'APP2-003 persist Codemagic Build 4 read-back' || exit 0
+          git push origin HEAD:main
