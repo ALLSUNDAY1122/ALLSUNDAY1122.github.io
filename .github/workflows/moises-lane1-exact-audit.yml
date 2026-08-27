@@ -22,8 +22,9 @@ jobs:
       - name: Install audit dependency
         run: python -m pip install --disable-pip-version-check jsonschema
       - name: Run exact A40 dependency closure audit
+        id: audit
+        continue-on-error: true
         run: |
-          set +e
           python tech-assets/moises-audio/Separation/Evaluation/lane1_dependency_audit.py \
             --expected-git-head 6514ab8eea1570c18e75f012254db48c3a0418e6 \
             --timeout-seconds 300 \
@@ -31,3 +32,22 @@ jobs:
           rc=$?
           cat /tmp/l1-a40-audit.json
           exit $rc
+      - name: Direct unittest traceback diagnostic
+        if: always()
+        run: |
+          export PYTHONPATH="$PWD/tech-assets/moises-audio/Separation/Server:$PWD/tech-assets/moises-audio/Separation/Evaluation:$PWD/tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          set +e
+          python -m unittest discover \
+            -s tech-assets/moises-audio/Separation/Tests \
+            -p 'test_*.py' 2>&1 | tee /tmp/l1-a40-unittest.log
+          exit 0
+      - name: Enforce exact audit result
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          with open('/tmp/l1-a40-audit.json', encoding='utf-8') as f:
+              report = json.load(f)
+          print('overall_state=', report['overall_state'])
+          raise SystemExit(0 if report['overall_state'] == 'PASS' else 1)
+          PY
