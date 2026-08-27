@@ -176,26 +176,23 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
     public static let requiredAuthority = "HQ_LATE_INTEGRATION"
     public static let limitations = [
         "NON_PARITY: W52 serializes ledger snapshots, checkpoints and external-anchor handoffs with W51 writers; it does not promote any Analysis PARITY row.",
-        "A quiescent snapshot is a deterministic SHA-256 commitment to one recovered W50/W51 ledger state. It is not a signature, trusted timestamp, Secure Enclave proof or Apple attestation.",
-        "The W52 custody receipt binds one snapshot, checkpoint and handoff generated while the authoritative W51 writer lease is held. It does not itself persist the handoff outside the mutable ledger root.",
-        "Whole-ledger rollback remains externally authoritative only when HQ stores the latest checkpoint/handoff/receipt root independently from the mutable ledger directory."
+        "W56 makes W52 I/O entrypoints migration-only. Debug compatibility calls route through W55 normalization; Release production calls fail closed before returning custody evidence that omits the W55 receipt/certificate.",
+        "Snapshot/CAS/root validators remain pure compatibility primitives because W55 normalized APIs depend on the unchanged W52 evidence formats.",
+        "Whole-ledger rollback remains externally authoritative only when HQ stores the latest normalized checkpoint/handoff/receipt/certificate roots independently from the mutable ledger directory."
     ]
 
+    @available(*, deprecated, message: "Migration-only W52 API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.observeSnapshot.")
     public static func observeSnapshot(
         ledgerID: String,
         rootURL: URL,
         fileManager: FileManager = .default
     ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionQuiescentSnapshot {
-        try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.withExclusiveLock(
+        try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.quiescentObserveSnapshot)
+        return try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.observeSnapshot(
             ledgerID: ledgerID,
-            rootURL: rootURL
-        ) { lease in
-            try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-            let head = try recoveredHead(ledgerID: ledgerID, rootURL: rootURL, fileManager: fileManager)
-            let snapshot = try makeSnapshot(head: head)
-            try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-            return snapshot
-        }
+            rootURL: rootURL,
+            fileManager: fileManager
+        ).snapshot
     }
 
     public static func appendCAS(
@@ -216,6 +213,7 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
         return cas
     }
 
+    @available(*, deprecated, message: "Migration-only W52 API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.makeStrictCheckpoint.")
     public static func makeStrictCheckpoint(
         expectedSnapshot: AnalysisPhysicalRealAudioBridgeConsumptionQuiescentSnapshot,
         checkpointID: String,
@@ -225,36 +223,19 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
         rootURL: URL,
         fileManager: FileManager = .default
     ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionCheckpoint {
-        guard validateSnapshot(expectedSnapshot) else {
-            throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.invalidSnapshot
-        }
-        return try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.withExclusiveLock(
-            ledgerID: expectedSnapshot.ledgerID,
-            rootURL: rootURL
-        ) { lease in
-            let head = try recoveredHead(ledgerID: expectedSnapshot.ledgerID, rootURL: rootURL, fileManager: fileManager)
-            let current = try makeSnapshot(head: head)
-            guard current == expectedSnapshot else {
-                throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.staleSnapshotCAS
-            }
-            try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-            let checkpoint = try AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpointManager.makeStrictCheckpoint(
-                ledgerID: expectedSnapshot.ledgerID,
-                checkpointID: checkpointID,
-                checkpointSequence: checkpointSequence,
-                approvalReference: approvalReference,
-                previousCheckpoint: previousCheckpoint,
-                rootURL: rootURL,
-                fileManager: fileManager
-            )
-            guard checkpointMatchesSnapshot(checkpoint, snapshot: current) else {
-                throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.transactionVerificationFailed
-            }
-            try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-            return checkpoint
-        }
+        try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.quiescentCheckpointCreate)
+        return try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.makeStrictCheckpoint(
+            expectedSnapshot: expectedSnapshot,
+            checkpointID: checkpointID,
+            checkpointSequence: checkpointSequence,
+            approvalReference: approvalReference,
+            previousCheckpoint: previousCheckpoint,
+            rootURL: rootURL,
+            fileManager: fileManager
+        ).checkpoint
     }
 
+    @available(*, deprecated, message: "Migration-only W52 API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.verifyCurrentLedgerStrict.")
     public static func verifyCurrentLedgerStrict(
         checkpoint: AnalysisPhysicalRealAudioBridgeConsumptionCheckpoint,
         expectedSnapshot: AnalysisPhysicalRealAudioBridgeConsumptionQuiescentSnapshot,
@@ -262,31 +243,17 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
         rootURL: URL,
         fileManager: FileManager = .default
     ) throws {
-        guard validateSnapshot(expectedSnapshot), expectedSnapshot.ledgerID == checkpoint.ledgerID else {
-            throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.invalidSnapshot
-        }
-        try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.withExclusiveLock(
-            ledgerID: checkpoint.ledgerID,
-            rootURL: rootURL
-        ) { lease in
-            let head = try recoveredHead(ledgerID: checkpoint.ledgerID, rootURL: rootURL, fileManager: fileManager)
-            let current = try makeSnapshot(head: head)
-            guard current == expectedSnapshot else {
-                throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.staleSnapshotCAS
-            }
-            try AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpointManager.verifyCurrentLedgerStrict(
-                checkpoint: checkpoint,
-                previousCheckpoint: previousCheckpoint,
-                rootURL: rootURL,
-                fileManager: fileManager
-            )
-            guard checkpointMatchesSnapshot(checkpoint, snapshot: current) else {
-                throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.transactionVerificationFailed
-            }
-            try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-        }
+        try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.quiescentCheckpointVerify)
+        _ = try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.verifyCurrentLedgerStrict(
+            checkpoint: checkpoint,
+            expectedSnapshot: expectedSnapshot,
+            previousCheckpoint: previousCheckpoint,
+            rootURL: rootURL,
+            fileManager: fileManager
+        )
     }
 
+    @available(*, deprecated, message: "Migration-only W52 API. Use AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.makeCertifiedCustodyBundle.")
     public static func makeCustodyBundle(
         ledgerID: String,
         expectedSnapshot: AnalysisPhysicalRealAudioBridgeConsumptionQuiescentSnapshot,
@@ -301,91 +268,21 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
         rootURL: URL,
         fileManager: FileManager = .default
     ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyBundle {
-        guard AnalysisPhysicalEvidenceW39BatchLoader.safeComponent(transactionID),
-              !checkpointApprovalReference.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-              !handoffApprovalReference.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.invalidTransactionRequest
-        }
-        guard validateSnapshot(expectedSnapshot), expectedSnapshot.ledgerID == ledgerID else {
-            throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.invalidSnapshot
-        }
-
-        return try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.withExclusiveLock(
+        try AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.requireCompatibilityRoute(.quiescentCustodyBundle)
+        return try AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.makeCertifiedCustodyBundle(
             ledgerID: ledgerID,
-            rootURL: rootURL
-        ) { lease in
-            try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-            let head = try recoveredHead(ledgerID: ledgerID, rootURL: rootURL, fileManager: fileManager)
-            let snapshot = try makeSnapshot(head: head)
-            guard expectedSnapshot == snapshot else {
-                throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.staleSnapshotCAS
-            }
-
-            let checkpoint = try AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpointManager.makeStrictCheckpoint(
-                ledgerID: ledgerID,
-                checkpointID: checkpointID,
-                checkpointSequence: checkpointSequence,
-                approvalReference: checkpointApprovalReference,
-                previousCheckpoint: previousCheckpoint,
-                rootURL: rootURL,
-                fileManager: fileManager
-            )
-            guard checkpointMatchesSnapshot(checkpoint, snapshot: snapshot) else {
-                throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.transactionVerificationFailed
-            }
-
-            let handoff = try AnalysisPhysicalRealAudioBridgeConsumptionCheckpointManager.makeStrictExternalAnchorHandoff(
-                handoffID: handoffID,
-                approvalReference: handoffApprovalReference,
-                checkpoint: checkpoint,
-                previousHandoff: previousHandoff
-            )
-            guard handoffMatchesSnapshot(handoff, checkpoint: checkpoint, snapshot: snapshot) else {
-                throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.transactionVerificationFailed
-            }
-
-            let inventoryRoot = try AnalysisAnalysisParityAdjudicationRoot.stableSHA256(snapshot.consumedW47PackageRootSHA256s.sorted())
-            let provisionalReceipt = AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyReceipt(
-                transactionID: transactionID,
-                authority: requiredAuthority,
-                approvalReference: checkpointApprovalReference + " | " + handoffApprovalReference,
-                ledgerID: ledgerID,
-                snapshotRootSHA256: snapshot.declaredSnapshotRootSHA256,
-                checkpointRootSHA256: checkpoint.declaredCheckpointRootSHA256,
-                handoffRootSHA256: handoff.declaredHandoffRootSHA256,
-                ledgerSequence: snapshot.latestSequence,
-                ledgerRootSHA256: snapshot.ledgerRootSHA256,
-                latestRecordRootSHA256: snapshot.latestRecordRootSHA256,
-                consumedW47InventoryRootSHA256: inventoryRoot,
-                predecessorCheckpointRootSHA256: checkpoint.predecessorCheckpointRootSHA256,
-                predecessorHandoffRootSHA256: handoff.predecessorHandoffRootSHA256,
-                limitations: limitations,
-                declaredReceiptRootSHA256: String(repeating: "0", count: 64)
-            )
-            let receiptRoot = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyReceiptRoot.compute(provisionalReceipt)
-            let receipt = AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyReceipt(
-                transactionID: provisionalReceipt.transactionID,
-                authority: provisionalReceipt.authority,
-                approvalReference: provisionalReceipt.approvalReference,
-                ledgerID: provisionalReceipt.ledgerID,
-                snapshotRootSHA256: provisionalReceipt.snapshotRootSHA256,
-                checkpointRootSHA256: provisionalReceipt.checkpointRootSHA256,
-                handoffRootSHA256: provisionalReceipt.handoffRootSHA256,
-                ledgerSequence: provisionalReceipt.ledgerSequence,
-                ledgerRootSHA256: provisionalReceipt.ledgerRootSHA256,
-                latestRecordRootSHA256: provisionalReceipt.latestRecordRootSHA256,
-                consumedW47InventoryRootSHA256: provisionalReceipt.consumedW47InventoryRootSHA256,
-                predecessorCheckpointRootSHA256: provisionalReceipt.predecessorCheckpointRootSHA256,
-                predecessorHandoffRootSHA256: provisionalReceipt.predecessorHandoffRootSHA256,
-                limitations: provisionalReceipt.limitations,
-                declaredReceiptRootSHA256: receiptRoot
-            )
-            guard validateReceipt(receipt, snapshot: snapshot, checkpoint: checkpoint, handoff: handoff) else {
-                throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.transactionVerificationFailed
-            }
-            try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-            return .init(snapshot: snapshot, checkpoint: checkpoint, handoff: handoff, receipt: receipt)
-        }
+            expectedSnapshot: expectedSnapshot,
+            transactionID: transactionID,
+            checkpointID: checkpointID,
+            checkpointSequence: checkpointSequence,
+            checkpointApprovalReference: checkpointApprovalReference,
+            previousCheckpoint: previousCheckpoint,
+            handoffID: handoffID,
+            handoffApprovalReference: handoffApprovalReference,
+            previousHandoff: previousHandoff,
+            rootURL: rootURL,
+            fileManager: fileManager
+        ).bundle.custodyBundle
     }
 
     public static func validateSnapshot(
@@ -439,50 +336,10 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
               (try? AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyReceiptRoot.compute(receipt)) == receipt.declaredReceiptRootSHA256 else {
             return false
         }
-        let inventoryRoot = try? AnalysisAnalysisParityAdjudicationRoot.stableSHA256(snapshot.consumedW47PackageRootSHA256s.sorted())
+        let inventoryRoot = try? AnalysisAnalysisParityAdjudicationRoot.stableSHA256(
+            snapshot.consumedW47PackageRootSHA256s.sorted()
+        )
         return inventoryRoot == receipt.consumedW47InventoryRootSHA256
-    }
-
-    private static func recoveredHead(
-        ledgerID: String,
-        rootURL: URL,
-        fileManager: FileManager
-    ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionLedgerHead {
-        _ = try AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.recoverIfNeeded(
-            ledgerID: ledgerID,
-            rootURL: rootURL,
-            fileManager: fileManager
-        )
-        guard let head = try AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.loadValidatedHead(
-            ledgerID: ledgerID,
-            rootURL: rootURL,
-            fileManager: fileManager
-        ) else {
-            throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.ledgerMissing
-        }
-        return head
-    }
-
-    private static func makeSnapshot(
-        head: AnalysisPhysicalRealAudioBridgeConsumptionLedgerHead
-    ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionQuiescentSnapshot {
-        let provisional = AnalysisPhysicalRealAudioBridgeConsumptionQuiescentSnapshot(
-            ledgerID: head.ledgerID,
-            latestSequence: head.latestSequence,
-            ledgerRootSHA256: head.declaredLedgerRootSHA256,
-            latestRecordRootSHA256: head.latestRecordRootSHA256,
-            consumedW47PackageRootSHA256s: head.records.map(\.w47PackageRootSHA256).sorted(),
-            declaredSnapshotRootSHA256: String(repeating: "0", count: 64)
-        )
-        let root = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentSnapshotRoot.compute(provisional)
-        return .init(
-            ledgerID: provisional.ledgerID,
-            latestSequence: provisional.latestSequence,
-            ledgerRootSHA256: provisional.ledgerRootSHA256,
-            latestRecordRootSHA256: provisional.latestRecordRootSHA256,
-            consumedW47PackageRootSHA256s: provisional.consumedW47PackageRootSHA256s,
-            declaredSnapshotRootSHA256: root
-        )
     }
 
     private static func checkpointMatchesSnapshot(
@@ -510,7 +367,9 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
               handoff.latestRecordRootSHA256 == snapshot.latestRecordRootSHA256 else {
             return false
         }
-        let inventoryRoot = try? AnalysisAnalysisParityAdjudicationRoot.stableSHA256(snapshot.consumedW47PackageRootSHA256s.sorted())
+        let inventoryRoot = try? AnalysisAnalysisParityAdjudicationRoot.stableSHA256(
+            snapshot.consumedW47PackageRootSHA256s.sorted()
+        )
         return inventoryRoot == handoff.consumedW47InventoryRootSHA256
     }
 }
