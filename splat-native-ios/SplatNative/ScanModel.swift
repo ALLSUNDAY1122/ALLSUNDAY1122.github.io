@@ -1703,6 +1703,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                         continuation.resume(returning: .failed("WorldMap archiveが空です"))
                         return
                     }
+                    continuation.resume(returning: .data(data))
                 } catch {
                     continuation.resume(returning: .failed(error.localizedDescription))
                 }
