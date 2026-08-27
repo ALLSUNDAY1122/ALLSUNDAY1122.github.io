@@ -191,15 +191,29 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
             rootURL: rootURL
         ) { lease in
             try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-            let head = try recoveredHead(
-                ledgerID: ledgerID,
-                rootURL: rootURL,
-                fileManager: fileManager
-            )
+            let head = try recoveredHead(ledgerID: ledgerID, rootURL: rootURL, fileManager: fileManager)
             let snapshot = try makeSnapshot(head: head)
             try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
             return snapshot
         }
+    }
+
+    public static func appendCAS(
+        for snapshot: AnalysisPhysicalRealAudioBridgeConsumptionQuiescentSnapshot
+    ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionAppendCAS {
+        guard validateSnapshot(snapshot) else {
+            throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.invalidSnapshot
+        }
+        let cas = AnalysisPhysicalRealAudioBridgeConsumptionAppendCAS(
+            ledgerID: snapshot.ledgerID,
+            expectedLatestSequence: snapshot.latestSequence,
+            expectedLedgerRootSHA256: snapshot.ledgerRootSHA256,
+            expectedLatestRecordRootSHA256: snapshot.latestRecordRootSHA256
+        )
+        guard AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.validateCAS(cas) else {
+            throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.invalidSnapshot
+        }
+        return cas
     }
 
     public static func makeStrictCheckpoint(
@@ -218,11 +232,7 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
             ledgerID: expectedSnapshot.ledgerID,
             rootURL: rootURL
         ) { lease in
-            let head = try recoveredHead(
-                ledgerID: expectedSnapshot.ledgerID,
-                rootURL: rootURL,
-                fileManager: fileManager
-            )
+            let head = try recoveredHead(ledgerID: expectedSnapshot.ledgerID, rootURL: rootURL, fileManager: fileManager)
             let current = try makeSnapshot(head: head)
             guard current == expectedSnapshot else {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.staleSnapshotCAS
@@ -259,11 +269,7 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
             ledgerID: checkpoint.ledgerID,
             rootURL: rootURL
         ) { lease in
-            let head = try recoveredHead(
-                ledgerID: checkpoint.ledgerID,
-                rootURL: rootURL,
-                fileManager: fileManager
-            )
+            let head = try recoveredHead(ledgerID: checkpoint.ledgerID, rootURL: rootURL, fileManager: fileManager)
             let current = try makeSnapshot(head: head)
             guard current == expectedSnapshot else {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.staleSnapshotCAS
@@ -283,7 +289,7 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
 
     public static func makeCustodyBundle(
         ledgerID: String,
-        expectedSnapshot: AnalysisPhysicalRealAudioBridgeConsumptionQuiescentSnapshot? = nil,
+        expectedSnapshot: AnalysisPhysicalRealAudioBridgeConsumptionQuiescentSnapshot,
         transactionID: String,
         checkpointID: String,
         checkpointSequence: UInt64,
@@ -300,7 +306,7 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
               !handoffApprovalReference.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.invalidTransactionRequest
         }
-        if let expectedSnapshot, !validateSnapshot(expectedSnapshot) || expectedSnapshot.ledgerID != ledgerID {
+        guard validateSnapshot(expectedSnapshot), expectedSnapshot.ledgerID == ledgerID else {
             throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.invalidSnapshot
         }
 
@@ -309,13 +315,9 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
             rootURL: rootURL
         ) { lease in
             try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
-            let head = try recoveredHead(
-                ledgerID: ledgerID,
-                rootURL: rootURL,
-                fileManager: fileManager
-            )
+            let head = try recoveredHead(ledgerID: ledgerID, rootURL: rootURL, fileManager: fileManager)
             let snapshot = try makeSnapshot(head: head)
-            if let expectedSnapshot, expectedSnapshot != snapshot {
+            guard expectedSnapshot == snapshot else {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyError.staleSnapshotCAS
             }
 
@@ -389,11 +391,16 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager {
     public static func validateSnapshot(
         _ value: AnalysisPhysicalRealAudioBridgeConsumptionQuiescentSnapshot
     ) -> Bool {
-        value.schemaVersion == 1
+        let cas = AnalysisPhysicalRealAudioBridgeConsumptionAppendCAS(
+            ledgerID: value.ledgerID,
+            expectedLatestSequence: value.latestSequence,
+            expectedLedgerRootSHA256: value.ledgerRootSHA256,
+            expectedLatestRecordRootSHA256: value.latestRecordRootSHA256
+        )
+        return value.schemaVersion == 1
             && AnalysisPhysicalEvidenceW39BatchLoader.safeComponent(value.ledgerID)
             && value.latestSequence > 0
-            && AnalysisPhysicalEvidenceW39BatchLoader.isSHA256(value.ledgerRootSHA256)
-            && AnalysisPhysicalEvidenceW39BatchLoader.isSHA256(value.latestRecordRootSHA256)
+            && AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.validateCAS(cas)
             && !value.consumedW47PackageRootSHA256s.isEmpty
             && value.consumedW47PackageRootSHA256s == value.consumedW47PackageRootSHA256s.sorted()
             && Set(value.consumedW47PackageRootSHA256s).count == value.consumedW47PackageRootSHA256s.count
