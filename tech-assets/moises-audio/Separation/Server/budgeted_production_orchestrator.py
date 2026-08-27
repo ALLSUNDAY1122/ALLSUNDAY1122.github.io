@@ -104,6 +104,14 @@ class BudgetedProductionSeparationOrchestrator:
         idempotency_key: str,
     ) -> Any:
         selected_models = _normalize_models(models)
+        if not isinstance(idempotency_key, str) or not idempotency_key or "\r" in idempotency_key or "\n" in idempotency_key:
+            raise OrchestratorError("SEP_IDEMPOTENCY_KEY_INVALID")
+        logical_job_id = hashlib.sha256(("lane1:" + idempotency_key).encode("utf-8")).hexdigest()[:32]
+        # Privacy deletion wins before a multi-gigabyte source read, duration analysis, cost reserve,
+        # upload or provider call. A43 inner.start repeats this tombstone check defensively.
+        if self.inner.resume_cache.is_deleted(logical_job_id):
+            raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_JOB_DELETED")
+
         source = _contained_file(source_path, self.source_root)
         # Reject the deployment/provider source-size boundary before hashing a multi-gigabyte file,
         # duration analysis or cost reservation. The inner layer repeats this check defensively.
@@ -113,9 +121,6 @@ class BudgetedProductionSeparationOrchestrator:
             raise OrchestratorError(exc.code, retryable=exc.retryable) from exc
         source_sha, _ = _sha256_file(source)
         fingerprint = _request_fingerprint(project_id, asset_id, source_sha, selected_models)
-        if not isinstance(idempotency_key, str) or not idempotency_key or "\r" in idempotency_key or "\n" in idempotency_key:
-            raise OrchestratorError("SEP_IDEMPOTENCY_KEY_INVALID")
-        logical_job_id = hashlib.sha256(("lane1:" + idempotency_key).encode("utf-8")).hexdigest()[:32]
         try:
             duration_seconds = self.duration_resolver(source)
         except CostGuardError:
@@ -175,6 +180,9 @@ class BudgetedProductionSeparationOrchestrator:
 
     def purge_resume_cache(self, logical_job_id: str) -> None:
         self.inner.purge_resume_cache(logical_job_id)
+
+    def tombstone_and_purge_resume_cache(self, logical_job_id: str) -> None:
+        self.inner.tombstone_and_purge_resume_cache(logical_job_id)
 
     def long_track_status(self, logical_job_id: str) -> Any:
         return self.inner.long_track_status(logical_job_id)
