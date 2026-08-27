@@ -1084,14 +1084,23 @@ workflows:
       - name: Install tools and audit Phase 0
         script: |
           set -euo pipefail
+          DIAG="$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
+          : > "$DIAG"
+          exec > >(tee -a "$DIAG") 2>&1
+          echo 'STAGE install-tools'
           HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          echo 'STAGE static-audit'
           cd "$CM_BUILD_DIR"
           python3 clipboard-widget/Tests/static_audit.py
+          echo 'STAGE initial-xcodegen'
           cd clipboard-widget
           xcodegen generate
       - name: Set unique TestFlight build number
         script: |
           set -euo pipefail
+          DIAG="$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"
+          exec > >(tee -a "$DIAG") 2>&1
+          echo 'STAGE build-number'
           cd "$CM_BUILD_DIR/clipboard-widget"
           python3 - <<'PY2'
           import os
