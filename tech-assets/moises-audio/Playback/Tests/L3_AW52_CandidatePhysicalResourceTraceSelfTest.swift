@@ -11,7 +11,8 @@ enum L3AW52CandidatePhysicalResourceTraceSelfTest {
         let artifactA = try stable.canonicalArtifactData(sessionIdentifier: "aw52-selftest")
         let artifactB = try stable.canonicalArtifactData(sessionIdentifier: "aw52-selftest")
         precondition(artifactA == artifactB)
-        precondition(!artifactA.isEmpty)
+        precondition(artifactA.count == 3_214)
+        precondition(fnv1a64(artifactA) == 14_041_105_997_891_895_343)
 
         let receipt = try stable.makeAW51CandidateReceipt(
             sessionIdentifier: "aw52-selftest",
@@ -127,6 +128,15 @@ enum L3AW52CandidatePhysicalResourceTraceSelfTest {
             batteryLevel: 0.90 - Double(index) * 0.001,
             externalPowerConnected: powered
         )
+    }
+
+    static func fnv1a64(_ data: Data) -> UInt64 {
+        var hash: UInt64 = 14_695_981_039_346_656_037
+        for byte in data {
+            hash ^= UInt64(byte)
+            hash &*= 1_099_511_628_211
+        }
+        return hash
     }
 
     static func expect(
