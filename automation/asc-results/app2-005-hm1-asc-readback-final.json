@@ -1,8 +1,87 @@
 {
-  "request_id": "app2-005-hm1-build-attach-inspect-20260827-2156",
-  "completed_at": "2026-08-27T12:56:52.425236+00:00",
-  "query_exit_code": 1,
-  "query_status": "failed",
-  "results": [],
-  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 482, in <module>\n    main()\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_gateway.py\", line 457, in main\n    status, response = api_get(token, req[\"path\"])\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_api.py\", line 158, in api_get\n    return api_request(token, path, method=\"GET\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/ALLSUNDAY1122.github.io/ALLSUNDAY1122.github.io/scripts/app_store_connect_api.py\", line 152, in api_request\n    raise RuntimeError(\nRuntimeError: App Store Connect API GET /v1/builds/c22f7aba-b777-4a09-8d3c-96ee08e89dab/betaGroups?limit=50 returned HTTP 403: {'errors': [{'id': '9a5a2531-7c6b-4af0-adcc-94ad5af3c1d1', 'status': '403', 'code': 'FORBIDDEN_ERROR', 'title': 'The given operation is not allowed', 'detail': \"The relationship 'betaGroups' does not allow 'GET_RELATED'. Allowed operations are: CREATE, DELETE\"}]}\n"
+  "request_id": "app2-005-hm1-build-iap-read-20260827-2159",
+  "completed_at": "2026-08-27T12:57:59.279966+00:00",
+  "query_exit_code": 0,
+  "query_status": "success",
+  "results": [
+    {
+      "label": "version-build",
+      "http_status": 200,
+      "data": []
+    },
+    {
+      "label": "monthly",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "6804373671",
+          "type": "subscriptions",
+          "attributes": {
+            "name": "第一種衛生管理者 プレミアム月額",
+            "productId": "jp.allsunday1122.healthmanager1.monthly",
+            "state": "MISSING_METADATA",
+            "subscriptionPeriod": "ONE_MONTH"
+          },
+          "relationships": {
+            "subscriptionLocalizations": [
+              {
+                "type": "subscriptionLocalizations",
+                "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488"
+              }
+            ],
+            "prices": [
+              {
+                "type": "subscriptionPrices",
+                "id": "eyJhIjoiNjgwNDM3MzY3MSIsImMiOiJKUCIsImQiOjAsInAiOiIwIn0"
+              }
+            ],
+            "subscriptionAvailability": {
+              "type": "subscriptionAvailabilities",
+              "id": "6804373671"
+            }
+          }
+        }
+      ],
+      "included": [
+        {
+          "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488",
+          "type": "subscriptionLocalizations",
+          "attributes": {
+            "name": "第一種衛生管理者 プレミアム月額",
+            "state": "PREPARE_FOR_SUBMISSION",
+            "locale": "ja",
+            "description": "追加問題・弱点学習などプレミアム機能を月額で利用できます。"
+          }
+        },
+        {
+          "id": "eyJhIjoiNjgwNDM3MzY3MSIsImMiOiJKUCIsImQiOjAsInAiOiIwIn0",
+          "type": "subscriptionPrices",
+          "attributes": {
+            "startDate": null
+          }
+        },
+        {
+          "id": "6804373671",
+          "type": "subscriptionAvailabilities",
+          "attributes": {}
+        }
+      ]
+    },
+    {
+      "label": "iap",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "6799583540",
+          "type": "inAppPurchases",
+          "attributes": {
+            "name": "第一種衛生管理者 買い切りプレミアム",
+            "productId": "jp.allsunday1122.healthmanager1.lifetime",
+            "state": "MISSING_METADATA",
+            "inAppPurchaseType": "NON_CONSUMABLE"
+          }
+        }
+      ]
+    }
+  ]
 }
