@@ -21,15 +21,12 @@ jobs:
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v6
-
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.12'
-
       - name: Install dependencies
         run: python -m pip install --disable-pip-version-check PyYAML
-
       - name: Materialize non-secret command
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
@@ -37,46 +34,35 @@ jobs:
           python - <<'PY'
           import json, os
           from pathlib import Path
-          raw = os.environ.get('ISSUE_BODY', '').strip()
-          data = json.loads(raw)
-          if not isinstance(data, dict):
-              raise SystemExit('Issue body must be one JSON object')
-          forbidden = ('secret','token','password','private_key','issuer_id','key_id','jwt','credential')
-          lowered = json.dumps(data, ensure_ascii=False).lower()
-          if any(term in lowered for term in forbidden):
-              raise SystemExit('Command issue must never contain credential fields or values')
-          Path('/tmp/release-command.json').write_text(
-              json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8'
-          )
+          data=json.loads(os.environ.get('ISSUE_BODY','').strip())
+          if not isinstance(data,dict): raise SystemExit('Issue body must be one JSON object')
+          forbidden=('secret','token','password','private_key','issuer_id','key_id','jwt','credential')
+          if any(term in json.dumps(data,ensure_ascii=False).lower() for term in forbidden): raise SystemExit('Command issue must never contain credential fields or values')
+          Path('/tmp/release-command.json').write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')
           PY
-
       - name: Execute App Store Connect command
         if: startsWith(github.event.issue.title, '[ASC-CMD]')
         env:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-        run: |
-          python scripts/app_store_connect_gateway.py \
-            --command /tmp/release-command.json \
-            --output release-result.json
-
+        run: python scripts/app_store_connect_gateway.py --command /tmp/release-command.json --output release-result.json
       - name: Execute APP2-003 Codemagic artifact readback
         if: startsWith(github.event.issue.title, '[CM-CMD] APP2-003 ARTIFACT')
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: python scripts/app2_003_codemagic_artifact_readback.py
-
+      - name: Execute APP2-003 pinned Codemagic build
+        if: startsWith(github.event.issue.title, '[CM-CMD] APP2-003 BUILD')
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: python scripts/app2_003_codemagic_build_start.py
       - name: Execute Codemagic command
-        if: startsWith(github.event.issue.title, '[CM-CMD]') && !startsWith(github.event.issue.title, '[CM-CMD] APP2-003 ARTIFACT')
+        if: startsWith(github.event.issue.title, '[CM-CMD]') && !startsWith(github.event.issue.title, '[CM-CMD] APP2-003 ARTIFACT') && !startsWith(github.event.issue.title, '[CM-CMD] APP2-003 BUILD')
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
           CM_APP_ID: ${{ vars.CM_APP_ID }}
-        run: |
-          python scripts/codemagic_build_gateway.py \
-            --command /tmp/release-command.json \
-            --output release-result.json
-
+        run: python scripts/codemagic_build_gateway.py --command /tmp/release-command.json --output release-result.json
       - name: Upload sanitized command result
         if: always()
         uses: actions/upload-artifact@v4
@@ -85,7 +71,6 @@ jobs:
           path: release-result.json
           if-no-files-found: error
           retention-days: 7
-
       - name: Report run locator to command issue
         if: always()
         uses: actions/github-script@v8
@@ -93,9 +78,4 @@ jobs:
           script: |
             const artifact = `release-command-result-${context.issue.number}-${context.runId}`;
             const conclusion = '${{ job.status }}';
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: `Release API command finished. status=${conclusion}; run_id=${context.runId}; artifact=${artifact}`
-            });
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body: `Release API command finished. status=${conclusion}; run_id=${context.runId}; artifact=${artifact}`});
