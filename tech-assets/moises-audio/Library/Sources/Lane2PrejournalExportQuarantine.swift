@@ -1,15 +1,13 @@
 import Foundation
 
 public enum Lane2PrejournalQuarantineLocation: String, Codable, Hashable, Sendable {
-    case pending
-    case recoveredForUser
+    case pending, recoveredForUser
 }
 
 public struct Lane2PrejournalQuarantineArtifact: Codable, Hashable, Sendable {
     public let filename: String
     public let byteCount: UInt64
     public let modifiedAtMilliseconds: Int64
-
     public init(filename: String, byteCount: UInt64, modifiedAtMilliseconds: Int64) {
         self.filename = filename
         self.byteCount = byteCount
@@ -24,7 +22,6 @@ public struct Lane2PrejournalQuarantineBatch: Codable, Hashable, Sendable {
     public let artifacts: [Lane2PrejournalQuarantineArtifact]
     public let totalBytes: UInt64
     public let snapshotToken: String
-
     public init(
         batchID: String,
         location: Lane2PrejournalQuarantineLocation,
@@ -46,7 +43,6 @@ public struct Lane2PrejournalQuarantineIssue: Codable, Hashable, Sendable {
     public let location: Lane2PrejournalQuarantineLocation
     public let batchName: String
     public let stableCode: String
-
     public init(location: Lane2PrejournalQuarantineLocation, batchName: String, stableCode: String) {
         self.location = location
         self.batchName = batchName
@@ -58,7 +54,6 @@ public struct Lane2PrejournalQuarantineInventory: Codable, Hashable, Sendable {
     public let pending: [Lane2PrejournalQuarantineBatch]
     public let recoveredForUser: [Lane2PrejournalQuarantineBatch]
     public let issues: [Lane2PrejournalQuarantineIssue]
-
     public init(
         pending: [Lane2PrejournalQuarantineBatch],
         recoveredForUser: [Lane2PrejournalQuarantineBatch],
@@ -67,8 +62,9 @@ public struct Lane2PrejournalQuarantineInventory: Codable, Hashable, Sendable {
         self.pending = pending.sorted { $0.batchID < $1.batchID }
         self.recoveredForUser = recoveredForUser.sorted { $0.batchID < $1.batchID }
         self.issues = issues.sorted {
-            if $0.location.rawValue == $1.location.rawValue { return $0.batchName < $1.batchName }
-            return $0.location.rawValue < $1.location.rawValue
+            $0.location.rawValue == $1.location.rawValue
+                ? $0.batchName < $1.batchName
+                : $0.location.rawValue < $1.location.rawValue
         }
     }
 }
@@ -77,7 +73,6 @@ public struct Lane2PrejournalDispositionRecoveryReport: Codable, Hashable, Senda
     public let completedPreserves: Int
     public let completedPendingPurges: Int
     public let completedRecoveredPurges: Int
-
     public init(completedPreserves: Int, completedPendingPurges: Int, completedRecoveredPurges: Int) {
         self.completedPreserves = completedPreserves
         self.completedPendingPurges = completedPendingPurges
@@ -106,19 +101,13 @@ public enum Lane2PrejournalQuarantineFailure: Error, Equatable, Sendable {
     case fileOperationFailed(String)
 }
 
-/// Explicit, crash-recoverable management for AW17 pre-journal export quarantine.
-///
-/// This type deliberately does not infer a ProjectID or write lifecycle export metadata. A caller
-/// can either preserve a valid quarantined batch for user retrieval or explicitly purge it. The
-/// preserve operation moves the whole batch into a non-orphan-swept recovery root so bytes remain
-/// shareable/exportable without pretending ownership is known.
+/// Explicit, crash-recoverable management for pre-journal export quarantine.
+/// AW51 makes every disposition, preserve and purge filesystem authority fail closed through
+/// `LibraryManagedPathBoundary`; dangling/symlink nodes are never equivalent to absence.
 public actor Lane2PrejournalExportQuarantineManager {
     private enum DispositionKind: String, Codable, Sendable {
-        case preserveForUser
-        case purgePending
-        case purgeRecovered
+        case preserveForUser, purgePending, purgeRecovered
     }
-
     private struct DispositionIntent: Codable, Sendable {
         let id: UUID
         let kind: DispositionKind
@@ -141,20 +130,16 @@ public actor Lane2PrejournalExportQuarantineManager {
         self.fileManager = fileManager
     }
 
-    /// Non-destructive inventory. One malformed batch is reported as an issue rather than hiding
-    /// other valid recovery candidates.
     public func inventory() -> Lane2PrejournalQuarantineInventory {
         let pending = inspectRoot(location: .pending)
         let recovered = inspectRoot(location: .recoveredForUser)
-        return Lane2PrejournalQuarantineInventory(
+        return .init(
             pending: pending.batches,
             recoveredForUser: recovered.batches,
             issues: pending.issues + recovered.issues
         )
     }
 
-    /// User/HQ explicitly chooses to retain bytes. The batch is moved atomically between two
-    /// `.LibraryRecovery` roots; no ProjectID is invented and nothing enters canonical `Exports/**`.
     @discardableResult
     public func preserveForUser(batchID: String, snapshotToken: String) throws -> Lane2PrejournalQuarantineBatch {
         _ = try recoverPendingDispositions()
@@ -162,39 +147,38 @@ public actor Lane2PrejournalExportQuarantineManager {
         guard batch.snapshotToken == snapshotToken else {
             throw Lane2PrejournalQuarantineFailure.staleSnapshot(batchID)
         }
-        guard !fileManager.fileExists(atPath: batchURL(batchID: batchID, location: .recoveredForUser).path) else {
-            throw Lane2PrejournalQuarantineFailure.destinationConflict(batchID)
+        do {
+            if try boundary.nodeExists(batchURL(batchID: batchID, location: .recoveredForUser), fileManager: fileManager) {
+                throw Lane2PrejournalQuarantineFailure.destinationConflict(batchID)
+            }
+        } catch let failure as Lane2PrejournalQuarantineFailure {
+            throw failure
+        } catch {
+            throw Lane2PrejournalQuarantineFailure.fileOperationFailed("PRESERVE_DESTINATION_\(batchID)")
         }
         let intent = try persistIntent(kind: .preserveForUser, batch: batch)
         try apply(intent)
         return try inspectBatch(batchID: batchID, location: .recoveredForUser)
     }
 
-    /// Explicit destructive decision for an unresolved quarantine batch. Exact snapshot matching is
-    /// required before the durable purge intent is written.
     public func purgePending(batchID: String, snapshotToken: String) throws {
         _ = try recoverPendingDispositions()
         let batch = try inspectBatch(batchID: batchID, location: .pending)
         guard batch.snapshotToken == snapshotToken else {
             throw Lane2PrejournalQuarantineFailure.staleSnapshot(batchID)
         }
-        let intent = try persistIntent(kind: .purgePending, batch: batch)
-        try apply(intent)
+        try apply(try persistIntent(kind: .purgePending, batch: batch))
     }
 
-    /// Explicit destructive decision for a batch that was previously preserved for user retrieval.
     public func purgeRecovered(batchID: String, snapshotToken: String) throws {
         _ = try recoverPendingDispositions()
         let batch = try inspectBatch(batchID: batchID, location: .recoveredForUser)
         guard batch.snapshotToken == snapshotToken else {
             throw Lane2PrejournalQuarantineFailure.staleSnapshot(batchID)
         }
-        let intent = try persistIntent(kind: .purgeRecovered, batch: batch)
-        try apply(intent)
+        try apply(try persistIntent(kind: .purgeRecovered, batch: batch))
     }
 
-    /// Returns only fully revalidated user-recovered artifact URLs. The hidden AW17 marker is never
-    /// exposed as a media artifact.
     public func recoveredArtifactURLs(batchID: String, snapshotToken: String) throws -> [URL] {
         _ = try recoverPendingDispositions()
         let batch = try inspectBatch(batchID: batchID, location: .recoveredForUser)
@@ -202,51 +186,61 @@ public actor Lane2PrejournalExportQuarantineManager {
             throw Lane2PrejournalQuarantineFailure.staleSnapshot(batchID)
         }
         let directory = batchURL(batchID: batchID, location: .recoveredForUser)
-        return batch.artifacts.map { directory.appendingPathComponent($0.filename, isDirectory: false) }
+        return try batch.artifacts.map {
+            let url = directory.appendingPathComponent($0.filename)
+            do {
+                try boundary.requireExistingRegularFile(url, within: directory, fileManager: fileManager)
+                return url
+            } catch {
+                throw Lane2PrejournalQuarantineFailure.invalidArtifact($0.filename)
+            }
+        }
     }
 
-    /// Relaunch convergence for a process death after the explicit decision became durable but before
-    /// its filesystem mutation or intent cleanup completed.
     @discardableResult
     public func recoverPendingDispositions() throws -> Lane2PrejournalDispositionRecoveryReport {
-        guard fileManager.fileExists(atPath: dispositionRootURL.path) else {
-            return Lane2PrejournalDispositionRecoveryReport(
-                completedPreserves: 0,
-                completedPendingPurges: 0,
-                completedRecoveredPurges: 0
-            )
+        do {
+            guard try boundary.nodeExists(dispositionRootURL, fileManager: fileManager) else {
+                return .init(completedPreserves: 0, completedPendingPurges: 0, completedRecoveredPurges: 0)
+            }
+            try boundary.requireDirectory(dispositionRootURL, fileManager: fileManager)
+        } catch {
+            throw Lane2PrejournalQuarantineFailure.fileOperationFailed("DISPOSITION_ROOT")
         }
 
         let urls: [URL]
         do {
             urls = try fileManager.contentsOfDirectory(
                 at: dispositionRootURL,
-                includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey],
+                includingPropertiesForKeys: [],
                 options: [.skipsHiddenFiles]
             )
         } catch {
             throw Lane2PrejournalQuarantineFailure.fileOperationFailed("DISPOSITION_ENUMERATE")
         }
 
-        var preserved = 0
-        var purgedPending = 0
-        var purgedRecovered = 0
+        var preserved = 0, pendingPurged = 0, recoveredPurged = 0
         for url in urls.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
             guard url.pathExtension.lowercased() == "json" else {
+                throw Lane2PrejournalQuarantineFailure.corruptDisposition(url.lastPathComponent)
+            }
+            do {
+                try boundary.requireExistingRegularFile(url, within: dispositionRootURL, fileManager: fileManager)
+            } catch {
                 throw Lane2PrejournalQuarantineFailure.corruptDisposition(url.lastPathComponent)
             }
             let intent = try loadIntent(at: url)
             try apply(intent)
             switch intent.kind {
             case .preserveForUser: preserved += 1
-            case .purgePending: purgedPending += 1
-            case .purgeRecovered: purgedRecovered += 1
+            case .purgePending: pendingPurged += 1
+            case .purgeRecovered: recoveredPurged += 1
             }
         }
-        return Lane2PrejournalDispositionRecoveryReport(
+        return .init(
             completedPreserves: preserved,
-            completedPendingPurges: purgedPending,
-            completedRecoveredPurges: purgedRecovered
+            completedPendingPurges: pendingPurged,
+            completedRecoveredPurges: recoveredPurged
         )
     }
 
@@ -255,20 +249,29 @@ public actor Lane2PrejournalExportQuarantineManager {
         case .preserveForUser:
             let source = batchURL(batchID: intent.batchID, location: .pending)
             let destination = batchURL(batchID: intent.batchID, location: .recoveredForUser)
-            let sourceExists = fileManager.fileExists(atPath: source.path)
-            let destinationExists = fileManager.fileExists(atPath: destination.path)
-
+            let sourceExists: Bool
+            let destinationExists: Bool
+            do {
+                sourceExists = try boundary.nodeExists(source, fileManager: fileManager)
+                destinationExists = try boundary.nodeExists(destination, fileManager: fileManager)
+            } catch {
+                throw Lane2PrejournalQuarantineFailure.fileOperationFailed("PRESERVE_AUTHORITY_\(intent.batchID)")
+            }
             if sourceExists && destinationExists {
                 throw Lane2PrejournalQuarantineFailure.destinationConflict(intent.batchID)
-            }
-            if sourceExists {
+            } else if sourceExists {
                 let batch = try inspectBatch(batchID: intent.batchID, location: .pending)
                 guard batch.snapshotToken == intent.snapshotToken else {
                     throw Lane2PrejournalQuarantineFailure.staleSnapshot(intent.batchID)
                 }
                 do {
-                    try fileManager.createDirectory(at: recoveredRootURL, withIntermediateDirectories: true)
+                    try boundary.ensureDirectory(recoveredRootURL, fileManager: fileManager)
+                    try boundary.requireSafeDestination(destination, within: recoveredRootURL, fileManager: fileManager)
+                    try boundary.requireDirectory(source, fileManager: fileManager)
                     try fileManager.moveItem(at: source, to: destination)
+                    try boundary.requireDirectory(destination, fileManager: fileManager)
+                } catch let failure as Lane2PrejournalQuarantineFailure {
+                    throw failure
                 } catch {
                     throw Lane2PrejournalQuarantineFailure.fileOperationFailed("PRESERVE_MOVE_\(intent.batchID)")
                 }
@@ -280,32 +283,44 @@ public actor Lane2PrejournalExportQuarantineManager {
             } else {
                 throw Lane2PrejournalQuarantineFailure.batchNotFound(intent.batchID)
             }
-
         case .purgePending:
             try applyPurge(intent, location: .pending)
-
         case .purgeRecovered:
             try applyPurge(intent, location: .recoveredForUser)
         }
-
         try removeIntent(id: intent.id)
     }
 
     private func applyPurge(_ intent: DispositionIntent, location: Lane2PrejournalQuarantineLocation) throws {
         let url = batchURL(batchID: intent.batchID, location: location)
-        guard fileManager.fileExists(atPath: url.path) else { return }
+        let exists: Bool
+        do {
+            exists = try boundary.nodeExists(url, fileManager: fileManager)
+        } catch {
+            throw Lane2PrejournalQuarantineFailure.fileOperationFailed("PURGE_AUTHORITY_\(intent.batchID)")
+        }
+        guard exists else { return }
         let batch = try inspectBatch(batchID: intent.batchID, location: location)
         guard batch.snapshotToken == intent.snapshotToken else {
             throw Lane2PrejournalQuarantineFailure.staleSnapshot(intent.batchID)
         }
         do {
+            try boundary.requireDirectory(url, fileManager: fileManager)
             try fileManager.removeItem(at: url)
+            if try boundary.nodeExists(url, fileManager: fileManager) {
+                throw Lane2PrejournalQuarantineFailure.fileOperationFailed("PURGE_REMAINS_\(intent.batchID)")
+            }
+        } catch let failure as Lane2PrejournalQuarantineFailure {
+            throw failure
         } catch {
             throw Lane2PrejournalQuarantineFailure.fileOperationFailed("PURGE_\(intent.batchID)")
         }
     }
 
-    private func persistIntent(kind: DispositionKind, batch: Lane2PrejournalQuarantineBatch) throws -> DispositionIntent {
+    private func persistIntent(
+        kind: DispositionKind,
+        batch: Lane2PrejournalQuarantineBatch
+    ) throws -> DispositionIntent {
         let intent = DispositionIntent(
             id: UUID(),
             kind: kind,
@@ -313,12 +328,15 @@ public actor Lane2PrejournalExportQuarantineManager {
             snapshotToken: batch.snapshotToken,
             createdAt: Date()
         )
+        let url = dispositionURL(id: intent.id)
         do {
-            try fileManager.createDirectory(at: dispositionRootURL, withIntermediateDirectories: true)
+            try boundary.ensureDirectory(dispositionRootURL, fileManager: fileManager)
+            _ = try boundary.requireRegularFileOrMissing(url, within: dispositionRootURL, fileManager: fileManager)
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.sortedKeys]
             encoder.dateEncodingStrategy = .iso8601
-            try encoder.encode(intent).write(to: dispositionURL(id: intent.id), options: [.atomic])
+            try encoder.encode(intent).write(to: url, options: [.atomic])
+            try boundary.requireExistingRegularFile(url, within: dispositionRootURL, fileManager: fileManager)
             return intent
         } catch {
             throw Lane2PrejournalQuarantineFailure.fileOperationFailed("DISPOSITION_WRITE")
@@ -331,6 +349,7 @@ public actor Lane2PrejournalExportQuarantineManager {
             throw Lane2PrejournalQuarantineFailure.corruptDisposition(url.lastPathComponent)
         }
         do {
+            try boundary.requireExistingRegularFile(url, within: dispositionRootURL, fileManager: fileManager)
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
             let intent = try decoder.decode(DispositionIntent.self, from: Data(contentsOf: url))
@@ -351,13 +370,20 @@ public actor Lane2PrejournalExportQuarantineManager {
 
     private func removeIntent(id: UUID) throws {
         let url = dispositionURL(id: id)
-        guard fileManager.fileExists(atPath: url.path) else { return }
         do {
+            guard try boundary.nodeExists(url, fileManager: fileManager) else { return }
+            try boundary.requireExistingRegularFile(url, within: dispositionRootURL, fileManager: fileManager)
             try fileManager.removeItem(at: url)
-            if fileManager.fileExists(atPath: dispositionRootURL.path),
-               (try fileManager.contentsOfDirectory(atPath: dispositionRootURL.path)).isEmpty {
+            guard !(try boundary.nodeExists(url, fileManager: fileManager)) else {
+                throw Lane2PrejournalQuarantineFailure.fileOperationFailed("DISPOSITION_REMOVE")
+            }
+            guard try boundary.nodeExists(dispositionRootURL, fileManager: fileManager) else { return }
+            try boundary.requireDirectory(dispositionRootURL, fileManager: fileManager)
+            if try fileManager.contentsOfDirectory(atPath: dispositionRootURL.path).isEmpty {
                 try fileManager.removeItem(at: dispositionRootURL)
             }
+        } catch let failure as Lane2PrejournalQuarantineFailure {
+            throw failure
         } catch {
             throw Lane2PrejournalQuarantineFailure.fileOperationFailed("DISPOSITION_REMOVE")
         }
@@ -367,31 +393,35 @@ public actor Lane2PrejournalExportQuarantineManager {
         location: Lane2PrejournalQuarantineLocation
     ) -> (batches: [Lane2PrejournalQuarantineBatch], issues: [Lane2PrejournalQuarantineIssue]) {
         let root = rootURL(for: location)
-        guard fileManager.fileExists(atPath: root.path) else { return ([], []) }
+        do {
+            guard try boundary.nodeExists(root, fileManager: fileManager) else { return ([], []) }
+            try boundary.requireDirectory(root, fileManager: fileManager)
+        } catch {
+            return (
+                [],
+                [.init(location: location, batchName: "<root>", stableCode: "UNSAFE_ROOT")]
+            )
+        }
         let children: [URL]
         do {
-            children = try fileManager.contentsOfDirectory(
-                at: root,
-                includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey],
-                options: []
-            )
+            children = try fileManager.contentsOfDirectory(at: root, includingPropertiesForKeys: [], options: [])
         } catch {
-            return ([], [Lane2PrejournalQuarantineIssue(location: location, batchName: "<root>", stableCode: "ENUMERATE_FAILED")])
+            return (
+                [],
+                [.init(location: location, batchName: "<root>", stableCode: "ENUMERATE_FAILED")]
+            )
         }
-
         var batches: [Lane2PrejournalQuarantineBatch] = []
         var issues: [Lane2PrejournalQuarantineIssue] = []
         for child in children {
             do {
                 batches.append(try inspectBatch(batchID: child.lastPathComponent, location: location))
             } catch {
-                issues.append(
-                    Lane2PrejournalQuarantineIssue(
-                        location: location,
-                        batchName: child.lastPathComponent,
-                        stableCode: Self.stableCode(error)
-                    )
-                )
+                issues.append(.init(
+                    location: location,
+                    batchName: child.lastPathComponent,
+                    stableCode: Self.stableCode(error)
+                ))
             }
         }
         return (batches, issues)
@@ -407,19 +437,22 @@ public actor Lane2PrejournalExportQuarantineManager {
         guard isDirectChild(url, of: root) else {
             throw Lane2PrejournalQuarantineFailure.unsafeBatchLocation(batchID)
         }
-
-        var isDirectory: ObjCBool = false
-        guard fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) else {
-            throw Lane2PrejournalQuarantineFailure.batchNotFound(batchID)
-        }
-        guard isDirectory.boolValue else {
-            throw Lane2PrejournalQuarantineFailure.batchNotDirectory(batchID)
-        }
-        let dirValues = try url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
-        guard dirValues.isDirectory == true else {
-            throw Lane2PrejournalQuarantineFailure.batchNotDirectory(batchID)
-        }
-        guard dirValues.isSymbolicLink != true else {
+        do {
+            try boundary.requireDirectory(root, fileManager: fileManager)
+            guard try boundary.nodeExists(url, fileManager: fileManager) else {
+                throw Lane2PrejournalQuarantineFailure.batchNotFound(batchID)
+            }
+            let topology = try url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
+            guard topology.isSymbolicLink != true else {
+                throw Lane2PrejournalQuarantineFailure.symlinkRejected(batchID)
+            }
+            guard topology.isDirectory == true else {
+                throw Lane2PrejournalQuarantineFailure.batchNotDirectory(batchID)
+            }
+            try boundary.requireDirectory(url, fileManager: fileManager)
+        } catch let failure as Lane2PrejournalQuarantineFailure {
+            throw failure
+        } catch {
             throw Lane2PrejournalQuarantineFailure.symlinkRejected(batchID)
         }
 
@@ -428,110 +461,114 @@ public actor Lane2PrejournalExportQuarantineManager {
             children = try fileManager.contentsOfDirectory(
                 at: url,
                 includingPropertiesForKeys: [
-                    .isDirectoryKey,
-                    .isRegularFileKey,
-                    .isSymbolicLinkKey,
-                    .fileSizeKey,
-                    .contentModificationDateKey
+                    .isDirectoryKey, .isRegularFileKey, .isSymbolicLinkKey,
+                    .fileSizeKey, .contentModificationDateKey
                 ],
                 options: []
             )
         } catch {
             throw Lane2PrejournalQuarantineFailure.fileOperationFailed("BATCH_ENUMERATE_\(batchID)")
         }
-
-        guard let markerURL = children.first(where: { $0.lastPathComponent == markerFilename }) else {
+        guard let marker = children.first(where: { $0.lastPathComponent == markerFilename }) else {
             throw Lane2PrejournalQuarantineFailure.missingPublicationMarker(batchID)
         }
-        let markerSession = try readMarker(markerURL, batchID: batchID)
+        let markerSession = try readMarker(marker, batchID: batchID)
 
         var artifacts: [Lane2PrejournalQuarantineArtifact] = []
-        var normalizedNames = Set<String>()
+        var names = Set<String>()
         var total: UInt64 = 0
         for child in children where child.lastPathComponent != markerFilename {
             guard isDirectChild(child, of: url) else {
                 throw Lane2PrejournalQuarantineFailure.unsafeBatchLocation(child.lastPathComponent)
             }
-            let values = try child.resourceValues(forKeys: [
-                .isDirectoryKey,
-                .isRegularFileKey,
-                .isSymbolicLinkKey,
-                .fileSizeKey,
-                .contentModificationDateKey
-            ])
-            if values.isDirectory == true {
-                throw Lane2PrejournalQuarantineFailure.unexpectedNestedEntry(child.lastPathComponent)
-            }
-            guard values.isSymbolicLink != true else {
-                throw Lane2PrejournalQuarantineFailure.symlinkRejected(child.lastPathComponent)
-            }
-            guard values.isRegularFile == true else {
+            let topology: URLResourceValues
+            do {
+                topology = try child.resourceValues(
+                    forKeys: [.isDirectoryKey, .isRegularFileKey, .isSymbolicLinkKey]
+                )
+            } catch {
                 throw Lane2PrejournalQuarantineFailure.invalidArtifact(child.lastPathComponent)
             }
-            let byteCount = UInt64(max(values.fileSize ?? 0, 0))
-            guard byteCount > 0 else {
+            if topology.isDirectory == true {
+                throw Lane2PrejournalQuarantineFailure.unexpectedNestedEntry(child.lastPathComponent)
+            }
+            if topology.isSymbolicLink == true {
+                throw Lane2PrejournalQuarantineFailure.symlinkRejected(child.lastPathComponent)
+            }
+            guard topology.isRegularFile == true else {
+                throw Lane2PrejournalQuarantineFailure.invalidArtifact(child.lastPathComponent)
+            }
+            do {
+                try boundary.requireExistingRegularFile(child, within: url, fileManager: fileManager)
+            } catch {
+                throw Lane2PrejournalQuarantineFailure.invalidArtifact(child.lastPathComponent)
+            }
+            let values = try child.resourceValues(forKeys: [.fileSizeKey, .contentModificationDateKey])
+            let bytes = UInt64(max(values.fileSize ?? 0, 0))
+            guard bytes > 0 else {
                 throw Lane2PrejournalQuarantineFailure.emptyArtifact(child.lastPathComponent)
             }
-            let canonicalName = child.lastPathComponent
+            let canonical = child.lastPathComponent
                 .precomposedStringWithCanonicalMapping
                 .lowercased(with: Locale(identifier: "en_US_POSIX"))
-            guard normalizedNames.insert(canonicalName).inserted else {
+            guard names.insert(canonical).inserted else {
                 throw Lane2PrejournalQuarantineFailure.ambiguousArtifactName(child.lastPathComponent)
             }
-            let modified = values.contentModificationDate ?? .distantPast
-            let millisDouble = modified.timeIntervalSince1970 * 1000
+            let seconds = (values.contentModificationDate ?? .distantPast).timeIntervalSince1970 * 1000
             let millis: Int64
-            if millisDouble >= Double(Int64.max) {
-                millis = Int64.max
-            } else if millisDouble <= Double(Int64.min) {
-                millis = Int64.min
-            } else {
-                millis = Int64(millisDouble.rounded(.towardZero))
-            }
-            let (nextTotal, overflow) = total.addingReportingOverflow(byteCount)
+            if seconds >= Double(Int64.max) { millis = .max }
+            else if seconds <= Double(Int64.min) { millis = .min }
+            else { millis = Int64(seconds.rounded(.towardZero)) }
+            let (next, overflow) = total.addingReportingOverflow(bytes)
             guard !overflow else {
                 throw Lane2PrejournalQuarantineFailure.byteCountOverflow(batchID)
             }
-            total = nextTotal
-            artifacts.append(
-                Lane2PrejournalQuarantineArtifact(
-                    filename: child.lastPathComponent,
-                    byteCount: byteCount,
-                    modifiedAtMilliseconds: millis
-                )
-            )
+            total = next
+            artifacts.append(.init(
+                filename: child.lastPathComponent,
+                byteCount: bytes,
+                modifiedAtMilliseconds: millis
+            ))
         }
         guard !artifacts.isEmpty else {
             throw Lane2PrejournalQuarantineFailure.emptyBatch(batchID)
         }
         artifacts.sort { $0.filename < $1.filename }
-        let token = Self.snapshotToken(batchID: batchID, markerSession: markerSession, artifacts: artifacts)
-        return Lane2PrejournalQuarantineBatch(
+        return .init(
             batchID: batchID,
             location: location,
             markerSessionID: markerSession,
             artifacts: artifacts,
             totalBytes: total,
-            snapshotToken: token
+            snapshotToken: Self.snapshotToken(
+                batchID: batchID,
+                markerSession: markerSession,
+                artifacts: artifacts
+            )
         )
     }
 
     private func readMarker(_ url: URL, batchID: String) throws -> String {
-        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
-        guard values.isSymbolicLink != true, values.isRegularFile == true else {
+        do {
+            try boundary.requireExistingRegularFile(
+                url,
+                within: url.deletingLastPathComponent(),
+                fileManager: fileManager
+            )
+        } catch {
             throw Lane2PrejournalQuarantineFailure.invalidPublicationMarker(batchID)
         }
-        let size = values.fileSize ?? 0
+        let size = try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
         guard size > 0, size <= 1024 else {
             throw Lane2PrejournalQuarantineFailure.invalidPublicationMarker(batchID)
         }
         do {
-            let session = String(decoding: try Data(contentsOf: url), as: UTF8.self)
+            let value = String(decoding: try Data(contentsOf: url), as: UTF8.self)
                 .trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !session.isEmpty, !session.contains("\0") else {
+            guard !value.isEmpty, !value.contains("\0") else {
                 throw Lane2PrejournalQuarantineFailure.invalidPublicationMarker(batchID)
             }
-            return session
+            return value
         } catch let failure as Lane2PrejournalQuarantineFailure {
             throw failure
         } catch {
@@ -549,44 +586,30 @@ public actor Lane2PrejournalExportQuarantineManager {
     }
 
     private func rootURL(for location: Lane2PrejournalQuarantineLocation) -> URL {
-        switch location {
-        case .pending: return pendingRootURL
-        case .recoveredForUser: return recoveredRootURL
-        }
+        location == .pending ? pendingRootURL : recoveredRootURL
     }
-
     private func batchURL(batchID: String, location: Lane2PrejournalQuarantineLocation) -> URL {
         rootURL(for: location).appendingPathComponent(batchID, isDirectory: true).standardizedFileURL
     }
-
     private var pendingRootURL: URL {
-        rootURL
-            .appendingPathComponent(".LibraryRecovery", isDirectory: true)
-            .appendingPathComponent("PrejournalExport", isDirectory: true)
+        rootURL.appendingPathComponent(".LibraryRecovery/PrejournalExport", isDirectory: true)
     }
-
     private var recoveredRootURL: URL {
-        rootURL
-            .appendingPathComponent(".LibraryRecovery", isDirectory: true)
-            .appendingPathComponent("RecoveredPrejournalExport", isDirectory: true)
+        rootURL.appendingPathComponent(".LibraryRecovery/RecoveredPrejournalExport", isDirectory: true)
     }
-
     private var dispositionRootURL: URL {
-        rootURL
-            .appendingPathComponent(".LibraryRecovery", isDirectory: true)
-            .appendingPathComponent("PrejournalExportDisposition", isDirectory: true)
+        rootURL.appendingPathComponent(".LibraryRecovery/PrejournalExportDisposition", isDirectory: true)
     }
-
     private func dispositionURL(id: UUID) -> URL {
-        dispositionRootURL.appendingPathComponent(id.uuidString + ".json", isDirectory: false)
+        dispositionRootURL.appendingPathComponent(id.uuidString + ".json")
     }
-
+    private var boundary: LibraryManagedPathBoundary {
+        .init(rootURL: rootURL)
+    }
     private func isDirectChild(_ candidate: URL, of parent: URL) -> Bool {
         candidate.standardizedFileURL.deletingLastPathComponent() == parent.standardizedFileURL
     }
 
-    /// Snapshot token detects stale UI/HQ confirmation caused by filename/size/mtime/session changes.
-    /// It is intentionally a non-cryptographic revision token, not a content-authenticity digest.
     private static func snapshotToken(
         batchID: String,
         markerSession: String,
@@ -612,9 +635,7 @@ public actor Lane2PrejournalExportQuarantineManager {
     }
 
     private static func stableCode(_ error: Error) -> String {
-        guard let failure = error as? Lane2PrejournalQuarantineFailure else {
-            return "UNKNOWN"
-        }
+        guard let failure = error as? Lane2PrejournalQuarantineFailure else { return "UNKNOWN" }
         switch failure {
         case .invalidBatchID: return "INVALID_BATCH_ID"
         case .batchNotFound: return "BATCH_NOT_FOUND"
