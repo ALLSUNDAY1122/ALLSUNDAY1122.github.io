@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 env:
-  LANE1_EXPECTED_HEAD: 05b7fd15efadcde624efcd0acc7157a5d19cb418
+  LANE1_EXPECTED_HEAD: 1841eac242d9963d0d5e4a8a7c049623feaf8f55
 
 jobs:
   lane1-a26-exact-checkout-audit:
@@ -66,6 +66,16 @@ jobs:
           assert report['unittest_discovery']['state'] == 'PASS', report['unittest_discovery']
           print('L1_A26_EXACT_AUDIT_PASS')
           PY
+
+      - name: Diagnose unittest failure verbosely
+        if: failure()
+        shell: bash
+        run: |
+          set +e
+          export PYTHONPATH="tech-assets/moises-audio/Separation/Server:tech-assets/moises-audio/Separation/Evaluation:tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          cd tech-assets/moises-audio
+          python3 -m unittest discover -v -s Separation/Tests -p 'test_*.py'
+          exit 0
 
       - name: Upload exact audit report
         if: always()
