@@ -1,8 +1,9 @@
-"""Canonical-role boundary for the A12 AudioShake advanced provider path.
+"""Canonical-role boundary for the A12/A44 AudioShake advanced provider path.
 
 A06/A07 orchestration must remain provider-neutral. This wrapper accepts canonical role IDs,
 translates them to account-enabled AudioShake model IDs only at POST /tasks, and maps provider
-output model IDs back to canonical roles before returning task state.
+output model IDs back to canonical roles before returning task state. A44 also exposes a media-free
+request preflight so the production entrypoint can reject impossible advanced requests before upload.
 """
 from __future__ import annotations
 
@@ -13,10 +14,13 @@ from advanced_capabilities import (
     AdvancedCapabilityError,
     AdvancedRoleCatalog,
     AudioShakeLikeClient,
-    build_audioshake_capabilities,
     discover_audioshake_models,
     load_advanced_role_catalog,
     validate_canonical_role_combination,
+)
+from audioshake_task_contract import (
+    AUDIOSHAKE_TASK_MAX_TARGETS,
+    build_contract_bound_audioshake_capabilities,
 )
 
 
@@ -48,7 +52,10 @@ class CanonicalAdvancedAudioShakeAdapter:
 
     def _refresh_maps(self) -> None:
         self._snapshot = discover_audioshake_models(self.client)
-        caps = build_audioshake_capabilities(self._snapshot, catalog=self.catalog)
+        caps = build_contract_bound_audioshake_capabilities(
+            self._snapshot,
+            catalog=self.catalog,
+        )
         self._role_to_model = dict(caps.role_model_map)
         inverse: dict[str, str] = {}
         for role, model in self._role_to_model.items():
@@ -56,6 +63,20 @@ class CanonicalAdvancedAudioShakeAdapter:
                 raise AdvancedCapabilityError("SEP_ADV_PROVIDER_MODEL_COLLISION")
             inverse[model] = role
         self._model_to_role = inverse
+
+    def preflight_separation(self, models: Iterable[str]) -> tuple[str, ...]:
+        """Validate task shape and account access without reading or uploading user media."""
+        canonical_roles = validate_canonical_role_combination(
+            models,
+            catalog=self.catalog,
+            max_targets=AUDIOSHAKE_TASK_MAX_TARGETS,
+        )
+        if self._snapshot is None:
+            self._refresh_maps()
+        for role in canonical_roles:
+            if self._role_to_model.get(role) is None:
+                raise AdvancedCapabilityError("SEP_ADV_PROVIDER_MODEL_NOT_ENABLED")
+        return canonical_roles
 
     def upload_asset(self, source_path):
         # Discovery precedes user-content upload so unavailable accounts fail before media transfer.
@@ -66,15 +87,10 @@ class CanonicalAdvancedAudioShakeAdapter:
     def create_separation_task(self, asset_id: str, models: Iterable[str], *, metadata=None) -> str:
         if not isinstance(asset_id, str) or not asset_id:
             raise AdvancedCapabilityError("SEP_ADV_ASSET_ID_INVALID")
-        canonical_roles = validate_canonical_role_combination(models, catalog=self.catalog)
-        if self._snapshot is None:
-            self._refresh_maps()
-        provider_models: list[str] = []
-        for role in canonical_roles:
-            model = self._role_to_model.get(role)
-            if model is None:
-                raise AdvancedCapabilityError("SEP_ADV_PROVIDER_MODEL_NOT_ENABLED")
-            provider_models.append(model)
+        # Defense in depth: callers that do not use the A44 production preflight still cannot POST
+        # an over-limit or account-disabled task.
+        canonical_roles = self.preflight_separation(models)
+        provider_models = [self._role_to_model[role] for role in canonical_roles]
         body: dict[str, Any] = {
             "assetId": asset_id,
             "targets": [{"model": model, "formats": ["wav"]} for model in provider_models],
