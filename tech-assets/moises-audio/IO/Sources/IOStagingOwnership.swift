@@ -69,6 +69,10 @@ public final class IOStagingOwnershipRegistry: @unchecked Sendable {
             .appendingPathComponent("StagingOwnership", isDirectory: true)
     }
 
+    private var pathBoundary: IOManagedPathBoundary {
+        IOManagedPathBoundary(rootURL: fileStore.rootURL)
+    }
+
     public func acquire(
         token: String,
         stagingFilename: String,
@@ -136,13 +140,22 @@ public final class IOStagingOwnershipRegistry: @unchecked Sendable {
     public func release(token: String) {
         guard Self.isValidToken(token) else { return }
         Self.processLock.withCriticalSection {
-            try? fileManager.removeItem(at: recordURL(token: token))
+            let url = recordURL(token: token)
+            guard (try? pathBoundary.requireRegularFileOrMissing(
+                url,
+                within: ledgerURL,
+                fileManager: fileManager
+            )) == true else {
+                return
+            }
+            try? fileManager.removeItem(at: url)
         }
     }
 
     /// Returns true when a durable lease protects this exact Staging filename.
     /// A fresh corrupt lease fails closed because the token encoded in the staging filename still
-    /// identifies its lease file; stale corrupt leases may be removed after `corruptRecordGrace`.
+    /// identifies its lease file; stale corrupt regular records may be removed after
+    /// `corruptRecordGrace`. Unsafe/symlink ledger nodes never become cleanup authority.
     public func isProtected(
         stagingFilename: String,
         now: Date = Date(),
@@ -152,24 +165,37 @@ public final class IOStagingOwnershipRegistry: @unchecked Sendable {
             throw IOStagingOwnershipError.invalidConfiguration
         }
         guard let token = Self.token(fromStagingFilename: stagingFilename) else { return false }
-        return Self.processLock.withCriticalSection {
+        return try Self.processLock.withCriticalSection {
+            try prepareLedgerDirectory()
             let url = recordURL(token: token)
-            guard fileManager.fileExists(atPath: url.path) else { return false }
+            let exists: Bool
+            do {
+                exists = try pathBoundary.requireRegularFileOrMissing(
+                    url,
+                    within: ledgerURL,
+                    fileManager: fileManager
+                )
+            } catch {
+                throw IOStagingOwnershipError.leaseCorrupt
+            }
+            guard exists else { return false }
+
             do {
                 let record = try decodeRecord(at: url)
                 guard record.token == token, record.stagingFilename == stagingFilename else {
                     throw IOStagingOwnershipError.leaseCorrupt
                 }
                 if record.expiresAt > now { return true }
-                try? fileManager.removeItem(at: url)
+                try removeRegularRecordIfPresent(url)
                 return false
-            } catch {
+            } catch let error as IOStagingOwnershipError {
+                if error != .leaseCorrupt { throw error }
                 let values = try? url.resourceValues(forKeys: [.contentModificationDateKey])
                 if let modified = values?.contentModificationDate,
                    modified > now.addingTimeInterval(-corruptRecordGrace) {
                     return true
                 }
-                try? fileManager.removeItem(at: url)
+                try removeRegularRecordIfPresent(url)
                 return false
             }
         }
@@ -201,7 +227,7 @@ public final class IOStagingOwnershipRegistry: @unchecked Sendable {
         for url in try leaseFilesLocked() {
             let record = try decodeRecord(at: url)
             if record.expiresAt <= now {
-                if removeExpired { try? fileManager.removeItem(at: url) }
+                if removeExpired { try removeRegularRecordIfPresent(url) }
                 continue
             }
             records.append(record)
@@ -211,11 +237,20 @@ public final class IOStagingOwnershipRegistry: @unchecked Sendable {
 
     private func leaseFilesLocked() throws -> [URL] {
         do {
-            return try fileManager.contentsOfDirectory(
+            try pathBoundary.requireDirectory(ledgerURL, fileManager: fileManager)
+            let candidates = try fileManager.contentsOfDirectory(
                 at: ledgerURL,
-                includingPropertiesForKeys: [.contentModificationDateKey, .isRegularFileKey],
+                includingPropertiesForKeys: [.contentModificationDateKey, .isRegularFileKey, .isSymbolicLinkKey],
                 options: [.skipsHiddenFiles]
             ).filter { $0.pathExtension == "json" }
+            for candidate in candidates {
+                try pathBoundary.requireExistingRegularFile(
+                    candidate,
+                    within: ledgerURL,
+                    fileManager: fileManager
+                )
+            }
+            return candidates
         } catch {
             throw IOStagingOwnershipError.ledgerUnavailable
         }
@@ -223,7 +258,7 @@ public final class IOStagingOwnershipRegistry: @unchecked Sendable {
 
     private func prepareLedgerDirectory() throws {
         do {
-            try fileManager.createDirectory(at: ledgerURL, withIntermediateDirectories: true)
+            try pathBoundary.ensureDirectory(ledgerURL, fileManager: fileManager)
         } catch {
             throw IOStagingOwnershipError.ledgerUnavailable
         }
@@ -231,8 +266,19 @@ public final class IOStagingOwnershipRegistry: @unchecked Sendable {
 
     private func readLocked(token: String) throws -> IOStagingOwnershipRecord {
         guard Self.isValidToken(token) else { throw IOStagingOwnershipError.invalidToken }
+        try prepareLedgerDirectory()
         let url = recordURL(token: token)
-        guard fileManager.fileExists(atPath: url.path) else { throw IOStagingOwnershipError.leaseMissing }
+        let exists: Bool
+        do {
+            exists = try pathBoundary.requireRegularFileOrMissing(
+                url,
+                within: ledgerURL,
+                fileManager: fileManager
+            )
+        } catch {
+            throw IOStagingOwnershipError.leaseCorrupt
+        }
+        guard exists else { throw IOStagingOwnershipError.leaseMissing }
         let record = try decodeRecord(at: url)
         guard record.token == token else { throw IOStagingOwnershipError.leaseCorrupt }
         return record
@@ -240,6 +286,11 @@ public final class IOStagingOwnershipRegistry: @unchecked Sendable {
 
     private func decodeRecord(at url: URL) throws -> IOStagingOwnershipRecord {
         do {
+            try pathBoundary.requireExistingRegularFile(
+                url,
+                within: ledgerURL,
+                fileManager: fileManager
+            )
             return try JSONDecoder().decode(IOStagingOwnershipRecord.self, from: Data(contentsOf: url))
         } catch {
             throw IOStagingOwnershipError.leaseCorrupt
@@ -248,12 +299,37 @@ public final class IOStagingOwnershipRegistry: @unchecked Sendable {
 
     private func writeLocked(_ record: IOStagingOwnershipRecord) throws {
         do {
+            try prepareLedgerDirectory()
+            let url = recordURL(token: record.token)
+            _ = try pathBoundary.requireRegularFileOrMissing(
+                url,
+                within: ledgerURL,
+                fileManager: fileManager
+            )
             let data = try JSONEncoder().encode(record)
-            try data.write(to: recordURL(token: record.token), options: .atomic)
+            try data.write(to: url, options: .atomic)
+            try pathBoundary.requireExistingRegularFile(
+                url,
+                within: ledgerURL,
+                fileManager: fileManager
+            )
         } catch let error as IOStagingOwnershipError {
             throw error
         } catch {
             throw IOStagingOwnershipError.ledgerUnavailable
+        }
+    }
+
+    private func removeRegularRecordIfPresent(_ url: URL) throws {
+        do {
+            let exists = try pathBoundary.requireRegularFileOrMissing(
+                url,
+                within: ledgerURL,
+                fileManager: fileManager
+            )
+            if exists { try fileManager.removeItem(at: url) }
+        } catch {
+            throw IOStagingOwnershipError.leaseCorrupt
         }
     }
 
