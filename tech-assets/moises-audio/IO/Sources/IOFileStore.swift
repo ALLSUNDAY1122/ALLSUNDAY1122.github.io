@@ -46,13 +46,35 @@ public struct IOFileStore: Sendable {
     public var exportsURL: URL { rootURL.appendingPathComponent(exportsDirectoryName, isDirectory: true) }
     public var stagingURL: URL { rootURL.appendingPathComponent(stagingDirectoryName, isDirectory: true) }
 
-    public func resolve(relativePath: String) throws -> URL {
+    public func resolve(
+        relativePath: String,
+        fileManager: FileManager = .default
+    ) throws -> URL {
         guard !relativePath.isEmpty, !relativePath.hasPrefix("/") else {
             throw StoreError.invalidRelativePath
         }
         let candidate = rootURL.appendingPathComponent(relativePath).standardizedFileURL
         guard isDescendant(candidate, of: rootURL) else {
             throw StoreError.invalidRelativePath
+        }
+
+        // Lexical containment is sufficient for a not-yet-created destination, but an existing
+        // app-owned artifact must also prove that its directory chain and leaf are not symlinks.
+        // This keeps the source-compatible resolver usable for future paths while preventing
+        // existing managed reads from escaping the configured root through filesystem aliases.
+        if fileManager.fileExists(atPath: candidate.path) {
+            do {
+                try IOManagedPathBoundary(rootURL: rootURL).requireExistingRegularFile(
+                    candidate,
+                    within: rootURL,
+                    fileManager: fileManager
+                )
+            } catch {
+                throw storeError(
+                    forBoundaryFailure: error,
+                    operationCode: "MANAGED_PATH_OPERATION_FAILED"
+                )
+            }
         }
         return candidate
     }
