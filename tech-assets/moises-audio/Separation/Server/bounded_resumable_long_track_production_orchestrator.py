@@ -1,8 +1,8 @@
 """A43 bounded-cache production wrapper for A41 crash-resumable long-track downloads."""
 from __future__ import annotations
 
+import hashlib
 import time
-from pathlib import Path
 from typing import Any, Callable
 
 from production_orchestrator import OrchestratorError
@@ -51,10 +51,32 @@ class BoundedCrashResumableLongTrackProductionSeparationOrchestrator(
         return report
 
     def purge_resume_cache(self, logical_job_id: str) -> None:
-        """Explicit hook for project/content deletion paths to erase retry-only stem bytes."""
+        """Maintenance purge that permits a later retry to rebuild the cache."""
         self.resume_cache.purge(logical_job_id)
 
+    def tombstone_and_purge_resume_cache(self, logical_job_id: str) -> None:
+        """Privacy deletion hook: purge retry bytes and permanently reject same-job resurrection."""
+        self.resume_cache.tombstone_and_purge(logical_job_id)
+
+    def start(self, *, idempotency_key: str, **kwargs: Any) -> Any:
+        # The parent remains authoritative for idempotency-key validation. For a syntactically
+        # usable key, reject recreation of a job whose content was explicitly deleted.
+        if (
+            isinstance(idempotency_key, str)
+            and idempotency_key
+            and "\r" not in idempotency_key
+            and "\n" not in idempotency_key
+        ):
+            logical_job_id = hashlib.sha256(
+                ("lane1:" + idempotency_key).encode("utf-8")
+            ).hexdigest()[:32]
+            if self.resume_cache.is_deleted(logical_job_id):
+                raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_JOB_DELETED")
+        return super().start(idempotency_key=idempotency_key, **kwargs)
+
     def collect_ready_outputs(self, logical_job_id: str) -> Any:
+        if self.resume_cache.is_deleted(logical_job_id):
+            raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_JOB_DELETED")
         # Reclaim abandoned bytes before the A15 storage preflight/download path. If a same-job
         # prefix has aged out or lost the quota race, A41 safely restarts that stem from byte zero.
         self.reclaim_resume_caches()
@@ -65,6 +87,9 @@ class BoundedCrashResumableLongTrackProductionSeparationOrchestrator(
                     raise OrchestratorError(
                         "SEP_OUTPUT_RESUME_CACHE_LOCK_FAILED", retryable=True
                     )
+                # Re-check after the lease: deletion may have won the race after the early preview.
+                if self.resume_cache.is_deleted(logical_job_id):
+                    raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_JOB_DELETED")
                 if cache_root.exists():
                     self.resume_cache.touch(logical_job_id)
                 try:
