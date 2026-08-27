@@ -21,6 +21,8 @@ jobs:
         run: python3 scripts/patch_hm1_final_release.py
       - name: Enable HM1 preparation diagnostics
         run: python3 scripts/patch_hm1_prepare_logging.py
+      - name: Make HM1 build App Store eligible
+        run: python3 scripts/patch_hm1_appstore_eligible.py
       - name: Validate HM1 release workflow contract
         run: |
           python3 - <<'PY'
@@ -37,12 +39,15 @@ jobs:
           ]
           for x in required: assert x in names, (x,names)
           prepare=next(x for x in w['scripts'] if x['name']=='Prepare audited 264-question bundle and icon')
+          signing=next(x for x in w['scripts'] if x['name']=='Apply App Store signing profiles')
           assert '/tmp/hm1-prepare.log' in prepare['script']
           assert '/tmp/hm1-prepare.log' in w['artifacts']
           assert w['environment']['ios_signing']['bundle_identifier']=='jp.allsunday1122.healthmanager1'
+          assert 'xcode-project use-profiles' in signing['script']
+          assert 'testFlightInternalTestingOnly' not in signing['script']
           assert w['publishing']['app_store_connect']['submit_to_testflight'] is True
           assert w['publishing']['app_store_connect']['submit_to_app_store'] is False
-          print('PASS: root Codemagic HM1 final release contract with diagnostics')
+          print('PASS: HM1 build is TestFlight + App Store eligible; auto App Store submission disabled')
           PY
       - name: Persist root Codemagic release gate
         run: |
@@ -53,7 +58,7 @@ jobs:
             echo "No HM1 Codemagic changes"
             exit 0
           fi
-          git commit -m "Wire HM1 264-question final release build"
+          git commit -m "Wire HM1 App Store eligible release build"
           cp codemagic.yaml /tmp/codemagic.yaml
           for attempt in 1 2 3 4 5; do
             if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
@@ -62,7 +67,7 @@ jobs:
             git reset --hard origin/main
             cp /tmp/codemagic.yaml codemagic.yaml
             git add codemagic.yaml
-            git diff --cached --quiet || git commit -m "Wire HM1 264-question final release build"
+            git diff --cached --quiet || git commit -m "Wire HM1 App Store eligible release build"
             sleep 2
           done
           exit 1
