@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "wave_id": "L4-W06",
+  "generated_at": "2026-08-23T17:01:00+09:00",
+  "engine": "TempoBeatAnalyzer",
+  "engine_version": "lane4-w06-adaptive-meter-aware-v1",
+  "environment": {
+    "swift": "6.2.1",
+    "platform": "x86_64 Linux",
+    "physical_iphone": false
+  },
+  "parity_eligible": false,
+  "evidence_class": "SYNTHETIC_ADVERSARIAL_NON_PARITY",
+  "cases": [
+    {
+      "id": "75bpm-weak-subdivisions",
+      "reference_bpm": 75.0,
+      "estimated_bpm": 75.0,
+      "confidence": 0.9650338648,
+      "beat_f_70ms": 1.0,
+      "purpose": "half/double protection with weak eighth-note subdivisions"
+    },
+    {
+      "id": "150bpm-alternating-accent",
+      "reference_bpm": 150.0,
+      "estimated_bpm": 150.0,
+      "confidence": 0.8422836231,
+      "beat_f_70ms": 1.0,
+      "purpose": "prevent 150 BPM alternating accents collapsing to 75 BPM"
+    },
+    {
+      "id": "100-to-130bpm-linear-drift",
+      "reference_bpm_interpretation": "median local beat rate",
+      "estimated_bpm": 115.3846153846,
+      "confidence": 0.3720404860,
+      "beat_f_70ms": 0.9827586207,
+      "purpose": "adaptive beat-period tracking under gradual tempo acceleration"
+    },
+    {
+      "id": "96bpm-weak-percussion-tonal-bed",
+      "reference_bpm": 96.0,
+      "estimated_bpm": 96.7741935484,
+      "confidence": 0.6938445112,
+      "beat_f_70ms": 0.9743589744,
+      "purpose": "weak transient recovery without restoring sustained-tone false positives"
+    },
+    {
+      "id": "90bpm-equal-subdivision-meter-ambiguity",
+      "result": "UNKNOWN_NIL",
+      "purpose": "fail closed when common metrical interpretations are nearly tied"
+    },
+    {
+      "id": "120bpm-syncopated-ghost-notes",
+      "reference_bpm": 120.0,
+      "estimated_bpm": 120.0,
+      "confidence": 0.8818014641,
+      "purpose": "tempo-rate stability under off-beat energy; exact real-audio phase remains unverified"
+    },
+    {
+      "id": "sustained-c4-tone",
+      "result": "UNKNOWN_NIL",
+      "purpose": "negative regression: relaxed weak-percussion gate must not invent tempo from frame-RMS beating"
+    }
+  ],
+  "aggregate_runtime": {
+    "wall_seconds_for_all_7_cases": 0.10,
+    "peak_rss_kb": 20772,
+    "measurement_note": "single optimized harness process; not physical-device evidence"
+  },
+  "remaining_gates": [
+    "rights-cleared multi-genre Golden MIR real-audio execution",
+    "live drummer/rubato/swing and varied meter ground truth",
+    "physical-iPhone latency/RSS/thermal/battery",
+    "current Moises differential",
+    "HQ PARITY judgment for MOI-P009"
+  ]
+}

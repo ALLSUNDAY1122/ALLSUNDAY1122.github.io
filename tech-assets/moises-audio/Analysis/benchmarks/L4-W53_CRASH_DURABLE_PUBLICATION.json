@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W53",
+  "status": "NON_PARITY_CRASH_DURABLE_PUBLICATION",
+  "canonical_base": {
+    "hq_epoch": 44,
+    "lane4_canonical": "W52",
+    "integration_source_commit": "a93ef6b058db89fa57d8ee0a8064e5df019af331",
+    "integration_ledger_commit": "701698290b6e2076ce71a9208d2626af85f918b5",
+    "hq_run_id": 33030546532,
+    "hq_swiftpm": "462/462 PASS"
+  },
+  "implementation": {
+    "durable_publication_source": "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift",
+    "secure_filesystem_source": "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift",
+    "secure_store_source": "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.swift",
+    "probe_models": "Analysis/AnalysisPhysicalRealAudioBridgeDurabilityProbeModels.swift",
+    "physical_probe_coordinator": "iOS/HostCore/AnalysisIOSBridgeDurabilityProbeCoordinator.swift",
+    "test_source": "Tests/MoisesAudioCoreTests/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationTests.swift",
+    "publication_order": [
+      "pending bytes -> data sync -> same-directory atomic rename -> ledger-directory fsync",
+      "record bytes -> data sync -> collision-safe hard-link publish -> temp unlink -> records-directory fsync",
+      "head bytes -> data sync -> same-directory atomic rename -> ledger-directory fsync",
+      "pending unlink -> ledger-directory fsync"
+    ],
+    "darwin_sync_policy": "Attempt F_FULLFSYNC for file data, then fallback to fsync when F_FULLFSYNC is unavailable; receipt exposes the observed mode.",
+    "interrupted_temp_policy": "Only .w53-pub-*.tmp regular non-symlink files within size bounds are tolerated, maximum 32 per directory; they are excluded from ledger record identity but never treated as committed evidence.",
+    "root_compatibility": "W49/W50 record, head, checkpoint, handoff and W52 custody root payload formats are unchanged."
+  },
+  "fault_contract": {
+    "points": [
+      "BEFORE_DATA_SYNC",
+      "AFTER_DATA_SYNC_BEFORE_PUBLISH",
+      "AFTER_PUBLISH_BEFORE_DIRECTORY_SYNC",
+      "AFTER_DIRECTORY_SYNC"
+    ],
+    "targets": [
+      "PENDING_MARKER",
+      "IMMUTABLE_RECORD",
+      "LEDGER_HEAD"
+    ],
+    "physical_power_loss_expected_states": {
+      "pending_any_boundary": "EXACT_PRE_APPEND",
+      "record_before_data_sync": "EXACT_PRE_APPEND",
+      "record_after_data_sync_before_publish": "EXACT_PRE_APPEND",
+      "record_after_publish_before_directory_sync": "EXACT_PRE_OR_POST",
+      "record_after_directory_sync": "EXACT_POST_APPEND",
+      "head_any_boundary": "EXACT_POST_APPEND"
+    },
+    "mixed_or_corrupt_state": "ALWAYS_REJECT"
+  },
+  "validation": {
+    "canonical_worker_swiftpm_w53": {
+      "status": "NOT_OBSERVED",
+      "reason": "Worker container git ls-remote failed before SwiftPM: Could not resolve host: github.com"
+    },
+    "latest_canonical_predecessor": {
+      "status": "PASS",
+      "source": "HQ Epoch44 Run 33030546532",
+      "swiftpm": "462/462"
+    },
+    "swift_posix_live_protocol": {
+      "swift": "6.2.1",
+      "warnings_as_errors": true,
+      "same_directory_fsync_rename_directory_fsync_iterations": 1000,
+      "exclusive_hard_link_record_publish": "PASS",
+      "directory_fsync": "PASS"
+    },
+    "process_crash_protocol_stress": {
+      "platform": "Linux POSIX independent protocol mirror",
+      "method": "fork child, stop at selected durability boundary with _exit, reopen and run W50-shaped recovery",
+      "targets": 3,
+      "fault_points_per_target": 4,
+      "runs_per_cell": 100,
+      "total_runs": 1200,
+      "exact_pre": 600,
+      "exact_post": 600,
+      "mixed": 0
+    },
+    "probe_ticket_adversarial_mirror": {
+      "checks": 240000,
+      "detected": 240000,
+      "undetected": 0,
+      "classes": 16,
+      "includes": [
+        "authority",
+        "approval reference",
+        "probe ID",
+        "ledger ID",
+        "source revision",
+        "build identity",
+        "physical session",
+        "device model",
+        "OS version",
+        "target",
+        "fault point",
+        "expected recovered state",
+        "pre-snapshot root",
+        "certificate root",
+        "declared ticket root",
+        "self-consistent but incorrect recovery mapping"
+      ]
+    },
+    "physical_iphone_apfs": {
+      "status": "NOT_OBSERVED",
+      "required": true,
+      "probe": "AnalysisIOSBridgeDurabilityProbeCoordinator",
+      "required_actions": [
+        "selected physical iPhone execution",
+        "capture observed F_FULLFSYNC vs fsync fallback mode",
+        "external process termination at every durability boundary",
+        "background/suspend/relaunch cases",
+        "controlled reboot/power-loss cases where operationally safe",
+        "reopen ticket and accept only exact pre or exact post according to contract"
+      ]
+    }
+  },
+  "limitations": [
+    "NON_PARITY: W53 is ledger custody/durability hardening only.",
+    "Linux process termination and POSIX fsync stress do not prove iPhone/APFS power-loss behavior.",
+    "F_FULLFSYNC capability/success must be observed on the selected physical iPhone; fallback fsync is recorded rather than silently relabeled as full flush.",
+    "Directory creation above the caller-selected root is not made durable by W53 because W53 intentionally does not fsync outside the selected custody root.",
+    "Advisory writer serialization remains a cooperating-writer contract; external checkpoint/handoff/receipt roots remain the authority against out-of-protocol mutation or whole-directory rollback.",
+    "No rights-cleared real corpus, current-iPhone Moises reference/differential, physical audio/performance evidence or final HQ PARITY judgment is supplied by W53."
+  ]
+}

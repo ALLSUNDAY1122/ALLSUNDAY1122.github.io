@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "bundle": "L4-W54",
+  "title": "W53 durability namespace and interrupted-temp lifecycle hardening",
+  "classification": "NON_PARITY",
+  "canonical_predecessor": {
+    "epoch": 44,
+    "lane4": "W52",
+    "integration_run_id": 33030546532,
+    "swiftpm_tests_passed": 462,
+    "swiftpm_tests_total": 462
+  },
+  "implementation": {
+    "pinned_directory_traversal": true,
+    "openat_no_follow": true,
+    "fstatat_at_symlink_nofollow": true,
+    "renameat_destination_identity_guard": true,
+    "linkat_exclusive_guard": true,
+    "unlinkat_identity_guard": true,
+    "writer_lease_temp_gc": true,
+    "gc_directory_fsync": true,
+    "durable_publication_parent_fd_pinned": true,
+    "dangling_symlink_removal_rejected": true,
+    "brand_new_ledger_bootstrap_before_gc": true,
+    "maximum_interrupted_temps_per_directory": 32
+  },
+  "portable_validation": {
+    "swift_version": "6.2.1",
+    "warnings_as_errors_namespace_and_durable_sources": "PASS",
+    "live_filesystem_stress": {
+      "gc_cases": 1000,
+      "gc_detected_or_completed": 1000,
+      "entry_substitution_cases": 1000,
+      "entry_substitution_detected": 1000,
+      "dangling_symlink_cases": 200,
+      "dangling_symlink_rejected": 200,
+      "directory_replacement_cases": 200,
+      "directory_replacement_detected": 200,
+      "undetected": 0
+    },
+    "high_level_durable_nofollow_live": "PASS",
+    "protocol_mutation_mirror": {
+      "classes": 16,
+      "mutations": 160000,
+      "detected": 160000,
+      "undetected": 0
+    }
+  },
+  "canonical_worker_validation": {
+    "exact_worker_swiftpm_xctest": "NOT_OBSERVED",
+    "reason": "git ls-remote failed: Could not resolve host: github.com",
+    "w54_compile_pass_claimed": false
+  },
+  "external_gates": [
+    "HQ semantic integration of W53/W54 and canonical SwiftPM/XCTest",
+    "selected iphoneos/arm64 Xcode compilation and execution",
+    "selected physical-iPhone/APFS F_FULLFSYNC/process-kill/suspend/relaunch/power-loss evidence",
+    "HQ-approved rights-cleared real-audio corpus and genuine integrated Lane2 decoder",
+    "current-iPhone Moises reference/differential evidence",
+    "final HQ PARITY judgment"
+  ],
+  "parity_promotions": 0
+}

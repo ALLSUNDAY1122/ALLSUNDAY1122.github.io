@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "bundle_id": "L4-M02",
+  "purpose": "Deterministic algorithm sanity fixtures only; not product PARITY evidence",
+  "fixtures": [
+    {
+      "fixture_id": "synthetic-120-c-major",
+      "rights_class": "PROJECT_OWNED",
+      "synthetic_only": true,
+      "parity_eligible": false,
+      "genre": "unit-synthetic",
+      "duration_seconds": 12,
+      "sample_rate": 8000,
+      "channels": 1,
+      "reference_bpm": 120,
+      "reference_key": {"tonic_pitch_class": 0, "mode": "major"},
+      "construction": "C-major triad sine components plus deterministic 18 ms pulse at each 120 BPM beat"
+    },
+    {
+      "fixture_id": "synthetic-90-a-minor",
+      "rights_class": "PROJECT_OWNED",
+      "synthetic_only": true,
+      "parity_eligible": false,
+      "genre": "unit-synthetic",
+      "duration_seconds": 12,
+      "sample_rate": 8000,
+      "channels": 1,
+      "reference_bpm": 90,
+      "reference_key": {"tonic_pitch_class": 9, "mode": "minor"},
+      "construction": "A-minor triad sine components plus deterministic 18 ms pulse at each 90 BPM beat"
+    },
+    {
+      "fixture_id": "synthetic-180-c-major",
+      "rights_class": "PROJECT_OWNED",
+      "synthetic_only": true,
+      "parity_eligible": false,
+      "genre": "unit-synthetic",
+      "duration_seconds": 10,
+      "sample_rate": 8000,
+      "channels": 1,
+      "reference_bpm": 180,
+      "reference_key": {"tonic_pitch_class": 0, "mode": "major"},
+      "construction": "C-major triad sine components plus deterministic 18 ms pulse at each 180 BPM beat; explicit half-tempo regression fixture"
+    }
+  ],
+  "required_real_audio_followup": {
+    "status": "MISSING",
+    "minimum_scope": [
+      "steady vocal pop",
+      "live drums with timing drift",
+      "electronic/dance",
+      "acoustic singer-songwriter",
+      "dense rock/metal",
+      "piano/keyboard-heavy",
+      "syncopated/funk",
+      "slow ballad",
+      "tempo ambiguity",
+      "modulation/key-change",
+      "weak/no-percussion"
+    ],
+    "rule": "Only project-owned or explicitly rights-cleared real audio may satisfy the final MOI-P009/MOI-P011 benchmark gates."
+  }
+}

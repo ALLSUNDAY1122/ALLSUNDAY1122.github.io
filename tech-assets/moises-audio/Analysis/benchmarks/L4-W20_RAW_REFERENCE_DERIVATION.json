@@ -1,0 +1,54 @@
+{
+  "wave": "L4-W20",
+  "title": "Raw current-Moises observation derivation / metric recomputation hardening",
+  "evidence_class": "NON_PARITY_PORTABLE_SYNTHETIC",
+  "generated_at": "2026-08-24T03:10:00+09:00",
+  "claims": {
+    "real_current_iphone_moises_observed": false,
+    "rights_cleared_production_audio_used": false,
+    "physical_iphone_project_benchmark": false,
+    "parity_claimed": false
+  },
+  "production_path": {
+    "source": "Analysis/AnalysisReferenceRawObservation.swift",
+    "template": "Analysis/benchmarks/REFERENCE_RAW_OBSERVATION_SET_TEMPLATE.json",
+    "runbook": "Analysis/benchmarks/REFERENCE_RAW_OBSERVATION_RUNBOOK.md",
+    "pipeline": [
+      "raw observation exact run+fixture+domain binding",
+      "Golden manifest/source SHA binding",
+      "deterministic Worker-owned metric recomputation",
+      "declared-vs-derived metric identity gate",
+      "derived capture set",
+      "W19 provenance/repeatability validation",
+      "W19 audited Reference compilation",
+      "W18 paired non-inferiority gate"
+    ]
+  },
+  "fail_closed_cases": [
+    "missing/extra/duplicate raw observation",
+    "wrong capture-set or manifest binding",
+    "raw evidence artifact not bound to W19 row",
+    "unsupported/unscorable observation",
+    "domain/payload mismatch",
+    "invalid beat/chord/section timeline",
+    "evaluator cardinality rejection",
+    "declared metric-key-set mismatch",
+    "declared metric-value mismatch",
+    "non-finite derived metric"
+  ],
+  "portable_swift_6_2_1": {
+    "source_shaped_typecheck": "PASS",
+    "complete_runs": 5,
+    "assertions_each_run": "13/13 PASS",
+    "stress_rows": 50000,
+    "internal_elapsed_seconds": [0.274485, 0.468851, 0.289327, 0.274780, 0.456634],
+    "process_wall_seconds": [0.30, 0.49, 0.31, 0.30, 0.49],
+    "max_rss_kb": [123372, 123304, 123360, 123164, 123320]
+  },
+  "durable_xctest": "Tests/MoisesAudioCoreTests/AnalysisReferenceRawObservationTests.swift",
+  "limitations": [
+    "Portable harness validates schema/integrity logic and tempo recomputation; canonical SwiftPM/Xcode tests remain HQ integrated-checkout evidence.",
+    "Actual Moises outputs were not captured or invented.",
+    "Final current-iPhone Moises reference, tolerance approval and PARITY judgment remain HQ-owned."
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "bundle": "L4-W37",
+  "evidence_status": "NON_PARITY",
+  "title": "Physical-iPhone Analysis capture orchestration / periodic telemetry + cancellation timing hardening",
+  "worker_branch": "moises/wp4-analysis-platform",
+  "frozen_base_sha": "be1c84314db182d6eee5097de34e017af1a4a7de",
+  "canonical_lane4_through": "L4-W36",
+  "canonical_lane4_source_head": "22d85e8bf0e25c110104cc2aa5d09bfcc87e444e",
+  "w37_existing_commits": [
+    "d2f87385b795d68ba1e568488698a7956d4ea6ab",
+    "c0deb817ee03d83ae48f76684f20d36cc05868ba",
+    "6ac436e172350799bad0d373945f7999275cf1ad",
+    "223f98771b9a2822341448c93c14cfc76cd8dbb2",
+    "2abda0641f4f506401eff87493c1eb0d61d5f042"
+  ],
+  "continuation_hardening": {
+    "portable_execution_integrity_gate": true,
+    "w23_sampling_result_is_explicit": true,
+    "periodic_sample_cap_fails_closed": true,
+    "sampler_join_before_finish": true,
+    "cancellation_helper_join_before_finish": true,
+    "workload_finish_cancels_pending_helper_tail": true,
+    "cancellation_requested_before_workload_cancel": true,
+    "cancellation_observed_only_after_w36_cancelled": true,
+    "batch_duplicate_run_id_detection": true,
+    "batch_reused_w36_execution_detection": true,
+    "whole_signal_compatibility_rejected_for_p021": true
+  },
+  "portable_validation": {
+    "runtime": "Swift 6.2.1 x86_64-unknown-linux-gnu",
+    "integrity_mirror_stress_validations": 200000,
+    "result": "PASS",
+    "elapsed_seconds": 0.02,
+    "maximum_rss_kb": 16076,
+    "scope": "source-shaped/mirror invariant stress only; not repository SwiftPM or Apple runtime evidence"
+  },
+  "apple_conditional_parse": {
+    "result": "PASS",
+    "scope": "Apple-conditional source-shaped orchestration syntax parsed by Swift 6.2.1 frontend on Linux; UIKit/Darwin branches were not typechecked or executed"
+  },
+  "durable_tests_added": [
+    "Tests/MoisesAudioCoreTests/AnalysisDeviceCapturePlanTests.swift",
+    "Tests/MoisesAudioCoreTests/AnalysisIOSPhysicalCaptureCoordinatorTests.swift"
+  ],
+  "physical_device_evidence": "NOT_OBSERVED",
+  "selected_xcode_apple_arm_compile": "NOT_OBSERVED",
+  "repository_swiftpm_xctest": "NOT_OBSERVED_IN_WORKER_ENVIRONMENT",
+  "parity_claim": false,
+  "remaining_external_gates": [
+    "genuine Lane-2 bounded decoder wired to AnalysisPCMChunkPulling / AnalysisChunkedSignalLoading",
+    "selected Xcode / Apple ARM compile",
+    "physical iPhone W23+W36+W37 execution",
+    "real RSS and physical footprint telemetry",
+    "thermal and battery telemetry",
+    "HQ-planned cancellation timing measurement",
+    "W24 repeated worst-case acceptance against HQ thresholds",
+    "W38 archive role extension for W35-W37",
+    "HQ final PARITY_MATRIX judgment"
+  ],
+  "notes": [
+    "BOUNDED_PULL_CONTRACT remains a software declaration and does not prove decoder hidden-buffer absence.",
+    "AnalysisWholeSignalChunkedCompatibilityAdapter remains prohibited as MOI-P021 evidence.",
+    "No production threshold or cancellation delay was selected by Worker 4."
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "wave": "L4-W38",
+  "title": "Physical evidence archive role extension / W35-W37 capture-chain integrity hardening",
+  "result": "NON_PARITY_ENGINEERING_EVIDENCE_PASS",
+  "parity_claim": false,
+  "operating_model": "v4｜4 Autonomous Independent Lanes / Late Integration",
+  "implementation": {
+    "legacy_w27_preserved": true,
+    "extension_schema_version": 2,
+    "parent_root_recomputed_by_canonical_validator": true,
+    "canonical_validator": "AnalysisPhysicalEvidenceArchiveChainValidator.validateStrict",
+    "required_per_run_roles": [
+      "W35_RUNTIME_ALGORITHM_EVIDENCE",
+      "W36_CURRENT_RUNTIME_EVIDENCE",
+      "W37_CAPTURE_PLAN",
+      "W37_EXECUTION_INTEGRITY_EVIDENCE",
+      "W37_EXECUTION_INTEGRITY_REPORT"
+    ],
+    "w36_current_runtime_provenance": [
+      "run_id",
+      "performance_run_id",
+      "run_kind",
+      "workload_execution_id",
+      "source_memory_contract",
+      "bounded_source_contract_accepted",
+      "observed_source_chunk_count",
+      "observed_source_sample_count",
+      "outcome",
+      "snapshot_sha256",
+      "algorithm_run_id",
+      "algorithm_workload_execution_id"
+    ],
+    "fail_closed_conditions": [
+      "legacy_w27_root_or_inventory_mismatch",
+      "duplicate_or_non_exact_w24_run_inventory",
+      "missing_or_duplicate_required_role",
+      "unexpected_run_artifact",
+      "unsafe_or_duplicate_path",
+      "missing_or_unmanifested_artifact_bytes",
+      "artifact_length_or_sha256_mismatch",
+      "malformed_or_non_hq_w37_capture_plan",
+      "w35_w36_w37_run_or_execution_binding_mismatch",
+      "non_bounded_pull_source_contract",
+      "zero_observed_w36_source_work",
+      "w36_w37_source_sample_or_outcome_mismatch",
+      "w37_integrity_report_not_equal_to_recomputed_report",
+      "cross_run_w36_execution_reuse",
+      "complete_or_cancellation_semantic_mismatch",
+      "extension_root_mismatch"
+    ]
+  },
+  "durable_tests_added": [
+    "AnalysisPhysicalEvidenceArchiveChainV2Tests.swift",
+    "AnalysisPhysicalEvidenceArchiveChainV2StrictTests.swift"
+  ],
+  "portable_validation": {
+    "swift_version": "6.2.1",
+    "target": "x86_64-unknown-linux-gnu",
+    "source_shaped_mirror_compile": "PASS_WARNINGS_AS_ERRORS",
+    "source_shaped_mirror_iterations": 200000,
+    "source_shaped_mirror_valid": 200000,
+    "source_shaped_reused_execution_rejected": true,
+    "source_shaped_missing_role_rejected": true,
+    "source_shaped_duplicate_planned_run_rejected": true,
+    "source_shaped_elapsed_seconds": 3.79,
+    "source_shaped_maximum_rss_kb": 17920,
+    "canonical_root_python_mirror_iterations": 200000,
+    "canonical_root_python_mirror_valid": 200000,
+    "parent_root_changes_extension_root": true,
+    "artifact_hash_changes_extension_root": true
+  },
+  "not_observed": [
+    "full_worker_branch_swiftpm_xctest_due_to_environment_dns_failure_resolving_github.com",
+    "selected_xcode_apple_arm_compile",
+    "physical_iphone_w23_w36_w37_capture",
+    "genuine_lane2_bounded_decoder_runtime",
+    "real_rss_physical_footprint_thermal_battery_cancellation",
+    "w24_repeated_hq_threshold_acceptance",
+    "hq_archive_root_external_anchor",
+    "current_iphone_moises_analysis_differential"
+  ],
+  "limitations": [
+    "The extension root is tamper-evident only after HQ independently anchors the W27 and W38 roots.",
+    "No signature, Secure Enclave proof, Apple attestation, trusted timestamp, or hardware-origin proof is provided by W38.",
+    "BOUNDED_PULL_CONTRACT does not prove a concrete decoder lacks hidden buffers; physical process telemetry remains authoritative.",
+    "Portable mirrors and committed XCTest source are engineering evidence only and cannot advance PARITY_MATRIX."
+  ]
+}
