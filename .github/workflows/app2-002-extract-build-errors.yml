@@ -1,0 +1,39 @@
+name: APP2-002 Extract Build Errors
+
+on:
+  push:
+    branches: [main]
+    paths: ['automation/app2-002-extract-errors-command.json']
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Extract compiler errors
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          src=Path('automation/codemagic-results/app2-002-build7-xcode.log').read_text(encoding='utf-8',errors='replace').splitlines()
+          hits=[]
+          for i,line in enumerate(src):
+              low=line.lower()
+              if ' error:' in low or low.startswith('error:') or 'fatal error' in low or '** archive failed **' in low or 'swift compiler error' in low:
+                  a=max(0,i-3); b=min(len(src),i+5)
+                  hits.extend(src[a:b]); hits.append('---')
+          out='\n'.join(hits[-500:]) if hits else 'NO_ERROR_LINES_FOUND\n'
+          Path('automation/codemagic-results/app2-002-build7-errors.txt').write_text(out,encoding='utf-8')
+          PY
+      - name: Persist excerpt
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/codemagic-results/app2-002-build7-errors.txt
+          git commit -m 'APP2-002: persist Build 7 compiler errors' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
