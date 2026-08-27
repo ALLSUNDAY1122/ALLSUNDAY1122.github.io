@@ -99,6 +99,10 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
         XCTAssertEqual(first.latestRecordRootSHA256, head.latestRecordRootSHA256)
         XCTAssertEqual(first.consumedW47PackageRootSHA256s, [sha("a")])
         XCTAssertTrue(AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.validateSnapshot(first))
+        let cas = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.appendCAS(for: first)
+        XCTAssertEqual(cas.expectedLatestSequence, first.latestSequence)
+        XCTAssertEqual(cas.expectedLedgerRootSHA256, first.ledgerRootSHA256)
+        XCTAssertEqual(cas.expectedLatestRecordRootSHA256, first.latestRecordRootSHA256)
     }
 
     func testStaleSnapshotCannotCreateCheckpointAfterAppend() throws {
@@ -284,8 +288,10 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyTests: XCT
     func testReceiptMutationIsRejected() throws {
         let root = try root(); defer { try? FileManager.default.removeItem(at: root) }
         _ = try seed(root)
+        let snapshot = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.observeSnapshot(ledgerID: "ledger", rootURL: root)
         let bundle = try AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustodyManager.makeCustodyBundle(
             ledgerID: "ledger",
+            expectedSnapshot: snapshot,
             transactionID: "tx-1",
             checkpointID: "cp-1",
             checkpointSequence: 1,
