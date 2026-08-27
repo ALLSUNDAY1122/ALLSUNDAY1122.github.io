@@ -33,7 +33,7 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore {
         "NON_PARITY: W51 serializes W50 bridge-consumption writers and rejects stale predecessor views; it does not promote any Analysis PARITY row.",
         "Same-process NSLock plus OS advisory flock serialize cooperating writers. The lock file is persistent by design so process termination releases the kernel lock without requiring stale-file deletion.",
         "The append CAS binds the exact predecessor sequence, ledger root and latest record root observed before publication. A writer whose view became stale fails closed before publishing a second candidate for that sequence.",
-        "W54 garbage-collects interrupted W53 publication temporaries only while the W51 writer lease is held, using pinned-directory no-follow identity checks before recovery/CAS observation.",
+        "W54 bootstraps the canonical W50 directory topology and garbage-collects interrupted W53 publication temporaries only while the W51 writer lease is held, using pinned-directory no-follow identity checks before recovery/CAS observation.",
         "Lock inode/token checks and W54 pinned-directory entry identity checks detect cooperating-path replacement during critical sections, but these are local custody controls rather than signatures, trusted timestamps, Secure Enclave proofs or Apple attestation."
     ]
 
@@ -47,6 +47,11 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore {
             rootURL: rootURL
         ) { lease in
             try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
+            try AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.ensureDirectories(
+                ledgerID: ledgerID,
+                rootURL: rootURL,
+                fileManager: fileManager
+            )
             _ = try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.garbageCollectInterruptedPublicationTemps(
                 ledgerID: ledgerID,
                 rootURL: rootURL,
@@ -119,6 +124,11 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore {
             rootURL: rootURL
         ) { lease in
             try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
+            try AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.ensureDirectories(
+                ledgerID: ledgerID,
+                rootURL: rootURL,
+                fileManager: fileManager
+            )
             _ = try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.garbageCollectInterruptedPublicationTemps(
                 ledgerID: ledgerID,
                 rootURL: rootURL,
@@ -188,6 +198,11 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore {
             rootURL: rootURL
         ) { lease in
             try AnalysisPhysicalRealAudioBridgeConsumptionWriterLock.validateLease(lease)
+            try AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.ensureDirectories(
+                ledgerID: ledgerID,
+                rootURL: rootURL,
+                fileManager: fileManager
+            )
             _ = try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.garbageCollectInterruptedPublicationTemps(
                 ledgerID: ledgerID,
                 rootURL: rootURL,
