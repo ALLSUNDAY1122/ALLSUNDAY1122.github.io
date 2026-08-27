@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "wave_id": "L3-AW53",
+  "title": "Lifecycle-Safe Physical Sampling Driver",
+  "result": "COMPLETE_NON_PARITY",
+  "canonical_audit": {
+    "notion_canonical_epoch_observed": 44,
+    "notion_lane3_integrated_through": "L3-AW49",
+    "github_integration_epoch_observed": 45,
+    "github_integration_head_observed": "0fea2b5f2db390cb1dc45ea9a9899d47ac549719",
+    "github_lane3_integrated_through": "L3-AW50",
+    "worker_branch_start_head": "7e3c52d5a8c9e16297c512dff291b24ea90a08a4",
+    "aw51_aw52_pending_hq_late_integration": true,
+    "canonical_publication_skew_observed": true,
+    "parity_rows_remain_missing": [
+      "MOI-P006", "MOI-P007", "MOI-P008", "MOI-P010",
+      "MOI-P012", "MOI-P014", "MOI-P015", "MOI-P021"
+    ]
+  },
+  "implementation": {
+    "portable_lifecycle": "Playback/Sources/Lane3CandidatePhysicalSamplingLifecycle.swift",
+    "selected_apple_driver": "Playback/Sources/AppleCandidatePhysicalSamplingDriver.swift",
+    "states": ["prepared", "running", "completed", "aborted"],
+    "recommended_cadence_seconds": 15,
+    "maximum_allowed_gap_seconds": 30,
+    "start_requires_active_application": true,
+    "immediate_first_sample": true,
+    "timer_run_loop_mode": "main/common",
+    "timer_tolerance_seconds": 1,
+    "abort_notifications": [
+      "UIApplication.willResignActiveNotification",
+      "UIApplication.didEnterBackgroundNotification",
+      "UIApplication.willTerminateNotification"
+    ],
+    "driver_controlled_abort_calls_aw52_cancel": true,
+    "scoped_with_driver_defer_cleanup": true,
+    "scoped_operation_main_actor_pinned": true,
+    "successful_handoff_contains": [
+      "sessionIdentifier",
+      "AW51 candidate resource receipt",
+      "canonical artifact data",
+      "completed lifecycle snapshot"
+    ],
+    "parity_promotion_allowed": false
+  },
+  "focused_verification": {
+    "swift": "6.2.1",
+    "platform": "Linux x86_64",
+    "flags": ["-swift-version 6", "-strict-concurrency=complete", "-warnings-as-errors", "-O"],
+    "stable_121_sample_15_second_lifecycle_pass": true,
+    "exact_30_second_gap_accepted": true,
+    "gap_30_000001_seconds_rejected": true,
+    "stress_valid_cells": 1000,
+    "stress_gap_rejected_cells": 1000,
+    "stress_non_monotonic_rejected_cells": 1000,
+    "stress_abort_cells": 1002,
+    "stress_total_cells": 4002,
+    "benchmark_iterations": 20000,
+    "benchmark_accepted_sample_transitions": 2420000,
+    "benchmark_elapsed_seconds_one_run": 0.02815625,
+    "benchmark_microseconds_per_lifecycle_one_run": 1.4078125,
+    "physical_performance_claim": false
+  },
+  "repository_native_artifacts": [
+    "Playback/Tests/L3_AW53_CandidatePhysicalSamplingLifecycleSelfTest.swift",
+    "Playback/Tests/L3_AW53_CandidatePhysicalSamplingLifecycleStress.swift",
+    "Playback/Tests/L3_AW53_CandidatePhysicalSamplingLifecycleBenchmark.swift",
+    "Playback/benchmarks/L3-AW53_LIFECYCLE_SAFE_PHYSICAL_SAMPLING_DRIVER.md"
+  ],
+  "commits_before_validation": [
+    "60c87df7345157f22400f1c222aa862532b30e40",
+    "0ae4a589305846ad88b3118edb46891bbf8e6f5d",
+    "c169edc7c19417a6af019da93fbc636383b5af48",
+    "1d42c3e5003b448efc3cb2af20a534487c4b2283",
+    "b10e14256872e329a2885c1564efa3b348ea0f78",
+    "2e603595997b92d5ee72f9c56427fc9eba5878e4",
+    "b2bd6d59fd140a82367b53ece98ddf4823a1ef25"
+  ],
+  "limitations": [
+    "AppleCandidatePhysicalSamplingDriver.swift was authored but not compiled against the selected Xcode/iOS SDK in the Worker environment.",
+    "UIKit notification/timer behavior and AW52 recorder cleanup still require selected-iPhone execution evidence.",
+    "No physical iPhone RSS, thermal, battery, audio, current-Moises or listening evidence was collected.",
+    "withDriver guarantees cleanup for its scoped workflow and the driver cancels all lifecycle/sample failure paths it owns; arbitrary host misuse outside that contract is not evidence.",
+    "Current-Moises third-party process RSS remains intentionally unmeasured and unfabricated.",
+    "AW51-AW53 still require HQ Late Integration and post-wave full Lane3 strict typecheck/repository-native execution.",
+    "P021 and all other Lane3 parity rows remain unpromoted."
+  ],
+  "parity_promotion_allowed": false
+}
