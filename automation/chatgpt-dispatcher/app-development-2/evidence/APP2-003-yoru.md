@@ -1,6 +1,6 @@
 # APP2-003｜夜の書架｜次セッション引き継ぎ
 
-更新: 2026-08-27 23:24 JST
+更新: 2026-08-28 01:25 JST
 Worker: YORU
 対象App: 夜の書架
 App Store Connect App ID: `6794137637`
@@ -10,7 +10,7 @@ Bundle ID: `io.github.allsunday1122.yorunoshoka`
 
 > このファイル・会話履歴・過去結果は開始点であり正本ではない。開始時および各「次」で Notion / GitHub / App Store Connect / Codemagic をfresh readすること。
 
-## 現在状態｜2026-08-27 23:24 JST
+## 現在状態｜2026-08-28 01:25 JST
 
 - Pattern C「紙面・温かみ」はmainへ統合済み。
 - 現行テスト対象は `1.2.0 / Build 4`。
@@ -35,6 +35,29 @@ Bundle ID: `io.github.allsunday1122.yorunoshoka`
 3. `xcode-project use-profiles` の対象過多
    - `ios/SchemeIndex.xcodeproj` まで自動探索して失敗していた。
    - `--project "$CM_BUILD_DIR/$XCODE_PROJECT"` を明示し、`ios/App/App.xcodeproj` のみに限定して解消。
+
+## Build 4実バイナリPrivacy監査｜2026-08-28 01:25
+
+Codemagic artifactから実際の `App.ipa` を取得し、構造化監査した。
+
+- `Payload/App.app/PrivacyInfo.xcprivacy`
+- `Payload/App.app/Frameworks/Capacitor.framework/PrivacyInfo.xcprivacy`
+- `Payload/App.app/Frameworks/Cordova.framework/PrivacyInfo.xcprivacy`
+
+3 manifestすべて:
+- `NSPrivacyTracking = false`
+- `NSPrivacyTrackingDomains = []`
+- `NSPrivacyCollectedDataTypes = []`
+- `NSPrivacyAccessedAPITypes = []`
+
+実IPA `Info.plist`:
+- `CFBundleIdentifier = io.github.allsunday1122.yorunoshoka`
+- `CFBundleShortVersionString = 1.2.0`
+- `CFBundleVersion = 4`
+- `MinimumOSVersion = 15.0`
+- `ITSAppUsesNonExemptEncryption = false`
+
+よって現行ASCの「データ収集なし」およびexport complianceと矛盾する証拠は実バイナリ上も確認されない。
 
 ## 重要な判定
 
@@ -66,15 +89,22 @@ Build 4はInternal TestFlight確認用として成功している。ただし `b
 - 戻る / タイトル / Aa / その他メニューの操作性
 - 重大な表示崩れ、白画面、クラッシュがない
 
-## 署名資産
+## 署名資産｜2026-08-28 01:19 fresh read
 
 - Bundle resource ID: `K459HXU63D`
+- Bundle identifier: `io.github.allsunday1122.yorunoshoka`
 - Profile ID: `6598LFYDY3`
-- Certificate ID: `B4WRC3G6V4`
 - Profile state: `ACTIVE`
+- Profile type: `IOS_APP_STORE`
+- Certificate ID: `B4WRC3G6V4`
+- Certificate type: `IOS_DISTRIBUTION`
 - Certificate expiration: `2027-07-24T14:20:41Z`
 
 新しいApple Distribution証明書を推測で発行/revokeしない。
+
+## Review Notes
+
+Pattern C向けReview Notes文面は確定済み。ただし新設した専用Issue-trigger workflowが実行登録されないため、現ASCは旧Notesのまま。これは提出blockerではなく、最終提出前に既存の安定したwrite経路へ統合して更新する。Review Notes更新のためだけに共有Gatewayを危険に変更しない。
 
 ## 禁止事項
 
