@@ -41,8 +41,11 @@ def main() -> int:
     # S12 uses the existing quality signal and weighted transient growth cost.
     require(model, "float effectiveGradThresh = densifyGradThresh;", "adaptive per-pass threshold")
     require(model, "const int configuredCeiling = maxGaussianCount > 0", "configured admission ceiling")
-    require(model, "std::max(maxGaussianCount - 1, 0)", "strict-below legacy terminal trigger")
+    require(model, "? maxGaussianCount", "full configured Gaussian budget")
+    reject(model, "maxGaussianCount - 1", "stale one-count ResourceGuard coupling")
     require(model, "float score = (grad[i] / vc) * half_max_dim;", "same avg-gradient quality signal")
+    require(model, "std::isfinite(score)", "finite quality-score guard")
+    require(model, "bool invalidScore = false;", "invalid score fail-closed state")
     require(model, "weightedScores.push_back(score);", "weighted quality score admission")
     require(model, "weightedScores.push_back(score);\n                            weightedScores.push_back(score);", "split cost two")
     require(model, "std::nth_element(", "linear-average quality cutoff")
