@@ -31,6 +31,11 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpointManager {
             predecessorRoot = previousCheckpoint.declaredCheckpointRootSHA256
         }
 
+        _ = try AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.recoverIfNeeded(
+            ledgerID: ledgerID,
+            rootURL: rootURL,
+            fileManager: fileManager
+        )
         guard let head = try AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.loadValidatedHead(
             ledgerID: ledgerID,
             rootURL: rootURL,
@@ -96,6 +101,11 @@ public enum AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpointManager {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionCheckpointError.predecessorCheckpointMismatch
             }
         }
+        _ = try AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.recoverIfNeeded(
+            ledgerID: checkpoint.ledgerID,
+            rootURL: rootURL,
+            fileManager: fileManager
+        )
         guard let head = try AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.loadValidatedHead(
             ledgerID: checkpoint.ledgerID,
             rootURL: rootURL,
