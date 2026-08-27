@@ -49,17 +49,18 @@ enum Lane3FileSourceIdentityFence {
             .timeIntervalSinceReferenceDate.bitPattern
 
         // These keys are supplemental. Some filesystems do not expose either value, so absence must
-        // not make a valid local regular file unusable. Hashes are only compared inside this process;
-        // they are never persisted as evidence or exposed as a stable cross-run identifier.
+        // not make a valid local regular file unusable. NSObject.hash follows Foundation equality for
+        // opaque identifiers and avoids relying on pointer-bearing debug descriptions. Hashes are only
+        // compared inside this process; they are never persisted or exposed as cross-run identifiers.
         let resourceValues = try? fileURL.resourceValues(
             forKeys: [.fileResourceIdentifierKey, .generationIdentifierKey]
         )
-        let resourceIdentifierHash = resourceValues?.fileResourceIdentifier.map {
-            String(reflecting: $0).hashValue
-        }
-        let generationIdentifierHash = resourceValues?.generationIdentifier.map {
-            String(reflecting: $0).hashValue
-        }
+        let resourceIdentifierHash = opaqueFoundationIdentifierHash(
+            resourceValues?.fileResourceIdentifier
+        )
+        let generationIdentifierHash = opaqueFoundationIdentifierHash(
+            resourceValues?.generationIdentifier
+        )
 
         return Lane3FileSourceIdentitySnapshot(
             systemNumber: systemNumber,
@@ -79,5 +80,10 @@ enum Lane3FileSourceIdentityFence {
         guard try capture(fileURL: fileURL) == expected else {
             throw Lane3FileSourceIdentityFenceError.changed
         }
+    }
+
+    private static func opaqueFoundationIdentifierHash(_ value: Any?) -> Int? {
+        guard let object = value as? NSObject else { return nil }
+        return object.hash
     }
 }
