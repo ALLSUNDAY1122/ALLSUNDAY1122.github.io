@@ -26,6 +26,10 @@ private struct Lane3AppleRepresentativeCodecReadable: Lane3PCMChunkReadable, @un
         case .emptySource: .emptySource
         case .sourceClosed: .sourceClosed
         case .sourceMetadataChanged: .sourceMetadataChanged
+        // AW49 keeps the durable AW43 report enum stable. A changed filesystem identity is a stronger
+        // form of source-stability violation and therefore folds into the existing metadata-change code.
+        case .sourceIdentityChanged: .sourceMetadataChanged
+        case .sourceIdentityUnavailable: .openRejected
         case .policyRejected: .policyRejected
         case .bufferAllocationFailed: .bufferAllocationFailed
         case .seekFailed: .seekFailed
@@ -90,6 +94,8 @@ public enum Lane3AppleRepresentativeCodecExecutionProbe {
         case .emptySource: .emptySource
         case .sourceClosed: .sourceClosed
         case .sourceMetadataChanged: .sourceMetadataChanged
+        case .sourceIdentityChanged: .sourceMetadataChanged
+        case .sourceIdentityUnavailable: .openRejected
         case .policyRejected: .policyRejected
         case .bufferAllocationFailed: .bufferAllocationFailed
         case .seekFailed: .seekFailed
