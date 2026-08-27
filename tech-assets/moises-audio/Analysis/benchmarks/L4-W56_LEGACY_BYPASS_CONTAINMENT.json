@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "bundle": "L4-W56",
+  "title": "Legacy normalized-ledger bypass containment",
+  "classification": "NON_PARITY",
+  "canonical_predecessor": {
+    "epoch": 44,
+    "lane4": "W52",
+    "integration_run_id": 33030546532,
+    "swiftpm_tests_passed": 462,
+    "swiftpm_tests_total": 462
+  },
+  "production_policy": {
+    "legacy_api_count": 13,
+    "debug_decision": "ALLOW_COMPATIBILITY_ROUTE",
+    "release_decision": "REJECT_PRODUCTION_LEGACY_API",
+    "release_legacy_return_without_w55_evidence": false,
+    "normalized_production_entrypoints": [
+      "AnalysisPhysicalRealAudioBridgeConsumptionNormalizedConcurrentStore",
+      "AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyManager.makeCertifiedCustodyBundle",
+      "AnalysisIOSBridgeNormalizedDurabilityProbeCoordinator"
+    ]
+  },
+  "legacy_routes": {
+    "w51_concurrent_store": "DEBUG_ROUTE_TO_W55_RELEASE_REJECT",
+    "w50_secure_checkpoint_public_wrapper": "INTERNAL_WRITER_LEASE_CORE_OR_DEBUG_W55_ROUTE_OR_RELEASE_REJECT",
+    "w52_quiescent_io": "DEBUG_ROUTE_TO_W55_RELEASE_REJECT",
+    "w53_ios_durability": "DEBUG_ROUTE_TO_W55_RELEASE_REJECT"
+  },
+  "compatibility": {
+    "w49_w55_hash_payload_formats_changed": false,
+    "w52_hashed_limitations_exactly_preserved": true,
+    "pure_snapshot_cas_receipt_validators_preserved": true,
+    "testing_fault_injection_core_preserved": true
+  },
+  "portable_validation": {
+    "swift_version": "6.2.1",
+    "warnings_as_errors": true,
+    "release_policy_harness": "REJECT",
+    "debug_policy_harness": "ALLOW",
+    "writer_lease_marker_scope": "OUTSIDE_FALSE_INSIDE_TRUE_NESTED_TRUE_AFTER_FALSE"
+  },
+  "xctest_source_coverage": [
+    "all 13 legacy API classes accounted for",
+    "writer lease marker scoped to critical section",
+    "debug legacy W51 CAS/append equivalence to W55 normalized path",
+    "debug legacy W52 snapshot equivalence to W55 normalized path",
+    "debug legacy W52 custody roots equal W55 certified bundle W52 sub-bundle",
+    "debug direct secure checkpoint equivalence to W55 normalized checkpoint",
+    "exact original W52 hashed limitations retained"
+  ],
+  "canonical_worker_validation": {
+    "exact_worker_swiftpm_xctest": "NOT_OBSERVED",
+    "worker_commit_workflow_runs": 0,
+    "local_git_ls_remote": "FAILED_DNS_COULD_NOT_RESOLVE_GITHUB_COM",
+    "w56_compile_pass_claimed": false
+  },
+  "external_gates": [
+    "HQ semantic integration of W53-W56 and canonical SwiftPM/XCTest",
+    "selected iphoneos/arm64 Xcode compilation and execution",
+    "selected physical-iPhone/APFS durability evidence",
+    "HQ-approved rights-cleared real-audio corpus and genuine integrated Lane2 decoder",
+    "current-iPhone Moises reference/differential evidence",
+    "final HQ PARITY judgment"
+  ],
+  "parity_promotions": 0
+}
