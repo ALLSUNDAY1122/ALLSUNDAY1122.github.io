@@ -1,5 +1,10 @@
 import Foundation
 import XCTest
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#endif
 @testable import MoisesAudioCore
 
 final class AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardeningTests: XCTestCase {
