@@ -211,6 +211,62 @@ jobs:
           /tmp/l2-aw53-selfcheck | tee /tmp/l2-aw53-selfcheck.out
           grep -q '^L2_AW53_SELF_TEST_PASS ' /tmp/l2-aw53-selfcheck.out
 
+  portable-lane2-aw53-xctest:
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.0
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Execute Lane 2 AW53 XCTest regressions
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp=/tmp/l2-aw53-xctest
+          rm -rf "$tmp"
+          mkdir -p "$tmp/Sources/Lane2AW53/Shared" "$tmp/Sources/Lane2AW53/IO" "$tmp/Sources/Lane2AW53/Library" "$tmp/Tests/Lane2AW53Tests"
+          cp Shared/DomainContracts.swift Shared/LibraryContracts.swift "$tmp/Sources/Lane2AW53/Shared/"
+          cp IO/Sources/*.swift "$tmp/Sources/Lane2AW53/IO/"
+          cp Library/Sources/*.swift "$tmp/Sources/Lane2AW53/Library/"
+          for file in \
+            Library/Tests/ManagedArtifactSegmentedRuntimeTests.swift \
+            Library/Tests/ManagedArtifactSegmentedBoundedMutationTests.swift \
+            Library/Tests/ManagedArtifactSegmentedSteadyStatePathAuthorityTests.swift
+          do
+            out="$tmp/Tests/Lane2AW53Tests/$(basename "$file")"
+            printf '@testable import Lane2AW53\n' > "$out"
+            cat "$file" >> "$out"
+          done
+          cat > "$tmp/Tests/Lane2AW53Tests/BoundedMutationContractXCTests.swift" <<'SWIFT'
+          import XCTest
+          @testable import Lane2AW53
+
+          final class BoundedMutationContractXCTests: XCTestCase {
+              func testPathologicalConcentrationContract() {
+                  Lane2ManagedArtifactSegmentedBoundedMutationTests.assertPathologicalConcentrationContract()
+              }
+
+              func testFailureContract() {
+                  Lane2ManagedArtifactSegmentedBoundedMutationTests.assertFailureContract()
+              }
+          }
+          SWIFT
+          cat > "$tmp/Package.swift" <<'SWIFT'
+          // swift-tools-version: 6.0
+          import PackageDescription
+
+          let package = Package(
+              name: "Lane2AW53CI",
+              targets: [
+                  .target(name: "Lane2AW53", path: "Sources/Lane2AW53"),
+                  .testTarget(name: "Lane2AW53Tests", dependencies: ["Lane2AW53"], path: "Tests/Lane2AW53Tests")
+              ]
+          )
+          SWIFT
+          swift test --package-path "$tmp" --parallel
+
   portable-lane3-aw53-native-execution:
     runs-on: ubuntu-latest
     container:
@@ -257,3 +313,42 @@ jobs:
           grep -q '^L3_AW53_CandidatePhysicalSamplingLifecycleSelfTest PASS ' /tmp/l3-aw53-native.out
           grep -q '^L3_AW53_CandidatePhysicalSamplingLifecycleStress PASS ' /tmp/l3-aw53-native.out
           grep -q '^L3_AW53_CandidatePhysicalSamplingLifecycleBenchmark iterations=20000 ' /tmp/l3-aw53-native.out
+
+  apple-lane3-ios-sdk-source-typecheck:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Selected Xcode and iOS SDK
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+          xcrun --sdk iphoneos --show-sdk-path
+      - name: Lane 3 Playback plus DSP iOS SDK typecheck
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sources=(
+            Shared/DomainContracts.swift
+            DSP/Sources/*.swift
+            Playback/Sources/*.swift
+          )
+          if [ "${#sources[@]}" -lt 4 ]; then
+            echo "Lane 3 source discovery unexpectedly small: ${#sources[@]}" >&2
+            exit 1
+          fi
+          SDK_PATH="$(xcrun --sdk iphoneos --show-sdk-path)"
+          printf 'Lane 3 iOS SDK typecheck source count: %s\n' "${#sources[@]}"
+          xcrun --sdk iphoneos swiftc \
+            -target arm64-apple-ios17.0 \
+            -sdk "$SDK_PATH" \
+            -swift-version 6 \
+            -warnings-as-errors \
+            -strict-concurrency=complete \
+            -parse-as-library \
+            -typecheck \
+            "${sources[@]}"
