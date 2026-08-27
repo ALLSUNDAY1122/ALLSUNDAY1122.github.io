@@ -1,6 +1,6 @@
 import Foundation
 
-private enum Lane3AW50MetadataMutation: Sendable {
+private enum Lane3AW50MetadataMutation: Equatable, Sendable {
     case channels
     case sampleRate
     case frameCount
