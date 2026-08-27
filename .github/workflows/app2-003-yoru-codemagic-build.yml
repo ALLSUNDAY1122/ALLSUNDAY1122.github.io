@@ -1,6 +1,10 @@
 name: APP2-003 Yoru Codemagic Build
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app-development-2/evidence/APP2-003-build4-trigger-request.json
   issues:
     types: [opened]
 
@@ -10,7 +14,7 @@ permissions:
 
 jobs:
   start:
-    if: startsWith(github.event.issue.title, '[YORU-CM-BUILD]')
+    if: github.event_name == 'push' || startsWith(github.event.issue.title, '[YORU-CM-BUILD]')
     runs-on: ubuntu-latest
     steps:
       - name: Start pinned Yoru signed Build 4
@@ -29,7 +33,9 @@ jobs:
           build_id=$(printf '%s' "$response" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("buildId") or d.get("id") or "")')
           test -n "$build_id"
           echo "build_id=$build_id" >> "$GITHUB_OUTPUT"
-      - name: Report locator
+          echo "Started Codemagic build_id=$build_id"
+      - name: Report locator to issue when issue-triggered
+        if: github.event_name == 'issues'
         env:
           GH_TOKEN: ${{ github.token }}
           ISSUE: ${{ github.event.issue.number }}
