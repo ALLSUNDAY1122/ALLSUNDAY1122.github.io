@@ -1,9 +1,25 @@
 {
-  "request_id": "app2-005-hm1-submission-readback-20260825-2102",
-  "completed_at": "2026-08-25T12:02:46.393804+00:00",
+  "request_id": "app2-005-hm1-approved-icon-readback-20260827-2148",
+  "completed_at": "2026-08-27T12:51:21.784327+00:00",
   "query_exit_code": 0,
   "query_status": "success",
   "results": [
+    {
+      "label": "app",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "6799581662",
+          "type": "apps",
+          "attributes": {
+            "name": "第一種衛生管理者｜学びスプリント",
+            "bundleId": "jp.allsunday1122.healthmanager1",
+            "sku": "health_manager_1",
+            "primaryLocale": "ja"
+          }
+        }
+      ]
+    },
     {
       "label": "review-submissions",
       "http_status": 200,
@@ -33,51 +49,6 @@
             "locale": "ja",
             "description": "第一種衛生管理者試験の学習用問題演習アプリです。\n\n公表問題の出題論点と現行法令を確認し、独自に作成・監査した264問を収録しています。公表回対応3セットと追加演習3セットを、44問通し・科目別・短時間のスプリントで繰り返し学習できます。\n\n主な機能:\n- 今日のスプリント（4・8・16問）\n- 関係法令・労働衛生・労働生理の科目別学習\n- 公表回対応3セット＋追加演習3セット\n- 44問通し演習\n- 苦手復習と学習記録\n- プレミアムで全264問を利用\n\nプレミアムは月額200円（対象者は7日間無料トライアル）または買い切り800円です。購入・復元はAppleのStoreKit 2を使用します。\n\n本アプリは厚生労働省、公益財団法人安全衛生技術試験協会その他の公的機関が提供・承認する公式アプリではありません。"
           }
-        }
-      ]
-    },
-    {
-      "label": "monthly",
-      "http_status": 200,
-      "data": [
-        {
-          "id": "6804373671",
-          "type": "subscriptions",
-          "attributes": {
-            "name": "第一種衛生管理者 プレミアム月額",
-            "productId": "jp.allsunday1122.healthmanager1.monthly",
-            "state": "MISSING_METADATA",
-            "subscriptionPeriod": "ONE_MONTH"
-          },
-          "relationships": {
-            "subscriptionLocalizations": [
-              {
-                "type": "subscriptionLocalizations",
-                "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488"
-              }
-            ],
-            "subscriptionAvailability": {
-              "type": "subscriptionAvailabilities",
-              "id": "6804373671"
-            }
-          }
-        }
-      ],
-      "included": [
-        {
-          "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488",
-          "type": "subscriptionLocalizations",
-          "attributes": {
-            "name": "第一種衛生管理者 プレミアム月額",
-            "state": "PREPARE_FOR_SUBMISSION",
-            "locale": "ja",
-            "description": "追加問題・弱点学習などプレミアム機能を月額で利用できます。"
-          }
-        },
-        {
-          "id": "6804373671",
-          "type": "subscriptionAvailabilities",
-          "attributes": {}
         }
       ]
     },
@@ -134,6 +105,18 @@
           }
         },
         {
+          "id": "c22f7aba-b777-4a09-8d3c-96ee08e89dab",
+          "type": "builds",
+          "attributes": {
+            "version": "2026082601",
+            "uploadedDate": "2026-08-25T14:46:19-07:00",
+            "processingState": "VALID",
+            "expired": false,
+            "expirationDate": "2026-11-23T13:46:19-08:00",
+            "minOsVersion": "16.0"
+          }
+        },
+        {
           "id": "455ceef3-1116-4913-800c-0f889c925623",
           "type": "builds",
           "attributes": {
@@ -156,6 +139,93 @@
             "expirationDate": "2026-11-14T23:10:25-08:00",
             "minOsVersion": "16.0"
           }
+        }
+      ]
+    },
+    {
+      "label": "beta-groups",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "da16ca74-d4c8-45a1-8735-5c4baad112cf",
+          "type": "betaGroups",
+          "attributes": {
+            "name": "sun"
+          }
+        }
+      ]
+    },
+    {
+      "label": "iap",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "6799583540",
+          "type": "inAppPurchases",
+          "attributes": {
+            "name": "第一種衛生管理者 買い切りプレミアム",
+            "productId": "jp.allsunday1122.healthmanager1.lifetime",
+            "state": "MISSING_METADATA",
+            "inAppPurchaseType": "NON_CONSUMABLE"
+          }
+        }
+      ]
+    },
+    {
+      "label": "subscription-groups",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "22329151",
+          "type": "subscriptionGroups",
+          "attributes": {
+            "referenceName": "第一種衛生管理者プレミアム"
+          }
+        }
+      ]
+    },
+    {
+      "label": "monthly",
+      "http_status": 200,
+      "data": [
+        {
+          "id": "6804373671",
+          "type": "subscriptions",
+          "attributes": {
+            "name": "第一種衛生管理者 プレミアム月額",
+            "productId": "jp.allsunday1122.healthmanager1.monthly",
+            "state": "MISSING_METADATA",
+            "subscriptionPeriod": "ONE_MONTH"
+          },
+          "relationships": {
+            "subscriptionLocalizations": [
+              {
+                "type": "subscriptionLocalizations",
+                "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488"
+              }
+            ],
+            "subscriptionAvailability": {
+              "type": "subscriptionAvailabilities",
+              "id": "6804373671"
+            }
+          }
+        }
+      ],
+      "included": [
+        {
+          "id": "8a7a9964-4b2c-4b1a-b8ad-77b24b76a488",
+          "type": "subscriptionLocalizations",
+          "attributes": {
+            "name": "第一種衛生管理者 プレミアム月額",
+            "state": "PREPARE_FOR_SUBMISSION",
+            "locale": "ja",
+            "description": "追加問題・弱点学習などプレミアム機能を月額で利用できます。"
+          }
+        },
+        {
+          "id": "6804373671",
+          "type": "subscriptionAvailabilities",
+          "attributes": {}
         }
       ]
     }
