@@ -12,96 +12,50 @@ permissions:
   contents: write
 
 jobs:
-  patch-and-upload:
+  recover-diagnostics:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Add pre-signing diagnostics and standard signing creation
+      - name: Recover and sanitize latest Codemagic diagnostics
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('codemagic.yaml')
-          s=p.read_text(encoding='utf-8')
-          marker='\n  clipboard-widget-phase0:\n'
-          start=s.index(marker)
-          block=s[start:]
-
-          # Keep signing behavior aligned with the repository's proven workflows.
-          block=block.replace(
-            'app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE 2>&1',
-            'app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE --create 2>&1',1)
-          block=block.replace(
-            'app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE 2>&1',
-            'app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE --create 2>&1',1)
-
-          # Start diagnostics before brew/static audit, because r4/r5 produced no artifact.
-          old='''          set -euo pipefail\n          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen\n          cd "$CM_BUILD_DIR"\n          python3 clipboard-widget/Tests/static_audit.py\n          cd clipboard-widget\n          xcodegen generate\n'''
-          new='''          set -euo pipefail\n          DIAG="$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"\n          : > "$DIAG"\n          exec > >(tee -a "$DIAG") 2>&1\n          echo 'STAGE install-tools'\n          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen\n          echo 'STAGE static-audit'\n          cd "$CM_BUILD_DIR"\n          python3 clipboard-widget/Tests/static_audit.py\n          echo 'STAGE initial-xcodegen'\n          cd clipboard-widget\n          xcodegen generate\n'''
-          if old in block:
-              block=block.replace(old,new,1)
-          elif "STAGE install-tools" not in block:
-              raise SystemExit('pre-signing diagnostic patch point missing')
-
-          old2='''          set -euo pipefail\n          cd "$CM_BUILD_DIR/clipboard-widget"\n          python3 - <<'PY2'\n'''
-          new2='''          set -euo pipefail\n          DIAG="$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log"\n          exec > >(tee -a "$DIAG") 2>&1\n          echo 'STAGE build-number'\n          cd "$CM_BUILD_DIR/clipboard-widget"\n          python3 - <<'PY2'\n'''
-          if old2 in block:
-              block=block.replace(old2,new2,1)
-          elif "STAGE build-number" not in block:
-              raise SystemExit('build-number diagnostic patch point missing')
-
-          p.write_text(s[:start]+block,encoding='utf-8')
-          print('PASS: r6 diagnostics start before the earliest failing stage')
-          PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add codemagic.yaml
-          git commit -m 'ci: capture clipboard pre-signing diagnostics' || true
-          git pull --rebase origin feature/clipboard-widget-poc
-          git push origin HEAD:feature/clipboard-widget-poc
-
-      - name: Trigger Codemagic TestFlight build and wait
-        id: build
-        continue-on-error: true
-        env:
-          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
-        run: |
-          set -euo pipefail
-          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260827-r6","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
-          python scripts/codemagic_build_gateway.py \
-            --command /tmp/clipboard-widget-cm-command.json \
-            --output /tmp/clipboard-widget-cm-result.json
-
-      - name: Persist safe Codemagic result
-        if: always()
-        run: |
-          set -euo pipefail
-          if [ ! -f /tmp/clipboard-widget-cm-result.json ]; then
-            echo 'No Codemagic result file to persist.'
-            exit 0
-          fi
           python3 - <<'PY'
           import json
           from pathlib import Path
-          r=json.loads(Path('/tmp/clipboard-widget-cm-result.json').read_text())
-          keep={k:r.get(k) for k in ('request_id','ok','workflow_id','branch','resolved_app_id','build_id','status','app_id','error','build_details')}
-          Path('/tmp/clipboard-widget-cm-safe.json').write_text(json.dumps(keep,ensure_ascii=False,indent=2)+'\n')
+          r=json.loads(Path('automation/clipboard-widget/evidence/codemagic-phase0-testflight.json').read_text(encoding='utf-8'))
+          arts=(r.get('build_details') or {}).get('artifacts') or []
+          if not arts:
+              raise SystemExit('No Codemagic artifact in latest evidence')
+          url=arts[0].get('short_lived_download_url')
+          if not url:
+              raise SystemExit('No short-lived artifact URL')
+          Path('/tmp/artifact-url.txt').write_text(url,encoding='utf-8')
           PY
-          git fetch origin feature/clipboard-widget-poc
-          git reset --hard origin/feature/clipboard-widget-poc
-          mkdir -p automation/clipboard-widget/evidence
-          cp /tmp/clipboard-widget-cm-safe.json automation/clipboard-widget/evidence/codemagic-phase0-testflight.json
+          curl --fail --location --retry 2 "$(cat /tmp/artifact-url.txt)" -o /tmp/cm-artifacts.zip
+          rm -f /tmp/artifact-url.txt
+          unzip -q /tmp/cm-artifacts.zip -d /tmp/cm-artifacts
+          find /tmp/cm-artifacts -maxdepth 4 -type f -print
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          files=list(Path('/tmp/cm-artifacts').rglob('clipboard-widget-phase0-diagnostics.log'))
+          if not files:
+              raise SystemExit('Diagnostic log not found in artifact bundle')
+          raw=files[0].read_text(encoding='utf-8',errors='replace')
+          raw=re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----','[REDACTED PEM]',raw,flags=re.S)
+          raw=re.sub(r'eyJ[A-Za-z0-9._-]{20,}','[REDACTED JWT]',raw)
+          raw=re.sub(r'(?i)(token|secret|password|private[_ -]?key)\s*[:=]\s*\S+',r'\1=[REDACTED]',raw)
+          out=Path('automation/clipboard-widget/evidence/codemagic-phase0-diagnostic.log')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(raw[-30000:],encoding='utf-8')
+          PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add automation/clipboard-widget/evidence/codemagic-phase0-testflight.json
-          git commit -m 'chore: record clipboard widget TestFlight evidence r6' || true
+          git add automation/clipboard-widget/evidence/codemagic-phase0-diagnostic.log
+          git commit -m 'chore: persist sanitized clipboard Codemagic diagnostic log'
           git pull --rebase origin feature/clipboard-widget-poc
           git push origin HEAD:feature/clipboard-widget-poc
-
-      - name: Enforce TestFlight build success
-        if: steps.build.outcome != 'success'
-        run: exit 1
