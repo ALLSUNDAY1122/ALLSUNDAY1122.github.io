@@ -8,6 +8,10 @@ AudioShake retention defaults reflect public developer documentation observed 20
 uploaded Assets expire after 72 hours; Task output download links expire after one hour.
 The current public developer index documents no Asset/Task DELETE endpoint, so those defaults
 are expiry evidence only, not a claim that task metadata/content is synchronously erased.
+
+The file-backed privacy registry is single-host only. Every read-modify-write mutation is
+serialized with POSIX flock and committed by fsync + atomic replace. Multi-host independent
+writers still require a shared transactional authority and are rejected by mutation_topology.
 """
 from __future__ import annotations
 
@@ -15,6 +19,7 @@ import json
 import os
 import re
 import shutil
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Callable
@@ -37,6 +42,7 @@ _ALLOWED_DIAGNOSTIC_KEYS = {
     "cost_units",
 }
 _PROVIDER_DELETE_RECEIPTS = {"accepted", "confirmed", "not_found"}
+_PROVIDER_INFLIGHT_STATE = "unknown_after_inflight"
 
 
 class PrivacyRetentionError(RuntimeError):
@@ -101,11 +107,62 @@ class PrivacyRecord:
 
 
 class AtomicPrivacyRegistry:
+    """Single-host atomic JSON registry with full read-modify-write serialization."""
+
     def __init__(self, path: str | Path):
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.lock_path = self.path.with_suffix(self.path.suffix + ".lock")
+
+    @contextmanager
+    def _locked(self):
+        try:
+            import fcntl
+        except ImportError as exc:  # pragma: no cover - non-POSIX deployment must fail closed
+            raise PrivacyRetentionError("SEP_PRIVACY_LOCK_UNAVAILABLE", retryable=True) from exc
+        try:
+            handle = self.lock_path.open("a+b")
+        except OSError as exc:
+            raise PrivacyRetentionError("SEP_PRIVACY_LOCK_UNAVAILABLE", retryable=True) from exc
+        with handle:
+            try:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            except OSError as exc:
+                raise PrivacyRetentionError("SEP_PRIVACY_LOCK_UNAVAILABLE", retryable=True) from exc
+            try:
+                yield
+            finally:
+                try:
+                    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+                except OSError:
+                    pass
 
     def load(self) -> dict[str, PrivacyRecord]:
+        with self._locked():
+            return self._load_unlocked()
+
+    def get(self, logical_job_id: str) -> PrivacyRecord | None:
+        logical_job_id = _validate_logical_job_id(logical_job_id)
+        with self._locked():
+            return self._load_unlocked().get(logical_job_id)
+
+    def mutate(
+        self,
+        logical_job_id: str,
+        operation: Callable[[PrivacyRecord | None], PrivacyRecord],
+    ) -> PrivacyRecord:
+        logical_job_id = _validate_logical_job_id(logical_job_id)
+        with self._locked():
+            records = self._load_unlocked()
+            updated = operation(records.get(logical_job_id))
+            _validate_record(updated)
+            if updated.logical_job_id != logical_job_id:
+                raise PrivacyRetentionError("SEP_PRIVACY_REGISTRY_IDENTITY_MISMATCH")
+            records[logical_job_id] = updated
+            self._save_unlocked(records)
+            return updated
+
+    def _load_unlocked(self) -> dict[str, PrivacyRecord]:
         if not self.path.exists():
             return {}
         try:
@@ -123,15 +180,19 @@ class AtomicPrivacyRegistry:
                 if not isinstance(key, str) or not isinstance(value, dict):
                     raise TypeError
                 record = PrivacyRecord(**value)
+                _validate_record(record)
                 if record.logical_job_id != key:
                     raise ValueError
-                _validate_logical_job_id(key)
                 parsed[key] = record
         except (TypeError, ValueError, PrivacyRetentionError) as exc:
             raise PrivacyRetentionError("SEP_PRIVACY_REGISTRY_RECORD_INVALID") from exc
         return parsed
 
-    def save(self, records: dict[str, PrivacyRecord]) -> None:
+    def _save_unlocked(self, records: dict[str, PrivacyRecord]) -> None:
+        for key, record in records.items():
+            _validate_record(record)
+            if key != record.logical_job_id:
+                raise PrivacyRetentionError("SEP_PRIVACY_REGISTRY_IDENTITY_MISMATCH")
         payload = {
             "schema_version": SCHEMA_VERSION,
             "records": {key: asdict(value) for key, value in sorted(records.items())},
@@ -144,6 +205,7 @@ class AtomicPrivacyRegistry:
                 handle.flush()
                 os.fsync(handle.fileno())
             os.replace(tmp, self.path)
+            _fsync_directory(self.path.parent)
         except OSError as exc:
             try:
                 tmp.unlink(missing_ok=True)
@@ -179,42 +241,43 @@ class PrivacyRetentionService:
         logical_job_id = _validate_logical_job_id(logical_job_id)
         policy.validate()
         created = self.now_epoch() if created_at_epoch is None else _positive_epoch(created_at_epoch)
-        records = self.registry.load()
-        existing = records.get(logical_job_id)
         asset_hash = _hash_provider_id(provider_asset_id)
         task_hash = _hash_provider_id(provider_task_id)
-        if existing is not None:
-            if (
-                existing.provider_asset_id_hash != asset_hash
-                or existing.provider_task_id_hash != task_hash
-                or existing.local_policy != policy.local_policy
-            ):
-                raise PrivacyRetentionError("SEP_PRIVACY_REGISTRATION_CONFLICT")
-            return existing
-        record = PrivacyRecord(
-            logical_job_id=logical_job_id,
-            provider_asset_id_hash=asset_hash,
-            provider_task_id_hash=task_hash,
-            created_at_epoch=created,
-            vendor_asset_expires_at_epoch=_add_ttl(created, policy.vendor_asset_ttl_seconds),
-            vendor_output_links_expire_at_epoch=_add_ttl(created, policy.vendor_output_link_ttl_seconds),
-            local_policy=policy.local_policy,
-            local_expires_at_epoch=_add_ttl(created, policy.local_ttl_seconds),
-        )
-        records[logical_job_id] = record
-        self.registry.save(records)
-        return record
+
+        def operation(existing: PrivacyRecord | None) -> PrivacyRecord:
+            if existing is not None:
+                if (
+                    existing.provider_asset_id_hash != asset_hash
+                    or existing.provider_task_id_hash != task_hash
+                    or existing.local_policy != policy.local_policy
+                ):
+                    raise PrivacyRetentionError("SEP_PRIVACY_REGISTRATION_CONFLICT")
+                return existing
+            return PrivacyRecord(
+                logical_job_id=logical_job_id,
+                provider_asset_id_hash=asset_hash,
+                provider_task_id_hash=task_hash,
+                created_at_epoch=created,
+                vendor_asset_expires_at_epoch=_add_ttl(created, policy.vendor_asset_ttl_seconds),
+                vendor_output_links_expire_at_epoch=_add_ttl(created, policy.vendor_output_link_ttl_seconds),
+                local_policy=policy.local_policy,
+                local_expires_at_epoch=_add_ttl(created, policy.local_ttl_seconds),
+            )
+
+        return self.registry.mutate(logical_job_id, operation)
 
     def record_diagnostic(self, logical_job_id: str, fields: dict[str, Any]) -> PrivacyRecord:
         logical_job_id = _validate_logical_job_id(logical_job_id)
-        records = self.registry.load()
-        record = _require_record(records, logical_job_id)
         sanitized = _sanitize_diagnostic(fields)
-        record.diagnostics.append(sanitized)
-        if len(record.diagnostics) > 32:
-            record.diagnostics = record.diagnostics[-32:]
-        self.registry.save(records)
-        return record
+
+        def operation(existing: PrivacyRecord | None) -> PrivacyRecord:
+            record = _require_existing_record(existing)
+            record.diagnostics.append(sanitized)
+            if len(record.diagnostics) > 32:
+                record.diagnostics = record.diagnostics[-32:]
+            return record
+
+        return self.registry.mutate(logical_job_id, operation)
 
     def request_delete(
         self,
@@ -228,49 +291,118 @@ class PrivacyRetentionService:
         logical_job_id = _validate_logical_job_id(logical_job_id)
         if reason not in {"user_delete", "account_delete", "retention_expired", "cancel_cleanup"}:
             raise PrivacyRetentionError("SEP_PRIVACY_DELETE_REASON_INVALID")
-        records = self.registry.load()
-        record = _require_record(records, logical_job_id)
 
-        if not record.local_delete_requested:
-            record.local_delete_requested = True
-            record.local_delete_reason = reason
-            record.delete_requested_at_epoch = self.now_epoch()
-            self.registry.save(records)
+        def persist_intent(existing: PrivacyRecord | None) -> PrivacyRecord:
+            record = _require_existing_record(existing)
+            if not record.local_delete_requested:
+                record.local_delete_requested = True
+                record.local_delete_reason = reason
+                record.delete_requested_at_epoch = self.now_epoch()
+            return record
 
-        self._delete_local_artifacts(record)
-        if delete_provider:
-            self._request_provider_deletion(
-                record,
-                provider_asset_id=provider_asset_id,
-                provider_task_id=provider_task_id,
+        self.registry.mutate(logical_job_id, persist_intent)
+        self._delete_local_artifacts(logical_job_id)
+
+        def confirm_local(existing: PrivacyRecord | None) -> PrivacyRecord:
+            record = _require_existing_record(existing)
+            record.local_delete_confirmed = True
+            return record
+
+        current = self.registry.mutate(logical_job_id, confirm_local)
+        if not delete_provider:
+            return current
+
+        should_contact = {"value": False}
+        asset_input_hash = _hash_provider_id(provider_asset_id)
+        task_input_hash = _hash_provider_id(provider_task_id)
+
+        def reserve_provider(existing: PrivacyRecord | None) -> PrivacyRecord:
+            record = _require_existing_record(existing)
+            if record.provider_delete_requested:
+                return record
+            record.provider_delete_requested = True
+            should_contact["value"] = True
+            record.provider_asset_delete_state = _reserved_provider_state(
+                expected_hash=record.provider_asset_id_hash,
+                supplied_hash=asset_input_hash,
             )
-        self.registry.save(records)
-        return record
+            record.provider_task_delete_state = _reserved_provider_state(
+                expected_hash=record.provider_task_id_hash,
+                supplied_hash=task_input_hash,
+            )
+            return record
+
+        reserved = self.registry.mutate(logical_job_id, reserve_provider)
+        if not should_contact["value"]:
+            return reserved
+
+        asset_state = self._delete_provider_object(
+            method_name="delete_asset",
+            object_id=provider_asset_id,
+            expected_hash=reserved.provider_asset_id_hash,
+            unsupported_state="unsupported_expiry_only",
+        )
+        task_state = self._delete_provider_object(
+            method_name="delete_task",
+            object_id=provider_task_id,
+            expected_hash=reserved.provider_task_id_hash,
+            unsupported_state="unsupported_unknown_retention",
+        )
+
+        def finish_provider(existing: PrivacyRecord | None) -> PrivacyRecord:
+            record = _require_existing_record(existing)
+            record.provider_asset_delete_state = asset_state
+            record.provider_task_delete_state = task_state
+            return record
+
+        return self.registry.mutate(logical_job_id, finish_provider)
 
     def sweep_expired(self) -> tuple[str, ...]:
         now = self.now_epoch()
-        records = self.registry.load()
+        candidates = tuple(
+            record.logical_job_id
+            for record in self.registry.load().values()
+            if record.local_policy == "explicit_expiry"
+            and record.local_expires_at_epoch is not None
+            and now >= record.local_expires_at_epoch
+            and not record.local_delete_confirmed
+        )
         deleted: list[str] = []
-        for logical_job_id, record in records.items():
-            if (
-                record.local_policy == "explicit_expiry"
-                and record.local_expires_at_epoch is not None
-                and now >= record.local_expires_at_epoch
-                and not record.local_delete_confirmed
-            ):
-                if not record.local_delete_requested:
-                    record.local_delete_requested = True
-                    record.local_delete_reason = "retention_expired"
-                    record.delete_requested_at_epoch = now
-                    self.registry.save(records)
-                self._delete_local_artifacts(record)
-                deleted.append(logical_job_id)
-        self.registry.save(records)
+        for logical_job_id in candidates:
+            should_delete = {"value": False}
+
+            def reserve(existing: PrivacyRecord | None) -> PrivacyRecord:
+                record = _require_existing_record(existing)
+                if (
+                    record.local_policy == "explicit_expiry"
+                    and record.local_expires_at_epoch is not None
+                    and now >= record.local_expires_at_epoch
+                    and not record.local_delete_confirmed
+                ):
+                    if not record.local_delete_requested:
+                        record.local_delete_requested = True
+                        record.local_delete_reason = "retention_expired"
+                        record.delete_requested_at_epoch = now
+                    should_delete["value"] = True
+                return record
+
+            self.registry.mutate(logical_job_id, reserve)
+            if not should_delete["value"]:
+                continue
+            self._delete_local_artifacts(logical_job_id)
+
+            def confirm(existing: PrivacyRecord | None) -> PrivacyRecord:
+                record = _require_existing_record(existing)
+                record.local_delete_confirmed = True
+                return record
+
+            self.registry.mutate(logical_job_id, confirm)
+            deleted.append(logical_job_id)
         return tuple(deleted)
 
     def snapshot(self, logical_job_id: str) -> dict[str, Any]:
         logical_job_id = _validate_logical_job_id(logical_job_id)
-        record = _require_record(self.registry.load(), logical_job_id)
+        record = _require_existing_record(self.registry.get(logical_job_id))
         now = self.now_epoch()
         asset_expired = (
             record.vendor_asset_expires_at_epoch is not None and now >= record.vendor_asset_expires_at_epoch
@@ -300,16 +432,16 @@ class PrivacyRetentionService:
             "parityState": "NON_PARITY_EVIDENCE_ONLY",
         }
 
-    def _delete_local_artifacts(self, record: PrivacyRecord) -> None:
-        target = self._artifact_directory(record.logical_job_id)
-        if target.exists():
-            try:
-                shutil.rmtree(target)
-            except OSError as exc:
-                raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True) from exc
+    def _delete_local_artifacts(self, logical_job_id: str) -> None:
+        target = self._artifact_directory(logical_job_id)
+        try:
+            shutil.rmtree(target)
+        except FileNotFoundError:
+            pass
+        except OSError as exc:
+            raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True) from exc
         if target.exists():
             raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_UNCONFIRMED", retryable=True)
-        record.local_delete_confirmed = True
 
     def _artifact_directory(self, logical_job_id: str) -> Path:
         target = (self.artifact_root / logical_job_id).resolve()
@@ -320,30 +452,6 @@ class PrivacyRetentionService:
         if len(relative.parts) != 1 or relative.name != logical_job_id:
             raise PrivacyRetentionError("SEP_PRIVACY_ARTIFACT_PATH_UNSAFE")
         return target
-
-    def _request_provider_deletion(
-        self,
-        record: PrivacyRecord,
-        *,
-        provider_asset_id: str | None,
-        provider_task_id: str | None,
-    ) -> None:
-        if record.provider_delete_requested:
-            return
-        record.provider_delete_requested = True
-
-        record.provider_asset_delete_state = self._delete_provider_object(
-            method_name="delete_asset",
-            object_id=provider_asset_id,
-            expected_hash=record.provider_asset_id_hash,
-            unsupported_state="unsupported_expiry_only",
-        )
-        record.provider_task_delete_state = self._delete_provider_object(
-            method_name="delete_task",
-            object_id=provider_task_id,
-            expected_hash=record.provider_task_id_hash,
-            unsupported_state="unsupported_unknown_retention",
-        )
 
     def _delete_provider_object(
         self,
@@ -367,6 +475,14 @@ class PrivacyRetentionService:
         if receipt not in _PROVIDER_DELETE_RECEIPTS:
             return "unknown_invalid_receipt"
         return receipt
+
+
+def _reserved_provider_state(*, expected_hash: str | None, supplied_hash: str | None) -> str:
+    if expected_hash is None:
+        return "not_applicable"
+    if supplied_hash != expected_hash:
+        return "identifier_unavailable"
+    return _PROVIDER_INFLIGHT_STATE
 
 
 def _sanitize_diagnostic(fields: dict[str, Any]) -> dict[str, Any]:
@@ -418,8 +534,26 @@ def _add_ttl(epoch: int, ttl: int | None) -> int | None:
     return None if ttl is None else epoch + ttl
 
 
-def _require_record(records: dict[str, PrivacyRecord], logical_job_id: str) -> PrivacyRecord:
+def _require_existing_record(record: PrivacyRecord | None) -> PrivacyRecord:
+    if record is None:
+        raise PrivacyRetentionError("SEP_PRIVACY_RECORD_NOT_FOUND")
+    return record
+
+
+def _validate_record(record: PrivacyRecord) -> None:
+    if not isinstance(record, PrivacyRecord):
+        raise PrivacyRetentionError("SEP_PRIVACY_REGISTRY_RECORD_INVALID")
+    _validate_logical_job_id(record.logical_job_id)
+    if record.local_policy not in {"until_project_delete", "explicit_expiry", "manual_delete"}:
+        raise PrivacyRetentionError("SEP_PRIVACY_REGISTRY_RECORD_INVALID")
+    if not isinstance(record.diagnostics, list):
+        raise PrivacyRetentionError("SEP_PRIVACY_REGISTRY_RECORD_INVALID")
+
+
+def _fsync_directory(path: Path) -> None:
+    flags = getattr(os, "O_DIRECTORY", 0) | os.O_RDONLY
+    fd = os.open(path, flags)
     try:
-        return records[logical_job_id]
-    except KeyError as exc:
-        raise PrivacyRetentionError("SEP_PRIVACY_RECORD_NOT_FOUND") from exc
+        os.fsync(fd)
+    finally:
+        os.close(fd)

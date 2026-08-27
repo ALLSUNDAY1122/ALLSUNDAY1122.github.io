@@ -145,6 +145,18 @@ public struct Lane3RepresentativeCodecExecutionReport: Equatable, Codable, Senda
     public let parityPromotionAllowed: Bool
 }
 
+private struct Lane3RepresentativeCodecSourceMetadataSnapshot: Equatable, Sendable {
+    let channels: Int
+    let sampleRate: Double
+    let frameCount: Int64
+
+    func exactlyMatches(_ other: Lane3RepresentativeCodecSourceMetadataSnapshot) -> Bool {
+        channels == other.channels
+            && sampleRate.bitPattern == other.sampleRate.bitPattern
+            && frameCount == other.frameCount
+    }
+}
+
 public enum Lane3RepresentativeCodecExecutionProbe {
     public static func openRejected(
         descriptor: Lane3RepresentativeCodecFixtureDescriptor,
@@ -190,12 +202,30 @@ public enum Lane3RepresentativeCodecExecutionProbe {
         guard chunkFrames > 0, chunkFrames <= 1_048_576 else {
             throw Lane3RepresentativeCodecExecutionError.invalidChunkFrames(chunkFrames)
         }
-        let metadataMatches = source.channels == descriptor.expectedChannels
-            && abs(source.sampleRate - descriptor.expectedSampleRate) <= 0.5
-        let metadataTruncation = source.frameCount >= 0 && source.frameCount < descriptor.baselineFrameCount
-        if !metadataMatches || source.frameCount <= 0 {
+
+        // AW50: freeze protocol-visible metadata before the first read. The second snapshot catches a
+        // source that is already unstable during preflight. Loop bounds, sample-count expectations and
+        // the final report are all derived from this frozen snapshot rather than live getters.
+        let metadata = sourceMetadata(source)
+        let confirmation = sourceMetadata(source)
+        let metadataTruncation = metadata.frameCount >= 0
+            && metadata.frameCount < descriptor.baselineFrameCount
+
+        if !metadata.exactlyMatches(confirmation) {
+            return reportRuntimeMetadataChange(
+                metadata: metadata,
+                descriptor: descriptor,
+                environment: environment,
+                metadataTruncation: metadataTruncation,
+                maximumChunkFrames: chunkFrames
+            )
+        }
+
+        let metadataMatches = metadata.channels == descriptor.expectedChannels
+            && abs(metadata.sampleRate - descriptor.expectedSampleRate) <= 0.5
+        if !metadataMatches || metadata.frameCount <= 0 {
             return reportMetadataFailure(
-                source: source,
+                metadata: metadata,
                 descriptor: descriptor,
                 environment: environment,
                 metadataTruncation: metadataTruncation
@@ -210,19 +240,32 @@ public enum Lane3RepresentativeCodecExecutionProbe {
         var failureCode: Lane3RepresentativeCodecFailureCode?
         var complete = false
 
-        while frame < source.frameCount {
-            let remaining = source.frameCount - frame
+        while frame < metadata.frameCount {
+            guard metadataStable(source, expected: metadata) else {
+                failureCode = .sourceMetadataChanged
+                break
+            }
+
+            let remaining = metadata.frameCount - frame
             let count = min(chunkFrames, Int(remaining))
             do {
                 let samples = try source.readInterleavedFrames(startFrame: frame, frameCount: count)
-                let expected = Int64(count).multipliedReportingOverflow(by: Int64(source.channels))
-                guard !expected.overflow, expected.partialValue <= Int64(Int.max) else {
+                guard metadataStable(source, expected: metadata) else {
+                    failureCode = .sourceMetadataChanged
+                    break
+                }
+
+                let expected = Int64(count).multipliedReportingOverflow(by: Int64(metadata.channels))
+                guard !expected.overflow,
+                      expected.partialValue >= 0,
+                      expected.partialValue <= Int64(Int.max) else {
                     throw Lane3RepresentativeCodecExecutionError.integerOverflow
                 }
                 guard samples.count == Int(expected.partialValue) else {
                     failureCode = .shortRead
                     break
                 }
+
                 readCalls = saturatingAdd(readCalls, 1)
                 framesRead = saturatingAdd(framesRead, UInt64(count))
                 for sample in samples {
@@ -238,24 +281,76 @@ public enum Lane3RepresentativeCodecExecutionProbe {
                 }
                 frame += Int64(count)
             } catch let failure as Lane3RepresentativeCodecReadFailure {
-                failureCode = failure.code
+                failureCode = metadataStable(source, expected: metadata)
+                    ? failure.code
+                    : .sourceMetadataChanged
                 break
             } catch is Lane3RepresentativeCodecExecutionError {
                 throw Lane3RepresentativeCodecExecutionError.integerOverflow
             } catch {
-                failureCode = .unexpectedReadFailure
+                failureCode = metadataStable(source, expected: metadata)
+                    ? .unexpectedReadFailure
+                    : .sourceMetadataChanged
                 break
             }
         }
-        if failureCode == nil && frame == source.frameCount {
-            complete = true
+
+        if failureCode == nil {
+            guard metadataStable(source, expected: metadata) else {
+                failureCode = .sourceMetadataChanged
+                return finalReport(
+                    metadata: metadata,
+                    descriptor: descriptor,
+                    environment: environment,
+                    chunkFrames: chunkFrames,
+                    metadataTruncation: metadataTruncation,
+                    readCalls: readCalls,
+                    framesRead: framesRead,
+                    nonFinite: nonFinite,
+                    checksum: checksum,
+                    failureCode: failureCode,
+                    complete: false
+                )
+            }
+            if frame == metadata.frameCount {
+                complete = true
+            }
         }
 
+        return finalReport(
+            metadata: metadata,
+            descriptor: descriptor,
+            environment: environment,
+            chunkFrames: chunkFrames,
+            metadataTruncation: metadataTruncation,
+            readCalls: readCalls,
+            framesRead: framesRead,
+            nonFinite: nonFinite,
+            checksum: checksum,
+            failureCode: failureCode,
+            complete: complete
+        )
+    }
+
+    private static func finalReport(
+        metadata: Lane3RepresentativeCodecSourceMetadataSnapshot,
+        descriptor: Lane3RepresentativeCodecFixtureDescriptor,
+        environment: Lane3RepresentativeCodecExecutionEnvironment,
+        chunkFrames: Int,
+        metadataTruncation: Bool,
+        readCalls: UInt64,
+        framesRead: UInt64,
+        nonFinite: UInt64,
+        checksum: UInt64,
+        failureCode: Lane3RepresentativeCodecFailureCode?,
+        complete: Bool
+    ) -> Lane3RepresentativeCodecExecutionReport {
         let cleanSatisfied = descriptor.faultExpectation == .clean
             && !metadataTruncation
-            && source.frameCount == descriptor.baselineFrameCount
+            && metadata.frameCount == descriptor.baselineFrameCount
             && complete
             && nonFinite == 0
+            && failureCode == nil
         let faultObserved: Bool
         switch descriptor.faultExpectation {
         case .clean:
@@ -272,9 +367,9 @@ public enum Lane3RepresentativeCodecExecutionProbe {
             fixture: descriptor,
             environment: environment,
             decoderOpened: true,
-            actualChannels: source.channels,
-            actualSampleRate: source.sampleRate,
-            actualFrameCount: source.frameCount,
+            actualChannels: metadata.channels,
+            actualSampleRate: metadata.sampleRate,
+            actualFrameCount: metadata.frameCount,
             readCalls: readCalls,
             framesRead: framesRead,
             maximumChunkFrames: chunkFrames,
@@ -295,8 +390,30 @@ public enum Lane3RepresentativeCodecExecutionProbe {
         )
     }
 
+    private static func reportRuntimeMetadataChange(
+        metadata: Lane3RepresentativeCodecSourceMetadataSnapshot,
+        descriptor: Lane3RepresentativeCodecFixtureDescriptor,
+        environment: Lane3RepresentativeCodecExecutionEnvironment,
+        metadataTruncation: Bool,
+        maximumChunkFrames: Int
+    ) -> Lane3RepresentativeCodecExecutionReport {
+        finalReport(
+            metadata: metadata,
+            descriptor: descriptor,
+            environment: environment,
+            chunkFrames: maximumChunkFrames,
+            metadataTruncation: metadataTruncation,
+            readCalls: 0,
+            framesRead: 0,
+            nonFinite: 0,
+            checksum: 0xcbf29ce484222325,
+            failureCode: .sourceMetadataChanged,
+            complete: false
+        )
+    }
+
     private static func reportMetadataFailure(
-        source: any Lane3PCMChunkReadable,
+        metadata: Lane3RepresentativeCodecSourceMetadataSnapshot,
         descriptor: Lane3RepresentativeCodecFixtureDescriptor,
         environment: Lane3RepresentativeCodecExecutionEnvironment,
         metadataTruncation: Bool
@@ -308,9 +425,9 @@ public enum Lane3RepresentativeCodecExecutionProbe {
             fixture: descriptor,
             environment: environment,
             decoderOpened: true,
-            actualChannels: source.channels,
-            actualSampleRate: source.sampleRate,
-            actualFrameCount: source.frameCount,
+            actualChannels: metadata.channels,
+            actualSampleRate: metadata.sampleRate,
+            actualFrameCount: metadata.frameCount,
             readCalls: 0,
             framesRead: 0,
             maximumChunkFrames: 0,
@@ -329,6 +446,23 @@ public enum Lane3RepresentativeCodecExecutionProbe {
             authoritativePhysicalEvidenceAllowed: environment == .physicalIPhoneAVFAudio && descriptor.rightsCleared,
             parityPromotionAllowed: false
         )
+    }
+
+    private static func sourceMetadata(
+        _ source: any Lane3PCMChunkReadable
+    ) -> Lane3RepresentativeCodecSourceMetadataSnapshot {
+        Lane3RepresentativeCodecSourceMetadataSnapshot(
+            channels: source.channels,
+            sampleRate: source.sampleRate,
+            frameCount: source.frameCount
+        )
+    }
+
+    private static func metadataStable(
+        _ source: any Lane3PCMChunkReadable,
+        expected: Lane3RepresentativeCodecSourceMetadataSnapshot
+    ) -> Bool {
+        expected.exactlyMatches(sourceMetadata(source))
     }
 
     private static func saturatingAdd(_ value: UInt64, _ delta: UInt64) -> UInt64 {

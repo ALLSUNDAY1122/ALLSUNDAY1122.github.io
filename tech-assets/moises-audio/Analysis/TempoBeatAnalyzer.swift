@@ -44,9 +44,6 @@ public enum TempoBeatAnalyzer {
         let signalRMS = sqrt(samples.reduce(0.0) { $0 + ($1 * $1) } / Double(samples.count))
         let transientContrast = maxOnset / max(log1p(signalRMS), 1e-9)
         guard transientContrast >= 0.01 else { return nil }
-        if transientness < 2.5, transientContrast < 0.08 {
-            return nil
-        }
 
         let envelopeRate = signal.sampleRate / Double(tempoHopSize)
         let minLag = max(1, Int(floor((60.0 * envelopeRate) / configuration.tempoRange.upperBound)))
@@ -281,7 +278,7 @@ public enum TempoBeatAnalyzer {
     }
 
     private static func metricalAmbiguityFactor(best: TempoCandidate, candidates: [TempoCandidate]) -> Double {
-        let commonRatios = [0.5, 2.0, 2.0 / 3.0, 1.5]
+        let commonRatios = [0.5, 2.0, 2.0 / 3.0, 1.5, 1.0 / 3.0, 3.0]
         for alternative in candidates.dropFirst() {
             guard alternative.weighted >= best.weighted * 0.94 else { continue }
             let ratio = alternative.bpm / best.bpm

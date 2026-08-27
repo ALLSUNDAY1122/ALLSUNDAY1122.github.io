@@ -61,22 +61,43 @@ enum AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem {
         try validateDirectory(rootURL, within: rootURL)
 
         let bridgeRoot = bridgeRootURL(rootURL: rootURL)
-        if !fileManager.fileExists(atPath: bridgeRoot.path) {
+        let bridgeCreated = !fileManager.fileExists(atPath: bridgeRoot.path)
+        if bridgeCreated {
             try fileManager.createDirectory(at: bridgeRoot, withIntermediateDirectories: false)
         }
         try validateDirectory(bridgeRoot, within: rootURL)
+        if bridgeCreated {
+            try AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.syncDirectoryMetadata(
+                rootURL,
+                within: rootURL
+            )
+        }
 
         let ledger = ledgerURL(ledgerID: ledgerID, rootURL: rootURL)
-        if !fileManager.fileExists(atPath: ledger.path) {
+        let ledgerCreated = !fileManager.fileExists(atPath: ledger.path)
+        if ledgerCreated {
             try fileManager.createDirectory(at: ledger, withIntermediateDirectories: false)
         }
         try validateDirectory(ledger, within: rootURL)
+        if ledgerCreated {
+            try AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.syncDirectoryMetadata(
+                bridgeRoot,
+                within: rootURL
+            )
+        }
 
         let records = ledger.appendingPathComponent("records", isDirectory: true)
-        if !fileManager.fileExists(atPath: records.path) {
+        let recordsCreated = !fileManager.fileExists(atPath: records.path)
+        if recordsCreated {
             try fileManager.createDirectory(at: records, withIntermediateDirectories: false)
         }
         try validateDirectory(records, within: ledger)
+        if recordsCreated {
+            try AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.syncDirectoryMetadata(
+                ledger,
+                within: rootURL
+            )
+        }
         try validateLedgerTopology(ledgerURL: ledger, rootURL: rootURL, fileManager: fileManager)
     }
 
@@ -86,14 +107,31 @@ enum AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem {
         fileManager: FileManager
     ) throws {
         try validateDirectory(ledgerURL, within: rootURL)
-        let allowed: Set<String> = [
+        let fixedAllowed: Set<String> = [
             "records",
             AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.headFileName,
             AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.pendingFileName
         ]
         let names = try fileManager.contentsOfDirectory(atPath: ledgerURL.path)
-        guard names.allSatisfy({ allowed.contains($0) }) else {
+        let temporaryNames = names.filter {
+            AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.isInterruptedTemporaryFileName($0)
+        }
+        guard temporaryNames.count <= AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.maximumInterruptedTemporaryFilesPerDirectory,
+              names.allSatisfy({ fixedAllowed.contains($0) || temporaryNames.contains($0) }) else {
             throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
+        }
+        for name in temporaryNames {
+            do {
+                try AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.validateInterruptedTemporaryFile(
+                    ledgerURL.appendingPathComponent(name),
+                    within: ledgerURL,
+                    maximumBytes: maxHeadBytes
+                )
+            } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError {
+                throw error
+            } catch {
+                throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
+            }
         }
         let records = ledgerURL.appendingPathComponent("records", isDirectory: true)
         if fileManager.fileExists(atPath: records.path) {
@@ -108,7 +146,27 @@ enum AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem {
     ) throws -> Set<String> {
         guard fileManager.fileExists(atPath: recordsURL.path) else { return [] }
         try validateDirectory(recordsURL, within: ledgerURL)
-        return Set(try fileManager.contentsOfDirectory(atPath: recordsURL.path))
+        let names = try fileManager.contentsOfDirectory(atPath: recordsURL.path)
+        let temporaryNames = names.filter {
+            AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.isInterruptedTemporaryFileName($0)
+        }
+        guard temporaryNames.count <= AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.maximumInterruptedTemporaryFilesPerDirectory else {
+            throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
+        }
+        for name in temporaryNames {
+            do {
+                try AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.validateInterruptedTemporaryFile(
+                    recordsURL.appendingPathComponent(name),
+                    within: ledgerURL,
+                    maximumBytes: maxRecordBytes
+                )
+            } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError {
+                throw error
+            } catch {
+                throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
+            }
+        }
+        return Set(names.filter { !temporaryNames.contains($0) })
     }
 
     static func validateDirectory(_ url: URL, within root: URL) throws {
@@ -166,6 +224,31 @@ enum AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem {
         maximumBytes: Int,
         fileManager: FileManager
     ) throws {
+        let target: AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationTarget =
+            url.lastPathComponent == AnalysisPhysicalRealAudioBridgeConsumptionLedgerStore.pendingFileName
+            ? .pendingMarker
+            : .ledgerHead
+        _ = try writeControlFileDurably(
+            data,
+            to: url,
+            ledgerURL: ledgerURL,
+            maximumBytes: maximumBytes,
+            target: target,
+            fileManager: fileManager,
+            injectedFault: nil
+        )
+    }
+
+    @discardableResult
+    static func writeControlFileDurably(
+        _ data: Data,
+        to url: URL,
+        ledgerURL: URL,
+        maximumBytes: Int,
+        target: AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationTarget,
+        fileManager: FileManager,
+        injectedFault: AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationInjectedFault?
+    ) throws -> AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationReceipt {
         guard data.count <= maximumBytes else {
             throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.oversizedFile
         }
@@ -181,8 +264,16 @@ enum AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.nonRegularFileRejected
             }
         }
-        try data.write(to: url, options: .atomic)
+        let receipt = try AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.replaceAtomically(
+            data,
+            to: url,
+            within: ledgerURL,
+            maximumBytes: maximumBytes,
+            target: target,
+            injectedFault: injectedFault
+        )
         _ = try readRegularFile(url, within: ledgerURL, maximumBytes: maximumBytes)
+        return receipt
     }
 
     static func lexicallyContained(_ url: URL, within root: URL) -> Bool {

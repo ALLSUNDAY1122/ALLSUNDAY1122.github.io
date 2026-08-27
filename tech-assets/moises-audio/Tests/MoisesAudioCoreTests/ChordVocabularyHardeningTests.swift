@@ -49,7 +49,7 @@ final class ChordVocabularyHardeningTests: XCTestCase {
         XCTAssertNil(ChordLabelNormalizer.canonicalize("C:unknown"))
     }
 
-    func testProductTimelineRegressionRemainsGapFreeAndMajorMinorCompatible() throws {
+    func testProductTimelineRegressionRemainsGapFreeAndMajorMinorCompatible() {
         var samples: [Float] = []
         appendTones(&samples, tones: [(48, 0.40), (52, 0.30), (55, 0.28)], seconds: 2)
         appendTones(&samples, tones: [(45, 0.40), (48, 0.30), (52, 0.28)], seconds: 2)
@@ -58,8 +58,8 @@ final class ChordVocabularyHardeningTests: XCTestCase {
 
         let events = ChordTimelineAnalyzer.analyze(signal: AnalysisSignal(sampleRate: 8_000, monoSamples: samples))
         XCTAssertEqual(events.map(\.normalizedLabel), ["C", "A:min", "N", "G"])
-        XCTAssertEqual(try XCTUnwrap(events.first).startSeconds, 0, accuracy: 1e-9)
-        XCTAssertEqual(try XCTUnwrap(events.last).endSeconds, 7, accuracy: 1e-9)
+        XCTAssertEqual(events.first?.startSeconds, 0, accuracy: 1e-9)
+        XCTAssertEqual(events.last?.endSeconds, 7, accuracy: 1e-9)
         for pair in zip(events, events.dropFirst()) {
             XCTAssertEqual(pair.0.endSeconds, pair.1.startSeconds, accuracy: 1e-9)
         }

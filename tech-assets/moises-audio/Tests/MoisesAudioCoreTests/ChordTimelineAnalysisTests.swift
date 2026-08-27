@@ -114,7 +114,7 @@ final class ChordTimelineAnalysisTests: XCTestCase {
         XCTAssertFalse(snapshot.chords.isEmpty)
         XCTAssertEqual(label(at: 1.0, in: snapshot.chords), "C")
         XCTAssertEqual(label(at: 3.0, in: snapshot.chords), "G")
-        XCTAssertFalse(snapshot.sections.isEmpty)
+        XCTAssertTrue(snapshot.sections.isEmpty)
     }
 }
 

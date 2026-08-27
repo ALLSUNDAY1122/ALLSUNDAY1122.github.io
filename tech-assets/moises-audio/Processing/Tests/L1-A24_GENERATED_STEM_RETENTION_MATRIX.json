@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A24",
+  "title": "Generated Stem Retention / Delete / Refund / Orphan Recovery",
+  "target": ["MOI-P025", "MOI-P024-supporting-semantics"],
+  "state": "COMPLETE_NON_PARITY",
+  "parity_claim": "NONE",
+  "tests": {
+    "broad_pre_persistence_fault_suite": {"passed": 40, "failed": 0},
+    "checked_in_focused_regression": {"passed": 24, "failed": 0},
+    "json_schema_samples": {"passed": 2, "failed": 0},
+    "python_compile": "PASS"
+  },
+  "contracts": [
+    "delete intent is durably persisted before destructive local work",
+    "local deletion and credit refund are independent state machines",
+    "refund request requires A21 refund_pending and refund confirmation requires A21 refunded plus authority evidence",
+    "local deletion never fabricates a credit release/refund",
+    "runtime erasure is not inferred from local deletion or an accepted delete request",
+    "runtime erasure complete requires confirmed/not-found or physically evidenced not-applicable state",
+    "A23 active pointer is detached only when it names the exact target variant",
+    "another active variant for the same project/role is preserved",
+    "captured manifest SHA must remain exact between durable delete intent and destructive execution",
+    "content-addressed object deletion uses references from both all manifests and all active pointers",
+    "a valid active pointer protects shared artifact bytes even if its matching manifest is absent",
+    "any corrupt/symlink manifest or active reference fails GC/delete closed",
+    "orphan objects are removed only when content-addressed, unreferenced by manifest or active pointer, and older than explicit grace",
+    "stale temporary files are cleaned only after a full reference-integrity scan and grace period",
+    "cancelled/failed inactive variants require physical A21 abandonment evidence before cleanup",
+    "active variants cannot be classified as abandoned",
+    "durable delete records act as tombstones against silent generation resurrection",
+    "public evidence excludes paths, raw audio, raw runtime IDs and raw credit/billing records"
+  ],
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "external_remaining": [
+    "live generation-runtime retention/delete behavior",
+    "actual authority-confirmed credit refund behavior",
+    "current-iPhone generated-stem delete/regenerate UX",
+    "integrated project/account deletion across Lane 2 and app shell",
+    "real current-iPhone Moises differential and HQ PARITY judgment"
+  ]
+}

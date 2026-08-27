@@ -133,7 +133,7 @@ final class AnalysisDeviceCapturePlanTests: XCTestCase {
 
         let wrongSource = AnalysisDeviceWorkloadSourceBinding(
             fixtureID: "long-a", sourceSHA256: sourceSHA,
-            sourceDurationSeconds: 3_500, sourceSampleRate: 48_000, sourceChannelCount: 1
+            sourceDurationSeconds: 3_599, sourceSampleRate: 48_000, sourceChannelCount: 1
         )
         let sourceMismatch = AnalysisDeviceCapturePlanValidator.validate(
             plan(source: wrongSource), workloadPolicy: policy(), performanceProfile: profile()

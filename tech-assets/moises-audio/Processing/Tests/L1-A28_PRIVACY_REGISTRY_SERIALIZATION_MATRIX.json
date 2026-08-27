@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "wave_id": "L1-A28",
+  "title": "Privacy Registry Transactional Serialization Hardening",
+  "evidence_state": "NON_PARITY_EVIDENCE_ONLY",
+  "parity_claim": "NONE",
+  "scope": "single-host file-backed privacy registry mutation correctness",
+  "cases": [
+    {
+      "id": "A28-01",
+      "scenario": "concurrent distinct registrations",
+      "expected": "all records survive without lost update",
+      "observed": "PASS",
+      "evidence": "16 concurrent logical jobs preserved"
+    },
+    {
+      "id": "A28-02",
+      "scenario": "concurrent diagnostic read-modify-write",
+      "expected": "all in-cap updates survive serialization",
+      "observed": "PASS",
+      "evidence": "24 concurrent diagnostic updates preserved"
+    },
+    {
+      "id": "A28-03",
+      "scenario": "concurrent delete requests with provider side effect",
+      "expected": "delete intent durable; provider asset/task calls reserved once",
+      "observed": "PASS",
+      "evidence": "10 concurrent delete callers; asset_calls=1; task_calls=1"
+    },
+    {
+      "id": "A28-04",
+      "scenario": "concurrent registration plus diagnostic mutation",
+      "expected": "cross-record mutation does not overwrite either record",
+      "observed": "PASS",
+      "evidence": "both records and diagnostic retained"
+    },
+    {
+      "id": "A28-05",
+      "scenario": "local artifact delete ENOENT race",
+      "expected": "already-absent target is idempotent success rather than false failure",
+      "observed": "PASS",
+      "evidence": "exact delete branch semantics 2/2 PASS for absent and existing target"
+    },
+    {
+      "id": "A28-06",
+      "scenario": "single-host topology preflight",
+      "expected": "A09 file store may pass only after full RMW flock serialization",
+      "observed": "PASS",
+      "evidence": "A09 profile updated to posix_flock + single_host_safe"
+    },
+    {
+      "id": "A28-07",
+      "scenario": "multi-host topology without shared authority adapter",
+      "expected": "fail closed",
+      "observed": "EXPECTED_FAIL_CLOSED",
+      "stable_error_code": "L1A27_SHARED_AUTHORITY_REQUIRED"
+    },
+    {
+      "id": "A28-08",
+      "scenario": "process interruption after provider-delete reservation",
+      "expected": "never report confirmed erasure and never blindly replay ambiguous external side effect",
+      "observed": "FAIL_CLOSED_BY_DESIGN",
+      "evidence": "durable unknown_after_inflight reservation state precedes provider contact"
+    },
+    {
+      "id": "A28-09",
+      "scenario": "POSIX lock unavailable",
+      "expected": "do not silently downgrade serialization guarantee",
+      "observed": "FAIL_CLOSED_BY_DESIGN",
+      "stable_error_code": "SEP_PRIVACY_LOCK_UNAVAILABLE"
+    }
+  ],
+  "test_observations": {
+    "existing_privacy_retention_regression": "25/25 PASS on A28 implementation before final ENOENT micro-hardening",
+    "privacy_concurrency_regression": "5/5 PASS before final ENOENT micro-hardening; dedicated ENOENT regression subsequently added",
+    "mutation_topology_regression": "8/8 PASS after A09 single-host profile update",
+    "final_local_delete_branch_check": "2/2 PASS after ENOENT hardening",
+    "python_compile": "PASS for A28 implementation/test set before final ENOENT micro-hardening; final source accepted by GitHub and remote readback pending full A26 exact-checkout audit"
+  },
+  "remaining_limits": [
+    "This evidence does not establish multi-host/distributed writer safety.",
+    "No shared transactional backend adapter exists for A09/A16/A23/A24.",
+    "No real user-content deletion or current-iPhone PARITY claim is made.",
+    "L1-A26 exact-checkout one-command full audit remains pending."
+  ]
+}
