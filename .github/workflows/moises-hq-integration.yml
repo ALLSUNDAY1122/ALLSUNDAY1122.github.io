@@ -101,3 +101,81 @@ jobs:
             -parse-as-library \
             -typecheck \
             "${sources[@]}"
+
+  portable-lane2-aw53-native-selfcheck:
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.0
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Execute Lane 2 AW53 real-filesystem self-check
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sources=(
+            Shared/DomainContracts.swift
+            Shared/LibraryContracts.swift
+            IO/Sources/*.swift
+            Library/Sources/*.swift
+          )
+          swiftc \
+            -swift-version 6 \
+            -warnings-as-errors \
+            -strict-concurrency=complete \
+            -O \
+            "${sources[@]}" \
+            Library/benchmarks/L2AW53SegmentedSteadyStateAuthoritySelfCheck.swift \
+            -o /tmp/l2-aw53-selfcheck
+          /tmp/l2-aw53-selfcheck | tee /tmp/l2-aw53-selfcheck.out
+          grep -q '^L2_AW53_SELF_TEST_PASS ' /tmp/l2-aw53-selfcheck.out
+
+  portable-lane3-aw53-native-execution:
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.0
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Execute Lane 3 AW53 lifecycle self-test stress and benchmark
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sources=(
+            Shared/DomainContracts.swift
+            DSP/Sources/*.swift
+            Playback/Sources/*.swift
+          )
+
+          cp Playback/Tests/L3_AW53_CandidatePhysicalSamplingLifecycleSelfTest.swift /tmp/L3AW53SelfTest.swift
+          cp Playback/Tests/L3_AW53_CandidatePhysicalSamplingLifecycleStress.swift /tmp/L3AW53Stress.swift
+          cp Playback/Tests/L3_AW53_CandidatePhysicalSamplingLifecycleBenchmark.swift /tmp/L3AW53Benchmark.swift
+          sed -i '/^@main$/d' /tmp/L3AW53SelfTest.swift /tmp/L3AW53Stress.swift /tmp/L3AW53Benchmark.swift
+          cat >/tmp/L3AW53CombinedRunner.swift <<'SWIFT'
+          @main
+          enum L3AW53CombinedRunner {
+              static func main() throws {
+                  try L3AW53CandidatePhysicalSamplingLifecycleSelfTest.main()
+                  try L3AW53CandidatePhysicalSamplingLifecycleStress.main()
+                  try L3AW53CandidatePhysicalSamplingLifecycleBenchmark.main()
+              }
+          }
+          SWIFT
+
+          swiftc -swift-version 6 -warnings-as-errors -strict-concurrency=complete -O \
+            "${sources[@]}" \
+            /tmp/L3AW53SelfTest.swift \
+            /tmp/L3AW53Stress.swift \
+            /tmp/L3AW53Benchmark.swift \
+            /tmp/L3AW53CombinedRunner.swift \
+            -o /tmp/l3-aw53-native
+          /tmp/l3-aw53-native | tee /tmp/l3-aw53-native.out
+          grep -q '^L3_AW53_CandidatePhysicalSamplingLifecycleSelfTest PASS ' /tmp/l3-aw53-native.out
+          grep -q '^L3_AW53_CandidatePhysicalSamplingLifecycleStress PASS ' /tmp/l3-aw53-native.out
+          grep -q '^L3_AW53_CandidatePhysicalSamplingLifecycleBenchmark iterations=20000 ' /tmp/l3-aw53-native.out
