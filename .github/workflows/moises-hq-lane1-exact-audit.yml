@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 env:
-  LANE1_EXPECTED_HEAD: 1841eac242d9963d0d5e4a8a7c049623feaf8f55
+  LANE1_EXPECTED_HEAD: 8abc9c64420f71d6d50ca5bbb1e35240a3c56d19
 
 jobs:
   lane1-a26-exact-checkout-audit:
@@ -72,8 +72,8 @@ jobs:
         shell: bash
         run: |
           set +e
-          export PYTHONPATH="tech-assets/moises-audio/Separation/Server:tech-assets/moises-audio/Separation/Evaluation:tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
-          cd tech-assets/moises-audio
+          export PYTHONPATH="$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Server:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Evaluation:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          cd "$GITHUB_WORKSPACE/tech-assets/moises-audio"
           python3 -m unittest discover -v -s Separation/Tests -p 'test_*.py'
           exit 0
 
