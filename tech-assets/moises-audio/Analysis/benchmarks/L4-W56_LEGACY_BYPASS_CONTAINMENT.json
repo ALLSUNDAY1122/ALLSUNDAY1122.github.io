@@ -8,7 +8,16 @@
     "lane4": "W52",
     "integration_run_id": 33030546532,
     "swiftpm_tests_passed": 462,
-    "swiftpm_tests_total": 462
+    "swiftpm_tests_total": 462,
+    "reason": "Latest HQ Epoch46 Run 33038712540 restored a green baseline with Analysis excluded from Package.swift, so it is not Lane4 compile evidence. Epoch44 remains the latest observed integration run that actually compiled the Analysis package surface through W52."
+  },
+  "latest_hq_observation": {
+    "integration_epoch_commit": 46,
+    "integration_head": "5f258a04b37e759340d52a72d69fa1d8257a4037",
+    "integration_run_id": 33038712540,
+    "integration_run_conclusion": "SUCCESS",
+    "lane4_analysis_in_package": false,
+    "may_be_used_as_w56_compile_evidence": false
   },
   "production_policy": {
     "legacy_api_count": 13,
@@ -56,7 +65,7 @@
     "w56_compile_pass_claimed": false
   },
   "external_gates": [
-    "HQ semantic integration of W53-W56 and canonical SwiftPM/XCTest",
+    "HQ semantic integration of W53-W56 with Analysis re-enabled and canonical SwiftPM/XCTest",
     "selected iphoneos/arm64 Xcode compilation and execution",
     "selected physical-iPhone/APFS durability evidence",
     "HQ-approved rights-cleared real-audio corpus and genuine integrated Lane2 decoder",
