@@ -26,6 +26,25 @@ class A45DependencyBindingTests(unittest.TestCase):
         self.assertIn("SEP_ADV_TASK_ID_MISMATCH", text)
         self.assertIn("raw_task_id != task_id", text)
         self.assertIn("SEP_ADV_OUTPUT_MODEL_DUPLICATE", text)
+        self.assertIn("_catalog_model_to_role", text)
+
+    def test_existing_task_observation_has_no_live_discovery_dependency(self):
+        text = (SERVER / "canonical_advanced_provider.py").read_text(encoding="utf-8")
+        tree = ast.parse(text)
+        method = None
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef) and node.name == "get_task_state":
+                method = node
+                break
+        self.assertIsNotNone(method)
+        calls_refresh = any(
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr == "_refresh_maps"
+            for node in ast.walk(method)
+        )
+        self.assertFalse(calls_refresh)
+        self.assertIn("self._catalog_model_to_role.get(provider_model)", text)
 
     def test_formal_a45_regression_is_present_and_parses(self):
         path = TESTS / "test_a45_provider_task_identity.py"
@@ -37,6 +56,7 @@ class A45DependencyBindingTests(unittest.TestCase):
         self.assertIn("AUDIOSHAKE_TASK_MAX_TARGETS", text)
         self.assertIn("build_contract_bound_audioshake_capabilities", text)
         self.assertIn("def preflight_separation", text)
+        self.assertIn("self._refresh_maps()", text)
 
 
 if __name__ == "__main__":
