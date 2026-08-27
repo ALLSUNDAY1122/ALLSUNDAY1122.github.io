@@ -59,6 +59,14 @@ public struct Lane3CandidatePhysicalResourceTraceAccumulator: Sendable {
 
     public var latestSample: Lane3CandidatePhysicalResourceSample? { samples.last }
 
+    public static func validatedSessionIdentifier(_ value: String) throws -> String {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard value == trimmed, !value.isEmpty, value.utf8.count <= 128 else {
+            throw Lane3CandidatePhysicalResourceTraceError.invalidSessionIdentifier
+        }
+        return value
+    }
+
     public mutating func append(_ sample: Lane3CandidatePhysicalResourceSample) throws {
         guard sample.uptimeSeconds.isFinite, sample.uptimeSeconds >= 0 else {
             throw Lane3CandidatePhysicalResourceTraceError.invalidUptime
@@ -81,11 +89,7 @@ public struct Lane3CandidatePhysicalResourceTraceAccumulator: Sendable {
     /// Binary canonical artifact for hashing/storage by the selected Apple recorder.
     /// Doubles are bound by IEEE-754 bitPattern and integers are little-endian.
     public func canonicalArtifactData(sessionIdentifier: String) throws -> Data {
-        let session = sessionIdentifier.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !session.isEmpty, session.utf8.count <= 128 else {
-            throw Lane3CandidatePhysicalResourceTraceError.invalidSessionIdentifier
-        }
-
+        let session = try Self.validatedSessionIdentifier(sessionIdentifier)
         var data = Data("LANE3_AW52_CANDIDATE_RESOURCE_TRACE_V1\0".utf8)
         let sessionBytes = Array(session.utf8)
         appendLittleEndian(UInt64(sessionBytes.count), to: &data)
@@ -106,7 +110,8 @@ public struct Lane3CandidatePhysicalResourceTraceAccumulator: Sendable {
         sessionIdentifier: String,
         traceArtifactSHA256: String
     ) throws -> Lane3PhysicalEvidenceResourceTraceReceipt {
-        _ = try canonicalArtifactData(sessionIdentifier: sessionIdentifier)
+        let session = try Self.validatedSessionIdentifier(sessionIdentifier)
+        _ = try canonicalArtifactData(sessionIdentifier: session)
         guard isLowercaseHex(traceArtifactSHA256, length: 64) else {
             throw Lane3CandidatePhysicalResourceTraceError.invalidArtifactDigest
         }
@@ -162,7 +167,7 @@ public struct Lane3CandidatePhysicalResourceTraceAccumulator: Sendable {
         }
 
         return Lane3PhysicalEvidenceResourceTraceReceipt(
-            sessionIdentifier: sessionIdentifier.trimmingCharacters(in: .whitespacesAndNewlines),
+            sessionIdentifier: session,
             subject: .candidate,
             observedDurationSeconds: duration,
             sampleCount: samples.count,
