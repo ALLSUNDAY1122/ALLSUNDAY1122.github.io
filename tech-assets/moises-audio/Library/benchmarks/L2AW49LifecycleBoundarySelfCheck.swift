@@ -20,13 +20,12 @@ struct L2AW49LifecycleBoundarySelfCheck {
 
         var checks = 0
         let missing = lifecycle.appendingPathComponent("missing.json")
-        precondition(
-            try boundary.requireRegularFileOrMissing(
-                missing,
-                within: lifecycle,
-                fileManager: fm
-            ) == false
+        let missingExists = try boundary.requireRegularFileOrMissing(
+            missing,
+            within: lifecycle,
+            fileManager: fm
         )
+        precondition(missingExists == false)
         checks += 1
 
         let dangling = lifecycle.appendingPathComponent("dangling.json")
@@ -80,7 +79,8 @@ struct L2AW49LifecycleBoundarySelfCheck {
         let start = Date()
         for index in 0..<10_000 {
             let candidate = safe.appendingPathComponent("probe-\(index).json")
-            precondition(try boundary.nodeExists(candidate, fileManager: fm) == false)
+            let exists = try boundary.nodeExists(candidate, fileManager: fm)
+            precondition(exists == false)
         }
         let elapsedMS = Date().timeIntervalSince(start) * 1_000
 
