@@ -1,10 +1,13 @@
 {
-  "request_id": "app2-005-hm1-build2026082701-readback-20260827-2210",
-  "requests": [
-    {"label": "builds", "path": "/v1/apps/6799581662/builds?limit=50"},
-    {"label": "version-build", "path": "/v1/appStoreVersions/b22c4518-3724-42a1-87d3-99c2d9d2b7d2/build"},
-    {"label": "review-submissions", "path": "/v1/apps/6799581662/reviewSubmissions?limit=50"},
-    {"label": "iap", "path": "/v1/apps/6799581662/inAppPurchasesV2?limit=50"},
-    {"label": "monthly", "path": "/v1/subscriptions/6804373671?include=appStoreReviewScreenshot,subscriptionLocalizations,subscriptionAvailability&limit[subscriptionLocalizations]=50"}
+  "request_id": "app2-005-hm1-attach-build2026082701-20260827-2211",
+  "action": "write",
+  "expected_app_id": "6799581662",
+  "expected_bundle_id": "jp.allsunday1122.healthmanager1",
+  "operations": [
+    {
+      "type": "attach_build",
+      "app_store_version_id": "b22c4518-3724-42a1-87d3-99c2d9d2b7d2",
+      "build_id": "a7fe9a21-7a5e-4b0d-93fa-2dbc7ee0feca"
+    }
   ]
 }
