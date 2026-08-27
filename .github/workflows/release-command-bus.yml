@@ -61,8 +61,14 @@ jobs:
             --command /tmp/release-command.json \
             --output release-result.json
 
+      - name: Execute APP2-003 Codemagic artifact readback
+        if: startsWith(github.event.issue.title, '[CM-CMD] APP2-003 ARTIFACT')
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: python scripts/app2_003_codemagic_artifact_readback.py
+
       - name: Execute Codemagic command
-        if: startsWith(github.event.issue.title, '[CM-CMD]')
+        if: startsWith(github.event.issue.title, '[CM-CMD]') && !startsWith(github.event.issue.title, '[CM-CMD] APP2-003 ARTIFACT')
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
           CM_APP_ID: ${{ vars.CM_APP_ID }}
