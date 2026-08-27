@@ -1,0 +1,59 @@
+name: APP2-002 Fetch Codemagic Build Log
+
+on:
+  push:
+    branches: [main]
+    paths: ['automation/app2-002-fetch-build-log-command.json']
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Fetch sanitized Xcode build log
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import io,json,os,re,urllib.request,zipfile
+          from pathlib import Path
+          cmd=json.loads(Path('automation/app2-002-fetch-build-log-command.json').read_text())
+          build_id=cmd['build_id']; token=os.environ['CM_API_TOKEN'].strip()
+          def fetch(url,auth=True):
+              h={'Accept':'application/json'}
+              if auth: h['x-auth-token']=token
+              with urllib.request.urlopen(urllib.request.Request(url,headers=h),timeout=30) as r: return r.read()
+          details=json.loads(fetch(f'https://codemagic.io/api/v3/builds/{build_id}').decode())
+          data=details.get('data') if isinstance(details,dict) else details
+          artifacts=(data or {}).get('artifacts') or []
+          bundle=next((a for a in artifacts if isinstance(a,dict) and a.get('type')=='bundle' and a.get('short_lived_download_url')),None)
+          if not bundle: raise SystemExit('artifact bundle not found')
+          zraw=fetch(bundle['short_lived_download_url'],auth=False)
+          with zipfile.ZipFile(io.BytesIO(zraw)) as z:
+              names=z.namelist()
+              candidates=[n for n in names if ('xcodebuild' in n.lower() or n.lower().endswith('.log')) and not any(x in n.lower() for x in ('secret','token','credential','key'))]
+              if not candidates: raise SystemExit('no build logs: '+repr(names[:100]))
+              texts=[]
+              for n in candidates[-10:]:
+                  try: texts.append('### '+n+'\n'+z.read(n).decode('utf-8','replace'))
+                  except Exception: pass
+          text='\n\n'.join(texts)
+          text=re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----','[REDACTED PEM]',text,flags=re.S)
+          text=re.sub(r'eyJ[A-Za-z0-9._-]{20,}','[REDACTED JWT]',text)
+          text=re.sub(r'(?i)(api[_ -]?key|private[_ -]?key|token|password)\s*[:=]\s*\S+',r'\1=[REDACTED]',text)
+          out=Path('automation/codemagic-results/app2-002-build7-xcode.log')
+          out.parent.mkdir(parents=True,exist_ok=True); out.write_text(text[-40000:],encoding='utf-8')
+          PY
+      - name: Persist log
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/codemagic-results/app2-002-build7-xcode.log
+          git commit -m 'APP2-002: persist Build 7 Xcode log' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
