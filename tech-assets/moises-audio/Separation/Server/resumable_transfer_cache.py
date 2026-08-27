@@ -24,6 +24,7 @@ _SAFE_JOB = re.compile(r"^[0-9a-f]{32}$")
 _CACHE_SUFFIX = ".download-cache"
 _LOCK_DIR_NAME = ".resume-cache-locks"
 _ACCESS_MARKER = ".last-access"
+_DELETED_SUFFIX = ".deleted"
 
 try:
     import fcntl as _fcntl
@@ -38,6 +39,18 @@ def _process_lock(path: Path) -> threading.RLock:
     key = str(path.resolve())
     with _PROCESS_LOCKS_GUARD:
         return _PROCESS_LOCKS.setdefault(key, threading.RLock())
+
+
+def _fsync_directory(path: Path) -> None:
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+    try:
+        fd = os.open(path, flags)
+    except OSError:
+        return
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
 
 
 @dataclass(frozen=True)
@@ -81,11 +94,12 @@ class _Candidate:
 
 
 class ResumableTransferCacheManager:
-    """TTL/quota reclamation with an external per-job lease.
+    """TTL/quota reclamation with an external per-job lease and durable delete tombstone.
 
     The lease lives outside the deletable cache directory. This avoids the classic race where a
     collector deletes a directory containing the lock inode while another process is waiting on
     that old inode and later writes into a newly-created directory without owning its real lock.
+    Delete tombstones live beside these locks, so user deletion cannot be undone by a late retry.
     """
 
     def __init__(
@@ -118,6 +132,10 @@ class ResumableTransferCacheManager:
     def _lock_path(self, logical_job_id: str) -> Path:
         job = self._validate_job(logical_job_id)
         return self.lock_root / f"{job}.lock"
+
+    def _deleted_path(self, logical_job_id: str) -> Path:
+        job = self._validate_job(logical_job_id)
+        return self.lock_root / f"{job}{_DELETED_SUFFIX}"
 
     @contextmanager
     def lease(self, logical_job_id: str, *, blocking: bool = True) -> Iterator[bool]:
@@ -157,7 +175,47 @@ class ResumableTransferCacheManager:
                 handle.close()
             process_lock.release()
 
+    def is_deleted(self, logical_job_id: str) -> bool:
+        path = self._deleted_path(logical_job_id)
+        if path.is_symlink() or (path.exists() and not path.is_file()):
+            raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_DELETE_TOMBSTONE_UNSAFE")
+        return path.is_file()
+
+    def _write_delete_tombstone_unlocked(self, logical_job_id: str) -> None:
+        path = self._deleted_path(logical_job_id)
+        if path.is_symlink() or (path.exists() and not path.is_file()):
+            raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_DELETE_TOMBSTONE_UNSAFE")
+        if path.is_file():
+            return
+        tmp = path.with_name(path.name + ".tmp")
+        try:
+            with tmp.open("wb") as handle:
+                handle.write(b"deleted\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(tmp, path)
+            _fsync_directory(path.parent)
+        except OSError as exc:
+            try:
+                tmp.unlink(missing_ok=True)
+            except OSError:
+                pass
+            raise OrchestratorError(
+                "SEP_OUTPUT_RESUME_CACHE_DELETE_TOMBSTONE_WRITE_FAILED",
+                retryable=True,
+            ) from exc
+
+    def tombstone_and_purge(self, logical_job_id: str) -> None:
+        """Durably prevent same-job retry resurrection, then remove retry-only cached bytes."""
+        with self.lease(logical_job_id) as acquired:
+            if not acquired:  # blocking lease always acquires; defensive only.
+                raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_LOCK_FAILED", retryable=True)
+            self._write_delete_tombstone_unlocked(logical_job_id)
+            self._remove_root(self.cache_root(logical_job_id))
+
     def ensure_cache_root(self, logical_job_id: str) -> Path:
+        if self.is_deleted(logical_job_id):
+            raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_JOB_DELETED")
         root = self.cache_root(logical_job_id)
         if root.exists() and (root.is_symlink() or not root.is_dir()):
             raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_UNSAFE")
@@ -233,7 +291,7 @@ class ResumableTransferCacheManager:
             ) from exc
 
     def purge(self, logical_job_id: str) -> None:
-        """Explicit privacy/deletion hook for one logical job's resumable bytes."""
+        """Remove retry-only bytes without creating a permanent delete tombstone."""
         with self.lease(logical_job_id) as acquired:
             if not acquired:  # blocking lease always acquires; defensive only.
                 raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_LOCK_FAILED", retryable=True)
@@ -309,7 +367,6 @@ class ResumableTransferCacheManager:
         retained.sort(key=lambda item: (item.last_access, item.logical_job_id))
         retained_bytes = sum(item.byte_count for item in retained)
         quota_candidates = list(retained)
-        protected: set[str] = set()
 
         for candidate in quota_candidates:
             if len(retained) <= self.policy.max_entries and retained_bytes <= self.policy.max_total_bytes:
@@ -317,7 +374,6 @@ class ResumableTransferCacheManager:
             with self.lease(candidate.logical_job_id, blocking=False) as acquired:
                 if not acquired:
                     skipped_active += 1
-                    protected.add(candidate.logical_job_id)
                     continue
                 path = candidate.path
                 if not path.exists():
@@ -333,9 +389,8 @@ class ResumableTransferCacheManager:
                 fresh_access = self._last_access(path)
                 fresh_size = self._tree_size(path)
                 if fresh_access != candidate.last_access or fresh_size != candidate.byte_count:
-                    # It became active between scan and eviction selection. Preserve it for this
-                    # sweep and report over_budget if the remaining old candidates cannot suffice.
-                    protected.add(candidate.logical_job_id)
+                    # It changed between scan and eviction selection. Preserve it for this sweep
+                    # rather than deleting bytes that may just have become relevant to a retry.
                     retained_bytes += fresh_size - candidate.byte_count
                     retained = [
                         _Candidate(x.logical_job_id, x.path, fresh_access, fresh_size)
