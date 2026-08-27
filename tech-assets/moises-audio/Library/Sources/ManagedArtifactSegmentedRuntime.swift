@@ -193,18 +193,18 @@ public struct Lane2ManagedArtifactSegmentedRuntime: Sendable {
         return result.sorted(by: Self.entryOrder)
     }
     private func validateShard(_ i: Int) throws { guard (0..<Self.shardCount).contains(i) else { throw Lane2ManagedArtifactSegmentedRuntimeFailure.invalidShard(i) } }
-    private func absoluteURL(_ p: String) throws -> URL { let p = try Self.normalize(p), u = rootURL.appendingPathComponent(p).standardizedFileURL, prefix = rootURL.path.hasSuffix("/") ? rootURL.path : rootURL.path + "/"; guard u.path.hasPrefix(prefix) else { throw Lane2ManagedArtifactSegmentedRuntimeFailure.invalidRelativePath(p) }; return u }
+    private func absoluteURL(_ p: String) throws -> URL { let p=try Self.normalize(p),u=rootURL.appendingPathComponent(p).standardizedFileURL,prefix=rootURL.path.hasSuffix("/") ? rootURL.path : rootURL.path+"/"; guard u.path.hasPrefix(prefix) else{throw Lane2ManagedArtifactSegmentedRuntimeFailure.invalidRelativePath(p)}; return u }
     private var boundary: LibraryManagedPathBoundary { .init(rootURL: rootURL) }
-    private var v1DirectoryURL: URL { rootURL.appendingPathComponent(recoveryDirectoryName, isDirectory: true).appendingPathComponent("ArtifactInventory", isDirectory: true).appendingPathComponent("v1", isDirectory: true) }
-    private var shardsDirectoryURL: URL { v1DirectoryURL.appendingPathComponent("Shards", isDirectory: true) }
-    private var segmentedDirectoryURL: URL { v1DirectoryURL.appendingPathComponent("Segmented", isDirectory: true) }
-    private func legacyShardURL(_ i: Int) -> URL { shardsDirectoryURL.appendingPathComponent(String(format: "%02x.json", i)) }
-    private func manifestURL(_ i: Int) -> URL { segmentedDirectoryURL.appendingPathComponent(String(format: "%02x.manifest.json", i)) }
-    private func segmentURL(shardIndex: Int, generation: UUID, segmentIndex: Int) -> URL { segmentedDirectoryURL.appendingPathComponent(String(format: "%02x.%@.%04d.json", shardIndex, generation.uuidString, segmentIndex)) }
-    private var stableEncoder: JSONEncoder { let e = JSONEncoder(); e.outputFormatting = [.sortedKeys]; return e }
-    private static func segmentCount(_ count: Int) -> Int { guard count > 0 else { return 0 }; let q = count / entriesPerSegment; return q + (count % entriesPerSegment == 0 ? 0 : 1) }
-    private static func entryOrder(_ a: Lane2ManagedArtifactRuntimeEntry, _ b: Lane2ManagedArtifactRuntimeEntry) -> Bool { a.relativePath < b.relativePath }
-    private static func isManaged(_ p: String) -> Bool { p.split(separator: "/").first.map { managedRootNames.contains(String($0)) } ?? false }
-    private static func normalize(_ raw: String) throws -> String { let p = raw.replacingOccurrences(of: "\\", with: "/"); guard !p.isEmpty, !p.hasPrefix("/"), !p.contains("\0"), !(p as NSString).isAbsolutePath else { throw Lane2ManagedArtifactSegmentedRuntimeFailure.invalidRelativePath(raw) }; let xs = p.split(separator: "/", omittingEmptySubsequences: false); guard xs.count >= 2, !xs.contains(where: { $0.isEmpty || $0 == "." || $0 == ".." }) else { throw Lane2ManagedArtifactSegmentedRuntimeFailure.invalidRelativePath(raw) }; return xs.joined(separator: "/") }
-    private static func shardIndex(_ p: String) -> Int { var h: UInt64 = 14_695_981_039_346_656_037; for b in p.utf8 { h ^= UInt64(b); h &*= 1_099_511_628_211 }; return Int(h % UInt64(shardCount)) }
+    private var v1DirectoryURL: URL { rootURL.appendingPathComponent(recoveryDirectoryName,isDirectory:true).appendingPathComponent("ArtifactInventory",isDirectory:true).appendingPathComponent("v1",isDirectory:true) }
+    private var shardsDirectoryURL: URL { v1DirectoryURL.appendingPathComponent("Shards",isDirectory:true) }
+    private var segmentedDirectoryURL: URL { v1DirectoryURL.appendingPathComponent("Segmented",isDirectory:true) }
+    private func legacyShardURL(_ i:Int)->URL { shardsDirectoryURL.appendingPathComponent(String(format:"%02x.json",i)) }
+    private func manifestURL(_ i:Int)->URL { segmentedDirectoryURL.appendingPathComponent(String(format:"%02x.manifest.json",i)) }
+    private func segmentURL(shardIndex:Int,generation:UUID,segmentIndex:Int)->URL { segmentedDirectoryURL.appendingPathComponent(String(format:"%02x.%@.%04d.json",shardIndex,generation.uuidString,segmentIndex)) }
+    private var stableEncoder: JSONEncoder { let e=JSONEncoder();e.outputFormatting=[.sortedKeys];return e }
+    private static func segmentCount(_ count:Int)->Int { guard count > 0 else{return 0}; let q=count/entriesPerSegment; return q + (count % entriesPerSegment == 0 ? 0 : 1) }
+    private static func entryOrder(_ a:Lane2ManagedArtifactRuntimeEntry,_ b:Lane2ManagedArtifactRuntimeEntry)->Bool { a.relativePath < b.relativePath }
+    private static func isManaged(_ p:String)->Bool { p.split(separator:"/").first.map{managedRootNames.contains(String($0))} ?? false }
+    private static func normalize(_ raw:String)throws->String { let p=raw.replacingOccurrences(of:"\\",with:"/"); guard !p.isEmpty,!p.hasPrefix("/"),!p.contains("\0"),!(p as NSString).isAbsolutePath else{throw Lane2ManagedArtifactSegmentedRuntimeFailure.invalidRelativePath(raw)};let xs=p.split(separator:"/",omittingEmptySubsequences:false);guard xs.count>=2,!xs.contains(where:{$0.isEmpty || $0=="." || $0==".."}) else{throw Lane2ManagedArtifactSegmentedRuntimeFailure.invalidRelativePath(raw)};return xs.joined(separator:"/") }
+    private static func shardIndex(_ p:String)->Int { var h:UInt64=14_695_981_039_346_656_037;for b in p.utf8{h ^= UInt64(b);h &*= 1_099_511_628_211};return Int(h % UInt64(shardCount)) }
 }
