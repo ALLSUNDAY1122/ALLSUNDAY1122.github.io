@@ -117,6 +117,7 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationTests: X
             .afterPublishBeforeDirectorySync,
             .afterDirectorySync
         ]
+        let expectedCertificateRoot = try certificate().declaredCertificateRootSHA256
 
         for target in targets {
             for point in points {
@@ -158,7 +159,7 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationTests: X
                 XCTAssertEqual(head != nil, expectedCommitted, "target=\(target) point=\(point)")
                 if expectedCommitted {
                     XCTAssertEqual(head?.latestSequence, 1)
-                    XCTAssertEqual(head?.records.last?.bridgeCertificateRootSHA256, try certificate().declaredCertificateRootSHA256)
+                    XCTAssertEqual(head?.records.last?.bridgeCertificateRootSHA256, expectedCertificateRoot)
                 }
             }
         }
