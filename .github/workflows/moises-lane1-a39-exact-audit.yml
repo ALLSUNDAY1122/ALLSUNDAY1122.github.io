@@ -1,0 +1,53 @@
+name: Moises Lane1 A39 Exact Audit
+
+on:
+  push:
+    branches:
+      - hq/moises-lane1-a39-audit-20260827
+
+permissions:
+  contents: read
+
+jobs:
+  lane1-a39-exact-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Worker 1 A39 tip
+        uses: actions/checkout@v4
+        with:
+          ref: 22ee8a44bb826b24047bc4e97442ac64a095e48b
+          fetch-depth: 1
+      - name: Verify exact checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          echo "actual_head=$actual"
+          test "$actual" = "22ee8a44bb826b24047bc4e97442ac64a095e48b"
+      - name: Python environment
+        shell: bash
+        run: |
+          python3 --version
+          python3 -m pip install --disable-pip-version-check jsonschema
+      - name: Run exact final-tip audit and expose discovery errors
+        shell: bash
+        working-directory: tech-assets/moises-audio
+        run: |
+          set +e
+          python3 Separation/Evaluation/lane1_dependency_audit.py \
+            --audio-root . \
+            --timeout-seconds 600 \
+            --expected-git-head 22ee8a44bb826b24047bc4e97442ac64a095e48b \
+            --output /tmp/l1-a39-exact-audit.json
+          audit_code=$?
+          echo "audit_exit_code=$audit_code"
+          cat /tmp/l1-a39-exact-audit.json
+          if [ "$audit_code" -ne 0 ]; then
+            echo "===== FULL UNITTEST DISCOVERY DIAGNOSTIC ====="
+            export PYTHONPATH="$PWD/Separation/Server:$PWD/Separation/Evaluation:$PWD/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+            python3 -m unittest discover -s Separation/Tests -p 'test_*.py' -v
+            discovery_code=$?
+            echo "discovery_exit_code=$discovery_code"
+          fi
+          exit "$audit_code"
