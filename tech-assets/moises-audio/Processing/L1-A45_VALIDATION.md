@@ -48,13 +48,27 @@ An interface-compatible focused boundary harness executed **12/12 PASS**. It is 
 
 ## Exact audit state
 
-During the prior A44 Wave, HQ Epoch45 integrated Lane 1 through A42 and ran the A26 exact checkout audit for Worker A42 tip `6acb782a35187ad8765060f89ceb791ef0304e1f`:
+HQ previously ran the A26 exact checkout audit for Worker A42 tip `6acb782a35187ad8765060f89ceb791ef0304e1f`:
 
 - Run `33036684021`
 - Job `98400764989`
-- conclusion: SUCCESS
+- conclusion: **SUCCESS**
 
-That proves the historical A42 checkpoint only. A43, A44 and A45 were added afterward. The HQ workflow is still pinned to A42 at the time of this Wave. Therefore the exact final-A45 full discovery/dependency audit is **NOT_OBSERVED**, A26 remains open for the current tip, and no current-tip exact PASS is claimed.
+Late in this A45 Wave, HQ retargeted the exact workflow to the A44 evidence tip `05b7fd15efadcde624efcd0acc7157a5d19cb418` and ran:
+
+- Run `33038424062`
+- Job `98406309543`
+- exact checkout identity / cleanliness: **PASS**
+- Python compile: **120 PASS**
+- owned source snapshot: **PASS**
+- dependency contracts: **28/28 PASS**
+- unittest discovery: **845 tests / 1 failure / 0 errors / 0 skipped**
+- overall: **FAIL**
+- report artifact: `l1-a26-exact-audit-05b7fd15efadcde624efcd0acc7157a5d19cb418`, artifact id `9632905364`
+
+The A26-v5 JSON records the unittest failure count but not the failing test name/traceback, so the exact A44 artifact cannot identify that one assertion by itself. A43/A44 dependency-binding tests were inspected after the run and no justified repair was found; no speculative change is made merely to turn the gate green.
+
+A45 was added after that exact A44 checkout. Therefore the exact final-A45 full discovery/dependency audit remains **NOT_OBSERVED**, A26 remains open for the current tip, and no current-tip exact PASS is claimed.
 
 The local execution environment still cannot resolve `github.com` for exact checkout (`Could not resolve host: github.com`). This is not reclassified as a test PASS.
 
@@ -76,5 +90,6 @@ A45 is direct correctness/recovery work for P003/P004/P005/P020, but it does **n
 1. Preserve low-level response Task identity binding and canonical identity recheck.
 2. Preserve restart-safe separation of concerns: live discovery authorizes **new Task creation**; static catalog identity interprets **existing Task output**.
 3. Production output collection must continue comparing returned canonical target set with the persisted requested role set before commit.
-4. Retarget the exact A26 workflow to the final Worker branch HEAD after this A45 status checkpoint and require all A26 gates PASS with zero unittest failures/errors before current-tip closure.
-5. Do not promote P003/P004/P005/P020 from A45 lane-local correctness evidence alone.
+4. Retarget the exact A26 workflow from A44 to the final Worker A45 branch HEAD after the status checkpoint and require all A26 gates PASS with zero unittest failures/errors before current-tip closure.
+5. If the A45 exact audit still fails, retain the failing unittest name and traceback in durable diagnostics before changing code; do not guess from the count-only A44 report.
+6. Do not promote P003/P004/P005/P020 from A45 lane-local correctness evidence alone.
