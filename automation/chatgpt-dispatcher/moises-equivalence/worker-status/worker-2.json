@@ -16,15 +16,15 @@
   ],
   "epoch_contract_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
   "base_integration_sha": "a5389c8ffba6c1186a076b0c0ab3ee560aad5c8f",
-  "head_sha": "548e9bae10cba93e833517484c9c612ba64b3748",
-  "prior_status_blob_sha": "afaa675f5c92e04c6fe74418e34b311e9e797621",
-  "historical_commit_ledger_through": "f8b7f4e28118c55c457964b592934b8b2ebe3b58",
+  "head_sha": "a0da895b032eeba51cbbdb4b98d3c4d547bbeaf9",
+  "prior_status_blob_sha": "96b5917925cb837150e51d5c80861e4dcda5a28e",
+  "historical_commit_ledger_through": "e981c81fd9507308e721ae9c855adb402cc0d441",
   "commits": [
-    "11995ed0a85fd003f066519cfd8215f974766900",
-    "7a07181e32036b9c60ccb8680cf96179ad479ef8",
-    "342393ae783c8e19d472c04036b450117d3993f3",
-    "8e50d815b79e4025910e958a5c60232df65e2ead",
-    "548e9bae10cba93e833517484c9c612ba64b3748"
+    "b3846b3cad26fa0bfe06206b8122d73df3d390b3",
+    "7c39c9ef6eecda52577fa61338a2756995344ebe",
+    "6458e37ca47f04f2311b11728d4a4be919178c10",
+    "217484e849860463fa84b014103da0290c129c17",
+    "a0da895b032eeba51cbbdb4b98d3c4d547bbeaf9"
   ],
   "legacy_v2_commits": [
     "b287a7ec0807663fe6dcfc8be312237c639cbc74",
@@ -33,28 +33,28 @@
     "bf4b7a552cfbe025608079f7fe11093af7526b0b"
   ],
   "tests": [
-    "L2-M01..L2-AW50 validation remains durable in Git history and prior status blob afaa675f5c92e04c6fe74418e34b311e9e797621.",
-    "Fresh canonical read reported HQ Epoch44 with Lane2 AW49 integrated; Run #316 SUCCESS, SwiftPM 462/462 PASS, Lane2 IO+Library full portable source typecheck PASS, and zero product PARITY promotions.",
-    "Exact AW51 Lane2PrejournalExportQuarantineManager plus exact AW50 LibraryManagedPathBoundary compiled with Swift 6.2.1 -swift-version 6 -warnings-as-errors -strict-concurrency=complete.",
-    "AW51 real-filesystem harness after final same-Wave absent-only disposition fix => L2_AW51_SELF_TEST_PASS checks=7 disposition_root=true dangling_destination=true disposition_leaf=true pending_root=true relaunch_preserve=true symlink_purge=true normal_preserve_purge=true preserve_purge_200_ms=2972.175 per_cycle_us=14860.873.",
-    "PrejournalDispositionPathAuthorityTests.swift adds six async XCTest regressions. The first draft had an await-inside-XCTUnwrap-autoclosure compile defect; it was fixed and exact manager+boundary+test source strict typecheck then passed. XCTest execution itself is not claimed on this Worker branch.",
-    "Final occupied-disposition-ID hardening commit 8e50d815b79e4025910e958a5c60232df65e2ead was diff-inspected: exactly one intended line changed from requireRegularFileOrMissing to requireSafeDestination.",
-    "AW50-status -> AW51 evidence-head compare is ahead by 5, behind by 0 and limited to four Library-owned source/test/benchmark/evidence files before this Worker-owned status update."
+    "L2-M01..L2-AW51 validation remains durable in Git history and prior status blob 96b5917925cb837150e51d5c80861e4dcda5a28e.",
+    "Fresh canonical read remained HQ Epoch44 with Lane2 AW49 integrated, SwiftPM 462/462 PASS, Lane2 IO+Library full portable source typecheck PASS and zero product PARITY promotions.",
+    "AW52 exact ManagedArtifactSegmentedShardStore production source passed Swift 6.2.1 -swift-version 6 -warnings-as-errors -strict-concurrency=complete focused typecheck against a small type-compatible ancestor-aware LibraryManagedPathBoundary copy.",
+    "AW52 final committed-selfcheck-equivalent real-filesystem harness => L2_AW52_SELF_TEST_PASS checks=8 segmented_symlink=true dangling_manifest=true legacy_parent=true segment_symlink=true pending_symlink=true cleanup=true overflow_guard=true cleanup_1000_ms=277.732.",
+    "ManagedArtifactSegmentedMigrationPathAuthorityTests.swift adds eight regression cases. After one test-only type-inference correction, production ShardStore + focused boundary + test source strict typecheck passed. XCTest execution PASS is not claimed on this Worker branch.",
+    "The first committed benchmark simplification contained throwing reads inside precondition autoclosures; commit 217484e849860463fa84b014103da0290c129c17 aligned the durable source with the already executed harness, which was then strict-compiled and rerun successfully.",
+    "AW51-status -> AW52 evidence-head compare is ahead by 5, behind by 0 and limited to four Library-owned source/test/benchmark/evidence files before this Worker-owned status update."
   ],
   "evidence": [
-    "Fresh audit confirmed Lane2PrejournalExportQuarantineManager still used direct fileExists/create/read/move/remove authority for preserve/purge disposition recovery after AW50.",
-    "AW51 routes disposition root/leaves, preserve source/destination, purge batch roots, recovered artifact URLs and inventory roots through ancestor-aware LibraryManagedPathBoundary.",
-    "Dangling recovered destinations cannot masquerade as absence; unsafe pending/recovered roots are surfaced non-destructively as UNSAFE_ROOT and are not enumerated through symlinks.",
-    "Persisted destructive purge intent pointing at a symlink batch fails closed, leaves the external target untouched and retains the disposition intent rather than falsely retiring it.",
-    "Persisted preserve intent still converges after relaunch, preserving the crash-recovery contract.",
-    "Disposition intent creation now requires a truly absent UUID destination; even an existing regular file is treated as occupied authority and is never atomically overwritten.",
-    "Final AW51 Evidence is tech-assets/moises-audio/Library/L2-AW51_PREJOURNAL_DISPOSITION_PATH_AUTHORITY_VALIDATION.md at evidence head 548e9bae10cba93e833517484c9c612ba64b3748."
+    "Fresh segmented audit found removeUncommittedGenerations directly enumerated and deleted under Segmented, so a symlinked Segmented directory could redirect destructive cleanup outside the configured Library root.",
+    "AW52 makes manifest and legacy-shard absence ancestor-aware: dangling manifests no longer enter legacy fallback, and symlinked Shards ancestors cannot source external migration authority.",
+    "Every committed/new segment is required to be a regular file under the validated Segmented directory; cleanup deletes only direct-child regular uncommitted files and preserves the final manifest plus exact committed segment names.",
+    "Migration publication no longer performs explicit final-manifest remove followed by pending move. After read-back verification it atomically writes an absent final manifest, then validates final authority; pending retirement is best-effort after final authority is visible.",
+    "Corrupt extreme manifest entryCount no longer reaches entryCount+511 overflow, and loadCommittedEntries no longer reserveCapacity directly from untrusted manifest entryCount.",
+    "External targets remained intact for Segmented-root symlink, legacy-parent symlink, segment symlink and pending symlink focused scenarios.",
+    "Final AW52 Evidence is tech-assets/moises-audio/Library/L2-AW52_SEGMENTED_MIGRATION_PATH_AUTHORITY_VALIDATION.md at evidence head a0da895b032eeba51cbbdb4b98d3c4d547bbeaf9."
   ],
   "known_gaps": [
-    "AW47-AW51 validation and subsequent Foundation read/write/move/remove remain separate syscalls, so same-path replacement TOCTOU remains; descriptor-relative/no-follow or Apple-equivalent primitives would be required for stronger closure.",
-    "AW51 whole-batch purge still uses Foundation recursive directory removal after snapshot and root revalidation; symlink batch roots are rejected, but descriptor-relative descendant deletion is not implemented.",
-    "Segmented managed-artifact inventory/migration and remaining deletion/recovery metadata still require independent filesystem-authority audit rather than inheriting AW51 automatically.",
-    "Physical iPhone/APFS/File Provider/protection-class/force-termination behavior and performance for AW47-AW51 remain unmeasured.",
+    "Lane2ManagedArtifactSegmentedRuntime and Lane2ManagedArtifactSegmentedBoundedMutation still use direct fileExists/resourceValues/create/write authority and require the next independent path-authority hardening wave; streaming traversal and inventory marker/bridge also remain to audit.",
+    "AW47-AW52 validation and subsequent Foundation read/write/remove remain separate syscalls, so same-path replacement TOCTOU remains; descriptor-relative/no-follow or Apple-equivalent primitives are required for stronger closure.",
+    "AW52 Foundation atomic-write behavior and crash durability require Apple/APFS/force-termination evidence; portable Linux execution does not prove filesystem durability on iPhone.",
+    "Physical iPhone/APFS/File Provider/protection-class/force-termination behavior and performance for AW47-AW52 remain unmeasured.",
     "AW45/AW46 launch recovery and manifest reconstruction are bounded portably, but physical-iPhone/APFS RSS/latency remains unmeasured.",
     "AW35/AW36 deterministic digest detects mutation/corruption but is not cryptographic authenticity against an actor able to rewrite both media and manifest.",
     "DNS rebinding between AW34 pre-connect resolution and URLSession subsequent resolution remains an Apple-networking TOCTOU gate.",
@@ -64,27 +64,27 @@
     "MOI-P001/P002/P017/P018/P019/P020/P024 remain MISSING until HQ real-device/reference/differential gates are satisfied."
   ],
   "hq_requests": [
-    "When integrating AW51, run full Lane2/package compile plus existing PrejournalExportQuarantineTests.swift and new PrejournalDispositionPathAuthorityTests.swift; focused Worker typecheck/self-check is not the integrated gate.",
-    "Preserve absent-only disposition-intent creation and fail-closed symlink/dangling semantics for pending/recovered/disposition roots and batch leaves.",
-    "Preserve destructive-intent retention: a purge that fails authority/snapshot validation must not retire its durable disposition intent.",
-    "Preserve relaunch preserve convergence and do not infer project ownership for prejournal recovery bytes.",
-    "Do not interpret AW51 as eliminating syscall-level TOCTOU or recursive-removal descendant races.",
-    "Do not promote Lane-2 PARITY rows from portable AW51 evidence alone.",
-    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW51."
+    "When integrating AW52, run full Lane2/package compile plus existing ManagedArtifactSegmentedMigrationTests.swift and new ManagedArtifactSegmentedMigrationPathAuthorityTests.swift; focused Worker typecheck/self-check is not the integrated gate.",
+    "Preserve ancestor-aware manifest/legacy absence semantics: dangling or symlinked authority must fail closed rather than enter fallback migration.",
+    "Preserve cleanup rules: enumerate only a validated real Segmented directory, protect the final manifest and exact committed segments, and remove only direct-child regular uncommitted files.",
+    "Preserve migration final-authority publication without the old explicit remove-final/move-pending gap; unsafe pending cleanup must not roll back already visible final authority.",
+    "Do not interpret AW52 as hardening steady-state segmented runtime/bounded mutation/streaming traversal or as eliminating syscall-level TOCTOU.",
+    "Do not promote Lane-2 PARITY rows from portable AW52 evidence alone.",
+    "No Shared/App/PARITY contract or Core Data schema change was required by L2-AW52."
   ],
   "autonomous_wave": {
-    "wave_id": "L2-AW51",
-    "goal": "Make prejournal preserve/purge disposition recovery and destructive batch authority fail closed on dangling/symlink/non-regular topology without changing public or HQ-owned contracts.",
-    "rationale": "AW50 explicitly left Lane2PrejournalExportQuarantineManager as the next data-safety gap. It owns durable explicit destructive decisions and relaunch convergence but still relied on direct Foundation path-existence and mutation authority.",
-    "done_when": "Disposition roots/leaves, preserve destinations, purge targets, inventory roots and recovered artifact URLs use LibraryManagedPathBoundary; dangling/symlink authority cannot be treated as absence or authorize deletion; relaunch preserve still converges; strict source/test typecheck and real-filesystem self-check pass; evidence/status are durable; Apple/PARITY gates remain explicit.",
+    "wave_id": "L2-AW52",
+    "goal": "Make segmented managed-artifact migration and uncommitted-generation cleanup authority fail closed on dangling/symlink/non-regular topology, while removing the final-manifest remove/move authority gap and corrupt-count overflow path.",
+    "rationale": "Fresh post-AW51 audit found the migration cleanup substrate could enumerate/remove through a symlinked Segmented directory and could treat dangling committed-manifest authority as legacy absence, both of which affect destructive cleanup or canonical inventory authority.",
+    "done_when": "Manifest/legacy/segment authority uses ancestor-aware LibraryManagedPathBoundary; cleanup cannot follow symlink topology; committed generation is protected by exact filenames; migration publishes verified absent final authority without explicit remove/move gap; extreme corrupt counts fail safely; strict typecheck, real-filesystem self-check, regressions, Evidence and status are durable; Apple/PARITY gates remain explicit.",
     "result": "COMPLETED_NON_PARITY",
-    "implementation_head_sha": "8e50d815b79e4025910e958a5c60232df65e2ead",
-    "evidence_head_sha": "548e9bae10cba93e833517484c9c612ba64b3748",
-    "next_priority": "Re-audit segmented managed-artifact inventory/migration first, then remaining deletion/recovery metadata, prioritizing any path whose metadata can authorize destructive cleanup or canonical lifecycle transitions."
+    "implementation_head_sha": "217484e849860463fa84b014103da0290c129c17",
+    "evidence_head_sha": "a0da895b032eeba51cbbdb4b98d3c4d547bbeaf9",
+    "next_priority": "Harden Lane2ManagedArtifactSegmentedRuntime and Lane2ManagedArtifactSegmentedBoundedMutation steady-state authority next, prioritizing dangling manifest fallback, managed artifact ancestor symlinks during snapshot, segment reads, and atomic manifest replacement; then audit streaming traversal/inventory marker bridge and remaining deletion metadata."
   },
-  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW51 continue Lane-2 work autonomously.",
+  "migration_note": "v4 autonomous planning is active. Historical L2-M01..L2-M04 remain preserved; L2-AW05 through L2-AW52 continue Lane-2 work autonomously.",
   "checkpoint_ready_since": "2026-08-22T19:06:35+09:00",
-  "last_updated": "2026-08-27T12:18:00+09:00",
-  "status_compaction_note": "Full pre-AW51 history remains addressable through prior_status_blob_sha afaa675f5c92e04c6fe74418e34b311e9e797621 and Git history; commits contains AW51 implementation/test/benchmark/evidence only.",
+  "last_updated": "2026-08-27T12:31:00+09:00",
+  "status_compaction_note": "Full pre-AW52 history remains addressable through prior_status_blob_sha 96b5917925cb837150e51d5c80861e4dcda5a28e and Git history; commits contains AW52 implementation/test/benchmark/evidence only.",
   "writer_policy": "Only Moises-Worker-2 may update this status file; HQ remains sole PARITY authority."
 }
