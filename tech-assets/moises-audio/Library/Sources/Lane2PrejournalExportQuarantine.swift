@@ -331,7 +331,7 @@ public actor Lane2PrejournalExportQuarantineManager {
         let url = dispositionURL(id: intent.id)
         do {
             try boundary.ensureDirectory(dispositionRootURL, fileManager: fileManager)
-            _ = try boundary.requireRegularFileOrMissing(url, within: dispositionRootURL, fileManager: fileManager)
+            try boundary.requireSafeDestination(url, within: dispositionRootURL, fileManager: fileManager)
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.sortedKeys]
             encoder.dateEncodingStrategy = .iso8601
