@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "wave_id": "L1-A40",
+  "title": "Exact-Audit Import Isolation / Python 3.12 Discovery Closure",
+  "parity_state": "NON_PARITY_EVIDENCE_ONLY",
+  "triggering_exact_audit": {
+    "worker_tip": "22ee8a44bb826b24047bc4e97442ac64a095e48b",
+    "github_actions_run_id": 33026092575,
+    "github_actions_job_id": 98367641633,
+    "owned_source_snapshot_pass": 352,
+    "python_compile_pass": 103,
+    "json_parse_pass": 156,
+    "json_schema_pass": 69,
+    "dependency_contracts_pass": 28,
+    "dependency_contracts_total": 28,
+    "unittest_tests_run": 761,
+    "unittest_errors": 2,
+    "unittest_skipped": 0,
+    "overall_state": "FAIL"
+  },
+  "known_error_closures": [
+    {
+      "id": "A40-IMPORT-001",
+      "path": "tech-assets/moises-audio/Separation/Tests/test_differential_gate_a20_import.py",
+      "failure": "test_differential_gate imported stale stub differential_common without validate_plan",
+      "root_cause": "A20 import probe installed bare-name stubs in sys.modules and did not restore process-global module state",
+      "repair": [
+        "snapshot touched sys.modules entries",
+        "snapshot sys.path",
+        "scope stubs inside isolated context",
+        "register unique gate probe before exec_module",
+        "restore prior module object identity or absence",
+        "restore sys.path exactly",
+        "assert post-probe module identity restoration"
+      ],
+      "state": "REPAIRED_PENDING_EXACT_RERUN"
+    },
+    {
+      "id": "A40-IMPORT-002",
+      "path": "tech-assets/moises-audio/Separation/Tests/test_rights_gate.py",
+      "failure": "Python 3.12 dataclass decoration failed because dynamically loaded rights_gate module was absent from sys.modules",
+      "root_cause": "module_from_spec result was executed before registration",
+      "repair": [
+        "use unique dynamic module name",
+        "register in sys.modules before exec_module",
+        "clean registration on exec failure",
+        "keep registration during tests",
+        "remove module in tearDownModule",
+        "assert ApprovedCheckpoint module registration"
+      ],
+      "state": "REPAIRED_PENDING_EXACT_RERUN"
+    }
+  ],
+  "safety_properties": {
+    "production_rights_gate_semantics_changed": false,
+    "differential_acceptance_policy_changed": false,
+    "a20_resume_semantics_changed": false,
+    "a26_dependency_contracts_weakened": false,
+    "test_order_dependency_targeted": true,
+    "global_module_cleanup_asserted": true
+  },
+  "new_tip_after_direct_repairs": "6514ab8eea1570c18e75f012254db48c3a0418e6",
+  "new_tip_workflow_runs_observed_at_wave_time": 0,
+  "local_exact_checkout": {
+    "state": "NOT_AVAILABLE",
+    "reason": "execution environment could not resolve github.com"
+  },
+  "a26": {
+    "state": "OPEN_EXACT_A40_TIP_RERUN_REQUIRED",
+    "required": [
+      "overall_state=PASS",
+      "git_head_binding.state=PASS",
+      "owned_source_snapshot.state=PASS",
+      "dependency_contracts.state=PASS",
+      "unittest_discovery.state=PASS",
+      "unittest failures=0",
+      "unittest errors=0"
+    ]
+  },
+  "claims": {
+    "exact_new_tip_full_unittest_pass": false,
+    "a26_complete": false,
+    "parity_promoted": false
+  }
+}
