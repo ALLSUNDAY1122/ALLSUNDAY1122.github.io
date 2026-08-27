@@ -16,10 +16,7 @@ final class IOManagedPathBoundaryTests: XCTestCase {
 
         let store = IOFileStore(rootURL: root)
         XCTAssertThrowsError(try store.prepareDirectories(fileManager: fm)) { error in
-            XCTAssertEqual(
-                error as? IOFileStore.StoreError,
-                .fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
-            )
+            XCTAssertEqual(error as? IOFileStore.StoreError, .invalidRelativePath)
         }
         XCTAssertTrue(try fm.contentsOfDirectory(atPath: external.path).isEmpty)
     }
@@ -41,10 +38,7 @@ final class IOManagedPathBoundaryTests: XCTestCase {
         try fm.createSymbolicLink(at: store.stagingURL, withDestinationURL: external)
 
         XCTAssertThrowsError(try store.stageCopy(from: source, fileManager: fm)) { error in
-            XCTAssertEqual(
-                error as? IOFileStore.StoreError,
-                .fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
-            )
+            XCTAssertEqual(error as? IOFileStore.StoreError, .invalidRelativePath)
         }
         XCTAssertTrue(try fm.contentsOfDirectory(atPath: external.path).isEmpty)
     }
@@ -68,10 +62,7 @@ final class IOManagedPathBoundaryTests: XCTestCase {
         XCTAssertThrowsError(
             try store.finalizeImport(stagingFile: staged, preferredName: "song", fileManager: fm)
         ) { error in
-            XCTAssertEqual(
-                error as? IOFileStore.StoreError,
-                .fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
-            )
+            XCTAssertEqual(error as? IOFileStore.StoreError, .invalidRelativePath)
         }
         XCTAssertTrue(fm.fileExists(atPath: staged.path))
         XCTAssertTrue(try fm.contentsOfDirectory(atPath: external.path).isEmpty)
@@ -96,10 +87,7 @@ final class IOManagedPathBoundaryTests: XCTestCase {
         XCTAssertThrowsError(
             try store.finalizeExport(stagingFile: staged, preferredName: "mix", fileManager: fm)
         ) { error in
-            XCTAssertEqual(
-                error as? IOFileStore.StoreError,
-                .fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
-            )
+            XCTAssertEqual(error as? IOFileStore.StoreError, .invalidRelativePath)
         }
         XCTAssertTrue(fm.fileExists(atPath: staged.path))
         XCTAssertTrue(try fm.contentsOfDirectory(atPath: external.path).isEmpty)
@@ -122,10 +110,7 @@ final class IOManagedPathBoundaryTests: XCTestCase {
         XCTAssertThrowsError(
             try store.finalizeImport(stagingFile: stagedLink, preferredName: "forged", fileManager: fm)
         ) { error in
-            XCTAssertEqual(
-                error as? IOFileStore.StoreError,
-                .fileOperationFailed(code: "UNSAFE_MANAGED_PATH")
-            )
+            XCTAssertEqual(error as? IOFileStore.StoreError, .invalidRelativePath)
         }
         XCTAssertEqual(try Data(contentsOf: external), Data([9, 8, 7]))
     }
@@ -149,5 +134,60 @@ final class IOManagedPathBoundaryTests: XCTestCase {
         store.removeIfExists(managedLookingVictim, fileManager: fm)
         XCTAssertTrue(fm.fileExists(atPath: victim.path))
         XCTAssertEqual(try Data(contentsOf: victim), Data([4, 5, 6]))
+    }
+
+    func testResolveRejectsExistingFileThroughManagedDirectorySymlink() throws {
+        let fm = FileManager.default
+        let base = fm.temporaryDirectory.appendingPathComponent("L2-AW47-read-dir-\(UUID().uuidString)")
+        let root = base.appendingPathComponent("root", isDirectory: true)
+        let external = base.appendingPathComponent("external", isDirectory: true)
+        let outside = external.appendingPathComponent("outside.m4a")
+        try fm.createDirectory(at: external, withIntermediateDirectories: true)
+        try Data([6, 6, 6]).write(to: outside)
+        defer { try? fm.removeItem(at: base) }
+
+        let store = IOFileStore(rootURL: root)
+        try store.prepareDirectories(fileManager: fm)
+        try fm.removeItem(at: store.importsURL)
+        try fm.createSymbolicLink(at: store.importsURL, withDestinationURL: external)
+
+        XCTAssertThrowsError(
+            try store.resolve(relativePath: "Imports/outside.m4a", fileManager: fm)
+        ) { error in
+            XCTAssertEqual(error as? IOFileStore.StoreError, .invalidRelativePath)
+        }
+    }
+
+    func testResolveRejectsExistingSymlinkLeaf() throws {
+        let fm = FileManager.default
+        let base = fm.temporaryDirectory.appendingPathComponent("L2-AW47-read-leaf-\(UUID().uuidString)")
+        let root = base.appendingPathComponent("root", isDirectory: true)
+        let outside = base.appendingPathComponent("outside.m4a")
+        try fm.createDirectory(at: base, withIntermediateDirectories: true)
+        try Data([7, 7, 7]).write(to: outside)
+        defer { try? fm.removeItem(at: base) }
+
+        let store = IOFileStore(rootURL: root)
+        try store.prepareDirectories(fileManager: fm)
+        let link = store.importsURL.appendingPathComponent("linked.m4a")
+        try fm.createSymbolicLink(at: link, withDestinationURL: outside)
+
+        XCTAssertThrowsError(
+            try store.resolve(relativePath: "Imports/linked.m4a", fileManager: fm)
+        ) { error in
+            XCTAssertEqual(error as? IOFileStore.StoreError, .invalidRelativePath)
+        }
+    }
+
+    func testResolvePreservesLexicalBehaviorForSafeMissingFuturePath() throws {
+        let fm = FileManager.default
+        let base = fm.temporaryDirectory.appendingPathComponent("L2-AW47-read-missing-\(UUID().uuidString)")
+        let root = base.appendingPathComponent("root", isDirectory: true)
+        defer { try? fm.removeItem(at: base) }
+
+        let store = IOFileStore(rootURL: root)
+        let resolved = try store.resolve(relativePath: "Imports/future.m4a", fileManager: fm)
+        XCTAssertEqual(resolved, root.appendingPathComponent("Imports/future.m4a").standardizedFileURL)
+        XCTAssertFalse(fm.fileExists(atPath: resolved.path))
     }
 }
