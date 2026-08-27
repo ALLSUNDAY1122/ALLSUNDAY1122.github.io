@@ -46,7 +46,8 @@ final class AnalysisPhysicalRealAudioBridgeConsumptionWriterLockTests: XCTestCas
         XCTAssertThrowsError(try AnalysisPhysicalRealAudioBridgeConsumptionConcurrentStore.observeAppendCAS(
             ledgerID: "ledger", rootURL: root
         )) { error in
-            guard case .lockOpenFailed = error as? AnalysisPhysicalRealAudioBridgeConsumptionWriterLockError else {
+            guard let lockError = error as? AnalysisPhysicalRealAudioBridgeConsumptionWriterLockError,
+                  case .lockOpenFailed = lockError else {
                 return XCTFail("expected O_NOFOLLOW lockOpenFailed, got \(error)")
             }
         }
