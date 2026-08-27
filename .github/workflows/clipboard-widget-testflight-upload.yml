@@ -20,75 +20,35 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Patch Codemagic workflow for TestFlight and diagnostics
+      - name: Align clipboard signing with proven App Store flow
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-
-          p = Path('codemagic.yaml')
-          s = p.read_text(encoding='utf-8')
-          marker = '\n  clipboard-widget-phase0:\n'
-          start = s.index(marker)
-          block = s[start:]
-
-          if 'Set unique TestFlight build number' not in block:
-              needle = '''      - name: Initialize signing keychain\n'''
-              insert = '''      - name: Set unique TestFlight build number\n        script: |\n          set -euo pipefail\n          cd "$CM_BUILD_DIR/clipboard-widget"\n          python3 - <<'PY2'\n          import os\n          from pathlib import Path\n          p=Path('project.yml')\n          s=p.read_text(encoding='utf-8')\n          old='CURRENT_PROJECT_VERSION: 1'\n          if old not in s:\n              raise SystemExit('CURRENT_PROJECT_VERSION baseline not found')\n          p.write_text(s.replace(old, 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1), encoding='utf-8')\n          print('PASS: build number='+os.environ['CM_BUILD_NUMBER'])\n          PY2\n          xcodegen generate\n          echo 'PASS: regenerated Xcode project with TestFlight build number'\n\n'''
-              if needle not in block:
-                  raise SystemExit('signing insertion point missing')
-              block = block.replace(needle, insert + needle, 1)
-
-          if 'PASS: regenerated Xcode project with TestFlight build number' not in block:
-              needle = '''          PY2\n\n      - name: Initialize signing keychain\n'''
-              replacement = '''          PY2\n          xcodegen generate\n          echo 'PASS: regenerated Xcode project with TestFlight build number'\n\n      - name: Initialize signing keychain\n'''
-              if needle not in block:
-                  raise SystemExit('existing build-number step repair point missing')
-              block = block.replace(needle, replacement, 1)
-
-          if 'Upload signed IPA to TestFlight' not in block:
-              needle = '''    artifacts:\n'''
-              insert = '''      - name: Upload signed IPA to TestFlight\n        script: |\n          set -euo pipefail\n          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"\n          test -n "$IPA_PATH"\n          app-store-connect publish --path "$IPA_PATH"\n          echo 'PASS: TestFlight upload command completed'\n'''
-              if needle not in block:
-                  raise SystemExit('artifact insertion point missing')
-              block = block.replace(needle, insert + needle, 1)
-
-          # Persist the output of every stage that can fail after xcodegen.
-          # The log is a Codemagic artifact so the next GitHub-side inspection
-          # can identify the first failing command without guessing.
-          diag = '$CM_BUILD_DIR/clipboard-widget-phase0-diagnostics.log'
-          if 'clipboard-widget-phase0-diagnostics.log' not in block:
-              replacements = [
-                  ('          keychain initialize\n',
-                   f'''          echo 'STAGE initialize-keychain' >> "{diag}"\n          keychain initialize 2>&1 | tee -a "{diag}"\n'''),
-                  ('          app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE\n          app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE\n',
-                   f'''          echo 'STAGE fetch-signing-files-app' >> "{diag}"\n          app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE 2>&1 | tee -a "{diag}"\n          echo 'STAGE fetch-signing-files-widget' >> "{diag}"\n          app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE 2>&1 | tee -a "{diag}"\n'''),
-                  ('          keychain add-certificates\n',
-                   f'''          echo 'STAGE add-certificates' >> "{diag}"\n          keychain add-certificates 2>&1 | tee -a "{diag}"\n'''),
-                  ('          xcode-project use-profiles --custom-export-options=\'{"testFlightInternalTestingOnly": true}\'\n',
-                   f'''          echo 'STAGE use-profiles' >> "{diag}"\n          xcode-project use-profiles --custom-export-options=\'{{"testFlightInternalTestingOnly": true}}\' 2>&1 | tee -a "{diag}"\n'''),
-                  ('          xcode-project build-ipa \\\n            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \\\n            --scheme "$XCODE_SCHEME"\n',
-                   f'''          echo 'STAGE build-ipa' >> "{diag}"\n          xcode-project build-ipa \\\n            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \\\n            --scheme "$XCODE_SCHEME" 2>&1 | tee -a "{diag}"\n'''),
-                  ('          app-store-connect publish --path "$IPA_PATH"\n',
-                   f'''          echo 'STAGE testflight-upload' >> "{diag}"\n          app-store-connect publish --path "$IPA_PATH" 2>&1 | tee -a "{diag}"\n'''),
-              ]
-              for old, new in replacements:
-                  if old not in block:
-                      raise SystemExit('diagnostic patch point missing: ' + old.splitlines()[0].strip())
-                  block = block.replace(old, new, 1)
-              artifact_needle = '''      - /tmp/xcodebuild_logs/*.log\n'''
-              if artifact_needle not in block:
-                  raise SystemExit('diagnostic artifact insertion point missing')
-              block = block.replace(artifact_needle, artifact_needle + '      - clipboard-widget-phase0-diagnostics.log\n', 1)
-
-          s = s[:start] + block
-          p.write_text(s, encoding='utf-8')
-          print('PASS: clipboard Phase 0 workflow patched for TestFlight diagnostics')
+          p=Path('codemagic.yaml')
+          s=p.read_text(encoding='utf-8')
+          marker='\n  clipboard-widget-phase0:\n'
+          start=s.index(marker)
+          block=s[start:]
+          replacements={
+            'app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE 2>&1':
+              'app-store-connect fetch-signing-files "$APP_BUNDLE_ID" --type IOS_APP_STORE --create 2>&1',
+            'app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE 2>&1':
+              'app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" --type IOS_APP_STORE --create 2>&1',
+          }
+          for old,new in replacements.items():
+              if new in block:
+                  continue
+              if old not in block:
+                  raise SystemExit('signing patch point missing: '+old)
+              block=block.replace(old,new,1)
+          p.write_text(s[:start]+block,encoding='utf-8')
+          print('PASS: both app and widget signing files use --create')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add codemagic.yaml
-          git commit -m 'ci: diagnose clipboard widget Phase 0 TestFlight build' || true
+          git commit -m 'ci: create clipboard App Store signing files when absent' || true
           git pull --rebase origin feature/clipboard-widget-poc
           git push origin HEAD:feature/clipboard-widget-poc
 
@@ -99,7 +59,7 @@ jobs:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           set -euo pipefail
-          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260826-r4","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
+          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260827-r5","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/clipboard-widget-cm-command.json
           python scripts/codemagic_build_gateway.py \
             --command /tmp/clipboard-widget-cm-command.json \
             --output /tmp/clipboard-widget-cm-result.json
@@ -126,7 +86,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add automation/clipboard-widget/evidence/codemagic-phase0-testflight.json
-          git commit -m 'chore: record clipboard widget TestFlight evidence' || true
+          git commit -m 'chore: record clipboard widget TestFlight evidence r5' || true
           git pull --rebase origin feature/clipboard-widget-poc
           git push origin HEAD:feature/clipboard-widget-poc
 
