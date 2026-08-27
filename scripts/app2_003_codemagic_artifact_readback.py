@@ -4,12 +4,39 @@ from __future__ import annotations
 import io
 import json
 import os
-import re
+import plistlib
 import urllib.request
 import zipfile
 from pathlib import Path
 
 EXPECTED_BUILD_ID = "6a903f4e0b744f0115921f39"
+TARGET_SUFFIXES = (
+    "/Info.plist",
+    "/PrivacyInfo.xcprivacy",
+)
+
+
+def safe_plist(raw: bytes):
+    try:
+        value = plistlib.loads(raw)
+    except Exception:
+        return None
+    if isinstance(value, dict):
+        allowed = {
+            "CFBundleIdentifier",
+            "CFBundleShortVersionString",
+            "CFBundleVersion",
+            "MinimumOSVersion",
+            "ITSAppUsesNonExemptEncryption",
+            "NSUserTrackingUsageDescription",
+            "NSAppTransportSecurity",
+            "NSPrivacyTracking",
+            "NSPrivacyTrackingDomains",
+            "NSPrivacyCollectedDataTypes",
+            "NSPrivacyAccessedAPITypes",
+        }
+        return {k: value[k] for k in allowed if k in value}
+    return value
 
 
 def main() -> int:
@@ -31,43 +58,40 @@ def main() -> int:
         payload = json.load(response)
     build = payload.get('data') or payload
     artifacts = build.get('artifacts') or []
-    if not artifacts:
-        raise SystemExit('no build artifacts')
     ipa = next((a for a in artifacts if a.get('type') == 'ipa'), None)
-    if not ipa:
+    if not ipa or not ipa.get('short_lived_download_url'):
         raise SystemExit('ipa artifact unavailable')
-    url = ipa.get('short_lived_download_url')
-    if not url:
-        raise SystemExit('artifact download URL unavailable')
 
-    with urllib.request.urlopen(url, timeout=60) as response:
+    with urllib.request.urlopen(ipa['short_lived_download_url'], timeout=60) as response:
         blob = response.read()
     zf = zipfile.ZipFile(io.BytesIO(blob))
-    chunks = []
-    names = []
-    for info in zf.infolist():
-        if info.is_dir() or info.file_size > 5_000_000:
-            continue
-        names.append(info.filename)
-        raw = zf.read(info)
-        try:
-            text = raw.decode('utf-8', errors='replace')
-        except Exception:
-            continue
-        chunks.append(f'===== {info.filename} =====\n{text}')
 
-    text = '\n'.join(chunks)
-    text = re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----', '[REDACTED PEM]', text, flags=re.S)
-    text = re.sub(r'eyJ[A-Za-z0-9._-]{20,}', '[REDACTED JWT]', text)
-    text = re.sub(r'(?i)(token|password|secret|private[_ -]?key)\s*[=:]\s*\S+', r'\1=[REDACTED]', text)
+    files = [i.filename for i in zf.infolist() if not i.is_dir()]
+    audit = {}
+    for name in files:
+        if not name.endswith(TARGET_SUFFIXES):
+            continue
+        parsed = safe_plist(zf.read(name))
+        if parsed is not None:
+            audit[name] = parsed
+
+    app_info = next((v for k, v in audit.items() if k == 'Payload/App.app/Info.plist'), {})
+    privacy_files = {k: v for k, v in audit.items() if k.endswith('/PrivacyInfo.xcprivacy')}
     result = {
         'ok': True,
         'request_id': command.get('request_id'),
         'action': 'inspect_artifact',
         'build_id': build_id,
         'status': build.get('status'),
-        'artifact_files': names,
-        'sanitized_text': text[-50000:],
+        'ipa': {
+            'size_in_bytes': ipa.get('size_in_bytes'),
+            'version_name': ipa.get('version_name'),
+            'version_code': ipa.get('version_code'),
+        },
+        'app_info': app_info,
+        'privacy_manifests': privacy_files,
+        'privacy_manifest_count': len(privacy_files),
+        'framework_names': sorted({n.split('/Frameworks/',1)[1].split('/',1)[0] for n in files if '/Frameworks/' in n}),
         'secret_values_persisted': False,
     }
     Path('release-result.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
