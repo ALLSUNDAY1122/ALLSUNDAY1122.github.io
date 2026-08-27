@@ -1110,8 +1110,9 @@ workflows:
           old='CURRENT_PROJECT_VERSION: 1'
           if old not in s:
               raise SystemExit('CURRENT_PROJECT_VERSION baseline not found')
-          p.write_text(s.replace(old, 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1), encoding='utf-8')
-          print('PASS: build number='+os.environ['CM_BUILD_NUMBER'])
+          build_number=str(int(__import__('time').time()))
+          p.write_text(s.replace(old, 'CURRENT_PROJECT_VERSION: '+build_number, 1), encoding='utf-8')
+          print('PASS: build number='+build_number)
           PY2
           xcodegen generate
           echo 'PASS: regenerated Xcode project with TestFlight build number'
