@@ -153,23 +153,29 @@ jobs:
             Playback/Sources/*.swift
           )
 
-          swiftc -swift-version 6 -warnings-as-errors -strict-concurrency=complete -O \
-            "${sources[@]}" \
-            Playback/Tests/L3_AW53_CandidatePhysicalSamplingLifecycleSelfTest.swift \
-            -o /tmp/l3-aw53-selftest
-          /tmp/l3-aw53-selftest | tee /tmp/l3-aw53-selftest.out
-          grep -q '^L3_AW53_CandidatePhysicalSamplingLifecycleSelfTest PASS ' /tmp/l3-aw53-selftest.out
+          cp Playback/Tests/L3_AW53_CandidatePhysicalSamplingLifecycleSelfTest.swift /tmp/L3AW53SelfTest.swift
+          cp Playback/Tests/L3_AW53_CandidatePhysicalSamplingLifecycleStress.swift /tmp/L3AW53Stress.swift
+          cp Playback/Tests/L3_AW53_CandidatePhysicalSamplingLifecycleBenchmark.swift /tmp/L3AW53Benchmark.swift
+          sed -i '/^@main$/d' /tmp/L3AW53SelfTest.swift /tmp/L3AW53Stress.swift /tmp/L3AW53Benchmark.swift
+          cat >/tmp/L3AW53CombinedRunner.swift <<'SWIFT'
+          @main
+          enum L3AW53CombinedRunner {
+              static func main() throws {
+                  try L3AW53CandidatePhysicalSamplingLifecycleSelfTest.main()
+                  try L3AW53CandidatePhysicalSamplingLifecycleStress.main()
+                  try L3AW53CandidatePhysicalSamplingLifecycleBenchmark.main()
+              }
+          }
+          SWIFT
 
           swiftc -swift-version 6 -warnings-as-errors -strict-concurrency=complete -O \
             "${sources[@]}" \
-            Playback/Tests/L3_AW53_CandidatePhysicalSamplingLifecycleStress.swift \
-            -o /tmp/l3-aw53-stress
-          /tmp/l3-aw53-stress | tee /tmp/l3-aw53-stress.out
-          grep -q '^L3_AW53_CandidatePhysicalSamplingLifecycleStress PASS ' /tmp/l3-aw53-stress.out
-
-          swiftc -swift-version 6 -warnings-as-errors -strict-concurrency=complete -O \
-            "${sources[@]}" \
-            Playback/Tests/L3_AW53_CandidatePhysicalSamplingLifecycleBenchmark.swift \
-            -o /tmp/l3-aw53-benchmark
-          /tmp/l3-aw53-benchmark | tee /tmp/l3-aw53-benchmark.out
-          grep -q '^L3_AW53_CandidatePhysicalSamplingLifecycleBenchmark iterations=20000 ' /tmp/l3-aw53-benchmark.out
+            /tmp/L3AW53SelfTest.swift \
+            /tmp/L3AW53Stress.swift \
+            /tmp/L3AW53Benchmark.swift \
+            /tmp/L3AW53CombinedRunner.swift \
+            -o /tmp/l3-aw53-native
+          /tmp/l3-aw53-native | tee /tmp/l3-aw53-native.out
+          grep -q '^L3_AW53_CandidatePhysicalSamplingLifecycleSelfTest PASS ' /tmp/l3-aw53-native.out
+          grep -q '^L3_AW53_CandidatePhysicalSamplingLifecycleStress PASS ' /tmp/l3-aw53-native.out
+          grep -q '^L3_AW53_CandidatePhysicalSamplingLifecycleBenchmark iterations=20000 ' /tmp/l3-aw53-native.out
