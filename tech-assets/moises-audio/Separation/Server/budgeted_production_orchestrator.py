@@ -3,7 +3,9 @@
 This adapter composes A10 cost safety with the A15/A41/A43 long-track production wrapper without
 changing the frozen Shared/App contracts. Provider create remains guarded against duplicate billing,
 while source/output storage pressure, transfer backpressure, validator-bound crash resumption and
-bounded retry-cache retention are enforced by the inner long-track layer.
+bounded retry-cache retention are enforced by the inner long-track layer. A44 additionally invokes
+an optional provider request preflight before source IO/cost reservation so known request-contract
+failures never require user-content upload.
 """
 from __future__ import annotations
 
@@ -82,6 +84,7 @@ class BudgetedProductionSeparationOrchestrator:
         self.cost_guard = cost_guard
         self.duration_resolver = duration_resolver
         self.source_root = Path(source_root).resolve()
+        self.provider_request_preflight = provider
         self.inner = BoundedCrashResumableLongTrackProductionSeparationOrchestrator(
             provider=BudgetedProviderProxy(provider, cost_guard),
             source_root=source_root,
@@ -111,6 +114,20 @@ class BudgetedProductionSeparationOrchestrator:
         # upload or provider call. A43 inner.start repeats this tombstone check defensively.
         if self.inner.resume_cache.is_deleted(logical_job_id):
             raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_JOB_DELETED")
+
+        # A44: provider-specific request contracts may be checked without media. Run that check
+        # before source containment/stat/hash, duration analysis, quota reservation and upload.
+        preflight = getattr(self.provider_request_preflight, "preflight_separation", None)
+        if callable(preflight):
+            try:
+                preflight(selected_models)
+            except Exception as exc:
+                code = getattr(exc, "code", None)
+                stable_code = code if isinstance(code, str) and code else "SEP_PROVIDER_REQUEST_PREFLIGHT_FAILED"
+                raise OrchestratorError(
+                    stable_code,
+                    retryable=bool(getattr(exc, "retryable", False)),
+                ) from exc
 
         source = _contained_file(source_path, self.source_root)
         # Reject the deployment/provider source-size boundary before hashing a multi-gigabyte file,

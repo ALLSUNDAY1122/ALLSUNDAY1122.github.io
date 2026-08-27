@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "wave": "L1-A45",
+  "title": "Provider Task Identity and Restart-Safe Advanced Observation",
+  "parity_state": "NON_PARITY_EVIDENCE_ONLY",
+  "observed_at": "2026-08-27",
+  "provider_contract": {
+    "provider": "AudioShake",
+    "get_task_by_id": "https://developer.audioshake.ai/api-reference/tasks/get",
+    "create_task": "https://developer.audioshake.ai/api-reference/tasks/create",
+    "documented_identity_fact": "GET /tasks/{id} path id and 200 response id are both the unique Task identifier; targets contain model/output data for that Task."
+  },
+  "pre_fix_gaps": [
+    {
+      "id": "A45-G1",
+      "risk": "AudioShakeClient accepted a syntactically valid Task response whose response id differed from the requested path Task id.",
+      "impact": "Wrong-job progress/output could be observed or committed after an abnormal proxy/cache/upstream response."
+    },
+    {
+      "id": "A45-G2",
+      "risk": "parse_task_state accepted duplicate target model rows and selected the first WAV when multiple WAV outputs existed.",
+      "impact": "Progress denominator and output identity could become ambiguous instead of failing closed."
+    },
+    {
+      "id": "A45-G3",
+      "risk": "A fresh canonical advanced adapter required GET /models before observing an already-created Task and built output mapping only from models currently enabled on the account.",
+      "impact": "Relaunch/reconnect could fail even when GET /tasks/{id} was healthy if model discovery was unavailable or account access changed after Task creation."
+    }
+  ],
+  "post_fix_invariants": [
+    "AudioShakeClient.get_task_state requires parsed response task_id to equal the requested task_id.",
+    "AudioShake task-state parsing rejects duplicate provider model targets.",
+    "A completed target requires exactly one WAV output with an HTTPS URL containing a hostname.",
+    "Canonical advanced observation independently rebinds response task_id to the requested task_id.",
+    "Canonical advanced observation rejects duplicate provider target models before canonical mapping.",
+    "Existing Task observation maps known provider models through the checked-in catalog and does not call live GET /models.",
+    "New Task preflight/create continues to require live account discovery and enabled model access.",
+    "Unknown provider output models remain fail-closed even when observation is discovery-independent."
+  ],
+  "formal_repository_tests": {
+    "test_a45_provider_task_identity.py": 13,
+    "test_a45_dependency_binding.py": 6,
+    "total": 19,
+    "exact_final_tip_execution": "NOT_OBSERVED"
+  },
+  "focused_harness": {
+    "type": "interface-compatible boundary harness, not repository-native checkout",
+    "assertions": 12,
+    "passed": 12,
+    "failed": 0,
+    "covers": [
+      "Task id mismatch rejection",
+      "exact Task id acceptance",
+      "duplicate target rejection",
+      "ambiguous WAV rejection",
+      "hostname validation",
+      "canonical Task id mismatch rejection",
+      "canonical duplicate rejection",
+      "catalog mapping for guitar/keys",
+      "known model mapping independent of current access",
+      "unknown model fail-closed"
+    ]
+  },
+  "a26_state": {
+    "historical_exact_pass": {
+      "worker_tip": "6acb782a35187ad8765060f89ceb791ef0304e1f",
+      "run": 33036684021,
+      "job": 98400764989,
+      "state": "PASS_AT_A42"
+    },
+    "current_tip": "PENDING_FINAL_A45_STATUS_COMMIT",
+    "current_tip_exact_audit": "NOT_OBSERVED",
+    "gate": "OPEN"
+  },
+  "parity": {
+    "P003": "MISSING",
+    "P004": "MISSING",
+    "P005": "MISSING",
+    "P020": "MISSING",
+    "reason": "A45 improves provider response correctness and restart observation but does not provide credentialed live separation, rights-cleared real-audio quality/latency, current-iPhone, or current-Moises differential evidence."
+  }
+}
