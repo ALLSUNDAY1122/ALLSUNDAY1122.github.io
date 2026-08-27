@@ -66,6 +66,12 @@ require(policy, "config.maxGaussianCount = Int32(clamping: limits.densificationB
 # Keep historical splatBudget decode/report compatibility, but count itself is no longer terminal.
 require(guard, "case splatBudget", "historical splatBudget decode")
 reject(guard, "else if splatCount >= limits.maxSplatCount", "terminal splat-count pause")
+reject(
+    model,
+    "stats.splatCount >= passResourceGuard.limits.maxSplatCount",
+    "count-driven every-step resource polling",
+)
+require(model, "let shouldCheckResources = iteration % 20 == 0 || checkpointDue", "bounded resource sampling cadence")
 
 # M3 telemetry/retry/resume invariants.
 for needle in (
