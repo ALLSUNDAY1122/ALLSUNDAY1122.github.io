@@ -381,6 +381,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             }
         }
     }
+
     func resumeCapture() {
         guard let session, !isWorldMapPersistencePending else { return }
         guard phase == .captured || (phase == .capturing && isCapturePaused) else { return }
@@ -421,6 +422,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         worldMapPersistenceWarning = nil
         UIApplication.shared.isIdleTimerDisabled = true
     }
+
     func finishCapture() {
         guard phase == .capturing,
               canFinishCapture,
@@ -484,6 +486,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
             }
         }
     }
+
     func discardAndReset() {
         invalidateWorldMapPersistence()
         closeActiveCaptureTiming()
@@ -850,8 +853,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                             ProcessInfo.processInfo.thermalState
                         )
                         let checkpointDue = iteration % SplatReconstructionPolicy.checkpointInterval == 0
-                        let shouldCheckResources = iteration % 20 == 0 || checkpointDue ||
-                            stats.splatCount >= passResourceGuard.limits.maxSplatCount
+                        let shouldCheckResources = iteration % 20 == 0 || checkpointDue
                         let resourceEvaluation = shouldCheckResources
                             ? passResourceGuard.evaluate(splatCount: stats.splatCount)
                             : nil
@@ -1701,7 +1703,6 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
                         continuation.resume(returning: .failed("WorldMap archiveが空です"))
                         return
                     }
-                    continuation.resume(returning: .data(data))
                 } catch {
                     continuation.resume(returning: .failed(error.localizedDescription))
                 }
@@ -1715,6 +1716,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         periodicWorldMapPersistenceTask = nil
         isWorldMapPersistencePending = false
     }
+
     private func loadPersistedWorldMap(projectURL: URL) -> ARWorldMap? {
         let url = projectStore.worldMapURL(projectURL: projectURL)
         guard let data = try? Data(contentsOf: url) else { return nil }
@@ -1842,6 +1844,7 @@ final class ScanModel: NSObject, ObservableObject, ARSessionDelegate {
         userPauseRequested = false
         worldMapPersistenceWarning = nil
     }
+
     private func limitedReason(_ reason: ARCamera.TrackingState.Reason) -> String {
         switch reason {
         case .initializing: return "位置を合わせています。ゆっくり動かしてください"
