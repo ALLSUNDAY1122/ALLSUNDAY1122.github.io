@@ -1,0 +1,49 @@
+name: APP2-004 Pharmacist Build 6 ASC Attach Diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/app2-004-yakuzaishi-build6-attach-diagnostic-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app2-004-yakuzaishi-build6-attach-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Diagnose and retry Build 6 relationship
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python3 scripts/app2_004_yakuzaishi_build6_attach_diagnostic.py
+
+      - name: Persist authenticated diagnostic
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f automation/asc-results/app2-004-yakuzaishi-build6-attach-diagnostic.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/asc-results/app2-004-yakuzaishi-build6-attach-diagnostic.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Persist APP2-004 Build 6 ASC attach diagnostic'
+            for attempt in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep $((attempt * 2))
+            done
+            exit 1
+          fi
