@@ -130,6 +130,7 @@ let package = Package(
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionCheckpointBinding.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionCheckpointStrict.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift",
+                "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureStore.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureCheckpoint.swift",
