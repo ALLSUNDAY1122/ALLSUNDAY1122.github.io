@@ -230,8 +230,10 @@ public final class Lane3AppleFilePCMChunkSource: Lane3PCMChunkReadable, @uncheck
     }
 
     private func validateStableSource() throws {
-        guard file.isOpen else {
-            throw Lane3AppleFilePCMChunkSourceError.sourceClosed
+        if #available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *) {
+            guard file.isOpen else {
+                throw Lane3AppleFilePCMChunkSourceError.sourceClosed
+            }
         }
         do {
             try Lane3FileSourceIdentityFence.requireUnchanged(
