@@ -140,6 +140,7 @@ let package = Package(
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionNormalizedConcurrentStore.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustody.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustody.swift",
+                "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionNormalizedCustodyCertificate.swift",
                 "Analysis/AnalysisPhysicalRealAudioBridgeDurabilityProbeModels.swift",
                 "Analysis/AnalysisSnapshotHealthBenchmark.swift",
                 "Analysis/AnalysisLongAudioPerformanceBenchmark.swift",
