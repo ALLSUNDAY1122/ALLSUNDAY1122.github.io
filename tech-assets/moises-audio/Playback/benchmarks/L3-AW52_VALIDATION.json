@@ -5,10 +5,14 @@
   "result": "COMPLETE_NON_PARITY",
   "canonical_audit": {
     "notion_canonical_epoch_observed": 44,
-    "integration_head_observed": "6579cf4280c926387dfd00dd63345d4f4147be4d",
-    "integration_lane3_integrated_through": "L3-AW49",
+    "notion_lane3_integrated_through": "L3-AW49",
+    "integration_head_initial": "6579cf4280c926387dfd00dd63345d4f4147be4d",
+    "integration_head_final": "0fea2b5f2db390cb1dc45ea9a9899d47ac549719",
+    "integration_final_commit_message": "moises hq epoch45 integrate L1 A42 L2 AW50 L3 AW50 L4 W54",
+    "integration_lane3_final_integrated_through": "L3-AW50",
+    "notion_git_integration_epoch_skew_observed": true,
     "worker_branch_start_head": "fdfc82c251ce4486f38a1fb7e266fe5a4614b0da",
-    "aw50_aw51_pending_hq_late_integration": true,
+    "aw51_aw52_pending_hq_late_integration": true,
     "parity_rows_remain_missing": [
       "MOI-P006", "MOI-P007", "MOI-P008", "MOI-P010",
       "MOI-P012", "MOI-P014", "MOI-P015", "MOI-P021"
@@ -74,7 +78,7 @@
     "Playback/Tests/L3_AW52_SessionBindingSelfTest.swift",
     "Playback/benchmarks/L3-AW52_CANDIDATE_PHYSICAL_RESOURCE_TRACE.md"
   ],
-  "source_and_evidence_commits_before_final_validation_update": [
+  "source_and_evidence_commits_before_this_validation_update": [
     "8925d7f892fa40084ae8c06d4b0c80de2677173d",
     "8bc0d9db06ec30d875cc274a6e06c92aa9e0e273",
     "76c777a096c0bb700254b04b58b6b314ea4a2692",
@@ -86,7 +90,8 @@
     "47f51d5b2fdf8a0607c1b27c874b1d9409c35c4c",
     "fac716be1e6652306d7baacb6760267314dd8167",
     "23e287bdf61eaa478a3fba7fd7630a71cfd4a40c",
-    "e79bbfce0024d5559a9db86305e89e17be3ea10c"
+    "e79bbfce0024d5559a9db86305e89e17be3ea10c",
+    "79d912c4f291690edb72ca5115063ec00e61e91d"
   ],
   "limitations": [
     "Selected-iOS source was authored but not compiled against Xcode/iOS SDK in the Worker environment.",
@@ -95,6 +100,7 @@
     "AW52 measures only the candidate process RSS and does not inspect or fabricate the third-party Moises process RSS.",
     "Battery monitoring state is restored on successful finish or explicit cancel; host lifecycle must call cancel on abort.",
     "Post-AW52 full Lane3 strict typecheck and repository-native test execution remain for HQ Apple/CI integration.",
+    "Notion still reported Epoch44 while GitHub integration had advanced to Epoch45 during final audit; GitHub actual state therefore superseded the stale integration observation for this validation record.",
     "P021 and all other parity rows remain unpromoted."
   ],
   "parity_promotion_allowed": false
