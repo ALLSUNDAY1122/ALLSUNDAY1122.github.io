@@ -56,6 +56,16 @@ private struct Lane2ManagedArtifactCensusCandidate: Hashable, Sendable {
     let byteCount: Int64
 }
 
+/// Foundation's FileManager is explicitly non-Sendable in current Apple SDKs.
+/// Keep the unchecked compatibility boundary private to the injected dependency.
+private final class Lane2CompatibilityCensusFileManagerHandle: @unchecked Sendable {
+    let value: FileManager
+
+    init(_ value: FileManager) {
+        self.value = value
+    }
+}
+
 /// One-time upgrade/reconciliation census that incrementally seeds the AW29 sharded inventory.
 ///
 /// Foundation does not provide a durable cross-process directory-enumerator cookie, so this type does
@@ -68,7 +78,7 @@ public struct Lane2ManagedArtifactCompatibilityCensus: Sendable {
 
     public let rootURL: URL
     public let recoveryDirectoryName: String
-    private let fileManager: FileManager
+    private let fileManagerHandle: Lane2CompatibilityCensusFileManagerHandle
 
     public init(
         rootURL: URL,
@@ -77,7 +87,11 @@ public struct Lane2ManagedArtifactCompatibilityCensus: Sendable {
     ) {
         self.rootURL = rootURL.standardizedFileURL
         self.recoveryDirectoryName = recoveryDirectoryName
-        self.fileManager = fileManager
+        self.fileManagerHandle = Lane2CompatibilityCensusFileManagerHandle(fileManager)
+    }
+
+    private var fileManager: FileManager {
+        fileManagerHandle.value
     }
 
     @discardableResult
