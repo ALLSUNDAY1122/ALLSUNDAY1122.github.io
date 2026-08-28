@@ -80,8 +80,12 @@ public struct Lane2ManagedArtifactInventory: Sendable {
         fileManagerHandle.value
     }
 
+    private var pathBoundary: LibraryManagedPathBoundary {
+        LibraryManagedPathBoundary(rootURL: rootURL)
+    }
+
     public var isAuthoritative: Bool {
-        fileManager.fileExists(atPath: authoritativeMarkerURL.path)
+        hasValidAuthoritativeMarker
     }
 
     @discardableResult
@@ -89,9 +93,8 @@ public struct Lane2ManagedArtifactInventory: Sendable {
         if isAuthoritative { return true }
         for rootName in Self.managedRootNames {
             let url = rootURL.appendingPathComponent(rootName, isDirectory: true)
-            var isDirectory: ObjCBool = false
-            guard fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) else { continue }
-            guard isDirectory.boolValue else { return false }
+            guard try pathBoundary.nodeExists(url, fileManager: fileManager) else { continue }
+            try pathBoundary.requireDirectory(url, fileManager: fileManager)
             guard let enumerator = fileManager.enumerator(at: url, includingPropertiesForKeys: [.isSymbolicLinkKey], options: [.skipsHiddenFiles], errorHandler: { _, _ in false }) else { return false }
             if enumerator.nextObject() != nil { return false }
         }
@@ -100,8 +103,20 @@ public struct Lane2ManagedArtifactInventory: Sendable {
     }
 
     public func markAuthoritativeAfterCompatibilityCensus() throws {
-        try fileManager.createDirectory(at: inventoryDirectoryURL, withIntermediateDirectories: true)
+        try pathBoundary.ensureDirectory(inventoryDirectoryURL, fileManager: fileManager)
+        if try pathBoundary.nodeExists(authoritativeMarkerURL, fileManager: fileManager) {
+            try pathBoundary.requireExistingRegularFile(
+                authoritativeMarkerURL,
+                within: inventoryDirectoryURL,
+                fileManager: fileManager
+            )
+        }
         try Data("lane2-managed-artifact-inventory-v1\n".utf8).write(to: authoritativeMarkerURL, options: [.atomic])
+        try pathBoundary.requireExistingRegularFile(
+            authoritativeMarkerURL,
+            within: inventoryDirectoryURL,
+            fileManager: fileManager
+        )
     }
 
     public func canServe(managedRootNames: [String]) -> Bool {
@@ -113,11 +128,12 @@ public struct Lane2ManagedArtifactInventory: Sendable {
         let normalized = try Self.normalize(relativePath)
         guard Self.isManaged(normalized) else { return false }
         let url = try absoluteURL(normalized)
-        guard fileManager.fileExists(atPath: url.path) else { return false }
-        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
-            throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(normalized)
-        }
+        guard try pathBoundary.nodeExists(url, fileManager: fileManager) else { return false }
+        try pathBoundary.requireExistingRegularFile(
+            url,
+            within: managedRootURL(for: normalized),
+            fileManager: fileManager
+        )
         try bridge.registerManaged(relativePaths: [normalized])
         return true
     }
@@ -148,16 +164,23 @@ public struct Lane2ManagedArtifactInventory: Sendable {
         var refreshPaths: [String] = []
         var retainedReferenced = 0
         var retainedYoung = 0
-        let keys: Set<URLResourceKey> = [.isRegularFileKey, .isSymbolicLinkKey, .contentModificationDateKey]
+        let keys: Set<URLResourceKey> = [.contentModificationDateKey]
 
         for candidate in slice.candidates {
             let relativePath = try Self.normalize(candidate.relativePath)
             guard Self.isManaged(relativePath) else { throw Lane2ManagedArtifactInventoryFailure.invalidRelativePath(relativePath) }
             if referenced.contains(relativePath) { retainedReferenced += 1; continue }
             let url = try absoluteURL(relativePath)
-            guard fileManager.fileExists(atPath: url.path) else { staleInventoryPaths.append(relativePath); continue }
+            guard try pathBoundary.nodeExists(url, fileManager: fileManager) else {
+                staleInventoryPaths.append(relativePath)
+                continue
+            }
+            try pathBoundary.requireExistingRegularFile(
+                url,
+                within: managedRootURL(for: relativePath),
+                fileManager: fileManager
+            )
             let values = try url.resourceValues(forKeys: keys)
-            guard values.isSymbolicLink != true, values.isRegularFile == true else { throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(relativePath) }
             let modified = values.contentModificationDate ?? .distantPast
             if now.timeIntervalSince(modified) < gracePeriod {
                 retainedYoung += 1
@@ -165,9 +188,18 @@ public struct Lane2ManagedArtifactInventory: Sendable {
                 continue
             }
             do {
+                // Revalidate immediately before the destructive syscall. This narrows, but cannot
+                // eliminate, the unavoidable userspace preflight-to-remove TOCTOU window.
+                try pathBoundary.requireExistingRegularFile(
+                    url,
+                    within: managedRootURL(for: relativePath),
+                    fileManager: fileManager
+                )
                 try fileManager.removeItem(at: url)
                 removed.append(relativePath)
                 staleInventoryPaths.append(relativePath)
+            } catch let failure as LibraryManagedPathBoundaryFailure {
+                throw failure
             } catch {
                 throw LibraryArtifactFailure.cleanupFailed(relativePath)
             }
@@ -196,6 +228,11 @@ public struct Lane2ManagedArtifactInventory: Sendable {
         let prefix = rootURL.path.hasSuffix("/") ? rootURL.path : rootURL.path + "/"
         guard candidate.path.hasPrefix(prefix) else { throw Lane2ManagedArtifactInventoryFailure.invalidRelativePath(relativePath) }
         return candidate
+    }
+
+    private func managedRootURL(for normalizedRelativePath: String) -> URL {
+        let rootName = normalizedRelativePath.split(separator: "/", omittingEmptySubsequences: false).first.map(String.init) ?? ""
+        return rootURL.appendingPathComponent(rootName, isDirectory: true)
     }
 
     private var inventoryDirectoryURL: URL {
