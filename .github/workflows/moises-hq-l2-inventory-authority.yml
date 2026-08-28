@@ -11,6 +11,7 @@ on:
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedRuntime.swift'
       - 'tech-assets/moises-audio/Library/Sources/LibraryDescriptorRelativeIO.swift'
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryPathAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryDescriptorAuthorityTests.swift'
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactSegmentedStreamingTraversalTests.swift'
       - 'tech-assets/moises-audio/Library/Tests/LibraryDescriptorRelativeIOTests.swift'
       - '.github/workflows/moises-hq-l2-inventory-authority.yml'
@@ -22,6 +23,7 @@ on:
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedRuntime.swift'
       - 'tech-assets/moises-audio/Library/Sources/LibraryDescriptorRelativeIO.swift'
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryPathAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryDescriptorAuthorityTests.swift'
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactSegmentedStreamingTraversalTests.swift'
       - 'tech-assets/moises-audio/Library/Tests/LibraryDescriptorRelativeIOTests.swift'
       - '.github/workflows/moises-hq-l2-inventory-authority.yml'
@@ -60,6 +62,10 @@ jobs:
           inventory="$tmp/Tests/Lane2InventoryTests/ManagedArtifactInventoryPathAuthorityTests.swift"
           printf '@testable import Lane2Inventory\n' > "$inventory"
           cat Library/Tests/ManagedArtifactInventoryPathAuthorityTests.swift >> "$inventory"
+
+          descriptor_authority="$tmp/Tests/Lane2InventoryTests/ManagedArtifactInventoryDescriptorAuthorityTests.swift"
+          printf '@testable import Lane2Inventory\n' > "$descriptor_authority"
+          cat Library/Tests/ManagedArtifactInventoryDescriptorAuthorityTests.swift >> "$descriptor_authority"
 
           descriptor="$tmp/Tests/Lane2InventoryTests/LibraryDescriptorRelativeIOTests.swift"
           printf '@testable import Lane2Inventory\n' > "$descriptor"
