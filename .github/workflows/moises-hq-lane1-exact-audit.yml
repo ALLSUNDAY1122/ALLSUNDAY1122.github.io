@@ -4,12 +4,11 @@ on:
   push:
     branches:
       - tech/moises-separation
-    paths:
-      - '.github/workflows/moises-hq-lane1-exact-audit.yml'
   pull_request:
     branches:
       - main
     paths:
+      - 'tech-assets/moises-audio/Separation/**'
       - '.github/workflows/moises-hq-lane1-exact-audit.yml'
   workflow_dispatch:
 
@@ -17,14 +16,14 @@ permissions:
   contents: read
 
 env:
-  LANE1_EXPECTED_HEAD: 5025c07bdb1d53102bfd610100c1fee9cfea756c
+  LANE1_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   lane1-a26-exact-checkout-audit:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout exact Worker 1 commit
+      - name: Checkout exact event head
         uses: actions/checkout@v4
         with:
           ref: ${{ env.LANE1_EXPECTED_HEAD }}
@@ -38,7 +37,7 @@ jobs:
           actual="$(git rev-parse HEAD)"
           test "$actual" = "$LANE1_EXPECTED_HEAD"
           test -z "$(git status --porcelain=v1)"
-          echo "Exact Worker 1 HEAD: $actual"
+          echo "Exact Lane1 event HEAD: $actual"
 
       - name: Install audit dependency
         shell: bash
