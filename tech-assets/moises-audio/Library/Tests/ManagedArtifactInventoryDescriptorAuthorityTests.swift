@@ -196,6 +196,30 @@ final class Lane2ManagedArtifactInventoryDescriptorAuthorityTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: externalFile), sentinel)
     }
 
+    func testFreshEmptyInitializationRejectsDescendantSymlinkWithoutBorrowingExternalTree() throws {
+        let root = try makeRoot(prefix: "empty-activation-symlink-root")
+        let external = try makeRoot(prefix: "empty-activation-symlink-external")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+
+        let exports = root.appendingPathComponent("Exports", isDirectory: true)
+        try FileManager.default.createDirectory(at: exports, withIntermediateDirectories: true)
+        let externalFile = external.appendingPathComponent("borrowed.m4a")
+        let sentinel = Data("external-empty-activation-must-survive".utf8)
+        try sentinel.write(to: externalFile)
+        try FileManager.default.createSymbolicLink(
+            at: exports.appendingPathComponent("borrowed", isDirectory: true),
+            withDestinationURL: external
+        )
+
+        let inventory = Lane2ManagedArtifactInventory(rootURL: root)
+        XCTAssertFalse(try inventory.initializeFreshAuthoritativeIfNoManagedArtifacts())
+        XCTAssertFalse(inventory.isAuthoritative)
+        XCTAssertEqual(try Data(contentsOf: externalFile), sentinel)
+    }
+
     private func makeRoot(prefix: String) throws -> URL {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(
             "L2InventoryDescriptorAuthority-\(prefix)-\(UUID().uuidString)",
