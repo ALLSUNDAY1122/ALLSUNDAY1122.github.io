@@ -47,8 +47,24 @@ enum AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication {
     try writeAll(data,to:fd); try injectIfRequested(injectedFault,target:target,point:.beforeDataSync,preserveTemporary:&preserveTemporary); let syncMode=try syncFileDescriptor(fd); try injectIfRequested(injectedFault,target:target,point:.afterDataSyncBeforePublish,preserveTemporary:&preserveTemporary); _=close(fd); fdOpen=false
     guard let tempIdentity=try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.entryIdentity(name:tempName,in:directory) else{throw AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError.postPublishVerificationFailed}; try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.validateRegularEntry(tempIdentity,maximumBytes:maximumBytes)
     do { try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.linkEntryExclusive(sourceName:tempName,destinationName:destinationName,in:directory) } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionNamespaceError { if case .entryLinkFailed(let code)=error, code==EEXIST{throw AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError.targetCollision}; throw error }
+    guard tempIdentity.linkCount < UInt64.max,
+          let linkedTempIdentity=try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.entryIdentity(name:tempName,in:directory),
+          linkedTempIdentity.device==tempIdentity.device,
+          linkedTempIdentity.inode==tempIdentity.inode,
+          linkedTempIdentity.mode==tempIdentity.mode,
+          linkedTempIdentity.size==tempIdentity.size,
+          linkedTempIdentity.linkCount==tempIdentity.linkCount+1,
+          let linkedDestinationIdentity=try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.entryIdentity(name:destinationName,in:directory),
+          linkedDestinationIdentity==linkedTempIdentity else { throw AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError.namespaceSubstitutionDetected }
     targetPublished=true; try injectIfRequested(injectedFault,target:target,point:.afterPublishBeforeDirectorySync,preserveTemporary:&preserveTemporary)
-    try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.unlinkExpectedEntry(name:tempName,expectedIdentity:tempIdentity,in:directory); preserveTemporary=true; try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.synchronizeDirectory(directory); try injectIfRequested(injectedFault,target:target,point:.afterDirectorySync,preserveTemporary:&preserveTemporary)
+    try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.unlinkExpectedEntry(name:tempName,expectedIdentity:linkedTempIdentity,in:directory)
+    guard let publishedIdentity=try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.entryIdentity(name:destinationName,in:directory),
+          publishedIdentity.device==tempIdentity.device,
+          publishedIdentity.inode==tempIdentity.inode,
+          publishedIdentity.mode==tempIdentity.mode,
+          publishedIdentity.size==tempIdentity.size,
+          publishedIdentity.linkCount==tempIdentity.linkCount else { throw AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError.namespaceSubstitutionDetected }
+    preserveTemporary=true; try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.synchronizeDirectory(directory); try injectIfRequested(injectedFault,target:target,point:.afterDirectorySync,preserveTemporary:&preserveTemporary)
     let reopened=try readEntry(name:destinationName,maximumBytes:maximumBytes,in:directory); guard targetPublished && reopened==data else{throw AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError.postPublishVerificationFailed}
     return .init(target:target,byteCount:data.count,dataSyncMode:syncMode,atomicPublish:true,parentDirectorySynced:true)
    }

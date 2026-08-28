@@ -129,6 +129,19 @@ enum AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem {
                 )
             } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError {
                 throw error
+            } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError {
+                switch error {
+                case .pathOutsideLedgerRoot:
+                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.pathOutsideLedgerRoot
+                case .symbolicLinkRejected:
+                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.symbolicLinkRejected
+                case .nonRegularTargetRejected:
+                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.nonRegularFileRejected
+                case .oversizedFile:
+                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.oversizedFile
+                default:
+                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
+                }
             } catch {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
             }
@@ -162,6 +175,19 @@ enum AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem {
                 )
             } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError {
                 throw error
+            } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError {
+                switch error {
+                case .pathOutsideLedgerRoot:
+                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.pathOutsideLedgerRoot
+                case .symbolicLinkRejected:
+                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.symbolicLinkRejected
+                case .nonRegularTargetRejected:
+                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.nonRegularFileRejected
+                case .oversizedFile:
+                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.oversizedFile
+                default:
+                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
+                }
             } catch {
                 throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
             }
