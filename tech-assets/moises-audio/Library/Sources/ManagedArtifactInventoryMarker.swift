@@ -27,30 +27,23 @@ public extension Lane2ManagedArtifactInventory {
         maximumEncodedBytes: Int = Self.maximumAuthoritativeShardEncodedBytes
     ) -> Lane2ManagedArtifactInventoryShardPreflight {
         let effectiveMaximum = max(maximumEncodedBytes, 1)
-        let shards = rootURL
-            .appendingPathComponent(recoveryDirectoryName, isDirectory: true)
-            .appendingPathComponent("ArtifactInventory", isDirectory: true)
-            .appendingPathComponent("v1", isDirectory: true)
-            .appendingPathComponent("Shards", isDirectory: true)
-
-        var isDirectory: ObjCBool = false
-        guard FileManager.default.fileExists(atPath: shards.path, isDirectory: &isDirectory) else {
-            return Lane2ManagedArtifactInventoryShardPreflight(
-                checkedShards: 0,
-                largestEncodedBytes: 0,
-                safeForAuthoritativeDecode: true
-            )
-        }
-        guard isDirectory.boolValue else {
-            return Lane2ManagedArtifactInventoryShardPreflight(
-                checkedShards: 0,
-                largestEncodedBytes: 0,
-                safeForAuthoritativeDecode: false
-            )
-        }
+        let authority = Lane2ManagedArtifactInventoryPathAuthority(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName,
+            fileManager: inventoryFileManager
+        )
+        let shards = authority.shardsDirectoryURL
 
         do {
-            let entries = try FileManager.default.contentsOfDirectory(
+            guard try authority.requireDirectoryIfPresent(shards) else {
+                return Lane2ManagedArtifactInventoryShardPreflight(
+                    checkedShards: 0,
+                    largestEncodedBytes: 0,
+                    safeForAuthoritativeDecode: true
+                )
+            }
+
+            let entries = try inventoryFileManager.contentsOfDirectory(
                 at: shards,
                 includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
                 options: [.skipsHiddenFiles]
@@ -76,6 +69,7 @@ public extension Lane2ManagedArtifactInventory {
                         safeForAuthoritativeDecode: false
                     )
                 }
+                try authority.requireExistingRegularFile(url, within: shards)
                 let values = try url.resourceValues(
                     forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]
                 )
@@ -111,17 +105,20 @@ public extension Lane2ManagedArtifactInventory {
     }
 
     var hasValidAuthoritativeMarker: Bool {
-        let marker = rootURL
-            .appendingPathComponent(recoveryDirectoryName, isDirectory: true)
-            .appendingPathComponent("ArtifactInventory", isDirectory: true)
-            .appendingPathComponent("v1", isDirectory: true)
-            .appendingPathComponent("authoritative", isDirectory: false)
-        guard FileManager.default.fileExists(atPath: marker.path) else { return false }
-        guard let values = try? marker.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
-              values.isRegularFile == true,
-              values.isSymbolicLink != true,
-              let data = try? Data(contentsOf: marker),
-              data == Data("lane2-managed-artifact-inventory-v1\n".utf8) else { return false }
-        return authoritativeShardPreflight().safeForAuthoritativeDecode
+        let authority = Lane2ManagedArtifactInventoryPathAuthority(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName,
+            fileManager: inventoryFileManager
+        )
+        let marker = authority.authoritativeMarkerURL
+        do {
+            guard try authority.nodeExists(marker) else { return false }
+            try authority.requireExistingRegularFile(marker, within: authority.v1DirectoryURL)
+            let data = try Data(contentsOf: marker)
+            guard data == Data("lane2-managed-artifact-inventory-v1\n".utf8) else { return false }
+            return authoritativeShardPreflight().safeForAuthoritativeDecode
+        } catch {
+            return false
+        }
     }
 }
