@@ -1,0 +1,196 @@
+name: Moises HQ Lane1 Privacy Delete Race Diagnostic v4
+
+on:
+  push:
+    branches:
+      - moises/hq-l1-privacy-delete-race-diag-v4
+    paths:
+      - '.github/workflows/moises-hq-l1-privacy-delete-race-diag-v4.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout diagnostic branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply candidate fix and isolated regression locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          source = Path('tech-assets/moises-audio/Separation/Server/privacy_retention.py')
+          text = source.read_text()
+          method = text.index('    def _delete_local_artifacts(self, logical_job_id: str) -> None:')
+          start = text.index('        targets = (', method)
+          end = text.index('\n\n    def _artifact_directory', start)
+          replacement = '''        targets = (
+              self._artifact_directory(logical_job_id),
+              self._artifact_directory(logical_job_id, suffix=".staging"),
+          )
+          try:
+              # Serialize normal/staging artifact deletion under the same per-job lease used
+              # by the resumable cache so concurrent privacy requests cannot overlap rmtree.
+              with self.resume_cache_manager.lease(logical_job_id) as acquired:
+                  if not acquired:
+                      raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_LOCK_FAILED", retryable=True)
+                  for target in targets:
+                      try:
+                          shutil.rmtree(target)
+                      except FileNotFoundError:
+                          pass
+                      except OSError as exc:
+                          raise PrivacyRetentionError(
+                              "SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True
+                          ) from exc
+
+                  cache_root = self.resume_cache_manager.cache_root(logical_job_id)
+                  if any(target.exists() for target in targets) or cache_root.exists():
+                      raise PrivacyRetentionError(
+                          "SEP_PRIVACY_LOCAL_DELETE_UNCONFIRMED", retryable=True
+                      )
+                  if not self.resume_cache_manager.is_deleted(logical_job_id):
+                      raise PrivacyRetentionError(
+                          "SEP_PRIVACY_LOCAL_DELETE_UNCONFIRMED", retryable=True
+                      )
+          except OrchestratorError as exc:
+              raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True) from exc'''
+          text = text[:start] + replacement + text[end:]
+          source.write_text(text)
+
+          test = Path('tech-assets/moises-audio/Separation/Tests/test_privacy_retention_concurrency.py')
+          text = test.read_text()
+          if 'import shutil\n' not in text:
+              text = text.replace('import threading\n', 'import shutil\nimport threading\n', 1)
+          marker = '    def test_local_delete_enoent_race_is_idempotent(self):\n'
+          if text.count(marker) != 1:
+              raise SystemExit(f'unexpected insertion marker count={text.count(marker)}')
+          addition = '''    def test_concurrent_local_artifact_delete_uses_per_job_lease(self):
+              job = "f" * 32
+              self.register_job(job)
+              directory = self.artifacts / job
+              staging = self.artifacts / f"{job}.staging"
+              for root in (directory, staging):
+                  root.mkdir(parents=True, exist_ok=True)
+                  for index in range(16):
+                      (root / f"stem-{index}.wav").write_bytes(b"audio")
+
+              barrier = threading.Barrier(10)
+              guard = threading.Lock()
+              active = 0
+              max_active = 0
+              original_rmtree = shutil.rmtree
+
+              def tracked_rmtree(path, *args, **kwargs):
+                  nonlocal active, max_active
+                  with guard:
+                      active += 1
+                      max_active = max(max_active, active)
+                  try:
+                      time.sleep(0.01)
+                      return original_rmtree(path, *args, **kwargs)
+                  finally:
+                      with guard:
+                          active -= 1
+
+              class PrivacyShutilProxy:
+                  rmtree = staticmethod(tracked_rmtree)
+
+              def delete(_):
+                  barrier.wait()
+                  return self.service().request_delete(job, delete_provider=False)
+
+              with mock.patch("privacy_retention.shutil", PrivacyShutilProxy):
+                  with ThreadPoolExecutor(max_workers=10) as pool:
+                      list(pool.map(delete, range(10)))
+
+              self.assertEqual(max_active, 1)
+              self.assertFalse(directory.exists())
+              self.assertFalse(staging.exists())
+              self.assertTrue(self.service().snapshot(job)["localDeleteConfirmed"])
+
+          '''
+          text = text.replace(marker, addition + marker, 1)
+          test.write_text(text)
+          PY
+          git diff --check
+
+      - name: Run separate captured stress diagnostics
+        shell: bash
+        run: |
+          set -u
+          mkdir -p "$GITHUB_WORKSPACE/diagnostic"
+          export PYTHONPATH="$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Server:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Evaluation:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          cd "$GITHUB_WORKSPACE/tech-assets/moises-audio"
+          : > "$GITHUB_WORKSPACE/diagnostic/results.tsv"
+
+          run_stress() {
+            label="$1"
+            test_name="$2"
+            failed=0
+            for i in $(seq 1 50); do
+              log="$GITHUB_WORKSPACE/diagnostic/${label}-${i}.log"
+              if python3 -m unittest -v "$test_name" >"$log" 2>&1; then
+                printf '%s\t%s\tPASS\n' "$label" "$i" >> "$GITHUB_WORKSPACE/diagnostic/results.tsv"
+              else
+                printf '%s\t%s\tFAIL\n' "$label" "$i" >> "$GITHUB_WORKSPACE/diagnostic/results.tsv"
+                printf '%s\t%s\n' "$label" "$i" >> "$GITHUB_WORKSPACE/diagnostic/failures.tsv"
+                cp "$log" "$GITHUB_WORKSPACE/diagnostic/${label}-FIRST-FAIL.log"
+                failed=1
+                break
+              fi
+            done
+            return $failed
+          }
+
+          existing_failed=0
+          isolated_failed=0
+          run_stress existing-race test_privacy_retention_concurrency.PrivacyRetentionConcurrencyTests.test_concurrent_delete_reserves_provider_side_effect_once || existing_failed=1
+          run_stress isolated-lease test_privacy_retention_concurrency.PrivacyRetentionConcurrencyTests.test_concurrent_local_artifact_delete_uses_per_job_lease || isolated_failed=1
+          printf 'existing_failed=%s\nisolated_failed=%s\n' "$existing_failed" "$isolated_failed" > "$GITHUB_WORKSPACE/diagnostic/status.txt"
+
+          {
+            echo '## Lane1 privacy race diagnostic v4'
+            echo '```'
+            cat "$GITHUB_WORKSPACE/diagnostic/status.txt"
+            echo '```'
+            if [ -f "$GITHUB_WORKSPACE/diagnostic/failures.tsv" ]; then
+              echo '### First failures'
+              echo '```'
+              cat "$GITHUB_WORKSPACE/diagnostic/failures.tsv"
+              echo '```'
+              for f in "$GITHUB_WORKSPACE"/diagnostic/*-FIRST-FAIL.log; do
+                [ -e "$f" ] || continue
+                echo "### $(basename "$f")"
+                echo '```text'
+                tail -n 120 "$f"
+                echo '```'
+              done
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lane1-privacy-race-diagnostic-v4
+          path: diagnostic/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Enforce diagnostic result
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat diagnostic/status.txt
+          if grep -q '=1' diagnostic/status.txt; then
+            exit 1
+          fi
