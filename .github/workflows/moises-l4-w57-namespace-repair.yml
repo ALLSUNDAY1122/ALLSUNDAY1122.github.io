@@ -1,4 +1,4 @@
-name: Moises L4 W57 Namespace Repair
+name: Moises L4 W57 Compile Gate
 
 on:
   push:
@@ -6,225 +6,32 @@ on:
       - moises/wp4-analysis-platform
     paths:
       - '.github/workflows/moises-l4-w57-namespace-repair.yml'
-      - 'tech-assets/moises-audio/Analysis/**'
-      - 'tech-assets/moises-audio/Tests/MoisesAudioCoreTests/**'
+      - 'tech-assets/moises-audio/**'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  repair-and-validate:
+  validate-l4:
     runs-on: ubuntu-24.04
-    container: swift:6.0
+    container:
+      image: swift:6.0
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: moises/wp4-analysis-platform
-          fetch-depth: 0
 
-      - name: Apply W57 compile compatibility and namespace repairs
+      - name: Swift toolchain
+        run: swift --version
+
+      - name: Verify Analysis is compiled by Package.swift
         working-directory: tech-assets/moises-audio
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
+          grep -q '"Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift"' Package.swift
+          grep -q '"Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift"' Package.swift
+          test -f Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift
+          test -f Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift
 
-          def replace_exact(path, old, new, expected=None):
-              p = Path(path)
-              text = p.read_text()
-              count = text.count(old)
-              if count == 0:
-                  # Idempotence: if the replacement is already present, accept it.
-                  if new in text:
-                      print(f"already repaired: {path}")
-                      return
-                  raise SystemExit(f"repair anchor missing: {path}")
-              if expected is not None and count != expected:
-                  raise SystemExit(f"unexpected anchor count {count} in {path}; expected {expected}")
-              p.write_text(text.replace(old, new))
-              print(f"repaired {path}: {count} replacement(s)")
-
-          # Persist the already-proven Swift 6 compile-only repairs that the prior
-          # diagnostic workflow had been applying transiently.
-          replace_exact(
-              'Tests/MoisesAudioCoreTests/AnalysisRealAudioParityAdjudicationTests.swift',
-              'expectedCaptureSetSHA256: overrideCaptureRoot ?? (try AnalysisAnalysisParityAdjudicationRoot.stableSHA256(captureSet))',
-              'expectedCaptureSetSHA256: try (overrideCaptureRoot ?? AnalysisAnalysisParityAdjudicationRoot.stableSHA256(captureSet))',
-              1,
-          )
-          replace_exact(
-              'Tests/MoisesAudioCoreTests/AnalysisChunkedInputPipelineTests.swift',
-              'result.inputDiagnostics',
-              'result.diagnostics',
-          )
-          replace_exact(
-              'Tests/MoisesAudioCoreTests/AnalysisChunkedInputPipelineTests.swift',
-              'chunked.inputDiagnostics',
-              'chunked.diagnostics',
-              1,
-          )
-          p = Path('Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift')
-          text = p.read_text()
-          for old, new in [
-              ('w44CheckpointCertificateRootSHA256: checkpointRoot ?? checkpointCertificate.declaredCertificateRootSHA256', 'w44CheckpointCertificateRootSHA256: try (checkpointRoot ?? checkpointCertificate.declaredCertificateRootSHA256)'),
-              ('w42AnchorReceiptRootSHA256: anchorRoot ?? anchorReceipt.declaredAnchorReceiptRootSHA256', 'w42AnchorReceiptRootSHA256: try (anchorRoot ?? anchorReceipt.declaredAnchorReceiptRootSHA256)'),
-              ('w41TransferRootSHA256: transferRoot ?? transfer.declaredTransferRootSHA256', 'w41TransferRootSHA256: try (transferRoot ?? transfer.declaredTransferRootSHA256)'),
-          ]:
-              if old in text:
-                  text = text.replace(old, new)
-              elif new not in text:
-                  raise SystemExit(f'repair anchor missing in {p}: {old}')
-          p.write_text(text)
-          replace_exact(
-              'Tests/MoisesAudioCoreTests/ChordVocabularyHardeningTests.swift',
-              'events.first?.startSeconds',
-              'events.first?.startSeconds ?? .nan',
-              1,
-          )
-          replace_exact(
-              'Tests/MoisesAudioCoreTests/ChordVocabularyHardeningTests.swift',
-              'events.last?.endSeconds',
-              'events.last?.endSeconds ?? .nan',
-              1,
-          )
-
-          # W53 bug: createExclusive deliberately creates a second hard link before
-          # unlinking the random temp name. The original W54 identity check captured
-          # linkCount=1 before linkat(), then compared that stale identity after
-          # linkat() when linkCount is correctly 2, causing normal publication to be
-          # misclassified as namespaceSubstitutionDetected.
-          durable = Path('Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift')
-          text = durable.read_text()
-          old = '''    targetPublished=true; try injectIfRequested(injectedFault,target:target,point:.afterPublishBeforeDirectorySync,preserveTemporary:&preserveTemporary)
-    try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.unlinkExpectedEntry(name:tempName,expectedIdentity:tempIdentity,in:directory); preserveTemporary=true; try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.synchronizeDirectory(directory); try injectIfRequested(injectedFault,target:target,point:.afterDirectorySync,preserveTemporary:&preserveTemporary)'''
-          new = '''    guard tempIdentity.linkCount < UInt64.max,
-          let linkedTempIdentity=try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.entryIdentity(name:tempName,in:directory),
-          linkedTempIdentity.device==tempIdentity.device,
-          linkedTempIdentity.inode==tempIdentity.inode,
-          linkedTempIdentity.mode==tempIdentity.mode,
-          linkedTempIdentity.size==tempIdentity.size,
-          linkedTempIdentity.linkCount==tempIdentity.linkCount+1,
-          let linkedDestinationIdentity=try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.entryIdentity(name:destinationName,in:directory),
-          linkedDestinationIdentity==linkedTempIdentity else { throw AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError.namespaceSubstitutionDetected }
-    targetPublished=true; try injectIfRequested(injectedFault,target:target,point:.afterPublishBeforeDirectorySync,preserveTemporary:&preserveTemporary)
-    try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.unlinkExpectedEntry(name:tempName,expectedIdentity:linkedTempIdentity,in:directory)
-    guard let publishedIdentity=try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.entryIdentity(name:destinationName,in:directory),
-          publishedIdentity.device==tempIdentity.device,
-          publishedIdentity.inode==tempIdentity.inode,
-          publishedIdentity.mode==tempIdentity.mode,
-          publishedIdentity.size==tempIdentity.size,
-          publishedIdentity.linkCount==tempIdentity.linkCount else { throw AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError.namespaceSubstitutionDetected }
-    preserveTemporary=true; try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.synchronizeDirectory(directory); try injectIfRequested(injectedFault,target:target,point:.afterDirectorySync,preserveTemporary:&preserveTemporary)'''
-          if old in text:
-              text = text.replace(old, new, 1)
-              durable.write_text(text)
-              print('repaired W53 intentional hard-link identity transition')
-          elif new not in text:
-              raise SystemExit('W53 hard-link repair anchor missing')
-          else:
-              print('W53 hard-link identity transition already repaired')
-
-          # Preserve specific fail-closed error identity for interrupted temp files.
-          secure = Path('Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift')
-          text = secure.read_text()
-          old_catch = '''            } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError {
-                throw error
-            } catch {
-                throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
-            }'''
-          new_catch = '''            } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError {
-                throw error
-            } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError {
-                switch error {
-                case .pathOutsideLedgerRoot:
-                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.pathOutsideLedgerRoot
-                case .symbolicLinkRejected:
-                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.symbolicLinkRejected
-                case .nonRegularTargetRejected:
-                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.nonRegularFileRejected
-                case .oversizedFile:
-                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.oversizedFile
-                default:
-                    throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
-                }
-            } catch {
-                throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
-            }'''
-          count = text.count(old_catch)
-          if count:
-              if count != 2:
-                  raise SystemExit(f'unexpected SecureFilesystem catch count: {count}')
-              secure.write_text(text.replace(old_catch, new_catch))
-              print('repaired interrupted-temp error fidelity in ledger and records topology validation')
-          elif new_catch not in text:
-              raise SystemExit('SecureFilesystem catch repair anchor missing')
-          else:
-              print('SecureFilesystem interrupted-temp error fidelity already repaired')
-          PY
-
-          git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
-          git diff --check
-          git diff -- Analysis Tests/MoisesAudioCoreTests | sed -n '1,500p'
-
-      - name: Run namespace regression cluster
-        id: namespace
+      - name: Full recovered Lane4 SwiftPM
         working-directory: tech-assets/moises-audio
-        run: |
-          set +e
-          swift test --filter 'AnalysisPhysicalRealAudioBridgeConsumption(DurablePublication|ConcurrentStore|NormalizedAccess|NormalizedConcurrentStore|NormalizedCustodyCertificate|QuiescentCustody|SecureStore|LegacyBypassContainment)Tests' > /tmp/l4-w57-namespace.log 2>&1
-          status=$?
-          set -e
-          cat /tmp/l4-w57-namespace.log
-          echo "status=$status" >> "$GITHUB_OUTPUT"
-          exit "$status"
-
-      - name: Persist verified namespace repair
-        if: steps.namespace.outputs.status == '0'
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
-          git config user.name 'chatgpt-l4-recovery'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add \
-            tech-assets/moises-audio/Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift \
-            tech-assets/moises-audio/Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift \
-            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisRealAudioParityAdjudicationTests.swift \
-            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisChunkedInputPipelineTests.swift \
-            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift \
-            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/ChordVocabularyHardeningTests.swift
-          if ! git diff --cached --quiet; then
-            git commit -m 'fix(moises-l4): repair W53 namespace publication invariants'
-            git push origin HEAD:moises/wp4-analysis-platform
-          fi
-
-      - name: Run full recovered L4 SwiftPM
-        if: steps.namespace.outputs.status == '0'
-        id: full
-        working-directory: tech-assets/moises-audio
-        run: |
-          set +e
-          swift test --parallel > /tmp/l4-w57-full.log 2>&1
-          status=$?
-          set -e
-          echo "status=$status" >> "$GITHUB_OUTPUT"
-          mkdir -p "$GITHUB_WORKSPACE/automation/chatgpt-dispatcher/moises-equivalence/recovery"
-          cp /tmp/l4-w57-namespace.log "$GITHUB_WORKSPACE/automation/chatgpt-dispatcher/moises-equivalence/recovery/L4-W57_NAMESPACE_CLUSTER.log"
-          cp /tmp/l4-w57-full.log "$GITHUB_WORKSPACE/automation/chatgpt-dispatcher/moises-equivalence/recovery/L4-W57_AFTER_NAMESPACE_FULL.log"
-          grep -nE 'error:|fatal error:|failed|FAIL' /tmp/l4-w57-full.log | head -n 400 || true
-
-      - name: Upload post-namespace diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: l4-w57-post-namespace-diagnostic
-          path: |
-            automation/chatgpt-dispatcher/moises-equivalence/recovery/L4-W57_NAMESPACE_CLUSTER.log
-            automation/chatgpt-dispatcher/moises-equivalence/recovery/L4-W57_AFTER_NAMESPACE_FULL.log
-          if-no-files-found: warn
-          retention-days: 7
-
-      - name: Enforce full SwiftPM result
-        if: steps.namespace.outputs.status == '0'
-        run: |
-          status='${{ steps.full.outputs.status }}'
-          if [ -z "$status" ]; then exit 2; fi
-          exit "$status"
+        run: swift test
