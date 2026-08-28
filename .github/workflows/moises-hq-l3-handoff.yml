@@ -35,7 +35,7 @@ jobs:
       - name: Swift version
         run: swift --version
 
-      - name: Execute Lane3 handoff manifest host and expected-plan self-tests
+      - name: Execute Lane3 handoff manifest host expected-plan and commitment self-tests
         working-directory: tech-assets/moises-audio
         shell: bash
         run: |
@@ -50,7 +50,12 @@ jobs:
           cp Playback/Tests/L3_HQ_PhysicalEvidenceHandoffManifestSelfTest.swift /tmp/L3HandoffManifest.swift
           cp Playback/Tests/L3_HQ_PhysicalEvidenceHandoffHostValidatorSelfTest.swift /tmp/L3HandoffHost.swift
           cp Playback/Tests/L3_HQ_PhysicalEvidenceHandoffExpectedPlanHostValidatorSelfTest.swift /tmp/L3HandoffExpectedPlan.swift
-          sed -i '/^@main$/d' /tmp/L3HandoffManifest.swift /tmp/L3HandoffHost.swift /tmp/L3HandoffExpectedPlan.swift
+          cp Playback/Tests/L3_HQ_PhysicalEvidenceHandoffExpectedPlanCommitmentSelfTest.swift /tmp/L3HandoffExpectedPlanCommitment.swift
+          sed -i '/^@main$/d' \
+            /tmp/L3HandoffManifest.swift \
+            /tmp/L3HandoffHost.swift \
+            /tmp/L3HandoffExpectedPlan.swift \
+            /tmp/L3HandoffExpectedPlanCommitment.swift
 
           cat >/tmp/L3HandoffCombinedRunner.swift <<'SWIFT'
           @main
@@ -59,6 +64,7 @@ jobs:
                   try L3HQPhysicalEvidenceHandoffManifestSelfTestMain.main()
                   try L3HQPhysicalEvidenceHandoffHostValidatorSelfTestMain.main()
                   try L3HQPhysicalEvidenceHandoffExpectedPlanHostValidatorSelfTestMain.main()
+                  try L3HQPhysicalEvidenceHandoffExpectedPlanCommitmentSelfTestMain.main()
               }
           }
           SWIFT
@@ -72,6 +78,7 @@ jobs:
             /tmp/L3HandoffManifest.swift \
             /tmp/L3HandoffHost.swift \
             /tmp/L3HandoffExpectedPlan.swift \
+            /tmp/L3HandoffExpectedPlanCommitment.swift \
             /tmp/L3HandoffCombinedRunner.swift \
             -o /tmp/l3-handoff-native
 
@@ -79,3 +86,4 @@ jobs:
           grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_MANIFEST_SELF_TEST_PASS ' /tmp/l3-handoff-native.out
           grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_HOST_VALIDATOR_SELF_TEST_PASS ' /tmp/l3-handoff-native.out
           grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_EXPECTED_PLAN_HOST_VALIDATOR_SELF_TEST_PASS ' /tmp/l3-handoff-native.out
+          grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_EXPECTED_PLAN_COMMITMENT_SELF_TEST_PASS ' /tmp/l3-handoff-native.out
