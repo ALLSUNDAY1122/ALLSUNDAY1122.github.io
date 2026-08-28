@@ -1,0 +1,13 @@
+{
+  "task": "APP2-003",
+  "app": "夜の書架",
+  "timestamp_jst": "2026-08-28T12:36:00+09:00",
+  "version": "1.2.0",
+  "build_number": "5",
+  "codemagic_build_id": "6a90c5121f14c2b8e5f8cfe1",
+  "physical_acceptance": "FAIL",
+  "user_report": "何も解決していない",
+  "root_cause": "native/main.tsx did not import app/pattern-c-fixes.css and did not mount ReaderRuntimeGuards, so prior fixes were absent from the iOS Vite/Capacitor bundle",
+  "corrective_action": "native entrypoint imports both fixes; Build 6 adds native-bundle marker gate before signing",
+  "review_submission": false
+}
