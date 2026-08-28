@@ -17,6 +17,11 @@ import Glibc
 /// regular file with another regular file under the same pinned parent directory. Physical
 /// APFS/File Provider/protection-class/force-termination behavior remains a separate gate.
 struct Lane2LibraryDescriptorRelativeIO: Sendable {
+    struct RegularFileMetadata: Equatable, Sendable {
+        let sizeBytes: Int
+        let modificationTime: TimeInterval
+    }
+
     enum Failure: Error, Equatable, Sendable {
         case invalidManagedPath(String)
         case openFailed(String)
@@ -77,6 +82,40 @@ struct Lane2LibraryDescriptorRelativeIO: Sendable {
         }
     }
 
+    /// Reads regular-file size and modification time from the opened descriptor rather than
+    /// reopening the pathname through Foundation after a separate topology validation.
+    func regularFileMetadata(at url: URL) throws -> RegularFileMetadata {
+        let relative = try relativeComponents(for: url)
+        return try withPinnedParent(relativeComponents: relative) { parentFD, leaf in
+            let fd = leaf.withCString { pointer in
+                lane2OpenAt(parentFD, pointer, lane2ReadOnlyNoFollowFlags, 0)
+            }
+            guard fd >= 0 else { throw Failure.openFailed(leaf) }
+            defer { _ = lane2Close(fd) }
+
+            var status = stat()
+            guard lane2Fstat(fd, &status) == 0 else { throw Failure.openFailed(leaf) }
+            let fileType = status.st_mode & mode_t(S_IFMT)
+            guard fileType == mode_t(S_IFREG) else { throw Failure.notRegularFile(leaf) }
+            guard status.st_size >= 0, let sizeBytes = Int(exactly: status.st_size) else {
+                throw Failure.fileTooLarge(leaf)
+            }
+
+            #if canImport(Darwin)
+            let modificationTime = Double(status.st_mtimespec.tv_sec)
+                + Double(status.st_mtimespec.tv_nsec) / 1_000_000_000
+            #elseif canImport(Glibc)
+            let modificationTime = Double(status.st_mtim.tv_sec)
+                + Double(status.st_mtim.tv_nsec) / 1_000_000_000
+            #endif
+
+            return RegularFileMetadata(
+                sizeBytes: sizeBytes,
+                modificationTime: modificationTime
+            )
+        }
+    }
+
     func writeRegularFileAtomically(_ data: Data, to url: URL) throws {
         let relative = try relativeComponents(for: url)
         try withPinnedParent(relativeComponents: relative) { parentFD, leaf in
@@ -132,6 +171,28 @@ struct Lane2LibraryDescriptorRelativeIO: Sendable {
     func removeLeaf(at url: URL) throws {
         let relative = try relativeComponents(for: url)
         try withPinnedParent(relativeComponents: relative) { parentFD, leaf in
+            let result = leaf.withCString { pointer in
+                lane2UnlinkAt(parentFD, pointer, 0)
+            }
+            guard result == 0 else { throw Failure.removeFailed(leaf) }
+            guard lane2Fsync(parentFD) == 0 else { throw Failure.syncFailed(leaf) }
+        }
+    }
+
+    /// Requires the leaf to be a regular file through the same pinned parent descriptor before
+    /// unlinking its directory entry. The open descriptor prevents symlink following and keeps the
+    /// checked inode alive while unlink occurs. This still does not prove same-name exact-inode
+    /// identity if another regular entry replaces the name between `openat` and `unlinkat`.
+    func removeRegularFileLeaf(at url: URL) throws {
+        let relative = try relativeComponents(for: url)
+        try withPinnedParent(relativeComponents: relative) { parentFD, leaf in
+            let fd = leaf.withCString { pointer in
+                lane2OpenAt(parentFD, pointer, lane2ReadOnlyNoFollowFlags, 0)
+            }
+            guard fd >= 0 else { throw Failure.openFailed(leaf) }
+            defer { _ = lane2Close(fd) }
+            try requireRegularFile(fd: fd, label: leaf)
+
             let result = leaf.withCString { pointer in
                 lane2UnlinkAt(parentFD, pointer, 0)
             }

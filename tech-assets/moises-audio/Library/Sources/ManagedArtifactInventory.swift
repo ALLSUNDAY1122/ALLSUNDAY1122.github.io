@@ -92,6 +92,10 @@ public struct Lane2ManagedArtifactInventory: Sendable {
         )
     }
 
+    var descriptorRelativeIO: Lane2LibraryDescriptorRelativeIO {
+        Lane2LibraryDescriptorRelativeIO(rootURL: rootURL)
+    }
+
     public var isAuthoritative: Bool {
         hasValidAuthoritativeMarker
     }
@@ -125,9 +129,9 @@ public struct Lane2ManagedArtifactInventory: Sendable {
                 authoritativeMarkerURL,
                 within: inventoryDirectoryURL
             )
-            try Data("lane2-managed-artifact-inventory-v1\n".utf8).write(
-                to: authoritativeMarkerURL,
-                options: [.atomic]
+            try descriptorRelativeIO.writeRegularFileAtomically(
+                Data("lane2-managed-artifact-inventory-v1\n".utf8),
+                to: authoritativeMarkerURL
             )
             try pathAuthority.requireExistingRegularFile(
                 authoritativeMarkerURL,
@@ -155,11 +159,8 @@ public struct Lane2ManagedArtifactInventory: Sendable {
                 url,
                 managedRootName: rootName
             ) else { return false }
+            _ = try descriptorRelativeIO.regularFileMetadata(at: url)
         } catch {
-            throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(normalized)
-        }
-        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
             throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(normalized)
         }
         try bridge.registerManaged(relativePaths: [normalized])
@@ -192,7 +193,6 @@ public struct Lane2ManagedArtifactInventory: Sendable {
         var refreshPaths: [String] = []
         var retainedReferenced = 0
         var retainedYoung = 0
-        let keys: Set<URLResourceKey> = [.isRegularFileKey, .isSymbolicLinkKey, .contentModificationDateKey]
 
         for candidate in slice.candidates {
             let relativePath = try Self.normalize(candidate.relativePath)
@@ -200,6 +200,7 @@ public struct Lane2ManagedArtifactInventory: Sendable {
             if referenced.contains(relativePath) { retainedReferenced += 1; continue }
             let url = try absoluteURL(relativePath)
             let rootName = String(relativePath.split(separator: "/", omittingEmptySubsequences: false)[0])
+            let metadata: Lane2LibraryDescriptorRelativeIO.RegularFileMetadata
             do {
                 guard try pathAuthority.requireManagedRegularFileIfPresent(
                     url,
@@ -208,28 +209,27 @@ public struct Lane2ManagedArtifactInventory: Sendable {
                     staleInventoryPaths.append(relativePath)
                     continue
                 }
+                metadata = try descriptorRelativeIO.regularFileMetadata(at: url)
             } catch {
                 throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(relativePath)
             }
-            let values = try url.resourceValues(forKeys: keys)
-            guard values.isSymbolicLink != true, values.isRegularFile == true else { throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(relativePath) }
-            let modified = values.contentModificationDate ?? .distantPast
+
+            let modified = Date(timeIntervalSince1970: metadata.modificationTime)
             if now.timeIntervalSince(modified) < gracePeriod {
                 retainedYoung += 1
                 refreshPaths.append(relativePath)
                 continue
             }
             do {
-                try pathAuthority.requireExistingRegularFile(
-                    url,
-                    within: pathAuthority.managedRootURL(rootName)
-                )
-                try fileManager.removeItem(at: url)
+                try descriptorRelativeIO.removeRegularFileLeaf(at: url)
                 removed.append(relativePath)
                 staleInventoryPaths.append(relativePath)
             } catch let failure as Lane2ManagedArtifactInventoryFailure {
                 throw failure
             } catch let failure as LibraryManagedPathBoundaryFailure {
+                _ = failure
+                throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(relativePath)
+            } catch let failure as Lane2LibraryDescriptorRelativeIO.Failure {
                 _ = failure
                 throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(relativePath)
             } catch {

@@ -17,6 +17,26 @@ final class Lane2LibraryDescriptorRelativeIOTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: file.path))
     }
 
+    func testMetadataComesFromPinnedRegularFileDescriptor() throws {
+        let root = try makeRoot(prefix: "metadata")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let directory = root.appendingPathComponent("managed", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let file = directory.appendingPathComponent("record.json")
+        let payload = Data("descriptor-metadata".utf8)
+        let expectedDate = Date(timeIntervalSince1970: 7_000_000)
+        try payload.write(to: file)
+        try FileManager.default.setAttributes(
+            [.modificationDate: expectedDate],
+            ofItemAtPath: file.path
+        )
+
+        let io = Lane2LibraryDescriptorRelativeIO(rootURL: root)
+        let metadata = try io.regularFileMetadata(at: file)
+        XCTAssertEqual(metadata.sizeBytes, payload.count)
+        XCTAssertEqual(metadata.modificationTime, expectedDate.timeIntervalSince1970, accuracy: 0.001)
+    }
+
     func testBoundedReadFailsClosedBeforeAppendingPastLimit() throws {
         let root = try makeRoot(prefix: "bounded-read")
         defer { try? FileManager.default.removeItem(at: root) }
@@ -48,6 +68,7 @@ final class Lane2LibraryDescriptorRelativeIOTests: XCTestCase {
 
         let io = Lane2LibraryDescriptorRelativeIO(rootURL: root)
         XCTAssertThrowsError(try io.readRegularFile(at: managedFile))
+        XCTAssertThrowsError(try io.regularFileMetadata(at: managedFile))
         XCTAssertEqual(try Data(contentsOf: externalFile), sentinel)
     }
 
@@ -68,6 +89,7 @@ final class Lane2LibraryDescriptorRelativeIOTests: XCTestCase {
 
         let io = Lane2LibraryDescriptorRelativeIO(rootURL: root)
         XCTAssertThrowsError(try io.readRegularFile(at: managedFile))
+        XCTAssertThrowsError(try io.regularFileMetadata(at: managedFile))
         XCTAssertEqual(try Data(contentsOf: externalFile), sentinel)
     }
 
@@ -118,6 +140,28 @@ final class Lane2LibraryDescriptorRelativeIOTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: externalFile), sentinel)
     }
 
+    func testRemoveRegularFileRejectsLeafSymlinkWithoutMutatingExternalTarget() throws {
+        let root = try makeRoot(prefix: "regular-remove-root")
+        let external = try makeRoot(prefix: "regular-remove-external")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+        let managed = root.appendingPathComponent("managed", isDirectory: true)
+        try FileManager.default.createDirectory(at: managed, withIntermediateDirectories: true)
+        let externalFile = external.appendingPathComponent("record.json")
+        let sentinel = Data("regular-remove-target-must-survive".utf8)
+        try sentinel.write(to: externalFile)
+        let managedFile = managed.appendingPathComponent("record.json")
+        try FileManager.default.createSymbolicLink(at: managedFile, withDestinationURL: externalFile)
+
+        let io = Lane2LibraryDescriptorRelativeIO(rootURL: root)
+        XCTAssertThrowsError(try io.removeRegularFileLeaf(at: managedFile))
+        XCTAssertEqual(try Data(contentsOf: externalFile), sentinel)
+        let attributes = try FileManager.default.attributesOfItem(atPath: managedFile.path)
+        XCTAssertEqual(attributes[.type] as? FileAttributeType, .typeSymbolicLink)
+    }
+
     func testRejectsPathOutsideManagedRoot() throws {
         let root = try makeRoot(prefix: "outside-root")
         let external = try makeRoot(prefix: "outside-external")
@@ -130,6 +174,8 @@ final class Lane2LibraryDescriptorRelativeIOTests: XCTestCase {
 
         let io = Lane2LibraryDescriptorRelativeIO(rootURL: root)
         XCTAssertThrowsError(try io.readRegularFile(at: externalFile))
+        XCTAssertThrowsError(try io.regularFileMetadata(at: externalFile))
+        XCTAssertThrowsError(try io.removeRegularFileLeaf(at: externalFile))
     }
 
     private func makeRoot(prefix: String) throws -> URL {

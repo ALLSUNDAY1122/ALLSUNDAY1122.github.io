@@ -42,6 +42,11 @@ public extension Lane2ManagedArtifactInventory {
                 let values = try url.resourceValues(forKeys: keys)
                 if values.isSymbolicLink == true { return false }
                 guard values.isRegularFile == true else { continue }
+                do {
+                    _ = try descriptorRelativeIO.regularFileMetadata(at: url)
+                } catch {
+                    throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(url.path)
+                }
                 let item = try lane2InventoryActivationRelativePath(for: url)
                 if item == normalized {
                     sawTarget = true
@@ -52,6 +57,18 @@ public extension Lane2ManagedArtifactInventory {
             if enumerationFailed { return false }
         }
         guard sawTarget else { return false }
+
+        // Revalidate each present managed root immediately before publishing authoritative state.
+        // This still cannot prove exact configured-root inode identity, but it prevents a late
+        // symlink/dangling substitution from becoming an authoritative activation.
+        for rootName in Lane2ManagedArtifactInventory.managedRootNames {
+            do {
+                _ = try authority.requireManagedRootIfPresent(rootName)
+            } catch {
+                throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(rootName)
+            }
+        }
+
         try markAuthoritativeAfterCompatibilityCensus()
         return true
     }
