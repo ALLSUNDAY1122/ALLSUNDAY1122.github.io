@@ -1,58 +1,16 @@
-name: Moises L4 W57 Recovery Once
+name: Moises L4 W57 Recovery Once (Retired)
 
 on:
-  push:
-    branches:
-      - moises/wp4-analysis-platform
-    paths:
-      - '.github/workflows/moises-l4-w57-recovery-once.yml'
-      - 'automation/chatgpt-dispatcher/moises-equivalence/recovery/l4-w57-repair-all.py'
-      - 'tech-assets/moises-audio/Package.swift'
-      - 'tech-assets/moises-audio/Analysis/**'
-      - 'tech-assets/moises-audio/iOS/HostCore/**'
-      - 'tech-assets/moises-audio/Tests/MoisesAudioCoreTests/**'
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  validate-recovered-l4:
+  retired:
     runs-on: ubuntu-24.04
-    container:
-      image: swift:6.0
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: moises/wp4-analysis-platform
-          fetch-depth: 0
-
-      - name: Apply idempotent W57 repairs
-        run: python3 automation/chatgpt-dispatcher/moises-equivalence/recovery/l4-w57-repair-all.py
-
-      - name: Verify patch shape
-        run: git diff --check
-
-      - name: Full recovered L4 SwiftPM
-        working-directory: tech-assets/moises-audio
-        run: swift test --parallel
-
-      - name: Persist verified repairs
+      - name: Recovery workflow retired
         run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
-          git config user.name 'chatgpt-l4-recovery'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add \
-            tech-assets/moises-audio/Analysis/AnalysisPhysicalEvidencePublishedBatchReopen.swift \
-            tech-assets/moises-audio/Analysis/AnalysisRealAudioParityAdjudication.swift \
-            tech-assets/moises-audio/Analysis/AnalysisRealAudioParityAdjudicationValidation.swift \
-            tech-assets/moises-audio/Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift \
-            tech-assets/moises-audio/Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift \
-            tech-assets/moises-audio/Analysis/benchmarks/L4-W57_EPOCH45_SWIFT6_RECOVERY.md \
-            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisRealAudioParityAdjudicationTests.swift \
-            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisChunkedInputPipelineTests.swift \
-            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift \
-            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/ChordVocabularyHardeningTests.swift
-          if ! git diff --cached --quiet; then
-            git commit -m 'fix(moises-l4): persist verified W57 Swift 6 recovery'
-            git push origin HEAD:moises/wp4-analysis-platform
-          fi
+          echo 'W57 source mutation inside CI is retired.'
+          echo 'Use moises-l4-w57-compile-probe.yml for immutable verification of committed source.'
