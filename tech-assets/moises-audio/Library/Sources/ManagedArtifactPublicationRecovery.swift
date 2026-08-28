@@ -25,6 +25,14 @@ public struct Lane2ManagedArtifactPublicationRecoveryReport: Hashable, Sendable 
     }
 }
 
+private final class Lane2PublicationRecoveryFileManagerHandle: @unchecked Sendable {
+    let value: FileManager
+
+    init(_ value: FileManager) {
+        self.value = value
+    }
+}
+
 /// Reconciles only durable publication intents from previous process sessions. It never enumerates
 /// Imports/Stems/Exports and therefore does not reintroduce AW28/AW30 full-root discovery after AW29
 /// authority. Regular files, including zero-byte interrupted outputs, are indexed so normal grace-
@@ -34,7 +42,7 @@ public struct Lane2ManagedArtifactPublicationRecovery: Sendable {
     public let rootURL: URL
     public let recoveryDirectoryName: String
     public let sessionID: String
-    private let fileManager: FileManager
+    private let fileManagerHandle: Lane2PublicationRecoveryFileManagerHandle
 
     public init(
         rootURL: URL,
@@ -45,7 +53,11 @@ public struct Lane2ManagedArtifactPublicationRecovery: Sendable {
         self.rootURL = rootURL.standardizedFileURL
         self.recoveryDirectoryName = recoveryDirectoryName
         self.sessionID = sessionID
-        self.fileManager = fileManager
+        self.fileManagerHandle = Lane2PublicationRecoveryFileManagerHandle(fileManager)
+    }
+
+    private var fileManager: FileManager {
+        fileManagerHandle.value
     }
 
     @discardableResult
