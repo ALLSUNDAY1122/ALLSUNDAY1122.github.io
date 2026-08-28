@@ -1,0 +1,30 @@
+name: Moises L4 W57 Compile Probe
+
+on:
+  push:
+    branches:
+      - moises/wp4-analysis-platform
+    paths:
+      - '.github/workflows/moises-l4-w57-compile-probe.yml'
+      - 'tech-assets/moises-audio/Package.swift'
+      - 'tech-assets/moises-audio/Analysis/**'
+      - 'tech-assets/moises-audio/iOS/HostCore/**'
+      - 'tech-assets/moises-audio/Tests/MoisesAudioCoreTests/**'
+
+permissions:
+  contents: read
+
+jobs:
+  swiftpm:
+    runs-on: ubuntu-24.04
+    container:
+      image: swift:6.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: moises/wp4-analysis-platform
+      - name: Swift version
+        run: swift --version
+      - name: Full recovered L4 SwiftPM
+        working-directory: tech-assets/moises-audio
+        run: swift test --parallel
