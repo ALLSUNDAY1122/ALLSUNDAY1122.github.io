@@ -84,6 +84,10 @@ public struct Lane2ManagedArtifactInventory: Sendable {
         inventoryFileManager
     }
 
+    private var descriptorIO: Lane2LibraryDescriptorRelativeIO {
+        Lane2LibraryDescriptorRelativeIO(rootURL: rootURL)
+    }
+
     private var pathAuthority: Lane2ManagedArtifactInventoryPathAuthority {
         Lane2ManagedArtifactInventoryPathAuthority(
             rootURL: rootURL,
@@ -125,9 +129,9 @@ public struct Lane2ManagedArtifactInventory: Sendable {
                 authoritativeMarkerURL,
                 within: inventoryDirectoryURL
             )
-            try Data("lane2-managed-artifact-inventory-v1\n".utf8).write(
-                to: authoritativeMarkerURL,
-                options: [.atomic]
+            try descriptorIO.writeRegularFileAtomically(
+                Data("lane2-managed-artifact-inventory-v1\n".utf8),
+                to: authoritativeMarkerURL
             )
             try pathAuthority.requireExistingRegularFile(
                 authoritativeMarkerURL,
