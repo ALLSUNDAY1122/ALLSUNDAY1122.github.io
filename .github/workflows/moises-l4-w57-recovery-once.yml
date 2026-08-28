@@ -33,13 +33,30 @@ jobs:
           status=$?
           set -e
           cat /tmp/l4-w57-swift-test.log
+
           if [ "$status" -ne 0 ]; then
-            log="../../automation/chatgpt-dispatcher/moises-equivalence/recovery/l4-w57-swift-test.log"
-            cp /tmp/l4-w57-swift-test.log "$log"
-            git config user.name 'chatgpt-l4-recovery'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add "$log"
-            git commit -m 'diagnostics(moises-l4): persist W57 Swift compile failure'
-            git push origin HEAD:moises/wp4-analysis-platform
+            diagnostic_rel="automation/chatgpt-dispatcher/moises-equivalence/recovery/L4-W57_SWIFTPM_DIAGNOSTIC.txt"
+            diagnostic="$GITHUB_WORKSPACE/$diagnostic_rel"
+            mkdir -p "$(dirname "$diagnostic")"
+            {
+              echo "L4-W57 exact Worker-branch SwiftPM diagnostic"
+              echo "head_sha=$GITHUB_SHA"
+              echo "swift_test_status=$status"
+              echo
+              echo "=== FIRST ERROR-LIKE LINES ==="
+              grep -nE 'error:|fatal error:|FAIL|failed' /tmp/l4-w57-swift-test.log | head -n 250 || true
+              echo
+              echo "=== LOG TAIL (last 400 lines) ==="
+              tail -n 400 /tmp/l4-w57-swift-test.log || true
+            } > "$diagnostic"
+
+            git -C "$GITHUB_WORKSPACE" config user.name 'chatgpt-l4-recovery'
+            git -C "$GITHUB_WORKSPACE" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git -C "$GITHUB_WORKSPACE" add -f "$diagnostic_rel"
+            if ! git -C "$GITHUB_WORKSPACE" diff --cached --quiet; then
+              git -C "$GITHUB_WORKSPACE" commit -m 'diagnostics(moises-l4): persist W57 Swift failure summary'
+              git -C "$GITHUB_WORKSPACE" push origin HEAD:moises/wp4-analysis-platform
+            fi
           fi
+
           exit "$status"
