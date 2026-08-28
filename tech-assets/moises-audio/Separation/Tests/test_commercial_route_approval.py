@@ -240,8 +240,14 @@ class CommercialRouteApprovalTests(unittest.TestCase):
         other = copy.deepcopy(self.manifest)
         other["operational_terms"]["pricing"]["unit_price"] = "0.250"
         second = self.call(other)
-        self.assertNotEqual(first["operational_policy"]["pricing_config_sha256"], second["operational_policy"]["pricing_config_sha256"])
-        self.assertNotIn("0.250", json.dumps(second))
+        first_policy = first["operational_policy"]
+        second_policy = second["operational_policy"]
+        self.assertNotEqual(first_policy["pricing_config_sha256"], second_policy["pricing_config_sha256"])
+        self.assertFalse(second_policy["pricing_values_persisted"])
+        policy_blob = json.dumps(second_policy, sort_keys=True)
+        self.assertNotIn("unit_price", policy_blob)
+        self.assertNotIn("minimum_charge", policy_blob)
+        self.assertNotIn("0.250", policy_blob)
 
 
 if __name__ == "__main__":
