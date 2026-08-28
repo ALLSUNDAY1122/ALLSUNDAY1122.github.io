@@ -19,6 +19,9 @@ def durable_record(*, asset="asset-current", task="task-current"):
         provider_asset_id=asset,
         provider_task_id=task,
         state="bound",
+        deletion_identity_binding_version=None,
+        deleted_provider_asset_id_hash=None,
+        deleted_provider_task_id_hash=None,
     )
 
 
@@ -35,8 +38,26 @@ class DurableService:
         self.registry = DurableRegistry(record)
         self.marked = []
 
-    def mark_deleted(self, logical_job_id):
+    def mark_deleted(
+        self,
+        logical_job_id,
+        *,
+        bind_provider_identity=False,
+        provider_asset_id_hash=None,
+        provider_task_id_hash=None,
+    ):
         self.marked.append(logical_job_id)
+        record = self.registry.record
+        record.state = "deleted"
+        record.provider_asset_id = None
+        record.provider_task_id = None
+        record.deletion_identity_binding_version = 1 if bind_provider_identity else None
+        record.deleted_provider_asset_id_hash = (
+            provider_asset_id_hash if bind_provider_identity else None
+        )
+        record.deleted_provider_task_id_hash = (
+            provider_task_id_hash if bind_provider_identity else None
+        )
 
 
 class PrivacyRegistry:
@@ -113,6 +134,12 @@ class AccountProcessingDeletionIdentityBindingTests(unittest.TestCase):
 
         self.assertEqual(result["state"], "COMPLETE")
         self.assertEqual(durable.marked, [LOGICAL])
+        record = durable.registry.record
+        self.assertEqual(record.deletion_identity_binding_version, 1)
+        self.assertEqual(record.deleted_provider_asset_id_hash, provider_hash(asset))
+        self.assertEqual(record.deleted_provider_task_id_hash, provider_hash(task))
+        self.assertIsNone(record.provider_asset_id)
+        self.assertIsNone(record.provider_task_id)
 
     def test_absent_provider_identity_requires_not_applicable_state(self):
         durable = DurableService(durable_record(asset=None, task=None))
