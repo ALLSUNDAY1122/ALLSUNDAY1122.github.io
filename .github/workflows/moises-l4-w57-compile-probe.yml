@@ -52,4 +52,19 @@ jobs:
 
       - name: Full recovered L4 SwiftPM
         working-directory: tech-assets/moises-audio
-        run: swift test --parallel
+        shell: bash
+        run: |
+          set +e
+          swift test --parallel > l4-w57-swiftpm.log 2>&1
+          status=$?
+          cat l4-w57-swiftpm.log
+          exit "$status"
+
+      - name: Upload W57 SwiftPM diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: l4-w57-swiftpm-diagnostics
+          path: tech-assets/moises-audio/l4-w57-swiftpm.log
+          if-no-files-found: error
+          retention-days: 7
