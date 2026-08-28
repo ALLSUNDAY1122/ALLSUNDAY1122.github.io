@@ -175,7 +175,7 @@ public struct Lane2CoreDataLiveArtifactReferenceResolver: Lane2LiveArtifactRefer
         let storeURL = storeURL
         let batchSize = batchSize
         return try await Task.detached {
-            try scan(
+            try Self.scan(
                 storeURL: storeURL,
                 targetProjectUUIDs: targetProjectUUIDs,
                 candidateArtifactPaths: candidateArtifactPaths,
