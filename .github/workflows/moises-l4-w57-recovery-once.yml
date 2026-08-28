@@ -12,7 +12,7 @@ on:
       - 'tech-assets/moises-audio/Tests/MoisesAudioCoreTests/**'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate-recovered-l4:
@@ -23,6 +23,31 @@ jobs:
         with:
           ref: moises/wp4-analysis-platform
           fetch-depth: 0
+
+      - name: Apply isolated Swift 6 test compile repairs
+        working-directory: tech-assets/moises-audio
+        run: |
+          parity_test='Tests/MoisesAudioCoreTests/AnalysisRealAudioParityAdjudicationTests.swift'
+          chunked_test='Tests/MoisesAudioCoreTests/AnalysisChunkedInputPipelineTests.swift'
+          p021_test='Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift'
+          chord_test='Tests/MoisesAudioCoreTests/ChordVocabularyHardeningTests.swift'
+
+          sed -i 's/expectedCaptureSetSHA256: overrideCaptureRoot ?? (try AnalysisAnalysisParityAdjudicationRoot\.stableSHA256(captureSet))/expectedCaptureSetSHA256: try (overrideCaptureRoot ?? AnalysisAnalysisParityAdjudicationRoot.stableSHA256(captureSet))/g' "$parity_test"
+          sed -i 's/result\.inputDiagnostics/result.diagnostics/g; s/chunked\.inputDiagnostics/chunked.diagnostics/g' "$chunked_test"
+          sed -i 's/w44CheckpointCertificateRootSHA256: checkpointRoot ?? checkpointCertificate\.declaredCertificateRootSHA256/w44CheckpointCertificateRootSHA256: try (checkpointRoot ?? checkpointCertificate.declaredCertificateRootSHA256)/g' "$p021_test"
+          sed -i 's/w42AnchorReceiptRootSHA256: anchorRoot ?? anchorReceipt\.declaredAnchorReceiptRootSHA256/w42AnchorReceiptRootSHA256: try (anchorRoot ?? anchorReceipt.declaredAnchorReceiptRootSHA256)/g' "$p021_test"
+          sed -i 's/w41TransferRootSHA256: transferRoot ?? transfer\.declaredTransferRootSHA256/w41TransferRootSHA256: try (transferRoot ?? transfer.declaredTransferRootSHA256)/g' "$p021_test"
+          sed -i 's/events\.first?\.startSeconds/events.first?.startSeconds ?? .nan/g; s/events\.last?\.endSeconds/events.last?.endSeconds ?? .nan/g' "$chord_test"
+
+          diagnostic_dir="$GITHUB_WORKSPACE/automation/chatgpt-dispatcher/moises-equivalence/recovery"
+          mkdir -p "$diagnostic_dir"
+          git -C "$GITHUB_WORKSPACE" diff -- \
+            "tech-assets/moises-audio/$parity_test" \
+            "tech-assets/moises-audio/$chunked_test" \
+            "tech-assets/moises-audio/$p021_test" \
+            "tech-assets/moises-audio/$chord_test" \
+            > "$diagnostic_dir/L4-W57_PROPOSED_PATCH.diff"
+          cat "$diagnostic_dir/L4-W57_PROPOSED_PATCH.diff"
 
       - name: Run exact worker SwiftPM and materialize diagnostics
         id: swiftpm
@@ -45,10 +70,10 @@ jobs:
             echo "swift_test_status=$status"
             echo
             echo "=== FIRST ERROR-LIKE LINES ==="
-            grep -nE 'error:|fatal error:|FAIL|failed' /tmp/l4-w57-swift-test.log | head -n 250 || true
+            grep -nE 'error:|fatal error:|FAIL|failed' /tmp/l4-w57-swift-test.log | head -n 300 || true
             echo
-            echo "=== LOG TAIL (last 400 lines) ==="
-            tail -n 400 /tmp/l4-w57-swift-test.log || true
+            echo "=== LOG TAIL (last 500 lines) ==="
+            tail -n 500 /tmp/l4-w57-swift-test.log || true
           } > "$diagnostic"
 
           cat "$diagnostic"
@@ -62,8 +87,24 @@ jobs:
           path: |
             automation/chatgpt-dispatcher/moises-equivalence/recovery/L4-W57_SWIFTPM_DIAGNOSTIC.txt
             automation/chatgpt-dispatcher/moises-equivalence/recovery/L4-W57_SWIFTPM_FULL_LOG.txt
+            automation/chatgpt-dispatcher/moises-equivalence/recovery/L4-W57_PROPOSED_PATCH.diff
           if-no-files-found: error
           retention-days: 7
+
+      - name: Persist verified W57 test compile repairs
+        if: steps.swiftpm.outputs.status == '0'
+        run: |
+          git config user.name 'chatgpt-l4-recovery'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisRealAudioParityAdjudicationTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisChunkedInputPipelineTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/ChordVocabularyHardeningTests.swift
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix(moises-l4): repair Swift 6 test compatibility for W57'
+            git push origin HEAD:moises/wp4-analysis-platform
+          fi
 
       - name: Enforce SwiftPM result
         if: always()
