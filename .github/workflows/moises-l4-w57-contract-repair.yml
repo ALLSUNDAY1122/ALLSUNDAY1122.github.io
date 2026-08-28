@@ -34,8 +34,10 @@ jobs:
             tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisDeviceWorkloadReceiptTests.swift
 
       - name: Canonicalize rights permitted-use encoding
-        shell: python3
+        shell: bash
         run: |
+          set -euo pipefail
+          python3 <<'PY'
           from pathlib import Path
           p = Path('tech-assets/moises-audio/Analysis/RealAudioBenchmarkSuite.swift')
           s = p.read_text()
@@ -80,6 +82,7 @@ jobs:
               print('rights encoding already canonical')
           else:
               raise SystemExit('AnalysisRightsEvidence repair anchor not found')
+          PY
 
       - name: Diff sanity
         shell: bash
