@@ -10,6 +10,11 @@ public enum Lane2ManagedArtifactSegmentedRuntimeFailure: Error, Equatable, Senda
     case invalidRelativePath(String); case invalidShard(Int); case corruptLegacyShard(String); case legacyShardOversized(String); case corruptManifest(String); case corruptSegment(String); case unsafeManagedArtifact(String); case verificationFailed(Int)
 }
 
+private final class Lane2SegmentedRuntimeFileManagerHandle: @unchecked Sendable {
+    let value: FileManager
+    init(_ value: FileManager) { self.value = value }
+}
+
 public struct Lane2ManagedArtifactSegmentedRuntime: Sendable {
     public static let shardCount = 256
     public static let entriesPerSegment = 512
@@ -22,11 +27,13 @@ public struct Lane2ManagedArtifactSegmentedRuntime: Sendable {
 
     public let rootURL: URL
     public let recoveryDirectoryName: String
-    private let fileManager: FileManager
+    private let fileManagerHandle: Lane2SegmentedRuntimeFileManagerHandle
 
     public init(rootURL: URL, recoveryDirectoryName: String = ".LibraryRecovery", fileManager: FileManager = .default) {
-        self.rootURL = rootURL.standardizedFileURL; self.recoveryDirectoryName = recoveryDirectoryName; self.fileManager = fileManager
+        self.rootURL = rootURL.standardizedFileURL; self.recoveryDirectoryName = recoveryDirectoryName; self.fileManagerHandle = Lane2SegmentedRuntimeFileManagerHandle(fileManager)
     }
+
+    private var fileManager: FileManager { fileManagerHandle.value }
 
     public func authority(forShard shardIndex: Int) throws -> Lane2ManagedArtifactRuntimeAuthority {
         try validateShard(shardIndex)
