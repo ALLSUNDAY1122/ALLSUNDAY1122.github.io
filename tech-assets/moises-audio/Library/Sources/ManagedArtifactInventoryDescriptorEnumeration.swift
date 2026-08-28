@@ -100,16 +100,17 @@ struct Lane2ManagedArtifactInventoryDescriptorEnumerator: Sendable {
 
             if fileType == mode_t(S_IFDIR) {
                 entries.append(Entry(relativePath: relativePath, kind: .directory))
-                let childFD = name.withCString { pointer in
-                    lane2InventoryOpenAt(directoryFD, pointer, lane2InventoryDirectoryNoFollowFlags, 0)
+                try withChildDirectory(
+                    parentFD: directoryFD,
+                    name: name,
+                    relativePath: relativePath
+                ) { childFD in
+                    try appendVisibleEntries(
+                        directoryFD: childFD,
+                        relativeComponents: pathComponents,
+                        entries: &entries
+                    )
                 }
-                guard childFD >= 0 else { throw Failure.openFailed(relativePath) }
-                defer { _ = lane2InventoryClose(childFD) }
-                try appendVisibleEntries(
-                    directoryFD: childFD,
-                    relativeComponents: pathComponents,
-                    entries: &entries
-                )
             } else if fileType == mode_t(S_IFREG) {
                 entries.append(Entry(relativePath: relativePath, kind: .regularFile))
             } else if fileType == mode_t(S_IFLNK) {
@@ -118,6 +119,20 @@ struct Lane2ManagedArtifactInventoryDescriptorEnumerator: Sendable {
                 entries.append(Entry(relativePath: relativePath, kind: .other))
             }
         }
+    }
+
+    private func withChildDirectory<T>(
+        parentFD: Int32,
+        name: String,
+        relativePath: String,
+        _ body: (Int32) throws -> T
+    ) throws -> T {
+        let childFD = name.withCString { pointer in
+            lane2InventoryOpenAt(parentFD, pointer, lane2InventoryDirectoryNoFollowFlags, 0)
+        }
+        guard childFD >= 0 else { throw Failure.openFailed(relativePath) }
+        defer { _ = lane2InventoryClose(childFD) }
+        return try body(childFD)
     }
 
     private func relativeComponents(for url: URL) throws -> [String] {
@@ -174,6 +189,7 @@ private func lane2InventoryEntryName(_ entry: dirent) -> String {
 }
 
 #if canImport(Darwin)
+private typealias Lane2InventoryDirectoryStream = UnsafeMutablePointer<DIR>
 private let lane2InventoryDirectoryNoFollowFlags = O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC
 private let lane2InventoryNoFollowStatFlag = AT_SYMLINK_NOFOLLOW
 
@@ -185,13 +201,14 @@ private let lane2InventoryNoFollowStatFlag = AT_SYMLINK_NOFOLLOW
 }
 @inline(__always) private func lane2InventoryClose(_ fd: Int32) -> Int32 { Darwin.close(fd) }
 @inline(__always) private func lane2InventoryDup(_ fd: Int32) -> Int32 { Darwin.dup(fd) }
-@inline(__always) private func lane2InventoryFDOpenDir(_ fd: Int32) -> UnsafeMutablePointer<DIR>? { Darwin.fdopendir(fd) }
-@inline(__always) private func lane2InventoryReadDir(_ directory: UnsafeMutablePointer<DIR>) -> UnsafeMutablePointer<dirent>? { Darwin.readdir(directory) }
-@inline(__always) private func lane2InventoryCloseDir(_ directory: UnsafeMutablePointer<DIR>) -> Int32 { Darwin.closedir(directory) }
+@inline(__always) private func lane2InventoryFDOpenDir(_ fd: Int32) -> Lane2InventoryDirectoryStream? { Darwin.fdopendir(fd) }
+@inline(__always) private func lane2InventoryReadDir(_ directory: Lane2InventoryDirectoryStream) -> UnsafeMutablePointer<dirent>? { Darwin.readdir(directory) }
+@inline(__always) private func lane2InventoryCloseDir(_ directory: Lane2InventoryDirectoryStream) -> Int32 { Darwin.closedir(directory) }
 @inline(__always) private func lane2InventoryFstatAt(_ fd: Int32, _ path: UnsafePointer<CChar>, _ status: UnsafeMutablePointer<stat>, _ flags: Int32) -> Int32 {
     Darwin.fstatat(fd, path, status, flags)
 }
 #elseif canImport(Glibc)
+private typealias Lane2InventoryDirectoryStream = OpaquePointer
 private let lane2InventoryDirectoryNoFollowFlags = O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC
 private let lane2InventoryNoFollowStatFlag = AT_SYMLINK_NOFOLLOW
 
@@ -203,9 +220,9 @@ private let lane2InventoryNoFollowStatFlag = AT_SYMLINK_NOFOLLOW
 }
 @inline(__always) private func lane2InventoryClose(_ fd: Int32) -> Int32 { Glibc.close(fd) }
 @inline(__always) private func lane2InventoryDup(_ fd: Int32) -> Int32 { Glibc.dup(fd) }
-@inline(__always) private func lane2InventoryFDOpenDir(_ fd: Int32) -> UnsafeMutablePointer<DIR>? { Glibc.fdopendir(fd) }
-@inline(__always) private func lane2InventoryReadDir(_ directory: UnsafeMutablePointer<DIR>) -> UnsafeMutablePointer<dirent>? { Glibc.readdir(directory) }
-@inline(__always) private func lane2InventoryCloseDir(_ directory: UnsafeMutablePointer<DIR>) -> Int32 { Glibc.closedir(directory) }
+@inline(__always) private func lane2InventoryFDOpenDir(_ fd: Int32) -> Lane2InventoryDirectoryStream? { Glibc.fdopendir(fd) }
+@inline(__always) private func lane2InventoryReadDir(_ directory: Lane2InventoryDirectoryStream) -> UnsafeMutablePointer<dirent>? { Glibc.readdir(directory) }
+@inline(__always) private func lane2InventoryCloseDir(_ directory: Lane2InventoryDirectoryStream) -> Int32 { Glibc.closedir(directory) }
 @inline(__always) private func lane2InventoryFstatAt(_ fd: Int32, _ path: UnsafePointer<CChar>, _ status: UnsafeMutablePointer<stat>, _ flags: Int32) -> Int32 {
     Glibc.fstatat(fd, path, status, flags)
 }
