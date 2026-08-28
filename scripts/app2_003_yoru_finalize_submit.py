@@ -39,7 +39,7 @@ def resolve_version(token):
     return xs[0]
 
 def resolve_build(token):
-    _,p=api_get(token,f'/v1/apps/{APP_ID}/builds?sort=-uploadedDate&limit=100')
+    _,p=api_get(token,f'/v1/builds?filter[app]={APP_ID}&sort=-uploadedDate&limit=100')
     xs=[x for x in many(p) if str((x.get('attributes') or {}).get('version'))==TARGET_BUILD]
     if len(xs)!=1: raise RuntimeError(f'Expected one Build {TARGET_BUILD}; found {len(xs)}')
     b=xs[0]; a=b.get('attributes') or {}
