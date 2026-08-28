@@ -6,6 +6,30 @@ import MoisesAudioCore
 #if canImport(AVFoundation)
 @preconcurrency import AVFoundation
 
+/// AVAssetExportSession is explicitly non-Sendable in current Apple SDKs, while its
+/// legacy iOS 17-compatible completion and cancellation APIs cross Sendable closure
+/// boundaries under Swift 6. Keep the unchecked boundary narrow and private rather
+/// than weakening sendability for the exporter actor itself.
+private final class IOSM4AExportSessionHandle: @unchecked Sendable {
+    private let session: AVAssetExportSession
+
+    init(_ session: AVAssetExportSession) {
+        self.session = session
+    }
+
+    func exportAsynchronously(completionHandler: @escaping @Sendable () -> Void) {
+        session.exportAsynchronously(completionHandler: completionHandler)
+    }
+
+    var status: AVAssetExportSession.Status {
+        session.status
+    }
+
+    func cancel() {
+        session.cancelExport()
+    }
+}
+
 /// Production-oriented M4A exporter that publishes a multi-stem request as one
 /// filesystem transaction. It can be injected independently from the importer
 /// because App's frozen coordinator accepts AudioImporting and AudioExporting
@@ -146,11 +170,12 @@ public actor IOSAtomicM4AExporter: AudioExporting {
         exporter.outputURL = outputURL
         exporter.outputFileType = .m4a
         exporter.shouldOptimizeForNetworkUse = false
+        let handle = IOSM4AExportSessionHandle(exporter)
 
         try await withTaskCancellationHandler(operation: {
             try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                exporter.exportAsynchronously {
-                    switch exporter.status {
+                handle.exportAsynchronously {
+                    switch handle.status {
                     case .completed:
                         continuation.resume()
                     case .cancelled:
@@ -163,7 +188,7 @@ public actor IOSAtomicM4AExporter: AudioExporting {
                 }
             }
         }, onCancel: {
-            exporter.cancelExport()
+            handle.cancel()
         })
     }
 
@@ -243,6 +268,8 @@ public actor IOSAtomicM4AExporter: AudioExporting {
             return .exportFailed(code: "EXPORT_OUTPUT_INVALID")
         case .destinationConflict:
             return .exportFailed(code: "EXPORT_BATCH_DESTINATION_CONFLICT")
+        case .integrityManifestInvalid, .integrityMismatch:
+            return .exportFailed(code: "EXPORT_BATCH_INTEGRITY_FAILED")
         case .fileOperationFailed(let code):
             return .processingFailed(code: code, retryable: true)
         }
