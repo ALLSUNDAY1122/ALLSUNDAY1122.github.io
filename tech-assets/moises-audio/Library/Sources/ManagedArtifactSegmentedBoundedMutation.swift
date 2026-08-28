@@ -3,13 +3,19 @@ import Foundation
 public struct Lane2ManagedArtifactBoundedMutationMetrics: Hashable, Sendable { public let generationsPublished:Int; public let maximumDecodedSegmentEntries:Int; public let maximumMutationBatchEntries:Int }
 public enum Lane2ManagedArtifactBoundedMutationFailure: Error, Equatable, Sendable { case invalidRelativePath(String); case corruptManifest(String); case corruptSegment(String); case verificationFailed(Int) }
 
+private final class Lane2SegmentedBoundedMutationFileManagerHandle: @unchecked Sendable {
+    let value: FileManager
+    init(_ value: FileManager) { self.value = value }
+}
+
 public struct Lane2ManagedArtifactSegmentedBoundedMutation: Sendable {
     public static let shardCount=256, entriesPerSegment=512, mutationBatchLimit=256
     public static let managedRootNames=["Imports","Stems","Exports"]
     private struct Manifest: Codable, Equatable, Sendable { let schemaVersion:Int;let shardIndex:Int;let generation:UUID;let segmentCount:Int;let entryCount:Int }
     private struct Segment: Codable, Sendable { let schemaVersion:Int;let shardIndex:Int;let generation:UUID;let segmentIndex:Int;let entries:[Lane2ManagedArtifactRuntimeEntry] }
-    public let rootURL:URL; public let recoveryDirectoryName:String; private let fileManager:FileManager
-    public init(rootURL:URL,recoveryDirectoryName:String=".LibraryRecovery",fileManager:FileManager = .default){self.rootURL=rootURL.standardizedFileURL;self.recoveryDirectoryName=recoveryDirectoryName;self.fileManager=fileManager}
+    public let rootURL:URL; public let recoveryDirectoryName:String; private let fileManagerHandle:Lane2SegmentedBoundedMutationFileManagerHandle
+    public init(rootURL:URL,recoveryDirectoryName:String=".LibraryRecovery",fileManager:FileManager = .default){self.rootURL=rootURL.standardizedFileURL;self.recoveryDirectoryName=recoveryDirectoryName;self.fileManagerHandle=Lane2SegmentedBoundedMutationFileManagerHandle(fileManager)}
+    private var fileManager:FileManager{fileManagerHandle.value}
 
     @discardableResult public func upsertManaged(relativePaths:[String]) throws -> Lane2ManagedArtifactBoundedMutationMetrics {
         var published=0,maximumDecoded=0,offset=0;let dedup=Array(Set(relativePaths)).sorted()
