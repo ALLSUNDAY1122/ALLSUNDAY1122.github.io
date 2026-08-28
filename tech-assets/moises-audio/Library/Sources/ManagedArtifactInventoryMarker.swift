@@ -45,7 +45,7 @@ public extension Lane2ManagedArtifactInventory {
 
             let entries = try inventoryFileManager.contentsOfDirectory(
                 at: shards,
-                includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
+                includingPropertiesForKeys: nil,
                 options: [.skipsHiddenFiles]
             )
             guard entries.count <= Self.shardCount else {
@@ -70,17 +70,8 @@ public extension Lane2ManagedArtifactInventory {
                     )
                 }
                 try authority.requireExistingRegularFile(url, within: shards)
-                let values = try url.resourceValues(
-                    forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]
-                )
-                guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                    return Lane2ManagedArtifactInventoryShardPreflight(
-                        checkedShards: entries.count,
-                        largestEncodedBytes: largest,
-                        safeForAuthoritativeDecode: false
-                    )
-                }
-                let bytes = max(values.fileSize ?? 0, 0)
+                let metadata = try descriptorRelativeIO.regularFileMetadata(at: url)
+                let bytes = metadata.sizeBytes
                 largest = max(largest, bytes)
                 guard bytes > 0, bytes <= effectiveMaximum else {
                     return Lane2ManagedArtifactInventoryShardPreflight(
@@ -114,8 +105,12 @@ public extension Lane2ManagedArtifactInventory {
         do {
             guard try authority.nodeExists(marker) else { return false }
             try authority.requireExistingRegularFile(marker, within: authority.v1DirectoryURL)
-            let data = try Data(contentsOf: marker)
-            guard data == Data("lane2-managed-artifact-inventory-v1\n".utf8) else { return false }
+            let expected = Data("lane2-managed-artifact-inventory-v1\n".utf8)
+            let data = try descriptorRelativeIO.readRegularFile(
+                at: marker,
+                maximumBytes: expected.count
+            )
+            guard data == expected else { return false }
             return authoritativeShardPreflight().safeForAuthoritativeDecode
         } catch {
             return false
