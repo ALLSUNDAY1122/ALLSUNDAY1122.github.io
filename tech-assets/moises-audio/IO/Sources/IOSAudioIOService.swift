@@ -430,11 +430,12 @@ public actor IOSAudioIOService: AudioImporting, AudioExporting {
         exporter.outputURL = outputURL
         exporter.outputFileType = .m4a
         exporter.shouldOptimizeForNetworkUse = false
+        let handle = IOAVAssetExportSessionHandle(exporter)
 
         try await withTaskCancellationHandler(operation: {
             try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                exporter.exportAsynchronously {
-                    switch exporter.status {
+                handle.exportAsynchronously {
+                    switch handle.status {
                     case .completed:
                         continuation.resume()
                     case .cancelled:
@@ -447,7 +448,7 @@ public actor IOSAudioIOService: AudioImporting, AudioExporting {
                 }
             }
         }, onCancel: {
-            exporter.cancelExport()
+            handle.cancel()
         })
     }
 
