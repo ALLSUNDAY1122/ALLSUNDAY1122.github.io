@@ -7,13 +7,19 @@ on:
     paths:
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactInventory*.swift'
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedStreamingTraversal.swift'
+      - 'tech-assets/moises-audio/Library/Sources/LibraryDescriptorRelativeIO.swift'
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryPathAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactSegmentedStreamingTraversalTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/LibraryDescriptorRelativeIOTests.swift'
       - '.github/workflows/moises-hq-l2-inventory-authority.yml'
   pull_request:
     paths:
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactInventory*.swift'
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedStreamingTraversal.swift'
+      - 'tech-assets/moises-audio/Library/Sources/LibraryDescriptorRelativeIO.swift'
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryPathAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactSegmentedStreamingTraversalTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/LibraryDescriptorRelativeIOTests.swift'
       - '.github/workflows/moises-hq-l2-inventory-authority.yml'
   workflow_dispatch:
 
@@ -35,7 +41,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Swift version
         run: swift --version
-      - name: Execute Lane 2 inventory path authority regressions
+      - name: Execute Lane 2 inventory path and descriptor authority regressions
         working-directory: tech-assets/moises-audio
         shell: bash
         run: |
@@ -46,9 +52,19 @@ jobs:
           cp Shared/DomainContracts.swift Shared/LibraryContracts.swift "$tmp/Sources/Lane2Inventory/Shared/"
           cp IO/Sources/*.swift "$tmp/Sources/Lane2Inventory/IO/"
           cp Library/Sources/*.swift "$tmp/Sources/Lane2Inventory/Library/"
-          out="$tmp/Tests/Lane2InventoryTests/ManagedArtifactInventoryPathAuthorityTests.swift"
-          printf '@testable import Lane2Inventory\n' > "$out"
-          cat Library/Tests/ManagedArtifactInventoryPathAuthorityTests.swift >> "$out"
+
+          inventory="$tmp/Tests/Lane2InventoryTests/ManagedArtifactInventoryPathAuthorityTests.swift"
+          printf '@testable import Lane2Inventory\n' > "$inventory"
+          cat Library/Tests/ManagedArtifactInventoryPathAuthorityTests.swift >> "$inventory"
+
+          descriptor="$tmp/Tests/Lane2InventoryTests/LibraryDescriptorRelativeIOTests.swift"
+          printf '@testable import Lane2Inventory\n' > "$descriptor"
+          cat Library/Tests/LibraryDescriptorRelativeIOTests.swift >> "$descriptor"
+
+          traversal="$tmp/Tests/Lane2InventoryTests/ManagedArtifactSegmentedStreamingTraversalTests.swift"
+          printf '@testable import Lane2Inventory\n' > "$traversal"
+          cat Library/Tests/ManagedArtifactSegmentedStreamingTraversalTests.swift >> "$traversal"
+
           cat > "$tmp/Package.swift" <<'SWIFT'
           // swift-tools-version: 6.0
           import PackageDescription
