@@ -228,7 +228,7 @@ public struct Lane2ManagedArtifactInventory: Sendable {
                     url,
                     within: pathAuthority.managedRootURL(rootName)
                 )
-                try fileManager.removeItem(at: url)
+                try descriptorIO.removeRegularFile(at: url)
                 removed.append(relativePath)
                 staleInventoryPaths.append(relativePath)
             } catch let failure as Lane2ManagedArtifactInventoryFailure {
