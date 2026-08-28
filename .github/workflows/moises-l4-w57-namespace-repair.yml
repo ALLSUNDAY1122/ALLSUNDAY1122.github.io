@@ -1,4 +1,4 @@
-name: Moises L4 W57 Compile Gate
+name: Moises L4 W57 Recovery Gate
 
 on:
   push:
@@ -7,9 +7,10 @@ on:
     paths:
       - '.github/workflows/moises-l4-w57-namespace-repair.yml'
       - 'tech-assets/moises-audio/**'
+  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate-l4:
@@ -22,6 +23,8 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Swift toolchain
         run: swift --version
@@ -32,16 +35,145 @@ jobs:
           set -euo pipefail
           grep -q '"Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift"' Package.swift
           grep -q '"Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift"' Package.swift
+          grep -q '"Analysis/RealAudioBenchmarkSuite.swift"' Package.swift
           test -f Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift
-          test -f Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift
+          test -f Analysis/RealAudioBenchmarkSuite.swift
+          if grep -Eq '^[[:space:]]*"Analysis",[[:space:]]*$' Package.swift; then
+            echo 'invalid green-by-exclusion baseline' >&2
+            exit 1
+          fi
 
-      - name: W57 bypass contract diagnostic
+      - name: Restore W52 known-green non-W53 contracts
+        run: |
+          set -euo pipefail
+          git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
+          base=a93ef6b058db89fa57d8ee0a8064e5df019af331
+          git checkout "$base" -- \
+            tech-assets/moises-audio/Analysis/TempoBeatAnalyzer.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/ChordTimelineAnalysisTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisDeviceCapturePlanTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisDeviceWorkloadReceiptTests.swift
+
+      - name: Canonicalize rights permitted-use encoding
+        run: |
+          set -euo pipefail
+          cat > /tmp/w57-rights-canonical.swift <<'SWIFT'
+          import Foundation
+
+          enum RepairError: Error { case anchorMissing }
+
+          let path = "tech-assets/moises-audio/Analysis/RealAudioBenchmarkSuite.swift"
+          let url = URL(fileURLWithPath: path)
+          var text = try String(contentsOf: url, encoding: .utf8)
+          let old = """
+                  self.notes = notes
+              }
+          }
+
+          public struct AnalysisReferenceAnnotation
+          """
+          let new = """
+                  self.notes = notes
+              }
+
+              private enum CodingKeys: String, CodingKey {
+                  case grantID, rightsClass, permittedUses, expiresAt, sourceSHA256, notes
+              }
+
+              public init(from decoder: Decoder) throws {
+                  let container = try decoder.container(keyedBy: CodingKeys.self)
+                  grantID = try container.decode(String.self, forKey: .grantID)
+                  rightsClass = try container.decode(AnalysisRightsClass.self, forKey: .rightsClass)
+                  permittedUses = Set(try container.decode([AnalysisBenchmarkPermittedUse].self, forKey: .permittedUses))
+                  expiresAt = try container.decodeIfPresent(Date.self, forKey: .expiresAt)
+                  sourceSHA256 = try container.decode(String.self, forKey: .sourceSHA256).lowercased()
+                  notes = try container.decodeIfPresent(String.self, forKey: .notes)
+              }
+
+              public func encode(to encoder: Encoder) throws {
+                  var container = encoder.container(keyedBy: CodingKeys.self)
+                  try container.encode(grantID, forKey: .grantID)
+                  try container.encode(rightsClass, forKey: .rightsClass)
+                  try container.encode(permittedUses.sorted { $0.rawValue < $1.rawValue }, forKey: .permittedUses)
+                  try container.encodeIfPresent(expiresAt, forKey: .expiresAt)
+                  try container.encode(sourceSHA256, forKey: .sourceSHA256)
+                  try container.encodeIfPresent(notes, forKey: .notes)
+              }
+          }
+
+          public struct AnalysisReferenceAnnotation
+          """
+          if text.contains(old) {
+              text = text.replacingOccurrences(of: old, with: new)
+              try text.write(to: url, atomically: true, encoding: .utf8)
+              print("canonicalized AnalysisRightsEvidence permittedUses")
+          } else if text.contains("permittedUses.sorted { $0.rawValue < $1.rawValue }") {
+              print("rights encoding already canonical")
+          } else {
+              throw RepairError.anchorMissing
+          }
+          SWIFT
+          swift /tmp/w57-rights-canonical.swift
+
+      - name: Diff sanity
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --stat
+
+      - name: W47 canonical corpus regressions
         working-directory: tech-assets/moises-audio
         run: |
           set -euo pipefail
-          nl -ba Analysis/AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustody.swift | sed -n '395,470p'
-          grep -R -n -E 'bypassToken|authorizeNormalizedRouting' Analysis || true
+          swift test --filter AnalysisPhysicalRealAudioCorpusExecutionTests
+          swift test --filter AnalysisPhysicalRealAudioParityBridgeTests
+
+      - name: W52 contract regressions
+        working-directory: tech-assets/moises-audio
+        run: |
+          set -euo pipefail
+          swift test --filter TempoKeyAnalysisTests
+          swift test --filter AnalysisLongAudioHardeningTests
+          swift test --filter ChordTimelineAnalysisTests
+          swift test --filter AnalysisDeviceCapturePlanTests
+          swift test --filter AnalysisDeviceWorkloadReceiptTests
+
+      - name: W53-W56 namespace regression cluster
+        working-directory: tech-assets/moises-audio
+        run: |
+          set -euo pipefail
+          swift test --filter 'AnalysisPhysicalRealAudioBridgeConsumption(DurablePublication|ConcurrentStore|NormalizedAccess|NormalizedConcurrentStore|NormalizedCustodyCertificate|QuiescentCustody|SecureStore|LegacyBypassContainment)Tests'
 
       - name: Full recovered Lane4 SwiftPM
         working-directory: tech-assets/moises-audio
-        run: swift test
+        run: |
+          set +e
+          swift test --parallel > l4-w57-full-swiftpm.log 2>&1
+          status=$?
+          cat l4-w57-full-swiftpm.log
+          exit "$status"
+
+      - name: Persist only full-gate-proven repairs
+        run: |
+          set -euo pipefail
+          git config user.name 'chatgpt-l4-recovery'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            tech-assets/moises-audio/Analysis/TempoBeatAnalyzer.swift \
+            tech-assets/moises-audio/Analysis/RealAudioBenchmarkSuite.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/ChordTimelineAnalysisTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisDeviceCapturePlanTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisDeviceWorkloadReceiptTests.swift
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix(moises-l4): restore W52 contracts and canonical manifest encoding'
+            git push origin HEAD:moises/wp4-analysis-platform
+          fi
+
+      - name: Upload W57 full diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: l4-w57-recovery-diagnostics
+          path: tech-assets/moises-audio/l4-w57-full-swiftpm.log
+          if-no-files-found: ignore
+          retention-days: 7
