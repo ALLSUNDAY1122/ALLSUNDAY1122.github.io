@@ -17,6 +17,21 @@ final class Lane2LibraryDescriptorRelativeIOTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: file.path))
     }
 
+    func testBoundedReadFailsClosedBeforeAppendingPastLimit() throws {
+        let root = try makeRoot(prefix: "bounded-read")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let directory = root.appendingPathComponent("managed", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let file = directory.appendingPathComponent("record.json")
+        try Data(repeating: 0x41, count: 65_537).write(to: file)
+        let io = Lane2LibraryDescriptorRelativeIO(rootURL: root)
+
+        XCTAssertThrowsError(try io.readRegularFile(at: file, maximumBytes: 65_536)) { error in
+            XCTAssertEqual(error as? Lane2LibraryDescriptorRelativeIO.Failure, .fileTooLarge("record.json"))
+        }
+        XCTAssertEqual(try io.readRegularFile(at: file, maximumBytes: 65_537).count, 65_537)
+    }
+
     func testReadRejectsAncestorSymlinkAtUseTime() throws {
         let root = try makeRoot(prefix: "ancestor-root")
         let external = try makeRoot(prefix: "ancestor-external")
