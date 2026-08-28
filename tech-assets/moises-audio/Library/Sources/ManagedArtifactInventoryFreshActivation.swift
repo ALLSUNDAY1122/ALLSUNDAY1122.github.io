@@ -13,13 +13,13 @@ public extension Lane2ManagedArtifactInventory {
         ) else { return false }
 
         let fileManager = FileManager.default
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
         let keys: Set<URLResourceKey> = [.isRegularFileKey, .isDirectoryKey, .isSymbolicLinkKey]
         var sawTarget = false
         for rootName in Lane2ManagedArtifactInventory.managedRootNames {
             let managedRoot = rootURL.appendingPathComponent(rootName, isDirectory: true)
-            var isDirectory: ObjCBool = false
-            guard fileManager.fileExists(atPath: managedRoot.path, isDirectory: &isDirectory) else { continue }
-            guard isDirectory.boolValue else { return false }
+            guard try boundary.nodeExists(managedRoot, fileManager: fileManager) else { continue }
+            try boundary.requireDirectory(managedRoot, fileManager: fileManager)
             var enumerationFailed = false
             guard let enumerator = fileManager.enumerator(
                 at: managedRoot,
@@ -32,6 +32,7 @@ public extension Lane2ManagedArtifactInventory {
             ) else { return false }
 
             for case let url as URL in enumerator {
+                guard try boundary.nodeExists(url, fileManager: fileManager) else { return false }
                 let values = try url.resourceValues(forKeys: keys)
                 if values.isSymbolicLink == true { return false }
                 guard values.isRegularFile == true else { continue }
