@@ -25,6 +25,11 @@ public enum Lane2ManagedArtifactSegmentedMigrationFailure: Error, Equatable, Sen
     case verificationFailed(Int)
 }
 
+private final class Lane2SegmentedShardStoreFileManagerHandle: @unchecked Sendable {
+    let value: FileManager
+    init(_ value: FileManager) { self.value = value }
+}
+
 /// AW39 migration substrate for AW29's v1 single-JSON shard layout.
 ///
 /// Authority changes only when the generation manifest is atomically published. Legacy bytes are
@@ -59,7 +64,7 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
 
     public let rootURL: URL
     public let recoveryDirectoryName: String
-    private let fileManager: FileManager
+    private let fileManagerHandle: Lane2SegmentedShardStoreFileManagerHandle
 
     public init(
         rootURL: URL,
@@ -68,8 +73,10 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
     ) {
         self.rootURL = rootURL.standardizedFileURL
         self.recoveryDirectoryName = recoveryDirectoryName
-        self.fileManager = fileManager
+        self.fileManagerHandle = Lane2SegmentedShardStoreFileManagerHandle(fileManager)
     }
+
+    private var fileManager: FileManager { fileManagerHandle.value }
 
     public func hasCommittedShard(_ shardIndex: Int) -> Bool {
         guard Self.validShard(shardIndex) else { return false }
