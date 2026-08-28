@@ -1,0 +1,130 @@
+name: Moises L4 W57 Contract Repair
+
+on:
+  push:
+    branches:
+      - moises/wp4-analysis-platform
+    paths:
+      - '.github/workflows/moises-l4-w57-contract-repair.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    container:
+      image: swift:6.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore HQ W52 known-green analysis contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
+          base=a93ef6b058db89fa57d8ee0a8064e5df019af331
+          git checkout "$base" -- \
+            tech-assets/moises-audio/Analysis/TempoBeatAnalyzer.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/ChordTimelineAnalysisTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisDeviceCapturePlanTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisDeviceWorkloadReceiptTests.swift
+
+      - name: Canonicalize rights permitted-use encoding
+        shell: python3
+        run: |
+          from pathlib import Path
+          p = Path('tech-assets/moises-audio/Analysis/RealAudioBenchmarkSuite.swift')
+          s = p.read_text()
+          marker = '''        self.notes = notes
+          }
+        }
+
+        public struct AnalysisReferenceAnnotation'''
+          replacement = '''        self.notes = notes
+          }
+
+          private enum CodingKeys: String, CodingKey {
+              case grantID, rightsClass, permittedUses, expiresAt, sourceSHA256, notes
+          }
+
+          public init(from decoder: Decoder) throws {
+              let container = try decoder.container(keyedBy: CodingKeys.self)
+              grantID = try container.decode(String.self, forKey: .grantID)
+              rightsClass = try container.decode(AnalysisRightsClass.self, forKey: .rightsClass)
+              permittedUses = Set(try container.decode([AnalysisBenchmarkPermittedUse].self, forKey: .permittedUses))
+              expiresAt = try container.decodeIfPresent(Date.self, forKey: .expiresAt)
+              sourceSHA256 = try container.decode(String.self, forKey: .sourceSHA256).lowercased()
+              notes = try container.decodeIfPresent(String.self, forKey: .notes)
+          }
+
+          public func encode(to encoder: Encoder) throws {
+              var container = encoder.container(keyedBy: CodingKeys.self)
+              try container.encode(grantID, forKey: .grantID)
+              try container.encode(rightsClass, forKey: .rightsClass)
+              try container.encode(permittedUses.sorted { $0.rawValue < $1.rawValue }, forKey: .permittedUses)
+              try container.encodeIfPresent(expiresAt, forKey: .expiresAt)
+              try container.encode(sourceSHA256, forKey: .sourceSHA256)
+              try container.encodeIfPresent(notes, forKey: .notes)
+          }
+        }
+
+        public struct AnalysisReferenceAnnotation'''
+          if marker in s:
+              p.write_text(s.replace(marker, replacement, 1))
+              print('canonicalized AnalysisRightsEvidence encoding')
+          elif 'permittedUses.sorted { $0.rawValue < $1.rawValue }' in s:
+              print('rights encoding already canonical')
+          else:
+              raise SystemExit('AnalysisRightsEvidence repair anchor not found')
+
+      - name: Diff sanity
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --stat
+          git diff -- tech-assets/moises-audio/Analysis/TempoBeatAnalyzer.swift \
+            tech-assets/moises-audio/Analysis/RealAudioBenchmarkSuite.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/ChordTimelineAnalysisTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisDeviceCapturePlanTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisDeviceWorkloadReceiptTests.swift | sed -n '1,520p'
+
+      - name: W47 canonical corpus and bridge regressions
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          swift test --filter AnalysisPhysicalRealAudioCorpusExecutionTests
+          swift test --filter AnalysisPhysicalRealAudioParityBridgeTests
+
+      - name: HQ W52 analysis regressions
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          swift test --filter TempoKeyAnalysisTests
+          swift test --filter AnalysisLongAudioHardeningTests
+          swift test --filter ChordTimelineAnalysisTests
+          swift test --filter AnalysisDeviceCapturePlanTests
+          swift test --filter AnalysisDeviceWorkloadReceiptTests
+
+      - name: Persist only proven repairs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'chatgpt-l4-recovery'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            tech-assets/moises-audio/Analysis/TempoBeatAnalyzer.swift \
+            tech-assets/moises-audio/Analysis/RealAudioBenchmarkSuite.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/ChordTimelineAnalysisTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisDeviceCapturePlanTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisDeviceWorkloadReceiptTests.swift
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix(moises-l4): restore canonical W52 analysis contracts'
+            git push origin HEAD:moises/wp4-analysis-platform
+          fi
