@@ -6,12 +6,16 @@ on:
       - tech/moises-separation
     paths:
       - 'tech-assets/moises-audio/Library/Sources/DeletionOwnership*.swift'
+      - 'tech-assets/moises-audio/Library/Sources/LibraryDescriptorRelativeIO.swift'
       - 'tech-assets/moises-audio/Library/Tests/DeletionOwnershipPathAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/LibraryDescriptorRelativeIOTests.swift'
       - '.github/workflows/moises-hq-l2-deletion-recovery-authority.yml'
   pull_request:
     paths:
       - 'tech-assets/moises-audio/Library/Sources/DeletionOwnership*.swift'
+      - 'tech-assets/moises-audio/Library/Sources/LibraryDescriptorRelativeIO.swift'
       - 'tech-assets/moises-audio/Library/Tests/DeletionOwnershipPathAuthorityTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/LibraryDescriptorRelativeIOTests.swift'
       - '.github/workflows/moises-hq-l2-deletion-recovery-authority.yml'
   workflow_dispatch:
 
@@ -33,7 +37,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Swift version
         run: swift --version
-      - name: Execute Lane 2 deletion recovery path authority regressions
+      - name: Execute Lane 2 deletion recovery path and descriptor authority regressions
         working-directory: tech-assets/moises-audio
         shell: bash
         run: |
@@ -47,6 +51,9 @@ jobs:
           out="$tmp/Tests/Lane2DeletionTests/DeletionOwnershipPathAuthorityTests.swift"
           printf '@testable import Lane2Deletion\n' > "$out"
           cat Library/Tests/DeletionOwnershipPathAuthorityTests.swift >> "$out"
+          descriptor="$tmp/Tests/Lane2DeletionTests/LibraryDescriptorRelativeIOTests.swift"
+          printf '@testable import Lane2Deletion\n' > "$descriptor"
+          cat Library/Tests/LibraryDescriptorRelativeIOTests.swift >> "$descriptor"
           cat > "$tmp/Package.swift" <<'SWIFT'
           // swift-tools-version: 6.0
           import PackageDescription
