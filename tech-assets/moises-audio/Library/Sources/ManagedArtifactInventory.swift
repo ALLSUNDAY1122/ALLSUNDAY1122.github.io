@@ -103,6 +103,7 @@ public struct Lane2ManagedArtifactInventory: Sendable {
     @discardableResult
     public func initializeFreshAuthoritativeIfNoManagedArtifacts() throws -> Bool {
         if isAuthoritative { return true }
+        let descriptorEnumerator = Lane2ManagedArtifactInventoryDescriptorEnumerator(rootURL: rootURL)
         for rootName in Self.managedRootNames {
             let url = pathAuthority.managedRootURL(rootName)
             do {
@@ -110,13 +111,13 @@ public struct Lane2ManagedArtifactInventory: Sendable {
             } catch {
                 return false
             }
-            guard let enumerator = fileManager.enumerator(
-                at: url,
-                includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey],
-                options: [.skipsHiddenFiles],
-                errorHandler: { _, _ in false }
-            ) else { return false }
-            if enumerator.nextObject() != nil { return false }
+            do {
+                if try !descriptorEnumerator.visibleEntriesRecursively(in: url).isEmpty {
+                    return false
+                }
+            } catch {
+                return false
+            }
         }
         try markAuthoritativeAfterCompatibilityCensus()
         return true
