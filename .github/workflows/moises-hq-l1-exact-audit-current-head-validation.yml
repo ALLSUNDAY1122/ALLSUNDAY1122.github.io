@@ -26,7 +26,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           test -z "$(git status --porcelain=v1)"
-          grep -F 'LANE1_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}' .github/workflows/moises-hq-lane1-exact-audit.yml
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/moises-hq-lane1-exact-audit.yml').read_text()
+          needle = 'LANE1_EXPECTED_HEAD: $' + '{{ github.event.pull_request.head.sha || github.sha }}'
+          assert needle in text, needle
+          print('TARGET_EVENT_HEAD_BINDING_PRESENT')
+          PY
 
       - name: Install audit dependency
         run: python3 -m pip install --disable-pip-version-check jsonschema
