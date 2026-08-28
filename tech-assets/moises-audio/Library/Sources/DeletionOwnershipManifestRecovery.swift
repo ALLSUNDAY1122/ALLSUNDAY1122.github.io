@@ -25,6 +25,10 @@ public struct Lane2DeletionOwnershipManifestRecoveryReport: Hashable, Sendable {
 /// the shard has first been made active. Recovery therefore probes the fixed 256-shard namespace,
 /// validates at most the first visible record in each existing shard, and atomically rebuilds a
 /// missing/corrupt/stale manifest without walking a shard-wide record inventory.
+///
+/// HQ path-authority hardening additionally rejects symlink, dangling-link and non-directory ancestors
+/// before enumeration or manifest I/O. Validation and I/O remain separate syscalls, so this does not
+/// claim descriptor-level TOCTOU closure.
 public struct Lane2DeletionOwnershipManifestRecovery: Sendable {
     public static let manifestFilename = ".active-shards-v2.json"
     public static let manifestSchemaVersion = 2
@@ -39,7 +43,7 @@ public struct Lane2DeletionOwnershipManifestRecovery: Sendable {
 
     @discardableResult
     public func reconcile() throws -> Lane2DeletionOwnershipManifestRecoveryReport {
-        try ensureLayout()
+        try pathAuthority.ensureLayout()
         let discovered = try discoverActiveShards()
         let manifestState = try readManifestState()
 
@@ -64,23 +68,12 @@ public struct Lane2DeletionOwnershipManifestRecovery: Sendable {
     private func discoverActiveShards() throws -> [Int] {
         var active: [Int] = []
         active.reserveCapacity(Lane2DeletionOwnershipIndex.shardCount)
-        let keys: [URLResourceKey] = [.isDirectoryKey, .isRegularFileKey, .isSymbolicLinkKey]
 
         for shardIndex in 0..<Lane2DeletionOwnershipIndex.shardCount {
-            let directory = shardDirectoryURL(shardIndex)
-            var isDirectory: ObjCBool = false
-            guard FileManager.default.fileExists(atPath: directory.path, isDirectory: &isDirectory) else {
+            guard try pathAuthority.requireShardDirectoryIfPresent(shardIndex) else {
                 continue
             }
-            let directoryValues = try directory.resourceValues(forKeys: Set(keys))
-            guard isDirectory.boolValue,
-                  directoryValues.isDirectory == true,
-                  directoryValues.isSymbolicLink != true else {
-                throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(
-                    String(format: "%02x", shardIndex)
-                )
-            }
-
+            let directory = shardDirectoryURL(shardIndex)
             var enumerationFailed = false
             guard let enumerator = FileManager.default.enumerator(
                 at: directory,
@@ -110,13 +103,11 @@ public struct Lane2DeletionOwnershipManifestRecovery: Sendable {
                     String(format: "%02x", shardIndex)
                 )
             }
-            let recordValues = try recordURL.resourceValues(
-                forKeys: [.isRegularFileKey, .isSymbolicLinkKey]
+            try pathAuthority.requireExistingRegularFile(
+                recordURL,
+                within: directory,
+                label: recordURL.lastPathComponent
             )
-            guard recordValues.isRegularFile == true,
-                  recordValues.isSymbolicLink != true else {
-                throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(recordURL.lastPathComponent)
-            }
             let filename = recordURL.deletingPathExtension().lastPathComponent
             guard let projectUUID = UUID(uuidString: filename),
                   filename == projectUUID.uuidString,
@@ -131,12 +122,8 @@ public struct Lane2DeletionOwnershipManifestRecovery: Sendable {
 
     private func readManifestState() throws -> (present: Bool, valid: Bool, shardIndices: [Int]) {
         let url = manifestURL
-        guard FileManager.default.fileExists(atPath: url.path) else {
+        guard try pathAuthority.metadataExists(url) else {
             return (false, false, [])
-        }
-        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
-            throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
         }
         do {
             let manifest = try JSONDecoder().decode(Manifest.self, from: Data(contentsOf: url))
@@ -145,6 +132,8 @@ public struct Lane2DeletionOwnershipManifestRecovery: Sendable {
                 && sorted == Array(Set(sorted)).sorted()
                 && sorted.allSatisfy { (0..<Lane2DeletionOwnershipIndex.shardCount).contains($0) }
             return (true, valid, valid ? sorted : [])
+        } catch let error as Lane2DeletionOwnershipIndexFailure {
+            throw error
         } catch {
             return (true, false, [])
         }
@@ -161,28 +150,32 @@ public struct Lane2DeletionOwnershipManifestRecovery: Sendable {
         )
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
+        _ = try pathAuthority.requireRegularFileOrMissing(
+            manifestURL,
+            within: ownershipDirectoryURL,
+            label: Self.manifestFilename
+        )
         try encoder.encode(manifest).write(to: manifestURL, options: [.atomic])
+        try pathAuthority.requireExistingRegularFile(
+            manifestURL,
+            within: ownershipDirectoryURL,
+            label: Self.manifestFilename
+        )
     }
 
-    private func ensureLayout() throws {
-        try FileManager.default.createDirectory(
-            at: ownershipDirectoryURL,
-            withIntermediateDirectories: true
-        )
-        try FileManager.default.createDirectory(
-            at: shardDirectoryRootURL,
-            withIntermediateDirectories: true
+    private var pathAuthority: Lane2DeletionOwnershipPathAuthority {
+        Lane2DeletionOwnershipPathAuthority(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName
         )
     }
 
     private var ownershipDirectoryURL: URL {
-        rootURL
-            .appendingPathComponent(recoveryDirectoryName, isDirectory: true)
-            .appendingPathComponent("DeleteOwnership", isDirectory: true)
+        pathAuthority.ownershipDirectoryURL
     }
 
     private var shardDirectoryRootURL: URL {
-        ownershipDirectoryURL.appendingPathComponent("Shards", isDirectory: true)
+        pathAuthority.shardDirectoryRootURL
     }
 
     private var manifestURL: URL {
@@ -190,10 +183,7 @@ public struct Lane2DeletionOwnershipManifestRecovery: Sendable {
     }
 
     private func shardDirectoryURL(_ shardIndex: Int) -> URL {
-        shardDirectoryRootURL.appendingPathComponent(
-            String(format: "%02x", shardIndex),
-            isDirectory: true
-        )
+        pathAuthority.shardDirectoryURL(shardIndex)
     }
 
     private struct Manifest: Codable, Sendable {
