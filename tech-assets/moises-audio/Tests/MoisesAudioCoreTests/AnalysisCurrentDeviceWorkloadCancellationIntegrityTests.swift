@@ -12,10 +12,11 @@ final class AnalysisCurrentDeviceWorkloadCancellationIntegrityTests: XCTestCase 
             source: W36OneChunkThenBlockPuller(samples: samples),
             sourceMemoryContract: .boundedPull
         )
+        let runContext = context(sampleCount: samples.count)
         let task = Task {
             await AnalysisCurrentDeviceWorkloadRunner.run(
                 signal: signal,
-                context: context(sampleCount: samples.count)
+                context: runContext
             )
         }
         try await Task.sleep(nanoseconds: 20_000_000)
@@ -36,10 +37,11 @@ final class AnalysisCurrentDeviceWorkloadCancellationIntegrityTests: XCTestCase 
             source: W36BlockBeforeFirstChunkPuller(),
             sourceMemoryContract: .boundedPull
         )
+        let runContext = context(sampleCount: sampleCount)
         let task = Task {
             await AnalysisCurrentDeviceWorkloadRunner.run(
                 signal: signal,
-                context: context(sampleCount: sampleCount)
+                context: runContext
             )
         }
         try await Task.sleep(nanoseconds: 20_000_000)
