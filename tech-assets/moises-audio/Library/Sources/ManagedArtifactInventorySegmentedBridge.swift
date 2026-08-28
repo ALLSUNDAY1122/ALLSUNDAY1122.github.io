@@ -37,6 +37,10 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
         fileManagerHandle.value
     }
 
+    private var descriptorIO: Lane2LibraryDescriptorRelativeIO {
+        Lane2LibraryDescriptorRelativeIO(rootURL: rootURL)
+    }
+
     private var pathAuthority: Lane2ManagedArtifactInventoryPathAuthority {
         Lane2ManagedArtifactInventoryPathAuthority(
             rootURL: rootURL,
@@ -90,7 +94,10 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
             )
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.sortedKeys]
-            try encoder.encode(record).write(to: cursorURL, options: [.atomic])
+            try descriptorIO.writeRegularFileAtomically(
+                encoder.encode(record),
+                to: cursorURL
+            )
             try pathAuthority.requireExistingRegularFile(
                 cursorURL,
                 within: pathAuthority.v1DirectoryURL
@@ -109,7 +116,7 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
                 cursorURL,
                 within: pathAuthority.v1DirectoryURL
             )
-            try fileManager.removeItem(at: cursorURL)
+            try descriptorIO.removeLeaf(at: cursorURL)
         } catch {
             throw Lane2ManagedArtifactInventoryFailure.corruptTraversalCursor
         }
@@ -124,7 +131,11 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
                 cursorURL,
                 within: pathAuthority.v1DirectoryURL
             )
-            let record = try JSONDecoder().decode(CursorRecord.self, from: Data(contentsOf: cursorURL))
+            let data = try descriptorIO.readRegularFile(
+                at: cursorURL,
+                maximumBytes: 64 * 1024
+            )
+            let record = try JSONDecoder().decode(CursorRecord.self, from: data)
             guard record.schemaVersion == CursorRecord.schemaVersion,
                   (0..<Lane2ManagedArtifactInventory.shardCount).contains(record.traversal.shardIndex) else {
                 throw Lane2ManagedArtifactInventoryFailure.corruptTraversalCursor
