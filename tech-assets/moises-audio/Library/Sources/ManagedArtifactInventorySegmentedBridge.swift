@@ -37,6 +37,14 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
         fileManagerHandle.value
     }
 
+    private var pathAuthority: Lane2ManagedArtifactInventoryPathAuthority {
+        Lane2ManagedArtifactInventoryPathAuthority(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName,
+            fileManager: fileManager
+        )
+    }
+
     public func registerManaged(relativePaths: [String]) throws {
         try boundedMutation.upsertManaged(relativePaths: relativePaths)
     }
@@ -51,6 +59,11 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
         candidateLimit: Int = Lane2ManagedArtifactInventory.defaultCandidateLimit,
         shardVisitLimit: Int = Lane2ManagedArtifactInventory.defaultShardVisitLimit
     ) throws -> Lane2ManagedArtifactInventorySlice {
+        do {
+            _ = try pathAuthority.requireV1DirectoryIfPresent()
+        } catch {
+            throw Lane2ManagedArtifactInventoryFailure.corruptTraversalCursor
+        }
         let prior = try loadTraversal()
         return try streamingTraversal.prepareOrphanCandidateSlice(
             priorTraversal: prior,
@@ -65,34 +78,52 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
         guard slice.priorTraversal == (try loadTraversal()) else {
             throw Lane2ManagedArtifactInventoryFailure.corruptTraversalCursor
         }
-        try fileManager.createDirectory(
-            at: cursorURL.deletingLastPathComponent(),
-            withIntermediateDirectories: true
-        )
-        let record = CursorRecord(
-            schemaVersion: CursorRecord.schemaVersion,
-            traversal: slice.nextTraversal
-        )
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys]
-        try encoder.encode(record).write(to: cursorURL, options: [.atomic])
+        do {
+            try pathAuthority.ensureV1Directory()
+            _ = try pathAuthority.requireRegularFileOrMissing(
+                cursorURL,
+                within: pathAuthority.v1DirectoryURL
+            )
+            let record = CursorRecord(
+                schemaVersion: CursorRecord.schemaVersion,
+                traversal: slice.nextTraversal
+            )
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.sortedKeys]
+            try encoder.encode(record).write(to: cursorURL, options: [.atomic])
+            try pathAuthority.requireExistingRegularFile(
+                cursorURL,
+                within: pathAuthority.v1DirectoryURL
+            )
+        } catch let failure as Lane2ManagedArtifactInventoryFailure {
+            throw failure
+        } catch {
+            throw Lane2ManagedArtifactInventoryFailure.corruptTraversalCursor
+        }
     }
 
     public func resetTraversalForRecovery() throws {
-        if fileManager.fileExists(atPath: cursorURL.path) {
+        do {
+            guard try pathAuthority.nodeExists(cursorURL) else { return }
+            try pathAuthority.requireExistingRegularFile(
+                cursorURL,
+                within: pathAuthority.v1DirectoryURL
+            )
             try fileManager.removeItem(at: cursorURL)
+        } catch {
+            throw Lane2ManagedArtifactInventoryFailure.corruptTraversalCursor
         }
     }
 
     private func loadTraversal() throws -> Lane2ManagedArtifactInventoryTraversal {
-        guard fileManager.fileExists(atPath: cursorURL.path) else {
-            return Lane2ManagedArtifactInventoryTraversal(shardIndex: 0)
-        }
         do {
-            let values = try cursorURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-            guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                throw Lane2ManagedArtifactInventoryFailure.corruptTraversalCursor
+            guard try pathAuthority.nodeExists(cursorURL) else {
+                return Lane2ManagedArtifactInventoryTraversal(shardIndex: 0)
             }
+            try pathAuthority.requireExistingRegularFile(
+                cursorURL,
+                within: pathAuthority.v1DirectoryURL
+            )
             let record = try JSONDecoder().decode(CursorRecord.self, from: Data(contentsOf: cursorURL))
             guard record.schemaVersion == CursorRecord.schemaVersion,
                   (0..<Lane2ManagedArtifactInventory.shardCount).contains(record.traversal.shardIndex) else {
@@ -128,10 +159,6 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
     }
 
     private var cursorURL: URL {
-        rootURL
-            .appendingPathComponent(recoveryDirectoryName, isDirectory: true)
-            .appendingPathComponent("ArtifactInventory", isDirectory: true)
-            .appendingPathComponent("v1", isDirectory: true)
-            .appendingPathComponent("cursor.json", isDirectory: false)
+        pathAuthority.cursorURL
     }
 }
