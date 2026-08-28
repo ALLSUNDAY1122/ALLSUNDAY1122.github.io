@@ -1,0 +1,169 @@
+name: Moises HQ Lane1 Privacy Delete Race Repair v9
+
+on:
+  push:
+    branches:
+      - moises/hq-l1-privacy-delete-race-repair-v7
+    paths:
+      - '.github/workflows/moises-hq-l1-privacy-delete-race-repair-v9.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-audit-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install audit dependency
+        run: python3 -m pip install --disable-pip-version-check jsonschema
+
+      - name: Recreate validated repair candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p diagnostics
+          python3 - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          source = Path('tech-assets/moises-audio/Separation/Server/privacy_retention.py')
+          text = source.read_text()
+          method = text.index('    def _delete_local_artifacts(self, logical_job_id: str) -> None:')
+          start = text.index('        targets = (', method)
+          end = text.index('\n\n    def _artifact_directory', start)
+          lines = [
+              '        targets = (',
+              '            self._artifact_directory(logical_job_id),',
+              '            self._artifact_directory(logical_job_id, suffix=".staging"),',
+              '        )',
+              '        try:',
+              '            # tombstone_and_purge releases its lease before normal/staging deletion.',
+              '            # Re-acquire the same stable per-job lease so concurrent privacy deletes',
+              '            # cannot overlap shutil.rmtree on the same artifact tree.',
+              '            with self.resume_cache_manager.lease(logical_job_id) as acquired:',
+              '                if not acquired:',
+              '                    raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_LOCK_FAILED", retryable=True)',
+              '                for target in targets:',
+              '                    try:',
+              '                        shutil.rmtree(target)',
+              '                    except FileNotFoundError:',
+              '                        pass',
+              '                    except OSError as exc:',
+              '                        raise PrivacyRetentionError(',
+              '                            "SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True',
+              '                        ) from exc',
+              '',
+              '                cache_root = self.resume_cache_manager.cache_root(logical_job_id)',
+              '                if any(target.exists() for target in targets) or cache_root.exists():',
+              '                    raise PrivacyRetentionError(',
+              '                        "SEP_PRIVACY_LOCAL_DELETE_UNCONFIRMED", retryable=True',
+              '                    )',
+              '                if not self.resume_cache_manager.is_deleted(logical_job_id):',
+              '                    raise PrivacyRetentionError(',
+              '                        "SEP_PRIVACY_LOCAL_DELETE_UNCONFIRMED", retryable=True',
+              '                    )',
+              '        except OrchestratorError as exc:',
+              '            raise PrivacyRetentionError(',
+              '                "SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True',
+              '            ) from exc',
+          ]
+          source.write_text(text[:start] + '\n'.join(lines) + text[end:])
+
+          wf = Path('.github/workflows/moises-hq-l1-privacy-delete-race-repair-v7.yml').read_text()
+          marker = "          cat > tech-assets/moises-audio/Separation/Tests/test_privacy_retention_delete_serialization.py <<'PYTEST'\n"
+          begin = wf.index(marker) + len(marker)
+          finish = wf.index('\n          PYTEST', begin)
+          test_body = textwrap.dedent(wf[begin:finish]) + '\n'
+          Path('tech-assets/moises-audio/Separation/Tests/test_privacy_retention_delete_serialization.py').write_text(test_body)
+          PY
+
+          python3 -m py_compile tech-assets/moises-audio/Separation/Server/privacy_retention.py tech-assets/moises-audio/Separation/Tests/test_privacy_retention_delete_serialization.py
+          export PYTHONPATH="$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Server:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Evaluation:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          python3 - <<'PY'
+          import inspect
+          from privacy_retention import PrivacyRetentionService
+          method = inspect.getsource(PrivacyRetentionService._delete_local_artifacts)
+          assert method.startswith('    def _delete_local_artifacts')
+          assert 'with self.resume_cache_manager.lease(logical_job_id) as acquired:' in method
+          PY
+          git diff --check
+
+      - name: Reconfirm both race regressions 50x each
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Server:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Evaluation:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          cd "$GITHUB_WORKSPACE/tech-assets/moises-audio"
+          for i in $(seq 1 50); do
+            python3 -m unittest test_privacy_retention_concurrency.PrivacyRetentionConcurrencyTests.test_concurrent_delete_reserves_provider_side_effect_once >> "$GITHUB_WORKSPACE/diagnostics/existing-stress.log" 2>&1
+          done
+          for i in $(seq 1 50); do
+            python3 -m unittest test_privacy_retention_delete_serialization.PrivacyRetentionDeleteSerializationTests.test_concurrent_local_artifact_delete_uses_per_job_lease >> "$GITHUB_WORKSPACE/diagnostics/serialization-stress.log" 2>&1
+          done
+
+      - name: Create scoped clean repair commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/moises-hq-l1-privacy-delete-race-repair-v7.yml
+          rm .github/workflows/moises-hq-l1-privacy-delete-race-repair-v8.yml
+          rm .github/workflows/moises-hq-l1-privacy-delete-race-repair-v9.yml
+          git config user.name 'ALLSUNDAY1122'
+          git config user.email 'kohei3615@gmail.com'
+          git add tech-assets/moises-audio/Separation/Server/privacy_retention.py
+          git add tech-assets/moises-audio/Separation/Tests/test_privacy_retention_delete_serialization.py
+          git add .github/workflows/moises-hq-l1-privacy-delete-race-repair-v7.yml
+          git add .github/workflows/moises-hq-l1-privacy-delete-race-repair-v8.yml
+          git add .github/workflows/moises-hq-l1-privacy-delete-race-repair-v9.yml
+          git diff --cached --check
+          git commit -m 'moises hq serialize Lane1 privacy local deletion per job'
+          git rev-parse HEAD > diagnostics/validated-tree-commit-sha.txt
+          git status --porcelain --untracked-files=no > diagnostics/tracked-status-after-commit.txt
+          test ! -s diagnostics/tracked-status-after-commit.txt
+
+      - name: Run exact A26 audit on validated tree commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          head="$(git rev-parse HEAD)"
+          python3 tech-assets/moises-audio/Separation/Evaluation/lane1_dependency_audit.py --audio-root tech-assets/moises-audio --expected-git-head "$head" --output diagnostics/l1-race-repair-a26.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('diagnostics/l1-race-repair-a26.json').read_text())
+          assert report['overall_state'] == 'PASS', report
+          assert report['git_head_binding']['state'] == 'PASS', report['git_head_binding']
+          assert report['owned_source_snapshot']['state'] == 'PASS', report['owned_source_snapshot']
+          assert report['dependency_contracts']['state'] == 'PASS', report['dependency_contracts']
+          assert report['unittest_discovery']['state'] == 'PASS', report['unittest_discovery']
+          PY
+
+      - name: Repeat full Lane1 discovery 5x
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Server:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Evaluation:$GITHUB_WORKSPACE/tech-assets/moises-audio/Separation/Tests${PYTHONPATH:+:$PYTHONPATH}"
+          cd "$GITHUB_WORKSPACE/tech-assets/moises-audio"
+          for i in 1 2 3 4 5; do
+            python3 -m unittest discover -s Separation/Tests -p 'test_*.py' 2>&1 | tee "$GITHUB_WORKSPACE/diagnostics/full-${i}.log"
+          done
+
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lane1-privacy-race-repair-v9
+          path: diagnostics/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Publish validated tree candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git push origin HEAD:refs/heads/moises/hq-l1-privacy-delete-race-validated-tree-v9
