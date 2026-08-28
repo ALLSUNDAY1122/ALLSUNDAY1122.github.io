@@ -75,6 +75,17 @@ private struct Lane2ManagedArtifactPublicationCursorEnvelope: Codable, Sendable 
     let cursor: Lane2ManagedArtifactPublicationRecoveryCursor
 }
 
+/// Foundation's FileManager is explicitly non-Sendable in current Apple SDKs.
+/// Keep that compatibility assertion private to the injected dependency rather
+/// than marking the public journal itself @unchecked Sendable.
+private final class Lane2PublicationJournalFileManagerHandle: @unchecked Sendable {
+    let value: FileManager
+
+    init(_ value: FileManager) {
+        self.value = value
+    }
+}
+
 /// Durable pre-publication signal for app-owned Imports/Stems/Exports artifacts.
 /// Writers persist an intent before the final move/rename and retire it only after the Library
 /// readiness boundary has registered the final path in the AW29 inventory.
@@ -89,7 +100,7 @@ public struct Lane2ManagedArtifactPublicationJournal: Sendable {
     public let rootURL: URL
     public let recoveryDirectoryName: String
     public let sessionID: String
-    private let fileManager: FileManager
+    private let fileManagerHandle: Lane2PublicationJournalFileManagerHandle
 
     public init(
         rootURL: URL,
@@ -100,7 +111,11 @@ public struct Lane2ManagedArtifactPublicationJournal: Sendable {
         self.rootURL = rootURL.standardizedFileURL
         self.recoveryDirectoryName = recoveryDirectoryName
         self.sessionID = sessionID
-        self.fileManager = fileManager
+        self.fileManagerHandle = Lane2PublicationJournalFileManagerHandle(fileManager)
+    }
+
+    private var fileManager: FileManager {
+        fileManagerHandle.value
     }
 
     private var pathBoundary: IOManagedPathBoundary {
