@@ -21,8 +21,9 @@ from typing import Any
 from privacy_retention import PrivacyRetentionError
 
 EVIDENCE_STATE = "NON_PARITY_EVIDENCE_ONLY"
-TOOL_VERSION = "L1-HQ-ACCOUNT-PROCESSING-DELETE-v1"
+TOOL_VERSION = "L1-HQ-ACCOUNT-PROCESSING-DELETE-v2"
 _LOGICAL_JOB_ID = re.compile(r"^[0-9a-f]{32}$")
+_SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _ASSET_ERASURE_TERMINAL = frozenset({"confirmed", "not_found", "expired"})
 _TASK_ERASURE_TERMINAL = frozenset({"confirmed", "not_found"})
 
@@ -117,6 +118,7 @@ class AccountProcessingDeletionService:
             complete, asset_state, task_state = _privacy_complete(
                 privacy_record=privacy_record,
                 durable_record=record,
+                require_identity_binding=True,
             )
             if not complete:
                 return _JobOutcome(
@@ -185,7 +187,12 @@ class AccountProcessingDeletionService:
         )
 
 
-def _privacy_complete(*, privacy_record: Any, durable_record: Any) -> tuple[bool, str, str]:
+def _privacy_complete(
+    *,
+    privacy_record: Any,
+    durable_record: Any,
+    require_identity_binding: bool = False,
+) -> tuple[bool, str, str]:
     local = bool(getattr(privacy_record, "local_delete_confirmed", False))
     expected_asset_hash = getattr(privacy_record, "provider_asset_id_hash", None)
     expected_task_hash = getattr(privacy_record, "provider_task_id_hash", None)
@@ -193,13 +200,34 @@ def _privacy_complete(*, privacy_record: Any, durable_record: Any) -> tuple[bool
     task_state = str(getattr(privacy_record, "provider_task_delete_state", "unknown"))
     durable_asset_id = getattr(durable_record, "provider_asset_id", None)
     durable_task_id = getattr(durable_record, "provider_task_id", None)
+
+    if require_identity_binding and not (
+        _provider_identity_matches(expected_asset_hash, durable_asset_id)
+        and _provider_identity_matches(expected_task_hash, durable_task_id)
+    ):
+        raise AccountProcessingDeletionError("SEP_ACCOUNT_DELETE_PROVIDER_IDENTITY_MISMATCH")
+
     asset_complete = (
-        expected_asset_hash is None and durable_asset_id is None
-    ) or asset_state in _ASSET_ERASURE_TERMINAL
+        asset_state == "not_applicable"
+        if expected_asset_hash is None
+        else asset_state in _ASSET_ERASURE_TERMINAL
+    )
     task_complete = (
-        expected_task_hash is None and durable_task_id is None
-    ) or task_state in _TASK_ERASURE_TERMINAL
+        task_state == "not_applicable"
+        if expected_task_hash is None
+        else task_state in _TASK_ERASURE_TERMINAL
+    )
     return local and asset_complete and task_complete, asset_state, task_state
+
+
+def _provider_identity_matches(expected_hash: Any, durable_id: Any) -> bool:
+    if expected_hash is None:
+        return durable_id is None
+    if not isinstance(expected_hash, str) or not _SHA256.fullmatch(expected_hash):
+        return False
+    if not isinstance(durable_id, str):
+        return False
+    return hashlib.sha256(durable_id.encode("utf-8")).hexdigest() == expected_hash
 
 
 def _canonical_project_id(value: str) -> str:
