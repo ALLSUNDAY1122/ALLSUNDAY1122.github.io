@@ -35,6 +35,13 @@ jobs:
           test -f Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift
           test -f Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift
 
+      - name: W57 bypass contract diagnostic
+        working-directory: tech-assets/moises-audio
+        run: |
+          set -euo pipefail
+          nl -ba Analysis/AnalysisPhysicalRealAudioBridgeConsumptionQuiescentCustody.swift | sed -n '395,470p'
+          grep -R -n -E 'bypassToken|authorizeNormalizedRouting' Analysis || true
+
       - name: Full recovered Lane4 SwiftPM
         working-directory: tech-assets/moises-audio
         run: swift test
