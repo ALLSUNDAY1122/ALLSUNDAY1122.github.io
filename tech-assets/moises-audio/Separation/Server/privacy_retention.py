@@ -453,19 +453,36 @@ class PrivacyRetentionService:
             self._artifact_directory(logical_job_id),
             self._artifact_directory(logical_job_id, suffix=".staging"),
         )
-        for target in targets:
-            try:
-                shutil.rmtree(target)
-            except FileNotFoundError:
-                pass
-            except OSError as exc:
-                raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True) from exc
+        try:
+            # tombstone_and_purge releases its lease before normal/staging deletion.
+            # Re-acquire the same stable per-job lease so concurrent privacy deletes
+            # cannot overlap shutil.rmtree on the same artifact tree.
+            with self.resume_cache_manager.lease(logical_job_id) as acquired:
+                if not acquired:
+                    raise OrchestratorError("SEP_OUTPUT_RESUME_CACHE_LOCK_FAILED", retryable=True)
+                for target in targets:
+                    try:
+                        shutil.rmtree(target)
+                    except FileNotFoundError:
+                        pass
+                    except OSError as exc:
+                        raise PrivacyRetentionError(
+                            "SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True
+                        ) from exc
 
-        cache_root = self.resume_cache_manager.cache_root(logical_job_id)
-        if any(target.exists() for target in targets) or cache_root.exists():
-            raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_UNCONFIRMED", retryable=True)
-        if not self.resume_cache_manager.is_deleted(logical_job_id):
-            raise PrivacyRetentionError("SEP_PRIVACY_LOCAL_DELETE_UNCONFIRMED", retryable=True)
+                cache_root = self.resume_cache_manager.cache_root(logical_job_id)
+                if any(target.exists() for target in targets) or cache_root.exists():
+                    raise PrivacyRetentionError(
+                        "SEP_PRIVACY_LOCAL_DELETE_UNCONFIRMED", retryable=True
+                    )
+                if not self.resume_cache_manager.is_deleted(logical_job_id):
+                    raise PrivacyRetentionError(
+                        "SEP_PRIVACY_LOCAL_DELETE_UNCONFIRMED", retryable=True
+                    )
+        except OrchestratorError as exc:
+            raise PrivacyRetentionError(
+                "SEP_PRIVACY_LOCAL_DELETE_FAILED", retryable=True
+            ) from exc
 
     def _artifact_directory(self, logical_job_id: str, *, suffix: str = "") -> Path:
         if suffix not in {"", ".staging"}:
