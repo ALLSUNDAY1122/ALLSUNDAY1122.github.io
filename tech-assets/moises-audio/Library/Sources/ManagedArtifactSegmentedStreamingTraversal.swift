@@ -53,6 +53,14 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
 
     private var fileManager: FileManager { fileManagerHandle.value }
 
+    private var pathAuthority: Lane2ManagedArtifactInventoryPathAuthority {
+        Lane2ManagedArtifactInventoryPathAuthority(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName,
+            fileManager: fileManager
+        )
+    }
+
     public func prepareOrphanCandidateSlice(
         priorTraversal: Lane2ManagedArtifactInventoryTraversal,
         gracePeriod: TimeInterval = 3600,
@@ -201,7 +209,12 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
 
     private func loadLegacyEntries(_ shardIndex: Int) throws -> [Entry] {
         let url = legacyShardURL(shardIndex)
-        guard fileManager.fileExists(atPath: url.path) else { return [] }
+        do {
+            guard try pathAuthority.nodeExists(url) else { return [] }
+            try pathAuthority.requireExistingRegularFile(url, within: pathAuthority.shardsDirectoryURL)
+        } catch {
+            throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptLegacyShard(url.lastPathComponent)
+        }
         let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
         guard values.isRegularFile == true, values.isSymbolicLink != true else {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptLegacyShard(url.lastPathComponent)
@@ -223,7 +236,12 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
 
     private func loadManifest(_ shardIndex: Int) throws -> Manifest? {
         let url = manifestURL(shardIndex)
-        guard fileManager.fileExists(atPath: url.path) else { return nil }
+        do {
+            guard try pathAuthority.nodeExists(url) else { return nil }
+            try pathAuthority.requireExistingRegularFile(url, within: segmentedDirectoryURL)
+        } catch {
+            throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptManifest(url.lastPathComponent)
+        }
         let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
         guard values.isRegularFile == true, values.isSymbolicLink != true else {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptManifest(url.lastPathComponent)
@@ -245,6 +263,11 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
 
     private func loadSegment(manifest: Manifest, segmentIndex: Int) throws -> Segment {
         let url = segmentURL(shardIndex: manifest.shardIndex, generation: manifest.generation, segmentIndex: segmentIndex)
+        do {
+            try pathAuthority.requireExistingRegularFile(url, within: segmentedDirectoryURL)
+        } catch {
+            throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptSegment(url.lastPathComponent)
+        }
         let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
         guard values.isRegularFile == true, values.isSymbolicLink != true else {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptSegment(url.lastPathComponent)
@@ -272,13 +295,11 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
     }
 
     private var v1DirectoryURL: URL {
-        rootURL.appendingPathComponent(recoveryDirectoryName, isDirectory: true)
-            .appendingPathComponent("ArtifactInventory", isDirectory: true)
-            .appendingPathComponent("v1", isDirectory: true)
+        pathAuthority.v1DirectoryURL
     }
-    private var segmentedDirectoryURL: URL { v1DirectoryURL.appendingPathComponent("Segmented", isDirectory: true) }
+    private var segmentedDirectoryURL: URL { pathAuthority.segmentedDirectoryURL }
     private func legacyShardURL(_ index: Int) -> URL {
-        v1DirectoryURL.appendingPathComponent("Shards", isDirectory: true)
+        pathAuthority.shardsDirectoryURL
             .appendingPathComponent(String(format: "%02x.json", index))
     }
     private func manifestURL(_ index: Int) -> URL {
