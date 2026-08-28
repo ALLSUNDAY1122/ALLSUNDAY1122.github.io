@@ -21,6 +21,7 @@ struct Lane2LibraryDescriptorRelativeIO: Sendable {
         case invalidManagedPath(String)
         case openFailed(String)
         case notRegularFile(String)
+        case fileTooLarge(String)
         case readFailed(String)
         case writeFailed(String)
         case syncFailed(String)
@@ -34,7 +35,15 @@ struct Lane2LibraryDescriptorRelativeIO: Sendable {
         self.rootURL = rootURL.standardizedFileURL
     }
 
-    func readRegularFile(at url: URL) throws -> Data {
+    /// Reads one regular managed file through a pinned descriptor chain.
+    ///
+    /// `maximumBytes` is enforced while streaming from the descriptor, rather than via a
+    /// separate pathname stat. This keeps oversized-input rejection bounded even if the leaf
+    /// grows after higher-level validation.
+    func readRegularFile(at url: URL, maximumBytes: Int? = nil) throws -> Data {
+        if let maximumBytes, maximumBytes < 0 {
+            throw Failure.invalidManagedPath(url.path)
+        }
         let relative = try relativeComponents(for: url)
         return try withPinnedParent(relativeComponents: relative) { parentFD, leaf in
             let fd = leaf.withCString { pointer in
@@ -55,6 +64,12 @@ struct Lane2LibraryDescriptorRelativeIO: Sendable {
                 guard count > 0 else {
                     if errno == EINTR { continue }
                     throw Failure.readFailed(leaf)
+                }
+                if let maximumBytes {
+                    guard data.count <= maximumBytes,
+                          count <= maximumBytes - data.count else {
+                        throw Failure.fileTooLarge(leaf)
+                    }
                 }
                 data.append(contentsOf: buffer.prefix(count))
             }
