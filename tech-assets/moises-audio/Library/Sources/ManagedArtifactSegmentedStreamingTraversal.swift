@@ -61,6 +61,13 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
         )
     }
 
+    /// The descriptor-relative reader is the final use-time authority after the higher-level
+    /// FileManager topology checks above. It pins the managed root and every descendant directory
+    /// with `openat`/`O_NOFOLLOW` before reading the leaf, narrowing the validation-to-open race.
+    private var descriptorIO: Lane2LibraryDescriptorRelativeIO {
+        Lane2LibraryDescriptorRelativeIO(rootURL: rootURL)
+    }
+
     public func prepareOrphanCandidateSlice(
         priorTraversal: Lane2ManagedArtifactInventoryTraversal,
         gracePeriod: TimeInterval = 3600,
@@ -211,20 +218,28 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
         let url = legacyShardURL(shardIndex)
         do {
             guard try pathAuthority.nodeExists(url) else { return [] }
-            try pathAuthority.requireExistingRegularFile(url, within: pathAuthority.shardsDirectoryURL)
         } catch {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptLegacyShard(url.lastPathComponent)
         }
-        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
+
+        let data: Data
+        do {
+            data = try descriptorIO.readRegularFile(
+                at: url,
+                maximumBytes: Self.maximumLegacyEncodedBytes
+            )
+        } catch let error as Lane2LibraryDescriptorRelativeIO.Failure {
+            if case .fileTooLarge = error {
+                throw Lane2ManagedArtifactSegmentedRuntimeFailure.legacyShardOversized(url.lastPathComponent)
+            }
+            throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptLegacyShard(url.lastPathComponent)
+        } catch {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptLegacyShard(url.lastPathComponent)
         }
-        guard max(values.fileSize ?? 0, 0) <= Self.maximumLegacyEncodedBytes else {
-            throw Lane2ManagedArtifactSegmentedRuntimeFailure.legacyShardOversized(url.lastPathComponent)
-        }
+
         let legacy: LegacyShard
         do {
-            legacy = try JSONDecoder().decode(LegacyShard.self, from: Data(contentsOf: url))
+            legacy = try JSONDecoder().decode(LegacyShard.self, from: data)
         } catch {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptLegacyShard(url.lastPathComponent)
         }
@@ -238,17 +253,20 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
         let url = manifestURL(shardIndex)
         do {
             guard try pathAuthority.nodeExists(url) else { return nil }
-            try pathAuthority.requireExistingRegularFile(url, within: segmentedDirectoryURL)
         } catch {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptManifest(url.lastPathComponent)
         }
-        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
+
+        let data: Data
+        do {
+            data = try descriptorIO.readRegularFile(at: url)
+        } catch {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptManifest(url.lastPathComponent)
         }
+
         let manifest: Manifest
         do {
-            manifest = try JSONDecoder().decode(Manifest.self, from: Data(contentsOf: url))
+            manifest = try JSONDecoder().decode(Manifest.self, from: data)
         } catch {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptManifest(url.lastPathComponent)
         }
@@ -263,18 +281,17 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
 
     private func loadSegment(manifest: Manifest, segmentIndex: Int) throws -> Segment {
         let url = segmentURL(shardIndex: manifest.shardIndex, generation: manifest.generation, segmentIndex: segmentIndex)
+
+        let data: Data
         do {
-            try pathAuthority.requireExistingRegularFile(url, within: segmentedDirectoryURL)
+            data = try descriptorIO.readRegularFile(at: url)
         } catch {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptSegment(url.lastPathComponent)
         }
-        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
-            throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptSegment(url.lastPathComponent)
-        }
+
         let segment: Segment
         do {
-            segment = try JSONDecoder().decode(Segment.self, from: Data(contentsOf: url))
+            segment = try JSONDecoder().decode(Segment.self, from: data)
         } catch {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptSegment(url.lastPathComponent)
         }
