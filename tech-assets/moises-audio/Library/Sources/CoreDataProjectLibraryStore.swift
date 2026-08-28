@@ -657,12 +657,12 @@ private enum StoreMapper {
         try LibrarySnapshotPolicy.validate(source: source)
 
         let processing = try StoreFetch.processing(projectID: projectID.rawValue, context: context)
-            .map { try processing(record: $0) }
+            .map { try Self.processing(record: $0) }
         let stems = try StoreFetch.stems(projectID: projectID.rawValue, context: context)
             .map { try stem(record: $0, projectID: projectID) }
         try LibrarySnapshotPolicy.validate(stems: stems, projectID: projectID)
         let edits = try StoreFetch.edit(projectID: projectID.rawValue, context: context)
-            .map { try edits(record: $0, projectID: projectID, context: context) }
+            .map { try Self.edits(record: $0, projectID: projectID, context: context) }
         return PersistedProjectSnapshot(
             projectID: projectID,
             source: source,
