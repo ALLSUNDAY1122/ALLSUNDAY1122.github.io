@@ -1,0 +1,77 @@
+name: APP2-003 Yoru Final App Review Submit
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  submit:
+    if: startsWith(github.event.issue.title, '[APP2-003-SUBMIT-REVIEW]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install ASC dependencies
+        run: python -m pip install --disable-pip-version-check pyjwt cryptography
+      - name: Verify explicit authorization and fixed target
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          python - <<'PY'
+          import json, os
+          d=json.loads(os.environ.get('ISSUE_BODY','{}'))
+          assert d.get('task_id')=='APP2-003'
+          assert d.get('app_id')=='6794137637'
+          assert d.get('bundle_id')=='io.github.allsunday1122.yorunoshoka'
+          assert d.get('version')=='1.2.0'
+          assert d.get('build')=='7'
+          assert d.get('physical_acceptance')=='PASS'
+          assert d.get('authorization')=='APPROVED'
+          print('PASS: explicit APP2-003 Build 7 submission authorization')
+          PY
+      - name: Submit guarded Build 7 to App Review
+        id: submit
+        continue-on-error: true
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          YORU_SUBMIT_OUTPUT: /tmp/app2-003-yoru-final-submit.json
+        run: |
+          python scripts/app2_003_yoru_finalize_submit.py
+      - name: Upload sanitized result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app2-003-yoru-final-submit-${{ github.run_id }}
+          path: /tmp/app2-003-yoru-final-submit.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Report result
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const status='${{ steps.submit.outcome }}';
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:`APP2-003 final App Review submit result: ${status}; run_id=${context.runId}; artifact=app2-003-yoru-final-submit-${context.runId}`});
+      - name: Enforce submission success
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/app2-003-yoru-final-submit.json')
+          if not p.exists(): raise SystemExit('submission result missing')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          if not d.get('submitted'): raise SystemExit('submission failed: '+str(d.get('error')))
+          if d.get('review_submission_state') not in {'WAITING_FOR_REVIEW','IN_REVIEW','COMPLETING'}:
+              raise SystemExit('unexpected review state: '+str(d.get('review_submission_state')))
+          print('PASS: APP2-003 Build 7 submitted; state='+d['review_submission_state'])
+          PY
