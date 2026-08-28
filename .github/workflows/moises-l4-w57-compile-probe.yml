@@ -28,25 +28,27 @@ jobs:
 
       - name: Assert recovered Analysis package surface
         working-directory: tech-assets/moises-audio
+        shell: sh
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          text = Path('Package.swift').read_text()
-          required = [
-              'Analysis/AnalysisSignal.swift',
-              'Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift',
-              'Analysis/AnalysisPhysicalRealAudioBridgeConsumptionNormalizedAccess.swift',
-              'Analysis/AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.swift',
-              'iOS/HostCore/AnalysisIOSBridgeDurabilityProbeCoordinator.swift',
-              'iOS/HostCore/AnalysisIOSBridgeNormalizedDurabilityProbeCoordinator.swift',
-          ]
-          missing = [path for path in required if f'"{path}"' not in text]
-          if missing:
-              raise SystemExit(f'W57 Analysis package surface incomplete: {missing}')
-          if '\n                "Analysis",' in text:
-              raise SystemExit('W57 invalid green-by-exclusion baseline: whole Analysis directory is excluded')
-          print('W57 Analysis package surface is enabled')
-          PY
+          set -eu
+          for path in \
+            Analysis/AnalysisSignal.swift \
+            Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift \
+            Analysis/AnalysisPhysicalRealAudioBridgeConsumptionNormalizedAccess.swift \
+            Analysis/AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.swift \
+            iOS/HostCore/AnalysisIOSBridgeDurabilityProbeCoordinator.swift \
+            iOS/HostCore/AnalysisIOSBridgeNormalizedDurabilityProbeCoordinator.swift
+          do
+            grep -Fq "\"$path\"" Package.swift || {
+              echo "W57 Analysis package surface incomplete: $path" >&2
+              exit 1
+            }
+          done
+          if grep -Eq '^[[:space:]]*"Analysis",[[:space:]]*$' Package.swift; then
+            echo 'W57 invalid green-by-exclusion baseline: whole Analysis directory is excluded' >&2
+            exit 1
+          fi
+          echo 'W57 Analysis package surface is enabled'
 
       - name: Full recovered L4 SwiftPM
         working-directory: tech-assets/moises-audio
