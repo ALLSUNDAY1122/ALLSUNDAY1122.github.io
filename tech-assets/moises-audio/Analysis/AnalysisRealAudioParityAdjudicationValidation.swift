@@ -33,6 +33,9 @@ public enum AnalysisAnalysisParityAdjudicationReportValidator {
         }
 
         for row in report.rowAdjudications {
+            let worstRegressionIsValid = row.worstRegression.map({ value in
+                value.isFinite && value >= 0
+            }) ?? true
             guard !row.feature.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
                   !row.domain.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
                   !row.expectedFixtureIDs.isEmpty,
@@ -47,7 +50,7 @@ public enum AnalysisAnalysisParityAdjudicationReportValidator {
                   row.nonParityCandidatePairCount >= 0,
                   row.failedPairCount <= row.observedPairCount,
                   row.nonParityCandidatePairCount <= row.observedPairCount,
-                  row.worstRegression.map { $0.isFinite && $0 >= 0 } ?? true else {
+                  worstRegressionIsValid else {
                 return false
             }
             switch row.status {
