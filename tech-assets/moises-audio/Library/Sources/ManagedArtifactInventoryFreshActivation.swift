@@ -18,8 +18,9 @@ public extension Lane2ManagedArtifactInventory {
             recoveryDirectoryName: recoveryDirectoryName,
             fileManager: fileManager
         )
-        let keys: Set<URLResourceKey> = [.isRegularFileKey, .isDirectoryKey, .isSymbolicLinkKey]
+        let descriptorEnumerator = Lane2ManagedArtifactInventoryDescriptorEnumerator(rootURL: rootURL)
         var sawTarget = false
+
         for rootName in Lane2ManagedArtifactInventory.managedRootNames {
             let managedRoot = authority.managedRootURL(rootName)
             do {
@@ -27,44 +28,29 @@ public extension Lane2ManagedArtifactInventory {
             } catch {
                 throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(rootName)
             }
-            var enumerationFailed = false
-            guard let enumerator = fileManager.enumerator(
-                at: managedRoot,
-                includingPropertiesForKeys: Array(keys),
-                options: [.skipsHiddenFiles],
-                errorHandler: { _, _ in
-                    enumerationFailed = true
-                    return false
-                }
-            ) else { return false }
 
-            for case let url as URL in enumerator {
-                let values = try url.resourceValues(forKeys: keys)
-                if values.isSymbolicLink == true { return false }
-                guard values.isRegularFile == true else { continue }
-                let item = try lane2InventoryActivationRelativePath(for: url)
+            let entries: [Lane2ManagedArtifactInventoryDescriptorEnumerator.Entry]
+            do {
+                entries = try descriptorEnumerator.visibleEntriesRecursively(in: managedRoot)
+            } catch {
+                // Preserve the existing compatibility-mode fallback for enumeration failures.
+                return false
+            }
+
+            for entry in entries {
+                if entry.kind == .symbolicLink { return false }
+                guard entry.kind == .regularFile else { continue }
+                let item = try lane2InventoryActivationNormalize(entry.relativePath)
                 if item == normalized {
                     sawTarget = true
                     continue
                 }
                 return false
             }
-            if enumerationFailed { return false }
         }
         guard sawTarget else { return false }
         try markAuthoritativeAfterCompatibilityCensus()
         return true
-    }
-
-    private func lane2InventoryActivationRelativePath(for url: URL) throws -> String {
-        let standardized = url.standardizedFileURL
-        let prefix = rootURL.path.hasSuffix("/") ? rootURL.path : rootURL.path + "/"
-        guard standardized.path.hasPrefix(prefix) else {
-            throw Lane2ManagedArtifactInventoryFailure.invalidRelativePath(url.path)
-        }
-        return try lane2InventoryActivationNormalize(
-            String(standardized.path.dropFirst(prefix.count))
-        )
     }
 }
 
