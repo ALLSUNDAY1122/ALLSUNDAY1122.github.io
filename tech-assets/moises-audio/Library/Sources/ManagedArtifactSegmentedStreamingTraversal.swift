@@ -1,5 +1,10 @@
 import Foundation
 
+private final class Lane2SegmentedStreamingTraversalFileManagerHandle: @unchecked Sendable {
+    let value: FileManager
+    init(_ value: FileManager) { self.value = value }
+}
+
 /// AW43 fully streaming orphan traversal for committed segmented managed-artifact shards.
 /// Each committed segment is decoded and discarded independently; traversal never materializes an
 /// entire committed shard before candidate filtering. Legacy fallback remains bounded by the AW38
@@ -38,13 +43,15 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
 
     public let rootURL: URL
     public let recoveryDirectoryName: String
-    private let fileManager: FileManager
+    private let fileManagerHandle: Lane2SegmentedStreamingTraversalFileManagerHandle
 
     public init(rootURL: URL, recoveryDirectoryName: String = ".LibraryRecovery", fileManager: FileManager = .default) {
         self.rootURL = rootURL.standardizedFileURL
         self.recoveryDirectoryName = recoveryDirectoryName
-        self.fileManager = fileManager
+        self.fileManagerHandle = Lane2SegmentedStreamingTraversalFileManagerHandle(fileManager)
     }
+
+    private var fileManager: FileManager { fileManagerHandle.value }
 
     public func prepareOrphanCandidateSlice(
         priorTraversal: Lane2ManagedArtifactInventoryTraversal,
