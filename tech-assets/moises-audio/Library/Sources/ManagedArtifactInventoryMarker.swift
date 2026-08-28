@@ -111,10 +111,11 @@ public extension Lane2ManagedArtifactInventory {
             fileManager: inventoryFileManager
         )
         let marker = authority.authoritativeMarkerURL
+        let descriptorIO = Lane2LibraryDescriptorRelativeIO(rootURL: rootURL)
         do {
             guard try authority.nodeExists(marker) else { return false }
             try authority.requireExistingRegularFile(marker, within: authority.v1DirectoryURL)
-            let data = try Data(contentsOf: marker)
+            let data = try descriptorIO.readRegularFile(at: marker, maximumBytes: 64)
             guard data == Data("lane2-managed-artifact-inventory-v1\n".utf8) else { return false }
             return authoritativeShardPreflight().safeForAuthoritativeDecode
         } catch {
