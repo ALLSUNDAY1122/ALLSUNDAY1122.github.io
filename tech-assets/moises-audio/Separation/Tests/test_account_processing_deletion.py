@@ -1,3 +1,4 @@
+import hashlib
 import json
 import types
 import unittest
@@ -9,6 +10,10 @@ from account_processing_deletion import (
 
 PROJECT = "12345678-1234-5678-9abc-def012345678"
 OTHER = "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee"
+
+
+def provider_hash(value):
+    return None if value is None else hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
 def job(hex_id, project_id=PROJECT, asset="asset-1", task="task-1", state="bound"):
@@ -69,8 +74,8 @@ class PrivacyService:
         task_id = kwargs.get("provider_task_id")
         self.registry.records[logical_job_id] = types.SimpleNamespace(
             local_delete_confirmed=True,
-            provider_asset_id_hash=None if asset_id is None else "hash-a",
-            provider_task_id_hash=None if task_id is None else "hash-t",
+            provider_asset_id_hash=provider_hash(asset_id),
+            provider_task_id_hash=provider_hash(task_id),
             provider_asset_delete_state=asset_state if asset_id is not None else "not_applicable",
             provider_task_delete_state=task_state if task_id is not None else "not_applicable",
         )
