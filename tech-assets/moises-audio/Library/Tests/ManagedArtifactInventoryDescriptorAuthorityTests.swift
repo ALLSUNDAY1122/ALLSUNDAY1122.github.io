@@ -120,6 +120,82 @@ final class Lane2ManagedArtifactInventoryDescriptorAuthorityTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: externalCursor), sentinel)
     }
 
+    func testDescriptorEnumeratorDoesNotFollowDescendantSymlink() throws {
+        let root = try makeRoot(prefix: "enumeration-root")
+        let external = try makeRoot(prefix: "enumeration-external")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+
+        let imports = root.appendingPathComponent("Imports", isDirectory: true)
+        try FileManager.default.createDirectory(at: imports, withIntermediateDirectories: true)
+        let externalFile = external.appendingPathComponent("borrowed.m4a")
+        try Data("external-must-not-be-enumerated".utf8).write(to: externalFile)
+        let link = imports.appendingPathComponent("borrowed-dir", isDirectory: true)
+        try FileManager.default.createSymbolicLink(at: link, withDestinationURL: external)
+
+        let enumerator = Lane2ManagedArtifactInventoryDescriptorEnumerator(rootURL: root)
+        let entries = try enumerator.visibleEntriesRecursively(in: imports)
+
+        XCTAssertTrue(entries.contains {
+            $0.relativePath == "Imports/borrowed-dir" && $0.kind == .symbolicLink
+        })
+        XCTAssertFalse(entries.contains {
+            $0.relativePath == "Imports/borrowed-dir/borrowed.m4a"
+        })
+        XCTAssertEqual(try Data(contentsOf: externalFile), Data("external-must-not-be-enumerated".utf8))
+    }
+
+    func testFreshActivationAcceptsOnlySingleDescriptorEnumeratedRegularFile() throws {
+        let root = try makeRoot(prefix: "activation-single")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let target = root.appendingPathComponent("Imports/session/first.m4a")
+        try FileManager.default.createDirectory(
+            at: target.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try Data("managed".utf8).write(to: target)
+
+        let inventory = Lane2ManagedArtifactInventory(rootURL: root)
+        XCTAssertTrue(
+            try inventory.activateForFirstManagedArtifactIfSafe(
+                relativePath: "Imports/session/first.m4a"
+            )
+        )
+        XCTAssertTrue(inventory.isAuthoritative)
+    }
+
+    func testFreshActivationRejectsDescendantSymlinkWithoutBorrowingExternalTree() throws {
+        let root = try makeRoot(prefix: "activation-symlink-root")
+        let external = try makeRoot(prefix: "activation-symlink-external")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+
+        let imports = root.appendingPathComponent("Imports", isDirectory: true)
+        try FileManager.default.createDirectory(at: imports, withIntermediateDirectories: true)
+        let target = imports.appendingPathComponent("first.m4a")
+        try Data("managed".utf8).write(to: target)
+        let externalFile = external.appendingPathComponent("second.m4a")
+        let sentinel = Data("external-must-survive".utf8)
+        try sentinel.write(to: externalFile)
+        try FileManager.default.createSymbolicLink(
+            at: imports.appendingPathComponent("borrowed", isDirectory: true),
+            withDestinationURL: external
+        )
+
+        let inventory = Lane2ManagedArtifactInventory(rootURL: root)
+        XCTAssertFalse(
+            try inventory.activateForFirstManagedArtifactIfSafe(
+                relativePath: "Imports/first.m4a"
+            )
+        )
+        XCTAssertFalse(inventory.isAuthoritative)
+        XCTAssertEqual(try Data(contentsOf: externalFile), sentinel)
+    }
+
     private func makeRoot(prefix: String) throws -> URL {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(
             "L2InventoryDescriptorAuthority-\(prefix)-\(UUID().uuidString)",
