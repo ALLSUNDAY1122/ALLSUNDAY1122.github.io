@@ -140,6 +140,31 @@ struct Lane2LibraryDescriptorRelativeIO: Sendable {
         }
     }
 
+    /// Removes a leaf only after opening that leaf through the pinned parent with `O_NOFOLLOW`
+    /// and verifying that the opened object is a regular file.
+    ///
+    /// This is the deletion primitive for managed orphan artifacts. A symlink swapped in after
+    /// higher-level validation is rejected before unlink, so an external target cannot provide
+    /// deletion authority. As with `removeLeaf`, this does not claim exact-inode preservation
+    /// against a same-parent regular-file replacement between `openat`/`fstat` and `unlinkat`.
+    func removeRegularFile(at url: URL) throws {
+        let relative = try relativeComponents(for: url)
+        try withPinnedParent(relativeComponents: relative) { parentFD, leaf in
+            let fd = leaf.withCString { pointer in
+                lane2OpenAt(parentFD, pointer, lane2ReadOnlyNoFollowFlags, 0)
+            }
+            guard fd >= 0 else { throw Failure.openFailed(leaf) }
+            defer { _ = lane2Close(fd) }
+            try requireRegularFile(fd: fd, label: leaf)
+
+            let result = leaf.withCString { pointer in
+                lane2UnlinkAt(parentFD, pointer, 0)
+            }
+            guard result == 0 else { throw Failure.removeFailed(leaf) }
+            guard lane2Fsync(parentFD) == 0 else { throw Failure.syncFailed(leaf) }
+        }
+    }
+
     private func relativeComponents(for url: URL) throws -> [String] {
         let candidate = url.standardizedFileURL
         let rootComponents = rootURL.pathComponents
