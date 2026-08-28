@@ -1,6 +1,6 @@
-# APP2-003｜夜の書架｜完了証拠
+# APP2-003｜夜の書架｜Guideline 4.3(a) 対応中
 
-更新: 2026-08-28 13:46 JST
+更新: 2026-08-29 07:12 JST
 Worker: YORU
 対象App: 夜の書架
 App Store Connect App ID: `6794137637`
@@ -10,118 +10,84 @@ Bundle ID: `io.github.allsunday1122.yorunoshoka`
 
 > このファイル・会話履歴・過去結果は開始点であり正本ではない。再開時は Notion / GitHub / App Store Connect / Codemagic をfresh readすること。
 
-## 最終状態｜2026-08-28 13:46 JST
+## 現在状態｜2026-08-29 07:12 JST
 
-- Pattern C「紙面・温かみ」はmainへ統合済み。
-- Build 4は実機UX不具合5点でFAIL。
-- Build 5は修正コードがnative iOS entrypointへ接続されておらず、ユーザー実機で「何も解決していない」と判定されFAIL。
-- native entrypointを修正し、生成native bundleと完成IPAそのものを検査するGateを追加した。
-- Internal TestFlight `1.2.0 / Build 6` をユーザーが2026-08-28に実機確認し、**「問題なし」＝物理受入PASS**。
-- ユーザーが続けて **「本申請して」** と明示承認。
-- 同一source commitから本審査用 `1.2.0 / Build 7` を生成し、App Store Connectへ提出済み。
-- App Store Version `1.2.0`: **WAITING_FOR_REVIEW**
-- Review Submission: **WAITING_FOR_REVIEW**
-- Release type: **MANUAL**。審査承認後の公開操作は今回の承認範囲に含めず、自動公開していない。
+ユーザー提供のApp Store Connect画面で、Version 1.2.0が **Guideline 4.3(a) - Design - Spam** により却下されたことを確認。続けてASC API / Codemagic / GitHub / Notionをfresh readした。
 
-## Build 6｜Internal TestFlight physical PASS
-
-- Codemagic Build ID: `6a9105fde0c3191da504c2c7`
-- source commit: `0083095e354fb96a22afadba8a7f174bc5dc8220`
-- ASC Build resource: `e831d8cf-fa07-463f-b948-c891e1554902`
-- processingState: `VALID`
-- buildAudienceType: `INTERNAL_ONLY`
-- ユーザー実機受入: **PASS**
-
-Build 4/5で報告された対象不具合:
-1. 読むときに話の途中位置から表示される。
-2. 話によって本文スクロールできない。
-3. 読書途中に前画面／ホームへ戻りにくい。
-4. 書架の検索・絞り込みUIがstickyで残る。
-5. 「この話を読む」CTAが見えにくい。
-
-Build 6 corrective layer:
-- `native/main.tsx` から `ReaderRuntimeGuards` と `pattern-c-fixes.css` を実読込。
-- Reader mount／作品切替でscroll positionを先頭へ再同期。
-- iOS/WKWebView向け縦スクロールを明示。
-- Reader toolbarを常時fixed化し、戻る導線を本文位置から独立。
-- `.library-tools` のstickyを廃止。
-- 「この話を読む」を主要CTAとして強化。
-
-## Build 7｜App Store review candidate
-
-- Codemagic Build ID: `6a910f0cfcbd73331ec99411`
-- source commit: `0083095e354fb96a22afadba8a7f174bc5dc8220`
-- IPA: version `1.2.0`, build `7`, 約12.8MB
-- ASC Build resource: `b0fece05-6994-4602-afd5-17c3bdd69cee`
-- processingState: `VALID`
-- buildAudienceType: `APP_STORE_ELIGIBLE`
-- `usesNonExemptEncryption=false`
-- Minimum iOS: 15.0
-
-### Build 7 native IPA proof
-
-完成IPA `Payload/App.app/public` を直接監査し、Build 6と同じ修正レイヤーを確認済み。
-
-- JS marker: `app2-003-reader-fixes-v3`
-- CSS marker: `app2-reader-fixes-v3`
-- scoped selectors:
-  - `html.app2-reader-fixes-v3.reader-overlay`
-  - `html.app2-reader-fixes-v3.reader-toolbar`
-  - `html.app2-reader-fixes-v3.library-tools`
-  - `html.app2-reader-fixes-v3.story-card.story-read-button`
-- `all_scoped_selectors_present=true`
-
-Privacy:
-- app / Capacitor / Cordova の3 `PrivacyInfo.xcprivacy` を確認。
-- `NSPrivacyTracking=false`
-- Tracking Domains / Collected Data Types / Accessed API Types は空。
-- `ITSAppUsesNonExemptEncryption=false`
-
-## Submission metadata audit
-
-- App Store Version ID: `812cd84c-3efb-407b-a04c-f9fb1b5554e6`
-- Japanese localization ID: `bd9192c2-e28a-43d6-abf5-0345f5a4b694`
-- Review detail ID: `630be79a-3c94-4c4b-8882-6644d165152e`
-- AppInfo ID: `b681848e-808d-4d80-83a7-4a6a61610417`
-- Age rating declaration: present
-- Privacy Policy URL: present
-- Review contact: required fields present
-- Demo account: not required
-- iPhone 6.5-inch screenshots: 4枚すべて `COMPLETE`
-- Review Notes: 最終内容をwrite + read-back済み
-
-`whatsNew` は現在Apple APIがSTATE_ERRORで編集不可だったため、推測で破壊的操作は行わなかった。提出必須Gateではブロックせず、実際のReview Submission作成・提出は成功した。
-
-## App Review submission
-
+ASC fresh read:
+- Version `1.2.0`: `REJECTED`
+- Version ID: `812cd84c-3efb-407b-a04c-f9fb1b5554e6`
 - Review Submission ID: `be8d6f15-4ffe-409c-8078-3f3b331ba4bb`
-- submittedDate: `2026-08-28T04:42:53.162Z`
-- Review Submission state: **WAITING_FOR_REVIEW**
-- App Store Version state: **WAITING_FOR_REVIEW**
-- selected Build: `b0fece05-6994-4602-afd5-17c3bdd69cee` = Build 7
-- selected Build processingState: `VALID`
-- selected Build audience: `APP_STORE_ELIGIBLE`
+- Review Submission state: `UNRESOLVED_ISSUES`
+- Review item: `REJECTED`
+- Selected Build: `b0fece05-6994-4602-afd5-17c3bdd69cee` = Build 7
+- Build 7 processingState: `VALID`
+- Build 7 buildAudienceType: `APP_STORE_ELIGIBLE`
 - releaseType: `MANUAL`
 
-独立post-submit read-backで上記を再確認済み。ReviewSubmissionItemは1件存在し `READY_FOR_REVIEW`。item単体の `/appStoreVersion` GETはApple API非対応で失敗したが、Version 1.2.0自身がWAITING_FOR_REVIEW、選択Build 7、Review Submission WAITING_FOR_REVIEWの3点で本申請成立を確認した。
+Codemagic fresh read:
+- Build ID: `6a910f0cfcbd73331ec99411`
+- workflow: `yoru-ios-appstore`
+- status: `finished`
+- App Store Connect publishing: `finished`
+- IPA: `App.ipa`, version `1.2.0`, build `7`, 12,809,827 bytes
+- source commit: `0083095e354fb96a22afadba8a7f174bc5dc8220`
 
-## 署名資産
+したがって今回の却下は署名・Build・upload・processingの失敗ではなく、App Reviewの4.3(a)ポリシー判定。
 
-- Profile `6598LFYDY3`: ACTIVE / IOS_APP_STORE
-- Certificate `B4WRC3G6V4`: IOS_DISTRIBUTION、expiration `2027-07-24T14:20:41Z`
-- 既存資産を継続利用。新規発行・revokeなし。
+## Appleの指摘
 
-## 結論
+Appleは、当該アプリが他の提出済みアプリとbinary / metadata / conceptのいずれかで類似し、差分が小さいと判断した。Appleメッセージは、同一source/assets、repackaged template、第三者template、複数アカウントにまたがる類似app等を4.3(a)要因として例示している。
 
-APP2-003で要求された修正→Internal TestFlight実機確認→本審査用Build生成→App Store Connect本申請まで完了。
+Appleがどの既存appとのどの類似を検出したかは、現時点のメッセージでは特定されていない。
 
-現在Apple審査待ち。今回のTaskは **DONE** とする。
-審査承認後の手動Releaseは別の真正な人間承認工程として残す。
+## 独自性の確認結果
 
-## 禁止事項／再開時注意
+現行repoのREADME / source treeを再監査:
+- 端末内に148話を収録。
+- `夜語り` 100話はrepoで「オリジナル怪談」と明記。
+- `境界夜話` 48話は4シリーズ×12話。
+- `public/stories.json` は約870KBのタイトル固有コンテンツ。
+- 検索、怖さ・長さ・シリーズ絞り込み、お気に入り、読了記録、reader theme/brightness/font size/line spacing/font、共有、haptics、offline読書を実装。
+- account / ads / analytics / IAPなし。
+- product-specific UI/runtimeは `app/HorrorLibrary.tsx`、`ReaderRuntimeGuards`、専用CSSで構成。
+
+一方、iOSのcontainerはCapacitor。binaryのframework部分が他のhybrid appと類似する可能性はあるため、Appleがbinary similarityを問題視した可能性は排除できない。ただし、現時点でAppleが比較対象appや類似箇所を明示していないため、原因を断定しない。
+
+開発者保有repoも一部横断確認。`nomikai-arcade-ios` はSwiftUI/native構造で夜の書架とは別構造。`kyokai-yawa` は関連コンテンツを持つWeb/static repoだが、これだけでApp Store上の4.3(a)比較対象だったとは判定しない。
+
+## 採用方針
+
+**見た目・説明文だけ変更して即再提出しない。**
+
+第一選択は、製品固有性を事実ベースで説明し、Appleにbinary / metadata / asset / conceptのどの類似が問題か追加情報を求めつつ、4.3(a)の再考を求めること。
+
+Appleの案内上、App Review Boardへのappealは一回の却下につき一回として扱うため、文面は準備するがユーザー承認なしに送らない。
+
+appeal packetはapp repoへ保存済み:
+- `docs/APP2-003_GUIDELINE_4_3A_APPEAL.md`
+- commit `00bab5bd6b827c5f69359ffd7d84089fcc495620`
+
+appealが不成立、またはAppleが実質的な類似を具体的に指摘した場合のみ、第二段階として物語固有の大きな機能差分（例: 作品横断の人物・場所・反復モチーフ・伏線・時系列探索）を実装する。source変更後は旧実機PASSを失効させ、新Internal TestFlightで再受入してから再申請する。
+
+## 既往Build
+
+- Build 4: 実機UX不具合でFAIL
+- Build 5: native entrypoint未接続でFAIL
+- Build 6: Internal TestFlightでユーザー実機PASS
+- Build 7: 同一sourceのApp Store候補。Build/ASC processingはPASSしたがApp Review 4.3(a)でREJECTED
+
+## 現在の人間Gate
+
+**4.3(a) appeal / reconsideration文面をAppleへ送ることへのユーザー承認。**
+
+承認前に新Build作成・cosmetic再提出・appeal送信は行わない。
+
+## 禁止事項
 
 - Codexは使わない。
 - secret/token/.p8/private keyをGitHub/Notion/evidence/logへ保存しない。
-- Build 4/5を再利用しない。
-- Internal-only Build 6を本審査用として使わない。
-- Apple審査承認後も、ユーザーの公開承認なしにmanual releaseしない。
+- 4.3(a)をBuild失敗と誤認しない。
+- Appleが比較対象を明示していない段階で原因appを断定しない。
+- superficial changeだけで再提出しない。
+- 一回限りのappealをユーザー承認なしに消費しない。
