@@ -28,7 +28,8 @@ let package = Package(
                 "Processing/Sources/ProcessingProviderCapabilities.swift",
                 "Processing/Sources/ProcessingLifecycleCoordinator.swift",
                 "Processing/Sources/ProcessingCrashSafeRelaunchRecovery.swift",
-                "App/VerticalSliceCoordinator.swift"
+                "App/VerticalSliceCoordinator.swift",
+                "App/AccountDataDeletionCoordinator.swift"
             ]
         ),
         .testTarget(
