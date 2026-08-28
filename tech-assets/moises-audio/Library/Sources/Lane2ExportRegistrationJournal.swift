@@ -70,6 +70,17 @@ public enum Lane2ExportRegistrationJournalFailure: Error, Equatable, Sendable {
     case publicationIntegrityFailed(String)
 }
 
+/// Foundation's FileManager is explicitly non-Sendable in current Apple SDKs.
+/// Keep that compatibility assertion private to the injected dependency rather
+/// than marking the public journal itself @unchecked Sendable.
+private final class Lane2ExportRegistrationFileManagerHandle: @unchecked Sendable {
+    let value: FileManager
+
+    init(_ value: FileManager) {
+        self.value = value
+    }
+}
+
 /// Durable handoff between export publication and lifecycle metadata registration.
 ///
 /// Canonical IO batches cross their atomic publication rename with a hidden pre-registration
@@ -83,11 +94,15 @@ public enum Lane2ExportRegistrationJournalFailure: Error, Equatable, Sendable {
 /// interpreted as "missing" compatibility state.
 public struct Lane2ExportRegistrationJournal: Sendable {
     public let rootURL: URL
-    private let fileManager: FileManager
+    private let fileManagerHandle: Lane2ExportRegistrationFileManagerHandle
 
     public init(rootURL: URL, fileManager: FileManager = .default) {
         self.rootURL = rootURL.standardizedFileURL
-        self.fileManager = fileManager
+        self.fileManagerHandle = Lane2ExportRegistrationFileManagerHandle(fileManager)
+    }
+
+    private var fileManager: FileManager {
+        fileManagerHandle.value
     }
 
     @discardableResult
