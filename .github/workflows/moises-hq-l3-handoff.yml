@@ -1,0 +1,81 @@
+name: Moises HQ Lane3 Handoff Evidence
+
+on:
+  push:
+    branches:
+      - tech/moises-separation
+    paths:
+      - 'tech-assets/moises-audio/Playback/Sources/Lane3PhysicalEvidenceHandoff*.swift'
+      - 'tech-assets/moises-audio/Playback/Tests/L3_HQ_PhysicalEvidenceHandoff*.swift'
+      - '.github/workflows/moises-hq-l3-handoff.yml'
+  pull_request:
+    paths:
+      - 'tech-assets/moises-audio/Playback/Sources/Lane3PhysicalEvidenceHandoff*.swift'
+      - 'tech-assets/moises-audio/Playback/Tests/L3_HQ_PhysicalEvidenceHandoff*.swift'
+      - '.github/workflows/moises-hq-l3-handoff.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: moises-hq-l3-handoff-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  portable-lane3-physical-evidence-handoff:
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.0
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Swift version
+        run: swift --version
+
+      - name: Execute Lane3 handoff manifest host and serialized-package gates
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sources=(
+            Shared/DomainContracts.swift
+            DSP/Sources/*.swift
+            Playback/Sources/*.swift
+          )
+
+          cp Playback/Tests/L3_HQ_PhysicalEvidenceHandoffManifestSelfTest.swift /tmp/L3HQHandoffManifest.swift
+          cp Playback/Tests/L3_HQ_PhysicalEvidenceHandoffHostValidatorSelfTest.swift /tmp/L3HQHandoffHost.swift
+          cp Playback/Tests/L3_HQ_PhysicalEvidenceHandoffPackageValidatorSelfTest.swift /tmp/L3HQHandoffPackage.swift
+          sed -i '/^@main$/d' /tmp/L3HQHandoffManifest.swift /tmp/L3HQHandoffHost.swift /tmp/L3HQHandoffPackage.swift
+
+          cat >/tmp/L3HQHandoffCombinedRunner.swift <<'SWIFT'
+          @main
+          enum L3HQHandoffCombinedRunner {
+              static func main() throws {
+                  try L3HQPhysicalEvidenceHandoffManifestSelfTestMain.main()
+                  try L3HQPhysicalEvidenceHandoffHostValidatorSelfTestMain.main()
+                  try L3HQPhysicalEvidenceHandoffPackageValidatorSelfTestMain.main()
+              }
+          }
+          SWIFT
+
+          swiftc \
+            -swift-version 6 \
+            -warnings-as-errors \
+            -strict-concurrency=complete \
+            -O \
+            "${sources[@]}" \
+            /tmp/L3HQHandoffManifest.swift \
+            /tmp/L3HQHandoffHost.swift \
+            /tmp/L3HQHandoffPackage.swift \
+            /tmp/L3HQHandoffCombinedRunner.swift \
+            -o /tmp/l3-hq-handoff
+
+          /tmp/l3-hq-handoff | tee /tmp/l3-hq-handoff.out
+          grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_MANIFEST_SELF_TEST_PASS ' /tmp/l3-hq-handoff.out
+          grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_HOST_VALIDATOR_SELF_TEST_PASS ' /tmp/l3-hq-handoff.out
+          grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_PACKAGE_VALIDATOR_SELF_TEST_PASS ' /tmp/l3-hq-handoff.out
