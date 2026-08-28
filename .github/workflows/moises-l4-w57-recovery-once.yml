@@ -27,27 +27,57 @@ jobs:
       - name: Apply isolated Swift 6 test compile repairs
         working-directory: tech-assets/moises-audio
         run: |
+          diagnostic_dir="$GITHUB_WORKSPACE/automation/chatgpt-dispatcher/moises-equivalence/recovery"
+          repair_log="$diagnostic_dir/L4-W57_REPAIR_SCRIPT.txt"
+          patch_file="$diagnostic_dir/L4-W57_PROPOSED_PATCH.diff"
+          mkdir -p "$diagnostic_dir"
+          : > "$repair_log"
+          : > "$patch_file"
+
           parity_test='Tests/MoisesAudioCoreTests/AnalysisRealAudioParityAdjudicationTests.swift'
           chunked_test='Tests/MoisesAudioCoreTests/AnalysisChunkedInputPipelineTests.swift'
           p021_test='Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift'
           chord_test='Tests/MoisesAudioCoreTests/ChordVocabularyHardeningTests.swift'
 
-          sed -i 's/expectedCaptureSetSHA256: overrideCaptureRoot ?? (try AnalysisAnalysisParityAdjudicationRoot\.stableSHA256(captureSet))/expectedCaptureSetSHA256: try (overrideCaptureRoot ?? AnalysisAnalysisParityAdjudicationRoot.stableSHA256(captureSet))/g' "$parity_test"
-          sed -i 's/result\.inputDiagnostics/result.diagnostics/g; s/chunked\.inputDiagnostics/chunked.diagnostics/g' "$chunked_test"
-          sed -i 's/w44CheckpointCertificateRootSHA256: checkpointRoot ?? checkpointCertificate\.declaredCertificateRootSHA256/w44CheckpointCertificateRootSHA256: try (checkpointRoot ?? checkpointCertificate.declaredCertificateRootSHA256)/g' "$p021_test"
-          sed -i 's/w42AnchorReceiptRootSHA256: anchorRoot ?? anchorReceipt\.declaredAnchorReceiptRootSHA256/w42AnchorReceiptRootSHA256: try (anchorRoot ?? anchorReceipt.declaredAnchorReceiptRootSHA256)/g' "$p021_test"
-          sed -i 's/w41TransferRootSHA256: transferRoot ?? transfer\.declaredTransferRootSHA256/w41TransferRootSHA256: try (transferRoot ?? transfer.declaredTransferRootSHA256)/g' "$p021_test"
-          sed -i 's/events\.first?\.startSeconds/events.first?.startSeconds ?? .nan/g; s/events\.last?\.endSeconds/events.last?.endSeconds ?? .nan/g' "$chord_test"
+          run_repair() {
+            label="$1"
+            shift
+            set +e
+            "$@"
+            rc=$?
+            set -e
+            echo "$label rc=$rc" | tee -a "$repair_log"
+          }
 
-          diagnostic_dir="$GITHUB_WORKSPACE/automation/chatgpt-dispatcher/moises-equivalence/recovery"
-          mkdir -p "$diagnostic_dir"
+          run_repair parity sed -i 's/expectedCaptureSetSHA256: overrideCaptureRoot ?? (try AnalysisAnalysisParityAdjudicationRoot\.stableSHA256(captureSet))/expectedCaptureSetSHA256: try (overrideCaptureRoot ?? AnalysisAnalysisParityAdjudicationRoot.stableSHA256(captureSet))/g' "$parity_test"
+          run_repair chunked sed -i 's/result\.inputDiagnostics/result.diagnostics/g; s/chunked\.inputDiagnostics/chunked.diagnostics/g' "$chunked_test"
+          run_repair p021-w44 sed -i 's/w44CheckpointCertificateRootSHA256: checkpointRoot ?? checkpointCertificate\.declaredCertificateRootSHA256/w44CheckpointCertificateRootSHA256: try (checkpointRoot ?? checkpointCertificate.declaredCertificateRootSHA256)/g' "$p021_test"
+          run_repair p021-w42 sed -i 's/w42AnchorReceiptRootSHA256: anchorRoot ?? anchorReceipt\.declaredAnchorReceiptRootSHA256/w42AnchorReceiptRootSHA256: try (anchorRoot ?? anchorReceipt.declaredAnchorReceiptRootSHA256)/g' "$p021_test"
+          run_repair p021-w41 sed -i 's/w41TransferRootSHA256: transferRoot ?? transfer\.declaredTransferRootSHA256/w41TransferRootSHA256: try (transferRoot ?? transfer.declaredTransferRootSHA256)/g' "$p021_test"
+          run_repair chord sed -i 's/events\.first?\.startSeconds/events.first?.startSeconds ?? .nan/g; s/events\.last?\.endSeconds/events.last?.endSeconds ?? .nan/g' "$chord_test"
+
+          {
+            echo
+            echo '=== POST-REPAIR TARGET LINES ==='
+            grep -nF 'expectedCaptureSetSHA256:' "$parity_test" | tail -n 5 || true
+            grep -nE 'result\.(inputDiagnostics|diagnostics)|chunked\.(inputDiagnostics|diagnostics)' "$chunked_test" || true
+            grep -nE 'w44CheckpointCertificateRootSHA256:|w42AnchorReceiptRootSHA256:|w41TransferRootSHA256:' "$p021_test" | tail -n 12 || true
+            grep -nE 'events\.(first|last)' "$chord_test" | head -n 10 || true
+          } | tee -a "$repair_log"
+
+          git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
+          set +e
           git -C "$GITHUB_WORKSPACE" diff -- \
             "tech-assets/moises-audio/$parity_test" \
             "tech-assets/moises-audio/$chunked_test" \
             "tech-assets/moises-audio/$p021_test" \
             "tech-assets/moises-audio/$chord_test" \
-            > "$diagnostic_dir/L4-W57_PROPOSED_PATCH.diff"
-          cat "$diagnostic_dir/L4-W57_PROPOSED_PATCH.diff"
+            > "$patch_file" 2>> "$repair_log"
+          diff_rc=$?
+          set -e
+          echo "git_diff rc=$diff_rc" | tee -a "$repair_log"
+          cat "$patch_file" || true
+          cat "$repair_log"
 
       - name: Run exact worker SwiftPM and materialize diagnostics
         id: swiftpm
@@ -85,6 +115,7 @@ jobs:
         with:
           name: l4-w57-swiftpm-diagnostic
           path: |
+            automation/chatgpt-dispatcher/moises-equivalence/recovery/L4-W57_REPAIR_SCRIPT.txt
             automation/chatgpt-dispatcher/moises-equivalence/recovery/L4-W57_SWIFTPM_DIAGNOSTIC.txt
             automation/chatgpt-dispatcher/moises-equivalence/recovery/L4-W57_SWIFTPM_FULL_LOG.txt
             automation/chatgpt-dispatcher/moises-equivalence/recovery/L4-W57_PROPOSED_PATCH.diff
@@ -94,6 +125,7 @@ jobs:
       - name: Persist verified W57 test compile repairs
         if: steps.swiftpm.outputs.status == '0'
         run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
           git config user.name 'chatgpt-l4-recovery'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add \
