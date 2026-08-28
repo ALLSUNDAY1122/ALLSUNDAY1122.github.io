@@ -17,6 +17,9 @@ jobs:
     container:
       image: swift:6.0
     timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
 
