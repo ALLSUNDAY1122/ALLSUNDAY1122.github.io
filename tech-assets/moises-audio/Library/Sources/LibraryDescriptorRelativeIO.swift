@@ -99,8 +99,6 @@ struct Lane2LibraryDescriptorRelativeIO: Sendable {
             }
 
             guard lane2Fsync(fd) == 0 else { throw Failure.syncFailed(leaf) }
-            guard lane2Close(fd) == 0 else { throw Failure.syncFailed(leaf) }
-
             let renameResult = temporaryLeaf.withCString { temporaryPointer in
                 leaf.withCString { leafPointer in
                     lane2RenameAt(parentFD, temporaryPointer, parentFD, leafPointer)
