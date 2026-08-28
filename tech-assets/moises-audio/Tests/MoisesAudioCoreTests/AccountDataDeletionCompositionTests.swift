@@ -15,12 +15,14 @@ final class AccountDataDeletionCompositionTests: XCTestCase {
         )
 
         let report = try await coordinator.deleteAccountData(scopes: [scope])
+        let processingCalls = await processing.calls
+        let libraryCalls = await library.calls
 
         XCTAssertTrue(report.isComplete)
         XCTAssertEqual(report.processingConfirmedProjectIDs, [projectID])
         XCTAssertEqual(report.libraryConfirmedProjectIDs, [projectID])
-        XCTAssertEqual(await processing.calls, [scope])
-        XCTAssertEqual(await library.calls, [projectID])
+        XCTAssertEqual(processingCalls, [scope])
+        XCTAssertEqual(libraryCalls, [projectID])
     }
 
     func testProcessingFailureDoesNotSuppressIndependentLane2Deletion() async {
@@ -51,8 +53,10 @@ final class AccountDataDeletionCompositionTests: XCTestCase {
             XCTFail("unexpected error: \(error)")
         }
 
-        XCTAssertEqual(await processing.calls, [scope])
-        XCTAssertEqual(await library.calls, [projectID])
+        let processingCalls = await processing.calls
+        let libraryCalls = await library.calls
+        XCTAssertEqual(processingCalls, [scope])
+        XCTAssertEqual(libraryCalls, [projectID])
     }
 
     func testLibraryFailureDoesNotSuppressIndependentLane1Deletion() async {
@@ -84,8 +88,10 @@ final class AccountDataDeletionCompositionTests: XCTestCase {
             XCTFail("unexpected error: \(error)")
         }
 
-        XCTAssertEqual(await processing.calls, [scope])
-        XCTAssertEqual(await library.calls, [projectID])
+        let processingCalls = await processing.calls
+        let libraryCalls = await library.calls
+        XCTAssertEqual(processingCalls, [scope])
+        XCTAssertEqual(libraryCalls, [projectID])
     }
 
     func testDuplicateProjectScopeFailsBeforeAnyDeletionSideEffect() async {
@@ -111,8 +117,10 @@ final class AccountDataDeletionCompositionTests: XCTestCase {
             XCTFail("unexpected error: \(error)")
         }
 
-        XCTAssertEqual(await processing.calls, [])
-        XCTAssertEqual(await library.calls, [])
+        let processingCalls = await processing.calls
+        let libraryCalls = await library.calls
+        XCTAssertEqual(processingCalls, [])
+        XCTAssertEqual(libraryCalls, [])
     }
 }
 
