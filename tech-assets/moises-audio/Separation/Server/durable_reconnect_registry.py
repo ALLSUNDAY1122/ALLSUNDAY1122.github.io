@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Protocol
 
 SCHEMA_VERSION = 1
+DELETE_IDENTITY_BINDING_VERSION = 1
 _SAFE_ID = re.compile(r"^[A-Za-z0-9._:-]{1,160}$")
 _SAFE_MODEL = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
 _LOGICAL_JOB_ID = re.compile(r"^[0-9a-f]{32}$")
@@ -91,6 +92,9 @@ class DurableJobRecord:
     updated_at_epoch_ms: int
     deleted_at_epoch_ms: int | None
     last_authoritative_snapshot: RecoverySnapshot
+    deletion_identity_binding_version: int | None = None
+    deleted_provider_asset_id_hash: str | None = None
+    deleted_provider_task_id_hash: str | None = None
 
 
 class AtomicDurableJobRegistry:
@@ -466,7 +470,21 @@ class DurableReconnectService:
             source="provider", outputs_committed=False,
         )
 
-    def mark_deleted(self, logical_job_id: str) -> RecoverySnapshot:
+    def mark_deleted(
+        self,
+        logical_job_id: str,
+        *,
+        bind_provider_identity: bool = False,
+        provider_asset_id_hash: str | None = None,
+        provider_task_id_hash: str | None = None,
+    ) -> RecoverySnapshot:
+        """Persist a deletion tombstone, optionally with immutable provider-identity proof.
+
+        Account deletion uses ``bind_provider_identity=True`` after privacy erasure is terminal.
+        The supplied hashes are re-bound to the still-live provider IDs in the same registry
+        mutation that clears those raw IDs. Existing legacy tombstones are never retrofitted:
+        without the original raw IDs, identity provenance cannot be reconstructed safely.
+        """
         logical_job_id = _validate_logical_job_id(logical_job_id)
         now = self.now_epoch_ms()
 
@@ -474,7 +492,31 @@ class DurableReconnectService:
             if existing is None:
                 raise DurableRecoveryError("SEP_RECOVERY_JOB_NOT_REGISTERED")
             if existing.state == "deleted":
+                if not bind_provider_identity:
+                    return existing
+                if existing.deletion_identity_binding_version != DELETE_IDENTITY_BINDING_VERSION:
+                    raise DurableRecoveryError("SEP_RECOVERY_DELETE_IDENTITY_PROOF_UNAVAILABLE")
+                if (
+                    existing.deleted_provider_asset_id_hash != provider_asset_id_hash
+                    or existing.deleted_provider_task_id_hash != provider_task_id_hash
+                ):
+                    raise DurableRecoveryError("SEP_RECOVERY_DELETE_PROVIDER_IDENTITY_MISMATCH")
                 return existing
+
+            if bind_provider_identity:
+                _require_provider_hash_matches(
+                    existing.provider_asset_id,
+                    provider_asset_id_hash,
+                    "SEP_RECOVERY_DELETE_PROVIDER_IDENTITY_MISMATCH",
+                )
+                _require_provider_hash_matches(
+                    existing.provider_task_id,
+                    provider_task_id_hash,
+                    "SEP_RECOVERY_DELETE_PROVIDER_IDENTITY_MISMATCH",
+                )
+            elif provider_asset_id_hash is not None or provider_task_id_hash is not None:
+                raise DurableRecoveryError("SEP_RECOVERY_DELETE_IDENTITY_PROOF_UNEXPECTED")
+
             snapshot = _next_snapshot(
                 existing, logical_phase="deleted", provider_phase=None,
                 fraction_complete=None, retryable=False,
@@ -483,9 +525,22 @@ class DurableReconnectService:
                 observed_at_epoch_ms=now,
             )
             return replace(
-                existing, state="deleted", provider_asset_id=None, provider_task_id=None,
-                deleted_at_epoch_ms=now, updated_at_epoch_ms=now,
+                existing,
+                state="deleted",
+                provider_asset_id=None,
+                provider_task_id=None,
+                deleted_at_epoch_ms=now,
+                updated_at_epoch_ms=now,
                 last_authoritative_snapshot=snapshot,
+                deletion_identity_binding_version=(
+                    DELETE_IDENTITY_BINDING_VERSION if bind_provider_identity else None
+                ),
+                deleted_provider_asset_id_hash=(
+                    provider_asset_id_hash if bind_provider_identity else None
+                ),
+                deleted_provider_task_id_hash=(
+                    provider_task_id_hash if bind_provider_identity else None
+                ),
             )
 
         return self.registry.mutate(logical_job_id, operation).last_authoritative_snapshot
@@ -696,11 +751,33 @@ def _validate_record(record: DurableJobRecord) -> None:
         or record.updated_at_epoch_ms < record.created_at_epoch_ms
     ):
         raise DurableRecoveryError("SEP_RECOVERY_TIMESTAMP_INVALID")
+
+    proof_values = (
+        record.deleted_provider_asset_id_hash,
+        record.deleted_provider_task_id_hash,
+    )
     if record.state == "deleted":
         if record.deleted_at_epoch_ms is None:
             raise DurableRecoveryError("SEP_RECOVERY_DELETE_TIMESTAMP_MISSING")
-    elif record.deleted_at_epoch_ms is not None:
-        raise DurableRecoveryError("SEP_RECOVERY_DELETE_TIMESTAMP_INVALID")
+        if record.provider_asset_id is not None or record.provider_task_id is not None:
+            raise DurableRecoveryError("SEP_RECOVERY_DELETE_PROVIDER_ID_NOT_CLEARED")
+        if record.deletion_identity_binding_version is None:
+            if any(value is not None for value in proof_values):
+                raise DurableRecoveryError("SEP_RECOVERY_DELETE_IDENTITY_PROOF_INVALID")
+        elif record.deletion_identity_binding_version == DELETE_IDENTITY_BINDING_VERSION:
+            for value in proof_values:
+                if value is not None and (not isinstance(value, str) or not _SHA256.fullmatch(value)):
+                    raise DurableRecoveryError("SEP_RECOVERY_DELETE_IDENTITY_PROOF_INVALID")
+        else:
+            raise DurableRecoveryError("SEP_RECOVERY_DELETE_IDENTITY_PROOF_VERSION_INVALID")
+    else:
+        if record.deleted_at_epoch_ms is not None:
+            raise DurableRecoveryError("SEP_RECOVERY_DELETE_TIMESTAMP_INVALID")
+        if (
+            record.deletion_identity_binding_version is not None
+            or any(value is not None for value in proof_values)
+        ):
+            raise DurableRecoveryError("SEP_RECOVERY_DELETE_IDENTITY_PROOF_UNEXPECTED")
     _validate_snapshot(record.last_authoritative_snapshot)
 
 
@@ -802,6 +879,18 @@ def _optional_id(value: Any) -> str | None:
     if not isinstance(value, str) or not _SAFE_ID.fullmatch(value):
         raise DurableRecoveryError("SEP_RECOVERY_PROVIDER_ID_INVALID")
     return value
+
+
+def _require_provider_hash_matches(provider_id: str | None, expected_hash: str | None, code: str) -> None:
+    if provider_id is None:
+        if expected_hash is not None:
+            raise DurableRecoveryError(code)
+        return
+    if not isinstance(expected_hash, str) or not _SHA256.fullmatch(expected_hash):
+        raise DurableRecoveryError(code)
+    actual = hashlib.sha256(provider_id.encode("utf-8")).hexdigest()
+    if actual != expected_hash:
+        raise DurableRecoveryError(code)
 
 
 def _phase(job: Any) -> str:
