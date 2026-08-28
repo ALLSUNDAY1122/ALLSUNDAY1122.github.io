@@ -118,6 +118,43 @@ final class Lane2LibraryDescriptorRelativeIOTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: externalFile), sentinel)
     }
 
+    func testRemoveRegularFileDeletesRegularLeafThroughPinnedParent() throws {
+        let root = try makeRoot(prefix: "remove-regular")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let managed = root.appendingPathComponent("managed", isDirectory: true)
+        try FileManager.default.createDirectory(at: managed, withIntermediateDirectories: true)
+        let managedFile = managed.appendingPathComponent("record.json")
+        try Data("delete-me".utf8).write(to: managedFile)
+
+        let io = Lane2LibraryDescriptorRelativeIO(rootURL: root)
+        try io.removeRegularFile(at: managedFile)
+
+        XCTAssertFalse(FileManager.default.fileExists(atPath: managedFile.path))
+    }
+
+    func testRemoveRegularFileRejectsSymlinkLeafWithoutMutatingExternalTarget() throws {
+        let root = try makeRoot(prefix: "remove-regular-root")
+        let external = try makeRoot(prefix: "remove-regular-external")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+        let managed = root.appendingPathComponent("managed", isDirectory: true)
+        try FileManager.default.createDirectory(at: managed, withIntermediateDirectories: true)
+        let externalFile = external.appendingPathComponent("record.json")
+        let sentinel = Data("external-regular-delete-target-must-survive".utf8)
+        try sentinel.write(to: externalFile)
+        let managedFile = managed.appendingPathComponent("record.json")
+        try FileManager.default.createSymbolicLink(at: managedFile, withDestinationURL: externalFile)
+
+        let io = Lane2LibraryDescriptorRelativeIO(rootURL: root)
+        XCTAssertThrowsError(try io.removeRegularFile(at: managedFile))
+
+        XCTAssertEqual(try Data(contentsOf: externalFile), sentinel)
+        let attributes = try FileManager.default.attributesOfItem(atPath: managedFile.path)
+        XCTAssertEqual(attributes[.type] as? FileAttributeType, .typeSymbolicLink)
+    }
+
     func testRejectsPathOutsideManagedRoot() throws {
         let root = try makeRoot(prefix: "outside-root")
         let external = try makeRoot(prefix: "outside-external")
