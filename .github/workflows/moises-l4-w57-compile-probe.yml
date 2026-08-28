@@ -10,6 +10,7 @@ on:
       - 'tech-assets/moises-audio/Analysis/**'
       - 'tech-assets/moises-audio/iOS/HostCore/**'
       - 'tech-assets/moises-audio/Tests/MoisesAudioCoreTests/**'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -21,10 +22,32 @@ jobs:
       image: swift:6.0
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: moises/wp4-analysis-platform
+
       - name: Swift version
         run: swift --version
+
+      - name: Assert recovered Analysis package surface
+        working-directory: tech-assets/moises-audio
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('Package.swift').read_text()
+          required = [
+              'Analysis/AnalysisSignal.swift',
+              'Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift',
+              'Analysis/AnalysisPhysicalRealAudioBridgeConsumptionNormalizedAccess.swift',
+              'Analysis/AnalysisPhysicalRealAudioBridgeConsumptionLegacyBypassPolicy.swift',
+              'iOS/HostCore/AnalysisIOSBridgeDurabilityProbeCoordinator.swift',
+              'iOS/HostCore/AnalysisIOSBridgeNormalizedDurabilityProbeCoordinator.swift',
+          ]
+          missing = [path for path in required if f'"{path}"' not in text]
+          if missing:
+              raise SystemExit(f'W57 Analysis package surface incomplete: {missing}')
+          if '\n                "Analysis",' in text:
+              raise SystemExit('W57 invalid green-by-exclusion baseline: whole Analysis directory is excluded')
+          print('W57 Analysis package surface is enabled')
+          PY
+
       - name: Full recovered L4 SwiftPM
         working-directory: tech-assets/moises-audio
         run: swift test --parallel
