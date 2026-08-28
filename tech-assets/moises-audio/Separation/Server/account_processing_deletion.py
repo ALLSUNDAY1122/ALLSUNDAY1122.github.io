@@ -100,14 +100,7 @@ class AccountProcessingDeletionService:
         if not isinstance(logical_job_id, str) or not _LOGICAL_JOB_ID.fullmatch(logical_job_id):
             return _invalid_record_outcome("SEP_ACCOUNT_DELETE_LOGICAL_JOB_ID_INVALID")
         if getattr(record, "state", None) == "deleted":
-            return _JobOutcome(
-                logical_job_id,
-                "complete",
-                True,
-                "durable_tombstone",
-                "durable_tombstone",
-                True,
-            )
+            return self._verify_existing_tombstone(logical_job_id, record)
         try:
             self.privacy_retention.request_delete(
                 logical_job_id,
@@ -164,6 +157,32 @@ class AccountProcessingDeletionService:
                 False,
                 _safe_error_code(exc),
             )
+
+    def _verify_existing_tombstone(self, logical_job_id: str, record: Any) -> _JobOutcome:
+        privacy_record = self.privacy_retention.registry.get(logical_job_id)
+        if privacy_record is None:
+            return _JobOutcome(
+                logical_job_id,
+                "incomplete",
+                False,
+                "unknown",
+                "unknown",
+                True,
+                "SEP_ACCOUNT_DELETE_TOMBSTONE_PRIVACY_UNVERIFIED",
+            )
+        complete, asset_state, task_state = _privacy_complete(
+            privacy_record=privacy_record,
+            durable_record=record,
+        )
+        return _JobOutcome(
+            logical_job_id,
+            "complete" if complete else "incomplete",
+            bool(getattr(privacy_record, "local_delete_confirmed", False)),
+            asset_state,
+            task_state,
+            True,
+            None if complete else "SEP_ACCOUNT_DELETE_TOMBSTONE_PRIVACY_INCOMPLETE",
+        )
 
 
 def _privacy_complete(*, privacy_record: Any, durable_record: Any) -> tuple[bool, str, str]:
