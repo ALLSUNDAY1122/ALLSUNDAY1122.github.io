@@ -7,15 +7,19 @@ on:
     paths:
       - 'tech-assets/moises-audio/Playback/Sources/Lane3PhysicalEvidenceHandoffManifest.swift'
       - 'tech-assets/moises-audio/Playback/Sources/Lane3PhysicalEvidenceHandoffHostValidator.swift'
+      - 'tech-assets/moises-audio/Playback/Sources/Lane3PhysicalEvidenceHandoffSerializedPackageValidator.swift'
       - 'tech-assets/moises-audio/Playback/Tests/L3_HQ_PhysicalEvidenceHandoffManifestSelfTest.swift'
       - 'tech-assets/moises-audio/Playback/Tests/L3_HQ_PhysicalEvidenceHandoffHostValidatorSelfTest.swift'
+      - 'tech-assets/moises-audio/Playback/Tests/L3_HQ_PhysicalEvidenceHandoffSerializedPackageSelfTest.swift'
       - '.github/workflows/moises-hq-l3-handoff-manifest.yml'
   pull_request:
     paths:
       - 'tech-assets/moises-audio/Playback/Sources/Lane3PhysicalEvidenceHandoffManifest.swift'
       - 'tech-assets/moises-audio/Playback/Sources/Lane3PhysicalEvidenceHandoffHostValidator.swift'
+      - 'tech-assets/moises-audio/Playback/Sources/Lane3PhysicalEvidenceHandoffSerializedPackageValidator.swift'
       - 'tech-assets/moises-audio/Playback/Tests/L3_HQ_PhysicalEvidenceHandoffManifestSelfTest.swift'
       - 'tech-assets/moises-audio/Playback/Tests/L3_HQ_PhysicalEvidenceHandoffHostValidatorSelfTest.swift'
+      - 'tech-assets/moises-audio/Playback/Tests/L3_HQ_PhysicalEvidenceHandoffSerializedPackageSelfTest.swift'
       - '.github/workflows/moises-hq-l3-handoff-manifest.yml'
   workflow_dispatch:
 
@@ -31,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: swift:6.0
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -80,3 +84,25 @@ jobs:
             -o /tmp/l3-hq-handoff-host-validator-selftest
           /tmp/l3-hq-handoff-host-validator-selftest | tee /tmp/l3-hq-handoff-host-validator-selftest.out
           grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_HOST_VALIDATOR_SELF_TEST_PASS ' /tmp/l3-hq-handoff-host-validator-selftest.out
+
+      - name: Execute Lane 3 fully serialized handoff package self-test
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sources=(
+            Shared/DomainContracts.swift
+            DSP/Sources/*.swift
+            Playback/Sources/*.swift
+          )
+          swiftc \
+            -swift-version 6 \
+            -warnings-as-errors \
+            -strict-concurrency=complete \
+            -O \
+            "${sources[@]}" \
+            Playback/Tests/L3_HQ_PhysicalEvidenceHandoffSerializedPackageSelfTest.swift \
+            -o /tmp/l3-hq-handoff-serialized-package-selftest
+          /tmp/l3-hq-handoff-serialized-package-selftest | tee /tmp/l3-hq-handoff-serialized-package-selftest.out
+          grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_SERIALIZED_PACKAGE_SELF_TEST_PASS ' /tmp/l3-hq-handoff-serialized-package-selftest.out
