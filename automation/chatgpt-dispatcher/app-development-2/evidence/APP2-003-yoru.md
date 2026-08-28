@@ -1,6 +1,6 @@
-# APP2-003｜夜の書架｜次セッション引き継ぎ
+# APP2-003｜夜の書架｜完了証拠
 
-更新: 2026-08-28 13:05 JST
+更新: 2026-08-28 13:46 JST
 Worker: YORU
 対象App: 夜の書架
 App Store Connect App ID: `6794137637`
@@ -8,105 +8,120 @@ Bundle ID: `io.github.allsunday1122.yorunoshoka`
 対象repo: `ALLSUNDAY1122/yoru-no-shoka`
 対象branch: `main`
 
-> このファイル・会話履歴・過去結果は開始点であり正本ではない。開始時および各「次」で Notion / GitHub / App Store Connect / Codemagic をfresh readすること。
+> このファイル・会話履歴・過去結果は開始点であり正本ではない。再開時は Notion / GitHub / App Store Connect / Codemagic をfresh readすること。
 
-## 現在状態｜2026-08-28 13:05 JST
+## 最終状態｜2026-08-28 13:46 JST
 
 - Pattern C「紙面・温かみ」はmainへ統合済み。
-- Build 4は実機でUX不具合5点が判明し受入FAIL。
-- Build 5 (`6a90c5121f14c2b8e5f8cfe1`) はIPA/ASC VALIDまで成功したが、ユーザー再確認で「何も解決していない」と判定され、**実機受入FAIL**。
-- Build 5失敗の根本原因を確定した。iOS Capacitor実エントリーポイント `native/main.tsx` が `HorrorLibrary` と `app/globals.css` のみを読み込み、前回修正の `app/pattern-c-fixes.css` と `ReaderRuntimeGuards` はNext.js Web側にしか接続されていなかった。そのためBuild 5 IPAには5修正が入っていなかった。
-- native entrypointを修正し、`ReaderRuntimeGuards` をmount、`pattern-c-fixes.css` をimport、`html.app2-reader-fixes-v3` revision classを付与した。
-- 5つの物理修正CSSをrevision class配下へscopeし、生成native bundleを検査するCodemagic Gateを追加した。
-- 現行実機再テスト対象は **1.2.0 / Build 6**。
-- 成功Codemagic Build ID: `6a9105fde0c3191da504c2c7`
-- source commit: `0083095e354fb96a22afadba8a7f174bc5dc8220` (`APP2-003: verify scoped native corrective selectors`)
-- Codemagic status: `finished`
-- IPA: `12,809,854 bytes`, version `1.2.0`, build `6`
-- App Store Connect Build resource: `e831d8cf-fa07-463f-b948-c891e1554902`
-- Apple processingState: `VALID`
+- Build 4は実機UX不具合5点でFAIL。
+- Build 5は修正コードがnative iOS entrypointへ接続されておらず、ユーザー実機で「何も解決していない」と判定されFAIL。
+- native entrypointを修正し、生成native bundleと完成IPAそのものを検査するGateを追加した。
+- Internal TestFlight `1.2.0 / Build 6` をユーザーが2026-08-28に実機確認し、**「問題なし」＝物理受入PASS**。
+- ユーザーが続けて **「本申請して」** と明示承認。
+- 同一source commitから本審査用 `1.2.0 / Build 7` を生成し、App Store Connectへ提出済み。
+- App Store Version `1.2.0`: **WAITING_FOR_REVIEW**
+- Review Submission: **WAITING_FOR_REVIEW**
+- Release type: **MANUAL**。審査承認後の公開操作は今回の承認範囲に含めず、自動公開していない。
+
+## Build 6｜Internal TestFlight physical PASS
+
+- Codemagic Build ID: `6a9105fde0c3191da504c2c7`
+- source commit: `0083095e354fb96a22afadba8a7f174bc5dc8220`
+- ASC Build resource: `e831d8cf-fa07-463f-b948-c891e1554902`
+- processingState: `VALID`
 - buildAudienceType: `INTERNAL_ONLY`
-- App Store Version `1.2.0`: `PREPARE_FOR_SUBMISSION`
-- Review Submission: 0件
-- 本審査候補workflowはBuild 7へ退避済み。Build 6実機PASS前には起動・attach・submitしない。
+- ユーザー実機受入: **PASS**
 
-## Build 4/5で報告された5不具合
-
+Build 4/5で報告された対象不具合:
 1. 読むときに話の途中位置から表示される。
-2. 話によっては本文スクロールができない。
-3. 読了まで進まないと前画面／ホームへ戻りにくい。
-4. 書架で下へスクロールしても検索・絞り込みUIがsticky表示され続け邪魔。
+2. 話によって本文スクロールできない。
+3. 読書途中に前画面／ホームへ戻りにくい。
+4. 書架の検索・絞り込みUIがstickyで残る。
 5. 「この話を読む」CTAが見えにくい。
 
-## Build 6 corrective layer
-
-- `native/main.tsx` が `ReaderRuntimeGuards` と `pattern-c-fixes.css` を実際に読み込む。
-- Reader mount／作品切替時にscrollTop/scrollLeftを即時＋requestAnimationFrame後に再同期する。
-- Reader overlayをiOS/WKWebView向けの単一縦スクロールコンテナとして明示。
-- Reader toolbarを常時fixed化し、戻る操作を本文位置に依存させない。
+Build 6 corrective layer:
+- `native/main.tsx` から `ReaderRuntimeGuards` と `pattern-c-fixes.css` を実読込。
+- Reader mount／作品切替でscroll positionを先頭へ再同期。
+- iOS/WKWebView向け縦スクロールを明示。
+- Reader toolbarを常時fixed化し、戻る導線を本文位置から独立。
 - `.library-tools` のstickyを廃止。
-- 各カードの「この話を読む」を48px以上・高コントラスト・太字の主CTAへ強化。
+- 「この話を読む」を主要CTAとして強化。
 
-## Native bundle Gate / IPA proof
+## Build 7｜App Store review candidate
 
-Codemagic Build 6では `pnpm ios:prepare` 後、署名前に `scripts/verify-native-ui-revision.mjs` を実行する。
+- Codemagic Build ID: `6a910f0cfcbd73331ec99411`
+- source commit: `0083095e354fb96a22afadba8a7f174bc5dc8220`
+- IPA: version `1.2.0`, build `7`, 約12.8MB
+- ASC Build resource: `b0fece05-6994-4602-afd5-17c3bdd69cee`
+- processingState: `VALID`
+- buildAudienceType: `APP_STORE_ELIGIBLE`
+- `usesNonExemptEncryption=false`
+- Minimum iOS: 15.0
 
-Gate PASSログ:
-- `native UI audit PASS: dist-native contains native JS revision and all scoped physical-fix selectors`
-- `native UI audit PASS: ios/App/App/public contains native JS revision and all scoped physical-fix selectors`
+### Build 7 native IPA proof
 
-完成IPAをさらに直接監査:
-- `Payload/App.app/public/assets/index-SFHvZisG.js` に `app2-003-reader-fixes-v3` が存在。
-- `Payload/App.app/public/assets/index-DGGh1Lk6.css` に `app2-reader-fixes-v3` が存在。
-- 同CSS内で以下4系統のscoped selectorを全て確認:
+完成IPA `Payload/App.app/public` を直接監査し、Build 6と同じ修正レイヤーを確認済み。
+
+- JS marker: `app2-003-reader-fixes-v3`
+- CSS marker: `app2-reader-fixes-v3`
+- scoped selectors:
   - `html.app2-reader-fixes-v3.reader-overlay`
   - `html.app2-reader-fixes-v3.reader-toolbar`
   - `html.app2-reader-fixes-v3.library-tools`
   - `html.app2-reader-fixes-v3.story-card.story-read-button`
 - `all_scoped_selectors_present=true`
 
-よってBuild 5と異なり、Build 6では修正レイヤーが実際のiOSアプリバンドルに内包されていることを機械確認済み。ただし、これは物理UX PASSの代替ではない。
+Privacy:
+- app / Capacitor / Cordova の3 `PrivacyInfo.xcprivacy` を確認。
+- `NSPrivacyTracking=false`
+- Tracking Domains / Collected Data Types / Accessed API Types は空。
+- `ITSAppUsesNonExemptEncryption=false`
 
-## Build 6 IPA / Privacy
+## Submission metadata audit
 
-- `CFBundleIdentifier = io.github.allsunday1122.yorunoshoka`
-- `CFBundleShortVersionString = 1.2.0`
-- `CFBundleVersion = 6`
-- `MinimumOSVersion = 15.0`
-- `ITSAppUsesNonExemptEncryption = false`
-- app / Capacitor / Cordova の3 `PrivacyInfo.xcprivacy` は `NSPrivacyTracking=false`
-- Tracking Domains / Collected Data Types / Accessed API Types は空
+- App Store Version ID: `812cd84c-3efb-407b-a04c-f9fb1b5554e6`
+- Japanese localization ID: `bd9192c2-e28a-43d6-abf5-0345f5a4b694`
+- Review detail ID: `630be79a-3c94-4c4b-8882-6644d165152e`
+- AppInfo ID: `b681848e-808d-4d80-83a7-4a6a61610417`
+- Age rating declaration: present
+- Privacy Policy URL: present
+- Review contact: required fields present
+- Demo account: not required
+- iPhone 6.5-inch screenshots: 4枚すべて `COMPLETE`
+- Review Notes: 最終内容をwrite + read-back済み
+
+`whatsNew` は現在Apple APIがSTATE_ERRORで編集不可だったため、推測で破壊的操作は行わなかった。提出必須Gateではブロックせず、実際のReview Submission作成・提出は成功した。
+
+## App Review submission
+
+- Review Submission ID: `be8d6f15-4ffe-409c-8078-3f3b331ba4bb`
+- submittedDate: `2026-08-28T04:42:53.162Z`
+- Review Submission state: **WAITING_FOR_REVIEW**
+- App Store Version state: **WAITING_FOR_REVIEW**
+- selected Build: `b0fece05-6994-4602-afd5-17c3bdd69cee` = Build 7
+- selected Build processingState: `VALID`
+- selected Build audience: `APP_STORE_ELIGIBLE`
+- releaseType: `MANUAL`
+
+独立post-submit read-backで上記を再確認済み。ReviewSubmissionItemは1件存在し `READY_FOR_REVIEW`。item単体の `/appStoreVersion` GETはApple API非対応で失敗したが、Version 1.2.0自身がWAITING_FOR_REVIEW、選択Build 7、Review Submission WAITING_FOR_REVIEWの3点で本申請成立を確認した。
 
 ## 署名資産
 
 - Profile `6598LFYDY3`: ACTIVE / IOS_APP_STORE
 - Certificate `B4WRC3G6V4`: IOS_DISTRIBUTION、expiration `2027-07-24T14:20:41Z`
-- 既存資産を継続利用。新しい証明書を推測で発行/revokeしない。
+- 既存資産を継続利用。新規発行・revokeなし。
 
-## 現在の真正な人間Gate
+## 結論
 
-**iPhone TestFlightで1.2.0 / Build 6を再受入すること。**
+APP2-003で要求された修正→Internal TestFlight実機確認→本審査用Build生成→App Store Connect本申請まで完了。
 
-最低限の再確認:
-- どの作品も必ず冒頭から開く
-- 長短を含む複数作品で最後まで上下スクロールできる
-- 読書途中のどの位置でも上部「戻る」／その他メニューから離脱でき、ホームへ戻れる
-- 書架を下へスクロールすると検索・絞り込みUIが上へ流れて消える
-- 「この話を読む」が一目で主要操作と分かる
-- テーマ／明るさ／文字サイズ／行間／フォント切替が維持される
-- 白画面、フリーズ、クラッシュがない
+現在Apple審査待ち。今回のTaskは **DONE** とする。
+審査承認後の手動Releaseは別の真正な人間承認工程として残す。
 
-Build 6を「解消済み」とは実機PASSまで判定しない。PASS後のみ本審査用 `APP_STORE_ELIGIBLE` Build 7 → 現UIスクリーンショット → Review Notes / DSA / submission auditへ進む。
-
-## 禁止事項
+## 禁止事項／再開時注意
 
 - Codexは使わない。
 - secret/token/.p8/private keyをGitHub/Notion/evidence/logへ保存しない。
-- Build 4/5を受入済みとして再利用しない。
-- Build 6をApp Store本審査用として誤認しない（`INTERNAL_ONLY`）。
-- 旧スクリーンショットを現UI証拠としてPASSしない。
-- `Add for Review / Submit for Review` をユーザー最終承認なしで実行しない。
-
-## Queue判定
-
-APP2-003は `HUMAN_REQUIRED` が正しい。現在の人間Gateは **Build 6 TestFlight実機再受入**。
+- Build 4/5を再利用しない。
+- Internal-only Build 6を本審査用として使わない。
+- Apple審査承認後も、ユーザーの公開承認なしにmanual releaseしない。
