@@ -19,6 +19,6 @@ def main():
     with urllib.request.urlopen(req,timeout=30) as r: d=json.load(r)
     build_id=d.get('buildId') or d.get('id')
     if not build_id: raise SystemExit('build id missing')
-    result={'ok':True,'request_id':cmd.get('request_id'),'action':'build_yoru','app_id':APP_ID,'workflow_id':WORKFLOW_ID,'branch':BRANCH,'build_id':build_id,'version':'1.2.0','build_number':'5','review_submission':False}
+    result={'ok':True,'request_id':cmd.get('request_id'),'action':'build_yoru','app_id':APP_ID,'workflow_id':WORKFLOW_ID,'branch':BRANCH,'build_id':build_id,'version':'1.2.0','build_number':'6','review_submission':False}
     Path('release-result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
 if __name__=='__main__': main()
