@@ -1,5 +1,13 @@
 import Foundation
 
+private final class Lane2SegmentedBridgeFileManagerHandle: @unchecked Sendable {
+    let value: FileManager
+
+    init(_ value: FileManager) {
+        self.value = value
+    }
+}
+
 /// AW41 compatibility bridge between the canonical AW29 inventory contract and the segmented
 /// runtime. AW43 routes candidate preparation through the fully streaming traversal reader while
 /// preserving the existing two-phase cursor contract. AW44 routes steady-state mutation through
@@ -13,7 +21,7 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
 
     public let rootURL: URL
     public let recoveryDirectoryName: String
-    private let fileManager: FileManager
+    private let fileManagerHandle: Lane2SegmentedBridgeFileManagerHandle
 
     public init(
         rootURL: URL,
@@ -22,7 +30,11 @@ public struct Lane2ManagedArtifactInventorySegmentedBridge: Sendable {
     ) {
         self.rootURL = rootURL.standardizedFileURL
         self.recoveryDirectoryName = recoveryDirectoryName
-        self.fileManager = fileManager
+        self.fileManagerHandle = Lane2SegmentedBridgeFileManagerHandle(fileManager)
+    }
+
+    private var fileManager: FileManager {
+        fileManagerHandle.value
     }
 
     public func registerManaged(relativePaths: [String]) throws {
