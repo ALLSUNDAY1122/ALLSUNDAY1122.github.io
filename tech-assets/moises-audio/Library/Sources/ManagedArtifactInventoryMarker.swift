@@ -32,27 +32,22 @@ public extension Lane2ManagedArtifactInventory {
             .appendingPathComponent("ArtifactInventory", isDirectory: true)
             .appendingPathComponent("v1", isDirectory: true)
             .appendingPathComponent("Shards", isDirectory: true)
-
-        var isDirectory: ObjCBool = false
-        guard FileManager.default.fileExists(atPath: shards.path, isDirectory: &isDirectory) else {
-            return Lane2ManagedArtifactInventoryShardPreflight(
-                checkedShards: 0,
-                largestEncodedBytes: 0,
-                safeForAuthoritativeDecode: true
-            )
-        }
-        guard isDirectory.boolValue else {
-            return Lane2ManagedArtifactInventoryShardPreflight(
-                checkedShards: 0,
-                largestEncodedBytes: 0,
-                safeForAuthoritativeDecode: false
-            )
-        }
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+        let fileManager = FileManager.default
 
         do {
-            let entries = try FileManager.default.contentsOfDirectory(
+            guard try boundary.nodeExists(shards, fileManager: fileManager) else {
+                return Lane2ManagedArtifactInventoryShardPreflight(
+                    checkedShards: 0,
+                    largestEncodedBytes: 0,
+                    safeForAuthoritativeDecode: true
+                )
+            }
+            try boundary.requireDirectory(shards, fileManager: fileManager)
+
+            let entries = try fileManager.contentsOfDirectory(
                 at: shards,
-                includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
+                includingPropertiesForKeys: [.fileSizeKey],
                 options: [.skipsHiddenFiles]
             )
             guard entries.count <= Self.shardCount else {
@@ -76,16 +71,8 @@ public extension Lane2ManagedArtifactInventory {
                         safeForAuthoritativeDecode: false
                     )
                 }
-                let values = try url.resourceValues(
-                    forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]
-                )
-                guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                    return Lane2ManagedArtifactInventoryShardPreflight(
-                        checkedShards: entries.count,
-                        largestEncodedBytes: largest,
-                        safeForAuthoritativeDecode: false
-                    )
-                }
+                try boundary.requireExistingRegularFile(url, within: shards, fileManager: fileManager)
+                let values = try url.resourceValues(forKeys: [.fileSizeKey])
                 let bytes = max(values.fileSize ?? 0, 0)
                 largest = max(largest, bytes)
                 guard bytes > 0, bytes <= effectiveMaximum else {
@@ -116,12 +103,20 @@ public extension Lane2ManagedArtifactInventory {
             .appendingPathComponent("ArtifactInventory", isDirectory: true)
             .appendingPathComponent("v1", isDirectory: true)
             .appendingPathComponent("authoritative", isDirectory: false)
-        guard FileManager.default.fileExists(atPath: marker.path) else { return false }
-        guard let values = try? marker.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey]),
-              values.isRegularFile == true,
-              values.isSymbolicLink != true,
-              let data = try? Data(contentsOf: marker),
-              data == Data("lane2-managed-artifact-inventory-v1\n".utf8) else { return false }
-        return authoritativeShardPreflight().safeForAuthoritativeDecode
+        let boundary = LibraryManagedPathBoundary(rootURL: rootURL)
+        let fileManager = FileManager.default
+        do {
+            guard try boundary.nodeExists(marker, fileManager: fileManager) else { return false }
+            try boundary.requireExistingRegularFile(
+                marker,
+                within: marker.deletingLastPathComponent(),
+                fileManager: fileManager
+            )
+            let data = try Data(contentsOf: marker)
+            guard data == Data("lane2-managed-artifact-inventory-v1\n".utf8) else { return false }
+            return authoritativeShardPreflight().safeForAuthoritativeDecode
+        } catch {
+            return false
+        }
     }
 }
