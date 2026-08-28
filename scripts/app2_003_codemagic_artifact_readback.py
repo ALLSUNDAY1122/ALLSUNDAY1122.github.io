@@ -12,6 +12,7 @@ from pathlib import Path
 ALLOWED_BUILD_IDS = {
     "6a903f4e0b744f0115921f39",
     "6a910380c8427ec173c8e13f",
+    "6a9104bdc61a7f197e4ce9b6",
 }
 TARGET_SUFFIXES = (
     "/Info.plist",
@@ -21,6 +22,7 @@ SAFE_LOG_TERMS = (
     "native UI audit",
     "native-ui-gate",
     "marker missing",
+    "signature missing",
     "Error:",
     "error:",
 )
