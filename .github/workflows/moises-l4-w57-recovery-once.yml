@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  repair-and-validate:
+  validate-recovered-l4:
     runs-on: ubuntu-24.04
     container: swift:6.0
     steps:
@@ -20,23 +20,17 @@ jobs:
           ref: moises/wp4-analysis-platform
           fetch-depth: 0
 
-      - name: Install patch helper
-        run: apt-get update && apt-get install -y python3
-
-      - name: Apply exact Swift 6 compile repairs
-        run: python3 automation/chatgpt-dispatcher/moises-equivalence/recovery/l4-w57-recover.py
-
       - name: Remove one-shot recovery machinery
         run: |
           rm .github/workflows/moises-l4-w57-recovery-once.yml
           rm automation/chatgpt-dispatcher/moises-equivalence/recovery/l4-w57-recover.py
 
-      - name: Commit repair before validation
+      - name: Commit recovered source before validation
         run: |
           git config user.name 'chatgpt-l4-recovery'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'moises(w57): repair epoch45 Swift 6 compile blockers'
+          git commit -m 'moises(w57): retire one-shot recovery runner'
           git push origin HEAD:moises/wp4-analysis-platform
 
       - name: Validate exact worker package under Swift 6.0.3
