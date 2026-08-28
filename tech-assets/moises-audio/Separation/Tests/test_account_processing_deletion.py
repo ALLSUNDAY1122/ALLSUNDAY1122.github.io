@@ -195,6 +195,38 @@ class AccountProcessingDeletionServiceTests(unittest.TestCase):
         self.assertEqual(privacy.calls, [])
         self.assertEqual(durable.marked, [])
 
+    def test_existing_durable_tombstone_without_privacy_evidence_fails_closed(self):
+        logical = "b" * 32
+        durable = DurableService([job(logical, asset=None, task=None, state="deleted")])
+        privacy = PrivacyService()
+        result = AccountProcessingDeletionService(
+            privacy_retention=privacy, durable_reconnect=durable
+        ).delete_project(PROJECT)
+        self.assertEqual(result["state"], "INCOMPLETE")
+        self.assertEqual(privacy.calls, [])
+        self.assertEqual(
+            result["jobs"][0]["stableErrorCode"],
+            "SEP_ACCOUNT_DELETE_TOMBSTONE_PRIVACY_UNVERIFIED",
+        )
+
+    def test_existing_durable_tombstone_requires_terminal_privacy_evidence(self):
+        logical = "c" * 32
+        durable = DurableService([job(logical, asset=None, task=None, state="deleted")])
+        privacy = PrivacyService()
+        privacy.registry.records[logical] = types.SimpleNamespace(
+            local_delete_confirmed=True,
+            provider_asset_id_hash="hash-a",
+            provider_task_id_hash="hash-t",
+            provider_asset_delete_state="not_found",
+            provider_task_delete_state="confirmed",
+        )
+        result = AccountProcessingDeletionService(
+            privacy_retention=privacy, durable_reconnect=durable
+        ).delete_project(PROJECT)
+        self.assertEqual(result["state"], "COMPLETE")
+        self.assertTrue(result["jobs"][0]["durableTombstoned"])
+        self.assertIsNone(result["jobs"][0]["stableErrorCode"])
+
 
 if __name__ == "__main__":
     unittest.main()
