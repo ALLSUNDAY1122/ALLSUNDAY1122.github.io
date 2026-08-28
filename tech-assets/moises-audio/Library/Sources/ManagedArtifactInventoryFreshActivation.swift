@@ -12,14 +12,21 @@ public extension Lane2ManagedArtifactInventory {
             String(normalized.split(separator: "/", omittingEmptySubsequences: false)[0])
         ) else { return false }
 
-        let fileManager = FileManager.default
+        let fileManager = inventoryFileManager
+        let authority = Lane2ManagedArtifactInventoryPathAuthority(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName,
+            fileManager: fileManager
+        )
         let keys: Set<URLResourceKey> = [.isRegularFileKey, .isDirectoryKey, .isSymbolicLinkKey]
         var sawTarget = false
         for rootName in Lane2ManagedArtifactInventory.managedRootNames {
-            let managedRoot = rootURL.appendingPathComponent(rootName, isDirectory: true)
-            var isDirectory: ObjCBool = false
-            guard fileManager.fileExists(atPath: managedRoot.path, isDirectory: &isDirectory) else { continue }
-            guard isDirectory.boolValue else { return false }
+            let managedRoot = authority.managedRootURL(rootName)
+            do {
+                guard try authority.requireManagedRootIfPresent(rootName) else { continue }
+            } catch {
+                throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(rootName)
+            }
             var enumerationFailed = false
             guard let enumerator = fileManager.enumerator(
                 at: managedRoot,
