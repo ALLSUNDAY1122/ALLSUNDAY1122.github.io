@@ -74,10 +74,10 @@ private struct Lane2BoundedOwnershipShardURLSlice: Sendable {
 
 /// Durable ownership evidence written before project tombstoning. AW32 stores current records in
 /// deterministic shard directories and keeps a tiny active-shard manifest, so ownership-only recovery
-/// no longer walks every record filename on each launch. Pre-AW32 flat records are migrated in bounded
-/// slices and journal-backed records remain directly addressable by project UUID throughout migration.
-/// AW45 additionally bounds the hot-path directory enumeration inside each active shard, preventing a
-/// pathologically concentrated shard directory from being fully materialized during launch recovery.
+/// no longer walks every record filename on each launch. AW45 bounds per-shard hot-path enumeration.
+/// HQ path-authority hardening additionally rejects symlink, dangling-link and non-directory ancestors
+/// before record/manifest enumeration, persistence or deletion. Validation and I/O remain separate
+/// syscalls; descriptor-level TOCTOU closure is not claimed.
 public struct Lane2DeletionOwnershipIndex: Sendable {
     public static let shardCount = 256
     public static let defaultShardVisitLimit = 4
@@ -92,50 +92,53 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
     }
 
     public func ensureLayout() throws {
-        try FileManager.default.createDirectory(
-            at: ownershipDirectoryURL,
-            withIntermediateDirectories: true
-        )
-        try FileManager.default.createDirectory(
-            at: shardDirectoryRootURL,
-            withIntermediateDirectories: true
-        )
+        try pathAuthority.ensureLayout()
     }
 
     @discardableResult
     public func persist(_ record: Lane2DeletionOwnershipRecord) throws -> URL {
         try ensureLayout()
         let legacyURL = legacyRecordURL(projectUUID: record.projectUUID)
+        let shardIndex = Self.shardIndex(for: record.projectUUID)
         let shardedURL = shardedRecordURL(projectUUID: record.projectUUID)
 
-        if FileManager.default.fileExists(atPath: legacyURL.path) {
+        if try pathAuthority.recordExists(legacyURL) {
             let existing = try loadRecord(at: legacyURL, expectedProjectUUID: record.projectUUID)
             try requireSameIdentity(existing, record)
         }
-        if FileManager.default.fileExists(atPath: shardedURL.path) {
+        if try pathAuthority.recordExists(shardedURL, shardIndex: shardIndex) {
             let existing = try loadRecord(at: shardedURL, expectedProjectUUID: record.projectUUID)
             try requireSameIdentity(existing, record)
-            try activateShard(Self.shardIndex(for: record.projectUUID))
-            if FileManager.default.fileExists(atPath: legacyURL.path) {
+            try activateShard(shardIndex)
+            if try pathAuthority.recordExists(legacyURL) {
+                try pathAuthority.requireExistingRegularFile(
+                    legacyURL,
+                    within: ownershipDirectoryURL
+                )
                 try FileManager.default.removeItem(at: legacyURL)
             }
             return shardedURL
         }
 
         let written = try persistSharded(record)
-        if FileManager.default.fileExists(atPath: legacyURL.path) {
+        if try pathAuthority.recordExists(legacyURL) {
+            try pathAuthority.requireExistingRegularFile(
+                legacyURL,
+                within: ownershipDirectoryURL
+            )
             try FileManager.default.removeItem(at: legacyURL)
         }
         return written
     }
 
     public func record(projectUUID: UUID) throws -> Lane2DeletionOwnershipRecord? {
+        let shardIndex = Self.shardIndex(for: projectUUID)
         let shardedURL = shardedRecordURL(projectUUID: projectUUID)
         let legacyURL = legacyRecordURL(projectUUID: projectUUID)
-        let sharded = FileManager.default.fileExists(atPath: shardedURL.path)
+        let sharded = try pathAuthority.recordExists(shardedURL, shardIndex: shardIndex)
             ? try loadRecord(at: shardedURL, expectedProjectUUID: projectUUID)
             : nil
-        let legacy = FileManager.default.fileExists(atPath: legacyURL.path)
+        let legacy = try pathAuthority.recordExists(legacyURL)
             ? try loadRecord(at: legacyURL, expectedProjectUUID: projectUUID)
             : nil
         if let sharded, let legacy {
@@ -151,8 +154,7 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
         var byID: [UUID: Lane2DeletionOwnershipRecord] = [:]
         for url in try legacyDirectRecordURLs() {
             let expected = try projectUUID(fromRecordURL: url)
-            let record = try loadRecord(at: url, expectedProjectUUID: expected)
-            byID[expected] = record
+            byID[expected] = try loadRecord(at: url, expectedProjectUUID: expected)
         }
         for shard in try loadActiveShards() {
             for url in try shardRecordURLs(shardIndex: shard) {
@@ -173,10 +175,6 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
         }
     }
 
-    /// AW32/AW45 bounded recovery selection. Up to `limit` legacy flat records are first relocated
-    /// into shards without scanning the entire flat directory. Remaining capacity is filled from at
-    /// most four active shards, and each visited shard inspects at most 1,024 entries plus one
-    /// non-materialized sentinel. Journal-backed IDs are excluded because CrashSafe reads them directly.
     public func pendingRecordSlice(
         limit: Int,
         excludingProjectUUIDs: Set<UUID> = []
@@ -218,26 +216,42 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
     public func remove(projectUUID: UUID) throws {
         try ensureLayout()
         let legacyURL = legacyRecordURL(projectUUID: projectUUID)
-        if FileManager.default.fileExists(atPath: legacyURL.path) {
+        if try pathAuthority.recordExists(legacyURL) {
+            try pathAuthority.requireExistingRegularFile(
+                legacyURL,
+                within: ownershipDirectoryURL
+            )
             try FileManager.default.removeItem(at: legacyURL)
         }
 
         let shardIndex = Self.shardIndex(for: projectUUID)
         let shardedURL = shardedRecordURL(projectUUID: projectUUID)
-        if FileManager.default.fileExists(atPath: shardedURL.path) {
+        if try pathAuthority.recordExists(shardedURL, shardIndex: shardIndex) {
+            try pathAuthority.requireExistingRegularFile(
+                shardedURL,
+                within: shardDirectoryURL(shardIndex)
+            )
             try FileManager.default.removeItem(at: shardedURL)
         }
         try retireShardIfEmpty(shardIndex)
     }
 
     public var isLegacyScanComplete: Bool {
-        FileManager.default.fileExists(atPath: legacyScanMarkerURL.path)
+        (try? pathAuthority.metadataExists(legacyScanMarkerURL)) == true
     }
 
     public func markLegacyScanComplete() throws {
         try ensureLayout()
+        _ = try pathAuthority.requireRegularFileOrMissing(
+            legacyScanMarkerURL,
+            within: ownershipDirectoryURL
+        )
         try Data("L2-AW22 legacy tombstone scan complete\n".utf8)
             .write(to: legacyScanMarkerURL, options: [.atomic])
+        try pathAuthority.requireExistingRegularFile(
+            legacyScanMarkerURL,
+            within: ownershipDirectoryURL
+        )
     }
 
     public static func shardIndex(for projectUUID: UUID) -> Int {
@@ -260,9 +274,11 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
             let expected = try projectUUID(fromRecordURL: url)
             let record = try loadRecord(at: url, expectedProjectUUID: expected)
             _ = try persistSharded(record)
-            if FileManager.default.fileExists(atPath: url.path) {
-                try FileManager.default.removeItem(at: url)
-            }
+            try pathAuthority.requireExistingRegularFile(
+                url,
+                within: ownershipDirectoryURL
+            )
+            try FileManager.default.removeItem(at: url)
             migrated.append(record)
         }
         return Lane2LegacyOwnershipMigrationSlice(records: migrated, hasMore: hasMore)
@@ -316,7 +332,7 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
     private func persistSharded(_ record: Lane2DeletionOwnershipRecord) throws -> URL {
         let shardIndex = Self.shardIndex(for: record.projectUUID)
         let url = shardedRecordURL(projectUUID: record.projectUUID)
-        if FileManager.default.fileExists(atPath: url.path) {
+        if try pathAuthority.recordExists(url, shardIndex: shardIndex) {
             let existing = try loadRecord(at: url, expectedProjectUUID: record.projectUUID)
             try requireSameIdentity(existing, record)
             return url
@@ -325,12 +341,21 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
         // The active-shard signal is durable before the record write. A crash in this gap can only
         // leave an empty active shard; it cannot leave a recovery record that the manifest hides.
         try activateShard(shardIndex)
-        try FileManager.default.createDirectory(
-            at: shardDirectoryURL(shardIndex),
-            withIntermediateDirectories: true
-        )
+        try pathAuthority.ensureShardDirectory(shardIndex)
+        if try pathAuthority.requireRegularFileOrMissing(
+            url,
+            within: shardDirectoryURL(shardIndex)
+        ) {
+            let existing = try loadRecord(at: url, expectedProjectUUID: record.projectUUID)
+            try requireSameIdentity(existing, record)
+            return url
+        }
         let data = try Self.encoder.encode(record)
         try data.write(to: url, options: [.atomic])
+        try pathAuthority.requireExistingRegularFile(
+            url,
+            within: shardDirectoryURL(shardIndex)
+        )
         return url
     }
 
@@ -343,7 +368,7 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
 
     private func retireShardIfEmpty(_ shardIndex: Int) throws {
         let directory = shardDirectoryURL(shardIndex)
-        guard FileManager.default.fileExists(atPath: directory.path) else {
+        guard try pathAuthority.requireShardDirectoryIfPresent(shardIndex) else {
             var active = try loadActiveShards()
             if active.removeAllOccurrences(of: shardIndex) {
                 try writeActiveShards(active)
@@ -351,8 +376,6 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
             return
         }
 
-        // AW45 emptiness check is streaming: validate the first visible record and stop. A non-empty
-        // shard never needs its remaining filenames materialized merely to decide that it cannot retire.
         if try shardContainsAnyValidatedRecord(shardIndex: shardIndex) {
             return
         }
@@ -361,12 +384,15 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
         if active.removeAllOccurrences(of: shardIndex) {
             try writeActiveShards(active)
         }
-        try? FileManager.default.removeItem(at: directory)
+        if try pathAuthority.requireShardDirectoryIfPresent(shardIndex) {
+            try? FileManager.default.removeItem(at: directory)
+        }
     }
 
     private func loadActiveShards() throws -> [Int] {
         let url = activeShardsURL
-        guard FileManager.default.fileExists(atPath: url.path) else {
+        guard try pathAuthority.metadataExists(url) else {
+            guard try pathAuthority.requireShardRootIfPresent() else { return [] }
             let entries = try FileManager.default.contentsOfDirectory(
                 at: shardDirectoryRootURL,
                 includingPropertiesForKeys: nil,
@@ -378,10 +404,6 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
             return []
         }
         do {
-            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-            guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
-            }
             let manifest = try Self.decoder.decode(
                 Lane2DeletionOwnershipActiveShards.self,
                 from: Data(contentsOf: url)
@@ -413,10 +435,21 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
             shardIndices: normalized
         )
         let data = try Self.encoder.encode(manifest)
+        _ = try pathAuthority.requireRegularFileOrMissing(
+            activeShardsURL,
+            within: ownershipDirectoryURL,
+            label: ".active-shards-v2.json"
+        )
         try data.write(to: activeShardsURL, options: [.atomic])
+        try pathAuthority.requireExistingRegularFile(
+            activeShardsURL,
+            within: ownershipDirectoryURL,
+            label: ".active-shards-v2.json"
+        )
     }
 
     private func boundedLegacyRecordURLs(limit: Int) throws -> [URL] {
+        guard try pathAuthority.requireOwnershipDirectoryIfPresent() else { return [] }
         let keys: [URLResourceKey] = [.isRegularFileKey, .isSymbolicLinkKey]
         var enumerationFailed = false
         guard let enumerator = FileManager.default.enumerator(
@@ -434,10 +467,11 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
         urls.reserveCapacity(limit)
         for case let url as URL in enumerator {
             guard url.pathExtension == "json" else { continue }
-            let values = try url.resourceValues(forKeys: Set(keys))
-            guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
-            }
+            try pathAuthority.requireExistingRegularFile(
+                url,
+                within: ownershipDirectoryURL,
+                label: url.lastPathComponent
+            )
             _ = try projectUUID(fromRecordURL: url)
             urls.append(url)
             if urls.count >= limit { break }
@@ -448,17 +482,13 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
         return urls
     }
 
-    /// AW45 hot-path scanner. It never constructs a shard-wide filename array. The first
-    /// `defaultShardDirectoryScanBudget` visible entries are validated, exclusion-filtered and kept
-    /// only until `limit` eligible candidates are available. One additional sentinel is inspected only
-    /// to report deferred work; its bytes/metadata are not loaded.
     private func boundedShardRecordURLSlice(
         shardIndex: Int,
         limit: Int,
         excludingProjectUUIDs: Set<UUID>
     ) throws -> Lane2BoundedOwnershipShardURLSlice {
         let directory = shardDirectoryURL(shardIndex)
-        guard FileManager.default.fileExists(atPath: directory.path) else {
+        guard try pathAuthority.requireShardDirectoryIfPresent(shardIndex) else {
             return Lane2BoundedOwnershipShardURLSlice(items: [], hasMore: false, directoryWasEmpty: true)
         }
         let keys: [URLResourceKey] = [.isRegularFileKey, .isSymbolicLinkKey]
@@ -490,10 +520,11 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
             guard url.pathExtension == "json" else {
                 throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
             }
-            let values = try url.resourceValues(forKeys: Set(keys))
-            guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
-            }
+            try pathAuthority.requireExistingRegularFile(
+                url,
+                within: directory,
+                label: url.lastPathComponent
+            )
             let projectUUID = try projectUUID(fromRecordURL: url)
             guard Self.shardIndex(for: projectUUID) == shardIndex else {
                 throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
@@ -519,6 +550,7 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
 
     private func shardContainsAnyValidatedRecord(shardIndex: Int) throws -> Bool {
         let directory = shardDirectoryURL(shardIndex)
+        guard try pathAuthority.requireShardDirectoryIfPresent(shardIndex) else { return false }
         let keys: [URLResourceKey] = [.isRegularFileKey, .isSymbolicLinkKey]
         var enumerationFailed = false
         guard let enumerator = FileManager.default.enumerator(
@@ -541,10 +573,11 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
         guard let url = value as? URL, url.pathExtension == "json" else {
             throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(String(format: "%02x", shardIndex))
         }
-        let values = try url.resourceValues(forKeys: Set(keys))
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
-            throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
-        }
+        try pathAuthority.requireExistingRegularFile(
+            url,
+            within: directory,
+            label: url.lastPathComponent
+        )
         let projectUUID = try projectUUID(fromRecordURL: url)
         guard Self.shardIndex(for: projectUUID) == shardIndex else {
             throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
@@ -553,17 +586,19 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
     }
 
     private func legacyDirectRecordURLs() throws -> [URL] {
-        try FileManager.default.contentsOfDirectory(
+        guard try pathAuthority.requireOwnershipDirectoryIfPresent() else { return [] }
+        return try FileManager.default.contentsOfDirectory(
             at: ownershipDirectoryURL,
             includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey],
             options: [.skipsHiddenFiles]
         )
         .filter { $0.pathExtension == "json" }
         .map { url in
-            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-            guard values.isSymbolicLink != true, values.isRegularFile == true else {
-                throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
-            }
+            try pathAuthority.requireExistingRegularFile(
+                url,
+                within: ownershipDirectoryURL,
+                label: url.lastPathComponent
+            )
             _ = try projectUUID(fromRecordURL: url)
             return url
         }
@@ -571,7 +606,7 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
 
     private func shardRecordURLs(shardIndex: Int) throws -> [URL] {
         let directory = shardDirectoryURL(shardIndex)
-        guard FileManager.default.fileExists(atPath: directory.path) else { return [] }
+        guard try pathAuthority.requireShardDirectoryIfPresent(shardIndex) else { return [] }
         return try FileManager.default.contentsOfDirectory(
             at: directory,
             includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey],
@@ -581,10 +616,11 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
             guard url.pathExtension == "json" else {
                 throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
             }
-            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-            guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
-            }
+            try pathAuthority.requireExistingRegularFile(
+                url,
+                within: directory,
+                label: url.lastPathComponent
+            )
             let projectUUID = try projectUUID(fromRecordURL: url)
             guard Self.shardIndex(for: projectUUID) == shardIndex else {
                 throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
@@ -604,14 +640,19 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
         }
     }
 
+    private var pathAuthority: Lane2DeletionOwnershipPathAuthority {
+        Lane2DeletionOwnershipPathAuthority(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName
+        )
+    }
+
     private var ownershipDirectoryURL: URL {
-        rootURL
-            .appendingPathComponent(recoveryDirectoryName, isDirectory: true)
-            .appendingPathComponent("DeleteOwnership", isDirectory: true)
+        pathAuthority.ownershipDirectoryURL
     }
 
     private var shardDirectoryRootURL: URL {
-        ownershipDirectoryURL.appendingPathComponent("Shards", isDirectory: true)
+        pathAuthority.shardDirectoryRootURL
     }
 
     private var activeShardsURL: URL {
@@ -632,21 +673,11 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
     }
 
     private func shardDirectoryURL(_ shardIndex: Int) -> URL {
-        shardDirectoryRootURL.appendingPathComponent(
-            String(format: "%02x", shardIndex),
-            isDirectory: true
-        )
+        pathAuthority.shardDirectoryURL(shardIndex)
     }
 
     private func ensureLayoutDirectoriesOnly() throws {
-        try FileManager.default.createDirectory(
-            at: ownershipDirectoryURL,
-            withIntermediateDirectories: true
-        )
-        try FileManager.default.createDirectory(
-            at: shardDirectoryRootURL,
-            withIntermediateDirectories: true
-        )
+        try pathAuthority.ensureLayout()
     }
 
     private func projectUUID(fromRecordURL url: URL) throws -> UUID {
@@ -664,10 +695,11 @@ public struct Lane2DeletionOwnershipIndex: Sendable {
         expectedProjectUUID: UUID
     ) throws -> Lane2DeletionOwnershipRecord {
         do {
-            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-            guard values.isSymbolicLink != true, values.isRegularFile == true else {
-                throw Lane2DeletionOwnershipIndexFailure.recordCorrupt(url.lastPathComponent)
-            }
+            try pathAuthority.requireExistingRegularFile(
+                url,
+                within: url.deletingLastPathComponent(),
+                label: url.lastPathComponent
+            )
             let record = try Self.decoder.decode(
                 Lane2DeletionOwnershipRecord.self,
                 from: Data(contentsOf: url)
