@@ -50,7 +50,7 @@ jobs:
           fi
           echo 'W57 Analysis package surface is enabled'
 
-      - name: Apply exact Swift 6 test-source repairs
+      - name: Apply exact W57 compile and namespace repairs
         working-directory: tech-assets/moises-audio
         shell: bash
         run: |
@@ -98,12 +98,8 @@ jobs:
           try repair(
               "Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift",
               old: "w44CheckpointCertificateRootSHA256: checkpointRoot ?? checkpointCertificate.declaredCertificateRootSHA256",
-              new: "w44CheckpointCertificateRootSHA256: try (checkpointRoot ?? checkpointCertificate.declaredCheckpointRootSHA256)"
+              new: "w44CheckpointCertificateRootSHA256: try (checkpointRoot ?? checkpointCertificate.declaredCertificateRootSHA256)"
           )
-          SWIFT
-          # Correct the property-name replacement above to preserve the existing API name.
-          sed -i 's/declaredCheckpointRootSHA256/declaredCertificateRootSHA256/' /tmp/l4-w57-repair.swift
-          cat >> /tmp/l4-w57-repair.swift <<'SWIFT'
           try repair(
               "Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift",
               old: "w42AnchorReceiptRootSHA256: anchorRoot ?? anchorReceipt.declaredAnchorReceiptRootSHA256",
@@ -124,11 +120,74 @@ jobs:
               old: "events.last?.endSeconds",
               new: "events.last?.endSeconds ?? .nan"
           )
+
+          let durableOld = """
+              targetPublished=true; try injectIfRequested(injectedFault,target:target,point:.afterPublishBeforeDirectorySync,preserveTemporary:&preserveTemporary)
+              try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.unlinkExpectedEntry(name:tempName,expectedIdentity:tempIdentity,in:directory); preserveTemporary=true; try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.synchronizeDirectory(directory); try injectIfRequested(injectedFault,target:target,point:.afterDirectorySync,preserveTemporary:&preserveTemporary)
+          """
+          let durableNew = """
+              guard tempIdentity.linkCount < UInt64.max,
+                    let linkedTempIdentity=try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.entryIdentity(name:tempName,in:directory),
+                    linkedTempIdentity.device==tempIdentity.device,
+                    linkedTempIdentity.inode==tempIdentity.inode,
+                    linkedTempIdentity.mode==tempIdentity.mode,
+                    linkedTempIdentity.size==tempIdentity.size,
+                    linkedTempIdentity.linkCount==tempIdentity.linkCount+1,
+                    let linkedDestinationIdentity=try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.entryIdentity(name:destinationName,in:directory),
+                    linkedDestinationIdentity==linkedTempIdentity else { throw AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError.namespaceSubstitutionDetected }
+              targetPublished=true; try injectIfRequested(injectedFault,target:target,point:.afterPublishBeforeDirectorySync,preserveTemporary:&preserveTemporary)
+              try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.unlinkExpectedEntry(name:tempName,expectedIdentity:linkedTempIdentity,in:directory)
+              guard let publishedIdentity=try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.entryIdentity(name:destinationName,in:directory),
+                    publishedIdentity.device==tempIdentity.device,
+                    publishedIdentity.inode==tempIdentity.inode,
+                    publishedIdentity.mode==tempIdentity.mode,
+                    publishedIdentity.size==tempIdentity.size,
+                    publishedIdentity.linkCount==tempIdentity.linkCount else { throw AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError.namespaceSubstitutionDetected }
+              preserveTemporary=true; try AnalysisPhysicalRealAudioBridgeConsumptionNamespaceHardening.synchronizeDirectory(directory); try injectIfRequested(injectedFault,target:target,point:.afterDirectorySync,preserveTemporary:&preserveTemporary)
+          """
+          try repair(
+              "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift",
+              old: durableOld,
+              new: durableNew
+          )
+
+          let secureOld = """
+                      } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError {
+                          throw error
+                      } catch {
+                          throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
+                      }
+          """
+          let secureNew = """
+                      } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError {
+                          throw error
+                      } catch let error as AnalysisPhysicalRealAudioBridgeConsumptionDurablePublicationError {
+                          switch error {
+                          case .pathOutsideLedgerRoot:
+                              throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.pathOutsideLedgerRoot
+                          case .symbolicLinkRejected:
+                              throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.symbolicLinkRejected
+                          case .nonRegularTargetRejected:
+                              throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.nonRegularFileRejected
+                          case .oversizedFile:
+                              throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.oversizedFile
+                          default:
+                              throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
+                          }
+                      } catch {
+                          throw AnalysisPhysicalRealAudioBridgeConsumptionSecureStoreError.unsafeFilesystemTopology
+                      }
+          """
+          try repair(
+              "Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift",
+              old: secureOld,
+              new: secureNew
+          )
           SWIFT
           swift /tmp/l4-w57-repair.swift
           git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
           git diff --check
-          git diff -- Tests/MoisesAudioCoreTests | sed -n '1,260p'
+          git diff -- Analysis Tests/MoisesAudioCoreTests | sed -n '1,420p'
 
       - name: Compile all recovered L4 tests
         working-directory: tech-assets/moises-audio
@@ -141,7 +200,18 @@ jobs:
           cat l4-w57-compile.log
           exit "$status"
 
-      - name: Persist compile-proven Swift 6 repairs
+      - name: Validate W53-W56 namespace regression cluster
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set +e
+          swift test --filter 'AnalysisPhysicalRealAudioBridgeConsumption(DurablePublication|ConcurrentStore|NormalizedAccess|NormalizedConcurrentStore|NormalizedCustodyCertificate|QuiescentCustody|SecureStore|LegacyBypassContainment)Tests' > l4-w57-namespace.log 2>&1
+          status=$?
+          set -e
+          cat l4-w57-namespace.log
+          exit "$status"
+
+      - name: Persist compile-and-regression-proven W57 repairs
         shell: bash
         run: |
           set -euo pipefail
@@ -149,12 +219,14 @@ jobs:
           git config user.name 'chatgpt-l4-recovery'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add \
+            tech-assets/moises-audio/Analysis/AnalysisPhysicalRealAudioBridgeConsumptionDurablePublication.swift \
+            tech-assets/moises-audio/Analysis/AnalysisPhysicalRealAudioBridgeConsumptionSecureFilesystem.swift \
             tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisRealAudioParityAdjudicationTests.swift \
             tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisChunkedInputPipelineTests.swift \
             tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift \
             tech-assets/moises-audio/Tests/MoisesAudioCoreTests/ChordVocabularyHardeningTests.swift
           if ! git diff --cached --quiet; then
-            git commit -m 'fix(moises-l4): persist W57 Swift 6 test compatibility'
+            git commit -m 'fix(moises-l4): repair W53 namespace publication invariants'
             git push origin HEAD:moises/wp4-analysis-platform
           fi
 
@@ -175,6 +247,7 @@ jobs:
           name: l4-w57-swiftpm-diagnostics
           path: |
             tech-assets/moises-audio/l4-w57-compile.log
+            tech-assets/moises-audio/l4-w57-namespace.log
             tech-assets/moises-audio/l4-w57-swiftpm.log
           if-no-files-found: warn
           retention-days: 7
