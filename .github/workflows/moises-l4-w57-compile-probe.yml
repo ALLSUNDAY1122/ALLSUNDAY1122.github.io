@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   swiftpm:
@@ -50,6 +50,114 @@ jobs:
           fi
           echo 'W57 Analysis package surface is enabled'
 
+      - name: Apply exact Swift 6 test-source repairs
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/l4-w57-repair.swift <<'SWIFT'
+          import Foundation
+
+          enum RepairError: Error, CustomStringConvertible {
+              case anchorMissing(String)
+              var description: String {
+                  switch self {
+                  case .anchorMissing(let path): return "repair anchor missing: \(path)"
+                  }
+              }
+          }
+
+          func repair(_ path: String, old: String, new: String) throws {
+              let url = URL(fileURLWithPath: path)
+              let text = try String(contentsOf: url, encoding: .utf8)
+              if text.contains(old) {
+                  try text.replacingOccurrences(of: old, with: new).write(to: url, atomically: true, encoding: .utf8)
+                  print("repaired \(path)")
+              } else if text.contains(new) {
+                  print("already repaired \(path)")
+              } else {
+                  throw RepairError.anchorMissing(path)
+              }
+          }
+
+          try repair(
+              "Tests/MoisesAudioCoreTests/AnalysisRealAudioParityAdjudicationTests.swift",
+              old: "expectedCaptureSetSHA256: overrideCaptureRoot ?? (try AnalysisAnalysisParityAdjudicationRoot.stableSHA256(captureSet))",
+              new: "expectedCaptureSetSHA256: try (overrideCaptureRoot ?? AnalysisAnalysisParityAdjudicationRoot.stableSHA256(captureSet))"
+          )
+          try repair(
+              "Tests/MoisesAudioCoreTests/AnalysisChunkedInputPipelineTests.swift",
+              old: "result.inputDiagnostics",
+              new: "result.diagnostics"
+          )
+          try repair(
+              "Tests/MoisesAudioCoreTests/AnalysisChunkedInputPipelineTests.swift",
+              old: "chunked.inputDiagnostics",
+              new: "chunked.diagnostics"
+          )
+          try repair(
+              "Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift",
+              old: "w44CheckpointCertificateRootSHA256: checkpointRoot ?? checkpointCertificate.declaredCertificateRootSHA256",
+              new: "w44CheckpointCertificateRootSHA256: try (checkpointRoot ?? checkpointCertificate.declaredCheckpointRootSHA256)"
+          )
+          SWIFT
+          # Correct the property-name replacement above to preserve the existing API name.
+          sed -i 's/declaredCheckpointRootSHA256/declaredCertificateRootSHA256/' /tmp/l4-w57-repair.swift
+          cat >> /tmp/l4-w57-repair.swift <<'SWIFT'
+          try repair(
+              "Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift",
+              old: "w42AnchorReceiptRootSHA256: anchorRoot ?? anchorReceipt.declaredAnchorReceiptRootSHA256",
+              new: "w42AnchorReceiptRootSHA256: try (anchorRoot ?? anchorReceipt.declaredAnchorReceiptRootSHA256)"
+          )
+          try repair(
+              "Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift",
+              old: "w41TransferRootSHA256: transferRoot ?? transfer.declaredTransferRootSHA256",
+              new: "w41TransferRootSHA256: try (transferRoot ?? transfer.declaredTransferRootSHA256)"
+          )
+          try repair(
+              "Tests/MoisesAudioCoreTests/ChordVocabularyHardeningTests.swift",
+              old: "events.first?.startSeconds",
+              new: "events.first?.startSeconds ?? .nan"
+          )
+          try repair(
+              "Tests/MoisesAudioCoreTests/ChordVocabularyHardeningTests.swift",
+              old: "events.last?.endSeconds",
+              new: "events.last?.endSeconds ?? .nan"
+          )
+          SWIFT
+          swift /tmp/l4-w57-repair.swift
+          git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
+          git diff --check
+          git diff -- Tests/MoisesAudioCoreTests | sed -n '1,260p'
+
+      - name: Compile all recovered L4 tests
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set +e
+          swift test --list-tests > l4-w57-compile.log 2>&1
+          status=$?
+          set -e
+          cat l4-w57-compile.log
+          exit "$status"
+
+      - name: Persist compile-proven Swift 6 repairs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
+          git config user.name 'chatgpt-l4-recovery'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisRealAudioParityAdjudicationTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisChunkedInputPipelineTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/AnalysisP021PhysicalEvidenceAdjudicationTests.swift \
+            tech-assets/moises-audio/Tests/MoisesAudioCoreTests/ChordVocabularyHardeningTests.swift
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix(moises-l4): persist W57 Swift 6 test compatibility'
+            git push origin HEAD:moises/wp4-analysis-platform
+          fi
+
       - name: Full recovered L4 SwiftPM
         working-directory: tech-assets/moises-audio
         shell: bash
@@ -65,6 +173,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: l4-w57-swiftpm-diagnostics
-          path: tech-assets/moises-audio/l4-w57-swiftpm.log
-          if-no-files-found: error
+          path: |
+            tech-assets/moises-audio/l4-w57-compile.log
+            tech-assets/moises-audio/l4-w57-swiftpm.log
+          if-no-files-found: warn
           retention-days: 7
