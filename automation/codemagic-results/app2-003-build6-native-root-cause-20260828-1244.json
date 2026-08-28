@@ -1,0 +1,10 @@
+{
+  "task": "APP2-003",
+  "timestamp_jst": "2026-08-28T12:44:00+09:00",
+  "root_cause_confirmed": true,
+  "native_entrypoint": "native/main.tsx",
+  "previous_native_imports": ["../app/HorrorLibrary", "../app/globals.css"],
+  "omitted_from_native_build": ["../app/ReaderRuntimeGuards", "../app/pattern-c-fixes.css"],
+  "effect": "Build 5 IPA could compile successfully while all five physical-test fixes remained absent from TestFlight UI",
+  "correction": "native/main.tsx now imports/mounts both fixes and Build 6 requires generated-native-bundle marker verification"
+}
