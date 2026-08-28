@@ -196,7 +196,7 @@ final class AnalysisRealAudioParityAdjudicationTests: XCTestCase {
             expectedCoveragePolicyID: coveragePolicy.policyID,
             expectedCoveragePolicySHA256: try AnalysisAnalysisParityAdjudicationRoot.stableSHA256(coveragePolicy),
             expectedCaptureSetID: captureSet.captureSetID,
-            expectedCaptureSetSHA256: overrideCaptureRoot ?? (try AnalysisAnalysisParityAdjudicationRoot.stableSHA256(captureSet)),
+            expectedCaptureSetSHA256: try (overrideCaptureRoot ?? AnalysisAnalysisParityAdjudicationRoot.stableSHA256(captureSet)),
             expectedCapturePolicyID: capturePolicy.policyID,
             expectedCapturePolicySHA256: try AnalysisAnalysisParityAdjudicationRoot.stableSHA256(capturePolicy),
             expectedReviewSetID: reviewSet.reviewSetID,

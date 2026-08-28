@@ -119,9 +119,9 @@ final class AnalysisP021PhysicalEvidenceAdjudicationTests: XCTestCase {
             deviceModel: "iPhone-selected",
             osVersion: "iOS-selected",
             physicalCaptureSessionID: "capture-session-a",
-            w44CheckpointCertificateRootSHA256: checkpointRoot ?? checkpointCertificate.declaredCertificateRootSHA256,
-            w42AnchorReceiptRootSHA256: anchorRoot ?? anchorReceipt.declaredAnchorReceiptRootSHA256,
-            w41TransferRootSHA256: transferRoot ?? transfer.declaredTransferRootSHA256,
+            w44CheckpointCertificateRootSHA256: try (checkpointRoot ?? checkpointCertificate.declaredCertificateRootSHA256),
+            w42AnchorReceiptRootSHA256: try (anchorRoot ?? anchorReceipt.declaredAnchorReceiptRootSHA256),
+            w41TransferRootSHA256: try (transferRoot ?? transfer.declaredTransferRootSHA256),
             runExecutions: runExecutions ?? [
                 .init(runID: runSummary.runID, workloadExecutionID: runSummary.workloadExecutionID)
             ]
