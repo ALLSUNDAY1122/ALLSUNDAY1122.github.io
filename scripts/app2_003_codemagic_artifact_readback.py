@@ -13,6 +13,7 @@ ALLOWED_BUILD_IDS = {
     "6a903f4e0b744f0115921f39",
     "6a910380c8427ec173c8e13f",
     "6a9104bdc61a7f197e4ce9b6",
+    "6a9105fde0c3191da504c2c7",
 }
 TARGET_SUFFIXES = (
     "/Info.plist",
@@ -25,6 +26,14 @@ SAFE_LOG_TERMS = (
     "signature missing",
     "Error:",
     "error:",
+)
+NATIVE_JS_MARKER = "app2-003-reader-fixes-v3"
+NATIVE_CSS_MARKER = "app2-reader-fixes-v3"
+NATIVE_CSS_SELECTORS = (
+    "html.app2-reader-fixes-v3.reader-overlay",
+    "html.app2-reader-fixes-v3.reader-toolbar",
+    "html.app2-reader-fixes-v3.library-tools",
+    "html.app2-reader-fixes-v3.story-card.story-read-button",
 )
 
 
@@ -71,6 +80,40 @@ def safe_failure_excerpt(bundle_blob: bytes):
             if any(term in line for term in SAFE_LOG_TERMS):
                 excerpts.append({"file": name, "line": line[:1000]})
     return names, excerpts[:80]
+
+
+def native_web_audit(zf: zipfile.ZipFile):
+    files = [i.filename for i in zf.infolist() if not i.is_dir()]
+    web_files = [
+        name for name in files
+        if "/public/" in name and name.lower().endswith((".js", ".css", ".html"))
+    ]
+    js_html = []
+    css = []
+    for name in web_files:
+        try:
+            text = zf.read(name).decode("utf-8", errors="replace")
+        except Exception:
+            continue
+        if name.lower().endswith(".css"):
+            css.append((name, text.replace(" ", "").replace("\n", "").replace("\t", "")))
+        else:
+            js_html.append((name, text))
+    js_files = [name for name, text in js_html if NATIVE_JS_MARKER in text]
+    css_marker_files = [name for name, text in css if NATIVE_CSS_MARKER in text]
+    selector_presence = {
+        selector: [name for name, text in css if selector in text]
+        for selector in NATIVE_CSS_SELECTORS
+    }
+    return {
+        "public_web_file_count": len(web_files),
+        "js_marker_present": bool(js_files),
+        "js_marker_files": js_files,
+        "css_marker_present": bool(css_marker_files),
+        "css_marker_files": css_marker_files,
+        "scoped_selector_presence": selector_presence,
+        "all_scoped_selectors_present": all(bool(v) for v in selector_presence.values()),
+    }
 
 
 def main() -> int:
@@ -126,6 +169,7 @@ def main() -> int:
             'privacy_manifests': privacy_files,
             'privacy_manifest_count': len(privacy_files),
             'framework_names': sorted({n.split('/Frameworks/',1)[1].split('/',1)[0] for n in files if '/Frameworks/' in n}),
+            'native_web_audit': native_web_audit(zf),
         })
 
     bundle = next((a for a in artifacts if a.get('type') == 'bundle'), None)
