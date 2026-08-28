@@ -27,6 +27,14 @@ public struct ProjectPresentation: Equatable, Sendable {
     }
 }
 
+/// App-facing seam for Lane1 durable processing recovery. The concrete Lane1 recovery actor conforms
+/// without changing the frozen Shared provider contract.
+public protocol ProcessingAppRelaunchRecovering: Sendable {
+    func recover(projectID: ProjectID) async throws -> ProcessingRecoveryAction
+}
+
+extension ProcessingCrashSafeRelaunchRecovery: ProcessingAppRelaunchRecovering {}
+
 /// Composition-only coordinator. Feature engines retain their own operational state.
 /// A project may be presented while separation is still running.
 public actor VerticalSliceCoordinator {
@@ -36,9 +44,11 @@ public actor VerticalSliceCoordinator {
     private let analysisEngine: any MusicAnalyzing
     private let persistence: any ProjectPersisting
     private let exporter: any AudioExporting
+    private let processingRecovery: (any ProcessingAppRelaunchRecovering)?
 
     public private(set) var route: AppRoute = .library
     public private(set) var project: ProjectPresentation?
+    public private(set) var processingRecoveryAction: ProcessingRecoveryAction?
 
     public init(
         importer: any AudioImporting,
@@ -46,7 +56,8 @@ public actor VerticalSliceCoordinator {
         playback: any PlaybackPreparing,
         analysisEngine: any MusicAnalyzing,
         persistence: any ProjectPersisting,
-        exporter: any AudioExporting
+        exporter: any AudioExporting,
+        processingRecovery: (any ProcessingAppRelaunchRecovering)? = nil
     ) {
         self.importer = importer
         self.separator = separator
@@ -54,6 +65,20 @@ public actor VerticalSliceCoordinator {
         self.analysisEngine = analysisEngine
         self.persistence = persistence
         self.exporter = exporter
+        self.processingRecovery = processingRecovery
+    }
+
+    /// App startup/relaunch hook. Absence of a configured recovery dependency is deliberately not
+    /// treated as `.none`: callers must not silently interpret "recovery was never wired" as
+    /// "there was nothing to recover".
+    @discardableResult
+    public func recoverProcessingAfterRelaunch(projectID: ProjectID) async throws -> ProcessingRecoveryAction {
+        guard let processingRecovery else {
+            throw DomainFailure.processingFailed(code: "PROC_RECOVERY_NOT_CONFIGURED", retryable: false)
+        }
+        let action = try await processingRecovery.recover(projectID: projectID)
+        processingRecoveryAction = action
+        return action
     }
 
     @discardableResult
