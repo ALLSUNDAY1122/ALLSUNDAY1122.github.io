@@ -6,12 +6,16 @@ on:
       - tech/moises-separation
     paths:
       - 'tech-assets/moises-audio/Playback/Sources/Lane3PhysicalEvidenceHandoffManifest.swift'
+      - 'tech-assets/moises-audio/Playback/Sources/Lane3PhysicalEvidenceHandoffHostValidator.swift'
       - 'tech-assets/moises-audio/Playback/Tests/L3_HQ_PhysicalEvidenceHandoffManifestSelfTest.swift'
+      - 'tech-assets/moises-audio/Playback/Tests/L3_HQ_PhysicalEvidenceHandoffHostValidatorSelfTest.swift'
       - '.github/workflows/moises-hq-l3-handoff-manifest.yml'
   pull_request:
     paths:
       - 'tech-assets/moises-audio/Playback/Sources/Lane3PhysicalEvidenceHandoffManifest.swift'
+      - 'tech-assets/moises-audio/Playback/Sources/Lane3PhysicalEvidenceHandoffHostValidator.swift'
       - 'tech-assets/moises-audio/Playback/Tests/L3_HQ_PhysicalEvidenceHandoffManifestSelfTest.swift'
+      - 'tech-assets/moises-audio/Playback/Tests/L3_HQ_PhysicalEvidenceHandoffHostValidatorSelfTest.swift'
       - '.github/workflows/moises-hq-l3-handoff-manifest.yml'
   workflow_dispatch:
 
@@ -54,3 +58,25 @@ jobs:
             -o /tmp/l3-hq-handoff-manifest-selftest
           /tmp/l3-hq-handoff-manifest-selftest | tee /tmp/l3-hq-handoff-manifest-selftest.out
           grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_MANIFEST_SELF_TEST_PASS ' /tmp/l3-hq-handoff-manifest-selftest.out
+
+      - name: Execute Lane 3 serialized host handoff validator self-test
+        working-directory: tech-assets/moises-audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sources=(
+            Shared/DomainContracts.swift
+            DSP/Sources/*.swift
+            Playback/Sources/*.swift
+          )
+          swiftc \
+            -swift-version 6 \
+            -warnings-as-errors \
+            -strict-concurrency=complete \
+            -O \
+            "${sources[@]}" \
+            Playback/Tests/L3_HQ_PhysicalEvidenceHandoffHostValidatorSelfTest.swift \
+            -o /tmp/l3-hq-handoff-host-validator-selftest
+          /tmp/l3-hq-handoff-host-validator-selftest | tee /tmp/l3-hq-handoff-host-validator-selftest.out
+          grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_HOST_VALIDATOR_SELF_TEST_PASS ' /tmp/l3-hq-handoff-host-validator-selftest.out
