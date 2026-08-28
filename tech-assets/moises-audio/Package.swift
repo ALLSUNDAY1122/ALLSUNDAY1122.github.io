@@ -24,6 +24,10 @@ let package = Package(
                 "AudioSeparationCore.swift",
                 "Shared/DomainContracts.swift",
                 "Shared/LibraryContracts.swift",
+                "Processing/Sources/ProcessingLifecycleStateStore.swift",
+                "Processing/Sources/ProcessingProviderCapabilities.swift",
+                "Processing/Sources/ProcessingLifecycleCoordinator.swift",
+                "Processing/Sources/ProcessingCrashSafeRelaunchRecovery.swift",
                 "App/VerticalSliceCoordinator.swift"
             ]
         ),
