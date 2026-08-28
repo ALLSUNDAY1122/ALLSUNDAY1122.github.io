@@ -45,6 +45,16 @@ public enum Lane2ManagedArtifactInventoryFailure: Error, Equatable, Sendable {
     case incompatibleManagedRoots
 }
 
+/// Foundation's FileManager is explicitly non-Sendable in current Apple SDKs.
+/// Keep the unchecked compatibility assertion private to the injected dependency.
+private final class Lane2ManagedArtifactInventoryFileManagerHandle: @unchecked Sendable {
+    let value: FileManager
+
+    init(_ value: FileManager) {
+        self.value = value
+    }
+}
+
 /// Canonical managed-artifact inventory facade.
 ///
 /// AW42 keeps the public AW29 contract stable while routing steady-state registration, removal,
@@ -58,12 +68,16 @@ public struct Lane2ManagedArtifactInventory: Sendable {
 
     public let rootURL: URL
     public let recoveryDirectoryName: String
-    private let fileManager: FileManager
+    private let fileManagerHandle: Lane2ManagedArtifactInventoryFileManagerHandle
 
     public init(rootURL: URL, recoveryDirectoryName: String = ".LibraryRecovery", fileManager: FileManager = .default) {
         self.rootURL = rootURL.standardizedFileURL
         self.recoveryDirectoryName = recoveryDirectoryName
-        self.fileManager = fileManager
+        self.fileManagerHandle = Lane2ManagedArtifactInventoryFileManagerHandle(fileManager)
+    }
+
+    private var fileManager: FileManager {
+        fileManagerHandle.value
     }
 
     public var isAuthoritative: Bool {
