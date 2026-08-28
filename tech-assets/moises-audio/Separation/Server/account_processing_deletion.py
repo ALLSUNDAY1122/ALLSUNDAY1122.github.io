@@ -21,7 +21,8 @@ from typing import Any
 from privacy_retention import PrivacyRetentionError
 
 EVIDENCE_STATE = "NON_PARITY_EVIDENCE_ONLY"
-TOOL_VERSION = "L1-HQ-ACCOUNT-PROCESSING-DELETE-v2"
+TOOL_VERSION = "L1-HQ-ACCOUNT-PROCESSING-DELETE-v3"
+DELETE_IDENTITY_BINDING_VERSION = 1
 _LOGICAL_JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _ASSET_ERASURE_TERMINAL = frozenset({"confirmed", "not_found", "expired"})
@@ -130,7 +131,12 @@ class AccountProcessingDeletionService:
                     False,
                     "SEP_ACCOUNT_DELETE_PROVIDER_ERASURE_INCOMPLETE",
                 )
-            self.durable_reconnect.mark_deleted(logical_job_id)
+            self.durable_reconnect.mark_deleted(
+                logical_job_id,
+                bind_provider_identity=True,
+                provider_asset_id_hash=getattr(privacy_record, "provider_asset_id_hash", None),
+                provider_task_id_hash=getattr(privacy_record, "provider_task_id_hash", None),
+            )
             return _JobOutcome(
                 logical_job_id,
                 "complete",
@@ -172,10 +178,25 @@ class AccountProcessingDeletionService:
                 True,
                 "SEP_ACCOUNT_DELETE_TOMBSTONE_PRIVACY_UNVERIFIED",
             )
-        complete, asset_state, task_state = _privacy_complete(
-            privacy_record=privacy_record,
-            durable_record=record,
-        )
+        try:
+            _require_tombstone_identity_binding(
+                privacy_record=privacy_record,
+                durable_record=record,
+            )
+            complete, asset_state, task_state = _privacy_complete(
+                privacy_record=privacy_record,
+                durable_record=record,
+            )
+        except AccountProcessingDeletionError as exc:
+            return _JobOutcome(
+                logical_job_id,
+                "incomplete",
+                bool(getattr(privacy_record, "local_delete_confirmed", False)),
+                str(getattr(privacy_record, "provider_asset_delete_state", "unknown")),
+                str(getattr(privacy_record, "provider_task_delete_state", "unknown")),
+                True,
+                exc.code,
+            )
         return _JobOutcome(
             logical_job_id,
             "complete" if complete else "incomplete",
@@ -218,6 +239,36 @@ def _privacy_complete(
         else task_state in _TASK_ERASURE_TERMINAL
     )
     return local and asset_complete and task_complete, asset_state, task_state
+
+
+def _require_tombstone_identity_binding(*, privacy_record: Any, durable_record: Any) -> None:
+    if getattr(durable_record, "deletion_identity_binding_version", None) != DELETE_IDENTITY_BINDING_VERSION:
+        raise AccountProcessingDeletionError("SEP_ACCOUNT_DELETE_TOMBSTONE_IDENTITY_PROOF_MISSING")
+    if getattr(durable_record, "provider_asset_id", None) is not None or getattr(
+        durable_record, "provider_task_id", None
+    ) is not None:
+        raise AccountProcessingDeletionError("SEP_ACCOUNT_DELETE_TOMBSTONE_IDENTITY_PROOF_INVALID")
+
+    expected_asset_hash = getattr(privacy_record, "provider_asset_id_hash", None)
+    expected_task_hash = getattr(privacy_record, "provider_task_id_hash", None)
+    proof_asset_hash = getattr(durable_record, "deleted_provider_asset_id_hash", None)
+    proof_task_hash = getattr(durable_record, "deleted_provider_task_id_hash", None)
+    if not (
+        _stored_hash_matches(expected_asset_hash, proof_asset_hash)
+        and _stored_hash_matches(expected_task_hash, proof_task_hash)
+    ):
+        raise AccountProcessingDeletionError("SEP_ACCOUNT_DELETE_TOMBSTONE_PROVIDER_IDENTITY_MISMATCH")
+
+
+def _stored_hash_matches(expected_hash: Any, proof_hash: Any) -> bool:
+    if expected_hash is None:
+        return proof_hash is None
+    return (
+        isinstance(expected_hash, str)
+        and _SHA256.fullmatch(expected_hash) is not None
+        and isinstance(proof_hash, str)
+        and proof_hash == expected_hash
+    )
 
 
 def _provider_identity_matches(expected_hash: Any, durable_id: Any) -> bool:
