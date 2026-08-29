@@ -252,8 +252,18 @@ private struct QuizView: View {
                 }
                 .padding(18)
             } else {
-                ContentUnavailableView("問題がありません", systemImage: "questionmark.circle")
-                    .padding(24)
+                VStack(spacing: 12) {
+                    Image(systemName: "questionmark.circle")
+                        .font(.system(size: 36))
+                        .foregroundStyle(Palette.navy)
+                    Text("問題がありません")
+                        .font(.headline)
+                    Text("問題データの読み込み状態を確認してください。")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(32)
             }
         }
         .background(Palette.paper.ignoresSafeArea())
