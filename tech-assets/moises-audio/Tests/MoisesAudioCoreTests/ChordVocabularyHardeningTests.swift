@@ -58,8 +58,8 @@ final class ChordVocabularyHardeningTests: XCTestCase {
 
         let events = ChordTimelineAnalyzer.analyze(signal: AnalysisSignal(sampleRate: 8_000, monoSamples: samples))
         XCTAssertEqual(events.map(\.normalizedLabel), ["C", "A:min", "N", "G"])
-        XCTAssertEqual(events.first?.startSeconds ?? .nan ?? .nan, 0, accuracy: 1e-9)
-        XCTAssertEqual(events.last?.endSeconds ?? .nan ?? .nan, 7, accuracy: 1e-9)
+        XCTAssertEqual(events.first?.startSeconds ?? .nan ?? .nan ?? .nan, 0, accuracy: 1e-9)
+        XCTAssertEqual(events.last?.endSeconds ?? .nan ?? .nan ?? .nan, 7, accuracy: 1e-9)
         for pair in zip(events, events.dropFirst()) {
             XCTAssertEqual(pair.0.endSeconds, pair.1.startSeconds, accuracy: 1e-9)
         }
