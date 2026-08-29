@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-08-29T12:40:00+09:00",
+  "normalizedState": "CODE_NOT_READY",
+  "bundleId": {
+    "value": "jp.allsunday1122.itpassportstudy",
+    "status": "AUTO_FIXED",
+    "evidence": "Apple Bundle ID resource 23464FS837 / API read-back verified"
+  },
+  "appStoreConnectAppRecord": {
+    "status": "HUMAN_REQUIRED",
+    "reason": "App Store Connect API preflight returned zero apps for the new Bundle ID. New App record creation is a UI human gate under the submission procedure.",
+    "packet": "apps/it-passport-rebuild/submission/app-record-packet.json"
+  },
+  "code": {
+    "status": "BUILD_REQUIRED_AFTER_GATES",
+    "detail": "SwiftUI home/domain/10-question-set/quiz flow is connected to a 30-question independent starter bank. Full release bank and content audit remain incomplete."
+  },
+  "questionQuality": {
+    "machineGate": "PASS",
+    "count": 30,
+    "distribution": {"strategy": 10, "management": 10, "technology": 10},
+    "contentAudit": "PENDING",
+    "originalMock300": "PENDING",
+    "officialFreshIngest": "PENDING"
+  },
+  "appIcon": {
+    "status": "PREFLIGHT_BLOCKED",
+    "reason": "Google Drive anonymous download endpoints do not return the exact canonical PNG bytes in GitHub Actions; source SHA mismatch is fail-closed. A stable byte-preserving transport is required before build."
+  },
+  "privacyManifest": "PRESENT",
+  "supportUrl": "PENDING_PUBLICATION",
+  "privacyPolicyUrl": "PENDING_PUBLICATION",
+  "screenshots": "BUILD_REQUIRED_AFTER_RUNNABLE_APP",
+  "iap": "DEFERRED_UNTIL_MVP_VALUE_DECISION",
+  "codemagic": {
+    "status": "NOT_CONFIGURED_FOR_NEW_APP",
+    "rule": "Do not spend a Codemagic build until AppIcon, content, App Store record, and metadata preflight are ready."
+  },
+  "finalApproval": "NOT_REACHED"
+}
