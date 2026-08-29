@@ -65,6 +65,7 @@ public struct Lane2ManagedArtifactInventory: Sendable {
     public static let defaultShardVisitLimit = 4
     public static let defaultCandidateLimit = 128
     public static let managedRootNames = ["Imports", "Stems", "Exports"]
+    private static let orphanCandidateModificationTimeWitnessTolerance: TimeInterval = 0.000_001
 
     public let rootURL: URL
     public let recoveryDirectoryName: String
@@ -219,6 +220,14 @@ public struct Lane2ManagedArtifactInventory: Sendable {
             let values = try url.resourceValues(forKeys: keys)
             guard values.isSymbolicLink != true, values.isRegularFile == true else { throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(relativePath) }
             let modified = values.contentModificationDate ?? .distantPast
+            let modificationWitnessChanged = abs(
+                modified.timeIntervalSince1970 - candidate.recordedModificationTime
+            ) > Self.orphanCandidateModificationTimeWitnessTolerance
+            if modificationWitnessChanged {
+                retainedYoung += 1
+                refreshPaths.append(relativePath)
+                continue
+            }
             if now.timeIntervalSince(modified) < gracePeriod {
                 retainedYoung += 1
                 refreshPaths.append(relativePath)
