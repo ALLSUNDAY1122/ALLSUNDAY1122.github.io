@@ -19,8 +19,9 @@ public struct Lane2ManagedArtifactInventoryShardPreflight: Hashable, Sendable {
 public extension Lane2ManagedArtifactInventory {
     /// AW38 guard for the v1 single-JSON-per-shard layout. This is intentionally a byte cap rather
     /// than an entry-count claim: checking encoded size requires only metadata syscalls and occurs
-    /// before JSONDecoder can materialize a pathological shard. A future segmented migration may
-    /// remove this compatibility ceiling after it has its own durable crash protocol.
+    /// before JSONDecoder can materialize a pathological shard. Descriptor-pinned enumeration keeps
+    /// the shard directory and leaf metadata on one no-follow authority path instead of reopening
+    /// each entry through Foundation pathname/resource-value lookups.
     static let maximumAuthoritativeShardEncodedBytes = 8 * 1024 * 1024
 
     func authoritativeShardPreflight(
@@ -33,6 +34,7 @@ public extension Lane2ManagedArtifactInventory {
             fileManager: inventoryFileManager
         )
         let shards = authority.shardsDirectoryURL
+        let descriptorEnumerator = Lane2ManagedArtifactInventoryDescriptorEnumerator(rootURL: rootURL)
 
         do {
             guard try authority.requireDirectoryIfPresent(shards) else {
@@ -43,11 +45,7 @@ public extension Lane2ManagedArtifactInventory {
                 )
             }
 
-            let entries = try inventoryFileManager.contentsOfDirectory(
-                at: shards,
-                includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
-                options: [.skipsHiddenFiles]
-            )
+            let entries = try descriptorEnumerator.visibleImmediateEntries(in: shards)
             guard entries.count <= Self.shardCount else {
                 return Lane2ManagedArtifactInventoryShardPreflight(
                     checkedShards: entries.count,
@@ -57,32 +55,23 @@ public extension Lane2ManagedArtifactInventory {
             }
 
             var largest = 0
-            for url in entries {
-                let stem = url.deletingPathExtension().lastPathComponent
-                guard url.pathExtension == "json",
+            for entry in entries {
+                let name = entry.name
+                let filename = name as NSString
+                let stem = filename.deletingPathExtension
+                guard filename.pathExtension == "json",
                       stem.count == 2,
                       let index = Int(stem, radix: 16),
-                      (0..<Self.shardCount).contains(index) else {
+                      (0..<Self.shardCount).contains(index),
+                      entry.kind == .regularFile else {
                     return Lane2ManagedArtifactInventoryShardPreflight(
                         checkedShards: entries.count,
                         largestEncodedBytes: largest,
                         safeForAuthoritativeDecode: false
                     )
                 }
-                try authority.requireExistingRegularFile(url, within: shards)
-                let values = try url.resourceValues(
-                    forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]
-                )
-                guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                    return Lane2ManagedArtifactInventoryShardPreflight(
-                        checkedShards: entries.count,
-                        largestEncodedBytes: largest,
-                        safeForAuthoritativeDecode: false
-                    )
-                }
-                let bytes = max(values.fileSize ?? 0, 0)
-                largest = max(largest, bytes)
-                guard bytes > 0, bytes <= effectiveMaximum else {
+                largest = max(largest, entry.byteCount)
+                guard entry.byteCount > 0, entry.byteCount <= effectiveMaximum else {
                     return Lane2ManagedArtifactInventoryShardPreflight(
                         checkedShards: entries.count,
                         largestEncodedBytes: largest,
