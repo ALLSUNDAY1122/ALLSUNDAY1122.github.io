@@ -6,6 +6,7 @@ on:
       - tech/moises-separation
     paths:
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactInventory*.swift'
+      - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactCompatibilityCensus.swift'
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedStreamingTraversal.swift'
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedBoundedMutation.swift'
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedRuntime.swift'
@@ -13,12 +14,14 @@ on:
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryPathAuthorityTests.swift'
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryDescriptorAuthorityTests.swift'
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryFreshActivationNodeKindTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactCompatibilityCensusPathAuthorityTests.swift'
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactSegmentedStreamingTraversalTests.swift'
       - 'tech-assets/moises-audio/Library/Tests/LibraryDescriptorRelativeIOTests.swift'
       - '.github/workflows/moises-hq-l2-inventory-authority.yml'
   pull_request:
     paths:
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactInventory*.swift'
+      - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactCompatibilityCensus.swift'
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedStreamingTraversal.swift'
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedBoundedMutation.swift'
       - 'tech-assets/moises-audio/Library/Sources/ManagedArtifactSegmentedRuntime.swift'
@@ -26,6 +29,7 @@ on:
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryPathAuthorityTests.swift'
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryDescriptorAuthorityTests.swift'
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactInventoryFreshActivationNodeKindTests.swift'
+      - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactCompatibilityCensusPathAuthorityTests.swift'
       - 'tech-assets/moises-audio/Library/Tests/ManagedArtifactSegmentedStreamingTraversalTests.swift'
       - 'tech-assets/moises-audio/Library/Tests/LibraryDescriptorRelativeIOTests.swift'
       - '.github/workflows/moises-hq-l2-inventory-authority.yml'
@@ -72,6 +76,10 @@ jobs:
           fresh_activation="$tmp/Tests/Lane2InventoryTests/ManagedArtifactInventoryFreshActivationNodeKindTests.swift"
           printf '@testable import Lane2Inventory\n' > "$fresh_activation"
           cat Library/Tests/ManagedArtifactInventoryFreshActivationNodeKindTests.swift >> "$fresh_activation"
+
+          census="$tmp/Tests/Lane2InventoryTests/ManagedArtifactCompatibilityCensusPathAuthorityTests.swift"
+          printf '@testable import Lane2Inventory\n' > "$census"
+          cat Library/Tests/ManagedArtifactCompatibilityCensusPathAuthorityTests.swift >> "$census"
 
           descriptor="$tmp/Tests/Lane2InventoryTests/LibraryDescriptorRelativeIOTests.swift"
           printf '@testable import Lane2Inventory\n' > "$descriptor"
