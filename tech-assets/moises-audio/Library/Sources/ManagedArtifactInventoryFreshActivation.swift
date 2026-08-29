@@ -3,7 +3,8 @@ import Foundation
 public extension Lane2ManagedArtifactInventory {
     /// Called at the first readiness boundary for a managed artifact. It may activate steady-state
     /// inventory mode only when every visible regular managed artifact is exactly this path. Any
-    /// second file, symlink or enumeration error leaves the installation in AW28 compatibility mode.
+    /// second file, symlink, unexpected non-regular node or enumeration error leaves the installation
+    /// in AW28 compatibility mode.
     @discardableResult
     func activateForFirstManagedArtifactIfSafe(relativePath: String) throws -> Bool {
         if hasValidAuthoritativeMarker { return true }
@@ -38,14 +39,19 @@ public extension Lane2ManagedArtifactInventory {
             }
 
             for entry in entries {
-                if entry.kind == .symbolicLink { return false }
-                guard entry.kind == .regularFile else { continue }
-                let item = try lane2InventoryActivationNormalize(entry.relativePath)
-                if item == normalized {
-                    sawTarget = true
+                switch entry.kind {
+                case .directory:
                     continue
+                case .symbolicLink, .other:
+                    return false
+                case .regularFile:
+                    let item = try lane2InventoryActivationNormalize(entry.relativePath)
+                    if item == normalized {
+                        sawTarget = true
+                        continue
+                    }
+                    return false
                 }
-                return false
             }
         }
         guard sawTarget else { return false }
