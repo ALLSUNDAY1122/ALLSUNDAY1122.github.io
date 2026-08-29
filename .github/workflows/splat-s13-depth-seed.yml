@@ -35,6 +35,10 @@ jobs:
           grep -q 'frame.smoothedSceneDepth ?? frame.sceneDepth' SplatNative/ScanModel.swift
           grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' SplatNative/ScanModel.swift
           grep -q 'seedOutcome.requiresFreshTrainer' SplatNative/ScanModel.swift
+          grep -q 'restoreFinishedProjectForS13Reprocess' SplatNative/ScanModel.swift
+          grep -q 'SplatPreviousResultEvidence.preserveBeforeReprocess' SplatNative/ScanModel.swift
+          grep -q '同じ撮影から再生成' SplatNative/ScanLibraryView.swift
+          grep -q 'canReprocessTrusted' SplatNative/ScanLibraryView.swift
       - name: Preserve Build 8 reconstruction invariants
         working-directory: splat-native-ios
         run: |
