@@ -1,0 +1,60 @@
+name: New IT Passport - Canonical AppIcon Gate
+
+on:
+  push:
+    branches:
+      - feature/it-passport-rebuild
+    paths:
+      - 'automation/it-passport-rebuild-icon-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  appicon:
+    runs-on: macos-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/it-passport-rebuild
+
+      - name: Materialize exact Learning Sprint canonical icon
+        run: |
+          bash apps/it-passport-rebuild/ios/tools/materialize_appicon.sh | tee /tmp/it-passport-appicon-gate.txt
+
+      - name: Verify asset catalog binding
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('apps/it-passport-rebuild/ios')
+          icon = root/'Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+          contents = json.loads((root/'Assets.xcassets/AppIcon.appiconset/Contents.json').read_text(encoding='utf-8'))
+          project = (root/'project.yml').read_text(encoding='utf-8')
+          assert icon.is_file() and icon.stat().st_size > 0
+          assert any(x.get('filename') == 'AppIcon-1024.png' and x.get('size') == '1024x1024' for x in contents['images'])
+          assert 'ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon' in project
+          print('PASS: AppIcon file, Contents.json, and asset compiler binding are consistent')
+          PY
+
+      - name: Persist verified AppIcon binary
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f apps/it-passport-rebuild/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "新ITパスポート｜検証済み正本AppIconを固定"
+          git push origin HEAD:feature/it-passport-rebuild
+
+      - name: Upload gate log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: it-passport-appicon-gate-${{ github.run_id }}
+          path: /tmp/it-passport-appicon-gate.txt
+          if-no-files-found: ignore
+          retention-days: 7
