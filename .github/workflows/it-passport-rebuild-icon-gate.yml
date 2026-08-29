@@ -22,7 +22,8 @@ jobs:
 
       - name: Materialize exact Learning Sprint canonical icon
         run: |
-          bash apps/it-passport-rebuild/ios/tools/materialize_appicon.sh | tee /tmp/it-passport-appicon-gate.txt
+          set -o pipefail
+          bash apps/it-passport-rebuild/ios/tools/materialize_appicon.sh 2>&1 | tee /tmp/it-passport-appicon-gate.txt
 
       - name: Verify asset catalog binding
         run: |
