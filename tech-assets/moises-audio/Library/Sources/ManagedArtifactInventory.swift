@@ -160,11 +160,8 @@ public struct Lane2ManagedArtifactInventory: Sendable {
                 url,
                 managedRootName: rootName
             ) else { return false }
+            _ = try descriptorIO.regularFileMetadata(at: url)
         } catch {
-            throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(normalized)
-        }
-        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-        guard values.isRegularFile == true, values.isSymbolicLink != true else {
             throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(normalized)
         }
         try bridge.registerManaged(relativePaths: [normalized])
@@ -197,7 +194,6 @@ public struct Lane2ManagedArtifactInventory: Sendable {
         var refreshPaths: [String] = []
         var retainedReferenced = 0
         var retainedYoung = 0
-        let keys: Set<URLResourceKey> = [.isRegularFileKey, .isSymbolicLinkKey, .contentModificationDateKey]
 
         for candidate in slice.candidates {
             let relativePath = try Self.normalize(candidate.relativePath)
@@ -205,6 +201,7 @@ public struct Lane2ManagedArtifactInventory: Sendable {
             if referenced.contains(relativePath) { retainedReferenced += 1; continue }
             let url = try absoluteURL(relativePath)
             let rootName = String(relativePath.split(separator: "/", omittingEmptySubsequences: false)[0])
+            let metadata: Lane2LibraryDescriptorRelativeRegularFileMetadata
             do {
                 guard try pathAuthority.requireManagedRegularFileIfPresent(
                     url,
@@ -213,12 +210,11 @@ public struct Lane2ManagedArtifactInventory: Sendable {
                     staleInventoryPaths.append(relativePath)
                     continue
                 }
+                metadata = try descriptorIO.regularFileMetadata(at: url)
             } catch {
                 throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(relativePath)
             }
-            let values = try url.resourceValues(forKeys: keys)
-            guard values.isSymbolicLink != true, values.isRegularFile == true else { throw Lane2ManagedArtifactInventoryFailure.unsafeManagedArtifact(relativePath) }
-            let modified = values.contentModificationDate ?? .distantPast
+            let modified = Date(timeIntervalSince1970: metadata.modificationTimeSince1970)
             if now.timeIntervalSince(modified) < gracePeriod {
                 retainedYoung += 1
                 refreshPaths.append(relativePath)
