@@ -1,0 +1,102 @@
+name: Scaniverse Build 9 Codemagic Gate
+
+on:
+  push:
+    branches:
+      - testflight/splat-native-ios-20260829-build9
+    paths:
+      - .github/workflows/scaniverse-build9-codemagic.yml
+
+permissions:
+  contents: read
+
+jobs:
+  build9:
+    runs-on: ubuntu-latest
+    timeout-minutes: 130
+    env:
+      CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+      CM_APP_ID: 6a769d81a1add9d06020b524
+      CM_WORKFLOW_ID: splat-native-ios
+      CM_BRANCH: testflight/splat-native-ios-20260829-build9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trigger and verify Codemagic Build 9
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${CM_API_TOKEN:-}"
+          python3 - <<'PY'
+          import json, os, time, urllib.error, urllib.request
+          from pathlib import Path
+
+          token=os.environ['CM_API_TOKEN'].strip()
+          app_id=os.environ['CM_APP_ID']
+          workflow=os.environ['CM_WORKFLOW_ID']
+          branch=os.environ['CM_BRANCH']
+          out=Path('/tmp/scaniverse-build9-codemagic.json')
+
+          def api(url, method='GET', payload=None):
+              body=None if payload is None else json.dumps(payload).encode()
+              req=urllib.request.Request(url,data=body,method=method,headers={
+                  'Content-Type':'application/json','Accept':'application/json','x-auth-token':token})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode()
+                      return r.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode(errors='replace')
+                  try: data=json.loads(raw) if raw else {}
+                  except Exception: data={'error':raw[:2000]}
+                  return e.code,data
+
+          status,payload=api('https://api.codemagic.io/builds','POST',{
+              'appId':app_id,'workflowId':workflow,'branch':branch})
+          if not 200 <= status < 300:
+              raise SystemExit(f'Codemagic start failed HTTP {status}: {payload}')
+          build_id=payload.get('buildId') or payload.get('id')
+          if not build_id:
+              raise SystemExit(f'No Codemagic build id: {payload}')
+          result={'ok':False,'build_id':build_id,'status':'started','workflow':workflow,'branch':branch}
+          out.write_text(json.dumps(result,indent=2)+'\n')
+          print('BUILD9_CODEMAGIC_STARTED',build_id)
+
+          terminal={'finished','failed','canceled','timeout','skipped'}
+          details={}
+          deadline=time.time()+7200
+          while time.time() < deadline:
+              code,detail=api(f'https://codemagic.io/api/v3/builds/{build_id}')
+              if not 200 <= code < 300:
+                  raise SystemExit(f'Codemagic inspect failed HTTP {code}: {detail}')
+              details=detail.get('data') or detail
+              state=details.get('status')
+              result['status']=state
+              result['commit']=details.get('commit') or details.get('commitId')
+              result['started_at']=details.get('startedAt') or details.get('started_at')
+              result['finished_at']=details.get('finishedAt') or details.get('finished_at')
+              out.write_text(json.dumps(result,indent=2)+'\n')
+              print('BUILD9_CODEMAGIC_STATUS',state)
+              if state in terminal:
+                  break
+              time.sleep(15)
+          else:
+              raise SystemExit('Codemagic Build 9 timed out')
+
+          if details.get('status')!='finished':
+              result['error']='Codemagic Build 9 ended '+str(details.get('status'))
+              out.write_text(json.dumps(result,indent=2)+'\n')
+              raise SystemExit(result['error'])
+          result['ok']=True
+          result['status']='finished'
+          result['artifact_names']=[a.get('name') for a in (details.get('artifacts') or [])]
+          out.write_text(json.dumps(result,indent=2)+'\n')
+          print('BUILD9_CODEMAGIC_FINISHED',build_id)
+          PY
+      - name: Upload Build 9 Codemagic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scaniverse-build9-codemagic-${{ github.run_id }}
+          path: /tmp/scaniverse-build9-codemagic.json
+          if-no-files-found: warn
+          retention-days: 14
