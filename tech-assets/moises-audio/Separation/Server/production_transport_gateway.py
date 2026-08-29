@@ -3,23 +3,32 @@
 This module does not authenticate HTTP/iOS requests and is not deployment/PARITY evidence.
 A real transport must authenticate the caller first, then pass the stable principal identity into
 this gateway. The gateway makes authorization and project/job ownership fail-closed before any
-snapshot/result/cancel/delete side effect and routes processing operations only through the
-canonical ProductionSeparationSafetyFacade / AccountProcessingDeletionService surfaces.
+start/snapshot/result/cancel/delete side effect and routes existing-job processing operations only
+through the canonical ProductionSeparationSafetyFacade / AccountProcessingDeletionService surfaces.
+
+Start is deliberately separated behind ``start_service``. That service must consume the exact
+canonical roles and quality profile supplied by the app and resolve them into the approved
+provider-neutral production start plan. The gateway never silently drops quality semantics or
+reaches a raw vendor/provider client.
 
 The design intentionally contains no raw production-backend methods. A future web framework
-adapter should be thin: authenticate -> decode exact stable IDs -> call this gateway -> encode the
-already-sanitized result.
+adapter should be thin: authenticate -> decode exact stable IDs/headers -> persist the uploaded
+body into a server-owned temporary source path -> call this gateway -> encode the already-sanitized
+result.
 """
 from __future__ import annotations
 
 import re
 import uuid
-from typing import Any
+from typing import Any, Iterable
 
 _LOGICAL_JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 _SAFE_PRINCIPAL_ID = re.compile(r"^[A-Za-z0-9._:@+\-]{1,200}$")
+_SAFE_ROLE = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
+_SAFE_STABLE_ERROR = re.compile(r"^[A-Z0-9_.:-]{1,200}$")
 _ALLOWED_OPERATIONS = frozenset(
     {
+        "processing_start",
         "processing_snapshot",
         "processing_result",
         "processing_cancel",
@@ -66,6 +75,7 @@ class ProductionTransportAuthorizationGateway:
         account_deletion: Any,
         authorizer: Any,
         project_resolver: Any,
+        start_service: Any | None = None,
     ):
         for name in ("snapshot", "result", "request_cancel", "request_delete"):
             if not callable(getattr(safety_facade, name, None)):
@@ -81,6 +91,66 @@ class ProductionTransportAuthorizationGateway:
         self._account_deletion = account_deletion
         self._authorizer = authorizer
         self._project_resolver = project_resolver
+        self._start_service = start_service
+
+    def start_processing(
+        self,
+        *,
+        principal_id: str,
+        project_id: str,
+        source_path: Any,
+        asset_id: str,
+        canonical_roles: Iterable[str],
+        quality_profile: str,
+        idempotency_key: str,
+    ) -> Any:
+        """Authorize a new logical processing start before any provider-facing side effect.
+
+        ``source_path`` is server-owned transport state, not a client pathname. Containment and
+        file-integrity validation remain the responsibility of the configured production start
+        service. The transport-visible role/quality/idempotency contract is validated here so an
+        adapter cannot silently discard or ambiguously normalize those request semantics.
+        """
+        project_id = self._authorize_project(
+            principal_id=principal_id,
+            project_id=project_id,
+            operation="processing_start",
+        )
+        asset_id = _canonical_asset_id(asset_id)
+        roles = _canonical_roles(canonical_roles)
+        quality_profile = _canonical_header_value(
+            quality_profile,
+            limit=512,
+            code="SEP_TRANSPORT_QUALITY_PROFILE_INVALID",
+        )
+        idempotency_key = _canonical_header_value(
+            idempotency_key,
+            limit=128,
+            code="SEP_TRANSPORT_IDEMPOTENCY_KEY_INVALID",
+        )
+
+        starter = getattr(self._start_service, "start", None)
+        if not callable(starter):
+            raise ProductionTransportGatewayError("SEP_TRANSPORT_START_SURFACE_MISSING")
+        try:
+            return starter(
+                source_path=source_path,
+                project_id=project_id,
+                asset_id=asset_id,
+                canonical_roles=roles,
+                quality_profile=quality_profile,
+                idempotency_key=idempotency_key,
+            )
+        except ProductionTransportGatewayError:
+            raise
+        except Exception as exc:
+            code = getattr(exc, "code", None)
+            if not isinstance(code, str) or not _SAFE_STABLE_ERROR.fullmatch(code):
+                code = "SEP_TRANSPORT_START_FAILED"
+            raise ProductionTransportGatewayError(
+                code,
+                retryable=bool(getattr(exc, "retryable", False)),
+            ) from exc
 
     def snapshot(self, *, principal_id: str, project_id: str, logical_job_id: str) -> Any:
         project_id = self._authorize_project(
@@ -181,16 +251,53 @@ def _canonical_principal_id(value: str) -> str:
 
 
 def _canonical_project_id(value: str) -> str:
+    return _canonical_uuid(value, "SEP_TRANSPORT_PROJECT_ID_INVALID", "SEP_TRANSPORT_PROJECT_ID_NONCANONICAL")
+
+
+def _canonical_asset_id(value: str) -> str:
+    return _canonical_uuid(value, "SEP_TRANSPORT_ASSET_ID_INVALID", "SEP_TRANSPORT_ASSET_ID_NONCANONICAL")
+
+
+def _canonical_uuid(value: str, invalid_code: str, noncanonical_code: str) -> str:
     if not isinstance(value, str):
-        raise ProductionTransportGatewayError("SEP_TRANSPORT_PROJECT_ID_INVALID")
+        raise ProductionTransportGatewayError(invalid_code)
     try:
         parsed = uuid.UUID(value)
     except (ValueError, AttributeError, TypeError) as exc:
-        raise ProductionTransportGatewayError("SEP_TRANSPORT_PROJECT_ID_INVALID") from exc
+        raise ProductionTransportGatewayError(invalid_code) from exc
     canonical = str(parsed)
     if value.lower() != canonical:
-        raise ProductionTransportGatewayError("SEP_TRANSPORT_PROJECT_ID_NONCANONICAL")
+        raise ProductionTransportGatewayError(noncanonical_code)
     return canonical
+
+
+def _canonical_roles(values: Iterable[str]) -> tuple[str, ...]:
+    if isinstance(values, (str, bytes)):
+        raise ProductionTransportGatewayError("SEP_TRANSPORT_ROLES_INVALID")
+    try:
+        roles = tuple(values)
+    except TypeError as exc:
+        raise ProductionTransportGatewayError("SEP_TRANSPORT_ROLES_INVALID") from exc
+    if not roles or len(roles) > 32:
+        raise ProductionTransportGatewayError("SEP_TRANSPORT_ROLES_INVALID")
+    if any(not isinstance(role, str) or not _SAFE_ROLE.fullmatch(role) for role in roles):
+        raise ProductionTransportGatewayError("SEP_TRANSPORT_ROLES_INVALID")
+    if len(set(roles)) != len(roles) or tuple(sorted(roles)) != roles:
+        raise ProductionTransportGatewayError("SEP_TRANSPORT_ROLES_NONCANONICAL")
+    return roles
+
+
+def _canonical_header_value(value: str, *, limit: int, code: str) -> str:
+    if (
+        not isinstance(value, str)
+        or not value
+        or value != value.strip()
+        or len(value.encode("utf-8")) > limit
+        or "\r" in value
+        or "\n" in value
+    ):
+        raise ProductionTransportGatewayError(code)
+    return value
 
 
 def _canonical_logical_job_id(value: str) -> str:
