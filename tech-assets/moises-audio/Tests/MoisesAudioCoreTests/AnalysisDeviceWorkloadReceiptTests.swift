@@ -156,7 +156,7 @@ final class AnalysisDeviceWorkloadReceiptTests: XCTestCase {
             AnalysisDeviceWorkloadStageEvent(stage: .tempo, startedOffsetSeconds: 0.05, endedOffsetSeconds: 0.15, status: .cancelled)
         ]
         let after = try receipt(kind: .cancellationProbe, stages: afterStages, snapshotData: .some(nil), snapshotSHA256: .some(nil), outputSummary: .some(nil))
-        report = AnalysisDeviceWorkloadReceiptValidator.validate(after, performanceEvidence: evidence(kind: .cancellationProbe, completedNormally: false, requested: 0.1, observed: 0.2), policy: policy)
+        report = AnalysisDeviceWorkloadReceiptValidator.validate(after, performanceEvidence: evidence(kind: .cancellationProbe, completedNormally: false, requested: 0.2, observed: 0.3), policy: policy)
         XCTAssertEqual(report.status, .realWorkCancellationPendingHQ)
     }
 

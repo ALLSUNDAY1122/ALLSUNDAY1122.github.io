@@ -34,6 +34,30 @@ public struct AnalysisRightsEvidence: Codable, Equatable, Sendable {
         self.sourceSHA256 = sourceSHA256.lowercased()
         self.notes = notes
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case grantID, rightsClass, permittedUses, expiresAt, sourceSHA256, notes
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        grantID = try container.decode(String.self, forKey: .grantID)
+        rightsClass = try container.decode(AnalysisRightsClass.self, forKey: .rightsClass)
+        permittedUses = Set(try container.decode([AnalysisBenchmarkPermittedUse].self, forKey: .permittedUses))
+        expiresAt = try container.decodeIfPresent(Date.self, forKey: .expiresAt)
+        sourceSHA256 = try container.decode(String.self, forKey: .sourceSHA256).lowercased()
+        notes = try container.decodeIfPresent(String.self, forKey: .notes)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(grantID, forKey: .grantID)
+        try container.encode(rightsClass, forKey: .rightsClass)
+        try container.encode(permittedUses.sorted { $0.rawValue < $1.rawValue }, forKey: .permittedUses)
+        try container.encodeIfPresent(expiresAt, forKey: .expiresAt)
+        try container.encode(sourceSHA256, forKey: .sourceSHA256)
+        try container.encodeIfPresent(notes, forKey: .notes)
+    }
 }
 
 public struct AnalysisReferenceAnnotation: Codable, Equatable, Sendable {
