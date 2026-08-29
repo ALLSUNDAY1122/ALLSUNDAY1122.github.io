@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   submit:
-    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[ASC-CMD] APP2-007 OTSU4 FINAL SUBMIT')
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTS4-SUBMIT]')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
