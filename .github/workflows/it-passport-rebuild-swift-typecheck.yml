@@ -1,0 +1,29 @@
+name: New IT Passport - Swift Typecheck
+
+on:
+  push:
+    branches:
+      - feature/it-passport-rebuild
+    paths:
+      - 'automation/it-passport-rebuild-typecheck-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  typecheck:
+    runs-on: macos-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/it-passport-rebuild
+      - name: Typecheck SwiftUI sources without running build scripts
+        run: |
+          SDK="$(xcrun --sdk iphonesimulator --show-sdk-path)"
+          xcrun swiftc \
+            -typecheck \
+            -sdk "$SDK" \
+            -target arm64-apple-ios16.0-simulator \
+            apps/it-passport-rebuild/ios/Sources/*.swift
