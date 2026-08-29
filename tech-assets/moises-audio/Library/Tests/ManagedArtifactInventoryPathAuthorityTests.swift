@@ -111,6 +111,74 @@ final class Lane2ManagedArtifactInventoryPathAuthorityTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: externalTarget), Data("must-survive".utf8))
     }
 
+    func testOrphanApplyRetainsChangedModificationWitnessEvenWhenReplacementIsOld() throws {
+        let root = try makeRoot(prefix: "orphan-witness")
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let now = Date(timeIntervalSince1970: 7_000_000)
+        let originalModification = now.addingTimeInterval(-7200)
+        let replacementModification = now.addingTimeInterval(-7100)
+        let relativePath = try pathInShard(0, stem: "witness")
+        let file = root.appendingPathComponent(relativePath)
+        try FileManager.default.createDirectory(
+            at: file.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try Data("original".utf8).write(to: file)
+        try FileManager.default.setAttributes(
+            [.modificationDate: originalModification],
+            ofItemAtPath: file.path
+        )
+
+        let inventory = Lane2ManagedArtifactInventory(rootURL: root)
+        try inventory.registerManaged(relativePaths: [relativePath])
+        try inventory.markAuthoritativeAfterCompatibilityCensus()
+        let slice = try inventory.prepareOrphanCandidateSlice(
+            gracePeriod: 3600,
+            now: now,
+            candidateLimit: 1,
+            shardVisitLimit: 1
+        )
+        let firstCandidate = try XCTUnwrap(slice.candidates.first)
+        XCTAssertEqual(firstCandidate.relativePath, relativePath)
+        XCTAssertEqual(
+            firstCandidate.recordedModificationTime,
+            originalModification.timeIntervalSince1970,
+            accuracy: 0.001
+        )
+
+        try Data("replacement".utf8).write(to: file)
+        try FileManager.default.setAttributes(
+            [.modificationDate: replacementModification],
+            ofItemAtPath: file.path
+        )
+        XCTAssertGreaterThan(now.timeIntervalSince(replacementModification), 3600)
+
+        let result = try inventory.applyOrphanCandidateSlice(
+            slice,
+            referencedRelativePaths: [],
+            gracePeriod: 3600,
+            now: now
+        )
+        XCTAssertTrue(result.removed.isEmpty)
+        XCTAssertEqual(result.retainedYoung, 1)
+        XCTAssertEqual(try Data(contentsOf: file), Data("replacement".utf8))
+
+        let refreshed = try inventory.prepareOrphanCandidateSlice(
+            gracePeriod: 3600,
+            now: now,
+            candidateLimit: 1,
+            shardVisitLimit: 1
+        )
+        let refreshedCandidate = try XCTUnwrap(refreshed.candidates.first)
+        XCTAssertEqual(refreshedCandidate.relativePath, relativePath)
+        XCTAssertEqual(
+            refreshedCandidate.recordedModificationTime,
+            replacementModification.timeIntervalSince1970,
+            accuracy: 0.001
+        )
+    }
+
     func testCursorPersistenceRejectsSymlinkedV1AncestorWithoutExternalWrite() throws {
         let root = try makeRoot(prefix: "cursor-root")
         let external = try makeRoot(prefix: "cursor-external")
