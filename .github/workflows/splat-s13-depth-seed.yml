@@ -37,8 +37,12 @@ jobs:
           grep -q 'seedOutcome.requiresFreshTrainer' SplatNative/ScanModel.swift
           grep -q 'restoreFinishedProjectForS13Reprocess' SplatNative/ScanModel.swift
           grep -q 'SplatPreviousResultEvidence.preserveBeforeReprocess' SplatNative/ScanModel.swift
+          grep -q 'reconstructionSeedEvidenceText' SplatNative/ScanModel.swift
           grep -q '同じ撮影から再生成' SplatNative/ScanLibraryView.swift
           grep -q 'canReprocessTrusted' SplatNative/ScanLibraryView.swift
+          grep -q 'reconstructionSeedEvidenceText' SplatNative/RootScanView.swift
+          grep -q 'reconstructionSeedEvidenceText' SplatNative/SplatResultView.swift
+          grep -q 'S13 seed:' SplatNative/ScanModel.swift
       - name: Preserve Build 8 reconstruction invariants
         working-directory: splat-native-ios
         run: |
