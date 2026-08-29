@@ -6,10 +6,10 @@ marker = '\n  clipboard-widget-asc-record-bootstrap:\n'
 
 probe = r'''          echo 'STAGE credential-probe'
           echo 'candidate_env_names_begin'
-          env | cut -d= -f1 | grep -Ei 'APPLE|FASTLANE|APP_STORE|CONNECT|(^|_)ASC(_|$)|DEVELOPER|SESSION' | sort || true
+          env | cut -d= -f1 | grep -Ei 'APPLE|FASTLANE|APP_STORE|CONNECT|(^|_)ASC(_|$)|DEVELOPER|SESSION|PASS|PASSWORD|USER|EMAIL|LOGIN|AUTH|COOKIE|ACCOUNT|CREDENTIAL' | sort || true
           echo 'candidate_env_names_end'
-          USERNAME="${FASTLANE_USER:-${APPLE_ID:-${APP_STORE_CONNECT_USERNAME:-${APPLE_USERNAME:-${APPLE_USER:-${ASC_USERNAME:-${IOS_APPLE_ID:-${APPLE_EMAIL:-}}}}}}}}"
-          PASSWORD="${FASTLANE_PASSWORD:-${APPLE_ID_PASSWORD:-${APPLE_PASSWORD:-${APP_STORE_CONNECT_PASSWORD:-${ASC_PASSWORD:-}}}}}"
+          USERNAME="${FASTLANE_USER:-${APPLE_ID:-${APP_STORE_CONNECT_USERNAME:-${APPLE_USERNAME:-${APPLE_USER:-${ASC_USERNAME:-${IOS_APPLE_ID:-${APPLE_EMAIL:-${ACCOUNT_EMAIL:-${LOGIN_EMAIL:-}}}}}}}}}}"
+          PASSWORD="${FASTLANE_PASSWORD:-${APPLE_ID_PASSWORD:-${APPLE_PASSWORD:-${APP_STORE_CONNECT_PASSWORD:-${ASC_PASSWORD:-${APP_SPECIFIC_PASSWORD:-${APPLICATION_SPECIFIC_PASSWORD:-}}}}}}}"
           SESSION="${FASTLANE_SESSION:-${APPLE_SESSION:-${ASC_SESSION:-}}}"
           if [[ -n "$USERNAME" ]]; then HAS_USERNAME=true; else HAS_USERNAME=false; fi
           if [[ -n "$PASSWORD" ]]; then HAS_PASSWORD=true; else HAS_PASSWORD=false; fi
