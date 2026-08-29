@@ -279,9 +279,8 @@ public struct Lane2ManagedArtifactSegmentedBoundedMutation: Sendable {
         do {
             guard try boundary.nodeExists(url, fileManager: fileManager) else { return nil }
             try boundary.requireExistingRegularFile(url, within: rootURL, fileManager: fileManager)
-            let attributes = try fileManager.attributesOfItem(atPath: url.path)
-            let date = attributes[.modificationDate] as? Date ?? .distantPast
-            return .init(relativePath: path, modificationTime: date.timeIntervalSince1970)
+            let modificationTime = try descriptorIO.regularFileModificationTime(at: url)
+            return .init(relativePath: path, modificationTime: modificationTime)
         } catch {
             throw Lane2ManagedArtifactBoundedMutationFailure.invalidRelativePath(path)
         }
