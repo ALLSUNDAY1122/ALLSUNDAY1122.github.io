@@ -54,9 +54,7 @@ jobs:
             "name": "pitari-resize-mobile",
             "version": "0.1.0",
             "private": true,
-            "dependencies": {
-              "expo": "~57.0.11"
-            }
+            "dependencies": {"expo": "~57.0.11"}
           }
           JSON
           cat > /tmp/pitari-eas/app.json <<'JSON'
@@ -66,40 +64,20 @@ jobs:
               "slug": "pitari-resize",
               "version": "0.1.0",
               "owner": "allsunday1122",
-              "ios": {
-                "bundleIdentifier": "jp.allsunday.pitariresize"
-              },
-              "extra": {
-                "eas": {
-                  "projectId": "d7480022-0db3-48dd-906e-43a12438ecdb"
-                }
-              }
+              "ios": {"bundleIdentifier": "jp.allsunday.pitariresize"},
+              "extra": {"eas": {"projectId": "d7480022-0db3-48dd-906e-43a12438ecdb"}}
             }
           }
           JSON
           cat > /tmp/pitari-eas/eas.json <<'JSON'
           {
-            "cli": {
-              "version": ">= 16.0.0",
-              "appVersionSource": "remote"
-            },
-            "build": {
-              "production": {
-                "autoIncrement": true
-              }
-            },
-            "submit": {
-              "production": {
-                "ios": {
-                  "ascAppId": "6795941132"
-                }
-              }
-            }
+            "cli": {"version": ">= 16.0.0", "appVersionSource": "remote"},
+            "build": {"production": {"autoIncrement": true}},
+            "submit": {"production": {"ios": {"ascAppId": "6795941132"}}}
           }
           JSON
           cat > /tmp/pitari-eas/.eas/workflows/release-ios.yml <<'YAML'
           name: Pitari iOS validation and TestFlight
-
           jobs:
             validate:
               name: Validate mobile
@@ -112,7 +90,6 @@ jobs:
                   run: pnpm test
                 - name: Expo doctor
                   run: pnpm doctor
-
             build_ios:
               name: Build iOS production
               needs: [validate]
@@ -121,20 +98,22 @@ jobs:
                 platform: ios
                 profile: production
                 message: 'TestFlight: video selection and long-video compression fixes'
-
             testflight:
               name: Upload to TestFlight
               needs: [build_ios]
               type: testflight
               params:
-                build_id: ${{ needs.build_ios.outputs.build_id }}
+                build_id: __EAS_BUILD_ID_EXPR__
                 profile: production
-                changelog: |
-                  - 動画選択済み状態を明確化
-                  - 長尺動画向け容量指定を1MB〜1GBへ拡張
-                  - 動画容量の初期値を元ファイル容量に連動
-                  - 課金表示・購入検証フローを再監査
+                changelog: '動画選択状態・長尺動画圧縮・課金検証フローを更新'
           YAML
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/pitari-eas/.eas/workflows/release-ios.yml')
+          text=p.read_text()
+          expr='$' + '{{ needs.build_ios.outputs.build_id }}'
+          p.write_text(text.replace('__EAS_BUILD_ID_EXPR__', expr))
+          PY
 
       - name: Execute Pitari EAS command
         env:
@@ -153,11 +132,9 @@ jobs:
           eas project:info | tee "$GITHUB_WORKSPACE/release-logs/eas-project-info.txt"
           eas build:list --platform ios --limit 10 --json --non-interactive > "$GITHUB_WORKSPACE/release-logs/eas-build-list.json"
           eas workflow:runs --limit 10 --json > "$GITHUB_WORKSPACE/release-logs/eas-workflow-runs.json"
-          if [ "$ACTION" = "inspect" ]; then
-            exit 0
-          fi
+          if [ "$ACTION" = "inspect" ]; then exit 0; fi
           if [ "$ACTION" = "run_workflow" ]; then
-            eas workflow:validate .eas/workflows/release-ios.yml --non-interactive | tee "$GITHUB_WORKSPACE/release-logs/eas-workflow-validate.txt"
+            eas workflow:validate .eas/workflows/release-ios.yml | tee "$GITHUB_WORKSPACE/release-logs/eas-workflow-validate.txt"
             eas workflow:run .eas/workflows/release-ios.yml --ref main --non-interactive --json > "$GITHUB_WORKSPACE/release-logs/eas-workflow-start.json"
             exit 0
           fi
