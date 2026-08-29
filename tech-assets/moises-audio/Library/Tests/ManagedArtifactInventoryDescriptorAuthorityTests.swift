@@ -220,6 +220,86 @@ final class Lane2ManagedArtifactInventoryDescriptorAuthorityTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: externalFile), sentinel)
     }
 
+    func testAuthoritativeShardPreflightUsesDescriptorMetadataForRegularShard() throws {
+        let root = try makeRoot(prefix: "shard-preflight-regular")
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let shards = root.appendingPathComponent(
+            ".LibraryRecovery/ArtifactInventory/v1/Shards",
+            isDirectory: true
+        )
+        try FileManager.default.createDirectory(at: shards, withIntermediateDirectories: true)
+        let payload = Data("descriptor-preflight".utf8)
+        try payload.write(to: shards.appendingPathComponent("00.json"))
+        try Data("hidden-compatibility-noise".utf8).write(
+            to: shards.appendingPathComponent(".ignored.json")
+        )
+
+        let inventory = Lane2ManagedArtifactInventory(rootURL: root)
+        let preflight = inventory.authoritativeShardPreflight(maximumEncodedBytes: 1024)
+
+        XCTAssertTrue(preflight.safeForAuthoritativeDecode)
+        XCTAssertEqual(preflight.checkedShards, 1)
+        XCTAssertEqual(preflight.largestEncodedBytes, payload.count)
+    }
+
+    func testAuthoritativeShardPreflightRejectsSymlinkLeafWithoutBorrowingExternalMetadata() throws {
+        let root = try makeRoot(prefix: "shard-preflight-symlink-root")
+        let external = try makeRoot(prefix: "shard-preflight-symlink-external")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+
+        let shards = root.appendingPathComponent(
+            ".LibraryRecovery/ArtifactInventory/v1/Shards",
+            isDirectory: true
+        )
+        try FileManager.default.createDirectory(at: shards, withIntermediateDirectories: true)
+        let externalShard = external.appendingPathComponent("00.json")
+        let sentinel = Data(repeating: 0x5a, count: 4096)
+        try sentinel.write(to: externalShard)
+        try FileManager.default.createSymbolicLink(
+            at: shards.appendingPathComponent("00.json"),
+            withDestinationURL: externalShard
+        )
+
+        let inventory = Lane2ManagedArtifactInventory(rootURL: root)
+        let preflight = inventory.authoritativeShardPreflight(maximumEncodedBytes: 8192)
+
+        XCTAssertFalse(preflight.safeForAuthoritativeDecode)
+        XCTAssertEqual(preflight.checkedShards, 1)
+        XCTAssertEqual(try Data(contentsOf: externalShard), sentinel)
+    }
+
+    func testAuthoritativeShardPreflightRejectsSymlinkShardDirectory() throws {
+        let root = try makeRoot(prefix: "shard-directory-symlink-root")
+        let external = try makeRoot(prefix: "shard-directory-symlink-external")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+
+        let v1 = root.appendingPathComponent(
+            ".LibraryRecovery/ArtifactInventory/v1",
+            isDirectory: true
+        )
+        try FileManager.default.createDirectory(at: v1, withIntermediateDirectories: true)
+        let externalShard = external.appendingPathComponent("00.json")
+        let sentinel = Data("external-shard-directory-must-survive".utf8)
+        try sentinel.write(to: externalShard)
+        try FileManager.default.createSymbolicLink(
+            at: v1.appendingPathComponent("Shards", isDirectory: true),
+            withDestinationURL: external
+        )
+
+        let inventory = Lane2ManagedArtifactInventory(rootURL: root)
+        let preflight = inventory.authoritativeShardPreflight(maximumEncodedBytes: 1024)
+
+        XCTAssertFalse(preflight.safeForAuthoritativeDecode)
+        XCTAssertEqual(try Data(contentsOf: externalShard), sentinel)
+    }
+
     private func makeRoot(prefix: String) throws -> URL {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(
             "L2InventoryDescriptorAuthority-\(prefix)-\(UUID().uuidString)",
