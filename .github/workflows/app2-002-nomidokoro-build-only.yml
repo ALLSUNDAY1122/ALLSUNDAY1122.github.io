@@ -22,11 +22,25 @@ jobs:
           python3 - <<'PY'
           import json, os, time, urllib.request, urllib.error
           from pathlib import Path
+
+          command_path=Path('automation/app2-002-nomidokoro-build-command.json')
+          command=json.loads(command_path.read_text(encoding='utf-8'))
+          if command.get('task_id')!='APP2-002':
+              raise SystemExit('unexpected task id')
+          if command.get('allow_codemagic_build') is not True:
+              print('SKIP: Codemagic build is locked. Set allow_codemagic_build=true only when a user-verifiable build is ready.')
+              raise SystemExit(0)
+
+          requested_build=command.get('requested_apple_build_number')
+          if not isinstance(requested_build,int) or requested_build < 1:
+              raise SystemExit('invalid requested_apple_build_number')
+
           TOKEN=os.environ['CM_API_TOKEN'].strip()
           APP_ID='6a66134ea9f671d548da335a'
           WORKFLOW='ios-native'
           BRANCH='codex/nomikai-arcade-ios-release'
           TERMINAL={'finished','failed','canceled','timeout','skipped'}
+
           def call(url, method='GET', payload=None):
               body=None if payload is None else json.dumps(payload).encode('utf-8')
               req=urllib.request.Request(url,data=body,method=method,headers={'Content-Type':'application/json','Accept':'application/json','x-auth-token':TOKEN})
@@ -36,10 +50,21 @@ jobs:
               except urllib.error.HTTPError as e:
                   raw=e.read().decode('utf-8',errors='replace')
                   raise RuntimeError(f'Codemagic HTTP {e.code}: {raw[:1200]}')
+
           status,resp=call('https://api.codemagic.io/builds','POST',{'appId':APP_ID,'workflowId':WORKFLOW,'branch':BRANCH})
           build_id=resp.get('buildId') or resp.get('id')
           if not build_id: raise SystemExit(f'No build id: {resp}')
-          result={'task_id':'APP2-002','app_id':APP_ID,'workflow_id':WORKFLOW,'branch':BRANCH,'codemagic_build_id':build_id,'start_http_status':status,'requested_apple_build_number':7,'submit_to_app_store':False}
+          result={
+              'task_id':'APP2-002',
+              'app_id':APP_ID,
+              'workflow_id':WORKFLOW,
+              'branch':BRANCH,
+              'codemagic_build_id':build_id,
+              'start_http_status':status,
+              'requested_apple_build_number':requested_build,
+              'submit_to_app_store':False,
+              'reason':command.get('reason')
+          }
           out=Path('automation/app2-002-build-result.json')
           deadline=time.time()+2400
           while time.time()<deadline:
