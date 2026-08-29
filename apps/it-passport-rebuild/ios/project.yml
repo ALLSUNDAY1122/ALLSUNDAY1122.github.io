@@ -23,6 +23,8 @@ targets:
       - path: Assets.xcassets
       - path: PrivacyInfo.xcprivacy
         buildPhase: resources
+      - path: ../questions/starter-v1.json
+        buildPhase: resources
     preBuildScripts:
       - name: Materialize canonical AppIcon
         script: bash tools/materialize_appicon.sh
