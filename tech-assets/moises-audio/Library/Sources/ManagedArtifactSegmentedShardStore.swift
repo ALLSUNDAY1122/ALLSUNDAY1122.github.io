@@ -98,7 +98,10 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
             try requireSegmentFile(url)
             let segment: Segment
             do {
-                segment = try JSONDecoder().decode(Segment.self, from: Data(contentsOf: url))
+                segment = try JSONDecoder().decode(
+                    Segment.self,
+                    from: descriptorIO.readRegularFile(at: url)
+                )
             } catch {
                 throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
             }
@@ -152,7 +155,10 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
 
         let legacy: LegacyShard
         do {
-            legacy = try JSONDecoder().decode(LegacyShard.self, from: Data(contentsOf: legacyURL))
+            legacy = try JSONDecoder().decode(
+                LegacyShard.self,
+                from: descriptorIO.readRegularFile(at: legacyURL)
+            )
         } catch {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptLegacyShard(legacyURL.lastPathComponent)
         }
@@ -293,7 +299,10 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
                 within: segmentedDirectoryURL,
                 fileManager: fileManager
             )
-            let pending = try JSONDecoder().decode(Manifest.self, from: Data(contentsOf: pendingURL))
+            let pending = try JSONDecoder().decode(
+                Manifest.self,
+                from: descriptorIO.readRegularFile(at: pendingURL)
+            )
             guard pending.schemaVersion == manifest.schemaVersion,
                   pending.shardIndex == manifest.shardIndex,
                   pending.generation == manifest.generation,
@@ -313,7 +322,10 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
             try requireSegmentFile(url)
             let decoded: Segment
             do {
-                decoded = try JSONDecoder().decode(Segment.self, from: Data(contentsOf: url))
+                decoded = try JSONDecoder().decode(
+                    Segment.self,
+                    from: descriptorIO.readRegularFile(at: url)
+                )
             } catch {
                 throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
             }
@@ -369,7 +381,10 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
 
         let manifest: Manifest
         do {
-            manifest = try JSONDecoder().decode(Manifest.self, from: Data(contentsOf: url))
+            manifest = try JSONDecoder().decode(
+                Manifest.self,
+                from: descriptorIO.readRegularFile(at: url)
+            )
         } catch {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(url.lastPathComponent)
         }
@@ -396,6 +411,10 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
 
     private var boundary: LibraryManagedPathBoundary {
         LibraryManagedPathBoundary(rootURL: rootURL)
+    }
+
+    private var descriptorIO: Lane2LibraryDescriptorRelativeIO {
+        Lane2LibraryDescriptorRelativeIO(rootURL: rootURL)
     }
 
     private var v1DirectoryURL: URL {
