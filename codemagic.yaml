@@ -1199,12 +1199,18 @@ workflows:
           : > "$DIAG"
           exec > >(tee -a "$DIAG") 2>&1
           echo 'STAGE credential-probe'
-          USERNAME="${FASTLANE_USER:-${APPLE_ID:-${APP_STORE_CONNECT_USERNAME:-}}}"
-          PASSWORD="${FASTLANE_PASSWORD:-${APPLE_ID_PASSWORD:-}}"
-          SESSION="${FASTLANE_SESSION:-}"
-          echo "has_username=$([[ -n \"$USERNAME\" ]] && echo true || echo false)"
-          echo "has_password=$([[ -n \"$PASSWORD\" ]] && echo true || echo false)"
-          echo "has_session=$([[ -n \"$SESSION\" ]] && echo true || echo false)"
+          echo 'candidate_env_names_begin'
+          env | cut -d= -f1 | grep -Ei 'APPLE|FASTLANE|APP_STORE|CONNECT|(^|_)ASC(_|$)|DEVELOPER|SESSION' | sort || true
+          echo 'candidate_env_names_end'
+          USERNAME="${FASTLANE_USER:-${APPLE_ID:-${APP_STORE_CONNECT_USERNAME:-${APPLE_USERNAME:-${APPLE_USER:-${ASC_USERNAME:-${IOS_APPLE_ID:-${APPLE_EMAIL:-}}}}}}}}"
+          PASSWORD="${FASTLANE_PASSWORD:-${APPLE_ID_PASSWORD:-${APPLE_PASSWORD:-${APP_STORE_CONNECT_PASSWORD:-${ASC_PASSWORD:-}}}}}"
+          SESSION="${FASTLANE_SESSION:-${APPLE_SESSION:-${ASC_SESSION:-}}}"
+          if [[ -n "$USERNAME" ]]; then HAS_USERNAME=true; else HAS_USERNAME=false; fi
+          if [[ -n "$PASSWORD" ]]; then HAS_PASSWORD=true; else HAS_PASSWORD=false; fi
+          if [[ -n "$SESSION" ]]; then HAS_SESSION=true; else HAS_SESSION=false; fi
+          echo "has_username=$HAS_USERNAME"
+          echo "has_password=$HAS_PASSWORD"
+          echo "has_session=$HAS_SESSION"
           if [[ -z "$USERNAME" || ( -z "$PASSWORD" && -z "$SESSION" ) ]]; then
             echo 'BLOCKED: no stored Apple web-login credential/session usable by fastlane produce'
             exit 44
