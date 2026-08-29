@@ -94,6 +94,18 @@ public struct Lane2ManagedArtifactCompatibilityCensus: Sendable {
         fileManagerHandle.value
     }
 
+    private var pathAuthority: Lane2ManagedArtifactInventoryPathAuthority {
+        Lane2ManagedArtifactInventoryPathAuthority(
+            rootURL: rootURL,
+            recoveryDirectoryName: recoveryDirectoryName,
+            fileManager: fileManager
+        )
+    }
+
+    private var descriptorIO: Lane2LibraryDescriptorRelativeIO {
+        Lane2LibraryDescriptorRelativeIO(rootURL: rootURL)
+    }
+
     @discardableResult
     public func advance(
         registrationLimit: Int = Self.defaultRegistrationLimit
@@ -286,15 +298,20 @@ public struct Lane2ManagedArtifactCompatibilityCensus: Sendable {
     }
 
     private func loadState() throws -> Lane2ManagedArtifactCensusState? {
-        guard fileManager.fileExists(atPath: stateURL.path) else { return nil }
         do {
-            let values = try stateURL.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
-            guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                throw Lane2ManagedArtifactCensusFailure.corruptState
-            }
+            guard try pathAuthority.requireV1DirectoryIfPresent() else { return nil }
+            guard try pathAuthority.requireDirectoryIfPresent(censusDirectoryURL) else { return nil }
+            guard try pathAuthority.requireRegularFileOrMissing(
+                stateURL,
+                within: censusDirectoryURL
+            ) else { return nil }
+            let data = try descriptorIO.readRegularFile(
+                at: stateURL,
+                maximumBytes: 64 * 1024
+            )
             let state = try JSONDecoder().decode(
                 Lane2ManagedArtifactCensusState.self,
-                from: Data(contentsOf: stateURL)
+                from: data
             )
             guard state.schemaVersion == Lane2ManagedArtifactCensusState.schemaVersion,
                   state.generation >= 1,
@@ -315,23 +332,51 @@ public struct Lane2ManagedArtifactCompatibilityCensus: Sendable {
     }
 
     private func persistState(_ state: Lane2ManagedArtifactCensusState) throws {
-        try fileManager.createDirectory(at: censusDirectoryURL, withIntermediateDirectories: true)
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys]
-        try encoder.encode(state).write(to: stateURL, options: [.atomic])
+        do {
+            try pathAuthority.ensureV1Directory()
+            try pathAuthority.boundary.ensureDirectory(
+                censusDirectoryURL,
+                fileManager: fileManager
+            )
+            _ = try pathAuthority.requireRegularFileOrMissing(
+                stateURL,
+                within: censusDirectoryURL
+            )
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.sortedKeys]
+            try descriptorIO.writeRegularFileAtomically(
+                encoder.encode(state),
+                to: stateURL
+            )
+            try pathAuthority.requireExistingRegularFile(
+                stateURL,
+                within: censusDirectoryURL
+            )
+        } catch let failure as Lane2ManagedArtifactCensusFailure {
+            throw failure
+        } catch {
+            throw Lane2ManagedArtifactCensusFailure.corruptState
+        }
     }
 
     private func removeStateIfPresent() throws {
-        guard fileManager.fileExists(atPath: stateURL.path) else { return }
-        try fileManager.removeItem(at: stateURL)
+        do {
+            guard try pathAuthority.requireV1DirectoryIfPresent() else { return }
+            guard try pathAuthority.requireDirectoryIfPresent(censusDirectoryURL) else { return }
+            guard try pathAuthority.requireRegularFileOrMissing(
+                stateURL,
+                within: censusDirectoryURL
+            ) else { return }
+            try descriptorIO.removeRegularFile(at: stateURL)
+        } catch let failure as Lane2ManagedArtifactCensusFailure {
+            throw failure
+        } catch {
+            throw Lane2ManagedArtifactCensusFailure.corruptState
+        }
     }
 
     private var censusDirectoryURL: URL {
-        rootURL
-            .appendingPathComponent(recoveryDirectoryName, isDirectory: true)
-            .appendingPathComponent("ArtifactInventory", isDirectory: true)
-            .appendingPathComponent("v1", isDirectory: true)
-            .appendingPathComponent("Census", isDirectory: true)
+        pathAuthority.v1DirectoryURL.appendingPathComponent("Census", isDirectory: true)
     }
 
     private var stateURL: URL {
