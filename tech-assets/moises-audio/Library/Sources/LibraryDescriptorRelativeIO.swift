@@ -77,6 +77,28 @@ struct Lane2LibraryDescriptorRelativeIO: Sendable {
         }
     }
 
+    /// Reads the modification time from the exact regular-file descriptor opened through the
+    /// pinned managed tree. No pathname-level metadata lookup is performed after parent pinning.
+    ///
+    /// The returned value identifies the inode that was opened and `fstat`-verified for this call.
+    /// It intentionally does not claim protection against a later same-parent regular-file rename.
+    func regularFileModificationTime(at url: URL) throws -> TimeInterval {
+        let relative = try relativeComponents(for: url)
+        return try withPinnedParent(relativeComponents: relative) { parentFD, leaf in
+            let fd = leaf.withCString { pointer in
+                lane2OpenAt(parentFD, pointer, lane2ReadOnlyNoFollowFlags, 0)
+            }
+            guard fd >= 0 else { throw Failure.openFailed(leaf) }
+            defer { _ = lane2Close(fd) }
+
+            var status = stat()
+            guard lane2Fstat(fd, &status) == 0 else { throw Failure.openFailed(leaf) }
+            let fileType = status.st_mode & mode_t(S_IFMT)
+            guard fileType == mode_t(S_IFREG) else { throw Failure.notRegularFile(leaf) }
+            return lane2ModificationTime(status)
+        }
+    }
+
     func writeRegularFileAtomically(_ data: Data, to url: URL) throws {
         let relative = try relativeComponents(for: url)
         try withPinnedParent(relativeComponents: relative) { parentFD, leaf in
@@ -224,6 +246,9 @@ private let lane2DirectoryNoFollowFlags = O_RDONLY | O_DIRECTORY | O_NOFOLLOW | 
 private let lane2ReadOnlyNoFollowFlags = O_RDONLY | O_NOFOLLOW | O_CLOEXEC
 private let lane2CreateExclusiveNoFollowFlags = O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC
 
+@inline(__always) private func lane2ModificationTime(_ status: stat) -> TimeInterval {
+    TimeInterval(status.st_mtimespec.tv_sec) + TimeInterval(status.st_mtimespec.tv_nsec) / 1_000_000_000
+}
 @inline(__always) private func lane2Open(_ path: UnsafePointer<CChar>, _ flags: Int32, _ mode: mode_t) -> Int32 {
     Darwin.open(path, flags, mode)
 }
@@ -242,6 +267,9 @@ private let lane2DirectoryNoFollowFlags = O_RDONLY | O_DIRECTORY | O_NOFOLLOW | 
 private let lane2ReadOnlyNoFollowFlags = O_RDONLY | O_NOFOLLOW | O_CLOEXEC
 private let lane2CreateExclusiveNoFollowFlags = O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC
 
+@inline(__always) private func lane2ModificationTime(_ status: stat) -> TimeInterval {
+    TimeInterval(status.st_mtim.tv_sec) + TimeInterval(status.st_mtim.tv_nsec) / 1_000_000_000
+}
 @inline(__always) private func lane2Open(_ path: UnsafePointer<CChar>, _ flags: Int32, _ mode: mode_t) -> Int32 {
     Glibc.open(path, flags, mode)
 }
