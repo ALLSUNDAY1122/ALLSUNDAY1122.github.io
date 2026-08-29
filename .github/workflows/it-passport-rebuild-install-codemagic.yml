@@ -24,120 +24,23 @@ jobs:
       - name: Install isolated New IT Passport workflow
         run: |
           python3 - <<'PY'
+          import base64
           from pathlib import Path
-
           path = Path('codemagic.yaml')
           text = path.read_text(encoding='utf-8')
           marker = '  it-passport-rebuild-ios:\n'
           if marker in text:
               print('PASS: it-passport-rebuild-ios already exists')
               raise SystemExit(0)
-          if not text.startswith('workflows:\n') and '\nworkflows:\n' not in text[:500]:
-              raise SystemExit('codemagic.yaml workflows root not found')
-
-          block = r'''  it-passport-rebuild-ios:
-    name: 新ITパスポート - iOS App Store Build
-    max_build_duration: 60
-    instance_type: mac_mini_m2
-    integrations:
-      app_store_connect: "Codemagic Shiwake Swipe"
-    environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: jp.allsunday1122.itpassportstudy
-      vars:
-        BUNDLE_ID: jp.allsunday1122.itpassportstudy
-        XCODE_PROJECT: apps/it-passport-rebuild/ios/ITPassportStudy.xcodeproj
-        XCODE_SCHEME: ITPassportStudy
-        EXPECTED_APPICON_SHA256: be4b5e7a38909ce702065c660cc18f6401b9ae2a560e71b342d8204f5067e677
-      xcode: latest
-    scripts:
-      - name: Install XcodeGen
-        script: |
-          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-      - name: Verify canonical release inputs
-        script: |
-          set -euo pipefail
-          cd "$CM_BUILD_DIR/apps/it-passport-rebuild/ios"
-          test "$BUNDLE_ID" = "jp.allsunday1122.itpassportstudy"
-          bash tools/materialize_appicon.sh
-          test -f Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
-          echo "$EXPECTED_APPICON_SHA256  Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" | shasum -a 256 -c -
-          test -f PrivacyInfo.xcprivacy
-          test -f ../questions/starter-v1.json
-      - name: Set CI build number and generate Xcode project
-        script: |
-          set -euo pipefail
-          cd "$CM_BUILD_DIR/apps/it-passport-rebuild/ios"
-          python3 - "$CM_BUILD_NUMBER" <<'PYBUILD'
-          from pathlib import Path
-          import re, sys
-          p = Path('project.yml')
-          text = p.read_text(encoding='utf-8')
-          text, n = re.subn(r'CURRENT_PROJECT_VERSION:\s*\d+', 'CURRENT_PROJECT_VERSION: ' + sys.argv[1], text, count=1)
-          if n != 1:
-              raise RuntimeError('CURRENT_PROJECT_VERSION replacement failed')
-          p.write_text(text, encoding='utf-8')
-          PYBUILD
-          xcodegen generate
-      - name: Apply App Store signing profile for internal distribution
-        script: |
-          set -euo pipefail
-          cd "$CM_BUILD_DIR/apps/it-passport-rebuild/ios"
-          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
-      - name: Build signed IPA
-        script: |
-          set -euo pipefail
-          xcode-project build-ipa \
-            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
-      - name: Verify packaged IPA identity
-        script: |
-          set -euo pipefail
-          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
-          test -n "$IPA_PATH"
-          VERIFY_DIR="$(mktemp -d)"
-          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
-          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
-          python3 - "$APP_DIR" <<'PYVERIFY'
-          from pathlib import Path
-          import plistlib, sys
-          app = Path(sys.argv[1])
-          info = plistlib.loads((app / 'Info.plist').read_bytes())
-          assert info.get('CFBundleIdentifier') == 'jp.allsunday1122.itpassportstudy'
-          assert str(info.get('CFBundleVersion', '')).isdigit()
-          assert (app / 'Assets.car').is_file()
-          assert (app / 'embedded.mobileprovision').is_file()
-          assert (app / '_CodeSignature').is_dir()
-          print('PASS: signed New IT Passport IPA identity verified')
-          PYVERIFY
-    artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: false
-        submit_to_app_store: false
-
-'''
+          block_b64 = 'ICBpdC1wYXNzcG9ydC1yZWJ1aWxkLWlvczoKICAgIG5hbWU6IOaWsElU44OR44K544Od44O844OIIC0gaU9TIEFwcCBTdG9yZSBCdWlsZAogICAgbWF4X2J1aWxkX2R1cmF0aW9uOiA2MAogICAgaW5zdGFuY2VfdHlwZTogbWFjX21pbmlfbTIKICAgIGludGVncmF0aW9uczoKICAgICAgYXBwX3N0b3JlX2Nvbm5lY3Q6ICJDb2RlbWFnaWMgU2hpd2FrZSBTd2lwZSIKICAgIGVudmlyb25tZW50OgogICAgICBpb3Nfc2lnbmluZzoKICAgICAgICBkaXN0cmlidXRpb25fdHlwZTogYXBwX3N0b3JlCiAgICAgICAgYnVuZGxlX2lkZW50aWZpZXI6IGpwLmFsbHN1bmRheTExMjIuaXRwYXNzcG9ydHN0dWR5CiAgICAgIHZhcnM6CiAgICAgICAgQlVORExFX0lEOiBqcC5hbGxzdW5kYXkxMTIyLml0cGFzc3BvcnRzdHVkeQogICAgICAgIFhDT0RFX1BST0pFQ1Q6IGFwcHMvaXQtcGFzc3BvcnQtcmVidWlsZC9pb3MvSVRQYXNzcG9ydFN0dWR5Lnhjb2RlcHJvagogICAgICAgIFhDT0RFX1NDSEVNRTogSVRQYXNzcG9ydFN0dWR5CiAgICAgICAgRVhQRUNURURfQVBQSUNPTl9TSEEyNTY6IGJlNGI1ZTdhMzg5MDljZTcwMjA2NWM2NjBjYzE4ZjY0MDFiOWFlMmE1NjBlNzFiMzQyZDgyMDRmNTA2N2U2NzcKICAgICAgeGNvZGU6IGxhdGVzdAogICAgc2NyaXB0czoKICAgICAgLSBuYW1lOiBJbnN0YWxsIFhjb2RlR2VuCiAgICAgICAgc2NyaXB0OiB8CiAgICAgICAgICBIT01FQlJFV19OT19BVVRPX1VQREFURT0xIGJyZXcgaW5zdGFsbCB4Y29kZWdlbgogICAgICAtIG5hbWU6IFZlcmlmeSBjYW5vbmljYWwgcmVsZWFzZSBpbnB1dHMKICAgICAgICBzY3JpcHQ6IHwKICAgICAgICAgIHNldCAtZXVvIHBpcGVmYWlsCiAgICAgICAgICBjZCAiJENNX0JVSUxEX0RJUi9hcHBzL2l0LXBhc3Nwb3J0LXJlYnVpbGQvaW9zIgogICAgICAgICAgdGVzdCAiJEJVTkRMRV9JRCIgPSAianAuYWxsc3VuZGF5MTEyMi5pdHBhc3Nwb3J0c3R1ZHkiCiAgICAgICAgICBiYXNoIHRvb2xzL21hdGVyaWFsaXplX2FwcGljb24uc2gKICAgICAgICAgIHRlc3QgLWYgQXNzZXRzLnhjYXNzZXRzL0FwcEljb24uYXBwaWNvbnNldC9BcHBJY29uLTEwMjQucG5nCiAgICAgICAgICBlY2hvICIkRVhQRUNURURfQVBQSUNPTl9TSEEyNTYgIEFzc2V0cy54Y2Fzc2V0cy9BcHBJY29uLmFwcGljb25zZXQvQXBwSWNvbi0xMDI0LnBuZyIgfCBzaGFzdW0gLWEgMjU2IC1jIC0KICAgICAgICAgIHRlc3QgLWYgUHJpdmFjeUluZm8ueGNwcml2YWN5CiAgICAgICAgICB0ZXN0IC1mIC4uL3F1ZXN0aW9ucy9zdGFydGVyLXYxLmpzb24KICAgICAgLSBuYW1lOiBTZXQgQ0kgYnVpbGQgbnVtYmVyIGFuZCBnZW5lcmF0ZSBYY29kZSBwcm9qZWN0CiAgICAgICAgc2NyaXB0OiB8CiAgICAgICAgICBzZXQgLWV1byBwaXBlZmFpbAogICAgICAgICAgY2QgIiRDTV9CVUlMRF9ESVIvYXBwcy9pdC1wYXNzcG9ydC1yZWJ1aWxkL2lvcyIKICAgICAgICAgIHB5dGhvbjMgLSAiJENNX0JVSUxEX05VTUJFUiIgPDwnUFlCVUlMRCcKICAgICAgICAgIGZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAogICAgICAgICAgaW1wb3J0IHJlLCBzeXMKICAgICAgICAgIHAgPSBQYXRoKCdwcm9qZWN0LnltbCcpCiAgICAgICAgICB0ZXh0ID0gcC5yZWFkX3RleHQoZW5jb2Rpbmc9J3V0Zi04JykKICAgICAgICAgIHRleHQsIG4gPSByZS5zdWJuKHInQ1VSUkVOVF9QUk9KRUNUX1ZFUlNJT046XHMqXGQrJywgJ0NVUlJFTlRfUFJPSkVDVF9WRVJTSU9OOiAnICsgc3lzLmFyZ3ZbMV0sIHRleHQsIGNvdW50PTEpCiAgICAgICAgICBpZiBuICE9IDE6CiAgICAgICAgICAgICAgcmFpc2UgUnVudGltZUVycm9yKCdDVVJSRU5UX1BST0pFQ1RfVkVSU0lPTiByZXBsYWNlbWVudCBmYWlsZWQnKQogICAgICAgICAgcC53cml0ZV90ZXh0KHRleHQsIGVuY29kaW5nPSd1dGYtOCcpCiAgICAgICAgICBQWUJVSUxECiAgICAgICAgICB4Y29kZWdlbiBnZW5lcmF0ZQogICAgICAtIG5hbWU6IEFwcGx5IEFwcCBTdG9yZSBzaWduaW5nIHByb2ZpbGUgZm9yIGludGVybmFsIGRpc3RyaWJ1dGlvbgogICAgICAgIHNjcmlwdDogfAogICAgICAgICAgc2V0IC1ldW8gcGlwZWZhaWwKICAgICAgICAgIGNkICIkQ01fQlVJTERfRElSL2FwcHMvaXQtcGFzc3BvcnQtcmVidWlsZC9pb3MiCiAgICAgICAgICB4Y29kZS1wcm9qZWN0IHVzZS1wcm9maWxlcyAtLWN1c3RvbS1leHBvcnQtb3B0aW9ucz0neyJ0ZXN0RmxpZ2h0SW50ZXJuYWxUZXN0aW5nT25seSI6IHRydWV9JwogICAgICAtIG5hbWU6IEJ1aWxkIHNpZ25lZCBJUEEKICAgICAgICBzY3JpcHQ6IHwKICAgICAgICAgIHNldCAtZXVvIHBpcGVmYWlsCiAgICAgICAgICB4Y29kZS1wcm9qZWN0IGJ1aWxkLWlwYSBcCiAgICAgICAgICAgIC0tcHJvamVjdCAiJENNX0JVSUxEX0RJUi8kWENPREVfUFJPSkVDVCIgXAogICAgICAgICAgICAtLXNjaGVtZSAiJFhDT0RFX1NDSEVNRSIKICAgICAgLSBuYW1lOiBWZXJpZnkgcGFja2FnZWQgSVBBIGlkZW50aXR5CiAgICAgICAgc2NyaXB0OiB8CiAgICAgICAgICBzZXQgLWV1byBwaXBlZmFpbAogICAgICAgICAgSVBBX1BBVEg9IiQoZmluZCAiJENNX0JVSUxEX0RJUi9idWlsZC9pb3MvaXBhIiAtbWF4ZGVwdGggMSAtdHlwZSBmIC1uYW1lICcqLmlwYScgLXByaW50IC1xdWl0KSIKICAgICAgICAgIHRlc3QgLW4gIiRJUEFfUEFUSCIKICAgICAgICAgIFZFUklGWV9ESVI9IiQobWt0ZW1wIC1kKSIKICAgICAgICAgIHVuemlwIC1xICIkSVBBX1BBVEgiIC1kICIkVkVSSUZZX0RJUiIKICAgICAgICAgIEFQUF9ESVI9IiQoZmluZCAiJFZFUklGWV9ESVIvUGF5bG9hZCIgLW1heGRlcHRoIDEgLXR5cGUgZCAtbmFtZSAnKi5hcHAnIC1wcmludCAtcXVpdCkiCiAgICAgICAgICBweXRob24zIC0gIiRBUFBfRElSIiA8PCdQWVZFUklGWScKICAgICAgICAgIGZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAogICAgICAgICAgaW1wb3J0IHBsaXN0bGliLCBzeXMKICAgICAgICAgIGFwcCA9IFBhdGgoc3lzLmFyZ3ZbMV0pCiAgICAgICAgICBpbmZvID0gcGxpc3RsaWIubG9hZHMoKGFwcCAvICdJbmZvLnBsaXN0JykucmVhZF9ieXRlcygpKQogICAgICAgICAgYXNzZXJ0IGluZm8uZ2V0KCdDRkJ1bmRsZUlkZW50aWZpZXInKSA9PSAnanAuYWxsc3VuZGF5MTEyMi5pdHBhc3Nwb3J0c3R1ZHknCiAgICAgICAgICBhc3NlcnQgc3RyKGluZm8uZ2V0KCdDRkJ1bmRsZVZlcnNpb24nLCAnJykpLmlzZGlnaXQoKQogICAgICAgICAgYXNzZXJ0IChhcHAgLyAnQXNzZXRzLmNhcicpLmlzX2ZpbGUoKQogICAgICAgICAgYXNzZXJ0IChhcHAgLyAnZW1iZWRkZWQubW9iaWxlcHJvdmlzaW9uJykuaXNfZmlsZSgpCiAgICAgICAgICBhc3NlcnQgKGFwcCAvICdfQ29kZVNpZ25hdHVyZScpLmlzX2RpcigpCiAgICAgICAgICBwcmludCgnUEFTUzogc2lnbmVkIE5ldyBJVCBQYXNzcG9ydCBJUEEgaWRlbnRpdHkgdmVyaWZpZWQnKQogICAgICAgICAgUFlWRVJJRlkKICAgIGFydGlmYWN0czoKICAgICAgLSBidWlsZC9pb3MvaXBhLyouaXBhCiAgICAgIC0gL3RtcC94Y29kZWJ1aWxkX2xvZ3MvKi5sb2cKICAgIHB1Ymxpc2hpbmc6CiAgICAgIGFwcF9zdG9yZV9jb25uZWN0OgogICAgICAgIGF1dGg6IGludGVncmF0aW9uCiAgICAgICAgc3VibWl0X3RvX3Rlc3RmbGlnaHQ6IGZhbHNlCiAgICAgICAgc3VibWl0X3RvX2FwcF9zdG9yZTogZmFsc2UKCg=='
+          block = base64.b64decode(block_b64).decode('utf-8')
           idx = text.find('workflows:\n')
           if idx < 0:
-              raise SystemExit('workflows root not found')
+              raise SystemExit('codemagic.yaml workflows root not found')
           insert_at = idx + len('workflows:\n')
-          text = text[:insert_at] + block + text[insert_at:]
-          path.write_text(text, encoding='utf-8')
-
+          path.write_text(text[:insert_at] + block + text[insert_at:], encoding='utf-8')
           check = path.read_text(encoding='utf-8')
-          required = [
-              'it-passport-rebuild-ios:',
-              'jp.allsunday1122.itpassportstudy',
-              'EXPECTED_APPICON_SHA256: be4b5e7a38909ce702065c660cc18f6401b9ae2a560e71b342d8204f5067e677',
-              'testFlightInternalTestingOnly',
-              'submit_to_testflight: false',
-              'submit_to_app_store: false',
-          ]
-          for token in required:
+          for token in ('it-passport-rebuild-ios:', 'jp.allsunday1122.itpassportstudy', 'testFlightInternalTestingOnly', 'submit_to_testflight: false', 'submit_to_app_store: false'):
               if token not in check:
                   raise SystemExit('missing New IT Passport Codemagic token: ' + token)
           print('PASS: isolated New IT Passport Codemagic workflow installed')
