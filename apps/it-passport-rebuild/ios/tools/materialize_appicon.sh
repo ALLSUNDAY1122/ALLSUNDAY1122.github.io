@@ -7,6 +7,7 @@ OUT="$ICON_DIR/AppIcon-1024.png"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 SRC="$TMP/ITPassport-canonical.png"
+VENV="$TMP/venv"
 FILE_ID="1Cej-mIkRG1NVjajSK8PI1xCE4vI17cXl"
 EXPECTED_SOURCE_SHA="a1c5fc063d443de17c8a498c132ccaad961dfa353a372756cd4e79ce4023f288"
 EXPECTED_PIXEL_SHA="7ecad6e7e195da9be52b2b75f2afd3dbfd199c1134fb737207abdd808ebc0403"
@@ -15,11 +16,9 @@ mkdir -p "$ICON_DIR"
 rm -f "$OUT"
 
 ensure_pillow() {
-  if ! python3 - <<'PY' >/dev/null 2>&1
-import PIL
-PY
-  then
-    python3 -m pip install --quiet --disable-pip-version-check Pillow
+  if [[ ! -x "$VENV/bin/python" ]]; then
+    python3 -m venv "$VENV"
+    "$VENV/bin/python" -m pip install --quiet --disable-pip-version-check Pillow
   fi
 }
 
@@ -28,7 +27,7 @@ verify_source() {
   [[ -s "$SRC" ]] || { echo "FAIL: canonical AppIcon source is empty" >&2; return 1; }
   byte_sha="$(shasum -a 256 "$SRC" | awk '{print $1}')"
   ensure_pillow
-  pixel_sha="$(SRC_PATH="$SRC" python3 - <<'PY'
+  pixel_sha="$(SRC_PATH="$SRC" "$VENV/bin/python" - <<'PY'
 from PIL import Image
 from pathlib import Path
 import hashlib, os, sys
