@@ -3,7 +3,7 @@ options:
   bundleIdPrefix: jp.allsunday1122
   deploymentTarget:
     iOS: '18.0'
-  preGenCommand: bash scripts/materialize_msplat_s7_wave1.sh
+  preGenCommand: python3 scripts/apply_s13_depth_seed.py && bash scripts/materialize_msplat_s7_wave1.sh
 packages:
   Msplat:
     path: Packages/MsplatMemory
