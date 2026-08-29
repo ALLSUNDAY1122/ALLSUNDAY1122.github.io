@@ -27,7 +27,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add codemagic.yaml
-          git commit -m 'ci: add clipboard ASC record bootstrap workflow' || true
+          git commit -m 'ci: update clipboard ASC credential probe' || true
           git pull --rebase origin feature/clipboard-widget-poc
           git push origin HEAD:feature/clipboard-widget-poc
 
@@ -38,7 +38,7 @@ jobs:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           set -euo pipefail
-          printf '%s\n' '{"request_id":"clipboard-widget-asc-record-bootstrap-20260829-r2","action":"build","workflow_id":"clipboard-widget-asc-record-bootstrap","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":2400,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/cm-record-command.json
+          printf '%s\n' '{"request_id":"clipboard-widget-asc-record-bootstrap-20260829-r3","action":"build","workflow_id":"clipboard-widget-asc-record-bootstrap","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":2400,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/cm-record-command.json
           python3 scripts/codemagic_build_gateway.py --command /tmp/cm-record-command.json --output /tmp/cm-record-result.json
 
       - name: Persist safe ASC bootstrap evidence
@@ -51,7 +51,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add automation/clipboard-widget/evidence
-          git commit -m 'chore: record clipboard ASC bootstrap evidence' || true
+          git commit -m 'chore: record clipboard ASC bootstrap evidence r3' || true
           git pull --rebase origin feature/clipboard-widget-poc
           git push origin HEAD:feature/clipboard-widget-poc
 
@@ -63,7 +63,7 @@ jobs:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           set -euo pipefail
-          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260829-r8","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/cm-tf-command.json
+          printf '%s\n' '{"request_id":"clipboard-widget-phase0-testflight-20260829-r9","action":"build","workflow_id":"clipboard-widget-phase0","branch":"feature/clipboard-widget-poc","wait":true,"timeout_seconds":4200,"app_id":"6a769d81a1add9d06020b524"}' > /tmp/cm-tf-command.json
           python3 scripts/codemagic_build_gateway.py --command /tmp/cm-tf-command.json --output /tmp/cm-tf-result.json
 
       - name: Persist TestFlight retry result
@@ -77,7 +77,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add automation/clipboard-widget/evidence/codemagic-phase0-testflight.json
-          git commit -m 'chore: record clipboard TestFlight retry r8' || true
+          git commit -m 'chore: record clipboard TestFlight retry r9' || true
           git pull --rebase origin feature/clipboard-widget-poc
           git push origin HEAD:feature/clipboard-widget-poc
 
