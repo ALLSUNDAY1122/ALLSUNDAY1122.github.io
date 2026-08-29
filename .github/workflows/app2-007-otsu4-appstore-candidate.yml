@@ -48,7 +48,9 @@ jobs:
           assert pub.get('submit_to_app_store') is False
           joined=str(wf)
           assert 'testFlightInternalTestingOnly' not in joined
-          assert 'len(data[\'questions\'])==720' in joined or 'len(data["questions"])==720' in joined
+          scripts='\n'.join(str(x.get('script','')) for x in (wf.get('scripts') or []) if isinstance(x,dict))
+          assert 'questions.generated.json' in scripts and '720' in scripts
+          assert '288' in scripts and '192' in scripts and '240' in scripts
           print('PASS candidate preflight',subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip())
           PY
       - name: Start and wait for Codemagic candidate
