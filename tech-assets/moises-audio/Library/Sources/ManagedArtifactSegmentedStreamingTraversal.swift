@@ -13,6 +13,8 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
     public static let shardCount = 256
     public static let entriesPerSegment = 512
     public static let maximumLegacyEncodedBytes = 8 * 1024 * 1024
+    public static let maximumManifestEncodedBytes = 64 * 1024
+    public static let maximumSegmentEncodedBytes = 8 * 1024 * 1024
 
     private struct Entry: Codable, Hashable, Sendable {
         let relativePath: String
@@ -259,7 +261,10 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
 
         let data: Data
         do {
-            data = try descriptorIO.readRegularFile(at: url)
+            data = try descriptorIO.readRegularFile(
+                at: url,
+                maximumBytes: Self.maximumManifestEncodedBytes
+            )
         } catch {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptManifest(url.lastPathComponent)
         }
@@ -284,7 +289,10 @@ public struct Lane2ManagedArtifactSegmentedStreamingTraversal: Sendable {
 
         let data: Data
         do {
-            data = try descriptorIO.readRegularFile(at: url)
+            data = try descriptorIO.readRegularFile(
+                at: url,
+                maximumBytes: Self.maximumSegmentEncodedBytes
+            )
         } catch {
             throw Lane2ManagedArtifactSegmentedRuntimeFailure.corruptSegment(url.lastPathComponent)
         }
