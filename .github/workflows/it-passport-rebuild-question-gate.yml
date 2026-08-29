@@ -1,0 +1,66 @@
+name: New IT Passport - Starter Question Gate
+
+on:
+  push:
+    branches:
+      - feature/it-passport-rebuild
+    paths:
+      - 'automation/it-passport-rebuild-question-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  question-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/it-passport-rebuild
+      - name: Validate starter bank
+        run: |
+          python3 - <<'PY'
+          import json, re
+          from collections import Counter
+          from pathlib import Path
+
+          path = Path('apps/it-passport-rebuild/questions/starter-v1.json')
+          qs = json.loads(path.read_text(encoding='utf-8'))
+          required = ['id','examBatch','domain','category','topic','question','choices','correctIndex','explanation','primaryEvidence','sourceUrl','syllabusVersion','legalDate','originType','copyrightBasis']
+          errors=[]
+          if len(qs) != 30: errors.append(f'count={len(qs)} expected=30')
+          ids=[q.get('id') for q in qs]
+          dup_ids=[k for k,v in Counter(ids).items() if v>1]
+          if dup_ids: errors.append(f'duplicate_ids={dup_ids}')
+          dist=Counter(q.get('domain') for q in qs)
+          expected={'strategy':10,'management':10,'technology':10}
+          if dict(dist) != expected: errors.append(f'distribution={dict(dist)} expected={expected}')
+          normalized=[]
+          for i,q in enumerate(qs):
+            missing=[k for k in required if k not in q or q[k] in (None,'',[])]
+            if missing: errors.append(f'{q.get("id",i)} missing={missing}')
+            if len(q.get('choices',[])) != 4: errors.append(f'{q.get("id",i)} choices!=4')
+            if q.get('correctIndex') not in range(4): errors.append(f'{q.get("id",i)} correctIndex invalid')
+            if q.get('syllabusVersion') != '6.5': errors.append(f'{q.get("id",i)} syllabus mismatch')
+            if q.get('originType') != 'independent': errors.append(f'{q.get("id",i)} origin mismatch')
+            normalized.append(re.sub(r'\W+','',q.get('question','').lower()))
+          dup_text=[k for k,v in Counter(normalized).items() if v>1]
+          if dup_text: errors.append(f'duplicate_question_text={len(dup_text)}')
+          result={'status':'PASS' if not errors else 'FAIL','count':len(qs),'distribution':dict(dist),'duplicate_ids':len(dup_ids),'duplicate_question_text':len(dup_text),'errors':errors,'note':'機械監査のみ。正答・難易度・根拠の内容監査は別ゲート。'}
+          out=Path('apps/it-passport-rebuild/quality/starter-question-gate.json')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(result,ensure_ascii=False))
+          if errors: raise SystemExit(1)
+          PY
+      - name: Persist evidence
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/it-passport-rebuild/quality/starter-question-gate.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "新ITパスポート｜問題スターター機械監査結果を保存"
+          git push origin HEAD:feature/it-passport-rebuild
