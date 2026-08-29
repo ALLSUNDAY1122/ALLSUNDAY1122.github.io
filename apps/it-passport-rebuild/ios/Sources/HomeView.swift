@@ -3,7 +3,6 @@ import SwiftUI
 private struct StudyDomain: Identifiable, Hashable {
     let id: String
     let title: String
-    let questionCount: Int
 }
 
 private struct QuestionSet: Identifiable, Hashable {
@@ -15,18 +14,18 @@ private struct QuestionSet: Identifiable, Hashable {
     var subtitle: String { "問題 \(start)〜\(end)" }
 }
 
-struct HomeView: View {
-    private let paper = Color(red: 247/255, green: 243/255, blue: 234/255)
-    private let card = Color(red: 1.0, green: 253/255, blue: 249/255)
-    private let navy = Color(red: 47/255, green: 74/255, blue: 109/255)
-    private let line = Color(red: 232/255, green: 223/255, blue: 207/255)
+private enum Palette {
+    static let paper = Color(red: 247/255, green: 243/255, blue: 234/255)
+    static let card = Color(red: 1.0, green: 253/255, blue: 249/255)
+    static let navy = Color(red: 47/255, green: 74/255, blue: 109/255)
+    static let line = Color(red: 232/255, green: 223/255, blue: 207/255)
+}
 
-    // Canonical question ingest is still in progress. These counts are deliberately
-    // not hard-coded as production totals; the production store will replace them.
+struct HomeView: View {
     private let domains = [
-        StudyDomain(id: "strategy", title: "ストラテジ系", questionCount: 0),
-        StudyDomain(id: "management", title: "マネジメント系", questionCount: 0),
-        StudyDomain(id: "technology", title: "テクノロジ系", questionCount: 0)
+        StudyDomain(id: "strategy", title: "ストラテジ系"),
+        StudyDomain(id: "management", title: "マネジメント系"),
+        StudyDomain(id: "technology", title: "テクノロジ系")
     ]
 
     var body: some View {
@@ -39,15 +38,15 @@ struct HomeView: View {
                         .font(.headline)
                         .foregroundStyle(.secondary)
                     domainGrid
-                    progressCard
+                    sourceNotice
                 }
                 .padding(.horizontal, 18)
                 .padding(.bottom, 32)
             }
-            .background(paper.ignoresSafeArea())
+            .background(Palette.paper.ignoresSafeArea())
             .toolbar(.hidden, for: .navigationBar)
         }
-        .tint(navy)
+        .tint(Palette.navy)
     }
 
     private var header: some View {
@@ -57,40 +56,49 @@ struct HomeView: View {
                 .foregroundStyle(.secondary)
             Text("ITパスポート")
                 .font(.system(size: 31, weight: .bold, design: .serif))
-                .minimumScaleFactor(0.8)
+                .minimumScaleFactor(0.72)
                 .lineLimit(1)
+                .frame(maxWidth: .infinity, alignment: .leading)
             Text("今日も1問、力に変える。")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
         .padding(.top, 10)
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var todayCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        let daily = QuestionStore.daily(limit: 8)
+        return VStack(alignment: .leading, spacing: 10) {
             Text("今日の学習")
                 .font(.system(size: 21, weight: .bold, design: .serif))
-            Text("弱点と復習タイミングから、今日やる問題を自動で選びます。")
+            Text("3分野を交互に8問。まずは短い1セットから。")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
-            Button("今日のスプリントを始める") { }
-                .buttonStyle(PrimaryButtonStyle(background: navy))
+            NavigationLink {
+                QuizView(title: "今日のスプリント", questions: daily)
+            } label: {
+                Text("今日のスプリントを始める　\(daily.count)問")
+            }
+            .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+            .disabled(daily.isEmpty)
         }
         .padding(18)
-        .background(card, in: RoundedRectangle(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18).stroke(line))
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.line))
     }
 
     private var domainGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
             ForEach(domains) { domain in
-                NavigationLink(value: domain) {
+                let count = QuestionStore.questions(domain: domain.id).count
+                NavigationLink {
+                    DomainSetView(domain: domain)
+                } label: {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(domain.title)
                             .font(.system(size: 17, weight: .bold, design: .serif))
                             .foregroundStyle(.primary)
-                        Text(domain.questionCount == 0 ? "問題データ接続準備中" : "\(domain.questionCount)問")
+                        Text("\(count)問")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         Spacer(minLength: 0)
@@ -100,56 +108,40 @@ struct HomeView: View {
                             Image(systemName: "chevron.right")
                         }
                         .font(.caption.bold())
-                        .foregroundStyle(navy)
+                        .foregroundStyle(Palette.navy)
                     }
                     .padding(15)
                     .frame(maxWidth: .infinity, minHeight: 122, alignment: .leading)
-                    .background(card, in: RoundedRectangle(cornerRadius: 16))
-                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(line))
+                    .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
+                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Palette.line))
                 }
                 .buttonStyle(.plain)
                 .gridCellColumns(domain.id == "technology" ? 2 : 1)
             }
         }
-        .navigationDestination(for: StudyDomain.self) { domain in
-            DomainSetView(domain: domain, paper: paper, card: card, navy: navy, line: line)
-        }
     }
 
-    private var progressCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("3分野の習熟度")
-                .font(.headline)
-            ForEach(domains) { domain in
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Text(domain.title)
-                        Spacer()
-                        Text("0%")
-                    }
-                    .font(.subheadline.bold())
-                    ProgressView(value: 0)
-                        .tint(navy)
-                }
-            }
+    private var sourceNotice: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Label("問題品質を優先して段階追加中", systemImage: "checkmark.shield")
+                .font(.subheadline.bold())
+            Text("現在はシラバスVer.6.5準拠の独自問題スターター30問を接続。監査済み問題だけを追加します。")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
-        .padding(18)
-        .background(card, in: RoundedRectangle(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18).stroke(line))
+        .padding(16)
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Palette.line))
     }
 }
 
 private struct DomainSetView: View {
     let domain: StudyDomain
-    let paper: Color
-    let card: Color
-    let navy: Color
-    let line: Color
 
+    private var questions: [StudyQuestion] { QuestionStore.questions(domain: domain.id) }
     private var sets: [QuestionSet] {
-        guard domain.questionCount > 0 else { return [] }
-        return stride(from: 0, to: domain.questionCount, by: 10).enumerated().map { offset, start in
-            QuestionSet(id: offset + 1, start: start + 1, end: min(start + 10, domain.questionCount))
+        stride(from: 0, to: questions.count, by: 10).enumerated().map { offset, start in
+            QuestionSet(id: offset + 1, start: start + 1, end: min(start + 10, questions.count))
         }
     }
 
@@ -158,41 +150,167 @@ private struct DomainSetView: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text(domain.title)
                     .font(.system(size: 28, weight: .bold, design: .serif))
-                Text("10問ずつのセットから選択")
+                Text("全\(questions.count)問を10問ずつのセットに分割")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
 
-                if sets.isEmpty {
-                    ContentUnavailableView(
-                        "問題データ接続準備中",
-                        systemImage: "square.stack.3d.up",
-                        description: Text("canonical問題バンク接続後、ここに10問単位のセットを自動表示します。")
-                    )
-                    .padding(.top, 28)
-                } else {
-                    ForEach(sets) { set in
-                        Button { } label: {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(set.title).font(.headline)
-                                    Text(set.subtitle).font(.caption).foregroundStyle(.secondary)
-                                }
-                                Spacer()
-                                Image(systemName: "chevron.right").foregroundStyle(navy)
+                ForEach(sets) { set in
+                    let slice = Array(questions[(set.start - 1)..<set.end])
+                    NavigationLink {
+                        QuizView(title: "\(domain.title)・\(set.title)", questions: slice)
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(set.title).font(.headline)
+                                Text("\(set.subtitle)・\(slice.count)問")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                             }
-                            .padding(16)
-                            .background(card, in: RoundedRectangle(cornerRadius: 15))
-                            .overlay(RoundedRectangle(cornerRadius: 15).stroke(line))
+                            Spacer()
+                            Image(systemName: "chevron.right").foregroundStyle(Palette.navy)
                         }
-                        .buttonStyle(.plain)
+                        .padding(16)
+                        .background(Palette.card, in: RoundedRectangle(cornerRadius: 15))
+                        .overlay(RoundedRectangle(cornerRadius: 15).stroke(Palette.line))
                     }
+                    .buttonStyle(.plain)
                 }
             }
             .padding(18)
         }
-        .background(paper.ignoresSafeArea())
+        .background(Palette.paper.ignoresSafeArea())
         .navigationTitle(domain.title)
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct QuizView: View {
+    let title: String
+    let questions: [StudyQuestion]
+
+    @State private var index = 0
+    @State private var selected: Int? = nil
+    @State private var correctCount = 0
+    @State private var finished = false
+
+    private var current: StudyQuestion? {
+        guard questions.indices.contains(index) else { return nil }
+        return questions[index]
+    }
+
+    var body: some View {
+        ScrollView {
+            if finished {
+                resultView
+            } else if let q = current {
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Text(q.category).font(.caption.bold()).foregroundStyle(Palette.navy)
+                        Spacer()
+                        Text("\(index + 1) / \(questions.count)").font(.caption).foregroundStyle(.secondary)
+                    }
+                    ProgressView(value: Double(index), total: Double(max(questions.count, 1)))
+                        .tint(Palette.navy)
+                    Text(q.question)
+                        .font(.system(size: 19, weight: .bold, design: .serif))
+                        .lineSpacing(5)
+
+                    ForEach(q.choices.indices, id: \.self) { choiceIndex in
+                        Button {
+                            answer(choiceIndex, question: q)
+                        } label: {
+                            HStack(alignment: .top, spacing: 10) {
+                                Text(["ア", "イ", "ウ", "エ"][choiceIndex]).font(.headline)
+                                Text(q.choices[choiceIndex]).frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            .padding(15)
+                            .foregroundStyle(choiceForeground(choiceIndex, q: q))
+                            .background(choiceBackground(choiceIndex, q: q), in: RoundedRectangle(cornerRadius: 14))
+                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(choiceBorder(choiceIndex, q: q), lineWidth: 1.4))
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(selected != nil)
+                    }
+
+                    if selected != nil {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(selected == q.correctIndex ? "正解" : "不正解")
+                                .font(.headline)
+                            Text(q.explanation).font(.subheadline)
+                            Text("出典根拠：\(q.primaryEvidence)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Button(index + 1 == questions.count ? "結果を見る" : "次の問題") {
+                                advance()
+                            }
+                            .buttonStyle(PrimaryButtonStyle(background: Palette.navy))
+                        }
+                        .padding(16)
+                        .background(Palette.card, in: RoundedRectangle(cornerRadius: 16))
+                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Palette.line))
+                    }
+                }
+                .padding(18)
+            } else {
+                ContentUnavailableView("問題がありません", systemImage: "questionmark.circle")
+                    .padding(24)
+            }
+        }
+        .background(Palette.paper.ignoresSafeArea())
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var resultView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "flag.checkered").font(.system(size: 42)).foregroundStyle(Palette.navy)
+            Text("セット完了").font(.system(size: 28, weight: .bold, design: .serif))
+            Text("\(questions.count)問中 \(correctCount)問正解")
+                .font(.title3.bold())
+            Text("正答率 \(questions.isEmpty ? 0 : Int(Double(correctCount) / Double(questions.count) * 100))%")
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(32)
+        .background(Palette.card, in: RoundedRectangle(cornerRadius: 20))
+        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Palette.line))
+        .padding(18)
+    }
+
+    private func answer(_ choice: Int, question: StudyQuestion) {
+        guard selected == nil else { return }
+        selected = choice
+        if choice == question.correctIndex { correctCount += 1 }
+    }
+
+    private func advance() {
+        if index + 1 >= questions.count {
+            finished = true
+        } else {
+            index += 1
+            selected = nil
+        }
+    }
+
+    private func choiceBackground(_ choice: Int, q: StudyQuestion) -> Color {
+        guard let selected else { return Palette.card }
+        if choice == q.correctIndex { return Color.green.opacity(0.13) }
+        if choice == selected { return Color.red.opacity(0.10) }
+        return Palette.card
+    }
+
+    private func choiceBorder(_ choice: Int, q: StudyQuestion) -> Color {
+        guard let selected else { return Palette.line }
+        if choice == q.correctIndex { return .green }
+        if choice == selected { return .red }
+        return Palette.line
+    }
+
+    private func choiceForeground(_ choice: Int, q: StudyQuestion) -> Color {
+        guard let selected else { return .primary }
+        if choice == q.correctIndex { return .green }
+        if choice == selected { return .red }
+        return .primary
     }
 }
 
