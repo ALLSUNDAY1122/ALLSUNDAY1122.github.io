@@ -1,0 +1,50 @@
+name: APP2-007 Otsu4 IAP Bootstrap
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  bootstrap:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      github.event.issue.title == '[ASC-CMD] APP2-007 OTSU4 IAP BOOTSTRAP'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Configure pinned Otsu4 lifetime IAP
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/app2_007_otsu4_iap_bootstrap.py
+      - name: Upload sanitized result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app2-007-otsu4-iap-${{ github.run_id }}
+          path: automation/app2-007-otsu4-iap-result.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Report result locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const conclusion = '${{ job.status }}';
+            const artifact = `app2-007-otsu4-iap-${context.runId}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `APP2-007 Otsu4 IAP bootstrap finished. status=${conclusion}; run_id=${context.runId}; artifact=${artifact}`
+            });
