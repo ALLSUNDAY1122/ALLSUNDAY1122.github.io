@@ -1,0 +1,91 @@
+name: New IT Passport - App Store Connect Preflight
+
+on:
+  push:
+    branches:
+      - feature/it-passport-rebuild
+    paths:
+      - 'automation/it-passport-rebuild-asc-preflight.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: macos-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/it-passport-rebuild
+
+      - name: Run read-only App Store Connect preflight
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 scripts/app_store_connect_gateway.py \
+            --command automation/it-passport-rebuild-asc-preflight.json \
+            --output /tmp/it-passport-asc-result.json
+
+      - name: Persist sanitized source-of-truth evidence
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          src = json.loads(Path('/tmp/it-passport-asc-result.json').read_text(encoding='utf-8'))
+          safe = {
+              'request_id': src.get('request_id'),
+              'action': src.get('action'),
+              'completed_at': src.get('completed_at'),
+              'results': [],
+          }
+          keep = {
+              'name', 'bundleId', 'sku', 'primaryLocale', 'identifier',
+              'platform', 'versionString', 'appStoreState', 'processingState'
+          }
+          for result in src.get('results', []):
+              out = {
+                  'label': result.get('label'),
+                  'http_status': result.get('http_status'),
+                  'data': [],
+              }
+              response = result.get('response') or {}
+              data = response.get('data') or []
+              if isinstance(data, dict):
+                  data = [data]
+              for item in data:
+                  if not isinstance(item, dict):
+                      continue
+                  attrs = item.get('attributes') or {}
+                  out['data'].append({
+                      'id': item.get('id'),
+                      'type': item.get('type'),
+                      'attributes': {k: attrs.get(k) for k in keep if k in attrs},
+                  })
+              safe['results'].append(out)
+
+          path = Path('apps/it-passport-rebuild/quality/asc-preflight-result.json')
+          path.parent.mkdir(parents=True, exist_ok=True)
+          path.write_text(json.dumps(safe, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/it-passport-rebuild/quality/asc-preflight-result.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "新ITパスポート｜App Store Connect事前監査結果を保存"
+          git push origin HEAD:feature/it-passport-rebuild
+
+      - name: Upload raw result for short-lived diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: it-passport-rebuild-asc-preflight-${{ github.run_id }}
+          path: /tmp/it-passport-asc-result.json
+          if-no-files-found: ignore
+          retention-days: 3
