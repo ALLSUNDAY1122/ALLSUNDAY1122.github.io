@@ -1,0 +1,217 @@
+name: New IT Passport - App Store Connect App Record
+
+on:
+  push:
+    branches:
+      - feature/it-passport-rebuild
+    paths:
+      - 'automation/it-passport-rebuild-app-record-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  create-app-record:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    env:
+      BUNDLE_ID: jp.allsunday1122.itpassportstudy
+      APP_NAME: ITパスポート 学びスプリント
+      APP_SKU: itpassportstudy-ios-2026
+      APP_LOCALE: ja
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+      FASTLANE_USER_SECRET: ${{ secrets.FASTLANE_USER }}
+      APPLE_ID_SECRET: ${{ secrets.APPLE_ID }}
+      APPLE_ID_USERNAME_SECRET: ${{ secrets.APPLE_ID_USERNAME }}
+      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+      FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+      CI: 'true'
+      FASTLANE_SKIP_UPDATE_CHECK: 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/it-passport-rebuild
+
+      - name: Preflight existing App Store Connect record
+        id: preflight
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          Path('/tmp/itp-app-record-read.json').write_text(json.dumps({
+            'request_id': 'it-passport-app-record-preflight',
+            'requests': [
+              {'label':'app','method':'GET','path':'/v1/apps?filter[bundleId]=jp.allsunday1122.itpassportstudy&limit=10'}
+            ]
+          }), encoding='utf-8')
+          PY
+          python3 scripts/app_store_connect_gateway.py \
+            --command /tmp/itp-app-record-read.json \
+            --output /tmp/itp-app-record-before.json
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          d=json.loads(Path('/tmp/itp-app-record-before.json').read_text())
+          data=d['results'][0]['response'].get('data',[])
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+            f.write(f"exists={'true' if data else 'false'}\n")
+            if data: f.write(f"app_id={data[0]['id']}\n")
+          PY
+
+      - name: Resolve Apple ID authentication availability
+        id: auth
+        if: steps.preflight.outputs.exists != 'true'
+        run: |
+          USERNAME="$FASTLANE_USER_SECRET"
+          [ -n "$USERNAME" ] || USERNAME="$APPLE_ID_SECRET"
+          [ -n "$USERNAME" ] || USERNAME="$APPLE_ID_USERNAME_SECRET"
+          HAVE_USER=false; HAVE_SESSION=false; HAVE_PASSWORD=false
+          [ -n "$USERNAME" ] && HAVE_USER=true
+          [ -n "$FASTLANE_SESSION" ] && HAVE_SESSION=true
+          [ -n "$FASTLANE_PASSWORD" ] && HAVE_PASSWORD=true
+          {
+            echo "have_user=$HAVE_USER"
+            echo "have_session=$HAVE_SESSION"
+            echo "have_password=$HAVE_PASSWORD"
+          } >> "$GITHUB_OUTPUT"
+          if [ "$HAVE_USER" = true ]; then
+            echo "resolved_username=$USERNAME" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Apple ID auth probe: user=$HAVE_USER session=$HAVE_SESSION password=$HAVE_PASSWORD"
+
+      - name: Install fastlane
+        if: steps.preflight.outputs.exists != 'true' && steps.auth.outputs.have_user == 'true' && (steps.auth.outputs.have_session == 'true' || steps.auth.outputs.have_password == 'true')
+        run: brew install fastlane
+
+      - name: Create App Store Connect app record
+        id: create
+        if: steps.preflight.outputs.exists != 'true' && steps.auth.outputs.have_user == 'true' && (steps.auth.outputs.have_session == 'true' || steps.auth.outputs.have_password == 'true')
+        continue-on-error: true
+        env:
+          PRODUCE_USERNAME: ${{ steps.auth.outputs.resolved_username }}
+          PRODUCE_APP_IDENTIFIER: jp.allsunday1122.itpassportstudy
+          PRODUCE_APP_NAME: ITパスポート 学びスプリント
+          PRODUCE_SKU: itpassportstudy-ios-2026
+          PRODUCE_LANGUAGE: ja
+          PRODUCE_SKIP_DEVCENTER: 'true'
+        run: |
+          set +e
+          timeout 360 fastlane produce create \
+            --username "$PRODUCE_USERNAME" \
+            --app_identifier "$PRODUCE_APP_IDENTIFIER" \
+            --app_name "$PRODUCE_APP_NAME" \
+            --sku "$PRODUCE_SKU" \
+            --language "$PRODUCE_LANGUAGE" \
+            --skip_devcenter true \
+            >/tmp/itp-produce.log 2>&1
+          RC=$?
+          echo "exit_code=$RC" >> "$GITHUB_OUTPUT"
+          if [ "$RC" -ne 0 ]; then
+            if grep -Eqi 'two.factor|2FA|verification code|session.*expired|Spaceship::Client' /tmp/itp-produce.log; then
+              echo 'reason=APPLE_ID_SESSION_OR_2FA_REQUIRED' >> "$GITHUB_OUTPUT"
+            elif grep -Eqi 'already.*taken|already.*exists|name.*used' /tmp/itp-produce.log; then
+              echo 'reason=APP_NAME_OR_RECORD_CONFLICT' >> "$GITHUB_OUTPUT"
+            else
+              echo 'reason=FASTLANE_PRODUCE_FAILED' >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo 'reason=CREATED' >> "$GITHUB_OUTPUT"
+          fi
+          exit "$RC"
+
+      - name: Read back App Store Connect record
+        id: readback
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          Path('/tmp/itp-app-record-readback-command.json').write_text(json.dumps({
+            'request_id': 'it-passport-app-record-readback',
+            'requests': [
+              {'label':'app','method':'GET','path':'/v1/apps?filter[bundleId]=jp.allsunday1122.itpassportstudy&limit=10'}
+            ]
+          }), encoding='utf-8')
+          PY
+          python3 scripts/app_store_connect_gateway.py \
+            --command /tmp/itp-app-record-readback-command.json \
+            --output /tmp/itp-app-record-after.json
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          d=json.loads(Path('/tmp/itp-app-record-after.json').read_text())
+          data=d['results'][0]['response'].get('data',[])
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+            f.write(f"exists={'true' if data else 'false'}\n")
+            if data: f.write(f"app_id={data[0]['id']}\n")
+          PY
+
+      - name: Persist sanitized result
+        if: always()
+        env:
+          PREFLIGHT_EXISTS: ${{ steps.preflight.outputs.exists }}
+          PREFLIGHT_APP_ID: ${{ steps.preflight.outputs.app_id }}
+          HAVE_USER: ${{ steps.auth.outputs.have_user }}
+          HAVE_SESSION: ${{ steps.auth.outputs.have_session }}
+          HAVE_PASSWORD: ${{ steps.auth.outputs.have_password }}
+          CREATE_REASON: ${{ steps.create.outputs.reason }}
+          CREATE_EXIT_CODE: ${{ steps.create.outputs.exit_code }}
+          READBACK_EXISTS: ${{ steps.readback.outputs.exists }}
+          READBACK_APP_ID: ${{ steps.readback.outputs.app_id }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          before=os.getenv('PREFLIGHT_EXISTS')=='true'
+          after=os.getenv('READBACK_EXISTS')=='true'
+          if after:
+            status='EXISTING' if before else 'CREATED'
+          elif os.getenv('HAVE_USER')!='true':
+            status='BLOCKED_NO_APPLE_ID_USERNAME_SECRET'
+          elif os.getenv('HAVE_SESSION')!='true' and os.getenv('HAVE_PASSWORD')!='true':
+            status='BLOCKED_NO_APPLE_ID_AUTH_SECRET'
+          else:
+            status='BLOCKED_' + (os.getenv('CREATE_REASON') or 'CREATE_FAILED')
+          result={
+            'status':status,
+            'bundle_id':'jp.allsunday1122.itpassportstudy',
+            'app_name':'ITパスポート 学びスプリント',
+            'sku':'itpassportstudy-ios-2026',
+            'primary_locale':'ja',
+            'app_store_connect_app_id': os.getenv('READBACK_APP_ID') or os.getenv('PREFLIGHT_APP_ID') or None,
+            'preflight_existing':before,
+            'readback_verified':after,
+            'auth_probe':{
+              'username_configured':os.getenv('HAVE_USER')=='true',
+              'session_configured':os.getenv('HAVE_SESSION')=='true',
+              'password_configured':os.getenv('HAVE_PASSWORD')=='true'
+            },
+            'create_reason':os.getenv('CREATE_REASON') or None,
+            'create_exit_code':os.getenv('CREATE_EXIT_CODE') or None,
+            'note':'No secret values are stored. App Store review submission is not performed.'
+          }
+          out=Path('apps/it-passport-rebuild/quality/app-record-bootstrap-result.json')
+          out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          Path('/tmp/itp-app-record-status.txt').write_text(status,encoding='utf-8')
+          print(json.dumps(result,ensure_ascii=False))
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/it-passport-rebuild/quality/app-record-bootstrap-result.json
+          if ! git diff --cached --quiet; then
+            git commit -m "新ITパスポート｜App Store Connect登録結果を保存"
+            git push origin HEAD:feature/it-passport-rebuild
+          fi
+
+      - name: Enforce app record gate
+        if: always()
+        run: |
+          STATUS="$(cat /tmp/itp-app-record-status.txt 2>/dev/null || echo UNKNOWN)"
+          case "$STATUS" in
+            CREATED|EXISTING) echo "PASS: $STATUS" ;;
+            *) echo "FAIL: $STATUS" >&2; exit 1 ;;
+          esac
