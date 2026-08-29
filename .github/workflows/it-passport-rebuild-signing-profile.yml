@@ -1,0 +1,215 @@
+name: New IT Passport - Signing Profile
+
+on:
+  push:
+    branches:
+      - feature/it-passport-rebuild
+    paths:
+      - 'automation/it-passport-rebuild-signing-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  signing-profile:
+    runs-on: macos-latest
+    timeout-minutes: 8
+    env:
+      TARGET_BUNDLE_ID: jp.allsunday1122.itpassportstudy
+      TARGET_BUNDLE_RESOURCE_ID: 23464FS837
+      TARGET_PROFILE_NAME: itpassportstudy_appstore
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/it-passport-rebuild
+          fetch-depth: 0
+
+      - name: Prepare or reuse App Store signing profile
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          sys.path.insert(0, 'scripts')
+          from app_store_connect_api import load_private_key, make_token
+
+          required = ('ASC_ISSUER_ID', 'ASC_KEY_ID', 'ASC_PRIVATE_KEY')
+          missing = [k for k in required if not os.environ.get(k, '').strip()]
+          if missing:
+              raise SystemExit('Missing App Store Connect API secrets: ' + ','.join(missing))
+
+          base = 'https://api.appstoreconnect.apple.com'
+          bundle_id = os.environ['TARGET_BUNDLE_ID']
+          bundle_resource_id = os.environ['TARGET_BUNDLE_RESOURCE_ID']
+          profile_name = os.environ['TARGET_PROFILE_NAME']
+          key_path, cleanup = load_private_key()
+          token = make_token(
+              os.environ['ASC_ISSUER_ID'].strip(),
+              os.environ['ASC_KEY_ID'].strip(),
+              key_path,
+          )
+
+          def call(method, path, payload=None):
+              body = None if payload is None else json.dumps(payload, separators=(',', ':')).encode('utf-8')
+              headers = {'Authorization': 'Bearer ' + token, 'Accept': 'application/json'}
+              if body is not None:
+                  headers['Content-Type'] = 'application/json'
+              req = urllib.request.Request(base + path, data=body, headers=headers, method=method)
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      raw = response.read().decode('utf-8')
+                      return response.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as exc:
+                  raw = exc.read().decode('utf-8', errors='replace')
+                  return exc.code, {'error': raw[:1800]}
+
+          def parse_date(value):
+              if not value:
+                  return datetime.min.replace(tzinfo=timezone.utc)
+              return datetime.fromisoformat(value.replace('Z', '+00:00'))
+
+          try:
+              status, bundle = call('GET', f'/v1/bundleIds/{bundle_resource_id}')
+              if status != 200:
+                  raise SystemExit(f'Bundle ID read-back failed: HTTP {status}')
+              attrs = (bundle.get('data') or {}).get('attributes') or {}
+              if attrs.get('identifier') != bundle_id:
+                  raise SystemExit(f'Bundle ID mismatch: expected {bundle_id}, got {attrs.get("identifier")!r}')
+
+              status, cert_payload = call('GET', '/v1/certificates?limit=200')
+              if status != 200:
+                  raise SystemExit(f'Certificate inventory failed: HTTP {status}')
+              now = datetime.now(timezone.utc)
+              certs = []
+              for resource in cert_payload.get('data', []):
+                  attrs = resource.get('attributes') or {}
+                  cert_type = attrs.get('certificateType')
+                  expiry = parse_date(attrs.get('expirationDate'))
+                  if cert_type not in {'DISTRIBUTION', 'IOS_DISTRIBUTION'}:
+                      continue
+                  if expiry <= now:
+                      continue
+                  certs.append((expiry, resource))
+              if not certs:
+                  raise SystemExit('No active iOS distribution certificate is visible to the API key')
+              certs.sort(key=lambda item: item[0], reverse=True)
+              selected_cert = certs[0][1]
+              selected_cert_id = selected_cert.get('id')
+              selected_cert_attrs = selected_cert.get('attributes') or {}
+
+              status, profiles = call('GET', '/v1/profiles?limit=200')
+              if status != 200:
+                  raise SystemExit(f'Profile inventory failed: HTTP {status}')
+
+              chosen = None
+              for profile in profiles.get('data', []):
+                  attrs = profile.get('attributes') or {}
+                  if attrs.get('profileType') != 'IOS_APP_STORE' or attrs.get('profileState') != 'ACTIVE':
+                      continue
+                  profile_id = profile.get('id')
+                  bs, bp = call('GET', f'/v1/profiles/{profile_id}/bundleId')
+                  if bs != 200 or (bp.get('data') or {}).get('id') != bundle_resource_id:
+                      continue
+                  cs, cp = call('GET', f'/v1/profiles/{profile_id}/relationships/certificates?limit=50')
+                  linked_certs = {item.get('id') for item in cp.get('data', [])} if cs == 200 else set()
+                  if not linked_certs:
+                      continue
+                  chosen = {
+                      'id': profile_id,
+                      'name': attrs.get('name'),
+                      'state': attrs.get('profileState'),
+                      'created': False,
+                      'certificate_ids': sorted(linked_certs),
+                  }
+                  break
+
+              if chosen is None:
+                  payload = {
+                      'data': {
+                          'type': 'profiles',
+                          'attributes': {
+                              'name': profile_name,
+                              'profileType': 'IOS_APP_STORE',
+                          },
+                          'relationships': {
+                              'bundleId': {
+                                  'data': {'type': 'bundleIds', 'id': bundle_resource_id}
+                              },
+                              'certificates': {
+                                  'data': [{'type': 'certificates', 'id': selected_cert_id}]
+                              },
+                          },
+                      }
+                  }
+                  create_status, created = call('POST', '/v1/profiles', payload)
+                  if create_status != 201:
+                      raise SystemExit(f'Profile creation failed: HTTP {create_status}; {str(created)[:1000]}')
+                  resource = created.get('data') or {}
+                  attrs = resource.get('attributes') or {}
+                  chosen = {
+                      'id': resource.get('id'),
+                      'name': attrs.get('name'),
+                      'state': attrs.get('profileState'),
+                      'created': True,
+                      'certificate_ids': [selected_cert_id],
+                  }
+
+              profile_id = chosen.get('id')
+              read_status, read_back = call('GET', f'/v1/profiles/{profile_id}')
+              if read_status != 200:
+                  raise SystemExit(f'Profile read-back failed: HTTP {read_status}')
+              read_attrs = (read_back.get('data') or {}).get('attributes') or {}
+              if read_attrs.get('profileState') != 'ACTIVE':
+                  raise SystemExit(f'Profile is not ACTIVE: {read_attrs.get("profileState")!r}')
+
+              result = {
+                  'status': 'PASS',
+                  'bundle_id': bundle_id,
+                  'bundle_resource_id': bundle_resource_id,
+                  'profile': chosen,
+                  'selected_distribution_certificate': {
+                      'id': selected_cert_id,
+                      'certificate_type': selected_cert_attrs.get('certificateType'),
+                      'expiration_date': selected_cert_attrs.get('expirationDate'),
+                  },
+                  'readback_verified': True,
+              }
+              Path('/tmp/it-passport-signing-profile-result.json').write_text(
+                  json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8'
+              )
+              print(json.dumps(result, ensure_ascii=False, indent=2))
+          finally:
+              if cleanup:
+                  try:
+                      Path(key_path).unlink(missing_ok=True)
+                  except Exception:
+                      pass
+          PY
+
+      - name: Persist sanitized signing result
+        run: |
+          set -euo pipefail
+          TARGET='apps/it-passport-rebuild/quality/signing-profile-result.json'
+          mkdir -p "$(dirname "$TARGET")"
+          cp /tmp/it-passport-signing-profile-result.json "$TARGET"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$TARGET"
+          if git diff --cached --quiet; then
+            echo 'No signing result change to persist'
+            exit 0
+          fi
+          git commit -m '新ITパスポート｜App Store署名プロファイル結果を保存'
+          git pull --rebase origin feature/it-passport-rebuild
+          git push origin HEAD:feature/it-passport-rebuild
