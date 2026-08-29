@@ -9,17 +9,44 @@ trap 'rm -rf "$TMP"' EXIT
 SRC="$TMP/ITPassport-canonical.png"
 FILE_ID="1Cej-mIkRG1NVjajSK8PI1xCE4vI17cXl"
 EXPECTED_SOURCE_SHA="a1c5fc063d443de17c8a498c132ccaad961dfa353a372756cd4e79ce4023f288"
+EXPECTED_PIXEL_SHA="7ecad6e7e195da9be52b2b75f2afd3dbfd199c1134fb737207abdd808ebc0403"
 
 mkdir -p "$ICON_DIR"
 rm -f "$OUT"
 
+ensure_pillow() {
+  if ! python3 - <<'PY' >/dev/null 2>&1
+import PIL
+PY
+  then
+    python3 -m pip install --quiet --disable-pip-version-check Pillow
+  fi
+}
+
 verify_source() {
-  local actual
+  local byte_sha pixel_sha
   [[ -s "$SRC" ]] || { echo "FAIL: canonical AppIcon source is empty" >&2; return 1; }
-  actual="$(shasum -a 256 "$SRC" | awk '{print $1}')"
-  if [[ "$actual" != "$EXPECTED_SOURCE_SHA" ]]; then
-    echo "FAIL: canonical AppIcon SHA mismatch expected=$EXPECTED_SOURCE_SHA actual=$actual" >&2
+  byte_sha="$(shasum -a 256 "$SRC" | awk '{print $1}')"
+  ensure_pillow
+  pixel_sha="$(SRC_PATH="$SRC" python3 - <<'PY'
+from PIL import Image
+from pathlib import Path
+import hashlib, os, sys
+p = Path(os.environ['SRC_PATH'])
+try:
+    im = Image.open(p).convert('RGB')
+except Exception as exc:
+    print(f'INVALID:{exc}')
+    sys.exit(0)
+print(hashlib.sha256(im.tobytes()).hexdigest())
+PY
+)"
+  if [[ "$pixel_sha" != "$EXPECTED_PIXEL_SHA" ]]; then
+    echo "FAIL: canonical AppIcon pixel mismatch expected=$EXPECTED_PIXEL_SHA actual=$pixel_sha byte_sha=$byte_sha" >&2
     return 1
+  fi
+  if [[ "$byte_sha" != "$EXPECTED_SOURCE_SHA" ]]; then
+    echo "INFO: source metadata/container differs but decoded RGB pixels match canonical; byte_sha=$byte_sha" >&2
   fi
 }
 
@@ -34,8 +61,9 @@ fetch_icon() {
   verify_source
 }
 
-# CI may provide a byte-preserving local canonical source in the future. It is
-# accepted only when its SHA-256 exactly matches the Notion/Drive source-of-truth.
+# When a byte-preserving source is injected, exact bytes are preferred. Google
+# Drive direct-download may rewrite PNG metadata/C2PA blocks, so remote sources
+# are accepted only when the decoded RGB pixels match the Drive canonical file.
 if [[ -n "${APPICON_SOURCE_PATH:-}" ]]; then
   [[ -f "$APPICON_SOURCE_PATH" ]] || { echo "FAIL: APPICON_SOURCE_PATH not found" >&2; exit 1; }
   cp "$APPICON_SOURCE_PATH" "$SRC"
@@ -43,7 +71,7 @@ if [[ -n "${APPICON_SOURCE_PATH:-}" ]]; then
 elif ! fetch_icon "https://drive.usercontent.google.com/download?id=${FILE_ID}&export=download&confirm=t"; then
   echo "INFO: trying alternate Google Drive download endpoint" >&2
   if ! fetch_icon "https://drive.google.com/uc?export=download&id=${FILE_ID}"; then
-    echo "FAIL: could not materialize exact canonical AppIcon from Google Drive; refusing fallback icon" >&2
+    echo "FAIL: could not materialize pixel-identical canonical AppIcon from Google Drive; refusing fallback icon" >&2
     exit 1
   fi
 fi
@@ -63,5 +91,5 @@ ALPHA="$(sips -g hasAlpha "$OUT" | awk '/hasAlpha/ {print $2}')"
 [[ "$WIDTH" == "1024" && "$HEIGHT" == "1024" ]] || { echo "FAIL: output dimensions ${WIDTH}x${HEIGHT}" >&2; exit 1; }
 [[ "$ALPHA" == "no" ]] || { echo "FAIL: output must not contain alpha" >&2; exit 1; }
 
-printf 'PASS AppIcon source_sha=%s output_sha=%s size=%sx%s alpha=%s\n' \
-  "$EXPECTED_SOURCE_SHA" "$(shasum -a 256 "$OUT" | awk '{print $1}')" "$WIDTH" "$HEIGHT" "$ALPHA"
+printf 'PASS AppIcon canonical_pixel_sha=%s output_sha=%s size=%sx%s alpha=%s\n' \
+  "$EXPECTED_PIXEL_SHA" "$(shasum -a 256 "$OUT" | awk '{print $1}')" "$WIDTH" "$HEIGHT" "$ALPHA"
