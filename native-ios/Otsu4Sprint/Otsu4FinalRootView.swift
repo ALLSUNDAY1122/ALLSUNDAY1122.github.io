@@ -28,11 +28,14 @@ struct Otsu4FinalRootView: View {
                         startWeak: { begin(.weak, Array(learningStore.weakQuestions(from: store, isPremium: purchaseStore.isPremium).shuffled().prefix(learningStore.goal))) },
                         resume: { activeSession = learningStore.restoreSession(from: store) },
                         goMock: { selectedTab = .mock },
-                        startSubject: { subject in begin(.subject(subject), Array(store.questions(subject: subject, isPremium: purchaseStore.isPremium).shuffled().prefix(learningStore.goal))) },
+                        startSubject: { subject in
+                            begin(.subject(subject), store.questions(subject: subject, isPremium: purchaseStore.isPremium))
+                        },
                         startRound: { set in
                             guard let rows = store.practiceRoundQuestions(set: set, isPremium: purchaseStore.isPremium) else { showingPaywall = true; return }
                             begin(.subject("第\(set)回・試験回別演習"), rows)
-                        }
+                        },
+                        showPaywall: { showingPaywall = true }
                     )
                     .tag(Otsu4FinalTab.home)
                     .tabItem { Label("ホーム", systemImage: "house") }
@@ -83,7 +86,13 @@ struct Otsu4FinalRootView: View {
     private func begin(_ kind: Otsu4StudyKind, _ questions: [Otsu4Question]) {
         guard !questions.isEmpty else { return }
         learningStore.clearResume()
-        activeSession = Otsu4StudySession(kind: kind, questions: questions)
+        activeSession = Otsu4StudySession(
+            kind: kind,
+            questions: questions,
+            onAnswer: { questionID, correct in
+                learningStore.recordQuestionAnswer(questionID: questionID, correct: correct)
+            }
+        )
     }
 }
 
@@ -97,6 +106,7 @@ private struct Otsu4FinalHomeView: View {
     let goMock: () -> Void
     let startSubject: (String) -> Void
     let startRound: (Int) -> Void
+    let showPaywall: () -> Void
     @State private var mode: Otsu4PracticeMode = .subject
 
     var body: some View {
@@ -159,8 +169,21 @@ private struct Otsu4FinalHomeView: View {
                 .pickerStyle(.segmented).accessibilityIdentifier("practice-mode-picker")
             if mode == .subject {
                 ForEach(["法令", "物理・化学", "性質・消火"], id: \.self) { subject in
-                    Button { startSubject(subject) } label: { row(subject, trailing: "") }
-                        .buttonStyle(.plain).accessibilityIdentifier("subject-\(subject)").accessibilityLabel("\(subject)を学習")
+                    NavigationLink {
+                        Otsu4SubjectQuestionListView(
+                            subject: subject,
+                            contentStore: contentStore,
+                            purchaseStore: purchaseStore,
+                            learningStore: learningStore,
+                            startAll: { startSubject(subject) },
+                            showPaywall: showPaywall
+                        )
+                    } label: {
+                        row(subject, trailing: "\(contentStore.allQuestions.filter { $0.subject == subject }.count)問")
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("subject-\(subject)")
+                    .accessibilityLabel("\(subject)の問題一覧")
                 }
             } else {
                 ForEach(1...Otsu4ContentStore.mockSetCount, id: \.self) { set in
@@ -172,13 +195,131 @@ private struct Otsu4FinalHomeView: View {
     }
 
     private func row(_ title: String, trailing: String) -> some View {
-        HStack { Text(title).font(Otsu4Theme.sans(15, weight: .bold)); Spacer(); if !trailing.isEmpty { Text(trailing).font(Otsu4Theme.sans(12)).foregroundStyle(Otsu4Theme.ink3) }; Image(systemName: "chevron.right") }
+        HStack { Text(title).font(Otsu4Theme.sans(15, weight: .bold)); Spacer(); if !trailing.isEmpty { Text(trailing).font(Otsu4Theme.sans(12)).foregroundStyle(Otsu4Theme.ink2) }; Image(systemName: "chevron.right") }
             .foregroundStyle(Otsu4Theme.ai).frame(maxWidth: .infinity, minHeight: 48).contentShape(Rectangle())
     }
 
     private func metric(_ title: String, _ value: String, _ color: Color) -> some View {
-        VStack(spacing: 3) { Text(value).font(Otsu4Theme.serif(17, weight: .bold)).foregroundStyle(color); Text(title).font(Otsu4Theme.sans(10)).foregroundStyle(Otsu4Theme.ink3) }
+        VStack(spacing: 3) { Text(value).font(Otsu4Theme.serif(17, weight: .bold)).foregroundStyle(color); Text(title).font(Otsu4Theme.sans(10)).foregroundStyle(Otsu4Theme.ink2) }
             .frame(maxWidth: .infinity).padding(.vertical, 10).background(Otsu4Theme.card).clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+private struct Otsu4SubjectQuestionListView: View {
+    let subject: String
+    let contentStore: Otsu4ContentStore
+    @ObservedObject var purchaseStore: Otsu4PurchaseStore
+    @ObservedObject var learningStore: Otsu4LearningStore
+    let startAll: () -> Void
+    let showPaywall: () -> Void
+
+    private var allQuestions: [Otsu4Question] {
+        contentStore.allQuestions.filter { $0.subject == subject }
+    }
+
+    private var availableQuestions: [Otsu4Question] {
+        contentStore.questions(subject: subject, isPremium: purchaseStore.isPremium)
+    }
+
+    private var availableIDs: Set<String> {
+        Set(availableQuestions.map(\.id))
+    }
+
+    var body: some View {
+        ZStack {
+            Otsu4PaperBackground()
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 10) {
+                    Otsu4Card {
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack(alignment: .firstTextBaseline) {
+                                Text(subject)
+                                    .font(Otsu4Theme.serif(28, weight: .bold))
+                                    .foregroundStyle(Otsu4Theme.ink)
+                                Spacer()
+                                Text("全\(allQuestions.count)問")
+                                    .font(Otsu4Theme.sans(13, weight: .bold))
+                                    .foregroundStyle(Otsu4Theme.ink2)
+                            }
+                            Text("各問題の正解回数 / 解いた回数を確認できます。問題文は一覧では1行だけ表示します。")
+                                .font(Otsu4Theme.sans(13))
+                                .foregroundStyle(Otsu4Theme.ink2)
+
+                            Button(purchaseStore.isPremium ? "全\(allQuestions.count)問を通して解く" : "無料範囲\(availableQuestions.count)問を通して解く", action: startAll)
+                                .buttonStyle(.borderedProminent)
+                                .tint(Otsu4Theme.shu)
+                                .frame(maxWidth: .infinity)
+
+                            if !purchaseStore.isPremium {
+                                Button("全\(allQuestions.count)問を解放", action: showPaywall)
+                                    .buttonStyle(.bordered)
+                                    .tint(Otsu4Theme.ai)
+                                    .frame(maxWidth: .infinity)
+                            }
+                        }
+                    }
+
+                    HStack {
+                        Text("問題一覧")
+                            .font(Otsu4Theme.serif(19, weight: .bold))
+                            .foregroundStyle(Otsu4Theme.ink)
+                        Spacer()
+                        Text("正解 / 解答")
+                            .font(Otsu4Theme.sans(12, weight: .bold))
+                            .foregroundStyle(Otsu4Theme.ink2)
+                    }
+                    .padding(.top, 4)
+
+                    ForEach(Array(allQuestions.enumerated()), id: \.element.id) { index, question in
+                        let progress = learningStore.questionProgress(for: question.id)
+                        let unlocked = availableIDs.contains(question.id)
+                        HStack(alignment: .top, spacing: 10) {
+                            Text("\(index + 1)")
+                                .font(Otsu4Theme.sans(12, weight: .bold))
+                                .foregroundStyle(Otsu4Theme.ai)
+                                .frame(width: 30, alignment: .trailing)
+
+                            VStack(alignment: .leading, spacing: 3) {
+                                HStack(spacing: 6) {
+                                    Text(question.topic)
+                                        .font(Otsu4Theme.sans(13, weight: .bold))
+                                        .foregroundStyle(Otsu4Theme.ink)
+                                    if !unlocked {
+                                        Image(systemName: "lock.fill")
+                                            .font(.caption2)
+                                            .foregroundStyle(Otsu4Theme.kin)
+                                    }
+                                }
+                                Text(question.question)
+                                    .font(Otsu4Theme.sans(12))
+                                    .foregroundStyle(Otsu4Theme.ink2)
+                                    .lineLimit(1)
+                            }
+
+                            Spacer(minLength: 8)
+
+                            Text("\(progress.correctCount) / \(progress.answerCount)")
+                                .font(Otsu4Theme.sans(13, weight: .bold).monospacedDigit())
+                                .foregroundStyle(progress.answerCount > 0 ? Otsu4Theme.ai : Otsu4Theme.ink2)
+                                .frame(minWidth: 52, alignment: .trailing)
+                        }
+                        .padding(12)
+                        .background(Otsu4Theme.card)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Otsu4Theme.line, lineWidth: 1)
+                        )
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("第\(index + 1)問 \(question.topic) 正解\(progress.correctCount)回 解答\(progress.answerCount)回")
+                    }
+                }
+                .padding(18)
+                .padding(.bottom, 24)
+            }
+        }
+        .navigationTitle("\(subject)・全問")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -239,7 +380,7 @@ private struct Otsu4FinalHistoryView: View {
                         }
                         Text("苦手一覧").font(Otsu4Theme.serif(19, weight: .bold))
                         let weak = learningStore.weakQuestions(from: contentStore, isPremium: purchaseStore.isPremium)
-                        if weak.isEmpty { Text("苦手はありません。誤答・わからないの問題がここに追加されます。").font(Otsu4Theme.sans(13)).foregroundStyle(Otsu4Theme.ink3) }
+                        if weak.isEmpty { Text("苦手はありません。誤答・わからないの問題がここに追加されます。").font(Otsu4Theme.sans(13)).foregroundStyle(Otsu4Theme.ink2) }
                         else { ForEach(Array(weak.prefix(8))) { q in Text("\(q.subject)・\(q.topic)　\(q.question)").font(Otsu4Theme.sans(12)).lineLimit(2).padding(8).background(Otsu4Theme.card).clipShape(RoundedRectangle(cornerRadius: 10)) } }
                     }.padding(18).padding(.bottom, 18)
                 }

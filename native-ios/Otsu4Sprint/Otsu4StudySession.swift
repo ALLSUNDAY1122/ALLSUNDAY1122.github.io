@@ -41,7 +41,6 @@ struct Otsu4AnswerState: Equatable {
     let correct: Bool
     let unknown: Bool
 
-    // Golden Master view aliases.
     var selected: Int? { selectedIndex }
     var isCorrect: Bool { correct }
 }
@@ -71,8 +70,14 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
     @Published private(set) var answers: [String: Otsu4AnswerState]
     @Published private(set) var isFinished = false
     private var timerTask: Task<Void, Never>?
+    private let onAnswer: ((String, Bool) -> Void)?
 
-    init(kind: Otsu4StudyKind, questions: [Otsu4Question], snapshot: Otsu4SessionSnapshot? = nil) {
+    init(
+        kind: Otsu4StudyKind,
+        questions: [Otsu4Question],
+        snapshot: Otsu4SessionSnapshot? = nil,
+        onAnswer: ((String, Bool) -> Void)? = nil
+    ) {
         self.kind = kind
         self.questions = questions
         self.startedAt = snapshot?.startedAt ?? Date()
@@ -80,6 +85,7 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
         self.answers = snapshot?.answers.mapValues {
             Otsu4AnswerState(selectedIndex: $0.selectedIndex, correct: $0.correct, unknown: $0.unknown)
         } ?? [:]
+        self.onAnswer = onAnswer
 
         if kind.isMock {
             timerTask = Task { [weak self] in
@@ -172,11 +178,19 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
         guard !isFinished else { return }
         let q = currentQuestion
         if !kind.isMock, answers[q.id] != nil { return }
-        answers[q.id] = Otsu4AnswerState(
+        let answer = Otsu4AnswerState(
             selectedIndex: choice,
             correct: choice == q.answer,
             unknown: choice == nil
         )
+        answers[q.id] = answer
+
+        // Standard/sprint/subject answers cannot be changed after selection, so
+        // persist their counters immediately. Mock answers stay editable and are
+        // counted once at submission by Otsu4LearningStore.complete(session:).
+        if !kind.isMock {
+            onAnswer?(q.id, answer.correct)
+        }
     }
 
     func next() {

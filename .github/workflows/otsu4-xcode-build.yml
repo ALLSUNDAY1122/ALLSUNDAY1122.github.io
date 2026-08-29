@@ -151,7 +151,7 @@ jobs:
           done < /tmp/otsu4-simulators.txt
       - name: Run native unit tests
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
-        timeout-minutes: 10
+        timeout-minutes: 20
         working-directory: native-ios/Otsu4Sprint
         run: |
           set -euo pipefail

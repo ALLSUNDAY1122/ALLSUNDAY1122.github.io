@@ -29,6 +29,11 @@ struct Otsu4SessionSnapshot: Codable, Equatable {
     let startedAt: Date
 }
 
+struct Otsu4QuestionProgress: Codable, Equatable {
+    var correctCount: Int = 0
+    var answerCount: Int = 0
+}
+
 struct Otsu4PersistedLearningState: Codable, Equatable {
     var goal: Int = 8
     var examDate: Date?
@@ -39,6 +44,7 @@ struct Otsu4PersistedLearningState: Codable, Equatable {
     var resume: Otsu4SessionSnapshot?
     var fontScale: Int = 1
     var seenIDs: Set<String>?
+    var questionProgress: [String: Otsu4QuestionProgress]?
 }
 
 @MainActor
@@ -93,8 +99,6 @@ final class Otsu4LearningStore: ObservableObject {
         return Int(ceil(Double(remaining) / Double(days)))
     }
 
-    // Compatibility with the Golden Master view API. Keep the canonical
-    // calculation in requiredDailyPace(totalAvailable:).
     func requiredDailyPace(totalQuestions: Int) -> Int? {
         requiredDailyPace(totalAvailable: totalQuestions)
     }
@@ -107,6 +111,15 @@ final class Otsu4LearningStore: ObservableObject {
             guard let date = calendar.date(byAdding: .day, value: -daysAgo, to: today) else { return 0 }
             return state.dailyAnswered[Self.dayKey(date)] ?? 0
         }
+    }
+
+    func questionProgress(for questionID: String) -> Otsu4QuestionProgress {
+        state.questionProgress?[questionID] ?? Otsu4QuestionProgress()
+    }
+
+    func recordQuestionAnswer(questionID: String, correct: Bool) {
+        incrementQuestionProgress(questionID: questionID, correct: correct)
+        save()
     }
 
     func setGoal(_ goal: Int) {
@@ -153,7 +166,14 @@ final class Otsu4LearningStore: ObservableObject {
             clearResume()
             return nil
         }
-        return Otsu4StudySession(kind: kind, questions: questions, snapshot: snapshot)
+        return Otsu4StudySession(
+            kind: kind,
+            questions: questions,
+            snapshot: snapshot,
+            onAnswer: { [weak self] questionID, correct in
+                self?.recordQuestionAnswer(questionID: questionID, correct: correct)
+            }
+        )
     }
 
     func complete(session: Otsu4StudySession) {
@@ -176,13 +196,23 @@ final class Otsu4LearningStore: ObservableObject {
         state.history = Array(state.history.prefix(200))
 
         var seen = state.seenIDs ?? []
-        seen.formUnion(session.questions.map(\.id))
+        seen.formUnion(session.answers.keys)
         state.seenIDs = seen
 
         if !session.kind.isMock {
-            let answered = session.questions.count
+            let answered = session.answers.count
             let key = Self.dayKey(Date())
             state.dailyAnswered[key, default: 0] += answered
+        }
+
+        // Non-mock answers are recorded immediately when chosen so that a long
+        // subject session can be interrupted without losing per-question stats.
+        // Mock answers are mutable until submission, so record their final state here.
+        if session.kind.isMock {
+            for q in session.questions {
+                guard let answer = session.answers[q.id] else { continue }
+                incrementQuestionProgress(questionID: q.id, correct: answer.correct)
+            }
         }
 
         for q in session.questions {
@@ -232,6 +262,17 @@ final class Otsu4LearningStore: ObservableObject {
         }
         state = imported
         save()
+    }
+
+    private func incrementQuestionProgress(questionID: String, correct: Bool) {
+        var map = state.questionProgress ?? [:]
+        var progress = map[questionID] ?? Otsu4QuestionProgress()
+        progress.answerCount += 1
+        if correct {
+            progress.correctCount += 1
+        }
+        map[questionID] = progress
+        state.questionProgress = map
     }
 
     private func save() {

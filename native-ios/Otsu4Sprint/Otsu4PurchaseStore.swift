@@ -23,8 +23,10 @@ final class Otsu4PurchaseStore: ObservableObject {
     init() {
         updatesTask = observeTransactionUpdates()
         Task {
-            await loadProduct()
             await refreshEntitlement()
+            if !isPremium {
+                await loadProduct()
+            }
         }
     }
 
@@ -40,18 +42,44 @@ final class Otsu4PurchaseStore: ObservableObject {
         premiumProduct?.displayPrice ?? "—"
     }
 
+    var canPurchase: Bool {
+        premiumProduct != nil && !isBusy
+    }
+
+    var isBusy: Bool {
+        switch state {
+        case .loading, .purchasing:
+            return true
+        default:
+            return false
+        }
+    }
+
     func loadProduct() async {
+        guard state != .premium else { return }
+        state = .loading
+
         do {
             let products = try await Product.products(for: [Self.premiumProductID])
-            premiumProduct = products.first(where: { $0.id == Self.premiumProductID })
-            if premiumProduct == nil, state != .premium {
-                state = .failed("商品情報を取得できませんでした")
+            guard let product = products.first(where: { $0.id == Self.premiumProductID }) else {
+                premiumProduct = nil
+                state = .failed("App Storeの商品情報を取得できませんでした。通信状態を確認して再読み込みしてください。")
+                return
+            }
+            premiumProduct = product
+            if state != .premium {
+                state = .free
             }
         } catch {
+            premiumProduct = nil
             if state != .premium {
-                state = .failed("商品情報を取得できませんでした")
+                state = .failed("App Storeの商品情報を取得できませんでした。通信状態を確認して再読み込みしてください。")
             }
         }
+    }
+
+    func retryProductLoad() async {
+        await loadProduct()
     }
 
     func refreshEntitlement() async {
@@ -66,16 +94,20 @@ final class Otsu4PurchaseStore: ObservableObject {
             break
         }
 
-        state = entitled ? .premium : .free
+        if entitled {
+            state = .premium
+        } else if case .failed = state {
+            // Keep the actionable StoreKit error visible instead of masking it as .free.
+        } else if state != .purchasing {
+            state = .free
+        }
     }
 
     func purchasePremium() async {
-        guard let product = premiumProduct else {
+        if premiumProduct == nil {
             await loadProduct()
-            guard let product = premiumProduct else { return }
-            await purchase(product)
-            return
         }
+        guard let product = premiumProduct else { return }
         await purchase(product)
     }
 
@@ -83,8 +115,11 @@ final class Otsu4PurchaseStore: ObservableObject {
         do {
             try await AppStore.sync()
             await refreshEntitlement()
+            if !isPremium, premiumProduct == nil {
+                await loadProduct()
+            }
         } catch {
-            state = .failed("購入情報を復元できませんでした")
+            state = .failed("購入情報を復元できませんでした。App Storeへサインインしていることを確認してください。")
         }
     }
 
@@ -118,7 +153,7 @@ final class Otsu4PurchaseStore: ObservableObject {
                 await refreshEntitlement()
             }
         } catch {
-            state = .failed("購入を完了できませんでした")
+            state = .failed("購入を完了できませんでした。時間をおいて再度お試しください。")
         }
     }
 
