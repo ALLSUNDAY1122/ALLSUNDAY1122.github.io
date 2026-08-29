@@ -133,9 +133,41 @@ jobs:
         working-directory: tech-assets/moises-audio
         run: swift test --filter TempoKeyAnalysisTests
 
-      - name: W52 long audio regression
+      - name: W52 long audio 01 preparation sanitization
         working-directory: tech-assets/moises-audio
-        run: swift test --filter AnalysisLongAudioHardeningTests
+        run: swift test --filter AnalysisLongAudioHardeningTests.testPreparationDownsamplesHighRateAndSanitizesPathologicalSamples
+
+      - name: W52 long audio 02 clean 8k no resample
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter AnalysisLongAudioHardeningTests.testCleanEightKilohertzSignalIsNotResampled
+
+      - name: W52 long audio 03 deterministic preparation
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter AnalysisLongAudioHardeningTests.testPreparationIsDeterministic
+
+      - name: W52 long audio 04 one-hour memory budget
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter AnalysisLongAudioHardeningTests.testOneHourBudgetAvoidsLegacyWholeTrackDoubleAmplification
+
+      - name: W52 long audio 05 bounded tempo 120 BPM
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter AnalysisLongAudioHardeningTests.testBoundedTempoFindsSynthetic120BPM
+
+      - name: W52 long audio 06 sustained tone fail-closed
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter AnalysisLongAudioHardeningTests.testBoundedTempoFailsClosedOnSustainedTone
+
+      - name: W52 long audio 07 bounded C major
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter AnalysisLongAudioHardeningTests.testBoundedKeyFindsSyntheticCMajorWithoutWholeTrackDoubleBuffer
+
+      - name: W52 long audio 08 gap-free chord timeline
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter AnalysisLongAudioHardeningTests.testBoundedChordTimelineIsGapFreeAndEndsAtDuration
+
+      - name: W52 long audio 09 benchmark non-parity
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter AnalysisLongAudioHardeningTests.testPreparationBenchmarkCanNeverSelfDeclareParity
 
       - name: W52 chord timeline regression
         working-directory: tech-assets/moises-audio
