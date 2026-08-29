@@ -1,0 +1,96 @@
+name: Otsu4 Store Assets
+
+on:
+  pull_request:
+    paths:
+      - 'native-ios/Otsu4Sprint/**'
+      - '.github/workflows/otsu4-store-assets.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    runs-on: macos-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Prepare audited resources
+        run: bash native-ios/Otsu4Sprint/prepare-ios.sh
+      - name: Generate Xcode project
+        working-directory: native-ios/Otsu4Sprint
+        run: xcodegen generate
+      - name: Select and boot large iPhone
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' > /tmp/otsu4-store-sim.txt
+          import json, subprocess
+          data=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          rows=[]
+          for runtime, devices in sorted(data.get('devices',{}).items(), reverse=True):
+              if 'iOS' not in runtime: continue
+              for d in devices:
+                  if d.get('isAvailable',True) and d.get('name','').startswith('iPhone'):
+                      rows.append((d['name'],d['udid']))
+          preferred=['17 Pro Max','16 Pro Max','16 Plus','15 Pro Max','15 Plus','14 Pro Max']
+          for token in preferred:
+              hit=next(((n,u) for n,u in rows if token in n),None)
+              if hit:
+                  print(f'{hit[0]}|{hit[1]}'); break
+          else: raise SystemExit('No 6.9-inch compatible iPhone simulator found')
+          PY
+          cat /tmp/otsu4-store-sim.txt
+          UDID=$(cut -d'|' -f2 /tmp/otsu4-store-sim.txt)
+          xcrun simctl shutdown all || true
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
+      - name: Capture store screenshots
+        working-directory: native-ios/Otsu4Sprint
+        run: |
+          set -euo pipefail
+          UDID=$(cut -d'|' -f2 /tmp/otsu4-store-sim.txt)
+          rm -rf /tmp/Otsu4Store.xcresult /tmp/otsu4-store-assets
+          xcodebuild test \
+            -project Otsu4Sprint.xcodeproj \
+            -scheme Otsu4Sprint \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -destination-timeout 90 \
+            -only-testing:Otsu4SprintUITests/Otsu4StoreScreenshotUITests/testCaptureStoreAssets \
+            -parallel-testing-enabled NO \
+            -resultBundlePath /tmp/Otsu4Store.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            ASSETCATALOG_COMPILER_APPICON_NAME=
+          mkdir -p /tmp/otsu4-store-assets
+          xcrun xcresulttool export attachments \
+            --path /tmp/Otsu4Store.xcresult \
+            --output-path /tmp/otsu4-store-assets
+          find /tmp/otsu4-store-assets -type f -maxdepth 2 -print
+      - name: Verify screenshot dimensions
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          pngs=list(Path('/tmp/otsu4-store-assets').rglob('*.png'))
+          if len(pngs) < 7: raise SystemExit(f'Expected 7 PNG screenshots, got {len(pngs)}')
+          allowed={(1260,2736),(1290,2796),(1320,2868)}
+          for p in pngs:
+              out=subprocess.check_output(['sips','-g','pixelWidth','-g','pixelHeight',str(p)],text=True)
+              vals={line.split(':',1)[0].strip():line.split(':',1)[1].strip() for line in out.splitlines() if ':' in line}
+              size=(int(vals['pixelWidth']),int(vals['pixelHeight']))
+              print(p.name,size)
+              if size not in allowed: raise SystemExit(f'Unsupported App Store screenshot size: {p} {size}')
+          PY
+      - name: Upload store assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: otsu4-store-assets-${{ github.event.pull_request.head.sha }}
+          path: /tmp/otsu4-store-assets
+          if-no-files-found: error
+          retention-days: 7
