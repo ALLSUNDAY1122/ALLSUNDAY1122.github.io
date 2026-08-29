@@ -1,0 +1,74 @@
+name: Moises HQ Lane1 Stable Start Transport Preflight
+
+on:
+  push:
+    branches:
+      - tech/moises-separation
+    paths:
+      - 'tech-assets/moises-audio/Processing/Sources/ServerStableStartCapability.swift'
+      - 'tech-assets/moises-audio/Processing/Tests/ServerStableStartTransportPreflightHarness.swift'
+      - '.github/workflows/moises-hq-l1-stable-start-transport-preflight.yml'
+  pull_request:
+    paths:
+      - 'tech-assets/moises-audio/Processing/Sources/ServerStableStartCapability.swift'
+      - 'tech-assets/moises-audio/Processing/Tests/ServerStableStartTransportPreflightHarness.swift'
+      - '.github/workflows/moises-hq-l1-stable-start-transport-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: moises-hq-l1-stable-start-transport-preflight-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  portable-runtime:
+    runs-on: ubuntu-latest
+    container: swift:6.0.3
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Compile isolated stable-start capability and harness
+        working-directory: tech-assets/moises-audio
+        run: |
+          set -euo pipefail
+          swift --version
+          swiftc \
+            -swift-version 6 \
+            -strict-concurrency=complete \
+            -warnings-as-errors \
+            Processing/Sources/ServerStableStartCapability.swift \
+            Processing/Tests/ServerStableStartTransportPreflightHarness.swift \
+            -o /tmp/lane1-stable-start-transport-preflight
+      - name: Execute fail-closed transport preflight scenarios
+        run: /tmp/lane1-stable-start-transport-preflight
+
+  apple-ios-sdk-typecheck:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Selected Xcode and iOS SDK
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+          xcrun --sdk iphoneos --show-sdk-path
+      - name: Typecheck isolated stable-start capability on iPhoneOS SDK
+        working-directory: tech-assets/moises-audio
+        run: |
+          set -euo pipefail
+          SDK_PATH="$(xcrun --sdk iphoneos --show-sdk-path)"
+          xcrun --sdk iphoneos swiftc \
+            -target arm64-apple-ios17.0 \
+            -sdk "$SDK_PATH" \
+            -swift-version 6 \
+            -warnings-as-errors \
+            -strict-concurrency=complete \
+            -parse-as-library \
+            -typecheck \
+            Processing/Sources/ServerStableStartCapability.swift \
+            Processing/Tests/ServerStableStartTransportPreflightHarness.swift
