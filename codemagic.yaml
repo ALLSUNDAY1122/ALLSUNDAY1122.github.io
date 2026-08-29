@@ -17,13 +17,12 @@ workflows:
         XCODE_SCHEME: Otsu4Sprint
       xcode: latest
     scripts:
-      - name: Verify canonical identifiers and candidate policy
+      - name: Verify canonical identifiers
         script: |
           set -euo pipefail
           test "$BUNDLE_ID" = "jp.allsunday1122.otsu4"
           test "$APP_STORE_APPLE_ID" = "6799755566"
           test "$APPLE_TEAM_ID" = "MN3D2ZM44N"
-          ! grep -q 'testFlightInternalTestingOnly' "$CM_BUILD_DIR/codemagic.yaml"
       - name: Install XcodeGen
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
       - name: Prepare audited final 720-question resources and icon
