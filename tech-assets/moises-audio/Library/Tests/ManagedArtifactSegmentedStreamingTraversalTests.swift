@@ -40,4 +40,55 @@ final class ManagedArtifactSegmentedStreamingTraversalTests: XCTestCase {
 
         XCTAssertThrowsError(try traversal.prepareOrphanCandidateSlice(priorTraversal: .init(shardIndex: shard), gracePeriod: 0, now: Date(timeIntervalSince1970: 1), candidateLimit: 600, shardVisitLimit: 1))
     }
+
+    func testOversizedManifestFailsClosedBeforeDecode() throws {
+        let fm = FileManager.default
+        let root = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("lane2-segmented-manifest-cap-\(UUID().uuidString)")
+        defer { try? fm.removeItem(at: root) }
+        let directory = root.appendingPathComponent(".LibraryRecovery/ArtifactInventory/v1/Segmented", isDirectory: true)
+        try fm.createDirectory(at: directory, withIntermediateDirectories: true)
+
+        let shard = 7
+        let manifestURL = directory.appendingPathComponent(String(format: "%02x.manifest.json", shard))
+        try Data(repeating: 0x20, count: Lane2ManagedArtifactSegmentedStreamingTraversal.maximumManifestEncodedBytes + 1).write(to: manifestURL)
+
+        let traversal = Lane2ManagedArtifactSegmentedStreamingTraversal(rootURL: root)
+        XCTAssertThrowsError(
+            try traversal.prepareOrphanCandidateSlice(
+                priorTraversal: .init(shardIndex: shard),
+                gracePeriod: 0,
+                now: Date(timeIntervalSince1970: 1),
+                candidateLimit: 1,
+                shardVisitLimit: 1
+            )
+        )
+    }
+
+    func testOversizedSegmentFailsClosedBeforeDecode() throws {
+        let fm = FileManager.default
+        let root = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("lane2-segmented-segment-cap-\(UUID().uuidString)")
+        defer { try? fm.removeItem(at: root) }
+        let directory = root.appendingPathComponent(".LibraryRecovery/ArtifactInventory/v1/Segmented", isDirectory: true)
+        try fm.createDirectory(at: directory, withIntermediateDirectories: true)
+
+        let shard = 7
+        let generation = UUID()
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let manifest = Manifest(schemaVersion: 1, shardIndex: shard, generation: generation, segmentCount: 1, entryCount: 1)
+        try encoder.encode(manifest).write(to: directory.appendingPathComponent(String(format: "%02x.manifest.json", shard)))
+        let segmentURL = directory.appendingPathComponent(String(format: "%02x.%@.%04d.json", shard, generation.uuidString, 0))
+        try Data(repeating: 0x20, count: Lane2ManagedArtifactSegmentedStreamingTraversal.maximumSegmentEncodedBytes + 1).write(to: segmentURL)
+
+        let traversal = Lane2ManagedArtifactSegmentedStreamingTraversal(rootURL: root)
+        XCTAssertThrowsError(
+            try traversal.prepareOrphanCandidateSlice(
+                priorTraversal: .init(shardIndex: shard),
+                gracePeriod: 0,
+                now: Date(timeIntervalSince1970: 1),
+                candidateLimit: 1,
+                shardVisitLimit: 1
+            )
+        )
+    }
 }
