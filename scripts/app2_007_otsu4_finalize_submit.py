@@ -47,12 +47,13 @@ def rel_id(x,key):
     except Exception: return None
 
 def validate_app(token,actions):
-    _,p=req(token,f'/v1/apps/{APP_ID}'); app=p.get('data') or {}; a=attrs(app)
+    fields='?fields[apps]=bundleId,contentRightsDeclaration'
+    _,p=req(token,f'/v1/apps/{APP_ID}{fields}'); app=p.get('data') or {}; a=attrs(app)
     if a.get('bundleId')!=BUNDLE_ID: raise RuntimeError('App/bundle mismatch')
     if not a.get('contentRightsDeclaration'):
         req(token,f'/v1/apps/{APP_ID}','PATCH',{'data':{'type':'apps','id':APP_ID,'attributes':{'contentRightsDeclaration':'DOES_NOT_USE_THIRD_PARTY_CONTENT'}}})
         actions.append('content_rights_declared')
-        _,p=req(token,f'/v1/apps/{APP_ID}'); a=attrs(p.get('data') or {})
+        _,p=req(token,f'/v1/apps/{APP_ID}{fields}'); a=attrs(p.get('data') or {})
     if a.get('contentRightsDeclaration')!='DOES_NOT_USE_THIRD_PARTY_CONTENT': raise RuntimeError('Unexpected content rights declaration')
     return a
 
