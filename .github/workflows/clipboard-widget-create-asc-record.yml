@@ -1,0 +1,148 @@
+name: Clipboard Widget Create App Store Connect Record
+
+on:
+  push:
+    branches:
+      - feature/clipboard-widget-poc
+    paths:
+      - '.github/workflows/clipboard-widget-create-asc-record.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  BUNDLE_ID: jp.allsunday1122.clipboardwidget
+  APP_NAME: クリップボードWidget
+  APP_SKU: clipboard-widget-20260827
+
+jobs:
+  create-record:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve existing Apple web credentials without exposing values
+        id: auth
+        env:
+          S_FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          S_APPLE_ID: ${{ secrets.APPLE_ID }}
+          S_ASC_USERNAME: ${{ secrets.APP_STORE_CONNECT_USERNAME }}
+          S_FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          S_APPLE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          S_FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          USERNAME="${S_FASTLANE_USER:-${S_APPLE_ID:-${S_ASC_USERNAME:-}}}"
+          PASSWORD="${S_FASTLANE_PASSWORD:-${S_APPLE_PASSWORD:-}}"
+          SESSION="${S_FASTLANE_SESSION:-}"
+          if [[ -n "$USERNAME" ]]; then echo 'has_username=true' >> "$GITHUB_OUTPUT"; else echo 'has_username=false' >> "$GITHUB_OUTPUT"; fi
+          if [[ -n "$PASSWORD" ]]; then echo 'has_password=true' >> "$GITHUB_OUTPUT"; else echo 'has_password=false' >> "$GITHUB_OUTPUT"; fi
+          if [[ -n "$SESSION" ]]; then echo 'has_session=true' >> "$GITHUB_OUTPUT"; else echo 'has_session=false' >> "$GITHUB_OUTPUT"; fi
+          if [[ -n "$USERNAME" && ( -n "$PASSWORD" || -n "$SESSION" ) ]]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+            printf '%s' "$USERNAME" > "$RUNNER_TEMP/asc_username"
+            chmod 600 "$RUNNER_TEMP/asc_username"
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install fastlane
+        if: steps.auth.outputs.ready == 'true'
+        run: gem install fastlane --no-document
+
+      - name: Create App Store Connect app record
+        id: create
+        if: steps.auth.outputs.ready == 'true'
+        continue-on-error: true
+        env:
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD || secrets.APPLE_ID_PASSWORD }}
+          FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+          FASTLANE_SKIP_UPDATE_CHECK: '1'
+          FASTLANE_HIDE_CHANGELOG: '1'
+          FASTLANE_DISABLE_COLORS: '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          USERNAME="$(cat "$RUNNER_TEMP/asc_username")"
+          RAW="$RUNNER_TEMP/produce.raw.log"
+          SAFE="$RUNNER_TEMP/produce.safe.log"
+          set +e
+          fastlane produce \
+            --username "$USERNAME" \
+            --app_identifier "$BUNDLE_ID" \
+            --app_name "$APP_NAME" \
+            --sku "$APP_SKU" \
+            --language 'ja-JP' \
+            --platform ios \
+            --skip_devcenter true \
+            >"$RAW" 2>&1
+          STATUS=$?
+          set -e
+          python3 - <<'PY'
+          from pathlib import Path
+          import os,re
+          raw=Path(os.environ['RUNNER_TEMP']+'/produce.raw.log').read_text(errors='replace')
+          # Remove obvious e-mail addresses, cookies, JWTs, PEM blocks and long secret-like tokens.
+          raw=re.sub(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}', '[REDACTED EMAIL]', raw)
+          raw=re.sub(r'-----BEGIN [^-]+-----.*?-----END [^-]+-----', '[REDACTED PEM]', raw, flags=re.S)
+          raw=re.sub(r'eyJ[A-Za-z0-9._-]{20,}', '[REDACTED JWT]', raw)
+          raw=re.sub(r'(?i)(session|cookie|password|token)(\s*[=:]\s*)\S+', r'\1\2[REDACTED]', raw)
+          Path(os.environ['RUNNER_TEMP']+'/produce.safe.log').write_text(raw[-20000:])
+          PY
+          cat "$SAFE"
+          exit "$STATUS"
+
+      - name: Persist safe creation evidence
+        if: always()
+        env:
+          READY: ${{ steps.auth.outputs.ready }}
+          HAS_USERNAME: ${{ steps.auth.outputs.has_username }}
+          HAS_PASSWORD: ${{ steps.auth.outputs.has_password }}
+          HAS_SESSION: ${{ steps.auth.outputs.has_session }}
+          CREATE_OUTCOME: ${{ steps.create.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin feature/clipboard-widget-poc
+          git reset --hard origin/feature/clipboard-widget-poc
+          mkdir -p automation/clipboard-widget/evidence
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,os
+          evidence={
+            'bundle_id':'jp.allsunday1122.clipboardwidget',
+            'app_name':'クリップボードWidget',
+            'sku':'clipboard-widget-20260827',
+            'credential_probe':{
+              'ready':os.getenv('READY','false'),
+              'has_username':os.getenv('HAS_USERNAME','false'),
+              'has_password':os.getenv('HAS_PASSWORD','false'),
+              'has_session':os.getenv('HAS_SESSION','false'),
+            },
+            'create_outcome':os.getenv('CREATE_OUTCOME','skipped'),
+          }
+          safe=Path(os.environ['RUNNER_TEMP']+'/produce.safe.log')
+          if safe.exists(): evidence['sanitized_log_tail']=safe.read_text(errors='replace')[-12000:]
+          Path('automation/clipboard-widget/evidence/asc-app-record-create.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+'\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add automation/clipboard-widget/evidence/asc-app-record-create.json
+          git commit -m 'chore: record clipboard ASC app creation evidence' || true
+          git pull --rebase origin feature/clipboard-widget-poc
+          git push origin HEAD:feature/clipboard-widget-poc
+
+      - name: Require usable Apple web credentials
+        if: steps.auth.outputs.ready != 'true'
+        run: |
+          echo 'No stored Apple web-login credential/session was available to fastlane produce.' >&2
+          exit 1
+
+      - name: Require app record creation success
+        if: steps.auth.outputs.ready == 'true' && steps.create.outcome != 'success'
+        run: exit 1
