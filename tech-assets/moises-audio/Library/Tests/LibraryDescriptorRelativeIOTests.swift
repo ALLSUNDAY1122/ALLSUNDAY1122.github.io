@@ -32,6 +32,44 @@ final class Lane2LibraryDescriptorRelativeIOTests: XCTestCase {
         XCTAssertEqual(try io.readRegularFile(at: file, maximumBytes: 65_537).count, 65_537)
     }
 
+    func testRegularFileMetadataUsesPinnedDescriptorModificationTime() throws {
+        let root = try makeRoot(prefix: "metadata-regular")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let directory = root.appendingPathComponent("managed", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let file = directory.appendingPathComponent("record.json")
+        try Data("metadata".utf8).write(to: file)
+        let modified = Date(timeIntervalSince1970: 1_700_000_123)
+        try FileManager.default.setAttributes([.modificationDate: modified], ofItemAtPath: file.path)
+
+        let io = Lane2LibraryDescriptorRelativeIO(rootURL: root)
+        let metadata = try io.regularFileMetadata(at: file)
+
+        XCTAssertEqual(metadata.modificationTimeSince1970, modified.timeIntervalSince1970, accuracy: 1.0)
+    }
+
+    func testRegularFileMetadataRejectsLeafSymlinkWithoutBorrowingExternalMetadata() throws {
+        let root = try makeRoot(prefix: "metadata-symlink-root")
+        let external = try makeRoot(prefix: "metadata-symlink-external")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+        let managed = root.appendingPathComponent("managed", isDirectory: true)
+        try FileManager.default.createDirectory(at: managed, withIntermediateDirectories: true)
+        let externalFile = external.appendingPathComponent("record.json")
+        let sentinel = Data("external-metadata-must-not-be-borrowed".utf8)
+        try sentinel.write(to: externalFile)
+        let externalModified = Date(timeIntervalSince1970: 1_600_000_000)
+        try FileManager.default.setAttributes([.modificationDate: externalModified], ofItemAtPath: externalFile.path)
+        let managedFile = managed.appendingPathComponent("record.json")
+        try FileManager.default.createSymbolicLink(at: managedFile, withDestinationURL: externalFile)
+
+        let io = Lane2LibraryDescriptorRelativeIO(rootURL: root)
+        XCTAssertThrowsError(try io.regularFileMetadata(at: managedFile))
+        XCTAssertEqual(try Data(contentsOf: externalFile), sentinel)
+    }
+
     func testReadRejectsAncestorSymlinkAtUseTime() throws {
         let root = try makeRoot(prefix: "ancestor-root")
         let external = try makeRoot(prefix: "ancestor-external")

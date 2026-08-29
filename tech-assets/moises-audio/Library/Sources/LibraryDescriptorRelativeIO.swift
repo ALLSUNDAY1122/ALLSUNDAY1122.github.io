@@ -6,6 +6,10 @@ import Darwin
 import Glibc
 #endif
 
+struct Lane2LibraryDescriptorRelativeRegularFileMetadata: Equatable, Sendable {
+    let modificationTimeSince1970: TimeInterval
+}
+
 /// Descriptor-relative managed-root I/O used after higher-level path-authority validation.
 ///
 /// This pins the managed root and every descendant directory while the leaf operation is
@@ -74,6 +78,26 @@ struct Lane2LibraryDescriptorRelativeIO: Sendable {
                 data.append(contentsOf: buffer.prefix(count))
             }
             return data
+        }
+    }
+
+    /// Returns metadata from the same `O_NOFOLLOW` regular-file descriptor authority used by
+    /// managed reads. Callers can therefore make freshness decisions without re-resolving the
+    /// leaf through Foundation pathname metadata APIs.
+    ///
+    /// This does not bind a later independent open/unlink to the exact inode observed here.
+    func regularFileMetadata(at url: URL) throws -> Lane2LibraryDescriptorRelativeRegularFileMetadata {
+        let relative = try relativeComponents(for: url)
+        return try withPinnedParent(relativeComponents: relative) { parentFD, leaf in
+            let fd = leaf.withCString { pointer in
+                lane2OpenAt(parentFD, pointer, lane2ReadOnlyNoFollowFlags, 0)
+            }
+            guard fd >= 0 else { throw Failure.openFailed(leaf) }
+            defer { _ = lane2Close(fd) }
+            let status = try regularFileStatus(fd: fd, label: leaf)
+            return Lane2LibraryDescriptorRelativeRegularFileMetadata(
+                modificationTimeSince1970: lane2ModificationTimeSince1970(status)
+            )
         }
     }
 
@@ -211,11 +235,16 @@ struct Lane2LibraryDescriptorRelativeIO: Sendable {
         return try body(currentFD, leaf)
     }
 
-    private func requireRegularFile(fd: Int32, label: String) throws {
+    private func regularFileStatus(fd: Int32, label: String) throws -> stat {
         var status = stat()
         guard lane2Fstat(fd, &status) == 0 else { throw Failure.openFailed(label) }
         let fileType = status.st_mode & mode_t(S_IFMT)
         guard fileType == mode_t(S_IFREG) else { throw Failure.notRegularFile(label) }
+        return status
+    }
+
+    private func requireRegularFile(fd: Int32, label: String) throws {
+        _ = try regularFileStatus(fd: fd, label: label)
     }
 }
 
@@ -224,6 +253,9 @@ private let lane2DirectoryNoFollowFlags = O_RDONLY | O_DIRECTORY | O_NOFOLLOW | 
 private let lane2ReadOnlyNoFollowFlags = O_RDONLY | O_NOFOLLOW | O_CLOEXEC
 private let lane2CreateExclusiveNoFollowFlags = O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC
 
+@inline(__always) private func lane2ModificationTimeSince1970(_ status: stat) -> TimeInterval {
+    TimeInterval(status.st_mtimespec.tv_sec) + TimeInterval(status.st_mtimespec.tv_nsec) / 1_000_000_000
+}
 @inline(__always) private func lane2Open(_ path: UnsafePointer<CChar>, _ flags: Int32, _ mode: mode_t) -> Int32 {
     Darwin.open(path, flags, mode)
 }
@@ -242,6 +274,9 @@ private let lane2DirectoryNoFollowFlags = O_RDONLY | O_DIRECTORY | O_NOFOLLOW | 
 private let lane2ReadOnlyNoFollowFlags = O_RDONLY | O_NOFOLLOW | O_CLOEXEC
 private let lane2CreateExclusiveNoFollowFlags = O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC
 
+@inline(__always) private func lane2ModificationTimeSince1970(_ status: stat) -> TimeInterval {
+    TimeInterval(status.st_mtim.tv_sec) + TimeInterval(status.st_mtim.tv_nsec) / 1_000_000_000
+}
 @inline(__always) private func lane2Open(_ path: UnsafePointer<CChar>, _ flags: Int32, _ mode: mode_t) -> Int32 {
     Glibc.open(path, flags, mode)
 }
