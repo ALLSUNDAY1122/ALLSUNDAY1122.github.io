@@ -13,7 +13,18 @@ permissions:
 
 jobs:
   persist:
-    if: github.event.workflow_run.head_branch == 'main'
+    # FEEDBACK_LOOP_FIREBREAK:
+    # - skipped target runs are terminal noise and must never create a new commit
+    # - runs whose head commit was produced by github-actions[bot] must never be
+    #   persisted back to main, otherwise the evidence commit can become input
+    #   to another watched run and recursively generate more evidence commits
+    # - explicitly ignore our own historical summary-commit message as a second
+    #   line of defense for old runs/replays
+    if: >-
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.conclusion != 'skipped' &&
+      github.event.workflow_run.head_commit.author.name != 'github-actions[bot]' &&
+      !contains(github.event.workflow_run.head_commit.message, 'APP2-009: persist completed workflow run summary')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -56,6 +67,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$TARGET"
-          git commit -m "APP2-009: persist completed workflow run summary" || exit 0
+          git commit -m "APP2-009: persist completed workflow run summary [no-app2-watch-loop]" || exit 0
           git pull --rebase origin main
           git push origin HEAD:main
