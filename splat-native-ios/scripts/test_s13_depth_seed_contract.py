@@ -56,6 +56,23 @@ for token in (
 ):
     assert token in PATCHER, f"missing S13 materializer contract: {token}"
 
+# The physical A/B test must reuse the exact finished raw capture rather than requiring a recapture.
+# Protect the currently trusted Build-8 result before switching only the in-memory model to captured;
+# the on-disk manifest stays finished until train() enters the existing atomic processing transition.
+for token in (
+    "restoreFinishedProjectForS13Reprocess",
+    "SplatProjectTrustRecovery.trustedResultURL",
+    "SplatPreviousResultEvidence.preserveBeforeReprocess",
+    "projectStore.reprocessRequest",
+    "restoreCaptureCheckpoint(checkpoint)",
+    "datasetReady = true",
+    "phase = .captured",
+    "同じ撮影raw",
+    "同じ撮影から再生成",
+    "canReprocessTrusted",
+):
+    assert token in PATCHER, f"missing same-raw S13 A/B contract: {token}"
+
 # Preserve the historical XcodeGen entrypoint so S7-S12 composition contracts remain stable.
 assert "preGenCommand: bash scripts/materialize_msplat_s7_wave1.sh" in PROJECT
 assert 'python3 "$ROOT/scripts/apply_s13_depth_seed.py"' in MATERIALIZER
@@ -93,4 +110,4 @@ def voxel(point):
 assert voxel((0.001, 0.001, -1.001)) == voxel((0.009, 0.009, -1.009))
 assert voxel((0.001, 0.001, -1.001)) != voxel((0.021, 0.001, -1.001))
 
-print("PASS: S13 depth-seed geometry contract")
+print("PASS: S13 depth-seed geometry + same-raw A/B contract")
