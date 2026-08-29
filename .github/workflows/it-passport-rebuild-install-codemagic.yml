@@ -1,0 +1,158 @@
+name: New IT Passport - Install Codemagic Workflow
+
+on:
+  push:
+    branches:
+      - feature/it-passport-rebuild
+    paths:
+      - 'automation/it-passport-rebuild-codemagic-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/it-passport-rebuild
+          fetch-depth: 0
+
+      - name: Install isolated New IT Passport workflow
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('codemagic.yaml')
+          text = path.read_text(encoding='utf-8')
+          marker = '  it-passport-rebuild-ios:\n'
+          if marker in text:
+              print('PASS: it-passport-rebuild-ios already exists')
+              raise SystemExit(0)
+          if not text.startswith('workflows:\n') and '\nworkflows:\n' not in text[:500]:
+              raise SystemExit('codemagic.yaml workflows root not found')
+
+          block = r'''  it-passport-rebuild-ios:
+    name: 新ITパスポート - iOS App Store Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.itpassportstudy
+      vars:
+        BUNDLE_ID: jp.allsunday1122.itpassportstudy
+        XCODE_PROJECT: apps/it-passport-rebuild/ios/ITPassportStudy.xcodeproj
+        XCODE_SCHEME: ITPassportStudy
+        EXPECTED_APPICON_SHA256: be4b5e7a38909ce702065c660cc18f6401b9ae2a560e71b342d8204f5067e677
+      xcode: latest
+    scripts:
+      - name: Install XcodeGen
+        script: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Verify canonical release inputs
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/apps/it-passport-rebuild/ios"
+          test "$BUNDLE_ID" = "jp.allsunday1122.itpassportstudy"
+          bash tools/materialize_appicon.sh
+          test -f Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          echo "$EXPECTED_APPICON_SHA256  Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" | shasum -a 256 -c -
+          test -f PrivacyInfo.xcprivacy
+          test -f ../questions/starter-v1.json
+      - name: Set CI build number and generate Xcode project
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/apps/it-passport-rebuild/ios"
+          python3 - "$CM_BUILD_NUMBER" <<'PYBUILD'
+          from pathlib import Path
+          import re, sys
+          p = Path('project.yml')
+          text = p.read_text(encoding='utf-8')
+          text, n = re.subn(r'CURRENT_PROJECT_VERSION:\s*\d+', 'CURRENT_PROJECT_VERSION: ' + sys.argv[1], text, count=1)
+          if n != 1:
+              raise RuntimeError('CURRENT_PROJECT_VERSION replacement failed')
+          p.write_text(text, encoding='utf-8')
+          PYBUILD
+          xcodegen generate
+      - name: Apply App Store signing profile for internal distribution
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/apps/it-passport-rebuild/ios"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+      - name: Verify packaged IPA identity
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios/ipa" -maxdepth 1 -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          python3 - "$APP_DIR" <<'PYVERIFY'
+          from pathlib import Path
+          import plistlib, sys
+          app = Path(sys.argv[1])
+          info = plistlib.loads((app / 'Info.plist').read_bytes())
+          assert info.get('CFBundleIdentifier') == 'jp.allsunday1122.itpassportstudy'
+          assert str(info.get('CFBundleVersion', '')).isdigit()
+          assert (app / 'Assets.car').is_file()
+          assert (app / 'embedded.mobileprovision').is_file()
+          assert (app / '_CodeSignature').is_dir()
+          print('PASS: signed New IT Passport IPA identity verified')
+          PYVERIFY
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
+
+'''
+          idx = text.find('workflows:\n')
+          if idx < 0:
+              raise SystemExit('workflows root not found')
+          insert_at = idx + len('workflows:\n')
+          text = text[:insert_at] + block + text[insert_at:]
+          path.write_text(text, encoding='utf-8')
+
+          check = path.read_text(encoding='utf-8')
+          required = [
+              'it-passport-rebuild-ios:',
+              'jp.allsunday1122.itpassportstudy',
+              'EXPECTED_APPICON_SHA256: be4b5e7a38909ce702065c660cc18f6401b9ae2a560e71b342d8204f5067e677',
+              'testFlightInternalTestingOnly',
+              'submit_to_testflight: false',
+              'submit_to_app_store: false',
+          ]
+          for token in required:
+              if token not in check:
+                  raise SystemExit('missing New IT Passport Codemagic token: ' + token)
+          print('PASS: isolated New IT Passport Codemagic workflow installed')
+          PY
+
+      - name: Persist branch change
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add codemagic.yaml
+          if git diff --cached --quiet; then
+            echo 'No Codemagic change to persist'
+            exit 0
+          fi
+          git commit -m '新ITパスポート｜専用Codemagicワークフローを追加'
+          git pull --rebase origin feature/it-passport-rebuild
+          git push origin HEAD:feature/it-passport-rebuild
