@@ -165,7 +165,8 @@ def ensure_price(token, product_resource_id, actions):
     if point is None:
         raise RuntimeError("JPN 800 JPY in-app purchase price point not found")
 
-    inline_id = "app2-007-otsu4-lifetime-jpn"
+    # ASC inline-created relationship resources require ${local-id} syntax.
+    inline_id = "${price}"
     payload = {
         "data": {
             "type": "inAppPurchasePriceSchedules",
