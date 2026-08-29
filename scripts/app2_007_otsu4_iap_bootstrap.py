@@ -3,6 +3,7 @@
 
 Secrets are supplied only through GitHub Actions. The script is pinned to the
 canonical app/bundle/product identifiers and refuses a bundle mismatch.
+Uses the App Store Connect 4.4.1+ version-based IAP metadata model.
 """
 
 import json
@@ -58,7 +59,12 @@ def req(token, path, method="GET", payload=None):
 
 def rows(payload):
     data = payload.get("data", []) if isinstance(payload, dict) else []
-    return data if isinstance(data, list) else [data]
+    return data if isinstance(data, list) else ([] if data is None else [data])
+
+
+def state(resource):
+    attrs = resource.get("attributes", {}) if isinstance(resource, dict) else {}
+    return attrs.get("state") or attrs.get("appStoreState") or attrs.get("appVersionState")
 
 
 def by_product(items, product_id):
@@ -92,14 +98,32 @@ def ensure_product(token, actions):
         _, created = req(token, "/v2/inAppPurchases", "POST", payload)
         item = created["data"]
         actions.append("created_non_consumable")
+    return item["id"]
 
-    product_id = item["id"]
-    _, detail = req(token, f"/v2/inAppPurchases/{product_id}?include=inAppPurchaseLocalizations")
-    localized = any(
-        x.get("type") == "inAppPurchaseLocalizations" and x.get("attributes", {}).get("locale") == "ja"
-        for x in detail.get("included", [])
-    )
-    if not localized:
+
+def ensure_version(token, product_resource_id, actions):
+    _, detail = req(token, f"/v2/inAppPurchases/{product_resource_id}?include=versions")
+    versions = [x for x in detail.get("included", []) if x.get("type") == "inAppPurchaseVersions"]
+    draft = next((x for x in versions if state(x) in {"PREPARE_FOR_SUBMISSION", "READY_FOR_REVIEW"}), None)
+    if draft is None:
+        payload = {
+            "data": {
+                "type": "inAppPurchaseVersions",
+                "relationships": {
+                    "inAppPurchase": {"data": {"type": "inAppPurchases", "id": product_resource_id}}
+                },
+            }
+        }
+        _, created = req(token, "/v1/inAppPurchaseVersions", "POST", payload)
+        draft = created["data"]
+        actions.append("created_iap_version")
+    return draft["id"]
+
+
+def ensure_localization(token, version_id, actions):
+    _, current = req(token, f"/v1/inAppPurchaseVersions/{version_id}/localizations?limit=200")
+    ja = next((x for x in rows(current) if x.get("attributes", {}).get("locale") == "ja"), None)
+    if ja is None:
         payload = {
             "data": {
                 "type": "inAppPurchaseLocalizations",
@@ -109,88 +133,84 @@ def ensure_product(token, actions):
                     "description": PRODUCT_DESCRIPTION,
                 },
                 "relationships": {
-                    "inAppPurchaseV2": {"data": {"type": "inAppPurchasesV2", "id": product_id}}
+                    "version": {"data": {"type": "inAppPurchaseVersions", "id": version_id}}
                 },
             }
         }
         req(token, "/v2/inAppPurchaseLocalizations", "POST", payload)
         actions.append("localized_ja")
 
+
+def ensure_price(token, product_resource_id, actions):
     try:
-        req(token, f"/v2/inAppPurchases/{product_id}/iapPriceSchedule")
+        req(token, f"/v2/inAppPurchases/{product_resource_id}/iapPriceSchedule")
         has_price_schedule = True
     except RuntimeError as exc:
         if "HTTP 404" not in str(exc):
             raise
         has_price_schedule = False
 
-    if not has_price_schedule:
-        _, points = req(
-            token,
-            f"/v2/inAppPurchases/{product_id}/pricePoints?filter[territory]={JPN}"
-            "&fields[inAppPurchasePricePoints]=customerPrice,territory&include=territory&limit=8000",
-        )
-        point = next(
-            (
-                x
-                for x in rows(points)
-                if decimal(x.get("attributes", {}).get("customerPrice")) == TARGET_PRICE
-            ),
-            None,
-        )
-        if point is None:
-            raise RuntimeError("JPN 800 JPY in-app purchase price point not found")
-        inline_id = "app2-007-otsu4-lifetime-jpn"
-        payload = {
-            "data": {
-                "type": "inAppPurchasePriceSchedules",
-                "relationships": {
-                    "inAppPurchase": {"data": {"type": "inAppPurchases", "id": product_id}},
-                    "baseTerritory": {"data": {"type": "territories", "id": JPN}},
-                    "manualPrices": {"data": [{"type": "inAppPurchasePrices", "id": inline_id}]},
-                },
+    if has_price_schedule:
+        return
+
+    _, points = req(
+        token,
+        f"/v2/inAppPurchases/{product_resource_id}/pricePoints?filter[territory]={JPN}"
+        "&fields[inAppPurchasePricePoints]=customerPrice,territory&include=territory&limit=8000",
+    )
+    point = next(
+        (x for x in rows(points) if decimal(x.get("attributes", {}).get("customerPrice")) == TARGET_PRICE),
+        None,
+    )
+    if point is None:
+        raise RuntimeError("JPN 800 JPY in-app purchase price point not found")
+
+    inline_id = "app2-007-otsu4-lifetime-jpn"
+    payload = {
+        "data": {
+            "type": "inAppPurchasePriceSchedules",
+            "relationships": {
+                "inAppPurchase": {"data": {"type": "inAppPurchases", "id": product_resource_id}},
+                "baseTerritory": {"data": {"type": "territories", "id": JPN}},
+                "manualPrices": {"data": [{"type": "inAppPurchasePrices", "id": inline_id}]},
             },
-            "included": [
-                {
-                    "type": "inAppPurchasePrices",
-                    "id": inline_id,
-                    "attributes": {"startDate": None},
-                    "relationships": {
-                        "inAppPurchaseV2": {"data": {"type": "inAppPurchasesV2", "id": product_id}},
-                        "inAppPurchasePricePoint": {
-                            "data": {"type": "inAppPurchasePricePoints", "id": point["id"]}
-                        },
+        },
+        "included": [
+            {
+                "type": "inAppPurchasePrices",
+                "id": inline_id,
+                "attributes": {"startDate": None},
+                "relationships": {
+                    "inAppPurchaseV2": {"data": {"type": "inAppPurchasesV2", "id": product_resource_id}},
+                    "inAppPurchasePricePoint": {
+                        "data": {"type": "inAppPurchasePricePoints", "id": point["id"]}
                     },
-                }
-            ],
-        }
-        req(token, "/v1/inAppPurchasePriceSchedules", "POST", payload)
-        actions.append("priced_800_jpy")
+                },
+            }
+        ],
+    }
+    req(token, "/v1/inAppPurchasePriceSchedules", "POST", payload)
+    actions.append("priced_800_jpy")
 
-    return product_id
 
-
-def collect_state(token, product_resource_id, actions):
+def collect_state(token, product_resource_id, version_id, actions):
     _, app = req(token, f"/v1/apps/{APP_ID}")
     actual_bundle = app["data"].get("attributes", {}).get("bundleId")
     if actual_bundle != BUNDLE_ID:
         raise RuntimeError(f"Bundle mismatch: expected {BUNDLE_ID}, got {actual_bundle!r}")
 
-    _, product = req(
-        token,
-        f"/v2/inAppPurchases/{product_resource_id}?include=inAppPurchaseLocalizations,iapPriceSchedule",
-    )
+    _, product = req(token, f"/v2/inAppPurchases/{product_resource_id}?include=iapPriceSchedule,versions")
+    _, version = req(token, f"/v1/inAppPurchaseVersions/{version_id}")
+    _, localizations = req(token, f"/v1/inAppPurchaseVersions/{version_id}/localizations?limit=200")
     _, all_products = req(token, f"/v1/apps/{APP_ID}/inAppPurchasesV2?limit=200")
     matching = by_product(rows(all_products), PRODUCT_ID)
     if not matching or matching.get("id") != product_resource_id:
         raise RuntimeError("Product read-back mismatch")
 
-    localization = [
-        x.get("attributes", {})
-        for x in product.get("included", [])
-        if x.get("type") == "inAppPurchaseLocalizations"
-        and x.get("attributes", {}).get("locale") == "ja"
-    ]
+    ja = next((x for x in rows(localizations) if x.get("attributes", {}).get("locale") == "ja"), None)
+    if ja is None:
+        raise RuntimeError("Japanese IAP localization read-back mismatch")
+
     return {
         "task_id": "APP2-007",
         "app": {"id": APP_ID, "bundle_id": actual_bundle},
@@ -199,8 +219,11 @@ def collect_state(token, product_resource_id, actions):
             "product_id": PRODUCT_ID,
             "type": "NON_CONSUMABLE",
             "target_price_jpy": "800",
-            "state": product["data"].get("attributes", {}).get("state"),
-            "localization_ja": localization[0] if localization else None,
+            "parent_state": product["data"].get("attributes", {}).get("state"),
+            "version_id": version_id,
+            "version_state": version["data"].get("attributes", {}).get("state"),
+            "localization_ja": ja.get("attributes", {}),
+            "has_price_schedule": any(x.get("type") == "inAppPurchasePriceSchedules" for x in product.get("included", [])),
         },
         "actions": actions,
         "review_screenshot_required_before_submission": True,
@@ -223,7 +246,10 @@ def main():
             raise RuntimeError(f"Bundle mismatch: expected {BUNDLE_ID}, got {actual_bundle!r}")
 
         product_resource_id = ensure_product(token, actions)
-        write_result(collect_state(token, product_resource_id, actions))
+        version_id = ensure_version(token, product_resource_id, actions)
+        ensure_localization(token, version_id, actions)
+        ensure_price(token, product_resource_id, actions)
+        write_result(collect_state(token, product_resource_id, version_id, actions))
     except Exception as exc:
         write_result(
             {
