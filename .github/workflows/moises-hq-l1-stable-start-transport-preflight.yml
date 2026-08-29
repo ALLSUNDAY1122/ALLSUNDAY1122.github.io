@@ -32,6 +32,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Compile isolated stable-start capability and harness
         working-directory: tech-assets/moises-audio
+        shell: bash
         run: |
           set -euo pipefail
           swift --version
