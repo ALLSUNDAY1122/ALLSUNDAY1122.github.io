@@ -2,7 +2,8 @@
 """S13 depth-seeded reconstruction contract.
 
 This gate is intentionally source/determinism oriented. The normal Native iOS workflow performs the
-actual Swift compile after XcodeGen runs the S13 materializer.
+actual Swift compile after XcodeGen runs the canonical materializer, which composes S13 before the
+existing S7-S12 Msplat patches.
 """
 from __future__ import annotations
 
@@ -12,6 +13,7 @@ import pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 BUILDER = (ROOT / "SplatNative" / "SplatDepthSeedBuilder.swift").read_text()
 PATCHER = (ROOT / "scripts" / "apply_s13_depth_seed.py").read_text()
+MATERIALIZER = (ROOT / "scripts" / "materialize_msplat_s7_wave1.sh").read_text()
 PROJECT = (ROOT / "project.yml").read_text()
 POLICY = (ROOT / "SplatNative" / "SplatReconstructionPolicy.swift").read_text()
 RESOURCE = (ROOT / "SplatNative" / "SplatResourceGuard.swift").read_text()
@@ -54,7 +56,9 @@ for token in (
 ):
     assert token in PATCHER, f"missing S13 materializer contract: {token}"
 
-assert "python3 scripts/apply_s13_depth_seed.py && bash scripts/materialize_msplat_s7_wave1.sh" in PROJECT
+# Preserve the historical XcodeGen entrypoint so S7-S12 composition contracts remain stable.
+assert "preGenCommand: bash scripts/materialize_msplat_s7_wave1.sh" in PROJECT
+assert 'python3 "$ROOT/scripts/apply_s13_depth_seed.py"' in MATERIALIZER
 
 # Quality/resource invariants must not move in the geometry experiment.
 for token in (
@@ -67,7 +71,7 @@ for token in (
     assert token in POLICY, f"S13 must preserve reconstruction quality contract: {token}"
 for token in (
     "residentMemoryBudgetBytes",
-    "availableMemoryReserveBytes",
+    "minimumAvailableMemoryReserveBytes",
     "peakResidentMemoryBytes",
 ):
     assert token in RESOURCE, f"S13 must preserve resource safety contract: {token}"
