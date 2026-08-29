@@ -28,6 +28,12 @@ struct Lane2ManagedArtifactInventoryDescriptorEnumerator: Sendable {
         let kind: EntryKind
     }
 
+    struct ImmediateEntry: Hashable, Sendable {
+        let name: String
+        let kind: EntryKind
+        let byteCount: Int
+    }
+
     enum Failure: Error, Equatable, Sendable {
         case invalidManagedPath(String)
         case openFailed(String)
@@ -51,6 +57,19 @@ struct Lane2ManagedArtifactInventoryDescriptorEnumerator: Sendable {
                 entries: &entries
             )
             return entries
+        }
+    }
+
+    /// Enumerates only immediate visible children while the target directory remains descriptor-pinned.
+    /// Metadata comes from the same `fstatat(..., AT_SYMLINK_NOFOLLOW)` observation used for type
+    /// classification, so callers do not need to reopen each child through a pathname just to learn size.
+    func visibleImmediateEntries(in directoryURL: URL) throws -> [ImmediateEntry] {
+        let relative = try relativeComponents(for: directoryURL)
+        return try withPinnedDirectory(relativeComponents: relative) { directoryFD in
+            try readVisibleImmediateEntries(
+                directoryFD: directoryFD,
+                relativeComponents: relative
+            )
         }
     }
 
@@ -119,6 +138,69 @@ struct Lane2ManagedArtifactInventoryDescriptorEnumerator: Sendable {
                 entries.append(Entry(relativePath: relativePath, kind: .other))
             }
         }
+    }
+
+    private func readVisibleImmediateEntries(
+        directoryFD: Int32,
+        relativeComponents: [String]
+    ) throws -> [ImmediateEntry] {
+        let streamFD = lane2InventoryDup(directoryFD)
+        guard streamFD >= 0 else {
+            throw Failure.openFailed(relativeComponents.joined(separator: "/"))
+        }
+        guard let directory = lane2InventoryFDOpenDir(streamFD) else {
+            _ = lane2InventoryClose(streamFD)
+            throw Failure.enumerateFailed(relativeComponents.joined(separator: "/"))
+        }
+        defer { _ = lane2InventoryCloseDir(directory) }
+
+        var entries: [ImmediateEntry] = []
+        while true {
+            errno = 0
+            guard let entryPointer = lane2InventoryReadDir(directory) else {
+                if errno != 0 {
+                    throw Failure.enumerateFailed(relativeComponents.joined(separator: "/"))
+                }
+                break
+            }
+
+            let name = lane2InventoryEntryName(entryPointer.pointee)
+            if name == "." || name == ".." || name.hasPrefix(".") {
+                continue
+            }
+            guard isSafePathComponent(name) else {
+                throw Failure.invalidManagedPath(name)
+            }
+
+            var status = stat()
+            let statResult = name.withCString { pointer in
+                lane2InventoryFstatAt(directoryFD, pointer, &status, lane2InventoryNoFollowStatFlag)
+            }
+            let relativePath = (relativeComponents + [name]).joined(separator: "/")
+            guard statResult == 0 else {
+                throw Failure.statFailed(relativePath)
+            }
+            guard status.st_size >= 0,
+                  let byteCount = Int(exactly: status.st_size) else {
+                throw Failure.statFailed(relativePath)
+            }
+            entries.append(
+                ImmediateEntry(
+                    name: name,
+                    kind: entryKind(for: status),
+                    byteCount: byteCount
+                )
+            )
+        }
+        return entries
+    }
+
+    private func entryKind(for status: stat) -> EntryKind {
+        let fileType = status.st_mode & mode_t(S_IFMT)
+        if fileType == mode_t(S_IFREG) { return .regularFile }
+        if fileType == mode_t(S_IFDIR) { return .directory }
+        if fileType == mode_t(S_IFLNK) { return .symbolicLink }
+        return .other
     }
 
     private func withChildDirectory<T>(
