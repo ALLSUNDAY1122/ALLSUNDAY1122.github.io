@@ -73,6 +73,18 @@ for token in (
 ):
     assert token in PATCHER, f"missing same-raw S13 A/B contract: {token}"
 
+# The screen recording must state which branch of the seed experiment actually ran. Without this,
+# a non-LiDAR/rawFeature fallback could be mistaken for a failed depth-seed experiment.
+for token in (
+    "reconstructionSeedEvidenceText",
+    "S13 seed:",
+    "seedOutcome.depthFrameCount",
+    "seedOutcome.geometryPointCount",
+    "training evidence UI",
+    "result evidence UI",
+):
+    assert token in PATCHER, f"missing visible S13 seed telemetry contract: {token}"
+
 # Preserve the historical XcodeGen entrypoint so S7-S12 composition contracts remain stable.
 assert "preGenCommand: bash scripts/materialize_msplat_s7_wave1.sh" in PROJECT
 assert 'python3 "$ROOT/scripts/apply_s13_depth_seed.py"' in MATERIALIZER
@@ -110,4 +122,4 @@ def voxel(point):
 assert voxel((0.001, 0.001, -1.001)) == voxel((0.009, 0.009, -1.009))
 assert voxel((0.001, 0.001, -1.001)) != voxel((0.021, 0.001, -1.001))
 
-print("PASS: S13 depth-seed geometry + same-raw A/B contract")
+print("PASS: S13 depth-seed geometry + same-raw A/B + visible seed telemetry contract")
