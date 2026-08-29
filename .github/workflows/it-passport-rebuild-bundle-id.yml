@@ -1,0 +1,41 @@
+name: New IT Passport - Ensure Apple Bundle ID
+
+on:
+  push:
+    branches:
+      - feature/it-passport-rebuild
+    paths:
+      - 'automation/it-passport-rebuild-bundle-id-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ensure-bundle-id:
+    runs-on: macos-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/it-passport-rebuild
+
+      - name: Ensure explicit Apple Bundle ID and read back
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 apps/it-passport-rebuild/tools/ensure_bundle_id.py > /tmp/it-passport-bundle-id-result.json
+          cat /tmp/it-passport-bundle-id-result.json
+
+      - name: Persist sanitized evidence
+        run: |
+          mkdir -p apps/it-passport-rebuild/quality
+          cp /tmp/it-passport-bundle-id-result.json apps/it-passport-rebuild/quality/bundle-id-registration.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/it-passport-rebuild/quality/bundle-id-registration.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "新ITパスポート｜Apple Bundle ID登録結果を保存"
+          git push origin HEAD:feature/it-passport-rebuild
