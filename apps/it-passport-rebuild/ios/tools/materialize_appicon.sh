@@ -11,15 +11,38 @@ VENV="$TMP/venv"
 FILE_ID="1Cej-mIkRG1NVjajSK8PI1xCE4vI17cXl"
 EXPECTED_SOURCE_SHA="a1c5fc063d443de17c8a498c132ccaad961dfa353a372756cd4e79ce4023f288"
 EXPECTED_PIXEL_SHA="7ecad6e7e195da9be52b2b75f2afd3dbfd199c1134fb737207abdd808ebc0403"
+EXPECTED_OUTPUT_SHA="be4b5e7a38909ce702065c660cc18f6401b9ae2a560e71b342d8204f5067e677"
+PILLOW_VERSION="12.3.0"
 
 mkdir -p "$ICON_DIR"
-rm -f "$OUT"
 
 ensure_pillow() {
   if [[ ! -x "$VENV/bin/python" ]]; then
     python3 -m venv "$VENV"
-    "$VENV/bin/python" -m pip install --quiet --disable-pip-version-check Pillow
+    "$VENV/bin/python" -m pip install --quiet --disable-pip-version-check "Pillow==$PILLOW_VERSION"
   fi
+}
+
+verify_output() {
+  local sha width height alpha
+  [[ -s "$OUT" ]] || return 1
+  sha="$(shasum -a 256 "$OUT" | awk '{print $1}')"
+  [[ "$sha" == "$EXPECTED_OUTPUT_SHA" ]] || {
+    echo "FAIL: AppIcon output SHA mismatch expected=$EXPECTED_OUTPUT_SHA actual=$sha" >&2
+    return 1
+  }
+  width="$(sips -g pixelWidth "$OUT" | awk '/pixelWidth/ {print $2}')"
+  height="$(sips -g pixelHeight "$OUT" | awk '/pixelHeight/ {print $2}')"
+  alpha="$(sips -g hasAlpha "$OUT" | awk '/hasAlpha/ {print $2}')"
+  [[ "$width" == "1024" && "$height" == "1024" ]] || {
+    echo "FAIL: AppIcon output dimensions ${width}x${height}" >&2
+    return 1
+  }
+  [[ "$alpha" == "no" ]] || {
+    echo "FAIL: AppIcon output must not contain alpha" >&2
+    return 1
+  }
+  printf 'PASS AppIcon output_sha=%s size=%sx%s alpha=%s\n' "$sha" "$width" "$height" "$alpha"
 }
 
 verify_source() {
@@ -60,9 +83,33 @@ fetch_icon() {
   verify_source
 }
 
-# When a byte-preserving source is injected, exact bytes are preferred. Google
-# Drive direct-download may rewrite PNG metadata/C2PA blocks, so remote sources
-# are accepted only when the decoded RGB pixels match the Drive canonical file.
+materialize_output() {
+  ensure_pillow
+  SRC_PATH="$SRC" OUT_PATH="$OUT" "$VENV/bin/python" - <<'PY'
+from PIL import Image
+from pathlib import Path
+import os
+src = Path(os.environ['SRC_PATH'])
+out = Path(os.environ['OUT_PATH'])
+with Image.open(src) as im:
+    rgb = im.convert('RGB')
+    resized = rgb.resize((1024, 1024), Image.Resampling.LANCZOS)
+    resized.save(out, format='PNG', optimize=True, compress_level=9)
+PY
+  verify_output
+}
+
+# A checked-in canonical output is authoritative only when it matches the exact
+# deterministic SHA produced from the Drive source. This prevents a black or
+# placeholder icon from silently shipping.
+if [[ -f "$OUT" ]] && verify_output; then
+  exit 0
+fi
+rm -f "$OUT"
+
+# When a byte-preserving source is injected, verify decoded canonical pixels.
+# Unauthenticated Google Drive may return HTML, so failure never falls back to
+# another icon.
 if [[ -n "${APPICON_SOURCE_PATH:-}" ]]; then
   [[ -f "$APPICON_SOURCE_PATH" ]] || { echo "FAIL: APPICON_SOURCE_PATH not found" >&2; exit 1; }
   cp "$APPICON_SOURCE_PATH" "$SRC"
@@ -81,14 +128,4 @@ SOURCE_ALPHA="$(sips -g hasAlpha "$SRC" | awk '/hasAlpha/ {print $2}')"
 [[ "$SOURCE_WIDTH" == "1254" && "$SOURCE_HEIGHT" == "1254" ]] || { echo "FAIL: source dimensions ${SOURCE_WIDTH}x${SOURCE_HEIGHT}" >&2; exit 1; }
 [[ "$SOURCE_ALPHA" == "no" ]] || { echo "FAIL: source must not contain alpha" >&2; exit 1; }
 
-cp "$SRC" "$OUT"
-sips -z 1024 1024 "$OUT" >/dev/null
-
-WIDTH="$(sips -g pixelWidth "$OUT" | awk '/pixelWidth/ {print $2}')"
-HEIGHT="$(sips -g pixelHeight "$OUT" | awk '/pixelHeight/ {print $2}')"
-ALPHA="$(sips -g hasAlpha "$OUT" | awk '/hasAlpha/ {print $2}')"
-[[ "$WIDTH" == "1024" && "$HEIGHT" == "1024" ]] || { echo "FAIL: output dimensions ${WIDTH}x${HEIGHT}" >&2; exit 1; }
-[[ "$ALPHA" == "no" ]] || { echo "FAIL: output must not contain alpha" >&2; exit 1; }
-
-printf 'PASS AppIcon canonical_pixel_sha=%s output_sha=%s size=%sx%s alpha=%s\n' \
-  "$EXPECTED_PIXEL_SHA" "$(shasum -a 256 "$OUT" | awk '{print $1}')" "$WIDTH" "$HEIGHT" "$ALPHA"
+materialize_output
