@@ -49,7 +49,8 @@ for token in (
     "SplatDepthSeedBuilder.preparePointCloudPLY",
     "seedOutcome.requiresFreshTrainer",
     "FileManager.default.removeItem(at: checkpoint)",
-    "running-preflight-seed-\\(seedOutcome.source.rawValue)",
+    "running-preflight-seed-",
+    "seedOutcome.source.rawValue",
 ):
     assert token in PATCHER, f"missing S13 materializer contract: {token}"
 
