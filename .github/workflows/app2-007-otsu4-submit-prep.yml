@@ -1,0 +1,48 @@
+name: APP2-007 Otsu4 Submission Prep
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  prepare:
+    if: >-
+      github.actor == 'ALLSUNDAY1122' &&
+      github.event.issue.title == '[ASC-CMD] APP2-007 OTSU4 SUBMISSION PREP'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Complete submission metadata
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: python scripts/app2_007_otsu4_submit_prep.py
+      - name: Upload sanitized result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app2-007-otsu4-submit-prep-${{ github.run_id }}
+          path: automation/app2-007-otsu4-submit-prep-result.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Report result locator
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const artifact = `app2-007-otsu4-submit-prep-${context.runId}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `APP2-007 Otsu4 submission prep finished. status=${{ job.status }}; run_id=${context.runId}; artifact=${artifact}`
+            });
