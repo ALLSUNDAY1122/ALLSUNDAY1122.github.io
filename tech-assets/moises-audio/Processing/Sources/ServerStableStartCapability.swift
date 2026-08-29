@@ -38,6 +38,8 @@ public actor ServerStableStartCapability: StableIdempotentSeparationStarting {
             throw DomainFailure.processingFailed(code: "SEP_NO_ROLES", retryable: false)
         }
 
+        let baseURL = try validatedServerBaseURL(configuration.baseURL)
+        let authorization = try await requiredAuthorizationHeader()
         let key = try validatedHeaderValue(idempotencyKey, limit: 128, code: "SEP_INVALID_IDEMPOTENCY_KEY")
         let roles = try validatedHeaderValue(
             request.requestedRoles.map(\.rawValue).sorted().joined(separator: ","),
@@ -46,7 +48,7 @@ public actor ServerStableStartCapability: StableIdempotentSeparationStarting {
         )
         let quality = try validatedHeaderValue(request.qualityProfile, limit: 512, code: "SEP_INVALID_QUALITY_HEADER")
 
-        var urlRequest = URLRequest(url: configuration.baseURL.appendingPathComponent("v1/separations"))
+        var urlRequest = URLRequest(url: baseURL.appendingPathComponent("v1/separations"))
         urlRequest.httpMethod = "POST"
         urlRequest.timeoutInterval = configuration.requestTimeoutSeconds
         urlRequest.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
@@ -56,9 +58,7 @@ public actor ServerStableStartCapability: StableIdempotentSeparationStarting {
         urlRequest.setValue(request.asset.id.rawValue.uuidString, forHTTPHeaderField: "X-Asset-ID")
         urlRequest.setValue(roles, forHTTPHeaderField: "X-Stem-Roles")
         urlRequest.setValue(quality, forHTTPHeaderField: "X-Quality-Profile")
-        if let authorization = try await configuration.authorizationHeader() {
-            urlRequest.setValue(authorization, forHTTPHeaderField: "Authorization")
-        }
+        urlRequest.setValue(authorization, forHTTPHeaderField: "Authorization")
 
         do {
             let (data, response) = try await session.upload(for: urlRequest, fromFile: sourceURL)
@@ -84,6 +84,39 @@ public actor ServerStableStartCapability: StableIdempotentSeparationStarting {
             throw DomainFailure.processingFailed(code: code, retryable: false)
         }
         return value
+    }
+
+    private func validatedServerBaseURL(_ url: URL) throws -> URL {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              components.scheme?.lowercased() == "https",
+              let host = components.host,
+              !host.isEmpty,
+              components.user == nil,
+              components.password == nil,
+              components.query == nil,
+              components.fragment == nil else {
+            throw DomainFailure.processingFailed(code: "SEP_UNSAFE_SERVER_URL", retryable: false)
+        }
+        return url
+    }
+
+    private func requiredAuthorizationHeader() async throws -> String {
+        let candidate: String?
+        do {
+            candidate = try await configuration.authorizationHeader()
+        } catch let failure as DomainFailure {
+            throw failure
+        } catch {
+            throw DomainFailure.accessDenied
+        }
+        guard let candidate,
+              !candidate.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              candidate.utf8.count <= 4096,
+              !candidate.contains("\r"),
+              !candidate.contains("\n") else {
+            throw DomainFailure.accessDenied
+        }
+        return candidate
     }
 
     private func resolvedAppOwnedURL(relativePath: String) throws -> URL {
