@@ -35,7 +35,7 @@ jobs:
       - name: Swift version
         run: swift --version
 
-      - name: Execute Lane3 handoff manifest host expected-plan commitment persisted-receipt and artifact-binding self-tests
+      - name: Execute Lane3 handoff manifest host commitment receipt artifact-binding and candidate-semantic self-tests
         working-directory: tech-assets/moises-audio
         shell: bash
         run: |
@@ -53,13 +53,15 @@ jobs:
           cp Playback/Tests/L3_HQ_PhysicalEvidenceHandoffExpectedPlanCommitmentSelfTest.swift /tmp/L3HandoffExpectedPlanCommitment.swift
           cp Playback/Tests/L3_HQ_PhysicalEvidenceHandoffCommittedPlanReceiptValidatorSelfTest.swift /tmp/L3HandoffCommittedPlanReceipt.swift
           cp Playback/Tests/L3_HQ_PhysicalEvidenceHandoffResourceArtifactValidatorSelfTest.swift /tmp/L3HandoffResourceArtifact.swift
+          cp Playback/Tests/L3_HQ_PhysicalEvidenceHandoffCandidateSemanticValidatorSelfTest.swift /tmp/L3HandoffCandidateSemantic.swift
           sed -i '/^@main$/d' \
             /tmp/L3HandoffManifest.swift \
             /tmp/L3HandoffHost.swift \
             /tmp/L3HandoffExpectedPlan.swift \
             /tmp/L3HandoffExpectedPlanCommitment.swift \
             /tmp/L3HandoffCommittedPlanReceipt.swift \
-            /tmp/L3HandoffResourceArtifact.swift
+            /tmp/L3HandoffResourceArtifact.swift \
+            /tmp/L3HandoffCandidateSemantic.swift
 
           cat >/tmp/L3HandoffCombinedRunner.swift <<'SWIFT'
           @main
@@ -71,6 +73,7 @@ jobs:
                   try L3HQPhysicalEvidenceHandoffExpectedPlanCommitmentSelfTestMain.main()
                   try L3HQPhysicalEvidenceHandoffCommittedPlanReceiptValidatorSelfTestMain.main()
                   try L3HQPhysicalEvidenceHandoffResourceArtifactValidatorSelfTestMain.main()
+                  try L3HQPhysicalEvidenceHandoffCandidateSemanticValidatorSelfTestMain.main()
               }
           }
           SWIFT
@@ -87,6 +90,7 @@ jobs:
             /tmp/L3HandoffExpectedPlanCommitment.swift \
             /tmp/L3HandoffCommittedPlanReceipt.swift \
             /tmp/L3HandoffResourceArtifact.swift \
+            /tmp/L3HandoffCandidateSemantic.swift \
             /tmp/L3HandoffCombinedRunner.swift \
             -o /tmp/l3-handoff-native
 
@@ -97,3 +101,4 @@ jobs:
           grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_EXPECTED_PLAN_COMMITMENT_SELF_TEST_PASS ' /tmp/l3-handoff-native.out
           grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_COMMITTED_PLAN_RECEIPT_VALIDATOR_SELF_TEST_PASS ' /tmp/l3-handoff-native.out
           grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_RESOURCE_ARTIFACT_VALIDATOR_SELF_TEST_PASS ' /tmp/l3-handoff-native.out
+          grep -q '^L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_CANDIDATE_SEMANTIC_VALIDATOR_SELF_TEST_PASS ' /tmp/l3-handoff-native.out
