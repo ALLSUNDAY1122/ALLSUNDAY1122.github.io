@@ -1,5 +1,13 @@
 STAGE credential-probe
-has_username=true
-has_password=true
-has_session=true
+candidate_env_names_begin
+APP_STORE_CONNECT_ISSUER_ID
+APP_STORE_CONNECT_KEY_IDENTIFIER
+APP_STORE_CONNECT_PRIVATE_KEY
+CM_DEVELOPER_DIR
+FCI_DEVELOPER_DIR
+SSH_CONNECTION
+candidate_env_names_end
+has_username=false
+has_password=false
+has_session=false
 BLOCKED: no stored Apple web-login credential/session usable by fastlane produce
