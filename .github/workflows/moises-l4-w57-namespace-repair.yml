@@ -121,22 +121,33 @@ jobs:
           git diff --check
           git diff --stat
 
-      - name: W47 canonical corpus regressions
+      - name: W47 corpus execution regression
         working-directory: tech-assets/moises-audio
-        run: |
-          set -euo pipefail
-          swift test --filter AnalysisPhysicalRealAudioCorpusExecutionTests
-          swift test --filter AnalysisPhysicalRealAudioParityBridgeTests
+        run: swift test --filter AnalysisPhysicalRealAudioCorpusExecutionTests
 
-      - name: W52 contract regressions
+      - name: W47 parity bridge regression
         working-directory: tech-assets/moises-audio
-        run: |
-          set -euo pipefail
-          swift test --filter TempoKeyAnalysisTests
-          swift test --filter AnalysisLongAudioHardeningTests
-          swift test --filter ChordTimelineAnalysisTests
-          swift test --filter AnalysisDeviceCapturePlanTests
-          swift test --filter AnalysisDeviceWorkloadReceiptTests
+        run: swift test --filter AnalysisPhysicalRealAudioParityBridgeTests
+
+      - name: W52 tempo key regression
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter TempoKeyAnalysisTests
+
+      - name: W52 long audio regression
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter AnalysisLongAudioHardeningTests
+
+      - name: W52 chord timeline regression
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter ChordTimelineAnalysisTests
+
+      - name: W52 capture plan regression
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter AnalysisDeviceCapturePlanTests
+
+      - name: W52 workload receipt regression
+        working-directory: tech-assets/moises-audio
+        run: swift test --filter AnalysisDeviceWorkloadReceiptTests
 
       - name: W53-W56 namespace regression cluster
         working-directory: tech-assets/moises-audio
