@@ -45,6 +45,51 @@ struct L3HQPhysicalEvidenceHandoffHostValidatorSelfTestMain {
         precondition(decodedReceipt == receipt)
         precondition(decodedReceipt.verifyIntegrity())
 
+        let finalAcceptance = Lane3PhysicalEvidenceFinalAcceptanceGate.evaluate(
+            manifestJSON: manifestJSON,
+            plan: corpus.plan,
+            deviceBundle: corpus.bundle,
+            resourceTraces: corpus.traces
+        )
+        precondition(finalAcceptance.schemaVersion == 1)
+        precondition(finalAcceptance.strictCompletion.readyForHQReview)
+        precondition(finalAcceptance.handoffReceipt == receipt)
+        precondition(finalAcceptance.issues.isEmpty)
+        precondition(finalAcceptance.readyForHQReview)
+        precondition(!finalAcceptance.parityPromotionAllowed)
+
+        let finalAcceptanceJSON = try encoder.encode(finalAcceptance)
+        let decodedFinalAcceptance = try JSONDecoder().decode(
+            Lane3PhysicalEvidenceFinalAcceptanceReport.self,
+            from: finalAcceptanceJSON
+        )
+        precondition(decodedFinalAcceptance == finalAcceptance)
+
+        let missingManifestAcceptance = Lane3PhysicalEvidenceFinalAcceptanceGate.evaluate(
+            manifestJSON: Data(),
+            plan: corpus.plan,
+            deviceBundle: corpus.bundle,
+            resourceTraces: corpus.traces
+        )
+        precondition(!missingManifestAcceptance.readyForHQReview)
+        precondition(missingManifestAcceptance.handoffReceipt == nil)
+        precondition(missingManifestAcceptance.issues.contains { $0.kind == .malformedManifest })
+        precondition(!missingManifestAcceptance.parityPromotionAllowed)
+
+        let duplicateCandidateTraces = corpus.traces + [corpus.traces[0]]
+        let duplicateTraceAcceptance = Lane3PhysicalEvidenceFinalAcceptanceGate.evaluate(
+            manifestJSON: manifestJSON,
+            plan: corpus.plan,
+            deviceBundle: corpus.bundle,
+            resourceTraces: duplicateCandidateTraces
+        )
+        precondition(!duplicateTraceAcceptance.strictCompletion.readyForHQReview)
+        precondition(!duplicateTraceAcceptance.readyForHQReview)
+        precondition(duplicateTraceAcceptance.handoffReceipt == nil)
+        precondition(duplicateTraceAcceptance.issues.contains { $0.kind == .strictCompletionNotReady })
+        precondition(duplicateTraceAcceptance.issues.contains { $0.kind == .evidenceMismatch })
+        precondition(!duplicateTraceAcceptance.parityPromotionAllowed)
+
         try expect(.malformedManifest) {
             _ = try Lane3PhysicalEvidenceHandoffHostValidator.validate(
                 manifestJSON: Data("not-json".utf8),
@@ -140,7 +185,7 @@ struct L3HQPhysicalEvidenceHandoffHostValidatorSelfTestMain {
             )
         )
 
-        print("L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_HOST_VALIDATOR_SELF_TEST_PASS serializedBoundary=true strictSchema=true evidenceRebind=true receiptIntegrity=true nonParity=true")
+        print("L3_HQ_PHYSICAL_EVIDENCE_HANDOFF_HOST_VALIDATOR_SELF_TEST_PASS serializedBoundary=true strictSchema=true evidenceRebind=true finalAcceptanceGate=true receiptIntegrity=true nonParity=true")
     }
 
     private struct Corpus {
