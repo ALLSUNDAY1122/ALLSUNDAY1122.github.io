@@ -1,0 +1,76 @@
+name: New IT Passport - ASC App Record Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/itpassport-create-asc-app-probe.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  create-or-readback:
+    runs-on: macos-latest
+    timeout-minutes: 5
+    env:
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe exact App Store Connect app creation
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          bundle = 'jp.allsunday1122.itpassportstudy'
+          name = 'ITパスポート 学びスプリント'
+          sku = 'itpassportstudy-ios-2026'
+          locale = 'ja'
+          key = load_private_key()
+          token = make_token(key)
+
+          _, before = api_get(token, f'/v1/apps?filter[bundleId]={bundle}&limit=10')
+          existing = before.get('data') or []
+          result = {'bundle_id': bundle, 'before_count': len(existing)}
+          if existing:
+              result['status'] = 'already_exists'
+              result['app'] = existing[0]
+          else:
+              payload = {
+                  'data': {
+                      'type': 'apps',
+                      'attributes': {
+                          'name': name,
+                          'bundleId': bundle,
+                          'sku': sku,
+                          'primaryLocale': locale,
+                      },
+                  }
+              }
+              try:
+                  status, response = api_request(token, '/v1/apps', method='POST', payload=payload)
+                  result['post_http_status'] = status
+                  result['post_response'] = response
+              except Exception as exc:
+                  result['post_error'] = str(exc)
+              _, after = api_get(token, f'/v1/apps?filter[bundleId]={bundle}&limit=10')
+              data = after.get('data') or []
+              result['after_count'] = len(data)
+              result['status'] = 'created_and_readback' if len(data) == 1 else 'not_created'
+              if data:
+                  result['app'] = data[0]
+
+          Path('itpassport-asc-app-probe.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps({k:v for k,v in result.items() if k not in ('post_response','app')}, ensure_ascii=False))
+          PY
+      - name: Upload sanitized probe result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: itpassport-asc-app-probe-${{ github.run_id }}
+          path: itpassport-asc-app-probe.json
+          retention-days: 7
