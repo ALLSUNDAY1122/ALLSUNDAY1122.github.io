@@ -1,0 +1,71 @@
+name: Pitari Codemagic Register
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pitari-codemagic-register-command.json
+      - .github/workflows/pitari-codemagic-register.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pitari-codemagic-register
+  cancel-in-progress: true
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Register Pitari repository in Codemagic
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$CM_API_TOKEN" || { echo '::error::CM_API_TOKEN missing'; exit 1; }
+          REQUEST_ID="$(python -c "import json;print(json.load(open('automation/pitari-codemagic-register-command.json'))['request_id'])")"
+          mkdir -p automation/codemagic-register-results
+          python - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+          cmd=json.loads(Path('automation/pitari-codemagic-register-command.json').read_text())
+          token=os.environ['CM_API_TOKEN']
+          payload={'repositoryUrl':'git@github.com:ALLSUNDAY1122/pitari-resize.git'}
+          req=urllib.request.Request('https://api.codemagic.io/apps', data=json.dumps(payload).encode(), method='POST')
+          req.add_header('Content-Type','application/json')
+          req.add_header('x-auth-token',token)
+          try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  body=r.read().decode('utf-8','replace')
+                  status=r.status
+          except urllib.error.HTTPError as e:
+              body=e.read().decode('utf-8','replace')
+              status=e.code
+          try: parsed=json.loads(body) if body else {}
+          except Exception: parsed={'body':body[:4000]}
+          out={'request_id':cmd['request_id'],'http_status':status,'response':parsed}
+          Path('automation/codemagic-register-results').mkdir(parents=True,exist_ok=True)
+          p=Path('automation/codemagic-register-results')/(cmd['request_id']+'.json')
+          p.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps({'http_status':status,'response':parsed},ensure_ascii=False))
+          if status < 200 or status >= 300: raise SystemExit(1)
+          PY
+      - name: Persist result
+        if: always()
+        run: |
+          REQUEST_ID="$(python -c "import json;print(json.load(open('automation/pitari-codemagic-register-command.json'))['request_id'])")"
+          RESULT="automation/codemagic-register-results/${REQUEST_ID}.json"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m "Persist Pitari Codemagic registration ${REQUEST_ID}" || exit 0
+          git push origin HEAD:main || {
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          }
