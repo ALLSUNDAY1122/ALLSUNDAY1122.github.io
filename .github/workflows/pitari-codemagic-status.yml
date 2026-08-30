@@ -7,57 +7,52 @@ on:
       - automation/pitari-codemagic-status-command.json
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - name: Inspect Codemagic build and actions
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           set -euo pipefail
-          python scripts/codemagic_build_gateway.py --command automation/pitari-codemagic-status-command.json --output /tmp/pitari-cm-status.json
           python - <<'PY'
           import json, os, urllib.request, urllib.error
-          from pathlib import Path
-          cmd=json.loads(Path('automation/pitari-codemagic-status-command.json').read_text())
+          sha=os.environ['GITHUB_SHA']
+          cmd_url=f'https://raw.githubusercontent.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/{sha}/automation/pitari-codemagic-status-command.json'
+          with urllib.request.urlopen(cmd_url,timeout=30) as r:
+            cmd=json.loads(r.read().decode())
           bid=cmd['build_id']
-          req=urllib.request.Request(f'https://codemagic.io/api/v3/builds/{bid}/actions',headers={'x-auth-token':os.environ['CM_API_TOKEN'],'Accept':'application/json'})
-          try:
-            with urllib.request.urlopen(req,timeout=30) as r:
-              raw=r.read().decode('utf-8','replace'); code=r.status
-          except urllib.error.HTTPError as e:
-            raw=e.read().decode('utf-8','replace'); code=e.code
-          try: obj=json.loads(raw) if raw else {}
-          except Exception: obj={'parse_error':True}
+          token=os.environ['CM_API_TOKEN']
+          def get(url):
+            req=urllib.request.Request(url,headers={'x-auth-token':token,'Accept':'application/json'})
+            try:
+              with urllib.request.urlopen(req,timeout=30) as r: return r.status,json.loads(r.read().decode() or '{}')
+            except urllib.error.HTTPError as e:
+              raw=e.read().decode('utf-8','replace')
+              try: body=json.loads(raw) if raw else {}
+              except Exception: body={'parse_error':True}
+              return e.code,body
+          bcode,bobj=get(f'https://codemagic.io/api/v3/builds/{bid}')
+          acode,aobj=get(f'https://codemagic.io/api/v3/builds/{bid}/actions')
           def compact(v):
             if isinstance(v,list): return [compact(x) for x in v]
             if not isinstance(v,dict): return v if isinstance(v,(str,int,float,bool)) or v is None else str(type(v).__name__)
-            allowed=('id','name','status','type','started_at','finished_at','startedAt','finishedAt','conclusion','result','message','error','error_message','exit_code','index')
+            allowed=('id','name','status','type','started_at','finished_at','startedAt','finishedAt','conclusion','result','message','error','error_message','exit_code','index','title','action_type')
             out={k:compact(v[k]) for k in allowed if k in v}
             out['_keys']=sorted(v.keys())
             return out
-          status=json.loads(Path('/tmp/pitari-cm-status.json').read_text())
-          status['actions_http_status']=code
-          status['actions_root_keys']=sorted(obj.keys()) if isinstance(obj,dict) else []
-          status['actions_diagnostic']=compact(obj.get('data',obj) if isinstance(obj,dict) else obj)
-          Path('/tmp/pitari-cm-status.json').write_text(json.dumps(status,ensure_ascii=False,indent=2)+'\n')
+          details=bobj.get('data',bobj) if isinstance(bobj,dict) else bobj
+          actions=aobj.get('data',aobj) if isinstance(aobj,dict) else aobj
+          print('PITARI_CODEMAGIC_DIAGNOSTIC='+json.dumps({
+            'request_id':cmd.get('request_id'),
+            'build_id':bid,
+            'build_http':bcode,
+            'build':compact(details),
+            'actions_http':acode,
+            'actions':compact(actions)
+          },ensure_ascii=False))
           PY
-      - name: Persist sanitized status
-        if: always()
-        run: |
-          RID=$(python -c "import json;print(json.load(open('automation/pitari-codemagic-status-command.json'))['request_id'])")
-          mkdir -p automation/codemagic-pitari-status
-          if [ -f /tmp/pitari-cm-status.json ]; then cp /tmp/pitari-cm-status.json "automation/codemagic-pitari-status/${RID}.json"; else printf '{"request_id":"%s","error":"status readback failed before output"}\n' "$RID" > "automation/codemagic-pitari-status/${RID}.json"; fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "automation/codemagic-pitari-status/${RID}.json"
-          git commit -m "Persist Pitari Codemagic status ${RID}" || exit 0
-          git pull --rebase origin main
-          git push origin HEAD:main
