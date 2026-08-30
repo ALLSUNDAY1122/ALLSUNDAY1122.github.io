@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Start Codemagic direct TestFlight build
+      - name: Execute Pitari Codemagic command
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
@@ -30,30 +30,39 @@ jobs:
           test -n "$CM_API_TOKEN" || { echo '::error::CM_API_TOKEN missing'; exit 1; }
           mkdir -p automation/codemagic-build-results
           python - <<'PY'
-          import json, os, urllib.request, urllib.error
+          import json, os, re, urllib.request, urllib.error
           from pathlib import Path
           cmd=json.loads(Path('automation/pitari-codemagic-build-command.json').read_text())
-          rid=cmd['request_id']
-          payload={
-            'appId':'6a769d81a1add9d06020b524',
-            'workflowId':'pitari-direct-testflight',
-            'branch':'release/pitari-testflight-direct-20260830',
-            'labels':['pitari-direct-testflight-20260830']
-          }
-          req=urllib.request.Request('https://api.codemagic.io/builds', data=json.dumps(payload).encode(), method='POST')
-          req.add_header('Content-Type','application/json')
-          req.add_header('x-auth-token',os.environ['CM_API_TOKEN'])
-          try:
-            with urllib.request.urlopen(req,timeout=30) as r:
-              body=r.read().decode('utf-8','replace'); status=r.status
-          except urllib.error.HTTPError as e:
-            body=e.read().decode('utf-8','replace'); status=e.code
-          try: parsed=json.loads(body) if body else {}
-          except Exception: parsed={'body':body[:4000]}
-          out={'request_id':rid,'http_status':status,'app_id':'6a769d81a1add9d06020b524','workflow_id':'pitari-direct-testflight','branch':'release/pitari-testflight-direct-20260830','response':parsed}
+          rid=cmd['request_id']; mode=cmd.get('mode','noop')
+          if mode == 'noop':
+              print('Pitari gateway update: noop')
+              raise SystemExit(0)
+          token=os.environ['CM_API_TOKEN']
+          def request(url, method='GET', payload=None, accept='application/json'):
+              data=None if payload is None else json.dumps(payload).encode()
+              req=urllib.request.Request(url,data=data,method=method,headers={'Content-Type':'application/json','Accept':accept,'x-auth-token':token})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r: return r.status,r.read().decode('utf-8','replace')
+              except urllib.error.HTTPError as e: return e.code,e.read().decode('utf-8','replace')
+          if mode == 'build':
+              payload={'appId':'6a769d81a1add9d06020b524','workflowId':'pitari-direct-testflight','branch':'release/pitari-testflight-direct-20260830','labels':['pitari-direct-testflight-20260830']}
+              status,body=request('https://api.codemagic.io/builds','POST',payload)
+              try: parsed=json.loads(body) if body else {}
+              except Exception: parsed={'body':body[:4000]}
+              out={'request_id':rid,'mode':mode,'http_status':status,'app_id':'6a769d81a1add9d06020b524','workflow_id':'pitari-direct-testflight','branch':'release/pitari-testflight-direct-20260830','response':parsed}
+          elif mode == 'step_log':
+              bid=cmd['build_id']; sid=cmd['step_id']
+              status,body=request(f'https://api.codemagic.io/builds/{bid}/step/{sid}',accept='text/plain')
+              body=body.replace(token,'[REDACTED]')
+              body=re.sub(r'https://[^\s/@]+:[^\s/@]+@', 'https://[REDACTED]@', body)
+              body=re.sub(r'(?i)(authorization:\s*(?:bearer|token)\s+)\S+', r'\1[REDACTED]', body)
+              body='\n'.join(body.splitlines()[-160:])[-16000:]
+              out={'request_id':rid,'mode':mode,'http_status':status,'build_id':bid,'step_id':sid,'log_tail':body}
+          else:
+              raise SystemExit(f'unsupported mode: {mode}')
           p=Path('automation/codemagic-build-results')/(rid+'.json')
           p.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
-          print(json.dumps({'http_status':status,'response':parsed},ensure_ascii=False))
+          print(json.dumps(out,ensure_ascii=False))
           if status < 200 or status >= 300: raise SystemExit(1)
           PY
       - name: Persist result
@@ -61,10 +70,11 @@ jobs:
         run: |
           REQUEST_ID="$(python -c "import json;print(json.load(open('automation/pitari-codemagic-build-command.json'))['request_id'])")"
           RESULT="automation/codemagic-build-results/${REQUEST_ID}.json"
+          test -f "$RESULT" || exit 0
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$RESULT"
-          git commit -m "Persist Pitari Codemagic build ${REQUEST_ID}" || exit 0
+          git commit -m "Persist Pitari Codemagic result ${REQUEST_ID}" || exit 0
           git push origin HEAD:main || {
             git fetch origin main
             git rebase origin/main
