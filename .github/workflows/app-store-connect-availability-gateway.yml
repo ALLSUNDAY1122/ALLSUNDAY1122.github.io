@@ -1,0 +1,80 @@
+name: App Store Connect Availability Gateway
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'automation/app-store-availability-command.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  availability:
+    runs-on: macos-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Create App Store availability
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 scripts/app_store_connect_create_availability.py \
+            --command automation/app-store-availability-command.json \
+            --output availability-result.json
+      - name: Persist sanitized availability result
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          source = json.loads(Path('availability-result.json').read_text(encoding='utf-8'))
+          request_id = source.get('request_id') or 'unknown'
+          if not re.fullmatch(r'[A-Za-z0-9._-]{1,100}', request_id):
+              raise SystemExit('Invalid request_id in availability-result.json')
+          payload = json.dumps(source, ensure_ascii=False, indent=2) + '\n'
+          unique = Path('automation/asc-results') / f'{request_id}.json'
+          unique.parent.mkdir(parents=True, exist_ok=True)
+          unique.write_text(payload, encoding='utf-8')
+          Path('automation/asc-availability-last-result.json').write_text(payload, encoding='utf-8')
+          Path('/tmp/availability-result.json').write_text(payload, encoding='utf-8')
+          Path('/tmp/availability-request-id.txt').write_text(request_id, encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          REQUEST_ID="$(cat /tmp/availability-request-id.txt)"
+          UNIQUE_PATH="automation/asc-results/${REQUEST_ID}.json"
+          git add automation/asc-availability-last-result.json "$UNIQUE_PATH"
+          if git diff --cached --quiet; then
+            echo "No availability result changes to persist"
+            exit 0
+          fi
+          git commit -m "Persist App Store availability result"
+          if git push; then
+            exit 0
+          fi
+
+          echo "Main advanced concurrently; preserving request-scoped result on latest main"
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/asc-results
+          cp /tmp/availability-result.json "$UNIQUE_PATH"
+          git add "$UNIQUE_PATH"
+          if git diff --cached --quiet; then
+            echo "Request-scoped availability result already persisted"
+            exit 0
+          fi
+          git commit -m "Persist App Store availability result for ${REQUEST_ID}"
+          git push
+      - name: Upload availability result
+        if: always() && hashFiles('availability-result.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-store-availability-result-${{ github.run_id }}
+          path: availability-result.json
+          retention-days: 7
