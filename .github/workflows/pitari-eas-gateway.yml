@@ -134,9 +134,19 @@ jobs:
           eas workflow:runs --limit 10 --json > "$GITHUB_WORKSPACE/release-logs/eas-workflow-runs.json"
           if [ "$ACTION" = "inspect" ]; then exit 0; fi
           if [ "$ACTION" = "run_workflow" ]; then
-            eas workflow:validate .eas/workflows/release-ios.yml | tee "$GITHUB_WORKSPACE/release-logs/eas-workflow-validate.txt"
-            eas workflow:run .eas/workflows/release-ios.yml --ref main --non-interactive --json > "$GITHUB_WORKSPACE/release-logs/eas-workflow-start.json"
-            exit 0
+            set +e
+            eas workflow:validate .eas/workflows/release-ios.yml > "$GITHUB_WORKSPACE/release-logs/eas-workflow-validate.txt" 2> "$GITHUB_WORKSPACE/release-logs/eas-workflow-validate.stderr.txt"
+            VALIDATE_STATUS=$?
+            printf '%s\n' "$VALIDATE_STATUS" > "$GITHUB_WORKSPACE/release-logs/eas-workflow-validate.exit.txt"
+            cat "$GITHUB_WORKSPACE/release-logs/eas-workflow-validate.txt"
+            cat "$GITHUB_WORKSPACE/release-logs/eas-workflow-validate.stderr.txt" >&2
+            if [ "$VALIDATE_STATUS" -ne 0 ]; then exit "$VALIDATE_STATUS"; fi
+            eas workflow:run .eas/workflows/release-ios.yml --ref main --non-interactive --json > "$GITHUB_WORKSPACE/release-logs/eas-workflow-start.json" 2> "$GITHUB_WORKSPACE/release-logs/eas-workflow-start.stderr.txt"
+            START_STATUS=$?
+            printf '%s\n' "$START_STATUS" > "$GITHUB_WORKSPACE/release-logs/eas-workflow-start.exit.txt"
+            cat "$GITHUB_WORKSPACE/release-logs/eas-workflow-start.json" || true
+            cat "$GITHUB_WORKSPACE/release-logs/eas-workflow-start.stderr.txt" >&2 || true
+            exit "$START_STATUS"
           fi
           echo "::error::unsupported action: $ACTION"
           exit 1
@@ -155,9 +165,9 @@ jobs:
               if p.exists():
                   try: out[name.removesuffix('.json').replace('-','_')]=json.loads(p.read_text())
                   except Exception: out[name.removesuffix('.json').replace('-','_')]=p.read_text()[:12000]
-          for name in ('eas-whoami.txt','eas-project-info.txt','eas-workflow-validate.txt'):
+          for name in ('eas-whoami.txt','eas-project-info.txt','eas-workflow-validate.txt','eas-workflow-validate.stderr.txt','eas-workflow-validate.exit.txt','eas-workflow-start.stderr.txt','eas-workflow-start.exit.txt'):
               p=Path('release-logs')/name
-              if p.exists(): out[name.removesuffix('.txt').replace('-','_')]=p.read_text()[:4000]
+              if p.exists(): out[name.removesuffix('.txt').replace('-','_')]=p.read_text()[:12000]
           target=Path('automation/eas-results')/f'{rid}.json'
           target.parent.mkdir(parents=True,exist_ok=True)
           target.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
