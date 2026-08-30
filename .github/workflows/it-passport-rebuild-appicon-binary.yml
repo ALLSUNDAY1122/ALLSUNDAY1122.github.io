@@ -26,9 +26,7 @@ jobs:
           OUT='apps/it-passport-rebuild/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
           EXPECTED='be4b5e7a38909ce702065c660cc18f6401b9ae2a560e71b342d8204f5067e677'
           test -f "$PART_DIR/READY"
-          COUNT="$(find "$PART_DIR" -maxdepth 1 -type f -name 'part*.b64' | wc -l | tr -d ' ')"
-          test "$COUNT" = '20'
-          for n in $(seq -w 0 19); do test -s "$PART_DIR/part${n}.b64"; done
+          for n in 00 01 02 03; do test -s "$PART_DIR/part${n}.b64"; done
           mkdir -p "$(dirname "$OUT")"
           cat "$PART_DIR"/part*.b64 | tr -d '\n\r ' | base64 --decode > "$OUT"
           ACTUAL="$(sha256sum "$OUT" | awk '{print $1}')"
