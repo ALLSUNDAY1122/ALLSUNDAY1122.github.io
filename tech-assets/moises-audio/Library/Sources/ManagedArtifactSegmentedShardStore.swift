@@ -78,6 +78,13 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
 
     private var fileManager: FileManager { fileManagerHandle.value }
 
+    /// Final leaf I/O authority for migration payload reads, publications, and cleanup removals.
+    /// Higher-level FileManager checks still validate topology and absence/presence semantics, while
+    /// the actual operation pins the managed root and each descendant directory with O_NOFOLLOW.
+    private var descriptorIO: Lane2LibraryDescriptorRelativeIO {
+        Lane2LibraryDescriptorRelativeIO(rootURL: rootURL)
+    }
+
     public func hasCommittedShard(_ shardIndex: Int) -> Bool {
         guard Self.validShard(shardIndex) else { return false }
         return (try? loadManifest(shardIndex)) != nil
@@ -95,10 +102,15 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
                 generation: manifest.generation,
                 segmentIndex: segmentIndex
             )
-            try requireSegmentFile(url)
+            let data: Data
+            do {
+                data = try descriptorIO.readRegularFile(at: url)
+            } catch {
+                throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
+            }
             let segment: Segment
             do {
-                segment = try JSONDecoder().decode(Segment.self, from: Data(contentsOf: url))
+                segment = try JSONDecoder().decode(Segment.self, from: data)
             } catch {
                 throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
             }
@@ -150,9 +162,15 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptLegacyShard(legacyURL.lastPathComponent)
         }
 
+        let legacyData: Data
+        do {
+            legacyData = try descriptorIO.readRegularFile(at: legacyURL)
+        } catch {
+            throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptLegacyShard(legacyURL.lastPathComponent)
+        }
         let legacy: LegacyShard
         do {
-            legacy = try JSONDecoder().decode(LegacyShard.self, from: Data(contentsOf: legacyURL))
+            legacy = try JSONDecoder().decode(LegacyShard.self, from: legacyData)
         } catch {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptLegacyShard(legacyURL.lastPathComponent)
         }
@@ -228,7 +246,7 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
                     within: segmentedDirectoryURL,
                     fileManager: fileManager
                 )
-                try fileManager.removeItem(at: candidate)
+                try descriptorIO.removeRegularFile(at: candidate)
             } catch {
                 throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(name)
             }
@@ -265,7 +283,7 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
             )
             do {
                 try boundary.requireSafeDestination(url, within: segmentedDirectoryURL, fileManager: fileManager)
-                try stableEncoder.encode(segment).write(to: url, options: [.atomic])
+                try descriptorIO.writeRegularFileAtomically(try stableEncoder.encode(segment), to: url)
                 try boundary.requireExistingRegularFile(url, within: segmentedDirectoryURL, fileManager: fileManager)
             } catch {
                 throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
@@ -287,13 +305,14 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
                 within: segmentedDirectoryURL,
                 fileManager: fileManager
             )
-            try encodedManifest.write(to: pendingURL, options: [.atomic])
+            try descriptorIO.writeRegularFileAtomically(encodedManifest, to: pendingURL)
             try boundary.requireExistingRegularFile(
                 pendingURL,
                 within: segmentedDirectoryURL,
                 fileManager: fileManager
             )
-            let pending = try JSONDecoder().decode(Manifest.self, from: Data(contentsOf: pendingURL))
+            let pendingData = try descriptorIO.readRegularFile(at: pendingURL)
+            let pending = try JSONDecoder().decode(Manifest.self, from: pendingData)
             guard pending.schemaVersion == manifest.schemaVersion,
                   pending.shardIndex == manifest.shardIndex,
                   pending.generation == manifest.generation,
@@ -310,10 +329,15 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
         var verifiedCount = 0
         for segmentIndex in 0..<segmentCount {
             let url = segmentURL(shardIndex: shardIndex, generation: generation, segmentIndex: segmentIndex)
-            try requireSegmentFile(url)
+            let data: Data
+            do {
+                data = try descriptorIO.readRegularFile(at: url)
+            } catch {
+                throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
+            }
             let decoded: Segment
             do {
-                decoded = try JSONDecoder().decode(Segment.self, from: Data(contentsOf: url))
+                decoded = try JSONDecoder().decode(Segment.self, from: data)
             } catch {
                 throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
             }
@@ -330,13 +354,24 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.verificationFailed(shardIndex)
         }
 
-        // Migration reaches authority only via an atomic write to a previously absent final manifest.
-        // The fixed pending file is evidence/staging only and can be cleaned after publication.
+        // Migration reaches authority only via an atomic descriptor-relative write to the final
+        // manifest name. The fixed pending file is evidence/staging only and can be cleaned after
+        // publication. Higher-level destination checks remain fail-closed before the write.
         let finalURL = manifestURL(shardIndex)
         do {
             try boundary.requireSafeDestination(finalURL, within: segmentedDirectoryURL, fileManager: fileManager)
-            try encodedManifest.write(to: finalURL, options: [.atomic])
-            try boundary.requireExistingRegularFile(finalURL, within: segmentedDirectoryURL, fileManager: fileManager)
+            try descriptorIO.writeRegularFileAtomically(encodedManifest, to: finalURL)
+            let finalData = try descriptorIO.readRegularFile(at: finalURL)
+            let published = try JSONDecoder().decode(Manifest.self, from: finalData)
+            guard published.schemaVersion == manifest.schemaVersion,
+                  published.shardIndex == manifest.shardIndex,
+                  published.generation == manifest.generation,
+                  published.segmentCount == manifest.segmentCount,
+                  published.entryCount == manifest.entryCount else {
+                throw Lane2ManagedArtifactSegmentedMigrationFailure.verificationFailed(shardIndex)
+            }
+        } catch let failure as Lane2ManagedArtifactSegmentedMigrationFailure {
+            throw failure
         } catch {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(finalURL.lastPathComponent)
         }
@@ -350,7 +385,7 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
                within: segmentedDirectoryURL,
                fileManager: fileManager
            )) != nil {
-            try? fileManager.removeItem(at: pendingURL)
+            try? descriptorIO.removeRegularFile(at: pendingURL)
         }
     }
 
@@ -367,9 +402,15 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(url.lastPathComponent)
         }
 
+        let data: Data
+        do {
+            data = try descriptorIO.readRegularFile(at: url)
+        } catch {
+            throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(url.lastPathComponent)
+        }
         let manifest: Manifest
         do {
-            manifest = try JSONDecoder().decode(Manifest.self, from: Data(contentsOf: url))
+            manifest = try JSONDecoder().decode(Manifest.self, from: data)
         } catch {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(url.lastPathComponent)
         }
@@ -380,18 +421,6 @@ public struct Lane2ManagedArtifactSegmentedShardStore: Sendable {
             throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptManifest(url.lastPathComponent)
         }
         return manifest
-    }
-
-    private func requireSegmentFile(_ url: URL) throws {
-        do {
-            try boundary.requireExistingRegularFile(
-                url,
-                within: segmentedDirectoryURL,
-                fileManager: fileManager
-            )
-        } catch {
-            throw Lane2ManagedArtifactSegmentedMigrationFailure.corruptSegment(url.lastPathComponent)
-        }
     }
 
     private var boundary: LibraryManagedPathBoundary {
