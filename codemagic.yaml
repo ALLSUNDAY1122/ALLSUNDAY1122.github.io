@@ -21,32 +21,37 @@ workflows:
       xcode: latest
       cocoapods: default
     scripts:
-      - name: Publish ephemeral source-transfer key
+      - name: Create ephemeral source-transfer key
         script: |
           set -euo pipefail
-          cd "$CM_BUILD_DIR"
-          mkdir -p pitari-bridge
           openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out /tmp/pitari-cm-private.pem >/dev/null 2>&1
-          openssl pkey -in /tmp/pitari-cm-private.pem -pubout -out pitari-bridge/public.pem
-          printf '%s\n' '{"stage":"waiting_encrypted_source"}' > pitari-bridge/status.json
-          git config user.name 'codemagic-ci'
-          git config user.email 'noreply@example.invalid'
-          git add pitari-bridge/public.pem pitari-bridge/status.json
-          git commit -m 'release: publish Pitari Codemagic transfer key [skip ci]'
-          git push origin HEAD:release/pitari-testflight-direct-20260830
+          openssl pkey -in /tmp/pitari-cm-private.pem -pubout -out /tmp/pitari-cm-public.pem
+          PUB=$(base64 < /tmp/pitari-cm-public.pem | tr -d '\n')
+          echo "PITARI_TRANSFER_ID=${CM_BUILD_ID}"
+          echo "PITARI_PUBLIC_KEY_B64=${PUB}"
+          echo "PITARI_SOURCE_STATE=WAITING"
       - name: Receive and decrypt Pitari source
         script: |
           set -euo pipefail
           cd "$CM_BUILD_DIR"
+          ROOT="pitari-bridge/${CM_BUILD_ID}"
           READY=0
-          for n in $(seq 1 120); do
+          for n in $(seq 1 180); do
             git fetch origin release/pitari-testflight-direct-20260830 >/dev/null 2>&1 || true
-            if git cat-file -e origin/release/pitari-testflight-direct-20260830:pitari-bridge/ready.json 2>/dev/null; then READY=1; break; fi
+            if git cat-file -e "origin/release/pitari-testflight-direct-20260830:${ROOT}/ready.json" 2>/dev/null; then READY=1; break; fi
             sleep 5
           done
           test "$READY" = 1
-          for p in 00 01 02 03 04; do git show "origin/release/pitari-testflight-direct-20260830:pitari-bridge/source.part$p"; done > /tmp/pitari-source.b64
-          git show origin/release/pitari-testflight-direct-20260830:pitari-bridge/key.b64 | base64 -d > /tmp/pitari-key.enc
+          git show "origin/release/pitari-testflight-direct-20260830:${ROOT}/ready.json" > /tmp/pitari-ready.json
+          PART_COUNT=$(python3 -c "import json;print(json.load(open('/tmp/pitari-ready.json'))['part_count'])")
+          EXPECTED_SHA=$(python3 -c "import json;print(json.load(open('/tmp/pitari-ready.json'))['tar_sha256'])")
+          test "$PART_COUNT" -gt 0
+          : > /tmp/pitari-source.b64
+          for n in $(seq 0 $((PART_COUNT-1))); do
+            P=$(printf '%02d' "$n")
+            git show "origin/release/pitari-testflight-direct-20260830:${ROOT}/source.part${P}" >> /tmp/pitari-source.b64
+          done
+          git show "origin/release/pitari-testflight-direct-20260830:${ROOT}/key.b64" | base64 -d > /tmp/pitari-key.enc
           base64 -d /tmp/pitari-source.b64 > /tmp/pitari-source.enc
           openssl pkeyutl -decrypt -inkey /tmp/pitari-cm-private.pem -in /tmp/pitari-key.enc -out /tmp/pitari-keyiv.bin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256 -pkeyopt rsa_mgf1_md:sha256
           python3 - <<'PY'
@@ -57,21 +62,26 @@ workflows:
           Path('/tmp/pitari-i').write_text(b[32:].hex())
           PY
           openssl enc -d -aes-256-cbc -K "$(cat /tmp/pitari-k)" -iv "$(cat /tmp/pitari-i)" -in /tmp/pitari-source.enc -out /tmp/pitari-source.tgz
-          test "$(shasum -a 256 /tmp/pitari-source.tgz | awk '{print $1}')" = '3d9a0f25a7e5bf88a5dfd624af6823180dfb2e667e6cc4a5def0d8a122802dfb'
+          ACTUAL_SHA=$(shasum -a 256 /tmp/pitari-source.tgz | awk '{print $1}')
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
           rm -rf /tmp/pitari-app
           mkdir -p /tmp/pitari-app
           tar -xzf /tmp/pitari-source.tgz -C /tmp/pitari-app
-          rm -f /tmp/pitari-cm-private.pem /tmp/pitari-key.enc /tmp/pitari-keyiv.bin /tmp/pitari-k /tmp/pitari-i /tmp/pitari-source.enc /tmp/pitari-source.b64
+          test -f /tmp/pitari-app/package.json
+          echo "PITARI_SOURCE_STATE=VERIFIED"
+          echo "PITARI_SOURCE_SHA256=${ACTUAL_SHA}"
+          rm -f /tmp/pitari-cm-private.pem /tmp/pitari-key.enc /tmp/pitari-keyiv.bin /tmp/pitari-k /tmp/pitari-i /tmp/pitari-source.enc /tmp/pitari-source.b64 /tmp/pitari-ready.json
       - name: Validate TypeScript and Expo project
         script: |
           set -euo pipefail
           cd /tmp/pitari-app
           corepack enable
           corepack prepare pnpm@11.9.0 --activate
-          pnpm install --no-frozen-lockfile
+          pnpm install --frozen-lockfile
           pnpm typecheck
           pnpm test
           pnpm doctor
+          echo "PITARI_VALIDATION=PASS"
       - name: Set next TestFlight build number and prebuild iOS
         script: |
           set -euo pipefail
@@ -85,6 +95,7 @@ workflows:
           from pathlib import Path
           p=Path('app.json')
           d=json.loads(p.read_text())
+          assert d['expo']['version']=='1.0.0', d['expo']['version']
           d['expo'].setdefault('ios',{})['buildNumber']=os.environ['PITARI_BUILD_NUMBER']
           p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
           PY
@@ -92,6 +103,7 @@ workflows:
           cd ios
           pod install
           printf '%s' "$NEXT" > /tmp/pitari-build-number
+          echo "PITARI_NEXT_BUILD=${NEXT}"
       - name: Fetch and apply App Store signing files
         script: |
           set -euo pipefail
@@ -111,11 +123,8 @@ workflows:
           xcode-project build-ipa --workspace "$WORKSPACE" --scheme "$SCHEME"
           IPA=$(find build/ios/ipa -type f -name '*.ipa' -print -quit)
           test -n "$IPA"
-          cd "$CM_BUILD_DIR"
-          printf '{"stage":"ipa_built","build_number":"%s","source_commit":"db13c80e3c9dd6dbad8a3465b8919cc97fea6a23","temporary_icon":true}\n' "$(cat /tmp/pitari-build-number)" > pitari-bridge/status.json
-          git add pitari-bridge/status.json
-          git commit -m 'release: Pitari signed IPA built [skip ci]' || true
-          git push origin HEAD:release/pitari-testflight-direct-20260830 || true
+          echo "PITARI_IPA_BUILT=YES"
+          echo "PITARI_BUILD_NUMBER=$(cat /tmp/pitari-build-number)"
     artifacts:
       - /tmp/pitari-app/build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
