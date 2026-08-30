@@ -93,16 +93,16 @@ jobs:
           echo typecheck >/tmp/stage; pnpm typecheck || { echo typecheck_failed >/tmp/error; exit 1; }
           echo test >/tmp/stage; pnpm test || { echo test_failed >/tmp/error; exit 1; }
           echo doctor >/tmp/stage; pnpm doctor || { echo doctor_failed >/tmp/error; exit 1; }
-          echo eas_cli >/tmp/stage; npm install -g eas-cli@23.0.0 >/dev/null 2>&1 || { echo eas_cli_failed >/tmp/error; exit 1; }
-          echo eas_auth >/tmp/stage; eas whoami >/tmp/eas-whoami 2>/tmp/eas-whoami.err || { echo eas_auth_failed >/tmp/error; exit 1; }
-          echo eas_build >/tmp/stage; eas build --platform ios --profile production --auto-submit --non-interactive --no-wait >/tmp/eas-start 2>/tmp/eas-error || { echo eas_build_failed >/tmp/error; exit 1; }
+          echo eas_cli >/tmp/stage; npx --yes eas-cli@latest --version >/tmp/eas-version 2>/tmp/eas-version.err || { echo eas_cli_failed >/tmp/error; exit 1; }
+          echo eas_auth >/tmp/stage; npx --yes eas-cli@latest whoami >/tmp/eas-whoami 2>/tmp/eas-whoami.err || { echo eas_auth_failed >/tmp/error; exit 1; }
+          echo eas_build >/tmp/stage; npx --yes eas-cli@latest build --platform ios --profile production --auto-submit --non-interactive --no-wait >/tmp/eas-start 2>/tmp/eas-error || { echo eas_build_failed >/tmp/error; exit 1; }
           sleep 3
-          echo eas_list >/tmp/stage; eas build:list --platform ios --limit 3 --json --non-interactive >/tmp/builds.json 2>/dev/null || { echo eas_list_failed >/tmp/error; exit 1; }
+          echo eas_list >/tmp/stage; npx --yes eas-cli@latest build:list --platform ios --limit 3 --json --non-interactive >/tmp/builds.json 2>/dev/null || { echo eas_list_failed >/tmp/error; exit 1; }
           python - <<'PY'
           import json
           from pathlib import Path
           bs=json.loads(Path('/tmp/builds.json').read_text()); meta=json.loads(Path('/tmp/ready.json').read_text())
-          out={'validation':'PASS','source_commit':meta.get('source_commit'),'temporary_icon':meta.get('temporary_icon',False),'auto_submit_requested':True,'builds':[{k:b.get(k) for k in ('id','status','appVersion','appBuildVersion','buildProfile','createdAt','updatedAt','gitCommitHash')} for b in bs[:3]]}
+          out={'validation':'PASS','source_commit':meta.get('source_commit'),'temporary_icon':meta.get('temporary_icon',False),'auto_submit_requested':True,'eas_cli_version':Path('/tmp/eas-version').read_text().strip(),'builds':[{k:b.get(k) for k in ('id','status','appVersion','appBuildVersion','buildProfile','createdAt','updatedAt','gitCommitHash')} for b in bs[:3]]}
           Path('/tmp/result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
           PY
           echo complete >/tmp/stage
