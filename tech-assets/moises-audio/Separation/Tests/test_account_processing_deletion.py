@@ -16,13 +16,25 @@ def provider_hash(value):
     return None if value is None else hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
-def job(hex_id, project_id=PROJECT, asset="asset-1", task="task-1", state="bound"):
+def job(
+    hex_id,
+    project_id=PROJECT,
+    asset="asset-1",
+    task="task-1",
+    state="bound",
+    proof_version=None,
+    proof_asset_hash=None,
+    proof_task_hash=None,
+):
     return types.SimpleNamespace(
         logical_job_id=hex_id,
         project_id=project_id,
         provider_asset_id=asset,
         provider_task_id=task,
         state=state,
+        deletion_identity_binding_version=proof_version,
+        deleted_provider_asset_id_hash=proof_asset_hash,
+        deleted_provider_task_id_hash=proof_task_hash,
     )
 
 
@@ -39,13 +51,27 @@ class DurableService:
         self.registry = DurableRegistry(records)
         self.marked = []
 
-    def mark_deleted(self, logical_job_id):
+    def mark_deleted(
+        self,
+        logical_job_id,
+        *,
+        bind_provider_identity=False,
+        provider_asset_id_hash=None,
+        provider_task_id_hash=None,
+    ):
         self.marked.append(logical_job_id)
         for record in self.registry.records:
             if record.logical_job_id == logical_job_id:
                 record.state = "deleted"
                 record.provider_asset_id = None
                 record.provider_task_id = None
+                record.deletion_identity_binding_version = 1 if bind_provider_identity else None
+                record.deleted_provider_asset_id_hash = (
+                    provider_asset_id_hash if bind_provider_identity else None
+                )
+                record.deleted_provider_task_id_hash = (
+                    provider_task_id_hash if bind_provider_identity else None
+                )
                 return
         raise RuntimeError("missing")
 
@@ -110,6 +136,9 @@ class AccountProcessingDeletionServiceTests(unittest.TestCase):
         self.assertEqual(durable.marked, ["1" * 32, "2" * 32])
         self.assertEqual([call[0] for call in privacy.calls], ["1" * 32, "2" * 32])
         self.assertTrue(all(call[1]["reason"] == "account_delete" for call in privacy.calls))
+        self.assertEqual(j1.deletion_identity_binding_version, 1)
+        self.assertEqual(j1.deleted_provider_asset_id_hash, provider_hash("asset-1"))
+        self.assertEqual(j1.deleted_provider_task_id_hash, provider_hash("task-1"))
 
     def test_unsupported_provider_erasure_keeps_durable_identity_for_reconciliation(self):
         logical = "4" * 32
@@ -133,7 +162,8 @@ class AccountProcessingDeletionServiceTests(unittest.TestCase):
 
     def test_jobs_that_never_created_provider_objects_complete_after_local_delete(self):
         logical = "5" * 32
-        durable = DurableService([job(logical, asset=None, task=None)])
+        record = job(logical, asset=None, task=None)
+        durable = DurableService([record])
         privacy = PrivacyService()
         result = AccountProcessingDeletionService(
             privacy_retention=privacy, durable_reconnect=durable
@@ -142,6 +172,9 @@ class AccountProcessingDeletionServiceTests(unittest.TestCase):
         self.assertEqual(durable.marked, [logical])
         self.assertEqual(result["jobs"][0]["providerAssetState"], "not_applicable")
         self.assertEqual(result["jobs"][0]["providerTaskState"], "not_applicable")
+        self.assertEqual(record.deletion_identity_binding_version, 1)
+        self.assertIsNone(record.deleted_provider_asset_id_hash)
+        self.assertIsNone(record.deleted_provider_task_id_hash)
 
     def test_one_job_failure_does_not_suppress_other_project_job_delete(self):
         bad = "6" * 32
@@ -214,14 +247,46 @@ class AccountProcessingDeletionServiceTests(unittest.TestCase):
             "SEP_ACCOUNT_DELETE_TOMBSTONE_PRIVACY_UNVERIFIED",
         )
 
-    def test_existing_durable_tombstone_requires_terminal_privacy_evidence(self):
+    def test_legacy_tombstone_with_terminal_privacy_evidence_still_fails_without_identity_proof(self):
         logical = "c" * 32
         durable = DurableService([job(logical, asset=None, task=None, state="deleted")])
         privacy = PrivacyService()
         privacy.registry.records[logical] = types.SimpleNamespace(
             local_delete_confirmed=True,
-            provider_asset_id_hash="hash-a",
-            provider_task_id_hash="hash-t",
+            provider_asset_id_hash=provider_hash("asset-before-delete"),
+            provider_task_id_hash=provider_hash("task-before-delete"),
+            provider_asset_delete_state="not_found",
+            provider_task_delete_state="confirmed",
+        )
+        result = AccountProcessingDeletionService(
+            privacy_retention=privacy, durable_reconnect=durable
+        ).delete_project(PROJECT)
+        self.assertEqual(result["state"], "INCOMPLETE")
+        self.assertEqual(
+            result["jobs"][0]["stableErrorCode"],
+            "SEP_ACCOUNT_DELETE_TOMBSTONE_IDENTITY_PROOF_MISSING",
+        )
+
+    def test_existing_bound_tombstone_reverifies_matching_provider_proof(self):
+        logical = "d" * 32
+        asset_hash = provider_hash("asset-before-delete")
+        task_hash = provider_hash("task-before-delete")
+        durable = DurableService([
+            job(
+                logical,
+                asset=None,
+                task=None,
+                state="deleted",
+                proof_version=1,
+                proof_asset_hash=asset_hash,
+                proof_task_hash=task_hash,
+            )
+        ])
+        privacy = PrivacyService()
+        privacy.registry.records[logical] = types.SimpleNamespace(
+            local_delete_confirmed=True,
+            provider_asset_id_hash=asset_hash,
+            provider_task_id_hash=task_hash,
             provider_asset_delete_state="not_found",
             provider_task_delete_state="confirmed",
         )
@@ -230,6 +295,63 @@ class AccountProcessingDeletionServiceTests(unittest.TestCase):
         ).delete_project(PROJECT)
         self.assertEqual(result["state"], "COMPLETE")
         self.assertTrue(result["jobs"][0]["durableTombstoned"])
+        self.assertIsNone(result["jobs"][0]["stableErrorCode"])
+
+    def test_existing_tombstone_provider_proof_mismatch_fails_closed(self):
+        logical = "e" * 32
+        durable = DurableService([
+            job(
+                logical,
+                asset=None,
+                task=None,
+                state="deleted",
+                proof_version=1,
+                proof_asset_hash=provider_hash("asset-original"),
+                proof_task_hash=provider_hash("task-original"),
+            )
+        ])
+        privacy = PrivacyService()
+        privacy.registry.records[logical] = types.SimpleNamespace(
+            local_delete_confirmed=True,
+            provider_asset_id_hash=provider_hash("asset-other"),
+            provider_task_id_hash=provider_hash("task-original"),
+            provider_asset_delete_state="confirmed",
+            provider_task_delete_state="confirmed",
+        )
+        result = AccountProcessingDeletionService(
+            privacy_retention=privacy, durable_reconnect=durable
+        ).delete_project(PROJECT)
+        self.assertEqual(result["state"], "INCOMPLETE")
+        self.assertEqual(
+            result["jobs"][0]["stableErrorCode"],
+            "SEP_ACCOUNT_DELETE_TOMBSTONE_PROVIDER_IDENTITY_MISMATCH",
+        )
+
+    def test_bound_tombstone_without_provider_objects_requires_explicit_not_applicable(self):
+        logical = "f" * 32
+        durable = DurableService([
+            job(
+                logical,
+                asset=None,
+                task=None,
+                state="deleted",
+                proof_version=1,
+                proof_asset_hash=None,
+                proof_task_hash=None,
+            )
+        ])
+        privacy = PrivacyService()
+        privacy.registry.records[logical] = types.SimpleNamespace(
+            local_delete_confirmed=True,
+            provider_asset_id_hash=None,
+            provider_task_id_hash=None,
+            provider_asset_delete_state="not_applicable",
+            provider_task_delete_state="not_applicable",
+        )
+        result = AccountProcessingDeletionService(
+            privacy_retention=privacy, durable_reconnect=durable
+        ).delete_project(PROJECT)
+        self.assertEqual(result["state"], "COMPLETE")
         self.assertIsNone(result["jobs"][0]["stableErrorCode"])
 
 
