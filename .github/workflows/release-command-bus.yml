@@ -5,7 +5,7 @@ on:
     types: [opened]
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 concurrency:
@@ -16,11 +16,13 @@ jobs:
   route:
     if: >-
       github.actor == 'ALLSUNDAY1122' &&
-      (startsWith(github.event.issue.title, '[ASC-CMD]') || startsWith(github.event.issue.title, '[CM-CMD]'))
+      (startsWith(github.event.issue.title, '[ASC-CMD]') || startsWith(github.event.issue.title, '[CM-CMD]') || startsWith(github.event.issue.title, '[PITARI-CMD]'))
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -63,6 +65,25 @@ jobs:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
           CM_APP_ID: ${{ vars.CM_APP_ID }}
         run: python scripts/codemagic_build_gateway.py --command /tmp/release-command.json --output release-result.json
+      - name: Assemble Pitari encrypted payload
+        if: startsWith(github.event.issue.title, '[PITARI-CMD] ASSEMBLE')
+        run: |
+          set -euo pipefail
+          RID=$(python -c "import json;print(json.load(open('/tmp/release-command.json'))['request_id'])")
+          case "$RID" in pitari-tar-eas-*) ;; *) echo invalid_request_id >&2; exit 2 ;; esac
+          DIR="automation/pitari-tar-exchange/$RID"
+          cat "$DIR/source.part00" "$DIR/source.part01" "$DIR/source.part02" "$DIR/source.part03" "$DIR/source.part04" > "$DIR/source.b64"
+          ACTUAL=$(sha256sum "$DIR/source.b64" | awk '{print $1}')
+          EXPECTED='c5b2c720db125b2b4f3cc971e93811e23ea75e4f3c52952631934a7ec4f43442'
+          test "$ACTUAL" = "$EXPECTED"
+          printf '%s\n' '{"ready":true,"source_sha256":"3d9a0f25a7e5bf88a5dfd624af6823180dfb2e667e6cc4a5def0d8a122802dfb","encrypted_source_sha256":"a4c19282029356580bbc1f450a4a1085da338f3d51b6eff901e78bd9f29332ae","temporary_icon":true}' > "$DIR/ready.json"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$DIR/source.b64" "$DIR/ready.json"
+          git commit -m "Assemble Pitari encrypted payload $RID"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          printf '{"ok":true,"request_id":"%s","action":"pitari_assemble","source_b64_sha256":"%s","ready":true}\n' "$RID" "$ACTUAL" > release-result.json
       - name: Upload sanitized command result
         if: always()
         uses: actions/upload-artifact@v4
