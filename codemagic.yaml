@@ -14,11 +14,9 @@ workflows:
     integrations:
       app_store_connect: "Codemagic Shiwake Swipe"
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: jp.allsunday.pitariresize
       vars:
         APP_STORE_APPLE_ID: "6795941132"
+        BUNDLE_ID: "jp.allsunday.pitariresize"
       node: 22.13.1
       xcode: latest
       cocoapods: default
@@ -94,9 +92,12 @@ workflows:
           cd ios
           pod install
           printf '%s' "$NEXT" > /tmp/pitari-build-number
-      - name: Apply App Store signing profiles
+      - name: Fetch and apply App Store signing files
         script: |
           set -euo pipefail
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+          keychain add-certificates
           cd /tmp/pitari-app/ios
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
       - name: Build signed IPA
