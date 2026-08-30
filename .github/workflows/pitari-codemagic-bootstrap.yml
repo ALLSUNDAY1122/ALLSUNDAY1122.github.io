@@ -1,0 +1,113 @@
+name: Pitari Codemagic EAS Fallback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pitari-codemagic-command.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pitari-codemagic-eas-fallback
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Register app and trigger validated EAS release
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$CM_API_TOKEN"
+          test -n "$EXPO_TOKEN"
+          python - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+
+          cmd=json.loads(Path('automation/pitari-codemagic-command.json').read_text())
+          rid=cmd['request_id']
+          token=os.environ['CM_API_TOKEN']
+          expo=os.environ['EXPO_TOKEN']
+          repo='ALLSUNDAY1122/pitari-resize'
+          repo_url='https://github.com/ALLSUNDAY1122/pitari-resize.git'
+          branch='fix/eas-manual-dispatch-20260830'
+          workflow='pitari_testflight'
+
+          def api(url, method='GET', payload=None):
+              data=None if payload is None else json.dumps(payload).encode()
+              req=urllib.request.Request(url,data=data,method=method,headers={'Content-Type':'application/json','x-auth-token':token})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode()
+                      return r.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode(errors='replace')
+                  try: body=json.loads(raw) if raw else {}
+                  except Exception: body={'error':raw[:2000]}
+                  return e.code, body
+
+          result={'request_id':rid,'repository':repo,'branch':branch,'workflow_id':workflow}
+          status,body=api('https://api.codemagic.io/apps')
+          if not 200 <= status < 300:
+              result.update(stage='list_apps',http_status=status,response=body)
+              raise SystemExit(json.dumps(result,ensure_ascii=False))
+          apps=body.get('applications') or body.get('data') or []
+          if isinstance(apps,dict): apps=apps.get('applications') or []
+          app=None
+          for item in apps:
+              s=json.dumps(item).lower().replace('.git','')
+              if 'allsunday1122/pitari-resize' in s or 'pitari-resize' in s:
+                  app=item; break
+          if app is None:
+              status,created=api('https://api.codemagic.io/apps','POST',{'repositoryUrl':repo_url})
+              result['register_http_status']=status
+              if not 200 <= status < 300:
+                  result.update(stage='register_app',response=created)
+                  Path('/tmp/pitari-cm-result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+                  raise SystemExit(2)
+              app=created.get('application') or created
+          app_id=app.get('_id') or app.get('id')
+          if not app_id:
+              result.update(stage='resolve_app_id',response=app)
+              Path('/tmp/pitari-cm-result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+              raise SystemExit(3)
+          result['app_id']=app_id
+
+          payload={
+            'appId':app_id,
+            'workflowId':workflow,
+            'branch':branch,
+            'environment':{'variables':{'EXPO_TOKEN':expo}},
+            'labels':['pitari-testflight-20260830']
+          }
+          status,started=api('https://api.codemagic.io/builds','POST',payload)
+          result['build_start_http_status']=status
+          if 200 <= status < 300:
+              bid=started.get('buildId') or started.get('id')
+              result.update(stage='build_started',build_id=bid,build_url=f'https://codemagic.io/app/{app_id}/build/{bid}' if bid else None)
+          else:
+              result.update(stage='build_start_failed',response=started)
+          Path('/tmp/pitari-cm-result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          if not 200 <= status < 300: raise SystemExit(4)
+          PY
+      - name: Persist sanitized result
+        if: always()
+        run: |
+          RID=$(python -c "import json;print(json.load(open('automation/pitari-codemagic-command.json'))['request_id'])")
+          mkdir -p automation/codemagic-pitari-results
+          if [ -f /tmp/pitari-cm-result.json ]; then cp /tmp/pitari-cm-result.json "automation/codemagic-pitari-results/${RID}.json"; else printf '{"request_id":"%s","stage":"gateway_failed_before_result"}\n' "$RID" > "automation/codemagic-pitari-results/${RID}.json"; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "automation/codemagic-pitari-results/${RID}.json"
+          git commit -m "Persist Pitari Codemagic fallback result ${RID}" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
