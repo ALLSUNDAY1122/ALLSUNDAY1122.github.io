@@ -45,7 +45,8 @@ jobs:
             return out
           status=json.loads(Path('/tmp/pitari-cm-status.json').read_text())
           status['actions_http_status']=code
-          status['actions_diagnostic']=compact(obj)
+          status['actions_root_keys']=sorted(obj.keys()) if isinstance(obj,dict) else []
+          status['actions_diagnostic']=compact(obj.get('data',obj) if isinstance(obj,dict) else obj)
           Path('/tmp/pitari-cm-status.json').write_text(json.dumps(status,ensure_ascii=False,indent=2)+'\n')
           PY
       - name: Persist sanitized status
