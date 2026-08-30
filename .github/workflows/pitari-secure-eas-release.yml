@@ -1,0 +1,117 @@
+name: Pitari Secure EAS Release Bridge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pitari-secure-command.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pitari-secure-eas-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Create ephemeral transfer key
+        run: |
+          set -euo pipefail
+          RID=$(python -c "import json;print(json.load(open('automation/pitari-secure-command.json'))['request_id'])")
+          printf '%s' "$RID" > /tmp/pitari-rid
+          mkdir -p "automation/pitari-secure-exchange/$RID"
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out /tmp/pitari-private.pem >/dev/null 2>&1
+          openssl pkey -in /tmp/pitari-private.pem -pubout -out "automation/pitari-secure-exchange/$RID/public.pem"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "automation/pitari-secure-exchange/$RID/public.pem"
+          git commit -m "Publish ephemeral Pitari transfer key $RID"
+          for n in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push origin HEAD:main; then break; fi
+            sleep 2
+          done
+      - name: Wait for encrypted source payload
+        run: |
+          set -euo pipefail
+          RID=$(cat /tmp/pitari-rid)
+          READY=0
+          for n in $(seq 1 120); do
+            git fetch origin main >/dev/null 2>&1 || true
+            if git cat-file -e "origin/main:automation/pitari-secure-exchange/$RID/ready.json" 2>/dev/null; then READY=1; break; fi
+            sleep 5
+          done
+          if [ "$READY" != 1 ]; then echo 'Encrypted payload did not arrive'; exit 1; fi
+          git show "origin/main:automation/pitari-secure-exchange/$RID/ready.json" > /tmp/ready.json
+          PARTS=$(python -c "import json;print(json.load(open('/tmp/ready.json'))['parts'])")
+          git show "origin/main:automation/pitari-secure-exchange/$RID/key.b64" | base64 -d > /tmp/key.enc
+          openssl pkeyutl -decrypt -inkey /tmp/pitari-private.pem -in /tmp/key.enc -out /tmp/keyiv.bin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256
+          python - <<'PY'
+          from pathlib import Path
+          b=Path('/tmp/keyiv.bin').read_bytes()
+          if len(b)!=48: raise SystemExit('invalid key material')
+          Path('/tmp/key.hex').write_text(b[:32].hex())
+          Path('/tmp/iv.hex').write_text(b[32:].hex())
+          PY
+          : > /tmp/payload.b64
+          for n in $(seq -f '%03g' 1 "$PARTS"); do git show "origin/main:automation/pitari-secure-exchange/$RID/payload.part$n" >> /tmp/payload.b64; done
+          base64 -d /tmp/payload.b64 > /tmp/payload.enc
+          openssl enc -d -aes-256-cbc -K "$(cat /tmp/key.hex)" -iv "$(cat /tmp/iv.hex)" -in /tmp/payload.enc -out /tmp/pitari-source.tgz
+          EXPECTED=$(python -c "import json;print(json.load(open('/tmp/ready.json'))['sha256'])")
+          ACTUAL=$(sha256sum /tmp/pitari-source.tgz | awk '{print $1}')
+          test "$EXPECTED" = "$ACTUAL"
+          mkdir -p /tmp/pitari-source
+          tar -xzf /tmp/pitari-source.tgz -C /tmp/pitari-source
+          rm -f /tmp/pitari-private.pem /tmp/keyiv.bin /tmp/key.hex /tmp/iv.hex /tmp/payload.enc /tmp/payload.b64 /tmp/key.enc
+      - name: Validate source and start EAS production auto-submit
+        run: |
+          set -euo pipefail
+          test -n "${EXPO_TOKEN:-}"
+          cd /tmp/pitari-source
+          git init -q
+          git config user.name 'pitari-secure-release'
+          git config user.email 'noreply@example.invalid'
+          git add .
+          git commit -qm 'secure source snapshot 6c933d369448351da05044cbce3c7578dec7e7b0'
+          corepack enable
+          corepack prepare pnpm@11.9.0 --activate
+          pnpm install --frozen-lockfile
+          pnpm typecheck
+          pnpm test
+          pnpm doctor
+          npm install -g eas-cli@23.0.0
+          eas whoami
+          eas build --platform ios --profile production --auto-submit --non-interactive --no-wait
+          eas build:list --platform ios --limit 3 --json --non-interactive > /tmp/pitari-eas-build-list.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          builds=json.loads(Path('/tmp/pitari-eas-build-list.json').read_text())
+          out={'validation':'PASS','eas_builds':[]}
+          for b in builds[:3]:
+              out['eas_builds'].append({k:b.get(k) for k in ('id','status','platform','appVersion','appBuildVersion','buildProfile','createdAt','updatedAt','gitCommitHash')})
+          Path('/tmp/pitari-secure-result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Persist sanitized release result
+        if: always()
+        run: |
+          RID=$(cat /tmp/pitari-rid 2>/dev/null || python -c "import json;print(json.load(open('automation/pitari-secure-command.json'))['request_id'])")
+          mkdir -p "automation/pitari-secure-results"
+          if [ -f /tmp/pitari-secure-result.json ]; then cp /tmp/pitari-secure-result.json "automation/pitari-secure-results/$RID.json"; else printf '{"validation":"FAIL","note":"secure release bridge failed before EAS build list was persisted"}\n' > "automation/pitari-secure-results/$RID.json"; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p "automation/pitari-secure-results"
+          if [ -f /tmp/pitari-secure-result.json ]; then cp /tmp/pitari-secure-result.json "automation/pitari-secure-results/$RID.json"; else printf '{"validation":"FAIL","note":"secure release bridge failed before EAS build list was persisted"}\n' > "automation/pitari-secure-results/$RID.json"; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "automation/pitari-secure-results/$RID.json"
+          git commit -m "Persist Pitari secure EAS result $RID" || exit 0
+          git push origin HEAD:main
