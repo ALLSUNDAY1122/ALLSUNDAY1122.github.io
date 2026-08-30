@@ -1,0 +1,80 @@
+name: Pitari Codemagic Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pitari-codemagic-build-command.json
+      - .github/workflows/pitari-codemagic-build.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pitari-codemagic-build
+  cancel-in-progress: false
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Start Codemagic EAS TestFlight bridge
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$CM_API_TOKEN" || { echo '::error::CM_API_TOKEN missing'; exit 1; }
+          test -n "$EXPO_TOKEN" || { echo '::error::EXPO_TOKEN missing'; exit 1; }
+          mkdir -p automation/codemagic-build-results
+          python - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+          cmd=json.loads(Path('automation/pitari-codemagic-build-command.json').read_text())
+          rid=cmd['request_id']
+          payload={
+            'appId':'6a93ad380956fdbda3265117',
+            'workflowId':'pitari_testflight',
+            'branch':'main',
+            'environment':{
+              'variables':{
+                'EXPO_TOKEN': os.environ['EXPO_TOKEN']
+              }
+            }
+          }
+          req=urllib.request.Request('https://api.codemagic.io/builds', data=json.dumps(payload).encode(), method='POST')
+          req.add_header('Content-Type','application/json')
+          req.add_header('x-auth-token',os.environ['CM_API_TOKEN'])
+          try:
+            with urllib.request.urlopen(req,timeout=30) as r:
+              body=r.read().decode('utf-8','replace'); status=r.status
+          except urllib.error.HTTPError as e:
+            body=e.read().decode('utf-8','replace'); status=e.code
+          try: parsed=json.loads(body) if body else {}
+          except Exception: parsed={'body':body[:4000]}
+          # Never persist request payload or any environment variable values.
+          out={'request_id':rid,'http_status':status,'response':parsed}
+          p=Path('automation/codemagic-build-results')/(rid+'.json')
+          p.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          safe={'http_status':status,'response':parsed}
+          print(json.dumps(safe,ensure_ascii=False))
+          if status < 200 or status >= 300: raise SystemExit(1)
+          PY
+      - name: Persist result
+        if: always()
+        run: |
+          REQUEST_ID="$(python -c "import json;print(json.load(open('automation/pitari-codemagic-build-command.json'))['request_id'])")"
+          RESULT="automation/codemagic-build-results/${REQUEST_ID}.json"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m "Persist Pitari Codemagic build ${REQUEST_ID}" || exit 0
+          git push origin HEAD:main || {
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          }
