@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Create App Store availability for an app that has no availability resource.
 
-This is intentionally create-only. It verifies the app id/bundle id pair, validates
-territory ids against App Store Connect, creates the v2 appAvailabilities resource,
+This is intentionally create-only. It verifies the app id/bundle id pair, fetches
+the complete App Store territory set, creates the v2 appAvailabilities resource,
 and reads the result back before reporting success.
 """
 
@@ -69,16 +69,21 @@ def preflight_app(token: str, app_id: str, bundle_id: str) -> None:
         raise RuntimeError(f"Target preflight failed: expected bundle {bundle_id}, got {actual!r}")
 
 
-def validate_territories(token: str, requested: list[str]) -> None:
+def fetch_and_validate_territories(token: str, requested: list[str]) -> list[str]:
     _, response = api_get(token, "/v1/territories?limit=200")
-    valid = {
-        str(item.get("id"))
-        for item in (response.get("data") or [])
-        if isinstance(item, dict) and item.get("id")
-    }
-    unknown = [territory for territory in requested if territory not in valid]
+    all_territories = sorted(
+        {
+            str(item.get("id"))
+            for item in (response.get("data") or [])
+            if isinstance(item, dict) and item.get("id")
+        }
+    )
+    if not all_territories:
+        raise RuntimeError("App Store Connect returned no territories.")
+    unknown = [territory for territory in requested if territory not in all_territories]
     if unknown:
         raise RuntimeError(f"Unknown App Store territory ids: {unknown}")
+    return all_territories
 
 
 def read_existing_availability(token: str, app_id: str):
@@ -92,17 +97,30 @@ def read_existing_availability(token: str, app_id: str):
         raise
 
 
-def create_availability(token: str, app_id: str, territories: list[str], available_in_new: bool):
+def create_availability(
+    token: str,
+    app_id: str,
+    all_territories: list[str],
+    requested: list[str],
+    available_in_new: bool,
+):
+    requested_set = set(requested)
     refs = []
     included = []
-    for territory in territories:
+
+    # App Store Connect v2 inline creation expects the complete territory set.
+    # Each not-yet-created territoryAvailability uses a ${local-id}; the real
+    # territory code lives in relationships.territory. Only requested regions
+    # are marked available, which lets us express Japan-only distribution while
+    # still satisfying the complete-set create contract.
+    for territory in all_territories:
         local_id = "${" + territory + "}"
         refs.append({"type": "territoryAvailabilities", "id": local_id})
         included.append(
             {
                 "type": "territoryAvailabilities",
                 "id": local_id,
-                "attributes": {"available": True},
+                "attributes": {"available": territory in requested_set},
                 "relationships": {
                     "territory": {
                         "data": {"type": "territories", "id": territory}
@@ -125,7 +143,13 @@ def create_availability(token: str, app_id: str, territories: list[str], availab
     return api_request(token, "/v2/appAvailabilities", method="POST", payload=payload)
 
 
-def verify(token: str, app_id: str, requested: list[str], available_in_new: bool) -> dict:
+def verify(
+    token: str,
+    app_id: str,
+    requested: list[str],
+    available_in_new: bool,
+    expected_territory_count: int,
+) -> dict:
     _, availability = api_get(token, f"/v1/apps/{app_id}/appAvailabilityV2")
     data = availability.get("data") if isinstance(availability, dict) else None
     if not isinstance(data, dict) or not data.get("id"):
@@ -141,23 +165,32 @@ def verify(token: str, app_id: str, requested: list[str], available_in_new: bool
         "?limit=200&include=territory&fields%5BterritoryAvailabilities%5D=available,territory"
     )
     _, territories_response = api_get(token, path)
+    items = [item for item in (territories_response.get("data") or []) if isinstance(item, dict)]
+    if len(items) != expected_territory_count:
+        raise RuntimeError(
+            f"Territory availability read-back count mismatch: expected "
+            f"{expected_territory_count}, got {len(items)}"
+        )
+
     available_ids = set()
-    for item in territories_response.get("data") or []:
-        if not isinstance(item, dict):
-            continue
+    for item in items:
         if (item.get("attributes") or {}).get("available") is not True:
             continue
         territory_rel = ((item.get("relationships") or {}).get("territory") or {}).get("data")
         if isinstance(territory_rel, dict) and territory_rel.get("id"):
             available_ids.add(str(territory_rel["id"]))
 
-    missing = [territory for territory in requested if territory not in available_ids]
-    if missing:
-        raise RuntimeError(f"Availability read-back missing requested territories: {missing}")
+    requested_set = set(requested)
+    if available_ids != requested_set:
+        raise RuntimeError(
+            f"Availability read-back mismatch: expected available={sorted(requested_set)}, "
+            f"got={sorted(available_ids)}"
+        )
 
     return {
         "availability_id": availability_id,
         "available_in_new_territories": attrs.get("availableInNewTerritories"),
+        "territory_availability_count": len(items),
         "requested_territories": requested,
         "verified_available_territories": sorted(available_ids),
     }
@@ -179,7 +212,7 @@ def main() -> None:
     try:
         token = make_token(issuer_id, key_id, key_path)
         preflight_app(token, command["expected_app_id"], command["expected_bundle_id"])
-        validate_territories(token, command["territories"])
+        all_territories = fetch_and_validate_territories(token, command["territories"])
         existing = read_existing_availability(token, command["expected_app_id"])
         if existing is not None:
             raise RuntimeError(
@@ -189,6 +222,7 @@ def main() -> None:
         status, response = create_availability(
             token,
             command["expected_app_id"],
+            all_territories,
             command["territories"],
             command["available_in_new_territories"],
         )
@@ -201,6 +235,7 @@ def main() -> None:
             command["expected_app_id"],
             command["territories"],
             command["available_in_new_territories"],
+            len(all_territories),
         )
     finally:
         if cleanup:
