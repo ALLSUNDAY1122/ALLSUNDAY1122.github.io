@@ -1,0 +1,48 @@
+name: Scanner Parity Golden Video Probe Self-Test
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/scanner-parity-golden-video-probe-gateway.yml
+      - .github/workflows/scanner-parity-golden-video-probe-self-test.yml
+      - scripts/prepare_scanner_parity_golden_video_probe.py
+      - scripts/run_scanner_parity_golden_video_probe_gateway.py
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Compile Python gateway scripts
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/prepare_scanner_parity_golden_video_probe.py \
+            scripts/run_scanner_parity_golden_video_probe_gateway.py
+      - name: Verify probe privacy and OIDC contracts
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          prep=Path('scripts/prepare_scanner_parity_golden_video_probe.py').read_text(encoding='utf-8')
+          gateway=Path('scripts/run_scanner_parity_golden_video_probe_gateway.py').read_text(encoding='utf-8')
+          workflow=Path('.github/workflows/scanner-parity-golden-video-probe-gateway.yml').read_text(encoding='utf-8')
+          assert 'scanner-golden-probe-relay' in gateway
+          assert 'scanner-golden-probe-relay' in gateway
+          assert 'scanner-parity-golden-video-probe' in prep
+          assert 'CM_API_TOKEN' in gateway and 'CM_API_TOKEN' in workflow
+          assert 'id-token: write' in workflow
+          assert 'contents: write' in workflow
+          assert 'automation/scanner-parity-golden-video-probe-command.json' in workflow
+          assert 'source_video_url' not in workflow
+          assert 'dropbox' not in workflow.lower()
+          assert 'download_url' not in workflow.lower()
+          assert 'submit_to_testflight' not in prep
+          assert 'submit_to_app_store' not in prep
+          assert 'FORMAL_GOLDEN_PASS' not in prep
+          assert 'FORMAL_GOLDEN_PASS' not in gateway
+          print('SCANNER_GOLDEN_VIDEO_PROBE_GATEWAY_CONTRACT_PASS')
+          PY

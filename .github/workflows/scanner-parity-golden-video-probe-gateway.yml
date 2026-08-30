@@ -1,0 +1,91 @@
+name: Scanner Parity Golden Video Probe Gateway
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - automation/scanner-parity-golden-video-probe-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout main gateway source
+        uses: actions/checkout@v6
+
+      - name: Validate command and prepare integration Codemagic probe workflow
+        run: |
+          set -euo pipefail
+          python3 scripts/prepare_scanner_parity_golden_video_probe.py \
+            automation/scanner-parity-golden-video-probe-command.json
+
+      - name: Start and monitor non-publishing video equivalence probe
+        id: probe
+        continue-on-error: true
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 scripts/run_scanner_parity_golden_video_probe_gateway.py \
+            automation/scanner-parity-golden-video-probe-command.json \
+            /tmp/scanner-golden-video-probe-result.json
+
+      - name: Persist sanitized video probe gateway result
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f /tmp/scanner-golden-video-probe-result.json || exit 0
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          src=Path('/tmp/scanner-golden-video-probe-result.json')
+          data=json.loads(src.read_text(encoding='utf-8'))
+          run_id=str(data.get('run_id') or '')
+          if not re.fullmatch(r'[0-9a-fA-F-]{36}',run_id): raise SystemExit('invalid run id')
+          allowed={k:data.get(k) for k in ('ok','run_id','mode','workflow_id','branch','source_sha','build_id','status','error')}
+          out=Path('automation/codemagic-results')/f'scanner-golden-video-probe-{run_id}.json'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps(allowed,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          Path('/tmp/scanner-video-probe-result-path.txt').write_text(str(out),encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          RESULT_PATH="$(cat /tmp/scanner-video-probe-result-path.txt)"
+          git add "$RESULT_PATH"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "scanner-parity: persist sanitized Golden video probe result"
+          if git push; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/scanner-golden-video-probe-result.json /tmp/_scanner-video-probe-result-full.json
+          python3 - "$RESULT_PATH" <<'PY'
+          import json,sys
+          from pathlib import Path
+          d=json.loads(Path('/tmp/_scanner-video-probe-result-full.json').read_text(encoding='utf-8'))
+          allowed={k:d.get(k) for k in ('ok','run_id','mode','workflow_id','branch','source_sha','build_id','status','error')}
+          p=Path(sys.argv[1]); p.parent.mkdir(parents=True,exist_ok=True)
+          p.write_text(json.dumps(allowed,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          git add "$RESULT_PATH"
+          git commit -m "scanner-parity: persist sanitized Golden video probe result"
+          git push origin HEAD:main
+
+      - name: Fail if probe gateway/build failed
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/scanner-golden-video-probe-result.json')
+          if not p.exists(): raise SystemExit('video probe gateway did not produce a result')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          if d.get('ok') is not True: raise SystemExit(f"video probe failed: {d.get('status')} / {d.get('error')}")
+          print('SCANNER_GOLDEN_VIDEO_PROBE_GATEWAY_PASS')
+          PY
