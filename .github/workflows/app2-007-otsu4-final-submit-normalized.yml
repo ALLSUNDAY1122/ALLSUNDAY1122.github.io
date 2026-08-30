@@ -32,7 +32,20 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
           OTS4_FINAL_SUBMIT_OUTPUT: automation/app2-007-otsu4-final-submit-result.json
-        run: PYTHONPATH=scripts python scripts/app2_007_otsu4_finalize_submit.py
+        run: |
+          PYTHONPATH=scripts python - <<'PY'
+          import app2_007_otsu4_finalize_submit as submit
+
+          def app_price_schedule(token):
+              status, payload = submit.req(token, f'/v1/apps/{submit.APP_ID}/appPriceSchedule?include=baseTerritory', allow404=True)
+              data = payload.get('data') if isinstance(payload, dict) else None
+              if status == 404 or not isinstance(data, dict) or data.get('type') != 'appPriceSchedules':
+                  return None
+              return data
+
+          submit.app_price_schedule = app_price_schedule
+          submit.main()
+          PY
       - name: Upload sanitized final result
         if: always()
         uses: actions/upload-artifact@v4
