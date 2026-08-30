@@ -1,0 +1,119 @@
+name: Pitari Expo GitHub Link Inspect
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/pitari-expo-github-inspect.yml
+      - automation/pitari-expo-github-inspect-command.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pitari-expo-github-inspect
+  cancel-in-progress: true
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Query Expo GitHub linkage
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p automation/expo-github-inspect-results
+          REQUEST_ID="$(python -c "import json;print(json.load(open('automation/pitari-expo-github-inspect-command.json'))['request_id'])")"
+          printf '%s' "$REQUEST_ID" > /tmp/request-id
+          python - <<'PY' >/tmp/graphql-payload.json
+          import json
+          query='''
+          query PitariGitHubInspect($accountName: String!, $appId: String!) {
+            account {
+              byName(accountName: $accountName) {
+                id
+                name
+                githubAppInstallations {
+                  id
+                  installationIdentifier
+                  metadata {
+                    githubAccountName
+                    githubAccountType
+                    installationStatus
+                  }
+                }
+              }
+            }
+            app {
+              byId(appId: $appId) {
+                id
+                fullName
+                githubRepository {
+                  id
+                  githubRepositoryIdentifier
+                  nodeIdentifier
+                  githubRepositoryUrl
+                  metadata {
+                    githubRepoName
+                    githubRepoOwnerName
+                    private
+                    defaultBranch
+                  }
+                }
+                githubRepositorySettings {
+                  id
+                  baseDirectory
+                }
+              }
+            }
+            githubApp {
+              name
+              environment
+            }
+          }
+          '''
+          print(json.dumps({'query':query,'variables':{'accountName':'allsunday1122','appId':'d7480022-0db3-48dd-906e-43a12438ecdb'}}))
+          PY
+          HTTP="$(curl -sS -o /tmp/graphql-result.json -w '%{http_code}' https://api.expo.dev/graphql -H "Authorization: Bearer $EXPO_TOKEN" -H 'Content-Type: application/json' --data-binary @/tmp/graphql-payload.json)"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          rid=Path('/tmp/request-id').read_text()
+          raw=Path('/tmp/graphql-result.json').read_text()
+          try: result=json.loads(raw)
+          except Exception: result={'raw':raw[:12000]}
+          out={'request_id':rid,'http_status':Path('/tmp/http-status').read_text() if Path('/tmp/http-status').exists() else None,'result':result}
+          Path('/tmp/result-copy.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          target=Path('automation/expo-github-inspect-results')/f'{rid}.json'
+          target.write_text(Path('/tmp/result-copy.json').read_text())
+          print(target)
+          PY
+        shell: bash
+      - name: Persist inspect result
+        if: always()
+        run: |
+          REQUEST_ID="$(cat /tmp/request-id 2>/dev/null || python -c "import json;print(json.load(open('automation/pitari-expo-github-inspect-command.json'))['request_id'])")"
+          RESULT="automation/expo-github-inspect-results/${REQUEST_ID}.json"
+          if [ ! -f "$RESULT" ]; then
+            mkdir -p automation/expo-github-inspect-results
+            printf '{"request_id":"%s","error":"inspect step did not persist result"}\n' "$REQUEST_ID" > "$RESULT"
+            cp "$RESULT" /tmp/result-copy.json
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m "Persist Pitari Expo GitHub inspect ${REQUEST_ID}" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/expo-github-inspect-results
+          cp /tmp/result-copy.json "$RESULT"
+          git add "$RESULT"
+          git commit -m "Persist Pitari Expo GitHub inspect ${REQUEST_ID}" || exit 0
+          git push origin HEAD:main
