@@ -28,6 +28,7 @@ jobs:
           set -euo pipefail
           RID=$(python -c "import json;print(json.load(open('automation/pitari-secure-command.json'))['request_id'])")
           printf '%s' "$RID" > /tmp/pitari-rid
+          printf '%s' 'ephemeral_key' > /tmp/pitari-stage
           mkdir -p "automation/pitari-secure-exchange/$RID"
           openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out /tmp/pitari-private.pem >/dev/null 2>&1
           openssl pkey -in /tmp/pitari-private.pem -pubout -out "automation/pitari-secure-exchange/$RID/public.pem"
@@ -39,6 +40,7 @@ jobs:
             if git pull --rebase origin main && git push origin HEAD:main; then break; fi
             sleep 2
           done
+          printf '%s' 'waiting_manifest' > /tmp/pitari-stage
       - name: Receive encrypted private-source manifest
         run: |
           set -euo pipefail
@@ -49,7 +51,8 @@ jobs:
             if git cat-file -e "origin/main:automation/pitari-secure-exchange/$RID/ready.json" 2>/dev/null; then READY=1; break; fi
             sleep 5
           done
-          if [ "$READY" != 1 ]; then echo 'Encrypted manifest did not arrive'; exit 1; fi
+          test "$READY" = 1
+          printf '%s' 'decrypt_manifest' > /tmp/pitari-stage
           git show "origin/main:automation/pitari-secure-exchange/$RID/key.b64" | base64 -d > /tmp/key.enc
           git show "origin/main:automation/pitari-secure-exchange/$RID/manifest.b64" | base64 -d > /tmp/manifest.enc
           openssl pkeyutl -decrypt -inkey /tmp/pitari-private.pem -in /tmp/key.enc -out /tmp/keyiv.bin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256
@@ -61,26 +64,30 @@ jobs:
           Path('/tmp/iv.hex').write_text(b[32:].hex())
           PY
           openssl enc -d -aes-256-cbc -K "$(cat /tmp/key.hex)" -iv "$(cat /tmp/iv.hex)" -in /tmp/manifest.enc -out /tmp/manifest.json
+          printf '%s' 'download_source' > /tmp/pitari-stage
           mkdir -p /tmp/pitari-source
           python - <<'PY'
-          import hashlib, json, urllib.request
+          import hashlib, json, urllib.request, urllib.error
           from pathlib import Path
           root=Path('/tmp/pitari-source')
           manifest=json.loads(Path('/tmp/manifest.json').read_text())
-          if manifest.get('source_commit')!='6c933d369448351da05044cbce3c7578dec7e7b0':
-              raise SystemExit('unexpected source commit')
+          if manifest.get('source_commit')!='6c933d369448351da05044cbce3c7578dec7e7b0': raise SystemExit('unexpected_source_commit')
           for item in manifest['files']:
               rel=item['path']
-              if rel.startswith('/') or '..' in Path(rel).parts: raise SystemExit('unsafe path')
-              target=root/rel
-              target.parent.mkdir(parents=True,exist_ok=True)
-              req=urllib.request.Request(item['url'],headers={'User-Agent':'pitari-secure-release'})
-              with urllib.request.urlopen(req,timeout=60) as r: data=r.read()
-              blob=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
-              if blob != item['git_blob_sha']: raise SystemExit(f'blob mismatch: {rel}')
-              target.write_bytes(data)
-          print(f"verified files={len(manifest['files'])}")
+              try:
+                  if rel.startswith('/') or '..' in Path(rel).parts: raise RuntimeError('unsafe_path')
+                  target=root/rel; target.parent.mkdir(parents=True,exist_ok=True)
+                  req=urllib.request.Request(item['url'],headers={'User-Agent':'pitari-secure-release'})
+                  with urllib.request.urlopen(req,timeout=60) as r: data=r.read()
+                  blob=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+                  if blob != item['git_blob_sha']: raise RuntimeError('blob_mismatch')
+                  target.write_bytes(data)
+              except Exception as e:
+                  Path('/tmp/pitari-safe-error').write_text(f'download_source:{rel}:{type(e).__name__}')
+                  raise
+          Path('/tmp/pitari-source-count').write_text(str(len(manifest['files'])))
           PY
+          printf '%s' 'source_verified' > /tmp/pitari-stage
           rm -f /tmp/pitari-private.pem /tmp/keyiv.bin /tmp/key.hex /tmp/iv.hex /tmp/key.enc /tmp/manifest.enc /tmp/manifest.json
       - name: Validate source and start EAS production auto-submit
         run: |
@@ -94,31 +101,47 @@ jobs:
           git commit -qm 'secure source snapshot 6c933d369448351da05044cbce3c7578dec7e7b0'
           corepack enable
           corepack prepare pnpm@11.9.0 --activate
-          pnpm install --frozen-lockfile
-          pnpm typecheck
-          pnpm test
-          pnpm doctor
-          npm install -g eas-cli@23.0.0
-          eas whoami
-          eas build --platform ios --profile production --auto-submit --non-interactive --no-wait
-          eas build:list --platform ios --limit 3 --json --non-interactive > /tmp/pitari-eas-build-list.json
+          printf '%s' 'pnpm_install' > /tmp/pitari-stage
+          pnpm install --frozen-lockfile || { printf '%s' 'pnpm_install:exit_nonzero' > /tmp/pitari-safe-error; exit 1; }
+          printf '%s' 'typecheck' > /tmp/pitari-stage
+          pnpm typecheck || { printf '%s' 'typecheck:exit_nonzero' > /tmp/pitari-safe-error; exit 1; }
+          printf '%s' 'test' > /tmp/pitari-stage
+          pnpm test || { printf '%s' 'test:exit_nonzero' > /tmp/pitari-safe-error; exit 1; }
+          printf '%s' 'doctor' > /tmp/pitari-stage
+          pnpm doctor || { printf '%s' 'doctor:exit_nonzero' > /tmp/pitari-safe-error; exit 1; }
+          printf '%s' 'eas_cli_install' > /tmp/pitari-stage
+          npm install -g eas-cli@23.0.0 >/dev/null 2>&1 || { printf '%s' 'eas_cli_install:exit_nonzero' > /tmp/pitari-safe-error; exit 1; }
+          printf '%s' 'eas_auth' > /tmp/pitari-stage
+          eas whoami >/tmp/eas-whoami.txt 2>/dev/null || { printf '%s' 'eas_auth:exit_nonzero' > /tmp/pitari-safe-error; exit 1; }
+          printf '%s' 'eas_build_start' > /tmp/pitari-stage
+          eas build --platform ios --profile production --auto-submit --non-interactive --no-wait >/tmp/eas-start.txt 2>/tmp/eas-start.err || { printf '%s' 'eas_build_start:exit_nonzero' > /tmp/pitari-safe-error; exit 1; }
+          printf '%s' 'eas_build_list' > /tmp/pitari-stage
+          eas build:list --platform ios --limit 3 --json --non-interactive > /tmp/pitari-eas-build-list.json 2>/dev/null || { printf '%s' 'eas_build_list:exit_nonzero' > /tmp/pitari-safe-error; exit 1; }
           python - <<'PY'
           import json
           from pathlib import Path
           builds=json.loads(Path('/tmp/pitari-eas-build-list.json').read_text())
-          out={'validation':'PASS','source_commit':'6c933d369448351da05044cbce3c7578dec7e7b0','auto_submit_requested':True,'eas_builds':[]}
-          for b in builds[:3]:
-              out['eas_builds'].append({k:b.get(k) for k in ('id','status','platform','appVersion','appBuildVersion','buildProfile','createdAt','updatedAt','gitCommitHash')})
+          out={'validation':'PASS','stage':'eas_build_started','source_commit':'6c933d369448351da05044cbce3c7578dec7e7b0','source_files_verified':int(Path('/tmp/pitari-source-count').read_text()),'auto_submit_requested':True,'eas_builds':[]}
+          for b in builds[:3]: out['eas_builds'].append({k:b.get(k) for k in ('id','status','platform','appVersion','appBuildVersion','buildProfile','createdAt','updatedAt','gitCommitHash')})
           Path('/tmp/pitari-secure-result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
           PY
+          printf '%s' 'complete' > /tmp/pitari-stage
       - name: Persist sanitized release result
         if: always()
         run: |
           RID=$(cat /tmp/pitari-rid 2>/dev/null || python -c "import json;print(json.load(open('automation/pitari-secure-command.json'))['request_id'])")
+          if [ ! -f /tmp/pitari-secure-result.json ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          out={'validation':'FAIL','failed_at':Path('/tmp/pitari-stage').read_text() if Path('/tmp/pitari-stage').exists() else 'bootstrap','error_class':Path('/tmp/pitari-safe-error').read_text() if Path('/tmp/pitari-safe-error').exists() else 'unclassified'}
+          Path('/tmp/pitari-secure-result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+          fi
           git fetch origin main
           git reset --hard origin/main
           mkdir -p "automation/pitari-secure-results"
-          if [ -f /tmp/pitari-secure-result.json ]; then cp /tmp/pitari-secure-result.json "automation/pitari-secure-results/$RID.json"; else printf '{"validation":"FAIL","note":"secure release bridge failed before EAS build list was persisted"}\n' > "automation/pitari-secure-results/$RID.json"; fi
+          cp /tmp/pitari-secure-result.json "automation/pitari-secure-results/$RID.json"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "automation/pitari-secure-results/$RID.json"
