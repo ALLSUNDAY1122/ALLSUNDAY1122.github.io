@@ -46,6 +46,11 @@ jobs:
           grep -q 'canReprocessTrusted' SplatNative/ScanLibraryView.swift
           grep -q 'S13 iOS 26 tap routing' SplatNative/ScanLibraryView.swift
           grep -q 'contentShape(Rectangle())' SplatNative/ScanLibraryView.swift
+          grep -q 'scanLabRouteToScanForReprocess' SplatNative/ScanLibraryView.swift
+          grep -q 'TabView(selection: $selectedTab)' SplatNative/IntegratedScanLabShellView.swift
+          grep -q 'tag(IntegratedScanLabTab.scan)' SplatNative/IntegratedScanLabShellView.swift
+          grep -q 'tag(IntegratedScanLabTab.library)' SplatNative/IntegratedScanLabShellView.swift
+          grep -q 'publisher(for: .scanLabRouteToScanForReprocess)' SplatNative/IntegratedScanLabShellView.swift
           grep -q 'reconstructionSeedEvidenceText' SplatNative/RootScanView.swift
           grep -q 'reconstructionSeedEvidenceText' SplatNative/SplatResultView.swift
           grep -q 'S13 seed:' SplatNative/ScanModel.swift
