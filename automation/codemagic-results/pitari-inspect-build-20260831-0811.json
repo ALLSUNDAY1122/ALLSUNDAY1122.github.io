@@ -1,0 +1,162 @@
+{
+  "request_id": "pitari-inspect-build-20260831-0811",
+  "ok": true,
+  "action": "inspect_build",
+  "workflow_id": null,
+  "branch": null,
+  "resolved_app_id": null,
+  "application_candidates": null,
+  "note": null,
+  "build_id": "6a943042e33a5bd2bdd496a3",
+  "status": "canceled",
+  "app_id": null,
+  "error": null,
+  "build_details": {
+    "id": "6a943042e33a5bd2bdd496a3",
+    "app_id": "6a769d81a1add9d06020b524",
+    "workflow": {
+      "id": "pitari-direct-testflight",
+      "source": "file",
+      "name": "Pitari Direct iOS TestFlight"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "canceled",
+    "index": 7,
+    "artifacts": [],
+    "labels": [
+      "pitari-log-handoff-20260830"
+    ],
+    "release_notes": [],
+    "created_at": "2026-08-30T13:29:38.462000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "68cc85a873c1e48b65f3dd6d7d2cce623800af69",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "release: add Pitari encrypted source part 03",
+      "url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/68cc85a873c1e48b65f3dd6d7d2cce623800af69"
+    },
+    "branch": "release/pitari-testflight-direct-20260830",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-08-30T13:29:46.437000Z",
+    "finished_at": "2026-08-30T13:41:53.912000Z"
+  },
+  "actions": {
+    "data": [
+      {
+        "id": "6a943043f4c053a69e3da830",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-30T13:29:46.787000Z",
+        "finished_at": "2026-08-30T13:30:09.454000Z"
+      },
+      {
+        "id": "6a943043f4c053a69e3da831",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-08-30T13:30:09.454000Z",
+        "finished_at": "2026-08-30T13:30:16.777000Z"
+      },
+      {
+        "id": "6a943043f4c053a69e3da832",
+        "name": "Create ephemeral source-transfer key",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nopenssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out /tmp/pitari-cm-private.pem >/dev/null 2>&1\nopenssl pkey -in /tmp/pitari-cm-private.pem -pubout -out /tmp/pitari-cm-public.pem\nPUB=$(base64 < /tmp/pitari-cm-public.pem | tr -d '\\n')\necho \"PITARI_TRANSFER_ID=${CM_BUILD_ID}\"\necho \"PITARI_PUBLIC_KEY_B64=${PUB}\"\necho \"PITARI_SOURCE_STATE=WAITING\"",
+        "status": "success",
+        "started_at": "2026-08-30T13:30:16.777000Z",
+        "finished_at": "2026-08-30T13:30:17.460000Z"
+      },
+      {
+        "id": "6a943043f4c053a69e3da833",
+        "name": "Receive and decrypt Pitari source",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR\"\nROOT=\"pitari-bridge/${CM_BUILD_ID}\"\nREADY=0\nfor n in $(seq 1 180); do\n  git fetch origin release/pitari-testflight-direct-20260830 >/dev/null 2>&1 || true\n  if git cat-file -e \"origin/release/pitari-testflight-direct-20260830:${ROOT}/ready.json\" 2>/dev/null; then READY=1; break; fi\n  sleep 5\ndone\ntest \"$READY\" = 1\ngit show \"origin/release/pitari-testflight-direct-20260830:${ROOT}/ready.json\" > /tmp/pitari-ready.json\nPART_COUNT=$(python3 -c \"import json;print(json.load(open('/tmp/pitari-ready.json'))['part_count'])\")\nEXPECTED_SHA=$(python3 -c \"import json;print(json.load(open('/tmp/pitari-ready.json'))['tar_sha256'])\")\ntest \"$PART_COUNT\" -gt 0\n: > /tmp/pitari-source.b64\nfor n in $(seq 0 $((PART_COUNT-1))); do\n  P=$(printf '%02d' \"$n\")\n  git show \"origin/release/pitari-testflight-direct-20260830:${ROOT}/source.part${P}\" >> /tmp/pitari-source.b64\ndone\ngit show \"origin/release/pitari-testflight-direct-20260830:${ROOT}/key.b64\" | base64 -d > /tmp/pitari-key.enc\nbase64 -d /tmp/pitari-source.b64 > /tmp/pitari-source.enc\nopenssl pkeyutl -decrypt -inkey /tmp/pitari-cm-private.pem -in /tmp/pitari-key.enc -out /tmp/pitari-keyiv.bin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256 -pkeyopt rsa_mgf1_md:sha256\npython3 - <<'PY'\nfrom pathlib import Path\nb=Path('/tmp/pitari-keyiv.bin').read_bytes()\nassert len(b)==48\nPath('/tmp/pitari-k').write_text(b[:32].hex())\nPath('/tmp/pitari-i').write_text(b[32:].hex())\nPY\nopenssl enc -d -aes-256-cbc -K \"$(cat /tmp/pitari-k)\" -iv \"$(cat /tmp/pitari-i)\" -in /tmp/pitari-source.enc -out /tmp/pitari-source.tgz\nACTUAL_SHA=$(shasum -a 256 /tmp/pitari-source.tgz | awk '{print $1}')\ntest \"$ACTUAL_SHA\" = \"$EXPECTED_SHA\"\nrm -rf /tmp/pitari-app\nmkdir -p /tmp/pitari-app\ntar -xzf /tmp/pitari-source.tgz -C /tmp/pitari-app\ntest -f /tmp/pitari-app/package.json\necho \"PITARI_SOURCE_STATE=VERIFIED\"\necho \"PITARI_SOURCE_SHA256=${ACTUAL_SHA}\"\nrm -f /tmp/pitari-cm-private.pem /tmp/pitari-key.enc /tmp/pitari-keyiv.bin /tmp/pitari-k /tmp/pitari-i /tmp/pitari-source.enc /tmp/pitari-source.b64 /tmp/pitari-ready.json",
+        "status": "canceled",
+        "started_at": "2026-08-30T13:30:17.460000Z",
+        "finished_at": "2026-08-30T13:41:53.912000Z"
+      },
+      {
+        "id": "6a943043f4c053a69e3da834",
+        "name": "Validate TypeScript and Expo project",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd /tmp/pitari-app\ncorepack enable\ncorepack prepare pnpm@11.9.0 --activate\npnpm install --no-frozen-lockfile\npnpm typecheck\npnpm test\npnpm doctor\necho \"PITARI_VALIDATION=PASS\"",
+        "status": null,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "id": "6a943043f4c053a69e3da835",
+        "name": "Set next TestFlight build number and prebuild iOS",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd /tmp/pitari-app\nLATEST=$(app-store-connect get-latest-testflight-build-number \"$APP_STORE_APPLE_ID\" 2>/dev/null || echo 6)\ncase \"$LATEST\" in ''|*[!0-9]*) LATEST=6 ;; esac\nNEXT=$((LATEST + 1))\nexport PITARI_BUILD_NUMBER=\"$NEXT\"\npython3 - <<'PY'\nimport json,os\nfrom pathlib import Path\np=Path('app.json')\nd=json.loads(p.read_text())\nassert d['expo']['version']=='1.0.0', d['expo']['version']\nd['expo'].setdefault('ios',{})['buildNumber']=os.environ['PITARI_BUILD_NUMBER']\np.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\\n')\nPY\npnpm exec expo prebuild --platform ios --clean --no-install\ncd ios\npod install\nprintf '%s' \"$NEXT\" > /tmp/pitari-build-number\necho \"PITARI_NEXT_BUILD=${NEXT}\"",
+        "status": null,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "id": "6a943043f4c053a69e3da836",
+        "name": "Fetch and apply App Store signing files",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nkeychain initialize\napp-store-connect fetch-signing-files \"$BUNDLE_ID\" --type IOS_APP_STORE --create\nkeychain add-certificates\ncd /tmp/pitari-app/ios\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
+        "status": null,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "id": "6a943043f4c053a69e3da837",
+        "name": "Build signed IPA",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd /tmp/pitari-app\nWORKSPACE=$(find ios -maxdepth 1 -name '*.xcworkspace' -print -quit)\ntest -n \"$WORKSPACE\"\nSCHEME=$(xcodebuild -workspace \"$WORKSPACE\" -list -json | python3 -c \"import json,sys; d=json.load(sys.stdin); print(d['workspace']['schemes'][0])\")\ntest -n \"$SCHEME\"\nxcode-project build-ipa --workspace \"$WORKSPACE\" --scheme \"$SCHEME\"\nIPA=$(find build/ios/ipa -type f -name '*.ipa' -print -quit)\ntest -n \"$IPA\"\necho \"PITARI_IPA_BUILT=YES\"\necho \"PITARI_BUILD_NUMBER=$(cat /tmp/pitari-build-number)\"",
+        "status": null,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "id": "6a943043f4c053a69e3da838",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": null,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "id": "6a943043f4c053a69e3da839",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": null,
+        "started_at": null,
+        "finished_at": null
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
