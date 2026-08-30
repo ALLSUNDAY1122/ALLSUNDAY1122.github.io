@@ -1,0 +1,129 @@
+name: Pitari EAS REST Gateway
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pitari-eas-rest-command.json
+      - .github/workflows/pitari-eas-rest-gateway.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pitari-eas-rest-gateway
+  cancel-in-progress: true
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout gateway repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Verify Expo token
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [ -z "$EXPO_TOKEN" ]; then
+            echo '::error::EXPO_TOKEN repository secret is not configured'
+            exit 1
+          fi
+
+      - name: Dispatch Pitari workflow via Expo REST API
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p release-logs automation/eas-rest-results
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          cmd=json.loads(Path('automation/pitari-eas-rest-command.json').read_text())
+          rid=cmd['request_id']; ref=cmd['git_ref']; fn=cmd['file_name']
+          if not re.fullmatch(r'[A-Za-z0-9._-]{1,100}', rid): raise SystemExit('invalid request_id')
+          if not re.fullmatch(r'[A-Za-z0-9._/-]{1,200}', ref): raise SystemExit('invalid git_ref')
+          if not re.fullmatch(r'[A-Za-z0-9._-]{1,100}\.ya?ml', fn): raise SystemExit('invalid file_name')
+          Path('/tmp/pitari-request-id.txt').write_text(rid)
+          Path('/tmp/pitari-git-ref.txt').write_text(ref)
+          Path('/tmp/pitari-file-name.txt').write_text(fn)
+          payload={'appId':'d7480022-0db3-48dd-906e-43a12438ecdb','gitRef':ref,'fileName':fn,'inputs':{}}
+          Path('/tmp/pitari-dispatch-payload.json').write_text(json.dumps(payload))
+          PY
+          HTTP_CODE="$(curl -sS -o release-logs/eas-rest-dispatch.json -w '%{http_code}' \
+            -X POST 'https://api.expo.dev/v2/workflows/dispatch' \
+            -H "Authorization: Bearer $EXPO_TOKEN" \
+            -H 'Content-Type: application/json' \
+            --data-binary @/tmp/pitari-dispatch-payload.json)"
+          printf '%s\n' "$HTTP_CODE" > release-logs/eas-rest-dispatch.http.txt
+          cat release-logs/eas-rest-dispatch.json
+          if [ "$HTTP_CODE" != '200' ]; then
+            echo "::error::Expo workflow dispatch failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
+          RUN_ID="$(python - <<'PY'
+          import json
+          d=json.load(open('release-logs/eas-rest-dispatch.json'))
+          print(d.get('data',{}).get('id',''))
+          PY
+          )"
+          if [ -z "$RUN_ID" ]; then
+            echo '::error::dispatch returned no workflow run id'
+            exit 1
+          fi
+          printf '%s\n' "$RUN_ID" > release-logs/eas-rest-run-id.txt
+          sleep 5
+          curl -sS 'https://api.expo.dev/v2/workflows/runs/'"$RUN_ID" \
+            -H "Authorization: Bearer $EXPO_TOKEN" > release-logs/eas-rest-run-detail.json
+          cat release-logs/eas-rest-run-detail.json
+
+      - name: Persist sanitized result
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cmd=json.loads(Path('automation/pitari-eas-rest-command.json').read_text())
+          rid=cmd.get('request_id','unknown')
+          out={'request_id':rid,'git_ref':cmd.get('git_ref'),'file_name':cmd.get('file_name')}
+          for name in ('eas-rest-dispatch.json','eas-rest-run-detail.json'):
+              p=Path('release-logs')/name
+              if p.exists():
+                  try: out[name.removesuffix('.json').replace('-','_')]=json.loads(p.read_text())
+                  except Exception: out[name.removesuffix('.json').replace('-','_')]=p.read_text()[:12000]
+          for name in ('eas-rest-dispatch.http.txt','eas-rest-run-id.txt'):
+              p=Path('release-logs')/name
+              if p.exists(): out[name.removesuffix('.txt').replace('-','_')]=p.read_text().strip()
+          target=Path('automation/eas-rest-results')/f'{rid}.json'
+          target.parent.mkdir(parents=True,exist_ok=True)
+          target.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          Path('/tmp/pitari-rest-result-copy.json').write_text(target.read_text())
+          print(target)
+          PY
+          REQUEST_ID="$(cat /tmp/pitari-request-id.txt 2>/dev/null || python -c "import json;print(json.load(open('automation/pitari-eas-rest-command.json'))['request_id'])")"
+          RESULT="automation/eas-rest-results/${REQUEST_ID}.json"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m "Persist Pitari EAS REST result ${REQUEST_ID}" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/eas-rest-results
+          cp /tmp/pitari-rest-result-copy.json "$RESULT"
+          git add "$RESULT"
+          git commit -m "Persist Pitari EAS REST result ${REQUEST_ID}" || exit 0
+          git push origin HEAD:main
+
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pitari-eas-rest-${{ github.run_id }}
+          path: release-logs
+          if-no-files-found: warn
+          retention-days: 7
