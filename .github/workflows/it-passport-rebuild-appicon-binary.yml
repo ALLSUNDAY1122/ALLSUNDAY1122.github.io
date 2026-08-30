@@ -1,0 +1,52 @@
+name: New IT Passport - Materialize Checked-in AppIcon Binary
+
+on:
+  push:
+    branches:
+      - feature/it-passport-rebuild
+    paths:
+      - 'automation/tmp-itpassport-appicon/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/it-passport-rebuild
+          fetch-depth: 0
+      - name: Reassemble canonical AppIcon
+        run: |
+          set -euo pipefail
+          PART_DIR='automation/tmp-itpassport-appicon'
+          OUT='apps/it-passport-rebuild/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+          EXPECTED='be4b5e7a38909ce702065c660cc18f6401b9ae2a560e71b342d8204f5067e677'
+          test -f "$PART_DIR/READY"
+          for n in 00 01 02 03 04 05; do test -s "$PART_DIR/part${n}.b64"; done
+          mkdir -p "$(dirname "$OUT")"
+          cat "$PART_DIR"/part*.b64 | tr -d '\n\r ' | base64 --decode > "$OUT"
+          ACTUAL="$(sha256sum "$OUT" | awk '{print $1}')"
+          test "$ACTUAL" = "$EXPECTED"
+          python3 - "$OUT" <<'PY'
+          import struct,sys
+          p=sys.argv[1]
+          b=open(p,'rb').read(32)
+          assert b[:8] == b'\x89PNG\r\n\x1a\n'
+          w,h=struct.unpack('>II',b[16:24])
+          assert (w,h)==(1024,1024),(w,h)
+          print('PASS: PNG 1024x1024, SHA verified')
+          PY
+      - name: Persist binary and remove transport chunks
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add apps/it-passport-rebuild/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+          git rm automation/tmp-itpassport-appicon/part*.b64
+          git commit -m '新ITパスポート｜正本AppIcon実バイナリを格納'
+          git pull --rebase origin feature/it-passport-rebuild
+          git push origin HEAD:feature/it-passport-rebuild
