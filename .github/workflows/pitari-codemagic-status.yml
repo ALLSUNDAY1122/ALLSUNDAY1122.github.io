@@ -52,6 +52,10 @@ jobs:
             }
             code,body=request('https://api.codemagic.io/builds','POST',payload)
             out={'request_id':cmd['request_id'],'action':action,'http_status':code,'response':parsed(body)}
+          elif action == 'cancel_build':
+            bid=cmd['build_id']
+            code,body=request(f'https://api.codemagic.io/builds/{bid}/cancel','POST')
+            out={'request_id':cmd['request_id'],'action':action,'http_status':code,'build_id':bid,'response':parsed(body)}
           elif action == 'inspect_build':
             bid=cmd['build_id']
             bcode,bbody=request(f'https://codemagic.io/api/v3/builds/{bid}')
