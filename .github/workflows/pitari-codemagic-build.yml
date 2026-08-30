@@ -22,14 +22,12 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Start Codemagic EAS TestFlight bridge
+      - name: Start Codemagic direct TestFlight build
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           set -euo pipefail
           test -n "$CM_API_TOKEN" || { echo '::error::CM_API_TOKEN missing'; exit 1; }
-          test -n "$EXPO_TOKEN" || { echo '::error::EXPO_TOKEN missing'; exit 1; }
           mkdir -p automation/codemagic-build-results
           python - <<'PY'
           import json, os, urllib.request, urllib.error
@@ -37,14 +35,10 @@ jobs:
           cmd=json.loads(Path('automation/pitari-codemagic-build-command.json').read_text())
           rid=cmd['request_id']
           payload={
-            'appId':'6a93ad380956fdbda3265117',
-            'workflowId':'pitari_testflight',
-            'branch':'main',
-            'environment':{
-              'variables':{
-                'EXPO_TOKEN': os.environ['EXPO_TOKEN']
-              }
-            }
+            'appId':'6a769d81a1add9d06020b524',
+            'workflowId':'pitari-direct-testflight',
+            'branch':'release/pitari-testflight-direct-20260830',
+            'labels':['pitari-direct-testflight-20260830']
           }
           req=urllib.request.Request('https://api.codemagic.io/builds', data=json.dumps(payload).encode(), method='POST')
           req.add_header('Content-Type','application/json')
@@ -56,12 +50,10 @@ jobs:
             body=e.read().decode('utf-8','replace'); status=e.code
           try: parsed=json.loads(body) if body else {}
           except Exception: parsed={'body':body[:4000]}
-          # Never persist request payload or any environment variable values.
-          out={'request_id':rid,'http_status':status,'response':parsed}
+          out={'request_id':rid,'http_status':status,'app_id':'6a769d81a1add9d06020b524','workflow_id':'pitari-direct-testflight','branch':'release/pitari-testflight-direct-20260830','response':parsed}
           p=Path('automation/codemagic-build-results')/(rid+'.json')
           p.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
-          safe={'http_status':status,'response':parsed}
-          print(json.dumps(safe,ensure_ascii=False))
+          print(json.dumps({'http_status':status,'response':parsed},ensure_ascii=False))
           if status < 200 or status >= 300: raise SystemExit(1)
           PY
       - name: Persist result
