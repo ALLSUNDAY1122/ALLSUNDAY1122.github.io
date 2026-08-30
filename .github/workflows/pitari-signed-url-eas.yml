@@ -1,0 +1,202 @@
+name: Pitari Signed URL TestFlight Bridge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pitari-url-command.json
+      - .github/workflows/pitari-signed-url-eas.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pitari-signed-url-eas
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Publish ephemeral transfer key
+        run: |
+          set -euo pipefail
+          RID=$(python -c "import json;print(json.load(open('automation/pitari-url-command.json'))['request_id'])")
+          test -n "$RID"
+          if ! [[ "$RID" =~ ^[A-Za-z0-9._-]{1,100}$ ]]; then echo 'invalid request_id' >&2; exit 1; fi
+          echo "$RID" >/tmp/rid
+          echo key >/tmp/stage
+          DIR="automation/pitari-url-exchange/$RID"
+          mkdir -p "$DIR"
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out /tmp/private.pem >/dev/null 2>&1
+          openssl pkey -in /tmp/private.pem -pubout -out "$DIR/public.pem"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "$DIR/public.pem"
+          git commit -m "Publish Pitari signed-url transfer key $RID"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo wait_manifest >/tmp/stage
+
+      - name: Receive encrypted signed URL manifest
+        run: |
+          set -euo pipefail
+          RID=$(cat /tmp/rid)
+          DIR="automation/pitari-url-exchange/$RID"
+          READY=0
+          for n in $(seq 1 240); do
+            git fetch origin main >/dev/null 2>&1 || true
+            if git cat-file -e "origin/main:$DIR/ready.json" 2>/dev/null; then READY=1; break; fi
+            sleep 5
+          done
+          test "$READY" = 1
+          echo decrypt_manifest >/tmp/stage
+          git show "origin/main:$DIR/ready.json" >/tmp/ready.json
+          git show "origin/main:$DIR/key.b64" | base64 -d >/tmp/key.enc
+          git show "origin/main:$DIR/manifest.b64" | base64 -d >/tmp/manifest.enc
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          m=json.loads(Path('/tmp/ready.json').read_text())
+          checks=[('/tmp/key.enc','key_enc_sha256'),('/tmp/manifest.enc','manifest_enc_sha256')]
+          for p,k in checks:
+              got=hashlib.sha256(Path(p).read_bytes()).hexdigest()
+              assert got==m[k], (p,got,m[k])
+          PY
+          openssl pkeyutl -decrypt -inkey /tmp/private.pem -in /tmp/key.enc -out /tmp/keyiv.bin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256 -pkeyopt rsa_mgf1_md:sha256
+          python - <<'PY'
+          from pathlib import Path
+          b=Path('/tmp/keyiv.bin').read_bytes(); assert len(b)==48
+          Path('/tmp/k').write_text(b[:32].hex()); Path('/tmp/i').write_text(b[32:].hex())
+          PY
+          openssl enc -d -aes-256-cbc -K "$(cat /tmp/k)" -iv "$(cat /tmp/i)" -in /tmp/manifest.enc -out /tmp/manifest.json
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          m=json.loads(Path('/tmp/ready.json').read_text())
+          got=hashlib.sha256(Path('/tmp/manifest.json').read_bytes()).hexdigest()
+          assert got==m['manifest_sha256'], (got,m['manifest_sha256'])
+          manifest=json.loads(Path('/tmp/manifest.json').read_text())
+          assert manifest.get('source_commit')==m.get('source_commit')
+          assert isinstance(manifest.get('files'),list) and manifest['files']
+          PY
+          echo fetch_source >/tmp/stage
+
+      - name: Fetch private source and verify Git blob SHAs
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/app
+          mkdir -p /tmp/app
+          python - <<'PY'
+          import hashlib,json,os,urllib.request
+          from pathlib import Path, PurePosixPath
+          manifest=json.loads(Path('/tmp/manifest.json').read_text())
+          root=Path('/tmp/app')
+          for item in manifest['files']:
+              rel=item['path']
+              p=PurePosixPath(rel)
+              assert not p.is_absolute() and '..' not in p.parts and rel not in ('','.')
+              assert rel.startswith(('src/','assets/')) or rel in {'App.tsx','app.json','eas.json','index.ts','package.json','pnpm-workspace.yaml','tsconfig.json','.gitignore'}
+              url=item['url']
+              assert url.startswith('https://raw.githubusercontent.com/ALLSUNDAY1122/pitari-resize/')
+              target=root / rel
+              target.parent.mkdir(parents=True,exist_ok=True)
+              with urllib.request.urlopen(url,timeout=60) as r:
+                  data=r.read()
+              expected_size=item.get('size')
+              if expected_size is not None:
+                  assert len(data)==expected_size, (rel,len(data),expected_size)
+              blob=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+              assert blob==item['blob_sha'], (rel,blob,item['blob_sha'])
+              target.write_bytes(data)
+              print(rel, len(data), blob)
+          print('verified_files', len(manifest['files']))
+          PY
+          test -f /tmp/app/package.json
+          test -f /tmp/app/App.tsx
+          test -f /tmp/app/assets/icon.png
+          rm -f /tmp/private.pem /tmp/key.enc /tmp/keyiv.bin /tmp/k /tmp/i /tmp/manifest.enc
+          echo source_ready >/tmp/stage
+
+      - name: Validate and launch EAS auto-submit
+        run: |
+          set -euo pipefail
+          cd /tmp/app
+          SOURCE_COMMIT=$(python -c "import json;print(json.load(open('/tmp/ready.json')).get('source_commit','unknown'))")
+          git init -q
+          git config user.name pitari-testflight
+          git config user.email noreply@example.invalid
+          git add .
+          git commit -qm "TestFlight source snapshot ${SOURCE_COMMIT:0:12}"
+          corepack enable
+          corepack prepare pnpm@11.9.0 --activate
+          echo install >/tmp/stage
+          pnpm install --no-frozen-lockfile || { echo install_failed >/tmp/error; exit 1; }
+          echo typecheck >/tmp/stage
+          pnpm typecheck || { echo typecheck_failed >/tmp/error; exit 1; }
+          echo test >/tmp/stage
+          pnpm test || { echo test_failed >/tmp/error; exit 1; }
+          echo doctor >/tmp/stage
+          pnpm doctor || { echo doctor_failed >/tmp/error; exit 1; }
+          echo eas_cli >/tmp/stage
+          npx --yes eas-cli@latest --version >/tmp/eas-version 2>/tmp/eas-version.err || { echo eas_cli_failed >/tmp/error; exit 1; }
+          echo eas_auth >/tmp/stage
+          npx --yes eas-cli@latest whoami >/tmp/eas-whoami 2>/tmp/eas-whoami.err || { echo eas_auth_failed >/tmp/error; exit 1; }
+          echo eas_build >/tmp/stage
+          npx --yes eas-cli@latest build --platform ios --profile production --auto-submit --non-interactive --no-wait >/tmp/eas-start 2>/tmp/eas-error || { echo eas_build_failed >/tmp/error; exit 1; }
+          sleep 5
+          echo eas_list >/tmp/stage
+          npx --yes eas-cli@latest build:list --platform ios --limit 5 --json --non-interactive >/tmp/builds.json 2>/tmp/eas-list-error || { echo eas_list_failed >/tmp/error; exit 1; }
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          bs=json.loads(Path('/tmp/builds.json').read_text())
+          meta=json.loads(Path('/tmp/ready.json').read_text())
+          out={
+            'validation':'PASS',
+            'source_commit':meta.get('source_commit'),
+            'transport':'encrypted_signed_urls',
+            'auto_submit_requested':True,
+            'eas_cli_version':Path('/tmp/eas-version').read_text().strip(),
+            'builds':[{k:b.get(k) for k in ('id','status','appVersion','appBuildVersion','buildProfile','createdAt','updatedAt','gitCommitHash')} for b in bs[:5]]
+          }
+          Path('/tmp/result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+          echo complete >/tmp/stage
+
+      - name: Persist sanitized result
+        if: always()
+        run: |
+          RID=$(cat /tmp/rid 2>/dev/null || echo unknown)
+          if [ ! -f /tmp/result.json ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          Path('/tmp/result.json').write_text(json.dumps({
+            'validation':'FAIL',
+            'failed_at':Path('/tmp/stage').read_text().strip() if Path('/tmp/stage').exists() else 'bootstrap',
+            'error':Path('/tmp/error').read_text().strip() if Path('/tmp/error').exists() else 'unclassified'
+          })+'\n')
+          PY
+          fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/pitari-url-results
+          cp /tmp/result.json "automation/pitari-url-results/$RID.json"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "automation/pitari-url-results/$RID.json"
+          git commit -m "Persist Pitari signed-url EAS result $RID" || exit 0
+          git push origin HEAD:main
+
+      - name: Cleanup sensitive runner files
+        if: always()
+        run: |
+          rm -f /tmp/private.pem /tmp/key.enc /tmp/keyiv.bin /tmp/k /tmp/i /tmp/manifest.enc /tmp/manifest.json /tmp/eas-error /tmp/eas-whoami.err
