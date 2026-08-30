@@ -1,0 +1,37 @@
+name: Pitari Codemagic Status Readback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pitari-codemagic-status-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Inspect Codemagic build
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          python scripts/codemagic_build_gateway.py --command automation/pitari-codemagic-status-command.json --output /tmp/pitari-cm-status.json
+      - name: Persist sanitized status
+        if: always()
+        run: |
+          RID=$(python -c "import json;print(json.load(open('automation/pitari-codemagic-status-command.json'))['request_id'])")
+          mkdir -p automation/codemagic-pitari-status
+          if [ -f /tmp/pitari-cm-status.json ]; then cp /tmp/pitari-cm-status.json "automation/codemagic-pitari-status/${RID}.json"; else printf '{"request_id":"%s","error":"status readback failed before output"}\n' "$RID" > "automation/codemagic-pitari-status/${RID}.json"; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "automation/codemagic-pitari-status/${RID}.json"
+          git commit -m "Persist Pitari Codemagic status ${RID}" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
