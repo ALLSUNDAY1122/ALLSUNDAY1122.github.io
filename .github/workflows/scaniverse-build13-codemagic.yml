@@ -1,0 +1,124 @@
+name: Scaniverse Build 13 Codemagic + ASC Gate
+
+on:
+  push:
+    branches:
+      - testflight/splat-native-ios-20260830-build13
+    paths:
+      - .github/workflows/scaniverse-build13-codemagic.yml
+
+permissions:
+  contents: read
+
+jobs:
+  build13:
+    runs-on: ubuntu-latest
+    timeout-minutes: 155
+    env:
+      CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+      CM_APP_ID: 6a769d81a1add9d06020b524
+      CM_BUILD_WORKFLOW: splat-native-ios
+      CM_READBACK_WORKFLOW: splat-build13-asc-readback
+      CM_BRANCH: testflight/splat-native-ios-20260830-build13
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trigger signed Build 13 and verify ASC readback
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${CM_API_TOKEN:-}"
+          python3 - <<'PY'
+          import json, os, time, urllib.error, urllib.request
+          from pathlib import Path
+
+          token=os.environ['CM_API_TOKEN'].strip()
+          app_id=os.environ['CM_APP_ID']
+          branch=os.environ['CM_BRANCH']
+          signed_workflow=os.environ['CM_BUILD_WORKFLOW']
+          readback_workflow=os.environ['CM_READBACK_WORKFLOW']
+          out=Path('/tmp/scaniverse-build13-codemagic.json')
+
+          def api(url, method='GET', payload=None):
+              body=None if payload is None else json.dumps(payload).encode()
+              req=urllib.request.Request(url,data=body,method=method,headers={
+                  'Content-Type':'application/json','Accept':'application/json','x-auth-token':token})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read().decode()
+                      return r.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as e:
+                  raw=e.read().decode(errors='replace')
+                  try: data=json.loads(raw) if raw else {}
+                  except Exception: data={'error':raw[:2000]}
+                  return e.code,data
+
+          def start(workflow):
+              status,payload=api('https://api.codemagic.io/builds','POST',{
+                  'appId':app_id,'workflowId':workflow,'branch':branch})
+              if not 200 <= status < 300:
+                  raise SystemExit(f'Codemagic start failed {workflow} HTTP {status}: {payload}')
+              build_id=payload.get('buildId') or payload.get('id')
+              if not build_id: raise SystemExit(f'No Codemagic build id for {workflow}: {payload}')
+              return build_id
+
+          def normalize_commit(value):
+              if isinstance(value,str): return value
+              if isinstance(value,dict):
+                  for k in ('hash','sha','id','commit'):
+                      v=value.get(k)
+                      if isinstance(v,str): return v
+              return None
+
+          def wait(build_id, label, timeout=7200):
+              terminal={'finished','failed','canceled','timeout','skipped'}
+              deadline=time.time()+timeout
+              details={}
+              while time.time()<deadline:
+                  code,detail=api(f'https://codemagic.io/api/v3/builds/{build_id}')
+                  if not 200 <= code < 300:
+                      raise SystemExit(f'Codemagic inspect failed HTTP {code}: {detail}')
+                  details=detail.get('data') or detail
+                  state=details.get('status')
+                  print(label, state)
+                  if state in terminal: break
+                  time.sleep(15)
+              else:
+                  raise SystemExit(f'{label} timed out')
+              if details.get('status')!='finished':
+                  raise SystemExit(f'{label} ended {details.get("status")}')
+              return details
+
+          evidence={'ok':False,'branch':branch}
+          signed_id=start(signed_workflow)
+          evidence['signed_build_id']=signed_id
+          print('BUILD13_CODEMAGIC_STARTED', signed_id)
+          signed=wait(signed_id,'BUILD13_CODEMAGIC_STATUS')
+          evidence['signed_status']='finished'
+          evidence['signed_commit']=normalize_commit(signed.get('commit') or signed.get('commitId'))
+          evidence['signed_started_at']=signed.get('startedAt') or signed.get('started_at')
+          evidence['signed_finished_at']=signed.get('finishedAt') or signed.get('finished_at')
+          evidence['signed_artifact_names']=[a.get('name') for a in (signed.get('artifacts') or [])]
+          actual_branch=signed.get('branch')
+          if actual_branch and actual_branch!=branch:
+              raise SystemExit(f'Build 13 branch mismatch: {actual_branch} != {branch}')
+          out.write_text(json.dumps(evidence,indent=2)+'\n')
+
+          readback_id=start(readback_workflow)
+          evidence['readback_build_id']=readback_id
+          print('BUILD13_ASC_READBACK_STARTED', readback_id)
+          readback=wait(readback_id,'BUILD13_ASC_READBACK_STATUS',timeout=1800)
+          evidence['readback_status']='finished'
+          evidence['readback_started_at']=readback.get('startedAt') or readback.get('started_at')
+          evidence['readback_finished_at']=readback.get('finishedAt') or readback.get('finished_at')
+          evidence['ok']=True
+          out.write_text(json.dumps(evidence,indent=2)+'\n')
+          print('BUILD13_GATE_FINISHED', json.dumps(evidence))
+          PY
+      - name: Upload Build 13 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scaniverse-build13-codemagic-${{ github.run_id }}
+          path: /tmp/scaniverse-build13-codemagic.json
+          if-no-files-found: warn
+          retention-days: 14
