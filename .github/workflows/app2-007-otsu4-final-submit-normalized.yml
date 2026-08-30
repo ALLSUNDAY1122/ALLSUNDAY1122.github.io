@@ -39,7 +39,12 @@ jobs:
           def app_price_schedule(token):
               status, payload = submit.req(token, f'/v1/apps/{submit.APP_ID}/appPriceSchedule?include=baseTerritory', allow404=True)
               data = payload.get('data') if isinstance(payload, dict) else None
-              if status == 404 or not isinstance(data, dict) or data.get('type') != 'appPriceSchedules':
+              if (
+                  status == 404
+                  or not isinstance(data, dict)
+                  or data.get('type') != 'appPriceSchedules'
+                  or str(data.get('id')) == submit.APP_ID
+              ):
                   return None
               return data
 
