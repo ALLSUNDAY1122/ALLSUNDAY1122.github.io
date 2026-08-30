@@ -33,7 +33,7 @@ jobs:
         run: |
           set -euo pipefail
           RID=$(cat /tmp/rid); READY=0
-          for n in $(seq 1 120); do
+          for n in $(seq 1 240); do
             git fetch origin main >/dev/null 2>&1 || true
             if git cat-file -e "origin/main:automation/pitari-tar-exchange/$RID/ready.json" 2>/dev/null; then READY=1; break; fi
             sleep 5
@@ -41,16 +41,30 @@ jobs:
           test "$READY" = 1
           echo decrypt >/tmp/stage
           DIR="automation/pitari-tar-exchange/$RID"
+          git show "origin/main:$DIR/ready.json" >/tmp/ready.json
           git show "origin/main:$DIR/key.b64" | base64 -d >/tmp/key.enc
+          PARTS=$(python -c "import json;print(json.load(open('/tmp/ready.json')).get('parts',0))")
           if git cat-file -e "origin/main:$DIR/source.b64" 2>/dev/null; then
             git show "origin/main:$DIR/source.b64" >/tmp/source.b64
           else
             : >/tmp/source.b64
-            for p in 00 01 02 03 04; do git show "origin/main:$DIR/source.part$p" >>/tmp/source.b64; done
+            test "$PARTS" -gt 0
+            for n in $(seq 0 $((PARTS-1))); do p=$(printf '%02d' "$n"); git show "origin/main:$DIR/source.part$p" >>/tmp/source.b64; done
           fi
-          test "$(sha256sum /tmp/source.b64 | awk '{print $1}')" = 'c5b2c720db125b2b4f3cc971e93811e23ea75e4f3c52952631934a7ec4f43442'
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          m=json.loads(Path('/tmp/ready.json').read_text())
+          for p,k in [('/tmp/source.b64','source_b64_sha256'),('/tmp/key.enc','key_enc_sha256')]:
+              got=hashlib.sha256(Path(p).read_bytes()).hexdigest(); assert got==m[k], (p,got,m[k])
+          PY
           base64 -d /tmp/source.b64 >/tmp/source.enc
-          test "$(sha256sum /tmp/source.enc | awk '{print $1}')" = 'a4c19282029356580bbc1f450a4a1085da338f3d51b6eff901e78bd9f29332ae'
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          m=json.loads(Path('/tmp/ready.json').read_text())
+          got=hashlib.sha256(Path('/tmp/source.enc').read_bytes()).hexdigest(); assert got==m['source_enc_sha256'], (got,m['source_enc_sha256'])
+          PY
           openssl pkeyutl -decrypt -inkey /tmp/private.pem -in /tmp/key.enc -out /tmp/keyiv.bin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256 -pkeyopt rsa_mgf1_md:sha256
           python - <<'PY'
           from pathlib import Path
@@ -58,15 +72,22 @@ jobs:
           Path('/tmp/k').write_text(b[:32].hex()); Path('/tmp/i').write_text(b[32:].hex())
           PY
           openssl enc -d -aes-256-cbc -K "$(cat /tmp/k)" -iv "$(cat /tmp/i)" -in /tmp/source.enc -out /tmp/source.tgz
-          test "$(sha256sum /tmp/source.tgz | awk '{print $1}')" = '3d9a0f25a7e5bf88a5dfd624af6823180dfb2e667e6cc4a5def0d8a122802dfb'
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          m=json.loads(Path('/tmp/ready.json').read_text())
+          got=hashlib.sha256(Path('/tmp/source.tgz').read_bytes()).hexdigest(); assert got==m['source_tgz_sha256'], (got,m['source_tgz_sha256'])
+          PY
           mkdir -p /tmp/app; tar -xzf /tmp/source.tgz -C /tmp/app
+          test -f /tmp/app/package.json
           rm -f /tmp/private.pem /tmp/key.enc /tmp/keyiv.bin /tmp/k /tmp/i /tmp/source.enc /tmp/source.b64
           echo source_ready >/tmp/stage
       - name: Validate and launch EAS auto-submit
         run: |
           set -euo pipefail
           cd /tmp/app
-          git init -q; git config user.name pitari-testflight; git config user.email noreply@example.invalid; git add .; git commit -qm 'TestFlight source snapshot db13c80e'
+          SOURCE_COMMIT=$(python -c "import json;print(json.load(open('/tmp/ready.json')).get('source_commit','unknown'))")
+          git init -q; git config user.name pitari-testflight; git config user.email noreply@example.invalid; git add .; git commit -qm "TestFlight source snapshot ${SOURCE_COMMIT:0:12}"
           corepack enable; corepack prepare pnpm@11.9.0 --activate
           echo install >/tmp/stage; pnpm install --no-frozen-lockfile || { echo install_failed >/tmp/error; exit 1; }
           echo typecheck >/tmp/stage; pnpm typecheck || { echo typecheck_failed >/tmp/error; exit 1; }
@@ -80,8 +101,8 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          bs=json.loads(Path('/tmp/builds.json').read_text())
-          out={'validation':'PASS','source_commit':'db13c80e3c9dd6dbad8a3465b8919cc97fea6a23','temporary_icon':True,'auto_submit_requested':True,'builds':[{k:b.get(k) for k in ('id','status','appVersion','appBuildVersion','buildProfile','createdAt','updatedAt','gitCommitHash')} for b in bs[:3]]}
+          bs=json.loads(Path('/tmp/builds.json').read_text()); meta=json.loads(Path('/tmp/ready.json').read_text())
+          out={'validation':'PASS','source_commit':meta.get('source_commit'),'temporary_icon':meta.get('temporary_icon',False),'auto_submit_requested':True,'builds':[{k:b.get(k) for k in ('id','status','appVersion','appBuildVersion','buildProfile','createdAt','updatedAt','gitCommitHash')} for b in bs[:3]]}
           Path('/tmp/result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
           PY
           echo complete >/tmp/stage
