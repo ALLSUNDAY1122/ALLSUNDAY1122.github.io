@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "status": "provisional-pre-next1",
+  "notes": "Original balance targets. No numeric field is claimed to match the reference game's exact value.",
+  "stages": [
+    {
+      "id": "relay_yard",
+      "order": 1,
+      "base_reward": 12.0,
+      "target_first_clear_seconds": 18.0,
+      "mastery_seconds": 7.0,
+      "checkpoint_count": 1,
+      "forward_gate": null,
+      "later_revisit": "dash shortcut"
+    },
+    {
+      "id": "liftworks",
+      "order": 2,
+      "base_reward": 140.0,
+      "target_first_clear_seconds": 32.0,
+      "mastery_seconds": 12.0,
+      "checkpoint_count": 2,
+      "forward_gate": "speed_tune",
+      "later_revisit": "double_jump secret route"
+    },
+    {
+      "id": "phase_foundry",
+      "order": 3,
+      "base_reward": 2400.0,
+      "target_first_clear_seconds": 48.0,
+      "mastery_seconds": 18.0,
+      "checkpoint_count": 2,
+      "forward_gate": "dash",
+      "later_revisit": "wall_jump upper route"
+    },
+    {
+      "id": "blackout_array",
+      "order": 4,
+      "base_reward": 52000.0,
+      "target_first_clear_seconds": 60.0,
+      "mastery_seconds": 24.0,
+      "checkpoint_count": 3,
+      "forward_gate": "double_jump",
+      "later_revisit": "phase_shift safe-light shortcut"
+    },
+    {
+      "id": "core_spire",
+      "order": 5,
+      "base_reward": 1200000.0,
+      "target_first_clear_seconds": 75.0,
+      "mastery_seconds": 30.0,
+      "checkpoint_count": 3,
+      "forward_gate": "wall_jump",
+      "later_revisit": "multi-ability mastery route"
+    }
+  ],
+  "balance_guardrails": {
+    "active_purchase_wait_target_seconds": 90,
+    "active_purchase_wait_failure_seconds": 180,
+    "prior_stage_minimum_share_after_next_unlock": 0.30,
+    "secret_required_for_main_progression": false,
+    "new_ability_minimum_forward_uses": 1,
+    "new_ability_minimum_backward_uses": 1
+  }
+}
