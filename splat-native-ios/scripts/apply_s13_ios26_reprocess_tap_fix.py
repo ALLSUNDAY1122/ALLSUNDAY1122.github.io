@@ -121,6 +121,24 @@ else:
             raise SystemExit("S13 route: separate-row reprocess action drifted")
         library = library.replace(old_action, new_action, 1)
 
+# A Build-11 same-raw tap has already transitioned the target project to the resumable
+# captured/failed path, which is exposed as "生成へ戻る" / "保存状態から復旧". Route that generic
+# continuation to Scan as well, otherwise the current physical evidence would remain trapped in
+# the Library hub even after the same-raw button itself is fixed.
+continue_marker = "S13 same-raw routing: continued project returns to Scan tab"
+if continue_marker not in library:
+    old_continue = """            model.restoreSavedProject(id: project.id)
+            dismiss()
+"""
+    new_continue = f"""            model.restoreSavedProject(id: project.id)
+            // {continue_marker}
+            {route_call}
+            dismiss()
+"""
+    if old_continue not in library:
+        raise SystemExit("S13 route: continueProject callsite drifted")
+    library = library.replace(old_continue, new_continue, 1)
+
 # Production Library and Scan are sibling TabView tabs. Give the shell explicit selection and
 # listen for the same-raw route signal. This works both from the Library hub and from ScanHomeView:
 # selecting Scan is a no-op when already selected, and dismiss() still closes the local library.
@@ -237,6 +255,7 @@ private enum IntegratedScanLabTab: Hashable {
 required_library = [
     list_marker,
     route_call,
+    continue_marker,
     'Label("同じ撮影から再生成", systemImage: "arrow.triangle.2.circlepath")',
 ]
 for token in required_library:
