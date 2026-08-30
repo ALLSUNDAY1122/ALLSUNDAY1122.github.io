@@ -9,6 +9,7 @@ DEST="$ROOT/Packages/MsplatMemory"
 # Keeping project.yml's historical preGen entrypoint unchanged preserves the S7-S12 integration
 # contract while still ensuring every generated S13 app contains the depth-seed callsites.
 python3 "$ROOT/scripts/apply_s13_depth_seed.py"
+python3 "$ROOT/scripts/apply_s13_ios26_reprocess_tap_fix.py"
 
 # Canonical Msplat materialization is ordered and fail-closed:
 # M1 camera/image residency -> M2 tensor/trainer lifetime -> exact syntactic
