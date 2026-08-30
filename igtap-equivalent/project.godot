@@ -1,0 +1,34 @@
+; Engine configuration file.
+; Edited by Session C for the independent Loopforge prototype.
+config_version=5
+
+[application]
+config/name="Loopforge"
+run/main_scene="res://Main.tscn"
+
+[autoload]
+InputRouter="*res://Platform/Input/InputRouter.gd"
+IOSLayout="*res://Platform/iOS/IOSLayout.gd"
+Lifecycle="*res://Platform/iOS/Lifecycle.gd"
+
+[display]
+
+[display/window]
+size/viewport_width=1280
+size/viewport_height=720
+size/window_width_override=1280
+size/window_height_override=720
+stretch/mode="canvas_items"
+stretch/aspect="expand"
+handheld/orientation=4
+ios/allow_high_refresh_rate=true
+ios/hide_home_indicator=false
+ios/hide_status_bar=true
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+
+[physics]
+common/physics_ticks_per_second=60

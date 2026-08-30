@@ -1,0 +1,26 @@
+name: Loopforge contract validation
+
+on:
+  push:
+    branches:
+      - 'igtap/**'
+    paths:
+      - 'igtap-equivalent/**'
+      - '.github/workflows/igtap-equivalent-contract.yml'
+  pull_request:
+    paths:
+      - 'igtap-equivalent/**'
+      - '.github/workflows/igtap-equivalent-contract.yml'
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate project contract
+        run: python igtap-equivalent/Build/validate_project.py
+      - name: Run integration bootstrap tests
+        run: python -m unittest discover -s igtap-equivalent/Tests/Integration -p 'test_*.py' -v
