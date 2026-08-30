@@ -83,11 +83,15 @@ func hex(_ bytes: [UInt8]) -> String {
 }
 func grayPixels(_ image: CGImage, width: Int, height: Int) -> [UInt8] {
     var pixels = [UInt8](repeating: 0, count: width * height)
-    guard let ctx = CGContext(data: &pixels, width: width, height: height, bitsPerComponent: 8,
-                              bytesPerRow: width, space: CGColorSpaceCreateDeviceGray(),
-                              bitmapInfo: CGImageAlphaInfo.none.rawValue) else { fatalError("CGContext") }
-    ctx.interpolationQuality = .medium
-    ctx.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+    let rendered = pixels.withUnsafeMutableBytes { raw -> Bool in
+        guard let ctx = CGContext(data: raw.baseAddress, width: width, height: height, bitsPerComponent: 8,
+                                  bytesPerRow: width, space: CGColorSpaceCreateDeviceGray(),
+                                  bitmapInfo: CGImageAlphaInfo.none.rawValue) else { return false }
+        ctx.interpolationQuality = .medium
+        ctx.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+        return true
+    }
+    guard rendered else { fatalError("CGContext") }
     return pixels
 }
 func averageHash256(_ image: CGImage) -> String {
