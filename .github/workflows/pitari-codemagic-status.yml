@@ -17,12 +17,37 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Inspect Codemagic build
+      - name: Inspect Codemagic build and actions
         env:
           CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
         run: |
           set -euo pipefail
           python scripts/codemagic_build_gateway.py --command automation/pitari-codemagic-status-command.json --output /tmp/pitari-cm-status.json
+          python - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+          cmd=json.loads(Path('automation/pitari-codemagic-status-command.json').read_text())
+          bid=cmd['build_id']
+          req=urllib.request.Request(f'https://codemagic.io/api/v3/builds/{bid}/actions',headers={'x-auth-token':os.environ['CM_API_TOKEN'],'Accept':'application/json'})
+          try:
+            with urllib.request.urlopen(req,timeout=30) as r:
+              raw=r.read().decode('utf-8','replace'); code=r.status
+          except urllib.error.HTTPError as e:
+            raw=e.read().decode('utf-8','replace'); code=e.code
+          try: obj=json.loads(raw) if raw else {}
+          except Exception: obj={'parse_error':True}
+          def compact(v):
+            if isinstance(v,list): return [compact(x) for x in v]
+            if not isinstance(v,dict): return v if isinstance(v,(str,int,float,bool)) or v is None else str(type(v).__name__)
+            allowed=('id','name','status','type','started_at','finished_at','startedAt','finishedAt','conclusion','result','message','error','error_message','exit_code','index')
+            out={k:compact(v[k]) for k in allowed if k in v}
+            out['_keys']=sorted(v.keys())
+            return out
+          status=json.loads(Path('/tmp/pitari-cm-status.json').read_text())
+          status['actions_http_status']=code
+          status['actions_diagnostic']=compact(obj)
+          Path('/tmp/pitari-cm-status.json').write_text(json.dumps(status,ensure_ascii=False,indent=2)+'\n')
+          PY
       - name: Persist sanitized status
         if: always()
         run: |
