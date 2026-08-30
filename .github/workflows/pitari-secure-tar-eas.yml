@@ -1,0 +1,86 @@
+name: Pitari Encrypted TestFlight Source Bridge
+on:
+  push:
+    branches: [main]
+    paths: [automation/pitari-tar-command.json]
+permissions:
+  contents: write
+concurrency:
+  group: pitari-tar-${{ github.sha }}
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Publish ephemeral key
+        run: |
+          set -euo pipefail
+          RID=$(python -c "import json;print(json.load(open('automation/pitari-tar-command.json'))['request_id'])")
+          echo "$RID" >/tmp/rid; echo key >/tmp/stage
+          mkdir -p "automation/pitari-tar-exchange/$RID"
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out /tmp/private.pem >/dev/null 2>&1
+          openssl pkey -in /tmp/private.pem -pubout -out "automation/pitari-tar-exchange/$RID/public.pem"
+          git config user.name github-actions[bot]; git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "automation/pitari-tar-exchange/$RID/public.pem"; git commit -m "Publish Pitari tar transfer key $RID"
+          git pull --rebase origin main; git push origin HEAD:main
+          echo wait_payload >/tmp/stage
+      - name: Receive encrypted source
+        run: |
+          set -euo pipefail
+          RID=$(cat /tmp/rid); READY=0
+          for n in $(seq 1 120); do git fetch origin main >/dev/null 2>&1 || true; if git cat-file -e "origin/main:automation/pitari-tar-exchange/$RID/ready.json" 2>/dev/null; then READY=1; break; fi; sleep 5; done
+          test "$READY" = 1
+          echo decrypt >/tmp/stage
+          git show "origin/main:automation/pitari-tar-exchange/$RID/key.b64" | base64 -d >/tmp/key.enc
+          git show "origin/main:automation/pitari-tar-exchange/$RID/source.b64" | base64 -d >/tmp/source.enc
+          openssl pkeyutl -decrypt -inkey /tmp/private.pem -in /tmp/key.enc -out /tmp/keyiv.bin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256
+          python - <<'PY'
+          from pathlib import Path
+          b=Path('/tmp/keyiv.bin').read_bytes(); assert len(b)==48
+          Path('/tmp/k').write_text(b[:32].hex()); Path('/tmp/i').write_text(b[32:].hex())
+          PY
+          openssl enc -d -aes-256-cbc -K "$(cat /tmp/k)" -iv "$(cat /tmp/i)" -in /tmp/source.enc -out /tmp/source.tgz
+          mkdir -p /tmp/app; tar -xzf /tmp/source.tgz -C /tmp/app
+          rm -f /tmp/private.pem /tmp/key.enc /tmp/keyiv.bin /tmp/k /tmp/i /tmp/source.enc
+          echo source_ready >/tmp/stage
+      - name: Validate and launch EAS auto-submit
+        run: |
+          set -euo pipefail
+          cd /tmp/app
+          git init -q; git config user.name pitari-testflight; git config user.email noreply@example.invalid; git add .; git commit -qm 'TestFlight source snapshot 6c933d3'
+          corepack enable; corepack prepare pnpm@11.9.0 --activate
+          echo install >/tmp/stage; pnpm install --no-frozen-lockfile || { echo install_failed >/tmp/error; exit 1; }
+          echo typecheck >/tmp/stage; pnpm typecheck || { echo typecheck_failed >/tmp/error; exit 1; }
+          echo test >/tmp/stage; pnpm test || { echo test_failed >/tmp/error; exit 1; }
+          echo doctor >/tmp/stage; pnpm doctor || { echo doctor_failed >/tmp/error; exit 1; }
+          echo eas_cli >/tmp/stage; npm install -g eas-cli@23.0.0 >/dev/null 2>&1
+          echo eas_build >/tmp/stage; eas build --platform ios --profile production --auto-submit --non-interactive --no-wait >/tmp/eas-start 2>/tmp/eas-error || { echo eas_build_failed >/tmp/error; exit 1; }
+          sleep 3
+          eas build:list --platform ios --limit 3 --json --non-interactive >/tmp/builds.json 2>/dev/null
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          bs=json.loads(Path('/tmp/builds.json').read_text())
+          out={'validation':'PASS','source':'main-6c933d3-with-temporary-testflight-icon','temporary_icon':True,'auto_submit_requested':True,'builds':[{k:b.get(k) for k in ('id','status','appVersion','appBuildVersion','buildProfile','createdAt','updatedAt')} for b in bs[:3]]}
+          Path('/tmp/result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+          echo complete >/tmp/stage
+      - name: Persist sanitized result
+        if: always()
+        run: |
+          RID=$(cat /tmp/rid 2>/dev/null || echo unknown)
+          if [ ! -f /tmp/result.json ]; then python - <<'PY'
+          import json
+          from pathlib import Path
+          Path('/tmp/result.json').write_text(json.dumps({'validation':'FAIL','failed_at':Path('/tmp/stage').read_text() if Path('/tmp/stage').exists() else 'bootstrap','error':Path('/tmp/error').read_text() if Path('/tmp/error').exists() else 'unclassified'})+'\n')
+          PY
+          fi
+          git fetch origin main; git reset --hard origin/main
+          mkdir -p automation/pitari-tar-results; cp /tmp/result.json "automation/pitari-tar-results/$RID.json"
+          git config user.name github-actions[bot]; git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "automation/pitari-tar-results/$RID.json"; git commit -m "Persist Pitari tar EAS result $RID" || exit 0; git push origin HEAD:main
