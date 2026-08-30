@@ -1,0 +1,237 @@
+{
+  "ok": true,
+  "request_id": "pitari-cm-actions-20260830-2044",
+  "action": "inspect_build",
+  "build_id": "6a94157b47e5b4b0a6f43588",
+  "status": "failed",
+  "build_details": {
+    "id": "6a94157b47e5b4b0a6f43588",
+    "app_id": "6a769d81a1add9d06020b524",
+    "workflow": {
+      "id": "pitari-direct-testflight",
+      "source": "file",
+      "name": "Pitari Direct iOS TestFlight"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "failed",
+    "index": 3,
+    "artifacts": [],
+    "labels": [
+      "pitari-direct-testflight-20260830"
+    ],
+    "release_notes": [],
+    "created_at": "2026-08-30T11:35:23.617000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "d7220557e74bd979e00ec8be37969e6ae1e2fbd5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "fix: create Pitari iOS signing files at build time",
+      "url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/d7220557e74bd979e00ec8be37969e6ae1e2fbd5"
+    },
+    "branch": "release/pitari-testflight-direct-20260830",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-08-30T11:35:31.276000Z",
+    "finished_at": "2026-08-30T11:36:16.448000Z"
+  },
+  "actions_http_status": 200,
+  "actions_root_keys": [
+    "current_page",
+    "data",
+    "page_size",
+    "total_pages"
+  ],
+  "actions_diagnostic": [
+    {
+      "id": "6a94157caabb9139eb3c8907",
+      "name": "Preparing build machine",
+      "status": "success",
+      "type": "preparing",
+      "started_at": "2026-08-30T11:35:31.579000Z",
+      "finished_at": "2026-08-30T11:36:07.986000Z",
+      "_keys": [
+        "finished_at",
+        "has_test_results",
+        "id",
+        "name",
+        "script",
+        "started_at",
+        "status",
+        "type"
+      ]
+    },
+    {
+      "id": "6a94157caabb9139eb3c8908",
+      "name": "Fetching app sources",
+      "status": "success",
+      "type": "fetching",
+      "started_at": "2026-08-30T11:36:07.986000Z",
+      "finished_at": "2026-08-30T11:36:15.225000Z",
+      "_keys": [
+        "finished_at",
+        "has_test_results",
+        "id",
+        "name",
+        "script",
+        "started_at",
+        "status",
+        "type"
+      ]
+    },
+    {
+      "id": "6a94157caabb9139eb3c8909",
+      "name": "Publish ephemeral source-transfer key",
+      "status": "failed",
+      "type": "script",
+      "started_at": "2026-08-30T11:36:15.225000Z",
+      "finished_at": "2026-08-30T11:36:16.202000Z",
+      "_keys": [
+        "finished_at",
+        "has_test_results",
+        "id",
+        "name",
+        "script",
+        "started_at",
+        "status",
+        "type"
+      ]
+    },
+    {
+      "id": "6a94157caabb9139eb3c890a",
+      "name": "Receive and decrypt Pitari source",
+      "status": "skipped",
+      "type": "script",
+      "started_at": "2026-08-30T11:36:16.202000Z",
+      "finished_at": "2026-08-30T11:36:16.203000Z",
+      "_keys": [
+        "finished_at",
+        "has_test_results",
+        "id",
+        "name",
+        "script",
+        "started_at",
+        "status",
+        "type"
+      ]
+    },
+    {
+      "id": "6a94157caabb9139eb3c890b",
+      "name": "Validate TypeScript and Expo project",
+      "status": "skipped",
+      "type": "script",
+      "started_at": "2026-08-30T11:36:16.203000Z",
+      "finished_at": "2026-08-30T11:36:16.203000Z",
+      "_keys": [
+        "finished_at",
+        "has_test_results",
+        "id",
+        "name",
+        "script",
+        "started_at",
+        "status",
+        "type"
+      ]
+    },
+    {
+      "id": "6a94157caabb9139eb3c890c",
+      "name": "Set next TestFlight build number and prebuild iOS",
+      "status": "skipped",
+      "type": "script",
+      "started_at": "2026-08-30T11:36:16.203000Z",
+      "finished_at": "2026-08-30T11:36:16.204000Z",
+      "_keys": [
+        "finished_at",
+        "has_test_results",
+        "id",
+        "name",
+        "script",
+        "started_at",
+        "status",
+        "type"
+      ]
+    },
+    {
+      "id": "6a94157caabb9139eb3c890d",
+      "name": "Fetch and apply App Store signing files",
+      "status": "skipped",
+      "type": "script",
+      "started_at": "2026-08-30T11:36:16.204000Z",
+      "finished_at": "2026-08-30T11:36:16.204000Z",
+      "_keys": [
+        "finished_at",
+        "has_test_results",
+        "id",
+        "name",
+        "script",
+        "started_at",
+        "status",
+        "type"
+      ]
+    },
+    {
+      "id": "6a94157caabb9139eb3c890e",
+      "name": "Build signed IPA",
+      "status": "skipped",
+      "type": "script",
+      "started_at": "2026-08-30T11:36:16.204000Z",
+      "finished_at": "2026-08-30T11:36:16.204000Z",
+      "_keys": [
+        "finished_at",
+        "has_test_results",
+        "id",
+        "name",
+        "script",
+        "started_at",
+        "status",
+        "type"
+      ]
+    },
+    {
+      "id": "6a94157caabb9139eb3c890f",
+      "name": "Publishing",
+      "status": "success",
+      "type": "publishing",
+      "started_at": "2026-08-30T11:36:16.204000Z",
+      "finished_at": "2026-08-30T11:36:16.363000Z",
+      "_keys": [
+        "finished_at",
+        "has_test_results",
+        "id",
+        "name",
+        "script",
+        "started_at",
+        "status",
+        "type"
+      ]
+    },
+    {
+      "id": "6a94157caabb9139eb3c8910",
+      "name": "Cleaning up",
+      "status": "success",
+      "type": "finishing",
+      "started_at": "2026-08-30T11:36:16.363000Z",
+      "finished_at": "2026-08-30T11:36:16.448000Z",
+      "_keys": [
+        "finished_at",
+        "has_test_results",
+        "id",
+        "name",
+        "script",
+        "started_at",
+        "status",
+        "type"
+      ]
+    }
+  ]
+}
