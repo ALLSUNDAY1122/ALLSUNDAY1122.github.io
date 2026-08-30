@@ -5,6 +5,7 @@ on:
     paths:
       - 'splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift'
       - 'splat-native-ios/scripts/apply_s13_depth_seed.py'
+      - 'splat-native-ios/scripts/apply_s13_ios26_reprocess_tap_fix.py'
       - 'splat-native-ios/scripts/test_s13_depth_seed_contract.py'
       - 'splat-native-ios/scripts/materialize_msplat_s7_wave1.sh'
       - 'splat-native-ios/project.yml'
@@ -13,6 +14,7 @@ on:
     paths:
       - 'splat-native-ios/SplatNative/SplatDepthSeedBuilder.swift'
       - 'splat-native-ios/scripts/apply_s13_depth_seed.py'
+      - 'splat-native-ios/scripts/apply_s13_ios26_reprocess_tap_fix.py'
       - 'splat-native-ios/scripts/test_s13_depth_seed_contract.py'
       - 'splat-native-ios/scripts/materialize_msplat_s7_wave1.sh'
       - 'splat-native-ios/project.yml'
@@ -32,6 +34,8 @@ jobs:
         run: |
           python3 scripts/apply_s13_depth_seed.py
           python3 scripts/apply_s13_depth_seed.py
+          python3 scripts/apply_s13_ios26_reprocess_tap_fix.py
+          python3 scripts/apply_s13_ios26_reprocess_tap_fix.py
           grep -q 'frame.smoothedSceneDepth ?? frame.sceneDepth' SplatNative/ScanModel.swift
           grep -q 'SplatDepthSeedBuilder.preparePointCloudPLY' SplatNative/ScanModel.swift
           grep -q 'seedOutcome.requiresFreshTrainer' SplatNative/ScanModel.swift
@@ -40,6 +44,8 @@ jobs:
           grep -q 'reconstructionSeedEvidenceText' SplatNative/ScanModel.swift
           grep -q '同じ撮影から再生成' SplatNative/ScanLibraryView.swift
           grep -q 'canReprocessTrusted' SplatNative/ScanLibraryView.swift
+          grep -q 'S13 iOS 26 tap routing' SplatNative/ScanLibraryView.swift
+          grep -q 'contentShape(Rectangle())' SplatNative/ScanLibraryView.swift
           grep -q 'reconstructionSeedEvidenceText' SplatNative/RootScanView.swift
           grep -q 'reconstructionSeedEvidenceText' SplatNative/SplatResultView.swift
           grep -q 'S13 seed:' SplatNative/ScanModel.swift
