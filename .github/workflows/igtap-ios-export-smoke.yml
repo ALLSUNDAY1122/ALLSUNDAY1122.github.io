@@ -47,6 +47,20 @@ jobs:
           cp -R /tmp/godot-templates/templates/. "$TEMPLATE_DIR/"
       - name: Import project
         run: /tmp/godot/Godot.app/Contents/MacOS/Godot --headless --editor --path igtap-equivalent --quit
+      - name: Inject CI-only team id for unsigned project generation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("igtap-equivalent/export_presets.cfg")
+          text = path.read_text(encoding="utf-8")
+          needle = 'application/app_store_team_id=""'
+          if needle not in text:
+              raise SystemExit("expected blank release App Store Team ID not found")
+          path.write_text(
+              text.replace(needle, 'application/app_store_team_id="CI00000000"', 1),
+              encoding="utf-8",
+          )
+          PY
       - name: Export unsigned iOS Xcode project
         run: |
           mkdir -p "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS"
@@ -59,9 +73,9 @@ jobs:
           unzip -q "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/Loopforge.zip" -d /tmp/loopforge-ios
           PBXPROJ="$(find /tmp/loopforge-ios -name project.pbxproj -print -quit)"
           test -n "$PBXPROJ"
-          grep -q 'TARGETED_DEVICE_FAMILY = 1;' "$PBXPROJ"
-          grep -q 'PRODUCT_BUNDLE_IDENTIFIER = jp.allsunday1122.loopforge;' "$PBXPROJ"
-          grep -q 'IPHONEOS_DEPLOYMENT_TARGET = 15.0;' "$PBXPROJ"
+          grep -Eq 'TARGETED_DEVICE_FAMILY = "?1"?;' "$PBXPROJ"
+          grep -Eq 'PRODUCT_BUNDLE_IDENTIFIER = "?jp\.allsunday1122\.loopforge"?;' "$PBXPROJ"
+          grep -Eq 'IPHONEOS_DEPLOYMENT_TARGET = "?15\.0"?;' "$PBXPROJ"
       - uses: actions/upload-artifact@v4
         with:
           name: loopforge-ios-xcode-project
