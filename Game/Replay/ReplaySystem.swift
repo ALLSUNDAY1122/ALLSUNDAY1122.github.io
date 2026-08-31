@@ -92,7 +92,9 @@ public enum ReplayValidationError: Error, Equatable, Sendable {
     case unsupportedVersion(Int)
     case emptyRecording
     case nonMonotonicTicks
+    case nonContiguousTicks
     case markerOutOfBounds
+    case markerTickMismatch
 }
 
 public struct ReplayRecording: Equatable, Sendable {
@@ -109,11 +111,19 @@ public struct ReplayRecording: Equatable, Sendable {
     public init(version: Int = ReplayFormat.currentVersion, context: ReplayContext, frames: [ReplayFrame], markers: [ReplayMarker] = []) throws {
         guard version == ReplayFormat.currentVersion else { throw ReplayValidationError.unsupportedVersion(version) }
         guard !frames.isEmpty else { throw ReplayValidationError.emptyRecording }
-        for index in 1..<frames.count where frames[index].tick <= frames[index - 1].tick {
-            throw ReplayValidationError.nonMonotonicTicks
+        for index in 1..<frames.count {
+            let previous = frames[index - 1].tick
+            let current = frames[index].tick
+            if current <= previous { throw ReplayValidationError.nonMonotonicTicks }
+            if current != previous + 1 { throw ReplayValidationError.nonContiguousTicks }
         }
-        for marker in markers where marker.frameIndex < 0 || marker.frameIndex >= frames.count {
-            throw ReplayValidationError.markerOutOfBounds
+        for marker in markers {
+            guard marker.frameIndex >= 0 && marker.frameIndex < frames.count else {
+                throw ReplayValidationError.markerOutOfBounds
+            }
+            guard frames[marker.frameIndex].tick == marker.tick else {
+                throw ReplayValidationError.markerTickMismatch
+            }
         }
         self.version = version
         self.context = context
@@ -169,6 +179,7 @@ public final class ReplayRecorder: @unchecked Sendable {
     public private(set) var frameCount = 0
     private var frames: [ReplayFrame] = []
     private var pendingMarkers: [(tick: UInt64, kind: ReplayMarkerKind)] = []
+    private var invalidated = false
 
     public init() {}
 
@@ -177,13 +188,20 @@ public final class ReplayRecorder: @unchecked Sendable {
         frames.removeAll(keepingCapacity: true)
         pendingMarkers.removeAll(keepingCapacity: true)
         frameCount = 0
+        invalidated = false
         isRecording = true
     }
 
     @discardableResult
     public func capture(tick: UInt64, state: any ReplayStateSource, input: ReplayInputSample) -> Bool {
-        guard isRecording else { return false }
-        if let last = frames.last, tick <= last.tick { return false }
+        guard isRecording, !invalidated else { return false }
+        if let last = frames.last {
+            if tick <= last.tick { return false }
+            if tick != last.tick + 1 {
+                invalidated = true
+                return false
+            }
+        }
         frames.append(ReplayFrame(tick: tick, position: state.position, velocity: state.velocity, input: input, locomotionState: state.locomotionState, resources: ReplayResourceState(airJumpsRemaining: state.airJumpsRemaining, airDashAvailable: state.airDashAvailable), facing: state.facing, isAlive: state.isAlive))
         frameCount = frames.count
         return true
@@ -191,7 +209,7 @@ public final class ReplayRecorder: @unchecked Sendable {
 
     @discardableResult
     public func mark(tick: UInt64, kind: ReplayMarkerKind) -> Bool {
-        guard isRecording else { return false }
+        guard isRecording, !invalidated else { return false }
         pendingMarkers.append((tick: tick, kind: kind))
         return true
     }
@@ -200,7 +218,7 @@ public final class ReplayRecorder: @unchecked Sendable {
         guard isRecording, let context else { return nil }
         isRecording = false
         self.context = nil
-        guard !frames.isEmpty else { resetBuffers(); return nil }
+        guard !invalidated, !frames.isEmpty else { resetBuffers(); return nil }
         let resolvedMarkers = pendingMarkers.compactMap { pending -> ReplayMarker? in
             guard let lastTick = frames.last?.tick, pending.tick <= lastTick else { return nil }
             guard let frameIndex = frameIndex(atOrBefore: pending.tick) else { return nil }
@@ -233,6 +251,7 @@ public final class ReplayRecorder: @unchecked Sendable {
         frames.removeAll(keepingCapacity: true)
         pendingMarkers.removeAll(keepingCapacity: true)
         frameCount = 0
+        invalidated = false
     }
 }
 

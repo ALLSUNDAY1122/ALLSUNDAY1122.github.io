@@ -23,6 +23,7 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
     private var wallGraceRemaining: Double = 0
     private var lastWallSide = 0 // -1 left, +1 right
     private var dashRemaining: Double = 0
+    private var groundDashJumpRemaining: Double = 0
     private var dashDirection = 1
     private var horizontalControlLockRemaining: Double = 0
     private var respawnRemaining: Double = 0
@@ -92,6 +93,7 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
             case .dash:
                 dashBufferRemaining = 0
                 dashRemaining = 0
+                groundDashJumpRemaining = 0
                 airDashAvailable = false
                 if locomotionState == .dashing { locomotionState = contacts.floor ? .grounded : .airborne }
             case .wallJump:
@@ -118,7 +120,7 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
         refreshContactResources()
         if locomotionState == .wallJumping && horizontalControlLockRemaining <= 0 { locomotionState = .airborne }
 
-        // Deterministic action priority: wall jump > normal/air jump > dash.
+        // Deterministic action priority: wall jump > combined ground dash+jump > normal/air jump > dash.
         if resolveJumpIfPossible() {
             dashBufferRemaining = 0
         } else {
@@ -153,6 +155,7 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
             // Do not keep re-applying dash velocity into a wall for the rest of the timer.
             // Ending immediately makes dash -> wall-jump timing deterministic and responsive.
             dashRemaining = 0
+            if !contacts.floor { groundDashJumpRemaining = 0 }
         } else if dashEndsThisStep {
             velocity.x *= config.dashExitSpeedRetain
         }
@@ -178,6 +181,7 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
         jumpBufferRemaining = max(0, jumpBufferRemaining - dt)
         forcedWallJumpBufferRemaining = max(0, forcedWallJumpBufferRemaining - dt)
         dashBufferRemaining = max(0, dashBufferRemaining - dt)
+        groundDashJumpRemaining = max(0, groundDashJumpRemaining - dt)
         horizontalControlLockRemaining = max(0, horizontalControlLockRemaining - dt)
         if contacts.floor { coyoteRemaining = config.coyoteTime } else { coyoteRemaining = max(0, coyoteRemaining - dt) }
         if contacts.wallLeft || contacts.wallRight { wallGraceRemaining = config.wallGraceTime } else { wallGraceRemaining = max(0, wallGraceRemaining - dt) }
@@ -217,8 +221,13 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
             return true
         }
 
-        if contacts.floor || coyoteRemaining > 0 {
-            performGroundJump()
+        let groundJumpAvailable = contacts.floor || coyoteRemaining > 0 || groundDashJumpRemaining > 0
+        if groundJumpAvailable {
+            if dashBufferRemaining > 0 && dashRemaining <= 0 && abilities.contains(.dash) {
+                performGroundDashJump()
+            } else {
+                performGroundJump()
+            }
             return true
         }
 
@@ -231,6 +240,7 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
 
     private func performGroundJump() {
         dashRemaining = 0
+        groundDashJumpRemaining = 0
         velocity.y = config.jumpSpeed
         jumpBufferRemaining = 0
         forcedWallJumpBufferRemaining = 0
@@ -239,7 +249,16 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
         locomotionState = .airborne
     }
 
+    private func performGroundDashJump() {
+        dashDirection = abs(moveAxis) > 0.001 ? (moveAxis >= 0 ? 1 : -1) : facing
+        facing = dashDirection
+        velocity.x = Double(dashDirection) * config.dashSpeed
+        dashBufferRemaining = 0
+        performGroundJump()
+    }
+
     private func performAirJump() {
+        groundDashJumpRemaining = 0
         velocity.y = config.airJumpSpeed
         airJumpsRemaining -= 1
         jumpBufferRemaining = 0
@@ -256,6 +275,7 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
         jumpBufferRemaining = 0
         forcedWallJumpBufferRemaining = 0
         dashRemaining = 0
+        groundDashJumpRemaining = 0
         wallGraceRemaining = 0
         lastWallSide = 0
         horizontalControlLockRemaining = config.wallJumpControlLockTime
@@ -274,7 +294,8 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
         dashRemaining = config.dashDuration
         dashBufferRemaining = 0
         if grounded {
-            coyoteRemaining = max(coyoteRemaining, config.dashDuration + 0.001)
+            groundDashJumpRemaining = config.dashDuration
+            coyoteRemaining = max(coyoteRemaining, config.coyoteTime)
         } else {
             airDashAvailable = false
         }
@@ -309,6 +330,7 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
         isAlive = false
         velocity = .zero
         dashRemaining = 0
+        groundDashJumpRemaining = 0
         dashBufferRemaining = 0
         jumpBufferRemaining = 0
         forcedWallJumpBufferRemaining = 0
@@ -330,6 +352,7 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
         wallGraceRemaining = 0
         lastWallSide = 0
         dashRemaining = 0
+        groundDashJumpRemaining = 0
         horizontalControlLockRemaining = 0
         respawnRemaining = 0
         airJumpsRemaining = 0

@@ -43,8 +43,16 @@ public struct CheckpointEvent: Equatable, Sendable {
     public init(checkpoint: CheckpointDescriptor) { self.checkpoint = checkpoint }
 }
 
-public struct LapEvent: Equatable, Sendable { public var courseID: String; public var elapsed: Double }
-public struct RecordingEvent: Equatable, Sendable { public var frameCount: Int }
+public struct LapEvent: Equatable, Sendable {
+    public var courseID: String
+    public var elapsed: Double
+    public init(courseID: String, elapsed: Double) { self.courseID = courseID; self.elapsed = elapsed }
+}
+
+public struct RecordingEvent: Equatable, Sendable {
+    public var frameCount: Int
+    public init(frameCount: Int) { self.frameCount = frameCount }
+}
 
 public enum CoreGameplaySignal: Equatable, Sendable {
     case playerDied(DeathEvent)
