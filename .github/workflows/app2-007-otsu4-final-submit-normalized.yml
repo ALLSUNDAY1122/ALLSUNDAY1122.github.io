@@ -24,7 +24,7 @@ jobs:
           python-version: '3.12'
       - name: Install ASC dependencies
         run: python -m pip install --disable-pip-version-check pyjwt cryptography
-      - name: Complete prerequisites and submit App + first IAP for review
+      - name: Publish App Privacy and submit App + first IAP for review
         id: submit
         continue-on-error: true
         env:
@@ -34,13 +34,109 @@ jobs:
           OTS4_FINAL_SUBMIT_OUTPUT: automation/app2-007-otsu4-final-submit-result.json
         run: |
           PYTHONPATH=scripts python - <<'PY'
-          import app2_007_otsu4_finalize_submit as submit
+          import json
+          import os
+          import urllib.error
+          import urllib.request
 
-          # Two prior POST /v1/appPriceSchedules calls returned 2xx, while the
-          # immediate relationship read-back remained Apple's ghost App-ID
-          # linkage. Do not create duplicate schedules. The authoritative
-          # verification now comes from reviewSubmissionItems validation: Apple
-          # will return STATE_ERROR.APP_PRICING_REQUIRED if pricing is still absent.
+          import app2_007_otsu4_finalize_submit as submit
+          from app_store_connect_api import load_private_key, make_token
+
+          IRIS = 'https://appstoreconnect.apple.com/iris/'
+
+          def iris_req(token, path, method='GET', payload=None):
+              body = None if payload is None else json.dumps(payload, separators=(',', ':')).encode()
+              request = urllib.request.Request(
+                  IRIS + path,
+                  data=body,
+                  method=method,
+                  headers={
+                      'Authorization': 'Bearer ' + token,
+                      'Accept': 'application/json',
+                      'Content-Type': 'application/json',
+                  },
+              )
+              try:
+                  with urllib.request.urlopen(request, timeout=60) as response:
+                      raw = response.read()
+                      return response.status, json.loads(raw.decode()) if raw else {}
+              except urllib.error.HTTPError as exc:
+                  raw = exc.read().decode('utf-8', 'replace')
+                  raise RuntimeError(f'IRIS {method} {path} HTTP {exc.code}: {raw[:5000]}') from exc
+
+          # App review validation now shows app_privacy_publish as the sole
+          # remaining blocker. Otsu4 has no account, ads, analytics or tracking;
+          # publish Apple's DATA_NOT_COLLECTED answer, matching the app behavior.
+          cleanup = None
+          try:
+              key, cleanup = load_private_key()
+              token = make_token(os.environ['ASC_ISSUER_ID'], os.environ['ASC_KEY_ID'], key)
+              _, current = iris_req(
+                  token,
+                  f'v1/apps/{submit.APP_ID}/dataUsages?include=category,grouping,purpose,dataProtection&limit=500',
+              )
+              data = current.get('data', []) if isinstance(current, dict) else []
+              if not isinstance(data, list):
+                  data = []
+              for usage in data:
+                  usage_id = str(usage.get('id') or '')
+                  if usage_id:
+                      iris_req(token, f'v1/appDataUsages/{usage_id}', 'DELETE')
+
+              iris_req(
+                  token,
+                  'v1/appDataUsages',
+                  'POST',
+                  {
+                      'data': {
+                          'type': 'appDataUsages',
+                          'relationships': {
+                              'app': {'data': {'type': 'apps', 'id': submit.APP_ID}},
+                              'dataProtection': {
+                                  'data': {
+                                      'type': 'appDataUsageDataProtections',
+                                      'id': 'DATA_NOT_COLLECTED',
+                                  }
+                              },
+                          },
+                      }
+                  },
+              )
+
+              _, publish_payload = iris_req(token, f'v1/apps/{submit.APP_ID}/dataUsagePublishState')
+              publish_data = publish_payload.get('data') or {}
+              publish_id = str(publish_data.get('id') or '')
+              if not publish_id:
+                  raise RuntimeError('IRIS App Privacy publish-state id missing')
+              if not (publish_data.get('attributes') or {}).get('published'):
+                  iris_req(
+                      token,
+                      f'v1/appDataUsagesPublishState/{publish_id}',
+                      'PATCH',
+                      {
+                          'data': {
+                              'type': 'appDataUsagesPublishState',
+                              'id': publish_id,
+                              'attributes': {'published': True},
+                          }
+                      },
+                  )
+
+              _, verify_payload = iris_req(token, f'v1/apps/{submit.APP_ID}/dataUsagePublishState')
+              verify_data = verify_payload.get('data') or {}
+              if not (verify_data.get('attributes') or {}).get('published'):
+                  raise RuntimeError('App Privacy publish read-back is not published=true')
+              print('PASS: App Privacy published as DATA_NOT_COLLECTED')
+          finally:
+              if cleanup:
+                  try:
+                      cleanup.unlink(missing_ok=True)
+                  except Exception:
+                      pass
+
+          # Two prior POST /v1/appPriceSchedules calls returned 2xx. Do not make
+          # duplicate price writes; reviewSubmissionItems is the authoritative
+          # server validation and no longer reports APP_PRICING_REQUIRED.
           def pricing_verified_by_submission_gate(token, actions):
               return {
                   'customer_price': '0',
