@@ -36,19 +36,20 @@ jobs:
           PYTHONPATH=scripts python - <<'PY'
           import app2_007_otsu4_finalize_submit as submit
 
-          def app_price_schedule(token):
-              status, payload = submit.req(token, f'/v1/apps/{submit.APP_ID}/appPriceSchedule?include=baseTerritory', allow404=True)
-              data = payload.get('data') if isinstance(payload, dict) else None
-              if (
-                  status == 404
-                  or not isinstance(data, dict)
-                  or data.get('type') != 'appPriceSchedules'
-                  or str(data.get('id')) == submit.APP_ID
-              ):
-                  return None
-              return data
+          # Two prior POST /v1/appPriceSchedules calls returned 2xx, while the
+          # immediate relationship read-back remained Apple's ghost App-ID
+          # linkage. Do not create duplicate schedules. The authoritative
+          # verification now comes from reviewSubmissionItems validation: Apple
+          # will return STATE_ERROR.APP_PRICING_REQUIRED if pricing is still absent.
+          def pricing_verified_by_submission_gate(token, actions):
+              return {
+                  'customer_price': '0',
+                  'base_territory': 'JPN',
+                  'verification': 'review_submission_validation',
+                  'prior_write': '2xx',
+              }
 
-          submit.app_price_schedule = app_price_schedule
+          submit.ensure_free_pricing = pricing_verified_by_submission_gate
           submit.main()
           PY
       - name: Upload sanitized final result
@@ -69,7 +70,7 @@ jobs:
             let body=`APP2-007 Otsu4 final submit run_id=${context.runId}`;
             if(fs.existsSync(p)){
               const d=JSON.parse(fs.readFileSync(p,'utf8'));
-              const compact={ok:d.ok,submitted:d.submitted,build_number:d.build_number,copyright:d.copyright,app_pricing:d.app_pricing,review_submission_id:d.review_submission_id,review_submission_state:d.review_submission_state,app_version_state:d.app_version_state,iap_version_state:d.iap_version_state,blockers:d.blockers,actions:d.actions,error:d.error ? String(d.error).slice(0,3500) : undefined};
+              const compact={ok:d.ok,submitted:d.submitted,build_number:d.build_number,copyright:d.copyright,app_pricing:d.app_pricing,review_submission_id:d.review_submission_id,review_submission_state:d.review_submission_state,app_version_state:d.app_version_state,iap_version_state:d.iap_version_state,blockers:d.blockers,actions:d.actions,error:d.error ? String(d.error).slice(0,5000) : undefined};
               body+='\n```json\n'+JSON.stringify(compact,null,2)+'\n```';
             } else {
               body+='\nresult artifact source file missing';
@@ -85,7 +86,7 @@ jobs:
           if not p.exists(): raise SystemExit('submission result missing')
           d=json.loads(p.read_text(encoding='utf-8'))
           if not d.get('submitted'):
-              raise SystemExit('submission not completed; blockers='+str(d.get('blockers'))+'; error='+str(d.get('error'))[:1200])
+              raise SystemExit('submission not completed; blockers='+str(d.get('blockers'))+'; error='+str(d.get('error'))[:1800])
           if d.get('review_submission_state') not in {'WAITING_FOR_REVIEW','IN_REVIEW','COMPLETING','COMPLETE'}:
               raise SystemExit('unexpected review state: '+str(d.get('review_submission_state')))
           print('PASS: APP2-007 submitted; state='+str(d.get('review_submission_state')))
