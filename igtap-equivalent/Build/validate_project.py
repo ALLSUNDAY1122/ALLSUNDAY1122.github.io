@@ -15,6 +15,7 @@ REQUIRED = [
     "Platform/Input/PauseController.gd",
     "Platform/iOS/IOSLayout.gd",
     "Platform/iOS/Lifecycle.gd",
+    "Platform/iOS/AppIcon.svg",
 ]
 
 def fail(message: str) -> None:
@@ -27,12 +28,14 @@ for rel in REQUIRED:
 
 project = (ROOT / "project.godot").read_text(encoding="utf-8")
 for setting in (
+    'config/icon="res://Platform/iOS/AppIcon.svg"',
     'size/viewport_width=1280',
     'size/viewport_height=720',
     'handheld/orientation=4',
     'ios/allow_high_refresh_rate=true',
     'ios/hide_home_indicator=true',
     'ios/suppress_ui_gesture=true',
+    'textures/vram_compression/import_etc2_astc=true',
     'common/physics_ticks_per_second=120',
     'common/max_physics_steps_per_frame=8',
     'PauseController="*res://Platform/Input/PauseController.gd"',

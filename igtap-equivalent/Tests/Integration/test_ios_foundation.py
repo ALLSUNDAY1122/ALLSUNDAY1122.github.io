@@ -15,6 +15,14 @@ class IOSFoundationTests(unittest.TestCase):
         self.assertIn('common/physics_ticks_per_second=120', project)
         self.assertIn('application/targeted_device_family=0', export)
 
+    def test_ios_project_has_mobile_texture_import_and_original_icon(self):
+        project = self.read("project.godot")
+        icon = ROOT / "Platform/iOS/AppIcon.svg"
+        self.assertIn('textures/vram_compression/import_etc2_astc=true', project)
+        self.assertIn('config/icon="res://Platform/iOS/AppIcon.svg"', project)
+        self.assertTrue(icon.is_file())
+        self.assertIn('<svg', icon.read_text(encoding="utf-8"))
+
     def test_ios_privacy_manifest_required_api_reasons_are_explicit(self):
         export = self.read("export_presets.cfg")
         self.assertIn('privacy/file_timestamp_access_reasons=3', export)
