@@ -4,6 +4,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 WORLD = ROOT / "Content" / "World" / "world_topology_v1.json"
+GEOMETRY = ROOT / "Content" / "World" / "stage_geometry_v1.json"
 STAGES = ROOT / "Content" / "Stages" / "stage_catalog_v1.json"
 GIMMICKS = ROOT / "Game" / "Gimmicks"
 
@@ -48,6 +49,29 @@ def test_world_stage_ids_and_checkpoint_counts_match_stage_system():
         expected = len(stage["checkpoints"])
         actual = len([node for node in world_by_id[stage["id"]]["nodes"] if node["id"].startswith("cp")])
         assert actual == expected
+
+
+def test_geometry_covers_every_topology_node_and_checkpoint_anchor():
+    world = load(WORLD)
+    geometry = load(GEOMETRY)
+    geometry_by_id = {stage["id"]: stage for stage in geometry["stages"]}
+    assert set(geometry_by_id) == {stage["id"] for stage in world["stages"]}
+    for stage in world["stages"]:
+        anchors = geometry_by_id[stage["id"]]["anchors"]
+        assert {node["id"] for node in stage["nodes"]} <= set(anchors)
+        assert "start" in anchors and "goal" in anchors
+
+
+def test_geometry_placements_are_supported_and_have_unique_ids_per_stage():
+    geometry = load(GEOMETRY)
+    supported = {"moving_platform", "spring", "hazard", "ability_gate", "state_switch", "state_gate", "visibility", "discovery"}
+    for stage in geometry["stages"]:
+        ids = []
+        for placement in stage["placements"]:
+            assert placement["type"] in supported
+            assert len(placement.get("size", [1, 1])) == 2
+            ids.append(placement["id"])
+        assert len(ids) == len(set(ids))
 
 
 def test_mandatory_route_is_reachable_without_secret_or_shortcut():

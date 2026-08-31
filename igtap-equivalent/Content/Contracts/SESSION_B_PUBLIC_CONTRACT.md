@@ -93,6 +93,19 @@ Gimmick component rules:
 
 World topology data is `Content/World/world_topology_v1.json`. It defines abstract connectivity and requirements, not copied reference-game geometry. Secrets are never mandatory for main progression. Later abilities must create shorter revisit routes.
 
+## Prototype stage assembly — implemented in Next2
+
+`Content/World/stage_geometry_v1.json` provides original provisional coordinates and gimmick placements for all five stages. Coordinates are intentionally project-original and may be retuned after the Session A world-unit ↔ Session C pixel-scale adapter is fixed.
+
+`PrototypeStageAssembler` provides:
+
+- `build_stage(stage_id) -> bool`
+- signal `gimmick_created(node)` — Session B `GimmickRuntime` should bind the emitted node.
+- signal `stage_trigger_created(node)` — Session C may wire Start/Goal/Checkpoint signals into `StageManager`/Session A.
+- signal `stage_built(stage_id, generated_nodes)`
+
+It creates placeholder StaticBody2D platforms, Start/Goal/Checkpoint Area2D triggers, and configured world gimmick nodes. This is a playtest scaffold, not final art or canonical level geometry. It exists so integration can test movement scale, timing and route feasibility without rebuilding the stage graph manually.
+
 ## Session C adapter compatibility
 
 Session C's current world adapter expects:
@@ -108,7 +121,7 @@ Next3/Next4 will provide the aggregate ProgressionWorld production root that com
 Required operations:
 
 - `add_resource(amount, source)`
-- `spend_resource(amount, reason) -> Bool`
+- `spend_resource(amount, reason) -> bool`
 - `current_resource()`
 - `resource_per_second()`
 - `calculate_clone_reward(stage_id, best_time, clone_profile)`
@@ -124,9 +137,9 @@ Large-number storage must be independent of display suffix formatting.
 Required operations:
 
 - `unlock_ability(ability_id)`
-- `is_ability_unlocked(ability_id) -> Bool`
+- `is_ability_unlocked(ability_id) -> bool`
 - `unlock_stage(stage_id)`
-- `is_stage_available(stage_id) -> Bool`
+- `is_stage_available(stage_id) -> bool`
 
 Required signal:
 
