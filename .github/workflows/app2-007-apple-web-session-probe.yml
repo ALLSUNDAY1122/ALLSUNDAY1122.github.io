@@ -1,0 +1,39 @@
+name: APP2-007 Apple Web Session Probe
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  probe:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTS4-SESSION-PROBE]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe secret presence only
+        id: probe
+        env:
+          FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APP_STORE_CONNECT_USERNAME: ${{ secrets.APP_STORE_CONNECT_USERNAME }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+        run: |
+          python - <<'PY'
+          import json, os
+          keys=['FASTLANE_SESSION','FASTLANE_USER','APPLE_ID','APP_STORE_CONNECT_USERNAME','FASTLANE_PASSWORD','FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD']
+          result={k: bool(os.environ.get(k)) for k in keys}
+          open('/tmp/session-probe.json','w').write(json.dumps(result))
+          print(json.dumps(result))
+          PY
+      - name: Report presence only
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs=require('fs');
+            const d=JSON.parse(fs.readFileSync('/tmp/session-probe.json','utf8'));
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:'APP2-007 Apple web-session secret presence (values never read/output):\n```json\n'+JSON.stringify(d,null,2)+'\n```'});
