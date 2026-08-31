@@ -15,6 +15,12 @@ class IOSFoundationTests(unittest.TestCase):
         self.assertIn('common/physics_ticks_per_second=120', project)
         self.assertIn('application/targeted_device_family=0', export)
 
+    def test_ios_privacy_manifest_required_api_reasons_are_explicit(self):
+        export = self.read("export_presets.cfg")
+        self.assertIn('privacy/file_timestamp_access_reasons=3', export)
+        self.assertIn('privacy/system_boot_time_access_reasons=1', export)
+        self.assertIn('privacy/disk_space_access_reasons=3', export)
+
     def test_touch_router_is_source_aware_for_simultaneous_fingers(self):
         router = self.read("Platform/Input/InputRouter.gd")
         mobile = self.read("Platform/Input/MobileControls.gd")

@@ -52,6 +52,9 @@ for setting in (
     'application/targeted_device_family=0',
     'application/export_project_only=true',
     'export_path="Build/iOS/Loopforge.zip"',
+    'privacy/file_timestamp_access_reasons=3',
+    'privacy/system_boot_time_access_reasons=1',
+    'privacy/disk_space_access_reasons=3',
 ):
     if setting not in export:
         fail(f"iOS export setting missing or changed: {setting}")
