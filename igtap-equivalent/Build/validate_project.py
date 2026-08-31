@@ -54,7 +54,7 @@ for setting in (
     'application/bundle_identifier="jp.allsunday1122.loopforge"',
     'application/targeted_device_family=0',
     'application/export_project_only=true',
-    'export_path="Build/iOS/Loopforge.zip"',
+    'export_path="Build/iOS/Loopforge"',
     'privacy/file_timestamp_access_reasons=3',
     'privacy/system_boot_time_access_reasons=1',
     'privacy/disk_space_access_reasons=3',

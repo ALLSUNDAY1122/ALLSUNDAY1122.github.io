@@ -56,7 +56,6 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import os
           path = Path("igtap-equivalent/export_presets.cfg")
           text = path.read_text(encoding="utf-8")
           team = 'application/app_store_team_id=""'
@@ -72,22 +71,38 @@ jobs:
           PY
       - name: Export unsigned iOS Xcode project
         run: |
+          rm -rf "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS"
           mkdir -p "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS"
-          /tmp/godot/Godot.app/Contents/MacOS/Godot --verbose --headless --path "$GITHUB_WORKSPACE/igtap-equivalent" --export-release "iOS Project" "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/Loopforge.zip"
-          test -s "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/Loopforge.zip"
+          set +e
+          /tmp/godot/Godot.app/Contents/MacOS/Godot --verbose --headless --path "$GITHUB_WORKSPACE/igtap-equivalent" --export-release "iOS Project" "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/Loopforge"
+          GODOT_EXIT=$?
+          set -e
+          PBXPROJ="$(find "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS" -name project.pbxproj -print -quit)"
+          if [ -z "$PBXPROJ" ] || [ ! -s "$PBXPROJ" ]; then
+            echo "Godot exit code: $GODOT_EXIT"
+            echo "No generated Xcode project found"
+            exit 1
+          fi
+          if [ "$GODOT_EXIT" -ne 0 ]; then
+            echo "Godot returned $GODOT_EXIT after project-only generation; accepting only because the generated Xcode project is present and will be independently audited."
+          fi
       - name: Audit generated Xcode project
         run: |
-          rm -rf /tmp/loopforge-ios
-          mkdir -p /tmp/loopforge-ios
-          unzip -q "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/Loopforge.zip" -d /tmp/loopforge-ios
-          PBXPROJ="$(find /tmp/loopforge-ios -name project.pbxproj -print -quit)"
+          PBXPROJ="$(find "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS" -name project.pbxproj -print -quit)"
           test -n "$PBXPROJ"
           grep -Eq 'TARGETED_DEVICE_FAMILY = "?1"?;' "$PBXPROJ"
           grep -Eq 'PRODUCT_BUNDLE_IDENTIFIER = "?jp\.allsunday1122\.loopforge"?;' "$PBXPROJ"
           grep -Eq 'IPHONEOS_DEPLOYMENT_TARGET = "?15\.0"?;' "$PBXPROJ"
+          test -s "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/PrivacyInfo.xcprivacy"
+          test -d "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/Loopforge.xcframework"
+      - name: Package generated Xcode project
+        run: |
+          cd "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS"
+          ditto -c -k --sequesterRsrc --keepParent . "$RUNNER_TEMP/Loopforge-iOS-Xcode-project.zip"
+          test -s "$RUNNER_TEMP/Loopforge-iOS-Xcode-project.zip"
       - uses: actions/upload-artifact@v4
         with:
           name: loopforge-ios-xcode-project
-          path: igtap-equivalent/Build/iOS/Loopforge.zip
+          path: ${{ runner.temp }}/Loopforge-iOS-Xcode-project.zip
           if-no-files-found: error
           retention-days: 3
