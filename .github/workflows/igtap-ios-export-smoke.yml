@@ -45,26 +45,35 @@ jobs:
           TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable"
           mkdir -p "$TEMPLATE_DIR"
           cp -R /tmp/godot-templates/templates/. "$TEMPLATE_DIR/"
+      - name: Verify iOS export template
+        run: |
+          TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable"
+          ls -lah "$TEMPLATE_DIR"
+          test -s "$TEMPLATE_DIR/ios.zip"
       - name: Import project
         run: /tmp/godot/Godot.app/Contents/MacOS/Godot --headless --editor --path igtap-equivalent --quit
-      - name: Inject CI-only team id for unsigned project generation
+      - name: Inject CI-only signing metadata and explicit template path
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import os
           path = Path("igtap-equivalent/export_presets.cfg")
           text = path.read_text(encoding="utf-8")
-          needle = 'application/app_store_team_id=""'
-          if needle not in text:
-              raise SystemExit("expected blank release App Store Team ID not found")
-          path.write_text(
-              text.replace(needle, 'application/app_store_team_id="CI00000000"', 1),
-              encoding="utf-8",
-          )
+          team = 'application/app_store_team_id=""'
+          template = 'custom_template/release=""'
+          if team not in text or template not in text:
+              raise SystemExit("expected release placeholders not found")
+          ios_zip = Path.home() / "Library/Application Support/Godot/export_templates/4.7.2.stable/ios.zip"
+          if not ios_zip.is_file():
+              raise SystemExit(f"iOS export template missing: {ios_zip}")
+          text = text.replace(team, 'application/app_store_team_id="CI00000000"', 1)
+          text = text.replace(template, f'custom_template/release="{ios_zip}"', 1)
+          path.write_text(text, encoding="utf-8")
           PY
       - name: Export unsigned iOS Xcode project
         run: |
           mkdir -p "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS"
-          /tmp/godot/Godot.app/Contents/MacOS/Godot --headless --path "$GITHUB_WORKSPACE/igtap-equivalent" --export-release "iOS Project" "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/Loopforge.zip"
+          /tmp/godot/Godot.app/Contents/MacOS/Godot --verbose --headless --path "$GITHUB_WORKSPACE/igtap-equivalent" --export-release "iOS Project" "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/Loopforge.zip"
           test -s "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/Loopforge.zip"
       - name: Audit generated Xcode project
         run: |
