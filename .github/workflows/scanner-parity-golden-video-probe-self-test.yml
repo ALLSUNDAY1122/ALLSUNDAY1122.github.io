@@ -7,6 +7,7 @@ on:
       - .github/workflows/scanner-parity-golden-video-probe-self-test.yml
       - scripts/prepare_scanner_parity_golden_video_probe.py
       - scripts/run_scanner_parity_golden_video_probe_gateway.py
+      - scripts/run_scanner_parity_golden_codemagic_gateway.py
 
 permissions:
   contents: read
@@ -21,19 +22,29 @@ jobs:
           set -euo pipefail
           python3 -m py_compile \
             scripts/prepare_scanner_parity_golden_video_probe.py \
-            scripts/run_scanner_parity_golden_video_probe_gateway.py
-      - name: Verify probe privacy and OIDC contracts
+            scripts/run_scanner_parity_golden_video_probe_gateway.py \
+            scripts/run_scanner_parity_golden_codemagic_gateway.py
+      - name: Verify probe privacy, app binding and OIDC contracts
         run: |
           set -euo pipefail
           python3 - <<'PY'
+          import json
           from pathlib import Path
           prep=Path('scripts/prepare_scanner_parity_golden_video_probe.py').read_text(encoding='utf-8')
-          gateway=Path('scripts/run_scanner_parity_golden_video_probe_gateway.py').read_text(encoding='utf-8')
+          probe=Path('scripts/run_scanner_parity_golden_video_probe_gateway.py').read_text(encoding='utf-8')
+          formal=Path('scripts/run_scanner_parity_golden_codemagic_gateway.py').read_text(encoding='utf-8')
           workflow=Path('.github/workflows/scanner-parity-golden-video-probe-gateway.yml').read_text(encoding='utf-8')
-          assert 'scanner-golden-probe-relay' in gateway
-          assert 'scanner-golden-probe-relay' in gateway
+          evidence=json.loads(Path('automation/codemagic-results/app2-010-codemagic-current-20260822-2014.json').read_text(encoding='utf-8'))
+          proven=str(evidence['app_id'])
+          assert proven == '6a769d81a1add9d06020b524'
+          for gateway in (probe, formal):
+              assert f'DEFAULT_CODEMAGIC_APP_ID = "{proven}"' in gateway
+              assert 'SCANNER_CODEMAGIC_APP_ID' in gateway
+              assert 'Invalid SCANNER_CODEMAGIC_APP_ID' in gateway
+              assert 'codemagic_api(token, "/apps")' not in gateway
+          assert 'scanner-golden-probe-relay' in probe
           assert 'scanner-parity-golden-video-probe' in prep
-          assert 'CM_API_TOKEN' in gateway and 'CM_API_TOKEN' in workflow
+          assert 'CM_API_TOKEN' in probe and 'CM_API_TOKEN' in workflow
           assert 'id-token: write' in workflow
           assert 'contents: write' in workflow
           assert 'automation/scanner-parity-golden-video-probe-command.json' in workflow
@@ -43,6 +54,7 @@ jobs:
           assert 'submit_to_testflight' not in prep
           assert 'submit_to_app_store' not in prep
           assert 'FORMAL_GOLDEN_PASS' not in prep
-          assert 'FORMAL_GOLDEN_PASS' not in gateway
+          assert 'FORMAL_GOLDEN_PASS' not in probe
+          assert 'FORMAL_GOLDEN_PASS' not in formal
           print('SCANNER_GOLDEN_VIDEO_PROBE_GATEWAY_CONTRACT_PASS')
           PY
