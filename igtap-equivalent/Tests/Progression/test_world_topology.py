@@ -14,9 +14,8 @@ def load(path):
 
 def shortest(stage, abilities, allow_shortcuts=False, allow_secrets=False):
     nodes = {node["id"]: node for node in stage["nodes"]}
-    start = ("start", stage["default_phase"])
-    queue = deque([(start[0], start[1], 0)])
-    seen = {start}
+    queue = deque([("start", stage["default_phase"], 0)])
+    seen = {("start", stage["default_phase"])}
     while queue:
         node_id, phase, distance = queue.popleft()
         if node_id == "goal":
@@ -29,11 +28,9 @@ def shortest(stage, abilities, allow_shortcuts=False, allow_secrets=False):
                 continue
             if edge["kind"] == "secret" and not allow_secrets:
                 continue
-            required_ability = edge.get("requires_ability")
-            if required_ability and required_ability not in abilities:
+            if edge.get("requires_ability") and edge["requires_ability"] not in abilities:
                 continue
-            required_phase = edge.get("requires_phase")
-            if required_phase and required_phase != phase_after_node:
+            if edge.get("requires_phase") and edge["requires_phase"] != phase_after_node:
                 continue
             state = (edge["to"], phase_after_node)
             if state not in seen:
@@ -42,10 +39,15 @@ def shortest(stage, abilities, allow_shortcuts=False, allow_secrets=False):
     return None
 
 
-def test_world_stage_ids_match_stage_system():
+def test_world_stage_ids_and_checkpoint_counts_match_stage_system():
     world = load(WORLD)
     catalog = load(STAGES)
     assert [stage["id"] for stage in world["stages"]] == catalog["stage_order"]
+    world_by_id = {stage["id"]: stage for stage in world["stages"]}
+    for stage in catalog["stages"]:
+        expected = len(stage["checkpoints"])
+        actual = len([node for node in world_by_id[stage["id"]]["nodes"] if node["id"].startswith("cp")])
+        assert actual == expected
 
 
 def test_mandatory_route_is_reachable_without_secret_or_shortcut():
@@ -64,7 +66,7 @@ def test_every_shortcut_is_real_route_improvement_after_later_unlocks():
         baseline = shortest(stage, set(stage["guaranteed_abilities"]), False, False)
         optimized = shortest(stage, all_abilities, True, False)
         assert baseline is not None and optimized is not None
-        assert optimized < baseline
+        assert optimized <= baseline - 2
         assert any(edge["kind"] == "shortcut" for edge in stage["edges"])
 
 
@@ -88,9 +90,9 @@ def test_gimmick_coverage_and_stage_variety():
 def test_state_gates_have_reachable_switches():
     world = load(WORLD)
     for stage in world["stages"]:
-        required_phases = {edge["requires_phase"] for edge in stage["edges"] if edge.get("requires_phase")}
-        settable_phases = {node["sets_phase"] for node in stage["nodes"] if node.get("sets_phase")}
-        assert required_phases <= settable_phases
+        required = {edge["requires_phase"] for edge in stage["edges"] if edge.get("requires_phase")}
+        settable = {node["sets_phase"] for node in stage["nodes"] if node.get("sets_phase")}
+        assert required <= settable
 
 
 def test_darkness_is_challenging_but_not_black_screen():
