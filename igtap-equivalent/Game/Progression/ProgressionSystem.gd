@@ -143,6 +143,9 @@ func movement_effects() -> Dictionary:
 func clone_capacity() -> int:
     return int(resulting_effect(&"clone_capacity").get("current_value", _catalog.base_clone_capacity()))
 
+func per_stage_clone_cap() -> int:
+    return _catalog.per_stage_clone_cap()
+
 func session_a_mapping() -> Dictionary:
     return _catalog.session_a_mapping()
 
@@ -155,6 +158,7 @@ func progression_snapshot() -> Dictionary:
         "unlocked_abilities": get_unlocked_abilities(),
         "movement_effects": movement_effects(),
         "clone_capacity": clone_capacity(),
+        "per_stage_clone_cap": per_stage_clone_cap(),
         "session_a_mapping": session_a_mapping()
     }
 

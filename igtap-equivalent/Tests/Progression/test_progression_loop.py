@@ -52,16 +52,20 @@ def test_session_a_mapping_is_explicit_and_non_deceptive():
     assert mapping["phase_shift"] == "world_only"
 
 
-def test_clone_capacity_is_global_and_bounded():
+def test_clone_capacity_is_global_per_stage_bounded_and_fills_all_stages():
     progression = load(PROGRESSION)
     upgrades = progression_upgrades()
     clone = upgrades["clone_capacity"]
     assert progression["base_clone_capacity"] == 1
+    assert progression["per_stage_clone_cap"] == 3
     assert clone["effect"] == "clone_capacity_add"
     assert clone["per_level_add"] == 1
-    assert clone["max_level"] == 8
+    assert clone["max_level"] == 14
+    assert progression["base_clone_capacity"] + clone["max_level"] == 15
+    assert clone["cost_growth"] == 1.44
     source = ROOT_SOURCE.read_text(encoding="utf-8")
     assert "allocated_without_stage + clone_count > clone_capacity()" in source
+    assert "clone_count > stage_clone_cap()" in source
 
 
 def test_new_record_auto_clone_respects_remaining_global_capacity():
@@ -78,6 +82,12 @@ def test_new_record_auto_clone_respects_remaining_global_capacity():
     assert allocated <= capacity
 
 
+def test_optional_tracks_wait_until_first_key_progression_purchase():
+    upgrades = progression_upgrades()
+    assert upgrades["jump_tune"]["requires_upgrades"] == ["speed_tune"]
+    assert upgrades["clone_capacity"]["requires_upgrades"] == ["speed_tune"]
+
+
 def test_movement_tracks_are_separate_from_discrete_player_abilities():
     upgrades = progression_upgrades()
     assert upgrades["speed_tune"]["effect"] == "run_speed_multiplier"
@@ -87,7 +97,7 @@ def test_movement_tracks_are_separate_from_discrete_player_abilities():
     assert upgrades["wall_jump"]["effect"] == "ability_unlock"
 
 
-def test_mandatory_ability_waits_stay_under_target_without_economic_upgrades():
+def test_mandatory_ability_waits_stay_under_target_with_one_global_clone():
     progression = load(PROGRESSION)
     economy = load(ECONOMY)
     stages = {item["id"]: item for item in load(STAGES)["stages"]}
@@ -101,12 +111,11 @@ def test_mandatory_ability_waits_stay_under_target_without_economic_upgrades():
         ("core_spire", "phase_shift"),
     ]
     balance = 0.0
-    rate = 0.0
     waits = []
     base_fraction = economy["clone_reward"]["base_fraction"]
     for stage_id, upgrade_id in chain:
         balance += rewards[stage_id]
-        rate += rewards[stage_id] * base_fraction / stages[stage_id]["target_first_clear_seconds"]
+        rate = rewards[stage_id] * base_fraction / stages[stage_id]["target_first_clear_seconds"]
         cost = upgrades[upgrade_id]["base_cost"]
         wait = max(0.0, (cost - balance) / rate)
         balance += wait * rate

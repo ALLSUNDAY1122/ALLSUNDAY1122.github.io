@@ -40,6 +40,9 @@ func upgrade_ids() -> Array[StringName]:
 func base_clone_capacity() -> int:
     return maxi(int(_raw.get("base_clone_capacity", 1)), 1)
 
+func per_stage_clone_cap() -> int:
+    return maxi(int(_raw.get("per_stage_clone_cap", 3)), 1)
+
 func ability_order() -> Array[StringName]:
     var result: Array[StringName] = []
     for value in _raw.get("ability_order", []):

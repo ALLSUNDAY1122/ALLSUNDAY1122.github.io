@@ -73,7 +73,7 @@ func register_lap(stage_id: StringName, elapsed_seconds: float, replay_payload: 
         if requested_clone_count < 0:
             requested_clone_count = 1 if int(clone_allocation_snapshot().get("remaining", 0)) > 0 else 0
         var profile := {
-            "clone_count": requested_clone_count,
+            "clone_count": mini(requested_clone_count, stage_clone_cap()),
             "route_quality": clampf(float(replay_payload.get("route_quality", 1.0)), 0.5, 1.5)
         }
         _economy.call("register_clone_route", stage_id, elapsed_seconds, profile)
@@ -150,8 +150,11 @@ func session_a_ability_mapping() -> Dictionary:
 func clone_capacity() -> int:
     return int(_progression.call("clone_capacity"))
 
+func stage_clone_cap() -> int:
+    return int(_progression.call("per_stage_clone_cap"))
+
 func set_clone_count(stage_id: StringName, clone_count: int) -> bool:
-    if clone_count < 0:
+    if clone_count < 0 or clone_count > stage_clone_cap():
         return false
     var profiles: Dictionary = economy_snapshot().get("clone_profiles", {})
     var allocated_without_stage := 0
@@ -168,10 +171,10 @@ func clone_allocation_snapshot() -> Dictionary:
     var allocated := 0
     var by_stage: Dictionary = {}
     for key in profiles.keys():
-        var count := maxi(int((profiles[key] as Dictionary).get("clone_count", 0)), 0)
+        var count := mini(maxi(int((profiles[key] as Dictionary).get("clone_count", 0)), 0), stage_clone_cap())
         allocated += count
         by_stage[str(key)] = count
-    return {"capacity": clone_capacity(), "allocated": allocated, "remaining": maxi(clone_capacity() - allocated, 0), "by_stage": by_stage}
+    return {"capacity": clone_capacity(), "per_stage_cap": stage_clone_cap(), "allocated": allocated, "remaining": maxi(clone_capacity() - allocated, 0), "by_stage": by_stage}
 
 func stage_availability(stage_id: StringName) -> Dictionary:
     var raw := _raw_stage_entry(stage_id)
