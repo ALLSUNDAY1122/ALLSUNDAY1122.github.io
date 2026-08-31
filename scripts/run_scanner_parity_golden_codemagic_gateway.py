@@ -12,12 +12,16 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-REPO = "ALLSUNDAY1122/ALLSUNDAY1122.github.io"
 RELAY = "https://gybchnyqlqwmajwkhsly.supabase.co/functions/v1/scanner-golden-relay"
 WORKFLOW_ID = "scanner-parity-golden-v3-qa"
 BRANCH = "scanner-parity/integration"
+# Stable Codemagic application backing this monorepo. Repository evidence records
+# this same app ID across multiple successful workflows. Avoid /apps discovery,
+# whose current response no longer yields a repository-name match.
+DEFAULT_CODEMAGIC_APP_ID = "6a769d81a1add9d06020b524"
 UUID_RE = re.compile(r"^[0-9a-fA-F-]{36}$")
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+APP_ID_RE = re.compile(r"^[0-9a-f]{24}$")
 TERMINAL = {"finished", "failed", "canceled", "timeout", "skipped"}
 
 
@@ -57,25 +61,11 @@ def codemagic_api(token: str, path: str, *, method: str = "GET", body: dict | No
     return request_json(f"https://api.codemagic.io{path}", method=method, headers={"x-auth-token": token, "Accept": "application/json"}, body=body, timeout=60)
 
 
-def find_app_id(token: str) -> str:
-    status, response = codemagic_api(token, "/apps")
-    if status < 200 or status >= 300:
-        raise RuntimeError(f"Codemagic app discovery failed with HTTP {status}")
-    apps = response.get("applications") or response.get("data") or []
-    if isinstance(apps, dict):
-        apps = apps.get("applications") or []
-    needle = REPO.lower()
-    candidates: list[str] = []
-    for app in apps:
-        serialized = json.dumps(app, ensure_ascii=False).lower().replace(".git", "")
-        if needle in serialized or needle.split("/")[-1] in serialized:
-            value = app.get("_id") or app.get("id")
-            if value:
-                candidates.append(str(value))
-    unique = sorted(set(candidates))
-    if len(unique) != 1:
-        raise RuntimeError(f"Codemagic app resolution was not unique; candidates={len(unique)}")
-    return unique[0]
+def resolve_app_id() -> str:
+    value = os.environ.get("SCANNER_CODEMAGIC_APP_ID", DEFAULT_CODEMAGIC_APP_ID).strip().lower()
+    if not APP_ID_RE.fullmatch(value):
+        raise RuntimeError("Invalid SCANNER_CODEMAGIC_APP_ID")
+    return value
 
 
 def main() -> int:
@@ -98,6 +88,7 @@ def main() -> int:
     result: dict = {"ok": False, "run_id": run_id, "mode": mode, "workflow_id": WORKFLOW_ID, "branch": BRANCH, "source_sha": prepared_sha}
     download_token = secrets.token_urlsafe(48)
     try:
+        app_id = resolve_app_id()
         oidc = github_oidc_token()
         status, registration = request_json(
             f"{RELAY}/register-download",
@@ -108,7 +99,6 @@ def main() -> int:
         if status < 200 or status >= 300 or not registration.get("ok"):
             raise RuntimeError(f"Golden relay registration failed with HTTP {status}")
 
-        app_id = find_app_id(cm_token)
         payload = {
             "appId": app_id,
             "workflowId": WORKFLOW_ID,
