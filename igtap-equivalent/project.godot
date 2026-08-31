@@ -1,5 +1,5 @@
 ; Engine configuration file.
-; Edited by Session C for the independent Loopforge prototype.
+; Session C iOS foundation for the independent Loopforge prototype.
 config_version=5
 
 [application]
@@ -10,6 +10,7 @@ run/main_scene="res://Main.tscn"
 InputRouter="*res://Platform/Input/InputRouter.gd"
 IOSLayout="*res://Platform/iOS/IOSLayout.gd"
 Lifecycle="*res://Platform/iOS/Lifecycle.gd"
+PauseController="*res://Platform/Input/PauseController.gd"
 
 [display]
 
@@ -22,8 +23,9 @@ stretch/mode="canvas_items"
 stretch/aspect="expand"
 handheld/orientation=4
 ios/allow_high_refresh_rate=true
-ios/hide_home_indicator=false
+ios/hide_home_indicator=true
 ios/hide_status_bar=true
+ios/suppress_ui_gesture=true
 
 [rendering]
 renderer/rendering_method="gl_compatibility"
@@ -31,4 +33,5 @@ renderer/rendering_method.mobile="gl_compatibility"
 textures/default_filters/use_nearest_mipmap_filter=false
 
 [physics]
-common/physics_ticks_per_second=60
+common/physics_ticks_per_second=120
+common/max_physics_steps_per_frame=8

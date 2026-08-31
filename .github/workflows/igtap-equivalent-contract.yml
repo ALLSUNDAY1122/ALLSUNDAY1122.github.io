@@ -33,3 +33,5 @@ jobs:
           sudo mv /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 /usr/local/bin/godot
       - name: Parse/import Godot project headlessly
         run: godot --headless --editor --path igtap-equivalent --quit
+      - name: Boot mock integration headlessly
+        run: godot --headless --path igtap-equivalent --quit-after 120

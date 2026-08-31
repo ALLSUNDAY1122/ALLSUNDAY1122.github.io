@@ -1,0 +1,70 @@
+name: Loopforge iOS project export smoke
+
+on:
+  push:
+    branches:
+      - 'igtap/wp3-ios-integration'
+      - 'igtap/integration'
+    paths:
+      - 'igtap-equivalent/project.godot'
+      - 'igtap-equivalent/export_presets.cfg'
+      - 'igtap-equivalent/Main.tscn'
+      - 'igtap-equivalent/Platform/**'
+      - 'igtap-equivalent/Integration/Bootstrap.gd'
+      - 'igtap-equivalent/Integration/Adapters/**'
+      - 'igtap-equivalent/Integration/Mock/**'
+      - '.github/workflows/igtap-ios-export-smoke.yml'
+  workflow_dispatch:
+
+jobs:
+  ios-project-export:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show Xcode environment
+        run: xcodebuild -version
+      - name: Cache Godot export templates
+        id: cache-templates
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Application Support/Godot/export_templates/4.7.2.stable
+          key: godot-4.7.2-stable-export-templates
+      - name: Install Godot 4.7.2 stable
+        run: |
+          curl -fsSL -o /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip
+          mkdir -p /tmp/godot
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          xattr -dr com.apple.quarantine /tmp/godot/Godot.app || true
+      - name: Install export templates
+        if: steps.cache-templates.outputs.cache-hit != 'true'
+        run: |
+          curl -fsSL -o /tmp/templates.tpz https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz
+          rm -rf /tmp/godot-templates
+          mkdir -p /tmp/godot-templates
+          unzip -q /tmp/templates.tpz -d /tmp/godot-templates
+          TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable"
+          mkdir -p "$TEMPLATE_DIR"
+          cp -R /tmp/godot-templates/templates/. "$TEMPLATE_DIR/"
+      - name: Import project
+        run: /tmp/godot/Godot.app/Contents/MacOS/Godot --headless --editor --path igtap-equivalent --quit
+      - name: Export unsigned iOS Xcode project
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS"
+          /tmp/godot/Godot.app/Contents/MacOS/Godot --headless --path "$GITHUB_WORKSPACE/igtap-equivalent" --export-release "iOS Project" "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/Loopforge.zip"
+          test -s "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/Loopforge.zip"
+      - name: Audit generated Xcode project
+        run: |
+          rm -rf /tmp/loopforge-ios
+          mkdir -p /tmp/loopforge-ios
+          unzip -q "$GITHUB_WORKSPACE/igtap-equivalent/Build/iOS/Loopforge.zip" -d /tmp/loopforge-ios
+          PBXPROJ="$(find /tmp/loopforge-ios -name project.pbxproj -print -quit)"
+          test -n "$PBXPROJ"
+          grep -q 'TARGETED_DEVICE_FAMILY = 1;' "$PBXPROJ"
+          grep -q 'PRODUCT_BUNDLE_IDENTIFIER = jp.allsunday1122.loopforge;' "$PBXPROJ"
+          grep -q 'IPHONEOS_DEPLOYMENT_TARGET = 15.0;' "$PBXPROJ"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: loopforge-ios-xcode-project
+          path: igtap-equivalent/Build/iOS/Loopforge.zip
+          if-no-files-found: error
+          retention-days: 3
