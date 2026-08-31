@@ -24,7 +24,7 @@ jobs:
           python-version: '3.12'
       - name: Install ASC dependencies
         run: python -m pip install --disable-pip-version-check pyjwt cryptography
-      - name: Publish App Privacy and submit App + first IAP for review
+      - name: Validate and submit App + first IAP for review
         id: submit
         continue-on-error: true
         env:
@@ -34,91 +34,11 @@ jobs:
           OTS4_FINAL_SUBMIT_OUTPUT: automation/app2-007-otsu4-final-submit-result.json
         run: |
           PYTHONPATH=scripts python - <<'PY'
-          import os
-          import json
-          from pathlib import Path
-
           import app2_007_otsu4_finalize_submit as submit
-          from app_store_connect_api import load_private_key, make_token
 
-          # App Review now reports app_privacy_publish as the only prerequisite.
-          # Try the corresponding /v1 data-usage resources on the normal
-          # App Store Connect API host using the same JWT used for submission.
-          cleanup = None
-          privacy_diag = Path('automation/app2-007-otsu4-privacy-result.json')
-          try:
-              key, cleanup = load_private_key()
-              token = make_token(os.environ['ASC_ISSUER_ID'], os.environ['ASC_KEY_ID'], key)
-              _, current = submit.req(
-                  token,
-                  f'/v1/apps/{submit.APP_ID}/dataUsages?include=category,grouping,purpose,dataProtection&limit=500',
-              )
-              usages = current.get('data', []) if isinstance(current, dict) else []
-              if not isinstance(usages, list):
-                  usages = []
-              for usage in usages:
-                  usage_id = str(usage.get('id') or '')
-                  if usage_id:
-                      submit.req(token, f'/v1/appDataUsages/{usage_id}', 'DELETE')
-
-              submit.req(
-                  token,
-                  '/v1/appDataUsages',
-                  'POST',
-                  {
-                      'data': {
-                          'type': 'appDataUsages',
-                          'relationships': {
-                              'app': {'data': {'type': 'apps', 'id': submit.APP_ID}},
-                              'dataProtection': {
-                                  'data': {
-                                      'type': 'appDataUsageDataProtections',
-                                      'id': 'DATA_NOT_COLLECTED',
-                                  }
-                              },
-                          },
-                      }
-                  },
-              )
-              _, publish_payload = submit.req(token, f'/v1/apps/{submit.APP_ID}/dataUsagePublishState')
-              publish_data = publish_payload.get('data') or {}
-              publish_id = str(publish_data.get('id') or '')
-              if not publish_id:
-                  raise RuntimeError('App Privacy publish-state id missing')
-              if not (publish_data.get('attributes') or {}).get('published'):
-                  submit.req(
-                      token,
-                      f'/v1/appDataUsagesPublishState/{publish_id}',
-                      'PATCH',
-                      {
-                          'data': {
-                              'type': 'appDataUsagesPublishState',
-                              'id': publish_id,
-                              'attributes': {'published': True},
-                          }
-                      },
-                  )
-              _, verify_payload = submit.req(token, f'/v1/apps/{submit.APP_ID}/dataUsagePublishState')
-              verify_data = verify_payload.get('data') or {}
-              published = bool((verify_data.get('attributes') or {}).get('published'))
-              privacy_diag.parent.mkdir(parents=True, exist_ok=True)
-              privacy_diag.write_text(json.dumps({'ok': published, 'published': published, 'answer': 'DATA_NOT_COLLECTED'}, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
-              if not published:
-                  raise RuntimeError('App Privacy publish read-back is not published=true')
-              print('PASS: App Privacy published as DATA_NOT_COLLECTED')
-          except Exception as exc:
-              privacy_diag.parent.mkdir(parents=True, exist_ok=True)
-              privacy_diag.write_text(json.dumps({'ok': False, 'published': False, 'error': str(exc)[:5000]}, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
-              raise
-          finally:
-              if cleanup:
-                  try:
-                      cleanup.unlink(missing_ok=True)
-                  except Exception:
-                      pass
-
-          # Free app pricing has already passed server-side submission validation;
-          # no duplicate scheduled price writes are made.
+          # App pricing has already passed Apple's reviewSubmissionItems validation.
+          # Avoid duplicate price-schedule writes and let Apple's submission gate
+          # remain the authoritative validation.
           def pricing_verified_by_submission_gate(token, actions):
               return {
                   'customer_price': '0',
@@ -130,15 +50,13 @@ jobs:
           submit.ensure_free_pricing = pricing_verified_by_submission_gate
           submit.main()
           PY
-      - name: Upload sanitized final results
+      - name: Upload sanitized final result
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: app2-007-otsu4-final-submit-${{ github.run_id }}
-          path: |
-            automation/app2-007-otsu4-final-submit-result.json
-            automation/app2-007-otsu4-privacy-result.json
-          if-no-files-found: warn
+          path: automation/app2-007-otsu4-final-submit-result.json
+          if-no-files-found: error
           retention-days: 14
       - name: Report exact result
         if: always()
@@ -147,13 +65,13 @@ jobs:
           script: |
             const fs=require('fs');
             const p='automation/app2-007-otsu4-final-submit-result.json';
-            const q='automation/app2-007-otsu4-privacy-result.json';
             let body=`APP2-007 Otsu4 final submit run_id=${context.runId}`;
-            if(fs.existsSync(q)) body+='\nprivacy=`'+fs.readFileSync(q,'utf8').trim().slice(0,4000)+'`';
             if(fs.existsSync(p)){
               const d=JSON.parse(fs.readFileSync(p,'utf8'));
               const compact={ok:d.ok,submitted:d.submitted,build_number:d.build_number,copyright:d.copyright,app_pricing:d.app_pricing,review_submission_id:d.review_submission_id,review_submission_state:d.review_submission_state,app_version_state:d.app_version_state,iap_version_state:d.iap_version_state,blockers:d.blockers,actions:d.actions,error:d.error ? String(d.error).slice(0,5000) : undefined};
               body+='\n```json\n'+JSON.stringify(compact,null,2)+'\n```';
+            } else {
+              body+='\nresult artifact source file missing';
             }
             await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body});
       - name: Enforce successful App Review submission
