@@ -1,52 +1,68 @@
 # Session A Core Gameplay Architecture
 
+Status: final Session A handoff, 2026-09-01.
+
 ## Implementation direction
 
-Target language: Swift, framework-light core logic suitable for direct inclusion in an iOS/SpriteKit/Metal shell. Session A will avoid UIKit/SwiftUI and avoid build/project files so Session C can integrate the source into the final iOS target.
+The Core implementation is pure Swift with Foundation only and does not depend on UIKit, SwiftUI, SpriteKit, progression, economy, or App Store infrastructure. It is designed to be driven from an iOS/native adapter or another integration layer through explicit public contracts.
 
-The simulation will be deterministic and fixed-step. Rendering/camera presentation may run at display refresh rate, but locomotion, ability state, timers and replay capture advance on fixed ticks.
+The authoritative simulation is fixed-step. Rendering may run at another refresh rate, but player movement, ability state, timers, lap timing, replay capture, Clone advancement, and camera target solving are intended to use the same fixed tick.
 
 ## Modules
 
-- `Game/Core/`: game clock, math/value types, event/signals, lap/checkpoint state.
-- `Game/Player/`: player controller/state machine and externally visible snapshot.
-- `Game/Physics/`: collision queries, swept movement, contact classification, corner correction.
-- `Game/Abilities/`: jump, air jump, dash, wall jump policies/resources.
-- `Game/Replay/`: recording format, recorder, versioning, correction samples.
-- `Game/Ghost/`: clone instances, loop playback and multi-clone coordination.
-- `Game/Camera/`: deterministic follow target state/room handoff abstraction; no UIKit rendering.
-- `Tests/Core/`: behavioural and determinism tests only.
+- `Game/Core/`: math/value types, public signals, fixed clock, lap timing, contracts.
+- `Game/Player/`: player controller/state machine and tunable movement constants.
+- `Game/Physics/`: deterministic AABB collision, bounded high-speed substeps, contact probing, depenetration.
+- `Game/Replay/`: versioned authoritative fixed-tick recording and validation.
+- `Game/Ghost/`: Clone cursor, loop/non-loop playback, phase offsets.
+- `Game/Camera/`: deterministic engine-independent camera target solver.
+- `Tests/Core/`: behavioural, determinism, stress, and integration-ready audits.
 
-## Simulation order per fixed tick
+`Game/Abilities/` is intentionally not required as a separate implementation directory; ability policy is currently compact enough to remain inside `PlayerController`/`PlayerConfig` while still being externally gated through `PlayerAbility`.
 
-1. Latch input transitions and buffered action requests.
-2. Update timers (coyote, jump buffer, dash, wall lock, invulnerability/respawn as applicable).
-3. Resolve action priority: death/respawn > active dash continuation > buffered wall jump > buffered ground/air jump > movement.
-4. Build desired velocity from abilities and locomotion state.
-5. Perform swept collision movement and contact resolution.
-6. Recompute grounded/wall/ceiling contacts.
-7. Reset/consume ability resources from the resolved contacts.
-8. Emit state-transition signals.
-9. Capture replay sample after authoritative resolution.
-10. Publish immutable player snapshot for camera/render consumers.
+## Fixed-tick order
+
+Recommended Session C order for each `FixedStepClock` tick:
+
+1. latch normalized input and issue Player requests;
+2. `player.step(dt:)`;
+3. forward checkpoint/lap/death semantics for the current tick as needed;
+4. `replay.captureTick(...)` after Player authoritative resolution;
+5. `replay.stepClones()`;
+6. `camera.step(...)` from resolved Player state;
+7. publish value snapshots to rendering/UI.
+
+Replay semantic markers are order-independent relative to same-tick capture and are resolved safely at recording finalization.
 
 ## Determinism policy
 
-- Fixed simulation tick target: 1/120 s.
-- UI/display frame delta is accumulated and never fed directly into core movement formulas.
-- Maximum catch-up steps per render frame is capped to prevent spiral-of-death; excessive accumulated time is surfaced as a diagnostic rather than changing game speed unpredictably.
-- Collision queries must be deterministic for identical geometry/query order.
-- Replay captures simulation ticks, not wall-clock timestamps.
+- Default fixed delta: `1 / 120 s`.
+- Display delta is accumulated by `FixedStepClock`; it is never fed directly into movement formulas.
+- Catch-up work is capped and excess time is exposed as `droppedTime`.
+- Collision results are deterministic for identical geometry and solid iteration order.
+- Lap timing and Replay use simulation ticks, not wall-clock timestamps.
+- Replay V1 requires contiguous fixed ticks.
+- Clone V1 applies authoritative sampled state on every tick, eliminating accumulated integration drift.
 
-## Action priority policy
+## Action priority / speed-tech policy
 
-The reference game contains useful emergent techniques where dash and jump overlap. We preserve these intentionally while removing accidental dropped inputs:
-- jump request during dash is buffered and may also form a dash-jump if received within the configured combo window;
-- wall contact during dash keeps enough horizontal momentum for dash-wall-jump conversion;
-- wall-jump impulse temporarily owns horizontal velocity, then hands back to player air control;
-- neutral dash uses facing direction, never stale unrelated state;
-- head collision cancels upward velocity but does not incorrectly consume/restore air-jump resource.
+The equivalent-feel target preserves useful dash/jump overlap while removing dropped-input bugs:
 
-## No cross-session coupling
+1. valid wall jump wins over all other actions;
+2. simultaneous eligible ground dash+jump becomes a combined dash-jump with dash horizontal speed plus jump lift;
+3. ordinary ground/coyote/air jump follows;
+4. dash follows when no higher-priority jump action resolves.
 
-Session A does not know about currency, upgrades pricing, stage geometry ownership, menus, touch controls, app lifecycle, code signing, build systems, or App Store Connect. Those systems consume Session A only through `PUBLIC_API_CONTRACT.md`.
+A ground-origin dash preserves ground-jump eligibility for the dash window after leaving a ledge. A jump during an active ground dash cancels the dash timer but retains current horizontal dash momentum. Wall impact terminates active dash immediately so the next valid wall-jump tick is deterministic.
+
+## Collision policy
+
+The player uses bounded substeps plus axis crossing checks. Resting floor/wall/ceiling contact is explicitly probed, so zero-axis velocity does not flicker contact state. Defensive depenetration handles small spawn/teleport overlaps. The solver is designed around configured player speeds and is not intended as an unbounded general-purpose rigid-body engine.
+
+## Replay / Clone policy
+
+Replay V1 stores every authoritative fixed-tick state plus normalized input metadata and semantic markers. Input metadata is retained for future compressed/resimulation formats, but V1 Clone playback does not numerically resimulate Player movement. Invalid versions, non-monotonic ticks, tick gaps, out-of-bounds markers, and marker tick/frame mismatches fail safely.
+
+## Cross-session boundary
+
+Session A does not own currency, upgrade pricing, stage content, UI, touch input, app lifecycle, persistence, native/Godot bridge implementation, code signing, CI, or App Store Connect. Those systems consume Session A through `PUBLIC_API_CONTRACT.md`, `PUBLIC_REPLAY_CONTRACT.md`, and `SESSION_C_HANDOFF.md`.

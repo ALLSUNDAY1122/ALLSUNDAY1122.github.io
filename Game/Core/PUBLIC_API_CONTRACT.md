@@ -1,12 +1,14 @@
 # Session A Public API / Signal Contract
 
-This contract is the only integration surface Session C should depend on. Concrete internal types may change while this contract remains source-compatible or receives an explicit version bump.
+Status: integration-ready (Session A Next 5, 2026-09-01)
 
-## Player command surface
+This file defines the supported integration surface for Session C. Session B/C must not mutate Session A internals such as velocity, ability counters, replay cursors, timers, or collision contacts.
+
+## Player commands
 
 ```swift
-public protocol PlayerControlling {
-    func setMoveAxis(_ axis: Float)                 // -1...1
+public protocol PlayerControlling: AnyObject {
+    func setMoveAxis(_ axis: Float) // clamped to -1...1
     func setJumpPressed(_ pressed: Bool)
     func requestJump()
     func requestDash()
@@ -17,9 +19,9 @@ public protocol PlayerControlling {
 }
 ```
 
-`requestWallJump()` is optional for UI; normal jump input while wall-contact is valid must also resolve to a wall jump.
+`requestWallJump()` is optional for input/UI integration; ordinary jump input while a wall jump is valid resolves to a wall jump automatically.
 
-## Ability identifiers
+### Ability identifiers
 
 ```swift
 public enum PlayerAbility: Hashable, Sendable {
@@ -31,26 +33,48 @@ public enum PlayerAbility: Hashable, Sendable {
 }
 ```
 
-Ability enable/disable is immediate and deterministic. Disabling an ability must clear any transient resource owned only by that ability.
+Advanced abilities (`airJump`, `dash`, `wallJump`) are OFF by default. Session B/C unlock them only through `setAbility(_:enabled:)`. Disabling an ability immediately clears transient resources owned by that ability.
 
-## Replay command surface
+### Action priority and dash-jump contract
+
+For conflicting requests on a fixed simulation tick:
+
+1. valid wall jump;
+2. combined ground dash+jump when dash and jump arrive on the same eligible tick;
+3. ordinary ground/coyote/air jump;
+4. dash.
+
+A ground-origin dash carries a jump-eligibility window through the configured dash duration even after leaving a ledge. This prevents 60/120 Hz input grouping from deleting the intended dash-jump technique.
+
+## Checkpoints
 
 ```swift
-public protocol ReplayControlling {
-    func startRecording(context: ReplayContext)
-    func stopRecording() -> ReplayRecording?
-    func clearRecording(for courseID: String?)
-    func spawnClone(recording: ReplayRecording, options: CloneSpawnOptions) -> CloneID
-    func removeClone(_ id: CloneID)
-    func removeAllClones()
+public protocol CheckpointAccepting: AnyObject {
+    func reachCheckpoint(_ checkpoint: CheckpointDescriptor)
+    func clearCheckpoint(scope: CheckpointScope)
 }
 ```
 
-Clone playback loops by default. Looping behaviour must be configurable through `CloneSpawnOptions`.
+A checkpoint signal emits only when the active checkpoint identifier changes. Death/automatic respawn uses the active checkpoint, otherwise the initial spawn. Session A does not award progression or currency.
+
+## Lap timing
+
+```swift
+public protocol LapTiming: AnyObject {
+    @discardableResult
+    func beginLap(courseID: String, atTick tick: UInt64) -> Bool
+
+    @discardableResult
+    func finishLap(courseID: String, atTick tick: UInt64) -> LapEvent?
+
+    func cancelLap(courseID: String)
+    func cancelAllLaps()
+}
+```
+
+Use `FixedTickLapTimer`, and pass ticks from the same `FixedStepClock` that advances gameplay. `finishLap` emits `lapCompleted` exactly once for an active lap and measures elapsed time from fixed ticks rather than wall-clock time.
 
 ## Integration signals
-
-Session A emits typed events through a single sink/stream abstraction. Required semantic events:
 
 ```swift
 public enum CoreGameplaySignal: Sendable {
@@ -61,82 +85,75 @@ public enum CoreGameplaySignal: Sendable {
 }
 ```
 
-Session C may map these to NotificationCenter, Combine/AsyncStream, an ECS event bus, or engine-specific delegates. Session A must not import UI, economy, progression, iOS platform, build, analytics, or App Store code.
+Session C may map these events into its own event bus/UI layer. Session A imports no economy, progression, UI, iOS lifecycle, analytics, build, or App Store code.
 
-## Checkpoint contract
+## Fixed-step integration
 
-External stage code may submit a checkpoint identifier and spawn transform. Session A owns only the currently active checkpoint state and deterministic respawn selection.
-
-```swift
-public protocol CheckpointAccepting {
-    func reachCheckpoint(_ checkpoint: CheckpointDescriptor)
-    func clearCheckpoint(scope: CheckpointScope)
-}
-```
-
-`checkpoint_reached` is emitted exactly once per activation transition, not every physics frame while overlapping.
-
-## Lap/course contract
-
-External stage code defines course start/finish triggers. Session A records timing and emits `lap_completed`; it does not award currency or unlock progression.
+Gameplay is authoritative at 120 Hz by default. Display refresh rate must not be used directly as the physics timestep.
 
 ```swift
-public protocol LapTiming {
-    func beginLap(courseID: String)
-    func finishLap(courseID: String)
-    func cancelLap(courseID: String)
-}
-```
-
-## Fixed-step integration contract
-
-Gameplay simulation is authoritative at 120 Hz by default. Display refresh rate must not be used as the physics timestep.
-
-Session C should own one `FixedStepClock` and feed each display-link/frame delta into it:
-
-```swift
-var clock = FixedStepClock() // default fixedDelta = 1/120
+var clock = FixedStepClock()
 
 clock.advance(frameDelta: displayDelta) { fixedDelta, tick in
+    // 1. apply normalized input requests to player
     player.step(dt: fixedDelta)
+
+    // 2. record resolved authoritative player state
+    replay.captureTick(tick: tick, state: player, input: replayInput)
+
+    // 3. advance clones on the same fixed tick
+    let cloneSnapshots = replay.stepClones()
+
+    // 4. update camera from the resolved player state
     camera.step(
         dt: fixedDelta,
         target: player.position,
         velocity: player.velocity,
         facing: player.facing
     )
-    // Replay capture/playback uses this same fixed tick.
 }
 ```
 
-`FixedStepFrame.interpolationAlpha` is render-only. It must not feed back into gameplay state. Long foreground stalls are capped and report `droppedTime`; Session C may use that diagnostic but must not replay a large variable timestep through gameplay.
+`FixedStepFrame.interpolationAlpha` is render-only and must not feed back into gameplay. Long stalls are clamped; `droppedTime` is diagnostic and must not be replayed as a giant variable timestep.
 
-## Camera contract
+## Camera
 
-`CameraFollower` is engine/UI independent. Session C reads its position and may interpolate snapshots for rendering.
+`CameraFollower` is UI/engine independent.
 
-- Call `step(dt:target:velocity:facing:)` on the same fixed tick as the player.
-- Call `snap(to:facing:)` after explicit scene/course teleports when an immediate camera cut is desired.
-- Large target discontinuities also self-snap through `teleportSnapDistance`, preventing the historical failure mode where the player and camera remain in different rooms after death/teleport.
-- Camera state never changes player physics, checkpoints, progression, or replay data.
+- Call `step(dt:target:velocity:facing:)` on the fixed tick.
+- Call `snap(to:facing:)` after an explicit scene/course teleport or immediate respawn camera cut.
+- Large target discontinuities also self-snap using `teleportSnapDistance`.
+- Camera state never changes physics, progression, checkpoints, or replay data.
 
-## Replay determinism contract
+## Replay / Clone
 
-A recording contains:
-- monotonically increasing fixed-step tick;
-- position and velocity samples;
-- compact input flags/axis;
-- locomotion state;
-- ability resource state;
-- facing direction;
-- checkpoint/lap markers where applicable.
+```swift
+public protocol ReplayControlling: AnyObject {
+    func startRecording(context: ReplayContext)
+    func stopRecording() -> ReplayRecording?
+    func clearRecording(for courseID: String?)
+    func spawnClone(recording: ReplayRecording, options: CloneSpawnOptions) -> CloneID
+    func removeClone(_ id: CloneID)
+    func removeAllClones()
+}
+```
 
-Playback uses fixed-step interpolation plus periodic authoritative state correction. The replay format is versioned. Unknown future versions must fail safely rather than silently misplay.
+Additional fixed-tick methods on `ReplaySystem`:
+
+- `captureTick(tick:state:input:)`
+- `recordMarker(tick:kind:)`
+- `stepClones()`
+- `cloneSnapshot(_:)`
+- `bestRecording(for:)`
+
+Replay V1 requires one authoritative sample for every consecutive fixed tick. A missing tick invalidates the recording instead of silently time-compressing Clone playback. Clone playback applies recorded authoritative state every tick, so numerical drift does not accumulate across loops.
+
+See `Game/Replay/PUBLIC_REPLAY_CONTRACT.md` for validation and persistence rules.
 
 ## Threading / ownership
 
-All mutation occurs on the gameplay simulation executor/main game loop. Read-only snapshots may be consumed asynchronously if copied as value types.
+All mutation occurs on one gameplay simulation executor/game loop. Value-type snapshots may be copied for rendering. Reference types in Session A are marked for controlled game-loop ownership; callers must not mutate them concurrently.
 
-## Integration rule
+## Session C boundary
 
-Session B/C must never reach into Session A internal state to change velocity, counters, replay cursor, or checkpoint bookkeeping. Use commands and signals above. If a missing integration need appears, extend this contract explicitly.
+Session C is responsible for input/platform adapters, rendering, stage trigger wiring, persistence, iOS lifecycle, build/signing, and TestFlight. Session A is responsible only for deterministic gameplay state and the public contracts above.

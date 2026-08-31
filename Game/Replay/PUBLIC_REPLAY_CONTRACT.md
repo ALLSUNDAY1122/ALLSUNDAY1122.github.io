@@ -1,21 +1,6 @@
 # Session A Replay / Clone Public Contract
 
-This is an additive detail contract under the root `Game/Core/PUBLIC_API_CONTRACT.md`. Session C should depend only on the public types/methods below, not recorder or clone internals.
-
-## Fixed-tick ordering
-
-Replay uses the same authoritative 120 Hz fixed tick as player physics.
-
-Recommended order for each `FixedStepClock` tick:
-
-1. Sample platform input and send commands to `PlayerController`.
-2. Run `player.step(dt:)`.
-3. Call `replay.captureTick(tick:state:input:)` with the same normalized input sample.
-4. Forward checkpoint/death/lap semantic markers with `recordMarker(tick:kind:)`.
-5. Call `replay.stepClones()` once.
-6. Render player/clone snapshots using display interpolation only.
-
-Marker calls are safe immediately before or after capture of the same tick. Marker-to-frame resolution is deferred until recording finalization, avoiding signal-order dependence.
+Status: Replay format V1, integration-ready 2026-09-01.
 
 ## Commands
 
@@ -30,7 +15,7 @@ func removeClone(_ id: CloneID)
 func removeAllClones()
 ```
 
-Additive fixed-tick methods:
+Additional fixed-tick integration methods:
 
 ```swift
 func captureTick(tick: UInt64, state: any ReplayStateSource, input: ReplayInputSample) -> Bool
@@ -40,36 +25,80 @@ func cloneSnapshot(_ id: CloneID) -> CloneSnapshot?
 func bestRecording(for courseID: String) -> ReplayRecording?
 ```
 
-`PlayerController` conforms to `ReplayStateSource`; Session C does not need to reach into player internals.
+## Replay V1 state
 
-## What is recorded
+Every captured frame contains:
 
-Every captured fixed tick stores authoritative tick, position, velocity, normalized input metadata, locomotion state, air-jump resource, air-dash availability, facing, and alive/dead state. Semantic markers support checkpoint reached, player death, and lap completion.
+- fixed simulation tick;
+- authoritative position and velocity;
+- normalized movement/action input metadata;
+- locomotion state;
+- air-jump and air-dash resource state;
+- facing direction;
+- alive/dead state.
+
+Checkpoint, death, and lap-completion semantics are stored as markers.
+
+## Fixed-tick completeness
+
+V1 requires captured ticks to be strictly increasing **and contiguous**. If a live recording skips a tick, that recording becomes invalid and `stopRecording()` returns `nil`; it must not become the course best or emit `recordingCompleted`.
+
+This rule prevents a dropped capture from silently shortening time during Clone playback.
+
+## Validation
+
+Constructing `ReplayRecording` rejects:
+
+- unsupported format versions;
+- empty recordings;
+- duplicate/reversed ticks;
+- missing ticks;
+- marker frame indices outside the frame array;
+- marker tick values that do not equal the referenced frame tick.
+
+Unknown/future formats therefore fail safely instead of producing plausible-but-wrong playback.
+
+## Marker ordering
+
+`recordMarker(tick:kind:)` may be called immediately before or after same-tick state capture. Marker tick is buffered first and resolved to a frame only when recording finalizes. A future marker for which no frame is ever captured is discarded.
 
 ## Clone playback
 
-V1 Clone playback is authoritative sampled-state playback, not input re-simulation. Each Clone copies the recorded frame state exactly on each fixed tick. Input is preserved as metadata for diagnostics/future deterministic re-simulation but does not drive V1 Clone physics.
+`CloneSpawnOptions` supports:
 
-This intentionally prevents accumulated integration drift. Rendering may interpolate between Clone snapshots, but interpolation must never feed back into playback state.
+- loop/non-loop playback;
+- start-frame selection;
+- phase offset in fixed ticks.
 
-Clone options support loop on/off, starting frame, and phase delay in fixed ticks. Multiple clones own independent cursors and loop counters.
+Multiple Clone instances have independent cursors. V1 playback advances exactly one recorded frame per Clone tick and applies the recorded authoritative state directly. It does not integrate input, so position/velocity error cannot accumulate over long loops.
 
-## Death and checkpoint behavior
+Recorded dead frames are visual/state data for the Clone; they do not destroy the Clone playback object. A looping Clone can therefore replay death and later return to the recording's initial live state.
 
-A recorded dead frame replays as dead but does not destroy or stop the Clone playback object. A looping Clone naturally returns to the first recorded state at the next loop.
+## Best recording
 
-Checkpoint/death/lap markers appear in `CloneSnapshot.markers` exactly when their recorded frame is played, once per loop. Live player death/checkpoint state does not mutate existing Clone cursors.
+`ReplaySystem` keeps one in-memory best recording per `courseID`, preferring the shortest valid `durationTicks`. `clearRecording(for:)` clears one course or all courses when passed `nil`.
 
-## Best recording semantics
+Persistence is deliberately outside Session A. Session C may serialize Replay data, but must persist `version` and revalidate through `ReplayRecording` when loading.
 
-`ReplaySystem` keeps the shortest completed recording per `courseID` using authoritative duration ticks. A slower later run does not overwrite the current best. Session B/C remains responsible for deciding when a course run starts/finishes and for persistence across app launches.
+## Signal
 
-## Format safety
+Successful non-empty `stopRecording()` emits:
 
-Current format version: `ReplayFormat.currentVersion == 1`.
+```swift
+.recordingCompleted(RecordingEvent(frameCount: recording.frameCount))
+```
 
-`ReplayRecording` validates supported version, non-empty frames, strictly monotonic ticks, and marker frame bounds. Unsupported future versions fail with `ReplayValidationError.unsupportedVersion` rather than silently misplaying.
+Invalid/empty recordings emit no completion signal.
 
-## Integration boundaries
+## Session C fixed-tick order
 
-Session A does not persist recordings to disk, award progression, choose UI appearance, or define course geometry. Session C may serialize validated recordings later, but must preserve format version and fixed-tick ordering.
+On each `FixedStepClock` tick:
+
+1. apply normalized input to Player;
+2. step Player;
+3. record semantic markers for the same tick if triggered;
+4. capture the resolved Player state;
+5. advance Clones;
+6. render `CloneSnapshot` values without mutating Clone cursors directly.
+
+Calling marker before or after step 4 on the same tick is supported.
