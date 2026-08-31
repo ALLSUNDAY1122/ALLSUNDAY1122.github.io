@@ -105,6 +105,7 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
 
     public func hasAbility(_ ability: PlayerAbility) -> Bool { abilities.contains(ability) }
 
+    /// Executes exactly one simulation tick. Session C should supply dt from FixedStepClock (120 Hz default).
     public func step(dt: Double) {
         guard dt > 0 else { return }
         guard isAlive else {
@@ -118,13 +119,13 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
         if locomotionState == .wallJumping && horizontalControlLockRemaining <= 0 { locomotionState = .airborne }
 
         // Deterministic action priority: wall jump > normal/air jump > dash.
-        // This makes a jump press on a valid wall win over a simultaneous dash request.
         if resolveJumpIfPossible() {
             dashBufferRemaining = 0
         } else {
             resolveDashIfPossible()
         }
 
+        let dashWasActive = dashRemaining > 0
         let dashEndsThisStep = dashRemaining > 0 && dashRemaining <= dt
         if dashRemaining > 0 {
             locomotionState = .dashing
@@ -146,7 +147,13 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
         position = solved.position
         velocity = solved.velocity
         contacts = solved.contacts
-        if dashEndsThisStep && !contacts.wallLeft && !contacts.wallRight {
+
+        let hitDashWall = dashWasActive && ((dashDirection > 0 && contacts.wallRight) || (dashDirection < 0 && contacts.wallLeft))
+        if hitDashWall {
+            // Do not keep re-applying dash velocity into a wall for the rest of the timer.
+            // Ending immediately makes dash -> wall-jump timing deterministic and responsive.
+            dashRemaining = 0
+        } else if dashEndsThisStep {
             velocity.x *= config.dashExitSpeedRetain
         }
 
@@ -275,9 +282,7 @@ public final class PlayerController: PlayerControlling, CheckpointAccepting, @un
     }
 
     private func applyHorizontalControl(dt: Double) {
-        if horizontalControlLockRemaining > 0 {
-            return
-        }
+        if horizontalControlLockRemaining > 0 { return }
 
         let targetX = moveAxis * config.maxRunSpeed
         if contacts.floor {

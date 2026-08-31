@@ -19,10 +19,52 @@ public struct CollisionContacts: Equatable, Sendable {
     public var wallRight = false
 
     public init() {}
+
+    mutating func formUnion(_ other: CollisionContacts) {
+        floor = floor || other.floor
+        ceiling = ceiling || other.ceiling
+        wallLeft = wallLeft || other.wallLeft
+        wallRight = wallRight || other.wallRight
+    }
 }
 
 public enum AxisSeparatedCollisionSolver {
+    /// Swept-by-substeps AABB solver. The crossing tests inside each micro-step prevent
+    /// tunneling, while the bounded travel per substep prevents diagonal corner skips.
     public static func move(
+        position: Vector2,
+        velocity: Vector2,
+        halfSize: Vector2,
+        dt: Double,
+        world: any CollisionWorld
+    ) -> (position: Vector2, velocity: Vector2, contacts: CollisionContacts) {
+        guard dt > 0 else {
+            return (position, velocity, probeContacts(position: position, halfSize: halfSize, world: world))
+        }
+
+        var p = resolveInitialPenetration(position: position, halfSize: halfSize, world: world)
+        var v = velocity
+        var contacts = CollisionContacts()
+
+        let totalDx = abs(v.x * dt)
+        let totalDy = abs(v.y * dt)
+        let bodyScale = max(0.02, min(halfSize.x, halfSize.y))
+        let maxTravel = max(0.02, bodyScale * 0.40)
+        let count = max(1, min(256, Int(ceil(max(totalDx, totalDy) / maxTravel))))
+        let subDt = dt / Double(count)
+
+        for _ in 0..<count {
+            let solved = moveSingle(position: p, velocity: v, halfSize: halfSize, dt: subDt, world: world)
+            p = solved.position
+            v = solved.velocity
+            contacts.formUnion(solved.contacts)
+        }
+
+        contacts.formUnion(probeContacts(position: p, halfSize: halfSize, world: world))
+        return (p, v, contacts)
+    }
+
+    private static func moveSingle(
         position: Vector2,
         velocity: Vector2,
         halfSize: Vector2,
@@ -110,6 +152,70 @@ public enum AxisSeparatedCollisionSolver {
         }
 
         return (p, v, contacts)
+    }
+
+    /// Keeps floor/wall/ceiling contacts stable even when the relevant velocity axis is zero.
+    private static func probeContacts(
+        position: Vector2,
+        halfSize: Vector2,
+        world: any CollisionWorld
+    ) -> CollisionContacts {
+        var contacts = CollisionContacts()
+        let eps = 0.000_01
+        let minX = position.x - halfSize.x
+        let maxX = position.x + halfSize.x
+        let minY = position.y - halfSize.y
+        let maxY = position.y + halfSize.y
+
+        for solid in world.solidBounds {
+            if intervalsOverlap(minX, maxX, solid.minX, solid.maxX) {
+                if abs(minY - solid.maxY) <= eps { contacts.floor = true }
+                if abs(maxY - solid.minY) <= eps { contacts.ceiling = true }
+            }
+            if intervalsOverlap(minY, maxY, solid.minY, solid.maxY) {
+                if abs(minX - solid.maxX) <= eps { contacts.wallLeft = true }
+                if abs(maxX - solid.minX) <= eps { contacts.wallRight = true }
+            }
+        }
+        return contacts
+    }
+
+    /// Defensive recovery for spawn/teleport rounding or prior-frame corner penetration.
+    /// Chooses the smallest separating translation and repeats a few times for stacked solids.
+    private static func resolveInitialPenetration(
+        position: Vector2,
+        halfSize: Vector2,
+        world: any CollisionWorld
+    ) -> Vector2 {
+        var p = position
+        for _ in 0..<4 {
+            var bestDelta: Vector2?
+            var bestMagnitude = Double.infinity
+            let minX = p.x - halfSize.x
+            let maxX = p.x + halfSize.x
+            let minY = p.y - halfSize.y
+            let maxY = p.y + halfSize.y
+
+            for solid in world.solidBounds where intervalsOverlap(minX, maxX, solid.minX, solid.maxX) && intervalsOverlap(minY, maxY, solid.minY, solid.maxY) {
+                let candidates = [
+                    Vector2(x: solid.minX - maxX, y: 0),
+                    Vector2(x: solid.maxX - minX, y: 0),
+                    Vector2(x: 0, y: solid.minY - maxY),
+                    Vector2(x: 0, y: solid.maxY - minY)
+                ]
+                for delta in candidates {
+                    let mag = abs(delta.x) + abs(delta.y)
+                    if mag < bestMagnitude {
+                        bestMagnitude = mag
+                        bestDelta = delta
+                    }
+                }
+            }
+
+            guard let delta = bestDelta else { break }
+            p = p + delta
+        }
+        return p
     }
 
     @inline(__always)

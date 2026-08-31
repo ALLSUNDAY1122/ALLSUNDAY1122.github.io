@@ -88,6 +88,38 @@ public protocol LapTiming {
 }
 ```
 
+## Fixed-step integration contract
+
+Gameplay simulation is authoritative at 120 Hz by default. Display refresh rate must not be used as the physics timestep.
+
+Session C should own one `FixedStepClock` and feed each display-link/frame delta into it:
+
+```swift
+var clock = FixedStepClock() // default fixedDelta = 1/120
+
+clock.advance(frameDelta: displayDelta) { fixedDelta, tick in
+    player.step(dt: fixedDelta)
+    camera.step(
+        dt: fixedDelta,
+        target: player.position,
+        velocity: player.velocity,
+        facing: player.facing
+    )
+    // Replay capture/playback uses this same fixed tick.
+}
+```
+
+`FixedStepFrame.interpolationAlpha` is render-only. It must not feed back into gameplay state. Long foreground stalls are capped and report `droppedTime`; Session C may use that diagnostic but must not replay a large variable timestep through gameplay.
+
+## Camera contract
+
+`CameraFollower` is engine/UI independent. Session C reads its position and may interpolate snapshots for rendering.
+
+- Call `step(dt:target:velocity:facing:)` on the same fixed tick as the player.
+- Call `snap(to:facing:)` after explicit scene/course teleports when an immediate camera cut is desired.
+- Large target discontinuities also self-snap through `teleportSnapDistance`, preventing the historical failure mode where the player and camera remain in different rooms after death/teleport.
+- Camera state never changes player physics, checkpoints, progression, or replay data.
+
 ## Replay determinism contract
 
 A recording contains:
