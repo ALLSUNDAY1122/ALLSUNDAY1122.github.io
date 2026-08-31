@@ -24,7 +24,7 @@ jobs:
             scripts/prepare_scanner_parity_golden_video_probe.py \
             scripts/run_scanner_parity_golden_video_probe_gateway.py \
             scripts/run_scanner_parity_golden_codemagic_gateway.py
-      - name: Verify probe privacy, app binding and OIDC contracts
+      - name: Verify probe privacy, app binding, status endpoint and OIDC contracts
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -42,6 +42,10 @@ jobs:
               assert 'SCANNER_CODEMAGIC_APP_ID' in gateway
               assert 'Invalid SCANNER_CODEMAGIC_APP_ID' in gateway
               assert 'codemagic_api(token, "/apps")' not in gateway
+              assert 'path.startswith("/v3/")' in gateway
+              assert 'https://codemagic.io/api' in gateway
+              assert 'https://api.codemagic.io' in gateway
+              assert 'codemagic_api(cm_token, f"/v3/builds/{build_id}")' in gateway
           assert 'scanner-golden-probe-relay' in probe
           assert 'scanner-parity-golden-video-probe' in prep
           assert 'CM_API_TOKEN' in probe and 'CM_API_TOKEN' in workflow

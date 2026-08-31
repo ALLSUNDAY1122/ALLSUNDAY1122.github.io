@@ -58,7 +58,10 @@ def github_oidc_token() -> str:
 
 
 def codemagic_api(token: str, path: str, *, method: str = "GET", body: dict | None = None) -> tuple[int, dict]:
-    return request_json(f"https://api.codemagic.io{path}", method=method, headers={"x-auth-token": token, "Accept": "application/json"}, body=body, timeout=60)
+    # Codemagic uses api.codemagic.io for build start/list APIs, but the v3
+    # single-build status API is hosted at codemagic.io/api/v3/....
+    base = "https://codemagic.io/api" if path.startswith("/v3/") else "https://api.codemagic.io"
+    return request_json(f"{base}{path}", method=method, headers={"x-auth-token": token, "Accept": "application/json"}, body=body, timeout=60)
 
 
 def resolve_app_id() -> str:
