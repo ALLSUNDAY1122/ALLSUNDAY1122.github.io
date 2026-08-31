@@ -101,3 +101,63 @@ Apple/Codemagic readback:
 APP2-007で要求された人間判断不要な工程は完了。720問化、分野別／試験回別、第1〜6回、全Content/Native/Xcode Gate、新署名Build 93、App Store Connect/Internal TestFlight `sun`配布readbackまで成立した。
 
 残るのはiPhone実機での最終受入のみ。Build 93で主要UI、分野別3科目、試験回別1〜6、模試6回、購入成功/cancel/pending/restore/再インストール後entitlement、VoiceOver等を確認する。実機PASS後のみApp Store本審査へ進む。
+
+---
+
+## 2026-08-31｜ユーザー本申請承認後の追加Release工程
+ユーザーから明示的に「本申請まで進めて」「全部やって」の承認を受け、旧Taskの本審査禁止Gateを解除して追加Release工程を実施。
+
+### 現行App Store候補
+- Version: **1.0**（Apple canonical display）
+- Build: **94**
+- Build resource: `19650d9a-f2e2-4ce9-b135-2fba143f678b`
+- `processingState = VALID`
+- `buildAudienceType = APP_STORE_ELIGIBLE`
+- 旧Build 93の `INTERNAL_ONLY` 制約を解消したApp Store候補IPA。
+
+### Store / IAP提出前整備
+- Copyright: `2026 ALLSUNDAY1122` read-back PASS
+- アプリ本体価格: JPN基準 **0円**。Review Submissionサーバー検証で `APP_PRICING_REQUIRED` が消失したことを確認。
+- IAP `jp.allsunday1122.otsu4.premium`
+  - Non-Consumable
+  - 800円
+  - 日本販売
+  - 日本語表示名・説明
+  - IAP審査用スクリーンショット COMPLETE
+- App Store公開用スクリーンショット6枚 COMPLETE
+- 説明 / キーワード / Support URL / Privacy Policy URL / 年齢区分 / Review連絡先・Notes: 設定済み
+
+### 2026-08-31 最終Review Submission検証
+Run `33382774372` でBuild 94 + App Version + 初回IAPの審査追加を検証。
+
+Apple associatedErrors は **App Privacyだけ**:
+- `STATE_ERROR.APP_DATA_USAGES_REQUIRED`
+- `You must have published answers to your app's data usages.`
+
+Copyright・価格など従来のassociatedErrorsは解消済み。
+
+### App Privacy自動化の到達限界を実証
+本アプリの実装監査では、アカウント登録・広告・行動解析・トラッキングを行わず、学習履歴は端末内保存。正しい回答は **「データを収集しない / DATA_NOT_COLLECTED」**。
+
+自動化経路を以下まで確認:
+1. App Store Connect公式JWT API
+   - `appDataUsages` / `appDataUsageDataProtections` / `dataUsagePublishState` はすべて404 PATH_ERROR
+   - App Privacy回答のwrite/publish APIは公開されていない。
+2. Fastlaneが使うApp Store Connect内部 `iris` API
+   - `DATA_NOT_COLLECTED` 作成およびPublish endpointの存在はFastlane実装で確認。
+   - 現在保有するASC API Key JWTではHTTP 401。Apple ID Web Sessionが必要。
+3. GitHub Actions secrets存在監査
+   - `FASTLANE_SESSION` / `FASTLANE_USER` / `APPLE_ID` / `APP_STORE_CONNECT_USERNAME` / `FASTLANE_PASSWORD` / application-specific password はすべて未登録。
+
+### 現在の唯一のHUMAN_REQUIRED
+App Store Connect UIの「アプリのプライバシー」で以下を一度だけ公開する:
+- 「いいえ、このアプリからデータを収集しません」
+- 保存
+- 公開
+- 確認ダイアログでも公開
+
+このUI公開後、mainの `.github/workflows/app2-007-otsu4-final-submit-normalized.yml` は、余計なPrivacy API再試行を行わず、Appleの審査Gateを再検証してBuild 94 + 初回IAPを同一Review Submissionに追加し `submitted=true` を実行する。
+
+完了条件は `review_submission_state = WAITING_FOR_REVIEW / IN_REVIEW / COMPLETING / COMPLETE` のread-back。
+
+現時点のApp Store本審査状態: **未提出（App Privacy UI公開のみ待ち）**。
