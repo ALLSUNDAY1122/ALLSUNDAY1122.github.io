@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "base_clone_capacity": 1,
+  "ability_order": ["speed_tune", "dash", "double_jump", "wall_jump", "phase_shift"],
+  "session_a_mapping": {
+    "speed_tune": "movement_effect:run_speed_multiplier",
+    "dash": "dash",
+    "double_jump": "airJump",
+    "wall_jump": "wallJump",
+    "phase_shift": "world_only"
+  },
+  "upgrades": [
+    {
+      "id": "speed_tune",
+      "display_name": "Drive Tuning",
+      "category": "movement",
+      "unlocks_after_stage": "relay_yard",
+      "base_cost": 24.0,
+      "cost_growth": 1.82,
+      "max_level": 6,
+      "effect": "run_speed_multiplier",
+      "per_level_multiplier": 1.06,
+      "ability_unlock_on_level": 1
+    },
+    {
+      "id": "jump_tune",
+      "display_name": "Lift Tuning",
+      "category": "movement",
+      "unlocks_after_stage": "relay_yard",
+      "base_cost": 34.0,
+      "cost_growth": 1.95,
+      "max_level": 5,
+      "effect": "jump_multiplier",
+      "per_level_multiplier": 1.06
+    },
+    {
+      "id": "clone_capacity",
+      "display_name": "Echo Capacity",
+      "category": "automation",
+      "unlocks_after_stage": "relay_yard",
+      "base_cost": 48.0,
+      "cost_growth": 1.95,
+      "max_level": 8,
+      "effect": "clone_capacity_add",
+      "per_level_add": 1
+    },
+    {
+      "id": "dash",
+      "display_name": "Vector Burst",
+      "category": "ability",
+      "unlocks_after_stage": "liftworks",
+      "requires_upgrades": ["speed_tune"],
+      "base_cost": 68.0,
+      "cost_growth": 1.0,
+      "max_level": 1,
+      "effect": "ability_unlock",
+      "ability_unlock_on_level": 1
+    },
+    {
+      "id": "double_jump",
+      "display_name": "Air Relay",
+      "category": "ability",
+      "unlocks_after_stage": "phase_foundry",
+      "requires_upgrades": ["dash"],
+      "base_cost": 190.0,
+      "cost_growth": 1.0,
+      "max_level": 1,
+      "effect": "ability_unlock",
+      "ability_unlock_on_level": 1
+    },
+    {
+      "id": "wall_jump",
+      "display_name": "Surface Rebound",
+      "category": "ability",
+      "unlocks_after_stage": "blackout_array",
+      "requires_upgrades": ["double_jump"],
+      "base_cost": 540.0,
+      "cost_growth": 1.0,
+      "max_level": 1,
+      "effect": "ability_unlock",
+      "ability_unlock_on_level": 1
+    },
+    {
+      "id": "phase_shift",
+      "display_name": "Phase Override",
+      "category": "world_ability",
+      "unlocks_after_stage": "core_spire",
+      "requires_upgrades": ["wall_jump"],
+      "base_cost": 1500.0,
+      "cost_growth": 1.0,
+      "max_level": 1,
+      "effect": "ability_unlock",
+      "ability_unlock_on_level": 1
+    }
+  ],
+  "balance_guardrails": {
+    "mandatory_ability_wait_target_seconds": 90.0,
+    "mandatory_ability_wait_failure_seconds": 180.0,
+    "base_clone_capacity": 1,
+    "required_forward_uses_per_ability": 1,
+    "required_backward_uses_per_ability": 1
+  }
+}

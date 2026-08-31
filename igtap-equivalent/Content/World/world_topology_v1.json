@@ -9,7 +9,7 @@
       "nodes": [{"id":"start"},{"id":"belts"},{"id":"lift"},{"id":"cp1"},{"id":"cp2"},{"id":"goal"},{"id":"secret_cache","secret_id":"relay_cache"}],
       "edges": [
         {"from":"start","to":"belts","kind":"main","gimmick":"hazard"},{"from":"belts","to":"lift","kind":"main","gimmick":"moving_platform"},{"from":"lift","to":"cp1","kind":"main","gimmick":"spring"},{"from":"cp1","to":"cp2","kind":"main","gimmick":"hazard"},{"from":"cp2","to":"goal","kind":"main","gimmick":"moving_platform"},
-        {"from":"start","to":"cp2","kind":"shortcut","shortcut_id":"relay_dash_cut","requires_ability":"dash","gimmick":"ability_gate"},{"from":"lift","to":"secret_cache","kind":"secret","requires_ability":"double_jump","gimmick":"ability_gate"},{"from":"secret_cache","to":"cp1","kind":"secret","gimmick":"spring"}
+        {"from":"start","to":"cp1","kind":"shortcut","shortcut_id":"relay_tuned_belt","requires_ability":"speed_tune","gimmick":"ability_gate"},{"from":"start","to":"cp2","kind":"shortcut","shortcut_id":"relay_dash_cut","requires_ability":"dash","gimmick":"ability_gate"},{"from":"lift","to":"secret_cache","kind":"secret","requires_ability":"double_jump","gimmick":"ability_gate"},{"from":"secret_cache","to":"cp1","kind":"secret","gimmick":"spring"}
       ]
     },
     {

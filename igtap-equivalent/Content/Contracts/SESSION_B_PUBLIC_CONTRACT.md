@@ -5,206 +5,148 @@ Owner: Session B / Progression + World
 Target: Godot 4.x / GDScript  
 Primary integration root: `Game/Progression/ProgressionWorld.gd`
 
-Session B never mutates Session A Player/Physics/Abilities/Replay/Ghost internals. Player-affecting world events cross the Session C adapter boundary.
+Session B never mutates Session A Player/Physics/Abilities/Replay/Ghost internals. Player-affecting world events and movement-effect changes cross the Session C adapter boundary.
 
 ## Aggregate production root
 
-`ProgressionWorld` is the Session C binding target from Next3 onward.
+`ProgressionWorld` is the Session C binding target.
 
 Session C-compatible signals:
 
 - `stage_context_changed(context: Dictionary)`
-- `currency_changed(total: float)` — compatibility projection only; precision may be clamped at extreme magnitudes.
+- `currency_changed(total: float)` — compatibility projection only.
 - `upgrade_purchased(upgrade_id: StringName, level: int)`
-- `ability_unlocked(ability_id: StringName)` — reserved; authoritative unlock flow is completed in Next4.
+- `ability_unlocked(ability_id: StringName)`
 - `clone_income_applied(stage_id: StringName, amount: float)` — compatibility projection only.
 
-Precision-preserving Session B signals:
+Precision/progression additions:
 
-- `economy_changed(total: Dictionary, delta: Dictionary, source: StringName)`
-- `economy_rate_changed(rate: Dictionary)`
-- `upgrade_purchase_committed(upgrade_id, level, paid_cost: Dictionary)`
+- `stage_availability_changed(stage_id, availability)`
+- `economy_changed(total, delta, source)`
+- `economy_rate_changed(rate)`
+- `upgrade_purchase_committed(upgrade_id, level, paid_cost)`
+- `movement_effects_changed(effects)`
+- `clone_capacity_changed(capacity)`
 
 State surface:
 
 - `register_lap(stage_id, elapsed_seconds, replay_payload = {})`
 - `register_death(stage_id, reason)`
 - `current_stage_context()`
-- `serialize_state()`
-- `restore_state(state)`
-- `get_unlocked_abilities()`
+- `serialize_state()` / `restore_state(state)`
+- `stage_select_entries()`
+- `stage_availability(stage_id)` / `is_stage_available(stage_id)`
+- `select_stage(stage_id)` / `begin_stage(stage_id = &"")`
 
-## Stage lifecycle — implemented Next1
+## Stage lifecycle — Next1
 
-Stage subsystem: `Game/Stages/StageManager.gd`.
+`StageManager` owns attempts, checkpoints, best times, raw sequential stage unlocks and retry state. Manual restart creates a new attempt; death retry preserves the attempt/time; duplicate/non-positive completions are rejected.
 
-Methods:
+From Next4 onward UI/integration must use `ProgressionWorld.stage_availability`, not raw `StageManager.is_stage_available`, because a stage can be cleared-unlocked but still require a purchased ability.
 
-- `select_stage`
-- `begin_stage`
-- `restart_stage`
-- `register_checkpoint`
-- `register_death`
-- `register_lap`
-- `complete_goal`
-- `unlock_stage`
-- `is_stage_available`
-- `stage_select_entries`
-- `current_stage_context`
-- `best_time`
-- `serialize_stage_state`
-- `restore_stage_state`
+## World / gimmicks — Next2
 
-Rules:
+`WorldState` owns phase, visibility, discoveries and declared ability gates. `GimmickRuntime` re-emits player-affecting spring/hazard requests; Session B never writes player velocity or invokes Session A death methods.
 
-- Manual begin/restart creates a new `attempt_id`.
-- Death retry preserves the attempt and elapsed time.
-- Backtracking cannot downgrade the active checkpoint.
-- Non-positive or duplicate finished laps are rejected.
-- Best time is the minimum positive completion time.
-- Stage clear unlocks the next stage at the stage subsystem level.
-- Session A lap timing is authoritative when supplied.
+World topology is `Content/World/world_topology_v1.json`. Secrets are optional. New movement/world abilities create revisit value in earlier content.
 
-## World / gimmicks — implemented Next2
+## Economy — Next3
 
-Authoritative world state: `Game/World/WorldState.gd`.
+Authoritative resource snapshots are `{mantissa: float, exponent: int}` representing `mantissa × 1000^exponent`. UI suffixes are presentation only.
 
-Methods:
+Public operations:
 
-- `set_unlocked_abilities`
-- `enter_stage`
-- `set_phase`
-- `set_visibility`
-- `reset_visibility`
-- `discover_secret`
-- `discover_shortcut`
-- `can_traverse`
-- `is_ability_unlocked`
-- `world_context`
-- `serialize_world_state`
-- `restore_world_state`
+- `add_resource`
+- `spend_resource`
+- `current_resource`
+- `resource_per_second`
+- `calculate_clone_reward`
+- `economy_snapshot`
 
-`GimmickRuntime` re-emits only:
+Active rewards and clone rewards are bounded by speed/quality factors. Passive economy ticks at 0.25 s. Slower recorded routes cannot degrade an existing best clone route.
 
-- `spring_launch_requested(body, launch_velocity, spring_id)`
-- `hazard_contact(body, hazard_id, reason)`
+Economic upgrade tracks remain:
 
-Session C maps these to Session A. Session B never assigns player velocity or calls player death APIs.
+- `flux_coils` → passive income multiplier
+- `loop_compression` → clone reward multiplier
+- `route_dividend` → active lap reward multiplier
 
-## Economy — implemented Next3
+## Progression / abilities — implemented Next4
 
-Authoritative stored resource is `BigResource`, represented externally as:
+Authoritative subsystem: `Game/Progression/ProgressionSystem.gd` with data in `Content/Progression/progression_v1.json`.
 
-```text
-{
-  "mantissa": float,
-  "exponent": int
-}
-```
+Public operations through `ProgressionWorld`:
 
-The value is `mantissa × 1000^exponent`. Storage is independent from UI suffixes.
-
-Required public operations are implemented on `ProgressionWorld`:
-
-- `add_resource(amount, source) -> bool`
-- `spend_resource(amount, reason) -> bool`
-- `current_resource() -> Dictionary`
-- `resource_per_second() -> Dictionary`
-- `calculate_clone_reward(stage_id, best_time, clone_profile) -> Dictionary`
-
-Additional economy operations:
-
+- `unlock_ability(ability_id) -> bool`
+- `is_ability_unlocked(ability_id) -> bool`
+- `get_unlocked_abilities() -> Array[StringName]`
+- `movement_effects() -> Dictionary`
+- `session_a_ability_mapping() -> Dictionary`
+- `clone_capacity() -> int`
 - `set_clone_count(stage_id, clone_count) -> bool`
-- `economy_snapshot() -> Dictionary`
+- `clone_allocation_snapshot() -> Dictionary`
+- `progression_snapshot() -> Dictionary`
 
-Economy rules:
+Unified `purchase/current_level/current_cost/resulting_effect/upgrade_availability` route both economic tracks and progression tracks without exposing which subsystem owns the item.
 
-- Negative, NaN and infinite additions are rejected.
-- Spending is atomic and cannot make the authoritative balance negative.
-- Passive production ticks at a data-configured cadence rather than every render frame.
-- Active lap reward rises with faster completion but is bounded.
-- Clone cycle reward rises with better best time and route quality but is bounded.
-- Clone RPS benefits from both faster cycles and higher speed reward.
-- Improved recorded routes may replace slower clone cycles; slower routes never degrade an existing best automation route.
-- Large balances remain in scientific group form. `float` conversion exists only for Session C legacy compatibility and is clamped at extreme magnitudes.
+Mandatory original progression:
 
-## Upgrade — implemented Next3 economic tracks
+1. Clear `relay_yard` → buy `speed_tune` → opens `liftworks` and a Relay Yard tuned-route shortcut.
+2. Clear `liftworks` → buy `dash` → opens `phase_foundry` and old-stage dash routes.
+3. Clear `phase_foundry` → buy `double_jump` → opens `blackout_array` and earlier secrets/routes.
+4. Clear `blackout_array` → buy `wall_jump` → opens `core_spire` and earlier wall shortcuts.
+5. Clear `core_spire` → buy `phase_shift` → endgame revisit shortcuts/secrets.
 
-Operations:
+Optional progression:
 
-- `purchase(upgrade_id) -> Dictionary`
-- `purchase_upgrade(upgrade_id) -> Dictionary`
-- `current_level(upgrade_id) -> int`
-- `current_cost(upgrade_id) -> Dictionary`
-- `resulting_effect(upgrade_id) -> Dictionary`
-- `upgrade_availability(upgrade_id) -> Dictionary`
+- `jump_tune` multiplies jump intent; Session C/A applies the value to the actual player implementation.
+- `clone_capacity` increases one global clone-allocation budget. The sum of per-stage clone counts cannot exceed this capacity.
+- higher `speed_tune` levels increase run-speed intent after its level-1 gate unlock.
 
-Economic tracks:
+### Session A mapping
 
-- `flux_coils` → global passive income multiplier.
-- `loop_compression` → clone-cycle reward multiplier.
-- `route_dividend` → active lap reward multiplier.
+Session B IDs do not pretend to be Session A enum cases:
 
-Prices use declared geometric curves in `Content/Economy/economy_balance_v1.json`. Purchases are atomic, max levels are terminal, and UI can query both current cost and next resulting effect. Track access is gated by declared stage-clear milestones.
+- `dash` → Session A `dash`
+- `double_jump` → Session A `airJump`
+- `wall_jump` → Session A `wallJump`
+- `speed_tune` → numeric `run_speed_multiplier`, not a discrete Session A ability
+- `phase_shift` → world-only ability; no Session A PlayerAbility mapping
+- `jump_tune` → numeric `jump_multiplier`, not a discrete Session A ability
 
-Movement, ability and clone-capacity progression is intentionally completed in Next4 rather than being hidden inside these economy upgrades.
+Session C must adapt the three discrete movement IDs and apply numeric movement effects through the eventual player-configuration bridge. Session B does not edit Session A config directly.
 
-## Resource display — implemented Next3
+### Stage availability
 
-`Game/UI/ResourceFormatter.gd` formats exact snapshots without altering stored values.
+`ProgressionWorld.stage_availability(stage_id)` is authoritative and combines:
 
-Default original unit is `Flux`:
+1. raw StageManager unlock (previous mandatory clear), and
+2. `WorldState.entry_required_ability` against ProgressionSystem unlock state.
 
-- Flux
-- kFlux
-- MFlux
-- GFlux
-- TFlux
-- PFlux
-- EFlux
-- ZFlux
-- YFlux
-- then scientific `eN Flux`
+Locked reasons are explicit: `unknown_stage`, `requires_previous_clear`, `requires_ability`.
 
-## Clone registration
+## Upgrade rules
 
-`ProgressionWorld.register_lap` performs exactly one active reward after `StageManager` accepts the completion.
+All purchases are atomic. Progression ability prerequisites and stage-clear milestones are checked before spending. `unlock_ability` is idempotent and, when directly invoked, synchronizes the corresponding minimum progression level so ability state and upgrade state cannot disagree.
 
-When a non-empty replay payload is supplied, it also registers/updates the stage clone route. The replay payload may optionally contain `route_quality`; Session B does not inspect Session A replay internals.
+## Save contract
 
-Clone count defaults to one only when no prior capacity/profile exists. Next4 owns clone-capacity progression.
+Aggregate save schema is version 2 and contains:
 
-## Progression / ability unlock — reserved for Next4
+- stage
+- world
+- economy
+- economic upgrades
+- progression levels / unlocked abilities
 
-Required operations remain:
-
-- `unlock_ability`
-- `is_ability_unlocked`
-- `unlock_stage`
-- composite stage availability including mandatory ability requirements.
-
-Required signal:
-
-- `ability_unlocked(ability_id)`
-
-Session B owns unlock state. Session A owns movement implementation.
+Version-1 aggregate saves remain readable; missing progression data starts at default locked progression rather than invalidating the save.
 
 ## Stable original IDs
 
-Stages:
+Stages: `relay_yard`, `liftworks`, `phase_foundry`, `blackout_array`, `core_spire`.
 
-- `relay_yard`
-- `liftworks`
-- `phase_foundry`
-- `blackout_array`
-- `core_spire`
+Abilities: `speed_tune`, `dash`, `double_jump`, `wall_jump`, `phase_shift`.
 
-Abilities:
-
-- `speed_tune`
-- `dash`
-- `double_jump`
-- `wall_jump`
-- `phase_shift`
+Optional progression IDs include `jump_tune` and `clone_capacity`.
 
 All IDs, presentation, economy constants and world layouts are project-original. No reference-game stage geometry, text, art, audio or exact unpublished numeric formula is represented as canonical.
