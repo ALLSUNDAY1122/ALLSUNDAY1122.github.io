@@ -1042,3 +1042,15 @@ workflows:
         submit_to_testflight: false
         submit_to_app_store: false
 
+  scanner-parity-golden-video-probe:
+    name: Scanner Parity - Golden Video Equivalence Probe
+    max_build_duration: 45
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+    scripts:
+      - name: Probe Golden video equivalence
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          bash scanner-parity/HQGoldenRunner/probe-golden-video-equivalence-codemagic.sh
