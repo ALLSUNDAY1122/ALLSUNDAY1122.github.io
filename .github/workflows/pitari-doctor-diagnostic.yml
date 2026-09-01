@@ -1,0 +1,83 @@
+name: Pitari Expo Doctor Diagnostic
+on:
+  push:
+    branches: [main]
+    paths: [automation/pitari-doctor-command.json]
+permissions:
+  contents: write
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Reproduce dependency validation
+        run: |
+          set -uo pipefail
+          RID=$(python -c "import json;print(json.load(open('automation/pitari-doctor-command.json'))['request_id'])")
+          echo "$RID" >/tmp/rid
+          mkdir -p /tmp/pitari-doctor/assets
+          cat > /tmp/pitari-doctor/package.json <<'JSON'
+          {
+            "name":"pitari-resize-mobile","version":"0.1.0","private":true,"main":"index.ts",
+            "scripts":{"doctor":"expo-doctor"},
+            "dependencies":{"expo":"~57.0.11","expo-build-properties":"~57.0.9","expo-clipboard":"~57.0.1","expo-dev-client":"~57.0.16","expo-file-system":"~57.0.2","expo-iap":"^5.0.1","expo-image-manipulator":"~57.0.8","expo-image-picker":"~57.0.8","expo-media-library":"~57.0.3","expo-sharing":"~57.0.8","expo-status-bar":"~57.0.1","fflate":"^0.8.2","react":"19.2.3","react-native":"0.86.2","react-native-compressor":"^2.0.3"},
+            "devDependencies":{"@types/node":"~24.13.3","@types/react":"~19.2.2","expo-doctor":"^1.20.1","tsx":"^4.20.6","typescript":"~6.0.3"},
+            "packageManager":"pnpm@11.9.0"
+          }
+          JSON
+          cat > /tmp/pitari-doctor/app.json <<'JSON'
+          {"expo":{"name":"ぴたりサイズ","slug":"pitari-resize","version":"1.0.0","icon":"./assets/icon.png","orientation":"portrait","userInterfaceStyle":"light","ios":{"supportsTablet":false,"deploymentTarget":"16.4","bundleIdentifier":"jp.allsunday.pitariresize"},"plugins":[["expo-build-properties",{"ios":{"deploymentTarget":"16.4"}}],"react-native-compressor","expo-image-picker","expo-media-library"],"extra":{"eas":{"projectId":"d7480022-0db3-48dd-906e-43a12438ecdb"}},"owner":"allsunday1122"}}
+          JSON
+          python - <<'PY'
+          import base64
+          from pathlib import Path
+          # 1x1 PNG; doctor only needs a valid referenced asset.
+          Path('/tmp/pitari-doctor/assets/icon.png').write_bytes(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='))
+          PY
+          cd /tmp/pitari-doctor
+          corepack enable
+          corepack prepare pnpm@11.9.0 --activate
+          pnpm install --no-frozen-lockfile >/tmp/install.log 2>&1
+          INSTALL_RC=$?
+          if [ "$INSTALL_RC" -eq 0 ]; then pnpm doctor >/tmp/doctor.log 2>&1; DOCTOR_RC=$?; else DOCTOR_RC=99; : >/tmp/doctor.log; fi
+          npx expo install --check >/tmp/expo-check.log 2>&1; CHECK_RC=$?
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          def tail(p,n=16000):
+              s=Path(p).read_text(errors='replace') if Path(p).exists() else ''
+              return s[-n:]
+          out={
+            'request_id':Path('/tmp/rid').read_text().strip(),
+            'install_rc':int(Path('/tmp/install_rc').read_text()) if Path('/tmp/install_rc').exists() else None,
+            'doctor_output':tail('/tmp/doctor.log'),
+            'expo_install_check_output':tail('/tmp/expo-check.log')
+          }
+          Path('/tmp/result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+        shell: bash
+      - name: Persist diagnostic
+        if: always()
+        run: |
+          RID=$(cat /tmp/rid 2>/dev/null || echo unknown)
+          # Backfill exit codes if the main step reached them.
+          if [ ! -f /tmp/result.json ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          def tail(p,n=16000):
+              return Path(p).read_text(errors='replace')[-n:] if Path(p).exists() else ''
+          Path('/tmp/result.json').write_text(json.dumps({'request_id':Path('/tmp/rid').read_text().strip() if Path('/tmp/rid').exists() else 'unknown','doctor_output':tail('/tmp/doctor.log'),'expo_install_check_output':tail('/tmp/expo-check.log'),'install_output':tail('/tmp/install.log')},ensure_ascii=False,indent=2)+'\n')
+          PY
+          fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/pitari-doctor-results
+          cp /tmp/result.json "automation/pitari-doctor-results/$RID.json"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "automation/pitari-doctor-results/$RID.json"
+          git commit -m "Persist Pitari doctor diagnostic $RID" || exit 0
+          git push origin HEAD:main
