@@ -26,15 +26,26 @@ func _ready() -> void:
     _core.bind(core_impl)
 
     _core.lap_completed.connect(_progression.register_lap)
-    _progression.ability_unlocked.connect(func(_id): _core.apply_ability_set(_progression.get_unlocked_abilities()))
+    _core.lap_completed.connect(_on_lap_completed)
+    _core.player_died.connect(func(_reason): Haptics.error())
+    _core.checkpoint_reached.connect(func(_id): Haptics.light())
+    _progression.ability_unlocked.connect(_on_ability_unlocked)
     _progression.stage_context_changed.connect(_core.set_stage_context)
-    _core.set_stage_context(_progression.current_stage_context())
 
     add_child(MobileControls.new())
     _build_hud()
     _progression.currency_changed.connect(_on_currency_changed)
     IOSLayout.safe_area_changed.connect(func(_rect: Rect2): _layout_hud())
     get_viewport().size_changed.connect(_layout_hud)
+
+    SaveStore.register_section(&"progression", Callable(_progression, "serialize_state"), Callable(_progression, "restore_state"))
+    SaveStore.offline_elapsed.connect(_progression.apply_offline_progress)
+    SaveStore.load_and_restore()
+    Haptics.set_enabled(bool(SaveStore.get_setting(&"haptics_enabled", true)))
+    _apply_audio_settings()
+
+    _core.apply_ability_set(_progression.get_unlocked_abilities())
+    _core.set_stage_context(_progression.current_stage_context())
     call_deferred("_layout_hud")
 
 func _build_hud() -> void:
@@ -67,3 +78,18 @@ func _layout_hud() -> void:
 
 func _on_currency_changed(total: float) -> void:
     _currency_label.text = "ENERGY  %.2f" % total
+
+func _on_ability_unlocked(_ability_id: StringName) -> void:
+    _core.apply_ability_set(_progression.get_unlocked_abilities())
+    Haptics.medium()
+    SaveStore.request_save(&"ability_unlocked")
+
+func _on_lap_completed(stage_id: StringName, elapsed_seconds: float, _replay_payload: Dictionary) -> void:
+    SaveStore.record_best_time(stage_id, elapsed_seconds)
+    Haptics.success()
+    SaveStore.request_save(&"lap_completed")
+
+func _apply_audio_settings() -> void:
+    var master := clampf(float(SaveStore.get_setting(&"master_volume", 1.0)), 0.0, 1.0)
+    if AudioServer.bus_count > 0:
+        AudioServer.set_bus_volume_db(0, linear_to_db(maxf(master, 0.0001)))

@@ -2,6 +2,8 @@ extends Node
 
 signal app_backgrounded
 signal app_foregrounded
+signal app_focus_lost
+signal app_focus_gained
 signal save_requested(reason: StringName)
 
 var is_backgrounded := false
@@ -15,6 +17,12 @@ func _notification(what: int) -> void:
         _enter_background()
     elif what == NOTIFICATION_APPLICATION_RESUMED:
         _return_foreground()
+    elif what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+        InputRouter.clear_virtual_actions()
+        app_focus_lost.emit()
+    elif what == NOTIFICATION_APPLICATION_FOCUS_IN:
+        InputRouter.clear_virtual_actions()
+        app_focus_gained.emit()
     elif what == NOTIFICATION_WM_CLOSE_REQUEST:
         save_requested.emit(&"close_request")
 

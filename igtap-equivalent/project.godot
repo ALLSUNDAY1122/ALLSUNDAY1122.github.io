@@ -1,6 +1,6 @@
 ; Engine configuration file.
 ; Session C iOS foundation for the independent Loopforge prototype.
-; Integration branch changes under this project are validated by Contract and iOS export smoke workflows.
+; C1 integration verification is intentionally triggered by project-path changes.
 config_version=5
 
 [application]
@@ -12,6 +12,9 @@ run/main_scene="res://Main.tscn"
 InputRouter="*res://Platform/Input/InputRouter.gd"
 IOSLayout="*res://Platform/iOS/IOSLayout.gd"
 Lifecycle="*res://Platform/iOS/Lifecycle.gd"
+SaveStore="*res://Platform/Save/SaveManager.gd"
+Haptics="*res://Platform/Haptics/Haptics.gd"
+AudioLifecycle="*res://Platform/iOS/AudioLifecycle.gd"
 PauseController="*res://Platform/Input/PauseController.gd"
 
 [display]
@@ -28,6 +31,10 @@ ios/allow_high_refresh_rate=true
 ios/hide_home_indicator=true
 ios/hide_status_bar=true
 ios/suppress_ui_gesture=true
+
+[audio]
+general/ios/session_category=0
+general/ios/mix_with_others=false
 
 [rendering]
 renderer/rendering_method="gl_compatibility"

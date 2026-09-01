@@ -15,7 +15,11 @@ REQUIRED = [
     "Platform/Input/PauseController.gd",
     "Platform/iOS/IOSLayout.gd",
     "Platform/iOS/Lifecycle.gd",
+    "Platform/iOS/AudioLifecycle.gd",
     "Platform/iOS/AppIcon.svg",
+    "Platform/Save/SaveManager.gd",
+    "Platform/Haptics/Haptics.gd",
+    "Tests/Integration/SaveSelfTest.gd",
 ]
 
 def fail(message: str) -> None:
@@ -38,7 +42,11 @@ for setting in (
     'textures/vram_compression/import_etc2_astc=true',
     'common/physics_ticks_per_second=120',
     'common/max_physics_steps_per_frame=8',
+    'SaveStore="*res://Platform/Save/SaveManager.gd"',
+    'Haptics="*res://Platform/Haptics/Haptics.gd"',
+    'AudioLifecycle="*res://Platform/iOS/AudioLifecycle.gd"',
     'PauseController="*res://Platform/Input/PauseController.gd"',
+    'general/ios/session_category=0',
 ):
     if setting not in project:
         fail(f"missing iOS/display/runtime setting: {setting}")
@@ -72,8 +80,22 @@ for token in ("InputEventScreenTouch", "InputEventScreenDrag", "_finger_actions"
         fail(f"mobile multi-touch token missing: {token}")
 
 lifecycle = (ROOT / "Platform/iOS/Lifecycle.gd").read_text(encoding="utf-8")
-for token in ("NOTIFICATION_APPLICATION_PAUSED", "NOTIFICATION_APPLICATION_RESUMED", "get_tree().paused = true"):
+for token in ("NOTIFICATION_APPLICATION_PAUSED", "NOTIFICATION_APPLICATION_RESUMED", "NOTIFICATION_APPLICATION_FOCUS_OUT", "get_tree().paused = true"):
     if token not in lifecycle:
         fail(f"lifecycle token missing: {token}")
 
-print("Loopforge iOS foundation validation: PASS")
+save = (ROOT / "Platform/Save/SaveManager.gd").read_text(encoding="utf-8")
+for token in ("CURRENT_SCHEMA_VERSION := 2", "checksum_sha256", "sha256_text", "backup_path", "_migrate_payload", "offline_elapsed"):
+    if token not in save:
+        fail(f"save resilience token missing: {token}")
+
+haptics = (ROOT / "Platform/Haptics/Haptics.gd").read_text(encoding="utf-8")
+if "Input.vibrate_handheld" not in haptics:
+    fail("mobile haptics API missing")
+
+audio = (ROOT / "Platform/iOS/AudioLifecycle.gd").read_text(encoding="utf-8")
+for token in ("AudioServer.set_bus_mute", "app_focus_lost", "app_foregrounded"):
+    if token not in audio:
+        fail(f"audio lifecycle token missing: {token}")
+
+print("Loopforge iOS foundation + persistence validation: PASS")

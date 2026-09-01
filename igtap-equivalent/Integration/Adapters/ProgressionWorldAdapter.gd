@@ -36,3 +36,17 @@ func current_stage_context() -> Dictionary:
     if _implementation != null and _implementation.has_method("current_stage_context"):
         return _implementation.current_stage_context()
     return {}
+
+func serialize_state() -> Dictionary:
+    if _implementation != null and _implementation.has_method("serialize_state"):
+        var state: Variant = _implementation.serialize_state()
+        return state if typeof(state) == TYPE_DICTIONARY else {}
+    return {}
+
+func restore_state(state: Dictionary) -> void:
+    if _implementation != null and _implementation.has_method("restore_state"):
+        _implementation.restore_state(state)
+
+func apply_offline_progress(elapsed_seconds: float) -> void:
+    if _implementation != null and _implementation.has_method("apply_offline_progress"):
+        _implementation.apply_offline_progress(elapsed_seconds)

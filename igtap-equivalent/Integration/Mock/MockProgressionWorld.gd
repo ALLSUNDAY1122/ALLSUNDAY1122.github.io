@@ -43,3 +43,11 @@ func restore_state(state: Dictionary) -> void:
     _laps = int(state.get("laps", 0))
     _unlocked.assign(state.get("unlocked", []))
     _announce()
+
+func apply_offline_progress(elapsed_seconds: float) -> void:
+    var amount := minf(elapsed_seconds, 60.0 * 60.0 * 8.0) * 0.02
+    if amount <= 0.0:
+        return
+    _currency += amount
+    clone_income_applied.emit(&"mock_loop", amount)
+    currency_changed.emit(_currency)
