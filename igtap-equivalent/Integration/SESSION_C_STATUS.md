@@ -1,30 +1,38 @@
 # Session C status
 
-## Bootstrap checkpoint — C 0/5
+## C 2/5 complete on work branch
 
-Date: 2026-08-30 JST
+Date: 2026-09-01 JST
 
-Reference inspected: current itch.io demo and public jam feedback. Only mechanics/experience are reference inputs; names, art, audio, prose and stage geometry are excluded from reuse.
+Observed source heads before C2 implementation:
 
-Git state observed during bootstrap:
+- Session A `igtap/wp1-core-gameplay`: `4059c603ce1564293db5bad5f9fe865bff4265b6`
+- Session B `igtap/wp2-progression-world`: `866932e9304cb5cd569ef86fc1e85184c316c250`
+- Session C/integration baseline: `768105cc84f201f5859bbefb8144c1be43aa5302`
 
-- Session A branch `igtap/wp1-core-gameplay`: `cba860926d2b1d3fd5ee27b595fd3d69e75a8d4c`
-- Session B branch `igtap/wp2-progression-world`: `d277edcd3da30f4d2155562cfb39bfcade68ecfc`
-- Session C bootstrap commit before integration merge: `bc2d2038a5f8c0e052a9c8e20f2627af7b0a29ab`
-- integration bootstrap merge: `9feb0fb556b72f0b82fa904e23fd80f9b4f005e8`
+C1 completed the iPhone runtime foundation and produced a validated unsigned Xcode project artifact from Godot 4.7.2.
 
-Completed before Next 1:
+C2 adds C-owned persistence and mobile lifecycle infrastructure without rewriting A/B ownership:
 
-- Canonical final Godot project root created at `igtap-equivalent/`.
-- Shared semantic contract created in `Integration/INTERFACE_CONTRACT.md`.
-- Landscape 1280x720 / expand scaling / iOS high-refresh baseline configured.
-- Safe-area abstraction, normalized keyboard/touch input, virtual left/right/jump/dash/pause controls and lifecycle notification abstraction created.
-- Mock core gameplay + mock progression connected so C can continue without A/B runtime code.
-- Python contract/integration tests added and passed in GitHub Actions.
-- Headless Godot parse/import added to CI using current stable 4.7.2.
+- Versioned local save envelope with SHA-256 payload verification.
+- Temp-file promotion plus one-generation backup rotation.
+- Corrupted-primary fallback to backup without destroying the valid backup during repair.
+- Schema migration path from v1 to v2.
+- Persistent progression/economy provider section, best-times map and settings.
+- Offline elapsed calculation with a seven-day safety cap and Adapter forwarding hook.
+- Background/foreground save lifecycle and touch-state clearing.
+- Focus-loss/focus-gain audio suspension and resume using AudioServer bus state preservation.
+- Mobile haptics abstraction with a user-disable setting.
+- Godot runtime self-test for primary load, backup recovery and v1 migration.
 
-Integration blocker discovered:
+Validation evidence before integration merge:
 
-A currently declares Swift/SpriteKit-or-Metal implementation direction and B uses a second project root (`igtap-equivalence/`). This conflicts with the required Godot iOS export architecture and is not economically solvable with a normal adapter. GitHub issue #4834 records the required correction while preserving A/B semantic design work.
+- Production C2 commit `17905908abf3adcbd4f7c99b5b39ae6437f263eb` passed the iOS Xcode-project export smoke workflow, run `33504673371`.
+- Test-harness/final C2 code commit `366c122e4c9e2c4ace777a48f07a3251ff3155ee` passed Loopforge contract validation run `33504889997` / run #26.
+- The contract job passed static validation, Python integration bootstrap tests, Godot 4.7.2 import/parse, save corruption + backup recovery + v1 migration self-test, and headless mock boot.
 
-Next C milestone: Next 1 completes and hardens the iOS foundation, then produces a validated Godot project/export path without depending on A/B completion.
+The mock progression implementation includes only a C-owned validation path for offline income; Session B remains authoritative for final economy behavior when integrated.
+
+Known release risk intentionally left for device QA: native AVAudioSession interruption behavior must be verified on a physical iPhone; C2 currently handles Godot app background/foreground/focus lifecycle and preserves AudioServer bus mute state.
+
+Remaining after C2: integrate latest A/B runtime, full-loop QA, then signing/archive/App Store Connect/TestFlight release.
