@@ -27,31 +27,55 @@ jobs:
             "packageManager":"pnpm@11.9.0"
           }
           JSON
+          cat > /tmp/pitari-doctor/pnpm-workspace.yaml <<'YAML'
+          packages:
+            - "."
+          allowBuilds:
+            esbuild: true
+          minimumReleaseAgeExclude:
+            - '@expo/cli@57.0.13'
+            - '@expo/config-plugins@57.0.7'
+            - babel-preset-expo@57.0.6
+            - expo-asset@57.0.9
+            - expo-file-system@57.0.2
+            - expo-modules-core@57.0.10
+            - expo@57.0.11
+            - expo-image-manipulator@57.0.8
+            - expo-image-picker@57.0.8
+            - expo-build-properties@57.0.9
+          YAML
           cat > /tmp/pitari-doctor/app.json <<'JSON'
           {"expo":{"name":"ぴたりサイズ","slug":"pitari-resize","version":"1.0.0","icon":"./assets/icon.png","orientation":"portrait","userInterfaceStyle":"light","ios":{"supportsTablet":false,"deploymentTarget":"16.4","bundleIdentifier":"jp.allsunday.pitariresize"},"plugins":[["expo-build-properties",{"ios":{"deploymentTarget":"16.4"}}],"react-native-compressor","expo-image-picker","expo-media-library"],"extra":{"eas":{"projectId":"d7480022-0db3-48dd-906e-43a12438ecdb"}},"owner":"allsunday1122"}}
           JSON
           python - <<'PY'
           import base64
           from pathlib import Path
-          # 1x1 PNG; doctor only needs a valid referenced asset.
           Path('/tmp/pitari-doctor/assets/icon.png').write_bytes(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='))
           PY
           cd /tmp/pitari-doctor
           corepack enable
           corepack prepare pnpm@11.9.0 --activate
           pnpm install --no-frozen-lockfile >/tmp/install.log 2>&1
-          INSTALL_RC=$?
-          if [ "$INSTALL_RC" -eq 0 ]; then pnpm doctor >/tmp/doctor.log 2>&1; DOCTOR_RC=$?; else DOCTOR_RC=99; : >/tmp/doctor.log; fi
-          npx expo install --check >/tmp/expo-check.log 2>&1; CHECK_RC=$?
+          INSTALL_RC=$?; echo "$INSTALL_RC" >/tmp/install_rc
+          if [ "$INSTALL_RC" -eq 0 ]; then
+            pnpm doctor >/tmp/doctor.log 2>&1; DOCTOR_RC=$?
+            npx expo install --check >/tmp/expo-check.log 2>&1; CHECK_RC=$?
+          else
+            DOCTOR_RC=99; CHECK_RC=99; : >/tmp/doctor.log; : >/tmp/expo-check.log
+          fi
+          echo "$DOCTOR_RC" >/tmp/doctor_rc; echo "$CHECK_RC" >/tmp/check_rc
           python - <<'PY'
           import json
           from pathlib import Path
-          def tail(p,n=16000):
+          def tail(p,n=20000):
               s=Path(p).read_text(errors='replace') if Path(p).exists() else ''
               return s[-n:]
           out={
             'request_id':Path('/tmp/rid').read_text().strip(),
-            'install_rc':int(Path('/tmp/install_rc').read_text()) if Path('/tmp/install_rc').exists() else None,
+            'install_rc':int(Path('/tmp/install_rc').read_text()),
+            'doctor_rc':int(Path('/tmp/doctor_rc').read_text()),
+            'expo_install_check_rc':int(Path('/tmp/check_rc').read_text()),
+            'install_output':tail('/tmp/install.log',8000),
             'doctor_output':tail('/tmp/doctor.log'),
             'expo_install_check_output':tail('/tmp/expo-check.log')
           }
@@ -62,12 +86,11 @@ jobs:
         if: always()
         run: |
           RID=$(cat /tmp/rid 2>/dev/null || echo unknown)
-          # Backfill exit codes if the main step reached them.
           if [ ! -f /tmp/result.json ]; then
             python - <<'PY'
           import json
           from pathlib import Path
-          def tail(p,n=16000):
+          def tail(p,n=20000):
               return Path(p).read_text(errors='replace')[-n:] if Path(p).exists() else ''
           Path('/tmp/result.json').write_text(json.dumps({'request_id':Path('/tmp/rid').read_text().strip() if Path('/tmp/rid').exists() else 'unknown','doctor_output':tail('/tmp/doctor.log'),'expo_install_check_output':tail('/tmp/expo-check.log'),'install_output':tail('/tmp/install.log')},ensure_ascii=False,indent=2)+'\n')
           PY
