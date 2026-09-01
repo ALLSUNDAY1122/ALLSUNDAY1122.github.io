@@ -20,6 +20,7 @@ REQUIRED = [
     "Platform/Save/SaveManager.gd",
     "Platform/Haptics/Haptics.gd",
     "Tests/Integration/SaveSelfTest.gd",
+    "Tests/Integration/SaveSelfTest.tscn",
 ]
 
 def fail(message: str) -> None:
