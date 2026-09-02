@@ -20,10 +20,11 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: '22'
+          package-manager-cache: false
       - name: Foundation-only notice
         if: ${{ hashFiles('tools/otsu4-build-content-v2.mjs') == '' }}
         run: echo 'Otsu4 product files are not present yet; audit will run on the product PR.'
