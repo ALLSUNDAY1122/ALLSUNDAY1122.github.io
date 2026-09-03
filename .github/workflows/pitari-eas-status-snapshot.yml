@@ -1,0 +1,139 @@
+name: Pitari EAS Status Snapshot
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pitari-eas-status-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Capture EAS build and submission status
+        shell: bash
+        run: |
+          set +e
+          RID=$(python -c "import json;print(json.load(open('automation/pitari-eas-status-command.json'))['request_id'])")
+          BUILD_ID=$(python -c "import json;print(json.load(open('automation/pitari-eas-status-command.json'))['build_id'])")
+          printf '%s' "$RID" >/tmp/rid
+          printf '%s' "$BUILD_ID" >/tmp/build-id
+
+          rm -rf /tmp/pitari-status
+          mkdir -p /tmp/pitari-status
+          cd /tmp/pitari-status
+          cat > package.json <<'JSON'
+          {"name":"pitari-eas-status","private":true}
+          JSON
+          cat > app.json <<'JSON'
+          {"expo":{"name":"ぴたりサイズ","slug":"pitari-resize","owner":"allsunday1122","version":"1.0.0","ios":{"bundleIdentifier":"jp.allsunday.pitariresize"},"extra":{"eas":{"projectId":"d7480022-0db3-48dd-906e-43a12438ecdb"}}}}
+          JSON
+          cat > eas.json <<'JSON'
+          {"cli":{"version":">= 16.0.1","appVersionSource":"remote"},"build":{"production":{"autoIncrement":true}},"submit":{"production":{}}}
+          JSON
+          git init -q
+          git config user.name pitari-status
+          git config user.email noreply@example.invalid
+          git add . && git commit -qm init
+
+          npx --yes eas-cli@23.0.0 whoami >/tmp/whoami.out 2>/tmp/whoami.err
+          WHO_RC=$?
+          npx --yes eas-cli@23.0.0 build:list --platform ios --limit 20 --json --non-interactive >/tmp/builds.out 2>/tmp/builds.err
+          BUILD_RC=$?
+
+          npx --yes eas-cli@23.0.0 submit:list --help >/tmp/submit-list-help.out 2>/tmp/submit-list-help.err
+          SUBMIT_LIST_HELP_RC=$?
+          npx --yes eas-cli@23.0.0 submission:list --help >/tmp/submission-list-help.out 2>/tmp/submission-list-help.err
+          SUBMISSION_LIST_HELP_RC=$?
+          npx --yes eas-cli@23.0.0 submit --help >/tmp/submit-help.out 2>/tmp/submit-help.err
+          SUBMIT_HELP_RC=$?
+
+          if [ "$SUBMIT_LIST_HELP_RC" -eq 0 ]; then
+            npx --yes eas-cli@23.0.0 submit:list --platform ios --limit 20 --json --non-interactive >/tmp/submissions.out 2>/tmp/submissions.err
+            SUBMISSIONS_RC=$?
+          else
+            : >/tmp/submissions.out; : >/tmp/submissions.err; SUBMISSIONS_RC=127
+          fi
+          if [ "$SUBMISSION_LIST_HELP_RC" -eq 0 ]; then
+            npx --yes eas-cli@23.0.0 submission:list --platform ios --limit 20 --json --non-interactive >/tmp/submission-list.out 2>/tmp/submission-list.err
+            SUBMISSION_LIST_RC=$?
+          else
+            : >/tmp/submission-list.out; : >/tmp/submission-list.err; SUBMISSION_LIST_RC=127
+          fi
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          rid=Path('/tmp/rid').read_text().strip()
+          build_id=Path('/tmp/build-id').read_text().strip()
+          def text(p,n=12000):
+              q=Path(p)
+              return q.read_text(errors='replace')[-n:] if q.exists() else ''
+          def envint(name, default=999):
+              import os
+              try:return int(os.environ.get(name,default))
+              except:return default
+          builds=[]
+          parse_error=''
+          try:
+              builds=json.loads(text('/tmp/builds.out',100000))
+          except Exception as e:
+              parse_error=repr(e)
+          target=None
+          if isinstance(builds,list):
+              target=next((b for b in builds if b.get('id')==build_id),None)
+          out={
+            'request_id':rid,
+            'build_id':build_id,
+            'eas_identity':text('/tmp/whoami.out',2000).strip(),
+            'target_build':target,
+            'recent_builds':builds[:5] if isinstance(builds,list) else [],
+            'build_list_parse_error':parse_error,
+            'raw':{
+              'whoami_error':text('/tmp/whoami.err',4000),
+              'builds_error':text('/tmp/builds.err',8000),
+              'submit_list_help':text('/tmp/submit-list-help.out',8000),
+              'submit_list_help_error':text('/tmp/submit-list-help.err',4000),
+              'submission_list_help':text('/tmp/submission-list-help.out',8000),
+              'submission_list_help_error':text('/tmp/submission-list-help.err',4000),
+              'submit_help':text('/tmp/submit-help.out',8000),
+              'submit_help_error':text('/tmp/submit-help.err',4000),
+              'submissions':text('/tmp/submissions.out',20000),
+              'submissions_error':text('/tmp/submissions.err',8000),
+              'submission_list':text('/tmp/submission-list.out',20000),
+              'submission_list_error':text('/tmp/submission-list.err',8000)
+            }
+          }
+          Path('/tmp/result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+        env:
+          WHO_RC: ${{ steps.none.outputs.none }}
+
+      - name: Persist snapshot
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          RID=$(cat /tmp/rid 2>/dev/null || echo unknown)
+          if [ ! -f /tmp/result.json ]; then
+            printf '%s\n' '{"error":"snapshot_failed_before_result"}' >/tmp/result.json
+          fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/pitari-eas-status-results
+          cp /tmp/result.json "automation/pitari-eas-status-results/$RID.json"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "automation/pitari-eas-status-results/$RID.json"
+          git commit -m "Persist Pitari EAS status $RID" || exit 0
+          git push origin HEAD:main
