@@ -23,10 +23,11 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: '22.13.1'
+          package-manager-cache: false
       - name: JavaScript syntax
         run: node --check toru-tango/generator-v2.js && node --check toru-tango/sw.js
       - name: Regression test
