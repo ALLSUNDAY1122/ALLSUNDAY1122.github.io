@@ -15,14 +15,15 @@ struct SplatDepthSeedFrame: Sendable {
     let h: Int
 }
 
-/// S13 reconstruction initialization.
+/// S14 reconstruction initialization.
 ///
-/// Build 8 proved that the bounded trainer can finish, but the physical result can still be
-/// geometrically fragmented. The previous initializer used ARKit raw feature points even when a
-/// per-frame scene-depth map had been persisted. S13 makes the surface-aligned depth cloud the
-/// preferred initializer, matching the reference iOS capture geometry convention while preserving
-/// raw feature points as a fail-closed fallback for devices/captures without usable depth.
+/// Hardware scene depth remains the preferred source when it exists. On captures such as the
+/// physical same-raw failure where `depth 0 frames` was observed, S14 now computes bounded RGB
+/// multi-view software depth before falling back to ARKit raw feature points. This isolates dense
+/// initialization from camera-pose refinement while preserving all trainer/resource contracts.
 enum SplatDepthSeedBuilder {
+    // Keep the S13 contract literals stable for regression coverage; S14 uses a new metadata file so
+    // an existing S13 rawFeaturePoints recipe cannot mask the software-depth experiment.
     static let recipeVersion = 1
     static let targetSamplesPerFrame = 900
     static let voxelDensity: Float = 100
@@ -30,10 +31,12 @@ enum SplatDepthSeedBuilder {
     static let maximumDepth: Float = 5.0
     static let minimumGeometryPointCount = 64
     static let maximumDepthSeedPointCount = 120_000
-    static let metadataFileName = "s13-seed-recipe.json"
+    static let legacyMetadataFileName = "s13-seed-recipe.json"
+    static let metadataFileName = "s14-seed-recipe.json"
 
     enum Source: String, Codable, Sendable {
         case depth
+        case planeSweep
         case rawFeaturePoints
     }
 
@@ -97,30 +100,47 @@ enum SplatDepthSeedBuilder {
         let depthResult = depthSeedPoints(projectURL: projectURL, frames: depthFrames)
         let source: Source
         let geometryPoints: [SIMD3<Float>]
+        let geometryColors: [SplatSeedSample]
 
         if depthResult.points.count >= minimumGeometryPointCount {
             source = .depth
             geometryPoints = depthResult.points
+            geometryColors = SplatSeedColorizer.colorize(
+                points: geometryPoints,
+                frames: colorFrames,
+                projectURL: projectURL
+            )
         } else {
-            let finiteFallback = fallbackPoints.filter {
-                $0.x.isFinite && $0.y.isFinite && $0.z.isFinite
-            }
-            guard finiteFallback.count >= minimumGeometryPointCount else {
-                throw NSError(
-                    domain: "SplatLab.S13",
-                    code: 1,
-                    userInfo: [NSLocalizedDescriptionKey: "初期3Dデータに必要なdepth/特徴点が不足しています"]
+            let softwareResult = SplatSoftwareDepthSeedBuilder.makeSeedPoints(
+                projectURL: projectURL,
+                frames: colorFrames
+            )
+            if softwareResult.points.count >= SplatSoftwareDepthSeedBuilder.minimumUsablePointCount,
+               softwareResult.colors.count == softwareResult.points.count {
+                source = .planeSweep
+                geometryPoints = softwareResult.points
+                geometryColors = softwareResult.colors
+            } else {
+                let finiteFallback = fallbackPoints.filter {
+                    $0.x.isFinite && $0.y.isFinite && $0.z.isFinite
+                }
+                guard finiteFallback.count >= minimumGeometryPointCount else {
+                    throw NSError(
+                        domain: "SplatLab.S14",
+                        code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "初期3Dデータに必要なdepth/RGB multi-view/特徴点が不足しています"]
+                    )
+                }
+                source = .rawFeaturePoints
+                geometryPoints = finiteFallback
+                geometryColors = SplatSeedColorizer.colorize(
+                    points: geometryPoints,
+                    frames: colorFrames,
+                    projectURL: projectURL
                 )
             }
-            source = .rawFeaturePoints
-            geometryPoints = finiteFallback
         }
 
-        let colors = SplatSeedColorizer.colorize(
-            points: geometryPoints,
-            frames: colorFrames,
-            projectURL: projectURL
-        )
         let skySeeds = SplatSkySeeder.makeSeeds(
             frames: colorFrames,
             geometryPoints: geometryPoints,
@@ -128,7 +148,7 @@ enum SplatDepthSeedBuilder {
         )
         try writePLY(
             geometryPoints: geometryPoints,
-            colors: colors,
+            colors: geometryColors,
             skySeeds: skySeeds,
             to: plyURL
         )
