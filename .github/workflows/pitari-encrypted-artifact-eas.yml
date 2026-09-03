@@ -1,0 +1,217 @@
+name: Pitari Encrypted Artifact EAS Bridge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pitari-artifact-command.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pitari-artifact-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Publish ephemeral transfer key
+        run: |
+          set -euo pipefail
+          RID=$(python -c "import json;print(json.load(open('automation/pitari-artifact-command.json'))['request_id'])")
+          printf '%s' "$RID" >/tmp/rid
+          printf '%s' key >/tmp/stage
+          DIR="automation/pitari-artifact-exchange/$RID"
+          mkdir -p "$DIR"
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out /tmp/private.pem >/dev/null 2>&1
+          openssl pkey -in /tmp/private.pem -pubout -out "$DIR/public.pem"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "$DIR/public.pem"
+          git commit -m "Publish Pitari artifact transfer key $RID"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          printf '%s' wait_url >/tmp/stage
+
+      - name: Receive and decrypt artifact URL
+        run: |
+          set -euo pipefail
+          RID=$(cat /tmp/rid)
+          DIR="automation/pitari-artifact-exchange/$RID"
+          READY=0
+          for n in $(seq 1 240); do
+            git fetch origin main >/dev/null 2>&1 || true
+            if git cat-file -e "origin/main:$DIR/url-ready.json" 2>/dev/null; then READY=1; break; fi
+            sleep 5
+          done
+          test "$READY" = 1 || { printf '%s' url_handoff_timeout >/tmp/error; exit 1; }
+          printf '%s' decrypt_url >/tmp/stage
+          git show "origin/main:$DIR/url-ready.json" >/tmp/url-ready.json
+          git show "origin/main:$DIR/url-key.b64" | base64 -d >/tmp/url-key.enc
+          git show "origin/main:$DIR/url.b64" | base64 -d >/tmp/url.enc
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          m=json.loads(Path('/tmp/url-ready.json').read_text())
+          checks=[('/tmp/url-key.enc','key_enc_sha256'),('/tmp/url.enc','url_enc_sha256')]
+          for p,k in checks:
+              got=hashlib.sha256(Path(p).read_bytes()).hexdigest()
+              assert got==m[k], (p,got,m[k])
+          PY
+          openssl pkeyutl -decrypt -inkey /tmp/private.pem -in /tmp/url-key.enc -out /tmp/url-keyiv.bin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256 -pkeyopt rsa_mgf1_md:sha256
+          python - <<'PY'
+          from pathlib import Path
+          b=Path('/tmp/url-keyiv.bin').read_bytes(); assert len(b)==48
+          Path('/tmp/url-k').write_text(b[:32].hex()); Path('/tmp/url-i').write_text(b[32:].hex())
+          PY
+          openssl enc -d -aes-256-cbc -K "$(cat /tmp/url-k)" -iv "$(cat /tmp/url-i)" -in /tmp/url.enc -out /tmp/artifact-url.txt
+          python - <<'PY'
+          from pathlib import Path
+          from urllib.parse import urlparse
+          u=Path('/tmp/artifact-url.txt').read_text().strip()
+          p=urlparse(u)
+          assert p.scheme=='https'
+          assert p.hostname and p.hostname.endswith('.oaiusercontent.com')
+          assert p.path.startswith('/files/')
+          assert not p.username and not p.password
+          print('Validated encrypted artifact URL host:', p.hostname)
+          PY
+          printf '%s' download_artifact >/tmp/stage
+          curl --fail --silent --show-error --location --retry 3 --connect-timeout 20 "$(cat /tmp/artifact-url.txt)" -o /tmp/payload.zip
+          unzip -tq /tmp/payload.zip
+          rm -rf /tmp/payload; mkdir -p /tmp/payload
+          unzip -q /tmp/payload.zip -d /tmp/payload
+          test -f /tmp/payload/ready.json
+          test -f /tmp/payload/key.b64
+          rm -f /tmp/artifact-url.txt /tmp/url-key.enc /tmp/url-keyiv.bin /tmp/url-k /tmp/url-i /tmp/url.enc
+
+      - name: Verify and decrypt private source artifact
+        run: |
+          set -euo pipefail
+          printf '%s' verify_source >/tmp/stage
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          root=Path('/tmp/payload')
+          m=json.loads((root/'ready.json').read_text())
+          parts=int(m.get('parts',0)); assert parts>0
+          source=b''.join((root/f'source.part{i:02d}').read_bytes() for i in range(parts))
+          Path('/tmp/source.b64').write_bytes(source)
+          assert hashlib.sha256(source).hexdigest()==m['source_b64_sha256']
+          key_enc=__import__('base64').b64decode((root/'key.b64').read_bytes())
+          Path('/tmp/source-key.enc').write_bytes(key_enc)
+          assert hashlib.sha256(key_enc).hexdigest()==m['key_enc_sha256']
+          PY
+          base64 -d /tmp/source.b64 >/tmp/source.enc
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          m=json.loads(Path('/tmp/payload/ready.json').read_text())
+          got=hashlib.sha256(Path('/tmp/source.enc').read_bytes()).hexdigest()
+          assert got==m['source_enc_sha256'], (got,m['source_enc_sha256'])
+          PY
+          openssl pkeyutl -decrypt -inkey /tmp/private.pem -in /tmp/source-key.enc -out /tmp/source-keyiv.bin -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256 -pkeyopt rsa_mgf1_md:sha256
+          python - <<'PY'
+          from pathlib import Path
+          b=Path('/tmp/source-keyiv.bin').read_bytes(); assert len(b)==48
+          Path('/tmp/source-k').write_text(b[:32].hex()); Path('/tmp/source-i').write_text(b[32:].hex())
+          PY
+          openssl enc -d -aes-256-cbc -K "$(cat /tmp/source-k)" -iv "$(cat /tmp/source-i)" -in /tmp/source.enc -out /tmp/source.tgz
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          m=json.loads(Path('/tmp/payload/ready.json').read_text())
+          got=hashlib.sha256(Path('/tmp/source.tgz').read_bytes()).hexdigest()
+          assert got==m['source_tgz_sha256'], (got,m['source_tgz_sha256'])
+          PY
+          rm -rf /tmp/app; mkdir -p /tmp/app
+          tar -xzf /tmp/source.tgz -C /tmp/app
+          test -f /tmp/app/package.json
+          test -f /tmp/app/pnpm-lock.yaml
+          cp /tmp/payload/ready.json /tmp/source-ready.json
+          rm -f /tmp/private.pem /tmp/source-key.enc /tmp/source-keyiv.bin /tmp/source-k /tmp/source-i /tmp/source.enc /tmp/source.b64 /tmp/source.tgz /tmp/payload.zip
+          printf '%s' source_ready >/tmp/stage
+
+      - name: Validate and launch EAS auto-submit
+        run: |
+          set -euo pipefail
+          cd /tmp/app
+          SOURCE_COMMIT=$(python -c "import json;print(json.load(open('/tmp/source-ready.json')).get('source_commit','unknown'))")
+          git init -q
+          git config user.name pitari-testflight
+          git config user.email noreply@example.invalid
+          git add .
+          git commit -qm "TestFlight source snapshot ${SOURCE_COMMIT:0:12}"
+          corepack enable
+          corepack prepare pnpm@11.9.0 --activate
+          printf '%s' install >/tmp/stage
+          pnpm install --frozen-lockfile || { printf '%s' install_failed >/tmp/error; exit 1; }
+          printf '%s' typecheck >/tmp/stage
+          pnpm typecheck || { printf '%s' typecheck_failed >/tmp/error; exit 1; }
+          printf '%s' test >/tmp/stage
+          pnpm test || { printf '%s' test_failed >/tmp/error; exit 1; }
+          printf '%s' doctor >/tmp/stage
+          pnpm doctor || { printf '%s' doctor_failed >/tmp/error; exit 1; }
+          printf '%s' eas_cli >/tmp/stage
+          npx --yes eas-cli@23.0.0 --version >/tmp/eas-version 2>/tmp/eas-version.err || { printf '%s' eas_cli_failed >/tmp/error; exit 1; }
+          printf '%s' eas_auth >/tmp/stage
+          npx --yes eas-cli@23.0.0 whoami >/tmp/eas-whoami 2>/tmp/eas-whoami.err || { printf '%s' eas_auth_failed >/tmp/error; exit 1; }
+          printf '%s' eas_build >/tmp/stage
+          npx --yes eas-cli@23.0.0 build --platform ios --profile production --auto-submit --non-interactive --no-wait --message 'Pitari TestFlight: SDK57 aligned video UX build' >/tmp/eas-start 2>/tmp/eas-error || { printf '%s' eas_build_failed >/tmp/error; exit 1; }
+          sleep 5
+          printf '%s' eas_list >/tmp/stage
+          npx --yes eas-cli@23.0.0 build:list --platform ios --limit 5 --json --non-interactive >/tmp/builds.json 2>/tmp/eas-list.err || { printf '%s' eas_list_failed >/tmp/error; exit 1; }
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          bs=json.loads(Path('/tmp/builds.json').read_text())
+          meta=json.loads(Path('/tmp/source-ready.json').read_text())
+          out={
+            'validation':'PASS',
+            'stage':'eas_build_started',
+            'source_commit':meta.get('source_commit'),
+            'temporary_icon':meta.get('temporary_icon',False),
+            'auto_submit_requested':True,
+            'eas_cli_version':Path('/tmp/eas-version').read_text().strip(),
+            'eas_identity':Path('/tmp/eas-whoami').read_text().strip(),
+            'builds':[{k:b.get(k) for k in ('id','status','platform','appVersion','appBuildVersion','buildProfile','createdAt','updatedAt','gitCommitHash')} for b in bs[:5]]
+          }
+          Path('/tmp/result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+          printf '%s' complete >/tmp/stage
+
+      - name: Persist sanitized result
+        if: always()
+        run: |
+          set -euo pipefail
+          RID=$(cat /tmp/rid 2>/dev/null || echo unknown)
+          if [ ! -f /tmp/result.json ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          out={
+            'validation':'FAIL',
+            'failed_at':Path('/tmp/stage').read_text().strip() if Path('/tmp/stage').exists() else 'bootstrap',
+            'error':Path('/tmp/error').read_text().strip() if Path('/tmp/error').exists() else 'unclassified'
+          }
+          Path('/tmp/result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+          fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/pitari-artifact-results
+          cp /tmp/result.json "automation/pitari-artifact-results/$RID.json"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "automation/pitari-artifact-results/$RID.json"
+          git commit -m "Persist Pitari artifact EAS result $RID" || exit 0
+          git push origin HEAD:main
