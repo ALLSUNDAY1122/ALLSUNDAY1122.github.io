@@ -19,6 +19,14 @@ env:
   GIT_LFS_SKIP_SMUDGE: '1'
 jobs:
   build:
+    # Feature branches use the lightweight Linux contract workflow on every push.
+    # The macOS/Xcode gate runs only when explicitly requested, on a PR, on HQ,
+    # or on a TestFlight release branch.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'pull_request' ||
+      github.ref_name == 'feature/splat-native-ios-poc' ||
+      startsWith(github.ref_name, 'testflight/')
     runs-on: macos-15
     timeout-minutes: 45
     env:
