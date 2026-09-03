@@ -1,0 +1,93 @@
+name: Pitari EAS Build Monitor
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/pitari-eas-monitor-command.json
+
+permissions:
+  contents: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Monitor EAS build and submission
+        run: |
+          set -euo pipefail
+          RID=$(python -c "import json;print(json.load(open('automation/pitari-eas-monitor-command.json'))['request_id'])")
+          BUILD_ID=$(python -c "import json;print(json.load(open('automation/pitari-eas-monitor-command.json'))['build_id'])")
+          printf '%s' "$RID" >/tmp/rid
+          mkdir -p /tmp/pitari-monitor
+          cd /tmp/pitari-monitor
+          cat > package.json <<'JSON'
+          {"name":"pitari-monitor","private":true}
+          JSON
+          cat > app.json <<'JSON'
+          {"expo":{"name":"ぴたりサイズ","slug":"pitari-resize","owner":"allsunday1122","version":"1.0.0","ios":{"bundleIdentifier":"jp.allsunday.pitariresize"},"extra":{"eas":{"projectId":"d7480022-0db3-48dd-906e-43a12438ecdb"}}}}
+          JSON
+          cat > eas.json <<'JSON'
+          {"cli":{"version":">= 16.0.1","appVersionSource":"remote"},"submit":{"production":{}}}
+          JSON
+          npx --yes eas-cli@23.0.0 whoami >/tmp/whoami.txt
+          FINAL_STATUS=""
+          for n in $(seq 1 20); do
+            npx --yes eas-cli@23.0.0 build:view "$BUILD_ID" --json >/tmp/build.json 2>/tmp/build.err || true
+            if [ -s /tmp/build.json ]; then
+              FINAL_STATUS=$(python -c "import json;print(json.load(open('/tmp/build.json')).get('status',''))")
+              echo "build_status=$FINAL_STATUS attempt=$n"
+              case "$FINAL_STATUS" in
+                FINISHED|ERRORED|CANCELED) break ;;
+              esac
+            fi
+            sleep 15
+          done
+          npx --yes eas-cli@23.0.0 submit:list --platform ios --limit 20 --json --non-interactive >/tmp/submissions.json 2>/tmp/submissions.err || true
+          npx --yes eas-cli@23.0.0 submit:status --platform ios --json --non-interactive >/tmp/submit-status.json 2>/tmp/submit-status.err || true
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          def load_json(path, default):
+              try: return json.loads(Path(path).read_text())
+              except Exception: return default
+          cmd=json.loads(Path('/github/workspace/automation/pitari-eas-monitor-command.json').read_text())
+          build=load_json('/tmp/build.json',{})
+          subs=load_json('/tmp/submissions.json',[])
+          status=load_json('/tmp/submit-status.json',{})
+          out={
+            'request_id':cmd['request_id'],
+            'build_id':cmd['build_id'],
+            'eas_identity':Path('/tmp/whoami.txt').read_text().strip(),
+            'build':build,
+            'submissions':subs,
+            'submit_status':status,
+            'errors':{
+              'build':Path('/tmp/build.err').read_text(errors='replace')[-4000:] if Path('/tmp/build.err').exists() else '',
+              'submissions':Path('/tmp/submissions.err').read_text(errors='replace')[-4000:] if Path('/tmp/submissions.err').exists() else '',
+              'submit_status':Path('/tmp/submit-status.err').read_text(errors='replace')[-4000:] if Path('/tmp/submit-status.err').exists() else ''
+            }
+          }
+          Path('/tmp/result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Persist monitor result
+        if: always()
+        run: |
+          set -euo pipefail
+          RID=$(cat /tmp/rid 2>/dev/null || echo unknown)
+          if [ ! -f /tmp/result.json ]; then echo '{"error":"monitor_failed_before_result"}' >/tmp/result.json; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p automation/pitari-eas-monitor-results
+          cp /tmp/result.json "automation/pitari-eas-monitor-results/$RID.json"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "automation/pitari-eas-monitor-results/$RID.json"
+          git commit -m "Persist Pitari EAS monitor $RID" || exit 0
+          git push origin HEAD:main
