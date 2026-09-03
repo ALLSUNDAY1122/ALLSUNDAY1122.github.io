@@ -1,0 +1,151 @@
+name: Scaniverse Build 14 Codemagic + ASC Gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - testflight/splat-native-ios-20260903-build14
+    paths:
+      - .github/workflows/scaniverse-build14-codemagic.yml
+
+permissions:
+  contents: read
+
+jobs:
+  signed-build-and-readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+      CM_APP_ID: 6a769d81a1add9d06020b524
+      CM_SIGNED_WORKFLOW: splat-native-ios
+      CM_READBACK_WORKFLOW: splat-build14-asc-readback
+      CM_BRANCH: testflight/splat-native-ios-20260903-build14
+      EXPECTED_COMMIT: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify internal TestFlight release boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq 'CURRENT_PROJECT_VERSION: 14' codemagic.yaml
+          grep -Fq 'testFlightInternalTestingOnly' codemagic.yaml
+          grep -Fq 'submit_to_testflight: true' codemagic.yaml
+          grep -Fq 'submit_to_app_store: false' codemagic.yaml
+          grep -Fq 'EXPECTED_BUILD: '\''14'\''' codemagic.yaml
+
+      - name: Build signed IPA, upload to TestFlight, and verify ASC
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${CM_API_TOKEN:-}"
+          python3 - <<'PY'
+          import json, os, time, urllib.error, urllib.request
+          from pathlib import Path
+
+          token = os.environ['CM_API_TOKEN'].strip()
+          app_id = os.environ['CM_APP_ID']
+          branch = os.environ['CM_BRANCH']
+          expected_commit = os.environ['EXPECTED_COMMIT']
+          evidence_path = Path('/tmp/scaniverse-build14-codemagic.json')
+
+          def api(url, method='GET', payload=None):
+              body = None if payload is None else json.dumps(payload).encode()
+              request = urllib.request.Request(
+                  url, data=body, method=method,
+                  headers={'Content-Type': 'application/json', 'Accept': 'application/json', 'x-auth-token': token},
+              )
+              try:
+                  with urllib.request.urlopen(request, timeout=30) as response:
+                      raw = response.read().decode()
+                      return response.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as error:
+                  raw = error.read().decode(errors='replace')
+                  try:
+                      data = json.loads(raw) if raw else {}
+                  except Exception:
+                      data = {'error': raw[:2000]}
+                  return error.code, data
+
+          def start(workflow):
+              status, payload = api('https://api.codemagic.io/builds', 'POST', {
+                  'appId': app_id, 'workflowId': workflow, 'branch': branch,
+              })
+              if not 200 <= status < 300:
+                  raise SystemExit(f'Codemagic start failed {workflow} HTTP {status}: {payload}')
+              build_id = payload.get('buildId') or payload.get('id')
+              if not build_id:
+                  raise SystemExit(f'Codemagic returned no build id for {workflow}: {payload}')
+              return build_id
+
+          def normalize_commit(value):
+              if isinstance(value, str):
+                  return value
+              if isinstance(value, dict):
+                  for key in ('hash', 'sha', 'id', 'commit'):
+                      candidate = value.get(key)
+                      if isinstance(candidate, str):
+                          return candidate
+              return None
+
+          def wait_for(build_id, label, timeout):
+              terminal = {'finished', 'failed', 'canceled', 'timeout', 'skipped'}
+              deadline = time.time() + timeout
+              details = {}
+              while time.time() < deadline:
+                  code, payload = api(f'https://codemagic.io/api/v3/builds/{build_id}')
+                  if not 200 <= code < 300:
+                      raise SystemExit(f'{label} inspect failed HTTP {code}: {payload}')
+                  details = payload.get('data') or payload
+                  state = details.get('status')
+                  print(label, state, flush=True)
+                  if state in terminal:
+                      break
+                  time.sleep(15)
+              else:
+                  raise SystemExit(f'{label} timed out')
+              if details.get('status') != 'finished':
+                  raise SystemExit(f'{label} ended {details.get("status")}')
+              return details
+
+          evidence = {
+              'ok': False,
+              'branch': branch,
+              'expectedCommit': expected_commit,
+              'buildNumber': 14,
+              'internalOnly': True,
+              'appStoreSubmission': False,
+          }
+          evidence_path.write_text(json.dumps(evidence, indent=2) + '\n')
+
+          signed_id = start(os.environ['CM_SIGNED_WORKFLOW'])
+          evidence['signedBuildId'] = signed_id
+          evidence_path.write_text(json.dumps(evidence, indent=2) + '\n')
+          signed = wait_for(signed_id, 'BUILD14_SIGNED', 7200)
+          signed_commit = normalize_commit(signed.get('commit') or signed.get('commitId'))
+          evidence['signedCommit'] = signed_commit
+          evidence['signedStatus'] = 'finished'
+          evidence['artifacts'] = [artifact.get('name') for artifact in (signed.get('artifacts') or [])]
+          if signed_commit and signed_commit != expected_commit:
+              raise SystemExit(f'Signed commit mismatch: {signed_commit} != {expected_commit}')
+          evidence_path.write_text(json.dumps(evidence, indent=2) + '\n')
+
+          readback_id = start(os.environ['CM_READBACK_WORKFLOW'])
+          evidence['readbackBuildId'] = readback_id
+          evidence_path.write_text(json.dumps(evidence, indent=2) + '\n')
+          wait_for(readback_id, 'BUILD14_ASC_READBACK', 1800)
+          evidence['readbackStatus'] = 'finished'
+          evidence['ok'] = True
+          evidence_path.write_text(json.dumps(evidence, indent=2) + '\n')
+          print('BUILD14_TESTFLIGHT_GATE_COMPLETE', json.dumps(evidence), flush=True)
+          PY
+
+      - name: Upload Build 14 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scaniverse-build14-codemagic-${{ github.run_id }}
+          path: /tmp/scaniverse-build14-codemagic.json
+          if-no-files-found: warn
+          retention-days: 14
