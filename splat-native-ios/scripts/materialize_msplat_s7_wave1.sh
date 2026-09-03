@@ -10,6 +10,9 @@ DEST="$ROOT/Packages/MsplatMemory"
 # contract while still ensuring every generated S13 app contains the depth-seed callsites.
 python3 "$ROOT/scripts/apply_s13_depth_seed.py"
 python3 "$ROOT/scripts/apply_s13_ios26_reprocess_tap_fix.py"
+# S14D is a durability/recovery-only layer. It must run after S13 has materialized the
+# physical same-raw UI so its guard checks the exact source shape that ships to iPhone.
+python3 "$ROOT/scripts/apply_s14d_durability_recovery.py"
 
 # Canonical Msplat materialization is ordered and fail-closed:
 # M1 camera/image residency -> M2 tensor/trainer lifetime -> exact syntactic
