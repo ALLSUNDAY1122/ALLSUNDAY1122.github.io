@@ -97,7 +97,7 @@ if state_marker not in root_view:
             Button("ライブラリに残して終了") {
                 model.returnHomePreservingProject()
             }
-            .buttonStyle(model.canRetryGeneration ? SecondaryButtonStyle() : PrimaryButtonStyle())
+            .buttonStyle(SecondaryButtonStyle())
 
             Button("撮影データを最近削除へ移して撮り直す", role: .destructive) {
                 confirmDiscardFailedProject = true
