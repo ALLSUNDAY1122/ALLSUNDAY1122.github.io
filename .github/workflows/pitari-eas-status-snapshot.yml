@@ -47,28 +47,23 @@ jobs:
           git add . && git commit -qm init
 
           npx --yes eas-cli@23.0.0 whoami >/tmp/whoami.out 2>/tmp/whoami.err
-          WHO_RC=$?
           npx --yes eas-cli@23.0.0 build:list --platform ios --limit 20 --json --non-interactive >/tmp/builds.out 2>/tmp/builds.err
-          BUILD_RC=$?
 
           npx --yes eas-cli@23.0.0 submit:list --help >/tmp/submit-list-help.out 2>/tmp/submit-list-help.err
           SUBMIT_LIST_HELP_RC=$?
           npx --yes eas-cli@23.0.0 submission:list --help >/tmp/submission-list-help.out 2>/tmp/submission-list-help.err
           SUBMISSION_LIST_HELP_RC=$?
           npx --yes eas-cli@23.0.0 submit --help >/tmp/submit-help.out 2>/tmp/submit-help.err
-          SUBMIT_HELP_RC=$?
 
           if [ "$SUBMIT_LIST_HELP_RC" -eq 0 ]; then
             npx --yes eas-cli@23.0.0 submit:list --platform ios --limit 20 --json --non-interactive >/tmp/submissions.out 2>/tmp/submissions.err
-            SUBMISSIONS_RC=$?
           else
-            : >/tmp/submissions.out; : >/tmp/submissions.err; SUBMISSIONS_RC=127
+            : >/tmp/submissions.out; : >/tmp/submissions.err
           fi
           if [ "$SUBMISSION_LIST_HELP_RC" -eq 0 ]; then
             npx --yes eas-cli@23.0.0 submission:list --platform ios --limit 20 --json --non-interactive >/tmp/submission-list.out 2>/tmp/submission-list.err
-            SUBMISSION_LIST_RC=$?
           else
-            : >/tmp/submission-list.out; : >/tmp/submission-list.err; SUBMISSION_LIST_RC=127
+            : >/tmp/submission-list.out; : >/tmp/submission-list.err
           fi
 
           python - <<'PY'
@@ -79,10 +74,6 @@ jobs:
           def text(p,n=12000):
               q=Path(p)
               return q.read_text(errors='replace')[-n:] if q.exists() else ''
-          def envint(name, default=999):
-              import os
-              try:return int(os.environ.get(name,default))
-              except:return default
           builds=[]
           parse_error=''
           try:
@@ -116,8 +107,6 @@ jobs:
           }
           Path('/tmp/result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
           PY
-        env:
-          WHO_RC: ${{ steps.none.outputs.none }}
 
       - name: Persist snapshot
         if: always()
