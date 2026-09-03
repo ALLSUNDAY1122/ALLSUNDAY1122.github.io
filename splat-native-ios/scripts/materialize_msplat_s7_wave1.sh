@@ -5,6 +5,15 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PIN="d620d9c58d270e7de9e34a9d8a85dcf938a5070d"
 DEST="$ROOT/Packages/MsplatMemory"
 
+# S13 remains an isolated app-side materialization layered before the canonical Msplat composition.
+# Keeping project.yml's historical preGen entrypoint unchanged preserves the S7-S12 integration
+# contract while still ensuring every generated S13 app contains the depth-seed callsites.
+python3 "$ROOT/scripts/apply_s13_depth_seed.py"
+python3 "$ROOT/scripts/apply_s13_ios26_reprocess_tap_fix.py"
+# S14D is a durability/recovery-only layer. It must run after S13 has materialized the
+# physical same-raw UI so its guard checks the exact source shape that ships to iPhone.
+python3 "$ROOT/scripts/apply_s14d_durability_recovery.py"
+
 # Canonical Msplat materialization is ordered and fail-closed:
 # M1 camera/image residency -> M2 tensor/trainer lifetime -> exact syntactic
 # normalization of the pinned two chunk guards -> S10 bounded backing/Metal
