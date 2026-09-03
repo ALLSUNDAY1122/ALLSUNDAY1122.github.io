@@ -19,12 +19,16 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Monitor EAS build and submission
+
+      - name: Capture EAS build status
+        shell: bash
         run: |
-          set -euo pipefail
+          set +e
           RID=$(python -c "import json;print(json.load(open('automation/pitari-eas-monitor-command.json'))['request_id'])")
           BUILD_ID=$(python -c "import json;print(json.load(open('automation/pitari-eas-monitor-command.json'))['build_id'])")
           printf '%s' "$RID" >/tmp/rid
+          printf '%s' "$BUILD_ID" >/tmp/build-id
+          rm -rf /tmp/pitari-monitor
           mkdir -p /tmp/pitari-monitor
           cd /tmp/pitari-monitor
           cat > package.json <<'JSON'
@@ -34,54 +38,64 @@ jobs:
           {"expo":{"name":"ぴたりサイズ","slug":"pitari-resize","owner":"allsunday1122","version":"1.0.0","ios":{"bundleIdentifier":"jp.allsunday.pitariresize"},"extra":{"eas":{"projectId":"d7480022-0db3-48dd-906e-43a12438ecdb"}}}}
           JSON
           cat > eas.json <<'JSON'
-          {"cli":{"version":">= 16.0.1","appVersionSource":"remote"},"submit":{"production":{}}}
+          {"cli":{"version":">= 16.0.1","appVersionSource":"remote"},"build":{"production":{"autoIncrement":true}},"submit":{"production":{}}}
           JSON
-          npx --yes eas-cli@23.0.0 whoami >/tmp/whoami.txt
-          FINAL_STATUS=""
-          for n in $(seq 1 20); do
-            npx --yes eas-cli@23.0.0 build:view "$BUILD_ID" --json >/tmp/build.json 2>/tmp/build.err || true
-            if [ -s /tmp/build.json ]; then
-              FINAL_STATUS=$(python -c "import json;print(json.load(open('/tmp/build.json')).get('status',''))")
-              echo "build_status=$FINAL_STATUS attempt=$n"
-              case "$FINAL_STATUS" in
-                FINISHED|ERRORED|CANCELED) break ;;
-              esac
-            fi
-            sleep 15
-          done
-          npx --yes eas-cli@23.0.0 submit:list --platform ios --limit 20 --json --non-interactive >/tmp/submissions.json 2>/tmp/submissions.err || true
-          npx --yes eas-cli@23.0.0 submit:status --platform ios --json --non-interactive >/tmp/submit-status.json 2>/tmp/submit-status.err || true
+          git init -q
+          git config user.name pitari-monitor
+          git config user.email noreply@example.invalid
+          git add . && git commit -qm init
+
+          npx --yes eas-cli@23.0.0 whoami >/tmp/whoami.out 2>/tmp/whoami.err
+          npx --yes eas-cli@23.0.0 build:list --platform ios --limit 20 --json --non-interactive >/tmp/builds.out 2>/tmp/builds.err
+          npx --yes eas-cli@23.0.0 build:view --help >/tmp/build-view-help.out 2>/tmp/build-view-help.err
+          npx --yes eas-cli@23.0.0 submit --help >/tmp/submit-help.out 2>/tmp/submit-help.err
+          npx --yes eas-cli@23.0.0 submit:list --help >/tmp/submit-list-help.out 2>/tmp/submit-list-help.err
+          npx --yes eas-cli@23.0.0 submission:list --help >/tmp/submission-list-help.out 2>/tmp/submission-list-help.err
+
           python - <<'PY'
           import json
           from pathlib import Path
-          def load_json(path, default):
-              try: return json.loads(Path(path).read_text())
-              except Exception: return default
-          cmd=json.loads(Path('/github/workspace/automation/pitari-eas-monitor-command.json').read_text())
-          build=load_json('/tmp/build.json',{})
-          subs=load_json('/tmp/submissions.json',[])
-          status=load_json('/tmp/submit-status.json',{})
+          rid=Path('/tmp/rid').read_text().strip()
+          build_id=Path('/tmp/build-id').read_text().strip()
+          def text(p,n=20000):
+              q=Path(p)
+              return q.read_text(errors='replace')[-n:] if q.exists() else ''
+          builds=[]; parse_error=''
+          try: builds=json.loads(text('/tmp/builds.out',200000))
+          except Exception as e: parse_error=repr(e)
+          target=next((b for b in builds if b.get('id')==build_id),None) if isinstance(builds,list) else None
           out={
-            'request_id':cmd['request_id'],
-            'build_id':cmd['build_id'],
-            'eas_identity':Path('/tmp/whoami.txt').read_text().strip(),
-            'build':build,
-            'submissions':subs,
-            'submit_status':status,
+            'request_id':rid,
+            'build_id':build_id,
+            'eas_identity':text('/tmp/whoami.out',2000).strip(),
+            'target_build':target,
+            'recent_builds':builds[:5] if isinstance(builds,list) else [],
+            'build_list_parse_error':parse_error,
             'errors':{
-              'build':Path('/tmp/build.err').read_text(errors='replace')[-4000:] if Path('/tmp/build.err').exists() else '',
-              'submissions':Path('/tmp/submissions.err').read_text(errors='replace')[-4000:] if Path('/tmp/submissions.err').exists() else '',
-              'submit_status':Path('/tmp/submit-status.err').read_text(errors='replace')[-4000:] if Path('/tmp/submit-status.err').exists() else ''
+              'whoami':text('/tmp/whoami.err',4000),
+              'build_list':text('/tmp/builds.err',8000)
+            },
+            'cli_help':{
+              'build_view':text('/tmp/build-view-help.out',12000),
+              'build_view_error':text('/tmp/build-view-help.err',4000),
+              'submit':text('/tmp/submit-help.out',12000),
+              'submit_error':text('/tmp/submit-help.err',4000),
+              'submit_list':text('/tmp/submit-list-help.out',12000),
+              'submit_list_error':text('/tmp/submit-list-help.err',4000),
+              'submission_list':text('/tmp/submission-list-help.out',12000),
+              'submission_list_error':text('/tmp/submission-list-help.err',4000)
             }
           }
           Path('/tmp/result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
           PY
+
       - name: Persist monitor result
         if: always()
+        shell: bash
         run: |
           set -euo pipefail
           RID=$(cat /tmp/rid 2>/dev/null || echo unknown)
-          if [ ! -f /tmp/result.json ]; then echo '{"error":"monitor_failed_before_result"}' >/tmp/result.json; fi
+          if [ ! -f /tmp/result.json ]; then printf '%s\n' '{"error":"monitor_failed_before_result"}' >/tmp/result.json; fi
           git fetch origin main
           git reset --hard origin/main
           mkdir -p automation/pitari-eas-monitor-results
