@@ -53,6 +53,7 @@ jobs:
           build_id = payload.get('buildId') or payload.get('id')
           if not build_id:
               raise SystemExit('Codemagic returned no build id')
+          print('BUILD14_DISTRIBUTION_BUILD_ID', build_id, flush=True)
           deadline = time.time() + 1500
           while time.time() < deadline:
               code, payload = api(f'https://codemagic.io/api/v3/builds/{build_id}')
@@ -67,6 +68,12 @@ jobs:
           else:
               raise SystemExit('Distribution diagnostic timed out')
           if state != 'finished':
+              diagnostic = {
+                  key: details.get(key)
+                  for key in ('status','message','workflowId','startedAt','finishedAt','version')
+                  if details.get(key) is not None
+              }
+              print('BUILD14_DISTRIBUTION_FAILURE', json.dumps(diagnostic, default=str), flush=True)
               raise SystemExit(f'Distribution diagnostic ended {state}')
           commit = details.get('commit') or details.get('commitId')
           if isinstance(commit, dict):
