@@ -1,0 +1,89 @@
+name: TestFlight Rebuild Codemagic Batch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/testflight-rebuild-codemagic-batch-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Start and monitor safe Codemagic TestFlight rebuilds
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, time, urllib.request, urllib.error, yaml
+          from pathlib import Path
+
+          cmd=json.loads(Path('automation/testflight-rebuild-codemagic-batch-command.json').read_text(encoding='utf-8'))
+          rid=str(cmd['request_id']); targets=cmd.get('targets') or []
+          token=os.environ.get('CM_API_TOKEN','').strip()
+          if not token: raise SystemExit('CM_API_TOKEN missing')
+          cfg=yaml.safe_load(Path('codemagic.yaml').read_text(encoding='utf-8')) or {}; workflows=cfg.get('workflows') or {}
+          def req(url,method='GET',payload=None):
+            data=None if payload is None else json.dumps(payload).encode()
+            r=urllib.request.Request(url,data=data,method=method,headers={'x-auth-token':token,'Content-Type':'application/json','Accept':'application/json'})
+            try:
+              with urllib.request.urlopen(r,timeout=30) as z:
+                raw=z.read().decode(); return z.status,(json.loads(raw) if raw else {})
+            except urllib.error.HTTPError as e:
+              raw=e.read().decode(errors='replace')
+              try: body=json.loads(raw) if raw else {}
+              except Exception: body={'error':raw[:1000]}
+              return e.code,body
+          out={'request_id':rid,'ok':False,'targets':[],'safety':{'submit_to_app_store':False,'app_store_review_submission':False}}
+          for t in targets:
+            wid=str(t['workflow_id']); appid=str(t['codemagic_app_id']); branch=str(t.get('branch','main'))
+            w=workflows.get(wid) or {}; pub=((w.get('publishing') or {}).get('app_store_connect') or {})
+            row={'name':t.get('name'),'bundle_id':t.get('bundle_id'),'workflow_id':wid,'codemagic_app_id':appid,'branch':branch,'build_id':None,'status':'not_started','ok':False,'errors':[]}
+            if not w: row['errors'].append('workflow missing from codemagic.yaml'); out['targets'].append(row); continue
+            if pub.get('submit_to_app_store') is True: row['errors'].append('blocked: workflow submits to App Store'); out['targets'].append(row); continue
+            if pub.get('submit_to_testflight') is not True: row['errors'].append('blocked: workflow is not configured to submit to TestFlight'); out['targets'].append(row); continue
+            hs,body=req('https://api.codemagic.io/builds','POST',{'appId':appid,'workflowId':wid,'branch':branch})
+            bid=body.get('buildId') or body.get('id')
+            if not (200 <= hs < 300 and bid): row['errors'].append(f'Codemagic start failed HTTP {hs}: {str(body)[:700]}'); out['targets'].append(row); continue
+            row['build_id']=str(bid); row['status']='started'; out['targets'].append(row)
+          deadline=time.time()+1200
+          terminal={'finished','failed','canceled','timeout','skipped'}
+          while time.time()<deadline:
+            pending=False
+            for row in out['targets']:
+              bid=row.get('build_id')
+              if not bid or row.get('status') in terminal: continue
+              pending=True
+              hs,body=req(f'https://codemagic.io/api/v3/builds/{bid}')
+              if not (200 <= hs < 300): row['errors'].append(f'status HTTP {hs}'); row['status']='status_error'; continue
+              d=body.get('data') or body; row['status']=d.get('status'); row['app_store_connect_status']=d.get('app_store_connect_status')
+              row['commit_hash']=((d.get('commit') or {}).get('hash'))
+              if row['status']=='finished': row['ok']=True
+            Path('/tmp/tf-cm-batch-progress.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+            if not pending: break
+            time.sleep(30)
+          out['ok']=all(x.get('ok') for x in out['targets']) and bool(out['targets'])
+          p=Path('automation/codemagic-results')/f'{rid}.json'; p.parent.mkdir(parents=True,exist_ok=True); payload=json.dumps(out,ensure_ascii=False,indent=2)+'\n'; p.write_text(payload,encoding='utf-8')
+          Path('/tmp/tf-cm-batch-result.json').write_text(payload,encoding='utf-8'); Path('/tmp/tf-cm-batch-path.txt').write_text(str(p),encoding='utf-8')
+          print(json.dumps({'ok':out['ok'],'targets':[{'name':x['name'],'build_id':x['build_id'],'status':x['status'],'ok':x['ok'],'errors':x['errors']} for x in out['targets']]},ensure_ascii=False))
+          PY
+      - name: Persist Codemagic rebuild evidence
+        if: always()
+        run: |
+          test -f /tmp/tf-cm-batch-path.txt || exit 1
+          P="$(cat /tmp/tf-cm-batch-path.txt)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$P"; git commit -m "Persist TestFlight Codemagic rebuild batch" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          cp "$P" /tmp/tf-cm-batch-copy.json
+          git fetch origin main; git reset --hard origin/main; mkdir -p "$(dirname "$P")"; cp /tmp/tf-cm-batch-copy.json "$P"
+          git add "$P"; git commit -m "Persist TestFlight Codemagic rebuild batch" || exit 0; git push origin HEAD:main
