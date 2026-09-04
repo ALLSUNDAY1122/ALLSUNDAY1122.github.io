@@ -1,0 +1,77 @@
+name: Scaniverse Build 14 Distribution Readback
+
+on:
+  push:
+    branches:
+      - diagnose/testflight-build14-access-20260904
+    paths:
+      - codemagic.yaml
+      - .github/workflows/scaniverse-build14-distribution-readback.yml
+
+permissions:
+  contents: read
+
+jobs:
+  distribution-readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+      CM_APP_ID: 6a769d81a1add9d06020b524
+      CM_WORKFLOW: splat-build14-distribution-readback
+      CM_BRANCH: diagnose/testflight-build14-access-20260904
+      EXPECTED_COMMIT: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run read-only App Store Connect distribution check
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${CM_API_TOKEN:-}"
+          python3 - <<'PY'
+          import json, os, time, urllib.error, urllib.request
+
+          def api(url, method='GET', payload=None):
+              body = None if payload is None else json.dumps(payload).encode()
+              request = urllib.request.Request(url, data=body, method=method, headers={
+                  'Content-Type':'application/json', 'Accept':'application/json', 'x-auth-token':os.environ['CM_API_TOKEN'].strip(),
+              })
+              try:
+                  with urllib.request.urlopen(request, timeout=30) as response:
+                      raw = response.read().decode()
+                      return response.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as error:
+                  raw = error.read().decode(errors='replace')
+                  return error.code, json.loads(raw) if raw else {}
+
+          code, payload = api('https://api.codemagic.io/builds', 'POST', {
+              'appId':os.environ['CM_APP_ID'], 'workflowId':os.environ['CM_WORKFLOW'], 'branch':os.environ['CM_BRANCH'],
+          })
+          if not 200 <= code < 300:
+              raise SystemExit(f'Codemagic start failed HTTP {code}: {payload}')
+          build_id = payload.get('buildId') or payload.get('id')
+          if not build_id:
+              raise SystemExit('Codemagic returned no build id')
+          deadline = time.time() + 1500
+          while time.time() < deadline:
+              code, payload = api(f'https://codemagic.io/api/v3/builds/{build_id}')
+              if not 200 <= code < 300:
+                  raise SystemExit(f'Codemagic inspect failed HTTP {code}: {payload}')
+              details = payload.get('data') or payload
+              state = details.get('status')
+              print('BUILD14_DISTRIBUTION_DIAGNOSTIC', state, flush=True)
+              if state in {'finished','failed','canceled','timeout','skipped'}:
+                  break
+              time.sleep(15)
+          else:
+              raise SystemExit('Distribution diagnostic timed out')
+          if state != 'finished':
+              raise SystemExit(f'Distribution diagnostic ended {state}')
+          commit = details.get('commit') or details.get('commitId')
+          if isinstance(commit, dict):
+              commit = commit.get('hash') or commit.get('sha') or commit.get('id')
+          if commit and commit != os.environ['EXPECTED_COMMIT']:
+              raise SystemExit(f'Commit mismatch: {commit} != {os.environ["EXPECTED_COMMIT"]}')
+          print('BUILD14_DISTRIBUTION_DIAGNOSTIC_COMPLETE', json.dumps({'buildId':build_id,'status':state,'commit':commit}))
+          PY
