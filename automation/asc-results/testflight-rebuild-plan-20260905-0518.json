@@ -1,0 +1,73 @@
+{
+  "request_id": "testflight-rebuild-plan-20260905-0518",
+  "target_count": 13,
+  "mapped_count": 6,
+  "workflows": [
+    {
+      "workflow_id": "health-manager-1-testflight",
+      "name": "Health Manager 1 - iOS TestFlight",
+      "bundle_id": "jp.allsunday1122.healthmanager1",
+      "xcode_project": "ios/health-manager-1/HealthManager1.xcodeproj",
+      "xcode_scheme": "HealthManager1",
+      "submit_to_testflight": true,
+      "submit_to_app_store": false,
+      "dynamic_build_number_hint": false,
+      "has_app_store_connect_integration": true
+    },
+    {
+      "workflow_id": "health-manager-2-ios",
+      "name": "Health Manager 2 - iOS TestFlight",
+      "bundle_id": "jp.allsunday1122.healthmanager2",
+      "xcode_project": "ios/health-manager-2/HealthManager2.xcodeproj",
+      "xcode_scheme": "HealthManager2",
+      "submit_to_testflight": false,
+      "submit_to_app_store": false,
+      "dynamic_build_number_hint": false,
+      "has_app_store_connect_integration": true
+    },
+    {
+      "workflow_id": "otsu4-ios",
+      "name": "危険物乙4 - iOS Internal TestFlight",
+      "bundle_id": "jp.allsunday1122.otsu4",
+      "xcode_project": "native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj",
+      "xcode_scheme": "Otsu4Sprint",
+      "submit_to_testflight": false,
+      "submit_to_app_store": false,
+      "dynamic_build_number_hint": true,
+      "has_app_store_connect_integration": true
+    },
+    {
+      "workflow_id": "pharmacist-ios",
+      "name": "薬剤師国家試験 - iOS App Store Candidate",
+      "bundle_id": "jp.allsunday1122.yakuzaishi",
+      "xcode_project": "pharmacist-manabi-sprint/ios/PharmacistSprint.xcodeproj",
+      "xcode_scheme": "PharmacistSprint",
+      "submit_to_testflight": true,
+      "submit_to_app_store": false,
+      "dynamic_build_number_hint": true,
+      "has_app_store_connect_integration": true
+    },
+    {
+      "workflow_id": "otsu4-native-ios",
+      "name": "危険物乙4 - Native Internal TestFlight",
+      "bundle_id": "jp.allsunday1122.otsu4",
+      "xcode_project": "native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj",
+      "xcode_scheme": "Otsu4Sprint",
+      "submit_to_testflight": false,
+      "submit_to_app_store": false,
+      "dynamic_build_number_hint": true,
+      "has_app_store_connect_integration": true
+    },
+    {
+      "workflow_id": "touhan-ios",
+      "name": "登録販売者 - iOS Internal TestFlight",
+      "bundle_id": "com.allsunday1122.tourokuhanbaisha",
+      "xcode_project": "touroku-hanbaisha-ios/native-ios/TouhanSprint.xcodeproj",
+      "xcode_scheme": "TouhanSprint",
+      "submit_to_testflight": null,
+      "submit_to_app_store": null,
+      "dynamic_build_number_hint": true,
+      "has_app_store_connect_integration": false
+    }
+  ]
+}
