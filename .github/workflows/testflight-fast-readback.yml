@@ -1,0 +1,77 @@
+name: TestFlight Fast Readback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/testflight-fast-readback-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Read latest build state for affected apps
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          sys.path.insert(0, str((Path.cwd()/'scripts').resolve()))
+          from app_store_connect_api import api_get, load_private_key, make_token
+          cmd=json.loads(Path('automation/testflight-fast-readback-command.json').read_text(encoding='utf-8'))
+          rid=str(cmd['request_id']); ids=[str(x) for x in cmd.get('app_ids',[])]
+          out={'request_id':rid,'apps':[],'errors':[],'read_only':True}
+          cleanup=None
+          try:
+            kp,cleanup=load_private_key(); token=make_token(os.environ['ASC_ISSUER_ID'],os.environ['ASC_KEY_ID'],kp)
+            for aid in ids:
+              r={'app_id':aid,'name':None,'bundle_id':None,'builds':[],'internal_groups':[],'errors':[]}
+              try:
+                _,ar=api_get(token,f'/v1/apps/{aid}?fields[apps]=name,bundleId')
+                aa=((((ar or {}).get('data') or {}).get('attributes') or {})); r['name']=aa.get('name'); r['bundle_id']=aa.get('bundleId')
+                _,br=api_get(token,f'/v1/builds?filter[app]={aid}&sort=-uploadedDate&limit=3&fields[builds]=version,uploadedDate,expirationDate,processingState,expired,buildAudienceType,usesNonExemptEncryption')
+                for b in [x for x in ((br or {}).get('data') or []) if isinstance(x,dict)]:
+                  bid=str(b.get('id')); ba=b.get('attributes') or {}; internal=None; external=None
+                  try:
+                    _,dr=api_get(token,f'/v1/builds/{bid}/buildBetaDetail?fields[buildBetaDetails]=internalBuildState,externalBuildState')
+                    da=((((dr or {}).get('data') or {}).get('attributes') or {})); internal=da.get('internalBuildState'); external=da.get('externalBuildState')
+                  except Exception as e: internal='READ_ERROR:'+type(e).__name__
+                  r['builds'].append({'id':bid,'version':ba.get('version'),'uploadedDate':ba.get('uploadedDate'),'expirationDate':ba.get('expirationDate'),'processingState':ba.get('processingState'),'expired':ba.get('expired'),'buildAudienceType':ba.get('buildAudienceType'),'usesNonExemptEncryption':ba.get('usesNonExemptEncryption'),'internalBuildState':internal,'externalBuildState':external})
+                _,gr=api_get(token,f'/v1/betaGroups?filter[app]={aid}&limit=50')
+                for g in [x for x in ((gr or {}).get('data') or []) if isinstance(x,dict) and (x.get('attributes') or {}).get('isInternalGroup') is True]:
+                  gid=str(g.get('id')); ga=g.get('attributes') or {}
+                  _,tr=api_get(token,f'/v1/betaGroups/{gid}/betaTesters?limit=200')
+                  testers=[x for x in ((tr or {}).get('data') or []) if isinstance(x,dict)]
+                  r['internal_groups'].append({'id':gid,'name':ga.get('name'),'hasAccessToAllBuilds':bool(ga.get('hasAccessToAllBuilds')),'testerCount':len(testers)})
+              except Exception as e: r['errors'].append(type(e).__name__+': '+str(e)[:1000])
+              out['apps'].append(r)
+          except Exception as e: out['errors'].append(type(e).__name__+': '+str(e)[:1500])
+          finally:
+            if cleanup: cleanup.unlink(missing_ok=True)
+          p=Path('automation/asc-results')/f'{rid}.json'; p.parent.mkdir(parents=True,exist_ok=True); payload=json.dumps(out,ensure_ascii=False,indent=2)+'\n'; p.write_text(payload,encoding='utf-8')
+          Path('/tmp/testflight-fast-result.json').write_text(payload,encoding='utf-8'); Path('/tmp/testflight-fast-path.txt').write_text(str(p),encoding='utf-8')
+          print(json.dumps({'apps':len(out['apps']),'errors':out['errors']},ensure_ascii=False))
+          PY
+      - name: Persist fast readback evidence
+        if: always()
+        run: |
+          test -f /tmp/testflight-fast-path.txt || exit 1
+          P="$(cat /tmp/testflight-fast-path.txt)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$P"; git commit -m "Persist TestFlight fast readback" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          cp "$P" /tmp/testflight-fast-copy.json
+          git fetch origin main; git reset --hard origin/main; mkdir -p "$(dirname "$P")"; cp /tmp/testflight-fast-copy.json "$P"
+          git add "$P"; git commit -m "Persist TestFlight fast readback" || exit 0; git push origin HEAD:main
