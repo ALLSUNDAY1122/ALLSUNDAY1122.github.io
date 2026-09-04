@@ -1,0 +1,32 @@
+{
+  "request_id": "testflight-reactivate-hm1-20260905-0518-r2",
+  "app_id": "6799581662",
+  "build_id": "a7fe9a21-7a5e-4b0d-93fa-2dbc7ee0feca",
+  "build_version": "2026082701",
+  "ok": false,
+  "before": {
+    "version": "2026082701",
+    "uploadedDate": "2026-08-27T06:10:24-07:00",
+    "expirationDate": "2026-09-02T06:24:54-07:00",
+    "expired": true,
+    "processingState": "VALID",
+    "buildAudienceType": "INTERNAL_ONLY",
+    "usesNonExemptEncryption": false
+  },
+  "after": null,
+  "before_beta": {
+    "internalBuildState": "EXPIRED",
+    "externalBuildState": "EXPIRED"
+  },
+  "after_beta": null,
+  "patch_http_status": null,
+  "errors": [
+    "RuntimeError: App Store Connect API PATCH /v1/builds/a7fe9a21-7a5e-4b0d-93fa-2dbc7ee0feca returned HTTP 409: {'errors': [{'id': 'b7400642-9c1a-4964-b8f7-5e0b543b8b0b', 'status': '409', 'code': 'ENTITY_ERROR.ATTRIBUTE.INVALID', 'title': 'The provided entity includes an attribute with an invalid value', 'detail': 'You cannot un-expire build that is already expired.', 'source': {'pointer': '/data/attributes/expired'}}]}"
+  ],
+  "safety": {
+    "delete": false,
+    "review_submit": false,
+    "external_beta_submit": false,
+    "only_patch_expired_false": true
+  }
+}
