@@ -1,0 +1,57 @@
+name: TestFlight Rebuild Plan Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/testflight-rebuild-plan-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Map Codemagic iOS workflows for affected apps
+        run: |
+          python3 - <<'PY'
+          import json,re,yaml
+          from pathlib import Path
+          cmd=json.loads(Path('automation/testflight-rebuild-plan-command.json').read_text(encoding='utf-8'))
+          rid=str(cmd['request_id']); targets=set(str(x) for x in cmd.get('bundle_ids',[]))
+          cfg=yaml.safe_load(Path('codemagic.yaml').read_text(encoding='utf-8')) or {}
+          rows=[]
+          for wid,w in (cfg.get('workflows') or {}).items():
+            w=w or {}; env=w.get('environment') or {}; sign=env.get('ios_signing') or {}; bundle=sign.get('bundle_identifier')
+            vars_=env.get('vars') or {}; bundle=bundle or vars_.get('BUNDLE_ID')
+            if not bundle or (targets and bundle not in targets): continue
+            pub=((w.get('publishing') or {}).get('app_store_connect') or {})
+            scripts='\n'.join(str((x or {}).get('script') or '') for x in (w.get('scripts') or []) if isinstance(x,dict))
+            dyn=bool('CM_BUILD_NUMBER' in scripts or 'agvtool new-version' in scripts or 'CURRENT_PROJECT_VERSION = "$BUILD_NUM"' in scripts)
+            project=vars_.get('XCODE_PROJECT'); scheme=vars_.get('XCODE_SCHEME')
+            rows.append({'workflow_id':wid,'name':w.get('name'),'bundle_id':bundle,'xcode_project':project,'xcode_scheme':scheme,
+                         'submit_to_testflight':pub.get('submit_to_testflight'),'submit_to_app_store':pub.get('submit_to_app_store'),
+                         'dynamic_build_number_hint':dyn,'has_app_store_connect_integration':bool((w.get('integrations') or {}).get('app_store_connect'))})
+          out={'request_id':rid,'target_count':len(targets),'mapped_count':len(rows),'workflows':rows}
+          p=Path('automation/asc-results')/f'{rid}.json'; p.parent.mkdir(parents=True,exist_ok=True); payload=json.dumps(out,ensure_ascii=False,indent=2)+'\n'; p.write_text(payload,encoding='utf-8')
+          Path('/tmp/tf-rebuild-plan.json').write_text(payload,encoding='utf-8'); Path('/tmp/tf-rebuild-plan-path.txt').write_text(str(p),encoding='utf-8')
+          print(json.dumps({'mapped_count':len(rows),'workflow_ids':[x['workflow_id'] for x in rows]},ensure_ascii=False))
+          PY
+      - name: Persist rebuild plan audit
+        if: always()
+        run: |
+          test -f /tmp/tf-rebuild-plan-path.txt || exit 1
+          P="$(cat /tmp/tf-rebuild-plan-path.txt)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$P"; git commit -m "Persist TestFlight rebuild plan audit" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          cp "$P" /tmp/tf-rebuild-plan-copy.json
+          git fetch origin main; git reset --hard origin/main; mkdir -p "$(dirname "$P")"; cp /tmp/tf-rebuild-plan-copy.json "$P"
+          git add "$P"; git commit -m "Persist TestFlight rebuild plan audit" || exit 0; git push origin HEAD:main
