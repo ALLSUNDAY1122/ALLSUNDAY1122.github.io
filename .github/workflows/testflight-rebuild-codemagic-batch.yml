@@ -55,16 +55,16 @@ jobs:
             if not (200 <= hs < 300 and bid): row['errors'].append(f'Codemagic start failed HTTP {hs}: {str(body)[:700]}'); out['targets'].append(row); continue
             row['build_id']=str(bid); row['status']='started'; out['targets'].append(row)
           deadline=time.time()+1200
-          terminal={'finished','failed','canceled','timeout','skipped','status_error'}
+          terminal={'finished','failed','canceled','timeout','skipped'}
           while time.time()<deadline:
             pending=False
             for row in out['targets']:
               bid=row.get('build_id')
               if not bid or row.get('status') in terminal: continue
               pending=True
-              hs,body=req(f'https://api.codemagic.io/builds/{bid}')
+              hs,body=req(f'https://codemagic.io/api/v3/builds/{bid}')
               if not (200 <= hs < 300): row['errors'].append(f'status HTTP {hs}: {str(body)[:500]}'); row['status']='status_error'; continue
-              d=body.get('build') or body.get('data') or body
+              d=body.get('data') or body
               row['status']=d.get('status')
               row['app_store_connect_status']=d.get('app_store_connect_status')
               row['commit_hash']=((d.get('commit') or {}).get('hash')) or d.get('commitHash')
