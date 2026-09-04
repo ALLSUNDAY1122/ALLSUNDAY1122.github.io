@@ -1,0 +1,105 @@
+name: TestFlight Build State Audit All Apps
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/testflight-build-state-audit-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Audit App Store Connect build and internal group state
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          from collections import Counter
+          from pathlib import Path
+
+          sys.path.insert(0, str((Path.cwd() / 'scripts').resolve()))
+          from app_store_connect_api import api_get, load_private_key, make_token
+
+          cmd=json.loads(Path('automation/testflight-build-state-audit-command.json').read_text(encoding='utf-8'))
+          rid=str(cmd['request_id'])
+          root=Path('automation/asc-results')/rid
+          root.mkdir(parents=True,exist_ok=True)
+          cleanup=None
+          summary={'request_id':rid,'apps_scanned':0,'tester_occurrence_counts':[],'apps':[],'errors':[],'personal_tester_data_persisted':False}
+          counts=Counter()
+          try:
+            issuer=os.environ.get('ASC_ISSUER_ID'); kid=os.environ.get('ASC_KEY_ID')
+            if not issuer or not kid: raise RuntimeError('missing ASC API credentials')
+            kp,cleanup=load_private_key(); token=make_token(issuer,kid,kp)
+            _,ar=api_get(token,'/v1/apps?limit=200&fields[apps]=name,bundleId')
+            apps=[x for x in ((ar or {}).get('data') or []) if isinstance(x,dict)]
+            summary['apps_scanned']=len(apps)
+            for app in apps:
+              aid=str(app.get('id')); aa=app.get('attributes') or {}; name=aa.get('name'); bundle=aa.get('bundleId')
+              d={'app_id':aid,'name':name,'bundle_id':bundle,'builds':[],'internal_groups':[],'errors':[]}
+              try:
+                _,br=api_get(token,f'/v1/builds?filter[app]={aid}&sort=-uploadedDate&limit=10&fields[builds]=version,uploadedDate,expirationDate,processingState,expired,buildAudienceType,usesNonExemptEncryption')
+                builds=[x for x in ((br or {}).get('data') or []) if isinstance(x,dict)]
+                for b in builds:
+                  bid=str(b.get('id')); ba=b.get('attributes') or {}; internal=None; external=None
+                  try:
+                    _,dr=api_get(token,f'/v1/builds/{bid}/buildBetaDetail?fields[buildBetaDetails]=internalBuildState,externalBuildState')
+                    da=((((dr or {}).get('data') or {}).get('attributes') or {}))
+                    internal=da.get('internalBuildState'); external=da.get('externalBuildState')
+                  except Exception as e:
+                    internal='READ_ERROR:'+type(e).__name__
+                  d['builds'].append({'id':bid,'version':ba.get('version'),'uploadedDate':ba.get('uploadedDate'),'expirationDate':ba.get('expirationDate'),'processingState':ba.get('processingState'),'expired':ba.get('expired'),'buildAudienceType':ba.get('buildAudienceType'),'usesNonExemptEncryption':ba.get('usesNonExemptEncryption'),'internalBuildState':internal,'externalBuildState':external})
+                _,gr=api_get(token,f'/v1/betaGroups?filter[app]={aid}&limit=200')
+                groups=[g for g in ((gr or {}).get('data') or []) if isinstance(g,dict) and (g.get('attributes') or {}).get('isInternalGroup') is True]
+                for g in groups:
+                  gid=str(g.get('id')); ga=g.get('attributes') or {}
+                  _,tr=api_get(token,f'/v1/betaGroups/{gid}/betaTesters?limit=200')
+                  tids=[str(t.get('id')) for t in ((tr or {}).get('data') or []) if isinstance(t,dict) and t.get('id')]
+                  for t in tids: counts[t]+=1
+                  _,gbr=api_get(token,f'/v1/betaGroups/{gid}/builds?limit=200')
+                  bids=[str(x.get('id')) for x in ((gbr or {}).get('data') or []) if isinstance(x,dict) and x.get('id')]
+                  d['internal_groups'].append({'id':gid,'name':ga.get('name'),'hasAccessToAllBuilds':bool(ga.get('hasAccessToAllBuilds')),'testerCount':len(tids),'buildCount':len(bids),'buildIds':bids[:20]})
+              except Exception as e:
+                d['errors'].append(type(e).__name__+': '+str(e)[:1000])
+              (root/f'{aid}.json').write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+              summary['apps'].append({'app_id':aid,'name':name,'bundle_id':bundle,'build_count':len(d['builds']),'latest_build':d['builds'][0] if d['builds'] else None,'internal_group_count':len(d['internal_groups']),'internal_tester_counts':[x['testerCount'] for x in d['internal_groups']],'errors':d['errors']})
+            summary['tester_occurrence_counts']=[n for _,n in counts.most_common(10)]
+          except Exception as e:
+            summary['errors'].append(type(e).__name__+': '+str(e)[:1500])
+          finally:
+            if cleanup: cleanup.unlink(missing_ok=True)
+          (root/'summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          Path('/tmp/testflight-audit-root.txt').write_text(str(root),encoding='utf-8')
+          print(json.dumps({'apps_scanned':summary['apps_scanned'],'tester_occurrence_counts':summary['tester_occurrence_counts'],'errors':summary['errors']},ensure_ascii=False))
+          PY
+      - name: Persist sanitized audit evidence
+        if: always()
+        run: |
+          test -f /tmp/testflight-audit-root.txt || exit 1
+          ROOT="$(cat /tmp/testflight-audit-root.txt)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT"
+          git commit -m "Persist all-app TestFlight build-state audit" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          cp -R "$ROOT" /tmp/testflight-audit-copy
+          git fetch origin main
+          git reset --hard origin/main
+          rm -rf "$ROOT"
+          mkdir -p "$(dirname "$ROOT")"
+          cp -R /tmp/testflight-audit-copy "$ROOT"
+          git add "$ROOT"
+          git commit -m "Persist all-app TestFlight build-state audit" || exit 0
+          git push origin HEAD:main
