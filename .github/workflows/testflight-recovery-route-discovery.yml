@@ -1,0 +1,67 @@
+name: TestFlight Recovery Route Discovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/testflight-recovery-route-discovery-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Discover existing build and upload routes
+        run: |
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          cmd=json.loads(Path('automation/testflight-recovery-route-discovery-command.json').read_text(encoding='utf-8'))
+          rid=str(cmd['request_id']); targets=cmd.get('targets') or []
+          files=[]
+          for base in ['.github/workflows','scripts','automation']:
+            p=Path(base)
+            if p.exists():
+              for f in p.rglob('*'):
+                if f.is_file() and f.suffix.lower() in {'.yml','.yaml','.py','.json','.sh','.js','.mjs','.cjs'}:
+                  files.append(f)
+          rows=[]
+          for t in targets:
+            bundle=str(t['bundle_id']); appid=str(t.get('app_id') or '')
+            hits=[]
+            for f in files:
+              try: text=f.read_text(encoding='utf-8',errors='replace')
+              except Exception: continue
+              if bundle not in text and (not appid or appid not in text): continue
+              relevant=[]
+              for ln in text.splitlines():
+                s=ln.strip()
+                low=s.lower()
+                if any(k in low for k in ['workflow','codemagic','api.codemagic.io/builds','submit_to_testflight','submit_to_app_store','eas','app_store_connect','build_number','cm_build_number','app-store-connect publish','altool','transporter','automation/']) or bundle in s or (appid and appid in s):
+                  relevant.append(s[:500])
+              hits.append({'path':str(f),'signals':relevant[:35]})
+            rows.append({'name':t.get('name'),'bundle_id':bundle,'app_id':appid,'hits':hits[:30]})
+          out={'request_id':rid,'targets':rows}
+          p=Path('automation/asc-results')/f'{rid}.json'; p.parent.mkdir(parents=True,exist_ok=True); payload=json.dumps(out,ensure_ascii=False,indent=2)+'\n'; p.write_text(payload,encoding='utf-8')
+          Path('/tmp/tf-route-discovery.json').write_text(payload,encoding='utf-8'); Path('/tmp/tf-route-discovery-path.txt').write_text(str(p),encoding='utf-8')
+          print(json.dumps({'targets':len(rows),'hit_counts':{r['name']:len(r['hits']) for r in rows}},ensure_ascii=False))
+          PY
+      - name: Persist route discovery
+        if: always()
+        run: |
+          test -f /tmp/tf-route-discovery-path.txt || exit 1
+          P="$(cat /tmp/tf-route-discovery-path.txt)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$P"; git commit -m "Persist TestFlight recovery route discovery" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          cp "$P" /tmp/tf-route-discovery-copy.json
+          git fetch origin main; git reset --hard origin/main; mkdir -p "$(dirname "$P")"; cp /tmp/tf-route-discovery-copy.json "$P"
+          git add "$P"; git commit -m "Persist TestFlight recovery route discovery" || exit 0; git push origin HEAD:main
