@@ -1,0 +1,290 @@
+name: TestFlight Recovery All Apps
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - automation/testflight-recovery-all-command.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Restore internal TestFlight access without deleting or submitting anything
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys, time
+          from collections import Counter
+          from pathlib import Path
+
+          sys.path.insert(0, str((Path.cwd() / 'scripts').resolve()))
+          from app_store_connect_api import api_get, api_request, load_private_key, make_token
+
+          cmd_path = Path('automation/testflight-recovery-all-command.json')
+          cmd = json.loads(cmd_path.read_text(encoding='utf-8'))
+          request_id = str(cmd.get('request_id') or 'testflight-recovery-all')
+
+          summary = {
+              'request_id': request_id,
+              'ok': False,
+              'mode': 'additive_only',
+              'safety': {
+                  'deletes_performed': False,
+                  'builds_expired': False,
+                  'app_store_review_submitted': False,
+                  'external_beta_review_submitted': False,
+                  'personal_tester_data_persisted': False,
+              },
+              'tester_inference': {
+                  'candidate_found': False,
+                  'candidate_frequency': 0,
+                  'second_frequency': 0,
+                  'confidence_rule': 'unique most-common tester present in >=3 internal groups',
+              },
+              'apps_scanned': 0,
+              'apps_with_recent_valid_build': 0,
+              'apps_repaired': 0,
+              'apps': [],
+              'errors': [],
+          }
+
+          cleanup = None
+          try:
+              issuer = os.environ.get('ASC_ISSUER_ID')
+              kid = os.environ.get('ASC_KEY_ID')
+              if not issuer or not kid:
+                  raise RuntimeError('missing ASC API credentials')
+              key_path, cleanup = load_private_key()
+              token = make_token(issuer, kid, key_path)
+
+              _, ar = api_get(token, '/v1/apps?limit=200&fields[apps]=name,bundleId')
+              apps = [x for x in ((ar or {}).get('data') or []) if isinstance(x, dict)]
+              summary['apps_scanned'] = len(apps)
+
+              records = []
+              tester_counts = Counter()
+
+              for app in apps:
+                  aid = str(app.get('id'))
+                  aa = app.get('attributes') or {}
+                  name = aa.get('name') or aid
+                  bundle = aa.get('bundleId')
+                  rec = {
+                      'app_id': aid,
+                      'name': name,
+                      'bundle_id': bundle,
+                      'latest_valid_build': None,
+                      'internal_group': None,
+                      'group_build_before': None,
+                      'group_build_after': None,
+                      'candidate_tester_before': None,
+                      'candidate_tester_after': None,
+                      'actions': [],
+                      'blocked_reason': None,
+                      'errors': [],
+                  }
+                  try:
+                      _, br = api_get(token, f'/v1/builds?filter[app]={aid}&sort=-uploadedDate&limit=200&fields[builds]=version,uploadedDate,processingState,expired,buildAudienceType')
+                      builds = [x for x in ((br or {}).get('data') or []) if isinstance(x, dict)]
+                      valid = []
+                      for b in builds:
+                          ba = b.get('attributes') or {}
+                          if ba.get('processingState') == 'VALID' and ba.get('expired') is not True:
+                              valid.append(b)
+                      target = None
+                      target_state = None
+                      for b in valid:
+                          bid = str(b.get('id'))
+                          try:
+                              _, dr = api_get(token, f'/v1/builds/{bid}/buildBetaDetail')
+                              st = ((((dr or {}).get('data') or {}).get('attributes') or {}).get('internalBuildState'))
+                              if st in ('READY_FOR_BETA_TESTING', 'IN_BETA_TESTING'):
+                                  target = b
+                                  target_state = st
+                                  break
+                          except Exception:
+                              pass
+                      if target is None:
+                          rec['blocked_reason'] = 'no non-expired VALID build ready for internal beta testing'
+                          records.append(rec)
+                          continue
+
+                      tb = target.get('attributes') or {}
+                      tid = str(target.get('id'))
+                      rec['latest_valid_build'] = {
+                          'id': tid,
+                          'version': tb.get('version'),
+                          'uploadedDate': tb.get('uploadedDate'),
+                          'buildAudienceType': tb.get('buildAudienceType'),
+                          'internalBuildState': target_state,
+                      }
+                      summary['apps_with_recent_valid_build'] += 1
+
+                      _, gr = api_get(token, f'/v1/betaGroups?filter[app]={aid}&limit=200')
+                      groups = [g for g in ((gr or {}).get('data') or []) if isinstance(g, dict) and (g.get('attributes') or {}).get('isInternalGroup') is True]
+                      if not groups:
+                          rec['blocked_reason'] = 'no internal beta group'
+                          records.append(rec)
+                          continue
+
+                      access = [g for g in groups if (g.get('attributes') or {}).get('hasAccessToAllBuilds') is True]
+                      sun = [g for g in groups if str((g.get('attributes') or {}).get('name') or '').strip().lower() == 'sun']
+                      group = access[0] if len(access) == 1 else (sun[0] if len(sun) == 1 else (groups[0] if len(groups) == 1 else None))
+                      if group is None:
+                          rec['blocked_reason'] = f'ambiguous internal beta groups: {len(groups)}'
+                          records.append(rec)
+                          continue
+
+                      gid = str(group.get('id'))
+                      ga = group.get('attributes') or {}
+                      rec['internal_group'] = {
+                          'id': gid,
+                          'name': ga.get('name'),
+                          'hasAccessToAllBuilds': bool(ga.get('hasAccessToAllBuilds')),
+                      }
+
+                      _, tr = api_get(token, f'/v1/betaGroups/{gid}/betaTesters?limit=200')
+                      testers = [t for t in ((tr or {}).get('data') or []) if isinstance(t, dict) and t.get('id')]
+                      tester_ids = [str(t.get('id')) for t in testers]
+                      for tester_id in tester_ids:
+                          tester_counts[tester_id] += 1
+
+                      rec['_group_id'] = gid
+                      rec['_target_build_id'] = tid
+                      rec['_has_all_builds'] = bool(ga.get('hasAccessToAllBuilds'))
+                      rec['_tester_ids'] = tester_ids
+                      records.append(rec)
+                  except Exception as e:
+                      rec['errors'].append(type(e).__name__ + ': ' + str(e)[:1000])
+                      records.append(rec)
+
+              ranked = tester_counts.most_common(2)
+              candidate = None
+              if ranked:
+                  top_id, top_n = ranked[0]
+                  second_n = ranked[1][1] if len(ranked) > 1 else 0
+                  summary['tester_inference']['candidate_frequency'] = top_n
+                  summary['tester_inference']['second_frequency'] = second_n
+                  if top_n >= 3 and top_n > second_n:
+                      candidate = top_id
+                      summary['tester_inference']['candidate_found'] = True
+
+              for rec in records:
+                  gid = rec.pop('_group_id', None)
+                  tid = rec.pop('_target_build_id', None)
+                  has_all = rec.pop('_has_all_builds', None)
+                  tester_ids = rec.pop('_tester_ids', [])
+                  if not gid or not tid:
+                      summary['apps'].append(rec)
+                      continue
+
+                  changed = False
+                  try:
+                      if has_all:
+                          rec['group_build_before'] = 'automatic_all_builds'
+                          rec['group_build_after'] = 'automatic_all_builds'
+                      else:
+                          _, gbr = api_get(token, f'/v1/betaGroups/{gid}/builds?limit=200')
+                          before_ids = [str(x.get('id')) for x in ((gbr or {}).get('data') or []) if isinstance(x, dict) and x.get('id')]
+                          rec['group_build_before'] = tid in before_ids
+                          if tid not in before_ids:
+                              payload = {'data': [{'type': 'builds', 'id': tid}]}
+                              hs, _ = api_request(token, f'/v1/betaGroups/{gid}/relationships/builds', method='POST', payload=payload)
+                              if hs not in (200, 201, 204):
+                                  raise RuntimeError(f'add build relationship HTTP {hs}')
+                              rec['actions'].append('added_latest_valid_build_to_internal_group')
+                              changed = True
+                              time.sleep(1)
+                          _, gar = api_get(token, f'/v1/betaGroups/{gid}/builds?limit=200')
+                          after_ids = [str(x.get('id')) for x in ((gar or {}).get('data') or []) if isinstance(x, dict) and x.get('id')]
+                          rec['group_build_after'] = tid in after_ids
+
+                      if candidate:
+                          rec['candidate_tester_before'] = candidate in tester_ids
+                          if candidate not in tester_ids:
+                              payload = {'data': [{'type': 'betaTesters', 'id': candidate}]}
+                              hs, _ = api_request(token, f'/v1/betaGroups/{gid}/relationships/betaTesters', method='POST', payload=payload)
+                              if hs not in (200, 201, 204):
+                                  raise RuntimeError(f'add tester relationship HTTP {hs}')
+                              rec['actions'].append('restored_common_internal_tester_to_group')
+                              changed = True
+                              time.sleep(1)
+                          _, tar = api_get(token, f'/v1/betaGroups/{gid}/betaTesters?limit=200')
+                          after_tester_ids = [str(x.get('id')) for x in ((tar or {}).get('data') or []) if isinstance(x, dict) and x.get('id')]
+                          rec['candidate_tester_after'] = candidate in after_tester_ids
+                      else:
+                          rec['candidate_tester_before'] = None
+                          rec['candidate_tester_after'] = None
+
+                      build_ok = rec['group_build_after'] in (True, 'automatic_all_builds')
+                      tester_ok = (rec['candidate_tester_after'] is True) if candidate else (len(tester_ids) > 0)
+                      if changed:
+                          summary['apps_repaired'] += 1
+                      if not build_ok:
+                          rec['blocked_reason'] = rec['blocked_reason'] or 'latest build not available to selected internal group after repair'
+                      elif not tester_ok:
+                          rec['blocked_reason'] = rec['blocked_reason'] or 'tester access not confirmed after repair'
+                  except Exception as e:
+                      rec['errors'].append(type(e).__name__ + ': ' + str(e)[:1000])
+
+                  summary['apps'].append(rec)
+
+              hard_errors = sum(len(x.get('errors') or []) for x in summary['apps'])
+              blocked = sum(1 for x in summary['apps'] if x.get('blocked_reason'))
+              summary['ok'] = hard_errors == 0 and summary['apps_with_recent_valid_build'] > 0
+              summary['blocked_count'] = blocked
+              summary['hard_error_count'] = hard_errors
+          except Exception as e:
+              summary['errors'].append(type(e).__name__ + ': ' + str(e)[:1500])
+          finally:
+              if cleanup:
+                  cleanup.unlink(missing_ok=True)
+
+          out = Path('automation/asc-results') / f'{request_id}.json'
+          out.parent.mkdir(parents=True, exist_ok=True)
+          payload = json.dumps(summary, ensure_ascii=False, indent=2) + '\n'
+          out.write_text(payload, encoding='utf-8')
+          Path('/tmp/testflight-recovery-all-result.json').write_text(payload, encoding='utf-8')
+          Path('/tmp/testflight-recovery-all-path.txt').write_text(str(out), encoding='utf-8')
+          print(json.dumps({
+              'ok': summary['ok'],
+              'apps_scanned': summary['apps_scanned'],
+              'apps_with_recent_valid_build': summary['apps_with_recent_valid_build'],
+              'apps_repaired': summary['apps_repaired'],
+              'tester_inference': summary['tester_inference'],
+              'blocked_count': summary.get('blocked_count'),
+              'hard_error_count': summary.get('hard_error_count'),
+              'errors': summary['errors'],
+          }, ensure_ascii=False))
+          PY
+
+      - name: Persist sanitized recovery evidence
+        if: always()
+        run: |
+          test -f /tmp/testflight-recovery-all-path.txt || exit 1
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          P="$(cat /tmp/testflight-recovery-all-path.txt)"
+          git add "$P"
+          git commit -m "Persist TestFlight all-app recovery evidence" || exit 0
+          if git push origin HEAD:main; then exit 0; fi
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p "$(dirname "$P")"
+          cp /tmp/testflight-recovery-all-result.json "$P"
+          git add "$P"
+          git commit -m "Persist TestFlight all-app recovery evidence" || exit 0
+          git push origin HEAD:main
