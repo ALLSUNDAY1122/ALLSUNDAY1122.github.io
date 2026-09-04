@@ -1,0 +1,2883 @@
+{
+  "request_id": "testflight-recovery-routes-20260905-0518",
+  "targets": [
+    {
+      "name": "夜の書架",
+      "bundle_id": "io.github.allsunday1122.yorunoshoka",
+      "app_id": "6794137637",
+      "hits": [
+        {
+          "path": ".github/workflows/app2-003-review-notes-write.yml",
+          "signals": [
+            "from scripts.app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID='6794137637'",
+            "BUNDLE_ID='io.github.allsunday1122.yorunoshoka'"
+          ]
+        },
+        {
+          "path": ".github/workflows/app2-003-yoru-final-submit.yml",
+          "signals": [
+            "assert d.get('app_id')=='6794137637'",
+            "assert d.get('bundle_id')=='io.github.allsunday1122.yorunoshoka'"
+          ]
+        },
+        {
+          "path": "scripts/app2_003_yoru_eas_signing.py",
+          "signals": [
+            "\"\"\"Safely inspect/transfer Yoru no Shoka iOS signing material from EAS to Codemagic.",
+            "The transfer is allowed only when EAS records identify the exact Apple certificate",
+            "COMMAND = Path(\"automation/app2-003-yoru-eas-signing-command.json\")",
+            "OUTPUT = Path(\"app2-003-yoru-eas-signing-result.json\")",
+            "CM_BASE = \"https://codemagic.io\"",
+            "\"eas_project_id\": \"f1a46391-1511-49ef-bfc6-846e4df70735\",",
+            "\"bundle_id\": \"io.github.allsunday1122.yorunoshoka\",",
+            "\"codemagic_app_id\": \"6a8af6e5a5c86907b00c2efd\",",
+            "\"codemagic_group_name\": \"app2_003_yoru_signing\",",
+            "REQUEST_RE = re.compile(r\"^app2-003-yoru-eas-signing-[A-Za-z0-9._-]{1,80}$\")",
+            "raise RuntimeError(\"EAS project could not be resolved by full name\")",
+            "if str(app.get(\"id\")) != EXPECTED[\"eas_project_id\"]:",
+            "raise RuntimeError(\"EAS project id mismatch\")",
+            "raise RuntimeError(f\"Expected exactly one EAS credential record matching Apple certificate/profile; found {len(matching)}\")",
+            "raise RuntimeError(\"Matching EAS certificate does not contain recoverable P12/password\")",
+            "raise RuntimeError(\"Matching EAS provisioning profile content is unavailable\")",
+            "raise RuntimeError(\"EAS P12 private-key extraction failed\")",
+            "app_id = EXPECTED[\"codemagic_app_id\"]",
+            "group_name = EXPECTED[\"codemagic_group_name\"]",
+            "raise RuntimeError(f\"Codemagic variable-group inventory failed: HTTP {status}\")",
+            "raise RuntimeError(f\"Codemagic variable inventory failed: HTTP {status}\")",
+            "raise RuntimeError(f\"Codemagic variable-group creation failed: HTTP {status}\")",
+            "raise RuntimeError(\"Codemagic variable-group id could not be resolved\")",
+            "raise RuntimeError(f\"Codemagic secure private-key insertion failed: HTTP {status}\")",
+            "raise RuntimeError(f\"Codemagic secret read-back failed: HTTP {status}\")",
+            "raise RuntimeError(\"Codemagic secure variable name missing after insertion\")",
+            "\"eas_project_id\": EXPECTED[\"eas_project_id\"],",
+            "\"eas_has_certificate_p12\": bool(cert.get(\"certificateP12\")),",
+            "\"eas_has_certificate_password\": bool(cert.get(\"certificatePassword\")),",
+            "\"eas_has_provisioning_profile\": bool(profile.get(\"provisioningProfile\")),",
+            "\"codemagic_app_id\": EXPECTED[\"codemagic_app_id\"],",
+            "\"codemagic_group_name\": EXPECTED[\"codemagic_group_name\"],",
+            "\"codemagic_group_id\": cm_result[\"group_id\"],",
+            "\"codemagic_group_created\": cm_result[\"created\"],",
+            "\"codemagic_secret_already_present\": cm_result[\"already_present\"],"
+          ]
+        },
+        {
+          "path": "scripts/app2_003_eas_signing_bridge.py",
+          "signals": [
+            "\"\"\"APP2-003: bridge the existing EAS iOS signing identity into Codemagic safely.",
+            "- EAS token, Codemagic token, P12, password and private key exist only in the",
+            "- The bridge refuses any EAS certificate whose Apple developer-portal id does",
+            "CM_BASE = \"https://codemagic.io\"",
+            "COMMAND = Path(\"automation/app2-003-eas-signing-command.json\")",
+            "RESULT_DIR = Path(\"automation/codemagic-results\")",
+            "\"bundle_id\": \"io.github.allsunday1122.yorunoshoka\",",
+            "\"eas_project_id\": \"f1a46391-1511-49ef-bfc6-846e4df70735\",",
+            "\"codemagic_app_id\": \"6a8af6e5a5c86907b00c2efd\",",
+            "\"codemagic_group_name\": \"app2_003_yoru_signing\",",
+            "raise RuntimeError(\"EAS distribution certificate P12 is not valid base64\") from exc",
+            "raise RuntimeError(\"EAS distribution certificate P12 is unexpectedly small\")",
+            "raise RuntimeError(\"OpenSSL could not read the EAS distribution certificate P12\")",
+            "raise RuntimeError(\"OpenSSL could not normalize the EAS private key\")",
+            "raise RuntimeError(\"Extracted EAS private key failed OpenSSL validation\")",
+            "raise RuntimeError(\"EAS private key does not match the EAS distribution certificate\")",
+            "raise RuntimeError(\"Normalized EAS private key is not PEM\")",
+            "if not re.fullmatch(r\"app2-003-eas-signing-[A-Za-z0-9._-]{1,70}\", request_id):",
+            "\"eas_project_id\": EXPECTED[\"eas_project_id\"],",
+            "\"codemagic_app_id\": EXPECTED[\"codemagic_app_id\"],",
+            "\"codemagic_group_name\": EXPECTED[\"codemagic_group_name\"],",
+            "tmpdir = Path(tempfile.mkdtemp(prefix=\"app2-003-eas-signing-\"))",
+            "raise RuntimeError(f\"EAS Apple App Identifier did not resolve uniquely: count={len(identifiers)}\")",
+            "result[\"eas_apple_app_identifier_resolved\"] = True",
+            "raise RuntimeError(\"EAS project slug mismatch\")",
+            "raise RuntimeError(\"EAS project owner mismatch\")",
+            "raise RuntimeError(f\"EAS App Store signing credential did not resolve uniquely: count={len(builds)}\")",
+            "f\"EAS certificate mismatch; expected {EXPECTED['apple_certificate_id']} but got {developer_cert_id or '[missing]'}\"",
+            "raise RuntimeError(\"EAS certificate P12 payload is unavailable\")",
+            "raise RuntimeError(\"EAS certificate password field is unavailable\")",
+            "\"eas_project_resolved\": True,",
+            "\"eas_distribution_type\": build_creds.get(\"iosDistributionType\"),",
+            "\"eas_distribution_certificate_record_id\": dist.get(\"id\"),",
+            "\"eas_developer_portal_certificate_id\": developer_cert_id,",
+            "\"eas_certificate_serial_number\": dist.get(\"serialNumber\"),"
+          ]
+        },
+        {
+          "path": "scripts/app2_003_yoru_finalize_submit.py",
+          "signals": [
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID='6794137637'; BUNDLE_ID='io.github.allsunday1122.yorunoshoka'; TARGET_VERSION='1.2.0'; TARGET_BUILD='7'"
+          ]
+        },
+        {
+          "path": "automation/app2-003-eas-signing-command.json",
+          "signals": [
+            "\"request_id\": \"app2-003-eas-signing-install-20260827-0914\",",
+            "\"bundle_id\": \"io.github.allsunday1122.yorunoshoka\",",
+            "\"eas_project_id\": \"f1a46391-1511-49ef-bfc6-846e4df70735\",",
+            "\"codemagic_app_id\": \"6a8af6e5a5c86907b00c2efd\",",
+            "\"codemagic_group_name\": \"app2_003_yoru_signing\""
+          ]
+        },
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6794137637\","
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"夜の書架\",\"app_id\":\"6794137637\",\"bundle_id\":\"io.github.allsunday1122.yorunoshoka\"},"
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"io.github.allsunday1122.yorunoshoka\","
+          ]
+        },
+        {
+          "path": "automation/app2-003-live-readback-command.json",
+          "signals": [
+            "{\"label\":\"app\",\"method\":\"GET\",\"path\":\"/v1/apps/6794137637\"},",
+            "{\"label\":\"versions\",\"method\":\"GET\",\"path\":\"/v1/apps/6794137637/appStoreVersions?limit=50\"},",
+            "{\"label\":\"builds\",\"method\":\"GET\",\"path\":\"/v1/apps/6794137637/builds?sort=-uploadedDate&limit=20\"},",
+            "{\"label\":\"review-submissions\",\"method\":\"GET\",\"path\":\"/v1/reviewSubmissions?filter[app]=6794137637&limit=20\"},"
+          ]
+        },
+        {
+          "path": "automation/app2-003-yoru-eas-signing-command.json",
+          "signals": [
+            "\"request_id\": \"app2-003-yoru-eas-signing-inspect-20260827-0844\",",
+            "\"eas_project_id\": \"f1a46391-1511-49ef-bfc6-846e4df70735\",",
+            "\"bundle_id\": \"io.github.allsunday1122.yorunoshoka\",",
+            "\"codemagic_app_id\": \"6a8af6e5a5c86907b00c2efd\",",
+            "\"codemagic_group_name\": \"app2_003_yoru_signing\""
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"app_id\": \"6794137637\",",
+            "\"bundle_id\": \"io.github.allsunday1122.yorunoshoka\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-touhan-signing-audit-20260819-1932.json",
+          "signals": [
+            "\"name\": \"Toru Tango Codemagic App Store\",",
+            "\"name\": \"*[expo] io.github.allsunday1122.yorunoshoka AppStore 2026-07-26T05:57:33.985Z\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-all-profile-types-cert-audit-20260819-2006.json",
+          "signals": [
+            "\"name\": \"Toru Tango Codemagic App Store\",",
+            "\"name\": \"*[expo] io.github.allsunday1122.yorunoshoka AppStore 2026-07-26T05:57:33.985Z\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6794137637\",",
+            "\"bundle_id\": \"io.github.allsunday1122.yorunoshoka\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-003-yoru-fresh-read-20260827-0833.json",
+          "signals": [
+            "\"id\": \"6794137637\",",
+            "\"bundleId\": \"io.github.allsunday1122.yorunoshoka\",",
+            "\"name\": \"*[expo] io.github.allsunday1122.yorunoshoka AppStore 2026-07-26T05:57:33.985Z\","
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-003-eas-signing-probe-20260827-0904.json",
+          "signals": [
+            "\"request_id\": \"app2-003-eas-signing-probe-20260827-0904\",",
+            "\"bundle_id\": \"io.github.allsunday1122.yorunoshoka\",",
+            "\"eas_project_id\": \"f1a46391-1511-49ef-bfc6-846e4df70735\",",
+            "\"codemagic_app_id\": \"6a8af6e5a5c86907b00c2efd\",",
+            "\"codemagic_group_name\": \"app2_003_yoru_signing\",",
+            "\"eas_apple_app_identifier_resolved\": true,",
+            "\"eas_project_resolved\": true,",
+            "\"eas_distribution_type\": \"APP_STORE\",",
+            "\"eas_distribution_certificate_record_id\": \"1b8d294c-a075-4a82-afbd-52264e2628d7\",",
+            "\"eas_developer_portal_certificate_id\": \"B4WRC3G6V4\",",
+            "\"eas_certificate_serial_number\": \"389A17375ADC0BCC68ABF60569FCABC2\",",
+            "\"eas_certificate_validity_not_before\": \"2026-07-24T14:20:42.000Z\",",
+            "\"eas_certificate_validity_not_after\": \"2027-07-24T14:20:41.000Z\",",
+            "\"eas_provisioning_profile_record_id\": \"d4ceca15-76ee-4b27-babc-c784397733b6\",",
+            "\"eas_provisioning_profile_developer_portal_id\": \"6598LFYDY3\",",
+            "\"codemagic_group_exists_before\": false,",
+            "\"codemagic_variable_names_before\": [],"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-003-eas-signing-probe-20260827-0908.json",
+          "signals": [
+            "\"request_id\": \"app2-003-eas-signing-probe-20260827-0908\",",
+            "\"bundle_id\": \"io.github.allsunday1122.yorunoshoka\",",
+            "\"eas_project_id\": \"f1a46391-1511-49ef-bfc6-846e4df70735\",",
+            "\"codemagic_app_id\": \"6a8af6e5a5c86907b00c2efd\",",
+            "\"codemagic_group_name\": \"app2_003_yoru_signing\",",
+            "\"eas_apple_app_identifier_resolved\": true,",
+            "\"eas_project_resolved\": true,",
+            "\"eas_distribution_type\": \"APP_STORE\",",
+            "\"eas_distribution_certificate_record_id\": \"1b8d294c-a075-4a82-afbd-52264e2628d7\",",
+            "\"eas_developer_portal_certificate_id\": \"B4WRC3G6V4\",",
+            "\"eas_certificate_serial_number\": \"389A17375ADC0BCC68ABF60569FCABC2\",",
+            "\"eas_certificate_validity_not_before\": \"2026-07-24T14:20:42.000Z\",",
+            "\"eas_certificate_validity_not_after\": \"2027-07-24T14:20:41.000Z\",",
+            "\"eas_provisioning_profile_record_id\": \"d4ceca15-76ee-4b27-babc-c784397733b6\",",
+            "\"eas_provisioning_profile_developer_portal_id\": \"6598LFYDY3\",",
+            "\"codemagic_group_exists_before\": false,",
+            "\"codemagic_variable_names_before\": [],"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-003-eas-signing-install-20260827-0914.json",
+          "signals": [
+            "\"request_id\": \"app2-003-eas-signing-install-20260827-0914\",",
+            "\"bundle_id\": \"io.github.allsunday1122.yorunoshoka\",",
+            "\"eas_project_id\": \"f1a46391-1511-49ef-bfc6-846e4df70735\",",
+            "\"codemagic_app_id\": \"6a8af6e5a5c86907b00c2efd\",",
+            "\"codemagic_group_name\": \"app2_003_yoru_signing\",",
+            "\"eas_apple_app_identifier_resolved\": true,",
+            "\"eas_project_resolved\": true,",
+            "\"eas_distribution_type\": \"APP_STORE\",",
+            "\"eas_distribution_certificate_record_id\": \"1b8d294c-a075-4a82-afbd-52264e2628d7\",",
+            "\"eas_developer_portal_certificate_id\": \"B4WRC3G6V4\",",
+            "\"eas_certificate_serial_number\": \"389A17375ADC0BCC68ABF60569FCABC2\",",
+            "\"eas_certificate_validity_not_before\": \"2026-07-24T14:20:42.000Z\",",
+            "\"eas_certificate_validity_not_after\": \"2027-07-24T14:20:41.000Z\",",
+            "\"eas_provisioning_profile_record_id\": \"d4ceca15-76ee-4b27-babc-c784397733b6\",",
+            "\"eas_provisioning_profile_developer_portal_id\": \"6598LFYDY3\",",
+            "\"codemagic_group_exists_before\": true,",
+            "\"codemagic_variable_names_before\": ["
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-003-yoru-build-inspect-20260827-0829.json",
+          "signals": [
+            "\"workflow_id\": null,",
+            "\"workflow\": {",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwceSgjAAANB_8Z4ZlKI57AEIUqSs0nNhFAQNoQWU8vU7-96ukv8pA-ETusldzwcJisJvR4MnhJTdV0vRw6-WT2VxwxVY-5nYxsg5LxSe8CtKSwSPZMLKVxLVN-lEX_GvJ2oSIUmPzRFnAKATZHaASn0eAnVoIJj6CymdeutSsGwsKn4FXak5rsbg8n4ygp-e_JZKU0Yx47r7VHSWG1aaL4htguzhvjS1zmqPH801ynLzoiNnvdleGZlxyx1Cw3fcufDnEaZU20T3fOMzLrcBkjKrzSvjSiUDeTCe61jvhIWyYMEMHmKJ7ZXl0X401QI5hR-SUqsC9QN5cdu4kuorezXmzj3EfKuOP7s_wVtocQ.D23W_8yoXcPtoY1SX1955rGJpQ0\",",
+            "\"release_notes\": [],",
+            "\"app_store_connect_status\": null,",
+            "\"name\": \"Synchronize and audit release version\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\nset -euo pipefail\\nexec > >(tee -a \\\"$CM_BUILD_DIR/yoru-production.log\\\") 2>&1\\necho \\\"=== stage: version-audit ===\\\"\\nnode scripts/sync-ios-release-version.mjs\\ngrep -q 'MARKETING_VERSION = 1.2.0;' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\ngrep -q 'CURRENT_PROJECT_VERSION = 4;' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\ngrep -q 'PRODUCT_BUNDLE_IDENTIFIER = io.github.allsunday1122.yorunoshoka;' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\ntes"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-003-eas-signing-probe-20260827-0842.json",
+          "signals": [
+            "\"request_id\": \"app2-003-eas-signing-probe-20260827-0842\",",
+            "\"bundle_id\": \"io.github.allsunday1122.yorunoshoka\",",
+            "\"eas_project_id\": \"f1a46391-1511-49ef-bfc6-846e4df70735\",",
+            "\"codemagic_app_id\": \"6a8af6e5a5c86907b00c2efd\",",
+            "\"codemagic_group_name\": \"app2_003_yoru_signing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/6794137637.json",
+          "signals": [
+            "\"app_id\": \"6794137637\",",
+            "\"bundle_id\": \"io.github.allsunday1122.yorunoshoka\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/summary.json",
+          "signals": [
+            "\"app_id\": \"6794137637\",",
+            "\"bundle_id\": \"io.github.allsunday1122.yorunoshoka\","
+          ]
+        }
+      ]
+    },
+    {
+      "name": "呑み処アーケード",
+      "bundle_id": "jp.allsunday1122.nomikaiarcade",
+      "app_id": "6794847479",
+      "hits": [
+        {
+          "path": ".github/workflows/app2-002-asc-revise.yml",
+          "signals": [
+            "- automation/app2-002-asc-revise-command.json",
+            "- name: Remove approved old version from release flow and align Build 5",
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID='6794847479'",
+            "BUNDLE_ID='jp.allsunday1122.nomikaiarcade'",
+            "if before_state != 'PENDING_DEVELOPER_RELEASE':",
+            "raise SystemExit(f'APP2-002 preflight failed: expected PENDING_DEVELOPER_RELEASE, got {before_state}')",
+            "if unlocked != 'PENDING_DEVELOPER_RELEASE':",
+            "if unlocked == 'PENDING_DEVELOPER_RELEASE':",
+            "out['released_to_store']=False",
+            "Path('automation/app2-002-asc-revise-result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')",
+            "print('PASS: APP2-002 old approved release flow removed; metadata and Build 5 aligned without submission/release')",
+            "if: always() && hashFiles('automation/app2-002-asc-revise-result.json') != ''",
+            "git add automation/app2-002-asc-revise-result.json"
+          ]
+        },
+        {
+          "path": ".github/workflows/app2-002-nomidokoro-release-bridge.yml",
+          "signals": [
+            "name: APP2-002 Nomidokoro Release Bridge",
+            "- automation/app2-002-nomidokoro-release-command.json",
+            "release-bridge:",
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID='6794847479'",
+            "BUNDLE_ID='jp.allsunday1122.nomikaiarcade'",
+            "- name: Start and monitor Codemagic Build 5",
+            "WORKFLOW='ios-native'",
+            "BRANCH='codex/nomikai-arcade-ios-release'",
+            "raise RuntimeError(f'Codemagic HTTP {e.code}: {raw[:1000]}')",
+            "status,resp=call('https://api.codemagic.io/builds','POST',{",
+            "'appId':APP_ID,'workflowId':WORKFLOW,'branch':BRANCH})",
+            "result={'app_id':APP_ID,'workflow_id':WORKFLOW,'branch':BRANCH,'build_id':build_id,'start_http_status':status}",
+            "_,details=call(f'https://codemagic.io/api/v3/builds/{build_id}')",
+            "Path('app2-002-codemagic.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')",
+            "print('Codemagic status:',state)",
+            "raise SystemExit(f'Codemagic build ended: {state}')",
+            "print('PASS: Codemagic build finished',build_id)",
+            "raise SystemExit('Codemagic build monitoring timeout')",
+            "- name: Upload APP2-002 release evidence",
+            "name: app2-002-nomidokoro-release-${{ github.run_id }}",
+            "app2-002-codemagic.json"
+          ]
+        },
+        {
+          "path": ".github/workflows/app2-002-build6-compliance.yml",
+          "signals": [
+            "- automation/app2-002-build6-compliance-command.json",
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID='6794847479'",
+            "out={'task_id':'APP2-002','app_id':APP_ID,'build_number':'6'}",
+            "Path('automation/app2-002-build6-compliance-result.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')",
+            "if: always() && hashFiles('automation/app2-002-build6-compliance-result.json') != ''",
+            "git add automation/app2-002-build6-compliance-result.json"
+          ]
+        },
+        {
+          "path": "automation/app2-002-build6-compliance-result.json",
+          "signals": [
+            "\"app_id\": \"6794847479\",",
+            "\"build_number\": \"6\","
+          ]
+        },
+        {
+          "path": "automation/app2-002-asc-read-command.json",
+          "signals": [
+            "{\"label\":\"versions\",\"path\":\"/v1/apps/6794847479/appStoreVersions?limit=20\"},",
+            "{\"label\":\"builds\",\"path\":\"/v1/builds?filter[app]=6794847479&limit=20\"}"
+          ]
+        },
+        {
+          "path": "automation/app2-002-build6-compliance-command.json",
+          "signals": [
+            "\"app_id\": \"6794847479\",",
+            "\"build_number\": \"6\",",
+            "\"reason\": \"Native SwiftUI/WKWebView app with bundled local HTML/assets only; no custom or third-party cryptography found in canonical source.\",",
+            "\"release_to_store\": false,"
+          ]
+        },
+        {
+          "path": "automation/app2-002-asc-revise-command.json",
+          "signals": [
+            "\"app_id\": \"6794847479\",",
+            "\"bundle_id\": \"jp.allsunday1122.nomikaiarcade\",",
+            "\"build_number\": 5,",
+            "\"release_to_store\": false"
+          ]
+        },
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6794847479\","
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"呑み処アーケード\",\"app_id\":\"6794847479\",\"bundle_id\":\"jp.allsunday1122.nomikaiarcade\"},"
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"jp.allsunday1122.nomikaiarcade\","
+          ]
+        },
+        {
+          "path": "automation/app2-002-build6-testflight-audit-command.json",
+          "signals": [
+            "\"app_id\": \"6794847479\","
+          ]
+        },
+        {
+          "path": "automation/app2-002-asc-revise-result.json",
+          "signals": [
+            "\"app_id\": \"6794847479\",",
+            "\"version_state_before\": \"PENDING_DEVELOPER_RELEASE\",",
+            "\"released_to_store\": false"
+          ]
+        },
+        {
+          "path": "automation/app2-002-nomidokoro-release-command.json",
+          "signals": [
+            "\"app_store_connect_id\": \"6794847479\",",
+            "\"bundle_id\": \"jp.allsunday1122.nomikaiarcade\",",
+            "\"codemagic_app_id\": \"6a66134ea9f671d548da335a\",",
+            "\"workflow_id\": \"ios-native\",",
+            "\"branch\": \"codex/nomikai-arcade-ios-release\",",
+            "\"build_number\": 5,",
+            "\"submit_to_app_store\": false,",
+            "\"release_old_build\": false"
+          ]
+        },
+        {
+          "path": "automation/app2-002-asc-check-20260829-1224.json",
+          "signals": [
+            "{\"request_id\":\"app2-002-asc-20260829-1224\",\"app_id\":\"6794847479\",\"requests\":[{\"label\":\"builds\",\"path\":\"/v1/builds?filter[app]=6794847479&limit=20\"},{\"label\":\"versions\",\"path\":\"/v1/apps/6794847479/appStoreVersions?limit=20\"}]}"
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"app_id\": \"6794847479\",",
+            "\"bundle_id\": \"jp.allsunday1122.nomikaiarcade\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6794847479\",",
+            "\"bundle_id\": \"jp.allsunday1122.nomikaiarcade\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/summary.json",
+          "signals": [
+            "\"app_id\": \"6794847479\",",
+            "\"bundle_id\": \"jp.allsunday1122.nomikaiarcade\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/6794847479.json",
+          "signals": [
+            "\"app_id\": \"6794847479\",",
+            "\"bundle_id\": \"jp.allsunday1122.nomikaiarcade\","
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FP3級 過去問コーチ",
+      "bundle_id": "com.allsunday1122.fp3kakomoncoach",
+      "app_id": "6796733578",
+      "hits": [
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6796733578\","
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"FP3級 過去問コーチ\",\"app_id\":\"6796733578\",\"bundle_id\":\"com.allsunday1122.fp3kakomoncoach\"},"
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"com.allsunday1122.fp3kakomoncoach\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"app_id\": \"6796733578\",",
+            "\"bundle_id\": \"com.allsunday1122.fp3kakomoncoach\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-touhan-signing-audit-20260819-1932.json",
+          "signals": [
+            "\"name\": \"Toru Tango Codemagic App Store\",",
+            "\"name\": \"*[expo] com.allsunday1122.fp3kakomoncoach AppStore 2026-07-31T13:41:46.502Z\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-all-profile-types-cert-audit-20260819-2006.json",
+          "signals": [
+            "\"name\": \"Toru Tango Codemagic App Store\",",
+            "\"name\": \"*[expo] com.allsunday1122.fp3kakomoncoach AppStore 2026-07-31T13:41:46.502Z\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6796733578\",",
+            "\"bundle_id\": \"com.allsunday1122.fp3kakomoncoach\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/6796733578.json",
+          "signals": [
+            "\"app_id\": \"6796733578\",",
+            "\"bundle_id\": \"com.allsunday1122.fp3kakomoncoach\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/summary.json",
+          "signals": [
+            "\"app_id\": \"6796733578\",",
+            "\"bundle_id\": \"com.allsunday1122.fp3kakomoncoach\","
+          ]
+        }
+      ]
+    },
+    {
+      "name": "第一種衛生管理者",
+      "bundle_id": "jp.allsunday1122.healthmanager1",
+      "app_id": "6799581662",
+      "hits": [
+        {
+          "path": ".github/workflows/hm1-codemagic-root-fix.yml",
+          "signals": [
+            "name: Fix HealthManager1 Codemagic root workflow",
+            "- automation/hm1-codemagic-root-fix-command.json",
+            "workflow_dispatch:",
+            "- name: Patch HealthManager1 root Codemagic workflow",
+            "path = Path('codemagic.yaml')",
+            "app_store_connect: Codemagic Shiwake Swipe",
+            "bundle_identifier: jp.allsunday1122.healthmanager1",
+            "BUNDLE_ID: jp.allsunday1122.healthmanager1",
+            "BUILD_NUM=\"${CM_BUILD_NUMBER:?CM_BUILD_NUMBER is required}\"",
+            "- name: Verify release inputs",
+            "app_store_connect:",
+            "submit_to_testflight: true",
+            "submit_to_app_store: false",
+            "print('PASS: HealthManager1 root workflow already matches hardened release gate')",
+            "print('PASS: hardened HealthManager1 root workflow synced')",
+            "- name: Validate Codemagic YAML",
+            "config = yaml.safe_load(Path('codemagic.yaml').read_text(encoding='utf-8')) or {}",
+            "workflow = (config.get('workflows') or {}).get('health-manager-1-testflight') or {}",
+            "names = [step.get('name') for step in workflow.get('scripts', [])]",
+            "assert 'Verify release inputs' in names",
+            "asc = (workflow.get('publishing') or {}).get('app_store_connect') or {}",
+            "assert asc.get('submit_to_testflight') is True",
+            "assert asc.get('submit_to_app_store') is False",
+            "print('PASS: HealthManager1 hardened root workflow validates')",
+            "- name: Commit root workflow correction",
+            "git add codemagic.yaml",
+            "echo \"No root Codemagic change\"",
+            "git commit -m \"Harden HealthManager1 Codemagic release gate\""
+          ]
+        },
+        {
+          "path": ".github/workflows/app2-005-hm1-ipa-premium-audit.yml",
+          "signals": [
+            "- automation/app2-005-hm1-ipa-premium-audit-command.json",
+            "workflow_dispatch:",
+            "cmd=json.loads(pathlib.Path('automation/app2-005-hm1-ipa-premium-audit-command.json').read_text(encoding='utf-8'))",
+            "'bundle_id':info.get('CFBundleIdentifier')=='jp.allsunday1122.healthmanager1',",
+            "path=pathlib.Path('automation/codemagic-results')/(cmd['request_id']+'.json')",
+            "REQUEST_ID=\"$(python3 -c \"import json;print(json.load(open('automation/app2-005-hm1-ipa-premium-audit-command.json'))['request_id'])\")\"",
+            "RESULT=\"automation/codemagic-results/${REQUEST_ID}.json\"",
+            "mkdir -p automation/codemagic-results"
+          ]
+        },
+        {
+          "path": ".github/workflows/hm1-ipa-verification.yml",
+          "signals": [
+            "- automation/hm1-ipa-verification-command.json",
+            "- name: Verify Codemagic signed IPA and audited 264-question payload",
+            "command=json.loads(Path('automation/hm1-ipa-verification-command.json').read_text(encoding='utf-8'))",
+            "req=urllib.request.Request(f'https://codemagic.io/api/v3/builds/{build_id}',headers={'x-auth-token':token})",
+            "raise SystemExit('No signed IPA artifact found on Codemagic build')",
+            "build_number=str(info.get('CFBundleVersion') or '')",
+            "expected_build=str(command.get('expected_build_number') or '')",
+            "'build_number':build_number,",
+            "'bundle_id_ok':info.get('CFBundleIdentifier')=='jp.allsunday1122.healthmanager1',",
+            "'build_number_numeric':build_number.isdigit(),",
+            "'expected_build_number':expected_build or None,",
+            "'expected_build_number_ok':(not expected_build) or build_number==expected_build,",
+            "'embedded_provision_present','bundle_id_ok','build_number_numeric','expected_build_number_ok'",
+            "'codemagic_status':build.get('status'),'app_store_connect_status':build.get('app_store_connect_status'),",
+            "Path('automation/hm1-ipa-verification-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')",
+            "print(json.dumps({'build_id':build_id,'passed':passed,'build_number':build_number,'question_count':len(questions),'rounds':dict(rounds)},ensure_ascii=False))",
+            "{\"label\":\"app\",\"path\":\"/v1/apps/6799581662\"},",
+            "{\"label\":\"builds\",\"path\":\"/v1/apps/6799581662/builds?sort=-uploadedDate&limit=20\"},",
+            "{\"label\":\"prerelease-versions\",\"path\":\"/v1/apps/6799581662/preReleaseVersions?limit=20\"},",
+            "{\"label\":\"beta-groups\",\"path\":\"/v1/apps/6799581662/betaGroups?limit=50\"},",
+            "{\"label\":\"iap\",\"path\":\"/v1/apps/6799581662/inAppPurchasesV2?limit=50\"},",
+            "{\"label\":\"subscription-groups\",\"path\":\"/v1/apps/6799581662/subscriptionGroups?limit=50\"}",
+            "python3 scripts/app_store_connect_gateway.py --command /tmp/hm1-asc-command.json --output /tmp/hm1-asc-result.json",
+            "summary=json.loads(Path('automation/hm1-ipa-verification-summary.json').read_text(encoding='utf-8'))",
+            "expected=str(summary['checks']['build_number'])",
+            "summary['asc_readback']={'completed_at':src.get('completed_at'),'results':results,'expected_build_number':expected,'matching_builds':matches,'build_match':bool(matches)}",
+            "Path('automation/hm1-ipa-verification-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')",
+            "print(json.dumps({'expected_build_number':expected,'asc_build_match':bool(matches),'matches':matches},ensure_ascii=False))",
+            "test -f automation/hm1-ipa-verification-summary.json",
+            "cp automation/hm1-ipa-verification-summary.json /tmp/hm1-summary.json",
+            "git add automation/hm1-ipa-verification-summary.json",
+            "cp /tmp/hm1-summary.json automation/hm1-ipa-verification-summary.json",
+            "git add automation/hm1-ipa-verification-summary.json"
+          ]
+        },
+        {
+          "path": ".github/workflows/hm1-final-release-prep.yml",
+          "signals": [
+            "name: Prepare HealthManager1 final release workflow",
+            "- automation/hm1-final-release-prep-command.json",
+            "- name: Patch root Codemagic HM1 workflow",
+            "run: python3 scripts/patch_hm1_final_release.py",
+            "- name: Validate HM1 release workflow contract",
+            "c=yaml.safe_load(Path('codemagic.yaml').read_text(encoding='utf-8'))",
+            "w=c['workflows']['health-manager-1-testflight']",
+            "'Verify HM1 release inputs',",
+            "assert w['environment']['ios_signing']['bundle_identifier']=='jp.allsunday1122.healthmanager1'",
+            "assert w['publishing']['app_store_connect']['submit_to_testflight'] is True",
+            "assert w['publishing']['app_store_connect']['submit_to_app_store'] is False",
+            "- name: Persist root Codemagic release gate",
+            "git add codemagic.yaml",
+            "echo \"No HM1 Codemagic changes\"",
+            "git commit -m \"Wire HM1 App Store eligible release build\"",
+            "cp codemagic.yaml /tmp/codemagic.yaml",
+            "cp /tmp/codemagic.yaml codemagic.yaml",
+            "git add codemagic.yaml",
+            "git diff --cached --quiet || git commit -m \"Wire HM1 App Store eligible release build\""
+          ]
+        },
+        {
+          "path": "scripts/app2_005_hm1_prepare_submit.py",
+          "signals": [
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID = \"6799581662\"",
+            "BUNDLE_ID = \"jp.allsunday1122.healthmanager1\"",
+            "- jp.allsunday1122.healthmanager1.monthly",
+            "- jp.allsunday1122.healthmanager1.lifetime",
+            "\"ageAssurance\": False,",
+            "result: dict = {\"task_id\":\"APP2-005\",\"completed_at\":datetime.now(timezone.utc).isoformat(),\"app_id\":APP_ID,\"bundle_id\":BUNDLE_ID,\"build\":BUILD_VERSION,\"release_performed\":False}"
+          ]
+        },
+        {
+          "path": "scripts/app2_005_hm1_availability.py",
+          "signals": [
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID='6799581662'",
+            "BUNDLE_ID='jp.allsunday1122.healthmanager1'",
+            "OUT=Path('automation/app2-005-hm1-availability-result.json')",
+            "if (((sub.get('data') or {}).get('attributes') or {}).get('productId'))!='jp.allsunday1122.healthmanager1.monthly':",
+            "if (((iap.get('data') or {}).get('attributes') or {}).get('productId'))!='jp.allsunday1122.healthmanager1.lifetime':"
+          ]
+        },
+        {
+          "path": "scripts/app2_005_hm1_iap_bootstrap.py",
+          "signals": [
+            "from app_store_connect_api import BASE_URL, load_private_key, make_token",
+            "APP_ID = \"6799581662\"",
+            "BUNDLE_ID = \"jp.allsunday1122.healthmanager1\"",
+            "MONTHLY_ID = \"jp.allsunday1122.healthmanager1.monthly\"",
+            "LIFETIME_ID = \"jp.allsunday1122.healthmanager1.lifetime\"",
+            "OUT = Path(\"automation/app2-005-hm1-iap-result.json\")"
+          ]
+        },
+        {
+          "path": "scripts/patch_hm1_final_release.py",
+          "signals": [
+            "p = Path('codemagic.yaml')",
+            "BUILD_NUM=\"${CM_BUILD_NUMBER:?CM_BUILD_NUMBER is required}\"",
+            "verify_inputs = '''      - name: Verify HM1 release inputs",
+            "print('PASS: HM1 audited release inputs contain 264 questions / 6x44 sets')",
+            "if '      - name: Verify HM1 release inputs\\n' not in block:",
+            "assert info.get('CFBundleIdentifier')=='jp.allsunday1122.healthmanager1'",
+            "'Verify HM1 release inputs',",
+            "'submit_to_testflight: true',",
+            "'submit_to_app_store: false',",
+            "raise SystemExit(f'missing HM1 release requirement: {item}')",
+            "print('PASS: patched root Codemagic HM1 final release workflow')"
+          ]
+        },
+        {
+          "path": "scripts/app2_005_hm1_intro_offer.py",
+          "signals": [
+            "from app_store_connect_api import BASE_URL, load_private_key, make_token",
+            "APP_ID = \"6799581662\"",
+            "BUNDLE_ID = \"jp.allsunday1122.healthmanager1\"",
+            "PRODUCT_ID = \"jp.allsunday1122.healthmanager1.monthly\"",
+            "OUT = Path(\"automation/app2-005-hm1-intro-offer-result.json\")"
+          ]
+        },
+        {
+          "path": "automation/testflight-reactivate-build-command.json",
+          "signals": [
+            "\"app_id\": \"6799581662\",",
+            "\"bundle_id\": \"jp.allsunday1122.healthmanager1\","
+          ]
+        },
+        {
+          "path": "automation/app2-005-hm1-availability-result.json",
+          "signals": [
+            "\"app_id\": \"6799581662\","
+          ]
+        },
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6799581662\","
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"第一種衛生管理者\",\"app_id\":\"6799581662\",\"bundle_id\":\"jp.allsunday1122.healthmanager1\"},"
+          ]
+        },
+        {
+          "path": "automation/app2-005-hm1-price-fix-result.json",
+          "signals": [
+            "\"product_id\": \"jp.allsunday1122.healthmanager1.lifetime\","
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"jp.allsunday1122.healthmanager1\","
+          ]
+        },
+        {
+          "path": "automation/app2-005-hm1-submit-command.json",
+          "signals": [
+            "\"app_id\": \"6799581662\","
+          ]
+        },
+        {
+          "path": "automation/hm1-ipa-verification-summary.json",
+          "signals": [
+            "\"codemagic_status\": \"finished\",",
+            "\"app_store_connect_status\": \"failed\",",
+            "\"bundle_id\": \"jp.allsunday1122.healthmanager1\",",
+            "\"build_number\": \"2026081901\",",
+            "\"build_number_ok\": true"
+          ]
+        },
+        {
+          "path": "automation/app2-005-hm1-intro-offer-result.json",
+          "signals": [
+            "\"app_id\": \"6799581662\",",
+            "\"product_id\": \"jp.allsunday1122.healthmanager1.monthly\","
+          ]
+        },
+        {
+          "path": "automation/app2-005-hm1-asc-command.json",
+          "signals": [
+            "\"expected_app_id\": \"6799581662\",",
+            "\"expected_bundle_id\": \"jp.allsunday1122.healthmanager1\","
+          ]
+        },
+        {
+          "path": "automation/app2-005-hm1-iap-result.json",
+          "signals": [
+            "\"id\": \"6799581662\",",
+            "\"bundle_id\": \"jp.allsunday1122.healthmanager1\",",
+            "\"product_id\": \"jp.allsunday1122.healthmanager1.monthly\",",
+            "\"product_id\": \"jp.allsunday1122.healthmanager1.lifetime\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-reactivate-hm1-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6799581662\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-reactivate-hm1-20260905-0518-r2.json",
+          "signals": [
+            "\"app_id\": \"6799581662\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"app_id\": \"6799581662\",",
+            "\"bundle_id\": \"jp.allsunday1122.healthmanager1\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-005-hm1-submit-diagnostic-20260825-2105.json",
+          "signals": [
+            "\"app_id\": \"6799581662\",",
+            "\"bundle_id\": \"jp.allsunday1122.healthmanager1\",",
+            "\"release_performed\": false,"
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6799581662\",",
+            "\"bundle_id\": \"jp.allsunday1122.healthmanager1\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-rebuild-plan-20260905-0518.json",
+          "signals": [
+            "\"workflows\": [",
+            "\"workflow_id\": \"health-manager-1-testflight\",",
+            "\"bundle_id\": \"jp.allsunday1122.healthmanager1\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": false,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"health-manager-2-ios\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": false,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"otsu4-ios\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"pharmacist-ios\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"otsu4-native-ios\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"submit_to_testflight\": null,",
+            "\"submit_to_app_store\": null,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": false"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-005-hm1-premium-visible-20260825-1940.json",
+          "signals": [
+            "\"workflow_id\": \"health-manager-1-testflight\",",
+            "\"workflow\": {",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwdu2QkAAANB_Oe_WYkJ66AEzQqNjTBQvVuMyKNeU8vVnnb1_uP7PGJsrFvHOpA8ifMjwTTYCxnaqLlkbS3wi8A4rQachkechfjvoAWY_L16__UAOY9Rpm3zuRWpF1vN-MhmjsWEd-9hoT7bRh53vaRZfg5SZr2FFi0t5MwFI9NulBR8FHu1aViPkBx7EX5LcXW_6-LskTavx2KpKvV2gKpei15kJz-wLmlQndjMgdez2ZoaUXwmwDq6CzrfNtgxmBIOGeQUbtcUJB4F8q0qR3XQpQCZm5ydH2tTJk1PnUlRYWGXhM6JAzkrv6gpNTkvSrk29Eo779mDU-n7_8wfYFWEz.r2_CFCgwZ_JZ4GUOkY2oToc98aE\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwV3XQjAAAOD_0r1zJiGXI19NPpZKbpy1NBNqJPHr3_M-z4rBf6aoswA4tUN6HeGKf1XwAzRZA6HzwPKnjitALqSCiPCtpqwiGj7e9yqkLpWzPjOqdebpJ2KymdUPyviixiIsig7Zs3ZUlgAdMf749RePEGZD5thnZvS3i3Rox9DUbWe3P5VPg_7iMkNEcHhgQHiuNL5f9ijWlXGO2tyZCUpc_zhXoyc1KV3oA6czmWXN24qgY4pKEZCjyMb39hGUKB6nZ6oz4gaNqSjezoYUfmZT--gzgJFtadYo9zfShpmUK-LKX-ya8ACeuDcNaCPe_jWxys0vJxD3w8vPO9TzWFs2UqN0YTeRvVngC2_KTjeMoN3K1bD6AyZ0bx4.1jN6FmkuNZ8ERi7XvUSAxDg59rA\",",
+            "\"release_notes\": [],",
+            "\"app_store_connect_status\": \"processing\",",
+            "\"name\": \"Verify HM1 release inputs\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\npython3 - \\\"$CM_BUILD_DIR/ios/health-manager-1\\\" <<'PY2'\\nfrom pathlib import Path\\nimport collections,json,re\\nimport sys\\nroot=Path(sys.argv[1])\\nq=json.loads((root/'Resources/questions.json').read_text(encoding='utf-8'))\\nhtml=(root/'Resources/index.html').read_text(encoding='utf-8')\\nassert len(q)==264, len(q)\\nassert len({x['id'] for x in q})==264\\nassert collections.Counter(x['round'] for x in q)=={'2026-04':44,'2025-10':44,'2025-04':44,'practice-A':44,'pr",
+            "\"script\": \"#!/usr/bin/env bash\\n\\nIPA_PATH=\\\"$(find build/ios/ipa -type f -name '*.ipa' -print -quit)\\\"\\ntest -n \\\"$IPA_PATH\\\"\\nVERIFY_DIR=\\\"$(mktemp -d)\\\"\\nunzip -q \\\"$IPA_PATH\\\" -d \\\"$VERIFY_DIR\\\"\\nAPP_DIR=\\\"$(find \\\"$VERIFY_DIR/Payload\\\" -maxdepth 1 -type d -name '*.app' -print -quit)\\\"\\npython3 - \\\"$APP_DIR\\\" <<'PY2'\\nfrom pathlib import Path\\nimport collections,json,plistlib,re,sys\\napp=Path(sys.argv[1])\\nindex=(app/'index.html').read_text(encoding='utf-8')\\nm=re.search(r'const QUESTIONS=(\\"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-005-hm1-264-final-testflight-20260822-1910.json",
+          "signals": [
+            "\"workflow_id\": \"health-manager-1-testflight\",",
+            "\"error\": \"Codemagic build ended with status: failed\",",
+            "\"workflow\": {",
+            "\"release_notes\": [],",
+            "\"app_store_connect_status\": null,",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ncd \\\"$CM_BUILD_DIR/ios/health-manager-1\\\"\\nBUILD_NUM=\\\"${CM_BUILD_NUMBER:?CM_BUILD_NUMBER is required}\\\"\\npython3 - \\\"$BUILD_NUM\\\" <<'PY2'\\nfrom pathlib import Path\\nimport re,sys\\nq=Path('project.yml')\\ns=q.read_text(encoding='utf-8')\\ns,n=re.subn(r'CURRENT_PROJECT_VERSION:\\\\s*\\\\d+',f'CURRENT_PROJECT_VERSION: {sys.argv[1]}',s,count=1)\\nif n != 1:\\n    raise SystemExit('CURRENT_PROJECT_VERSION replacement failed')\\nq.write_text(s,encoding='utf-8')\\nPY2\\nxcodegen",
+            "\"name\": \"Verify HM1 release inputs\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\npython3 - \\\"$CM_BUILD_DIR/ios/health-manager-1\\\" <<'PY2'\\nfrom pathlib import Path\\nimport collections,json,re\\nimport sys\\nroot=Path(sys.argv[1])\\nq=json.loads((root/'Resources/questions.json').read_text(encoding='utf-8'))\\nhtml=(root/'Resources/index.html').read_text(encoding='utf-8')\\nassert len(q)==264, len(q)\\nassert len({x['id'] for x in q})==264\\nassert collections.Counter(x['round'] for x in q)=={'2026-04':44,'2025-10':44,'2025-04':44,'practice-A':44,'pr",
+            "\"script\": \"#!/usr/bin/env bash\\n\\nIPA_PATH=\\\"$(find build/ios/ipa -type f -name '*.ipa' -print -quit)\\\"\\ntest -n \\\"$IPA_PATH\\\"\\nVERIFY_DIR=\\\"$(mktemp -d)\\\"\\nunzip -q \\\"$IPA_PATH\\\" -d \\\"$VERIFY_DIR\\\"\\nAPP_DIR=\\\"$(find \\\"$VERIFY_DIR/Payload\\\" -maxdepth 1 -type d -name '*.app' -print -quit)\\\"\\npython3 - \\\"$APP_DIR\\\" <<'PY2'\\nfrom pathlib import Path\\nimport collections,json,plistlib,re,sys\\napp=Path(sys.argv[1])\\nindex=(app/'index.html').read_text(encoding='utf-8')\\nm=re.search(r'const QUESTIONS=(\\"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-005-hm1-264-final-testflight-20260822-2004.json",
+          "signals": [
+            "\"workflow_id\": \"health-manager-1-testflight\",",
+            "\"workflow\": {",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwceSgjAAANB_8b4z6JKIBw8UKWpooQQujookIYKo9K_f2fdWVP2nvXnmIh7BZHO-hObCHFnOv2zdnYTYAIxfs6sGtiLM7i1t48jUE9x3uLqhYVHphBve6gYhY78Ob6Cq6MNyavVCjfbj3J8CWqOnpUgtFPqVMIT6dCyem8E4XNs-iMXjMHssKCv8lE07t1Cg0kyqg9yl4eBe3Vo0rJ1CeuMNpOXFfWfpNbdTrTd2gzT7oRIrsP4FpOhAsrPhT5MinX9K6tfsLmTn3MQ-OZ5AMLKCjtyn_pxOHXLZNmP-QID-JWBRSHvwIi-MibO8wEDPWoSWsuaGUVjjfr_6AyoTY94.6OTey8Wgj4AK5l82l9lZdnejX7o\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwduSQzAAANB_6bsZsiweXaqoS1SbhheTikvUTli00q_f2XMOnfXPnlmRxB0O3DDGyLq8BwBNJOaJ0bzNyzIyimucIOECjWQb9vxkjj8nY-9nUo6UO1GgQ1nkdllHikuDifIQFSBe4LBQmOoWu4j6zh9kqZpbpcdhDRZqtc9pF3mU-Z73pSreqFQDr6Sd6F6pXhsHthHLyPVkTrZatEIP8J5BmPYBfsXvgfUj9DKsmrs_BxV5DjfH4z-V6Qz3-1J3j-8XSI98Qtb5uFxWWX5TNzBPbjuSlqK-X9lmIwMrmaGC2QiP8mewm-Tcpa-mvBmjCh20fn67tZb4WfimWBkGElCZpe0AwkSSt2oUESOIEM3kzrN_RHA7_AE8jXAE.WBcqEc8wh4GvPmPywLCfE89mMlQ\",",
+            "\"release_notes\": [],",
+            "\"app_store_connect_status\": \"processing\",",
+            "\"name\": \"Verify HM1 release inputs\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\npython3 - \\\"$CM_BUILD_DIR/ios/health-manager-1\\\" <<'PY2'\\nfrom pathlib import Path\\nimport collections,json,re\\nimport sys\\nroot=Path(sys.argv[1])\\nq=json.loads((root/'Resources/questions.json').read_text(encoding='utf-8'))\\nhtml=(root/'Resources/index.html').read_text(encoding='utf-8')\\nassert len(q)==264, len(q)\\nassert len({x['id'] for x in q})==264\\nassert collections.Counter(x['round'] for x in q)=={'2026-04':44,'2025-10':44,'2025-04':44,'practice-A':44,'pr",
+            "\"script\": \"#!/usr/bin/env bash\\n\\nIPA_PATH=\\\"$(find build/ios/ipa -type f -name '*.ipa' -print -quit)\\\"\\ntest -n \\\"$IPA_PATH\\\"\\nVERIFY_DIR=\\\"$(mktemp -d)\\\"\\nunzip -q \\\"$IPA_PATH\\\" -d \\\"$VERIFY_DIR\\\"\\nAPP_DIR=\\\"$(find \\\"$VERIFY_DIR/Payload\\\" -maxdepth 1 -type d -name '*.app' -print -quit)\\\"\\npython3 - \\\"$APP_DIR\\\" <<'PY2'\\nfrom pathlib import Path\\nimport collections,json,plistlib,re,sys\\napp=Path(sys.argv[1])\\nindex=(app/'index.html').read_text(encoding='utf-8')\\nm=re.search(r'const QUESTIONS=(\\"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-005-hm1-jpy-paywall-20260823-2129.json",
+          "signals": [
+            "\"workflow_id\": \"health-manager-1-testflight\",",
+            "\"workflow\": {",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwcmOgjAAANB_8U6CLbR68FCZsogzLqAsl0YKNIhSELHA15t5byHIv21XDRLYpLiE_XOnZU_44EEgXalQP-vNIH0KrGplyKxpB5w0Qe9ZaXr17k4F_bHbT9OAhEmaaKRv-PvyvTJjP2ZO5_p9hRo4lrhHwrI7T-cmizNqJUHN5O7YGjR6CaDluQLxTa_XB2T7BvHdiStUuHR0Q14wvhYGJOiUYIMaJpABbVVJw5ndW2N2mIQqOfZmlDscm1H0ISXRlqOPp54J2fBb8SCXP4D0Gx5Vx7fnQlnnKtVqMdrSL2QcLW3vsE8DfZ04J6jiN76Yq91HFeHWuh_IZrP4AmMkYQg.oENh4F9jRKJggT5BvQN2VWcXA34\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwclygjAAANB_6d0ZFknDkbAqW5G4hAtDICICskPK13f63lep_UNDtXSSHbbBNCRLqLIHGOYwmTgyBu2uY_BoKtolZ6-q1jowtkPnp1RQQukkoqoLJa4fsHubqBQBSW7x6hprPxI10z3obKrL0030EytZoguwEjpr5lLmAfpGbo0Y6Fe5fI5EjJWPHkQKFkau3Rt8JppNnLgecz9TIrl4y8TDkbYWdBqf1qmBdg42GPVAIARPtROK2yXNn_s8Ctb-_vVBiD5BCqZWvzFRbGUslD5kLGN8Xzd1S4mpCOeyNsxlLiyztpPsirj1bvojj3cqT9w-esVEyU_gXJHxgnJFLv7CIGFYipFQzhpVGDQgHdCrRAjy7OsPvrRvRQ.sfzqlpD1QqlFgzidNEFziv9bmYY\",",
+            "\"release_notes\": [],",
+            "\"app_store_connect_status\": \"processing\",",
+            "\"name\": \"Verify HM1 release inputs\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\npython3 - \\\"$CM_BUILD_DIR/ios/health-manager-1\\\" <<'PY2'\\nfrom pathlib import Path\\nimport collections,json,re\\nimport sys\\nroot=Path(sys.argv[1])\\nq=json.loads((root/'Resources/questions.json').read_text(encoding='utf-8'))\\nhtml=(root/'Resources/index.html').read_text(encoding='utf-8')\\nassert len(q)==264, len(q)\\nassert len({x['id'] for x in q})==264\\nassert collections.Counter(x['round'] for x in q)=={'2026-04':44,'2025-10':44,'2025-04':44,'practice-A':44,'pr",
+            "\"script\": \"#!/usr/bin/env bash\\n\\nIPA_PATH=\\\"$(find build/ios/ipa -type f -name '*.ipa' -print -quit)\\\"\\ntest -n \\\"$IPA_PATH\\\"\\nVERIFY_DIR=\\\"$(mktemp -d)\\\"\\nunzip -q \\\"$IPA_PATH\\\" -d \\\"$VERIFY_DIR\\\"\\nAPP_DIR=\\\"$(find \\\"$VERIFY_DIR/Payload\\\" -maxdepth 1 -type d -name '*.app' -print -quit)\\\"\\npython3 - \\\"$APP_DIR\\\" <<'PY2'\\nfrom pathlib import Path\\nimport collections,json,plistlib,re,sys\\napp=Path(sys.argv[1])\\nindex=(app/'index.html').read_text(encoding='utf-8')\\nm=re.search(r'const QUESTIONS=(\\"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "登録販売者",
+      "bundle_id": "com.allsunday1122.tourokuhanbaisha",
+      "app_id": "6802119268",
+      "hits": [
+        {
+          "path": ".github/workflows/app2-010-codemagic-install.yml",
+          "signals": [
+            "name: APP2-010 Install Codemagic Workflow",
+            "- 'automation/app2-010-codemagic-install.json'",
+            "- name: Append Touhan workflow onto latest main without clobbering peers",
+            "path=Path('codemagic.yaml')",
+            "app_store_connect: \"Codemagic Shiwake Swipe\"",
+            "bundle_identifier: com.allsunday1122.tourokuhanbaisha",
+            "BUNDLE_ID: com.allsunday1122.tourokuhanbaisha",
+            "APP_STORE_CONNECT_APP_ID: \"6802119268\"",
+            "CODEMAGIC_PROFILE_REF: tourokuhanbaisha_appstore",
+            "- name: Audit registration seller release inputs",
+            "test \"$BUNDLE_ID\" = \"com.allsunday1122.tourokuhanbaisha\"",
+            "test \"$APP_STORE_CONNECT_APP_ID\" = \"6802119268\"",
+            "test \"$CODEMAGIC_PROFILE_REF\" = \"tourokuhanbaisha_appstore\"",
+            "python3 touroku-hanbaisha-ios/scripts/validate_release.py",
+            "text=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)",
+            "grep -q 'com.allsunday1122.tourokuhanbaisha' \"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\"",
+            "app_store_connect:",
+            "submit_to_testflight: true",
+            "submit_to_app_store: false",
+            "if grep -q '^  touhan-ios:$' codemagic.yaml && git diff --quiet -- codemagic.yaml; then",
+            "data=yaml.safe_load(open('codemagic.yaml',encoding='utf-8'))",
+            "wf=data['workflows']['touhan-ios']",
+            "assert wf['environment']['ios_signing']['bundle_identifier']=='com.allsunday1122.tourokuhanbaisha'",
+            "assert wf['publishing']['app_store_connect']['submit_to_testflight'] is True",
+            "assert wf['publishing']['app_store_connect']['submit_to_app_store'] is False",
+            "print('PASS: touhan-ios workflow parsed and review submission disabled')",
+            "git add codemagic.yaml",
+            "git commit -m \"Add 登録販売者 Internal TestFlight workflow\""
+          ]
+        },
+        {
+          "path": "scripts/app2_010_create_managed_signing.py",
+          "signals": [
+            "- Stores the newly generated RSA private key directly as a secure Codemagic",
+            "from app_store_connect_api import load_private_key, make_token",
+            "CM_BASE = \"https://codemagic.io\"",
+            "COMMAND = Path(\"automation/app2-010-managed-signing-command.json\")",
+            "\"app_store_connect_app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"codemagic_app_id\": \"6a769d81a1add9d06020b524\",",
+            "\"codemagic_group_name\": \"app2_010_touhan_signing\",",
+            "\"codemagic_group_name\": EXPECTED[\"codemagic_group_name\"],",
+            "# Ensure the target Codemagic secret group is absent before starting a new managed identity.",
+            "cm_status, cm_groups = cm_call(cm_token, \"GET\", f\"/api/v3/apps/{EXPECTED['codemagic_app_id']}/variable-groups\")",
+            "raise RuntimeError(f\"Codemagic group inventory failed: HTTP {cm_status}\")",
+            "existing_group = cm_group_id(cm_groups, EXPECTED[\"codemagic_group_name\"])",
+            "[\"openssl\", \"req\", \"-new\", \"-key\", str(signing_key_path), \"-out\", str(csr_path), \"-subj\", \"/CN=APP2-010 Touhan Codemagic/O=ALLSUNDAY1122/C=JP\"],",
+            "# Create a new Apple Distribution certificate whose private key is under this workflow's control.",
+            "# Persist the private key directly into Codemagic encrypted app variables before profile replacement.",
+            "f\"/api/v3/apps/{EXPECTED['codemagic_app_id']}/variable-groups\",",
+            "{\"name\": EXPECTED[\"codemagic_group_name\"]},",
+            "raise RuntimeError(f\"Codemagic managed group create failed: HTTP {create_group_status}\")",
+            "check_status, check_groups = cm_call(cm_token, \"GET\", f\"/api/v3/apps/{EXPECTED['codemagic_app_id']}/variable-groups\")",
+            "new_group_id = cm_group_id(check_groups, EXPECTED[\"codemagic_group_name\"])",
+            "raise RuntimeError(\"Codemagic managed group id could not be resolved\")",
+            "result[\"codemagic_group_id\"] = new_group_id",
+            "raise RuntimeError(f\"Codemagic private-key secret insert failed: HTTP {secret_status}\")",
+            "raise RuntimeError(f\"Codemagic secret read-back failed: HTTP {vars_status}\")",
+            "raise RuntimeError(\"Codemagic secret name missing after write\")",
+            "result[\"codemagic_variable_names\"] = variable_names"
+          ]
+        },
+        {
+          "path": "scripts/install_touhan_codemagic.py",
+          "signals": [
+            "CODEMAGIC = ROOT / \"codemagic.yaml\"",
+            "TRIGGER = ROOT / \"automation/app2-010-codemagic-install-trigger.json\"",
+            "RESULT_DIR = ROOT / \"automation/codemagic-results\"",
+            "WORKFLOW_ID = \"touhan-ios\"",
+            "BUNDLE_ID: com.allsunday1122.tourokuhanbaisha",
+            "APP_STORE_CONNECT_APP_ID: \"6802119268\"",
+            "CODEMAGIC_PROFILE_REF: tourokuhanbaisha_appstore",
+            "- name: Audit registration seller release inputs",
+            "test \"$BUNDLE_ID\" = \"com.allsunday1122.tourokuhanbaisha\"",
+            "test \"$APP_STORE_CONNECT_APP_ID\" = \"6802119268\"",
+            "test \"$CODEMAGIC_PROFILE_REF\" = \"tourokuhanbaisha_appstore\"",
+            "test -n \"${APP_STORE_CONNECT_PRIVATE_KEY:-}\"",
+            "test -n \"${APP_STORE_CONNECT_KEY_IDENTIFIER:-}\"",
+            "test -n \"${APP_STORE_CONNECT_ISSUER_ID:-}\"",
+            "python3 touroku-hanbaisha-ios/scripts/validate_release.py",
+            "build_number = os.environ.get('CM_BUILD_NUMBER') or os.environ.get('BUILD_NUMBER')",
+            "if not build_number:",
+            "raise RuntimeError('Codemagic build number is unavailable')",
+            "text=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+build_number, 1)",
+            "grep -q 'com.allsunday1122.tourokuhanbaisha' \"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\"",
+            "app-store-connect publish \\",
+            "--altool-retries 3 \\",
+            "--altool-retry-wait 2 \\",
+            "--altool-verbose-logging \\",
+            "for name in ('APP_STORE_CONNECT_KEY_IDENTIFIER','APP_STORE_CONNECT_ISSUER_ID'):",
+            "def replace_workflow(text: str) -> tuple[str, bool]:",
+            "marker = f\"\\n  {WORKFLOW_ID}:\\n\"",
+            "search_from = body_start + len(f\"  {WORKFLOW_ID}:\\n\")",
+            "text = CODEMAGIC.read_text(encoding=\"utf-8\")",
+            "if not text.startswith(\"workflows:\\n\") and \"\\nworkflows:\\n\" not in text:",
+            "raise SystemExit(\"codemagic.yaml has no workflows root\")",
+            "updated, changed = replace_workflow(text)",
+            "CODEMAGIC.write_text(updated, encoding=\"utf-8\")",
+            "final = CODEMAGIC.read_text(encoding=\"utf-8\")",
+            "workflow = final[final.index(\"  touhan-ios:\\n\"):]"
+          ]
+        },
+        {
+          "path": "scripts/create_touhan_apple_profile.py",
+          "signals": [
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "COMMAND = Path(\"automation/app2-010-touhan-apple-profile-command.json\")",
+            "EXPECTED_APP_ID = \"6802119268\"",
+            "EXPECTED_BUNDLE_ID = \"com.allsunday1122.tourokuhanbaisha\""
+          ]
+        },
+        {
+          "path": "automation/app2-010-touhan-apple-profile-command.json",
+          "signals": [
+            "\"app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\","
+          ]
+        },
+        {
+          "path": "automation/app2-010-asc-readback-command.json",
+          "signals": [
+            "{\"label\":\"builds\",\"method\":\"GET\",\"path\":\"/v1/apps/6802119268/builds?sort=-uploadedDate&limit=20\"}"
+          ]
+        },
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6802119268\","
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"登録販売者\",\"app_id\":\"6802119268\",\"bundle_id\":\"com.allsunday1122.tourokuhanbaisha\"},"
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"com.allsunday1122.tourokuhanbaisha\","
+          ]
+        },
+        {
+          "path": "automation/app2-010-testflight-invite-command.json",
+          "signals": [
+            "\"app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"build_number\": \"10\""
+          ]
+        },
+        {
+          "path": "automation/app2-010-managed-signing-command.json",
+          "signals": [
+            "\"app_store_connect_app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"codemagic_app_id\": \"6a769d81a1add9d06020b524\",",
+            "\"codemagic_group_name\": \"app2_010_touhan_signing\","
+          ]
+        },
+        {
+          "path": "automation/app2-010-testflight-route-command.json",
+          "signals": [
+            "\"app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"build_number\": \"11\""
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-touhan-profile-create-20260819-1940.json",
+          "signals": [
+            "\"app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-internal-audit-20260820-2005.json",
+          "signals": [
+            "\"app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"target_build_number\": \"10\",",
+            "\"build_numbers\": []"
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-build11-route-20260823-1802.json",
+          "signals": [
+            "\"app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"target_build_number\": \"11\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-invite-20260820-2015.json",
+          "signals": [
+            "\"app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"build_number\": \"10\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-compliance-route-20260820-2010.json",
+          "signals": [
+            "\"app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"target_build_number\": \"10\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-rebuild-plan-20260905-0518.json",
+          "signals": [
+            "\"workflows\": [",
+            "\"workflow_id\": \"health-manager-1-testflight\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": false,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"health-manager-2-ios\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": false,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"otsu4-ios\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"pharmacist-ios\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"otsu4-native-ios\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"submit_to_testflight\": null,",
+            "\"submit_to_app_store\": null,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": false"
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-invite2-20260820-2016.json",
+          "signals": [
+            "\"app_id\": \"6802119268\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"build_number\": \"10\","
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-010-touhan-build-internal3-20260819-1510.json",
+          "signals": [
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"error\": \"Codemagic build ended with status: failed\",",
+            "\"workflow\": {",
+            "\"release_notes\": [],",
+            "\"app_store_connect_status\": null,",
+            "\"name\": \"Audit registration seller release inputs\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\nset -euo pipefail\\ncd \\\"$CM_BUILD_DIR\\\"\\nnode touroku-hanbaisha-sprint/validate-history-calendar.mjs\\nbash -n touroku-hanbaisha-ios/native-ios/prepare-ios.sh\\ntest \\\"$BUNDLE_ID\\\" = \\\"com.allsunday1122.tourokuhanbaisha\\\"\\ntest \\\"$APP_STORE_CONNECT_APP_ID\\\" = \\\"6802119268\\\"\\ntest \\\"$CODEMAGIC_PROFILE_REF\\\" = \\\"tourokuhanbaisha_appstore\\\"\\nbash touroku-hanbaisha-ios/native-ios/prepare-ios.sh\\npython3 touroku-hanbaisha-ios/scripts/validate_release.py\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\nset -euo pipefail\\ncd \\\"$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios\\\"\\npython3 - <<'PYBUILD'\\nfrom pathlib import Path\\nimport os\\np=Path('project.yml')\\ntext=p.read_text(encoding='utf-8')\\ntext=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)\\np.write_text(text, encoding='utf-8')\\nPYBUILD\\nxcodegen generate\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\nset -euo pipefail\\ntest -f \\\"$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/PrivacyInfo.xcprivacy\\\"\\ntest -f \\\"$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\\\"\\necho \\\"$APPICON_SHA256  $CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\\\" | shasum -a 256 -c -\\ngrep -q 'com.allsunday1122.tourokuhanbaisha' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\ngrep -q 'MN"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-010-touhan-install-buildnum-20260819-1523.json",
+          "signals": [
+            "\"action\": \"install_touhan_workflow\",",
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"build_number_mode\": \"CM_BUILD_NUMBER_or_BUILD_NUMBER\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"app_store_connect_app_id\": \"6802119268\",",
+            "\"codemagic_profile_ref\": \"tourokuhanbaisha_appstore\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-010-touhan-install-existing-profile-20260819-1943.json",
+          "signals": [
+            "\"action\": \"install_touhan_workflow\",",
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"build_number_mode\": \"CM_BUILD_NUMBER_or_BUILD_NUMBER\",",
+            "\"signing_mode\": \"fetch_existing_apple_profile_and_codemagic_certificate\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"app_store_connect_app_id\": \"6802119268\",",
+            "\"codemagic_profile_ref\": \"tourokuhanbaisha_appstore\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-010-managed-signing-20260819-2010.json",
+          "signals": [
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"codemagic_group_name\": \"app2_010_touhan_signing\",",
+            "\"codemagic_group_id\": \"6a858cbdf36a890a9fa2c3f4\",",
+            "\"codemagic_variable_names\": ["
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-010-touhan-install-min-20260819-1341.json",
+          "signals": [
+            "\"action\": \"install_touhan_workflow\",",
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"app_store_connect_app_id\": \"6802119268\",",
+            "\"codemagic_profile_ref\": \"tourokuhanbaisha_appstore\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-010-touhan-build-explicit-asc-20260819-2025.json",
+          "signals": [
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"error\": \"Codemagic build ended with status: failed\",",
+            "\"workflow\": {",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwd2yQkAAAOB36d5MrL-96CKkcmoZlJ-bHZZjqU6LFevpm_N9m2b_z-ppboW8-Ih41j-fonwTQKdXsHhYPEdmDFUmq6vsm499m_nzmAHlBlNQtJFMzVNyuNbMEYM_csbU37GFqVYtQnKjc2cV_KCI3Ff_GpQjs3dLAbkV9kZE4IGBRCsf9kKSY4q1HxtFkMJT5BxJrMlkWwWTh16qp4S2axt10ORzhbuyWURh3KeUKw4Lr-sdacqld95zUpPb6WlLNCJZRVPuiBqbstH5KPDNi4NbVBfVKE0g0I5hjOTbw87V7ZkB6R1YOh282OIDgAJ0VzzPa5iRvNbxfrfbfAFCT2IH.w6M1yXKv0UzABFOIPcqGd8nD0P0\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwclygjAAANB_8c4MoFE49CAEKUhYAoHqhZHFWAKJyDp8fafv7ej5n9G_7gYOaNQQnidWuHiISiIROlecxotr4a2kIrYkH3-uCPvAzGEaAWsIXBJyQVG07uffCHrKMz3ro_PuBzQpt1TNrnahntxoQxyVNn2MN9uDwtqjEh9ItlynuHO2tzbNQjVD4Gux_ArmbOb5EQytqgd1L0K1pXlya1ClFIrEmlQ9X-qWxWVerSEfEt41mmJI0zfVqNNeTjBhqk9jjBkIOnwozDpm3uhwd2LNXXOBDox7UcTCHF4wd7IT2jJA1rHEfnh5eGDZsj7VPntWGXCUFpk4yNIZgSbRgm6WF_3zbp_W4Wv3B62YZ8A.0Lv_Q3OkR4tnH4I9XmWvlXUV60A\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwUtygjAAANC7dM8MCigsCUYBJSGB1sDGCV_5GcEA1dN3-t5Xbf8D4z0FlNUlHC8Jm3bqHGhR_myIB8o8wX5K6rEtrOcsML2wmEzkxQWTd_jzy4_E0GewTHhfZTKYYEXlbFO-hv6gP6Vequ_KiB9nztlk5BqfIb6hpE0HZvLjlONd1SgrFrhSQx3q2HQ8H0n5KjJnY0SiiQfbDPsMBT5oyEN0ur-L3MIe006V1ssKYhRDtgEkakT79lZouYp0W22i4FBf174Ikfm97xQSR1fKro8tiC0r__g0ArDyzVPWi-0MZ2LcGpDjbL80TsxHmCUNUvqWQVp5WuKAYcnSECCbzp1du4kXJfZGnE8W4q5THoBQllNXfL7-AK_lb3E.B7qepLKKTtoR6Ue6chzh22cbriM\",",
+            "\"release_notes\": [],",
+            "\"app_store_connect_status\": null,",
+            "\"name\": \"Audit registration seller release inputs\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\nset -euo pipefail\\ncd \\\"$CM_BUILD_DIR\\\"\\nnode touroku-hanbaisha-sprint/validate-history-calendar.mjs\\nbash -n touroku-hanbaisha-ios/native-ios/prepare-ios.sh\\ntest \\\"$BUNDLE_ID\\\" = \\\"com.allsunday1122.tourokuhanbaisha\\\"\\ntest \\\"$APP_STORE_CONNECT_APP_ID\\\" = \\\"6802119268\\\"\\ntest \\\"$CODEMAGIC_PROFILE_REF\\\" = \\\"tourokuhanbaisha_appstore\\\"\\ntest -n \\\"${CERTIFICATE_PRIVATE_KEY:-}\\\"\\ntest -n \\\"${APP_STORE_CONNECT_PRIVATE_KEY:-}\\\"\\ntest -n \\\"${APP_STORE_CONNECT_KEY_IDE",
+            "\"script\": \"#!/usr/bin/env bash\\n\\nset -euo pipefail\\ncd \\\"$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios\\\"\\npython3 - <<'PYBUILD'\\nfrom pathlib import Path\\nimport os\\np=Path('project.yml')\\ntext=p.read_text(encoding='utf-8')\\nbuild_number = os.environ.get('CM_BUILD_NUMBER') or os.environ.get('BUILD_NUMBER')\\nif not build_number:\\n    raise RuntimeError('Codemagic build number is unavailable')\\ntext=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+build_number, 1)\\np.write_",
+            "\"script\": \"#!/usr/bin/env bash\\n\\nset -euo pipefail\\ntest -f \\\"$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/PrivacyInfo.xcprivacy\\\"\\ntest -f \\\"$CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\\\"\\necho \\\"$APPICON_SHA256  $CM_BUILD_DIR/touroku-hanbaisha-ios/native-ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\\\" | shasum -a 256 -c -\\ngrep -q 'com.allsunday1122.tourokuhanbaisha' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\ngrep -q 'MN"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-010-touhan-install-cli-upload-20260819-2030.json",
+          "signals": [
+            "\"action\": \"install_touhan_workflow\",",
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"build_number_mode\": \"CM_BUILD_NUMBER_or_BUILD_NUMBER\",",
+            "\"publishing_mode\": \"codemagic_cli_direct_upload_internal_only_no_magic_actions\",",
+            "\"codemagic_group_name\": \"app2_010_touhan_signing\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"app_store_connect_app_id\": \"6802119268\",",
+            "\"codemagic_profile_ref\": \"tourokuhanbaisha_appstore\",",
+            "\"submit_to_testflight_beta_review\": false,",
+            "\"submit_to_app_store\": false,"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-010-touhan-install-managed-signing-20260819-2014.json",
+          "signals": [
+            "\"action\": \"install_touhan_workflow\",",
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"build_number_mode\": \"CM_BUILD_NUMBER_or_BUILD_NUMBER\",",
+            "\"codemagic_group_name\": \"app2_010_touhan_signing\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"app_store_connect_app_id\": \"6802119268\",",
+            "\"codemagic_profile_ref\": \"tourokuhanbaisha_appstore\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-010-touhan-install-signing2-20260819-1353.json",
+          "signals": [
+            "\"action\": \"install_touhan_workflow\",",
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"bundle_id\": \"com.allsunday1122.tourokuhanbaisha\",",
+            "\"app_store_connect_app_id\": \"6802119268\",",
+            "\"codemagic_profile_ref\": \"tourokuhanbaisha_appstore\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FP2級",
+      "bundle_id": "com.allsunday1122.fp2manabisprint",
+      "app_id": "6797228406",
+      "hits": [
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6797228406\","
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"FP2級\",\"app_id\":\"6797228406\",\"bundle_id\":\"com.allsunday1122.fp2manabisprint\"},"
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"com.allsunday1122.fp2manabisprint\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"app_id\": \"6797228406\",",
+            "\"bundle_id\": \"com.allsunday1122.fp2manabisprint\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-touhan-signing-audit-20260819-1932.json",
+          "signals": [
+            "\"name\": \"Toru Tango Codemagic App Store\",",
+            "\"name\": \"*[expo] com.allsunday1122.fp2manabisprint AppStore 2026-08-02T11:32:57.711Z\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-all-profile-types-cert-audit-20260819-2006.json",
+          "signals": [
+            "\"name\": \"Toru Tango Codemagic App Store\",",
+            "\"name\": \"*[expo] com.allsunday1122.fp2manabisprint AppStore 2026-08-02T11:32:57.711Z\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6797228406\",",
+            "\"bundle_id\": \"com.allsunday1122.fp2manabisprint\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/6797228406.json",
+          "signals": [
+            "\"app_id\": \"6797228406\",",
+            "\"bundle_id\": \"com.allsunday1122.fp2manabisprint\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/summary.json",
+          "signals": [
+            "\"app_id\": \"6797228406\",",
+            "\"bundle_id\": \"com.allsunday1122.fp2manabisprint\","
+          ]
+        }
+      ]
+    },
+    {
+      "name": "仕訳スワイプ",
+      "bundle_id": "jp.allsunday1122.shiwakeswipe",
+      "app_id": "6794796078",
+      "hits": [
+        {
+          "path": ".github/workflows/shiwake-app-review-submit.yml",
+          "signals": [
+            "- automation/shiwake-app-review-submit-command.json",
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID = '6794796078'",
+            "BUNDLE_ID = 'jp.allsunday1122.shiwakeswipe'",
+            "command_path = Path('automation/shiwake-app-review-submit-command.json')",
+            "Path('automation/shiwake-app-review-submit-result.json').write_text(",
+            "git add automation/shiwake-app-review-submit-result.json"
+          ]
+        },
+        {
+          "path": "automation/app-store-availability-command.json",
+          "signals": [
+            "\"expected_app_id\": \"6794796078\",",
+            "\"expected_bundle_id\": \"jp.allsunday1122.shiwakeswipe\","
+          ]
+        },
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6794796078\","
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"仕訳スワイプ\",\"app_id\":\"6794796078\",\"bundle_id\":\"jp.allsunday1122.shiwakeswipe\"},"
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"jp.allsunday1122.shiwakeswipe\","
+          ]
+        },
+        {
+          "path": "automation/app-store-connect-command.json",
+          "signals": [
+            "{\"label\": \"availability\", \"method\": \"GET\", \"path\": \"/v1/apps/6794796078/appAvailabilityV2\"}"
+          ]
+        },
+        {
+          "path": "automation/shiwake-app-review-submit-command.json",
+          "signals": [
+            "\"app_id\": \"6794796078\",",
+            "\"bundle_id\": \"jp.allsunday1122.shiwakeswipe\","
+          ]
+        },
+        {
+          "path": "automation/asc-availability-last-result.json",
+          "signals": [
+            "\"expected_app_id\": \"6794796078\",",
+            "\"expected_bundle_id\": \"jp.allsunday1122.shiwakeswipe\",",
+            "\"availability_id\": \"6794796078\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-001-shiwake-live3-20260830-2206.json",
+          "signals": [
+            "\"id\": \"6794796078\",",
+            "\"bundleId\": \"jp.allsunday1122.shiwakeswipe\",",
+            "\"sku\": \"jp.allsunday1122.shiwakeswipe\",",
+            "\"label\": \"prerelease-versions\",",
+            "\"type\": \"preReleaseVersions\",",
+            "\"type\": \"preReleaseVersions\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-001-shiwake-availability-jpn2-20260831-0820.json",
+          "signals": [
+            "\"expected_app_id\": \"6794796078\",",
+            "\"expected_bundle_id\": \"jp.allsunday1122.shiwakeswipe\",",
+            "\"availability_id\": \"6794796078\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"app_id\": \"6794796078\",",
+            "\"bundle_id\": \"jp.allsunday1122.shiwakeswipe\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6794796078\",",
+            "\"bundle_id\": \"jp.allsunday1122.shiwakeswipe\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/6794796078.json",
+          "signals": [
+            "\"app_id\": \"6794796078\",",
+            "\"bundle_id\": \"jp.allsunday1122.shiwakeswipe\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/summary.json",
+          "signals": [
+            "\"app_id\": \"6794796078\",",
+            "\"bundle_id\": \"jp.allsunday1122.shiwakeswipe\","
+          ]
+        }
+      ]
+    },
+    {
+      "name": "薬剤師国家試験",
+      "bundle_id": "jp.allsunday1122.yakuzaishi",
+      "app_id": "6799753724",
+      "hits": [
+        {
+          "path": ".github/workflows/app2-004-yakuzaishi-prepare-submission.yml",
+          "signals": [
+            "- automation/app2-004-yakuzaishi-prepare-command.json",
+            "workflow_dispatch:",
+            "- name: Prepare no-IAP native release resources",
+            "python3 pharmacist-manabi-sprint/scripts/validate_release.py",
+            "-configuration Release \\",
+            "APP=/tmp/yakuzaishi-derived/Build/Products/Release-iphonesimulator/PharmacistSprint.app",
+            "xcrun simctl launch --terminate-running-process \"$UDID\" jp.allsunday1122.yakuzaishi",
+            "mkdir -p automation/app2-004-yakuzaishi-submission-assets automation/asc-results",
+            "cp /tmp/yakuzaishi-review/01-home.png automation/app2-004-yakuzaishi-submission-assets/01-home.png 2>/dev/null || true",
+            "cp /tmp/app2-004-yakuzaishi-prepare-result.json automation/asc-results/app2-004-yakuzaishi-prepare-submission-result.json",
+            "Path('automation/asc-results/app2-004-yakuzaishi-prepare-submission-result.json').write_text(json.dumps({'task_id':'APP2-004','submitted':False,'submission_ready':False,'error':log[-4000:]},ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')",
+            "git add automation/asc-results/app2-004-yakuzaishi-prepare-submission-result.json automation/app2-004-yakuzaishi-submission-assets || true",
+            "p=Path('automation/asc-results/app2-004-yakuzaishi-prepare-submission-result.json')",
+            "raise SystemExit('Final submit must not happen in preparation workflow')"
+          ]
+        },
+        {
+          "path": ".github/workflows/pharmacist-ios-preflight.yml",
+          "signals": [
+            "workflow_dispatch:",
+            "- '.github/workflows/pharmacist-ios-preflight.yml'",
+            "- 'pharmacist-manabi-sprint/scripts/validate_release.py'",
+            "- 'codemagic.yaml'",
+            "- '.github/workflows/pharmacist-ios-preflight.yml'",
+            "- 'codemagic.yaml'",
+            "- name: Static no-IAP release audit",
+            "run: python3 pharmacist-manabi-sprint/scripts/validate_release.py",
+            "python3 -m py_compile pharmacist-manabi-sprint/scripts/validate_release.py",
+            "- name: Release simulator build",
+            "-configuration Release \\",
+            "build > /tmp/pharmacist-release.log 2>&1",
+            "tail -n 160 /tmp/pharmacist-release.log",
+            "- name: Verify Release app resources",
+            "APP=$(find \"$HOME/Library/Developer/Xcode/DerivedData\" -path '*Build/Products/Release-iphonesimulator/PharmacistSprint.app' -type d | head -1)",
+            "'releaseBuildExit':b,",
+            "'bundleId':'jp.allsunday1122.yakuzaishi',",
+            "'appStoreConnectAppId':'6799753724',"
+          ]
+        },
+        {
+          "path": ".github/workflows/app2-004-yakuzaishi-build6-finalize-submit.yml",
+          "signals": [
+            "- automation/app2-004-yakuzaishi-build6-finalize-submit-command.json",
+            "workflow_dispatch:",
+            "p=Path('automation/app2-004-yakuzaishi-build6-finalize-submit-command.json')",
+            "- name: Verify no-IAP native release candidate",
+            "python3 pharmacist-manabi-sprint/scripts/validate_release.py",
+            "-configuration Release \\",
+            "APP=/tmp/yakuzaishi-derived/Build/Products/Release-iphonesimulator/PharmacistSprint.app",
+            "xcrun simctl launch --terminate-running-process \"$UDID\" jp.allsunday1122.yakuzaishi",
+            "mkdir -p automation/asc-results",
+            "out=Path('automation/asc-results/app2-004-yakuzaishi-build6-final-submit-result.json')",
+            "git add automation/asc-results/app2-004-yakuzaishi-build6-final-submit-result.json",
+            "p=Path('automation/asc-results/app2-004-yakuzaishi-build6-final-submit-result.json')"
+          ]
+        },
+        {
+          "path": "scripts/app2_004_yakuzaishi_metadata_probe.py",
+          "signals": [
+            "from app_store_connect_api import load_private_key, make_token",
+            "APP_ID = \"6799753724\"",
+            "BUNDLE_ID = \"jp.allsunday1122.yakuzaishi\"",
+            "OUT = Path(\"automation/app2-004-yakuzaishi-metadata-probe.json\")"
+          ]
+        },
+        {
+          "path": "scripts/app2_004_yakuzaishi_asc_audit.py",
+          "signals": [
+            "from app_store_connect_api import load_private_key, make_token",
+            "APP_ID = \"6799753724\"",
+            "BUNDLE_ID = \"jp.allsunday1122.yakuzaishi\"",
+            "MONTHLY_ID = \"jp.allsunday1122.yakuzaishi.monthly\"",
+            "LIFETIME_ID = \"jp.allsunday1122.yakuzaishi.lifetime\"",
+            "RESULT = Path(\"automation/app2-004-yakuzaishi-asc-final.json\")"
+          ]
+        },
+        {
+          "path": "scripts/app2_004_yakuzaishi_prepare_submission.py",
+          "signals": [
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID = \"6799753724\"",
+            "BUNDLE_ID = \"jp.allsunday1122.yakuzaishi\"",
+            "\"ageAssurance\": False,"
+          ]
+        },
+        {
+          "path": "scripts/app2_004_yakuzaishi_iap_bootstrap.py",
+          "signals": [
+            "from app_store_connect_api import BASE_URL, load_private_key, make_token",
+            "APP_ID = \"6799753724\"",
+            "BUNDLE_ID = \"jp.allsunday1122.yakuzaishi\"",
+            "MONTHLY_ID = \"jp.allsunday1122.yakuzaishi.monthly\"",
+            "LIFETIME_ID = \"jp.allsunday1122.yakuzaishi.lifetime\"",
+            "RESULT_PATH = Path(\"automation/app2-004-yakuzaishi-iap-result.json\")"
+          ]
+        },
+        {
+          "path": "scripts/app2_004_yakuzaishi_submission_preflight.py",
+          "signals": [
+            "from app_store_connect_api import api_get, load_private_key, make_token",
+            "APP_ID = \"6799753724\"",
+            "BUNDLE_ID = \"jp.allsunday1122.yakuzaishi\"",
+            "OUT = Path(\"automation/app2-004-yakuzaishi-submission-preflight.json\")"
+          ]
+        },
+        {
+          "path": "scripts/app2_004_yakuzaishi_submit_review.py",
+          "signals": [
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID = \"6799753724\"",
+            "BUNDLE_ID = \"jp.allsunday1122.yakuzaishi\""
+          ]
+        },
+        {
+          "path": "scripts/app2_004_yakuzaishi_build6_attach_diagnostic.py",
+          "signals": [
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID = \"6799753724\"",
+            "OUT = Path(\"automation/asc-results/app2-004-yakuzaishi-build6-attach-diagnostic.json\")"
+          ]
+        },
+        {
+          "path": "scripts/app2_004_yakuzaishi_build4_asc_readback.py",
+          "signals": [
+            "from app_store_connect_api import load_private_key, make_token",
+            "APP_ID = \"6799753724\"",
+            "BUNDLE_ID = \"jp.allsunday1122.yakuzaishi\"",
+            "RESULT = Path(\"automation/app2-004-yakuzaishi-build4-asc.json\")",
+            "return {\"ready\": False, \"reason\": \"build_not_found\"}"
+          ]
+        },
+        {
+          "path": "automation/app2-004-yakuzaishi-iap-diagnostic.json",
+          "signals": [
+            "\"log_tail\": \"{\\\"request_id\\\": \\\"APP2-004-yakuzaishi-iap-bootstrap\\\", \\\"app\\\": {\\\"id\\\": \\\"6799753724\\\", \\\"bundleId\\\": \\\"jp.allsunday1122.yakuzaishi\\\", \\\"name\\\": \\\"薬剤師国家試験｜学びスプリント\\\"}, \\\"actions\\\": [], \\\"lifetime\\\": {\\\"id\\\": \\\"6802918851\\\", \\\"productId\\\": \\\"jp.allsunday1122.yakuzaishi.lifetime\\\", \\\"state\\\": \\\"MISSING_METADATA\\\", \\\"configuredPriceJPN\\\": \\\"980\\\"}, \\\"monthly\\\": {\\\"id\\\": \\\"6802958538\\\", \\\"productId\\\": \\\"jp.allsunday1122.yakuzaishi.monthly\\\", \\\"state\\\": \\\"MISSING_METADATA\\\", \\\"configure"
+          ]
+        },
+        {
+          "path": "automation/app2-004-yakuzaishi-iap-result.json",
+          "signals": [
+            "\"id\": \"6799753724\",",
+            "\"bundleId\": \"jp.allsunday1122.yakuzaishi\",",
+            "\"productId\": \"jp.allsunday1122.yakuzaishi.lifetime\",",
+            "\"productId\": \"jp.allsunday1122.yakuzaishi.monthly\","
+          ]
+        },
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6799753724\","
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"薬剤師国家試験\",\"app_id\":\"6799753724\",\"bundle_id\":\"jp.allsunday1122.yakuzaishi\"},"
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"jp.allsunday1122.yakuzaishi\","
+          ]
+        },
+        {
+          "path": "automation/app2-004-yakuzaishi-final-submit-command.json",
+          "signals": [
+            "\"app_id\": \"6799753724\",",
+            "\"bundle_id\": \"jp.allsunday1122.yakuzaishi\","
+          ]
+        },
+        {
+          "path": "automation/app2-004-yakuzaishi-build4-asc-diagnostic.json",
+          "signals": [
+            "\"log_tail\": \"{\\\"task_id\\\": \\\"APP2-004\\\", \\\"target_build\\\": \\\"4\\\", \\\"app\\\": {\\\"id\\\": \\\"6799753724\\\", \\\"attributes\\\": {\\\"name\\\": \\\"薬剤師国家試験｜学びスプリント\\\", \\\"bundleId\\\": \\\"jp.allsunday1122.yakuzaishi\\\", \\\"sku\\\": \\\"yakuzaishi-sprint-ios\\\"}}, \\\"build\\\": {\\\"id\\\": \\\"08361432-b815-4194-ab9d-b3860d71cbe2\\\", \\\"attributes\\\": {\\\"version\\\": \\\"4\\\", \\\"uploadedDate\\\": \\\"2026-08-23T06:08:41-07:00\\\", \\\"processingState\\\": \\\"VALID\\\", \\\"expired\\\": false, \\\"expirationDate\\\": \\\"2026-11-21T05:08:41-08:00\\\", \\\"minOsVersion\\\""
+          ]
+        },
+        {
+          "path": "automation/app2-004-yakuzaishi-build4-asc.json",
+          "signals": [
+            "\"id\": \"6799753724\",",
+            "\"bundleId\": \"jp.allsunday1122.yakuzaishi\","
+          ]
+        },
+        {
+          "path": "automation/app2-004-yakuzaishi-submission-preflight.json",
+          "signals": [
+            "\"app_id\": \"6799753724\",",
+            "\"bundle_id\": \"jp.allsunday1122.yakuzaishi\",",
+            "\"id\": \"6799753724\",",
+            "\"bundleId\": \"jp.allsunday1122.yakuzaishi\",",
+            "\"releaseType\": \"AFTER_APPROVAL\",",
+            "\"earliestReleaseDate\": null,",
+            "\"releaseType\": \"AFTER_APPROVAL\",",
+            "\"earliestReleaseDate\": null,"
+          ]
+        },
+        {
+          "path": "automation/app2-004-yakuzaishi-asc-final.json",
+          "signals": [
+            "\"id\": \"6799753724\",",
+            "\"bundleId\": \"jp.allsunday1122.yakuzaishi\",",
+            "\"productId\": \"jp.allsunday1122.yakuzaishi.lifetime\",",
+            "\"productId\": \"jp.allsunday1122.yakuzaishi.monthly\","
+          ]
+        },
+        {
+          "path": "automation/app2-004-yakuzaishi-asc-diagnostic.json",
+          "signals": [
+            "\"log_tail\": \"{\\\"task_id\\\": \\\"APP2-004\\\", \\\"app\\\": {\\\"id\\\": \\\"6799753724\\\", \\\"attributes\\\": {\\\"name\\\": \\\"薬剤師国家試験｜学びスプリント\\\", \\\"bundleId\\\": \\\"jp.allsunday1122.yakuzaishi\\\", \\\"sku\\\": \\\"yakuzaishi-sprint-ios\\\"}}, \\\"build2\\\": {\\\"id\\\": \\\"c7a954bc-3677-418e-88b6-1e65d2ba086e\\\", \\\"attributes\\\": {\\\"version\\\": \\\"2\\\", \\\"uploadedDate\\\": \\\"2026-08-18T20:58:01-07:00\\\", \\\"processingState\\\": \\\"VALID\\\", \\\"expired\\\": false, \\\"expirationDate\\\": \\\"2026-11-16T19:58:01-08:00\\\", \\\"minOsVersion\\\": \\\"16.0\\\", \\\"buildAudie"
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"app_id\": \"6799753724\",",
+            "\"bundle_id\": \"jp.allsunday1122.yakuzaishi\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-004-yakuzaishi-submit-review-result.json",
+          "signals": [
+            "\"app_id\": \"6799753724\",",
+            "\"bundle_id\": \"jp.allsunday1122.yakuzaishi\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6799753724\",",
+            "\"bundle_id\": \"jp.allsunday1122.yakuzaishi\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-rebuild-plan-20260905-0518.json",
+          "signals": [
+            "\"workflows\": [",
+            "\"workflow_id\": \"health-manager-1-testflight\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": false,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"health-manager-2-ios\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": false,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"otsu4-ios\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"pharmacist-ios\",",
+            "\"bundle_id\": \"jp.allsunday1122.yakuzaishi\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"otsu4-native-ios\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"submit_to_testflight\": null,",
+            "\"submit_to_app_store\": null,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": false"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-004-yakuzaishi-testflight-explicit-build3-20260822-1814.json",
+          "signals": [
+            "\"workflow_id\": \"pharmacist-ios\",",
+            "\"workflow\": {",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwduSQzAAANB_6XtmyLr1YR9E04zUrS6l-2KKhlCCVR2-fmfPOdTmPzTxtPd1zZ3eCjarbVzS3IjMuQFKae3YsVMPteDRqZO-dflqZ4K9fC58zLnMUCDgM6G7aVEi2mvpURAAn3akyU4299N7zFdvePAFqqOBEqU8aharyqQYVByhxID5BJSbh9y8WARBDa4FmddMD_3zpViwF51ZT4LCLi3Zge_71g50gWRRQ6cFFCI-FJVL4McPGebjy6lvpD3JbG4_FB7FW83jKFK_JBd1NL0Ec4j10ai007GRxmxjev-QyokILYhlExVz0GdYy-p4MiX8BKo2WFj5MZlYryIonxr57Ox3yZPvwx96FWcN.mubEVAiMeU2oeARRiQd7GS3QVgA\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwclygjAAANB_8e5MJA3LoQfRCih7QJZLBohKIohAicDXd_re5rH_p_csab0gBSb6SrZdUkTAltMcyNbSx77daDbdfrAaUCbBQ-kXbLfSYHLvUeozIur6xUoVPaezo7lORKpxgF6qcOUqqS2IcZw2k1cfvXDK87aZzxYSsnO8hJnhaKUaBb8ce9U7ubj-2JygwBRfJeUVP443JWg7GL55LN_Fs15BmcPsps2GIAFdSCOKgqOThbpR31nnT0l3DBq1L6m2NcnDWhDNTVNijsjsxR5X7hIt_EeHYPZd3e_Ee7JuGg7aGj0VcwhJk9nV19Rjg9ULnxkBFK-8ielgK4cCmZCdiMWUT4l59r35A87daVc.8egW2-Oe1S-EK9xbDEZydUvwtP8\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwUmSgjAAAMC_eLcqREE4CsIQIkEdZLtQooKRJYQlEl8_Nd2rav_P5DRug-D3CVA-ROdkFDhLpjmaF0OLZMiVy37XHpy8v0bzWik5FuoJgIvXkapGdxGPPmPdWjYJlUn3xhhqnv7DteUq_Hx-fGKd4PtYtjG7NeEU0mZguG1F35Aw5VyYyiOztuSLFqimhjXULkhANWfDOKancw0krnJlUzjH3_5mdfUdVaDAvuVKhVhzTz2gEk7XlqHI2q3f_jbYqugMvUjkqNUrG3awcx05vIMlq4tS6U95uTh-uCHGs1fXL0btaUL6kSG4BJ2G6MjgRzZxor7C_cd_mkUaCx4dgN07TGXUHDYhP2i7R_FtCu1mL0Qb3QobcPUH2v9xjg.Vqb0XvDI2IieY6k7iQmP4YUqUaQ\",",
+            "\"release_notes\": [],",
+            "\"app_store_connect_status\": \"processing\",",
+            "\"name\": \"Release audit before signed native build\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ncd \\\"$CM_BUILD_DIR\\\"\\npython3 pharmacist-manabi-sprint/scripts/validate_release.py\\nbash -n pharmacist-manabi-sprint/ios/prepare-ios.sh\\npython3 -m py_compile pharmacist-manabi-sprint/ios/apply-xcode-capabilities.py\\ntest \\\"$BUNDLE_ID\\\" = \\\"jp.allsunday1122.yakuzaishi\\\"\\ntest \\\"$APP_STORE_CONNECT_APP_ID\\\" = \\\"6799753724\\\"\\ntest \\\"$CODEMAGIC_PROFILE_REF\\\" = \\\"yakuzaishi_appstore\\\"\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ncd \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\\\"\\npython3 - <<'PY'\\nfrom pathlib import Path\\nimport os\\np=Path('project.yml')\\ntext=p.read_text(encoding='utf-8')\\ntext=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)\\np.write_text(text,encoding='utf-8')\\nPY\\nxcodegen generate\\npython3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj\",",
+            "\"name\": \"Verify signed native release inputs\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ntest -f \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Generated/questions.native.json\\\"\\ntest -f \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/PrivacyInfo.xcprivacy\\\"\\ntest -f \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\\\"\\ngrep -q 'com.apple.InAppPurchase' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\n! grep -q 'SystemCapabilities = \\\"' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\n! grep -R -q 'WKWebVie"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-004-yakuzaishi-zoom-field-batches-build4-20260823-2207.json",
+          "signals": [
+            "\"workflow_id\": \"pharmacist-ios\",",
+            "\"workflow\": {",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwc2SgiAAAOB36e5MBhke9oAEZmlJKloXxhxT0_UnTaqn39nvWxT4nzVU89bF-MKMLSVtIraNXcxBiBQ7V57TX5bkJpjjd5iYRNVmntonhqAMDo_k6aftWMwurvbWZqgP0Y6Ozx2HcZk1kAWHYPLGjWrOAyh6FGAHuNQ17xUS9OH7KwnbLC_VjdfQrmAHwumjcflINE4n2Uyj4SpWc5FHtDuiCRhRI95cw5WSQanBqznrLImLOwilXK_q_N3Picq-4HeOTftdWx76EGPJOdOGNOtDJb39V0Cy63h3K0nto_O-SI7olQ4fnUErQusTHgvInzkCR2Hh1oxLeNeVtt6Mgx69sO6U2bWhP4s_cWNnAA.74PUCSeybL42yYoKocAo6BHlzu0\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwclygjAAANB_8c4MO-HQA1slihQtm1wYdhLFsEiEfH2n7x064585IWp7YZgA-e2LvGjUJ-485MKqzshG6rTCPgvQTEi2tjeiLOMQBIvwjthLFyXEsry4J5-27IteuDub_l5qNQeZJNWir_CXLv0MvujeiCtvwBOOHbCaSH1CpLpmrg_yt3WGhtIHnQOsZwIhancLVeMUNZzs903vR-aDywc6CEigx5LRIPRJqNyqNLJZlTNrX41ihKzpKI5wkrJq1mwhRipcHO1JTh4EkyllCIf8j-bhlwmwVcQb5s3zOMWTqVxJ_SjR6YL0YGclddp5U1JwJUisuH1OXI6LHAz12HAoxuGvn3dfhz9S4Wk0.njj1XGZdtkIPCxjtgSHVgzi0-l4\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwduSQzAAANB_6bsZFsFjU01tGsqEVPtitqiGbBVx_fqdPWdX7f_Bjk8uyRUbWHNpd_KUF-c4OW7YBI6aJLV-iyB4fwuUPf1pCrcD71Nba38BmtJzsOlcy6xP2Va9IWg_-Ad8s72eXSpnVVebwKt4NHgM-dpEqqvEUIUUsZJ4AbvXHBOhuzytF7kiXaP4AgXNi8EjM-BLWE70-QFiXILkE71t_8AMIOU8bhXG0kudnwJlIXpo52UgzGTJ6DTIcz2lN31slfshVWwksmfZOLMPlpJ2XcrpcYu7PqYu4jfB-JaprUHgUkWpeRUJHUJJ1OyUBBqR2BLQ4ByIQVr3Ordo8SBG_-Kcj2y1269lUSx8h30FwWu_-wPQoXA1.7e3-m6vn59cM4A-9hHpVOLeC-4Y\",",
+            "\"release_notes\": [],",
+            "\"app_store_connect_status\": \"processing\",",
+            "\"name\": \"Release audit before signed native build\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ncd \\\"$CM_BUILD_DIR\\\"\\npython3 pharmacist-manabi-sprint/scripts/validate_release.py\\nbash -n pharmacist-manabi-sprint/ios/prepare-ios.sh\\npython3 -m py_compile pharmacist-manabi-sprint/ios/apply-xcode-capabilities.py\\ntest \\\"$BUNDLE_ID\\\" = \\\"jp.allsunday1122.yakuzaishi\\\"\\ntest \\\"$APP_STORE_CONNECT_APP_ID\\\" = \\\"6799753724\\\"\\ntest \\\"$CODEMAGIC_PROFILE_REF\\\" = \\\"yakuzaishi_appstore\\\"\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ncd \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\\\"\\npython3 - <<'PY'\\nfrom pathlib import Path\\nimport os\\np=Path('project.yml')\\ntext=p.read_text(encoding='utf-8')\\ntext=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)\\np.write_text(text,encoding='utf-8')\\nPY\\nxcodegen generate\\npython3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj\",",
+            "\"name\": \"Verify signed native release inputs\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ntest -f \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Generated/questions.native.json\\\"\\ntest -f \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/PrivacyInfo.xcprivacy\\\"\\ntest -f \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\\\"\\ngrep -q 'com.apple.InAppPurchase' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\n! grep -q 'SystemCapabilities = \\\"' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\n! grep -R -q 'WKWebVie"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-004-yakuzaishi-appstore-build6-20260826-1943.json",
+          "signals": [
+            "\"workflow_id\": \"pharmacist-ios\",",
+            "\"workflow\": {",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwVG3QjAAAOD_0rtzuovo4T6YENJYc1t76WRGlzSZQr_-nvt9i8r-B5-1wkqLhVMGr1cCUWwgg5gNQBHTp_ErKkNbT2vYhmNV5ZGze7hdKgXOn9q1ONnulHPaU6vKNMr4UYr-RrLRH7zmmTYg2-wPnvLfCbu0uXEHd51YCVerz74Ta7pt1XrmJ5ACuOlFNtBZm0pWUg_p_kP2dAdj1G2gFrIjSeqq64o6HUYgMMelJzu0PEhboTb1yIq9XW_JMYGu1WS-Ti7LKeYr4tfyZ96CXrRABdHWcWYmPvsaBrC1C4iFCm93bphZiwYqzN1J-vZDagIz_mvRc6WRKyr0ybzNXW_g8zXoDjL4XvwBpy1pZg.rJlQPEK9y13-AGp-ywFvC2cea3g\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwUtygjAAANC7uHcGQlRYdMFP0DZAQb4bBwNCKIYATUBO3-l7u0b_Z4zdHM4uGBbUJEopCCgMYlNNZUYqJ1zzYehnK4liS7qJGQhB4mhc0m0i-zWyQgi6IM8iWWB21h3HjnVWsZyFjX97UTOBcmvQkFW_qO4DWoT4SQ3aHnFnxyIjOMCL_CAeK5Lr3U2BNMdoSuG4BI-2d1665y16Lvl6SwYDrKsSctX-5sDlUOorLYoPQ8Xe9sRMpESn-zqOoqpr66BkguX1j_lwrTuVigD1brWdvph3CM6rWjcXU5ImJYFHrlVqvO3Bc1AYn8rimqR02JQSTdAkvX22HLGVCHUZttRP75JqfBb4Y_cHjwpqTg.UT4mZoNAUqGUL4BE6T0y2q36ptQ\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVzsuWQzAAANB_6d45XqO69GjTpqLBkJqNQwmqqEa8vn5m7hfcXWn8M4cn8xm2BGLdOjLLBof2XrSlpd7ygdXfGwf8o8eLqtj1q0piUwrewexSLh7Pz6E1gJnXDBoZA5xmyj5UWvbx7eONBjYurWzNUXEKi7zu9Wi6p6yNWvFBnIUkcapj_QMlI0xkjV56wYbFWEX06vYHUikTTeZQTPZzdXfMoxK4UyrFvstgK78szYMPuXFN3UfzJDF8vdTFpgZBp3ssad6z3Pk0r6bR2WSSOH-3QtA8VWzqLZV6dWr8LrRLPq4D0NDXgFZ8GbS1FOh8-AEDxMgYR8bPAJ0yA0DHJ7h0F5Fqyzghj6AOR2YOlvIZctBsy-t28na_DOtyAA.8wOtOEpylaGZG81GxCIUULaZ-7E\",",
+            "\"release_notes\": [],",
+            "\"app_store_connect_status\": \"processing\",",
+            "\"name\": \"Release audit before signed native build\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ncd \\\"$CM_BUILD_DIR\\\"\\npython3 pharmacist-manabi-sprint/scripts/validate_release.py\\nbash -n pharmacist-manabi-sprint/ios/prepare-ios.sh\\npython3 -m py_compile pharmacist-manabi-sprint/ios/apply-xcode-capabilities.py\\ntest \\\"$BUNDLE_ID\\\" = \\\"jp.allsunday1122.yakuzaishi\\\"\\ntest \\\"$APP_STORE_CONNECT_APP_ID\\\" = \\\"6799753724\\\"\\ntest \\\"$CODEMAGIC_PROFILE_REF\\\" = \\\"yakuzaishi_appstore\\\"\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ncd \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\\\"\\npython3 - <<'PY'\\nfrom pathlib import Path\\nimport os\\np=Path('project.yml')\\ntext=p.read_text(encoding='utf-8')\\ntext=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)\\np.write_text(text,encoding='utf-8')\\nPY\\nxcodegen generate\\npython3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj\",",
+            "\"name\": \"Verify signed native release inputs\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ntest -f \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Generated/questions.native.json\\\"\\ntest -f \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/PrivacyInfo.xcprivacy\\\"\\ntest -f \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\\\"\\ngrep -q 'com.apple.InAppPurchase' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\n! grep -q 'SystemCapabilities = \\\"' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\n! grep -R -q 'WKWebVie"
+          ]
+        },
+        {
+          "path": "automation/codemagic-results/app2-004-yakuzaishi-testflight-build3-20260822-1811.json",
+          "signals": [
+            "\"workflow_id\": \"pharmacist-ios\",",
+            "\"error\": \"Codemagic build ended with status: failed\",",
+            "\"workflow\": {",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwUtygjAAANC7uGcmgQK66CJCicQiX0HZYSAgKiF8JHL6Tt_b1OjfXtyzRgbsh7vL4vTQAO4b7ZUcCJWvTuSBI4ZH3domfkotazQvcT5SnJRjFrpPnXtQRMB-THgNI5yiL_h8NWKoTUJaGQBwOp1BD72CJG6XKsMnmRl5zdP72hxLmuUhn63G9iTsnZLiRqnVTuqqaaqOFzOjXzu6Tilbdy25JxOuTG1chk-ZwiRoA0YKBSBSz66gpQw7rbveHgdDe1S5LFQNWNRfD8GOeMrhNczby8iW1hjE29YJbuqRW3Yis6cUOqwAdpeQpdkZ8bPfF3dEcva749VJ69rsy0PxDIYbt2IR-fr4vfkD_0NpJg.LdQ9yUPpsc_gxQ3PcRbfwmpQ1f4\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwUtygjAAANC7uHdGUj6y6MIgikAKEgRlwyDyC2KBkAQ4fafvbarDPzg0cT0_d8kW_bRAvLV4LgzkYJ7y9n5zwgnB04050ovhPpXT2LLazioDCLZmNK0sQzTyoB3r7njNxQfdW2MNbhy4HLGav3SsOKotimaYKZP5WlwybAm3VF_5bqLtoetNFfQEhQsP4tp_I0OfR09kZn7_atzKu4Szx4Vfyr7-6I_X5BNkv1ndPhuuUBbgZtAnVTpl71LZKpqMSTjuY7BMWvSoggV0-1WzGup2UWVPD-ZMXpHKaExGYQ9nmvcu66XVP0M1H4mzaEbxBM1CISHXmnyk_jjsSbLzT_ZZAyZMVAmXVKDvzR-fW2wS.6rCb3HaYg8xsdU5B0a6mvKHJbWk\",",
+            "\"short_lived_download_url\": \"https://api.codemagic.io//artifacts/.eJwVwdu2QkAAANB_6d1aufNIJKkwGsWLpU5jptwZmfn61tl7U1n_7IHc8Pr3uvfb6URcZFu4p-Trg7vEO-2opWEhEcGL1HKusGzCkSEaS9TiqkvX556LpsANOIokE-FcgZgrX7KvgsG-puR9QC8RN3kH1OlZfL6m0aznsq2Mylr7E7QYfviz-zqyGgHUMe7lmeK_aTdN2Idj_XF4CnfC7k0XKKcfLpfSHAUWceI-saOk0wdPvBRK6riYoEVpNVMe-K2VrkMIhSq60iwqYukixmqy1e1hwnpAFoaEMj6GcG0EHzQmPjUOMusWjV2N2nw7MoPocvDoE61huUFJg4BwXqQs2IUGvnO1Ji3oYbDcnvtH7SqHc-YxF21-JKRyfw.VXqPf64MkvYHNIHFJBBEBzFHIk0\",",
+            "\"release_notes\": [],",
+            "\"app_store_connect_status\": null,",
+            "\"name\": \"Release audit before signed native build\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ncd \\\"$CM_BUILD_DIR\\\"\\npython3 pharmacist-manabi-sprint/scripts/validate_release.py\\nbash -n pharmacist-manabi-sprint/ios/prepare-ios.sh\\npython3 -m py_compile pharmacist-manabi-sprint/ios/apply-xcode-capabilities.py\\ntest \\\"$BUNDLE_ID\\\" = \\\"jp.allsunday1122.yakuzaishi\\\"\\ntest \\\"$APP_STORE_CONNECT_APP_ID\\\" = \\\"6799753724\\\"\\ntest \\\"$CODEMAGIC_PROFILE_REF\\\" = \\\"yakuzaishi_appstore\\\"\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ncd \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios\\\"\\npython3 - <<'PY'\\nfrom pathlib import Path\\nimport os\\np=Path('project.yml')\\ntext=p.read_text(encoding='utf-8')\\ntext=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)\\np.write_text(text,encoding='utf-8')\\nPY\\nxcodegen generate\\npython3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj\",",
+            "\"name\": \"Verify signed native release inputs\",",
+            "\"script\": \"#!/usr/bin/env bash\\n\\ntest -f \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Generated/questions.native.json\\\"\\ntest -f \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/PrivacyInfo.xcprivacy\\\"\\ntest -f \\\"$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png\\\"\\ngrep -q 'com.apple.InAppPurchase' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\n! grep -q 'SystemCapabilities = \\\"' \\\"$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj\\\"\\n! grep -R -q 'WKWebVie"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "撮る単語帳",
+      "bundle_id": "com.allsunday1122.torutango",
+      "app_id": "6795968222",
+      "hits": [
+        {
+          "path": ".github/workflows/toru-tango-store-finalize.yml",
+          "signals": [
+            "- automation/toru-tango-store-finalize-command.json",
+            "workflow_dispatch:",
+            "p=Path('automation/toru-tango-store-finalize-command.json')",
+            "'app_id':'6795968222',",
+            "'bundle_id':'com.allsunday1122.torutango',",
+            "'build_number':'9',",
+            "mkdir -p toru-tango-mobile/release-evidence",
+            "cp /tmp/toru-tango-store-finalize-result.json toru-tango-mobile/release-evidence/appstore-preflight-finalize-20260821.json",
+            "git add toru-tango-mobile/release-evidence/appstore-preflight-finalize-20260821.json",
+            "mkdir -p toru-tango-mobile/release-evidence",
+            "cp /tmp/toru-tango-store-finalize-result.json toru-tango-mobile/release-evidence/appstore-preflight-finalize-20260821.json",
+            "git add toru-tango-mobile/release-evidence/appstore-preflight-finalize-20260821.json"
+          ]
+        },
+        {
+          "path": ".github/workflows/toru-tango-codemagic-command.yml",
+          "signals": [
+            "name: Toru Tango Codemagic Build 9 Command",
+            "group: toru-tango-codemagic-build-9",
+            "- name: Checkout exact release branch",
+            "- name: Validate Codemagic workflow safety",
+            "cfg = yaml.safe_load(Path('codemagic.yaml').read_text(encoding='utf-8')) or {}",
+            "wf = (cfg.get('workflows') or {}).get('toru-tango-ios-testflight')",
+            "raise SystemExit('toru-tango-ios-testflight workflow missing on release branch')",
+            "asc = ((wf.get('publishing') or {}).get('app_store_connect') or {})",
+            "if asc.get('submit_to_app_store') is True:",
+            "raise SystemExit('Blocked: workflow would submit to App Store review')",
+            "if asc.get('submit_to_testflight') is not True:",
+            "raise SystemExit('Blocked: workflow is not configured for TestFlight upload')",
+            "if signing.get('bundle_identifier') != 'com.allsunday1122.torutango':",
+            "print('PASS: Toru Tango Codemagic workflow is TestFlight-only and Build 9 is fixed')",
+            "- name: Start and monitor Codemagic Build 9",
+            "workflow_id = 'toru-tango-ios-testflight'",
+            "status, started = api('https://api.codemagic.io/builds', 'POST', {",
+            "'workflowId': workflow_id,",
+            "raise SystemExit(f'Codemagic start failed HTTP {status}: {started}')",
+            "raise SystemExit(f'Codemagic did not return buildId: {started}')",
+            "print(f'Codemagic build started: {build_id}')",
+            "s, data = api(f'https://codemagic.io/api/v3/builds/{build_id}')",
+            "raise SystemExit(f'Codemagic inspect failed HTTP {s}: {data}')",
+            "print(f'Codemagic status: {current}')",
+            "raise SystemExit('Timed out waiting for Codemagic build')",
+            "'workflow_id': workflow_id,",
+            "raise SystemExit(f'Codemagic build ended with status {final.get(\"status\")}')",
+            "- name: Upload sanitized Codemagic result",
+            "name: toru-tango-codemagic-build9-${{ github.run_id }}",
+            "- name: Report Codemagic locator",
+            "'Toru Tango Codemagic Build 9 command finished.',",
+            "`codemagic_build_id=${{ toJSON(steps.cm.outputs.build_id) }}`,",
+            "`codemagic_status=${{ toJSON(steps.cm.outputs.status) }}`,",
+            "`artifact=toru-tango-codemagic-build9-${context.runId}`,"
+          ]
+        },
+        {
+          "path": ".github/workflows/toru-tango-eas-command.yml",
+          "signals": [
+            "name: Toru Tango EAS Delivery Command",
+            "group: toru-tango-eas-build-8-delivery",
+            "if: github.actor == 'ALLSUNDAY1122' && github.event.issue.title == '[EAS-CMD] Toru Tango Build 8 delivery'",
+            "- name: Checkout release candidate branch",
+            "mkdir -p release-logs",
+            "git -C \"$GITHUB_WORKSPACE\" rev-parse HEAD | tee release-logs/source-sha.txt",
+            "grep -q \"bundleIdentifier: 'com.allsunday1122.torutango'\" app.config.ts",
+            "- name: Setup Expo and EAS",
+            "eas-version: 22.2.0",
+            "- name: Validate release candidate",
+            "run: eas whoami | tee release-logs/eas-whoami.txt",
+            "eas build --platform ios --profile production --non-interactive --json 2>&1 | tee release-logs/eas-build.log",
+            "- name: Resolve exact EAS build ID",
+            "eas build:list --platform ios --limit 5 --json --non-interactive > release-logs/eas-build-list.json",
+            "source_sha = Path('release-logs/source-sha.txt').read_text().strip()",
+            "data = json.loads(Path('release-logs/eas-build-list.json').read_text())",
+            "raise SystemExit(f'No EAS build found for source SHA {source_sha}')",
+            "raise SystemExit('Matched EAS build has no id')",
+            "Path('release-logs/eas-build-id.txt').write_text(build_id)",
+            "print(f'EAS build id: {build_id}')",
+            "eas submit --platform ios --profile production --id \"${{ steps.resolve.outputs.build_id }}\" --non-interactive 2>&1 | tee release-logs/eas-submit.log",
+            "path: toru-tango-mobile/release-logs",
+            "`eas_build_id=${{ toJSON(steps.resolve.outputs.build_id) }}`,"
+          ]
+        },
+        {
+          "path": ".github/workflows/toru-tango-appstore-screenshots.yml",
+          "signals": [
+            "workflow_dispatch:",
+            "- '.github/workflows/toru-tango-appstore-screenshots.yml'",
+            "APP_BUNDLE_ID: com.allsunday1122.torutango",
+            "- name: Build release app for Simulator",
+            "-configuration Release \\",
+            "app=$(find /tmp/toru-derived/Build/Products -path '*Release-iphonesimulator/*.app' -print | head -1)",
+            "'appStoreConnectAppId': '6795968222',",
+            "'bundleId': 'com.allsunday1122.torutango',"
+          ]
+        },
+        {
+          "path": ".github/workflows/toru-tango-testflight-internal-command.yml",
+          "signals": [
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID = '6795968222'",
+            "BUNDLE_ID = 'com.allsunday1122.torutango'",
+            "BUILD_NUMBER = '8'",
+            "'build_number': BUILD_NUMBER,",
+            "if attrs.get('version') != BUILD_NUMBER or attrs.get('processingState') != 'VALID' or attrs.get('expired') is True:"
+          ]
+        },
+        {
+          "path": "scripts/toru_tango_store_finalize.py",
+          "signals": [
+            "review submission, submits for review, changes availability, or releases the app.",
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID = \"6795968222\"",
+            "BUNDLE_ID = \"com.allsunday1122.torutango\"",
+            "\"ageAssurance\": False,",
+            "\"release_performed\": False,"
+          ]
+        },
+        {
+          "path": "automation/toru-tango-store-finalize-command.json",
+          "signals": [
+            "\"app_id\": \"6795968222\",",
+            "\"bundle_id\": \"com.allsunday1122.torutango\",",
+            "\"build_number\": \"9\","
+          ]
+        },
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6795968222\","
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"撮る単語帳\",\"app_id\":\"6795968222\",\"bundle_id\":\"com.allsunday1122.torutango\"},"
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"com.allsunday1122.torutango\","
+          ]
+        },
+        {
+          "path": "automation/toru-tango-build9-delivery-safety.json",
+          "signals": [
+            "\"appId\": \"6795968222\",",
+            "\"bundleId\": \"com.allsunday1122.torutango\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"app_id\": \"6795968222\",",
+            "\"bundle_id\": \"com.allsunday1122.torutango\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-touhan-signing-audit-20260819-1932.json",
+          "signals": [
+            "\"name\": \"Toru Tango Codemagic App Store\",",
+            "\"name\": \"*[expo] com.allsunday1122.torutango AppStore 2026-07-30T12:42:26.686Z\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-all-profile-types-cert-audit-20260819-2006.json",
+          "signals": [
+            "\"name\": \"Toru Tango Codemagic App Store\",",
+            "\"name\": \"*[expo] com.allsunday1122.torutango AppStore 2026-07-30T12:42:26.686Z\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6795968222\",",
+            "\"bundle_id\": \"com.allsunday1122.torutango\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/toru-tango-submission-audit-20260827-2213.json",
+          "signals": [
+            "\"id\": \"6795968222\",",
+            "\"bundleId\": \"com.allsunday1122.torutango\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/6795968222.json",
+          "signals": [
+            "\"app_id\": \"6795968222\",",
+            "\"bundle_id\": \"com.allsunday1122.torutango\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/summary.json",
+          "signals": [
+            "\"app_id\": \"6795968222\",",
+            "\"bundle_id\": \"com.allsunday1122.torutango\","
+          ]
+        }
+      ]
+    },
+    {
+      "name": "卓 TAKU CALC",
+      "bundle_id": "com.koheimorita.takucalc",
+      "app_id": "6794350490",
+      "hits": [
+        {
+          "path": "scripts/app2_011_upload_screenshot.py",
+          "signals": [
+            "It never submits the app for review or releases it.",
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID = \"6794350490\"",
+            "BUNDLE_ID = \"com.koheimorita.takucalc\"",
+            "parser.add_argument(\"--image\", default=\"automation/app2-011/taku-appstore-home.png\")"
+          ]
+        },
+        {
+          "path": "scripts/app2_011_submit_review.py",
+          "signals": [
+            "never releases the app. Version 1.5.0 is configured for MANUAL release, so even",
+            "an approval remains pending developer release until a separate explicit action.",
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID = \"6794350490\"",
+            "BUNDLE_ID = \"com.koheimorita.takucalc\"",
+            "\"release_performed\": False,",
+            "if attrs.get(\"releaseType\") != \"MANUAL\":",
+            "raise RuntimeError(f\"Refusing submission because releaseType is not MANUAL: {attrs.get('releaseType')}\")",
+            "result[\"release_type\"] = attrs.get(\"releaseType\")",
+            "# Explicitly submit for review. This does NOT release the version.",
+            "print(f\"PASS: TAKU submitted for App Review; state={state}; release remains manual\")"
+          ]
+        },
+        {
+          "path": "scripts/app2_011_taku_store_finalize.py",
+          "signals": [
+            "Review or releases the app. Credentials remain in GitHub Actions secrets. Review",
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID = \"6794350490\"",
+            "BUNDLE_ID = \"com.koheimorita.takucalc\"",
+            "\"ageAssurance\": False,"
+          ]
+        },
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6794350490\","
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"卓 TAKU CALC\",\"app_id\":\"6794350490\",\"bundle_id\":\"com.koheimorita.takucalc\"},"
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"com.koheimorita.takucalc\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"app_id\": \"6794350490\",",
+            "\"bundle_id\": \"com.koheimorita.takucalc\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-touhan-signing-audit-20260819-1932.json",
+          "signals": [
+            "\"name\": \"Toru Tango Codemagic App Store\",",
+            "\"name\": \"*[expo] com.koheimorita.takucalc AppStore 2026-07-24T14:30:46.175Z\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/app2-010-all-profile-types-cert-audit-20260819-2006.json",
+          "signals": [
+            "\"name\": \"Toru Tango Codemagic App Store\",",
+            "\"name\": \"*[expo] com.koheimorita.takucalc AppStore 2026-07-24T14:30:46.175Z\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6794350490\",",
+            "\"bundle_id\": \"com.koheimorita.takucalc\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/summary.json",
+          "signals": [
+            "\"app_id\": \"6794350490\",",
+            "\"bundle_id\": \"com.koheimorita.takucalc\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/6794350490.json",
+          "signals": [
+            "\"app_id\": \"6794350490\",",
+            "\"bundle_id\": \"com.koheimorita.takucalc\","
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ITパスポート",
+      "bundle_id": "jp.allsunday1122.itpassportquiz",
+      "app_id": "6796310458",
+      "hits": [
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6796310458\","
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"ITパスポート\",\"app_id\":\"6796310458\",\"bundle_id\":\"jp.allsunday1122.itpassportquiz\"},"
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"jp.allsunday1122.itpassportquiz\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"app_id\": \"6796310458\",",
+            "\"bundle_id\": \"jp.allsunday1122.itpassportquiz\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6796310458\",",
+            "\"bundle_id\": \"jp.allsunday1122.itpassportquiz\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/summary.json",
+          "signals": [
+            "\"app_id\": \"6796310458\",",
+            "\"bundle_id\": \"jp.allsunday1122.itpassportquiz\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/6796310458.json",
+          "signals": [
+            "\"app_id\": \"6796310458\",",
+            "\"bundle_id\": \"jp.allsunday1122.itpassportquiz\","
+          ]
+        }
+      ]
+    },
+    {
+      "name": "第二種衛生管理者",
+      "bundle_id": "jp.allsunday1122.healthmanager2",
+      "app_id": "6799751657",
+      "hits": [
+        {
+          "path": "scripts/hm2_configure_iap_prices.py",
+          "signals": [
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID = \"6799751657\"",
+            "BUNDLE_ID = \"jp.allsunday1122.healthmanager2\"",
+            "if sub_product != \"jp.allsunday1122.healthmanager2.monthly\":",
+            "if iap_product != \"jp.allsunday1122.healthmanager2.lifetime\":"
+          ]
+        },
+        {
+          "path": "scripts/hm2_configure_standard_iap_prices.py",
+          "signals": [
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID='6799751657'",
+            "BUNDLE_ID='jp.allsunday1122.healthmanager2'",
+            "assert sa.get('productId')=='jp.allsunday1122.healthmanager2.monthly'",
+            "assert (((i.get('data') or {}).get('attributes') or {}).get('productId'))=='jp.allsunday1122.healthmanager2.lifetime'"
+          ]
+        },
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6799751657\","
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"第二種衛生管理者\",\"app_id\":\"6799751657\",\"bundle_id\":\"jp.allsunday1122.healthmanager2\"},"
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"jp.allsunday1122.healthmanager2\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"app_id\": \"6799751657\",",
+            "\"bundle_id\": \"jp.allsunday1122.healthmanager2\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6799751657\",",
+            "\"bundle_id\": \"jp.allsunday1122.healthmanager2\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-rebuild-plan-20260905-0518.json",
+          "signals": [
+            "\"workflows\": [",
+            "\"workflow_id\": \"health-manager-1-testflight\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": false,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"health-manager-2-ios\",",
+            "\"bundle_id\": \"jp.allsunday1122.healthmanager2\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": false,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"otsu4-ios\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"pharmacist-ios\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"otsu4-native-ios\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"submit_to_testflight\": null,",
+            "\"submit_to_app_store\": null,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": false"
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/summary.json",
+          "signals": [
+            "\"app_id\": \"6799751657\",",
+            "\"bundle_id\": \"jp.allsunday1122.healthmanager2\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/6799751657.json",
+          "signals": [
+            "\"app_id\": \"6799751657\",",
+            "\"bundle_id\": \"jp.allsunday1122.healthmanager2\","
+          ]
+        }
+      ]
+    },
+    {
+      "name": "危険物乙4",
+      "bundle_id": "jp.allsunday1122.otsu4",
+      "app_id": "6799755566",
+      "hits": [
+        {
+          "path": ".github/workflows/otsu4-codemagic-internal-testflight.yml",
+          "signals": [
+            "name: Otsu4 Codemagic Internal TestFlight",
+            "TARGET_BRANCH: release/otsu4-720-internal-testflight",
+            "TARGET_WORKFLOW: otsu4-ios",
+            "CONFIRMED_ASC_INTEGRATION: Codemagic Shiwake Swipe",
+            "ref: release/otsu4-720-internal-testflight",
+            "cfg=yaml.safe_load(open('codemagic.yaml',encoding='utf-8'))",
+            "wf=(cfg.get('workflows') or {}).get('otsu4-ios')",
+            "assert wf, 'otsu4-ios workflow missing'",
+            "assert integrations.get('app_store_connect') == os.environ['CONFIRMED_ASC_INTEGRATION'], integrations",
+            "assert signing.get('bundle_identifier') == 'jp.allsunday1122.otsu4'",
+            "pub=((wf.get('publishing') or {}).get('app_store_connect') or {})",
+            "assert pub.get('submit_to_testflight') is True, 'TestFlight upload must be explicitly enabled'",
+            "assert pub.get('submit_to_app_store') is False, 'App Store submission must remain disabled'",
+            "print('PASS: isolated Internal TestFlight workflow; target head='+sha)",
+            "- name: Start and wait for Codemagic build",
+            "out=Path('otsu4-codemagic-result.json')",
+            "result={'ok':False,'app_id':app_id,'workflow_id':'otsu4-ios','branch':branch,'status':'preflight'}",
+            "payload={'appId':app_id,'workflowId':'otsu4-ios','branch':branch}",
+            "status,data=api('https://api.codemagic.io/builds','POST',payload)",
+            "result['error']='Codemagic did not return buildId'",
+            "print('Codemagic build started:',build_id)",
+            "status,data=api(f'https://codemagic.io/api/v3/builds/{build_id}')",
+            "print('Codemagic status:',state)",
+            "result['app_store_connect_status']=details.get('app_store_connect_status')",
+            "result['error']=f'Codemagic build ended with {state}'",
+            "result['error']='Timed out waiting for Codemagic build'",
+            "name: otsu4-codemagic-internal-${{ github.run_id }}",
+            "path: otsu4-codemagic-result.json"
+          ]
+        },
+        {
+          "path": ".github/workflows/app2-007-otsu4-appstore-candidate.yml",
+          "signals": [
+            "TARGET_BRANCH: release/otsu4-appstore-candidate-20260829",
+            "TARGET_WORKFLOW: otsu4-appstore-candidate",
+            "ref: release/otsu4-appstore-candidate-20260829",
+            "cfg=yaml.safe_load(open('codemagic.yaml',encoding='utf-8'))",
+            "wf=(cfg.get('workflows') or {}).get(os.environ['TARGET_WORKFLOW'])",
+            "assert wf, 'candidate workflow missing'",
+            "assert ((wf.get('integrations') or {}).get('app_store_connect')) == 'Codemagic Shiwake Swipe'",
+            "assert signing.get('bundle_identifier')=='jp.allsunday1122.otsu4'",
+            "pub=((wf.get('publishing') or {}).get('app_store_connect') or {})",
+            "assert pub.get('submit_to_testflight') is True",
+            "assert pub.get('submit_to_app_store') is False",
+            "- name: Start and wait for Codemagic candidate",
+            "result={'ok':False,'app_id':os.environ['CM_APP_ID'],'workflow_id':os.environ['TARGET_WORKFLOW'],'branch':os.environ['TARGET_BRANCH'],'status':'preflight'}",
+            "status,data=api('https://api.codemagic.io/builds','POST',{'appId':os.environ['CM_APP_ID'],'workflowId':os.environ['TARGET_WORKFLOW'],'branch':os.environ['TARGET_BRANCH']})",
+            "if not build_id: raise SystemExit('Codemagic did not return buildId')",
+            "status,data=api(f'https://codemagic.io/api/v3/builds/{build_id}')",
+            "result.update(status=state,commit=(d.get('commit') or {}).get('hash'),app_store_connect_status=d.get('app_store_connect_status'),started_at=d.get('started_at'),finished_at=d.get('finished_at')); save()",
+            "if state!='finished': raise SystemExit(f'Codemagic ended {state}')",
+            "result['error']='Timed out waiting for Codemagic'; save(); raise SystemExit(result['error'])"
+          ]
+        },
+        {
+          "path": "scripts/app2_007_otsu4_store_assets_upload.py",
+          "signals": [
+            "The binary images are downloaded by the workflow from a pinned successful",
+            "from app_store_connect_api import BASE_URL, load_private_key, make_token",
+            "APP_ID = \"6799755566\"",
+            "BUNDLE_ID = \"jp.allsunday1122.otsu4\"",
+            "OUT = Path(os.environ.get(\"OTS4_STORE_UPLOAD_OUTPUT\", \"automation/app2-007-otsu4-store-upload-result.json\"))"
+          ]
+        },
+        {
+          "path": "scripts/app2_007_otsu4_iap_availability.py",
+          "signals": [
+            "from app_store_connect_api import BASE_URL, load_private_key, make_token",
+            "APP_ID='6799755566'; BUNDLE_ID='jp.allsunday1122.otsu4'; IAP_ID='6806477067'; JPN='JPN'",
+            "OUT=Path('automation/app2-007-otsu4-iap-availability-result.json')"
+          ]
+        },
+        {
+          "path": "scripts/app2_007_otsu4_finalize_submit.py",
+          "signals": [
+            "App Store Connect API, validates the release/IAP, adds the app version and first",
+            "from app_store_connect_api import BASE_URL, load_private_key, make_token",
+            "APP_ID = '6799755566'",
+            "BUNDLE_ID = 'jp.allsunday1122.otsu4'",
+            "OUT = Path(os.environ.get('OTS4_FINAL_SUBMIT_OUTPUT', 'automation/app2-007-otsu4-final-submit-result.json'))",
+            "NOTES = '''本アプリは危険物取扱者 乙種第4類の学習アプリです。アカウント登録、広告、行動解析、トラッキングはありません。学習履歴は端末内に保存されます。\\n\\n無料版では72問を利用できます。非消耗型アプリ内課金「乙4 プレミアム」（jp.allsunday1122.otsu4.premium）を購入すると、全720問、模擬試験6回、全範囲の復習機能を解放します。購入画面は「設定」→「乙4 プレミアム」から開けます。\\n\\n審査時は通常のSandbox購入フローをご利用ください。購入済みの場合は「購入を復元」でも権利を再確認できます。'''",
+            "raise RuntimeError(f'Expected at least 6 COMPLETE screenshots, found {len(complete)}')",
+            "build_number = str(build_attrs.get('version'))",
+            "build_number=build_number,"
+          ]
+        },
+        {
+          "path": "scripts/app2_007_otsu4_submit_prep.py",
+          "signals": [
+            "from app_store_connect_api import api_get, api_request, load_private_key, make_token",
+            "APP_ID = \"6799755566\"",
+            "BUNDLE_ID = \"jp.allsunday1122.otsu4\"",
+            "OUT = Path(\"automation/app2-007-otsu4-submit-prep-result.json\")",
+            "REVIEW_NOTES = \"\"\"本アプリは危険物取扱者 乙種第4類の試験対策アプリです。アカウント登録は不要です。\\n\\n購入導線: 「設定」→「Premium」、またはロックされた問題・模擬試験の解放ボタンから「乙4 プレミアム」を表示できます。Product ID は jp.allsunday1122.otsu4.premium、非消耗型です。購入後は全720問、模擬試験6回、全範囲の復習機能が解放されます。\\n\\n無料状態でも72問を利用でき、主要な学習導線を確認できます。学習履歴は端末内に保存し、広告・解析SDK・独自アカウント・開発者サーバーへの学習データ送信はありません。\"\"\"",
+            "\"ageAssurance\": False,"
+          ]
+        },
+        {
+          "path": "scripts/app2_007_otsu4_iap_bootstrap.py",
+          "signals": [
+            "from app_store_connect_api import BASE_URL, load_private_key, make_token",
+            "APP_ID = \"6799755566\"",
+            "BUNDLE_ID = \"jp.allsunday1122.otsu4\"",
+            "PRODUCT_ID = \"jp.allsunday1122.otsu4.premium\"",
+            "OUT = Path(\"automation/app2-007-otsu4-iap-result.json\")"
+          ]
+        },
+        {
+          "path": "automation/testflight-fast-readback-command.json",
+          "signals": [
+            "\"6799755566\""
+          ]
+        },
+        {
+          "path": "automation/testflight-recovery-route-discovery-command.json",
+          "signals": [
+            "{\"name\":\"危険物乙4\",\"app_id\":\"6799755566\",\"bundle_id\":\"jp.allsunday1122.otsu4\"}"
+          ]
+        },
+        {
+          "path": "automation/testflight-rebuild-plan-command.json",
+          "signals": [
+            "\"jp.allsunday1122.otsu4\""
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-recovery-all-20260905-0518.json",
+          "signals": [
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": null,",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"app_id\": \"6799755566\",",
+            "\"bundle_id\": \"jp.allsunday1122.otsu4\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\",",
+            "\"blocked_reason\": \"no non-expired VALID build ready for internal beta testing\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-fast-readback-20260905-0518.json",
+          "signals": [
+            "\"app_id\": \"6799755566\",",
+            "\"bundle_id\": \"jp.allsunday1122.otsu4\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-rebuild-plan-20260905-0518.json",
+          "signals": [
+            "\"workflows\": [",
+            "\"workflow_id\": \"health-manager-1-testflight\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": false,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"health-manager-2-ios\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": false,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"otsu4-ios\",",
+            "\"bundle_id\": \"jp.allsunday1122.otsu4\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"pharmacist-ios\",",
+            "\"submit_to_testflight\": true,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"otsu4-native-ios\",",
+            "\"bundle_id\": \"jp.allsunday1122.otsu4\",",
+            "\"submit_to_testflight\": false,",
+            "\"submit_to_app_store\": false,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": true",
+            "\"workflow_id\": \"touhan-ios\",",
+            "\"submit_to_testflight\": null,",
+            "\"submit_to_app_store\": null,",
+            "\"dynamic_build_number_hint\": true,",
+            "\"has_app_store_connect_integration\": false"
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/summary.json",
+          "signals": [
+            "\"app_id\": \"6799755566\",",
+            "\"bundle_id\": \"jp.allsunday1122.otsu4\","
+          ]
+        },
+        {
+          "path": "automation/asc-results/testflight-state-audit-20260905-0518/6799755566.json",
+          "signals": [
+            "\"app_id\": \"6799755566\",",
+            "\"bundle_id\": \"jp.allsunday1122.otsu4\","
+          ]
+        }
+      ]
+    }
+  ]
+}
