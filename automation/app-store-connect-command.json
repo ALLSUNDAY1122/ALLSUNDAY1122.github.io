@@ -1,6 +1,20 @@
 {
-  "request_id": "app2-001-shiwake-availability-recheck-20260831-0819",
+  "request_id": "testflight-group-install-diagnosis-20260905-2011",
   "requests": [
-    {"label": "availability", "method": "GET", "path": "/v1/apps/6794796078/appAvailabilityV2"}
+    {
+      "label": "hm1-group-builds",
+      "method": "GET",
+      "path": "/v1/betaGroups/da16ca74-d4c8-45a1-8735-5c4baad112cf/builds?limit=200&fields[builds]=version,expired,processingState,minOsVersion"
+    },
+    {
+      "label": "pharmacist-group-builds",
+      "method": "GET",
+      "path": "/v1/betaGroups/56dfa9cf-bceb-477d-94bd-b65d9ebf26ff/builds?limit=200&fields[builds]=version,expired,processingState,minOsVersion"
+    },
+    {
+      "label": "touhan-group-builds",
+      "method": "GET",
+      "path": "/v1/betaGroups/cdd5f083-c442-46ff-95fe-a4ef7c7072ef/builds?limit=200&fields[builds]=version,expired,processingState,minOsVersion"
+    }
   ]
 }
