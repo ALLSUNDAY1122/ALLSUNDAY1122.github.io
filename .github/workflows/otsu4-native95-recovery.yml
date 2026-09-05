@@ -3,6 +3,10 @@ name: Otsu4 Native Build95 Recovery
 on:
   issues:
     types: [opened]
+  push:
+    branches: [main]
+    paths:
+      - automation/otsu4-native95-trigger.json
 
 permissions:
   contents: read
@@ -14,7 +18,7 @@ concurrency:
 
 jobs:
   recover:
-    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTS4-NATIVE95]')
+    if: github.actor == 'ALLSUNDAY1122' && (github.event_name == 'push' || startsWith(github.event.issue.title, '[OTS4-NATIVE95]'))
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
@@ -70,7 +74,7 @@ jobs:
           else:
               raise SystemExit('Timed out waiting for Codemagic')
       - name: Report locator
-        if: always()
+        if: always() && github.event_name == 'issues'
         uses: actions/github-script@v8
         with:
           script: |
