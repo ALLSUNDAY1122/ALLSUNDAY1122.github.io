@@ -1,0 +1,1 @@
+2026-08-23: Build 93 ASC/TestFlight readback is performed through Codemagic workflow `otsu4-asc-readback`, using the registered App Store Connect integration `Codemagic Shiwake Swipe`. Completion requires `app-store-connect get-latest-testflight-build-number 6799755566` to return >= 93. This does not submit to App Store review.
