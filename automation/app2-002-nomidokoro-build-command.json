@@ -4,7 +4,7 @@
   "workflow_id": "ios-native",
   "branch": "codex/nomikai-arcade-ios-release",
   "requested_apple_build_number": 9,
-  "allow_codemagic_build": false,
+  "allow_codemagic_build": true,
   "submit_to_app_store": false,
-  "reason": "Build 9 trigger already issued; relocked immediately to prevent duplicate Codemagic builds"
+  "reason": "Retry Build 9 for Internal TestFlight recovery only: prior Codemagic attempt failed before machine start; ASC confirms Build 9 does not exist"
 }
