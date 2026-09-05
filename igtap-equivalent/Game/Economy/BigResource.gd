@@ -13,19 +13,19 @@ func _init(value: float = 0.0, group_exponent: int = 0) -> void:
     exponent = maxi(group_exponent, 0)
     _normalize()
 
-static func from_number(value: float):
+static func from_number(value: float) -> BigResource:
     if not is_finite(value):
         return null
     return BigResource.new(value, 0)
 
-static func from_snapshot(snapshot: Dictionary):
+static func from_snapshot(snapshot: Dictionary) -> BigResource:
     var value := float(snapshot.get("mantissa", 0.0))
     var group_exponent := int(snapshot.get("exponent", 0))
     if not is_finite(value) or group_exponent < 0:
         return null
     return BigResource.new(value, group_exponent)
 
-func copy():
+func copy() -> BigResource:
     return BigResource.new(mantissa, exponent)
 
 func is_zero() -> bool:
@@ -41,7 +41,7 @@ func signed_snapshot(sign_value: float) -> Dictionary:
     var sign_multiplier := -1.0 if sign_value < 0.0 else 1.0
     return {"mantissa": absf(mantissa) * sign_multiplier, "exponent": exponent}
 
-func compare(other) -> int:
+func compare(other: BigResource) -> int:
     if is_zero() and other.is_zero():
         return 0
     if is_negative() != other.is_negative():
@@ -53,7 +53,7 @@ func compare(other) -> int:
         return 0
     return 1 if mantissa > other.mantissa else -1
 
-func add_assign(other) -> void:
+func add_assign(other: BigResource) -> void:
     if other == null or other.is_zero():
         return
     if is_zero():
@@ -61,7 +61,7 @@ func add_assign(other) -> void:
         exponent = other.exponent
         _normalize()
         return
-    var difference := exponent - other.exponent
+    var difference: int = exponent - other.exponent
     if difference > PRECISION_GROUPS:
         return
     if difference < -PRECISION_GROUPS:
@@ -76,12 +76,12 @@ func add_assign(other) -> void:
         exponent = other.exponent
     _normalize()
 
-func subtract_assign(other) -> bool:
+func subtract_assign(other: BigResource) -> bool:
     if other == null or other.is_negative():
         return false
     if compare(other) < 0:
         return false
-    var negative := other.copy()
+    var negative: BigResource = other.copy()
     negative.mantissa *= -1.0
     add_assign(negative)
     if mantissa < 0.0 and absf(mantissa) <= ZERO_EPSILON:
