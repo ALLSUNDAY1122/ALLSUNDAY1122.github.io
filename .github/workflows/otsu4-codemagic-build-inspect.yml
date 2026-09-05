@@ -1,0 +1,56 @@
+name: Otsu4 Codemagic Build Inspect
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  inspect:
+    if: github.actor == 'ALLSUNDAY1122' && startsWith(github.event.issue.title, '[OTS4-CM-DIAG]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect existing Codemagic build read-only
+        id: inspect
+        env:
+          CM_API_TOKEN: ${{ secrets.CM_API_TOKEN }}
+          BUILD_ID: '6a9b7241dcbe0654ad9df89c'
+        run: |
+          python3 - <<'PY' > /tmp/diag.txt
+          import json, os, urllib.request
+          bid=os.environ['BUILD_ID']
+          token=os.environ['CM_API_TOKEN']
+          req=urllib.request.Request(f'https://codemagic.io/api/v3/builds/{bid}',headers={'x-auth-token':token})
+          with urllib.request.urlopen(req,timeout=30) as r:
+              raw=json.loads(r.read().decode())
+          d=raw.get('data') or raw
+          print('build_id='+bid)
+          for k in ('status','workflowId','branch','startedAt','finishedAt','app_store_connect_status'):
+              print(f'{k}={d.get(k)}')
+          actions=d.get('actions') or []
+          print('actions_count='+str(len(actions)))
+          for i,a in enumerate(actions):
+              if not isinstance(a,dict):
+                  continue
+              vals=[]
+              for k in ('name','status','startedAt','finishedAt','error','message'):
+                  v=a.get(k)
+                  if v is not None:
+                      s=str(v).replace('\n',' ')[:800]
+                      vals.append(f'{k}={s}')
+              print(f'action[{i}] '+ ' | '.join(vals))
+          PY
+          cat /tmp/diag.txt
+      - name: Comment diagnostic
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            let body='';
+            try { body=fs.readFileSync('/tmp/diag.txt','utf8'); } catch(e) { body='diagnostic output unavailable'; }
+            if (body.length > 6000) body=body.slice(0,6000);
+            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:'```text\n'+body+'\n```'});
