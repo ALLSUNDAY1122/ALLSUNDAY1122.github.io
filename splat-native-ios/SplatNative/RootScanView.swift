@@ -556,6 +556,19 @@ struct RootScanView: View {
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
 
+            if let diagnostic = model.reconstructionDiagnosticText, !diagnostic.isEmpty {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("診断情報")
+                        .font(.caption.bold())
+                    Text(diagnostic)
+                        .font(.caption.monospaced())
+                        .textSelection(.enabled)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(12)
+                .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+            }
+
             if model.canRetryGeneration {
                 Button("生成だけもう一度試す") {
                     model.retryGeneration()
