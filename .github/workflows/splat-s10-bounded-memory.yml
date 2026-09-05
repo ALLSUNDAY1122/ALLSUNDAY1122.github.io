@@ -1,0 +1,37 @@
+name: Splat S10 Bounded Memory Contract
+
+on:
+  pull_request:
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-s10-bounded-memory.yml'
+  push:
+    branches:
+      - 'scaniverse/s10-bounded-msplat-memory'
+    paths:
+      - 'splat-native-ios/**'
+      - '.github/workflows/splat-s10-bounded-memory.yml'
+
+jobs:
+  bounded-memory-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Materialize exact pinned Msplat with M1 + M2 + S10
+        working-directory: splat-native-ios
+        run: bash scripts/materialize_msplat_s7_wave1.sh
+      - name: Verify no reconstruction quality tradeoff
+        working-directory: splat-native-ios
+        run: |
+          grep -Fq 'static let standardIterations = 7_000' SplatNative/SplatReconstructionPolicy.swift
+          grep -Fq 'static let datasetDownscale: Float = 4.0' SplatNative/SplatReconstructionPolicy.swift
+          grep -Fq 'config.shDegree = 3' SplatNative/SplatReconstructionPolicy.swift
+          grep -Fq 'jpegData(compressionQuality: 0.90)' SplatNative/ScanModel.swift
+          grep -Fq 'let maximumBudget = 1_536 * mib' SplatNative/SplatResourceGuard.swift
+          grep -Fq 'let minimumReserve = 256 * mib' SplatNative/SplatResourceGuard.swift
+          grep -Fq 'let maximumReserve = 512 * mib' SplatNative/SplatResourceGuard.swift
+      - name: Verify S10 exact generated-source contracts
+        working-directory: splat-native-ios
+        run: python3 scripts/test_s10_bounded_memory_patch.py Packages/MsplatMemory

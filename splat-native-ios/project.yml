@@ -1,0 +1,125 @@
+name: SplatNative
+options:
+  bundleIdPrefix: jp.allsunday1122
+  deploymentTarget:
+    iOS: '18.0'
+  preGenCommand: bash scripts/materialize_msplat_s7_wave1.sh
+packages:
+  Msplat:
+    path: Packages/MsplatMemory
+  MetalSplatter:
+    url: https://github.com/scier/MetalSplatter.git
+    revision: 2b965de1934de38dda1c71cf90bf798aa948a14c
+  Supabase:
+    url: https://github.com/supabase/supabase-swift.git
+    revision: 21d3aaf21ee98f41611f9f75070489fc8b23d882
+  AssimpBinary:
+    path: Packages/AssimpBinary
+targets:
+  SplatNative:
+    type: application
+    platform: iOS
+    deploymentTarget: '18.0'
+    sources:
+      - path: SplatNative
+    dependencies:
+      - package: Msplat
+        product: Msplat
+      - package: MetalSplatter
+        product: MetalSplatter
+      - package: MetalSplatter
+        product: SplatIO
+      - package: Supabase
+        product: Supabase
+      - package: AssimpBinary
+        product: AssimpBinary
+      - sdk: libc++.tbd
+      - sdk: libz.tbd
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.splatlab
+        PRODUCT_NAME: Splat Lab Native
+        MARKETING_VERSION: 1.0.0
+        CURRENT_PROJECT_VERSION: 1
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Scan Lab
+        INFOPLIST_KEY_CFBundleURLTypes: |
+          {
+              CFBundleTypeRole = Editor;
+              CFBundleURLName = "jp.allsunday1122.splatlab.auth";
+              CFBundleURLSchemes = (
+                  "jp.allsunday1122.splatlab"
+              );
+          }
+        INFOPLIST_KEY_NSCameraUsageDescription: 周囲を撮影して端末内で3Dスキャンを生成するため、カメラを使用します。
+        INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: Mapへ公開する地点をユーザーが明示的に設定した場合だけ、現在地を取得します。位置情報は自動送信しません。
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+        TARGETED_DEVICE_FAMILY: '1'
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SWIFT_VERSION: '6.0'
+        SWIFT_STRICT_CONCURRENCY: minimal
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        CODE_SIGN_STYLE: Automatic
+  SplatNativeTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: '18.0'
+    sources:
+      - path: SplatNativeTests
+      - path: SplatNative/CapturePolicy.swift
+      - path: SplatNative/ScanLabAuthStatePolicy.swift
+      - path: SplatNative/ScanLabAuthCallbackPolicy.swift
+      - path: SplatNative/ScanLabPasswordRecoveryPolicy.swift
+      - path: SplatNative/ScanLabProfilePolicy.swift
+      - path: SplatNative/ScanLabAuthErrorPolicy.swift
+      - path: SplatNative/ScanLabSessionPolicy.swift
+      - path: SplatNative/ScanLabPublishPackage.swift
+      - path: SplatNative/ScanLabGeotagPolicy.swift
+      - path: SplatNative/ScanReportPolicy.swift
+      - path: SplatNative/SplatReconstructionPolicy.swift
+      - path: SplatNative/SplatSeedColorizer.swift
+      - path: SplatNative/SplatSkySeeder.swift
+      - path: SplatNative/SplatResourceGuard.swift
+      - path: SplatNative/SplatViewerState.swift
+      - path: SplatNative/ScanProjectStore.swift
+      - path: SplatNative/ScanWorldMapArchiveStore.swift
+      - path: SplatNative/SplatCompletionVerifier.swift
+      - path: SplatNative/SplatStrongCompletionEvidence.swift
+      - path: SplatNative/SplatPreviousResultEvidence.swift
+      - path: SplatNative/SplatProjectTrustRecovery.swift
+      - path: SplatNative/SplatExportService.swift
+      - path: SplatNative/SplatCanonicalSHAsset+ProjectDurability.swift
+      - path: SplatNative/SplatExportAdmission.swift
+      - path: SplatNative/SplatTransientExportWorkspace.swift
+      - path: SplatNative/SplatVideoConfiguration.swift
+      - path: SplatNative/SplatCameraGeometry.swift
+      - path: SplatNative/SplatVideoMemoryPolicy.swift
+      - path: SplatNative/SplatVideoExporter.swift
+      - path: SplatNative/MeshExportService.swift
+      - path: SplatNative/MeshExportAdmission.swift
+      - path: SplatNative/MeshExportMemoryPolicy.swift
+      - path: SplatNative/MeshPointCloudExportService.swift
+      - path: SplatNative/MeshRawProjectBridge.swift
+      - path: SplatNative/MeshProjectStore.swift
+      - path: SplatNative/MeshProjectIntegrity.swift
+      - path: SplatNative/ScanLabMapQuery.swift
+    dependencies:
+      - package: Msplat
+        product: Msplat
+      - package: MetalSplatter
+        product: MetalSplatter
+      - package: MetalSplatter
+        product: SplatIO
+      - package: AssimpBinary
+        product: AssimpBinary
+      - sdk: libc++.tbd
+      - sdk: libz.tbd
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.splatlab.tests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: '6.0'
+        SWIFT_STRICT_CONCURRENCY: minimal
+        CODE_SIGNING_ALLOWED: NO
