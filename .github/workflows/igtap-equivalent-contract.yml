@@ -29,6 +29,8 @@ jobs:
         run: python igtap-equivalent/Build/validate_project.py
       - name: Run integration bootstrap tests
         run: python -m unittest discover -s igtap-equivalent/Tests/Integration -p 'test_*.py' -v
+      - name: Run Session B progression audit tests
+        run: python -m unittest discover -s igtap-equivalent/Tests/Progression -p 'test_*.py' -v
       - name: Install Godot 4.7.2 stable
         shell: bash
         run: |
@@ -40,5 +42,7 @@ jobs:
         run: godot --headless --editor --path igtap-equivalent --quit
       - name: Run save corruption and migration self-test
         run: timeout 30s godot --headless --path igtap-equivalent res://Tests/Integration/SaveSelfTest.tscn
-      - name: Boot mock integration headlessly
+      - name: Run C3 full-loop self-test
+        run: timeout 30s godot --headless --path igtap-equivalent res://Tests/Integration/FullLoopSelfTest.tscn
+      - name: Boot integrated runtime headlessly
         run: godot --headless --path igtap-equivalent --quit-after 120
