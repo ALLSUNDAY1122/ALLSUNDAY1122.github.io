@@ -1,0 +1,186 @@
+{
+  "request_id": "testflight-recover-otsu4-native-20260905-1023",
+  "ok": false,
+  "action": "build",
+  "workflow_id": "otsu4-native-ios",
+  "branch": "main",
+  "resolved_app_id": null,
+  "application_candidates": [
+    {
+      "id": "6a769d81a1add9d06020b524",
+      "name": "ALLSUNDAY1122.github.io",
+      "repositoryUrl": null
+    }
+  ],
+  "note": null,
+  "build_id": "6a9b6e8480e23752f88ddbe8",
+  "status": "failed",
+  "app_id": "6a769d81a1add9d06020b524",
+  "error": "Codemagic build ended with status: failed",
+  "build_details": {
+    "id": "6a9b6e8480e23752f88ddbe8",
+    "app_id": "6a769d81a1add9d06020b524",
+    "workflow": {
+      "id": "otsu4-native-ios",
+      "source": "file",
+      "name": "危険物乙4 - Native Internal TestFlight"
+    },
+    "instance_type": "mac_mini_m2",
+    "status": "failed",
+    "index": 3,
+    "artifacts": [],
+    "labels": [],
+    "release_notes": [],
+    "created_at": "2026-09-05T01:21:08.224000Z",
+    "config": {
+      "flutter_mode": null,
+      "shorebird_mode": null,
+      "flutter_version": null,
+      "xcode_version": "latest",
+      "platforms": []
+    },
+    "remote_access_enabled": false,
+    "commit": {
+      "hash": "a2e44db069650b18c971cdbd0b2fdac6c3d20d8c",
+      "avatar_url": "https://avatars.githubusercontent.com/u/233652603?v=4",
+      "author_name": "ALLSUNDAY1122",
+      "author_email": "kohei3615@gmail.com",
+      "message": "Recover Otsu4 via native Internal TestFlight route",
+      "url": "https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/a2e44db069650b18c971cdbd0b2fdac6c3d20d8c"
+    },
+    "branch": "main",
+    "tag": null,
+    "pull_request": null,
+    "app_store_connect_status": null,
+    "build_inputs": {},
+    "started_at": "2026-09-05T01:21:16.658000Z",
+    "finished_at": "2026-09-05T01:21:54.619000Z"
+  },
+  "actions": {
+    "data": [
+      {
+        "id": "6a9b6e852f709ffca3d0582b",
+        "name": "Preparing build machine",
+        "type": "preparing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-05T01:21:16.931000Z",
+        "finished_at": "2026-09-05T01:21:43.931000Z"
+      },
+      {
+        "id": "6a9b6e852f709ffca3d0582c",
+        "name": "Fetching app sources",
+        "type": "fetching",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-05T01:21:43.931000Z",
+        "finished_at": "2026-09-05T01:21:50.442000Z"
+      },
+      {
+        "id": "6a9b6e852f709ffca3d0582a",
+        "name": "Set up code signing identities",
+        "type": "setup_code_signing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-05T01:21:50.442000Z",
+        "finished_at": "2026-09-05T01:21:53.158000Z"
+      },
+      {
+        "id": "6a9b6e852f709ffca3d0582d",
+        "name": "Check out pinned Release Gate source",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR\"\ngit fetch --depth=1 origin \"$RELEASE_SOURCE_BRANCH\"\ngit checkout --detach \"$RELEASE_SOURCE_SHA\"\ntest \"$(git rev-parse HEAD)\" = \"$RELEASE_SOURCE_SHA\"",
+        "status": "failed",
+        "started_at": "2026-09-05T01:21:53.158000Z",
+        "finished_at": "2026-09-05T01:21:54.363000Z"
+      },
+      {
+        "id": "6a9b6e852f709ffca3d0582e",
+        "name": "Install XcodeGen",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nHOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen",
+        "status": "skipped",
+        "started_at": "2026-09-05T01:21:54.363000Z",
+        "finished_at": "2026-09-05T01:21:54.363000Z"
+      },
+      {
+        "id": "6a9b6e852f709ffca3d0582f",
+        "name": "Prepare audited 360-question resources and canonical icon",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nbash \"$CM_BUILD_DIR/native-ios/Otsu4Sprint/prepare-ios.sh\"",
+        "status": "skipped",
+        "started_at": "2026-09-05T01:21:54.363000Z",
+        "finished_at": "2026-09-05T01:21:54.364000Z"
+      },
+      {
+        "id": "6a9b6e852f709ffca3d05830",
+        "name": "Set CI build number and generate Xcode project",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR/native-ios/Otsu4Sprint\"\npython3 - <<'PY'\nfrom pathlib import Path\nimport os\np = Path(\"project.yml\")\ntext = p.read_text(encoding=\"utf-8\")\nbuild_number = os.environ.get(\"CM_BUILD_NUMBER\") or os.environ.get(\"BUILD_NUMBER\")\nif not build_number:\n    raise RuntimeError(\"Codemagic build number is unavailable\")\np.write_text(text.replace(\"CURRENT_PROJECT_VERSION: '1'\", \"CURRENT_PROJECT_VERSION: '\" + build_number + \"'\", 1), encoding=\"utf-8\")\nPY\nxcodegen generate",
+        "status": "skipped",
+        "started_at": "2026-09-05T01:21:54.364000Z",
+        "finished_at": "2026-09-05T01:21:54.364000Z"
+      },
+      {
+        "id": "6a9b6e852f709ffca3d05831",
+        "name": "Verify signed release inputs",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ntest -f \"$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json\"\ntest -f \"$CM_BUILD_DIR/native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy\"\ntest -f \"$CM_BUILD_DIR/native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png\"\npython3 - \"$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json\" <<'PY'\nimport json,sys\ndata=json.load(open(sys.argv[1],encoding=\"utf-8\"))\nassert data[\"contentVersion\"] == \"otsu4-2026-08-product-v2\"\nassert len(data[\"questions\"]) == 360\nPY",
+        "status": "skipped",
+        "started_at": "2026-09-05T01:21:54.364000Z",
+        "finished_at": "2026-09-05T01:21:54.364000Z"
+      },
+      {
+        "id": "6a9b6e852f709ffca3d05832",
+        "name": "Apply App Store signing profile for Internal TestFlight only",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\ncd \"$CM_BUILD_DIR/native-ios/Otsu4Sprint\"\nxcode-project use-profiles --custom-export-options='{\"testFlightInternalTestingOnly\": true}'",
+        "status": "skipped",
+        "started_at": "2026-09-05T01:21:54.364000Z",
+        "finished_at": "2026-09-05T01:21:54.364000Z"
+      },
+      {
+        "id": "6a9b6e852f709ffca3d05833",
+        "name": "Build signed IPA",
+        "type": "script",
+        "has_test_results": false,
+        "script": "#!/usr/bin/env bash\n\nset -euo pipefail\nxcode-project build-ipa \\\n  --project \"$CM_BUILD_DIR/$XCODE_PROJECT\" \\\n  --scheme \"$XCODE_SCHEME\"",
+        "status": "skipped",
+        "started_at": "2026-09-05T01:21:54.364000Z",
+        "finished_at": "2026-09-05T01:21:54.365000Z"
+      },
+      {
+        "id": "6a9b6e852f709ffca3d05834",
+        "name": "Publishing",
+        "type": "publishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-05T01:21:54.365000Z",
+        "finished_at": "2026-09-05T01:21:54.527000Z"
+      },
+      {
+        "id": "6a9b6e852f709ffca3d05835",
+        "name": "Cleaning up",
+        "type": "finishing",
+        "has_test_results": false,
+        "script": null,
+        "status": "success",
+        "started_at": "2026-09-05T01:21:54.527000Z",
+        "finished_at": "2026-09-05T01:21:54.619000Z"
+      }
+    ],
+    "page_size": 30,
+    "current_page": 1,
+    "total_pages": 1
+  }
+}
