@@ -10,9 +10,9 @@ on:
       - 'igtap-equivalent/export_presets.cfg'
       - 'igtap-equivalent/Main.tscn'
       - 'igtap-equivalent/Platform/**'
-      - 'igtap-equivalent/Integration/Bootstrap.gd'
-      - 'igtap-equivalent/Integration/Adapters/**'
-      - 'igtap-equivalent/Integration/Mock/**'
+      - 'igtap-equivalent/Integration/**'
+      - 'igtap-equivalent/Game/**'
+      - 'igtap-equivalent/Content/**'
       - '.github/workflows/igtap-ios-export-smoke.yml'
   workflow_dispatch:
 
@@ -50,8 +50,15 @@ jobs:
           TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable"
           ls -lah "$TEMPLATE_DIR"
           test -s "$TEMPLATE_DIR/ios.zip"
-      - name: Import project
-        run: /tmp/godot/Godot.app/Contents/MacOS/Godot --headless --editor --path igtap-equivalent --quit
+      - name: Import project and reject script errors
+        shell: bash
+        run: |
+          set -o pipefail
+          /tmp/godot/Godot.app/Contents/MacOS/Godot --headless --editor --path igtap-equivalent --quit 2>&1 | tee /tmp/loopforge-ios-import.log
+          if grep -E 'SCRIPT ERROR: (Parse Error|Compile Error)|Failed to load script' /tmp/loopforge-ios-import.log; then
+            echo 'Godot script compilation errors detected during iOS import.' >&2
+            exit 1
+          fi
       - name: Inject CI-only signing metadata and explicit template path
         run: |
           python3 - <<'PY'
