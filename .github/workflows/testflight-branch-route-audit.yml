@@ -22,63 +22,67 @@ jobs:
         run: |
           git fetch --all --prune
           python3 - <<'PY'
-          import json, subprocess, yaml, re
+          import json, subprocess, yaml
           from pathlib import Path
 
           cmd=json.loads(Path('automation/testflight-branch-route-audit-command.json').read_text(encoding='utf-8'))
           rid=str(cmd['request_id']); targets=cmd.get('targets') or []
-          branches=[]
           raw=subprocess.check_output(['git','for-each-ref','--format=%(refname:short)','refs/remotes/origin'],text=True)
-          for b in raw.splitlines():
-            if b=='origin/HEAD': continue
-            if b.startswith('origin/'): branches.append(b[len('origin/'):])
-          out={'request_id':rid,'branch_count':len(branches),'targets':[]}
-          for t in targets:
-            bundle=str(t['bundle_id']); appid=str(t.get('app_id') or ''); row={'name':t.get('name'),'bundle_id':bundle,'app_id':appid,'codemagic_routes':[],'github_workflow_hits':[],'source_hits':[]}
-            for br in branches:
-              # codemagic route
-              p=subprocess.run(['git','show',f'origin/{br}:codemagic.yaml'],text=True,capture_output=True)
-              if p.returncode==0:
-                try: cfg=yaml.safe_load(p.stdout) or {}
-                except Exception: cfg={}
-                for wid,w in (cfg.get('workflows') or {}).items():
-                  w=w or {}; env=w.get('environment') or {}; sign=env.get('ios_signing') or {}; vars_=env.get('vars') or {}
-                  wb=sign.get('bundle_identifier') or vars_.get('BUNDLE_ID')
-                  text=yaml.safe_dump(w,allow_unicode=True)
+          branches=[b[len('origin/'):] for b in raw.splitlines() if b.startswith('origin/') and b!='origin/HEAD']
+          rows={str(t['bundle_id']):{'name':t.get('name'),'bundle_id':str(t['bundle_id']),'app_id':str(t.get('app_id') or ''),'codemagic_routes':[],'github_workflow_hits':[],'source_hits':[]} for t in targets}
+
+          def run(args):
+            return subprocess.run(args,text=True,capture_output=True)
+
+          for br in branches:
+            ref=f'origin/{br}'
+            # Parse codemagic.yaml once per branch, then match every target.
+            p=run(['git','show',f'{ref}:codemagic.yaml'])
+            if p.returncode==0:
+              try: cfg=yaml.safe_load(p.stdout) or {}
+              except Exception: cfg={}
+              for wid,w in (cfg.get('workflows') or {}).items():
+                w=w or {}; env=w.get('environment') or {}; sign=env.get('ios_signing') or {}; vars_=env.get('vars') or {}
+                wb=str(sign.get('bundle_identifier') or vars_.get('BUNDLE_ID') or '')
+                text=yaml.safe_dump(w,allow_unicode=True)
+                asc=((w.get('publishing') or {}).get('app_store_connect') or {})
+                for bundle,row in rows.items():
+                  appid=row['app_id']
                   if wb==bundle or bundle in text or (appid and appid in text):
-                    asc=((w.get('publishing') or {}).get('app_store_connect') or {})
-                    row['codemagic_routes'].append({'branch':br,'workflow_id':wid,'workflow_name':w.get('name'),'bundle_id':wb,'submit_to_testflight':asc.get('submit_to_testflight'),'submit_to_app_store':asc.get('submit_to_app_store'),'has_asc_integration':bool((w.get('integrations') or {}).get('app_store_connect'))})
-              # workflow hits
-              q=subprocess.run(['git','ls-tree','-r','--name-only',f'origin/{br}','.github/workflows'],text=True,capture_output=True)
-              if q.returncode==0:
-                for path in q.stdout.splitlines():
-                  if not path.endswith(('.yml','.yaml')): continue
-                  z=subprocess.run(['git','show',f'origin/{br}:{path}'],text=True,capture_output=True)
-                  if z.returncode!=0: continue
-                  txt=z.stdout
-                  if bundle in txt or (appid and appid in txt):
-                    sig=[]
-                    for line in txt.splitlines():
-                      s=line.strip(); low=s.lower()
-                      if bundle in s or (appid and appid in s) or any(k in low for k in ['codemagic','submit_to_testflight','app-store-connect','altool','transporter','eas build','eas submit','workflow_id','build_number']): sig.append(s[:400])
-                    row['github_workflow_hits'].append({'branch':br,'path':path,'signals':sig[:30]})
-              # source presence by exact bundle id, limited cheap grep via git grep
-              g=subprocess.run(['git','grep','-l','-F',bundle,f'origin/{br}','--','*.pbxproj','*.yml','*.yaml','*.json','*.plist','*.swift','*.gradle','app.json','app.config.*'],text=True,capture_output=True)
-              if g.returncode==0:
-                paths=[]
-                for ln in g.stdout.splitlines()[:20]:
-                  paths.append(ln.split(':',1)[-1])
-                if paths: row['source_hits'].append({'branch':br,'paths':paths})
-            # dedupe identical branch/path combos
-            seen=set(); gh=[]
-            for x in row['github_workflow_hits']:
-              k=(x['branch'],x['path'])
-              if k not in seen: seen.add(k); gh.append(x)
-            row['github_workflow_hits']=gh
-            out['targets'].append(row)
-          p=Path('automation/asc-results')/f'{rid}.json'; p.parent.mkdir(parents=True,exist_ok=True); payload=json.dumps(out,ensure_ascii=False,indent=2)+'\n'; p.write_text(payload,encoding='utf-8')
-          Path('/tmp/tf-branch-route-result.json').write_text(payload,encoding='utf-8'); Path('/tmp/tf-branch-route-path.txt').write_text(str(p),encoding='utf-8')
-          print(json.dumps({'branch_count':out['branch_count'],'targets':[{ 'name':r['name'],'codemagic':len(r['codemagic_routes']),'actions':len(r['github_workflow_hits']),'sources':len(r['source_hits'])} for r in out['targets']]},ensure_ascii=False))
+                    row['codemagic_routes'].append({'branch':br,'workflow_id':wid,'workflow_name':w.get('name'),'bundle_id':wb or None,'submit_to_testflight':asc.get('submit_to_testflight'),'submit_to_app_store':asc.get('submit_to_app_store'),'has_asc_integration':bool((w.get('integrations') or {}).get('app_store_connect'))})
+
+            # git grep jumps directly to matching workflow/source files instead of reading every workflow.
+            for bundle,row in rows.items():
+              appid=row['app_id']
+              patterns=[bundle] + ([appid] if appid else [])
+              wf_paths=set(); src_paths=set()
+              for pattern in patterns:
+                q=run(['git','grep','-l','-F',pattern,ref,'--','.github/workflows/*.yml','.github/workflows/*.yaml'])
+                if q.returncode==0:
+                  for ln in q.stdout.splitlines():
+                    wf_paths.add(ln.split(':',1)[-1])
+                g=run(['git','grep','-l','-F',pattern,ref,'--','*.pbxproj','*.yml','*.yaml','*.json','*.plist','*.swift','*.gradle','app.json','app.config.*'])
+                if g.returncode==0:
+                  for ln in g.stdout.splitlines()[:40]:
+                    src_paths.add(ln.split(':',1)[-1])
+              for path in sorted(wf_paths):
+                z=run(['git','show',f'{ref}:{path}'])
+                if z.returncode!=0: continue
+                sig=[]
+                for line in z.stdout.splitlines():
+                  s=line.strip(); low=s.lower()
+                  if bundle in s or (appid and appid in s) or any(k in low for k in ['codemagic','submit_to_testflight','app-store-connect','altool','transporter','eas build','eas submit','workflow_id','build_number']):
+                    sig.append(s[:400])
+                row['github_workflow_hits'].append({'branch':br,'path':path,'signals':sig[:30]})
+              if src_paths:
+                row['source_hits'].append({'branch':br,'paths':sorted(src_paths)[:30]})
+
+          out={'request_id':rid,'branch_count':len(branches),'targets':list(rows.values())}
+          p=Path('automation/asc-results')/f'{rid}.json'; p.parent.mkdir(parents=True,exist_ok=True)
+          payload=json.dumps(out,ensure_ascii=False,indent=2)+'\n'; p.write_text(payload,encoding='utf-8')
+          Path('/tmp/tf-branch-route-result.json').write_text(payload,encoding='utf-8')
+          Path('/tmp/tf-branch-route-path.txt').write_text(str(p),encoding='utf-8')
+          print(json.dumps({'branch_count':len(branches),'targets':[{'name':r['name'],'codemagic':len(r['codemagic_routes']),'actions':len(r['github_workflow_hits']),'sources':len(r['source_hits'])} for r in rows.values()]},ensure_ascii=False))
           PY
       - name: Persist branch route audit
         if: always()
