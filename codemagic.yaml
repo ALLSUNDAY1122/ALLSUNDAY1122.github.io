@@ -1,0 +1,97 @@
+workflows:
+  otsu4-native-ios:
+    name: 危険物乙4 - Build95 Internal TestFlight Recovery
+    max_build_duration: 80
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.otsu4
+      vars:
+        BUNDLE_ID: jp.allsunday1122.otsu4
+        XCODE_PROJECT: native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj
+        XCODE_SCHEME: Otsu4Sprint
+        RECOVERY_SOURCE_SHA: 67ec6a9bfd61c745b016eabdc63f5f2f7d6f9e53
+      xcode: latest
+    scripts:
+      - name: Check out frozen Build95 recovery source
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          git fetch --depth=1 origin "$RECOVERY_SOURCE_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$RECOVERY_SOURCE_SHA"
+      - name: Verify Build95 source invariants
+        script: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('native-ios/Otsu4Sprint/project.yml')
+          s=p.read_text(encoding='utf-8')
+          assert s.count("CURRENT_PROJECT_VERSION: '95'") == 2, s.count("CURRENT_PROJECT_VERSION: '95'")
+          assert 'jp.allsunday1122.otsu4' in s
+          print('PASS: both project and target build numbers are 95')
+          PY
+      - name: Install XcodeGen
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Prepare audited 360-question resources and icon
+        script: |
+          set -euo pipefail
+          bash "$CM_BUILD_DIR/native-ios/Otsu4Sprint/prepare-ios.sh"
+      - name: Generate Xcode project
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
+          xcodegen generate
+      - name: Verify release inputs
+        script: |
+          set -euo pipefail
+          test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json"
+          test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy"
+          test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png"
+          python3 - "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1],encoding='utf-8'))
+          assert data['contentVersion']=='otsu4-2026-08-product-v2'
+          assert len(data['questions'])==360
+          print('PASS: audited Otsu4 360-question bundle inputs')
+          PY
+      - name: Apply App Store signing profiles for internal TestFlight only
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+      - name: Verify signed IPA is Build95 before upload
+        script: |
+          set -euo pipefail
+          IPA_PATH="$(find build/ios/ipa -type f -name '*.ipa' -print -quit)"
+          test -n "$IPA_PATH"
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q "$IPA_PATH" -d "$VERIFY_DIR"
+          APP_DIR="$(find "$VERIFY_DIR/Payload" -maxdepth 1 -type d -name '*.app' -print -quit)"
+          python3 - "$APP_DIR" <<'PY'
+          from pathlib import Path
+          import plistlib,sys
+          app=Path(sys.argv[1])
+          info=plistlib.loads((app/'Info.plist').read_bytes())
+          assert info.get('CFBundleIdentifier')=='jp.allsunday1122.otsu4', info.get('CFBundleIdentifier')
+          assert str(info.get('CFBundleVersion'))=='95', info.get('CFBundleVersion')
+          print('PASS: signed IPA bundle/build = jp.allsunday1122.otsu4 / 95')
+          PY
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
